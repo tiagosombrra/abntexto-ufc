@@ -1,4 +1,31 @@
+## Uso rápido
+
+1. Clique em **Use this template**.
+2. Crie um novo repositório.
+3. Edite `documento.tex`.
+4. Configure o trabalho em `\ufcsetup{...}`.
+5. Compile no Overleaf ou localmente com `make`.
+
+
+
 # Modelo de Trabalho Acadêmico UFC em LaTeX
+
+Template LaTeX comunitário e modernizado para elaboração de trabalhos
+acadêmicos na Universidade Federal do Ceará (UFC).
+
+> [!IMPORTANT]
+> Este é um projeto comunitário e não oficial. A conformidade deve ser
+> verificada com os guias vigentes do Sistema de Bibliotecas da UFC e
+> com as regras específicas do curso, programa ou edital.
+
+## Modalidades
+
+- Graduação
+- Especialização
+- Dissertação
+- Tese
+- Projeto de pesquisa
+- Projeto de pesquisa anonimizado
 
 Este pacote preserva a estrutura histórica do template UFC/abnTeX2 e moderniza sua infraestrutura para uso genérico em cursos, programas e unidades acadêmicas da Universidade Federal do Ceará. A atualização foi feita com quatro objetivos simultâneos:
 
