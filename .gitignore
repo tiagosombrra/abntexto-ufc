@@ -1,0 +1,44 @@
+# LaTeX build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.acn
+*.acr
+*.alg
+*.xdy
+
+# minted / Pygments
+_minted-*
+*.pyg
+*.pygtex
+
+# Other generated formats
+*.dvi
+*.ps
+
+# Generated main PDF
+documento.pdf
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
