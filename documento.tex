@@ -1,0 +1,212 @@
+% Modelo de Trabalho Acadêmico UFC em LaTeX
+%
+% Base histórica: versões UFC/abnTeX2 2016 (ShareLaTeX) e 2019 (Overleaf).
+% Atualização normativa e técnica: Tiago Guimarães Sombra (2026).
+%
+% Este arquivo continua sendo o único ponto de entrada do template. Selecione
+% abaixo apenas um modo de documento. Não é necessário criar outro .tex para
+% graduação, especialização, dissertação, tese ou projeto de pesquisa.
+%
+% Os guias atuais da UFC e as regras específicas do curso/programa/editais
+% prevalecem sobre o template. Consulte o README.md antes da submissão.
+
+\documentclass[
+    a4paper,          % Papel A4
+    12pt,             % Corpo do texto em tamanho 12
+    chapter=TITLE,
+    oneside,
+    english,
+    brazil,
+    fleqn             % Comente para centralizar equações; veja mathindent abaixo
+]{abntex2}
+
+\input{lib/preambulo}
+
+\setlength{\mathindent}{0pt} % Comente junto com fleqn para equações centralizadas
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%            CONFIGURAÇÃO DO DOCUMENTO             %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Interface recomendada para novos documentos. Os comandos históricos
+% (\trabalhoacademico, \ies, \centro, \autor etc.) continuam disponíveis
+% para retrocompatibilidade, mas não precisam ser usados em projetos novos.
+%
+% Modos suportados em `tipo`:
+%   tccgraduacao | tccespecializacao | dissertacao | tese
+%   projeto | projetoanonimizado
+%
+% Módulos opcionais:
+%   algoritmos = nenhum | algpseudocodex | algorithm2e
+%   codigo      = listings | minted
+%   graficos    = sim | nao
+%   caixas      = sim | nao
+%   teoremas    = basico | avancado
+%
+% `algorithm2e` é mantido apenas para documentos legados. Para novos textos de
+% Ciência da Computação, prefira algpseudocodex. `minted`, gráficos e caixas
+% são carregados somente quando explicitamente habilitados.
+\ufcsetup{
+    tipo = tccgraduacao,
+
+    ies = {Universidade Federal do Ceará},
+    sigla = {UFC},
+    centro = {Nome do Centro, Faculdade, Instituto ou Campus},
+    departamento = {Nome do Departamento ou Unidade Acadêmica},
+
+    curso-graduacao = {Nome do Curso},
+    habilitacao = {bacharel},
+
+    curso-especializacao = {Nome do Curso de Especialização},
+
+    programa-mestrado = {Programa de Pós-Graduação em Nome do Programa},
+    nome-mestrado = {Mestrado Acadêmico em Nome do Curso},
+    titulo-mestre = {Nome da Área},
+    area-mestrado = {Nome da Área de Concentração},
+
+    programa-doutorado = {Programa de Pós-Graduação em Nome do Programa},
+    nome-doutorado = {Doutorado em Nome do Curso},
+    titulo-doutor = {Nome da Área},
+    area-doutorado = {Nome da Área de Concentração},
+
+    programa-projeto = {Nome do Curso, Programa ou Processo Seletivo},
+    tipo-projeto = {Projeto de pesquisa},
+    entidade-submissao = {Universidade Federal do Ceará},
+    natureza-projeto = {},
+    identificador-projeto = {},
+
+    autor = {Nome Sobrenome},
+    titulo = {Título do Trabalho},
+    ano = {Ano},
+    local = {Fortaleza},
+    data-aprovacao = {},
+
+    orientador = {Prof. Dr. Nome do Orientador},
+    orientador-ies = {Universidade Federal do Ceará (UFC)},
+    orientador-unidade = {Nome do Centro ou Unidade},
+    orientador-feminino = nao,
+
+    coorientador = {},
+    coorientador-ies = {Universidade ou Instituição},
+    coorientador-unidade = {Centro ou Unidade},
+    coorientador-feminino = nao,
+
+    autor-epigrafe = {Autor da epígrafe},
+
+    banca-2 = {Prof. Dr. Nome do Membro},
+    banca-2-unidade = {Centro ou Unidade},
+    banca-2-ies = {Instituição},
+    banca-3 = {}, banca-3-unidade = {}, banca-3-ies = {},
+    banca-4 = {}, banca-4-unidade = {}, banca-4-ies = {},
+    banca-5 = {}, banca-5-unidade = {}, banca-5-ies = {},
+    banca-6 = {}, banca-6-unidade = {}, banca-6-ies = {},
+
+    qualificacao = nao,
+    ficha-catalografica = nao,
+    brasao-projeto = sim,
+    links = discretos,
+
+    algoritmos = nenhum,
+    codigo = listings,
+    graficos = nao,
+    caixas = nao,
+    teoremas = basico
+}
+
+% -----------------------------------------------------------------------------
+% API LEGADA - EXEMPLOS (não usar simultaneamente com a configuração acima)
+% -----------------------------------------------------------------------------
+% \trabalhoacademico{tese}
+% \ies{Universidade Federal do Ceará}
+% \centro{Centro de Ciências}
+% \autor{Nome Sobrenome}
+% \titulo{Título do Trabalho}
+% \incluirfichacatalografica{nao}
+% \brasaoemprojeto{sim}
+
+\begin{document}
+
+    % -------------------------------------------------------------------------
+    % ELEMENTOS PRÉ-TEXTUAIS
+    % -------------------------------------------------------------------------
+    % UFC project guide: the cover is optional. Comment the line below when the
+    % applicable call/regulation does not request it.
+    \imprimircapa
+    \imprimirfolhaderosto{}
+
+    \seprojeto{%
+        % Research project: lists are optional; enable only when useful.
+        % \imprimirlistadeilustracoes
+        % \imprimirlistadetabelas
+        % \imprimirlistadequadros
+        % Enabled in the demonstration because the sample chapters use \gls{...}.
+        % The UFC project guide treats this list as optional; comment it when the
+        % project contains no abbreviations/acronyms that require a list.
+        \imprimirlistadeabreviaturasesiglas
+        % \imprimirlistadesimbolos{1-pre-textuais/lista-de-simbolos}
+        \imprimirsumario
+    }{%
+        % Final academic work.
+        \imprimirfichacatalografica{1-pre-textuais/ficha-catalografica}
+        % \imprimirerrata{1-pre-textuais/errata}
+        \imprimirfolhadeaprovacao
+        \imprimirdedicatoria{1-pre-textuais/dedicatoria}
+        \imprimiragradecimentos{1-pre-textuais/agradecimentos}
+        \imprimirepigrafe{1-pre-textuais/epigrafe}
+        \imprimirresumo{1-pre-textuais/resumo}
+        \imprimirabstract{1-pre-textuais/abstract}
+        \renewcommand*\listfigurename{Lista de Figuras}
+        \imprimirlistadeilustracoes
+        \imprimirlistadetabelas
+        % \imprimirlistadequadros
+        % \imprimirlistadealgoritmos
+        % \imprimirlistadecodigosfonte
+        \imprimirlistadeabreviaturasesiglas
+        \imprimirlistadesimbolos{1-pre-textuais/lista-de-simbolos}
+        \imprimirsumario
+    }
+
+    \setcounter{table}{0}
+
+    % -------------------------------------------------------------------------
+    % ELEMENTOS TEXTUAIS
+    % -------------------------------------------------------------------------
+    \textual
+    \input{2-textuais/1-introducao}
+    \input{2-textuais/2-fundamentacao-teorica}
+    \input{2-textuais/3-metodologia}
+    \input{2-textuais/4-resultados}
+    \input{2-textuais/5-conclusao}
+
+    % -------------------------------------------------------------------------
+    % ELEMENTOS PÓS-TEXTUAIS
+    % -------------------------------------------------------------------------
+    \imprimirreferencias
+    % \imprimirglossario
+
+    % Appendices and annexes are optional. Project examples keep them disabled by default.
+    \seprojeto{%
+        % The example text references these appendices; remove them together with
+        % the corresponding references when creating a minimal project.
+        \imprimirapendices
+            \input{3-pos-textuais/apendices/apendice-a}
+            \input{3-pos-textuais/apendices/apendice-b}
+            \input{3-pos-textuais/apendices/apendice-c}
+        % \imprimiranexos
+        %     \input{3-pos-textuais/anexos/anexo-a}
+    }{%
+        \imprimirapendices
+            \input{3-pos-textuais/apendices/apendice-a}
+            \input{3-pos-textuais/apendices/apendice-b}
+            \input{3-pos-textuais/apendices/apendice-c}
+            % LEGADO/EXEMPLO COM PDF EXTERNO:
+            % \input{3-pos-textuais/apendices/apendice-d}
+
+        \imprimiranexos
+            \input{3-pos-textuais/anexos/anexo-a}
+            % LEGADO/EXEMPLO COM PDF EXTERNO:
+            % \input{3-pos-textuais/anexos/anexo-b}
+    }
+
+    % \imprimirindice
+
+\end{document}
