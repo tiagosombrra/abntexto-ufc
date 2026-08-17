@@ -4,14 +4,18 @@
 ## Build reproduzível com Biber, glossários e índice.                   ##
 ########################################################################
 
+VERSION := 1.1.1
 filename := documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 
-.PHONY: all compile pdf lua preflight clean
+.PHONY: all compile pdf lua preflight version clean
 
 all: compile
 pdf: compile
+
+version:
+	@echo "$(VERSION)"
 
 compile:
 	@echo "Compilando $(filename).tex com $(ENGINE) + Biber..."
@@ -23,13 +27,13 @@ compile:
 	$(ENGINE) $(LATEXFLAGS) $(filename).tex
 	@echo "Processo finalizado com sucesso."
 
-# Valida o fluxo Unicode/OpenType sem mudar o padrão do Overleaf.
+# Validate the Unicode/OpenType path without changing the default Overleaf flow.
 lua:
 	$(MAKE) clean
 	$(MAKE) ENGINE=lualatex compile
 
-# Preflight local: compila e reprova warnings/caixas excedentes no log final.
-# Dependências de sistema como pdffonts são verificadas apenas quando disponíveis.
+# Local preflight: compile and reject warnings or overflowing boxes in the final log.
+# System dependencies such as pdffonts are checked only when available.
 preflight: compile
 	@echo "Verificando warnings finais..."
 	@if grep -E "LaTeX Warning:|Package [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox" $(filename).log; then \
