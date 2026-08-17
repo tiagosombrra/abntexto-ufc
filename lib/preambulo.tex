@@ -256,15 +256,8 @@
   \setlength{\interspacealgoruled}{\UFCCaptionObjectSep}%
 }
 
-% listings é carregado no núcleo; sua legenda fica acima do código.
-\captionsetup[lstlisting]{%
-  font={footnotesize,singlespacing},
-  format=plain,
-  justification=justified,
-  labelsep=endash,
-  singlelinecheck=false,
-  skip=\UFCCaptionObjectSep
-}
+% listings é carregado no núcleo; a configuração global de caption já
+% fornece fonte reduzida e espaço simples. Aqui fixamos apenas posição e gaps.
 \lstset{%
   captionpos=t,
   abovecaptionskip=0pt,
