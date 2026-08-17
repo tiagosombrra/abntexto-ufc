@@ -217,6 +217,60 @@
 % -----------------------------------------------------------------------------
 \usepackage{lib/ufctex}
 
+% -----------------------------------------------------------------------------
+% Normalização transversal de objetos
+% -----------------------------------------------------------------------------
+% A camada histórica ufctex possui implementações próprias para fonte, código e
+% alguns ambientes de algoritmo. As regras abaixo centralizam a política desta
+% versão sem exigir alterações manuais em cada figura, tabela, quadro ou código.
+\renewcommand{\Fonte}[2][\fontename]{%
+  \vspace{\UFCObjectSourceSep}%
+  \par\noindent%
+  {\footnotesize\SingleSpacing #1\ABNTEXcaptionfontedelim #2\par}%
+}
+\renewcommand{\Nota}[2][\notaname]{\Fonte[#1]{#2}}
+
+% algorithm/algpseudocodex usa o mecanismo do package caption.
+\AddToHook{package/algorithm/after}{%
+  \captionsetup[algorithm]{%
+    font={footnotesize,singlespacing},
+    labelfont=normalfont,
+    textfont=normalfont,
+    format=plain,
+    justification=justified,
+    labelsep=endash,
+    singlelinecheck=false,
+    skip=\UFCCaptionObjectSep
+  }%
+}
+
+% algorithm2e possui mecanismo de legenda próprio.
+\AddToHook{package/algorithm2e/after}{%
+  \SetAlCapFnt{\footnotesize\linespread{1}\selectfont}%
+  \SetAlCapNameFnt{\footnotesize\linespread{1}\selectfont}%
+  \SetAlCapSty{textnormal}%
+  \SetAlCapNameSty{textnormal}%
+  \SetAlgoCaptionSeparator{\space\textendash\space}%
+  \SetAlCapHSkip{0pt}%
+  \SetAlCapSkip{\UFCCaptionObjectSep}%
+  \setlength{\interspacealgoruled}{\UFCCaptionObjectSep}%
+}
+
+% listings é carregado no núcleo; sua legenda fica acima do código.
+\captionsetup[lstlisting]{%
+  font={footnotesize,singlespacing},
+  format=plain,
+  justification=justified,
+  labelsep=endash,
+  singlelinecheck=false,
+  skip=\UFCCaptionObjectSep
+}
+\lstset{%
+  captionpos=t,
+  abovecaptionskip=0pt,
+  belowcaptionskip=\UFCCaptionObjectSep
+}
+
 % Referências cruzadas. cleveref foi mantido por compatibilidade e maturidade;
 % zref-clever foi avaliado como alternativa, mas não oferece ganho suficiente
 % para justificar quebra da API \cref/\Cref nesta versão do template.
