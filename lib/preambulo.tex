@@ -2,6 +2,7 @@
 % publicados pelo Sistema de Bibliotecas da Universidade Federal do Ceará.
 %
 % Atualização normativa e técnica: Tiago Guimarães Sombra (2026).
+% Versão comunitária: 1.1.0 (2026-08-17).
 % Base preservada do template UFC/abnTeX2 2016/2019.
 %
 % Este arquivo concentra a infraestrutura LaTeX comum. Regras de apresentação
@@ -83,12 +84,24 @@
 % -----------------------------------------------------------------------------
 % Figuras e objetos flutuantes
 % -----------------------------------------------------------------------------
+% Política única de separação visual entre identificação, objeto e fonte.
+\newlength{\UFCCaptionObjectSep}
+\setlength{\UFCCaptionObjectSep}{6pt}
+\newlength{\UFCObjectSourceSep}
+\setlength{\UFCObjectSourceSep}{6pt}
+
 \usepackage{graphicx}
 \graphicspath{{figuras/}}
 \usepackage[export]{adjustbox}
 \usepackage{flafter}
 \usepackage{placeins}
-\usepackage{subcaption}
+\usepackage[
+  font={footnotesize,singlespacing},
+  format=plain,
+  justification=justified,
+  singlelinecheck=false,
+  skip=6pt
+]{subcaption}
 \usepackage{pdflscape}
 
 % -----------------------------------------------------------------------------
@@ -102,6 +115,11 @@
 \usepackage{tabularray-abnt}
 \UseTblrLibrary{booktabs,siunitx}
 \SetAbntTblrFont{\normalsize}
+% Captions internas de tall/long tabularray também devem seguir a UFC:
+% fonte 10, entrelinha simples e separação visual de 6 pt.
+\SetTblrStyle{caption,lasthead,capcont}{font=\footnotesize}
+\SetTblrStyle{firsthead-text,lasthead-text,conthead-text}{font=\footnotesize}
+\SetTblrStyle{lastfoot}{font=\footnotesize}
 
 % LEGADO DISPONÍVEL SOMENTE SE O USUÁRIO PRECISAR:
 % multirow, xltabular, threeparttable e makecell deixaram de ser carregados por
@@ -143,16 +161,29 @@
 \usepackage{csquotes}
 
 % -----------------------------------------------------------------------------
-% Legendas
+% Legendas e espaçamento dos objetos acadêmicos
 % -----------------------------------------------------------------------------
-% Guias UFC/ABNT: legenda, fonte e notas em tamanho menor e espaço simples.
+% Os guias UFC exigem identificação acima e fonte abaixo para ilustrações
+% (incluindo figuras, gráficos, fluxogramas e quadros) e tabelas, com fonte 10 e
+% espaço simples. Não há distância numérica prescrita entre identificação,
+% objeto e fonte. O template adota 6 pt como política tipográfica uniforme.
+% Algoritmos e códigos-fonte não recebem regra específica nos guias UFC; quando
+% legendados, o template estende a eles a mesma política visual por consistência.
 \usepackage[
   font={footnotesize,singlespacing},
   format=plain,
   justification=justified,
-  skip=0pt,
+  labelsep=endash,
   singlelinecheck=false
 ]{caption}
+\captionsetup{skip=\UFCCaptionObjectSep}
+% Subfiguras/subtabelas não são tratadas separadamente pelo guia UFC; quando
+% usadas, preservamos a mesma fonte 10 e espaço simples para não criar uma
+% legenda menor que o padrão institucional.
+% longtblr é a infraestrutura usada por longabnttblr. Seus separadores padrão
+% já são 6 pt, mas os fixamos explicitamente para manter uma única política.
+\SetTblrOuter[longtblr]{headsep=\UFCCaptionObjectSep,footsep=\UFCObjectSourceSep}
+\SetTblrOuter[talltblr]{headsep=\UFCCaptionObjectSep,footsep=\UFCObjectSourceSep}
 
 % -----------------------------------------------------------------------------
 % Citações e referências
