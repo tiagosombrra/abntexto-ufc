@@ -40,8 +40,12 @@ v2-layout-check:
 	for engine in pdflatex lualatex; do \
 		for fixture in $(V2_LAYOUT_FIXTURES); do \
 			echo "Validando $$fixture com $$engine..."; \
-			$$engine $(LATEXFLAGS) $$fixture >/dev/null; \
-			$$engine $(LATEXFLAGS) $$fixture >/dev/null; \
+			if ! $$engine $(LATEXFLAGS) $$fixture > /tmp/ufctex-v2-layout.log 2>&1; then \
+				cat /tmp/ufctex-v2-layout.log; exit 1; \
+			fi; \
+			if ! $$engine $(LATEXFLAGS) $$fixture > /tmp/ufctex-v2-layout.log 2>&1; then \
+				cat /tmp/ufctex-v2-layout.log; exit 1; \
+			fi; \
 		done; \
 	done
 
@@ -51,8 +55,12 @@ v2-pretextual-check:
 	for engine in pdflatex lualatex; do \
 		for fixture in $(V2_PRETEXTUAL_FIXTURES); do \
 			echo "Validando $$fixture com $$engine..."; \
-			$$engine $(LATEXFLAGS) $$fixture >/dev/null; \
-			$$engine $(LATEXFLAGS) $$fixture >/dev/null; \
+			if ! $$engine $(LATEXFLAGS) $$fixture > /tmp/ufctex-v2-pretextual.log 2>&1; then \
+				cat /tmp/ufctex-v2-pretextual.log; exit 1; \
+			fi; \
+			if ! $$engine $(LATEXFLAGS) $$fixture > /tmp/ufctex-v2-pretextual.log 2>&1; then \
+				cat /tmp/ufctex-v2-pretextual.log; exit 1; \
+			fi; \
 		done; \
 	done
 	@if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' pretextuais-trabalho.toc; then \
@@ -62,8 +70,9 @@ v2-pretextual-check:
 	@grep -Eiq 'Introdu' pretextuais-trabalho.toc || \
 		(echo "Preflight V2 falhou: seção textual ausente do Sumário."; exit 1)
 	@if command -v pdftotext >/dev/null 2>&1; then \
-		pdftotext pretextuais-trabalho.pdf - | grep -Eiq '^Dedicat[oó]ria$$' && \
-			(echo "Preflight V2 falhou: dedicatória recebeu título."; exit 1) || true; \
+		if pdftotext pretextuais-trabalho.pdf - | grep -Eiq '^Dedicat[oó]ria$$'; then \
+			echo "Preflight V2 falhou: dedicatória recebeu título."; exit 1; \
+		fi; \
 		if pdftotext pretextuais-projeto-anonimo.pdf - | grep -Fq 'AUTOR SIGILOSO TESTE'; then \
 			echo "Preflight V2 falhou: autor vazou no projeto anonimizado."; exit 1; \
 		fi; \
