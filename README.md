@@ -2,7 +2,7 @@
 
 Template LaTeX comunitário e modernizado para elaboração de trabalhos acadêmicos na Universidade Federal do Ceará (UFC).
 
-**Versão comunitária atual: 1.1.1 — 17/08/2026**
+**Versão comunitária atual: 1.1.2 — 18/08/2026**
 
 > [!IMPORTANT]
 > Este é um projeto comunitário e não oficial. A conformidade deve ser conferida com os guias vigentes do Sistema de Bibliotecas da UFC e com as regras específicas do curso, programa, processo seletivo ou edital aplicável.
@@ -40,16 +40,18 @@ A ordem de decisão adotada pelo template é:
 
 O template auxilia a composição; ele não substitui a conferência final das normas aplicáveis ao documento.
 
-## O que mudou na v1.1.1
+## O que mudou na v1.1.2
 
-A v1.1.1 é uma release de manutenção e documentação da política introduzida na v1.1.0.
+A v1.1.2 é uma release de manutenção da linha `abntex2`/`memoir` antes da futura migração de plataforma.
 
-- README reorganizado para refletir o comportamento atual do template;
-- versão do template explicitada nos arquivos principais e no `Makefile`;
-- política de espaçamento de objetos documentada de forma normativa e tipográfica;
-- distinção explícita entre exigências UFC e convenções internas do template;
-- exemplos de figuras, tabelas, quadros, algoritmos e código alinhados à implementação atual;
-- preservação da retrocompatibilidade e da base `abntex2`/`memoir`.
+- opção pública de idioma atualizada de `brazil` para `brazilian`;
+- preflight automatizado em GitHub Actions com TeX Live 2026;
+- `make preflight` passa a reconhecer explicitamente duas depreciações upstream inevitáveis do `abntex2` 1.9.7, sem liberar outros warnings;
+- versão do template atualizada nos arquivos principais e no `Makefile`.
+
+### v1.1.1
+
+A v1.1.1 consolidou a documentação e os metadados da política introduzida na v1.1.0, preservando a retrocompatibilidade e a base `abntex2`/`memoir`.
 
 ### v1.1.0
 
@@ -325,13 +327,13 @@ make preflight
 make clean
 ```
 
-`make preflight` reprova warnings LaTeX/pacote e caixas `Overfull`/`Underfull` no log final, além de verificar incorporação de fontes quando `pdffonts` estiver disponível.
+`make preflight` reprova warnings LaTeX/pacote/classe e caixas `Overfull`/`Underfull` no log final, além de verificar incorporação de fontes quando `pdffonts` estiver disponível. Na série 1.x, duas depreciações upstream do `abntex2` 1.9.7 são filtradas de forma exata: o uso interno do nome Babel `brazil` e o uso de `memoir/\settocpreprocessor`. Outros warnings continuam reprovando o preflight.
 
 ## Compatibilidade com Overleaf
 
 O fluxo principal permanece pdfLaTeX por ser o caminho mais conservador para o template histórico. LuaLaTeX também é suportado. A versão do TeX Live de projetos antigos pode ser diferente da versão corrente do Overleaf e deve ser conferida quando houver divergência de compilação.
 
-O filtro via `silence` é restrito ao warning conhecido do `microtype`/kernel referente a `\showhyphens`; outros warnings permanecem visíveis.
+O filtro via `silence` é restrito ao warning conhecido do `microtype`/kernel referente a `\showhyphens`; as duas exceções upstream da série 1.x são tratadas apenas pelo `make preflight`.
 
 ## Retrocompatibilidade
 
@@ -367,6 +369,7 @@ O template não ativa tagging experimental por padrão. A prioridade atual é es
 
 ## Versões recentes
 
+- **1.1.2 — 18/08/2026:** compatibilidade com Babel atual e preflight automatizado em TeX Live 2026;
 - **1.1.1 — 17/08/2026:** documentação, metadados de versão e alinhamento da política de objetos;
 - **1.1.0 — 17/08/2026:** normalização uniforme de espaçamento para objetos acadêmicos;
 - **1.0.0 — 16/08/2026:** primeira versão pública modernizada do repositório.
@@ -378,11 +381,3 @@ A modernização preserva a autoria, os créditos e a história do template UFC/
 Atualização normativa e técnica da série modernizada: **Tiago Guimarães Sombra (2026)**.
 
 O repositório é distribuído sob a **LaTeX Project Public License (LPPL) 1.3c**, conforme o arquivo `LICENSE`.
-
-## Referências institucionais
-
-- Normalização de trabalhos acadêmicos — Sistema de Bibliotecas da UFC: `https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/`
-- Templates — Sistema de Bibliotecas da UFC: `https://biblioteca.ufc.br/pt/servicos-e-produtos/templates/`
-- Normas para recebimento de teses e dissertações: `https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/`
-
-O histórico detalhado das versões antigas do template permanece disponível no histórico Git e nos comentários preservados da base original.
