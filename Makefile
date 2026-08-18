@@ -70,16 +70,22 @@ v2-pretextual-check:
 	@grep -Eiq 'Introdu' pretextuais-trabalho.toc || \
 		(echo "Preflight V2 falhou: seção textual ausente do Sumário."; exit 1)
 	@if command -v pdftotext >/dev/null 2>&1; then \
-		if pdftotext pretextuais-trabalho.pdf - | grep -Eiq '^Dedicat[oó]ria$$'; then \
+		pdftotext pretextuais-trabalho.pdf /tmp/ufctex-v2-pretextual.txt; \
+		for heading in 'AGRADECIMENTOS' 'RESUMO' 'ABSTRACT' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE ABREVIATURAS E SIGLAS' 'LISTA DE SÍMBOLOS' 'SUMÁRIO'; do \
+			grep -Fq "$$heading" /tmp/ufctex-v2-pretextual.txt || \
+				(echo "Preflight V2 falhou: título pré-textual ausente ou incorreto: $$heading"; exit 1); \
+		done; \
+		if grep -Eiq '^Dedicat[oó]ria$$' /tmp/ufctex-v2-pretextual.txt; then \
 			echo "Preflight V2 falhou: dedicatória recebeu título."; exit 1; \
 		fi; \
-		if pdftotext pretextuais-projeto-anonimo.pdf - | grep -Fq 'AUTOR SIGILOSO TESTE'; then \
+		pdftotext pretextuais-projeto-anonimo.pdf /tmp/ufctex-v2-anonimo.txt; \
+		if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/ufctex-v2-anonimo.txt; then \
 			echo "Preflight V2 falhou: autor vazou no projeto anonimizado."; exit 1; \
 		fi; \
-		if pdftotext pretextuais-projeto-anonimo.pdf - | grep -Fq 'ORIENTADOR SIGILOSO TESTE'; then \
+		if grep -Fq 'ORIENTADOR SIGILOSO TESTE' /tmp/ufctex-v2-anonimo.txt; then \
 			echo "Preflight V2 falhou: orientador vazou no projeto anonimizado."; exit 1; \
 		fi; \
-		pdftotext pretextuais-projeto-anonimo.pdf - | grep -Fq 'PROJETO-ANONIMO-001' || \
+		grep -Fq 'PROJETO-ANONIMO-001' /tmp/ufctex-v2-anonimo.txt || \
 			(echo "Preflight V2 falhou: identificador anonimizado ausente."; exit 1); \
 	fi
 
