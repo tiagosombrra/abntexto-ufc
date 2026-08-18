@@ -9,8 +9,9 @@ filename := documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 V2_LAYOUT_FIXTURES := tests/normativa/layout-anverso.tex tests/normativa/layout-frente-verso.tex
+V2_PRETEXTUAL_FIXTURES := tests/normativa/pretextuais-trabalho.tex tests/normativa/pretextuais-projeto-anonimo.tex
 
-.PHONY: all compile pdf lua preflight v2-layout-check version clean
+.PHONY: all compile pdf lua preflight v2-layout-check v2-pretextual-check version clean
 
 all: compile
 pdf: compile
@@ -44,10 +45,39 @@ v2-layout-check:
 		done; \
 	done
 
+# Validate pre-textual ordering, TOC isolation and anonymized-project output.
+v2-pretextual-check:
+	@set -e; \
+	for engine in pdflatex lualatex; do \
+		for fixture in $(V2_PRETEXTUAL_FIXTURES); do \
+			echo "Validando $$fixture com $$engine..."; \
+			$$engine $(LATEXFLAGS) $$fixture >/dev/null; \
+			$$engine $(LATEXFLAGS) $$fixture >/dev/null; \
+		done; \
+	done
+	@if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' pretextuais-trabalho.toc; then \
+		echo "Preflight V2 falhou: elemento pré-textual entrou no Sumário."; \
+		cat pretextuais-trabalho.toc; exit 1; \
+	fi
+	@grep -Eiq 'Introdu' pretextuais-trabalho.toc || \
+		(echo "Preflight V2 falhou: seção textual ausente do Sumário."; exit 1)
+	@if command -v pdftotext >/dev/null 2>&1; then \
+		pdftotext pretextuais-trabalho.pdf - | grep -Eiq '^Dedicat[oó]ria$$' && \
+			(echo "Preflight V2 falhou: dedicatória recebeu título."; exit 1) || true; \
+		if pdftotext pretextuais-projeto-anonimo.pdf - | grep -Fq 'AUTOR SIGILOSO TESTE'; then \
+			echo "Preflight V2 falhou: autor vazou no projeto anonimizado."; exit 1; \
+		fi; \
+		if pdftotext pretextuais-projeto-anonimo.pdf - | grep -Fq 'ORIENTADOR SIGILOSO TESTE'; then \
+			echo "Preflight V2 falhou: orientador vazou no projeto anonimizado."; exit 1; \
+		fi; \
+		pdftotext pretextuais-projeto-anonimo.pdf - | grep -Fq 'PROJETO-ANONIMO-001' || \
+			(echo "Preflight V2 falhou: identificador anonimizado ausente."; exit 1); \
+	fi
+
 # Local preflight: compile and reject warnings or overflowing boxes in the final log.
 # Known upstream deprecations from abnTeX2 1.9.7 are filtered narrowly.
 # System dependencies such as pdffonts are checked only when available.
-preflight: compile v2-layout-check
+preflight: compile v2-layout-check v2-pretextual-check
 	@echo "Verificando warnings finais..."
 	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox' $(filename).log | \
 		grep -vF -e "Package babel Warning: Name 'brazil' is deprecated." \
@@ -72,5 +102,6 @@ clean:
 	@rm -f *.ntn *.not *.lof *.lot *.toc *.loa *.lsg *.nlo *.nls *.ilg *.ind
 	@rm -f *.glg *.glo *.xdy *.acn *.idx *.loq *.lol *.fls *.fdb_latexmk *.synctex.gz *~
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf
+	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf
 	@rm -f $(filename).pdf
 	@echo "Processo finalizado com sucesso."
