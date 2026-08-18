@@ -1,0 +1,52 @@
+\ProvidesFile{ufctex/core.def}[2026/08/18 UFC core configuration]
+
+\RequirePackage{iftex}
+\RequirePackage[english,brazilian]{babel}
+\RequirePackage{microtype}
+
+\ExplSyntaxOn
+
+\tl_new:N \g_ufc_document_type_tl
+\tl_new:N \g_ufc_print_mode_tl
+
+\keys_define:nn { ufc }
+  {
+    tipo .choice:,
+    tipo / tccgraduacao .code:n =
+      { \tl_gset:Nn \g_ufc_document_type_tl { tccgraduacao } },
+    tipo / tccespecializacao .code:n =
+      { \tl_gset:Nn \g_ufc_document_type_tl { tccespecializacao } },
+    tipo / dissertacao .code:n =
+      { \tl_gset:Nn \g_ufc_document_type_tl { dissertacao } },
+    tipo / tese .code:n =
+      { \tl_gset:Nn \g_ufc_document_type_tl { tese } },
+    tipo / projeto .code:n =
+      { \tl_gset:Nn \g_ufc_document_type_tl { projeto } },
+    tipo / projetoanonimizado .code:n =
+      { \tl_gset:Nn \g_ufc_document_type_tl { projetoanonimizado } },
+
+    impressao .choice:,
+    impressao / anverso .code:n =
+      { \tl_gset:Nn \g_ufc_print_mode_tl { anverso } },
+    impressao / frente-verso .code:n =
+      { \tl_gset:Nn \g_ufc_print_mode_tl { frente-verso } },
+  }
+
+\keys_set:nn { ufc }
+  {
+    tipo = tccgraduacao,
+    impressao = anverso,
+  }
+
+\NewDocumentCommand \ufcsetup { +m }
+  { \keys_set:nn { ufc } { #1 } }
+
+\NewExpandableDocumentCommand \ufcDocumentType { }
+  { \tl_use:N \g_ufc_document_type_tl }
+
+\NewExpandableDocumentCommand \ufcPrintMode { }
+  { \tl_use:N \g_ufc_print_mode_tl }
+
+\ExplSyntaxOff
+
+\endinput
