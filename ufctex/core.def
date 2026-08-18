@@ -8,6 +8,77 @@
 
 \tl_new:N \g_ufc_document_type_tl
 \tl_new:N \g_ufc_print_mode_tl
+\tl_new:N \g_ufc_cover_mode_tl
+\bool_new:N \g_ufc_catalog_card_bool
+\bool_new:N \g_ufc_coat_of_arms_bool
+\prop_new:N \g_ufc_metadata_prop
+
+\prop_gset_from_keyval:Nn \g_ufc_metadata_prop
+  {
+    ies = {Universidade Federal do Ceará},
+    sigla = {UFC},
+    centro = {},
+    departamento = {},
+    curso-graduacao = {},
+    habilitacao = {},
+    curso-especializacao = {},
+    programa-mestrado = {},
+    nome-mestrado = {},
+    titulo-mestre = {},
+    area-mestrado = {},
+    programa-doutorado = {},
+    nome-doutorado = {},
+    titulo-doutor = {},
+    area-doutorado = {},
+    programa-projeto = {},
+    tipo-projeto = {Projeto de pesquisa},
+    entidade-submissao = {Universidade Federal do Ceará},
+    natureza-projeto = {},
+    identificador-projeto = {},
+    autor = {},
+    titulo = {},
+    subtitulo = {},
+    ano = {},
+    local = {Fortaleza},
+    data-aprovacao = {},
+    orientador = {},
+    orientador-ies = {},
+    orientador-unidade = {},
+    orientador-feminino = {nao},
+    coorientador = {},
+    coorientador-ies = {},
+    coorientador-unidade = {},
+    coorientador-feminino = {nao},
+    autor-epigrafe = {},
+    banca-2 = {},
+    banca-2-unidade = {},
+    banca-2-ies = {},
+    banca-3 = {},
+    banca-3-unidade = {},
+    banca-3-ies = {},
+    banca-4 = {},
+    banca-4-unidade = {},
+    banca-4-ies = {},
+    banca-5 = {},
+    banca-5-unidade = {},
+    banca-5-ies = {},
+    banca-6 = {},
+    banca-6-unidade = {},
+    banca-6-ies = {}
+  }
+
+\cs_new_protected:Npn \ufc_meta_set:nn #1#2
+  { \prop_gput:Nnn \g_ufc_metadata_prop {#1} {#2} }
+
+\cs_new:Npn \ufc_meta_use:n #1
+  { \prop_item:Nn \g_ufc_metadata_prop {#1} }
+
+\prg_new_conditional:Npnn \ufc_meta_if_blank:n #1 { T, F, TF }
+  {
+    \tl_if_blank:eTF { \ufc_meta_use:n {#1} }
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
 
 \keys_define:nn { ufc }
   {
@@ -30,12 +101,92 @@
       { \tl_gset:Nn \g_ufc_print_mode_tl { anverso } },
     impressao / frente-verso .code:n =
       { \tl_gset:Nn \g_ufc_print_mode_tl { frente-verso } },
+
+    capa .choice:,
+    capa / auto .code:n = { \tl_gset:Nn \g_ufc_cover_mode_tl { auto } },
+    capa / sim .code:n = { \tl_gset:Nn \g_ufc_cover_mode_tl { sim } },
+    capa / nao .code:n = { \tl_gset:Nn \g_ufc_cover_mode_tl { nao } },
+
+    ficha-catalografica .choice:,
+    ficha-catalografica / sim .code:n = { \bool_gset_true:N \g_ufc_catalog_card_bool },
+    ficha-catalografica / nao .code:n = { \bool_gset_false:N \g_ufc_catalog_card_bool },
+    ficha-catalografica / true .meta:n = { ficha-catalografica = sim },
+    ficha-catalografica / false .meta:n = { ficha-catalografica = nao },
+
+    brasao .choice:,
+    brasao / sim .code:n = { \bool_gset_true:N \g_ufc_coat_of_arms_bool },
+    brasao / nao .code:n = { \bool_gset_false:N \g_ufc_coat_of_arms_bool },
+    brasao / true .meta:n = { brasao = sim },
+    brasao / false .meta:n = { brasao = nao },
+    brasao-projeto .meta:n = { brasao = #1 },
+
+    ies .code:n = { \ufc_meta_set:nn {ies} {#1} },
+    sigla .code:n = { \ufc_meta_set:nn {sigla} {#1} },
+    centro .code:n = { \ufc_meta_set:nn {centro} {#1} },
+    departamento .code:n = { \ufc_meta_set:nn {departamento} {#1} },
+    curso-graduacao .code:n = { \ufc_meta_set:nn {curso-graduacao} {#1} },
+    habilitacao .code:n = { \ufc_meta_set:nn {habilitacao} {#1} },
+    curso-especializacao .code:n = { \ufc_meta_set:nn {curso-especializacao} {#1} },
+    programa-mestrado .code:n = { \ufc_meta_set:nn {programa-mestrado} {#1} },
+    nome-mestrado .code:n = { \ufc_meta_set:nn {nome-mestrado} {#1} },
+    titulo-mestre .code:n = { \ufc_meta_set:nn {titulo-mestre} {#1} },
+    area-mestrado .code:n = { \ufc_meta_set:nn {area-mestrado} {#1} },
+    programa-doutorado .code:n = { \ufc_meta_set:nn {programa-doutorado} {#1} },
+    nome-doutorado .code:n = { \ufc_meta_set:nn {nome-doutorado} {#1} },
+    titulo-doutor .code:n = { \ufc_meta_set:nn {titulo-doutor} {#1} },
+    area-doutorado .code:n = { \ufc_meta_set:nn {area-doutorado} {#1} },
+    programa-projeto .code:n = { \ufc_meta_set:nn {programa-projeto} {#1} },
+    tipo-projeto .code:n = { \ufc_meta_set:nn {tipo-projeto} {#1} },
+    entidade-submissao .code:n = { \ufc_meta_set:nn {entidade-submissao} {#1} },
+    natureza-projeto .code:n = { \ufc_meta_set:nn {natureza-projeto} {#1} },
+    identificador-projeto .code:n = { \ufc_meta_set:nn {identificador-projeto} {#1} },
+    autor .code:n = { \ufc_meta_set:nn {autor} {#1} },
+    titulo .code:n = { \ufc_meta_set:nn {titulo} {#1} },
+    subtitulo .code:n = { \ufc_meta_set:nn {subtitulo} {#1} },
+    ano .code:n = { \ufc_meta_set:nn {ano} {#1} },
+    local .code:n = { \ufc_meta_set:nn {local} {#1} },
+    data-aprovacao .code:n = { \ufc_meta_set:nn {data-aprovacao} {#1} },
+    orientador .code:n = { \ufc_meta_set:nn {orientador} {#1} },
+    orientador-ies .code:n = { \ufc_meta_set:nn {orientador-ies} {#1} },
+    orientador-unidade .code:n = { \ufc_meta_set:nn {orientador-unidade} {#1} },
+    orientador-feminino .choice:,
+    orientador-feminino / sim .code:n = { \ufc_meta_set:nn {orientador-feminino} {sim} },
+    orientador-feminino / nao .code:n = { \ufc_meta_set:nn {orientador-feminino} {nao} },
+    orientador-feminino / true .meta:n = { orientador-feminino = sim },
+    orientador-feminino / false .meta:n = { orientador-feminino = nao },
+    coorientador .code:n = { \ufc_meta_set:nn {coorientador} {#1} },
+    coorientador-ies .code:n = { \ufc_meta_set:nn {coorientador-ies} {#1} },
+    coorientador-unidade .code:n = { \ufc_meta_set:nn {coorientador-unidade} {#1} },
+    coorientador-feminino .choice:,
+    coorientador-feminino / sim .code:n = { \ufc_meta_set:nn {coorientador-feminino} {sim} },
+    coorientador-feminino / nao .code:n = { \ufc_meta_set:nn {coorientador-feminino} {nao} },
+    coorientador-feminino / true .meta:n = { coorientador-feminino = sim },
+    coorientador-feminino / false .meta:n = { coorientador-feminino = nao },
+    autor-epigrafe .code:n = { \ufc_meta_set:nn {autor-epigrafe} {#1} },
+    banca-2 .code:n = { \ufc_meta_set:nn {banca-2} {#1} },
+    banca-2-unidade .code:n = { \ufc_meta_set:nn {banca-2-unidade} {#1} },
+    banca-2-ies .code:n = { \ufc_meta_set:nn {banca-2-ies} {#1} },
+    banca-3 .code:n = { \ufc_meta_set:nn {banca-3} {#1} },
+    banca-3-unidade .code:n = { \ufc_meta_set:nn {banca-3-unidade} {#1} },
+    banca-3-ies .code:n = { \ufc_meta_set:nn {banca-3-ies} {#1} },
+    banca-4 .code:n = { \ufc_meta_set:nn {banca-4} {#1} },
+    banca-4-unidade .code:n = { \ufc_meta_set:nn {banca-4-unidade} {#1} },
+    banca-4-ies .code:n = { \ufc_meta_set:nn {banca-4-ies} {#1} },
+    banca-5 .code:n = { \ufc_meta_set:nn {banca-5} {#1} },
+    banca-5-unidade .code:n = { \ufc_meta_set:nn {banca-5-unidade} {#1} },
+    banca-5-ies .code:n = { \ufc_meta_set:nn {banca-5-ies} {#1} },
+    banca-6 .code:n = { \ufc_meta_set:nn {banca-6} {#1} },
+    banca-6-unidade .code:n = { \ufc_meta_set:nn {banca-6-unidade} {#1} },
+    banca-6-ies .code:n = { \ufc_meta_set:nn {banca-6-ies} {#1} }
   }
 
 \keys_set:nn { ufc }
   {
     tipo = tccgraduacao,
     impressao = anverso,
+    capa = auto,
+    ficha-catalografica = nao,
+    brasao = sim
   }
 
 \NewDocumentCommand \ufcsetup { +m }
@@ -46,6 +197,24 @@
 
 \NewExpandableDocumentCommand \ufcPrintMode { }
   { \tl_use:N \g_ufc_print_mode_tl }
+
+\NewExpandableDocumentCommand \ufcMeta { m }
+  { \ufc_meta_use:n {#1} }
+
+\NewDocumentCommand \ufcIfProjectTF { m m }
+  {
+    \str_case:VnF \g_ufc_document_type_tl
+      {
+        {projeto} {#1}
+        {projetoanonimizado} {#1}
+      }
+      {#2}
+  }
+
+\NewDocumentCommand \ufcIfAnonymizedProjectTF { m m }
+  {
+    \str_if_eq:VnTF \g_ufc_document_type_tl {projetoanonimizado} {#1} {#2}
+  }
 
 \ExplSyntaxOff
 
