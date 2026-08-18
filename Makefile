@@ -4,7 +4,7 @@
 ## Build reproduzível com Biber, glossários e índice.                   ##
 ########################################################################
 
-VERSION := 1.1.1
+VERSION := 1.1.2
 filename := documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
@@ -33,13 +33,18 @@ lua:
 	$(MAKE) ENGINE=lualatex compile
 
 # Local preflight: compile and reject warnings or overflowing boxes in the final log.
+# Known upstream deprecations from abnTeX2 1.9.7 are filtered narrowly.
 # System dependencies such as pdffonts are checked only when available.
 preflight: compile
 	@echo "Verificando warnings finais..."
-	@if grep -E "LaTeX Warning:|Package [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox" $(filename).log; then \
+	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox' $(filename).log | \
+		grep -vF -e "Package babel Warning: Name 'brazil' is deprecated." \
+		          -e 'Class memoir Warning: \settocpreprocessor is marked deprecated and will be' || true); \
+	if [ -n "$$warnings" ]; then \
+		printf '%s\n' "$$warnings"; \
 		echo "Preflight falhou: revise os avisos acima."; exit 1; \
 	else \
-		echo "Log final sem warnings estruturais."; \
+		echo "Log final sem warnings estruturais não reconhecidos."; \
 	fi
 	@if command -v pdffonts >/dev/null 2>&1; then \
 		if pdffonts $(filename).pdf | tail -n +3 | awk 'NF && $$6 != "yes" {bad=1} END{exit bad}'; then \
