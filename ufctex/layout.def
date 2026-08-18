@@ -50,8 +50,6 @@
 \cs_new_protected:Npn \ufc_layout_one_sided:
   {
     \newgeometry{
-      a4paper,
-      onecolumn,
       twoside = false,
       left = 3cm,
       top = 3cm,
@@ -63,8 +61,6 @@
 \cs_new_protected:Npn \ufc_layout_two_sided:
   {
     \newgeometry{
-      a4paper,
-      onecolumn,
       twoside = true,
       inner = 3cm,
       outer = 2cm,
