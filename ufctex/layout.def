@@ -1,0 +1,130 @@
+\ProvidesFile{ufctex/layout.def}[2026/08/18 UFC page and text layout]
+
+% Use Times New Roman when the engine can access it, with a portable fallback.
+\ifPDFTeX
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage{newtxtext}
+  \RequirePackage{newtxmath}
+\else
+  \RequirePackage{fontspec}
+  \IfFontExistsTF{Times New Roman}{%
+    \setmainfont{Times New Roman}%
+  }{%
+    \ClassWarningNoLine{ufctex}{Times New Roman not found; using TeX Gyre Termes}%
+    \setmainfont{TeX Gyre Termes}%
+  }%
+  \RequirePackage{unicode-math}
+  \setmathfont{TeX Gyre Termes Math}
+\fi
+
+% UFC body text uses 12 pt, 1.5 spacing and no extra paragraph spacing.
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1.5cm}
+\AtBeginDocument{\onehalfsp}
+
+% UFC section hierarchy. The same hierarchy is mirrored in the table of contents.
+\def\sectionfont       {\bfseries\MakeUppercase}
+\def\subsectionfont    {\bfseries}
+\def\subsubsectionfont {\bfseries\itshape}
+\def\paragraphfont     {\itshape}
+\def\subparagraphfont  {}
+
+\def\tocsectionfont       {\bfseries\MakeUppercase}
+\def\tocsubsectionfont    {\bfseries}
+\def\tocsubsubsectionfont {\bfseries\itshape}
+\def\tocparagraphfont     {\itshape}
+\def\tocsubparagraphfont  {}
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+
+% The v2 normative profile is section-based. Chapter mode is intentionally disabled.
+\renewcommand{\usechapters}{%
+  \ClassError{ufctex}
+    {Chapter mode is not supported by the UFC v2 normative profile}
+    {Use section as the primary textual level.}%
+}
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_layout_one_sided:
+  {
+    \newgeometry{
+      a4paper,
+      onecolumn,
+      twoside = false,
+      left = 3cm,
+      top = 3cm,
+      right = 2cm,
+      bottom = 2cm
+    }
+  }
+
+\cs_new_protected:Npn \ufc_layout_two_sided:
+  {
+    \newgeometry{
+      a4paper,
+      onecolumn,
+      twoside = true,
+      inner = 3cm,
+      outer = 2cm,
+      top = 3cm,
+      bottom = 2cm
+    }
+  }
+
+\cs_new_protected:Npn \ufc_next_odd_physical_page:
+  {
+    \clearpage
+    \int_if_odd:nF { \value{page} }
+      {
+        \thispagestyle{empty}
+        \hbox{}
+        \newpage
+      }
+  }
+
+\cs_new_protected:Npn \ufc_primary_section_break:
+  {
+    \str_if_eq:VnTF \g_ufc_print_mode_tl { frente-verso }
+      { \ufc_next_odd_physical_page: }
+      { \clearpage }
+  }
+
+\cs_new_protected:Npn \ufc_layout_apply:
+  {
+    % Pre-textual pages remain one-sided in both print modes.
+    \cs_set_eq:NN \onesidelayout \ufc_layout_one_sided:
+
+    \str_if_eq:VnTF \g_ufc_print_mode_tl { frente-verso }
+      { \cs_set_eq:NN \twosidelayout \ufc_layout_two_sided: }
+      { \cs_set_eq:NN \twosidelayout \ufc_layout_one_sided: }
+  }
+
+\NewDocumentCommand \ufcPrimarySectionBreak { }
+  { \ufc_primary_section_break: }
+
+\AtBeginDocument{\ufc_layout_apply:}
+
+\ExplSyntaxOff
+
+% Keep one public extension point instead of relying on abntexto internals.
+\providecommand{\ufcsectionhook}{}
+\def\hooksection{\ufcPrimarySectionBreak\ufcsectionhook}
+
+% UFC footnotes use reduced type, single spacing and a 5 cm separator rule.
+\makeatletter
+\renewcommand{\footnoterule}{%
+  \kern 3pt
+  \hrule width 5cm
+  \kern 3pt
+}
+\long\def\@makefntext#1{%
+  \parindent=0pt
+  \abntsmall\singlesp
+  \noindent
+  \hbox to 2cm{\hss\@makefnmark\enspace}#1%
+}
+\makeatother
+
+\endinput
