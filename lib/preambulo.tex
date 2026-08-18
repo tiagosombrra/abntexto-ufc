@@ -223,8 +223,9 @@
 % A camada histórica ufctex possui implementações próprias para fonte, código e
 % alguns ambientes de algoritmo. As regras abaixo centralizam a política desta
 % versão sem exigir alterações manuais em cada figura, tabela, quadro ou código.
+% A composição do objeto já fornece a separação antes de Fonte/Nota; não se soma
+% outro \vspace de 6 pt aqui, evitando duplicar esse afastamento visual.
 \renewcommand{\Fonte}[2][\fontename]{%
-  \vspace{\UFCObjectSourceSep}%
   \par\noindent%
   {\footnotesize\SingleSpacing #1\ABNTEXcaptionfontedelim #2\par}%
 }
