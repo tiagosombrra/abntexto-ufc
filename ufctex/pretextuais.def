@@ -1,0 +1,455 @@
+\ProvidesFile{ufctex/pretextuais.def}[2026/08/18 UFC pre-textual elements]
+
+\RequirePackage{pdfpages}
+
+\makeatletter
+\newcommand{\ufc@starttoc}[1]{\@starttoc{#1}}
+\makeatother
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_input_file:n #1
+  {
+    \InputIfFileExists{#1}{}{%
+      \ClassWarningNoLine{ufctex}{Input~file~'#1'~not~found}%
+    }
+  }
+
+\cs_new_protected:Npn \ufc_pretextual_heading:n #1
+  {
+    \begin{center}
+      \bfseries\MakeUppercase{#1}\par
+    \end{center}
+    \vspace{\baselineskip}
+  }
+
+\NewDocumentCommand \ufcPretextualHeading { m }
+  { \ufc_pretextual_heading:n {#1} }
+
+\cs_new:Npn \ufc_title_text:
+  {
+    \MakeUppercase{\ufc_meta_use:n {titulo}}
+    \ufc_meta_if_blank:nF {subtitulo}
+      {:\space\MakeUppercase{\ufc_meta_use:n {subtitulo}}}
+  }
+
+\cs_new_protected:Npn \ufc_optional_upper_line:n #1
+  {
+    \ufc_meta_if_blank:nF {#1}
+      { \MakeUppercase{\ufc_meta_use:n {#1}}\par }
+  }
+
+\cs_new_protected:Npn \ufc_cover_program_lines:
+  {
+    \str_case:Vn \g_ufc_document_type_tl
+      {
+        {tccgraduacao}
+          { \ufc_optional_upper_line:n {curso-graduacao} }
+        {tccespecializacao}
+          { \ufc_optional_upper_line:n {curso-especializacao} }
+        {dissertacao}
+          {
+            \ufc_optional_upper_line:n {programa-mestrado}
+            \ufc_optional_upper_line:n {nome-mestrado}
+          }
+        {tese}
+          {
+            \ufc_optional_upper_line:n {programa-doutorado}
+            \ufc_optional_upper_line:n {nome-doutorado}
+          }
+        {projeto}
+          { \ufc_optional_upper_line:n {programa-projeto} }
+        {projetoanonimizado}
+          { \ufc_optional_upper_line:n {programa-projeto} }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_print_coat_of_arms:
+  {
+    \bool_if:NT \g_ufc_coat_of_arms_bool
+      {
+        \IfFileExists{assets/institucional/brasao-ufc.pdf}
+          { \includegraphics[width=2.2cm]{assets/institucional/brasao-ufc.pdf}\par\vspace{.3\baselineskip} }
+          {
+            \IfFileExists{lib/logo-ufc.PNG}
+              { \includegraphics[width=2.2cm]{lib/logo-ufc.PNG}\par\vspace{.3\baselineskip} }
+              { \ClassWarningNoLine{ufctex}{UFC~coat~of~arms~asset~not~found} }
+          }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_print_visible_author:
+  {
+    \ufcIfAnonymizedProjectTF
+      {
+        \ufc_meta_if_blank:nF {identificador-projeto}
+          { \MakeUppercase{\ufc_meta_use:n {identificador-projeto}}\par }
+      }
+      {
+        \ufc_meta_if_blank:nF {autor}
+          { \MakeUppercase{\ufc_meta_use:n {autor}}\par }
+      }
+  }
+
+\cs_new:Npn \ufc_orientation_label:
+  {
+    \str_if_eq:eeTF {\ufc_meta_use:n {orientador-feminino}} {sim}
+      {Orientadora}
+      {Orientador}
+  }
+
+\cs_new:Npn \ufc_coorientation_label:
+  {
+    \str_if_eq:eeTF {\ufc_meta_use:n {coorientador-feminino}} {sim}
+      {Coorientadora}
+      {Coorientador}
+  }
+
+\cs_new:Npn \ufc_nature_text:
+  {
+    \str_case:VnF \g_ufc_document_type_tl
+      {
+        {tccgraduacao}
+          {
+            Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Graduação~em~
+            \ufc_meta_use:n {curso-graduacao}~da~\ufc_meta_use:n {ies},~como~requisito~
+            parcial~à~obtenção~do~grau~de~\ufc_meta_use:n {habilitacao}~em~
+            \ufc_meta_use:n {curso-graduacao}.
+          }
+        {tccespecializacao}
+          {
+            Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Especialização~em~
+            \ufc_meta_use:n {curso-especializacao}~da~\ufc_meta_use:n {ies},~como~
+            requisito~parcial~à~obtenção~do~título~de~especialista~em~
+            \ufc_meta_use:n {curso-especializacao}.
+          }
+        {dissertacao}
+          {
+            Dissertação~apresentada~ao~\ufc_meta_use:n {programa-mestrado}~da~
+            \ufc_meta_use:n {ies},~como~requisito~parcial~à~obtenção~do~título~de~
+            mestre~em~\ufc_meta_use:n {titulo-mestre}.
+            \ufc_meta_if_blank:nF {area-mestrado}
+              {~Área~de~concentração:~\ufc_meta_use:n {area-mestrado}.}
+          }
+        {tese}
+          {
+            Tese~apresentada~ao~\ufc_meta_use:n {programa-doutorado}~da~
+            \ufc_meta_use:n {ies},~como~requisito~parcial~à~obtenção~do~título~de~
+            doutor~em~\ufc_meta_use:n {titulo-doutor}.
+            \ufc_meta_if_blank:nF {area-doutorado}
+              {~Área~de~concentração:~\ufc_meta_use:n {area-doutorado}.}
+          }
+        {projeto}
+          {
+            \ufc_meta_if_blank:nTF {natureza-projeto}
+              {
+                \ufc_meta_use:n {tipo-projeto}~apresentado~à~
+                \ufc_meta_use:n {entidade-submissao}.
+              }
+              { \ufc_meta_use:n {natureza-projeto} }
+          }
+        {projetoanonimizado}
+          {
+            \ufc_meta_if_blank:nTF {natureza-projeto}
+              {
+                \ufc_meta_use:n {tipo-projeto}~apresentado~à~
+                \ufc_meta_use:n {entidade-submissao}.
+              }
+              { \ufc_meta_use:n {natureza-projeto} }
+          }
+      }
+      {}
+  }
+
+\cs_new_protected:Npn \ufc_print_advisors:
+  {
+    \ufcIfAnonymizedProjectTF
+      {}
+      {
+        \ufc_meta_if_blank:nF {orientador}
+          { \par\ufc_orientation_label:\c_colon_str\space\ufc_meta_use:n {orientador} }
+        \ufc_meta_if_blank:nF {coorientador}
+          { \par\ufc_coorientation_label:\c_colon_str\space\ufc_meta_use:n {coorientador} }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_cover:
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \centering\bfseries
+      \ufc_print_coat_of_arms:
+      \MakeUppercase{\ufc_meta_use:n {ies}}\par
+      \ufc_optional_upper_line:n {centro}
+      \ufc_optional_upper_line:n {departamento}
+      \ufc_cover_program_lines:
+      \vspace{2cm}
+      \ufc_print_visible_author:
+      \vfill
+      \ufc_title_text:\par
+      \vfill
+      \MakeUppercase{\ufc_meta_use:n {local}}\par
+      \ufc_meta_use:n {ano}\par
+    \endgroup
+    \clearpage
+    \setcounter{page}{1}
+  }
+
+\NewDocumentCommand \imprimircapa { }
+  {
+    \str_if_eq:VnF \g_ufc_cover_mode_tl {nao}
+      { \ufc_cover: }
+  }
+
+\cs_new_protected:Npn \ufc_title_page:
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \centering
+      \ufc_print_visible_author:
+      \vspace{4cm}
+      \bfseries\ufc_title_text:\par
+      \normalfont
+      \vspace{4cm}
+      \noindent\hspace*{8cm}%
+      \begin{minipage}{\dimexpr\textwidth-8cm\relax}
+        \singlesp
+        \ufc_nature_text:
+        \ufc_print_advisors:
+      \end{minipage}
+      \vfill
+      \MakeUppercase{\ufc_meta_use:n {local}}\par
+      \ufc_meta_use:n {ano}\par
+    \endgroup
+    \clearpage
+  }
+
+\NewDocumentCommand \imprimirfolhaderosto { O{} }
+  { \ufc_title_page: }
+
+\cs_new_protected:Npn \ufc_catalog_card:n #1
+  {
+    \bool_if:NT \g_ufc_catalog_card_bool
+      {
+        \IfFileExists{#1.pdf}
+          { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1.pdf} }
+          {
+            \IfFileExists{#1}
+              { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1} }
+              { \ClassWarningNoLine{ufctex}{Catalog~card~file~'#1'~not~found} }
+          }
+      }
+  }
+
+\NewDocumentCommand \imprimirfichacatalografica { m }
+  { \ufc_catalog_card:n {#1} }
+
+\cs_new_protected:Npn \ufc_signature_block:nnn #1#2#3
+  {
+    \vspace{.8\baselineskip}
+    \begin{center}
+      \rule{8cm}{0.4pt}\par
+      #1\par
+      \tl_if_blank:nF {#2} {#2\par}
+      \tl_if_blank:nF {#3} {#3\par}
+    \end{center}
+  }
+
+\cs_new_protected:Npn \ufc_examiner_signature:n #1
+  {
+    \ufc_meta_if_blank:nF {banca-#1}
+      {
+        \ufc_signature_block:nnn
+          {\ufc_meta_use:n {banca-#1}}
+          {\ufc_meta_use:n {banca-#1-unidade}}
+          {\ufc_meta_use:n {banca-#1-ies}}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_approval_page:
+  {
+    \ufcIfProjectTF
+      {}
+      {
+        \clearpage
+        \thispagestyle{empty}
+        \begingroup
+          \centering
+          \MakeUppercase{\ufc_meta_use:n {autor}}\par
+          \vspace{2\baselineskip}
+          \bfseries\ufc_title_text:\par
+          \normalfont
+          \vspace{2\baselineskip}
+          \noindent\hspace*{8cm}%
+          \begin{minipage}{\dimexpr\textwidth-8cm\relax}
+            \singlesp\ufc_nature_text:
+          \end{minipage}
+          \vspace{\baselineskip}
+          \raggedright
+          Aprovada~em:~\ufc_meta_use:n {data-aprovacao}\par
+          \vspace{\baselineskip}
+          \centering\bfseries BANCA~EXAMINADORA\normalfont\par
+          \ufc_meta_if_blank:nF {orientador}
+            {
+              \ufc_signature_block:nnn
+                {\ufc_meta_use:n {orientador}~(\ufc_orientation_label:)}
+                {\ufc_meta_use:n {orientador-unidade}}
+                {\ufc_meta_use:n {orientador-ies}}
+            }
+          \ufc_meta_if_blank:nF {coorientador}
+            {
+              \ufc_signature_block:nnn
+                {\ufc_meta_use:n {coorientador}~(\ufc_coorientation_label:)}
+                {\ufc_meta_use:n {coorientador-unidade}}
+                {\ufc_meta_use:n {coorientador-ies}}
+            }
+          \ufc_examiner_signature:n {2}
+          \ufc_examiner_signature:n {3}
+          \ufc_examiner_signature:n {4}
+          \ufc_examiner_signature:n {5}
+          \ufc_examiner_signature:n {6}
+        \endgroup
+        \clearpage
+      }
+  }
+
+\NewDocumentCommand \imprimirfolhadeaprovacao { }
+  { \ufc_approval_page: }
+
+\NewDocumentCommand \imprimirdedicatoria { m }
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \vspace*{.45\textheight}
+    \noindent\hspace*{8cm}%
+    \begin{minipage}{\dimexpr\textwidth-8cm\relax}
+      \onehalfsp\justifying
+      \ufc_input_file:n {#1}
+    \end{minipage}
+    \vfill
+    \clearpage
+  }
+
+\cs_if_exist:NF \justifying
+  { \cs_new_eq:NN \justifying \relax }
+
+\NewDocumentCommand \imprimiragradecimentos { m }
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \ufc_pretextual_heading:n {Agradecimentos}
+    \ufc_input_file:n {#1}
+    \clearpage
+  }
+
+\NewDocumentCommand \imprimirepigrafe { m }
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \vspace*{.45\textheight}
+    \noindent\hspace*{8cm}%
+    \begin{minipage}{\dimexpr\textwidth-8cm\relax}
+      \ufc_input_file:n {#1}
+      \ufc_meta_if_blank:nF {autor-epigrafe}
+        { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }
+    \end{minipage}
+    \vfill
+    \clearpage
+  }
+
+\ProvideDocumentCommand \palavraschave { m }
+  {
+    \par\vspace{\baselineskip}
+    \noindent\textbf{Palavras-chave:}\space #1
+  }
+
+\ProvideDocumentCommand \keywords { m }
+  {
+    \par\vspace{\baselineskip}
+    \noindent\textbf{Keywords:}\space #1
+  }
+
+\NewDocumentCommand \imprimirresumo { m }
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \ufc_pretextual_heading:n {Resumo}
+    \begingroup
+      \setlength{\parindent}{0pt}
+      \ufc_input_file:n {#1}
+    \endgroup
+    \clearpage
+  }
+
+\NewDocumentCommand \imprimirabstract { m }
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \selectlanguage{english}
+      \ufc_pretextual_heading:n {Abstract}
+      \setlength{\parindent}{0pt}
+      \ufc_input_file:n {#1}
+    \endgroup
+    \clearpage
+  }
+
+\cs_new_protected:Npn \ufc_pretextual_list:nn #1#2
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \ufc_pretextual_heading:n {#1}
+    #2
+    \clearpage
+  }
+
+\NewDocumentCommand \imprimirlistadeilustracoes { }
+  { \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufc@starttoc{lof}} }
+
+\NewDocumentCommand \imprimirlistadefiguras { }
+  { \ufc_pretextual_list:nn {Lista~de~Figuras} {\ufc@starttoc{lof}} }
+
+\NewDocumentCommand \imprimirlistadetabelas { }
+  { \ufc_pretextual_list:nn {Lista~de~Tabelas} {\ufc@starttoc{lot}} }
+
+\NewDocumentCommand \imprimirlistadequadros { }
+  { \ufc_pretextual_list:nn {Lista~de~Quadros} {\ufc@starttoc{loq}} }
+
+\NewDocumentCommand \imprimirlistadeabreviaturasesiglas { m }
+  { \ufc_pretextual_list:nn {Lista~de~Abreviaturas~e~Siglas} {\ufc_input_file:n {#1}} }
+
+\NewDocumentCommand \imprimirlistadesimbolos { m }
+  { \ufc_pretextual_list:nn {Lista~de~Símbolos} {\ufc_input_file:n {#1}} }
+
+\NewDocumentEnvironment { ufclistadefinicoes } { O{3cm} }
+  {
+    \begin{description}[
+      style=multiline,
+      leftmargin=#1,
+      labelwidth=\dimexpr#1-.3cm\relax,
+      labelsep=.3cm,
+      font=\normalfont,
+      itemsep=0pt,
+      parsep=0pt,
+      topsep=0pt
+    ]
+  }
+  { \end{description} }
+
+\NewDocumentCommand \ufclistaentrada { m m }
+  { \item[#1] #2 }
+
+\NewDocumentCommand \imprimirsumario { }
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \ufc_pretextual_heading:n {Sumário}
+    \ufc@starttoc{toc}
+    \clearpage
+  }
+
+\ExplSyntaxOff
+
+\endinput
