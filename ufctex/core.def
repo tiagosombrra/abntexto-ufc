@@ -201,7 +201,7 @@
 \NewExpandableDocumentCommand \ufcMeta { m }
   { \ufc_meta_use:n {#1} }
 
-\NewDocumentCommand \ufcIfProjectTF { m m }
+\NewDocumentCommand \ufcIfProjectTF { +m +m }
   {
     \str_case:VnF \g_ufc_document_type_tl
       {
@@ -211,7 +211,7 @@
       {#2}
   }
 
-\NewDocumentCommand \ufcIfAnonymizedProjectTF { m m }
+\NewDocumentCommand \ufcIfAnonymizedProjectTF { +m +m }
   {
     \str_if_eq:VnTF \g_ufc_document_type_tl {projetoanonimizado} {#1} {#2}
   }
