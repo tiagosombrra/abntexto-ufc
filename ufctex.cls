@@ -13,5 +13,6 @@
 
 \input{ufctex/core.def}
 \input{ufctex/layout.def}
+\input{ufctex/pretextuais.def}
 
 \endinput
