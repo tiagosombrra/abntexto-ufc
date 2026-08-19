@@ -33,8 +33,10 @@
 
     \int_compare:nNnT { \seq_count:N \l_ufc_bib_title_words_seq } > {1}
       {
-        \clist_if_in:NeT \c_ufc_bib_leading_words_clist
-          { \tl_lower_case:n { \l_ufc_bib_first_word_tl } }
+        \tl_set:Nx \l_tmpa_tl
+          { \tl_lower_case:n { \tl_use:N \l_ufc_bib_first_word_tl } }
+        \exp_args:NNV \clist_if_in:NnT
+          \c_ufc_bib_leading_words_clist \l_tmpa_tl
           {
             \tl_set:Nx \l_ufc_bib_second_word_tl
               { \seq_item:Nn \l_ufc_bib_title_words_seq {2} }
