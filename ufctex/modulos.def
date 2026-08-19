@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/modulos.def}[2026/08/18 UFC optional modules]
+\ProvidesFile{ufctex/modulos.def}[2026/08/19 UFC optional modules]
 
 \RequirePackage{etoolbox}
 
@@ -7,6 +7,10 @@
 \tl_new:N \g_ufc_table_module_tl
 \tl_new:N \g_ufc_code_module_tl
 \tl_new:N \g_ufc_algorithm_module_tl
+\tl_new:N \g_ufc_glossary_module_tl
+\tl_new:N \g_ufc_index_module_tl
+\bool_new:N \g_ufc_glossary_initialized_bool
+\bool_new:N \g_ufc_index_initialized_bool
 
 \keys_define:nn { ufc }
   {
@@ -41,6 +45,37 @@
       {
         \tl_gset:Nn \g_ufc_algorithm_module_tl { algpseudocodex }
         \RequirePackage{algpseudocodex}
+      },
+
+    glossario .choice:,
+    glossario / nenhum .code:n =
+      { \tl_gset:Nn \g_ufc_glossary_module_tl { nenhum } },
+    glossario / glossaries .code:n =
+      {
+        \tl_gset:Nn \g_ufc_glossary_module_tl { glossaries }
+        \bool_if:NF \g_ufc_glossary_initialized_bool
+          {
+            \RequirePackage{glossaries-extra}
+            \makeglossaries
+            \ufcSetupGlossaryModule
+            \bool_gset_true:N \g_ufc_glossary_initialized_bool
+          }
+      },
+    glossario / glossaries-extra .meta:n = { glossario = glossaries },
+
+    indice .choice:,
+    indice / nenhum .code:n =
+      { \tl_gset:Nn \g_ufc_index_module_tl { nenhum } },
+    indice / imakeidx .code:n =
+      {
+        \tl_gset:Nn \g_ufc_index_module_tl { imakeidx }
+        \bool_if:NF \g_ufc_index_initialized_bool
+          {
+            \RequirePackage{imakeidx}
+            \makeindex[columns=1,title={ÍNDICE}]
+            \ufcSetupIndexModule
+            \bool_gset_true:N \g_ufc_index_initialized_bool
+          }
       }
   }
 
@@ -48,7 +83,9 @@
   {
     tabelas = nativo,
     codigo = nenhum,
-    algoritmos = nenhum
+    algoritmos = nenhum,
+    glossario = nenhum,
+    indice = nenhum
   }
 
 \NewExpandableDocumentCommand \ufcTableModule { }
