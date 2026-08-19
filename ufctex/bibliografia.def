@@ -51,10 +51,64 @@
 \DeclareFieldFormat{uppercasecite}{#1}
 \DeclareFieldFormat{firstword}{\normalfont\ufc_bib_title_cite:n {#1}}
 
-% COMPATIBILITY_ADAPTER: keep the full year in compressed author-date citations.
+\ExplSyntaxOff
+
 \makeatletter
+
+% Keep complete years in same-author citations.
 \AtEveryCitekey{\global\let\cbx@lastyear\@undefined}
+
+% Backport the current biblatex-abnt apud formatting.
+\renewcommand*{\addapud}{%
+  \renewcommand*{\compcitedelim}{%
+    \ifnumequal{\value{multicitecount}}{\value{multicitetotal}}%
+      {\space\mkbibitalic{\bibstring{apud}}}%
+      {\addsemicolon}%
+    \space}%
+  \renewcommand*{\multicitedelim}{%
+    \ifnumequal{\value{multicitecount}}{\value{multicitetotal}}%
+      {\space\mkbibitalic{\bibstring{apud}}}%
+      {\addsemicolon}%
+    \space}%
+  \renewcommand*{\textcitedelim}{%
+    \ifnumequal{\value{multicitecount}}{\value{multicitetotal}}%
+      {\addspace\mkbibitalic{\bibstring{apud}}}%
+      {\addsemicolon}%
+    \space}%
+}
+
+\xpatchcmd{\@apud}
+  {\isdot\addspace\bibstring{apud}\addspace}
+  {\isdot\addspace\mkbibitalic{\bibstring{apud}}\addspace}
+  {}{}
+
+\RenewDocumentCommand{\textapud}{o o m o o m}{%
+  \citelastname{#3}\addspace%
+  \mkbibparens{%
+    \IfNoValueTF{#2}{%
+      \IfNoValueTF{#1}{%
+        \citeyearorsh*{#3}%
+      }{%
+        \citeyearorsh*[#1]{#3}%
+      }%
+    }{%
+      \citeyearorsh*[#1][#2]{#3}%
+    }\addspace%
+    \IfNoValueTF{#5}{%
+      \IfNoValueTF{#4}{%
+        \plaincite[\mkbibitalic{\blx@imc@bibxstring{apud}}][]{#6}%
+      }{%
+        \plaincite[\mkbibitalic{\blx@imc@bibxstring{apud}}][#4]{#6}%
+      }%
+    }{%
+      \cite[\mkbibitalic{\blx@imc@bibxstring{apud}} #4][#5]{#6}%
+    }%
+  }%
+}
+
 \makeatother
+
+\ExplSyntaxOn
 
 \NewDocumentCommand \ufcbibliografia { m }
   { \addbibresource{#1} }
