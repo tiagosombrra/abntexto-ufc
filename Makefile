@@ -105,6 +105,12 @@ v2-object-check:
 			fi; \
 		done; \
 	done
+	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' objetos-avancados.log | \
+		grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true); \
+	if [ -n "$$warnings" ]; then \
+		printf '%s\n' "$$warnings"; \
+		echo "Preflight V2 falhou: fixture de objetos contém warnings ou overflow não reconhecidos."; exit 1; \
+	fi
 	@grep -Fq 'Figura normativa de teste' objetos-avancados.lof || \
 		(echo "Preflight V2 falhou: figura ausente da lista de figuras."; exit 1)
 	@grep -Fq 'Tabela acadêmica de teste' objetos-avancados.lot || \
@@ -144,6 +150,11 @@ v2-minted-check:
 				cat /tmp/ufctex-v2-minted.log; exit 1; \
 			fi; \
 		done; \
+		overflow=$$(grep -E 'Overfull \\hbox|Overfull \\vbox' objetos-minted.log || true); \
+		if [ -n "$$overflow" ]; then \
+			printf '%s\n' "$$overflow"; \
+			echo "Preflight V2 falhou: fixture minted contém overflow."; exit 1; \
+		fi; \
 		grep -Fq 'Arquivo Python com minted' objetos-minted.loc || \
 			(echo "Preflight V2 falhou: minted ausente da lista de códigos."; exit 1); \
 	else \
