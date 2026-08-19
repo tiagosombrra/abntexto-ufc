@@ -122,8 +122,15 @@ for engine in pdflatex lualatex; do
     if grep -Fq 'ECO, Umberto' /tmp/ufctex-v2-bib.txt; then
       fail_semantic 'Fonte original do apud entrou indevidamente nas referências.'
     fi
+    grep -Fq 'e1234' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'E-location ausente da referência eletrônica.'
     grep -Fq '10.0000/ufctex.2025.1234' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'DOI ausente da referência eletrônica.'
+    grep -Fq 'SIMPÓSIO INTERNACIONAL DE TESTE' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Referência de evento ausente.'
+    if grep -Eq 'SIMPÓSIO INTERNACIONAL DE TESTE,? 2025,? \[[Ss]\. ?[Ll]\.\]' /tmp/ufctex-v2-bib.txt; then
+      fail_semantic 'Evento sem cidade recebeu sine loco indevidamente.'
+    fi
 
     if command -v pdftohtml >/dev/null 2>&1; then
       check_apud_italic
