@@ -56,6 +56,180 @@
 \DeclareFieldFormat{uppercasecite}{#1}
 \DeclareFieldFormat{firstword}{\normalfont\ufc_bib_title_cite:n {#1}}
 
+% Restrict given-name disambiguation to equal surname and publication year.
+\prop_new:N \g_ufc_bib_key_hashes_prop
+\prop_new:N \g_ufc_bib_id_initial_prop
+\prop_new:N \g_ufc_bib_id_level_prop
+\clist_new:N \l_ufc_bib_hashes_clist
+\tl_new:N \l_ufc_bib_key_tl
+\tl_new:N \l_ufc_bib_id_tl
+\tl_new:N \l_ufc_bib_hash_tl
+\tl_new:N \l_ufc_bib_initial_tl
+\tl_new:N \l_ufc_bib_level_tl
+
+\cs_new_protected:Npn \ufc_bib_make_key:nn #1#2
+  {
+    \tl_set:Nx \l_ufc_bib_key_tl
+      { \therefsection | \tl_lower_case:n {#1} | #2 }
+  }
+
+\cs_new_protected:Npn \ufc_bib_make_id:n #1
+  { \tl_set:Nx \l_ufc_bib_id_tl { \l_ufc_bib_key_tl | #1 } }
+
+\cs_new_protected:Npn \ufc_bib_register_author:nnnn #1#2#3#4
+  {
+    \ufc_bib_make_key:nn {#1} {#3}
+    \tl_set:Nx \l_ufc_bib_hash_tl {#4}
+    \tl_set:Nx \l_ufc_bib_initial_tl {#2}
+    \ufc_bib_make_id:n { \l_ufc_bib_hash_tl }
+
+    \prop_get:NVNTF
+      \g_ufc_bib_key_hashes_prop \l_ufc_bib_key_tl \l_tmpa_tl
+      {
+        \clist_set:NV \l_ufc_bib_hashes_clist \l_tmpa_tl
+        \clist_if_in:NVF \l_ufc_bib_hashes_clist \l_ufc_bib_hash_tl
+          {
+            \tl_set:Nn \l_ufc_bib_level_tl {1}
+            \clist_map_inline:Nn \l_ufc_bib_hashes_clist
+              {
+                \tl_set:Nx \l_tmpd_tl { \l_ufc_bib_key_tl | ##1 }
+                \prop_get:NVN \g_ufc_bib_id_level_prop \l_tmpd_tl \l_tmpb_tl
+                \int_compare:nNnT { \l_tmpb_tl } < {1}
+                  { \prop_gput:NVn \g_ufc_bib_id_level_prop \l_tmpd_tl {1} }
+                \prop_get:NVN \g_ufc_bib_id_initial_prop \l_tmpd_tl \l_tmpc_tl
+                \tl_if_eq:NNT \l_tmpc_tl \l_ufc_bib_initial_tl
+                  {
+                    \prop_gput:NVn \g_ufc_bib_id_level_prop \l_tmpd_tl {2}
+                    \tl_set:Nn \l_ufc_bib_level_tl {2}
+                  }
+              }
+            \prop_gput:NVV
+              \g_ufc_bib_id_level_prop \l_ufc_bib_id_tl \l_ufc_bib_level_tl
+            \prop_gput:NVV
+              \g_ufc_bib_id_initial_prop \l_ufc_bib_id_tl \l_ufc_bib_initial_tl
+            \clist_put_right:NV \l_ufc_bib_hashes_clist \l_ufc_bib_hash_tl
+            \prop_gput:NVx
+              \g_ufc_bib_key_hashes_prop \l_ufc_bib_key_tl
+              { \clist_use:Nn \l_ufc_bib_hashes_clist {,} }
+          }
+      }
+      {
+        \prop_gput:NVV
+          \g_ufc_bib_key_hashes_prop \l_ufc_bib_key_tl \l_ufc_bib_hash_tl
+        \prop_gput:NVV
+          \g_ufc_bib_id_initial_prop \l_ufc_bib_id_tl \l_ufc_bib_initial_tl
+        \prop_gput:NVn \g_ufc_bib_id_level_prop \l_ufc_bib_id_tl {0}
+      }
+  }
+
+\DeclareNameFormat{ufccollectauthor}
+  {
+    \int_compare:nNnT { \value{listtotal} } = {1}
+      {
+        \ufc_bib_register_author:nnnn
+          { \namepartfamily }
+          { \namepartgiveni }
+          { \thefield{year} }
+          { \thefield{fullhash} }
+      }
+  }
+
+\ExplSyntaxOff
+\AtDataInput{\printnames[ufccollectauthor]{author}}
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_bib_current_level:
+  {
+    \ufc_bib_make_key:nn { \namepartfamily } { \thefield{year} }
+    \ufc_bib_make_id:n { \thefield{fullhash} }
+    \prop_get:NVNF \g_ufc_bib_id_level_prop \l_ufc_bib_id_tl \l_tmpa_tl
+      { \tl_set:Nn \l_tmpa_tl {-1} }
+  }
+
+\cs_new_protected:Npn \ufc_bib_default_label_name:
+  {
+    \int_case:nnF { \value{uniquename} }
+      {
+        {0}
+          { \usebibmacro{name:family}
+              {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+        {1}
+          { \usebibmacro{name:family-given}
+              {\namepartfamily}{\namepartgiveni}{\namepartprefix}{\namepartsuffixi} }
+        {2}
+          { \usebibmacro{name:family-given}
+              {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+      }
+      { \usebibmacro{name:family}
+          {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+  }
+
+\cs_new_protected:Npn \ufc_bib_default_text_label_name:
+  {
+    \int_case:nnF { \value{uniquename} }
+      {
+        {0}
+          { \usebibmacro{name:family}
+              {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+        {1}
+          { \usebibmacro{name:given-family}
+              {\namepartfamily}{\namepartgiveni}{\namepartprefix}{\namepartsuffix} }
+        {2}
+          { \usebibmacro{name:given-family}
+              {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+      }
+      { \usebibmacro{name:family}
+          {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+  }
+
+\DeclareNameFormat{labelname}
+  {
+    \int_compare:nNnTF { \value{listtotal} } = {1}
+      {
+        \ufc_bib_current_level:
+        \int_case:nnF { \l_tmpa_tl }
+          {
+            {-1} { \ufc_bib_default_label_name: }
+            {0}
+              { \usebibmacro{name:family}
+                  {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+            {1}
+              { \usebibmacro{name:family-given}
+                  {\namepartfamily}{\namepartgiveni}{\namepartprefix}{\namepartsuffixi} }
+            {2}
+              { \usebibmacro{name:family-given}
+                  {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+          }
+          { \ufc_bib_default_label_name: }
+      }
+      { \ufc_bib_default_label_name: }
+    \usebibmacro{name:andothers}
+  }
+
+\DeclareNameFormat{textlabelname}
+  {
+    \int_compare:nNnTF { \value{listtotal} } = {1}
+      {
+        \ufc_bib_current_level:
+        \int_case:nnF { \l_tmpa_tl }
+          {
+            {-1} { \ufc_bib_default_text_label_name: }
+            {0}
+              { \usebibmacro{name:family}
+                  {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+            {1}
+              { \usebibmacro{name:given-family}
+                  {\namepartfamily}{\namepartgiveni}{\namepartprefix}{\namepartsuffix} }
+            {2}
+              { \usebibmacro{name:given-family}
+                  {\namepartfamily}{\namepartgiven}{\namepartprefix}{\namepartsuffix} }
+          }
+          { \ufc_bib_default_text_label_name: }
+      }
+      { \ufc_bib_default_text_label_name: }
+    \usebibmacro{name:andothers}
+  }
+
 \ExplSyntaxOff
 
 \makeatletter
