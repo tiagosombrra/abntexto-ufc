@@ -2,6 +2,7 @@
 
 % Normative mapping: docs/NORMAS.md.
 % Complements pretextuais.def with the long-epigraph variant and errata.
+% Residual pre-textual behavior is covered by the v2 preflight fixtures.
 
 \ExplSyntaxOn
 
