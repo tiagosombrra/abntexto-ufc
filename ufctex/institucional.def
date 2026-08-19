@@ -1,0 +1,20 @@
+\ProvidesFile{ufctex/institucional.def}[2026/08/19 UFC institutional assets]
+
+\ExplSyntaxOn
+
+\cs_set_protected:Npn \ufc_print_coat_of_arms:
+  {
+    \bool_if:NT \g_ufc_coat_of_arms_bool
+      {
+        \IfFileExists{assets/institucional/brasao-ufc.PNG}
+          {
+            \includegraphics[width=2.2cm]{assets/institucional/brasao-ufc.PNG}
+            \par\vspace{.3\baselineskip}
+          }
+          { \ClassWarningNoLine{ufctex}{UFC~coat~of~arms~asset~not~found} }
+      }
+  }
+
+\ExplSyntaxOff
+
+\endinput

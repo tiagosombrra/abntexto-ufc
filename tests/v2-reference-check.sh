@@ -11,12 +11,7 @@ if [ -n "$warnings" ]; then
   exit 1
 fi
 
-if command -v pdffonts >/dev/null 2>&1; then
-  if ! pdffonts documento.pdf | tail -n +3 | awk 'NF && $6 != "yes" {bad=1} END{exit bad}'; then
-    echo 'Documento V2 falhou: há fonte não incorporada.'
-    exit 1
-  fi
-fi
+sh tests/v2-font-embedding-check.sh documento.pdf
 
 if command -v pdfinfo >/dev/null 2>&1; then
   pdfinfo -meta documento.pdf > /tmp/ufctex-v2-pdfa-meta.xml
