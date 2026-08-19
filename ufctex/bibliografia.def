@@ -57,7 +57,7 @@
 \cs_new_protected:Npn \ufc_print_references:
   {
     \ufc_primary_section_break:
-    \phantomsection
+    \cs_if_exist:NT \phantomsection { \phantomsection }
     \addcontentsline{toc}{section}{Referências}
     \begingroup
       \parindent=0pt
