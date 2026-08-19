@@ -16,7 +16,7 @@
   \let\ufc@baseaddcontentsline\addcontentsline
   \def\addcontentsline#1#2#3{%
     \ufc@baseaddcontentsline{#1}{#2}{#3}%
-    \def\ufc@ext{#1}%
+    \edef\ufc@ext{#1}%
     \def\ufc@lof{lof}%
     \def\ufc@logr{logr}%
     \def\ufc@loq{loq}%
