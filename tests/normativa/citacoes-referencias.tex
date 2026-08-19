@@ -1,0 +1,37 @@
+\documentclass{ufctex}
+
+\ufcbibliografia{tests/fixtures/referencias-v2.bib}
+
+\begin{document}
+
+\section{Citações e referências}
+
+Citação de uma autoria: \cite{silva2020}.
+
+Citação textual de uma autoria: \textcite{silva2020}.
+
+Citação de dois autores com localização: \cite[103]{oliveira2011}.
+
+Citação textual de dois autores com localização: \textcite[103]{oliveira2011}.
+
+Citação de três autores: \cite{cruz2000}.
+
+Citação de mais de três autores: \cite[198]{rocha2021}.
+
+Mesmo autor e mesmo ano: \cite{chiavenato2008admin,chiavenato2008gestao}.
+
+Autores distintos citados simultaneamente: \cite{silva2020,ferreira2006}.
+
+Autoria institucional: \cite{ufc2025}.
+
+Título sem autoria com uma palavra: \cite{acrefino1993}.
+
+Título sem autoria com várias palavras: \cite{tribunal2011}.
+
+Título sem autoria iniciado por artigo: \cite[5]{tunel2005}.
+
+Referência eletrônica com DOI: \cite{doi2025}.
+
+\imprimirreferencias
+
+\end{document}
