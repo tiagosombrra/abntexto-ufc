@@ -89,10 +89,17 @@ for engine in pdflatex lualatex; do
       fail_semantic 'Citação de título sem autoria incorreta.'
     grep -Eq 'O túnel \[(…|\. ?\. ?\.) ?\], 2005, p\. 5' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'Citação de título iniciado por artigo incorreta.'
+    grep -Fq 'Eco, 1983, p. 121 apud Köche, 2009, p. 147' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Citação de citação incorreta.'
     grep -Fq 'REFERÊNCIAS' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'Título de referências ausente.'
     grep -Fq 'SILVA, João Carlos' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'Entrada bibliográfica não preserva sobrenome em caixa alta.'
+    grep -Fq 'KÖCHE, José Carlos' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Fonte consultada no apud ausente das referências.'
+    if grep -Fq 'ECO, Umberto' /tmp/ufctex-v2-bib.txt; then
+      fail_semantic 'Fonte original do apud entrou indevidamente nas referências.'
+    fi
     grep -Fq '10.0000/ufctex.2025.1234' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'DOI ausente da referência eletrônica.'
   fi
