@@ -43,6 +43,10 @@ compile_plain_project() {
     cat /tmp/ufctex-v2-project.log
     exit 1
   }
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-project.log 2>&1 || {
+    cat /tmp/ufctex-v2-project.log
+    exit 1
+  }
 }
 
 check_log() {
@@ -59,19 +63,16 @@ check_log() {
 for engine in pdflatex lualatex; do
   compile_project_with_biber "$engine"
   check_log projeto-15287.log
-
 done
 
 for engine in pdflatex lualatex; do
   compile_plain_project "$engine" tests/normativa/projeto-sem-capa.tex projeto-sem-capa
   check_log projeto-sem-capa.log
-
 done
 
 for engine in pdflatex lualatex; do
   compile_plain_project "$engine" tests/normativa/pretextuais-projeto-anonimo.tex pretextuais-projeto-anonimo
   check_log pretextuais-projeto-anonimo.log
-
 done
 
 if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' projeto-15287.log; then
