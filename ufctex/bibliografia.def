@@ -12,6 +12,11 @@
   extradate=true
 ]{biblatex}
 
+% NBR 6023:2025 makes an unavailable event city optional.
+\renewbibmacro*{venue}{%
+  \iffieldundef{venue}{}{\printfield{venue}}%
+}
+
 \ExplSyntaxOn
 
 \seq_new:N \l_ufc_bib_title_words_seq
