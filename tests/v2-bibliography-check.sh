@@ -44,7 +44,9 @@ if len(apud_nodes) < 2:
     raise SystemExit('Preflight V2 falhou: apud não foi isolado tipograficamente no PDF.')
 for node in apud_nodes:
     family = fonts.get(node.attrib.get('font', ''), '')
-    if not any(marker in family for marker in ('italic', 'oblique', 'cmti')):
+    structural_italic = any(child.tag.lower() == 'i' for child in node.iter())
+    named_italic = any(marker in family for marker in ('italic', 'oblique', 'cmti'))
+    if not (structural_italic or named_italic):
         raise SystemExit(f'Preflight V2 falhou: apud não está em itálico ({family}).')
 PY
 }
