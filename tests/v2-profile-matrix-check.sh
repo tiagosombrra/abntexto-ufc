@@ -54,11 +54,20 @@ for engine in pdflatex lualatex; do
       exit 1
     }
 
-    pdfinfo "$job.pdf" | grep -Eq '^Page size:[[:space:]]+595(\.[0-9]+)? x 842(\.[0-9]+)? pts \(A4\)' || {
+    if ! pdfinfo "$job.pdf" | awk '
+      /^Page size:/ {
+        width = $3 + 0
+        height = $5 + 0
+        if (width < 594.5 || width > 596.0 || height < 841.0 || height > 842.8)
+          exit 1
+        found = 1
+      }
+      END { if (!found) exit 1 }
+    '; then
       pdfinfo "$job.pdf"
       echo "Perfil $profile/$engine: página não é A4."
       exit 1
-    }
+    fi
 
     pages=$(pdfinfo "$job.pdf" | awk '/^Pages:/ {print $2}')
     [ "${pages:-0}" -ge 6 ] || {
