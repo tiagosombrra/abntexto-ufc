@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/bibliografia.def}[2026/08/18 UFC citations and references]
+\ProvidesFile{ufctex/bibliografia.def}[2026/08/19 UFC citations and references]
 
 \RequirePackage[
   backend=biber,
@@ -11,11 +11,6 @@
   accite=false,
   extradate=true
 ]{biblatex}
-
-% NBR 6023:2025 makes an unavailable event city optional.
-\renewbibmacro*{venue}{%
-  \iffieldundef{venue}{}{\printfield{venue}}%
-}
 
 \ExplSyntaxOn
 

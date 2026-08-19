@@ -13,7 +13,7 @@ V2_PRETEXTUAL_FIXTURES := tests/normativa/pretextuais-trabalho.tex tests/normati
 V2_OBJECT_FIXTURES := tests/normativa/objetos-avancados.tex
 V2_MINTED_FIXTURE := tests/normativa/objetos-minted.tex
 
-.PHONY: all compile pdf lua preflight v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check version clean
+.PHONY: all compile pdf lua preflight v1-regression-check v2-check v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check version clean
 
 all: compile
 pdf: compile
@@ -36,6 +36,10 @@ lua:
 	$(MAKE) clean
 	$(MAKE) ENGINE=lualatex compile
 
+# Keep the legacy line protected while V2 is developed on the same branch.
+v1-regression-check:
+	@sh tests/v1-regression-check.sh
+
 # Compile the isolated v2 layout fixtures with both supported engines.
 v2-layout-check:
 	@set -e; \
@@ -50,6 +54,10 @@ v2-layout-check:
 			fi; \
 		done; \
 	done
+
+# Validate the generated PDF geometry against the normative page model.
+v2-pdf-geometry-check:
+	@sh tests/v2-pdf-geometry-check.sh
 
 # Validate pre-textual ordering, TOC isolation and anonymized-project output.
 v2-pretextual-check:
@@ -127,9 +135,18 @@ v2-object-check:
 		(echo "Preflight V2 falhou: código externo ausente da lista de códigos."; exit 1)
 	@grep -Fq 'Busca linear' objetos-avancados.loa || \
 		(echo "Preflight V2 falhou: algoritmo ausente da lista de algoritmos."; exit 1)
+	@grep -Fq 'Figura normativa de teste' objetos-avancados.loi || \
+		(echo "Preflight V2 falhou: figura ausente da lista unificada de ilustrações."; exit 1)
+	@grep -Fq 'Gráfico normativo de teste' objetos-avancados.loi || \
+		(echo "Preflight V2 falhou: gráfico ausente da lista unificada de ilustrações."; exit 1)
+	@grep -Fq 'Quadro multipágina de teste' objetos-avancados.loi || \
+		(echo "Preflight V2 falhou: quadro ausente da lista unificada de ilustrações."; exit 1)
+	@if grep -Fq 'Tabela acadêmica de teste' objetos-avancados.loi; then \
+		echo "Preflight V2 falhou: tabela entrou indevidamente na lista de ilustrações."; exit 1; \
+	fi
 	@if command -v pdftotext >/dev/null 2>&1; then \
 		pdftotext objetos-avancados.pdf /tmp/ufctex-v2-objects.txt; \
-		for heading in 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE QUADROS' 'LISTA DE GRÁFICOS' 'LISTA DE CÓDIGOS' 'LISTA DE ALGORITMOS'; do \
+		for heading in 'LISTA DE ILUSTRAÇÕES' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE QUADROS' 'LISTA DE GRÁFICOS' 'LISTA DE CÓDIGOS' 'LISTA DE ALGORITMOS'; do \
 			grep -Fq "$$heading" /tmp/ufctex-v2-objects.txt || \
 				(echo "Preflight V2 falhou: lista de objeto ausente: $$heading"; exit 1); \
 		done; \
@@ -175,10 +192,17 @@ v2-project-check:
 v2-profile-check:
 	@sh tests/v2-profile-matrix-check.sh
 
-# Local preflight: compile and reject warnings or overflowing boxes in the final log.
-# Known upstream deprecations from abnTeX2 1.9.7 are filtered narrowly.
+# Validate post-textual elements and the public V1 compatibility layer.
+v2-posttextual-compat-check:
+	@sh tests/v2-posttextual-compat-check.sh
+
+# Run every V2 gate available locally.
+v2-check: v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check
+	@echo "Gate local completo da V2 concluído."
+
+# Local preflight: legacy document plus the full V1/V2 regression matrix.
 # System dependencies such as pdffonts are checked only when available.
-preflight: compile v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check
+preflight: compile v1-regression-check v2-check
 	@echo "Verificando warnings finais..."
 	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox' $(filename).log | \
 		grep -vF -e "Package babel Warning: Name 'brazil' is deprecated." \
@@ -194,13 +218,13 @@ preflight: compile v2-layout-check v2-pretextual-check v2-object-check v2-minted
 			echo "Fontes do PDF incorporadas."; \
 		else \
 			echo "Preflight falhou: há fonte não incorporada."; exit 1; \
-		fi; \
+		fi
 	fi
 
 clean:
 	@echo "Limpando arquivos auxiliares..."
 	@rm -f *.out *.aux *.alg *.acr *.dvi *.gls *.log *.bbl *.blg *.bcf *.run.xml
-	@rm -f *.ntn *.not *.lof *.lot *.toc *.loa *.loc *.logr *.lsg *.nlo *.nls *.ilg *.ind
+	@rm -f *.ntn *.not *.lof *.loi *.lot *.toc *.loa *.loc *.logr *.lsg *.nlo *.nls *.ilg *.ind
 	@rm -f *.glg *.glo *.xdy *.acn *.idx *.loq *.lol *.fls *.fdb_latexmk *.synctex.gz *~
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf
 	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf

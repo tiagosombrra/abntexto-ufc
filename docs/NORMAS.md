@@ -50,6 +50,10 @@ Exemplos atuais:
 - o Guia de Projetos UFC foi elaborado sob a NBR 15287:2011; a V2 usa a **NBR 15287:2025**;
 - o Guia de Citações UFC de 2025 já adota a **NBR 10520:2023**.
 
+### Lista de ilustrações
+
+A V2 oferece uma lista geral de ilustrações e mantém listas específicas por tipo. A lista geral agrega, na ordem de ocorrência no documento, figuras, gráficos e quadros; tabelas permanecem fora dessa lista e continuam em lista própria. Essa política evita que `\imprimirlistadeilustracoes` seja apenas um alias da lista de figuras e preserva as listas específicas quando o documento ou o programa exigir separação por tipo.
+
 ## Mapa de implementação
 
 | Parte do modelo | Norma/requisito principal | Implementação |
@@ -63,11 +67,11 @@ Exemplos atuais:
 | folha de rosto | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
 | ficha catalográfica | NBR 14724:2024 + política atual da UFC | `ufctex/pretextuais.def` |
 | folha de aprovação | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
-| dedicatória, agradecimentos e epígrafe | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
+| dedicatória, agradecimentos, epígrafe e errata | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
 | resumo e abstract | NBR 6028:2021 + NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
-| listas | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
+| listas pré-textuais | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` + `ufctex/objetos.def` |
 | Sumário | NBR 6027:2012 + NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
-| figuras, gráficos e ilustrações | NBR 14724:2024 + UFC | `ufctex/objetos.def` |
+| figuras, gráficos e ilustrações | NBR 14724:2024 + UFC | `ufctex/objetos.def` + lista unificada em `ufctex/pretextuais.def` |
 | tabelas numéricas | NBR 14724:2024 + IBGE | `ufctex/objetos.def` + `tabularray-abnt` |
 | quadros | NBR 14724:2024 + UFC | `ufctex/objetos.def` |
 | código-fonte e algoritmos | extensão editorial compatível com NBR 14724:2024 | `ufctex/objetos.def` + `ufctex/modulos.def` |
@@ -101,6 +105,10 @@ Quando um pacote ainda não implementar uma norma vigente, a V2 pode aplicar um 
 
 Em particular, na auditoria de 2026-08-19, o `biblatex-abnt` publicado ainda não incorporava integralmente a NBR 6023:2025; o projeto upstream mantinha uma proposta de suporte inicial em revisão. Os ajustes transitórios estão isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível em uma versão estável do upstream.
 
+## Gates de validação
+
+`make preflight` é a entrada local completa. Ele executa a compilação da linha atual, a regressão V1 e toda a matriz V2: layout, geometria do PDF, pré-textuais, objetos, `minted`, citações/referências, NBR 6023:2025, projetos, seis perfis e pós-textuais/compatibilidade V1. O GitHub Actions deve usar os mesmos scripts e targets como gate externo em TeX Live 2026, sem introduzir validações funcionais que existam apenas no CI.
+
 ## Fontes institucionais de verificação
 
 - Sistema de Bibliotecas da UFC — Normalização de trabalhos acadêmicos: https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/
@@ -116,5 +124,5 @@ Antes de `v2.0.0` e de cada versão principal posterior:
 2. revisar os Guias de Normalização da UFC;
 3. atualizar esta matriz;
 4. atualizar ou remover patches de compatibilidade;
-5. executar toda a suíte normativa;
+5. executar `make preflight` e confirmar toda a suíte normativa;
 6. não declarar conformidade com uma edição que não esteja coberta por testes.

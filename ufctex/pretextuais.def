@@ -1,10 +1,28 @@
-\ProvidesFile{ufctex/pretextuais.def}[2026/08/18 UFC pre-textual elements]
+\ProvidesFile{ufctex/pretextuais.def}[2026/08/19 UFC pre-textual elements]
 
 \RequirePackage{pdfpages}
 \RequirePackage{ragged2e}
 
 \makeatletter
 \newcommand{\ufcstarttoc}[1]{\@starttoc{#1}}
+
+% Keep one unified illustration list in source order while preserving typed lists.
+\def\loilabelwidth{5.4em}
+\def\loiifont{\maintocfont}
+\def\l@loii{\extline{0pt}{\loilabelwidth}{\loiifont}}
+\AddToHook{begindocument}{%
+  \let\ufc@baseaddtoext\addtoext
+  \def\addtoext#1#2#3{%
+    \ufc@baseaddtoext{#1}{#2}{#3}%
+    \def\ufc@ext{#1}%
+    \def\ufc@lof{lof}%
+    \def\ufc@logr{logr}%
+    \def\ufc@loq{loq}%
+    \ifx\ufc@ext\ufc@lof \ufc@baseaddtoext{loi}{loii}{#3}\fi
+    \ifx\ufc@ext\ufc@logr \ufc@baseaddtoext{loi}{loii}{#3}\fi
+    \ifx\ufc@ext\ufc@loq \ufc@baseaddtoext{loi}{loii}{#3}\fi
+  }%
+}
 \makeatother
 
 \ExplSyntaxOn
@@ -374,7 +392,7 @@
     \clearpage
   }
 
-\NewDocumentCommand \imprimirepigrafe { m }
+\cs_new_protected:Npn \ufc_epigraph_short:n #1
   {
     \clearpage
     \thispagestyle{empty}
@@ -386,6 +404,48 @@
         { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }
     \end{minipage}
     \vfill
+    \clearpage
+  }
+
+\cs_new_protected:Npn \ufc_epigraph_long:n #1
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \vspace*{.45\textheight}
+    \noindent\hspace*{4cm}%
+    \begin{minipage}{\dimexpr\textwidth-4cm\relax}
+      \fontsize{10}{12}\selectfont
+      \singlesp
+      \justifying
+      \ufc_input_file:n {#1}
+      \ufc_meta_if_blank:nF {autor-epigrafe}
+        { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }
+    \end{minipage}
+    \vfill
+    \clearpage
+  }
+
+\NewDocumentCommand \imprimirepigrafe { O{curta} m }
+  {
+    \str_case:nnF {#1}
+      {
+        {curta} { \ufc_epigraph_short:n {#2} }
+        {longa} { \ufc_epigraph_long:n {#2} }
+      }
+      {
+        \ClassError{ufctex}
+          {Invalid~epigraph~type~'#1'}
+          {Use~\string\imprimirepigrafe[curta]~or~\string\imprimirepigrafe[longa].}
+      }
+  }
+
+\NewDocumentCommand \imprimirerrata { m }
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \ufc_pretextual_heading:n {Errata}
+    \justifying
+    \ufc_input_file:n {#1}
     \clearpage
   }
 
@@ -436,7 +496,7 @@
   }
 
 \NewDocumentCommand \imprimirlistadeilustracoes { }
-  { \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{lof}} }
+  { \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}} }
 
 \NewDocumentCommand \imprimirlistadefiguras { }
   { \ufc_pretextual_list:nn {Lista~de~Figuras} {\ufcstarttoc{lof}} }
