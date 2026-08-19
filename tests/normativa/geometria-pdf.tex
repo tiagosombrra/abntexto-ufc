@@ -1,0 +1,23 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = @UFC_PRINT@
+}
+
+\newcommand{\geometriapagina}[1]{%
+  \noindent UFCLEFT#1\hfill UFCRIGHT#1\par
+  \vspace{2\baselineskip}
+  Texto de validação geométrica da página.
+}
+
+\begin{document}
+\textual
+
+\geometriapagina{ONE}
+\newpage
+\geometriapagina{TWO}
+\newpage
+\geometriapagina{THREE}
+
+\end{document}
