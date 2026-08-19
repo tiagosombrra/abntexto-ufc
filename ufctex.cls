@@ -13,6 +13,8 @@
 
 \input{ufctex/core.def}
 \input{ufctex/layout.def}
+\input{ufctex/modulos.def}
 \input{ufctex/pretextuais.def}
+\input{ufctex/objetos.def}
 
 \endinput
