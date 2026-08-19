@@ -54,8 +54,12 @@
 
 \cs_new_protected:Npn \ufc_objects_setup_minted:
   {
-    \NewDocumentCommand \ufcinputminted { O{} m m }
-      { \inputminted[##1]{##2}{##3} }
+    \NewDocumentCommand \ufcinputminted { O{\placepos} O{} m m }
+      {
+        \place[##1]\vbox\bgroup
+          \inputminted[##2]{##3}{##4}
+        \egroup\endplace
+      }
   }
 
 \cs_new_protected:Npn \ufc_objects_setup_algorithms:
