@@ -1,6 +1,9 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{ufctex}[2026/08/18 v2.0.0-dev UFC academic document class]
 
+% Normative policy and version matrix: docs/NORMAS.md.
+% Always target the latest applicable ABNT edition.
+
 \LoadClass[12pt]{abntexto}
 
 \makeatletter
