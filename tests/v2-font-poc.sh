@@ -4,12 +4,52 @@ set -u
 root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$root" || exit 1
 
+find_tex_bin() {
+  if command -v kpsewhich >/dev/null 2>&1; then
+    return 0
+  fi
+
+  found=''
+  for candidate in /c/texlive/*/bin/windows; do
+    [ -x "$candidate/kpsewhich.exe" ] && found="$candidate"
+  done
+
+  if [ -z "$found" ]; then
+    for candidate in \
+      '/c/Program Files/MiKTeX/miktex/bin/x64' \
+      '/c/Program Files/MiKTeX/miktex/bin' \
+      "/c/Users/${USERNAME:-}/AppData/Local/Programs/MiKTeX/miktex/bin/x64" \
+      "/c/Users/${USERNAME:-}/AppData/Local/Programs/MiKTeX/miktex/bin"; do
+      [ -x "$candidate/kpsewhich.exe" ] && found="$candidate" && break
+    done
+  fi
+
+  if [ -n "$found" ]; then
+    PATH="$found:$PATH"
+    export PATH
+    echo "POC fontes: toolchain TeX localizada em $found"
+  fi
+}
+
+find_tex_bin
+
+missing=''
 for cmd in kpsewhich pdffonts pdflatex lualatex; do
-  command -v "$cmd" >/dev/null 2>&1 || {
-    echo "POC fontes: comando ausente: $cmd"
-    exit 2
-  }
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    missing="$missing $cmd"
+  fi
 done
+
+if [ -n "$missing" ]; then
+  echo "POC fontes: comandos ausentes:$missing"
+  echo 'POC fontes: verifique a instalação/PATH do TeX Live ou MiKTeX.'
+  exit 2
+fi
+
+printf 'POC fontes: kpsewhich = %s\n' "$(command -v kpsewhich)"
+printf 'POC fontes: pdflatex = %s\n' "$(command -v pdflatex)"
+printf 'POC fontes: lualatex  = %s\n' "$(command -v lualatex)"
+printf 'POC fontes: pdffonts  = %s\n' "$(command -v pdffonts)"
 
 font_dir=${UFC_WINDOWS_FONTS_DIR:-}
 if [ -z "$font_dir" ]; then
@@ -21,6 +61,7 @@ if [ -z "$font_dir" ]; then
 fi
 
 if [ -n "$font_dir" ]; then
+  echo "POC fontes: diretório Windows Fonts = $font_dir"
   case "$(uname -s 2>/dev/null || echo unknown)" in
     MINGW*|MSYS*|CYGWIN*) TTFONTS="${font_dir}//;${TTFONTS:-}" ;;
     *) TTFONTS="${font_dir}//:${TTFONTS:-}" ;;
@@ -70,8 +111,8 @@ compile_case() {
   cleanup "$job"
   echo "POC fontes: $family com $engine"
   "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
-    -jobname="$job" "$fixture" >"/tmp/$job.log" 2>&1 || {
-      cat "/tmp/$job.log"
+    -jobname="$job" "$fixture" >"${TMPDIR:-/tmp}/$job.log" 2>&1 || {
+      cat "${TMPDIR:-/tmp}/$job.log"
       return 1
     }
 
