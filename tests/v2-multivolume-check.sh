@@ -79,8 +79,16 @@ if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-
   echo 'Multivolume V2 falhou: pagina-inicial=0 foi aceita.'
   exit 1
 fi
-if ! grep -Fq 'Class ufctex Error: Invalid pagina-inicial' /tmp/ufctex-v2-invalid-page.log || \
-   ! grep -Fq "'0" /tmp/ufctex-v2-invalid-page.log; then
+if ! python3 - /tmp/ufctex-v2-invalid-page.log <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
+pattern = r"Class ufctex Error: Invalid pagina-inicial '0\s*'\."
+raise SystemExit(0 if re.search(pattern, text, re.DOTALL) else 1)
+PY
+then
   cat /tmp/ufctex-v2-invalid-page.log
   echo 'Multivolume V2 falhou: pagina-inicial inválida não produziu o erro esperado.'
   exit 1
