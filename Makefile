@@ -12,8 +12,9 @@ V2_LAYOUT_FIXTURES := tests/normativa/layout-anverso.tex tests/normativa/layout-
 V2_PRETEXTUAL_FIXTURES := tests/normativa/pretextuais-trabalho.tex tests/normativa/pretextuais-projeto-anonimo.tex
 V2_OBJECT_FIXTURES := tests/normativa/objetos-avancados.tex
 V2_MINTED_FIXTURE := tests/normativa/objetos-minted.tex
+V2_BIB_FIXTURE := tests/normativa/citacoes-referencias.tex
 
-.PHONY: all compile pdf lua preflight v2-layout-check v2-pretextual-check v2-object-check v2-minted-check version clean
+.PHONY: all compile pdf lua preflight v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check version clean
 
 all: compile
 pdf: compile
@@ -163,10 +164,65 @@ v2-minted-check:
 		echo "latexminted não disponível; rota minted não executada neste ambiente."; \
 	fi
 
+# Validate UFC author-date citations and bibliography formatting with Biber.
+v2-bib-check:
+	@set -e; \
+	for engine in pdflatex lualatex; do \
+		echo "Validando $(V2_BIB_FIXTURE) com $$engine + Biber..."; \
+		rm -f citacoes-referencias.aux citacoes-referencias.bbl citacoes-referencias.bcf citacoes-referencias.blg citacoes-referencias.log citacoes-referencias.out citacoes-referencias.pdf citacoes-referencias.run.xml citacoes-referencias.toc; \
+		if ! $$engine $(LATEXFLAGS) $(V2_BIB_FIXTURE) > /tmp/ufctex-v2-bib.log 2>&1; then \
+			cat /tmp/ufctex-v2-bib.log; exit 1; \
+		fi; \
+		if ! biber citacoes-referencias > /tmp/ufctex-v2-biber.log 2>&1; then \
+			cat /tmp/ufctex-v2-biber.log; exit 1; \
+		fi; \
+		if ! $$engine $(LATEXFLAGS) $(V2_BIB_FIXTURE) > /tmp/ufctex-v2-bib.log 2>&1; then \
+			cat /tmp/ufctex-v2-bib.log; exit 1; \
+		fi; \
+		if ! $$engine $(LATEXFLAGS) $(V2_BIB_FIXTURE) > /tmp/ufctex-v2-bib.log 2>&1; then \
+			cat /tmp/ufctex-v2-bib.log; exit 1; \
+		fi; \
+	done
+	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' citacoes-referencias.log | \
+		grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true); \
+	if [ -n "$$warnings" ]; then \
+		printf '%s\n' "$$warnings"; \
+		echo "Preflight V2 falhou: fixture bibliográfica contém warnings ou overflow não reconhecidos."; exit 1; \
+	fi
+	@if command -v pdftotext >/dev/null 2>&1; then \
+		pdftotext -layout citacoes-referencias.pdf /tmp/ufctex-v2-bib.txt; \
+		for expected in \
+			'(Silva, 2020)' \
+			'Silva (2020)' \
+			'(Oliveira; Nunes, 2011, p. 103)' \
+			'Oliveira e Nunes (2011, p. 103)' \
+			'(Cruz; Perota; Mendes, 2000)' \
+			'(Rocha et al., 2021, p. 198)' \
+			'(Ferreira, C., 2007, p. 20)' \
+			'(Ferreira, L., 2007, p. 40)' \
+			'C. Ferreira (2007, p. 20)' \
+			'L. Ferreira (2007, p. 40)' \
+			'(Universidade Federal do Ceará, 2025)' \
+			'(Acrefino, 1993)' \
+			'(Tribunal [...], 2011)' \
+			'(O túnel [...], 2005, p. 5)' \
+			'REFERÊNCIAS' \
+			'SILVA, João Carlos'; do \
+			grep -Fq "$$expected" /tmp/ufctex-v2-bib.txt || \
+				(echo "Preflight V2 falhou: saída bibliográfica ausente: $$expected"; cat /tmp/ufctex-v2-bib.txt; exit 1); \
+		done; \
+		grep -Fq 'apud' /tmp/ufctex-v2-bib.txt || \
+			(echo "Preflight V2 falhou: citação de citação ausente."; exit 1); \
+		grep -Fq '2008a' /tmp/ufctex-v2-bib.txt || \
+			(echo "Preflight V2 falhou: desambiguação 2008a ausente."; exit 1); \
+		grep -Fq '2008b' /tmp/ufctex-v2-bib.txt || \
+			(echo "Preflight V2 falhou: desambiguação 2008b ausente."; exit 1); \
+	fi
+
 # Local preflight: compile and reject warnings or overflowing boxes in the final log.
 # Known upstream deprecations from abnTeX2 1.9.7 are filtered narrowly.
 # System dependencies such as pdffonts are checked only when available.
-preflight: compile v2-layout-check v2-pretextual-check v2-object-check v2-minted-check
+preflight: compile v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check
 	@echo "Verificando warnings finais..."
 	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox' $(filename).log | \
 		grep -vF -e "Package babel Warning: Name 'brazil' is deprecated." \
@@ -182,7 +238,7 @@ preflight: compile v2-layout-check v2-pretextual-check v2-object-check v2-minted
 			echo "Fontes do PDF incorporadas."; \
 		else \
 			echo "Preflight falhou: há fonte não incorporada."; exit 1; \
-		fi; \
+		fi
 	fi
 
 clean:
@@ -192,7 +248,7 @@ clean:
 	@rm -f *.glg *.glo *.xdy *.acn *.idx *.loq *.lol *.fls *.fdb_latexmk *.synctex.gz *~
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf
 	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf
-	@rm -f objetos-avancados.pdf objetos-minted.pdf
+	@rm -f objetos-avancados.pdf objetos-minted.pdf citacoes-referencias.pdf
 	@rm -rf _minted-*
 	@rm -f $(filename).pdf
 	@echo "Processo finalizado com sucesso."
