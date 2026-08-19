@@ -79,10 +79,11 @@ if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-
   echo 'Multivolume V2 falhou: pagina-inicial=0 foi aceita.'
   exit 1
 fi
-grep -Fq "Invalid pagina-inicial '0'" /tmp/ufctex-v2-invalid-page.log || {
+if ! grep -Fq 'Class ufctex Error: Invalid pagina-inicial' /tmp/ufctex-v2-invalid-page.log || \
+   ! grep -Fq "'0" /tmp/ufctex-v2-invalid-page.log; then
   cat /tmp/ufctex-v2-invalid-page.log
   echo 'Multivolume V2 falhou: pagina-inicial inválida não produziu o erro esperado.'
   exit 1
-}
+fi
 
 echo 'Gate V2 de trabalhos multivolume concluído.'
