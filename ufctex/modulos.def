@@ -55,6 +55,8 @@
         \tl_gset:Nn \g_ufc_glossary_module_tl { glossaries }
         \bool_if:NF \g_ufc_glossary_initialized_bool
           {
+            % The v2 path uses \printglossary, so datatool locale sorting is not used.
+            \PassOptionsToPackage{lang-warn=false}{datatool-base}
             % UFC renders its own glossary heading/style; package translations are unnecessary.
             \RequirePackage[notranslate]{glossaries-extra}
             \makeglossaries
