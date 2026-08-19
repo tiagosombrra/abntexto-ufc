@@ -54,7 +54,8 @@ text = unicodedata.normalize('NFC', text)
 chunks = [re.sub(r'\s+', ' ', part).strip() for part in re.split(r'\n\s*\n', text) if part.strip()]
 
 def entry(marker):
-    matches = [part for part in chunks if marker in part]
+    marker_fold = marker.casefold()
+    matches = [part for part in chunks if marker_fold in part.casefold()]
     if not matches:
         raise SystemExit(f'Entrada de teste ausente: {marker}\n{text}')
     return ' '.join(matches)
@@ -68,7 +69,7 @@ if 'e202501' not in article:
     raise SystemExit('NBR 6023:2025: e-location ausente.')
 
 judgment = entry('Recurso extraordinário de teste')
-if 'julgado em' not in judgment.lower() or '2025' not in judgment:
+if 'julgado em' not in judgment.casefold() or '2025' not in judgment:
     raise SystemExit('NBR 6023:2025: data de julgamento ausente.')
 
 online = entry('Preservação de documentos digitais')
@@ -80,14 +81,14 @@ if not re.search(r'[Ss]\.\s*[Ll]\.', printed) or not re.search(r'[Ss]\.\s*[Nn]\.
     raise SystemExit('NBR 6023:2025: documento impresso sem dados perdeu [S. l.] ou [s. n.].')
 
 supplement = entry('Indicadores acadêmicos brasileiros')
-if 'Suplemento' not in supplement or supplement.find('2025') > supplement.find('Suplemento'):
+if 'suplemento' not in supplement.casefold() or supplement.find('2025') > supplement.casefold().find('suplemento'):
     raise SystemExit('NBR 6023:2025: suplemento não está posicionado após a data.')
 
 interview = entry('Eficiência e inovação na gestão')
-if 'HAMEL' not in interview.upper():
+if 'hamel' not in interview.casefold():
     raise SystemExit('NBR 6023:2025: entrevistado não aparece como autor principal.')
 
-periodical = entry('Revista Brasileira de Teste')
+periodical = entry('REVISTA BRASILEIRA DE TESTE. Fortaleza')
 if '1234-5678' not in periodical:
     raise SystemExit('NBR 6023:2025: ISSN opcional não foi preservado.')
 
