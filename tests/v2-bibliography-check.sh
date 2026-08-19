@@ -29,6 +29,26 @@ Path('/tmp/ufctex-v2-bib.txt').write_text(text, encoding='utf-8')
 PY
 }
 
+check_apud_italic() {
+  pdftohtml -xml -hidden -nodrm "$job.pdf" /tmp/ufctex-v2-bib-visual >/dev/null 2>&1
+  python3 - <<'PY'
+import xml.etree.ElementTree as ET
+
+root = ET.parse('/tmp/ufctex-v2-bib-visual.xml').getroot()
+fonts = {
+    node.attrib['id']: node.attrib.get('family', '').lower()
+    for node in root.iter('fontspec')
+}
+apud_nodes = [node for node in root.iter('text') if ''.join(node.itertext()).strip() == 'apud']
+if len(apud_nodes) < 2:
+    raise SystemExit('Preflight V2 falhou: apud não foi isolado tipograficamente no PDF.')
+for node in apud_nodes:
+    family = fonts.get(node.attrib.get('font', ''), '')
+    if not any(marker in family for marker in ('italic', 'oblique', 'cmti')):
+        raise SystemExit(f'Preflight V2 falhou: apud não está em itálico ({family}).')
+PY
+}
+
 for engine in pdflatex lualatex; do
   cleanup_job
   echo "Validando $fixture com $engine + Biber..."
@@ -91,6 +111,8 @@ for engine in pdflatex lualatex; do
       fail_semantic 'Citação de título iniciado por artigo incorreta.'
     grep -Fq 'Eco, 1983, p. 121 apud Koche, 2009, p. 147' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'Citação de citação incorreta.'
+    grep -Fq 'Eco (1983 apud Koche, 2009)' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Citação de citação textual incorreta.'
     grep -Fq 'REFERÊNCIAS' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'Título de referências ausente.'
     grep -Fq 'SILVA, João Carlos' /tmp/ufctex-v2-bib.txt || \
@@ -102,6 +124,10 @@ for engine in pdflatex lualatex; do
     fi
     grep -Fq '10.0000/ufctex.2025.1234' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'DOI ausente da referência eletrônica.'
+
+    if command -v pdftohtml >/dev/null 2>&1; then
+      check_apud_italic
+    fi
   fi
 
 done
