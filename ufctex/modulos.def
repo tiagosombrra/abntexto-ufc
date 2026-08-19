@@ -1,0 +1,70 @@
+\ProvidesFile{ufctex/modulos.def}[2026/08/18 UFC optional modules]
+
+\RequirePackage{etoolbox}
+
+\ExplSyntaxOn
+
+\tl_new:N \g_ufc_table_module_tl
+\tl_new:N \g_ufc_code_module_tl
+\tl_new:N \g_ufc_algorithm_module_tl
+
+\keys_define:nn { ufc }
+  {
+    tabelas .choice:,
+    tabelas / nativo .code:n =
+      { \tl_gset:Nn \g_ufc_table_module_tl { nativo } },
+    tabelas / tabularray .code:n =
+      { \tl_gset:Nn \g_ufc_table_module_tl { tabularray } },
+    tabelas / tabularray-abnt .meta:n = { tabelas = tabularray },
+
+    codigo .choice:,
+    codigo / nenhum .code:n =
+      { \tl_gset:Nn \g_ufc_code_module_tl { nenhum } },
+    codigo / listings .code:n =
+      { \tl_gset:Nn \g_ufc_code_module_tl { listings } },
+    codigo / minted .code:n =
+      { \tl_gset:Nn \g_ufc_code_module_tl { minted } },
+
+    algoritmos .choice:,
+    algoritmos / nenhum .code:n =
+      { \tl_gset:Nn \g_ufc_algorithm_module_tl { nenhum } },
+    algoritmos / algpseudocodex .code:n =
+      { \tl_gset:Nn \g_ufc_algorithm_module_tl { algpseudocodex } }
+  }
+
+\keys_set:nn { ufc }
+  {
+    tabelas = nativo,
+    codigo = nenhum,
+    algoritmos = nenhum
+  }
+
+\cs_new_protected:Npn \ufc_modules_load:
+  {
+    \str_if_eq:VnT \g_ufc_table_module_tl { tabularray }
+      { \RequirePackage{tabularray-abnt} }
+
+    \str_case:Vn \g_ufc_code_module_tl
+      {
+        { listings } { \RequirePackage{listings} }
+        { minted }   { \RequirePackage{minted} }
+      }
+
+    \str_if_eq:VnT \g_ufc_algorithm_module_tl { algpseudocodex }
+      { \RequirePackage{algpseudocodex} }
+  }
+
+\AtEndPreamble{\ufc_modules_load:}
+
+\NewExpandableDocumentCommand \ufcTableModule { }
+  { \tl_use:N \g_ufc_table_module_tl }
+
+\NewExpandableDocumentCommand \ufcCodeModule { }
+  { \tl_use:N \g_ufc_code_module_tl }
+
+\NewExpandableDocumentCommand \ufcAlgorithmModule { }
+  { \tl_use:N \g_ufc_algorithm_module_tl }
+
+\ExplSyntaxOff
+
+\endinput
