@@ -1,4 +1,6 @@
-\ProvidesFile{ufctex/core.def}[2026/08/18 UFC core configuration]
+\ProvidesFile{ufctex/core.def}[2026/08/19 UFC core configuration]
+
+% Normative mapping: docs/NORMAS.md.
 
 \RequirePackage{iftex}
 \RequirePackage[english,brazilian]{babel}
@@ -38,6 +40,8 @@
     autor = {},
     titulo = {},
     subtitulo = {},
+    variacao-titulo = {},
+    volume = {},
     ano = {},
     local = {Fortaleza},
     data-aprovacao = {},
@@ -84,17 +88,35 @@
   {
     tipo .choice:,
     tipo / tccgraduacao .code:n =
-      { \tl_gset:Nn \g_ufc_document_type_tl { tccgraduacao } },
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { tccgraduacao }
+        \bool_gset_true:N \g_ufc_coat_of_arms_bool
+      },
     tipo / tccespecializacao .code:n =
-      { \tl_gset:Nn \g_ufc_document_type_tl { tccespecializacao } },
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { tccespecializacao }
+        \bool_gset_true:N \g_ufc_coat_of_arms_bool
+      },
     tipo / dissertacao .code:n =
-      { \tl_gset:Nn \g_ufc_document_type_tl { dissertacao } },
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { dissertacao }
+        \bool_gset_true:N \g_ufc_coat_of_arms_bool
+      },
     tipo / tese .code:n =
-      { \tl_gset:Nn \g_ufc_document_type_tl { tese } },
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { tese }
+        \bool_gset_true:N \g_ufc_coat_of_arms_bool
+      },
     tipo / projeto .code:n =
-      { \tl_gset:Nn \g_ufc_document_type_tl { projeto } },
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { projeto }
+        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+      },
     tipo / projetoanonimizado .code:n =
-      { \tl_gset:Nn \g_ufc_document_type_tl { projetoanonimizado } },
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { projetoanonimizado }
+        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+      },
 
     impressao .choice:,
     impressao / anverso .code:n =
@@ -143,6 +165,8 @@
     autor .code:n = { \ufc_meta_set:nn {autor} {#1} },
     titulo .code:n = { \ufc_meta_set:nn {titulo} {#1} },
     subtitulo .code:n = { \ufc_meta_set:nn {subtitulo} {#1} },
+    variacao-titulo .code:n = { \ufc_meta_set:nn {variacao-titulo} {#1} },
+    volume .code:n = { \ufc_meta_set:nn {volume} {#1} },
     ano .code:n = { \ufc_meta_set:nn {ano} {#1} },
     local .code:n = { \ufc_meta_set:nn {local} {#1} },
     data-aprovacao .code:n = { \ufc_meta_set:nn {data-aprovacao} {#1} },
