@@ -2,12 +2,13 @@
 set -eu
 
 source_fixture="tests/normativa/ficha-catalografica.tex"
-tmp_fixture=".ufctex-v2-catalog-main.tex"
-card_source=".ufctex-catalog-card.tex"
+tmp_fixture="ufctex-v2-catalog-main.tex"
+card_source="ufctex-v2-catalog-card.tex"
+card_base="ufctex-v2-catalog-card"
 
 cleanup() {
-  rm -f "$tmp_fixture" "$card_source" .ufctex-catalog-card.aux .ufctex-catalog-card.log \
-        .ufctex-catalog-card.pdf ficha-catalografica-*.aux ficha-catalografica-*.log \
+  rm -f "$tmp_fixture" "$card_source" "$card_base".aux "$card_base".log "$card_base".pdf \
+        ficha-catalografica-*.aux ficha-catalografica-*.log \
         ficha-catalografica-*.out ficha-catalografica-*.pdf ficha-catalografica-*.toc
 }
 trap cleanup EXIT INT TERM
@@ -33,7 +34,9 @@ pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$card_source"
 for engine in pdflatex lualatex; do
   for mode in anverso frente-verso; do
     job="ficha-catalografica-$mode-$engine"
-    sed "s/@UFC_PRINT@/$mode/g" "$source_fixture" > "$tmp_fixture"
+    sed -e "s/@UFC_PRINT@/$mode/g" \
+        -e "s/\.ufctex-catalog-card/$card_base/g" \
+        "$source_fixture" > "$tmp_fixture"
 
     echo "Validando ficha catalográfica: $mode/$engine..."
     for pass in 1 2 3; do
