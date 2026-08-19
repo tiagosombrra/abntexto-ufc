@@ -18,6 +18,17 @@
   }
 \AtEndPreamble{\ufc_objects_setup_quadro:}
 
+\cs_new_protected:Npn \ufc_objects_setup_tabularray:
+  {
+    \str_if_eq:VnT \g_ufc_table_module_tl { tabularray }
+      {
+        \DefTblrTemplate{firsthead-text}{abnt}{\par\hfill(continua)}
+        \DefTblrTemplate{lasthead-text}{abnt}{\par\hfill(conclusão)}
+        \DefTblrTemplate{conthead-text}{abnt}{\par\hfill(continuação)}
+      }
+  }
+\AtEndPreamble{\ufc_objects_setup_tabularray:}
+
 \NewDocumentCommand \ufcfonte { m }
   { \src{#1} }
 
