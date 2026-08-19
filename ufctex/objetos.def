@@ -62,12 +62,12 @@
   {
     \NewDocumentEnvironment { ufcalgoritmo } { O{\placepos} O{1} }
       {
-        \begin{place}[##1]
+        \place[##1]\vbox\bgroup
         \begin{algorithmic}[##2]
       }
       {
         \end{algorithmic}
-        \end{place}
+        \egroup\endplace
       }
   }
 
