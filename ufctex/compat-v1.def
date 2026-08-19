@@ -84,7 +84,44 @@
 \ProvideDocumentCommand \citeonline { O{} m }
   { \textcite[#1]{#2} }
 
-\ProvideDocumentCommand \Caption { m } { \legend{#1} }
+% V1 object helpers carried the object type outside \Caption. Reconstruct that
+% context so the old three-block API maps to abntexto's typed legend areas.
+\tl_new:N \l_ufc_legacy_object_type_tl
+
+\cs_new_protected:Npn \ufc_legacy_caption:n #1
+  {
+    \tl_if_blank:VTF \l_ufc_legacy_object_type_tl
+      {
+        \ClassError{ufctex}
+          {Legacy~\string\Caption~requires~\string\UFCfig,~\string\UFCtab~or~\string\UFCqua}
+          {Use~the~typed~V1~helper~or~the~V2~\string\legend\{type\}\{title\}~API.}
+      }
+      {
+        \tl_if_head_eq_meaning:nNTF {#1} \label
+          { \ufc_legacy_caption_with_label:w #1 \q_stop }
+          { \legend{\tl_use:N \l_ufc_legacy_object_type_tl}{#1} }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_legacy_caption_with_label:w \label #1 #2 \q_stop
+  {
+    \legend{\tl_use:N \l_ufc_legacy_object_type_tl}{#2}
+    \label{#1}
+  }
+
+\cs_new_protected:Npn \ufc_legacy_object:nnnn #1#2#3#4
+  {
+    \group_begin:
+      \tl_set:Nn \l_ufc_legacy_object_type_tl {#1}
+      #2
+      #4
+      \begin{place}[here]
+        #3
+      \end{place}
+    \group_end:
+  }
+
+\ProvideDocumentCommand \Caption { m } { \ufc_legacy_caption:n {#1} }
 \ProvideDocumentCommand \Fonte { O{Fonte} m }
   {
     \str_if_eq:nnF {#1} {Fonte}
@@ -97,6 +134,14 @@
       { \ClassWarningNoLine{ufctex}{Custom~legacy~note~label~'#1'~is~rendered~with~the~v2~Nota~label} }
     \abntextonote{#2}
   }
+\ProvideDocumentCommand \UFCfig { m m m }
+  { \ufc_legacy_object:nnnn {figure} {#1} {#2} {#3} }
+\ProvideDocumentCommand \UFCtab { m m m }
+  { \ufc_legacy_object:nnnn {table} {#1} {#2} {#3} }
+\ProvideDocumentCommand \UFCqua { m m m }
+  { \ufc_legacy_object:nnnn {quadro} {#1} {#2} {#3} }
+\ProvideDocumentCommand \UFCincludegraphics { O{} m }
+  { \includegraphics[#1]{#2} }
 
 % Old files used a mode switch followed by one command per appendix/annex.
 % The v2 aliases preserve that source shape but delegate each item to abntexto.
