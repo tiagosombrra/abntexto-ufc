@@ -3,9 +3,10 @@
 % Compatibility only. New documents should use \ufcsetup and abntexto public APIs.
 % Normative presentation always follows the v2 rules documented in docs/NORMAS.md.
 
+\ExplSyntaxOn
+
 \ProvideDocumentCommand \trabalhoacademico { m }
   {
-    \ExplSyntaxOn
     \str_if_eq:nnTF {#1} {projetocego}
       {
         \ClassWarningNoLine{ufctex}
@@ -13,7 +14,6 @@
         \ufcsetup{tipo=projetoanonimizado}
       }
       { \ufcsetup{tipo=#1} }
-    \ExplSyntaxOff
   }
 
 \ProvideDocumentCommand \ies { m } { \ufcsetup{ies={#1}} }
@@ -74,13 +74,11 @@
 
 \ProvideDocumentCommand \ehqualificacao { m }
   {
-    \ExplSyntaxOn
     \str_if_eq:nnT {#1} {sim}
       {
         \ClassWarningNoLine{ufctex}
           {Legacy~qualification~mode~is~not~a~v2~document~profile;~configure~the~document~type~and~nature~explicitly}
       }
-    \ExplSyntaxOff
   }
 
 \ProvideDocumentCommand \citeonline { O{} m }
@@ -89,18 +87,14 @@
 \ProvideDocumentCommand \Caption { m } { \legend{#1} }
 \ProvideDocumentCommand \Fonte { O{Fonte} m }
   {
-    \ExplSyntaxOn
     \str_if_eq:nnF {#1} {Fonte}
       { \ClassWarningNoLine{ufctex}{Custom~legacy~source~label~'#1'~is~rendered~with~the~v2~Fonte~label} }
-    \ExplSyntaxOff
     \src{#2}
   }
 \ProvideDocumentCommand \Nota { O{Nota} m }
   {
-    \ExplSyntaxOn
     \str_if_eq:nnF {#1} {Nota}
       { \ClassWarningNoLine{ufctex}{Custom~legacy~note~label~'#1'~is~rendered~with~the~v2~Nota~label} }
-    \ExplSyntaxOff
     \abntextonote{#2}
   }
 
@@ -110,5 +104,7 @@
 \ProvideDocumentCommand \apendice { m } { \appendix{#1} }
 \ProvideDocumentCommand \imprimiranexos { } { \clearpage }
 \ProvideDocumentCommand \anexo { m } { \annex{#1} }
+
+\ExplSyntaxOff
 
 \endinput
