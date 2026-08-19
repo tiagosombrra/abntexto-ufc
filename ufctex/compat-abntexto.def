@@ -34,4 +34,26 @@
 
 \makeatother
 
+% LaTeX 2026 loads the new block implementation whenever \DocumentMetadata is
+% present. Avoid enumitem-only description keys so PDF/A documents use the same
+% public UFC list API without depending on the incomplete enumitem emulation.
+\RenewDocumentEnvironment{ufclistadefinicoes}{O{3cm}}
+  {%
+    \begin{list}{}{%
+      \setlength{\leftmargin}{#1}%
+      \setlength{\labelwidth}{\dimexpr#1-.3cm\relax}%
+      \setlength{\labelsep}{.3cm}%
+      \setlength{\rightmargin}{0pt}%
+      \setlength{\itemsep}{0pt}%
+      \setlength{\parsep}{0pt}%
+      \setlength{\topsep}{0pt}%
+      \setlength{\partopsep}{0pt}%
+      \setlength{\listparindent}{0pt}%
+      \renewcommand*\makelabel[1]{%
+        \parbox[t]{\labelwidth}{\normalfont ##1}%
+      }%
+    }%
+  }
+  {\end{list}}
+
 \endinput
