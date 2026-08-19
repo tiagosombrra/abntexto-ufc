@@ -43,18 +43,20 @@
 \ufcfonte{Elaboração própria.}
 \label{tab:objeto}
 \begin{ufcobjeto}[here]
-  \begin{tabular}{rr}
+  \begin{tabular*}{8cm}{@{\extracolsep{\fill}}rr}
     1 & 10 \\
     2 & 20 \\
     3 & 30
-  \end{tabular}
+  \end{tabular*}
 \end{ufcobjeto}
 
 \begin{longabnttblr}
 [
   theme={quadro},
   caption={Quadro multipágina de teste},
-  label={qua:longo}
+  label={qua:longo},
+  remark{Fonte}={Elaboração própria.},
+  remark{Nota}={Validação do suporte multipágina.}
 ]
 {
   colspec={X X},
