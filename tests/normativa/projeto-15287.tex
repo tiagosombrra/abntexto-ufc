@@ -1,0 +1,58 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tipo = projeto,
+  impressao = anverso,
+  capa = sim,
+  ies = {Instituição de Origem Teste},
+  entidade-submissao = {Universidade Federal do Ceará},
+  programa-projeto = {Programa de Pós-Graduação de Teste},
+  tipo-projeto = {Projeto de pesquisa},
+  autor = {Autor Projeto Teste},
+  titulo = {Projeto de Pesquisa Normativo},
+  subtitulo = {Validação da NBR 15287},
+  variacao-titulo = {Project Research Normative Test},
+  volume = {2},
+  local = {Fortaleza},
+  ano = {2026},
+  orientador = {Prof. Orientador Projeto Teste}
+}
+
+\ufcbibliografia{tests/fixtures/referencias-v2.bib}
+
+\begin{document}
+\pretextual
+
+\imprimircapa
+\imprimirfolhaderosto
+\imprimirsumario
+
+\textual
+\section{Introdução}
+A introdução apresenta o tema, o problema, os objetivos e a justificativa do projeto.
+
+\subsection{Problema de pesquisa}
+Problema de pesquisa da fixture normativa.
+
+\subsection{Objetivos}
+Objetivos da fixture normativa.
+
+\subsection{Justificativa}
+Justificativa da fixture normativa.
+
+\section{Referencial teórico}
+Referencial teórico utilizado para embasar a proposta.
+
+\section{Metodologia}
+Métodos, procedimentos de coleta e estratégia de análise.
+
+\section{Recursos}
+Recursos necessários à execução da pesquisa.
+
+\section{Cronograma}
+Cronograma das atividades previstas para a pesquisa.
+
+\nocite{silva2020}
+\imprimirreferencias
+
+\end{document}
