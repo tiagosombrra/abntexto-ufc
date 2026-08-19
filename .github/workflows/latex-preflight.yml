@@ -32,5 +32,5 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            make preflight
             sh tests/v2-bibliography-check.sh
+            make preflight
