@@ -72,7 +72,7 @@ Exemplos atuais:
 | quadros | NBR 14724:2024 + UFC | `ufctex/objetos.def` |
 | código-fonte e algoritmos | extensão editorial compatível com NBR 14724:2024 | `ufctex/objetos.def` + `ufctex/modulos.def` |
 | citações | NBR 10520:2023 + Guia UFC de Citações | `ufctex/bibliografia.def` |
-| referências | NBR 6023:2025 + requisitos UFC compatíveis | `ufctex/bibliografia.def` |
+| referências | NBR 6023:2025 + requisitos UFC compatíveis | `ufctex/bibliografia.def` + `ufctex/compat-nbr6023-2025.def` |
 | projetos | NBR 15287:2025 + requisitos UFC compatíveis | perfil `projeto` |
 | projeto anonimizado | NBR 15287:2025 + regras do edital específico | perfil `projetoanonimizado` |
 | glossário | NBR 14724:2024 | módulo opcional |
@@ -99,7 +99,7 @@ Não devem ser mantidos patches apenas para reproduzir uma edição antiga de um
 
 Quando um pacote ainda não implementar uma norma vigente, a V2 pode aplicar um patch mínimo, isolado e testado. Esse patch deve ser removível quando o upstream incorporar a mesma regra.
 
-Em particular, na auditoria de 2026-08-19, o `biblatex-abnt` publicado ainda não incorporava integralmente a NBR 6023:2025; o projeto upstream mantinha uma proposta de suporte inicial em revisão. Por isso a V2 possui regressões próprias para os pontos da edição de 2025.
+Em particular, na auditoria de 2026-08-19, o `biblatex-abnt` publicado ainda não incorporava integralmente a NBR 6023:2025; o projeto upstream mantinha uma proposta de suporte inicial em revisão. Os ajustes transitórios estão isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível em uma versão estável do upstream.
 
 ## Fontes institucionais de verificação
 
