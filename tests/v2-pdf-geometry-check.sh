@@ -34,9 +34,7 @@ for mode in anverso frente-verso; do
 done
 
 python3 <<'PY'
-import math
 import xml.etree.ElementTree as ET
-from pathlib import Path
 
 PT_PER_CM = 72.0 / 2.54
 A4_W = 21.0 * PT_PER_CM
@@ -95,47 +93,46 @@ def page_number(page, expected):
     return matches[0]
 
 
+def validate_page_margins(mode, page, page_idx, left_marker, right_marker):
+    left = find(page, left_marker)
+    right = find(page, right_marker)
+
+    if mode == 'anverso' or page_idx % 2 == 1:
+        close(left['xMin'], M3, POS_TOL, f'{mode}/p{page_idx} margem esquerda')
+        close(right['xMax'], A4_W - M2, POS_TOL, f'{mode}/p{page_idx} margem direita')
+    else:
+        close(left['xMin'], M2, POS_TOL, f'{mode}/p{page_idx} margem esquerda externa')
+        close(right['xMax'], A4_W - M3, POS_TOL, f'{mode}/p{page_idx} margem direita interna')
+
+    if not (78.0 <= left['yMin'] <= 105.0):
+        raise SystemExit(f'{mode}/p{page_idx} margem superior fora da faixa: y={left["yMin"]:.2f} pt')
+
+
 def validate(mode):
     pages = pages_from(f'geometry-{mode}.html')
-    if len(pages) != 3:
-        raise SystemExit(f'{mode}: esperado PDF de 3 páginas, obtido {len(pages)}')
+    if len(pages) != 4:
+        raise SystemExit(f'{mode}: esperado PDF de 4 páginas, obtido {len(pages)}')
 
     for i, page in enumerate(pages, 1):
         close(page['width'], A4_W, SIZE_TOL, f'{mode}/p{i} largura A4')
         close(page['height'], A4_H, SIZE_TOL, f'{mode}/p{i} altura A4')
 
-    # Markers are normal-flow text anchored to the text block itself.
-    p1 = pages[0]
-    left1 = find(p1, 'UFCLEFTONE')
-    right1 = find(p1, 'UFCRIGHTONE')
-    close(left1['xMin'], M3, POS_TOL, f'{mode}/p1 margem esquerda')
-    close(right1['xMax'], A4_W - M2, POS_TOL, f'{mode}/p1 margem direita')
-    if not (78.0 <= left1['yMin'] <= 105.0):
-        raise SystemExit(f'{mode}/p1 margem superior fora da faixa: y={left1["yMin"]:.2f} pt')
+    validate_page_margins(mode, pages[0], 1, 'UFCLEFTPREONE', 'UFCRIGHTPREONE')
+    validate_page_margins(mode, pages[1], 2, 'UFCLEFTPRETWO', 'UFCRIGHTPRETWO')
+    validate_page_margins(mode, pages[2], 3, 'UFCLEFTTEXTONE', 'UFCRIGHTTEXTONE')
+    validate_page_margins(mode, pages[3], 4, 'UFCLEFTTEXTTWO', 'UFCRIGHTTEXTTWO')
 
-    p2 = pages[1]
-    left2 = find(p2, 'UFCLEFTTWO')
-    right2 = find(p2, 'UFCRIGHTTWO')
-    if mode == 'anverso':
-        close(left2['xMin'], M3, POS_TOL, 'anverso/p2 margem esquerda')
-        close(right2['xMax'], A4_W - M2, POS_TOL, 'anverso/p2 margem direita')
-    else:
-        close(left2['xMin'], M2, POS_TOL, 'frente-verso/p2 margem externa esquerda')
-        close(right2['xMax'], A4_W - M3, POS_TOL, 'frente-verso/p2 margem interna direita')
-
-    # Page numbers are measured from the rendered PDF header, not TeX dimensions.
-    n2 = page_number(pages[1], 2)
     n3 = page_number(pages[2], 3)
-    for page_idx, n in ((2, n2), (3, n3)):
+    n4 = page_number(pages[3], 4)
+    for page_idx, n in ((3, n3), (4, n4)):
         if not (42.0 <= n['yMin'] <= 72.0):
             raise SystemExit(f'{mode}/p{page_idx} paginação vertical fora da faixa: y={n["yMin"]:.2f} pt')
 
+    close(n3['xMax'], A4_W - M2, 7.0, f'{mode}/p3 paginação direita')
     if mode == 'anverso':
-        close(n2['xMax'], A4_W - M2, 7.0, 'anverso/p2 paginação direita')
-        close(n3['xMax'], A4_W - M2, 7.0, 'anverso/p3 paginação direita')
+        close(n4['xMax'], A4_W - M2, 7.0, 'anverso/p4 paginação direita')
     else:
-        close(n2['xMin'], M2, 7.0, 'frente-verso/p2 paginação esquerda')
-        close(n3['xMax'], A4_W - M2, 7.0, 'frente-verso/p3 paginação direita')
+        close(n4['xMin'], M2, 7.0, 'frente-verso/p4 paginação esquerda')
 
 for mode in ('anverso', 'frente-verso'):
     validate(mode)

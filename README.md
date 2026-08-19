@@ -31,9 +31,15 @@ documento.tex
 
 ## Uso rápido
 
-O ponto de entrada é `documento.tex`:
+O ponto de entrada é `documento.tex`. Para trabalhos destinados a depósito institucional, preserve `\DocumentMetadata` antes de `\documentclass`:
 
 ```tex
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
 \documentclass{ufctex}
 
 \ufcsetup{
@@ -46,13 +52,16 @@ O ponto de entrada é `documento.tex`:
 }
 ```
 
+O perfil PDF/A-2b é a escolha técnica adotada pelo template para produzir um PDF/A validável. A exigência institucional da UFC é por PDF/A; o subtipo PDF/A-2b não é apresentado pelo projeto como uma imposição específica da Universidade.
+
 Depois:
 
 1. escolha o perfil do documento;
 2. preencha os metadados em `\ufcsetup`;
 3. edite os arquivos em `1-pre-textuais`, `2-textuais` e `3-pos-textuais`;
 4. mantenha `documento.tex` como arquivo principal;
-5. compile e revise o PDF final.
+5. compile e revise o PDF final;
+6. para depósito, execute também a validação PDF/A de release.
 
 ## Perfis
 
@@ -66,6 +75,8 @@ Depois:
 | `projetoanonimizado` | projeto de pesquisa com identificação pessoal suprimida |
 
 A impressão pode ser configurada como `anverso` ou `frente-verso`.
+
+No modo `frente-verso`, as margens são espelhadas em todo o miolo: anverso com esquerda/superior de 3 cm e direita/inferior de 2 cm; verso com direita/superior de 3 cm e esquerda/inferior de 2 cm. Elementos pré-textuais, exceto a ficha catalográfica, e seções primárias são conduzidos ao próximo anverso quando necessário. Os pós-textuais controlados pela V2 usam a mesma política de início em anverso.
 
 ## Estrutura textual
 
@@ -98,6 +109,8 @@ Exemplo:
 \imprimirsumario
 ```
 
+O documento de referência mantém resumo e abstract na faixa de 150 a 500 palavras. As palavras-chave são apresentadas em sequência após o resumo/abstract.
+
 A Lista de Ilustrações reúne figuras, gráficos e quadros na ordem de ocorrência. Tabelas permanecem em lista própria. Listas específicas de figuras, gráficos e quadros também estão disponíveis.
 
 ## Objetos
@@ -116,6 +129,8 @@ A API principal usa as áreas de legenda do `abntexto`:
 ```
 
 O mesmo padrão é usado para `table`, `quadro`, `grafico`, `codigo` e `algoritmo`, conforme o módulo habilitado.
+
+Para ilustrações, informe sempre a fonte com `\ufcfonte{...}`, inclusive quando o conteúdo for de elaboração própria. Os exemplos normativos e a suíte de objetos validam a presença da fonte nos documentos de teste.
 
 ## Módulos opcionais
 
@@ -139,6 +154,16 @@ Valores principais:
 
 `minted` exige o suporte externo correspondente no ambiente de compilação.
 
+## Fonte tipográfica
+
+O Guia UFC admite Arial ou Times New Roman. A V2 segue uma estratégia portável:
+
+- com LuaLaTeX, usa Times New Roman quando a fonte está instalada e acessível;
+- sem Times New Roman no ambiente LuaLaTeX, usa TeX Gyre Termes e emite warning;
+- com pdfLaTeX, usa NewTX como família portável de desenho Times.
+
+NewTX e TeX Gyre Termes não devem ser descritas como a própria Times New Roman. Quando o curso ou programa exigir identidade literal da família tipográfica, prefira LuaLaTeX em um ambiente que disponibilize Times New Roman e confira as fontes incorporadas no PDF final.
+
 ## Citações e referências
 
 A V2 usa `biblatex` com Biber e estilo ABNT:
@@ -160,7 +185,7 @@ Ao final:
 \imprimirreferencias
 ```
 
-A camada `compat-nbr6023-2025.def` mantém isolados os ajustes transitórios necessários enquanto o suporte equivalente não estiver disponível no upstream.
+As referências são apresentadas com espaçamento simples dentro de cada entrada e um intervalo equivalente a uma linha simples entre entradas. A camada `compat-nbr6023-2025.def` mantém isolados os ajustes transitórios necessários enquanto o suporte equivalente não estiver disponível no upstream.
 
 ## Pós-textuais
 
@@ -192,17 +217,39 @@ LuaLaTeX:
 make lua
 ```
 
-Validação completa:
+Validação completa de desenvolvimento:
 
 ```bash
 make preflight
 ```
 
-A suíte V2 cobre o documento de referência, layout, geometria do PDF, pré-textuais, objetos, bibliografia, projetos, perfis, pós-textuais e compatibilidade pública da API da linha anterior. O gate externo usa TeX Live 2026.
+Validação pré-release, incluindo conformidade PDF/A-2b com veraPDF:
+
+```bash
+make release-preflight
+```
+
+O gate PDF/A usa a instalação local de `verapdf` quando disponível. Como alternativa, usa Docker com a imagem estável `verapdf/cli:v1.30.2`. Arquivos incorporados pelo usuário, especialmente PDFs e imagens externos, podem alterar a conformidade; por isso o PDF final de depósito deve ser validado novamente.
+
+A suíte V2 cobre o documento de referência, PDF/A, layout, geometria real do PDF, duplex, pré-textuais, objetos, bibliografia, projetos, perfis, pós-textuais e compatibilidade pública da API da linha anterior. O gate externo usa TeX Live 2026.
+
+## Entrega institucional UFC
+
+Na política institucional vigente consultada em agosto de 2026:
+
+- TCC, dissertações e teses destinados ao repositório devem ser entregues em arquivo eletrônico PDF/A;
+- a folha de aprovação da versão destinada ao repositório deve ser apresentada sem as assinaturas dos membros da banca;
+- a representação visual da ficha catalográfica tornou-se facultativa para TCC, dissertações e teses, e o serviço CATALOG foi descontinuado pela UFC em 2026.
+
+Por isso, `ficha-catalografica = nao` permanece como padrão da V2. O comando de inclusão continua disponível para situações em que um programa, edital ou acervo específico ainda o solicite.
+
+A folha de aprovação gerada pela classe contém identificação e linhas da banca, mas não insere imagens de assinaturas. Não acrescente assinaturas digitalizadas à cópia destinada ao repositório quando a orientação institucional aplicável determinar sua ausência.
 
 ## Overleaf
 
 Importe o projeto completo e mantenha `documento.tex` como arquivo principal. Use uma versão recente do TeX Live que contenha `abntexto` 1.1 ou superior. pdfLaTeX é o caminho padrão; LuaLaTeX também é suportado.
+
+Preserve `\DocumentMetadata` antes de `\documentclass` quando precisar gerar PDF/A. A validação independente com veraPDF deve ser feita após baixar o PDF final.
 
 Caso use `minted`, habilite o fluxo exigido por esse pacote no ambiente de compilação.
 
@@ -234,10 +281,11 @@ Consulte `docs/NORMAS.md` para:
 - edições normativas adotadas;
 - precedência entre ABNT e requisitos institucionais;
 - mapa norma → implementação;
+- políticas UFC verificadas em 2026;
 - patches temporários de compatibilidade;
 - política dos gates de validação.
 
-Não declare conformidade apenas porque o documento compilou. A revisão final deve considerar as exigências específicas aplicáveis ao trabalho.
+Não declare conformidade apenas porque o documento compilou ou porque o PDF contém metadados PDF/A. A revisão final deve considerar as exigências específicas aplicáveis ao trabalho e, para depósito, a validação independente do arquivo final.
 
 ## Linha 1.x
 

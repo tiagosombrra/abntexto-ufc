@@ -302,6 +302,9 @@
         \bfseries REFERÊNCIAS\par
       \end{center}
       \vspace{\baselineskip}
+      \singlesp
+      \raggedright
+      \setlength{\bibitemsep}{\baselineskip}
       \printbibliography[heading=none]
     \endgroup
   }

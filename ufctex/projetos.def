@@ -61,7 +61,7 @@
         \singlesp
         \ufc_nature_text:
         \ufc_print_advisors:
-      \end{minipage}
+      \end{minipage}\par
       \vfill
       \MakeUppercase{\ufc_meta_use:n {local}}\par
       \ufc_meta_use:n {ano}\par

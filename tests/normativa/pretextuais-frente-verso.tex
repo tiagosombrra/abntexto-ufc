@@ -1,0 +1,39 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = frente-verso,
+  capa = nao,
+  brasao = nao,
+  ies = {Universidade Federal do Ceará},
+  programa-doutorado = {Programa de Pós-Graduação em Ciência da Computação},
+  titulo-doutor = {Ciência da Computação},
+  autor = {Autor Duplex Teste},
+  titulo = {Validação Duplex dos Pré-textuais},
+  local = {Fortaleza},
+  ano = {2026},
+  data-aprovacao = {19 de agosto de 2026},
+  orientador = {Prof. Dr. Orientador Duplex},
+  orientador-ies = {Universidade Federal do Ceará}
+}
+
+\begin{document}
+\pretextual
+
+\imprimirfolhaderosto
+\imprimirerrata{tests/fixtures/pretextuais/errata.tex}
+\imprimirfolhadeaprovacao
+\imprimirdedicatoria{tests/fixtures/pretextuais/dedicatoria.tex}
+\imprimiragradecimentos{tests/fixtures/pretextuais/agradecimentos.tex}
+\imprimirepigrafe[longa]{tests/fixtures/pretextuais/epigrafe.tex}
+\imprimirresumo{tests/fixtures/pretextuais/resumo.tex}
+\imprimirabstract{tests/fixtures/pretextuais/abstract.tex}
+\imprimirlistadeabreviaturasesiglas{tests/fixtures/pretextuais/abreviaturas.tex}
+\imprimirlistadesimbolos{tests/fixtures/pretextuais/simbolos.tex}
+\imprimirsumario
+
+\textual
+\section{Introdução duplex}
+MARCADOR-TEXTUAL-DUPLEX.
+
+\end{document}

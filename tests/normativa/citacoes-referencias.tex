@@ -2,6 +2,13 @@
 
 \ufcbibliografia{tests/fixtures/referencias-v2.bib}
 
+\AtBeginBibliography{%
+  \typeout{UFC-BIBITEMSEP=\the\bibitemsep}%
+  \typeout{UFC-BIBACTUALITEMSEP=\the\itemsep}%
+  \typeout{UFC-BIBBASELINE=\the\baselineskip}%
+  \typeout{UFC-BIBSTRETCH=\baselinestretch}%
+}
+
 \begin{document}
 
 \tableofcontents

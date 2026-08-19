@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/layout.def}[2026/08/18 UFC page and text layout]
+\ProvidesFile{ufctex/layout.def}[2026/08/19 UFC page and text layout]
 
 % Use Times New Roman when the engine can access it, with a portable fallback.
 \ifPDFTeX
@@ -89,15 +89,21 @@
 
 \cs_new_protected:Npn \ufc_layout_apply:
   {
-    % Pre-textual pages remain one-sided in both print modes.
-    \cs_set_eq:NN \onesidelayout \ufc_layout_one_sided:
-
     \str_if_eq:VnTF \g_ufc_print_mode_tl { frente-verso }
-      { \cs_set_eq:NN \twosidelayout \ufc_layout_two_sided: }
-      { \cs_set_eq:NN \twosidelayout \ufc_layout_one_sided: }
+      {
+        \cs_set_eq:NN \onesidelayout \ufc_layout_two_sided:
+        \cs_set_eq:NN \twosidelayout \ufc_layout_two_sided:
+      }
+      {
+        \cs_set_eq:NN \onesidelayout \ufc_layout_one_sided:
+        \cs_set_eq:NN \twosidelayout \ufc_layout_one_sided:
+      }
   }
 
 \NewDocumentCommand \ufcPrimarySectionBreak { }
+  { \ufc_primary_section_break: }
+
+\NewDocumentCommand \ufcPretextualBreak { }
   { \ufc_primary_section_break: }
 
 \AtBeginDocument{\ufc_layout_apply:}
@@ -107,6 +113,30 @@
 % Keep one public extension point instead of relying on abntexto internals.
 \providecommand{\ufcsectionhook}{}
 \def\hooksection{\ufcPrimarySectionBreak\ufcsectionhook}
+
+% In duplex mode, every pre-textual element except the catalog card starts on recto.
+\AtBeginDocument{%
+  \AddToHook{cmd/imprimirfolhaderosto/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirfolhadeaprovacao/before}{\ufcIfProjectTF{}{\ufcPretextualBreak}}%
+  \AddToHook{cmd/imprimirdedicatoria/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimiragradecimentos/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirepigrafe/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirerrata/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirresumo/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirabstract/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadeilustracoes/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadefiguras/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadetabelas/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadequadros/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadegraficos/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadecodigos/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadealgoritmos/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadeabreviaturasesiglas/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirlistadesimbolos/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/imprimirsumario/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/appendix/before}{\ufcPrimarySectionBreak}%
+  \AddToHook{cmd/annex/before}{\ufcPrimarySectionBreak}%
+}
 
 % UFC footnotes use reduced type, single spacing and a 5 cm separator rule.
 \makeatletter

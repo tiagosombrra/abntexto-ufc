@@ -13,7 +13,7 @@ V2_PRETEXTUAL_FIXTURES := tests/normativa/pretextuais-trabalho.tex tests/normati
 V2_OBJECT_FIXTURES := tests/normativa/objetos-avancados.tex
 V2_MINTED_FIXTURE := tests/normativa/objetos-minted.tex
 
-.PHONY: all compile pdf lua preflight v2-reference-check v2-check v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check version clean
+.PHONY: all compile pdf lua preflight release-preflight v2-reference-check v2-pdfa-check v2-check v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-duplex-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check v2-duplex-posttextual-check version clean
 
 all: compile
 pdf: compile
@@ -39,6 +39,10 @@ lua:
 # Validate the user-facing V2 document.
 v2-reference-check:
 	@sh tests/v2-reference-check.sh
+
+# Validate the generated reference document independently as PDF/A-2b.
+v2-pdfa-check: v2-reference-check
+	@sh tests/v2-pdfa-check.sh
 
 # Compile the isolated v2 layout fixtures with both supported engines.
 v2-layout-check:
@@ -98,6 +102,10 @@ v2-pretextual-check:
 		grep -Fq 'PROJETO-ANONIMO-001' /tmp/ufctex-v2-anonimo.txt || \
 			(echo "Preflight V2 falhou: identificador anonimizado ausente."; exit 1); \
 	fi
+
+# Validate mirrored margins and recto starts in duplex pre-textual matter.
+v2-duplex-pretextual-check:
+	@sh tests/v2-duplex-pretextual-check.sh
 
 # Validate figures, tables, quadros, graphs, code and pseudocode.
 v2-object-check:
@@ -183,6 +191,7 @@ v2-minted-check:
 # Validate UFC author-date citations and bibliography formatting with Biber.
 v2-bib-check:
 	@sh tests/v2-bibliography-check.sh
+	@sh tests/v2-reference-spacing-check.sh
 
 # Validate research projects against NBR 15287:2025.
 v2-project-check:
@@ -196,13 +205,22 @@ v2-profile-check:
 v2-posttextual-compat-check:
 	@sh tests/v2-posttextual-compat-check.sh
 
+# Validate post-textual recto starts in duplex mode.
+v2-duplex-posttextual-check:
+	@sh tests/v2-duplex-posttextual-check.sh
+
 # Run every isolated V2 gate available locally.
-v2-check: v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check
+v2-check: v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-duplex-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check v2-duplex-posttextual-check
 	@echo "Gate local isolado da V2 concluído."
 
 # Full local gate: user-facing document plus the isolated V2 regression matrix.
 preflight: v2-reference-check v2-check
 	@echo "Preflight completo da V2 concluído."
+
+# Release gate: serialize independent PDF/A validation after the full regression.
+release-preflight: preflight
+	@sh tests/v2-pdfa-check.sh
+	@echo "Preflight de release da V2 concluído."
 
 clean:
 	@echo "Limpando arquivos auxiliares..."
@@ -210,7 +228,7 @@ clean:
 	@rm -f *.ntn *.not *.lof *.loi *.lot *.toc *.loa *.loc *.logr *.lsg *.nlo *.nls *.ilg *.ind
 	@rm -f *.glg *.glo *.xdy *.acn *.idx *.loq *.lol *.fls *.fdb_latexmk *.synctex.gz *~
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf
-	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf
+	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf pretextuais-duplex-*.pdf
 	@rm -f objetos-avancados.pdf objetos-minted.pdf citacoes-referencias.pdf
 	@rm -f referencias-6023-2025.pdf projeto-15287.pdf projeto-sem-capa.pdf
 	@rm -f perfil-*.pdf perfil-*.aux perfil-*.log perfil-*.out perfil-*.toc .ufctex-v2-profile.tex

@@ -32,6 +32,8 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
             sh tests/v2-reference-check.sh
+      - name: Validate PDF/A-2b
+        run: sh tests/v2-pdfa-check.sh
 
   v2-structure:
     name: V2 layout, pre-textuals and projects
@@ -49,7 +51,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            make v2-layout-check v2-pretextual-check v2-project-check
+            make v2-layout-check v2-pretextual-check v2-duplex-pretextual-check v2-project-check
             sh tests/v2-pdf-geometry-check.sh
 
   v2-objects-bibliography:
@@ -104,4 +106,29 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            sh tests/v2-posttextual-compat-check.sh
+            make v2-posttextual-compat-check v2-duplex-posttextual-check
+
+  latex-preflight:
+    name: latex-preflight
+    if: ${{ always() }}
+    needs:
+      - v2-reference
+      - v2-structure
+      - v2-objects-bibliography
+      - v2-profiles
+      - v2-posttextual-compat
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate required gate
+        env:
+          REFERENCE: ${{ needs.v2-reference.result }}
+          STRUCTURE: ${{ needs.v2-structure.result }}
+          OBJECTS_BIB: ${{ needs.v2-objects-bibliography.result }}
+          PROFILES: ${{ needs.v2-profiles.result }}
+          POSTTEXTUAL: ${{ needs.v2-posttextual-compat.result }}
+        run: |
+          test "$REFERENCE" = success
+          test "$STRUCTURE" = success
+          test "$OBJECTS_BIB" = success
+          test "$PROFILES" = success
+          test "$POSTTEXTUAL" = success
