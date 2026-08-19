@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{ufctex}[2026/08/19 v2.0.0-dev UFC academic document class]
+\ProvidesClass{ufctex}[2026/08/19 v2.0.0 UFC academic document class]
 
 % Normative policy and version matrix: docs/NORMAS.md.
 % Always target the latest applicable ABNT edition.

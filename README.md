@@ -2,7 +2,7 @@
 
 Template comunitário para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), com uma classe própria baseada em `abntexto`.
 
-> A V2 está em desenvolvimento como `2.0.0-dev`. A linha estável 1.x permanece preservada na branch `1.x`.
+**Versão atual: 2.0.0 — 19/08/2026.** A linha estável 1.x permanece preservada na branch `1.x` para documentos legados.
 
 Este projeto não é um modelo oficial da UFC. Antes da entrega, confira as orientações vigentes do Sistema de Bibliotecas, do curso, do programa e do edital aplicável.
 
@@ -198,7 +198,7 @@ Validação completa:
 make preflight
 ```
 
-A suíte V2 cobre layout, geometria do PDF, pré-textuais, objetos, bibliografia, projetos, perfis, pós-textuais e compatibilidade pública da linha anterior. O gate externo usa TeX Live 2026.
+A suíte V2 cobre o documento de referência, layout, geometria do PDF, pré-textuais, objetos, bibliografia, projetos, perfis, pós-textuais e compatibilidade pública da API da linha anterior. O gate externo usa TeX Live 2026.
 
 ## Overleaf
 
@@ -241,7 +241,7 @@ Não declare conformidade apenas porque o documento compilou. A revisão final d
 
 ## Linha 1.x
 
-A última série baseada diretamente em `abntex2` permanece disponível na branch `1.x` para manutenção e documentos legados. Novos documentos devem usar a V2 após a publicação da versão 2.0.0.
+A última série baseada diretamente em `abntex2` permanece disponível na branch `1.x` para manutenção e documentos legados. Novos documentos devem usar a V2.
 
 ## Licença
 

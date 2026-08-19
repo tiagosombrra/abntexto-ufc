@@ -4,7 +4,7 @@
 ## Build reproduzível com Biber, glossários e índice.                   ##
 ########################################################################
 
-VERSION := 2.0.0-dev
+VERSION := 2.0.0
 filename := documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
