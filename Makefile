@@ -13,7 +13,7 @@ V2_PRETEXTUAL_FIXTURES := tests/normativa/pretextuais-trabalho.tex tests/normati
 V2_OBJECT_FIXTURES := tests/normativa/objetos-avancados.tex
 V2_MINTED_FIXTURE := tests/normativa/objetos-minted.tex
 
-.PHONY: all compile pdf lua preflight v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check version clean
+.PHONY: all compile pdf lua preflight v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check version clean
 
 all: compile
 pdf: compile
@@ -167,10 +167,14 @@ v2-minted-check:
 v2-bib-check:
 	@sh tests/v2-bibliography-check.sh
 
+# Validate research projects against NBR 15287:2025.
+v2-project-check:
+	@sh tests/v2-project-check.sh
+
 # Local preflight: compile and reject warnings or overflowing boxes in the final log.
 # Known upstream deprecations from abnTeX2 1.9.7 are filtered narrowly.
 # System dependencies such as pdffonts are checked only when available.
-preflight: compile v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check
+preflight: compile v2-layout-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check
 	@echo "Verificando warnings finais..."
 	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox' $(filename).log | \
 		grep -vF -e "Package babel Warning: Name 'brazil' is deprecated." \
@@ -197,6 +201,7 @@ clean:
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf
 	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf
 	@rm -f objetos-avancados.pdf objetos-minted.pdf citacoes-referencias.pdf
+	@rm -f referencias-6023-2025.pdf projeto-15287.pdf projeto-sem-capa.pdf
 	@rm -rf _minted-*
 	@rm -f $(filename).pdf
 	@echo "Processo finalizado com sucesso."
