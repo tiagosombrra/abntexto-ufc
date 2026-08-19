@@ -81,7 +81,7 @@ for engine in pdflatex lualatex; do
     printf '%s\n' "$warnings"
     if printf '%s\n' "$warnings" | grep -q 'Overfull'; then
       echo 'Contexto das caixas excedentes:'
-      grep -n -B2 -A4 -E 'Overfull \\hbox|Overfull \\vbox' "$job.log" || true
+      grep -n -B4 -A40 -E 'Overfull \\hbox|Overfull \\vbox' "$job.log" || true
     fi
     echo "Preflight V2 falhou: fixture bibliográfica contém warnings ou overflow não reconhecidos."
     exit 1
