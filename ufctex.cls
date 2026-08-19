@@ -22,5 +22,7 @@
 \input{ufctex/objetos.def}
 \input{ufctex/bibliografia.def}
 \input{ufctex/compat-nbr6023-2025.def}
+\input{ufctex/postextuais.def}
+\input{ufctex/compat-v1.def}
 
 \endinput
