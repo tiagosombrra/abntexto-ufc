@@ -43,13 +43,18 @@
             \ufc_bib_clean_word:N \l_ufc_bib_second_word_tl
             \c_space_tl \tl_use:N \l_ufc_bib_second_word_tl
           }
-        ~[\ldots]
+        \addspace[\textellipsis]\isdot
       }
   }
 
 % NBR 10520:2023 uses normal capitalization in citations.
 \DeclareFieldFormat{uppercasecite}{#1}
 \DeclareFieldFormat{firstword}{\normalfont\ufc_bib_title_cite:n {#1}}
+
+% COMPATIBILITY_ADAPTER: keep the full year in compressed author-date citations.
+\makeatletter
+\AtEveryCitekey{\global\let\cbx@lastyear\@undefined}
+\makeatother
 
 \NewDocumentCommand \ufcbibliografia { m }
   { \addbibresource{#1} }
