@@ -125,3 +125,5 @@ done
 
 grep -Fq 'Referências' "$job.toc" || (echo 'Referências ausentes do Sumário.'; exit 1)
 echo 'Gate V2 de citações e referências concluído.'
+
+sh tests/v2-references-6023-check.sh
