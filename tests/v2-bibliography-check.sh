@@ -79,6 +79,10 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
+    if printf '%s\n' "$warnings" | grep -q 'Overfull'; then
+      echo 'Contexto das caixas excedentes:'
+      grep -n -B2 -A4 -E 'Overfull \\hbox|Overfull \\vbox' "$job.log" || true
+    fi
     echo "Preflight V2 falhou: fixture bibliográfica contém warnings ou overflow não reconhecidos."
     exit 1
   fi
@@ -86,74 +90,38 @@ for engine in pdflatex lualatex; do
   if command -v pdftotext >/dev/null 2>&1; then
     normalize_pdf_text
 
-    grep -Fq 'Silva, 2020' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação autor-data simples incorreta.'
-    if grep -Fq 'SILVA, 2020' /tmp/ufctex-v2-bib.txt; then
-      fail_semantic 'Citação em caixa alta incompatível com NBR 10520:2023.'
-    fi
-    grep -Fq 'Oliveira; Nunes, 2011, p. 103' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação parentética de dois autores incorreta.'
-    grep -Fq 'Oliveira e Nunes (2011, p. 103)' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação textual de dois autores incorreta.'
-    grep -Fq 'Cruz; Perota; Mendes, 2000' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação de três autores incorreta.'
-    grep -Fq 'Rocha et al., 2021, p. 198' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação com et al. incorreta.'
-    grep -Fq 'Chiavenato, 2008a, 2008b' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Desambiguação de mesmo autor/ano incorreta.'
-    grep -Fq 'Rudio, 2002, 2003, 2007' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Ordem cronológica de mesma autoria incorreta.'
-    grep -Fq 'Rudio (2002, 2003, 2007)' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação textual de mesma autoria em anos distintos incorreta.'
-    grep -Fq 'Ferreira, C., 2007, p. 20' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Desambiguação do primeiro autor homônimo incorreta.'
-    grep -Fq 'Ferreira, L., 2007, p. 40' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Desambiguação do segundo autor homônimo incorreta.'
-    grep -Fq 'C. Ferreira (2007, p. 20)' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Forma textual do primeiro autor homônimo incorreta.'
-    grep -Fq 'L. Ferreira (2007, p. 40)' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Forma textual do segundo autor homônimo incorreta.'
-    grep -Fq 'Ferreira, 2006; Silva, 2020' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Ordenação de autores simultâneos incorreta.'
-    grep -Fq 'Universidade Federal do Ceará, 2025' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação de pessoa jurídica incorreta.'
-    grep -Fq 'Acrefino, 1993' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação de título de uma palavra incorreta.'
-    grep -Eq 'Tribunal \[(…|\. ?\. ?\.) ?\], 2011' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação de título sem autoria incorreta.'
-    grep -Eq 'O túnel \[(…|\. ?\. ?\.) ?\], 2005, p\. 5' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação de título iniciado por artigo incorreta.'
-    grep -Fq 'Eco, 1983, p. 121 apud Koche, 2009, p. 147' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação de citação incorreta.'
-    grep -Fq 'Eco (1983 apud Koche, 2009)' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Citação de citação textual incorreta.'
-    grep -Fq 'REFERÊNCIAS' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Título de referências ausente.'
-    grep -Fq 'SILVA, João Carlos' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Entrada bibliográfica não preserva sobrenome em caixa alta.'
-    grep -Fq 'KOCHE, José Carlos' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Fonte consultada no apud ausente das referências.'
-    if grep -Fq 'ECO, Umberto' /tmp/ufctex-v2-bib.txt; then
-      fail_semantic 'Fonte original do apud entrou indevidamente nas referências.'
-    fi
-    grep -Fq 'e1234' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'E-location ausente da referência eletrônica.'
-    grep -Fq '10.0000/ufctex.2025.1234' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'DOI ausente da referência eletrônica.'
-    grep -Fq 'SIMPÓSIO INTERNACIONAL DE TESTE' /tmp/ufctex-v2-bib.txt || \
-      fail_semantic 'Referência de evento ausente.'
-    if grep -Eq 'SIMPÓSIO INTERNACIONAL DE TESTE,? 2025,? \[[Ss]\. ?[Ll]\.\]' /tmp/ufctex-v2-bib.txt; then
-      fail_semantic 'Evento sem cidade recebeu sine loco indevidamente.'
-    fi
+    grep -Fq 'Silva, 2020' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação autor-data simples incorreta.'
+    if grep -Fq 'SILVA, 2020' /tmp/ufctex-v2-bib.txt; then fail_semantic 'Citação em caixa alta incompatível com NBR 10520:2023.'; fi
+    grep -Fq 'Oliveira; Nunes, 2011, p. 103' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação parentética de dois autores incorreta.'
+    grep -Fq 'Oliveira e Nunes (2011, p. 103)' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação textual de dois autores incorreta.'
+    grep -Fq 'Cruz; Perota; Mendes, 2000' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação de três autores incorreta.'
+    grep -Fq 'Rocha et al., 2021, p. 198' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação com et al. incorreta.'
+    grep -Fq 'Chiavenato, 2008a, 2008b' /tmp/ufctex-v2-bib.txt || fail_semantic 'Desambiguação de mesmo autor/ano incorreta.'
+    grep -Fq 'Rudio, 2002, 2003, 2007' /tmp/ufctex-v2-bib.txt || fail_semantic 'Ordem cronológica de mesma autoria incorreta.'
+    grep -Fq 'Rudio (2002, 2003, 2007)' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação textual de mesma autoria em anos distintos incorreta.'
+    grep -Fq 'Ferreira, C., 2007, p. 20' /tmp/ufctex-v2-bib.txt || fail_semantic 'Desambiguação do primeiro autor homônimo incorreta.'
+    grep -Fq 'Ferreira, L., 2007, p. 40' /tmp/ufctex-v2-bib.txt || fail_semantic 'Desambiguação do segundo autor homônimo incorreta.'
+    grep -Fq 'C. Ferreira (2007, p. 20)' /tmp/ufctex-v2-bib.txt || fail_semantic 'Forma textual do primeiro autor homônimo incorreta.'
+    grep -Fq 'L. Ferreira (2007, p. 40)' /tmp/ufctex-v2-bib.txt || fail_semantic 'Forma textual do segundo autor homônimo incorreta.'
+    grep -Fq 'Ferreira, 2006; Silva, 2020' /tmp/ufctex-v2-bib.txt || fail_semantic 'Ordenação de autores simultâneos incorreta.'
+    grep -Fq 'Universidade Federal do Ceará, 2025' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação de pessoa jurídica incorreta.'
+    grep -Fq 'Acrefino, 1993' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação de título de uma palavra incorreta.'
+    grep -Eq 'Tribunal \[(…|\. ?\. ?\.) ?\], 2011' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação de título sem autoria incorreta.'
+    grep -Eq 'O túnel \[(…|\. ?\. ?\.) ?\], 2005, p\. 5' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação de título iniciado por artigo incorreta.'
+    grep -Fq 'Eco, 1983, p. 121 apud Koche, 2009, p. 147' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação de citação incorreta.'
+    grep -Fq 'Eco (1983 apud Koche, 2009)' /tmp/ufctex-v2-bib.txt || fail_semantic 'Citação de citação textual incorreta.'
+    grep -Fq 'REFERÊNCIAS' /tmp/ufctex-v2-bib.txt || fail_semantic 'Título de referências ausente.'
+    grep -Fq 'SILVA, João Carlos' /tmp/ufctex-v2-bib.txt || fail_semantic 'Entrada bibliográfica não preserva sobrenome em caixa alta.'
+    grep -Fq 'KOCHE, José Carlos' /tmp/ufctex-v2-bib.txt || fail_semantic 'Fonte consultada no apud ausente das referências.'
+    if grep -Fq 'ECO, Umberto' /tmp/ufctex-v2-bib.txt; then fail_semantic 'Fonte original do apud entrou indevidamente nas referências.'; fi
+    grep -Fq 'e1234' /tmp/ufctex-v2-bib.txt || fail_semantic 'E-location ausente da referência eletrônica.'
+    grep -Fq '10.0000/ufctex.2025.1234' /tmp/ufctex-v2-bib.txt || fail_semantic 'DOI ausente da referência eletrônica.'
+    grep -Fq 'SIMPÓSIO INTERNACIONAL DE TESTE' /tmp/ufctex-v2-bib.txt || fail_semantic 'Referência de evento ausente.'
+    if grep -Eq 'SIMPÓSIO INTERNACIONAL DE TESTE,? 2025,? \[[Ss]\. ?[Ll]\.\]' /tmp/ufctex-v2-bib.txt; then fail_semantic 'Evento sem cidade recebeu sine loco indevidamente.'; fi
 
-    if command -v pdftohtml >/dev/null 2>&1; then
-      check_apud_italic
-    fi
+    if command -v pdftohtml >/dev/null 2>&1; then check_apud_italic; fi
   fi
-
 done
 
-grep -Fq 'Referências' "$job.toc" || \
-  (echo 'Referências ausentes do Sumário.'; exit 1)
-
+grep -Fq 'Referências' "$job.toc" || (echo 'Referências ausentes do Sumário.'; exit 1)
 echo 'Gate V2 de citações e referências concluído.'
