@@ -1,0 +1,87 @@
+\ProvidesFile{ufctex/postextuais.def}[2026/08/19 UFC post-textual elements]
+
+% Normative mapping: docs/NORMAS.md.
+% References are implemented in bibliografia.def. This module owns the optional
+% glossary and index presentation; appendices and annexes use abntexto public APIs.
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_posttextual_heading:n #1
+  {
+    \ufc_primary_section_break:
+    \cs_if_exist:NT \phantomsection { \phantomsection }
+    \addcontentsline{toc}{section}{\MakeUppercase{#1}}
+    \begin{center}
+      \bfseries\MakeUppercase{#1}\par
+    \end{center}
+    \vspace{\baselineskip}
+  }
+
+\NewDocumentCommand \ufcPosttextualHeading { m }
+  { \ufc_posttextual_heading:n {#1} }
+
+\NewDocumentCommand \ufcSetupGlossaryModule { }
+  {
+    \newglossarystyle{ufc}
+      {
+        \setglossarystyle{list}
+        \renewenvironment{theglossary}
+          {\begin{description}[leftmargin=0pt,labelsep=.5em]}
+          {\end{description}}
+        \renewcommand*{\glossentry}[2]
+          {
+            \item[\glstarget{##1}{\glossentryname{##1}:}]
+            \glossentrydesc{##1}.%
+          }
+        \renewcommand*{\subglossentry}[3]
+          {
+            \item[\glstarget{##2}{\glossentryname{##2}:}]
+            \glossentrydesc{##2}.%
+          }
+      }
+    \setglossarystyle{ufc}
+    \glstocfalse
+  }
+
+\NewDocumentCommand \imprimirglossario { }
+  {
+    \cs_if_exist:NTF \printglossary
+      {
+        \ufc_posttextual_heading:n {Glossário}
+        \begingroup
+          \setglossarysection{none}
+          \glstocfalse
+          \onehalfsp
+          \printglossary[style=ufc,title={}]
+        \endgroup
+      }
+      {
+        \ClassWarningNoLine{ufctex}
+          {Glossary~requested~without~glossario=glossaries}
+      }
+  }
+
+\NewDocumentCommand \ufcIndexHeading { m }
+  { \ufc_posttextual_heading:n {#1} }
+
+\NewDocumentCommand \ufcSetupIndexModule { }
+  { \indexsetup{level=\ufcIndexHeading} }
+
+\NewDocumentCommand \imprimirindice { }
+  {
+    \cs_if_exist:NTF \printindex
+      {
+        \begingroup
+          \onehalfsp
+          \printindex
+        \endgroup
+      }
+      {
+        \ClassWarningNoLine{ufctex}
+          {Index~requested~without~indice=imakeidx}
+      }
+  }
+
+\ExplSyntaxOff
+
+\endinput
