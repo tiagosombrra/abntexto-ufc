@@ -1,0 +1,42 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = anverso,
+  glossario = glossaries,
+  indice = imakeidx
+}
+
+\ufcbibliografia{tests/fixtures/referencias-v2.bib}
+
+\newglossaryentry{malha}{
+  name = {malha},
+  description = {discretização de um domínio geométrico}
+}
+\newglossaryentry{curva}{
+  name = {curva compartilhada},
+  description = {entidade geométrica incidente em mais de uma superfície}
+}
+
+\begin{document}
+
+\pretextual
+\imprimirsumario
+
+\textual
+\section{Introdução}
+Uma \gls{malha} pode compartilhar uma \gls{curva}.\index{malha}\index{curva compartilhada}
+A referência normativa é exercitada por \parencite{silva2020}.
+
+\imprimirreferencias
+\imprimirglossario
+
+\appendix{Questionário produzido pelo autor}
+Conteúdo do apêndice de validação.
+
+\annex{Documento institucional externo}
+Conteúdo do anexo de validação.
+
+\imprimirindice
+
+\end{document}

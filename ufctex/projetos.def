@@ -1,0 +1,91 @@
+\ProvidesFile{ufctex/projetos.def}[2026/08/19 UFC research project profile]
+
+% NBR 15287:2025 + compatible UFC institutional requirements.
+% Full normative mapping: docs/NORMAS.md.
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_project_entity_line:
+  {
+    \ufc_meta_if_blank:nTF {entidade-submissao}
+      { \MakeUppercase{\ufc_meta_use:n {ies}}\par }
+      { \MakeUppercase{\ufc_meta_use:n {entidade-submissao}}\par }
+  }
+
+\cs_new_protected:Npn \ufc_project_title_extras:
+  {
+    \ufc_meta_if_blank:nF {variacao-titulo}
+      { \MakeUppercase{\ufc_meta_use:n {variacao-titulo}}\par }
+    \ufc_meta_if_blank:nF {volume}
+      { VOLUME~\ufc_meta_use:n {volume}\par }
+  }
+
+\cs_new_protected:Npn \ufc_project_cover:
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \centering\bfseries
+      \ufc_print_coat_of_arms:
+      \ufc_project_entity_line:
+      \ufc_optional_upper_line:n {centro}
+      \ufc_optional_upper_line:n {departamento}
+      \ufc_optional_upper_line:n {programa-projeto}
+      \vspace{2cm}
+      \ufc_print_visible_author:
+      \vfill
+      \ufc_title_text:\par
+      \ufc_project_title_extras:
+      \vfill
+      \MakeUppercase{\ufc_meta_use:n {local}}\par
+      \ufc_meta_use:n {ano}\par
+    \endgroup
+    \clearpage
+    \setcounter{page}{1}
+  }
+
+\cs_new_protected:Npn \ufc_project_title_page:
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \centering
+      \ufc_print_visible_author:
+      \vspace{4cm}
+      \bfseries\ufc_title_text:\par
+      \ufc_project_title_extras:
+      \normalfont
+      \vspace{4cm}
+      \noindent\hspace*{8cm}%
+      \begin{minipage}{\dimexpr\textwidth-8cm\relax}
+        \singlesp
+        \ufc_nature_text:
+        \ufc_print_advisors:
+      \end{minipage}\par
+      \vfill
+      \MakeUppercase{\ufc_meta_use:n {local}}\par
+      \ufc_meta_use:n {ano}\par
+    \endgroup
+    \clearpage
+  }
+
+\RenewDocumentCommand \imprimircapa { }
+  {
+    \str_if_eq:VnF \g_ufc_cover_mode_tl {nao}
+      {
+        \ufcIfProjectTF
+          { \ufc_project_cover: }
+          { \ufc_cover: }
+      }
+  }
+
+\RenewDocumentCommand \imprimirfolhaderosto { O{} }
+  {
+    \ufcIfProjectTF
+      { \ufc_project_title_page: }
+      { \ufc_title_page: }
+  }
+
+\ExplSyntaxOff
+
+\endinput

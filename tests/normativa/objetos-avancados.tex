@@ -1,0 +1,135 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tabelas = tabularray,
+  codigo = listings,
+  algoritmos = algpseudocodex
+}
+
+\SetAbntTblrFont{\small}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false
+}
+
+\begin{document}
+
+\imprimirlistadeilustracoes
+\imprimirlistadefiguras
+\imprimirlistadetabelas
+\imprimirlistadequadros
+\imprimirlistadegraficos
+\imprimirlistadecodigos
+\imprimirlistadealgoritmos
+
+\legend{figure}{Figura normativa de teste}
+\ufcfonte{Elaboração própria.}
+\ufcnota{Objeto gráfico sintético para validação.}
+\label{fig:objeto}
+\begin{ufcobjeto}[here]
+  \centering\rule{8cm}{3cm}
+\end{ufcobjeto}
+
+\legend{grafico}{Gráfico normativo de teste}
+\ufcfonte{Elaboração própria.}
+\label{graf:objeto}
+\begin{ufcobjeto}[here]
+  \centering\rule{8cm}{2cm}
+\end{ufcobjeto}
+
+\legend{table}{Tabela acadêmica de teste}
+\ufcfonte{Elaboração própria.}
+\label{tab:objeto}
+\begin{ufcobjeto}[here]
+  \begin{tabular*}{8cm}{@{\extracolsep{\fill}}rr}
+    1 & 10 \\
+    2 & 20 \\
+    3 & 30
+  \end{tabular*}
+\end{ufcobjeto}
+
+\begin{longabnttblr}
+[
+  theme={quadro},
+  caption={Quadro multipágina de teste},
+  label={qua:longo},
+  remark{Fonte}={Elaboração própria.},
+  remark{Nota}={Validação do suporte multipágina.}
+]
+{
+  colspec={X X},
+  vlines,
+  hlines
+}
+Item & Descrição \\
+01 & Linha de validação 01 \\
+02 & Linha de validação 02 \\
+03 & Linha de validação 03 \\
+04 & Linha de validação 04 \\
+05 & Linha de validação 05 \\
+06 & Linha de validação 06 \\
+07 & Linha de validação 07 \\
+08 & Linha de validação 08 \\
+09 & Linha de validação 09 \\
+10 & Linha de validação 10 \\
+11 & Linha de validação 11 \\
+12 & Linha de validação 12 \\
+13 & Linha de validação 13 \\
+14 & Linha de validação 14 \\
+15 & Linha de validação 15 \\
+16 & Linha de validação 16 \\
+17 & Linha de validação 17 \\
+18 & Linha de validação 18 \\
+19 & Linha de validação 19 \\
+20 & Linha de validação 20 \\
+21 & Linha de validação 21 \\
+22 & Linha de validação 22 \\
+23 & Linha de validação 23 \\
+24 & Linha de validação 24 \\
+25 & Linha de validação 25 \\
+26 & Linha de validação 26 \\
+27 & Linha de validação 27 \\
+28 & Linha de validação 28 \\
+29 & Linha de validação 29 \\
+30 & Linha de validação 30 \\
+31 & Linha de validação 31 \\
+32 & Linha de validação 32 \\
+33 & Linha de validação 33 \\
+34 & Linha de validação 34 \\
+35 & Linha de validação 35
+\end{longabnttblr}
+
+\legend{codigo}{Trecho C++ embutido}
+\ufcfonte{Elaboração própria.}
+\label{cod:inline}
+\begin{ufclisting}[here]
+int soma(int a, int b) {
+    return a + b;
+}
+\end{ufclisting}
+
+\legend{codigo}{Arquivo C++ externo}
+\ufcfonte{Elaboração própria.}
+\label{cod:arquivo}
+\begin{ufcobjeto}[here]
+  \ufcinputlisting[language=C++]{tests/fixtures/exemplo.cpp}
+\end{ufcobjeto}
+
+\legend{algoritmo}{Busca linear}
+\ufcfonte{Elaboração própria.}
+\label{alg:busca}
+\begin{ufcalgoritmo}[here][1]
+  \State $i \gets 1$
+  \While{$i \leq n$}
+    \If{$A[i] = x$}
+      \State \Return $i$
+    \EndIf
+    \State $i \gets i + 1$
+  \EndWhile
+  \State \Return $-1$
+\end{ufcalgoritmo}
+
+\end{document}

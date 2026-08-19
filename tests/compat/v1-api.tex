@@ -1,0 +1,57 @@
+\documentclass{ufctex}
+
+% Historical v1 metadata API.
+\trabalhoacademico{tese}
+\ies{Universidade Federal do Ceará}
+\iessigla{UFC}
+\centro{Centro de Ciências}
+\departamento{Departamento de Computação}
+\programadoutorado{Programa de Pós-Graduação em Ciência da Computação}
+\nomedodoutorado{Doutorado em Ciência da Computação}
+\doutorem{Ciência da Computação}
+\areadeconcentracaodoutorado{Computação Gráfica}
+\autor{Autor Legado Teste}
+\titulo{Documento Legado de Validação}
+\data{2026}
+\local{Fortaleza}
+\orientador{Prof. Orientador Legado}
+\orientadories{Universidade Federal do Ceará}
+\orientadorcentro{Centro de Ciências}
+\orientadorfeminino{nao}
+\incluirfichacatalografica{nao}
+
+\ufcbibliografia{tests/fixtures/referencias-v2.bib}
+
+\begin{document}
+
+\imprimircapa
+\imprimirfolhaderosto
+\imprimirsumario
+
+\textual
+\section{Introdução}
+A API histórica de citação permanece disponível: \citeonline{silva2020}.
+
+\UFCfig{
+  \Caption{\label{fig:compat-v1} Objeto pela API legada}
+}{
+  \rule{6cm}{2cm}
+}{
+  \Fonte{Elaboração própria.}
+  \Nota{Objeto usado apenas para regressão de compatibilidade.}
+}
+A Figura~\ref{fig:compat-v1} foi produzida pela interface histórica.
+
+\seprojeto{ERRO-PERFIL-PROJETO}{PERFIL-ACADEMICO-CORRETO}
+
+\imprimirreferencias
+
+\imprimirapendices
+\apendice{Material complementar produzido pelo autor}
+Conteúdo do apêndice legado.
+
+\imprimiranexos
+\anexo{Documento externo}
+Conteúdo do anexo legado.
+
+\end{document}

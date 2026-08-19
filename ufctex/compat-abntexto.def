@@ -1,0 +1,59 @@
+\ProvidesFile{ufctex/compat-abntexto.def}[2026/08/19 ABNTexto compatibility]
+
+% ABNTexto 1.1 writes legend entries with \addcontentsline, while older
+% development builds route them through \addtoext. Normalize both paths here.
+
+\makeatletter
+
+\AddToHook{begindocument/end}{%
+  \ifcsname ufc@baseaddtoext\endcsname
+    \let\addtoext\ufc@baseaddtoext
+  \fi
+
+  % Unified illustration entries already contain their native typed label box.
+  \def\l@loii{\extline{0pt}{0pt}{\maintocfont}}%
+
+  \let\ufc@baseaddcontentsline\addcontentsline
+  \def\addcontentsline#1#2#3{%
+    \ufc@baseaddcontentsline{#1}{#2}{#3}%
+    \edef\ufc@ext{#1}%
+    \def\ufc@lof{lof}%
+    \def\ufc@logr{logr}%
+    \def\ufc@loq{loq}%
+    \ifx\ufc@ext\ufc@lof
+      \ufc@baseaddcontentsline{loi}{loii}{#3}%
+    \fi
+    \ifx\ufc@ext\ufc@logr
+      \ufc@baseaddcontentsline{loi}{loii}{#3}%
+    \fi
+    \ifx\ufc@ext\ufc@loq
+      \ufc@baseaddcontentsline{loi}{loii}{#3}%
+    \fi
+  }%
+}
+
+\makeatother
+
+% LaTeX 2026 loads the new block implementation whenever \DocumentMetadata is
+% present. Avoid enumitem-only description keys so PDF/A documents use the same
+% public UFC list API without depending on the incomplete enumitem emulation.
+\RenewDocumentEnvironment{ufclistadefinicoes}{O{3cm}}
+  {%
+    \begin{list}{}{%
+      \setlength{\leftmargin}{#1}%
+      \setlength{\labelwidth}{\dimexpr#1-.3cm\relax}%
+      \setlength{\labelsep}{.3cm}%
+      \setlength{\rightmargin}{0pt}%
+      \setlength{\itemsep}{0pt}%
+      \setlength{\parsep}{0pt}%
+      \setlength{\topsep}{0pt}%
+      \setlength{\partopsep}{0pt}%
+      \setlength{\listparindent}{0pt}%
+      \renewcommand*\makelabel[1]{%
+        \parbox[t]{\labelwidth}{\normalfont ##1}%
+      }%
+    }%
+  }
+  {\end{list}}
+
+\endinput

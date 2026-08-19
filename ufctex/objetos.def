@@ -1,0 +1,94 @@
+\ProvidesFile{ufctex/objetos.def}[2026/08/18 UFC figures, tables, code and algorithms]
+
+\ExplSyntaxOn
+
+% Native abntexto legend areas used by the UFC profile.
+\cs_if_exist:cF { IDgrafico }
+  { \definelegendplace{grafico}{Gráfico}{logr} }
+\cs_if_exist:cF { IDcodigo }
+  { \definelegendplace{codigo}{Código}{loc} }
+\cs_if_exist:cF { IDalgoritmo }
+  { \definelegendplace{algoritmo}{Algoritmo}{loa} }
+
+% tabularray-abnt defines quadro itself when loaded with abntexto.
+\cs_new_protected:Npn \ufc_objects_setup_quadro:
+  {
+    \cs_if_exist:cF { IDquadro }
+      { \definelegendplace{quadro}{Quadro}{loq} }
+  }
+\AtEndPreamble{\ufc_objects_setup_quadro:}
+
+\NewDocumentCommand \ufcfonte { m }
+  { \src{#1} }
+
+\NewDocumentCommand \ufcnota { m }
+  { \abntextonote{#1} }
+
+\NewDocumentEnvironment { ufcobjeto } { O{\placepos} }
+  { \begin{place}[#1] }
+  { \end{place} }
+
+\NewDocumentCommand \imprimirlistadegraficos { }
+  { \ufc_pretextual_list:nn {Lista~de~Gráficos} {\ufcstarttoc{logr}} }
+
+\NewDocumentCommand \imprimirlistadecodigos { }
+  { \ufc_pretextual_list:nn {Lista~de~Códigos} {\ufcstarttoc{loc}} }
+
+\NewDocumentCommand \imprimirlistadealgoritmos { }
+  { \ufc_pretextual_list:nn {Lista~de~Algoritmos} {\ufcstarttoc{loa}} }
+
+\cs_new_protected:Npn \ufc_objects_setup_listings:
+  {
+    \lstnewenvironment{ufclisting}[1][\placepos]
+      {
+        \let\medskipamount\smallskipamount
+        \place[##1]\vbox\bgroup
+      }
+      {
+        \egroup\endplace
+      }
+
+    \NewDocumentCommand \ufcinputlisting { O{} m }
+      { \lstinputlisting[##1]{##2} }
+  }
+
+\cs_new_protected:Npn \ufc_objects_setup_minted:
+  {
+    \NewDocumentCommand \ufcinputminted { O{\placepos} O{} m m }
+      {
+        \place[##1]\vbox\bgroup
+          \inputminted[##2]{##3}{##4}
+        \egroup\endplace
+      }
+  }
+
+\cs_new_protected:Npn \ufc_objects_setup_algorithms:
+  {
+    \NewDocumentEnvironment { ufcalgoritmo } { O{\placepos} O{1} }
+      {
+        \place[##1]\vbox\bgroup
+        \begin{algorithmic}[##2]
+      }
+      {
+        \end{algorithmic}
+        \egroup\endplace
+      }
+  }
+
+\cs_new_protected:Npn \ufc_objects_setup_optional:
+  {
+    \str_case:Vn \g_ufc_code_module_tl
+      {
+        { listings } { \ufc_objects_setup_listings: }
+        { minted }   { \ufc_objects_setup_minted: }
+      }
+
+    \str_if_eq:VnT \g_ufc_algorithm_module_tl { algpseudocodex }
+      { \ufc_objects_setup_algorithms: }
+  }
+
+\AtBeginDocument{\ufc_objects_setup_optional:}
+
+\ExplSyntaxOff
+
+\endinput

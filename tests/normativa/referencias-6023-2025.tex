@@ -1,0 +1,24 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = anverso
+}
+
+\ufcbibliografia{tests/fixtures/referencias-6023-2025.bib}
+
+\begin{document}
+
+\nocite{evento-sem-cidade}
+\nocite{artigo-elocation}
+\nocite{jurisprudencia-data}
+\nocite{eletronico-sem-publicacao}
+\nocite{impresso-sem-publicacao}
+\nocite{suplemento}
+\nocite{entrevista}
+\nocite{periodico-issn}
+\nocite{identificadores}
+
+\imprimirreferencias
+
+\end{document}
