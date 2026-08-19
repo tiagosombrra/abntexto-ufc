@@ -15,14 +15,14 @@ permissions:
   contents: read
 
 jobs:
-  legacy-regression:
-    name: Legacy 1.x regression
+  v2-reference:
+    name: V2 reference document
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-      - name: Validate legacy line
+      - name: Validate reference document
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
           texlive_version: 2026
@@ -31,7 +31,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            sh tests/v1-regression-check.sh
+            sh tests/v2-reference-check.sh
 
   v2-structure:
     name: V2 layout, pre-textuals and projects

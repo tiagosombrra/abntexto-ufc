@@ -71,7 +71,7 @@ A V2 oferece uma lista geral de ilustrações e mantém listas específicas por 
 | resumo e abstract | NBR 6028:2021 + NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
 | listas pré-textuais | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` + `ufctex/objetos.def` |
 | Sumário | NBR 6027:2012 + NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
-| figuras, gráficos e ilustrações | NBR 14724:2024 + UFC | `ufctex/objetos.def` + lista unificada em `ufctex/pretextuais.def` |
+| figuras, gráficos e ilustrações | NBR 14724:2024 + UFC | `ufctex/objetos.def` + `ufctex/pretextuais.def` + `ufctex/compat-abntexto.def` |
 | tabelas numéricas | NBR 14724:2024 + IBGE | `ufctex/objetos.def` + `tabularray-abnt` |
 | quadros | NBR 14724:2024 + UFC | `ufctex/objetos.def` |
 | código-fonte e algoritmos | extensão editorial compatível com NBR 14724:2024 | `ufctex/objetos.def` + `ufctex/modulos.def` |
@@ -107,7 +107,7 @@ Em particular, na auditoria de 2026-08-19, o `biblatex-abnt` publicado ainda nã
 
 ## Gates de validação
 
-`make preflight` é a entrada local completa. Ele executa a compilação da linha atual, a regressão V1 e toda a matriz V2: layout, geometria do PDF, pré-textuais, objetos, `minted`, citações/referências, NBR 6023:2025, projetos, seis perfis e pós-textuais/compatibilidade V1. O GitHub Actions deve usar os mesmos scripts e targets como gate externo em TeX Live 2026, sem introduzir validações funcionais que existam apenas no CI.
+`make preflight` é a entrada local completa da V2. Ele valida primeiro o `documento.tex` de referência e depois executa a matriz isolada de regressão: layout, geometria do PDF, pré-textuais, objetos, `minted`, citações/referências, NBR 6023:2025, projetos, seis perfis e pós-textuais/compatibilidade da API V1. A linha estável 1.x é mantida e validada separadamente em sua própria branch. O GitHub Actions deve usar os mesmos scripts e targets como gate externo em TeX Live 2026, sem introduzir validações funcionais que existam apenas no CI.
 
 ## Fontes institucionais de verificação
 

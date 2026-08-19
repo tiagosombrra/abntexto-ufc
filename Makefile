@@ -1,10 +1,10 @@
 ########################################################################
-## Modelo de Trabalho Acadêmico UFC / abnTeX2                          ##
+## Modelo de Trabalho Acadêmico UFC / ufctex V2                        ##
 ## Revisão normativa e técnica: Tiago Guimarães Sombra (2026).         ##
 ## Build reproduzível com Biber, glossários e índice.                   ##
 ########################################################################
 
-VERSION := 1.1.2
+VERSION := 2.0.0-dev
 filename := documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
@@ -13,7 +13,7 @@ V2_PRETEXTUAL_FIXTURES := tests/normativa/pretextuais-trabalho.tex tests/normati
 V2_OBJECT_FIXTURES := tests/normativa/objetos-avancados.tex
 V2_MINTED_FIXTURE := tests/normativa/objetos-minted.tex
 
-.PHONY: all compile pdf lua preflight v1-regression-check v2-check v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check version clean
+.PHONY: all compile pdf lua preflight v2-reference-check v2-check v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check version clean
 
 all: compile
 pdf: compile
@@ -36,9 +36,9 @@ lua:
 	$(MAKE) clean
 	$(MAKE) ENGINE=lualatex compile
 
-# Keep the legacy line protected while V2 is developed on the same branch.
-v1-regression-check:
-	@sh tests/v1-regression-check.sh
+# Validate the user-facing V2 document.
+v2-reference-check:
+	@sh tests/v2-reference-check.sh
 
 # Compile the isolated v2 layout fixtures with both supported engines.
 v2-layout-check:
@@ -196,30 +196,13 @@ v2-profile-check:
 v2-posttextual-compat-check:
 	@sh tests/v2-posttextual-compat-check.sh
 
-# Run every V2 gate available locally.
+# Run every isolated V2 gate available locally.
 v2-check: v2-layout-check v2-pdf-geometry-check v2-pretextual-check v2-object-check v2-minted-check v2-bib-check v2-project-check v2-profile-check v2-posttextual-compat-check
-	@echo "Gate local completo da V2 concluído."
+	@echo "Gate local isolado da V2 concluído."
 
-# Local preflight: legacy document plus the full V1/V2 regression matrix.
-# System dependencies such as pdffonts are checked only when available.
-preflight: compile v1-regression-check v2-check
-	@echo "Verificando warnings finais..."
-	@warnings=$$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox' $(filename).log | \
-		grep -vF -e "Package babel Warning: Name 'brazil' is deprecated." \
-		          -e 'Class memoir Warning: \settocpreprocessor is marked deprecated and will be' || true); \
-	if [ -n "$$warnings" ]; then \
-		printf '%s\n' "$$warnings"; \
-		echo "Preflight falhou: revise os avisos acima."; exit 1; \
-	else \
-		echo "Log final sem warnings estruturais não reconhecidos."; \
-	fi
-	@if command -v pdffonts >/dev/null 2>&1; then \
-		if pdffonts $(filename).pdf | tail -n +3 | awk 'NF && $$6 != "yes" {bad=1} END{exit bad}'; then \
-			echo "Fontes do PDF incorporadas."; \
-		else \
-			echo "Preflight falhou: há fonte não incorporada."; exit 1; \
-		fi
-	fi
+# Full local gate: user-facing document plus the isolated V2 regression matrix.
+preflight: v2-reference-check v2-check
+	@echo "Preflight completo da V2 concluído."
 
 clean:
 	@echo "Limpando arquivos auxiliares..."
