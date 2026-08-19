@@ -43,8 +43,10 @@ import unicodedata
 from pathlib import Path
 
 profile = sys.argv[1]
-text = Path('/tmp/ufctex-v2-profile.txt').read_text(encoding='utf-8')
-text = re.sub(r'\s+', ' ', unicodedata.normalize('NFC', text)).strip()
+raw = Path('/tmp/ufctex-v2-profile.txt').read_text(encoding='utf-8')
+# PDF text extraction may preserve visual hyphenation at line breaks.
+raw = re.sub(r'(?<=\w)-[ \t]*\n[ \t]*(?=\w)', '', raw)
+text = re.sub(r'\s+', ' ', unicodedata.normalize('NFC', raw)).strip()
 fold = text.casefold()
 
 expected = {
