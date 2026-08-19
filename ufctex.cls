@@ -20,5 +20,6 @@
 \input{ufctex/pretextuais.def}
 \input{ufctex/objetos.def}
 \input{ufctex/bibliografia.def}
+\input{ufctex/compat-nbr6023-2025.def}
 
 \endinput
