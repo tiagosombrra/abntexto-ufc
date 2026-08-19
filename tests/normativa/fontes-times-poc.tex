@@ -1,0 +1,26 @@
+\documentclass[12pt]{article}
+\usepackage{iftex}
+
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \renewcommand{\rmdefault}{times-ttf}
+\else
+  \usepackage{fontspec}
+  \IfFontExistsTF{Times New Roman}
+    {\setmainfont{Times New Roman}}
+    {\PackageError{ufctex-font-poc}{Times New Roman not found}{Install Times New Roman before running this proof of concept.}}
+\fi
+
+\begin{document}
+Texto normal em Times New Roman.
+
+\textbf{Negrito em Times New Roman.}
+
+\textit{Itálico em Times New Roman.}
+
+\textbf{\textit{Negrito itálico em Times New Roman.}}
+
+Acentuação: ação, ciência, computação, orientação, avaliação, João, Ceará, São Luís, à, ê, í, ó, ú, ç.
+
+Pontuação: -- --- ``aspas inglesas''; parênteses; dois-pontos; ponto e vírgula.
+\end{document}
