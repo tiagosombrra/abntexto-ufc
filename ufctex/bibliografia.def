@@ -135,7 +135,11 @@
   }
 
 \ExplSyntaxOff
-\AtDataInput{\printnames[ufccollectauthor]{author}}
+\AtDataInput{%
+  \begingroup
+    \setbox0=\hbox{\printnames[ufccollectauthor]{author}}%
+  \endgroup
+}
 \ExplSyntaxOn
 
 \cs_new_protected:Npn \ufc_bib_current_level:
