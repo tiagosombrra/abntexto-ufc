@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{ufctex}[2026/08/18 v2.0.0-dev UFC academic document class]
+\ProvidesClass{ufctex}[2026/08/19 v2.0.0-dev UFC academic document class]
 
 % Normative policy and version matrix: docs/NORMAS.md.
 % Always target the latest applicable ABNT edition.
@@ -18,6 +18,7 @@
 \input{ufctex/layout.def}
 \input{ufctex/modulos.def}
 \input{ufctex/pretextuais.def}
+\input{ufctex/projetos.def}
 \input{ufctex/objetos.def}
 \input{ufctex/bibliografia.def}
 \input{ufctex/compat-nbr6023-2025.def}
