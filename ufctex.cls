@@ -18,6 +18,7 @@
 \input{ufctex/layout.def}
 \input{ufctex/modulos.def}
 \input{ufctex/pretextuais.def}
+\input{ufctex/pretextuais-opcionais.def}
 \input{ufctex/projetos.def}
 \input{ufctex/objetos.def}
 \input{ufctex/bibliografia.def}
