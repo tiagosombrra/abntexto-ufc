@@ -1,0 +1,75 @@
+\ProvidesFile{ufctex/bibliografia.def}[2026/08/18 UFC citations and references]
+
+\RequirePackage[
+  backend=biber,
+  style=abnt,
+  sorting=nyt,
+  sortcites=true,
+  maxcitenames=3,
+  mincitenames=1,
+  maxbibnames=99,
+  accite=false,
+  extradate=true
+]{biblatex}
+
+\ExplSyntaxOn
+
+\seq_new:N \l_ufc_bib_title_words_seq
+\tl_new:N \l_ufc_bib_first_word_tl
+\tl_new:N \l_ufc_bib_second_word_tl
+\clist_const:Nn \c_ufc_bib_leading_words_clist
+  { a, o, as, os, um, uma, uns, umas, e, de, da, do, das, dos, em, no, na, nos, nas, por, com, sem, sob, se, que }
+
+\cs_new_protected:Npn \ufc_bib_clean_word:N #1
+  { \regex_replace_once:nnN { [\.,;:] \Z } { } #1 }
+
+\cs_new_protected:Npn \ufc_bib_title_cite:n #1
+  {
+    \seq_set_split:Nnn \l_ufc_bib_title_words_seq { ~ } {#1}
+    \tl_set:Nx \l_ufc_bib_first_word_tl
+      { \seq_item:Nn \l_ufc_bib_title_words_seq {1} }
+    \ufc_bib_clean_word:N \l_ufc_bib_first_word_tl
+    \tl_use:N \l_ufc_bib_first_word_tl
+
+    \int_compare:nNnT { \seq_count:N \l_ufc_bib_title_words_seq } > {1}
+      {
+        \clist_if_in:NeT \c_ufc_bib_leading_words_clist
+          { \tl_lower_case:n { \l_ufc_bib_first_word_tl } }
+          {
+            \tl_set:Nx \l_ufc_bib_second_word_tl
+              { \seq_item:Nn \l_ufc_bib_title_words_seq {2} }
+            \ufc_bib_clean_word:N \l_ufc_bib_second_word_tl
+            \c_space_tl \tl_use:N \l_ufc_bib_second_word_tl
+          }
+        ~[\ldots]
+      }
+  }
+
+% NBR 10520:2023 uses normal capitalization in citations.
+\DeclareFieldFormat{uppercasecite}{#1}
+\DeclareFieldFormat{firstword}{\normalfont\ufc_bib_title_cite:n {#1}}
+
+\NewDocumentCommand \ufcbibliografia { m }
+  { \addbibresource{#1} }
+
+\cs_new_protected:Npn \ufc_print_references:
+  {
+    \ufc_primary_section_break:
+    \phantomsection
+    \addcontentsline{toc}{section}{Referências}
+    \begingroup
+      \parindent=0pt
+      \begin{center}
+        \bfseries REFERÊNCIAS\par
+      \end{center}
+      \vspace{\baselineskip}
+      \printbibliography[heading=none]
+    \endgroup
+  }
+
+\NewDocumentCommand \imprimirreferencias { }
+  { \ufc_print_references: }
+
+\ExplSyntaxOff
+
+\endinput
