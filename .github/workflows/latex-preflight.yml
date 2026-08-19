@@ -50,6 +50,7 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
             make v2-layout-check v2-pretextual-check v2-project-check
+            sh tests/v2-pdf-geometry-check.sh
 
   v2-objects-bibliography:
     name: V2 objects and bibliography
