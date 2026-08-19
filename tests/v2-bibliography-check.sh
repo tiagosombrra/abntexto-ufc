@@ -101,6 +101,18 @@ for engine in pdflatex lualatex; do
       fail_semantic 'Citação com et al. incorreta.'
     grep -Fq 'Chiavenato, 2008a, 2008b' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'Desambiguação de mesmo autor/ano incorreta.'
+    grep -Fq 'Rudio, 2002, 2003, 2007' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Ordem cronológica de mesma autoria incorreta.'
+    grep -Fq 'Rudio (2002, 2003, 2007)' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Citação textual de mesma autoria em anos distintos incorreta.'
+    grep -Fq 'Ferreira, C., 2007, p. 20' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Desambiguação do primeiro autor homônimo incorreta.'
+    grep -Fq 'Ferreira, L., 2007, p. 40' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Desambiguação do segundo autor homônimo incorreta.'
+    grep -Fq 'C. Ferreira (2007, p. 20)' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Forma textual do primeiro autor homônimo incorreta.'
+    grep -Fq 'L. Ferreira (2007, p. 40)' /tmp/ufctex-v2-bib.txt || \
+      fail_semantic 'Forma textual do segundo autor homônimo incorreta.'
     grep -Fq 'Ferreira, 2006; Silva, 2020' /tmp/ufctex-v2-bib.txt || \
       fail_semantic 'Ordenação de autores simultâneos incorreta.'
     grep -Fq 'Universidade Federal do Ceará, 2025' /tmp/ufctex-v2-bib.txt || \
