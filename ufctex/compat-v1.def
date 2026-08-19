@@ -1,0 +1,114 @@
+\ProvidesFile{ufctex/compat-v1.def}[2026/08/19 UFC v1 compatibility layer]
+
+% Compatibility only. New documents should use \ufcsetup and abntexto public APIs.
+% Normative presentation always follows the v2 rules documented in docs/NORMAS.md.
+
+\ProvideDocumentCommand \trabalhoacademico { m }
+  {
+    \ExplSyntaxOn
+    \str_if_eq:nnTF {#1} {projetocego}
+      {
+        \ClassWarningNoLine{ufctex}
+          {Legacy~type~'projetocego'~is~deprecated;~using~projetoanonimizado}
+        \ufcsetup{tipo=projetoanonimizado}
+      }
+      { \ufcsetup{tipo=#1} }
+    \ExplSyntaxOff
+  }
+
+\ProvideDocumentCommand \ies { m } { \ufcsetup{ies={#1}} }
+\ProvideDocumentCommand \iessigla { m } { \ufcsetup{sigla={#1}} }
+\ProvideDocumentCommand \centro { m } { \ufcsetup{centro={#1}} }
+\ProvideDocumentCommand \departamento { m } { \ufcsetup{departamento={#1}} }
+\ProvideDocumentCommand \graduacaoem { m } { \ufcsetup{curso-graduacao={#1}} }
+\ProvideDocumentCommand \habilitacao { m } { \ufcsetup{habilitacao={#1}} }
+\ProvideDocumentCommand \especializacaoem { m } { \ufcsetup{curso-especializacao={#1}} }
+\ProvideDocumentCommand \programamestrado { m } { \ufcsetup{programa-mestrado={#1}} }
+\ProvideDocumentCommand \nomedomestrado { m } { \ufcsetup{nome-mestrado={#1}} }
+\ProvideDocumentCommand \mestreem { m } { \ufcsetup{titulo-mestre={#1}} }
+\ProvideDocumentCommand \areadeconcentracaomestrado { m } { \ufcsetup{area-mestrado={#1}} }
+\ProvideDocumentCommand \programadoutorado { m } { \ufcsetup{programa-doutorado={#1}} }
+\ProvideDocumentCommand \nomedodoutorado { m } { \ufcsetup{nome-doutorado={#1}} }
+\ProvideDocumentCommand \doutorem { m } { \ufcsetup{titulo-doutor={#1}} }
+\ProvideDocumentCommand \areadeconcentracaodoutorado { m } { \ufcsetup{area-doutorado={#1}} }
+\ProvideDocumentCommand \programaprojeto { m } { \ufcsetup{programa-projeto={#1}} }
+\ProvideDocumentCommand \tipoprojeto { m } { \ufcsetup{tipo-projeto={#1}} }
+\ProvideDocumentCommand \entidadesubmissao { m } { \ufcsetup{entidade-submissao={#1}} }
+\ProvideDocumentCommand \identificadorprojeto { m } { \ufcsetup{identificador-projeto={#1}} }
+\ProvideDocumentCommand \naturezaprojeto { m } { \ufcsetup{natureza-projeto={#1}} }
+\ProvideDocumentCommand \autor { m } { \ufcsetup{autor={#1}} }
+\ProvideDocumentCommand \titulo { m } { \ufcsetup{titulo={#1}} }
+\ProvideDocumentCommand \data { m } { \ufcsetup{ano={#1}} }
+\ProvideDocumentCommand \local { m } { \ufcsetup{local={#1}} }
+\ProvideDocumentCommand \dataaprovacao { m } { \ufcsetup{data-aprovacao={#1}} }
+\ProvideDocumentCommand \orientador { m } { \ufcsetup{orientador={#1}} }
+\ProvideDocumentCommand \orientadories { m } { \ufcsetup{orientador-ies={#1}} }
+\ProvideDocumentCommand \orientadorcentro { m } { \ufcsetup{orientador-unidade={#1}} }
+\ProvideDocumentCommand \orientadorfeminino { m } { \ufcsetup{orientador-feminino=#1} }
+\ProvideDocumentCommand \coorientador { m } { \ufcsetup{coorientador={#1}} }
+\ProvideDocumentCommand \coorientadories { m } { \ufcsetup{coorientador-ies={#1}} }
+\ProvideDocumentCommand \coorientadorcentro { m } { \ufcsetup{coorientador-unidade={#1}} }
+\ProvideDocumentCommand \coorientadorfeminino { m } { \ufcsetup{coorientador-feminino=#1} }
+\ProvideDocumentCommand \autordaepigrafe { m } { \ufcsetup{autor-epigrafe={#1}} }
+
+\ProvideDocumentCommand \membrodabancadois { m } { \ufcsetup{banca-2={#1}} }
+\ProvideDocumentCommand \membrodabancadoiscentro { m } { \ufcsetup{banca-2-unidade={#1}} }
+\ProvideDocumentCommand \membrodabancadoisies { m } { \ufcsetup{banca-2-ies={#1}} }
+\ProvideDocumentCommand \membrodabancatres { m } { \ufcsetup{banca-3={#1}} }
+\ProvideDocumentCommand \membrodabancatrescentro { m } { \ufcsetup{banca-3-unidade={#1}} }
+\ProvideDocumentCommand \membrodabancatresies { m } { \ufcsetup{banca-3-ies={#1}} }
+\ProvideDocumentCommand \membrodabancaquatro { m } { \ufcsetup{banca-4={#1}} }
+\ProvideDocumentCommand \membrodabancaquatrocentro { m } { \ufcsetup{banca-4-unidade={#1}} }
+\ProvideDocumentCommand \membrodabancaquatroies { m } { \ufcsetup{banca-4-ies={#1}} }
+\ProvideDocumentCommand \membrodabancacinco { m } { \ufcsetup{banca-5={#1}} }
+\ProvideDocumentCommand \membrodabancacincocentro { m } { \ufcsetup{banca-5-unidade={#1}} }
+\ProvideDocumentCommand \membrodabancacincoies { m } { \ufcsetup{banca-5-ies={#1}} }
+\ProvideDocumentCommand \membrodabancaseis { m } { \ufcsetup{banca-6={#1}} }
+\ProvideDocumentCommand \membrodabancaseiscentro { m } { \ufcsetup{banca-6-unidade={#1}} }
+\ProvideDocumentCommand \membrodabancaseisies { m } { \ufcsetup{banca-6-ies={#1}} }
+
+\ProvideDocumentCommand \seprojeto { +m +m } { \ufcIfProjectTF{#1}{#2} }
+\ProvideDocumentCommand \seprojetoanonimizado { +m +m } { \ufcIfAnonymizedProjectTF{#1}{#2} }
+\ProvideDocumentCommand \incluirfichacatalografica { m } { \ufcsetup{ficha-catalografica=#1} }
+\ProvideDocumentCommand \brasaoemprojeto { m } { \ufcsetup{brasao=#1} }
+
+\ProvideDocumentCommand \ehqualificacao { m }
+  {
+    \ExplSyntaxOn
+    \str_if_eq:nnT {#1} {sim}
+      {
+        \ClassWarningNoLine{ufctex}
+          {Legacy~qualification~mode~is~not~a~v2~document~profile;~configure~the~document~type~and~nature~explicitly}
+      }
+    \ExplSyntaxOff
+  }
+
+\ProvideDocumentCommand \citeonline { O{} m }
+  { \textcite[#1]{#2} }
+
+\ProvideDocumentCommand \Caption { m } { \legend{#1} }
+\ProvideDocumentCommand \Fonte { O{Fonte} m }
+  {
+    \ExplSyntaxOn
+    \str_if_eq:nnF {#1} {Fonte}
+      { \ClassWarningNoLine{ufctex}{Custom~legacy~source~label~'#1'~is~rendered~with~the~v2~Fonte~label} }
+    \ExplSyntaxOff
+    \src{#2}
+  }
+\ProvideDocumentCommand \Nota { O{Nota} m }
+  {
+    \ExplSyntaxOn
+    \str_if_eq:nnF {#1} {Nota}
+      { \ClassWarningNoLine{ufctex}{Custom~legacy~note~label~'#1'~is~rendered~with~the~v2~Nota~label} }
+    \ExplSyntaxOff
+    \abntextonote{#2}
+  }
+
+% Old files used a mode switch followed by one command per appendix/annex.
+% The v2 aliases preserve that source shape but delegate each item to abntexto.
+\ProvideDocumentCommand \imprimirapendices { } { \clearpage }
+\ProvideDocumentCommand \apendice { m } { \appendix{#1} }
+\ProvideDocumentCommand \imprimiranexos { } { \clearpage }
+\ProvideDocumentCommand \anexo { m } { \annex{#1} }
+
+\endinput
