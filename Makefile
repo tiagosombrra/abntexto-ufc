@@ -109,6 +109,8 @@ v2-object-check:
 		grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true); \
 	if [ -n "$$warnings" ]; then \
 		printf '%s\n' "$$warnings"; \
+		echo "Contexto das caixas excedentes:"; \
+		grep -n -A4 -B1 -E 'Overfull \\hbox|Overfull \\vbox' objetos-avancados.log || true; \
 		echo "Preflight V2 falhou: fixture de objetos contém warnings ou overflow não reconhecidos."; exit 1; \
 	fi
 	@grep -Fq 'Figura normativa de teste' objetos-avancados.lof || \
