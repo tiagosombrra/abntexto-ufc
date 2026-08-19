@@ -20,6 +20,7 @@
 \input{ufctex/pretextuais.def}
 \input{ufctex/projetos.def}
 \input{ufctex/objetos.def}
+\input{ufctex/compat-abntexto.def}
 \input{ufctex/bibliografia.def}
 \input{ufctex/compat-nbr6023-2025.def}
 \input{ufctex/postextuais.def}
