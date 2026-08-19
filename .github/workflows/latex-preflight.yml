@@ -32,13 +32,13 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
             sh tests/v2-reference-check.sh
-      - name: Validate PDF/A-2b
+      - name: Validate reference PDF/A-2b
         run: sh tests/v2-pdfa-check.sh
 
   v2-structure:
     name: V2 layout, pre-textuals and projects
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -51,8 +51,16 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            make v2-layout-check v2-pretextual-check v2-duplex-pretextual-check v2-project-check
-            sh tests/v2-pdf-geometry-check.sh
+            make \
+              v2-distribution-check \
+              v2-layout-check \
+              v2-pdf-geometry-check \
+              v2-pretextual-check \
+              v2-duplex-pretextual-check \
+              v2-project-check \
+              v2-build-check \
+              v2-multivolume-check \
+              v2-catalog-card-check
 
   v2-objects-bibliography:
     name: V2 objects and bibliography
@@ -75,11 +83,11 @@ jobs:
   v2-profiles:
     name: V2 profile matrix
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-      - name: Validate six profiles
+      - name: Build and validate twelve profile PDFs
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
           texlive_version: 2026
@@ -89,6 +97,8 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
             make v2-profile-check
+      - name: Validate twelve profile PDFs as PDF/A-2b
+        run: sh tests/v2-profile-pdfa-check.sh
 
   v2-posttextual-compat:
     name: V2 post-textuals and v1 compatibility

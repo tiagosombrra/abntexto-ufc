@@ -1,0 +1,139 @@
+\ProvidesFile{ufctex/trabalhos.def}[2026/08/19 UFC academic work profiles]
+
+% NBR 14724:2024: volume identification and continuous pagination.
+\ExplSyntaxOn
+
+\int_new:N \g_ufc_initial_page_int
+\int_new:N \l_ufc_catalog_page_int
+\int_gset:Nn \g_ufc_initial_page_int {1}
+
+\keys_define:nn { ufc }
+  {
+    pagina-inicial .code:n =
+      {
+        \int_compare:nNnTF {#1} > {0}
+          { \int_gset:Nn \g_ufc_initial_page_int {#1} }
+          {
+            \ClassError{ufctex}
+              {Invalid~pagina-inicial~'#1'}
+              {Use~an~integer~greater~than~zero.}
+          }
+      }
+  }
+
+\AtBeginDocument
+  { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
+
+\AddToHook{cmd/imprimircapa/after}
+  { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
+
+\cs_new_protected:Npn \ufc_work_volume_line:
+  {
+    \ufc_meta_if_blank:nF {volume}
+      { VOLUME~\ufc_meta_use:n {volume}\par }
+  }
+
+\cs_set_protected:Npn \ufc_cover_program_lines:
+  {
+    \str_case:Vn \g_ufc_document_type_tl
+      {
+        {tccgraduacao}
+          {
+            \ufc_meta_if_blank:nF {curso-graduacao}
+              {
+                \MakeUppercase
+                  {Curso~de~Graduação~em~\ufc_meta_use:n {curso-graduacao}}\par
+              }
+          }
+        {tccespecializacao}
+          {
+            \ufc_meta_if_blank:nF {curso-especializacao}
+              {
+                \MakeUppercase
+                  {Curso~de~Especialização~em~\ufc_meta_use:n {curso-especializacao}}\par
+              }
+          }
+        {dissertacao}
+          {
+            \ufc_optional_upper_line:n {programa-mestrado}
+            \ufc_optional_upper_line:n {nome-mestrado}
+          }
+        {tese}
+          {
+            \ufc_optional_upper_line:n {programa-doutorado}
+            \ufc_optional_upper_line:n {nome-doutorado}
+          }
+      }
+  }
+
+\cs_set_protected:Npn \ufc_cover:
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \centering\bfseries
+      \ufc_print_coat_of_arms:
+      \MakeUppercase{\ufc_meta_use:n {ies}}\par
+      \ufc_optional_upper_line:n {centro}
+      \ufc_optional_upper_line:n {departamento}
+      \ufc_cover_program_lines:
+      \vspace{2cm}
+      \ufc_print_visible_author:
+      \vfill
+      \ufc_title_text:\par
+      \ufc_work_volume_line:
+      \vfill
+      \MakeUppercase{\ufc_meta_use:n {local}}\par
+      \ufc_meta_use:n {ano}\par
+    \endgroup
+    \clearpage
+    \setcounter{page}{\int_use:N \g_ufc_initial_page_int}
+  }
+
+\cs_set_protected:Npn \ufc_title_page:
+  {
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \centering
+      \ufc_print_visible_author:
+      \vspace{4cm}
+      \bfseries\ufc_title_text:\par
+      \ufc_work_volume_line:
+      \normalfont
+      \vspace{4cm}
+      \noindent\hspace*{8cm}%
+      \begin{minipage}{\dimexpr\textwidth-8cm\relax}
+        \singlesp
+        \ufc_nature_text:
+        \ufc_print_advisors:
+      \end{minipage}\par
+      \vfill
+      \MakeUppercase{\ufc_meta_use:n {local}}\par
+      \ufc_meta_use:n {ano}\par
+    \endgroup
+    \clearpage
+  }
+
+% UFC pagination: in one-sided works the catalog card is physical but uncounted;
+% in duplex works it is counted as the verso of the title-page leaf.
+\cs_set_protected:Npn \ufc_catalog_card:n #1
+  {
+    \bool_if:NT \g_ufc_catalog_card_bool
+      {
+        \int_set:Nn \l_ufc_catalog_page_int { \value{page} }
+        \IfFileExists{#1.pdf}
+          { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1.pdf} }
+          {
+            \IfFileExists{#1}
+              { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1} }
+              { \ClassWarningNoLine{ufctex}{Catalog~card~file~'#1'~not~found} }
+          }
+        \str_if_eq:VnT \g_ufc_print_mode_tl {anverso}
+          { \setcounter{page}{\int_use:N \l_ufc_catalog_page_int} }
+      }
+  }
+
+\ExplSyntaxOff
+
+\endinput

@@ -1,14 +1,12 @@
 # Modelo LaTeX UFC
 
-Template comunitário para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), com uma classe própria baseada em `abntexto`.
+Template comunitário para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), com classe própria `ufctex` baseada em `abntexto`.
 
-**Versão atual: 2.0.0 — 19/08/2026.** A linha estável 1.x permanece preservada na branch `1.x` para documentos legados.
+**Versão atual: 2.0.0 — 19/08/2026.** A linha 1.x baseada em `abntex2` permanece preservada na branch `1.x` para documentos legados.
 
-Este projeto não é um modelo oficial da UFC. Antes da entrega, confira as orientações vigentes do Sistema de Bibliotecas, do curso, do programa e do edital aplicável.
+Este projeto não é um modelo oficial da UFC. Antes da entrega, confira também as orientações vigentes do Sistema de Bibliotecas, do curso, do programa e do edital aplicável.
 
-## V2
-
-A V2 substitui a arquitetura histórica baseada diretamente em `abntex2` por:
+## Arquitetura V2
 
 ```text
 documento.tex
@@ -18,20 +16,22 @@ documento.tex
           +-- layout.def
           +-- modulos.def
           +-- pretextuais.def
+          +-- institucional.def
           +-- projetos.def
+          +-- trabalhos.def
           +-- objetos.def
-          +-- bibliografia.def
-          +-- postextuais.def
           +-- compat-abntexto.def
+          +-- bibliografia.def
           +-- compat-nbr6023-2025.def
+          +-- postextuais.def
           +-- compat-v1.def
 ```
 
-`ufctex` requer `abntexto` 1.1 ou superior. A política normativa e a matriz de implementação estão em `docs/NORMAS.md`.
+`ufctex` requer `abntexto` 1.1 ou superior. A política normativa detalhada está em `docs/NORMAS.md`.
 
 ## Uso rápido
 
-O ponto de entrada é `documento.tex`. Para trabalhos destinados a depósito institucional, preserve `\DocumentMetadata` antes de `\documentclass`:
+O arquivo principal é `documento.tex`. Para PDFs destinados a depósito, preserve `\DocumentMetadata` antes de `\documentclass`:
 
 ```tex
 \DocumentMetadata{
@@ -52,16 +52,7 @@ O ponto de entrada é `documento.tex`. Para trabalhos destinados a depósito ins
 }
 ```
 
-O perfil PDF/A-2b é a escolha técnica adotada pelo template para produzir um PDF/A validável. A exigência institucional da UFC é por PDF/A; o subtipo PDF/A-2b não é apresentado pelo projeto como uma imposição específica da Universidade.
-
-Depois:
-
-1. escolha o perfil do documento;
-2. preencha os metadados em `\ufcsetup`;
-3. edite os arquivos em `1-pre-textuais`, `2-textuais` e `3-pos-textuais`;
-4. mantenha `documento.tex` como arquivo principal;
-5. compile e revise o PDF final;
-6. para depósito, execute também a validação PDF/A de release.
+A UFC exige PDF/A nas modalidades de depósito institucional aplicáveis. O projeto escolhe PDF/A-2b como perfil técnico verificável; não declara o subtipo 2b como imposição específica da Universidade.
 
 ## Perfis
 
@@ -72,15 +63,60 @@ Depois:
 | `dissertacao` | dissertação de mestrado |
 | `tese` | tese de doutorado |
 | `projeto` | projeto de pesquisa identificado |
-| `projetoanonimizado` | projeto de pesquisa com identificação pessoal suprimida |
+| `projetoanonimizado` | projeto de pesquisa com dados pessoais suprimidos |
 
-A impressão pode ser configurada como `anverso` ou `frente-verso`.
+A impressão pode ser `anverso` ou `frente-verso`.
 
-No modo `frente-verso`, as margens são espelhadas em todo o miolo: anverso com esquerda/superior de 3 cm e direita/inferior de 2 cm; verso com direita/superior de 3 cm e esquerda/inferior de 2 cm. Elementos pré-textuais, exceto a ficha catalográfica, e seções primárias são conduzidos ao próximo anverso quando necessário. Os pós-textuais controlados pela V2 usam a mesma política de início em anverso.
+## Trabalhos em mais de um volume
+
+Quando houver mais de um volume:
+
+```tex
+\ufcsetup{
+  volume = {2},
+  pagina-inicial = 101
+}
+```
+
+`volume` é impresso na capa e na folha de rosto dos trabalhos acadêmicos. `pagina-inicial` permite manter paginação contínua entre os volumes.
+
+## Frente e verso
+
+No modo `frente-verso`, a V2 aplica margens espelhadas ao miolo:
+
+- anverso: esquerda/superior 3 cm; direita/inferior 2 cm;
+- verso: direita/superior 3 cm; esquerda/inferior 2 cm;
+- paginação à direita no anverso e à esquerda no verso;
+- pré-textuais, exceto ficha catalográfica, iniciam em anverso;
+- seções textuais primárias e pós-textuais controlados pela V2 iniciam em anverso.
+
+## Ficha catalográfica
+
+Em 2026, a representação visual da ficha tornou-se facultativa no contexto institucional consultado. O padrão é:
+
+```tex
+ficha-catalografica = nao
+```
+
+Quando ativada:
+
+```tex
+ficha-catalografica = sim
+```
+
+use:
+
+```tex
+\imprimirfichacatalografica{caminho/para/ficha}
+```
+
+No modo `anverso`, a página física da ficha não incrementa a contagem lógica. Em `frente-verso`, ela ocupa o verso da folha de rosto e permanece na sequência contada.
+
+A inclusão de uma ficha ou de qualquer PDF externo pode alterar a conformidade PDF/A do arquivo final. Sempre execute novamente o veraPDF no documento completo depois de incorporar arquivos externos.
 
 ## Estrutura textual
 
-O perfil normativo V2 é baseado em seções. Use:
+A V2 usa `\section` como nível textual primário:
 
 ```tex
 \section{Introdução}
@@ -88,7 +124,7 @@ O perfil normativo V2 é baseado em seções. Use:
 \subsubsection{Detalhamento}
 ```
 
-`\chapter` não faz parte do perfil V2.
+`\chapter` não faz parte do perfil normativo V2.
 
 ## Elementos pré-textuais
 
@@ -96,6 +132,7 @@ Exemplo:
 
 ```tex
 \pretextual
+
 \imprimircapa
 \imprimirfolhaderosto
 \imprimirfolhadeaprovacao
@@ -106,16 +143,18 @@ Exemplo:
 \imprimirabstract{1-pre-textuais/abstract}
 \imprimirlistadeilustracoes
 \imprimirlistadetabelas
+\imprimirlistadeabreviaturasesiglas{1-pre-textuais/lista-de-abreviaturas-e-siglas}
+\imprimirlistadesimbolos{1-pre-textuais/lista-de-simbolos}
 \imprimirsumario
 ```
 
-O documento de referência mantém resumo e abstract na faixa de 150 a 500 palavras. As palavras-chave são apresentadas em sequência após o resumo/abstract.
+A folha de aprovação gerada pela classe contém linhas e identificação da banca, mas não incorpora imagens de assinatura.
 
-A Lista de Ilustrações reúne figuras, gráficos e quadros na ordem de ocorrência. Tabelas permanecem em lista própria. Listas específicas de figuras, gráficos e quadros também estão disponíveis.
+O resumo e o abstract distribuídos ficam na faixa de 150 a 500 palavras e usam palavras-chave após o texto.
 
 ## Objetos
 
-A API principal usa as áreas de legenda do `abntexto`:
+A API principal usa a infraestrutura de legenda do `abntexto`:
 
 ```tex
 \legend{figure}{Título da figura}
@@ -128,9 +167,9 @@ A API principal usa as áreas de legenda do `abntexto`:
 \end{ufcobjeto}
 ```
 
-O mesmo padrão é usado para `table`, `quadro`, `grafico`, `codigo` e `algoritmo`, conforme o módulo habilitado.
+O mesmo padrão é usado para tabelas, quadros, gráficos, códigos e algoritmos conforme o módulo habilitado. A fonte deve ser informada inclusive em conteúdo de elaboração própria.
 
-Para ilustrações, informe sempre a fonte com `\ufcfonte{...}`, inclusive quando o conteúdo for de elaboração própria. Os exemplos normativos e a suíte de objetos validam a presença da fonte nos documentos de teste.
+A Lista de Ilustrações agrega figuras, gráficos e quadros. Tabelas permanecem em lista própria.
 
 ## Módulos opcionais
 
@@ -152,21 +191,21 @@ Valores principais:
 - `glossario`: `nenhum` ou `glossaries`;
 - `indice`: `nenhum` ou `imakeidx`.
 
-`minted` exige o suporte externo correspondente no ambiente de compilação.
+`minted` exige suporte externo no ambiente de compilação.
 
 ## Fonte tipográfica
 
-O Guia UFC admite Arial ou Times New Roman. A V2 segue uma estratégia portável:
+O Guia UFC admite Arial ou Times New Roman. A V2 usa:
 
-- com LuaLaTeX, usa Times New Roman quando a fonte está instalada e acessível;
-- sem Times New Roman no ambiente LuaLaTeX, usa TeX Gyre Termes e emite warning;
-- com pdfLaTeX, usa NewTX como família portável de desenho Times.
+- LuaLaTeX: Times New Roman quando instalada;
+- LuaLaTeX sem Times New Roman: TeX Gyre Termes, com warning explícito;
+- pdfLaTeX: NewTX como família portável de desenho Times.
 
-NewTX e TeX Gyre Termes não devem ser descritas como a própria Times New Roman. Quando o curso ou programa exigir identidade literal da família tipográfica, prefira LuaLaTeX em um ambiente que disponibilize Times New Roman e confira as fontes incorporadas no PDF final.
+NewTX e TeX Gyre Termes não são apresentadas como a própria Times New Roman. Quando houver exigência de identidade literal da família, prefira LuaLaTeX em ambiente que disponibilize Times New Roman e confira as fontes incorporadas.
 
 ## Citações e referências
 
-A V2 usa `biblatex` com Biber e estilo ABNT:
+A V2 usa `biblatex` + Biber com estilo ABNT:
 
 ```tex
 \ufcbibliografia{3-pos-textuais/referencias.bib}
@@ -185,7 +224,7 @@ Ao final:
 \imprimirreferencias
 ```
 
-As referências são apresentadas com espaçamento simples dentro de cada entrada e um intervalo equivalente a uma linha simples entre entradas. A camada `compat-nbr6023-2025.def` mantém isolados os ajustes transitórios necessários enquanto o suporte equivalente não estiver disponível no upstream.
+A camada `compat-nbr6023-2025.def` concentra ajustes transitórios da NBR 6023:2025 enquanto o suporte equivalente não estiver disponível no upstream.
 
 ## Pós-textuais
 
@@ -194,12 +233,15 @@ As referências são apresentadas com espaçamento simples dentro de cada entrad
 \imprimirglossario
 
 \appendix{Título do apêndice}
+\input{3-pos-textuais/apendices/apendice-a}
+
 \annex{Título do anexo}
+\input{3-pos-textuais/anexos/anexo-a}
 
 \imprimirindice
 ```
 
-Apêndices, anexos, glossário e índice são opcionais.
+Os arquivos distribuídos de apêndices e anexos contêm somente o conteúdo; a abertura é feita por `\appendix` e `\annex` no documento principal.
 
 ## Compilação
 
@@ -209,7 +251,13 @@ Fluxo padrão:
 make
 ```
 
-O `Makefile` usa pdfLaTeX por padrão e executa Biber, glossários e índice quando configurados pelo documento de referência.
+O `Makefile` usa pdfLaTeX por padrão. Após a primeira passagem, executa apenas os processadores necessários pelos artefatos efetivamente gerados:
+
+- `.bcf` com uma `datasource` bibliográfica → Biber;
+- `.glo` não vazio → `makeglossaries`;
+- `.idx` não vazio → `makeindex`.
+
+Assim, um documento sem fonte bibliográfica, glossário ou índice não exige os processadores correspondentes.
 
 LuaLaTeX:
 
@@ -217,79 +265,64 @@ LuaLaTeX:
 make lua
 ```
 
-Validação completa de desenvolvimento:
+## Validação
+
+Gate completo de desenvolvimento:
 
 ```bash
 make preflight
 ```
 
-Validação pré-release, incluindo conformidade PDF/A-2b com veraPDF:
+Gate de release, incluindo veraPDF:
 
 ```bash
 make release-preflight
 ```
 
-O gate PDF/A usa a instalação local de `verapdf` quando disponível. Como alternativa, usa Docker com a imagem estável `verapdf/cli:v1.30.2`. Arquivos incorporados pelo usuário, especialmente PDFs e imagens externos, podem alterar a conformidade; por isso o PDF final de depósito deve ser validado novamente.
+A suíte cobre:
 
-A suíte V2 cobre o documento de referência, PDF/A, layout, geometria real do PDF, duplex, pré-textuais, objetos, bibliografia, projetos, perfis, pós-textuais e compatibilidade pública da API da linha anterior. O gate externo usa TeX Live 2026.
+- consistência dos arquivos distribuídos;
+- documento completo de referência;
+- A4, margens, paginação e duplex medidos no PDF;
+- pré e pós-textuais;
+- ficha catalográfica em `anverso` e `frente-verso`;
+- trabalhos multivolume e continuidade de paginação;
+- objetos, tabelas, código e algoritmos;
+- citações e referências;
+- projetos;
+- fluxo modular do `Makefile`;
+- seis perfis completos em pdfLaTeX e LuaLaTeX.
 
-## Entrega institucional UFC
+A matriz final gera **12 PDFs** — seis perfis × dois motores — e verifica conteúdo específico, Sumário, A4, fontes incorporadas, ausência de `chapter`, warnings/overflow não reconhecidos e metadados PDF/A-2b. O gate de release passa os 12 PDFs e o documento de referência pelo veraPDF.
 
-Na política institucional vigente consultada em agosto de 2026:
-
-- TCC, dissertações e teses destinados ao repositório devem ser entregues em arquivo eletrônico PDF/A;
-- a folha de aprovação da versão destinada ao repositório deve ser apresentada sem as assinaturas dos membros da banca;
-- a representação visual da ficha catalográfica tornou-se facultativa para TCC, dissertações e teses, e o serviço CATALOG foi descontinuado pela UFC em 2026.
-
-Por isso, `ficha-catalografica = nao` permanece como padrão da V2. O comando de inclusão continua disponível para situações em que um programa, edital ou acervo específico ainda o solicite.
-
-A folha de aprovação gerada pela classe contém identificação e linhas da banca, mas não insere imagens de assinaturas. Não acrescente assinaturas digitalizadas à cópia destinada ao repositório quando a orientação institucional aplicável determinar sua ausência.
+O CI usa TeX Live 2026 e mantém o job agregado `latex-preflight` como gate obrigatório.
 
 ## Overleaf
 
-Importe o projeto completo e mantenha `documento.tex` como arquivo principal. Use uma versão recente do TeX Live que contenha `abntexto` 1.1 ou superior. pdfLaTeX é o caminho padrão; LuaLaTeX também é suportado.
+Importe o projeto completo e mantenha `documento.tex` como arquivo principal. Use uma versão recente do TeX Live com `abntexto` 1.1 ou superior.
 
-Preserve `\DocumentMetadata` antes de `\documentclass` quando precisar gerar PDF/A. A validação independente com veraPDF deve ser feita após baixar o PDF final.
-
-Caso use `minted`, habilite o fluxo exigido por esse pacote no ambiente de compilação.
+pdfLaTeX é o caminho padrão; LuaLaTeX também é suportado. Preserve `\DocumentMetadata` antes de `\documentclass` quando precisar de PDF/A e valide o PDF baixado com veraPDF antes do depósito.
 
 ## Migração da V1
 
-A V2 é uma mudança de plataforma. Para documentos novos, não carregue `lib/preambulo.tex` nem use `abntex2` diretamente.
-
-Principais mudanças:
+A V2 é uma mudança de plataforma. A implementação histórica permanece na branch `1.x`; os arquivos LaTeX V1 não são distribuídos na árvore V2.
 
 | V1 | V2 |
 |---|---|
 | `\documentclass{abntex2}` | `\documentclass{ufctex}` |
-| `\input{lib/preambulo}` | removido do documento principal |
-| configuração histórica distribuída | `\ufcsetup{...}` |
+| `\input{lib/preambulo}` | removido |
+| configuração histórica | `\ufcsetup{...}` |
 | `\chapter` como nível principal | `\section` |
-| helpers `\UFCfig`, `\UFCtab`, `\UFCqua` | `\legend` + `\ufcfonte` + `ufcobjeto` |
-| configuração bibliográfica no preâmbulo | `\ufcbibliografia{arquivo.bib}` |
+| `\UFCfig`, `\UFCtab`, `\UFCqua` | `\legend` + `\ufcfonte` + `ufcobjeto` |
+| configuração bibliográfica histórica | `\ufcbibliografia{arquivo.bib}` |
 
-A camada `compat-v1.def` existe para facilitar transição e regressão, mas não define o estilo recomendado para documentos novos.
-
-## Compatibilidade
-
-A V2 é validada com pdfLaTeX e LuaLaTeX. O desenvolvimento local pode usar uma distribuição mais nova, mas a certificação do projeto é feita no ambiente definido pelo GitHub Actions com TeX Live 2026 e `abntexto` estável.
+`compat-v1.def` existe apenas como camada de transição e regressão; não define o estilo recomendado para documentos novos.
 
 ## Normas
 
-Consulte `docs/NORMAS.md` para:
+Consulte `docs/NORMAS.md` para a matriz norma → implementação, política de precedência e gates de validação.
 
-- edições normativas adotadas;
-- precedência entre ABNT e requisitos institucionais;
-- mapa norma → implementação;
-- políticas UFC verificadas em 2026;
-- patches temporários de compatibilidade;
-- política dos gates de validação.
-
-Não declare conformidade apenas porque o documento compilou ou porque o PDF contém metadados PDF/A. A revisão final deve considerar as exigências específicas aplicáveis ao trabalho e, para depósito, a validação independente do arquivo final.
-
-## Linha 1.x
-
-A última série baseada diretamente em `abntex2` permanece disponível na branch `1.x` para manutenção e documentos legados. Novos documentos devem usar a V2.
+Não declare conformidade apenas porque o documento compilou ou porque contém metadados PDF/A. A revisão final deve considerar as exigências específicas aplicáveis e, para depósito, a validação independente do arquivo final.
 
 ## Licença
 

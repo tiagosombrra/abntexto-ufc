@@ -1,13 +1,23 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
 \documentclass{ufctex}
 
 \ufcsetup{
   tipo = @UFC_TYPE@,
   impressao = anverso,
+  capa = sim,
+  ficha-catalografica = nao,
+  glossario = nenhum,
+  indice = nenhum,
   ies = {Universidade Federal do Ceará},
   centro = {Centro de Teste},
   departamento = {Departamento de Teste},
   curso-graduacao = {Ciência da Computação},
-  habilitacao = {Bacharel},
+  habilitacao = {bacharel},
   curso-especializacao = {Computação Aplicada},
   programa-mestrado = {Programa de Pós-Graduação de Teste},
   nome-mestrado = {Mestrado Acadêmico de Teste},
@@ -25,21 +35,60 @@
   titulo = {Documento de Validação do Perfil},
   local = {Fortaleza},
   ano = {2026},
-  orientador = {Prof. Orientador Matriz Teste}
+  data-aprovacao = {19 de agosto de 2026},
+  orientador = {Prof. Orientador Matriz Teste},
+  orientador-ies = {Universidade Federal do Ceará},
+  orientador-unidade = {Centro de Teste},
+  banca-2 = {Prof. Membro Matriz Teste},
+  banca-2-ies = {Universidade Federal do Ceará},
+  banca-2-unidade = {Centro de Teste}
 }
+
+\ufcbibliografia{tests/fixtures/referencias-v2.bib}
 
 \begin{document}
 \pretextual
 
 \imprimircapa
 \imprimirfolhaderosto
+\ufcIfProjectTF{}{
+  \imprimirfolhadeaprovacao
+  \imprimirresumo{1-pre-textuais/resumo}
+  \imprimirabstract{1-pre-textuais/abstract}
+}
 \imprimirsumario
 
 \textual
 \section{Introdução}
 Conteúdo mínimo para validação do perfil documental.
 
-\section{Metodologia}
-Segunda seção primária da fixture.
+\ufcIfProjectTF{
+  \section{Referencial teórico}
+  Referencial mínimo da proposta.
+
+  \section{Metodologia}
+  Procedimentos metodológicos da proposta.
+
+  \section{Recursos}
+  Recursos necessários à execução.
+
+  \section{Cronograma}
+  Cronograma sintético da proposta.
+}{
+  \section{Fundamentação teórica}
+  Fundamentação mínima do trabalho acadêmico.
+
+  \section{Metodologia}
+  Procedimentos metodológicos do trabalho.
+
+  \section{Resultados e discussão}
+  Resultados sintéticos para validação estrutural.
+
+  \section{Conclusão}
+  Conclusão sintética da fixture.
+}
+
+\nocite{silva2020}
+\imprimirreferencias
 
 \end{document}
