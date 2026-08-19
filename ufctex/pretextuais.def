@@ -249,7 +249,7 @@
         \singlesp
         \ufc_nature_text:
         \ufc_print_advisors:
-      \end{minipage}
+      \end{minipage}\par
       \vfill
       \MakeUppercase{\ufc_meta_use:n {local}}\par
       \ufc_meta_use:n {ano}\par
@@ -348,7 +348,7 @@
           \noindent\hspace*{8cm}%
           \begin{minipage}{\dimexpr\textwidth-8cm\relax}
             \singlesp\ufc_nature_text:
-          \end{minipage}
+          \end{minipage}\par
           \vspace{\baselineskip}
           \raggedright
           Aprovada~em:~\ufc_meta_use:n {data-aprovacao}\par
@@ -378,7 +378,7 @@
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
       \onehalfsp\justifying
       \ufc_input_file:n {#1}
-    \end{minipage}
+    \end{minipage}\par
     \vfill
     \clearpage
   }
@@ -402,7 +402,7 @@
       \ufc_input_file:n {#1}
       \ufc_meta_if_blank:nF {autor-epigrafe}
         { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }
-    \end{minipage}
+    \end{minipage}\par
     \vfill
     \clearpage
   }
@@ -420,7 +420,7 @@
       \ufc_input_file:n {#1}
       \ufc_meta_if_blank:nF {autor-epigrafe}
         { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }
-    \end{minipage}
+    \end{minipage}\par
     \vfill
     \clearpage
   }
