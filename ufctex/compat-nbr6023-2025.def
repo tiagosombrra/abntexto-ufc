@@ -1,0 +1,181 @@
+\ProvidesFile{ufctex/compat-nbr6023-2025.def}[2026/08/19 NBR 6023:2025 compatibility]
+
+% Temporary compatibility layer for rules not yet covered by the released
+% biblatex-abnt. Normative baseline: docs/NORMAS.md.
+
+% NBR 6023:2025: unknown publication data are omitted for documents with URL.
+\renewbibmacro*{publisher}{%
+  \iflistundef{publisher}
+    {\ifboolexpr{
+       test {\iftoggle{nosn}}
+       or
+       not test {\iffieldundef{url}}
+     }
+       {}
+       {\printtext[brackets]{\mkbibemph{\bibstring{sinenomine}}}}}
+    {\printlist{publisher}}%
+}
+
+\renewbibmacro*{location}{%
+  \iflistundef{location}
+    {\ifboolexpr{
+       test {\iftoggle{nosl}}
+       or
+       not test {\iffieldundef{url}}
+     }
+       {}
+       {\printtext[brackets]{\mkbibemph{\bibstring{sineloco}}}}}
+    {\printlist{location}}%
+}
+
+% NBR 6023:2025: event city is optional.
+\renewbibmacro*{venue}{\printfield{venue}}
+
+\renewbibmacro*{publisher+location+date}{%
+  \ifboolexpr{
+    test {\iflistundef{publisher}}
+    and
+    test {\iflistundef{location}}
+    and
+    not test {\iftoggle{nosl}}
+    and
+    not test {\iftoggle{nosn}}
+    and
+    test {\iffieldundef{url}}
+  }{%
+    \printtext[brackets]{\mkbibemph{\bibstring{sineloco}}%
+    \setunit{\addcolon\addnbspace}%
+    \mkbibemph{\bibstring{sinenomine}}}%
+  }{%
+    \ifboolexpr{
+      test {\ifnameundef{author}}
+      and
+      test {\ifnameundef{editor}}
+      and
+      test {\iflistundef{publisher}}
+      and
+      not test {\iflistundef{organization}}
+    }{%
+      \usebibmacro{location}%
+    }{%
+      \usebibmacro{location}%
+      \setunit*{\addcolon\addspace}%
+      \usebibmacro{publisher}%
+    }%
+  }%
+  \setunit*{\addcomma\addspace}%
+  \usebibmacro{date}%
+  \newunit%
+}
+
+\renewbibmacro*{publisher+location+issue+date}{%
+  \ifboolexpr{
+    test {\iflistundef{publisher}}
+    and
+    test {\iflistundef{location}}
+    and
+    not test {\iftoggle{nosl}}
+    and
+    not test {\iftoggle{nosn}}
+    and
+    test {\iffieldundef{url}}
+  }{%
+    \printtext[brackets]{\mkbibemph{\bibstring{sineloco}}%
+    \setunit{\addcolon\addnbspace}%
+    \mkbibemph{\bibstring{sinenomine}}}%
+  }{%
+    \ifboolexpr{
+      test {\ifnameundef{author}}
+      and
+      test {\ifnameundef{editor}}
+      and
+      test {\iflistundef{publisher}}
+      and
+      not test {\iflistundef{organization}}
+    }{%
+      \usebibmacro{location}%
+    }{%
+      \usebibmacro{location}%
+      \setunit*{\addcolon\addspace}%
+      \usebibmacro{publisher}%
+    }%
+  }%
+  \setunit*{\addcomma\addspace}%
+  \printfield[number]{issue}%
+  \setunit*{\addcomma\addspace}%
+  \usebibmacro{date}%
+  \newunit%
+}
+
+% NBR 6023:2025: jurisprudence may include the judgment date.
+\newbibmacro*{ufc:judgmentdate}{%
+  \iffieldundef{eventyear}
+    {}
+    {\printtext{julgado em\addspace}%
+     \printeventdate}%
+}
+
+\DeclareBibliographyDriver{jurisdiction}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \usebibmacro{author/organization}%
+  \setunit{\labelnamepunct}%
+  \usebibmacro{title}%
+  \setunit{\addcomma\addspace}%
+  \usebibmacro{ufc:judgmentdate}%
+  \newunit
+  \newblock
+  \printlist{language}%
+  \newunit
+  \newblock
+  \usebibmacro{byauthor}%
+  \newunit
+  \newblock
+  \usebibmacro{byeditor+others}\newunit
+  \usebibmacro{bytranslator+others}%
+  \newunit
+  \newblock
+  \printfield{version}%
+  \newunit
+  \newblock
+  \iffieldundef{relatedtype}{}{\bibstring{\strfield{relatedtype}}}%
+  \setunit*{\addcolon\addspace}%
+  \newblock
+  \usebibmacro{journal+section}%
+  \setunit*{\addcomma\addspace}%
+  \printlist{publisher}%
+  \setunit*{\addcomma\addspace}%
+  \printlist{location}%
+  \setunit*{\addcomma\addspace}%
+  \usebibmacro{volume+number+eid}%
+  \setunit{\addcomma\addspace}%
+  \printfield{pages}%
+  \setunit*{\addcomma\addspace}%
+  \printfield{pagetotal}%
+  \setunit{\addcomma\addspace}%
+  \usebibmacro{issue+date}%
+  \newunit
+  \newblock
+  \printfield{note}%
+  \printunit{\addperiod\addspace}%
+  \newblock
+  \iftoggle{bbx:isbn}{\printfield{issn}}{}%
+  \newunit
+  \newblock
+  \usebibmacro{doi+eprint+url}%
+  \newunit
+  \newblock
+  \usebibmacro{addendum+pubstate}%
+  \setunit{\bibpagerefpunct}%
+  \newblock
+  \usebibmacro{pageref}%
+  \setunit*{\addperiod\addspace}%
+  \newunit
+  \newblock
+  \iftoggle{bbx:related}
+    {\usebibmacro{related:init}\usebibmacro{related}}
+    {}%
+  \usebibmacro{finentry}%
+}
+
+\endinput
