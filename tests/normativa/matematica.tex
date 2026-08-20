@@ -2,25 +2,11 @@
 
 \ufcsetup{fonte=@UFC_FONT@}
 
-\makeatletter
-\newcommand{\ufcMathPolicyProbe}{%
-  \ifPDFTeX
-    \@ifpackageloaded{newtxmath}
-      {\typeout{UFC-MATH-POLICY=NEW-TX-MATH}}
-      {\typeout{UFC-MATH-POLICY=MISSING}}%
-  \else
-    \@ifpackageloaded{unicode-math}
-      {\typeout{UFC-MATH-POLICY=TEX-GYRE-TERMES-MATH}}
-      {\typeout{UFC-MATH-POLICY=MISSING}}%
-  \fi
-}
-\makeatother
-
 \pagestyle{empty}
 
 \begin{document}
 
-\ufcMathPolicyProbe
+\typeout{UFC-MATH-POLICY=\ufcMathFontPolicy}
 
 \begin{equation}
   E = mc^2 + \alpha
