@@ -9,7 +9,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-for token in '\\toprule' '\\midrule' '\\bottomrule' 'row{even}' 'remark{Fonte}' 'remark{Nota}' 'tabelas = tabularray'; do
+for token in '\toprule' '\midrule' '\bottomrule' 'row{even}' 'remark{Fonte}' 'remark{Nota}' 'tabelas = tabularray'; do
   grep -Fq "$token" "$fixture" || {
     echo "Tabela IBGE: estrutura obrigatória ausente no fixture: $token"
     exit 1
@@ -32,9 +32,7 @@ for engine in pdflatex lualatex; do
     }
   done
 
-  warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' | \
-    grep -vF -e 'Class ufctex Warning: TeX Gyre Termes Math not found; using Latin Modern Math' || true)
+  warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "$job: warning ou overflow não reconhecido."
