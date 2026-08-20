@@ -6,6 +6,7 @@ cd "$root" || exit 1
 
 class_fixture="tests/normativa/fontes-classe-poc.tex"
 class_tmp="ufctex-font-class-poc.tex"
+compile_only=${UFC_FONT_POC_COMPILE_ONLY:-0}
 trap 'rm -f "$class_tmp"' EXIT INT TERM
 
 find_tex_bin() {
@@ -67,10 +68,16 @@ find_poppler_bin() {
 }
 
 find_tex_bin
-find_poppler_bin
+if [ "$compile_only" != 1 ]; then
+  find_poppler_bin
+fi
 
 missing=''
-for cmd in kpsewhich pdffonts pdftotext pdflatex lualatex; do
+required='kpsewhich pdflatex lualatex'
+if [ "$compile_only" != 1 ]; then
+  required="$required pdffonts pdftotext"
+fi
+for cmd in $required; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     missing="$missing $cmd"
   fi
@@ -85,8 +92,12 @@ fi
 printf 'POC fontes: kpsewhich = %s\n' "$(command -v kpsewhich)"
 printf 'POC fontes: pdflatex = %s\n' "$(command -v pdflatex)"
 printf 'POC fontes: lualatex  = %s\n' "$(command -v lualatex)"
-printf 'POC fontes: pdffonts  = %s\n' "$(command -v pdffonts)"
-printf 'POC fontes: pdftotext = %s\n' "$(command -v pdftotext)"
+if [ "$compile_only" != 1 ]; then
+  printf 'POC fontes: pdffonts  = %s\n' "$(command -v pdffonts)"
+  printf 'POC fontes: pdftotext = %s\n' "$(command -v pdftotext)"
+else
+  echo 'POC fontes: modo compile-only; certificação do PDF será executada no gate Linux.'
+fi
 
 font_dir=${UFC_WINDOWS_FONTS_DIR:-}
 if [ -z "$font_dir" ]; then
@@ -179,8 +190,10 @@ compile_case() {
       return 1
     }
 
-  assert_names "$job.pdf" "$family" || return 1
-  echo "POC fontes: identidade de infraestrutura confirmada em $job.pdf"
+  if [ "$compile_only" != 1 ]; then
+    assert_names "$job.pdf" "$family" || return 1
+    echo "POC fontes: identidade de infraestrutura confirmada em $job.pdf"
+  fi
 }
 
 compile_class_case() {
@@ -197,11 +210,15 @@ compile_class_case() {
       return 1
     }
 
-  assert_names "$job.pdf" "$family" || return 1
-  assert_no_text_fallback "$job.pdf" || return 1
-  assert_text_extraction "$job.pdf" || return 1
-  sh tests/v2-font-embedding-check.sh "$job.pdf" || return 1
-  echo "POC fontes: ufctex estrito confirmado em $job.pdf"
+  if [ "$compile_only" != 1 ]; then
+    assert_names "$job.pdf" "$family" || return 1
+    assert_no_text_fallback "$job.pdf" || return 1
+    assert_text_extraction "$job.pdf" || return 1
+    sh tests/v2-font-embedding-check.sh "$job.pdf" || return 1
+    echo "POC fontes: ufctex estrito confirmado em $job.pdf"
+  else
+    echo "POC fontes: artefato Windows gerado em $job.pdf"
+  fi
 }
 
 blocked=0
@@ -234,7 +251,7 @@ compile_class_case lualatex times || failed=1
 compile_class_case lualatex arial || failed=1
 
 if [ "$failed" -ne 0 ]; then
-  echo 'POC fontes: houve falha de identidade tipográfica.'
+  echo 'POC fontes: houve falha na geração/certificação tipográfica.'
   exit 1
 fi
 
@@ -243,4 +260,8 @@ if [ "$blocked" -ne 0 ]; then
   exit 2
 fi
 
-echo 'POC fontes: Times New Roman e Arial literais validadas na infraestrutura e no ufctex estrito.'
+if [ "$compile_only" = 1 ]; then
+  echo 'POC fontes: quatro PDFs estritos gerados no Windows; certificação delegada ao gate Linux.'
+else
+  echo 'POC fontes: Times New Roman e Arial literais validadas na infraestrutura e no ufctex estrito.'
+fi
