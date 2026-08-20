@@ -1,0 +1,32 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tabelas = tabularray
+}
+
+\makeatletter
+\newcommand{\ufcIBGEProbe}{\typeout{UFC-IBGE-FONTSIZE=\f@size}}
+\makeatother
+
+\begin{document}
+
+\begin{tallabnttblr}
+[
+  caption={Indicadores numéricos de teste},
+  label={tab:ibge},
+  remark{Fonte}={Elaboração própria.},
+]
+{
+  colspec={X[r] X[r]},
+  row{even}={bg=black!5},
+}
+\toprule
+\ufcIBGEProbe Ano & Valor \\
+\midrule
+2024 & 10 \\
+2025 & 12 \\
+2026 & 15 \\
+\bottomrule
+\end{tallabnttblr}
+
+\end{document}

@@ -20,7 +20,10 @@
     tabelas / tabularray .code:n =
       {
         \tl_gset:Nn \g_ufc_table_module_tl { tabularray }
+        \RequirePackage{xcolor}
         \RequirePackage{tabularray-abnt}
+        \UseTblrLibrary{booktabs}
+        \SetAbntTblrFont{\normalsize}
       },
     tabelas / tabularray-abnt .meta:n = { tabelas = tabularray },
 
