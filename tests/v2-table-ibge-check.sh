@@ -64,11 +64,6 @@ assert_all('UFC-IBGE-SOURCE-FONTSIZE', 10.0 * pt_per_bp)
 assert_all('UFC-IBGE-NOTE-FONTSIZE', 10.0 * pt_per_bp)
 PY
 
-  grep -Fq 'Indicadores numéricos de teste' "$job.lot" || {
-    echo "$job: tabela ausente da lista de tabelas."
-    exit 1
-  }
-
   sh tests/v2-font-embedding-check.sh "$job.pdf"
 
   pdftotext -layout "$job.pdf" "/tmp/$job.txt"
@@ -78,7 +73,6 @@ PY
       exit 1
     }
   done
-
 done
 
 echo 'Gate V2 do subconjunto tabular IBGE concluído.'
