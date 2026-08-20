@@ -236,7 +236,7 @@ jobs:
             Write-Host "Found $path"
           }
 
-      - name: Install TeX Live 2026 and font dependencies
+      - name: Install TeX Live 2026 and prepare font metrics
         shell: pwsh
         run: |
           $root = Join-Path $env:RUNNER_TEMP 'texlive-2026'
@@ -272,7 +272,7 @@ jobs:
           $env:PATH = "$bin;$env:PATH"
           $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber csquotes fontaxes newtx fontspec unicode-math xpatch etoolbox
+          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber csquotes fontaxes newtx fontspec unicode-math xpatch etoolbox ttfutils
           if ($LASTEXITCODE -ne 0) {
             throw "tlmgr package installation failed with exit code $LASTEXITCODE"
           }
@@ -286,23 +286,28 @@ jobs:
             throw "mktexlsr failed with exit code $LASTEXITCODE"
           }
 
-          $winfontsMap = & (Join-Path $bin 'kpsewhich.exe') winfonts.map
-          if (-not $winfontsMap) {
-            throw 'winfonts.map was not found after CTAN runtime installation.'
-          }
-          Write-Host "Winfonts map: $winfontsMap"
-
-          & (Join-Path $bin 'updmap-sys.exe') --enable Map=winfonts.map
-          if ($LASTEXITCODE -ne 0) {
-            throw "updmap-sys failed with exit code $LASTEXITCODE"
-          }
-
-          foreach ($support in 't1times-ttf.fd', 't1arial.fd', 'winfonts.map') {
+          foreach ($support in 'tex256.enc', 'ts1-winfonts.enc') {
             $resolved = & (Join-Path $bin 'kpsewhich.exe') $support
             if (-not $resolved) {
-              throw "Winfonts support file not found: $support"
+              throw "Winfonts encoding file not found: $support"
             }
-            Write-Host "Winfonts support: $resolved"
+            Write-Host "Winfonts encoding: $resolved"
+          }
+
+          $texmfHome = Join-Path $root 'texmf-home'
+          $env:TEXMFHOME = $texmfHome
+          "TEXMFHOME=$texmfHome" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          & "$env:GITHUB_WORKSPACE\tools\prepare-windows-fonts.ps1" -TexmfRoot $texmfHome -FontsDir (Join-Path $env:WINDIR 'Fonts')
+          if ($LASTEXITCODE -ne 0) {
+            throw "ufctex Windows font preparation failed with exit code $LASTEXITCODE"
+          }
+
+          foreach ($support in 'ufctex-winfonts-ready.tex', 'ufctex-windows.map', 't1times-ttf.fd', 'ts1times-ttf.fd', 't1arial.fd', 'ts1arial.fd') {
+            $resolved = & (Join-Path $bin 'kpsewhich.exe') $support
+            if (-not $resolved) {
+              throw "Generated ufctex font support file not found: $support"
+            }
+            Write-Host "Generated support: $resolved"
           }
 
           $version = & (Join-Path $bin 'tlmgr.bat') version | Out-String
