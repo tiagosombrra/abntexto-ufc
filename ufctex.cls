@@ -15,6 +15,7 @@
 \makeatother
 
 \input{ufctex/core.def}
+\input{ufctex/fontes.def}
 \input{ufctex/layout.def}
 \input{ufctex/modulos.def}
 \input{ufctex/pretextuais.def}

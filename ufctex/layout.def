@@ -1,22 +1,5 @@
 \ProvidesFile{ufctex/layout.def}[2026/08/20 UFC page and text layout]
 
-% Use Times New Roman when the engine can access it, with a portable fallback.
-\ifPDFTeX
-  \RequirePackage[T1]{fontenc}
-  \RequirePackage{newtxtext}
-  \RequirePackage{newtxmath}
-\else
-  \RequirePackage{fontspec}
-  \IfFontExistsTF{Times New Roman}{%
-    \setmainfont{Times New Roman}%
-  }{%
-    \ClassWarningNoLine{ufctex}{Times New Roman not found; using TeX Gyre Termes}%
-    \setmainfont{TeX Gyre Termes}%
-  }%
-  \RequirePackage{unicode-math}
-  \setmathfont{TeX Gyre Termes Math}
-\fi
-
 % UFC body text uses 12 pt, 1.5 spacing, 2 cm first-line indent and no extra spacing.
 \setlength{\parskip}{0pt}
 \setlength{\parindent}{2cm}
