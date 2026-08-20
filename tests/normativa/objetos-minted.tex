@@ -1,10 +1,23 @@
 \documentclass{ufctex}
 
 \ufcsetup{codigo=minted}
-\setminted{fontsize=\small,breaklines}
+
+\makeatletter
+\newcommand{\ufcMintedTextProbe}{%
+  \typeout{UFC-MINTED-TEXT-FAMILY=\f@family}%
+  \typeout{UFC-MINTED-TEXT-FONTSIZE=\f@size}%
+}
+\newcommand{\ufcMintedProbe}{%
+  \typeout{UFC-MINTED-FAMILY=\f@family}%
+  \typeout{UFC-MINTED-FONTSIZE=\f@size}%
+}
+\makeatother
+
+\setminted{breaklines,formatcom=\ufcMintedProbe}
 
 \begin{document}
 
+\ufcMintedTextProbe
 \imprimirlistadecodigos
 
 \legend{codigo}{Arquivo Python com minted}
