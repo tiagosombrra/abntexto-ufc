@@ -40,11 +40,29 @@ for engine in pdflatex lualatex; do
     exit 1
   fi
 
-  grep -Eq 'UFC-IBGE-FONTSIZE=12([.]0+)?$' "$job.log" || {
-    grep 'UFC-IBGE-FONTSIZE' "$job.log" || true
-    echo "$job: corpo da tabela não está em tamanho 12."
-    exit 1
-  }
+  python3 - "$job.log" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
+
+def metric(name):
+    values = [float(v) for v in re.findall(rf'{re.escape(name)}=([0-9.]+)', text)]
+    if not values:
+        raise SystemExit(f'métrica ausente: {name}')
+    return values
+
+def assert_all(name, expected, tolerance=0.06):
+    for value in metric(name):
+        if abs(value - expected) > tolerance:
+            raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {value:.4f}')
+
+pt_per_bp = 72.27 / 72.0
+assert_all('UFC-IBGE-BODY-FONTSIZE', 12.0)
+assert_all('UFC-IBGE-CAPTION-FONTSIZE', 10.0 * pt_per_bp)
+assert_all('UFC-IBGE-SOURCE-FONTSIZE', 10.0 * pt_per_bp)
+PY
 
   grep -Fq 'Indicadores numéricos de teste' "$job.lot" || {
     echo "$job: tabela ausente da lista de tabelas."
