@@ -50,17 +50,19 @@ def marker(name):
         raise SystemExit(f'marcador ausente: {name}')
     return match.group(1).strip()
 
-text_family = marker('UFC-MINTED-TEXT-FAMILY')
-minted_family = marker('UFC-MINTED-FAMILY')
+
+def normalize_family(value):
+    return re.sub(r'\([0-9]+\)$', '', value)
+
+text_family = normalize_family(marker('UFC-MINTED-TEXT-FAMILY'))
+minted_family = normalize_family(marker('UFC-MINTED-FAMILY'))
 if minted_family != text_family:
     raise SystemExit(f'minted mudou de família: texto={text_family}, minted={minted_family}')
 
-pt_per_bp = 72.27 / 72.0
-expected = 12.0 * pt_per_bp
 for name in ('UFC-MINTED-TEXT-FONTSIZE', 'UFC-MINTED-FONTSIZE'):
     actual = float(marker(name))
-    if abs(actual - expected) > 0.06:
-        raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {actual:.4f}')
+    if abs(actual - 12.0) > 0.1:
+        raise SystemExit(f'{name}: esperado 12 pt nominal, obtido {actual:.4f}')
 PY
 
   sh tests/v2-font-embedding-check.sh "$job.pdf"

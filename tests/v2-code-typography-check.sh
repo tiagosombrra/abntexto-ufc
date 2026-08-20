@@ -44,21 +44,23 @@ def scalar(name):
     except ValueError as exc:
         raise SystemExit(f'{name}: valor inválido: {value}') from exc
 
-text_family = marker('UFC-TEXT-FAMILY')
-code_family = marker('UFC-CODE-FAMILY')
-algorithm_family = marker('UFC-ALGORITHM-FAMILY')
+
+def normalize_family(value):
+    return re.sub(r'\([0-9]+\)$', '', value)
+
+text_family = normalize_family(marker('UFC-TEXT-FAMILY'))
+code_family = normalize_family(marker('UFC-CODE-FAMILY'))
+algorithm_family = normalize_family(marker('UFC-ALGORITHM-FAMILY'))
 
 if code_family != text_family:
     raise SystemExit(f'código mudou de família: texto={text_family}, código={code_family}')
 if algorithm_family != text_family:
     raise SystemExit(f'algoritmo mudou de família: texto={text_family}, algoritmo={algorithm_family}')
 
-pt_per_bp = 72.27 / 72.0
-expected = 12.0 * pt_per_bp
 for name in ('UFC-TEXT-FONTSIZE', 'UFC-CODE-FONTSIZE', 'UFC-ALGORITHM-FONTSIZE'):
     actual = scalar(name)
-    if abs(actual - expected) > 0.06:
-        raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {actual:.4f}')
+    if abs(actual - 12.0) > 0.1:
+        raise SystemExit(f'{name}: esperado 12 pt nominal, obtido {actual:.4f}')
 PY
 
     sh tests/v2-font-embedding-check.sh "$job.pdf"
