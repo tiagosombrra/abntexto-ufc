@@ -4,6 +4,10 @@ set -u
 root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$root" || exit 1
 
+class_fixture="tests/normativa/fontes-classe-poc.tex"
+class_tmp="ufctex-font-class-poc.tex"
+trap 'rm -f "$class_tmp"' EXIT INT TERM
+
 find_tex_bin() {
   if command -v kpsewhich >/dev/null 2>&1; then
     return 0
@@ -71,7 +75,8 @@ fi
 
 cleanup() {
   job=$1
-  rm -f "$job".aux "$job".log "$job".out "$job".pdf
+  rm -f "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".log \
+    "$job".out "$job".pdf "$job".run.xml
 }
 
 font_names() {
@@ -109,7 +114,7 @@ compile_case() {
   job="fontes-${family}-${engine}-poc"
 
   cleanup "$job"
-  echo "POC fontes: $family com $engine"
+  echo "POC fontes: infraestrutura $family com $engine"
   "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
     -jobname="$job" "$fixture" >"${TMPDIR:-/tmp}/$job.log" 2>&1 || {
       cat "${TMPDIR:-/tmp}/$job.log"
@@ -117,7 +122,26 @@ compile_case() {
     }
 
   assert_names "$job.pdf" "$family" || return 1
-  echo "POC fontes: identidade confirmada em $job.pdf"
+  echo "POC fontes: identidade de infraestrutura confirmada em $job.pdf"
+}
+
+compile_class_case() {
+  engine=$1
+  family=$2
+  job="ufctex-${family}-${engine}-strict-poc"
+
+  cleanup "$job"
+  sed "s/@UFC_FONT@/$family/g" "$class_fixture" > "$class_tmp"
+  echo "POC fontes: ufctex estrito $family com $engine"
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
+    -jobname="$job" "$class_tmp" >"${TMPDIR:-/tmp}/$job.log" 2>&1 || {
+      cat "${TMPDIR:-/tmp}/$job.log"
+      return 1
+    }
+
+  assert_names "$job.pdf" "$family" || return 1
+  sh tests/v2-font-embedding-check.sh "$job.pdf" || return 1
+  echo "POC fontes: ufctex estrito confirmado em $job.pdf"
 }
 
 blocked=0
@@ -139,11 +163,15 @@ else
   if [ "$blocked" -eq 0 ]; then
     compile_case pdflatex times || failed=1
     compile_case pdflatex arial || failed=1
+    compile_class_case pdflatex times || failed=1
+    compile_class_case pdflatex arial || failed=1
   fi
 fi
 
 compile_case lualatex times || failed=1
 compile_case lualatex arial || failed=1
+compile_class_case lualatex times || failed=1
+compile_class_case lualatex arial || failed=1
 
 if [ "$failed" -ne 0 ]; then
   echo 'POC fontes: houve falha de identidade tipográfica.'
@@ -155,4 +183,4 @@ if [ "$blocked" -ne 0 ]; then
   exit 2
 fi
 
-echo 'POC fontes: Times New Roman e Arial literais validadas nos dois motores.'
+echo 'POC fontes: Times New Roman e Arial literais validadas na infraestrutura e no ufctex estrito.'
