@@ -104,8 +104,10 @@
         \tl_gset:Nn \g_ufc_glossary_module_tl { glossaries }
         \bool_if:NF \g_ufc_glossary_initialized_bool
           {
+            \PassOptionsToPackage{lang-warn=false}{datatool-base}
             \RequirePackage[acronym,toc=false]{glossaries}
             \makeglossaries
+            \ufcSetupGlossaryModule
             \bool_gset_true:N \g_ufc_glossary_initialized_bool
           }
       },
@@ -120,6 +122,7 @@
           {
             \RequirePackage{imakeidx}
             \makeindex
+            \ufcSetupIndexModule
             \bool_gset_true:N \g_ufc_index_initialized_bool
           }
       },
