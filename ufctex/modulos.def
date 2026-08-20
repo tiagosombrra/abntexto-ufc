@@ -11,6 +11,34 @@
 \tl_new:N \g_ufc_index_module_tl
 \bool_new:N \g_ufc_glossary_initialized_bool
 \bool_new:N \g_ufc_index_initialized_bool
+\bool_new:N \g_ufc_table_typography_patched_bool
+
+\cs_new_protected:Npn \ufc_table_patch_theme:n #1
+  {
+    \tl_if_exist:cTF { g__tblr_theme_#1_code_tl }
+      {
+        \tl_gput_right:cn { g__tblr_theme_#1_code_tl }
+          {
+            \SetTblrStyle{caption,lasthead,capcont}{font=\abntsmall}
+            \SetTblrStyle{firsthead-text,lasthead-text,conthead-text,lastfoot}{font=\abntsmall}
+          }
+      }
+      {
+        \ClassError{ufctex}
+          {tabularray-abnt theme '#1' is unavailable}
+          {Update tabularray-abnt before using tabelas=tabularray.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_table_apply_typography:
+  {
+    \bool_if:NF \g_ufc_table_typography_patched_bool
+      {
+        \ufc_table_patch_theme:n { abnt }
+        \ufc_table_patch_theme:n { quadro }
+        \bool_gset_true:N \g_ufc_table_typography_patched_bool
+      }
+  }
 
 \keys_define:nn { ufc }
   {
@@ -24,6 +52,7 @@
         \RequirePackage{tabularray-abnt}
         \UseTblrLibrary{booktabs}
         \SetAbntTblrFont{\normalsize}
+        \ufc_table_apply_typography:
       },
     tabelas / tabularray-abnt .meta:n = { tabelas = tabularray },
 
