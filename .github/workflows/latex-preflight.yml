@@ -210,7 +210,7 @@ jobs:
           PY
 
   v2-font-windows-poc:
-    name: V2 Windows literal font identity
+    name: V2 Windows literal font build
     if: >-
       (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
       github.event_name == 'workflow_dispatch'
@@ -235,21 +235,6 @@ jobs:
             }
             Write-Host "Found $path"
           }
-
-      - name: Install Poppler
-        shell: pwsh
-        run: |
-          choco install poppler --yes --no-progress
-          $pdffonts = Get-ChildItem -Path 'C:\ProgramData\chocolatey\lib\poppler\tools' -Filter 'pdffonts.exe' -Recurse -ErrorAction Stop | Select-Object -First 1
-          $pdftotext = Get-ChildItem -Path 'C:\ProgramData\chocolatey\lib\poppler\tools' -Filter 'pdftotext.exe' -Recurse -ErrorAction Stop | Select-Object -First 1
-          if (-not $pdffonts -or -not $pdftotext) {
-            throw 'Poppler executables were not found after Chocolatey installation.'
-          }
-          if ($pdffonts.DirectoryName -ne $pdftotext.DirectoryName) {
-            throw 'Poppler executables resolved to different directories.'
-          }
-          $pdffonts.DirectoryName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          Write-Host "Poppler bin: $($pdffonts.DirectoryName)"
 
       - name: Install TeX Live 2026 and font dependencies
         shell: pwsh
@@ -326,10 +311,11 @@ jobs:
             throw 'The Windows POC did not install TeX Live 2026.'
           }
 
-      - name: Prove literal Times New Roman and Arial through ufctex
+      - name: Build literal Times New Roman and Arial through ufctex
         shell: bash
         env:
           UFC_WINDOWS_FONTS_DIR: C:/Windows/Fonts
+          UFC_FONT_POC_COMPILE_ONLY: '1'
         run: sh tests/v2-font-poc.sh
 
       - name: Upload literal font PDFs
@@ -345,7 +331,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      - name: Publish Windows font identity status
+      - name: Publish Windows font build status
         if: ${{ always() }}
         shell: pwsh
         env:
@@ -363,8 +349,8 @@ jobs:
           }
           $body = @{
             state = $state
-            context = 'ufctex/windows-font-identity'
-            description = 'Windows literal font identity and embedding proof'
+            context = 'ufctex/windows-font-build'
+            description = 'Windows literal font PDF generation'
             target_url = $env:RUN_URL
           } | ConvertTo-Json
           Invoke-RestMethod `
@@ -375,7 +361,7 @@ jobs:
             -Body $body | Out-Null
 
   v2-font-windows-pdfa:
-    name: V2 Windows literal font PDF/A
+    name: V2 Windows literal font certification
     if: >-
       always() && (
         (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
@@ -396,7 +382,7 @@ jobs:
           name: v2-windows-literal-font-pdfs
           path: windows-font-pdfs
 
-      - name: Validate embedded literal fonts and PDF/A-2b
+      - name: Certify literal fonts, Unicode, embedding and PDF/A-2b
         shell: bash
         run: |
           sudo apt-get update -y
@@ -404,7 +390,7 @@ jobs:
           command -v docker >/dev/null 2>&1
           sh tests/v2-windows-font-pdfa-check.sh windows-font-pdfs
 
-      - name: Publish Windows literal font PDF/A status
+      - name: Publish Windows literal font certification status
         if: ${{ always() }}
         shell: bash
         env:
@@ -423,7 +409,7 @@ jobs:
           payload = json.dumps({
               'state': state,
               'context': 'ufctex/windows-font-poc',
-              'description': 'Literal Windows fonts embedded and PDF/A-2b compliant',
+              'description': 'Windows fonts: literal identity, embedding and PDF/A-2b',
               'target_url': os.environ['RUN_URL'],
           }).encode()
           request = urllib.request.Request(
