@@ -1,6 +1,6 @@
 # Base normativa da V2
 
-Última auditoria normativa: **2026-08-20**.
+Última auditoria normativa: **2026-08-20**.  
 Estado de implementação tipográfica: **Fase 2 em validação**.
 
 Este arquivo é a fonte única do projeto para política normativa, classificação de conformidade e vínculo entre requisito, implementação e teste.
@@ -28,11 +28,13 @@ A página de Normalização de Trabalhos Acadêmicos do Sistema de Bibliotecas d
 | Guia de Normalização para Elaboração de Referências | NBR 6023:2018 | superado pela NBR 6023:2025 |
 | Guia de Normalização de Projetos de Pesquisa | NBR 15287:2011 e outras edições históricas | superado pela NBR 15287:2025 e pelas demais normas vigentes aplicáveis |
 
-A Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG, de 10 de fevereiro de 2026, tem precedência sobre disposições técnicas conflitantes de guias anteriores. Ela torna facultativa a ficha catalográfica visual para TCC, dissertação e tese depositados no Repositório Institucional e revoga disposições técnicas em contrário dos manuais e guias anteriores.
+A Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG, de 10 de fevereiro de 2026, tem precedência sobre disposições técnicas conflitantes de guias anteriores. Ela torna facultativa a ficha catalográfica visual para TCC, dissertação e tese depositados no Repositório Institucional.
+
+A Portaria CAPES nº 206/2018 permanece vigente. O agradecimento CAPES é obrigatório quando o trabalho resultar de atividade financiada total ou parcialmente pela CAPES; essa condição deve ser informada pelo autor e não pode ser inferida pela classe.
 
 A data de um PDF institucional não é tratada como prova isolada de vigência normativa.
 
-## Normas adotadas
+## Normas e atos adotados
 
 | Assunto | Referência | Uso principal |
 |---|---|---|
@@ -46,6 +48,8 @@ A data de um PDF institucional não é tratada como prova isolada de vigência n
 | Índice | **ABNT NBR 6034:2004** | índice remissivo opcional |
 | Lombada | **ABNT NBR 12225:2023** | requisito condicional |
 | Tabelas numéricas | **IBGE, Normas de apresentação tabular, 3. ed., 1993** | estrutura de tabelas numéricas |
+| Ficha catalográfica | **IN Conjunta UFC nº 2/2026** | caráter facultativo da representação visual no depósito |
+| Agradecimento CAPES | **Portaria CAPES nº 206/2018** | requisito condicional ao financiamento CAPES |
 
 As edições devem ser reconfirmadas antes de cada nova versão principal do template.
 
@@ -71,8 +75,9 @@ Um fallback de compatibilidade não transforma um PDF em tipograficamente confor
 | política `fonte-estrita=sim|nao` | **CONFORME NO ESCOPO TESTADO** | modo estrito rejeita fonte literal ausente; modo não estrito registra fallback explicitamente |
 | Times New Roman/Arial literais no PDF final | **INCOMPLETO** | implementação existe; falta fechar a POC Windows e a certificação completa do Gate T |
 | variantes regular/negrito/itálico/negrito-itálico das fontes literais | **INCOMPLETO** | POC valida as quatro variantes; evidência Windows ainda precisa ser fechada |
-| `rmfamily`, `sffamily` e `ttfamily` preservando a família institucional | **CONFORME NO ESCOPO TESTADO** | `fontes.def` mapeia os três slots; `v2-font-config-check.sh` exerce os três |
-| tamanhos reduzidos uniformes nas exceções | **INCOMPLETO** | citação longa, nota e título de objeto já usam 10 pt; falta completar cobertura tipométrica de todas as exceções |
+| `rmfamily`, `sffamily` e `ttfamily` preservando a família institucional | **CONFORME NO ESCOPO TESTADO** | `fontes.def` mapeia os três slots; gate tipográfico exerce os três |
+| tamanhos reduzidos uniformes nas exceções controladas pela classe | **CONFORME NO ESCOPO TESTADO** | citação longa, notas, paginação, epígrafe, títulos/fontes/notas de objetos e tabelas usam tamanho reduzido; gates tipométricos cobrem os casos controláveis |
+| ficha catalográfica externa em tamanho normativo | **NÃO APLICÁVEL à tipografia interna da classe** | quando incluída, é PDF externo; deve ser gerada conforme a fonte institucional e revalidada no PDF/A final |
 | recuo da primeira linha do parágrafo em 2 cm | **CONFORME** | `layout.def` + `tests/v2-layout-check.sh` |
 | ausência de espaço adicional entre parágrafos | **CONFORME** | `\parskip=0pt` |
 | espaço 1,5 no corpo | **CONFORME** | `\onehalfsp` aplicado no início do documento |
@@ -83,18 +88,19 @@ Um fallback de compatibilidade não transforma um PDF em tipograficamente confor
 | estrutura principal baseada em seções, sem capítulos | **CONFORME** | `\usechapters` gera erro e distribuição bloqueia `\chapter` |
 | cinco níveis de seção e correspondência no Sumário | **CONFORME** | hierarquia definida em `layout.def` e TOC exercitado nos gates |
 | início de seção primária em nova página/anverso | **CONFORME** | `\ufcPrimarySectionBreak` + testes duplex |
-| alinhamento de títulos de seção com mais de uma linha | **CONFORME** | `abntexto` usa composição suspensa após o indicativo; comportamento auditado |
+| alinhamento de títulos de seção com mais de uma linha | **CONFORME** | composição suspensa do `abntexto`, auditada |
 | capa e folha de rosto | **CONFORME** | perfis e pré-textuais exercitados nos dois motores |
 | natureza/orientação a partir do meio da mancha gráfica | **CONFORME** | bloco textual deslocado conforme política UFC |
 | folha de aprovação sem imagens de assinatura para depósito | **CONFORME** | classe não incorpora assinaturas digitalizadas |
 | ficha catalográfica visual facultativa | **CONFORME** | `ficha-catalografica=nao` é o padrão conforme IN Conjunta 2/2026 |
 | ficha catalográfica não contada nem numerada | **CONFORME** | contador lógico e paridade física testados em dois motores e dois modos |
 | contagem dos pré-textuais e numeração somente a partir do textual | **CONFORME** | gates de paginação, ficha e geometria |
-| posição da paginação anverso/frente-verso | **CONFORME** | gate geométrico mede canto superior direito/esquerdo |
+| posição da paginação anverso/frente-verso | **CONFORME** | gate geométrico mede canto superior direito/esquerdo; `abntexto` aplica `\abntsmall` à paginação |
 | paginação contínua em apêndices e anexos | **CONFORME** | pós-textuais preservam a sequência |
 | trabalhos em mais de um volume | **CONFORME** | `volume` e `pagina-inicial` com regressão própria |
 | dedicatória sem título | **CONFORME** | gate pré-textual verifica ausência de título |
 | agradecimentos, errata, resumo, abstract e listas | **CONFORME** | presença e títulos exercitados nos gates |
+| agradecimento CAPES quando aplicável | **CONFORME NO ESCOPO DO TEMPLATE** | `1-pre-textuais/agradecimentos.tex` orienta o autor e `tests/v2-capes-guidance-check.sh` protege a orientação; a condição depende do financiamento |
 | epígrafe longa em 10 pt, espaço simples e recuo de 4 cm | **CONFORME** | implementação explícita em `pretextuais.def` |
 | resumo e abstract sem recuo de primeira linha | **CONFORME** | `\parindent=0pt` nos dois elementos |
 | resumo/abstract entre 150 e 500 palavras | **CONFORME** | `tests/v2-reference-check.sh` conta palavras |
@@ -106,26 +112,27 @@ Um fallback de compatibilidade não transforma um PDF em tipograficamente confor
 | referências em espaço simples | **CONFORME** | gate mede o espaçamento efetivo |
 | uma linha simples entre referências | **CONFORME** | gate mede `bibitemsep`/`itemsep` |
 | NBR 6023:2025 | **CONFORME NO ESCOPO TESTADO** | regressões cobrem os casos implementados pelo projeto |
-| referências próprias de anexo no próprio anexo | **INCOMPLETO** | falta fixture com referência bibliográfica local real |
-| título de ilustração limitado à largura real do objeto | **CONFORME** | `objetos.def` usa `min(legendmaxwidth,savedplacewidth)`; `v2-object-geometry-check.sh` mede objeto de 6 cm |
+| referências próprias de anexo no próprio anexo | **CONFORME NO ESCOPO TESTADO** | `tests/v2-documentary-source-check.sh` usa referência bibliográfica completa em nota dentro do anexo |
+| título de ilustração limitado à largura real do objeto | **CONFORME** | `objetos.def` usa `min(legendmaxwidth,savedplacewidth)`; gate mede objeto de 6 cm |
 | título de ilustração em tamanho reduzido | **CONFORME** | `\abntsmall\singlesp` + gate tipométrico de objeto |
-| fonte e nota de ilustração dentro dos limites do objeto | **INCOMPLETO** | upstream usa largura real; falta gate geométrico próprio para fonte/nota |
+| fonte e nota de ilustração dentro dos limites do objeto | **CONFORME** | `tests/v2-object-geometry-check.sh` mede largura real e tamanho de título, Fonte e Nota |
 | indicação de fonte de elaboração própria | **CONFORME** | fixtures e gate verificam `Fonte:` |
-| fonte externa de ilustração/tabela conforme NBR 10520 | **INCOMPLETO** | falta fixture com citação externa real |
+| fonte externa de ilustração/tabela conforme NBR 10520 | **CONFORME NO ESCOPO TESTADO** | `tests/v2-documentary-source-check.sh` usa citação autor-data real em `Fonte:` |
 | Lista de Ilustrações agregando figuras, gráficos e quadros | **CONFORME** | regressão verifica conteúdo e exclui tabelas |
 | tabelas em lista própria | **CONFORME** | regressões exercitam lista de tabelas |
-| apresentação tabular segundo IBGE | **INCOMPLETO** | `tabularray-abnt` existe; falta fechar subconjunto mínimo verificável do projeto |
+| apresentação tabular segundo IBGE | **CONFORME NO ESCOPO TESTADO** | `tests/v2-table-ibge-check.sh` exige tabela numérica aberta nas laterais, sem grade no corpo, com regras superior/cabeçalho/inferior, Fonte e incorporação de fontes |
+| corpo de tabela em tamanho 12 e elementos descritivos em tamanho reduzido | **CONFORME NO ESCOPO TESTADO** | módulo `tabularray` mantém corpo em `\normalsize` e aplica `\abntsmall` a legenda/Fonte/Nota; gate mede os tamanhos |
+| linhas alternadas em tabelas | **CONFORME COMO OPÇÃO EDITORIAL** | `xcolor` é carregado pelo módulo e `tabularray` aceita `row{even}`; não é aplicado por padrão |
 | equações numeradas e referência resolvida | **CONFORME** | fixture normativa específica |
 | número da equação alinhado à direita da mancha gráfica | **CONFORME NO ESCOPO TESTADO** | `tests/v2-math-check.sh` mede coordenada no PDF real |
 | tipografia de código com `listings` | **CONFORME NO ESCOPO TESTADO** | default `\ttfamily\normalsize`; `ttfamily` é remapeada à família institucional; gate próprio |
-| tipografia de código com `minted` | **CONFORME NO ESCOPO TESTADO** | default `fontfamily=tt, fontsize=\normalsize`; gate consulta a fonte renderizada na página de código via `pdffonts` |
-| tipografia de algoritmos | **CONFORME NO ESCOPO TESTADO** | `ufcalgoritmo` usa tamanho normal e a família textual institucional; gate próprio |
-| tipografia matemática | **CONFORME NO ESCOPO TESTADO** | matemática é complementar: NewTX Math no pdfLaTeX e TeX Gyre Termes Math no LuaLaTeX; não é declarada como Times/Arial textual |
+| tipografia de código com `minted` | **CONFORME NO ESCOPO TESTADO** | default `fontfamily=tt, fontsize=\normalsize`; gate consulta a fonte renderizada via `pdffonts` |
+| tipografia de algoritmos | **CONFORME NO ESCOPO TESTADO** | `ufcalgoritmo` usa tamanho normal e família textual institucional; gate próprio |
+| tipografia matemática | **CONFORME NO ESCOPO TESTADO** | matemática é complementar e testada separadamente; não é declarada como Times/Arial textual |
 | estrutura de projetos NBR 15287:2025 | **CONFORME NO ESCOPO TESTADO** | fixture cobre elementos exigidos no escopo do template |
 | projeto anonimizado sem vazamento de autor/orientador | **CONFORME** | gate semântico específico |
 | glossário, apêndice, anexo e índice | **CONFORME NO ESCOPO TESTADO** | ordem, presença, TOC e início no anverso verificados |
 | ênfase tipográfica de títulos de apêndices/anexos igual à seção primária | **CONFORME** | `abntexto` reutiliza a política tipográfica da seção primária |
-| agradecimento obrigatório à CAPES quando aplicável | **INCOMPLETO** | requisito depende do financiamento; template deve orientar o autor, não inferir a condição |
 | lombada NBR 12225:2023 | **NÃO APLICÁVEL à distribuição eletrônica corrente** | extensão condicional futura |
 | PDF/A para depósito | **CONFORME** | `\DocumentMetadata` + validação independente com veraPDF |
 | PDF/A-2b | **CONFORME COMO ESCOLHA TÉCNICA DO PROJETO** | subtipo técnico do projeto, não imposição atribuída à UFC |
@@ -148,24 +155,21 @@ O fechamento do Gate N não significa que a implementação esteja integralmente
 6. política de código `listings` e `minted` em tamanho 12 por padrão;
 7. política de algoritmos em tamanho 12 por padrão;
 8. política matemática complementar explícita;
-9. título de objeto limitado à largura física da ilustração;
-10. gates tipográficos específicos para seleção de fonte, código, `minted`, algoritmos e matemática;
-11. POC Windows para fontes Microsoft literais, mantida inicialmente fora do gate obrigatório.
+9. título, Fonte e Nota de objetos limitados à largura física da ilustração e em tamanho reduzido;
+10. fonte externa de objeto e referência bibliográfica local de anexo com regressão própria;
+11. subconjunto tabular IBGE com corpo 12, legenda/Fonte/Nota reduzidas e suporte opcional a linhas alternadas;
+12. orientação CAPES condicional protegida por gate;
+13. gates tipográficos específicos para seleção de fonte, código, `minted`, algoritmos, matemática, objetos e tabelas;
+14. POC Windows para fontes Microsoft literais, mantida fora do gate obrigatório até validação.
 
 ### Pendente para o Gate T
 
 1. fechar a evidência Windows de Times New Roman/Arial literais nos dois motores;
 2. fechar identidade das quatro variantes das famílias literais;
-3. completar tamanhos reduzidos de todas as exceções;
-4. medir geometricamente fonte e nota de ilustrações;
-5. adicionar fonte externa de objeto com citação conforme NBR 10520;
-6. adicionar referência bibliográfica própria real em anexo;
-7. fechar subconjunto tabular IBGE;
-8. orientar agradecimento CAPES quando aplicável;
-9. executar regressão completa dos 12 PDFs;
-10. executar PDF/A/veraPDF;
-11. validar ambiente Overleaf;
-12. tornar os gates tipográficos obrigatórios somente após a infraestrutura estar comprovada.
+3. executar regressão completa dos 12 PDFs após as mudanças tipográficas;
+4. executar PDF/A/veraPDF final;
+5. validar ambiente Overleaf;
+6. promover o job Windows ao gate obrigatório somente se a infraestrutura se mostrar reprodutível.
 
 ## Requisitos institucionais UFC
 
@@ -173,7 +177,7 @@ O fechamento do Gate N não significa que a implementação esteja integralmente
 
 O Guia UFC de Trabalhos Acadêmicos atualmente vinculado exige **Arial ou Times New Roman, tamanho 12**, inclusive na capa. Prevê tamanho menor e uniforme para citações longas, notas de rodapé, paginação, ficha catalográfica, legendas e fontes de ilustrações e tabelas, recomendando tamanho 10 para essas exceções.
 
-A V2 distingue a fonte literal de substitutos de compatibilidade. `NewTX`, `TeX Gyre Termes` e `TeX Gyre Heros` não são declarados como Times New Roman ou Arial.
+A V2 distingue fonte literal de substitutos de compatibilidade. `NewTX`, `TeX Gyre Termes` e `TeX Gyre Heros` não são declarados como Times New Roman ou Arial.
 
 `fonte-estrita=sim` é a rota de certificação tipográfica: se a família literal solicitada não estiver disponível, a compilação deve falhar. `fonte-estrita=nao` existe para portabilidade e desenvolvimento, mas um PDF produzido com fallback não deve ser apresentado como tipograficamente conforme à exigência UFC de família literal.
 
@@ -181,7 +185,7 @@ Não foi localizada exceção institucional de família para código. Por isso, 
 
 ### Matemática
 
-A família matemática é complementar à família textual. A V2 usa NewTX Math no pdfLaTeX e TeX Gyre Termes Math no LuaLaTeX. Essa família complementar não é descrita como “Times New Roman matemática” ou “Arial matemática”.
+A família matemática é complementar à família textual. A V2 usa NewTX Math no pdfLaTeX e uma família matemática OpenType compatível no LuaLaTeX, preferindo TeX Gyre Termes Math quando disponível. Essa família complementar não é descrita como “Times New Roman matemática” ou “Arial matemática”.
 
 Equações numeradas usam algarismos arábicos entre parênteses e o gate geométrico verifica o alinhamento à direita da mancha gráfica.
 
@@ -201,7 +205,7 @@ A Instrução Normativa Conjunta nº 2/2026 torna facultativa a representação 
 
 Quando a ficha for incluída, o verso com dados catalográficos não é contado nem numerado. A implementação restaura o contador lógico e preserva a paridade física também no modo `frente-verso`.
 
-Como a ficha é um PDF externo, sua inclusão exige nova validação PDF/A do arquivo completo.
+Como a ficha é um PDF externo, sua tipografia e conformidade PDF/A devem ser verificadas no próprio arquivo e novamente no PDF final consolidado.
 
 ### Trabalhos em mais de um volume
 
@@ -219,7 +223,7 @@ No modo `frente-verso`:
 
 ### Paginação
 
-Os elementos pré-textuais são contados a partir da folha de rosto e não são numerados. O verso destinado aos dados catalográficos não é contado nem numerado. A numeração aparece a partir da primeira página textual. Apêndices, anexos e volumes mantêm sequência contínua.
+Os elementos pré-textuais são contados a partir da folha de rosto e não são numerados. O verso destinado aos dados catalográficos não é contado nem numerado. A numeração aparece a partir da primeira página textual. Apêndices, anexos e volumes mantêm sequência contínua. A paginação textual usa tamanho reduzido pelo mecanismo do `abntexto` auditado.
 
 ### Espaçamento
 
@@ -229,7 +233,9 @@ O Guia UFC orienta espaço 1,5 no corpo e espaço simples nas exceções institu
 
 A NBR 14724:2024 determina que identificação, título, fonte, legenda e notas acompanhem os limites da própria ilustração. A fonte consultada deve seguir a NBR 10520; quando o objeto for do próprio autor, deve haver indicação equivalente a “Elaboração própria”.
 
-A V2 já limita o título à largura física real do objeto e aplica tamanho reduzido. A medição geométrica de fonte e nota permanece pendente para o Gate T.
+A V2 limita título, Fonte e Nota à largura física real do objeto e mede esses elementos em regressão própria. Fonte externa é exercitada com citação autor-data real.
+
+Para tabelas numéricas, o perfil `tabularray` segue o subconjunto IBGE auditado: tabela aberta nas laterais, sem grade horizontal no corpo, com regra superior, separação do cabeçalho e regra inferior. O corpo permanece em tamanho 12; legenda, Fonte e Nota usam tamanho reduzido. Linhas alternadas por cor são uma opção editorial e não são aplicadas por padrão.
 
 A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrência. Tabelas permanecem em lista própria.
 
@@ -237,7 +243,11 @@ A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrê
 
 O Guia UFC de Citações de 2025 foi elaborado conforme a NBR 10520:2023. Citações diretas longas usam parágrafo distinto, letra menor, espaço simples, sem aspas e recuo de 4 cm, com separação do texto anterior/posterior.
 
-Para referências, prevalece a NBR 6023:2025. Referências usam espaço simples internamente e uma linha simples de separação. Referências próprias de anexo devem permanecer no próprio anexo, em nota ou lista específica; o caso bibliográfico real ainda será incluído no Gate T.
+Para referências, prevalece a NBR 6023:2025. Referências usam espaço simples internamente e uma linha simples de separação. Referências próprias de anexo permanecem no próprio anexo; o gate documental inclui um caso bibliográfico real em nota local.
+
+### CAPES
+
+Quando o trabalho decorrer de atividade financiada total ou parcialmente pela CAPES, o autor deve incluir o agradecimento exigido pela Portaria CAPES nº 206/2018. O template contém a orientação e a redação obrigatória como comentário em `1-pre-textuais/agradecimentos.tex`. A classe não tenta inferir se o requisito é aplicável.
 
 ### Projetos de pesquisa
 
@@ -256,12 +266,12 @@ Para `projeto` e `projetoanonimizado`, a V2 adota NBR 15287:2025 e preserva some
 | volume e paginação contínua | NBR 14724:2024 + UFC | `ufctex/trabalhos.def` |
 | ficha catalográfica | IN Conjunta 2/2026 + NBR 14724:2024 | `ufctex/trabalhos.def` + regressão dedicada |
 | folha de aprovação | NBR 14724:2024 + política de depósito UFC | `ufctex/pretextuais.def` |
-| dedicatória, agradecimentos, epígrafe e errata | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
+| dedicatória, agradecimentos, epígrafe e errata | NBR 14724:2024 + UFC + Portaria CAPES 206/2018 | `ufctex/pretextuais.def` + arquivos de conteúdo |
 | resumo e abstract | NBR 6028:2021 + UFC | `ufctex/pretextuais.def` |
 | listas e Sumário | NBR 14724:2024 + NBR 6027:2012 | `ufctex/pretextuais.def` + `ufctex/objetos.def` |
 | seções e subdivisões | NBR 6024:2012 + UFC | `ufctex/layout.def` / `abntexto` |
 | figuras, gráficos e quadros | NBR 14724:2024 + UFC | `ufctex/objetos.def` + infraestrutura `place` |
-| tabelas numéricas | NBR 14724:2024 + IBGE | `ufctex/objetos.def` + `tabularray-abnt` |
+| tabelas numéricas | NBR 14724:2024 + IBGE | `ufctex/modulos.def` + `tabularray-abnt` + `tests/v2-table-ibge-check.sh` |
 | código e algoritmos | requisito tipográfico UFC + extensão editorial | `ufctex/modulos.def` + `ufctex/objetos.def` |
 | equações | NBR 14724:2024 | ambiente matemático + `tests/v2-math-check.sh` |
 | citações | NBR 10520:2023 | `ufctex/bibliografia.def` + `abntexto` |
@@ -281,7 +291,7 @@ Os ajustes necessários para NBR 6023:2025 permanecem isolados em `ufctex/compat
 
 ## Build e gates
 
-`make preflight` executa consistência da distribuição, documento de referência, layout, política de fontes, geometria, matemática/equações, pré-textuais, duplex, ficha catalográfica, multivolume, estruturas normativas complementares, objetos, código/algoritmos, `minted`, bibliografia, projetos, matriz de seis perfis nos dois motores, pós-textuais, compatibilidade V1 e fluxo modular do Makefile.
+`make preflight` executa consistência da distribuição, documento de referência, layout, política de fontes, geometria, matemática/equações, pré-textuais, orientação CAPES, duplex, ficha catalográfica, multivolume, estruturas normativas complementares, objetos, geometria de objetos, subconjunto IBGE, código/algoritmos, `minted`, fontes documentais, bibliografia, projetos, matriz de seis perfis nos dois motores, pós-textuais, compatibilidade V1 e fluxo modular do Makefile.
 
 A matriz final produz **12 PDFs**: seis perfis × dois motores. Cada PDF é verificado quanto a conteúdo específico, A4, fontes incorporadas, Sumário, ausência de `chapter`, warnings/overflow reconhecidos e declaração PDF/A-2b.
 
@@ -289,13 +299,9 @@ A matriz final produz **12 PDFs**: seis perfis × dois motores. Cada PDF é veri
 
 Para o Gate T ainda faltam evidências finais de:
 
-- fontes literais e quatro variantes no Windows;
-- tamanhos reduzidos restantes;
-- fonte/nota de objetos por geometria;
-- fonte externa conforme NBR 10520;
-- referência bibliográfica específica de anexo;
-- subconjunto tabular IBGE;
-- regressão integral dos 12 PDFs e PDF/A;
+- Times New Roman e Arial literais e quatro variantes no runner Windows;
+- regressão integral dos 12 PDFs após a rodada tipográfica;
+- PDF/A/veraPDF final;
 - ambiente Overleaf.
 
 ## Fontes institucionais de verificação
@@ -310,6 +316,7 @@ Para o Gate T ainda faltam evidências finais de:
 - Instrução Normativa Conjunta nº 2/2026: https://biblioteca.ufc.br/wp-content/uploads/2026/02/instrucao-normativa-conjunta-2.pdf
 - Sistema de Bibliotecas da UFC — FAQ da ficha catalográfica: https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/
 - Sistema de Bibliotecas da UFC — Coleção de Normas Técnicas: https://biblioteca.ufc.br/pt/colecao-de-normas-tecnicas/
+- CAPES — Portaria nº 206/2018 e Identidade Visual: https://www.gov.br/capes/pt-br/centrais-de-conteudo/portaria-no-206-de-4-de-setembro-de-2018.pdf
 - ABNT Catálogo: https://www.abntcatalogo.com.br/
 
 ## Manutenção
@@ -318,7 +325,7 @@ Antes de nova versão principal:
 
 1. reconfirmar as edições normativas;
 2. revisar páginas e guias da UFC;
-3. revisar políticas de depósito e ficha catalográfica;
+3. revisar políticas de depósito, ficha catalográfica e CAPES;
 4. atualizar ou remover patches de compatibilidade;
 5. resolver todas as divergências classificadas;
 6. promover itens `INCOMPLETO` somente após evidência adequada;
