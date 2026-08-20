@@ -25,9 +25,6 @@
     \newglossarystyle{ufc}
       {
         \setglossarystyle{list}
-        \renewenvironment{theglossary}
-          {\begin{description}[leftmargin=0pt,labelsep=.5em]}
-          {\end{description}}
         \renewcommand*{\glossentry}[2]
           {
             \item[\glstarget{####1}{\glossentryname{####1}:}]
