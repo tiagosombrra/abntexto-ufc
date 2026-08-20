@@ -35,7 +35,21 @@ find_tex_bin() {
   fi
 }
 
+find_poppler_bin() {
+  if command -v pdffonts >/dev/null 2>&1; then
+    return 0
+  fi
+
+  found=$(find /c/ProgramData/chocolatey/lib/poppler/tools -type f -iname pdffonts.exe -print -quit 2>/dev/null || true)
+  if [ -n "$found" ]; then
+    PATH="$(dirname "$found"):$PATH"
+    export PATH
+    echo "POC fontes: Poppler localizado em $(dirname "$found")"
+  fi
+}
+
 find_tex_bin
+find_poppler_bin
 
 missing=''
 for cmd in kpsewhich pdffonts pdftotext pdflatex lualatex; do
