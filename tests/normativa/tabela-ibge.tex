@@ -5,23 +5,25 @@
 }
 
 \makeatletter
-\newcommand{\ufcIBGEProbe}{\typeout{UFC-IBGE-FONTSIZE=\f@size}}
+\newcommand{\ufcIBGEBodyProbe}{\typeout{UFC-IBGE-BODY-FONTSIZE=\f@size}}
+\newcommand{\ufcIBGECaptionProbe}{\typeout{UFC-IBGE-CAPTION-FONTSIZE=\f@size}}
+\newcommand{\ufcIBGESourceProbe}{\typeout{UFC-IBGE-SOURCE-FONTSIZE=\f@size}}
 \makeatother
 
 \begin{document}
 
 \begin{tallabnttblr}
 [
-  caption={Indicadores numéricos de teste},
+  caption={\ufcIBGECaptionProbe Indicadores numéricos de teste},
   label={tab:ibge},
-  remark{Fonte}={Elaboração própria.},
+  remark{Fonte}={\ufcIBGESourceProbe Elaboração própria.},
 ]
 {
   colspec={X[r] X[r]},
   row{even}={bg=black!5},
 }
 \toprule
-\ufcIBGEProbe Ano & Valor \\
+\ufcIBGEBodyProbe Ano & Valor \\
 \midrule
 2024 & 10 \\
 2025 & 12 \\
