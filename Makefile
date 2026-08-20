@@ -13,7 +13,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 	v2-reference-check v2-pdfa-check v2-check v2-distribution-check \
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
-	v2-object-check v2-object-geometry-check v2-code-typography-check v2-minted-check \
+	v2-object-check v2-object-geometry-check v2-code-typography-check v2-table-ibge-check v2-minted-check \
 	v2-documentary-source-check v2-bib-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
 	v2-posttextual-compat-check v2-duplex-posttextual-check \
@@ -90,7 +90,10 @@ v2-object-geometry-check:
 v2-code-typography-check:
 	@sh tests/v2-code-typography-check.sh
 
-v2-object-check: v2-object-geometry-check v2-code-typography-check
+v2-table-ibge-check:
+	@sh tests/v2-table-ibge-check.sh
+
+v2-object-check: v2-object-geometry-check v2-code-typography-check v2-table-ibge-check
 	@sh tests/v2-object-check.sh
 
 v2-minted-check:
@@ -164,6 +167,7 @@ clean:
 	@rm -f font-config-*.pdf font-config-*.aux font-config-*.log font-config-*.out ufctex-font-config.tex
 	@rm -f matematica-*.pdf matematica-*.aux matematica-*.log matematica-*.out ufctex-matematica.tex
 	@rm -f objeto-geometria-*.pdf objeto-geometria-*.aux objeto-geometria-*.log objeto-geometria-*.out
+	@rm -f tabela-ibge-*.pdf tabela-ibge-*.aux tabela-ibge-*.log tabela-ibge-*.out tabela-ibge-*.lot
 	@rm -f tipografia-codigo-*.pdf tipografia-codigo-*.aux tipografia-codigo-*.log tipografia-codigo-*.out
 	@rm -f tipografia-codigo-*.loa tipografia-codigo-*.loc ufctex-code-typography.tex
 	@rm -f fontes-documentais-*.pdf fontes-documentais-*.aux fontes-documentais-*.bbl fontes-documentais-*.bcf
