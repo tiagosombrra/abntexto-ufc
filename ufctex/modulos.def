@@ -15,7 +15,7 @@
 
 \cs_new_protected:Npn \ufc_table_check_version:
   {
-    \@ifpackagelater{tabularray-abnt}{2025/08/07}
+    \IfPackageAtLeastTF{tabularray-abnt}{2025-08-08}
       { }
       {
         \ClassError{ufctex}
@@ -104,16 +104,11 @@
         \tl_gset:Nn \g_ufc_glossary_module_tl { glossaries }
         \bool_if:NF \g_ufc_glossary_initialized_bool
           {
-            % The v2 path uses \printglossary, so datatool locale sorting is not used.
-            \PassOptionsToPackage{lang-warn=false}{datatool-base}
-            % UFC renders its own glossary heading/style; package translations are unnecessary.
-            \RequirePackage[notranslate]{glossaries-extra}
+            \RequirePackage[acronym,toc=false]{glossaries}
             \makeglossaries
-            \ufcSetupGlossaryModule
             \bool_gset_true:N \g_ufc_glossary_initialized_bool
           }
       },
-    glossario / glossaries-extra .meta:n = { glossario = glossaries },
 
     indice .choice:,
     indice / nenhum .code:n =
@@ -124,31 +119,16 @@
         \bool_if:NF \g_ufc_index_initialized_bool
           {
             \RequirePackage{imakeidx}
-            \makeindex[columns=1,title={ÍNDICE}]
-            \ufcSetupIndexModule
+            \makeindex
             \bool_gset_true:N \g_ufc_index_initialized_bool
           }
-      }
+      },
   }
 
-\keys_set:nn { ufc }
-  {
-    tabelas = nativo,
-    codigo = nenhum,
-    algoritmos = nenhum,
-    glossario = nenhum,
-    indice = nenhum
-  }
-
-\NewExpandableDocumentCommand \ufcTableModule { }
-  { \tl_use:N \g_ufc_table_module_tl }
-
-\NewExpandableDocumentCommand \ufcCodeModule { }
-  { \tl_use:N \g_ufc_code_module_tl }
-
-\NewExpandableDocumentCommand \ufcAlgorithmModule { }
-  { \tl_use:N \g_ufc_algorithm_module_tl }
+\tl_gset:Nn \g_ufc_table_module_tl { nativo }
+\tl_gset:Nn \g_ufc_code_module_tl { nenhum }
+\tl_gset:Nn \g_ufc_algorithm_module_tl { nenhum }
+\tl_gset:Nn \g_ufc_glossary_module_tl { nenhum }
+\tl_gset:Nn \g_ufc_index_module_tl { nenhum }
 
 \ExplSyntaxOff
-
-\endinput
