@@ -68,7 +68,8 @@ if not asset.is_file():
     errors.append(f'ativo institucional ausente: {asset}')
 
 makefile = Path('Makefile').read_text(encoding='utf-8')
-cls = Path('ufctex.cls').read_text(encoding='utf-8')
+cls_path = Path('ufctex.cls')
+cls = cls_path.read_text(encoding='utf-8')
 readme = Path('README.md').read_text(encoding='utf-8')
 
 if not re.search(r'^VERSION\s*:?=\s*2\.0\.0\s*$', makefile, re.MULTILINE):
@@ -77,9 +78,21 @@ if 'v2.0.0 UFC academic document class' not in cls:
     errors.append('ufctex.cls: versão diferente de v2.0.0')
 if 'Versão atual: 2.0.0' not in readme:
     errors.append('README.md: versão diferente de 2.0.0')
-for module in ('institucional.def', 'trabalhos.def'):
-    if rf'\input{{ufctex/{module}}}' not in cls:
-        errors.append(f'ufctex.cls: módulo {module} não carregado')
+
+modules = re.findall(r'\\input\{(ufctex/[^}]+\.def)\}', uncommented(cls))
+if 'ufctex/fontes.def' not in modules:
+    errors.append('ufctex.cls: módulo obrigatório ufctex/fontes.def não carregado')
+for module in modules:
+    if not Path(module).is_file():
+        errors.append(f'ufctex.cls: módulo carregado não existe: {module}')
+
+microsoft_fonts = {
+    'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
+    'arial.ttf', 'arialbd.ttf', 'ariali.ttf', 'arialbi.ttf',
+}
+for path in Path('.').rglob('*'):
+    if path.is_file() and path.name.lower() in microsoft_fonts:
+        errors.append(f'fonte Microsoft proprietária não pode ser versionada: {path}')
 
 if errors:
     raise SystemExit('\n'.join(errors))
