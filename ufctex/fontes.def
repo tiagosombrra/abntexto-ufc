@@ -9,14 +9,37 @@
 \else
   \RequirePackage{fontspec}
   \RequirePackage{unicode-math}
-  \setmathfont{TeX Gyre Termes Math}
 \fi
 
 \ExplSyntaxOn
 
 \tl_new:N \g_ufc_font_family_tl
+\tl_new:N \g_ufc_math_font_policy_tl
 \bool_new:N \g_ufc_font_strict_bool
 \bool_new:N \l_ufc_font_files_available_bool
+
+\ifPDFTeX
+  \tl_gset:Nn \g_ufc_math_font_policy_tl { NEW-TX-MATH }
+\else
+  \IfFontExistsTF{TeX Gyre Termes Math}
+    {
+      \setmathfont{TeX Gyre Termes Math}
+      \tl_gset:Nn \g_ufc_math_font_policy_tl { TEX-GYRE-TERMES-MATH }
+    }
+    {
+      \IfFontExistsTF{Latin Modern Math}
+        {
+          \setmathfont{Latin Modern Math}
+          \tl_gset:Nn \g_ufc_math_font_policy_tl { LATIN-MODERN-MATH }
+          \ClassWarningNoLine{ufctex}{TeX~Gyre~Termes~Math~not~found;~using~Latin~Modern~Math}
+        }
+        {
+          \ClassError{ufctex}
+            {No~supported~OpenType~math~font~was~found}
+            {Install~TeX~Gyre~Termes~Math~or~Latin~Modern~Math.}
+        }
+    }
+\fi
 
 \keys_define:nn { ufc }
   {
@@ -185,6 +208,9 @@
         }
     \fi
   }
+
+\NewExpandableDocumentCommand \ufcMathFontPolicy { }
+  { \tl_use:N \g_ufc_math_font_policy_tl }
 
 \AtEndPreamble{\ufc_font_apply:}
 
