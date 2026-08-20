@@ -67,12 +67,31 @@ PY
   sh tests/v2-font-embedding-check.sh "$job.pdf"
 
   pdftotext -layout "$job.pdf" "/tmp/$job.txt"
-  for marker in 'Indicadores numéricos de teste' 'Ano' '2024' '2025' '2026' 'Fonte:' 'Elaboração própria' 'Nota:' 'Valores sintéticos para validação'; do
-    grep -Fq "$marker" "/tmp/$job.txt" || {
-      echo "$job: conteúdo tabular ausente: $marker"
-      exit 1
-    }
-  done
+  python3 - "/tmp/$job.txt" "$job" <<'PY'
+import re
+import sys
+import unicodedata
+from pathlib import Path
+
+path, job = sys.argv[1:]
+raw = Path(path).read_text(encoding='utf-8', errors='replace')
+raw = re.sub(r'(?<=\w)-[ \t]*\n[ \t]*(?=\w)', '', raw)
+text = re.sub(r'\s+', ' ', unicodedata.normalize('NFC', raw)).strip()
+
+for marker in (
+    'Indicadores numéricos de teste',
+    'Ano',
+    '2024',
+    '2025',
+    '2026',
+    'Fonte:',
+    'Elaboração própria',
+    'Nota:',
+    'Valores sintéticos para validação',
+):
+    if marker not in text:
+        raise SystemExit(f'{job}: conteúdo tabular ausente: {marker}')
+PY
 done
 
 echo 'Gate V2 do subconjunto tabular IBGE concluído.'
