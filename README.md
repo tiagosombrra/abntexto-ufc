@@ -369,15 +369,22 @@ A suíte cobre:
 
 A matriz final gera **12 PDFs** — seis perfis × dois motores — e verifica conteúdo específico, Sumário, A4, fontes incorporadas, ausência de `chapter`, warnings/overflow não reconhecidos e metadados PDF/A-2b. O gate de release passa os 12 PDFs e o documento de referência pelo veraPDF.
 
-O CI usa TeX Live 2026. A branch de evolução contém ainda uma POC Windows separada para provar Times New Roman e Arial literais, incluindo as quatro variantes, nos dois motores e pela própria classe em modo estrito. Esse job só deve virar gate obrigatório depois de demonstrar execução reprodutível.
+O CI principal usa TeX Live 2026. A branch de evolução contém uma POC Windows separada para provar Times New Roman e Arial literais, incluindo as quatro variantes, nos dois motores e pela própria classe em modo estrito. Esse job só deve virar gate obrigatório depois de demonstrar execução reprodutível.
 
 ## Overleaf
 
-Importe o projeto completo e mantenha `documento.tex` como arquivo principal. Use uma versão recente do TeX Live com `abntexto` 1.1 ou superior.
+Em **20/08/2026**, o ambiente estável público do Overleaf ainda usa **TeX Live 2025**. Como `abntexto` 1.1 foi publicado em maio de 2026, essa versão não faz parte nativamente do TeX Live 2025.
 
-pdfLaTeX é o caminho padrão; LuaLaTeX também é suportado. Preserve `\DocumentMetadata` antes de `\documentclass` quando precisar de PDF/A e valide o PDF baixado com veraPDF antes do depósito.
+Por isso, a branch de evolução possui um proxy de compatibilidade que reproduz o fluxo do Overleaf com `latexmk`, TeX Live 2025 e uma cópia **intacta e pinada** de `abntexto.cls` 1.1 obtida do repositório upstream. O arquivo não é versionado neste repositório.
 
-Se Times New Roman/Arial literais não estiverem disponíveis no ambiente Overleaf, `fonte-estrita=nao` permite compilação de desenvolvimento com fallback. Isso não deve ser confundido com certificação tipográfica final da família literal.
+O Gate T exige duas evidências distintas:
+
+1. o proxy automatizado em TeX Live 2025 deve compilar o documento completo com pdfLaTeX e LuaLaTeX;
+2. o template final deve passar por smoke test real no Overleaf antes da release.
+
+A distribuição Overleaf-ready será produzida na Fase 3 somente após o Gate T. Ela deverá incluir o runtime necessário para não depender de uma versão de `abntexto` ainda ausente do ambiente estável, preservando o arquivo upstream sem modificação e sua licença.
+
+Se Times New Roman/Arial literais não estiverem disponíveis no Overleaf, `fonte-estrita=nao` permite compilação de desenvolvimento com fallback. Isso não deve ser confundido com certificação tipográfica final da família literal.
 
 ## Migração da V1
 
