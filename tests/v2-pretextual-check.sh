@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+sh tests/v2-capes-guidance-check.sh
+
 fixtures="tests/normativa/pretextuais-trabalho.tex tests/normativa/pretextuais-projeto-anonimo.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
