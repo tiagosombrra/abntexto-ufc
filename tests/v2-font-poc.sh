@@ -38,7 +38,7 @@ find_tex_bin() {
 find_tex_bin
 
 missing=''
-for cmd in kpsewhich pdffonts pdflatex lualatex; do
+for cmd in kpsewhich pdffonts pdftotext pdflatex lualatex; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     missing="$missing $cmd"
   fi
@@ -54,6 +54,7 @@ printf 'POC fontes: kpsewhich = %s\n' "$(command -v kpsewhich)"
 printf 'POC fontes: pdflatex = %s\n' "$(command -v pdflatex)"
 printf 'POC fontes: lualatex  = %s\n' "$(command -v lualatex)"
 printf 'POC fontes: pdffonts  = %s\n' "$(command -v pdffonts)"
+printf 'POC fontes: pdftotext = %s\n' "$(command -v pdftotext)"
 
 font_dir=${UFC_WINDOWS_FONTS_DIR:-}
 if [ -z "$font_dir" ]; then
@@ -107,6 +108,31 @@ assert_names() {
   done
 }
 
+assert_no_text_fallback() {
+  pdf=$1
+  names=$(font_names "$pdf")
+
+  if printf '%s\n' "$names" | grep -Eiq 'TeXGyreTermesX|TeXGyreTermes|TeXGyreHeros|NimbusSans'; then
+    echo "POC fontes: $pdf contém família textual de fallback inesperada."
+    pdffonts "$pdf"
+    return 1
+  fi
+}
+
+assert_text_extraction() {
+  pdf=$1
+  txt="${TMPDIR:-/tmp}/$(basename "$pdf" .pdf)-text.txt"
+  pdftotext "$pdf" "$txt" || return 1
+
+  for marker in 'Texto normal para prova literal da classe.' 'ação' 'ciência' 'computação' 'orientação' 'avaliação' 'João' 'Ceará' 'São Luís'; do
+    grep -Fq "$marker" "$txt" || {
+      echo "POC fontes: extração de texto ausente ou incorreta em $pdf: $marker"
+      cat "$txt"
+      return 1
+    }
+  done
+}
+
 compile_case() {
   engine=$1
   family=$2
@@ -140,6 +166,8 @@ compile_class_case() {
     }
 
   assert_names "$job.pdf" "$family" || return 1
+  assert_no_text_fallback "$job.pdf" || return 1
+  assert_text_extraction "$job.pdf" || return 1
   sh tests/v2-font-embedding-check.sh "$job.pdf" || return 1
   echo "POC fontes: ufctex estrito confirmado em $job.pdf"
 }
