@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   v2-reference:
@@ -175,6 +176,44 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils
             make v2-overleaf-stable-check
 
+      - name: Publish Overleaf proxy status
+        if: ${{ always() }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          state = 'success' if os.environ['JOB_STATUS'] == 'success' else 'failure'
+          payload = json.dumps({
+              'state': state,
+              'context': 'ufctex/overleaf-proxy',
+              'description': 'TeX Live 2025 Overleaf proxy',
+              'target_url': os.environ['RUN_URL'],
+          }).encode()
+          request = urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['REPO']}/statuses/{os.environ['SHA']}",
+              data=payload,
+              method='POST',
+              headers={
+                  'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+                  'Accept': 'application/vnd.github+json',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'ufctex-ci-status',
+              },
+          )
+          with urllib.request.urlopen(request) as response:
+              if response.status != 201:
+                  raise SystemExit(f'commit status HTTP {response.status}')
+          PY
+
   v2-font-windows-poc:
     name: V2 Windows literal font POC
     if: >-
@@ -261,6 +300,35 @@ jobs:
           UFC_WINDOWS_FONTS_DIR: C:/Windows/Fonts
         run: sh tests/v2-font-poc.sh
 
+      - name: Publish Windows font POC status
+        if: ${{ always() }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          $state = if ($env:JOB_STATUS -eq 'success') { 'success' } else { 'failure' }
+          $headers = @{
+            Authorization = "Bearer $env:GH_TOKEN"
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
+          }
+          $body = @{
+            state = $state
+            context = 'ufctex/windows-font-poc'
+            description = 'Windows literal Times New Roman and Arial proof'
+            target_url = $env:RUN_URL
+          } | ConvertTo-Json
+          Invoke-RestMethod `
+            -Method Post `
+            -Uri "https://api.github.com/repos/$env:REPO/statuses/$env:SHA" `
+            -Headers $headers `
+            -ContentType 'application/json' `
+            -Body $body | Out-Null
+
   latex-preflight:
     name: latex-preflight
     if: ${{ always() }}
@@ -285,3 +353,41 @@ jobs:
           test "$OBJECTS_BIB" = success
           test "$PROFILES" = success
           test "$POSTTEXTUAL" = success
+
+      - name: Publish required gate status
+        if: ${{ always() }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          state = 'success' if os.environ['JOB_STATUS'] == 'success' else 'failure'
+          payload = json.dumps({
+              'state': state,
+              'context': 'ufctex/latex-preflight',
+              'description': 'Required V2 TeX Live 2026 gate',
+              'target_url': os.environ['RUN_URL'],
+          }).encode()
+          request = urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['REPO']}/statuses/{os.environ['SHA']}",
+              data=payload,
+              method='POST',
+              headers={
+                  'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+                  'Accept': 'application/vnd.github+json',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'ufctex-ci-status',
+              },
+          )
+          with urllib.request.urlopen(request) as response:
+              if response.status != 201:
+                  raise SystemExit(f'commit status HTTP {response.status}')
+          PY
