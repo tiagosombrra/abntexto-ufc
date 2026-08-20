@@ -1,4 +1,25 @@
-\ProvidesFile{ufctex/objetos.def}[2026/08/18 UFC figures, tables, code and algorithms]
+\ProvidesFile{ufctex/objetos.def}[2026/08/20 UFC figures, tables, code and algorithms]
+
+% Keep object titles within the real object width and use the reduced normative size.
+\makeatletter
+\providecommand{\ufcobjectlegendhook}{}
+\def\printlegendbox{\hfil\vtop{%
+  \leavevmode\targetlegend
+  \setbox0=\hbox{{\legendlabel}\savedlegend}%
+  \dimen@=\legendmaxwidth\relax
+  \ifdim\savedplacewidth<\dimen@
+    \dimen@=\savedplacewidth
+  \fi
+  \ifdim\wd0>\dimen@
+    \hsize=\dimen@
+  \else
+    \hsize=\wd0
+  \fi
+  \abntsmall\singlesp
+  \ufcobjectlegendhook
+  \hangfrom{\legendlabel}\savedlegend\strut
+}}
+\makeatother
 
 \ExplSyntaxOn
 

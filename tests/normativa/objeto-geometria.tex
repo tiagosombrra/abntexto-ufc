@@ -1,0 +1,20 @@
+\documentclass{ufctex}
+
+\makeatletter
+\renewcommand{\ufcobjectlegendhook}{%
+  \typeout{UFC-OBJECT-TITLE-WIDTH=\the\hsize}%
+  \typeout{UFC-OBJECT-CONTENT-WIDTH=\the\savedplacewidth}%
+  \typeout{UFC-OBJECT-TITLE-FONTSIZE=\f@size}%
+}
+\makeatother
+
+\begin{document}
+
+\legend{figure}{Título deliberadamente longo para validar que a legenda respeita a largura física da ilustração}
+\ufcfonte{Elaboração própria.}
+\ufcnota{Validação geométrica de um objeto estreito.}
+\begin{ufcobjeto}[here]
+  \rule{6cm}{2cm}
+\end{ufcobjeto}
+
+\end{document}
