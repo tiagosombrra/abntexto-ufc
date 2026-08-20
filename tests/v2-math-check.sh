@@ -44,12 +44,17 @@ for engine in pdflatex lualatex; do
         }
         ;;
       lualatex)
-        grep -Fq 'UFC-MATH-POLICY=TEX-GYRE-TERMES-MATH' "$job.log" || {
-          echo "$job: política TeX Gyre Termes Math não confirmada."
+        if grep -Fq 'UFC-MATH-POLICY=TEX-GYRE-TERMES-MATH' "$job.log"; then
+          expected='TeXGyreTermesMath'
+        elif grep -Fq 'UFC-MATH-POLICY=LATIN-MODERN-MATH' "$job.log"; then
+          expected='LatinModernMath'
+        else
+          echo "$job: política matemática OpenType não reconhecida."
+          grep 'UFC-MATH-POLICY' "$job.log" || true
           exit 1
-        }
-        pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq 'TeXGyreTermesMath' || {
-          echo "$job: TeX Gyre Termes Math não identificada no PDF."
+        fi
+        pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
+          echo "$job: fonte matemática esperada não identificada: $expected"
           pdffonts "$job.pdf"
           exit 1
         }
