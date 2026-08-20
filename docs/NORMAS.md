@@ -63,6 +63,8 @@ As edições devem ser reconfirmadas antes de cada nova versão principal do tem
 
 Um fallback de compatibilidade não transforma um PDF em tipograficamente conforme. Para a família textual, conformidade final exige **Arial ou Times New Roman literais** no PDF produzido.
 
+O PDF certificado também deve ser **autocontido para renderização**: todas as fontes efetivamente utilizadas devem estar incorporadas (`emb=yes` em `pdffonts`). Incorporação por subconjunto é aceita, pois os glifos utilizados permanecem dentro do arquivo; qualquer fonte com `emb=no` reprova o artefato.
+
 ## Matriz requisito → implementação → teste
 
 | Requisito | Estado | Evidência / decisão |
@@ -75,6 +77,7 @@ Um fallback de compatibilidade não transforma um PDF em tipograficamente confor
 | política `fonte-estrita=sim|nao` | **CONFORME NO ESCOPO TESTADO** | modo estrito rejeita fonte literal ausente; modo não estrito registra fallback explicitamente |
 | Times New Roman/Arial literais no PDF final | **INCOMPLETO** | implementação existe; falta fechar a POC Windows e a certificação completa do Gate T |
 | variantes regular/negrito/itálico/negrito-itálico das fontes literais | **INCOMPLETO** | POC valida as quatro variantes; evidência Windows ainda precisa ser fechada |
+| todas as fontes usadas incorporadas ao PDF final | **CONFORME NO ESCOPO TESTADO** | `tests/v2-font-embedding-check.sh` reprova `emb=no` ou ausência de fontes; documento de referência, matriz de perfis e POC Windows usam o mesmo gate |
 | `rmfamily`, `sffamily` e `ttfamily` preservando a família institucional | **CONFORME NO ESCOPO TESTADO** | `fontes.def` mapeia os três slots; gate tipográfico exerce os três |
 | tamanhos reduzidos uniformes nas exceções controladas pela classe | **CONFORME NO ESCOPO TESTADO** | citação longa, notas, paginação, epígrafe, títulos/fontes/notas de objetos e tabelas usam tamanho reduzido; gates tipométricos cobrem os casos controláveis |
 | ficha catalográfica externa em tamanho normativo | **NÃO APLICÁVEL à tipografia interna da classe** | quando incluída, é PDF externo; deve ser gerada conforme a fonte institucional e revalidada no PDF/A final |
@@ -160,14 +163,15 @@ O fechamento do Gate N não significa que a implementação esteja integralmente
 11. subconjunto tabular IBGE com corpo 12, legenda/Fonte/Nota reduzidas e suporte opcional a linhas alternadas;
 12. orientação CAPES condicional protegida por gate;
 13. gates tipográficos específicos para seleção de fonte, código, `minted`, algoritmos, matemática, objetos e tabelas;
-14. POC Windows para fontes Microsoft literais, mantida fora do gate obrigatório até validação.
+14. gate geral de incorporação que exige `emb=yes` para todas as fontes utilizadas no PDF;
+15. POC Windows para fontes Microsoft literais, mantida fora do gate obrigatório até validação.
 
 ### Pendente para o Gate T
 
 1. fechar a evidência Windows de Times New Roman/Arial literais nos dois motores;
 2. fechar identidade das quatro variantes das famílias literais;
-3. executar regressão completa dos 12 PDFs após as mudanças tipográficas;
-4. executar PDF/A/veraPDF final;
+3. revalidar a regressão completa dos 12 PDFs na cabeça final da rodada tipográfica;
+4. revalidar PDF/A/veraPDF na cabeça final;
 5. validar ambiente Overleaf;
 6. promover o job Windows ao gate obrigatório somente se a infraestrutura se mostrar reprodutível.
 
@@ -194,6 +198,8 @@ Equações numeradas usam algarismos arábicos entre parênteses e o gate geomé
 As orientações de recebimento consultadas em 2026 exigem arquivo eletrônico **PDF/A** para TCC, dissertações e teses destinados ao repositório.
 
 A V2 usa **PDF/A-2b** como perfil técnico verificável. O subtipo 2b é escolha de implementação do projeto, não requisito específico atribuído à UFC.
+
+Para a certificação da V2, o PDF final deve permanecer autocontido: todas as fontes utilizadas na renderização precisam estar incorporadas. O gate consulta `pdffonts` e reprova qualquer ocorrência `emb=no`, além da validação estrutural independente com veraPDF.
 
 ### Folha de aprovação
 
@@ -280,7 +286,7 @@ Para `projeto` e `projetoanonimizado`, a V2 adota NBR 15287:2025 e preserva some
 | glossário | NBR 14724:2024 | módulo opcional |
 | apêndices e anexos | NBR 14724:2024 | API pública do `abntexto` + política V2 de quebra |
 | índice | NBR 6034:2004 | módulo opcional |
-| PDF/A | política institucional UFC | `\DocumentMetadata` + veraPDF |
+| PDF/A e fontes autocontidas | política institucional UFC + escolha técnica do projeto | `\DocumentMetadata` + `tests/v2-font-embedding-check.sh` + veraPDF |
 | compatibilidade V1 | transição de documentos | `ufctex/compat-v1.def` |
 
 ## Compatibilidade dos pacotes
@@ -293,15 +299,15 @@ Os ajustes necessários para NBR 6023:2025 permanecem isolados em `ufctex/compat
 
 `make preflight` executa consistência da distribuição, documento de referência, layout, política de fontes, geometria, matemática/equações, pré-textuais, orientação CAPES, duplex, ficha catalográfica, multivolume, estruturas normativas complementares, objetos, geometria de objetos, subconjunto IBGE, código/algoritmos, `minted`, fontes documentais, bibliografia, projetos, matriz de seis perfis nos dois motores, pós-textuais, compatibilidade V1 e fluxo modular do Makefile.
 
-A matriz final produz **12 PDFs**: seis perfis × dois motores. Cada PDF é verificado quanto a conteúdo específico, A4, fontes incorporadas, Sumário, ausência de `chapter`, warnings/overflow reconhecidos e declaração PDF/A-2b.
+A matriz final produz **12 PDFs**: seis perfis × dois motores. Cada PDF é verificado quanto a conteúdo específico, A4, fontes incorporadas (`emb=yes`), Sumário, ausência de `chapter`, warnings/overflow e declaração PDF/A-2b.
 
 `make release-preflight` acrescenta veraPDF para o documento de referência e os 12 PDFs da matriz.
 
 Para o Gate T ainda faltam evidências finais de:
 
 - Times New Roman e Arial literais e quatro variantes no runner Windows;
-- regressão integral dos 12 PDFs após a rodada tipográfica;
-- PDF/A/veraPDF final;
+- reexecução integral dos 12 PDFs na cabeça final da rodada;
+- PDF/A/veraPDF final na cabeça final;
 - ambiente Overleaf.
 
 ## Fontes institucionais de verificação
