@@ -76,7 +76,7 @@ if not re.search(r'^VERSION\s*:?=\s*2\.0\.0\s*$', makefile, re.MULTILINE):
     errors.append('Makefile: versão diferente de 2.0.0')
 if 'v2.0.0 UFC academic document class' not in cls:
     errors.append('ufctex.cls: versão diferente de v2.0.0')
-if not re.search(r'Versão\s+publicada\s+atual:\s*2\.0\.0\b', readme, re.IGNORECASE):
+if not re.search(r'Versão\s+publicada\s+atual:\s*(?:\*\*)?2\.0\.0(?:\*\*)?\b', readme, re.IGNORECASE):
     errors.append('README.md: versão publicada diferente de 2.0.0')
 
 modules = re.findall(r'\\input\{(ufctex/[^}]+\.def)\}', uncommented(cls))
