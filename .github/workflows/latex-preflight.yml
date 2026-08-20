@@ -121,6 +121,60 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils
             make v2-posttextual-compat-check v2-duplex-posttextual-check
 
+  v2-overleaf-stable-poc:
+    name: V2 Overleaf stable proxy
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
+      github.event_name == 'workflow_dispatch'
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Pin abntexto 1.1 runtime
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64
+          import hashlib
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          expected = 'f9cc40c65fbf6c2f9520b4ca4f312440e8d0ee6a'
+          url = f'https://api.github.com/repos/ElaysonAbreu/abntexto/git/blobs/{expected}'
+          request = urllib.request.Request(
+              url,
+              headers={
+                  'Accept': 'application/vnd.github+json',
+                  'User-Agent': 'ufctex-overleaf-smoke',
+              },
+          )
+          with urllib.request.urlopen(request) as response:
+              data = json.load(response)
+
+          content = base64.b64decode(data['content'])
+          digest = hashlib.sha1(b'blob ' + str(len(content)).encode() + b'\0' + content).hexdigest()
+          if digest != expected:
+              raise SystemExit(f'abntexto blob mismatch: {digest}')
+          if b'[2026-05-08 1.1 Preparation of works in ABNT standards]' not in content:
+              raise SystemExit('abntexto 1.1 identity marker missing')
+          Path('abntexto.cls').write_bytes(content)
+          PY
+
+      - name: Validate TeX Live 2025 proxy
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2025
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils
+            make v2-overleaf-stable-check
+
   v2-font-windows-poc:
     name: V2 Windows literal font POC
     if: >-
