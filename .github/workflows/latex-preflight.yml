@@ -278,13 +278,40 @@ jobs:
           if (-not (Test-Path (Join-Path $bin 'tlmgr.bat'))) {
             throw "TeX Live binary directory not found: $bin"
           }
-          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber newtx fontspec unicode-math winfonts xpatch etoolbox
+          $env:PATH = "$bin;$env:PATH"
+          $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber newtx fontspec unicode-math xpatch etoolbox
           if ($LASTEXITCODE -ne 0) {
             throw "tlmgr package installation failed with exit code $LASTEXITCODE"
           }
+
+          $winfontsZip = Join-Path $env:RUNNER_TEMP 'winfonts.zip'
+          Invoke-WebRequest 'https://mirrors.mit.edu/CTAN/fonts/winfonts/winfonts.zip' -OutFile $winfontsZip
+          Expand-Archive -Path $winfontsZip -DestinationPath (Join-Path $root 'texmf-dist') -Force
+
+          & (Join-Path $bin 'mktexlsr.exe') (Join-Path $root 'texmf-dist')
+          if ($LASTEXITCODE -ne 0) {
+            throw "mktexlsr failed with exit code $LASTEXITCODE"
+          }
+
+          $winfontsMap = & (Join-Path $bin 'kpsewhich.exe') winfonts.map
+          if (-not $winfontsMap) {
+            throw 'winfonts.map was not found after CTAN runtime installation.'
+          }
+          Write-Host "Winfonts map: $winfontsMap"
+
           & (Join-Path $bin 'updmap-sys.exe') --enable Map=winfonts.map
           if ($LASTEXITCODE -ne 0) {
             throw "updmap-sys failed with exit code $LASTEXITCODE"
+          }
+
+          foreach ($support in 't1times-ttf.fd', 't1arial.fd', 'winfonts.map') {
+            $resolved = & (Join-Path $bin 'kpsewhich.exe') $support
+            if (-not $resolved) {
+              throw "Winfonts support file not found: $support"
+            }
+            Write-Host "Winfonts support: $resolved"
           }
 
           $version = & (Join-Path $bin 'tlmgr.bat') version | Out-String
@@ -292,7 +319,6 @@ jobs:
           if ($version -notmatch '2026') {
             throw 'The Windows POC did not install TeX Live 2026.'
           }
-          $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Prove literal Times New Roman and Arial through ufctex
         shell: bash
