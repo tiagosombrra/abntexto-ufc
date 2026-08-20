@@ -14,7 +14,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
 	v2-object-check v2-object-geometry-check v2-code-typography-check v2-table-ibge-check v2-minted-check \
-	v2-documentary-source-check v2-bib-check \
+	v2-documentary-source-check v2-bib-check v2-overleaf-stable-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
 	v2-posttextual-compat-check v2-duplex-posttextual-check \
 	v2-build-check v2-multivolume-check v2-catalog-card-check
@@ -106,6 +106,9 @@ v2-bib-check: v2-documentary-source-check
 	@sh tests/v2-bibliography-check.sh
 	@sh tests/v2-reference-spacing-check.sh
 
+v2-overleaf-stable-check:
+	@sh tests/v2-overleaf-stable-check.sh
+
 v2-project-check:
 	@sh tests/v2-project-check.sh
 
@@ -179,6 +182,7 @@ clean:
 	@rm -f perfil-*.pdf perfil-*.aux perfil-*.log perfil-*.out perfil-*.toc
 	@rm -f perfil-*.bbl perfil-*.bcf perfil-*.blg perfil-*.run.xml perfil-*.tex
 	@rm -f ufctex-build-minimo.* .ufctex-v2-profile.tex
+	@rm -f overleaf-stable-pdflatex.pdf overleaf-stable-lualatex.pdf
 	@rm -rf _minted-*
 	@rm -f $(filename).pdf
 	@echo "Processo finalizado com sucesso."
