@@ -1,28 +1,22 @@
 \documentclass{ufctex}
 
-\ufcsetup{codigo=minted}
-
-\makeatletter
-\newcommand{\ufcMintedTextProbe}{%
-  \typeout{UFC-MINTED-TEXT-FAMILY=\f@family}%
-  \typeout{UFC-MINTED-TEXT-FONTSIZE=\f@size}%
+\ufcsetup{
+  fonte=@UFC_FONT@,
+  codigo=minted
 }
-\newcommand{\ufcMintedProbe}{%
-  \typeout{UFC-MINTED-FAMILY=\f@family}%
-  \typeout{UFC-MINTED-FONTSIZE=\f@size}%
-}
-\makeatother
-
-\setminted{breaklines,formatcom=\ufcMintedProbe}
+\setminted{breaklines}
 
 \begin{document}
 
-\ufcMintedTextProbe
 \imprimirlistadecodigos
 
 \legend{codigo}{Arquivo Python com minted}
 \ufcfonte{Elaboração própria.}
 \label{cod:minted}
+\ufcinputminted[here]{python}{tests/fixtures/exemplo.py}
+
+\clearpage
+\pagestyle{empty}
 \ufcinputminted[here]{python}{tests/fixtures/exemplo.py}
 
 \end{document}

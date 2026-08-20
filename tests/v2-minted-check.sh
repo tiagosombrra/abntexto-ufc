@@ -2,6 +2,7 @@
 set -eu
 
 fixture="tests/normativa/objetos-minted.tex"
+tmp="ufctex-minted-check.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 if ! command -v latexminted >/dev/null 2>&1; then
@@ -10,62 +11,87 @@ if ! command -v latexminted >/dev/null 2>&1; then
 fi
 
 cleanup() {
-  rm -f objetos-minted-*.aux objetos-minted-*.log objetos-minted-*.out objetos-minted-*.pdf objetos-minted-*.loc
+  rm -f "$tmp" objetos-minted-*.aux objetos-minted-*.log objetos-minted-*.out objetos-minted-*.pdf objetos-minted-*.loc
 }
 trap cleanup EXIT INT TERM
 
+expected_family() {
+  engine=$1
+  family=$2
+  log=$3
+
+  case "$family/$engine" in
+    times/pdflatex)
+      if grep -Fq 'Using literal Times New Roman with pdfLaTeX' "$log"; then
+        echo 'TimesNewRoman'
+      else
+        echo 'TeXGyreTermesX'
+      fi
+      ;;
+    arial/pdflatex)
+      if grep -Fq 'Using literal Arial with pdfLaTeX' "$log"; then
+        echo 'Arial'
+      else
+        echo 'TeXGyreHeros'
+      fi
+      ;;
+    times/lualatex)
+      if grep -Fq 'Using literal Times New Roman with LuaLaTeX' "$log"; then
+        echo 'TimesNewRoman'
+      else
+        echo 'TeXGyreTermes'
+      fi
+      ;;
+    arial/lualatex)
+      if grep -Fq 'Using literal Arial with LuaLaTeX' "$log"; then
+        echo 'Arial'
+      else
+        echo 'TeXGyreHeros'
+      fi
+      ;;
+  esac
+}
+
 for engine in pdflatex lualatex; do
-  job="objetos-minted-$engine"
-  echo "Validando $fixture com $engine..."
-  for pass in 1 2; do
-    "$engine" -jobname="$job" -shell-escape $flags "$fixture" > /tmp/ufctex-v2-minted.log 2>&1 || {
-      cat /tmp/ufctex-v2-minted.log
+  for family in times arial; do
+    sed "s/@UFC_FONT@/$family/g" "$fixture" > "$tmp"
+    job="objetos-minted-$family-$engine"
+    echo "Validando minted $family com $engine..."
+
+    for pass in 1 2; do
+      "$engine" -jobname="$job" -shell-escape $flags "$tmp" > /tmp/ufctex-v2-minted.log 2>&1 || {
+        cat /tmp/ufctex-v2-minted.log
+        exit 1
+      }
+    done
+
+    overflow=$(grep -E 'Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
+    if [ -n "$overflow" ]; then
+      printf '%s\n' "$overflow"
+      echo "$job: fixture minted contém overflow."
+      exit 1
+    fi
+
+    grep -Fq 'Arquivo Python com minted' "$job.loc" || {
+      echo "$job: minted ausente da lista de códigos."
+      exit 1
+    }
+
+    sh tests/v2-font-embedding-check.sh "$job.pdf"
+
+    pages=$(pdfinfo "$job.pdf" | awk '/^Pages:/ {print $2}')
+    [ "${pages:-0}" -ge 2 ] || {
+      echo "$job: página isolada de código não foi gerada."
+      exit 1
+    }
+
+    expected=$(expected_family "$engine" "$family" "$job.log")
+    pdffonts -f "$pages" -l "$pages" "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
+      echo "$job: página isolada de minted não usa a família esperada: $expected"
+      pdffonts -f "$pages" -l "$pages" "$job.pdf"
       exit 1
     }
   done
-
-  overflow=$(grep -E 'Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
-  if [ -n "$overflow" ]; then
-    printf '%s\n' "$overflow"
-    echo "$job: fixture minted contém overflow."
-    exit 1
-  fi
-
-  grep -Fq 'Arquivo Python com minted' "$job.loc" || {
-    echo "$job: minted ausente da lista de códigos."
-    exit 1
-  }
-
-  python3 - "$job.log" <<'PY'
-import re
-import sys
-from pathlib import Path
-
-text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
-
-
-def marker(name):
-    match = re.search(rf'{re.escape(name)}=([^\r\n]+)', text)
-    if not match:
-        raise SystemExit(f'marcador ausente: {name}')
-    return match.group(1).strip()
-
-
-def normalize_family(value):
-    return re.sub(r'\([0-9]+\)$', '', value)
-
-text_family = normalize_family(marker('UFC-MINTED-TEXT-FAMILY'))
-minted_family = normalize_family(marker('UFC-MINTED-FAMILY'))
-if minted_family != text_family:
-    raise SystemExit(f'minted mudou de família: texto={text_family}, minted={minted_family}')
-
-for name in ('UFC-MINTED-TEXT-FONTSIZE', 'UFC-MINTED-FONTSIZE'):
-    actual = float(marker(name))
-    if abs(actual - 12.0) > 0.1:
-        raise SystemExit(f'{name}: esperado 12 pt nominal, obtido {actual:.4f}')
-PY
-
-  sh tests/v2-font-embedding-check.sh "$job.pdf"
 done
 
 echo 'Gate V2 de minted concluído.'
