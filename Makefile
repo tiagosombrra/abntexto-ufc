@@ -13,7 +13,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 	v2-reference-check v2-pdfa-check v2-check v2-distribution-check \
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
-	v2-object-check v2-object-geometry-check v2-minted-check v2-bib-check \
+	v2-object-check v2-object-geometry-check v2-code-typography-check v2-minted-check v2-bib-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
 	v2-posttextual-compat-check v2-duplex-posttextual-check \
 	v2-build-check v2-multivolume-check v2-catalog-card-check
@@ -83,7 +83,10 @@ v2-duplex-pretextual-check:
 v2-object-geometry-check:
 	@sh tests/v2-object-geometry-check.sh
 
-v2-object-check: v2-object-geometry-check
+v2-code-typography-check:
+	@sh tests/v2-code-typography-check.sh
+
+v2-object-check: v2-object-geometry-check v2-code-typography-check
 	@sh tests/v2-object-check.sh
 
 v2-minted-check:
@@ -153,6 +156,8 @@ clean:
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf geometria-*.pdf normativa-complementar-*.pdf
 	@rm -f font-config-*.pdf font-config-*.aux font-config-*.log font-config-*.out ufctex-font-config.tex
 	@rm -f objeto-geometria-*.pdf objeto-geometria-*.aux objeto-geometria-*.log objeto-geometria-*.out
+	@rm -f tipografia-codigo-*.pdf tipografia-codigo-*.aux tipografia-codigo-*.log tipografia-codigo-*.out
+	@rm -f tipografia-codigo-*.loa tipografia-codigo-*.loc ufctex-code-typography.tex
 	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf pretextuais-duplex-*.pdf
 	@rm -f objetos-avancados.pdf objetos-minted.pdf citacoes-referencias.pdf
 	@rm -f referencias-6023-2025.pdf projeto-15287.pdf projeto-sem-capa.pdf

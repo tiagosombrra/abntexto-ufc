@@ -13,7 +13,12 @@ trap cleanup EXIT INT TERM
 render_fixture() {
   family=$1
   strict=$2
-  sed -e "s/@UFC_FONT@/$family/g" -e "s/@UFC_STRICT@/$strict/g" "$fixture" > "$tmp"
+  slot=$3
+  sed \
+    -e "s/@UFC_FONT@/$family/g" \
+    -e "s/@UFC_STRICT@/$strict/g" \
+    -e "s/@UFC_SLOT@/$slot/g" \
+    "$fixture" > "$tmp"
 }
 
 expected_family() {
@@ -67,25 +72,33 @@ literal_available() {
 
 for engine in pdflatex lualatex; do
   for family in times arial; do
-    render_fixture "$family" nao
-    job="font-config-$family-$engine"
-    echo "Validando fonte $family em modo compatível com $engine..."
-    "$engine" -jobname="$job" $flags "$tmp" > "/tmp/$job.out" 2>&1 || {
-      cat "/tmp/$job.out"
-      exit 1
-    }
+    baseline_log=''
 
-    sh tests/v2-font-embedding-check.sh "$job.pdf"
-    expected=$(expected_family "$engine" "$family" "$job.log")
-    pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
-      echo "$job: família esperada não encontrada: $expected"
-      pdffonts "$job.pdf"
-      exit 1
-    }
+    for slot in rm sf tt; do
+      render_fixture "$family" nao "$slot"
+      job="font-config-$family-$slot-$engine"
+      echo "Validando fonte $family/$slot em modo compatível com $engine..."
+      "$engine" -jobname="$job" $flags "$tmp" > "/tmp/$job.out" 2>&1 || {
+        cat "/tmp/$job.out"
+        exit 1
+      }
 
-    render_fixture "$family" sim
+      sh tests/v2-font-embedding-check.sh "$job.pdf"
+      expected=$(expected_family "$engine" "$family" "$job.log")
+      pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
+        echo "$job: família esperada não encontrada: $expected"
+        pdffonts "$job.pdf"
+        exit 1
+      }
+
+      if [ "$slot" = rm ]; then
+        baseline_log="$job.log"
+      fi
+    done
+
+    render_fixture "$family" sim rm
     strict_job="font-config-$family-$engine-strict"
-    if literal_available "$engine" "$family" "$job.log"; then
+    if literal_available "$engine" "$family" "$baseline_log"; then
       echo "Validando fonte literal $family em modo estrito com $engine..."
       "$engine" -jobname="$strict_job" $flags "$tmp" > "/tmp/$strict_job.out" 2>&1 || {
         cat "/tmp/$strict_job.out"

@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/modulos.def}[2026/08/19 UFC optional modules]
+\ProvidesFile{ufctex/modulos.def}[2026/08/20 UFC optional modules]
 
 \RequirePackage{etoolbox}
 
@@ -31,11 +31,15 @@
       {
         \tl_gset:Nn \g_ufc_code_module_tl { listings }
         \RequirePackage{listings}
+        % Source code remains in the institutional text family and body size.
+        \lstset{basicstyle=\ttfamily\normalsize}
       },
     codigo / minted .code:n =
       {
         \tl_gset:Nn \g_ufc_code_module_tl { minted }
         \RequirePackage{minted}
+        % minted defaults to tt; ufctex maps tt to the institutional family.
+        \setminted{fontfamily=tt,fontsize=\normalsize}
       },
 
     algoritmos .choice:,

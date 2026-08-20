@@ -1,0 +1,44 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  fonte = @UFC_FONT@,
+  codigo = listings,
+  algoritmos = algpseudocodex
+}
+
+\makeatletter
+\newcommand{\ufcTextProbe}{%
+  \typeout{UFC-TEXT-FAMILY=\f@family}%
+  \typeout{UFC-TEXT-FONTSIZE=\f@size}%
+}
+\newcommand{\ufcCodeProbe}{%
+  \typeout{UFC-CODE-FAMILY=\f@family}%
+  \typeout{UFC-CODE-FONTSIZE=\f@size}%
+}
+\newcommand{\ufcAlgorithmProbe}{%
+  \typeout{UFC-ALGORITHM-FAMILY=\f@family}%
+  \typeout{UFC-ALGORITHM-FONTSIZE=\f@size}%
+}
+\makeatother
+
+\begin{document}
+
+\ufcTextProbe
+
+\makeatletter
+{\lst@basicstyle\ufcCodeProbe}
+\makeatother
+
+\legend{codigo}{Código de validação tipográfica}
+\ufcfonte{Elaboração própria.}
+\begin{ufclisting}[here]
+int valor = 1;
+\end{ufclisting}
+
+\legend{algoritmo}{Algoritmo de validação tipográfica}
+\ufcfonte{Elaboração própria.}
+\begin{ufcalgoritmo}[here][1]
+  \State \ufcAlgorithmProbe $x \gets 1$
+\end{ufcalgoritmo}
+
+\end{document}

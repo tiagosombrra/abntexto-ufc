@@ -51,6 +51,22 @@
       }
   }
 
+% Keep all textual family switches inside the institutional family.
+\cs_new_protected:Npn \ufc_font_pdftex_set_text_family:n #1
+  {
+    \renewcommand{\rmdefault}{#1}
+    \renewcommand{\sfdefault}{#1}
+    \renewcommand{\ttdefault}{#1}
+    \renewcommand{\familydefault}{\rmdefault}
+  }
+
+\cs_new_protected:Npn \ufc_font_luatex_set_text_family:n #1
+  {
+    \setmainfont{#1}
+    \setsansfont{#1}
+    \setmonofont{#1}
+  }
+
 \cs_new_protected:Npn \ufc_font_pdftex_times:
   {
     \ufc_font_check_files:n
@@ -64,8 +80,7 @@
       }
     \bool_if:NTF \l_ufc_font_files_available_bool
       {
-        \renewcommand{\rmdefault}{times-ttf}
-        \renewcommand{\familydefault}{\rmdefault}
+        \ufc_font_pdftex_set_text_family:n {times-ttf}
         \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~pdfLaTeX}
       }
       {
@@ -76,8 +91,7 @@
               {Install~the~Microsoft~font~and~winfonts~support,~or~use~LuaLaTeX.}
           }
           {
-            \renewcommand{\rmdefault}{ntxtlf}
-            \renewcommand{\familydefault}{\rmdefault}
+            \ufc_font_pdftex_set_text_family:n {ntxtlf}
             \ClassInfo{ufctex}{Times~New~Roman~not~available~to~pdfLaTeX;~using~NewTX~compatibility~fallback}
           }
       }
@@ -96,8 +110,7 @@
       }
     \bool_if:NTF \l_ufc_font_files_available_bool
       {
-        \renewcommand{\sfdefault}{arial}
-        \renewcommand{\familydefault}{\sfdefault}
+        \ufc_font_pdftex_set_text_family:n {arial}
         \ClassInfo{ufctex}{Using~literal~Arial~with~pdfLaTeX}
       }
       {
@@ -108,8 +121,7 @@
               {Install~the~Microsoft~font~and~winfonts~support,~or~use~LuaLaTeX.}
           }
           {
-            \renewcommand{\sfdefault}{qhv}
-            \renewcommand{\familydefault}{\sfdefault}
+            \ufc_font_pdftex_set_text_family:n {qhv}
             \ClassInfo{ufctex}{Arial~not~available~to~pdfLaTeX;~using~TeX~Gyre~Heros~compatibility~fallback}
           }
       }
@@ -119,7 +131,7 @@
   {
     \IfFontExistsTF{Times New Roman}
       {
-        \setmainfont{Times New Roman}
+        \ufc_font_luatex_set_text_family:n {Times New Roman}
         \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~LuaLaTeX}
       }
       {
@@ -131,7 +143,7 @@
           }
           {
             \ClassWarningNoLine{ufctex}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes}
-            \setmainfont{TeX Gyre Termes}
+            \ufc_font_luatex_set_text_family:n {TeX Gyre Termes}
           }
       }
   }
@@ -140,7 +152,7 @@
   {
     \IfFontExistsTF{Arial}
       {
-        \setmainfont{Arial}
+        \ufc_font_luatex_set_text_family:n {Arial}
         \ClassInfo{ufctex}{Using~literal~Arial~with~LuaLaTeX}
       }
       {
@@ -152,7 +164,7 @@
           }
           {
             \ClassWarningNoLine{ufctex}{Arial~not~found;~using~TeX~Gyre~Heros}
-            \setmainfont{TeX Gyre Heros}
+            \ufc_font_luatex_set_text_family:n {TeX Gyre Heros}
           }
       }
   }
