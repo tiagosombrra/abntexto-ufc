@@ -22,7 +22,7 @@ grep -Fq '[2026-05-08 1.1 Preparation of works in ABNT standards]' abntexto.cls 
   exit 1
 }
 
-for cmd in pdffonts pdftotext pdfinfo biber makeglossaries makeindex; do
+for cmd in latexmk pdffonts pdftotext pdfinfo biber makeglossaries makeindex; do
   command -v "$cmd" >/dev/null 2>&1 || {
     echo "Overleaf proxy: comando ausente: $cmd"
     exit 1
@@ -30,7 +30,10 @@ for cmd in pdffonts pdftotext pdfinfo biber makeglossaries makeindex; do
 done
 
 cleanup() {
-  make clean >/dev/null 2>&1 || true
+  latexmk -C documento.tex >/dev/null 2>&1 || true
+  rm -f documento.acn documento.acr documento.alg documento.bbl documento.bcf documento.blg
+  rm -f documento.glg documento.glo documento.gls documento.idx documento.ilg documento.ind
+  rm -f documento.ist documento.nlo documento.nls documento.run.xml documento.xdy
 }
 trap cleanup EXIT INT TERM
 
@@ -38,11 +41,18 @@ flags='LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbo
 
 for engine in pdflatex lualatex; do
   echo "Overleaf proxy: validando documento completo com $engine / TeX Live 2025..."
-  make clean >/dev/null
-  make ENGINE="$engine" compile > "/tmp/ufctex-overleaf-$engine.out" 2>&1 || {
-    cat "/tmp/ufctex-overleaf-$engine.out"
-    exit 1
-  }
+  cleanup
+
+  case "$engine" in
+    pdflatex) latexmk_mode='-pdf' ;;
+    lualatex) latexmk_mode='-lualatex' ;;
+  esac
+
+  latexmk "$latexmk_mode" -interaction=nonstopmode -halt-on-error documento.tex \
+    > "/tmp/ufctex-overleaf-$engine.out" 2>&1 || {
+      cat "/tmp/ufctex-overleaf-$engine.out"
+      exit 1
+    }
 
   warnings=$(grep -E "$flags" documento.log || true)
   if [ -n "$warnings" ]; then
