@@ -1,6 +1,6 @@
 # Base normativa da V2
 
-Última auditoria: **2026-08-19**.
+Última auditoria: **2026-08-20**.
 
 Este arquivo registra a política normativa e o mapa de implementação da V2 do modelo LaTeX UFC.
 
@@ -15,6 +15,21 @@ A V2 adota a edição vigente mais recente de cada norma aplicável. Quando um g
 5. comportamento de `abntexto` e demais pacotes.
 
 O comportamento de um pacote nunca prevalece sobre requisito normativo ou institucional aplicável.
+
+## Auditoria institucional de 2026-08-20
+
+A página de Normalização de Trabalhos Acadêmicos do Sistema de Bibliotecas da UFC foi atualizada em 4 de março de 2026 e declara que os guias institucionais estão de acordo com as normas ABNT vigentes. Entretanto, os PDFs atualmente vinculados possuem datas e bases normativas diferentes:
+
+| Documento UFC atualmente vinculado | Base declarada no PDF | Situação na auditoria |
+|---|---|---|
+| Guia de Normalização de Trabalhos Acadêmicos, 2022 | NBR 14724:2011, NBR 6023:2018, NBR 10520:2002 e NBR 12225:2004 | usar requisitos institucionais apenas quando compatíveis com as normas vigentes |
+| Guia de Normalização para Elaboração de Citações, 2025 | NBR 10520:2023 e NBR 6023:2018 | NBR 10520:2023 atual; referência à NBR 6023:2018 superada pela edição de 2025 |
+| Guia de Normalização para Elaboração de Referências | NBR 6023:2018 | superado pela NBR 6023:2025 |
+| Guia de Normalização de Projetos de Pesquisa | NBR 15287:2011 e outras edições históricas | superado pela NBR 15287:2025 e pelas demais normas vigentes aplicáveis |
+
+A Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG, de 10 de fevereiro de 2026, tem precedência sobre disposições técnicas conflitantes de guias anteriores. Ela torna facultativa a ficha catalográfica visual para TCC, dissertação e tese depositados no Repositório Institucional e revoga disposições técnicas em contrário dos manuais e guias anteriores.
+
+Consequentemente, a V2 não interpreta a data do PDF institucional como prova de vigência normativa. Cada requisito é confrontado com a norma ABNT vigente e com atos institucionais posteriores.
 
 ## Normas adotadas
 
@@ -35,7 +50,13 @@ As edições devem ser reconfirmadas antes de cada nova versão principal do tem
 
 ## Requisitos institucionais UFC
 
-A página de normalização do Sistema de Bibliotecas da UFC foi atualizada em 4 de março de 2026 e orienta o uso das normas ABNT vigentes. PDFs históricos dos guias continuam úteis para requisitos institucionais que não conflitem com edições ABNT posteriores.
+### Tipografia
+
+O Guia UFC de Trabalhos Acadêmicos atualmente vinculado exige **Arial ou Times New Roman, tamanho 12**, inclusive na capa. Prevê tamanho menor e uniforme para citações longas, notas de rodapé, paginação, ficha catalográfica, legendas e fontes de ilustrações e tabelas, recomendando tamanho 10 para essas exceções.
+
+A implementação V2 deve distinguir a família tipográfica literal de substitutos metricamente ou visualmente compatíveis. `NewTX` e `TeX Gyre Termes` não devem ser declaradas como Times New Roman. A identidade tipográfica será objeto de gate próprio antes da próxima release.
+
+Ambientes de código, algoritmos e matemática permanecem em auditoria específica para determinar se há exceção institucional aplicável ou se devem seguir a família principal.
 
 ### PDF/A
 
@@ -51,7 +72,7 @@ A versão destinada ao repositório deve apresentar a folha de aprovação sem a
 
 ### Ficha catalográfica
 
-Em 2026, a representação visual da ficha catalográfica tornou-se facultativa no contexto da Instrução Normativa conjunta nº 2/2026, e o serviço CATALOG foi descontinuado. Por isso:
+A Instrução Normativa Conjunta nº 2/2026 torna facultativa a representação visual da ficha catalográfica para TCC, dissertações e teses e registra que sua ausência não impede aprovação, depósito ou divulgação. O serviço institucional de elaboração e o módulo CATALOG foram descontinuados para esses trabalhos. Por isso:
 
 ```tex
 ficha-catalografica = nao
@@ -91,6 +112,16 @@ No modo `frente-verso`:
 
 As regressões geométricas medem o PDF real, incluindo margens, paginação e paridade física.
 
+### Paginação
+
+Para trabalhos em anverso, a UFC orienta contar sequencialmente as folhas a partir da folha de rosto, considerando somente o anverso; capa e ficha catalográfica não entram nessa contagem. A numeração aparece a partir da primeira folha textual, no canto superior direito.
+
+Para frente e verso, a contagem considera as páginas a partir da folha de rosto, e a posição da numeração alterna entre canto superior direito no anverso e superior esquerdo no verso. Apêndices e anexos mantêm paginação contínua, assim como trabalhos em mais de um volume.
+
+### Espaçamento
+
+O Guia UFC orienta espaço 1,5 no corpo do trabalho e espaço simples nas exceções institucionais, incluindo citações longas, notas de rodapé, referências, legendas, ficha catalográfica e natureza do trabalho. Não deve existir espaço adicional entre parágrafos. Referências consecutivas são separadas por uma linha simples em branco.
+
 ### Resumo e abstract
 
 O documento de referência mantém resumo e abstract entre 150 e 500 palavras. A suíte conta as palavras dos arquivos distribuídos e verifica a presença das palavras-chave.
@@ -101,21 +132,30 @@ A fonte acompanha ilustrações e tabelas, inclusive quando o conteúdo é de el
 
 A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrência. Tabelas permanecem em lista própria. Listas específicas continuam disponíveis.
 
+### Citações
+
+O Guia UFC de Citações de 2025 foi elaborado conforme a NBR 10520:2023. Para citações diretas com mais de três linhas, orienta parágrafo distinto, letra menor que a do texto, espaço simples, sem aspas e recomenda recuo de 4 cm.
+
 ### Referências
 
-As referências usam espaçamento simples internamente e intervalo equivalente a uma linha simples entre entradas consecutivas. O gate mede `\baselineskip`, `\baselinestretch` e `\bibitemsep` durante a bibliografia.
+O PDF institucional atualmente vinculado ainda usa NBR 6023:2018. Para a V2 prevalece a NBR 6023:2025. As referências usam espaçamento simples internamente e intervalo equivalente a uma linha simples entre entradas consecutivas. O gate mede `\baselineskip`, `\baselinestretch` e `\bibitemsep` durante a bibliografia.
+
+### Projetos de pesquisa
+
+O Guia UFC de Projetos atualmente vinculado ainda declara NBR 15287:2011. Para os perfis `projeto` e `projetoanonimizado`, a V2 adota NBR 15287:2025 e preserva apenas requisitos institucionais do guia que continuem compatíveis com a edição vigente.
 
 ## Mapa de implementação
 
 | Parte | Norma/requisito principal | Implementação |
 |---|---|---|
 | configuração e perfis | política UFC + normas por tipo | `ufctex/core.def` |
-| papel, margens, fonte e espaçamento | NBR 14724:2024 + UFC | `ufctex/layout.def` |
+| tipografia | NBR 14724:2024 + requisito UFC Arial/Times New Roman | auditoria em andamento; será isolada em módulo próprio antes da próxima release |
+| papel, margens e espaçamento | NBR 14724:2024 + UFC | `ufctex/layout.def` |
 | duplex e início no anverso | NBR 14724:2024 + UFC | `ufctex/layout.def` + regressões geométricas |
 | ativos institucionais | identidade visual UFC | `ufctex/institucional.def` + `assets/institucional/` |
 | capa e folha de rosto | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` + `ufctex/trabalhos.def` |
 | volume e paginação contínua | NBR 14724:2024 + UFC | `ufctex/trabalhos.def` |
-| ficha catalográfica | política UFC 2026 + NBR 14724:2024 | `ufctex/trabalhos.def` |
+| ficha catalográfica | IN Conjunta 2/2026 + NBR 14724:2024 | `ufctex/trabalhos.def` |
 | folha de aprovação | NBR 14724:2024 + política de depósito UFC | `ufctex/pretextuais.def` |
 | dedicatória, agradecimentos, epígrafe e errata | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
 | resumo e abstract | NBR 6028:2021 + UFC | `ufctex/pretextuais.def` |
@@ -123,7 +163,7 @@ As referências usam espaçamento simples internamente e intervalo equivalente a
 | seções e subdivisões | NBR 6024:2012 + UFC | `ufctex/layout.def` / `abntexto` |
 | figuras, gráficos e quadros | NBR 14724:2024 + UFC | `ufctex/objetos.def` |
 | tabelas numéricas | NBR 14724:2024 + IBGE | `ufctex/objetos.def` + `tabularray-abnt` |
-| código e algoritmos | extensão editorial compatível | `ufctex/objetos.def` + `ufctex/modulos.def` |
+| código e algoritmos | extensão editorial em auditoria tipográfica | `ufctex/objetos.def` + `ufctex/modulos.def` |
 | citações | NBR 10520:2023 | `ufctex/bibliografia.def` |
 | referências | NBR 6023:2025 | `ufctex/bibliografia.def` + `ufctex/compat-nbr6023-2025.def` |
 | projetos | NBR 15287:2025 | `ufctex/projetos.def` |
@@ -137,7 +177,7 @@ As referências usam espaçamento simples internamente e intervalo equivalente a
 
 `abntexto`, `biblatex-abnt`, `tabularray-abnt` e demais pacotes são infraestrutura. A versão de um pacote não define, isoladamente, o nível de conformidade normativa da V2.
 
-Na auditoria de 2026-08-19, os ajustes necessários para NBR 6023:2025 permanecem isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
+Os ajustes necessários para NBR 6023:2025 permanecem isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
 
 ## Build
 
@@ -168,6 +208,8 @@ Assim, documentos sem fonte bibliográfica, glossário ou índice não dependem 
 
 A matriz de perfis produz **12 PDFs**: seis perfis × dois motores. Cada PDF é verificado quanto a conteúdo específico do perfil, A4, fontes incorporadas, Sumário, ausência de estrutura `chapter`, ausência de warnings/overflow não reconhecidos e declaração PDF/A-2b.
 
+A próxima release deve acrescentar um gate de **identidade tipográfica**. A simples verificação de `embedded=yes` não é suficiente para comprovar Arial ou Times New Roman literal.
+
 `make release-preflight` acrescenta veraPDF para o documento de referência e para os 12 PDFs da matriz.
 
 No GitHub Actions, o job agregado `latex-preflight` depende de todos os grupos funcionais e permanece como contrato da proteção da branch `main`.
@@ -188,8 +230,13 @@ A linha 1.x permanece preservada em sua própria branch para documentos legados.
 ## Fontes institucionais de verificação
 
 - Sistema de Bibliotecas da UFC — Normalização de trabalhos acadêmicos: https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/
+- Guia de Normalização de Trabalhos Acadêmicos atualmente vinculado: https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf
+- Guia de Normalização para Elaboração de Citações 2025: https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf
+- Guia de Normalização para Elaboração de Referências atualmente vinculado: https://biblioteca.ufc.br/wp-content/uploads/2023/12/guianormalizacaoreferencias.pdf
+- Guia de Normalização de Projetos de Pesquisa atualmente vinculado: https://biblioteca.ufc.br/wp-content/uploads/2019/10/guia-de-projetos-06.10.2019.pdf
 - Sistema de Bibliotecas da UFC — Normas para recebimento de teses e dissertações: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/
 - Sistema de Bibliotecas da UFC — Normas para recebimento de TCC: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/
+- Instrução Normativa Conjunta nº 2/2026: https://biblioteca.ufc.br/wp-content/uploads/2026/02/instrucao-normativa-conjunta-2.pdf
 - Sistema de Bibliotecas da UFC — FAQ da ficha catalográfica: https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/
 - Sistema de Bibliotecas da UFC — Coleção de Normas Técnicas: https://biblioteca.ufc.br/pt/colecao-de-normas-tecnicas/
 - ABNT Catálogo: https://www.abntcatalogo.com.br/
