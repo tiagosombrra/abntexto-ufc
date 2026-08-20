@@ -272,7 +272,7 @@ jobs:
           $env:PATH = "$bin;$env:PATH"
           $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber newtx fontspec unicode-math xpatch etoolbox
+          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber csquotes newtx fontspec unicode-math xpatch etoolbox
           if ($LASTEXITCODE -ne 0) {
             throw "tlmgr package installation failed with exit code $LASTEXITCODE"
           }
