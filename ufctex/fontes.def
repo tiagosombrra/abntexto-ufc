@@ -16,6 +16,7 @@
 \tl_new:N \g_ufc_font_family_tl
 \tl_new:N \g_ufc_math_font_policy_tl
 \bool_new:N \g_ufc_font_strict_bool
+\bool_new:N \g_ufc_pdftex_windows_map_loaded_bool
 \bool_new:N \l_ufc_font_files_available_bool
 
 \ifPDFTeX
@@ -74,9 +75,19 @@
       }
   }
 
+\cs_new_protected:Npn \ufc_font_pdftex_load_windows_map:
+  {
+    \bool_if:NF \g_ufc_pdftex_windows_map_loaded_bool
+      {
+        \pdfmapfile{+ufctex-windows.map}
+        \bool_gset_true:N \g_ufc_pdftex_windows_map_loaded_bool
+      }
+  }
+
 % Keep all textual family switches inside the institutional family.
 \cs_new_protected:Npn \ufc_font_pdftex_set_text_family:n #1
   {
+    \ufc_font_pdftex_load_windows_map:
     \renewcommand{\rmdefault}{#1}
     \renewcommand{\sfdefault}{#1}
     \renewcommand{\ttdefault}{#1}
@@ -92,62 +103,52 @@
 
 \cs_new_protected:Npn \ufc_font_pdftex_times:
   {
-    \bool_if:NTF \g_ufc_font_strict_bool
+    \ufc_font_check_files:n
+      { ufctex-winfonts-ready.tex, ufctex-windows.map, t1times-ttf.fd, ts1times-ttf.fd }
+    \bool_if:NTF \l_ufc_font_files_available_bool
       {
-        \ufc_font_check_files:n { t1times-ttf.fd }
-        \bool_if:NTF \l_ufc_font_files_available_bool
-          {
-            \ufc_font_pdftex_set_text_family:n {times-ttf}
-            \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~pdfLaTeX}
-          }
-          {
-            \ClassError{ufctex}
-              {Times~New~Roman~support~is~not~available~to~pdfLaTeX}
-              {Install~winfonts~support,~enable~winfonts.map,~and~make~the~Microsoft~TrueType~files~visible~to~pdfTeX.}
-          }
+        \ufc_font_pdftex_set_text_family:n {times-ttf}
+        \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~pdfLaTeX}
       }
       {
-        \ufc_font_check_files:n
-          { t1times-ttf.fd, winfonts.map, times.ttf, timesbd.ttf, timesi.ttf, timesbi.ttf }
-        \bool_if:NTF \l_ufc_font_files_available_bool
+        \bool_if:NTF \g_ufc_font_strict_bool
           {
-            \ufc_font_pdftex_set_text_family:n {times-ttf}
-            \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~pdfLaTeX}
+            \ClassError{ufctex}
+              {Times~New~Roman~support~is~not~prepared~for~pdfLaTeX}
+              {Run~tools/prepare-windows-fonts.ps1~on~Windows~and~compile~again.}
           }
           {
-            \ufc_font_pdftex_set_text_family:n {ntxtlf}
-            \ClassInfo{ufctex}{Times~New~Roman~not~available~to~pdfLaTeX;~using~NewTX~compatibility~fallback}
+            \renewcommand{\rmdefault}{ntxtlf}
+            \renewcommand{\sfdefault}{ntxtlf}
+            \renewcommand{\ttdefault}{ntxtlf}
+            \renewcommand{\familydefault}{\rmdefault}
+            \ClassInfo{ufctex}{Times~New~Roman~not~prepared~for~pdfLaTeX;~using~NewTX~compatibility~fallback}
           }
       }
   }
 
 \cs_new_protected:Npn \ufc_font_pdftex_arial:
   {
-    \bool_if:NTF \g_ufc_font_strict_bool
+    \ufc_font_check_files:n
+      { ufctex-winfonts-ready.tex, ufctex-windows.map, t1arial.fd, ts1arial.fd }
+    \bool_if:NTF \l_ufc_font_files_available_bool
       {
-        \ufc_font_check_files:n { t1arial.fd }
-        \bool_if:NTF \l_ufc_font_files_available_bool
-          {
-            \ufc_font_pdftex_set_text_family:n {arial}
-            \ClassInfo{ufctex}{Using~literal~Arial~with~pdfLaTeX}
-          }
-          {
-            \ClassError{ufctex}
-              {Arial~support~is~not~available~to~pdfLaTeX}
-              {Install~winfonts~support,~enable~winfonts.map,~and~make~the~Microsoft~TrueType~files~visible~to~pdfTeX.}
-          }
+        \ufc_font_pdftex_set_text_family:n {arial}
+        \ClassInfo{ufctex}{Using~literal~Arial~with~pdfLaTeX}
       }
       {
-        \ufc_font_check_files:n
-          { t1arial.fd, winfonts.map, arial.ttf, arialbd.ttf, ariali.ttf, arialbi.ttf }
-        \bool_if:NTF \l_ufc_font_files_available_bool
+        \bool_if:NTF \g_ufc_font_strict_bool
           {
-            \ufc_font_pdftex_set_text_family:n {arial}
-            \ClassInfo{ufctex}{Using~literal~Arial~with~pdfLaTeX}
+            \ClassError{ufctex}
+              {Arial~support~is~not~prepared~for~pdfLaTeX}
+              {Run~tools/prepare-windows-fonts.ps1~on~Windows~and~compile~again.}
           }
           {
-            \ufc_font_pdftex_set_text_family:n {qhv}
-            \ClassInfo{ufctex}{Arial~not~available~to~pdfLaTeX;~using~TeX~Gyre~Heros~compatibility~fallback}
+            \renewcommand{\rmdefault}{qhv}
+            \renewcommand{\sfdefault}{qhv}
+            \renewcommand{\ttdefault}{qhv}
+            \renewcommand{\familydefault}{\rmdefault}
+            \ClassInfo{ufctex}{Arial~not~prepared~for~pdfLaTeX;~using~TeX~Gyre~Heros~compatibility~fallback}
           }
       }
   }
