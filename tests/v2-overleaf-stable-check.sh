@@ -22,12 +22,6 @@ grep -Fq '[2026-05-08 1.1 Preparation of works in ABNT standards]' abntexto.cls 
   exit 1
 }
 
-[ -f tests/fixtures/overleaf-latexmkrc ] || {
-  echo 'Overleaf proxy: fixture latexmkrc ausente.'
-  exit 1
-}
-cp tests/fixtures/overleaf-latexmkrc latexmkrc
-
 for cmd in latexmk pdffonts pdftotext pdfinfo biber makeglossaries makeindex; do
   command -v "$cmd" >/dev/null 2>&1 || {
     echo "Overleaf proxy: comando ausente: $cmd"
@@ -37,7 +31,6 @@ done
 
 cleanup() {
   latexmk -C documento.tex >/dev/null 2>&1 || true
-  rm -f latexmkrc
   rm -f documento.acn documento.acr documento.alg documento.bbl documento.bcf documento.blg
   rm -f documento.glg documento.glo documento.gls documento.idx documento.ilg documento.ind
   rm -f documento.ist documento.nlo documento.nls documento.run.xml documento.xdy
@@ -47,7 +40,7 @@ trap cleanup EXIT INT TERM
 flags='LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Underfull \\hbox|Overfull \\vbox'
 
 for engine in pdflatex lualatex; do
-  echo "Overleaf proxy: validando documento completo com $engine / TeX Live 2025..."
+  echo "Overleaf proxy: validando documento completo com $engine / imagem oficial TeX Live 2025..."
   latexmk -C documento.tex >/dev/null 2>&1 || true
 
   case "$engine" in
