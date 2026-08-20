@@ -11,7 +11,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 .PHONY: all pdf compile lua version clean \
 	preflight release-preflight \
 	v2-reference-check v2-pdfa-check v2-check v2-distribution-check \
-	v2-layout-check v2-pdf-geometry-check \
+	v2-layout-check v2-pdf-geometry-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
 	v2-object-check v2-minted-check v2-bib-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
@@ -68,6 +68,9 @@ v2-layout-check:
 v2-pdf-geometry-check:
 	@sh tests/v2-pdf-geometry-check.sh
 
+v2-normative-complement-check:
+	@sh tests/v2-normative-complement-check.sh
+
 v2-pretextual-check:
 	@sh tests/v2-pretextual-check.sh
 
@@ -112,6 +115,7 @@ v2-check: \
 	v2-distribution-check \
 	v2-layout-check \
 	v2-pdf-geometry-check \
+	v2-normative-complement-check \
 	v2-pretextual-check \
 	v2-duplex-pretextual-check \
 	v2-object-check \
@@ -139,7 +143,7 @@ clean:
 	@rm -f *.out *.aux *.alg *.acr *.dvi *.gls *.log *.bbl *.blg *.bcf *.run.xml
 	@rm -f *.ntn *.not *.lof *.loi *.lot *.toc *.loa *.loc *.logr *.lsg *.nlo *.nls *.ilg *.ind
 	@rm -f *.glg *.glo *.xdy *.acn *.idx *.loq *.lol *.fls *.fdb_latexmk *.synctex.gz *~
-	@rm -f layout-anverso.pdf layout-frente-verso.pdf geometria-*.pdf
+	@rm -f layout-anverso.pdf layout-frente-verso.pdf geometria-*.pdf normativa-complementar-*.pdf
 	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf pretextuais-duplex-*.pdf
 	@rm -f objetos-avancados.pdf objetos-minted.pdf citacoes-referencias.pdf
 	@rm -f referencias-6023-2025.pdf projeto-15287.pdf projeto-sem-capa.pdf
