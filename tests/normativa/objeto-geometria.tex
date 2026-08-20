@@ -6,13 +6,21 @@
   \typeout{UFC-OBJECT-CONTENT-WIDTH=\the\savedplacewidth}%
   \typeout{UFC-OBJECT-TITLE-FONTSIZE=\f@size}%
 }
+\newcommand{\ufcSourceProbe}{%
+  \typeout{UFC-OBJECT-SOURCE-WIDTH=\the\hsize}%
+  \typeout{UFC-OBJECT-SOURCE-FONTSIZE=\f@size}%
+}
+\newcommand{\ufcNoteProbe}{%
+  \typeout{UFC-OBJECT-NOTE-WIDTH=\the\hsize}%
+  \typeout{UFC-OBJECT-NOTE-FONTSIZE=\f@size}%
+}
 \makeatother
 
 \begin{document}
 
 \legend{figure}{Título deliberadamente longo para validar que a legenda respeita a largura física da ilustração}
-\ufcfonte{Elaboração própria.}
-\ufcnota{Validação geométrica de um objeto estreito.}
+\ufcfonte{\ufcSourceProbe Elaboração própria com texto deliberadamente longo para validar a largura da fonte.}
+\ufcnota{\ufcNoteProbe Validação geométrica de nota deliberadamente longa em um objeto estreito.}
 \begin{ufcobjeto}[here]
   \rule{6cm}{2cm}
 \end{ufcobjeto}
