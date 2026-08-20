@@ -47,6 +47,8 @@
 
 \ExplSyntaxOn
 
+\bool_new:N \g_ufc_physical_parity_inverted_bool
+
 \cs_new_protected:Npn \ufc_layout_one_sided:
   {
     \newgeometry{
@@ -69,15 +71,26 @@
     }
   }
 
+\cs_new_protected:Npn \ufc_blank_page:
+  {
+    \thispagestyle{empty}
+    \hbox{}
+    \newpage
+  }
+
 \cs_new_protected:Npn \ufc_next_odd_physical_page:
   {
     \clearpage
-    \int_if_odd:nF { \value{page} }
-      {
-        \thispagestyle{empty}
-        \hbox{}
-        \newpage
-      }
+    \bool_if:NTF \g_ufc_physical_parity_inverted_bool
+      { \int_if_odd:nT { \value{page} } { \ufc_blank_page: } }
+      { \int_if_odd:nF { \value{page} } { \ufc_blank_page: } }
+  }
+
+\cs_new_protected:Npn \ufc_register_uncounted_physical_page:
+  {
+    \bool_if:NTF \g_ufc_physical_parity_inverted_bool
+      { \bool_gset_false:N \g_ufc_physical_parity_inverted_bool }
+      { \bool_gset_true:N \g_ufc_physical_parity_inverted_bool }
   }
 
 \cs_new_protected:Npn \ufc_primary_section_break:
@@ -105,6 +118,9 @@
 
 \NewDocumentCommand \ufcPretextualBreak { }
   { \ufc_primary_section_break: }
+
+\NewDocumentCommand \ufcRegisterUncountedPhysicalPage { }
+  { \ufc_register_uncounted_physical_page: }
 
 \AtBeginDocument{\ufc_layout_apply:}
 
