@@ -152,7 +152,7 @@ jobs:
         shell: pwsh
         run: choco install poppler --yes --no-progress
 
-      - name: Install TeX Live 2026 and Winfonts
+      - name: Install TeX Live 2026 and font dependencies
         shell: pwsh
         run: |
           $root = Join-Path $env:RUNNER_TEMP 'texlive-2026'
@@ -185,7 +185,7 @@ jobs:
           if (-not (Test-Path (Join-Path $bin 'tlmgr.bat'))) {
             throw "TeX Live binary directory not found: $bin"
           }
-          & (Join-Path $bin 'tlmgr.bat') install fontspec luatex winfonts
+          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber newtx fontspec unicode-math winfonts xpatch etoolbox
           if ($LASTEXITCODE -ne 0) {
             throw "tlmgr package installation failed with exit code $LASTEXITCODE"
           }
@@ -201,7 +201,7 @@ jobs:
           }
           $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Prove literal Times New Roman and Arial
+      - name: Prove literal Times New Roman and Arial through ufctex
         shell: bash
         env:
           UFC_WINDOWS_FONTS_DIR: C:/Windows/Fonts
