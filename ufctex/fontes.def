@@ -6,7 +6,6 @@
   \RequirePackage[T1]{fontenc}
   \RequirePackage{newtxtext}
   \RequirePackage{newtxmath}
-  \RequirePackage{tgheros}
 \else
   \RequirePackage{fontspec}
   \RequirePackage{unicode-math}
@@ -67,19 +66,19 @@
       {
         \renewcommand{\rmdefault}{times-ttf}
         \renewcommand{\familydefault}{\rmdefault}
-        \ClassInfo{ufctex}{Using literal Times New Roman with pdfLaTeX}
+        \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~pdfLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
             \ClassError{ufctex}
-              {Times New Roman literal is not available to pdfLaTeX}
-              {Install the Microsoft font and winfonts support, or use LuaLaTeX.}
+              {Times~New~Roman~literal~is~not~available~to~pdfLaTeX}
+              {Install~the~Microsoft~font~and~winfonts~support,~or~use~LuaLaTeX.}
           }
           {
             \renewcommand{\rmdefault}{ntxtlf}
             \renewcommand{\familydefault}{\rmdefault}
-            \ClassInfo{ufctex}{Times New Roman not available to pdfLaTeX; using NewTX compatibility fallback}
+            \ClassInfo{ufctex}{Times~New~Roman~not~available~to~pdfLaTeX;~using~NewTX~compatibility~fallback}
           }
       }
   }
@@ -99,19 +98,19 @@
       {
         \renewcommand{\sfdefault}{arial}
         \renewcommand{\familydefault}{\sfdefault}
-        \ClassInfo{ufctex}{Using literal Arial with pdfLaTeX}
+        \ClassInfo{ufctex}{Using~literal~Arial~with~pdfLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
             \ClassError{ufctex}
-              {Arial literal is not available to pdfLaTeX}
-              {Install the Microsoft font and winfonts support, or use LuaLaTeX.}
+              {Arial~literal~is~not~available~to~pdfLaTeX}
+              {Install~the~Microsoft~font~and~winfonts~support,~or~use~LuaLaTeX.}
           }
           {
             \renewcommand{\sfdefault}{qhv}
             \renewcommand{\familydefault}{\sfdefault}
-            \ClassInfo{ufctex}{Arial not available to pdfLaTeX; using TeX Gyre Heros compatibility fallback}
+            \ClassInfo{ufctex}{Arial~not~available~to~pdfLaTeX;~using~TeX~Gyre~Heros~compatibility~fallback}
           }
       }
   }
@@ -121,17 +120,17 @@
     \IfFontExistsTF{Times New Roman}
       {
         \setmainfont{Times New Roman}
-        \ClassInfo{ufctex}{Using literal Times New Roman with LuaLaTeX}
+        \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~LuaLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
             \ClassError{ufctex}
-              {Times New Roman not found}
-              {Install Times New Roman or set fonte-estrita=nao.}
+              {Times~New~Roman~not~found}
+              {Install~Times~New~Roman~or~set~fonte-estrita=nao.}
           }
           {
-            \ClassWarningNoLine{ufctex}{Times New Roman not found; using TeX Gyre Termes}
+            \ClassWarningNoLine{ufctex}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes}
             \setmainfont{TeX Gyre Termes}
           }
       }
@@ -142,17 +141,17 @@
     \IfFontExistsTF{Arial}
       {
         \setmainfont{Arial}
-        \ClassInfo{ufctex}{Using literal Arial with LuaLaTeX}
+        \ClassInfo{ufctex}{Using~literal~Arial~with~LuaLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
             \ClassError{ufctex}
-              {Arial not found}
-              {Install Arial or set fonte-estrita=nao.}
+              {Arial~not~found}
+              {Install~Arial~or~set~fonte-estrita=nao.}
           }
           {
-            \ClassWarningNoLine{ufctex}{Arial not found; using TeX Gyre Heros}
+            \ClassWarningNoLine{ufctex}{Arial~not~found;~using~TeX~Gyre~Heros}
             \setmainfont{TeX Gyre Heros}
           }
       }

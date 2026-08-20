@@ -26,7 +26,7 @@ expected_family() {
       if grep -Fq 'Using literal Times New Roman with pdfLaTeX' "$log"; then
         echo 'TimesNewRoman'
       else
-        echo 'NewTX'
+        echo 'TeXGyreTermesX'
       fi
       ;;
     arial/pdflatex)
