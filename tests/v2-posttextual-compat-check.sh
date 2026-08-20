@@ -92,7 +92,7 @@ if 'capítulo' in fold or 'capitulo' in fold:
     raise SystemExit(f'{job}: estrutura baseada em capítulo reapareceu.')
 PY
 
-  for marker in 'Referências' 'Glossário' 'Questionário produzido pelo autor' 'Documento institucional externo' 'Índice'; do
+  for marker in 'Referências' 'Glossário' 'Questionário produzido pelo autor' 'Documento institucional externo' 'Remissivo'; do
     grep -Fqi "$marker" "$job.toc" || {
       echo "$job: item pós-textual ausente do Sumário: $marker"
       cat "$job.toc"
