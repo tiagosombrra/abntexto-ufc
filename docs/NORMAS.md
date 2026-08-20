@@ -2,7 +2,7 @@
 
 Última auditoria: **2026-08-20**.
 
-Este arquivo registra a política normativa e o mapa de implementação da V2 do modelo LaTeX UFC.
+Este arquivo registra a política normativa, a classificação da auditoria e o mapa de implementação da V2 do modelo LaTeX UFC.
 
 ## Política normativa
 
@@ -29,7 +29,7 @@ A página de Normalização de Trabalhos Acadêmicos do Sistema de Bibliotecas d
 
 A Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG, de 10 de fevereiro de 2026, tem precedência sobre disposições técnicas conflitantes de guias anteriores. Ela torna facultativa a ficha catalográfica visual para TCC, dissertação e tese depositados no Repositório Institucional e revoga disposições técnicas em contrário dos manuais e guias anteriores.
 
-Consequentemente, a V2 não interpreta a data do PDF institucional como prova de vigência normativa. Cada requisito é confrontado com a norma ABNT vigente e com atos institucionais posteriores.
+Consequentemente, a data de um PDF institucional não é tratada como prova de vigência normativa. Cada requisito é confrontado com a norma ABNT vigente e com atos institucionais posteriores.
 
 ## Normas adotadas
 
@@ -48,15 +48,98 @@ Consequentemente, a V2 não interpreta a data do PDF institucional como prova de
 
 As edições devem ser reconfirmadas antes de cada nova versão principal do template.
 
+## Classificação da auditoria 2026-08-20
+
+Estados usados:
+
+- **CONFORME**: requisito implementado e coberto por evidência/teste compatível;
+- **DIVERGENTE**: implementação atual contraria requisito vigente;
+- **INCOMPLETO**: implementação existe, mas a cobertura normativa ou o gate ainda não prova todo o requisito;
+- **NÃO TESTADO**: comportamento pode existir por herança de pacote, mas não é declarado conforme sem teste próprio;
+- **NÃO APLICÁVEL**: requisito condicional fora do escopo da distribuição corrente.
+
+| Requisito | Estado | Evidência / decisão |
+|---|---|---|
+| papel A4 | **CONFORME** | `tests/v2-pdf-geometry-check.sh` mede o PDF real |
+| margens anverso 3 cm esquerda/superior e 2 cm direita/inferior | **CONFORME** | `ufctex/layout.def` + gate geométrico |
+| margens espelhadas no frente-verso | **CONFORME** | `ufctex/layout.def` + gate geométrico |
+| fonte-base em tamanho 12 | **CONFORME** | `ufctex.cls` carrega `abntexto` em 12 pt |
+| família Arial ou Times New Roman literal | **DIVERGENTE** | pdfLaTeX usa NewTX; LuaLaTeX admite fallback TeX Gyre Termes |
+| variantes regular/negrito/itálico/negrito-itálico da família institucional | **INCOMPLETO** | gate atual verifica incorporação, não identidade tipográfica |
+| tamanhos reduzidos uniformes nas exceções | **INCOMPLETO** | há usos de `\abntsmall`, `\small` e 10 pt, mas falta gate tipométrico completo |
+| recuo da primeira linha do parágrafo em 2 cm conforme guia UFC | **DIVERGENTE** | `ufctex/layout.def` usa 1,5 cm |
+| ausência de espaço adicional entre parágrafos | **CONFORME** | `\parskip=0pt` |
+| espaço 1,5 no corpo | **CONFORME** | `\onehalfsp` aplicado no início do documento |
+| natureza do trabalho em espaço simples | **CONFORME** | capa/folha de rosto usam minipage com `\singlesp` |
+| notas de rodapé em tamanho reduzido e espaço simples | **CONFORME** | `\abntsmall\singlesp` |
+| filete de 5 cm das notas de rodapé | **CONFORME** | `\footnoterule` redefine largura para 5 cm |
+| linhas subsequentes da nota alinhadas sob a primeira letra do texto | **DIVERGENTE** | implementação atual não cria recuo suspenso para linhas quebradas |
+| estrutura principal baseada em seções, sem capítulos | **CONFORME** | `\usechapters` gera erro e distribuição bloqueia `\chapter` |
+| cinco níveis de seção e correspondência no Sumário | **CONFORME** | hierarquia definida em `layout.def` e TOC exercitado nos gates |
+| início de seção primária em nova página/anverso | **CONFORME** | `\ufcPrimarySectionBreak` + testes duplex |
+| alinhamento de títulos de seção com mais de uma linha | **NÃO TESTADO** | depende parcialmente do `abntexto`; falta gate geométrico próprio |
+| capa e folha de rosto | **CONFORME** | perfis e pré-textuais exercitados nos dois motores |
+| natureza/orientação a partir do meio da mancha gráfica | **CONFORME** | bloco textual deslocado 8 cm |
+| folha de aprovação sem imagens de assinatura para depósito | **CONFORME** | classe gera linhas e identificação, sem incorporar assinaturas |
+| ficha catalográfica visual facultativa | **CONFORME** | padrão `ficha-catalografica=nao` conforme IN Conjunta 2/2026 |
+| ficha catalográfica não contada nem numerada | **DIVERGENTE** | a NBR 14724:2024 exclui o verso com dados catalográficos da contagem; a implementação atual ainda incrementa a contagem no modo frente-verso |
+| contagem dos pré-textuais e numeração somente a partir do textual | **CONFORME**, exceto ficha | gates de paginação e geometria; corrigir interação com ficha catalográfica |
+| posição da paginação anverso/frente-verso | **CONFORME** | gate geométrico mede canto superior direito/esquerdo |
+| paginação contínua em apêndices e anexos | **CONFORME** | pós-textuais preservam a sequência |
+| trabalhos em mais de um volume | **CONFORME** | volume em capa/folha de rosto e `pagina-inicial` testados |
+| dedicatória sem título | **CONFORME** | gate pré-textual verifica ausência de título |
+| agradecimentos, errata, resumo, abstract e listas | **CONFORME** | títulos e presença exercitados nos gates |
+| epígrafe longa em 10 pt, espaço simples e recuo de 4 cm | **CONFORME** | implementação explícita em `pretextuais.def` |
+| resumo e abstract sem recuo de primeira linha | **CONFORME** | `\parindent=0pt` nos dois elementos |
+| resumo/abstract entre 150 e 500 palavras | **CONFORME** | `tests/v2-reference-check.sh` conta palavras |
+| palavras-chave/keywords | **CONFORME** | API e documento de referência exercitados |
+| pré-textuais fora do Sumário | **CONFORME** | gate verifica que não entram no TOC |
+| pré-textuais iniciando em anverso no duplex | **CONFORME** | `tests/v2-duplex-pretextual-check.sh` mede página física |
+| citação autor-data, autores múltiplos, pessoa jurídica, homônimos e `apud` | **CONFORME** | `tests/v2-bibliography-check.sh` cobre os casos principais da NBR 10520:2023 |
+| citação direta longa: fonte menor, simples, sem aspas e recuo recomendado de 4 cm | **NÃO TESTADO** | não há fixture/gate específico de bloco de citação longa |
+| referências em espaço simples | **CONFORME** | gate mede `baselinestretch` |
+| uma linha simples entre referências | **CONFORME** | gate mede `bibitemsep` e `itemsep` efetivo |
+| NBR 6023:2025 | **CONFORME NO ESCOPO TESTADO** | regressões cobrem evento, e-location, data de julgamento, dados desconhecidos, suplemento, entrevista, ISSN, DOI e ORCID |
+| referências próprias de anexo no próprio anexo | **NÃO TESTADO** | fixture de anexo não exercita referência específica/local |
+| identificação, título, fonte, legenda e nota de ilustrações | **INCOMPLETO** | API existe e presença é testada, mas falta medir alinhamento/largura em relação à ilustração |
+| indicação de fonte de elaboração própria | **CONFORME** | fixtures usam e gate verifica `Fonte:` |
+| fonte externa de ilustração/tabela conforme NBR 10520 | **INCOMPLETO** | API aceita texto livre; falta fixture normativa com citação externa |
+| Lista de Ilustrações agregando figuras, gráficos e quadros | **CONFORME** | regressão verifica conteúdo e exclui tabelas |
+| tabelas em lista própria | **CONFORME** | regressões exercitam lista de tabelas |
+| apresentação tabular segundo IBGE | **INCOMPLETO** | suporte `tabularray-abnt` existe; gate não cobre toda a norma tabular |
+| equações e fórmulas | **NÃO TESTADO** | falta fixture específica para apresentação e numeração |
+| tipografia de código/listings/minted | **INCOMPLETO** | exemplo usa `\ttfamily\small`; ainda não há decisão institucional para exceção de família |
+| tipografia de algoritmos | **INCOMPLETO** | falta decisão/gate de família e tamanho |
+| tipografia matemática | **INCOMPLETO** | família matemática é distinta da família textual e precisa de política explícita |
+| estrutura de projetos NBR 15287:2025 | **CONFORME NO ESCOPO TESTADO** | fixture cobre introdução, problema, objetivos, justificativa, referencial, metodologia, recursos, cronograma e referências |
+| projeto anonimizado sem vazamento de autor/orientador | **CONFORME** | gate semântico específico |
+| glossário, apêndice, anexo e índice | **CONFORME NO ESCOPO TESTADO** | ordem, presença, TOC e início no anverso são verificados |
+| ênfase tipográfica de títulos de apêndices/anexos igual à seção primária | **NÃO TESTADO** | falta comparação tipográfica explícita |
+| agradecimento obrigatório à CAPES quando aplicável | **INCOMPLETO** | requisito é condicional ao financiamento; template deve orientar o autor, não inferir a condição |
+| lombada NBR 12225:2023 | **NÃO APLICÁVEL à distribuição eletrônica corrente** | extensão condicional futura para versão física |
+| PDF/A para depósito | **CONFORME** | `\DocumentMetadata` + validação independente com veraPDF |
+| PDF/A-2b | **CONFORME COMO ESCOLHA TÉCNICA DO PROJETO** | não é apresentado como subtipo imposto pela UFC |
+
+## Divergências obrigatórias antes da próxima release
+
+A próxima fase deve corrigir, no mínimo:
+
+1. família tipográfica institucional literal e política de fallback;
+2. recuo de primeira linha de 1,5 cm para 2 cm;
+3. contagem da ficha catalográfica também no modo frente-verso;
+4. alinhamento suspenso das linhas subsequentes de notas de rodapé.
+
+Os itens classificados como **INCOMPLETO** ou **NÃO TESTADO** devem receber decisão normativa explícita e/ou gate antes de serem promovidos a **CONFORME**.
+
 ## Requisitos institucionais UFC
 
 ### Tipografia
 
 O Guia UFC de Trabalhos Acadêmicos atualmente vinculado exige **Arial ou Times New Roman, tamanho 12**, inclusive na capa. Prevê tamanho menor e uniforme para citações longas, notas de rodapé, paginação, ficha catalográfica, legendas e fontes de ilustrações e tabelas, recomendando tamanho 10 para essas exceções.
 
-A implementação V2 deve distinguir a família tipográfica literal de substitutos metricamente ou visualmente compatíveis. `NewTX` e `TeX Gyre Termes` não devem ser declaradas como Times New Roman. A identidade tipográfica será objeto de gate próprio antes da próxima release.
+A V2 deve distinguir a família tipográfica literal de substitutos metricamente ou visualmente compatíveis. `NewTX` e `TeX Gyre Termes` não podem ser declaradas como Times New Roman.
 
-Ambientes de código, algoritmos e matemática permanecem em auditoria específica para determinar se há exceção institucional aplicável ou se devem seguir a família principal.
+Ambientes de código, algoritmos e matemática exigem política tipográfica própria antes da próxima release.
 
 ### PDF/A
 
@@ -64,41 +147,21 @@ As orientações de recebimento consultadas em 2026 exigem arquivo eletrônico *
 
 A V2 usa **PDF/A-2b** como perfil técnico verificável. O subtipo 2b é escolha de implementação do projeto, não requisito específico atribuído à UFC.
 
-`documento.tex` e a matriz final de perfis usam `\DocumentMetadata` antes de `\documentclass`. A declaração XMP não é considerada prova suficiente: o gate de release usa veraPDF.
-
 ### Folha de aprovação
 
 A versão destinada ao repositório deve apresentar a folha de aprovação sem assinaturas. A V2 produz identificação e linhas da banca, mas não incorpora assinaturas digitalizadas.
 
 ### Ficha catalográfica
 
-A Instrução Normativa Conjunta nº 2/2026 torna facultativa a representação visual da ficha catalográfica para TCC, dissertações e teses e registra que sua ausência não impede aprovação, depósito ou divulgação. O serviço institucional de elaboração e o módulo CATALOG foram descontinuados para esses trabalhos. Por isso:
+A Instrução Normativa Conjunta nº 2/2026 torna facultativa a representação visual da ficha catalográfica para TCC, dissertações e teses. Por isso, `ficha-catalografica=nao` permanece o padrão.
 
-```tex
-ficha-catalografica = nao
-```
+Quando a ficha for incluída, a NBR 14724:2024 vigente determina que o verso da folha de rosto com os dados catalográficos **não seja contado nem numerado**. A implementação V2 atual preserva essa regra somente no modo `anverso`; o modo `frente-verso` está classificado como divergente e deve ser corrigido.
 
-é o padrão.
-
-Quando a ficha for usada, a V2 diferencia os modos de impressão:
-
-- `anverso`: a ficha ocupa página física, mas não incrementa a contagem lógica;
-- `frente-verso`: a ficha ocupa o verso da folha de rosto e permanece na sequência contada.
-
-A regressão `tests/v2-catalog-card-check.sh` valida os dois comportamentos com pdfLaTeX e LuaLaTeX. Como a ficha é um PDF externo, sua inclusão pode alterar a conformidade PDF/A do trabalho; o arquivo completo deve ser validado novamente com veraPDF.
+Como a ficha é um PDF externo, sua inclusão pode alterar a conformidade PDF/A; o arquivo completo deve ser validado novamente com veraPDF.
 
 ### Trabalhos em mais de um volume
 
-A identificação do volume deve aparecer quando o trabalho for dividido em mais de um volume, e a paginação permanece única e sequencial entre os volumes.
-
-A V2 oferece:
-
-```tex
-volume = {2},
-pagina-inicial = 101
-```
-
-O módulo `ufctex/trabalhos.def` aplica `volume` à capa e à folha de rosto dos trabalhos acadêmicos e preserva `pagina-inicial` após a capa. A regressão `tests/v2-multivolume-check.sh` valida o comportamento nos dois motores suportados.
+A identificação do volume deve aparecer quando o trabalho for dividido em mais de um volume, e a paginação permanece única e sequencial entre os volumes. A V2 oferece `volume` e `pagina-inicial`, com regressão própria.
 
 ### Frente e verso
 
@@ -107,16 +170,12 @@ No modo `frente-verso`:
 - anverso: esquerda/superior 3 cm; direita/inferior 2 cm;
 - verso: direita/superior 3 cm; esquerda/inferior 2 cm;
 - numeração à direita no anverso e à esquerda no verso;
-- elementos pré-textuais, exceto ficha catalográfica, iniciam no anverso;
+- elementos pré-textuais, exceto a página destinada aos dados catalográficos, iniciam no anverso;
 - seções textuais primárias e elementos pós-textuais controlados pela V2 iniciam no anverso.
-
-As regressões geométricas medem o PDF real, incluindo margens, paginação e paridade física.
 
 ### Paginação
 
-Para trabalhos em anverso, a UFC orienta contar sequencialmente as folhas a partir da folha de rosto, considerando somente o anverso; capa e ficha catalográfica não entram nessa contagem. A numeração aparece a partir da primeira folha textual, no canto superior direito.
-
-Para frente e verso, a contagem considera as páginas a partir da folha de rosto, e a posição da numeração alterna entre canto superior direito no anverso e superior esquerdo no verso. Apêndices e anexos mantêm paginação contínua, assim como trabalhos em mais de um volume.
+Os elementos pré-textuais são contados a partir da folha de rosto e não são numerados. O verso da folha de rosto destinado aos dados catalográficos não é contado nem numerado. A numeração aparece a partir da primeira página textual. Em frente e verso, a posição alterna entre o canto superior direito no anverso e o superior esquerdo no verso. Apêndices, anexos e volumes mantêm sequência contínua.
 
 ### Espaçamento
 
@@ -124,38 +183,40 @@ O Guia UFC orienta espaço 1,5 no corpo do trabalho e espaço simples nas exceç
 
 ### Resumo e abstract
 
-O documento de referência mantém resumo e abstract entre 150 e 500 palavras. A suíte conta as palavras dos arquivos distribuídos e verifica a presença das palavras-chave.
+O documento de referência mantém resumo e abstract entre 150 e 500 palavras, sem recuo na primeira linha, e usa palavras-chave após o texto.
 
 ### Ilustrações e tabelas
 
-A fonte acompanha ilustrações e tabelas, inclusive quando o conteúdo é de elaboração própria. A API pública usa `\ufcfonte{...}`.
+A fonte acompanha ilustrações e tabelas, inclusive quando o conteúdo é de elaboração própria. A NBR 14724:2024 exige que tipo, número, título, fonte, legenda e notas respeitem os limites da ilustração. A V2 ainda precisa acrescentar uma regressão geométrica para esse requisito.
 
-A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrência. Tabelas permanecem em lista própria. Listas específicas continuam disponíveis.
+A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrência. Tabelas permanecem em lista própria.
 
 ### Citações
 
-O Guia UFC de Citações de 2025 foi elaborado conforme a NBR 10520:2023. Para citações diretas com mais de três linhas, orienta parágrafo distinto, letra menor que a do texto, espaço simples, sem aspas e recomenda recuo de 4 cm.
+O Guia UFC de Citações de 2025 foi elaborado conforme a NBR 10520:2023. Para citações diretas com mais de três linhas, orienta parágrafo distinto, letra menor que a do texto, espaço simples, sem aspas e recomenda recuo de 4 cm. A V2 ainda precisa de fixture específica para provar esse bloco de apresentação.
 
 ### Referências
 
-O PDF institucional atualmente vinculado ainda usa NBR 6023:2018. Para a V2 prevalece a NBR 6023:2025. As referências usam espaçamento simples internamente e intervalo equivalente a uma linha simples entre entradas consecutivas. O gate mede `\baselineskip`, `\baselinestretch` e `\bibitemsep` durante a bibliografia.
+O PDF institucional atualmente vinculado ainda usa NBR 6023:2018. Para a V2 prevalece a NBR 6023:2025. As referências usam espaçamento simples internamente e intervalo equivalente a uma linha simples entre entradas consecutivas.
+
+A NBR 14724:2024 também determina que referências próprias de um anexo, quando houver, sejam apresentadas no próprio anexo, em nota de rodapé ou lista específica. Esse caso ainda não possui regressão dedicada.
 
 ### Projetos de pesquisa
 
-O Guia UFC de Projetos atualmente vinculado ainda declara NBR 15287:2011. Para os perfis `projeto` e `projetoanonimizado`, a V2 adota NBR 15287:2025 e preserva apenas requisitos institucionais do guia que continuem compatíveis com a edição vigente.
+O Guia UFC de Projetos atualmente vinculado ainda declara NBR 15287:2011. Para os perfis `projeto` e `projetoanonimizado`, a V2 adota NBR 15287:2025 e preserva apenas requisitos institucionais compatíveis com a edição vigente.
 
 ## Mapa de implementação
 
 | Parte | Norma/requisito principal | Implementação |
 |---|---|---|
 | configuração e perfis | política UFC + normas por tipo | `ufctex/core.def` |
-| tipografia | NBR 14724:2024 + requisito UFC Arial/Times New Roman | auditoria em andamento; será isolada em módulo próprio antes da próxima release |
+| tipografia | NBR 14724:2024 + requisito UFC Arial/Times New Roman | atualmente em `ufctex/layout.def`; deve migrar para módulo próprio |
 | papel, margens e espaçamento | NBR 14724:2024 + UFC | `ufctex/layout.def` |
 | duplex e início no anverso | NBR 14724:2024 + UFC | `ufctex/layout.def` + regressões geométricas |
 | ativos institucionais | identidade visual UFC | `ufctex/institucional.def` + `assets/institucional/` |
 | capa e folha de rosto | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` + `ufctex/trabalhos.def` |
 | volume e paginação contínua | NBR 14724:2024 + UFC | `ufctex/trabalhos.def` |
-| ficha catalográfica | IN Conjunta 2/2026 + NBR 14724:2024 | `ufctex/trabalhos.def` |
+| ficha catalográfica | IN Conjunta 2/2026 + NBR 14724:2024 | `ufctex/trabalhos.def`; divergência duplex pendente |
 | folha de aprovação | NBR 14724:2024 + política de depósito UFC | `ufctex/pretextuais.def` |
 | dedicatória, agradecimentos, epígrafe e errata | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
 | resumo e abstract | NBR 6028:2021 + UFC | `ufctex/pretextuais.def` |
@@ -179,53 +240,26 @@ O Guia UFC de Projetos atualmente vinculado ainda declara NBR 15287:2011. Para o
 
 Os ajustes necessários para NBR 6023:2025 permanecem isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
 
-## Build
+## Build e gates
 
-O `Makefile` executa uma primeira passagem LaTeX e decide os processadores auxiliares pelos artefatos efetivamente produzidos:
+`make preflight` executa consistência da distribuição, documento de referência, layout, geometria, pré-textuais, duplex, ficha catalográfica, multivolume, objetos, bibliografia, projetos, matriz de seis perfis nos dois motores, pós-textuais, compatibilidade V1 e fluxo modular do Makefile.
 
-- `.bcf` contendo uma `datasource` bibliográfica → Biber;
-- `.glo` não vazio → `makeglossaries`;
-- `.idx` não vazio → `makeindex`.
+A matriz final produz **12 PDFs**: seis perfis × dois motores. Cada PDF é verificado quanto a conteúdo específico, A4, fontes incorporadas, Sumário, ausência de `chapter`, warnings/overflow reconhecidos e declaração PDF/A-2b.
 
-Assim, documentos sem fonte bibliográfica, glossário ou índice não dependem desses processadores. `tests/v2-build-path-check.sh` usa executáveis-falha deliberados para provar que processadores desnecessários não são chamados.
+`make release-preflight` acrescenta veraPDF para o documento de referência e os 12 PDFs da matriz.
 
-## Gates de validação
+A próxima release deve acrescentar gates específicos para:
 
-`make preflight` executa:
-
-- consistência estática da distribuição;
-- documento de referência;
-- layout, A4, margens e paginação real;
-- pré-textuais e duplex;
-- ficha catalográfica nos dois modos;
-- trabalhos multivolume;
-- objetos, tabelas, códigos, algoritmos e `minted`;
-- citações, referências e espaçamento;
-- projetos;
-- seis perfis completos em pdfLaTeX e LuaLaTeX;
-- pós-textuais e compatibilidade pública da API V1;
-- fluxo modular do `Makefile`.
-
-A matriz de perfis produz **12 PDFs**: seis perfis × dois motores. Cada PDF é verificado quanto a conteúdo específico do perfil, A4, fontes incorporadas, Sumário, ausência de estrutura `chapter`, ausência de warnings/overflow não reconhecidos e declaração PDF/A-2b.
-
-A próxima release deve acrescentar um gate de **identidade tipográfica**. A simples verificação de `embedded=yes` não é suficiente para comprovar Arial ou Times New Roman literal.
-
-`make release-preflight` acrescenta veraPDF para o documento de referência e para os 12 PDFs da matriz.
-
-No GitHub Actions, o job agregado `latex-preflight` depende de todos os grupos funcionais e permanece como contrato da proteção da branch `main`.
-
-## Consistência da distribuição
-
-`tests/v2-distribution-check.sh` impede a reintrodução de:
-
-- `\chapter` e helpers V1 nos arquivos distribuídos ao usuário;
-- qualquer pasta `lib/` na distribuição V2;
-- referências ativas a arquivos inexistentes;
-- ausência do brasão em `assets/institucional/`;
-- divergência entre a versão do `Makefile`, da classe e do README;
-- scripts `tests/v2-*.sh` com erro de sintaxe POSIX shell.
-
-A linha 1.x permanece preservada em sua própria branch para documentos legados.
+- identidade tipográfica;
+- tamanhos tipográficos reduzidos;
+- citação direta longa;
+- recuo de primeira linha;
+- alinhamento de notas de rodapé;
+- contagem da ficha catalográfica em duplex;
+- geometria de legendas/fontes/notas de ilustrações;
+- referências específicas de anexos;
+- equações/fórmulas;
+- política tipográfica de código, algoritmos e matemática.
 
 ## Fontes institucionais de verificação
 
@@ -249,7 +283,9 @@ Antes de nova versão principal:
 2. revisar páginas e guias da UFC;
 3. revisar políticas de depósito e ficha catalográfica;
 4. atualizar ou remover patches de compatibilidade;
-5. executar `make preflight`;
-6. executar `make release-preflight`;
-7. confirmar `latex-preflight` no CI;
-8. não declarar conformidade que não possua evidência e teste compatível.
+5. resolver todas as divergências classificadas;
+6. promover itens `INCOMPLETO`/`NÃO TESTADO` somente após evidência adequada;
+7. executar `make preflight`;
+8. executar `make release-preflight`;
+9. confirmar `latex-preflight` no CI;
+10. não declarar conformidade que não possua evidência e teste compatível.
