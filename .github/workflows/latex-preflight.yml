@@ -138,25 +138,20 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
-          import base64
           import hashlib
-          import json
           import urllib.request
           from pathlib import Path
 
           expected = 'f9cc40c65fbf6c2f9520b4ca4f312440e8d0ee6a'
-          url = f'https://api.github.com/repos/ElaysonAbreu/abntexto/git/blobs/{expected}'
+          commit = '4c03fd7b5a7af089627dedb547c53cad4eed2a2a'
+          url = f'https://raw.githubusercontent.com/ElaysonAbreu/abntexto/{commit}/abntexto.cls'
           request = urllib.request.Request(
               url,
-              headers={
-                  'Accept': 'application/vnd.github+json',
-                  'User-Agent': 'ufctex-overleaf-smoke',
-              },
+              headers={'User-Agent': 'ufctex-overleaf-smoke'},
           )
           with urllib.request.urlopen(request) as response:
-              data = json.load(response)
+              content = response.read()
 
-          content = base64.b64decode(data['content'])
           digest = hashlib.sha1(b'blob ' + str(len(content)).encode() + b'\0' + content).hexdigest()
           if digest != expected:
               raise SystemExit(f'abntexto blob mismatch: {digest}')
@@ -243,7 +238,18 @@ jobs:
 
       - name: Install Poppler
         shell: pwsh
-        run: choco install poppler --yes --no-progress
+        run: |
+          choco install poppler --yes --no-progress
+          $pdffonts = Get-ChildItem -Path 'C:\ProgramData\chocolatey\lib\poppler\tools' -Filter 'pdffonts.exe' -Recurse -ErrorAction Stop | Select-Object -First 1
+          $pdftotext = Get-ChildItem -Path 'C:\ProgramData\chocolatey\lib\poppler\tools' -Filter 'pdftotext.exe' -Recurse -ErrorAction Stop | Select-Object -First 1
+          if (-not $pdffonts -or -not $pdftotext) {
+            throw 'Poppler executables were not found after Chocolatey installation.'
+          }
+          if ($pdffonts.DirectoryName -ne $pdftotext.DirectoryName) {
+            throw 'Poppler executables resolved to different directories.'
+          }
+          $pdffonts.DirectoryName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Write-Host "Poppler bin: $($pdffonts.DirectoryName)"
 
       - name: Install TeX Live 2026 and font dependencies
         shell: pwsh
