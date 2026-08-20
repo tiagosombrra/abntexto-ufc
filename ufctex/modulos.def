@@ -13,6 +13,18 @@
 \bool_new:N \g_ufc_index_initialized_bool
 \bool_new:N \g_ufc_table_typography_patched_bool
 
+\cs_new_protected:Npn \ufc_table_check_version:
+  {
+    \@ifpackagelater{tabularray-abnt}{2025/08/07}
+      { }
+      {
+        \ClassError{ufctex}
+          {tabularray-abnt~2025-08-08~or~newer~is~required}
+          {Update~the~TeX~distribution~before~using~tabelas=tabularray.}
+      }
+  }
+
+% Compatibility adapter for the tabularray theme store used by tabularray-abnt.
 \cs_new_protected:Npn \ufc_table_patch_theme:n #1
   {
     \tl_if_exist:cTF { g__tblr_theme_#1_code_tl }
@@ -25,8 +37,8 @@
       }
       {
         \ClassError{ufctex}
-          {tabularray-abnt theme '#1' is unavailable}
-          {Update tabularray-abnt before using tabelas=tabularray.}
+          {tabularray-abnt~theme~'#1'~is~unavailable}
+          {Update~tabularray-abnt~before~using~tabelas=tabularray.}
       }
   }
 
@@ -50,6 +62,7 @@
         \tl_gset:Nn \g_ufc_table_module_tl { tabularray }
         \RequirePackage{xcolor}
         \RequirePackage{tabularray-abnt}
+        \ufc_table_check_version:
         \UseTblrLibrary{booktabs}
         \SetAbntTblrFont{\normalsize}
         \ufc_table_apply_typography:
