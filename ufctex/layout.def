@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/layout.def}[2026/08/19 UFC page and text layout]
+\ProvidesFile{ufctex/layout.def}[2026/08/20 UFC page and text layout]
 
 % Use Times New Roman when the engine can access it, with a portable fallback.
 \ifPDFTeX
@@ -17,9 +17,9 @@
   \setmathfont{TeX Gyre Termes Math}
 \fi
 
-% UFC body text uses 12 pt, 1.5 spacing and no extra paragraph spacing.
+% UFC body text uses 12 pt, 1.5 spacing, 2 cm first-line indent and no extra spacing.
 \setlength{\parskip}{0pt}
-\setlength{\parindent}{1.5cm}
+\setlength{\parindent}{2cm}
 \AtBeginDocument{\onehalfsp}
 
 % UFC section hierarchy. The same hierarchy is mirrored in the table of contents.
@@ -148,6 +148,8 @@
 \long\def\@makefntext#1{%
   \parindent=0pt
   \abntsmall\singlesp
+  \hangindent=2cm
+  \hangafter=1
   \noindent
   \hbox to 2cm{\hss\@makefnmark\enspace}#1%
 }
