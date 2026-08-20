@@ -11,7 +11,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 .PHONY: all pdf compile lua version clean \
 	preflight release-preflight \
 	v2-reference-check v2-pdfa-check v2-check v2-distribution-check \
-	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-normative-complement-check \
+	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
 	v2-object-check v2-object-geometry-check v2-code-typography-check v2-minted-check v2-bib-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
@@ -71,7 +71,10 @@ v2-font-config-check:
 v2-pdf-geometry-check:
 	@sh tests/v2-pdf-geometry-check.sh
 
-v2-normative-complement-check:
+v2-math-check:
+	@sh tests/v2-math-check.sh
+
+v2-normative-complement-check: v2-math-check
 	@sh tests/v2-normative-complement-check.sh
 
 v2-pretextual-check:
@@ -155,6 +158,7 @@ clean:
 	@rm -f *.glg *.glo *.xdy *.acn *.idx *.loq *.lol *.fls *.fdb_latexmk *.synctex.gz *~
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf geometria-*.pdf normativa-complementar-*.pdf
 	@rm -f font-config-*.pdf font-config-*.aux font-config-*.log font-config-*.out ufctex-font-config.tex
+	@rm -f matematica-*.pdf matematica-*.aux matematica-*.log matematica-*.out ufctex-matematica.tex
 	@rm -f objeto-geometria-*.pdf objeto-geometria-*.aux objeto-geometria-*.log objeto-geometria-*.out
 	@rm -f tipografia-codigo-*.pdf tipografia-codigo-*.aux tipografia-codigo-*.log tipografia-codigo-*.out
 	@rm -f tipografia-codigo-*.loa tipografia-codigo-*.loc ufctex-code-typography.tex
