@@ -121,6 +121,92 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils
             make v2-posttextual-compat-check v2-duplex-posttextual-check
 
+  v2-font-windows-poc:
+    name: V2 Windows literal font POC
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
+      github.event_name == 'workflow_dispatch'
+    continue-on-error: true
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Verify Microsoft fonts
+        shell: pwsh
+        run: |
+          $required = @(
+            'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
+            'arial.ttf', 'arialbd.ttf', 'ariali.ttf', 'arialbi.ttf'
+          )
+          foreach ($font in $required) {
+            $path = Join-Path $env:WINDIR "Fonts\$font"
+            if (-not (Test-Path $path)) {
+              throw "Required Microsoft font file not found: $path"
+            }
+            Write-Host "Found $path"
+          }
+
+      - name: Install Poppler
+        shell: pwsh
+        run: choco install poppler --yes --no-progress
+
+      - name: Install TeX Live 2026 and Winfonts
+        shell: pwsh
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP 'texlive-2026'
+          $profile = Join-Path $env:RUNNER_TEMP 'texlive.profile'
+          @"
+          selected_scheme scheme-small
+          TEXDIR $root
+          TEXMFCONFIG $root/texmf-config
+          TEXMFVAR $root/texmf-var
+          TEXMFHOME $root/texmf-home
+          option_doc 0
+          option_src 0
+          option_autobackup 0
+          option_path 0
+          "@ | Set-Content -Path $profile -Encoding ascii
+
+          Set-Location $env:RUNNER_TEMP
+          Invoke-WebRequest 'https://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip' -OutFile 'install-tl.zip'
+          Expand-Archive -Path 'install-tl.zip' -DestinationPath 'install-tl' -Force
+          $installer = Get-ChildItem -Path 'install-tl' -Filter 'install-tl-windows.bat' -Recurse | Select-Object -First 1
+          if (-not $installer) {
+            throw 'TeX Live Windows installer was not found after extraction.'
+          }
+          & $installer.FullName --profile=$profile
+          if ($LASTEXITCODE -ne 0) {
+            throw "TeX Live installer failed with exit code $LASTEXITCODE"
+          }
+
+          $bin = Join-Path $root 'bin\windows'
+          if (-not (Test-Path (Join-Path $bin 'tlmgr.bat'))) {
+            throw "TeX Live binary directory not found: $bin"
+          }
+          & (Join-Path $bin 'tlmgr.bat') install fontspec luatex winfonts
+          if ($LASTEXITCODE -ne 0) {
+            throw "tlmgr package installation failed with exit code $LASTEXITCODE"
+          }
+          & (Join-Path $bin 'updmap-sys.exe') --enable Map=winfonts.map
+          if ($LASTEXITCODE -ne 0) {
+            throw "updmap-sys failed with exit code $LASTEXITCODE"
+          }
+
+          $version = & (Join-Path $bin 'tlmgr.bat') version | Out-String
+          Write-Host $version
+          if ($version -notmatch '2026') {
+            throw 'The Windows POC did not install TeX Live 2026.'
+          }
+          $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Prove literal Times New Roman and Arial
+        shell: bash
+        env:
+          UFC_WINDOWS_FONTS_DIR: C:/Windows/Fonts
+        run: sh tests/v2-font-poc.sh
+
   latex-preflight:
     name: latex-preflight
     if: ${{ always() }}
