@@ -40,7 +40,25 @@ find_poppler_bin() {
     return 0
   fi
 
-  found=$(find /c/ProgramData/chocolatey/lib/poppler/tools -type f -iname pdffonts.exe -print -quit 2>/dev/null || true)
+  found=''
+  if command -v where.exe >/dev/null 2>&1; then
+    found_win=$(where.exe pdffonts.exe 2>/dev/null | tr -d '\r' | head -n 1 || true)
+    if [ -n "$found_win" ] && command -v cygpath >/dev/null 2>&1; then
+      found=$(cygpath -u "$found_win")
+    fi
+  fi
+
+  if [ -z "$found" ] && command -v powershell.exe >/dev/null 2>&1; then
+    found_win=$(powershell.exe -NoProfile -Command '$p = Get-ChildItem -Path "C:\ProgramData\chocolatey\lib\poppler\tools" -Filter pdffonts.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1; if ($p) { $p.FullName }' 2>/dev/null | tr -d '\r' | head -n 1 || true)
+    if [ -n "$found_win" ] && command -v cygpath >/dev/null 2>&1; then
+      found=$(cygpath -u "$found_win")
+    fi
+  fi
+
+  if [ -z "$found" ]; then
+    found=$(find /c/ProgramData/chocolatey/lib/poppler/tools -type f -iname pdffonts.exe -print -quit 2>/dev/null || true)
+  fi
+
   if [ -n "$found" ]; then
     PATH="$(dirname "$found"):$PATH"
     export PATH
