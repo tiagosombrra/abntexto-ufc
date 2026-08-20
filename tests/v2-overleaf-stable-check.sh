@@ -1,14 +1,24 @@
 #!/bin/sh
 set -eu
 
-runtime=$(kpsewhich abntexto.cls || true)
-[ -n "$runtime" ] || {
-  echo 'Overleaf proxy: abntexto.cls não localizado.'
+[ -f abntexto.cls ] || {
+  echo 'Overleaf proxy: runtime local abntexto.cls ausente.'
   exit 1
 }
 
-grep -Fq '[2026-05-08 1.1 Preparation of works in ABNT standards]' "$runtime" || {
-  echo "Overleaf proxy: versão incorreta de abntexto em $runtime"
+runtime=$(kpsewhich abntexto.cls || true)
+[ -n "$runtime" ] || {
+  echo 'Overleaf proxy: abntexto.cls não localizado pelo Kpathsea.'
+  exit 1
+}
+
+cmp -s "$runtime" abntexto.cls || {
+  echo "Overleaf proxy: Kpathsea não priorizou o runtime pinado: $runtime"
+  exit 1
+}
+
+grep -Fq '[2026-05-08 1.1 Preparation of works in ABNT standards]' abntexto.cls || {
+  echo 'Overleaf proxy: runtime local não corresponde ao abntexto 1.1 esperado.'
   exit 1
 }
 
@@ -21,7 +31,6 @@ done
 
 cleanup() {
   make clean >/dev/null 2>&1 || true
-  rm -f overleaf-stable-pdflatex.pdf overleaf-stable-lualatex.pdf
 }
 trap cleanup EXIT INT TERM
 
@@ -61,8 +70,6 @@ for engine in pdflatex lualatex; do
       exit 1
     }
   done
-
-  cp documento.pdf "overleaf-stable-$engine.pdf"
 done
 
 echo 'Gate proxy V2 para Overleaf estável concluído.'
