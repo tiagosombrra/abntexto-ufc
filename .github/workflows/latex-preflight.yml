@@ -37,7 +37,7 @@ jobs:
         run: sh tests/v2-pdfa-check.sh
 
   v2-structure:
-    name: V2 layout, pre-textuals and projects
+    name: V2 layout, fonts, pre-textuals and projects
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -55,6 +55,7 @@ jobs:
             make \
               v2-distribution-check \
               v2-layout-check \
+              v2-font-config-check \
               v2-pdf-geometry-check \
               v2-normative-complement-check \
               v2-pretextual-check \
