@@ -31,7 +31,7 @@
         {
           \setmathfont{Latin Modern Math}
           \tl_gset:Nn \g_ufc_math_font_policy_tl { LATIN-MODERN-MATH }
-          \ClassWarningNoLine{ufctex}{TeX~Gyre~Termes~Math~not~found;~using~Latin~Modern~Math}
+          \ClassInfo{ufctex}{TeX~Gyre~Termes~Math~not~found;~using~Latin~Modern~Math}
         }
         {
           \ClassError{ufctex}
@@ -165,7 +165,7 @@
               {Install~Times~New~Roman~or~set~fonte-estrita=nao.}
           }
           {
-            \ClassWarningNoLine{ufctex}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes}
+            \ClassInfo{ufctex}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes~compatibility~fallback}
             \ufc_font_luatex_set_text_family:n {TeX Gyre Termes}
           }
       }
@@ -186,7 +186,7 @@
               {Install~Arial~or~set~fonte-estrita=nao.}
           }
           {
-            \ClassWarningNoLine{ufctex}{Arial~not~found;~using~TeX~Gyre~Heros}
+            \ClassInfo{ufctex}{Arial~not~found;~using~TeX~Gyre~Heros~compatibility~fallback}
             \ufc_font_luatex_set_text_family:n {TeX Gyre Heros}
           }
       }
