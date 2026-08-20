@@ -129,6 +129,8 @@ jobs:
       github.event_name == 'workflow_dispatch'
     continue-on-error: true
     runs-on: ubuntu-latest
+    container:
+      image: quay.io/sharelatex/texlive-full:2025.1
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -165,16 +167,12 @@ jobs:
           Path('abntexto.cls').write_bytes(content)
           PY
 
-      - name: Validate TeX Live 2025 proxy
-        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
-        with:
-          texlive_version: 2025
-          os: debian
-          run: |
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update -y
-            apt-get install -y --no-install-recommends make poppler-utils
-            make v2-overleaf-stable-check
+      - name: Validate official Overleaf TeX Live 2025 image
+        shell: bash
+        run: |
+          apt-get update -y
+          apt-get install -y --no-install-recommends make poppler-utils
+          make v2-overleaf-stable-check
 
       - name: Publish Overleaf proxy status
         if: ${{ always() }}
@@ -195,7 +193,7 @@ jobs:
           payload = json.dumps({
               'state': state,
               'context': 'ufctex/overleaf-proxy',
-              'description': 'TeX Live 2025 Overleaf proxy',
+              'description': 'Official Overleaf TeX Live 2025 image proxy',
               'target_url': os.environ['RUN_URL'],
           }).encode()
           request = urllib.request.Request(
@@ -355,7 +353,7 @@ jobs:
           test "$POSTTEXTUAL" = success
 
       - name: Publish required gate status
-        if: ${{ always() }}
+        if: ${{ always() && github.event_name != 'pull_request' }}
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
