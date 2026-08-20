@@ -9,7 +9,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-for token in '\\toprule' '\\midrule' '\\bottomrule' 'row{even}' 'remark{Fonte}' 'tabelas = tabularray'; do
+for token in '\\toprule' '\\midrule' '\\bottomrule' 'row{even}' 'remark{Fonte}' 'remark{Nota}' 'tabelas = tabularray'; do
   grep -Fq "$token" "$fixture" || {
     echo "Tabela IBGE: estrutura obrigatória ausente no fixture: $token"
     exit 1
@@ -33,7 +33,8 @@ for engine in pdflatex lualatex; do
   done
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' | \
+    grep -vF -e 'Class ufctex Warning: TeX Gyre Termes Math not found; using Latin Modern Math' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "$job: warning ou overflow não reconhecido."
@@ -62,6 +63,7 @@ pt_per_bp = 72.27 / 72.0
 assert_all('UFC-IBGE-BODY-FONTSIZE', 12.0)
 assert_all('UFC-IBGE-CAPTION-FONTSIZE', 10.0 * pt_per_bp)
 assert_all('UFC-IBGE-SOURCE-FONTSIZE', 10.0 * pt_per_bp)
+assert_all('UFC-IBGE-NOTE-FONTSIZE', 10.0 * pt_per_bp)
 PY
 
   grep -Fq 'Indicadores numéricos de teste' "$job.lot" || {
@@ -72,7 +74,7 @@ PY
   sh tests/v2-font-embedding-check.sh "$job.pdf"
 
   pdftotext -layout "$job.pdf" "/tmp/$job.txt"
-  for marker in 'Indicadores numéricos de teste' 'Ano' '2024' '2025' '2026' 'Fonte:' 'Elaboração própria'; do
+  for marker in 'Indicadores numéricos de teste' 'Ano' '2024' '2025' '2026' 'Fonte:' 'Elaboração própria' 'Nota:' 'Valores sintéticos para validação'; do
     grep -Fq "$marker" "/tmp/$job.txt" || {
       echo "$job: conteúdo tabular ausente: $marker"
       exit 1
