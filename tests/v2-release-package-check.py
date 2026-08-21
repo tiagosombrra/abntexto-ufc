@@ -18,6 +18,11 @@ MICROSOFT_FONTS = {
     "arial.ttf", "arialbd.ttf", "ariali.ttf", "arialbi.ttf",
 }
 
+REFERENCE_IMAGE_SHA1 = {
+    "figuras/ufc-campus-pici.jpg": "5f431612cdbfbb088c37c685a0e3c93852e96ccd",
+    "figuras/ufc-reitoria.jpg": "b6746bb53d82dae52330805ca0a08f029b773b2e",
+}
+
 
 def version() -> str:
     text = (ROOT / "Makefile").read_text(encoding="utf-8")
@@ -46,6 +51,18 @@ def assert_prefix(entries: set[str], prefix: str) -> None:
     invalid = sorted(entry for entry in entries if not entry.startswith(prefix))
     if invalid:
         raise SystemExit(f"Archive entries outside {prefix}: {invalid[:5]}")
+
+
+def assert_reference_images(archive_path: Path, root: str) -> None:
+    with zipfile.ZipFile(archive_path) as archive:
+        archive_names = set(archive.namelist())
+        for relative, expected in REFERENCE_IMAGE_SHA1.items():
+            entry = f"{root}{relative}"
+            if entry not in archive_names:
+                raise SystemExit(f"Release archive missing licensed reference image: {entry}")
+            actual = hashlib.sha1(archive.read(entry)).hexdigest()
+            if actual != expected:
+                raise SystemExit(f"Reference image SHA-1 mismatch in {entry}: {actual}")
 
 
 def verify_checksums(directory: Path) -> None:
@@ -78,6 +95,14 @@ def build(output: Path, abntexto: Path) -> None:
 def main() -> None:
     if not (ROOT / "documento.pdf").is_file():
         raise SystemExit("documento.pdf missing; run make release-preflight first.")
+
+    for relative, expected in REFERENCE_IMAGE_SHA1.items():
+        path = ROOT / relative
+        if not path.is_file():
+            raise SystemExit(f"Licensed reference image missing before packaging: {relative}")
+        actual = hashlib.sha1(path.read_bytes()).hexdigest()
+        if actual != expected:
+            raise SystemExit(f"Licensed reference image SHA-1 mismatch: {relative}")
 
     v = version()
     with tempfile.TemporaryDirectory(prefix="ufctex-release-check-") as temp:
@@ -145,6 +170,9 @@ def main() -> None:
             f"{template_root}figuras/exemplo.py",
             f"{template_root}figuras/fluxo-exemplo.png",
             f"{template_root}figuras/grafico-exemplo.jpg",
+            f"{template_root}figuras/LICENCAS.md",
+            f"{template_root}figuras/ufc-campus-pici.jpg",
+            f"{template_root}figuras/ufc-reitoria.jpg",
             f"{template_root}ufctex.cls",
             f"{template_root}Makefile",
         ):
@@ -152,6 +180,7 @@ def main() -> None:
                 raise SystemExit(f"Template bundle missing {required_entry}")
         if f"{template_root}abntexto.cls" in template_entries:
             raise SystemExit("Standard template bundle must not vendor abntexto.cls.")
+        assert_reference_images(template_zip, template_root)
         assert_no_proprietary_fonts(template_entries)
 
         overleaf_zip = first / f"modelo-latex-ufc-overleaf-{v}.zip"
@@ -163,9 +192,13 @@ def main() -> None:
             f"{overleaf_root}2-textuais/exemplos-de-formatacao.tex",
             f"{overleaf_root}figuras/fluxo-exemplo.png",
             f"{overleaf_root}figuras/grafico-exemplo.jpg",
+            f"{overleaf_root}figuras/LICENCAS.md",
+            f"{overleaf_root}figuras/ufc-campus-pici.jpg",
+            f"{overleaf_root}figuras/ufc-reitoria.jpg",
         ):
             if required_entry not in overleaf_entries:
                 raise SystemExit(f"Overleaf bundle missing {required_entry}")
+        assert_reference_images(overleaf_zip, overleaf_root)
         assert_no_proprietary_fonts(overleaf_entries)
 
         ctan_zip = first / f"ufctex-ctan-{v}.zip"
@@ -182,16 +215,27 @@ def main() -> None:
             "ufctex/doc/example/2-textuais/exemplos-de-formatacao.tex",
             "ufctex/doc/example/figuras/fluxo-exemplo.png",
             "ufctex/doc/example/figuras/grafico-exemplo.jpg",
+            "ufctex/doc/example/figuras/LICENCAS.md",
+            "ufctex/doc/example/figuras/ufc-campus-pici.jpg",
+            "ufctex/doc/example/figuras/ufc-reitoria.jpg",
             "ufctex/ufctex.tds.zip",
         ):
             if required_entry not in ctan_entries:
                 raise SystemExit(f"CTAN bundle missing {required_entry}")
+        assert_reference_images(ctan_zip, "ufctex/doc/example/")
         assert_no_proprietary_fonts(ctan_entries)
 
         with zipfile.ZipFile(ctan_zip) as archive:
             tds_bytes = archive.read("ufctex/ufctex.tds.zip")
         with zipfile.ZipFile(io.BytesIO(tds_bytes)) as tds:
             tds_entries = set(tds.namelist())
+            for relative, expected in REFERENCE_IMAGE_SHA1.items():
+                entry = f"doc/latex/ufctex/example/{relative}"
+                if entry not in tds_entries:
+                    raise SystemExit(f"TDS bundle missing {entry}")
+                actual = hashlib.sha1(tds.read(entry)).hexdigest()
+                if actual != expected:
+                    raise SystemExit(f"TDS reference image SHA-1 mismatch in {entry}: {actual}")
         for required_entry in (
             "tex/latex/ufctex/ufctex.cls",
             "tex/latex/ufctex/ufctex/core.def",
@@ -201,6 +245,9 @@ def main() -> None:
             "doc/latex/ufctex/example/2-textuais/exemplos-de-formatacao.tex",
             "doc/latex/ufctex/example/figuras/fluxo-exemplo.png",
             "doc/latex/ufctex/example/figuras/grafico-exemplo.jpg",
+            "doc/latex/ufctex/example/figuras/LICENCAS.md",
+            "doc/latex/ufctex/example/figuras/ufc-campus-pici.jpg",
+            "doc/latex/ufctex/example/figuras/ufc-reitoria.jpg",
             "scripts/ufctex/prepare-windows-fonts.ps1",
         ):
             if required_entry not in tds_entries:
