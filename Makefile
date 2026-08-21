@@ -9,7 +9,7 @@ ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 
 .PHONY: all pdf compile lua version clean \
-	preflight release-preflight package gate-d \
+	preflight release-preflight package distribution-preflight \
 	v2-reference-check v2-pdfa-check v2-check v2-distribution-check v2-release-package-check \
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
@@ -170,9 +170,9 @@ package: release-preflight
 	@rm -f .ufctex-abntexto.cls
 	@echo "Bundles de distribuição da V2 concluídos."
 
-gate-d: package
+distribution-preflight: package
 	@python3 tests/v2-release-package-check.py
-	@echo "Gate D de distribuição concluído."
+	@echo "Preflight automatizado de distribuição concluído."
 
 clean:
 	@echo "Limpando arquivos auxiliares..."
