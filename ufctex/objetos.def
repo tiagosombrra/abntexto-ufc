@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/objetos.def}[2026/08/20 UFC figures, tables, code and algorithms]
+\ProvidesFile{ufctex/objetos.def}[2026/08/21 UFC figures, tables, code and algorithms]
 
 % Keep object titles within the real object width and use the reduced normative size.
 \makeatletter
@@ -83,13 +83,28 @@
       }
   }
 
+\cs_new_protected:Npn \ufc_algorithm_begin:n #1
+  {
+    \int_compare:nNnTF {#1} = {0}
+      { \begin{algorithmic} }
+      {
+        \int_compare:nNnTF {#1} > {0}
+          { \begin{algorithmic}[#1] }
+          {
+            \ClassError{ufctex}
+              {Invalid~algorithm~line~numbering~frequency~'#1'}
+              {Use~zero~for~no~line~numbers~or~a~positive~integer.}
+          }
+      }
+  }
+
 \cs_new_protected:Npn \ufc_objects_setup_algorithms:
   {
     \NewDocumentEnvironment { ufcalgoritmo } { O{\placepos} O{1} }
       {
         \place[##1]\vbox\bgroup
         \normalsize
-        \begin{algorithmic}[##2]
+        \ufc_algorithm_begin:n {##2}
       }
       {
         \end{algorithmic}
