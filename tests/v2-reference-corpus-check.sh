@@ -24,7 +24,8 @@ required = (
     'Figura estreita com legenda curta',
     'Figura de largura intermediária',
     'Figura larga próxima à largura útil',
-    'Distribuição sintética de três categorias',
+    'Fluxo de processamento em arquivo PNG raster',
+    'Distribuição sintética de três categorias em arquivo JPEG',
     'Comparação de configurações editoriais',
     'Indicadores sintéticos com linhas alternadas',
     'Função de média em Python com números de linha',
@@ -62,7 +63,8 @@ check_list documento.loi \
   'Figura estreita com legenda curta' \
   'Figura de largura intermediária' \
   'Figura larga próxima à largura útil' \
-  'Distribuição sintética de três categorias' \
+  'Fluxo de processamento em arquivo PNG raster' \
+  'Distribuição sintética de três categorias em arquivo JPEG' \
   'Comparação de configurações editoriais'
 
 check_list documento.lot \
