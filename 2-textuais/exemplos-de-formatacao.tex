@@ -70,16 +70,42 @@ As Figuras~\ref{fig:campus-pici-computacao} e~\ref{fig:reitoria-ufc} exercitam f
 
 \subsection{Gráfico e quadro}
 
-\legend{grafico}{Distribuição sintética de três categorias em arquivo JPEG}
+\legend{grafico}{Distribuição sintética de três categorias}
 \ufcfonte{Elaboração própria.}
 \ufcnota{Valores meramente ilustrativos.}
 \label{graf:barras}
 \begin{ufcobjeto}[here]
   \centering
-  \includegraphics[width=9cm]{figuras/grafico-exemplo.jpg}
+  \begingroup
+  \setlength{\unitlength}{1pt}
+  \begin{picture}(300,180)
+    \put(45,25){\line(1,0){235}}
+    \put(45,25){\line(0,1){130}}
+    \put(40,25){\makebox(0,0)[r]{0}}
+    \put(40,58){\makebox(0,0)[r]{5}}
+    \put(40,90){\makebox(0,0)[r]{10}}
+    \put(40,123){\makebox(0,0)[r]{15}}
+    \put(40,155){\makebox(0,0)[r]{20}}
+    \put(45,58){\line(1,0){235}}
+    \put(45,90){\line(1,0){235}}
+    \put(45,123){\line(1,0){235}}
+    \put(45,155){\line(1,0){235}}
+    \put(76,25){\color{black!55}\rule{35pt}{78pt}}
+    \put(148,25){\color{black!55}\rule{35pt}{117pt}}
+    \put(220,25){\color{black!55}\rule{35pt}{59pt}}
+    \put(94,109){\makebox(0,0){12}}
+    \put(166,148){\makebox(0,0){18}}
+    \put(238,90){\makebox(0,0){9}}
+    \put(94,12){\makebox(0,0){Categoria A}}
+    \put(166,12){\makebox(0,0){Categoria B}}
+    \put(238,12){\makebox(0,0){Categoria C}}
+    \put(165,0){\makebox(0,0){Categoria}}
+    \put(8,90){\rotatebox{90}{Valor}}
+  \end{picture}
+  \endgroup
 \end{ufcobjeto}
 
-O Gráfico~\ref{graf:barras} valida a inclusão de JPEG, a numeração de gráficos e sua presença na Lista de Ilustrações. O arquivo de exemplo contém eixos, categorias, escala e valores explícitos para evitar que uma regressão visual seja confundida com um gráfico vazio.
+O Gráfico~\ref{graf:barras} valida a numeração de gráficos e sua presença na Lista de Ilustrações. O exemplo é desenhado diretamente em \LaTeX{}, com eixos, categorias, escala e valores explícitos, evitando dependência de um arquivo raster para esta validação visual.
 
 \legend{quadro}{Comparação de configurações editoriais do exemplo}
 \ufcfonte{Elaboração própria.}

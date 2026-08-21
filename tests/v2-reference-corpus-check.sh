@@ -50,7 +50,7 @@ required = (
     'Campus do Pici',
     'Vista da Lagoa do Pici no Campus do Pici',
     'Reitoria da Universidade Federal do Ceará',
-    'Distribuição sintética de três categorias em arquivo JPEG',
+    'Distribuição sintética de três categorias',
     'Comparação de configurações editoriais',
     'Indicadores sintéticos com linhas alternadas',
     'Função de média em Python com números de linha',
@@ -78,6 +78,23 @@ if '??' in text:
     raise SystemExit('Corpus V2 falhou: referência não resolvida encontrada no PDF.')
 if 'Execute make reference-assets' in text:
     raise SystemExit('Corpus V2 falhou: fallback de fotografia apareceu no PDF de CI.')
+
+pages = [re.sub(r'\s+', ' ', page) for page in text.split('\f')]
+committee_pages = [page for page in pages if 'BANCA EXAMINADORA' in page]
+if len(committee_pages) != 1:
+    raise SystemExit(f'Corpus V2 falhou: esperado exatamente um bloco de banca, encontrados {len(committee_pages)}.')
+committee = committee_pages[0]
+committee_members = (
+    'Nome do Orientador',
+    'Nome do Segundo Membro',
+    'Nome do Terceiro Membro',
+    'Nome do Quarto Membro',
+    'Nome do Quinto Membro',
+    'Nome do Sexto Membro',
+)
+missing_committee = [name for name in committee_members if name not in committee]
+if missing_committee:
+    raise SystemExit('Corpus V2 falhou: banca não cabe integralmente na folha de aprovação: ' + ', '.join(missing_committee))
 
 list_blocks = (
     ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Exemplo de figura no padrão V2'),
@@ -115,7 +132,7 @@ check_list documento.loi \
   'Fluxo de processamento em arquivo PNG raster' \
   'Campus do Pici, onde se localiza o Departamento de Computação da UFC' \
   'Reitoria da Universidade Federal do Ceará' \
-  'Distribuição sintética de três categorias em arquivo JPEG' \
+  'Distribuição sintética de três categorias' \
   'Comparação de configurações editoriais'
 
 check_list documento.lot \
