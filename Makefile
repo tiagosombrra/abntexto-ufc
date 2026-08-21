@@ -10,11 +10,12 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 
 .PHONY: all pdf compile lua version clean \
 	preflight release-preflight package distribution-preflight \
-	v2-reference-check v2-pdfa-check v2-check v2-distribution-check v2-release-package-check \
+	v2-repository-audit v2-reference-check v2-reference-corpus-check v2-pdfa-check \
+	v2-check v2-distribution-check v2-release-package-check \
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
 	v2-object-check v2-object-geometry-check v2-code-typography-check v2-table-ibge-check v2-minted-check \
-	v2-documentary-source-check v2-bib-check v2-overleaf-stable-check \
+	v2-algorithm-numbering-check v2-documentary-source-check v2-bib-check v2-overleaf-stable-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
 	v2-posttextual-compat-check v2-duplex-posttextual-check \
 	v2-build-check v2-multivolume-check v2-catalog-card-check
@@ -54,8 +55,14 @@ lua:
 	$(MAKE) clean
 	$(MAKE) ENGINE=lualatex compile
 
+v2-repository-audit:
+	@python3 tests/v2-repository-audit.py
+
 v2-reference-check:
 	@sh tests/v2-reference-check.sh
+
+v2-reference-corpus-check: v2-reference-check
+	@sh tests/v2-reference-corpus-check.sh
 
 v2-pdfa-check: v2-reference-check
 	@sh tests/v2-pdfa-check.sh
@@ -102,6 +109,9 @@ v2-object-check: v2-object-geometry-check v2-code-typography-check v2-table-ibge
 v2-minted-check:
 	@sh tests/v2-minted-check.sh
 
+v2-algorithm-numbering-check:
+	@sh tests/v2-algorithm-numbering-check.sh
+
 v2-documentary-source-check:
 	@sh tests/v2-documentary-source-check.sh
 
@@ -137,6 +147,7 @@ v2-catalog-card-check:
 	@sh tests/v2-catalog-card-check.sh
 
 v2-check: \
+	v2-repository-audit \
 	v2-distribution-check \
 	v2-layout-check \
 	v2-font-config-check \
@@ -146,6 +157,7 @@ v2-check: \
 	v2-duplex-pretextual-check \
 	v2-object-check \
 	v2-minted-check \
+	v2-algorithm-numbering-check \
 	v2-bib-check \
 	v2-project-check \
 	v2-profile-check \
@@ -156,7 +168,7 @@ v2-check: \
 	v2-catalog-card-check
 	@echo "Gate local isolado da V2 concluído."
 
-preflight: v2-reference-check v2-check
+preflight: v2-reference-corpus-check v2-check
 	@echo "Preflight completo da V2 concluído."
 
 release-preflight: preflight
@@ -186,6 +198,7 @@ clean:
 	@rm -f tabela-ibge-*.pdf tabela-ibge-*.aux tabela-ibge-*.log tabela-ibge-*.out tabela-ibge-*.lot
 	@rm -f tipografia-codigo-*.pdf tipografia-codigo-*.aux tipografia-codigo-*.log tipografia-codigo-*.out
 	@rm -f tipografia-codigo-*.loa tipografia-codigo-*.loc ufctex-code-typography.tex
+	@rm -f algoritmo-linhas-*.pdf algoritmo-linhas-*.aux algoritmo-linhas-*.log algoritmo-linhas-*.out algoritmo-linhas-*.loa
 	@rm -f fontes-documentais-*.pdf fontes-documentais-*.aux fontes-documentais-*.bbl fontes-documentais-*.bcf
 	@rm -f fontes-documentais-*.blg fontes-documentais-*.log fontes-documentais-*.out fontes-documentais-*.run.xml
 	@rm -f pretextuais-trabalho.pdf pretextuais-projeto-anonimo.pdf pretextuais-duplex-*.pdf
