@@ -30,7 +30,10 @@ LEGACY_ALLOWED = (
 )
 LEGACY_PATTERNS = {
     'abntex2': re.compile(r'\babntex2\b', re.IGNORECASE),
-    'legacy lib path': re.compile(r'(?<![A-Za-z0-9_-])lib/'),
+    'legacy lib reference': re.compile(
+        r'(?<![A-Za-z0-9_-])lib/(?:logo-ufc(?:\.PNG)?|preambulo|ufctex)',
+        re.IGNORECASE,
+    ),
     'legacy logo': re.compile(r'logo-ufc\.PNG', re.IGNORECASE),
     'legacy Caption': re.compile(r'\\Caption\b'),
     'legacy Fonte': re.compile(r'\\Fonte\b'),
@@ -201,6 +204,8 @@ def main() -> None:
     for path in files:
         name = relative(path)
         lower = name.lower()
+        if name.startswith('lib/'):
+            errors.append(f'{name}: tracked legacy lib/ path is not allowed')
         if any(lower.endswith(suffix) for suffix in GENERATED_SUFFIXES):
             errors.append(f'{name}: generated artifact must not be tracked')
         if name in {'.DS_Store', 'Thumbs.db'} or '/__pycache__/' in f'/{name}/':
@@ -215,7 +220,7 @@ def main() -> None:
 
         if name != SELF:
             if TODO_PATTERN.search(text):
-                errors.append(f'{name}: TODO/FIXME/HACK marker found')
+                errors.append(f'{name}: pending-work marker found')
             for pattern in ABSOLUTE_PATH_PATTERNS:
                 if pattern.search(text):
                     errors.append(f'{name}: machine-specific absolute path found')
