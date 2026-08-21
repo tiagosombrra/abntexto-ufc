@@ -97,8 +97,12 @@ for module in modules:
 release_infrastructure = (
     'tools/build-release-bundles.py',
     'tools/fetch-abntexto.py',
+    'tools/download-actions-artifact.py',
     'tests/v2-release-package-check.py',
+    'tests/v2-overleaf-bundle-check.py',
+    'tests/v2-release-metadata-check.py',
     'docs/README-CTAN.md',
+    '.github/workflows/distribution.yml',
 )
 for required in release_infrastructure:
     if not Path(required).is_file():
@@ -126,6 +130,9 @@ done
 python3 -m py_compile \
   tools/build-release-bundles.py \
   tools/fetch-abntexto.py \
-  tests/v2-release-package-check.py
+  tools/download-actions-artifact.py \
+  tests/v2-release-package-check.py \
+  tests/v2-overleaf-bundle-check.py \
+  tests/v2-release-metadata-check.py
 
 echo 'Gate V2 de consistência da distribuição concluído.'
