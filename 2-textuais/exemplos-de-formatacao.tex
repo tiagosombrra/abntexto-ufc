@@ -2,7 +2,7 @@
 
 Esta seção reúne exemplos deliberadamente variados para que o documento de referência também funcione como corpus visual de regressão. Os elementos abaixo são sintéticos e devem ser substituídos pelo conteúdo acadêmico do trabalho.
 
-\subsection{Figuras em diferentes larguras}
+\subsection{Figuras em diferentes larguras e formatos}
 
 \legend{figure}{Figura estreita com legenda curta}
 \ufcfonte{Elaboração própria.}
@@ -31,28 +31,29 @@ A Figura~\ref{fig:estreita} exercita um objeto estreito e permite verificar se l
   \fbox{\parbox[c][3cm][c]{0.78\linewidth}{\centering Figura sintética larga\\78\% da largura disponível}}
 \end{ufcobjeto}
 
-As Figuras~\ref{fig:media} e~\ref{fig:larga} exercitam larguras progressivamente maiores sem alterar a API pública do objeto.
+\legend{figure}{Fluxo de processamento em arquivo PNG raster}
+\ufcfonte{Elaboração própria.}
+\ufcnota{O arquivo é incluído diretamente com \texttt{\string\includegraphics}.}
+\label{fig:png-fluxo}
+\begin{ufcobjeto}[here]
+  \centering
+  \includegraphics[width=0.65\linewidth]{figuras/fluxo-exemplo.png}
+\end{ufcobjeto}
+
+As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larguras progressivamente maiores, composição sintética e inclusão de imagem raster sem alterar a API pública do objeto.
 
 \subsection{Gráfico e quadro}
 
-\legend{grafico}{Distribuição sintética de três categorias}
+\legend{grafico}{Distribuição sintética de três categorias em arquivo JPEG}
 \ufcfonte{Elaboração própria.}
 \ufcnota{Valores meramente ilustrativos.}
 \label{graf:barras}
 \begin{ufcobjeto}[here]
   \centering
-  \fbox{%
-    \parbox[c][3.2cm][c]{9cm}{%
-      \centering
-      \rule{1cm}{1.0cm}\hspace{0.8cm}
-      \rule{1cm}{1.8cm}\hspace{0.8cm}
-      \rule{1cm}{2.5cm}\\[0.4em]
-      A\hspace{1.55cm}B\hspace{1.55cm}C
-    }%
-  }
+  \includegraphics[width=9cm]{figuras/grafico-exemplo.jpg}
 \end{ufcobjeto}
 
-O Gráfico~\ref{graf:barras} valida a numeração e a inclusão de gráficos na Lista de Ilustrações.
+O Gráfico~\ref{graf:barras} valida a inclusão de JPEG, a numeração de gráficos e sua presença na Lista de Ilustrações.
 
 \legend{quadro}{Comparação de configurações editoriais do exemplo}
 \ufcfonte{Elaboração própria.}
@@ -138,7 +139,7 @@ static int dobro(int valor) {
     return resultado;
 }
 \end{ufclisting}
-\lstset{numbers=none}
+\lstset{numbers=none,stepnumber=1}
 
 Os Códigos~\ref{cod:python-numerado}, \ref{cod:cpp-sem-numero}, \ref{cod:python-externo} e~\ref{cod:java} demonstram linguagens e políticas de numeração distintas usando o mesmo módulo \texttt{listings}.
 
