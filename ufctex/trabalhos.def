@@ -25,16 +25,13 @@
 \AtBeginDocument
   { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
 
-\AddToHook{cmd/imprimircapa/after}
-  { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
-
 \cs_new_protected:Npn \ufc_work_volume_line:
   {
     \ufc_meta_if_blank:nF {volume}
       { VOLUME~\ufc_meta_use:n {volume}\par }
   }
 
-\cs_set_protected:Npn \ufc_cover_program_lines:
+\cs_new_protected:Npn \ufc_cover_program_lines:
   {
     \str_case:Vn \g_ufc_document_type_tl
       {
@@ -67,7 +64,7 @@
       }
   }
 
-\cs_set_protected:Npn \ufc_cover:
+\cs_new_protected:Npn \ufc_cover:
   {
     \clearpage
     \thispagestyle{empty}
@@ -91,7 +88,16 @@
     \setcounter{page}{\int_use:N \g_ufc_initial_page_int}
   }
 
-\cs_set_protected:Npn \ufc_title_page:
+\NewDocumentCommand \imprimircapa { }
+  {
+    \str_if_eq:VnF \g_ufc_cover_mode_tl {nao}
+      { \ufc_cover: }
+  }
+
+\AddToHook{cmd/imprimircapa/after}
+  { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
+
+\cs_new_protected:Npn \ufc_title_page:
   {
     \clearpage
     \thispagestyle{empty}
@@ -116,8 +122,11 @@
     \clearpage
   }
 
+\NewDocumentCommand \imprimirfolhaderosto { O{} }
+  { \ufc_title_page: }
+
 % NBR 14724:2024: the catalog-data verso is physical but neither counted nor numbered.
-\cs_set_protected:Npn \ufc_catalog_card:n #1
+\cs_new_protected:Npn \ufc_catalog_card:n #1
   {
     \bool_if:NT \g_ufc_catalog_card_bool
       {
@@ -144,6 +153,9 @@
           }
       }
   }
+
+\NewDocumentCommand \imprimirfichacatalografica { m }
+  { \ufc_catalog_card:n {#1} }
 
 \ExplSyntaxOff
 
