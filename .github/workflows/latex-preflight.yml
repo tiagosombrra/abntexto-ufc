@@ -125,8 +125,11 @@ jobs:
   v2-overleaf-stable-poc:
     name: V2 Overleaf stable proxy
     if: >-
-      (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
-      github.event_name == 'workflow_dispatch'
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && (
+        github.ref == 'refs/heads/main' ||
+        startsWith(github.ref, 'refs/heads/maintenance/v2.')
+      ))
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -220,8 +223,11 @@ jobs:
   v2-font-windows-poc:
     name: V2 Windows literal font build
     if: >-
-      (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
-      github.event_name == 'workflow_dispatch'
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && (
+        github.ref == 'refs/heads/main' ||
+        startsWith(github.ref, 'refs/heads/maintenance/v2.')
+      ))
     runs-on: windows-2025
     timeout-minutes: 35
     outputs:
@@ -412,7 +418,7 @@ jobs:
 
       - name: Upload Windows font diagnostics
         if: ${{ always() && steps.windows-font-build.outcome == 'failure' }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: v2-windows-literal-font-diagnostics
           path: artifacts/windows-font-diagnostics
@@ -422,7 +428,7 @@ jobs:
       - name: Upload literal font PDFs
         id: upload-font-pdfs
         if: ${{ success() }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: v2-windows-literal-font-pdfs
           path: |
@@ -495,10 +501,7 @@ jobs:
     if: >-
       always() &&
       needs.v2-font-windows-poc.outputs.build_outcome == 'success' &&
-      needs.v2-font-windows-poc.outputs.artifact_outcome == 'success' && (
-        (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
-        github.event_name == 'workflow_dispatch'
-      )
+      needs.v2-font-windows-poc.outputs.artifact_outcome == 'success'
     needs:
       - v2-font-windows-poc
     runs-on: ubuntu-latest
@@ -508,7 +511,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Download literal font PDFs
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: v2-windows-literal-font-pdfs
           path: windows-font-pdfs
@@ -583,8 +586,7 @@ jobs:
           OVERLEAF: ${{ needs.v2-overleaf-stable-poc.result }}
           WINDOWS_BUILD: ${{ needs.v2-font-windows-poc.result }}
           WINDOWS_PDFA: ${{ needs.v2-font-windows-pdfa.result }}
-          EVENT_NAME: ${{ github.event_name }}
-          REF_NAME: ${{ github.ref }}
+          GATE_T_REQUIRED: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/maintenance/v2.'))) }}
         run: |
           test "$REFERENCE" = success
           test "$STRUCTURE" = success
@@ -592,7 +594,7 @@ jobs:
           test "$PROFILES" = success
           test "$POSTTEXTUAL" = success
 
-          if [ "$EVENT_NAME" = workflow_dispatch ] || [ "$REF_NAME" = refs/heads/maintenance/v2.0.1-typography ]; then
+          if [ "$GATE_T_REQUIRED" = true ]; then
             test "$OVERLEAF" = success
             test "$WINDOWS_BUILD" = success
             test "$WINDOWS_PDFA" = success
