@@ -13,6 +13,24 @@ for file in documento.loi documento.lot documento.loc documento.loa documento.to
   }
 done
 
+if [ "${UFC_REQUIRE_REFERENCE_IMAGES:-0}" = 1 ]; then
+  python3 <<'PY'
+import hashlib
+from pathlib import Path
+
+expected = {
+    Path('figuras/ufc-campus-pici.jpg'): '5f431612cdbfbb088c37c685a0e3c93852e96ccd',
+    Path('figuras/ufc-reitoria.jpg'): 'b6746bb53d82dae52330805ca0a08f029b773b2e',
+}
+for path, digest in expected.items():
+    if not path.is_file():
+        raise SystemExit(f'Corpus V2 falhou: fotografia licenciada ausente: {path}')
+    actual = hashlib.sha1(path.read_bytes()).hexdigest()
+    if actual != digest:
+        raise SystemExit(f'Corpus V2 falhou: SHA-1 divergente em {path}: {actual}')
+PY
+fi
+
 pdftotext -layout documento.pdf /tmp/ufctex-v2-reference-corpus.txt
 
 python3 <<'PY'
@@ -25,6 +43,8 @@ required = (
     'Figura de largura intermediária',
     'Figura larga próxima à largura útil',
     'Fluxo de processamento em arquivo PNG raster',
+    'Campus do Pici, onde se localiza o Departamento de Computação da UFC',
+    'Reitoria da Universidade Federal do Ceará',
     'Distribuição sintética de três categorias em arquivo JPEG',
     'Comparação de configurações editoriais',
     'Indicadores sintéticos com linhas alternadas',
@@ -46,6 +66,8 @@ if missing:
     raise SystemExit('Corpus V2 falhou: marcadores ausentes no PDF: ' + ', '.join(missing))
 if '??' in text:
     raise SystemExit('Corpus V2 falhou: referência não resolvida encontrada no PDF.')
+if 'Execute make reference-assets' in text:
+    raise SystemExit('Corpus V2 falhou: fallback de fotografia apareceu no PDF de CI.')
 PY
 
 check_list() {
@@ -64,6 +86,8 @@ check_list documento.loi \
   'Figura de largura intermediária' \
   'Figura larga próxima à largura útil' \
   'Fluxo de processamento em arquivo PNG raster' \
+  'Campus do Pici, onde se localiza o Departamento de Computação da UFC' \
+  'Reitoria da Universidade Federal do Ceará' \
   'Distribuição sintética de três categorias em arquivo JPEG' \
   'Comparação de configurações editoriais'
 
