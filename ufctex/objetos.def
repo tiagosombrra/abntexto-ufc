@@ -42,13 +42,21 @@
 % UFC lists use uppercase headings, but their entries preserve the title casing.
 \cs_new_protected:Npn \ufc_objects_setup_list_fonts:
   {
-    \cs_set:Npn \loiifont { \normalfont }
-    \cs_if_exist:NT \loffont  { \cs_set:Npn \loffont  { \normalfont } }
-    \cs_if_exist:NT \logrfont { \cs_set:Npn \logrfont { \normalfont } }
-    \cs_if_exist:NT \loqfont  { \cs_set:Npn \loqfont  { \normalfont } }
-    \cs_if_exist:NT \lotfont  { \cs_set:Npn \lotfont  { \normalfont } }
-    \cs_if_exist:NT \locfont  { \cs_set:Npn \locfont  { \normalfont } }
-    \cs_if_exist:NT \loafont  { \cs_set:Npn \loafont  { \normalfont } }
+    \cs_gset:Npn \loiifont { \normalfont }
+
+    \cs_if_exist:NT \lofextfont  { \cs_gset:Npn \lofextfont  { \normalfont } }
+    \cs_if_exist:NT \logrextfont { \cs_gset:Npn \logrextfont { \normalfont } }
+    \cs_if_exist:NT \loqextfont  { \cs_gset:Npn \loqextfont  { \normalfont } }
+    \cs_if_exist:NT \lotextfont  { \cs_gset:Npn \lotextfont  { \normalfont } }
+    \cs_if_exist:NT \locextfont  { \cs_gset:Npn \locextfont  { \normalfont } }
+    \cs_if_exist:NT \loaextfont  { \cs_gset:Npn \loaextfont  { \normalfont } }
+
+    \cs_if_exist:NT \lofifont  { \cs_gset:Npn \lofifont  { \normalfont } }
+    \cs_if_exist:NT \logrifont { \cs_gset:Npn \logrifont { \normalfont } }
+    \cs_if_exist:NT \loqifont  { \cs_gset:Npn \loqifont  { \normalfont } }
+    \cs_if_exist:NT \lotifont  { \cs_gset:Npn \lotifont  { \normalfont } }
+    \cs_if_exist:NT \locifont  { \cs_gset:Npn \locifont  { \normalfont } }
+    \cs_if_exist:NT \loaifont  { \cs_gset:Npn \loaifont  { \normalfont } }
   }
 \AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
 
