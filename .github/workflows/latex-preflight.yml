@@ -217,6 +217,9 @@ jobs:
     continue-on-error: true
     runs-on: windows-2025
     timeout-minutes: 35
+    outputs:
+      build_outcome: ${{ steps.windows-font-build.outcome }}
+      artifact_outcome: ${{ steps.upload-font-pdfs.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -317,13 +320,36 @@ jobs:
           }
 
       - name: Build literal Times New Roman and Arial through ufctex
+        id: windows-font-build
         shell: bash
         env:
           UFC_WINDOWS_FONTS_DIR: C:/Windows/Fonts
           UFC_FONT_POC_COMPILE_ONLY: '1'
-        run: sh tests/v2-font-poc.sh
+        run: |
+          set +e
+          sh tests/v2-font-poc.sh
+          code=$?
+          set -e
+
+          case "$code" in
+            0)  failure='' ;;
+            11) failure='pdfLaTeX / Times New Roman / infrastructure POC' ;;
+            12) failure='pdfLaTeX / Arial / infrastructure POC' ;;
+            13) failure='pdfLaTeX / Times New Roman / ufctex strict POC' ;;
+            14) failure='pdfLaTeX / Arial / ufctex strict POC' ;;
+            21) failure='LuaLaTeX / Times New Roman / infrastructure POC' ;;
+            22) failure='LuaLaTeX / Arial / infrastructure POC' ;;
+            23) failure='LuaLaTeX / Times New Roman / ufctex strict POC' ;;
+            24) failure='LuaLaTeX / Arial / ufctex strict POC' ;;
+            *)  failure="unclassified font POC exit $code" ;;
+          esac
+
+          printf 'exit_code=%s\n' "$code" >> "$GITHUB_OUTPUT"
+          printf 'font_failure=%s\n' "$failure" >> "$GITHUB_OUTPUT"
+          exit "$code"
 
       - name: Upload literal font PDFs
+        id: upload-font-pdfs
         if: ${{ success() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -342,11 +368,24 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           JOB_STATUS: ${{ job.status }}
+          BUILD_OUTCOME: ${{ steps.windows-font-build.outcome }}
+          BUILD_EXIT_CODE: ${{ steps.windows-font-build.outputs.exit_code }}
+          FONT_FAILURE: ${{ steps.windows-font-build.outputs.font_failure }}
+          ARTIFACT_OUTCOME: ${{ steps.upload-font-pdfs.outcome }}
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           $state = if ($env:JOB_STATUS -eq 'success') { 'success' } else { 'failure' }
+          if ($env:BUILD_OUTCOME -ne 'success' -and $env:FONT_FAILURE) {
+            $description = "Failed ($env:BUILD_EXIT_CODE): $env:FONT_FAILURE"
+          }
+          elseif ($env:BUILD_OUTCOME -eq 'success' -and $env:ARTIFACT_OUTCOME -ne 'success') {
+            $description = 'Windows font PDFs built; artifact upload failed'
+          }
+          else {
+            $description = 'Windows literal font PDF generation'
+          }
           $headers = @{
             Authorization = "Bearer $env:GH_TOKEN"
             Accept = 'application/vnd.github+json'
@@ -355,7 +394,7 @@ jobs:
           $body = @{
             state = $state
             context = 'ufctex/windows-font-build'
-            description = 'Windows literal font PDF generation'
+            description = $description
             target_url = $env:RUN_URL
           } | ConvertTo-Json
           Invoke-RestMethod `
@@ -368,7 +407,9 @@ jobs:
   v2-font-windows-pdfa:
     name: V2 Windows literal font certification
     if: >-
-      always() && (
+      always() &&
+      needs.v2-font-windows-poc.outputs.build_outcome == 'success' &&
+      needs.v2-font-windows-poc.outputs.artifact_outcome == 'success' && (
         (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
         github.event_name == 'workflow_dispatch'
       )
