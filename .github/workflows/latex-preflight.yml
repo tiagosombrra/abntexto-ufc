@@ -127,7 +127,6 @@ jobs:
     if: >-
       (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
       github.event_name == 'workflow_dispatch'
-    continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -139,18 +138,27 @@ jobs:
         run: |
           python3 - <<'PY'
           import hashlib
+          import time
           import urllib.request
           from pathlib import Path
 
           expected = 'f9cc40c65fbf6c2f9520b4ca4f312440e8d0ee6a'
           commit = '4c03fd7b5a7af089627dedb547c53cad4eed2a2a'
           url = f'https://raw.githubusercontent.com/ElaysonAbreu/abntexto/{commit}/abntexto.cls'
-          request = urllib.request.Request(
-              url,
-              headers={'User-Agent': 'ufctex-overleaf-smoke'},
-          )
-          with urllib.request.urlopen(request) as response:
-              content = response.read()
+          content = None
+          for attempt in range(1, 4):
+              try:
+                  request = urllib.request.Request(
+                      url,
+                      headers={'User-Agent': 'ufctex-overleaf-smoke'},
+                  )
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      content = response.read()
+                  break
+              except Exception:
+                  if attempt == 3:
+                      raise
+                  time.sleep(5 * attempt)
 
           digest = hashlib.sha1(b'blob ' + str(len(content)).encode() + b'\0' + content).hexdigest()
           if digest != expected:
@@ -214,7 +222,6 @@ jobs:
     if: >-
       (github.event_name == 'push' && github.ref == 'refs/heads/maintenance/v2.0.1-typography') ||
       github.event_name == 'workflow_dispatch'
-    continue-on-error: true
     runs-on: windows-2025
     timeout-minutes: 35
     outputs:
@@ -257,31 +264,85 @@ jobs:
           "@ | Set-Content -Path $profile -Encoding ascii
 
           Set-Location $env:RUNNER_TEMP
-          Invoke-WebRequest 'https://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip' -OutFile 'install-tl.zip'
-          Expand-Archive -Path 'install-tl.zip' -DestinationPath 'install-tl' -Force
+          $installerZip = Join-Path $env:RUNNER_TEMP 'install-tl.zip'
+          $installerSources = @(
+            'https://mirrors.mit.edu/CTAN/systems/texlive/tlnet/install-tl.zip',
+            'https://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip'
+          )
+          $installerDownloaded = $false
+          foreach ($source in $installerSources) {
+            try {
+              Write-Host "Downloading TeX Live installer from $source"
+              Invoke-WebRequest $source -OutFile $installerZip -TimeoutSec 60
+              $installerDownloaded = $true
+              break
+            }
+            catch {
+              Write-Warning "TeX Live installer download failed from $source"
+            }
+          }
+          if (-not $installerDownloaded) {
+            throw 'TeX Live installer could not be downloaded from any configured source.'
+          }
+
+          Expand-Archive -Path $installerZip -DestinationPath 'install-tl' -Force
           $installer = Get-ChildItem -Path 'install-tl' -Filter 'install-tl-windows.bat' -Recurse | Select-Object -First 1
           if (-not $installer) {
             throw 'TeX Live Windows installer was not found after extraction.'
           }
-          & $installer.FullName --profile=$profile
-          if ($LASTEXITCODE -ne 0) {
-            throw "TeX Live installer failed with exit code $LASTEXITCODE"
+
+          $repositories = @(
+            'https://mirrors.mit.edu/CTAN/systems/texlive/tlnet',
+            'https://mirror.ctan.org/systems/texlive/tlnet'
+          )
+          $texliveRepo = $null
+          foreach ($repository in $repositories) {
+            if (Test-Path $root) {
+              Remove-Item $root -Recurse -Force
+            }
+            Write-Host "Trying TeX Live repository: $repository"
+            & $installer.FullName --profile=$profile --repository=$repository
+            $candidateBin = Join-Path $root 'bin\windows'
+            if ($LASTEXITCODE -eq 0 -and (Test-Path (Join-Path $candidateBin 'tlmgr.bat'))) {
+              $texliveRepo = $repository
+              break
+            }
+            Write-Warning "TeX Live installation failed from $repository"
+          }
+          if (-not $texliveRepo) {
+            throw 'TeX Live installation failed for all configured repositories.'
           }
 
           $bin = Join-Path $root 'bin\windows'
-          if (-not (Test-Path (Join-Path $bin 'tlmgr.bat'))) {
-            throw "TeX Live binary directory not found: $bin"
-          }
           $env:PATH = "$bin;$env:PATH"
           $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-          & (Join-Path $bin 'tlmgr.bat') install abntexto biblatex-abnt biber csquotes fontaxes newtx fontspec unicode-math xpatch etoolbox ttfutils fontware
+          & (Join-Path $bin 'tlmgr.bat') --repository $texliveRepo install abntexto biblatex-abnt biber csquotes fontaxes newtx fontspec unicode-math xpatch etoolbox ttfutils fontware
           if ($LASTEXITCODE -ne 0) {
             throw "tlmgr package installation failed with exit code $LASTEXITCODE"
           }
 
           $winfontsZip = Join-Path $env:RUNNER_TEMP 'winfonts.zip'
-          Invoke-WebRequest 'https://mirrors.mit.edu/CTAN/fonts/winfonts/winfonts.zip' -OutFile $winfontsZip
+          $winfontsSources = @(
+            'https://mirrors.mit.edu/CTAN/fonts/winfonts/winfonts.zip',
+            'https://mirror.ctan.org/fonts/winfonts/winfonts.zip'
+          )
+          $winfontsDownloaded = $false
+          foreach ($source in $winfontsSources) {
+            try {
+              Write-Host "Downloading winfonts support from $source"
+              Invoke-WebRequest $source -OutFile $winfontsZip -TimeoutSec 60
+              $winfontsDownloaded = $true
+              break
+            }
+            catch {
+              Write-Warning "winfonts download failed from $source"
+            }
+          }
+          if (-not $winfontsDownloaded) {
+            throw 'winfonts support could not be downloaded from any configured source.'
+          }
+
           Expand-Archive -Path $winfontsZip -DestinationPath (Join-Path $root 'texmf-dist') -Force
 
           & (Join-Path $bin 'mktexlsr.exe') (Join-Path $root 'texmf-dist')
@@ -361,7 +422,7 @@ jobs:
       - name: Upload literal font PDFs
         id: upload-font-pdfs
         if: ${{ success() }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: v2-windows-literal-font-pdfs
           path: |
@@ -440,7 +501,6 @@ jobs:
       )
     needs:
       - v2-font-windows-poc
-    continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -448,7 +508,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Download literal font PDFs
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: v2-windows-literal-font-pdfs
           path: windows-font-pdfs
@@ -508,6 +568,9 @@ jobs:
       - v2-objects-bibliography
       - v2-profiles
       - v2-posttextual-compat
+      - v2-overleaf-stable-poc
+      - v2-font-windows-poc
+      - v2-font-windows-pdfa
     runs-on: ubuntu-latest
     steps:
       - name: Aggregate required gate
@@ -517,12 +580,23 @@ jobs:
           OBJECTS_BIB: ${{ needs.v2-objects-bibliography.result }}
           PROFILES: ${{ needs.v2-profiles.result }}
           POSTTEXTUAL: ${{ needs.v2-posttextual-compat.result }}
+          OVERLEAF: ${{ needs.v2-overleaf-stable-poc.result }}
+          WINDOWS_BUILD: ${{ needs.v2-font-windows-poc.result }}
+          WINDOWS_PDFA: ${{ needs.v2-font-windows-pdfa.result }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref }}
         run: |
           test "$REFERENCE" = success
           test "$STRUCTURE" = success
           test "$OBJECTS_BIB" = success
           test "$PROFILES" = success
           test "$POSTTEXTUAL" = success
+
+          if [ "$EVENT_NAME" = workflow_dispatch ] || [ "$REF_NAME" = refs/heads/maintenance/v2.0.1-typography ]; then
+            test "$OVERLEAF" = success
+            test "$WINDOWS_BUILD" = success
+            test "$WINDOWS_PDFA" = success
+          fi
 
       - name: Publish required gate status
         if: ${{ always() && github.event_name != 'pull_request' }}
@@ -543,7 +617,7 @@ jobs:
           payload = json.dumps({
               'state': state,
               'context': 'ufctex/latex-preflight',
-              'description': 'Required V2 TeX Live 2026 gate',
+              'description': 'Required V2 TeX Live, Overleaf and Windows gate',
               'target_url': os.environ['RUN_URL'],
           }).encode()
           request = urllib.request.Request(
