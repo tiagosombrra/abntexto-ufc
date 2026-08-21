@@ -89,12 +89,7 @@ for ($i = $vectorStart + 1; $i -lt $vectorEnd; $i++) {
     $replacement = "$prefix/.notdef"
   }
 
-  $lines[$i] = [regex]::Replace(
-    $lines[$i],
-    '^\s*/[^\s%]+',
-    [System.Text.RegularExpressions.MatchEvaluator]{ param($match) $replacement },
-    1
-  )
+  $lines[$i] = $lines[$i] -replace '^\s*/[^\s%]+', $replacement
 }
 
 $parent = Split-Path -Parent $OutputEncoding
