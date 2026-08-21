@@ -36,6 +36,17 @@ find_tex_bin() {
   fi
 }
 
+normalize_texmfhome() {
+  case "$(uname -s 2>/dev/null || echo unknown)" in
+    MINGW*|MSYS*|CYGWIN*)
+      if [ -n "${TEXMFHOME:-}" ] && command -v cygpath >/dev/null 2>&1; then
+        TEXMFHOME=$(cygpath -m "$TEXMFHOME")
+        export TEXMFHOME
+      fi
+      ;;
+  esac
+}
+
 find_poppler_bin() {
   if command -v pdffonts >/dev/null 2>&1; then
     return 0
@@ -68,6 +79,7 @@ find_poppler_bin() {
 }
 
 find_tex_bin
+normalize_texmfhome
 if [ "$compile_only" != 1 ]; then
   find_poppler_bin
 fi
@@ -92,6 +104,9 @@ fi
 printf 'POC fontes: kpsewhich = %s\n' "$(command -v kpsewhich)"
 printf 'POC fontes: pdflatex = %s\n' "$(command -v pdflatex)"
 printf 'POC fontes: lualatex  = %s\n' "$(command -v lualatex)"
+if [ -n "${TEXMFHOME:-}" ]; then
+  printf 'POC fontes: TEXMFHOME  = %s\n' "$TEXMFHOME"
+fi
 if [ "$compile_only" != 1 ]; then
   printf 'POC fontes: pdffonts  = %s\n' "$(command -v pdffonts)"
   printf 'POC fontes: pdftotext = %s\n' "$(command -v pdftotext)"
@@ -226,8 +241,8 @@ failed=0
 
 if ! kpsewhich t1times-ttf.fd >/dev/null 2>&1 || \
    ! kpsewhich t1arial.fd >/dev/null 2>&1 || \
-   ! kpsewhich winfonts.map >/dev/null 2>&1; then
-  echo 'POC fontes: suporte winfonts não localizado para pdfLaTeX.'
+   ! kpsewhich ufctex-windows.map >/dev/null 2>&1; then
+  echo 'POC fontes: suporte ufctex Windows não localizado para pdfLaTeX.'
   blocked=1
 else
   for ttf in times.ttf timesbd.ttf timesi.ttf timesbi.ttf arial.ttf arialbd.ttf ariali.ttf arialbi.ttf; do
