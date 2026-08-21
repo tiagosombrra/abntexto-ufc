@@ -34,7 +34,8 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            make preflight
+            make reference-assets
+            UFC_REQUIRE_REFERENCE_IMAGES=1 make preflight
 
       - name: Upload reference corpus PDF
         if: ${{ success() }}
