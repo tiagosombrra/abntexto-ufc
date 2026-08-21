@@ -37,8 +37,15 @@ python3 <<'PY'
 import re
 from pathlib import Path
 
+
+def normalize_pdf_text(value):
+    value = value.replace('\u00ad', '')
+    value = re.sub(r'-[ \t]*\r?\n[ \t]*(?=\w)', '', value)
+    return re.sub(r'\s+', ' ', value)
+
+
 text = Path('/tmp/ufctex-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
-flat = re.sub(r'\s+', ' ', text)
+flat = normalize_pdf_text(text)
 required = (
     'CATÁLOGO DE EXEMPLOS E VALIDAÇÃO VISUAL',
     'Normas e diretrizes adotadas',
@@ -79,7 +86,7 @@ if '??' in text:
 if 'Execute make reference-assets' in text:
     raise SystemExit('Corpus V2 falhou: fallback de fotografia apareceu no PDF de CI.')
 
-pages = [re.sub(r'\s+', ' ', page) for page in text.split('\f')]
+pages = [normalize_pdf_text(page) for page in text.split('\f')]
 committee_pages = [page for page in pages if 'BANCA EXAMINADORA' in page]
 if len(committee_pages) != 1:
     raise SystemExit(f'Corpus V2 falhou: esperado exatamente um bloco de banca, encontrados {len(committee_pages)}.')
