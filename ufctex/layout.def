@@ -5,20 +5,13 @@
 \setlength{\parindent}{2cm}
 \AtBeginDocument{\onehalfsp}
 
-% Keep ABNT topics geometry explicit under the current LaTeX tagging layer.
-\setlist[topics,1]{
-  label=\alph*),
-  align=left,
-  labelindent=\parindent,
-  labelwidth=0.5cm,
-  leftmargin=\dimexpr\parindent+0.5cm+\labelsep\relax
-}
-\setlist[topics,2]{
-  label=---,
-  align=left,
-  labelwidth=0.6cm,
-  leftmargin=\dimexpr0.6cm+\labelsep\relax
-}
+% Tagging-safe ABNT alíneas and subalíneas.
+\NewDocumentEnvironment{ufcalineas}{}
+  {\begin{enumerate}[label=\alph*),nosep,align=left,labelindent=2cm,labelwidth=.5cm,labelsep=.3cm,leftmargin=2.8cm]}
+  {\end{enumerate}}
+\NewDocumentEnvironment{ufcsubalineas}{}
+  {\begin{enumerate}[label=---,nosep,align=left,labelwidth=.6cm,labelsep=.3cm,leftmargin=.9cm]}
+  {\end{enumerate}}
 
 % UFC section hierarchy. The same hierarchy is mirrored in the table of contents.
 \def\sectionfont       {\bfseries\MakeUppercase}
