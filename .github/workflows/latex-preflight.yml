@@ -351,7 +351,7 @@ jobs:
 
       - name: Upload Windows font diagnostics
         if: ${{ always() && steps.windows-font-build.outcome == 'failure' }}
-        uses: actions/upload-artifact@b7c566a7d0c52e7e042e478d3ebc226f9cd953ec # v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: v2-windows-literal-font-diagnostics
           path: artifacts/windows-font-diagnostics
