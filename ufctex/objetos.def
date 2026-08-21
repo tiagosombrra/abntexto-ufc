@@ -43,7 +43,6 @@
 \cs_new_protected:Npn \ufc_objects_setup_list_fonts:
   {
     \cs_gset:Npn \loiifont { \normalfont }
-    \cs_gset:cpn { l@loii } { \extline{0pt}{\loilabelwidth}{\normalfont} }
 
     \cs_if_exist:NT \lofextfont  { \cs_gset:Npn \lofextfont  { \normalfont } }
     \cs_if_exist:NT \logrextfont { \cs_gset:Npn \logrextfont { \normalfont } }
@@ -60,6 +59,20 @@
     \cs_if_exist:NT \loaifont  { \cs_gset:Npn \loaifont  { \normalfont } }
   }
 \AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
+
+\cs_new_protected:Npn \ufc_objects_loii_entry:nn #1#2
+  { \extline{0pt}\loilabelwidth\normalfont{#1}{#2} }
+
+\cs_new_protected:Npn \ufc_objects_print_illustration_list:
+  {
+    \group_begin:
+      \cs_set_eq:cN { l@loii } \ufc_objects_loii_entry:nn
+      \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}}
+    \group_end:
+  }
+
+\RenewDocumentCommand \imprimirlistadeilustracoes { }
+  { \ufc_objects_print_illustration_list: }
 
 \NewDocumentCommand \ufcfonte { m }
   { \src{#1} }
