@@ -69,6 +69,12 @@ New-Item -ItemType Directory -Force -Path $work, $tfmDir, $vfDir, $ttfDir, $encD
 Copy-Item $encT1 (Join-Path $encDir 'tex256.enc') -Force
 Copy-Item $encTs1 (Join-Path $encDir 'ts1-winfonts.enc') -Force
 
+$unicodeScript = Join-Path $PSScriptRoot 'convert-encoding-to-unicode.ps1'
+$unicodeT1 = Join-Path $encDir 'ufctex-t1-unicode.enc'
+$unicodeTs1 = Join-Path $encDir 'ufctex-ts1-unicode.enc'
+& $unicodeScript -InputEncoding $encT1 -OutputEncoding $unicodeT1 -OutputEncodingName 'ufctexT1UnicodeEncoding'
+& $unicodeScript -InputEncoding $encTs1 -OutputEncoding $unicodeTs1 -OutputEncodingName 'ufctexTS1UnicodeEncoding'
+
 Push-Location $work
 try {
   foreach ($font in $fonts) {
@@ -90,8 +96,8 @@ finally {
 
 $map = @()
 foreach ($font in $fonts) {
-  $map += "$($font.RawT1) $($font.Ps) `"T1Encoding ReEncodeFont`" <[tex256.enc <$($font.File)"
-  $map += "$($font.RawTS1) $($font.Ps) `"ts1-winfonts ReEncodeFont`" <[ts1-winfonts.enc <$($font.File)"
+  $map += "$($font.RawT1) $($font.Ps) `"ufctexT1UnicodeEncoding ReEncodeFont`" <[ufctex-t1-unicode.enc <$($font.File)"
+  $map += "$($font.RawTS1) $($font.Ps) `"ufctexTS1UnicodeEncoding ReEncodeFont`" <[ufctex-ts1-unicode.enc <$($font.File)"
 }
 $map | Set-Content -Path (Join-Path $mapDir 'ufctex-windows.map') -Encoding ascii
 
