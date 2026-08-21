@@ -108,6 +108,7 @@ for module in modules:
 release_infrastructure = (
     'tools/build-release-bundles.py',
     'tools/fetch-abntexto.py',
+    'tools/fetch-reference-images.py',
     'tools/download-actions-artifact.py',
     'tests/v2-release-package-check.py',
     'tests/v2-overleaf-bundle-check.py',
@@ -118,6 +119,7 @@ release_infrastructure = (
     'docs/README-CTAN.md',
     'docs/CHANGELOG-CTAN.md',
     'docs/AUDITORIA-V2.md',
+    'figuras/LICENCAS.md',
     '.github/workflows/distribution.yml',
     '.github/workflows/reference-validation.yml',
 )
@@ -147,6 +149,7 @@ done
 python3 -m py_compile \
   tools/build-release-bundles.py \
   tools/fetch-abntexto.py \
+  tools/fetch-reference-images.py \
   tools/download-actions-artifact.py \
   tests/v2-repository-audit.py \
   tests/v2-release-package-check.py \
