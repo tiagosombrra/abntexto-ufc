@@ -8,7 +8,7 @@ filename ?= documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 
-.PHONY: all pdf compile lua version clean \
+.PHONY: all pdf compile lua version clean reference-assets \
 	preflight release-preflight package distribution-preflight \
 	v2-repository-audit v2-reference-check v2-reference-corpus-check v2-pdfa-check \
 	v2-check v2-distribution-check v2-release-package-check \
@@ -25,6 +25,9 @@ pdf: compile
 
 version:
 	@echo "$(VERSION)"
+
+reference-assets:
+	@python3 tools/fetch-reference-images.py
 
 compile:
 	@echo "Compilando $(filename).tex com $(ENGINE)..."
@@ -176,7 +179,8 @@ release-preflight: preflight
 	@sh tests/v2-profile-pdfa-check.sh
 	@echo "Preflight de release da V2 concluído."
 
-package: release-preflight
+package: reference-assets
+	@$(MAKE) release-preflight
 	@python3 tools/fetch-abntexto.py --output .ufctex-abntexto.cls
 	@python3 tools/build-release-bundles.py --abntexto .ufctex-abntexto.cls
 	@rm -f .ufctex-abntexto.cls
