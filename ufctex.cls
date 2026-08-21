@@ -20,8 +20,8 @@
 \input{ufctex/modulos.def}
 \input{ufctex/pretextuais.def}
 \input{ufctex/institucional.def}
-\input{ufctex/projetos.def}
 \input{ufctex/trabalhos.def}
+\input{ufctex/projetos.def}
 \input{ufctex/objetos.def}
 \input{ufctex/compat-abntexto.def}
 \input{ufctex/bibliografia.def}
