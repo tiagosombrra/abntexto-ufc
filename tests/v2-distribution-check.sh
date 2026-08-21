@@ -112,12 +112,18 @@ release_infrastructure = (
     'tests/v2-release-package-check.py',
     'tests/v2-overleaf-bundle-check.py',
     'tests/v2-release-metadata-check.py',
+    'tests/v2-repository-audit.py',
+    'tests/v2-reference-corpus-check.sh',
+    'tests/v2-algorithm-numbering-check.sh',
     'docs/README-CTAN.md',
+    'docs/CHANGELOG-CTAN.md',
+    'docs/AUDITORIA-V2.md',
     '.github/workflows/distribution.yml',
+    '.github/workflows/reference-validation.yml',
 )
 for required in release_infrastructure:
     if not Path(required).is_file():
-        errors.append(f'infraestrutura de distribuição ausente: {required}')
+        errors.append(f'infraestrutura de distribuição/validação ausente: {required}')
 
 microsoft_fonts = {
     'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
@@ -142,6 +148,7 @@ python3 -m py_compile \
   tools/build-release-bundles.py \
   tools/fetch-abntexto.py \
   tools/download-actions-artifact.py \
+  tests/v2-repository-audit.py \
   tests/v2-release-package-check.py \
   tests/v2-overleaf-bundle-check.py \
   tests/v2-release-metadata-check.py
