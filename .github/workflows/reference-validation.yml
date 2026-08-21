@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - 'validation/v2.*'
+  pull_request:
+    branches:
+      - 'release/v2.*'
   workflow_dispatch:
 
 permissions:
