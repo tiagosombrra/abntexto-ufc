@@ -1,6 +1,7 @@
-#include <iostream>
+int soma(int a, int b) {
+    return a + b;
+}
 
 int main() {
-    std::cout << "Hello, UFC!\n";
-    return 0;
+    return soma(2, 3) == 5 ? 0 : 1;
 }
