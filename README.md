@@ -13,7 +13,7 @@ A linha 2.x reorganiza a implementação em módulos, preserva a API pública da
 - `biblatex` + `biber`;
 - pacotes opcionais apenas quando os módulos correspondentes forem ativados.
 
-A versão estável pública do Overleaf consultada em 20/08/2026 ainda utiliza TeX Live 2025. Como `abntexto` 1.1 foi publicado em 2026, o ambiente estável não deve ser tratado como possuindo essa versão nativamente. A compatibilidade é exercitada em CI com TeX Live 2025 e uma cópia íntegra e pinada de `abntexto.cls` 1.1. O bundle específico para importação no Overleaf será preparado na fase de distribuição, depois do fechamento do gate tipográfico.
+A versão estável pública do Overleaf consultada em 20/08/2026 ainda utiliza TeX Live 2025. Como `abntexto` 1.1 foi publicado em 2026, o ambiente estável não deve ser tratado como possuindo essa versão nativamente. A compatibilidade é exercitada em CI com TeX Live 2025 e uma cópia íntegra e pinada de `abntexto.cls` 1.1. O bundle específico para importação no Overleaf será preparado na fase de distribuição.
 
 ## Estrutura
 
@@ -108,7 +108,7 @@ Em modo não estrito, os fallbacks são explicitamente tratados como substitutos
 
 Para declarar conformidade tipográfica final com o requisito UFC, use a família literal e verifique o PDF produzido. O modo estrito existe para essa certificação.
 
-No LuaLaTeX, Times New Roman e Arial literais são resolvidas por `fontspec` a partir das fontes disponíveis ao sistema. No pdfLaTeX, o modo estrito requer o suporte `Winfonts`, `winfonts.map` habilitado e os arquivos TrueType Microsoft visíveis ao pdfTeX. As fontes Microsoft não fazem parte da distribuição `ufctex`.
+No LuaLaTeX, Times New Roman e Arial literais são resolvidas por `fontspec` a partir das fontes disponíveis ao sistema. No pdfLaTeX, o modo estrito usa o suporte local preparado por `tools/prepare-windows-fonts.ps1`: o script gera TFM/VF/FD, encodings Unicode e `ufctex-windows.map` a partir das fontes Microsoft instaladas no Windows. As fontes proprietárias não são redistribuídas pelo `ufctex`.
 
 Independentemente do engine, o PDF certificado deve ser autocontido: todas as fontes efetivamente utilizadas precisam aparecer como `emb=yes` em `pdffonts`. Incorporação por subconjunto é aceita; `emb=no` reprova o artefato. A validação PDF/A com veraPDF é aplicada adicionalmente nos gates de release.
 
@@ -361,9 +361,9 @@ O gate obrigatório em TeX Live 2026 cobre:
 - 12 PDFs da matriz;
 - validação PDF/A-2b dos PDFs de referência e da matriz.
 
-A POC Windows é experimental enquanto a paridade literal não estiver fechada. Ela exige Times New Roman e Arial reais do Windows, quatro variantes, identidade PDF, ausência de fallback textual, extração correta de caracteres, incorporação (`emb=yes`) e validação PDF/A-2b posterior dos PDFs gerados.
+O Gate T integra a validação Windows obrigatória nas branches V2: Times New Roman e Arial literais são compiladas em pdfLaTeX e LuaLaTeX, incluindo regular, negrito, itálico e negrito-itálico. Os quatro PDFs estritos são verificados quanto à identidade da família, ausência de fallback textual, extração Unicode, incorporação (`emb=yes`) e conformidade PDF/A-2b com veraPDF.
 
-O proxy Overleaf usa TeX Live 2025 com `abntexto` 1.1 pinado para detectar incompatibilidades com o ambiente público estável. Ele não substitui o smoke final dentro do serviço Overleaf.
+O proxy Overleaf usa TeX Live 2025 com `abntexto` 1.1 pinado para detectar incompatibilidades com o ambiente público estável. Ele integra o Gate T nas branches V2 e não substitui o smoke final dentro do serviço Overleaf.
 
 ## Compatibilidade V1
 
