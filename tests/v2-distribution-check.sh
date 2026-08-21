@@ -80,12 +80,23 @@ else:
     if f'v{version} UFC academic document class' not in cls:
         errors.append(f'ufctex.cls: versão diferente de v{version}')
 
-if not re.search(
-    r'Versão\s+publicada\s+atual:\s*(?:\*\*)?[0-9]+\.[0-9]+\.[0-9]+(?:\*\*)?\b',
-    readme,
-    re.IGNORECASE,
-):
-    errors.append('README.md: versão publicada atual ausente ou inválida')
+    published_match = re.search(
+        r'Versão\s+publicada\s+atual:\s*(?:\*\*)?([0-9]+\.[0-9]+\.[0-9]+)(?:\*\*)?\b',
+        readme,
+        re.IGNORECASE,
+    )
+    candidate_match = re.search(
+        r'Versão\s+candidata\s+em\s+preparação:\s*(?:\*\*)?([0-9]+\.[0-9]+\.[0-9]+)(?:\*\*)?\b',
+        readme,
+        re.IGNORECASE,
+    )
+    if not published_match:
+        errors.append('README.md: versão publicada atual ausente ou inválida')
+    elif published_match.group(1) != version:
+        if not candidate_match or candidate_match.group(1) != version:
+            errors.append(
+                f'README.md: VERSION {version} não coincide com versão publicada nem candidata'
+            )
 
 modules = re.findall(r'\\input\{(ufctex/[^}]+\.def)\}', uncommented(cls))
 if 'ufctex/fontes.def' not in modules:
