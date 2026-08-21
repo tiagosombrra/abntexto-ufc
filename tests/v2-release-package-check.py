@@ -143,6 +143,8 @@ def main() -> None:
             f"{template_root}2-textuais/exemplos-de-formatacao.tex",
             f"{template_root}3-pos-textuais/referencias.bib",
             f"{template_root}figuras/exemplo.py",
+            f"{template_root}figuras/fluxo-exemplo.png",
+            f"{template_root}figuras/grafico-exemplo.jpg",
             f"{template_root}ufctex.cls",
             f"{template_root}Makefile",
         ):
@@ -156,10 +158,14 @@ def main() -> None:
         overleaf_entries = names(overleaf_zip)
         overleaf_root = f"modelo-latex-ufc-overleaf-{v}/"
         assert_prefix(overleaf_entries, overleaf_root)
-        if f"{overleaf_root}abntexto.cls" not in overleaf_entries:
-            raise SystemExit("Overleaf bundle missing pinned abntexto.cls.")
-        if f"{overleaf_root}2-textuais/exemplos-de-formatacao.tex" not in overleaf_entries:
-            raise SystemExit("Overleaf bundle missing the V2 reference corpus.")
+        for required_entry in (
+            f"{overleaf_root}abntexto.cls",
+            f"{overleaf_root}2-textuais/exemplos-de-formatacao.tex",
+            f"{overleaf_root}figuras/fluxo-exemplo.png",
+            f"{overleaf_root}figuras/grafico-exemplo.jpg",
+        ):
+            if required_entry not in overleaf_entries:
+                raise SystemExit(f"Overleaf bundle missing {required_entry}")
         assert_no_proprietary_fonts(overleaf_entries)
 
         ctan_zip = first / f"ufctex-ctan-{v}.zip"
@@ -174,6 +180,8 @@ def main() -> None:
             f"ufctex/doc/ufctex-{v}-reference.pdf",
             "ufctex/doc/example/documento.tex",
             "ufctex/doc/example/2-textuais/exemplos-de-formatacao.tex",
+            "ufctex/doc/example/figuras/fluxo-exemplo.png",
+            "ufctex/doc/example/figuras/grafico-exemplo.jpg",
             "ufctex/ufctex.tds.zip",
         ):
             if required_entry not in ctan_entries:
@@ -191,6 +199,8 @@ def main() -> None:
             "doc/latex/ufctex/CHANGELOG.md",
             f"doc/latex/ufctex/ufctex-{v}-reference.pdf",
             "doc/latex/ufctex/example/2-textuais/exemplos-de-formatacao.tex",
+            "doc/latex/ufctex/example/figuras/fluxo-exemplo.png",
+            "doc/latex/ufctex/example/figuras/grafico-exemplo.jpg",
             "scripts/ufctex/prepare-windows-fonts.ps1",
         ):
             if required_entry not in tds_entries:
