@@ -34,26 +34,35 @@ fi
 pdftotext -layout documento.pdf /tmp/ufctex-v2-reference-corpus.txt
 
 python3 <<'PY'
+import re
+import unicodedata
 from pathlib import Path
 
-text = Path('/tmp/ufctex-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
+raw = Path('/tmp/ufctex-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
+text = unicodedata.normalize('NFKC', raw)
+text = re.sub(r'([\wÀ-ÖØ-öø-ÿ])-\s*\n\s*([\wÀ-ÖØ-öø-ÿ])', r'\1\2', text)
+text = re.sub(r'\s+', ' ', text).strip()
+
+# Full caption/list identity is checked below in .loi/.lot/.loc/.loa.
+# PDF text extraction is intentionally checked with distinctive fragments so
+# physical line wrapping in captions does not create false negatives.
 required = (
     'CATÁLOGO DE EXEMPLOS E VALIDAÇÃO VISUAL',
-    'Figura estreita com legenda curta',
+    'Figura estreita',
     'Figura de largura intermediária',
-    'Figura larga próxima à largura útil',
-    'Fluxo de processamento em arquivo PNG raster',
-    'Campus do Pici, onde se localiza o Departamento de Computação da UFC',
+    'Figura larga próxima',
+    'Fluxo de processamento',
+    'Campus do Pici',
     'Reitoria da Universidade Federal do Ceará',
-    'Distribuição sintética de três categorias em arquivo JPEG',
+    'Distribuição sintética de três categorias',
     'Comparação de configurações editoriais',
-    'Indicadores sintéticos com linhas alternadas',
-    'Função de média em Python com números de linha',
-    'Função de máximo em C++ sem números de linha',
-    'Arquivo Python externo com números de linha',
-    'Método Java com numeração a cada duas linhas',
-    'Máximo divisor comum com números de linha',
-    'Seleção do maior valor sem números de linha',
+    'Indicadores sintéticos',
+    'Função de média em Python',
+    'Função de máximo em C++',
+    'Arquivo Python externo',
+    'Método Java',
+    'Máximo divisor comum',
+    'Seleção do maior valor',
     'APÊNDICE A',
     'APÊNDICE B',
     'APÊNDICE C',
