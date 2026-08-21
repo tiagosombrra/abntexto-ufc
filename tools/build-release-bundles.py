@@ -195,6 +195,7 @@ def build_tds(
     ctan_readme = (ROOT / "docs/README-CTAN.md").read_bytes()
     entries.extend((
         ("doc/latex/ufctex/README.md", ctan_readme, 0o644),
+        ("doc/latex/ufctex/CHANGELOG.md", (ROOT / "docs/CHANGELOG-CTAN.md").read_bytes(), 0o644),
         ("doc/latex/ufctex/LICENSE", (ROOT / "LICENSE").read_bytes(), 0o644),
         ("doc/latex/ufctex/NORMAS.md", (ROOT / "docs/NORMAS.md").read_bytes(), 0o644),
         (f"doc/latex/ufctex/ufctex-{version}-reference.pdf", reference_pdf.read_bytes(), 0o644),
@@ -232,6 +233,7 @@ def build_ctan_bundle(
     root = "ufctex/"
     entries: list[tuple[str, bytes, int]] = [
         (f"{root}README.md", (ROOT / "docs/README-CTAN.md").read_bytes(), 0o644),
+        (f"{root}CHANGELOG.md", (ROOT / "docs/CHANGELOG-CTAN.md").read_bytes(), 0o644),
         (f"{root}LICENSE", (ROOT / "LICENSE").read_bytes(), 0o644),
         (f"{root}doc/NORMAS.md", (ROOT / "docs/NORMAS.md").read_bytes(), 0o644),
         (f"{root}doc/ufctex-{version}-reference.pdf", reference_pdf.read_bytes(), 0o644),
