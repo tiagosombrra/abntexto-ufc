@@ -22,6 +22,7 @@ A auditoria cobre arquivos rastreados pelo Git, classe e módulos V2, template d
 | A10 | `topics` do `abntexto` com `leftmargin=!` falhou no corpus com `\DocumentMetadata`/tagging ativo | geometria estabilizada no `ufctex` e fixture metadata adicionada |
 | A11 | exemplos de figuras eram majoritariamente caixas sintéticas e não exerciam arquivos raster reais | PNG e JPEG adicionados ao corpus e aos checks de distribuição |
 | A12 | teste de pacote ainda usava a expressão “Gate D” para uma etapa que não fecha o Gate D formal | corrigido para `Release package preflight` |
+| A13 | regra inicial para `lib/` confundia caminho legado do projeto com o diretório legítimo do Chocolatey | regra refinada para caminhos V1 conhecidos e pasta rastreada `lib/` |
 
 ## Corpus de referência
 
@@ -51,7 +52,7 @@ Casos mutuamente exclusivos ou dependentes do ambiente permanecem em fixtures de
 `tests/v2-repository-audit.py` verifica todos os arquivos rastreados e reprova, entre outros casos:
 
 - caminho ou API V1 fora do escopo explícito de compatibilidade;
-- `TODO`, `FIXME`, `HACK` e marcadores equivalentes;
+- marcadores explícitos de trabalho pendente ou correção temporária;
 - caminhos absolutos ligados a máquinas de desenvolvimento;
 - artefatos gerados versionados por engano;
 - texto fora de UTF-8 ou sem newline final;
@@ -59,6 +60,8 @@ Casos mutuamente exclusivos ou dependentes do ambiente permanecem em fixtures de
 - chaves `\ufcsetup` inexistentes em exemplos `.tex`/`.md`;
 - módulo carregado mas ausente;
 - definição do mesmo comando interno em múltiplos módulos.
+
+A regra de caminhos V1 diferencia referências do próprio projeto de diretórios legítimos de ferramentas externas. Uma pasta rastreada `lib/` continua proibida na V2, assim como referências conhecidas à antiga arquitetura.
 
 ## Gate R — corpus de referência
 
