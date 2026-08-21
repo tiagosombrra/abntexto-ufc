@@ -58,7 +58,8 @@
   breaklines=true,
   columns=fullflexible,
   keepspaces=true,
-  showstringspaces=false
+  showstringspaces=false,
+  numbers=none
 }
 
 \begin{document}
@@ -68,7 +69,7 @@
 \imprimircapa
 \imprimirfolhaderosto
 % \imprimirfichacatalografica{1-pre-textuais/ficha-catalografica}
-% \imprimirerrata{1-pre-textuais/errata}
+\imprimirerrata{1-pre-textuais/errata}
 \imprimirfolhadeaprovacao
 \imprimirdedicatoria{1-pre-textuais/dedicatoria}
 \imprimiragradecimentos{1-pre-textuais/agradecimentos}
@@ -88,19 +89,32 @@
 
 \input{2-textuais/1-introducao}
 \input{2-textuais/2-fundamentacao-teorica}
+\input{2-textuais/trabalhos-relacionados}
 \input{2-textuais/3-metodologia}
 \input{2-textuais/4-resultados}
+\input{2-textuais/exemplos-de-formatacao}
 \input{2-textuais/5-conclusao}
 
 \imprimirreferencias
 \imprimirglossario
 
-% Elementos pós-textuais opcionais.
-% \appendix{Título do apêndice}
-% \input{3-pos-textuais/apendices/apendice-a}
-%
-% \annex{Título do anexo}
-% \input{3-pos-textuais/anexos/anexo-a}
+\appendix{Material complementar elaborado pelo autor}
+\input{3-pos-textuais/apendices/apendice-a}
+
+\appendix{Questionário de exemplo}
+\input{3-pos-textuais/apendices/apendice-b}
+
+\appendix{Código-fonte de exemplo}
+\input{3-pos-textuais/apendices/apendice-c}
+
+\appendix{Orientação para documento externo autoral}
+\input{3-pos-textuais/apendices/apendice-d}
+
+\annex{Documento complementar externo}
+\input{3-pos-textuais/anexos/anexo-a}
+
+\annex{Orientação para documento externo em PDF}
+\input{3-pos-textuais/anexos/anexo-b}
 
 \imprimirindice
 
