@@ -1,0 +1,30 @@
+\documentclass{ufctex}
+
+\ufcsetup{algoritmos = algpseudocodex}
+
+\begin{document}
+
+\legend{algoritmo}{Algoritmo numerado de validação}
+\ufcfonte{Elaboração própria.}
+\begin{ufcalgoritmo}[here][1]
+  \State $i \gets 1$ \Comment{NUMERADO-1}
+  \While{$i \leq n$} \Comment{NUMERADO-2}
+    \If{$A[i] = x$} \Comment{NUMERADO-3}
+      \State \Return $i$ \Comment{NUMERADO-4}
+    \EndIf
+    \State $i \gets i + 1$ \Comment{NUMERADO-6}
+  \EndWhile
+  \State \Return $-1$ \Comment{NUMERADO-8}
+\end{ufcalgoritmo}
+
+\legend{algoritmo}{Algoritmo sem numeração de validação}
+\ufcfonte{Elaboração própria.}
+\begin{ufcalgoritmo}[here][0]
+  \If{$a > b$}
+    \State \Return $a$ \Comment{SEM-NUMERO-A}
+  \Else
+    \State \Return $b$ \Comment{SEM-NUMERO-B}
+  \EndIf
+\end{ufcalgoritmo}
+
+\end{document}

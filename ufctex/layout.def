@@ -1,9 +1,39 @@
-\ProvidesFile{ufctex/layout.def}[2026/08/20 UFC page and text layout]
+\ProvidesFile{ufctex/layout.def}[2026/08/21 UFC page and text layout]
 
 % UFC body text uses 12 pt, 1.5 spacing, 2 cm first-line indent and no extra spacing.
 \setlength{\parskip}{0pt}
 \setlength{\parindent}{2cm}
 \AtBeginDocument{\onehalfsp}
+
+% Tagging-safe ABNT alíneas and subalíneas using LaTeX block-list keys.
+\NewDocumentEnvironment{ufcalineas}{}
+  {\begin{enumerate}[
+    item-label={\alph{enumi})},
+    item-vspace=0pt,
+    begin-vspace=0pt,
+    end-vspace=0pt,
+    para-vspace=0pt,
+    left-margin=2.8cm,
+    label-width=.5cm,
+    label-sep=.3cm,
+    item-indent=0pt,
+    label-align=left
+  ]}
+  {\end{enumerate}}
+\NewDocumentEnvironment{ufcsubalineas}{}
+  {\begin{enumerate}[
+    item-label={---},
+    item-vspace=0pt,
+    begin-vspace=0pt,
+    end-vspace=0pt,
+    para-vspace=0pt,
+    left-margin=.9cm,
+    label-width=.6cm,
+    label-sep=.3cm,
+    item-indent=0pt,
+    label-align=left
+  ]}
+  {\end{enumerate}}
 
 % UFC section hierarchy. The same hierarchy is mirrored in the table of contents.
 \def\sectionfont       {\bfseries\MakeUppercase}
