@@ -185,20 +185,25 @@ def main() -> None:
 
         overleaf_zip = first / f"modelo-latex-ufc-overleaf-{v}.zip"
         overleaf_entries = names(overleaf_zip)
-        overleaf_root = f"modelo-latex-ufc-overleaf-{v}/"
-        assert_prefix(overleaf_entries, overleaf_root)
+        wrapped_root = f"modelo-latex-ufc-overleaf-{v}/"
+        if any(entry.startswith(wrapped_root) for entry in overleaf_entries):
+            raise SystemExit("Overleaf bundle must place the main document at the archive root.")
         for required_entry in (
-            f"{overleaf_root}abntexto.cls",
-            f"{overleaf_root}2-textuais/exemplos-de-formatacao.tex",
-            f"{overleaf_root}figuras/fluxo-exemplo.png",
-            f"{overleaf_root}figuras/grafico-exemplo.jpg",
-            f"{overleaf_root}figuras/LICENCAS.md",
-            f"{overleaf_root}figuras/ufc-campus-pici.jpg",
-            f"{overleaf_root}figuras/ufc-reitoria.jpg",
+            "documento.tex",
+            "ufctex.cls",
+            "abntexto.cls",
+            "1-pre-textuais/resumo.tex",
+            "3-pos-textuais/referencias.bib",
+            "2-textuais/exemplos-de-formatacao.tex",
+            "figuras/fluxo-exemplo.png",
+            "figuras/grafico-exemplo.jpg",
+            "figuras/LICENCAS.md",
+            "figuras/ufc-campus-pici.jpg",
+            "figuras/ufc-reitoria.jpg",
         ):
             if required_entry not in overleaf_entries:
                 raise SystemExit(f"Overleaf bundle missing {required_entry}")
-        assert_reference_images(overleaf_zip, overleaf_root)
+        assert_reference_images(overleaf_zip, "")
         assert_no_proprietary_fonts(overleaf_entries)
 
         ctan_zip = first / f"ufctex-ctan-{v}.zip"
