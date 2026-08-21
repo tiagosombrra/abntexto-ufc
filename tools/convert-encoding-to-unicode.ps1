@@ -19,7 +19,10 @@ function Resolve-KpseFile([string]$Name) {
   return $path
 }
 
-function Add-GlyphList([hashtable]$GlyphMap, [string]$Path) {
+function Add-GlyphList(
+  [System.Collections.Generic.Dictionary[string,string]]$GlyphMap,
+  [string]$Path
+) {
   foreach ($line in Get-Content $Path) {
     if (-not $line -or $line.StartsWith('#') -or -not $line.Contains(';')) {
       continue
@@ -45,7 +48,9 @@ if (-not (Test-Path $InputEncoding)) {
   throw "Input encoding not found: $InputEncoding"
 }
 
-$glyphMap = @{}
+$glyphMap = [System.Collections.Generic.Dictionary[string,string]]::new(
+  [System.StringComparer]::Ordinal
+)
 Add-GlyphList $glyphMap (Resolve-KpseFile 'texglyphlist.txt')
 Add-GlyphList $glyphMap (Resolve-KpseFile 'glyphlist.txt')
 
