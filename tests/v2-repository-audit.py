@@ -53,7 +53,10 @@ SETUP_KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*=')
 
 
 def tracked_files() -> list[Path]:
-    output = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT)
+    output = subprocess.check_output(
+        ['git', '-c', f'safe.directory={ROOT}', 'ls-files', '-z'],
+        cwd=ROOT,
+    )
     return [ROOT / item.decode('utf-8') for item in output.split(b'\0') if item]
 
 
