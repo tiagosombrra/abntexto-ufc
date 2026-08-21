@@ -158,7 +158,8 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            make preflight
+            make reference-assets
+            UFC_REQUIRE_REFERENCE_IMAGES=1 make preflight
             make v2-reference-check
             make v2-profile-check
 
