@@ -7,6 +7,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SELF = 'tests/v2-repository-audit.py'
 
 TEXT_SUFFIXES = {
     '.bib', '.cls', '.def', '.md', '.py', '.sh', '.tex', '.txt', '.yml', '.yaml',
@@ -23,7 +24,7 @@ LEGACY_ALLOWED = (
     'tests/v1-regression-check.sh',
     'tests/v2-posttextual-compat-check.sh',
     'tests/v2-distribution-check.sh',
-    'tests/v2-repository-audit.py',
+    SELF,
     'README.md',
     'docs/',
 )
@@ -212,12 +213,13 @@ def main() -> None:
             continue
         texts[name] = text
 
-        if TODO_PATTERN.search(text):
-            errors.append(f'{name}: TODO/FIXME/HACK marker found')
-        for pattern in ABSOLUTE_PATH_PATTERNS:
-            if pattern.search(text):
-                errors.append(f'{name}: machine-specific absolute path found')
-                break
+        if name != SELF:
+            if TODO_PATTERN.search(text):
+                errors.append(f'{name}: TODO/FIXME/HACK marker found')
+            for pattern in ABSOLUTE_PATH_PATTERNS:
+                if pattern.search(text):
+                    errors.append(f'{name}: machine-specific absolute path found')
+                    break
 
         legacy_allowed = any(name == item or name.startswith(item) for item in LEGACY_ALLOWED)
         if not legacy_allowed:
@@ -230,9 +232,10 @@ def main() -> None:
     audit_modules(texts, errors)
 
     if errors:
-        for error in sorted(set(errors)):
+        unique = sorted(set(errors))
+        for error in unique:
             print(error)
-        raise SystemExit(f'Repository audit failed with {len(set(errors))} issue(s).')
+        raise SystemExit(f'Repository audit failed with {len(unique)} issue(s).')
 
     print(f'Repository audit passed: {len(files)} tracked files checked.')
 
