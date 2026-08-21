@@ -22,6 +22,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
+      - name: Audit tracked repository files
+        run: python3 tests/v2-repository-audit.py
+
       - name: Validate V2 repository and reference corpus
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
@@ -33,6 +36,21 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils
             make preflight
 
+      - name: Upload reference corpus PDF
+        if: ${{ success() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: v2-reference-corpus-${{ github.run_id }}
+          path: |
+            documento.pdf
+            documento.loi
+            documento.lot
+            documento.loc
+            documento.loa
+            documento.toc
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Publish reference audit status
         if: ${{ always() }}
         shell: bash
@@ -40,7 +58,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           JOB_STATUS: ${{ job.status }}
           REPO: ${{ github.repository }}
-          SHA: ${{ github.sha }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           python3 - <<'PY'
