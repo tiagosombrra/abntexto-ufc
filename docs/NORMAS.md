@@ -1,7 +1,7 @@
 # Base normativa da V2
 
 Última auditoria normativa: **2026-08-20**.  
-Estado de implementação tipográfica: **Fase 2 em validação**.
+Estado de implementação tipográfica: **Fase 2 concluída em 2026-08-21; Gate T encerrado**.
 
 Este arquivo é a fonte única do projeto para política normativa, classificação de conformidade e vínculo entre requisito, implementação e teste.
 
@@ -75,8 +75,8 @@ O PDF certificado também deve ser **autocontido para renderização**: todas as
 | fonte-base em tamanho 12 | **CONFORME** | `abntexto` carregado em 12 pt; gates tipográficos medem o tamanho nominal |
 | seleção pública `fonte=times|arial` | **CONFORME NO ESCOPO TESTADO** | `ufctex/fontes.def` + `tests/v2-font-config-check.sh` |
 | política `fonte-estrita=sim|nao` | **CONFORME NO ESCOPO TESTADO** | modo estrito rejeita fonte literal ausente; modo não estrito registra fallback explicitamente |
-| Times New Roman/Arial literais no PDF final | **INCOMPLETO** | implementação existe; falta fechar a POC Windows e a certificação completa do Gate T |
-| variantes regular/negrito/itálico/negrito-itálico das fontes literais | **INCOMPLETO** | POC valida as quatro variantes; evidência Windows ainda precisa ser fechada |
+| Times New Roman/Arial literais no PDF final | **CONFORME NO ESCOPO TESTADO** | Gate T Windows certifica as duas famílias em modo estrito, pdfLaTeX e LuaLaTeX, com identidade literal, extração Unicode, `emb=yes` e PDF/A-2b |
+| variantes regular/negrito/itálico/negrito-itálico das fontes literais | **CONFORME NO ESCOPO TESTADO** | Gate T exerce e identifica as quatro variantes de Times New Roman e Arial nos dois motores |
 | todas as fontes usadas incorporadas ao PDF final | **CONFORME NO ESCOPO TESTADO** | `tests/v2-font-embedding-check.sh` reprova `emb=no` ou ausência de fontes; documento de referência, matriz de perfis e POC Windows usam o mesmo gate |
 | `rmfamily`, `sffamily` e `ttfamily` preservando a família institucional | **CONFORME NO ESCOPO TESTADO** | `fontes.def` mapeia os três slots; gate tipográfico exerce os três |
 | tamanhos reduzidos uniformes nas exceções controladas pela classe | **CONFORME NO ESCOPO TESTADO** | citação longa, notas, paginação, epígrafe, títulos/fontes/notas de objetos e tabelas usam tamanho reduzido; gates tipométricos cobrem os casos controláveis |
@@ -144,9 +144,9 @@ O PDF certificado também deve ser **autocontido para renderização**: todas as
 
 A auditoria normativa de 2026 está **fechada em 20/08/2026**. Não há requisito crítico sem origem normativa ou decisão explícita.
 
-O fechamento do Gate N não significa que a implementação esteja integralmente certificada. Significa que divergências e lacunas foram identificadas e encaminhadas à Fase 2.
+O fechamento do Gate N identificou as divergências e lacunas que foram encaminhadas à Fase 2. A certificação tipográfica correspondente foi concluída posteriormente no Gate T.
 
-## Fase 2 — Tipografia e fontes
+## Fase 2 — Tipografia e fontes — encerrada
 
 ### Implementado
 
@@ -164,16 +164,23 @@ O fechamento do Gate N não significa que a implementação esteja integralmente
 12. orientação CAPES condicional protegida por gate;
 13. gates tipográficos específicos para seleção de fonte, código, `minted`, algoritmos, matemática, objetos e tabelas;
 14. gate geral de incorporação que exige `emb=yes` para todas as fontes utilizadas no PDF;
-15. POC Windows para fontes Microsoft literais, mantida fora do gate obrigatório até validação.
+15. Gate T Windows obrigatório para Times New Roman e Arial literais, com geração local do suporte pdfLaTeX e certificação em pdfLaTeX/LuaLaTeX;
+16. proxy Overleaf em TeX Live 2025 com `abntexto` 1.1 íntegro e pinado, integrado ao Gate T das branches V2.
 
-### Pendente para o Gate T
+### Gate T — encerrado
 
-1. fechar a evidência Windows de Times New Roman/Arial literais nos dois motores;
-2. fechar identidade das quatro variantes das famílias literais;
-3. revalidar a regressão completa dos 12 PDFs na cabeça final da rodada tipográfica;
-4. revalidar PDF/A/veraPDF na cabeça final;
-5. validar ambiente Overleaf;
-6. promover o job Windows ao gate obrigatório somente se a infraestrutura se mostrar reprodutível.
+O Gate T foi encerrado em **21/08/2026** com as seguintes evidências:
+
+1. Times New Roman e Arial literais compiladas em pdfLaTeX e LuaLaTeX;
+2. variantes regular, negrito, itálico e negrito-itálico identificadas para as duas famílias;
+3. extração Unicode correta, incluindo acentuação e caracteres usados em português;
+4. todas as fontes utilizadas nos quatro PDFs estritos incorporadas (`emb=yes`);
+5. quatro PDFs estritos aprovados como PDF/A-2b pelo veraPDF;
+6. documento de referência e matriz de seis perfis × dois motores revalidados, totalizando 12 PDFs da matriz;
+7. proxy Overleaf TeX Live 2025 + `abntexto` 1.1 aprovado;
+8. jobs Windows, certificação PDF/A e proxy Overleaf integrados ao `latex-preflight` obrigatório para `main` e branches `maintenance/v2.*`.
+
+O proxy Overleaf é evidência de compatibilidade com o ambiente público estável consultado, mas não substitui o smoke final realizado dentro do serviço Overleaf durante a fase de distribuição.
 
 ## Requisitos institucionais UFC
 
@@ -303,12 +310,7 @@ A matriz final produz **12 PDFs**: seis perfis × dois motores. Cada PDF é veri
 
 `make release-preflight` acrescenta veraPDF para o documento de referência e os 12 PDFs da matriz.
 
-Para o Gate T ainda faltam evidências finais de:
-
-- Times New Roman e Arial literais e quatro variantes no runner Windows;
-- reexecução integral dos 12 PDFs na cabeça final da rodada;
-- PDF/A/veraPDF final na cabeça final;
-- ambiente Overleaf.
+O `latex-preflight` obrigatório das branches V2 acrescenta ao gate Linux o proxy Overleaf e o Gate T Windows. O Windows produz os quatro PDFs estritos de Times New Roman/Arial em pdfLaTeX/LuaLaTeX; a certificação posterior verifica identidade literal, extração Unicode, incorporação das fontes e PDF/A-2b. O agregado só publica sucesso quando todos esses componentes obrigatórios concluem com sucesso.
 
 ## Fontes institucionais de verificação
 
