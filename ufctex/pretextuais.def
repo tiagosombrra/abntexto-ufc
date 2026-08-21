@@ -58,51 +58,6 @@
       { \MakeUppercase{\ufc_meta_use:n {#1}}\par }
   }
 
-\cs_new_protected:Npn \ufc_cover_program_lines:
-  {
-    \str_case:Vn \g_ufc_document_type_tl
-      {
-        {tccgraduacao}
-          { \ufc_optional_upper_line:n {curso-graduacao} }
-        {tccespecializacao}
-          { \ufc_optional_upper_line:n {curso-especializacao} }
-        {dissertacao}
-          {
-            \ufc_optional_upper_line:n {programa-mestrado}
-            \ufc_optional_upper_line:n {nome-mestrado}
-          }
-        {tese}
-          {
-            \ufc_optional_upper_line:n {programa-doutorado}
-            \ufc_optional_upper_line:n {nome-doutorado}
-          }
-        {projeto}
-          { \ufc_optional_upper_line:n {programa-projeto} }
-        {projetoanonimizado}
-          { \ufc_optional_upper_line:n {programa-projeto} }
-      }
-  }
-
-\cs_new_protected:Npn \ufc_print_coat_of_arms:
-  {
-    \bool_if:NT \g_ufc_coat_of_arms_bool
-      {
-        \IfFileExists{assets/institucional/brasao-ufc.pdf}
-          {
-            \includegraphics[width=2.2cm]{assets/institucional/brasao-ufc.pdf}
-            \par\vspace{.3\baselineskip}
-          }
-          {
-            \IfFileExists{lib/logo-ufc.PNG}
-              {
-                \includegraphics[width=2.2cm]{lib/logo-ufc.PNG}
-                \par\vspace{.3\baselineskip}
-              }
-              { \ClassWarningNoLine{ufctex}{UFC~coat~of~arms~asset~not~found} }
-          }
-      }
-  }
-
 \cs_new_protected:Npn \ufc_print_visible_author:
   {
     \ufcIfAnonymizedProjectTF
@@ -203,79 +158,6 @@
           }
       }
   }
-
-\cs_new_protected:Npn \ufc_cover:
-  {
-    \clearpage
-    \thispagestyle{empty}
-    \begingroup
-      \centering\bfseries
-      \ufc_print_coat_of_arms:
-      \MakeUppercase{\ufc_meta_use:n {ies}}\par
-      \ufc_optional_upper_line:n {centro}
-      \ufc_optional_upper_line:n {departamento}
-      \ufc_cover_program_lines:
-      \vspace{2cm}
-      \ufc_print_visible_author:
-      \vfill
-      \ufc_title_text:\par
-      \vfill
-      \MakeUppercase{\ufc_meta_use:n {local}}\par
-      \ufc_meta_use:n {ano}\par
-    \endgroup
-    \clearpage
-    \setcounter{page}{1}
-  }
-
-\NewDocumentCommand \imprimircapa { }
-  {
-    \str_if_eq:VnF \g_ufc_cover_mode_tl {nao}
-      { \ufc_cover: }
-  }
-
-\cs_new_protected:Npn \ufc_title_page:
-  {
-    \clearpage
-    \thispagestyle{empty}
-    \begingroup
-      \centering
-      \ufc_print_visible_author:
-      \vspace{4cm}
-      \bfseries\ufc_title_text:\par
-      \normalfont
-      \vspace{4cm}
-      \noindent\hspace*{8cm}%
-      \begin{minipage}{\dimexpr\textwidth-8cm\relax}
-        \singlesp
-        \ufc_nature_text:
-        \ufc_print_advisors:
-      \end{minipage}\par
-      \vfill
-      \MakeUppercase{\ufc_meta_use:n {local}}\par
-      \ufc_meta_use:n {ano}\par
-    \endgroup
-    \clearpage
-  }
-
-\NewDocumentCommand \imprimirfolhaderosto { O{} }
-  { \ufc_title_page: }
-
-\cs_new_protected:Npn \ufc_catalog_card:n #1
-  {
-    \bool_if:NT \g_ufc_catalog_card_bool
-      {
-        \IfFileExists{#1.pdf}
-          { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1.pdf} }
-          {
-            \IfFileExists{#1}
-              { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1} }
-              { \ClassWarningNoLine{ufctex}{Catalog~card~file~'#1'~not~found} }
-          }
-      }
-  }
-
-\NewDocumentCommand \imprimirfichacatalografica { m }
-  { \ufc_catalog_card:n {#1} }
 
 \cs_new_protected:Npn \ufc_signature_from_keys:nnn #1#2#3
   {
