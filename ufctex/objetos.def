@@ -43,6 +43,7 @@
 \cs_new_protected:Npn \ufc_objects_setup_list_fonts:
   {
     \cs_gset:Npn \loiifont { \normalfont }
+    \cs_gset:cpn { l@loii } { \extline{0pt}{\loilabelwidth}{\normalfont} }
 
     \cs_if_exist:NT \lofextfont  { \cs_gset:Npn \lofextfont  { \normalfont } }
     \cs_if_exist:NT \logrextfont { \cs_gset:Npn \logrextfont { \normalfont } }
