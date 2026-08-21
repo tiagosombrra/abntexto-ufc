@@ -101,7 +101,7 @@ check_list documento.loc \
   'Função de máximo em C++ sem números de linha' \
   'Arquivo Python externo com números de linha' \
   'Método Java com numeração a cada duas linhas' \
-  'Arquivo C++ apresentado como apêndice'
+  'Código C++ apresentado como apêndice'
 
 check_list documento.loa \
   'Busca linear' \
