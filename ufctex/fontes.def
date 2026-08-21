@@ -104,7 +104,7 @@
 \cs_new_protected:Npn \ufc_font_pdftex_times:
   {
     \ufc_font_check_files:n
-      { ufctex-winfonts-ready.tex, ufctex-windows.map, t1times-ttf.fd, ts1times-ttf.fd }
+      { ufctex-winfonts-ready.tex, t1times-ttf.fd, ts1times-ttf.fd }
     \bool_if:NTF \l_ufc_font_files_available_bool
       {
         \ufc_font_pdftex_set_text_family:n {times-ttf}
@@ -130,7 +130,7 @@
 \cs_new_protected:Npn \ufc_font_pdftex_arial:
   {
     \ufc_font_check_files:n
-      { ufctex-winfonts-ready.tex, ufctex-windows.map, t1arial.fd, ts1arial.fd }
+      { ufctex-winfonts-ready.tex, t1arial.fd, ts1arial.fd }
     \bool_if:NTF \l_ufc_font_files_available_bool
       {
         \ufc_font_pdftex_set_text_family:n {arial}
