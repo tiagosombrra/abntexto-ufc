@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/modulos.def}[2026/08/20 UFC optional modules]
+\ProvidesFile{ufctex/modulos.def}[2026/08/21 UFC optional modules]
 
 \RequirePackage{etoolbox}
 
@@ -93,6 +93,9 @@
     algoritmos / algpseudocodex .code:n =
       {
         \tl_gset:Nn \g_ufc_algorithm_module_tl { algpseudocodex }
+        % Keep EndIf/EndWhile visible: hidden block endings still consume line
+        % numbers in algpseudocodex and produce visually empty numbered lines.
+        \PassOptionsToPackage{noEnd=false}{algpseudocodex}
         \RequirePackage{algpseudocodex}
       },
 
