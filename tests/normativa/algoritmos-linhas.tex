@@ -7,15 +7,24 @@
 \legend{algoritmo}{Algoritmo numerado de validação}
 \ufcfonte{Elaboração própria.}
 \begin{ufcalgoritmo}[here][1]
-  \State NUMERADO-A
-  \State NUMERADO-B
+  \State $i \gets 1$ \Comment{NUMERADO-1}
+  \While{$i \leq n$} \Comment{NUMERADO-2}
+    \If{$A[i] = x$} \Comment{NUMERADO-3}
+      \State \Return $i$ \Comment{NUMERADO-4}
+    \EndIf
+    \State $i \gets i + 1$ \Comment{NUMERADO-6}
+  \EndWhile
+  \State \Return $-1$ \Comment{NUMERADO-8}
 \end{ufcalgoritmo}
 
 \legend{algoritmo}{Algoritmo sem numeração de validação}
 \ufcfonte{Elaboração própria.}
 \begin{ufcalgoritmo}[here][0]
-  \State SEM-NUMERO-A
-  \State SEM-NUMERO-B
+  \If{$a > b$}
+    \State \Return $a$ \Comment{SEM-NUMERO-A}
+  \Else
+    \State \Return $b$ \Comment{SEM-NUMERO-B}
+  \EndIf
 \end{ufcalgoritmo}
 
 \end{document}
