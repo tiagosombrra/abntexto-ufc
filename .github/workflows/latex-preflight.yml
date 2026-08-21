@@ -326,9 +326,10 @@ jobs:
           UFC_WINDOWS_FONTS_DIR: C:/Windows/Fonts
           UFC_FONT_POC_COMPILE_ONLY: '1'
         run: |
+          mkdir -p artifacts/windows-font-diagnostics
           set +e
-          sh tests/v2-font-poc.sh
-          code=$?
+          sh tests/v2-font-poc.sh 2>&1 | tee artifacts/windows-font-diagnostics/build.log
+          code=${PIPESTATUS[0]}
           set -e
 
           case "$code" in
@@ -347,6 +348,15 @@ jobs:
           printf 'exit_code=%s\n' "$code" >> "$GITHUB_OUTPUT"
           printf 'font_failure=%s\n' "$failure" >> "$GITHUB_OUTPUT"
           exit "$code"
+
+      - name: Upload Windows font diagnostics
+        if: ${{ always() && steps.windows-font-build.outcome == 'failure' }}
+        uses: actions/upload-artifact@b7c566a7d0c52e7e042e478d3ebc226f9cd953ec # v6
+        with:
+          name: v2-windows-literal-font-diagnostics
+          path: artifacts/windows-font-diagnostics
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Upload literal font PDFs
         id: upload-font-pdfs
@@ -403,6 +413,21 @@ jobs:
             -Headers $headers `
             -ContentType 'application/json' `
             -Body $body | Out-Null
+
+          if ($env:BUILD_OUTCOME -ne 'success' -and $env:BUILD_EXIT_CODE) {
+            $diagnosticBody = @{
+              state = 'failure'
+              context = "ufctex/windows-font-failure/$env:BUILD_EXIT_CODE"
+              description = $env:FONT_FAILURE
+              target_url = $env:RUN_URL
+            } | ConvertTo-Json
+            Invoke-RestMethod `
+              -Method Post `
+              -Uri "https://api.github.com/repos/$env:REPO/statuses/$env:SHA" `
+              -Headers $headers `
+              -ContentType 'application/json' `
+              -Body $diagnosticBody | Out-Null
+          }
 
   v2-font-windows-pdfa:
     name: V2 Windows literal font certification
