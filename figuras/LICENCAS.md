@@ -14,7 +14,7 @@ As imagens externas abaixo são usadas apenas como exemplos visuais do template 
 - SHA-1 do original: `5f431612cdbfbb088c37c685a0e3c93852e96ccd`
 - Alterações: nenhuma; o arquivo original é usado sem modificação.
 
-A fotografia ilustra o Campus do Pici. O Departamento de Computação da UFC está localizado no Bloco 910 desse campus; a fotografia não é apresentada como sendo a fachada do Bloco 910.
+A fotografia mostra uma vista da Lagoa do Pici no Campus do Pici.
 
 ## Reitoria da UFC
 

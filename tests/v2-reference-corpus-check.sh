@@ -35,34 +35,35 @@ pdftotext -layout documento.pdf /tmp/ufctex-v2-reference-corpus.txt
 
 python3 <<'PY'
 import re
-import unicodedata
 from pathlib import Path
 
-raw = Path('/tmp/ufctex-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
-text = unicodedata.normalize('NFKC', raw)
-text = re.sub(r'([\wÀ-ÖØ-öø-ÿ])-\s*\n\s*([\wÀ-ÖØ-öø-ÿ])', r'\1\2', text)
-text = re.sub(r'\s+', ' ', text).strip()
-
-# Full caption/list identity is checked below in .loi/.lot/.loc/.loa.
-# PDF text extraction is intentionally checked with distinctive fragments so
-# physical line wrapping in captions does not create false negatives.
+text = Path('/tmp/ufctex-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
+flat = re.sub(r'\s+', ' ', text)
 required = (
     'CATÁLOGO DE EXEMPLOS E VALIDAÇÃO VISUAL',
-    'Figura estreita',
+    'Normas e diretrizes adotadas',
+    'Referências bibliográficas e recursos eletrônicos',
+    'Figura estreita com legenda curta',
     'Figura de largura intermediária',
-    'Figura larga próxima',
-    'Fluxo de processamento',
+    'Figura larga próxima à largura útil',
+    'Fluxo de processamento em arquivo PNG raster',
     'Campus do Pici',
+    'Vista da Lagoa do Pici no Campus do Pici',
     'Reitoria da Universidade Federal do Ceará',
-    'Distribuição sintética de três categorias',
+    'Distribuição sintética de três categorias em arquivo JPEG',
     'Comparação de configurações editoriais',
-    'Indicadores sintéticos',
-    'Função de média em Python',
-    'Função de máximo em C++',
-    'Arquivo Python externo',
-    'Método Java',
-    'Máximo divisor comum',
-    'Seleção do maior valor',
+    'Indicadores sintéticos com linhas alternadas',
+    'Função de média em Python com números de linha',
+    'Função de máximo em C++ sem números de linha',
+    'Arquivo Python externo com números de linha',
+    'Método Java com numeração a cada duas linhas',
+    'Máximo divisor comum com números de linha',
+    'Seleção do maior valor sem números de linha',
+    'Nome do Quinto Membro',
+    'Nome do Sexto Membro',
+    'ABNT NBR 14724:2024',
+    'ABNT NBR 6023:2025',
+    'HTTP Semantics',
     'APÊNDICE A',
     'APÊNDICE B',
     'APÊNDICE C',
@@ -70,13 +71,30 @@ required = (
     'ANEXO A',
     'ANEXO B',
 )
-missing = [marker for marker in required if marker not in text]
+missing = [marker for marker in required if marker not in flat]
 if missing:
     raise SystemExit('Corpus V2 falhou: marcadores ausentes no PDF: ' + ', '.join(missing))
 if '??' in text:
     raise SystemExit('Corpus V2 falhou: referência não resolvida encontrada no PDF.')
 if 'Execute make reference-assets' in text:
     raise SystemExit('Corpus V2 falhou: fallback de fotografia apareceu no PDF de CI.')
+
+list_blocks = (
+    ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Exemplo de figura no padrão V2'),
+    ('LISTA DE TABELAS', 'LISTA DE CÓDIGOS', 'Tabela 1 — Etapas do procedimento'),
+    ('LISTA DE CÓDIGOS', 'LISTA DE ALGORITMOS', 'Código 1 — Função de soma em C++'),
+    ('LISTA DE ALGORITMOS', 'LISTA DE ABREVIATURAS E SIGLAS', 'Algoritmo 1 — Busca linear'),
+)
+for start, end, marker in list_blocks:
+    start_at = flat.find(start)
+    end_at = flat.find(end, start_at + len(start))
+    if start_at < 0 or end_at < 0:
+        raise SystemExit(f'Corpus V2 falhou: bloco de lista não localizado: {start}.')
+    block = flat[start_at:end_at]
+    if marker not in block:
+        raise SystemExit(f'Corpus V2 falhou: entrada com caixa preservada ausente de {start}: {marker}')
+    if marker.upper() in block:
+        raise SystemExit(f'Corpus V2 falhou: entrada indevidamente convertida para caixa alta em {start}.')
 PY
 
 check_list() {

@@ -39,6 +39,19 @@
   }
 \AtEndPreamble{\ufc_objects_setup_quadro:}
 
+% UFC lists use uppercase headings, but their entries preserve the title casing.
+\cs_new_protected:Npn \ufc_objects_setup_list_fonts:
+  {
+    \cs_set:Npn \loiifont { \normalfont }
+    \cs_if_exist:NT \loffont  { \cs_set:Npn \loffont  { \normalfont } }
+    \cs_if_exist:NT \logrfont { \cs_set:Npn \logrfont { \normalfont } }
+    \cs_if_exist:NT \loqfont  { \cs_set:Npn \loqfont  { \normalfont } }
+    \cs_if_exist:NT \lotfont  { \cs_set:Npn \lotfont  { \normalfont } }
+    \cs_if_exist:NT \locfont  { \cs_set:Npn \locfont  { \normalfont } }
+    \cs_if_exist:NT \loafont  { \cs_set:Npn \loafont  { \normalfont } }
+  }
+\AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
+
 \NewDocumentCommand \ufcfonte { m }
   { \src{#1} }
 
