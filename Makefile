@@ -3,14 +3,14 @@
 ## Revisão normativa e técnica: Tiago Guimarães Sombra (2026).         ##
 ########################################################################
 
-VERSION := 2.0.0
+VERSION := 2.1.0
 filename ?= documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 
 .PHONY: all pdf compile lua version clean \
-	preflight release-preflight \
-	v2-reference-check v2-pdfa-check v2-check v2-distribution-check \
+	preflight release-preflight package gate-d \
+	v2-reference-check v2-pdfa-check v2-check v2-distribution-check v2-release-package-check \
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
 	v2-object-check v2-object-geometry-check v2-code-typography-check v2-table-ibge-check v2-minted-check \
@@ -62,6 +62,9 @@ v2-pdfa-check: v2-reference-check
 
 v2-distribution-check:
 	@sh tests/v2-distribution-check.sh
+
+v2-release-package-check: release-preflight
+	@python3 tests/v2-release-package-check.py
 
 v2-layout-check:
 	@sh tests/v2-layout-check.sh
@@ -161,6 +164,16 @@ release-preflight: preflight
 	@sh tests/v2-profile-pdfa-check.sh
 	@echo "Preflight de release da V2 concluído."
 
+package: release-preflight
+	@python3 tools/fetch-abntexto.py --output .ufctex-abntexto.cls
+	@python3 tools/build-release-bundles.py --abntexto .ufctex-abntexto.cls
+	@rm -f .ufctex-abntexto.cls
+	@echo "Bundles de distribuição da V2 concluídos."
+
+gate-d: package
+	@python3 tests/v2-release-package-check.py
+	@echo "Gate D de distribuição concluído."
+
 clean:
 	@echo "Limpando arquivos auxiliares..."
 	@rm -f *.out *.aux *.alg *.acr *.dvi *.gls *.log *.bbl *.blg *.bcf *.run.xml
@@ -181,8 +194,8 @@ clean:
 	@rm -f postextuais*.pdf multivolume-*.pdf ficha-catalografica-*.pdf
 	@rm -f perfil-*.pdf perfil-*.aux perfil-*.log perfil-*.out perfil-*.toc
 	@rm -f perfil-*.bbl perfil-*.bcf perfil-*.blg perfil-*.run.xml perfil-*.tex
-	@rm -f ufctex-build-minimo.* .ufctex-v2-profile.tex
+	@rm -f ufctex-build-minimo.* .ufctex-v2-profile.tex .ufctex-abntexto.cls
 	@rm -f overleaf-stable-pdflatex.pdf overleaf-stable-lualatex.pdf
-	@rm -rf _minted-*
+	@rm -rf _minted-* dist
 	@rm -f $(filename).pdf
 	@echo "Processo finalizado com sucesso."

@@ -37,6 +37,10 @@ _minted-*
 # Generated main PDF
 documento.pdf
 
+# Release artifacts
+dist/
+.ufctex-abntexto.cls
+
 # Editors / OS
 .vscode/
 .idea/

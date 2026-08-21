@@ -72,12 +72,20 @@ cls_path = Path('ufctex.cls')
 cls = cls_path.read_text(encoding='utf-8')
 readme = Path('README.md').read_text(encoding='utf-8')
 
-if not re.search(r'^VERSION\s*:?=\s*2\.0\.0\s*$', makefile, re.MULTILINE):
-    errors.append('Makefile: versão diferente de 2.0.0')
-if 'v2.0.0 UFC academic document class' not in cls:
-    errors.append('ufctex.cls: versão diferente de v2.0.0')
-if not re.search(r'Versão\s+publicada\s+atual:\s*(?:\*\*)?2\.0\.0(?:\*\*)?\b', readme, re.IGNORECASE):
-    errors.append('README.md: versão publicada diferente de 2.0.0')
+version_match = re.search(r'^VERSION\s*:?=\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$', makefile, re.MULTILINE)
+if not version_match:
+    errors.append('Makefile: VERSION sem versão semântica válida')
+else:
+    version = version_match.group(1)
+    if f'v{version} UFC academic document class' not in cls:
+        errors.append(f'ufctex.cls: versão diferente de v{version}')
+
+if not re.search(
+    r'Versão\s+publicada\s+atual:\s*(?:\*\*)?[0-9]+\.[0-9]+\.[0-9]+(?:\*\*)?\b',
+    readme,
+    re.IGNORECASE,
+):
+    errors.append('README.md: versão publicada atual ausente ou inválida')
 
 modules = re.findall(r'\\input\{(ufctex/[^}]+\.def)\}', uncommented(cls))
 if 'ufctex/fontes.def' not in modules:
@@ -85,6 +93,16 @@ if 'ufctex/fontes.def' not in modules:
 for module in modules:
     if not Path(module).is_file():
         errors.append(f'ufctex.cls: módulo carregado não existe: {module}')
+
+release_infrastructure = (
+    'tools/build-release-bundles.py',
+    'tools/fetch-abntexto.py',
+    'tests/v2-release-package-check.py',
+    'docs/README-CTAN.md',
+)
+for required in release_infrastructure:
+    if not Path(required).is_file():
+        errors.append(f'infraestrutura de distribuição ausente: {required}')
 
 microsoft_fonts = {
     'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
@@ -104,5 +122,10 @@ for script in tests/v2-*.sh; do
     exit 1
   }
 done
+
+python3 -m py_compile \
+  tools/build-release-bundles.py \
+  tools/fetch-abntexto.py \
+  tests/v2-release-package-check.py
 
 echo 'Gate V2 de consistência da distribuição concluído.'
