@@ -2,7 +2,8 @@
 
 Classe LaTeX para trabalhos acadêmicos da Universidade Federal do Ceará, baseada em `abntexto`.
 
-Versão publicada atual: **2.0.0**.
+Versão publicada atual: **2.0.0**.  
+Versão candidata em preparação: **2.1.0**.
 
 A linha 2.x reorganiza a implementação em módulos, preserva a API pública da V1 quando possível e acompanha a base normativa vigente auditada em agosto de 2026.
 
@@ -13,7 +14,7 @@ A linha 2.x reorganiza a implementação em módulos, preserva a API pública da
 - `biblatex` + `biber`;
 - pacotes opcionais apenas quando os módulos correspondentes forem ativados.
 
-A versão estável pública do Overleaf consultada em 20/08/2026 ainda utiliza TeX Live 2025. Como `abntexto` 1.1 foi publicado em 2026, o ambiente estável não deve ser tratado como possuindo essa versão nativamente. A compatibilidade é exercitada em CI com TeX Live 2025 e uma cópia íntegra e pinada de `abntexto.cls` 1.1. O bundle específico para importação no Overleaf será preparado na fase de distribuição.
+A versão estável pública do Overleaf consultada em 20/08/2026 ainda utiliza TeX Live 2025. Como `abntexto` 1.1 foi publicado em 2026, o ambiente estável não deve ser tratado como possuindo essa versão nativamente. A compatibilidade é exercitada em CI com TeX Live 2025 e uma cópia íntegra e pinada de `abntexto.cls` 1.1. O bundle `modelo-latex-ufc-overleaf-2.1.0.zip` é gerado pelo preflight de distribuição e inclui essa cópia pinada; o proxy de CI não substitui o smoke final dentro do serviço Overleaf.
 
 ## Estrutura
 
@@ -347,6 +348,35 @@ Preflight de release com PDF/A:
 make release-preflight
 ```
 
+Geração local dos bundles de distribuição:
+
+```bash
+make package
+```
+
+Preflight local do empacotamento:
+
+```bash
+make distribution-preflight
+```
+
+Esse alvo valida apenas a parte automatizável da distribuição. Ele não representa o Gate D formal, que também exige GitHub Release, preparação CTAN, smoke no serviço Overleaf e documentação final.
+
+## Distribuição
+
+A candidata 2.1.0 produz os seguintes artefatos reproduzíveis:
+
+- `ufctex-2.1.0.zip`: classe, módulos, ativos necessários, licença e documentação mínima;
+- `modelo-latex-ufc-2.1.0.zip`: template completo para uso local;
+- `modelo-latex-ufc-overleaf-2.1.0.zip`: template para importação no Overleaf com `abntexto` 1.1 pinado;
+- `ufctex-ctan-2.1.0.zip`: candidato CTAN com layout navegável e arquivo TDS interno;
+- `ufctex-2.1.0-reference.pdf`: documento de referência;
+- `SHA256SUMS`: hashes SHA-256 dos artefatos.
+
+As fontes Microsoft não são incluídas em nenhum bundle. O brasão da UFC é um ativo institucional oficial e sua utilização deve respeitar o Manual de Identidade Visual da Universidade; ele não deve ser interpretado como coberto automaticamente pela LPPL da classe.
+
+O pacote CTAN é preparado separadamente do template. Antes da submissão, a classificação de redistribuição do ativo institucional deve ser confirmada e o nome `ufctex` deve ser reconfirmado no catálogo CTAN.
+
 ## CI
 
 O workflow principal é `.github/workflows/latex-preflight.yml`.
@@ -364,6 +394,8 @@ O gate obrigatório em TeX Live 2026 cobre:
 O Gate T integra a validação Windows obrigatória nas branches V2: Times New Roman e Arial literais são compiladas em pdfLaTeX e LuaLaTeX, incluindo regular, negrito, itálico e negrito-itálico. Os quatro PDFs estritos são verificados quanto à identidade da família, ausência de fallback textual, extração Unicode, incorporação (`emb=yes`) e conformidade PDF/A-2b com veraPDF.
 
 O proxy Overleaf usa TeX Live 2025 com `abntexto` 1.1 pinado para detectar incompatibilidades com o ambiente público estável. Ele integra o Gate T nas branches V2 e não substitui o smoke final dentro do serviço Overleaf.
+
+O workflow `.github/workflows/distribution.yml` exige o Gate T do mesmo SHA, executa o release preflight, valida PDF/A-2b, gera e verifica os bundles, testa o ZIP de Overleaf no proxy TeX Live 2025 e publica o status `ufctex/distribution-preflight`. Em uma tag `v2.x.y`, a publicação da GitHub Release só é liberada após essas verificações e após a consistência entre tag, classe e metadados de versão.
 
 ## Compatibilidade V1
 
