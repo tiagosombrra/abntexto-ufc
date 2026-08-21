@@ -236,6 +236,13 @@ compile_class_case() {
   fi
 }
 
+fail_case() {
+  code=$1
+  label=$2
+  echo "::error title=V2 Windows literal font failure::$label"
+  exit "$code"
+}
+
 blocked=0
 failed=0
 
@@ -253,17 +260,31 @@ else
   done
 
   if [ "$blocked" -eq 0 ]; then
-    compile_case pdflatex times || failed=1
-    compile_case pdflatex arial || failed=1
-    compile_class_case pdflatex times || failed=1
-    compile_class_case pdflatex arial || failed=1
+    if [ "$compile_only" = 1 ]; then
+      compile_case pdflatex times || fail_case 11 'pdfLaTeX / Times New Roman / infrastructure POC'
+      compile_case pdflatex arial || fail_case 12 'pdfLaTeX / Arial / infrastructure POC'
+      compile_class_case pdflatex times || fail_case 13 'pdfLaTeX / Times New Roman / ufctex strict POC'
+      compile_class_case pdflatex arial || fail_case 14 'pdfLaTeX / Arial / ufctex strict POC'
+    else
+      compile_case pdflatex times || failed=1
+      compile_case pdflatex arial || failed=1
+      compile_class_case pdflatex times || failed=1
+      compile_class_case pdflatex arial || failed=1
+    fi
   fi
 fi
 
-compile_case lualatex times || failed=1
-compile_case lualatex arial || failed=1
-compile_class_case lualatex times || failed=1
-compile_class_case lualatex arial || failed=1
+if [ "$compile_only" = 1 ]; then
+  compile_case lualatex times || fail_case 21 'LuaLaTeX / Times New Roman / infrastructure POC'
+  compile_case lualatex arial || fail_case 22 'LuaLaTeX / Arial / infrastructure POC'
+  compile_class_case lualatex times || fail_case 23 'LuaLaTeX / Times New Roman / ufctex strict POC'
+  compile_class_case lualatex arial || fail_case 24 'LuaLaTeX / Arial / ufctex strict POC'
+else
+  compile_case lualatex times || failed=1
+  compile_case lualatex arial || failed=1
+  compile_class_case lualatex times || failed=1
+  compile_class_case lualatex arial || failed=1
+fi
 
 if [ "$failed" -ne 0 ]; then
   echo 'POC fontes: houve falha na geração/certificação tipográfica.'
