@@ -1,6 +1,6 @@
 \section{Catálogo de exemplos e validação visual}\label{sec:catalogo-exemplos}
 
-Esta seção reúne exemplos deliberadamente variados para que o documento de referência também funcione como corpus visual de regressão. Os elementos abaixo são sintéticos e devem ser substituídos pelo conteúdo acadêmico do trabalho.
+Esta seção reúne exemplos deliberadamente variados para que o documento de referência também funcione como corpus visual de regressão. Os elementos abaixo são exemplos e devem ser substituídos pelo conteúdo acadêmico do trabalho.
 
 \subsection{Figuras em diferentes larguras e formatos}
 
@@ -41,6 +41,32 @@ A Figura~\ref{fig:estreita} exercita um objeto estreito e permite verificar se l
 \end{ufcobjeto}
 
 As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larguras progressivamente maiores, composição sintética e inclusão de imagem raster sem alterar a API pública do objeto.
+
+\subsection{Imagens institucionais reais da UFC}
+
+\legend{figure}{Campus do Pici, onde se localiza o Departamento de Computação da UFC}
+\ufcfonte{Universidadefederalceara (2018), Wikimedia Commons, CC BY-SA 4.0.}
+\ufcnota{O Departamento de Computação está localizado no Bloco 910. A fotografia ilustra o Campus do Pici e não é apresentada como a fachada do bloco.}
+\label{fig:campus-pici-computacao}
+\begin{ufcobjeto}[here]
+  \centering
+  \IfFileExists{figuras/ufc-campus-pici.jpg}
+    {\includegraphics[width=0.72\linewidth]{figuras/ufc-campus-pici.jpg}}
+    {\fbox{\parbox[c][4cm][c]{0.72\linewidth}{\centering Execute \texttt{make reference-assets} para baixar a fotografia licenciada do Campus do Pici.}}}
+\end{ufcobjeto}
+
+\legend{figure}{Reitoria da Universidade Federal do Ceará}
+\ufcfonte{Joelkaula (2018), Wikimedia Commons, CC BY-SA 4.0.}
+\ufcnota{Fotografia externa usada sem modificação e distribuída sob licença própria; ver \texttt{figuras/LICENCAS.md}.}
+\label{fig:reitoria-ufc}
+\begin{ufcobjeto}[here]
+  \centering
+  \IfFileExists{figuras/ufc-reitoria.jpg}
+    {\includegraphics[width=0.62\linewidth]{figuras/ufc-reitoria.jpg}}
+    {\fbox{\parbox[c][5cm][c]{0.62\linewidth}{\centering Execute \texttt{make reference-assets} para baixar a fotografia licenciada da Reitoria da UFC.}}}
+\end{ufcobjeto}
+
+As Figuras~\ref{fig:campus-pici-computacao} e~\ref{fig:reitoria-ufc} exercitam fotografias reais com proporções e dimensões distintas. As imagens são baixadas por \texttt{make reference-assets}, com verificação de integridade e atribuição registrada em \texttt{figuras/LICENCAS.md}.
 
 \subsection{Gráfico e quadro}
 
