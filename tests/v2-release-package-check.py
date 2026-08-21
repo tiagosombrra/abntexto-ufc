@@ -140,7 +140,9 @@ def main() -> None:
             f"{template_root}documento.tex",
             f"{template_root}1-pre-textuais/resumo.tex",
             f"{template_root}2-textuais/1-introducao.tex",
+            f"{template_root}2-textuais/exemplos-de-formatacao.tex",
             f"{template_root}3-pos-textuais/referencias.bib",
+            f"{template_root}figuras/exemplo.py",
             f"{template_root}ufctex.cls",
             f"{template_root}Makefile",
         ):
@@ -156,6 +158,8 @@ def main() -> None:
         assert_prefix(overleaf_entries, overleaf_root)
         if f"{overleaf_root}abntexto.cls" not in overleaf_entries:
             raise SystemExit("Overleaf bundle missing pinned abntexto.cls.")
+        if f"{overleaf_root}2-textuais/exemplos-de-formatacao.tex" not in overleaf_entries:
+            raise SystemExit("Overleaf bundle missing the V2 reference corpus.")
         assert_no_proprietary_fonts(overleaf_entries)
 
         ctan_zip = first / f"ufctex-ctan-{v}.zip"
@@ -163,11 +167,13 @@ def main() -> None:
         assert_prefix(ctan_entries, "ufctex/")
         for required_entry in (
             "ufctex/README.md",
+            "ufctex/CHANGELOG.md",
             "ufctex/LICENSE",
             "ufctex/tex/ufctex.cls",
             "ufctex/tex/ufctex/core.def",
             f"ufctex/doc/ufctex-{v}-reference.pdf",
             "ufctex/doc/example/documento.tex",
+            "ufctex/doc/example/2-textuais/exemplos-de-formatacao.tex",
             "ufctex/ufctex.tds.zip",
         ):
             if required_entry not in ctan_entries:
@@ -182,7 +188,9 @@ def main() -> None:
             "tex/latex/ufctex/ufctex.cls",
             "tex/latex/ufctex/ufctex/core.def",
             "doc/latex/ufctex/README.md",
+            "doc/latex/ufctex/CHANGELOG.md",
             f"doc/latex/ufctex/ufctex-{v}-reference.pdf",
+            "doc/latex/ufctex/example/2-textuais/exemplos-de-formatacao.tex",
             "scripts/ufctex/prepare-windows-fonts.ps1",
         ):
             if required_entry not in tds_entries:
@@ -191,7 +199,7 @@ def main() -> None:
 
         verify_checksums(first)
 
-    print("Gate D release package check completed.")
+    print("Release package preflight completed.")
 
 
 if __name__ == "__main__":
