@@ -5,12 +5,34 @@
 \setlength{\parindent}{2cm}
 \AtBeginDocument{\onehalfsp}
 
-% Tagging-safe ABNT alíneas and subalíneas.
+% Tagging-safe ABNT alíneas and subalíneas using LaTeX block-list keys.
 \NewDocumentEnvironment{ufcalineas}{}
-  {\begin{enumerate}[label=\alph*),nosep,align=left,labelindent=2cm,labelwidth=.5cm,labelsep=.3cm,leftmargin=2.8cm]}
+  {\begin{enumerate}[
+    item-label={\alph{enumi})},
+    item-vspace=0pt,
+    begin-vspace=0pt,
+    end-vspace=0pt,
+    para-vspace=0pt,
+    left-margin=2.8cm,
+    label-width=.5cm,
+    label-sep=.3cm,
+    item-indent=0pt,
+    label-align=left
+  ]}
   {\end{enumerate}}
 \NewDocumentEnvironment{ufcsubalineas}{}
-  {\begin{enumerate}[label=---,nosep,align=left,labelwidth=.6cm,labelsep=.3cm,leftmargin=.9cm]}
+  {\begin{enumerate}[
+    item-label={---},
+    item-vspace=0pt,
+    begin-vspace=0pt,
+    end-vspace=0pt,
+    para-vspace=0pt,
+    left-margin=.9cm,
+    label-width=.6cm,
+    label-sep=.3cm,
+    item-indent=0pt,
+    label-align=left
+  ]}
   {\end{enumerate}}
 
 % UFC section hierarchy. The same hierarchy is mirrored in the table of contents.
