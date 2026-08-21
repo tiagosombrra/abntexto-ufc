@@ -38,7 +38,7 @@ jobs:
             UFC_REQUIRE_REFERENCE_IMAGES=1 make preflight
 
       - name: Upload reference corpus PDF
-        if: ${{ success() }}
+        if: ${{ always() && hashFiles('documento.pdf') != '' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: v2-reference-corpus-${{ github.run_id }}
