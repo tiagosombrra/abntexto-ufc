@@ -15,7 +15,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
 	v2-pretextual-check v2-duplex-pretextual-check \
 	v2-object-check v2-object-geometry-check v2-code-typography-check v2-table-ibge-check v2-minted-check \
-	v2-algorithm-numbering-check v2-documentary-source-check v2-bib-check v2-overleaf-stable-check \
+	v2-algorithm-numbering-check v2-pdf-validator-check v2-documentary-source-check v2-bib-check v2-overleaf-stable-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
 	v2-posttextual-compat-check v2-duplex-posttextual-check \
 	v2-build-check v2-multivolume-check v2-catalog-card-check
@@ -115,6 +115,9 @@ v2-minted-check:
 v2-algorithm-numbering-check:
 	@sh tests/v2-algorithm-numbering-check.sh
 
+v2-pdf-validator-check: v2-reference-check
+	@sh tests/v2-pdf-validator-check.sh documento.pdf
+
 v2-documentary-source-check:
 	@sh tests/v2-documentary-source-check.sh
 
@@ -171,7 +174,7 @@ v2-check: \
 	v2-catalog-card-check
 	@echo "Gate local isolado da V2 concluído."
 
-preflight: v2-reference-corpus-check v2-check
+preflight: v2-reference-corpus-check v2-pdf-validator-check v2-check
 	@echo "Preflight completo da V2 concluído."
 
 release-preflight: preflight
