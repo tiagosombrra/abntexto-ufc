@@ -14,7 +14,7 @@ from normative_catalog import load_catalog
 from normative_full import full_rule_map, load_full_contract
 
 AUDIT = ROOT / "normativa" / "coverage-audit.json"
-PROMOTIONS = ROOT / "normativa" / "coverage-promotions.json"
+PROMOTIONS_GLOB = "coverage-promotions*.json"
 SOURCE_AUDIT = ROOT / "normativa" / "source-audit.json"
 
 REQUIRED_DOMAINS = {
@@ -63,9 +63,38 @@ def fail(message: str) -> None:
     raise SystemExit(f"Normative coverage audit failed: {message}")
 
 
+def load_promotions(audit_reviewed: date) -> tuple[dict[str, list[str]], list[str]]:
+    paths = sorted((ROOT / "normativa").glob(PROMOTIONS_GLOB))
+    if not paths:
+        fail("no coverage promotion ledgers found")
+
+    merged: dict[str, list[str]] = {}
+    names: list[str] = []
+    for path in paths:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data.get("schema_version") != 1:
+            fail(f"{path.name}: unsupported schema_version")
+        try:
+            reviewed = date.fromisoformat(data["reviewed_at"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise SystemExit(
+                f"Normative coverage audit failed: {path.name}: invalid review date: {exc}"
+            ) from exc
+        if reviewed < audit_reviewed:
+            fail(f"{path.name}: coverage promotions are older than the N4 inventory")
+        resolved = data.get("resolved_gaps")
+        if not isinstance(resolved, dict):
+            fail(f"{path.name}: resolved_gaps must be an object")
+        duplicate = sorted(set(merged) & set(resolved))
+        if duplicate:
+            fail(f"duplicate gap resolutions across ledgers: {', '.join(duplicate)}")
+        merged.update(resolved)
+        names.append(path.name)
+    return merged, names
+
+
 def main() -> None:
     audit = json.loads(AUDIT.read_text(encoding="utf-8"))
-    promotions = json.loads(PROMOTIONS.read_text(encoding="utf-8"))
     source_audit = json.loads(SOURCE_AUDIT.read_text(encoding="utf-8"))
     catalog = load_catalog()
     full_contract = load_full_contract(catalog)
@@ -73,7 +102,7 @@ def main() -> None:
     known_source_ids = {source["id"] for source in catalog["sources"]}
     known_source_ids |= {source["id"] for source in source_audit.get("sources", [])}
 
-    if audit.get("schema_version") != 1 or promotions.get("schema_version") != 1:
+    if audit.get("schema_version") != 1:
         fail("unsupported schema_version")
     if audit.get("phase") != "N4":
         fail("unexpected phase")
@@ -81,11 +110,10 @@ def main() -> None:
         fail("invalid phase_status")
     try:
         audit_reviewed = date.fromisoformat(audit["reviewed_at"])
-        promotions_reviewed = date.fromisoformat(promotions["reviewed_at"])
     except (KeyError, TypeError, ValueError) as exc:
         raise SystemExit(f"Normative coverage audit failed: invalid review date: {exc}") from exc
-    if promotions_reviewed < audit_reviewed:
-        fail("coverage promotions are older than the N4 inventory")
+
+    resolved, promotion_ledgers = load_promotions(audit_reviewed)
 
     allowed = set(audit.get("allowed_treatments", []))
     expected_allowed = {"automatic", "automatic-partial", "manual", "conditional", "not-applicable"}
@@ -150,9 +178,6 @@ def main() -> None:
     if missing_priority:
         fail("priority N4 gaps missing from the baseline inventory: " + ", ".join(missing_priority))
 
-    resolved = promotions.get("resolved_gaps")
-    if not isinstance(resolved, dict):
-        fail("coverage-promotions.resolved_gaps must be an object")
     unknown_resolved = sorted(set(resolved) - gap_ids)
     if unknown_resolved:
         fail("promotions reference unknown gaps: " + ", ".join(unknown_resolved))
@@ -183,8 +208,9 @@ def main() -> None:
     print(
         "Normative coverage inventory passed: "
         f"{len(domains)} domains, {len(full_rules)} full atomic rules, "
-        f"{len(gap_ids)} identified gaps, {len(resolved)} resolved, "
-        f"{len(unresolved)} unresolved, status={audit['phase_status']}."
+        f"{len(gap_ids)} identified gaps, {len(resolved)} resolved through "
+        f"{len(promotion_ledgers)} ledgers, {len(unresolved)} unresolved, "
+        f"status={audit['phase_status']}."
     )
 
 

@@ -5,13 +5,14 @@ import copy
 import json
 from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 from normative_atomic import load_atomic_contract
 from normative_catalog import ACTIVE_STATUSES, CatalogError, load_catalog, source_map
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_COVERAGE_RULES = ROOT / "normativa" / "coverage-rules.json"
+DEFAULT_COVERAGE_DIR = ROOT / "normativa"
+DEFAULT_COVERAGE_GLOB = "coverage-rules*.json"
 
 NON_NORMATIVE_AUTHORITIES = {"project-policy", "technical-profile"}
 ALLOWED_VALIDATION_MODES = {
@@ -34,6 +35,13 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise CatalogError(f"{label} must be an object")
     return data
+
+
+def _default_coverage_paths() -> list[Path]:
+    paths = sorted(DEFAULT_COVERAGE_DIR.glob(DEFAULT_COVERAGE_GLOB))
+    if not paths:
+        raise CatalogError("no N4 coverage rule manifests found")
+    return paths
 
 
 def _resolve_sources(
@@ -150,44 +158,53 @@ def _build_rule(spec: dict[str, Any], catalog: dict[str, Any]) -> dict[str, Any]
 
 def load_full_contract(
     catalog: dict[str, Any] | None = None,
-    coverage_path: Path = DEFAULT_COVERAGE_RULES,
+    coverage_paths: Iterable[Path] | None = None,
 ) -> dict[str, Any]:
     if catalog is None:
         catalog = load_catalog()
     n3 = load_atomic_contract(catalog)
-    manifest = _load_json(coverage_path, "N4 coverage rules")
+    paths = list(coverage_paths) if coverage_paths is not None else _default_coverage_paths()
+    if not paths:
+        raise CatalogError("N4 coverage rule manifest list is empty")
 
-    if manifest.get("schema_version") != 1:
-        raise CatalogError("unsupported coverage-rules schema_version")
-    try:
-        coverage_reviewed = date.fromisoformat(manifest["reviewed_at"])
-        catalog_reviewed = date.fromisoformat(catalog["reviewed_at"])
-    except (KeyError, TypeError, ValueError) as exc:
-        raise CatalogError("catalog and coverage-rules reviewed_at must be ISO dates") from exc
-    if coverage_reviewed < catalog_reviewed:
-        raise CatalogError("N4 coverage rules are older than the catalog review")
-
-    specs = manifest.get("rules")
-    if not isinstance(specs, list):
-        raise CatalogError("coverage-rules.rules must be a list")
-
+    catalog_reviewed = date.fromisoformat(catalog["reviewed_at"])
     rules = [copy.deepcopy(rule) for rule in n3["rules"]]
     seen = {rule["id"] for rule in rules}
     promoted: list[str] = []
-    for spec in specs:
-        if not isinstance(spec, dict):
-            raise CatalogError("every coverage rule must be an object")
-        rule = _build_rule(spec, catalog)
-        if rule["id"] in seen:
-            raise CatalogError(f"coverage rule id collides with existing atomic rule: {rule['id']}")
-        seen.add(rule["id"])
-        promoted.append(rule["id"])
-        rules.append(rule)
+    manifest_names: list[str] = []
+    reviewed_dates: list[date] = []
+
+    for path in paths:
+        manifest = _load_json(path, f"N4 coverage rules {path.name}")
+        if manifest.get("schema_version") != 1:
+            raise CatalogError(f"{path.name}: unsupported coverage-rules schema_version")
+        try:
+            coverage_reviewed = date.fromisoformat(manifest["reviewed_at"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise CatalogError(f"{path.name}: reviewed_at must be an ISO date") from exc
+        if coverage_reviewed < catalog_reviewed:
+            raise CatalogError(f"{path.name}: N4 coverage rules are older than the catalog review")
+        reviewed_dates.append(coverage_reviewed)
+        manifest_names.append(path.name)
+
+        specs = manifest.get("rules")
+        if not isinstance(specs, list):
+            raise CatalogError(f"{path.name}: rules must be a list")
+        for spec in specs:
+            if not isinstance(spec, dict):
+                raise CatalogError(f"{path.name}: every coverage rule must be an object")
+            rule = _build_rule(spec, catalog)
+            if rule["id"] in seen:
+                raise CatalogError(f"coverage rule id collides with existing atomic rule: {rule['id']}")
+            seen.add(rule["id"])
+            promoted.append(rule["id"])
+            rules.append(rule)
 
     return {
         "schema_version": 1,
-        "reviewed_at": manifest["reviewed_at"],
+        "reviewed_at": max(reviewed_dates).isoformat(),
         "catalog_reviewed_at": catalog["reviewed_at"],
+        "coverage_manifests": manifest_names,
         "n3_rule_count": len(n3["rules"]),
         "promoted_rule_ids": promoted,
         "rules": rules,
@@ -208,7 +225,8 @@ def main() -> None:
     print(
         "Full normative contract valid: "
         f"{len(rules)} atomic rules ({contract['n3_rule_count']} N3 + "
-        f"{len(contract['promoted_rule_ids'])} N4), {normative} normative, "
+        f"{len(contract['promoted_rule_ids'])} N4 across "
+        f"{len(contract['coverage_manifests'])} manifests), {normative} normative, "
         f"{project} project/technical-profile."
     )
 
