@@ -44,6 +44,17 @@ def normalize_pdf_text(value):
     return re.sub(r'\s+', ' ', value)
 
 
+def require_dotted_entry(source, start, end, marker):
+    start_at = source.find(start)
+    end_at = source.find(end, start_at + len(start))
+    if start_at < 0 or end_at < 0:
+        raise SystemExit(f'Corpus V2 falhou: bloco de lista não localizado: {start}.')
+    block = source[start_at:end_at]
+    pattern = re.compile(re.escape(marker) + r'[^\n]*(?:\.\s*){3,}\s*\d+\s*$', re.M)
+    if not pattern.search(block):
+        raise SystemExit(f'Corpus V2 falhou: líder pontilhado ausente em {start}: {marker}')
+
+
 text = Path('/tmp/ufctex-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
 flat = normalize_pdf_text(text)
 required = (
@@ -119,6 +130,15 @@ for start, end, marker in list_blocks:
         raise SystemExit(f'Corpus V2 falhou: entrada com caixa preservada ausente de {start}: {marker}')
     if marker.upper() in block:
         raise SystemExit(f'Corpus V2 falhou: entrada indevidamente convertida para caixa alta em {start}.')
+    require_dotted_entry(text, start, end, marker)
+
+toc_pages = [page for page in text.split('\f') if 'SUMÁRIO' in page and 'INTRODUÇÃO' in page]
+if len(toc_pages) != 1:
+    raise SystemExit(f'Corpus V2 falhou: esperado um sumário principal, encontrados {len(toc_pages)}.')
+toc = toc_pages[0]
+for label in ('INTRODUÇÃO', 'REFERÊNCIAS'):
+    if not re.search(r'^\s*(?:\d+\s+)?' + re.escape(label) + r'\s+(?:\.\s*){3,}\s*\d+\s*$', toc, re.M):
+        raise SystemExit(f'Corpus V2 falhou: líder pontilhado ausente no sumário para {label}.')
 PY
 
 check_list() {
