@@ -8,6 +8,8 @@
 - added Times New Roman and Arial policies for pdfLaTeX and LuaLaTeX;
 - added PDF/A-2b, font embedding and Windows literal-font certification;
 - added table, code, algorithm, bibliography, duplex and profile validation;
+- fixed code and algorithm line numbers to remain inside the 3 cm text margin;
+- added an independent PDF validator with strict, portable and accessibility profiles;
 - added deterministic GitHub, Overleaf and CTAN/TDS release bundles.
 
-Validated through Gate T, deterministic distribution preflight and a real Overleaf import smoke test.
+Validated through Gate T, deterministic distribution preflight, a real Overleaf import smoke test and the final normative/visual audit.
