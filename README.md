@@ -4,7 +4,7 @@ Classe LaTeX para trabalhos acadêmicos da Universidade Federal do Ceará, basea
 
 Versão publicada atual: **2.1.0**.
 
-A linha 2.x reorganiza a implementação em módulos, preserva a API pública da V1 quando possível e acompanha a base normativa vigente auditada em agosto de 2026.
+A linha 2.x organiza a implementação em módulos e acompanha a base normativa vigente auditada em agosto de 2026.
 
 ## Requisitos
 
@@ -30,12 +30,12 @@ ufctex/
 ├── projetos.def
 ├── objetos.def
 ├── bibliografia.def
+├── compat-abntexto.def
 ├── compat-nbr6023-2025.def
-├── postextuais.def
-└── compat-v1.def
+└── postextuais.def
 ```
 
-Cada responsabilidade fica concentrada em um módulo. `compat-v1.def` é a única camada destinada à transição de APIs da linha 1.x.
+Cada responsabilidade fica concentrada em um módulo. `compat-abntexto.def` e `compat-nbr6023-2025.def` tratam adaptações correntes ao upstream e ao escopo testado da norma de referências; não são camadas de compatibilidade com versões anteriores do template.
 
 ## Configuração básica
 
@@ -431,7 +431,7 @@ A versão 2.1.0 transforma `documento.tex` em um corpus visual e semântico de r
 
 Casos incompatíveis entre si ou dependentes do ambiente continuam em fixtures dedicadas: `minted`, fontes Microsoft literais, duplex, ficha catalográfica externa e matriz de perfis.
 
-`tests/v2-repository-audit.py` percorre todos os arquivos rastreados pelo Git e bloqueia, entre outros problemas, resíduos V1 fora da camada de compatibilidade, chaves públicas inexistentes em exemplos, caminhos absolutos, artefatos gerados versionados e divergências de versão.
+`tests/v2-repository-audit.py` percorre todos os arquivos rastreados pelo Git e identifica, entre outros problemas, referências à arquitetura anterior, chaves públicas inexistentes em exemplos, caminhos absolutos, artefatos gerados versionados e divergências de versão.
 
 O histórico da auditoria da V2 está em `docs/AUDITORIA-V2.md`.
 
@@ -452,13 +452,9 @@ As fontes Microsoft não são incluídas. O brasão da UFC é um ativo instituci
 
 O workflow principal é `.github/workflows/latex-preflight.yml`. O Gate T obrigatório cobre o documento de referência, a matriz de perfis, PDF/A, fontes incorporadas, Times New Roman/Arial literais no Windows e o proxy Overleaf.
 
-A Fase 4 acrescenta `.github/workflows/reference-validation.yml` e o status `ufctex/reference-audit`, responsável pela auditoria integral e pelo corpus de referência.
+O workflow `.github/workflows/reference-validation.yml` e o status `ufctex/reference-audit` executam a auditoria integral e o corpus de referência.
 
 O workflow `.github/workflows/distribution.yml` exige o Gate T do mesmo SHA, executa o release preflight, gera/verifica os bundles, testa o ZIP de Overleaf no proxy TeX Live 2025 e publica `ufctex/distribution-preflight`.
-
-## Compatibilidade V1
-
-A V2 não replica internamente a arquitetura 1.x. `ufctex/compat-v1.def` existe apenas para reduzir o custo de migração de documentos antigos. Resíduos estruturais da V1 não são permitidos nos demais módulos.
 
 ## Licença
 

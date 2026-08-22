@@ -53,6 +53,6 @@ O perfil portátil admite fallback tipográfico apenas como alerta. O perfil est
 
 A interface principal de validação passa a ser `python3 tests/run.py --mode pr`, também disponível por `make check` e `make preflight`. O runner executa checks independentes até o fim, bloqueia apenas dependentes cujo artefato necessário falhou e grava evidências em `artifacts/validation/`.
 
-O modo `release` acrescenta as certificações profundas de PDF/A e é exposto por `make release-check` e `make release-preflight`. Os alvos e scripts `v2-*` permanecem temporariamente como implementação de compatibilidade durante a migração. Após equivalência comprovada no mesmo SHA, checks textuais e geométricos serão absorvidos por módulos Python e os scripts redundantes poderão ser removidos sem alterar a interface pública do CI.
+O modo `release` acrescenta as certificações profundas de PDF/A e é exposto por `make release-check` e `make release-preflight`. Os alvos e scripts `v2-*` permanecem como implementações de baixo nível atrás do runner unificado. Após equivalência comprovada no mesmo SHA, checks textuais e geométricos podem ser absorvidos por módulos Python e scripts redundantes removidos sem alterar a interface pública do CI.
 
 O workflow de auditoria usa `concurrency` com cancelamento de execução anterior no mesmo PR. Assim, novos commits não deixam auditorias pesadas obsoletas consumindo runners enquanto o head já mudou.

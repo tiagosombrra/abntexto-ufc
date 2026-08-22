@@ -4,7 +4,7 @@ Data: 2026-08-21.
 
 ## Escopo
 
-A auditoria cobre arquivos rastreados pelo Git, classe e módulos V2, template distribuído, exemplos, documentação, scripts, testes, workflows e artefatos de release. O objetivo é bloquear resíduos da arquitetura 1.x fora da camada de compatibilidade e fazer o documento de referência funcionar como corpus visual e semântico de regressão.
+A auditoria cobre arquivos rastreados pelo Git, classe e módulos V2, template distribuído, exemplos, documentação, scripts, testes, workflows e artefatos de release. O objetivo é bloquear resíduos da arquitetura anterior que não pertencem à implementação V2 corrente e fazer o documento de referência funcionar como corpus visual e semântico de regressão.
 
 ## Achados
 
@@ -22,7 +22,7 @@ A auditoria cobre arquivos rastreados pelo Git, classe e módulos V2, template d
 | A10 | `topics` do `abntexto` falhou com `\DocumentMetadata`/tagging ativo no TeX Live 2026 | substituído na API V2 por `ufcalineas`/`ufcsubalineas`, exercitados com metadata ativa |
 | A11 | exemplos de figuras eram majoritariamente caixas sintéticas e não exerciam arquivos raster reais | PNG e JPEG adicionados ao corpus e aos checks de distribuição |
 | A12 | teste de pacote ainda usava a expressão “Gate D” para uma etapa que não fecha o Gate D formal | corrigido para `Release package preflight` |
-| A13 | regra inicial para `lib/` confundia caminho legado do projeto com o diretório legítimo do Chocolatey | regra refinada para caminhos V1 conhecidos e pasta rastreada `lib/` |
+| A13 | regra inicial para `lib/` confundia caminho legado do projeto com o diretório legítimo do Chocolatey | regra refinada para caminhos da arquitetura anterior e pasta rastreada `lib/` |
 | A14 | `algpseudocodex` ocultava `EndIf`/`EndWhile` por padrão, mas continuava consumindo seus números, produzindo linhas numeradas vazias e espaçamento irregular | `noEnd=false` aplicado; regressão exige sequência 1–8 e conteúdo visível nas linhas 5 e 7 |
 | A15 | uso de fotografias institucionais reais precisava separar licença de imagem da LPPL do projeto | Reitoria e Campus do Pici usam originais CC BY-SA 4.0 com SHA-1 verificado e atribuição em `figuras/LICENCAS.md` |
 | A16 | foi localizada fotografia oficial da fachada do Departamento de Computação, mas sem licença pública de redistribuição identificada | não redistribuída; corpus usa fotografia livre do Campus do Pici e identifica corretamente o DC no Bloco 910 sem afirmar que a imagem mostra sua fachada |
@@ -58,7 +58,7 @@ Casos mutuamente exclusivos ou dependentes do ambiente permanecem em fixtures de
 
 `tests/v2-repository-audit.py` verifica todos os arquivos rastreados e reprova, entre outros casos:
 
-- caminho ou API V1 fora do escopo explícito de compatibilidade;
+- caminhos ou APIs da arquitetura anterior em arquivos correntes;
 - marcadores explícitos de trabalho pendente ou correção temporária;
 - caminhos absolutos ligados a máquinas de desenvolvimento;
 - artefatos gerados versionados por engano;
@@ -68,7 +68,7 @@ Casos mutuamente exclusivos ou dependentes do ambiente permanecem em fixtures de
 - módulo carregado mas ausente;
 - definição do mesmo comando interno em múltiplos módulos.
 
-A regra de caminhos V1 diferencia referências do próprio projeto de diretórios legítimos de ferramentas externas. Uma pasta rastreada `lib/` continua proibida na V2, assim como referências conhecidas à antiga arquitetura.
+A regra de caminhos legados diferencia referências do próprio projeto de diretórios legítimos de ferramentas externas. Uma pasta rastreada `lib/` continua proibida na V2, assim como referências conhecidas à arquitetura anterior.
 
 ## Gate R — corpus de referência
 
