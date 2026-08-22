@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from normative_atomic import atomic_rule_map, load_atomic_contract
 from normative_catalog import load_catalog, rule_map
 
 
@@ -23,7 +24,9 @@ def quoted_pairs(text: str, function: str) -> set[tuple[str, str]]:
 
 def main() -> None:
     catalog = load_catalog()
-    rules = rule_map(catalog)
+    compatibility_rules = rule_map(catalog)
+    contract = load_atomic_contract(catalog)
+    rules = atomic_rule_map(contract)
     reviewed = date.fromisoformat(catalog["reviewed_at"])
 
     for source in catalog["sources"]:
@@ -42,9 +45,11 @@ def main() -> None:
     mappings = quoted_pairs(cli, "norm_check") | quoted_pairs(web, "nck")
     validator_checks = {check_id for check_id, _ in mappings}
 
-    unknown_rules = sorted({rule_id for _, rule_id in mappings if rule_id not in rules})
+    unknown_rules = sorted(
+        {rule_id for _, rule_id in mappings if rule_id not in compatibility_rules}
+    )
     if unknown_rules:
-        fail("validator references unknown rules: " + ", ".join(unknown_rules))
+        fail("validator references unknown compatibility rules: " + ", ".join(unknown_rules))
 
     uncovered: list[str] = []
     known_checks = gate_checks | validator_checks
@@ -53,20 +58,25 @@ def main() -> None:
         if not evidence & known_checks:
             uncovered.append(rule_id)
     if uncovered:
-        fail("rules without a known gate or validator check: " + ", ".join(sorted(uncovered)))
+        fail("atomic rules without a known gate or validator check: " + ", ".join(sorted(uncovered)))
 
-    direct_by_rule: dict[str, set[str]] = {}
+    direct_by_parent: dict[str, set[str]] = {}
     for check_id, rule_id in mappings:
-        direct_by_rule.setdefault(rule_id, set()).add(check_id)
+        direct_by_parent.setdefault(rule_id, set()).add(check_id)
 
-    automatic = sum(rule["validation"]["mode"].startswith("automatic") for rule in rules.values())
+    automatic = sum(
+        rule["validation"]["mode"].startswith("automatic")
+        for rule in rules.values()
+    )
     manual = len(rules) - automatic
+    project_policy = sum(rule["authority"] == "project-policy" for rule in rules.values())
     print(
         "Normative coverage passed: "
-        f"{len(catalog['sources'])} sources, {len(rules)} rules, "
+        f"{len(catalog['sources'])} sources, {len(rules)} atomic rules, "
         f"{automatic} automatic/partial, {manual} manual/conditional, "
-        f"{len(gate_checks)} unified gates, {len(validator_checks)} direct PDF checks, "
-        f"{len(direct_by_rule)} rules consumed directly by validators."
+        f"{project_policy} project-policy, {len(gate_checks)} unified gates, "
+        f"{len(validator_checks)} direct PDF checks, "
+        f"{len(direct_by_parent)} compatibility parent rules consumed directly."
     )
 
 

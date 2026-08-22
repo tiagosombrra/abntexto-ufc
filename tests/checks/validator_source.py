@@ -15,10 +15,12 @@ CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 APP = ROOT / "validator" / "app.js"
 INDEX = ROOT / "validator" / "index.html"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
+NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
 NORMATIVE_COVERAGE = ROOT / "tests" / "checks" / "normative_coverage.py"
 NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
 NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
 NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
+NORMATIVE_ATOMIC_CONTRACT = ROOT / "tests" / "checks" / "normative_atomic_contract.py"
 
 
 def fail(message: str) -> None:
@@ -40,17 +42,23 @@ def run_source_check(path: Path, label: str) -> None:
 
 
 def main() -> None:
-    py_compile.compile(str(CLI), doraise=True)
-    py_compile.compile(str(NORMATIVE_TOOL), doraise=True)
-    py_compile.compile(str(NORMATIVE_COVERAGE), doraise=True)
-    py_compile.compile(str(NORMATIVE_PRECEDENCE), doraise=True)
-    py_compile.compile(str(NORMATIVE_SOURCES), doraise=True)
-    py_compile.compile(str(NORMATIVE_ATOMICITY), doraise=True)
+    for path in (
+        CLI,
+        NORMATIVE_TOOL,
+        NORMATIVE_ATOMIC_TOOL,
+        NORMATIVE_COVERAGE,
+        NORMATIVE_PRECEDENCE,
+        NORMATIVE_SOURCES,
+        NORMATIVE_ATOMICITY,
+        NORMATIVE_ATOMIC_CONTRACT,
+    ):
+        py_compile.compile(str(path), doraise=True)
 
     run_source_check(NORMATIVE_TOOL, "normative catalog")
     run_source_check(NORMATIVE_PRECEDENCE, "normative precedence")
     run_source_check(NORMATIVE_SOURCES, "normative sources")
     run_source_check(NORMATIVE_ATOMICITY, "normative atomicity")
+    run_source_check(NORMATIVE_ATOMIC_CONTRACT, "normative atomic contract")
     run_source_check(NORMATIVE_COVERAGE, "normative coverage")
 
     completed = subprocess.run(
