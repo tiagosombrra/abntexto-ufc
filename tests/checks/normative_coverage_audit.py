@@ -4,15 +4,17 @@ from __future__ import annotations
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from normative_atomic import atomic_rule_map, load_atomic_contract
 from normative_catalog import load_catalog
+from normative_full import full_rule_map, load_full_contract
 
 AUDIT = ROOT / "normativa" / "coverage-audit.json"
+PROMOTIONS = ROOT / "normativa" / "coverage-promotions.json"
 SOURCE_AUDIT = ROOT / "normativa" / "source-audit.json"
 
 REQUIRED_DOMAINS = {
@@ -63,18 +65,27 @@ def fail(message: str) -> None:
 
 def main() -> None:
     audit = json.loads(AUDIT.read_text(encoding="utf-8"))
+    promotions = json.loads(PROMOTIONS.read_text(encoding="utf-8"))
     source_audit = json.loads(SOURCE_AUDIT.read_text(encoding="utf-8"))
     catalog = load_catalog()
-    atomic = atomic_rule_map(load_atomic_contract(catalog))
+    full_contract = load_full_contract(catalog)
+    full_rules = full_rule_map(full_contract)
     known_source_ids = {source["id"] for source in catalog["sources"]}
     known_source_ids |= {source["id"] for source in source_audit.get("sources", [])}
 
-    if audit.get("schema_version") != 1:
+    if audit.get("schema_version") != 1 or promotions.get("schema_version") != 1:
         fail("unsupported schema_version")
     if audit.get("phase") != "N4":
         fail("unexpected phase")
     if audit.get("phase_status") not in {"in-progress", "complete"}:
         fail("invalid phase_status")
+    try:
+        audit_reviewed = date.fromisoformat(audit["reviewed_at"])
+        promotions_reviewed = date.fromisoformat(promotions["reviewed_at"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise SystemExit(f"Normative coverage audit failed: invalid review date: {exc}") from exc
+    if promotions_reviewed < audit_reviewed:
+        fail("coverage promotions are older than the N4 inventory")
 
     allowed = set(audit.get("allowed_treatments", []))
     expected_allowed = {"automatic", "automatic-partial", "manual", "conditional", "not-applicable"}
@@ -98,7 +109,7 @@ def main() -> None:
         existing = domain.get("existing_atomic_rules", [])
         if not isinstance(existing, list):
             fail(f"{domain_id}: existing_atomic_rules must be a list")
-        unknown_atomic = sorted(set(existing) - set(atomic))
+        unknown_atomic = sorted(set(existing) - set(full_rules))
         if unknown_atomic:
             fail(f"{domain_id}: unknown atomic rules: {', '.join(unknown_atomic)}")
 
@@ -118,8 +129,6 @@ def main() -> None:
                 fail(f"{domain_id}: gap without id")
             if gap_id in gap_ids:
                 fail(f"duplicate gap id: {gap_id}")
-            if gap_id in atomic:
-                fail(f"gap already exists in atomic contract: {gap_id}")
             gap_ids.add(gap_id)
 
             if not gap.get("requirement"):
@@ -139,15 +148,43 @@ def main() -> None:
 
     missing_priority = sorted(PRIORITY_GAPS - gap_ids)
     if missing_priority:
-        fail("priority N4 gaps disappeared before promotion: " + ", ".join(missing_priority))
+        fail("priority N4 gaps missing from the baseline inventory: " + ", ".join(missing_priority))
 
-    if audit["phase_status"] == "complete" and gap_ids:
-        fail("N4 cannot be complete while explicit gaps remain")
+    resolved = promotions.get("resolved_gaps")
+    if not isinstance(resolved, dict):
+        fail("coverage-promotions.resolved_gaps must be an object")
+    unknown_resolved = sorted(set(resolved) - gap_ids)
+    if unknown_resolved:
+        fail("promotions reference unknown gaps: " + ", ".join(unknown_resolved))
+
+    promoted_targets: set[str] = set()
+    for gap_id, rule_ids in resolved.items():
+        if not isinstance(rule_ids, list) or not rule_ids:
+            fail(f"{gap_id}: promotion must reference at least one atomic rule")
+        if len(rule_ids) != len(set(rule_ids)):
+            fail(f"{gap_id}: duplicate atomic rule in promotion")
+        for rule_id in rule_ids:
+            rule = full_rules.get(rule_id)
+            if not rule:
+                fail(f"{gap_id}: promoted rule does not exist: {rule_id}")
+            if rule.get("phase") != "N4":
+                fail(f"{gap_id}: promotion must resolve through an N4 rule: {rule_id}")
+            promoted_targets.add(rule_id)
+
+    manifest_promoted = set(full_contract["promoted_rule_ids"])
+    untracked_promotions = sorted(manifest_promoted - promoted_targets)
+    if untracked_promotions:
+        fail("N4 atomic rules without a resolved-gap mapping: " + ", ".join(untracked_promotions))
+
+    unresolved = gap_ids - set(resolved)
+    if audit["phase_status"] == "complete" and unresolved:
+        fail("N4 cannot be complete while unresolved gaps remain: " + ", ".join(sorted(unresolved)))
 
     print(
         "Normative coverage inventory passed: "
-        f"{len(domains)} domains, {len(atomic)} atomic rules, "
-        f"{len(gap_ids)} explicit N4 gaps, status={audit['phase_status']}."
+        f"{len(domains)} domains, {len(full_rules)} full atomic rules, "
+        f"{len(gap_ids)} identified gaps, {len(resolved)} resolved, "
+        f"{len(unresolved)} unresolved, status={audit['phase_status']}."
     )
 
 

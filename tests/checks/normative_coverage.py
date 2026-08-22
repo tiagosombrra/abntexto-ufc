@@ -10,9 +10,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "tests" / "checks"))
 
-from normative_atomic import atomic_rule_map, load_atomic_contract
 from normative_catalog import load_catalog, rule_map
 from normative_coverage_audit import main as run_coverage_audit
+from normative_full import full_rule_map, load_full_contract
 
 
 def fail(message: str) -> None:
@@ -29,8 +29,8 @@ def main() -> None:
 
     catalog = load_catalog()
     compatibility_rules = rule_map(catalog)
-    contract = load_atomic_contract(catalog)
-    rules = atomic_rule_map(contract)
+    contract = load_full_contract(catalog)
+    rules = full_rule_map(contract)
     reviewed = date.fromisoformat(catalog["reviewed_at"])
 
     for source in catalog["sources"]:
@@ -62,7 +62,7 @@ def main() -> None:
         if not evidence & known_checks:
             uncovered.append(rule_id)
     if uncovered:
-        fail("atomic rules without a known gate or validator check: " + ", ".join(sorted(uncovered)))
+        fail("full atomic rules without a known gate or validator check: " + ", ".join(sorted(uncovered)))
 
     direct_by_parent: dict[str, set[str]] = {}
     for check_id, rule_id in mappings:
@@ -73,12 +73,12 @@ def main() -> None:
         for rule in rules.values()
     )
     manual = len(rules) - automatic
-    project_policy = sum(rule["authority"] == "project-policy" for rule in rules.values())
+    project_policy = sum(rule["authority"] in {"project-policy", "technical-profile"} for rule in rules.values())
     print(
         "Normative coverage passed: "
-        f"{len(catalog['sources'])} sources, {len(rules)} atomic rules, "
+        f"{len(catalog['sources'])} sources, {len(rules)} full atomic rules, "
         f"{automatic} automatic/partial, {manual} manual/conditional, "
-        f"{project_policy} project-policy, {len(gate_checks)} unified gates, "
+        f"{project_policy} project/technical-profile, {len(gate_checks)} unified gates, "
         f"{len(validator_checks)} direct PDF checks, "
         f"{len(direct_by_parent)} compatibility parent rules consumed directly."
     )

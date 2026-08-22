@@ -16,11 +16,14 @@ APP = ROOT / "validator" / "app.js"
 INDEX = ROOT / "validator" / "index.html"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
 NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
+NORMATIVE_FULL_TOOL = ROOT / "tools" / "normative_full.py"
 NORMATIVE_COVERAGE = ROOT / "tests" / "checks" / "normative_coverage.py"
+NORMATIVE_COVERAGE_AUDIT = ROOT / "tests" / "checks" / "normative_coverage_audit.py"
 NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
 NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
 NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
 NORMATIVE_ATOMIC_CONTRACT = ROOT / "tests" / "checks" / "normative_atomic_contract.py"
+NORMATIVE_FULL_CONTRACT = ROOT / "tests" / "checks" / "normative_full_contract.py"
 
 
 def fail(message: str) -> None:
@@ -46,11 +49,14 @@ def main() -> None:
         CLI,
         NORMATIVE_TOOL,
         NORMATIVE_ATOMIC_TOOL,
+        NORMATIVE_FULL_TOOL,
         NORMATIVE_COVERAGE,
+        NORMATIVE_COVERAGE_AUDIT,
         NORMATIVE_PRECEDENCE,
         NORMATIVE_SOURCES,
         NORMATIVE_ATOMICITY,
         NORMATIVE_ATOMIC_CONTRACT,
+        NORMATIVE_FULL_CONTRACT,
     ):
         py_compile.compile(str(path), doraise=True)
 
@@ -59,6 +65,8 @@ def main() -> None:
     run_source_check(NORMATIVE_SOURCES, "normative sources")
     run_source_check(NORMATIVE_ATOMICITY, "normative atomicity")
     run_source_check(NORMATIVE_ATOMIC_CONTRACT, "normative atomic contract")
+    run_source_check(NORMATIVE_FULL_TOOL, "full normative loader")
+    run_source_check(NORMATIVE_FULL_CONTRACT, "full normative contract")
     run_source_check(NORMATIVE_COVERAGE, "normative coverage")
 
     completed = subprocess.run(
@@ -117,7 +125,7 @@ def main() -> None:
         if completed.returncode != 0:
             fail("generated normative web catalog has invalid JavaScript syntax")
 
-    print("Validator sources and normative catalog validated.")
+    print("Validator sources and normative contracts validated.")
 
 
 if __name__ == "__main__":
