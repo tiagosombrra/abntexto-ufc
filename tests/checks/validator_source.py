@@ -16,6 +16,7 @@ APP = ROOT / "validator" / "app.js"
 INDEX = ROOT / "validator" / "index.html"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
 NORMATIVE_COVERAGE = ROOT / "tests" / "checks" / "normative_coverage.py"
+NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
 
 
 def fail(message: str) -> None:
@@ -40,8 +41,10 @@ def main() -> None:
     py_compile.compile(str(CLI), doraise=True)
     py_compile.compile(str(NORMATIVE_TOOL), doraise=True)
     py_compile.compile(str(NORMATIVE_COVERAGE), doraise=True)
+    py_compile.compile(str(NORMATIVE_PRECEDENCE), doraise=True)
 
     run_source_check(NORMATIVE_TOOL, "normative catalog")
+    run_source_check(NORMATIVE_PRECEDENCE, "normative precedence")
     run_source_check(NORMATIVE_COVERAGE, "normative coverage")
 
     completed = subprocess.run(
