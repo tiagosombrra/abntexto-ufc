@@ -77,15 +77,19 @@ def check_layout(pages):
     cs.append(Check('layout.margins','Layout','Margens horizontais 3 cm / 2 cm','NBR 14724:2024 / UFC',PASS if not out else FAIL,'Nenhum texto ultrapassa as margens.' if not out else f'Exemplos: {out[:8]}','Recuar o elemento para dentro da mancha gráfica.' if out else '',level='geométrico'))
     return cs
 
+def is_text_fallback(name):
+    x=re.sub(r'[^a-z0-9]','',name.lower())
+    return ('texgyretermesx' in x or ('texgyretermes' in x and 'math' not in x) or 'texgyreheros' in x)
+
 def check_fonts(fs,profile):
     cs=[]; unemb=[f['name'] for f in fs if f['emb']!='yes']
     cs.append(Check('font.embedded','Tipografia','Todas as fontes incorporadas','PDF/A / preservação',PASS if fs and not unemb else FAIL,'Todas incorporadas.' if fs and not unemb else f'Não incorporadas/indeterminadas: {unemb or "nenhuma fonte analisável"}','Recompile incorporando todas as fontes.' if unemb or not fs else ''))
     names=[re.sub(r'^[A-Z]{6}\+','',f['name']) for f in fs]; nn=[re.sub(r'[^a-z0-9]','',n.lower()) for n in names]
     literal=[n for n,x in zip(names,nn) if 'timesnewroman' in x or x.startswith('arial')]
-    fallback=[n for n,x in zip(names,nn) if any(k in x for k in ('texgyretermes','texgyreheros','newtx','ntxt','qhv'))]
+    fallback=[n for n in names if is_text_fallback(n)]
     ok=bool(literal) and not fallback
     st=PASS if ok else (WARN if profile=='portable' else FAIL)
-    cs.append(Check('font.literal','Tipografia','Arial ou Times New Roman literal','Guia UFC - Formato',st,f'Literais: {literal or "nenhuma"}; fallback: {fallback or "nenhum"}','Use fonte-estrita=sim com Arial ou Times New Roman literal.' if not ok else '',mandatory=profile!='portable',level='tipográfico'))
+    cs.append(Check('font.literal','Tipografia','Arial ou Times New Roman literal','Guia UFC - Formato',st,f'Literais: {literal or "nenhuma"}; fallback textual: {fallback or "nenhum"}','Use fonte-estrita=sim com Arial ou Times New Roman literal.' if not ok else '',mandatory=profile!='portable',level='tipográfico'))
     return cs
 
 def check_structure(t):
