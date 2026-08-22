@@ -50,7 +50,7 @@ import xml.etree.ElementTree as ET
 
 root = ET.parse('/tmp/ufctex-v2-pretextual-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
-target = 'UMA CITAÇÃO DE EXEMPLO USADA APENAS PARA VALIDAR A APRESENTAÇÃO DA EPÍGRAFE.'
+target = 'CITAÇÃO DE EXEMPLO'
 
 for page in (node for node in root.iter() if local(node.tag) == 'page'):
     words = [node for node in page.iter() if local(node.tag) == 'word']
