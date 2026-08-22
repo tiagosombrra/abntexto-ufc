@@ -66,7 +66,7 @@ def verdict(cs):
 
 def check_layout(pages):
     bad=[i for i,(w,h,_) in enumerate(pages,1) if abs(w-A4[0])>1.8 or abs(h-A4[1])>1.8]
-    cs=[Check('layout.a4','Layout','Papel A4','NBR 14724:2024 / UFC',PASS if not bad else FAIL,'Todas as páginas em A4.' if not bad else f'Páginas fora de A4: {bad}','Configure papel A4 em todo o documento.' if bad else '')]
+    cs=[Check('layout.a4','Layout','Papel A4','NBR 14724:2024 / UFC',PASS if not bad else FAIL,'Todas as páginas em A4.' if not bad else f'Páginas fora de A4: {bad}','Configure papel A4 em todas as páginas.' if bad else '')]
     out=[]
     for i,(w,h,ws) in enumerate(pages,1):
         for s,x0,y0,x1,y1 in ws:
