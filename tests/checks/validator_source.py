@@ -19,6 +19,7 @@ NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
 NORMATIVE_FULL_TOOL = ROOT / "tools" / "normative_full.py"
 NORMATIVE_COVERAGE = ROOT / "tests" / "checks" / "normative_coverage.py"
 NORMATIVE_COVERAGE_AUDIT = ROOT / "tests" / "checks" / "normative_coverage_audit.py"
+NORMATIVE_CURRENCY = ROOT / "tests" / "checks" / "normative_currency.py"
 NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
 NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
 NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
@@ -52,6 +53,7 @@ def main() -> None:
         NORMATIVE_FULL_TOOL,
         NORMATIVE_COVERAGE,
         NORMATIVE_COVERAGE_AUDIT,
+        NORMATIVE_CURRENCY,
         NORMATIVE_PRECEDENCE,
         NORMATIVE_SOURCES,
         NORMATIVE_ATOMICITY,
@@ -63,6 +65,7 @@ def main() -> None:
     run_source_check(NORMATIVE_TOOL, "normative catalog")
     run_source_check(NORMATIVE_PRECEDENCE, "normative precedence")
     run_source_check(NORMATIVE_SOURCES, "normative sources")
+    run_source_check(NORMATIVE_CURRENCY, "normative currency")
     run_source_check(NORMATIVE_ATOMICITY, "normative atomicity")
     run_source_check(NORMATIVE_ATOMIC_CONTRACT, "normative atomic contract")
     run_source_check(NORMATIVE_FULL_TOOL, "full normative loader")
