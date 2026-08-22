@@ -7,7 +7,10 @@ on:
       - 'release/v2.*'
     paths:
       - 'validator/**'
+      - 'normativa/**'
       - 'tools/validate-ufc-pdf.py'
+      - 'tools/normative_catalog.py'
+      - 'tests/checks/validator_source.py'
       - '.github/workflows/validator-pages.yml'
   workflow_dispatch:
 
@@ -45,6 +48,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build normative catalog
+        run: python3 tools/normative_catalog.py --emit-web validator/normative-catalog.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
