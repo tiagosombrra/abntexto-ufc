@@ -1,6 +1,6 @@
 # ufctex changelog
 
-## 2.1.0 — release candidate
+## 2.1.0 — 2026-08-21
 
 - migrated the UFC class to the `abntexto` 1.1+ base;
 - added modular V2 configuration and compatibility support for V1 content;
@@ -10,4 +10,4 @@
 - added table, code, algorithm, bibliography, duplex and profile validation;
 - added deterministic GitHub, Overleaf and CTAN/TDS release bundles.
 
-The release remains a candidate until the final Gate D review is complete.
+Validated through Gate T, deterministic distribution preflight and a real Overleaf import smoke test.
