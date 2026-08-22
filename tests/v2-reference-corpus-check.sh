@@ -132,13 +132,52 @@ for start, end, marker in list_blocks:
         raise SystemExit(f'Corpus V2 falhou: entrada indevidamente convertida para caixa alta em {start}.')
     require_dotted_entry(text, start, end, marker)
 
-toc_pages = [page for page in text.split('\f') if 'SUMÁRIO' in page and 'INTRODUÇÃO' in page]
-if len(toc_pages) != 1:
-    raise SystemExit(f'Corpus V2 falhou: esperado um sumário principal, encontrados {len(toc_pages)}.')
-toc = toc_pages[0]
-for label in ('INTRODUÇÃO', 'REFERÊNCIAS'):
-    if not re.search(r'^\s*(?:\d+\s+)?' + re.escape(label) + r'\s+(?:\.\s*){3,}\s*\d+\s*$', toc, re.M):
-        raise SystemExit(f'Corpus V2 falhou: líder pontilhado ausente no sumário para {label}.')
+raw_pages = text.split('\f')
+toc_starts = [
+    index for index, page in enumerate(raw_pages)
+    if 'SUMÁRIO' in page and 'INTRODUÇÃO' in page
+]
+if len(toc_starts) != 1:
+    raise SystemExit(f'Corpus V2 falhou: esperado um sumário principal, encontrados {len(toc_starts)}.')
+
+toc_start = toc_starts[0]
+toc_end = None
+for index in range(toc_start + 1, len(raw_pages)):
+    if re.search(r'^\s*1\s+INTRODUÇÃO\s*$', raw_pages[index], re.M):
+        toc_end = index
+        break
+if toc_end is None:
+    raise SystemExit('Corpus V2 falhou: fim do sumário não localizado antes da seção INTRODUÇÃO.')
+
+toc = '\n'.join(raw_pages[toc_start:toc_end])
+toc_flat = normalize_pdf_text(toc)
+for marker in (
+    'INTRODUÇÃO',
+    'Normas e diretrizes adotadas',
+    'CONCLUSÃO',
+    'REFERÊNCIAS',
+    'GLOSSÁRIO',
+    'APÊNDICE A',
+    'APÊNDICE D',
+    'ANEXO A',
+    'ANEXO B',
+    'ÍNDICE REMISSIVO',
+):
+    if marker not in toc_flat:
+        raise SystemExit(f'Corpus V2 falhou: entrada obrigatória ausente do sumário: {marker}.')
+
+entry_lines = [line for line in toc.splitlines() if re.search(r'\d+\s*$', line)]
+if len(entry_lines) < 20:
+    raise SystemExit(f'Corpus V2 falhou: poucas entradas paginadas no sumário: {len(entry_lines)}.')
+undotted = [
+    line.strip() for line in entry_lines
+    if not re.search(r'(?:\.\s*){3,}\s*\d+\s*$', line)
+]
+if undotted:
+    sample = ' | '.join(undotted[:8])
+    raise SystemExit(
+        f'Corpus V2 falhou: {len(undotted)} entrada(s) do sumário sem líder pontilhado: {sample}'
+    )
 PY
 
 check_list() {
