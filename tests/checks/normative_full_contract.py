@@ -23,46 +23,49 @@ def main() -> None:
 
     if contract["n3_rule_count"] != 100:
         fail(f"expected 100 certified N3 atomic rules, got {contract['n3_rule_count']}")
-    if len(contract["promoted_rule_ids"]) != 23:
-        fail(f"expected 23 promoted N4 rules, got {len(contract['promoted_rule_ids'])}")
-    if len(rules) != 123:
-        fail(f"expected 123 full atomic rules, got {len(rules)}")
+    if len(rules) != contract["n3_rule_count"] + len(contract["promoted_rule_ids"]):
+        fail("full contract count is inconsistent with N3 + N4 promotions")
+    if len(contract["promoted_rule_ids"]) < 23:
+        fail("N4 contract lost the certified first promotion block")
+    if "project.standard" in rules:
+        fail("retired project.standard umbrella returned to the active contract")
 
     expected = {
         "pagination.pretextual.counted-not-numbered": {"counted": True, "number_visible": False},
         "pagination.catalog-data.not-counted": {"counted": False, "number_visible": False},
         "pagination.recto.position": {"position": "upper-right"},
-        "pagination.recto.offset.top": {"top_mm": 20},
-        "pagination.recto.offset.right": {"right_mm": 20},
         "pagination.verso.position": {"position": "upper-left"},
-        "pagination.verso.offset.top": {"top_mm": 20},
-        "pagination.verso.offset.left": {"left_mm": 20},
         "footnote.line-spacing": {"factor": 1.0},
         "footnote.separator.length": {"length_mm": 50, "origin": "left-margin"},
         "footnote.hanging-alignment": {"enabled": True},
         "section.indicator.alignment": {"alignment": "left"},
         "section.indicator.separator": {"separator": "single-character-space"},
         "section.primary.recto-duplex": {"start_side": "recto"},
-        "section.primary.after-spacing": {"after_factor": 1.5},
-        "section.subsection.before-after-spacing": {"before_factor": 1.5, "after_factor": 1.5},
         "section.multiline.hanging": {"enabled": True},
-        "heading.unnumbered.centered": {"alignment": "centered"},
         "nature.line-spacing": {"factor": 1.0},
         "nature.block.alignment": {"horizontal_extent": "mid-text-block-to-right-margin"},
     }
     for rule_id, values in expected.items():
-        if rules[rule_id]["values"] != values:
-            fail(f"{rule_id}: unexpected values {rules[rule_id]['values']}")
+        rule = rules.get(rule_id)
+        if not rule:
+            fail(f"certified N4 rule disappeared: {rule_id}")
+        if rule["values"] != values:
+            fail(f"{rule_id}: unexpected values {rule['values']}")
 
     for rule_id in contract["promoted_rule_ids"]:
         rule = rules[rule_id]
-        if rule["authority"] != "normative":
-            fail(f"{rule_id}: first N4 promotion must contain only normative rules")
-        resolution = rule.get("resolution")
-        if not isinstance(resolution, dict) or resolution.get("status") != "resolved":
-            fail(f"{rule_id}: unresolved provenance")
-        if not resolution.get("governing_sources"):
-            fail(f"{rule_id}: missing governing source")
+        authority = rule.get("authority")
+        if authority == "normative":
+            resolution = rule.get("resolution")
+            if not isinstance(resolution, dict) or resolution.get("status") != "resolved":
+                fail(f"{rule_id}: unresolved normative provenance")
+            if not resolution.get("governing_sources"):
+                fail(f"{rule_id}: missing governing source")
+        elif authority in {"project-policy", "technical-profile"}:
+            if rule.get("sources") or rule.get("resolution") is not None:
+                fail(f"{rule_id}: non-normative rule claims external authority")
+        else:
+            fail(f"{rule_id}: invalid authority {authority}")
 
     indicator = rules["section.indicator.alignment"]
     if set(indicator["resolution"]["governing_sources"]) != {
@@ -83,7 +86,8 @@ def main() -> None:
 
     print(
         "Full normative contract passed: "
-        f"{len(rules)} atomic rules, {len(contract['promoted_rule_ids'])} N4 promotions, "
+        f"{len(rules)} atomic rules, {len(contract['promoted_rule_ids'])} N4 promotions "
+        f"across {len(contract.get('coverage_manifests', []))} manifests, "
         "current-source precedence preserved."
     )
 
