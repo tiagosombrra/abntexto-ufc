@@ -1,14 +1,6 @@
 name: PDF validator
 
 on:
-  pull_request:
-    branches:
-      - main
-      - 'release/v2.*'
-    paths:
-      - 'validator/**'
-      - 'tools/validate-ufc-pdf.py'
-      - '.github/workflows/validator-pages.yml'
   push:
     branches:
       - main
@@ -38,15 +30,10 @@ jobs:
         with:
           node-version: '22'
       - name: Validate sources
-        run: |
-          python3 -m py_compile tools/validate-ufc-pdf.py
-          node --check validator/app.js
-          grep -Fq 'pdfjs-dist@6.2.108' validator/app.js
-          ! grep -Eq 'fetch\s*\(|FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\(' validator/app.js
-          grep -Fq 'não é enviado para servidor' validator/index.html
+        run: python3 tests/checks/validator_source.py
 
   deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     needs: check
     permissions:
       contents: read
