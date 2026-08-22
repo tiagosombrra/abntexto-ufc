@@ -8,9 +8,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tests" / "checks"))
 
 from normative_atomic import atomic_rule_map, load_atomic_contract
 from normative_catalog import load_catalog, rule_map
+from normative_coverage_audit import main as run_coverage_audit
 
 
 def fail(message: str) -> None:
@@ -23,6 +25,8 @@ def quoted_pairs(text: str, function: str) -> set[tuple[str, str]]:
 
 
 def main() -> None:
+    run_coverage_audit()
+
     catalog = load_catalog()
     compatibility_rules = rule_map(catalog)
     contract = load_atomic_contract(catalog)
