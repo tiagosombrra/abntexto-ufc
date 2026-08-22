@@ -35,11 +35,28 @@ def main() -> None:
     if completed.returncode != 0:
         fail(completed.stdout + completed.stderr)
 
+    completed = subprocess.run(
+        [sys.executable, str(CLI), "--help"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        fail("CLI cannot load the normative catalog")
+
     app = APP.read_text(encoding="utf-8")
+    cli = CLI.read_text(encoding="utf-8")
     html = INDEX.read_text(encoding="utf-8")
 
     if "pdfjs-dist@6.2.108" not in app:
         fail("PDF.js version is not pinned to 6.2.108")
+    if 'from "./normative-catalog.js"' not in app:
+        fail("Web/Lite does not consume the generated normative catalog")
+    if "from normative_catalog import" not in cli:
+        fail("CLI does not consume the normative catalog")
+    if "A4=(595.276,841.89)" in cli or "A4=[595.276,841.89]" in app:
+        fail("validator geometry is hard-coded instead of catalog-driven")
 
     forbidden = r"FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\("
     if re.search(forbidden, app):
@@ -47,6 +64,9 @@ def main() -> None:
 
     if "não é enviado para servidor" not in html:
         fail("local-processing disclosure is missing")
+    for marker in ('id="normative-base"', 'id="norm-reviewed"', 'id="norm-sources"'):
+        if marker not in html:
+            fail(f"normative-base UI marker is missing: {marker}")
 
     node = shutil.which("node")
     if not node:
