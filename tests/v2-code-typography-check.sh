@@ -104,13 +104,24 @@ def locate_marker_line(marker):
         if not line_words:
             continue
         text = ''.join(''.join(word.itertext()) for word in line_words)
-        if target in compact(text):
-            return {
-                'x0': min(float(word.attrib['xMin']) for word in line_words),
-                'y0': min(float(word.attrib['yMin']) for word in line_words),
-                'x1': max(float(word.attrib['xMax']) for word in line_words),
-                'y1': max(float(word.attrib['yMax']) for word in line_words),
-            }
+        if target not in compact(text):
+            continue
+        data = [{
+            'text': ''.join(word.itertext()),
+            'x0': float(word.attrib['xMin']),
+            'y0': float(word.attrib['yMin']),
+            'x1': float(word.attrib['xMax']),
+            'y1': float(word.attrib['yMax']),
+        } for word in line_words]
+        content = [word for word in data if not re.fullmatch(r'\d+:?', word['text'].strip())]
+        if not content:
+            raise SystemExit(f'marcador geométrico sem conteúdo: {marker}')
+        return {
+            'content_x0': min(word['x0'] for word in content),
+            'y0': min(word['y0'] for word in data),
+            'x1': max(word['x1'] for word in data),
+            'y1': max(word['y1'] for word in data),
+        }
     raise SystemExit(f'marcador geométrico ausente: {marker}')
 
 
@@ -121,7 +132,7 @@ def line_number_for(marker_box):
         word_center = (word['y0'] + word['y1']) / 2
         if abs(word_center - center) > Y_TOL:
             continue
-        if word['x0'] >= marker_box['x0']:
+        if word['x1'] > marker_box['content_x0'] + 0.5:
             continue
         if re.fullmatch(r'\d+:?', word['text'].strip()):
             candidates.append(word)

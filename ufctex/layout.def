@@ -49,6 +49,13 @@
 \def\tocsubparagraphfont  {}
 
 % UFC examples use dotted leaders up to the right-aligned page number.
+% Reserve a compact visible leader even for entries that almost fill the line.
+\def\ufctocdot{\hbox{$\mathsurround=0pt\mkern1mu\hbox{.}\mkern1mu$}}
+\def\extdotleaders{%
+  \nobreak
+  \hbox to 1.1em{\leaders\ufctocdot\hfil}%
+  \leaders\ufctocdot\hfil
+}
 \appto\hooktocsection{\let\extleaders=\extdotleaders}
 
 \setcounter{secnumdepth}{5}

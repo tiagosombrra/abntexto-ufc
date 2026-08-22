@@ -125,35 +125,15 @@
       }
   }
 
-\bool_new:N \l_ufc_algorithm_numbered_bool
-
-\cs_new_protected:Npn \ufc_algorithm_numbered_list_begin:
-  {
-    \begin{list}{}
-      {
-        \leftmargin=2em
-        \rightmargin=2em
-        \topsep=0pt
-        \partopsep=0pt
-        \parsep=0pt
-        \itemsep=0pt
-      }
-    \item[]
-  }
-
-\cs_new_protected:Npn \ufc_algorithm_numbered_list_end:
-  { \end{list} }
-
 \cs_new_protected:Npn \ufc_algorithm_begin:n #1
   {
-    \bool_set_false:N \l_ufc_algorithm_numbered_bool
     \int_compare:nNnTF {#1} = {0}
       { \begin{algorithmic} }
       {
         \int_compare:nNnTF {#1} > {0}
           {
-            \bool_set_true:N \l_ufc_algorithm_numbered_bool
-            \ufc_algorithm_numbered_list_begin:
+            \leftskip=3em\relax
+            \rightskip=3em\relax
             \begin{algorithmic}[#1]
           }
           {
@@ -165,11 +145,7 @@
   }
 
 \cs_new_protected:Npn \ufc_algorithm_end:
-  {
-    \end{algorithmic}
-    \bool_if:NT \l_ufc_algorithm_numbered_bool
-      { \ufc_algorithm_numbered_list_end: }
-  }
+  { \end{algorithmic} }
 
 \cs_new_protected:Npn \ufc_objects_setup_algorithms:
   {

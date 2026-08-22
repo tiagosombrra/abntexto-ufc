@@ -27,7 +27,10 @@ if font_status(fallback, 'strict') != module['FAIL']:
 if font_status(fallback, 'portable') != module['WARN']:
     raise SystemExit('fallback textual deveria gerar alerta no perfil portable')
 PY
+set +e
 python3 tools/validate-ufc-pdf.py "$pdf" --profile portable --format json --output "$report"
+validator_status=$?
+set -e
 python3 - "$report" <<'PY'
 import json,sys
 r=json.load(open(sys.argv[1],encoding='utf-8')); c={x['id']:x for x in r['checks']}
@@ -39,4 +42,8 @@ if bad: raise SystemExit('; '.join(f"{x['id']}: {x['evidence']}" for x in bad))
 if c['layout.margins']['status']!='APROVADO': raise SystemExit(c['layout.margins']['evidence'])
 if c['font.literal']['status'] not in {'APROVADO','ALERTA'}: raise SystemExit('perfil portátil não deve reprovar apenas por fallback tipográfico')
 PY
+if [ "$validator_status" -ne 0 ]; then
+  echo "Validador PDF V2 falhou com status $validator_status sem reprovação obrigatória identificada no relatório."
+  exit "$validator_status"
+fi
 echo 'Gate V2 do validador de PDF concluído.'
