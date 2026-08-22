@@ -1,0 +1,66 @@
+name: PDF validator
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release/v2.*'
+    paths:
+      - 'validator/**'
+      - 'tools/validate-ufc-pdf.py'
+      - '.github/workflows/validator-pages.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'validator/**'
+      - 'tools/validate-ufc-pdf.py'
+      - '.github/workflows/validator-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pdf-validator-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate sources
+        run: |
+          python3 -m py_compile tools/validate-ufc-pdf.py
+          node --check validator/app.js
+          grep -Fq 'pdfjs-dist@6.2.108' validator/app.js
+          ! grep -Eq 'fetch\s*\(|FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\(' validator/app.js
+          grep -Fq 'não é enviado para servidor' validator/index.html
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: check
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: validator
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
