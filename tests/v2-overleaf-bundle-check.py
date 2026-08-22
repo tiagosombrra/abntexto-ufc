@@ -42,12 +42,12 @@ def main() -> None:
         raise SystemExit(f"Overleaf bundle not found: {bundle}")
 
     with tempfile.TemporaryDirectory(prefix="ufctex-overleaf-bundle-") as temp:
-        temp_path = Path(temp)
-        safe_extract(bundle, temp_path)
+        project = Path(temp)
+        safe_extract(bundle, project)
 
-        project = temp_path / f"modelo-latex-ufc-overleaf-{v}"
-        if not project.is_dir():
-            raise SystemExit(f"Unexpected Overleaf bundle root: {project.name}")
+        wrapped_root = project / f"modelo-latex-ufc-overleaf-{v}"
+        if wrapped_root.exists():
+            raise SystemExit("Overleaf bundle must place documento.tex at the archive root.")
 
         required = (
             project / "documento.tex",

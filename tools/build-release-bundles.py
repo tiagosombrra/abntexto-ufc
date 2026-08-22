@@ -164,7 +164,7 @@ def build_template_bundle(
     abntexto: Path | None = None,
 ) -> Path:
     suffix = "-overleaf" if abntexto else ""
-    root = f"modelo-latex-ufc{suffix}-{version}/"
+    root = "" if abntexto else f"modelo-latex-ufc-{version}/"
     path = out / f"modelo-latex-ufc{suffix}-{version}.zip"
     entries = source_entries(TEMPLATE_INPUTS, root)
     if abntexto:
@@ -173,7 +173,7 @@ def build_template_bundle(
         content = abntexto.read_bytes()
         if b"[2026-05-08 1.1 Preparation of works in ABNT standards]" not in content:
             raise SystemExit("Pinned abntexto.cls identity marker missing.")
-        entries.append((f"{root}abntexto.cls", content, 0o644))
+        entries.append(("abntexto.cls", content, 0o644))
     write_archive(path, entries, date_time)
     return path
 
