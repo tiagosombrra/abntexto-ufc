@@ -4,6 +4,33 @@ pdf="${1:-documento.pdf}"
 report="/tmp/ufctex-v2-pdf-validator.json"
 [ -f "$pdf" ] || { echo "Validador PDF V2 falhou: $pdf não existe."; exit 1; }
 python3 -m py_compile tools/validate-ufc-pdf.py
+python3 - <<'PY'
+import importlib.util
+from pathlib import Path
+
+path = Path('tools/validate-ufc-pdf.py')
+spec = importlib.util.spec_from_file_location('ufc_pdf_validator', path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+def font_status(names, profile):
+    rows = [{'name': name, 'emb': 'yes', 'uni': 'yes'} for name in names]
+    return module.check_fonts(rows, profile)[-1].status
+
+for names in (
+    ['TimesNewRomanPSMT', 'NewTXMI', 'txsys'],
+    ['ArialMT', 'TeXGyreTermesMath-Regular'],
+):
+    status = font_status(names, 'strict')
+    if status != module.PASS:
+        raise SystemExit(f'fonte literal com matemática complementar deveria passar: {names}: {status}')
+
+fallback = ['TeXGyreTermesX-Regular', 'NewTXMI']
+if font_status(fallback, 'strict') != module.FAIL:
+    raise SystemExit('fallback textual deveria reprovar no perfil strict')
+if font_status(fallback, 'portable') != module.WARN:
+    raise SystemExit('fallback textual deveria gerar alerta no perfil portable')
+PY
 python3 tools/validate-ufc-pdf.py "$pdf" --profile portable --format json --output "$report"
 python3 - "$report" <<'PY'
 import json,sys
