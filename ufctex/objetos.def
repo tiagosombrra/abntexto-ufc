@@ -132,9 +132,12 @@
       {
         \int_compare:nNnTF {#1} > {0}
           {
-            \leftskip=3em\relax
-            \rightskip=3em\relax
-            \begin{algorithmic}[#1]
+            \hbox to \linewidth\bgroup
+              \hfil
+              \vbox\bgroup
+                \hsize=\dimexpr\linewidth-6em\relax
+                \linewidth=\hsize
+                \begin{algorithmic}[#1]
           }
           {
             \ClassError{ufctex}
@@ -144,8 +147,20 @@
       }
   }
 
-\cs_new_protected:Npn \ufc_algorithm_end:
-  { \end{algorithmic} }
+\cs_new_protected:Npn \ufc_algorithm_end:n #1
+  {
+    \int_compare:nNnTF {#1} = {0}
+      { \end{algorithmic} }
+      {
+        \int_compare:nNnT {#1} > {0}
+          {
+            \end{algorithmic}
+              \egroup
+              \hfil
+            \egroup
+          }
+      }
+  }
 
 \cs_new_protected:Npn \ufc_objects_setup_algorithms:
   {
@@ -156,7 +171,7 @@
         \ufc_algorithm_begin:n {##2}
       }
       {
-        \ufc_algorithm_end:
+        \ufc_algorithm_end:n {##2}
         \egroup\endplace
       }
   }
