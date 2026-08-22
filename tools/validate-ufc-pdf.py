@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, re, shutil, subprocess, sys, tempfile, xml.etree.ElementTree as ET
+import argparse, json, re, shutil, subprocess, sys, tempfile, unicodedata, xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -54,7 +54,10 @@ def bbox(pdf):
         pages.append((float(pg.attrib['width']),float(pg.attrib['height']),words))
     return pages
 
-def norm(s): return re.sub(r'\s+',' ',s.upper()).strip()
+def norm(s):
+    s=unicodedata.normalize('NFKD',s)
+    s=''.join(ch for ch in s if not unicodedata.combining(ch))
+    return re.sub(r'\s+',' ',s.upper()).strip()
 def verdict(cs):
     if any(c.mandatory and c.status==FAIL for c in cs): return FAIL
     if any(c.mandatory and c.status==REVIEW for c in cs): return 'REVISÃO NECESSÁRIA'
