@@ -119,7 +119,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
-            make v2-posttextual-compat-check v2-duplex-posttextual-check
+            make v2-posttextual-check v2-duplex-posttextual-check
 
   v2-overleaf-stable-poc:
     name: V2 Overleaf stable proxy

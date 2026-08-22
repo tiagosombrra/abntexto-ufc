@@ -17,7 +17,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 	v2-object-check v2-object-geometry-check v2-code-typography-check v2-table-ibge-check v2-minted-check \
 	v2-algorithm-numbering-check v2-pdf-validator-check v2-documentary-source-check v2-bib-check v2-overleaf-stable-check \
 	v2-project-check v2-profile-check v2-profile-pdfa-check \
-	v2-posttextual-compat-check v2-duplex-posttextual-check \
+	v2-posttextual-check v2-duplex-posttextual-check \
 	v2-build-check v2-multivolume-check v2-catalog-card-check
 
 all: compile
@@ -143,8 +143,8 @@ v2-profile-check:
 v2-profile-pdfa-check: v2-profile-check
 	@sh tests/v2-profile-pdfa-check.sh
 
-v2-posttextual-compat-check:
-	@sh tests/v2-posttextual-compat-check.sh
+v2-posttextual-check:
+	@sh tests/v2-posttextual-check.sh
 
 v2-duplex-posttextual-check:
 	@sh tests/v2-duplex-posttextual-check.sh
@@ -173,7 +173,7 @@ v2-check: \
 	v2-bib-check \
 	v2-project-check \
 	v2-profile-check \
-	v2-posttextual-compat-check \
+	v2-posttextual-check \
 	v2-duplex-posttextual-check \
 	v2-build-check \
 	v2-multivolume-check \

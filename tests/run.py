@@ -59,7 +59,7 @@ CHECKS = (
     Check("project", "Research project", ("sh", "tests/v2-project-check.sh")),
     Check("profiles", "Document profiles", ("sh", "tests/v2-profile-matrix-check.sh")),
     Check("profile-pdfa", "Profile PDF/A-2b", ("sh", "tests/v2-profile-pdfa-check.sh"), modes=("release",), depends=("profiles",)),
-    Check("posttextual-compat", "Post-textual compatibility", ("sh", "tests/v2-posttextual-compat-check.sh")),
+    Check("posttextual", "Post-textual elements", ("sh", "tests/v2-posttextual-check.sh")),
     Check("duplex-posttextual", "Duplex post-textual elements", ("sh", "tests/v2-duplex-posttextual-check.sh")),
     Check("build-path", "Build path", ("sh", "tests/v2-build-path-check.sh")),
     Check("multivolume", "Multi-volume documents", ("sh", "tests/v2-multivolume-check.sh")),

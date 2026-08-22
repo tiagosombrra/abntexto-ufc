@@ -362,7 +362,7 @@
       "normativity": "required",
       "kind": "toc-layout",
       "values": {"heading_centered": true, "heading_uppercase": true, "page_numbers": "right", "mirror_section_hierarchy": true},
-      "validation": {"mode": "automatic-partial", "checks": ["reference-corpus", "posttextual-compat"]}
+      "validation": {"mode": "automatic-partial", "checks": ["reference-corpus", "posttextual"]}
     },
     {
       "id": "section.hierarchy",
@@ -439,7 +439,7 @@
       "normativity": "institutional-requirement-compatible-with-current-abnt",
       "kind": "posttextual-heading",
       "values": {"new_page": true, "uppercase": true, "bold": true, "font_pt": 12, "centered": true},
-      "validation": {"mode": "automatic-partial", "checks": ["posttextual-compat", "duplex-posttextual"]}
+      "validation": {"mode": "automatic-partial", "checks": ["posttextual", "duplex-posttextual"]}
     },
     {
       "id": "annex.heading",
@@ -450,7 +450,7 @@
       "normativity": "institutional-requirement-compatible-with-current-abnt",
       "kind": "posttextual-heading",
       "values": {"new_page": true, "uppercase": true, "bold": true, "font_pt": 12, "centered": true},
-      "validation": {"mode": "automatic-partial", "checks": ["posttextual-compat", "duplex-posttextual"]}
+      "validation": {"mode": "automatic-partial", "checks": ["posttextual", "duplex-posttextual"]}
     },
     {
       "id": "index.presentation",
@@ -461,7 +461,7 @@
       "normativity": "required-when-present",
       "kind": "index-layout",
       "values": {"heading_uppercase": true, "heading_bold": true, "heading_centered": true, "font_pt": 12},
-      "validation": {"mode": "automatic-partial", "checks": ["posttextual-compat", "reference-corpus"]}
+      "validation": {"mode": "automatic-partial", "checks": ["posttextual", "reference-corpus"]}
     },
     {
       "id": "project.standard",
