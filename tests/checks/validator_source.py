@@ -15,25 +15,34 @@ CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 APP = ROOT / "validator" / "app.js"
 INDEX = ROOT / "validator" / "index.html"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
+NORMATIVE_COVERAGE = ROOT / "tests" / "checks" / "normative_coverage.py"
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"Validator source check failed: {message}")
 
 
-def main() -> None:
-    py_compile.compile(str(CLI), doraise=True)
-    py_compile.compile(str(NORMATIVE_TOOL), doraise=True)
-
+def run_source_check(path: Path, label: str) -> None:
     completed = subprocess.run(
-        [sys.executable, str(NORMATIVE_TOOL)],
+        [sys.executable, str(path)],
         cwd=ROOT,
         text=True,
         capture_output=True,
         check=False,
     )
     if completed.returncode != 0:
-        fail(completed.stdout + completed.stderr)
+        fail(f"{label}: {completed.stdout}{completed.stderr}")
+    if completed.stdout:
+        print(completed.stdout.strip())
+
+
+def main() -> None:
+    py_compile.compile(str(CLI), doraise=True)
+    py_compile.compile(str(NORMATIVE_TOOL), doraise=True)
+    py_compile.compile(str(NORMATIVE_COVERAGE), doraise=True)
+
+    run_source_check(NORMATIVE_TOOL, "normative catalog")
+    run_source_check(NORMATIVE_COVERAGE, "normative coverage")
 
     completed = subprocess.run(
         [sys.executable, str(CLI), "--help"],
