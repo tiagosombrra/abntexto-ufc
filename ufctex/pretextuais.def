@@ -282,11 +282,12 @@
 \NewDocumentCommand \imprimirfolhadeaprovacao { }
   { \ufc_approval_page: }
 
+% UFC dedicatory and epigraph blocks start below the physical page midpoint.
 \NewDocumentCommand \imprimirdedicatoria { m }
   {
     \clearpage
     \thispagestyle{empty}
-    \vspace*{.45\textheight}
+    \vspace*{.5\textheight}
     \noindent\hspace*{8cm}%
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
       \onehalfsp\justifying
@@ -305,12 +306,11 @@
     \clearpage
   }
 
-% UFC epigraphs start below the vertical midpoint of the page.
 \cs_new_protected:Npn \ufc_epigraph_short:n #1
   {
     \clearpage
     \thispagestyle{empty}
-    \vspace*{.60\textheight}
+    \vspace*{.5\textheight}
     \noindent\hspace*{8cm}%
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
       \ufc_input_file:n {#1}
@@ -325,7 +325,7 @@
   {
     \clearpage
     \thispagestyle{empty}
-    \vspace*{.60\textheight}
+    \vspace*{.5\textheight}
     \noindent\hspace*{4cm}%
     \begin{minipage}{\dimexpr\textwidth-4cm\relax}
       \fontsize{10}{12}\selectfont
