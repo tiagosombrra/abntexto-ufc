@@ -20,6 +20,8 @@ O SiBi-UFC exige arquivo eletrônico PDF/A da capa aos anexos e folha de aprova�
 | F2 | smoke real no Overleaf compilou 41 páginas sem warnings/erros, mas usou NewTX porque Times New Roman literal não estava disponível | PORTABILIDADE CONFORME; UFC ESTRITO NÃO CONFORME | documentação e validador distinguem smoke funcional de certificação tipográfica; modo estrito exige fonte literal |
 | F3 | PDF de referência é PDF/A-2b e possui idioma `pt-BR`, mas não possui tagged PDF, bookmarks nem título/autor completos nos metadados | ACESSIBILIDADE AVANÇADA INCOMPLETA | perfil de acessibilidade do validador reporta os itens; não são atribuídos como requisito de depósito UFC sem fonte institucional |
 | F4 | checks automáticos anteriores não distinguiam requisito verificável, heurístico e revisão humana | LACUNA DE VALIDAÇÃO | novo validador usa estados APROVADO/REPROVADO/ALERTA/REVISÃO MANUAL/NÃO APLICÁVEL e registra nível de evidência |
+| F5 | listas paginadas e entradas de nível primário do sumário podiam ser emitidas sem líder pontilhado pelo padrão do `abntexto` | DIVERGENTE | perfil UFC reativa `\extdotleaders`; regressão cobre ilustrações, figuras, tabelas, quadros, gráficos, códigos, algoritmos e entradas textuais/pós-textuais do sumário |
+| F6 | CI acumulava workflows obsoletos e fragmentava a validação em muitos scripts/alvos, aumentando recompilações e tempo de diagnóstico | EFICIÊNCIA/MANUTENIBILIDADE | `concurrency` cancela runs antigos; `tests/run.py` passa a ser o orquestrador único com execução acumulativa, logs por check e relatório Markdown/JSON |
 
 ## Veredito do PDF anterior à correção F1
 
@@ -46,3 +48,11 @@ O validador não presume conformidade sem evidência. Requisitos sem prova autom
 Antes da tag, o PR final incorpora `tools/validate-ufc-pdf.py`, a interface `validator/` para GitHub Pages, o workflow de validação/deploy e `tests/v2-pdf-validator-check.sh`. O novo gate executa o validador no perfil portátil sobre o próprio PDF de referência e exige, entre outros itens, A4, margens horizontais, fontes incorporadas, estrutura acadêmica e declaração PDF/A.
 
 O perfil portátil admite fallback tipográfico apenas como alerta. O perfil estrito reprova a ausência de Times New Roman/Arial literal e exige validação profunda de PDF/A para um veredito técnico completo. O perfil de acessibilidade acrescenta tagging/PDF/UA e mantém como revisão humana os requisitos sem evidência automática suficiente.
+
+## Gate C — CI consolidado
+
+A interface principal de validação passa a ser `python3 tests/run.py --mode pr`, também disponível por `make check` e `make preflight`. O runner executa checks independentes até o fim, bloqueia apenas dependentes cujo artefato necessário falhou e grava evidências em `artifacts/validation/`.
+
+O modo `release` acrescenta as certificações profundas de PDF/A e é exposto por `make release-check` e `make release-preflight`. Os alvos e scripts `v2-*` permanecem temporariamente como implementação de compatibilidade durante a migração. Após equivalência comprovada no mesmo SHA, checks textuais e geométricos serão absorvidos por módulos Python e os scripts redundantes poderão ser removidos sem alterar a interface pública do CI.
+
+O workflow de auditoria usa `concurrency` com cancelamento de execução anterior no mesmo PR. Assim, novos commits não deixam auditorias pesadas obsoletas consumindo runners enquanto o head já mudou.
