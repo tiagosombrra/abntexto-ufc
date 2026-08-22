@@ -40,3 +40,9 @@ A V2 passa a incluir um validador independente do LaTeX:
 - saída: tabela, JSON ou Markdown, com evidência e orientação de correção.
 
 O validador não presume conformidade sem evidência. Requisitos sem prova automática suficiente permanecem em revisão manual.
+
+## Gate V — validador e regressão geométrica
+
+Antes da tag, o PR final incorpora `tools/validate-ufc-pdf.py`, a interface `validator/` para GitHub Pages, o workflow de validação/deploy e `tests/v2-pdf-validator-check.sh`. O novo gate executa o validador no perfil portátil sobre o próprio PDF de referência e exige, entre outros itens, A4, margens horizontais, fontes incorporadas, estrutura acadêmica e declaração PDF/A.
+
+O perfil portátil admite fallback tipográfico apenas como alerta. O perfil estrito reprova a ausência de Times New Roman/Arial literal e exige validação profunda de PDF/A para um veredito técnico completo. O perfil de acessibilidade acrescenta tagging/PDF/UA e mantém como revisão humana os requisitos sem evidência automática suficiente.
