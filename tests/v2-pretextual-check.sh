@@ -43,6 +43,32 @@ if command -v pdftotext >/dev/null 2>&1; then
     exit 1
   fi
 
+  pdftotext -bbox-layout pretextuais-trabalho.pdf /tmp/ufctex-v2-pretextual-bbox.html
+  python3 - <<'PY'
+import re
+import xml.etree.ElementTree as ET
+
+root = ET.parse('/tmp/ufctex-v2-pretextual-bbox.html').getroot()
+local = lambda tag: tag.rsplit('}', 1)[-1]
+target = 'UMA CITAÇÃO DE EXEMPLO USADA APENAS PARA VALIDAR A APRESENTAÇÃO DA EPÍGRAFE.'
+
+for page in (node for node in root.iter() if local(node.tag) == 'page'):
+    words = [node for node in page.iter() if local(node.tag) == 'word']
+    text = re.sub(r'\s+', ' ', ' '.join(''.join(word.itertext()) for word in words)).upper()
+    if target not in text:
+        continue
+    first_y = min(float(word.attrib['yMin']) for word in words)
+    midpoint = float(page.attrib['height']) / 2
+    if first_y <= midpoint:
+        raise SystemExit(
+            f'Preflight V2 falhou: epígrafe inicia antes do meio da página: '
+            f'y={first_y:.2f}, meio={midpoint:.2f}'
+        )
+    break
+else:
+    raise SystemExit('Preflight V2 falhou: página da epígrafe não localizada.')
+PY
+
   pdftotext pretextuais-projeto-anonimo.pdf /tmp/ufctex-v2-anonimo.txt
   if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/ufctex-v2-anonimo.txt; then
     echo 'Preflight V2 falhou: autor vazou no projeto anonimizado.'
