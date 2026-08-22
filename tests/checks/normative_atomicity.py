@@ -21,19 +21,18 @@ def main() -> None:
 
     if plan.get("schema_version") != 1 or atomic.get("schema_version") != 1:
         fail("unsupported schema_version")
-    if plan.get("statuses") != ["keep-atomic", "split", "retire-in-n4"]:
+    if plan.get("statuses") != ["keep-atomic", "split"]:
         fail("unexpected status vocabulary")
 
     catalog_ids = {rule["id"] for rule in catalog["rules"]}
+    if "project.standard" in catalog_ids:
+        fail("retired project.standard must not remain in the current catalog")
+
     entries = plan.get("rules")
     if not isinstance(entries, dict) or set(entries) != catalog_ids:
         fail("atomicity plan must cover the current catalog exactly")
 
-    manifest_parents = (
-        set(atomic.get("keep_atomic", []))
-        | set(atomic.get("groups", {}))
-        | set(atomic.get("retire_in_n4", {}))
-    )
+    manifest_parents = set(atomic.get("keep_atomic", [])) | set(atomic.get("groups", {}))
     if manifest_parents != catalog_ids:
         fail("atomic manifest must cover the current catalog exactly")
 
@@ -66,11 +65,6 @@ def main() -> None:
         elif targets:
             fail(f"{parent}: only split entries may declare targets")
 
-        if status == "retire-in-n4":
-            reason = entry.get("reason")
-            if not reason or atomic["retire_in_n4"].get(parent) != reason:
-                fail(f"{parent}: retirement reason mismatch")
-
     if entries["deposit.pdfa"]["targets"] != [
         "deposit.pdfa.required",
         "pdfa.profile.project",
@@ -78,12 +72,10 @@ def main() -> None:
         fail("PDF/A institutional requirement and project profile must be separated")
     if entries["summary.word-count"]["status"] != "split":
         fail("summary word count and keyword presence must be separate rules")
-    if entries["project.standard"]["status"] != "retire-in-n4":
-        fail("project.standard must be replaced by individual NBR 15287 rules")
 
     keep_count = sum(entry["status"] == "keep-atomic" for entry in entries.values())
     if keep_count + target_count != 100:
-        fail("N3 contract must resolve to exactly 100 atomic rules before N4")
+        fail("N3 contract must resolve to exactly 100 atomic rules")
 
     print(
         "Normative atomicity plan passed: "

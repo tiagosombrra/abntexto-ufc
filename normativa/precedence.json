@@ -216,8 +216,7 @@
       ],
       "supporting_sources": [
         "ufc-guia-trabalhos-2022"
-      ],
-      "note": "Regra ainda agregada; será decomposta na fase N3."
+      ]
     },
     "section.hierarchy": {
       "scope": "technical",
@@ -227,8 +226,7 @@
       ],
       "supporting_sources": [
         "ufc-guia-trabalhos-2022"
-      ],
-      "note": "Regra ainda agregada; será decomposta na fase N3."
+      ]
     },
     "quotation.long": {
       "scope": "technical",
@@ -304,16 +302,6 @@
       ],
       "supporting_sources": [
         "ufc-guia-trabalhos-2022"
-      ]
-    },
-    "project.standard": {
-      "scope": "technical",
-      "status": "resolved",
-      "governing_sources": [
-        "abnt-nbr-15287-2025"
-      ],
-      "supporting_sources": [
-        "ufc-normalizacao-2026"
       ]
     },
     "deposit.pdfa": {

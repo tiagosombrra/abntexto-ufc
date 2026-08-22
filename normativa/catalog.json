@@ -464,17 +464,6 @@
       "validation": {"mode": "automatic-partial", "checks": ["posttextual", "reference-corpus"]}
     },
     {
-      "id": "project.standard",
-      "category": "project",
-      "requirement": "Perfis de projeto de pesquisa seguem a NBR 15287:2025 e apenas requisitos UFC compatíveis.",
-      "sources": ["abnt-nbr-15287-2025", "ufc-normalizacao-2026"],
-      "locator": "NBR 15287:2025",
-      "normativity": "required-for-project-profile",
-      "kind": "document-profile",
-      "values": {"profile": ["projeto", "projetoanonimizado"]},
-      "validation": {"mode": "automatic-partial", "checks": ["project", "profile-matrix"]}
-    },
-    {
       "id": "deposit.pdfa",
       "category": "deposit",
       "requirement": "O arquivo eletrônico para depósito deve ser PDF/A.",

@@ -209,7 +209,6 @@ def load_full_contract(
         "promoted_rule_ids": promoted,
         "rules": rules,
         "compatibility_aliases": copy.deepcopy(n3["compatibility_aliases"]),
-        "retired_in_n4": copy.deepcopy(n3["retired_in_n4"]),
     }
 
 

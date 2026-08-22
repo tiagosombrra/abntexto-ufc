@@ -208,16 +208,15 @@ def load_atomic_contract(
     parents = rule_map(catalog, allow_review=True)
     keep = manifest.get("keep_atomic")
     groups = manifest.get("groups")
-    retire = manifest.get("retire_in_n4")
-    if not isinstance(keep, list) or not isinstance(groups, dict) or not isinstance(retire, dict):
-        raise CatalogError("atomic-rules requires keep_atomic, groups and retire_in_n4")
+    if not isinstance(keep, list) or not isinstance(groups, dict):
+        raise CatalogError("atomic-rules requires keep_atomic and groups")
 
-    declared_parents = set(keep) | set(groups) | set(retire)
+    declared_parents = set(keep) | set(groups)
     if declared_parents != set(parents):
         missing = sorted(set(parents) - declared_parents)
         extra = sorted(declared_parents - set(parents))
         raise CatalogError(f"atomic parent coverage mismatch; missing={missing}, extra={extra}")
-    if (set(keep) & set(groups)) or (set(keep) & set(retire)) or (set(groups) & set(retire)):
+    if set(keep) & set(groups):
         raise CatalogError("atomic parent classifications must be disjoint")
 
     plan_rules = plan.get("rules")
@@ -256,13 +255,6 @@ def load_atomic_contract(
             seen.add(child["id"])
             atomic.append(child)
 
-    for parent_id, reason in retire.items():
-        plan_entry = plan_rules[parent_id]
-        if plan_entry.get("status") != "retire-in-n4":
-            raise CatalogError(f"atomicity plan disagrees for retired rule {parent_id}")
-        if not reason or plan_entry.get("reason") != reason:
-            raise CatalogError(f"retirement reason mismatch for {parent_id}")
-
     for rule in atomic:
         for field in ("id", "category", "requirement", "locator", "normativity", "kind"):
             if not rule.get(field):
@@ -286,7 +278,6 @@ def load_atomic_contract(
         "reviewed_at": manifest["reviewed_at"],
         "catalog_reviewed_at": catalog["reviewed_at"],
         "rules": atomic,
-        "retired_in_n4": copy.deepcopy(retire),
         "compatibility_aliases": {
             parent_id: [spec["id"] for spec in specs]
             for parent_id, specs in groups.items()
@@ -304,8 +295,7 @@ def main() -> None:
     project = sum(rule["authority"] == "project-policy" for rule in rules.values())
     print(
         "Atomic normative contract valid: "
-        f"{len(rules)} atomic rules, {project} project-policy rule, "
-        f"{len(contract['retired_in_n4'])} umbrella rule deferred to N4."
+        f"{len(rules)} atomic rules, {project} project-policy rule."
     )
 
 

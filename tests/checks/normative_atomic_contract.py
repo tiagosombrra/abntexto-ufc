@@ -27,8 +27,10 @@ def main() -> None:
     contract = load_atomic_contract(catalog)
     atomic = atomic_rule_map(contract)
 
-    if len(parents) != 30:
-        fail(f"expected 30 current parent rules before N4, got {len(parents)}")
+    if len(parents) != 29:
+        fail(f"expected 29 current compatibility parent rules, got {len(parents)}")
+    if "project.standard" in parents:
+        fail("retired project.standard must not remain in the compatibility catalog")
     if len(atomic) != 100:
         fail(f"expected 100 N3 atomic rules, got {len(atomic)}")
 
@@ -106,8 +108,7 @@ def main() -> None:
 
     print(
         "Normative atomic contract passed: "
-        f"{len(atomic)} atomic rules, {len(aliases)} compatibility aliases, "
-        f"{len(contract['retired_in_n4'])} umbrella rule deferred to N4."
+        f"{len(atomic)} atomic rules, {len(aliases)} compatibility aliases."
     )
 
 
