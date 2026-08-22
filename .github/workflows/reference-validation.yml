@@ -34,7 +34,7 @@ jobs:
           run: |
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
-            apt-get install -y --no-install-recommends make poppler-utils
+            apt-get install -y --no-install-recommends make nodejs poppler-utils
             make reference-assets
             UFC_REQUIRE_REFERENCE_IMAGES=1 python3 tests/run.py --mode pr
 
