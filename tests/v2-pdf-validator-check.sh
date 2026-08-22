@@ -6,7 +6,9 @@ report="/tmp/ufctex-v2-pdf-validator.json"
 python3 -m py_compile tools/validate-ufc-pdf.py
 python3 - <<'PY'
 import runpy
+import sys
 
+sys.path.insert(0, 'tools')
 module = runpy.run_path('tools/validate-ufc-pdf.py', run_name='ufc_pdf_validator')
 
 def font_status(names, profile):
