@@ -9,7 +9,7 @@ ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 
 .PHONY: all pdf compile lua version clean reference-assets \
-	preflight release-preflight package distribution-preflight \
+	check release-check preflight release-preflight package distribution-preflight \
 	v2-repository-audit v2-reference-check v2-reference-corpus-check v2-pdfa-check \
 	v2-check v2-distribution-check v2-release-package-check \
 	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
@@ -57,6 +57,12 @@ compile:
 lua:
 	$(MAKE) clean
 	$(MAKE) ENGINE=lualatex compile
+
+check:
+	@python3 tests/run.py --mode pr
+
+release-check:
+	@python3 tests/run.py --mode release
 
 v2-repository-audit:
 	@python3 tests/v2-repository-audit.py
@@ -174,12 +180,10 @@ v2-check: \
 	v2-catalog-card-check
 	@echo "Gate local isolado da V2 concluído."
 
-preflight: v2-reference-corpus-check v2-pdf-validator-check v2-check
+preflight: check
 	@echo "Preflight completo da V2 concluído."
 
-release-preflight: preflight
-	@sh tests/v2-pdfa-check.sh
-	@sh tests/v2-profile-pdfa-check.sh
+release-preflight: release-check
 	@echo "Preflight de release da V2 concluído."
 
 package: reference-assets
