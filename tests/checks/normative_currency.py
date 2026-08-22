@@ -13,12 +13,19 @@ from normative_catalog import ACTIVE_STATUSES, load_catalog, source_map
 POLICY = ROOT / "normativa" / "version-policy.json"
 SOURCE_AUDIT = ROOT / "normativa" / "source-audit.json"
 DOC = ROOT / "docs" / "VIGENCIA-NORMATIVA.md"
-ACTIVE_MACHINE_FILES = (
+STATIC_ACTIVE_MACHINE_FILES = (
     ROOT / "normativa" / "catalog.json",
     ROOT / "normativa" / "precedence.json",
     ROOT / "normativa" / "atomic-rules.json",
-    ROOT / "normativa" / "coverage-rules.json",
+    ROOT / "normativa" / "atomicity-plan.json",
+    ROOT / "normativa" / "coverage-audit.json",
 )
+
+
+def active_machine_files() -> list[Path]:
+    paths = list(STATIC_ACTIVE_MACHINE_FILES)
+    paths.extend(sorted((ROOT / "normativa").glob("coverage-rules*.json")))
+    return list(dict.fromkeys(paths))
 
 
 def fail(message: str) -> None:
@@ -94,9 +101,10 @@ def main() -> None:
     if not isinstance(supersessions, list) or not supersessions:
         fail("supersession map must be non-empty")
 
+    machine_files = active_machine_files()
     active_text = {
         path.relative_to(ROOT).as_posix(): path.read_text(encoding="utf-8")
-        for path in ACTIVE_MACHINE_FILES
+        for path in machine_files
     }
     seen_pairs: set[tuple[str, str, str]] = set()
 
@@ -136,7 +144,8 @@ def main() -> None:
     print(
         "Normative currency passed: "
         f"{len(current_ids)} current technical standards, "
-        f"{len(supersessions)} documented UFC stale-reference mappings; "
+        f"{len(supersessions)} documented UFC stale-reference mappings, "
+        f"{len(machine_files)} active machine files scanned; "
         "latest applicable edition is mandatory."
     )
 
