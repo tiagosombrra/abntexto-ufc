@@ -38,6 +38,7 @@ CHECKS = (
     Check("reference", "Reference document", ("sh", "tests/v2-reference-check.sh")),
     Check("reference-corpus", "Reference corpus", ("sh", "tests/v2-reference-corpus-check.sh"), depends=("reference",)),
     Check("pdf-validator", "UFC PDF validator", ("sh", "tests/v2-pdf-validator-check.sh", "documento.pdf"), depends=("reference",)),
+    Check("pdfa", "Reference PDF/A-2b", ("sh", "tests/v2-pdfa-check.sh", "documento.pdf"), modes=("release",), depends=("reference",)),
     Check("distribution-source", "Distribution source", ("sh", "tests/v2-distribution-check.sh")),
     Check("layout", "Layout", ("sh", "tests/v2-layout-check.sh")),
     Check("font-config", "Font configuration", ("sh", "tests/v2-font-config-check.sh")),
@@ -57,13 +58,12 @@ CHECKS = (
     Check("reference-spacing", "Reference spacing", ("sh", "tests/v2-reference-spacing-check.sh")),
     Check("project", "Research project", ("sh", "tests/v2-project-check.sh")),
     Check("profiles", "Document profiles", ("sh", "tests/v2-profile-matrix-check.sh")),
+    Check("profile-pdfa", "Profile PDF/A-2b", ("sh", "tests/v2-profile-pdfa-check.sh"), modes=("release",), depends=("profiles",)),
     Check("posttextual-compat", "Post-textual compatibility", ("sh", "tests/v2-posttextual-compat-check.sh")),
     Check("duplex-posttextual", "Duplex post-textual elements", ("sh", "tests/v2-duplex-posttextual-check.sh")),
     Check("build-path", "Build path", ("sh", "tests/v2-build-path-check.sh")),
     Check("multivolume", "Multi-volume documents", ("sh", "tests/v2-multivolume-check.sh")),
     Check("catalog-card", "Catalog card", ("sh", "tests/v2-catalog-card-check.sh")),
-    Check("pdfa", "Reference PDF/A-2b", ("sh", "tests/v2-pdfa-check.sh", "documento.pdf"), modes=("release",), depends=("reference",)),
-    Check("profile-pdfa", "Profile PDF/A-2b", ("sh", "tests/v2-profile-pdfa-check.sh"), modes=("release",), depends=("profiles",)),
 )
 
 
@@ -153,11 +153,15 @@ def run_check(check: Check, report_dir: Path, results: dict[str, Result]) -> Res
     )
 
 
-def write_reports(report_dir: Path, mode: str, results: list[Result]) -> None:
+def write_reports(report_dir: Path, mode: str, results: list[Result], complete: bool) -> None:
     report_dir.mkdir(parents=True, exist_ok=True)
+    failed = any(item.status == "FAIL" for item in results)
+    skipped = any(item.status == "SKIP" for item in results)
+    state = "FAIL" if complete and (failed or skipped) else "PASS" if complete else "RUNNING"
     payload = {
         "mode": mode,
-        "result": "PASS" if all(item.status == "PASS" for item in results) else "FAIL",
+        "complete": complete,
+        "result": state,
         "checks": [asdict(item) for item in results],
     }
     (report_dir / "validation-report.json").write_text(
@@ -169,7 +173,8 @@ def write_reports(report_dir: Path, mode: str, results: list[Result]) -> None:
         "# UFCtex validation",
         "",
         f"- Mode: `{mode}`",
-        f"- Result: **{payload['result']}**",
+        f"- Complete: `{str(complete).lower()}`",
+        f"- Result: **{state}**",
         "",
         "| Status | Check | Duration |",
         "|---|---|---:|",
@@ -178,14 +183,14 @@ def write_reports(report_dir: Path, mode: str, results: list[Result]) -> None:
         duration = f"{item.duration_seconds:.1f}s" if item.duration_seconds else "-"
         lines.append(f"| {item.status} | {item.label} | {duration} |")
     failures = [item for item in results if item.status == "FAIL"]
-    skipped = [item for item in results if item.status == "SKIP"]
+    skipped_results = [item for item in results if item.status == "SKIP"]
     if failures:
         lines.extend(["", "## Failures", ""])
         for item in failures:
             lines.append(f"- `{item.name}`: exit {item.exit_code}; log `{item.log}`")
-    if skipped:
+    if skipped_results:
         lines.extend(["", "## Skipped", ""])
-        for item in skipped:
+        for item in skipped_results:
             lines.append(f"- `{item.name}`: {item.reason}")
     (report_dir / "validation-report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -214,6 +219,7 @@ def main() -> int:
 
     results_by_name: dict[str, Result] = {}
     ordered_results: list[Result] = []
+    write_reports(report_dir, args.mode, ordered_results, complete=False)
 
     print(f"UFCtex validation: mode={args.mode}, checks={len(checks)}")
     for index, check in enumerate(checks, 1):
@@ -221,12 +227,13 @@ def main() -> int:
         result = run_check(check, report_dir, results_by_name)
         results_by_name[check.name] = result
         ordered_results.append(result)
+        write_reports(report_dir, args.mode, ordered_results, complete=False)
         suffix = f" ({result.duration_seconds:.1f}s)" if result.duration_seconds else ""
         print(f"         {result.status}{suffix}")
         if result.status == "FAIL":
             print_failure_tail(result)
 
-    write_reports(report_dir, args.mode, ordered_results)
+    write_reports(report_dir, args.mode, ordered_results, complete=True)
 
     passed = sum(item.status == "PASS" for item in ordered_results)
     failed = sum(item.status == "FAIL" for item in ordered_results)
