@@ -126,23 +126,23 @@
   }
 
 \bool_new:N \l_ufc_algorithm_numbered_bool
-\dim_new:N \l_ufc_algorithm_inner_width_dim
 
-\cs_new_protected:Npn \ufc_algorithm_numbered_box_begin:
+\cs_new_protected:Npn \ufc_algorithm_numbered_list_begin:
   {
-    \dim_set:Nn \l_ufc_algorithm_inner_width_dim { \hsize - 4em }
-    \hbox to \hsize \bgroup
-      \hskip 2em
-      \vbox \bgroup
-        \hsize=\l_ufc_algorithm_inner_width_dim
+    \begin{list}{}
+      {
+        \leftmargin=2em
+        \rightmargin=2em
+        \topsep=0pt
+        \partopsep=0pt
+        \parsep=0pt
+        \itemsep=0pt
+      }
+    \item[]
   }
 
-\cs_new_protected:Npn \ufc_algorithm_numbered_box_end:
-  {
-      \egroup
-      \hfil
-    \egroup
-  }
+\cs_new_protected:Npn \ufc_algorithm_numbered_list_end:
+  { \end{list} }
 
 \cs_new_protected:Npn \ufc_algorithm_begin:n #1
   {
@@ -153,7 +153,7 @@
         \int_compare:nNnTF {#1} > {0}
           {
             \bool_set_true:N \l_ufc_algorithm_numbered_bool
-            \ufc_algorithm_numbered_box_begin:
+            \ufc_algorithm_numbered_list_begin:
             \begin{algorithmic}[#1]
           }
           {
@@ -168,7 +168,7 @@
   {
     \end{algorithmic}
     \bool_if:NT \l_ufc_algorithm_numbered_bool
-      { \ufc_algorithm_numbered_box_end: }
+      { \ufc_algorithm_numbered_list_end: }
   }
 
 \cs_new_protected:Npn \ufc_objects_setup_algorithms:
