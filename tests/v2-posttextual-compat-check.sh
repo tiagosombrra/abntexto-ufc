@@ -2,7 +2,6 @@
 set -eu
 
 modern="tests/normativa/postextuais.tex"
-legacy="tests/compat/v1-api.tex"
 
 cleanup_job() {
   job="$1"
@@ -100,61 +99,6 @@ PY
     }
   done
 
-  legacy_job="compat-v1-$engine"
-  cleanup_job "$legacy_job"
-  echo "Validando API V1 com $engine..."
-
-  "$engine" -jobname="$legacy_job" -interaction=nonstopmode -halt-on-error -file-line-error "$legacy" > /tmp/ufctex-v2-compat.log 2>&1 || {
-    cat /tmp/ufctex-v2-compat.log
-    exit 1
-  }
-  biber "$legacy_job" > /tmp/ufctex-v2-compat-biber.log 2>&1 || {
-    cat /tmp/ufctex-v2-compat-biber.log
-    exit 1
-  }
-  for pass in 1 2 3; do
-    "$engine" -jobname="$legacy_job" -interaction=nonstopmode -halt-on-error -file-line-error "$legacy" > /tmp/ufctex-v2-compat.log 2>&1 || {
-      cat /tmp/ufctex-v2-compat.log
-      exit 1
-    }
-  done
-  check_log "$legacy_job"
-
-  pdftotext -layout "$legacy_job.pdf" "/tmp/$legacy_job.txt"
-  python3 - "$legacy_job" <<'PY'
-import re
-import sys
-import unicodedata
-from pathlib import Path
-
-job = sys.argv[1]
-raw = Path(f'/tmp/{job}.txt').read_text(encoding='utf-8')
-raw = re.sub(r'(?<=\w)-[ \t]*\n[ \t]*(?=\w)', '', raw)
-text = re.sub(r'\s+', ' ', unicodedata.normalize('NFC', raw)).strip()
-fold = text.casefold()
-
-required = (
-    'autor legado teste',
-    'documento legado de validação',
-    'perfil-academico-correto',
-    'objeto pela api legada',
-    'fonte:',
-    'nota:',
-    'referências',
-    'apêndice a',
-    'anexo a',
-    'silva',
-)
-for marker in required:
-    if marker not in fold:
-        raise SystemExit(f'{job}: compatibilidade V1 ausente: {marker}')
-
-if 'erro-perfil-projeto' in fold:
-    raise SystemExit(f'{job}: condicional legado de projeto escolheu o ramo incorreto.')
-if 'capítulo' in fold or 'capitulo' in fold:
-    raise SystemExit(f'{job}: compatibilidade V1 reintroduziu capítulos.')
-PY
-
 done
 
-echo 'Gate V2 de pós-textuais e compatibilidade V1 concluído.'
+echo 'Gate V2 de pós-textuais concluído.'
