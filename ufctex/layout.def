@@ -48,6 +48,9 @@
 \def\tocparagraphfont     {\itshape}
 \def\tocsubparagraphfont  {}
 
+% UFC examples use dotted leaders up to the right-aligned page number.
+\appto\hooktocsection{\let\extleaders=\extdotleaders}
+
 \setcounter{secnumdepth}{5}
 \setcounter{tocdepth}{5}
 
