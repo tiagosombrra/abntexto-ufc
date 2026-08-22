@@ -63,8 +63,50 @@ for name in ('UFC-TEXT-FONTSIZE', 'UFC-CODE-FONTSIZE', 'UFC-ALGORITHM-FONTSIZE')
         raise SystemExit(f'{name}: esperado 12 pt nominal, obtido {actual:.4f}')
 PY
 
+    pdftotext -bbox-layout "$job.pdf" "/tmp/$job-bbox.html"
+    python3 - "/tmp/$job-bbox.html" <<'PY'
+import re
+import sys
+import xml.etree.ElementTree as ET
+
+A4_WIDTH = 595.276
+CM = 72.0 / 2.54
+LEFT = 3 * CM
+RIGHT = 2 * CM
+TOL = 1.5
+
+root = ET.parse(sys.argv[1]).getroot()
+local = lambda tag: tag.rsplit('}', 1)[-1]
+
+
+def compact(value):
+    return re.sub(r'[^A-Z0-9]', '', value.upper())
+
+
+def locate(marker):
+    target = compact(marker)
+    for line in (node for node in root.iter() if local(node.tag) == 'line'):
+        words = [node for node in line if local(node.tag) == 'word']
+        if not words:
+            continue
+        text = ''.join(''.join(word.itertext()) for word in words)
+        if target in compact(text):
+            return (
+                min(float(word.attrib['xMin']) for word in words),
+                max(float(word.attrib['xMax']) for word in words),
+            )
+    raise SystemExit(f'marcador geométrico ausente: {marker}')
+
+for marker in ('UFC-CODE-GEOMETRY-MARKER', 'UFC-ALGORITHM-GEOMETRY-MARKER'):
+    x0, x1 = locate(marker)
+    if x0 < LEFT - TOL:
+        raise SystemExit(f'{marker}: conteúdo/numeração invade margem esquerda: x={x0:.2f}, limite={LEFT:.2f}')
+    if x1 > A4_WIDTH - RIGHT + TOL:
+        raise SystemExit(f'{marker}: conteúdo/numeração invade margem direita: x={x1:.2f}, limite={A4_WIDTH - RIGHT:.2f}')
+PY
+
     sh tests/v2-font-embedding-check.sh "$job.pdf"
   done
 done
 
-echo 'Gate V2 de tipografia de código e algoritmos concluído.'
+echo 'Gate V2 de tipografia e geometria de código e algoritmos concluído.'
