@@ -74,6 +74,7 @@ CM = 72.0 / 2.54
 LEFT = 3 * CM
 RIGHT = 2 * CM
 TOL = 1.5
+Y_TOL = 3.0
 
 root = ET.parse(sys.argv[1]).getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
@@ -83,26 +84,65 @@ def compact(value):
     return re.sub(r'[^A-Z0-9]', '', value.upper())
 
 
-def locate(marker):
+words = []
+for node in root.iter():
+    if local(node.tag) != 'word':
+        continue
+    words.append({
+        'text': ''.join(node.itertext()),
+        'x0': float(node.attrib['xMin']),
+        'y0': float(node.attrib['yMin']),
+        'x1': float(node.attrib['xMax']),
+        'y1': float(node.attrib['yMax']),
+    })
+
+
+def locate_marker_line(marker):
     target = compact(marker)
     for line in (node for node in root.iter() if local(node.tag) == 'line'):
-        words = [node for node in line if local(node.tag) == 'word']
-        if not words:
+        line_words = [node for node in line if local(node.tag) == 'word']
+        if not line_words:
             continue
-        text = ''.join(''.join(word.itertext()) for word in words)
+        text = ''.join(''.join(word.itertext()) for word in line_words)
         if target in compact(text):
-            return (
-                min(float(word.attrib['xMin']) for word in words),
-                max(float(word.attrib['xMax']) for word in words),
-            )
+            return {
+                'x0': min(float(word.attrib['xMin']) for word in line_words),
+                'y0': min(float(word.attrib['yMin']) for word in line_words),
+                'x1': max(float(word.attrib['xMax']) for word in line_words),
+                'y1': max(float(word.attrib['yMax']) for word in line_words),
+            }
     raise SystemExit(f'marcador geométrico ausente: {marker}')
 
+
+def line_number_for(marker_box):
+    center = (marker_box['y0'] + marker_box['y1']) / 2
+    candidates = []
+    for word in words:
+        word_center = (word['y0'] + word['y1']) / 2
+        if abs(word_center - center) > Y_TOL:
+            continue
+        if word['x0'] >= marker_box['x0']:
+            continue
+        if re.fullmatch(r'\d+:?', word['text'].strip()):
+            candidates.append(word)
+    if not candidates:
+        raise SystemExit('número de linha não localizado junto ao marcador geométrico')
+    return min(candidates, key=lambda word: word['x0'])
+
+
 for marker in ('UFC-CODE-GEOMETRY-MARKER', 'UFC-ALGORITHM-GEOMETRY-MARKER'):
-    x0, x1 = locate(marker)
-    if x0 < LEFT - TOL:
-        raise SystemExit(f'{marker}: conteúdo/numeração invade margem esquerda: x={x0:.2f}, limite={LEFT:.2f}')
-    if x1 > A4_WIDTH - RIGHT + TOL:
-        raise SystemExit(f'{marker}: conteúdo/numeração invade margem direita: x={x1:.2f}, limite={A4_WIDTH - RIGHT:.2f}')
+    box = locate_marker_line(marker)
+    number = line_number_for(box)
+    if number['x0'] < LEFT - TOL:
+        raise SystemExit(
+            f"{marker}: número de linha invade margem esquerda: "
+            f"x={number['x0']:.2f}, limite={LEFT:.2f}"
+        )
+    if box['x1'] > A4_WIDTH - RIGHT + TOL:
+        raise SystemExit(
+            f"{marker}: conteúdo invade margem direita: "
+            f"x={box['x1']:.2f}, limite={A4_WIDTH - RIGHT:.2f}"
+        )
 PY
 
     sh tests/v2-font-embedding-check.sh "$job.pdf"
