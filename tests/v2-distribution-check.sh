@@ -13,11 +13,6 @@ forbidden = {
     r'\\chapter\s*\{': r'\chapter',
     r'\\apendice\s*\{': r'\apendice',
     r'\\anexo\s*\{': r'\anexo',
-    r'\\Caption\s*\{': r'\Caption',
-    r'\\UFC(?:fig|tab|qua)\b': r'\UFCfig/\UFCtab/\UFCqua',
-    r'\\Fonte\s*\{': r'\Fonte',
-    r'\\documentclass\s*(?:\[[^\]]*\])?\s*\{abntex2\}': 'abntex2',
-    r'\\input\s*\{lib/(?:preambulo|ufctex)': 'lib V1',
 }
 
 
@@ -39,7 +34,7 @@ for path in tex_files:
     text = uncommented(path.read_text(encoding='utf-8'))
     for pattern, label in forbidden.items():
         if re.search(pattern, text):
-            errors.append(f'{path}: API/estrutura V1 ativa: {label}')
+            errors.append(f'{path}: estrutura não permitida no corpus V2: {label}')
 
     refs = []
     refs.extend((m.group(1), 'tex') for m in re.finditer(r'\\(?:input|include)\s*\{([^}]+)\}', text))
@@ -59,9 +54,6 @@ for path in tex_files:
             candidate = candidate.with_suffix('.bib')
         if not candidate.exists():
             errors.append(f'{path}: arquivo referenciado não existe: {candidate}')
-
-if Path('lib').exists():
-    errors.append('a pasta lib/ pertence à linha 1.x e não deve existir na distribuição V2')
 
 asset = Path('assets/institucional/brasao-ufc.PNG')
 if not asset.is_file():

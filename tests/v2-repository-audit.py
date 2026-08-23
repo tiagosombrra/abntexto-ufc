@@ -18,16 +18,13 @@ GENERATED_SUFFIXES = {
     '.idx', '.ilg', '.ind', '.lof', '.log', '.lot', '.out', '.run.xml', '.synctex.gz',
     '.toc', '.pyc', '.zip',
 }
-LEGACY_ALLOWED = (
+FORBIDDEN_LEGACY_PATHS = {
     'ufctex/compat-v1.def',
-    'tests/compat/',
     'tests/v1-regression-check.sh',
     'tests/v2-posttextual-compat-check.sh',
-    'tests/v2-distribution-check.sh',
-    SELF,
-    'README.md',
-    'docs/',
-)
+}
+FORBIDDEN_LEGACY_PREFIXES = ('lib/', 'tests/compat/')
+LEGACY_CONTENT_EXEMPT = (SELF,)
 LEGACY_PATTERNS = {
     'abntex2': re.compile(r'\babntex2\b', re.IGNORECASE),
     'legacy lib reference': re.compile(
@@ -50,12 +47,13 @@ ABSOLUTE_PATH_PATTERNS = (
 CS_PATTERN = re.compile(r'\\cs_(?:new|set)(?:_protected)?:Npn\s+(\\[A-Za-z@:_]+)')
 KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*\.(?:choice|code|meta):')
 SETUP_KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*=')
+ACTION_USE_PATTERN = re.compile(r'(?m)^\s*-?\s*uses:\s*([^\s@]+)@([^\s#]+)')
+SHA40_PATTERN = re.compile(r'^[0-9a-f]{40}$', re.IGNORECASE)
 
 
 def tracked_files() -> list[Path]:
     output = subprocess.check_output(
-        ['git', '-c', f'safe.directory={ROOT}', 'ls-files', '-z'],
-        cwd=ROOT,
+        ['git', '-c', f'safe.directory={ROOT}', 'ls-files', '-z'], cwd=ROOT
     )
     return [ROOT / item.decode('utf-8') for item in output.split(b'\0') if item]
 
@@ -65,9 +63,7 @@ def relative(path: Path) -> str:
 
 
 def is_text(path: Path) -> bool:
-    if path.name in {'Makefile', 'LICENSE'}:
-        return True
-    return path.suffix.lower() in TEXT_SUFFIXES
+    return path.name in {'Makefile', 'LICENSE'} or path.suffix.lower() in TEXT_SUFFIXES
 
 
 def read_text(path: Path, errors: list[str]) -> str | None:
@@ -130,7 +126,11 @@ def audit_versions(texts: dict[str, str], errors: list[str]) -> str | None:
     version = match.group(1)
 
     cls = texts.get('ufctex.cls', '')
-    if f'v{version} UFC academic document class' not in cls:
+    cls_match = re.search(
+        rf'\\ProvidesClass\{{ufctex\}}\[(\d{{4}}/\d{{2}}/\d{{2}})\s+v{re.escape(version)}\s+UFC academic document class\]',
+        cls,
+    )
+    if not cls_match:
         errors.append(f'ufctex.cls: class version does not match {version}')
 
     ctan = texts.get('docs/README-CTAN.md', '')
@@ -140,8 +140,15 @@ def audit_versions(texts: dict[str, str], errors: list[str]) -> str | None:
         errors.append(f'docs/README-CTAN.md: expected {version}, got {current}')
 
     changelog = texts.get('docs/CHANGELOG-CTAN.md', '')
-    if changelog and not re.search(rf'^##\s+{re.escape(version)}\b', changelog, re.MULTILINE):
+    release_match = re.search(
+        rf'^##\s+{re.escape(version)}\s+[—-]\s+(\d{{4}}-\d{{2}}-\d{{2}})\s*$',
+        changelog,
+        re.MULTILINE,
+    )
+    if not release_match:
         errors.append(f'docs/CHANGELOG-CTAN.md: release candidate {version} is missing')
+    elif cls_match and cls_match.group(1).replace('/', '-') != release_match.group(1):
+        errors.append('ufctex.cls and docs/CHANGELOG-CTAN.md: release dates differ')
 
     readme = texts.get('README.md', '')
     published = re.search(
@@ -199,6 +206,32 @@ def audit_modules(texts: dict[str, str], errors: list[str]) -> None:
             errors.append(f'internal command {command} defined in multiple modules: {", ".join(unique)}')
 
 
+def audit_release_docs(texts: dict[str, str], errors: list[str]) -> None:
+    normas = texts.get('docs/NORMAS.md', '')
+    if 'ufctex/compat-v1.def' in normas or re.search(r'compatibilidade\s+V1', normas, re.IGNORECASE):
+        errors.append('docs/NORMAS.md: retired V1 compatibility is still described as active')
+
+    readme = texts.get('README.md', '')
+    ctan = texts.get('docs/README-CTAN.md', '')
+    stale = re.compile(
+        r'classification\s+must\s+be\s+confirmed\s+before\s+a\s+CTAN\s+submission|classifica[cç][aã]o\s+para\s+redistribui[cç][aã]o',
+        re.IGNORECASE,
+    )
+    if stale.search(readme) or stale.search(ctan):
+        errors.append('release documentation: retired coat-of-arms CTAN blocker is still present')
+
+
+def audit_workflow_pins(texts: dict[str, str], errors: list[str]) -> None:
+    for name, text in texts.items():
+        if not name.startswith('.github/workflows/') or not name.endswith(('.yml', '.yaml')):
+            continue
+        for action, ref in ACTION_USE_PATTERN.findall(text):
+            if action.startswith('./'):
+                continue
+            if not SHA40_PATTERN.fullmatch(ref):
+                errors.append(f'{name}: external action is not pinned to a full commit SHA: {action}@{ref}')
+
+
 def main() -> None:
     errors: list[str] = []
     files = tracked_files()
@@ -207,8 +240,8 @@ def main() -> None:
     for path in files:
         name = relative(path)
         lower = name.lower()
-        if name.startswith('lib/'):
-            errors.append(f'{name}: tracked legacy lib/ path is not allowed')
+        if name in FORBIDDEN_LEGACY_PATHS or any(name.startswith(prefix) for prefix in FORBIDDEN_LEGACY_PREFIXES):
+            errors.append(f'{name}: retired legacy path is not allowed')
         if any(lower.endswith(suffix) for suffix in GENERATED_SUFFIXES):
             errors.append(f'{name}: generated artifact must not be tracked')
         if name in {'.DS_Store', 'Thumbs.db'} or '/__pycache__/' in f'/{name}/':
@@ -229,15 +262,16 @@ def main() -> None:
                     errors.append(f'{name}: machine-specific absolute path found')
                     break
 
-        legacy_allowed = any(name == item or name.startswith(item) for item in LEGACY_ALLOWED)
-        if not legacy_allowed:
+        if name not in LEGACY_CONTENT_EXEMPT:
             for label, pattern in LEGACY_PATTERNS.items():
                 if pattern.search(text):
-                    errors.append(f'{name}: {label} found outside compatibility scope')
+                    errors.append(f'{name}: {label} found outside anti-legacy test scope')
 
     audit_versions(texts, errors)
     audit_setup_keys(texts, errors)
     audit_modules(texts, errors)
+    audit_release_docs(texts, errors)
+    audit_workflow_pins(texts, errors)
 
     if errors:
         unique = sorted(set(errors))

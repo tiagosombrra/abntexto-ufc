@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/pretextuais.def}[2026/08/21 UFC pre-textual elements]
+\ProvidesFile{ufctex/pretextuais.def}[2026/08/23 UFC pre-textual elements]
 
 \RequirePackage{pdfpages}
 \RequirePackage{ragged2e}
@@ -282,11 +282,12 @@
 \NewDocumentCommand \imprimirfolhadeaprovacao { }
   { \ufc_approval_page: }
 
+% UFC dedicatory and epigraph blocks start below the physical page midpoint.
 \NewDocumentCommand \imprimirdedicatoria { m }
   {
     \clearpage
     \thispagestyle{empty}
-    \vspace*{.45\textheight}
+    \vspace*{.5\textheight}
     \noindent\hspace*{8cm}%
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
       \onehalfsp\justifying
@@ -309,7 +310,7 @@
   {
     \clearpage
     \thispagestyle{empty}
-    \vspace*{.45\textheight}
+    \vspace*{.5\textheight}
     \noindent\hspace*{8cm}%
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
       \ufc_input_file:n {#1}
@@ -324,7 +325,7 @@
   {
     \clearpage
     \thispagestyle{empty}
-    \vspace*{.45\textheight}
+    \vspace*{.5\textheight}
     \noindent\hspace*{4cm}%
     \begin{minipage}{\dimexpr\textwidth-4cm\relax}
       \fontsize{10}{12}\selectfont
@@ -437,7 +438,8 @@
 \NewDocumentEnvironment { ufclistadefinicoes } { O{3cm} }
   {
     \begin{description}[
-      style=multiline,
+      style=standard,
+      align=left,
       leftmargin=#1,
       labelwidth=\dimexpr#1-.3cm\relax,
       labelsep=.3cm,

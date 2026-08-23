@@ -1,13 +1,18 @@
 # ufctex changelog
 
-## 2.1.0 — release candidate
+## 2.1.0 — 2026-08-23
 
-- migrated the UFC class to the `abntexto` 1.1+ base;
-- added modular V2 configuration and compatibility support for V1 content;
+- based the UFC class on the `abntexto` 1.1+ base;
+- added modular V2 configuration and current upstream/normative compatibility adapters;
 - added current UFC/ABNT normative profiles and regression coverage;
 - added Times New Roman and Arial policies for pdfLaTeX and LuaLaTeX;
 - added PDF/A-2b, font embedding and Windows literal-font certification;
 - added table, code, algorithm, bibliography, duplex and profile validation;
-- added deterministic GitHub, Overleaf and CTAN/TDS release bundles.
+- fixed code and algorithm line numbers to remain inside the 3 cm text margin;
+- aligned labels and descriptions in abbreviation/acronym and symbol lists, with geometric regression coverage;
+- added an independent PDF validator with strict, portable and accessibility profiles;
+- added deterministic GitHub, Overleaf and CTAN release bundles;
+- consolidated the CTAN archive into a browsing-friendly layout without a redundant nested TDS ZIP;
+- completed the unrestricted final Gate F audit of code, documentation, licenses, CI and release artifacts.
 
-The release remains a candidate until the final Gate D review is complete.
+Validated through Gate T, deterministic distribution preflight, a real Overleaf import smoke test and the final normative/visual audit.

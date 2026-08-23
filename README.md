@@ -2,19 +2,20 @@
 
 Classe LaTeX para trabalhos acadêmicos da Universidade Federal do Ceará, baseada em `abntexto`.
 
-Versão publicada atual: **2.0.0**.  
-Versão candidata em preparação: **2.1.0**.
+Versão publicada atual: **2.1.0**.
 
-A linha 2.x reorganiza a implementação em módulos, preserva a API pública da V1 quando possível e acompanha a base normativa vigente auditada em agosto de 2026.
+A linha 2.x organiza a implementação em módulos e acompanha a base normativa vigente auditada em agosto de 2026.
 
 ## Requisitos
 
 - TeX Live 2026 recomendado para desenvolvimento e CI;
 - `abntexto` 1.1 ou superior;
 - `biblatex` + `biber`;
+- `newtx` no pdfLaTeX e fontes TeX Gyre no LuaLaTeX/XeLaTeX para os perfis portáteis;
+- `tabularray-abnt` de 08/08/2025 ou mais recente quando `tabelas = tabularray`;
 - pacotes opcionais apenas quando os módulos correspondentes forem ativados.
 
-A versão estável pública do Overleaf consultada em 20/08/2026 utiliza TeX Live 2025. Como `abntexto` 1.1 foi publicado em 2026, o bundle específico `modelo-latex-ufc-overleaf-2.1.0.zip` inclui uma cópia íntegra e pinada de `abntexto.cls` 1.1. O proxy de CI em TeX Live 2025 não substitui o smoke final dentro do serviço Overleaf.
+O bundle específico `modelo-latex-ufc-overleaf-2.1.0.zip` inclui uma cópia íntegra e pinada de `abntexto.cls` 1.1 para manter compatibilidade com ambientes que ainda não o ofereçam. O smoke real no Overleaf, realizado em 21/08/2026, compilou com sucesso em pdfLaTeX sobre TeX Live 2026; o proxy de CI em TeX Live 2025 permanece como verificação adicional de compatibilidade.
 
 ## Estrutura
 
@@ -31,12 +32,12 @@ ufctex/
 ├── projetos.def
 ├── objetos.def
 ├── bibliografia.def
+├── compat-abntexto.def
 ├── compat-nbr6023-2025.def
-├── postextuais.def
-└── compat-v1.def
+└── postextuais.def
 ```
 
-Cada responsabilidade fica concentrada em um módulo. `compat-v1.def` é a única camada destinada à transição de APIs da linha 1.x.
+Cada responsabilidade fica concentrada em um módulo. `compat-abntexto.def` e `compat-nbr6023-2025.def` tratam adaptações correntes ao upstream e ao escopo testado da norma de referências; não são camadas de compatibilidade com versões anteriores do template.
 
 ## Configuração básica
 
@@ -141,7 +142,7 @@ No modo `frente-verso`, a V2 aplica margens espelhadas:
 
 ## Ficha catalográfica
 
-O padrão da candidata é:
+O padrão da versão 2.1.0 é:
 
 ```tex
 \ufcsetup{ficha-catalografica = nao}
@@ -413,11 +414,11 @@ Preflight automatizado de distribuição:
 make distribution-preflight
 ```
 
-`distribution-preflight` não representa sozinho o Gate D formal, que também exige GitHub Release, preparação CTAN, smoke no serviço Overleaf e documentação final.
+`distribution-preflight` cobre a parte automatizada do Gate D. O processo final também inclui smoke real no Overleaf, revisão dos metadados e publicação da tag imutável/GitHub Release. A submissão ao CTAN permanece uma etapa separada.
 
 ## Corpus de referência e auditoria
 
-A candidata 2.1.0 transforma `documento.tex` em um corpus visual e semântico de regressão. Ele compila, entre outros casos:
+A versão 2.1.0 transforma `documento.tex` em um corpus visual e semântico de regressão. Ele compila, entre outros casos:
 
 - errata e demais pré-textuais;
 - figuras estreita, intermediária e larga;
@@ -432,34 +433,30 @@ A candidata 2.1.0 transforma `documento.tex` em um corpus visual e semântico de
 
 Casos incompatíveis entre si ou dependentes do ambiente continuam em fixtures dedicadas: `minted`, fontes Microsoft literais, duplex, ficha catalográfica externa e matriz de perfis.
 
-`tests/v2-repository-audit.py` percorre todos os arquivos rastreados pelo Git e bloqueia, entre outros problemas, resíduos V1 fora da camada de compatibilidade, chaves públicas inexistentes em exemplos, caminhos absolutos, artefatos gerados versionados e divergências de versão.
+`tests/v2-repository-audit.py` percorre todos os arquivos rastreados pelo Git e identifica, entre outros problemas, referências à arquitetura anterior, chaves públicas inexistentes em exemplos, caminhos absolutos, artefatos gerados versionados e divergências de versão.
 
-O histórico da auditoria da candidata está em `docs/AUDITORIA-V2.md`.
+O histórico da auditoria da V2 está em `docs/AUDITORIA-V2.md`.
 
 ## Distribuição
 
-A candidata 2.1.0 produz:
+A versão 2.1.0 produz:
 
 - `ufctex-2.1.0.zip`: classe, módulos, ativos necessários, licença e documentação;
 - `modelo-latex-ufc-2.1.0.zip`: template completo para uso local;
 - `modelo-latex-ufc-overleaf-2.1.0.zip`: template para Overleaf com `abntexto` 1.1 pinado;
-- `ufctex-ctan-2.1.0.zip`: candidato CTAN com arquivo TDS interno;
+- `ufctex-ctan-2.1.0.zip`: candidato CTAN em layout navegável, pronto para submissão;
 - `ufctex-2.1.0-reference.pdf`: documento de referência;
 - `SHA256SUMS`: hashes SHA-256 dos artefatos.
 
-As fontes Microsoft não são incluídas. O brasão da UFC é um ativo institucional oficial e não deve ser interpretado como coberto automaticamente pela LPPL da classe. Sua classificação para redistribuição deve ser confirmada antes de uma submissão ao CTAN.
+As fontes Microsoft não são incluídas. O brasão da UFC é um ativo institucional oficial, redistribuído sem modificação para composição de documentos acadêmicos da UFC. Ele não é declarado como coberto pela LPPL da classe e permanece sujeito às regras de identidade visual da Universidade.
 
 ## CI
 
 O workflow principal é `.github/workflows/latex-preflight.yml`. O Gate T obrigatório cobre o documento de referência, a matriz de perfis, PDF/A, fontes incorporadas, Times New Roman/Arial literais no Windows e o proxy Overleaf.
 
-A Fase 4 acrescenta `.github/workflows/reference-validation.yml` e o status `ufctex/reference-audit`, responsável pela auditoria integral e pelo corpus de referência.
+O workflow `.github/workflows/reference-validation.yml` e o status `ufctex/reference-audit` executam a auditoria integral e o corpus de referência.
 
 O workflow `.github/workflows/distribution.yml` exige o Gate T do mesmo SHA, executa o release preflight, gera/verifica os bundles, testa o ZIP de Overleaf no proxy TeX Live 2025 e publica `ufctex/distribution-preflight`.
-
-## Compatibilidade V1
-
-A V2 não replica internamente a arquitetura 1.x. `ufctex/compat-v1.def` existe apenas para reduzir o custo de migração de documentos antigos. Resíduos estruturais da V1 não são permitidos nos demais módulos.
 
 ## Licença
 
