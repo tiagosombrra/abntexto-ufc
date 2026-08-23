@@ -169,13 +169,16 @@ jobs:
           sh tests/v2-profile-pdfa-check.sh
 
       - name: Build deterministic release bundles
-        shell: bash
-        run: |
-          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
-          python3 tools/fetch-abntexto.py --output .ufctex-abntexto.cls
-          python3 tools/build-release-bundles.py --abntexto .ufctex-abntexto.cls
-          python3 tests/v2-release-package-check.py
-          rm -f .ufctex-abntexto.cls
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+            python3 tools/fetch-abntexto.py --output .ufctex-abntexto.cls
+            python3 tools/build-release-bundles.py --abntexto .ufctex-abntexto.cls
+            python3 tests/v2-release-package-check.py
+            rm -f .ufctex-abntexto.cls
 
       - name: Validate Overleaf import bundle proxy
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
