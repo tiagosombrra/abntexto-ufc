@@ -76,7 +76,7 @@ v2-reference-corpus-check: v2-reference-check
 v2-pdfa-check: v2-reference-check
 	@sh tests/v2-pdfa-check.sh
 
-v2-distribution-check:
+v2-distribution-check: v2-repository-audit
 	@sh tests/v2-distribution-check.sh
 
 v2-release-package-check: release-preflight
