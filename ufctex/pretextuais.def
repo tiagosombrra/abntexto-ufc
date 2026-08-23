@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/pretextuais.def}[2026/08/21 UFC pre-textual elements]
+\ProvidesFile{ufctex/pretextuais.def}[2026/08/23 UFC pre-textual elements]
 
 \RequirePackage{pdfpages}
 \RequirePackage{ragged2e}
@@ -438,7 +438,8 @@
 \NewDocumentEnvironment { ufclistadefinicoes } { O{3cm} }
   {
     \begin{description}[
-      style=multiline,
+      style=standard,
+      align=left,
       leftmargin=#1,
       labelwidth=\dimexpr#1-.3cm\relax,
       labelsep=.3cm,
