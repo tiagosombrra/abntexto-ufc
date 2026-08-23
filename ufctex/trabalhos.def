@@ -1,10 +1,11 @@
-\ProvidesFile{ufctex/trabalhos.def}[2026/08/19 UFC academic work profiles]
+\ProvidesFile{ufctex/trabalhos.def}[2026/08/20 UFC academic work profiles]
 
 % NBR 14724:2024: volume identification and continuous pagination.
 \ExplSyntaxOn
 
 \int_new:N \g_ufc_initial_page_int
 \int_new:N \l_ufc_catalog_page_int
+\bool_new:N \l_ufc_catalog_included_bool
 \int_gset:Nn \g_ufc_initial_page_int {1}
 
 \keys_define:nn { ufc }
@@ -24,16 +25,13 @@
 \AtBeginDocument
   { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
 
-\AddToHook{cmd/imprimircapa/after}
-  { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
-
 \cs_new_protected:Npn \ufc_work_volume_line:
   {
     \ufc_meta_if_blank:nF {volume}
       { VOLUME~\ufc_meta_use:n {volume}\par }
   }
 
-\cs_set_protected:Npn \ufc_cover_program_lines:
+\cs_new_protected:Npn \ufc_cover_program_lines:
   {
     \str_case:Vn \g_ufc_document_type_tl
       {
@@ -66,7 +64,7 @@
       }
   }
 
-\cs_set_protected:Npn \ufc_cover:
+\cs_new_protected:Npn \ufc_cover:
   {
     \clearpage
     \thispagestyle{empty}
@@ -90,7 +88,16 @@
     \setcounter{page}{\int_use:N \g_ufc_initial_page_int}
   }
 
-\cs_set_protected:Npn \ufc_title_page:
+\NewDocumentCommand \imprimircapa { }
+  {
+    \str_if_eq:VnF \g_ufc_cover_mode_tl {nao}
+      { \ufc_cover: }
+  }
+
+\AddToHook{cmd/imprimircapa/after}
+  { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
+
+\cs_new_protected:Npn \ufc_title_page:
   {
     \clearpage
     \thispagestyle{empty}
@@ -115,24 +122,40 @@
     \clearpage
   }
 
-% UFC pagination: in one-sided works the catalog card is physical but uncounted;
-% in duplex works it is counted as the verso of the title-page leaf.
-\cs_set_protected:Npn \ufc_catalog_card:n #1
+\NewDocumentCommand \imprimirfolhaderosto { O{} }
+  { \ufc_title_page: }
+
+% NBR 14724:2024: the catalog-data verso is physical but neither counted nor numbered.
+\cs_new_protected:Npn \ufc_catalog_card:n #1
   {
     \bool_if:NT \g_ufc_catalog_card_bool
       {
         \int_set:Nn \l_ufc_catalog_page_int { \value{page} }
+        \bool_set_false:N \l_ufc_catalog_included_bool
         \IfFileExists{#1.pdf}
-          { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1.pdf} }
+          {
+            \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1.pdf}
+            \bool_set_true:N \l_ufc_catalog_included_bool
+          }
           {
             \IfFileExists{#1}
-              { \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1} }
+              {
+                \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1}
+                \bool_set_true:N \l_ufc_catalog_included_bool
+              }
               { \ClassWarningNoLine{ufctex}{Catalog~card~file~'#1'~not~found} }
           }
-        \str_if_eq:VnT \g_ufc_print_mode_tl {anverso}
-          { \setcounter{page}{\int_use:N \l_ufc_catalog_page_int} }
+        \bool_if:NT \l_ufc_catalog_included_bool
+          {
+            \setcounter{page}{\int_use:N \l_ufc_catalog_page_int}
+            \str_if_eq:VnT \g_ufc_print_mode_tl {frente-verso}
+              { \ufcRegisterUncountedPhysicalPage }
+          }
       }
   }
+
+\NewDocumentCommand \imprimirfichacatalografica { m }
+  { \ufc_catalog_card:n {#1} }
 
 \ExplSyntaxOff
 

@@ -13,11 +13,6 @@ forbidden = {
     r'\\chapter\s*\{': r'\chapter',
     r'\\apendice\s*\{': r'\apendice',
     r'\\anexo\s*\{': r'\anexo',
-    r'\\Caption\s*\{': r'\Caption',
-    r'\\UFC(?:fig|tab|qua)\b': r'\UFCfig/\UFCtab/\UFCqua',
-    r'\\Fonte\s*\{': r'\Fonte',
-    r'\\documentclass\s*(?:\[[^\]]*\])?\s*\{abntex2\}': 'abntex2',
-    r'\\input\s*\{lib/(?:preambulo|ufctex)': 'lib V1',
 }
 
 
@@ -39,7 +34,7 @@ for path in tex_files:
     text = uncommented(path.read_text(encoding='utf-8'))
     for pattern, label in forbidden.items():
         if re.search(pattern, text):
-            errors.append(f'{path}: API/estrutura V1 ativa: {label}')
+            errors.append(f'{path}: estrutura não permitida no corpus V2: {label}')
 
     refs = []
     refs.extend((m.group(1), 'tex') for m in re.finditer(r'\\(?:input|include)\s*\{([^}]+)\}', text))
@@ -60,26 +55,77 @@ for path in tex_files:
         if not candidate.exists():
             errors.append(f'{path}: arquivo referenciado não existe: {candidate}')
 
-if Path('lib').exists():
-    errors.append('a pasta lib/ pertence à linha 1.x e não deve existir na distribuição V2')
-
 asset = Path('assets/institucional/brasao-ufc.PNG')
 if not asset.is_file():
     errors.append(f'ativo institucional ausente: {asset}')
 
 makefile = Path('Makefile').read_text(encoding='utf-8')
-cls = Path('ufctex.cls').read_text(encoding='utf-8')
+cls_path = Path('ufctex.cls')
+cls = cls_path.read_text(encoding='utf-8')
 readme = Path('README.md').read_text(encoding='utf-8')
 
-if not re.search(r'^VERSION\s*:?=\s*2\.0\.0\s*$', makefile, re.MULTILINE):
-    errors.append('Makefile: versão diferente de 2.0.0')
-if 'v2.0.0 UFC academic document class' not in cls:
-    errors.append('ufctex.cls: versão diferente de v2.0.0')
-if 'Versão atual: 2.0.0' not in readme:
-    errors.append('README.md: versão diferente de 2.0.0')
-for module in ('institucional.def', 'trabalhos.def'):
-    if rf'\input{{ufctex/{module}}}' not in cls:
-        errors.append(f'ufctex.cls: módulo {module} não carregado')
+version_match = re.search(r'^VERSION\s*:?=\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$', makefile, re.MULTILINE)
+if not version_match:
+    errors.append('Makefile: VERSION sem versão semântica válida')
+else:
+    version = version_match.group(1)
+    if f'v{version} UFC academic document class' not in cls:
+        errors.append(f'ufctex.cls: versão diferente de v{version}')
+
+    published_match = re.search(
+        r'Versão\s+publicada\s+atual:\s*(?:\*\*)?([0-9]+\.[0-9]+\.[0-9]+)(?:\*\*)?\b',
+        readme,
+        re.IGNORECASE,
+    )
+    candidate_match = re.search(
+        r'Versão\s+candidata\s+em\s+preparação:\s*(?:\*\*)?([0-9]+\.[0-9]+\.[0-9]+)(?:\*\*)?\b',
+        readme,
+        re.IGNORECASE,
+    )
+    if not published_match:
+        errors.append('README.md: versão publicada atual ausente ou inválida')
+    elif published_match.group(1) != version:
+        if not candidate_match or candidate_match.group(1) != version:
+            errors.append(
+                f'README.md: VERSION {version} não coincide com versão publicada nem candidata'
+            )
+
+modules = re.findall(r'\\input\{(ufctex/[^}]+\.def)\}', uncommented(cls))
+if 'ufctex/fontes.def' not in modules:
+    errors.append('ufctex.cls: módulo obrigatório ufctex/fontes.def não carregado')
+for module in modules:
+    if not Path(module).is_file():
+        errors.append(f'ufctex.cls: módulo carregado não existe: {module}')
+
+release_infrastructure = (
+    'tools/build-release-bundles.py',
+    'tools/fetch-abntexto.py',
+    'tools/fetch-reference-images.py',
+    'tools/download-actions-artifact.py',
+    'tests/v2-release-package-check.py',
+    'tests/v2-overleaf-bundle-check.py',
+    'tests/v2-release-metadata-check.py',
+    'tests/v2-repository-audit.py',
+    'tests/v2-reference-corpus-check.sh',
+    'tests/v2-algorithm-numbering-check.sh',
+    'docs/README-CTAN.md',
+    'docs/CHANGELOG-CTAN.md',
+    'docs/AUDITORIA-V2.md',
+    'figuras/LICENCAS.md',
+    '.github/workflows/distribution.yml',
+    '.github/workflows/reference-validation.yml',
+)
+for required in release_infrastructure:
+    if not Path(required).is_file():
+        errors.append(f'infraestrutura de distribuição/validação ausente: {required}')
+
+microsoft_fonts = {
+    'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
+    'arial.ttf', 'arialbd.ttf', 'ariali.ttf', 'arialbi.ttf',
+}
+for path in Path('.').rglob('*'):
+    if path.is_file() and path.name.lower() in microsoft_fonts:
+        errors.append(f'fonte Microsoft proprietária não pode ser versionada: {path}')
 
 if errors:
     raise SystemExit('\n'.join(errors))
@@ -91,5 +137,15 @@ for script in tests/v2-*.sh; do
     exit 1
   }
 done
+
+python3 -m py_compile \
+  tools/build-release-bundles.py \
+  tools/fetch-abntexto.py \
+  tools/fetch-reference-images.py \
+  tools/download-actions-artifact.py \
+  tests/v2-repository-audit.py \
+  tests/v2-release-package-check.py \
+  tests/v2-overleaf-bundle-check.py \
+  tests/v2-release-metadata-check.py
 
 echo 'Gate V2 de consistência da distribuição concluído.'

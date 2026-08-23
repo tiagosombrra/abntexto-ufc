@@ -1,10 +1,18 @@
 \label{ap:codigo}
 
-Este apêndice exemplifica a inclusão de código-fonte elaborado pelo autor.
+Este apêndice exemplifica código-fonte elaborado pelo autor usando o mesmo ambiente tipográfico empregado no corpo do trabalho. A inclusão de arquivo externo é exercitada separadamente no catálogo de exemplos com Python.
 
-\legend{codigo}{Arquivo C++ apresentado como apêndice}
+\lstset{language=C++,numbers=left,stepnumber=1,numbersep=8pt}
+\legend{codigo}{Código C++ apresentado como apêndice}
 \ufcfonte{Elaboração própria.}
 \label{cod:apendice-cpp}
-\begin{ufcobjeto}[here]
-  \ufcinputlisting[language=C++]{figuras/main.cpp}
-\end{ufcobjeto}
+\begin{ufclisting}[here]
+int soma(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    return soma(2, 3);
+}
+\end{ufclisting}
+\lstset{numbers=none,stepnumber=1}

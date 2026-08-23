@@ -1,7 +1,10 @@
 \documentclass{ufctex}
 
-\ufcsetup{codigo=minted}
-\setminted{fontsize=\small,breaklines}
+\ufcsetup{
+  fonte=@UFC_FONT@,
+  codigo=minted
+}
+\setminted{breaklines}
 
 \begin{document}
 
@@ -10,6 +13,10 @@
 \legend{codigo}{Arquivo Python com minted}
 \ufcfonte{Elaboração própria.}
 \label{cod:minted}
+\ufcinputminted[here]{python}{tests/fixtures/exemplo.py}
+
+\clearpage
+\pagestyle{empty}
 \ufcinputminted[here]{python}{tests/fixtures/exemplo.py}
 
 \end{document}

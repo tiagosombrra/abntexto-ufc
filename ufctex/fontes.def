@@ -1,0 +1,222 @@
+\ProvidesFile{ufctex/fontes.def}[2026/08/20 UFC typography and font policy]
+
+\RequirePackage{etoolbox}
+
+\ifPDFTeX
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage{newtxtext}
+  \RequirePackage{newtxmath}
+\else
+  \RequirePackage{fontspec}
+  \RequirePackage{unicode-math}
+\fi
+
+\ExplSyntaxOn
+
+\tl_new:N \g_ufc_font_family_tl
+\tl_new:N \g_ufc_math_font_policy_tl
+\bool_new:N \g_ufc_font_strict_bool
+\bool_new:N \g_ufc_pdftex_windows_map_loaded_bool
+\bool_new:N \l_ufc_font_files_available_bool
+
+\ifPDFTeX
+  \tl_gset:Nn \g_ufc_math_font_policy_tl { NEW-TX-MATH }
+\else
+  \IfFontExistsTF{TeX Gyre Termes Math}
+    {
+      \setmathfont{TeX Gyre Termes Math}
+      \tl_gset:Nn \g_ufc_math_font_policy_tl { TEX-GYRE-TERMES-MATH }
+    }
+    {
+      \IfFontExistsTF{Latin Modern Math}
+        {
+          \setmathfont{Latin Modern Math}
+          \tl_gset:Nn \g_ufc_math_font_policy_tl { LATIN-MODERN-MATH }
+          \ClassInfo{ufctex}{TeX~Gyre~Termes~Math~not~found;~using~Latin~Modern~Math}
+        }
+        {
+          \ClassError{ufctex}
+            {No~supported~OpenType~math~font~was~found}
+            {Install~TeX~Gyre~Termes~Math~or~Latin~Modern~Math.}
+        }
+    }
+\fi
+
+\keys_define:nn { ufc }
+  {
+    fonte .choice:,
+    fonte / times .code:n =
+      { \tl_gset:Nn \g_ufc_font_family_tl { times } },
+    fonte / arial .code:n =
+      { \tl_gset:Nn \g_ufc_font_family_tl { arial } },
+
+    fonte-estrita .choice:,
+    fonte-estrita / sim .code:n =
+      { \bool_gset_true:N \g_ufc_font_strict_bool },
+    fonte-estrita / nao .code:n =
+      { \bool_gset_false:N \g_ufc_font_strict_bool },
+    fonte-estrita / true .meta:n = { fonte-estrita = sim },
+    fonte-estrita / false .meta:n = { fonte-estrita = nao }
+  }
+
+\keys_set:nn { ufc }
+  {
+    fonte = times,
+    fonte-estrita = nao
+  }
+
+\cs_new_protected:Npn \ufc_font_check_files:n #1
+  {
+    \bool_set_true:N \l_ufc_font_files_available_bool
+    \clist_map_inline:nn {#1}
+      {
+        \file_if_exist:nF {##1}
+          { \bool_set_false:N \l_ufc_font_files_available_bool }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_font_pdftex_load_windows_map:
+  {
+    \bool_if:NF \g_ufc_pdftex_windows_map_loaded_bool
+      {
+        \pdfmapfile{+ufctex-windows.map}
+        \bool_gset_true:N \g_ufc_pdftex_windows_map_loaded_bool
+      }
+  }
+
+% Keep all textual family switches inside the institutional family.
+\cs_new_protected:Npn \ufc_font_pdftex_set_text_family:n #1
+  {
+    \ufc_font_pdftex_load_windows_map:
+    \renewcommand{\rmdefault}{#1}
+    \renewcommand{\sfdefault}{#1}
+    \renewcommand{\ttdefault}{#1}
+    \renewcommand{\familydefault}{\rmdefault}
+  }
+
+\cs_new_protected:Npn \ufc_font_luatex_set_text_family:n #1
+  {
+    \setmainfont{#1}
+    \setsansfont{#1}
+    \setmonofont{#1}
+  }
+
+\cs_new_protected:Npn \ufc_font_pdftex_times:
+  {
+    \ufc_font_check_files:n
+      { ufctex-winfonts-ready.tex, t1times-ttf.fd, ts1times-ttf.fd }
+    \bool_if:NTF \l_ufc_font_files_available_bool
+      {
+        \ufc_font_pdftex_set_text_family:n {times-ttf}
+        \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~pdfLaTeX}
+      }
+      {
+        \bool_if:NTF \g_ufc_font_strict_bool
+          {
+            \ClassError{ufctex}
+              {Times~New~Roman~support~is~not~prepared~for~pdfLaTeX}
+              {Run~tools/prepare-windows-fonts.ps1~on~Windows~and~compile~again.}
+          }
+          {
+            \renewcommand{\rmdefault}{ntxtlf}
+            \renewcommand{\sfdefault}{ntxtlf}
+            \renewcommand{\ttdefault}{ntxtlf}
+            \renewcommand{\familydefault}{\rmdefault}
+            \ClassInfo{ufctex}{Times~New~Roman~not~prepared~for~pdfLaTeX;~using~NewTX~compatibility~fallback}
+          }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_font_pdftex_arial:
+  {
+    \ufc_font_check_files:n
+      { ufctex-winfonts-ready.tex, t1arial.fd, ts1arial.fd }
+    \bool_if:NTF \l_ufc_font_files_available_bool
+      {
+        \ufc_font_pdftex_set_text_family:n {arial}
+        \ClassInfo{ufctex}{Using~literal~Arial~with~pdfLaTeX}
+      }
+      {
+        \bool_if:NTF \g_ufc_font_strict_bool
+          {
+            \ClassError{ufctex}
+              {Arial~support~is~not~prepared~for~pdfLaTeX}
+              {Run~tools/prepare-windows-fonts.ps1~on~Windows~and~compile~again.}
+          }
+          {
+            \renewcommand{\rmdefault}{qhv}
+            \renewcommand{\sfdefault}{qhv}
+            \renewcommand{\ttdefault}{qhv}
+            \renewcommand{\familydefault}{\rmdefault}
+            \ClassInfo{ufctex}{Arial~not~prepared~for~pdfLaTeX;~using~TeX~Gyre~Heros~compatibility~fallback}
+          }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_font_luatex_times:
+  {
+    \IfFontExistsTF{Times New Roman}
+      {
+        \ufc_font_luatex_set_text_family:n {Times New Roman}
+        \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~LuaLaTeX}
+      }
+      {
+        \bool_if:NTF \g_ufc_font_strict_bool
+          {
+            \ClassError{ufctex}
+              {Times~New~Roman~not~found}
+              {Install~Times~New~Roman~or~set~fonte-estrita=nao.}
+          }
+          {
+            \ClassInfo{ufctex}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes~compatibility~fallback}
+            \ufc_font_luatex_set_text_family:n {TeX Gyre Termes}
+          }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_font_luatex_arial:
+  {
+    \IfFontExistsTF{Arial}
+      {
+        \ufc_font_luatex_set_text_family:n {Arial}
+        \ClassInfo{ufctex}{Using~literal~Arial~with~LuaLaTeX}
+      }
+      {
+        \bool_if:NTF \g_ufc_font_strict_bool
+          {
+            \ClassError{ufctex}
+              {Arial~not~found}
+              {Install~Arial~or~set~fonte-estrita=nao.}
+          }
+          {
+            \ClassInfo{ufctex}{Arial~not~found;~using~TeX~Gyre~Heros~compatibility~fallback}
+            \ufc_font_luatex_set_text_family:n {TeX Gyre Heros}
+          }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_font_apply:
+  {
+    \ifPDFTeX
+      \str_case:Vn \g_ufc_font_family_tl
+        {
+          { times } { \ufc_font_pdftex_times: }
+          { arial } { \ufc_font_pdftex_arial: }
+        }
+    \else
+      \str_case:Vn \g_ufc_font_family_tl
+        {
+          { times } { \ufc_font_luatex_times: }
+          { arial } { \ufc_font_luatex_arial: }
+        }
+    \fi
+  }
+
+\NewExpandableDocumentCommand \ufcMathFontPolicy { }
+  { \tl_use:N \g_ufc_math_font_policy_tl }
+
+\AtEndPreamble{\ufc_font_apply:}
+
+\ExplSyntaxOff
+
+\endinput

@@ -1,0 +1,19 @@
+\documentclass{ufctex}
+
+\ufcbibliografia{tests/fixtures/fontes-documentais.bib}
+
+\begin{document}
+\textual
+
+\section{Fontes documentais}
+
+\legend{figure}{Objeto com fonte externa}
+\ufcfonte{Adaptado de \textcite{silva2026}.}
+\begin{ufcobjeto}[here]
+  \rule{6cm}{2cm}
+\end{ufcobjeto}
+
+\annex{Documento com referência própria}
+Texto do anexo com referência bibliográfica apresentada localmente.\footnote{\fullcite{silva2026}}
+
+\end{document}

@@ -2,7 +2,7 @@
 
 \ExplSyntaxOn
 
-\cs_set_protected:Npn \ufc_print_coat_of_arms:
+\cs_new_protected:Npn \ufc_print_coat_of_arms:
   {
     \bool_if:NT \g_ufc_coat_of_arms_bool
       {

@@ -5,6 +5,15 @@
   impressao = anverso
 }
 
+\makeatletter
+\newcommand{\ufcFootnoteProbe}{%
+  \typeout{UFC-FOOTNOTE-HANG=\the\hangindent}%
+  \typeout{UFC-FOOTNOTE-HANGAFTER=\the\hangafter}%
+  \typeout{UFC-FOOTNOTE-FONTSIZE=\f@size}%
+  \typeout{UFC-FOOTNOTE-BASELINE=\the\baselineskip}%
+}
+\makeatother
+
 \begin{document}
 
 \pretextual
@@ -16,7 +25,8 @@
 \textual
 
 \section{Introdução}
-Texto de validação do corpo em tamanho normal, espaçamento de um e meio e recuo de primeira linha. Esta nota verifica a apresentação reduzida e o espaçamento simples\footnote{Nota de rodapé usada apenas para validar tamanho, entrelinha, recuo inicial e filete.}.
+\typeout{UFC-PARINDENT=\the\parindent}
+Texto de validação do corpo em tamanho normal, espaçamento de um e meio e recuo de primeira linha. Esta nota verifica a apresentação reduzida, o espaçamento simples e o alinhamento suspenso das linhas subsequentes\footnote{\ufcFootnoteProbe Nota de rodapé deliberadamente extensa para produzir mais de uma linha e validar o tamanho reduzido, a entrelinha simples, o recuo suspenso das linhas subsequentes sob a primeira letra do texto e o filete normativo.}.
 
 \subsection{Seção secundária}
 Texto de validação da seção secundária.

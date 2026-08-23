@@ -24,8 +24,7 @@ for engine in pdflatex lualatex; do
     }
     rm -f "$job.tex"
 
-    warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-      grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
     if [ -n "$warnings" ]; then
       printf '%s\n' "$warnings"
       echo "Preflight V2 falhou: perfil $profile/$engine contém warning ou overflow não reconhecido."

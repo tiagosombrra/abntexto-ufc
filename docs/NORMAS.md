@@ -1,12 +1,13 @@
 # Base normativa da V2
 
-Última auditoria: **2026-08-19**.
+Última auditoria normativa: **2026-08-23**.  
+Estado: **V2.1.0 auditada para release; Gate F final**.
 
-Este arquivo registra a política normativa e o mapa de implementação da V2 do modelo LaTeX UFC.
+Este documento é a referência humana do projeto para política normativa, precedência e vínculo entre requisito, implementação e teste. O catálogo atômico e a cobertura executável ficam em `normativa/` e nos checks de `tests/checks/`.
 
 ## Política normativa
 
-A V2 adota a edição vigente mais recente de cada norma aplicável. Quando um guia institucional ainda citar edição substituída, a decisão segue esta ordem:
+A V2 adota a edição vigente mais recente de cada norma aplicável. Quando um guia institucional ainda cita edição substituída, a decisão segue esta ordem:
 
 1. legislação, regulamento, instrução normativa ou resolução institucional aplicável;
 2. edição vigente da norma ABNT;
@@ -14,14 +15,14 @@ A V2 adota a edição vigente mais recente de cada norma aplicável. Quando um g
 4. Guia de Normalização da UFC mais recente aplicável;
 5. comportamento de `abntexto` e demais pacotes.
 
-O comportamento de um pacote nunca prevalece sobre requisito normativo ou institucional aplicável.
+O comportamento de um pacote nunca prevalece sobre requisito normativo ou institucional aplicável. Datas de PDFs institucionais não são tratadas, isoladamente, como prova de vigência de uma norma técnica.
 
-## Normas adotadas
+## Base reconfirmada
 
-| Assunto | Referência | Uso principal |
+| Assunto | Referência adotada | Escopo principal |
 |---|---|---|
 | Trabalhos acadêmicos | **ABNT NBR 14724:2024**, versão corrigida de 01/04/2025 | estrutura, apresentação, paginação e elementos documentais |
-| Citações | **ABNT NBR 10520:2023** | citações diretas, indiretas, autor-data e `apud` |
+| Citações | **ABNT NBR 10520:2023** | citações diretas, indiretas e sistema autor-data |
 | Referências | **ABNT NBR 6023:2025** | elaboração e apresentação das referências |
 | Projetos de pesquisa | **ABNT NBR 15287:2025** | perfis `projeto` e `projetoanonimizado` |
 | Resumos | **ABNT NBR 6028:2021** | resumo, abstract e palavras-chave |
@@ -29,180 +30,137 @@ O comportamento de um pacote nunca prevalece sobre requisito normativo ou instit
 | Sumário | **ABNT NBR 6027:2012** | composição e hierarquia do Sumário |
 | Índice | **ABNT NBR 6034:2004** | índice remissivo opcional |
 | Lombada | **ABNT NBR 12225:2023** | requisito condicional |
-| Tabelas numéricas | **IBGE, Normas de apresentação tabular, 3. ed., 1993** | estrutura de tabelas numéricas |
+| Tabelas numéricas | **IBGE, Normas de Apresentação Tabular, 3. ed., 1993** | estrutura de tabelas numéricas |
+| Ficha catalográfica | **IN Conjunta UFC nº 2/2026** | representação visual facultativa no depósito |
+| Agradecimento CAPES | **Portaria CAPES nº 206/2018** | requisito condicional ao financiamento CAPES |
 
-As edições devem ser reconfirmadas antes de cada nova versão principal do template.
+As edições são reconfirmadas antes de cada versão principal. O inventário de fontes, datas de consulta e precedência está em `normativa/source-audit.json`.
 
-## Requisitos institucionais UFC
+## Auditoria institucional UFC
 
-A página de normalização do Sistema de Bibliotecas da UFC foi atualizada em 4 de março de 2026 e orienta o uso das normas ABNT vigentes. PDFs históricos dos guias continuam úteis para requisitos institucionais que não conflitem com edições ABNT posteriores.
+A página de Normalização de Trabalhos Acadêmicos do Sistema de Bibliotecas da UFC foi revisada em 2026 e declara alinhamento às normas ABNT vigentes. Guias institucionais históricos continuam úteis para requisitos específicos da UFC, mas referências internas a edições ABNT superadas não substituem a edição vigente.
 
-### PDF/A
+A Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG torna facultativa a representação visual da ficha catalográfica para TCC, dissertação e tese depositados no Repositório Institucional.
 
-As orientações de recebimento consultadas em 2026 exigem arquivo eletrônico **PDF/A** para TCC, dissertações e teses destinados ao repositório.
+Para depósito, o projeto considera os requisitos institucionais vigentes de PDF/A, abrangência do arquivo da capa aos anexos e folha de aprovação sem assinaturas digitalizadas. A classe não presume se o trabalho recebeu financiamento CAPES; quando aplicável, o autor deve incluir o agradecimento exigido pela Portaria CAPES nº 206/2018.
 
-A V2 usa **PDF/A-2b** como perfil técnico verificável. O subtipo 2b é escolha de implementação do projeto, não requisito específico atribuído à UFC.
+## Estados de conformidade
 
-`documento.tex` e a matriz final de perfis usam `\DocumentMetadata` antes de `\documentclass`. A declaração XMP não é considerada prova suficiente: o gate de release usa veraPDF.
+- **CONFORME**: requisito implementado e sustentado por evidência/teste compatível;
+- **CONFORME NO ESCOPO TESTADO**: requisito amplo cuja parcela exercitada possui evidência suficiente;
+- **DIVERGENTE**: implementação atual contraria requisito vigente;
+- **INCOMPLETO**: regra conhecida, mas falta decisão, cobertura ou evidência necessária;
+- **NÃO APLICÁVEL**: requisito condicional fora do escopo da distribuição corrente.
 
-### Folha de aprovação
+Fallback de compatibilidade tipográfica não torna um PDF estritamente conforme. Para a família textual, a certificação final estrita exige **Times New Roman ou Arial literais** no PDF produzido.
 
-A versão destinada ao repositório deve apresentar a folha de aprovação sem assinaturas. A V2 produz identificação e linhas da banca, mas não incorpora assinaturas digitalizadas.
+O PDF final também deve ser autocontido para renderização: todas as fontes efetivamente usadas devem estar incorporadas. Incorporação por subconjunto é aceita.
 
-### Ficha catalográfica
+## Matriz requisito → implementação → teste
 
-Em 2026, a representação visual da ficha catalográfica tornou-se facultativa no contexto da Instrução Normativa conjunta nº 2/2026, e o serviço CATALOG foi descontinuado. Por isso:
-
-```tex
-ficha-catalografica = nao
-```
-
-é o padrão.
-
-Quando a ficha for usada, a V2 diferencia os modos de impressão:
-
-- `anverso`: a ficha ocupa página física, mas não incrementa a contagem lógica;
-- `frente-verso`: a ficha ocupa o verso da folha de rosto e permanece na sequência contada.
-
-A regressão `tests/v2-catalog-card-check.sh` valida os dois comportamentos com pdfLaTeX e LuaLaTeX. Como a ficha é um PDF externo, sua inclusão pode alterar a conformidade PDF/A do trabalho; o arquivo completo deve ser validado novamente com veraPDF.
-
-### Trabalhos em mais de um volume
-
-A identificação do volume deve aparecer quando o trabalho for dividido em mais de um volume, e a paginação permanece única e sequencial entre os volumes.
-
-A V2 oferece:
-
-```tex
-volume = {2},
-pagina-inicial = 101
-```
-
-O módulo `ufctex/trabalhos.def` aplica `volume` à capa e à folha de rosto dos trabalhos acadêmicos e preserva `pagina-inicial` após a capa. A regressão `tests/v2-multivolume-check.sh` valida o comportamento nos dois motores suportados.
-
-### Frente e verso
-
-No modo `frente-verso`:
-
-- anverso: esquerda/superior 3 cm; direita/inferior 2 cm;
-- verso: direita/superior 3 cm; esquerda/inferior 2 cm;
-- numeração à direita no anverso e à esquerda no verso;
-- elementos pré-textuais, exceto ficha catalográfica, iniciam no anverso;
-- seções textuais primárias e elementos pós-textuais controlados pela V2 iniciam no anverso.
-
-As regressões geométricas medem o PDF real, incluindo margens, paginação e paridade física.
-
-### Resumo e abstract
-
-O documento de referência mantém resumo e abstract entre 150 e 500 palavras. A suíte conta as palavras dos arquivos distribuídos e verifica a presença das palavras-chave.
-
-### Ilustrações e tabelas
-
-A fonte acompanha ilustrações e tabelas, inclusive quando o conteúdo é de elaboração própria. A API pública usa `\ufcfonte{...}`.
-
-A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrência. Tabelas permanecem em lista própria. Listas específicas continuam disponíveis.
-
-### Referências
-
-As referências usam espaçamento simples internamente e intervalo equivalente a uma linha simples entre entradas consecutivas. O gate mede `\baselineskip`, `\baselinestretch` e `\bibitemsep` durante a bibliografia.
-
-## Mapa de implementação
-
-| Parte | Norma/requisito principal | Implementação |
+| Requisito | Estado | Implementação / evidência |
 |---|---|---|
-| configuração e perfis | política UFC + normas por tipo | `ufctex/core.def` |
-| papel, margens, fonte e espaçamento | NBR 14724:2024 + UFC | `ufctex/layout.def` |
-| duplex e início no anverso | NBR 14724:2024 + UFC | `ufctex/layout.def` + regressões geométricas |
-| ativos institucionais | identidade visual UFC | `ufctex/institucional.def` + `assets/institucional/` |
-| capa e folha de rosto | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` + `ufctex/trabalhos.def` |
-| volume e paginação contínua | NBR 14724:2024 + UFC | `ufctex/trabalhos.def` |
-| ficha catalográfica | política UFC 2026 + NBR 14724:2024 | `ufctex/trabalhos.def` |
-| folha de aprovação | NBR 14724:2024 + política de depósito UFC | `ufctex/pretextuais.def` |
-| dedicatória, agradecimentos, epígrafe e errata | NBR 14724:2024 + UFC | `ufctex/pretextuais.def` |
-| resumo e abstract | NBR 6028:2021 + UFC | `ufctex/pretextuais.def` |
-| listas e Sumário | NBR 14724:2024 + NBR 6027:2012 | `ufctex/pretextuais.def` + `ufctex/objetos.def` |
-| seções e subdivisões | NBR 6024:2012 + UFC | `ufctex/layout.def` / `abntexto` |
-| figuras, gráficos e quadros | NBR 14724:2024 + UFC | `ufctex/objetos.def` |
-| tabelas numéricas | NBR 14724:2024 + IBGE | `ufctex/objetos.def` + `tabularray-abnt` |
-| código e algoritmos | extensão editorial compatível | `ufctex/objetos.def` + `ufctex/modulos.def` |
-| citações | NBR 10520:2023 | `ufctex/bibliografia.def` |
-| referências | NBR 6023:2025 | `ufctex/bibliografia.def` + `ufctex/compat-nbr6023-2025.def` |
-| projetos | NBR 15287:2025 | `ufctex/projetos.def` |
-| glossário | NBR 14724:2024 | módulo opcional |
-| apêndices e anexos | NBR 14724:2024 | API pública do `abntexto` + política V2 de quebra |
-| índice | NBR 6034:2004 | módulo opcional |
-| PDF/A | política institucional UFC | `\DocumentMetadata` + veraPDF |
-| compatibilidade V1 | transição de documentos | `ufctex/compat-v1.def` |
+| papel A4 | **CONFORME** | `ufctex/layout.def`; `tests/v2-pdf-geometry-check.sh` |
+| margens anverso 3 cm esquerda/superior e 2 cm direita/inferior | **CONFORME** | `ufctex/layout.def`; gate geométrico |
+| margens espelhadas em frente-verso | **CONFORME** | `ufctex/layout.def`; regressões duplex |
+| corpo textual em tamanho 12 | **CONFORME** | classe carregada em 12 pt; gates tipográficos |
+| seleção pública `fonte=times|arial` | **CONFORME NO ESCOPO TESTADO** | `ufctex/fontes.def`; font-config |
+| política `fonte-estrita=sim|nao` | **CONFORME NO ESCOPO TESTADO** | modo estrito falha sem fonte literal; fallback é declarado |
+| Times New Roman/Arial literais no PDF estrito | **CONFORME NO ESCOPO TESTADO** | Gate T Windows em pdfLaTeX/LuaLaTeX |
+| variantes regular/negrito/itálico/negrito-itálico | **CONFORME NO ESCOPO TESTADO** | certificação Windows nos dois motores |
+| todas as fontes incorporadas | **CONFORME NO ESCOPO TESTADO** | `tests/v2-font-embedding-check.sh`, perfis e Gate T |
+| recuo de primeira linha em 2 cm | **CONFORME** | `ufctex/layout.def`; layout check |
+| sem espaço adicional entre parágrafos | **CONFORME** | `\parskip=0pt`; layout check |
+| espaçamento 1,5 no corpo | **CONFORME** | política da classe |
+| exceções em espaço simples/tamanho reduzido | **CONFORME NO ESCOPO TESTADO** | citações longas, notas, paginação, objetos e tabelas exercitados |
+| capa e folha de rosto | **CONFORME** | `ufctex/pretextuais.def`, `ufctex/trabalhos.def` |
+| volume e paginação contínua | **CONFORME** | `ufctex/trabalhos.def`; multivolume check |
+| ficha catalográfica visual facultativa | **CONFORME** | política padrão `nao`; regressão dedicada |
+| folha de aprovação sem assinaturas digitalizadas | **CONFORME NO ESCOPO TESTADO** | `ufctex/pretextuais.def`; validador mantém inspeção visual quando necessário |
+| dedicatória, agradecimentos, epígrafe e errata | **CONFORME NO ESCOPO TESTADO** | pré-textuais + fixtures |
+| resumo/abstract e palavras-chave | **CONFORME NO ESCOPO TESTADO** | `ufctex/pretextuais.def`; corpus de referência |
+| listas e Sumário | **CONFORME** | pré-textuais + regressão de líderes pontilhados |
+| seções e subdivisões | **CONFORME NO ESCOPO TESTADO** | `ufctex/layout.def`; NBR 6024 |
+| figuras, gráficos e quadros | **CONFORME NO ESCOPO TESTADO** | `ufctex/objetos.def`; geometria de objetos |
+| tabelas numéricas | **CONFORME NO ESCOPO TESTADO** | modo nativo e `tabularray-abnt`; gate IBGE |
+| código e algoritmos | **CONFORME NO ESCOPO TESTADO** | módulos opcionais + gate geométrico/tipográfico |
+| equações | **CONFORME NO ESCOPO TESTADO** | ambiente matemático + math check |
+| citações | **CONFORME NO ESCOPO TESTADO** | `ufctex/bibliografia.def`; NBR 10520:2023 |
+| referências | **CONFORME NO ESCOPO TESTADO** | `biblatex-abnt` + `compat-nbr6023-2025.def`; NBR 6023:2025 |
+| projetos | **CONFORME NO ESCOPO TESTADO** | `ufctex/projetos.def`; NBR 15287:2025 |
+| glossário | **CONFORME NO ESCOPO TESTADO** | módulo opcional |
+| apêndices e anexos | **CONFORME NO ESCOPO TESTADO** | API pública do `abntexto` + política V2 de quebra |
+| índice | **CONFORME NO ESCOPO TESTADO** | módulo opcional; NBR 6034:2004 |
+| PDF/A e fontes autocontidas | **CONFORME NO ESCOPO TESTADO** | `\DocumentMetadata`, veraPDF, font embedding gates |
+
+A cobertura detalhada e atômica não é duplicada manualmente aqui. Ela é mantida em `normativa/catalog.json`, `normativa/atomic-rules.json`, `normativa/coverage-audit.json` e verificada por `tests/checks/normative_*`.
+
+## Tipografia
+
+A API pública oferece `fonte=times` e `fonte=arial`. A política de identidade é controlada por `fonte-estrita`:
+
+- `sim`: exige a família literal e reprova ausência;
+- `nao`: admite fallback explicitamente identificado para portabilidade/desenvolvimento.
+
+Fallbacks portáteis:
+
+- pdfLaTeX + Times: NewTX;
+- pdfLaTeX + Arial: TeX Gyre Heros;
+- LuaLaTeX/XeLaTeX + Times: TeX Gyre Termes;
+- LuaLaTeX/XeLaTeX + Arial: TeX Gyre Heros.
+
+O Gate T Windows certifica Times New Roman e Arial literais, suas variantes, extração Unicode, incorporação e PDF/A-2b. As fontes Microsoft não são redistribuídas.
+
+## Objetos acadêmicos
+
+Figuras, gráficos, quadros, códigos e algoritmos usam a infraestrutura de objetos da V2. Título, Fonte e Nota são vinculados à largura física do objeto. A numeração de códigos/algoritmos permanece dentro da mancha gráfica. A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrência; tabelas permanecem em lista própria.
+
+Para tabelas numéricas, o módulo `tabularray` requer `tabularray-abnt` datado de **2025-08-08 ou mais recente**. A alternância de linhas é uma extensão editorial opcional e não uma regra normativa automática.
+
+## Citações e referências
+
+O projeto aplica NBR 10520:2023 para citações. Citações diretas longas usam parágrafo distinto, letra menor, espaço simples, sem aspas e recuo institucional exercitado de 4 cm.
+
+Para referências, prevalece a NBR 6023:2025. Ajustes necessários ao escopo testado ficam isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
+
+## Projetos de pesquisa
+
+Os perfis `projeto` e `projetoanonimizado` adotam NBR 15287:2025 e preservam apenas requisitos UFC compatíveis com a edição vigente. O perfil anonimizado remove dados pessoais usados na seleção sem criar uma norma institucional inexistente.
 
 ## Compatibilidade dos pacotes
 
-`abntexto`, `biblatex-abnt`, `tabularray-abnt` e demais pacotes são infraestrutura. A versão de um pacote não define, isoladamente, o nível de conformidade normativa da V2.
+`abntexto`, `biblatex-abnt`, `tabularray-abnt` e demais pacotes são infraestrutura. A versão de um pacote não define, isoladamente, conformidade normativa.
 
-Na auditoria de 2026-08-19, os ajustes necessários para NBR 6023:2025 permanecem isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
+A V2 exige `abntexto` 1.1 ou superior. Para os perfis portáteis de fonte, pdfLaTeX usa NewTX/TeX Gyre e motores Unicode usam `fontspec`, `unicode-math` e famílias TeX Gyre compatíveis. Módulos opcionais são carregados somente quando ativados.
 
-## Build
+## Build e gates
 
-O `Makefile` executa uma primeira passagem LaTeX e decide os processadores auxiliares pelos artefatos efetivamente produzidos:
+`make preflight` executa a validação coordenada por `tests/run.py --mode pr`, incluindo auditoria do repositório, documento de referência, layout, fontes, geometria, matemática, pré-textuais, duplex, objetos, tabelas, código/algoritmos, bibliografia, projetos, matriz de perfis, pós-textuais, multivolume e ficha catalográfica.
 
-- `.bcf` contendo uma `datasource` bibliográfica → Biber;
-- `.glo` não vazio → `makeglossaries`;
-- `.idx` não vazio → `makeindex`.
+`make release-preflight` usa `tests/run.py --mode release` e acrescenta certificações profundas de PDF/A. O Gate T combina Linux, proxy Overleaf e certificação Windows de fontes literais. `make distribution-preflight` ainda reconstrói e valida deterministicamente todos os bundles, inclusive compilação direta a partir do candidato CTAN extraído.
 
-Assim, documentos sem fonte bibliográfica, glossário ou índice não dependem desses processadores. `tests/v2-build-path-check.sh` usa executáveis-falha deliberados para provar que processadores desnecessários não são chamados.
-
-## Gates de validação
-
-`make preflight` executa:
-
-- consistência estática da distribuição;
-- documento de referência;
-- layout, A4, margens e paginação real;
-- pré-textuais e duplex;
-- ficha catalográfica nos dois modos;
-- trabalhos multivolume;
-- objetos, tabelas, códigos, algoritmos e `minted`;
-- citações, referências e espaçamento;
-- projetos;
-- seis perfis completos em pdfLaTeX e LuaLaTeX;
-- pós-textuais e compatibilidade pública da API V1;
-- fluxo modular do `Makefile`.
-
-A matriz de perfis produz **12 PDFs**: seis perfis × dois motores. Cada PDF é verificado quanto a conteúdo específico do perfil, A4, fontes incorporadas, Sumário, ausência de estrutura `chapter`, ausência de warnings/overflow não reconhecidos e declaração PDF/A-2b.
-
-`make release-preflight` acrescenta veraPDF para o documento de referência e para os 12 PDFs da matriz.
-
-No GitHub Actions, o job agregado `latex-preflight` depende de todos os grupos funcionais e permanece como contrato da proteção da branch `main`.
-
-## Consistência da distribuição
-
-`tests/v2-distribution-check.sh` impede a reintrodução de:
-
-- `\chapter` e helpers V1 nos arquivos distribuídos ao usuário;
-- qualquer pasta `lib/` na distribuição V2;
-- referências ativas a arquivos inexistentes;
-- ausência do brasão em `assets/institucional/`;
-- divergência entre a versão do `Makefile`, da classe e do README;
-- scripts `tests/v2-*.sh` com erro de sintaxe POSIX shell.
-
-A linha 1.x permanece preservada em sua própria branch para documentos legados.
-
-## Fontes institucionais de verificação
+## Fontes institucionais e normativas de verificação
 
 - Sistema de Bibliotecas da UFC — Normalização de trabalhos acadêmicos: https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/
-- Sistema de Bibliotecas da UFC — Normas para recebimento de teses e dissertações: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/
-- Sistema de Bibliotecas da UFC — Normas para recebimento de TCC: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/
-- Sistema de Bibliotecas da UFC — FAQ da ficha catalográfica: https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/
-- Sistema de Bibliotecas da UFC — Coleção de Normas Técnicas: https://biblioteca.ufc.br/pt/colecao-de-normas-tecnicas/
-- ABNT Catálogo: https://www.abntcatalogo.com.br/
+- Guia de Normalização de Trabalhos Acadêmicos: https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf
+- Guia de Normalização para Elaboração de Citações 2025: https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf
+- Sistema de Bibliotecas da UFC — normas para recebimento de teses e dissertações: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/
+- Sistema de Bibliotecas da UFC — normas para recebimento de TCC: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/
+- Instrução Normativa Conjunta nº 2/2026: https://biblioteca.ufc.br/wp-content/uploads/2026/02/instrucao-normativa-conjunta-2.pdf
+- Sistema de Bibliotecas da UFC — ficha catalográfica: https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/
+- Sistema de Bibliotecas da UFC — coleção de normas técnicas: https://biblioteca.ufc.br/pt/colecao-de-normas-tecnicas/
+- CAPES — Portaria nº 206/2018: https://www.gov.br/capes/pt-br/centrais-de-conteudo/portaria-no-206-de-4-de-setembro-de-2018.pdf
+- Catálogo ABNT: https://www.abntcatalogo.com.br/
 
 ## Manutenção
 
 Antes de nova versão principal:
 
 1. reconfirmar as edições normativas;
-2. revisar páginas e guias da UFC;
-3. revisar políticas de depósito e ficha catalográfica;
-4. atualizar ou remover patches de compatibilidade;
-5. executar `make preflight`;
-6. executar `make release-preflight`;
-7. confirmar `latex-preflight` no CI;
-8. não declarar conformidade que não possua evidência e teste compatível.
+2. revisar atos, páginas e guias da UFC;
+3. revisar políticas de depósito, ficha catalográfica e CAPES;
+4. revisar dependências e remover adaptações upstream que deixaram de ser necessárias;
+5. executar os contratos normativos e resolver divergências classificadas;
+6. executar `make preflight` e `make release-preflight`;
+7. confirmar Gate T, Overleaf, Windows e `distribution-preflight` no mesmo SHA;
+8. não declarar conformidade sem evidência compatível.

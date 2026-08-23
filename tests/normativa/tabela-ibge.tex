@@ -1,0 +1,39 @@
+\documentclass{ufctex}
+
+\ufcsetup{
+  tabelas = tabularray
+}
+
+\makeatletter
+\newcommand{\ufcIBGEBodyProbe}{\typeout{UFC-IBGE-BODY-FONTSIZE=\f@size}}
+\newcommand{\ufcIBGECaptionProbe}{\typeout{UFC-IBGE-CAPTION-FONTSIZE=\f@size}}
+\newcommand{\ufcIBGESourceProbe}{\typeout{UFC-IBGE-SOURCE-FONTSIZE=\f@size}}
+\newcommand{\ufcIBGENoteProbe}{\typeout{UFC-IBGE-NOTE-FONTSIZE=\f@size}}
+\makeatother
+
+\begin{document}
+
+\begin{table}[htbp]
+\centering
+\begin{tallabnttblr}
+[
+  caption={\ufcIBGECaptionProbe Indicadores numéricos de teste},
+  label={tab:ibge},
+  remark{Fonte}={\ufcIBGESourceProbe Elaboração própria.},
+  remark{Nota}={\ufcIBGENoteProbe Valores sintéticos para validação.},
+]
+{
+  colspec={r r},
+  row{even}={bg=black!5},
+}
+\toprule
+\ufcIBGEBodyProbe Ano & Valor \\
+\midrule
+2024 & 10 \\
+2025 & 12 \\
+2026 & 15 \\
+\bottomrule
+\end{tallabnttblr}
+\end{table}
+
+\end{document}

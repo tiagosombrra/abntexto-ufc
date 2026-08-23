@@ -1,0 +1,28 @@
+\documentclass[12pt]{article}
+\usepackage{iftex}
+
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \pdfmapfile{+ufctex-windows.map}
+  \renewcommand{\sfdefault}{arial}
+  \renewcommand{\familydefault}{\sfdefault}
+\else
+  \usepackage{fontspec}
+  \IfFontExistsTF{Arial}
+    {\setmainfont{Arial}}
+    {\PackageError{ufctex-font-poc}{Arial not found}{Install Arial before running this proof of concept.}}
+\fi
+
+\begin{document}
+Texto normal em Arial.
+
+\textbf{Negrito em Arial.}
+
+\textit{Itálico em Arial.}
+
+\textbf{\textit{Negrito itálico em Arial.}}
+
+Acentuação: ação, ciência, computação, orientação, avaliação, João, Ceará, São Luís, à, ê, í, ó, ú, ç.
+
+Pontuação: -- --- ``aspas inglesas''; parênteses; dois-pontos; ponto e vírgula.
+\end{document}

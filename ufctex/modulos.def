@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/modulos.def}[2026/08/19 UFC optional modules]
+\ProvidesFile{ufctex/modulos.def}[2026/08/21 UFC optional modules]
 
 \RequirePackage{etoolbox}
 
@@ -11,6 +11,46 @@
 \tl_new:N \g_ufc_index_module_tl
 \bool_new:N \g_ufc_glossary_initialized_bool
 \bool_new:N \g_ufc_index_initialized_bool
+\bool_new:N \g_ufc_table_typography_patched_bool
+
+\cs_new_protected:Npn \ufc_table_check_version:
+  {
+    \IfPackageAtLeastTF{tabularray-abnt}{2025-08-08}
+      { }
+      {
+        \ClassError{ufctex}
+          {tabularray-abnt~2025-08-08~or~newer~is~required}
+          {Update~the~TeX~distribution~before~using~tabelas=tabularray.}
+      }
+  }
+
+% Compatibility adapter for the tabularray theme store used by tabularray-abnt.
+\cs_new_protected:Npn \ufc_table_patch_theme:n #1
+  {
+    \tl_if_exist:cTF { g__tblr_theme_#1_code_tl }
+      {
+        \tl_gput_right:cn { g__tblr_theme_#1_code_tl }
+          {
+            \SetTblrStyle{caption,lasthead,capcont}{font=\abntsmall}
+            \SetTblrStyle{firsthead-text,lasthead-text,conthead-text,lastfoot}{font=\abntsmall}
+          }
+      }
+      {
+        \ClassError{ufctex}
+          {tabularray-abnt~theme~'#1'~is~unavailable}
+          {Update~tabularray-abnt~before~using~tabelas=tabularray.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_table_apply_typography:
+  {
+    \bool_if:NF \g_ufc_table_typography_patched_bool
+      {
+        \ufc_table_patch_theme:n { abnt }
+        \ufc_table_patch_theme:n { quadro }
+        \bool_gset_true:N \g_ufc_table_typography_patched_bool
+      }
+  }
 
 \keys_define:nn { ufc }
   {
@@ -20,7 +60,12 @@
     tabelas / tabularray .code:n =
       {
         \tl_gset:Nn \g_ufc_table_module_tl { tabularray }
+        \RequirePackage{xcolor}
         \RequirePackage{tabularray-abnt}
+        \ufc_table_check_version:
+        \UseTblrLibrary{booktabs}
+        \SetAbntTblrFont{\normalsize}
+        \ufc_table_apply_typography:
       },
     tabelas / tabularray-abnt .meta:n = { tabelas = tabularray },
 
@@ -31,11 +76,15 @@
       {
         \tl_gset:Nn \g_ufc_code_module_tl { listings }
         \RequirePackage{listings}
+        % Source code remains in the institutional text family and body size.
+        \lstset{basicstyle=\ttfamily\normalsize}
       },
     codigo / minted .code:n =
       {
         \tl_gset:Nn \g_ufc_code_module_tl { minted }
         \RequirePackage{minted}
+        % minted defaults to tt; ufctex maps tt to the institutional family.
+        \setminted{fontfamily=tt,fontsize=\normalsize}
       },
 
     algoritmos .choice:,
@@ -44,6 +93,9 @@
     algoritmos / algpseudocodex .code:n =
       {
         \tl_gset:Nn \g_ufc_algorithm_module_tl { algpseudocodex }
+        % Keep EndIf/EndWhile visible: hidden block endings still consume line
+        % numbers in algpseudocodex and produce visually empty numbered lines.
+        \PassOptionsToPackage{noEnd=false}{algpseudocodex}
         \RequirePackage{algpseudocodex}
       },
 
@@ -55,16 +107,13 @@
         \tl_gset:Nn \g_ufc_glossary_module_tl { glossaries }
         \bool_if:NF \g_ufc_glossary_initialized_bool
           {
-            % The v2 path uses \printglossary, so datatool locale sorting is not used.
             \PassOptionsToPackage{lang-warn=false}{datatool-base}
-            % UFC renders its own glossary heading/style; package translations are unnecessary.
-            \RequirePackage[notranslate]{glossaries-extra}
+            \RequirePackage[acronym,toc=false]{glossaries}
             \makeglossaries
             \ufcSetupGlossaryModule
             \bool_gset_true:N \g_ufc_glossary_initialized_bool
           }
       },
-    glossario / glossaries-extra .meta:n = { glossario = glossaries },
 
     indice .choice:,
     indice / nenhum .code:n =
@@ -75,31 +124,17 @@
         \bool_if:NF \g_ufc_index_initialized_bool
           {
             \RequirePackage{imakeidx}
-            \makeindex[columns=1,title={ÍNDICE}]
+            \makeindex
             \ufcSetupIndexModule
             \bool_gset_true:N \g_ufc_index_initialized_bool
           }
-      }
+      },
   }
 
-\keys_set:nn { ufc }
-  {
-    tabelas = nativo,
-    codigo = nenhum,
-    algoritmos = nenhum,
-    glossario = nenhum,
-    indice = nenhum
-  }
-
-\NewExpandableDocumentCommand \ufcTableModule { }
-  { \tl_use:N \g_ufc_table_module_tl }
-
-\NewExpandableDocumentCommand \ufcCodeModule { }
-  { \tl_use:N \g_ufc_code_module_tl }
-
-\NewExpandableDocumentCommand \ufcAlgorithmModule { }
-  { \tl_use:N \g_ufc_algorithm_module_tl }
+\tl_gset:Nn \g_ufc_table_module_tl { nativo }
+\tl_gset:Nn \g_ufc_code_module_tl { nenhum }
+\tl_gset:Nn \g_ufc_algorithm_module_tl { nenhum }
+\tl_gset:Nn \g_ufc_glossary_module_tl { nenhum }
+\tl_gset:Nn \g_ufc_index_module_tl { nenhum }
 
 \ExplSyntaxOff
-
-\endinput

@@ -58,19 +58,12 @@ for engine in pdflatex lualatex; do
       echo "$job: contador inesperado antes da ficha."
       exit 1
     }
-
-    if [ "$mode" = anverso ]; then
-      expected=2
-    else
-      expected=3
-    fi
-
-    grep -Fq "UFC-AFTER-CARD=$expected" "$job.log" || {
-      echo "$job: contagem da ficha incompatível com o modo $mode."
+    grep -Fq 'UFC-AFTER-CARD=2' "$job.log" || {
+      echo "$job: ficha catalográfica foi contada indevidamente."
       exit 1
     }
-    grep -Fq "UFC-TEXT-PAGE=$expected" "$job.log" || {
-      echo "$job: paginação textual não preservou a contagem esperada."
+    grep -Fq 'UFC-TEXT-PAGE=2' "$job.log" || {
+      echo "$job: texto não preservou a contagem lógica após a ficha."
       exit 1
     }
 
@@ -87,12 +80,13 @@ pages = raw.split('\f')
 if pages and not pages[-1].strip():
     pages.pop()
 norm = [re.sub(r'\s+', ' ', unicodedata.normalize('NFC', p)).strip().casefold() for p in pages]
-if len(norm) < 3:
-    raise SystemExit(f'{job}: esperado ao menos folha de rosto, ficha e texto.')
+
+if len(norm) != 3:
+    raise SystemExit(f'{job}: esperado folha de rosto, ficha e texto em 3 páginas físicas; obtido {len(norm)}.')
 if 'ficha-catalografica-teste' not in norm[1]:
-    raise SystemExit(f'{job}: ficha não ocupa a página física subsequente à folha de rosto.')
-if 'marcador textual após a ficha catalográfica' not in ' '.join(norm):
-    raise SystemExit(f'{job}: texto posterior à ficha ausente.')
+    raise SystemExit(f'{job}: ficha não ocupa o verso físico da folha de rosto.')
+if 'marcador textual após a ficha catalográfica' not in norm[2]:
+    raise SystemExit(f'{job}: texto posterior à ficha não iniciou no anverso físico seguinte.')
 PY
   done
 done

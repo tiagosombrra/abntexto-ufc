@@ -25,4 +25,39 @@ for engine in pdflatex lualatex; do
   done
 done
 
+python3 - layout-anverso.log <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
+
+def dim(name):
+    match = re.search(rf'{re.escape(name)}=([0-9.]+)pt', text)
+    if not match:
+        raise SystemExit(f'Layout V2: métrica ausente: {name}')
+    return float(match.group(1))
+
+def scalar(name):
+    match = re.search(rf'{re.escape(name)}=([0-9.]+)', text)
+    if not match:
+        raise SystemExit(f'Layout V2: métrica ausente: {name}')
+    return float(match.group(1))
+
+def close(name, actual, expected, tolerance=0.06):
+    if abs(actual - expected) > tolerance:
+        raise SystemExit(f'Layout V2: {name}: esperado {expected:.4f}, obtido {actual:.4f}')
+
+pt_per_cm = 72.27 / 2.54
+pt_per_bp = 72.27 / 72.0
+close('recuo de primeira linha', dim('UFC-PARINDENT'), 2.0 * pt_per_cm)
+close('recuo suspenso da nota', dim('UFC-FOOTNOTE-HANG'), 2.0 * pt_per_cm)
+close('tamanho da nota', scalar('UFC-FOOTNOTE-FONTSIZE'), 10.0 * pt_per_bp)
+close('entrelinha simples da nota', dim('UFC-FOOTNOTE-BASELINE'), 11.5 * pt_per_bp)
+
+match = re.search(r'UFC-FOOTNOTE-HANGAFTER=(-?[0-9]+)', text)
+if not match or int(match.group(1)) != 1:
+    raise SystemExit('Layout V2: hangafter da nota deve ser 1.')
+PY
+
 echo 'Gate V2 de layout concluído.'

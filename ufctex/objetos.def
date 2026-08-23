@@ -1,4 +1,25 @@
-\ProvidesFile{ufctex/objetos.def}[2026/08/18 UFC figures, tables, code and algorithms]
+\ProvidesFile{ufctex/objetos.def}[2026/08/21 UFC figures, tables, code and algorithms]
+
+% Keep object titles within the real object width and use the reduced normative size.
+\makeatletter
+\providecommand{\ufcobjectlegendhook}{}
+\def\printlegendbox{\hfil\vtop{%
+  \leavevmode\targetlegend
+  \setbox0=\hbox{{\legendlabel}\savedlegend}%
+  \dimen@=\legendmaxwidth\relax
+  \ifdim\savedplacewidth<\dimen@
+    \dimen@=\savedplacewidth
+  \fi
+  \ifdim\wd0>\dimen@
+    \hsize=\dimen@
+  \else
+    \hsize=\wd0
+  \fi
+  \abntsmall\singlesp
+  \ufcobjectlegendhook
+  \hangfrom{\legendlabel}\savedlegend\strut
+}}
+\makeatother
 
 \ExplSyntaxOn
 
@@ -17,6 +38,41 @@
       { \definelegendplace{quadro}{Quadro}{loq} }
   }
 \AtEndPreamble{\ufc_objects_setup_quadro:}
+
+% UFC lists use uppercase headings, but their entries preserve the title casing.
+\cs_new_protected:Npn \ufc_objects_setup_list_fonts:
+  {
+    \cs_gset:Npn \loiifont { \normalfont }
+
+    \cs_if_exist:NT \lofextfont  { \cs_gset:Npn \lofextfont  { \normalfont } }
+    \cs_if_exist:NT \logrextfont { \cs_gset:Npn \logrextfont { \normalfont } }
+    \cs_if_exist:NT \loqextfont  { \cs_gset:Npn \loqextfont  { \normalfont } }
+    \cs_if_exist:NT \lotextfont  { \cs_gset:Npn \lotextfont  { \normalfont } }
+    \cs_if_exist:NT \locextfont  { \cs_gset:Npn \locextfont  { \normalfont } }
+    \cs_if_exist:NT \loaextfont  { \cs_gset:Npn \loaextfont  { \normalfont } }
+
+    \cs_if_exist:NT \lofifont  { \cs_gset:Npn \lofifont  { \normalfont } }
+    \cs_if_exist:NT \logrifont { \cs_gset:Npn \logrifont { \normalfont } }
+    \cs_if_exist:NT \loqifont  { \cs_gset:Npn \loqifont  { \normalfont } }
+    \cs_if_exist:NT \lotifont  { \cs_gset:Npn \lotifont  { \normalfont } }
+    \cs_if_exist:NT \locifont  { \cs_gset:Npn \locifont  { \normalfont } }
+    \cs_if_exist:NT \loaifont  { \cs_gset:Npn \loaifont  { \normalfont } }
+  }
+\AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
+
+\cs_new_protected:Npn \ufc_objects_loii_entry:nn #1#2
+  { \extline{0pt}\loilabelwidth\normalfont{#1}{#2} }
+
+\cs_new_protected:Npn \ufc_objects_print_illustration_list:
+  {
+    \group_begin:
+      \cs_set_eq:cN { l@loii } \ufc_objects_loii_entry:nn
+      \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}}
+    \group_end:
+  }
+
+\RenewDocumentCommand \imprimirlistadeilustracoes { }
+  { \ufc_objects_print_illustration_list: }
 
 \NewDocumentCommand \ufcfonte { m }
   { \src{#1} }
@@ -37,11 +93,18 @@
 \NewDocumentCommand \imprimirlistadealgoritmos { }
   { \ufc_pretextual_list:nn {Lista~de~Algoritmos} {\ufcstarttoc{loa}} }
 
+\cs_new_protected:Npn \ufc_listing_apply_number_margins:
+  {
+    \cs_if_eq:ccF { lst@PlaceNumber } { @empty }
+      { \lstset{xleftmargin=3em,xrightmargin=3em} }
+  }
+
 \cs_new_protected:Npn \ufc_objects_setup_listings:
   {
     \lstnewenvironment{ufclisting}[1][\placepos]
       {
         \let\medskipamount\smallskipamount
+        \ufc_listing_apply_number_margins:
         \place[##1]\vbox\bgroup
       }
       {
@@ -62,15 +125,53 @@
       }
   }
 
+\cs_new_protected:Npn \ufc_algorithm_begin:n #1
+  {
+    \int_compare:nNnTF {#1} = {0}
+      { \begin{algorithmic} }
+      {
+        \int_compare:nNnTF {#1} > {0}
+          {
+            \hbox to \linewidth\bgroup
+              \hfil
+              \vbox\bgroup
+                \hsize=\dimexpr\linewidth-6em\relax
+                \linewidth=\hsize
+                \begin{algorithmic}[#1]
+          }
+          {
+            \ClassError{ufctex}
+              {Invalid~algorithm~line~numbering~frequency~'#1'}
+              {Use~zero~for~no~line~numbers~or~a~positive~integer.}
+          }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_algorithm_end:n #1
+  {
+    \int_compare:nNnTF {#1} = {0}
+      { \end{algorithmic} }
+      {
+        \int_compare:nNnT {#1} > {0}
+          {
+            \end{algorithmic}
+              \egroup
+              \hfil
+            \egroup
+          }
+      }
+  }
+
 \cs_new_protected:Npn \ufc_objects_setup_algorithms:
   {
     \NewDocumentEnvironment { ufcalgoritmo } { O{\placepos} O{1} }
       {
         \place[##1]\vbox\bgroup
-        \begin{algorithmic}[##2]
+        \normalsize
+        \ufc_algorithm_begin:n {##2}
       }
       {
-        \end{algorithmic}
+        \ufc_algorithm_end:n {##2}
         \egroup\endplace
       }
   }

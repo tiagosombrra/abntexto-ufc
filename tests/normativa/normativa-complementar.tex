@@ -1,0 +1,49 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{ufctex}
+
+\makeatletter
+\newcommand{\ufcLongQuoteProbe}{%
+  \typeout{UFC-LONGQUOTE-HANG=\the\hangindent}%
+  \typeout{UFC-LONGQUOTE-FONTSIZE=\f@size}%
+  \typeout{UFC-LONGQUOTE-BASELINE=\the\baselineskip}%
+}
+\makeatother
+
+\begin{document}
+\textual
+
+\section{Estruturas normativas complementares}
+
+Texto anterior à citação direta longa.
+
+\Enquote{\ufcLongQuoteProbe
+Citação direta longa de validação normativa, deliberadamente extensa para ocupar mais de uma linha e exercitar o tamanho reduzido, o espaçamento simples e o recuo de quatro centímetros fornecidos pela classe-base.}
+
+Texto posterior à citação direta longa.
+
+\begin{ufcalineas}
+  \item Alínea normativa de primeiro nível;
+  \item Segunda alínea normativa:
+    \begin{ufcsubalineas}
+      \item Subalínea normativa de segundo nível.
+    \end{ufcsubalineas}
+\end{ufcalineas}
+
+A Equação~\ref{eq:normativa} exercita a numeração de fórmulas.
+\begin{equation}
+  E = mc^2
+  \label{eq:normativa}
+\end{equation}
+
+\appendix{Instrumento de validação normativa}
+Conteúdo do apêndice complementar.
+
+\annex{Documento externo de validação normativa}
+Conteúdo do anexo complementar.\footnote{Referência específica do anexo apresentada no próprio anexo para exercitar o requisito condicional.}
+
+\end{document}

@@ -15,6 +15,7 @@ command -v pdffonts >/dev/null 2>&1 || {
 
 if ! pdffonts "$pdf" | tail -n +3 | awk '
   NF {
+    count++
     found = 0
     for (i = 1; i <= NF; i++) {
       if ($i == "yes" || $i == "no") {
@@ -25,11 +26,14 @@ if ! pdffonts "$pdf" | tail -n +3 | awk '
     }
     if (!found) bad = 1
   }
-  END { exit bad }
+  END {
+    if (count == 0) bad = 1
+    exit bad
+  }
 '; then
   pdffonts "$pdf"
-  echo "Fontes V2: há fonte não incorporada ou linha não reconhecida em $pdf."
+  echo "Fontes V2: há fonte não incorporada, nenhuma fonte detectada ou linha não reconhecida em $pdf."
   exit 1
 fi
 
-echo "Fontes V2 incorporadas: $pdf"
+echo "Fontes V2 autocontidas (emb=yes): $pdf"

@@ -15,6 +15,8 @@
   capa = auto,
   ficha-catalografica = nao,
   brasao = sim,
+  fonte = times,
+  fonte-estrita = nao,
   tabelas = tabularray,
   codigo = listings,
   algoritmos = algpseudocodex,
@@ -40,24 +42,32 @@
   coorientador-unidade = {},
   coorientador-feminino = nao,
   autor-epigrafe = {Autor da epígrafe},
-  banca-2 = {Prof. Dr. Nome do Membro},
-  banca-2-unidade = {Centro ou Unidade},
-  banca-2-ies = {Instituição},
-  banca-3 = {}, banca-3-unidade = {}, banca-3-ies = {},
-  banca-4 = {}, banca-4-unidade = {}, banca-4-ies = {},
-  banca-5 = {}, banca-5-unidade = {}, banca-5-ies = {},
-  banca-6 = {}, banca-6-unidade = {}, banca-6-ies = {}
+  banca-2 = {Profa. Dra. Nome do Segundo Membro},
+  banca-2-unidade = {Departamento ou Unidade Acadêmica},
+  banca-2-ies = {Universidade Federal do Ceará},
+  banca-3 = {Prof. Dr. Nome do Terceiro Membro},
+  banca-3-unidade = {Departamento ou Unidade Acadêmica},
+  banca-3-ies = {Universidade Federal do Ceará},
+  banca-4 = {Profa. Dra. Nome do Quarto Membro},
+  banca-4-unidade = {Centro, Faculdade, Instituto ou Campus},
+  banca-4-ies = {Outra Instituição de Ensino Superior},
+  banca-5 = {Prof. Dr. Nome do Quinto Membro},
+  banca-5-unidade = {Programa de Pós-Graduação ou Unidade Acadêmica},
+  banca-5-ies = {Outra Instituição de Ensino Superior},
+  banca-6 = {Profa. Dra. Nome do Sexto Membro},
+  banca-6-unidade = {Departamento ou Unidade Acadêmica},
+  banca-6-ies = {Outra Instituição de Ensino Superior}
 }
 
 \ufcbibliografia{3-pos-textuais/referencias.bib}
 \input{3-pos-textuais/glossario}
 
 \lstset{
-  basicstyle=\ttfamily\small,
   breaklines=true,
   columns=fullflexible,
   keepspaces=true,
-  showstringspaces=false
+  showstringspaces=false,
+  numbers=none
 }
 
 \begin{document}
@@ -67,7 +77,7 @@
 \imprimircapa
 \imprimirfolhaderosto
 % \imprimirfichacatalografica{1-pre-textuais/ficha-catalografica}
-% \imprimirerrata{1-pre-textuais/errata}
+\imprimirerrata{1-pre-textuais/errata}
 \imprimirfolhadeaprovacao
 \imprimirdedicatoria{1-pre-textuais/dedicatoria}
 \imprimiragradecimentos{1-pre-textuais/agradecimentos}
@@ -87,19 +97,32 @@
 
 \input{2-textuais/1-introducao}
 \input{2-textuais/2-fundamentacao-teorica}
+\input{2-textuais/trabalhos-relacionados}
 \input{2-textuais/3-metodologia}
 \input{2-textuais/4-resultados}
+\input{2-textuais/exemplos-de-formatacao}
 \input{2-textuais/5-conclusao}
 
 \imprimirreferencias
 \imprimirglossario
 
-% Elementos pós-textuais opcionais.
-% \appendix{Título do apêndice}
-% \input{3-pos-textuais/apendices/apendice-a}
-%
-% \annex{Título do anexo}
-% \input{3-pos-textuais/anexos/anexo-a}
+\appendix{Material complementar elaborado pelo autor}
+\input{3-pos-textuais/apendices/apendice-a}
+
+\appendix{Questionário de exemplo}
+\input{3-pos-textuais/apendices/apendice-b}
+
+\appendix{Código-fonte de exemplo}
+\input{3-pos-textuais/apendices/apendice-c}
+
+\appendix{Orientação para documento externo autoral}
+\input{3-pos-textuais/apendices/apendice-d}
+
+\annex{Documento complementar externo}
+\input{3-pos-textuais/anexos/anexo-a}
+
+\annex{Orientação para documento externo em PDF}
+\input{3-pos-textuais/anexos/anexo-b}
 
 \imprimirindice
 

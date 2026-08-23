@@ -10,7 +10,7 @@
   {
     \ufc_primary_section_break:
     \cs_if_exist:NT \phantomsection { \phantomsection }
-    \addcontentsline{toc}{section}{\MakeUppercase{#1}}
+    \addcontentsline{toc}{section}{\protect\toclabelbox{}\MakeUppercase{#1}}
     \begin{center}
       \bfseries\MakeUppercase{#1}\par
     \end{center}
@@ -25,9 +25,6 @@
     \newglossarystyle{ufc}
       {
         \setglossarystyle{list}
-        \renewenvironment{theglossary}
-          {\begin{description}[leftmargin=0pt,labelsep=.5em]}
-          {\end{description}}
         \renewcommand*{\glossentry}[2]
           {
             \item[\glstarget{####1}{\glossentryname{####1}:}]

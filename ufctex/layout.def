@@ -1,26 +1,39 @@
-\ProvidesFile{ufctex/layout.def}[2026/08/19 UFC page and text layout]
+\ProvidesFile{ufctex/layout.def}[2026/08/21 UFC page and text layout]
 
-% Use Times New Roman when the engine can access it, with a portable fallback.
-\ifPDFTeX
-  \RequirePackage[T1]{fontenc}
-  \RequirePackage{newtxtext}
-  \RequirePackage{newtxmath}
-\else
-  \RequirePackage{fontspec}
-  \IfFontExistsTF{Times New Roman}{%
-    \setmainfont{Times New Roman}%
-  }{%
-    \ClassWarningNoLine{ufctex}{Times New Roman not found; using TeX Gyre Termes}%
-    \setmainfont{TeX Gyre Termes}%
-  }%
-  \RequirePackage{unicode-math}
-  \setmathfont{TeX Gyre Termes Math}
-\fi
-
-% UFC body text uses 12 pt, 1.5 spacing and no extra paragraph spacing.
+% UFC body text uses 12 pt, 1.5 spacing, 2 cm first-line indent and no extra spacing.
 \setlength{\parskip}{0pt}
-\setlength{\parindent}{1.5cm}
+\setlength{\parindent}{2cm}
 \AtBeginDocument{\onehalfsp}
+
+% Tagging-safe ABNT alíneas and subalíneas using LaTeX block-list keys.
+\NewDocumentEnvironment{ufcalineas}{}
+  {\begin{enumerate}[
+    item-label={\alph{enumi})},
+    item-vspace=0pt,
+    begin-vspace=0pt,
+    end-vspace=0pt,
+    para-vspace=0pt,
+    left-margin=2.8cm,
+    label-width=.5cm,
+    label-sep=.3cm,
+    item-indent=0pt,
+    label-align=left
+  ]}
+  {\end{enumerate}}
+\NewDocumentEnvironment{ufcsubalineas}{}
+  {\begin{enumerate}[
+    item-label={---},
+    item-vspace=0pt,
+    begin-vspace=0pt,
+    end-vspace=0pt,
+    para-vspace=0pt,
+    left-margin=.9cm,
+    label-width=.6cm,
+    label-sep=.3cm,
+    item-indent=0pt,
+    label-align=left
+  ]}
+  {\end{enumerate}}
 
 % UFC section hierarchy. The same hierarchy is mirrored in the table of contents.
 \def\sectionfont       {\bfseries\MakeUppercase}
@@ -35,6 +48,16 @@
 \def\tocparagraphfont     {\itshape}
 \def\tocsubparagraphfont  {}
 
+% UFC examples use spaced dotted leaders up to the right-aligned page number.
+% Preserve a compact visible leader when a primary entry nearly fills the line.
+\def\ufctocdot{\hbox{$\mathsurround=0pt\mkern4.5mu\hbox{.}\mkern4.5mu$}}
+\def\extdotleaders{%
+  \nobreak
+  \hbox to 1.1em{\leaders\ufctocdot\hfil}%
+  \leaders\ufctocdot\hfil
+}
+\appto\hooktocsection{\let\extleaders=\extdotleaders}
+
 \setcounter{secnumdepth}{5}
 \setcounter{tocdepth}{5}
 
@@ -46,6 +69,8 @@
 }
 
 \ExplSyntaxOn
+
+\bool_new:N \g_ufc_physical_parity_inverted_bool
 
 \cs_new_protected:Npn \ufc_layout_one_sided:
   {
@@ -69,15 +94,26 @@
     }
   }
 
+\cs_new_protected:Npn \ufc_blank_page:
+  {
+    \thispagestyle{empty}
+    \hbox{}
+    \newpage
+  }
+
 \cs_new_protected:Npn \ufc_next_odd_physical_page:
   {
     \clearpage
-    \int_if_odd:nF { \value{page} }
-      {
-        \thispagestyle{empty}
-        \hbox{}
-        \newpage
-      }
+    \bool_if:NTF \g_ufc_physical_parity_inverted_bool
+      { \int_if_odd:nT { \value{page} } { \ufc_blank_page: } }
+      { \int_if_odd:nF { \value{page} } { \ufc_blank_page: } }
+  }
+
+\cs_new_protected:Npn \ufc_register_uncounted_physical_page:
+  {
+    \bool_if:NTF \g_ufc_physical_parity_inverted_bool
+      { \bool_gset_false:N \g_ufc_physical_parity_inverted_bool }
+      { \bool_gset_true:N \g_ufc_physical_parity_inverted_bool }
   }
 
 \cs_new_protected:Npn \ufc_primary_section_break:
@@ -105,6 +141,9 @@
 
 \NewDocumentCommand \ufcPretextualBreak { }
   { \ufc_primary_section_break: }
+
+\NewDocumentCommand \ufcRegisterUncountedPhysicalPage { }
+  { \ufc_register_uncounted_physical_page: }
 
 \AtBeginDocument{\ufc_layout_apply:}
 
@@ -148,6 +187,8 @@
 \long\def\@makefntext#1{%
   \parindent=0pt
   \abntsmall\singlesp
+  \hangindent=2cm
+  \hangafter=1
   \noindent
   \hbox to 2cm{\hss\@makefnmark\enspace}#1%
 }
