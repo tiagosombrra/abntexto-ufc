@@ -1,6 +1,10 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{ufctex}[2026/08/21 v2.1.0 UFC academic document class]
+\ProvidesClass{ufctex}[2026/08/23 v2.1.0 UFC academic document class]
 
+% Historical UFC template: Ednardo Moreira Rodrigues and Alan Batista de Oliveira.
+% V2 redesign and maintenance: Tiago Guimarães Sombra.
+% Historical lineage adapted from ueceTeX2 by Thiago Nascimento.
+% Distributed under LPPL 1.3c or later; see LICENSE.
 % Normative policy and version matrix: docs/NORMAS.md.
 % Always target the latest applicable ABNT edition.
 
