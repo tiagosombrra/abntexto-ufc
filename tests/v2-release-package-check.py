@@ -103,6 +103,29 @@ def build(output: Path, abntexto: Path) -> None:
     ], cwd=ROOT)
 
 
+def run_pdflatex(work: Path, document: Path, tex_root: Path) -> None:
+    env = os.environ.copy()
+    env["TEXINPUTS"] = f"{tex_root}//:{env.get('TEXINPUTS', '')}"
+    for _ in range(2):
+        completed = subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", document.name],
+            cwd=work,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            errors="replace",
+            check=False,
+        )
+        if completed.returncode != 0:
+            raise SystemExit(
+                f"CTAN compile smoke failed for {document.name}:\n"
+                + "\n".join(completed.stdout.splitlines()[-60:])
+            )
+    if not document.with_suffix(".pdf").is_file():
+        raise SystemExit(f"CTAN compile smoke did not produce {document.with_suffix('.pdf').name}.")
+
+
 def ctan_compile_smoke(ctan_zip: Path) -> None:
     with tempfile.TemporaryDirectory(prefix="abntexto-ufc-ctan-smoke-") as temp:
         temp_path = Path(temp)
@@ -146,23 +169,22 @@ Pacote instalado a partir do candidato CTAN.
 """,
             encoding="utf-8",
         )
-        env = os.environ.copy()
-        env["TEXINPUTS"] = f"{tex_root}//:{env.get('TEXINPUTS', '')}"
-        for _ in range(2):
-            completed = subprocess.run(
-                ["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", document.name],
-                cwd=work,
-                env=env,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                errors="replace",
-                check=False,
-            )
-            if completed.returncode != 0:
-                raise SystemExit("CTAN installation smoke failed:\n" + "\n".join(completed.stdout.splitlines()[-60:]))
-        if not (work / "smoke.pdf").is_file():
-            raise SystemExit("CTAN installation smoke did not produce smoke.pdf.")
+        run_pdflatex(work, document, tex_root)
+
+
+def ctan_example_compile_smoke(ctan_zip: Path) -> None:
+    with tempfile.TemporaryDirectory(prefix="abntexto-ufc-ctan-example-") as temp:
+        temp_path = Path(temp)
+        with zipfile.ZipFile(ctan_zip) as archive:
+            archive.extractall(temp_path / "archive")
+        archive_root = temp_path / "archive" / PACKAGE_ID
+        tex_root = archive_root / "tex"
+        source = archive_root / "doc" / f"{PACKAGE_ID}-example.tex"
+        work = temp_path / "work"
+        work.mkdir()
+        document = work / source.name
+        shutil.copyfile(source, document)
+        run_pdflatex(work, document, tex_root)
 
 
 def main() -> None:
@@ -281,12 +303,8 @@ def main() -> None:
             f"{ctan_root}LICENSE",
             f"{ctan_root}tex/abntexto-ufc.cls",
             f"{ctan_root}tex/abntexto-ufc/core.def",
-            f"{ctan_root}doc/example/documento.tex",
-            f"{ctan_root}doc/example/2-textuais/exemplos-de-formatacao.tex",
-            f"{ctan_root}doc/example/figuras/LICENCAS.md",
-            f"{ctan_root}doc/example/figuras/ufc-campus-pici.jpg",
-            f"{ctan_root}doc/example/figuras/ufc-reitoria.jpg",
-            f"{ctan_root}scripts/prepare-windows-fonts.ps1",
+            f"{ctan_root}doc/NORMAS.md",
+            f"{ctan_root}doc/{PACKAGE_ID}-example.tex",
         ):
             if required_entry not in ctan_entries:
                 raise SystemExit(f"CTAN bundle missing {required_entry}")
@@ -300,12 +318,18 @@ def main() -> None:
             raise SystemExit("CTAN bundle must not contain the UFC coat of arms binary.")
         if f"{ctan_root}doc/{PACKAGE_ID}-{v}-reference.pdf" in ctan_entries:
             raise SystemExit("CTAN bundle must not contain the reference PDF that embeds the UFC coat of arms.")
+        if any(entry.startswith(f"{ctan_root}doc/example/") for entry in ctan_entries):
+            raise SystemExit("CTAN bundle must not contain the full project reference source tree.")
+        if any(entry.startswith(f"{ctan_root}scripts/") for entry in ctan_entries):
+            raise SystemExit("CTAN bundle must not contain project-specific helper scripts.")
+        if any(Path(entry).suffix.lower() in {".png", ".jpg", ".jpeg"} for entry in ctan_entries):
+            raise SystemExit("CTAN bundle must not contain image assets.")
         if any(entry.endswith(".tds.zip") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain a redundant nested TDS archive.")
         assert_ctan_excludes_coat_of_arms(ctan_zip)
-        assert_reference_images(ctan_zip, f"{ctan_root}doc/example/")
         assert_no_proprietary_fonts(ctan_entries)
         ctan_compile_smoke(ctan_zip)
+        ctan_example_compile_smoke(ctan_zip)
 
         verify_checksums(first)
 

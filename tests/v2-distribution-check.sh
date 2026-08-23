@@ -128,6 +128,12 @@ else:
         errors.append('CTAN builder ainda inclui assets/institucional')
     if 'reference_pdf' in ctan_builder or '-reference.pdf' in ctan_builder:
         errors.append('CTAN builder ainda inclui PDF de referência com marca institucional')
+    if 'DOC_SOURCE_INPUTS' in ctan_builder or 'doc/example/' in ctan_builder:
+        errors.append('CTAN builder ainda inclui árvore completa do documento de referência')
+    if 'prepare-windows-fonts.ps1' in ctan_builder or 'convert-encoding-to-unicode.ps1' in ctan_builder:
+        errors.append('CTAN builder ainda inclui scripts específicos do projeto')
+    if 'docs/ctan-example.tex' not in ctan_builder:
+        errors.append('CTAN builder não inclui o exemplo mínimo portátil')
 
 release_infrastructure = (
     'tools/build-release-bundles.py',
@@ -142,6 +148,7 @@ release_infrastructure = (
     'tests/v2-algorithm-numbering-check.sh',
     'docs/README-CTAN.md',
     'docs/CHANGELOG-CTAN.md',
+    'docs/ctan-example.tex',
     'docs/AUDITORIA-V2.md',
     'figuras/LICENCAS.md',
     '.github/workflows/distribution.yml',
