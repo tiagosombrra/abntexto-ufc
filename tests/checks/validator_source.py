@@ -22,6 +22,7 @@ NORMATIVE_CURRENCY = ROOT / "tests" / "checks" / "normative_currency.py"
 NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
 NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
 NORMATIVE_SOURCE_REFERENCES = ROOT / "tests" / "checks" / "normative_source_references.py"
+NORMATIVE_TRACEABILITY = ROOT / "tests" / "checks" / "normative_traceability.py"
 NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
 NORMATIVE_ATOMIC_CONTRACT = ROOT / "tests" / "checks" / "normative_atomic_contract.py"
 NORMATIVE_FULL_CONTRACT = ROOT / "tests" / "checks" / "normative_full_contract.py"
@@ -57,6 +58,7 @@ def main() -> None:
         NORMATIVE_PRECEDENCE,
         NORMATIVE_SOURCES,
         NORMATIVE_SOURCE_REFERENCES,
+        NORMATIVE_TRACEABILITY,
         NORMATIVE_ATOMICITY,
         NORMATIVE_ATOMIC_CONTRACT,
         NORMATIVE_FULL_CONTRACT,
@@ -73,6 +75,7 @@ def main() -> None:
     run_source_check(NORMATIVE_FULL_TOOL, "full normative loader")
     run_source_check(NORMATIVE_FULL_CONTRACT, "full normative contract")
     run_source_check(NORMATIVE_COVERAGE, "normative coverage")
+    run_source_check(NORMATIVE_TRACEABILITY, "normative traceability")
 
     completed = subprocess.run(
         [sys.executable, str(CLI), "--help"],
