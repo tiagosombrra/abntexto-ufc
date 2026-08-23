@@ -141,6 +141,7 @@ release_infrastructure = (
     'tools/fetch-reference-images.py',
     'tools/download-actions-artifact.py',
     'tests/v2-ctan-policy-check.py',
+    'tests/v2-ctan-archive-check.py',
     'tests/v2-release-package-check.py',
     'tests/v2-overleaf-bundle-check.py',
     'tests/v2-release-metadata-check.py',
@@ -186,6 +187,7 @@ python3 -m py_compile \
   tools/fetch-reference-images.py \
   tools/download-actions-artifact.py \
   tests/v2-ctan-policy-check.py \
+  tests/v2-ctan-archive-check.py \
   tests/v2-repository-audit.py \
   tests/v2-release-package-check.py \
   tests/v2-overleaf-bundle-check.py \
