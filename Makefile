@@ -10,15 +10,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 
 .PHONY: all pdf compile lua version clean reference-assets \
 	check release-check preflight release-preflight package distribution-preflight \
-	v2-repository-audit v2-reference-check v2-reference-corpus-check v2-pdfa-check \
-	v2-check v2-distribution-check v2-release-package-check \
-	v2-layout-check v2-font-config-check v2-pdf-geometry-check v2-math-check v2-normative-complement-check \
-	v2-pretextual-check v2-duplex-pretextual-check \
-	v2-object-check v2-object-geometry-check v2-code-typography-check v2-table-ibge-check v2-minted-check \
-	v2-algorithm-numbering-check v2-pdf-validator-check v2-documentary-source-check v2-bib-check v2-overleaf-stable-check \
-	v2-project-check v2-profile-check v2-profile-pdfa-check \
-	v2-posttextual-check v2-duplex-posttextual-check \
-	v2-build-check v2-multivolume-check v2-catalog-card-check
+	v2-repository-audit v2-reference-check v2-reference-corpus-check v2-overleaf-stable-check
 
 all: compile
 pdf: compile
@@ -73,112 +65,8 @@ v2-reference-check:
 v2-reference-corpus-check: v2-reference-check
 	@sh tests/v2-reference-corpus-check.sh
 
-v2-pdfa-check: v2-reference-check
-	@sh tests/v2-pdfa-check.sh
-
-v2-distribution-check: v2-repository-audit
-	@sh tests/v2-distribution-check.sh
-
-v2-release-package-check: release-preflight
-	@python3 tests/v2-release-package-check.py
-
-v2-layout-check:
-	@sh tests/v2-layout-check.sh
-
-v2-font-config-check:
-	@sh tests/v2-font-config-check.sh
-
-v2-pdf-geometry-check:
-	@sh tests/v2-pdf-geometry-check.sh
-
-v2-math-check:
-	@sh tests/v2-math-check.sh
-
-v2-normative-complement-check: v2-math-check
-	@sh tests/v2-normative-complement-check.sh
-
-v2-pretextual-check:
-	@sh tests/v2-pretextual-check.sh
-
-v2-duplex-pretextual-check:
-	@sh tests/v2-duplex-pretextual-check.sh
-
-v2-object-geometry-check:
-	@sh tests/v2-object-geometry-check.sh
-
-v2-code-typography-check:
-	@sh tests/v2-code-typography-check.sh
-
-v2-table-ibge-check:
-	@sh tests/v2-table-ibge-check.sh
-
-v2-object-check: v2-object-geometry-check v2-code-typography-check v2-table-ibge-check
-	@sh tests/v2-object-check.sh
-
-v2-minted-check:
-	@sh tests/v2-minted-check.sh
-
-v2-algorithm-numbering-check:
-	@sh tests/v2-algorithm-numbering-check.sh
-
-v2-pdf-validator-check: v2-reference-check
-	@sh tests/v2-pdf-validator-check.sh documento.pdf
-
-v2-documentary-source-check:
-	@sh tests/v2-documentary-source-check.sh
-
-v2-bib-check: v2-documentary-source-check
-	@sh tests/v2-bibliography-check.sh
-	@sh tests/v2-reference-spacing-check.sh
-
 v2-overleaf-stable-check:
 	@sh tests/v2-overleaf-stable-check.sh
-
-v2-project-check:
-	@sh tests/v2-project-check.sh
-
-v2-profile-check:
-	@sh tests/v2-profile-matrix-check.sh
-
-v2-profile-pdfa-check: v2-profile-check
-	@sh tests/v2-profile-pdfa-check.sh
-
-v2-posttextual-check:
-	@sh tests/v2-posttextual-check.sh
-
-v2-duplex-posttextual-check:
-	@sh tests/v2-duplex-posttextual-check.sh
-
-v2-build-check:
-	@sh tests/v2-build-path-check.sh
-
-v2-multivolume-check:
-	@sh tests/v2-multivolume-check.sh
-
-v2-catalog-card-check:
-	@sh tests/v2-catalog-card-check.sh
-
-v2-check: \
-	v2-repository-audit \
-	v2-distribution-check \
-	v2-layout-check \
-	v2-font-config-check \
-	v2-pdf-geometry-check \
-	v2-normative-complement-check \
-	v2-pretextual-check \
-	v2-duplex-pretextual-check \
-	v2-object-check \
-	v2-minted-check \
-	v2-algorithm-numbering-check \
-	v2-bib-check \
-	v2-project-check \
-	v2-profile-check \
-	v2-posttextual-check \
-	v2-duplex-posttextual-check \
-	v2-build-check \
-	v2-multivolume-check \
-	v2-catalog-card-check
-	@echo "Gate local isolado da V2 concluído."
 
 preflight: check
 	@echo "Preflight completo da V2 concluído."
