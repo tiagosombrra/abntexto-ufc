@@ -1,6 +1,6 @@
-# ufctex
+# abntexto-ufc
 
-`ufctex` is a LaTeX class for academic works at the Federal University of Ceará (UFC), Brazil. It is based on `abntexto` and provides institutional profiles for undergraduate works, specialization works, dissertations, theses, and research proposals.
+`abntexto-ufc` is a LaTeX class for academic works at the Federal University of Ceará (UFC), Brazil. It is based on `abntexto` and provides institutional profiles for undergraduate works, specialization works, dissertations, theses, and research proposals.
 
 Version: 2.1.0
 
@@ -33,21 +33,23 @@ Portable fallback fonts are available when strict literal-font mode is disabled,
 
 The CTAN archive contains:
 
-- the class and its handwritten modules;
+- the canonical `abntexto-ufc` class and its handwritten modules;
 - the complete reference document in PDF;
 - the source of the reference document;
 - the normative implementation matrix in `doc/NORMAS.md`;
 - helper scripts for local Windows font preparation.
 
-The full editable UFC template is also distributed separately in the project releases.
+The deprecated `ufctex` compatibility entry point is retained only in project/template distributions and is not part of the CTAN package.
+
+The full editable UFC template is distributed separately in the project releases.
 
 ## License and assets
 
-The `ufctex` source code and project documentation are subject to the LaTeX Project Public License 1.3c or any later version, as stated in `LICENSE`.
+The `abntexto-ufc` source code and project documentation are subject to the LaTeX Project Public License 1.3c or any later version, as stated in `LICENSE`.
 
 Two reference photographs in `doc/example/figuras/` are distributed under CC BY-SA 4.0 with their authorship, source URLs and checksums recorded in `doc/example/figuras/LICENCAS.md`.
 
-The UFC coat of arms in `assets/institucional/brasao-ufc.PNG` is an official institutional mark published by the Federal University of Ceará. It is redistributed unmodified to support composition of UFC academic documents, is not declared to be covered by the LPPL, and remains subject to the University's visual identity rules.
+The UFC coat of arms in `assets/institucional/brasao-ufc.PNG` is an official institutional mark published by the Federal University of Ceará. Its distribution policy is being separated from the LPPL-covered package sources; the CTAN candidate must satisfy TeX Live free-data requirements before publication.
 
 Official visual identity source: https://www.ufc.br/a-universidade/identidade-visual-da-ufc
 
@@ -61,7 +63,7 @@ The historical UFC template was developed by Ednardo Moreira Rodrigues and Alan 
 
 Version 2.1.0 completed the normative and visual audits, Gate T, Windows literal-font certification, deterministic distribution preflight, the real Overleaf import smoke test, and the final unrestricted Gate F audit.
 
-The CTAN package uses the package id `ufctex`; availability of that catalogue id is reconfirmed immediately before upload.
+The CTAN package id is `abntexto-ufc`. Catalogue availability is reconfirmed immediately before upload.
 
 ## Project
 

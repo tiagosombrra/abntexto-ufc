@@ -18,18 +18,18 @@
 }
 \makeatother
 
-\input{ufctex/core.def}
-\input{ufctex/fontes.def}
-\input{ufctex/layout.def}
-\input{ufctex/modulos.def}
-\input{ufctex/pretextuais.def}
-\input{ufctex/institucional.def}
-\input{ufctex/trabalhos.def}
-\input{ufctex/projetos.def}
-\input{ufctex/objetos.def}
-\input{ufctex/compat-abntexto.def}
-\input{ufctex/bibliografia.def}
-\input{ufctex/compat-nbr6023-2025.def}
-\input{ufctex/postextuais.def}
+\input{abntexto-ufc/core.def}
+\input{abntexto-ufc/fontes.def}
+\input{abntexto-ufc/layout.def}
+\input{abntexto-ufc/modulos.def}
+\input{abntexto-ufc/pretextuais.def}
+\input{abntexto-ufc/institucional.def}
+\input{abntexto-ufc/trabalhos.def}
+\input{abntexto-ufc/projetos.def}
+\input{abntexto-ufc/objetos.def}
+\input{abntexto-ufc/compat-abntexto.def}
+\input{abntexto-ufc/bibliografia.def}
+\input{abntexto-ufc/compat-nbr6023-2025.def}
+\input{abntexto-ufc/postextuais.def}
 
 \endinput

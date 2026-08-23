@@ -26,9 +26,9 @@ def main() -> None:
     if args.release_tag != expected_tag:
         raise SystemExit(f"Release tag mismatch: expected {expected_tag}, got {args.release_tag}.")
 
-    cls = (ROOT / "ufctex.cls").read_text(encoding="utf-8")
+    cls = (ROOT / "abntexto-ufc.cls").read_text(encoding="utf-8")
     if f"v{version} UFC academic document class" not in cls:
-        raise SystemExit(f"ufctex.cls does not declare v{version}.")
+        raise SystemExit(f"abntexto-ufc.cls does not declare v{version}.")
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     published = re.search(

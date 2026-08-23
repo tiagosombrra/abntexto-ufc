@@ -12,6 +12,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
+PACKAGE_ID = "abntexto-ufc"
+LEGACY_CLASS = "ufctex.cls"
 
 MICROSOFT_FONTS = {
     "times.ttf", "timesbd.ttf", "timesi.ttf", "timesbi.ttf",
@@ -90,16 +92,16 @@ def build(output: Path, abntexto: Path) -> None:
 
 
 def ctan_compile_smoke(ctan_zip: Path) -> None:
-    with tempfile.TemporaryDirectory(prefix="ufctex-ctan-smoke-") as temp:
+    with tempfile.TemporaryDirectory(prefix="abntexto-ufc-ctan-smoke-") as temp:
         temp_path = Path(temp)
         with zipfile.ZipFile(ctan_zip) as archive:
             archive.extractall(temp_path / "archive")
-        tex_root = temp_path / "archive" / "ufctex" / "tex"
+        tex_root = temp_path / "archive" / PACKAGE_ID / "tex"
         work = temp_path / "work"
         work.mkdir()
         document = work / "smoke.tex"
         document.write_text(
-            r"""\documentclass{ufctex}
+            r"""\documentclass{abntexto-ufc}
 \ufcsetup{
   tipo = tese,
   impressao = anverso,
@@ -124,7 +126,7 @@ def ctan_compile_smoke(ctan_zip: Path) -> None:
 \begin{document}
 \imprimircapa
 \imprimirfolhaderosto
-\chapter{Teste}
+\section{Teste}
 Pacote instalado a partir do candidato CTAN.
 \end{document}
 """,
@@ -162,7 +164,7 @@ def main() -> None:
             raise SystemExit(f"Licensed reference image SHA-1 mismatch: {relative}")
 
     v = version()
-    with tempfile.TemporaryDirectory(prefix="ufctex-release-check-") as temp:
+    with tempfile.TemporaryDirectory(prefix="abntexto-ufc-release-check-") as temp:
         temp_path = Path(temp)
         abntexto = temp_path / "abntexto.cls"
         subprocess.check_call([
@@ -183,23 +185,24 @@ def main() -> None:
                 raise SystemExit(f"Release artifact is not reproducible: {filename}")
 
         required = {
-            f"ufctex-{v}.zip",
+            f"{PACKAGE_ID}-{v}.zip",
             f"modelo-latex-ufc-{v}.zip",
             f"modelo-latex-ufc-overleaf-{v}.zip",
-            f"ufctex-ctan-{v}.zip",
-            f"ufctex-{v}-reference.pdf",
+            f"{PACKAGE_ID}-ctan-{v}.zip",
+            f"{PACKAGE_ID}-{v}-reference.pdf",
             "SHA256SUMS",
         }
         if set(first_files) != required:
             raise SystemExit(f"Unexpected release artifacts: {sorted(set(first_files) ^ required)}")
 
-        class_zip = first / f"ufctex-{v}.zip"
+        class_zip = first / f"{PACKAGE_ID}-{v}.zip"
         class_entries = names(class_zip)
-        class_root = f"ufctex-{v}/"
+        class_root = f"{PACKAGE_ID}-{v}/"
         assert_prefix(class_entries, class_root)
         for required_entry in (
-            f"{class_root}ufctex.cls",
-            f"{class_root}ufctex/core.def",
+            f"{class_root}abntexto-ufc.cls",
+            f"{class_root}abntexto-ufc/core.def",
+            f"{class_root}{LEGACY_CLASS}",
             f"{class_root}assets/institucional/brasao-ufc.PNG",
             f"{class_root}tools/prepare-windows-fonts.ps1",
             f"{class_root}README.md",
@@ -224,7 +227,9 @@ def main() -> None:
             f"{template_root}figuras/LICENCAS.md",
             f"{template_root}figuras/ufc-campus-pici.jpg",
             f"{template_root}figuras/ufc-reitoria.jpg",
-            f"{template_root}ufctex.cls",
+            f"{template_root}abntexto-ufc.cls",
+            f"{template_root}abntexto-ufc/core.def",
+            f"{template_root}{LEGACY_CLASS}",
             f"{template_root}Makefile",
         ):
             if required_entry not in template_entries:
@@ -239,7 +244,8 @@ def main() -> None:
         if any(entry.startswith(f"modelo-latex-ufc-overleaf-{v}/") for entry in overleaf_entries):
             raise SystemExit("Overleaf bundle must place the main document at the archive root.")
         for required_entry in (
-            "documento.tex", "ufctex.cls", "abntexto.cls",
+            "documento.tex", "abntexto-ufc.cls", LEGACY_CLASS, "abntexto.cls",
+            "abntexto-ufc/core.def",
             "1-pre-textuais/resumo.tex", "3-pos-textuais/referencias.bib",
             "2-textuais/exemplos-de-formatacao.tex", "figuras/LICENCAS.md",
             "figuras/ufc-campus-pici.jpg", "figuras/ufc-reitoria.jpg",
@@ -249,29 +255,34 @@ def main() -> None:
         assert_reference_images(overleaf_zip, "")
         assert_no_proprietary_fonts(overleaf_entries)
 
-        ctan_zip = first / f"ufctex-ctan-{v}.zip"
+        ctan_zip = first / f"{PACKAGE_ID}-ctan-{v}.zip"
         ctan_entries = names(ctan_zip)
-        assert_prefix(ctan_entries, "ufctex/")
+        ctan_root = f"{PACKAGE_ID}/"
+        assert_prefix(ctan_entries, ctan_root)
         for required_entry in (
-            "ufctex/README.md",
-            "ufctex/CHANGELOG.md",
-            "ufctex/LICENSE",
-            "ufctex/tex/ufctex.cls",
-            "ufctex/tex/ufctex/core.def",
-            "ufctex/tex/assets/institucional/brasao-ufc.PNG",
-            f"ufctex/doc/ufctex-{v}-reference.pdf",
-            "ufctex/doc/example/documento.tex",
-            "ufctex/doc/example/2-textuais/exemplos-de-formatacao.tex",
-            "ufctex/doc/example/figuras/LICENCAS.md",
-            "ufctex/doc/example/figuras/ufc-campus-pici.jpg",
-            "ufctex/doc/example/figuras/ufc-reitoria.jpg",
-            "ufctex/scripts/prepare-windows-fonts.ps1",
+            f"{ctan_root}README.md",
+            f"{ctan_root}CHANGELOG.md",
+            f"{ctan_root}LICENSE",
+            f"{ctan_root}tex/abntexto-ufc.cls",
+            f"{ctan_root}tex/abntexto-ufc/core.def",
+            f"{ctan_root}tex/assets/institucional/brasao-ufc.PNG",
+            f"{ctan_root}doc/{PACKAGE_ID}-{v}-reference.pdf",
+            f"{ctan_root}doc/example/documento.tex",
+            f"{ctan_root}doc/example/2-textuais/exemplos-de-formatacao.tex",
+            f"{ctan_root}doc/example/figuras/LICENCAS.md",
+            f"{ctan_root}doc/example/figuras/ufc-campus-pici.jpg",
+            f"{ctan_root}doc/example/figuras/ufc-reitoria.jpg",
+            f"{ctan_root}scripts/prepare-windows-fonts.ps1",
         ):
             if required_entry not in ctan_entries:
                 raise SystemExit(f"CTAN bundle missing {required_entry}")
+        if f"{ctan_root}tex/{LEGACY_CLASS}" in ctan_entries:
+            raise SystemExit("CTAN bundle must not expose the deprecated ufctex class identity.")
+        if any(entry.startswith(f"{ctan_root}tex/ufctex/") for entry in ctan_entries):
+            raise SystemExit("CTAN bundle must not expose the deprecated ufctex module namespace.")
         if any(entry.endswith(".tds.zip") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain a redundant nested TDS archive.")
-        assert_reference_images(ctan_zip, "ufctex/doc/example/")
+        assert_reference_images(ctan_zip, f"{ctan_root}doc/example/")
         assert_no_proprietary_fonts(ctan_entries)
         ctan_compile_smoke(ctan_zip)
 
