@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-23",
+  "purpose": "Typed registry for normative evidence identifiers that are not coordinated runner gates in tests/run.py.",
+  "policy": {
+    "runner_gates_source": "tests/run.py",
+    "runner_gates_are_implicit": true,
+    "unknown_evidence_behavior": "error",
+    "proof_rule": "An evidence identifier being registered proves only that its mechanism is classified and traceable; it does not by itself make a normative rule PROVEN."
+  },
+  "allowed_types": [
+    "lower-level-check",
+    "policy-assertion",
+    "runner-alias",
+    "deep-validator",
+    "ci-job",
+    "manual"
+  ],
+  "evidence": [
+    {
+      "id": "approval.signatures",
+      "type": "manual",
+      "description": "Manual review of the deposited approval sheet for prohibited signature images or handwritten/digital signatures.",
+      "target": {
+        "review": "final-deposit-pdf"
+      }
+    },
+    {
+      "id": "capes",
+      "type": "lower-level-check",
+      "description": "Checks that distributed acknowledgement guidance contains the CAPES funding acknowledgement markers required by project policy when applicable.",
+      "target": {
+        "script": "tests/v2-capes-guidance-check.sh",
+        "runner_gate": "pretextual"
+      }
+    },
+    {
+      "id": "catalog.optional",
+      "type": "policy-assertion",
+      "description": "Policy assertion that the visual catalog card is optional under the current UFC institutional act; behavior is exercised by the catalog-card gate.",
+      "target": {
+        "runner_gate": "catalog-card",
+        "script": "tests/v2-catalog-card-check.sh"
+      }
+    },
+    {
+      "id": "font.literal",
+      "type": "deep-validator",
+      "description": "Literal font identity evidence, requiring inspection beyond portable fallback configuration.",
+      "target": {
+        "scripts": [
+          "tests/v2-font-config-check.sh",
+          "tests/v2-font-poc.sh"
+        ],
+        "ci_evidence": [
+          "windows-font-poc",
+          "windows-font-pdfa"
+        ]
+      }
+    },
+    {
+      "id": "layout.a4",
+      "type": "lower-level-check",
+      "description": "Rendered PDF A4 page-size assertion.",
+      "target": {
+        "runner_gate": "pdf-geometry",
+        "script": "tests/v2-pdf-geometry-check.sh"
+      }
+    },
+    {
+      "id": "layout.margins",
+      "type": "lower-level-check",
+      "description": "Rendered PDF margin geometry assertion.",
+      "target": {
+        "runner_gate": "pdf-geometry",
+        "script": "tests/v2-pdf-geometry-check.sh"
+      }
+    },
+    {
+      "id": "pdfa.deep",
+      "type": "deep-validator",
+      "description": "PDF/A conformance evidence produced by deep PDF/A validation rather than browser heuristics.",
+      "target": {
+        "runner_gates": [
+          "pdfa",
+          "profile-pdfa"
+        ],
+        "scripts": [
+          "tests/v2-pdfa-check.sh",
+          "tests/v2-profile-pdfa-check.sh"
+        ]
+      }
+    },
+    {
+      "id": "profile-matrix",
+      "type": "runner-alias",
+      "description": "Semantic alias for the document-profile matrix runner gate.",
+      "target": {
+        "runner_gate": "profiles",
+        "script": "tests/v2-profile-matrix-check.sh"
+      }
+    },
+    {
+      "id": "windows-font-pdfa",
+      "type": "ci-job",
+      "description": "Windows literal-font certification path including embedding and PDF/A evidence.",
+      "target": {
+        "workflow": ".github/workflows/latex-preflight.yml",
+        "job": "v2-font-windows-pdfa",
+        "status_context": "ufctex/windows-font-poc"
+      }
+    },
+    {
+      "id": "windows-font-poc",
+      "type": "ci-job",
+      "description": "Windows literal-font build proof using Microsoft font files and TeX Live 2026.",
+      "target": {
+        "workflow": ".github/workflows/latex-preflight.yml",
+        "job": "v2-font-windows-poc",
+        "status_context": "ufctex/windows-font-build"
+      }
+    }
+  ]
+}
