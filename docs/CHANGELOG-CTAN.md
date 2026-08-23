@@ -9,6 +9,7 @@
 - added PDF/A-2b, font embedding and Windows literal-font certification;
 - added table, code, algorithm, bibliography, duplex and profile validation;
 - fixed code and algorithm line numbers to remain inside the 3 cm text margin;
+- aligned labels and descriptions in abbreviation/acronym and symbol lists, with geometric regression coverage;
 - added an independent PDF validator with strict, portable and accessibility profiles;
 - added deterministic GitHub, Overleaf and CTAN release bundles;
 - consolidated the CTAN archive into a browsing-friendly layout without a redundant nested TDS ZIP;
