@@ -18,15 +18,18 @@ GENERATED_SUFFIXES = {
     '.idx', '.ilg', '.ind', '.lof', '.log', '.lot', '.out', '.run.xml', '.synctex.gz',
     '.toc', '.pyc', '.zip',
 }
-LEGACY_ALLOWED = (
+FORBIDDEN_LEGACY_PATHS = {
     'ufctex/compat-v1.def',
-    'tests/compat/',
     'tests/v1-regression-check.sh',
     'tests/v2-posttextual-compat-check.sh',
-    'tests/v2-distribution-check.sh',
+}
+FORBIDDEN_LEGACY_PREFIXES = (
+    'lib/',
+    'tests/compat/',
+)
+LEGACY_CONTENT_EXEMPT = (
     SELF,
-    'README.md',
-    'docs/',
+    'tests/v2-distribution-check.sh',
 )
 LEGACY_PATTERNS = {
     'abntex2': re.compile(r'\babntex2\b', re.IGNORECASE),
@@ -207,8 +210,10 @@ def main() -> None:
     for path in files:
         name = relative(path)
         lower = name.lower()
-        if name.startswith('lib/'):
-            errors.append(f'{name}: tracked legacy lib/ path is not allowed')
+        if name in FORBIDDEN_LEGACY_PATHS or any(
+            name.startswith(prefix) for prefix in FORBIDDEN_LEGACY_PREFIXES
+        ):
+            errors.append(f'{name}: retired legacy path is not allowed')
         if any(lower.endswith(suffix) for suffix in GENERATED_SUFFIXES):
             errors.append(f'{name}: generated artifact must not be tracked')
         if name in {'.DS_Store', 'Thumbs.db'} or '/__pycache__/' in f'/{name}/':
@@ -229,11 +234,10 @@ def main() -> None:
                     errors.append(f'{name}: machine-specific absolute path found')
                     break
 
-        legacy_allowed = any(name == item or name.startswith(item) for item in LEGACY_ALLOWED)
-        if not legacy_allowed:
+        if name not in LEGACY_CONTENT_EXEMPT:
             for label, pattern in LEGACY_PATTERNS.items():
                 if pattern.search(text):
-                    errors.append(f'{name}: {label} found outside compatibility scope')
+                    errors.append(f'{name}: {label} found outside anti-legacy test scope')
 
     audit_versions(texts, errors)
     audit_setup_keys(texts, errors)
