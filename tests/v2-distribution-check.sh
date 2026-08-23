@@ -108,6 +108,27 @@ for module in modules:
     if not Path(module).is_file():
         errors.append(f'abntexto-ufc.cls: módulo carregado não existe: {module}')
 
+institutional = Path('abntexto-ufc/institucional.def').read_text(encoding='utf-8')
+if 'brasao-arquivo' not in institutional:
+    errors.append('abntexto-ufc/institucional.def: chave brasao-arquivo ausente')
+if 'assets/institucional/brasao-ufc.PNG' not in institutional:
+    errors.append('abntexto-ufc/institucional.def: caminho compatível padrão do brasão ausente')
+
+builder = Path('tools/build-release-bundles.py').read_text(encoding='utf-8')
+ctan_match = re.search(
+    r'def build_ctan_bundle\(.*?(?=\ndef write_checksums\()',
+    builder,
+    re.DOTALL,
+)
+if not ctan_match:
+    errors.append('tools/build-release-bundles.py: função build_ctan_bundle ausente')
+else:
+    ctan_builder = ctan_match.group(0)
+    if 'assets/institucional' in ctan_builder:
+        errors.append('CTAN builder ainda inclui assets/institucional')
+    if 'reference_pdf' in ctan_builder or '-reference.pdf' in ctan_builder:
+        errors.append('CTAN builder ainda inclui PDF de referência com marca institucional')
+
 release_infrastructure = (
     'tools/build-release-bundles.py',
     'tools/fetch-abntexto.py',

@@ -34,10 +34,11 @@ Portable fallback fonts are available when strict literal-font mode is disabled,
 The CTAN archive contains:
 
 - the canonical `abntexto-ufc` class and its handwritten modules;
-- the complete reference document in PDF;
 - the source of the reference document;
 - the normative implementation matrix in `doc/NORMAS.md`;
 - helper scripts for local Windows font preparation.
+
+The generated project reference PDF is distributed separately from the CTAN archive because it contains the UFC institutional mark.
 
 The deprecated `ufctex` compatibility entry point is retained only in project/template distributions and is not part of the CTAN package.
 
@@ -49,7 +50,7 @@ The `abntexto-ufc` source code and project documentation are subject to the LaTe
 
 Two reference photographs in `doc/example/figuras/` are distributed under CC BY-SA 4.0 with their authorship, source URLs and checksums recorded in `doc/example/figuras/LICENCAS.md`.
 
-The UFC coat of arms in `assets/institucional/brasao-ufc.PNG` is an official institutional mark published by the Federal University of Ceará. Its distribution policy is being separated from the LPPL-covered package sources; the CTAN candidate must satisfy TeX Live free-data requirements before publication.
+The UFC coat of arms is not distributed in the CTAN archive and is not declared to be covered by the LPPL. When `brasao = sim` is enabled, obtain the official mark from the Federal University of Ceará and provide it locally with `brasao-arquivo = {path/to/file}`. The compatibility default is `assets/institucional/brasao-ufc.PNG`.
 
 Official visual identity source: https://www.ufc.br/a-universidade/identidade-visual-da-ufc
 

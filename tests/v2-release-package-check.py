@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 PACKAGE_ID = "abntexto-ufc"
 LEGACY_CLASS = "ufctex.cls"
+COAT_OF_ARMS = ROOT / "assets/institucional/brasao-ufc.PNG"
 
 MICROSOFT_FONTS = {
     "times.ttf", "timesbd.ttf", "timesi.ttf", "timesbi.ttf",
@@ -67,6 +69,16 @@ def assert_reference_images(archive_path: Path, root: str) -> None:
                 raise SystemExit(f"Reference image SHA-1 mismatch in {entry}: {actual}")
 
 
+def assert_ctan_excludes_coat_of_arms(archive_path: Path) -> None:
+    expected = hashlib.sha1(COAT_OF_ARMS.read_bytes()).hexdigest()
+    with zipfile.ZipFile(archive_path) as archive:
+        for info in archive.infolist():
+            if info.is_dir():
+                continue
+            if hashlib.sha1(archive.read(info.filename)).hexdigest() == expected:
+                raise SystemExit(f"CTAN bundle redistributes the UFC coat of arms: {info.filename}")
+
+
 def verify_checksums(directory: Path) -> None:
     checksum_file = directory / "SHA256SUMS"
     listed = {}
@@ -99,6 +111,7 @@ def ctan_compile_smoke(ctan_zip: Path) -> None:
         tex_root = temp_path / "archive" / PACKAGE_ID / "tex"
         work = temp_path / "work"
         work.mkdir()
+        shutil.copyfile(COAT_OF_ARMS, work / "brasao-externo.PNG")
         document = work / "smoke.tex"
         document.write_text(
             r"""\documentclass{abntexto-ufc}
@@ -108,6 +121,7 @@ def ctan_compile_smoke(ctan_zip: Path) -> None:
   capa = auto,
   ficha-catalografica = nao,
   brasao = sim,
+  brasao-arquivo = {brasao-externo.PNG},
   fonte = times,
   fonte-estrita = nao,
   programa-doutorado = {Programa de Pós-Graduação em Ciência da Computação},
@@ -154,6 +168,8 @@ Pacote instalado a partir do candidato CTAN.
 def main() -> None:
     if not (ROOT / "documento.pdf").is_file():
         raise SystemExit("documento.pdf missing; run make release-preflight first.")
+    if not COAT_OF_ARMS.is_file():
+        raise SystemExit("UFC coat of arms missing from project source tree.")
 
     for relative, expected in REFERENCE_IMAGE_SHA1.items():
         path = ROOT / relative
@@ -265,8 +281,6 @@ def main() -> None:
             f"{ctan_root}LICENSE",
             f"{ctan_root}tex/abntexto-ufc.cls",
             f"{ctan_root}tex/abntexto-ufc/core.def",
-            f"{ctan_root}tex/assets/institucional/brasao-ufc.PNG",
-            f"{ctan_root}doc/{PACKAGE_ID}-{v}-reference.pdf",
             f"{ctan_root}doc/example/documento.tex",
             f"{ctan_root}doc/example/2-textuais/exemplos-de-formatacao.tex",
             f"{ctan_root}doc/example/figuras/LICENCAS.md",
@@ -280,8 +294,15 @@ def main() -> None:
             raise SystemExit("CTAN bundle must not expose the deprecated ufctex class identity.")
         if any(entry.startswith(f"{ctan_root}tex/ufctex/") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not expose the deprecated ufctex module namespace.")
+        if any(entry.startswith(f"{ctan_root}tex/assets/institucional/") for entry in ctan_entries):
+            raise SystemExit("CTAN bundle must not redistribute UFC institutional assets.")
+        if any(Path(entry).name == "brasao-ufc.PNG" for entry in ctan_entries):
+            raise SystemExit("CTAN bundle must not contain the UFC coat of arms binary.")
+        if f"{ctan_root}doc/{PACKAGE_ID}-{v}-reference.pdf" in ctan_entries:
+            raise SystemExit("CTAN bundle must not contain the reference PDF that embeds the UFC coat of arms.")
         if any(entry.endswith(".tds.zip") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain a redundant nested TDS archive.")
+        assert_ctan_excludes_coat_of_arms(ctan_zip)
         assert_reference_images(ctan_zip, f"{ctan_root}doc/example/")
         assert_no_proprietary_fonts(ctan_entries)
         ctan_compile_smoke(ctan_zip)
