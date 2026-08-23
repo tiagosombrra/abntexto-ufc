@@ -1,5 +1,6 @@
 name: PDF validator
 
+# External actions are pinned to immutable commit SHAs.
 on:
   push:
     branches:
