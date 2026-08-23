@@ -2,14 +2,17 @@
 set -eu
 
 fixture="tests/normativa/build-minimo.tex"
-job="ufctex-build-minimo"
-stubdir="/tmp/ufctex-v2-build-stubs"
+job="abntexto-ufc-build-minimo"
+legacy_job="ufctex-compat-minimo"
+stubdir="/tmp/abntexto-ufc-v2-build-stubs"
 
 cleanup() {
   rm -rf "$stubdir"
-  rm -f "$job".tex "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".log \
-    "$job".out "$job".pdf "$job".run.xml "$job".toc "$job".glo "$job".gls \
-    "$job".glg "$job".idx "$job".ind "$job".ilg
+  for target in "$job" "$legacy_job"; do
+    rm -f "$target".tex "$target".aux "$target".bbl "$target".bcf "$target".blg "$target".log \
+      "$target".out "$target".pdf "$target".run.xml "$target".toc "$target".glo "$target".gls \
+      "$target".glg "$target".idx "$target".ind "$target".ilg
+  done
 }
 trap cleanup EXIT INT TERM
 
@@ -26,9 +29,9 @@ SH
   done
 
   cp "$fixture" "$job.tex"
-  echo "Validando fluxo make modular com $engine..."
-  PATH="$stubdir:$PATH" make filename="$job" ENGINE="$engine" compile > /tmp/ufctex-v2-build.log 2>&1 || {
-    cat /tmp/ufctex-v2-build.log
+  echo "Validando fluxo make modular canônico com $engine..."
+  PATH="$stubdir:$PATH" make filename="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-v2-build.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-build.log
     exit 1
   }
 
@@ -47,11 +50,32 @@ SH
     exit 1
   fi
 
-  pdftotext -layout "$job.pdf" /tmp/ufctex-v2-build.txt
-  grep -Fqi 'Marcador do build modular' /tmp/ufctex-v2-build.txt || {
+  pdftotext -layout "$job.pdf" /tmp/abntexto-ufc-v2-build.txt
+  grep -Fqi 'Marcador do build modular' /tmp/abntexto-ufc-v2-build.txt || {
     echo "$engine: conteúdo esperado ausente do PDF."
     exit 1
   }
 done
 
-echo 'Gate V2 do fluxo make modular concluído.'
+cleanup
+sed 's/\\documentclass{abntexto-ufc}/\\documentclass{ufctex}/' "$fixture" > "$legacy_job.tex"
+echo 'Validando shim de compatibilidade ufctex com pdflatex...'
+pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$legacy_job.tex" > /tmp/ufctex-compat-build.log 2>&1 || {
+  cat /tmp/ufctex-compat-build.log
+  exit 1
+}
+[ -f "$legacy_job.pdf" ] || {
+  echo 'Shim ufctex não gerou PDF.'
+  exit 1
+}
+grep -Fqi 'deprecated' "$legacy_job.log" || {
+  echo 'Shim ufctex não emitiu aviso de depreciação.'
+  exit 1
+}
+pdftotext -layout "$legacy_job.pdf" /tmp/ufctex-compat-build.txt
+grep -Fqi 'Marcador do build modular' /tmp/ufctex-compat-build.txt || {
+  echo 'Conteúdo esperado ausente do PDF gerado pelo shim ufctex.'
+  exit 1
+}
+
+echo 'Gate V2 do fluxo make modular e compatibilidade de classe concluído.'
