@@ -15,6 +15,9 @@ for engine in pdflatex lualatex; do
         exit 1
       }
     done
+    if [ "$fixture" = "tests/normativa/pretextuais-trabalho.tex" ] && command -v pdftotext >/dev/null 2>&1; then
+      python3 tests/checks/pretextual_definition_alignment.py pretextuais-trabalho.pdf
+    fi
   done
 done
 
