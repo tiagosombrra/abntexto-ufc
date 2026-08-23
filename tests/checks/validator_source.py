@@ -9,7 +9,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 APP = ROOT / "validator" / "app.js"
@@ -95,7 +94,7 @@ def main() -> None:
     if "A4=(595.276,841.89)" in cli or "A4=[595.276,841.89]" in app:
         fail("validator geometry is hard-coded instead of catalog-driven")
 
-    forbidden = r"FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\("
+    forbidden = r"FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\(|\bfetch\s*\("
     if re.search(forbidden, app):
         fail("browser code contains a network upload API")
 
