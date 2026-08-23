@@ -8,6 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SELF = 'tests/v2-repository-audit.py'
+CANONICAL_CLASS = 'abntexto-ufc.cls'
+LEGACY_CLASS = 'ufctex.cls'
 
 TEXT_SUFFIXES = {
     '.bib', '.cls', '.def', '.md', '.py', '.sh', '.tex', '.txt', '.yml', '.yaml',
@@ -49,6 +51,7 @@ KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*\.(?:choice|code|meta):')
 SETUP_KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*=')
 ACTION_USE_PATTERN = re.compile(r'(?m)^\s*-?\s*uses:\s*([^\s@]+)@([^\s#]+)')
 SHA40_PATTERN = re.compile(r'^[0-9a-f]{40}$', re.IGNORECASE)
+MODULE_PATTERN = re.compile(r'\\input\{((?:abntexto-ufc|ufctex)/[^}]+\.def)\}')
 
 
 def tracked_files() -> list[Path]:
@@ -117,6 +120,20 @@ def extract_braced_calls(text: str, command: str) -> list[str]:
     return result
 
 
+def canonical_modules(texts: dict[str, str], errors: list[str]) -> list[str]:
+    cls = texts.get(CANONICAL_CLASS, '')
+    modules = MODULE_PATTERN.findall(cls)
+    if not modules:
+        errors.append(f'{CANONICAL_CLASS}: no UFC modules are loaded')
+        return []
+    if len(modules) != len(set(modules)):
+        errors.append(f'{CANONICAL_CLASS}: duplicate module input')
+    for module in modules:
+        if module not in texts:
+            errors.append(f'{CANONICAL_CLASS}: missing module: {module}')
+    return modules
+
+
 def audit_versions(texts: dict[str, str], errors: list[str]) -> str | None:
     makefile = texts.get('Makefile', '')
     match = re.search(r'^VERSION\s*:?=\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$', makefile, re.MULTILINE)
@@ -125,13 +142,19 @@ def audit_versions(texts: dict[str, str], errors: list[str]) -> str | None:
         return None
     version = match.group(1)
 
-    cls = texts.get('ufctex.cls', '')
+    cls = texts.get(CANONICAL_CLASS, '')
     cls_match = re.search(
-        rf'\\ProvidesClass\{{ufctex\}}\[(\d{{4}}/\d{{2}}/\d{{2}})\s+v{re.escape(version)}\s+UFC academic document class\]',
+        rf'\\ProvidesClass\{{abntexto-ufc\}}\[(\d{{4}}/\d{{2}}/\d{{2}})\s+v{re.escape(version)}\s+UFC academic document class\]',
         cls,
     )
     if not cls_match:
-        errors.append(f'ufctex.cls: class version does not match {version}')
+        errors.append(f'{CANONICAL_CLASS}: class version does not match {version}')
+
+    legacy = texts.get(LEGACY_CLASS, '')
+    if '\\LoadClass{abntexto-ufc}' not in legacy:
+        errors.append(f'{LEGACY_CLASS}: compatibility wrapper must load abntexto-ufc')
+    if 'deprecated' not in legacy.lower():
+        errors.append(f'{LEGACY_CLASS}: compatibility wrapper must emit a deprecation warning')
 
     ctan = texts.get('docs/README-CTAN.md', '')
     ctan_match = re.search(r'^Version:\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$', ctan, re.MULTILINE)
@@ -148,7 +171,7 @@ def audit_versions(texts: dict[str, str], errors: list[str]) -> str | None:
     if not release_match:
         errors.append(f'docs/CHANGELOG-CTAN.md: release candidate {version} is missing')
     elif cls_match and cls_match.group(1).replace('/', '-') != release_match.group(1):
-        errors.append('ufctex.cls and docs/CHANGELOG-CTAN.md: release dates differ')
+        errors.append(f'{CANONICAL_CLASS} and docs/CHANGELOG-CTAN.md: release dates differ')
 
     readme = texts.get('README.md', '')
     published = re.search(
@@ -168,11 +191,8 @@ def audit_versions(texts: dict[str, str], errors: list[str]) -> str | None:
     return version
 
 
-def audit_setup_keys(texts: dict[str, str], errors: list[str]) -> None:
-    definitions = '\n'.join(
-        text for name, text in texts.items()
-        if name.startswith('ufctex/') and name.endswith('.def')
-    )
+def audit_setup_keys(texts: dict[str, str], modules: list[str], errors: list[str]) -> None:
+    definitions = '\n'.join(texts.get(name, '') for name in modules)
     defined = set(KEY_PATTERN.findall(definitions))
     for name, text in texts.items():
         if not (name.endswith('.tex') or name.endswith('.md')):
@@ -183,23 +203,17 @@ def audit_setup_keys(texts: dict[str, str], errors: list[str]) -> None:
                     errors.append(f'{name}: unknown \\ufcsetup key: {key}')
 
 
-def audit_modules(texts: dict[str, str], errors: list[str]) -> None:
-    cls = texts.get('ufctex.cls', '')
-    modules = re.findall(r'\\input\{(ufctex/[^}]+\.def)\}', cls)
-    if len(modules) != len(set(modules)):
-        errors.append('ufctex.cls: duplicate module input')
-    for module in modules:
-        if module not in texts:
-            errors.append(f'ufctex.cls: missing module: {module}')
-    if 'ufctex/trabalhos.def' in modules and 'ufctex/projetos.def' in modules:
-        if modules.index('ufctex/trabalhos.def') > modules.index('ufctex/projetos.def'):
-            errors.append('ufctex.cls: trabalhos.def must load before projetos.def')
+def audit_modules(texts: dict[str, str], modules: list[str], errors: list[str]) -> None:
+    by_basename = {Path(module).name: index for index, module in enumerate(modules)}
+    if 'trabalhos.def' in by_basename and 'projetos.def' in by_basename:
+        if by_basename['trabalhos.def'] > by_basename['projetos.def']:
+            errors.append(f'{CANONICAL_CLASS}: trabalhos.def must load before projetos.def')
 
     definitions: dict[str, list[str]] = defaultdict(list)
-    for name, text in texts.items():
-        if name.startswith('ufctex/') and name.endswith('.def'):
-            for command in CS_PATTERN.findall(text):
-                definitions[command].append(name)
+    for name in modules:
+        text = texts.get(name, '')
+        for command in CS_PATTERN.findall(text):
+            definitions[command].append(name)
     for command, locations in sorted(definitions.items()):
         unique = sorted(set(locations))
         if len(unique) > 1:
@@ -218,7 +232,7 @@ def audit_release_docs(texts: dict[str, str], errors: list[str]) -> None:
         re.IGNORECASE,
     )
     if stale.search(readme) or stale.search(ctan):
-        errors.append('release documentation: retired coat-of-arms CTAN blocker is still present')
+        errors.append('release documentation: obsolete coat-of-arms licensing wording is still present')
 
 
 def audit_workflow_pins(texts: dict[str, str], errors: list[str]) -> None:
@@ -268,8 +282,9 @@ def main() -> None:
                     errors.append(f'{name}: {label} found outside anti-legacy test scope')
 
     audit_versions(texts, errors)
-    audit_setup_keys(texts, errors)
-    audit_modules(texts, errors)
+    modules = canonical_modules(texts, errors)
+    audit_setup_keys(texts, modules, errors)
+    audit_modules(texts, modules, errors)
     audit_release_docs(texts, errors)
     audit_workflow_pins(texts, errors)
 
