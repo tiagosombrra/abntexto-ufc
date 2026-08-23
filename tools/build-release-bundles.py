@@ -101,10 +101,7 @@ def iter_files(specs: Iterable[str]) -> list[tuple[Path, Path]]:
         source = ROOT / spec
         if not source.exists():
             raise SystemExit(f"Required release input missing: {spec}")
-        if source.is_file():
-            candidates = [source]
-        else:
-            candidates = sorted(path for path in source.rglob("*") if path.is_file())
+        candidates = [source] if source.is_file() else sorted(path for path in source.rglob("*") if path.is_file())
         for path in candidates:
             relative = path.relative_to(ROOT)
             key = relative.as_posix()
@@ -115,9 +112,7 @@ def iter_files(specs: Iterable[str]) -> list[tuple[Path, Path]]:
 
 
 def file_mode(path: Path) -> int:
-    if path.suffix in {".sh", ".py"}:
-        return 0o755
-    return 0o644
+    return 0o755 if path.suffix in {".sh", ".py"} else 0o644
 
 
 def make_info(name: str, date_time: tuple[int, int, int, int, int, int], mode: int = 0o644) -> zipfile.ZipInfo:
@@ -141,8 +136,7 @@ def source_entries(specs: Iterable[str], prefix: str = "") -> list[tuple[str, by
     for path, relative in iter_files(specs):
         if path.name.lower() in MICROSOFT_FONTS:
             raise SystemExit(f"Proprietary Microsoft font cannot be distributed: {relative}")
-        target = f"{prefix}{relative.as_posix()}"
-        entries.append((target, path.read_bytes(), file_mode(path)))
+        entries.append((f"{prefix}{relative.as_posix()}", path.read_bytes(), file_mode(path)))
     return entries
 
 
@@ -178,49 +172,6 @@ def build_template_bundle(
     return path
 
 
-def build_tds(
-    version: str,
-    reference_pdf: Path,
-    date_time: tuple[int, int, int, int, int, int],
-) -> bytes:
-    entries: list[tuple[str, bytes, int]] = []
-
-    for path, relative in iter_files(("ufctex.cls", "ufctex", "assets/institucional")):
-        entries.append((
-            f"tex/latex/ufctex/{relative.as_posix()}",
-            path.read_bytes(),
-            file_mode(path),
-        ))
-
-    ctan_readme = (ROOT / "docs/README-CTAN.md").read_bytes()
-    entries.extend((
-        ("doc/latex/ufctex/README.md", ctan_readme, 0o644),
-        ("doc/latex/ufctex/CHANGELOG.md", (ROOT / "docs/CHANGELOG-CTAN.md").read_bytes(), 0o644),
-        ("doc/latex/ufctex/LICENSE", (ROOT / "LICENSE").read_bytes(), 0o644),
-        ("doc/latex/ufctex/NORMAS.md", (ROOT / "docs/NORMAS.md").read_bytes(), 0o644),
-        (f"doc/latex/ufctex/ufctex-{version}-reference.pdf", reference_pdf.read_bytes(), 0o644),
-    ))
-
-    for path, relative in iter_files(DOC_SOURCE_INPUTS):
-        entries.append((
-            f"doc/latex/ufctex/example/{relative.as_posix()}",
-            path.read_bytes(),
-            file_mode(path),
-        ))
-
-    for path, relative in iter_files((
-        "tools/convert-encoding-to-unicode.ps1",
-        "tools/prepare-windows-fonts.ps1",
-    )):
-        entries.append((
-            f"scripts/ufctex/{relative.name}",
-            path.read_bytes(),
-            0o644,
-        ))
-
-    return archive_bytes(entries, date_time)
-
-
 def build_ctan_bundle(
     out: Path,
     version: str,
@@ -240,30 +191,16 @@ def build_ctan_bundle(
     ]
 
     for path, relative in iter_files(("ufctex.cls", "ufctex", "assets/institucional")):
-        entries.append((
-            f"{root}tex/{relative.as_posix()}",
-            path.read_bytes(),
-            file_mode(path),
-        ))
+        entries.append((f"{root}tex/{relative.as_posix()}", path.read_bytes(), file_mode(path)))
 
     for path, relative in iter_files(DOC_SOURCE_INPUTS):
-        entries.append((
-            f"{root}doc/example/{relative.as_posix()}",
-            path.read_bytes(),
-            file_mode(path),
-        ))
+        entries.append((f"{root}doc/example/{relative.as_posix()}", path.read_bytes(), file_mode(path)))
 
     for path, relative in iter_files((
         "tools/convert-encoding-to-unicode.ps1",
         "tools/prepare-windows-fonts.ps1",
     )):
-        entries.append((
-            f"{root}scripts/{relative.name}",
-            path.read_bytes(),
-            0o644,
-        ))
-
-    entries.append((f"{root}ufctex.tds.zip", build_tds(version, reference_pdf, date_time), 0o644))
+        entries.append((f"{root}scripts/{relative.name}", path.read_bytes(), 0o644))
 
     path = out / f"ufctex-ctan-{version}.zip"
     write_archive(path, entries, date_time)
@@ -273,8 +210,7 @@ def build_ctan_bundle(
 def write_checksums(out: Path, artifacts: list[Path]) -> Path:
     lines = []
     for path in sorted(artifacts, key=lambda item: item.name):
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
-        lines.append(f"{digest}  {path.name}")
+        lines.append(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}")
     checksum_path = out / "SHA256SUMS"
     checksum_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return checksum_path
@@ -291,10 +227,7 @@ def main() -> None:
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     for path in output.iterdir():
-        if path.is_dir():
-            shutil.rmtree(path)
-        else:
-            path.unlink()
+        shutil.rmtree(path) if path.is_dir() else path.unlink()
 
     date_time = zip_datetime(source_date_epoch())
     reference_pdf = args.reference_pdf.resolve()
