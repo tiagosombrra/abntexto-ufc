@@ -95,9 +95,15 @@ else:
 if r'\LoadClass{abntexto-ufc}' not in legacy:
     errors.append('ufctex.cls: wrapper de compatibilidade não carrega abntexto-ufc')
 
-modules = re.findall(r'\\input\{(abntexto-ufc/[^}]+\.def)\}', uncommented(canonical))
-if 'abntexto-ufc/fontes.def' not in modules:
-    errors.append('abntexto-ufc.cls: módulo obrigatório abntexto-ufc/fontes.def não carregado')
+modules = re.findall(
+    r'\\input\{((?:abntexto-ufc|ufctex)/[^}]+\.def)\}',
+    uncommented(canonical),
+)
+if not modules:
+    errors.append('abntexto-ufc.cls: nenhum módulo UFC carregado')
+module_names = {Path(module).name for module in modules}
+if 'fontes.def' not in module_names:
+    errors.append('abntexto-ufc.cls: módulo obrigatório fontes.def não carregado')
 for module in modules:
     if not Path(module).is_file():
         errors.append(f'abntexto-ufc.cls: módulo carregado não existe: {module}')
