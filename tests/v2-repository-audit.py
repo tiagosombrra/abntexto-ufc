@@ -29,7 +29,6 @@ FORBIDDEN_LEGACY_PREFIXES = (
 )
 LEGACY_CONTENT_EXEMPT = (
     SELF,
-    'tests/v2-distribution-check.sh',
 )
 LEGACY_PATTERNS = {
     'abntex2': re.compile(r'\babntex2\b', re.IGNORECASE),
