@@ -53,14 +53,6 @@ TEMPLATE_INPUTS = (
     "tools/prepare-windows-fonts.ps1",
 )
 
-DOC_SOURCE_INPUTS = (
-    "documento.tex",
-    "1-pre-textuais",
-    "2-textuais",
-    "3-pos-textuais",
-    "figuras",
-)
-
 
 def read_version() -> str:
     text = (ROOT / "Makefile").read_text(encoding="utf-8")
@@ -188,19 +180,11 @@ def build_ctan_bundle(
         (f"{root}CHANGELOG.md", (ROOT / "docs/CHANGELOG-CTAN.md").read_bytes(), 0o644),
         (f"{root}LICENSE", (ROOT / "LICENSE").read_bytes(), 0o644),
         (f"{root}doc/NORMAS.md", (ROOT / "docs/NORMAS.md").read_bytes(), 0o644),
+        (f"{root}doc/{PACKAGE_ID}-example.tex", (ROOT / "docs/ctan-example.tex").read_bytes(), 0o644),
     ]
 
     for path, relative in iter_files(("abntexto-ufc.cls", "abntexto-ufc")):
         entries.append((f"{root}tex/{relative.as_posix()}", path.read_bytes(), file_mode(path)))
-
-    for path, relative in iter_files(DOC_SOURCE_INPUTS):
-        entries.append((f"{root}doc/example/{relative.as_posix()}", path.read_bytes(), file_mode(path)))
-
-    for path, relative in iter_files((
-        "tools/convert-encoding-to-unicode.ps1",
-        "tools/prepare-windows-fonts.ps1",
-    )):
-        entries.append((f"{root}scripts/{relative.name}", path.read_bytes(), 0o644))
 
     path = out / f"{PACKAGE_ID}-ctan-{version}.zip"
     write_archive(path, entries, date_time)

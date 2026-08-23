@@ -25,32 +25,30 @@ TeX Live 2026 is the reference distribution used by the project CI.
 
 UFC documents may use Times New Roman or Arial. Literal Microsoft font files are not distributed by this package.
 
-LuaLaTeX can use locally installed Times New Roman and Arial through `fontspec`. For pdfLaTeX, the project provides PowerShell helpers that prepare local metrics from Microsoft fonts already installed on Windows.
+LuaLaTeX can use locally installed Times New Roman and Arial through `fontspec`. For pdfLaTeX, the project repository provides optional PowerShell helpers that prepare local metrics from Microsoft fonts already installed on Windows; those project-specific helpers are not part of the CTAN archive.
 
 Portable fallback fonts are available when strict literal-font mode is disabled, but they are not presented as literal Times New Roman or Arial.
 
 ## Documentation
 
-The CTAN archive contains:
+The CTAN archive is intentionally limited to the installable class surface and essential documentation. It contains:
 
-- the canonical `abntexto-ufc` class and its handwritten modules;
-- the source of the reference document;
+- the canonical `abntexto-ufc` class and its handwritten runtime modules;
 - the normative implementation matrix in `doc/NORMAS.md`;
-- helper scripts for local Windows font preparation.
+- a minimal portable example in `doc/abntexto-ufc-example.tex`;
+- this README, the changelog, and the LPPL license.
+
+The full editable UFC template, reference document, photographs, validation infrastructure, and platform-specific helper scripts are maintained in the project repository and release bundles, not in the CTAN archive.
 
 The generated project reference PDF is distributed separately from the CTAN archive because it contains the UFC institutional mark.
 
 The deprecated `ufctex` compatibility entry point is retained only in project/template distributions and is not part of the CTAN package.
 
-The full editable UFC template is distributed separately in the project releases.
-
 ## License and assets
 
 The `abntexto-ufc` source code and project documentation are subject to the LaTeX Project Public License 1.3c or any later version, as stated in `LICENSE`.
 
-Two reference photographs in `doc/example/figuras/` are distributed under CC BY-SA 4.0 with their authorship, source URLs and checksums recorded in `doc/example/figuras/LICENCAS.md`.
-
-The UFC coat of arms is not distributed in the CTAN archive and is not declared to be covered by the LPPL. When `brasao = sim` is enabled, obtain the official mark from the Federal University of Ceará and provide it locally with `brasao-arquivo = {path/to/file}`. The compatibility default is `assets/institucional/brasao-ufc.PNG`.
+The CTAN archive contains no institutional image assets. The UFC coat of arms is not distributed in the CTAN archive and is not declared to be covered by the LPPL. When `brasao = sim` is enabled, obtain the official mark from the Federal University of Ceará and provide it locally with `brasao-arquivo = {path/to/file}`. The compatibility default is `assets/institucional/brasao-ufc.PNG`.
 
 Official visual identity source: https://www.ufc.br/a-universidade/identidade-visual-da-ufc
 
