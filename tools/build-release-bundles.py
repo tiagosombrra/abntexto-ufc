@@ -15,14 +15,18 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 
+PACKAGE_ID = "abntexto-ufc"
+LEGACY_CLASS = "ufctex.cls"
+
 MICROSOFT_FONTS = {
     "times.ttf", "timesbd.ttf", "timesi.ttf", "timesbi.ttf",
     "arial.ttf", "arialbd.ttf", "ariali.ttf", "arialbi.ttf",
 }
 
 CLASS_INPUTS = (
-    "ufctex.cls",
-    "ufctex",
+    "abntexto-ufc.cls",
+    "abntexto-ufc",
+    LEGACY_CLASS,
     "assets/institucional",
     "tools/convert-encoding-to-unicode.ps1",
     "tools/prepare-windows-fonts.ps1",
@@ -38,8 +42,9 @@ TEMPLATE_INPUTS = (
     "3-pos-textuais",
     "figuras",
     "assets",
-    "ufctex.cls",
-    "ufctex",
+    "abntexto-ufc.cls",
+    "abntexto-ufc",
+    LEGACY_CLASS,
     "Makefile",
     "README.md",
     "LICENSE",
@@ -64,9 +69,9 @@ def read_version() -> str:
         raise SystemExit("Makefile VERSION not found.")
     version = match.group(1)
 
-    cls = (ROOT / "ufctex.cls").read_text(encoding="utf-8")
+    cls = (ROOT / "abntexto-ufc.cls").read_text(encoding="utf-8")
     if f"v{version} UFC academic document class" not in cls:
-        raise SystemExit(f"ufctex.cls does not match VERSION {version}.")
+        raise SystemExit(f"abntexto-ufc.cls does not match VERSION {version}.")
     return version
 
 
@@ -145,8 +150,8 @@ def write_archive(path: Path, entries: list[tuple[str, bytes, int]], date_time: 
 
 
 def build_class_bundle(out: Path, version: str, date_time: tuple[int, int, int, int, int, int]) -> Path:
-    root = f"ufctex-{version}/"
-    path = out / f"ufctex-{version}.zip"
+    root = f"{PACKAGE_ID}-{version}/"
+    path = out / f"{PACKAGE_ID}-{version}.zip"
     write_archive(path, source_entries(CLASS_INPUTS, root), date_time)
     return path
 
@@ -181,16 +186,16 @@ def build_ctan_bundle(
     if not reference_pdf.is_file():
         raise SystemExit(f"Reference PDF not found: {reference_pdf}")
 
-    root = "ufctex/"
+    root = f"{PACKAGE_ID}/"
     entries: list[tuple[str, bytes, int]] = [
         (f"{root}README.md", (ROOT / "docs/README-CTAN.md").read_bytes(), 0o644),
         (f"{root}CHANGELOG.md", (ROOT / "docs/CHANGELOG-CTAN.md").read_bytes(), 0o644),
         (f"{root}LICENSE", (ROOT / "LICENSE").read_bytes(), 0o644),
         (f"{root}doc/NORMAS.md", (ROOT / "docs/NORMAS.md").read_bytes(), 0o644),
-        (f"{root}doc/ufctex-{version}-reference.pdf", reference_pdf.read_bytes(), 0o644),
+        (f"{root}doc/{PACKAGE_ID}-{version}-reference.pdf", reference_pdf.read_bytes(), 0o644),
     ]
 
-    for path, relative in iter_files(("ufctex.cls", "ufctex", "assets/institucional")):
+    for path, relative in iter_files(("abntexto-ufc.cls", "abntexto-ufc", "assets/institucional")):
         entries.append((f"{root}tex/{relative.as_posix()}", path.read_bytes(), file_mode(path)))
 
     for path, relative in iter_files(DOC_SOURCE_INPUTS):
@@ -202,7 +207,7 @@ def build_ctan_bundle(
     )):
         entries.append((f"{root}scripts/{relative.name}", path.read_bytes(), 0o644))
 
-    path = out / f"ufctex-ctan-{version}.zip"
+    path = out / f"{PACKAGE_ID}-ctan-{version}.zip"
     write_archive(path, entries, date_time)
     return path
 
@@ -217,7 +222,7 @@ def write_checksums(out: Path, artifacts: list[Path]) -> Path:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build deterministic ufctex release bundles.")
+    parser = argparse.ArgumentParser(description=f"Build deterministic {PACKAGE_ID} release bundles.")
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     parser.add_argument("--reference-pdf", type=Path, default=ROOT / "documento.pdf")
     parser.add_argument("--abntexto", type=Path)
@@ -234,7 +239,7 @@ def main() -> None:
     if not reference_pdf.is_file():
         raise SystemExit("documento.pdf is required; run make release-preflight first.")
 
-    reference_out = output / f"ufctex-{version}-reference.pdf"
+    reference_out = output / f"{PACKAGE_ID}-{version}-reference.pdf"
     shutil.copyfile(reference_pdf, reference_out)
 
     artifacts = [

@@ -1,5 +1,5 @@
 ########################################################################
-## Modelo de Trabalho Acadêmico UFC / ufctex V2                        ##
+## Modelo de Trabalho Acadêmico UFC / abntexto-ufc V2                  ##
 ## Revisão normativa e técnica: Tiago Guimarães Sombra (2026).         ##
 ########################################################################
 
@@ -76,9 +76,9 @@ release-preflight: release-check
 
 package: reference-assets
 	@$(MAKE) release-preflight
-	@python3 tools/fetch-abntexto.py --output .ufctex-abntexto.cls
-	@python3 tools/build-release-bundles.py --abntexto .ufctex-abntexto.cls
-	@rm -f .ufctex-abntexto.cls
+	@python3 tools/fetch-abntexto.py --output .abntexto-ufc-upstream.cls
+	@python3 tools/build-release-bundles.py --abntexto .abntexto-ufc-upstream.cls
+	@rm -f .abntexto-ufc-upstream.cls
 	@echo "Bundles de distribuição da V2 concluídos."
 
 distribution-preflight: package
@@ -106,7 +106,8 @@ clean:
 	@rm -f postextuais*.pdf multivolume-*.pdf ficha-catalografica-*.pdf
 	@rm -f perfil-*.pdf perfil-*.aux perfil-*.log perfil-*.out perfil-*.toc
 	@rm -f perfil-*.bbl perfil-*.bcf perfil-*.blg perfil-*.run.xml perfil-*.tex
-	@rm -f ufctex-build-minimo.* .ufctex-v2-profile.tex .ufctex-abntexto.cls
+	@rm -f ufctex-build-minimo.* abntexto-ufc-build-minimo.* ufctex-compat-minimo.* .ufctex-v2-profile.tex
+	@rm -f .ufctex-abntexto.cls .abntexto-ufc-upstream.cls
 	@rm -f overleaf-stable-pdflatex.pdf overleaf-stable-lualatex.pdf
 	@rm -rf _minted-* dist
 	@rm -f $(filename).pdf

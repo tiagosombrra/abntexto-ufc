@@ -1,4 +1,4 @@
-# ufctex changelog
+# abntexto-ufc changelog
 
 ## 2.1.0 — 2026-08-23
 

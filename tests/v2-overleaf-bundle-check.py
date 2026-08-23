@@ -41,7 +41,7 @@ def main() -> None:
     if not bundle.is_file():
         raise SystemExit(f"Overleaf bundle not found: {bundle}")
 
-    with tempfile.TemporaryDirectory(prefix="ufctex-overleaf-bundle-") as temp:
+    with tempfile.TemporaryDirectory(prefix="abntexto-ufc-overleaf-bundle-") as temp:
         project = Path(temp)
         safe_extract(bundle, project)
 
@@ -51,6 +51,8 @@ def main() -> None:
 
         required = (
             project / "documento.tex",
+            project / "abntexto-ufc.cls",
+            project / "abntexto-ufc" / "core.def",
             project / "ufctex.cls",
             project / "abntexto.cls",
             project / "1-pre-textuais" / "resumo.tex",
