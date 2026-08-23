@@ -180,22 +180,17 @@ def build_template_bundle(
 def build_ctan_bundle(
     out: Path,
     version: str,
-    reference_pdf: Path,
     date_time: tuple[int, int, int, int, int, int],
 ) -> Path:
-    if not reference_pdf.is_file():
-        raise SystemExit(f"Reference PDF not found: {reference_pdf}")
-
     root = f"{PACKAGE_ID}/"
     entries: list[tuple[str, bytes, int]] = [
         (f"{root}README.md", (ROOT / "docs/README-CTAN.md").read_bytes(), 0o644),
         (f"{root}CHANGELOG.md", (ROOT / "docs/CHANGELOG-CTAN.md").read_bytes(), 0o644),
         (f"{root}LICENSE", (ROOT / "LICENSE").read_bytes(), 0o644),
         (f"{root}doc/NORMAS.md", (ROOT / "docs/NORMAS.md").read_bytes(), 0o644),
-        (f"{root}doc/{PACKAGE_ID}-{version}-reference.pdf", reference_pdf.read_bytes(), 0o644),
     ]
 
-    for path, relative in iter_files(("abntexto-ufc.cls", "abntexto-ufc", "assets/institucional")):
+    for path, relative in iter_files(("abntexto-ufc.cls", "abntexto-ufc")):
         entries.append((f"{root}tex/{relative.as_posix()}", path.read_bytes(), file_mode(path)))
 
     for path, relative in iter_files(DOC_SOURCE_INPUTS):
@@ -245,7 +240,7 @@ def main() -> None:
     artifacts = [
         build_class_bundle(output, version, date_time),
         build_template_bundle(output, version, date_time),
-        build_ctan_bundle(output, version, reference_pdf, date_time),
+        build_ctan_bundle(output, version, date_time),
         reference_out,
     ]
     if args.abntexto:

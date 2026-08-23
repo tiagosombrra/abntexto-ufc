@@ -1,18 +1,32 @@
-\ProvidesFile{ufctex/institucional.def}[2026/08/19 UFC institutional assets]
+\ProvidesFile{ufctex/institucional.def}[2026/08/23 UFC institutional assets]
 
 \ExplSyntaxOn
+
+\tl_new:N \g_ufc_coat_of_arms_file_tl
+\tl_gset:Nn \g_ufc_coat_of_arms_file_tl { assets/institucional/brasao-ufc.PNG }
+
+\keys_define:nn { ufc }
+  {
+    brasao-arquivo .tl_gset:N = \g_ufc_coat_of_arms_file_tl
+  }
+
+\cs_new_protected:Npn \ufc_include_coat_of_arms:n #1
+  {
+    \file_if_exist:nTF {#1}
+      {
+        \includegraphics[width=2.2cm]{#1}
+        \par\vspace{.3\baselineskip}
+      }
+      {
+        \ClassWarningNoLine{abntexto-ufc}
+          {UFC~coat~of~arms~asset~not~found;~configure~brasao-arquivo}
+      }
+  }
 
 \cs_new_protected:Npn \ufc_print_coat_of_arms:
   {
     \bool_if:NT \g_ufc_coat_of_arms_bool
-      {
-        \IfFileExists{assets/institucional/brasao-ufc.PNG}
-          {
-            \includegraphics[width=2.2cm]{assets/institucional/brasao-ufc.PNG}
-            \par\vspace{.3\baselineskip}
-          }
-          { \ClassWarningNoLine{ufctex}{UFC~coat~of~arms~asset~not~found} }
-      }
+      { \exp_args:NV \ufc_include_coat_of_arms:n \g_ufc_coat_of_arms_file_tl }
   }
 
 \ExplSyntaxOff
