@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import hashlib
-import io
+import os
 import re
 import subprocess
 import sys
@@ -83,13 +83,70 @@ def build(output: Path, abntexto: Path) -> None:
     subprocess.check_call([
         PYTHON,
         str(ROOT / "tools/build-release-bundles.py"),
-        "--output",
-        str(output),
-        "--reference-pdf",
-        str(ROOT / "documento.pdf"),
-        "--abntexto",
-        str(abntexto),
+        "--output", str(output),
+        "--reference-pdf", str(ROOT / "documento.pdf"),
+        "--abntexto", str(abntexto),
     ], cwd=ROOT)
+
+
+def ctan_compile_smoke(ctan_zip: Path) -> None:
+    with tempfile.TemporaryDirectory(prefix="ufctex-ctan-smoke-") as temp:
+        temp_path = Path(temp)
+        with zipfile.ZipFile(ctan_zip) as archive:
+            archive.extractall(temp_path / "archive")
+        tex_root = temp_path / "archive" / "ufctex" / "tex"
+        work = temp_path / "work"
+        work.mkdir()
+        document = work / "smoke.tex"
+        document.write_text(
+            r"""\documentclass{ufctex}
+\ufcsetup{
+  tipo = tese,
+  impressao = anverso,
+  capa = auto,
+  ficha-catalografica = nao,
+  brasao = sim,
+  fonte = times,
+  fonte-estrita = nao,
+  programa-doutorado = {Programa de Pós-Graduação em Ciência da Computação},
+  titulo-doutor = {Ciência da Computação},
+  autor = {Nome Sobrenome},
+  titulo = {Teste de instalação CTAN},
+  local = {Fortaleza},
+  ano = {2026},
+  orientador = {Prof. Dr. Nome do Orientador},
+  tabelas = nativo,
+  codigo = nenhum,
+  algoritmos = nenhum,
+  glossario = nenhum,
+  indice = nenhum
+}
+\begin{document}
+\imprimircapa
+\imprimirfolhaderosto
+\chapter{Teste}
+Pacote instalado a partir do candidato CTAN.
+\end{document}
+""",
+            encoding="utf-8",
+        )
+        env = os.environ.copy()
+        env["TEXINPUTS"] = f"{tex_root}//:{env.get('TEXINPUTS', '')}"
+        for _ in range(2):
+            completed = subprocess.run(
+                ["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", document.name],
+                cwd=work,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                errors="replace",
+                check=False,
+            )
+            if completed.returncode != 0:
+                raise SystemExit("CTAN installation smoke failed:\n" + "\n".join(completed.stdout.splitlines()[-60:]))
+        if not (work / "smoke.pdf").is_file():
+            raise SystemExit("CTAN installation smoke did not produce smoke.pdf.")
 
 
 def main() -> None:
@@ -109,10 +166,7 @@ def main() -> None:
         temp_path = Path(temp)
         abntexto = temp_path / "abntexto.cls"
         subprocess.check_call([
-            PYTHON,
-            str(ROOT / "tools/fetch-abntexto.py"),
-            "--output",
-            str(abntexto),
+            PYTHON, str(ROOT / "tools/fetch-abntexto.py"), "--output", str(abntexto)
         ], cwd=ROOT)
 
         first = temp_path / "first"
@@ -167,9 +221,6 @@ def main() -> None:
             f"{template_root}2-textuais/1-introducao.tex",
             f"{template_root}2-textuais/exemplos-de-formatacao.tex",
             f"{template_root}3-pos-textuais/referencias.bib",
-            f"{template_root}figuras/exemplo.py",
-            f"{template_root}figuras/fluxo-exemplo.png",
-            f"{template_root}figuras/grafico-exemplo.jpg",
             f"{template_root}figuras/LICENCAS.md",
             f"{template_root}figuras/ufc-campus-pici.jpg",
             f"{template_root}figuras/ufc-reitoria.jpg",
@@ -185,21 +236,13 @@ def main() -> None:
 
         overleaf_zip = first / f"modelo-latex-ufc-overleaf-{v}.zip"
         overleaf_entries = names(overleaf_zip)
-        wrapped_root = f"modelo-latex-ufc-overleaf-{v}/"
-        if any(entry.startswith(wrapped_root) for entry in overleaf_entries):
+        if any(entry.startswith(f"modelo-latex-ufc-overleaf-{v}/") for entry in overleaf_entries):
             raise SystemExit("Overleaf bundle must place the main document at the archive root.")
         for required_entry in (
-            "documento.tex",
-            "ufctex.cls",
-            "abntexto.cls",
-            "1-pre-textuais/resumo.tex",
-            "3-pos-textuais/referencias.bib",
-            "2-textuais/exemplos-de-formatacao.tex",
-            "figuras/fluxo-exemplo.png",
-            "figuras/grafico-exemplo.jpg",
-            "figuras/LICENCAS.md",
-            "figuras/ufc-campus-pici.jpg",
-            "figuras/ufc-reitoria.jpg",
+            "documento.tex", "ufctex.cls", "abntexto.cls",
+            "1-pre-textuais/resumo.tex", "3-pos-textuais/referencias.bib",
+            "2-textuais/exemplos-de-formatacao.tex", "figuras/LICENCAS.md",
+            "figuras/ufc-campus-pici.jpg", "figuras/ufc-reitoria.jpg",
         ):
             if required_entry not in overleaf_entries:
                 raise SystemExit(f"Overleaf bundle missing {required_entry}")
@@ -215,49 +258,22 @@ def main() -> None:
             "ufctex/LICENSE",
             "ufctex/tex/ufctex.cls",
             "ufctex/tex/ufctex/core.def",
+            "ufctex/tex/assets/institucional/brasao-ufc.PNG",
             f"ufctex/doc/ufctex-{v}-reference.pdf",
             "ufctex/doc/example/documento.tex",
             "ufctex/doc/example/2-textuais/exemplos-de-formatacao.tex",
-            "ufctex/doc/example/figuras/fluxo-exemplo.png",
-            "ufctex/doc/example/figuras/grafico-exemplo.jpg",
             "ufctex/doc/example/figuras/LICENCAS.md",
             "ufctex/doc/example/figuras/ufc-campus-pici.jpg",
             "ufctex/doc/example/figuras/ufc-reitoria.jpg",
-            "ufctex/ufctex.tds.zip",
+            "ufctex/scripts/prepare-windows-fonts.ps1",
         ):
             if required_entry not in ctan_entries:
                 raise SystemExit(f"CTAN bundle missing {required_entry}")
+        if any(entry.endswith(".tds.zip") for entry in ctan_entries):
+            raise SystemExit("CTAN bundle must not contain a redundant nested TDS archive.")
         assert_reference_images(ctan_zip, "ufctex/doc/example/")
         assert_no_proprietary_fonts(ctan_entries)
-
-        with zipfile.ZipFile(ctan_zip) as archive:
-            tds_bytes = archive.read("ufctex/ufctex.tds.zip")
-        with zipfile.ZipFile(io.BytesIO(tds_bytes)) as tds:
-            tds_entries = set(tds.namelist())
-            for relative, expected in REFERENCE_IMAGE_SHA1.items():
-                entry = f"doc/latex/ufctex/example/{relative}"
-                if entry not in tds_entries:
-                    raise SystemExit(f"TDS bundle missing {entry}")
-                actual = hashlib.sha1(tds.read(entry)).hexdigest()
-                if actual != expected:
-                    raise SystemExit(f"TDS reference image SHA-1 mismatch in {entry}: {actual}")
-        for required_entry in (
-            "tex/latex/ufctex/ufctex.cls",
-            "tex/latex/ufctex/ufctex/core.def",
-            "doc/latex/ufctex/README.md",
-            "doc/latex/ufctex/CHANGELOG.md",
-            f"doc/latex/ufctex/ufctex-{v}-reference.pdf",
-            "doc/latex/ufctex/example/2-textuais/exemplos-de-formatacao.tex",
-            "doc/latex/ufctex/example/figuras/fluxo-exemplo.png",
-            "doc/latex/ufctex/example/figuras/grafico-exemplo.jpg",
-            "doc/latex/ufctex/example/figuras/LICENCAS.md",
-            "doc/latex/ufctex/example/figuras/ufc-campus-pici.jpg",
-            "doc/latex/ufctex/example/figuras/ufc-reitoria.jpg",
-            "scripts/ufctex/prepare-windows-fonts.ps1",
-        ):
-            if required_entry not in tds_entries:
-                raise SystemExit(f"TDS bundle missing {required_entry}")
-        assert_no_proprietary_fonts(tds_entries)
+        ctan_compile_smoke(ctan_zip)
 
         verify_checksums(first)
 
