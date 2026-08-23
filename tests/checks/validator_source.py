@@ -32,9 +32,9 @@ def fail(message: str) -> None:
     raise SystemExit(f"Validator source check failed: {message}")
 
 
-def run_source_check(path: Path, label: str) -> None:
+def run_source_check(path: Path, label: str, *args: str) -> None:
     completed = subprocess.run(
-        [sys.executable, str(path)],
+        [sys.executable, str(path), *args],
         cwd=ROOT,
         text=True,
         capture_output=True,
@@ -75,7 +75,7 @@ def main() -> None:
     run_source_check(NORMATIVE_FULL_TOOL, "full normative loader")
     run_source_check(NORMATIVE_FULL_CONTRACT, "full normative contract")
     run_source_check(NORMATIVE_COVERAGE, "normative coverage")
-    run_source_check(NORMATIVE_TRACEABILITY, "normative traceability")
+    run_source_check(NORMATIVE_TRACEABILITY, "normative traceability", "--strict-evidence")
 
     completed = subprocess.run(
         [sys.executable, str(CLI), "--help"],
