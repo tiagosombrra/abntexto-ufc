@@ -12,10 +12,12 @@ Core requirements:
 
 - LaTeX2e;
 - `abntexto` 1.1 or newer;
-- `babel`, `iftex`, `microtype`, `etoolbox`;
-- `biblatex` with the ABNT style and `biber`.
+- `babel`, `iftex`, `microtype`, `etoolbox`, `pdfpages`, `ragged2e`;
+- `biblatex` with the ABNT style and `biber`;
+- pdfLaTeX: `fontenc`, `newtxtext`, `newtxmath`;
+- LuaLaTeX/XeLaTeX: `fontspec`, `unicode-math`, TeX Gyre Termes/Heros and a compatible math font.
 
-Optional modules may additionally use `tabularray-abnt`, `xcolor`, `listings`, `minted`, `algpseudocodex`, `glossaries` and `imakeidx`. `minted` also requires its external Python/Pygments toolchain.
+Optional modules may additionally use `xcolor`, `listings`, `minted`, `algpseudocodex`, `glossaries` and `imakeidx`. The `tabularray` table module requires `tabularray-abnt` dated 2025-08-08 or newer. `minted` also requires its external Python/Pygments toolchain.
 
 TeX Live 2026 is the reference distribution used by the project CI.
 
@@ -29,30 +31,37 @@ Portable fallback fonts are available when strict literal-font mode is disabled,
 
 ## Documentation
 
-The CTAN submission candidate contains:
+The CTAN archive contains:
 
+- the class and its handwritten modules;
 - the complete reference document in PDF;
 - the source of the reference document;
-- the normative implementation matrix in `NORMAS.md`;
-- a TDS archive for installation testing.
+- the normative implementation matrix in `doc/NORMAS.md`;
+- helper scripts for local Windows font preparation.
 
-The full editable UFC template is distributed separately in the project releases.
+The full editable UFC template is also distributed separately in the project releases.
 
-## License and institutional mark
+## License and assets
 
 The `ufctex` source code and project documentation are subject to the LaTeX Project Public License 1.3c or any later version, as stated in `LICENSE`.
 
-The UFC coat of arms is an official institutional mark published by the Federal University of Ceará and governed by the University's visual identity rules. It is not declared to be covered by the LPPL. Its redistribution classification must be confirmed before a CTAN submission.
+Two reference photographs in `doc/example/figuras/` are distributed under CC BY-SA 4.0 with their authorship, source URLs and checksums recorded in `doc/example/figuras/LICENCAS.md`.
+
+The UFC coat of arms in `assets/institucional/brasao-ufc.PNG` is an official institutional mark published by the Federal University of Ceará. It is redistributed unmodified to support composition of UFC academic documents, is not declared to be covered by the LPPL, and remains subject to the University's visual identity rules.
 
 Official visual identity source: https://www.ufc.br/a-universidade/identidade-visual-da-ufc
 
 The pinned `abntexto` class used by the dedicated Overleaf compatibility bundle is upstream public-domain software and is not included in this CTAN package.
 
+## History and provenance
+
+The historical UFC template was developed by Ednardo Moreira Rodrigues and Alan Batista de Oliveira, with institutional reviewers and collaborators recorded in the earlier project sources. That template was historically adapted in part from `ueceTeX2` by Thiago Nascimento. The current V2 architecture was redesigned and is maintained by Tiago Guimarães Sombra. This lineage is LPPL-compatible; the current repository preserves the full Git history and prior releases.
+
 ## Release state
 
-Version 2.1.0 has completed Gate T, deterministic distribution preflight and the real Overleaf import smoke test. It is the stable GitHub/Overleaf release line.
+Version 2.1.0 completed the normative and visual audits, Gate T, Windows literal-font certification, deterministic distribution preflight, the real Overleaf import smoke test, and the final unrestricted Gate F audit.
 
-The CTAN archive remains a submission candidate until the redistribution classification of the UFC institutional mark is confirmed. The package name `ufctex` must also be reconfirmed in the CTAN catalogue immediately before upload.
+The CTAN package uses the package id `ufctex`; availability of that catalogue id is reconfirmed immediately before upload.
 
 ## Project
 
