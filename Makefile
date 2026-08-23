@@ -83,6 +83,7 @@ package: reference-assets
 
 distribution-preflight: package
 	@python3 tests/v2-release-package-check.py
+	@python3 tests/v2-ctan-archive-check.py dist/abntexto-ufc-ctan-$(VERSION).zip
 	@echo "Preflight automatizado de distribuição concluído."
 
 clean:

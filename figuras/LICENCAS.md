@@ -1,6 +1,6 @@
 # Licenças das imagens de referência
 
-As imagens externas abaixo são usadas apenas como exemplos visuais do template e mantêm suas licenças próprias. A LPPL do `ufctex` não substitui essas licenças.
+As imagens externas abaixo são usadas apenas como exemplos visuais do template e mantêm suas licenças próprias. A LPPL do `abntexto-ufc` não substitui essas licenças. Essas fotografias pertencem aos bundles completos do projeto e não são distribuídas no pacote CTAN reduzido.
 
 ## Campus do Pici
 
