@@ -178,6 +178,8 @@ jobs:
             python3 tools/fetch-abntexto.py --output .ufctex-abntexto.cls
             python3 tools/build-release-bundles.py --abntexto .ufctex-abntexto.cls
             python3 tests/v2-release-package-check.py
+            VERSION="$(make -s version)"
+            python3 tests/v2-ctan-archive-check.py "dist/abntexto-ufc-ctan-${VERSION}.zip"
             rm -f .ufctex-abntexto.cls
 
       - name: Validate Overleaf import bundle proxy
