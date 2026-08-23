@@ -11,6 +11,8 @@ A linha 2.x organiza a implementação em módulos e acompanha a base normativa 
 - TeX Live 2026 recomendado para desenvolvimento e CI;
 - `abntexto` 1.1 ou superior;
 - `biblatex` + `biber`;
+- `newtx` no pdfLaTeX e fontes TeX Gyre no LuaLaTeX/XeLaTeX para os perfis portáteis;
+- `tabularray-abnt` de 08/08/2025 ou mais recente quando `tabelas = tabularray`;
 - pacotes opcionais apenas quando os módulos correspondentes forem ativados.
 
 O bundle específico `modelo-latex-ufc-overleaf-2.1.0.zip` inclui uma cópia íntegra e pinada de `abntexto.cls` 1.1 para manter compatibilidade com ambientes que ainda não o ofereçam. O smoke real no Overleaf, realizado em 21/08/2026, compilou com sucesso em pdfLaTeX sobre TeX Live 2026; o proxy de CI em TeX Live 2025 permanece como verificação adicional de compatibilidade.
@@ -442,11 +444,11 @@ A versão 2.1.0 produz:
 - `ufctex-2.1.0.zip`: classe, módulos, ativos necessários, licença e documentação;
 - `modelo-latex-ufc-2.1.0.zip`: template completo para uso local;
 - `modelo-latex-ufc-overleaf-2.1.0.zip`: template para Overleaf com `abntexto` 1.1 pinado;
-- `ufctex-ctan-2.1.0.zip`: candidato CTAN com arquivo TDS interno;
+- `ufctex-ctan-2.1.0.zip`: candidato CTAN em layout navegável, pronto para submissão;
 - `ufctex-2.1.0-reference.pdf`: documento de referência;
 - `SHA256SUMS`: hashes SHA-256 dos artefatos.
 
-As fontes Microsoft não são incluídas. O brasão da UFC é um ativo institucional oficial e não deve ser interpretado como coberto automaticamente pela LPPL da classe. Sua classificação para redistribuição deve ser confirmada antes de uma submissão ao CTAN.
+As fontes Microsoft não são incluídas. O brasão da UFC é um ativo institucional oficial, redistribuído sem modificação para composição de documentos acadêmicos da UFC. Ele não é declarado como coberto pela LPPL da classe e permanece sujeito às regras de identidade visual da Universidade.
 
 ## CI
 
