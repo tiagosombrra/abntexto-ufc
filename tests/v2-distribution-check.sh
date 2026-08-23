@@ -60,8 +60,10 @@ if not asset.is_file():
     errors.append(f'ativo institucional ausente: {asset}')
 
 makefile = Path('Makefile').read_text(encoding='utf-8')
-cls_path = Path('ufctex.cls')
-cls = cls_path.read_text(encoding='utf-8')
+canonical_path = Path('abntexto-ufc.cls')
+legacy_path = Path('ufctex.cls')
+canonical = canonical_path.read_text(encoding='utf-8')
+legacy = legacy_path.read_text(encoding='utf-8')
 readme = Path('README.md').read_text(encoding='utf-8')
 
 version_match = re.search(r'^VERSION\s*:?=\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$', makefile, re.MULTILINE)
@@ -69,8 +71,8 @@ if not version_match:
     errors.append('Makefile: VERSION sem versão semântica válida')
 else:
     version = version_match.group(1)
-    if f'v{version} UFC academic document class' not in cls:
-        errors.append(f'ufctex.cls: versão diferente de v{version}')
+    if f'v{version} UFC academic document class' not in canonical:
+        errors.append(f'abntexto-ufc.cls: versão diferente de v{version}')
 
     published_match = re.search(
         r'Versão\s+publicada\s+atual:\s*(?:\*\*)?([0-9]+\.[0-9]+\.[0-9]+)(?:\*\*)?\b',
@@ -90,12 +92,21 @@ else:
                 f'README.md: VERSION {version} não coincide com versão publicada nem candidata'
             )
 
-modules = re.findall(r'\\input\{(ufctex/[^}]+\.def)\}', uncommented(cls))
-if 'ufctex/fontes.def' not in modules:
-    errors.append('ufctex.cls: módulo obrigatório ufctex/fontes.def não carregado')
+if r'\LoadClass{abntexto-ufc}' not in legacy:
+    errors.append('ufctex.cls: wrapper de compatibilidade não carrega abntexto-ufc')
+
+modules = re.findall(
+    r'\\input\{((?:abntexto-ufc|ufctex)/[^}]+\.def)\}',
+    uncommented(canonical),
+)
+if not modules:
+    errors.append('abntexto-ufc.cls: nenhum módulo UFC carregado')
+module_names = {Path(module).name for module in modules}
+if 'fontes.def' not in module_names:
+    errors.append('abntexto-ufc.cls: módulo obrigatório fontes.def não carregado')
 for module in modules:
     if not Path(module).is_file():
-        errors.append(f'ufctex.cls: módulo carregado não existe: {module}')
+        errors.append(f'abntexto-ufc.cls: módulo carregado não existe: {module}')
 
 release_infrastructure = (
     'tools/build-release-bundles.py',
