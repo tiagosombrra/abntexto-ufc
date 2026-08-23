@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-23",
+  "purpose": "Conservative initial proof-state policy for the v2.2.0 normative verification matrix.",
+  "policy": {
+    "principle": "Existing rule definitions, runner gates and typed evidence do not by themselves make a normative rule PROVEN.",
+    "promotion_rule": "PROVEN requires explicit scenario coverage, final-output measurement where applicable, a passing positive assertion and a meaningful negative test or a documented technical exception.",
+    "allowed_proof_statuses": [
+      "PROVEN",
+      "PARTIAL",
+      "NOT_PROVEN",
+      "MANUAL",
+      "CONDITIONAL",
+      "NOT_APPLICABLE",
+      "GAP"
+    ],
+    "allowed_evidence_statuses": [
+      "UNASSESSED",
+      "PARTIAL",
+      "EXPLICIT",
+      "MANUAL",
+      "NOT_APPLICABLE"
+    ],
+    "default_proof_status_by_validation_mode": {
+      "automatic": "NOT_PROVEN",
+      "automatic-deep": "NOT_PROVEN",
+      "automatic-partial": "PARTIAL",
+      "automatic-policy": "NOT_PROVEN",
+      "manual": "MANUAL",
+      "conditional-manual": "CONDITIONAL",
+      "conditional": "CONDITIONAL",
+      "not-applicable": "NOT_APPLICABLE"
+    }
+  }
+}
