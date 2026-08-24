@@ -68,7 +68,7 @@ CHECKS = (
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run UFCtex validation as one coordinated gate.")
+    parser = argparse.ArgumentParser(description="Run abntexto-ufc validation as one coordinated gate.")
     parser.add_argument("--mode", choices=("pr", "release"), default="pr")
     parser.add_argument("--only", help="Comma-separated check names.")
     parser.add_argument("--report-dir", default="artifacts/validation")
@@ -170,7 +170,7 @@ def write_reports(report_dir: Path, mode: str, results: list[Result], complete: 
     )
 
     lines = [
-        "# UFCtex validation",
+        "# abntexto-ufc validation",
         "",
         f"- Mode: `{mode}`",
         f"- Complete: `{str(complete).lower()}`",
@@ -221,11 +221,11 @@ def main() -> int:
     ordered_results: list[Result] = []
     write_reports(report_dir, args.mode, ordered_results, complete=False)
 
-    print(f"UFCtex validation: mode={args.mode}, checks={len(checks)}")
+    print(f"abntexto-ufc validation: mode={args.mode}, checks={len(checks)}")
     for index, check in enumerate(checks, 1):
         print(f"[{index:02}/{len(checks):02}] {check.label} ...", flush=True)
         result = run_check(check, report_dir, results_by_name)
-        results_by_name[check.name] = result
+        results_by_name[result.name] = result
         ordered_results.append(result)
         write_reports(report_dir, args.mode, ordered_results, complete=False)
         suffix = f" ({result.duration_seconds:.1f}s)" if result.duration_seconds else ""

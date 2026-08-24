@@ -47,7 +47,7 @@ ABSOLUTE_PATH_PATTERNS = (
     re.compile(r'file:///'),
 )
 CS_PATTERN = re.compile(r'\\cs_(?:new|set)(?:_protected)?:Npn\s+(\\[A-Za-z@:_]+)')
-KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*\.(?:choice|code|meta):')
+KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*\.(?:choice|code|meta|tl_gset):')
 SETUP_KEY_PATTERN = re.compile(r'(?m)^\s*([a-z][a-z0-9-]*)\s*=')
 ACTION_USE_PATTERN = re.compile(r'(?m)^\s*-?\s*uses:\s*([^\s@]+)@([^\s#]+)')
 SHA40_PATTERN = re.compile(r'^[0-9a-f]{40}$', re.IGNORECASE)
