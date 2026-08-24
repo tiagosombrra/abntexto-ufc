@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/normativa/multivolume.tex"
-invalid_fixture=".ufctex-v2-invalid-page.tex"
+invalid_fixture=".abntexto-ufc-v2-invalid-page.tex"
 
 cleanup_invalid() {
   rm -f "$invalid_fixture" invalid-page.aux invalid-page.log invalid-page.out invalid-page.pdf invalid-page.toc
@@ -15,14 +15,14 @@ for engine in pdflatex lualatex; do
 
   echo "Validando trabalho multivolume com $engine..."
   for pass in 1 2 3; do
-    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-multivolume.log 2>&1 || {
-      cat /tmp/ufctex-v2-multivolume.log
+    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-multivolume.log 2>&1 || {
+      cat /tmp/abntexto-ufc-v2-multivolume.log
       exit 1
     }
   done
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "Multivolume V2 falhou: $job contém warning ou overflow não reconhecido."
@@ -75,21 +75,21 @@ done
 
 cleanup_invalid
 sed 's/pagina-inicial = 101/pagina-inicial = 0/' "$fixture" > "$invalid_fixture"
-if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-line-error "$invalid_fixture" > /tmp/ufctex-v2-invalid-page.log 2>&1; then
+if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-line-error "$invalid_fixture" > /tmp/abntexto-ufc-v2-invalid-page.log 2>&1; then
   echo 'Multivolume V2 falhou: pagina-inicial=0 foi aceita.'
   exit 1
 fi
-if ! python3 - /tmp/ufctex-v2-invalid-page.log <<'PY'
+if ! python3 - /tmp/abntexto-ufc-v2-invalid-page.log <<'PY'
 import re
 import sys
 from pathlib import Path
 
 text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
-pattern = r"Class ufctex Error: Invalid pagina-inicial '0\s*'\."
+pattern = r"Class abntexto-ufc Error: Invalid pagina-inicial '0\s*'\."
 raise SystemExit(0 if re.search(pattern, text, re.DOTALL) else 1)
 PY
 then
-  cat /tmp/ufctex-v2-invalid-page.log
+  cat /tmp/abntexto-ufc-v2-invalid-page.log
   echo 'Multivolume V2 falhou: pagina-inicial inválida não produziu o erro esperado.'
   exit 1
 fi
