@@ -72,7 +72,7 @@ jobs:
           state = 'success' if os.environ['JOB_STATUS'] == 'success' else 'failure'
           payload = json.dumps({
               'state': state,
-              'context': 'ufctex/reference-audit',
+              'context': 'abntexto-ufc/reference-audit',
               'description': 'Unified repository and V2 validation',
               'target_url': os.environ['RUN_URL'],
           }).encode()
@@ -85,7 +85,7 @@ jobs:
                   'Accept': 'application/vnd.github+json',
                   'X-GitHub-Api-Version': '2022-11-28',
                   'Content-Type': 'application/json',
-                  'User-Agent': 'ufctex-reference-audit',
+                  'User-Agent': 'abntexto-ufc-reference-audit',
               },
           )
           with urllib.request.urlopen(request, timeout=30) as response:
