@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N1 incremental locator classification for direct, indirect, secondary and long quotations plus the UFC citation-system policy.",
+  "rulesets": [
+    {
+      "id": "citations.direct-short",
+      "rule_ids": [
+        "citation.direct-short.max-lines",
+        "citation.direct-short.quotation-marks",
+        "citation.direct-short.emphasis"
+      ],
+      "current_locator": "ABNT NBR 10520:2023; Guia UFC 2025, 2.3.1.1",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-10520-2023",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 10520:2023 is identified, but its exact authoritative clause text for short direct citations is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-citacoes-2025",
+          "locator": "2.3.1.1, p. 8",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf"
+        }
+      ]
+    },
+    {
+      "id": "citations.direct-source",
+      "rule_ids": ["citation.direct.source"],
+      "current_locator": "ABNT NBR 10520:2023; Guia UFC 2025, 2.3.1",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-10520-2023",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 10520:2023 is identified, but its exact authoritative clause text for direct-citation source attribution is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-citacoes-2025",
+          "locator": "2.3.1, p. 6-7",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf"
+        }
+      ]
+    },
+    {
+      "id": "citations.indirect-source",
+      "rule_ids": ["citation.indirect.source"],
+      "current_locator": "ABNT NBR 10520:2023; Guia UFC 2025, 2.3.2",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-10520-2023",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 10520:2023 is identified, but its exact authoritative clause text for indirect citations is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-citacoes-2025",
+          "locator": "2.3.2, p. 10",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf"
+        }
+      ]
+    },
+    {
+      "id": "citations.ufc-system",
+      "rule_ids": ["citation.system.ufc"],
+      "current_locator": "Guia UFC 2025, apresentação e seção 3",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-citacoes-2025",
+          "locator": "Apresentação, p. 5; 3-3.1, p. 18",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf"
+        }
+      ]
+    },
+    {
+      "id": "citations.apud",
+      "rule_ids": ["citation.apud.presentation"],
+      "current_locator": "ABNT NBR 10520:2023; Guia UFC 2025, 2.3.3",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-10520-2023",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 10520:2023 is identified, but its exact authoritative clause text for citation of citation is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-citacoes-2025",
+          "locator": "2.3.3, p. 11",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf"
+        }
+      ]
+    },
+    {
+      "id": "citations.direct-long",
+      "rule_ids": [
+        "quotation.long.block",
+        "quotation.long.indent.left",
+        "quotation.long.font.size",
+        "quotation.long.line-spacing",
+        "quotation.long.quotation-marks"
+      ],
+      "current_locator": "NBR 10520:2023; Guia UFC de Citações 2025",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-10520-2023",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 10520:2023 is identified, but its exact authoritative clause text for long direct citations is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-citacoes-2025",
+          "locator": "2.3.1.2, p. 9",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf"
+        }
+      ]
+    }
+  ]
+}
