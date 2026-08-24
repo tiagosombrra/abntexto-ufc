@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,6 +11,77 @@ MODULE_RE = re.compile(r"\\input\{(abntexto-ufc/[^}]+\.def)\}")
 LEGACY_CLASS_MESSAGE_RE = re.compile(
     r"\\Class(?:Info|Error|Warning|WarningNoLine)\{ufctex\}"
 )
+LEGACY_IDENTITY_RE = re.compile(r"ufctex", re.IGNORECASE)
+TEXT_SUFFIXES = {
+    ".bib",
+    ".cls",
+    ".def",
+    ".json",
+    ".md",
+    ".ps1",
+    ".py",
+    ".sh",
+    ".tex",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
+LEGACY_FULL_FILE_EXEMPT = {
+    "ufctex.cls",
+    "docs/AUDITORIA-FINAL-V2.1.0.md",
+    "docs/AUDITORIA-V2.md",
+    "docs/CHANGELOG-CTAN.md",
+    "tests/v2-build-path-check.sh",
+    "tests/v2-canonical-identity-check.py",
+    "tests/v2-ctan-archive-check.py",
+    "tests/v2-ctan-policy-check.py",
+    "tests/v2-distribution-check.sh",
+    "tests/v2-overleaf-bundle-check.py",
+    "tests/v2-release-metadata-check.py",
+    "tests/v2-release-package-check.py",
+    "tests/v2-repository-audit.py",
+    "tools/build-release-bundles.py",
+}
+LEGACY_DOCUMENTATION_EXEMPT = {
+    "README.md": (
+        re.compile(r"ufctex\.cls.*(?:shim|compat)", re.IGNORECASE),
+        re.compile(r"\\documentclass\{ufctex\}"),
+    ),
+    "docs/README-CTAN.md": (
+        re.compile(r"ufctex.*(?:deprecated|compat)", re.IGNORECASE),
+    ),
+}
+
+
+def tracked_files() -> list[Path]:
+    output = subprocess.check_output(
+        ["git", "-c", f"safe.directory={ROOT}", "ls-files", "-z"], cwd=ROOT
+    )
+    return [ROOT / item.decode("utf-8") for item in output.split(b"\0") if item]
+
+
+def is_text(path: Path) -> bool:
+    return path.name in {"Makefile", "LICENSE"} or path.suffix.lower() in TEXT_SUFFIXES
+
+
+def audit_global_identity(errors: list[str]) -> None:
+    for path in tracked_files():
+        if not is_text(path):
+            continue
+        relative = path.relative_to(ROOT).as_posix()
+        if relative in LEGACY_FULL_FILE_EXEMPT:
+            continue
+
+        text = path.read_text(encoding="utf-8", errors="strict")
+        allowed = LEGACY_DOCUMENTATION_EXEMPT.get(relative, ())
+        for line_number, line in enumerate(text.splitlines(), 1):
+            if not LEGACY_IDENTITY_RE.search(line):
+                continue
+            if any(pattern.search(line) for pattern in allowed):
+                continue
+            errors.append(
+                f"{relative}:{line_number}: unclassified legacy ufctex identity: {line.strip()}"
+            )
 
 
 def main() -> None:
@@ -44,6 +116,8 @@ def main() -> None:
     normas = (ROOT / "docs/NORMAS.md").read_text(encoding="utf-8")
     if "`ufctex/" in normas:
         errors.append("docs/NORMAS.md: legacy module path remains in CTAN documentation")
+
+    audit_global_identity(errors)
 
     if errors:
         for error in errors:
