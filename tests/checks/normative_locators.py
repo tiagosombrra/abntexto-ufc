@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 
 AUDIT = ROOT / "normativa" / "locator-audit.json"
+SUPPLEMENT_GLOB = "locator-audit-*.json"
 SOURCE_STATUSES = {"VERIFIED", "UNAVAILABLE_WITH_REASON", "NOT_APPLICABLE"}
 
 
@@ -21,11 +22,18 @@ def fail(message: str) -> None:
     raise SystemExit(f"Normative locator audit failed: {message}")
 
 
-def load_audit() -> dict[str, Any]:
+def load_json(path: Path, label: str) -> dict[str, Any]:
     try:
-        data = json.loads(AUDIT.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        fail(f"cannot load locator audit: {exc}")
+        fail(f"cannot load {label}: {exc}")
+    if not isinstance(data, dict):
+        fail(f"{label} must be an object")
+    return data
+
+
+def load_audit() -> dict[str, Any]:
+    data = load_json(AUDIT, "locator audit")
     if data.get("schema_version") != 1:
         fail("unsupported schema_version")
     if data.get("coverage_mode") not in {"incremental", "complete"}:
@@ -36,6 +44,25 @@ def load_audit() -> dict[str, Any]:
     allowed = policy.get("allowed_statuses")
     if not isinstance(allowed, list) or not allowed:
         fail("policy allowed_statuses must be a non-empty list")
+
+    rulesets = data.get("rulesets")
+    if not isinstance(rulesets, list) or not rulesets:
+        fail("rulesets must be a non-empty list")
+
+    reviewed_dates = [data.get("reviewed_at")]
+    merged_rulesets = list(rulesets)
+    for path in sorted(AUDIT.parent.glob(SUPPLEMENT_GLOB)):
+        supplement = load_json(path, f"locator audit supplement {path.name}")
+        if supplement.get("schema_version") != 1:
+            fail(f"{path.name}: unsupported schema_version")
+        supplement_rulesets = supplement.get("rulesets")
+        if not isinstance(supplement_rulesets, list) or not supplement_rulesets:
+            fail(f"{path.name}: rulesets must be a non-empty list")
+        reviewed_dates.append(supplement.get("reviewed_at"))
+        merged_rulesets.extend(supplement_rulesets)
+
+    data["rulesets"] = merged_rulesets
+    data["manifest_reviewed_at"] = reviewed_dates
     return data
 
 
@@ -100,13 +127,14 @@ def main() -> None:
     audit = load_audit()
     contract = load_full_contract()
     contract_reviewed = date.fromisoformat(contract["reviewed_at"])
-    try:
-        audit_reviewed = date.fromisoformat(audit["reviewed_at"])
-    except (KeyError, TypeError, ValueError) as exc:
-        fail("reviewed_at must be an ISO date")
-        raise AssertionError from exc
-    if audit_reviewed < contract_reviewed:
-        fail("locator audit is older than the full normative contract")
+    for reviewed_at in audit["manifest_reviewed_at"]:
+        try:
+            audit_reviewed = date.fromisoformat(reviewed_at)
+        except (TypeError, ValueError) as exc:
+            fail("every locator audit manifest needs an ISO reviewed_at")
+            raise AssertionError from exc
+        if audit_reviewed < contract_reviewed:
+            fail("a locator audit manifest is older than the full normative contract")
 
     rules = {rule["id"]: rule for rule in contract["rules"]}
     normative_ids = {
@@ -114,10 +142,7 @@ def main() -> None:
     }
     allowed_statuses = set(audit["policy"]["allowed_statuses"])
 
-    rulesets = audit.get("rulesets")
-    if not isinstance(rulesets, list) or not rulesets:
-        fail("rulesets must be a non-empty list")
-
+    rulesets = audit["rulesets"]
     seen_rulesets: set[str] = set()
     audited_rules: set[str] = set()
     status_counts: Counter[str] = Counter()
