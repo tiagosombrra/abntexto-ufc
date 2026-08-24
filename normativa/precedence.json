@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-22",
+  "reviewed_at": "2026-08-24",
   "description": "Política de resolução de vigência e precedência da base normativa abntexto-ufc.",
   "catalog_policy_mode": "replace-embedded-policy",
   "principles": [
@@ -253,6 +253,9 @@
       "status": "resolved",
       "governing_sources": [
         "abnt-nbr-14724-2024"
+      ],
+      "supporting_sources": [
+        "ufc-guia-trabalhos-2022"
       ]
     },
     "illustration.source": {
@@ -261,6 +264,9 @@
       "governing_sources": [
         "abnt-nbr-14724-2024",
         "abnt-nbr-10520-2023"
+      ],
+      "supporting_sources": [
+        "ufc-guia-trabalhos-2022"
       ]
     },
     "table.ibge": {
@@ -271,7 +277,7 @@
       ],
       "supporting_sources": [
         "abnt-nbr-14724-2024",
-        "ufc-normalizacao-2026"
+        "ufc-guia-trabalhos-2022"
       ]
     },
     "appendix.heading": {
