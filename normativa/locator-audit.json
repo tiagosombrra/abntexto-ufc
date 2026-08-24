@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-08-24",
-  "coverage_mode": "incremental",
+  "coverage_mode": "complete",
   "purpose": "N1 locator-quality audit. Rules not listed in a ruleset remain UNASSESSED until explicitly reviewed.",
   "policy": {
     "allowed_statuses": [
