@@ -75,7 +75,7 @@ def evidence_defaults(validation_mode: str) -> dict[str, str]:
     }
 
 
-def build_proof_matrix() -> dict[str, Any]:
+def build_proof_matrix(source_commit_sha: str | None = None) -> dict[str, Any]:
     contract = load_full_contract()
     traceability = build_traceability_matrix()
     policy_data = load_policy()
@@ -129,6 +129,7 @@ def build_proof_matrix() -> dict[str, Any]:
 
     return {
         "schema_version": 1,
+        "source_commit_sha": source_commit_sha,
         "contract_reviewed_at": contract["reviewed_at"],
         "proof_policy_reviewed_at": policy_data["reviewed_at"],
         "rule_count": len(rows),
@@ -147,10 +148,16 @@ def write_markdown(matrix: dict[str, Any], path: Path) -> None:
         f"- Rules: **{matrix['rule_count']}**",
         f"- Contract reviewed: **{matrix['contract_reviewed_at']}**",
         f"- Proof policy reviewed: **{matrix['proof_policy_reviewed_at']}**",
-        "",
-        "## Proof-status counts",
-        "",
     ]
+    if matrix.get("source_commit_sha"):
+        lines.append(f"- Source commit: **`{matrix['source_commit_sha']}`**")
+    lines.extend(
+        [
+            "",
+            "## Proof-status counts",
+            "",
+        ]
+    )
     lines.extend(
         f"- `{status}`: **{count}**"
         for status, count in matrix["proof_status_counts"].items()
@@ -160,8 +167,8 @@ def write_markdown(matrix: dict[str, Any], path: Path) -> None:
             "",
             "## Rule matrix",
             "",
-            "| Rule | Mode | Proof | Scenario | Positive | Negative | PDF | Sources | Evidence |",
-            "|---|---|---|---|---|---|---|---|---|",
+            "| Rule | Locator | Governing sources | Mode | Proof | Scenario | Positive | Negative | PDF | Sources | Evidence |",
+            "|---|---|---|---|---|---|---|---|---|---|---|",
         ]
     )
 
@@ -170,9 +177,11 @@ def write_markdown(matrix: dict[str, Any], path: Path) -> None:
             f"{item['id']} ({item['kind']})" for item in row["evidence"]
         )
         sources = ", ".join(row["sources"])
+        governing = ", ".join(row["governing_sources"])
+        locator = str(row.get("locator") or "")
         lines.append(
-            f"| `{row['rule_id']}` | {row['validation_mode']} | {row['proof_status']} | "
-            f"{row['scenario_status']} | {row['positive_test_status']} | "
+            f"| `{row['rule_id']}` | {locator} | {governing} | {row['validation_mode']} | "
+            f"{row['proof_status']} | {row['scenario_status']} | {row['positive_test_status']} | "
             f"{row['negative_test_status']} | {row['pdf_measurement_status']} | "
             f"{sources} | {evidence} |"
         )
@@ -187,12 +196,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--json", type=Path)
     parser.add_argument("--markdown", type=Path)
+    parser.add_argument("--commit-sha")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    matrix = build_proof_matrix()
+    matrix = build_proof_matrix(args.commit_sha)
 
     if args.json:
         args.json.parent.mkdir(parents=True, exist_ok=True)
