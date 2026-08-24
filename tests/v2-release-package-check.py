@@ -69,14 +69,25 @@ def assert_reference_images(archive_path: Path, root: str) -> None:
                 raise SystemExit(f"Reference image SHA-1 mismatch in {entry}: {actual}")
 
 
-def assert_ctan_excludes_coat_of_arms(archive_path: Path) -> None:
+def assert_excludes_coat_of_arms(archive_path: Path) -> None:
     expected = hashlib.sha1(COAT_OF_ARMS.read_bytes()).hexdigest()
     with zipfile.ZipFile(archive_path) as archive:
         for info in archive.infolist():
             if info.is_dir():
                 continue
             if hashlib.sha1(archive.read(info.filename)).hexdigest() == expected:
-                raise SystemExit(f"CTAN bundle redistributes the UFC coat of arms: {info.filename}")
+                raise SystemExit(
+                    f"Public release archive redistributes the UFC coat of arms: {info.filename}"
+                )
+
+
+def assert_bundled_document_disables_coat_of_arms(archive_path: Path, document_entry: str) -> None:
+    with zipfile.ZipFile(archive_path) as archive:
+        text = archive.read(document_entry).decode("utf-8")
+    if "  brasao = nao," not in text:
+        raise SystemExit(f"Bundled document does not disable the external institutional mark: {document_entry}")
+    if "  brasao = sim," in text:
+        raise SystemExit(f"Bundled document still enables the undistributed institutional mark: {document_entry}")
 
 
 def verify_checksums(directory: Path) -> None:
@@ -98,7 +109,6 @@ def build(output: Path, abntexto: Path) -> None:
         PYTHON,
         str(ROOT / "tools/build-release-bundles.py"),
         "--output", str(output),
-        "--reference-pdf", str(ROOT / "documento.pdf"),
         "--abntexto", str(abntexto),
     ], cwd=ROOT)
 
@@ -188,8 +198,6 @@ def ctan_example_compile_smoke(ctan_zip: Path) -> None:
 
 
 def main() -> None:
-    if not (ROOT / "documento.pdf").is_file():
-        raise SystemExit("documento.pdf missing; run make release-preflight first.")
     if not COAT_OF_ARMS.is_file():
         raise SystemExit("UFC coat of arms missing from project source tree.")
 
@@ -227,7 +235,6 @@ def main() -> None:
             f"modelo-latex-ufc-{v}.zip",
             f"modelo-latex-ufc-overleaf-{v}.zip",
             f"{PACKAGE_ID}-ctan-{v}.zip",
-            f"{PACKAGE_ID}-{v}-reference.pdf",
             "SHA256SUMS",
         }
         if set(first_files) != required:
@@ -241,7 +248,6 @@ def main() -> None:
             f"{class_root}abntexto-ufc.cls",
             f"{class_root}abntexto-ufc/core.def",
             f"{class_root}{LEGACY_CLASS}",
-            f"{class_root}assets/institucional/brasao-ufc.PNG",
             f"{class_root}tools/prepare-windows-fonts.ps1",
             f"{class_root}README.md",
             f"{class_root}LICENSE",
@@ -250,6 +256,9 @@ def main() -> None:
                 raise SystemExit(f"Class bundle missing {required_entry}")
         if any(entry.startswith(f"{class_root}1-pre-textuais/") for entry in class_entries):
             raise SystemExit("Class bundle unexpectedly contains template content.")
+        if any(entry.startswith(f"{class_root}assets/institucional/") for entry in class_entries):
+            raise SystemExit("Class bundle must not redistribute UFC institutional assets.")
+        assert_excludes_coat_of_arms(class_zip)
         assert_no_proprietary_fonts(class_entries)
 
         template_zip = first / f"modelo-latex-ufc-{v}.zip"
@@ -274,6 +283,12 @@ def main() -> None:
                 raise SystemExit(f"Template bundle missing {required_entry}")
         if f"{template_root}abntexto.cls" in template_entries:
             raise SystemExit("Standard template bundle must not vendor abntexto.cls.")
+        if any(entry.startswith(f"{template_root}assets/institucional/") for entry in template_entries):
+            raise SystemExit("Template bundle must not redistribute UFC institutional assets.")
+        assert_bundled_document_disables_coat_of_arms(
+            template_zip, f"{template_root}documento.tex"
+        )
+        assert_excludes_coat_of_arms(template_zip)
         assert_reference_images(template_zip, template_root)
         assert_no_proprietary_fonts(template_entries)
 
@@ -290,6 +305,10 @@ def main() -> None:
         ):
             if required_entry not in overleaf_entries:
                 raise SystemExit(f"Overleaf bundle missing {required_entry}")
+        if any(entry.startswith("assets/institucional/") for entry in overleaf_entries):
+            raise SystemExit("Overleaf bundle must not redistribute UFC institutional assets.")
+        assert_bundled_document_disables_coat_of_arms(overleaf_zip, "documento.tex")
+        assert_excludes_coat_of_arms(overleaf_zip)
         assert_reference_images(overleaf_zip, "")
         assert_no_proprietary_fonts(overleaf_entries)
 
@@ -316,8 +335,6 @@ def main() -> None:
             raise SystemExit("CTAN bundle must not redistribute UFC institutional assets.")
         if any(Path(entry).name == "brasao-ufc.PNG" for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain the UFC coat of arms binary.")
-        if f"{ctan_root}doc/{PACKAGE_ID}-{v}-reference.pdf" in ctan_entries:
-            raise SystemExit("CTAN bundle must not contain the reference PDF that embeds the UFC coat of arms.")
         if any(entry.startswith(f"{ctan_root}doc/example/") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain the full project reference source tree.")
         if any(entry.startswith(f"{ctan_root}scripts/") for entry in ctan_entries):
@@ -326,7 +343,7 @@ def main() -> None:
             raise SystemExit("CTAN bundle must not contain image assets.")
         if any(entry.endswith(".tds.zip") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain a redundant nested TDS archive.")
-        assert_ctan_excludes_coat_of_arms(ctan_zip)
+        assert_excludes_coat_of_arms(ctan_zip)
         assert_no_proprietary_fonts(ctan_entries)
         ctan_compile_smoke(ctan_zip)
         ctan_example_compile_smoke(ctan_zip)
