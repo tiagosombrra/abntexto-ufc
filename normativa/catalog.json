@@ -41,8 +41,9 @@
       "publisher": "Universidade Federal do Ceará",
       "edition": "2025",
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf",
-      "status": "current",
-      "checked_at": "2026-08-22"
+      "status": "current-with-superseded-norm-references",
+      "checked_at": "2026-08-22",
+      "notes": "O guia usa a NBR 10520:2023 para citações, mas ainda contém referência técnica à NBR 6023:2018; essa referência não define a edição vigente."
     },
     {
       "id": "ufc-in-2-2026",
@@ -84,7 +85,7 @@
       "url": "https://www.abntcatalogo.com.br/",
       "status": "current",
       "checked_at": "2026-08-22",
-      "access": "official-catalog-or-Target-GEDWeb"
+      "access": "official-catalog-or-licensed-access"
     },
     {
       "id": "abnt-nbr-10520-2023",
