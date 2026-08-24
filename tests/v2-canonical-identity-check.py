@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -122,6 +123,15 @@ def main() -> None:
     if errors:
         for error in errors:
             print(error)
+        legacy_counts = Counter(
+            error.split(":", 1)[0]
+            for error in errors
+            if "unclassified legacy ufctex identity" in error
+        )
+        if legacy_counts:
+            print("Legacy identity findings by file:")
+            for filename, count in sorted(legacy_counts.items()):
+                print(f"LEGACY_SUMMARY {filename}: {count}")
         raise SystemExit(f"Canonical identity check failed with {len(errors)} issue(s).")
 
     print(f"Canonical identity check passed: {len(modules)} modules aligned.")
