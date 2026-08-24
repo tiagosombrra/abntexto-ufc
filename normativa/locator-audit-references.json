@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N1 incremental locator classification for reference layout and current NBR 6023:2025-only rules.",
+  "rulesets": [
+    {
+      "id": "references.layout",
+      "rule_ids": [
+        "references.font.size",
+        "references.line-spacing",
+        "references.alignment",
+        "references.entry-spacing"
+      ],
+      "current_locator": "NBR 6023:2025 6.3; UFC 3.2.3.1",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "3.2.3.1, p. 54",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        },
+        {
+          "source_id": "abnt-nbr-6023-2025",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "ABNT NBR 6023:2025 is the current technical authority identified by the contract, but exact authoritative clause-level text for section 6.3 is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access. The UFC guide remains verified institutional evidence but internally cites the superseded 2018 edition and therefore does not establish current-edition authority."
+        }
+      ]
+    },
+    {
+      "id": "references.doi",
+      "rule_ids": ["references.doi.when-present"],
+      "current_locator": "ABNT NBR 6023:2025, 7.7.6 e casos aplicáveis",
+      "status": "UNAVAILABLE_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6023-2025",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The exact authoritative NBR 6023:2025 clause text for DOI inclusion is not available in the repository or public evidence corpus. Verification of the claimed clause and applicable documentary cases requires authoritative/licensed access."
+        }
+      ]
+    },
+    {
+      "id": "references.online-access",
+      "rule_ids": ["references.online.url-access"],
+      "current_locator": "ABNT NBR 6023:2025, 6.6 e referências eletrônicas aplicáveis",
+      "status": "UNAVAILABLE_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6023-2025",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The exact authoritative NBR 6023:2025 clause text for online availability/access data is not available in the repository or public evidence corpus. Verification of the claimed clause and applicable electronic-reference cases requires authoritative/licensed access."
+        }
+      ]
+    }
+  ]
+}
