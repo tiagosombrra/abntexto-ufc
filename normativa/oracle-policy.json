@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "phase": "N5",
+  "purpose": "Shared final-PDF measurement policy for isolated normative fixtures.",
+  "marker_prefix": "UFCORACLE",
+  "tools": {
+    "bbox": "pdftotext -bbox-layout",
+    "typography": "pdftohtml -xml -zoom 1.0",
+    "page_metadata": "pdfinfo",
+    "font_inventory": "pdffonts"
+  },
+  "tolerances": {
+    "page_size_pt": 1.0,
+    "horizontal_position_pt": 5.0,
+    "vertical_position_pt": 5.0,
+    "font_size_pt": 1.0
+  },
+  "evidence_format": "json",
+  "exit_capabilities": [
+    "page-geometry",
+    "marker-bounding-box",
+    "target-block-position",
+    "basic-font-size"
+  ]
+}
