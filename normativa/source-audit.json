@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-08-22",
-  "scope": "ufctex-v2.1.0-current-sources",
+  "scope": "abntexto-ufc-v2.1.0-current-sources",
   "purpose": "Audit inventory for phase N2. Runtime normative truth remains normativa/catalog.json plus normativa/precedence.json until N3 decomposition.",
   "policy": {
     "current_only": true,
