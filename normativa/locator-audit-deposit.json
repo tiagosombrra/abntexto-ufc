@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N1 incremental locator classification for institutional deposit requirements.",
+  "rulesets": [
+    {
+      "id": "deposit.pdfa-required",
+      "rule_ids": ["deposit.pdfa.required"],
+      "current_locator": "Requisitos de recebimento SiBi/UFC",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-deposito-tcc-2026",
+          "locator": "Requisitos — PDF/A da capa aos anexos; atualização 04/03/2026",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/"
+        },
+        {
+          "source_id": "ufc-deposito-pos-2026",
+          "locator": "Requisitos, item 2 — PDF/A da capa aos anexos; atualização 04/03/2026",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/"
+        }
+      ]
+    },
+    {
+      "id": "deposit.approval-signatures",
+      "rule_ids": ["deposit.approval-signatures"],
+      "current_locator": "Requisitos de recebimento SiBi/UFC",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-deposito-tcc-2026",
+          "locator": "Requisitos — folha de aprovação sem assinaturas; atualização 04/03/2026",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/"
+        },
+        {
+          "source_id": "ufc-deposito-pos-2026",
+          "locator": "Requisitos, item 3 — folha de aprovação sem assinaturas; atualização 04/03/2026",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/"
+        }
+      ]
+    },
+    {
+      "id": "deposit.catalog-card",
+      "rule_ids": ["deposit.catalog-card"],
+      "current_locator": "IN Conjunta nº 2/2026, arts. 1º-3º e 7º",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-in-2-2026",
+          "locator": "arts. 1º-3º e 7º, p. 2",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2026/02/instrucao-normativa-conjunta-2.pdf"
+        }
+      ]
+    },
+    {
+      "id": "deposit.capes",
+      "rule_ids": ["deposit.capes"],
+      "current_locator": "Portaria CAPES nº 206/2018",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "capes-portaria-206-2018",
+          "locator": "Portaria nº 206/2018, arts. 1º-3º",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://cad.capes.gov.br/ato-administrativo-detalhar?idAtoAdmElastic=83"
+        },
+        {
+          "source_id": "ufc-deposito-pos-2026",
+          "locator": "Nota CAPES após as instruções de entrega; atualização 04/03/2026",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/"
+        }
+      ]
+    },
+    {
+      "id": "deposit.metadata-workflow",
+      "rule_ids": ["deposit.metadata.workflow"],
+      "current_locator": "SiBi/UFC — Normas para o Recebimento de TCC e Normas para o Recebimento de Teses e Dissertações, atualizadas em 04/03/2026",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-deposito-tcc-2026",
+          "locator": "Instruções para encaminhamento — cadastro do trabalho no RI via DSpace; atualização 04/03/2026",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/"
+        },
+        {
+          "source_id": "ufc-deposito-pos-2026",
+          "locator": "Instruções para entrega — cadastro no RI e submissão à biblioteca; atualização 04/03/2026",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/"
+        }
+      ]
+    }
+  ]
+}
