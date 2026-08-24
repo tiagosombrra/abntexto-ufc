@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N1 incremental locator classification for page format, margins and pagination.",
+  "rulesets": [
+    {
+      "id": "layout.page-a4",
+      "rule_ids": ["page.a4"],
+      "current_locator": "UFC 4.1",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified, but exact authoritative clause text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access; the UFC guide still cites NBR 14724:2011 and is not current technical authority."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.1, p. 64",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "layout.margin-recto",
+      "rule_ids": [
+        "margin.recto.left",
+        "margin.recto.top",
+        "margin.recto.right",
+        "margin.recto.bottom"
+      ],
+      "current_locator": "UFC 4.2",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified, but exact authoritative clause text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access; the UFC guide still cites NBR 14724:2011 and is not current technical authority."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.2, p. 65",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "layout.margin-verso",
+      "rule_ids": [
+        "margin.verso.left",
+        "margin.verso.top",
+        "margin.verso.right",
+        "margin.verso.bottom"
+      ],
+      "current_locator": "UFC 4.2",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified, but exact authoritative clause text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access; the UFC guide still cites NBR 14724:2011 and is not current technical authority."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.2, p. 65",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "pagination.general",
+      "rule_ids": [
+        "pagination.pretextual.counted-not-numbered",
+        "pagination.catalog-data.not-counted",
+        "pagination.textual.display-start",
+        "pagination.recto.position",
+        "pagination.recto.offset.top",
+        "pagination.recto.offset.right",
+        "pagination.verso.position",
+        "pagination.verso.offset.top",
+        "pagination.verso.offset.left",
+        "pagination.multivolume.continuous",
+        "pagination.appendix-annex.continuous"
+      ],
+      "current_locator": "ABNT NBR 14724:2024 — paginação; UFC 4.4",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified, but exact authoritative clause text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access; the UFC guide still cites NBR 14724:2011 and is not current technical authority."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.4, p. 73-74",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    }
+  ]
+}
