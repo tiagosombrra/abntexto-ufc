@@ -85,8 +85,9 @@ import sys
 from pathlib import Path
 
 text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
-pattern = r"Class abntexto-ufc Error: Invalid pagina-inicial '0\s*'\."
-raise SystemExit(0 if re.search(pattern, text, re.DOTALL) else 1)
+compact = re.sub(r'\s+', '', text)
+expected = "Classabntexto-ufcError:Invalidpagina-inicial'0'."
+raise SystemExit(0 if expected in compact else 1)
 PY
 then
   cat /tmp/abntexto-ufc-v2-invalid-page.log
