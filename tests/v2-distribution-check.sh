@@ -140,6 +140,7 @@ release_infrastructure = (
     'tools/fetch-abntexto.py',
     'tools/fetch-reference-images.py',
     'tools/download-actions-artifact.py',
+    'tests/v2-canonical-identity-check.py',
     'tests/v2-ctan-policy-check.py',
     'tests/v2-ctan-archive-check.py',
     'tests/v2-release-package-check.py',
@@ -172,6 +173,7 @@ if errors:
     raise SystemExit('\n'.join(errors))
 PY
 
+python3 tests/v2-canonical-identity-check.py
 python3 tests/v2-ctan-policy-check.py
 
 for script in tests/v2-*.sh; do
@@ -186,6 +188,7 @@ python3 -m py_compile \
   tools/fetch-abntexto.py \
   tools/fetch-reference-images.py \
   tools/download-actions-artifact.py \
+  tests/v2-canonical-identity-check.py \
   tests/v2-ctan-policy-check.py \
   tests/v2-ctan-archive-check.py \
   tests/v2-repository-audit.py \

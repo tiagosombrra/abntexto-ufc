@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/fontes.def}[2026/08/20 UFC typography and font policy]
+\ProvidesFile{abntexto-ufc/fontes.def}[2026/08/20 UFC typography and font policy]
 
 \RequirePackage{etoolbox}
 
@@ -32,10 +32,10 @@
         {
           \setmathfont{Latin Modern Math}
           \tl_gset:Nn \g_ufc_math_font_policy_tl { LATIN-MODERN-MATH }
-          \ClassInfo{ufctex}{TeX~Gyre~Termes~Math~not~found;~using~Latin~Modern~Math}
+          \ClassInfo{abntexto-ufc}{TeX~Gyre~Termes~Math~not~found;~using~Latin~Modern~Math}
         }
         {
-          \ClassError{ufctex}
+          \ClassError{abntexto-ufc}
             {No~supported~OpenType~math~font~was~found}
             {Install~TeX~Gyre~Termes~Math~or~Latin~Modern~Math.}
         }
@@ -108,12 +108,12 @@
     \bool_if:NTF \l_ufc_font_files_available_bool
       {
         \ufc_font_pdftex_set_text_family:n {times-ttf}
-        \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~pdfLaTeX}
+        \ClassInfo{abntexto-ufc}{Using~literal~Times~New~Roman~with~pdfLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
-            \ClassError{ufctex}
+            \ClassError{abntexto-ufc}
               {Times~New~Roman~support~is~not~prepared~for~pdfLaTeX}
               {Run~tools/prepare-windows-fonts.ps1~on~Windows~and~compile~again.}
           }
@@ -122,7 +122,7 @@
             \renewcommand{\sfdefault}{ntxtlf}
             \renewcommand{\ttdefault}{ntxtlf}
             \renewcommand{\familydefault}{\rmdefault}
-            \ClassInfo{ufctex}{Times~New~Roman~not~prepared~for~pdfLaTeX;~using~NewTX~compatibility~fallback}
+            \ClassInfo{abntexto-ufc}{Times~New~Roman~not~prepared~for~pdfLaTeX;~using~NewTX~compatibility~fallback}
           }
       }
   }
@@ -134,12 +134,12 @@
     \bool_if:NTF \l_ufc_font_files_available_bool
       {
         \ufc_font_pdftex_set_text_family:n {arial}
-        \ClassInfo{ufctex}{Using~literal~Arial~with~pdfLaTeX}
+        \ClassInfo{abntexto-ufc}{Using~literal~Arial~with~pdfLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
-            \ClassError{ufctex}
+            \ClassError{abntexto-ufc}
               {Arial~support~is~not~prepared~for~pdfLaTeX}
               {Run~tools/prepare-windows-fonts.ps1~on~Windows~and~compile~again.}
           }
@@ -148,7 +148,7 @@
             \renewcommand{\sfdefault}{qhv}
             \renewcommand{\ttdefault}{qhv}
             \renewcommand{\familydefault}{\rmdefault}
-            \ClassInfo{ufctex}{Arial~not~prepared~for~pdfLaTeX;~using~TeX~Gyre~Heros~compatibility~fallback}
+            \ClassInfo{abntexto-ufc}{Arial~not~prepared~for~pdfLaTeX;~using~TeX~Gyre~Heros~compatibility~fallback}
           }
       }
   }
@@ -158,17 +158,17 @@
     \IfFontExistsTF{Times New Roman}
       {
         \ufc_font_luatex_set_text_family:n {Times New Roman}
-        \ClassInfo{ufctex}{Using~literal~Times~New~Roman~with~LuaLaTeX}
+        \ClassInfo{abntexto-ufc}{Using~literal~Times~New~Roman~with~LuaLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
-            \ClassError{ufctex}
+            \ClassError{abntexto-ufc}
               {Times~New~Roman~not~found}
               {Install~Times~New~Roman~or~set~fonte-estrita=nao.}
           }
           {
-            \ClassInfo{ufctex}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes~compatibility~fallback}
+            \ClassInfo{abntexto-ufc}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes~compatibility~fallback}
             \ufc_font_luatex_set_text_family:n {TeX Gyre Termes}
           }
       }
@@ -179,17 +179,17 @@
     \IfFontExistsTF{Arial}
       {
         \ufc_font_luatex_set_text_family:n {Arial}
-        \ClassInfo{ufctex}{Using~literal~Arial~with~LuaLaTeX}
+        \ClassInfo{abntexto-ufc}{Using~literal~Arial~with~LuaLaTeX}
       }
       {
         \bool_if:NTF \g_ufc_font_strict_bool
           {
-            \ClassError{ufctex}
+            \ClassError{abntexto-ufc}
               {Arial~not~found}
               {Install~Arial~or~set~fonte-estrita=nao.}
           }
           {
-            \ClassInfo{ufctex}{Arial~not~found;~using~TeX~Gyre~Heros~compatibility~fallback}
+            \ClassInfo{abntexto-ufc}{Arial~not~found;~using~TeX~Gyre~Heros~compatibility~fallback}
             \ufc_font_luatex_set_text_family:n {TeX Gyre Heros}
           }
       }

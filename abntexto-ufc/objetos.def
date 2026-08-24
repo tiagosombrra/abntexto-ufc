@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/objetos.def}[2026/08/21 UFC figures, tables, code and algorithms]
+\ProvidesFile{abntexto-ufc/objetos.def}[2026/08/21 UFC figures, tables, code and algorithms]
 
 % Keep object titles within the real object width and use the reduced normative size.
 \makeatletter
@@ -140,7 +140,7 @@
                 \begin{algorithmic}[#1]
           }
           {
-            \ClassError{ufctex}
+            \ClassError{abntexto-ufc}
               {Invalid~algorithm~line~numbering~frequency~'#1'}
               {Use~zero~for~no~line~numbers~or~a~positive~integer.}
           }

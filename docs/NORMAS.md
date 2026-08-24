@@ -60,34 +60,34 @@ O PDF final também deve ser autocontido para renderização: todas as fontes ef
 
 | Requisito | Estado | Implementação / evidência |
 |---|---|---|
-| papel A4 | **CONFORME** | `ufctex/layout.def`; `tests/v2-pdf-geometry-check.sh` |
-| margens anverso 3 cm esquerda/superior e 2 cm direita/inferior | **CONFORME** | `ufctex/layout.def`; gate geométrico |
-| margens espelhadas em frente-verso | **CONFORME** | `ufctex/layout.def`; regressões duplex |
+| papel A4 | **CONFORME** | `abntexto-ufc/layout.def`; `tests/v2-pdf-geometry-check.sh` |
+| margens anverso 3 cm esquerda/superior e 2 cm direita/inferior | **CONFORME** | `abntexto-ufc/layout.def`; gate geométrico |
+| margens espelhadas em frente-verso | **CONFORME** | `abntexto-ufc/layout.def`; regressões duplex |
 | corpo textual em tamanho 12 | **CONFORME** | classe carregada em 12 pt; gates tipográficos |
-| seleção pública `fonte=times|arial` | **CONFORME NO ESCOPO TESTADO** | `ufctex/fontes.def`; font-config |
+| seleção pública `fonte=times|arial` | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/fontes.def`; font-config |
 | política `fonte-estrita=sim|nao` | **CONFORME NO ESCOPO TESTADO** | modo estrito falha sem fonte literal; fallback é declarado |
 | Times New Roman/Arial literais no PDF estrito | **CONFORME NO ESCOPO TESTADO** | Gate T Windows em pdfLaTeX/LuaLaTeX |
 | variantes regular/negrito/itálico/negrito-itálico | **CONFORME NO ESCOPO TESTADO** | certificação Windows nos dois motores |
 | todas as fontes incorporadas | **CONFORME NO ESCOPO TESTADO** | `tests/v2-font-embedding-check.sh`, perfis e Gate T |
-| recuo de primeira linha em 2 cm | **CONFORME** | `ufctex/layout.def`; layout check |
+| recuo de primeira linha em 2 cm | **CONFORME** | `abntexto-ufc/layout.def`; layout check |
 | sem espaço adicional entre parágrafos | **CONFORME** | `\parskip=0pt`; layout check |
 | espaçamento 1,5 no corpo | **CONFORME** | política da classe |
 | exceções em espaço simples/tamanho reduzido | **CONFORME NO ESCOPO TESTADO** | citações longas, notas, paginação, objetos e tabelas exercitados |
-| capa e folha de rosto | **CONFORME** | `ufctex/pretextuais.def`, `ufctex/trabalhos.def` |
-| volume e paginação contínua | **CONFORME** | `ufctex/trabalhos.def`; multivolume check |
+| capa e folha de rosto | **CONFORME** | `abntexto-ufc/pretextuais.def`, `abntexto-ufc/trabalhos.def` |
+| volume e paginação contínua | **CONFORME** | `abntexto-ufc/trabalhos.def`; multivolume check |
 | ficha catalográfica visual facultativa | **CONFORME** | política padrão `nao`; regressão dedicada |
-| folha de aprovação sem assinaturas digitalizadas | **CONFORME NO ESCOPO TESTADO** | `ufctex/pretextuais.def`; validador mantém inspeção visual quando necessário |
+| folha de aprovação sem assinaturas digitalizadas | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/pretextuais.def`; validador mantém inspeção visual quando necessário |
 | dedicatória, agradecimentos, epígrafe e errata | **CONFORME NO ESCOPO TESTADO** | pré-textuais + fixtures |
-| resumo/abstract e palavras-chave | **CONFORME NO ESCOPO TESTADO** | `ufctex/pretextuais.def`; corpus de referência |
+| resumo/abstract e palavras-chave | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/pretextuais.def`; corpus de referência |
 | listas e Sumário | **CONFORME** | pré-textuais + regressão de líderes pontilhados |
-| seções e subdivisões | **CONFORME NO ESCOPO TESTADO** | `ufctex/layout.def`; NBR 6024 |
-| figuras, gráficos e quadros | **CONFORME NO ESCOPO TESTADO** | `ufctex/objetos.def`; geometria de objetos |
+| seções e subdivisões | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/layout.def`; NBR 6024 |
+| figuras, gráficos e quadros | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/objetos.def`; geometria de objetos |
 | tabelas numéricas | **CONFORME NO ESCOPO TESTADO** | modo nativo e `tabularray-abnt`; gate IBGE |
 | código e algoritmos | **CONFORME NO ESCOPO TESTADO** | módulos opcionais + gate geométrico/tipográfico |
 | equações | **CONFORME NO ESCOPO TESTADO** | ambiente matemático + math check |
-| citações | **CONFORME NO ESCOPO TESTADO** | `ufctex/bibliografia.def`; NBR 10520:2023 |
+| citações | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/bibliografia.def`; NBR 10520:2023 |
 | referências | **CONFORME NO ESCOPO TESTADO** | `biblatex-abnt` + `compat-nbr6023-2025.def`; NBR 6023:2025 |
-| projetos | **CONFORME NO ESCOPO TESTADO** | `ufctex/projetos.def`; NBR 15287:2025 |
+| projetos | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/projetos.def`; NBR 15287:2025 |
 | glossário | **CONFORME NO ESCOPO TESTADO** | módulo opcional |
 | apêndices e anexos | **CONFORME NO ESCOPO TESTADO** | API pública do `abntexto` + política V2 de quebra |
 | índice | **CONFORME NO ESCOPO TESTADO** | módulo opcional; NBR 6034:2004 |
@@ -121,7 +121,7 @@ Para tabelas numéricas, o módulo `tabularray` requer `tabularray-abnt` datado 
 
 O projeto aplica NBR 10520:2023 para citações. Citações diretas longas usam parágrafo distinto, letra menor, espaço simples, sem aspas e recuo institucional exercitado de 4 cm.
 
-Para referências, prevalece a NBR 6023:2025. Ajustes necessários ao escopo testado ficam isolados em `ufctex/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
+Para referências, prevalece a NBR 6023:2025. Ajustes necessários ao escopo testado ficam isolados em `abntexto-ufc/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
 
 ## Projetos de pesquisa
 

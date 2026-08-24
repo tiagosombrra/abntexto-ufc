@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/modulos.def}[2026/08/21 UFC optional modules]
+\ProvidesFile{abntexto-ufc/modulos.def}[2026/08/21 UFC optional modules]
 
 \RequirePackage{etoolbox}
 
@@ -18,7 +18,7 @@
     \IfPackageAtLeastTF{tabularray-abnt}{2025-08-08}
       { }
       {
-        \ClassError{ufctex}
+        \ClassError{abntexto-ufc}
           {tabularray-abnt~2025-08-08~or~newer~is~required}
           {Update~the~TeX~distribution~before~using~tabelas=tabularray.}
       }
@@ -36,7 +36,7 @@
           }
       }
       {
-        \ClassError{ufctex}
+        \ClassError{abntexto-ufc}
           {tabularray-abnt~theme~'#1'~is~unavailable}
           {Update~tabularray-abnt~before~using~tabelas=tabularray.}
       }
@@ -83,7 +83,7 @@
       {
         \tl_gset:Nn \g_ufc_code_module_tl { minted }
         \RequirePackage{minted}
-        % minted defaults to tt; ufctex maps tt to the institutional family.
+        % minted defaults to tt; abntexto-ufc maps tt to the institutional family.
         \setminted{fontfamily=tt,fontsize=\normalsize}
       },
 

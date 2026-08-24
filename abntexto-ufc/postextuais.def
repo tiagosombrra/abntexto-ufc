@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/postextuais.def}[2026/08/19 UFC post-textual elements]
+\ProvidesFile{abntexto-ufc/postextuais.def}[2026/08/19 UFC post-textual elements]
 
 % Normative mapping: docs/NORMAS.md.
 % References are implemented in bibliografia.def. This module owns the optional
@@ -53,7 +53,7 @@
         \endgroup
       }
       {
-        \ClassWarningNoLine{ufctex}
+        \ClassWarningNoLine{abntexto-ufc}
           {Glossary~requested~without~glossario=glossaries}
       }
   }
@@ -74,7 +74,7 @@
         \endgroup
       }
       {
-        \ClassWarningNoLine{ufctex}
+        \ClassWarningNoLine{abntexto-ufc}
           {Index~requested~without~indice=imakeidx}
       }
   }
