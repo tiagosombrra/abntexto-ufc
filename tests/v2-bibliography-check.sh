@@ -115,7 +115,7 @@ for engine in pdflatex lualatex; do
     grep -Fq 'KOCHE, José Carlos' /tmp/abntexto-ufc-v2-bib.txt || fail_semantic 'Fonte consultada no apud ausente das referências.'
     if grep -Fq 'ECO, Umberto' /tmp/abntexto-ufc-v2-bib.txt; then fail_semantic 'Fonte original do apud entrou indevidamente nas referências.'; fi
     grep -Fq 'e1234' /tmp/abntexto-ufc-v2-bib.txt || fail_semantic 'E-location ausente da referência eletrônica.'
-    grep -Fq '10.0000/abntexto-ufc.2025.1234' /tmp/abntexto-ufc-v2-bib.txt || fail_semantic 'DOI ausente da referência eletrônica.'
+    grep -Fq '10.0000/exemplo.2025.1234' /tmp/abntexto-ufc-v2-bib.txt || fail_semantic 'DOI ausente da referência eletrônica.'
     grep -Fq 'SIMPÓSIO INTERNACIONAL DE TESTE' /tmp/abntexto-ufc-v2-bib.txt || fail_semantic 'Referência de evento ausente.'
     if grep -Eq 'SIMPÓSIO INTERNACIONAL DE TESTE,? 2025,? \[[Ss]\. ?[Ll]\.\]' /tmp/abntexto-ufc-v2-bib.txt; then fail_semantic 'Evento sem cidade recebeu sine loco indevidamente.'; fi
 
