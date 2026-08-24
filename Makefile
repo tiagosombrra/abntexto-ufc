@@ -3,7 +3,7 @@
 ## Revisão normativa e técnica: Tiago Guimarães Sombra (2026).         ##
 ########################################################################
 
-VERSION := 2.1.0
+VERSION := 2.2.0
 filename ?= documento
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
