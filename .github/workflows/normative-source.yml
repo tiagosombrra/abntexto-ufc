@@ -44,7 +44,7 @@ jobs:
           node-version: '24'
       - name: Validate normative sources and contracts
         run: python3 tests/checks/validator_source.py
-      - name: Build normative proof-state snapshot
+      - name: Build normative proof-state and N4 false-coverage snapshots
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
@@ -53,7 +53,11 @@ jobs:
             --json artifacts/normative-proof-state/proof-state.json \
             --markdown artifacts/normative-proof-state/proof-state.md \
             --commit-sha "${SOURCE_COMMIT_SHA}"
-      - name: Upload normative proof-state snapshot
+          python3 tests/checks/normative_false_coverage.py \
+            --json artifacts/normative-proof-state/false-coverage.json \
+            --markdown artifacts/normative-proof-state/false-coverage.md \
+            --commit-sha "${SOURCE_COMMIT_SHA}"
+      - name: Upload normative verification snapshots
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: normative-proof-state-${{ github.event.pull_request.head.sha || github.sha }}
