@@ -2,8 +2,7 @@
 
 Classe LaTeX para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), baseada em `abntexto`.
 
-Versão publicada atual: **2.1.0**.  
-Versão candidata em preparação: **2.2.0**.
+Versão publicada atual: **2.2.0**.
 
 A identidade canônica atual do projeto é **`abntexto-ufc`**. O desenvolvimento da linha **2.2.0** concentra a verificação normativa e a adequação da distribuição para o CTAN.
 
