@@ -2,7 +2,9 @@
 
 Classe LaTeX para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), baseada em `abntexto`.
 
-A identidade canônica atual do projeto é **`abntexto-ufc`**. A última versão estável publicada é **2.1.0**; a linha **2.2.0** está em preparação com verificação normativa e remediação para distribuição no CTAN.
+Versão publicada atual: **2.1.0**.
+
+A identidade canônica atual do projeto é **`abntexto-ufc`**. O desenvolvimento da linha **2.2.0** concentra a verificação normativa e a adequação da distribuição para o CTAN.
 
 ## Requisitos
 
@@ -299,7 +301,7 @@ O repositório mantém testes de geometria, tipografia, elementos pré/pós-text
 
 ## Verificação normativa v2.2.0
 
-A v2.2.0 está evoluindo de uma suíte de regressão para um sistema explícito de evidência normativa. O princípio é:
+A v2.2.0 evolui de uma suíte de regressão para um sistema explícito de evidência normativa. O princípio é:
 
 ```text
 regra existente
