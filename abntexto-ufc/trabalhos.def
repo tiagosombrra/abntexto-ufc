@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/trabalhos.def}[2026/08/20 UFC academic work profiles]
+\ProvidesFile{abntexto-ufc/trabalhos.def}[2026/08/20 UFC academic work profiles]
 
 % NBR 14724:2024: volume identification and continuous pagination.
 \ExplSyntaxOn
@@ -15,7 +15,7 @@
         \int_compare:nNnTF {#1} > {0}
           { \int_gset:Nn \g_ufc_initial_page_int {#1} }
           {
-            \ClassError{ufctex}
+            \ClassError{abntexto-ufc}
               {Invalid~pagina-inicial~'#1'}
               {Use~an~integer~greater~than~zero.}
           }
@@ -143,7 +143,7 @@
                 \includepdf[pages=1,pagecommand={\thispagestyle{empty}}]{#1}
                 \bool_set_true:N \l_ufc_catalog_included_bool
               }
-              { \ClassWarningNoLine{ufctex}{Catalog~card~file~'#1'~not~found} }
+              { \ClassWarningNoLine{abntexto-ufc}{Catalog~card~file~'#1'~not~found} }
           }
         \bool_if:NT \l_ufc_catalog_included_bool
           {

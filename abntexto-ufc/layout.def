@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/layout.def}[2026/08/21 UFC page and text layout]
+\ProvidesFile{abntexto-ufc/layout.def}[2026/08/21 UFC page and text layout]
 
 % UFC body text uses 12 pt, 1.5 spacing, 2 cm first-line indent and no extra spacing.
 \setlength{\parskip}{0pt}
@@ -63,7 +63,7 @@
 
 % The v2 normative profile is section-based. Chapter mode is intentionally disabled.
 \renewcommand{\usechapters}{%
-  \ClassError{ufctex}
+  \ClassError{abntexto-ufc}
     {Chapter mode is not supported by the UFC v2 normative profile}
     {Use section as the primary textual level.}%
 }

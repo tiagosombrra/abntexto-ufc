@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/compat-nbr6023-2025.def}[2026/08/19 NBR 6023:2025 compatibility]
+\ProvidesFile{abntexto-ufc/compat-nbr6023-2025.def}[2026/08/19 NBR 6023:2025 compatibility]
 
 % Temporary compatibility layer for rules not yet covered by the released
 % biblatex-abnt. Normative baseline: docs/NORMAS.md.

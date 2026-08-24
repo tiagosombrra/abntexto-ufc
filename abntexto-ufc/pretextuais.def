@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/pretextuais.def}[2026/08/23 UFC pre-textual elements]
+\ProvidesFile{abntexto-ufc/pretextuais.def}[2026/08/23 UFC pre-textual elements]
 
 \RequirePackage{pdfpages}
 \RequirePackage{ragged2e}
@@ -30,7 +30,7 @@
 \cs_new_protected:Npn \ufc_input_file:n #1
   {
     \InputIfFileExists{#1}{}{%
-      \ClassWarningNoLine{ufctex}{Input~file~'#1'~not~found}%
+      \ClassWarningNoLine{abntexto-ufc}{Input~file~'#1'~not~found}%
     }
   }
 
@@ -347,7 +347,7 @@
         {longa} { \ufc_epigraph_long:n {#2} }
       }
       {
-        \ClassError{ufctex}
+        \ClassError{abntexto-ufc}
           {Invalid~epigraph~type~'#1'}
           {Use~\string\imprimirepigrafe[curta]~or~\string\imprimirepigrafe[longa].}
       }

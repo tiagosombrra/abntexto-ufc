@@ -1,4 +1,4 @@
-\ProvidesFile{ufctex/institucional.def}[2026/08/23 UFC institutional assets]
+\ProvidesFile{abntexto-ufc/institucional.def}[2026/08/23 UFC institutional assets]
 
 \ExplSyntaxOn
 
