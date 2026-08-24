@@ -257,7 +257,7 @@ A bibliografia usa `biblatex-abnt` e `biber`. Ajustes específicos ao escopo atu
 
 ## PDF/A
 
-O documento de referência usa metadados PDF/A-2b. PDF/A-2b é uma política técnica verificável do projeto e não é apresentada como requisito geral da UFC para todo documento.
+O documento de referência usa metadados PDF/A-2b. PDF/A-2b é uma política técnica verificável do projeto e não é apresentada como requisito geral da UFC para qualquer documento.
 
 ## Build e validação
 
