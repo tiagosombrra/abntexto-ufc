@@ -3,7 +3,7 @@ set -eu
 
 fixture="tests/normativa/build-minimo.tex"
 job="abntexto-ufc-build-minimo"
-legacy_job="ufctex-compat-minimo"
+legacy_job="abntexto-ufc-legacy-compat-minimo"
 stubdir="/tmp/abntexto-ufc-v2-build-stubs"
 
 cleanup() {
@@ -59,22 +59,22 @@ done
 
 cleanup
 sed 's/\\documentclass{abntexto-ufc}/\\documentclass{ufctex}/' "$fixture" > "$legacy_job.tex"
-echo 'Validando shim de compatibilidade ufctex com pdflatex...'
-pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$legacy_job.tex" > /tmp/ufctex-compat-build.log 2>&1 || {
-  cat /tmp/ufctex-compat-build.log
+echo 'Validando shim legado ufctex com pdflatex...'
+pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$legacy_job.tex" > /tmp/abntexto-ufc-legacy-compat-build.log 2>&1 || {
+  cat /tmp/abntexto-ufc-legacy-compat-build.log
   exit 1
 }
 [ -f "$legacy_job.pdf" ] || {
-  echo 'Shim ufctex não gerou PDF.'
+  echo 'Shim legado ufctex não gerou PDF.'
   exit 1
 }
 grep -Fqi 'deprecated' "$legacy_job.log" || {
-  echo 'Shim ufctex não emitiu aviso de depreciação.'
+  echo 'Shim legado ufctex não registrou a depreciação.'
   exit 1
 }
-pdftotext -layout "$legacy_job.pdf" /tmp/ufctex-compat-build.txt
-grep -Fqi 'Marcador do build modular' /tmp/ufctex-compat-build.txt || {
-  echo 'Conteúdo esperado ausente do PDF gerado pelo shim ufctex.'
+pdftotext -layout "$legacy_job.pdf" /tmp/abntexto-ufc-legacy-compat-build.txt
+grep -Fqi 'Marcador do build modular' /tmp/abntexto-ufc-legacy-compat-build.txt || {
+  echo 'Conteúdo esperado ausente do PDF gerado pelo shim legado ufctex.'
   exit 1
 }
 

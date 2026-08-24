@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/normativa/tipografia-codigo.tex"
-tmp="ufctex-code-typography.tex"
+tmp="abntexto-ufc-code-typography.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {

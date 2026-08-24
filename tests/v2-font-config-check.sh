@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/normativa/fontes-config.tex"
-tmp="ufctex-font-config.tex"
+tmp="abntexto-ufc-font-config.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {

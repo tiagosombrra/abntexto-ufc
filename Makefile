@@ -92,12 +92,12 @@ clean:
 	@rm -f *.ntn *.not *.lof *.loi *.lot *.toc *.loa *.loc *.logr *.lsg *.nlo *.nls *.ilg *.ind
 	@rm -f *.glg *.glo *.xdy *.acn *.idx *.loq *.lol *.fls *.fdb_latexmk *.synctex.gz *~
 	@rm -f layout-anverso.pdf layout-frente-verso.pdf geometria-*.pdf normativa-complementar-*.pdf
-	@rm -f font-config-*.pdf font-config-*.aux font-config-*.log font-config-*.out ufctex-font-config.tex
-	@rm -f matematica-*.pdf matematica-*.aux matematica-*.log matematica-*.out ufctex-matematica.tex
+	@rm -f font-config-*.pdf font-config-*.aux font-config-*.log font-config-*.out abntexto-ufc-font-config.tex
+	@rm -f matematica-*.pdf matematica-*.aux matematica-*.log matematica-*.out abntexto-ufc-matematica.tex
 	@rm -f objeto-geometria-*.pdf objeto-geometria-*.aux objeto-geometria-*.log objeto-geometria-*.out
 	@rm -f tabela-ibge-*.pdf tabela-ibge-*.aux tabela-ibge-*.log tabela-ibge-*.out tabela-ibge-*.lot
 	@rm -f tipografia-codigo-*.pdf tipografia-codigo-*.aux tipografia-codigo-*.log tipografia-codigo-*.out
-	@rm -f tipografia-codigo-*.loa tipografia-codigo-*.loc ufctex-code-typography.tex
+	@rm -f tipografia-codigo-*.loa tipografia-codigo-*.loc abntexto-ufc-code-typography.tex
 	@rm -f algoritmo-linhas-*.pdf algoritmo-linhas-*.aux algoritmo-linhas-*.log algoritmo-linhas-*.out algoritmo-linhas-*.loa
 	@rm -f fontes-documentais-*.pdf fontes-documentais-*.aux fontes-documentais-*.bbl fontes-documentais-*.bcf
 	@rm -f fontes-documentais-*.blg fontes-documentais-*.log fontes-documentais-*.out fontes-documentais-*.run.xml
@@ -107,8 +107,8 @@ clean:
 	@rm -f postextuais*.pdf multivolume-*.pdf ficha-catalografica-*.pdf
 	@rm -f perfil-*.pdf perfil-*.aux perfil-*.log perfil-*.out perfil-*.toc
 	@rm -f perfil-*.bbl perfil-*.bcf perfil-*.blg perfil-*.run.xml perfil-*.tex
-	@rm -f ufctex-build-minimo.* abntexto-ufc-build-minimo.* ufctex-compat-minimo.* .ufctex-v2-profile.tex
-	@rm -f .ufctex-abntexto.cls .abntexto-ufc-upstream.cls
+	@rm -f abntexto-ufc-build-minimo.* abntexto-ufc-legacy-compat-minimo.*
+	@rm -f .abntexto-ufc-upstream.cls
 	@rm -f overleaf-stable-pdflatex.pdf overleaf-stable-lualatex.pdf
 	@rm -rf _minted-* dist
 	@rm -f $(filename).pdf

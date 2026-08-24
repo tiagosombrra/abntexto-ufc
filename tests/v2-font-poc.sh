@@ -5,7 +5,7 @@ root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$root" || exit 1
 
 class_fixture="tests/normativa/fontes-classe-poc.tex"
-class_tmp="ufctex-font-class-poc.tex"
+class_tmp="abntexto-ufc-font-class-poc.tex"
 compile_only=${UFC_FONT_POC_COMPILE_ONLY:-0}
 trap 'rm -f "$class_tmp"' EXIT INT TERM
 
@@ -214,11 +214,11 @@ compile_case() {
 compile_class_case() {
   engine=$1
   family=$2
-  job="ufctex-${family}-${engine}-strict-poc"
+  job="abntexto-ufc-${family}-${engine}-strict-poc"
 
   cleanup "$job"
   sed "s/@UFC_FONT@/$family/g" "$class_fixture" > "$class_tmp"
-  echo "POC fontes: ufctex estrito $family com $engine"
+  echo "POC fontes: abntexto-ufc estrito $family com $engine"
   "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
     -jobname="$job" "$class_tmp" >"${TMPDIR:-/tmp}/$job.log" 2>&1 || {
       cat "${TMPDIR:-/tmp}/$job.log"
@@ -230,7 +230,7 @@ compile_class_case() {
     assert_no_text_fallback "$job.pdf" || return 1
     assert_text_extraction "$job.pdf" || return 1
     sh tests/v2-font-embedding-check.sh "$job.pdf" || return 1
-    echo "POC fontes: ufctex estrito confirmado em $job.pdf"
+    echo "POC fontes: abntexto-ufc estrito confirmado em $job.pdf"
   else
     echo "POC fontes: artefato Windows gerado em $job.pdf"
   fi
@@ -248,8 +248,8 @@ failed=0
 
 if ! kpsewhich t1times-ttf.fd >/dev/null 2>&1 || \
    ! kpsewhich t1arial.fd >/dev/null 2>&1 || \
-   ! kpsewhich ufctex-windows.map >/dev/null 2>&1; then
-  echo 'POC fontes: suporte ufctex Windows não localizado para pdfLaTeX.'
+   ! kpsewhich abntexto-ufc-windows.map >/dev/null 2>&1; then
+  echo 'POC fontes: suporte abntexto-ufc Windows não localizado para pdfLaTeX.'
   blocked=1
 else
   for ttf in times.ttf timesbd.ttf timesi.ttf timesbi.ttf arial.ttf arialbd.ttf ariali.ttf arialbi.ttf; do
@@ -263,8 +263,8 @@ else
     if [ "$compile_only" = 1 ]; then
       compile_case pdflatex times || fail_case 11 'pdfLaTeX / Times New Roman / infrastructure POC'
       compile_case pdflatex arial || fail_case 12 'pdfLaTeX / Arial / infrastructure POC'
-      compile_class_case pdflatex times || fail_case 13 'pdfLaTeX / Times New Roman / ufctex strict POC'
-      compile_class_case pdflatex arial || fail_case 14 'pdfLaTeX / Arial / ufctex strict POC'
+      compile_class_case pdflatex times || fail_case 13 'pdfLaTeX / Times New Roman / abntexto-ufc strict POC'
+      compile_class_case pdflatex arial || fail_case 14 'pdfLaTeX / Arial / abntexto-ufc strict POC'
     else
       compile_case pdflatex times || failed=1
       compile_case pdflatex arial || failed=1
@@ -277,8 +277,8 @@ fi
 if [ "$compile_only" = 1 ]; then
   compile_case lualatex times || fail_case 21 'LuaLaTeX / Times New Roman / infrastructure POC'
   compile_case lualatex arial || fail_case 22 'LuaLaTeX / Arial / infrastructure POC'
-  compile_class_case lualatex times || fail_case 23 'LuaLaTeX / Times New Roman / ufctex strict POC'
-  compile_class_case lualatex arial || fail_case 24 'LuaLaTeX / Arial / ufctex strict POC'
+  compile_class_case lualatex times || fail_case 23 'LuaLaTeX / Times New Roman / abntexto-ufc strict POC'
+  compile_class_case lualatex arial || fail_case 24 'LuaLaTeX / Arial / abntexto-ufc strict POC'
 else
   compile_case lualatex times || failed=1
   compile_case lualatex arial || failed=1
@@ -299,5 +299,5 @@ fi
 if [ "$compile_only" = 1 ]; then
   echo 'POC fontes: quatro PDFs estritos gerados no Windows; certificação delegada ao gate Linux.'
 else
-  echo 'POC fontes: Times New Roman e Arial literais validadas na infraestrutura e no ufctex estrito.'
+  echo 'POC fontes: Times New Roman e Arial literais validadas na infraestrutura e no abntexto-ufc estrito.'
 fi

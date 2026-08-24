@@ -43,7 +43,7 @@ figuras/ufc-reitoria.jpg
 
 # Release artifacts
 dist/
-.ufctex-abntexto.cls
+.abntexto-ufc-upstream.cls
 
 # Editors / OS
 .vscode/
