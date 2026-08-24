@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 PDF_MEASUREMENT = ROOT / "tools" / "pdf_measurement.py"
 PDF_ORACLE_CORE = ROOT / "tests" / "checks" / "pdf_oracle_core.py"
+PRETEXTUAL_ORACLE = ROOT / "tests" / "checks" / "pretextual_oracle.py"
 APP = ROOT / "validator" / "app.js"
 INDEX = ROOT / "validator" / "index.html"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
@@ -57,6 +58,7 @@ def main() -> None:
         CLI,
         PDF_MEASUREMENT,
         PDF_ORACLE_CORE,
+        PRETEXTUAL_ORACLE,
         NORMATIVE_TOOL,
         NORMATIVE_ATOMIC_TOOL,
         NORMATIVE_FULL_TOOL,
