@@ -44,3 +44,17 @@ jobs:
           node-version: '24'
       - name: Validate normative sources and contracts
         run: python3 tests/checks/validator_source.py
+      - name: Build normative proof-state snapshot
+        run: |
+          mkdir -p artifacts/normative-proof-state
+          python3 tests/checks/normative_proof_state.py \
+            --json artifacts/normative-proof-state/proof-state.json \
+            --markdown artifacts/normative-proof-state/proof-state.md \
+            --commit-sha "${GITHUB_SHA}"
+      - name: Upload normative proof-state snapshot
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: normative-proof-state-${{ github.sha }}
+          path: artifacts/normative-proof-state
+          if-no-files-found: error
+          retention-days: 30
