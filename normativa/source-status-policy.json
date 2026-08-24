@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "Define how complete source-registry statuses map to runtime activity without losing authority restrictions.",
+  "registry_statuses": {
+    "current": {
+      "runtime_activity": "active",
+      "allowed_runtime_statuses": ["current"],
+      "technical_authority": "preserve"
+    },
+    "current-institutional-with-stale-technical-citations": {
+      "runtime_activity": "active-restricted",
+      "allowed_runtime_statuses": [
+        "current",
+        "current-with-superseded-norm-references"
+      ],
+      "technical_authority": false,
+      "restriction": "May support compatible institutional detail but must not govern a technical-scope rule or select a technical-standard edition."
+    },
+    "current-with-superseded-provisions": {
+      "runtime_activity": "scope-restricted",
+      "allowed_runtime_statuses": [],
+      "technical_authority": "preserve",
+      "promotion_requires": "rule-by-rule-review",
+      "restriction": "Promotion to the runtime subset requires an explicit source override after the still-operative provision is identified and overridden provisions are excluded."
+    }
+  },
+  "source_overrides": {
+    "ibge-tabular-1993": {
+      "allowed_runtime_statuses": ["current-for-tabular-presentation"],
+      "reason": "Runtime status narrows the current registry entry to the delegated tabular-presentation scope."
+    }
+  }
+}

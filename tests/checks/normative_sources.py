@@ -8,10 +8,95 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 AUDIT = ROOT / "normativa" / "source-audit.json"
 CATALOG = ROOT / "normativa" / "catalog.json"
+PRECEDENCE = ROOT / "normativa" / "precedence.json"
+STATUS_POLICY = ROOT / "normativa" / "source-status-policy.json"
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"Normative source audit failed: {message}")
+
+
+def validate_status_semantics(
+    audit: dict,
+    catalog: dict,
+    by_id: dict[str, dict],
+) -> tuple[int, int]:
+    precedence = json.loads(PRECEDENCE.read_text(encoding="utf-8"))
+    policy = json.loads(STATUS_POLICY.read_text(encoding="utf-8"))
+
+    if policy.get("schema_version") != 1:
+        fail("unsupported source-status-policy schema_version")
+    if date.fromisoformat(policy["reviewed_at"]) < date.fromisoformat(audit["reviewed_at"]):
+        fail("source-status-policy is older than the source audit")
+
+    mappings = policy.get("registry_statuses")
+    overrides = policy.get("source_overrides", {})
+    if not isinstance(mappings, dict) or not mappings:
+        fail("source-status-policy registry_statuses must be a non-empty object")
+    if not isinstance(overrides, dict):
+        fail("source-status-policy source_overrides must be an object")
+
+    unknown_registry_statuses = sorted(
+        {source["status"] for source in audit["sources"]} - set(mappings)
+    )
+    if unknown_registry_statuses:
+        fail(
+            "source-status-policy does not classify registry statuses: "
+            + ", ".join(unknown_registry_statuses)
+        )
+
+    unknown_overrides = sorted(set(overrides) - set(by_id))
+    if unknown_overrides:
+        fail("source-status-policy has unknown source overrides: " + ", ".join(unknown_overrides))
+
+    source_roles = precedence.get("source_roles", {})
+    resolutions = precedence.get("rules", {})
+    catalog_by_id = {source["id"]: source for source in catalog["sources"]}
+    if set(source_roles) != set(catalog_by_id):
+        fail("precedence source roles do not match the runtime catalog")
+
+    restricted = 0
+    scope_restricted = 0
+    for source_id, runtime in catalog_by_id.items():
+        registry = by_id[source_id]
+        mapping = mappings[registry["status"]]
+        override = overrides.get(source_id, {})
+
+        allowed = override.get(
+            "allowed_runtime_statuses",
+            mapping.get("allowed_runtime_statuses", []),
+        )
+        if not isinstance(allowed, list):
+            fail(f"source {source_id}: allowed_runtime_statuses must be a list")
+        if runtime.get("status") not in allowed:
+            fail(
+                f"source {source_id}: runtime status {runtime.get('status')} is incompatible "
+                f"with registry status {registry['status']}"
+            )
+
+        activity = mapping.get("runtime_activity")
+        if activity == "scope-restricted":
+            scope_restricted += 1
+            if override.get("promotion_reviewed") is not True:
+                fail(f"source {source_id}: scope-restricted source was promoted without review")
+
+        technical_authority = mapping.get("technical_authority")
+        if registry.get("technical_authority") is False or technical_authority is False:
+            restricted += 1
+            if registry.get("technical_authority") is not False:
+                fail(f"source {source_id}: policy requires explicit technical_authority=false")
+            role = source_roles[source_id]
+            if role in {"technical-standard", "technical-guidance"}:
+                fail(f"source {source_id}: restricted guide has technical runtime role {role}")
+            for rule_id, resolution in resolutions.items():
+                if resolution.get("scope") != "technical":
+                    continue
+                if source_id in resolution.get("governing_sources", []):
+                    fail(
+                        f"source {source_id}: restricted guide governs technical rule {rule_id}"
+                    )
+
+    return restricted, scope_restricted
 
 
 def main() -> None:
@@ -46,6 +131,8 @@ def main() -> None:
     missing = sorted(catalog_ids - set(by_id))
     if missing:
         fail("runtime catalog sources missing from N2 inventory: " + ", ".join(missing))
+
+    restricted, scope_restricted = validate_status_semantics(audit, catalog, by_id)
 
     expected_technical = {
         "abnt-nbr-14724-2024",
@@ -83,7 +170,11 @@ def main() -> None:
     if in_2024.get("status") != "current-with-superseded-provisions":
         fail("IN 2/2024 must record partial supersession")
     overrides = in_2026.get("overrides", [])
-    if not any(item.get("source") == "ufc-in-2-2024" and item.get("scope") == "visual-catalog-card-requirement" for item in overrides):
+    if not any(
+        item.get("source") == "ufc-in-2-2024"
+        and item.get("scope") == "visual-catalog-card-requirement"
+        for item in overrides
+    ):
         fail("IN 2/2026 must explicitly override the old visual catalog-card requirement")
 
     required_ufc = {
@@ -114,7 +205,9 @@ def main() -> None:
         "Normative source audit passed: "
         f"{len(sources)} current/restricted sources, "
         f"{len(expected_technical)} current ABNT standards, "
-        f"{len(institutional_guides)} UFC guides restricted from edition authority."
+        f"{len(institutional_guides)} UFC guides restricted from edition authority, "
+        f"{restricted} restricted runtime sources, "
+        f"{scope_restricted} scope-restricted runtime sources."
     )
 
 
