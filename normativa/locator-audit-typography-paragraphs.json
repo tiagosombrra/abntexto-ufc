@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N1 incremental locator classification for body typography, reduced-font exceptions, spacing and paragraphs.",
+  "rulesets": [
+    {
+      "id": "typography.body",
+      "rule_ids": [
+        "font.family.body",
+        "font.size.body"
+      ],
+      "current_locator": "UFC 4.1(c)",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.1(c), p. 64",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "typography.reduced-font",
+      "rule_ids": [
+        "font.size.reduced.long-quote",
+        "font.size.reduced.footnote",
+        "font.size.reduced.pagination",
+        "font.size.reduced.catalog-card",
+        "font.size.reduced.illustration-caption",
+        "font.size.reduced.illustration-source",
+        "font.size.reduced.table-caption",
+        "font.size.reduced.table-source"
+      ],
+      "current_locator": "UFC 4.1(c)",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.1(c), p. 64",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "layout.body-spacing",
+      "rule_ids": ["spacing.body"],
+      "current_locator": "UFC 4.3",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.3, p. 66",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        },
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified, but exact authoritative clause text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access; the UFC guide still cites NBR 14724:2011 and is not current technical authority."
+        }
+      ]
+    },
+    {
+      "id": "layout.body-paragraph",
+      "rule_ids": [
+        "paragraph.first-line.indent",
+        "paragraph.spacing.extra"
+      ],
+      "current_locator": "UFC 4.3",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.3, p. 66; Figura 34, p. 68",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    }
+  ]
+}
