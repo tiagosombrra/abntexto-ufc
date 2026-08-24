@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "phase": "N6",
+  "purpose": "Isolated positive scenarios for dedication and epigraph final-PDF evidence.",
+  "fixture": "tests/normativa/pretextual-oracle-dedication-epigraph.tex",
+  "tolerances": {
+    "line_spacing_pt": 1.5
+  },
+  "scenarios": [
+    {
+      "id": "dedication.three-lines",
+      "component": "dedication",
+      "route": "\\imprimirdedicatoria",
+      "line_count": 3,
+      "markers": ["UFCN6DEDONE", "UFCN6DEDTWO", "UFCN6DEDTHREE"],
+      "rules": [
+        "dedication.heading.present",
+        "dedication.position.start",
+        "dedication.indent.left",
+        "dedication.font.size",
+        "dedication.line-spacing",
+        "dedication.alignment"
+      ]
+    },
+    {
+      "id": "epigraph.short.three-lines",
+      "component": "epigraph-short",
+      "route": "\\imprimirepigrafe[curta]",
+      "line_count": 3,
+      "markers": ["UFCN6SHORTONE", "UFCN6SHORTTWO", "UFCN6SHORTTHREE"],
+      "rules": [
+        "epigraph.short.position.start",
+        "epigraph.short.indent.left",
+        "epigraph.short.font.size",
+        "epigraph.short.line-spacing",
+        "epigraph.short.alignment",
+        "epigraph.short.quotation-marks"
+      ]
+    },
+    {
+      "id": "epigraph.long.four-lines",
+      "component": "epigraph-long",
+      "route": "\\imprimirepigrafe[longa]",
+      "line_count": 4,
+      "markers": ["UFCN6LONGONE", "UFCN6LONGTWO", "UFCN6LONGTHREE", "UFCN6LONGFOUR"],
+      "rules": [
+        "epigraph.long.position.start",
+        "epigraph.long.indent.left",
+        "epigraph.long.font.size",
+        "epigraph.long.line-spacing",
+        "epigraph.long.alignment",
+        "epigraph.long.quotation-marks"
+      ]
+    }
+  ],
+  "calibration": {
+    "onehalf_12pt": ["UFCN6CALHALFONE", "UFCN6CALHALFTWO", "UFCN6CALHALFTHREE"],
+    "single_10pt": ["UFCN6CALSINGLEONE", "UFCN6CALSINGLETWO", "UFCN6CALSINGLETHREE"]
+  }
+}
