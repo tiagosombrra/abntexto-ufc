@@ -1,10 +1,8 @@
-# ufctex
+# abntexto-ufc
 
-Classe LaTeX para trabalhos acadêmicos da Universidade Federal do Ceará, baseada em `abntexto`.
+Classe LaTeX para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), baseada em `abntexto`.
 
-Versão publicada atual: **2.1.0**.
-
-A linha 2.x organiza a implementação em módulos e acompanha a base normativa vigente auditada em agosto de 2026.
+A identidade canônica atual do projeto é **`abntexto-ufc`**. A última versão estável publicada é **2.1.0**; a linha **2.2.0** está em preparação com verificação normativa e remediação para distribuição no CTAN.
 
 ## Requisitos
 
@@ -15,13 +13,13 @@ A linha 2.x organiza a implementação em módulos e acompanha a base normativa 
 - `tabularray-abnt` de 08/08/2025 ou mais recente quando `tabelas = tabularray`;
 - pacotes opcionais apenas quando os módulos correspondentes forem ativados.
 
-O bundle específico `modelo-latex-ufc-overleaf-2.1.0.zip` inclui uma cópia íntegra e pinada de `abntexto.cls` 1.1 para manter compatibilidade com ambientes que ainda não o ofereçam. O smoke real no Overleaf, realizado em 21/08/2026, compilou com sucesso em pdfLaTeX sobre TeX Live 2026; o proxy de CI em TeX Live 2025 permanece como verificação adicional de compatibilidade.
+O bundle específico para Overleaf inclui uma cópia íntegra e pinada de `abntexto.cls` 1.1 quando necessário para compatibilidade com ambientes que ainda não o ofereçam.
 
 ## Estrutura
 
 ```text
-ufctex.cls
-ufctex/
+abntexto-ufc.cls
+abntexto-ufc/
 ├── core.def
 ├── fontes.def
 ├── layout.def
@@ -37,14 +35,14 @@ ufctex/
 └── postextuais.def
 ```
 
-Cada responsabilidade fica concentrada em um módulo. `compat-abntexto.def` e `compat-nbr6023-2025.def` tratam adaptações correntes ao upstream e ao escopo testado da norma de referências; não são camadas de compatibilidade com versões anteriores do template.
+Cada responsabilidade fica concentrada em um módulo. `compat-abntexto.def` e `compat-nbr6023-2025.def` tratam adaptações correntes ao upstream e ao escopo testado da norma de referências.
 
-## Configuração básica
+## Uso básico
 
 Exemplo para uma tese:
 
 ```tex
-\documentclass{ufctex}
+\documentclass{abntexto-ufc}
 
 \ufcsetup{
   tipo = tese,
@@ -72,7 +70,7 @@ Exemplo para uma tese:
 }
 ```
 
-## Perfis
+Perfis disponíveis:
 
 | Perfil | Uso |
 |---|---|
@@ -85,9 +83,24 @@ Exemplo para uma tese:
 
 A impressão pode ser `anverso` ou `frente-verso`.
 
+## Brasão institucional
+
+A composição pode ser controlada por:
+
+```tex
+\ufcsetup{
+  brasao = sim,
+  brasao-arquivo = {caminho/para/brasao-oficial.png}
+}
+```
+
+O pacote destinado ao CTAN não redistribui o brasão da UFC. O usuário pode obter o ativo oficial diretamente da Universidade e fornecê-lo localmente. `brasao = nao` desativa sua composição.
+
+A política de redistribuição do ativo institucional é independente da regra normativa de composição da capa.
+
 ## Tipografia
 
-O Guia UFC admite **Times New Roman ou Arial**. A V2 oferece:
+O perfil UFC admite Times New Roman ou Arial:
 
 ```tex
 \ufcsetup{
@@ -98,26 +111,14 @@ O Guia UFC admite **Times New Roman ou Arial**. A V2 oferece:
 
 Valores de `fonte`:
 
-- `times` → Times New Roman;
-- `arial` → Arial.
+- `times` — Times New Roman;
+- `arial` — Arial.
 
-A chave `fonte-estrita` define a política de identidade:
+`fonte-estrita = sim` exige a família literal. `fonte-estrita = nao` permite fallback portátil quando a fonte literal não estiver disponível.
 
-- `sim`: exige a família literal solicitada e falha quando ela não está disponível;
-- `nao`: permite fallback de compatibilidade para portabilidade e desenvolvimento.
+No LuaLaTeX, Times New Roman e Arial podem ser resolvidas via `fontspec`. No pdfLaTeX, o modo estrito usa suporte local produzido por `tools/prepare-windows-fonts.ps1` a partir das fontes Microsoft já instaladas no Windows. As fontes proprietárias não são redistribuídas pelo projeto.
 
-Fallbacks não são apresentados como fontes literais:
-
-- pdfLaTeX + `times`: NewTX;
-- pdfLaTeX + `arial`: TeX Gyre Heros;
-- LuaLaTeX + `times`: TeX Gyre Termes;
-- LuaLaTeX + `arial`: TeX Gyre Heros.
-
-No LuaLaTeX, Times New Roman e Arial literais são resolvidas pelo `fontspec`. No pdfLaTeX, o modo estrito usa o suporte local produzido por `tools/prepare-windows-fonts.ps1` a partir das fontes Microsoft já instaladas no Windows. As fontes proprietárias não são redistribuídas pelo projeto.
-
-O PDF certificado deve ter todas as fontes efetivamente usadas incorporadas (`emb=yes`). A incorporação por subconjunto é aceita. O Gate T também valida PDF/A-2b com veraPDF.
-
-A matemática usa uma família matemática complementar; ela não é apresentada como Times New Roman ou Arial.
+O Gate T valida identidade tipográfica literal no Windows, incorporação de fontes e PDF/A-2b nos cenários certificados.
 
 ## Trabalhos em mais de um volume
 
@@ -132,34 +133,28 @@ A matemática usa uma família matemática complementar; ela não é apresentada
 
 ## Frente e verso
 
-No modo `frente-verso`, a V2 aplica margens espelhadas:
-
-- anverso: esquerda/superior 3 cm; direita/inferior 2 cm;
-- verso: direita/superior 3 cm; esquerda/inferior 2 cm;
-- paginação à direita no anverso e à esquerda no verso;
-- pré-textuais, exceto ficha catalográfica, iniciam em anverso;
-- seções textuais primárias e pós-textuais controlados pela V2 iniciam no anverso.
+No modo `frente-verso`, a classe aplica margens espelhadas e as regras correspondentes de início em anverso para os elementos controlados pelo perfil.
 
 ## Ficha catalográfica
 
-O padrão da versão 2.1.0 é:
+O padrão atual é:
 
 ```tex
 \ufcsetup{ficha-catalografica = nao}
 ```
 
-Quando a ficha for aplicável:
+Quando aplicável:
 
 ```tex
 \ufcsetup{ficha-catalografica = sim}
 \imprimirfichacatalografica{caminho/para/ficha}
 ```
 
-A ficha é tratada como PDF externo. Sua tipografia e conformidade PDF/A devem ser verificadas no documento final.
+A ficha é tratada como PDF externo; sua conformidade deve ser avaliada no documento final.
 
 ## Estrutura textual
 
-A V2 usa `\section` como nível textual primário:
+A linha V2 usa `\section` como nível textual primário:
 
 ```tex
 \section{Introdução}
@@ -192,13 +187,9 @@ A V2 usa `\section` como nível textual primário:
 \imprimirsumario
 ```
 
-A folha de aprovação gerada pela classe não incorpora imagens de assinatura. O resumo e o abstract distribuídos permanecem na faixa de 150 a 500 palavras.
+## Figuras, gráficos, quadros e outros objetos
 
-Quando o trabalho decorrer de atividade financiada total ou parcialmente pela CAPES, consulte a orientação em `1-pre-textuais/agradecimentos.tex`.
-
-## Figuras, gráficos e quadros
-
-A API principal usa a infraestrutura de objetos do `abntexto`:
+A API principal usa a infraestrutura de objetos de `abntexto`:
 
 ```tex
 \legend{figure}{Título da figura}
@@ -211,46 +202,21 @@ A API principal usa a infraestrutura de objetos do `abntexto`:
 \end{ufcobjeto}
 ```
 
-O primeiro argumento de `\legend` pode ser `figure`, `grafico`, `quadro`, `codigo` ou `algoritmo`, conforme o objeto. Título, Fonte e Nota são limitados à largura física do objeto e usam o tamanho reduzido definido pelo perfil.
-
-A Lista de Ilustrações agrega figuras, gráficos e quadros. Tabelas permanecem em lista própria.
+O primeiro argumento de `\legend` pode ser `figure`, `grafico`, `quadro`, `codigo` ou `algoritmo`, conforme o objeto.
 
 ## Tabelas
 
-Para tabelas numéricas com `tabularray-abnt`:
+O módulo `tabularray` pode ser ativado por:
 
 ```tex
 \ufcsetup{tabelas = tabularray}
 ```
 
-Exemplo com linhas alternadas opcionais:
+Linhas alternadas e outros recursos editoriais permanecem configuráveis pelo próprio ambiente e não são impostos automaticamente.
 
-```tex
-\begin{tallabnttblr}
-[
-  caption={Indicadores},
-  label={tab:indicadores},
-  remark{Fonte}={Elaboração própria.},
-  remark{Nota}={Valores sintéticos.},
-]
-{
-  colspec={XX[r]},
-  row{even}={bg=black!5},
-}
-\toprule
-Item & Valor \\
-\midrule
-A & 10 \\
-B & 12 \\
-\bottomrule
-\end{tallabnttblr}
-```
+## Código-fonte e algoritmos
 
-O corpo permanece em tamanho 12. Legenda, Fonte e Nota usam tamanho reduzido. A alternância de linhas é editorial e não é aplicada automaticamente.
-
-## Código-fonte
-
-Ative um único módulo:
+Código:
 
 ```tex
 \ufcsetup{codigo = listings}
@@ -262,56 +228,13 @@ ou:
 \ufcsetup{codigo = minted}
 ```
 
-Com `listings`, linguagem e números de linha continuam configuráveis pelo próprio pacote:
-
-```tex
-\lstset{language=Python,numbers=left}
-
-\legend{codigo}{Função em Python com números de linha}
-\ufcfonte{Elaboração própria.}
-\begin{ufclisting}[here]
-def dobro(valor):
-    return 2 * valor
-\end{ufclisting}
-```
-
-Para remover a numeração:
-
-```tex
-\lstset{numbers=none}
-```
-
-O documento de referência da V2 exerce C++, Python e Java, com diferentes políticas de números de linha. O fluxo `minted` permanece em fixture própria porque exige o toolchain externo correspondente.
-
-## Algoritmos
+Algoritmos:
 
 ```tex
 \ufcsetup{algoritmos = algpseudocodex}
 ```
 
-Com números de linha:
-
-```tex
-\legend{algoritmo}{Busca linear}
-\ufcfonte{Elaboração própria.}
-\begin{ufcalgoritmo}[here][1]
-  \State $i \gets 1$
-  \State \Return $i$
-\end{ufcalgoritmo}
-```
-
-Sem números de linha:
-
-```tex
-\legend{algoritmo}{Busca linear sem numeração}
-\ufcfonte{Elaboração própria.}
-\begin{ufcalgoritmo}[here][0]
-  \State $i \gets 1$
-  \State \Return $i$
-\end{ufcalgoritmo}
-```
-
-O segundo argumento opcional controla a frequência de numeração do `algorithmic`: `1` numera cada linha e `0` suprime os números.
+Os módulos são opcionais e só carregam suas dependências quando ativados.
 
 ## Glossário e índice
 
@@ -322,43 +245,19 @@ O segundo argumento opcional controla a frequência de numeração do `algorithm
 }
 ```
 
-A V2 cria glossário e índice somente quando os módulos são ativados.
-
 ## Referências
 
 ```tex
 \ufcbibliografia{3-pos-textuais/referencias.bib}
 ```
 
-A bibliografia usa `biblatex-abnt` e `biber`. Ajustes necessários ao escopo testado da NBR 6023:2025 ficam isolados em `ufctex/compat-nbr6023-2025.def`.
-
-## Apêndices e anexos
-
-```tex
-\appendix{Instrumento elaborado pelo autor}
-\input{3-pos-textuais/apendices/apendice-a}
-
-\annex{Documento externo}
-\input{3-pos-textuais/anexos/anexo-a}
-```
-
-O documento de referência compila todos os quatro apêndices e os dois anexos distribuídos.
+A bibliografia usa `biblatex-abnt` e `biber`. Ajustes específicos ao escopo atualmente testado da NBR 6023:2025 ficam isolados em `abntexto-ufc/compat-nbr6023-2025.def`.
 
 ## PDF/A
 
-O documento de referência usa:
+O documento de referência usa metadados PDF/A-2b. PDF/A-2b é uma política técnica verificável do projeto e não é apresentada como requisito geral da UFC para todo documento.
 
-```tex
-\DocumentMetadata{
-  lang = pt-BR,
-  pdfstandard = A-2b,
-  pdfversion = 1.7
-}
-```
-
-PDF/A-2b é uma escolha técnica verificável do projeto, não uma exigência específica atribuída à UFC.
-
-## Build
+## Build e validação
 
 Compilação padrão:
 
@@ -372,31 +271,13 @@ LuaLaTeX:
 make compile ENGINE=lualatex
 ```
 
-Limpeza:
-
-```bash
-make clean
-```
-
-Auditoria integral do repositório:
-
-```bash
-make v2-repository-audit
-```
-
-Validação do documento/corpus de referência:
-
-```bash
-make v2-reference-corpus-check
-```
-
 Preflight completo:
 
 ```bash
 make preflight
 ```
 
-Preflight de release com PDF/A:
+Preflight de release:
 
 ```bash
 make release-preflight
@@ -408,56 +289,58 @@ Geração dos bundles:
 make package
 ```
 
-Preflight automatizado de distribuição:
+Preflight de distribuição:
 
 ```bash
 make distribution-preflight
 ```
 
-`distribution-preflight` cobre a parte automatizada do Gate D. O processo final também inclui smoke real no Overleaf, revisão dos metadados e publicação da tag imutável/GitHub Release. A submissão ao CTAN permanece uma etapa separada.
+O repositório mantém testes de geometria, tipografia, elementos pré/pós-textuais, objetos, referências, perfis, PDF/A, Overleaf e fontes literais no Windows.
 
-## Corpus de referência e auditoria
+## Verificação normativa v2.2.0
 
-A versão 2.1.0 transforma `documento.tex` em um corpus visual e semântico de regressão. Ele compila, entre outros casos:
+A v2.2.0 está evoluindo de uma suíte de regressão para um sistema explícito de evidência normativa. O princípio é:
 
-- errata e demais pré-textuais;
-- figuras estreita, intermediária e larga;
-- gráfico e quadros;
-- tabela nativa e `tabularray-abnt` com zebra opcional;
-- C++, Python e Java com diferentes políticas de números de linha;
-- algoritmos com e sem numeração;
-- equação e citação longa;
-- trabalhos relacionados;
-- referências, glossário e índice;
-- quatro apêndices e dois anexos.
+```text
+regra existente
+  !=
+fonte rastreável
+  !=
+evidência classificada
+  !=
+propriedade medida no PDF final
+  !=
+regra comprovada
+```
 
-Casos incompatíveis entre si ou dependentes do ambiente continuam em fixtures dedicadas: `minted`, fontes Microsoft literais, duplex, ficha catalográfica externa e matriz de perfis.
+O roadmap detalhado está mantido nos documentos de planejamento da v2.2.0. Mudanças de distribuição CTAN são tratadas separadamente de mudanças de conformidade UFC/ABNT.
 
-`tests/v2-repository-audit.py` percorre todos os arquivos rastreados pelo Git e identifica, entre outros problemas, referências à arquitetura anterior, chaves públicas inexistentes em exemplos, caminhos absolutos, artefatos gerados versionados e divergências de versão.
+## Compatibilidade com a identidade anterior
 
-O histórico da auditoria da V2 está em `docs/AUDITORIA-V2.md`.
+`ufctex.cls` permanece temporariamente nos bundles do projeto como **shim de compatibilidade** para documentos existentes que ainda usam:
+
+```tex
+\documentclass{ufctex}
+```
+
+Novos documentos devem usar sempre:
+
+```tex
+\documentclass{abntexto-ufc}
+```
+
+O shim legado não é distribuído como identidade do pacote CTAN e não contém uma segunda implementação dos módulos.
+
+A release histórica v2.1.0 foi publicada sob a identidade anterior; registros e artefatos dessa release não são reescritos.
 
 ## Distribuição
 
-A versão 2.1.0 produz:
+A identidade atual dos novos artefatos de classe/CTAN é `abntexto-ufc`.
 
-- `ufctex-2.1.0.zip`: classe, módulos, ativos necessários, licença e documentação;
-- `modelo-latex-ufc-2.1.0.zip`: template completo para uso local;
-- `modelo-latex-ufc-overleaf-2.1.0.zip`: template para Overleaf com `abntexto` 1.1 pinado;
-- `ufctex-ctan-2.1.0.zip`: candidato CTAN em layout navegável, pronto para submissão;
-- `ufctex-2.1.0-reference.pdf`: documento de referência;
-- `SHA256SUMS`: hashes SHA-256 dos artefatos.
+O repositório também produz bundles completos do modelo para uso local e Overleaf. A candidata CTAN é deliberadamente menor e contém apenas a superfície necessária para instalar, usar e documentar a classe.
 
-As fontes Microsoft não são incluídas. O brasão da UFC é um ativo institucional oficial, redistribuído sem modificação para composição de documentos acadêmicos da UFC. Ele não é declarado como coberto pela LPPL da classe e permanece sujeito às regras de identidade visual da Universidade.
-
-## CI
-
-O workflow principal é `.github/workflows/latex-preflight.yml`. O Gate T obrigatório cobre o documento de referência, a matriz de perfis, PDF/A, fontes incorporadas, Times New Roman/Arial literais no Windows e o proxy Overleaf.
-
-O workflow `.github/workflows/reference-validation.yml` e o status `ufctex/reference-audit` executam a auditoria integral e o corpus de referência.
-
-O workflow `.github/workflows/distribution.yml` exige o Gate T do mesmo SHA, executa o release preflight, gera/verifica os bundles, testa o ZIP de Overleaf no proxy TeX Live 2025 e publica `ufctex/distribution-preflight`.
+A tag `v2.2.0` só será criada após o gate final de certificação da distribuição.
 
 ## Licença
 
-Consulte `LICENSE`.
+O código e a documentação do projeto são distribuídos nos termos indicados em `LICENSE` (LPPL 1.3c ou posterior). Ativos de terceiros ou institucionais têm política de licenciamento/proveniência separada e não são automaticamente cobertos pela LPPL.
