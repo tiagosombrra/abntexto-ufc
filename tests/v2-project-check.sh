@@ -10,20 +10,20 @@ compile_project_with_biber() {
         "$job".out "$job".pdf "$job".run.xml "$job".toc
 
   echo "Validando $fixture com $engine + Biber..."
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-project.log 2>&1 || {
-    cat /tmp/ufctex-v2-project.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
-  biber "$job" > /tmp/ufctex-v2-project-biber.log 2>&1 || {
-    cat /tmp/ufctex-v2-project-biber.log
+  biber "$job" > /tmp/abntexto-ufc-v2-project-biber.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-project-biber.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-project.log 2>&1 || {
-    cat /tmp/ufctex-v2-project.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-project.log 2>&1 || {
-    cat /tmp/ufctex-v2-project.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
 }
@@ -35,16 +35,16 @@ compile_plain_project() {
 
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
   echo "Validando $fixture com $engine..."
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-project.log 2>&1 || {
-    cat /tmp/ufctex-v2-project.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-project.log 2>&1 || {
-    cat /tmp/ufctex-v2-project.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-project.log 2>&1 || {
-    cat /tmp/ufctex-v2-project.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
 }
@@ -52,7 +52,7 @@ compile_plain_project() {
 check_log() {
   log="$1"
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "Preflight V2 falhou: fixture de projeto contém warning ou overflow não reconhecido."
@@ -86,9 +86,9 @@ if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' pretextuais-projeto-anonimo.log; the
 fi
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext -layout projeto-15287.pdf /tmp/ufctex-v2-project.txt
-  pdftotext -layout projeto-sem-capa.pdf /tmp/ufctex-v2-project-no-cover.txt
-  pdftotext -layout pretextuais-projeto-anonimo.pdf /tmp/ufctex-v2-project-anon.txt
+  pdftotext -layout projeto-15287.pdf /tmp/abntexto-ufc-v2-project.txt
+  pdftotext -layout projeto-sem-capa.pdf /tmp/abntexto-ufc-v2-project-no-cover.txt
+  pdftotext -layout pretextuais-projeto-anonimo.pdf /tmp/abntexto-ufc-v2-project-anon.txt
 
   python3 - <<'PY'
 import re
@@ -100,9 +100,9 @@ def normalize(path):
     text = Path(path).read_text(encoding='utf-8')
     return re.sub(r'\s+', ' ', unicodedata.normalize('NFC', text)).strip()
 
-project = normalize('/tmp/ufctex-v2-project.txt')
-no_cover = normalize('/tmp/ufctex-v2-project-no-cover.txt')
-anon = normalize('/tmp/ufctex-v2-project-anon.txt')
+project = normalize('/tmp/abntexto-ufc-v2-project.txt')
+no_cover = normalize('/tmp/abntexto-ufc-v2-project-no-cover.txt')
+anon = normalize('/tmp/abntexto-ufc-v2-project-anon.txt')
 
 for expected in (
     'UNIVERSIDADE FEDERAL DO CEARÁ',

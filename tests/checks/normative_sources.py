@@ -20,7 +20,7 @@ def main() -> None:
 
     if audit.get("schema_version") != 1:
         fail("unsupported schema_version")
-    if audit.get("scope") != "ufctex-v2.1.0-current-sources":
+    if audit.get("scope") != "abntexto-ufc-v2.1.0-current-sources":
         fail("unexpected audit scope")
 
     reviewed = date.fromisoformat(audit["reviewed_at"])

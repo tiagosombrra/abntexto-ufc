@@ -7,15 +7,15 @@ flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 for engine in pdflatex lualatex; do
   echo "Validando $fixture com $engine..."
   for pass in 1 2; do
-    "$engine" $flags "$fixture" > /tmp/ufctex-v2-objects.log 2>&1 || {
-      cat /tmp/ufctex-v2-objects.log
+    "$engine" $flags "$fixture" > /tmp/abntexto-ufc-v2-objects.log 2>&1 || {
+      cat /tmp/abntexto-ufc-v2-objects.log
       exit 1
     }
   done
 done
 
 warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' objetos-avancados.log | \
-  grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+  grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
   echo 'Contexto das caixas excedentes:'
@@ -40,9 +40,9 @@ if grep -Fq 'Tabela acadêmica de teste' objetos-avancados.loi; then
 fi
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext -layout objetos-avancados.pdf /tmp/ufctex-v2-objects.txt
+  pdftotext -layout objetos-avancados.pdf /tmp/abntexto-ufc-v2-objects.txt
   for heading in 'LISTA DE ILUSTRAÇÕES' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE QUADROS' 'LISTA DE GRÁFICOS' 'LISTA DE CÓDIGOS' 'LISTA DE ALGORITMOS'; do
-    grep -Fq "$heading" /tmp/ufctex-v2-objects.txt || {
+    grep -Fq "$heading" /tmp/abntexto-ufc-v2-objects.txt || {
       echo "Preflight V2 falhou: lista de objeto ausente: $heading"
       exit 1
     }
@@ -52,7 +52,7 @@ if command -v pdftotext >/dev/null 2>&1; then
 import re
 from pathlib import Path
 
-text = Path('/tmp/ufctex-v2-objects.txt').read_text(encoding='utf-8', errors='replace')
+text = Path('/tmp/abntexto-ufc-v2-objects.txt').read_text(encoding='utf-8', errors='replace')
 
 markers = (
     'Figura normativa de teste',
@@ -72,8 +72,8 @@ for marker in markers:
         )
 PY
 
-  grep -Fq 'Fonte:' /tmp/ufctex-v2-objects.txt || { echo 'Fonte de objeto ausente.'; exit 1; }
-  grep -Fq 'Nota:' /tmp/ufctex-v2-objects.txt || { echo 'Nota de objeto ausente.'; exit 1; }
+  grep -Fq 'Fonte:' /tmp/abntexto-ufc-v2-objects.txt || { echo 'Fonte de objeto ausente.'; exit 1; }
+  grep -Fq 'Nota:' /tmp/abntexto-ufc-v2-objects.txt || { echo 'Nota de objeto ausente.'; exit 1; }
 fi
 
 echo 'Gate V2 de objetos concluído.'

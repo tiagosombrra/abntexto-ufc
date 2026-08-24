@@ -42,17 +42,17 @@ jobs:
           ref_name = os.environ['REF_NAME']
           token = os.environ['GH_TOKEN']
           required = {
-              'ufctex/overleaf-proxy',
-              'ufctex/windows-font-build',
-              'ufctex/windows-font-poc',
-              'ufctex/latex-preflight',
+              'abntexto-ufc/overleaf-proxy',
+              'abntexto-ufc/windows-font-build',
+              'abntexto-ufc/windows-font-poc',
+              'abntexto-ufc/latex-preflight',
           }
           headers = {
               'Authorization': f'Bearer {token}',
               'Accept': 'application/vnd.github+json',
               'X-GitHub-Api-Version': '2022-11-28',
               'Content-Type': 'application/json',
-              'User-Agent': 'ufctex-distribution-gate',
+              'User-Agent': 'abntexto-ufc-distribution-gate',
           }
 
           def request_json(url, data=None, method=None):
@@ -175,12 +175,12 @@ jobs:
           os: debian
           run: |
             export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
-            python3 tools/fetch-abntexto.py --output .ufctex-abntexto.cls
-            python3 tools/build-release-bundles.py --abntexto .ufctex-abntexto.cls
+            python3 tools/fetch-abntexto.py --output .abntexto-ufc-upstream.cls
+            python3 tools/build-release-bundles.py --abntexto .abntexto-ufc-upstream.cls
             python3 tests/v2-release-package-check.py
             VERSION="$(make -s version)"
             python3 tests/v2-ctan-archive-check.py "dist/abntexto-ufc-ctan-${VERSION}.zip"
-            rm -f .ufctex-abntexto.cls
+            rm -f .abntexto-ufc-upstream.cls
 
       - name: Validate Overleaf import bundle proxy
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
@@ -197,7 +197,7 @@ jobs:
         id: upload-release
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: ufctex-release-${{ github.sha }}
+          name: abntexto-ufc-release-${{ github.sha }}
           path: dist
           if-no-files-found: error
           retention-days: 30
@@ -239,7 +239,7 @@ jobs:
           state = 'success' if os.environ['JOB_STATUS'] == 'success' else 'failure'
           payload = json.dumps({
               'state': state,
-              'context': 'ufctex/distribution-preflight',
+              'context': 'abntexto-ufc/distribution-preflight',
               'description': 'Gate T, release bundles and Overleaf bundle proxy',
               'target_url': os.environ['RUN_URL'],
           }).encode()
@@ -252,7 +252,7 @@ jobs:
                   'Accept': 'application/vnd.github+json',
                   'X-GitHub-Api-Version': '2022-11-28',
                   'Content-Type': 'application/json',
-                  'User-Agent': 'ufctex-distribution-status',
+                  'User-Agent': 'abntexto-ufc-distribution-status',
               },
           )
           with urllib.request.urlopen(request, timeout=30) as response:
@@ -303,4 +303,4 @@ jobs:
           gh release create "$GITHUB_REF_NAME" dist/* \
             --verify-tag \
             --generate-notes \
-            --title "ufctex $GITHUB_REF_NAME"
+            --title "abntexto-ufc $GITHUB_REF_NAME"

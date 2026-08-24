@@ -70,7 +70,7 @@ assert_text_extraction() {
 
 for engine in pdflatex lualatex; do
   for family in times arial; do
-    pdf="$root/ufctex-${family}-${engine}-strict-poc.pdf"
+    pdf="$root/abntexto-ufc-${family}-${engine}-strict-poc.pdf"
     [ -s "$pdf" ] || {
       echo "Fontes Windows PDF/A: arquivo ausente: $pdf"
       exit 1

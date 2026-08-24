@@ -4,7 +4,7 @@
 
 ## Regra mandatória
 
-O UFCtex deve seguir a **edição vigente mais recente da norma técnica aplicável**. Uma edição ABNT substituída não pode governar uma regra ativa apenas porque ainda aparece citada em um Guia de Normalização da UFC.
+O abntexto-ufc deve seguir a **edição vigente mais recente da norma técnica aplicável**. Uma edição ABNT substituída não pode governar uma regra ativa apenas porque ainda aparece citada em um Guia de Normalização da UFC.
 
 Esta decisão não é uma preferência editorial do projeto. Ela decorre de duas fontes institucionais da própria UFC:
 
@@ -37,7 +37,7 @@ A única exceção à regra técnica geral é um modelo específico de curso for
 
 As referências antigas abaixo são mantidas nesta documentação **apenas para explicar a divergência de vigência**. Elas não pertencem à base técnica ativa.
 
-| Documento UFC | Edição ainda citada | Edição técnica adotada pelo UFCtex | Decisão |
+| Documento UFC | Edição ainda citada | Edição técnica adotada pelo abntexto-ufc | Decisão |
 |---|---|---|---|
 | Guia de Trabalhos Acadêmicos, 2022 | ABNT NBR 14724:2011 | **ABNT NBR 14724:2024** (versão corrigida em 01/04/2025) | usa a edição vigente |
 | Guia de Trabalhos Acadêmicos, 2022 | ABNT NBR 6023:2018 | **ABNT NBR 6023:2025** | usa a edição vigente |

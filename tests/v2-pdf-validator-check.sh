@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 pdf="${1:-documento.pdf}"
-report="/tmp/ufctex-v2-pdf-validator.json"
+report="/tmp/abntexto-ufc-v2-pdf-validator.json"
 [ -f "$pdf" ] || { echo "Validador PDF V2 falhou: $pdf não existe."; exit 1; }
 python3 -m py_compile tools/validate-ufc-pdf.py
 python3 - <<'PY'

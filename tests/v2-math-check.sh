@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/normativa/matematica.tex"
-tmp="ufctex-matematica.tex"
+tmp="abntexto-ufc-matematica.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {

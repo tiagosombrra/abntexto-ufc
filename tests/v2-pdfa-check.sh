@@ -2,7 +2,7 @@
 set -eu
 
 pdf="${1:-documento.pdf}"
-report="/tmp/ufctex-v2-verapdf.xml"
+report="/tmp/abntexto-ufc-v2-verapdf.xml"
 
 [ -f "$pdf" ] || {
   echo "PDF/A V2 falhou: arquivo não encontrado: $pdf"

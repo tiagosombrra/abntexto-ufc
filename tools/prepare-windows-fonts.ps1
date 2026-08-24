@@ -57,23 +57,23 @@ foreach ($font in $fonts) {
   }
 }
 
-$work = Join-Path $env:TEMP "ufctex-winfonts-$PID"
-$tfmDir = Join-Path $TexmfRoot 'fonts\tfm\ufctex\windows'
-$vfDir = Join-Path $TexmfRoot 'fonts\vf\ufctex\windows'
-$ttfDir = Join-Path $TexmfRoot 'fonts\truetype\ufctex\windows'
-$encDir = Join-Path $TexmfRoot 'fonts\enc\dvips\ufctex'
-$mapDir = Join-Path $TexmfRoot 'fonts\map\pdftex\ufctex'
-$texDir = Join-Path $TexmfRoot 'tex\latex\ufctex-winfonts'
+$work = Join-Path $env:TEMP "abntexto-ufc-winfonts-$PID"
+$tfmDir = Join-Path $TexmfRoot 'fonts\tfm\abntexto-ufc\windows'
+$vfDir = Join-Path $TexmfRoot 'fonts\vf\abntexto-ufc\windows'
+$ttfDir = Join-Path $TexmfRoot 'fonts\truetype\abntexto-ufc\windows'
+$encDir = Join-Path $TexmfRoot 'fonts\enc\dvips\abntexto-ufc'
+$mapDir = Join-Path $TexmfRoot 'fonts\map\pdftex\abntexto-ufc'
+$texDir = Join-Path $TexmfRoot 'tex\latex\abntexto-ufc-winfonts'
 
 New-Item -ItemType Directory -Force -Path $work, $tfmDir, $vfDir, $ttfDir, $encDir, $mapDir, $texDir | Out-Null
 Copy-Item $encT1 (Join-Path $encDir 'tex256.enc') -Force
 Copy-Item $encTs1 (Join-Path $encDir 'ts1-winfonts.enc') -Force
 
 $unicodeScript = Join-Path $PSScriptRoot 'convert-encoding-to-unicode.ps1'
-$unicodeT1 = Join-Path $encDir 'ufctex-t1-unicode.enc'
-$unicodeTs1 = Join-Path $encDir 'ufctex-ts1-unicode.enc'
-& $unicodeScript -InputEncoding $encT1 -OutputEncoding $unicodeT1 -OutputEncodingName 'ufctexT1UnicodeEncoding'
-& $unicodeScript -InputEncoding $encTs1 -OutputEncoding $unicodeTs1 -OutputEncodingName 'ufctexTS1UnicodeEncoding'
+$unicodeT1 = Join-Path $encDir 'abntexto-ufc-t1-unicode.enc'
+$unicodeTs1 = Join-Path $encDir 'abntexto-ufc-ts1-unicode.enc'
+& $unicodeScript -InputEncoding $encT1 -OutputEncoding $unicodeT1 -OutputEncodingName 'abntextoUfcT1UnicodeEncoding'
+& $unicodeScript -InputEncoding $encTs1 -OutputEncoding $unicodeTs1 -OutputEncodingName 'abntextoUfcTS1UnicodeEncoding'
 
 Push-Location $work
 try {
@@ -96,13 +96,13 @@ finally {
 
 $map = @()
 foreach ($font in $fonts) {
-  $map += "$($font.RawT1) $($font.Ps) `"ufctexT1UnicodeEncoding ReEncodeFont`" <[ufctex-t1-unicode.enc <$($font.File)"
-  $map += "$($font.RawTS1) $($font.Ps) `"ufctexTS1UnicodeEncoding ReEncodeFont`" <[ufctex-ts1-unicode.enc <$($font.File)"
+  $map += "$($font.RawT1) $($font.Ps) `"abntextoUfcT1UnicodeEncoding ReEncodeFont`" <[abntexto-ufc-t1-unicode.enc <$($font.File)"
+  $map += "$($font.RawTS1) $($font.Ps) `"abntextoUfcTS1UnicodeEncoding ReEncodeFont`" <[abntexto-ufc-ts1-unicode.enc <$($font.File)"
 }
-$map | Set-Content -Path (Join-Path $mapDir 'ufctex-windows.map') -Encoding ascii
+$map | Set-Content -Path (Join-Path $mapDir 'abntexto-ufc-windows.map') -Encoding ascii
 
 @'
-\ProvidesFile{t1times-ttf.fd}[2026/08/20 ufctex generated Times New Roman support]
+\ProvidesFile{t1times-ttf.fd}[2026/08/20 abntexto-ufc generated Times New Roman support]
 \DeclareFontFamily{T1}{times-ttf}{}
 \DeclareFontShape{T1}{times-ttf}{m}{n}{<-> mtmr8t}{}
 \DeclareFontShape{T1}{times-ttf}{m}{it}{<-> mtmri8t}{}
@@ -117,7 +117,7 @@ $map | Set-Content -Path (Join-Path $mapDir 'ufctex-windows.map') -Encoding asci
 '@ | Set-Content -Path (Join-Path $texDir 't1times-ttf.fd') -Encoding ascii
 
 @'
-\ProvidesFile{ts1times-ttf.fd}[2026/08/20 ufctex generated Times New Roman support]
+\ProvidesFile{ts1times-ttf.fd}[2026/08/20 abntexto-ufc generated Times New Roman support]
 \DeclareFontFamily{TS1}{times-ttf}{}
 \DeclareFontShape{TS1}{times-ttf}{m}{n}{<-> mtmr8c}{}
 \DeclareFontShape{TS1}{times-ttf}{m}{it}{<-> mtmri8c}{}
@@ -132,7 +132,7 @@ $map | Set-Content -Path (Join-Path $mapDir 'ufctex-windows.map') -Encoding asci
 '@ | Set-Content -Path (Join-Path $texDir 'ts1times-ttf.fd') -Encoding ascii
 
 @'
-\ProvidesFile{t1arial.fd}[2026/08/20 ufctex generated Arial support]
+\ProvidesFile{t1arial.fd}[2026/08/20 abntexto-ufc generated Arial support]
 \DeclareFontFamily{T1}{arial}{}
 \DeclareFontShape{T1}{arial}{m}{n}{<-> malr8t}{}
 \DeclareFontShape{T1}{arial}{m}{it}{<-> malri8t}{}
@@ -147,7 +147,7 @@ $map | Set-Content -Path (Join-Path $mapDir 'ufctex-windows.map') -Encoding asci
 '@ | Set-Content -Path (Join-Path $texDir 't1arial.fd') -Encoding ascii
 
 @'
-\ProvidesFile{ts1arial.fd}[2026/08/20 ufctex generated Arial support]
+\ProvidesFile{ts1arial.fd}[2026/08/20 abntexto-ufc generated Arial support]
 \DeclareFontFamily{TS1}{arial}{}
 \DeclareFontShape{TS1}{arial}{m}{n}{<-> malr8c}{}
 \DeclareFontShape{TS1}{arial}{m}{it}{<-> malri8c}{}
@@ -162,11 +162,11 @@ $map | Set-Content -Path (Join-Path $mapDir 'ufctex-windows.map') -Encoding asci
 '@ | Set-Content -Path (Join-Path $texDir 'ts1arial.fd') -Encoding ascii
 
 @'
-\ProvidesFile{ufctex-winfonts-ready.tex}[2026/08/20 ufctex generated Windows font support]
-\def\ufctexWindowsFontSupportVersion{2026-08-20}
+\ProvidesFile{abntexto-ufc-winfonts-ready.tex}[2026/08/20 abntexto-ufc generated Windows font support]
+\def\ufcWindowsFontSupportVersion{2026-08-20}
 \endinput
-'@ | Set-Content -Path (Join-Path $texDir 'ufctex-winfonts-ready.tex') -Encoding ascii
+'@ | Set-Content -Path (Join-Path $texDir 'abntexto-ufc-winfonts-ready.tex') -Encoding ascii
 
 Run-Command 'mktexlsr' @($TexmfRoot)
 Remove-Item $work -Recurse -Force
-Write-Host "ufctex Windows font support prepared in $TexmfRoot"
+Write-Host "abntexto-ufc Windows font support prepared in $TexmfRoot"

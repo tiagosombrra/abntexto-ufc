@@ -18,8 +18,8 @@ for engine in pdflatex lualatex; do
     sed "s/@UFC_TYPE@/$profile/g" "$fixture" > "$job.tex"
 
     echo "Validando perfil completo $profile com $engine..."
-    make filename="$job" ENGINE="$engine" compile > /tmp/ufctex-v2-profile.log 2>&1 || {
-      cat /tmp/ufctex-v2-profile.log
+    make filename="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-v2-profile.log 2>&1 || {
+      cat /tmp/abntexto-ufc-v2-profile.log
       exit 1
     }
     rm -f "$job.tex"

@@ -9,14 +9,14 @@ for engine in pdflatex lualatex; do
     base=$(basename "$fixture" .tex)
     echo "Validando $fixture com $engine..."
     for pass in 1 2; do
-      "$engine" $flags "$fixture" > /tmp/ufctex-v2-layout.log 2>&1 || {
-        cat /tmp/ufctex-v2-layout.log
+      "$engine" $flags "$fixture" > /tmp/abntexto-ufc-v2-layout.log 2>&1 || {
+        cat /tmp/abntexto-ufc-v2-layout.log
         exit 1
       }
     done
 
     warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$base.log" | \
-      grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+      grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
     if [ -n "$warnings" ]; then
       printf '%s\n' "$warnings"
       echo "Layout V2 falhou: $base/$engine contém warning ou overflow não reconhecido."

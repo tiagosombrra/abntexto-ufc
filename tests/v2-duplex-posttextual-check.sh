@@ -2,7 +2,7 @@
 set -eu
 
 source_fixture="tests/normativa/postextuais.tex"
-tmp_fixture=".ufctex-v2-posttextual-duplex.tex"
+tmp_fixture=".abntexto-ufc-v2-posttextual-duplex.tex"
 job="postextuais-duplex"
 
 cleanup() {
@@ -14,31 +14,31 @@ trap cleanup EXIT INT TERM
 
 sed 's/impressao = anverso/impressao = frente-verso/' "$source_fixture" > "$tmp_fixture"
 
-pdflatex -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/ufctex-v2-post-duplex.log 2>&1 || {
-  cat /tmp/ufctex-v2-post-duplex.log
+pdflatex -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/abntexto-ufc-v2-post-duplex.log 2>&1 || {
+  cat /tmp/abntexto-ufc-v2-post-duplex.log
   exit 1
 }
-biber "$job" > /tmp/ufctex-v2-post-duplex-biber.log 2>&1 || {
-  cat /tmp/ufctex-v2-post-duplex-biber.log
+biber "$job" > /tmp/abntexto-ufc-v2-post-duplex-biber.log 2>&1 || {
+  cat /tmp/abntexto-ufc-v2-post-duplex-biber.log
   exit 1
 }
-makeglossaries "$job" > /tmp/ufctex-v2-post-duplex-glossary.log 2>&1 || {
-  cat /tmp/ufctex-v2-post-duplex-glossary.log
+makeglossaries "$job" > /tmp/abntexto-ufc-v2-post-duplex-glossary.log 2>&1 || {
+  cat /tmp/abntexto-ufc-v2-post-duplex-glossary.log
   exit 1
 }
-makeindex "$job" > /tmp/ufctex-v2-post-duplex-index.log 2>&1 || {
-  cat /tmp/ufctex-v2-post-duplex-index.log
+makeindex "$job" > /tmp/abntexto-ufc-v2-post-duplex-index.log 2>&1 || {
+  cat /tmp/abntexto-ufc-v2-post-duplex-index.log
   exit 1
 }
 for pass in 1 2 3; do
-  pdflatex -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/ufctex-v2-post-duplex.log 2>&1 || {
-    cat /tmp/ufctex-v2-post-duplex.log
+  pdflatex -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/abntexto-ufc-v2-post-duplex.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-post-duplex.log
     exit 1
   }
 done
 
 warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-  grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+  grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
   echo 'Pós-textuais duplex V2 contêm warning ou overflow não reconhecido.'

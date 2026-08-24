@@ -16,14 +16,14 @@ for engine in pdflatex lualatex; do
   echo "Validando estruturas normativas complementares com $engine..."
 
   for pass in 1 2 3; do
-    "$engine" -jobname="$job" $flags "$fixture" > /tmp/ufctex-v2-normativa-complementar.log 2>&1 || {
-      cat /tmp/ufctex-v2-normativa-complementar.log
+    "$engine" -jobname="$job" $flags "$fixture" > /tmp/abntexto-ufc-v2-normativa-complementar.log 2>&1 || {
+      cat /tmp/abntexto-ufc-v2-normativa-complementar.log
       exit 1
     }
   done
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "$job: warning ou overflow não reconhecido."

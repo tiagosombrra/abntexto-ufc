@@ -9,14 +9,14 @@ for engine in pdflatex lualatex; do
 
   echo "Validando início em anverso dos pré-textuais com $engine..."
   for pass in 1 2 3; do
-    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-duplex-pretextual.log 2>&1 || {
-      cat /tmp/ufctex-v2-duplex-pretextual.log
+    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-duplex-pretextual.log 2>&1 || {
+      cat /tmp/abntexto-ufc-v2-duplex-pretextual.log
       exit 1
     }
   done
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "Duplex V2 falhou: $job contém warning ou overflow não reconhecido."

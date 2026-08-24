@@ -56,7 +56,7 @@ def main() -> None:
     if profile["authority"] != "project-policy":
         fail("PDF/A-2b must be classified as project policy")
     if profile["values"] != {"profile": "PDF/A-2b"}:
-        fail("unexpected UFCtex PDF/A technical profile")
+        fail("unexpected abntexto-ufc PDF/A technical profile")
     if profile["sources"] or profile["resolution"] is not None:
         fail("project PDF/A profile must not claim UFC/ABNT normative authority")
 

@@ -13,27 +13,27 @@ for engine in pdflatex lualatex; do
   cleanup_job
   echo "Validando $fixture com $engine + Biber..."
 
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-6023.log 2>&1 || {
-    cat /tmp/ufctex-v2-6023.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-6023.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-6023.log
     exit 1
   }
 
-  biber "$job" > /tmp/ufctex-v2-6023-biber.log 2>&1 || {
-    cat /tmp/ufctex-v2-6023-biber.log
+  biber "$job" > /tmp/abntexto-ufc-v2-6023-biber.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-6023-biber.log
     exit 1
   }
 
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-6023.log 2>&1 || {
-    cat /tmp/ufctex-v2-6023.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-6023.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-6023.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/ufctex-v2-6023.log 2>&1 || {
-    cat /tmp/ufctex-v2-6023.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-6023.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-6023.log
     exit 1
   }
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "Preflight V2 falhou: regressão NBR 6023:2025 contém warning ou overflow não reconhecido."
@@ -43,13 +43,13 @@ for engine in pdflatex lualatex; do
 done
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext -layout "$job.pdf" /tmp/ufctex-v2-6023.txt
+  pdftotext -layout "$job.pdf" /tmp/abntexto-ufc-v2-6023.txt
   python3 - <<'PY'
 import re
 import unicodedata
 from pathlib import Path
 
-text = Path('/tmp/ufctex-v2-6023.txt').read_text(encoding='utf-8')
+text = Path('/tmp/abntexto-ufc-v2-6023.txt').read_text(encoding='utf-8')
 text = unicodedata.normalize('NFC', text)
 chunks = [re.sub(r'\s+', ' ', part).strip() for part in re.split(r'\n\s*\n', text) if part.strip()]
 

@@ -3,14 +3,14 @@
 
 \ifPDFTeX
   \usepackage[T1]{fontenc}
-  \pdfmapfile{+ufctex-windows.map}
+  \pdfmapfile{+abntexto-ufc-windows.map}
   \renewcommand{\sfdefault}{arial}
   \renewcommand{\familydefault}{\sfdefault}
 \else
   \usepackage{fontspec}
   \IfFontExistsTF{Arial}
     {\setmainfont{Arial}}
-    {\PackageError{ufctex-font-poc}{Arial not found}{Install Arial before running this proof of concept.}}
+    {\PackageError{abntexto-ufc-font-poc}{Arial not found}{Install Arial before running this proof of concept.}}
 \fi
 
 \begin{document}
