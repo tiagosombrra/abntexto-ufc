@@ -21,6 +21,7 @@ NORMATIVE_COVERAGE_AUDIT = ROOT / "tests" / "checks" / "normative_coverage_audit
 NORMATIVE_CURRENCY = ROOT / "tests" / "checks" / "normative_currency.py"
 NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
 NORMATIVE_RECONCILIATION = ROOT / "tests" / "checks" / "normative_reconciliation.py"
+NORMATIVE_FALSE_COVERAGE = ROOT / "tests" / "checks" / "normative_false_coverage.py"
 NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
 NORMATIVE_SOURCE_REFERENCES = ROOT / "tests" / "checks" / "normative_source_references.py"
 NORMATIVE_LOCATORS = ROOT / "tests" / "checks" / "normative_locators.py"
@@ -60,6 +61,7 @@ def main() -> None:
         NORMATIVE_CURRENCY,
         NORMATIVE_PRECEDENCE,
         NORMATIVE_RECONCILIATION,
+        NORMATIVE_FALSE_COVERAGE,
         NORMATIVE_SOURCES,
         NORMATIVE_SOURCE_REFERENCES,
         NORMATIVE_LOCATORS,
@@ -78,6 +80,7 @@ def main() -> None:
     run_source_check(NORMATIVE_LOCATORS, "normative locators")
     run_source_check(NORMATIVE_CURRENCY, "normative currency")
     run_source_check(NORMATIVE_RECONCILIATION, "normative reconciliation")
+    run_source_check(NORMATIVE_FALSE_COVERAGE, "normative false coverage")
     run_source_check(NORMATIVE_ATOMICITY, "normative atomicity")
     run_source_check(NORMATIVE_ATOMIC_CONTRACT, "normative atomic contract")
     run_source_check(NORMATIVE_FULL_TOOL, "full normative loader")
