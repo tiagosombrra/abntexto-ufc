@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N1 final locator classification for the remaining normative rules before complete coverage mode.",
+  "rulesets": [
+    {
+      "id": "format.text-color",
+      "rule_ids": ["format.text.color"],
+      "current_locator": "ABNT NBR 14724:2024 — formato; UFC 4.1(b)",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is the governing technical authority, but exact authoritative clause-level text for this dimension is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.1(b), p. 64",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "pretextual.start-recto",
+      "rule_ids": ["pretextual.start.recto"],
+      "current_locator": "ABNT NBR 14724:2024 — formato; UFC 4.1(d)-4.1(e)",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is the governing technical authority, but exact authoritative clause-level text for this dimension is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.1(d)-4.1(e), p. 64",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "posttextual.spine",
+      "rule_ids": ["spine.conditional"],
+      "current_locator": "ABNT NBR 14724:2024 — parte externa; ABNT NBR 12225:2023; UFC 3.1.2",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified as technical authority for the external part of the work, but exact authoritative clause-level text is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "abnt-nbr-12225-2023",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 12225:2023 is identified as the governing spine presentation standard, but its exact authoritative text is not available in the repository or public evidence corpus. The UFC guide cites a superseded edition and cannot certify the current technical locator."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "3.1.2, p. 16-17",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "objects.illustration-bounds",
+      "rule_ids": [
+        "illustration.caption.bounds",
+        "illustration.source.bounds",
+        "illustration.note.bounds"
+      ],
+      "current_locator": "NBR 14724:2024 — ilustrações; Guia UFC 2022, 4.9(g)",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified as technical authority for illustration presentation, but exact authoritative clause-level text is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.9(g), p. 84",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "objects.illustration-source",
+      "rule_ids": [
+        "illustration.source.required",
+        "illustration.source.external-citation"
+      ],
+      "current_locator": "NBR 14724:2024; NBR 10520:2023; Guia UFC 2022, 4.9(d)",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified as technical authority for illustration presentation, but exact authoritative clause-level text is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "abnt-nbr-10520-2023",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 10520:2023 governs citation presentation, but its exact authoritative clause text for external illustration-source attribution is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.9(d), p. 84",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "objects.table-ibge",
+      "rule_ids": [
+        "table.ibge.open-sides",
+        "table.ibge.body-grid",
+        "table.ibge.top-rule",
+        "table.ibge.header-rule",
+        "table.ibge.bottom-rule"
+      ],
+      "current_locator": "Normas de apresentação tabular, 3. ed.; Guia UFC 2022, 4.10",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "ibge-tabular-1993",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The official IBGE 3rd edition is identified and indexed, but direct exact locator verification could not be completed in the current evidence corpus because the official PDF endpoint denied full retrieval. The UFC guide reproduces the tabular presentation requirements but does not substitute for source-level IBGE verification."
+        },
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified as supporting technical authority for tabular presentation, but exact authoritative clause-level text is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.10(f)-4.10(h) and Figura 45, p. 86-87",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "multivolume.cover-title-page",
+      "rule_ids": ["volume.number.cover-title-page"],
+      "current_locator": "ABNT NBR 14724:2024 — capa/folha de rosto; Guia UFC 2022, 3.1.1 e 3.2.1.1",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified as technical authority for cover and title-page content, but exact authoritative clause-level text is not available in the repository or public evidence corpus. Verification requires authoritative/licensed access."
+        },
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "3.1.1(f), p. 12; 3.2.1.1(d), p. 18",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "project.structure-nbr15287",
+      "rule_ids": [
+        "project.cover.optional",
+        "project.title-page.required",
+        "project.textual.required-sections"
+      ],
+      "current_locator": "ABNT NBR 15287:2025 — estrutura",
+      "status": "UNAVAILABLE_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-15287-2025",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 15287:2025 is registered as the governing project-research presentation standard, but exact authoritative structure text is not available in the repository or public evidence corpus. These locators require authoritative/licensed NBR 15287:2025 review before they can be marked VERIFIED."
+        }
+      ]
+    }
+  ]
+}
