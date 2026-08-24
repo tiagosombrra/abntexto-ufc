@@ -370,7 +370,7 @@
       "category": "textual",
       "requirement": "A numeração progressiva e a hierarquia de seções seguem a NBR 6024 vigente no escopo adotado pelo template.",
       "sources": ["abnt-nbr-6024-2012", "ufc-guia-trabalhos-2022"],
-      "locator": "NBR 6024:2012; UFC 4.6",
+      "locator": "NBR 6024:2012; UFC 4.5-4.5.1",
       "normativity": "required",
       "kind": "section-hierarchy",
       "values": {"max_levels": 5, "primary_starts_new_page": true},
