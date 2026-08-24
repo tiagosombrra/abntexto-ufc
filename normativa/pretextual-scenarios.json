@@ -4,6 +4,9 @@
   "phase": "N6",
   "purpose": "Isolated positive scenarios for dedication and epigraph final-PDF evidence.",
   "fixture": "tests/normativa/pretextual-oracle-dedication-epigraph.tex",
+  "tolerances": {
+    "line_spacing_pt": 1.5
+  },
   "scenarios": [
     {
       "id": "dedication.three-lines",
