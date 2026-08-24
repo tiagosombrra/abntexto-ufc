@@ -1,7 +1,7 @@
 # Base normativa da V2
 
 Última auditoria normativa: **2026-08-23**.  
-Estado: **V2.1.0 auditada para release; Gate F final**.
+Estado da linha 2.2.0: **certificação de distribuição em andamento; verificação normativa N1 em progresso**.
 
 Este documento é a referência humana do projeto para política normativa, precedência e vínculo entre requisito, implementação e teste. O catálogo atômico e a cobertura executável ficam em `normativa/` e nos checks de `tests/checks/`.
 
