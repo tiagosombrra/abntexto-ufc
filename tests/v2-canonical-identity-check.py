@@ -129,9 +129,10 @@ def main() -> None:
             if "unclassified legacy ufctex identity" in error
         )
         if legacy_counts:
-            print("Legacy identity findings by file:")
-            for filename, count in sorted(legacy_counts.items()):
-                print(f"LEGACY_SUMMARY {filename}: {count}")
+            compact = ", ".join(
+                f"{filename}={count}" for filename, count in sorted(legacy_counts.items())
+            )
+            print(f"LEGACY_FILES {compact}")
         raise SystemExit(f"Canonical identity check failed with {len(errors)} issue(s).")
 
     print(f"Canonical identity check passed: {len(modules)} modules aligned.")
