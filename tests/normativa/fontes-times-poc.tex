@@ -3,13 +3,13 @@
 
 \ifPDFTeX
   \usepackage[T1]{fontenc}
-  \pdfmapfile{+ufctex-windows.map}
+  \pdfmapfile{+abntexto-ufc-windows.map}
   \renewcommand{\rmdefault}{times-ttf}
 \else
   \usepackage{fontspec}
   \IfFontExistsTF{Times New Roman}
     {\setmainfont{Times New Roman}}
-    {\PackageError{ufctex-font-poc}{Times New Roman not found}{Install Times New Roman before running this proof of concept.}}
+    {\PackageError{abntexto-ufc-font-poc}{Times New Roman not found}{Install Times New Roman before running this proof of concept.}}
 \fi
 
 \begin{document}

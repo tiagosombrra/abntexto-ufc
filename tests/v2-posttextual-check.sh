@@ -13,7 +13,7 @@ cleanup_job() {
 check_log() {
   job="$1"
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "Gate V2 falhou: $job contém warning ou overflow não reconhecido."
@@ -26,25 +26,25 @@ for engine in pdflatex lualatex; do
   cleanup_job "$job"
   echo "Validando pós-textuais com $engine..."
 
-  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/ufctex-v2-post.log 2>&1 || {
-    cat /tmp/ufctex-v2-post.log
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/abntexto-ufc-v2-post.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-post.log
     exit 1
   }
-  biber "$job" > /tmp/ufctex-v2-post-biber.log 2>&1 || {
-    cat /tmp/ufctex-v2-post-biber.log
+  biber "$job" > /tmp/abntexto-ufc-v2-post-biber.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-post-biber.log
     exit 1
   }
-  makeglossaries "$job" > /tmp/ufctex-v2-post-glossary.log 2>&1 || {
-    cat /tmp/ufctex-v2-post-glossary.log
+  makeglossaries "$job" > /tmp/abntexto-ufc-v2-post-glossary.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-post-glossary.log
     exit 1
   }
-  makeindex "$job" > /tmp/ufctex-v2-post-index.log 2>&1 || {
-    cat /tmp/ufctex-v2-post-index.log
+  makeindex "$job" > /tmp/abntexto-ufc-v2-post-index.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-post-index.log
     exit 1
   }
   for pass in 1 2 3; do
-    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/ufctex-v2-post.log 2>&1 || {
-      cat /tmp/ufctex-v2-post.log
+    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/abntexto-ufc-v2-post.log 2>&1 || {
+      cat /tmp/abntexto-ufc-v2-post.log
       exit 1
     }
   done

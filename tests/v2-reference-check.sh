@@ -14,12 +14,12 @@ fi
 sh tests/v2-font-embedding-check.sh documento.pdf
 
 if command -v pdfinfo >/dev/null 2>&1; then
-  pdfinfo -meta documento.pdf > /tmp/ufctex-v2-pdfa-meta.xml
-  grep -Eq '<pdfaid:part>2</pdfaid:part>' /tmp/ufctex-v2-pdfa-meta.xml || {
+  pdfinfo -meta documento.pdf > /tmp/abntexto-ufc-v2-pdfa-meta.xml
+  grep -Eq '<pdfaid:part>2</pdfaid:part>' /tmp/abntexto-ufc-v2-pdfa-meta.xml || {
     echo 'Documento V2 falhou: declaração PDF/A parte 2 ausente.'
     exit 1
   }
-  grep -Eq '<pdfaid:conformance>[Bb]</pdfaid:conformance>' /tmp/ufctex-v2-pdfa-meta.xml || {
+  grep -Eq '<pdfaid:conformance>[Bb]</pdfaid:conformance>' /tmp/abntexto-ufc-v2-pdfa-meta.xml || {
     echo 'Documento V2 falhou: declaração PDF/A-2b ausente.'
     exit 1
   }
@@ -43,9 +43,9 @@ for path, marker, label in cases:
 PY
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext documento.pdf /tmp/ufctex-v2-reference.txt
+  pdftotext documento.pdf /tmp/abntexto-ufc-v2-reference.txt
   for marker in 'RESUMO' 'ABSTRACT' 'LISTA DE ILUSTRAÇÕES' 'SUMÁRIO' 'INTRODUÇÃO' 'REFERÊNCIAS' 'GLOSSÁRIO' 'ÍNDICE'; do
-    grep -Fq "$marker" /tmp/ufctex-v2-reference.txt || {
+    grep -Fq "$marker" /tmp/abntexto-ufc-v2-reference.txt || {
       echo "Documento V2 falhou: marcador ausente: $marker"
       exit 1
     }

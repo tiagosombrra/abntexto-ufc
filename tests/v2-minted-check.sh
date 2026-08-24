@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/normativa/objetos-minted.tex"
-tmp="ufctex-minted-check.tex"
+tmp="abntexto-ufc-minted-check.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 if ! command -v latexminted >/dev/null 2>&1; then
@@ -59,8 +59,8 @@ for engine in pdflatex lualatex; do
     echo "Validando minted $family com $engine..."
 
     for pass in 1 2; do
-      "$engine" -jobname="$job" -shell-escape $flags "$tmp" > /tmp/ufctex-v2-minted.log 2>&1 || {
-        cat /tmp/ufctex-v2-minted.log
+      "$engine" -jobname="$job" -shell-escape $flags "$tmp" > /tmp/abntexto-ufc-v2-minted.log 2>&1 || {
+        cat /tmp/abntexto-ufc-v2-minted.log
         exit 1
       }
     done

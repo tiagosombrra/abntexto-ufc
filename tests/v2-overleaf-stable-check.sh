@@ -56,8 +56,8 @@ for engine in pdflatex lualatex; do
   esac
 
   latexmk "$latexmk_mode" -interaction=nonstopmode -halt-on-error documento.tex \
-    > "/tmp/ufctex-overleaf-$engine.out" 2>&1 || {
-      cat "/tmp/ufctex-overleaf-$engine.out"
+    > "/tmp/abntexto-ufc-overleaf-$engine.out" 2>&1 || {
+      cat "/tmp/abntexto-ufc-overleaf-$engine.out"
       exit 1
     }
 
@@ -70,19 +70,19 @@ for engine in pdflatex lualatex; do
 
   sh tests/v2-font-embedding-check.sh documento.pdf
 
-  pdfinfo -meta documento.pdf > "/tmp/ufctex-overleaf-$engine-meta.xml"
-  grep -Eq '<pdfaid:part>2</pdfaid:part>' "/tmp/ufctex-overleaf-$engine-meta.xml" || {
+  pdfinfo -meta documento.pdf > "/tmp/abntexto-ufc-overleaf-$engine-meta.xml"
+  grep -Eq '<pdfaid:part>2</pdfaid:part>' "/tmp/abntexto-ufc-overleaf-$engine-meta.xml" || {
     echo "Overleaf proxy: $engine sem declaração PDF/A parte 2."
     exit 1
   }
-  grep -Eq '<pdfaid:conformance>[Bb]</pdfaid:conformance>' "/tmp/ufctex-overleaf-$engine-meta.xml" || {
+  grep -Eq '<pdfaid:conformance>[Bb]</pdfaid:conformance>' "/tmp/abntexto-ufc-overleaf-$engine-meta.xml" || {
     echo "Overleaf proxy: $engine sem declaração PDF/A-2b."
     exit 1
   }
 
-  pdftotext documento.pdf "/tmp/ufctex-overleaf-$engine.txt"
+  pdftotext documento.pdf "/tmp/abntexto-ufc-overleaf-$engine.txt"
   for marker in 'RESUMO' 'ABSTRACT' 'LISTA DE ILUSTRAÇÕES' 'SUMÁRIO' 'INTRODUÇÃO' 'REFERÊNCIAS' 'GLOSSÁRIO' 'ÍNDICE'; do
-    grep -Fq "$marker" "/tmp/ufctex-overleaf-$engine.txt" || {
+    grep -Fq "$marker" "/tmp/abntexto-ufc-overleaf-$engine.txt" || {
       echo "Overleaf proxy: $engine sem marcador esperado: $marker"
       exit 1
     }

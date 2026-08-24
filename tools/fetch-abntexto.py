@@ -26,7 +26,7 @@ def main() -> None:
     content = None
     for attempt in range(1, 4):
         try:
-            request = urllib.request.Request(URL, headers={"User-Agent": "ufctex-release"})
+            request = urllib.request.Request(URL, headers={"User-Agent": "abntexto-ufc-release"})
             with urllib.request.urlopen(request, timeout=30) as response:
                 content = response.read()
             break

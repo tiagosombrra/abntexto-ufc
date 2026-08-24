@@ -22,7 +22,7 @@ def fail(message: str) -> None:
 
 
 def load_runner_checks() -> dict[str, Any]:
-    spec = importlib.util.spec_from_file_location("ufctex_test_runner", RUNNER)
+    spec = importlib.util.spec_from_file_location("abntexto-ufc_test_runner", RUNNER)
     if spec is None or spec.loader is None:
         fail("cannot load tests/run.py")
     module = importlib.util.module_from_spec(spec)

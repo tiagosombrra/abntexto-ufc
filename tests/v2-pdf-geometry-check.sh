@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/normativa/geometria-pdf.tex"
-tmp_fixture=".ufctex-v2-geometry.tex"
+tmp_fixture=".abntexto-ufc-v2-geometry.tex"
 
 cleanup() {
   rm -f "$tmp_fixture" geometry-anverso.* geometry-frente-verso.*
@@ -15,14 +15,14 @@ for mode in anverso frente-verso; do
 
   echo "Validando geometria PDF: $mode..."
   for pass in 1 2; do
-    pdflatex -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/ufctex-v2-geometry.log 2>&1 || {
-      cat /tmp/ufctex-v2-geometry.log
+    pdflatex -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/abntexto-ufc-v2-geometry.log 2>&1 || {
+      cat /tmp/abntexto-ufc-v2-geometry.log
       exit 1
     }
   done
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "Geometria V2 falhou: $mode contém warning ou overflow não reconhecido."

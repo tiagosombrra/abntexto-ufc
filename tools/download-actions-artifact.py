@@ -32,7 +32,7 @@ def main() -> None:
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
-        "User-Agent": "ufctex-artifact-download",
+        "User-Agent": "abntexto-ufc-artifact-download",
     }
     metadata_url = f"https://api.github.com/repos/{args.repository}/actions/artifacts/{args.artifact_id}"
     with urllib.request.urlopen(
@@ -56,7 +56,7 @@ def main() -> None:
         if not location:
             raise SystemExit("Artifact redirect did not include Location.")
         with urllib.request.urlopen(
-            urllib.request.Request(location, headers={"User-Agent": "ufctex-artifact-download"}),
+            urllib.request.Request(location, headers={"User-Agent": "abntexto-ufc-artifact-download"}),
             timeout=60,
         ) as response:
             content = response.read()

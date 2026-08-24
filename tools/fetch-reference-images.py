@@ -27,7 +27,7 @@ def sha1(data: bytes) -> str:
 
 
 def download(url: str) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": "ufctex/2.1.0 reference-assets"})
+    request = urllib.request.Request(url, headers={"User-Agent": "abntexto-ufc/2.1.0 reference-assets"})
     last_error: Exception | None = None
     for attempt in range(4):
         try:

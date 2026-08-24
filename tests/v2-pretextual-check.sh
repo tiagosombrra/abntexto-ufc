@@ -10,8 +10,8 @@ for engine in pdflatex lualatex; do
   for fixture in $fixtures; do
     echo "Validando $fixture com $engine..."
     for pass in 1 2; do
-      "$engine" $flags "$fixture" > /tmp/ufctex-v2-pretextual.log 2>&1 || {
-        cat /tmp/ufctex-v2-pretextual.log
+      "$engine" $flags "$fixture" > /tmp/abntexto-ufc-v2-pretextual.log 2>&1 || {
+        cat /tmp/abntexto-ufc-v2-pretextual.log
         exit 1
       }
     done
@@ -33,25 +33,25 @@ grep -Eiq 'Introdu' pretextuais-trabalho.toc || {
 }
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext pretextuais-trabalho.pdf /tmp/ufctex-v2-pretextual.txt
+  pdftotext pretextuais-trabalho.pdf /tmp/abntexto-ufc-v2-pretextual.txt
   for heading in 'AGRADECIMENTOS' 'RESUMO' 'ABSTRACT' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE ABREVIATURAS E SIGLAS' 'LISTA DE SÍMBOLOS' 'SUMÁRIO'; do
-    grep -Fq "$heading" /tmp/ufctex-v2-pretextual.txt || {
+    grep -Fq "$heading" /tmp/abntexto-ufc-v2-pretextual.txt || {
       echo "Preflight V2 falhou: título pré-textual ausente ou incorreto: $heading"
       exit 1
     }
   done
 
-  if grep -Eiq '^Dedicat[oó]ria$' /tmp/ufctex-v2-pretextual.txt; then
+  if grep -Eiq '^Dedicat[oó]ria$' /tmp/abntexto-ufc-v2-pretextual.txt; then
     echo 'Preflight V2 falhou: dedicatória recebeu título.'
     exit 1
   fi
 
-  pdftotext -bbox-layout pretextuais-trabalho.pdf /tmp/ufctex-v2-pretextual-bbox.html
+  pdftotext -bbox-layout pretextuais-trabalho.pdf /tmp/abntexto-ufc-v2-pretextual-bbox.html
   python3 - <<'PY'
 import re
 import xml.etree.ElementTree as ET
 
-root = ET.parse('/tmp/ufctex-v2-pretextual-bbox.html').getroot()
+root = ET.parse('/tmp/abntexto-ufc-v2-pretextual-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
 
 
@@ -84,16 +84,16 @@ check_below_midpoint('dedicatória', 'FAMÍLIA')
 check_below_midpoint('epígrafe', 'CITAÇÃO DE EXEMPLO')
 PY
 
-  pdftotext pretextuais-projeto-anonimo.pdf /tmp/ufctex-v2-anonimo.txt
-  if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/ufctex-v2-anonimo.txt; then
+  pdftotext pretextuais-projeto-anonimo.pdf /tmp/abntexto-ufc-v2-anonimo.txt
+  if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/abntexto-ufc-v2-anonimo.txt; then
     echo 'Preflight V2 falhou: autor vazou no projeto anonimizado.'
     exit 1
   fi
-  if grep -Fq 'ORIENTADOR SIGILOSO TESTE' /tmp/ufctex-v2-anonimo.txt; then
+  if grep -Fq 'ORIENTADOR SIGILOSO TESTE' /tmp/abntexto-ufc-v2-anonimo.txt; then
     echo 'Preflight V2 falhou: orientador vazou no projeto anonimizado.'
     exit 1
   fi
-  grep -Fq 'PROJETO-ANONIMO-001' /tmp/ufctex-v2-anonimo.txt || {
+  grep -Fq 'PROJETO-ANONIMO-001' /tmp/abntexto-ufc-v2-anonimo.txt || {
     echo 'Preflight V2 falhou: identificador anonimizado ausente.'
     exit 1
   }

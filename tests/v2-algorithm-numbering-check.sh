@@ -11,17 +11,17 @@ trap cleanup EXIT INT TERM
 
 for engine in pdflatex lualatex; do
   job="algoritmo-linhas-$engine"
-  "$engine" -jobname="$job" $flags "$fixture" >/tmp/ufctex-v2-algorithm-numbering.log 2>&1 || {
-    cat /tmp/ufctex-v2-algorithm-numbering.log
+  "$engine" -jobname="$job" $flags "$fixture" >/tmp/abntexto-ufc-v2-algorithm-numbering.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-algorithm-numbering.log
     exit 1
   }
-  "$engine" -jobname="$job" $flags "$fixture" >/tmp/ufctex-v2-algorithm-numbering.log 2>&1 || {
-    cat /tmp/ufctex-v2-algorithm-numbering.log
+  "$engine" -jobname="$job" $flags "$fixture" >/tmp/abntexto-ufc-v2-algorithm-numbering.log 2>&1 || {
+    cat /tmp/abntexto-ufc-v2-algorithm-numbering.log
     exit 1
   }
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
-    grep -vF -e 'Class ufctex Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+    grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "$job: warning ou overflow não reconhecido."

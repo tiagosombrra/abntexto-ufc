@@ -31,8 +31,8 @@ for path, digest in expected.items():
 PY
 fi
 
-pdftotext -layout documento.pdf /tmp/ufctex-v2-reference-corpus.txt
-pdftotext -bbox-layout documento.pdf /tmp/ufctex-v2-reference-corpus-bbox.html
+pdftotext -layout documento.pdf /tmp/abntexto-ufc-v2-reference-corpus.txt
+pdftotext -bbox-layout documento.pdf /tmp/abntexto-ufc-v2-reference-corpus-bbox.html
 
 python3 <<'PY'
 import re
@@ -61,7 +61,7 @@ def require_dotted_entry(source, start, end, marker):
         raise SystemExit(f'Corpus V2 falhou: líder pontilhado espaçado ausente em {start}: {marker}')
 
 
-text = Path('/tmp/ufctex-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
+text = Path('/tmp/abntexto-ufc-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
 flat = normalize_pdf_text(text)
 required = (
     'CATÁLOGO DE EXEMPLOS E VALIDAÇÃO VISUAL',
@@ -185,7 +185,7 @@ if undotted:
         f'Corpus V2 falhou: {len(undotted)} entrada(s) do sumário sem líder pontilhado espaçado: {sample}'
     )
 
-root = ET.parse('/tmp/ufctex-v2-reference-corpus-bbox.html').getroot()
+root = ET.parse('/tmp/abntexto-ufc-v2-reference-corpus-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
 
 
