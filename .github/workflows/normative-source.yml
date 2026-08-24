@@ -7,8 +7,10 @@ on:
     paths:
       - 'normativa/**'
       - 'tools/normative_*.py'
+      - 'tools/pdf_measurement.py'
       - 'tools/validate-ufc-pdf.py'
       - 'tests/checks/normative_*.py'
+      - 'tests/checks/pdf_oracle_core.py'
       - 'tests/checks/validator_source.py'
       - 'tests/run.py'
       - 'validator/**'
@@ -19,8 +21,10 @@ on:
     paths:
       - 'normativa/**'
       - 'tools/normative_*.py'
+      - 'tools/pdf_measurement.py'
       - 'tools/validate-ufc-pdf.py'
       - 'tests/checks/normative_*.py'
+      - 'tests/checks/pdf_oracle_core.py'
       - 'tests/checks/validator_source.py'
       - 'tests/run.py'
       - 'validator/**'
