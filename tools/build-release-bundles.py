@@ -27,7 +27,6 @@ CLASS_INPUTS = (
     "abntexto-ufc.cls",
     "abntexto-ufc",
     LEGACY_CLASS,
-    "assets/institucional",
     "tools/convert-encoding-to-unicode.ps1",
     "tools/prepare-windows-fonts.ps1",
     "LICENSE",
@@ -41,7 +40,6 @@ TEMPLATE_INPUTS = (
     "2-textuais",
     "3-pos-textuais",
     "figuras",
-    "assets",
     "abntexto-ufc.cls",
     "abntexto-ufc",
     LEGACY_CLASS,
@@ -137,6 +135,24 @@ def source_entries(specs: Iterable[str], prefix: str = "") -> list[tuple[str, by
     return entries
 
 
+def template_entries(prefix: str) -> list[tuple[str, bytes, int]]:
+    entries = source_entries(TEMPLATE_INPUTS, prefix)
+    document_name = f"{prefix}documento.tex"
+    marker = "  brasao = sim,"
+    replacement = "  brasao = nao,"
+
+    for index, (name, content, mode) in enumerate(entries):
+        if name != document_name:
+            continue
+        text = content.decode("utf-8")
+        if text.count(marker) != 1:
+            raise SystemExit("documento.tex must contain exactly one default brasao = sim setting.")
+        entries[index] = (name, text.replace(marker, replacement, 1).encode("utf-8"), mode)
+        return entries
+
+    raise SystemExit("documento.tex missing from template bundle inputs.")
+
+
 def write_archive(path: Path, entries: list[tuple[str, bytes, int]], date_time: tuple[int, int, int, int, int, int]) -> None:
     path.write_bytes(archive_bytes(entries, date_time))
 
@@ -157,7 +173,7 @@ def build_template_bundle(
     suffix = "-overleaf" if abntexto else ""
     root = "" if abntexto else f"modelo-latex-ufc-{version}/"
     path = out / f"modelo-latex-ufc{suffix}-{version}.zip"
-    entries = source_entries(TEMPLATE_INPUTS, root)
+    entries = template_entries(root)
     if abntexto:
         if not abntexto.is_file():
             raise SystemExit(f"Pinned abntexto.cls not found: {abntexto}")
@@ -203,7 +219,6 @@ def write_checksums(out: Path, artifacts: list[Path]) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description=f"Build deterministic {PACKAGE_ID} release bundles.")
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
-    parser.add_argument("--reference-pdf", type=Path, default=ROOT / "documento.pdf")
     parser.add_argument("--abntexto", type=Path)
     args = parser.parse_args()
 
@@ -214,18 +229,10 @@ def main() -> None:
         shutil.rmtree(path) if path.is_dir() else path.unlink()
 
     date_time = zip_datetime(source_date_epoch())
-    reference_pdf = args.reference_pdf.resolve()
-    if not reference_pdf.is_file():
-        raise SystemExit("documento.pdf is required; run make release-preflight first.")
-
-    reference_out = output / f"{PACKAGE_ID}-{version}-reference.pdf"
-    shutil.copyfile(reference_pdf, reference_out)
-
     artifacts = [
         build_class_bundle(output, version, date_time),
         build_template_bundle(output, version, date_time),
         build_ctan_bundle(output, version, date_time),
-        reference_out,
     ]
     if args.abntexto:
         artifacts.append(build_template_bundle(output, version, date_time, args.abntexto.resolve()))
