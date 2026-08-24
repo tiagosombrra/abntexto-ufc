@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-24",
+  "reviewed_at": "2026-08-22",
   "policy": {
     "description": "Fonte normativa única para o template e validadores UFC.",
     "precedence": [
@@ -424,8 +424,8 @@
       "id": "table.ibge",
       "category": "objects",
       "requirement": "Tabelas numéricas seguem o padrão tabular do IBGE indicado pela ABNT.",
-      "sources": ["ibge-tabular-1993", "abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
-      "locator": "Normas de apresentação tabular, 3. ed.; Guia UFC 2022, 4.10",
+      "sources": ["ibge-tabular-1993", "abnt-nbr-14724-2024"],
+      "locator": "Normas de apresentação tabular, 3. ed.",
       "normativity": "required-when-applicable",
       "kind": "table-layout",
       "values": {"open_sides": true, "body_grid": false, "top_rule": true, "header_rule": true, "bottom_rule": true},
