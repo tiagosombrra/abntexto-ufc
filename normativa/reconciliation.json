@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N2 machine-readable reconciliation between current UFC institutional guidance and current applicable technical authority.",
+  "detail_classifications": {
+    "current-compatible-institutional-requirement": "A current UFC institutional source governs the detail in its institutional scope without displacing a higher-precedence current technical authority.",
+    "superseded-guidance": "A historical technical reference remains embedded in UFC guidance only as context and cannot govern an active technical rule.",
+    "recommendation": "The UFC source expresses a recommendation rather than a mandatory technical requirement; adoption must remain explicitly classified.",
+    "project-policy": "The behavior is an explicit abntexto-ufc project policy rather than an ABNT/UFC normative requirement.",
+    "unknown-review": "The source relationship or precedence cannot be resolved safely and requires explicit review before consumption."
+  },
+  "support_policy": "When a current technical standard governs a rule and a UFC guide is only supporting evidence, the rule remains technical; the UFC relationship is compatible support and is not reclassified as a UFC-specific institutional requirement.",
+  "unknown_review_allowed_at_n2_exit": false,
+  "superseded_references": [
+    {
+      "context_source": "ufc-guia-trabalhos-2022",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 14724:2011",
+      "current_reference": "ABNT NBR 14724:2024",
+      "current_source": "abnt-nbr-14724-2024",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-trabalhos-2022",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 6023:2018",
+      "current_reference": "ABNT NBR 6023:2025",
+      "current_source": "abnt-nbr-6023-2025",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-trabalhos-2022",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 10520:2002",
+      "current_reference": "ABNT NBR 10520:2023",
+      "current_source": "abnt-nbr-10520-2023",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-trabalhos-2022",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 12225:2004",
+      "current_reference": "ABNT NBR 12225:2023",
+      "current_source": "abnt-nbr-12225-2023",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-citacoes-2025",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 6023:2018",
+      "current_reference": "ABNT NBR 6023:2025",
+      "current_source": "abnt-nbr-6023-2025",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-referencias-2023",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 6023:2018",
+      "current_reference": "ABNT NBR 6023:2025",
+      "current_source": "abnt-nbr-6023-2025",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-projetos-2019",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 15287:2011",
+      "current_reference": "ABNT NBR 15287:2025",
+      "current_source": "abnt-nbr-15287-2025",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-projetos-2019",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 6023:2018",
+      "current_reference": "ABNT NBR 6023:2025",
+      "current_source": "abnt-nbr-6023-2025",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-projetos-2019",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 10520:2002",
+      "current_reference": "ABNT NBR 10520:2023",
+      "current_source": "abnt-nbr-10520-2023",
+      "conflict_status": "resolved-current-edition"
+    },
+    {
+      "context_source": "ufc-guia-projetos-2019",
+      "classification": "superseded-guidance",
+      "superseded_reference": "ABNT NBR 12225:2004",
+      "current_reference": "ABNT NBR 12225:2023",
+      "current_source": "abnt-nbr-12225-2023",
+      "conflict_status": "resolved-current-edition"
+    }
+  ]
+}
