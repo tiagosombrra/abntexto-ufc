@@ -2,7 +2,7 @@
 
 `abntexto-ufc` is a LaTeX class for academic works at the Federal University of Ceará (UFC), Brazil. It is based on `abntexto` and provides institutional profiles for undergraduate works, specialization works, dissertations, theses, and research proposals.
 
-Version: 2.1.0
+Version: 2.2.0
 
 Maintainer: Tiago Sombra (`tiagosombrra`)
 
@@ -38,9 +38,7 @@ The CTAN archive is intentionally limited to the installable class surface and e
 - a minimal portable example in `doc/abntexto-ufc-example.tex`;
 - this README, the changelog, and the LPPL license.
 
-The full editable UFC template, reference document, photographs, validation infrastructure, and platform-specific helper scripts are maintained in the project repository and release bundles, not in the CTAN archive.
-
-The generated project reference PDF is distributed separately from the CTAN archive because it contains the UFC institutional mark.
+The full editable UFC template, reference document, photographs, validation infrastructure, and platform-specific helper scripts are maintained in the project repository and are not part of the CTAN archive.
 
 The deprecated `ufctex` compatibility entry point is retained only in project/template distributions and is not part of the CTAN package.
 
@@ -60,7 +58,9 @@ The historical UFC template was developed by Ednardo Moreira Rodrigues and Alan 
 
 ## Release state
 
-Version 2.1.0 completed the normative and visual audits, Gate T, Windows literal-font certification, deterministic distribution preflight, the real Overleaf import smoke test, and the final unrestricted Gate F audit.
+Version 2.1.0 was the previous published release.
+
+Version 2.2.0 is the current certification candidate. It adopts the canonical `abntexto-ufc` package/class identity, excludes the UFC institutional mark from redistributed public archives, reduces the CTAN payload to the installable surface, strengthens deterministic licensing/distribution gates, and preserves the distinction between normative rule definition and measured final-PDF proof.
 
 The CTAN package id is `abntexto-ufc`. Catalogue availability is reconfirmed immediately before upload.
 
