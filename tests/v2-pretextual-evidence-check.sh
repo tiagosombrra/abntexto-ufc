@@ -47,12 +47,21 @@ import sys
 from pathlib import Path
 
 payload = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+print(
+    'N6-EVIDENCE summary '
+    + ' '.join(f'{key}={value}' for key, value in sorted(payload['status_counts'].items()))
+    + f" distinct_pages={payload['target_pages_are_distinct']}"
+)
 for scenario in payload['scenarios']:
-    print(f"N6 scenario {scenario['scenario_id']} page={scenario['page']}")
+    print(
+        f"N6-EVIDENCE scenario={scenario['scenario_id']} page={scenario['page']} "
+        f"lines={scenario['line_count_measured']}/{scenario['line_count_expected']}"
+    )
     for item in scenario['evidence']:
         print(
-            f"  {item['status']:10} {item['rule_id']} "
-            f"expected={item['expected']} measured={item['measured']}"
+            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
+            f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
 PY
 
