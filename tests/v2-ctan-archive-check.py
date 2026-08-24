@@ -9,6 +9,34 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 MODULE_PATTERN = re.compile(r"\\input\{(abntexto-ufc/[^}]+\.def)\}")
+VERSION_PATTERN = re.compile(
+    r"^VERSION\s*:?=\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$", re.MULTILINE
+)
+
+
+def current_version() -> str:
+    text = (ROOT / "Makefile").read_text(encoding="utf-8")
+    match = VERSION_PATTERN.search(text)
+    if not match:
+        raise SystemExit("Makefile VERSION not found.")
+    return match.group(1)
+
+
+def validate_release_state() -> None:
+    version = current_version()
+    normas = (ROOT / "docs/NORMAS.md").read_text(encoding="utf-8")
+    if f"Estado da linha {version}:" not in normas:
+        raise SystemExit(
+            f"docs/NORMAS.md does not declare the current release line {version}."
+        )
+
+    ctan_readme = (ROOT / "docs/README-CTAN.md").read_text(encoding="utf-8")
+    if not re.search(rf"^Version:\s*{re.escape(version)}\s*$", ctan_readme, re.MULTILINE):
+        raise SystemExit(f"docs/README-CTAN.md does not declare Version: {version}.")
+
+    canonical = (ROOT / "abntexto-ufc.cls").read_text(encoding="utf-8")
+    if f"v{version} UFC academic document class" not in canonical:
+        raise SystemExit(f"abntexto-ufc.cls does not declare v{version}.")
 
 
 def expected_sources() -> dict[str, Path]:
@@ -53,6 +81,7 @@ def main() -> None:
     if not args.archive.is_file():
         raise SystemExit(f"CTAN archive not found: {args.archive}")
 
+    validate_release_state()
     expected = expected_sources()
     with zipfile.ZipFile(args.archive) as archive:
         names = {info.filename for info in archive.infolist() if not info.is_dir()}
