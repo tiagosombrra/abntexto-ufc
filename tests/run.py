@@ -206,6 +206,19 @@ def print_failure_tail(result: Result, lines: int = 35) -> None:
         print(line)
 
 
+def print_structured_evidence(result: Result, prefix: str = "N6-EVIDENCE ") -> None:
+    path = Path(result.log)
+    if not path.is_file():
+        return
+    content = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    evidence = [line for line in content if line.startswith(prefix)]
+    if not evidence:
+        return
+    print(f"\n--- {result.name}: structured evidence ---")
+    for line in evidence:
+        print(line)
+
+
 def main() -> int:
     args = parse_args()
     checks = selected_checks(args.mode, args.only)
@@ -231,6 +244,8 @@ def main() -> int:
         write_reports(report_dir, args.mode, ordered_results, complete=False)
         suffix = f" ({result.duration_seconds:.1f}s)" if result.duration_seconds else ""
         print(f"         {result.status}{suffix}")
+        if result.status == "PASS" and result.name == "pretextual":
+            print_structured_evidence(result)
         if result.status == "FAIL":
             print_failure_tail(result)
 
