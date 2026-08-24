@@ -10,10 +10,7 @@
     },
     "current-institutional-with-stale-technical-citations": {
       "runtime_activity": "active-restricted",
-      "allowed_runtime_statuses": [
-        "current",
-        "current-with-superseded-norm-references"
-      ],
+      "allowed_runtime_statuses": ["current-with-superseded-norm-references"],
       "technical_authority": false,
       "restriction": "May support compatible institutional detail but must not govern a technical-scope rule or select a technical-standard edition."
     },
