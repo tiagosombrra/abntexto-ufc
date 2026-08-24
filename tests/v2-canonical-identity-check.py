@@ -12,7 +12,9 @@ MODULE_RE = re.compile(r"\\input\{(abntexto-ufc/[^}]+\.def)\}")
 LEGACY_CLASS_MESSAGE_RE = re.compile(
     r"\\Class(?:Info|Error|Warning|WarningNoLine)\{ufctex\}"
 )
-LEGACY_IDENTITY_RE = re.compile(r"ufctex", re.IGNORECASE)
+LEGACY_IDENTITY_RE = re.compile(
+    r"(?<![A-Za-z0-9])ufctex(?![A-Za-z0-9])", re.IGNORECASE
+)
 TEXT_SUFFIXES = {
     ".bib",
     ".cls",
