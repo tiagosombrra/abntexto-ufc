@@ -115,6 +115,15 @@ if 'assets/institucional/brasao-ufc.PNG' not in institutional:
     errors.append('abntexto-ufc/institucional.def: caminho compatível padrão do brasão ausente')
 
 builder = Path('tools/build-release-bundles.py').read_text(encoding='utf-8')
+if re.search(r'CLASS_INPUTS\s*=\s*\(.*?assets/institucional', builder, re.DOTALL):
+    errors.append('Class bundle ainda inclui o ativo institucional da UFC')
+if re.search(r'TEMPLATE_INPUTS\s*=\s*\(.*?"assets"', builder, re.DOTALL):
+    errors.append('Template/Overleaf bundle ainda inclui a árvore de ativos institucionais')
+if 'text.replace(marker, replacement, 1)' not in builder or 'brasao = nao' not in builder:
+    errors.append('Builder não desativa o brasão no documento empacotado sem o ativo institucional')
+if '--reference-pdf' in builder or '-reference.pdf' in builder or 'reference_out' in builder:
+    errors.append('Builder ainda publica PDF de referência que pode incorporar a marca institucional')
+
 ctan_match = re.search(
     r'def build_ctan_bundle\(.*?(?=\ndef write_checksums\()',
     builder,

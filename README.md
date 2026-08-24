@@ -96,9 +96,9 @@ A composição pode ser controlada por:
 }
 ```
 
-O pacote destinado ao CTAN não redistribui o brasão da UFC. O usuário pode obter o ativo oficial diretamente da Universidade e fornecê-lo localmente. `brasao = nao` desativa sua composição.
+Os bundles públicos gerados de classe, template, Overleaf e CTAN não redistribuem o brasão real da UFC. Nos bundles de template e Overleaf, `documento.tex` é distribuído com `brasao = nao` para compilar sem depender de um ativo institucional não incluído. O usuário pode obter o ativo oficial diretamente da Universidade e ativá-lo localmente com `brasao = sim` e `brasao-arquivo`.
 
-A política de redistribuição do ativo institucional é independente da regra normativa de composição da capa.
+A política de redistribuição do ativo institucional é independente da regra normativa de composição da capa e não remove o suporte da classe a um brasão oficial fornecido localmente.
 
 ## Tipografia
 

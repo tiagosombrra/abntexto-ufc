@@ -62,6 +62,16 @@ def main() -> None:
         if missing:
             raise SystemExit(f"Overleaf bundle missing files: {', '.join(missing)}")
 
+        institutional_assets = project / "assets" / "institucional"
+        if institutional_assets.exists() and any(institutional_assets.rglob("*")):
+            raise SystemExit("Overleaf bundle must not redistribute UFC institutional assets.")
+
+        document = (project / "documento.tex").read_text(encoding="utf-8")
+        if "  brasao = nao," not in document:
+            raise SystemExit("Overleaf bundle must disable the undistributed institutional mark by default.")
+        if "  brasao = sim," in document:
+            raise SystemExit("Overleaf bundle still enables the undistributed institutional mark.")
+
         harness = (
             ("tests/v2-overleaf-stable-check.sh", "tests/v2-overleaf-stable-check.sh"),
             ("tests/v2-font-embedding-check.sh", "tests/v2-font-embedding-check.sh"),
