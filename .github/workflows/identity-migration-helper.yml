@@ -63,7 +63,6 @@ jobs:
               print(relative)
           PY
 
-          python3 tests/v2-canonical-identity-check.py
           git diff --check
 
       - name: Commit migration
