@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "purpose": "N1 incremental locator classification for documentary illustration and equation rules whose current provenance is already explicit.",
+  "rulesets": [
+    {
+      "id": "objects.illustration-presentation",
+      "rule_ids": [
+        "illustration.identification.position",
+        "illustration.source.position",
+        "illustration.note.position"
+      ],
+      "current_locator": "ABNT NBR 14724:2024 — ilustrações; Guia UFC 2022, 4.9",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.9(c)-4.9(e), p. 84",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        },
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified as technical authority for illustration presentation, but exact authoritative clause-level text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
+        }
+      ]
+    },
+    {
+      "id": "objects.list-routing",
+      "rule_ids": ["list.routing.illustrations"],
+      "current_locator": "Guia UFC 2022, 3.2.1.9-3.2.1.10",
+      "status": "VERIFIED",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "3.2.1.9-3.2.1.10, p. 42-45",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        }
+      ]
+    },
+    {
+      "id": "equations.presentation",
+      "rule_ids": [
+        "equation.display",
+        "equation.numbering.format",
+        "equation.numbering.right"
+      ],
+      "current_locator": "ABNT NBR 14724:2024 — equações e fórmulas; Guia UFC 2022, 4.8",
+      "status": "PARTIAL_WITH_REASON",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-trabalhos-2022",
+          "locator": "4.8, p. 83",
+          "status": "VERIFIED",
+          "checked_at": "2026-08-24",
+          "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+        },
+        {
+          "source_id": "abnt-nbr-14724-2024",
+          "locator": null,
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-08-24",
+          "reason": "The current NBR 14724:2024 is identified as technical authority for equations and formulas, but exact authoritative clause-level text is not available in the repository or public evidence corpus. Clause-level verification requires authoritative/licensed access."
+        }
+      ]
+    }
+  ]
+}
