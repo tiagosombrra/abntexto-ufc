@@ -41,4 +41,19 @@ test -s "$evidence" || {
   exit 1
 }
 
+python3 - "$evidence" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+payload = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+for scenario in payload['scenarios']:
+    print(f"N6 scenario {scenario['scenario_id']} page={scenario['page']}")
+    for item in scenario['evidence']:
+        print(
+            f"  {item['status']:10} {item['rule_id']} "
+            f"expected={item['expected']} measured={item['measured']}"
+        )
+PY
+
 echo 'Gate de evidência N6 para dedicatória e epígrafes concluído.'
