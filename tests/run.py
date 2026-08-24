@@ -43,6 +43,7 @@ CHECKS = (
     Check("layout", "Layout", ("sh", "tests/v2-layout-check.sh")),
     Check("font-config", "Font configuration", ("sh", "tests/v2-font-config-check.sh")),
     Check("pdf-geometry", "PDF geometry", ("sh", "tests/v2-pdf-geometry-check.sh")),
+    Check("pdf-oracle-core", "PDF normative oracle core", ("sh", "tests/v2-pdf-oracle-core-check.sh")),
     Check("math", "Mathematics", ("sh", "tests/v2-math-check.sh")),
     Check("normative-complement", "Normative complement", ("sh", "tests/v2-normative-complement-check.sh")),
     Check("pretextual", "Pre-textual elements", ("sh", "tests/v2-pretextual-check.sh")),
