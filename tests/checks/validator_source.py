@@ -22,6 +22,7 @@ NORMATIVE_CURRENCY = ROOT / "tests" / "checks" / "normative_currency.py"
 NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
 NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
 NORMATIVE_SOURCE_REFERENCES = ROOT / "tests" / "checks" / "normative_source_references.py"
+NORMATIVE_LOCATORS = ROOT / "tests" / "checks" / "normative_locators.py"
 NORMATIVE_TRACEABILITY = ROOT / "tests" / "checks" / "normative_traceability.py"
 NORMATIVE_PROOF_STATE = ROOT / "tests" / "checks" / "normative_proof_state.py"
 NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
@@ -59,6 +60,7 @@ def main() -> None:
         NORMATIVE_PRECEDENCE,
         NORMATIVE_SOURCES,
         NORMATIVE_SOURCE_REFERENCES,
+        NORMATIVE_LOCATORS,
         NORMATIVE_TRACEABILITY,
         NORMATIVE_PROOF_STATE,
         NORMATIVE_ATOMICITY,
@@ -71,6 +73,7 @@ def main() -> None:
     run_source_check(NORMATIVE_PRECEDENCE, "normative precedence")
     run_source_check(NORMATIVE_SOURCES, "normative sources")
     run_source_check(NORMATIVE_SOURCE_REFERENCES, "normative source references")
+    run_source_check(NORMATIVE_LOCATORS, "normative locators")
     run_source_check(NORMATIVE_CURRENCY, "normative currency")
     run_source_check(NORMATIVE_ATOMICITY, "normative atomicity")
     run_source_check(NORMATIVE_ATOMIC_CONTRACT, "normative atomic contract")
