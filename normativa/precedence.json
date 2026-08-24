@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-08-22",
-  "description": "Política de resolução de vigência e precedência da base normativa UFCtex.",
+  "description": "Política de resolução de vigência e precedência da base normativa abntexto-ufc.",
   "catalog_policy_mode": "replace-embedded-policy",
   "principles": [
     "Requisitos técnicos usam a edição vigente da norma técnica aplicável.",

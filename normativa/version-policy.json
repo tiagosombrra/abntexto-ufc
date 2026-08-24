@@ -3,7 +3,7 @@
   "reviewed_at": "2026-08-22",
   "mode": "latest-current-applicable-technical-standard-mandatory",
   "decision": "mandatory",
-  "purpose": "Make the UFCtex technical-version rule explicit, auditable and machine-checkable when UFC guides still cite superseded ABNT editions.",
+  "purpose": "Make the abntexto-ufc technical-version rule explicit, auditable and machine-checkable when UFC guides still cite superseded ABNT editions.",
   "institutional_basis": [
     {
       "id": "ufc-res-17-cepe-2017",

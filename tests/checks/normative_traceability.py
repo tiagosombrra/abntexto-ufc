@@ -228,7 +228,7 @@ def build_matrix() -> dict[str, Any]:
 
 def write_markdown(matrix: dict[str, Any], path: Path) -> None:
     lines = [
-        "# UFCtex normative traceability",
+        "# abntexto-ufc normative traceability",
         "",
         f"- Rules: **{matrix['rule_count']}**",
         f"- Runner gates: **{matrix['runner_gate_count']}**",
@@ -270,7 +270,7 @@ def write_markdown(matrix: dict[str, Any], path: Path) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Audit UFCtex normative rule traceability.")
+    parser = argparse.ArgumentParser(description="Audit abntexto-ufc normative rule traceability.")
     parser.add_argument("--json", type=Path)
     parser.add_argument("--markdown", type=Path)
     parser.add_argument("--strict-evidence", action="store_true")

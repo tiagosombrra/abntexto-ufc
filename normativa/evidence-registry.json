@@ -107,7 +107,7 @@
       "target": {
         "workflow": ".github/workflows/latex-preflight.yml",
         "job": "v2-font-windows-pdfa",
-        "status_context": "ufctex/windows-font-poc"
+        "status_context": "abntexto-ufc/windows-font-poc"
       }
     },
     {
@@ -117,7 +117,7 @@
       "target": {
         "workflow": ".github/workflows/latex-preflight.yml",
         "job": "v2-font-windows-poc",
-        "status_context": "ufctex/windows-font-build"
+        "status_context": "abntexto-ufc/windows-font-build"
       }
     }
   ]
