@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 subsection-spacing evidence merge: `19e1fa90a87b35fd5a9f987328bdcfd609809bd9`
+- Stable main after N6 multiline-hanging evidence merge: `decea2b1c7adc3093764ec22922d73fc87cfb22d`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -256,6 +256,36 @@ The final-PDF oracle measures the before and after intervals independently with 
 
 No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment.
 
+### Multiline section hanging alignment
+
+Evidence PR `#88`, squash merge `decea2b1c7adc3093764ec22922d73fc87cfb22d`.
+
+Stable base: `4a5d4423079829e91fab97c56fe03939da90c625`.
+
+Final exact audited head: `e083cae66ac2bc05716009867b736d43e0745f28`.
+
+Scoped rule:
+
+- `section.multiline.hanging`
+
+Stored predicate:
+
+- `values.enabled = true`
+
+Final exact-head CI evidence:
+
+- Normative source contract `32893401823`: SUCCESS
+- normative job `97950297846`: SUCCESS
+- LaTeX preflight `32893401881`: SUCCESS
+- structural job `97950298305`: SUCCESS
+- aggregate `latex-preflight` job `97952535110`: SUCCESS
+- structural `PASS=14 FAIL=0 SKIP=0`
+- `N6-EVIDENCE section-multiline-hanging-summary PASS=1 levels=5 continuation_lines=10`
+
+The final-PDF fixture forces natural wrapping at all five numbered hierarchy levels. Continuation-line alignment is measured relative to the first title-text character of the first line; the numeric indicator is only fixture-integrity evidence. Measured deltas were `0.9 pt` for section, `0.9 pt` for subsection, `0.468 pt` for subsubsection, `0.504 pt` for paragraph and `0.9 pt` for subparagraph, with two continuation lines at each level. All are within the unchanged N5 horizontal-position tolerance of `5 pt`.
+
+No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment.
+
 ## N6 remaining work
 
 Continue with bounded, independently measurable components. Preferred order:
@@ -266,32 +296,31 @@ Continue with bounded, independently measurable components. Preferred order:
 4. post-textual dimensions;
 5. deposit/distribution-related evidence measurable from the relevant final artifact or institutional workflow.
 
-Current section-related rulesets still outside the completed section scopes:
+Current section-related ruleset still outside the completed section scopes:
 
-- `sections.multiline-hanging`: `section.multiline.hanging`
 - `sections.unnumbered-centered`: `heading.unnumbered.centered`
 
-Do not infer either dimension from prior green section evidence.
+Do not infer this dimension from prior green pre-textual, TOC or post-textual evidence.
 
 ## Immediate next bounded increment
 
-Next: `sections.multiline-hanging`.
+Next: `sections.unnumbered-centered`.
 
-Current rederived scope from `normativa/locator-audit-sections-footnotes-nature.json` and the full contract:
+Current rederived scope from `normativa/locator-audit-sections-footnotes-nature.json` and `normativa/coverage-rules.json`:
 
-- ruleset: `sections.multiline-hanging`
-- exact rule: `section.multiline.hanging`
-- stored predicate: `values.enabled = true`
-- institutional locator: UFC `4.5.1(d), p. 77`
+- ruleset: `sections.unnumbered-centered`
+- exact rule: `heading.unnumbered.centered`
+- stored predicate: `values.alignment = "centered"`
+- institutional locator: UFC `4.5.1(g), p. 77`
 
 Before creating the evidence PR:
 
 1. rederive the exact ruleset mapping and current full-contract value from the source tree again at branch creation time;
-2. construct controlled final-PDF fixtures that force numbered section titles to wrap naturally to multiple lines;
-3. measure the continuation-line horizontal alignment relative to the first title-text character, not relative to the numeric indicator;
-4. exercise enough section levels to avoid proving only one printer implementation while keeping the single stored predicate unchanged;
-5. use only the N5 horizontal-position tolerance and treat line-break positions/wording as fixture integrity or observational evidence, not new normative predicates;
-6. keep unnumbered-heading centering, section spacing, typography and unrelated dimensions outside this increment;
+2. enumerate the applicable unnumbered-heading surfaces already implemented by the class and distinguish them from headings governed by separate element-specific rules;
+3. construct controlled final-PDF fixtures that exercise a representative cross-section of applicable unnumbered headings without changing their semantics;
+4. measure each heading center against the physical text-area center using the N5 horizontal-position tolerance;
+5. use heading presence and expected page as fixture-integrity evidence only; do not silently add case, weight, font-size or page-break predicates to this rule;
+6. keep numbered-section layout, spacing, multiline hanging and unrelated typography outside this increment;
 7. if evidence exposes a real class defect, preserve the FAIL, use an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
 
 ## Required PR discipline
@@ -353,4 +382,4 @@ Do not reconstruct state primarily from old chats. Git history, this handoff and
 
 ## Next action
 
-From stable main `19e1fa90a87b35fd5a9f987328bdcfd609809bd9`, rederive `sections.multiline-hanging` and `section.multiline.hanging` (`values.enabled=true`). If the scope remains exactly one rule, create an evidence-only N6 PR with controlled final-PDF measurement of multiline continuation alignment. Do not absorb unnumbered-heading centering, runtime/class changes, normative values, locators, tolerances, compatibility mappings or proof-state into that increment.
+From stable main `decea2b1c7adc3093764ec22922d73fc87cfb22d`, rederive `sections.unnumbered-centered` and `heading.unnumbered.centered` (`values.alignment="centered"`). If the scope remains exactly one rule, create an evidence-only N6 PR with controlled final-PDF measurement of applicable unnumbered-heading center alignment. Do not absorb case, weight, font-size, page-break, runtime/class changes, normative values, locators, tolerances, compatibility mappings or proof-state into that increment.
