@@ -42,6 +42,18 @@
 \def\paragraphfont     {\itshape}
 \def\subparagraphfont  {}
 
+% Use one character space between each section indicator and its title.
+\patchcmd{\printsection}{\thesection\quad}{\thesection\space}{}
+  {\ClassError{abntexto-ufc}{Cannot patch section separator}{Update the abntexto compatibility layer.}}
+\patchcmd{\printsubsection}{\thesubsection\quad}{\thesubsection\space}{}
+  {\ClassError{abntexto-ufc}{Cannot patch subsection separator}{Update the abntexto compatibility layer.}}
+\patchcmd{\printsubsubsection}{\thesubsubsection\quad}{\thesubsubsection\space}{}
+  {\ClassError{abntexto-ufc}{Cannot patch subsubsection separator}{Update the abntexto compatibility layer.}}
+\patchcmd{\printparagraph}{\theparagraph\quad}{\theparagraph\space}{}
+  {\ClassError{abntexto-ufc}{Cannot patch paragraph separator}{Update the abntexto compatibility layer.}}
+\patchcmd{\printsubparagraph}{\thesubparagraph\quad}{\thesubparagraph\space}{}
+  {\ClassError{abntexto-ufc}{Cannot patch subparagraph separator}{Update the abntexto compatibility layer.}}
+
 \def\tocsectionfont       {\bfseries\MakeUppercase}
 \def\tocsubsectionfont    {\bfseries}
 \def\tocsubsubsectionfont {\bfseries\itshape}
