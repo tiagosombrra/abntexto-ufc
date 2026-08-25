@@ -15,6 +15,12 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "normativa" / "pretextual-lists-scenario.json"
+RULE_ORDER = [
+    "list.illustrations.optional",
+    "list.tables.optional",
+    "list.abbreviations.optional",
+    "list.symbols.optional",
+]
 
 
 def fail(message: str) -> None:
@@ -40,12 +46,7 @@ def marker_pages(pages: list[Any], marker: str) -> list[int]:
     return [page.index for page in pages if wanted in page_text(page)]
 
 
-def record(
-    rule_id: str,
-    status: str,
-    expected: Any,
-    measured: Any,
-) -> dict[str, Any]:
+def record(rule_id: str, status: str, expected: Any, measured: Any) -> dict[str, Any]:
     return {
         "rule_id": rule_id,
         "status": status,
@@ -59,13 +60,22 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Measure N6 optional pre-textual list final-PDF evidence."
     )
-    parser.add_argument("present_pdf", type=Path)
+    parser.add_argument("illustrations_pdf", type=Path)
+    parser.add_argument("tables_pdf", type=Path)
+    parser.add_argument("abbreviations_pdf", type=Path)
+    parser.add_argument("symbols_pdf", type=Path)
     parser.add_argument("absent_pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
     args = parser.parse_args()
 
-    for pdf in (args.present_pdf, args.absent_pdf):
+    present_pdfs = {
+        RULE_ORDER[0]: args.illustrations_pdf,
+        RULE_ORDER[1]: args.tables_pdf,
+        RULE_ORDER[2]: args.abbreviations_pdf,
+        RULE_ORDER[3]: args.symbols_pdf,
+    }
+    for pdf in [*present_pdfs.values(), args.absent_pdf]:
         if not pdf.is_file():
             fail(f"PDF not found: {pdf}")
 
@@ -92,6 +102,8 @@ def main() -> None:
             f"contract_only={sorted(expected_scope - scenario_scope)} "
             f"count={len(expected_scope)}"
         )
+    if scenario.get("rules") != RULE_ORDER:
+        fail("optional-list rule order drift")
 
     list_specs = scenario.get("lists")
     if not isinstance(list_specs, dict) or set(list_specs) != scenario_scope:
@@ -103,36 +115,48 @@ def main() -> None:
         if not isinstance(heading, str) or not heading:
             fail(f"empty list heading for {rule_id}")
 
+    fixtures = scenario.get("fixtures")
+    expected_fixture_keys = scenario_scope | {"absent"}
+    if not isinstance(fixtures, dict) or set(fixtures) != expected_fixture_keys:
+        fail("fixture mapping must contain exactly four rule fixtures plus absent")
+
     sentinel = scenario.get("sentinel")
     if not isinstance(sentinel, str) or not sentinel:
         fail("sentinel marker is required")
 
     try:
-        present_pages = bbox_pages(args.present_pdf)
+        present_pages = {
+            rule_id: bbox_pages(pdf) for rule_id, pdf in present_pdfs.items()
+        }
         absent_pages = bbox_pages(args.absent_pdf)
     except PDFMeasurementError as exc:
         fail(str(exc))
 
-    present_sentinel = marker_pages(present_pages, sentinel)
+    fixture_summary: dict[str, Any] = {}
+    for rule_id, pages in present_pages.items():
+        sentinel_pages = marker_pages(pages, sentinel)
+        if len(sentinel_pages) != 1:
+            fail(f"sentinel must occur once for {rule_id}: {sentinel_pages}")
+        fixture_summary[rule_id] = {
+            "page_count": len(pages),
+            "sentinel_pages": sentinel_pages,
+        }
+
     absent_sentinel = marker_pages(absent_pages, sentinel)
-    if len(present_sentinel) != 1 or len(absent_sentinel) != 1:
-        fail(
-            "sentinel must occur on exactly one page in each fixture: "
-            f"present={present_sentinel} absent={absent_sentinel}"
-        )
+    if len(absent_sentinel) != 1:
+        fail(f"absent sentinel must occur once: {absent_sentinel}")
 
     evidence: list[dict[str, Any]] = []
-
-    for rule_id in scenario["rules"]:
+    for rule_id in RULE_ORDER:
         rule = rules[rule_id]
         required = rule.get("values", {}).get("required")
-        spec = list_specs[rule_id]
-        present_heading_pages = marker_pages(present_pages, spec["heading"])
-        absent_heading_pages = marker_pages(absent_pages, spec["heading"])
+        heading = list_specs[rule_id]["heading"]
+        own_heading_pages = marker_pages(present_pages[rule_id], heading)
+        absent_heading_pages = marker_pages(absent_pages, heading)
 
         passed = (
             required is False
-            and len(present_heading_pages) == 1
+            and len(own_heading_pages) == 1
             and len(absent_heading_pages) == 0
         )
         evidence.append(
@@ -141,7 +165,7 @@ def main() -> None:
                 "PASS" if passed else "FAIL",
                 {"required": required},
                 {
-                    "present_heading_pages": present_heading_pages,
+                    "present_heading_pages": own_heading_pages,
                     "absent_heading_pages": absent_heading_pages,
                 },
             )
@@ -157,10 +181,7 @@ def main() -> None:
         "source_commit_sha": args.commit_sha,
         "result": result,
         "status_counts": status_counts,
-        "present_fixture": {
-            "page_count": len(present_pages),
-            "sentinel_pages": present_sentinel,
-        },
+        "present_fixtures": fixture_summary,
         "absent_fixture": {
             "page_count": len(absent_pages),
             "sentinel_pages": absent_sentinel,
@@ -177,7 +198,7 @@ def main() -> None:
     print(
         "N6-EVIDENCE optional-lists-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
-        + f" present_pages={len(present_pages)}"
+        + f" present_fixtures={len(present_pages)}"
         + f" absent_pages={len(absent_pages)}"
     )
     for item in evidence:
