@@ -69,4 +69,6 @@ print(f'{job}: todos os elementos auditados iniciam no anverso.')
 PY
 done
 
+sh tests/v2-section-primary-recto-duplex-evidence-check.sh
+
 echo 'Gate V2 de pré-textuais duplex concluído.'
