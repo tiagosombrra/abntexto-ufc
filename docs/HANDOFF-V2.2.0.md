@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 optional pre-textual lists merge: `961cfb41de76c192b7a703956e861c7aba88c251`
+- Stable main after N6 table-of-contents evidence merge: `1f1feed15e2c69a067022042f26aa663447cdd9d`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -226,15 +226,22 @@ The instrumentation required two corrections before final certification. First, 
 
 No class/runtime implementation, normative value, locator, oracle tolerance or proof-state changed. A final unchanged-head evidence comment is recorded directly on PR #71.
 
-## N6 remaining work
+### Table of contents
 
-Continue with bounded, independently measurable components. Preferred order:
+PR `#73`, squash-merged as `1f1feed15e2c69a067022042f26aa663447cdd9d`.
 
-1. table of contents;
-2. remaining pre-textual/structural atomic dimensions not yet covered by N6 final-PDF evidence;
-3. then move to textual, citation/object, post-textual and deposit-related evidence according to the canonical N6 scope before declaring N6 complete.
+Exact audited head before merge: `f042ff99910a7e9e0fb0d3ca40cc292f047f9980`.
 
-The immediate next increment is the table of contents. Its already mapped bounded scope is:
+Required evidence:
+
+- `Normative source contract` run `32845862671`: SUCCESS;
+- `LaTeX preflight` run `32845862682`: SUCCESS;
+- structural job `97795253961`: SUCCESS;
+- required aggregate job `97797391157`: SUCCESS;
+- structural result: `PASS=14 FAIL=0 SKIP=0`;
+- `N6-EVIDENCE toc-summary PASS=5 toc_pages=5 hierarchy_levels=5 non_normative=1`.
+
+Five scoped normative rules passed final-PDF measurement:
 
 - `toc.pretextual-exclusion`;
 - `toc.heading.alignment`;
@@ -242,9 +249,35 @@ The immediate next increment is the table of contents. Its already mapped bounde
 - `toc.page-number.position`;
 - `toc.section-hierarchy.mirror`.
 
-Before creating the evidence PR, re-read the exact rule values, locators and applicability from the current full contract. Do not infer additional TOC dimensions from implementation details.
+Measured highlights:
 
-The evidence design should use controlled final-PDF content that distinguishes pre-textual exclusion from textual hierarchy and page-number placement, while preserving the same scope-drift checks and conservative proof semantics used by prior N6 increments.
+- controlled pre-textual markers do not appear inside the identified TOC page range;
+- the `SUMÁRIO` heading is uppercase and centered with measured center delta `0.0002 pt`;
+- all five controlled hierarchy page numbers terminate within `0.0041 pt` of the contract-derived right text margin;
+- section through subparagraph TOC entries reproduce the corresponding body-heading font identity/family and size, with `0.0 pt` font-size delta for all five levels.
+
+The first run stopped before PDF measurement because the initial scope filter treated every `toc.*` rule as normative and therefore included `toc.leaders.dotted.project`. Inspection confirmed that this sixth namespace member is explicitly `authority=project-policy` with `normative_claim=false`. The oracle was corrected to derive the five N6 rules from `authority=normative` while separately accounting for the one non-normative TOC policy rule. No class implementation, normative value, locator, oracle tolerance or proof-state changed.
+
+A final exact-head certification comment is recorded directly on PR #73.
+
+## N6 remaining work
+
+Continue with bounded, independently measurable components. Preferred order from this checkpoint:
+
+1. remaining pre-textual/structural atomic dimensions not yet covered by a bounded N6 final-PDF increment;
+2. textual typography/section/quotation dimensions;
+3. citation/object dimensions;
+4. post-textual dimensions;
+5. deposit/distribution-related normative evidence that is actually measurable from the relevant final artifact or institutional workflow.
+
+The immediate next bounded candidate is the pre-textual pagination/start-side transition. Before creating its evidence PR, derive the exact normative scope from the current full contract and existing N6 registry rather than hard-coding an assumed group. Expected candidates to verify include:
+
+- `pagination.pretextual.counted-not-numbered`;
+- `pagination.textual.display-start`;
+- `pretextual.start.recto`;
+- the catalog-data pagination exception only if it belongs to the same independently measurable component after applicability review.
+
+Do not add pagination offsets, duplex side rules, catalog-card semantics or other dimensions merely because they are adjacent in implementation. Scope must be derived from rule authority, applicability and the bounded fixture design.
 
 ## Required PR discipline from this checkpoint forward
 
@@ -288,4 +321,4 @@ Do not reconstruct status primarily from old chat messages. Git history, this ha
 
 ## Next action
 
-Create the N6 table-of-contents evidence increment from stable main `961cfb41de76c192b7a703956e861c7aba88c251`, first re-reading the exact five TOC rule contracts and preserving the same evidence-only semantics used by prior bounded N6 PRs.
+From stable main `1f1feed15e2c69a067022042f26aa663447cdd9d`, derive the exact remaining pre-textual pagination/start-side N6 scope from the current full contract and existing bounded evidence. Then create a new evidence-only PR with controlled final-PDF fixtures; do not alter class/runtime, normative values, locators, tolerances or proof-state unless measurement independently exposes a defect requiring a separate implementation-fix PR.
