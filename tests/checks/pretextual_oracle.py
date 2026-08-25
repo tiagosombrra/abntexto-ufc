@@ -20,7 +20,6 @@ from pdf_measurement import (
     Typography,
     Word,
     bbox_pages,
-    find_marker,
     normalize,
     typography_runs,
 )
@@ -50,8 +49,23 @@ def full_rule_map() -> dict[str, dict[str, Any]]:
     return {rule["id"]: rule for rule in contract["rules"]}
 
 
+def find_scenario_marker(pages: list[Page], marker: str) -> tuple[Page, Word]:
+    wanted = normalize(marker)
+    matches: list[tuple[Page, Word]] = []
+    wrappers = "".join(QUOTE_CHARS)
+    for page in pages:
+        for word in page.words:
+            if normalize(word.text.strip(wrappers)) == wanted:
+                matches.append((page, word))
+    if len(matches) != 1:
+        raise PDFMeasurementError(
+            f"marker {marker}: expected exactly one quote-tolerant word, found {len(matches)}"
+        )
+    return matches[0]
+
+
 def marker_series(pages: list[Page], markers: list[str]) -> tuple[Page, list[Word]]:
-    found = [find_marker(pages, marker) for marker in markers]
+    found = [find_scenario_marker(pages, marker) for marker in markers]
     page_indexes = {page.index for page, _ in found}
     if len(page_indexes) != 1:
         raise PDFMeasurementError(

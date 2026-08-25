@@ -291,6 +291,7 @@
     \noindent\hspace*{8cm}%
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
       \onehalfsp\justifying
+      \setlength{\parindent}{0pt}
       \ufc_input_file:n {#1}
     \end{minipage}\par
     \vfill
@@ -313,7 +314,7 @@
     \vspace*{.5\textheight}
     \noindent\hspace*{8cm}%
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
-      \ufc_input_file:n {#1}
+      \textquotedblleft\ufc_input_file:n {#1}\textquotedblright
       \ufc_meta_if_blank:nF {autor-epigrafe}
         { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }
     \end{minipage}\par
@@ -331,6 +332,7 @@
       \fontsize{10}{12}\selectfont
       \singlesp
       \justifying
+      \setlength{\parindent}{0pt}
       \ufc_input_file:n {#1}
       \ufc_meta_if_blank:nF {autor-epigrafe}
         { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }

@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - 'abntexto-ufc/**'
       - 'normativa/**'
       - 'tools/normative_*.py'
       - 'tools/pdf_measurement.py'
@@ -20,6 +21,7 @@ on:
     branches:
       - main
     paths:
+      - 'abntexto-ufc/**'
       - 'normativa/**'
       - 'tools/normative_*.py'
       - 'tools/pdf_measurement.py'
