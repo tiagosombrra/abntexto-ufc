@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "subsection-spacing",
+  "locator_ruleset": "sections.subsection-spacing",
+  "rules": [
+    "section.subsection.before-after-spacing"
+  ],
+  "markers": {
+    "before": "N6SubsectionBefore",
+    "heading": "N6SubsectionHeading",
+    "after": "N6SubsectionAfter",
+    "calibration_top": "N6SubsectionCalTop",
+    "calibration_bottom": "N6SubsectionCalBottom"
+  },
+  "calibration": {
+    "before_factor": 1.5,
+    "after_factor": 1.5,
+    "description": "same-document onehalfsp line transition with one explicit baselineskip vertical space"
+  }
+}
