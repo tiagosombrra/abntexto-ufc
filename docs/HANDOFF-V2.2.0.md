@@ -8,40 +8,40 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 section-indicator evidence merge: `96ee28fd04d17514fa21a5925c2305571c43220a`
+- Stable main after N6 primary-section recto/duplex evidence merge: `838e83d19a133d19e7f9aae9d3d675f274da2ed3`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
-- The legacy class entry point remains only as a deprecated compatibility shim.
-- UFC institutional mark is excluded from public/CTAN bundles; users may supply an official local asset through the supported class option.
+- Legacy `ufctex.cls` remains only as a deprecated compatibility shim and is outside the canonical CTAN package.
+- UFC institutional mark is externalized from public/CTAN bundles; users may supply an official local asset through the supported class option.
 
 ## Governing method
 
-The v2.2.0 audit must not equate green CI with normative proof. Each normative rule must be tracked through source provenance, locator quality, atomicity, positive/negative evidence and, when applicable, final-PDF measurement.
+The v2.2.0 audit must not equate green CI with normative proof. Each normative rule is tracked through source provenance, locator quality, atomicity and, when applicable, direct final-PDF measurement.
 
 Conservative proof policy remains in force:
 
-- no rule is promoted to `PROVEN` merely because a parent/aggregate check passes;
-- source text unavailable at authoritative/licensed clause level remains `UNAVAILABLE_WITH_REASON` or `PARTIAL_WITH_REASON` as appropriate;
+- no rule is promoted to `PROVEN` merely because a parent or aggregate check passes;
+- unavailable authoritative/licensed clause text remains explicitly unavailable or partial as appropriate;
 - measured N6 conformance does not itself change proof-state;
-- normative values, locators and oracle tolerances must not be changed inside evidence-only PRs;
-- implementation corrections discovered by evidence must be isolated in separate fix PRs;
-- measured fixture observations must not silently strengthen the stored normative predicate;
-- evidence PRs merge only on the exact audited head, up to date with `main`.
+- normative values, locators and N5 oracle tolerances are not changed inside evidence-only PRs;
+- implementation defects exposed by evidence are corrected in isolated implementation PRs;
+- fixture observations must not silently strengthen the stored normative predicate;
+- evidence PRs merge only on the exact audited head and while up to date with `main`.
 
 ## Phase status
 
 | Phase | Status | Canonical result |
 | --- | --- | --- |
 | N0 | DONE | normative baseline established |
-| N1 | DONE | 170/170 normative locators classified; `UNASSESSED=0`; mode `complete` |
+| N1 | DONE | 170/170 normative locators classified; `UNASSESSED=0` |
 | N2 | DONE | UFC/ABNT reconciliation complete; `unknown-review=0` |
 | N3 | DONE | 46/46 atomicity gaps resolved |
 | N4 | DONE | false-coverage policy active; `unsafe-proven=0` |
 | N5 | DONE | final-PDF oracle calibrated and integrated |
-| N6 | IN PROGRESS | positive final-PDF evidence by bounded component |
+| N6 | IN PROGRESS | bounded positive final-PDF evidence |
 | N7-N15 | PENDING | continue only after N6 closure |
-| M1 | IMPLEMENTED | Node 24 / Pages migration merged; formal runtime/deployment closure still requires explicit evidence review |
+| M1 | IMPLEMENTED | Node 24 / Pages migration merged; formal runtime/deployment evidence still pending |
 | D0-D4 | DONE | CTAN identity, asset and distribution remediation completed |
 | D5 rehearsal | VALIDATED | rehearsal only; not a release decision |
 | D5 final | BLOCKED | repeat only on N15-approved final source tree |
@@ -49,7 +49,7 @@ Conservative proof policy remains in force:
 
 ## Normative baseline after N5
 
-Historical baseline; do not recompute or rewrite it without an explicit proof-state phase/change.
+Historical baseline; do not recompute or rewrite without an explicit proof-state phase/change.
 
 - full atomic rules: 181
 - normative rules: 170
@@ -57,7 +57,7 @@ Historical baseline; do not recompute or rewrite it without an explicit proof-st
 - N2 unknown review relationships: 0
 - N3 gaps resolved: 46/46
 - N4 unsafe `PROVEN`: 0
-- proof-state baseline before later promotions:
+- historical proof-state baseline:
   - `PARTIAL=114`
   - `NOT_PROVEN=51`
   - `CONDITIONAL=10`
@@ -65,157 +65,77 @@ Historical baseline; do not recompute or rewrite it without an explicit proof-st
   - `NOT_APPLICABLE=1`
   - `PROVEN=0`
 
+## Major normative-audit milestones
+
+- N1: PR `#55` — 170/170 locator coverage.
+- N2: PR `#56` — reconciliation complete.
+- N4: PR `#57` — parent/local promotion policy and `unsafe-proven=0`.
+- N5: PR `#58` — PDF oracle based on `pdftotext -bbox-layout`, `pdftohtml -xml -zoom 1.0`, `pdfinfo` and `pdffonts`.
+- N5 tolerances remain: page size 1 pt, horizontal position 5 pt, vertical position 5 pt, font size 1 pt.
+
 ## N6 completed increments
 
 ### Dedication and epigraph
 
 PRs `#59`, `#60`, `#61`.
 
-The first measured fixture exposed three real implementation divergences instead of masking them:
-
-- `dedication.indent.left`: unintended +20 mm paragraph indent;
-- `epigraph.short.quotation-marks`: required quotation marks missing;
-- `epigraph.long.indent.left`: unintended +20 mm paragraph indent.
-
-PR #60 corrected implementation only. PR #61 added naturally wrapped text so justification could be measured rather than inferred from explicit line breaks. Final bounded evidence passes all dedication/short-epigraph/long-epigraph dimensions, including wrapped-text alignment.
+Initial measurement exposed three real class divergences: dedication +20 mm left indent, missing short-epigraph quotation marks, and long-epigraph +20 mm left indent. PR #60 corrected implementation only; PR #61 added wrapped-text evidence. Final bounded evidence passes all scoped dimensions.
 
 ### Acknowledgements
 
-PR `#62`.
-
-Final evidence: `PASS=8` for own-page transition, heading case/weight/alignment/font size and body font size/1.5 spacing/justification.
+PR `#62`: final `PASS=8`.
 
 ### Summary / abstract / keywords
 
-PR `#63`.
-
-Final evidence: `PASS=14`, including required vernacular/foreign summaries, one-paragraph structure, 150-500 word range, keyword presence/position/separator/punctuation/case, 12 pt, 1.5 spacing, zero first-line indent and justified alignment.
+PR `#63`: final `PASS=14`.
 
 ### Cover
 
-PR `#64`.
-
-Final evidence: `PASS=4` for required academic cover, field order, volume on cover/title-page and optional project cover suppression.
+PR `#64`: final `PASS=4`.
 
 ### Title page
 
-PR `#65`, squash-merged as `c4b7865e5857ab3195a2b4e32f7da94673a29569`.
+PR `#65`, squash merge `c4b7865e5857ab3195a2b4e32f7da94673a29569`.
 
-Exact audited head: `d3fb8957f50868c3334ee29c134db9b6b8a42e10`.
-
-- Normative source contract `32802206747`: SUCCESS
-- LaTeX preflight `32802206746`: SUCCESS
-- structural job `97665147264`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
-- `N6-EVIDENCE title-page-summary PASS=7`
-
-Scoped rules:
-
-- `title-page.element.required`
-- `title-page.fields.order`
-- `volume.number.cover-title-page`
-- `nature.line-spacing`
-- `nature.block.alignment`
-- `project.title-page.required`
-- `project.anonymization.policy`
+Exact audited head `d3fb8957f50868c3334ee29c134db9b6b8a42e10`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE title-page-summary PASS=7`.
 
 ### Approval page
 
-PR `#67`, squash-merged as `673d25252b3b526b5503309535cb423184456e35`.
+PR `#67`, squash merge `673d25252b3b526b5503309535cb423184456e35`.
 
-Exact audited head: `effeab0cbc9a6b82d2d81cf038e2656e42c603f5`.
+Exact audited head `effeab0cbc9a6b82d2d81cf038e2656e42c603f5`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE approval-summary PASS=2 academic_profiles=4 supplemental_profiles=2`.
 
-- Normative source contract `32830408562`: SUCCESS
-- LaTeX preflight `32830408536`: SUCCESS
-- structural job `97747584964`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
-- `N6-EVIDENCE approval-summary PASS=2 academic_profiles=4 supplemental_profiles=2`
-
-Scoped rules:
-
-- `approval.element.required`
-- `approval.fields.order`
-
-The first evidence run used a nature marker that appeared twice in graduation/specialization output. This was an instrumentation ambiguity, not a class defect; the marker was moved to a single-occurrence metadata position without altering implementation, expectation, locator, tolerance or proof-state.
+The first fixture had a duplicated marker in graduation/specialization output; only fixture instrumentation was corrected.
 
 ### Errata
 
-PR `#69`, squash-merged as `5b6050b89e701e9463242de9d9948af9bb6a2687`.
+PR `#69`, squash merge `5b6050b89e701e9463242de9d9948af9bb6a2687`.
 
-Exact audited head: `c1351a194e47afc5f8996d7f64fd2d31ad9d0762`.
+Exact audited head `c1351a194e47afc5f8996d7f64fd2d31ad9d0762`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE errata-summary PASS=3 present_pages=3 absent_pages=2`.
 
-- Normative source contract `32833494577`: SUCCESS
-- LaTeX preflight `32833494574`: SUCCESS
-- structural job `97757168011`: SUCCESS
-- aggregate job `97758970932`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
-- `N6-EVIDENCE errata-summary PASS=3 present_pages=3 absent_pages=2`
-
-Scoped rules:
-
-- `errata.element.optional`
-- `errata.position`
-- `errata.contents`
-
-The first oracle incorrectly strengthened `after=title-page` into immediate adjacency. The final predicate is only `errata_page > title_page`; `page_delta` is observational.
+The initial oracle incorrectly strengthened `after=title-page` into immediate adjacency. Final predicate is only `errata_page > title_page`; `page_delta` is observational.
 
 ### Optional pre-textual lists
 
-PR `#71`, squash-merged as `961cfb41de76c192b7a703956e861c7aba88c251`.
+PR `#71`, squash merge `961cfb41de76c192b7a703956e861c7aba88c251`.
 
-Exact audited head: `33c41dc741dfce7c110a657acdd5cf091b6f2024`.
+Exact audited head `33c41dc741dfce7c110a657acdd5cf091b6f2024`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE optional-lists-summary PASS=4 present_fixtures=4 absent_pages=1`.
 
-- Normative source contract `32841169790`: SUCCESS
-- LaTeX preflight `32841169894`: SUCCESS
-- structural job `97780773494`: SUCCESS
-- aggregate job `97782325510`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
-- `N6-EVIDENCE optional-lists-summary PASS=4 present_fixtures=4 absent_pages=1`
-
-Scoped rules:
-
-- `list.illustrations.optional`
-- `list.tables.optional`
-- `list.abbreviations.optional`
-- `list.symbols.optional`
-
-Normative PASS is restricted to `required=false`. List-entry content, object generation, ordering, layout and typography are not inferred as additional requirements.
+Normative PASS is restricted to `required=false`; list-entry content/layout is not inferred as an additional normative requirement.
 
 ### Table of contents
 
-PR `#73`, squash-merged as `1f1feed15e2c69a067022042f26aa663447cdd9d`.
+PR `#73`, squash merge `1f1feed15e2c69a067022042f26aa663447cdd9d`.
 
-Exact audited head: `f042ff99910a7e9e0fb0d3ca40cc292f047f9980`.
+Exact audited head `f042ff99910a7e9e0fb0d3ca40cc292f047f9980`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE toc-summary PASS=5 toc_pages=5 hierarchy_levels=5 non_normative=1`.
 
-- Normative source contract `32845862671`: SUCCESS
-- LaTeX preflight `32845862682`: SUCCESS
-- structural job `97795253961`: SUCCESS
-- aggregate job `97797391157`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
-- `N6-EVIDENCE toc-summary PASS=5 toc_pages=5 hierarchy_levels=5 non_normative=1`
-
-Scoped normative rules:
-
-- `toc.pretextual-exclusion`
-- `toc.heading.alignment`
-- `toc.heading.case`
-- `toc.page-number.position`
-- `toc.section-hierarchy.mirror`
-
-The first scope filter incorrectly included non-normative `toc.leaders.dotted.project`. Final scope derives only `authority=normative` and separately accounts for the project-policy member.
+The final scope includes only normative TOC rules and accounts for project-policy members separately.
 
 ### Pre-textual pagination and start-side transition
 
-PR `#75`, squash-merged as `d1c0fd5580d172fd41863f0b67f63d6c724eb8c5`.
+PR `#75`, squash merge `d1c0fd5580d172fd41863f0b67f63d6c724eb8c5`.
 
-Exact audited head: `b5a9f1188b8d981dbd519561cdd7e4ba446782e1`.
-
-- Normative source contract `32849497792`: SUCCESS
-- LaTeX preflight `32849497722`: SUCCESS
-- structural job `97806826028`: SUCCESS
-- aggregate job `97809054286`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
-- `N6-EVIDENCE pretextual-pagination-summary PASS=4 duplex_pages=27 catalog_pages=3 recto_markers=13`
+Exact audited head `b5a9f1188b8d981dbd519561cdd7e4ba446782e1`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE pretextual-pagination-summary PASS=4 duplex_pages=27 catalog_pages=3 recto_markers=13`.
 
 Scoped rules:
 
@@ -224,147 +144,142 @@ Scoped rules:
 - `pagination.textual.display-start`
 - `pretextual.start.recto`
 
-Measured highlights include 26 unnumbered physical pre-textual pages, textual display starting on physical/logical page 27, a catalog-card fixture where physical page 3 displays logical page 2, all controlled pre-textual starts on recto, and the catalog card as the immediate title-page verso exception.
-
-The first exact-head structural run used an author marker that legitimately appeared again on the approval page. Only the controlled marker was moved to the title-page-only location string `N6 Pagination Title City`; no normative or class semantics changed.
-
 ### Textual section hierarchy
 
-PR `#77`, squash-merged as `2a4b38a57bf1fafa3f4dbb9a7992340f3f03e2a8`.
+PR `#77`, squash merge `2a4b38a57bf1fafa3f4dbb9a7992340f3f03e2a8`.
 
-Exact audited head: `5c5db3a2e9a78bc97d252a8da9fb3bdad74577b5`.
-
-Required evidence:
+Exact audited head `5c5db3a2e9a78bc97d252a8da9fb3bdad74577b5`.
 
 - Normative source contract `32854036704`: SUCCESS
 - LaTeX preflight `32854036715`: SUCCESS
 - structural job `97821531899`: SUCCESS
-- aggregate `latex-preflight` job `97823695121`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
+- aggregate `latex-preflight` `97823695121`: SUCCESS
+- structural `PASS=14 FAIL=0 SKIP=0`
 - `N6-EVIDENCE section-hierarchy-summary PASS=3 levels=5 first_primary_page=1 second_primary_page=2`
 
-Three scoped rules passed final-PDF measurement:
+Scoped rules:
 
 - `section.numbering.progressive`
 - `section.levels.max`
 - `section.primary.new-page`
 
-Measured highlights:
-
-- the final PDF exposes the exact controlled progressive sequence `1`, `1.1`, `1.1.1`, `1.1.1.1`, `1.1.1.1.1`, followed by primary section `2`;
-- the deepest controlled/observed hierarchy depth is five; this is recorded as positive evidence only and does not claim the class prevents an unsupported sixth level;
-- the complete first controlled hierarchy and its body marker remain on physical page 1 while the second primary section starts on page 2;
-- `page_delta=1` is observational only; the normative predicate is only that the next primary section starts on a later page.
-
-Instrumentation/auditability history:
-
-- the first run stopped before normative measurement because the body control marker was emitted as `N6Omega.` while the extractor required exact `N6Omega`; only fixture punctuation changed;
-- the next green run exposed a harness auditability gap: successful `N6-EVIDENCE` was surfaced only for the `pretextual` check;
-- the final head changes the harness generically so every passing check that actually contains `N6-EVIDENCE` surfaces those lines in the Actions log;
-- no oracle predicate, class/runtime implementation, normative value, locator, tolerance, compatibility scope or proof-state changed.
-
-The final authoritative certification comment is recorded on PR #77.
+The harness was also improved generically so every passing check containing `N6-EVIDENCE` surfaces those lines in Actions logs. No normative predicate changed.
 
 ### Textual section indicators
 
-Evidence PR `#79`, squash-merged as `96ee28fd04d17514fa21a5925c2305571c43220a`.
+Evidence PR `#79`, squash merge `96ee28fd04d17514fa21a5925c2305571c43220a`.
 
-Final exact audited head: `23ce3c5de0d580aab0caaea59349732e8f7e1535`.
+Final exact audited head `23ce3c5de0d580aab0caaea59349732e8f7e1535`.
 
 Scoped rules:
 
 - `section.indicator.alignment`
 - `section.indicator.separator`
 
-Initial evidence head `b3edf76d37f8346af587f31e5aa72127f37ed8ef` correctly exposed a real implementation defect:
+Initial evidence correctly exposed a real implementation defect: alignment passed, but the inherited `\quad` produced a 12.0 pt heading gap against a 3.0 pt same-font literal-space calibration, exceeding the 5 pt N5 tolerance.
 
-- `section.indicator.alignment`: PASS on all five levels;
-- `section.indicator.separator`: FAIL on all five levels;
-- inherited heading gap: 12.0 pt;
-- same-document literal-space calibration: 3.0 pt;
-- uniform excess: 9.0 pt, above the N5 horizontal tolerance of 5.0 pt.
+The FAIL remained visible in #79. PR `#80`, exact head `0fc77f034ce63ac9bc4804fe0071435342404144`, squash merge `9dd63e4cd54e47d1d5a2226160437283014b6e89`, corrected only `abntexto-ufc/layout.def` by replacing the inherited separator with `\space` in the five numbered textual-section printers.
 
-The FAIL was preserved in #79. Implementation was corrected separately in PR `#80`, exact head `0fc77f034ce63ac9bc4804fe0071435342404144`, squash-merged as `9dd63e4cd54e47d1d5a2226160437283014b6e89`.
-
-PR #80 changed only `abntexto-ufc/layout.def`, replacing the inherited `\quad` separator by `\space` in the five numbered textual-section printers through fail-fast patches. It deliberately did not alter TOC labels, spacing, duplex behavior, multiline hanging, typography, normative values, locators, tolerances or proof-state.
-
-Implementation-fix certification:
-
-- Normative source contract `32872035018`: SUCCESS
-- LaTeX preflight `32872034981`: SUCCESS
-- structural job `97881122641`: SUCCESS
-- aggregate `latex-preflight` job `97882891377`: SUCCESS
-
-After #80 merged, the evidence branch was synchronized with `main` without force/rebase and rerun with unchanged oracle semantics.
-
-Final evidence:
+Final evidence after the isolated fix:
 
 - Normative source contract `32872834514`: SUCCESS
 - LaTeX preflight `32872834517`: SUCCESS
 - structural job `97883700774`: SUCCESS
-- aggregate `latex-preflight` job `97886512955`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
+- aggregate `latex-preflight` `97886512955`: SUCCESS
+- structural `PASS=14 FAIL=0 SKIP=0`
 - `N6-EVIDENCE section-indicator-summary PASS=2 levels=5`
-- `section.indicator.alignment`: PASS on all five levels;
-- `section.indicator.separator`: PASS on all five levels;
-- measured heading gap = 3.0 pt and same-font single-space calibration = 3.0 pt, with delta 0.0 pt at every level.
+- measured heading gap = 3.0 pt; same-font literal-space calibration = 3.0 pt; delta = 0.0 pt at all five levels.
 
-The evidence PR remains evidence-only relative to the post-fix `main`: five scenario/fixture/oracle/gate files and no class/runtime diff. No normative value, locator, tolerance, compatibility mapping or proof-state changed.
+### Primary section recto in duplex documents
+
+Evidence PR `#82`, squash merge `838e83d19a133d19e7f9aae9d3d675f274da2ed3`.
+
+Exact audited head `8f5926f43230131fafc5410e3a955ffc3af06f22`.
+
+Stable audited base: `39d4d799716105e6561bc66452dc04a492d4d635`.
+
+Scoped rule:
+
+- `section.primary.recto-duplex`
+
+Stored contract predicate:
+
+- `values.start_side = "recto"`
+- applicable only when `duplex = true`
+
+Final evidence:
+
+- Normative source contract run `32876510274`: SUCCESS
+- LaTeX preflight run `32876510233`: SUCCESS
+- structural job `97895584067`: SUCCESS
+- aggregate `latex-preflight` job `97898148526`: SUCCESS
+- structural result: `PASS=14 FAIL=0 SKIP=0`
+- `N6-EVIDENCE section-primary-recto-duplex-summary PASS=1 primaries=3 pages=1,3,5`
+
+Measurement used a controlled `impressao=frente-verso` final PDF with three short primary sections. Their headings occurred on physical pages 1, 3 and 5. Physical pages 2 and 4 were empty transitions and are recorded only as observational evidence. Normative PASS depends only on recto parity; page deltas and blank-page insertion are not additional stored predicates.
+
+The evidence increment contains only scenario/fixture/oracle/gate integration. No class/runtime implementation, normative value, locator, tolerance, compatibility mapping or proof-state changed.
 
 ## N6 remaining work
 
-Continue with bounded, independently measurable components. Preferred order from this checkpoint:
+Continue with bounded, independently measurable components. Preferred order:
 
 1. remaining textual section layout/typography dimensions;
 2. quotation and paragraph dimensions;
 3. citation/object dimensions;
 4. post-textual dimensions;
-5. deposit/distribution-related normative evidence that is actually measurable from the relevant final artifact or institutional workflow.
+5. deposit/distribution-related evidence measurable from the relevant final artifact or institutional workflow.
 
-Current section-related rulesets from `normativa/locator-audit-sections-footnotes-nature.json` that remain outside the completed `sections.hierarchy` and `sections.indicator` scopes are:
+Current section-related rulesets still outside completed `sections.hierarchy`, `sections.indicator` and `sections.primary-recto-duplex` scopes:
 
-- `sections.primary-recto-duplex`: `section.primary.recto-duplex`
 - `sections.primary-after-spacing`: `section.primary.after-spacing`
 - `sections.subsection-spacing`: `section.subsection.before-after-spacing`
 - `sections.multiline-hanging`: `section.multiline.hanging`
 - `sections.unnumbered-centered`: `heading.unnumbered.centered`
 
-Do not infer any of those dimensions from the green hierarchy or indicator evidence.
+Do not infer any of these dimensions from prior green section evidence.
 
-The immediate next bounded candidate is `sections.primary-recto-duplex`, with exactly one rule ID:
+## Immediate next bounded increment
 
-- `section.primary.recto-duplex`
+Next: `sections.primary-after-spacing` with exactly one rule:
 
-At PR creation, rederive that exact scope and expected value from the current full contract and locator mappings. Use a controlled duplex final-PDF fixture where the preceding textual content deliberately ends such that the next primary section would otherwise begin on verso; measure physical page parity directly and treat any inserted blank page only as observational support. Keep primary after-spacing, subsection spacing, multiline hanging, unnumbered-heading centering and other section dimensions outside this increment.
+- `section.primary.after-spacing`
 
-## Required PR discipline from this checkpoint forward
+Before creating the evidence PR:
 
-Every bounded audit PR should contain, in its body or final comment:
+1. rederive the exact ruleset mapping from `normativa/locator-audit-sections-footnotes-nature.json`;
+2. rederive the current full-contract value for `section.primary.after-spacing` rather than copying a historical expectation;
+3. construct a controlled final-PDF fixture with a primary heading followed by measurable body text and same-document line-spacing calibration;
+4. measure only the stored after-spacing predicate, using N5 tolerances where applicable;
+5. keep subsection spacing, multiline hanging, unnumbered-heading centering and all unrelated typography outside this increment;
+6. if evidence exposes a class defect, preserve the FAIL, open an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
+
+## Required PR discipline
+
+Every bounded audit PR must record:
 
 1. stable base SHA;
-2. exact head SHA used for evidence;
+2. exact audited head SHA;
 3. complete rule scope;
 4. fixtures and measurement strategy;
 5. required workflow run IDs and relevant job ID;
 6. structured `N6-EVIDENCE` summary;
-7. explicit statement that normative values/locators/tolerances/proof-state were not changed, unless the PR is explicitly a policy/source/proof-state PR;
-8. merge only on unchanged audited head;
-9. after merge, update this handoff file with the merge SHA and the next action.
-
-If measurement exposes a class defect, do not hide it by changing the oracle. Record the `FAIL`, open an isolated implementation-fix PR, preserve the normative expectation, rerun the evidence, and only then close the bounded component.
+7. explicit statement about normative values, locators, tolerances and proof-state;
+8. merge only on the unchanged audited head and while `behind_by=0`;
+9. after merge, update this handoff with the merge SHA and next action.
 
 ## CTAN / release state
 
-The original CTAN blockers have been technically remediated for v2.2.0:
+Technical blockers already remediated for v2.2.0:
 
-- canonical package/class renamed to `abntexto-ufc`;
-- the legacy package identity is retained only through the compatibility surface outside the CTAN canonical package;
-- UFC coat of arms externalized from public/CTAN archives;
-- CTAN archive reduced to the canonical runtime, essential documentation and portable example;
+- canonical package/class identity is `abntexto-ufc`;
+- legacy identity remains only through compatibility surface outside the canonical CTAN package;
+- UFC coat of arms is externalized from public/CTAN archives;
+- CTAN archive is limited to canonical runtime, essential documentation and portable example;
 - archive/asset identity guards and allowlists are present;
-- D5 distribution certification has been rehearsed on PR #36.
+- D5 distribution rehearsal exists in PR #36.
 
-Do not tag or publish v2.2.0 from the rehearsal. Final D5 must be repeated on the source tree approved at N15, and D6 CTAN resubmission follows that final certification.
+Do not tag or publish v2.2.0 from the rehearsal. Final D5 must run on the N15-approved final source tree; D6 CTAN resubmission follows that certification.
 
 ## M1 state
 
@@ -376,26 +291,26 @@ Implementation is complete through PR #19:
 - `deploy-pages` v5;
 - repository `has_pages=true`.
 
-M1 is not formally `DONE` until explicit Pages/runtime/deployment evidence is reviewed and recorded. Do not conflate implementation completion with closure evidence.
+M1 remains `IMPLEMENTED`, not formally `DONE`, until explicit Pages/runtime/deployment evidence is reviewed and recorded.
 
 ## Open release-adjacent items
 
-- PR #36 remains D5 distribution rehearsal only; do not merge/publish it as final v2.2.0 release certification.
-- Issue #18 remains open for bit-reproducible PDF differences (`CreationDate`, `ModDate`, PDF `/ID`) even though pages/text/fonts/images were identical; reassess release-blocking status under the final public bundle policy later.
+- PR #36 remains D5 distribution rehearsal only.
+- Issue #18 remains open for bit-reproducible PDF differences (`CreationDate`, `ModDate`, PDF `/ID`) although pages/text/fonts/images were identical; reassess release-blocking status later under the final public bundle policy.
 - D5 final remains blocked by N15.
 - D6 CTAN resubmission remains blocked by final D5.
 
-## How to resume in a new ChatGPT conversation
+## How to resume
 
-Read, in this order:
+Read, in order:
 
-1. `docs/HANDOFF-V2.2.0.md`;
+1. this file;
 2. current `main` SHA and open PRs;
-3. the latest bounded audit PR body/comments and its exact-head workflow runs;
-4. `normativa/atomic-rules.json`, relevant `coverage-rules-*.json`, locator/proof policy and oracle policy only as needed for the next scope.
+3. latest bounded audit PR body/comments and exact-head workflow runs;
+4. current full contract, relevant locator ruleset and N5 oracle policy for the next scope.
 
-Do not reconstruct status primarily from old chat messages. Git history, this handoff and exact CI evidence are authoritative.
+Do not reconstruct state primarily from old chats. Git history, this handoff and exact CI evidence are authoritative.
 
 ## Next action
 
-From stable main `96ee28fd04d17514fa21a5925c2305571c43220a`, rederive `sections.primary-recto-duplex` from the current full contract and locator mappings. If it remains exactly `section.primary.recto-duplex`, create an evidence-only N6 PR with a controlled duplex final-PDF fixture that forces a primary-section recto transition. Measure only the stored recto predicate. Do not absorb section spacing, subsection spacing, multiline hanging, unnumbered-heading centering, class/runtime changes, normative values, locators, tolerances or proof-state into that evidence increment.
+From stable main `838e83d19a133d19e7f9aae9d3d675f274da2ed3`, rederive `sections.primary-after-spacing` and the exact current value of `section.primary.after-spacing`. If the scope remains one rule, create an evidence-only N6 PR with a controlled final-PDF fixture and measure only that after-spacing predicate. Do not absorb subsection spacing, multiline hanging, unnumbered-heading centering, runtime/class changes, normative values, locators, tolerances or proof-state into that evidence increment.
