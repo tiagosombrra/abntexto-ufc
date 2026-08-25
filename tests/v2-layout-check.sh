@@ -66,5 +66,6 @@ sh tests/v2-section-primary-after-spacing-evidence-check.sh
 sh tests/v2-subsection-spacing-evidence-check.sh
 sh tests/v2-section-multiline-hanging-evidence-check.sh
 sh tests/v2-section-unnumbered-centered-evidence-check.sh
+sh tests/v2-body-paragraph-evidence-check.sh
 
 echo 'Gate V2 de layout concluído.'
