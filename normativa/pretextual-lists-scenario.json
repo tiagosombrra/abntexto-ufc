@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "optional-pretextual-lists",
+  "rules": [
+    "list.illustrations.optional",
+    "list.tables.optional",
+    "list.abbreviations.optional",
+    "list.symbols.optional"
+  ],
+  "fixtures": {
+    "present": "tests/normativa/pretextual-oracle-lists-present.tex",
+    "absent": "tests/normativa/pretextual-oracle-lists-absent.tex",
+    "abbreviations": "tests/fixtures/pretextuais/abreviaturas-oracle.tex",
+    "symbols": "tests/fixtures/pretextuais/simbolos-oracle.tex"
+  },
+  "lists": {
+    "list.illustrations.optional": {
+      "heading": "LISTA DE ILUSTRAÇÕES",
+      "entry_marker": "UFCN6LISTILLENTRY"
+    },
+    "list.tables.optional": {
+      "heading": "LISTA DE TABELAS",
+      "entry_marker": "UFCN6LISTTABLEENTRY"
+    },
+    "list.abbreviations.optional": {
+      "heading": "LISTA DE ABREVIATURAS E SIGLAS",
+      "entry_marker": "UFCN6LISTABBRENTRY"
+    },
+    "list.symbols.optional": {
+      "heading": "LISTA DE SÍMBOLOS",
+      "entry_marker": "UFCN6LISTSYMENTRY"
+    }
+  },
+  "sentinel": "UFCN6LISTSENTINEL"
+}
