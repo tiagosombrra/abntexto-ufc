@@ -9,6 +9,9 @@
     "toc.page-number.position",
     "toc.section-hierarchy.mirror"
   ],
+  "non_normative_rules": [
+    "toc.leaders.dotted.project"
+  ],
   "heading": "SUMÁRIO",
   "pretextual_markers": [
     "AGRADECIMENTOS",
