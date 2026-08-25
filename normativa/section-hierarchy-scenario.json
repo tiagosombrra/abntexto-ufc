@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "section-hierarchy",
+  "parent_rule": "section.hierarchy",
+  "rules": [
+    "section.numbering.progressive",
+    "section.levels.max",
+    "section.primary.new-page"
+  ],
+  "levels": [
+    {"level": "section", "marker": "N6Alpha", "number": "1"},
+    {"level": "subsection", "marker": "N6Beta", "number": "1.1"},
+    {"level": "subsubsection", "marker": "N6Gamma", "number": "1.1.1"},
+    {"level": "paragraph", "marker": "N6Delta", "number": "1.1.1.1"},
+    {"level": "subparagraph", "marker": "N6Epsilon", "number": "1.1.1.1.1"}
+  ],
+  "first_primary_body_marker": "N6Omega",
+  "second_primary": {"marker": "N6Zeta", "number": "2"}
+}

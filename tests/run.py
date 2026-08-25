@@ -244,7 +244,7 @@ def main() -> int:
         write_reports(report_dir, args.mode, ordered_results, complete=False)
         suffix = f" ({result.duration_seconds:.1f}s)" if result.duration_seconds else ""
         print(f"         {result.status}{suffix}")
-        if result.status == "PASS" and result.name == "pretextual":
+        if result.status == "PASS":
             print_structured_evidence(result)
         if result.status == "FAIL":
             print_failure_tail(result)
