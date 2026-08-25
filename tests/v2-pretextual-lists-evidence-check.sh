@@ -1,16 +1,28 @@
 #!/bin/sh
 set -eu
 
-present_fixture="tests/normativa/pretextual-oracle-lists-present.tex"
+illustrations_fixture="tests/normativa/pretextual-oracle-list-illustrations-present.tex"
+tables_fixture="tests/normativa/pretextual-oracle-list-tables-present.tex"
+abbreviations_fixture="tests/normativa/pretextual-oracle-list-abbreviations-present.tex"
+symbols_fixture="tests/normativa/pretextual-oracle-list-symbols-present.tex"
 absent_fixture="tests/normativa/pretextual-oracle-lists-absent.tex"
-present_job="pretextual-oracle-lists-present"
+
+illustrations_job="pretextual-oracle-list-illustrations-present"
+tables_job="pretextual-oracle-list-tables-present"
+abbreviations_job="pretextual-oracle-list-abbreviations-present"
+symbols_job="pretextual-oracle-list-symbols-present"
 absent_job="pretextual-oracle-lists-absent"
 evidence="artifacts/normative-pretextual/optional-lists.json"
 
 cleanup() {
-  for job in "$present_job" "$absent_job"; do
+  for job in \
+    "$illustrations_job" \
+    "$tables_job" \
+    "$abbreviations_job" \
+    "$symbols_job" \
+    "$absent_job"; do
     rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
-    rm -f "$job.loi" "$job.lof" "$job.lot"
+    rm -f "$job.loi" "$job.lof" "$job.lot" "$job.loq" "$job.logr"
   done
 }
 trap cleanup EXIT INT TERM
@@ -41,12 +53,18 @@ compile_fixture() {
   fi
 }
 
-compile_fixture "$present_fixture" "$present_job"
+compile_fixture "$illustrations_fixture" "$illustrations_job"
+compile_fixture "$tables_fixture" "$tables_job"
+compile_fixture "$abbreviations_fixture" "$abbreviations_job"
+compile_fixture "$symbols_fixture" "$symbols_job"
 compile_fixture "$absent_fixture" "$absent_job"
 
 mkdir -p "$(dirname "$evidence")"
 python3 tests/checks/normative_pretextual_lists.py \
-  "$present_job.pdf" \
+  "$illustrations_job.pdf" \
+  "$tables_job.pdf" \
+  "$abbreviations_job.pdf" \
+  "$symbols_job.pdf" \
   "$absent_job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
