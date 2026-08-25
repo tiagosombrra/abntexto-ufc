@@ -12,7 +12,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
-- Legacy `ufctex.cls` remains only as a deprecated compatibility shim and is outside the canonical CTAN package.
+- The legacy class entry point remains only as a deprecated compatibility shim and is outside the canonical CTAN package.
 - UFC institutional mark is externalized from public/CTAN bundles; users may supply an official local asset through the supported class option.
 
 ## Governing method
