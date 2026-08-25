@@ -9,10 +9,11 @@
     "list.symbols.optional"
   ],
   "fixtures": {
-    "present": "tests/normativa/pretextual-oracle-lists-present.tex",
-    "absent": "tests/normativa/pretextual-oracle-lists-absent.tex",
-    "abbreviations": "tests/fixtures/pretextuais/abreviaturas-oracle.tex",
-    "symbols": "tests/fixtures/pretextuais/simbolos-oracle.tex"
+    "list.illustrations.optional": "tests/normativa/pretextual-oracle-list-illustrations-present.tex",
+    "list.tables.optional": "tests/normativa/pretextual-oracle-list-tables-present.tex",
+    "list.abbreviations.optional": "tests/normativa/pretextual-oracle-list-abbreviations-present.tex",
+    "list.symbols.optional": "tests/normativa/pretextual-oracle-list-symbols-present.tex",
+    "absent": "tests/normativa/pretextual-oracle-lists-absent.tex"
   },
   "lists": {
     "list.illustrations.optional": {
