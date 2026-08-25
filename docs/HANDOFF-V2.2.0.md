@@ -12,7 +12,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
-- `ufctex.cls` remains only as a deprecated compatibility shim.
+- The legacy class entry point remains only as a deprecated compatibility shim.
 - UFC institutional mark is excluded from public/CTAN bundles; users may supply an official local asset through the supported class option.
 
 ## Governing method
@@ -172,7 +172,7 @@ If measurement exposes a class defect, do not hide it by changing the oracle. Re
 The original CTAN blockers have been technically remediated for v2.2.0:
 
 - canonical package/class renamed to `abntexto-ufc`;
-- legacy `ufctex` retained only for compatibility outside the CTAN canonical surface;
+- the legacy package identity is retained only through the compatibility surface outside the CTAN canonical package;
 - UFC coat of arms externalized from public/CTAN archives;
 - CTAN archive reduced to the canonical runtime, essential documentation and portable example;
 - archive/asset identity guards and allowlists are present;
