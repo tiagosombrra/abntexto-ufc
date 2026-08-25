@@ -14,6 +14,6 @@
   },
   "calibration": {
     "factor": 1.5,
-    "description": "same-document onehalfsp line interval"
+    "description": "same-document onehalfsp line transition with one explicit baselineskip vertical space"
   }
 }
