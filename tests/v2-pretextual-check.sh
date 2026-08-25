@@ -12,6 +12,7 @@ sh tests/v2-pretextual-approval-evidence-check.sh
 sh tests/v2-pretextual-errata-evidence-check.sh
 sh tests/v2-pretextual-lists-evidence-check.sh
 sh tests/v2-pretextual-toc-evidence-check.sh
+sh tests/v2-pretextual-pagination-evidence-check.sh
 
 fixtures="tests/normativa/pretextuais-trabalho.tex tests/normativa/pretextuais-projeto-anonimo.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
