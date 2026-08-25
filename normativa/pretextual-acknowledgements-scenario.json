@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "phase": "N6",
+  "purpose": "Isolated positive final-PDF scenario for acknowledgement-page typography and body layout.",
+  "fixture": "tests/normativa/pretextual-oracle-acknowledgements.tex",
+  "component": "acknowledgements",
+  "route": "\\imprimiragradecimentos",
+  "markers": {
+    "previous_page": "UFCN6ACKPREV",
+    "body_start": "UFCN6ACKSTART",
+    "body_end": "UFCN6ACKEND"
+  },
+  "calibration": {
+    "line_spacing": [
+      "UFCN6ACKCALONE",
+      "UFCN6ACKCALTWO",
+      "UFCN6ACKCALTHREE"
+    ],
+    "font_weight": {
+      "regular": "UFCN6ACKREGULAR",
+      "bold": "UFCN6ACKBOLD"
+    }
+  },
+  "minimum_body_lines": 4,
+  "tolerances": {
+    "line_spacing_pt": 1.5
+  },
+  "rules": [
+    "acknowledgements.page.own",
+    "acknowledgements.heading.case",
+    "acknowledgements.heading.weight",
+    "acknowledgements.heading.alignment",
+    "acknowledgements.heading.font-size",
+    "acknowledgements.body.font-size",
+    "acknowledgements.body.line-spacing",
+    "acknowledgements.body.alignment"
+  ]
+}
