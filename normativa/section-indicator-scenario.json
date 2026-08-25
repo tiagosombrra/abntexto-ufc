@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "section-indicator",
+  "locator_ruleset": "sections.indicator",
+  "rules": [
+    "section.indicator.alignment",
+    "section.indicator.separator"
+  ],
+  "levels": [
+    {
+      "level": "section",
+      "title_marker": "N6Sect",
+      "number": "1",
+      "calibration_left": "N6SCalA",
+      "calibration_right": "N6SCalB"
+    },
+    {
+      "level": "subsection",
+      "title_marker": "N6Sub",
+      "number": "1.1",
+      "calibration_left": "N6UCalA",
+      "calibration_right": "N6UCalB"
+    },
+    {
+      "level": "subsubsection",
+      "title_marker": "N6Subsub",
+      "number": "1.1.1",
+      "calibration_left": "N6VCalA",
+      "calibration_right": "N6VCalB"
+    },
+    {
+      "level": "paragraph",
+      "title_marker": "N6Para",
+      "number": "1.1.1.1",
+      "calibration_left": "N6PCalA",
+      "calibration_right": "N6PCalB"
+    },
+    {
+      "level": "subparagraph",
+      "title_marker": "N6Subpara",
+      "number": "1.1.1.1.1",
+      "calibration_left": "N6QCalA",
+      "calibration_right": "N6QCalB"
+    }
+  ]
+}
