@@ -290,8 +290,8 @@
     \vspace*{.5\textheight}
     \noindent\hspace*{8cm}%
     \begin{minipage}{\dimexpr\textwidth-8cm\relax}
-      \setlength{\parindent}{0pt}
       \onehalfsp\justifying
+      \setlength{\parindent}{0pt}
       \ufc_input_file:n {#1}
     \end{minipage}\par
     \vfill
@@ -331,8 +331,8 @@
     \begin{minipage}{\dimexpr\textwidth-4cm\relax}
       \fontsize{10}{12}\selectfont
       \singlesp
-      \setlength{\parindent}{0pt}
       \justifying
+      \setlength{\parindent}{0pt}
       \ufc_input_file:n {#1}
       \ufc_meta_if_blank:nF {autor-epigrafe}
         { \par\raggedleft\ufc_meta_use:n {autor-epigrafe} }
