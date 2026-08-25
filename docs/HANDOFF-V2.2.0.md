@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 primary-section after-spacing evidence merge: `9a9b9bf8fda4807b83526c4843562229308e1378`
+- Stable main after N6 subsection-spacing evidence merge: `19e1fa90a87b35fd5a9f987328bdcfd609809bd9`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -227,6 +227,35 @@ Instrumentation history is part of the audit record. Initial head `07b11dc7965b9
 
 This was an instrumentation correction, not a class defect. No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed.
 
+### Subsection before/after spacing
+
+Evidence PR `#86`, squash merge `19e1fa90a87b35fd5a9f987328bdcfd609809bd9`.
+
+Stable base: `060a4e7e0f96b92a9b40518daee87be66f520061`.
+
+Final exact audited head: `c959db09f1622f96db6050c5a244fe43c4884f57`.
+
+Scoped rule:
+
+- `section.subsection.before-after-spacing`
+
+Stored predicates:
+
+- `values.before_factor = 1.5`
+- `values.after_factor = 1.5`
+
+Final exact-head CI evidence:
+
+- Normative source contract `32886010258`: SUCCESS
+- LaTeX preflight `32886010255`: SUCCESS
+- structural job `97926524853`: SUCCESS
+- aggregate `latex-preflight` `97929084769`: SUCCESS
+- `N6-EVIDENCE subsection-spacing-summary PASS=1`
+
+The final-PDF oracle measures the before and after intervals independently with `pdftotext -bbox-layout` word-center geometry and compares both against a same-document `onehalfsp` calibration containing one explicit `\baselineskip` interval. The N5 vertical tolerance remains `5 pt`; the gate hard-fails unless both predicates are within tolerance.
+
+No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment.
+
 ## N6 remaining work
 
 Continue with bounded, independently measurable components. Preferred order:
@@ -239,24 +268,30 @@ Continue with bounded, independently measurable components. Preferred order:
 
 Current section-related rulesets still outside the completed section scopes:
 
-- `sections.subsection-spacing`: `section.subsection.before-after-spacing`
 - `sections.multiline-hanging`: `section.multiline.hanging`
 - `sections.unnumbered-centered`: `heading.unnumbered.centered`
 
-Do not infer any of these dimensions from prior green section evidence.
+Do not infer either dimension from prior green section evidence.
 
 ## Immediate next bounded increment
 
-Next: `sections.subsection-spacing`.
+Next: `sections.multiline-hanging`.
+
+Current rederived scope from `normativa/locator-audit-sections-footnotes-nature.json` and the full contract:
+
+- ruleset: `sections.multiline-hanging`
+- exact rule: `section.multiline.hanging`
+- stored predicate: `values.enabled = true`
+- institutional locator: UFC `4.5.1(d), p. 77`
 
 Before creating the evidence PR:
 
-1. rederive the exact ruleset mapping from `normativa/locator-audit-sections-footnotes-nature.json`;
-2. rederive the current full-contract values for `section.subsection.before-after-spacing` rather than copying historical expectations;
-3. construct a controlled final-PDF fixture that independently exposes the vertical space before and after a subsection heading;
-4. use same-document 1.5-spaced calibration and the N5 vertical tolerance, while accounting correctly for center-to-center line geometry;
-5. measure only the stored before/after spacing predicates;
-6. keep multiline hanging, unnumbered-heading centering and all unrelated typography outside this increment;
+1. rederive the exact ruleset mapping and current full-contract value from the source tree again at branch creation time;
+2. construct controlled final-PDF fixtures that force numbered section titles to wrap naturally to multiple lines;
+3. measure the continuation-line horizontal alignment relative to the first title-text character, not relative to the numeric indicator;
+4. exercise enough section levels to avoid proving only one printer implementation while keeping the single stored predicate unchanged;
+5. use only the N5 horizontal-position tolerance and treat line-break positions/wording as fixture integrity or observational evidence, not new normative predicates;
+6. keep unnumbered-heading centering, section spacing, typography and unrelated dimensions outside this increment;
 7. if evidence exposes a real class defect, preserve the FAIL, use an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
 
 ## Required PR discipline
@@ -318,4 +353,4 @@ Do not reconstruct state primarily from old chats. Git history, this handoff and
 
 ## Next action
 
-From stable main `9a9b9bf8fda4807b83526c4843562229308e1378`, rederive `sections.subsection-spacing` and the exact current values of `section.subsection.before-after-spacing`. If the scope remains one rule, create an evidence-only N6 PR with controlled final-PDF measurement of the stored before/after spacing predicates. Do not absorb multiline hanging, unnumbered-heading centering, runtime/class changes, normative values, locators, tolerances or proof-state into that increment.
+From stable main `19e1fa90a87b35fd5a9f987328bdcfd609809bd9`, rederive `sections.multiline-hanging` and `section.multiline.hanging` (`values.enabled=true`). If the scope remains exactly one rule, create an evidence-only N6 PR with controlled final-PDF measurement of multiline continuation alignment. Do not absorb unnumbered-heading centering, runtime/class changes, normative values, locators, tolerances, compatibility mappings or proof-state into that increment.
