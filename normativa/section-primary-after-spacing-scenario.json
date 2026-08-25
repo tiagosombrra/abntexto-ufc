@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "section-primary-after-spacing",
+  "locator_ruleset": "sections.primary-after-spacing",
+  "rules": [
+    "section.primary.after-spacing"
+  ],
+  "markers": {
+    "heading": "N6SpacingAlpha",
+    "body": "N6SpacingBody",
+    "calibration_top": "N6SpacingCalTop",
+    "calibration_bottom": "N6SpacingCalBottom"
+  },
+  "calibration": {
+    "factor": 1.5,
+    "description": "same-document onehalfsp line interval"
+  }
+}
