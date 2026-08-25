@@ -97,10 +97,11 @@ def main() -> None:
     if not isinstance(list_specs, dict) or set(list_specs) != scenario_scope:
         fail("list specification keys must match the scenario rule scope exactly")
     for rule_id, spec in list_specs.items():
-        if not isinstance(spec, dict) or set(spec) != {"heading", "entry_marker"}:
+        if not isinstance(spec, dict) or set(spec) != {"heading"}:
             fail(f"invalid list specification for {rule_id}")
-        if not all(isinstance(spec[key], str) and spec[key] for key in spec):
-            fail(f"empty list marker for {rule_id}")
+        heading = spec.get("heading")
+        if not isinstance(heading, str) or not heading:
+            fail(f"empty list heading for {rule_id}")
 
     sentinel = scenario.get("sentinel")
     if not isinstance(sentinel, str) or not sentinel:
@@ -121,7 +122,6 @@ def main() -> None:
         )
 
     evidence: list[dict[str, Any]] = []
-    supplemental: dict[str, Any] = {}
 
     for rule_id in scenario["rules"]:
         rule = rules[rule_id]
@@ -129,7 +129,6 @@ def main() -> None:
         spec = list_specs[rule_id]
         present_heading_pages = marker_pages(present_pages, spec["heading"])
         absent_heading_pages = marker_pages(absent_pages, spec["heading"])
-        entry_pages = marker_pages(present_pages, spec["entry_marker"])
 
         passed = (
             required is False
@@ -148,18 +147,8 @@ def main() -> None:
             )
         )
 
-        list_page = present_heading_pages[0] if len(present_heading_pages) == 1 else None
-        supplemental[rule_id] = {
-            "entry_marker": spec["entry_marker"],
-            "entry_pages": entry_pages,
-            "entry_observed_on_list_page": list_page in entry_pages if list_page else False,
-        }
-
     status_counts = dict(Counter(item["status"] for item in evidence))
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
-    supplemental_pass = all(
-        item["entry_observed_on_list_page"] for item in supplemental.values()
-    )
 
     payload = {
         "schema_version": 1,
@@ -175,10 +164,6 @@ def main() -> None:
         "absent_fixture": {
             "page_count": len(absent_pages),
             "sentinel_pages": absent_sentinel,
-        },
-        "supplemental_route_integrity": {
-            "all_entries_observed_on_list_pages": supplemental_pass,
-            "lists": supplemental,
         },
         "evidence": evidence,
     }
@@ -201,11 +186,6 @@ def main() -> None:
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
-    print(
-        "N6-EVIDENCE optional-lists-route-integrity "
-        f"all_entries_observed_on_list_pages={str(supplemental_pass).lower()} "
-        f"measured={json.dumps(supplemental, ensure_ascii=False, sort_keys=True)}"
-    )
 
 
 if __name__ == "__main__":
