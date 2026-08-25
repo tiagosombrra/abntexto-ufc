@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 multiline-hanging evidence merge: `decea2b1c7adc3093764ec22922d73fc87cfb22d`
+- Stable main after N6 unnumbered-heading centering evidence merge: `0bf1a098688bdd1c6ceba077434bab53f448ffb8`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -286,42 +286,76 @@ The final-PDF fixture forces natural wrapping at all five numbered hierarchy lev
 
 No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment.
 
+### Unnumbered heading centering
+
+Evidence PR `#90`, squash merge `0bf1a098688bdd1c6ceba077434bab53f448ffb8`.
+
+Stable base: `bc45a708c53ac399a17a4784e74ebbba79a1c1b0`.
+
+Final exact audited head: `d4888fb6a6641c2e028d8046c0c6c364e033b6be`.
+
+Scoped rule:
+
+- `heading.unnumbered.centered`
+
+Stored predicate:
+
+- `values.alignment = "centered"`
+
+Final exact-head CI evidence:
+
+- Normative source contract `32895268110`: SUCCESS
+- normative job `97956367509`: SUCCESS
+- LaTeX preflight `32895268075`: SUCCESS
+- structural job `97956367463`: SUCCESS
+- aggregate `latex-preflight` job `97958863144`: SUCCESS
+- structural `PASS=14 FAIL=0 SKIP=0`
+- `N6-EVIDENCE section-unnumbered-centered-summary PASS=1 surfaces=3 max_delta_pt=0.2162`
+
+The final-PDF fixture exercises the three distinct current rendering paths for applicable unnumbered headings: the shared pre-textual helper through `AGRADECIMENTOS`, the dedicated `REFERÊNCIAS` implementation, and the shared post-textual helper. Heading center is compared with the recto text-area center derived from the normative 3 cm left / 2 cm right margins. Measured deltas were `0.2162 pt`, `0.0002 pt` and `0.0002 pt`, respectively, all within the unchanged N5 horizontal-position tolerance of `5 pt`.
+
+No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment. The N6 section-layout block is now complete.
+
 ## N6 remaining work
 
 Continue with bounded, independently measurable components. Preferred order:
 
-1. remaining textual section layout/typography dimensions;
-2. quotation and paragraph dimensions;
+1. paragraph dimensions;
+2. quotation dimensions;
 3. citation/object dimensions;
 4. post-textual dimensions;
 5. deposit/distribution-related evidence measurable from the relevant final artifact or institutional workflow.
 
-Current section-related ruleset still outside the completed section scopes:
-
-- `sections.unnumbered-centered`: `heading.unnumbered.centered`
-
-Do not infer this dimension from prior green pre-textual, TOC or post-textual evidence.
+The section-layout scopes completed through PR #90 must not be reopened without new evidence of a regression or a changed normative source.
 
 ## Immediate next bounded increment
 
-Next: `sections.unnumbered-centered`.
+Next: `layout.body-paragraph`.
 
-Current rederived scope from `normativa/locator-audit-sections-footnotes-nature.json` and `normativa/coverage-rules.json`:
+Current rederived scope from `normativa/locator-audit-typography-paragraphs.json`, `normativa/catalog.json`, `normativa/atomic-rules.json` and the current full contract:
 
-- ruleset: `sections.unnumbered-centered`
-- exact rule: `heading.unnumbered.centered`
-- stored predicate: `values.alignment = "centered"`
-- institutional locator: UFC `4.5.1(g), p. 77`
+- ruleset: `layout.body-paragraph`
+- exact rules:
+  - `paragraph.first-line.indent`
+  - `paragraph.spacing.extra`
+- stored predicates:
+  - `values.first_line_indent_mm = 20`
+  - `values.paragraph_extra_spacing_pt = 0`
+- institutional locator: UFC `4.3, p. 66; Figura 34, p. 68`
+- locator status: `VERIFIED`
+
+Current implementation observation only, not normative proof: `abntexto-ufc/layout.def` sets `\parindent` to `2cm` and `\parskip` to `0pt`.
 
 Before creating the evidence PR:
 
-1. rederive the exact ruleset mapping and current full-contract value from the source tree again at branch creation time;
-2. enumerate the applicable unnumbered-heading surfaces already implemented by the class and distinguish them from headings governed by separate element-specific rules;
-3. construct controlled final-PDF fixtures that exercise a representative cross-section of applicable unnumbered headings without changing their semantics;
-4. measure each heading center against the physical text-area center using the N5 horizontal-position tolerance;
-5. use heading presence and expected page as fixture-integrity evidence only; do not silently add case, weight, font-size or page-break predicates to this rule;
-6. keep numbered-section layout, spacing, multiline hanging and unrelated typography outside this increment;
-7. if evidence exposes a real class defect, preserve the FAIL, use an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
+1. rederive the exact two-rule scope and inherited atomic values from the current full contract again at branch creation time;
+2. construct a controlled final-PDF body-text fixture with multiple ordinary paragraphs and unambiguous marker words;
+3. measure first-line horizontal offset from the recto text left edge and compare it with the 20 mm predicate using the N5 horizontal-position tolerance;
+4. measure the vertical transition between consecutive paragraphs against a same-document control with identical body line spacing and no added paragraph skip, using the N5 vertical-position tolerance;
+5. keep body line spacing itself outside this increment because `spacing.body` is a separate rule;
+6. use page number, line wrapping and paragraph text only as fixture-integrity/observational evidence;
+7. do not infer conformance from the source-level `\parindent` / `\parskip` assignments;
+8. if evidence exposes a real class defect, preserve the FAIL, use an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
 
 ## Required PR discipline
 
@@ -382,4 +416,4 @@ Do not reconstruct state primarily from old chats. Git history, this handoff and
 
 ## Next action
 
-From stable main `decea2b1c7adc3093764ec22922d73fc87cfb22d`, rederive `sections.unnumbered-centered` and `heading.unnumbered.centered` (`values.alignment="centered"`). If the scope remains exactly one rule, create an evidence-only N6 PR with controlled final-PDF measurement of applicable unnumbered-heading center alignment. Do not absorb case, weight, font-size, page-break, runtime/class changes, normative values, locators, tolerances, compatibility mappings or proof-state into that increment.
+From stable main `0bf1a098688bdd1c6ceba077434bab53f448ffb8`, rederive `layout.body-paragraph`, `paragraph.first-line.indent` (`values.first_line_indent_mm=20`) and `paragraph.spacing.extra` (`values.paragraph_extra_spacing_pt=0`). If the scope remains exactly these two rules, create an evidence-only N6 PR with controlled final-PDF measurement of first-line indentation and zero extra inter-paragraph spacing. Do not absorb `spacing.body`, source/runtime/class changes, normative values, locators, N5 tolerances, compatibility mappings or proof-state into that increment.
