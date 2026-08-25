@@ -19,7 +19,7 @@
     "pretextual.start.recto"
   ],
   "duplex": {
-    "textual_marker": "N6 pagination textual sentinel",
+    "textual_marker": "N6 Pagination Text Body",
     "pretextual_markers": [
       "N6 Pagination Duplex Author",
       "ERRATA",
