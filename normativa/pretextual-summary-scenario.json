@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-24",
+  "phase": "N6",
+  "purpose": "Isolated positive final-PDF scenario for vernacular summary, foreign abstract and keyword presentation.",
+  "fixture": "tests/normativa/pretextual-oracle-summary-abstract.tex",
+  "components": {
+    "vernacular": {
+      "route": "\\imprimirresumo",
+      "heading": "RESUMO",
+      "body_start": "UFCN6SUMSTART",
+      "body_end": "UFCN6SUMEND",
+      "keyword_label": "Palavras-chave:",
+      "keyword_text": "malhamento; normalização; pesquisa acadêmica."
+    },
+    "foreign": {
+      "route": "\\imprimirabstract",
+      "heading": "ABSTRACT",
+      "body_start": "UFCN6ABSSTART",
+      "body_end": "UFCN6ABSEND",
+      "keyword_label": "Keywords:",
+      "keyword_text": "meshing; normalization; academic research."
+    }
+  },
+  "calibration": [
+    "UFCN6SUMCALONE",
+    "UFCN6SUMCALTWO",
+    "UFCN6SUMCALTHREE"
+  ],
+  "minimum_body_lines": 8,
+  "tolerances": {
+    "line_spacing_pt": 1.5,
+    "keyword_blank_line_gap_pt": 3.0
+  },
+  "rules": [
+    "summary.vernacular.required",
+    "summary.foreign.required",
+    "summary.paragraph.single",
+    "summary.word-count.range",
+    "summary.keywords.required",
+    "summary.foreign.keywords.required",
+    "summary.keywords.position",
+    "summary.keywords.separator",
+    "summary.keywords.terminal-punctuation",
+    "summary.keywords.initial-case",
+    "summary.font.size",
+    "summary.line-spacing",
+    "summary.first-line.indent",
+    "summary.alignment"
+  ]
+}
