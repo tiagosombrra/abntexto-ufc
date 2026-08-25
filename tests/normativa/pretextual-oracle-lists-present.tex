@@ -1,0 +1,39 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  tipo = tese,
+  autor = {UFC N6 Lists Author},
+  titulo = {UFC N6 Lists Present Fixture},
+  local = {Fortaleza},
+  ano = {2093},
+  brasao = nao
+}
+
+\begin{document}
+\pretextual
+
+\imprimirlistadeilustracoes
+\imprimirlistadetabelas
+\imprimirlistadeabreviaturasesiglas{tests/fixtures/pretextuais/abreviaturas-oracle.tex}
+\imprimirlistadesimbolos{tests/fixtures/pretextuais/simbolos-oracle.tex}
+
+\textual
+\section{UFCN6LISTSENTINEL}
+Texto de controle para o cenário N6 de listas opcionais.
+
+\begin{figure}[h]
+  \centering
+  \rule{4cm}{2cm}
+  \caption{UFCN6LISTILLENTRY}
+\end{figure}
+
+\begin{table}[h]
+  \centering
+  \caption{UFCN6LISTTABLEENTRY}
+  \begin{tabular}{cc}
+    A & B \\
+    1 & 2
+  \end{tabular}
+\end{table}
+
+\end{document}
