@@ -36,8 +36,8 @@
     "markers": {
       "author": "UFCN6TPPROJAUTHOR",
       "title": "UFCN6TPPROJTITLE",
-      "nature_left": "UFCN6TPNATURELEFT",
-      "nature_right": "UFCN6TPNATURERIGHT",
+      "nature_left": "UFCN6TPL",
+      "nature_right": "UFCN6TPR",
       "nature_lines": [
         "UFCN6TPNATUREA",
         "UFCN6TPNATUREB",
