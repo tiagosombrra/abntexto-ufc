@@ -1,0 +1,25 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = anverso,
+  brasao = nao
+}
+
+\ufcbibliografia{tests/fixtures/referencias-v2.bib}
+
+\begin{document}
+\pretextual
+
+\imprimiragradecimentos{tests/fixtures/pretextuais/agradecimentos.tex}
+
+\textual
+\section{N6CenterContext}
+\nocite{silva2020}
+
+\imprimirreferencias
+
+\ufcPosttextualHeading{N6PostCenter}
+N6PostCenterBody
+
+\end{document}

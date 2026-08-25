@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "section-unnumbered-centered",
+  "locator_ruleset": "sections.unnumbered-centered",
+  "rules": [
+    "heading.unnumbered.centered"
+  ],
+  "surfaces": [
+    {
+      "id": "pretextual-shared",
+      "marker": "AGRADECIMENTOS",
+      "implementation": "ufc_pretextual_heading"
+    },
+    {
+      "id": "references",
+      "marker": "REFERÊNCIAS",
+      "implementation": "ufc_print_references"
+    },
+    {
+      "id": "posttextual-shared",
+      "marker": "N6POSTCENTER",
+      "implementation": "ufc_posttextual_heading"
+    }
+  ]
+}
