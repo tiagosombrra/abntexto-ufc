@@ -73,12 +73,9 @@ def lines(page: ET.Element) -> list[ET.Element]:
     return [
         item
         for item in page.iter()
-        if local(item.tag) == "line" and any(local(child.tag) == "word" for child in item)
+        if local(item.tag) == "line"
+        and any(local(child.tag) == "word" for child in item)
     ]
-
-
-def line_text(line: ET.Element) -> str:
-    return " ".join(word_text(item) for item in words(line))
 
 
 def page_list(root: ET.Element) -> list[ET.Element]:
@@ -88,7 +85,9 @@ def page_list(root: ET.Element) -> list[ET.Element]:
     return result
 
 
-def find_marker_page(pages: list[ET.Element], marker: str) -> tuple[int, ET.Element]:
+def find_marker_page(
+    pages: list[ET.Element], marker: str
+) -> tuple[int, ET.Element]:
     wanted = normalize(marker)
     matches: list[tuple[int, ET.Element]] = []
     for index, page in enumerate(pages, start=1):
@@ -111,7 +110,9 @@ def find_marker_line(page: ET.Element, marker: str) -> tuple[int, ET.Element]:
 
 
 def find_heading_word(page: ET.Element) -> ET.Element:
-    matches = [item for item in words(page) if normalize(word_text(item)) == HEADING]
+    matches = [
+        item for item in words(page) if normalize(word_text(item)) == HEADING
+    ]
     if len(matches) != 1:
         fail(f"heading {HEADING}: expected one word, found {len(matches)}")
     return matches[0]
@@ -121,7 +122,9 @@ def line_bounds(line: ET.Element) -> tuple[float, float, float]:
     try:
         x_min = float(line.attrib["xMin"])
         x_max = float(line.attrib["xMax"])
-        center_y = (float(line.attrib["yMin"]) + float(line.attrib["yMax"])) / 2.0
+        center_y = (
+            float(line.attrib["yMin"]) + float(line.attrib["yMax"])
+        ) / 2.0
     except (KeyError, ValueError) as exc:
         fail(f"invalid line bounds: {line.attrib}")
         raise AssertionError from exc
@@ -130,7 +133,10 @@ def line_bounds(line: ET.Element) -> tuple[float, float, float]:
 
 def average_gap(target_lines: list[ET.Element]) -> float:
     centers = [line_bounds(line)[2] for line in target_lines]
-    gaps = [centers[index + 1] - centers[index] for index in range(len(centers) - 1)]
+    gaps = [
+        centers[index + 1] - centers[index]
+        for index in range(len(centers) - 1)
+    ]
     if not gaps or any(gap <= 0 for gap in gaps):
         fail(f"invalid top-to-bottom line geometry: {centers}")
     return mean(gaps)
@@ -138,27 +144,32 @@ def average_gap(target_lines: list[ET.Element]) -> float:
 
 def typography_contains(runs: list[Any], page: int, marker: str) -> Any:
     wanted = normalize(marker)
-    matches = [run for run in runs if run.page == page and wanted in normalize(run.text)]
+    matches = [
+        run
+        for run in runs
+        if run.page == page and wanted in normalize(run.text)
+    ]
     if len(matches) != 1:
         raise PDFMeasurementError(
-            f"typography marker {marker}: expected one containing run on page {page}, found {len(matches)}"
+            f"typography marker {marker}: expected one containing run on page "
+            f"{page}, found {len(matches)}"
         )
     return matches[0]
 
 
 def typography_exact(runs: list[Any], page: int, text: str) -> Any:
     wanted = normalize(text)
-    matches = [run for run in runs if run.page == page and normalize(run.text) == wanted]
+    matches = [
+        run
+        for run in runs
+        if run.page == page and normalize(run.text) == wanted
+    ]
     if len(matches) != 1:
         raise PDFMeasurementError(
-            f"typography text {text}: expected one exact run on page {page}, found {len(matches)}"
+            f"typography text {text}: expected one exact run on page {page}, "
+            f"found {len(matches)}"
         )
     return matches[0]
-
-
-def bold_family(family: str) -> bool:
-    compact = normalize(family).replace(" ", "").replace("-", "")
-    return any(token in compact for token in ("BOLD", "SEMIBOLD", "DEMIBOLD", "BLACK"))
 
 
 def record(
@@ -191,7 +202,9 @@ def close_status(actual: float, expected: float, tolerance: float) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 acknowledgement-page final-PDF evidence.")
+    parser = argparse.ArgumentParser(
+        description="Measure N6 acknowledgement-page final-PDF evidence."
+    )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -217,14 +230,19 @@ def main() -> None:
     if missing:
         fail("scenario rules missing from full contract: " + ", ".join(missing))
 
-    horizontal_tolerance = oracle.get("tolerances", {}).get("horizontal_position_pt")
+    horizontal_tolerance = oracle.get("tolerances", {}).get(
+        "horizontal_position_pt"
+    )
     font_tolerance = oracle.get("tolerances", {}).get("font_size_pt")
     spacing_tolerance = scenario.get("tolerances", {}).get("line_spacing_pt")
-    if not all(isinstance(value, (int, float)) and value > 0 for value in (
-        horizontal_tolerance,
-        font_tolerance,
-        spacing_tolerance,
-    )):
+    if not all(
+        isinstance(value, (int, float)) and value > 0
+        for value in (
+            horizontal_tolerance,
+            font_tolerance,
+            spacing_tolerance,
+        )
+    ):
         fail("positive horizontal/font/spacing tolerances are required")
 
     catalog = load_catalog()
@@ -235,7 +253,7 @@ def main() -> None:
     root = bbox_root(pdf)
     pages = page_list(root)
     markers = scenario["markers"]
-    prev_index, _ = find_marker_page(pages, markers["previous_page"])
+    previous_page_index, _ = find_marker_page(pages, markers["previous_page"])
     body_page_index, body_page = find_marker_page(pages, markers["body_start"])
     end_page_index, _ = find_marker_page(pages, markers["body_end"])
     if body_page_index != end_page_index:
@@ -244,7 +262,9 @@ def main() -> None:
     heading_word = find_heading_word(body_page)
     typography = typography_runs(pdf)
     heading_type = typography_exact(typography, body_page_index, HEADING)
-    body_type = typography_contains(typography, body_page_index, markers["body_start"])
+    body_type = typography_contains(
+        typography, body_page_index, markers["body_start"]
+    )
 
     body_lines_all = lines(body_page)
     start_index, _ = find_marker_line(body_page, markers["body_start"])
@@ -254,115 +274,245 @@ def main() -> None:
     body_lines = body_lines_all[start_index : end_index + 1]
     minimum_lines = int(scenario["minimum_body_lines"])
     if len(body_lines) < minimum_lines:
-        fail(f"expected at least {minimum_lines} naturally wrapped body lines, found {len(body_lines)}")
+        fail(
+            f"expected at least {minimum_lines} naturally wrapped body lines, "
+            f"found {len(body_lines)}"
+        )
 
-    calibration_markers = scenario["calibration"]
-    calibration_pages = [find_marker_page(pages, marker)[0] for marker in calibration_markers]
+    calibration = scenario["calibration"]
+    spacing_markers = calibration["line_spacing"]
+    calibration_pages = [
+        find_marker_page(pages, marker)[0] for marker in spacing_markers
+    ]
     if len(set(calibration_pages)) != 1:
-        fail(f"spacing calibration markers must share one page: {calibration_pages}")
-    calibration_page = pages[calibration_pages[0] - 1]
-    calibration_lines = [find_marker_line(calibration_page, marker)[1] for marker in calibration_markers]
+        fail(
+            "spacing calibration markers must share one page: "
+            f"{calibration_pages}"
+        )
+    calibration_page_index = calibration_pages[0]
+    calibration_page = pages[calibration_page_index - 1]
+    calibration_lines = [
+        find_marker_line(calibration_page, marker)[1]
+        for marker in spacing_markers
+    ]
     calibrated_gap = average_gap(calibration_lines)
     body_gap = average_gap(body_lines)
+
+    weight_markers = calibration["font_weight"]
+    regular_type = typography_contains(
+        typography,
+        calibration_page_index,
+        weight_markers["regular"],
+    )
+    bold_type = typography_contains(
+        typography,
+        calibration_page_index,
+        weight_markers["bold"],
+    )
+    if regular_type.font_id == bold_type.font_id:
+        fail(
+            "font-weight calibration did not produce distinct regular and bold "
+            f"font ids: {regular_type.font_id}"
+        )
 
     page_width = float(body_page.attrib["width"])
     expected_left = margin_left_mm * PT_PER_MM
     expected_right = page_width - margin_right_mm * PT_PER_MM
     expected_center = (expected_left + expected_right) / 2.0
-    heading_center = (float(heading_word.attrib["xMin"]) + float(heading_word.attrib["xMax"])) / 2.0
+    heading_center = (
+        float(heading_word.attrib["xMin"]) + float(heading_word.attrib["xMax"])
+    ) / 2.0
 
     bounds = [line_bounds(line) for line in body_lines]
-    non_first_left_deltas = [abs(item[0] - expected_left) for item in bounds[1:]]
-    non_final_right_deltas = [abs(item[1] - expected_right) for item in bounds[:-1]]
+    non_first_left_deltas = [
+        abs(item[0] - expected_left) for item in bounds[1:]
+    ]
+    non_final_right_deltas = [
+        abs(item[1] - expected_right) for item in bounds[:-1]
+    ]
     body_justified = (
         bool(non_first_left_deltas)
         and bool(non_final_right_deltas)
-        and all(delta <= float(horizontal_tolerance) for delta in non_first_left_deltas)
-        and all(delta <= float(horizontal_tolerance) for delta in non_final_right_deltas)
+        and all(
+            delta <= float(horizontal_tolerance)
+            for delta in non_first_left_deltas
+        )
+        and all(
+            delta <= float(horizontal_tolerance)
+            for delta in non_final_right_deltas
+        )
     )
 
     evidence: list[dict[str, Any]] = []
 
     rule = rules["acknowledgements.page.own"]
     expected = bool(rule["values"]["new_page"])
-    actual = body_page_index != prev_index and body_page_index > prev_index
-    evidence.append(record(
-        rule["id"], boolean_status(actual, expected), expected,
-        {"previous_page": prev_index, "acknowledgements_page": body_page_index},
-        "pdftotext -bbox-layout",
-    ))
+    actual = body_page_index > previous_page_index
+    evidence.append(
+        record(
+            rule["id"],
+            boolean_status(actual, expected),
+            expected,
+            {
+                "previous_page": previous_page_index,
+                "acknowledgements_page": body_page_index,
+            },
+            "pdftotext -bbox-layout",
+        )
+    )
 
     rule = rules["acknowledgements.heading.case"]
     expected = bool(rule["values"]["heading_uppercase"])
     raw_heading = word_text(heading_word)
     actual = raw_heading == raw_heading.upper() and normalize(raw_heading) == HEADING
-    evidence.append(record(rule["id"], boolean_status(actual, expected), expected, raw_heading, "pdftotext -bbox-layout"))
+    evidence.append(
+        record(
+            rule["id"],
+            boolean_status(actual, expected),
+            expected,
+            raw_heading,
+            "pdftotext -bbox-layout",
+        )
+    )
 
     rule = rules["acknowledgements.heading.weight"]
     expected = bool(rule["values"]["heading_bold"])
-    actual = bold_family(heading_type.family)
-    evidence.append(record(
-        rule["id"], boolean_status(actual, expected), expected,
-        {"family": heading_type.family, "font_id": heading_type.font_id, "bold_detected": actual},
-        "pdftohtml -xml fontspec",
-    ))
+    actual = (
+        heading_type.font_id == bold_type.font_id
+        and heading_type.font_id != regular_type.font_id
+    )
+    evidence.append(
+        record(
+            rule["id"],
+            boolean_status(actual, expected),
+            expected,
+            {
+                "heading_font_id": heading_type.font_id,
+                "heading_family": heading_type.family,
+                "regular_font_id": regular_type.font_id,
+                "regular_family": regular_type.family,
+                "bold_font_id": bold_type.font_id,
+                "bold_family": bold_type.family,
+                "matches_bold_calibration": actual,
+            },
+            "pdftohtml -xml same-document font-id calibration",
+        )
+    )
 
     rule = rules["acknowledgements.heading.alignment"]
     expected = bool(rule["values"]["heading_centered"])
     center_delta = abs(heading_center - expected_center)
     actual = center_delta <= float(horizontal_tolerance)
-    evidence.append(record(
-        rule["id"], boolean_status(actual, expected), expected,
-        {"heading_center_pt": round(heading_center, 4), "text_area_center_pt": round(expected_center, 4), "delta_pt": round(center_delta, 4)},
-        "pdftotext -bbox-layout",
-        tolerance=float(horizontal_tolerance),
-    ))
+    evidence.append(
+        record(
+            rule["id"],
+            boolean_status(actual, expected),
+            expected,
+            {
+                "heading_center_pt": round(heading_center, 4),
+                "text_area_center_pt": round(expected_center, 4),
+                "delta_pt": round(center_delta, 4),
+            },
+            "pdftotext -bbox-layout",
+            tolerance=float(horizontal_tolerance),
+        )
+    )
 
     rule = rules["acknowledgements.heading.font-size"]
     expected_font = float(rule["values"]["font_pt"])
-    evidence.append(record(
-        rule["id"], close_status(heading_type.font_size, expected_font, float(font_tolerance)),
-        expected_font, {"font_pt": round(heading_type.font_size, 4), "family": heading_type.family},
-        "pdftohtml -xml", tolerance=float(font_tolerance),
-    ))
+    evidence.append(
+        record(
+            rule["id"],
+            close_status(
+                heading_type.font_size,
+                expected_font,
+                float(font_tolerance),
+            ),
+            expected_font,
+            {
+                "font_pt": round(heading_type.font_size, 4),
+                "family": heading_type.family,
+            },
+            "pdftohtml -xml",
+            tolerance=float(font_tolerance),
+        )
+    )
 
     rule = rules["acknowledgements.body.font-size"]
     expected_font = float(rule["values"]["font_pt"])
-    evidence.append(record(
-        rule["id"], close_status(body_type.font_size, expected_font, float(font_tolerance)),
-        expected_font, {"font_pt": round(body_type.font_size, 4), "family": body_type.family},
-        "pdftohtml -xml", tolerance=float(font_tolerance),
-    ))
+    evidence.append(
+        record(
+            rule["id"],
+            close_status(
+                body_type.font_size,
+                expected_font,
+                float(font_tolerance),
+            ),
+            expected_font,
+            {
+                "font_pt": round(body_type.font_size, 4),
+                "family": body_type.family,
+            },
+            "pdftohtml -xml",
+            tolerance=float(font_tolerance),
+        )
+    )
 
     rule = rules["acknowledgements.body.line-spacing"]
     expected_spacing = float(rule["values"]["line_spacing"])
-    evidence.append(record(
-        rule["id"], close_status(body_gap, calibrated_gap, float(spacing_tolerance)),
-        {"contract": expected_spacing, "calibrated_gap_pt": round(calibrated_gap, 4)},
-        {"body_average_gap_pt": round(body_gap, 4), "line_count": len(body_lines)},
-        "pdftotext -bbox-layout + same-document spacing calibration",
-        tolerance=float(spacing_tolerance),
-    ))
+    evidence.append(
+        record(
+            rule["id"],
+            close_status(
+                body_gap,
+                calibrated_gap,
+                float(spacing_tolerance),
+            ),
+            {
+                "contract": expected_spacing,
+                "calibrated_gap_pt": round(calibrated_gap, 4),
+            },
+            {
+                "body_average_gap_pt": round(body_gap, 4),
+                "line_count": len(body_lines),
+            },
+            "pdftotext -bbox-layout + same-document spacing calibration",
+            tolerance=float(spacing_tolerance),
+        )
+    )
 
     rule = rules["acknowledgements.body.alignment"]
     expected_alignment = rule["values"]["alignment"]
     if expected_alignment != "justified":
-        fail(f"unsupported acknowledgement body alignment: {expected_alignment!r}")
-    evidence.append(record(
-        rule["id"], "PASS" if body_justified else "FAIL", expected_alignment,
-        {
-            "line_count": len(body_lines),
-            "first_line_x_min_pt": round(bounds[0][0], 4),
-            "expected_left_pt": round(expected_left, 4),
-            "expected_right_pt": round(expected_right, 4),
-            "non_first_left_deltas_pt": [round(delta, 4) for delta in non_first_left_deltas],
-            "non_final_right_deltas_pt": [round(delta, 4) for delta in non_final_right_deltas],
-        },
-        "pdftotext -bbox-layout", tolerance=float(horizontal_tolerance),
-    ))
+        fail(
+            f"unsupported acknowledgement body alignment: {expected_alignment!r}"
+        )
+    evidence.append(
+        record(
+            rule["id"],
+            "PASS" if body_justified else "FAIL",
+            expected_alignment,
+            {
+                "line_count": len(body_lines),
+                "first_line_x_min_pt": round(bounds[0][0], 4),
+                "expected_left_pt": round(expected_left, 4),
+                "expected_right_pt": round(expected_right, 4),
+                "non_first_left_deltas_pt": [
+                    round(delta, 4) for delta in non_first_left_deltas
+                ],
+                "non_final_right_deltas_pt": [
+                    round(delta, 4) for delta in non_final_right_deltas
+                ],
+            },
+            "pdftotext -bbox-layout",
+            tolerance=float(horizontal_tolerance),
+        )
+    )
 
     counts = Counter(item["status"] for item in evidence)
-    findings = [item["rule_id"] for item in evidence if item["status"] == "FAIL"]
+    findings = [
+        item["rule_id"] for item in evidence if item["status"] == "FAIL"
+    ]
     payload = {
         "schema_version": 1,
         "phase": "N6",
@@ -376,17 +526,24 @@ def main() -> None:
         "measurement": {
             "acknowledgements_page": body_page_index,
             "body_line_count": len(body_lines),
-            "calibration_page": calibration_pages[0],
+            "calibration_page": calibration_page_index,
+            "regular_font_id": regular_type.font_id,
+            "bold_font_id": bold_type.font_id,
         },
         "evidence": evidence,
     }
 
     args.json.parent.mkdir(parents=True, exist_ok=True)
-    args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    args.json.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     print(
         "N6-EVIDENCE acknowledgements-summary "
-        + " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
+        + " ".join(
+            f"{key}={value}" for key, value in sorted(counts.items())
+        )
         + f" page={body_page_index} body_lines={len(body_lines)}"
     )
     for item in evidence:
