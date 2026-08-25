@@ -6,6 +6,7 @@ sh tests/v2-pretextual-evidence-check.sh
 sh tests/v2-pretextual-alignment-evidence-check.sh
 sh tests/v2-pretextual-acknowledgements-evidence-check.sh
 sh tests/v2-pretextual-summary-evidence-check.sh
+sh tests/v2-pretextual-cover-evidence-check.sh
 
 fixtures="tests/normativa/pretextuais-trabalho.tex tests/normativa/pretextuais-projeto-anonimo.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
