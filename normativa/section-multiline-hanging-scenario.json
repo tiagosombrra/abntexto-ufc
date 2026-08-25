@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "section-multiline-hanging",
+  "locator_ruleset": "sections.multiline-hanging",
+  "rules": [
+    "section.multiline.hanging"
+  ],
+  "levels": [
+    {
+      "level": "section",
+      "number": "1",
+      "marker_prefix": "N6HS",
+      "marker_count": 12
+    },
+    {
+      "level": "subsection",
+      "number": "1.1",
+      "marker_prefix": "N6HU",
+      "marker_count": 12
+    },
+    {
+      "level": "subsubsection",
+      "number": "1.1.1",
+      "marker_prefix": "N6HV",
+      "marker_count": 12
+    },
+    {
+      "level": "paragraph",
+      "number": "1.1.1.1",
+      "marker_prefix": "N6HP",
+      "marker_count": 12
+    },
+    {
+      "level": "subparagraph",
+      "number": "1.1.1.1.1",
+      "marker_prefix": "N6HQ",
+      "marker_count": 12
+    }
+  ]
+}
