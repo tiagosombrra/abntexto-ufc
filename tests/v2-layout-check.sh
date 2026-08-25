@@ -61,5 +61,6 @@ if not match or int(match.group(1)) != 1:
 PY
 
 sh tests/v2-section-hierarchy-evidence-check.sh
+sh tests/v2-section-indicator-evidence-check.sh
 
 echo 'Gate V2 de layout concluído.'
