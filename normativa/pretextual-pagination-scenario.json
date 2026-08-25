@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "pretextual-pagination-transition",
+  "scope": {
+    "categories": ["pagination", "pretextual"],
+    "kinds": [
+      "pagination-visibility",
+      "pagination-exception",
+      "pagination-start",
+      "page-side-start"
+    ],
+    "validation_checks_any": ["pretextual", "duplex-pretextual", "catalog-card"]
+  },
+  "rules": [
+    "pagination.pretextual.counted-not-numbered",
+    "pagination.catalog-data.not-counted",
+    "pagination.textual.display-start",
+    "pretextual.start.recto"
+  ],
+  "duplex": {
+    "textual_marker": "N6 Pagination Text Body",
+    "pretextual_markers": [
+      "N6 Pagination Title City",
+      "ERRATA",
+      "BANCA EXAMINADORA",
+      "À família e às pessoas que contribuíram",
+      "AGRADECIMENTOS",
+      "Uma citação de exemplo usada apenas para validar",
+      "RESUMO",
+      "ABSTRACT",
+      "LISTA DE ILUSTRAÇÕES",
+      "LISTA DE TABELAS",
+      "LISTA DE ABREVIATURAS E SIGLAS",
+      "LISTA DE SÍMBOLOS",
+      "SUMÁRIO"
+    ]
+  },
+  "catalog": {
+    "title_page_marker": "N6 Catalog Author",
+    "card_marker": "N6 Catalog Card",
+    "textual_marker": "N6 Catalog Text"
+  }
+}
