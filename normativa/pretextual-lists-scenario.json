@@ -16,20 +16,16 @@
   },
   "lists": {
     "list.illustrations.optional": {
-      "heading": "LISTA DE ILUSTRAÇÕES",
-      "entry_marker": "N6 illustration entry"
+      "heading": "LISTA DE ILUSTRAÇÕES"
     },
     "list.tables.optional": {
-      "heading": "LISTA DE TABELAS",
-      "entry_marker": "N6 table entry"
+      "heading": "LISTA DE TABELAS"
     },
     "list.abbreviations.optional": {
-      "heading": "LISTA DE ABREVIATURAS E SIGLAS",
-      "entry_marker": "N6 abbreviation entry"
+      "heading": "LISTA DE ABREVIATURAS E SIGLAS"
     },
     "list.symbols.optional": {
-      "heading": "LISTA DE SÍMBOLOS",
-      "entry_marker": "N6 symbol entry"
+      "heading": "LISTA DE SÍMBOLOS"
     }
   },
   "sentinel": "N6 list sentinel"
