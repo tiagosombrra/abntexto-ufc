@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 approval-page merge: `673d25252b3b526b5503309535cb423184456e35`
+- Stable main after N6 errata merge: `5b6050b89e701e9463242de9d9948af9bb6a2687`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -161,25 +161,57 @@ The first evidence run reported an order FAIL only for graduation/specialization
 
 A final unchanged-head evidence review comment is recorded directly on PR #67.
 
-## N6 remaining work
+### Errata
 
-Continue with bounded, independently measurable components. Preferred order:
+PR `#69`, squash-merged as `5b6050b89e701e9463242de9d9948af9bb6a2687`.
 
-1. errata;
-2. optional pre-textual lists;
-3. table of contents;
-4. remaining pre-textual/structural atomic dimensions not yet covered by N6 final-PDF evidence;
-5. then move to textual, citation/object, post-textual and deposit-related evidence according to the canonical N6 scope before declaring N6 complete.
+Exact audited head before merge: `c1351a194e47afc5f8996d7f64fd2d31ad9d0762`.
 
-The immediate next increment is errata. Its current active contract is compact and conditional:
+Required evidence:
+
+- `Normative source contract` run `32833494577`: SUCCESS;
+- `LaTeX preflight` run `32833494574`: SUCCESS;
+- structural job `97757168011`: SUCCESS;
+- required aggregate job `97758970932`: SUCCESS;
+- structural result: `PASS=14 FAIL=0 SKIP=0`;
+- `N6-EVIDENCE errata-summary PASS=3 present_pages=3 absent_pages=2`.
+
+Three scoped rules passed final-PDF measurement:
 
 - `errata.element.optional`;
 - `errata.position`;
 - `errata.contents`.
 
-The evidence should distinguish optional absence from valid presence. When present, it must measure placement after the title page and verify both required content parts without inventing additional normative layout dimensions.
+Measured highlights:
 
-The scenario must derive its expected rule set from the full contract and fail on scope drift, following the title-page/cover/approval pattern.
+- a controlled absent fixture verified that errata is optional rather than mandatory;
+- a controlled present fixture placed the errata after the title page and before a sentinel page;
+- work-reference and correction markers were independently observed on the errata page;
+- `page_delta=1` is retained only as a measured fixture observation; the normative position check is strictly `after=title-page` and does not strengthen the contract to require adjacency.
+
+Before final certification, the oracle was corrected because an earlier implementation incorrectly required immediate adjacency to the title page. The correction changed only the measurement predicate; no class implementation, normative expectation, locator, tolerance or proof-state was changed.
+
+The branch was synchronized with the then-current `main` before final certification so the required merge gate was evaluated on an up-to-date head. A final unchanged-head evidence review comment is recorded directly on PR #69.
+
+## N6 remaining work
+
+Continue with bounded, independently measurable components. Preferred order:
+
+1. optional pre-textual lists;
+2. table of contents;
+3. remaining pre-textual/structural atomic dimensions not yet covered by N6 final-PDF evidence;
+4. then move to textual, citation/object, post-textual and deposit-related evidence according to the canonical N6 scope before declaring N6 complete.
+
+The immediate next increment is the optional pre-textual lists. Its current active contract is exactly:
+
+- `list.illustrations.optional`;
+- `list.tables.optional`;
+- `list.abbreviations.optional`;
+- `list.symbols.optional`.
+
+The evidence must distinguish valid absence from valid presence for each list family. When present, evidence should verify the corresponding generated/list content in the final PDF without inventing layout, ordering or typography requirements that are not represented by the active contract.
+
+The scenario must derive its expected `list.*.optional` rule set from the full contract and fail on scope drift. Existing implementation exposes figure/table/generated list routes and file-backed abbreviation/symbol routes; the evidence design should test the public commands rather than private internals.
 
 ## Required PR discipline from this checkpoint forward
 
@@ -223,4 +255,4 @@ Do not reconstruct status primarily from old chat messages. Git history, this ha
 
 ## Next action
 
-Create the N6 errata evidence increment from stable main `673d25252b3b526b5503309535cb423184456e35`, preserving the same evidence-only semantics used by prior bounded N6 PRs.
+Create the N6 optional pre-textual list evidence increment from stable main `5b6050b89e701e9463242de9d9948af9bb6a2687`, preserving the same evidence-only semantics used by prior bounded N6 PRs.
