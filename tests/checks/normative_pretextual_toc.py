@@ -24,6 +24,7 @@ RULE_ORDER = [
     "toc.page-number.position",
     "toc.section-hierarchy.mirror",
 ]
+NON_NORMATIVE_RULE_ORDER = ["toc.leaders.dotted.project"]
 LEVEL_ORDER = ["section", "subsection", "subsubsection", "paragraph", "subparagraph"]
 
 
@@ -97,17 +98,39 @@ def main() -> None:
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
-    expected_scope = {rule_id for rule_id in rules if rule_id.startswith("toc.")}
+    all_toc_scope = {rule_id for rule_id in rules if rule_id.startswith("toc.")}
+    expected_scope = {
+        rule_id
+        for rule_id in all_toc_scope
+        if rules[rule_id].get("authority") == "normative"
+    }
+    expected_non_normative = all_toc_scope - expected_scope
     scenario_scope = set(scenario.get("rules", []))
+    scenario_non_normative = set(scenario.get("non_normative_rules", []))
     if expected_scope != scenario_scope or len(expected_scope) != 5:
         fail(
-            "TOC scope mismatch: "
+            "normative TOC scope mismatch: "
             f"scenario_only={sorted(scenario_scope - expected_scope)} "
             f"contract_only={sorted(expected_scope - scenario_scope)} "
             f"count={len(expected_scope)}"
         )
+    if expected_non_normative != scenario_non_normative:
+        fail(
+            "non-normative TOC scope mismatch: "
+            f"scenario_only={sorted(scenario_non_normative - expected_non_normative)} "
+            f"contract_only={sorted(expected_non_normative - scenario_non_normative)}"
+        )
     if scenario.get("rules") != RULE_ORDER:
-        fail("TOC rule order drift")
+        fail("TOC normative rule order drift")
+    if scenario.get("non_normative_rules") != NON_NORMATIVE_RULE_ORDER:
+        fail("TOC non-normative rule order drift")
+
+    project_rule = rules["toc.leaders.dotted.project"]
+    if (
+        project_rule.get("authority") != "project-policy"
+        or project_rule.get("values", {}).get("normative_claim") is not False
+    ):
+        fail("dotted-leader project policy authority drift")
 
     heading = scenario.get("heading")
     pretextual_markers = scenario.get("pretextual_markers")
@@ -350,6 +373,8 @@ def main() -> None:
         "source_commit_sha": args.commit_sha,
         "result": result,
         "status_counts": status_counts,
+        "normative_rules": RULE_ORDER,
+        "non_normative_rules": NON_NORMATIVE_RULE_ORDER,
         "toc_pages": sorted(toc_page_indexes),
         "first_text_page": first_text_page,
         "evidence": evidence,
@@ -366,6 +391,7 @@ def main() -> None:
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" toc_pages={','.join(str(page) for page in sorted(toc_page_indexes))}"
         + f" hierarchy_levels={len(hierarchy)}"
+        + f" non_normative={len(NON_NORMATIVE_RULE_ORDER)}"
     )
     for item in evidence:
         print(
