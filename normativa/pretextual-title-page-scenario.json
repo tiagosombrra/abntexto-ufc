@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "title-page",
+  "rules": [
+    "title-page.element.required",
+    "title-page.fields.order",
+    "volume.number.cover-title-page",
+    "nature.line-spacing",
+    "nature.block.alignment",
+    "project.title-page.required",
+    "project.anonymization.policy"
+  ],
+  "fixtures": {
+    "academic": "tests/normativa/pretextual-oracle-title-page-academic.tex",
+    "project": "tests/normativa/pretextual-oracle-title-page-project.tex",
+    "anonymized_project": "tests/normativa/pretextual-oracle-title-page-project-anonymized.tex"
+  },
+  "academic": {
+    "cover_page": 1,
+    "title_page": 2,
+    "markers": {
+      "author": "UFCN6TPAUTHOR",
+      "title": "UFCN6TPTITLE",
+      "subtitle": "UFCN6TPSUBTITLE",
+      "volume": "VOLUME 3",
+      "nature": "UFCN6TPNATUREPROGRAM",
+      "advisor": "UFCN6TPADVISOR",
+      "coadvisor": "UFCN6TPCOADVISOR",
+      "city": "UFCN6TPCITY",
+      "year": "2098"
+    }
+  },
+  "project": {
+    "title_page": 1,
+    "markers": {
+      "author": "UFCN6TPPROJAUTHOR",
+      "title": "UFCN6TPPROJTITLE",
+      "nature_left": "UFCN6TPNATURELEFT",
+      "nature_right": "UFCN6TPNATURERIGHT",
+      "nature_lines": [
+        "UFCN6TPNATUREA",
+        "UFCN6TPNATUREB",
+        "UFCN6TPNATUREC"
+      ],
+      "advisor": "UFCN6TPPROJADVISOR",
+      "calibration_lines": [
+        "UFCN6TPSINGLEA",
+        "UFCN6TPSINGLEB",
+        "UFCN6TPSINGLEC"
+      ]
+    }
+  },
+  "anonymized_project": {
+    "title_page": 1,
+    "markers": {
+      "public_identifier": "UFCN6TPPUBLICID",
+      "hidden_author": "UFCN6TPSECRETAUTHOR",
+      "hidden_advisor": "UFCN6TPSECRETADVISOR",
+      "title": "UFCN6TPANONTITLE"
+    }
+  }
+}
