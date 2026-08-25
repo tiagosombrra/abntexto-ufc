@@ -79,15 +79,16 @@ def page_lines(page: ET.Element) -> list[ET.Element]:
     ]
 
 
-def find_target_page(root: ET.Element, marker: str) -> ET.Element:
-    matches: list[ET.Element] = []
-    for page in (node for node in root.iter() if local(node.tag) == "page"):
+def find_target_page(root: ET.Element, marker: str) -> tuple[int, ET.Element]:
+    matches: list[tuple[int, ET.Element]] = []
+    pages = [node for node in root.iter() if local(node.tag) == "page"]
+    for page_index, page in enumerate(pages, start=1):
         if any(
             marker_word_matches(word, marker)
             for word in page.iter()
             if local(word.tag) == "word"
         ):
-            matches.append(page)
+            matches.append((page_index, page))
     if len(matches) != 1:
         fail(f"marker {marker}: expected one target page, found {len(matches)}")
     return matches[0]
@@ -109,7 +110,7 @@ def audit_scenario(
     margin_right_mm: float,
     tolerance_pt: float,
 ) -> dict[str, Any]:
-    page = find_target_page(root, scenario["marker"])
+    page_index, page = find_target_page(root, scenario["marker"])
     lines = page_lines(page)
     minimum_lines = int(scenario["minimum_lines"])
     if len(lines) < minimum_lines:
@@ -145,7 +146,7 @@ def audit_scenario(
         "scenario_id": scenario["id"],
         "component": scenario["component"],
         "route": scenario["route"],
-        "page": int(page.attrib.get("number", "0") or 0),
+        "page": page_index,
         "marker": scenario["marker"],
         "rule_id": scenario["alignment_rule"],
         "status": "PASS" if passed else "FAIL",
@@ -159,9 +160,7 @@ def audit_scenario(
                 for x_min, x_max in bounds
             ],
             "left_deltas_pt": [round(delta, 4) for delta in left_deltas],
-            "non_final_right_deltas_pt": [
-                round(delta, 4) for delta in right_deltas
-            ],
+            "non_final_right_deltas_pt": [round(delta, 4) for delta in right_deltas],
         },
         "tolerance_pt": tolerance_pt,
         "tool": "pdftotext -bbox-layout",
