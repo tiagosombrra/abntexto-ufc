@@ -63,7 +63,20 @@ def header_arabic_numbers(page: Any) -> list[Any]:
     ]
 
 
-def unique_header_number(page: Any) -> int | None:
+def header_roman_numbers(page: Any) -> list[Any]:
+    return [
+        word
+        for word in page.words
+        if word.box.y_min < HEADER_LIMIT_PT
+        and re.fullmatch(r"[IVXLCDM]+", word.text.strip().upper())
+    ]
+
+
+def header_number_tokens(page: Any) -> list[Any]:
+    return header_arabic_numbers(page) + header_roman_numbers(page)
+
+
+def unique_arabic_header_number(page: Any) -> int | None:
     matches = header_arabic_numbers(page)
     if not matches:
         return None
@@ -165,11 +178,12 @@ def main() -> None:
     duplex_pretextual_pages = [page for page in duplex_pages if page.index < duplex_text_page.index]
 
     pretextual_header_numbers = {
-        page.index: [word.text for word in header_arabic_numbers(page)]
+        page.index: [word.text for word in header_number_tokens(page)]
         for page in duplex_pretextual_pages
-        if header_arabic_numbers(page)
+        if header_number_tokens(page)
     }
-    duplex_text_number = unique_header_number(duplex_text_page)
+    duplex_text_number = unique_arabic_header_number(duplex_text_page)
+    duplex_text_roman = [word.text for word in header_roman_numbers(duplex_text_page)]
 
     marker_pages: dict[str, int] = {}
     for marker in pretextual_markers:
@@ -197,9 +211,10 @@ def main() -> None:
             f"text={catalog_text_page.index}"
         )
 
-    catalog_title_number = unique_header_number(catalog_title_page)
-    catalog_card_number = unique_header_number(catalog_card_page)
-    catalog_text_number = unique_header_number(catalog_text_page)
+    catalog_title_tokens = [word.text for word in header_number_tokens(catalog_title_page)]
+    catalog_card_tokens = [word.text for word in header_number_tokens(catalog_card_page)]
+    catalog_text_number = unique_arabic_header_number(catalog_text_page)
+    catalog_text_roman = [word.text for word in header_roman_numbers(catalog_text_page)]
 
     evidence: list[dict[str, Any]] = []
 
@@ -210,6 +225,7 @@ def main() -> None:
         and counted_expected.get("number_visible") is False
         and not pretextual_header_numbers
         and duplex_text_number == duplex_text_page.index
+        and not duplex_text_roman
     )
     evidence.append(
         record(
@@ -221,6 +237,7 @@ def main() -> None:
                 "pretextual_pages_with_visible_header_numbers": pretextual_header_numbers,
                 "first_textual_physical_page": duplex_text_page.index,
                 "first_textual_visible_number": duplex_text_number,
+                "first_textual_roman_tokens": duplex_text_roman,
                 "physical_and_logical_progression_match": duplex_text_number == duplex_text_page.index,
             },
         )
@@ -232,8 +249,9 @@ def main() -> None:
     catalog_pass = (
         catalog_expected.get("counted") is False
         and catalog_expected.get("number_visible") is False
-        and catalog_card_number is None
+        and not catalog_card_tokens
         and catalog_text_number == catalog_expected_text_number
+        and not catalog_text_roman
     )
     evidence.append(
         record(
@@ -242,11 +260,12 @@ def main() -> None:
             catalog_expected,
             {
                 "title_page_physical": catalog_title_page.index,
-                "title_page_visible_number": catalog_title_number,
+                "title_page_visible_number_tokens": catalog_title_tokens,
                 "catalog_card_physical": catalog_card_page.index,
-                "catalog_card_visible_number": catalog_card_number,
+                "catalog_card_visible_number_tokens": catalog_card_tokens,
                 "first_textual_physical_page": catalog_text_page.index,
                 "first_textual_visible_number": catalog_text_number,
+                "first_textual_roman_tokens": catalog_text_roman,
                 "expected_visible_number_if_card_uncounted": catalog_expected_text_number,
             },
         )
@@ -259,9 +278,11 @@ def main() -> None:
         and textual_expected.get("numeral_system") == "arabic"
         and not pretextual_header_numbers
         and duplex_text_number is not None
-        and catalog_title_number is None
-        and catalog_card_number is None
+        and not duplex_text_roman
+        and not catalog_title_tokens
+        and not catalog_card_tokens
         and catalog_text_number is not None
+        and not catalog_text_roman
     )
     evidence.append(
         record(
@@ -272,13 +293,15 @@ def main() -> None:
                 "duplex": {
                     "first_textual_physical_page": duplex_text_page.index,
                     "first_textual_visible_number": duplex_text_number,
-                    "preceding_visible_numbers": pretextual_header_numbers,
+                    "first_textual_roman_tokens": duplex_text_roman,
+                    "preceding_visible_number_tokens": pretextual_header_numbers,
                 },
                 "catalog_exception": {
                     "first_textual_physical_page": catalog_text_page.index,
                     "first_textual_visible_number": catalog_text_number,
-                    "title_page_visible_number": catalog_title_number,
-                    "catalog_card_visible_number": catalog_card_number,
+                    "first_textual_roman_tokens": catalog_text_roman,
+                    "title_page_visible_number_tokens": catalog_title_tokens,
+                    "catalog_card_visible_number_tokens": catalog_card_tokens,
                 },
             },
         )
