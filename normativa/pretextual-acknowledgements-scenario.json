@@ -11,11 +11,17 @@
     "body_start": "UFCN6ACKSTART",
     "body_end": "UFCN6ACKEND"
   },
-  "calibration": [
-    "UFCN6ACKCALONE",
-    "UFCN6ACKCALTWO",
-    "UFCN6ACKCALTHREE"
-  ],
+  "calibration": {
+    "line_spacing": [
+      "UFCN6ACKCALONE",
+      "UFCN6ACKCALTWO",
+      "UFCN6ACKCALTHREE"
+    ],
+    "font_weight": {
+      "regular": "UFCN6ACKREGULAR",
+      "bold": "UFCN6ACKBOLD"
+    }
+  },
   "minimum_body_lines": 4,
   "tolerances": {
     "line_spacing_pt": 1.5
