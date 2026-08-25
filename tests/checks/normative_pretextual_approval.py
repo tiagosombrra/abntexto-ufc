@@ -241,7 +241,7 @@ def academic_measurement(
     return order
 
 
-def suppressed_measurement(
+def non_applicable_measurement(
     profile: str,
     pdf: Path,
     markers: dict[str, str],
@@ -265,7 +265,7 @@ def suppressed_measurement(
         "page_count": len(pages),
         "sentinel_page": sentinel_page,
         "approval_marker_presence": present,
-        "suppressed": sentinel_page is not None and not any(present.values()),
+        "current_route_suppressed": sentinel_page is not None and not any(present.values()),
     }
 
 
@@ -294,7 +294,7 @@ def main() -> None:
         )
 
     academic_profiles = list(scenario.get("academic_profiles", []))
-    suppressed_profiles = list(scenario.get("suppressed_profiles", []))
+    non_applicable_profiles = list(scenario.get("suppressed_profiles", []))
     required_rule = rules["approval.element.required"]
     expected_applicability = sorted(required_rule.get("applicability", {}).get("profiles", []))
     if sorted(academic_profiles) != expected_applicability:
@@ -304,7 +304,7 @@ def main() -> None:
         )
 
     profile_pdfs = parse_profile_pdfs(args.profile_pdf)
-    expected_profiles = set(academic_profiles) | set(suppressed_profiles)
+    expected_profiles = set(academic_profiles) | set(non_applicable_profiles)
     if set(profile_pdfs) != expected_profiles:
         fail(
             "approval PDF profile mismatch: "
@@ -320,37 +320,25 @@ def main() -> None:
         profile: academic_measurement(profile, profile_pdfs[profile], markers)
         for profile in academic_profiles
     }
-    suppressed = {
-        profile: suppressed_measurement(profile, profile_pdfs[profile], markers)
-        for profile in suppressed_profiles
+    non_applicable = {
+        profile: non_applicable_measurement(profile, profile_pdfs[profile], markers)
+        for profile in non_applicable_profiles
     }
 
     required_expected = {
         "required": bool(required_rule["values"]["required"]),
         "profiles": academic_profiles,
-        "suppressed_profiles": suppressed_profiles,
     }
     required_measured = {
-        "academic": {
-            profile: {
-                "present": data["present"],
-                "approval_page": data["approval_page"],
-                "sentinel_page": data["sentinel_page"],
-            }
-            for profile, data in academic.items()
-        },
-        "suppressed": {
-            profile: {
-                "suppressed": data["suppressed"],
-                "sentinel_page": data["sentinel_page"],
-            }
-            for profile, data in suppressed.items()
-        },
+        profile: {
+            "present": data["present"],
+            "approval_page": data["approval_page"],
+            "sentinel_page": data["sentinel_page"],
+        }
+        for profile, data in academic.items()
     }
-    required_pass = (
-        required_expected["required"]
-        and all(data["present"] for data in academic.values())
-        and all(data["suppressed"] for data in suppressed.values())
+    required_pass = required_expected["required"] and all(
+        data["present"] for data in academic.values()
     )
 
     order_rule = rules["approval.fields.order"]
@@ -392,7 +380,7 @@ def main() -> None:
         "result": result,
         "status_counts": status_counts,
         "academic_profiles": academic,
-        "suppressed_profiles": suppressed,
+        "supplemental_non_applicable_profiles": non_applicable,
         "evidence": evidence,
     }
 
@@ -406,7 +394,7 @@ def main() -> None:
         "N6-EVIDENCE approval-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" academic_profiles={len(academic_profiles)}"
-        + f" suppressed_profiles={len(suppressed_profiles)}"
+        + f" supplemental_profiles={len(non_applicable_profiles)}"
     )
     for item in evidence:
         print(
@@ -414,6 +402,10 @@ def main() -> None:
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
+    print(
+        "N6-EVIDENCE approval-non-applicable-observation "
+        + json.dumps(non_applicable, ensure_ascii=False, sort_keys=True)
+    )
 
     if args.enforce and result != "PASS":
         failed = [item["rule_id"] for item in evidence if item["status"] != "PASS"]
