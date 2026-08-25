@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "errata",
+  "rules": [
+    "errata.element.optional",
+    "errata.position",
+    "errata.contents"
+  ],
+  "fixtures": {
+    "present": "tests/normativa/pretextual-oracle-errata-present.tex",
+    "absent": "tests/normativa/pretextual-oracle-errata-absent.tex",
+    "content": "tests/fixtures/pretextuais/errata-oracle.tex"
+  },
+  "markers": {
+    "title_page": "UFCN6ERRTITLEPAGE",
+    "errata_heading": "ERRATA",
+    "reference": "UFCN6ERRREFERENCE",
+    "correction": "UFCN6ERRCORRECTION",
+    "sentinel": "UFCN6ERRSENTINEL"
+  }
+}
