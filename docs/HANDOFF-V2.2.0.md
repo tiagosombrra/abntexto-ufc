@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 section-hierarchy evidence merge: `2a4b38a57bf1fafa3f4dbb9a7992340f3f03e2a8`
+- Stable main after N6 section-indicator evidence merge: `96ee28fd04d17514fa21a5925c2305571c43220a`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -265,6 +265,52 @@ Instrumentation/auditability history:
 
 The final authoritative certification comment is recorded on PR #77.
 
+### Textual section indicators
+
+Evidence PR `#79`, squash-merged as `96ee28fd04d17514fa21a5925c2305571c43220a`.
+
+Final exact audited head: `23ce3c5de0d580aab0caaea59349732e8f7e1535`.
+
+Scoped rules:
+
+- `section.indicator.alignment`
+- `section.indicator.separator`
+
+Initial evidence head `b3edf76d37f8346af587f31e5aa72127f37ed8ef` correctly exposed a real implementation defect:
+
+- `section.indicator.alignment`: PASS on all five levels;
+- `section.indicator.separator`: FAIL on all five levels;
+- inherited heading gap: 12.0 pt;
+- same-document literal-space calibration: 3.0 pt;
+- uniform excess: 9.0 pt, above the N5 horizontal tolerance of 5.0 pt.
+
+The FAIL was preserved in #79. Implementation was corrected separately in PR `#80`, exact head `0fc77f034ce63ac9bc4804fe0071435342404144`, squash-merged as `9dd63e4cd54e47d1d5a2226160437283014b6e89`.
+
+PR #80 changed only `abntexto-ufc/layout.def`, replacing the inherited `\quad` separator by `\space` in the five numbered textual-section printers through fail-fast patches. It deliberately did not alter TOC labels, spacing, duplex behavior, multiline hanging, typography, normative values, locators, tolerances or proof-state.
+
+Implementation-fix certification:
+
+- Normative source contract `32872035018`: SUCCESS
+- LaTeX preflight `32872034981`: SUCCESS
+- structural job `97881122641`: SUCCESS
+- aggregate `latex-preflight` job `97882891377`: SUCCESS
+
+After #80 merged, the evidence branch was synchronized with `main` without force/rebase and rerun with unchanged oracle semantics.
+
+Final evidence:
+
+- Normative source contract `32872834514`: SUCCESS
+- LaTeX preflight `32872834517`: SUCCESS
+- structural job `97883700774`: SUCCESS
+- aggregate `latex-preflight` job `97886512955`: SUCCESS
+- structural result: `PASS=14 FAIL=0 SKIP=0`
+- `N6-EVIDENCE section-indicator-summary PASS=2 levels=5`
+- `section.indicator.alignment`: PASS on all five levels;
+- `section.indicator.separator`: PASS on all five levels;
+- measured heading gap = 3.0 pt and same-font single-space calibration = 3.0 pt, with delta 0.0 pt at every level.
+
+The evidence PR remains evidence-only relative to the post-fix `main`: five scenario/fixture/oracle/gate files and no class/runtime diff. No normative value, locator, tolerance, compatibility mapping or proof-state changed.
+
 ## N6 remaining work
 
 Continue with bounded, independently measurable components. Preferred order from this checkpoint:
@@ -275,23 +321,21 @@ Continue with bounded, independently measurable components. Preferred order from
 4. post-textual dimensions;
 5. deposit/distribution-related normative evidence that is actually measurable from the relevant final artifact or institutional workflow.
 
-Current section-related rulesets from `normativa/locator-audit-sections-footnotes-nature.json` that remain outside the completed `sections.hierarchy` scope are:
+Current section-related rulesets from `normativa/locator-audit-sections-footnotes-nature.json` that remain outside the completed `sections.hierarchy` and `sections.indicator` scopes are:
 
-- `sections.indicator`: `section.indicator.alignment`, `section.indicator.separator`
 - `sections.primary-recto-duplex`: `section.primary.recto-duplex`
 - `sections.primary-after-spacing`: `section.primary.after-spacing`
 - `sections.subsection-spacing`: `section.subsection.before-after-spacing`
 - `sections.multiline-hanging`: `section.multiline.hanging`
 - `sections.unnumbered-centered`: `heading.unnumbered.centered`
 
-Do not infer any of those dimensions from the green hierarchy evidence.
+Do not infer any of those dimensions from the green hierarchy or indicator evidence.
 
-The immediate next bounded candidate is `sections.indicator`, with exactly two rule IDs:
+The immediate next bounded candidate is `sections.primary-recto-duplex`, with exactly one rule ID:
 
-- `section.indicator.alignment`
-- `section.indicator.separator`
+- `section.primary.recto-duplex`
 
-At PR creation, rederive that exact scope and the expected values from the current full contract and compatibility/source mappings. Do not hard-code expected values from this handoff. Use controlled final-PDF section headings and `pdftotext -bbox-layout` geometry/token extraction to distinguish indicator alignment from title text and to verify the stored separator predicate. Keep spacing, duplex recto behavior, multiline hanging and typography outside this increment.
+At PR creation, rederive that exact scope and expected value from the current full contract and locator mappings. Use a controlled duplex final-PDF fixture where the preceding textual content deliberately ends such that the next primary section would otherwise begin on verso; measure physical page parity directly and treat any inserted blank page only as observational support. Keep primary after-spacing, subsection spacing, multiline hanging, unnumbered-heading centering and other section dimensions outside this increment.
 
 ## Required PR discipline from this checkpoint forward
 
@@ -354,4 +398,4 @@ Do not reconstruct status primarily from old chat messages. Git history, this ha
 
 ## Next action
 
-From stable main `2a4b38a57bf1fafa3f4dbb9a7992340f3f03e2a8`, rederive `sections.indicator` from the current full contract and locator mappings. If it remains exactly `section.indicator.alignment` plus `section.indicator.separator`, create an evidence-only N6 PR with controlled final-PDF section headings. Measure only the stored alignment and separator predicates. Do not absorb spacing, duplex recto behavior, multiline hanging, unnumbered-heading centering, class/runtime changes, normative values, locators, tolerances or proof-state into that evidence increment.
+From stable main `96ee28fd04d17514fa21a5925c2305571c43220a`, rederive `sections.primary-recto-duplex` from the current full contract and locator mappings. If it remains exactly `section.primary.recto-duplex`, create an evidence-only N6 PR with a controlled duplex final-PDF fixture that forces a primary-section recto transition. Measure only the stored recto predicate. Do not absorb section spacing, subsection spacing, multiline hanging, unnumbered-heading centering, class/runtime changes, normative values, locators, tolerances or proof-state into that evidence increment.
