@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 primary-section recto/duplex evidence merge: `838e83d19a133d19e7f9aae9d3d675f274da2ed3`
+- Stable main after N6 primary-section after-spacing evidence merge: `9a9b9bf8fda4807b83526c4843562229308e1378`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -121,15 +121,11 @@ PR `#71`, squash merge `961cfb41de76c192b7a703956e861c7aba88c251`.
 
 Exact audited head `33c41dc741dfce7c110a657acdd5cf091b6f2024`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE optional-lists-summary PASS=4 present_fixtures=4 absent_pages=1`.
 
-Normative PASS is restricted to `required=false`; list-entry content/layout is not inferred as an additional normative requirement.
-
 ### Table of contents
 
 PR `#73`, squash merge `1f1feed15e2c69a067022042f26aa663447cdd9d`.
 
 Exact audited head `f042ff99910a7e9e0fb0d3ca40cc292f047f9980`; structural `PASS=14 FAIL=0 SKIP=0`; `N6-EVIDENCE toc-summary PASS=5 toc_pages=5 hierarchy_levels=5 non_normative=1`.
-
-The final scope includes only normative TOC rules and accounts for project-policy members separately.
 
 ### Pre-textual pagination and start-side transition
 
@@ -163,8 +159,6 @@ Scoped rules:
 - `section.levels.max`
 - `section.primary.new-page`
 
-The harness was also improved generically so every passing check containing `N6-EVIDENCE` surfaces those lines in Actions logs. No normative predicate changed.
-
 ### Textual section indicators
 
 Evidence PR `#79`, squash merge `96ee28fd04d17514fa21a5925c2305571c43220a`.
@@ -176,11 +170,9 @@ Scoped rules:
 - `section.indicator.alignment`
 - `section.indicator.separator`
 
-Initial evidence correctly exposed a real implementation defect: alignment passed, but the inherited `\quad` produced a 12.0 pt heading gap against a 3.0 pt same-font literal-space calibration, exceeding the 5 pt N5 tolerance.
+Initial evidence correctly exposed a real implementation defect: the inherited wide separator exceeded the single-character-space calibration. PR `#80`, exact head `0fc77f034ce63ac9bc4804fe0071435342404144`, squash merge `9dd63e4cd54e47d1d5a2226160437283014b6e89`, corrected only the five numbered textual-section printers.
 
-The FAIL remained visible in #79. PR `#80`, exact head `0fc77f034ce63ac9bc4804fe0071435342404144`, squash merge `9dd63e4cd54e47d1d5a2226160437283014b6e89`, corrected only `abntexto-ufc/layout.def` by replacing the inherited separator with `\space` in the five numbered textual-section printers.
-
-Final evidence after the isolated fix:
+Final evidence:
 
 - Normative source contract `32872834514`: SUCCESS
 - LaTeX preflight `32872834517`: SUCCESS
@@ -196,29 +188,44 @@ Evidence PR `#82`, squash merge `838e83d19a133d19e7f9aae9d3d675f274da2ed3`.
 
 Exact audited head `8f5926f43230131fafc5410e3a955ffc3af06f22`.
 
-Stable audited base: `39d4d799716105e6561bc66452dc04a492d4d635`.
+- Normative source contract `32876510274`: SUCCESS
+- LaTeX preflight `32876510233`: SUCCESS
+- structural job `97895584067`: SUCCESS
+- aggregate `latex-preflight` `97898148526`: SUCCESS
+- structural `PASS=14 FAIL=0 SKIP=0`
+- `N6-EVIDENCE section-primary-recto-duplex-summary PASS=1 primaries=3 pages=1,3,5`
+
+Rule `section.primary.recto-duplex` passed on physical pages 1, 3 and 5. Blank transition pages are observational only.
+
+### Primary section after-spacing
+
+Evidence PR `#84`, squash merge `9a9b9bf8fda4807b83526c4843562229308e1378`.
+
+Stable base: `8fcdfb72f91860c32ff952b46f4992e0a680bf60`.
+
+Final exact audited head: `d36ad9c12327da4bb3d6ac5ef0003e5661a9a3d2`.
 
 Scoped rule:
 
-- `section.primary.recto-duplex`
+- `section.primary.after-spacing`
 
-Stored contract predicate:
+Stored predicate:
 
-- `values.start_side = "recto"`
-- applicable only when `duplex = true`
+- `values.after_factor = 1.5`
 
 Final evidence:
 
-- Normative source contract run `32876510274`: SUCCESS
-- LaTeX preflight run `32876510233`: SUCCESS
-- structural job `97895584067`: SUCCESS
-- aggregate `latex-preflight` job `97898148526`: SUCCESS
-- structural result: `PASS=14 FAIL=0 SKIP=0`
-- `N6-EVIDENCE section-primary-recto-duplex-summary PASS=1 primaries=3 pages=1,3,5`
+- Normative source contract `32884056552`: SUCCESS
+- LaTeX preflight `32884056758`: SUCCESS
+- structural job `97920193298`: SUCCESS
+- aggregate `latex-preflight` `97922278296`: SUCCESS
+- structural `PASS=14 FAIL=0 SKIP=0`
+- `N6-EVIDENCE section-primary-after-spacing-summary PASS=1 gap_pt=41.5500 calibration_pt=41.4000`
+- measured delta = `0.15 pt`, within the N5 vertical tolerance of `5 pt`.
 
-Measurement used a controlled `impressao=frente-verso` final PDF with three short primary sections. Their headings occurred on physical pages 1, 3 and 5. Physical pages 2 and 4 were empty transitions and are recorded only as observational evidence. Normative PASS depends only on recto parity; page deltas and blank-page insertion are not additional stored predicates.
+Instrumentation history is part of the audit record. Initial head `07b11dc7965b9e514062c14bb6a1576e5cf9b669` compared the heading/body center-to-center interval (`41.55 pt`) against directly adjacent 1.5-spaced calibration lines (`20.70 pt`) and therefore reported a false FAIL. Inspection of the pinned upstream section implementation showed that the primary heading applies one baseline vertical skip after the heading. Existing N6 keyword-position evidence independently uses the same geometry: one blank 1.5-spaced interval is approximately two center-to-center baseline intervals. The final fixture therefore uses a like-for-like same-document calibration with one explicit 1.5-spaced vertical interval, yielding `41.40 pt`.
 
-The evidence increment contains only scenario/fixture/oracle/gate integration. No class/runtime implementation, normative value, locator, tolerance, compatibility mapping or proof-state changed.
+This was an instrumentation correction, not a class defect. No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed.
 
 ## N6 remaining work
 
@@ -230,9 +237,8 @@ Continue with bounded, independently measurable components. Preferred order:
 4. post-textual dimensions;
 5. deposit/distribution-related evidence measurable from the relevant final artifact or institutional workflow.
 
-Current section-related rulesets still outside completed `sections.hierarchy`, `sections.indicator` and `sections.primary-recto-duplex` scopes:
+Current section-related rulesets still outside the completed section scopes:
 
-- `sections.primary-after-spacing`: `section.primary.after-spacing`
 - `sections.subsection-spacing`: `section.subsection.before-after-spacing`
 - `sections.multiline-hanging`: `section.multiline.hanging`
 - `sections.unnumbered-centered`: `heading.unnumbered.centered`
@@ -241,18 +247,17 @@ Do not infer any of these dimensions from prior green section evidence.
 
 ## Immediate next bounded increment
 
-Next: `sections.primary-after-spacing` with exactly one rule:
-
-- `section.primary.after-spacing`
+Next: `sections.subsection-spacing`.
 
 Before creating the evidence PR:
 
 1. rederive the exact ruleset mapping from `normativa/locator-audit-sections-footnotes-nature.json`;
-2. rederive the current full-contract value for `section.primary.after-spacing` rather than copying a historical expectation;
-3. construct a controlled final-PDF fixture with a primary heading followed by measurable body text and same-document line-spacing calibration;
-4. measure only the stored after-spacing predicate, using N5 tolerances where applicable;
-5. keep subsection spacing, multiline hanging, unnumbered-heading centering and all unrelated typography outside this increment;
-6. if evidence exposes a class defect, preserve the FAIL, open an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
+2. rederive the current full-contract values for `section.subsection.before-after-spacing` rather than copying historical expectations;
+3. construct a controlled final-PDF fixture that independently exposes the vertical space before and after a subsection heading;
+4. use same-document 1.5-spaced calibration and the N5 vertical tolerance, while accounting correctly for center-to-center line geometry;
+5. measure only the stored before/after spacing predicates;
+6. keep multiline hanging, unnumbered-heading centering and all unrelated typography outside this increment;
+7. if evidence exposes a real class defect, preserve the FAIL, use an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
 
 ## Required PR discipline
 
@@ -313,4 +318,4 @@ Do not reconstruct state primarily from old chats. Git history, this handoff and
 
 ## Next action
 
-From stable main `838e83d19a133d19e7f9aae9d3d675f274da2ed3`, rederive `sections.primary-after-spacing` and the exact current value of `section.primary.after-spacing`. If the scope remains one rule, create an evidence-only N6 PR with a controlled final-PDF fixture and measure only that after-spacing predicate. Do not absorb subsection spacing, multiline hanging, unnumbered-heading centering, runtime/class changes, normative values, locators, tolerances or proof-state into that evidence increment.
+From stable main `9a9b9bf8fda4807b83526c4843562229308e1378`, rederive `sections.subsection-spacing` and the exact current values of `section.subsection.before-after-spacing`. If the scope remains one rule, create an evidence-only N6 PR with controlled final-PDF measurement of the stored before/after spacing predicates. Do not absorb multiline hanging, unnumbered-heading centering, runtime/class changes, normative values, locators, tolerances or proof-state into that increment.
