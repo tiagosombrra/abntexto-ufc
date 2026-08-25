@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "approval-page",
+  "rules": [
+    "approval.element.required",
+    "approval.fields.order"
+  ],
+  "academic_profiles": [
+    "tccgraduacao",
+    "tccespecializacao",
+    "dissertacao",
+    "tese"
+  ],
+  "suppressed_profiles": [
+    "projeto",
+    "projetoanonimizado"
+  ],
+  "fixture": "tests/normativa/pretextual-oracle-approval.tex",
+  "markers": {
+    "author": "UFCN6APAUTHOR",
+    "title": "UFCN6APTITLE",
+    "subtitle": "UFCN6APSUBTITLE",
+    "nature": "UFCN6APNATURE",
+    "approval_date": "UFCN6APDATE",
+    "committee_heading": "BANCA EXAMINADORA",
+    "advisor": "UFCN6APADVISOR",
+    "member": "UFCN6APMEMBER",
+    "sentinel": "UFCN6APSENTINEL"
+  }
+}
