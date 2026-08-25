@@ -17,20 +17,20 @@
   "lists": {
     "list.illustrations.optional": {
       "heading": "LISTA DE ILUSTRAÇÕES",
-      "entry_marker": "UFCN6LISTILLENTRY"
+      "entry_marker": "N6 illustration entry"
     },
     "list.tables.optional": {
       "heading": "LISTA DE TABELAS",
-      "entry_marker": "UFCN6LISTTABLEENTRY"
+      "entry_marker": "N6 table entry"
     },
     "list.abbreviations.optional": {
       "heading": "LISTA DE ABREVIATURAS E SIGLAS",
-      "entry_marker": "UFCN6LISTABBRENTRY"
+      "entry_marker": "N6 abbreviation entry"
     },
     "list.symbols.optional": {
       "heading": "LISTA DE SÍMBOLOS",
-      "entry_marker": "UFCN6LISTSYMENTRY"
+      "entry_marker": "N6 symbol entry"
     }
   },
-  "sentinel": "UFCN6LISTSENTINEL"
+  "sentinel": "N6 list sentinel"
 }
