@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "body-paragraph",
+  "locator_ruleset": "layout.body-paragraph",
+  "rules": [
+    "paragraph.first-line.indent",
+    "paragraph.spacing.extra"
+  ],
+  "markers": {
+    "indent_first": "N6ParagraphIndentOne",
+    "indent_second": "N6ParagraphIndentTwo",
+    "margin_control": "N6ParagraphMarginControl",
+    "calibration_top": "N6ParagraphCalTop",
+    "calibration_bottom": "N6ParagraphCalBottom"
+  },
+  "calibration": {
+    "indent_reference": "same-font noindent line at the text left edge",
+    "spacing_reference": "same-document adjacent body-line center gap"
+  }
+}
