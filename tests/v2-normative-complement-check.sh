@@ -92,4 +92,6 @@ PY
   fi
 done
 
+sh tests/v2-long-quotation-evidence-check.sh
+
 echo 'Gate V2 de estruturas normativas complementares concluído.'
