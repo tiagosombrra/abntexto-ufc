@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 errata merge: `5b6050b89e701e9463242de9d9948af9bb6a2687`
+- Stable main after N6 optional pre-textual lists merge: `961cfb41de76c192b7a703956e861c7aba88c251`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -193,25 +193,58 @@ Before final certification, the oracle was corrected because an earlier implemen
 
 The branch was synchronized with the then-current `main` before final certification so the required merge gate was evaluated on an up-to-date head. A final unchanged-head evidence review comment is recorded directly on PR #69.
 
-## N6 remaining work
+### Optional pre-textual lists
 
-Continue with bounded, independently measurable components. Preferred order:
+PR `#71`, squash-merged as `961cfb41de76c192b7a703956e861c7aba88c251`.
 
-1. optional pre-textual lists;
-2. table of contents;
-3. remaining pre-textual/structural atomic dimensions not yet covered by N6 final-PDF evidence;
-4. then move to textual, citation/object, post-textual and deposit-related evidence according to the canonical N6 scope before declaring N6 complete.
+Exact audited head before merge: `33c41dc741dfce7c110a657acdd5cf091b6f2024`.
 
-The immediate next increment is the optional pre-textual lists. Its current active contract is exactly:
+Required evidence:
+
+- `Normative source contract` run `32841169790`: SUCCESS;
+- `LaTeX preflight` run `32841169894`: SUCCESS;
+- structural job `97780773494`: SUCCESS;
+- required aggregate job `97782325510`: SUCCESS;
+- structural result: `PASS=14 FAIL=0 SKIP=0`;
+- `N6-EVIDENCE optional-lists-summary PASS=4 present_fixtures=4 absent_pages=1`.
+
+Four scoped rules passed final-PDF measurement:
 
 - `list.illustrations.optional`;
 - `list.tables.optional`;
 - `list.abbreviations.optional`;
 - `list.symbols.optional`.
 
-The evidence must distinguish valid absence from valid presence for each list family. When present, evidence should verify the corresponding generated/list content in the final PDF without inventing layout, ordering or typography requirements that are not represented by the active contract.
+Measured highlights:
 
-The scenario must derive its expected `list.*.optional` rule set from the full contract and fail on scope drift. Existing implementation exposes figure/table/generated list routes and file-backed abbreviation/symbol routes; the evidence design should test the public commands rather than private internals.
+- four isolated present fixtures exercise exactly one documented public list command each;
+- every present fixture exposes its corresponding heading on exactly one PDF page;
+- the common absent fixture exposes none of the four headings;
+- normative PASS is restricted to `required=false`; list-entry content, object generation, ordering, layout and typography are not inferred as additional requirements.
+
+The instrumentation required two corrections before final certification. First, an illustration fixture used the standard LaTeX `figure`/`caption` path and produced an overflow; repository documentation and the canonical object regression suite show that the documented V2 object API is `\legend{...}` plus `ufcobjeto`, and object generation is outside this bounded optionality contract, so that unrelated route was removed instead of changing the class or weakening warning checks. Second, each textual control sentence repeated its list heading phrase, causing the substring-based final-PDF extractor to report a second heading page. The control text was neutralized while preserving the strict exact-one-present/zero-absent criterion.
+
+No class/runtime implementation, normative value, locator, oracle tolerance or proof-state changed. A final unchanged-head evidence comment is recorded directly on PR #71.
+
+## N6 remaining work
+
+Continue with bounded, independently measurable components. Preferred order:
+
+1. table of contents;
+2. remaining pre-textual/structural atomic dimensions not yet covered by N6 final-PDF evidence;
+3. then move to textual, citation/object, post-textual and deposit-related evidence according to the canonical N6 scope before declaring N6 complete.
+
+The immediate next increment is the table of contents. Its already mapped bounded scope is:
+
+- `toc.pretextual-exclusion`;
+- `toc.heading.alignment`;
+- `toc.heading.case`;
+- `toc.page-number.position`;
+- `toc.section-hierarchy.mirror`.
+
+Before creating the evidence PR, re-read the exact rule values, locators and applicability from the current full contract. Do not infer additional TOC dimensions from implementation details.
+
+The evidence design should use controlled final-PDF content that distinguishes pre-textual exclusion from textual hierarchy and page-number placement, while preserving the same scope-drift checks and conservative proof semantics used by prior N6 increments.
 
 ## Required PR discipline from this checkpoint forward
 
@@ -255,4 +288,4 @@ Do not reconstruct status primarily from old chat messages. Git history, this ha
 
 ## Next action
 
-Create the N6 optional pre-textual list evidence increment from stable main `5b6050b89e701e9463242de9d9948af9bb6a2687`, preserving the same evidence-only semantics used by prior bounded N6 PRs.
+Create the N6 table-of-contents evidence increment from stable main `961cfb41de76c192b7a703956e861c7aba88c251`, first re-reading the exact five TOC rule contracts and preserving the same evidence-only semantics used by prior bounded N6 PRs.
