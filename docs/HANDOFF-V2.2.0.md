@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 table-of-contents evidence merge: `1f1feed15e2c69a067022042f26aa663447cdd9d`
+- Stable main after N6 pre-textual pagination/start-side evidence merge: `d1c0fd5580d172fd41863f0b67f63d6c724eb8c5`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -260,24 +260,68 @@ The first run stopped before PDF measurement because the initial scope filter tr
 
 A final exact-head certification comment is recorded directly on PR #73.
 
+### Pre-textual pagination and start-side transition
+
+PR `#75`, squash-merged as `d1c0fd5580d172fd41863f0b67f63d6c724eb8c5`.
+
+Exact audited head before merge: `b5a9f1188b8d981dbd519561cdd7e4ba446782e1`.
+
+Required evidence:
+
+- `Normative source contract` run `32849497792`: SUCCESS;
+- `LaTeX preflight` run `32849497722`: SUCCESS;
+- structural job `97806826028`: SUCCESS;
+- required aggregate job `97809054286`: SUCCESS;
+- structural result: `PASS=14 FAIL=0 SKIP=0`;
+- `N6-EVIDENCE pretextual-pagination-summary PASS=4 duplex_pages=27 catalog_pages=3 recto_markers=13`.
+
+Four scoped normative rules passed final-PDF measurement:
+
+- `pagination.pretextual.counted-not-numbered`;
+- `pagination.catalog-data.not-counted`;
+- `pagination.textual.display-start`;
+- `pretextual.start.recto`.
+
+Measured highlights:
+
+- all 26 physical pre-textual pages in the controlled duplex fixture expose no visible Arabic or Roman header page-number token;
+- the first textual page is physical page 27 and displays Arabic page number `27`, directly matching physical/logical progression when no uncounted page is present;
+- in the catalog-card fixture, the title page is physical page 1, the catalog card is physical page 2 and the first textual page is physical page 3 displaying logical page number `2`, providing final-PDF evidence that the catalog card is not counted;
+- the title page and catalog card expose no visible page-number tokens;
+- all 13 controlled pre-textual starts occur on odd physical pages;
+- the catalog card is the immediate physical verso of the title page, satisfying the stored exception to recto starts.
+
+The first exact-head structural run aborted before measuring any scoped rule because the original title-page marker used the author string, which legitimately appears again on the approval page. Only the controlled fixture marker was moved to the title-page-only location string `N6 Pagination Title City`. The class implementation, normative expectation, scope, locator, tolerance and proof-state remained unchanged. The final oracle also retains hardened detection for both Arabic and Roman visible header numbering.
+
+A final exact-head certification comment is recorded directly on PR #75.
+
 ## N6 remaining work
 
 Continue with bounded, independently measurable components. Preferred order from this checkpoint:
 
-1. remaining pre-textual/structural atomic dimensions not yet covered by a bounded N6 final-PDF increment;
-2. textual typography/section/quotation dimensions;
+1. textual section hierarchy and typography dimensions;
+2. quotation and paragraph dimensions;
 3. citation/object dimensions;
 4. post-textual dimensions;
 5. deposit/distribution-related normative evidence that is actually measurable from the relevant final artifact or institutional workflow.
 
-The immediate next bounded candidate is the pre-textual pagination/start-side transition. Before creating its evidence PR, derive the exact normative scope from the current full contract and existing N6 registry rather than hard-coding an assumed group. Expected candidates to verify include:
+The immediate next bounded candidate is the existing `sections.hierarchy` ruleset identified by `normativa/locator-audit-sections-footnotes-nature.json`. Its exact three-rule scope is:
 
-- `pagination.pretextual.counted-not-numbered`;
-- `pagination.textual.display-start`;
-- `pretextual.start.recto`;
-- the catalog-data pagination exception only if it belongs to the same independently measurable component after applicability review.
+- `section.numbering.progressive`;
+- `section.levels.max`;
+- `section.primary.new-page`.
 
-Do not add pagination offsets, duplex side rules, catalog-card semantics or other dimensions merely because they are adjacent in implementation. Scope must be derived from rule authority, applicability and the bounded fixture design.
+Before creating the evidence PR, derive and assert this scope again from the current full contract rather than relying only on the handoff. Use controlled final-PDF section markers to measure progressive numbering, the five-level ceiling and primary-section page transitions. Keep adjacent section rules separate unless their own authority/applicability and fixture design justify a later bounded component, including:
+
+- `section.indicator.alignment`;
+- `section.indicator.separator`;
+- `section.primary.recto-duplex`;
+- `section.primary.after-spacing`;
+- `section.subsection.before-after-spacing`;
+- `section.multiline.hanging`;
+- `heading.unnumbered.centered`.
+
+Do not infer those adjacent dimensions from a green `sections.hierarchy` increment.
 
 ## Required PR discipline from this checkpoint forward
 
@@ -321,4 +365,4 @@ Do not reconstruct status primarily from old chat messages. Git history, this ha
 
 ## Next action
 
-From stable main `1f1feed15e2c69a067022042f26aa663447cdd9d`, derive the exact remaining pre-textual pagination/start-side N6 scope from the current full contract and existing bounded evidence. Then create a new evidence-only PR with controlled final-PDF fixtures; do not alter class/runtime, normative values, locators, tolerances or proof-state unless measurement independently exposes a defect requiring a separate implementation-fix PR.
+From stable main `d1c0fd5580d172fd41863f0b67f63d6c724eb8c5`, derive the exact `sections.hierarchy` N6 scope from the current full contract and existing bounded evidence. If it remains the three-rule set documented above, create an evidence-only PR with controlled final-PDF fixtures for progressive numbering, the five-level section ceiling and primary-section new-page behavior. Do not alter class/runtime, normative values, locators, tolerances or proof-state unless measurement independently exposes a defect requiring a separate implementation-fix PR.
