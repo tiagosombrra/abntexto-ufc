@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "short-direct-citation",
+  "locator_ruleset": "citations.direct-short",
+  "rules": [
+    "citation.direct-short.max-lines",
+    "citation.direct-short.quotation-marks",
+    "citation.direct-short.emphasis"
+  ],
+  "markers": {
+    "body_control": "N6ShortCitationControl",
+    "body_before": "N6ShortCitationBefore",
+    "quote_open": "N6ShortCitationOpen",
+    "quote_middle": "N6ShortCitationMiddle",
+    "quote_close": "N6ShortCitationClose",
+    "body_after": "N6ShortCitationAfter"
+  },
+  "calibration": {
+    "typography_reference": "same-document ordinary body text",
+    "line_threshold": "positive controlled short-citation evidence only",
+    "quotation_mark_reference": "visible quote-boundary glyphs in final PDF"
+  }
+}
