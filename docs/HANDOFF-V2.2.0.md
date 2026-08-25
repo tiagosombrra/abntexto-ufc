@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 unnumbered-heading centering evidence merge: `0bf1a098688bdd1c6ceba077434bab53f448ffb8`
+- Stable main after N6 body-paragraph evidence merge: `7e509a68f5dd3adc4aead749404425885cbe8745`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -316,46 +316,86 @@ The final-PDF fixture exercises the three distinct current rendering paths for a
 
 No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment. The N6 section-layout block is now complete.
 
+### Body paragraph indentation and extra spacing
+
+Evidence PR `#92`, squash merge `7e509a68f5dd3adc4aead749404425885cbe8745`.
+
+Stable base: `137ad2e5586af7130e970a77b3c40b1a6bab6aa2`.
+
+Final exact audited head: `6080d321d7b5b37b1bb5d2821b8cf8fa072ac601`.
+
+Scoped rules:
+
+- `paragraph.first-line.indent`
+- `paragraph.spacing.extra`
+
+Stored predicates:
+
+- `values.first_line_indent_mm = 20`
+- `values.paragraph_extra_spacing_pt = 0`
+
+Final exact-head CI evidence:
+
+- Normative source contract `32905956551`: SUCCESS
+- normative job `97989991552`: SUCCESS
+- LaTeX preflight `32905956529`: SUCCESS
+- structural job `97989991424`: SUCCESS
+- aggregate `latex-preflight` job `97991172794`: SUCCESS
+- structural `PASS=14 FAIL=0 SKIP=0`
+- `N6-EVIDENCE body-paragraph-summary PASS=2 indent_one_pt=56.6930 indent_two_pt=56.6930 paragraph_gap_pt=20.7000 calibration_gap_pt=20.7000`
+
+The final-PDF oracle measures two ordinary body paragraphs against a same-font `noindent` margin control. The expected 20 mm indentation is `56.6929 pt`; both measured offsets were `56.6930 pt`, delta `0.0001 pt`. Extra paragraph spacing is isolated by subtracting a same-document adjacent body-line center gap from the paragraph-to-paragraph center gap: both were `20.7000 pt`, so measured extra spacing was exactly `0.0 pt`.
+
+No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment. Body line spacing remains a separate rule and was not promoted by the calibration.
+
 ## N6 remaining work
 
 Continue with bounded, independently measurable components. Preferred order:
 
-1. paragraph dimensions;
-2. quotation dimensions;
-3. citation/object dimensions;
-4. post-textual dimensions;
-5. deposit/distribution-related evidence measurable from the relevant final artifact or institutional workflow.
+1. quotation dimensions;
+2. citation/object dimensions;
+3. post-textual dimensions;
+4. deposit/distribution-related evidence measurable from the relevant final artifact or institutional workflow.
 
-The section-layout scopes completed through PR #90 must not be reopened without new evidence of a regression or a changed normative source.
+The section-layout scopes completed through PR #90 and the body-paragraph scope completed in PR #92 must not be reopened without new evidence of a regression or a changed normative source.
 
 ## Immediate next bounded increment
 
-Next: `layout.body-paragraph`.
+Next: `citations.direct-long`.
 
-Current rederived scope from `normativa/locator-audit-typography-paragraphs.json`, `normativa/catalog.json`, `normativa/atomic-rules.json` and the current full contract:
+Current rederived scope from `normativa/locator-audit-citations.json`, `normativa/catalog.json`, `normativa/atomic-rules.json` and the current full contract:
 
-- ruleset: `layout.body-paragraph`
+- ruleset: `citations.direct-long`
 - exact rules:
-  - `paragraph.first-line.indent`
-  - `paragraph.spacing.extra`
-- stored predicates:
-  - `values.first_line_indent_mm = 20`
-  - `values.paragraph_extra_spacing_pt = 0`
-- institutional locator: UFC `4.3, p. 66; Figura 34, p. 68`
-- locator status: `VERIFIED`
-
-Current implementation observation only, not normative proof: `abntexto-ufc/layout.def` sets `\parindent` to `2cm` and `\parskip` to `0pt`.
+  - `quotation.long.block`
+  - `quotation.long.indent.left`
+  - `quotation.long.font.size`
+  - `quotation.long.line-spacing`
+  - `quotation.long.quotation-marks`
+- parent applicability/value context:
+  - direct quotation with `min_lines = 4`
+  - `left_indent_mm = 40`
+  - `font_pt = 10`
+  - `line_spacing = 1.0`
+  - `quotation_marks = false`
+- atomic block predicate: `values.block = true`
+- current locator: `NBR 10520:2023; Guia UFC de Citações 2025`
+- locator audit status: `PARTIAL_WITH_REASON`
+- public institutional evidence: UFC citation guide 2025, `2.3.1.2, p. 9`, `VERIFIED`
+- current ABNT NBR 10520:2023 exact clause text remains `UNAVAILABLE_WITH_REASON` in the repository/public evidence corpus and must not be represented as clause-level verified.
 
 Before creating the evidence PR:
 
-1. rederive the exact two-rule scope and inherited atomic values from the current full contract again at branch creation time;
-2. construct a controlled final-PDF body-text fixture with multiple ordinary paragraphs and unambiguous marker words;
-3. measure first-line horizontal offset from the recto text left edge and compare it with the 20 mm predicate using the N5 horizontal-position tolerance;
-4. measure the vertical transition between consecutive paragraphs against a same-document control with identical body line spacing and no added paragraph skip, using the N5 vertical-position tolerance;
-5. keep body line spacing itself outside this increment because `spacing.body` is a separate rule;
-6. use page number, line wrapping and paragraph text only as fixture-integrity/observational evidence;
-7. do not infer conformance from the source-level `\parindent` / `\parskip` assignments;
-8. if evidence exposes a real class defect, preserve the FAIL, use an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
+1. rederive the five-rule scope, atomic values and applicability from the current full contract again at branch creation time;
+2. identify the actual supported long-quotation rendering path used by `abntexto-ufc`/pinned `abntexto`, rather than inventing a test-only layout;
+3. construct a controlled final-PDF fixture with at least four naturally rendered quote lines and unambiguous markers;
+4. measure the quote block's left offset from the text left edge against the 40 mm predicate using the N5 horizontal-position tolerance;
+5. measure quote font size against 10 pt using the N5 font-size tolerance and existing PDF font-span instrumentation;
+6. measure internal quote line spacing against a same-document single-spacing calibration using the N5 vertical-position tolerance;
+7. verify absence of quotation marks without turning source wording or punctuation outside the block into a new predicate;
+8. treat `quotation.long.block` as the structural existence of one distinct long-quotation block through the supported rendering route; do not silently strengthen it with unrelated before/after spacing requirements;
+9. keep short direct citations, source-attribution format and body line spacing outside this increment;
+10. if evidence exposes a real class defect, preserve the FAIL, use an isolated implementation-fix PR, rerun unchanged evidence, then close the component.
 
 ## Required PR discipline
 
@@ -416,4 +456,4 @@ Do not reconstruct state primarily from old chats. Git history, this handoff and
 
 ## Next action
 
-From stable main `0bf1a098688bdd1c6ceba077434bab53f448ffb8`, rederive `layout.body-paragraph`, `paragraph.first-line.indent` (`values.first_line_indent_mm=20`) and `paragraph.spacing.extra` (`values.paragraph_extra_spacing_pt=0`). If the scope remains exactly these two rules, create an evidence-only N6 PR with controlled final-PDF measurement of first-line indentation and zero extra inter-paragraph spacing. Do not absorb `spacing.body`, source/runtime/class changes, normative values, locators, N5 tolerances, compatibility mappings or proof-state into that increment.
+From stable main `7e509a68f5dd3adc4aead749404425885cbe8745`, rederive `citations.direct-long` and its five atomic rules. If the scope remains unchanged, identify the real long-quotation rendering path and create an evidence-only N6 PR measuring distinct block rendering, 40 mm left indent, 10 pt font size, single internal line spacing and absence of quotation marks. Do not absorb short-citation formatting, source attribution, body spacing, source/runtime/class changes, normative values, locators, N5 tolerances, compatibility mappings or proof-state into that increment.
