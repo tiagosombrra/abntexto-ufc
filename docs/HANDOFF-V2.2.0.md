@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 title-page merge: `c4b7865e5857ab3195a2b4e32f7da94673a29569`
+- Stable main after N6 approval-page merge: `673d25252b3b526b5503309535cb423184456e35`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -132,24 +132,54 @@ Measured highlights:
 
 A final evidence review comment is recorded directly on PR #65.
 
+### Approval page
+
+PR `#67`, squash-merged as `673d25252b3b526b5503309535cb423184456e35`.
+
+Exact audited head before merge: `effeab0cbc9a6b82d2d81cf038e2656e42c603f5`.
+
+Required evidence:
+
+- `Normative source contract` run `32830408562`: SUCCESS;
+- `LaTeX preflight` run `32830408536`: SUCCESS;
+- structural job `97747584964`: SUCCESS;
+- structural result: `PASS=14 FAIL=0 SKIP=0`;
+- `N6-EVIDENCE approval-summary PASS=2 academic_profiles=4 supplemental_profiles=2`.
+
+Two scoped rules passed final-PDF measurement:
+
+- `approval.element.required`;
+- `approval.fields.order`.
+
+Measured highlights:
+
+- approval-page presence verified in all four applicable academic profiles: `tccgraduacao`, `tccespecializacao`, `dissertacao`, and `tese`;
+- author, title/subtitle, nature, approval date and committee ordering verified from final-PDF geometry in all four profiles;
+- project and anonymized-project suppression was recorded only as supplemental non-applicability/regression observation and did not determine normative PASS.
+
+The first evidence run reported an order FAIL only for graduation/specialization because the fixture used a nature marker that occurred twice inside those generated nature strings. This was an instrumentation ambiguity, not a class defect. The marker was moved to a single-occurrence metadata position; the class implementation, normative expectation, locator, tolerance and proof-state remained unchanged.
+
+A final unchanged-head evidence review comment is recorded directly on PR #67.
+
 ## N6 remaining work
 
 Continue with bounded, independently measurable components. Preferred order:
 
-1. approval page;
-2. errata;
-3. optional pre-textual lists;
-4. table of contents;
-5. remaining pre-textual/structural atomic dimensions not yet covered by N6 final-PDF evidence;
-6. then move to textual, citation/object, post-textual and deposit-related evidence according to the canonical N6 scope before declaring N6 complete.
+1. errata;
+2. optional pre-textual lists;
+3. table of contents;
+4. remaining pre-textual/structural atomic dimensions not yet covered by N6 final-PDF evidence;
+5. then move to textual, citation/object, post-textual and deposit-related evidence according to the canonical N6 scope before declaring N6 complete.
 
-The immediate next increment should be the approval page because it is the next mandatory academic pre-textual component after title-page coverage and has a compact contract:
+The immediate next increment is errata. Its current active contract is compact and conditional:
 
-- `approval.element.required`;
-- `approval.fields.order`;
-- include any explicit cross-scope rule that governs approval-page output, but do not invent new normative dimensions.
+- `errata.element.optional`;
+- `errata.position`;
+- `errata.contents`.
 
-The scenario must derive its expected rule set from the full contract and fail on scope drift, following the title-page/cover pattern.
+The evidence should distinguish optional absence from valid presence. When present, it must measure placement after the title page and verify both required content parts without inventing additional normative layout dimensions.
+
+The scenario must derive its expected rule set from the full contract and fail on scope drift, following the title-page/cover/approval pattern.
 
 ## Required PR discipline from this checkpoint forward
 
@@ -193,4 +223,4 @@ Do not reconstruct status primarily from old chat messages. Git history, this ha
 
 ## Next action
 
-Create the N6 approval-page evidence increment from stable main `c4b7865e5857ab3195a2b4e32f7da94673a29569`, preserving the same evidence-only semantics used by PRs #62-#65.
+Create the N6 errata evidence increment from stable main `673d25252b3b526b5503309535cb423184456e35`, preserving the same evidence-only semantics used by prior bounded N6 PRs.
