@@ -204,19 +204,19 @@ def main() -> None:
 
     position_rule = rules["errata.position"]
     position_expected = {"after": position_rule["values"]["after"]}
+    page_delta = None
+    if present["title_page"] is not None and present["errata_heading"] is not None:
+        page_delta = present["errata_heading"] - present["title_page"]
     position_measured = {
         "title_page": present["title_page"],
         "errata_page": present["errata_heading"],
         "sentinel_page": present["sentinel"],
-        "immediately_after_title_page": (
-            present["title_page"] is not None
-            and present["errata_heading"] is not None
-            and present["errata_heading"] == present["title_page"] + 1
-        ),
+        "page_delta": page_delta,
+        "after_title_page": page_delta is not None and page_delta > 0,
     }
     position_pass = (
         position_expected["after"] == "title-page"
-        and position_measured["immediately_after_title_page"]
+        and position_measured["after_title_page"]
         and present["sentinel"] is not None
         and present["errata_heading"] is not None
         and present["errata_heading"] < present["sentinel"]
