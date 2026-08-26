@@ -106,7 +106,8 @@ def page_index_for_marker(page_nodes: list[ET.Element], marker: str) -> int:
     wanted = normalize(marker)
     matches: list[int] = []
     for index, page in enumerate(page_nodes, start=1):
-        if any(normalize(word_text(word)) == wanted for word in words(page)):
+        page_text = normalize(" ".join(word_text(word) for word in words(page)))
+        if wanted in page_text:
             matches.append(index)
     if len(matches) != 1:
         fail(f"marker {marker}: expected one page, found {len(matches)}")
