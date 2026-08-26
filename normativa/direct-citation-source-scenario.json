@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "direct-citation-source",
+  "locator_ruleset": "citations.direct-source",
+  "rules": [
+    "citation.direct.source"
+  ],
+  "markers": {
+    "body_before": "N6DSBEF",
+    "quote_start": "N6DSOPN",
+    "quote_end": "N6DSCLS",
+    "body_after": "N6DSAFT"
+  },
+  "fixture": {
+    "citation_key": "oliveira2011",
+    "source_tokens": ["Oliveira", "Nunes", "2011"],
+    "locator_token": "103"
+  },
+  "calibration": {
+    "source_window": "generated citation between quote-end and body-after markers",
+    "association": "same controlled sentence in final PDF"
+  }
+}
