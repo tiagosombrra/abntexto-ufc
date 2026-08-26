@@ -1,0 +1,33 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  tabelas = tabularray
+}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{table}[htbp]
+\centering
+\begin{tallabnttblr}
+[
+  caption={UFCN9IBGECAP Tabela controlada},
+  label={tab:n9-ibge-vector},
+  remark{Fonte}={UFCN9IBGESRC Própria.},
+]
+{
+  width=0.8\linewidth,
+  colspec={X[l] X[r]},
+}
+\toprule
+UFCN9IBGEHL & UFCN9IBGEHR \\
+\midrule
+UFCN9IBGER1 & 10 \\
+UFCN9IBGER2 & 20 \\
+UFCN9IBGER3 & 30 \\
+\bottomrule
+\end{tallabnttblr}
+\end{table}
+
+\end{document}

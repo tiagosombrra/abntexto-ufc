@@ -109,13 +109,75 @@
         ]
       },
       "proof_state_changed": false
+    },
+    {
+      "id": "table-ibge-vector-final-pdf",
+      "campaign_id": "table-final-pdf",
+      "rule_ids": [
+        "table.ibge.open-sides",
+        "table.ibge.body-grid",
+        "table.ibge.top-rule",
+        "table.ibge.header-rule",
+        "table.ibge.bottom-rule"
+      ],
+      "evidence_json": "artifacts/normative-layout/table-ibge-vector-final-pdf.json",
+      "evidence_sources": [
+        "normativa/oracle-policy.json",
+        "normativa/vector-rule-oracle-extension.json",
+        "normativa/table-ibge-vector-final-pdf-scenario.json",
+        "tools/pdf_vector_measurement.py",
+        "tests/normativa/vector-rule-oracle-calibration.tex",
+        "tests/checks/normative_vector_rule_oracle.py",
+        "tests/v2-vector-rule-oracle-check.sh",
+        "tests/normativa/table-ibge-vector-final-pdf.tex",
+        "tests/checks/normative_n9_table_ibge_vector.py",
+        "tests/v2-table-ibge-vector-evidence-check.sh",
+        "tests/v2-object-geometry-check.sh",
+        "tests/v2-table-ibge-check.sh"
+      ],
+      "required_pr_checks": ["object-geometry", "table-ibge"],
+      "required_tokens": {
+        "normativa/oracle-policy.json": [
+          "pdftocairo -svg",
+          "vector-rule-geometry"
+        ],
+        "tools/pdf_vector_measurement.py": [
+          "filled-thin-rectangle",
+          "stroked-line"
+        ],
+        "tests/v2-vector-rule-oracle-check.sh": [
+          "python3 tests/checks/normative_vector_rule_oracle.py"
+        ],
+        "tests/v2-table-ibge-vector-evidence-check.sh": [
+          "sh tests/v2-vector-rule-oracle-check.sh",
+          "python3 tests/checks/normative_n9_table_ibge_vector.py"
+        ],
+        "tests/checks/normative_n9_table_ibge_vector.py": [
+          "table.ibge.open-sides",
+          "table.ibge.body-grid",
+          "table.ibge.top-rule",
+          "table.ibge.header-rule",
+          "table.ibge.bottom-rule",
+          "vector-rule-oracle-calibration.json"
+        ],
+        "tests/v2-object-geometry-check.sh": [
+          "sh tests/v2-table-ibge-vector-evidence-check.sh",
+          "python3 tests/checks/normative_n9_progress.py"
+        ],
+        "tests/v2-table-ibge-check.sh": [
+          "\\toprule",
+          "\\midrule",
+          "\\bottomrule"
+        ]
+      },
+      "proof_state_changed": false
     }
   ],
   "expected_counts": {
     "total": 23,
     "baseline_existing_bounded_positive": 7,
-    "promoted_bounded_positive": 11,
-    "current_existing_bounded_positive": 18,
-    "current_support_only": 5
+    "promoted_bounded_positive": 16,
+    "current_existing_bounded_positive": 23,
+    "current_support_only": 0
   }
 }

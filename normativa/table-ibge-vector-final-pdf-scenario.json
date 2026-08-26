@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "phase": "N9",
+  "component": "table-ibge-vector-final-pdf",
+  "campaign_id": "table-final-pdf",
+  "purpose": "Measure the five residual IBGE table line-geometry predicates directly from an isolated final PDF using the calibrated N5 vector-rule capability.",
+  "rules": [
+    "table.ibge.open-sides",
+    "table.ibge.body-grid",
+    "table.ibge.top-rule",
+    "table.ibge.header-rule",
+    "table.ibge.bottom-rule"
+  ],
+  "fixture": {
+    "path": "tests/normativa/table-ibge-vector-final-pdf.tex",
+    "engine": "pdflatex",
+    "passes": 2,
+    "expected_pages": 1
+  },
+  "markers": {
+    "caption": "UFCN9IBGECAP",
+    "header_left": "UFCN9IBGEHL",
+    "header_right": "UFCN9IBGEHR",
+    "body_first": "UFCN9IBGER1",
+    "body_middle": "UFCN9IBGER2",
+    "body_last": "UFCN9IBGER3",
+    "table_source_marker": "UFCN9IBGESRC"
+  },
+  "locator_ruleset": "objects.table-ibge",
+  "oracle_extension": "normativa/vector-rule-oracle-extension.json",
+  "measurement": {
+    "vector_tool": "pdftocairo -svg",
+    "text_tool": "pdftotext -bbox-layout",
+    "exact_rule_thickness_not_frozen": true,
+    "exact_table_width_not_frozen": true,
+    "exact_vertical_gaps_not_frozen": true
+  },
+  "proof_state_changed": false
+}
