@@ -4,6 +4,7 @@ set -eu
 fixture="tests/normativa/textual-oracle-long-quotation.tex"
 job="textual-oracle-long-quotation"
 evidence="artifacts/normative-textual/long-quotation.json"
+reduced_evidence="artifacts/normative-textual/long-quote-reduced-size.json"
 log="/tmp/abntexto-ufc-v2-long-quotation.log"
 
 cleanup() {
@@ -42,4 +43,14 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para citação direta longa concluído.'
+python3 tests/checks/normative_long_quote_reduced_size.py \
+  "$evidence" \
+  --json "$reduced_evidence" \
+  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
+
+test -s "$reduced_evidence" || {
+  echo 'Auditoria N8 de tamanho reduzido da citação longa falhou: evidência JSON não foi gerada.'
+  exit 1
+}
+
+echo 'Gate de evidência N6/N8 para citação direta longa concluído.'
