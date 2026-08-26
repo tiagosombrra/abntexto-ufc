@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "phase": "N9",
+  "component": "illustration-final-pdf",
+  "purpose": "Bounded final-PDF evidence for the eight residual illustration typography, bounds and relative-position predicates.",
+  "rules": [
+    "font.size.reduced.illustration-caption",
+    "font.size.reduced.illustration-source",
+    "illustration.caption.bounds",
+    "illustration.source.bounds",
+    "illustration.note.bounds",
+    "illustration.identification.position",
+    "illustration.source.position",
+    "illustration.note.position"
+  ],
+  "locator_rulesets": {
+    "font.size.reduced.illustration-caption": "typography.reduced-font",
+    "font.size.reduced.illustration-source": "typography.reduced-font",
+    "illustration.caption.bounds": "objects.illustration-bounds",
+    "illustration.source.bounds": "objects.illustration-bounds",
+    "illustration.note.bounds": "objects.illustration-bounds",
+    "illustration.identification.position": "objects.illustration-presentation",
+    "illustration.source.position": "objects.illustration-presentation",
+    "illustration.note.position": "objects.illustration-presentation"
+  },
+  "fixture": {
+    "path": "tests/normativa/illustration-final-pdf.tex",
+    "engine": "pdflatex",
+    "passes": 2,
+    "object_width_mm": 60,
+    "object_height_mm": 20
+  },
+  "markers": {
+    "caption_start": "N9CAPA",
+    "caption_end": "N9CAPZ",
+    "source_start": "N9SRCA",
+    "source_end": "N9SRCZ",
+    "note_start": "N9NOTA",
+    "note_end": "N9NOTZ",
+    "object_left_top": "N9OBJA",
+    "object_right_bottom": "N9OBJZ"
+  },
+  "measurement": {
+    "bounds": "full rendered block must stay within the controlled object left/right edges using the existing N5 horizontal tolerance",
+    "positions": "relative ordering only; no exact vertical gap is frozen",
+    "typography": "caption/source marker runs are measured with pdftohtml XML using the existing N5 font-size tolerance"
+  }
+}
