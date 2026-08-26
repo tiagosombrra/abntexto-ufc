@@ -1,16 +1,21 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-24",
+  "reviewed_at": "2026-08-26",
   "phase": "N4",
   "phase_status": "complete",
   "purpose": "Machine-readable policy for auditing false atomic coverage. Traceable or green parent/gate evidence must not be mistaken for proof of every atomic dimension derived from that parent.",
   "evidence_origin_classes": {
     "parent-inherited": "N3 split target whose validation block is inherited unchanged from its aggregate parent. The evidence identifies the parent mechanism but does not independently prove the child dimension.",
     "atomic-parent": "N3 rule retained as atomic; its validation belongs to the same rule identity, but proof still requires the full proof policy.",
-    "rule-local-promotion": "N4 promoted rule with validation declared in its own coverage-rule specification; rule-local declaration still does not by itself imply PROVEN."
+    "rule-local-promotion": "N4 promoted rule with validation declared in its own coverage-rule specification; rule-local declaration still does not by itself imply PROVEN.",
+    "rule-local-override": "N3 split target whose normative value and provenance remain inherited but whose validation mechanism is explicitly overridden for that atomic dimension. The override does not by itself imply PROVEN."
   },
+  "rule_local_overrides": [
+    "font.size.reduced.catalog-card"
+  ],
   "proof_safety": {
     "parent_inherited_evidence_alone_may_prove": false,
+    "rule_local_override_evidence_alone_may_prove": false,
     "registered_or_green_evidence_alone_may_prove": false,
     "proven_requires_explicit": [
       "scenario_status",
@@ -41,5 +46,5 @@
       "epigraph.long.quotation-marks"
     ]
   },
-  "exit_criterion": "Every full-contract rule has an evidence-origin classification and proof state; no rule is PROVEN from parent-inherited or merely registered/green evidence."
+  "exit_criterion": "Every full-contract rule has an evidence-origin classification and proof state; no rule is PROVEN from parent-inherited, rule-local-override, or merely registered/green evidence."
 }
