@@ -68,4 +68,8 @@ PY
 
 done
 
+sh tests/v2-illustration-evidence-check.sh
+python3 tests/checks/normative_n9_progress.py \
+  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
+
 echo 'Gate V2 de geometria de objetos concluído.'
