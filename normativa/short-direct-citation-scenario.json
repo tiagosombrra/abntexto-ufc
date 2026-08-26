@@ -9,12 +9,12 @@
     "citation.direct-short.emphasis"
   ],
   "markers": {
-    "body_control": "N6ShortCitationControl",
-    "body_before": "N6ShortCitationBefore",
-    "quote_open": "N6ShortCitationOpen",
-    "quote_middle": "N6ShortCitationMiddle",
-    "quote_close": "N6ShortCitationClose",
-    "body_after": "N6ShortCitationAfter"
+    "body_control": "N6SCCTL",
+    "body_before": "N6SCBEF",
+    "quote_open": "N6SCOPN",
+    "quote_middle": "N6SCMID",
+    "quote_close": "N6SCCLS",
+    "body_after": "N6SCAFT"
   },
   "calibration": {
     "typography_reference": "same-document ordinary body text",
