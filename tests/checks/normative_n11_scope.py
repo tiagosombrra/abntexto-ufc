@@ -168,6 +168,18 @@ def main() -> None:
         missing_tokens = [token for token in item.get("required_tokens", []) if token not in text]
         if missing_tokens:
             fail(f"bounded evidence {item['rule_id']} lost required tokens: {missing_tokens}")
+
+        gate = ROOT / item["evidence_gate"]
+        host = ROOT / item["gate_host"]
+        if not gate.is_file() or not host.is_file():
+            fail(f"bounded evidence wiring file missing for {item['rule_id']}")
+        gate_text = gate.read_text(encoding="utf-8")
+        host_text = host.read_text(encoding="utf-8")
+        if item["evidence_file"] not in gate_text:
+            fail(f"bounded evidence gate no longer invokes checker for {item['rule_id']}")
+        if item["required_host_token"] not in host_text:
+            fail(f"bounded evidence gate is orphaned for {item['rule_id']}")
+
         for check_id in item.get("required_check_ids", []):
             if check_id not in required_checks:
                 fail(f"bounded evidence depends on non-required PR check: {check_id}")
