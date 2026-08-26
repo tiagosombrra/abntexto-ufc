@@ -21,6 +21,9 @@
       "rule_id": "project.cover.optional",
       "required_check_ids": ["pretextual"],
       "evidence_file": "tests/checks/normative_pretextual_cover.py",
+      "evidence_gate": "tests/v2-pretextual-cover-evidence-check.sh",
+      "gate_host": "tests/v2-pretextual-check.sh",
+      "required_host_token": "sh tests/v2-pretextual-cover-evidence-check.sh",
       "required_tokens": [
         "rules[\"project.cover.optional\"]",
         "optional_pass",
@@ -31,6 +34,9 @@
       "rule_id": "project.title-page.required",
       "required_check_ids": ["pretextual"],
       "evidence_file": "tests/checks/normative_pretextual_title_page.py",
+      "evidence_gate": "tests/v2-pretextual-title-page-evidence-check.sh",
+      "gate_host": "tests/v2-pretextual-check.sh",
+      "required_host_token": "sh tests/v2-pretextual-title-page-evidence-check.sh",
       "required_tokens": [
         "rules[\"project.title-page.required\"]",
         "expected_project_required",
@@ -41,6 +47,9 @@
       "rule_id": "project.anonymization.policy",
       "required_check_ids": ["pretextual"],
       "evidence_file": "tests/checks/normative_pretextual_title_page.py",
+      "evidence_gate": "tests/v2-pretextual-title-page-evidence-check.sh",
+      "gate_host": "tests/v2-pretextual-check.sh",
+      "required_host_token": "sh tests/v2-pretextual-title-page-evidence-check.sh",
       "required_tokens": [
         "rules[\"project.anonymization.policy\"]",
         "public_identifier_required",
