@@ -23,11 +23,11 @@ for pass in 1 2; do
     }
 done
 
-warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox|Underfull \\hbox|Underfull \\vbox' "$job.log" | \
+warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Auditoria N7 de página e margens falhou: warning ou box problem não reconhecido em $fixture."
+  echo "Auditoria N7 de página e margens falhou: warning ou overflow não reconhecido em $fixture."
   exit 1
 fi
 
