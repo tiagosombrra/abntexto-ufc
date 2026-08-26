@@ -1,16 +1,18 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
 Updated: 2026-08-26
-Checkpoint PR: #107
-Audited base: `81d1f42296c1b52222c53f273520475e5d162ba8`
+Checkpoint PR: #117
+Audited base: `803dba0ebfe3450a5ccf77a6cf14e87cdd16b6a6`
 N6 technical closure head: `5d1d9ba4aecba5519b600bfba4114009f551ea52`
 N7 technical closure merge: `555b538d7ef05eebfde88a3a3f1e92961f605019`
 N8 reduced-size mapping merge: `61738858d32ab1aea677832e9063fd01ad2b1d1a`
 N8 reference-layout merge: `81d1f42296c1b52222c53f273520475e5d162ba8`
+N8 semantic-closure merge: `2881b88ce1c0d334ecaaab1d4c7b884343f3a313`
+N9 scope-reconciliation merge: `803dba0ebfe3450a5ccf77a6cf14e87cdd16b6a6`
 
 This is the single dynamic continuation document for the v2.2.0 audit and release. Future work must read this file before relying on chat history. Detailed implementation evidence remains in Git history, pull requests, Actions runs, `normativa/` and `tests/`.
 
-The stable audited base for the final N8 semantic closure is the squash-merge of PR #114 on `main`, recorded above. Resolve the final semantic-closure merge SHA and later evidence SHAs from Git history instead of adding documentation-only commits merely to record hashes.
+The stable audited base for current N9 evidence work is the squash-merge of PR #116 on `main`, recorded above. Resolve later evidence merge SHAs from Git history instead of adding documentation-only commits merely to record hashes.
 
 ## Source-of-truth hierarchy
 
@@ -58,7 +60,7 @@ The phase meanings come from the original planning branch `planning/v2.2.0-norma
 | N6 | pre-textual elements | DONE |
 | N7 | layout, pagination, sections and footnotes | DONE |
 | N8 | citations and references | DONE — 19/19 bounded positive coverage |
-| N9 | objects, tables, equations and code | ACTIVE — exact scope rederivation next |
+| N9 | objects, tables, equations and code | ACTIVE — 15/23 bounded positive coverage on current illustration-evidence branch |
 | N10 | post-textual elements and multivolume | PENDING |
 | N11 | research-project profile / NBR 15287 | PENDING |
 | N12 | profile, engine and font matrix | PENDING |
@@ -178,13 +180,39 @@ The final semantic block reuses the existing controlled NBR 6023:2025 corpus and
 - full reference punctuation, access-label wording and unrelated formatting remain observational and are not strengthened into new predicates;
 - `abntexto-ufc/compat-nbr6023-2025.def` passes the explicit compatibility-boundary audit: general DOI/URL formatting remains delegated to `biblatex-abnt`, no global DOI/URL formatter override is detected, and the single `doi+eprint+url` call inside the custom jurisprudence driver remains an allowed local use.
 
-The first semantic evidence run on implementation head `a34a510332c24ee673b76350f642c81e114540c9` completed in LaTeX preflight run `32982034330`, job `98220782814`, with `N8-EVIDENCE reference-semantics-summary PASS=2 compat_boundary=PASS` and overall object/bibliography validation `PASS=8 FAIL=0 SKIP=0`. The normative source contract run `32982034501` also completed `SUCCESS`. This handoff-only closure update changes the PR head and must therefore receive a final exact-head CI pass before merge.
-
-N8 bounded positive coverage is therefore **19/19 = 100%**, and the phase gate is closed when this exact closure branch is merged under the standard final-head/`behind_by=0` discipline.
+The semantic evidence path completed with `N8-EVIDENCE reference-semantics-summary PASS=2 compat_boundary=PASS` and overall object/bibliography validation `PASS=8 FAIL=0 SKIP=0`. PR #115 was squash-merged as `2881b88ce1c0d334ecaaab1d4c7b884343f3a313`, formally closing N8 at **19/19 = 100% bounded positive coverage**.
 
 The locator/proof-state boundary remains conservative. `references.layout` is `PARTIAL_WITH_REASON`, while `references.doi` and `references.online-access` remain `UNAVAILABLE_WITH_REASON` at exact licensed NBR 6023:2025 clause-text level. Rendered evidence closes bounded implementation coverage and the N8 phase gate; it does **not** independently promote those rules to `PROVEN`.
 
 Do not use the earlier `12/18` count.
+
+### N9 — objects, tables, equations and code — ACTIVE
+
+PR #116 rederived N9 from the current full 181-rule contract and froze an exact **23-predicate** work map. The baseline reconciliation is intentionally immutable at **7/23 existing-bounded-positive + 16/23 support-only**. Project-policy code/algorithm capabilities remain non-normative, and TeX-log/source-structure checks do not close visual predicates.
+
+The initial 16 residual predicates are machine-partitioned in `normativa/n9-campaign-plan.json` into:
+
+- `illustration-final-pdf`: 8 predicates measurable with the existing N5 oracle;
+- `table-final-pdf`: 7 predicates, of which two reduced-font rules are measurable with N5 and five `table.ibge.*` line-geometry rules require an explicit oracle capability extension;
+- `equation-display-final-pdf`: 1 predicate measurable with the existing N5 bbox capability.
+
+PR #116 passed exact-head source/CI validation with `N9-EVIDENCE scope-reconciliation total=23 existing_bounded_positive=7 support_only=16`, `existing_n5_capability_rules=11`, `oracle_extension_required_rules=5`, overall object/bibliography `PASS=8 FAIL=0 SKIP=0`, and was squash-merged as `803dba0ebfe3450a5ccf77a6cf14e87cdd16b6a6`.
+
+PR #117 adds final-PDF evidence for the eight illustration residuals without changing the class implementation, normative values, locators, proof policy or N5 tolerances. On head `e604dc1cfa79211892cca108353030e3df6df597`, source contract run `32994766190` completed `SUCCESS`; LaTeX preflight run `32994765548`, job `98260978199`, measured `N9-EVIDENCE illustration-final-pdf-summary PASS=8 FAIL=0` and promoted bounded progress to **15/23 current existing-bounded-positive + 8/23 support-only**.
+
+Key illustration measurements were:
+
+- caption and source typography: exactly `10.0 pt`;
+- controlled object width: `170.0780 pt` (60 mm calibration);
+- source and note stayed effectively on the 60 mm object bounds; caption right overflow was `1.6646 pt`, within the unchanged N5 horizontal tolerance of `5 pt`;
+- caption remained above the object (`y_max=145.155 pt`, object `y_min=158.823 pt`);
+- source remained below the object (`y_min=221.348 pt`, object `y_max=211.730 pt`);
+- note remained after the source (`y_min=283.558 pt`, source `y_max=276.268 pt`);
+- exact vertical gaps remain observational and are not frozen into stronger predicates.
+
+`normativa/n9-bounded-promotions.json` keeps current promotions separate from the immutable 7/16 baseline. `tests/checks/normative_n9_progress.py` requires same-run PASS evidence, exact promoted rule IDs, PR-preflight binding and `proof_state_changed=false` before counting a promotion.
+
+N9 therefore remains ACTIVE. Current bounded-positive coverage on the PR #117 evidence branch is **15/23 = 65.2%**; the remaining eight predicates are the two reduced-font table rules, `equation.display`, and the five `table.ibge.*` line-geometry predicates.
 
 ### Normative currency
 
@@ -240,10 +268,16 @@ Do not create a documentation checkpoint after every evidence PR merely to recor
 
 ## Next action
 
-N8 is closed at **19/19 bounded positive coverage** once the current semantic-closure branch receives final exact-head validation and is merged. The next roadmap gate is **N9 — objects, tables, equations and code**.
+Finish PR #117 on its final documentation-updated head. Require exact-head `Normative source contract=SUCCESS`, exact-head aggregate `latex-preflight=SUCCESS`, `N9-EVIDENCE illustration-final-pdf-summary PASS=8 FAIL=0`, bounded progress `15/23 + 8/23`, and `behind_by=0` before squash merge.
 
-Before opening N9 evidence work, rederive its exact predicate work map from the current full 181-rule contract. Do not rely on a historical phase count. At minimum, reconcile the cross-cutting reduced-size rules for illustration/table captions and sources, illustration bounds/source requirements, current illustration-position/list-routing rules, the five `table.ibge.*` atoms, equation presentation/numbering rules, and code/algorithm project-policy capabilities against the existing object/code/table regressions.
+After PR #117, use one bounded N9 PR for the three remaining predicates already measurable by the frozen N5 oracle:
 
-For each N9 predicate, classify existing evidence as exact bounded coverage, support-only, conditional/manual, or missing. Reuse existing final-PDF/object geometry oracles where the predicate matches exactly; add new bounded evidence only for genuine gaps. Preserve the current locator/proof-state distinctions and do not promote project-policy code/algorithm capabilities into UFC/ABNT requirements.
+- `font.size.reduced.table-caption = 10 pt`;
+- `font.size.reduced.table-source = 10 pt`;
+- `equation.display = true`.
+
+Keep table typography and equation display as separate isolated fixtures/checkers inside that PR, then register both promotions through `normativa/n9-bounded-promotions.json`. If all three pass, N9 advances to **18/23 bounded positive coverage**, leaving exactly the five `table.ibge.*` line-geometry predicates.
+
+Before assessing those five IBGE predicates, design and calibrate a separate explicit N5 oracle extension for vector/rule geometry. Do not silently introduce rasterization, SVG, `pdftocairo`, `pdftoppm` or another extractor as if it were already part of the frozen N5 capability. Preserve the current locator/proof-state limitations.
 
 After N9: N10 → N11 → N12 → N13 → N14 → N15 → D5 final → D6.
