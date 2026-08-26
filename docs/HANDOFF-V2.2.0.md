@@ -1,12 +1,13 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
 Updated: 2026-08-26
-Checkpoint PR: #106
-Audited base: `557a4559fff2b88d17e9b5a3541c12f3e866659d`
+Checkpoint PR: #107
+Audited base: `756f844f1606da9184ac66f300db4aefd4a38fe5`
+N6 technical closure head: `5d1d9ba4aecba5519b600bfba4114009f551ea52`
 
 This is the single dynamic continuation document for the v2.2.0 audit and release. Future work must read this file before relying on chat history. Detailed implementation evidence remains in Git history, pull requests, Actions runs, `normativa/` and `tests/`.
 
-After this checkpoint is merged, the stable checkpoint is the squash-merge of PR #106 on `main`; resolve its exact SHA from Git history instead of adding a follow-up documentation-only commit merely to record the hash.
+After this checkpoint is merged, the stable checkpoint is the squash-merge of PR #107 on `main`; resolve its exact SHA from Git history instead of adding a follow-up documentation-only commit merely to record the hash.
 
 ## Source-of-truth hierarchy
 
@@ -51,9 +52,9 @@ The phase meanings come from the original planning branch `planning/v2.2.0-norma
 | N3 | classify/resolve 46 explicit atomicity gaps | DONE |
 | N4 | false-coverage audit and safe proof policy | DONE |
 | N5 | final-PDF oracle construction/calibration | DONE |
-| N6 | pre-textual elements | ACTIVE — closure reconciliation required |
-| N7 | layout, pagination, sections and footnotes | OPEN |
-| N8 | citations and references | OPEN — partially executed |
+| N6 | pre-textual elements | DONE |
+| N7 | layout, pagination, sections and footnotes | ACTIVE — residual rederivation required |
+| N8 | citations and references | OPEN — partially executed ahead of sequence |
 | N9 | objects, tables, equations and code | PENDING |
 | N10 | post-textual elements and multivolume | PENDING |
 | N11 | research-project profile / NBR 15287 | PENDING |
@@ -62,11 +63,11 @@ The phase meanings come from the original planning branch `planning/v2.2.0-norma
 | N14 | Web/Lite and CLI/Deep unification | PENDING |
 | N15 | full normative certification and release decision | PENDING |
 
-Formal roadmap closure is therefore **6/16 phases = 37.5%**, with **62.5% of phase gates remaining**. This is a gate-count metric only; it is not a conformity or proof percentage.
+Formal roadmap closure is therefore **7/16 phases = 43.75%**, with **56.25% of phase gates remaining**. This is a gate-count metric only; it is not a conformity or proof percentage.
 
 Historical fixture names and log prefixes containing `n6` / `N6-EVIDENCE` remain valid evidence identifiers. They are not renamed merely to repair roadmap labels.
 
-## Baseline preserved from N0–N5
+## Baseline preserved from N0–N5 and N6 reconciliation
 
 - full atomic rules: 181;
 - normative rules: 170;
@@ -74,7 +75,9 @@ Historical fixture names and log prefixes containing `n6` / `N6-EVIDENCE` remain
 - N2 unknown-review relationships: 0;
 - N3 explicit gaps resolved/classified: 46/46;
 - N4 unsafe `PROVEN`: 0;
-- historical proof-state baseline: `PARTIAL=114`, `NOT_PROVEN=51`, `CONDITIONAL=10`, `MANUAL=5`, `NOT_APPLICABLE=1`, `PROVEN=0`.
+- current proof-state baseline after N6 validation-boundary reconciliation: `PARTIAL=113`, `NOT_PROVEN=51`, `CONDITIONAL=10`, `MANUAL=6`, `NOT_APPLICABLE=1`, `PROVEN=0`;
+- evidence origins: `atomic-parent=8`, `parent-inherited=91`, `rule-local-override=1`, `rule-local-promotion=81`;
+- the sole current `rule-local-override` is `font.size.reduced.catalog-card`; it remains normatively 10 pt but is validated manually because the catalog card is supplied as an external PDF.
 
 N5 tools: `pdftotext -bbox-layout`, `pdftohtml -xml -zoom 1.0`, `pdfinfo`, `pdffonts`.
 
@@ -85,21 +88,41 @@ N5 tolerances remain unchanged:
 - vertical position: 5 pt;
 - font size: 1 pt.
 
-Key baseline PRs: #55 (N1), #56 (N2), #57 (N4) and #58 (N5).
+Key baseline PRs: #55 (N1), #56 (N2), #57 (N4), #58 (N5) and #107 (N6 closure reconciliation).
 
 ## Checkpoint audit findings
 
-### N6 — pre-textuals
+### N6 — pre-textuals — DONE
 
-All planned pre-textual families have positive evidence in the existing campaign: dedication, acknowledgements, short/long epigraph, summary/abstract/keywords, cover, title page, approval page, errata, optional lists, TOC and catalog-card/pagination interaction.
+N6 is formally closed after reconciling the complete pre-textual scope against the existing bounded campaign and the remaining deposit/catalog-card boundaries.
 
-Relevant evidence is retained in PRs #59–#75. Real implementation defects fixed during this campaign remain valid fixes.
+Bounded positive evidence covers the planned pre-textual families: dedication, acknowledgements, short/long epigraph, summary/abstract/keywords, cover, title page, approval page, errata, optional lists, TOC, pre-textual pagination/start-side behavior and catalog-card interaction. The historical campaign remains represented by PRs #59–#75; PR #107 closes the remaining catalog-card classification boundary.
 
-However N6 is **not marked DONE at this checkpoint**. Before closure, reconcile the family evidence against the complete pre-textual atomic scope, including cross-cutting reduced typography, catalog-card policy and deposit/pagination boundaries. The result must explicitly classify every residual as bounded, manual, conditional, project-policy or assigned to a later phase.
+The closure classification is intentionally conservative:
 
-### N7 — layout, pagination, sections and footnotes
+- `deposit.catalog-card`: bounded positive evidence now exercises enabled and disabled routes across pdfLaTeX/LuaLaTeX and anverso/frente-verso;
+- `font.size.reduced.catalog-card = 10 pt`: **MANUAL / external-pdf**. `\imprimirfichacatalografica` includes a supplied PDF with `pdfpages`; the class controls inclusion, physical placement and pagination but cannot restyle the PDF's internal typography;
+- `deposit.approval-signatures`: **MANUAL** deposit evidence; no automatic proof is inferred from approval-page rendering;
+- `deposit.capes`: **CONDITIONAL** on CAPES funding and retained as a deposit requirement rather than promoted by pre-textual rendering;
+- research-project-specific cover/title-page/anonymization observations are support evidence only for the later N11 gate and do not close N11;
+- no project-policy or later-phase predicate was promoted merely because a broad N6 fixture exercised it.
 
-Current bounded positive coverage: **15/39 = 38.5%**.
+The N4 guardrail was extended, not weakened: `rule-local-override` is a whitelisted evidence-origin class and cannot independently yield `PROVEN`. The normative contract on the N6 closure head reports `unsafe-proven=0` and `PROVEN=0`.
+
+N6 final technical validation on head `5d1d9ba4aecba5519b600bfba4114009f551ea52`:
+
+- Normative source contract run `32957583127`: SUCCESS;
+- LaTeX preflight run `32957582998`: all five effective jobs SUCCESS;
+- structural job: `PASS=14 FAIL=0 SKIP=0`;
+- catalog-card evidence: `deposit.catalog-card status=PASS measured=enabled-and-disabled-routes`;
+- aggregate `latex-preflight`: SUCCESS;
+- Windows literal-font and Overleaf-proxy jobs remained expected conditional skips.
+
+Closing N6 changes the phase gate only. It does not promote any normative rule to `PROVEN`.
+
+### N7 — layout, pagination, sections and footnotes — ACTIVE
+
+Last reconciled bounded positive coverage before N6 closure: **15/39 = 38.5%**. This count must now be rederived against the current full contract before any new N7 evidence PR is opened.
 
 Already covered:
 
@@ -107,7 +130,9 @@ Already covered:
 - body paragraph: #92;
 - three core pagination predicates inherited from the pre-textual pagination scenario.
 
-The 39-rule rederivation includes A4, recto/verso margins, text color, body font family/size, body spacing, paragraph behavior, reduced-size footnote/pagination contexts, section rules, pagination rules and footnotes.
+The 39-rule work map includes A4, recto/verso margins, text color, body font family/size, body spacing, paragraph behavior, reduced-size footnote/pagination contexts, section rules, pagination rules and footnotes.
+
+Footnote provenance/classification work in PRs #46/#47 belongs to N1 evidence and does **not** substitute for bounded final-PDF N7 evidence. Explicit footnote predicates include simple spacing, the 5 cm separator and hanging alignment; rederive the full N7 residual before assuming these are the only missing rules.
 
 Do not use the earlier `15/34` count.
 
@@ -115,7 +140,9 @@ Do not use the earlier `15/34` count.
 
 Current bounded positive coverage: **12/19 = 63.2%**.
 
-Citation predicates are covered by #94, #96, #98, #100, #102 and #104. References still require bounded reconciliation for layout, DOI and online-access predicates. The cross-cutting reduced-size long-quotation rule is also part of the N8 work map.
+Citation predicates were executed ahead of canonical sequence by PRs #94, #96, #98, #100, #102 and #104. They remain valid evidence and are classified as N8 work; they do not alter the N7 gate.
+
+References still require bounded reconciliation for layout, DOI and online-access predicates. The cross-cutting reduced-size long-quotation rule is also part of the N8 work map.
 
 `abntexto-ufc/compat-nbr6023-2025.def` is active temporary compatibility code and must be explicitly audited during N8 rather than assumed correct because bibliography regressions pass.
 
@@ -175,6 +202,8 @@ Do not create a documentation checkpoint after every evidence PR merely to recor
 
 ## Next action
 
-Before starting new N7/N8/N9 evidence, perform **N6 closure reconciliation** against the complete current atomic contract and existing positive pre-textual evidence. Reuse existing regressions where they measure the exact predicate; add new bounded evidence only for genuine uncovered predicates.
+N6 is closed. The only active roadmap gate is **N7 — layout, pagination, sections and footnotes**.
 
-If N6 closes cleanly, proceed in canonical order: N7 → N8 → N9 → N10 → N11 → N12 → N13 → N14 → N15 → D5 final → D6.
+Before creating new N7 evidence, rederive the complete current N7 rule set from the full atomic contract and existing bounded evidence. Produce an exact covered/residual classification, reuse existing evidence only where it measures the exact predicate, and identify the smallest genuine residual scope for the next PR.
+
+Do not open new N8 or N9 work until N7 is formally closed. After N7: N8 → N9 → N10 → N11 → N12 → N13 → N14 → N15 → D5 final → D6.

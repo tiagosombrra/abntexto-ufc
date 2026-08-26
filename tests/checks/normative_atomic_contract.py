@@ -72,6 +72,17 @@ def main() -> None:
     if "applies_to" not in catalog_card.get("applicability", {}):
         fail("catalog-card document profiles must be applicability metadata")
 
+    catalog_typography = atomic["font.size.reduced.catalog-card"]
+    if catalog_typography["values"] != {"pt": 10}:
+        fail("catalog-card reduced-font value must remain 10 pt")
+    catalog_validation = catalog_typography["validation"]
+    if catalog_validation.get("mode") != "manual":
+        fail("external catalog-card typography must be classified as manual validation")
+    if catalog_validation.get("checks") != ["catalog-card"]:
+        fail("catalog-card typography must remain tied to the catalog-card gate")
+    if catalog_validation.get("scope") != "external-pdf":
+        fail("catalog-card typography must be explicitly scoped to the external PDF")
+
     keywords = atomic["summary.keywords.required"]
     if keywords["values"] != {"required": True}:
         fail("summary keyword requirement is not atomic")

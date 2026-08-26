@@ -19,6 +19,7 @@ from normative_proof_state import build_proof_matrix
 from normative_traceability import build_matrix as build_traceability_matrix
 
 POLICY = ROOT / "normativa" / "false-coverage-policy.json"
+VALIDATION_OVERRIDES = ROOT / "normativa" / "validation-overrides.json"
 
 
 def fail(message: str) -> None:
@@ -37,15 +38,26 @@ def load_policy() -> dict[str, Any]:
         fail("N4 false-coverage policy must be complete")
 
     classes = data.get("evidence_origin_classes")
-    expected_classes = {"parent-inherited", "atomic-parent", "rule-local-promotion"}
+    expected_classes = {
+        "parent-inherited",
+        "atomic-parent",
+        "rule-local-promotion",
+        "rule-local-override",
+    }
     if not isinstance(classes, dict) or set(classes) != expected_classes:
         fail("unexpected evidence-origin classes")
+
+    overrides = data.get("rule_local_overrides")
+    if not isinstance(overrides, list) or len(overrides) != len(set(overrides)):
+        fail("rule_local_overrides must be a unique list")
 
     safety = data.get("proof_safety")
     if not isinstance(safety, dict):
         fail("proof_safety block is required")
     if safety.get("parent_inherited_evidence_alone_may_prove") is not False:
         fail("parent-inherited evidence must not independently prove an atomic rule")
+    if safety.get("rule_local_override_evidence_alone_may_prove") is not False:
+        fail("rule-local override evidence must not independently prove an atomic rule")
     if safety.get("registered_or_green_evidence_alone_may_prove") is not False:
         fail("registered/green evidence alone must not imply PROVEN")
     required = safety.get("proven_requires_explicit")
@@ -72,6 +84,19 @@ def load_policy() -> dict[str, Any]:
     return data
 
 
+def load_validation_override_ids() -> set[str]:
+    try:
+        data = json.loads(VALIDATION_OVERRIDES.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"cannot load validation overrides: {exc}")
+    if data.get("schema_version") != 1:
+        fail("unsupported validation-overrides schema_version")
+    overrides = data.get("overrides")
+    if not isinstance(overrides, dict):
+        fail("validation-overrides requires an overrides object")
+    return set(overrides)
+
+
 def validation_signature(validation: dict[str, Any]) -> str:
     return json.dumps(validation, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
@@ -81,6 +106,13 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
     safety = policy_data["proof_safety"]
     explicit_status = safety["explicit_status"]
     required_explicit = safety["proven_requires_explicit"]
+    override_ids = set(policy_data["rule_local_overrides"])
+    manifest_override_ids = load_validation_override_ids()
+    if override_ids != manifest_override_ids:
+        fail(
+            "N4 rule-local override whitelist differs from validation-overrides: "
+            f"policy={sorted(override_ids)}, manifest={sorted(manifest_override_ids)}"
+        )
 
     catalog = load_catalog()
     parents = rule_map(catalog, allow_review=True)
@@ -101,6 +133,8 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
         fail("N3/N4 origin sets do not cover the full contract exactly")
     if set(trace_rows) != full_ids or set(proof_rows) != full_ids:
         fail("full contract, traceability and proof-state rule sets differ")
+    if not override_ids <= atomic_ids:
+        fail("rule-local validation overrides must target N3 atomic rules")
 
     inherited_parent_by_rule: dict[str, str] = {}
     for parent_id, targets in atomic["compatibility_aliases"].items():
@@ -109,8 +143,12 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
                 fail(f"atomic target appears under multiple parents: {target}")
             inherited_parent_by_rule[target] = parent_id
 
-    expected_parent_inherited = len(inherited_parent_by_rule)
-    expected_atomic_parent = len(atomic_ids) - expected_parent_inherited
+    if not override_ids <= set(inherited_parent_by_rule):
+        fail("rule-local validation overrides must target split atomic children")
+
+    expected_parent_inherited = len(inherited_parent_by_rule) - len(override_ids)
+    expected_rule_local_override = len(override_ids)
+    expected_atomic_parent = len(atomic_ids) - len(inherited_parent_by_rule)
     expected_rule_local = len(promoted_ids)
 
     signatures = Counter(
@@ -136,20 +174,29 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
             parent = parents.get(parent_id)
             if parent is None:
                 fail(f"rule {rule_id}: missing catalog parent {parent_id}")
-            if validation != parent.get("validation"):
-                fail(
-                    f"rule {rule_id}: split-target validation no longer matches its parent; "
-                    "N4 policy must be revised for rule-local child evidence"
-                )
-            origin = "parent-inherited"
+            if rule_id in override_ids:
+                if validation == parent.get("validation"):
+                    fail(f"rule {rule_id}: declared rule-local override no longer differs from its parent")
+                origin = "rule-local-override"
+            else:
+                if validation != parent.get("validation"):
+                    fail(
+                        f"rule {rule_id}: split-target validation no longer matches its parent "
+                        "and is not declared as a rule-local override"
+                    )
+                origin = "parent-inherited"
         elif rule_id in atomic_ids:
             parent_id = rule.get("parent_rule")
             if parent_id != rule_id:
                 fail(f"rule {rule_id}: unexpected non-split N3 parent identity {parent_id}")
+            if rule_id in override_ids:
+                fail(f"rule {rule_id}: rule-local override unexpectedly targets an atomic parent")
             origin = "atomic-parent"
         elif rule_id in promoted_ids:
             if rule.get("parent_rule") is not None:
                 fail(f"rule {rule_id}: N4 promoted rule unexpectedly claims an N3 parent")
+            if rule_id in override_ids:
+                fail(f"rule {rule_id}: rule-local override unexpectedly targets an N4 promotion")
             origin = "rule-local-promotion"
         else:
             fail(f"rule {rule_id}: cannot determine evidence origin")
@@ -159,6 +206,8 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
         if proof_status == "PROVEN":
             if origin == "parent-inherited":
                 unsafe_reasons.append("parent-inherited validation cannot independently prove a child")
+            if origin == "rule-local-override":
+                unsafe_reasons.append("rule-local validation override cannot independently prove a child")
             missing_explicit = [
                 field
                 for field in required_explicit
@@ -191,7 +240,7 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
                 "positive_test_status": proof_row["positive_test_status"],
                 "negative_test_status": proof_row["negative_test_status"],
                 "pdf_measurement_status": proof_row["pdf_measurement_status"],
-                "false_coverage_risk": origin == "parent-inherited",
+                "false_coverage_risk": origin in {"parent-inherited", "rule-local-override"},
                 "unsafe_proven_reasons": unsafe_reasons,
             }
         )
@@ -201,6 +250,7 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
         "parent-inherited": expected_parent_inherited,
         "atomic-parent": expected_atomic_parent,
         "rule-local-promotion": expected_rule_local,
+        "rule-local-override": expected_rule_local_override,
     }
     if dict(origin_counts) != expected_origin_counts:
         fail(

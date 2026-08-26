@@ -12,6 +12,7 @@ from normative_catalog import CatalogError, load_catalog, rule_map
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ATOMIC_RULES = ROOT / "normativa" / "atomic-rules.json"
 DEFAULT_ATOMICITY_PLAN = ROOT / "normativa" / "atomicity-plan.json"
+DEFAULT_VALIDATION_OVERRIDES = ROOT / "normativa" / "validation-overrides.json"
 
 
 def _load_json(path: Path, label: str) -> dict[str, Any]:
@@ -181,10 +182,42 @@ def _build_keep(
     return rule
 
 
+def _apply_validation_overrides(
+    rules: list[dict[str, Any]],
+    path: Path,
+    *,
+    minimum_reviewed_at: date,
+) -> None:
+    manifest = _load_json(path, "atomic validation overrides")
+    if manifest.get("schema_version") != 1:
+        raise CatalogError("unsupported validation-overrides schema_version")
+    try:
+        reviewed_at = date.fromisoformat(manifest["reviewed_at"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise CatalogError("validation-overrides reviewed_at must be an ISO date") from exc
+    if reviewed_at < minimum_reviewed_at:
+        raise CatalogError("validation-overrides is older than the atomic rule contract")
+
+    overrides = manifest.get("overrides")
+    if not isinstance(overrides, dict):
+        raise CatalogError("validation-overrides requires an overrides object")
+
+    by_id = {rule["id"]: rule for rule in rules}
+    unknown = sorted(set(overrides) - set(by_id))
+    if unknown:
+        raise CatalogError("validation-overrides contains unknown atomic rules: " + ", ".join(unknown))
+
+    for rule_id, validation in overrides.items():
+        if not isinstance(validation, dict) or not validation.get("checks"):
+            raise CatalogError(f"validation override {rule_id}: checks are required")
+        by_id[rule_id]["validation"] = copy.deepcopy(validation)
+
+
 def load_atomic_contract(
     catalog: dict[str, Any] | None = None,
     path: Path = DEFAULT_ATOMIC_RULES,
     plan_path: Path = DEFAULT_ATOMICITY_PLAN,
+    validation_overrides_path: Path = DEFAULT_VALIDATION_OVERRIDES,
 ) -> dict[str, Any]:
     if catalog is None:
         catalog = load_catalog()
@@ -254,6 +287,12 @@ def load_atomic_contract(
                 raise CatalogError(f"duplicate/colliding atomic rule id: {child['id']}")
             seen.add(child["id"])
             atomic.append(child)
+
+    _apply_validation_overrides(
+        atomic,
+        validation_overrides_path,
+        minimum_reviewed_at=atomic_reviewed,
+    )
 
     for rule in atomic:
         for field in ("id", "category", "requirement", "locator", "normativity", "kind"):
