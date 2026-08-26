@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "phase": "N9",
+  "purpose": "Current bounded-positive promotions from the immutable N9 baseline reconciliation. Promotions change bounded coverage only and never mutate normative proof-state.",
+  "baseline_reconciliation": "normativa/n9-scope-reconciliation.json",
+  "campaign_plan": "normativa/n9-campaign-plan.json",
+  "policy": {
+    "promotions_must_originate_from_baseline_support_only": true,
+    "promotion_requires_runtime_pass_evidence": true,
+    "promotion_requires_pr_preflight_binding": true,
+    "proof_state_must_remain_unchanged": true
+  },
+  "promotions": [
+    {
+      "id": "illustration-final-pdf",
+      "campaign_id": "illustration-final-pdf",
+      "rule_ids": [
+        "font.size.reduced.illustration-caption",
+        "font.size.reduced.illustration-source",
+        "illustration.caption.bounds",
+        "illustration.source.bounds",
+        "illustration.note.bounds",
+        "illustration.identification.position",
+        "illustration.source.position",
+        "illustration.note.position"
+      ],
+      "evidence_json": "artifacts/normative-layout/illustration-final-pdf.json",
+      "evidence_sources": [
+        "normativa/illustration-final-pdf-scenario.json",
+        "tests/normativa/illustration-final-pdf.tex",
+        "tests/checks/normative_n9_illustration.py",
+        "tests/v2-illustration-evidence-check.sh",
+        "tests/v2-object-geometry-check.sh"
+      ],
+      "required_pr_checks": ["object-geometry"],
+      "required_tokens": {
+        "tests/v2-object-geometry-check.sh": [
+          "sh tests/v2-illustration-evidence-check.sh",
+          "python3 tests/checks/normative_n9_progress.py"
+        ],
+        "tests/v2-illustration-evidence-check.sh": [
+          "python3 tests/checks/normative_n9_illustration.py"
+        ],
+        "tests/checks/normative_n9_illustration.py": [
+          "font.size.reduced.illustration-caption",
+          "illustration.caption.bounds",
+          "illustration.note.position"
+        ]
+      },
+      "proof_state_changed": false
+    }
+  ],
+  "expected_counts": {
+    "total": 23,
+    "baseline_existing_bounded_positive": 7,
+    "promoted_bounded_positive": 8,
+    "current_existing_bounded_positive": 15,
+    "current_support_only": 8
+  }
+}
