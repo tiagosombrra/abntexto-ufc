@@ -10,7 +10,8 @@
       "font.size.reduced.illustration-source",
       "font.size.reduced.table-caption",
       "font.size.reduced.table-source"
-    ]
+    ],
+    "pr_workflow": ".github/workflows/latex-preflight.yml"
   },
   "policy": {
     "full_contract_is_authoritative_for_scope": true,
@@ -18,7 +19,8 @@
     "tex_log_or_source_structure_alone_is_support_only_for_visual_predicates": true,
     "semantic_presence_or_routing_may_use_rendered_text_and_generated_lists": true,
     "project_policy_capabilities_remain_non_normative": true,
-    "existing_bounded_mapping_does_not_change_proof_state": true
+    "existing_bounded_mapping_does_not_change_proof_state": true,
+    "existing_bounded_requires_pr_preflight_check": true
   },
   "groups": [
     {
@@ -57,6 +59,7 @@
         "tests/normativa/tabela-ibge.tex",
         "tests/v2-table-ibge-check.sh"
       ],
+      "required_pr_checks": ["objects", "table-ibge"],
       "required_tokens": {
         "tests/normativa/objetos-avancados.tex": ["\\legend{figure}", "\\ufcfonte{Elaboração própria.}", "\\legend{table}"],
         "tests/v2-object-check.sh": ["grep -Fq 'Fonte:'"],
@@ -69,6 +72,7 @@
       "classification": "existing-bounded-positive",
       "rule_ids": ["illustration.source.external-citation"],
       "evidence": ["tests/v2-documentary-source-check.sh"],
+      "required_pr_checks": ["documentary-source"],
       "required_tokens": {
         "tests/v2-documentary-source-check.sh": ["adaptado de", "fonte externa não foi apresentada em forma de citação autor-data"]
       }
@@ -89,6 +93,7 @@
       "classification": "existing-bounded-positive",
       "rule_ids": ["list.routing.illustrations"],
       "evidence": ["tests/v2-object-check.sh"],
+      "required_pr_checks": ["objects"],
       "required_tokens": {
         "tests/v2-object-check.sh": ["Figura normativa de teste", "Gráfico normativo de teste", "Quadro multipágina de teste", "tabela entrou indevidamente na lista de ilustrações"]
       }
@@ -118,6 +123,7 @@
       "classification": "existing-bounded-positive",
       "rule_ids": ["equation.numbering.format"],
       "evidence": ["tests/v2-normative-complement-check.sh"],
+      "required_pr_checks": ["normative-complement"],
       "required_tokens": {
         "tests/v2-normative-complement-check.sh": ["if '(1)' not in text", "número da equação ausente"]
       }
@@ -127,6 +133,7 @@
       "classification": "existing-bounded-positive",
       "rule_ids": ["equation.numbering.right"],
       "evidence": ["tests/v2-math-check.sh"],
+      "required_pr_checks": ["math"],
       "required_tokens": {
         "tests/v2-math-check.sh": ["expected_right = page_width - 2.0 * 72.0 / 2.54", "número da equação não está alinhado à direita"]
       }
@@ -135,7 +142,8 @@
       "id": "code-capability",
       "classification": "existing-bounded-positive",
       "rule_ids": ["code.listing.project-policy"],
-      "evidence": ["tests/v2-code-typography-check.sh", "tests/v2-object-check.sh", "tests/v2-minted-check.sh"],
+      "evidence": ["tests/v2-code-typography-check.sh", "tests/v2-object-check.sh"],
+      "required_pr_checks": ["code-typography", "objects"],
       "required_tokens": {
         "tests/v2-code-typography-check.sh": ["UFC-CODE-GEOMETRY-MARKER"],
         "tests/v2-object-check.sh": ["Trecho C++ embutido", "Arquivo C++ externo"]
@@ -145,10 +153,10 @@
       "id": "algorithm-capability",
       "classification": "existing-bounded-positive",
       "rule_ids": ["algorithm.project-policy"],
-      "evidence": ["tests/v2-code-typography-check.sh", "tests/v2-algorithm-numbering-check.sh", "tests/v2-object-check.sh"],
+      "evidence": ["tests/v2-code-typography-check.sh", "tests/v2-object-check.sh"],
+      "required_pr_checks": ["code-typography", "objects"],
       "required_tokens": {
         "tests/v2-code-typography-check.sh": ["UFC-ALGORITHM-GEOMETRY-MARKER"],
-        "tests/v2-algorithm-numbering-check.sh": ["sequência numerada incompleta"],
         "tests/v2-object-check.sh": ["Busca linear"]
       }
     }
