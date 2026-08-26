@@ -17,7 +17,7 @@
   },
   "markers": {
     "caption": "UFCN9TABLECAPTION",
-    "source": "UFCN9TABLESOURCE"
+    "table_source_marker": "UFCN9TABLESOURCE"
   },
   "locator_ruleset": "typography.reduced-font",
   "measurement": {
