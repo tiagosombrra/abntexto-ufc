@@ -2,13 +2,14 @@
 
 Updated: 2026-08-26
 Checkpoint PR: #107
-Audited base: `555b538d7ef05eebfde88a3a3f1e92961f605019`
+Audited base: `61738858d32ab1aea677832e9063fd01ad2b1d1a`
 N6 technical closure head: `5d1d9ba4aecba5519b600bfba4114009f551ea52`
 N7 technical closure merge: `555b538d7ef05eebfde88a3a3f1e92961f605019`
+N8 reduced-size mapping merge: `61738858d32ab1aea677832e9063fd01ad2b1d1a`
 
 This is the single dynamic continuation document for the v2.2.0 audit and release. Future work must read this file before relying on chat history. Detailed implementation evidence remains in Git history, pull requests, Actions runs, `normativa/` and `tests/`.
 
-The current stable audited base for N8 is the squash-merge of PR #112 on `main`, recorded above. Resolve later evidence merge SHAs from Git history instead of adding documentation-only commits merely to record hashes.
+The current stable audited base for N8 is the squash-merge of PR #113 on `main`, recorded above. Resolve later evidence merge SHAs from Git history instead of adding documentation-only commits merely to record hashes.
 
 ## Source-of-truth hierarchy
 
@@ -55,7 +56,7 @@ The phase meanings come from the original planning branch `planning/v2.2.0-norma
 | N5 | final-PDF oracle construction/calibration | DONE |
 | N6 | pre-textual elements | DONE |
 | N7 | layout, pagination, sections and footnotes | DONE |
-| N8 | citations and references | ACTIVE — 13/19 bounded after current reduced-size mapping |
+| N8 | citations and references | ACTIVE — 17/19 bounded after reference-layout evidence |
 | N9 | objects, tables, equations and code | PENDING |
 | N10 | post-textual elements and multivolume | PENDING |
 | N11 | research-project profile / NBR 15287 | PENDING |
@@ -156,19 +157,27 @@ The N8 scope was rederived against the current full contract after N7 closure. I
 - `references.doi.when-present`;
 - `references.online.url-access`.
 
-Before the current N8 branch, bounded positive coverage was **12/19 = 63.2%**: the 7 citation predicates plus the 5 direct long-quotation predicates.
+The initial bounded N8 baseline was **12/19 = 63.2%**: the 7 citation predicates plus the 5 direct long-quotation predicates.
 
-The current bounded branch maps `font.size.reduced.long-quote` to the already measured `quotation.long.font.size` final-PDF samples while explicitly recording `independent_physical_sample=false`. It also binds the source evidence path and commit SHA, requires the two current normative contracts to agree at 10 pt, and preserves the historical N6 long-quotation oracle unchanged. When this branch is merged, bounded N8 coverage becomes **13/19 = 68.4%**, leaving **6/19**, all reference-specific.
+PR #113 mapped `font.size.reduced.long-quote` to the already measured `quotation.long.font.size` final-PDF samples while explicitly recording `independent_physical_sample=false`. The mapping binds the source evidence path and commit SHA, requires the two current normative contracts to agree at 10 pt and preserves the historical N6 long-quotation oracle unchanged. PR #113 was squash-merged as `61738858d32ab1aea677832e9063fd01ad2b1d1a`, raising bounded N8 coverage to **13/19 = 68.4%**.
 
-The six residual reference predicates have different evidence types and should not be collapsed into one broad regression claim:
+The current reference-layout campaign adds bounded final-PDF evidence for all four physical reference predicates without changing the class implementation, normative values, locators or N5 tolerances. The isolated two-entry bibliography uses same-document 12 pt single-spacing and left-margin controls. The measured results are:
 
-- the four layout predicates require bounded final-PDF geometry/typography measurement using N5 tolerances;
-- DOI requires an applicable entry whose final rendered reference includes the DOI;
-- online access requires final rendered availability plus access-date data when required.
+- `references.font.size`: both controlled entry starts measured exactly `12.0 pt`;
+- `references.line-spacing`: the three-line first entry measured internal gaps `13.7625 pt` and `13.875 pt` against a same-document single-spacing calibration of `13.8 pt`;
+- `references.alignment`: both entry starts measured exactly `x=85.039 pt`, equal to the same-document left-margin control; continuation-line positions are retained as observations only and are not promoted into an unstated no-hanging-indent predicate;
+- `references.entry-spacing`: the measured gap from the last baseline of the first entry to the first baseline of the second was `27.575 pt`, against `27.6 pt` expected for one blank single-spaced line, delta `0.025 pt`.
 
-Existing broad bibliography regressions remain support only until mapped to these exact IDs. `tests/v2-reference-spacing-check.sh` reports TeX/runtime dimensions but is not final-PDF N5 evidence. `tests/v2-references-6023-check.sh` already observes DOI and several NBR 6023 compatibility cases, but it does not by itself close both semantic predicates.
+All four predicates therefore pass the unchanged N5 measurement policy. Once this branch is merged, bounded N8 coverage is **17/19 = 89.5%**. The remaining two predicates are semantic and reference-specific:
 
-`abntexto-ufc/compat-nbr6023-2025.def` remains active temporary compatibility code. It must be explicitly audited during the final N8 semantic block rather than assumed correct because bibliography regressions pass. The compatibility layer currently adjusts specific missing-data/event/jurisdiction behaviors; general DOI/URL output remains largely delegated to `biblatex-abnt`, except where a driver explicitly invokes `doi+eprint+url`.
+- `references.doi.when-present`;
+- `references.online.url-access`.
+
+The existing `tests/v2-references-6023-check.sh` remains support rather than bounded closure for those two IDs. Its controlled corpus already contains a DOI entry and an online entry with `url` + `urldate`; however, the current online assertion checks missing-publication-data behavior rather than explicitly asserting rendered URL plus access date.
+
+`abntexto-ufc/compat-nbr6023-2025.def` remains active temporary compatibility code. Its current boundary is now explicitly understood: it adjusts missing publisher/location behavior, optional event city and jurisprudence judgment date, while general DOI/URL output is primarily delegated to `biblatex-abnt` (with `doi+eprint+url` explicitly used where a custom driver requires it). The final N8 semantic block must preserve and document this boundary rather than duplicating general DOI/URL formatting in the compatibility layer.
+
+The locator state remains conservative. `references.layout` is `PARTIAL_WITH_REASON`, and the DOI/online-access locators remain unavailable at exact licensed NBR 6023:2025 clause-text level. Positive rendered evidence closes bounded coverage and the phase gate only; it does not independently promote these rules to `PROVEN`.
 
 Do not use the earlier `12/18` count.
 
@@ -228,8 +237,8 @@ Do not create a documentation checkpoint after every evidence PR merely to recor
 
 N7 is closed. The only active roadmap gate is **N8 — citations and references**.
 
-After merging the current reduced-size mapping, create the smallest next bounded scope for the four reference-layout predicates only: 12 pt font size, simple internal spacing, left alignment and one blank simple-spaced line between entries. Use an isolated bibliography fixture and direct final-PDF measurement with the unchanged N5 tolerances; do not count existing log-level spacing checks as final-PDF proof.
+After merging the current reference-layout evidence, close the two remaining semantic predicates only: `references.doi.when-present` and `references.online.url-access`. Reuse the existing NBR 6023:2025 controlled corpus where it is exact, add explicit rendered-entry evidence for DOI and for URL plus access date, and audit the `compat-nbr6023-2025.def` boundary without moving generic DOI/URL formatting into the temporary compatibility layer unless a concrete defect requires it.
 
-Then close the two remaining semantic predicates (`references.doi.when-present` and `references.online.url-access`) with exact rendered-entry evidence and an explicit audit of `abntexto-ufc/compat-nbr6023-2025.def` boundaries.
+If both predicates pass and all N8 exit criteria reconcile conservatively, close N8 formally and rederive the N9 objects/tables/equations/code scope before opening new evidence work.
 
 Do not open N9 until N8 is formally closed. After N8: N9 → N10 → N11 → N12 → N13 → N14 → N15 → D5 final → D6.
