@@ -6,6 +6,10 @@ job="illustration-final-pdf"
 evidence="artifacts/normative-layout/illustration-final-pdf.json"
 log="/tmp/abntexto-ufc-v2-illustration-evidence.log"
 
+python3 -m py_compile \
+  tests/checks/normative_n9_illustration.py \
+  tests/checks/normative_n9_progress.py
+
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
 }
