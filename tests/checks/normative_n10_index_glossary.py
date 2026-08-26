@@ -93,6 +93,15 @@ def document_text(page_nodes: list[ET.Element]) -> str:
     return normalize(" ".join(word_text(word) for page in page_nodes for word in words(page)))
 
 
+def document_has_heading(page_nodes: list[ET.Element], keyword: str) -> bool:
+    wanted = normalize(keyword)
+    return any(
+        normalize(line_text(line)) == wanted
+        for page in page_nodes
+        for line in lines(page)
+    )
+
+
 def page_index_for_marker(page_nodes: list[ET.Element], marker: str) -> int:
     wanted = normalize(marker)
     matches: list[int] = []
@@ -232,9 +241,13 @@ def main() -> None:
     center_delta = abs(heading_center - text_area_center)
     font_delta = abs(float(heading_type.font_size) - 12.0)
 
-    present_glossary_heading = normalize(markers["glossary_heading_keyword"]) in present_text
+    present_glossary_heading = document_has_heading(
+        present_pages, markers["glossary_heading_keyword"]
+    )
     present_glossary_entry = normalize(markers["present_glossary_entry"]) in present_text
-    absent_glossary_heading = normalize(markers["glossary_heading_keyword"]) in absent_text
+    absent_glossary_heading = document_has_heading(
+        absent_pages, markers["glossary_heading_keyword"]
+    )
     absent_glossary_entry = normalize(markers["present_glossary_entry"]) in absent_text
     absent_index_entry = normalize(markers["absent_index_entry"]) in absent_text
 
@@ -243,7 +256,11 @@ def main() -> None:
             "index.heading.case",
             "PASS" if uppercase_text(raw_heading) else "FAIL",
             supported["index.heading.case"],
-            {"heading": raw_heading, "uppercase": uppercase_text(raw_heading), "exact_heading_text_frozen": False},
+            {
+                "heading": raw_heading,
+                "uppercase": uppercase_text(raw_heading),
+                "exact_heading_text_frozen": False,
+            },
             "pdftotext -bbox-layout",
         ),
         record(
@@ -284,7 +301,13 @@ def main() -> None:
         ),
         record(
             "glossary.element.optional",
-            "PASS" if present_glossary_heading and present_glossary_entry and not absent_glossary_heading and not absent_glossary_entry and absent_index_entry else "FAIL",
+            "PASS"
+            if present_glossary_heading
+            and present_glossary_entry
+            and not absent_glossary_heading
+            and not absent_glossary_entry
+            and absent_index_entry
+            else "FAIL",
             supported["glossary.element.optional"],
             {
                 "present_route": {
@@ -323,7 +346,10 @@ def main() -> None:
         },
     }
     args.json.parent.mkdir(parents=True, exist_ok=True)
-    args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    args.json.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     print(
         "N10-EVIDENCE index-glossary-final-pdf-summary "
