@@ -5,6 +5,7 @@ modern="tests/normativa/postextuais.tex"
 
 python3 tests/checks/normative_n10_scope.py
 sh tests/v2-appendix-annex-final-pdf-evidence-check.sh
+sh tests/v2-index-glossary-final-pdf-evidence-check.sh
 
 cleanup_job() {
   job="$1"
