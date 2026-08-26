@@ -20,6 +20,7 @@ EXPECTED_PROJECT_POLICY = {
     "algorithm.project-policy",
 }
 PR_CHECK_SCRIPTS = {
+    "object-geometry": "tests/v2-object-geometry-check.sh",
     "objects": "tests/v2-object-check.sh",
     "table-ibge": "tests/v2-table-ibge-check.sh",
     "documentary-source": "tests/v2-documentary-source-check.sh",
@@ -92,11 +93,29 @@ def pr_selected_checks(relative: str) -> set[str]:
         fail(f"PR workflow no longer declares pull_request: {relative}")
 
     selected: set[str] = set()
-    for match in re.findall(r"--only\s+([A-Za-z0-9_.-]+(?:,[A-Za-z0-9_.-]+)*)", source):
+    for match in re.findall(
+        r"--only\s+([A-Za-z0-9_.-]+(?:,[A-Za-z0-9_.-]+)*)", source
+    ):
         selected.update(item for item in match.split(",") if item)
     if not selected:
         fail(f"no tests/run.py --only selections found in PR workflow: {relative}")
     return selected
+
+
+def verify_scope_checker_host(check: str, selected_checks: set[str]) -> str:
+    if check not in selected_checks:
+        fail(f"scope checker host is outside PR preflight: {check}")
+    script = PR_CHECK_SCRIPTS.get(check)
+    if script is None:
+        fail(f"unknown scope checker host: {check}")
+    path = ROOT / script
+    if not path.is_file():
+        fail(f"scope checker host script missing: {script}")
+    source = path.read_text(encoding="utf-8", errors="replace")
+    invocation = "python3 tests/checks/normative_n9_scope.py"
+    if invocation not in source:
+        fail(f"scope checker host no longer invokes N9 checker: {script}")
+    return script
 
 
 def verify_bounded_pr_checks(
@@ -148,6 +167,12 @@ def main() -> None:
     if not isinstance(pr_workflow, str) or not pr_workflow:
         fail("PR workflow path is required")
     selected_pr_checks = pr_selected_checks(pr_workflow)
+    scope_checker_check = derivation.get("scope_checker_check")
+    if scope_checker_check != "object-geometry":
+        fail(f"unexpected scope checker host: {scope_checker_check}")
+    scope_checker_script = verify_scope_checker_host(
+        scope_checker_check, selected_pr_checks
+    )
 
     policy = scenario.get("policy")
     required_policy = (
@@ -158,6 +183,7 @@ def main() -> None:
         "project_policy_capabilities_remain_non_normative",
         "existing_bounded_mapping_does_not_change_proof_state",
         "existing_bounded_requires_pr_preflight_check",
+        "scope_checker_must_run_in_pr_preflight",
     )
     if not isinstance(policy, dict) or not all(
         policy.get(key) is True for key in required_policy
@@ -285,6 +311,10 @@ def main() -> None:
         "N9-EVIDENCE pr-preflight-required check_ids="
         + json.dumps(sorted(bounded_pr_checks), ensure_ascii=False)
         + f" workflow={pr_workflow}"
+    )
+    print(
+        "N9-EVIDENCE scope-checker-host "
+        f"check={scope_checker_check} script={scope_checker_script}"
     )
     print(
         "N9-EVIDENCE authority-boundary project_policy_rule_ids="
