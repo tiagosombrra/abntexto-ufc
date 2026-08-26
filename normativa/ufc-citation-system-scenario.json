@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "ufc-citation-system",
+  "locator_ruleset": "citations.ufc-system",
+  "rules": [
+    "citation.system.ufc"
+  ],
+  "fixtures": {
+    "parenthetical": {
+      "citation_key": "silva2020",
+      "source_tokens": ["Silva"],
+      "date_tokens": ["2020"]
+    },
+    "textual": {
+      "citation_key": "oliveira2011",
+      "source_tokens": ["Oliveira", "Nunes"],
+      "date_tokens": ["2011"]
+    }
+  },
+  "markers": {
+    "parenthetical_before": "N6CSAPRE",
+    "parenthetical_after": "N6CSAPST",
+    "textual_before": "N6CSBPRE",
+    "textual_after": "N6CSBPST"
+  },
+  "calibration": {
+    "system_evidence": "positive final-PDF evidence that supported default citation surfaces preserve identifiable author token(s) and date token(s)",
+    "citation_form": "punctuation, token order and parenthetical/textual formatting are observational only"
+  }
+}
