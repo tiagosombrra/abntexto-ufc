@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+
+fixture="tests/normativa/vector-rule-oracle-calibration.tex"
+job="vector-rule-oracle-calibration"
+flags="-interaction=nonstopmode -halt-on-error -file-line-error"
+
+cleanup() {
+  rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf"
+}
+trap cleanup EXIT INT TERM
+
+python3 -m py_compile tools/pdf_vector_measurement.py tests/checks/normative_vector_rule_oracle.py
+
+for pass in 1 2; do
+  pdflatex -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {
+    cat "/tmp/$job.out"
+    exit 1
+  }
+done
+
+warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
+  grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+if [ -n "$warnings" ]; then
+  printf '%s\n' "$warnings"
+  echo "$job: warning ou overflow não reconhecido."
+  exit 1
+fi
+
+python3 tests/checks/normative_vector_rule_oracle.py "$job.pdf" \
+  --json artifacts/normative-layout/vector-rule-oracle-calibration.json \
+  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
+
+echo 'Gate de calibração N5 para geometria vetorial concluído.'
