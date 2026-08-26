@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 RECONCILIATION = ROOT / "normativa" / "n9-scope-reconciliation.json"
 CAMPAIGN_PLAN = ROOT / "normativa" / "n9-campaign-plan.json"
 ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+VECTOR_EXTENSION = ROOT / "normativa" / "vector-rule-oracle-extension.json"
 EXPECTED_CAMPAIGNS = {
     "illustration-final-pdf": 8,
     "table-final-pdf": 7,
@@ -53,6 +54,7 @@ def main() -> None:
     reconciliation = load_json(RECONCILIATION)
     plan = load_json(CAMPAIGN_PLAN)
     oracle = load_json(ORACLE_POLICY)
+    extension = load_json(VECTOR_EXTENSION)
 
     if reconciliation.get("schema_version") != 1 or reconciliation.get("phase") != "N9":
         fail("invalid N9 reconciliation schema/phase")
@@ -60,6 +62,12 @@ def main() -> None:
         fail("invalid campaign plan schema/phase")
     if oracle.get("schema_version") != 1 or oracle.get("phase") != "N5":
         fail("invalid N5 oracle policy schema/phase")
+    if (
+        extension.get("schema_version") != 1
+        or extension.get("phase") != "N5"
+        or extension.get("component") != "vector-rule-geometry"
+    ):
+        fail("invalid vector-rule oracle extension schema/phase/component")
 
     required_policy = (
         "campaigns_must_partition_support_only_rules",
@@ -135,6 +143,28 @@ def main() -> None:
         fail(f"table oracle-extension subset drifted: {extension_table}")
     if set(existing_table) | set(extension_table) != set(table["rule_ids"]):
         fail("table capability subsets do not partition the table campaign")
+    if table.get("oracle_extension") != "normativa/vector-rule-oracle-extension.json":
+        fail("table campaign is not bound to the vector-rule oracle extension")
+    if table.get("oracle_extension_runtime_calibration_required") is not True:
+        fail("table campaign must require same-run vector calibration")
+
+    if oracle.get("tools", {}).get("vector_geometry") != extension.get("tool"):
+        fail("vector tool registration drifted between oracle policy and extension")
+    if oracle.get("vector_geometry_extension") != "normativa/vector-rule-oracle-extension.json":
+        fail("oracle policy extension binding drifted")
+    if "vector-rule-geometry" not in oracle.get("exit_capabilities", []):
+        fail("vector-rule-geometry capability is not registered")
+    extension_policy = extension.get("policy", {})
+    if not isinstance(extension_policy, dict) or not all(
+        extension_policy.get(key) is expected
+        for key, expected in {
+            "additive_capability_only": True,
+            "existing_n5_tolerances_unchanged": True,
+            "rasterization_not_used": True,
+            "proof_state_changed": False,
+        }.items()
+    ):
+        fail("vector-rule extension policy drifted")
 
     extension_set = set(extension_table)
     existing_n5_set = planned_set - extension_set
@@ -165,6 +195,11 @@ def main() -> None:
     print(
         "N9-EVIDENCE oracle-extension-required rule_ids="
         + json.dumps(sorted(extension_set), ensure_ascii=False)
+    )
+    print(
+        "N9-EVIDENCE oracle-extension-registered "
+        f"tool={extension.get('tool')} capability=vector-rule-geometry "
+        "same_run_calibration_required=true"
     )
 
 
