@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "phase": "N7",
+  "component": "typography",
+  "rules": [
+    "format.text.color",
+    "font.family.body",
+    "font.size.body",
+    "spacing.body",
+    "font.size.reduced.pagination"
+  ],
+  "direct_pdf_rules": [
+    "format.text.color",
+    "font.size.body",
+    "spacing.body",
+    "font.size.reduced.pagination"
+  ],
+  "locator_rulesets": {
+    "format.text.color": "format.text-color",
+    "font.family.body": "typography.body",
+    "font.size.body": "typography.body",
+    "spacing.body": "layout.body-spacing",
+    "font.size.reduced.pagination": "typography.reduced-font"
+  },
+  "markers": {
+    "body_alpha": "UFCNSevenBodyAlpha",
+    "body_beta": "UFCNSevenBodyBeta",
+    "body_gamma": "UFCNSevenBodyGamma",
+    "body_delta": "UFCNSevenBodyDelta",
+    "calibration_alpha": "UFCNSevenCalAlpha",
+    "calibration_beta": "UFCNSevenCalBeta"
+  },
+  "measurement": {
+    "bbox_tool": "pdftotext -bbox-layout",
+    "typography_tool": "pdftohtml -xml -zoom 1.0",
+    "body_spacing_calibration": "same-document 12pt single spacing",
+    "color_scope": "all typography runs in the isolated fixture",
+    "pagination_scope": "one visible Arabic header number on each textual page"
+  },
+  "literal_family_baseline": {
+    "commit_sha": "e8035cbdf85dff95537c419b5bf85c4cd64416f9",
+    "workflow_run_id": 32967129935,
+    "build_job_id": 98172052603,
+    "certification_job_id": 98174341299,
+    "artifact_name": "v2-windows-literal-font-pdfs",
+    "artifact_digest": "sha256:df395781a4bc4a31248bcf65fe9c45434c067b6e7f5956366c761b8b7b13d38d",
+    "result": "PASS"
+  }
+}

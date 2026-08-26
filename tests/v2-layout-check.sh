@@ -69,5 +69,6 @@ sh tests/v2-section-unnumbered-centered-evidence-check.sh
 sh tests/v2-body-paragraph-evidence-check.sh
 sh tests/v2-footnote-text-evidence-check.sh
 sh tests/v2-footnote-separator-evidence-check.sh
+sh tests/v2-typography-evidence-check.sh
 
 echo 'Gate V2 de layout concluído.'
