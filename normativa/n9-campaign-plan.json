@@ -52,7 +52,9 @@
         "table.ibge.header-rule",
         "table.ibge.bottom-rule"
       ],
-      "next_action": "Close table typography with the existing N5 oracle, then design and calibrate an explicit vector-rule measurement extension before assessing IBGE line geometry."
+      "oracle_extension": "normativa/vector-rule-oracle-extension.json",
+      "oracle_extension_runtime_calibration_required": true,
+      "next_action": "Use the explicitly registered and same-run calibrated vector-rule oracle extension before assessing IBGE line geometry."
     },
     {
       "id": "equation-display-final-pdf",
