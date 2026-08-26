@@ -94,6 +94,14 @@ def _build_child(parent: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]
     if authority not in {"normative", "project-policy"}:
         raise CatalogError(f"atomic rule {rule_id}: invalid authority {authority}")
 
+    validation = spec.get("validation")
+    if validation is None:
+        validation = copy.deepcopy(parent["validation"])
+    elif not isinstance(validation, dict) or not validation.get("checks"):
+        raise CatalogError(f"atomic rule {rule_id}: validation override requires checks")
+    else:
+        validation = copy.deepcopy(validation)
+
     child = {
         "id": rule_id,
         "category": spec.get("category", parent["category"]),
@@ -102,7 +110,7 @@ def _build_child(parent: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]
         "normativity": spec.get("normativity", parent["normativity"]),
         "kind": spec.get("kind", parent["kind"]),
         "values": _selected_values(parent, spec),
-        "validation": copy.deepcopy(parent["validation"]),
+        "validation": validation,
         "parent_rule": parent["id"],
         "authority": authority,
     }
