@@ -70,6 +70,7 @@ done
 
 sh tests/v2-illustration-evidence-check.sh
 sh tests/v2-table-typography-equation-evidence-check.sh
+sh tests/v2-table-ibge-vector-evidence-check.sh
 python3 tests/checks/normative_n9_progress.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
