@@ -8,7 +8,7 @@ This file is the canonical continuation point for the v2.2.0 audit/release plan.
 
 - Repository: `tiagosombrra/modelo-latex-ufc`
 - Default branch: `main`
-- Stable main after N6 short-direct-citation evidence merge: `df60a280dc952a5d8dc17480a07ea61479a01acd`
+- Stable main after N6 direct-citation-source evidence merge: `3de83d0f216b62ba837fe5d594bc0379e38d63f8`
 - Latest published release: `v2.1.0`
 - Future release under audit: `v2.2.0`
 - Canonical class/package identity: `abntexto-ufc`
@@ -104,52 +104,60 @@ Detailed fixtures and measurements remain in each PR. This ledger is the canonic
 | Body paragraph | `#92` / `7e509a68f5dd3adc4aead749404425885cbe8745` | exact head `6080d321d7b5b37b1bb5d2821b8cf8fa072ac601`; 20 mm measured 56.6930 pt; extra spacing 0.0 pt |
 | Long direct quotation | `#94` / `e98c807cfb56dcac7bb15857efb2390dea38e887` | exact head `0c9d1f32609a61826d8c836412e75f9a0514aa48`; `PASS=5`; no implementation change |
 | Short direct citation | `#96` / `df60a280dc952a5d8dc17480a07ea61479a01acd` | exact final head `6fbf6bd6260a904a7fe630968c2c5867be4eeea4`; `PASS=3`; two fixture-only instrumentation corrections; no implementation change |
+| Direct citation source | `#98` / `3de83d0f216b62ba837fe5d594bc0379e38d63f8` | exact final head `e961b0a05ae9e83d53dcfa75bdf3d30f42801307`; `PASS=1`; one marker-only instrumentation correction; no implementation change |
 
-## Latest closed increment: short direct citation
+## Latest closed increment: direct citation source
 
-Evidence PR `#96`, squash merge `df60a280dc952a5d8dc17480a07ea61479a01acd`.
+Evidence PR `#98`, squash merge `3de83d0f216b62ba837fe5d594bc0379e38d63f8`.
 
-Stable base: `5af7ef2e8be47e02c0ac9073613430cfbda1da49`.
+Stable base: `5d3fa2929ad9509ba9ccbb37b09f8bddb38a615a`.
 
-Final exact audited head: `6fbf6bd6260a904a7fe630968c2c5867be4eeea4`.
+Final exact audited head: `e961b0a05ae9e83d53dcfa75bdf3d30f42801307`.
 
-Ruleset and exact rules:
+Ruleset and exact rule:
 
-- `citations.direct-short`
-- `citation.direct-short.max-lines` → `max_lines = 3`
-- `citation.direct-short.quotation-marks` → `style = "double"`
-- `citation.direct-short.emphasis` → `citation_emphasis = false`
+- `citations.direct-source`
+- `citation.direct.source`
+- stored predicates: `source_required = true`, `locator_when_available = true`
 
 Locator state remains unchanged:
 
 - ruleset status: `PARTIAL_WITH_REASON`
-- UFC Guia de Citações 2025 `2.3.1.1, p. 8`: `VERIFIED`
+- UFC Guia de Citações 2025 `2.3.1, p. 6-7`: `VERIFIED`
 - exact authoritative ABNT NBR 10520:2023 clause text: `UNAVAILABLE_WITH_REASON` in the repository/public evidence corpus.
 
-Supported rendering route: `\enquote{...}` through `csquotes`, already loaded by required `abntexto >= 1.1`.
+Supported rendering route used by the evidence:
+
+- controlled direct quotation through `\enquote{...}`;
+- source attribution through existing `\cite[103]{oliveira2011}` integration;
+- bibliography source: `tests/fixtures/referencias-v2.bib` through `\ufcbibliografia`.
 
 Final exact-head CI:
 
-- Normative source contract run `32915246185`: SUCCESS; job `98017494931`
-- LaTeX preflight run `32915246180`: SUCCESS
-- objects/bibliography job `98017494963`: SUCCESS; `PASS=8 FAIL=0 SKIP=0`
-- structural job `98017494780`: SUCCESS
-- profile matrix job `98017494974`: SUCCESS including PDF/A-2b certification
-- aggregate `latex-preflight` job `98018574930`: SUCCESS
-- `N6-EVIDENCE short-direct-citation-summary PASS=3 lines=3 opening_marks=["“"] closing_marks=["”"] font_control_id=1`
+- Normative source contract run `32917579066`: SUCCESS; job `98024404595`
+- LaTeX preflight run `32917579079`: SUCCESS
+- objects/bibliography job `98024404205`: SUCCESS; `PASS=8 FAIL=0 SKIP=0`
+- structural job `98024404412`: SUCCESS
+- profile matrix job `98024404388`: SUCCESS including PDF/A-2b
+- reference document job `98024404443`: SUCCESS
+- post-textual job `98024404320`: SUCCESS
+- aggregate `latex-preflight` job `98025491743`: SUCCESS
+- `N6-EVIDENCE direct-citation-source-summary PASS=1 source_tokens=3/3 locator=103 locator_present=true`
 
-Measured final-PDF results:
+Measured final-PDF result:
 
-- short-citation threshold: controlled quotation occupies exactly 3 lines; this is positive applicability evidence only, not a claim that the class automatically truncates or converts longer quotations;
-- quotation marks: visible opening/closing marks are typographic double quotes `“` and `”`;
-- citation-only emphasis: start/middle/end quote samples use the same `12.0 pt` font id and black color as the same-document body control; font-size delta is `0.0 pt` for every sample.
+- source-identification tokens `Oliveira`, `Nunes` and `2011` were all present in the generated citation window;
+- applicable locator token `103` survived rendering;
+- source window contained 5 words and remained in the same controlled sentence as the quotation;
+- punctuation, token order and parenthetical/textual form were explicitly observational only and were not promoted into new predicates.
 
 Instrumentation history:
 
-1. Initial fixture used long unbreakable sentinels and produced an artificial `Overfull \\hbox (3.0972pt)`. Only marker strings were shortened; warning policy was not relaxed.
-2. The next fixture payload itself occupied 5 lines, contradicting the positive short-citation applicability scenario. Only the controlled quotation text was shortened; checker and stored predicate remained unchanged.
+- initial head `088cede3ae1f70f6a92c9960e896f1e9b20663c9` failed before normative measurement because start marker `N6DSQ` was a prefix of end marker `N6DSQE`; substring lookup therefore found two matches;
+- only scenario/fixture markers were changed to non-overlapping `N6DSOPN` and `N6DSCLS`;
+- checker logic, normative rule, locator, tolerances and class/runtime implementation were unchanged.
 
-Neither incident was a class/runtime defect. No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed.
+No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment.
 
 ## N6 remaining work
 
@@ -164,34 +172,29 @@ Closed N6 scopes must not be reopened without evidence of regression or a change
 
 ## Immediate next bounded increment
 
-Next candidate: `citations.direct-source`.
+Next candidate: `citations.indirect-source`.
 
-Rederived on stable main `df60a280dc952a5d8dc17480a07ea61479a01acd` from `normativa/locator-audit-citations.json` and `normativa/coverage-rules-citations.json`:
+Rederived on stable main `3de83d0f216b62ba837fe5d594bc0379e38d63f8` from `normativa/locator-audit-citations.json` and `normativa/coverage-rules-citations.json`:
 
-- exact rule: `citation.direct.source`
-- stored predicates:
-  - `source_required = true`
-  - `locator_when_available = true`
-- current locator: `ABNT NBR 10520:2023; Guia UFC 2025, 2.3.1`
+- exact rule: `citation.indirect.source`
+- stored predicate: `source_required = true`
+- current locator: `ABNT NBR 10520:2023; Guia UFC 2025, 2.3.2`
 - locator status: `PARTIAL_WITH_REASON`
-- UFC citation guide 2025 `2.3.1, p. 6-7`: `VERIFIED`
+- UFC citation guide 2025 `2.3.2, p. 10`: `VERIFIED`
 - exact authoritative ABNT NBR 10520:2023 clause text remains `UNAVAILABLE_WITH_REASON` in the repository/public evidence corpus.
 
-Supported citation route already exercised by the repository's bibliography fixture:
+Supported citation routes already exercised by the bibliography fixture include `\cite{silva2020}` and `\textcite{silva2020}`.
 
-- `\cite[103]{oliveira2011}` renders a parenthetical author-date citation with locator;
-- `\textcite[103]{oliveira2011}` renders a textual author-date citation with locator;
-- both use the existing `\ufcbibliografia{tests/fixtures/referencias-v2.bib}` integration.
-
-Recommended next evidence design:
+Recommended evidence design:
 
 1. rederive the exact rule payload and locator state from the then-current full contract before branch creation;
-2. create a controlled direct-quotation fixture using an actual quotation plus the supported citation command and an available page locator;
-3. verify from the final PDF that the direct quotation is accompanied by an identifiable source and that the supplied locator survives rendering;
-4. measure only the stored predicates; do not strengthen them into one mandatory punctuation order, one exact citation command, or one exact textual/parenthetical form;
-5. keep indirect citations, author-date system policy, `apud`, short/long quotation typography and reference-list formatting outside this increment;
-6. integrate the gate into the existing `bibliography` validation domain;
-7. if final-PDF evidence exposes a real implementation defect, preserve the FAIL and isolate the implementation fix before rerunning unchanged evidence.
+2. create a controlled paraphrase/indirect-citation fixture using an existing bibliography key and the supported citation route;
+3. delimit the generated citation window in the final PDF and verify that an identifiable source survives rendering;
+4. treat the fixture's paraphrase status as positive applicability evidence only — final-PDF extraction cannot prove semantic paraphrasing;
+5. measure only `source_required=true`; do not add a locator requirement, punctuation rule, citation order or mandatory textual/parenthetical form;
+6. keep `citation.system.ufc`, `citation.apud.presentation`, direct-quotation rules and reference-list formatting outside the increment;
+7. integrate the gate in the existing `bibliography` validation domain;
+8. preserve FAIL and isolate implementation corrections if the final-PDF evidence exposes a real defect.
 
 ## Required PR discipline
 
@@ -236,4 +239,4 @@ Do not reconstruct state primarily from old chats. Git history, this handoff and
 
 ## Next action
 
-From stable main `df60a280dc952a5d8dc17480a07ea61479a01acd`, rederive `citations.direct-source` and `citation.direct.source`. If unchanged, create an evidence-only N6 PR using the existing bibliography/citation route to prove source presence and preservation of an available locator in the final PDF. Keep indirect citations, system-policy rules, `apud`, quotation typography, class/runtime changes, normative values, locators, N5 tolerances, compatibility mappings and proof-state outside that increment.
+From stable main `3de83d0f216b62ba837fe5d594bc0379e38d63f8`, rederive `citations.indirect-source` and `citation.indirect.source`. If unchanged, create an evidence-only N6 PR using a controlled indirect-citation fixture and the existing bibliography/citation route to prove source presence in the final PDF. Keep citation-system policy, `apud`, direct-quotation presentation, class/runtime changes, normative values, locators, N5 tolerances, compatibility mappings and proof-state outside that increment.
