@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "phase": "N9",
+  "purpose": "Partition the 16 support-only N9 residual predicates into bounded evidence campaigns without changing normative values or N5 tolerances.",
+  "policy": {
+    "campaigns_must_partition_support_only_rules": true,
+    "existing_n5_oracle_is_preferred_when_capable": true,
+    "new_measurement_capability_requires_explicit_oracle_extension": true,
+    "no_visual_predicate_closes_from_tex_log_or_source_structure_alone": true
+  },
+  "campaigns": [
+    {
+      "id": "illustration-final-pdf",
+      "rule_ids": [
+        "font.size.reduced.illustration-caption",
+        "font.size.reduced.illustration-source",
+        "illustration.caption.bounds",
+        "illustration.source.bounds",
+        "illustration.note.bounds",
+        "illustration.identification.position",
+        "illustration.source.position",
+        "illustration.note.position"
+      ],
+      "measurement_status": "existing-n5-capability",
+      "measurement_tools": [
+        "pdftotext -bbox-layout",
+        "pdftohtml -xml -zoom 1.0"
+      ],
+      "next_action": "Build an isolated final-PDF illustration fixture and measure typography, relative positions and content-width bounds."
+    },
+    {
+      "id": "table-final-pdf",
+      "rule_ids": [
+        "font.size.reduced.table-caption",
+        "font.size.reduced.table-source",
+        "table.ibge.open-sides",
+        "table.ibge.body-grid",
+        "table.ibge.top-rule",
+        "table.ibge.header-rule",
+        "table.ibge.bottom-rule"
+      ],
+      "measurement_status": "mixed-capability",
+      "existing_n5_rule_ids": [
+        "font.size.reduced.table-caption",
+        "font.size.reduced.table-source"
+      ],
+      "oracle_extension_required_rule_ids": [
+        "table.ibge.open-sides",
+        "table.ibge.body-grid",
+        "table.ibge.top-rule",
+        "table.ibge.header-rule",
+        "table.ibge.bottom-rule"
+      ],
+      "next_action": "Close table typography with the existing N5 oracle, then design and calibrate an explicit vector-rule measurement extension before assessing IBGE line geometry."
+    },
+    {
+      "id": "equation-display-final-pdf",
+      "rule_ids": [
+        "equation.display"
+      ],
+      "measurement_status": "existing-n5-capability",
+      "measurement_tools": [
+        "pdftotext -bbox-layout"
+      ],
+      "next_action": "Measure the displayed equation as a block distinct from surrounding body text in an isolated final-PDF fixture."
+    }
+  ],
+  "expected_counts": {
+    "campaigns": 3,
+    "residual_rules": 16,
+    "existing_n5_capability_rules": 11,
+    "oracle_extension_required_rules": 5
+  }
+}

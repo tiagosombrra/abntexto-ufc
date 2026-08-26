@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "phase": "N9",
+  "purpose": "Exact work map and conservative existing-evidence classification for objects, tables, equations, code and algorithms.",
+  "derivation": {
+    "categories": ["objects", "equations", "code-algorithms"],
+    "cross_cutting_rule_ids": [
+      "font.size.reduced.illustration-caption",
+      "font.size.reduced.illustration-source",
+      "font.size.reduced.table-caption",
+      "font.size.reduced.table-source"
+    ],
+    "pr_workflow": ".github/workflows/latex-preflight.yml",
+    "scope_checker_check": "object-geometry"
+  },
+  "policy": {
+    "full_contract_is_authoritative_for_scope": true,
+    "visual_geometry_or_typography_requires_final_pdf_for_bounded_closure": true,
+    "tex_log_or_source_structure_alone_is_support_only_for_visual_predicates": true,
+    "semantic_presence_or_routing_may_use_rendered_text_and_generated_lists": true,
+    "project_policy_capabilities_remain_non_normative": true,
+    "existing_bounded_mapping_does_not_change_proof_state": true,
+    "existing_bounded_requires_pr_preflight_check": true,
+    "scope_checker_must_run_in_pr_preflight": true
+  },
+  "groups": [
+    {
+      "id": "reduced-typography",
+      "classification": "support-only",
+      "rule_ids": [
+        "font.size.reduced.illustration-caption",
+        "font.size.reduced.illustration-source",
+        "font.size.reduced.table-caption",
+        "font.size.reduced.table-source"
+      ],
+      "evidence": [
+        "tests/v2-object-geometry-check.sh",
+        "tests/v2-table-ibge-check.sh"
+      ],
+      "reason": "Current checks read TeX-level font metrics; N9 bounded visual closure requires direct final-PDF typography evidence."
+    },
+    {
+      "id": "illustration-bounds",
+      "classification": "support-only",
+      "rule_ids": [
+        "illustration.caption.bounds",
+        "illustration.source.bounds",
+        "illustration.note.bounds"
+      ],
+      "evidence": ["tests/v2-object-geometry-check.sh"],
+      "reason": "Current checks compare TeX box dimensions, not the rendered final-PDF bounding boxes."
+    },
+    {
+      "id": "source-required",
+      "classification": "existing-bounded-positive",
+      "rule_ids": ["illustration.source.required"],
+      "evidence": [
+        "tests/normativa/objetos-avancados.tex",
+        "tests/v2-object-check.sh",
+        "tests/normativa/tabela-ibge.tex",
+        "tests/v2-table-ibge-check.sh"
+      ],
+      "required_pr_checks": ["objects", "table-ibge"],
+      "required_tokens": {
+        "tests/normativa/objetos-avancados.tex": ["\\legend{figure}", "\\ufcfonte{Elaboração própria.}", "\\legend{table}"],
+        "tests/v2-object-check.sh": ["grep -Fq 'Fonte:'"],
+        "tests/normativa/tabela-ibge.tex": ["remark{Fonte}"],
+        "tests/v2-table-ibge-check.sh": ["'Fonte:'"]
+      }
+    },
+    {
+      "id": "source-external-citation",
+      "classification": "existing-bounded-positive",
+      "rule_ids": ["illustration.source.external-citation"],
+      "evidence": ["tests/v2-documentary-source-check.sh"],
+      "required_pr_checks": ["documentary-source"],
+      "required_tokens": {
+        "tests/v2-documentary-source-check.sh": ["adaptado de", "fonte externa não foi apresentada em forma de citação autor-data"]
+      }
+    },
+    {
+      "id": "illustration-presentation",
+      "classification": "support-only",
+      "rule_ids": [
+        "illustration.identification.position",
+        "illustration.source.position",
+        "illustration.note.position"
+      ],
+      "evidence": ["tests/normativa/objetos-avancados.tex", "tests/v2-object-check.sh"],
+      "reason": "Fixture order and rendered presence support the behavior, but final-PDF relative positions are not measured."
+    },
+    {
+      "id": "illustration-list-routing",
+      "classification": "existing-bounded-positive",
+      "rule_ids": ["list.routing.illustrations"],
+      "evidence": ["tests/v2-object-check.sh"],
+      "required_pr_checks": ["objects"],
+      "required_tokens": {
+        "tests/v2-object-check.sh": ["Figura normativa de teste", "Gráfico normativo de teste", "Quadro multipágina de teste", "tabela entrou indevidamente na lista de ilustrações"]
+      }
+    },
+    {
+      "id": "table-ibge",
+      "classification": "support-only",
+      "rule_ids": [
+        "table.ibge.open-sides",
+        "table.ibge.body-grid",
+        "table.ibge.top-rule",
+        "table.ibge.header-rule",
+        "table.ibge.bottom-rule"
+      ],
+      "evidence": ["tests/normativa/tabela-ibge.tex", "tests/v2-table-ibge-check.sh"],
+      "reason": "The current gate verifies fixture commands/source structure and rendered text, but not the final-PDF rule geometry itself."
+    },
+    {
+      "id": "equation-display",
+      "classification": "support-only",
+      "rule_ids": ["equation.display"],
+      "evidence": ["tests/normativa/matematica.tex", "tests/v2-math-check.sh"],
+      "reason": "A displayed equation fixture exists, but block/display presentation is not yet measured as its own final-PDF predicate."
+    },
+    {
+      "id": "equation-number-format",
+      "classification": "existing-bounded-positive",
+      "rule_ids": ["equation.numbering.format"],
+      "evidence": ["tests/v2-normative-complement-check.sh"],
+      "required_pr_checks": ["normative-complement"],
+      "required_tokens": {
+        "tests/v2-normative-complement-check.sh": ["if '(1)' not in text", "número da equação ausente"]
+      }
+    },
+    {
+      "id": "equation-number-right",
+      "classification": "existing-bounded-positive",
+      "rule_ids": ["equation.numbering.right"],
+      "evidence": ["tests/v2-math-check.sh"],
+      "required_pr_checks": ["math"],
+      "required_tokens": {
+        "tests/v2-math-check.sh": ["expected_right = page_width - 2.0 * 72.0 / 2.54", "número da equação não está alinhado à direita"]
+      }
+    },
+    {
+      "id": "code-capability",
+      "classification": "existing-bounded-positive",
+      "rule_ids": ["code.listing.project-policy"],
+      "evidence": ["tests/v2-code-typography-check.sh", "tests/v2-object-check.sh"],
+      "required_pr_checks": ["code-typography", "objects"],
+      "required_tokens": {
+        "tests/v2-code-typography-check.sh": ["UFC-CODE-GEOMETRY-MARKER"],
+        "tests/v2-object-check.sh": ["Trecho C++ embutido", "Arquivo C++ externo"]
+      }
+    },
+    {
+      "id": "algorithm-capability",
+      "classification": "existing-bounded-positive",
+      "rule_ids": ["algorithm.project-policy"],
+      "evidence": ["tests/v2-code-typography-check.sh", "tests/v2-object-check.sh"],
+      "required_pr_checks": ["code-typography", "objects"],
+      "required_tokens": {
+        "tests/v2-code-typography-check.sh": ["UFC-ALGORITHM-GEOMETRY-MARKER"],
+        "tests/v2-object-check.sh": ["Busca linear"]
+      }
+    }
+  ],
+  "expected_counts": {
+    "total": 23,
+    "existing_bounded_positive": 7,
+    "support_only": 16
+  }
+}
