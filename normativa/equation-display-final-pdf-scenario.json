@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "phase": "N9",
+  "component": "equation-display-final-pdf",
+  "campaign_id": "equation-display-final-pdf",
+  "purpose": "Measure equation.display as a distinct rendered block between controlled body-text markers without strengthening horizontal alignment or exact spacing into new predicates.",
+  "rules": [
+    "equation.display"
+  ],
+  "fixture": {
+    "path": "tests/normativa/equation-display-final-pdf.tex",
+    "engine": "pdflatex",
+    "passes": 2,
+    "expected_pages": 1
+  },
+  "markers": {
+    "before": "UFCN9EQBEFORE",
+    "equation": "UFCN9EQDISPLAY",
+    "after": "UFCN9EQAFTER"
+  },
+  "locator_ruleset": "equations.presentation",
+  "measurement": {
+    "tool": "pdftotext -bbox-layout",
+    "predicate": "equation marker occupies a non-overlapping vertical band strictly between surrounding body-text controls",
+    "horizontal_alignment_is_observational_only": true,
+    "exact_vertical_gaps_are_not_frozen": true
+  },
+  "proof_state_changed": false
+}
