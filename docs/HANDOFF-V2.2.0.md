@@ -1,8 +1,8 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
 Updated: 2026-08-26
-Checkpoint PR: #120
-Stable base before this PR: `082bc033b86465cb375ca3c90b6ed812de430b7c`
+Checkpoint PR: #121
+Stable base before this PR: `17c8e22337f861127bf6bb07efa8bf9602010a49`
 
 This is the single dynamic continuation document for the v2.2.0 normative audit and release. Future work must read this file before relying on chat history. Detailed evidence belongs in `normativa/`, `tests/`, Git history, pull requests and Actions logs.
 
@@ -51,7 +51,7 @@ Guardrails:
 | N7 | layout, pagination, sections and footnotes | DONE — 39/39 bounded positive coverage |
 | N8 | citations and references | DONE — 19/19 bounded positive coverage |
 | N9 | objects, tables, equations and code | DONE — 23/23 bounded positive coverage |
-| N10 | post-textual elements and multivolume | ACTIVE — 2/20 bounded positive, 18 support-only after reconciliation |
+| N10 | post-textual elements and multivolume | ACTIVE — 15/20 bounded positive, 5 support-only after appendix/annex evidence |
 | N11 | research-project profile / NBR 15287 | PENDING |
 | N12 | profile, engine and font matrix | PENDING |
 | N13 | negative fixtures / negative-path validation | PENDING |
@@ -129,28 +129,40 @@ PR #120 machine-rederived N10 from the current full contract and locator manifes
 - `pagination.appendix-annex.continuous`;
 - `volume.number.cover-title-page`.
 
-The conservative baseline is **2/20 bounded positive + 18/20 support-only**:
+PR #120 fixed the conservative baseline at **2/20 bounded positive + 18/20 support-only**:
 
 - `volume.number.cover-title-page`: existing final-PDF oracle explicitly requires the volume marker on both cover and title page;
 - `pagination.multivolume.continuous`: existing multivolume gate explicitly checks logical progression `101 → 102 → 102` and rejects invalid `pagina-inicial=0`.
 
-Broad post-textual presence/order and duplex-start regressions remain support-only. They are not promoted merely because CI is green.
+Its final audited head `084145b77dc0574a356d42bdb0a4da5302429674` passed Normative source and full LaTeX preflight with `behind_by=0`, then squash-merged as `17c8e22337f861127bf6bb07efa8bf9602010a49`.
 
-PR #120 structured reconciliation evidence requires and currently reports:
+PR #121 executes the exact **13-rule `appendix-annex-final-pdf` campaign** and raises bounded N10 coverage to **15/20**, leaving only five index/glossary predicates support-only. The isolated positive fixture exercises two appendices and two annexes so letter sequencing is measured directly rather than inferred from a single item.
+
+The first technical run on head `6b6dc40cbbec02c8011fca3d9579fdf1f7142eff` reported `PASS=13 FAIL=0`:
+
+- appendices A/B start on their own pages, render uppercase, use the same-document bold calibration, measure exactly 12 pt and are centered within the recto text area;
+- annexes A/B satisfy the same five predicates;
+- both identification patterns render `PALAVRA + letter + dash + title`, with consecutive `A/B`; the observed em dash is evidence only and the exact dash glyph subtype is not frozen;
+- logical pagination remains continuous from 70 through 74 across textual content, appendices and annexes;
+- exact heading spacing, vertical position and physical page deltas remain observational only;
+- locator states remain `PARTIAL_WITH_REASON` and proof-state remains unchanged.
+
+Structured progress after this campaign is:
 
 - `total=20`;
-- `existing_bounded_positive=2`;
-- `support_only=18`;
-- two disjoint residual campaigns covering exactly `13 + 5` rules;
-- post-textual and pagination locator states remain `PARTIAL_WITH_REASON`;
-- proof-state unchanged.
+- `baseline_existing_bounded_positive=2`;
+- `promoted_bounded_positive=13`;
+- `current_bounded_positive=15`;
+- `current_support_only=5`;
+- `proof_state_changed=false`.
 
-Residual campaigns:
+Broad post-textual presence/order and duplex-start regressions remain support-only except where an exact campaign maps them to a stored predicate.
 
-1. `appendix-annex-final-pdf` — 13 rules: five appendix heading/page predicates, five annex heading/page predicates, both identification patterns, and appendix→annex pagination continuity.
-2. `index-glossary-final-pdf` — 5 rules: four index-heading predicates plus glossary optionality using controlled present/absent routes.
+The only residual campaign is now:
 
-Do not promote locator proof-state while closing these campaigns; the current authoritative-text limitations remain in force.
+- `index-glossary-final-pdf` — 5 rules: `index.heading.case`, `index.heading.weight`, `index.heading.alignment`, `index.heading.font-size`, and `glossary.element.optional` using controlled present/absent routes.
+
+Do not promote locator proof-state while closing this campaign; the current authoritative-text limitations remain in force.
 
 ## Normative currency
 
@@ -185,8 +197,8 @@ For roadmap PRs:
 
 ## Next action
 
-Finish PR #120 on its final documentation-updated head. Require exact-head Normative source and LaTeX preflight success, the structured N10 reconciliation line `total=20 existing_bounded_positive=2 support_only=18`, and `behind_by=0`; then squash merge.
+Finish PR #121 on its final documentation-updated head. Require exact-head Normative source and LaTeX preflight success, `N10-EVIDENCE appendix-annex-final-pdf-summary PASS=13 FAIL=0`, `current_bounded_positive=15 current_support_only=5`, and `behind_by=0`; then squash merge.
 
-After #120 merges, create `audit/n10-appendix-annex-final-pdf-evidence` from the new stable `main` and execute only the 13-rule `appendix-annex-final-pdf` campaign. Use an isolated controlled final-PDF fixture and existing N5 bbox/typography tooling. Derive every expected value from the current contract before implementing assertions; do not infer or strengthen unstored formatting details.
+After #121 merges, create `audit/n10-index-glossary-final-pdf-evidence` from the new stable `main`. Rederive the exact five stored values before coding. Use final-PDF evidence for the four index-heading dimensions and controlled glossary-present/glossary-absent routes for optionality. Do not infer index-body formatting or strengthen unstored predicates.
 
-After that campaign, execute the 5-rule `index-glossary-final-pdf` campaign. Only when N10 reaches 20/20 bounded positive coverage may N10 be marked DONE and N11 become active.
+Only when that final campaign reaches N10 **20/20 bounded positive coverage** may N10 be marked DONE, formal roadmap closure advance to **11/16 = 68.75%**, and N11 become active. Rederive the exact N11 work map from the current contract before opening N11 implementation/evidence work.
