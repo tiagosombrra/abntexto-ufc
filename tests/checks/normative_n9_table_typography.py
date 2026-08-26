@@ -115,7 +115,7 @@ def main() -> None:
     markers = scenario.get("markers", {})
     if fixture.get("engine") != "pdflatex" or fixture.get("passes") != 2:
         fail("fixture engine/pass contract drift")
-    if set(markers) != {"caption", "source"}:
+    if set(markers) != {"caption", "table_source_marker"}:
         fail("table typography marker contract drift")
 
     try:
@@ -124,7 +124,7 @@ def main() -> None:
         fail(str(exc))
 
     evidence: list[dict[str, Any]] = []
-    for rule_id, marker_key in zip(RULES, ("caption", "source"), strict=True):
+    for rule_id, marker_key in zip(RULES, ("caption", "table_source_marker"), strict=True):
         run = unique_run(runs, markers[marker_key])
         delta = abs(run.font_size - 10.0)
         evidence.append({
