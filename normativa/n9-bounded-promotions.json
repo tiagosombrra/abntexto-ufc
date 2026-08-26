@@ -49,13 +49,73 @@
         ]
       },
       "proof_state_changed": false
+    },
+    {
+      "id": "table-typography-final-pdf",
+      "campaign_id": "table-final-pdf",
+      "rule_ids": [
+        "font.size.reduced.table-caption",
+        "font.size.reduced.table-source"
+      ],
+      "evidence_json": "artifacts/normative-layout/table-typography-final-pdf.json",
+      "evidence_sources": [
+        "normativa/table-typography-final-pdf-scenario.json",
+        "tests/normativa/table-typography-final-pdf.tex",
+        "tests/checks/normative_n9_table_typography.py",
+        "tests/v2-table-typography-equation-evidence-check.sh",
+        "tests/v2-object-geometry-check.sh"
+      ],
+      "required_pr_checks": ["object-geometry"],
+      "required_tokens": {
+        "tests/v2-object-geometry-check.sh": [
+          "sh tests/v2-table-typography-equation-evidence-check.sh",
+          "python3 tests/checks/normative_n9_progress.py"
+        ],
+        "tests/v2-table-typography-equation-evidence-check.sh": [
+          "python3 tests/checks/normative_n9_table_typography.py"
+        ],
+        "tests/checks/normative_n9_table_typography.py": [
+          "font.size.reduced.table-caption",
+          "font.size.reduced.table-source"
+        ]
+      },
+      "proof_state_changed": false
+    },
+    {
+      "id": "equation-display-final-pdf",
+      "campaign_id": "equation-display-final-pdf",
+      "rule_ids": [
+        "equation.display"
+      ],
+      "evidence_json": "artifacts/normative-layout/equation-display-final-pdf.json",
+      "evidence_sources": [
+        "normativa/equation-display-final-pdf-scenario.json",
+        "tests/normativa/equation-display-final-pdf.tex",
+        "tests/checks/normative_n9_equation_display.py",
+        "tests/v2-table-typography-equation-evidence-check.sh",
+        "tests/v2-object-geometry-check.sh"
+      ],
+      "required_pr_checks": ["object-geometry"],
+      "required_tokens": {
+        "tests/v2-object-geometry-check.sh": [
+          "sh tests/v2-table-typography-equation-evidence-check.sh",
+          "python3 tests/checks/normative_n9_progress.py"
+        ],
+        "tests/v2-table-typography-equation-evidence-check.sh": [
+          "python3 tests/checks/normative_n9_equation_display.py"
+        ],
+        "tests/checks/normative_n9_equation_display.py": [
+          "equation.display"
+        ]
+      },
+      "proof_state_changed": false
     }
   ],
   "expected_counts": {
     "total": 23,
     "baseline_existing_bounded_positive": 7,
-    "promoted_bounded_positive": 8,
-    "current_existing_bounded_positive": 15,
-    "current_support_only": 8
+    "promoted_bounded_positive": 11,
+    "current_existing_bounded_positive": 18,
+    "current_support_only": 5
   }
 }
