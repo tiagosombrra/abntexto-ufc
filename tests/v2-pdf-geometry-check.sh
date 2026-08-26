@@ -141,3 +141,4 @@ print('Gate V2 de geometria PDF concluído.')
 PY
 
 sh tests/v2-page-margins-evidence-check.sh
+sh tests/v2-pagination-geometry-evidence-check.sh

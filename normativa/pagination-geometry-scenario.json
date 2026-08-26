@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "phase": "N7",
+  "component": "pagination-geometry",
+  "rules": [
+    "pagination.recto.position",
+    "pagination.recto.offset.top",
+    "pagination.recto.offset.right",
+    "pagination.verso.position",
+    "pagination.verso.offset.top",
+    "pagination.verso.offset.left"
+  ],
+  "locator_ruleset": "pagination.general",
+  "fixture": "tests/normativa/textual-oracle-pagination-geometry.tex",
+  "markers": {
+    "recto": "UFCNSevenPaginationRecto",
+    "verso": "UFCNSevenPaginationVerso"
+  },
+  "measurement": {
+    "tool": "pdftotext -bbox-layout",
+    "page_number_detection": "one standalone Arabic numeral in the upper page region",
+    "position_predicate": "page-number center lies in the required upper outer quadrant",
+    "recto_top_reference": "top edge of page-number glyph box from physical page top",
+    "recto_right_reference": "right edge of physical page to page-number glyph box right edge",
+    "verso_top_reference": "top edge of page-number glyph box from physical page top",
+    "verso_left_reference": "physical page left edge to page-number glyph box left edge"
+  },
+  "tolerance_policy": "Reuse N5 horizontal_position_pt and vertical_position_pt unchanged."
+}
