@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "phase": "N11",
+  "scope": "research-project-profile",
+  "total_rules": 5,
+  "normative_rule_ids": [
+    "project.cover.optional",
+    "project.title-page.required",
+    "project.textual.required-sections"
+  ],
+  "technical_profile_rule_ids": [
+    "project.final-work-elements.excluded"
+  ],
+  "project_policy_rule_ids": [
+    "project.anonymization.policy"
+  ],
+  "locator_file": "normativa/locator-audit-final.json",
+  "locator_ruleset": "project.structure-nbr15287",
+  "existing_bounded_positive": [
+    {
+      "rule_id": "project.cover.optional",
+      "required_check_ids": ["pretextual"],
+      "evidence_file": "tests/checks/normative_pretextual_cover.py",
+      "required_tokens": [
+        "rules[\"project.cover.optional\"]",
+        "optional_pass",
+        "cover_suppressed"
+      ]
+    },
+    {
+      "rule_id": "project.title-page.required",
+      "required_check_ids": ["pretextual"],
+      "evidence_file": "tests/checks/normative_pretextual_title_page.py",
+      "required_tokens": [
+        "rules[\"project.title-page.required\"]",
+        "expected_project_required",
+        "projetoanonimizado"
+      ]
+    },
+    {
+      "rule_id": "project.anonymization.policy",
+      "required_check_ids": ["pretextual"],
+      "evidence_file": "tests/checks/normative_pretextual_title_page.py",
+      "required_tokens": [
+        "rules[\"project.anonymization.policy\"]",
+        "public_identifier_required",
+        "hidden_author"
+      ]
+    }
+  ],
+  "support_only_rule_ids": [
+    "project.textual.required-sections",
+    "project.final-work-elements.excluded"
+  ],
+  "required_pr_check_ids": [
+    "pretextual",
+    "project",
+    "profiles"
+  ],
+  "scope_checker_host": {
+    "check_id": "project",
+    "script": "tests/v2-project-check.sh",
+    "checker": "tests/checks/normative_n11_scope.py"
+  },
+  "campaigns": [
+    {
+      "id": "project-structure-final-pdf",
+      "rule_ids": [
+        "project.textual.required-sections",
+        "project.final-work-elements.excluded"
+      ],
+      "measurement": "final-pdf-required-sections-and-excluded-elements",
+      "rules": 2
+    }
+  ],
+  "authority_policy": {
+    "nbr15287_locator_status": "UNAVAILABLE_WITH_REASON",
+    "normative_rules": 3,
+    "technical_profile_rules": 1,
+    "project_policy_rules": 1,
+    "proof_state_changed": false,
+    "broad_project_regressions_are_support_only": true
+  }
+}
