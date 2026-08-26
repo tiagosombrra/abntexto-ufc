@@ -1,0 +1,25 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = anverso,
+  glossario = glossaries,
+  indice = imakeidx
+}
+
+\newglossaryentry{n10term}{
+  name = {N10GLOSSARYTERM},
+  description = {N10GLOSSARYDESCRIPTION}
+}
+
+\begin{document}
+
+\textual
+\section{N10INDEXSOURCE}
+UFCN10RegularControl \textbf{UFCN10BoldControl}.
+Uso controlado: \gls{n10term}.\index{N10INDEXALPHA}
+
+\imprimirglossario
+\imprimirindice
+
+\end{document}
