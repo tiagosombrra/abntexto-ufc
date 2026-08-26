@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "phase": "N9",
+  "component": "table-typography-final-pdf",
+  "campaign_id": "table-final-pdf",
+  "purpose": "Measure the two reduced-size table typography predicates directly from an isolated final PDF using the frozen N5 typography oracle.",
+  "rules": [
+    "font.size.reduced.table-caption",
+    "font.size.reduced.table-source"
+  ],
+  "fixture": {
+    "path": "tests/normativa/table-typography-final-pdf.tex",
+    "engine": "pdflatex",
+    "passes": 2,
+    "expected_pages": 1
+  },
+  "markers": {
+    "caption": "UFCN9TABLECAPTION",
+    "table_source_marker": "UFCN9TABLESOURCE"
+  },
+  "locator_ruleset": "typography.reduced-font",
+  "measurement": {
+    "tool": "pdftohtml -xml -zoom 1.0",
+    "font_size_tolerance_source": "normativa/oracle-policy.json",
+    "family_is_observational_only": true
+  },
+  "proof_state_changed": false
+}
