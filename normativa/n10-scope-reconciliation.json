@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "phase": "N10",
+  "scope": "posttextual-and-multivolume",
+  "total_rules": 20,
+  "posttextual_locator": "normativa/locator-audit-posttextual.json",
+  "pagination_locator": "normativa/locator-audit-layout-pagination.json",
+  "posttextual_rule_ids": [
+    "appendix.page.own",
+    "appendix.heading.case",
+    "appendix.heading.weight",
+    "appendix.heading.font-size",
+    "appendix.heading.alignment",
+    "annex.page.own",
+    "annex.heading.case",
+    "annex.heading.weight",
+    "annex.heading.font-size",
+    "annex.heading.alignment",
+    "index.heading.case",
+    "index.heading.weight",
+    "index.heading.alignment",
+    "index.heading.font-size",
+    "glossary.element.optional",
+    "appendix.identification.pattern",
+    "annex.identification.pattern"
+  ],
+  "cross_scope_rule_ids": [
+    "pagination.multivolume.continuous",
+    "pagination.appendix-annex.continuous",
+    "volume.number.cover-title-page"
+  ],
+  "existing_bounded_positive": [
+    {
+      "rule_id": "volume.number.cover-title-page",
+      "required_check_ids": ["pretextual"],
+      "evidence_file": "tests/checks/normative_pretextual_cover.py",
+      "required_tokens": [
+        "rules[\"volume.number.cover-title-page\"]",
+        "volume_pass = volume_cover and volume_title_page",
+        "pdftotext -bbox-layout"
+      ]
+    },
+    {
+      "rule_id": "pagination.multivolume.continuous",
+      "required_check_ids": ["multivolume"],
+      "evidence_file": "tests/v2-multivolume-check.sh",
+      "required_tokens": [
+        "UFC-PAGE-AFTER-COVER=101",
+        "UFC-PAGE-AFTER-TITLE=102",
+        "UFC-TEXT-PAGE=102"
+      ]
+    }
+  ],
+  "support_only_rule_ids": [
+    "appendix.page.own",
+    "appendix.heading.case",
+    "appendix.heading.weight",
+    "appendix.heading.font-size",
+    "appendix.heading.alignment",
+    "annex.page.own",
+    "annex.heading.case",
+    "annex.heading.weight",
+    "annex.heading.font-size",
+    "annex.heading.alignment",
+    "index.heading.case",
+    "index.heading.weight",
+    "index.heading.alignment",
+    "index.heading.font-size",
+    "glossary.element.optional",
+    "appendix.identification.pattern",
+    "annex.identification.pattern",
+    "pagination.appendix-annex.continuous"
+  ],
+  "required_pr_check_ids": [
+    "pretextual",
+    "multivolume",
+    "posttextual",
+    "duplex-posttextual"
+  ],
+  "scope_checker_host": {
+    "check_id": "posttextual",
+    "script": "tests/v2-posttextual-check.sh",
+    "checker": "tests/checks/normative_n10_scope.py"
+  },
+  "campaigns": [
+    {
+      "id": "appendix-annex-final-pdf",
+      "rule_ids": [
+        "appendix.page.own",
+        "appendix.heading.case",
+        "appendix.heading.weight",
+        "appendix.heading.font-size",
+        "appendix.heading.alignment",
+        "annex.page.own",
+        "annex.heading.case",
+        "annex.heading.weight",
+        "annex.heading.font-size",
+        "annex.heading.alignment",
+        "appendix.identification.pattern",
+        "annex.identification.pattern",
+        "pagination.appendix-annex.continuous"
+      ],
+      "measurement": "final-pdf-bbox-and-typography",
+      "rules": 13
+    },
+    {
+      "id": "index-glossary-final-pdf",
+      "rule_ids": [
+        "index.heading.case",
+        "index.heading.weight",
+        "index.heading.alignment",
+        "index.heading.font-size",
+        "glossary.element.optional"
+      ],
+      "measurement": "final-pdf-heading-and-present-absent-routes",
+      "rules": 5
+    }
+  ],
+  "authority_policy": {
+    "posttextual_locator_status": "PARTIAL_WITH_REASON",
+    "pagination_locator_status": "PARTIAL_WITH_REASON",
+    "proof_state_changed": false,
+    "broad_posttextual_regressions_are_support_only": true
+  }
+}
