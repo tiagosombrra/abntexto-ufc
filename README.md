@@ -315,7 +315,13 @@ propriedade medida no PDF final
 regra comprovada
 ```
 
-O roadmap detalhado está mantido nos documentos de planejamento da v2.2.0. Mudanças de distribuição CTAN são tratadas separadamente de mudanças de conformidade UFC/ABNT.
+Documentação ativa da auditoria:
+
+- `docs/HANDOFF-V2.2.0.md` — estado canônico, roadmap N0–N15 e próxima ação;
+- `docs/NORMAS.md` — mapa normativo humano;
+- `docs/VIGENCIA-NORMATIVA.md` — política de vigência e precedência.
+
+O histórico detalhado de evidências permanece nos PRs, Actions, `normativa/` e `tests/`. Auditorias de releases encerradas ficam em `docs/history/`. Mudanças de distribuição CTAN são tratadas separadamente de mudanças de conformidade UFC/ABNT.
 
 ## Compatibilidade com a identidade anterior
 

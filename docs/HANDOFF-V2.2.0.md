@@ -1,233 +1,180 @@
-# abntexto-ufc v2.2.0 — Canonical Handoff
+# abntexto-ufc v2.2.0 — Canonical handoff
 
-Updated: 2026-08-25
+Updated: 2026-08-26
+Checkpoint PR: #106
+Audited base: `557a4559fff2b88d17e9b5a3541c12f3e866659d`
 
-This file is the canonical continuation point for the v2.2.0 audit/release plan. Future work should read this file before relying on chat history. Detailed historical evidence remains authoritative in Git history, PR bodies/comments and exact GitHub Actions runs.
+This is the single dynamic continuation document for the v2.2.0 audit and release. Future work must read this file before relying on chat history. Detailed implementation evidence remains in Git history, pull requests, Actions runs, `normativa/` and `tests/`.
 
-## Current stable checkpoint
+After this checkpoint is merged, the stable checkpoint is the squash-merge of PR #106 on `main`; resolve its exact SHA from Git history instead of adding a follow-up documentation-only commit merely to record the hash.
 
-- Repository: `tiagosombrra/modelo-latex-ufc`
-- Default branch: `main`
-- Stable main after N6 `apud` evidence merge: `84e57059795da7927466d6834e733b1d61800631`
-- Latest published release: `v2.1.0`
-- Future release under audit: `v2.2.0`
-- Canonical class/package identity: `abntexto-ufc`
-- Legacy class entry point: deprecated compatibility shim only; outside the canonical CTAN package.
-- UFC institutional mark: externalized from public/CTAN bundles; users may supply an official local asset through the supported class option.
+## Source-of-truth hierarchy
 
-## Governing method
+1. `normativa/*.json` — machine-readable requirements, source status, locators, precedence and proof policy.
+2. `tests/` and GitHub Actions — executable evidence and regressions.
+3. `docs/NORMAS.md` — human-readable normative map.
+4. `docs/VIGENCIA-NORMATIVA.md` — current-edition and precedence policy.
+5. this handoff — roadmap state, audit decisions and next action.
+6. Git/PR/Actions history — detailed historical evidence.
 
-The audit must not equate green CI with normative proof. Conservative policy remains in force:
+Historical release audits live under `docs/history/`. Distribution-only documents remain `docs/README-CTAN.md`, `docs/CHANGELOG-CTAN.md` and `docs/ctan-example.tex`.
 
-- no rule is promoted to `PROVEN` merely because an aggregate check passes;
-- unavailable authoritative/licensed clause text remains unavailable or partial;
-- measured N6 conformance does not change proof-state;
-- evidence-only PRs do not change normative values, locators, N5 tolerances or compatibility mappings;
-- implementation defects exposed by evidence are corrected separately while the evidence predicate remains unchanged;
-- fixture observations must not strengthen stored predicates;
-- merge evidence only on the exact audited head with `behind_by=0`;
-- after each bounded evidence merge, update this handoff before creating the next evidence branch.
+## Governing audit policy
 
-## Phase status
+Keep three states separate:
 
-| Phase | Status | Canonical result |
+- **positive coverage**: an exact predicate was exercised/measured;
+- **phase gate**: all exit criteria of that roadmap phase were reconciled;
+- **proof-state**: normative confidence classification under `normativa/proof-policy.json`.
+
+A green CI job, a positive fixture or a closed phase does not by itself promote a rule to `PROVEN`.
+
+Conservative rules remain mandatory:
+
+- unavailable authoritative/licensed text stays unavailable or partial;
+- evidence-only work does not silently change normative values, locators, N5 tolerances or compatibility mappings;
+- fixture observations do not strengthen stored predicates;
+- broad regressions count as support, not bounded phase closure, until mapped to the exact predicate;
+- implementation defects exposed by evidence are fixed separately while preserving the evidence predicate;
+- evidence is merged only on the exact audited head with `behind_by=0`;
+- no closed scope is reopened without a changed source, changed predicate or regression.
+
+## Canonical N0–N15 roadmap
+
+The phase meanings come from the original planning branch `planning/v2.2.0-normative-verification` and are restored here as the canonical sequence:
+
+| Phase | Scope | Gate status |
 | --- | --- | --- |
-| N0 | DONE | normative baseline established |
-| N1 | DONE | 170/170 normative locators classified; `UNASSESSED=0` |
-| N2 | DONE | UFC/ABNT reconciliation complete; `unknown-review=0` |
-| N3 | DONE | 46/46 atomicity gaps resolved |
-| N4 | DONE | false-coverage policy active; `unsafe-proven=0` |
-| N5 | DONE | final-PDF oracle calibrated and integrated |
-| N6 | IN PROGRESS | bounded positive final-PDF evidence; citation family dedicated scopes closed |
-| N7-N15 | PENDING | continue only after N6 closure |
-| M1 | IMPLEMENTED | Node 24 / Pages migration merged; formal runtime/deployment evidence pending |
-| D0-D4 | DONE | CTAN identity, asset and distribution remediation completed |
-| D5 rehearsal | VALIDATED | rehearsal only; not a release decision |
-| D5 final | BLOCKED | repeat only on N15-approved final source tree |
-| D6 | BLOCKED | CTAN resubmission follows final D5 certification |
+| N0 | freeze / baseline | DONE |
+| N1 | normative sources and exact locators | DONE |
+| N2 | UFC × current-ABNT reconciliation | DONE |
+| N3 | classify/resolve 46 explicit atomicity gaps | DONE |
+| N4 | false-coverage audit and safe proof policy | DONE |
+| N5 | final-PDF oracle construction/calibration | DONE |
+| N6 | pre-textual elements | ACTIVE — closure reconciliation required |
+| N7 | layout, pagination, sections and footnotes | OPEN |
+| N8 | citations and references | OPEN — partially executed |
+| N9 | objects, tables, equations and code | PENDING |
+| N10 | post-textual elements and multivolume | PENDING |
+| N11 | research-project profile / NBR 15287 | PENDING |
+| N12 | profile, engine and font matrix | PENDING |
+| N13 | negative fixtures / negative-path validation | PENDING |
+| N14 | Web/Lite and CLI/Deep unification | PENDING |
+| N15 | full normative certification and release decision | PENDING |
 
-## Normative baseline after N5
+Formal roadmap closure is therefore **6/16 phases = 37.5%**, with **62.5% of phase gates remaining**. This is a gate-count metric only; it is not a conformity or proof percentage.
 
-Historical baseline; do not recompute or rewrite without an explicit proof-state phase/change.
+Historical fixture names and log prefixes containing `n6` / `N6-EVIDENCE` remain valid evidence identifiers. They are not renamed merely to repair roadmap labels.
 
-- full atomic rules: 181
-- normative rules: 170
-- N1 locator coverage: 170/170
-- N2 unknown review relationships: 0
-- N3 gaps resolved: 46/46
-- N4 unsafe `PROVEN`: 0
-- historical proof-state baseline: `PARTIAL=114`, `NOT_PROVEN=51`, `CONDITIONAL=10`, `MANUAL=5`, `NOT_APPLICABLE=1`, `PROVEN=0`
+## Baseline preserved from N0–N5
 
-## N5 final-PDF oracle policy
+- full atomic rules: 181;
+- normative rules: 170;
+- N1 locator coverage: 170/170;
+- N2 unknown-review relationships: 0;
+- N3 explicit gaps resolved/classified: 46/46;
+- N4 unsafe `PROVEN`: 0;
+- historical proof-state baseline: `PARTIAL=114`, `NOT_PROVEN=51`, `CONDITIONAL=10`, `MANUAL=5`, `NOT_APPLICABLE=1`, `PROVEN=0`.
 
-Tools: `pdftotext -bbox-layout`, `pdftohtml -xml -zoom 1.0`, `pdfinfo`, `pdffonts`.
+N5 tools: `pdftotext -bbox-layout`, `pdftohtml -xml -zoom 1.0`, `pdfinfo`, `pdffonts`.
 
-Tolerances remain unchanged:
+N5 tolerances remain unchanged:
 
-- page size: `1 pt`
-- horizontal position: `5 pt`
-- vertical position: `5 pt`
-- font size: `1 pt`
+- page size: 1 pt;
+- horizontal position: 5 pt;
+- vertical position: 5 pt;
+- font size: 1 pt.
 
-## Major normative-audit milestones
+Key baseline PRs: #55 (N1), #56 (N2), #57 (N4) and #58 (N5).
 
-- N1: PR `#55` — 170/170 locator coverage.
-- N2: PR `#56` — reconciliation complete.
-- N4: PR `#57` — parent/local promotion policy and `unsafe-proven=0`.
-- N5: PR `#58` — final-PDF oracle calibrated and integrated.
+## Checkpoint audit findings
 
-## N6 completed increments
+### N6 — pre-textuals
 
-Detailed fixtures and measurements remain in each PR. This ledger is the canonical resume index.
+All planned pre-textual families have positive evidence in the existing campaign: dedication, acknowledgements, short/long epigraph, summary/abstract/keywords, cover, title page, approval page, errata, optional lists, TOC and catalog-card/pagination interaction.
 
-| Scope | PR / merge | Result / critical note |
-| --- | --- | --- |
-| Dedication + epigraph | `#59/#60/#61` | Evidence exposed three real class divergences; #60 fixed dedication +20 mm indent, short-epigraph quotation marks and long-epigraph +20 mm indent; final evidence passed. |
-| Acknowledgements | `#62` | `PASS=8` |
-| Summary / abstract / keywords | `#63` | `PASS=14` |
-| Cover | `#64` | `PASS=4` |
-| Title page | `#65` | `PASS=7` |
-| Approval | `#67` | `PASS=2` |
-| Errata | `#69` | `PASS=3` |
-| Optional lists | `#71` | `PASS=4` |
-| TOC | `#73` | `PASS=5` |
-| Pre-textual pagination/start-side | `#75` | `PASS=4` |
-| Section hierarchy | `#77` | `PASS=3` |
-| Section indicators | `#79/#80` | real separator defect fixed separately; final 3.0 pt gap matched calibration |
-| Primary section recto duplex | `#82` | primary pages 1,3,5 |
-| Primary after-spacing | `#84` | 41.55 pt vs 41.40 pt calibration; initial false FAIL was instrumentation |
-| Subsection spacing | `#86` | `PASS=1` |
-| Multiline hanging | `#88` | five levels, 10 continuation lines, max delta 0.9 pt |
-| Unnumbered heading centering | `#90` | max delta 0.2162 pt |
-| Body paragraph | `#92` | 20 mm measured 56.6930 pt; extra spacing 0.0 pt |
-| Long direct quotation | `#94` / `e98c807cfb56dcac7bb15857efb2390dea38e887` | exact head `0c9d1f32609a61826d8c836412e75f9a0514aa48`; `PASS=5`; no implementation change |
-| Short direct citation | `#96` / `df60a280dc952a5d8dc17480a07ea61479a01acd` | exact final head `6fbf6bd6260a904a7fe630968c2c5867be4eeea4`; `PASS=3`; two fixture-only instrumentation corrections |
-| Direct citation source | `#98` / `3de83d0f216b62ba837fe5d594bc0379e38d63f8` | exact final head `e961b0a05ae9e83d53dcfa75bdf3d30f42801307`; `PASS=1`; one marker-only instrumentation correction |
-| Indirect citation source | `#100` / `c0ff40d8841ca3ff689681b4f2beae2c14d5f866` | exact head `c58f0d0e1f70c81a37556472577f3a0ecf915f28`; `PASS=1`; no instrumentation incident |
-| UFC author-date citation system | `#102` / `1b1a675e041ed40abad901c98b95a9c38854a4e0` | exact head `48e77a37295ca7e6d0f82c3b9a639e25d66739cc`; `PASS=1`; 2/2 author-date surfaces |
-| Citation of citation (`apud`) | `#104` / `84e57059795da7927466d6834e733b1d61800631` | exact head `c20f1079640fd57329d07e0b9e7b05cb7ff95407`; `PASS=1`; 2/2 supported surfaces; no instrumentation incident |
+Relevant evidence is retained in PRs #59–#75. Real implementation defects fixed during this campaign remain valid fixes.
 
-## Citation-family N6 status
+However N6 is **not marked DONE at this checkpoint**. Before closure, reconcile the family evidence against the complete pre-textual atomic scope, including cross-cutting reduced typography, catalog-card policy and deposit/pagination boundaries. The result must explicitly classify every residual as bounded, manual, conditional, project-policy or assigned to a later phase.
 
-The dedicated citation rulesets currently present in `normativa/locator-audit-citations.json` are now covered by bounded N6 final-PDF evidence:
+### N7 — layout, pagination, sections and footnotes
 
-- `citations.direct-short` → #96
-- `citations.direct-source` → #98
-- `citations.indirect-source` → #100
-- `citations.ufc-system` → #102
-- `citations.apud` → #104
-- `citations.direct-long` → #94
+Current bounded positive coverage: **15/39 = 38.5%**.
 
-This statement is about dedicated measured N6 evidence only; it does not promote proof-state and must be rederived if the citation contract changes.
+Already covered:
 
-## Latest closed increment: citation of citation (`apud`)
+- section family: PRs #77, #79/#80, #82, #84, #86, #88, #90;
+- body paragraph: #92;
+- three core pagination predicates inherited from the pre-textual pagination scenario.
 
-Evidence PR `#104`, squash merge `84e57059795da7927466d6834e733b1d61800631`.
+The 39-rule rederivation includes A4, recto/verso margins, text color, body font family/size, body spacing, paragraph behavior, reduced-size footnote/pagination contexts, section rules, pagination rules and footnotes.
 
-Stable base: `a4938f306a9b72899c05f4671a919a1fd2f42b00`.
+Do not use the earlier `15/34` count.
 
-Final exact audited head: `c20f1079640fd57329d07e0b9e7b05cb7ff95407`.
+### N8 — citations and references
 
-Ruleset and exact rule:
+Current bounded positive coverage: **12/19 = 63.2%**.
 
-- `citations.apud`
-- `citation.apud.presentation`
-- stored predicate: `apud_supported = true`
-- normativity: `required-when-applicable`
-- locator status: `PARTIAL_WITH_REASON`
-- UFC Guia de Citações 2025 `2.3.3, p. 11`: `VERIFIED`
-- exact authoritative ABNT NBR 10520:2023 clause text remains `UNAVAILABLE_WITH_REASON` in the repository/public evidence corpus.
+Citation predicates are covered by #94, #96, #98, #100, #102 and #104. References still require bounded reconciliation for layout, DOI and online-access predicates. The cross-cutting reduced-size long-quotation rule is also part of the N8 work map.
 
-Supported rendering routes used by the evidence:
+`abntexto-ufc/compat-nbr6023-2025.def` is active temporary compatibility code and must be explicitly audited during N8 rather than assumed correct because bibliography regressions pass.
 
-- parenthetical: `\apud[121]{eco1983}[147]{koche2009}`
-- textual: `\textapud{eco1983}{koche2009}`
-- bibliography fixture: `tests/fixtures/referencias-v2.bib` via `\ufcbibliografia`
+Do not use the earlier `12/18` count.
 
-Final exact-head CI:
+### Normative currency
 
-- Normative source contract run `32921837629`: SUCCESS; job `98036787034`
-- LaTeX preflight run `32921837576`: SUCCESS
-- objects/bibliography job `98036786993`: SUCCESS; `PASS=8 FAIL=0 SKIP=0`
-- post-textual job `98036786812`: SUCCESS
-- reference document job `98036787035`: SUCCESS
-- profile matrix job `98036787400`: SUCCESS including PDF/A-2b
-- structural job `98036786955`: SUCCESS
-- aggregate `latex-preflight` job `98038148107`: SUCCESS
-- `N6-EVIDENCE apud-presentation-summary PASS=1 surfaces=2 supported_surfaces=2/2`
+The current repository state correctly records `ABNT NBR 14724:2024` with the corrected version dated 2025-04-01. No N1/N2 reopening is required for this point.
 
-Measured final-PDF result:
+Current technical-edition policy remains governed by `normativa/version-policy.json` and `docs/VIGENCIA-NORMATIVA.md`.
 
-- parenthetical surface preserved original source `Eco/1983`, `apud`, and consulted source `Koche/2009`; bounded window contained 9 words;
-- textual surface preserved the same required identification; bounded window contained 5 words;
-- both surfaces reported `apud_supported=true`;
-- locator survival (`121`, `147`), punctuation, token order, typography/italics and exact parenthetical/textual form remained observational only;
-- `exact_apud_format_not_strengthened=true` and `positive_fixture_evidence_only=true`.
+### M1 — validator Pages migration
 
-Instrumentation / implementation history:
+M1 is **DONE**.
 
-- the exact initial head passed the bounded oracle without fixture/instrumentation correction;
-- no class/runtime implementation correction was required.
+The current workflow uses Node 24 and the intended Pages actions. Main-branch run `32922391042` completed both `check` and `deploy`; the deployment log reports success and evaluates the environment URL as `https://tiagosombrra.github.io/modelo-latex-ufc/`.
 
-No class/runtime implementation, normative value, locator, N5 tolerance, compatibility mapping or proof-state changed in this increment.
+### Distribution / CTAN track
 
-## N6 remaining work
+- D0–D4: DONE.
+- D5 rehearsal: validated historically in PR #36 only.
+- D5 final: BLOCKED by N15.
+- D6 CTAN resubmission: BLOCKED by final D5.
 
-Continue with bounded, independently measurable components. Preferred order after citation-family closure:
+PR #36 must not become the final release branch. It is an old rehearsal and is far behind current `main`; create a fresh D5 final branch from the N15-approved SHA.
 
-1. object/table dimensions;
-2. post-textual dimensions not already covered by bounded evidence;
-3. deposit/distribution-related evidence measurable from the relevant final artifact or institutional workflow.
+Issue #18 (bit-reproducible reference PDF metadata/ID) remains open and must receive an explicit release-blocking/non-blocking decision before final D5.
 
-Closed N6 scopes must not be reopened without evidence of regression or a changed normative source.
+The UFC institutional mark remains in the source repository but is excluded from generated public/CTAN bundles. Documentation should say **externalized from public/CTAN bundles**, not removed from the repository.
 
-## Immediate next bounded increment
+## Documentation maintenance policy
 
-No object/table ruleset is preselected in this documentation checkpoint.
+Keep the active documentation surface small:
 
-After this handoff update is merged, rederive remaining N6 object/table candidates from the then-current `main`, full normative contract and relevant locator-audit files. Select the next bounded scope only from that rederived state; do not assume a candidate from chat history.
+- `README.md` — user-facing usage and project entry point;
+- `docs/NORMAS.md` — normative human map;
+- `docs/VIGENCIA-NORMATIVA.md` — normative currency/precedence;
+- `docs/HANDOFF-V2.2.0.md` — only dynamic roadmap/audit state document;
+- `docs/README-CTAN.md`, `docs/CHANGELOG-CTAN.md`, `docs/ctan-example.tex` — distribution artifacts;
+- `docs/history/` — immutable historical audits that still have archival value.
 
-## Required PR discipline
+Do not add separate progress, checkpoint, status, roadmap or generic audit Markdown files when the information belongs in this handoff. Detailed evidence belongs in machine-readable files, tests, PRs and Actions logs.
 
-Every bounded audit PR must record stable base SHA, exact audited head SHA, complete rule scope, fixture/measurement strategy, workflow/job IDs, structured `N6-EVIDENCE`, and an explicit statement about normative values/locators/tolerances/proof-state. Merge only on the unchanged audited head with `behind_by=0`; then update this handoff before the next evidence branch.
+## Commit and PR discipline
 
-## CTAN / release state
+For roadmap work:
 
-Technical blockers already remediated for v2.2.0:
+1. branch from the exact stable `main`;
+2. define one bounded scope and its exact rule IDs;
+3. add/update scenario, fixture, checker and gate only as required;
+4. run the relevant source contract and CI;
+5. verify the final PR head did not move and `behind_by=0`;
+6. squash merge using `expected_head_sha`;
+7. update this handoff only when the roadmap state or next action materially changes.
 
-- canonical package/class identity is `abntexto-ufc`;
-- legacy identity remains only through compatibility surface outside the canonical CTAN package;
-- UFC coat of arms is externalized from public/CTAN archives;
-- CTAN archive is limited to canonical runtime, essential documentation and portable example;
-- archive/asset identity guards and allowlists are present;
-- D5 distribution rehearsal exists in PR #36.
-
-Do not tag or publish v2.2.0 from the rehearsal. Final D5 must run on the N15-approved final source tree; D6 CTAN resubmission follows that certification.
-
-## M1 state
-
-Implementation is complete through PR #19: Node 24 migration, `configure-pages` v6, `upload-pages-artifact` v5, `deploy-pages` v5, and repository `has_pages=true`.
-
-M1 remains `IMPLEMENTED`, not formally `DONE`, until explicit Pages/runtime/deployment evidence is reviewed and recorded.
-
-## Open release-adjacent items
-
-- PR #36 remains D5 distribution rehearsal only.
-- Issue #18 remains open for bit-reproducible PDF differences (`CreationDate`, `ModDate`, PDF `/ID`) although pages/text/fonts/images were identical; reassess release-blocking status under the final public bundle policy.
-- D5 final remains blocked by N15.
-- D6 CTAN resubmission remains blocked by final D5.
-
-## How to resume
-
-Read, in order:
-
-1. this file;
-2. current `main` SHA and open PRs;
-3. latest bounded audit PR body/comments and exact-head workflow runs;
-4. current full contract, relevant locator ruleset and N5 oracle policy for the next scope.
-
-Do not reconstruct state primarily from old chats. Git history, this handoff and exact CI evidence are authoritative.
+Do not create a documentation checkpoint after every evidence PR merely to record its merge SHA. PR history and Git already provide that detail.
 
 ## Next action
 
-Merge this documentation checkpoint. Then, from the resulting stable `main`, rederive remaining N6 object/table rulesets and select the next bounded evidence scope from current contract/locator state. Do not create the next evidence branch before that rederivation.
+Before starting new N7/N8/N9 evidence, perform **N6 closure reconciliation** against the complete current atomic contract and existing positive pre-textual evidence. Reuse existing regressions where they measure the exact predicate; add new bounded evidence only for genuine uncovered predicates.
+
+If N6 closes cleanly, proceed in canonical order: N7 → N8 → N9 → N10 → N11 → N12 → N13 → N14 → N15 → D5 final → D6.

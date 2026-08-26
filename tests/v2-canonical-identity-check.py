@@ -31,8 +31,6 @@ TEXT_SUFFIXES = {
 }
 LEGACY_FULL_FILE_EXEMPT = {
     "ufctex.cls",
-    "docs/AUDITORIA-FINAL-V2.1.0.md",
-    "docs/AUDITORIA-V2.md",
     "docs/CHANGELOG-CTAN.md",
     "tests/v2-build-path-check.sh",
     "tests/v2-canonical-identity-check.py",
@@ -45,6 +43,9 @@ LEGACY_FULL_FILE_EXEMPT = {
     "tests/v2-repository-audit.py",
     "tools/build-release-bundles.py",
 }
+LEGACY_FULL_DIRECTORY_EXEMPT = (
+    "docs/history/",
+)
 LEGACY_DOCUMENTATION_EXEMPT = {
     "README.md": (
         re.compile(r"ufctex\.cls.*(?:shim|compat)", re.IGNORECASE),
@@ -73,6 +74,8 @@ def audit_global_identity(errors: list[str]) -> None:
             continue
         relative = path.relative_to(ROOT).as_posix()
         if relative in LEGACY_FULL_FILE_EXEMPT:
+            continue
+        if relative.startswith(LEGACY_FULL_DIRECTORY_EXEMPT):
             continue
 
         text = path.read_text(encoding="utf-8", errors="strict")
