@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "phase": "N7",
+  "component": "footnote-separator",
+  "rules": [
+    "footnote.separator.length"
+  ],
+  "locator_rulesets": {
+    "footnote.separator.length": "footnotes.separator"
+  },
+  "markers": {
+    "margin_control": "UFCN7SeparatorMargin",
+    "footnote_text": "UFCN7SeparatorFootnote"
+  },
+  "measurement": {
+    "vector_tool": "pdftocairo -svg",
+    "text_tool": "pdftotext -bbox-layout",
+    "origin_reference": "same-document left-margin text marker"
+  }
+}
