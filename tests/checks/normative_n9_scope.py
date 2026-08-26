@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -17,6 +18,14 @@ TARGET_CATEGORIES = {"objects", "equations", "code-algorithms"}
 EXPECTED_PROJECT_POLICY = {
     "code.listing.project-policy",
     "algorithm.project-policy",
+}
+PR_CHECK_SCRIPTS = {
+    "objects": "tests/v2-object-check.sh",
+    "table-ibge": "tests/v2-table-ibge-check.sh",
+    "documentary-source": "tests/v2-documentary-source-check.sh",
+    "normative-complement": "tests/v2-normative-complement-check.sh",
+    "math": "tests/v2-math-check.sh",
+    "code-typography": "tests/v2-code-typography-check.sh",
 }
 
 
@@ -74,6 +83,52 @@ def verify_evidence(group: dict[str, Any]) -> None:
             )
 
 
+def pr_selected_checks(relative: str) -> set[str]:
+    path = ROOT / relative
+    if not path.is_file():
+        fail(f"PR workflow not found: {relative}")
+    source = path.read_text(encoding="utf-8", errors="replace")
+    if "pull_request:" not in source:
+        fail(f"PR workflow no longer declares pull_request: {relative}")
+
+    selected: set[str] = set()
+    for match in re.findall(r"--only\s+([A-Za-z0-9_.-]+(?:,[A-Za-z0-9_.-]+)*)", source):
+        selected.update(item for item in match.split(",") if item)
+    if not selected:
+        fail(f"no tests/run.py --only selections found in PR workflow: {relative}")
+    return selected
+
+
+def verify_bounded_pr_checks(
+    group: dict[str, Any], selected_checks: set[str]
+) -> list[str]:
+    required = group.get("required_pr_checks")
+    if not isinstance(required, list) or not required or not all(
+        isinstance(check, str) and check for check in required
+    ):
+        fail(f"group {group.get('id')}: bounded mapping requires required_pr_checks")
+    if len(required) != len(set(required)):
+        fail(f"group {group.get('id')}: duplicate required_pr_checks")
+
+    missing = sorted(set(required) - selected_checks)
+    if missing:
+        fail(
+            f"group {group.get('id')}: bounded evidence is outside PR preflight: "
+            + ", ".join(missing)
+        )
+
+    evidence = set(group["evidence"])
+    for check in required:
+        script = PR_CHECK_SCRIPTS.get(check)
+        if script is None:
+            fail(f"group {group.get('id')}: unknown bounded PR check {check}")
+        if script not in evidence:
+            fail(
+                f"group {group.get('id')}: PR check {check} is not tied to its evidence script {script}"
+            )
+    return required
+
+
 def main() -> None:
     scenario = load_json(SCENARIO)
     if scenario.get("schema_version") != 1 or scenario.get("phase") != "N9":
@@ -89,6 +144,10 @@ def main() -> None:
     if not isinstance(cross_cutting, list) or len(cross_cutting) != 4:
         fail("expected exactly four cross-cutting reduced-size rules")
     cross_cutting_set = set(cross_cutting)
+    pr_workflow = derivation.get("pr_workflow")
+    if not isinstance(pr_workflow, str) or not pr_workflow:
+        fail("PR workflow path is required")
+    selected_pr_checks = pr_selected_checks(pr_workflow)
 
     policy = scenario.get("policy")
     required_policy = (
@@ -98,8 +157,11 @@ def main() -> None:
         "semantic_presence_or_routing_may_use_rendered_text_and_generated_lists",
         "project_policy_capabilities_remain_non_normative",
         "existing_bounded_mapping_does_not_change_proof_state",
+        "existing_bounded_requires_pr_preflight_check",
     )
-    if not isinstance(policy, dict) or not all(policy.get(key) is True for key in required_policy):
+    if not isinstance(policy, dict) or not all(
+        policy.get(key) is True for key in required_policy
+    ):
         fail("N9 evidence policy drifted")
 
     contract = load_full_contract()
@@ -141,7 +203,9 @@ def main() -> None:
             if rule.get("values") != {"supported": True, "normative_claim": False}:
                 fail(f"{rule_id}: project-policy values drifted: {rule.get('values')}")
         elif rule.get("authority") != "normative":
-            fail(f"{rule_id}: unexpected non-normative authority {rule.get('authority')}")
+            fail(
+                f"{rule_id}: unexpected non-normative authority {rule.get('authority')}"
+            )
 
     expected_cross = {
         "font.size.reduced.illustration-caption",
@@ -158,6 +222,7 @@ def main() -> None:
     classifications: Counter[str] = Counter()
     bounded_rules: list[str] = []
     support_rules: list[str] = []
+    bounded_pr_checks: set[str] = set()
     for group in groups:
         classification = group.get("classification")
         if classification not in {"existing-bounded-positive", "support-only"}:
@@ -167,12 +232,23 @@ def main() -> None:
         classifications[classification] += count
         if classification == "existing-bounded-positive":
             if "reason" in group:
-                fail(f"group {group.get('id')}: bounded mapping should use explicit evidence, not a support reason")
+                fail(
+                    f"group {group.get('id')}: bounded mapping should use explicit evidence, not a support reason"
+                )
+            bounded_pr_checks.update(
+                verify_bounded_pr_checks(group, selected_pr_checks)
+            )
             bounded_rules.extend(group["rule_ids"])
         else:
+            if "required_pr_checks" in group:
+                fail(
+                    f"group {group.get('id')}: support-only group cannot claim required PR checks"
+                )
             reason = group.get("reason")
             if not isinstance(reason, str) or not reason:
-                fail(f"group {group.get('id')}: support-only classification requires a reason")
+                fail(
+                    f"group {group.get('id')}: support-only classification requires a reason"
+                )
             support_rules.extend(group["rule_ids"])
 
     expected_counts = scenario.get("expected_counts")
@@ -204,6 +280,11 @@ def main() -> None:
     print(
         "N9-EVIDENCE support-only rule_ids="
         + json.dumps(sorted(support_rules), ensure_ascii=False)
+    )
+    print(
+        "N9-EVIDENCE pr-preflight-required check_ids="
+        + json.dumps(sorted(bounded_pr_checks), ensure_ascii=False)
+        + f" workflow={pr_workflow}"
     )
     print(
         "N9-EVIDENCE authority-boundary project_policy_rule_ids="
