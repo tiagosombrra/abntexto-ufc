@@ -64,8 +64,13 @@ for engine in pdflatex lualatex; do
         echo "$job: rota da ficha alterou indevidamente a contagem lógica."
         exit 1
       }
-      grep -Fq 'UFC-TEXT-PAGE=2' "$job.log" || {
-        echo "$job: texto não preservou a contagem lógica após a rota da ficha."
+
+      expected_text_page=2
+      if [ "$mode" = "frente-verso" ] && [ "$card_mode" = "nao" ]; then
+        expected_text_page=3
+      fi
+      grep -Fq "UFC-TEXT-PAGE=$expected_text_page" "$job.log" || {
+        echo "$job: página lógica textual inesperada; esperado $expected_text_page."
         exit 1
       }
 
@@ -98,10 +103,14 @@ else:
     text_pages = [index for index, page in enumerate(norm) if text_marker in page]
     if len(text_pages) != 1:
         raise SystemExit(f'{job}: marcador textual ausente ou duplicado com ficha desabilitada.')
-    if text_pages[0] <= 0:
-        raise SystemExit(f'{job}: texto não aparece depois da folha de rosto com ficha desabilitada.')
-    if mode == 'anverso' and text_pages[0] != 1:
-        raise SystemExit(f'{job}: modo anverso criou página física inesperada com ficha desabilitada.')
+    expected_physical_index = 1 if mode == 'anverso' else 2
+    if text_pages[0] != expected_physical_index:
+        raise SystemExit(
+            f'{job}: texto em página física inesperada com ficha desabilitada; '
+            f'esperado índice {expected_physical_index}, obtido {text_pages[0]}.'
+        )
+    if mode == 'frente-verso' and (len(norm) != 3 or norm[1]):
+        raise SystemExit(f'{job}: frente-verso sem ficha deve preservar verso físico em branco antes do texto.')
 PY
     done
   done
