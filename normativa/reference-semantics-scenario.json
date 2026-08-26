@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "phase": "N8",
+  "component": "reference-semantics",
+  "rules": [
+    "references.doi.when-present",
+    "references.online.url-access"
+  ],
+  "locator_rulesets": {
+    "references.doi.when-present": "references.doi",
+    "references.online.url-access": "references.online-access"
+  },
+  "entries": {
+    "references.doi.when-present": {
+      "bib_key": "identificadores",
+      "marker": "Identificadores persistentes em referências",
+      "doi": "10.1234/exemplo.2025.1"
+    },
+    "references.online.url-access": {
+      "bib_key": "eletronico-sem-publicacao",
+      "marker": "Preservação de documentos digitais",
+      "url": "https://example.org/preservacao",
+      "access_date": "2026-08-19"
+    }
+  },
+  "compatibility_boundary": {
+    "file": "abntexto-ufc/compat-nbr6023-2025.def",
+    "general_doi_url_formatting": "delegated-to-biblatex-abnt",
+    "forbid_global_doi_url_formatter_override": true,
+    "custom_driver_macro_use_is_allowed": true
+  },
+  "evidence_policy": {
+    "positive_applicable_cases_only": true,
+    "entry_local_evidence": true,
+    "full_reference_string_is_not_a_predicate": true,
+    "engine_matrix_is_deferred_to_N12": true
+  }
+}
