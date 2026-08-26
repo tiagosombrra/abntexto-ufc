@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "phase": "N6",
+  "component": "apud-presentation",
+  "locator_ruleset": "citations.apud",
+  "rules": [
+    "citation.apud.presentation"
+  ],
+  "markers": {
+    "parenthetical_before": "N6APUPRE",
+    "parenthetical_after": "N6APUPOST",
+    "textual_before": "N6APTPRE",
+    "textual_after": "N6APTPOST"
+  },
+  "fixtures": {
+    "parenthetical": {
+      "original_citation_key": "eco1983",
+      "consulted_citation_key": "koche2009",
+      "original_tokens": ["Eco", "1983"],
+      "apud_token": "apud",
+      "consulted_tokens": ["Koche", "2009"]
+    },
+    "textual": {
+      "original_citation_key": "eco1983",
+      "consulted_citation_key": "koche2009",
+      "original_tokens": ["Eco", "1983"],
+      "apud_token": "apud",
+      "consulted_tokens": ["Koche", "2009"]
+    }
+  },
+  "calibration": {
+    "support": "positive final-PDF evidence requires original source, apud indication and consulted source in each bounded generated citation window",
+    "excluded": "locator survival, punctuation, token order, italics and exact parenthetical/textual form are observational only"
+  }
+}
