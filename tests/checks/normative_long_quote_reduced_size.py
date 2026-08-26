@@ -53,6 +53,13 @@ def main() -> None:
     if scenario != expected_scenario:
         fail(f"scenario drift: {scenario}")
 
+    expected_source_path = ROOT / scenario["source_evidence"]
+    if args.source_evidence.resolve() != expected_source_path.resolve():
+        fail(
+            f"unexpected source evidence path: {args.source_evidence} != "
+            f"{scenario['source_evidence']}"
+        )
+
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
     rule = rules.get(RULE_ID)
@@ -83,10 +90,16 @@ def main() -> None:
     source = load_json(args.source_evidence)
     if (
         source.get("schema_version") != 1
+        or source.get("phase") != "N6"
         or source.get("component") != "long-quotation"
         or source.get("result") != "PASS"
     ):
         fail("source long-quotation evidence is not a successful compatible payload")
+    if args.commit_sha and source.get("source_commit_sha") != args.commit_sha:
+        fail(
+            f"source evidence commit drift: {source.get('source_commit_sha')} != "
+            f"{args.commit_sha}"
+        )
 
     matches = [
         item
@@ -148,7 +161,8 @@ def main() -> None:
             "context": "long-quote",
             "shared_measurement_with": SOURCE_RULE_ID,
             "independent_physical_sample": False,
-            "source_evidence": str(args.source_evidence),
+            "source_evidence": scenario["source_evidence"],
+            "source_commit_sha": source.get("source_commit_sha"),
             "samples": normalized_samples,
         },
         "tool": source_item.get("tool"),
