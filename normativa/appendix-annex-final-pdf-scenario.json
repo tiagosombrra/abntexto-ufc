@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "phase": "N10",
+  "component": "appendix-annex-final-pdf",
+  "rules": [
+    "appendix.page.own",
+    "appendix.heading.case",
+    "appendix.heading.weight",
+    "appendix.heading.font-size",
+    "appendix.heading.alignment",
+    "annex.page.own",
+    "annex.heading.case",
+    "annex.heading.weight",
+    "annex.heading.font-size",
+    "annex.heading.alignment",
+    "appendix.identification.pattern",
+    "annex.identification.pattern",
+    "pagination.appendix-annex.continuous"
+  ],
+  "fixture": "tests/normativa/appendix-annex-final-pdf.tex",
+  "engine": "pdflatex",
+  "engine_matrix_deferred_to": "N12",
+  "page_control": {
+    "logical_start": 70,
+    "text_marker": "N10TEXTPAGE"
+  },
+  "font_weight_calibration": {
+    "regular": "N10REGCAL",
+    "bold": "N10BOLDCAL"
+  },
+  "appendices": [
+    {
+      "letter": "A",
+      "source_title": "N10AppendixAlpha",
+      "rendered_title": "N10APPENDIXALPHA",
+      "body_marker": "N10APPENDIXBODYALPHA"
+    },
+    {
+      "letter": "B",
+      "source_title": "N10AppendixBeta",
+      "rendered_title": "N10APPENDIXBETA",
+      "body_marker": "N10APPENDIXBODYBETA"
+    }
+  ],
+  "annexes": [
+    {
+      "letter": "A",
+      "source_title": "N10AnnexAlpha",
+      "rendered_title": "N10ANNEXALPHA",
+      "body_marker": "N10ANNEXBODYALPHA"
+    },
+    {
+      "letter": "B",
+      "source_title": "N10AnnexBeta",
+      "rendered_title": "N10ANNEXBETA",
+      "body_marker": "N10ANNEXBODYBETA"
+    }
+  ],
+  "evidence_policy": {
+    "positive_applicable_cases_only": true,
+    "exact_heading_spacing_not_frozen": true,
+    "exact_heading_vertical_position_not_frozen": true,
+    "exact_dash_glyph_not_frozen": true,
+    "physical_page_delta_is_observational": true,
+    "proof_state_changed": false
+  }
+}
