@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "purpose": "Validation-mode exceptions for atomic rules whose normative value is preserved but whose evidence mechanism differs from the parent rule.",
+  "overrides": {
+    "font.size.reduced.catalog-card": {
+      "mode": "manual",
+      "checks": ["catalog-card"],
+      "scope": "external-pdf",
+      "reason": "The catalog card is supplied as an external PDF and included without restyling; the class controls inclusion, physical placement and pagination, not the PDF's internal typography."
+    }
+  }
+}
