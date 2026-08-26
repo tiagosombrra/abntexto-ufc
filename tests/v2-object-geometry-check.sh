@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+python3 tests/checks/normative_n9_scope.py
+
 fixture="tests/normativa/objeto-geometria.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
