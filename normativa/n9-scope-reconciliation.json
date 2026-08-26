@@ -11,7 +11,8 @@
       "font.size.reduced.table-caption",
       "font.size.reduced.table-source"
     ],
-    "pr_workflow": ".github/workflows/latex-preflight.yml"
+    "pr_workflow": ".github/workflows/latex-preflight.yml",
+    "scope_checker_check": "object-geometry"
   },
   "policy": {
     "full_contract_is_authoritative_for_scope": true,
@@ -20,7 +21,8 @@
     "semantic_presence_or_routing_may_use_rendered_text_and_generated_lists": true,
     "project_policy_capabilities_remain_non_normative": true,
     "existing_bounded_mapping_does_not_change_proof_state": true,
-    "existing_bounded_requires_pr_preflight_check": true
+    "existing_bounded_requires_pr_preflight_check": true,
+    "scope_checker_must_run_in_pr_preflight": true
   },
   "groups": [
     {
