@@ -131,3 +131,4 @@ sh tests/v2-short-direct-citation-evidence-check.sh
 sh tests/v2-direct-citation-source-evidence-check.sh
 sh tests/v2-indirect-citation-source-evidence-check.sh
 sh tests/v2-ufc-citation-system-evidence-check.sh
+sh tests/v2-apud-evidence-check.sh
