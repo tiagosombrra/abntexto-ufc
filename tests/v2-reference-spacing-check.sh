@@ -46,3 +46,5 @@ if not 0.99 <= stretch <= 1.01:
 
 print('Gate V2 de espaçamento das referências concluído.')
 PY
+
+sh tests/v2-reference-layout-evidence-check.sh

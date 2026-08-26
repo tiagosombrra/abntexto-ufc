@@ -1,0 +1,26 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = anverso
+}
+
+\ufcbibliografia{tests/fixtures/n8-reference-layout.bib}
+
+\begin{document}
+
+\textual
+
+\noindent UFCN8MarginControl\par
+
+\vspace{\baselineskip}
+\begingroup
+\singlesp
+\noindent UFCN8CalAlpha\\
+UFCN8CalBeta\par
+\endgroup
+
+\nocite{n8alpha,n8beta}
+\imprimirreferencias
+
+\end{document}

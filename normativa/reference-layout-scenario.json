@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "phase": "N8",
+  "component": "reference-layout",
+  "rules": [
+    "references.font.size",
+    "references.line-spacing",
+    "references.alignment",
+    "references.entry-spacing"
+  ],
+  "locator_ruleset": "references.layout",
+  "markers": {
+    "margin_control": "UFCN8MarginControl",
+    "calibration_alpha": "UFCN8CalAlpha",
+    "calibration_beta": "UFCN8CalBeta",
+    "entry_alpha": "UFCN8ALPHAREF",
+    "entry_beta": "UFCN8BETAREF"
+  },
+  "measurement": {
+    "bbox_tool": "pdftotext -bbox-layout",
+    "typography_tool": "pdftohtml -xml -zoom 1.0",
+    "line_spacing_calibration": "same-document 12pt single spacing",
+    "alignment_reference": "same-document left-margin control",
+    "entry_spacing_model": "one blank single-spaced line equals two baseline gaps between adjacent entry baselines"
+  }
+}
