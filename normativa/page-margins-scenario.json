@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "phase": "N7",
+  "component": "page-margins",
+  "rules": [
+    "page.a4",
+    "margin.recto.left",
+    "margin.recto.top",
+    "margin.recto.right",
+    "margin.recto.bottom",
+    "margin.verso.left",
+    "margin.verso.top",
+    "margin.verso.right",
+    "margin.verso.bottom"
+  ],
+  "locator_rulesets": {
+    "page.a4": "layout.page-a4",
+    "margin.recto.left": "layout.margin-recto",
+    "margin.recto.top": "layout.margin-recto",
+    "margin.recto.right": "layout.margin-recto",
+    "margin.recto.bottom": "layout.margin-recto",
+    "margin.verso.left": "layout.margin-verso",
+    "margin.verso.top": "layout.margin-verso",
+    "margin.verso.right": "layout.margin-verso",
+    "margin.verso.bottom": "layout.margin-verso"
+  },
+  "pages": {
+    "recto": 1,
+    "verso": 2
+  },
+  "measurement": {
+    "page_tool": "pdftotext -bbox-layout",
+    "vector_tool": "pdftocairo -svg",
+    "frame": "textwidth-by-textheight content frame",
+    "frame_paths_per_page": 4
+  }
+}

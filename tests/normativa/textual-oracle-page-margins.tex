@@ -1,0 +1,36 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  tipo = tese,
+  impressao = frente-verso,
+  capa = nao,
+  ficha-catalografica = nao,
+  brasao = nao
+}
+
+\newcommand{\ufctextareaframe}{%
+  \par
+  \begingroup
+  \topskip=0pt
+  \offinterlineskip
+  \vbox to \textheight{%
+    \hrule width \textwidth height 0.4pt
+    \hbox to \textwidth{%
+      \vrule width 0.4pt height \dimexpr\textheight-0.8pt\relax depth 0pt
+      \hfil
+      \vrule width 0.4pt height \dimexpr\textheight-0.8pt\relax depth 0pt
+    }%
+    \hrule width \textwidth height 0.4pt
+  }%
+  \endgroup
+}
+
+\begin{document}
+\pagestyle{empty}
+\textual
+
+\ufctextareaframe
+\clearpage
+\ufctextareaframe
+
+\end{document}
