@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -66,6 +67,8 @@ CHECKS = (
     Check("multivolume", "Multi-volume documents", ("sh", "tests/v2-multivolume-check.sh")),
     Check("catalog-card", "Catalog card", ("sh", "tests/v2-catalog-card-check.sh")),
 )
+
+EVIDENCE_PATTERN = re.compile(r"^N[0-9]+-EVIDENCE ")
 
 
 def parse_args() -> argparse.Namespace:
@@ -206,12 +209,12 @@ def print_failure_tail(result: Result, lines: int = 35) -> None:
         print(line)
 
 
-def print_structured_evidence(result: Result, prefix: str = "N6-EVIDENCE ") -> None:
+def print_structured_evidence(result: Result) -> None:
     path = Path(result.log)
     if not path.is_file():
         return
     content = path.read_text(encoding="utf-8", errors="replace").splitlines()
-    evidence = [line for line in content if line.startswith(prefix)]
+    evidence = [line for line in content if EVIDENCE_PATTERN.match(line)]
     if not evidence:
         return
     print(f"\n--- {result.name}: structured evidence ---")

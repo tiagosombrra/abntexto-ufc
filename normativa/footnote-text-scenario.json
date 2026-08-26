@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "phase": "N7",
+  "component": "footnote-text",
+  "rules": [
+    "font.size.reduced.footnote",
+    "footnote.line-spacing",
+    "footnote.hanging-alignment"
+  ],
+  "locator_rulesets": {
+    "font.size.reduced.footnote": "typography.reduced-font",
+    "footnote.line-spacing": "footnotes.line-spacing",
+    "footnote.hanging-alignment": "footnotes.hanging-alignment"
+  },
+  "markers": {
+    "calibration_top": "UFCN7FootCalOne",
+    "calibration_bottom": "UFCN7FootCalTwo",
+    "footnote_first": "UFCN7FootFirst",
+    "footnote_second": "UFCN7FootSecond",
+    "footnote_third": "UFCN7FootThird"
+  },
+  "calibration": {
+    "line_spacing_reference": "same-document 10 pt single-spaced two-line calibration",
+    "hanging_reference": "first text character of the first footnote line"
+  },
+  "excluded_residual": {
+    "rule": "footnote.separator.length",
+    "reason": "The 5 cm separator is vector content and requires a dedicated final-PDF vector measurement rather than text-box inference."
+  }
+}
