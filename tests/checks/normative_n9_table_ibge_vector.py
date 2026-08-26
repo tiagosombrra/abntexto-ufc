@@ -83,6 +83,45 @@ def candidate_dicts(rules: list[VectorRule]) -> list[dict[str, object]]:
     return [rule.to_dict() for rule in rules]
 
 
+def cluster_axis_rules(
+    rules: list[VectorRule],
+    *,
+    orientation: str,
+    cluster_tolerance_pt: float,
+) -> list[VectorRule]:
+    selected = [rule for rule in rules if rule.orientation == orientation]
+    if not selected:
+        return []
+    key = rule_center_y if orientation == "horizontal" else rule_center_x
+    selected.sort(key=key)
+    groups: list[list[VectorRule]] = []
+    for rule in selected:
+        if not groups:
+            groups.append([rule])
+            continue
+        current_center = sum(key(item) for item in groups[-1]) / len(groups[-1])
+        if abs(key(rule) - current_center) <= cluster_tolerance_pt:
+            groups[-1].append(rule)
+        else:
+            groups.append([rule])
+
+    logical: list[VectorRule] = []
+    for group in groups:
+        box = union_box(*(item.box for item in group))
+        length = box.width if orientation == "horizontal" else box.height
+        logical.append(
+            VectorRule(
+                page=group[0].page,
+                orientation=orientation,
+                box=box,
+                length=length,
+                thickness=max(item.thickness for item in group),
+                paint=f"logical-cluster:{len(group)}",
+            )
+        )
+    return logical
+
+
 def evidence(
     rule_id: str,
     passed: bool,
@@ -180,6 +219,7 @@ def main() -> None:
         min_length = float(parser_cfg["min_rule_length_pt"])
     except (KeyError, TypeError, ValueError) as exc:
         fail(f"invalid oracle configuration: {exc}")
+    logical_cluster_tol = max(axis_tol, max_thickness)
 
     markers = scenario.get("markers", {})
     expected_marker_keys = {
@@ -224,7 +264,7 @@ def main() -> None:
     content_right = max(header_right.x_max, header_left.x_max)
 
     try:
-        rules = vector_rules(
+        raw_rules = vector_rules(
             args.pdf,
             page=page_index,
             axis_tolerance_pt=axis_tol,
@@ -234,8 +274,18 @@ def main() -> None:
     except PDFMeasurementError as exc:
         fail(str(exc))
 
-    horizontal = [rule for rule in rules if rule.orientation == "horizontal"]
-    vertical = [rule for rule in rules if rule.orientation == "vertical"]
+    raw_horizontal = [rule for rule in raw_rules if rule.orientation == "horizontal"]
+    raw_vertical = [rule for rule in raw_rules if rule.orientation == "vertical"]
+    horizontal = cluster_axis_rules(
+        raw_rules,
+        orientation="horizontal",
+        cluster_tolerance_pt=logical_cluster_tol,
+    )
+    vertical = cluster_axis_rules(
+        raw_rules,
+        orientation="vertical",
+        cluster_tolerance_pt=logical_cluster_tol,
+    )
     covering = [
         rule for rule in horizontal
         if rule.box.x_min <= content_left + horizontal_tol
@@ -304,6 +354,22 @@ def main() -> None:
 
     open_sides_pass = boundaries_valid and not side_verticals
     body_grid_pass = boundaries_valid and not body_horizontal_grid and not body_vertical_grid
+
+    marker_inventory = {
+        key: value[1].box.to_dict()
+        for key, value in found.items()
+    }
+    vector_inventory = {
+        "logical_cluster_tolerance_pt": logical_cluster_tol,
+        "raw_horizontal": candidate_dicts(raw_horizontal),
+        "raw_vertical": candidate_dicts(raw_vertical),
+        "logical_horizontal": candidate_dicts(horizontal),
+        "logical_vertical": candidate_dicts(vertical),
+        "covering_table_content": candidate_dicts(covering),
+        "markers": marker_inventory,
+        "content_left_pt": round(content_left, 4),
+        "content_right_pt": round(content_right, 4),
+    }
 
     evidence_items = [
         evidence(
@@ -380,12 +446,7 @@ def main() -> None:
         "source_commit_sha": args.commit_sha or "",
         "pdf": str(args.pdf),
         "result": result,
-        "vector_rule_inventory": {
-            "total": len(rules),
-            "horizontal": len(horizontal),
-            "vertical": len(vertical),
-            "covering_table_content": len(covering),
-        },
+        "vector_rule_inventory": vector_inventory,
         "evidence": evidence_items,
         "proof_state_changed": False,
     }
@@ -393,9 +454,14 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
+        "N9-EVIDENCE table-ibge-vector-inventory "
+        + json.dumps(vector_inventory, ensure_ascii=False, sort_keys=True)
+    )
+    print(
         "N9-EVIDENCE table-ibge-vector-final-pdf-summary "
         f"PASS={counts.get('PASS', 0)} FAIL={counts.get('FAIL', 0)} "
-        f"horizontal_rules={len(horizontal)} vertical_rules={len(vertical)}"
+        f"raw_horizontal_rules={len(raw_horizontal)} raw_vertical_rules={len(raw_vertical)} "
+        f"logical_horizontal_rules={len(horizontal)} logical_vertical_rules={len(vertical)}"
     )
     for item in evidence_items:
         print(
