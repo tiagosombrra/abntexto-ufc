@@ -3,6 +3,8 @@ set -eu
 
 modern="tests/normativa/postextuais.tex"
 
+python3 tests/checks/normative_n10_scope.py
+
 cleanup_job() {
   job="$1"
   rm -f "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".glg "$job".glo \
@@ -98,7 +100,6 @@ PY
       exit 1
     }
   done
-
 done
 
 echo 'Gate V2 de pós-textuais concluído.'
