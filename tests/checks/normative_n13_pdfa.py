@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
@@ -150,12 +151,10 @@ def mutate_pdf(source: Path, target: Path) -> None:
     mutated = data.replace(SOURCE_MARKER, MUTATED_MARKER, 1)
     if len(mutated) != len(data):
         fail("controlled PDF/A mutation changed file length")
-    target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(mutated)
 
 
 def run_verapdf(pdf: Path, report: Path) -> tuple[str, int]:
-    report.parent.mkdir(parents=True, exist_ok=True)
     if shutil.which("verapdf"):
         completed = run(["verapdf", "-f", "2b", str(pdf)], stdout_path=report)
         return "local", completed.returncode
@@ -203,7 +202,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--json",
         type=Path,
-        default=ROOT / "artifacts" / "n13-negative" / "pdfa-validation.json",
+        default=Path("/tmp/abntexto-ufc-n13-pdfa.json"),
     )
     return parser.parse_args()
 
@@ -215,22 +214,23 @@ def main() -> None:
         fail(f"source PDF not found: {source}")
     require_positive_report(args.positive_report)
 
-    artifact_dir = ROOT / "artifacts" / "n13-pdfa"
-    mutated = artifact_dir / "documento-pdfa-part3-negative.pdf"
-    negative_report = artifact_dir / "verapdf-negative.xml"
+    with tempfile.TemporaryDirectory(prefix=".n13-pdfa-", dir=ROOT) as temp_dir_name:
+        temp_dir = Path(temp_dir_name)
+        mutated = temp_dir / "documento-pdfa-part3-negative.pdf"
+        negative_report = temp_dir / "verapdf-negative.xml"
 
-    mutate_pdf(source, mutated)
-    readability_runner = verify_readability_and_text_identity(source, mutated)
+        mutate_pdf(source, mutated)
+        readability_runner = verify_readability_and_text_identity(source, mutated)
 
-    runner, vera_exit = run_verapdf(mutated, negative_report)
-    root = load_xml(negative_report)
-    report = validation_report(root)
-    if report.attrib.get("isCompliant") != "false":
-        fail(f"veraPDF did not reject controlled PDF/A mutation (exit {vera_exit})")
+        runner, vera_exit = run_verapdf(mutated, negative_report)
+        root = load_xml(negative_report)
+        report = validation_report(root)
+        if report.attrib.get("isCompliant") != "false":
+            fail(f"veraPDF did not reject controlled PDF/A mutation (exit {vera_exit})")
 
-    rules = failed_rules(root)
-    if TARGET_RULE not in rules:
-        fail(f"veraPDF rejection did not include target rule {TARGET_RULE}; observed {rules}")
+        rules = failed_rules(root)
+        if TARGET_RULE not in rules:
+            fail(f"veraPDF rejection did not include target rule {TARGET_RULE}; observed {rules}")
 
     payload: dict[str, Any] = {
         "schema_version": 1,
