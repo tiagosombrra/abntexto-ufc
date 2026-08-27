@@ -1,14 +1,13 @@
 \ProvidesFile{abntexto-ufc/pretextuais-listas.def}[2026/08/27 UFC aligned definition lists]
 
-% Keep the semantic description-list API and page-breaking behavior, but use
-% enumitem's multiline style so the label box is top-aligned with the first
-% line of its definition.  The previous standard style visibly lowered the
-% abbreviation/symbol column relative to the definition column.
+% Keep the semantic description-list API and page-breaking behavior.  The
+% multiline/parleft combination places each label in a top-aligned paragraph
+% box, matching the first line of the corresponding definition.
 \RenewDocumentEnvironment{ufclistadefinicoes}{O{3cm}}
   {%
     \begin{description}[
       style=multiline,
-      align=left,
+      align=parleft,
       leftmargin=#1,
       labelwidth=\dimexpr#1-.3cm\relax,
       labelsep=.3cm,
