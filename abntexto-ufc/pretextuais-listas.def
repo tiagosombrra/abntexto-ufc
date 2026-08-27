@@ -1,33 +1,27 @@
 \ProvidesFile{abntexto-ufc/pretextuais-listas.def}[2026/08/27 UFC aligned definition lists]
 
-\RequirePackage{array}
-\RequirePackage{longtable}
-
-% Abbreviation/acronym and symbol lists are semantic two-column rows.
-% A description list boxes the label independently and can shift its baseline
-% relative to the definition.  Use a breakable table so both cells share the
-% same row baseline while preserving long-list page breaks.
+% Keep the semantic description-list API and page-breaking behavior, but use
+% enumitem's multiline style so the label box is top-aligned with the first
+% line of its definition.  The previous standard style visibly lowered the
+% abbreviation/symbol column relative to the definition column.
 \RenewDocumentEnvironment{ufclistadefinicoes}{O{3cm}}
   {%
-    \par
-    \setlength{\LTleft}{0pt}%
-    \setlength{\LTright}{0pt}%
-    \setlength{\LTpre}{0pt}%
-    \setlength{\LTpost}{0pt}%
-    \begin{longtable}{%
-      @{}%
-      >{\RaggedRight\arraybackslash}p{#1}%
-      @{\hspace{.3cm}}%
-      >{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-#1-.3cm\relax}%
-      @{}%
-    }%
+    \begin{description}[
+      style=multiline,
+      align=left,
+      leftmargin=#1,
+      labelwidth=\dimexpr#1-.3cm\relax,
+      labelsep=.3cm,
+      font=\normalfont,
+      itemsep=0pt,
+      parsep=0pt,
+      partopsep=0pt,
+      topsep=0pt
+    ]%
   }
-  {%
-    \end{longtable}%
-    \par
-  }
+  {\end{description}}
 
 \RenewDocumentCommand\ufclistaentrada{m m}
-  {\strut #1 & \strut #2 \tabularnewline}
+  {\item[#1] #2}
 
 \endinput
