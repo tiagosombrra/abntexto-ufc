@@ -59,9 +59,18 @@ grep -Eiq 'Introdu' documento.toc || {
   exit 1
 }
 
-if grep -Eiq 'resumo|abstract|lista de ilustra' documento.toc; then
-  echo 'Documento V2 falhou: elemento pré-textual entrou no Sumário.'
-  exit 1
-fi
+python3 <<'PY'
+import re
+from pathlib import Path
+
+toc = Path('documento.toc').read_text(encoding='utf-8', errors='replace')
+for title in ('RESUMO', 'ABSTRACT', 'LISTA DE ILUSTRAÇÕES'):
+    pattern = re.compile(
+        r'\\contentsline\s*\{[^}]+\}\s*\{' + re.escape(title) + r'\}\s*\{',
+        re.IGNORECASE,
+    )
+    if pattern.search(toc):
+        raise SystemExit(f'Documento V2 falhou: elemento pré-textual entrou no Sumário: {title}')
+PY
 
 echo 'Documento V2 de referência validado.'
