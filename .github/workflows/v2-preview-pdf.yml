@@ -1,0 +1,44 @@
+name: V2 preview PDF
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/v2-preview-pdf.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    name: Build v2.2.0 preview PDF
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Build reference PDF
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils
+            make clean
+            make compile
+            sh tests/v2-font-embedding-check.sh documento.pdf
+
+      - name: Validate PDF/A-2b
+        run: sh tests/v2-pdfa-check.sh documento.pdf
+
+      - name: Upload preview PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: abntexto-ufc-v2.2.0-list-alignment-preview
+          path: documento.pdf
+          if-no-files-found: error
+          retention-days: 1
