@@ -37,8 +37,9 @@
 % LaTeX 2026 loads the new block implementation whenever \DocumentMetadata is
 % present. Avoid enumitem-only description keys so PDF/A documents use the same
 % public UFC list API without depending on the incomplete enumitem emulation.
-% Keep labels as ordinary horizontal material: wrapping them in a top-aligned
-% parbox changes the label reference point and visibly lowers the first column.
+% Keep labels on the same baseline as their definitions and left-align the
+% first column at the text-area margin. The definition column keeps the public
+% 3 cm offset (label column plus 0.3 cm separation).
 \RenewDocumentEnvironment{ufclistadefinicoes}{O{3cm}}
   {%
     \begin{list}{}{%
@@ -51,7 +52,9 @@
       \setlength{\topsep}{0pt}%
       \setlength{\partopsep}{0pt}%
       \setlength{\listparindent}{0pt}%
-      \renewcommand*\makelabel[1]{\normalfont ##1}%
+      \renewcommand*\makelabel[1]{%
+        \makebox[\labelwidth][l]{\normalfont ##1}%
+      }%
     }%
   }
   {\end{list}}
