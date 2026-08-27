@@ -126,7 +126,7 @@ Stable mechanism state before PR #130 merge:
 - `citation-quotation-presentation` — REPRESENTED;
 - `vector-rule-geometry` — REPRESENTED;
 - `semantic-structural-observers` — REPRESENTED;
-- `text-typography-extraction` — represented by the ported PR #130 campaign, pending exact-head validation and merge;
+- `text-typography-extraction` — represented by the ported PR #130 campaign, pending merge;
 - `configuration-strict-rejection` — pre-existing behavior exists, but still needs machine-bound N13 receipt/evidence;
 - `pdf-pdfa-validation` — still requires controlled structurally valid non-conformity and validator-specific rejection evidence.
 
@@ -142,15 +142,24 @@ After stable-main preflight #941 closed the #134 compatibility blocker, PR #130 
 
 The fifth controlled negative case temporarily renders `UFCNSevenBodyAlpha` at 14 pt, requires successful pdfLaTeX compilation, and requires `normative_typography.py` to reject `font.size.body` with `N7-EVIDENCE rule=font.size.body status=FAIL`.
 
-Normative source contract #311 / run id `33081569884` is green on the ported head. LaTeX preflight #942 / run id `33081569864` is the exact-head validation run; do not merge #130 until that run is fully reconciled and the distribution blocker below is closed.
+Exact-head evidence on `6a7835b1a89508a7b5854249660a575972fc4901` is already green:
+
+- Normative source contract #311 / run id `33081569884` — SUCCESS;
+- LaTeX preflight #942 / run id `33081569864` — SUCCESS;
+- `body-font-size` — PASS with expected rule `font.size.body`;
+- N13 summary — `PASS=5 FAIL=0 selected=5 proof_state_changed=false`;
+- positive N11 — 5/5 bounded coverage, `proof_state_changed=false`;
+- structural suite — 14/14 PASS.
+
+Do not merge #130 yet. The distribution blocker below changes stable main first; #130 must then be ported once more to the resulting stable main so its final audited head is `behind_by=0`.
 
 No class implementation, normative values, locators, N5 tolerances, compatibility mappings, N12-certified workflow or proof-state are changed by the typography port.
 
 ### Remaining N13 sequence
 
-After the typography case is exact-head validated, merged and confirmed on stable main:
+After the typography case is merged and confirmed on stable main:
 
-1. machine-bind `configuration-strict-rejection` using structured receipt/evidence from the existing strict font checks;
+1. machine-bind `configuration-strict-rejection` using structured receipt/evidence from the existing strict font checks; `font-config` already executes before `negative-paths`, so the receipt can be consumed in the same coordinated gate without rerunning the font matrix;
 2. implement host-side PDF/A negative validation using a structurally readable PDF with controlled XMP non-conformity and veraPDF-specific rejection evidence;
 3. rederive the complete mechanism inventory;
 4. close N13 only if every declared mechanism is represented or explicitly reconciled;
@@ -175,18 +184,37 @@ Full stable-main preflight #941 / run id `33080352548` is fully green, including
 
 ## Distribution reference-corpus blocker — ACTIVE HOTFIX
 
-Stable-main Distribution preflight #219 / run id `33080343888` exposed one stale reference-corpus expectation after the #133 guide rewrite:
+Stable-main Distribution preflight #219 / run id `33080343888` first exposed a stale reference-corpus expectation after the #133 guide rewrite:
 
 - Gate T prerequisite — SUCCESS;
 - full `make preflight` — 30/31 checks PASS;
 - only `Reference corpus` failed;
 - exact failure: expected PDF marker `BASE NORMATIVA ADOTADA` was absent;
-- the document source defines `\subsection{Base normativa adotada}` and the same corpus checker already expects `Base normativa adotada` in the sumário;
-- all PDF, layout, N13 baseline, N11, object, bibliography and post-textual checks in that same release preflight passed.
+- the document source defines `\subsection{Base normativa adotada}` and the same corpus checker already expects `Base normativa adotada` in the sumário.
 
-This is a stale test-contract case expectation, not a class/normative/PDF defect. The hotfix changes only the body marker in `tests/v2-reference-corpus-check.sh` from the obsolete all-uppercase form to the exact subsection title `Base normativa adotada`. It does not remove the marker, weaken the corpus, change heading behavior or alter normative values.
+PR #135 was opened from stable main to repair the corpus checker without changing the class or document. Its initial functional fix changed the obsolete all-uppercase body marker to the exact subsection title. Normal PR LaTeX preflight #943 / run id `33082560287` was fully green.
 
-Do not merge PR #130 before this distribution hotfix is validated and merged. After the hotfix changes stable main, port/rebase #130 once more if required so its final audited head is `behind_by=0`.
+Because the distribution workflow does not run on ordinary PRs, ephemeral branch `release/v2.2.0-corpus-check` was pointed to the exact PR head `16d89a738d2c71f38d7e534a293229dd28a9dc70`. This triggered:
+
+- Gate T full LaTeX preflight #944 / run id `33084632832` — fully SUCCESS, including Overleaf/TeX Live 2025, Windows literal-font build/certification, structural suite and aggregate;
+- Distribution preflight #220 / run id `33084622421` — full `make preflight` again reached 30/31 PASS, proving that the `Base normativa adotada` correction passed.
+
+The only #220 failure was the next stale corpus assumption:
+
+`Corpus V2 falhou: líder pontilhado espaçado ausente em LISTA DE TABELAS: Tabela 1 — Organização didática dos componentes exercitados pelo documento de referência`
+
+The list entry is long enough to wrap. The previous helper required `marker + leader + page` on one physical `pdftotext -layout` line via `[^\n]*`, so a valid dotted leader on a continuation line was rejected. This is a checker line-wrapping defect, not evidence that the list lost its leader.
+
+The current PR #135 fix keeps the leader requirement strict but makes it entry-aware:
+
+- locate exactly one marker line within the intended list block;
+- collect that entry through continuation lines only until the next `Figura|Tabela|Código|Algoritmo N — ...` entry begins;
+- require the spaced dotted leader plus page number inside that bounded entry;
+- never allow the failed entry to borrow the leader of the next list entry.
+
+This remains a test-contract repair. It does not remove any required marker, remove the dotted-leader requirement, alter list rendering, change class behavior, change normative values, change N5 tolerances or change proof-state.
+
+Do not merge PR #130 before PR #135 is exact-head validated and merged. After #135 changes stable main, port #130 once more so its final audited head is `behind_by=0`.
 
 ## Normative currency
 
@@ -222,13 +250,15 @@ For roadmap PRs:
 
 ## Immediate next action
 
-1. validate and merge the isolated distribution reference-corpus hotfix from stable main `d10d28607487c5a8d7bca325f48201c6deea8a77`;
-2. require the corrected release/distribution preflight to pass, especially `Reference corpus`, bundle construction and Overleaf import proxy;
-3. inspect the resulting stable-main preflight/distribution runs;
-4. finish/reconcile PR #130 preflight #942, but re-port #130 onto the resulting new stable main before merge if it becomes behind;
-5. on the final #130 head require `body-font-size` PASS, N13 summary 5/5, positive N11 5/5, exact-head green CI and `behind_by=0`;
-6. squash-merge #130 and inspect stable main;
-7. continue N13 with machine-bound configuration-strict evidence;
-8. add host-side PDF/A negative evidence;
-9. perform final mechanism inventory reconciliation and close N13 only if all declared cells are represented or explicitly reconciled;
-10. advance to N14 only after N13 closure.
+1. validate PR #135 on its new exact head containing both corpus-checker repairs;
+2. update the ephemeral `release/v2.2.0-corpus-check` branch to that exact head and rerun the real distribution workflow;
+3. require Gate T full preflight green and distribution `make preflight` 31/31, then require release PDF/A, deterministic bundles, Overleaf import proxy and artifact upload green;
+4. require PR #135 exact head unchanged, expected two-file diff and `behind_by=0`, then squash merge with expected head SHA;
+5. inspect resulting stable-main full preflight and distribution runs;
+6. port PR #130 onto that new stable main without changing its three audited functional deltas;
+7. on final #130 head require source contract green, `body-font-size` PASS, N13 summary 5/5, positive N11 5/5, ordinary preflight green and `behind_by=0`;
+8. squash-merge #130 and inspect stable main;
+9. continue N13 with machine-bound configuration-strict evidence;
+10. add host-side PDF/A negative evidence;
+11. perform final mechanism inventory reconciliation and close N13 only if all declared cells are represented or explicitly reconciled;
+12. advance to N14 only after N13 closure.
