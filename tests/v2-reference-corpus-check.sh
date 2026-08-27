@@ -47,7 +47,7 @@ def normalize_pdf_text(value):
 
 
 def spaced_leader_pattern():
-    return r'(?:\.\s+){1,}\.\s*\d+\s*$'
+    return r'(?:\.\s+){1,}\d+\s*$'
 
 
 ENTRY_START = re.compile(r'^\s*(?:Figura|Tabela|Código|Algoritmo)\s+\d+\s+[—-]\s+')
