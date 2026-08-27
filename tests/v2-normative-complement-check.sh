@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+python3 tests/checks/normative_n12_matrix.py
+
 fixture="tests/normativa/normativa-complementar.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
