@@ -57,7 +57,7 @@ Guardrails:
 | N10 | post-textual elements and multivolume | DONE — 20/20 bounded positive coverage |
 | N11 | research-project profile / NBR 15287 | DONE — 5/5 bounded positive coverage |
 | N12 | profile, engine and font matrix | DONE — 20-cell factorized certification + orthogonality gate |
-| N13 | negative fixtures / negative-path validation | ACTIVE — typography PR #130 validated, blocked by distribution hotfix #135 |
+| N13 | negative fixtures / negative-path validation | ACTIVE — typography PR #130 validated, blocked by #135 distribution hotfix |
 | N14 | Web/Lite and CLI/Deep unification | PENDING |
 | N15 | full normative certification and release decision | PENDING |
 
@@ -157,7 +157,7 @@ No class implementation, normative values, locators, N5 tolerances, compatibilit
 
 After PR #130 is merged and confirmed on stable main:
 
-1. machine-bind `configuration-strict-rejection` using structured receipt/evidence from the existing strict font checks; `font-config` already executes before `negative-paths`, so the receipt can be consumed in the same coordinated gate without rerunning the expensive font matrix;
+1. machine-bind `configuration-strict-rejection` using structured receipt/evidence from the existing strict font checks;
 2. implement host-side PDF/A negative validation using a structurally readable PDF with controlled XMP non-conformity and veraPDF-specific rejection evidence;
 3. rederive the complete mechanism inventory;
 4. close N13 only if every declared mechanism is represented or explicitly reconciled;
@@ -167,81 +167,81 @@ After PR #130 is merged and confirmed on stable main:
 
 PR #133 converted the v2.2 reference PDF into the commented UFC academic-work guide while preserving class behavior and normative values. It squash-merged as `2cbd6d00318ba906e225fa37a4efb724300c3b4e`.
 
-The post-#133 full preflight #933 / run id `33076301572` exposed one LuaLaTeX/TeX Live 2025 overflow in the long direct CAPES Portaria nº 206/2018 URL. All other Linux, PDF/A, structural and Windows surfaces were green.
+PR #134 fixed the LuaLaTeX/TeX Live 2025 overflow in the CAPES Portaria URL:
 
-PR #134 fixed only that compatibility issue:
+- final exact head `05bf4c87ac4a7b711be71015c4b33222b53e67a2`;
+- squash merge / current stable main `d10d28607487c5a8d7bca325f48201c6deea8a77`;
+- no warning suppression or tolerance relaxation;
+- N12-certified `latex-preflight.yml` unchanged.
 
-- final exact head: `05bf4c87ac4a7b711be71015c4b33222b53e67a2`;
-- squash merge / current stable main: `d10d28607487c5a8d7bca325f48201c6deea8a77`;
-- the bibliography uses the shorter official CAPES administrative-act catalog URL;
-- no warning suppression or tolerance relaxation was introduced;
-- the N12-certified `latex-preflight.yml` was not modified.
-
-Full stable-main preflight #941 / run id `33080352548` is fully green, including reference/PDF-A, 12 profile PDFs/PDF-A, objects/bibliography, post-textuals, structural suite, Overleaf stable proxy, Windows literal-font build/certification and aggregate `latex-preflight`.
+Stable-main full preflight #941 / run id `33080352548` is fully green, including reference/PDF-A, 12 profile PDFs/PDF-A, objects/bibliography, post-textuals, structural suite, Overleaf stable proxy, Windows literal-font build/certification and aggregate `latex-preflight`.
 
 ## PR #135 — distribution reference-corpus hotfix — ACTIVE
 
 PR #135 is an isolated test-contract repair. It changes only `tests/v2-reference-corpus-check.sh` plus this canonical handoff. It must not alter class implementation, document rendering, normative values, locators, N5 tolerances, proof-state or the N12-certified workflow.
 
+The real distribution path has successively exposed four formatting-sensitive assumptions in the same reference-corpus checker. In each case, the remaining 30 checks passed and no class/rendering regression was established.
+
 ### Failure 1 — stale subsection case
 
-Stable-main Distribution preflight #219 / run id `33080343888` exposed the first stale corpus expectation:
+Distribution #219 / run id `33080343888`:
 
-- Gate T prerequisite — SUCCESS;
-- full `make preflight` — PASS=30, FAIL=1;
-- only `Reference corpus` failed;
-- checker expected `BASE NORMATIVA ADOTADA` although the guide source defines `\subsection{Base normativa adotada}`.
+- Gate T — SUCCESS;
+- `make preflight` — PASS=30, FAIL=1;
+- checker expected obsolete `BASE NORMATIVA ADOTADA` although the guide source defines `\subsection{Base normativa adotada}`.
 
-The first #135 repair changed only the obsolete body marker to the exact subsection title `Base normativa adotada`.
+Repair: require exact current marker `Base normativa adotada`.
 
-Normal PR preflight #943 passed. The ephemeral branch `release/v2.2.0-corpus-check` then ran the real distribution path on exact head `16d89a738d2c71f38d7e534a293229dd28a9dc70`:
+### Failure 2 — dotted leader required on same physical line
 
-- Gate T #944 / run id `33084632832` — fully SUCCESS, including Overleaf/TeX Live 2025 and Windows literal-font certification;
-- Distribution #220 / run id `33084622421` — again PASS=30, FAIL=1, proving that the subsection-marker repair itself passed.
+After failure 1, exact-head Gate T #944 / run id `33084632832` was fully green. Distribution #220 / run id `33084622421` again reached PASS=30, FAIL=1 and exposed a long `Tabela 1` entry whose leader appears on a continuation line.
 
-### Failure 2 — leader required on same physical line
+Repair: bound the search to a single list entry and include its continuation lines, so an entry cannot borrow a leader from the next item.
 
-The only #220 failure was:
+### Failure 3 — long title itself required on one physical line
 
-`Corpus V2 falhou: líder pontilhado espaçado ausente em LISTA DE TABELAS: Tabela 1 — Organização didática dos componentes exercitados pelo documento de referência`
+On exact head `1c53ca774e4dcb20b8e5876d9c604a4d9304e226`:
 
-The long list entry wraps. The checker used `marker + [^\n]* + leader`, which incorrectly required marker, leader and page on one `pdftotext -layout` physical line.
+- normal PR preflight #946 / run id `33086792227` — SUCCESS;
+- Gate T #947 / run id `33087104736` — SUCCESS after a selective Windows rerun; the first Windows attempt failed only because both CTAN installer sources failed before template compilation;
+- Distribution #221 / run id `33087095185` — PASS=30, FAIL=1.
 
-The second repair bounded the search to one list entry and allowed continuation lines, preserving the rule that the failed entry cannot borrow the dotted leader from a following entry.
+Failure: the complete long `Tabela 1 — Organização didática...` marker was still expected on one physical `pdftotext -layout` line.
 
-### Failure 3 — long marker itself required on one physical line
+Repair commit `0f00957e0a091f089cb40ea23916f8fe1d59295f`: parse each `Figura|Tabela|Código|Algoritmo N — ...` item as a bounded record, normalize all continuation lines, require exactly one matching title, and require leader/page within that same record.
 
-The second repair was tested on exact head `1c53ca774e4dcb20b8e5876d9c604a4d9304e226`.
+### Failure 4 — helper accidentally required at least two leader dots
 
-Evidence on that SHA:
+The bounded-record parser was tested on head `b1c4547c0c79d541116277b32fdb3ce07b1d5a45`.
 
-- normal PR LaTeX preflight #946 / run id `33086792227` — SUCCESS, including reference/PDF-A, 12 profile PDFs/PDF-A, objects/bibliography, post-textuals, structural suite and aggregate;
-- Gate T #947 / run id `33087104736`, first attempt — every Linux job and Overleaf/TeX Live 2025 passed; Windows failed before template compilation because both configured CTAN installer sources failed to download `install-tl.zip`;
-- #947 selective Windows rerun on the same SHA — SUCCESS; literal Times New Roman/Arial build passed, Unicode/embedding/PDF-A certification passed, and aggregate `latex-preflight` finished SUCCESS. This confirms the first Windows failure was transient external infrastructure, not a repository regression;
-- Distribution #221 / run id `33087095185` — again PASS=30, FAIL=1. All checks except `Reference corpus` passed.
+Evidence:
 
-The exact #221 corpus failure was:
+- normal PR preflight #949 / run id `33089210989` — SUCCESS;
+- Gate T #950 / run id `33089315096` — fully SUCCESS, including Overleaf/TeX Live 2025, Windows literal Times/Arial build, Unicode/embedding/PDF-A certification and aggregate;
+- Distribution #222 / run id `33089302508` — Gate T SUCCESS, `make preflight` again PASS=30, FAIL=1.
 
-`Corpus V2 falhou: esperado exatamente uma entrada para LISTA DE TABELAS: Tabela 1 — Organização didática dos componentes exercitados pelo documento de referência; encontradas 0.`
+Exact failure:
 
-Diagnosis: although the second repair allowed the dotted leader to appear on a continuation line, it still located the target by requiring the entire long marker to occur on one physical line. The long title itself wraps, so the target locator remained formatting-sensitive.
+`Corpus V2 falhou: 1 entrada(s) do sumário sem líder pontilhado espaçado: ANEXO B — ORIENTAÇÃO PARA DOCUMENTO EXTERNO EM PDF .                                    53`
 
-### Current robust parser design
+Diagnosis: `spaced_leader_pattern()` was `(?:\.\s+){1,}\.\s*\d+\s*$`, which requires at least two dot tokens because of the extra literal `\.` outside the repeated group. The long `ANEXO B` entry legitimately leaves room for only one leader dot before page 53.
 
-Functional checker commit before this handoff synchronization: `0f00957e0a091f089cb40ea23916f8fe1d59295f`.
+Current repair commit before this handoff synchronization: `314d10a3d07cbbea0d568d3374eaf43474f1b6e3`.
 
-`require_dotted_entry` now treats each list item as a record rather than a physical line:
+The pattern is now `(?:\.\s+){1,}\d+\s*$`: one or more spaced leader dots followed by the page number. This preserves the dotted-leader requirement while removing the accidental minimum of two dots. It does not accept an entry with no dot.
 
-1. delimit the intended list block;
-2. detect each entry start with `Figura|Tabela|Código|Algoritmo N — ...`;
-3. collect all physical continuation lines until the next entry start;
-4. normalize the complete entry record with the same PDF-text normalizer used elsewhere;
-5. require exactly one normalized entry containing the exact expected marker;
-6. require the spaced dotted leader plus page number inside that same normalized entry.
+### Current #135 contract
 
-This supports wrapping in both the title and the leader while keeping entry boundaries strict. A target cannot borrow the leader or page number from the next entry. The requirement is not weakened; only the accidental dependency on `pdftotext` physical line wrapping is removed.
+The checker now:
 
-The current final PR head after this handoff synchronization must be read from PR #135 before validation/merge; do not reuse `1c53ca...` as final evidence because the checker has changed since that run.
+1. validates the exact current subsection marker;
+2. treats list entries as bounded logical records rather than physical PDF-text lines;
+3. allows title and leader wrapping within the same record;
+4. requires the target title exactly once;
+5. requires at least one dotted-leader token plus page number inside that same entry;
+6. preserves all existing TOC/list case, alignment, corpus and navigation-file checks.
+
+The final PR head after this handoff commit must be read from PR #135 before validation/merge. Do not reuse earlier SHAs as final evidence.
 
 ## Normative currency
 
@@ -278,8 +278,8 @@ For roadmap PRs:
 ## Immediate next action
 
 1. read PR #135 final head after this handoff commit and require the diff to remain exactly two files;
-2. validate the final #135 head through normal PR preflight;
-3. point ephemeral `release/v2.2.0-corpus-check` to that exact head and run the real distribution path;
+2. validate that exact head through normal PR preflight;
+3. point ephemeral `release/v2.2.0-corpus-check` to the same SHA and run the real distribution path;
 4. require Gate T fully green on that exact SHA, including Overleaf/TeX Live 2025 and Windows literal-font build/certification;
 5. require distribution `make preflight` **31/31**, then release PDF/A, deterministic bundles, Overleaf import proxy and artifact upload all green;
 6. require `behind_by=0`, mark #135 ready and squash-merge with `expected_head_sha`;
