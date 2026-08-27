@@ -158,4 +158,11 @@ if grep -Eiq 'resumo|abstract|agradecimentos|dedicat[oó]ria|folha de aprova' pr
   exit 1
 fi
 
+python3 -m py_compile tests/checks/normative_n11_project_structure.py
+python3 tests/checks/normative_n11_project_structure.py \
+  projeto-15287.pdf \
+  --json artifacts/normative-project/project-structure-final-pdf.json \
+  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-unknown}}" \
+  --enforce
+
 echo 'Gate V2 NBR 15287:2025 concluído.'
