@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "phase": "N13",
+  "status": "ACTIVE_BASELINE",
+  "purpose": "Validate that existing normative oracles reject isolated controlled violations for the intended predicate rather than through incidental compile or runtime failures.",
+  "policy": {
+    "positive_baseline_required": true,
+    "compile_failure_counts_as_rejection": false,
+    "target_rejection_must_be_nonzero": true,
+    "exact_signature_required": true,
+    "failed_rule_evidence_required": true,
+    "mutations_are_temporary": true,
+    "normative_contract_changed": false,
+    "locator_policy_changed": false,
+    "oracle_tolerances_changed": false,
+    "proof_state_changed": false
+  },
+  "mechanism_inventory": [
+    {
+      "id": "final-pdf-geometry",
+      "state": "REPRESENTED",
+      "case_ids": [
+        "page-margins-right"
+      ]
+    },
+    {
+      "id": "citation-quotation-presentation",
+      "state": "REPRESENTED",
+      "case_ids": [
+        "short-direct-citation-quotes"
+      ]
+    },
+    {
+      "id": "vector-rule-geometry",
+      "state": "REPRESENTED",
+      "case_ids": [
+        "ibge-table-open-sides"
+      ]
+    },
+    {
+      "id": "configuration-strict-rejection",
+      "state": "PREEXISTING_NEGATIVE",
+      "evidence_paths": [
+        "tests/v2-font-config-check.sh",
+        "tests/v2-pdf-validator-check.sh"
+      ]
+    },
+    {
+      "id": "semantic-structural-observers",
+      "state": "HARDENING_REQUIRED",
+      "evidence_paths": [
+        "tests/checks/normative_n11_project_structure.py"
+      ],
+      "reason": "The N11 positive-campaign progress assertion can abort before predicate-specific negative evidence is emitted."
+    },
+    {
+      "id": "pdf-pdfa-validation",
+      "state": "INVENTORY_PENDING",
+      "evidence_paths": [
+        "tests/v2-pdfa-check.sh",
+        "tests/v2-profile-pdfa-check.sh"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "page-margins-right",
+      "family": "final-pdf-geometry",
+      "fixture": "tests/normativa/textual-oracle-page-margins.tex",
+      "positive_gate": [
+        "sh",
+        "tests/v2-page-margins-evidence-check.sh"
+      ],
+      "mutation": {
+        "kind": "replace_once",
+        "anchor": "\\textual\n\n\\ufctextareaframe",
+        "content": "\\textual\n\\newgeometry{twoside=true,inner=3cm,outer=4cm,top=3cm,bottom=2cm}\n\n\\ufctextareaframe"
+      },
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
+      "oracle": [
+        "python3",
+        "tests/checks/normative_page_margins.py",
+        "{pdf}",
+        "--json",
+        "{evidence_json}"
+      ],
+      "expected_rule_id": "margin.recto.right",
+      "expected_signature": "N7-EVIDENCE rule=margin.recto.right status=FAIL"
+    },
+    {
+      "id": "short-direct-citation-quotes",
+      "family": "citation-quotation-presentation",
+      "fixture": "tests/normativa/textual-oracle-short-direct-citation.tex",
+      "positive_gate": [
+        "sh",
+        "tests/v2-short-direct-citation-evidence-check.sh"
+      ],
+      "mutation": {
+        "kind": "insert_before",
+        "anchor": "\\begin{document}",
+        "content": "\\renewcommand{\\enquote}[1]{#1}\n"
+      },
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
+      "oracle": [
+        "python3",
+        "tests/checks/normative_short_direct_citation.py",
+        "{pdf}",
+        "--json",
+        "{evidence_json}"
+      ],
+      "expected_rule_id": "citation.direct-short.quotation-marks",
+      "expected_signature": "N6-EVIDENCE rule=citation.direct-short.quotation-marks status=FAIL"
+    },
+    {
+      "id": "ibge-table-open-sides",
+      "family": "vector-rule-geometry",
+      "fixture": "tests/normativa/table-ibge-vector-final-pdf.tex",
+      "positive_gate": [
+        "sh",
+        "tests/v2-table-ibge-vector-evidence-check.sh"
+      ],
+      "mutation": {
+        "kind": "replace_once",
+        "anchor": "colspec={X[l] X[r]}",
+        "content": "colspec={|X[l]| X[r]|}"
+      },
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
+      "oracle": [
+        "python3",
+        "tests/checks/normative_n9_table_ibge_vector.py",
+        "{pdf}",
+        "--json",
+        "{evidence_json}"
+      ],
+      "expected_rule_id": "table.ibge.open-sides",
+      "expected_signature": "N9-EVIDENCE rule=table.ibge.open-sides status=FAIL"
+    }
+  ]
+}

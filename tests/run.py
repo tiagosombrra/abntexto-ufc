@@ -47,6 +47,7 @@ CHECKS = (
     Check("pdf-geometry", "PDF geometry", ("sh", "tests/v2-pdf-geometry-check.sh"), depends=("pdf-oracle-core",)),
     Check("math", "Mathematics", ("sh", "tests/v2-math-check.sh")),
     Check("normative-complement", "Normative complement", ("sh", "tests/v2-normative-complement-check.sh")),
+    Check("negative-paths", "N13 negative paths", ("sh", "tests/v2-negative-paths-check.sh")),
     Check("pretextual", "Pre-textual elements", ("sh", "tests/v2-pretextual-check.sh")),
     Check("duplex-pretextual", "Duplex pre-textual elements", ("sh", "tests/v2-duplex-pretextual-check.sh")),
     Check("object-geometry", "Object geometry", ("sh", "tests/v2-object-geometry-check.sh")),
