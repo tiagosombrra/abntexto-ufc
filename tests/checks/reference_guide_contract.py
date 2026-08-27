@@ -3,16 +3,36 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-MAP_PATH = ROOT / "normativa/reference-guide-map.json"
-CATALOG_PATH = ROOT / "normativa/catalog.json"
-ATOMIC_PATH = ROOT / "normativa/atomic-rules.json"
+NORMATIVE_DIR = ROOT / "normativa"
+MAP_PATH = NORMATIVE_DIR / "reference-guide-map.json"
+CATALOG_PATH = NORMATIVE_DIR / "catalog.json"
+ATOMIC_PATH = NORMATIVE_DIR / "atomic-rules.json"
 ALLOWED_CLASSIFICATIONS = {"normative", "institutional", "model-policy", "example"}
 
 
-def load_json(path: Path) -> dict:
+def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def collect_declared_rule_ids(value: Any) -> set[str]:
+    rule_ids: set[str] = set()
+
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in {"rule_id", "expected_rule_id"} and isinstance(item, str):
+                rule_ids.add(item)
+            elif key == "rule_ids" and isinstance(item, list):
+                rule_ids.update(entry for entry in item if isinstance(entry, str))
+            else:
+                rule_ids.update(collect_declared_rule_ids(item))
+    elif isinstance(value, list):
+        for item in value:
+            rule_ids.update(collect_declared_rule_ids(item))
+
+    return rule_ids
 
 
 def collect_rule_ids(catalog: dict, atomic: dict) -> set[str]:
@@ -22,6 +42,12 @@ def collect_rule_ids(catalog: dict, atomic: dict) -> set[str]:
         for rule in group:
             if "id" in rule:
                 rule_ids.add(rule["id"])
+
+    for path in sorted(NORMATIVE_DIR.glob("*.json")):
+        if path == MAP_PATH:
+            continue
+        rule_ids.update(collect_declared_rule_ids(load_json(path)))
+
     return rule_ids
 
 
