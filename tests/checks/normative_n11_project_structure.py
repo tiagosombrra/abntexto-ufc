@@ -129,10 +129,12 @@ def main() -> None:
     all_required_present = True
     for semantic_id in expected_required:
         token = str(observer_map[semantic_id])
-        count = raw_text.count(token)
+        observer = normalize(token).casefold()
+        count = compact_fold.count(observer)
         present = count > 0
         required_measurements[semantic_id] = {
             "observer": token,
+            "matching": "normalized-case-insensitive",
             "occurrences": count,
             "present": present,
         }
