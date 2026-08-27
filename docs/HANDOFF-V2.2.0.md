@@ -1,8 +1,8 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
-Updated: 2026-08-26
-Checkpoint PR: #125
-Stable main: `b9a827199fea3838bf94d707d43c78523f1475ad`
+Updated: 2026-08-27
+Checkpoint PR: #128
+Stable main: `a1dfd9a179c768bde63a2bf9055af2c1fd142cad`
 
 This is the single dynamic continuation document for the v2.2.0 normative audit and release. Future work must read this file before relying on chat history. Detailed evidence belongs in `normativa/`, `tests/`, Git history, pull requests and Actions logs.
 
@@ -56,11 +56,11 @@ Guardrails:
 | N10 | post-textual elements and multivolume | DONE — 20/20 bounded positive coverage |
 | N11 | research-project profile / NBR 15287 | DONE — 5/5 bounded positive coverage |
 | N12 | profile, engine and font matrix | DONE — 20-cell factorized certification + orthogonality gate |
-| N13 | negative fixtures / negative-path validation | NEXT |
+| N13 | negative fixtures / negative-path validation | ACTIVE — 4 controlled negative cases; residual mechanism reconciliation pending |
 | N14 | Web/Lite and CLI/Deep unification | PENDING |
 | N15 | full normative certification and release decision | PENDING |
 
-Formal roadmap closure is **13/16 phases = 81.25%**. The remaining three gates are **18.75%** of the roadmap. This is a phase-gate metric, not a conformity or proof percentage.
+Formal roadmap closure remains **13/16 phases = 81.25%**. The remaining three gates are **18.75%** of the roadmap. N13 activity does not count as phase closure until its mechanism inventory is fully reconciled. This is a phase-gate metric, not a conformity or proof percentage.
 
 ## Frozen baseline and oracle policy
 
@@ -160,32 +160,39 @@ The N12 manifest binds certification to stable-main workflow run **#875 / run id
 
 No normative values, locators, tolerances, compatibility mappings or proof-state were changed by N12.
 
-## N13 — negative fixtures / negative-path validation — NEXT
+## N13 — negative fixtures / negative-path validation — ACTIVE
 
-N13 must test **validator sensitivity**, not create a second normative specification.
+N13 tests **validator sensitivity** and does not create a second normative specification.
 
-Before closure, rederive the exact set of validator/oracle mechanism families from the current implementation. At minimum, negative-path coverage should distinguish:
+PR #127 established the machine-readable baseline and generic temporary-mutation harness. Its final branch evidence reported **PASS=3 / FAIL=0** for:
 
-- final-PDF geometry;
-- text/typography extraction;
-- citation/quotation presentation;
-- vector-rule geometry;
-- semantic/structural observers;
-- configuration/strict rejection paths;
-- PDF/PDF-A validation where a controlled, non-destructive negative artifact can be produced.
+1. `page-margins-right` — family `final-pdf-geometry`, expected rejection `margin.recto.right`;
+2. `short-direct-citation-quotes` — family `citation-quotation-presentation`, expected rejection `citation.direct-short.quotation-marks`;
+3. `ibge-table-open-sides` — family `vector-rule-geometry`, expected rejection `table.ibge.open-sides`.
 
-For every controlled negative case:
+The initial margin mutation was discarded because it did not change the physical geometry measured by the oracle. The accepted case mutates the actual post-`\textual` geometry while preserving the expected predicate and N5 tolerance. PR #127 squash-merged as stable main `a1dfd9a179c768bde63a2bf9055af2c1fd142cad`.
 
-1. the corresponding positive baseline/gate must remain green;
-2. the negative fixture must compile successfully when the target is a rendered-PDF oracle;
-3. the target validator/oracle must return non-zero;
-4. rejection must match a specific expected diagnostic/evidence signature, so unrelated crashes do not count;
-5. the mutation must be isolated and machine-described;
-6. normative predicates, locators, tolerances and proof-state remain unchanged.
+Post-#127 stable-main LaTeX preflight **#890 / run id 33055886167** is fully green, including profile matrix/PDF-A, reference document/PDF-A, Overleaf proxy, Windows literal Times/Arial build and certification, structural checks and aggregate gate.
 
-Prefer a machine-readable N13 manifest plus one generic harness. Do not permanently fork positive fixtures when a deterministic temporary mutation can express the violation more safely.
+PR #128 hardens the N11 structural observer so predicate evidence is serialized/printed before positive-campaign bookkeeping can reject a negative run. The positive project route remains strict at **5/5 bounded positive coverage**; there is no bypass for the N11 closure gate.
 
-N13 may require more than one PR. Do not mark the phase DONE until the mechanism inventory is reconciled and every declared negative-path cell is machine-verified.
+PR #128 adds the fourth controlled case:
+
+4. `project-required-resources` — family `semantic-structural-observers`; the required `Recursos` section is temporarily replaced by non-equivalent `Infraestrutura`, the project compiles through pdfLaTeX + Biber, and `normative_n11_project_structure.py --enforce` must reject `project.textual.required-sections`.
+
+Pre-handoff PR #128 head `9bcd7f46063d274af3d31f66877ccea3d1fd416c` passed both source-contract and LaTeX-preflight workflows. Structured evidence recorded **PASS=4 / FAIL=0** for N13 and the positive N11 project route remained **5/5**. This handoff update changes the PR head, so the resulting exact head must be revalidated before merge.
+
+Current mechanism state:
+
+- `final-pdf-geometry` — REPRESENTED;
+- `citation-quotation-presentation` — REPRESENTED;
+- `vector-rule-geometry` — REPRESENTED;
+- `semantic-structural-observers` — REPRESENTED on PR #128;
+- `configuration-strict-rejection` — pre-existing negative paths identified, but N13 must bind them to machine-verifiable campaign evidence rather than documentation alone;
+- `pdf-pdfa-validation` — still pending a controlled non-destructive negative artifact and exact validator signature;
+- text/typography extraction — still requires explicit reconciliation before closure; coverage by another family must not be assumed without machine evidence.
+
+N13 remains open. Do not mark the phase DONE until the mechanism inventory is fully reconciled and every declared negative-path cell is machine-verified.
 
 ## Normative currency
 
@@ -220,12 +227,17 @@ For roadmap PRs:
 
 ## Next action
 
-Confirm the full stable-main LaTeX preflight for merge SHA `b9a827199fea3838bf94d707d43c78523f1475ad`, including profile matrix/PDF-A, Overleaf proxy, Windows literal font build/certification and aggregate success.
+Finish PR #128 on its documentation-final head:
 
-Then begin N13 from that exact stable main:
+1. require both Normative source contract and LaTeX preflight to pass on the exact new head;
+2. confirm `behind_by=0` against stable main `a1dfd9a179c768bde63a2bf9055af2c1fd142cad`;
+3. verify the diff remains limited to N13/N11 audit code, manifest and this handoff;
+4. mark ready and squash merge with `expected_head_sha` only after those checks.
 
-1. inventory current validator/oracle mechanism families and pre-existing negative paths;
-2. create a machine-readable N13 negative-path manifest;
-3. implement a generic harness that performs isolated temporary mutations, requires successful fixture compilation, invokes the existing target oracle and requires a specific rejection signature;
-4. start with representative geometry, citation/quotation and vector-oracle cases;
-5. use the first N13 PR to expose any validators that reject only through incidental/internal failures rather than predicate-specific evidence; harden those validators separately before claiming N13 closure.
+Then continue N13 from the resulting stable main in isolated units:
+
+1. reconcile and machine-bind the pre-existing `configuration-strict-rejection` negatives;
+2. add an explicit text/typography-extraction negative case if the mechanism inventory shows it is not already represented by a predicate-specific path;
+3. implement PDF/PDF-A negative validation on the existing veraPDF execution path, using a structurally valid PDF with a controlled non-conformity and requiring a validator-specific rejection signature;
+4. rederive the complete mechanism inventory and close N13 only when every declared cell is represented or explicitly reconciled with a justified state;
+5. only after N13 closure advance the formal roadmap to N14.
