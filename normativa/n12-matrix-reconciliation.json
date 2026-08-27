@@ -73,7 +73,7 @@
     "workflow_run_id": 33032198400,
     "workflow_run_number": 875,
     "event": "workflow_dispatch",
-    "observed_conclusion": "PENDING",
+    "observed_conclusion": "SUCCESS",
     "required_job_names": [
       "V2 reference document",
       "V2 layout, fonts, pre-textuals and projects",
@@ -84,7 +84,29 @@
       "V2 Windows literal font build",
       "V2 Windows literal font certification",
       "latex-preflight"
-    ]
+    ],
+    "observed_jobs": [
+      "V2 reference document",
+      "V2 layout, fonts, pre-textuals and projects",
+      "V2 objects and bibliography",
+      "V2 profile matrix",
+      "V2 post-textuals",
+      "V2 Overleaf stable proxy",
+      "V2 Windows literal font build",
+      "V2 Windows literal font certification",
+      "latex-preflight"
+    ],
+    "job_receipts": {
+      "V2 reference document": {"job_id": 98387005877, "conclusion": "success"},
+      "V2 layout, fonts, pre-textuals and projects": {"job_id": 98387006008, "conclusion": "success"},
+      "V2 objects and bibliography": {"job_id": 98387006134, "conclusion": "success"},
+      "V2 profile matrix": {"job_id": 98387005999, "conclusion": "success"},
+      "V2 post-textuals": {"job_id": 98387006091, "conclusion": "success"},
+      "V2 Overleaf stable proxy": {"job_id": 98387006022, "conclusion": "success"},
+      "V2 Windows literal font build": {"job_id": 98387006071, "conclusion": "success"},
+      "V2 Windows literal font certification": {"job_id": 98388304353, "conclusion": "success"},
+      "latex-preflight": {"job_id": 98388425604, "conclusion": "success"}
+    }
   },
   "certified_git_blobs": {
     "abntexto-ufc/core.def": "55ba9eda2d86b891c868043bb8c450f5310e6141",
@@ -92,12 +114,21 @@
     "abntexto-ufc/trabalhos.def": "219c8c8e2ef369583043f0e1395befd5c350b9ac",
     "abntexto-ufc/projetos.def": "247da45ea877666e9f214f535c0f2c2b8c5fd092",
     "tests/smoke/perfil-base.tex": "74312347b2abc384c73c088122edddc440a74318",
+    "tests/normativa/fontes-config.tex": "0325752c2a45ab6ba29d44ef57852b6283932500",
+    "tests/normativa/fontes-classe-poc.tex": "88321e771da3e12fafbc12c24662687df7ad1598",
+    "tests/normativa/fontes-times-poc.tex": "9e787d0a657270599e7bc250037d876562eee537",
+    "tests/normativa/fontes-arial-poc.tex": "e7871e057a8969de07ac85eee980fbfce163009f",
     "tests/v2-profile-matrix-check.sh": "a76338e4bd2a9923e56e62d4b1540618a1af79f5",
     "tests/v2-profile-pdfa-check.sh": "b3a6fd2a8f579e3221f66a43a1b360ef1986b084",
     "tests/v2-font-config-check.sh": "50daa19ca81af6b6ccd9467c19be873b86eeb0c6",
     "tests/v2-font-poc.sh": "daafd4abc7ea8d2b19bbb1988be37de4dc889459",
     "tests/v2-windows-font-pdfa-check.sh": "72946d022ad04525a42d99bcb0010b1bf6157c86",
     ".github/workflows/latex-preflight.yml": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"
+  },
+  "scope_checker_host": {
+    "check_id": "normative-complement",
+    "script": "tests/v2-normative-complement-check.sh",
+    "checker": "tests/checks/normative_n12_matrix.py"
   },
   "supplemental_environment": {
     "overleaf_proxy_is_core_matrix_cell": false,
