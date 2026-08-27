@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "phase": "N13",
-  "status": "ACTIVE",
+  "status": "DONE",
   "purpose": "Validate that existing normative oracles reject isolated controlled violations for the intended predicate rather than through incidental compile or runtime failures.",
   "policy": {
     "positive_baseline_required": true,

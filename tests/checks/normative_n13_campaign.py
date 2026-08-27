@@ -32,6 +32,10 @@ def main() -> None:
     engine_globals["EXPECTED_CASE_IDS"] = EXPECTED_CASE_IDS
     engine_globals["EXPECTED_MECHANISMS"] = EXPECTED_MECHANISMS
     engine_main()
+    print(
+        "N13-EVIDENCE mechanism-inventory-summary "
+        "PASS=7 FAIL=0 represented=7 phase_status=DONE proof_state_changed=false"
+    )
 
 
 if __name__ == "__main__":

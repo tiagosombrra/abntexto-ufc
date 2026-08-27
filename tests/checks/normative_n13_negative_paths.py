@@ -61,7 +61,7 @@ def load_json(path: Path) -> dict[str, Any]:
 def validate_manifest(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     if manifest.get("schema_version") != 1 or manifest.get("phase") != "N13":
         fail("invalid manifest schema/phase")
-    if manifest.get("status") != "ACTIVE":
+    if manifest.get("status") != "DONE":
         fail(f"unexpected N13 manifest status: {manifest.get('status')}")
     if manifest.get("policy") != EXPECTED_POLICY:
         fail("N13 negative-path policy drift")

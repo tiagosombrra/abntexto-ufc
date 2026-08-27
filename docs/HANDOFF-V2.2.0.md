@@ -1,17 +1,17 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
 Updated: 2026-08-27
-Checkpoint: PR #137 binds N13 strict configuration rejection; pre-documentation exact-head validation green
-Stable main: `4944d98fd4dd35d9df45fb5764e360324a72b741`
-Stable-main LaTeX preflight: #965 / run `33111409990` — SUCCESS
-Stable-main Distribution preflight: #229 / run `33111409974` — SUCCESS
+Checkpoint: N13 formal-closure candidate prepared on `audit/n13-formal-closure`; exact-head PR validation pending
+Stable main: `c27686b9cc0b7dcb6aa40a6e29b49829ed2ea693`
+Stable-main LaTeX preflight: #978 / run `33118743279` — SUCCESS
+Stable-main Distribution preflight: #231 / run `33118743274` — SUCCESS
 
 This is the single dynamic continuation document for the v2.2.0 normative audit and release. Read it before relying on chat history. Detailed historical evidence belongs in `normativa/`, `tests/`, Git history, pull requests and GitHub Actions logs.
 
 ## Source-of-truth hierarchy
 
 1. `normativa/*.json` — machine-readable requirements, locators, precedence, proof policy and phase manifests.
-2. `tests/` + GitHub Actions — executable evidence, negative-path sensitivity and regressions.
+2. `tests/` + GitHub Actions — executable evidence, validator sensitivity and regressions.
 3. `docs/NORMAS.md` — human-readable normative map.
 4. `docs/VIGENCIA-NORMATIVA.md` — current-edition and precedence policy.
 5. this handoff — roadmap state, audit decisions and immediate next action.
@@ -37,13 +37,14 @@ Guardrails:
 - implementation defects exposed by evidence are fixed separately while preserving the predicate;
 - evidence merges require the exact audited head and `behind_by=0`;
 - no closed scope is reopened without changed source, changed predicate or regression;
-- in N13, compile failure is not evidence that a validator rejected a normative violation;
+- compile failure is not evidence that a validator rejected a normative violation;
 - negative fixtures and validator receipts are instrumentation, not new normative requirements;
-- do not modify the N12-certified `.github/workflows/latex-preflight.yml` during N13 unless N12 is explicitly reopened.
+- the N12-certified `.github/workflows/latex-preflight.yml` remains untouched unless N12 is explicitly reopened;
+- bulk remote-branch deletion remains deferred until final repository cleanup.
 
 ## Canonical N0–N15 roadmap
 
-| Phase | Scope | Gate status |
+| Phase | Scope | Gate status on this closure branch |
 | --- | --- | --- |
 | N0 | freeze / baseline | DONE |
 | N1 | normative sources and exact locators | DONE |
@@ -58,11 +59,11 @@ Guardrails:
 | N10 | post-textual elements and multivolume | DONE — 20/20 bounded positive coverage |
 | N11 | research-project profile / NBR 15287 | DONE — 5/5 bounded positive coverage |
 | N12 | profile, engine and font matrix | DONE — 20-cell factorized certification + orthogonality gate |
-| N13 | negative fixtures / negative-path validation | ACTIVE — PR #137 strict/config receipt validated; PDF/PDF-A negative mechanism remains |
+| N13 | negative fixtures / negative-path validation | DONE candidate — 7/7 mechanism inventory represented; exact-head closure validation pending |
 | N14 | Web/Lite and CLI/Deep unification | PENDING |
 | N15 | full normative certification and release decision | PENDING |
 
-Formal roadmap closure remains **13/16 phases = 81.25%**. This is a phase-gate metric, not a normative-conformity or proof percentage.
+The closure branch represents **14/16 phases = 87.5%**. Stable `main` remains formally at 13/16 until this closure PR is independently validated and merged. This percentage is a phase-gate metric, not a normative-conformity or proof percentage.
 
 ## Frozen baseline and oracle policy
 
@@ -81,33 +82,40 @@ Frozen N5 tolerances remain unchanged:
 - vertical position: 5 pt;
 - font size: 1 pt.
 
-Core N5 tools remain `pdftotext -bbox-layout`, `pdftohtml -xml -zoom 1.0`, `pdfinfo` and `pdffonts`. N9 added calibrated vector-rule geometry with `pdftocairo -svg`; no rasterization or tolerance change.
+Core final-PDF tooling remains `pdftotext -bbox-layout`, `pdftohtml -xml -zoom 1.0`, `pdfinfo`, `pdffonts` and calibrated `pdftocairo -svg` vector geometry.
 
-## Closed-phase certification notes
+### N11 and N12 closed-state invariants
 
-### N11 — research-project profile
+N11 remains exactly five `project.*` predicates with **5/5 bounded positive coverage** and `proof_state_changed=false`. NBR 15287 locator limitations remain explicit.
 
-N11 covers exactly five `project.*` predicates and remains **5/5 bounded positive coverage**. NBR 15287 locator limitations remain explicit and proof-state is unchanged.
-
-### N12 — compatibility matrix
-
-N12 is closed as a factorized 20-cell certification:
+N12 remains a factorized 20-cell certification:
 
 - six profiles × two engines = 12 cells;
 - portable `times`/`arial` × pdfLaTeX/LuaLaTeX = 4 cells;
 - literal Windows Times New Roman/Arial × pdfLaTeX/LuaLaTeX = 4 cells.
 
-Literal Windows identity is certified only on the Windows route, never inferred from Linux fallback fonts.
+Literal Windows identity is certified only on the Windows route. The certified workflow blob `.github/workflows/latex-preflight.yml` remains SHA `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-The certified workflow blob `.github/workflows/latex-preflight.yml` remains SHA `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
+## Stable-main baseline after PR #138
 
-## Stable-main baseline
+PR #138, `audit: add N13 PDF/A negative validation`, squash-merged as stable main `c27686b9cc0b7dcb6aa40a6e29b49829ed2ea693`.
 
-Repository-hygiene PR #136 squash-merged as stable main `4944d98fd4dd35d9df45fb5764e360324a72b741` without changing class implementation or the normative contract.
+Its exact functional head was `59911308d4304fc3a54b7513f0691540768ffc9e`, with `behind_by=0` and exactly four changed files. Exact-head evidence included:
 
-Post-#136 stable-main certification:
+- Normative source contract #323 / `33117857209` — SUCCESS;
+- LaTeX preflight #977 / `33117857239` — SUCCESS;
+- five controlled rendered-PDF negative cases — `PASS=5 FAIL=0 selected=5 proof_state_changed=false`;
+- strict-configuration receipt — PASS with the same fallback observation producing `strict=REPROVADO` and `portable=ALERTA`;
+- positive N11 — 5/5 bounded coverage, `proof_state_changed=false`;
+- structural suite — `PASS=14 FAIL=0 SKIP=0`;
+- controlled PDF/A receipt:
+  `N13-EVIDENCE mechanism=pdf-pdfa-validation status=PASS mutation=pdfaid-part-2-to-3 readable=true text_unchanged=true verapdf_compliant=false specification=ISO_19005_2 clause=6.6.4 test=2 compile_failure_counted_as_rejection=false proof_state_changed=false`.
 
-- LaTeX preflight #965 / `33111409990` — SUCCESS;
+The PDF/A receipt uses an already-valid PDF/A-2b reference PDF, mutates exactly one same-length XMP identifier `<pdfaid:part>2</pdfaid:part>` → `<pdfaid:part>3</pdfaid:part>`, preserves `pdfinfo`/`pdftotext` readability and extracted text identity, and is rejected by veraPDF 1.30.2 under PDF/A-2b at ISO 19005-2:2011 clause 6.6.4 test 2. This signature is observed validator evidence, not an inferred identifier.
+
+Post-merge stable-main certification is fully green:
+
+- LaTeX preflight #978 / `33118743279` — SUCCESS;
 - reference document + PDF/A-2b — SUCCESS;
 - 12-profile matrix + PDF/A-2b — SUCCESS;
 - objects/bibliography — SUCCESS;
@@ -116,86 +124,40 @@ Post-#136 stable-main certification:
 - Overleaf/TeX Live 2025 proxy — SUCCESS;
 - Windows literal Times New Roman/Arial build — SUCCESS;
 - Windows literal Unicode/embedding/PDF-A certification — SUCCESS;
-- Distribution #229 / `33111409974` — SUCCESS through Gate T, release preflight, PDF/A-2b, deterministic bundles, Overleaf import proxy and artifact upload.
+- aggregate `latex-preflight` — SUCCESS;
+- Distribution #231 / `33118743274` — SUCCESS through Gate T, release preflight, PDF/A-2b, deterministic bundles, Overleaf import proxy, artifact upload and aggregate `distribution-preflight`; GitHub Release publication skipped as expected because the ref is not a release tag.
 
-## N13 — negative fixtures / validator sensitivity — ACTIVE
+## N13 — formal closure candidate
 
 N13 validates sensitivity of existing oracles/validators and does not create a second normative specification.
 
-### Rendered-PDF controlled cases already merged
+The complete mechanism inventory is now:
 
-1. `page-margins-right` → `margin.recto.right`;
-2. `body-font-size` → `font.size.body`;
-3. `short-direct-citation-quotes` → `citation.direct-short.quotation-marks`;
-4. `ibge-table-open-sides` → `table.ibge.open-sides`;
-5. `project-required-resources` → `project.textual.required-sections`.
+1. `final-pdf-geometry` — REPRESENTED by `page-margins-right`;
+2. `text-typography-extraction` — REPRESENTED by `body-font-size`;
+3. `citation-quotation-presentation` — REPRESENTED by `short-direct-citation-quotes`;
+4. `vector-rule-geometry` — REPRESENTED by `ibge-table-open-sides`;
+5. `configuration-strict-rejection` — REPRESENTED by the machine-bound strict/portable receipt;
+6. `semantic-structural-observers` — REPRESENTED by `project-required-resources` and the N11 structural oracle;
+7. `pdf-pdfa-validation` — REPRESENTED by the readable same-length XMP mutation and veraPDF-specific rejection.
 
-The generic mutation harness requires a passing positive baseline, successful fixture compilation, target-oracle non-zero rejection, exact predicate signature and matching failed-rule evidence.
+The formal-closure branch changes phase metadata/instrumentation only:
 
-### PR #137 — configuration strict rejection
+- `normativa/n13-negative-paths.json`: `status` becomes `DONE`; predicates, cases, mechanism bindings and policy stay unchanged;
+- `tests/checks/normative_n13_negative_paths.py`: the generic executor requires `status=DONE`;
+- `tests/checks/normative_n13_campaign.py`: after the executor succeeds, it emits
+  `N13-EVIDENCE mechanism-inventory-summary PASS=7 FAIL=0 represented=7 phase_status=DONE proof_state_changed=false`;
+- this handoff records the closure candidate and stable-main evidence.
 
-Branch: `audit/n13-configuration-strict-receipt`.
+No class/runtime code, normative value, source locator, N5 tolerance, compatibility mapping, proof-state or N12 workflow is changed by formal closure.
 
-Base: stable main `4944d98fd4dd35d9df45fb5764e360324a72b741`.
-
-Pre-documentation implementation head: `a9040a4e70803ea9f665113bf3202cf7771cba86`.
-
-PR #137 adds one structured validator-mechanism receipt and keeps all five rendered-PDF mutation cases unchanged. The checker reuses `check_fonts()` from `tools/validate-ufc-pdf.py` and binds its result to the existing normative rule `font.family.body`.
-
-The same textual fallback observation must produce:
-
-- profile `strict` → `REPROVADO`, mandatory;
-- profile `portable` → `ALERTA`, non-mandatory.
-
-Literal Times New Roman and Arial controls must remain `APROVADO` in `strict`.
-
-Exact pre-documentation evidence:
-
-- Normative source contract #314 / `33112476335` — SUCCESS;
-- LaTeX preflight #967 / `33112476333` — SUCCESS;
-- five existing negative cases — `PASS=5 FAIL=0 selected=5 proof_state_changed=false`;
-- `N13-EVIDENCE mechanism=configuration-strict-rejection status=PASS rule=font.family.body strict=REPROVADO portable=ALERTA same_observation=true compile_failure_counted_as_rejection=false proof_state_changed=false`;
-- positive N11 — 5/5 bounded coverage, `proof_state_changed=false`;
-- structural suite — `PASS=14 FAIL=0 SKIP=0`;
-- reference/PDF-A, profiles/PDF-A, objects/bibliography and post-textual jobs — SUCCESS;
-- branch was `behind_by=0` before this handoff synchronization.
-
-This handoff commit changes the PR head. The pre-documentation evidence is historical support only; merge requires the final documented head to reproduce the required CI evidence and remain `behind_by=0`.
-
-### N13 mechanism inventory after PR #137
-
-- `final-pdf-geometry` — REPRESENTED;
-- `text-typography-extraction` — REPRESENTED;
-- `citation-quotation-presentation` — REPRESENTED;
-- `vector-rule-geometry` — REPRESENTED;
-- `configuration-strict-rejection` — REPRESENTED on PR #137;
-- `semantic-structural-observers` — REPRESENTED;
-- `pdf-pdfa-validation` — INVENTORY_PENDING.
-
-N13 remains ACTIVE until `pdf-pdfa-validation` is represented/reconciled and the complete mechanism inventory is rederived.
-
-### PDF/PDF-A negative-path requirement
-
-A corrupt or unreadable PDF is not sufficient negative evidence. The controlled negative document must:
-
-1. originate from a positively valid/readable PDF;
-2. remain readable by ordinary PDF tooling such as `pdfinfo` and `pdftotext` after mutation;
-3. contain an isolated PDF/A-2b non-conformity that does not depend on LaTeX compile failure;
-4. be rejected specifically by veraPDF under flavour `2b`;
-5. emit structured N13 evidence identifying the controlled mutation and veraPDF rejection;
-6. leave normative values, locators, N5 tolerances and proof-state unchanged.
-
-A promising implementation direction is a same-length in-place mutation of the PDF/A XMP identification metadata on a controlled valid PDF, followed by independent readability checks and veraPDF-specific rejection. Do not freeze a veraPDF clause/signature until an observed validator report confirms the stable failure identifier.
+N13 is not considered merged/closed on stable `main` until the final closure head independently reproduces the five negative cases, configuration receipt, PDF/A receipt, 7/7 inventory receipt, N11 5/5 and structural 14/14 with `behind_by=0`.
 
 ## Repository hygiene and Git policy
 
-The published `main` history is healthy and must not be rewritten for cosmetic compaction. Protected long-lived branches are `main` and `1.x`; roadmap/audit/fix/docs/preview/release-validation branches are disposable working refs after their evidence is safely represented by PR/merge/Actions history.
+The published `main` history must not be rewritten for cosmetic compaction. Protected long-lived branches are `main` and `1.x`. Audit/fix/docs/preview/release-validation branches remain disposable working refs after their evidence is safely represented by PR/merge/Actions history, but physical branch deletion is intentionally deferred until the final cleanup stage.
 
-A 2026-08-27 audit found 123 remote branches. Physical branch deletion is intentionally **deferred until the final cleanup stage**; do not make branch deletion a blocker for N13–N15 work.
-
-Preserve `planning/v2.2.0-normative-verification` until its unique divergent content is explicitly reconciled. Do not delete it solely based on age/name.
-
-Release tags `v*` remain immutable. Do not force-update protected branches or published tags.
+Preserve `planning/v2.2.0-normative-verification` until its unique divergent content is explicitly reconciled. Release tags `v*` remain immutable.
 
 ## Normative currency
 
@@ -212,29 +174,16 @@ Issue #18, bit-reproducible reference PDF metadata/ID, remains open and requires
 
 The UFC institutional mark remains in the source repository but is externalized from public/CTAN bundles; do not describe it as removed from the repository.
 
-## PR discipline
-
-For roadmap PRs:
-
-1. branch from exact stable `main`;
-2. derive the exact bounded predicate/mechanism scope from the current contract and implementation;
-3. add only required scenario/fixture/checker/gate changes;
-4. validate source contract and CI;
-5. require final head unchanged and `behind_by=0`;
-6. squash merge using `expected_head_sha`;
-7. inspect the full stable-main push, including Overleaf and Windows literal fonts when applicable;
-8. update this handoff whenever roadmap state, stable-main evidence or immediate next action materially changes;
-9. defer bulk remote-ref cleanup until the final cleanup stage unless a branch itself blocks current work.
-
 ## Immediate next action
 
-1. validate PR #137 again on the exact post-handoff head;
-2. require the five existing negative cases, the strict-configuration receipt and positive N11 to remain green with `proof_state_changed=false`;
-3. require `behind_by=0`, mark #137 ready and squash-merge with `expected_head_sha`;
-4. inspect the resulting stable-main LaTeX preflight and distribution evidence;
-5. branch from that exact stable main for `pdf-pdfa-validation`;
-6. prototype a structurally readable controlled PDF/A-2b metadata non-conformity and observe the exact veraPDF rejection before freezing the receipt signature;
-7. bind the successful PDF/A negative path into the N13 mechanism inventory;
-8. rederive the complete inventory and close N13 only if all declared mechanisms are represented or explicitly reconciled;
-9. advance to N14 only after formal N13 closure;
-10. leave bulk branch deletion for the final repository-cleanup stage.
+1. open the formal N13 closure PR from `audit/n13-formal-closure` onto exact stable main `c27686b9cc0b7dcb6aa40a6e29b49829ed2ea693`;
+2. require the PR diff to remain limited to the N13 status/executor/campaign and this handoff;
+3. require exact-head Normative source contract and LaTeX preflight SUCCESS;
+4. require `N13-EVIDENCE negative-path-summary PASS=5 FAIL=0 selected=5 proof_state_changed=false`;
+5. require the strict-configuration and PDF/A-specific N13 receipts to remain PASS;
+6. require `N13-EVIDENCE mechanism-inventory-summary PASS=7 FAIL=0 represented=7 phase_status=DONE proof_state_changed=false`;
+7. require N11 5/5, structural `PASS=14 FAIL=0 SKIP=0`, final head unchanged and `behind_by=0`;
+8. mark the closure PR ready and squash-merge with `expected_head_sha`;
+9. certify the resulting stable main with full LaTeX preflight and Distribution, including Overleaf and Windows literal fonts;
+10. only then begin N14 Web/Lite and CLI/Deep unification from that exact stable main;
+11. leave bulk branch deletion for the final repository-cleanup stage.
