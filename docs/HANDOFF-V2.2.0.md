@@ -1,8 +1,9 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
 Updated: 2026-08-27
-Checkpoint PR: #134 — Overleaf/TeX Live 2025 hotfix in progress
-Stable main before the current hotfix: `2cbd6d00318ba906e225fa37a4efb724300c3b4e`
+Checkpoint: distribution reference-corpus hotfix before N13 typography merge
+Stable main: `d10d28607487c5a8d7bca325f48201c6deea8a77`
+Stable-main full preflight: #941 / run id `33080352548` — SUCCESS
 
 This is the single dynamic continuation document for the v2.2.0 normative audit and release. Future work must read this file before relying on chat history. Detailed historical evidence belongs in `normativa/`, `tests/`, Git history, pull requests and GitHub Actions logs.
 
@@ -12,7 +13,7 @@ This is the single dynamic continuation document for the v2.2.0 normative audit 
 2. `tests/` + GitHub Actions — executable evidence, negative-path sensitivity and regressions.
 3. `docs/NORMAS.md` — human-readable normative map.
 4. `docs/VIGENCIA-NORMATIVA.md` — current-edition and precedence policy.
-5. this handoff — roadmap state, audit decisions and next action.
+5. this handoff — roadmap state, audit decisions and immediate next action.
 6. Git/PR/Actions history — detailed historical evidence.
 
 Do not create generic progress/checkpoint Markdown files. Historical release audits belong under `docs/history/`.
@@ -56,7 +57,7 @@ Guardrails:
 | N10 | post-textual elements and multivolume | DONE — 20/20 bounded positive coverage |
 | N11 | research-project profile / NBR 15287 | DONE — 5/5 bounded positive coverage |
 | N12 | profile, engine and font matrix | DONE — 20-cell factorized certification + orthogonality gate |
-| N13 | negative fixtures / negative-path validation | ACTIVE |
+| N13 | negative fixtures / negative-path validation | ACTIVE — typography port prepared in PR #130 |
 | N14 | Web/Lite and CLI/Deep unification | PENDING |
 | N15 | full normative certification and release decision | PENDING |
 
@@ -119,31 +120,35 @@ PR #128 added the fourth controlled case and hardened evidence ordering in the N
 
 PR #128 final exact head was `e7c69a4d974779bde5b04f71cf9b97b9f6cdc76c`, squash-merged as `9fee7c4b760bf4aaee5615f63e6b7e5f58e549a2`. Stable-main preflight #895 / run id `33058717022` was fully green, including Overleaf and Windows literal-font certification.
 
-Current stable mechanism state before the pending typography port:
+Stable mechanism state before PR #130 merge:
 
 - `final-pdf-geometry` — REPRESENTED;
 - `citation-quotation-presentation` — REPRESENTED;
 - `vector-rule-geometry` — REPRESENTED;
 - `semantic-structural-observers` — REPRESENTED;
-- `text-typography-extraction` — prepared in PR #130 but not yet merged;
+- `text-typography-extraction` — represented by the ported PR #130 campaign, pending exact-head validation and merge;
 - `configuration-strict-rejection` — pre-existing behavior exists, but still needs machine-bound N13 receipt/evidence;
-- `pdf-pdfa-validation` — pending controlled structurally valid non-conformity and validator-specific rejection evidence.
+- `pdf-pdfa-validation` — still requires controlled structurally valid non-conformity and validator-specific rejection evidence.
 
 ### PR #130 — typography negative path
 
-PR #130, branch `audit/n13-typography-negative-path`, remains open and draft on stale base. Its preserved head is `7e830dd4f5bb732fa98b20a6020a0e1158c50ec6`.
+The original preserved head before the port was `7e830dd4f5bb732fa98b20a6020a0e1158c50ec6`. It was intentionally not merged on stale ancestry.
 
-It adds the fifth controlled negative case:
+After stable-main preflight #941 closed the #134 compatibility blocker, PR #130 was atomically ported onto `d10d28607487c5a8d7bca325f48201c6deea8a77` as head `6a7835b1a89508a7b5854249660a575972fc4901` with `behind_by=0` at port time. The port contains only three N13 functional deltas plus its handoff update:
 
-5. `body-font-size` — temporarily renders `UFCNSevenBodyAlpha` at 14 pt, requires successful pdfLaTeX compilation, and requires `normative_typography.py` to reject `font.size.body` with `N7-EVIDENCE rule=font.size.body status=FAIL`.
+1. `normativa/n13-negative-paths.json` adds mechanism `text-typography-extraction` and case `body-font-size`;
+2. `tests/checks/normative_n13_campaign.py` expands the expected campaign scope without duplicating the generic executor;
+3. `tests/v2-negative-paths-check.sh` routes the gate through the campaign adapter.
 
-The PR also adds the campaign adapter `tests/checks/normative_n13_campaign.py`. Its `runpy` binding was corrected to modify the loaded executor function's actual `__globals__`, not merely the dictionary returned by `runpy.run_path()`.
+The fifth controlled negative case temporarily renders `UFCNSevenBodyAlpha` at 14 pt, requires successful pdfLaTeX compilation, and requires `normative_typography.py` to reject `font.size.body` with `N7-EVIDENCE rule=font.size.body status=FAIL`.
 
-Do not merge #130 on its stale ancestry. After the current stable-main hotfix is complete, port only its three functional deltas onto the new stable main, rerun exact-head source/preflight CI, require `behind_by=0`, then merge.
+Normative source contract #311 / run id `33081569884` is green on the ported head. LaTeX preflight #942 / run id `33081569864` is the exact-head validation run; do not merge #130 until that run is fully reconciled and the distribution blocker below is closed.
+
+No class implementation, normative values, locators, N5 tolerances, compatibility mappings, N12-certified workflow or proof-state are changed by the typography port.
 
 ### Remaining N13 sequence
 
-After typography is stable-main evidence:
+After the typography case is exact-head validated, merged and confirmed on stable main:
 
 1. machine-bind `configuration-strict-rejection` using structured receipt/evidence from the existing strict font checks;
 2. implement host-side PDF/A negative validation using a structurally readable PDF with controlled XMP non-conformity and veraPDF-specific rejection evidence;
@@ -151,48 +156,37 @@ After typography is stable-main evidence:
 4. close N13 only if every declared mechanism is represented or explicitly reconciled;
 5. only then advance to N14.
 
-## Editorial v2.2 reference guide
+## Editorial v2.2 reference guide and Overleaf hotfix
 
-PR #133 converted the v2.2 reference PDF into the commented UFC academic-work guide while preserving class behavior and normative values.
+PR #133 converted the v2.2 reference PDF into the commented UFC academic-work guide while preserving class behavior and normative values. It squash-merged as `2cbd6d00318ba906e225fa37a4efb724300c3b4e`.
 
-Final exact head before merge: `ba3dcc053c10f7ce926348d4c3729d13c478e746`.
+The post-#133 full preflight #933 / run id `33076301572` exposed one LuaLaTeX/TeX Live 2025 overflow in the long direct CAPES Portaria nº 206/2018 URL. All other Linux, PDF/A, structural and Windows surfaces were green.
 
-Exact-head PR validation:
+PR #134 fixed only that compatibility issue:
 
-- Normative source contract run #309 / id `33075329551`: SUCCESS;
-- LaTeX preflight #931 / id `33075329213`: SUCCESS;
-- reference/PDF-A: SUCCESS;
-- 12 profile PDFs/PDF-A: SUCCESS;
-- objects/bibliography: SUCCESS;
-- post-textuals: SUCCESS;
-- structural suite: 14/14 SUCCESS;
-- aggregate `latex-preflight`: SUCCESS.
+- final exact head: `05bf4c87ac4a7b711be71015c4b33222b53e67a2`;
+- squash merge: `d10d28607487c5a8d7bca325f48201c6deea8a77`;
+- the bibliography now uses the shorter official CAPES administrative-act catalog URL;
+- no warning suppression or tolerance relaxation was introduced;
+- the non-frozen reference-preview workflow now checks TeX Live 2025 on relevant PRs;
+- the N12-certified `latex-preflight.yml` was not modified.
 
-PR #133 squash-merged as stable main `2cbd6d00318ba906e225fa37a4efb724300c3b4e`.
+Full stable-main preflight #941 / run id `33080352548` is fully green, including reference/PDF-A, 12 profile PDFs/PDF-A, objects/bibliography, post-textuals, structural suite, Overleaf stable proxy, Windows literal-font build/certification and aggregate `latex-preflight`.
 
-During PR validation, the repository auditor exposed a false positive because the pending-work detector used case-insensitive matching and therefore interpreted the ordinary Portuguese word `todo` as a reserved technical marker. The detector was corrected to recognize only explicit uppercase work markers; guide prose was not rewritten to bypass the detector.
+## Distribution reference-corpus blocker — ACTIVE HOTFIX
 
-## Current compatibility blocker — PR #134
+Stable-main Distribution preflight #219 / run id `33080343888` exposed one stale reference-corpus expectation after the #133 guide rewrite:
 
-The full stable-main post-#133 preflight #933 / run id `33076301572` isolated one compatibility regression:
+- Gate T prerequisite — SUCCESS;
+- full `make preflight` — 30/31 checks PASS;
+- only `Reference corpus` failed;
+- exact failure: expected PDF marker `BASE NORMATIVA ADOTADA` was absent;
+- the document source defines `\subsection{Base normativa adotada}` and the same corpus checker already expects `Base normativa adotada` in the sumário;
+- all PDF, layout, N13 baseline, N11, object, bibliography and post-textual checks in that same release preflight passed.
 
-- reference document/PDF-A — SUCCESS;
-- 12 profile matrix/PDF-A — SUCCESS;
-- objects/bibliography — SUCCESS;
-- post-textuals — SUCCESS;
-- structure — SUCCESS;
-- Windows literal Times/Arial build — SUCCESS;
-- Windows literal-font certification — SUCCESS;
-- Overleaf stable proxy / LuaLaTeX / TeX Live 2025 — FAILURE;
-- aggregate gate — FAILURE only because of the Overleaf proxy.
+This is a stale test-contract case expectation, not a class/normative/PDF defect. The hotfix changes only the body marker in `tests/v2-reference-corpus-check.sh` from the obsolete all-uppercase form to the exact subsection title `Base normativa adotada`. It does not remove the marker, weaken the corpus, change heading behavior or alter normative values.
 
-The Overleaf failure is a single `Overfull \\hbox` of **0.21825 pt** while printing the CAPES Portaria nº 206/2018 URL. pdfLaTeX / TeX Live 2025 passes.
-
-PR #134 was opened to diagnose and fix only that issue. A temporary PR-only TeX Live 2025 diagnostic workflow identified the exact offending URL and was then removed from the branch; it must not enter `main`.
-
-The bibliography now points `capes2062018` to the official CAPES administrative-act catalog entry instead of the longer direct-file URL. The permanent N12 workflow remains untouched.
-
-PR #134 is not ready for merge until the final branch head passes its normal PR CI and the exact Overleaf proxy is revalidated on a route that executes TeX Live 2025. After merge, run the full stable-main preflight and require Overleaf + Windows certification to be green before resuming N13.
+Do not merge PR #130 before this distribution hotfix is validated and merged. After the hotfix changes stable main, port/rebase #130 once more if required so its final audited head is `behind_by=0`.
 
 ## Normative currency
 
@@ -228,12 +222,13 @@ For roadmap PRs:
 
 ## Immediate next action
 
-1. finish PR #134 on its final non-diagnostic head;
-2. verify the short official CAPES catalog URL removes the LuaLaTeX / TeX Live 2025 overflow without suppressing warnings;
-3. require normal PR source/preflight CI green and `behind_by=0`;
-4. squash-merge #134 using the exact expected head;
-5. run and inspect the full stable-main preflight, including Overleaf and Windows literal-font certification;
-6. only after stable main is fully green, port PR #130's three functional typography-negative deltas onto the new stable main;
-7. validate and merge the N13 typography negative path;
-8. continue with configuration-strict evidence, PDF/A negative evidence and final N13 reconciliation;
-9. advance to N14 only after N13 closure.
+1. validate and merge the isolated distribution reference-corpus hotfix from stable main `d10d28607487c5a8d7bca325f48201c6deea8a77`;
+2. require the corrected release/distribution preflight to pass, especially `Reference corpus`, bundle construction and Overleaf import proxy;
+3. inspect the resulting stable-main preflight/distribution runs;
+4. finish/reconcile PR #130 preflight #942, but re-port #130 onto the resulting new stable main before merge if it becomes behind;
+5. on the final #130 head require `body-font-size` PASS, N13 summary 5/5, positive N11 5/5, exact-head green CI and `behind_by=0`;
+6. squash-merge #130 and inspect stable main;
+7. continue N13 with machine-bound configuration-strict evidence;
+8. add host-side PDF/A negative evidence;
+9. perform final mechanism inventory reconciliation and close N13 only if all declared cells are represented or explicitly reconciled;
+10. advance to N14 only after N13 closure.
