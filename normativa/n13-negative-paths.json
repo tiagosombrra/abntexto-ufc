@@ -66,10 +66,11 @@
     },
     {
       "id": "pdf-pdfa-validation",
-      "state": "INVENTORY_PENDING",
+      "state": "REPRESENTED",
       "evidence_paths": [
         "tests/v2-pdfa-check.sh",
-        "tests/v2-profile-pdfa-check.sh"
+        "tests/v2-profile-pdfa-check.sh",
+        "tests/checks/normative_n13_pdfa.py"
       ]
     }
   ],

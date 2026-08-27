@@ -24,6 +24,12 @@ fi
 
 if [ -s "$report" ] && grep -Fq 'isCompliant="true"' "$report"; then
   echo 'Gate V2 PDF/A-2b concluído.'
+  if [ "$pdf" = "documento.pdf" ] && [ "${UFC_N13_PDFA_NEGATIVE:-1}" = "1" ]; then
+    python3 tests/checks/normative_n13_pdfa.py \
+      "$pdf" \
+      --positive-report "$report" \
+      --json /tmp/abntexto-ufc-n13-pdfa.json
+  fi
   exit 0
 fi
 
