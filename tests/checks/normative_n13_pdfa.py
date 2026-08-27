@@ -142,6 +142,7 @@ def mutate_pdf(source: Path, target: Path) -> None:
     if len(mutated) != len(data):
         fail("controlled PDF/A mutation changed file length")
     target.write_bytes(mutated)
+    target.chmod(0o644)
 
 
 def run_verapdf(pdf: Path, report: Path) -> tuple[str, int, str]:
@@ -216,6 +217,7 @@ def main() -> None:
 
     with tempfile.TemporaryDirectory(prefix=".n13-pdfa-", dir=ROOT) as temp_dir_name:
         temp_dir = Path(temp_dir_name)
+        temp_dir.chmod(0o755)
         mutated = temp_dir / "documento-pdfa-part3-negative.pdf"
         negative_report = temp_dir / "verapdf-negative.xml"
 
