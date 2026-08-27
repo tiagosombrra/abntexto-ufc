@@ -12,6 +12,7 @@ on:
       - 'tools/validate-ufc-pdf.py'
       - 'tools/normative_catalog.py'
       - 'tests/checks/validator_source.py'
+      - 'tests/checks/normative_n14_validator_contract.py'
       - '.github/workflows/validator-pages.yml'
   workflow_dispatch:
 
