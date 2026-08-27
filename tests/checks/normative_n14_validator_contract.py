@@ -35,12 +35,54 @@ EXPECTED_POLICY = {
     "measurement_backend_equivalence_required": False,
     "browser_network_upload_allowed": False,
 }
-EXPECTED_ALIASES = {
-    "font.literal": ("font.family", "font.literal"),
-    "font.embedded": ("font.embedding", "font.embedded"),
+EXPECTED_BASELINE_COUNTS = {
+    "web_check_count": 25,
+    "cli_check_count": 27,
+    "canonical_check_count": 28,
+    "shared_canonical_count": 24,
+    "alias_count": 2,
+    "web_only_count": 1,
+    "cli_only_count": 3,
+}
+EXPECTED_BASELINE_ALIASES = {
+    "font.literal": {"web_id": "font.family", "cli_id": "font.literal"},
+    "font.embedded": {"web_id": "font.embedding", "cli_id": "font.embedded"},
+}
+EXPECTED_BASELINE_SCHEMA_DRIFT = {
+    "web_normative_catalog_field": "normativeCatalog",
+    "cli_normative_catalog_field": "normative_catalog",
+    "web_normative_rule_field": "normativeRule",
+    "cli_normative_rule_field": "normative_rule",
+    "web_mode_field": True,
+    "cli_mode_field": False,
 }
 EXPECTED_WEB_ONLY = {"security.javascript"}
 EXPECTED_CLI_ONLY = {"security.encrypted", "pdfa.claim", "access.pdfua"}
+EXPECTED_TOP_LEVEL = ["file", "profile", "verdict", "normative_catalog", "checks", "mode"]
+EXPECTED_CHECK_FIELDS = [
+    "id",
+    "category",
+    "rule",
+    "source",
+    "status",
+    "evidence",
+    "correction",
+    "mandatory",
+    "level",
+    "normative_rule",
+    "locator",
+    "normativity",
+]
+EXPECTED_ADOPTION = {
+    "state": "ADOPTED",
+    "emitted_alias_count": 0,
+    "web_report_case": "snake_case",
+    "cli_report_case": "snake_case",
+    "web_mode": "web-lite-local",
+    "cli_mode": "cli-deep-local",
+    "normative_contract_changed": False,
+    "proof_state_changed": False,
+}
 
 
 def fail(message: str) -> None:
@@ -62,6 +104,11 @@ def require_marker(text: str, marker: str, label: str) -> None:
         fail(f"{label} marker missing: {marker}")
 
 
+def forbid_marker(text: str, marker: str, label: str) -> None:
+    if marker in text:
+        fail(f"{label} legacy marker still present: {marker}")
+
+
 def main() -> None:
     data = load_contract()
     if data.get("schema_version") != 1 or data.get("phase") != "N14":
@@ -79,6 +126,43 @@ def main() -> None:
     if data.get("verdicts") != EXPECTED_VERDICTS:
         fail("verdict vocabulary drift")
 
+    baseline = data.get("baseline")
+    if not isinstance(baseline, dict):
+        fail("baseline must be an object")
+    for key, expected in EXPECTED_BASELINE_COUNTS.items():
+        if baseline.get(key) != expected:
+            fail(f"baseline {key}={baseline.get(key)} expected={expected}")
+    if baseline.get("aliases") != EXPECTED_BASELINE_ALIASES:
+        fail("historical alias baseline drift")
+    if baseline.get("observed_schema_drift") != EXPECTED_BASELINE_SCHEMA_DRIFT:
+        fail("historical schema-drift baseline changed")
+
+    surfaces = data.get("surfaces")
+    if not isinstance(surfaces, dict):
+        fail("surfaces must be an object")
+    web_surface = surfaces.get("web-lite")
+    cli_surface = surfaces.get("cli-deep")
+    if not isinstance(web_surface, dict) or not isinstance(cli_surface, dict):
+        fail("both validator surfaces must be declared")
+    if web_surface.get("report_case") != "snake_case" or cli_surface.get("report_case") != "snake_case":
+        fail("both surfaces must adopt snake_case")
+    if web_surface.get("mode") != "web-lite-local" or cli_surface.get("mode") != "cli-deep-local":
+        fail("surface mode drift")
+    if web_surface.get("local_processing") is not True or cli_surface.get("local_processing") is not True:
+        fail("both surfaces must remain local-processing")
+
+    target = data.get("target_report_schema")
+    if not isinstance(target, dict) or target.get("case") != "snake_case":
+        fail("target report schema must use snake_case")
+    if target.get("required_top_level") != EXPECTED_TOP_LEVEL:
+        fail("target top-level schema drift")
+    if target.get("required_check_fields") != EXPECTED_CHECK_FIELDS:
+        fail("target check schema drift")
+    if target.get("adoption_state") != "ADOPTED":
+        fail("target schema must be adopted in N14-B")
+    if data.get("adoption") != EXPECTED_ADOPTION:
+        fail("N14-B adoption receipt drift")
+
     inventory = data.get("check_inventory")
     if not isinstance(inventory, list) or not inventory:
         fail("check_inventory must be a non-empty list")
@@ -86,9 +170,9 @@ def main() -> None:
     canonical_ids: list[str] = []
     web_ids: list[str] = []
     cli_ids: list[str] = []
-    aliases: dict[str, tuple[str, str]] = {}
     web_only: set[str] = set()
     cli_only: set[str] = set()
+    current_aliases: list[str] = []
     catalog_rules = rule_map(load_catalog())
 
     for item in inventory:
@@ -113,20 +197,19 @@ def main() -> None:
             fail(f"{canonical_id}: no implementing surface")
 
         state = item.get("state")
-        if state == "ALIAS_REQUIRED":
-            if web_id is None or cli_id is None:
-                fail(f"{canonical_id}: alias requires both surfaces")
-            aliases[canonical_id] = (web_id, cli_id)
-        elif state == "WEB_ONLY":
-            if web_id is None or cli_id is not None:
+        if state == "WEB_ONLY":
+            if web_id != canonical_id or cli_id is not None:
                 fail(f"{canonical_id}: invalid WEB_ONLY mapping")
             web_only.add(canonical_id)
         elif state == "CLI_ONLY":
-            if cli_id is None or web_id is not None:
+            if cli_id != canonical_id or web_id is not None:
                 fail(f"{canonical_id}: invalid CLI_ONLY mapping")
             cli_only.add(canonical_id)
-        elif state != "ALIGNED":
-            fail(f"{canonical_id}: unsupported state {state}")
+        elif state == "ALIGNED":
+            if web_id != canonical_id or cli_id != canonical_id:
+                current_aliases.append(canonical_id)
+        else:
+            fail(f"{canonical_id}: unsupported post-adoption state {state}")
 
         normative_rule = item.get("normative_rule")
         if normative_rule is not None and normative_rule not in catalog_rules:
@@ -145,48 +228,16 @@ def main() -> None:
         fail("duplicate Web/Lite check id")
     if len(set(cli_ids)) != len(cli_ids):
         fail("duplicate CLI/Deep check id")
-    if aliases != EXPECTED_ALIASES:
-        fail(f"unexpected alias inventory: {aliases}")
+    if current_aliases:
+        fail(f"unresolved emitted aliases: {sorted(current_aliases)}")
     if web_only != EXPECTED_WEB_ONLY:
         fail(f"unexpected Web/Lite-only inventory: {sorted(web_only)}")
     if cli_only != EXPECTED_CLI_ONLY:
         fail(f"unexpected CLI/Deep-only inventory: {sorted(cli_only)}")
 
-    shared = sum(
-        item.get("web_id") is not None and item.get("cli_id") is not None
-        for item in inventory
-    )
-    baseline = data.get("baseline")
-    expected_counts = {
-        "web_check_count": len(web_ids),
-        "cli_check_count": len(cli_ids),
-        "canonical_check_count": len(canonical_ids),
-        "shared_canonical_count": shared,
-        "alias_count": len(aliases),
-        "web_only_count": len(web_only),
-        "cli_only_count": len(cli_only),
-    }
-    if not isinstance(baseline, dict):
-        fail("baseline must be an object")
-    for key, expected in expected_counts.items():
-        if baseline.get(key) != expected:
-            fail(f"baseline {key}={baseline.get(key)} expected={expected}")
-    if expected_counts != {
-        "web_check_count": 25,
-        "cli_check_count": 27,
-        "canonical_check_count": 28,
-        "shared_canonical_count": 24,
-        "alias_count": 2,
-        "web_only_count": 1,
-        "cli_only_count": 3,
-    }:
-        fail(f"unexpected N14 initial inventory counts: {expected_counts}")
-
-    target = data.get("target_report_schema")
-    if not isinstance(target, dict) or target.get("case") != "snake_case":
-        fail("target report schema must use snake_case")
-    if target.get("adoption_state") != "PENDING":
-        fail("initial N14 target schema must remain pending adoption")
+    shared = sum(item.get("web_id") is not None and item.get("cli_id") is not None for item in inventory)
+    if (len(web_ids), len(cli_ids), len(canonical_ids), shared) != (25, 27, 28, 24):
+        fail("post-adoption inventory counts changed")
 
     web = WEB.read_text(encoding="utf-8")
     cli = CLI.read_text(encoding="utf-8")
@@ -195,21 +246,37 @@ def main() -> None:
     require_marker(cli, "from normative_catalog import", "CLI/Deep normative catalog")
     require_marker(web, "pdfjs-dist@6.2.108", "Web/Lite PDF.js pin")
     require_marker(web, 'mode:"web-lite-local"', "Web/Lite mode")
+    require_marker(cli, "'mode':'cli-deep-local'", "CLI/Deep mode")
     require_marker(html, "não é enviado para servidor", "Web/Lite local-processing disclosure")
 
     forbidden = r"FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\(|\bfetch\s*\("
     if re.search(forbidden, web):
         fail("browser code contains a network upload API")
 
-    for marker in ('"font.family"', '"font.embedding"', '"security.javascript"', '"pdfa.deep"'):
-        require_marker(web, marker, "Web/Lite baseline")
+    require_marker(
+        web,
+        'CHECK_ID_ALIASES={"font.family":"font.literal","font.embedding":"font.embedded"}',
+        "Web/Lite boundary alias normalization",
+    )
+    require_marker(web, "id:CHECK_ID_ALIASES[c.id]??c.id", "Web/Lite canonical emitted ID")
+    require_marker(web, "normative_rule:c.normativeRule", "Web/Lite canonical normative metadata")
+    for marker in ('"security.javascript"', '"pdfa.deep"'):
+        require_marker(web, marker, "Web/Lite current inventory")
     for marker in ("'font.literal'", "'font.embedded'", "'security.encrypted'", "'pdfa.claim'", "'access.pdfua'"):
-        require_marker(cli, marker, "CLI/Deep baseline")
+        require_marker(cli, marker, "CLI/Deep current inventory")
 
-    require_marker(web, "normativeCatalog", "Web/Lite current report schema")
-    require_marker(web, "normativeRule", "Web/Lite current check schema")
-    require_marker(cli, "'normative_catalog'", "CLI/Deep current report schema")
-    require_marker(cli, "normative_rule", "CLI/Deep current check schema")
+    require_marker(
+        web,
+        "normative_catalog:{schema_version:normativeCatalog.schema_version,reviewed_at:normativeCatalog.reviewed_at}",
+        "Web/Lite adopted top-level schema",
+    )
+    require_marker(web, "checks:reportChecks", "Web/Lite normalized check boundary")
+    require_marker(web, "generated_at:new Date().toISOString()", "Web/Lite generated timestamp")
+    require_marker(web, "c.normative_rule", "Web/Lite CSV canonical metadata")
+    forbid_marker(web, "normativeCatalog:{", "Web/Lite top-level report schema")
+    forbid_marker(web, "generatedAt:", "Web/Lite top-level report schema")
+    require_marker(cli, "'normative_catalog'", "CLI/Deep report schema")
+    require_marker(cli, "normative_rule", "CLI/Deep check schema")
 
     deep_boundaries = {
         item["canonical_id"]: (item["web_mode"], item["cli_mode"])
@@ -223,10 +290,15 @@ def main() -> None:
         fail(f"deep capability boundary drift: {deep_boundaries}")
 
     print(
-        "N14-EVIDENCE validator-inventory "
-        f"status=PASS web_checks={len(web_ids)} cli_checks={len(cli_ids)} "
-        f"canonical_checks={len(canonical_ids)} shared={shared} aliases={len(aliases)} "
-        f"web_only={len(web_only)} cli_only={len(cli_only)} phase_status=ACTIVE "
+        "N14-EVIDENCE validator-baseline "
+        "status=PASS web_checks=25 cli_checks=27 canonical_checks=28 shared=24 "
+        "baseline_aliases=2 web_only=1 cli_only=3 phase_status=ACTIVE "
+        "normative_contract_changed=false proof_state_changed=false"
+    )
+    print(
+        "N14-EVIDENCE schema-adoption "
+        "status=PASS web_case=snake_case cli_case=snake_case emitted_aliases=0 "
+        "web_mode=web-lite-local cli_mode=cli-deep-local phase_status=ACTIVE "
         "normative_contract_changed=false proof_state_changed=false"
     )
     print(
