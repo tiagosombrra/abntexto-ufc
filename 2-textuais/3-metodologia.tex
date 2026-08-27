@@ -1,25 +1,51 @@
-\section{Metodologia}\label{sec:metodologia}
+\section{Formatação geral e organização da parte textual}\label{sec:formatacao-geral}
 
-Descreva nesta seção o desenho da pesquisa, os dados, instrumentos, procedimentos, critérios de avaliação e demais elementos necessários à reprodutibilidade do trabalho.
+A apresentação do texto deve ser controlada pela classe, e não por ajustes manuais espalhados pelo conteúdo. Esta seção resume as regras gerais que o documento de referência exercita e que a suíte de validação mede diretamente no PDF produzido.
 
-\subsection{Exemplo de tabela}
+\subsection{Papel e margens}
 
-\legend{table}{Etapas do procedimento}
-\ufcfonte{Elaboração própria.}
-\label{tab:etapas-v2}
-\begin{ufcobjeto}[here]
-  \centering
-  \begin{tabular}{cl}
-    \hline
-    Etapa & Descrição \\
-    \hline
-    1 & Preparação dos dados \\
-    2 & Execução do procedimento \\
-    3 & Avaliação dos resultados \\
-    \hline
-  \end{tabular}
-\end{ufcobjeto}
+\guianormativa{ABNT NBR 14724:2024}{O documento é produzido em papel A4. No anverso, a configuração adotada utiliza margens esquerda e superior de 3 cm e margens direita e inferior de 2 cm. Em impressão frente e verso, as margens laterais são espelhadas para preservar a margem interna maior \parencite{abnt14724}.}
 
-A Tabela~\ref{tab:etapas-v2} usa a mesma API de legenda e fonte dos demais objetos, mas permanece fora da Lista de Ilustrações, conforme a organização adotada pela V2.
+\guiaexemplo{Este PDF usa \texttt{impressao=anverso}. Os testes do repositório também geram páginas de verso e medem a geometria final para verificar o espelhamento das margens.}
 
-Para tabelas mais complexas ou multipágina, habilite \texttt{tabelas = tabularray} e utilize os ambientes fornecidos por \texttt{tabularray-abnt}.
+\subsection{Fonte, tamanho e cor}
+
+O corpo textual do documento usa tamanho 12. A API pública oferece as famílias \texttt{times} e \texttt{arial}; o modo \texttt{fonte-estrita} diferencia a exigência de identidade literal da fonte e o uso de fallback portátil para desenvolvimento.
+
+\guianormativa{ABNT NBR 14724:2024 e política tipográfica UFC adotada}{O corpo textual é apresentado em tamanho 12 e em cor preta; tamanhos reduzidos são usados em contextos específicos, como citações longas, notas, paginação e partes de objetos.}
+
+\guiapolitica{Quando \texttt{fonte-estrita=sim}, a compilação deve falhar se a família literal solicitada não estiver disponível. Quando \texttt{fonte-estrita=nao}, o template pode usar uma família substituta explicitamente identificada para portabilidade. A certificação de Times New Roman e Arial literais é feita em uma rota Windows separada.}
+
+\subsection{Espaçamento e parágrafos}
+
+\guianormativa{ABNT NBR 14724:2024 e escopo UFC auditado}{O corpo usa espaçamento 1,5. Os parágrafos do corpo adotam recuo de primeira linha de 2 cm e não recebem espaço vertical adicional entre si. Contextos específicos podem usar espaço simples e tamanho reduzido.}
+
+O recuo de primeira linha é uma propriedade do parágrafo; não deve ser simulado com espaços, tabulações ou comandos manuais no início de cada parágrafo. Da mesma forma, a separação entre parágrafos não deve ser criada com linhas em branco adicionais destinadas apenas a alterar a aparência.
+
+\subsection{Paginação}
+
+A contagem das folhas e a exibição dos números são controladas pela classe. No fluxo exercitado pelo template, os números tornam-se visíveis a partir da primeira página textual e usam tamanho reduzido.
+
+\guianormativa{ABNT NBR 14724:2024}{A apresentação da paginação acompanha a progressão física do documento e respeita a distinção entre anverso e verso. O template posiciona o número no canto superior externo da página conforme o modo de impressão.}
+
+\subsection{Seções e subseções}
+
+\guianormativa{ABNT NBR 6024:2012}{A numeração é progressiva e a hierarquia deve ser refletida de forma consistente no corpo e no sumário \parencite{abnt6024}.}
+
+\guiapolitica{A V2 limita sua hierarquia pública exercitada a cinco níveis. Cada seção primária inicia em nova página, e a classe controla o espaçamento e a apresentação do indicador numérico.}
+
+Evite aplicar negrito, tamanho, alinhamento ou espaçamento manualmente aos títulos para “corrigir” uma página isolada. Se um título estiver incorreto, a correção deve ocorrer na configuração ou na implementação do nível correspondente.
+
+\subsection{Notas de rodapé}
+
+Notas de rodapé são apresentadas com tamanho reduzido e espaço simples. A composição deve permanecer legível e claramente separada do corpo.
+
+\guiainstitucional{No escopo auditado da V2, o texto da nota usa 10 pt, espaçamento simples e alinhamento suspenso nas linhas de continuação. O separador é exercitado com 5 cm a partir da margem esquerda.}
+
+\subsection{Alíneas e subalíneas}
+
+Quando uma enumeração fizer parte da estrutura discursiva do texto, o template fornece ambientes para alíneas e subalíneas que preservam a apresentação adotada pela classe. Enumerações comuns do \LaTeX{} continuam disponíveis quando não representam a estrutura normativa de alíneas.
+
+\guiaexemplo{A Seção~\ref{sec:catalogo-exemplos} apresenta alíneas, subalíneas e uma enumeração comum para comparação visual.}
+
+\index{margens}\index{fonte}\index{espaçamento}\index{parágrafo}\index{paginação}\index{seções}\index{notas de rodapé}
