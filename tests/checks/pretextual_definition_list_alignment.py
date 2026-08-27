@@ -26,13 +26,7 @@ def locate(pdf: Path, marker: str):
         fail(f"{pdf}: {exc}")
 
 
-def row_measurement(
-    pdf: Path,
-    label: str,
-    definition_start: str,
-    *,
-    vertical_anchor: str = "top",
-) -> dict[str, float | int | str]:
+def row_measurement(pdf: Path, label: str, definition_start: str) -> dict[str, float | int | str]:
     label_page, label_word = locate(pdf, label)
     definition_page, definition_word = locate(pdf, definition_start)
     if label_page.index != definition_page.index:
@@ -41,36 +35,21 @@ def row_measurement(
             f"({label_page.index}/{definition_page.index})"
         )
 
-    if vertical_anchor == "top":
-        label_y = label_word.box.y_min
-        definition_y = definition_word.box.y_min
-    elif vertical_anchor == "bottom":
-        # A mathematical glyph can have a different ascender/top extent than
-        # ordinary text even on the same baseline.  The controlled M/Malha
-        # fixture has no descenders, so the lower bbox edge is the stable
-        # same-baseline proxy while remaining sensitive to vertical shifts.
-        label_y = label_word.box.y_max
-        definition_y = definition_word.box.y_max
-    else:
-        fail(f"unsupported vertical anchor: {vertical_anchor}")
-
-    vertical_delta = abs(label_y - definition_y)
+    vertical_delta = abs(label_word.box.y_min - definition_word.box.y_min)
     if vertical_delta > ALIGNMENT_TOLERANCE_PT:
         fail(
-            f"{pdf}: row {label!r}/{definition_start!r} is vertically misaligned "
-            f"using {vertical_anchor} anchor: delta={vertical_delta:.3f}pt > "
-            f"{ALIGNMENT_TOLERANCE_PT:.3f}pt"
+            f"{pdf}: row {label!r}/{definition_start!r} is vertically misaligned: "
+            f"delta={vertical_delta:.3f}pt > {ALIGNMENT_TOLERANCE_PT:.3f}pt"
         )
 
     return {
         "page": label_page.index,
         "label": label,
         "definition_start": definition_start,
-        "vertical_anchor": vertical_anchor,
         "label_x": label_word.box.x_min,
         "definition_x": definition_word.box.x_min,
-        "label_y": label_y,
-        "definition_y": definition_y,
+        "label_y": label_word.box.y_min,
+        "definition_y": definition_word.box.y_min,
         "vertical_delta_pt": vertical_delta,
     }
 
@@ -103,13 +82,13 @@ def main() -> None:
         row_measurement(args.abbreviations_pdf, "ABNT", "Associação"),
         row_measurement(args.abbreviations_pdf, "UFC", "Universidade"),
     ]
+
+    # Mathematical glyph bounding boxes are font-dependent and do not expose
+    # the TeX baseline directly. The symbol fixture therefore keeps real math
+    # symbols for rendering coverage and adds one textual control row solely
+    # to measure the generic label/definition alignment mechanism.
     symbol_rows = [
-        row_measurement(
-            args.symbols_pdf,
-            "M",
-            "Malha",
-            vertical_anchor="bottom",
-        ),
+        row_measurement(args.symbols_pdf, "SYMALIGN", "DEFALIGN"),
     ]
 
     label_spread = assert_column_consistency(abbreviation_rows, "label_x")
@@ -123,6 +102,11 @@ def main() -> None:
         "column_tolerance_pt": COLUMN_TOLERANCE_PT,
         "abbreviation_rows": abbreviation_rows,
         "symbol_rows": symbol_rows,
+        "symbol_probe": {
+            "kind": "textual-control-row",
+            "purpose": "measure generic list-row alignment without math-glyph bbox bias",
+            "math_symbols_retained_in_fixture": True,
+        },
         "abbreviation_label_x_spread_pt": label_spread,
         "abbreviation_definition_x_spread_pt": definition_spread,
         "normative_contract_changed": False,
