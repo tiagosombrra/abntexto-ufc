@@ -24,6 +24,13 @@
       ]
     },
     {
+      "id": "text-typography-extraction",
+      "state": "REPRESENTED",
+      "case_ids": [
+        "body-font-size"
+      ]
+    },
+    {
       "id": "citation-quotation-presentation",
       "state": "REPRESENTED",
       "case_ids": [
@@ -91,6 +98,33 @@
       ],
       "expected_rule_id": "margin.recto.right",
       "expected_signature": "N7-EVIDENCE rule=margin.recto.right status=FAIL"
+    },
+    {
+      "id": "body-font-size",
+      "family": "text-typography-extraction",
+      "fixture": "tests/normativa/textual-oracle-typography.tex",
+      "positive_gate": [
+        "sh",
+        "tests/v2-typography-evidence-check.sh"
+      ],
+      "mutation": {
+        "kind": "replace_once",
+        "anchor": "\\noindent UFCNSevenBodyAlpha\\\\\n",
+        "content": "\\noindent {\\fontsize{14}{16}\\selectfont UFCNSevenBodyAlpha}\\\\\n"
+      },
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
+      "oracle": [
+        "python3",
+        "tests/checks/normative_typography.py",
+        "{pdf}",
+        "--json",
+        "{evidence_json}"
+      ],
+      "expected_rule_id": "font.size.body",
+      "expected_signature": "N7-EVIDENCE rule=font.size.body status=FAIL"
     },
     {
       "id": "short-direct-citation-quotes",
