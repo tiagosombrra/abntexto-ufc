@@ -19,6 +19,7 @@ TARGET_RULE = {
     "clause": "6.6.4",
     "testNumber": "2",
 }
+POPLER_CONTAINER = "ghcr.io/xu-cheng/texlive-debian:latest"
 
 
 def fail(message: str) -> None:
@@ -72,7 +73,15 @@ def require_positive_report(path: Path) -> None:
         fail("positive baseline report is not PDF/A-2b compliant")
 
 
-def readable_text(pdf: Path) -> str:
+def repository_relative(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        fail(f"container path must stay inside the repository: {path}")
+
+
+def local_readable_text(pdf: Path) -> str:
     info = run(["pdfinfo", str(pdf)])
     if info.returncode != 0:
         fail(f"pdfinfo rejected readable-PDF requirement for {pdf}: {info.stdout[-1200:]}")
@@ -82,6 +91,53 @@ def readable_text(pdf: Path) -> str:
     if not text.stdout.strip():
         fail(f"pdftotext produced empty text for {pdf}")
     return text.stdout
+
+
+def verify_readability_and_text_identity(source: Path, mutated: Path) -> str:
+    if shutil.which("pdfinfo") and shutil.which("pdftotext"):
+        source_text = local_readable_text(source)
+        mutated_text = local_readable_text(mutated)
+        if mutated_text != source_text:
+            fail("controlled XMP mutation changed extracted document text")
+        return "local-poppler"
+
+    if not shutil.which("docker"):
+        fail("pdfinfo/pdftotext or Docker is required for readable-PDF validation")
+
+    source_rel = repository_relative(source)
+    mutated_rel = repository_relative(mutated)
+    script = r"""
+set -eu
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -qq
+apt-get install -y -qq --no-install-recommends poppler-utils >/dev/null
+pdfinfo "$1" >/tmp/source.info
+pdfinfo "$2" >/tmp/mutated.info
+pdftotext -layout "$1" /tmp/source.txt
+pdftotext -layout "$2" /tmp/mutated.txt
+test -s /tmp/source.txt
+test -s /tmp/mutated.txt
+cmp -s /tmp/source.txt /tmp/mutated.txt
+"""
+    completed = run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "-v",
+            f"{ROOT}:/data:ro",
+            POPPLER_CONTAINER,
+            "/bin/bash",
+            "-lc",
+            script,
+            "n13-poppler",
+            f"/data/{source_rel}",
+            f"/data/{mutated_rel}",
+        ]
+    )
+    if completed.returncode != 0:
+        fail(f"containerized Poppler readability/text-identity check failed: {completed.stdout[-2000:]}")
+    return "containerized-poppler"
 
 
 def mutate_pdf(source: Path, target: Path) -> None:
@@ -96,14 +152,6 @@ def mutate_pdf(source: Path, target: Path) -> None:
         fail("controlled PDF/A mutation changed file length")
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(mutated)
-
-
-def repository_relative(path: Path) -> str:
-    resolved = path.resolve()
-    try:
-        return resolved.relative_to(ROOT.resolve()).as_posix()
-    except ValueError:
-        fail(f"Docker veraPDF path must stay inside the repository: {path}")
 
 
 def run_verapdf(pdf: Path, report: Path) -> tuple[str, int]:
@@ -171,11 +219,8 @@ def main() -> None:
     mutated = artifact_dir / "documento-pdfa-part3-negative.pdf"
     negative_report = artifact_dir / "verapdf-negative.xml"
 
-    source_text = readable_text(source)
     mutate_pdf(source, mutated)
-    mutated_text = readable_text(mutated)
-    if mutated_text != source_text:
-        fail("controlled XMP mutation changed extracted document text")
+    readability_runner = verify_readability_and_text_identity(source, mutated)
 
     runner, vera_exit = run_verapdf(mutated, negative_report)
     root = load_xml(negative_report)
@@ -196,6 +241,7 @@ def main() -> None:
         "mutation": "pdfaid-part-2-to-3",
         "same_length_mutation": True,
         "source_marker_occurrences": 1,
+        "readability_runner": readability_runner,
         "pdfinfo_readable": True,
         "pdftotext_readable": True,
         "extracted_text_unchanged": True,
