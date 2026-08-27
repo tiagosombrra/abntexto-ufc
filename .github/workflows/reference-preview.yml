@@ -12,6 +12,7 @@ on:
       - 'figuras/**'
       - 'Makefile'
       - '.latexmkrc'
+      - 'tools/fetch-reference-images.py'
       - 'tests/v2-font-embedding-check.sh'
       - 'tests/v2-pdfa-check.sh'
       - '.github/workflows/reference-preview.yml'
@@ -38,6 +39,9 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils
             make clean
+            make reference-assets
+            test -s figuras/ufc-campus-pici.jpg
+            test -s figuras/ufc-reitoria.jpg
             make compile
             sh tests/v2-font-embedding-check.sh documento.pdf
       - name: Validate reference PDF/A-2b
