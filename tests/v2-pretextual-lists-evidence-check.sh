@@ -13,6 +13,7 @@ abbreviations_job="pretextual-oracle-list-abbreviations-present"
 symbols_job="pretextual-oracle-list-symbols-present"
 absent_job="pretextual-oracle-lists-absent"
 evidence="artifacts/normative-pretextual/optional-lists.json"
+alignment_evidence="artifacts/layout/pretextual-definition-lists.json"
 
 cleanup() {
   for job in \
@@ -69,8 +70,18 @@ python3 tests/checks/normative_pretextual_lists.py \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
+python3 tests/checks/pretextual_definition_list_alignment.py \
+  "$abbreviations_job.pdf" \
+  "$symbols_job.pdf" \
+  --json "$alignment_evidence"
+
 test -s "$evidence" || {
   echo 'Auditoria de listas opcionais falhou: evidência JSON não foi gerada.'
+  exit 1
+}
+
+test -s "$alignment_evidence" || {
+  echo 'Auditoria de listas opcionais falhou: evidência de alinhamento não foi gerada.'
   exit 1
 }
 
