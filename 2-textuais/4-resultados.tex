@@ -1,34 +1,49 @@
-\section{Resultados e discussão}\label{sec:resultados}
+\section{Citações, notas e referências}\label{sec:citacoes-referencias}
 
-Apresente os resultados de forma coerente com os objetivos e com o protocolo metodológico. Figuras, tabelas, códigos e algoritmos devem ser citados no texto e interpretados no contexto da pesquisa.
+Citações conectam o argumento do autor às fontes utilizadas; referências identificam os documentos citados ou utilizados de acordo com a política bibliográfica adotada. O template separa a apresentação das citações no texto da composição final da lista de referências.
 
-\subsection{Exemplo de código-fonte}
+\subsection{Citação indireta}
 
-\legend{codigo}{Função de soma em C++}
-\ufcfonte{Elaboração própria.}
-\label{cod:soma-v2}
-\begin{ufclisting}[here]
-int soma(int a, int b) {
-    return a + b;
-}
-\end{ufclisting}
+Na citação indireta, a ideia da fonte é apresentada com redação própria. Por exemplo, a separação entre conteúdo e apresentação é uma característica central do fluxo de preparação de documentos em \LaTeX{} \parencite{lamport1994}.
 
-O Código~\ref{cod:soma-v2} demonstra o módulo portátil baseado em \texttt{listings}. Para projetos que necessitem de \texttt{minted}, altere a opção \texttt{codigo} e use o fluxo de compilação correspondente.
+\guianormativa{ABNT NBR 10520:2023}{A indicação de autoria e data deve seguir o sistema de citação adotado no documento. O projeto usa \texttt{biblatex-abnt} como infraestrutura e mantém regressões específicas para a apresentação prevista no escopo testado \parencite{abnt10520}.}
 
-\subsection{Exemplo de algoritmo}
+\subsection{Citação direta curta}
 
-\legend{algoritmo}{Busca linear}
-\ufcfonte{Elaboração própria.}
-\label{alg:busca-v2}
-\begin{ufcalgoritmo}[here][1]
-  \State $i \gets 1$
-  \While{$i \leq n$}
-    \If{$A[i] = x$}
-      \State \Return $i$
-    \EndIf
-    \State $i \gets i + 1$
-  \EndWhile
-  \State \Return $-1$
-\end{ufcalgoritmo}
+Citações diretas curtas permanecem integradas ao parágrafo e usam sinais de citação apropriados. Para evitar reproduzir conteúdo protegido de uma norma técnica, o exemplo abaixo é deliberadamente sintético.
 
-O Algoritmo~\ref{alg:busca-v2} usa \texttt{algpseudocodex}, módulo recomendado para pseudocódigo em documentos novos.
+\guiaexemplo{Uma citação curta pode ser demonstrada como \enquote{texto citado com poucas linhas}, seguida da indicação bibliográfica correspondente. Em um trabalho real, o conteúdo entre aspas deve reproduzir fielmente a fonte consultada e trazer os dados exigidos para localização.}
+
+\subsection{Citação direta longa}
+
+\guianormativa{ABNT NBR 10520:2023 e escopo UFC auditado}{Citação direta com mais de três linhas é apresentada em bloco distinto, sem aspas, com recuo esquerdo de 4 cm, fonte reduzida de 10 pt e espaçamento simples \parencite{abnt10520}.}
+
+O documento de referência exercita fisicamente esse comportamento com um texto sintético na Seção~\ref{sec:catalogo-exemplos}. A suíte mede recuo, tamanho de fonte, espaçamento, ausência de aspas e separação do bloco em relação ao corpo.
+
+\subsection{Citação de citação}
+
+O recurso conhecido como citação de citação deve ser usado com parcimônia, preferindo-se a consulta à fonte original sempre que possível. Quando necessário, a apresentação de \textit{apud} segue a política bibliográfica e a NBR 10520 vigente.
+
+\guiapolitica{O repositório possui cenários específicos para verificar a apresentação de \textit{apud}. O fato de o template suportar o recurso não elimina a responsabilidade acadêmica de consultar a fonte original quando ela estiver disponível.}
+
+\subsection{Notas de rodapé}
+
+Notas podem complementar uma informação sem interromper excessivamente o fluxo do parágrafo. Sua tipografia reduzida foi descrita na Seção~\ref{sec:formatacao-geral}.
+
+\guiaexemplo{Use notas para informação realmente complementar. Referências bibliográficas não devem ser transferidas arbitrariamente para notas apenas para contornar o sistema de citações configurado no trabalho.}
+
+\subsection{Lista de referências}
+
+\guianormativa{ABNT NBR 6023:2025}{A elaboração das referências segue a edição vigente adotada pelo projeto. No escopo de apresentação exercitado pela V2, as entradas são alinhadas à margem esquerda, usam fonte 12 pt e espaçamento simples internamente, com separação entre referências correspondente a uma linha em branco de espaço simples \parencite{abnt6023}.}
+
+O arquivo \texttt{3-pos-textuais/referencias.bib} demonstra tipos bibliográficos diferentes: livro, artigo de periódico com DOI, trabalho em evento, dissertação, relatório técnico, norma e recurso eletrônico. O objetivo é exercitar os campos mais comuns sem sugerir que todos eles devam aparecer em todo trabalho.
+
+\guiaexemplo{Uma referência com DOI só apresenta DOI quando esse identificador pertence ao documento referenciado. De modo semelhante, URL e data de acesso são usados quando pertinentes ao tipo de fonte e à regra bibliográfica aplicável.}
+
+\subsection{Normas técnicas como referências}
+
+As normas citadas neste guia aparecem também nas referências para que o leitor saiba qual edição orienta cada seção. O projeto não redistribui o texto integral das normas ABNT; a comunidade UFC pode utilizar os meios institucionais autorizados para consulta das normas técnicas.
+
+\guiainstitucional{O Sistema de Bibliotecas da UFC disponibiliza orientação sobre acesso à coleção de normas técnicas. Este PDF identifica a norma e a edição adotadas, mas não substitui a consulta à publicação oficial \parencite{ufcnormastecnicas}.}
+
+\index{citação direta}\index{citação indireta}\index{referências}\index{apud}\index{DOI}
