@@ -26,7 +26,13 @@ def locate(pdf: Path, marker: str):
         fail(f"{pdf}: {exc}")
 
 
-def row_measurement(pdf: Path, label: str, definition_start: str) -> dict[str, float | int | str]:
+def row_measurement(
+    pdf: Path,
+    label: str,
+    definition_start: str,
+    *,
+    vertical_anchor: str = "top",
+) -> dict[str, float | int | str]:
     label_page, label_word = locate(pdf, label)
     definition_page, definition_word = locate(pdf, definition_start)
     if label_page.index != definition_page.index:
@@ -35,22 +41,37 @@ def row_measurement(pdf: Path, label: str, definition_start: str) -> dict[str, f
             f"({label_page.index}/{definition_page.index})"
         )
 
-    top_delta = abs(label_word.box.y_min - definition_word.box.y_min)
-    if top_delta > ALIGNMENT_TOLERANCE_PT:
+    if vertical_anchor == "top":
+        label_y = label_word.box.y_min
+        definition_y = definition_word.box.y_min
+    elif vertical_anchor == "bottom":
+        # A mathematical glyph can have a different ascender/top extent than
+        # ordinary text even on the same baseline.  The controlled M/Malha
+        # fixture has no descenders, so the lower bbox edge is the stable
+        # same-baseline proxy while remaining sensitive to vertical shifts.
+        label_y = label_word.box.y_max
+        definition_y = definition_word.box.y_max
+    else:
+        fail(f"unsupported vertical anchor: {vertical_anchor}")
+
+    vertical_delta = abs(label_y - definition_y)
+    if vertical_delta > ALIGNMENT_TOLERANCE_PT:
         fail(
-            f"{pdf}: row {label!r}/{definition_start!r} is vertically misaligned: "
-            f"delta={top_delta:.3f}pt > {ALIGNMENT_TOLERANCE_PT:.3f}pt"
+            f"{pdf}: row {label!r}/{definition_start!r} is vertically misaligned "
+            f"using {vertical_anchor} anchor: delta={vertical_delta:.3f}pt > "
+            f"{ALIGNMENT_TOLERANCE_PT:.3f}pt"
         )
 
     return {
         "page": label_page.index,
         "label": label,
         "definition_start": definition_start,
+        "vertical_anchor": vertical_anchor,
         "label_x": label_word.box.x_min,
         "definition_x": definition_word.box.x_min,
-        "label_y": label_word.box.y_min,
-        "definition_y": definition_word.box.y_min,
-        "top_delta_pt": top_delta,
+        "label_y": label_y,
+        "definition_y": definition_y,
+        "vertical_delta_pt": vertical_delta,
     }
 
 
@@ -83,7 +104,12 @@ def main() -> None:
         row_measurement(args.abbreviations_pdf, "UFC", "Universidade"),
     ]
     symbol_rows = [
-        row_measurement(args.symbols_pdf, "M", "Malha"),
+        row_measurement(
+            args.symbols_pdf,
+            "M",
+            "Malha",
+            vertical_anchor="bottom",
+        ),
     ]
 
     label_spread = assert_column_consistency(abbreviation_rows, "label_x")
@@ -110,7 +136,7 @@ def main() -> None:
         )
 
     max_delta = max(
-        float(row["top_delta_pt"])
+        float(row["vertical_delta_pt"])
         for row in [*abbreviation_rows, *symbol_rows]
     )
     print(
