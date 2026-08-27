@@ -47,7 +47,21 @@ def normalize_pdf_text(value):
 
 
 def spaced_leader_pattern():
-    return r'(?:\.\s+){1,}\.\s*\d+\s*$'
+    return r'(?:\.\s+){1,}\d+\s*$'
+
+
+ENTRY_START = re.compile(r'^\s*(?:Figura|Tabela|Código|Algoritmo)\s+\d+\s+[—-]\s+')
+
+
+def list_entries(block):
+    lines = block.splitlines()
+    starts = [index for index, line in enumerate(lines) if ENTRY_START.match(line)]
+    entries = []
+    for position, start_index in enumerate(starts):
+        end_index = starts[position + 1] if position + 1 < len(starts) else len(lines)
+        raw_entry = '\n'.join(lines[start_index:end_index])
+        entries.append((raw_entry, normalize_pdf_text(raw_entry)))
+    return entries
 
 
 def require_dotted_entry(source, start, end, marker):
@@ -55,9 +69,17 @@ def require_dotted_entry(source, start, end, marker):
     end_at = source.find(end, start_at + len(start))
     if start_at < 0 or end_at < 0:
         raise SystemExit(f'Corpus V2 falhou: bloco de lista não localizado: {start}.')
-    block = source[start_at:end_at]
-    pattern = re.compile(re.escape(marker) + r'[^\n]*' + spaced_leader_pattern(), re.M)
-    if not pattern.search(block):
+
+    entries = list_entries(source[start_at:end_at])
+    matches = [(raw, normalized) for raw, normalized in entries if marker in normalized]
+    if len(matches) != 1:
+        raise SystemExit(
+            f'Corpus V2 falhou: esperado exatamente uma entrada para {start}: '
+            f'{marker}; encontradas {len(matches)}.'
+        )
+
+    _, normalized_entry = matches[0]
+    if not re.search(spaced_leader_pattern(), normalized_entry):
         raise SystemExit(f'Corpus V2 falhou: líder pontilhado espaçado ausente em {start}: {marker}')
 
 
@@ -66,7 +88,7 @@ flat = normalize_pdf_text(text)
 required = (
     'MODELO COMENTADO DE TRABALHO ACADÊMICO DA UFC',
     'INTRODUÇÃO E USO DESTE MODELO',
-    'BASE NORMATIVA ADOTADA',
+    'Base normativa adotada',
     'ESTRUTURA DO TRABALHO ACADÊMICO',
     'ELEMENTOS PRÉ-TEXTUAIS EM DETALHE',
     'FORMATAÇÃO GERAL E ORGANIZAÇÃO DA PARTE TEXTUAL',
@@ -203,20 +225,26 @@ if undotted:
 
 root = ET.parse('/tmp/abntexto-ufc-v2-reference-corpus-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
+bbox_pages = [node for node in root.iter() if local(node.tag) == 'page']
+if toc_end > len(bbox_pages):
+    raise SystemExit(
+        f'Corpus V2 falhou: intervalo físico do sumário excede páginas BBox: '
+        f'toc_end={toc_end}, bbox_pages={len(bbox_pages)}.'
+    )
 
 
 def toc_title_x(marker):
     matches = []
-    for line in (node for node in root.iter() if local(node.tag) == 'line'):
-        words = [node for node in line if local(node.tag) == 'word']
-        if not words:
-            continue
-        raw = ' '.join(''.join(word.itertext()) for word in words)
-        if not raw.startswith(marker):
-            continue
-        if not any(''.join(word.itertext()).strip() == '.' for word in words):
-            continue
-        matches.append((raw, float(words[0].attrib['xMin'])))
+    for page_index in range(toc_start, toc_end):
+        page = bbox_pages[page_index]
+        for line in (node for node in page.iter() if local(node.tag) == 'line'):
+            words = [node for node in line if local(node.tag) == 'word']
+            if not words:
+                continue
+            raw = ' '.join(''.join(word.itertext()) for word in words)
+            if not raw.startswith(marker):
+                continue
+            matches.append((raw, float(words[0].attrib['xMin']), page_index + 1))
     if len(matches) != 1:
         raise SystemExit(
             f'Corpus V2 falhou: esperado um título primário no sumário para {marker}; encontrados {len(matches)}.'
