@@ -170,7 +170,7 @@ Exact-head PR validation:
 
 PR #133 squash-merged as stable main `2cbd6d00318ba906e225fa37a4efb724300c3b4e`.
 
-During PR validation, the repository auditor exposed a false positive because `TODO_PATTERN` used case-insensitive matching and therefore interpreted ordinary Portuguese `todo` as technical `TODO`. The auditor was corrected to recognize only explicit uppercase work markers; guide prose was not rewritten to bypass the detector.
+During PR validation, the repository auditor exposed a false positive because the pending-work detector used case-insensitive matching and therefore interpreted the ordinary Portuguese word `todo` as a reserved technical marker. The detector was corrected to recognize only explicit uppercase work markers; guide prose was not rewritten to bypass the detector.
 
 ## Current compatibility blocker — PR #134
 
