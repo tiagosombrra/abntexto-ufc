@@ -225,20 +225,26 @@ if undotted:
 
 root = ET.parse('/tmp/abntexto-ufc-v2-reference-corpus-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
+bbox_pages = [node for node in root.iter() if local(node.tag) == 'page']
+if toc_end > len(bbox_pages):
+    raise SystemExit(
+        f'Corpus V2 falhou: intervalo físico do sumário excede páginas BBox: '
+        f'toc_end={toc_end}, bbox_pages={len(bbox_pages)}.'
+    )
 
 
 def toc_title_x(marker):
     matches = []
-    for line in (node for node in root.iter() if local(node.tag) == 'line'):
-        words = [node for node in line if local(node.tag) == 'word']
-        if not words:
-            continue
-        raw = ' '.join(''.join(word.itertext()) for word in words)
-        if not raw.startswith(marker):
-            continue
-        if not any(''.join(word.itertext()).strip() == '.' for word in words):
-            continue
-        matches.append((raw, float(words[0].attrib['xMin'])))
+    for page_index in range(toc_start, toc_end):
+        page = bbox_pages[page_index]
+        for line in (node for node in page.iter() if local(node.tag) == 'line'):
+            words = [node for node in line if local(node.tag) == 'word']
+            if not words:
+                continue
+            raw = ' '.join(''.join(word.itertext()) for word in words)
+            if not raw.startswith(marker):
+                continue
+            matches.append((raw, float(words[0].attrib['xMin']), page_index + 1))
     if len(matches) != 1:
         raise SystemExit(
             f'Corpus V2 falhou: esperado um título primário no sumário para {marker}; encontrados {len(matches)}.'
