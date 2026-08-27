@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+sh tests/v2-reference-guide-contract-check.sh
+
 make clean
 make compile
 
