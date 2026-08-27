@@ -23,14 +23,16 @@
       "implementation": "validator/app.js",
       "ui": "validator/index.html",
       "measurement_backend": "PDF.js 6.2.108",
-      "report_case": "camelCase",
-      "local_processing": true
+      "report_case": "snake_case",
+      "local_processing": true,
+      "mode": "web-lite-local"
     },
     "cli-deep": {
       "implementation": "tools/validate-ufc-pdf.py",
       "measurement_backend": "Poppler + veraPDF",
       "report_case": "snake_case",
-      "local_processing": true
+      "local_processing": true,
+      "mode": "cli-deep-local"
     }
   },
   "baseline": {
@@ -41,7 +43,11 @@
     "alias_count": 2,
     "web_only_count": 1,
     "cli_only_count": 3,
-    "current_schema_drift": {
+    "aliases": {
+      "font.literal": {"web_id": "font.family", "cli_id": "font.literal"},
+      "font.embedded": {"web_id": "font.embedding", "cli_id": "font.embedded"}
+    },
+    "observed_schema_drift": {
       "web_normative_catalog_field": "normativeCatalog",
       "cli_normative_catalog_field": "normative_catalog",
       "web_normative_rule_field": "normativeRule",
@@ -54,14 +60,24 @@
     "case": "snake_case",
     "required_top_level": ["file", "profile", "verdict", "normative_catalog", "checks", "mode"],
     "required_check_fields": ["id", "category", "rule", "source", "status", "evidence", "correction", "mandatory", "level", "normative_rule", "locator", "normativity"],
-    "adoption_state": "PENDING"
+    "adoption_state": "ADOPTED"
+  },
+  "adoption": {
+    "state": "ADOPTED",
+    "emitted_alias_count": 0,
+    "web_report_case": "snake_case",
+    "cli_report_case": "snake_case",
+    "web_mode": "web-lite-local",
+    "cli_mode": "cli-deep-local",
+    "normative_contract_changed": false,
+    "proof_state_changed": false
   },
   "check_inventory": [
     {"canonical_id":"pdf.open","web_id":"pdf.open","cli_id":"pdf.open","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
     {"canonical_id":"layout.a4","web_id":"layout.a4","cli_id":"layout.a4","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"page.a4","state":"ALIGNED"},
     {"canonical_id":"layout.margins","web_id":"layout.margins","cli_id":"layout.margins","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"margin.recto","state":"ALIGNED"},
-    {"canonical_id":"font.literal","web_id":"font.family","cli_id":"font.literal","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"font.family.body","state":"ALIAS_REQUIRED"},
-    {"canonical_id":"font.embedded","web_id":"font.embedding","cli_id":"font.embedded","web_mode":"review-only","cli_mode":"automatic-deep","state":"ALIAS_REQUIRED"},
+    {"canonical_id":"font.literal","web_id":"font.literal","cli_id":"font.literal","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"font.family.body","state":"ALIGNED"},
+    {"canonical_id":"font.embedded","web_id":"font.embedded","cli_id":"font.embedded","web_mode":"review-only","cli_mode":"automatic-deep","state":"ALIGNED"},
     {"canonical_id":"structure.cover","web_id":"structure.cover","cli_id":"structure.cover","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
     {"canonical_id":"structure.approval","web_id":"structure.approval","cli_id":"structure.approval","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
     {"canonical_id":"structure.resumo","web_id":"structure.resumo","cli_id":"structure.resumo","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
