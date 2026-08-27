@@ -125,7 +125,8 @@ def main() -> None:
         "for engine in pdflatex lualatex",
         "for family in times arial",
         "for slot in rm sf tt",
-        "fonte-estrita",
+        'render_fixture "$family" sim rm',
+        "strict_job=",
         "sh tests/v2-font-embedding-check.sh",
     ])
 
