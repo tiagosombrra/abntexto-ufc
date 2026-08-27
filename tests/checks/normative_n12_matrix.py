@@ -161,8 +161,10 @@ def main() -> None:
     for relative in orth.get("profile_render_files", []):
         forbid_tokens(ROOT / relative, ["g_ufc_font_family_tl", "ufc_font_apply", "fonte / times", "fonte / arial"])
 
-    workflow = ROOT / manifest["stable_main_evidence"]["workflow"]
-    workflow_text = require_tokens(workflow, manifest["stable_main_evidence"]["required_job_names"])
+    stable = manifest.get("stable_main_evidence", {})
+    workflow = ROOT / stable["workflow"]
+    required_jobs = stable.get("required_job_names", [])
+    workflow_text = require_tokens(workflow, required_jobs)
     for token in (
         "workflow_dispatch:",
         "V2 Windows literal font build",
@@ -174,7 +176,6 @@ def main() -> None:
         if token not in workflow_text:
             fail(f"workflow lost N12 stable-main gate token: {token}")
 
-    stable = manifest.get("stable_main_evidence", {})
     if stable.get("source_sha") != "34a723c33d6779fb8a4476c7e4d94f610e19e129":
         fail("stable-main evidence SHA drifted")
     if stable.get("workflow_run_id") != 33032198400 or stable.get("workflow_run_number") != 875:
@@ -183,10 +184,41 @@ def main() -> None:
         fail("N12 stable-main evidence must come from workflow_dispatch so Windows gates are required")
     if stable.get("observed_conclusion") != "SUCCESS":
         fail("stable-main N12 workflow receipt is not certified SUCCESS")
+
     observed_jobs = stable.get("observed_jobs", [])
-    required_jobs = stable.get("required_job_names", [])
     if sorted(observed_jobs) != sorted(required_jobs):
         fail("stable-main SUCCESS receipt does not cover every required N12 job")
+    if len(required_jobs) != 9 or len(set(required_jobs)) != 9:
+        fail("stable-main required job set must contain exactly nine unique jobs")
+
+    receipts = stable.get("job_receipts", {})
+    if not isinstance(receipts, dict) or set(receipts) != set(required_jobs):
+        fail("stable-main job receipt keys do not match the required N12 jobs")
+    receipt_ids: set[int] = set()
+    for job_name in required_jobs:
+        receipt = receipts.get(job_name)
+        if not isinstance(receipt, dict):
+            fail(f"invalid stable-main job receipt: {job_name}")
+        job_id = receipt.get("job_id")
+        conclusion = receipt.get("conclusion")
+        if not isinstance(job_id, int) or job_id <= 0:
+            fail(f"invalid stable-main job id for {job_name}: {job_id!r}")
+        if conclusion != "success":
+            fail(f"stable-main job receipt is not successful: {job_name}={conclusion!r}")
+        if job_id in receipt_ids:
+            fail(f"stable-main job receipt reuses job id {job_id}")
+        receipt_ids.add(job_id)
+
+    host = manifest.get("scope_checker_host", {})
+    if host.get("check_id") != "normative-complement":
+        fail("N12 scope checker must be hosted by normative-complement")
+    host_script = ROOT / host.get("script", "")
+    checker_path = host.get("checker")
+    if not isinstance(checker_path, str) or not checker_path:
+        fail("N12 scope checker path is missing")
+    host_text = require_tokens(host_script, [checker_path])
+    if "python3 tests/checks/normative_n12_matrix.py" not in host_text:
+        fail("N12 scope checker is not directly invoked by normative-complement")
 
     supplemental = manifest.get("supplemental_environment", {})
     if supplemental.get("overleaf_proxy_is_core_matrix_cell") is not False:
@@ -216,8 +248,10 @@ def main() -> None:
     print(
         "N12-EVIDENCE stable-main-receipt "
         f"sha={stable['source_sha']} run_id={stable['workflow_run_id']} "
-        f"run_number={stable['workflow_run_number']} conclusion={stable['observed_conclusion']}"
+        f"run_number={stable['workflow_run_number']} conclusion={stable['observed_conclusion']} "
+        f"jobs={len(receipts)}"
     )
+    print("N12-EVIDENCE scope-checker-host check_id=normative-complement status=PASS")
     print(
         "N12-EVIDENCE authority-boundary "
         "compatibility-certification=true normative_predicates_reopened=false proof_state_changed=false"
