@@ -56,8 +56,24 @@ def require_dotted_entry(source, start, end, marker):
     if start_at < 0 or end_at < 0:
         raise SystemExit(f'Corpus V2 falhou: bloco de lista não localizado: {start}.')
     block = source[start_at:end_at]
-    pattern = re.compile(re.escape(marker) + r'[^\n]*' + spaced_leader_pattern(), re.M)
-    if not pattern.search(block):
+    lines = block.splitlines()
+    marker_lines = [index for index, line in enumerate(lines) if marker in line]
+    if len(marker_lines) != 1:
+        raise SystemExit(
+            f'Corpus V2 falhou: esperado exatamente um marcador em {start}: '
+            f'{marker}; encontrados {len(marker_lines)}.'
+        )
+
+    entry_start = marker_lines[0]
+    next_entry = re.compile(r'^\s*(?:Figura|Tabela|Código|Algoritmo)\s+\d+\s+[—-]\s+')
+    entry_lines = [lines[entry_start]]
+    for line in lines[entry_start + 1:]:
+        if next_entry.match(line):
+            break
+        entry_lines.append(line)
+
+    entry = '\n'.join(entry_lines)
+    if not re.search(spaced_leader_pattern(), entry, re.M):
         raise SystemExit(f'Corpus V2 falhou: líder pontilhado espaçado ausente em {start}: {marker}')
 
 
