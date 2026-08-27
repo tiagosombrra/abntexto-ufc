@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "phase": "N12",
+  "scope": "profile-engine-font-certification",
+  "coverage_model": "factorized-orthogonal-axes",
+  "dimensions": {
+    "profiles": [
+      "tccgraduacao",
+      "tccespecializacao",
+      "dissertacao",
+      "tese",
+      "projeto",
+      "projetoanonimizado"
+    ],
+    "engines": ["pdflatex", "lualatex"],
+    "font_families": ["times", "arial"]
+  },
+  "expected_cells": {
+    "profile_engine": 12,
+    "portable_font_engine": 4,
+    "literal_windows_font_engine": 4,
+    "total_certification_cells": 20
+  },
+  "profile_engine_evidence": {
+    "check_id": "profiles",
+    "script": "tests/v2-profile-matrix-check.sh",
+    "pdfa_script": "tests/v2-profile-pdfa-check.sh",
+    "fixture": "tests/smoke/perfil-base.tex",
+    "properties": [
+      "zero-unrecognized-warnings-or-overflow",
+      "clean-biber",
+      "a4",
+      "font-embedding",
+      "profile-semantic-content",
+      "toc-structure",
+      "pdfa-2b"
+    ]
+  },
+  "portable_font_engine_evidence": {
+    "check_id": "font-config",
+    "script": "tests/v2-font-config-check.sh",
+    "properties": [
+      "rm-sf-tt-selected-family",
+      "font-embedding",
+      "literal-when-available",
+      "compatible-fallback-when-literal-unavailable",
+      "strict-mode-accept-or-family-specific-reject"
+    ]
+  },
+  "literal_windows_font_engine_evidence": {
+    "build_script": "tests/v2-font-poc.sh",
+    "certification_script": "tests/v2-windows-font-pdfa-check.sh",
+    "properties": [
+      "literal-family-identity",
+      "no-text-fallback",
+      "unicode-text-extraction",
+      "font-embedding",
+      "pdfa-2b"
+    ]
+  },
+  "orthogonality": {
+    "profile_key_file": "abntexto-ufc/core.def",
+    "font_key_file": "abntexto-ufc/fontes.def",
+    "profile_render_files": [
+      "abntexto-ufc/trabalhos.def",
+      "abntexto-ufc/projetos.def"
+    ],
+    "policy": "profile choice and font family are independent configuration axes; marginal matrices may certify the cross-product only while this static separation remains true"
+  },
+  "stable_main_evidence": {
+    "source_sha": "34a723c33d6779fb8a4476c7e4d94f610e19e129",
+    "workflow": ".github/workflows/latex-preflight.yml",
+    "workflow_run_id": 33032198400,
+    "workflow_run_number": 875,
+    "event": "workflow_dispatch",
+    "observed_conclusion": "PENDING",
+    "required_job_names": [
+      "V2 reference document",
+      "V2 layout, fonts, pre-textuals and projects",
+      "V2 objects and bibliography",
+      "V2 profile matrix",
+      "V2 post-textuals",
+      "V2 Overleaf stable proxy",
+      "V2 Windows literal font build",
+      "V2 Windows literal font certification",
+      "latex-preflight"
+    ]
+  },
+  "certified_git_blobs": {
+    "abntexto-ufc/core.def": "55ba9eda2d86b891c868043bb8c450f5310e6141",
+    "abntexto-ufc/fontes.def": "8c6c5751c5806def42298d99f809f5c5ea3a7bc7",
+    "abntexto-ufc/trabalhos.def": "219c8c8e2ef369583043f0e1395befd5c350b9ac",
+    "abntexto-ufc/projetos.def": "247da45ea877666e9f214f535c0f2c2b8c5fd092",
+    "tests/smoke/perfil-base.tex": "74312347b2abc384c73c088122edddc440a74318",
+    "tests/v2-profile-matrix-check.sh": "a76338e4bd2a9923e56e62d4b1540618a1af79f5",
+    "tests/v2-profile-pdfa-check.sh": "b3a6fd2a8f579e3221f66a43a1b360ef1986b084",
+    "tests/v2-font-config-check.sh": "50daa19ca81af6b6ccd9467c19be873b86eeb0c6",
+    "tests/v2-font-poc.sh": "daafd4abc7ea8d2b19bbb1988be37de4dc889459",
+    "tests/v2-windows-font-pdfa-check.sh": "72946d022ad04525a42d99bcb0010b1bf6157c86",
+    ".github/workflows/latex-preflight.yml": "188678d85e7b0869581991ed894091560b497331"
+  },
+  "supplemental_environment": {
+    "overleaf_proxy_is_core_matrix_cell": false,
+    "purpose": "supplemental compatibility signal for the public TeX Live 2025 environment"
+  },
+  "closure_policy": {
+    "does_not_reopen_normative_predicates": true,
+    "proof_state_changed": false,
+    "literal_windows_identity_requires_windows_path": true,
+    "full_24_cell_profile_font_cross_product_required": false,
+    "factorization_requires_orthogonality_check": true
+  }
+}
