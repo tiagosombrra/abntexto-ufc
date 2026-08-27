@@ -72,9 +72,9 @@
         "tests/v2-page-margins-evidence-check.sh"
       ],
       "mutation": {
-        "kind": "insert_before",
-        "anchor": "\\begin{document}",
-        "content": "\\addtolength{\\textwidth}{15mm}\n"
+        "kind": "replace_once",
+        "anchor": "\\textual\n\n\\ufctextareaframe",
+        "content": "\\textual\n\\newgeometry{twoside=true,inner=3cm,outer=4cm,top=3cm,bottom=2cm}\n\n\\ufctextareaframe"
       },
       "compile": {
         "engine": "pdflatex",
