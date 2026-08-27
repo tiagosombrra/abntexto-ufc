@@ -23,7 +23,6 @@
 \input{abntexto-ufc/layout.def}
 \input{abntexto-ufc/modulos.def}
 \input{abntexto-ufc/pretextuais.def}
-\input{abntexto-ufc/pretextuais-listas.def}
 \input{abntexto-ufc/institucional.def}
 \input{abntexto-ufc/trabalhos.def}
 \input{abntexto-ufc/projetos.def}
