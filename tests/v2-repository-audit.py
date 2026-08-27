@@ -39,7 +39,9 @@ LEGACY_PATTERNS = {
     'legacy UFC object helper': re.compile(r'\\UFC(?:fig|tab|qua)\b'),
     'legacy project type': re.compile(r'\bprojetocego\b'),
 }
-TODO_PATTERN = re.compile(r'\b(?:TODO|FIXME|HACK|XXX|MIGRATION_PENDING)\b', re.IGNORECASE)
+# Pending-work markers are intentionally case-sensitive. In Portuguese prose,
+# the common word "todo" must not be interpreted as the technical marker TODO.
+TODO_PATTERN = re.compile(r'\b(?:TODO|FIXME|HACK|XXX|MIGRATION_PENDING)\b')
 ABSOLUTE_PATH_PATTERNS = (
     re.compile(r'\b[A-Za-z]:[\\/](?:Users|Documents and Settings)[\\/]', re.IGNORECASE),
     re.compile(r'/home/[A-Za-z0-9._-]+/'),

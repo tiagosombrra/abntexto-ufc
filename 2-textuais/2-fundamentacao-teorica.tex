@@ -1,30 +1,61 @@
-\section{Fundamentação teórica}\label{sec:fundamentacao}
+\section{Estrutura do trabalho acadêmico}\label{sec:estrutura-trabalho}
 
-Organize nesta seção os conceitos, modelos e trabalhos que sustentam a pesquisa. Use subseções quando a hierarquia do conteúdo exigir detalhamento.
+A organização de um trabalho acadêmico é normalmente compreendida em três grandes grupos: elementos pré-textuais, elementos textuais e elementos pós-textuais. O template separa essas etapas com os comandos \texttt{\string\pretextual} e \texttt{\string\textual}; referências, glossário, apêndices, anexos e índice são produzidos depois do corpo principal.
 
-\subsection{Exemplo de ilustração}
+\guianormativa{ABNT NBR 14724:2024}{A norma de apresentação de trabalhos acadêmicos fornece a estrutura geral do documento e as regras de apresentação que orientam a composição dos elementos. A obrigatoriedade de um elemento pode variar conforme sua natureza e o perfil do trabalho \parencite{abnt14724}.}
 
-A V2 usa a área de legenda do \texttt{abntexto}. A identificação é declarada antes do objeto e a fonte é registrada pela API pública do template.
+\subsection{Visão geral dos componentes}
 
-\legend{figure}{Exemplo de figura no padrão V2}
-\ufcfonte{Elaboração própria.}
-\ufcnota{Elemento sintético utilizado apenas para demonstrar a composição.}
-\label{fig:exemplo-v2}
-\begin{ufcobjeto}[here]
-  \centering
-  \rule{9cm}{4cm}
-\end{ufcobjeto}
+\begin{table}[htbp]
+\centering
+\begin{tallabnttblr}
+[
+  caption={Organização didática dos componentes exercitados pelo documento de referência},
+  label={tab:estrutura-documento},
+  remark{Fonte}={Elaboração própria a partir da base normativa adotada pelo projeto.},
+  remark{Nota}={A aplicabilidade concreta depende do perfil e das regras institucionais correspondentes.},
+]
+{
+  colspec={X[l,1.1] X[l,2.2] X[l,2.7]},
+}
+\toprule
+Grupo & Componentes demonstrados & Observação \\
+\midrule
+Pré-textuais & capa, folha de rosto, errata, folha de aprovação, dedicatória, agradecimentos, epígrafe, resumo, abstract, listas e sumário & antecedem o corpo textual; alguns são obrigatórios, outros opcionais ou condicionais \\
+Textuais & seções e subseções do desenvolvimento acadêmico & o conteúdo e os títulos concretos dependem da natureza da pesquisa e do programa \\
+Pós-textuais & referências, glossário, apêndices, anexos e índice & complementam o trabalho depois do texto principal; a aplicabilidade varia conforme o elemento \\
+\bottomrule
+\end{tallabnttblr}
+\end{table}
 
-A Figura~\ref{fig:exemplo-v2} pode ser substituída por uma imagem com \texttt{\string\includegraphics} sem alterar a estrutura de identificação, fonte e nota.
+A Tabela~\ref{tab:estrutura-documento} é deliberadamente descritiva. Ela não pretende substituir a consulta à norma ou às regras do curso; sua função é orientar a leitura deste PDF e mostrar onde cada recurso aparece.
 
-\subsection{Exemplo de gráfico}
+\subsection{Elementos pré-textuais}
 
-\legend{grafico}{Exemplo de gráfico no padrão V2}
-\ufcfonte{Elaboração própria.}
-\label{graf:exemplo-v2}
-\begin{ufcobjeto}[here]
-  \centering
-  \rule{9cm}{3cm}
-\end{ufcobjeto}
+Os elementos pré-textuais identificam o trabalho, registram informações acadêmicas e auxiliam a navegação antes do início do texto principal. Neste documento são exercitados capa, folha de rosto, errata, folha de aprovação, dedicatória, agradecimentos, epígrafe, resumo, abstract, listas de ilustrações, tabelas, códigos, algoritmos, abreviaturas e símbolos, além do sumário.
 
-Figuras e gráficos entram automaticamente na Lista de Ilustrações; tabelas permanecem em lista própria.
+\guiaexemplo{A ficha catalográfica está desativada no documento principal para demonstrar a política padrão do perfil. O comando correspondente permanece comentado em \texttt{documento.tex} e pode ser habilitado quando o fluxo institucional exigir sua representação.}
+
+\subsection{Elementos textuais}
+
+A parte textual é o núcleo acadêmico do trabalho. O template não impõe que todos os documentos usem os mesmos títulos de capítulo: a organização deve ser adequada ao gênero acadêmico, ao método, à área do conhecimento e às exigências do curso ou programa.
+
+Neste modelo comentado, as seções textuais foram escolhidas para ensinar a própria estrutura do documento. Em um trabalho real, elas devem ser substituídas pelos capítulos efetivamente necessários à pesquisa.
+
+\guianormativa{ABNT NBR 6024:2012}{A numeração das seções é progressiva. O template suporta uma hierarquia controlada de seções e preserva a apresentação correspondente no sumário \parencite{abnt6024}.}
+
+\subsection{Elementos pós-textuais}
+
+Depois do corpo textual, o documento pode apresentar referências, glossário, apêndices, anexos e índice. As referências reúnem as fontes efetivamente utilizadas conforme a política bibliográfica; apêndices contêm material complementar elaborado pelo autor; anexos recebem material complementar de autoria externa; glossário e índice são recursos opcionais quando úteis ao trabalho.
+
+\guianormativa{ABNT NBR 6023:2025}{A elaboração e apresentação das referências seguem a edição vigente adotada pelo projeto \parencite{abnt6023}.}
+
+\guianormativa{ABNT NBR 6034:2004}{O índice remissivo é um elemento pós-textual opcional. No documento de referência ele permanece habilitado para demonstrar o recurso e validar sua apresentação \parencite{abnt6034}.}
+
+\subsection{Contagem e exibição da paginação}
+
+As folhas pré-textuais participam da progressão do documento, mas a apresentação do número de página segue a política aplicável ao início da parte textual. Em documentos frente e verso, a classe também controla o lado de início dos elementos que exigem abertura em página ímpar, respeitando as exceções documentais implementadas.
+
+\guiaexemplo{Este PDF está configurado em \texttt{impressao=anverso}. A matriz de testes do projeto também compila cenários frente e verso para verificar margens espelhadas, paginação e início em página apropriada.}
+
+\index{elementos pré-textuais}\index{elementos textuais}\index{elementos pós-textuais}\index{paginação}

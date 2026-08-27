@@ -1,19 +1,37 @@
-\section{Introdução}\label{sec:introducao}
+\section{Introdução e uso deste modelo}\label{sec:introducao}
 
-Este arquivo exemplifica a estrutura textual da V2 do modelo. O documento principal concentra os metadados institucionais em \texttt{\string\ufcsetup}, enquanto os arquivos desta pasta contêm apenas o texto acadêmico.
+Este documento de referência é, ao mesmo tempo, um exemplo compilável e um guia visual do \gls{template} \texttt{abntexto-ufc}. Em vez de simular uma pesquisa acadêmica fictícia, as próximas seções explicam a estrutura de um trabalho acadêmico, as principais regras de apresentação e de \gls{normalizacao} exercitadas pelo template e os recursos disponíveis para produção de TCCs, monografias de especialização, dissertações, teses e projetos de pesquisa.
 
-O \LaTeX{} separa conteúdo e apresentação e é amplamente utilizado na produção de documentos científicos \parencite{knuth}. Na V2, a classe \texttt{abntexto-ufc} centraliza as regras tipográficas e institucionais e usa \texttt{abntexto} como base editorial.
+O arquivo principal \texttt{documento.tex} concentra os metadados institucionais em \texttt{\string\ufcsetup}. Os arquivos das pastas \texttt{1-pre-textuais}, \texttt{2-textuais} e \texttt{3-pos-textuais} mostram uma forma de separar o conteúdo por etapa documental. A classe \texttt{abntexto-ufc} centraliza a apresentação e usa \texttt{abntexto} como base editorial, preservando a separação entre conteúdo e formatação característica do \LaTeX{} \parencite{knuth,lamport1994}.
 
-A \gls{normalizacao} deve ser conferida à luz das regras aplicáveis ao curso, programa ou edital. O template reduz trabalho de formatação, mas não substitui a revisão institucional do documento.\index{normalização}\index{LaTeX}
+\subsection{Como interpretar as orientações deste PDF}
 
-\subsection{Normas e diretrizes adotadas}
+Ao longo do documento são usados quatro tipos de indicação explícita.
 
-No escopo implementado pela V2, a apresentação geral dos trabalhos acadêmicos segue a ABNT NBR 14724:2024, considerando sua versão corrigida de 2025; as citações seguem a ABNT NBR 10520:2023; e as referências são tratadas conforme a ABNT NBR 6023:2025 \parencite{abnt14724,abnt10520,abnt6023}.
+\guianormativa{normas ABNT ou referência técnica aplicável}{Identifica uma regra de apresentação cuja fonte pertence à base normativa auditada do projeto. A redação deste guia é uma paráfrase técnica; o texto integral da norma deve ser consultado na fonte autorizada.}
 
-Também são consideradas a ABNT NBR 6028:2021 para resumos, a ABNT NBR 6024:2012 para numeração progressiva, a ABNT NBR 6027:2012 para sumário, a ABNT NBR 15287:2025 para projetos de pesquisa e a ABNT NBR 12225:2023 para lombada. Para tabelas de dados numéricos, o modelo adota as Normas de apresentação tabular do IBGE \parencite{abnt6028,abnt6024,abnt6027,abnt15287,abnt12225,ibge1993}.
+\guiainstitucional{Identifica uma orientação, resolução, instrução normativa ou prática institucional da Universidade Federal do Ceará que complementa a base ABNT quando aplicável ao depósito ou à apresentação do trabalho.}
 
-No âmbito institucional, são observados os Guias de Normalização do Sistema de Bibliotecas da UFC e a Resolução nº 17/CEPE, de 2 de outubro de 2017. A própria Biblioteca Universitária informa que seus guias orientam a aplicação das normas ABNT vigentes \parencite{ufcguia2022,ufcresolucao17,ufc2026normalizacao}. Quando um guia histórico referencia uma edição substituída de uma norma, a V2 prioriza a edição vigente e preserva os requisitos institucionais da UFC que permanecem compatíveis.
+\guiapolitica{Identifica uma decisão técnica ou editorial do \texttt{abntexto-ufc}. Uma política do modelo não deve ser interpretada automaticamente como exigência universal da ABNT ou da UFC.}
 
-A comunidade acadêmica da UFC pode consultar as normas técnicas integrais por meio da coleção disponibilizada pela Biblioteca Universitária na plataforma Target GEDWeb \parencite{ufcnormastecnicas}.
+\guiaexemplo{Identifica conteúdo incluído apenas para demonstrar visualmente uma possibilidade do template. Exemplos podem ser removidos ou substituídos no trabalho real.}
 
-Substitua este texto pela introdução do seu trabalho, apresentando tema, delimitação, problema, justificativa, objetivos e organização do documento conforme a natureza da pesquisa.
+Essa separação é importante. Por exemplo, o documento de referência declara PDF/A-2b e a suíte de release o valida com veraPDF; entretanto, o perfil PDF/A-2b específico é uma política técnica do projeto, enquanto a necessidade de PDF/A no fluxo institucional de depósito é tratada separadamente pela documentação da UFC.
+
+\subsection{Base normativa adotada}
+
+A apresentação geral dos trabalhos acadêmicos é organizada a partir da ABNT NBR 14724:2024, considerando a versão corrigida em 1º de abril de 2025. Citações seguem a ABNT NBR 10520:2023 e referências seguem a ABNT NBR 6023:2025 \parencite{abnt14724,abnt10520,abnt6023}.
+
+Outras referências atuam em escopos específicos: ABNT NBR 6028:2021 para resumo e palavras-chave; ABNT NBR 6024:2012 para numeração progressiva; ABNT NBR 6027:2012 para sumário; ABNT NBR 15287:2025 para projetos de pesquisa; ABNT NBR 6034:2004 para índice; ABNT NBR 12225:2023 para lombada; e Normas de Apresentação Tabular do IBGE para tabelas numéricas \parencite{abnt6028,abnt6024,abnt6027,abnt15287,abnt6034,abnt12225,ibge1993}.
+
+\guiainstitucional{O Sistema de Bibliotecas da UFC mantém orientações de normalização e informa que os trabalhos acadêmicos devem observar as normas vigentes aplicáveis. Guias institucionais históricos continuam úteis para requisitos próprios da UFC, mas uma referência antiga a uma edição substituída da ABNT não prevalece sobre a edição vigente adotada pelo projeto \parencite{ufc2026normalizacao,ufcguia2022}.}
+
+\subsection{O que este documento demonstra}
+
+O PDF foi configurado no perfil \texttt{tccgraduacao}, em impressão apenas no anverso, com fonte Times em modo portátil, listas, glossário, índice, códigos, algoritmos e tabelas \texttt{tabularray}. Essa configuração serve como corpus visual completo; outros perfis alteram automaticamente os elementos que lhes são aplicáveis.
+
+A suíte de validação do repositório cobre, entre outros pontos, tamanho A4, margens, paginação, tipografia, pré-textuais, citações, referências, objetos, tabelas, equações, códigos, algoritmos, projetos, elementos pós-textuais, matriz de perfis, motores de compilação, compatibilidade com ambiente semelhante ao Overleaf e certificação de Times New Roman e Arial literais em Windows.
+
+\guiapolitica{O template reduz o trabalho manual de formatação, mas não substitui a verificação final das exigências específicas do curso, programa, edital, repositório institucional ou procedimento administrativo aplicável ao trabalho.}
+
+\index{normalização}\index{LaTeX}\index{ABNT}\index{UFC}

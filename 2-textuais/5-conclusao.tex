@@ -1,5 +1,88 @@
-\section{Conclusão}\label{sec:conclusao}
+\section{Recursos do abntexto-ufc, elementos pós-textuais e revisão final}\label{sec:recursos-finais}
 
-Retome os objetivos, sintetize os principais resultados e explicite as conclusões sustentadas pela pesquisa. Quando pertinente, registre limitações, implicações e possibilidades de continuidade do trabalho.
+A classe reúne opções de perfil e módulos editoriais para que o mesmo projeto possa atender diferentes tipos de trabalho sem duplicar a lógica de formatação. Esta seção encerra o guia explicando os principais recursos e os elementos que aparecem depois do texto principal.
 
-Antes da entrega, substitua todos os textos de demonstração, revise os metadados de \texttt{documento.tex}, confira as referências e execute o gate de validação do template.
+\subsection{Perfis de documento}
+
+A opção \texttt{tipo} seleciona o perfil acadêmico. A matriz de certificação da V2 exercita TCC de graduação, TCC de especialização, dissertação, tese, projeto de pesquisa e projeto de pesquisa anonimizado.
+
+\guiapolitica{Perfis controlam a aplicabilidade de elementos e metadados. O objetivo é evitar que o usuário tenha de remover manualmente partes da classe para adaptar um TCC a uma dissertação, tese ou projeto.}
+
+\guianormativa{ABNT NBR 15287:2025}{Os perfis \texttt{projeto} e \texttt{projetoanonimizado} usam a estrutura de projeto de pesquisa adotada pela V2. O perfil anonimizado adiciona uma política técnica de ocultação de dados pessoais para processos que exijam avaliação sem identificação; essa anonimização não é apresentada como regra geral da NBR 15287 \parencite{abnt15287}.}
+
+\subsection{Fontes e motores de compilação}
+
+A opção \texttt{fonte=times|arial} seleciona a família textual desejada. A opção \texttt{fonte-estrita} determina se a identidade literal é obrigatória ou se o ambiente pode usar fallback portátil.
+
+\guiainstitucional{A política tipográfica UFC adotada pelo projeto trabalha com Arial ou Times New Roman. A certificação literal é executada em Windows com pdfLaTeX e LuaLaTeX; as fontes Microsoft não são redistribuídas pelo repositório.}
+
+\guiapolitica{O documento de referência usa modo portátil para compilar em ambientes públicos. Uma compilação com fallback não deve ser confundida com evidência de identidade literal da família solicitada.}
+
+\subsection{PDF/A}
+
+O cabeçalho de \texttt{documento.tex} declara \texttt{pdfstandard=A-2b}. A suíte verifica o PDF gerado com veraPDF e também confere incorporação de fontes.
+
+\guiainstitucional{O fluxo de depósito acompanhado pelo projeto exige PDF/A nos casos institucionais aplicáveis. As páginas atuais do Sistema de Bibliotecas devem ser verificadas conforme o tipo de trabalho \parencite{ufcdepositotcc2026,ufcdepositopos2026}.}
+
+\guiapolitica{A escolha do perfil específico PDF/A-2b para o documento de referência e para a certificação da V2 é uma política técnica do projeto; ela não é apresentada como uma afirmação de que toda norma ABNT exige especificamente PDF/A-2b.}
+
+\subsection{Referências}
+
+As referências aparecem imediatamente após o texto quando produzidas por \texttt{\string\imprimirreferencias}. O banco bibliográfico é declarado com \texttt{\string\ufcbibliografia} e processado por Biber no fluxo recomendado.
+
+\guianormativa{ABNT NBR 6023:2025}{Inclua na lista final as fontes de acordo com a política bibliográfica do trabalho e mantenha os dados necessários à identificação de cada documento \parencite{abnt6023}.}
+
+\subsection{Glossário}
+
+O glossário é um elemento opcional para definir termos especializados, siglas ou conceitos quando essa lista realmente auxiliar o leitor. O documento de referência o mantém habilitado para demonstrar a integração com o pacote \texttt{glossaries}.
+
+\guiapolitica{Não use o glossário como duplicação automática de toda palavra técnica. Registre apenas termos cuja definição agregue valor ao trabalho e cuja repetição no corpo prejudicaria a leitura.}
+
+\subsection{Apêndices}
+
+Apêndices contêm material complementar elaborado pelo próprio autor e são identificados em sequência própria.
+
+\guianormativa{estrutura pós-textual adotada pela V2}{Cada apêndice inicia em página própria. No escopo auditado, seu cabeçalho é centralizado, em letras maiúsculas, negrito e tamanho 12.}
+
+\guiaexemplo{Este documento possui apêndices com material textual, questionário, código-fonte e orientação para documento externo autoral. Eles existem para exercitar diferentes comprimentos e conteúdos.}
+
+\subsection{Anexos}
+
+Anexos são usados para material complementar de autoria externa ou não produzido pelo autor do trabalho.
+
+\guianormativa{estrutura pós-textual adotada pela V2}{Cada anexo inicia em página própria e usa a mesma política de apresentação do cabeçalho exercitada para apêndices.}
+
+\guiaexemplo{Se um documento externo em PDF precisar ser anexado, verifique legibilidade, direitos de uso, orientação de página e compatibilidade com o arquivo final. O exemplo deste projeto documenta a rota sem redistribuir material externo desnecessário.}
+
+\subsection{Índice}
+
+O índice remissivo é diferente do sumário: ele organiza termos e assuntos para facilitar a localização de ocorrências no documento.
+
+\guianormativa{ABNT NBR 6034:2004}{O índice é elemento opcional e possui norma específica de apresentação. A V2 demonstra o recurso com \texttt{imakeidx} e verifica o título e sua composição no PDF final \parencite{abnt6034}.}
+
+\subsection{Lombada}
+
+\guianormativa{ABNT NBR 12225:2023}{A lombada possui aplicação condicional, normalmente relacionada à produção física do trabalho. O documento eletrônico de referência não a força em perfis nos quais não seja aplicável \parencite{abnt12225}.}
+
+\subsection{Checklist antes da entrega}
+
+Antes de entregar um trabalho real produzido a partir deste modelo:
+
+\begin{enumerate}
+  \item revise todos os campos de \texttt{\string\ufcsetup};
+  \item mantenha apenas os pré-textuais aplicáveis ao seu perfil;
+  \item substitua todos os exemplos e conteúdos de demonstração pelo texto acadêmico real;
+  \item confirme citações e referências contra as fontes consultadas;
+  \item revise figuras, tabelas, quadros, códigos, algoritmos, equações, fontes e notas;
+  \item verifique glossário, apêndices, anexos e índice somente quando pertinentes;
+  \item compile o documento completo com todos os processadores auxiliares necessários;
+  \item examine visualmente o PDF final, inclusive quebras de página e elementos externos;
+  \item execute os gates de validação disponíveis no projeto;
+  \item confira as regras atuais do curso, programa e fluxo de depósito da UFC.
+\end{enumerate}
+
+\guiapolitica{Um CI verde demonstra que o corpus testado respeitou os contratos executáveis do projeto. Ele não transforma automaticamente toda regra externa em prova formal de conformidade e não substitui a revisão acadêmica e institucional do conteúdo.}
+
+Este modelo comentado deve ser entendido como ponto de partida auditável: o usuário escreve o conteúdo acadêmico, enquanto a classe concentra a maior parte das decisões editoriais e o repositório registra a evidência usada para mantê-las.
+
+\index{PDF/A}\index{glossário}\index{apêndice}\index{anexo}\index{índice}\index{projeto de pesquisa}

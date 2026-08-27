@@ -1,6 +1,12 @@
-\section{Catálogo de exemplos e validação visual}\label{sec:catalogo-exemplos}
+\section{Ilustrações, tabelas e outros objetos acadêmicos}\label{sec:catalogo-exemplos}
 
-Esta seção reúne exemplos deliberadamente variados para que o documento de referência também funcione como corpus visual de regressão. Os elementos abaixo são exemplos e devem ser substituídos pelo conteúdo acadêmico do trabalho.
+Esta seção funciona como catálogo visual e corpus de regressão. Cada grupo apresenta primeiro a regra ou política exercitada e, em seguida, exemplos compiláveis. Os objetos devem ser citados e discutidos no texto do trabalho real; não devem ser incluídos apenas para preencher o documento.
+
+\subsection{Regra geral para ilustrações}
+
+\guianormativa{ABNT NBR 14724:2024 e NBR 10520:2023}{Ilustrações devem ser identificadas de modo consistente e apresentar indicação de fonte. Quando a fonte for externa, sua indicação deve ser compatível com o sistema de citações adotado \parencite{abnt14724,abnt10520}.}
+
+\guiapolitica{Na V2, título, fonte e nota são vinculados à largura física do objeto. Os testes verificam que esses elementos não ultrapassem horizontalmente a largura da ilustração. O tamanho reduzido adotado para títulos e fontes de objetos é 10 pt no escopo institucional do projeto.}
 
 \subsection{Figuras em diferentes larguras e formatos}
 
@@ -12,7 +18,7 @@ Esta seção reúne exemplos deliberadamente variados para que o documento de re
   \fbox{\parbox[c][2.6cm][c]{5.5cm}{\centering Figura sintética\\5,5 cm}}
 \end{ufcobjeto}
 
-A Figura~\ref{fig:estreita} exercita um objeto estreito e permite verificar se legenda e fonte acompanham sua largura física.
+\guiaexemplo{A Figura~\ref{fig:estreita} demonstra que uma figura estreita não deve fazer seu título ou sua fonte ocuparem arbitrariamente toda a mancha gráfica.}
 
 \legend{figure}{Figura de largura intermediária com uma legenda deliberadamente longa para validar quebra de linha, alinhamento e limite horizontal do título do objeto}
 \ufcfonte{Elaboração própria.}
@@ -40,7 +46,7 @@ A Figura~\ref{fig:estreita} exercita um objeto estreito e permite verificar se l
   \includegraphics[width=0.65\linewidth]{figuras/fluxo-exemplo.png}
 \end{ufcobjeto}
 
-As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larguras progressivamente maiores, composição sintética e inclusão de imagem raster sem alterar a API pública do objeto.
+As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larguras progressivamente maiores, quebra de título, fonte, nota e inclusão de imagem raster.
 
 \subsection{Imagens institucionais reais da UFC}
 
@@ -66,9 +72,11 @@ As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larg
     {\fbox{\parbox[c][5cm][c]{0.62\linewidth}{\centering Execute \texttt{make reference-assets} para baixar a fotografia licenciada da Reitoria da UFC.}}}
 \end{ufcobjeto}
 
-As Figuras~\ref{fig:campus-pici-computacao} e~\ref{fig:reitoria-ufc} exercitam fotografias reais com proporções e dimensões distintas. As imagens são baixadas por \texttt{make reference-assets}, com verificação de integridade e atribuição registrada em \texttt{figuras/LICENCAS.md}.
+\guiapolitica{Fotografias externas de demonstração não são incorporadas aos bundles públicos/CTAN sem controle de licença. O comando \texttt{make reference-assets} baixa os arquivos de referência e verifica sua integridade; as licenças ficam registradas separadamente.}
 
-\subsection{Gráfico e quadro}
+\subsection{Gráficos}
+
+Gráficos são tratados como ilustrações e participam da Lista de Ilustrações no modelo de referência.
 
 \legend{grafico}{Distribuição sintética de três categorias}
 \ufcfonte{Elaboração própria.}
@@ -105,7 +113,11 @@ As Figuras~\ref{fig:campus-pici-computacao} e~\ref{fig:reitoria-ufc} exercitam f
   \endgroup
 \end{ufcobjeto}
 
-O Gráfico~\ref{graf:barras} valida a numeração de gráficos e sua presença na Lista de Ilustrações. O exemplo é desenhado diretamente em \LaTeX{}, com eixos, categorias, escala e valores explícitos, evitando dependência de um arquivo raster para esta validação visual.
+\guiaexemplo{O Gráfico~\ref{graf:barras} é desenhado diretamente em \LaTeX{} para que a regressão visual não dependa de um arquivo externo. Em uma pesquisa real, escolha o tipo de gráfico de acordo com os dados e informe claramente escalas, unidades, categorias e fonte.}
+
+\subsection{Quadros}
+
+O projeto distingue quadros de tabelas numéricas. Quadros são úteis para organizar conteúdo predominantemente textual.
 
 \legend{quadro}{Comparação de configurações editoriais do exemplo}
 \ufcfonte{Elaboração própria.}
@@ -123,9 +135,11 @@ O Gráfico~\ref{graf:barras} valida a numeração de gráficos e sua presença n
   \end{tabular}
 \end{ufcobjeto}
 
-O Quadro~\ref{qua:configuracoes} exercita conteúdo textual tabular, distinto de uma tabela numérica.
+\guiaexemplo{O Quadro~\ref{qua:configuracoes} demonstra informação textual organizada em linhas e colunas. Não use a denominação ``tabela'' apenas porque um conteúdo foi produzido com o ambiente \texttt{tabular}; a escolha do tipo deve considerar a natureza da informação apresentada.}
 
-\subsection{Tabela com estilo tabularray-abnt}
+\subsection{Tabelas numéricas}
+
+\guianormativa{Normas de Apresentação Tabular do IBGE, 3. ed.}{Para tabelas numéricas, a V2 exercita laterais abertas, ausência de grade no corpo e regras horizontais superior, de separação do cabeçalho e inferior \parencite{ibge1993}.}
 
 \begin{table}[htbp]
 \centering
@@ -151,9 +165,13 @@ Delta & 2026 & 18 \\
 \end{tallabnttblr}
 \end{table}
 
-A Tabela~\ref{tab:zebra} complementa a tabela nativa da Seção~\ref{sec:metodologia} e exerce o módulo \texttt{tabularray-abnt} habilitado no documento principal.
+\guiapolitica{A alternância de fundo da Tabela~\ref{tab:zebra} é uma extensão editorial opcional. Ela não é tratada como regra automática da ABNT ou do IBGE. O exemplo existe para mostrar que o módulo pode aplicar estilos sem alterar as regras estruturais da tabela.}
 
-\subsection{Código-fonte em diferentes linguagens}
+\subsection{Código-fonte}
+
+Código-fonte não é convertido artificialmente em uma regra ABNT específica. A V2 o trata como objeto acadêmico com identificação, fonte, numeração e largura controladas, oferecendo módulos de apresentação configuráveis.
+
+\guiapolitica{O documento de referência usa \texttt{listings}. A política de numeração das linhas pode variar conforme a finalidade do exemplo; o importante é manter legibilidade, identificação consistente e fonte do conteúdo quando aplicável.}
 
 \lstset{language=Python,numbers=left,stepnumber=1,numbersep=8pt}
 \legend{codigo}{Função de média em Python com números de linha}
@@ -193,9 +211,13 @@ static int dobro(int valor) {
 \end{ufclisting}
 \lstset{numbers=none,stepnumber=1}
 
-Os Códigos~\ref{cod:python-numerado}, \ref{cod:cpp-sem-numero}, \ref{cod:python-externo} e~\ref{cod:java} demonstram linguagens e políticas de numeração distintas usando o mesmo módulo \texttt{listings}.
+Os Códigos~\ref{cod:python-numerado}, \ref{cod:cpp-sem-numero}, \ref{cod:python-externo} e~\ref{cod:java} demonstram linguagens e políticas de numeração distintas usando o mesmo módulo.
 
-\subsection{Algoritmos com e sem números de linha}
+\subsection{Algoritmos}
+
+Algoritmos em pseudocódigo são apresentados como objetos próprios da V2. O módulo recomendado no documento de referência é \texttt{algpseudocodex}.
+
+\guiapolitica{Numeração de linhas em pseudocódigo é uma opção editorial do exemplo e não uma exigência normativa geral. A identificação e a fonte continuam sendo tratadas de forma consistente com os demais objetos do template.}
 
 \legend{algoritmo}{Máximo divisor comum com números de linha}
 \ufcfonte{Elaboração própria.}
@@ -220,9 +242,7 @@ Os Códigos~\ref{cod:python-numerado}, \ref{cod:cpp-sem-numero}, \ref{cod:python
   \EndIf
 \end{ufcalgoritmo}
 
-Os Algoritmos~\ref{alg:mdc-numerado} e~\ref{alg:maior-sem-numero} validam as duas apresentações de numeração suportadas pelo ambiente.
-
-\subsection{Equação, citação longa e listas}
+\subsection{Equações}
 
 A Equação~\ref{eq:media-exemplo} exemplifica uma expressão numerada e referenciada no texto.
 \begin{equation}
@@ -230,9 +250,15 @@ A Equação~\ref{eq:media-exemplo} exemplifica uma expressão numerada e referen
   \label{eq:media-exemplo}
 \end{equation}
 
-Uma citação direta longa também é exercitada no documento de referência:
+\guiapolitica{Use numeração e referência quando a equação precisar ser identificada no texto. A suíte matemática verifica a estabilidade tipográfica e a integração do conteúdo matemático com os motores suportados.}
+
+\subsection{Citação longa, alíneas e enumerações}
+
+Uma citação direta longa também é exercitada no documento de referência. O conteúdo abaixo é sintético e existe apenas para permitir a verificação geométrica do bloco:
 
 \Enquote{A composição tipográfica de um documento científico deve ser tratada como parte de um processo reprodutível de edição, revisão e validação, mantendo conteúdo e apresentação suficientemente separados para que mudanças editoriais possam ser verificadas de forma sistemática.}
+
+\guianormativa{ABNT NBR 10520:2023}{O bloco acima exercita a apresentação de citação direta longa descrita na Seção~\ref{sec:citacoes-referencias}: recuo de 4 cm, fonte reduzida, espaço simples e ausência de aspas no PDF final \parencite{abnt10520}.}
 
 Exemplo de alíneas e subalíneas:
 
@@ -252,10 +278,10 @@ Exemplo de enumeração comum:
   \item revisar o PDF produzido.
 \end{enumerate}
 
-\subsection{Referências bibliográficas e recursos eletrônicos}
+\subsection{Tipos bibliográficos exercitados}
 
-O arquivo \texttt{3-pos-textuais/referencias.bib} reúne exemplos de tipos bibliográficos distintos para demonstrar a composição final das referências. Além das normas e documentos institucionais citados no texto, o corpus inclui livro, artigo de periódico com DOI, trabalho publicado em evento, dissertação, relatório técnico e recursos eletrônicos com URL e data de acesso.
-
-Os exemplos também exercitam campos úteis do \texttt{biblatex}, como \texttt{isbn}, \texttt{doi}, \texttt{url}, \texttt{urldate}, \texttt{institution}, \texttt{edition}, \texttt{volume}, \texttt{number} e \texttt{pages}. Em trabalhos reais, devem constar nas Referências somente as fontes efetivamente citadas ou utilizadas de acordo com a política bibliográfica adotada.
+O arquivo \texttt{3-pos-textuais/referencias.bib} reúne livro, artigo, evento, dissertação, relatório, normas e recursos eletrônicos. Campos como \texttt{isbn}, \texttt{doi}, \texttt{url}, \texttt{urldate}, \texttt{institution}, \texttt{edition}, \texttt{volume}, \texttt{number} e \texttt{pages} são usados apenas quando pertinentes ao tipo de documento.
 
 \nocite{lamport1994,wessberg2000,vaswani2017attention,almeida2018,rfc9110}
+
+\index{figuras}\index{gráficos}\index{quadros}\index{tabelas}\index{código-fonte}\index{algoritmos}\index{equações}

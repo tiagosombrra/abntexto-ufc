@@ -1,28 +1,73 @@
-\section{Trabalhos relacionados}\label{sec:trabalhos-relacionados}
+\section{Elementos pré-textuais em detalhe}\label{sec:pretextuais-detalhe}
 
-Apresente nesta seção os trabalhos mais próximos ao problema investigado, destacando objetivo, método, resultados e limitações relevantes para a pesquisa.
+Esta seção explica os principais elementos que aparecem antes do texto acadêmico. O próprio PDF já apresentou cada um deles nas páginas anteriores; aqui o objetivo é tornar explícita a finalidade, a aplicabilidade e a regra de apresentação exercitada pelo template.
 
-\subsection{Trabalho relacionado A}
+\subsection{Capa e folha de rosto}
 
-Descreva o primeiro trabalho relacionado e explicite sua relação com a proposta desenvolvida.
+A capa identifica externamente o trabalho. A folha de rosto repete os dados essenciais e acrescenta informações acadêmicas como natureza do trabalho, curso ou programa, orientação e demais campos aplicáveis ao perfil.
 
-\subsection{Trabalho relacionado B}
+\guianormativa{ABNT NBR 14724:2024}{Capa e folha de rosto integram a estrutura de trabalhos acadêmicos. A ordem e a composição dos campos são tratadas pelo perfil selecionado no \texttt{abntexto-ufc} \parencite{abnt14724}.}
 
-Descreva o segundo trabalho relacionado e compare seus principais aspectos com o trabalho anterior.
+\guiapolitica{Os dados pessoais e institucionais são declarados em \texttt{\string\ufcsetup}. Isso evita editar manualmente a diagramação da capa ou da folha de rosto e permite que os perfis reutilizem os mesmos metadados.}
 
-\legend{quadro}{Comparação sintética dos trabalhos relacionados}
-\ufcfonte{Elaboração própria.}
-\label{qua:trabalhos-relacionados}
-\begin{ufcobjeto}[here]
-  \centering
-  \begin{tabular}{lll}
-    \hline
-    Trabalho & Método & Limitação \\
-    \hline
-    Trabalho A & Método A & Limitação A \\
-    Trabalho B & Método B & Limitação B \\
-    \hline
-  \end{tabular}
-\end{ufcobjeto}
+\subsection{Ficha catalográfica}
 
-Use o quadro apenas quando a comparação tabular ajudar a síntese; a discussão crítica deve permanecer no texto.
+A representação visual da ficha catalográfica é controlada pela opção \texttt{ficha-catalografica}. No documento de referência ela permanece desativada para demonstrar o comportamento padrão adotado na V2.
+
+\guiainstitucional{A política de depósito da UFC vigente em 2026 tornou facultativa a representação visual da ficha catalográfica no arquivo depositado para os tipos documentais abrangidos pela Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG \parencite{ufcinstrucao2_2026}. O autor deve conferir o procedimento institucional vigente no momento da entrega.}
+
+\subsection{Errata}
+
+A errata é usada quando, depois da produção do trabalho, é necessário registrar correções. O exemplo deste PDF apresenta a referência do trabalho seguida por uma tabela com folha, linha, texto incorreto e forma corrigida.
+
+\guiaexemplo{Se não houver correções a registrar, remova a chamada \texttt{\string\imprimirerrata} do documento. O arquivo de exemplo existe para demonstrar a composição quando o elemento é necessário.}
+
+\subsection{Folha de aprovação}
+
+Nos perfis acadêmicos aos quais se aplica, a folha de aprovação registra autoria, título, natureza do trabalho, data de aprovação, orientação e banca examinadora. O exemplo usa uma banca extensa para exercitar a quebra e o posicionamento de múltiplos membros.
+
+\guiainstitucional{No fluxo de depósito considerado pelo projeto, a folha de aprovação é apresentada sem reproduzir assinaturas digitalizadas. A conferência final deve considerar a orientação vigente do Sistema de Bibliotecas para TCC, dissertação ou tese \parencite{ufcdepositotcc2026,ufcdepositopos2026}.}
+
+\subsection{Dedicatória}
+
+A dedicatória é um elemento de natureza pessoal e não recebe título no exemplo UFC adotado pela classe.
+
+\guiainstitucional{No escopo auditado do template, a dedicatória inicia abaixo do meio da folha, utiliza recuo esquerdo de 8 cm, fonte de 12 pt, espaçamento 1,5 e alinhamento justificado. Esses valores são exercitados por testes específicos do documento final.}
+
+\guiaexemplo{O arquivo \texttt{1-pre-textuais/dedicatoria.tex} contém apenas uma frase curta para mostrar a posição do bloco. Em um trabalho real, substitua-a pela dedicatória desejada ou remova o elemento.}
+
+\subsection{Agradecimentos}
+
+Os agradecimentos registram pessoas e instituições que contribuíram para o trabalho. O título é apresentado em página própria, e o corpo mantém a tipografia do texto acadêmico exercitada pelo perfil.
+
+\guiainstitucional{No escopo UFC auditado, o título AGRADECIMENTOS aparece centralizado, em letras maiúsculas, negrito e 12 pt; o corpo usa 12 pt, espaçamento 1,5 e alinhamento justificado.}
+
+\guiainstitucional{Quando o trabalho tiver financiamento ao qual se aplique obrigação específica de agradecimento, como a Portaria CAPES nº 206/2018, o autor deve inserir o texto institucional exigido pela fonte correspondente \parencite{capes2062018}. O template não presume automaticamente a existência de financiamento.}
+
+\subsection{Epígrafe}
+
+A epígrafe apresenta uma citação relacionada ao trabalho. O template diferencia a apresentação de epígrafes curtas e longas no escopo institucional auditado.
+
+\guiainstitucional{Epígrafes de até três linhas iniciam abaixo do meio da folha, usam recuo esquerdo de 8 cm, fonte de 12 pt, espaçamento 1,5 e aspas. Epígrafes com mais de três linhas usam recuo esquerdo de 4 cm, fonte de 10 pt, espaçamento simples e são apresentadas sem aspas.}
+
+\subsection{Resumo, abstract e palavras-chave}
+
+O resumo apresenta de forma concisa objetivo, método, resultados e conclusões relevantes do trabalho. O abstract oferece a versão em língua estrangeira prevista pelo perfil.
+
+\guianormativa{ABNT NBR 6028:2021}{Para trabalhos acadêmicos, o contrato normativo adotado pelo projeto trabalha com resumo e abstract entre 150 e 500 palavras e exige palavras-chave ou keywords. O texto é apresentado em parágrafo único, fonte 12 pt, espaçamento 1,5, sem recuo de primeira linha e com alinhamento justificado \parencite{abnt6028}.}
+
+\guiaexemplo{O resumo deste próprio PDF descreve o objetivo do modelo comentado. Assim, o pré-textual funciona como um exemplo semanticamente coerente, não como texto de preenchimento.}
+
+\subsection{Listas}
+
+O documento de referência habilita listas de ilustrações, tabelas, códigos, algoritmos, abreviaturas e siglas e símbolos para demonstrar todas as rotas suportadas. Em trabalhos reais, devem ser mantidas apenas as listas pertinentes ao conteúdo e às regras aplicáveis.
+
+\guiapolitica{Figuras, gráficos e quadros são agregados na Lista de Ilustrações. Tabelas, códigos e algoritmos possuem listas próprias no modelo de referência. A existência dessas listas no PDF de demonstração não significa que todo trabalho precise conter todos esses tipos de objeto.}
+
+\subsection{Sumário}
+
+O sumário apresenta a estrutura de seções do documento e os respectivos números de página.
+
+\guianormativa{ABNT NBR 6027:2012}{O template mantém o título SUMÁRIO centralizado e em letras maiúsculas, posiciona os números de página à direita e reproduz a hierarquia tipográfica das seções. Elementos pré-textuais não são incluídos no sumário \parencite{abnt6027}.}
+
+\index{capa}\index{folha de rosto}\index{errata}\index{dedicatória}\index{agradecimentos}\index{epígrafe}\index{resumo}\index{sumário}

@@ -1,4 +1,4 @@
-% Modelo de Trabalho Acadêmico UFC em LaTeX — V2
+% Modelo comentado de Trabalho Acadêmico UFC em LaTeX — V2
 % Classe institucional: abntexto-ufc / abntexto 1.1+
 
 \DocumentMetadata{
@@ -28,8 +28,8 @@
   curso-graduacao = {Nome do Curso},
   habilitacao = {bacharel},
   autor = {Nome Sobrenome},
-  titulo = {Título do Trabalho},
-  subtitulo = {},
+  titulo = {Modelo comentado de trabalho acadêmico da UFC},
+  subtitulo = {Guia visual de estrutura, normalização e recursos do abntexto-ufc},
   local = {Fortaleza},
   ano = {2026},
   data-aprovacao = {dia de mês de 2026},
@@ -68,6 +68,21 @@
   keepspaces=true,
   showstringspaces=false,
   numbers=none
+}
+
+% Local documentation callouts used only by this reference document. They do
+% not change the public class API or the normative contract.
+\newcommand{\guianormativa}[2]{%
+  \par\medskip\noindent\textbf{Base normativa — #1.} #2\par\smallskip
+}
+\newcommand{\guiainstitucional}[1]{%
+  \par\medskip\noindent\textbf{Orientação institucional UFC.} #1\par\smallskip
+}
+\newcommand{\guiapolitica}[1]{%
+  \par\medskip\noindent\textbf{Política do modelo.} #1\par\smallskip
+}
+\newcommand{\guiaexemplo}[1]{%
+  \par\medskip\noindent\textbf{Exemplo.} #1\par\smallskip
 }
 
 \begin{document}
