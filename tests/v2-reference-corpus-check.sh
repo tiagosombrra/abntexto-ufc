@@ -50,30 +50,36 @@ def spaced_leader_pattern():
     return r'(?:\.\s+){1,}\.\s*\d+\s*$'
 
 
+ENTRY_START = re.compile(r'^\s*(?:Figura|Tabela|Código|Algoritmo)\s+\d+\s+[—-]\s+')
+
+
+def list_entries(block):
+    lines = block.splitlines()
+    starts = [index for index, line in enumerate(lines) if ENTRY_START.match(line)]
+    entries = []
+    for position, start_index in enumerate(starts):
+        end_index = starts[position + 1] if position + 1 < len(starts) else len(lines)
+        raw_entry = '\n'.join(lines[start_index:end_index])
+        entries.append((raw_entry, normalize_pdf_text(raw_entry)))
+    return entries
+
+
 def require_dotted_entry(source, start, end, marker):
     start_at = source.find(start)
     end_at = source.find(end, start_at + len(start))
     if start_at < 0 or end_at < 0:
         raise SystemExit(f'Corpus V2 falhou: bloco de lista não localizado: {start}.')
-    block = source[start_at:end_at]
-    lines = block.splitlines()
-    marker_lines = [index for index, line in enumerate(lines) if marker in line]
-    if len(marker_lines) != 1:
+
+    entries = list_entries(source[start_at:end_at])
+    matches = [(raw, normalized) for raw, normalized in entries if marker in normalized]
+    if len(matches) != 1:
         raise SystemExit(
-            f'Corpus V2 falhou: esperado exatamente um marcador em {start}: '
-            f'{marker}; encontrados {len(marker_lines)}.'
+            f'Corpus V2 falhou: esperado exatamente uma entrada para {start}: '
+            f'{marker}; encontradas {len(matches)}.'
         )
 
-    entry_start = marker_lines[0]
-    next_entry = re.compile(r'^\s*(?:Figura|Tabela|Código|Algoritmo)\s+\d+\s+[—-]\s+')
-    entry_lines = [lines[entry_start]]
-    for line in lines[entry_start + 1:]:
-        if next_entry.match(line):
-            break
-        entry_lines.append(line)
-
-    entry = '\n'.join(entry_lines)
-    if not re.search(spaced_leader_pattern(), entry, re.M):
+    _, normalized_entry = matches[0]
+    if not re.search(spaced_leader_pattern(), normalized_entry):
         raise SystemExit(f'Corpus V2 falhou: líder pontilhado espaçado ausente em {start}: {marker}')
 
 
