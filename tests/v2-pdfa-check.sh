@@ -28,7 +28,7 @@ if [ -s "$report" ] && grep -Fq 'isCompliant="true"' "$report"; then
     python3 tests/checks/normative_n13_pdfa.py \
       "$pdf" \
       --positive-report "$report" \
-      --json artifacts/n13-negative/pdfa-validation.json
+      --json /tmp/abntexto-ufc-n13-pdfa.json
   fi
   exit 0
 fi
