@@ -27,38 +27,28 @@ def fail(message: str) -> None:
     raise SystemExit(f"N13 PDF/A negative validation failed: {message}")
 
 
-def run(command: list[str], *, stdout_path: Path | None = None) -> subprocess.CompletedProcess[str]:
-    if stdout_path is None:
-        return subprocess.run(
-            command,
-            cwd=ROOT,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            errors="replace",
-            check=False,
-        )
-    with stdout_path.open("w", encoding="utf-8") as handle:
-        return subprocess.run(
-            command,
-            cwd=ROOT,
-            stdout=handle,
-            stderr=subprocess.STDOUT,
-            text=True,
-            errors="replace",
-            check=False,
-        )
+def run(command: list[str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        command,
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        errors="replace",
+        check=False,
+    )
 
 
 def local_name(tag: str) -> str:
     return tag.rsplit("}", 1)[-1]
 
 
-def load_xml(path: Path) -> ET.Element:
+def load_xml(path: Path, *, diagnostic: str = "") -> ET.Element:
     try:
         return ET.parse(path).getroot()
     except (OSError, ET.ParseError) as exc:
-        fail(f"invalid veraPDF XML report {path}: {exc}")
+        suffix = f"; veraPDF stderr: {diagnostic[-1600:]}" if diagnostic.strip() else ""
+        fail(f"invalid veraPDF XML report {path}: {exc}{suffix}")
 
 
 def validation_report(root: ET.Element) -> ET.Element:
@@ -154,28 +144,38 @@ def mutate_pdf(source: Path, target: Path) -> None:
     target.write_bytes(mutated)
 
 
-def run_verapdf(pdf: Path, report: Path) -> tuple[str, int]:
+def run_verapdf(pdf: Path, report: Path) -> tuple[str, int, str]:
     if shutil.which("verapdf"):
-        completed = run(["verapdf", "-f", "2b", str(pdf)], stdout_path=report)
-        return "local", completed.returncode
-    if shutil.which("docker"):
+        command = ["verapdf", "-f", "2b", str(pdf)]
+        runner = "local"
+    elif shutil.which("docker"):
         relative = repository_relative(pdf)
-        completed = run(
-            [
-                "docker",
-                "run",
-                "--rm",
-                "-v",
-                f"{ROOT}:/data:ro",
-                "verapdf/cli:v1.30.2",
-                "-f",
-                "2b",
-                f"/data/{relative}",
-            ],
-            stdout_path=report,
+        command = [
+            "docker",
+            "run",
+            "--rm",
+            "-v",
+            f"{ROOT}:/data:ro",
+            "verapdf/cli:v1.30.2",
+            "-f",
+            "2b",
+            f"/data/{relative}",
+        ]
+        runner = "docker-verapdf-1.30.2"
+    else:
+        fail("veraPDF or Docker is required for N13 PDF/A negative validation")
+
+    with report.open("w", encoding="utf-8") as handle:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            stdout=handle,
+            stderr=subprocess.PIPE,
+            text=True,
+            errors="replace",
+            check=False,
         )
-        return "docker-verapdf-1.30.2", completed.returncode
-    fail("veraPDF or Docker is required for N13 PDF/A negative validation")
+    return runner, completed.returncode, completed.stderr
 
 
 def failed_rules(root: ET.Element) -> list[dict[str, str]]:
@@ -222,8 +222,8 @@ def main() -> None:
         mutate_pdf(source, mutated)
         readability_runner = verify_readability_and_text_identity(source, mutated)
 
-        runner, vera_exit = run_verapdf(mutated, negative_report)
-        root = load_xml(negative_report)
+        runner, vera_exit, vera_stderr = run_verapdf(mutated, negative_report)
+        root = load_xml(negative_report, diagnostic=vera_stderr)
         report = validation_report(root)
         if report.attrib.get("isCompliant") != "false":
             fail(f"veraPDF did not reject controlled PDF/A mutation (exit {vera_exit})")
