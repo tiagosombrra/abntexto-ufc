@@ -127,7 +127,7 @@ cmp -s /tmp/source.txt /tmp/mutated.txt
             "--rm",
             "-v",
             f"{ROOT}:/data:ro",
-            POPPLER_CONTAINER,
+            POPLER_CONTAINER,
             "/bin/bash",
             "-lc",
             script,
