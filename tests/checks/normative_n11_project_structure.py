@@ -195,15 +195,20 @@ def main() -> None:
         "current_support_only": support_only,
         "proof_state_changed": False,
     }
-    for key in (
-        "total",
-        "baseline_existing_bounded_positive",
-        "promoted_bounded_positive",
-        "current_bounded_positive",
-        "current_support_only",
-    ):
-        if progress[key] != expected_progress.get(key):
-            fail(f"bounded-progress mismatch for {key}: {progress[key]} != {expected_progress.get(key)}")
+    progress_mismatches = {
+        key: {
+            "actual": progress[key],
+            "expected": expected_progress.get(key),
+        }
+        for key in (
+            "total",
+            "baseline_existing_bounded_positive",
+            "promoted_bounded_positive",
+            "current_bounded_positive",
+            "current_support_only",
+        )
+        if progress[key] != expected_progress.get(key)
+    }
 
     payload = {
         "schema_version": 1,
@@ -216,6 +221,7 @@ def main() -> None:
         "findings": findings,
         "evidence": evidence,
         "bounded_progress": progress,
+        "bounded_progress_mismatches": progress_mismatches,
     }
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -242,6 +248,11 @@ def main() -> None:
 
     if args.enforce and findings:
         fail("enforcement requested with unresolved project-structure findings")
+    if progress_mismatches:
+        fail(
+            "bounded-progress mismatch: "
+            + json.dumps(progress_mismatches, ensure_ascii=False, sort_keys=True)
+        )
 
 
 if __name__ == "__main__":
