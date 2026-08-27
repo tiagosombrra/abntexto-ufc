@@ -19,7 +19,7 @@ EXPECTED_MECHANISMS = {
     "text-typography-extraction": "REPRESENTED",
     "citation-quotation-presentation": "REPRESENTED",
     "vector-rule-geometry": "REPRESENTED",
-    "configuration-strict-rejection": "PREEXISTING_NEGATIVE",
+    "configuration-strict-rejection": "REPRESENTED",
     "semantic-structural-observers": "REPRESENTED",
     "pdf-pdfa-validation": "INVENTORY_PENDING",
 }

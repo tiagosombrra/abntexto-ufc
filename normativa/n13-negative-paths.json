@@ -46,10 +46,12 @@
     },
     {
       "id": "configuration-strict-rejection",
-      "state": "PREEXISTING_NEGATIVE",
+      "state": "REPRESENTED",
       "evidence_paths": [
         "tests/v2-font-config-check.sh",
-        "tests/v2-pdf-validator-check.sh"
+        "tests/v2-pdf-validator-check.sh",
+        "tests/checks/normative_n13_configuration.py",
+        "tests/v2-negative-paths-check.sh"
       ]
     },
     {
