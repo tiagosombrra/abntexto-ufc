@@ -13,6 +13,10 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, find_marker
 
 ALIGNMENT_TOLERANCE_PT = 1.0
 COLUMN_TOLERANCE_PT = 1.0
+POSITION_TOLERANCE_PT = 1.0
+PDF_PT_PER_MM = 72.0 / 25.4
+TEXT_MARGIN_LEFT_PT = 30.0 * PDF_PT_PER_MM
+DEFINITION_COLUMN_X_PT = 60.0 * PDF_PT_PER_MM
 
 
 def fail(message: str) -> None:
@@ -42,6 +46,22 @@ def row_measurement(pdf: Path, label: str, definition_start: str) -> dict[str, f
             f"delta={vertical_delta:.3f}pt > {ALIGNMENT_TOLERANCE_PT:.3f}pt"
         )
 
+    label_left_delta = abs(label_word.box.x_min - TEXT_MARGIN_LEFT_PT)
+    if label_left_delta > POSITION_TOLERANCE_PT:
+        fail(
+            f"{pdf}: label {label!r} is not left-aligned with the text area: "
+            f"x={label_word.box.x_min:.3f}pt expected={TEXT_MARGIN_LEFT_PT:.3f}pt "
+            f"delta={label_left_delta:.3f}pt > {POSITION_TOLERANCE_PT:.3f}pt"
+        )
+
+    definition_x_delta = abs(definition_word.box.x_min - DEFINITION_COLUMN_X_PT)
+    if definition_x_delta > POSITION_TOLERANCE_PT:
+        fail(
+            f"{pdf}: definition {definition_start!r} moved from the 3 cm list offset: "
+            f"x={definition_word.box.x_min:.3f}pt expected={DEFINITION_COLUMN_X_PT:.3f}pt "
+            f"delta={definition_x_delta:.3f}pt > {POSITION_TOLERANCE_PT:.3f}pt"
+        )
+
     return {
         "page": label_page.index,
         "label": label,
@@ -51,6 +71,8 @@ def row_measurement(pdf: Path, label: str, definition_start: str) -> dict[str, f
         "label_y": label_word.box.y_min,
         "definition_y": definition_word.box.y_min,
         "vertical_delta_pt": vertical_delta,
+        "label_left_delta_pt": label_left_delta,
+        "definition_x_delta_pt": definition_x_delta,
     }
 
 
@@ -90,9 +112,13 @@ def main() -> None:
     symbol_rows = [
         row_measurement(args.symbols_pdf, "SYMALIGN", "DEFALIGN"),
     ]
+    all_rows = [*abbreviation_rows, *symbol_rows]
 
-    label_spread = assert_column_consistency(abbreviation_rows, "label_x")
-    definition_spread = assert_column_consistency(abbreviation_rows, "definition_x")
+    label_spread = assert_column_consistency(all_rows, "label_x")
+    definition_spread = assert_column_consistency(all_rows, "definition_x")
+    max_vertical_delta = max(float(row["vertical_delta_pt"]) for row in all_rows)
+    max_label_left_delta = max(float(row["label_left_delta_pt"]) for row in all_rows)
+    max_definition_x_delta = max(float(row["definition_x_delta_pt"]) for row in all_rows)
 
     payload = {
         "schema_version": 1,
@@ -100,6 +126,9 @@ def main() -> None:
         "result": "PASS",
         "alignment_tolerance_pt": ALIGNMENT_TOLERANCE_PT,
         "column_tolerance_pt": COLUMN_TOLERANCE_PT,
+        "position_tolerance_pt": POSITION_TOLERANCE_PT,
+        "expected_text_margin_left_pt": TEXT_MARGIN_LEFT_PT,
+        "expected_definition_column_x_pt": DEFINITION_COLUMN_X_PT,
         "abbreviation_rows": abbreviation_rows,
         "symbol_rows": symbol_rows,
         "symbol_probe": {
@@ -107,8 +136,11 @@ def main() -> None:
             "purpose": "measure generic list-row alignment without math-glyph bbox bias",
             "math_symbols_retained_in_fixture": True,
         },
-        "abbreviation_label_x_spread_pt": label_spread,
-        "abbreviation_definition_x_spread_pt": definition_spread,
+        "label_x_spread_pt": label_spread,
+        "definition_x_spread_pt": definition_spread,
+        "max_vertical_delta_pt": max_vertical_delta,
+        "max_label_left_delta_pt": max_label_left_delta,
+        "max_definition_x_delta_pt": max_definition_x_delta,
         "normative_contract_changed": False,
     }
 
@@ -119,14 +151,12 @@ def main() -> None:
             encoding="utf-8",
         )
 
-    max_delta = max(
-        float(row["vertical_delta_pt"])
-        for row in [*abbreviation_rows, *symbol_rows]
-    )
     print(
         "LAYOUT-EVIDENCE pretextual-definition-lists status=PASS "
-        f"rows={len(abbreviation_rows) + len(symbol_rows)} "
-        f"max_vertical_delta_pt={max_delta:.3f} "
+        f"rows={len(all_rows)} "
+        f"max_vertical_delta_pt={max_vertical_delta:.3f} "
+        f"max_label_left_delta_pt={max_label_left_delta:.3f} "
+        f"max_definition_x_delta_pt={max_definition_x_delta:.3f} "
         f"label_x_spread_pt={label_spread:.3f} "
         f"definition_x_spread_pt={definition_spread:.3f}"
     )
