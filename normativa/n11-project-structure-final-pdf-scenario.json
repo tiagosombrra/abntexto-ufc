@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "phase": "N11",
+  "campaign": "project-structure-final-pdf",
+  "fixture": "tests/normativa/projeto-15287.tex",
+  "pdf": "projeto-15287.pdf",
+  "rules": [
+    "project.textual.required-sections",
+    "project.final-work-elements.excluded"
+  ],
+  "required_sections": {
+    "introduction": "INTRODUÇÃO",
+    "theoretical-framework": "REFERENCIAL TEÓRICO",
+    "methodology": "METODOLOGIA",
+    "resources": "RECURSOS",
+    "schedule": "CRONOGRAMA",
+    "references": "REFERÊNCIAS"
+  },
+  "excluded_elements": {
+    "summary": ["RESUMO"],
+    "abstract": ["ABSTRACT"],
+    "approval-page": ["BANCA EXAMINADORA", "APROVADA EM"]
+  },
+  "policy": {
+    "observer_tokens_are_not_new_normative_lexical_requirements": true,
+    "section_order_is_not_asserted": true,
+    "proof_state_changed": false
+  },
+  "expected_progress": {
+    "total": 5,
+    "baseline_existing_bounded_positive": 3,
+    "promoted_bounded_positive": 2,
+    "current_bounded_positive": 5,
+    "current_support_only": 0
+  }
+}
