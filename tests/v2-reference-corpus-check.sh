@@ -64,9 +64,19 @@ def require_dotted_entry(source, start, end, marker):
 text = Path('/tmp/abntexto-ufc-v2-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
 flat = normalize_pdf_text(text)
 required = (
-    'CATÁLOGO DE EXEMPLOS E VALIDAÇÃO VISUAL',
-    'Normas e diretrizes adotadas',
-    'Referências bibliográficas e recursos eletrônicos',
+    'MODELO COMENTADO DE TRABALHO ACADÊMICO DA UFC',
+    'INTRODUÇÃO E USO DESTE MODELO',
+    'BASE NORMATIVA ADOTADA',
+    'ESTRUTURA DO TRABALHO ACADÊMICO',
+    'ELEMENTOS PRÉ-TEXTUAIS EM DETALHE',
+    'FORMATAÇÃO GERAL E ORGANIZAÇÃO DA PARTE TEXTUAL',
+    'CITAÇÕES, NOTAS E REFERÊNCIAS',
+    'ILUSTRAÇÕES, TABELAS E OUTROS OBJETOS ACADÊMICOS',
+    'RECURSOS DO ABNTEXTO-UFC, ELEMENTOS PÓS-TEXTUAIS E REVISÃO FINAL',
+    'Base normativa',
+    'Orientação institucional UFC',
+    'Política do modelo',
+    'Exemplo',
     'Figura estreita com legenda curta',
     'Figura de largura intermediária',
     'Figura larga próxima à largura útil',
@@ -87,6 +97,7 @@ required = (
     'Nome do Sexto Membro',
     'ABNT NBR 14724:2024',
     'ABNT NBR 6023:2025',
+    'ABNT NBR 10520:2023',
     'HTTP Semantics',
     'APÊNDICE A',
     'APÊNDICE B',
@@ -121,10 +132,10 @@ if missing_committee:
     raise SystemExit('Corpus V2 falhou: banca não cabe integralmente na folha de aprovação: ' + ', '.join(missing_committee))
 
 list_blocks = (
-    ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Exemplo de figura no padrão V2'),
-    ('LISTA DE TABELAS', 'LISTA DE CÓDIGOS', 'Tabela 1 — Etapas do procedimento'),
-    ('LISTA DE CÓDIGOS', 'LISTA DE ALGORITMOS', 'Código 1 — Função de soma em C++'),
-    ('LISTA DE ALGORITMOS', 'LISTA DE ABREVIATURAS E SIGLAS', 'Algoritmo 1 — Busca linear'),
+    ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Figura estreita com legenda curta'),
+    ('LISTA DE TABELAS', 'LISTA DE CÓDIGOS', 'Tabela 1 — Organização didática dos componentes exercitados pelo documento de referência'),
+    ('LISTA DE CÓDIGOS', 'LISTA DE ALGORITMOS', 'Código 1 — Função de média em Python com números de linha'),
+    ('LISTA DE ALGORITMOS', 'LISTA DE ABREVIATURAS E SIGLAS', 'Algoritmo 1 — Máximo divisor comum com números de linha'),
 )
 for start, end, marker in list_blocks:
     start_at = flat.find(start)
@@ -141,7 +152,7 @@ for start, end, marker in list_blocks:
 raw_pages = text.split('\f')
 toc_starts = [
     index for index, page in enumerate(raw_pages)
-    if 'SUMÁRIO' in page and 'INTRODUÇÃO' in page
+    if 'SUMÁRIO' in page and 'INTRODUÇÃO E USO DESTE MODELO' in page
 ]
 if len(toc_starts) != 1:
     raise SystemExit(f'Corpus V2 falhou: esperado um sumário principal, encontrados {len(toc_starts)}.')
@@ -149,18 +160,23 @@ if len(toc_starts) != 1:
 toc_start = toc_starts[0]
 toc_end = None
 for index in range(toc_start + 1, len(raw_pages)):
-    if re.search(r'^\s*1\s+INTRODUÇÃO\s*$', raw_pages[index], re.M):
+    if re.search(r'^\s*1\s+INTRODUÇÃO E USO DESTE MODELO\s*$', raw_pages[index], re.M):
         toc_end = index
         break
 if toc_end is None:
-    raise SystemExit('Corpus V2 falhou: fim do sumário não localizado antes da seção INTRODUÇÃO.')
+    raise SystemExit('Corpus V2 falhou: fim do sumário não localizado antes da primeira seção textual.')
 
 toc = '\n'.join(raw_pages[toc_start:toc_end])
 toc_flat = normalize_pdf_text(toc)
 for marker in (
-    'INTRODUÇÃO',
-    'Normas e diretrizes adotadas',
-    'CONCLUSÃO',
+    'INTRODUÇÃO E USO DESTE MODELO',
+    'Base normativa adotada',
+    'ESTRUTURA DO TRABALHO ACADÊMICO',
+    'ELEMENTOS PRÉ-TEXTUAIS EM DETALHE',
+    'FORMATAÇÃO GERAL E ORGANIZAÇÃO DA PARTE TEXTUAL',
+    'CITAÇÕES, NOTAS E REFERÊNCIAS',
+    'ILUSTRAÇÕES, TABELAS E OUTROS OBJETOS ACADÊMICOS',
+    'RECURSOS DO ABNTEXTO-UFC, ELEMENTOS PÓS-TEXTUAIS E REVISÃO FINAL',
     'REFERÊNCIAS',
     'GLOSSÁRIO',
     'APÊNDICE A',
@@ -173,8 +189,8 @@ for marker in (
         raise SystemExit(f'Corpus V2 falhou: entrada obrigatória ausente do sumário: {marker}.')
 
 entry_lines = [line for line in toc.splitlines() if re.search(r'\d+\s*$', line)]
-if len(entry_lines) < 20:
-    raise SystemExit(f'Corpus V2 falhou: poucas entradas paginadas no sumário: {len(entry_lines)}.')
+if len(entry_lines) < 30:
+    raise SystemExit(f'Corpus V2 falhou: poucas entradas paginadas no sumário comentado: {len(entry_lines)}.')
 undotted = [
     line.strip() for line in entry_lines
     if not re.search(spaced_leader_pattern(), line)
@@ -207,8 +223,18 @@ def toc_title_x(marker):
         )
     return matches[0][1]
 
-reference_x = toc_title_x('INTRODUÇÃO')
-for marker in ('CONCLUSÃO', 'REFERÊNCIAS', 'GLOSSÁRIO', 'ÍNDICE REMISSIVO'):
+reference_x = toc_title_x('INTRODUÇÃO E USO DESTE MODELO')
+for marker in (
+    'ESTRUTURA DO TRABALHO ACADÊMICO',
+    'ELEMENTOS PRÉ-TEXTUAIS EM DETALHE',
+    'FORMATAÇÃO GERAL E ORGANIZAÇÃO DA PARTE TEXTUAL',
+    'CITAÇÕES, NOTAS E REFERÊNCIAS',
+    'ILUSTRAÇÕES, TABELAS E OUTROS OBJETOS ACADÊMICOS',
+    'RECURSOS DO ABNTEXTO-UFC',
+    'REFERÊNCIAS',
+    'GLOSSÁRIO',
+    'ÍNDICE REMISSIVO',
+):
     actual_x = toc_title_x(marker)
     if abs(actual_x - reference_x) > 1.5:
         raise SystemExit(
@@ -239,11 +265,10 @@ check_list documento.loi \
   'Comparação de configurações editoriais'
 
 check_list documento.lot \
-  'Etapas do procedimento' \
+  'Organização didática dos componentes exercitados pelo documento de referência' \
   'Indicadores sintéticos com linhas alternadas'
 
 check_list documento.loc \
-  'Função de soma em C++' \
   'Função de média em Python com números de linha' \
   'Função de máximo em C++ sem números de linha' \
   'Arquivo Python externo com números de linha' \
@@ -251,8 +276,7 @@ check_list documento.loc \
   'Código C++ apresentado como apêndice'
 
 check_list documento.loa \
-  'Busca linear' \
   'Máximo divisor comum com números de linha' \
   'Seleção do maior valor sem números de linha'
 
-echo 'Corpus visual e semântico do documento de referência validado.'
+echo 'Corpus visual, didático e semântico do documento de referência validado.'
