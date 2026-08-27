@@ -1,12 +1,13 @@
 \ProvidesFile{abntexto-ufc/pretextuais-listas.def}[2026/08/27 UFC aligned definition lists]
 
-% Keep the semantic description-list API and page-breaking behavior.  The
-% multiline/parleft combination places each label in a top-aligned paragraph
-% box, matching the first line of the corresponding definition.
+% Keep the semantic description-list API and page-breaking behavior.  With
+% description lists, enumitem applies label alignment on the boxed standard
+% style; parleft then gives the label a top-aligned paragraph box so its first
+% baseline matches the corresponding definition line.
 \RenewDocumentEnvironment{ufclistadefinicoes}{O{3cm}}
   {%
     \begin{description}[
-      style=multiline,
+      style=standard,
       align=parleft,
       leftmargin=#1,
       labelwidth=\dimexpr#1-.3cm\relax,
