@@ -21,7 +21,7 @@ EXPECTED_MECHANISMS = {
     "vector-rule-geometry": "REPRESENTED",
     "configuration-strict-rejection": "REPRESENTED",
     "semantic-structural-observers": "REPRESENTED",
-    "pdf-pdfa-validation": "INVENTORY_PENDING",
+    "pdf-pdfa-validation": "REPRESENTED",
 }
 
 
