@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "phase": "N13",
-  "status": "ACTIVE_BASELINE",
+  "status": "ACTIVE",
   "purpose": "Validate that existing normative oracles reject isolated controlled violations for the intended predicate rather than through incidental compile or runtime failures.",
   "policy": {
     "positive_baseline_required": true,
@@ -47,11 +47,13 @@
     },
     {
       "id": "semantic-structural-observers",
-      "state": "HARDENING_REQUIRED",
+      "state": "REPRESENTED",
+      "case_ids": [
+        "project-required-resources"
+      ],
       "evidence_paths": [
         "tests/checks/normative_n11_project_structure.py"
-      ],
-      "reason": "The N11 positive-campaign progress assertion can abort before predicate-specific negative evidence is emitted."
+      ]
     },
     {
       "id": "pdf-pdfa-validation",
@@ -143,6 +145,35 @@
       ],
       "expected_rule_id": "table.ibge.open-sides",
       "expected_signature": "N9-EVIDENCE rule=table.ibge.open-sides status=FAIL"
+    },
+    {
+      "id": "project-required-resources",
+      "family": "semantic-structural-observers",
+      "fixture": "tests/normativa/projeto-15287.tex",
+      "positive_gate": [
+        "sh",
+        "tests/v2-project-check.sh"
+      ],
+      "mutation": {
+        "kind": "replace_once",
+        "anchor": "\\section{Recursos}\nRecursos necessários à execução da pesquisa.",
+        "content": "\\section{Infraestrutura}\nInfraestrutura necessária à execução da pesquisa."
+      },
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 3,
+        "biber_after_pass": 1
+      },
+      "oracle": [
+        "python3",
+        "tests/checks/normative_n11_project_structure.py",
+        "{pdf}",
+        "--json",
+        "{evidence_json}",
+        "--enforce"
+      ],
+      "expected_rule_id": "project.textual.required-sections",
+      "expected_signature": "N11-EVIDENCE rule=project.textual.required-sections status=FAIL"
     }
   ]
 }

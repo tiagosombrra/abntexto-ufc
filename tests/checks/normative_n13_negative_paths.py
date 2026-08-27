@@ -16,13 +16,14 @@ EXPECTED_CASE_IDS = (
     "page-margins-right",
     "short-direct-citation-quotes",
     "ibge-table-open-sides",
+    "project-required-resources",
 )
 EXPECTED_MECHANISMS = {
     "final-pdf-geometry": "REPRESENTED",
     "citation-quotation-presentation": "REPRESENTED",
     "vector-rule-geometry": "REPRESENTED",
     "configuration-strict-rejection": "PREEXISTING_NEGATIVE",
-    "semantic-structural-observers": "HARDENING_REQUIRED",
+    "semantic-structural-observers": "REPRESENTED",
     "pdf-pdfa-validation": "INVENTORY_PENDING",
 }
 EXPECTED_POLICY = {
@@ -60,7 +61,7 @@ def load_json(path: Path) -> dict[str, Any]:
 def validate_manifest(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     if manifest.get("schema_version") != 1 or manifest.get("phase") != "N13":
         fail("invalid manifest schema/phase")
-    if manifest.get("status") != "ACTIVE_BASELINE":
+    if manifest.get("status") != "ACTIVE":
         fail(f"unexpected N13 manifest status: {manifest.get('status')}")
     if manifest.get("policy") != EXPECTED_POLICY:
         fail("N13 negative-path policy drift")
@@ -117,8 +118,13 @@ def validate_manifest(manifest: dict[str, Any]) -> list[dict[str, Any]]:
             fail(f"case {case_id}: compile specification is required")
         if compile_spec.get("engine") not in {"pdflatex", "lualatex"}:
             fail(f"case {case_id}: unsupported compile engine")
-        if compile_spec.get("passes") not in {1, 2, 3}:
+        passes = compile_spec.get("passes")
+        if passes not in {1, 2, 3}:
             fail(f"case {case_id}: invalid compile pass count")
+        biber_after_pass = compile_spec.get("biber_after_pass")
+        if biber_after_pass is not None:
+            if not isinstance(biber_after_pass, int) or biber_after_pass < 1 or biber_after_pass >= passes:
+                fail(f"case {case_id}: invalid biber_after_pass")
         if not isinstance(case.get("expected_rule_id"), str) or not case["expected_rule_id"]:
             fail(f"case {case_id}: expected_rule_id is required")
         if not isinstance(case.get("expected_signature"), str) or not case["expected_signature"]:
@@ -191,6 +197,60 @@ def failed_rule_from_evidence(path: Path, rule_id: str) -> dict[str, Any]:
     return matches[0]
 
 
+def compile_negative_fixture(
+    case_id: str,
+    mutated_tex: Path,
+    temp_dir: Path,
+    compile_spec: dict[str, Any],
+    env: dict[str, str],
+) -> Path:
+    job = safe_job_name(case_id)
+    engine = compile_spec["engine"]
+    passes = int(compile_spec["passes"])
+    biber_after_pass = compile_spec.get("biber_after_pass")
+    compile_output = ""
+    compile_command = [
+        engine,
+        f"-jobname={job}",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-file-line-error",
+        f"-output-directory={temp_dir}",
+        str(mutated_tex),
+    ]
+
+    for pass_index in range(1, passes + 1):
+        compiled = run_command(compile_command, env=env)
+        compile_output += f"\n--- latex pass {pass_index} ---\n{compiled.stdout}"
+        if compiled.returncode != 0:
+            raise CaseFailure(
+                f"negative fixture compile failed for {case_id}; compile failure does not count as rejection\n"
+                + output_tail(compile_output)
+            )
+
+        if biber_after_pass == pass_index:
+            biber_command = [
+                "biber",
+                "--input-directory",
+                str(temp_dir),
+                "--output-directory",
+                str(temp_dir),
+                job,
+            ]
+            biber = run_command(biber_command, env=env)
+            compile_output += f"\n--- biber after pass {pass_index} ---\n{biber.stdout}"
+            if biber.returncode != 0:
+                raise CaseFailure(
+                    f"negative fixture bibliography build failed for {case_id}; build failure does not count as rejection\n"
+                    + output_tail(compile_output)
+                )
+
+    pdf = temp_dir / f"{job}.pdf"
+    if not pdf.is_file() or pdf.stat().st_size == 0:
+        raise CaseFailure(f"negative fixture did not produce a PDF for {case_id}: {pdf}")
+    return pdf
+
+
 def run_case(case: dict[str, Any], env: dict[str, str]) -> dict[str, Any]:
     case_id = case["id"]
     family = case["family"]
@@ -210,33 +270,10 @@ def run_case(case: dict[str, Any], env: dict[str, str]) -> dict[str, Any]:
         temp_dir = Path(temp_name)
         mutated_tex = temp_dir / fixture.name
         mutated_tex.write_text(mutated, encoding="utf-8")
-        job = safe_job_name(case_id)
         compile_spec = case["compile"]
-        engine = compile_spec["engine"]
-        compile_output = ""
-        compile_command = [
-            engine,
-            f"-jobname={job}",
-            "-interaction=nonstopmode",
-            "-halt-on-error",
-            "-file-line-error",
-            f"-output-directory={temp_dir}",
-            str(mutated_tex),
-        ]
-        for pass_index in range(1, int(compile_spec["passes"]) + 1):
-            compiled = run_command(compile_command, env=env)
-            compile_output += f"\n--- pass {pass_index} ---\n{compiled.stdout}"
-            if compiled.returncode != 0:
-                raise CaseFailure(
-                    f"negative fixture compile failed for {case_id}; compile failure does not count as rejection\n"
-                    + output_tail(compile_output)
-                )
+        pdf = compile_negative_fixture(case_id, mutated_tex, temp_dir, compile_spec, env)
 
-        pdf = temp_dir / f"{job}.pdf"
-        if not pdf.is_file() or pdf.stat().st_size == 0:
-            raise CaseFailure(f"negative fixture did not produce a PDF for {case_id}: {pdf}")
-
-        evidence_json = temp_dir / f"{job}-evidence.json"
+        evidence_json = temp_dir / f"{safe_job_name(case_id)}-evidence.json"
         oracle_values = {
             "pdf": str(pdf),
             "evidence_json": str(evidence_json),
@@ -332,7 +369,7 @@ def main() -> None:
     payload = {
         "schema_version": 1,
         "phase": "N13",
-        "campaign": "negative-path-baseline",
+        "campaign": "negative-path-validation",
         "source_commit_sha": os.environ.get("SOURCE_COMMIT_SHA", os.environ.get("GITHUB_SHA", "")),
         "result": "PASS" if not failures else "FAIL",
         "selected_case_ids": [case["id"] for case in selected],
