@@ -95,5 +95,6 @@ PY
 done
 
 sh tests/v2-long-quotation-evidence-check.sh
+sh tests/v2-negative-paths-check.sh
 
 echo 'Gate V2 de estruturas normativas complementares concluído.'
