@@ -97,7 +97,7 @@
     "tests/v2-font-config-check.sh": "50daa19ca81af6b6ccd9467c19be873b86eeb0c6",
     "tests/v2-font-poc.sh": "daafd4abc7ea8d2b19bbb1988be37de4dc889459",
     "tests/v2-windows-font-pdfa-check.sh": "72946d022ad04525a42d99bcb0010b1bf6157c86",
-    ".github/workflows/latex-preflight.yml": "188678d85e7b0869581991ed894091560b497331"
+    ".github/workflows/latex-preflight.yml": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"
   },
   "supplemental_environment": {
     "overleaf_proxy_is_core_matrix_cell": false,
