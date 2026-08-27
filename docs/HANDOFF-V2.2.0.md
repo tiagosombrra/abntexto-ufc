@@ -180,7 +180,7 @@ Stable-main full preflight #941 / run id `33080352548` is fully green, including
 
 PR #135 is an isolated test-contract repair. It changes only `tests/v2-reference-corpus-check.sh` plus this canonical handoff. It must not alter class implementation, document rendering, normative values, locators, N5 tolerances, proof-state or the N12-certified workflow.
 
-The real distribution path has successively exposed four formatting-sensitive assumptions in the same reference-corpus checker. In each case, the remaining 30 checks passed and no class/rendering regression was established.
+The real distribution path has successively exposed five formatting-sensitive assumptions in the same reference-corpus checker. In every distribution attempt, the other 30 checks passed; the full exact-head Gate T also remained green once transient infrastructure failures were rerun. No class/rendering regression has been established by these failures.
 
 ### Failure 1 — stale subsection case
 
@@ -226,9 +226,27 @@ Exact failure:
 
 Diagnosis: `spaced_leader_pattern()` was `(?:\.\s+){1,}\.\s*\d+\s*$`, which requires at least two dot tokens because of the extra literal `\.` outside the repeated group. The long `ANEXO B` entry legitimately leaves room for only one leader dot before page 53.
 
-Current repair commit before this handoff synchronization: `314d10a3d07cbbea0d568d3374eaf43474f1b6e3`.
+Repair commit `314d10a3d07cbbea0d568d3374eaf43474f1b6e3`: use `(?:\.\s+){1,}\d+\s*$`, one or more spaced leader dots followed by the page number. This preserves the dotted-leader requirement and does not accept an entry with no dot.
 
-The pattern is now `(?:\.\s+){1,}\d+\s*$`: one or more spaced leader dots followed by the page number. This preserves the dotted-leader requirement while removing the accidental minimum of two dots. It does not accept an entry with no dot.
+### Failure 5 — TOC alignment observer required title and leader on one BBox line
+
+The one-or-more-dot repair was validated on exact head `cb31f7059088c4e0b1274c72cf7bfca81976c276`.
+
+Evidence:
+
+- normal PR preflight #952 / run id `33091596254` — SUCCESS;
+- Gate T #953 / run id `33091676998` — fully SUCCESS, including reference/PDF-A, 12 profile PDFs/PDF-A, objects/bibliography, post-textuals, structural suite, Overleaf/TeX Live 2025, literal Windows Times/Arial build, Unicode/embedding/PDF-A certification and aggregate;
+- Distribution #223 / run id `33091668876` — Gate T prerequisite SUCCESS and `make preflight` PASS=30, FAIL=1.
+
+Exact failure:
+
+`Corpus V2 falhou: esperado um título primário no sumário para RECURSOS DO ABNTEXTO-UFC; encontrados 0.`
+
+Diagnosis: `toc_title_x()` scanned every BBox line in the document and used a dot token on the same line as the title as its TOC disambiguator. The long primary title beginning `RECURSOS DO ABNTEXTO-UFC` wraps before the leader, so the title line has no dot and the observer returns zero even though the entry is present and the separate TOC corpus checks already confirm it.
+
+Repair commit before this handoff synchronization: `9f06e289a2f04f8ba131efbc9854345c67cc74d1`.
+
+The observer now reuses the already-derived physical TOC page interval (`toc_start:toc_end`) to scope BBox title searches. Inside those pages it measures the first title word `xMin` directly and no longer depends on a leader dot sharing the same physical line. The same 1.5 pt alignment threshold is preserved. This changes only observer disambiguation; it does not weaken the alignment predicate or leader validation.
 
 ### Current #135 contract
 
@@ -236,10 +254,11 @@ The checker now:
 
 1. validates the exact current subsection marker;
 2. treats list entries as bounded logical records rather than physical PDF-text lines;
-3. allows title and leader wrapping within the same record;
-4. requires the target title exactly once;
-5. requires at least one dotted-leader token plus page number inside that same entry;
-6. preserves all existing TOC/list case, alignment, corpus and navigation-file checks.
+3. allows title and leader wrapping within the same list-entry record;
+4. requires the target list title exactly once;
+5. requires at least one dotted-leader token plus page number inside that same list entry;
+6. scopes TOC BBox alignment observations to the physical TOC pages already identified from the rendered PDF;
+7. preserves the existing TOC alignment threshold, TOC/list case checks, corpus markers and navigation-file checks.
 
 The final PR head after this handoff commit must be read from PR #135 before validation/merge. Do not reuse earlier SHAs as final evidence.
 
