@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+python3 tests/checks/normative_n11_scope.py
+
 compile_project_with_biber() {
   engine="$1"
   job="projeto-15287"

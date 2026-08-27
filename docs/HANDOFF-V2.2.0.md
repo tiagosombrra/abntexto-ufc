@@ -1,8 +1,8 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
 Updated: 2026-08-26
-Checkpoint PR: #122
-Stable base before this PR: `509b04c08d0fa3be469d32c0ed5a856f76e5422c`
+Checkpoint PR: #123
+Stable base before this PR: `dc964740e0200483c3327c760f820e6f30f12d6a`
 
 This is the single dynamic continuation document for the v2.2.0 normative audit and release. Future work must read this file before relying on chat history. Detailed evidence belongs in `normativa/`, `tests/`, Git history, pull requests and Actions logs.
 
@@ -52,13 +52,13 @@ Guardrails:
 | N8 | citations and references | DONE — 19/19 bounded positive coverage |
 | N9 | objects, tables, equations and code | DONE — 23/23 bounded positive coverage |
 | N10 | post-textual elements and multivolume | DONE — 20/20 bounded positive coverage |
-| N11 | research-project profile / NBR 15287 | ACTIVE — exact scope reconciliation pending |
+| N11 | research-project profile / NBR 15287 | ACTIVE — 3/5 bounded positive, 2 support-only |
 | N12 | profile, engine and font matrix | PENDING |
 | N13 | negative fixtures / negative-path validation | PENDING |
 | N14 | Web/Lite and CLI/Deep unification | PENDING |
 | N15 | full normative certification and release decision | PENDING |
 
-Formal roadmap closure is **11/16 phases = 68.75%**. The remaining five gates are **31.25%** of the roadmap. This is a phase-gate metric, not a conformity or proof percentage.
+Formal roadmap closure is **11/16 phases = 68.75%**. The remaining five gates are **31.25%** of the roadmap. N11 remains active, so this phase-gate percentage does not advance until N11 closes. This is not a conformity or proof percentage.
 
 ## Frozen baseline and oracle policy
 
@@ -95,7 +95,7 @@ N9 added one calibrated N5 extension without changing those tolerances:
 
 ### N6 — pre-textuals — DONE
 
-The pre-textual work map is reconciled. Manual/conditional boundaries remain explicit, including catalog-card font sizing, approval signatures and CAPES applicability. Research-project observations remain support-only until N11 maps them to exact project predicates.
+The pre-textual work map is reconciled. Manual/conditional boundaries remain explicit, including catalog-card font sizing, approval signatures and CAPES applicability. N11 reconciliation has now mapped three existing structured N6 project measurements to exact `project.*` predicates; this mapping changes bounded-coverage classification only and does not promote proof-state.
 
 ### N7 — layout, pagination, sections and footnotes — DONE
 
@@ -126,28 +126,60 @@ Progression:
 
 - PR #120: exact scope reconciliation — baseline `2/20 bounded + 18/20 support-only`; squash merge `17c8e22337f861127bf6bb07efa8bf9602010a49`.
 - PR #121: 13-rule `appendix-annex-final-pdf` campaign — `15/20`; final audited head `2779c86aa08ac979f8cac7f4007c66a2584f6573`; squash merge `509b04c08d0fa3be469d32c0ed5a856f76e5422c`.
-- PR #122: final 5-rule `index-glossary-final-pdf` campaign — `20/20` on technical head `9f648ab676800d0e9cf5c0e76c23e3eab7494458`; final documentation-updated head must still pass exact-head CI before merge.
+- PR #122: final 5-rule `index-glossary-final-pdf` campaign — `20/20`; technical evidence head `9f648ab676800d0e9cf5c0e76c23e3eab7494458`, final audited documentation head `de172c297594ded28b2833d95065b45377dbfd33`, Normative source contract #251 and LaTeX preflight #862 successful with `behind_by=0`, then squash-merged as `dc964740e0200483c3327c760f820e6f30f12d6a`.
 
-The PR #122 final-PDF campaign reports `PASS=5 FAIL=0` and `current_bounded_positive=20 current_support_only=0`:
+The PR #122 final-PDF campaign reported `PASS=5 FAIL=0` and `current_bounded_positive=20 current_support_only=0`:
 
 - observed index heading: `ÍNDICE REMISSIVO`; this lexical text is observational and is **not** frozen as an additional predicate;
-- index heading is uppercase;
-- index heading uses the same-document bold calibration and differs from the regular calibration;
-- index heading measures exactly 12 pt within the frozen 1 pt tolerance;
-- index heading center differs from the recto text-area center by approximately `0.00023 pt`, within the frozen 5 pt tolerance;
-- `glossary.element.optional` passes with a controlled present route and a separate clean absent route while an independent index is still generated.
+- index heading is uppercase, bold against same-document calibration, exactly 12 pt, and centered within the frozen N5 tolerance;
+- `glossary.element.optional` passes with controlled present and absent routes while an independent index is still generated.
 
-The absent-route fixture was corrected during audit so it truly omits glossary configuration instead of configuring `glossaries` and intentionally not printing it. The observer was also narrowed to detect glossary headings structurally and index entries by normalized page content. These were evidence-fixture/observer corrections only; no class implementation, normative value, locator or N5 tolerance changed.
-
-Post-textual and pagination locator limitations remain in force. N10 closure does **not** promote proof-state; the project-wide proof baseline remains unchanged and `PROVEN=0`.
+The absent-route fixture and marker observer were corrected during audit without changing the class implementation, any normative value, locator or N5 tolerance. N10 closure did **not** promote proof-state.
 
 ## N11 — research-project profile / NBR 15287 — ACTIVE
 
-N11 must now be rederived from the **current full contract** before any implementation or evidence campaign is opened. Do not reuse an old count by assumption.
+PR #123 machine-rederives N11 from the current 181-rule full contract as exactly **5 `project.*` predicates**, partitioned by authority:
 
-Read-only reconnaissance indicates that `normativa/coverage-rules-project.json`, `normativa/locator-audit-final.json`, `tests/v2-project-check.sh`, `tests/normativa/projeto-15287.tex`, `tests/normativa/projeto-sem-capa.tex` and `tests/normativa/pretextuais-projeto-anonimo.tex` are the principal inputs for reconciliation. Existing broad project regressions must be mapped to exact predicates before being counted as bounded positive coverage.
+Normative NBR 15287:2025 rules — 3:
 
-The NBR 15287:2025 structure rules currently have locator status `UNAVAILABLE_WITH_REASON` because exact authoritative/licensed clause text is not available in the repository evidence corpus. Positive rendered evidence must therefore remain separate from normative proof-state. Technical-profile and project-policy rules, including anonymization behavior, must also remain explicitly separated from ABNT normative claims.
+- `project.cover.optional`;
+- `project.title-page.required`;
+- `project.textual.required-sections`.
+
+Internal technical/profile rules — 2:
+
+- `project.final-work-elements.excluded` — authority `technical-profile`;
+- `project.anonymization.policy` — authority `project-policy`.
+
+The NBR 15287:2025 locator ruleset `project.structure-nbr15287` covers exactly the three normative rules and remains `UNAVAILABLE_WITH_REASON`: exact authoritative/licensed clause text is not available in the repository evidence corpus. Positive rendered evidence therefore remains separate from normative proof-state.
+
+The conservative N11 baseline is **3/5 bounded positive + 2/5 support-only**.
+
+Existing bounded-positive rules, mapped from live structured N6 evidence:
+
+- `project.cover.optional` — the cover oracle measures both `projeto` and `projetoanonimizado` with `required=false` and suppressed cover routes;
+- `project.title-page.required` — the title-page oracle measures title-page presence for both project profiles with `required=true`;
+- `project.anonymization.policy` — the title-page oracle verifies hidden author/advisor and the required public identifier.
+
+PR #123 does not count these merely because checker files exist. `normativa/n11-scope-reconciliation.json` and `tests/checks/normative_n11_scope.py` also require each historical checker to remain invoked by its evidence gate, and each evidence gate to remain invoked by the mandatory `pretextual` CI host. Orphaned evidence therefore cannot silently remain in the bounded baseline.
+
+Residual support-only rules:
+
+- `project.textual.required-sections` with exact semantic values `introduction`, `theoretical-framework`, `methodology`, `resources`, `schedule`, `references`;
+- `project.final-work-elements.excluded` with exact semantic values `summary`, `abstract`, `approval-page`.
+
+The existing `tests/v2-project-check.sh` already exercises these behaviors broadly in `tests/normativa/projeto-15287.tex`, but those observations remain support-only until the exact two rule IDs are mapped by the residual `project-structure-final-pdf` campaign.
+
+On PR #123 head `c1ddfefe80fe67049d51f79c3bc0fa8c33a4f04c`, the structural job of LaTeX preflight #867 reported:
+
+- `N11-EVIDENCE scope-reconciliation total=5 existing_bounded_positive=3 support_only=2`;
+- exact authority lists: 3 normative, 1 technical-profile, 1 project-policy;
+- one residual campaign with exactly two rules;
+- `nbr15287=UNAVAILABLE_WITH_REASON`;
+- `proof_state_changed=false`;
+- structural validation summary `PASS=14 FAIL=0 SKIP=0`.
+
+This is bounded-coverage reconciliation, not a proof-state promotion.
 
 ## Normative currency
 
@@ -182,6 +214,8 @@ For roadmap PRs:
 
 ## Next action
 
-Finish PR #122 on its **final documentation-updated head**. Require exact-head Normative source and full LaTeX preflight success, including `N10-EVIDENCE index-glossary-final-pdf-summary PASS=5 FAIL=0`, `current_bounded_positive=20 current_support_only=0`, structural repository audit success, aggregate `latex-preflight` success and `behind_by=0`; then squash merge with the expected head SHA.
+Finish PR #123 on its final documentation-updated head. Require exact-head Normative source and full LaTeX preflight success, including structural `N11-EVIDENCE scope-reconciliation total=5 existing_bounded_positive=3 support_only=2`, structural validation `PASS=14 FAIL=0 SKIP=0`, aggregate `latex-preflight` success and `behind_by=0`; then squash merge with the expected head SHA.
 
-After #122 merges, rederive the exact N11 work map from the current full contract, project locator manifests and existing project gates. Build a machine-readable reconciliation that distinguishes normative NBR 15287 predicates from technical-profile/project-policy predicates and classifies existing checks as bounded-positive or support-only. Only after that reconciliation should any residual N11 evidence or implementation work begin.
+After #123 merges, create `audit/n11-project-structure-evidence` from the new stable `main`. Reuse the controlled `projeto-15287.pdf` generated by the project gate and add structured final-PDF evidence for exactly the two residual predicates. Map the six contract semantic section IDs to the controlled project headings and verify their presence without inventing an order predicate. For final-work exclusions, verify the exact semantic exclusions while treating concrete detection strings such as `RESUMO`, `ABSTRACT`, `BANCA EXAMINADORA` and `APROVADA EM` as observer tokens rather than new normative lexical requirements.
+
+If that residual campaign reports `PASS=2 FAIL=0`, promote N11 bounded coverage to **5/5** while keeping the NBR 15287 locator `UNAVAILABLE_WITH_REASON` and proof-state unchanged. Only then may N11 be marked DONE, formal roadmap closure advance to **12/16 = 75%**, and N12 become active for a fresh exact-scope rederivation.
