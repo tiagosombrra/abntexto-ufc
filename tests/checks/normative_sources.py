@@ -99,14 +99,71 @@ def validate_status_semantics(
     return restricted, scope_restricted
 
 
+def validate_b1_reconciliation(audit: dict, by_id: dict[str, dict]) -> None:
+    article_guide = by_id.get("ufc-guia-artigos-2021")
+    if not article_guide:
+        fail("missing current UFC scientific-article guide")
+    if article_guide.get("status") != "current-institutional-with-stale-technical-citations":
+        fail("article guide must be restricted from technical-edition authority")
+    if article_guide.get("technical_authority") is not False:
+        fail("article guide cannot select the active ABNT edition")
+
+    article_standard = by_id.get("abnt-nbr-6022-2018")
+    if not article_standard:
+        fail("missing reconciled current article-presentation technical standard")
+    if article_standard.get("kind") != "technical-standard" or article_standard.get("status") != "current":
+        fail("NBR 6022:2018 must be recorded as a current technical standard")
+
+    cepe_2015 = by_id.get("ufc-res-17-cepe-2015")
+    if not cepe_2015 or cepe_2015.get("status") != "current":
+        fail("CEPE Resolution 17/2015 must be registered as a current institutional source")
+    if "program-level-presentation-directives" not in cepe_2015.get("applies_to", []):
+        fail("CEPE Resolution 17/2015 program-level presentation scope is missing")
+
+    capes_59 = by_id.get("capes-portaria-59-2017")
+    if not capes_59:
+        fail("CAPES Portaria 59/2017 classification is missing")
+    if capes_59.get("kind") != "external-regulation":
+        fail("CAPES Portaria 59/2017 must remain an external regulation")
+    if capes_59.get("technical_authority") is not False:
+        fail("CAPES Portaria 59/2017 must not acquire technical formatting authority")
+    if "postgraduate-program-evaluation" not in capes_59.get("applies_to", []):
+        fail("CAPES Portaria 59/2017 evaluation scope is missing")
+
+    excluded = audit.get("reviewed_excluded_sources")
+    if not isinstance(excluded, list) or not excluded:
+        fail("reviewed_excluded_sources must record reviewed non-current references")
+    mec_records = [item for item in excluded if item.get("id") == "mec-portaria-1224-2013"]
+    if len(mec_records) != 1:
+        fail("MEC Portaria 1.224/2013 must have exactly one excluded-source record")
+    mec = mec_records[0]
+    if mec.get("status") != "revoked" or mec.get("technical_authority") is not False:
+        fail("MEC Portaria 1.224/2013 must be recorded as revoked and non-technical")
+    if "mec-portaria-1224-2013" in by_id:
+        fail("revoked MEC Portaria 1.224/2013 leaked into the current source registry")
+
+    candidates = audit.get("reconciled_profile_candidate_sources", {}).get("scientific-article")
+    expected_candidates = {
+        "ufc-guia-artigos-2021",
+        "abnt-nbr-6022-2018",
+        "abnt-nbr-10520-2023",
+        "abnt-nbr-6023-2025",
+        "abnt-nbr-6024-2012",
+        "abnt-nbr-6028-2021",
+        "ibge-tabular-1993",
+    }
+    if set(candidates or []) != expected_candidates:
+        fail("scientific-article candidate source set is incomplete or drifted")
+
+
 def main() -> None:
     audit = json.loads(AUDIT.read_text(encoding="utf-8"))
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
 
     if audit.get("schema_version") != 1:
         fail("unsupported schema_version")
-    if audit.get("scope") != "abntexto-ufc-v2.1.0-current-sources":
-        fail("unexpected audit scope")
+    if audit.get("scope") != "abntexto-ufc-current-sources":
+        fail("unexpected release-dependent or unknown audit scope")
 
     reviewed = date.fromisoformat(audit["reviewed_at"])
     sources = audit.get("sources")
@@ -124,13 +181,13 @@ def main() -> None:
                 fail(f"source {source_id}: missing {field}")
         if date.fromisoformat(source["checked_at"]) > reviewed:
             fail(f"source {source_id}: checked after audit review date")
-        if source["status"] in {"superseded", "historical"}:
+        if source["status"] in {"superseded", "historical", "revoked"}:
             fail(f"legacy source must not remain in current inventory: {source_id}")
 
     catalog_ids = {source["id"] for source in catalog["sources"]}
     missing = sorted(catalog_ids - set(by_id))
     if missing:
-        fail("runtime catalog sources missing from N2 inventory: " + ", ".join(missing))
+        fail("runtime catalog sources missing from source inventory: " + ", ".join(missing))
 
     restricted, scope_restricted = validate_status_semantics(audit, catalog, by_id)
 
@@ -139,6 +196,7 @@ def main() -> None:
         "abnt-nbr-10520-2023",
         "abnt-nbr-6023-2025",
         "abnt-nbr-15287-2025",
+        "abnt-nbr-6022-2018",
         "abnt-nbr-6028-2021",
         "abnt-nbr-6024-2012",
         "abnt-nbr-6027-2012",
@@ -146,10 +204,11 @@ def main() -> None:
         "abnt-nbr-12225-2023",
     }
     if set(audit.get("current_technical_sources", [])) != expected_technical:
-        fail("current technical standard set changed without N2 review")
+        fail("current technical standard set changed without source-authority review")
 
     institutional_guides = {
         "ufc-guia-trabalhos-2022",
+        "ufc-guia-artigos-2021",
         "ufc-guia-citacoes-2025",
         "ufc-guia-referencias-2023",
         "ufc-guia-projetos-2019",
@@ -178,6 +237,7 @@ def main() -> None:
         fail("IN 2/2026 must explicitly override the old visual catalog-card requirement")
 
     required_ufc = {
+        "ufc-res-17-cepe-2015",
         "ufc-res-17-cepe-2017",
         "ufc-res-05-consuni-2023",
         "ufc-in-2-2024",
@@ -196,10 +256,13 @@ def main() -> None:
         "abnt-nbr-6023-2018",
         "abnt-nbr-15287-2011",
         "abnt-nbr-12225-2004",
+        "mec-portaria-1224-2013",
     }
     leaked = sorted(forbidden_ids & set(by_id))
     if leaked:
-        fail("superseded ABNT sources retained as active inventory entries: " + ", ".join(leaked))
+        fail("superseded, revoked or historical sources retained as active entries: " + ", ".join(leaked))
+
+    validate_b1_reconciliation(audit, by_id)
 
     print(
         "Normative source audit passed: "
@@ -207,7 +270,8 @@ def main() -> None:
         f"{len(expected_technical)} current ABNT standards, "
         f"{len(institutional_guides)} UFC guides restricted from edition authority, "
         f"{restricted} restricted runtime sources, "
-        f"{scope_restricted} scope-restricted runtime sources."
+        f"{scope_restricted} scope-restricted runtime sources; "
+        "N15-B1 article/graduate authority reconciliation present."
     )
 
 
