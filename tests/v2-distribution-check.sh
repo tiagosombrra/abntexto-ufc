@@ -206,6 +206,17 @@ legacy_reference_exempt = {
     'docs/HANDOFF-V2.2.0.md',
     'release/n15-b2r-a-naming-inventory.json',
 }
+
+
+def legacy_path_present(text: str, token: str) -> bool:
+    escaped = re.escape(token)
+    if token.endswith('/'):
+        pattern = rf'(?<![A-Za-z0-9_-]){escaped}'
+    else:
+        pattern = rf'(?<![A-Za-z0-9_-]){escaped}(?![A-Za-z0-9_.-])'
+    return re.search(pattern, text) is not None
+
+
 root = Path.cwd().resolve()
 tracked = subprocess.check_output(
     ['git', '-c', f'safe.directory={root}', 'ls-files', '-z'],
@@ -225,7 +236,10 @@ for raw in tracked:
         text = data.decode('utf-8')
     except (OSError, UnicodeDecodeError):
         continue
-    stale = [token for token in legacy_reference_tokens if token in text]
+    stale = [
+        token for token in legacy_reference_tokens
+        if legacy_path_present(text, token)
+    ]
     if stale:
         errors.append(f'{name}: referência ativa ao layout A2 legado: {", ".join(stale)}')
 
