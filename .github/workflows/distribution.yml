@@ -165,7 +165,7 @@ jobs:
         shell: bash
         run: |
           command -v docker >/dev/null 2>&1
-          sh tests/v2-pdfa-check.sh documento.pdf
+          sh tests/v2-pdfa-check.sh main.pdf
           sh tests/v2-profile-pdfa-check.sh
 
       - name: Build deterministic release bundles
