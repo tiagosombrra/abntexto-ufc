@@ -179,9 +179,12 @@ A2 has synchronized:
 - auxiliary reference/distribution workflows;
 - README and active B2R documentation;
 - `tests/smoke/perfil-base.tex` after CI exposed stale frontmatter paths;
-- `normativa/reference-guide-map.json` source-file trace paths after CI exposed stale chapter paths.
+- `normativa/reference-guide-map.json` source-file trace paths after CI exposed stale chapter paths;
+- `tests/v2-capes-guidance-check.sh` after structure CI exposed a stale acknowledgements path;
+- `tests/v2-distribution-check.sh` with explicit Git safe-directory handling inside the TeX Live container;
+- `tests/checks/normative_n12_matrix.py` with bounded A2 historical-content reconstruction for the two migrated paths inside the frozen profile fixture.
 
-The last item is a secondary documentation/rastreability map. Its own policy remains `normative_contract_changed=false`; no predicate, value, source authority or normative locator was changed.
+The `reference-guide-map.json` item is a secondary documentation/rastreability map. Its own policy remains `normative_contract_changed=false`; no predicate, value, source authority or normative locator was changed.
 
 `tests/v2-distribution-check.sh` rejects reintroduction of old A2 top-level paths and scans active tracked text for stale path references, while allowing explicit migration/history ledgers to record old names.
 
@@ -191,7 +194,7 @@ The last item is a secondary documentation/rastreability map. Its own policy rem
 
 `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
 
-A2 adapts scripts called by that workflow rather than editing the workflow itself.
+The N12 matrix manifest and its certified historical hashes also remain unchanged. A1 reconstructs historical `\ProvidesFile` identities for renamed modules; A2 now reconstructs only `frontmatter/resumo` → `1-pre-textuais/resumo` and `frontmatter/abstract` → `1-pre-textuais/abstract` before checking the historical `tests/smoke/perfil-base.tex` blob. Any other content drift still fails the hash.
 
 ### Exact-head CI findings and repairs
 
@@ -213,9 +216,22 @@ Second documented cycle, head `8b1a0a8013c10cc73ad43115b25d0beca567e529`:
 
 Repair:
 
-3. `docs/VIGENCIA-NORMATIVA.md` now preserves the corrected B2A article state **and** explicitly lists every exact superseded/current ABNT reference required by `normativa/version-policy.json`, plus the exact CEPE authority markers expected by the checker. The repair commit before this documentation sync is `5539e5370447fd97e844dfbadf4663992ab0e176`.
+3. `docs/VIGENCIA-NORMATIVA.md` now preserves the corrected B2A article state and explicitly lists every exact superseded/current ABNT reference required by `normativa/version-policy.json`, plus exact CEPE markers.
 
-The failed #1032 and #376 runs remain historical evidence. Neither failure indicates runtime formatting drift; both exposed stale or incomplete migration/documentation consumers and were fixed without changing normative predicates, values, locators or authority.
+Third cycle, head `a0bf9d060a188aa963d7e7f7002a538ef3dee2e0`:
+
+- Source Contract #380 — SUCCESS;
+- Reference Preview #34 — SUCCESS, including reference PDF/A and public TeX Live 2025 proxy;
+- LaTeX preflight #1044 confirmed reference + PDF/A SUCCESS, twelve-profile build + twelve-profile PDF/A SUCCESS and post-textual SUCCESS;
+- structure failed because three A2 migration consumers were still incomplete.
+
+Repairs:
+
+4. distribution-source scan now runs `git ls-files` with explicit `safe.directory`, fixing the container ownership failure;
+5. N12 checker now uses a machine-ledger-controlled reverse-content bridge for exactly the two profile-fixture paths changed by A2; frozen N12 manifest/workflow/hashes remain untouched;
+6. CAPES guidance check now reads `frontmatter/agradecimentos.tex`.
+
+The failed historical runs remain evidence. None required changing normative predicates, values, locators, source authority or formatting behavior.
 
 ### A2 invariants
 
@@ -223,7 +239,7 @@ The failed #1032 and #376 runs remain historical evidence. Neither failure indic
 - no article runtime change;
 - no formatting/pagination intent change;
 - no normative predicate/value/locator/authority change;
-- N12 workflow byte-identical;
+- N12 workflow and matrix manifest remain unchanged;
 - UFC institutional mark remains excluded from public bundles;
 - reference image hashes/licensing unchanged.
 
@@ -246,7 +262,7 @@ A2 can be marked DONE only when all are true on one exact PR head:
 
 ## Next executable action
 
-1. treat the new live PR head produced by this documentation synchronization as the sole certification candidate;
+1. treat the new live PR head produced by the three structure-gate repairs plus this documentation synchronization as the sole certification candidate;
 2. inspect its Source Contract, Reference Preview and LaTeX preflight runs;
 3. fix only reproducible remaining A2 path/packaging/documentation regressions and record each finding here/ledger;
 4. once those checks are green, run exact-head Gate T and Distribution certification;
