@@ -48,7 +48,7 @@ The deprecated `ufctex` compatibility entry point is retained only in project/te
 
 The `abntexto-ufc` source code and project documentation are subject to the LaTeX Project Public License 1.3c or any later version, as stated in `LICENSE`.
 
-The CTAN archive contains no institutional image assets. The UFC coat of arms is not distributed in the CTAN archive and is not declared to be covered by the LPPL. When `brasao = sim` is enabled, obtain the official mark from the Federal University of Ceará and provide it locally with `brasao-arquivo = {path/to/file}`. The compatibility default is `assets/institucional/brasao-ufc.PNG`.
+The CTAN archive contains no institutional image assets. The UFC coat of arms is not distributed in the CTAN archive and is not declared to be covered by the LPPL. When `brasao = sim` is enabled, obtain the official mark from the Federal University of Ceará and provide it locally with `brasao-arquivo = {path/to/file}`. The compatibility default is `assets/institutional/ufc-coat-of-arms.png`.
 
 Official visual identity source: https://www.ufc.br/a-universidade/identidade-visual-da-ufc
 
