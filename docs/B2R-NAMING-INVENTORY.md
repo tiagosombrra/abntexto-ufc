@@ -174,6 +174,12 @@ A2 is not DONE until one exact PR head proves all of the following:
 
 After squash merge, the resulting `main` must be re-certified before B2R-B begins.
 
+## Next executable action
+
+Use the live PR head produced after the #1051 scanner reconciliation and this mandatory documentation sync as the sole certification candidate. Require Source Contract, Reference Preview and full LaTeX preflight green on that exact SHA. Only then run exact-head Gate T and deterministic Distribution, verify `behind_by=0`, perform final receipt-only documentation sync, squash-merge PR #147 and re-certify resulting `main` before B2R-B.
+
+If the current GitHub tool surface cannot dispatch Gate T or Distribution, keep A2 open and record that operational blocker; do not replace either required gate with a weaker check.
+
 ## B2R-B — BLOCKED BY A2
 
 Only after A2 merge + post-merge recertification:
