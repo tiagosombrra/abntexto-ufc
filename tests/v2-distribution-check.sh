@@ -102,17 +102,17 @@ modules = re.findall(
 if not modules:
     errors.append('abntexto-ufc.cls: nenhum módulo UFC carregado')
 module_names = {Path(module).name for module in modules}
-if 'fontes.def' not in module_names:
-    errors.append('abntexto-ufc.cls: módulo obrigatório fontes.def não carregado')
+if 'fonts.def' not in module_names:
+    errors.append('abntexto-ufc.cls: módulo obrigatório fonts.def não carregado')
 for module in modules:
     if not Path(module).is_file():
         errors.append(f'abntexto-ufc.cls: módulo carregado não existe: {module}')
 
-institutional = Path('abntexto-ufc/institucional.def').read_text(encoding='utf-8')
+institutional = Path('abntexto-ufc/institutional.def').read_text(encoding='utf-8')
 if 'brasao-arquivo' not in institutional:
-    errors.append('abntexto-ufc/institucional.def: chave brasao-arquivo ausente')
+    errors.append('abntexto-ufc/institutional.def: chave brasao-arquivo ausente')
 if 'assets/institucional/brasao-ufc.PNG' not in institutional:
-    errors.append('abntexto-ufc/institucional.def: caminho compatível padrão do brasão ausente')
+    errors.append('abntexto-ufc/institutional.def: caminho compatível padrão do brasão ausente')
 
 builder = Path('tools/build-release-bundles.py').read_text(encoding='utf-8')
 if re.search(r'CLASS_INPUTS\s*=\s*\(.*?assets/institucional', builder, re.DOTALL):
