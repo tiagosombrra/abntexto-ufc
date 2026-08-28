@@ -4,20 +4,13 @@
 
 ## Regra mandatória
 
-O abntexto-ufc deve seguir a **edição vigente mais recente da norma técnica aplicável**. Uma edição ABNT substituída não pode governar uma regra ativa apenas porque ainda aparece citada em um Guia de Normalização da UFC.
+O `abntexto-ufc` deve seguir a **edição vigente mais recente da norma técnica aplicável**. Uma edição ABNT substituída não pode governar uma regra ativa apenas porque ainda aparece citada em um Guia de Normalização da UFC.
 
-Esta decisão não é uma preferência editorial do projeto. Ela decorre da base institucional da própria UFC:
+A base institucional é:
 
-1. a **Resolução nº 17/CEPE, de 02 de outubro de 2017**, cujo art. 1º determina que a normalização dos trabalhos acadêmicos da UFC seja realizada de acordo com as normas técnicas de informação e documentação da ABNT ou por modelo específico aprovado no rito previsto pela própria resolução;
-2. a página vigente **Normalização de trabalhos acadêmicos — Sistema de Bibliotecas UFC**, atualizada em 04/03/2026, que declara que os cinco Guias de Normalização da UFC estão de acordo com as **normas vigentes** da ABNT;
-3. para a pós-graduação stricto sensu, a **Resolução nº 17/CEPE, de 04 de dezembro de 2015**, em vigor, atribui ao colegiado do programa, nas Normas Gerais art. 10, X, competência para definir diretrizes referentes à forma de apresentação de dissertação, tese ou trabalho equivalente.
-
-Fontes institucionais:
-
-- Resolução nº 17/CEPE, de 02/10/2017: https://ufc.br/images/_files/a_universidade/cepe/resolucao_cepe_2017/resolucao17_cepe_2017.pdf
-- Resolução nº 17/CEPE, de 04/12/2015: https://normadigital.ufc.br/cepe/resolucao-no-17-cepe-de-04-de-dezembro-de-2015-2/
-- Página de Normalização do SiBi/UFC: https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/
-- Relação oficial das Resoluções CEPE de 2017: https://www.ufc.br/a-universidade/documentos-oficiais/9285-resolucoes-do-conselho-de-ensino-pesquisa-e-extensao-cepe-2017
+1. Resolução nº 17/CEPE, de 02/10/2017 — normalização dos trabalhos acadêmicos da UFC segundo normas técnicas de informação/documentação da ABNT ou modelo específico aprovado no rito institucional;
+2. página vigente de Normalização de Trabalhos Acadêmicos do Sistema de Bibliotecas da UFC — os cinco guias institucionais devem ser lidos à luz das normas vigentes;
+3. para stricto sensu, Resolução nº 17/CEPE, de 04/12/2015 — o colegiado do PPG pode definir diretrizes de apresentação dentro de seu escopo, desde que a diretriz específica seja identificada e vigente.
 
 ## Regra de decisão
 
@@ -29,94 +22,114 @@ Para requisito institucional:
 
 **ato UFC vigente → requisito institucional UFC vigente → guia UFC → norma técnica, quando aplicável → implementação**.
 
-Um guia UFC que contenha uma citação técnica antiga continua podendo fornecer orientação institucional compatível, mas **não reativa** a edição ABNT substituída.
+Um guia UFC que cite edição técnica antiga pode continuar fornecendo orientação institucional compatível, mas **não reativa** a edição ABNT substituída. Conflito real entre fontes atuais recebe `review-required`; o projeto não escolhe silenciosamente uma delas.
 
-Se duas fontes atuais e aplicáveis forem realmente incompatíveis, o requisito recebe `review-required`; o projeto não escolhe silenciosamente uma delas.
+## Fontes institucionais principais
 
-### Relação entre CEPE 17/2015 e CEPE 17/2017
+- Resolução nº 17/CEPE, de 02/10/2017;
+- Resolução nº 17/CEPE, de 04/12/2015;
+- página de Normalização do SiBi/UFC;
+- guias oficiais do SiBi/UFC;
+- atos de depósito e instruções normativas vigentes cadastrados em `normativa/source-audit.json`.
 
-As duas resoluções não devem ser tratadas como concorrentes genéricas:
+O inventário completo, datas de consulta, status, precedência e exclusões ficam nos arquivos máquina-legíveis em `normativa/`.
 
-- a **CEPE 17/2017** estabelece o regime geral de normalização: ABNT ou modelo específico formalmente aprovado; o art. 1º, §§ 2º-3º, define o rito e o comportamento na ausência de modelo específico;
-- a **CEPE 17/2015** estabelece a governança dos programas stricto sensu e dá ao colegiado do PPG competência para definir diretrizes de apresentação de dissertação, tese ou equivalente.
+## Artigo científico — estado corrente após N15-B2A
 
-Portanto, um PPG pode introduzir uma exceção institucional de apresentação dentro de seu escopo, mas isso exige uma **diretriz específica identificada e vigente**. A mera existência da competência do colegiado não autoriza o template a inventar uma variante nem a afastar silenciosamente a base ABNT/UFC geral. Uma regra de PPG só pode ser consumida depois de cadastrada, localizada, reconciliada e testada.
+A fonte institucional ativa é:
 
-## N15-B1 — perfil de artigo científico: fontes reconciliadas, runtime ainda congelado
+- ID: `ufc-guia-artigos-2022`;
+- título: Guia de normalização de artigo em publicação periódica da Universidade Federal do Ceará;
+- edição bibliográfica: **2022**;
+- arquivo corrigido atualmente publicado pelo SiBi/UFC: **27/04/2023**;
+- papel: `institutional-guide`, não autoridade técnica ABNT.
 
-A página vigente do SiBi/UFC lista **cinco** guias oficiais. O quinto, que faltava ao inventário anterior, é o **Guia de Normalização de Artigo em Publicação Periódica Científica**, edição UFC 2021.
+A identidade anterior `ufc-guia-artigos-2021` é mantida somente como fonte revisada e superseded history, com `replaced_by = ufc-guia-artigos-2022`.
 
-Na seção de apresentação do guia, a UFC informa como base a **ABNT NBR 6022:2018** para artigos e também cita NBR 10520:2002, NBR 6023:2018, NBR 6024:2012, NBR 6028:2021 e as normas tabulares do IBGE. A revisão N15-B1 reconciliou essa lista com a política de vigência atual:
+A norma técnica ativa do contrato de artigo é:
 
-- **ABNT NBR 6022:2018** permanece a edição corrente identificada para apresentação de artigo em publicação periódica técnica e/ou científica. A revisão pública de 28/08/2026 cruzou o guia UFC vigente, a página institucional atual da UFC e registros universitários atuais de normas; não foi identificada edição posterior substitutiva;
-- a citação **ABNT NBR 10520:2002** do guia é substituída, para qualquer regra futura, pela **ABNT NBR 10520:2023**;
-- a citação **ABNT NBR 6023:2018** do guia é substituída pela **ABNT NBR 6023:2025**;
-- NBR 6024:2012, NBR 6028:2021 e IBGE 1993 permanecem conforme seus escopos já reconciliados.
+- `abnt-nbr-6022-2018` — ABNT NBR 6022:2018.
 
-Essa reconciliação **não implementa o perfil de artigo**. Durante N15-B1, `ufc-guia-artigos-2021` e `abnt-nbr-6022-2018` permanecem fontes reconciliadas de perfil futuro, fora de `normativa/catalog.json` e `normativa/precedence.json`. A promoção para predicados `article.*`, runtime LaTeX, locators e evidências pertence exclusivamente à **N15-B2**.
+N15-B2A/PR #145 já promoveu esse conjunto para catálogo/precedência e adicionou **13 predicados `article.*`** com locators e metadados de fase. Portanto, a formulação antiga de que guia/6022 estavam “fora do catálogo” ou de que a promoção dos predicados ainda era futura está revogada.
 
-O próprio guia UFC também estabelece uma fronteira de aplicabilidade importante: suas orientações são requisitos mínimos e, antes da submissão, devem ser consultadas as diretrizes do periódico de destino. O futuro perfil UFC não poderá afirmar que substitui instruções editoriais específicas do periódico.
+O que **ainda não existe** é o runtime LaTeX específico de artigo. Não há perfil público `type=article`/`tipo=artigo` em produção nem módulo `articles.def` carregado pela classe. Essa implementação pertence a N15-B2B, depois da normalização da API pública em B2R-B.
 
-## Mapeamento explícito de edições citadas pela UFC
+### Recomendações não promovidas a obrigação
 
-As referências antigas abaixo são mantidas nesta documentação **apenas para explicar a divergência de vigência**. Elas não pertencem à base técnica ativa.
+No guia corrente, linguagem como `convém`, `recomenda-se` e `sugerimos` permanece recomendação. Em particular, não são hard requirements automáticos do contrato:
 
-| Documento UFC | Edição ainda citada | Edição técnica adotada/reconciliada pelo abntexto-ufc | Decisão |
-|---|---|---|---|
-| Guia de Trabalhos Acadêmicos, 2022 | ABNT NBR 14724:2011 | **ABNT NBR 14724:2024** (versão corrigida em 01/04/2025) | usa a edição vigente |
-| Guia de Trabalhos Acadêmicos, 2022 | ABNT NBR 6023:2018 | **ABNT NBR 6023:2025** | usa a edição vigente |
-| Guia de Trabalhos Acadêmicos, 2022 | ABNT NBR 10520:2002 | **ABNT NBR 10520:2023** | usa a edição vigente |
-| Guia de Trabalhos Acadêmicos, 2022 | ABNT NBR 12225:2004 | **ABNT NBR 12225:2023** | usa a edição vigente |
-| Guia de Artigo Científico, 2021 | ABNT NBR 10520:2002 | **ABNT NBR 10520:2023** | fonte reconciliada em N15-B1; runtime do artigo somente em N15-B2 |
-| Guia de Artigo Científico, 2021 | ABNT NBR 6023:2018 | **ABNT NBR 6023:2025** | fonte reconciliada em N15-B1; runtime do artigo somente em N15-B2 |
-| Guia de Citações, 2025 | ABNT NBR 6023:2018 | **ABNT NBR 6023:2025** | a NBR 10520:2023 do próprio guia continua vigente; somente a referência à 6023 foi substituída |
-| Guia de Referências, 2023 | ABNT NBR 6023:2018 | **ABNT NBR 6023:2025** | usa a edição vigente |
-| Guia de Projetos de Pesquisa, 2019 | ABNT NBR 15287:2011 | **ABNT NBR 15287:2025** | usa a edição vigente |
-| Guia de Projetos de Pesquisa, 2019 | ABNT NBR 6023:2018 | **ABNT NBR 6023:2025** | usa a edição vigente |
-| Guia de Projetos de Pesquisa, 2019 | ABNT NBR 10520:2002 | **ABNT NBR 10520:2023** | usa a edição vigente |
-| Guia de Projetos de Pesquisa, 2019 | ABNT NBR 12225:2004 | **ABNT NBR 12225:2023** | usa a edição vigente |
+- resumo com 150–250 palavras;
+- mínimo de três palavras-chave;
+- uso de Arial ou Times apenas porque o guia recomenda essas famílias;
+- alinhamento à direita da autoria quando apresentado como sugestão.
 
-As normas que continuam atuais, mesmo que tenham ano antigo, permanecem ativas. O critério é **vigência**, não o número do ano.
+O contrato diferencia requisito obrigatório, recomendação e boundary manual/condicional.
 
-## Outras referências encontradas na página de recebimento de teses e dissertações
+### Fronteira com periódicos
 
-A página vigente do SiBi/UFC também referencia atos que não podem receber autoridade de formatação por mera associação documental:
+O próprio guia UFC informa que suas orientações são requisitos mínimos e que as instruções específicas do periódico de destino devem ser consultadas antes da submissão. O futuro perfil de artigo do template será uma baseline UFC; não poderá afirmar que substitui as author guidelines de um periódico.
 
-- **Portaria MEC nº 1.224/2013**: tratava de manutenção e guarda do acervo acadêmico. O próprio MEC informa que foi **revogada** pela Portaria Normativa nº 22/2017 e pela Portaria nº 315/2018. Por isso, ela é registrada apenas como fonte revisada e excluída; não integra o inventário ativo e não possui autoridade técnica sobre formatação;
-- **Portaria CAPES nº 59/2017**: o catálogo oficial da CAPES a marca como vigente e sua ementa é o regulamento da Avaliação Quadrienal 2017. Seu escopo é avaliação de programas de pós-graduação, não apresentação técnica de dissertações/teses. Ela é classificada como regulação externa contextual, com `technical_authority=false`;
-- **Resolução nº 17/CEPE, de 04/12/2015**: ao contrário das duas referências anteriores, possui efeito institucional direto sobre a governança da apresentação nos PPGs e, por isso, foi promovida ao inventário corrente com escopo explícito de autoridade de programa.
+## Mapeamento de edições citadas por guias UFC
 
-## Normas técnicas vigentes atualmente adotadas pelo runtime
+Referências antigas são preservadas apenas para explicar divergências de vigência; não governam a base técnica ativa.
 
-| Assunto | Norma |
-|---|---|
+| Documento institucional | Edição antiga citada | Edição técnica ativa/reconciliada | Decisão |
+| --- | --- | --- | --- |
+| Guia de Trabalhos Acadêmicos 2022 | NBR 14724:2011 | **NBR 14724:2024**, corrigida em 01/04/2025 | usar edição vigente |
+| Guia de Trabalhos Acadêmicos 2022 | NBR 6023:2018 | **NBR 6023:2025** | usar edição vigente |
+| Guia de Trabalhos Acadêmicos 2022 | NBR 10520:2002 | **NBR 10520:2023** | usar edição vigente |
+| Guia de Trabalhos Acadêmicos 2022 | NBR 12225:2004 | **NBR 12225:2023** | usar edição vigente |
+| Guia de Artigo 2022/correção 2023 | NBR 10520:2002 | **NBR 10520:2023** | usar edição vigente |
+| Guia de Artigo 2022/correção 2023 | NBR 6023:2018 | **NBR 6023:2025** | usar edição vigente |
+| Guia de Artigo 2022/correção 2023 | NBR 6022:2018 | **NBR 6022:2018** | edição corrente identificada |
+| Guia de Citações 2025 | NBR 6023:2018 | **NBR 6023:2025** | atualizar somente a referência a 6023 |
+| Guia de Referências 2023 | NBR 6023:2018 | **NBR 6023:2025** | usar edição vigente |
+| Guia de Projetos de Pesquisa 2019 | NBR 15287:2011 | **NBR 15287:2025** | usar edição vigente |
+| Guia de Projetos de Pesquisa 2019 | NBR 6023:2018 | **NBR 6023:2025** | usar edição vigente |
+| Guia de Projetos de Pesquisa 2019 | NBR 10520:2002 | **NBR 10520:2023** | usar edição vigente |
+| Guia de Projetos de Pesquisa 2019 | NBR 12225:2004 | **NBR 12225:2023** | usar edição vigente |
+
+Normas antigas em ano podem continuar ativas se não houver substituição; o critério é vigência, não recência numérica.
+
+## Base técnica corrente do contrato
+
+| Assunto | Referência |
+| --- | --- |
 | Trabalhos acadêmicos | ABNT NBR 14724:2024, versão corrigida em 01/04/2025 |
+| Artigos em publicação periódica | ABNT NBR 6022:2018 |
 | Citações | ABNT NBR 10520:2023 |
 | Referências | ABNT NBR 6023:2025 |
 | Projetos de pesquisa | ABNT NBR 15287:2025 |
 | Resumo, resenha e recensão | ABNT NBR 6028:2021 |
-| Numeração progressiva de seções | ABNT NBR 6024:2012 |
+| Numeração progressiva | ABNT NBR 6024:2012 |
 | Sumário | ABNT NBR 6027:2012 |
 | Índice | ABNT NBR 6034:2004 |
 | Lombada | ABNT NBR 12225:2023 |
-| Tabelas numéricas | Normas de apresentação tabular do IBGE, 3. ed., 1993, quando aplicável |
+| Tabelas numéricas | Normas de Apresentação Tabular do IBGE, 3. ed., 1993, quando aplicável |
 
-Fonte reconciliada, **ainda não adotada pelo runtime em N15-B1**:
+`ABNT NBR 6022:2018` já pertence ao contrato normativo ativo; isso não significa que o runtime de artigo esteja implementado.
 
-| Perfil futuro | Norma |
-|---|---|
-| Artigo em publicação periódica técnica e/ou científica | **ABNT NBR 6022:2018** — promoção prevista para N15-B2 junto com o contrato `article.*` |
+## Fontes revisadas e excluídas/contextuais
 
-## Como uma atualização futura é tratada
+O projeto não concede autoridade técnica por mera presença em páginas institucionais. Exemplos já reconciliados:
 
-Quando uma nova edição técnica for identificada:
+- Portaria MEC nº 1.224/2013 — revogada; mantida apenas como reviewed/excluded history;
+- Portaria CAPES nº 59/2017 — contextual para avaliação de programas, `technical_authority=false`;
+- Resolução nº 17/CEPE, de 04/12/2015 — autoridade institucional de governança de PPG, mas não licença genérica para inventar regras de apresentação.
 
-1. a nova edição não altera automaticamente valores no template;
-2. a fonte é marcada para revisão;
-3. os requisitos afetados são confrontados com a nova edição;
-4. regras alteradas são atualizadas e retestadas;
-5. a edição substituída é removida da base técnica ativa;
-6. se um guia UFC ainda citar a edição antiga, a divergência é acrescentada a este mapa;
-7. CI, CLI, Web e documentação devem convergir para a mesma decisão.
+## Atualização futura de norma
 
-O arquivo máquina-legível correspondente é `normativa/version-policy.json`. O gate `tests/checks/normative_currency.py` impede que uma edição mapeada como substituída volte a governar arquivos normativos ativos e também impede que as fontes reconciliadas do perfil de artigo entrem no runtime antes da N15-B2.
+Quando nova edição técnica for identificada:
+
+1. a fonte entra em revisão; não muda valores automaticamente;
+2. os requisitos afetados são comparados com a nova edição;
+3. regras alteradas recebem atualização explícita de fonte/predicate/locator/evidence;
+4. a edição substituída sai da base técnica ativa;
+5. divergências com guias UFC são registradas nesta política e nos ledgers máquina-legíveis;
+6. runtime, testes, CLI/Web e documentação devem convergir antes da fase ser fechada.
+
+## Documentação e continuidade
+
+Esta política deve permanecer sincronizada com `normativa/version-policy.json`, `normativa/source-audit.json`, `normativa/catalog.json`, `normativa/precedence.json` e o estado descrito em `docs/HANDOFF-V2.2.0.md`.
+
+Desatualização documental é bloqueante para fechamento de fase. Mudanças materiais em autoridade, vigência, promoção de fontes/predicados ou status de runtime devem atualizar esta documentação no mesmo ciclo de trabalho.
