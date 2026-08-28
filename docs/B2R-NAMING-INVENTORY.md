@@ -4,24 +4,16 @@ Updated: 2026-08-28
 
 Current certified base: `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`.
 
-This document is the human-readable companion to `release/n15-b2r-a-naming-inventory.json`. `docs/NAMING.md` remains the naming policy.
+Active branch: `refactor/n15-b2r-a2-user-layout`.  
+Active PR: #147 (draft).
 
-## Certified starting point
+This document is the human-readable companion to `release/n15-b2r-a-naming-inventory.json`. `docs/NAMING.md` remains the naming policy. `docs/HANDOFF-V2.2.0.md` is the canonical project continuation point.
 
-B2R-A1 is closed and post-merge certified on `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`:
+## Mandatory synchronization rule
 
-- Source Contract #367 — SUCCESS;
-- LaTeX preflight push #1030 — SUCCESS;
-- exact Gate T / workflow_dispatch #1031 — SUCCESS;
-- Distribution #239 — SUCCESS.
+B2R cannot be closed if this file, the release ledger and the canonical handoff disagree with the live branch/PR/CI state. Update them after material scope decisions, newly discovered CI blockers, blocker fixes, merge/certification events and before handing the project to another conversation.
 
-Distribution #239 passed release preflight, PDF/A-2b, deterministic bundles, Overleaf import proxy and candidate upload. No new PDF Validator/Pages run was expected because A1 did not modify validator or normative surfaces.
-
-## B2R decomposition
-
-B2R is split so naming changes remain separable from public API and article behavior.
-
-### B2R-A1 — DONE
+## B2R-A1 — DONE
 
 Internal package modules were normalized to canonical English paths:
 
@@ -39,13 +31,18 @@ Internal package modules were normalized to canonical English paths:
 
 Retained canonical paths are `core.def`, `layout.def`, `compat-abntexto.def` and `compat-nbr6023-2025.def`. Module order is unchanged; `academic-works.def` loads before `research-projects.def`.
 
-PR #146 was squash-merged and the resulting `main` was fully re-certified before A2 began.
+PR #146 was squash-merged. Certified resulting `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`:
 
-### B2R-A2 — IMPLEMENTATION CANDIDATE
+- Source Contract #367 — SUCCESS;
+- LaTeX preflight push #1030 — SUCCESS;
+- exact Gate T #1031 — SUCCESS;
+- Distribution #239 — SUCCESS.
 
-A2 normalizes only the user-example and distribution-facing repository layout. It does not change `\ufcsetup`, public commands, normative predicates or article runtime.
+## B2R-A2 — IMPLEMENTATION CANDIDATE
 
-Approved and implemented moves:
+A2 normalizes only the user-example and distribution-facing repository layout. It does not change `\ufcsetup`, public command semantics, article runtime, or normative predicates/values/locators.
+
+### Approved and implemented moves
 
 | Previous path | Canonical path |
 | --- | --- |
@@ -59,57 +56,86 @@ Approved and implemented moves:
 
 Repository, complete template bundle and Overleaf bundle intentionally share the same canonical content layout. The Overleaf archive keeps `main.tex` at archive root.
 
-The institutional coat of arms remains source-only. Public class/template/Overleaf/CTAN bundles continue to exclude it, with release validation using the binary hash rather than trusting only its filename.
+A2 deliberately retains Portuguese leaf filenames that describe academic content, for example `frontmatter/resumo.tex`, `backmatter/apendices/` and `backmatter/anexos/`. Test/evidence fixture names and historical normative identifiers are outside the rename scope unless a direct path consumer must be updated.
 
-A2 deliberately retains Portuguese leaf filenames that describe academic content, such as `frontmatter/resumo.tex`, `backmatter/apendices/` and `backmatter/anexos/`. Test fixtures and normative/evidence identifiers are also outside this rename scope.
-
-### A2 synchronized consumers
+### Synchronized consumers
 
 The implementation synchronizes:
 
 - `Makefile` default entrypoint;
-- `main.tex` content references;
-- reference images and example listings;
-- institutional asset default path;
+- `main.tex` content and bibliography references;
+- example image/listing/license paths;
+- institutional source-only asset path;
 - reference-image downloader;
-- coordinated validation runner;
+- validation runner;
 - reference, corpus, PDF validator and PDF/A checks;
 - Overleaf stable proxy and import-bundle contract;
 - deterministic release builder and release-package contract;
 - distribution-source validation;
-- reference preview, reference audit and distribution workflows;
-- README and B2R handoff/ledger documentation.
+- reference preview, reference validation and distribution workflows;
+- `tests/smoke/perfil-base.tex`;
+- `normativa/reference-guide-map.json` secondary guide-trace source paths;
+- README, handoff and B2R documentation.
 
-`tests/v2-distribution-check.sh` additionally rejects reintroduction of legacy A2 top-level paths and scans active tracked text for stale references. Migration ledgers/policy and historical records are exempt because they must preserve the previous names explicitly.
+`tests/v2-distribution-check.sh` rejects reintroduction of legacy A2 top-level paths and scans active tracked text for stale path references. Explicit migration/history ledgers remain allowed to mention old names.
+
+### Secondary trace-map clarification
+
+`normativa/reference-guide-map.json` lives under `normativa/` but is a secondary documentation/rastreability map. Its declared purpose is to connect the commented reference guide to existing normative sources/rules without creating new requirements, and its policy remains:
+
+`normative_contract_changed=false`
+
+A2 changed only its `source_file` paths from `2-textuais/...` to `chapters/...`. No source authority, predicate, value, rule ID or normative locator was changed.
 
 ### Frozen N12 boundary
 
-`.github/workflows/latex-preflight.yml` is not modified in A2. Its certified blob must remain:
+`.github/workflows/latex-preflight.yml` is not modified in A2. Required blob:
 
 `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
 
-Compatibility is preserved by updating the scripts invoked by that frozen workflow so their default reference artifact is `main.pdf`.
+Compatibility is preserved by updating the scripts invoked by that workflow so their default reference artifact is `main.pdf`.
+
+### First exact-head CI cycle
+
+On PR head `1f80043139ae9fabe68c554c264ef7d8c5087cd8`:
+
+- Source Contract #368 — SUCCESS;
+- Reference Preview #22 built the complete `main.tex` successfully before subsequent PDF/A/proxy steps;
+- LaTeX preflight #1032 identified two path-only regressions.
+
+The two failures were:
+
+1. reference-guide contract: `normativa/reference-guide-map.json` still pointed to `2-textuais/...`;
+2. profile matrix: `tests/smoke/perfil-base.tex` still pointed to `1-pre-textuais/resumo` and `1-pre-textuais/abstract`.
+
+Both have been corrected. The failed CI remains recorded as useful migration evidence; it is not reclassified as a formatting/runtime failure.
 
 ### A2 closure requirements
 
-A2 is not DONE until the exact PR head proves:
+A2 is not DONE until one exact PR head proves all of the following:
 
-- `main.tex` is the canonical root entrypoint;
-- old top-level user paths are absent;
-- active consumers contain no stale A2 paths;
-- template and Overleaf bundles expose the canonical layout;
-- the UFC institutional mark remains excluded from public bundles;
-- reference image hashes remain unchanged;
-- repository/distribution audits pass;
-- reference and corpus regressions pass;
-- twelve-profile matrix and PDF/A remain green;
-- Overleaf import/stable proxies remain green;
-- required Windows literal-font certification remains green;
-- N12 workflow remains byte-identical;
-- the branch is `behind_by=0` immediately before merge.
+- Source Contract green;
+- reference build, corpus and PDF/A green;
+- twelve-profile matrix and profile PDF/A green;
+- structure, objects/bibliography and post-textual regressions green;
+- Overleaf stable/import proxy green;
+- required Windows literal-font certification green under Gate T;
+- deterministic distribution preflight green;
+- N12 workflow byte-identical;
+- no active stale A2 paths;
+- UFC institutional mark remains excluded from public bundles;
+- reference-image hashes/licensing unchanged;
+- PR `behind_by=0` immediately before merge;
+- `HANDOFF`, this inventory, release ledger, README and normative human documentation are synchronized as applicable.
 
 After squash merge, the resulting `main` must be re-certified before B2R-B begins.
 
-### B2R-B — BLOCKED BY A2
+## B2R-B — BLOCKED BY A2
 
-B2R-B will introduce canonical English project-owned public API surfaces only after A2 is merged and re-certified. Existing supported Portuguese public surfaces remain compatibility aliases throughout v2.x.
+Only after A2 merge + post-merge recertification:
+
+- create a machine-readable public API inventory;
+- introduce canonical English project-owned public API surfaces;
+- retain supported Portuguese keys/values/commands/environments as compatibility aliases throughout v2.x;
+- prove canonical-English/Portuguese compatibility semantics and output;
+- prevent new unreviewed engineering identifiers from bypassing the naming policy.
