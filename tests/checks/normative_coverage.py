@@ -31,14 +31,18 @@ def main() -> None:
     compatibility_rules = rule_map(catalog)
     contract = load_full_contract(catalog)
     rules = full_rule_map(contract)
-    reviewed = date.fromisoformat(catalog["reviewed_at"])
+    contract_reviewed = max(
+        date.fromisoformat(catalog["reviewed_at"]),
+        date.fromisoformat(catalog["precedence_reviewed_at"]),
+        date.fromisoformat(contract["reviewed_at"]),
+    )
 
     for source in catalog["sources"]:
         checked = date.fromisoformat(source["checked_at"])
-        if checked > reviewed:
+        if checked > contract_reviewed:
             fail(
-                f"source {source['id']} was checked on {checked} after catalog review {reviewed}; "
-                "review affected rules and advance reviewed_at"
+                f"source {source['id']} was checked on {checked} after the current "
+                f"full-contract review {contract_reviewed}; review affected rules first"
             )
 
     runner = (ROOT / "tests" / "run.py").read_text(encoding="utf-8")
@@ -73,14 +77,18 @@ def main() -> None:
         for rule in rules.values()
     )
     manual = len(rules) - automatic
-    project_policy = sum(rule["authority"] in {"project-policy", "technical-profile"} for rule in rules.values())
+    project_policy = sum(
+        rule["authority"] in {"project-policy", "technical-profile"}
+        for rule in rules.values()
+    )
     print(
         "Normative coverage passed: "
         f"{len(catalog['sources'])} sources, {len(rules)} full atomic rules, "
         f"{automatic} automatic/partial, {manual} manual/conditional, "
         f"{project_policy} project/technical-profile, {len(gate_checks)} unified gates, "
         f"{len(validator_checks)} direct PDF checks, "
-        f"{len(direct_by_parent)} compatibility parent rules consumed directly."
+        f"{len(direct_by_parent)} compatibility parent rules consumed directly; "
+        f"contract_reviewed={contract_reviewed.isoformat()}."
     )
 
 
