@@ -100,7 +100,9 @@ def main() -> None:
     full_contract = load_full_contract(catalog)
     full_rules = full_rule_map(full_contract)
     known_source_ids = {source["id"] for source in catalog["sources"]}
-    known_source_ids |= {source["id"] for source in source_audit.get("sources", [])}
+    known_source_ids |= {
+        source["id"] for source in source_audit.get("sources", []) if isinstance(source, dict)
+    }
 
     if audit.get("schema_version") != 1:
         fail("unsupported schema_version")
@@ -193,13 +195,25 @@ def main() -> None:
             if not rule:
                 fail(f"{gap_id}: promoted rule does not exist: {rule_id}")
             if rule.get("phase") != "N4":
-                fail(f"{gap_id}: promotion must resolve through an N4 rule: {rule_id}")
+                fail(f"{gap_id}: N4 gap resolution references non-N4 rule: {rule_id}")
             promoted_targets.add(rule_id)
 
-    manifest_promoted = set(full_contract["promoted_rule_ids"])
-    untracked_promotions = sorted(manifest_promoted - promoted_targets)
+    n4_manifest_promoted = {
+        rule_id
+        for rule_id in full_contract["promoted_rule_ids"]
+        if full_rules[rule_id].get("phase") == "N4"
+    }
+    untracked_promotions = sorted(n4_manifest_promoted - promoted_targets)
     if untracked_promotions:
         fail("N4 atomic rules without a resolved-gap mapping: " + ", ".join(untracked_promotions))
+
+    foreign_promotions = {
+        rule_id
+        for rule_id in full_contract["promoted_rule_ids"]
+        if full_rules[rule_id].get("phase") != "N4"
+    }
+    if promoted_targets & foreign_promotions:
+        fail("N4 promotion ledger consumed rules owned by another phase")
 
     unresolved = gap_ids - set(resolved)
     if audit["phase_status"] == "complete" and unresolved:
@@ -208,8 +222,9 @@ def main() -> None:
     print(
         "Normative coverage inventory passed: "
         f"{len(domains)} domains, {len(full_rules)} full atomic rules, "
-        f"{len(gap_ids)} identified gaps, {len(resolved)} resolved through "
+        f"{len(gap_ids)} identified N4 gaps, {len(resolved)} resolved through "
         f"{len(promotion_ledgers)} ledgers, {len(unresolved)} unresolved, "
+        f"{len(foreign_promotions)} non-N4 promotions excluded from the N4 ledger; "
         f"status={audit['phase_status']}."
     )
 
