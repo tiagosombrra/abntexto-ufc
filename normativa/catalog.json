@@ -35,6 +35,17 @@
       "notes": "Usar requisitos institucionais compatíveis; referências internas a edições ABNT antigas não definem a edição vigente."
     },
     {
+      "id": "ufc-guia-artigos-2022",
+      "kind": "institutional-guide",
+      "title": "Guia de normalização de artigo em publicação periódica da Universidade Federal do Ceará",
+      "publisher": "Universidade Federal do Ceará",
+      "edition": "2022",
+      "url": "https://biblioteca.ufc.br/wp-content/uploads/2023/04/guia-de-normalizacao-de-artigo-corrigido-27.04.2023.pdf",
+      "status": "current-with-superseded-norm-references",
+      "checked_at": "2026-08-28",
+      "notes": "Fonte institucional atual para o perfil artigo. Referências internas antigas à NBR 10520:2002 e NBR 6023:2018 não selecionam a edição técnica vigente."
+    },
+    {
       "id": "ufc-guia-citacoes-2025",
       "kind": "institutional-guide",
       "title": "Guia de Normalização para Elaboração de Citações",
@@ -116,6 +127,17 @@
       "url": "https://www.abntcatalogo.com.br/",
       "status": "current",
       "checked_at": "2026-08-22"
+    },
+    {
+      "id": "abnt-nbr-6022-2018",
+      "kind": "technical-standard",
+      "title": "ABNT NBR 6022:2018 — Artigo em publicação periódica técnica e/ou científica — Apresentação",
+      "publisher": "ABNT",
+      "edition": "2018",
+      "url": "https://www.abntcatalogo.com.br/",
+      "status": "current",
+      "checked_at": "2026-08-28",
+      "access": "official-catalog-or-licensed-access"
     },
     {
       "id": "abnt-nbr-6028-2021",

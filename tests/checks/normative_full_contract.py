@@ -11,6 +11,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_catalog import load_catalog
 from normative_full import full_rule_map, load_full_contract
 
+ARTICLE_RULE_COUNT = 13
+
 
 def fail(message: str) -> None:
     raise SystemExit(f"Full normative contract failed: {message}")
@@ -24,9 +26,9 @@ def main() -> None:
     if contract["n3_rule_count"] != 100:
         fail(f"expected 100 certified N3 atomic rules, got {contract['n3_rule_count']}")
     if len(rules) != contract["n3_rule_count"] + len(contract["promoted_rule_ids"]):
-        fail("full contract count is inconsistent with N3 + N4 promotions")
-    if len(contract["promoted_rule_ids"]) < 23:
-        fail("N4 contract lost the certified first promotion block")
+        fail("full contract count is inconsistent with N3 + promotions")
+    if len(contract["promoted_rule_ids"]) < 23 + ARTICLE_RULE_COUNT:
+        fail("full contract lost a certified promotion block")
     if "project.standard" in rules:
         fail("retired project.standard umbrella returned to the active contract")
 
@@ -48,9 +50,19 @@ def main() -> None:
     for rule_id, values in expected.items():
         rule = rules.get(rule_id)
         if not rule:
-            fail(f"certified N4 rule disappeared: {rule_id}")
+            fail(f"certified rule disappeared: {rule_id}")
         if rule["values"] != values:
             fail(f"{rule_id}: unexpected values {rule['values']}")
+
+    article_rules = {
+        rule_id: rule for rule_id, rule in rules.items() if rule_id.startswith("article.")
+    }
+    if len(article_rules) != ARTICLE_RULE_COUNT:
+        fail(f"expected {ARTICLE_RULE_COUNT} N15-B2A article rules, got {len(article_rules)}")
+    if any(rule.get("phase") != "N15-B2A" for rule in article_rules.values()):
+        fail("article rules are not isolated to the N15-B2A promotion phase")
+    if "N15-B2A" not in contract.get("promotion_phases", []):
+        fail("full contract did not record the N15-B2A promotion phase")
 
     for rule_id in contract["promoted_rule_ids"]:
         rule = rules[rule_id]
@@ -82,13 +94,13 @@ def main() -> None:
         if not (set(rules[rule_id]["validation"]["checks"]) & gates)
     )
     if uncovered:
-        fail("promoted N4 rules without unified evidence: " + ", ".join(uncovered))
+        fail("promoted rules without unified evidence: " + ", ".join(uncovered))
 
     print(
         "Full normative contract passed: "
-        f"{len(rules)} atomic rules, {len(contract['promoted_rule_ids'])} N4 promotions "
-        f"across {len(contract.get('coverage_manifests', []))} manifests, "
-        "current-source precedence preserved."
+        f"{len(rules)} atomic rules, {len(contract['promoted_rule_ids'])} promotions "
+        f"across {len(contract.get('coverage_manifests', []))} manifests; "
+        f"phases={','.join(contract.get('promotion_phases', []))}."
     )
 
 

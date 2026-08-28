@@ -3,7 +3,7 @@
   "reviewed_at": "2026-08-28",
   "mode": "latest-current-applicable-technical-standard-mandatory",
   "decision": "mandatory",
-  "purpose": "Make the abntexto-ufc technical-version rule explicit, auditable and machine-checkable when UFC guides still cite superseded ABNT editions, while keeping reconciled future-profile sources outside runtime until their predicates are deliberately promoted.",
+  "purpose": "Make the abntexto-ufc technical-version rule explicit, auditable and machine-checkable when UFC guides still cite superseded ABNT editions, while separating source/rule promotion from later LaTeX runtime implementation.",
   "institutional_basis": [
     {
       "id": "ufc-res-17-cepe-2017",
@@ -39,13 +39,14 @@
     "current_ufc_act_governs_institutional_scope": true,
     "conflict_behavior": "review-required",
     "course_specific_exception": "A Resolução nº 17/CEPE de 2017 admite modelo específico formalmente aprovado no rito previsto no art. 1º, §§ 2º-3º. Para pós-graduação stricto sensu, a Resolução nº 17/CEPE de 2015, Normas Gerais art. 10, X, também atribui ao colegiado do programa competência para definir diretrizes de apresentação. Nenhuma dessas competências altera silenciosamente o template: a diretriz específica deve ser identificada, cadastrada como fonte institucional vigente, ter escopo explícito e ser reconciliada antes de alterar comportamento.",
-    "future_profile_promotion": "Uma fonte técnica reconciliada para perfil ainda não implementado permanece fora do runtime catalog/precedence até que os respectivos predicados, locators e evidências sejam deliberadamente promovidos."
+    "profile_promotion_stages": "Uma fonte reconciliada entra em catalog/precedence somente junto com predicados que a consomem. A existência do contrato normativo não implica que o runtime LaTeX já esteja implementado; implementação e evidência final são fases separadas."
   },
   "current_technical_sources": [
     "abnt-nbr-14724-2024",
     "abnt-nbr-10520-2023",
     "abnt-nbr-6023-2025",
     "abnt-nbr-15287-2025",
+    "abnt-nbr-6022-2018",
     "abnt-nbr-6028-2021",
     "abnt-nbr-6024-2012",
     "abnt-nbr-6027-2012",
@@ -54,13 +55,15 @@
   ],
   "profile_candidates": {
     "scientific_article": {
-      "status": "reconciled-not-runtime",
+      "status": "contract-promotion-in-progress-runtime-pending",
       "candidate_sources": [
         "abnt-nbr-6022-2018",
-        "ufc-guia-artigos-2021"
+        "ufc-guia-artigos-2022"
       ],
-      "runtime_promotion_phase": "N15-B2",
-      "rule": "NBR 6022:2018 and the current UFC scientific-article guide are authority inputs for N15-B2, but B1 must not create article.* predicates or alter current academic/project behavior."
+      "source_and_contract_phase": "N15-B2A",
+      "runtime_implementation_phase": "N15-B2B",
+      "evidence_completion_phase": "N15-B2C",
+      "rule": "N15-B2A promotes the corrected current UFC article guide and NBR 6022:2018 only together with explicit article.* predicates and locators. LaTeX formatting remains unchanged until N15-B2B, and final profile evidence remains N15-B2C."
     }
   },
   "supersessions": [
@@ -90,18 +93,18 @@
       "current_source": "abnt-nbr-12225-2023"
     },
     {
-      "context_source": "ufc-guia-artigos-2021",
+      "context_source": "ufc-guia-artigos-2022",
       "superseded_reference": "ABNT NBR 10520:2002",
       "current_reference": "ABNT NBR 10520:2023",
       "current_source": "abnt-nbr-10520-2023",
-      "note": "O guia de artigos permanece institucionalmente atual, mas a edição de citações nele impressa foi substituída."
+      "note": "O guia de artigos corrigido de 2022 permanece institucionalmente atual, mas a edição de citações nele impressa foi substituída."
     },
     {
-      "context_source": "ufc-guia-artigos-2021",
+      "context_source": "ufc-guia-artigos-2022",
       "superseded_reference": "ABNT NBR 6023:2018",
       "current_reference": "ABNT NBR 6023:2025",
       "current_source": "abnt-nbr-6023-2025",
-      "note": "O guia de artigos permanece institucionalmente atual, mas a edição de referências nele impressa foi substituída."
+      "note": "O guia de artigos corrigido de 2022 permanece institucionalmente atual, mas a edição de referências nele impressa foi substituída."
     },
     {
       "context_source": "ufc-guia-citacoes-2025",

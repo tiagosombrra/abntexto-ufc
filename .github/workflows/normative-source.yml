@@ -9,6 +9,7 @@ on:
       - 'normativa/**'
       - 'release/final-audit.json'
       - 'release/n15-b1-source-authority.json'
+      - 'release/n15-b2a-article-contract.json'
       - 'docs/HANDOFF-V2.2.0.md'
       - 'tools/normative_*.py'
       - 'tools/pdf_measurement.py'
@@ -28,6 +29,7 @@ on:
       - 'normativa/**'
       - 'release/final-audit.json'
       - 'release/n15-b1-source-authority.json'
+      - 'release/n15-b2a-article-contract.json'
       - 'docs/HANDOFF-V2.2.0.md'
       - 'tools/normative_*.py'
       - 'tools/pdf_measurement.py'
@@ -58,8 +60,10 @@ jobs:
           node-version: '24'
       - name: Validate normative sources and contracts
         run: python3 tests/checks/validator_source.py
-      - name: Validate N15-B1 source-authority ledger
+      - name: Validate historical N15-B1 source-authority ledger
         run: python3 tests/checks/normative_n15_b1_source_authority.py
+      - name: Validate N15-B2A article source contract
+        run: python3 tests/checks/normative_n15_b2a_article_contract.py
       - name: Build normative proof-state and N4 false-coverage snapshots
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

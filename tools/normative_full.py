@@ -40,7 +40,7 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
 def _default_coverage_paths() -> list[Path]:
     paths = sorted(DEFAULT_COVERAGE_DIR.glob(DEFAULT_COVERAGE_GLOB))
     if not paths:
-        raise CatalogError("no N4 coverage rule manifests found")
+        raise CatalogError("no coverage rule manifests found")
     return paths
 
 
@@ -91,7 +91,11 @@ def _resolve_sources(
     return resolution
 
 
-def _build_rule(spec: dict[str, Any], catalog: dict[str, Any]) -> dict[str, Any]:
+def _build_rule(
+    spec: dict[str, Any],
+    catalog: dict[str, Any],
+    default_phase: str,
+) -> dict[str, Any]:
     rule_id = spec.get("id")
     if not isinstance(rule_id, str) or not rule_id:
         raise CatalogError("coverage rule requires a non-empty id")
@@ -119,6 +123,10 @@ def _build_rule(spec: dict[str, Any], catalog: dict[str, Any]) -> dict[str, Any]
     if authority != "normative" and authority not in NON_NORMATIVE_AUTHORITIES:
         raise CatalogError(f"coverage rule {rule_id}: invalid authority {authority}")
 
+    phase = spec.get("phase", default_phase)
+    if not isinstance(phase, str) or not phase:
+        raise CatalogError(f"coverage rule {rule_id}: phase must be a non-empty string")
+
     rule = {
         "id": rule_id,
         "category": spec["category"],
@@ -129,7 +137,7 @@ def _build_rule(spec: dict[str, Any], catalog: dict[str, Any]) -> dict[str, Any]
         "values": copy.deepcopy(values),
         "validation": copy.deepcopy(validation),
         "authority": authority,
-        "phase": "N4",
+        "phase": phase,
     }
     if "applicability" in spec:
         if not isinstance(spec["applicability"], dict):
@@ -165,7 +173,7 @@ def load_full_contract(
     n3 = load_atomic_contract(catalog)
     paths = list(coverage_paths) if coverage_paths is not None else _default_coverage_paths()
     if not paths:
-        raise CatalogError("N4 coverage rule manifest list is empty")
+        raise CatalogError("coverage rule manifest list is empty")
 
     catalog_reviewed = date.fromisoformat(catalog["reviewed_at"])
     rules = [copy.deepcopy(rule) for rule in n3["rules"]]
@@ -173,9 +181,10 @@ def load_full_contract(
     promoted: list[str] = []
     manifest_names: list[str] = []
     reviewed_dates: list[date] = []
+    promotion_phases: set[str] = set()
 
     for path in paths:
-        manifest = _load_json(path, f"N4 coverage rules {path.name}")
+        manifest = _load_json(path, f"coverage rules {path.name}")
         if manifest.get("schema_version") != 1:
             raise CatalogError(f"{path.name}: unsupported coverage-rules schema_version")
         try:
@@ -183,9 +192,14 @@ def load_full_contract(
         except (KeyError, TypeError, ValueError) as exc:
             raise CatalogError(f"{path.name}: reviewed_at must be an ISO date") from exc
         if coverage_reviewed < catalog_reviewed:
-            raise CatalogError(f"{path.name}: N4 coverage rules are older than the catalog review")
+            raise CatalogError(f"{path.name}: coverage rules are older than the catalog review")
         reviewed_dates.append(coverage_reviewed)
         manifest_names.append(path.name)
+
+        manifest_phase = manifest.get("phase", "N4")
+        if not isinstance(manifest_phase, str) or not manifest_phase:
+            raise CatalogError(f"{path.name}: phase must be a non-empty string")
+        promotion_phases.add(manifest_phase)
 
         specs = manifest.get("rules")
         if not isinstance(specs, list):
@@ -193,11 +207,12 @@ def load_full_contract(
         for spec in specs:
             if not isinstance(spec, dict):
                 raise CatalogError(f"{path.name}: every coverage rule must be an object")
-            rule = _build_rule(spec, catalog)
+            rule = _build_rule(spec, catalog, manifest_phase)
             if rule["id"] in seen:
                 raise CatalogError(f"coverage rule id collides with existing atomic rule: {rule['id']}")
             seen.add(rule["id"])
             promoted.append(rule["id"])
+            promotion_phases.add(rule["phase"])
             rules.append(rule)
 
     return {
@@ -205,6 +220,7 @@ def load_full_contract(
         "reviewed_at": max(reviewed_dates).isoformat(),
         "catalog_reviewed_at": catalog["reviewed_at"],
         "coverage_manifests": manifest_names,
+        "promotion_phases": sorted(promotion_phases),
         "n3_rule_count": len(n3["rules"]),
         "promoted_rule_ids": promoted,
         "rules": rules,
@@ -221,12 +237,13 @@ def main() -> None:
     rules = full_rule_map(contract)
     normative = sum(rule["authority"] == "normative" for rule in rules.values())
     project = len(rules) - normative
+    phases = ",".join(contract.get("promotion_phases", []))
     print(
         "Full normative contract valid: "
         f"{len(rules)} atomic rules ({contract['n3_rule_count']} N3 + "
-        f"{len(contract['promoted_rule_ids'])} N4 across "
+        f"{len(contract['promoted_rule_ids'])} promotions across "
         f"{len(contract['coverage_manifests'])} manifests), {normative} normative, "
-        f"{project} project/technical-profile."
+        f"{project} project/technical-profile; phases={phases}."
     )
 
 

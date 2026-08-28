@@ -114,12 +114,8 @@ def validate_source_checks(
         fail(f"{rule_id}: VERIFIED ruleset requires every source to be VERIFIED")
     if ruleset_status == "PARTIAL_WITH_REASON":
         if "VERIFIED" not in source_states or "UNAVAILABLE_WITH_REASON" not in source_states:
-            fail(
-                f"{rule_id}: PARTIAL_WITH_REASON requires verified and unavailable-with-reason sources"
-            )
-    if ruleset_status == "UNAVAILABLE_WITH_REASON" and source_states != {
-        "UNAVAILABLE_WITH_REASON"
-    }:
+            fail(f"{rule_id}: PARTIAL_WITH_REASON requires verified and unavailable-with-reason sources")
+    if ruleset_status == "UNAVAILABLE_WITH_REASON" and source_states != {"UNAVAILABLE_WITH_REASON"}:
         fail(f"{rule_id}: UNAVAILABLE_WITH_REASON requires every source to be unavailable")
 
 
@@ -127,14 +123,16 @@ def main() -> None:
     audit = load_audit()
     contract = load_full_contract()
     contract_reviewed = date.fromisoformat(contract["reviewed_at"])
+
+    manifest_dates: list[date] = []
     for reviewed_at in audit["manifest_reviewed_at"]:
         try:
-            audit_reviewed = date.fromisoformat(reviewed_at)
+            manifest_dates.append(date.fromisoformat(reviewed_at))
         except (TypeError, ValueError) as exc:
             fail("every locator audit manifest needs an ISO reviewed_at")
             raise AssertionError from exc
-        if audit_reviewed < contract_reviewed:
-            fail("a locator audit manifest is older than the full normative contract")
+    if max(manifest_dates) < contract_reviewed:
+        fail("incremental locator audit set does not reach the current full-contract review")
 
     rules = {rule["id"]: rule for rule in contract["rules"]}
     normative_ids = {
@@ -178,9 +176,7 @@ def main() -> None:
             elif status == "NOT_APPLICABLE":
                 fail(f"{rule_id}: normative rule cannot be NOT_APPLICABLE")
             if rule.get("locator") != locator:
-                fail(
-                    f"{rule_id}: locator drift; audit={locator!r}, contract={rule.get('locator')!r}"
-                )
+                fail(f"{rule_id}: locator drift; audit={locator!r}, contract={rule.get('locator')!r}")
             validate_source_checks(rule_id, rule, status, checks)
             audited_rules.add(rule_id)
             status_counts[status] += 1
@@ -188,19 +184,14 @@ def main() -> None:
     audited_normative = audited_rules & normative_ids
     remaining = normative_ids - audited_normative
     if audit["coverage_mode"] == "complete" and remaining:
-        fail(
-            "complete locator audit has unclassified normative rules: "
-            + ", ".join(sorted(remaining))
-        )
+        fail("complete locator audit has unclassified normative rules: " + ", ".join(sorted(remaining)))
 
     status_counts["UNASSESSED"] = len(remaining)
-    summary = ", ".join(
-        f"{status}={count}" for status, count in sorted(status_counts.items())
-    )
+    summary = ", ".join(f"{status}={count}" for status, count in sorted(status_counts.items()))
     print(
         "Normative locator audit: "
         f"{len(audited_normative)}/{len(normative_ids)} normative rules explicitly classified; "
-        f"{summary}; mode={audit['coverage_mode']}."
+        f"{summary}; mode={audit['coverage_mode']}; latest_manifest={max(manifest_dates).isoformat()}."
     )
 
 

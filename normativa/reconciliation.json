@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-08-28",
-  "purpose": "Machine-readable reconciliation between current UFC institutional guidance and current applicable technical authority. N15-B1 extends the N2 ledger with the scientific-article guide while preserving the existing runtime contract boundary.",
+  "purpose": "Machine-readable reconciliation between current UFC institutional guidance and current applicable technical authority. N15-B2A corrects the active scientific-article guide identity before article predicates consume it, without changing the established current-edition policy.",
   "detail_classifications": {
     "current-compatible-institutional-requirement": "A current UFC institutional source governs the detail in its institutional scope without displacing a higher-precedence current technical authority.",
     "superseded-guidance": "A historical technical reference remains embedded in UFC guidance only as context and cannot govern an active technical rule.",
@@ -45,7 +45,7 @@
       "conflict_status": "resolved-current-edition"
     },
     {
-      "context_source": "ufc-guia-artigos-2021",
+      "context_source": "ufc-guia-artigos-2022",
       "classification": "superseded-guidance",
       "superseded_reference": "ABNT NBR 10520:2002",
       "current_reference": "ABNT NBR 10520:2023",
@@ -53,7 +53,7 @@
       "conflict_status": "resolved-current-edition"
     },
     {
-      "context_source": "ufc-guia-artigos-2021",
+      "context_source": "ufc-guia-artigos-2022",
       "classification": "superseded-guidance",
       "superseded_reference": "ABNT NBR 6023:2018",
       "current_reference": "ABNT NBR 6023:2025",
