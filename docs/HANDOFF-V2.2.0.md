@@ -6,7 +6,7 @@ Checkpoint: **N15-B2A closure candidate — PR #145 (`audit/n15-b2a-article-cont
 
 Certified stable `main` before N15-B2A: `bc7b3bbe0e7ac21aa16efb1f0bab9a4dfb8e912e`.
 
-Current exact B2A head: `def57a05b1ab098089973458653503b4d9ba32a6` before this documentation-only update. The final audited head must be re-read after documentation commits.
+Current B2A documentation head at this checkpoint: `e8aa07795efcfdaa8cc97f5187e6a47449061c9f` before this one-line receipt update. Always use the PR's current `head_sha` as the merge/certification authority rather than a prose SHA in this document.
 
 Canonical receipts already obtained for the B2A implementation head:
 
@@ -167,7 +167,7 @@ Implementation-head receipts:
 - Source Contract #351 — SUCCESS;
 - LaTeX preflight #1012 — SUCCESS, including the 12-profile matrix, PDF/A, reference document, post-textuals, objects/bibliography and layout/fonts/pre-textuals/projects.
 
-After this documentation update, the final exact PR head must receive fresh green receipts before merge.
+After the naming-roadmap documentation commits, the final exact PR head must receive fresh green receipts before merge.
 
 ## N15-B2R — English naming and public API normalization
 
@@ -317,13 +317,12 @@ Physical branch cleanup remains deferred until final v2.2.0 certification/tag. N
 
 ## Immediate next action
 
-1. commit this handoff plus `docs/NAMING.md` on PR #145 before beginning B2R;
-2. require Source Contract and full LaTeX preflight green on the new final PR #145 exact head;
-3. verify PR #145 remains mergeable and `behind_by=0` against current `main`;
-4. squash-merge PR #145 only with that exact audited head;
-5. re-certify resulting `main`, including full push/manual/Distribution surfaces needed by the existing gate strategy;
-6. mark N15-B2A DONE in this handoff on a fresh B2R branch;
-7. begin N15-B2R-A with a read-only API/naming inventory before renaming files;
-8. complete B2R-A regression proof before introducing canonical-English public API in B2R-B;
-9. begin article runtime B2B only after B2R is certified;
-10. leave B2C/B3/C/D and physical branch cleanup blocked until their prerequisites are satisfied.
+1. require Source Contract and full LaTeX preflight green on the final PR #145 exact head after `docs/NAMING.md`/handoff updates;
+2. verify PR #145 remains mergeable and `behind_by=0` against current `main`;
+3. squash-merge PR #145 only with that exact audited head;
+4. re-certify resulting `main`, including full push/manual/Distribution surfaces needed by the existing gate strategy;
+5. mark N15-B2A DONE in this handoff on a fresh B2R branch;
+6. begin N15-B2R-A with a read-only API/naming inventory before renaming files;
+7. complete B2R-A regression proof before introducing canonical-English public API in B2R-B;
+8. begin article runtime B2B only after B2R is certified;
+9. leave B2C/B3/C/D and physical branch cleanup blocked until their prerequisites are satisfied.
