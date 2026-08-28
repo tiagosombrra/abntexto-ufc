@@ -36,6 +36,13 @@ def load_json(path: Path) -> dict[str, Any]:
     return data
 
 
+def historical_guide_record(source_audit: dict[str, Any]) -> dict[str, Any] | None:
+    for item in source_audit.get("reviewed_excluded_sources", []):
+        if isinstance(item, dict) and item.get("id") == "ufc-guia-artigos-2021":
+            return item
+    return None
+
+
 def main() -> None:
     ledger = load_json(LEDGER)
     source_audit = load_json(SOURCE_AUDIT)
@@ -68,13 +75,13 @@ def main() -> None:
     if "ufc-guia-artigos-2021" in source_ids:
         fail("superseded B1 article-guide identity remained active")
 
-    superseded = {
-        item.get("id")
-        for item in source_audit.get("reviewed_superseded_sources", [])
-        if isinstance(item, dict)
-    }
-    if "ufc-guia-artigos-2021" not in superseded:
-        fail("historical B1 article-guide identity is not preserved in superseded evidence")
+    historical = historical_guide_record(source_audit)
+    if not historical:
+        fail("historical B1 article-guide identity is not preserved in reviewed exclusions")
+    if historical.get("status") != "superseded-by-corrected-current-guide":
+        fail("historical B1 article-guide record has the wrong supersession status")
+    if historical.get("replaced_by") != "ufc-guia-artigos-2022":
+        fail("historical B1 article-guide record does not point to the corrected current guide")
 
     article_guide = next(
         item for item in source_audit["sources"] if item.get("id") == "ufc-guia-artigos-2022"
