@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "phase": "N15-A",
+  "overall_n15_status": "ACTIVE",
+  "audit_status": "CLOSURE_CANDIDATE",
+  "audited_base_sha": "0a13f4388479f63b9af2d898d3cc0410a4a57c0f",
+  "reviewed_at": "2026-08-28",
+  "purpose": "Record the final unrestricted pre-release audit without changing normative predicates, proof state, runtime behavior, release version or repository history.",
+  "authority_boundary": {
+    "this_file_is_normative": false,
+    "normative_contract_changed": false,
+    "locator_policy_changed": false,
+    "oracle_tolerances_changed": false,
+    "proof_state_changed": false,
+    "n12_workflow_changed": false,
+    "release_version_changed": false,
+    "physical_branch_cleanup_performed": false
+  },
+  "frozen_baseline": {
+    "roadmap_done_phases": [
+      "N0", "N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "N9", "N10", "N11", "N12", "N13", "N14"
+    ],
+    "atomic_rules": 181,
+    "normative_rules": 170,
+    "locator_coverage": "170/170",
+    "explicit_gaps": "46/46",
+    "proof_state": {
+      "PARTIAL": 113,
+      "NOT_PROVEN": 51,
+      "CONDITIONAL": 10,
+      "MANUAL": 6,
+      "NOT_APPLICABLE": 1,
+      "PROVEN": 0
+    },
+    "n5_tolerances_pt": {
+      "page_size": 1,
+      "horizontal": 5,
+      "vertical": 5,
+      "font_size": 1
+    },
+    "n12_workflow_blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"
+  },
+  "stable_main_certification": {
+    "sha": "0a13f4388479f63b9af2d898d3cc0410a4a57c0f",
+    "source_contract": {"run_number": 334, "conclusion": "SUCCESS"},
+    "pdf_validator": {"run_number": 133, "conclusion": "SUCCESS"},
+    "push_preflight": {"run_number": 992, "conclusion": "SUCCESS"},
+    "exact_gate_t": {"run_number": 993, "run_id": 33130543594, "conclusion": "SUCCESS"},
+    "distribution": {"run_number": 235, "run_id": 33130538175, "conclusion": "SUCCESS"},
+    "structural_summary": "PASS=14 FAIL=0 SKIP=0",
+    "n13_negative_cases": "5/5",
+    "n13_mechanisms": "7/7",
+    "n11_bounded_positive": "5/5"
+  },
+  "audit_dimensions": [
+    "normative-source-completeness",
+    "proof-state-and-known-unknowns",
+    "latex-runtime-and-profile-surface",
+    "requirement-implementation-test-documentation-traceability",
+    "documentation-currentness-and-authority-claims",
+    "repository-hygiene",
+    "ci-and-test-observability",
+    "distribution-and-ctan-surface",
+    "assets-and-licensing",
+    "code-quality-and-portability",
+    "reproducibility",
+    "release-version-consistency",
+    "git-and-github-hygiene"
+  ],
+  "findings": [
+    {
+      "id": "N15-F001",
+      "status": "FINDING",
+      "severity": "medium",
+      "area": "normative-source-completeness",
+      "title": "Official UFC guide inventory is not completeness-explicit",
+      "observation": "The current UFC normalization page lists five guides, while normativa/source-audit.json and tests/checks/normative_sources.py model four institutional guides. The omitted guide is the UFC guide for scientific journal articles.",
+      "evidence": [
+        "https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/",
+        "normativa/source-audit.json",
+        "tests/checks/normative_sources.py"
+      ],
+      "required_disposition": "N15-B must add an explicit reviewed-out-of-scope classification for the article guide unless an article profile is deliberately added. This must not create a new template requirement by implication.",
+      "blocks_release": true
+    },
+    {
+      "id": "N15-F002",
+      "status": "FINDING",
+      "severity": "medium",
+      "area": "normative-source-completeness",
+      "title": "Related UFC deposit acts are not explicitly classified",
+      "observation": "The current UFC thesis/dissertation receiving page also lists MEC Portaria 1.224/2013, CEPE Resolution 17/2015 and CAPES Portaria 59/2017. They are not active formatting sources in the current registry, but the final audit must record that they were reviewed and classify them as operational/contextual or applicable before release.",
+      "evidence": [
+        "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/",
+        "normativa/source-audit.json"
+      ],
+      "required_disposition": "N15-B must record reviewed scope explicitly without granting technical authority to operational acts.",
+      "blocks_release": true
+    },
+    {
+      "id": "N15-F003",
+      "status": "FINDING",
+      "severity": "low",
+      "area": "documentation-and-source-metadata",
+      "title": "Source-audit scope still names v2.1.0",
+      "observation": "normativa/source-audit.json and tests/checks/normative_sources.py still require the scope identifier abntexto-ufc-v2.1.0-current-sources.",
+      "evidence": ["normativa/source-audit.json", "tests/checks/normative_sources.py"],
+      "required_disposition": "N15-B must move the scope identifier to a release-independent/current form or v2.2.0 form without changing source authority or predicates.",
+      "blocks_release": true
+    },
+    {
+      "id": "N15-F004",
+      "status": "FINDING",
+      "severity": "low",
+      "area": "documentation-currentness",
+      "title": "Human normative map still describes the v2.1.0 release state",
+      "observation": "docs/NORMAS.md still states that V2.1.0 was audited for release and refers to the prior Gate F state.",
+      "evidence": ["docs/NORMAS.md"],
+      "required_disposition": "N15-B/C must update audit/release-state wording while preserving normative content and locators.",
+      "blocks_release": true
+    },
+    {
+      "id": "N15-F005",
+      "status": "FINDING",
+      "severity": "high",
+      "area": "reproducibility",
+      "title": "Reference PDF bit reproducibility remains unresolved",
+      "observation": "GitHub issue #18 remains the only open repository issue. The v2.1.0 main/tag reference PDFs differed only in generated PDF metadata/ID. Current deterministic bundle checks do not independently prove that two production reference builds are byte-identical.",
+      "evidence": [
+        "https://github.com/tiagosombrra/modelo-latex-ufc/issues/18",
+        "tests/v2-reference-check.sh",
+        "tests/v2-release-package-check.py",
+        ".github/workflows/distribution.yml"
+      ],
+      "required_disposition": "N15-B/C must build the production reference path twice under a controlled SOURCE_DATE_EPOCH and compare exact SHA-256 hashes, fixing metadata generation if required.",
+      "blocks_release": true
+    },
+    {
+      "id": "N15-F006",
+      "status": "FINDING",
+      "severity": "medium",
+      "area": "release-version-consistency",
+      "title": "Release surfaces intentionally remain at 2.1.0",
+      "observation": "Makefile, abntexto-ufc.cls and CTAN-facing documentation still identify the published 2.1.0 release. This is correct before final promotion but must be synchronized atomically for the v2.2.0 release candidate.",
+      "evidence": ["Makefile", "abntexto-ufc.cls", "docs/README-CTAN.md", "docs/CHANGELOG-CTAN.md"],
+      "required_disposition": "N15-C must promote all version-bearing release surfaces together and rerun release metadata/package gates.",
+      "blocks_release": true
+    },
+    {
+      "id": "N15-F007",
+      "status": "REVIEW",
+      "severity": "low",
+      "area": "ci-and-test-observability",
+      "title": "Reference-validation workflow appears tied to an older branch strategy",
+      "observation": ".github/workflows/reference-validation.yml watches validation/v2.* pushes and release/v2.* pull requests. No validation/v2.* branch currently exists, while the current release path uses main, exact Gate T and Distribution. Three historical release/v2.2.0-* branches remain.",
+      "evidence": [".github/workflows/reference-validation.yml"],
+      "required_disposition": "N15-B or final cleanup must prove whether this workflow still has a unique supported use before retaining or removing it.",
+      "blocks_release": false
+    },
+    {
+      "id": "N15-F008",
+      "status": "DEFERRED_CLEANUP",
+      "severity": "medium",
+      "area": "git-and-github-hygiene",
+      "title": "Remote branch inventory is heavily accumulated",
+      "observation": "The audit observed 131 remote branches, dominated by completed audit/docs/fix campaigns. No pull request was open when the inventory was taken.",
+      "evidence": ["GitHub branch inventory reviewed 2026-08-28"],
+      "required_disposition": "After final v2.2.0 certification/tag, delete branches whose evidence is represented by merged/closed PR and Actions history. Preserve main, 1.x, the current final-audit/release branches until finished, and explicitly reconcile planning/v2.2.0-normative-verification before deletion.",
+      "blocks_release": false
+    },
+    {
+      "id": "N15-F009",
+      "status": "DEFERRED_CLEANUP",
+      "severity": "low",
+      "area": "git-and-github-hygiene",
+      "title": "Historical release rehearsal branch must not be merged",
+      "observation": "release/v2.2.0-certification belongs to closed unmerged PR #36, is 104 commits behind main and 10 commits ahead, and represents a historical D5 rehearsal rather than the final release source tree.",
+      "evidence": ["https://github.com/tiagosombrra/modelo-latex-ufc/pull/36"],
+      "required_disposition": "Use it only as historical release-rehearsal evidence; derive N15-C fresh from certified main. Delete only during final cleanup after useful differences are reconciled.",
+      "blocks_release": false
+    },
+    {
+      "id": "N15-F010",
+      "status": "DEFERRED_CLEANUP",
+      "severity": "low",
+      "area": "git-and-github-hygiene",
+      "title": "Historical N13 release branches are stale cleanup candidates",
+      "observation": "release/v2.2.0-corpus-check and release/v2.2.0-n13-typography-check have the same old N13 campaign diff and are behind current main. N13 is already closed and re-certified on main.",
+      "evidence": ["GitHub compare against main reviewed 2026-08-28"],
+      "required_disposition": "Retain through final release certification, then remove in the physical cleanup pass if no unique evidence remains.",
+      "blocks_release": false
+    },
+    {
+      "id": "N15-F011",
+      "status": "DEFERRED_CLEANUP",
+      "severity": "low",
+      "area": "git-and-github-hygiene",
+      "title": "tmp-noop branch has no unique content",
+      "observation": "tmp-noop is 85 commits behind main, ahead_by=0 and has no changed files against its merge base.",
+      "evidence": ["GitHub compare against main reviewed 2026-08-28"],
+      "required_disposition": "Delete during final cleanup.",
+      "blocks_release": false
+    },
+    {
+      "id": "N15-F012",
+      "status": "REVIEW",
+      "severity": "medium",
+      "area": "git-and-github-hygiene",
+      "title": "Planning branch has substantial unique divergent history",
+      "observation": "planning/v2.2.0-normative-verification is 107 commits behind main and 55 commits ahead, with historical plans/audits and many old implementation deltas.",
+      "evidence": ["GitHub compare against main reviewed 2026-08-28"],
+      "required_disposition": "Before physical deletion, explicitly decide which unique planning/audit documents are already represented by canonical handoff, normativa, tests, PRs and Actions. Move only genuinely useful historical documents to docs/history/; never merge the old code tree wholesale.",
+      "blocks_release": false
+    }
+  ],
+  "passes": [
+    {
+      "id": "N15-P001",
+      "area": "documentation-authority",
+      "result": "PASS",
+      "observation": "README.md does not claim that the project is already the officially published UFC LaTeX template. The current official UFC templates page still marks the Overleaf/LaTeX model as 'Em atualização'.",
+      "evidence": ["README.md", "https://biblioteca.ufc.br/pt/servicos-e-produtos/templates/"]
+    },
+    {
+      "id": "N15-P002",
+      "area": "assets-and-licensing",
+      "result": "PASS",
+      "observation": "Reference photographs have explicit CC BY-SA 4.0 provenance; the UFC institutional mark is retained in source but excluded from public/CTAN bundles; proprietary Microsoft fonts are not redistributed.",
+      "evidence": ["figuras/LICENCAS.md", "tests/v2-release-package-check.py", "docs/README-CTAN.md"]
+    },
+    {
+      "id": "N15-P003",
+      "area": "git-and-github-hygiene",
+      "result": "PASS",
+      "observation": "Stable branches main and 1.x are protected against deletion/non-fast-forward changes, require linear history and squash PRs, and require latex-preflight. Version tags v* are immutable.",
+      "evidence": ["GitHub rulesets Stable branches and Immutable version tags reviewed 2026-08-28"]
+    },
+    {
+      "id": "N15-P004",
+      "area": "ci-and-test-observability",
+      "result": "PASS",
+      "observation": "tests/v2-font-poc.sh is not orphaned: it is consumed by the frozen N12 Windows literal-font route. tools/convert-encoding-to-unicode.ps1 is consumed by tools/prepare-windows-fonts.ps1.",
+      "evidence": [".github/workflows/latex-preflight.yml", "tools/prepare-windows-fonts.ps1"]
+    },
+    {
+      "id": "N15-P005",
+      "area": "proof-state-and-known-unknowns",
+      "result": "PASS",
+      "observation": "The proof-state machinery remains intentionally conservative: green evidence and closed phases do not auto-promote rules to PROVEN. The current baseline has zero unsafe PROVEN entries and is retained unchanged for release auditing.",
+      "evidence": ["normativa/proof-policy.json", "tests/checks/normative_proof_state.py"]
+    },
+    {
+      "id": "N15-P006",
+      "area": "distribution-and-ctan-surface",
+      "result": "PASS",
+      "observation": "Distribution #235 passed Gate T prerequisite, release preflight, PDF/A-2b, deterministic bundle construction, Overleaf import proxy, candidate upload and aggregate on the N14-closed main tree. Final D5 must still be repeated after N15-C changes.",
+      "evidence": [".github/workflows/distribution.yml", "tests/v2-release-package-check.py"]
+    }
+  ],
+  "audit_limitations": [
+    {
+      "id": "N15-L001",
+      "statement": "Licensed ABNT full text is not reproduced or inferred beyond available authoritative locators and existing audited evidence. Unavailable text remains unavailable/partial."
+    },
+    {
+      "id": "N15-L002",
+      "statement": "A direct network git clone was unavailable in the audit execution environment. Repository-wide claims are therefore grounded in GitHub API inventory, existing repository audits, executable gates and targeted file inspection rather than an unreported local clone scan."
+    },
+    {
+      "id": "N15-L003",
+      "statement": "No source-page observation in this audit changes a normative predicate. New or omitted institutional documents must first be classified under precedence and source-status policy in N15-B."
+    }
+  ],
+  "n15_plan": {
+    "N15-A": "Final unrestricted audit and explicit finding ledger.",
+    "N15-B": "Correct and reconcile release-blocking findings while preserving normative authority boundaries.",
+    "N15-C": "Create the v2.2.0 release candidate, synchronize version metadata and prove bit reproducibility.",
+    "N15-D": "Run final exact-head source/validator/preflight/Gate-T/Distribution certification and make the release decision.",
+    "post_release_cleanup": "After certification/tag, perform physical branch/repository cleanup from the audited cleanup inventory."
+  },
+  "exit_criteria": {
+    "dimensions_recorded": 13,
+    "release_blocking_findings_identified": 6,
+    "cleanup_is_deferred": true,
+    "closed_phases_reopened": false,
+    "normative_predicates_changed": false,
+    "proof_state_changed": false,
+    "version_promoted": false,
+    "n15a_ready_to_close": true
+  }
+}
