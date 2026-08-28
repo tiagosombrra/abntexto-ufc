@@ -62,7 +62,7 @@
     "branch": "refactor/n15-b2r-a2-user-layout",
     "pull_request": 147,
     "pull_request_state": "DRAFT",
-    "status": "IMPLEMENTATION_CANDIDATE_CI_REPAIR",
+    "status": "IMPLEMENTATION_CANDIDATE_AWAITING_EXACT_HEAD_RECERTIFICATION",
     "public_api_change_allowed": false,
     "normative_contract_change_allowed": false,
     "article_runtime_change_allowed": false,
@@ -92,14 +92,8 @@
     },
     "n12_historical_content_rewrites": {
       "tests/smoke/perfil-base.tex": [
-        {
-          "current": "frontmatter/resumo",
-          "historical": "1-pre-textuais/resumo"
-        },
-        {
-          "current": "frontmatter/abstract",
-          "historical": "1-pre-textuais/abstract"
-        }
+        {"current": "frontmatter/resumo", "historical": "1-pre-textuais/resumo"},
+        {"current": "frontmatter/abstract", "historical": "1-pre-textuais/abstract"}
       ]
     },
     "exact_head_cycles": [
@@ -109,18 +103,8 @@
         "reference_preview": "#22 REFERENCE_BUILD_SUCCESS_BEFORE_LATER_STEPS",
         "latex_preflight": "#1032 FAILED_PATH_CONSUMERS",
         "findings": [
-          {
-            "surface": "reference-guide-contract",
-            "cause": "normativa/reference-guide-map.json source_file entries still used 2-textuais/...",
-            "classification": "secondary-trace-path-only",
-            "resolved": true
-          },
-          {
-            "surface": "twelve-profile-matrix",
-            "cause": "tests/smoke/perfil-base.tex still used 1-pre-textuais/resumo and 1-pre-textuais/abstract",
-            "classification": "fixture-path-only",
-            "resolved": true
-          }
+          {"surface": "reference-guide-contract", "cause": "normativa/reference-guide-map.json source_file entries still used 2-textuais/...", "classification": "secondary-trace-path-only", "resolved": true},
+          {"surface": "twelve-profile-matrix", "cause": "tests/smoke/perfil-base.tex still used 1-pre-textuais/resumo and 1-pre-textuais/abstract", "classification": "fixture-path-only", "resolved": true}
         ]
       },
       {
@@ -130,13 +114,7 @@
           "surface": "normative-currency-human-documentation",
           "cause": "docs/VIGENCIA-NORMATIVA.md rewrite omitted exact full ABNT prefixes required by version-policy supersession assertions and abbreviated CEPE date markers",
           "classification": "human-documentation-contract-only",
-          "other_source_contract_stages_before_failure": [
-            "catalog PASS",
-            "precedence PASS",
-            "source-audit PASS",
-            "source-reference-integrity PASS",
-            "locator-audit PASS"
-          ],
+          "other_source_contract_stages_before_failure": ["catalog PASS", "precedence PASS", "source-audit PASS", "source-reference-integrity PASS", "locator-audit PASS"],
           "resolved": true,
           "repair_commit_before_ledger_sync": "5539e5370447fd97e844dfbadf4663992ab0e176"
         }
@@ -146,36 +124,11 @@
         "source_contract": "#380 SUCCESS",
         "reference_preview": "#34 SUCCESS",
         "latex_preflight": "#1044 STRUCTURE_FAILED",
-        "confirmed_success_before_structure_repair": [
-          "reference document and PDF/A SUCCESS",
-          "twelve profile build SUCCESS",
-          "twelve profile PDF/A SUCCESS",
-          "post-textual SUCCESS"
-        ],
+        "confirmed_success_before_structure_repair": ["reference document and PDF/A SUCCESS", "twelve profile build SUCCESS", "twelve profile PDF/A SUCCESS", "post-textual SUCCESS"],
         "findings": [
-          {
-            "surface": "distribution-source",
-            "cause": "git ls-files inside the TeX Live container lacked an explicit safe.directory override",
-            "classification": "ci-container-git-safety-only",
-            "resolved": true,
-            "repair_commit_before_ledger_sync": "4e33dedbb7d4df516eebcdc0f784d533c6e51d3e"
-          },
-          {
-            "surface": "normative-complement-n12",
-            "cause": "tests/smoke/perfil-base.tex retained the same path but its two A2 content paths changed, so the frozen N12 historical blob needed a bounded reverse-content rewrite bridge",
-            "classification": "frozen-evidence-path-migration-only",
-            "resolved": true,
-            "checker_commit_before_ledger_sync": "e1a85104354ddd8407e6c766edbb8d0e397d4b0e",
-            "manifest_changed": false,
-            "frozen_workflow_changed": false
-          },
-          {
-            "surface": "pretextual-capes-guidance",
-            "cause": "tests/v2-capes-guidance-check.sh still read 1-pre-textuais/agradecimentos.tex directly",
-            "classification": "stale-a2-path-only",
-            "resolved": true,
-            "repair_commit_before_ledger_sync": "9b06a95cd04914a48095cc2a20ddfce1bb1bcf57"
-          }
+          {"surface": "distribution-source", "cause": "git ls-files inside the TeX Live container lacked an explicit safe.directory override", "classification": "ci-container-git-safety-only", "resolved": true, "repair_commit_before_ledger_sync": "4e33dedbb7d4df516eebcdc0f784d533c6e51d3e"},
+          {"surface": "normative-complement-n12", "cause": "tests/smoke/perfil-base.tex retained the same path but its two A2 content paths changed, so the frozen N12 historical blob needed a bounded reverse-content rewrite bridge", "classification": "frozen-evidence-path-migration-only", "resolved": true, "checker_commit_before_ledger_sync": "e1a85104354ddd8407e6c766edbb8d0e397d4b0e", "manifest_changed": false, "frozen_workflow_changed": false},
+          {"surface": "pretextual-capes-guidance", "cause": "tests/v2-capes-guidance-check.sh still read 1-pre-textuais/agradecimentos.tex directly", "classification": "stale-a2-path-only", "resolved": true, "repair_commit_before_ledger_sync": "9b06a95cd04914a48095cc2a20ddfce1bb1bcf57"}
         ]
       },
       {
@@ -197,19 +150,8 @@
           "surface": "distribution-source-active-legacy-path-scan",
           "classification": "mixed-real-stale-references-and-one-substring-false-positive",
           "reported_files": 9,
-          "real_stale_reference_files": [
-            ".gitignore",
-            "chapters/1-introducao.tex",
-            "chapters/2-fundamentacao-teorica.tex",
-            "chapters/4-resultados.tex",
-            "chapters/5-conclusao.tex",
-            "chapters/trabalhos-relacionados.tex",
-            "docs/README-CTAN.md",
-            "tests/v2-ctan-policy-check.py"
-          ],
-          "false_positive_files": [
-            "abntexto-ufc/layout.def"
-          ],
+          "real_stale_reference_files": [".gitignore", "chapters/1-introducao.tex", "chapters/2-fundamentacao-teorica.tex", "chapters/4-resultados.tex", "chapters/5-conclusao.tex", "chapters/trabalhos-relacionados.tex", "docs/README-CTAN.md", "tests/v2-ctan-policy-check.py"],
+          "false_positive_files": ["abntexto-ufc/layout.def"],
           "false_positive_reason": "raw substring figuras/ matched inside imprimirlistadefiguras/before",
           "resolved": true
         },
@@ -287,5 +229,5 @@
     "active documentation and machine ledger are synchronized before closure",
     "resulting main is re-certified before B2R-B"
   ],
-  "next_after_a2": "After exact-head green certification, final documentation sync, squash merge and post-merge main recertification, begin B2R-B machine-readable public API inventory and canonical English aliases."
+  "next_after_a2": "Use the live PR head after the #1051 scanner reconciliation and mandatory documentation sync as the sole candidate. Require exact-head Source Contract, Reference Preview and full LaTeX preflight green; then run Gate T and deterministic Distribution, verify behind_by=0, perform final receipt-only documentation sync, squash merge and re-certify resulting main before B2R-B. If workflow dispatch is unavailable in the current tool surface, keep A2 open rather than weakening the gate."
 }
