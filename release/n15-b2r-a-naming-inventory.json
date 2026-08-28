@@ -17,7 +17,8 @@
       "README.md",
       "docs/NORMAS.md",
       "docs/VIGENCIA-NORMATIVA.md",
-      "docs/NAMING.md"
+      "docs/NAMING.md",
+      "docs/README-CTAN.md"
     ],
     "required_events": [
       "material scope or architecture decision",
@@ -176,6 +177,50 @@
             "repair_commit_before_ledger_sync": "9b06a95cd04914a48095cc2a20ddfce1bb1bcf57"
           }
         ]
+      },
+      {
+        "head_sha": "3fcd7a6d8cf09567c9e6c79448b8a3f0dbf3899c",
+        "source_contract": "#387 SUCCESS",
+        "reference_preview": "#41 SUCCESS",
+        "latex_preflight": "#1051 STRUCTURE_FAILED_DISTRIBUTION_SOURCE_ONLY",
+        "confirmed_success": [
+          "reference document and PDF/A SUCCESS",
+          "twelve profile build SUCCESS",
+          "twelve profile PDF/A SUCCESS",
+          "post-textual SUCCESS",
+          "objects and bibliography SUCCESS",
+          "normative-complement PASS including bounded N12 content rewrite",
+          "pretextual PASS including CAPES guidance",
+          "layout/font-config/pdf-geometry/math/project/build-path/multivolume/catalog-card PASS"
+        ],
+        "finding": {
+          "surface": "distribution-source-active-legacy-path-scan",
+          "classification": "mixed-real-stale-references-and-one-substring-false-positive",
+          "reported_files": 9,
+          "real_stale_reference_files": [
+            ".gitignore",
+            "chapters/1-introducao.tex",
+            "chapters/2-fundamentacao-teorica.tex",
+            "chapters/4-resultados.tex",
+            "chapters/5-conclusao.tex",
+            "chapters/trabalhos-relacionados.tex",
+            "docs/README-CTAN.md",
+            "tests/v2-ctan-policy-check.py"
+          ],
+          "false_positive_files": [
+            "abntexto-ufc/layout.def"
+          ],
+          "false_positive_reason": "raw substring figuras/ matched inside imprimirlistadefiguras/before",
+          "resolved": true
+        },
+        "repairs": {
+          "gitignore_generated_and_reference_image_paths_migrated": true,
+          "compiled_reference_guide_paths_migrated": true,
+          "ctan_readme_asset_path_migrated": true,
+          "ctan_binary_policy_paths_migrated_with_hashes_unchanged": true,
+          "scanner_boundary_aware": true,
+          "broad_layout_def_exemption_added": false
+        }
       }
     ],
     "normative_trace_update": {
