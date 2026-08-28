@@ -156,19 +156,24 @@
             "surface": "distribution-source",
             "cause": "git ls-files inside the TeX Live container lacked an explicit safe.directory override",
             "classification": "ci-container-git-safety-only",
-            "resolved": false
+            "resolved": true,
+            "repair_commit_before_ledger_sync": "4e33dedbb7d4df516eebcdc0f784d533c6e51d3e"
           },
           {
             "surface": "normative-complement-n12",
             "cause": "tests/smoke/perfil-base.tex retained the same path but its two A2 content paths changed, so the frozen N12 historical blob needed a bounded reverse-content rewrite bridge",
             "classification": "frozen-evidence-path-migration-only",
-            "resolved": true
+            "resolved": true,
+            "checker_commit_before_ledger_sync": "e1a85104354ddd8407e6c766edbb8d0e397d4b0e",
+            "manifest_changed": false,
+            "frozen_workflow_changed": false
           },
           {
             "surface": "pretextual-capes-guidance",
             "cause": "tests/v2-capes-guidance-check.sh still read 1-pre-textuais/agradecimentos.tex directly",
             "classification": "stale-a2-path-only",
-            "resolved": false
+            "resolved": true,
+            "repair_commit_before_ledger_sync": "9b06a95cd04914a48095cc2a20ddfce1bb1bcf57"
           }
         ]
       }
