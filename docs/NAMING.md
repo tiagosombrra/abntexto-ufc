@@ -31,7 +31,7 @@ During v2.x:
 - supported Portuguese setup keys remain accepted;
 - supported Portuguese setup values remain accepted where already exposed;
 - supported Portuguese UFC-owned commands/environments remain available as aliases or compatibility wrappers;
-- upstream `abntexto`/`abntex2` compatibility commands are not renamed merely for local style consistency;
+- upstream compatibility commands are not renamed merely for local style consistency;
 - removal of a supported public surface requires a separate deprecation/removal policy and, normally, a major-version boundary.
 
 Canonical English API may become the documented default without making Portuguese compatibility input invalid.
