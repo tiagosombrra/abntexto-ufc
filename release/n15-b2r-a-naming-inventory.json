@@ -3,7 +3,7 @@
   "phase": "N15-B2R-A",
   "reviewed_at": "2026-08-28",
   "base_main_sha": "7699ed205d4554df28fc46908fff3be0b92a38f7",
-  "status": "A2_IMPLEMENTATION_APPROVED",
+  "status": "A2_IMPLEMENTATION_CANDIDATE",
   "purpose": "Bound and track the behavior-preserving English naming migration before public API or article runtime changes.",
   "certified_base_receipts": {
     "source_contract": "#361 SUCCESS",
@@ -37,7 +37,7 @@
     "scope": "user-example-and-distribution-facing-repository-layout",
     "base_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
     "branch": "refactor/n15-b2r-a2-user-layout",
-    "status": "IMPLEMENTATION_APPROVED",
+    "status": "IMPLEMENTATION_CANDIDATE_AWAITING_EXACT_HEAD_CERTIFICATION",
     "public_api_change_allowed": false,
     "normative_contract_change_allowed": false,
     "article_runtime_change_allowed": false,
@@ -68,11 +68,13 @@
       "tools/build-release-bundles.py",
       "tests/run.py reference PDF consumers",
       "tests/v2-reference-check.sh",
+      "tests/v2-reference-corpus-check.sh",
+      "tests/v2-pdf-validator-check.sh default",
       "tests/v2-pdfa-check.sh default and N13 reference-document trigger",
       "tests/v2-overleaf-stable-check.sh",
       "tests/v2-overleaf-bundle-check.py",
       "tests/v2-release-package-check.py",
-      "tests/v2-distribution-check.sh",
+      "tests/v2-distribution-check.sh including stale active-path scan",
       ".github/workflows/reference-preview.yml",
       ".github/workflows/reference-validation.yml",
       ".github/workflows/distribution.yml",
@@ -81,8 +83,17 @@
     "frozen_workflow_constraint": {
       "path": ".github/workflows/latex-preflight.yml",
       "required_blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
+      "observed_candidate_blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
       "mutation_allowed": false,
       "compatibility_strategy": "update the scripts invoked by the frozen workflow so their defaults resolve main.pdf and the canonical layout without changing the workflow blob"
+    },
+    "pre_pr_audit": {
+      "base_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
+      "behind_by": 0,
+      "normative_files_changed": false,
+      "article_runtime_changed": false,
+      "public_api_changed": false,
+      "accidental_dummy_file_present": false
     }
   },
   "module_renames": [
