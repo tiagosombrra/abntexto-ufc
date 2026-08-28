@@ -75,6 +75,9 @@ The implementation synchronizes:
 - reference preview, reference validation and distribution workflows;
 - `tests/smoke/perfil-base.tex`;
 - `normativa/reference-guide-map.json` secondary guide-trace source paths;
+- `tests/v2-capes-guidance-check.sh`;
+- `tests/v2-distribution-check.sh` container-safe Git scan;
+- `tests/checks/normative_n12_matrix.py` bounded A2 historical-content bridge;
 - README, handoff, naming and normative human documentation.
 
 `tests/v2-distribution-check.sh` rejects reintroduction of legacy A2 top-level paths and scans active tracked text for stale path references. Explicit migration/history ledgers remain allowed to mention old names.
@@ -91,7 +94,7 @@ A2 changed only its `source_file` paths from `2-textuais/...` to `chapters/...`.
 
 `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
 
-Compatibility is preserved by updating the scripts invoked by that workflow so their default reference artifact is `main.pdf`.
+The N12 matrix manifest and certified historical hashes also remain unchanged. A1 reconstructs historical `\ProvidesFile` identities for renamed modules. A2 reconstructs only the two path strings changed inside `tests/smoke/perfil-base.tex` — `frontmatter/resumo` → `1-pre-textuais/resumo` and `frontmatter/abstract` → `1-pre-textuais/abstract` — before computing the historical blob. Any other content drift remains a failure.
 
 ### Exact-head CI cycles
 
@@ -114,9 +117,22 @@ Second documented cycle, PR head `8b1a0a8013c10cc73ad43115b25d0beca567e529`:
 
 Repair:
 
-3. `docs/VIGENCIA-NORMATIVA.md` now explicitly lists every full superseded/current ABNT pair from `normativa/version-policy.json`, keeps `ABNT NBR 6022:2018`, the current 2022/corrected-2023 article-guide state, and exact CEPE titles. Repair commit before this documentation sync: `5539e5370447fd97e844dfbadf4663992ab0e176`.
+3. `docs/VIGENCIA-NORMATIVA.md` explicitly lists every full superseded/current ABNT pair from `normativa/version-policy.json`, keeps `ABNT NBR 6022:2018`, the current 2022/corrected-2023 article-guide state, and exact CEPE titles. Repair commit before documentation sync: `5539e5370447fd97e844dfbadf4663992ab0e176`.
 
-These failures are preserved as migration evidence. They did not require changing normative predicates, values, locators or authority.
+Third cycle, PR head `a0bf9d060a188aa963d7e7f7002a538ef3dee2e0`:
+
+- Source Contract #380 — SUCCESS;
+- Reference Preview #34 — SUCCESS, including reference PDF/A and public TeX Live 2025 proxy;
+- LaTeX preflight #1044 confirmed reference document + PDF/A SUCCESS, twelve-profile build + twelve-profile PDF/A SUCCESS and post-textual SUCCESS;
+- the structure job failed on three migration consumers, while the substantive layout/font/geometry/math/project/build-path/multivolume/catalog-card checks shown after those failures continued to pass.
+
+Repairs:
+
+4. distribution-source scan now invokes `git -c safe.directory=<repo> ls-files -z`, avoiding the Git dubious-ownership failure inside the TeX Live container without changing the frozen workflow;
+5. `tests/checks/normative_n12_matrix.py` now uses the machine-ledger-controlled reverse-content bridge for exactly the two profile-fixture paths changed by A2; the N12 manifest, certified hashes and frozen workflow remain unchanged;
+6. `tests/v2-capes-guidance-check.sh` now reads `frontmatter/agradecimentos.tex` instead of the removed `1-pre-textuais/agradecimentos.tex`.
+
+The historical failed runs remain migration evidence. None required changing normative predicates, values, locators, source authority, public API, article runtime or formatting behavior.
 
 ### A2 closure requirements
 
