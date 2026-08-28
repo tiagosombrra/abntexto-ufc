@@ -1,13 +1,13 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
-Updated: 2026-08-27
-Checkpoint: N14-B validator report-contract adoption on `audit/n14-validator-adoption`
-Stable main: `6ead459e9fcaa3d5154fef5883dccc8d06ec5a78`
-Stable-main source contract: #329 / run `33124342072` — SUCCESS
-Stable-main PDF validator: #131 / run `33124342083` — source check and Pages deploy SUCCESS
-Stable-main LaTeX preflight: #985 / run `33124342103` — SUCCESS
-Stable-main Gate T: #986 / run `33124347158` — SUCCESS
-Stable-main Distribution preflight: #233 / run `33124342067` — SUCCESS
+Updated: 2026-08-28
+Checkpoint: N14-C cross-surface closure candidate in PR #142 (`audit/n14-cross-surface-closure`)
+Stable main before PR #142: `678cb4d776fe24f4ccdb300f36486bfb70c2461e`
+Stable-main source contract: #331 / run `33128000046` — SUCCESS
+Stable-main PDF validator: #132 / run `33127999931` — source check and Pages deploy SUCCESS
+Stable-main LaTeX preflight: #988 / run `33127999949` — SUCCESS
+Stable-main Gate T: #989 / run `33128007869` — SUCCESS
+Stable-main Distribution preflight: #234 / run `33127999952` — SUCCESS
 
 This is the single dynamic continuation document for the v2.2.0 normative audit and release. Detailed historical evidence belongs in `normativa/`, `tests/`, Git history, pull requests and GitHub Actions logs.
 
@@ -68,10 +68,10 @@ Guardrails:
 | N11 | research-project profile / NBR 15287 | DONE — 5/5 bounded positive coverage |
 | N12 | profile, engine and font matrix | DONE — 20-cell factorized certification + orthogonality gate |
 | N13 | negative fixtures / negative-path validation | DONE — 7/7 validator mechanisms represented and sensitivity-tested |
-| N14 | Web/Lite and CLI/Deep unification | ACTIVE — N14-A merged; N14-B adoption candidate active |
+| N14 | Web/Lite and CLI/Deep unification | CLOSURE CANDIDATE — PR #142; contract records 6/6 exit criteria and requires exact-head merge before stable-main closure |
 | N15 | full normative certification and release decision | PENDING |
 
-Stable `main` has **14/16 completed phase gates = 87.5%**. N14 remains active and therefore does not increase this metric. This percentage is not a normative-conformity or proof percentage.
+Stable `main` before PR #142 has **14/16 completed phase gates = 87.5%**. Merging the exact validated N14-C head raises the formal roadmap to **15/16 = 93.75%**. These percentages are roadmap-gate metrics, not normative-conformity or proof percentages.
 
 ## Frozen normative baseline and oracle policy
 
@@ -108,77 +108,76 @@ PR #139 closed N13 and squash-merged as `04cc137f6b0930c2f2a32aa4c299005432959f3
 
 N13 is closed. Do not reopen it without a changed predicate/source or reproducible regression.
 
-## N14-A — contract baseline merged
+## N14-A — baseline merged
 
-PR #140, `audit: establish N14 validator contract baseline`, was validated on exact head `224ab8f7d124c283e801e6bb466efcb7b2c29f64`, `behind_by=0`, with exactly five expected files. Its pull-request synthetic merge tree had zero file differences from the audited head.
+PR #140 established the technical validator baseline and squash-merged as `6ead459e9fcaa3d5154fef5883dccc8d06ec5a78` after exact-head validation. The baseline records 25 Web checks, 27 CLI checks, 28 canonical identities, 24 shared identities, two historical aliases, one Web-only identity and three CLI-only identities.
 
-N14-A evidence:
-
-- Normative source contract #328 — SUCCESS;
-- LaTeX preflight #984 / `33123641766` — SUCCESS;
-- structural suite — `PASS=14 FAIL=0 SKIP=0`;
-- N13 remained 7/7 `DONE`;
-- N11 remained 5/5;
-- `proof_state_changed=false`.
-
-PR #140 squash-merged as stable main `6ead459e9fcaa3d5154fef5883dccc8d06ec5a78`.
-
-Post-merge stable-main certification is fully green:
-
-- Normative source contract #329 / `33124342072` — SUCCESS;
-- PDF validator #131 / `33124342083` — source check and GitHub Pages deploy SUCCESS;
-- push LaTeX preflight #985 / `33124342103` — SUCCESS including reference/PDF-A, 12-profile matrix/PDF-A, objects/bibliography, post-textuals, structural `PASS=14 FAIL=0 SKIP=0`, Overleaf/TeX Live 2025, Windows literal build and independent Unicode/embedding/PDF-A certification;
-- Gate T #986 / `33124347158` — SUCCESS with the complete required suite;
-- Distribution #233 / `33124342067` — SUCCESS through Gate T prerequisite, release preflight, PDF/A-2b, deterministic bundles, Overleaf import proxy, release-candidate upload and aggregate `distribution-preflight`.
-
-N14-A established a technical baseline of 25 Web checks, 27 CLI checks, 28 canonical identities, 24 shared identities, two observed aliases, one Web-only identity and three CLI-only identities. The two baseline aliases were:
+Historical aliases remain evidence and are not rewritten away:
 
 - `font.family` → canonical `font.literal`;
 - `font.embedding` → canonical `font.embedded`.
 
-That observed baseline remains historical evidence and must not be rewritten away.
+## N14-B — report-contract adoption merged
 
-## N14-B — report-contract adoption candidate
+PR #141, `audit: adopt N14 validator report contract`, normalized the emitted machine-readable report contract without changing measurement or decision behavior and squash-merged as stable main `678cb4d776fe24f4ccdb300f36486bfb70c2461e`.
 
-N14-B normalizes the emitted machine-readable report contract without changing measurement or decision behavior.
+N14-B preserves the existing measurement backends and adds boundary normalization only:
 
-Planned/current adoption on `audit/n14-validator-adoption`:
-
-- Web/Lite keeps its existing PDF.js measurement logic and internal check construction;
-- Web/Lite normalizes report output at the boundary to canonical IDs and snake_case fields;
-- emitted Web aliases become zero while the N14-A alias baseline remains recorded separately;
+- Web/Lite keeps PDF.js measurement logic and normalizes emitted IDs/fields to canonical snake_case;
+- emitted aliases are zero while the N14-A historical alias baseline remains two;
 - Web/Lite emits `normative_catalog`, `normative_rule`, `generated_at` and `mode="web-lite-local"`;
-- CLI/Deep retains its existing Poppler/veraPDF measurement logic and canonical IDs;
-- CLI/Deep adds the missing report field `mode="cli-deep-local"`;
-- both surfaces therefore satisfy the shared target report schema without requiring measurement-backend identity;
+- CLI/Deep keeps Poppler/veraPDF measurement logic and canonical IDs and emits `mode="cli-deep-local"`;
 - `font.embedded` and `pdfa.deep` remain review-only on Web/Lite and automatic/deep on CLI;
 - Web-only `security.javascript` and CLI-only `security.encrypted`, `pdfa.claim`, `access.pdfua` remain explicit capability differences;
-- no normative predicate, locator, N5 tolerance, compatibility mapping or proof-state changes;
-- no change to `.github/workflows/latex-preflight.yml`.
+- no normative predicate, locator, N5 tolerance, compatibility mapping or proof-state changed;
+- `.github/workflows/latex-preflight.yml` was not changed.
 
-Expected N14-B receipts:
+Post-merge stable-main certification is fully green:
 
-`N14-EVIDENCE validator-baseline status=PASS web_checks=25 cli_checks=27 canonical_checks=28 shared=24 baseline_aliases=2 web_only=1 cli_only=3 phase_status=ACTIVE normative_contract_changed=false proof_state_changed=false`
+- Normative source contract #331 / `33128000046` — SUCCESS with proof-state baseline unchanged and all three N14-B receipts;
+- PDF validator #132 / `33127999931` — source check and GitHub Pages deploy SUCCESS;
+- push LaTeX preflight #988 / `33127999949` — SUCCESS including reference/PDF-A, 12-profile matrix/PDF-A, objects/bibliography, post-textuals, structural suite, Overleaf/TeX Live 2025, Windows literal build and independent Unicode/embedding/PDF-A certification;
+- exact Gate T #989 / `33128007869` — SUCCESS with the complete required suite for `678cb4d...`;
+- Distribution #234 / `33127999952` — SUCCESS through Gate T prerequisite, release preflight, PDF/A-2b, deterministic bundles, Overleaf import proxy, release-candidate upload and aggregate `distribution-preflight`.
 
-`N14-EVIDENCE schema-adoption status=PASS web_case=snake_case cli_case=snake_case emitted_aliases=0 web_mode=web-lite-local cli_mode=cli-deep-local phase_status=ACTIVE normative_contract_changed=false proof_state_changed=false`
+N14-B adoption remained a phase intermediate; it did not by itself close N14.
 
-`N14-EVIDENCE capability-boundary status=PASS web_lite_upload=false deep_review_only=font.embedded,pdfa.deep measurement_backend_equivalence_required=false proof_state_changed=false`
+## N14-C — closure candidate in PR #142
 
-N14 remains `ACTIVE` after N14-B. Adoption is not phase closure.
+PR #142 adds no new validator predicate and does not change `validator/app.js`, `tools/validate-ufc-pdf.py`, `normativa/` or `.github/`.
 
-## N14-C — remaining closure work
+The closure candidate is limited to five files:
 
-N14-C must independently test semantic contract equivalence across the two surfaces using synthetic vectors. It must require:
+1. `validator/validation-vectors.json` — synthetic cross-surface contract vectors;
+2. `tests/checks/normative_n14_cross_surface.py` — executes the current Web/Lite contract expressions through Node and the current CLI/Deep `Check`/`verdict()` implementation through Python;
+3. `validator/validation-contract.json` — records the N14 closure candidate and six of six exit criteria;
+4. `tests/checks/normative_n14_validator_contract.py` — binds N14-C to the existing source contract gate;
+5. this handoff.
 
-- zero unresolved emitted aliases/schema drift;
-- the canonical report fields and status/verdict vocabularies on both surfaces;
-- consistent normative metadata binding for shared normative checks;
-- preserved Web/Lite privacy and deep-capability boundaries;
-- explicit treatment of Web-only and CLI-only checks;
-- no requirement that PDF.js and Poppler numerical measurements be identical;
-- no normative or proof-state change.
+N14-C requires and emits evidence for:
 
-Only after N14-C passes and its exact audited head is independently validated may N14 be marked `DONE`.
+- five verdict vectors with identical Web/Lite and CLI/Deep semantic outcomes;
+- 24 shared canonical identities across 28 canonical checks;
+- two historical aliases normalized at the Web report boundary and zero emitted aliases;
+- canonical check schema equivalence using the current Web `reportCheck()` output and CLI `Check` serialization;
+- zero post-adoption schema drift;
+- explicit deep boundaries for `font.embedded` and `pdfa.deep`;
+- no requirement for numerical identity between PDF.js and Poppler/veraPDF measurements;
+- no change to normative contract, locator policy, N5 tolerances or proof state.
+
+Expected N14-C receipts:
+
+`N14-EVIDENCE cross-surface-vectors status=PASS verdict_vectors=5 shared_checks=24 canonical_checks=28 baseline_aliases=2 emitted_aliases=0 schema_drift=0 deep_boundaries=2 backend_equivalence_required=false proof_state_changed=false`
+
+`N14-EVIDENCE n14-closure status=PASS exit_criteria=6/6 phase_status=DONE normative_contract_changed=false locator_policy_changed=false oracle_tolerances_changed=false proof_state_changed=false`
+
+The technical contract records `status=DONE` inside the candidate so the closure checker can validate the intended terminal state. Formal stable-main closure still requires PR #142 to satisfy `behind_by=0`, exact-head CI, exact file scope and exact-head merge. Until then, N14 is not closed on stable main.
+
+## N15 — pending final certification and release decision
+
+N15 begins only after N14-C is merged and the resulting stable main is re-certified. N15 must not reinterpret prior phase closure as `PROVEN` normative state. Its first action is to derive the final certification/release-decision inventory from the existing normative/proof/distribution contracts and unresolved release blockers, including issue #18.
+
+No N15 implementation should reopen N0–N14 without changed source, changed predicate or reproducible regression.
 
 ## Repository hygiene and Git policy
 
@@ -203,12 +202,13 @@ The UFC institutional mark remains in the source repository but is externalized 
 
 ## Immediate next action
 
-1. validate the N14-B adoption branch against stable main `6ead459e9fcaa3d5154fef5883dccc8d06ec5a78`;
-2. require exactly five changed files: `validator/app.js`, `tools/validate-ufc-pdf.py`, `validator/validation-contract.json`, `tests/checks/normative_n14_validator_contract.py`, and this handoff;
-3. require `behind_by=0` and the three N14-B receipts above;
-4. require PDF-validator/source checks and LaTeX preflight green, with N13 still 7/7 `DONE`, N11 still 5/5 and structural `PASS=14 FAIL=0 SKIP=0`;
-5. verify PR merge-ref tree equivalence to the exact branch head when `behind_by=0`;
-6. merge N14-B only with the exact audited head;
-7. re-certify stable main before beginning N14-C;
-8. implement N14-C synthetic cross-surface vectors and close N14 only if every exit criterion remains satisfied;
-9. leave bulk branch deletion for final repository cleanup.
+1. validate PR #142 on its final exact head after this handoff update;
+2. require exactly the five N14-C files listed above and `behind_by=0`;
+3. require the baseline/adoption/capability receipts plus both N14-C receipts;
+4. require N13 still 7/7 `DONE`, N11 still 5/5 and structural `PASS=14 FAIL=0 SKIP=0`;
+5. verify no changes to normative predicates, locators, frozen N5 tolerances, proof state, `validator/app.js`, CLI implementation or the N12 workflow;
+6. verify pull-request merge-ref tree equivalence to the exact audited head when possible;
+7. mark PR #142 ready and squash-merge only with the exact audited head;
+8. re-certify the resulting stable main with source contract, PDF validator, push preflight, exact Gate T and Distribution;
+9. then begin N15 inventory and final release-decision work;
+10. leave bulk branch deletion for final repository cleanup.
