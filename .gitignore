@@ -35,11 +35,11 @@ _minted-*
 *.ps
 
 # Generated main PDF
-documento.pdf
+main.pdf
 
 # Fetched reference photographs
-figuras/ufc-campus-pici.jpg
-figuras/ufc-reitoria.jpg
+figures/ufc-campus-pici.jpg
+figures/ufc-reitoria.jpg
 
 # Release artifacts
 dist/
