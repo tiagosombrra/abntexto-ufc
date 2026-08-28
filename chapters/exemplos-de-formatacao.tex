@@ -43,7 +43,7 @@ Esta seção funciona como catálogo visual e corpus de regressão. Cada grupo a
 \label{fig:png-fluxo}
 \begin{ufcobjeto}[here]
   \centering
-  \includegraphics[width=0.65\linewidth]{figuras/fluxo-exemplo.png}
+  \includegraphics[width=0.65\linewidth]{figures/fluxo-exemplo.png}
 \end{ufcobjeto}
 
 As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larguras progressivamente maiores, quebra de título, fonte, nota e inclusão de imagem raster.
@@ -56,19 +56,19 @@ As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larg
 \label{fig:campus-pici-computacao}
 \begin{ufcobjeto}[here]
   \centering
-  \IfFileExists{figuras/ufc-campus-pici.jpg}
-    {\includegraphics[width=0.72\linewidth]{figuras/ufc-campus-pici.jpg}}
+  \IfFileExists{figures/ufc-campus-pici.jpg}
+    {\includegraphics[width=0.72\linewidth]{figures/ufc-campus-pici.jpg}}
     {\fbox{\parbox[c][4cm][c]{0.72\linewidth}{\centering Execute \texttt{make reference-assets} para baixar a fotografia licenciada do Campus do Pici.}}}
 \end{ufcobjeto}
 
 \legend{figure}{Reitoria da Universidade Federal do Ceará}
 \ufcfonte{Joelkaula (2018), Wikimedia Commons, CC BY-SA 4.0.}
-\ufcnota{Fotografia externa usada sem modificação e distribuída sob licença própria; ver \texttt{figuras/LICENCAS.md}.}
+\ufcnota{Fotografia externa usada sem modificação e distribuída sob licença própria; ver \texttt{figures/LICENCAS.md}.}
 \label{fig:reitoria-ufc}
 \begin{ufcobjeto}[here]
   \centering
-  \IfFileExists{figuras/ufc-reitoria.jpg}
-    {\includegraphics[width=0.62\linewidth]{figuras/ufc-reitoria.jpg}}
+  \IfFileExists{figures/ufc-reitoria.jpg}
+    {\includegraphics[width=0.62\linewidth]{figures/ufc-reitoria.jpg}}
     {\fbox{\parbox[c][5cm][c]{0.62\linewidth}{\centering Execute \texttt{make reference-assets} para baixar a fotografia licenciada da Reitoria da UFC.}}}
 \end{ufcobjeto}
 
@@ -196,7 +196,7 @@ int maximo(int a, int b) {
 \ufcfonte{Elaboração própria.}
 \label{cod:python-externo}
 \begin{ufcobjeto}[here]
-  \ufcinputlisting[language=Python,numbers=left,numbersep=8pt]{figuras/exemplo.py}
+  \ufcinputlisting[language=Python,numbers=left,numbersep=8pt]{figures/exemplo.py}
 \end{ufcobjeto}
 
 \lstset{language=Java,numbers=left,stepnumber=2,numbersep=8pt}
@@ -280,7 +280,7 @@ Exemplo de enumeração comum:
 
 \subsection{Tipos bibliográficos exercitados}
 
-O arquivo \texttt{3-pos-textuais/referencias.bib} reúne livro, artigo, evento, dissertação, relatório, normas e recursos eletrônicos. Campos como \texttt{isbn}, \texttt{doi}, \texttt{url}, \texttt{urldate}, \texttt{institution}, \texttt{edition}, \texttt{volume}, \texttt{number} e \texttt{pages} são usados apenas quando pertinentes ao tipo de documento.
+O arquivo \texttt{backmatter/referencias.bib} reúne livro, artigo, evento, dissertação, relatório, normas e recursos eletrônicos. Campos como \texttt{isbn}, \texttt{doi}, \texttt{url}, \texttt{urldate}, \texttt{institution}, \texttt{edition}, \texttt{volume}, \texttt{number} e \texttt{pages} são usados apenas quando pertinentes ao tipo de documento.
 
 \nocite{lamport1994,wessberg2000,vaswani2017attention,almeida2018,rfc9110}
 

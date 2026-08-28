@@ -4,7 +4,7 @@
 ########################################################################
 
 VERSION := 2.1.0
-filename ?= documento
+filename ?= main
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 

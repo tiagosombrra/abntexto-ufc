@@ -1,12 +1,12 @@
 #!/bin/sh
 set -eu
 
-[ -s documento.pdf ] || {
-  echo 'Corpus V2 falhou: documento.pdf ausente.'
+[ -s main.pdf ] || {
+  echo 'Corpus V2 falhou: main.pdf ausente.'
   exit 1
 }
 
-for file in documento.loi documento.lot documento.loc documento.loa documento.toc; do
+for file in main.loi main.lot main.loc main.loa main.toc; do
   [ -s "$file" ] || {
     echo "Corpus V2 falhou: arquivo de navegação ausente: $file"
     exit 1
@@ -19,8 +19,8 @@ import hashlib
 from pathlib import Path
 
 expected = {
-    Path('figuras/ufc-campus-pici.jpg'): '5f431612cdbfbb088c37c685a0e3c93852e96ccd',
-    Path('figuras/ufc-reitoria.jpg'): 'b6746bb53d82dae52330805ca0a08f029b773b2e',
+    Path('figures/ufc-campus-pici.jpg'): '5f431612cdbfbb088c37c685a0e3c93852e96ccd',
+    Path('figures/ufc-reitoria.jpg'): 'b6746bb53d82dae52330805ca0a08f029b773b2e',
 }
 for path, digest in expected.items():
     if not path.is_file():
@@ -31,8 +31,8 @@ for path, digest in expected.items():
 PY
 fi
 
-pdftotext -layout documento.pdf /tmp/abntexto-ufc-v2-reference-corpus.txt
-pdftotext -bbox-layout documento.pdf /tmp/abntexto-ufc-v2-reference-corpus-bbox.html
+pdftotext -layout main.pdf /tmp/abntexto-ufc-v2-reference-corpus.txt
+pdftotext -bbox-layout main.pdf /tmp/abntexto-ufc-v2-reference-corpus-bbox.html
 
 python3 <<'PY'
 import re
@@ -282,7 +282,7 @@ check_list() {
   done
 }
 
-check_list documento.loi \
+check_list main.loi \
   'Figura estreita com legenda curta' \
   'Figura de largura intermediária' \
   'Figura larga próxima à largura útil' \
@@ -292,18 +292,18 @@ check_list documento.loi \
   'Distribuição sintética de três categorias' \
   'Comparação de configurações editoriais'
 
-check_list documento.lot \
+check_list main.lot \
   'Organização didática dos componentes exercitados pelo documento de referência' \
   'Indicadores sintéticos com linhas alternadas'
 
-check_list documento.loc \
+check_list main.loc \
   'Função de média em Python com números de linha' \
   'Função de máximo em C++ sem números de linha' \
   'Arquivo Python externo com números de linha' \
   'Método Java com numeração a cada duas linhas' \
   'Código C++ apresentado como apêndice'
 
-check_list documento.loa \
+check_list main.loa \
   'Máximo divisor comum com números de linha' \
   'Seleção do maior valor sem números de linha'
 

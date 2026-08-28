@@ -11,7 +11,7 @@
     {
       "id": "page-and-margins",
       "classification": "normative",
-      "source_file": "2-textuais/3-metodologia.tex",
+      "source_file": "chapters/3-metodologia.tex",
       "marker": "Papel e margens",
       "source_ids": ["abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
       "rule_ids": ["page.a4", "margin.recto.left", "margin.recto.top", "margin.recto.right", "margin.recto.bottom", "margin.verso.left", "margin.verso.top", "margin.verso.right", "margin.verso.bottom"]
@@ -19,7 +19,7 @@
     {
       "id": "body-typography",
       "classification": "institutional",
-      "source_file": "2-textuais/3-metodologia.tex",
+      "source_file": "chapters/3-metodologia.tex",
       "marker": "Fonte, tamanho e cor",
       "source_ids": ["ufc-guia-trabalhos-2022"],
       "rule_ids": ["font.family.body", "font.size.body", "spacing.body", "paragraph.first-line.indent", "paragraph.spacing.extra"]
@@ -27,7 +27,7 @@
     {
       "id": "section-numbering",
       "classification": "normative",
-      "source_file": "2-textuais/3-metodologia.tex",
+      "source_file": "chapters/3-metodologia.tex",
       "marker": "Seções e subseções",
       "source_ids": ["abnt-nbr-6024-2012"],
       "rule_ids": ["section.numbering.progressive", "section.levels.max", "section.primary.new-page"]
@@ -35,7 +35,7 @@
     {
       "id": "dedication-layout",
       "classification": "institutional",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Dedicatória",
       "source_ids": ["ufc-guia-trabalhos-2022"],
       "rule_ids": ["dedication.heading.present", "dedication.position.start", "dedication.indent.left", "dedication.font.size", "dedication.line-spacing", "dedication.alignment"]
@@ -43,7 +43,7 @@
     {
       "id": "acknowledgements-layout",
       "classification": "institutional",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Agradecimentos",
       "source_ids": ["ufc-guia-trabalhos-2022"],
       "rule_ids": ["acknowledgements.page.own", "acknowledgements.heading.case", "acknowledgements.heading.weight", "acknowledgements.heading.alignment", "acknowledgements.heading.font-size", "acknowledgements.body.font-size", "acknowledgements.body.line-spacing", "acknowledgements.body.alignment"]
@@ -51,7 +51,7 @@
     {
       "id": "epigraph-layout",
       "classification": "institutional",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Epígrafe",
       "source_ids": ["ufc-guia-trabalhos-2022"],
       "rule_ids": ["epigraph.short.position.start", "epigraph.short.indent.left", "epigraph.short.font.size", "epigraph.short.line-spacing", "epigraph.short.alignment", "epigraph.short.quotation-marks", "epigraph.long.position.start", "epigraph.long.indent.left", "epigraph.long.font.size", "epigraph.long.line-spacing", "epigraph.long.alignment", "epigraph.long.quotation-marks"]
@@ -59,7 +59,7 @@
     {
       "id": "summary-and-keywords",
       "classification": "normative",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Resumo, abstract e palavras-chave",
       "source_ids": ["abnt-nbr-6028-2021"],
       "rule_ids": ["summary.word-count.range", "summary.keywords.required", "summary.font.size", "summary.line-spacing", "summary.first-line.indent", "summary.alignment"]
@@ -67,7 +67,7 @@
     {
       "id": "table-of-contents",
       "classification": "normative",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Sumário",
       "source_ids": ["abnt-nbr-6027-2012"],
       "rule_ids": ["toc.pretextual-exclusion", "toc.heading.alignment", "toc.heading.case", "toc.page-number.position", "toc.section-hierarchy.mirror"]
@@ -75,7 +75,7 @@
     {
       "id": "long-direct-quotation",
       "classification": "normative",
-      "source_file": "2-textuais/4-resultados.tex",
+      "source_file": "chapters/4-resultados.tex",
       "marker": "Citação direta longa",
       "source_ids": ["abnt-nbr-10520-2023"],
       "rule_ids": ["quotation.long.block", "quotation.long.indent.left", "quotation.long.font.size", "quotation.long.line-spacing", "quotation.long.quotation-marks"]
@@ -83,7 +83,7 @@
     {
       "id": "reference-list-layout",
       "classification": "normative",
-      "source_file": "2-textuais/4-resultados.tex",
+      "source_file": "chapters/4-resultados.tex",
       "marker": "Lista de referências",
       "source_ids": ["abnt-nbr-6023-2025"],
       "rule_ids": ["references.font.size", "references.line-spacing", "references.alignment", "references.entry-spacing"]
@@ -91,7 +91,7 @@
     {
       "id": "illustration-source-and-bounds",
       "classification": "normative",
-      "source_file": "2-textuais/exemplos-de-formatacao.tex",
+      "source_file": "chapters/exemplos-de-formatacao.tex",
       "marker": "Regra geral para ilustrações",
       "source_ids": ["abnt-nbr-14724-2024", "abnt-nbr-10520-2023"],
       "rule_ids": ["illustration.source.required", "illustration.source.external-citation", "illustration.caption.bounds", "illustration.source.bounds", "illustration.note.bounds"]
@@ -99,7 +99,7 @@
     {
       "id": "numeric-tables",
       "classification": "normative",
-      "source_file": "2-textuais/exemplos-de-formatacao.tex",
+      "source_file": "chapters/exemplos-de-formatacao.tex",
       "marker": "Tabelas numéricas",
       "source_ids": ["ibge-tabular-1993"],
       "rule_ids": ["table.ibge.open-sides", "table.ibge.body-grid", "table.ibge.top-rule", "table.ibge.header-rule", "table.ibge.bottom-rule"]
@@ -107,7 +107,7 @@
     {
       "id": "catalog-card-deposit",
       "classification": "institutional",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Ficha catalográfica",
       "source_ids": ["ufc-in-2-2026"],
       "rule_ids": ["deposit.catalog-card"]
@@ -115,7 +115,7 @@
     {
       "id": "approval-signatures-deposit",
       "classification": "institutional",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Folha de aprovação",
       "source_ids": ["ufc-deposito-tcc-2026", "ufc-deposito-pos-2026"],
       "rule_ids": ["deposit.approval-signatures"]
@@ -123,7 +123,7 @@
     {
       "id": "capes-acknowledgement",
       "classification": "institutional",
-      "source_file": "2-textuais/trabalhos-relacionados.tex",
+      "source_file": "chapters/trabalhos-relacionados.tex",
       "marker": "Portaria CAPES nº 206/2018",
       "source_ids": ["capes-portaria-206-2018"],
       "rule_ids": ["deposit.capes"]
@@ -131,7 +131,7 @@
     {
       "id": "pdfa-deposit",
       "classification": "institutional",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "PDF/A",
       "source_ids": ["ufc-deposito-tcc-2026", "ufc-deposito-pos-2026"],
       "rule_ids": ["deposit.pdfa.required"]
@@ -139,7 +139,7 @@
     {
       "id": "research-project-profile",
       "classification": "normative",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "Perfis de documento",
       "source_ids": ["abnt-nbr-15287-2025"],
       "rule_ids": ["project.cover.optional", "project.title-page.required", "project.textual.required-sections"]
@@ -147,7 +147,7 @@
     {
       "id": "research-project-anonymization",
       "classification": "model-policy",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "projetoanonimizado",
       "source_ids": [],
       "rule_ids": ["project.anonymization.policy"]
@@ -155,7 +155,7 @@
     {
       "id": "appendix-layout",
       "classification": "institutional",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "Apêndices",
       "source_ids": ["ufc-guia-trabalhos-2022"],
       "rule_ids": ["appendix.page.own", "appendix.heading.case", "appendix.heading.weight", "appendix.heading.font-size", "appendix.heading.alignment"]
@@ -163,7 +163,7 @@
     {
       "id": "annex-layout",
       "classification": "institutional",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "Anexos",
       "source_ids": ["ufc-guia-trabalhos-2022"],
       "rule_ids": ["annex.page.own", "annex.heading.case", "annex.heading.weight", "annex.heading.font-size", "annex.heading.alignment"]
@@ -171,7 +171,7 @@
     {
       "id": "index-presentation",
       "classification": "normative",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "Índice",
       "source_ids": ["abnt-nbr-6034-2004"],
       "rule_ids": ["index.heading.case", "index.heading.weight", "index.heading.alignment", "index.heading.font-size"]
@@ -179,7 +179,7 @@
     {
       "id": "portable-font-policy",
       "classification": "model-policy",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "fonte-estrita",
       "source_ids": [],
       "rule_ids": []
@@ -187,7 +187,7 @@
     {
       "id": "pdfa2b-policy",
       "classification": "model-policy",
-      "source_file": "2-textuais/5-conclusao.tex",
+      "source_file": "chapters/5-conclusao.tex",
       "marker": "PDF/A-2b",
       "source_ids": [],
       "rule_ids": []
@@ -195,7 +195,7 @@
     {
       "id": "table-zebra-example",
       "classification": "example",
-      "source_file": "2-textuais/exemplos-de-formatacao.tex",
+      "source_file": "chapters/exemplos-de-formatacao.tex",
       "marker": "alternância de fundo",
       "source_ids": [],
       "rule_ids": []
@@ -203,7 +203,7 @@
     {
       "id": "algorithm-line-numbering-example",
       "classification": "example",
-      "source_file": "2-textuais/exemplos-de-formatacao.tex",
+      "source_file": "chapters/exemplos-de-formatacao.tex",
       "marker": "Numeração de linhas em pseudocódigo",
       "source_ids": [],
       "rule_ids": []

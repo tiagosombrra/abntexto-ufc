@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 PACKAGE_ID = "abntexto-ufc"
 LEGACY_CLASS = "ufctex.cls"
-COAT_OF_ARMS = ROOT / "assets/institucional/brasao-ufc.PNG"
+COAT_OF_ARMS = ROOT / "assets/institutional/ufc-coat-of-arms.png"
 
 MICROSOFT_FONTS = {
     "times.ttf", "timesbd.ttf", "timesi.ttf", "timesbi.ttf",
@@ -23,8 +23,8 @@ MICROSOFT_FONTS = {
 }
 
 REFERENCE_IMAGE_SHA1 = {
-    "figuras/ufc-campus-pici.jpg": "5f431612cdbfbb088c37c685a0e3c93852e96ccd",
-    "figuras/ufc-reitoria.jpg": "b6746bb53d82dae52330805ca0a08f029b773b2e",
+    "figures/ufc-campus-pici.jpg": "5f431612cdbfbb088c37c685a0e3c93852e96ccd",
+    "figures/ufc-reitoria.jpg": "b6746bb53d82dae52330805ca0a08f029b773b2e",
 }
 
 
@@ -254,9 +254,9 @@ def main() -> None:
         ):
             if required_entry not in class_entries:
                 raise SystemExit(f"Class bundle missing {required_entry}")
-        if any(entry.startswith(f"{class_root}1-pre-textuais/") for entry in class_entries):
+        if any(entry.startswith(f"{class_root}frontmatter/") for entry in class_entries):
             raise SystemExit("Class bundle unexpectedly contains template content.")
-        if any(entry.startswith(f"{class_root}assets/institucional/") for entry in class_entries):
+        if any(entry.startswith(f"{class_root}assets/institutional/") for entry in class_entries):
             raise SystemExit("Class bundle must not redistribute UFC institutional assets.")
         assert_excludes_coat_of_arms(class_zip)
         assert_no_proprietary_fonts(class_entries)
@@ -266,14 +266,14 @@ def main() -> None:
         template_root = f"modelo-latex-ufc-{v}/"
         assert_prefix(template_entries, template_root)
         for required_entry in (
-            f"{template_root}documento.tex",
-            f"{template_root}1-pre-textuais/resumo.tex",
-            f"{template_root}2-textuais/1-introducao.tex",
-            f"{template_root}2-textuais/exemplos-de-formatacao.tex",
-            f"{template_root}3-pos-textuais/referencias.bib",
-            f"{template_root}figuras/LICENCAS.md",
-            f"{template_root}figuras/ufc-campus-pici.jpg",
-            f"{template_root}figuras/ufc-reitoria.jpg",
+            f"{template_root}main.tex",
+            f"{template_root}frontmatter/resumo.tex",
+            f"{template_root}chapters/1-introducao.tex",
+            f"{template_root}chapters/exemplos-de-formatacao.tex",
+            f"{template_root}backmatter/referencias.bib",
+            f"{template_root}figures/LICENCAS.md",
+            f"{template_root}figures/ufc-campus-pici.jpg",
+            f"{template_root}figures/ufc-reitoria.jpg",
             f"{template_root}abntexto-ufc.cls",
             f"{template_root}abntexto-ufc/core.def",
             f"{template_root}{LEGACY_CLASS}",
@@ -283,10 +283,10 @@ def main() -> None:
                 raise SystemExit(f"Template bundle missing {required_entry}")
         if f"{template_root}abntexto.cls" in template_entries:
             raise SystemExit("Standard template bundle must not vendor abntexto.cls.")
-        if any(entry.startswith(f"{template_root}assets/institucional/") for entry in template_entries):
+        if any(entry.startswith(f"{template_root}assets/institutional/") for entry in template_entries):
             raise SystemExit("Template bundle must not redistribute UFC institutional assets.")
         assert_bundled_document_disables_coat_of_arms(
-            template_zip, f"{template_root}documento.tex"
+            template_zip, f"{template_root}main.tex"
         )
         assert_excludes_coat_of_arms(template_zip)
         assert_reference_images(template_zip, template_root)
@@ -297,17 +297,17 @@ def main() -> None:
         if any(entry.startswith(f"modelo-latex-ufc-overleaf-{v}/") for entry in overleaf_entries):
             raise SystemExit("Overleaf bundle must place the main document at the archive root.")
         for required_entry in (
-            "documento.tex", "abntexto-ufc.cls", LEGACY_CLASS, "abntexto.cls",
+            "main.tex", "abntexto-ufc.cls", LEGACY_CLASS, "abntexto.cls",
             "abntexto-ufc/core.def",
-            "1-pre-textuais/resumo.tex", "3-pos-textuais/referencias.bib",
-            "2-textuais/exemplos-de-formatacao.tex", "figuras/LICENCAS.md",
-            "figuras/ufc-campus-pici.jpg", "figuras/ufc-reitoria.jpg",
+            "frontmatter/resumo.tex", "backmatter/referencias.bib",
+            "chapters/exemplos-de-formatacao.tex", "figures/LICENCAS.md",
+            "figures/ufc-campus-pici.jpg", "figures/ufc-reitoria.jpg",
         ):
             if required_entry not in overleaf_entries:
                 raise SystemExit(f"Overleaf bundle missing {required_entry}")
-        if any(entry.startswith("assets/institucional/") for entry in overleaf_entries):
+        if any(entry.startswith("assets/institutional/") for entry in overleaf_entries):
             raise SystemExit("Overleaf bundle must not redistribute UFC institutional assets.")
-        assert_bundled_document_disables_coat_of_arms(overleaf_zip, "documento.tex")
+        assert_bundled_document_disables_coat_of_arms(overleaf_zip, "main.tex")
         assert_excludes_coat_of_arms(overleaf_zip)
         assert_reference_images(overleaf_zip, "")
         assert_no_proprietary_fonts(overleaf_entries)
@@ -331,9 +331,9 @@ def main() -> None:
             raise SystemExit("CTAN bundle must not expose the deprecated ufctex class identity.")
         if any(entry.startswith(f"{ctan_root}tex/ufctex/") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not expose the deprecated ufctex module namespace.")
-        if any(entry.startswith(f"{ctan_root}tex/assets/institucional/") for entry in ctan_entries):
+        if any(entry.startswith(f"{ctan_root}tex/assets/institutional/") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not redistribute UFC institutional assets.")
-        if any(Path(entry).name == "brasao-ufc.PNG" for entry in ctan_entries):
+        if any(Path(entry).name == "ufc-coat-of-arms.png" for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain the UFC coat of arms binary.")
         if any(entry.startswith(f"{ctan_root}doc/example/") for entry in ctan_entries):
             raise SystemExit("CTAN bundle must not contain the full project reference source tree.")

@@ -1,166 +1,201 @@
 # Base normativa da V2
 
-Última auditoria normativa: **2026-08-23**.  
-Estado: **V2.1.0 auditada para release; Gate F final**.
+Última revisão: **2026-08-28**.  
+Estado do projeto: **v2.2.0 em auditoria N15; B2R-A2 ativa**.
 
-Este documento é a referência humana do projeto para política normativa, precedência e vínculo entre requisito, implementação e teste. O catálogo atômico e a cobertura executável ficam em `normativa/` e nos checks de `tests/checks/`.
+Este documento é o mapa humano da base normativa e de sua relação com a implementação. A autoridade máquina-legível permanece em `normativa/`; evidência executável permanece em `tests/` e GitHub Actions. Este arquivo não cria requisitos novos.
 
-## Política normativa
+## Política de precedência
 
-A V2 adota a edição vigente mais recente de cada norma aplicável. Quando um guia institucional ainda cita edição substituída, a decisão segue esta ordem:
+O projeto aplica a edição vigente da norma técnica correspondente e não permite que uma referência antiga dentro de um guia UFC reative uma norma substituída.
 
-1. legislação, regulamento, instrução normativa ou resolução institucional aplicável;
-2. edição vigente da norma ABNT;
-3. requisito institucional específico da UFC compatível com a norma vigente;
-4. Guia de Normalização da UFC mais recente aplicável;
-5. comportamento de `abntexto` e demais pacotes.
+Para requisito técnico:
 
-O comportamento de um pacote nunca prevalece sobre requisito normativo ou institucional aplicável. Datas de PDFs institucionais não são tratadas, isoladamente, como prova de vigência de uma norma técnica.
+**norma ABNT vigente → requisito UFC compatível/complementar → guia UFC → implementação**.
 
-## Base reconfirmada
+Para requisito institucional:
 
-| Assunto | Referência adotada | Escopo principal |
-|---|---|---|
-| Trabalhos acadêmicos | **ABNT NBR 14724:2024**, versão corrigida de 01/04/2025 | estrutura, apresentação, paginação e elementos documentais |
-| Citações | **ABNT NBR 10520:2023** | citações diretas, indiretas e sistema autor-data |
-| Referências | **ABNT NBR 6023:2025** | elaboração e apresentação das referências |
-| Projetos de pesquisa | **ABNT NBR 15287:2025** | perfis `projeto` e `projetoanonimizado` |
-| Resumos | **ABNT NBR 6028:2021** | resumo, abstract e palavras-chave |
-| Numeração progressiva | **ABNT NBR 6024:2012** | seções e subdivisões |
-| Sumário | **ABNT NBR 6027:2012** | composição e hierarquia do Sumário |
-| Índice | **ABNT NBR 6034:2004** | índice remissivo opcional |
+**ato UFC vigente → requisito institucional UFC vigente → guia UFC → norma técnica, quando aplicável → implementação**.
+
+Conflitos reais entre fontes atuais recebem revisão explícita; não são resolvidos silenciosamente.
+
+## Base técnica corrente
+
+| Assunto | Referência adotada | Escopo |
+| --- | --- | --- |
+| Trabalhos acadêmicos | **ABNT NBR 14724:2024**, versão corrigida em 01/04/2025 | estrutura e apresentação |
+| Artigo em publicação periódica | **ABNT NBR 6022:2018** | contrato `article.*`; runtime ainda pendente |
+| Citações | **ABNT NBR 10520:2023** | citações |
+| Referências | **ABNT NBR 6023:2025** | referências |
+| Projetos de pesquisa | **ABNT NBR 15287:2025** | perfis de projeto |
+| Resumo, resenha e recensão | **ABNT NBR 6028:2021** | resumos e palavras-chave |
+| Numeração progressiva | **ABNT NBR 6024:2012** | seções |
+| Sumário | **ABNT NBR 6027:2012** | sumário |
+| Índice | **ABNT NBR 6034:2004** | índice |
 | Lombada | **ABNT NBR 12225:2023** | requisito condicional |
-| Tabelas numéricas | **IBGE, Normas de Apresentação Tabular, 3. ed., 1993** | estrutura de tabelas numéricas |
+| Tabelas numéricas | **IBGE, Normas de Apresentação Tabular, 3. ed., 1993** | apresentação tabular |
 | Ficha catalográfica | **IN Conjunta UFC nº 2/2026** | representação visual facultativa no depósito |
-| Agradecimento CAPES | **Portaria CAPES nº 206/2018** | requisito condicional ao financiamento CAPES |
+| Agradecimento CAPES | **Portaria CAPES nº 206/2018** | requisito condicional |
 
-As edições são reconfirmadas antes de cada versão principal. O inventário de fontes, datas de consulta e precedência está em `normativa/source-audit.json`.
+A vigência, os IDs exatos, status e exclusões são controlados por `normativa/source-audit.json`, `normativa/version-policy.json`, `normativa/catalog.json` e `normativa/precedence.json`.
 
-## Auditoria institucional UFC
+## Fontes institucionais UFC
 
-A página de Normalização de Trabalhos Acadêmicos do Sistema de Bibliotecas da UFC foi revisada em 2026 e declara alinhamento às normas ABNT vigentes. Guias institucionais históricos continuam úteis para requisitos específicos da UFC, mas referências internas a edições ABNT superadas não substituem a edição vigente.
+A página vigente de Normalização do Sistema de Bibliotecas da UFC lista cinco guias. Eles são tratados como fontes institucionais dentro da política de precedência, não como substitutos da edição técnica vigente.
 
-A Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG torna facultativa a representação visual da ficha catalográfica para TCC, dissertação e tese depositados no Repositório Institucional.
+Para artigo científico, a fonte institucional ativa é `ufc-guia-artigos-2022`, edição bibliográfica 2022, no arquivo corrigido publicado em 27/04/2023. A identidade `ufc-guia-artigos-2021` permanece apenas como histórico superseded.
 
-Para depósito, o projeto considera os requisitos institucionais vigentes de PDF/A, abrangência do arquivo da capa aos anexos e folha de aprovação sem assinaturas digitalizadas. A classe não presume se o trabalho recebeu financiamento CAPES; quando aplicável, o autor deve incluir o agradecimento exigido pela Portaria CAPES nº 206/2018.
+A reconciliação detalhada de vigência está em `docs/VIGENCIA-NORMATIVA.md`.
 
-## Estados de conformidade
+## Estado do contrato de artigo
 
-- **CONFORME**: requisito implementado e sustentado por evidência/teste compatível;
-- **CONFORME NO ESCOPO TESTADO**: requisito amplo cuja parcela exercitada possui evidência suficiente;
-- **DIVERGENTE**: implementação atual contraria requisito vigente;
-- **INCOMPLETO**: regra conhecida, mas falta decisão, cobertura ou evidência necessária;
-- **NÃO APLICÁVEL**: requisito condicional fora do escopo da distribuição corrente.
+N15-B2A/PR #145 já promoveu:
 
-Fallback de compatibilidade tipográfica não torna um PDF estritamente conforme. Para a família textual, a certificação final estrita exige **Times New Roman ou Arial literais** no PDF produzido.
+- `abnt-nbr-6022-2018`;
+- `ufc-guia-artigos-2022`;
+- 13 predicados `article.*`;
+- locators e metadados de fase correspondentes.
 
-O PDF final também deve ser autocontido para renderização: todas as fontes efetivamente usadas devem estar incorporadas. Incorporação por subconjunto é aceita.
+Isso **não significa que o runtime do artigo já exista**. A classe ainda não oferece o perfil final de artigo. A implementação pertence a N15-B2B, depois da normalização pública de API em B2R-B.
 
-## Matriz requisito → implementação → teste
+Recomendações do guia, como 150–250 palavras no resumo, mínimo de três palavras-chave ou família tipográfica quando expressas por `convém`/`recomenda-se`, não são convertidas automaticamente em obrigação.
 
-| Requisito | Estado | Implementação / evidência |
-|---|---|---|
-| papel A4 | **CONFORME** | `abntexto-ufc/layout.def`; `tests/v2-pdf-geometry-check.sh` |
-| margens anverso 3 cm esquerda/superior e 2 cm direita/inferior | **CONFORME** | `abntexto-ufc/layout.def`; gate geométrico |
-| margens espelhadas em frente-verso | **CONFORME** | `abntexto-ufc/layout.def`; regressões duplex |
-| corpo textual em tamanho 12 | **CONFORME** | classe carregada em 12 pt; gates tipográficos |
-| seleção pública `fonte=times|arial` | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/fontes.def`; font-config |
-| política `fonte-estrita=sim|nao` | **CONFORME NO ESCOPO TESTADO** | modo estrito falha sem fonte literal; fallback é declarado |
-| Times New Roman/Arial literais no PDF estrito | **CONFORME NO ESCOPO TESTADO** | Gate T Windows em pdfLaTeX/LuaLaTeX |
-| variantes regular/negrito/itálico/negrito-itálico | **CONFORME NO ESCOPO TESTADO** | certificação Windows nos dois motores |
-| todas as fontes incorporadas | **CONFORME NO ESCOPO TESTADO** | `tests/v2-font-embedding-check.sh`, perfis e Gate T |
-| recuo de primeira linha em 2 cm | **CONFORME** | `abntexto-ufc/layout.def`; layout check |
-| sem espaço adicional entre parágrafos | **CONFORME** | `\parskip=0pt`; layout check |
-| espaçamento 1,5 no corpo | **CONFORME** | política da classe |
-| exceções em espaço simples/tamanho reduzido | **CONFORME NO ESCOPO TESTADO** | citações longas, notas, paginação, objetos e tabelas exercitados |
-| capa e folha de rosto | **CONFORME** | `abntexto-ufc/pretextuais.def`, `abntexto-ufc/trabalhos.def` |
-| volume e paginação contínua | **CONFORME** | `abntexto-ufc/trabalhos.def`; multivolume check |
-| ficha catalográfica visual facultativa | **CONFORME** | política padrão `nao`; regressão dedicada |
-| folha de aprovação sem assinaturas digitalizadas | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/pretextuais.def`; validador mantém inspeção visual quando necessário |
-| dedicatória, agradecimentos, epígrafe e errata | **CONFORME NO ESCOPO TESTADO** | pré-textuais + fixtures |
-| resumo/abstract e palavras-chave | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/pretextuais.def`; corpus de referência |
-| listas e Sumário | **CONFORME** | pré-textuais + regressão de líderes pontilhados |
-| seções e subdivisões | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/layout.def`; NBR 6024 |
-| figuras, gráficos e quadros | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/objetos.def`; geometria de objetos |
-| tabelas numéricas | **CONFORME NO ESCOPO TESTADO** | modo nativo e `tabularray-abnt`; gate IBGE |
-| código e algoritmos | **CONFORME NO ESCOPO TESTADO** | módulos opcionais + gate geométrico/tipográfico |
-| equações | **CONFORME NO ESCOPO TESTADO** | ambiente matemático + math check |
-| citações | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/bibliografia.def`; NBR 10520:2023 |
-| referências | **CONFORME NO ESCOPO TESTADO** | `biblatex-abnt` + `compat-nbr6023-2025.def`; NBR 6023:2025 |
-| projetos | **CONFORME NO ESCOPO TESTADO** | `abntexto-ufc/projetos.def`; NBR 15287:2025 |
-| glossário | **CONFORME NO ESCOPO TESTADO** | módulo opcional |
-| apêndices e anexos | **CONFORME NO ESCOPO TESTADO** | API pública do `abntexto` + política V2 de quebra |
-| índice | **CONFORME NO ESCOPO TESTADO** | módulo opcional; NBR 6034:2004 |
-| PDF/A e fontes autocontidas | **CONFORME NO ESCOPO TESTADO** | `\DocumentMetadata`, veraPDF, font embedding gates |
+## Estados de evidência
 
-A cobertura detalhada e atômica não é duplicada manualmente aqui. Ela é mantida em `normativa/catalog.json`, `normativa/atomic-rules.json`, `normativa/coverage-audit.json` e verificada por `tests/checks/normative_*`.
+A máquina usa o modelo explícito de proof state. O baseline histórico N0–N14 registrava:
+
+- `PARTIAL=113`;
+- `NOT_PROVEN=51`;
+- `CONDITIONAL=10`;
+- `MANUAL=6`;
+- `NOT_APPLICABLE=1`;
+- `PROVEN=0`.
+
+CI verde não promove automaticamente uma regra para `PROVEN`. A força da evidência depende do tipo de observação e do vínculo fonte → predicate → locator → implementação → medição.
+
+## Implementação canônica atual
+
+Módulos internos ativos da classe:
+
+```text
+abntexto-ufc.cls
+abntexto-ufc/
+├── core.def
+├── fonts.def
+├── layout.def
+├── modules.def
+├── frontmatter.def
+├── institutional.def
+├── academic-works.def
+├── research-projects.def
+├── objects.def
+├── bibliography.def
+├── compat-abntexto.def
+├── compat-nbr6023-2025.def
+└── backmatter.def
+```
+
+Os nomes antigos dos módulos foram removidos em B2R-A1/PR #146. O `latex-preflight.yml` N12 permanece congelado; a compatibilidade histórica de hash é tratada no checker dedicado sem restaurar os paths antigos.
+
+## Layout canônico do template em B2R-A2
+
+A2 normaliza a superfície visível do projeto para:
+
+```text
+main.tex
+frontmatter/
+chapters/
+backmatter/
+figures/
+assets/institutional/ufc-coat-of-arms.png   # source-only
+```
+
+O bundle de template e o bundle Overleaf usam o mesmo layout de conteúdo; `main.tex` fica na raiz do arquivo importável no Overleaf.
+
+O brasão institucional real não é redistribuído nos bundles públicos. O suporte da classe a um arquivo oficial fornecido localmente permanece disponível.
+
+## Matriz humana requisito → implementação → evidência
+
+| Requisito / grupo | Estado resumido | Implementação / evidência principal |
+| --- | --- | --- |
+| A4 e margens | conforme no escopo testado | `layout.def`; geometry checks |
+| fonte 12 e parágrafos | conforme no escopo testado | `fonts.def`, `layout.def`; font/layout gates |
+| Times New Roman / Arial literais | conforme no escopo certificado | Gate T Windows; embedding/PDF-A checks |
+| capa/folha de rosto/volume | conforme no escopo testado | `frontmatter.def`, `academic-works.def` |
+| ficha catalográfica | conforme ao contrato vigente | política default + fixture dedicada |
+| resumo/abstract/listas/sumário | conforme no escopo testado | `frontmatter.def`; reference/profile checks |
+| seções | conforme no escopo testado | `layout.def`; NBR 6024 checks |
+| figuras, gráficos, quadros | conforme no escopo testado | `objects.def`; object geometry |
+| tabelas numéricas | conforme no escopo testado | `objects.def`; IBGE/tabularray checks |
+| código/algoritmos | política editorial testada | módulos opcionais + typography/numbering checks |
+| citações | conforme no escopo testado | `bibliography.def`; NBR 10520 checks |
+| referências | conforme no escopo testado | `bibliography.def`, `compat-nbr6023-2025.def` |
+| projetos | conforme no escopo testado | `research-projects.def`; profile/project checks |
+| apêndices/anexos/índice | conforme no escopo testado | `backmatter.def` + checks dedicados |
+| PDF/A-2b | política técnica do projeto + requisitos de depósito aplicáveis | `\DocumentMetadata`, veraPDF e validator |
+| artigo científico | **contrato normativo ativo; runtime pendente** | `coverage-rules-article.json`; B2B/B2C ainda futuros |
+
+A cobertura atômica não é duplicada manualmente aqui; consulte `normativa/atomic-rules.json`, coverage manifests, locator audit e proof-state artifacts.
 
 ## Tipografia
 
-A API pública oferece `fonte=times` e `fonte=arial`. A política de identidade é controlada por `fonte-estrita`:
+A API pública atual ainda usa a superfície portuguesa da v2.x, por exemplo:
 
-- `sim`: exige a família literal e reprova ausência;
-- `nao`: admite fallback explicitamente identificado para portabilidade/desenvolvimento.
+```tex
+\ufcsetup{
+  fonte = times,
+  fonte-estrita = nao
+}
+```
 
-Fallbacks portáteis:
+B2R-B introduzirá nomes canônicos em inglês de forma aditiva, mantendo os nomes portugueses suportados como aliases de compatibilidade em v2.x.
 
-- pdfLaTeX + Times: NewTX;
-- pdfLaTeX + Arial: TeX Gyre Heros;
-- LuaLaTeX/XeLaTeX + Times: TeX Gyre Termes;
-- LuaLaTeX/XeLaTeX + Arial: TeX Gyre Heros.
-
-O Gate T Windows certifica Times New Roman e Arial literais, suas variantes, extração Unicode, incorporação e PDF/A-2b. As fontes Microsoft não são redistribuídas.
-
-## Objetos acadêmicos
-
-Figuras, gráficos, quadros, códigos e algoritmos usam a infraestrutura de objetos da V2. Título, Fonte e Nota são vinculados à largura física do objeto. A numeração de códigos/algoritmos permanece dentro da mancha gráfica. A Lista de Ilustrações agrega figuras, gráficos e quadros na ordem de ocorrência; tabelas permanecem em lista própria.
-
-Para tabelas numéricas, o módulo `tabularray` requer `tabularray-abnt` datado de **2025-08-08 ou mais recente**. A alternância de linhas é uma extensão editorial opcional e não uma regra normativa automática.
+Fallback portátil não equivale à certificação tipográfica literal. O Gate T Windows certifica Times New Roman e Arial literais, variantes, incorporação, Unicode e PDF/A-2b. Fontes Microsoft proprietárias não são redistribuídas.
 
 ## Citações e referências
 
-O projeto aplica NBR 10520:2023 para citações. Citações diretas longas usam parágrafo distinto, letra menor, espaço simples, sem aspas e recuo institucional exercitado de 4 cm.
-
-Para referências, prevalece a NBR 6023:2025. Ajustes necessários ao escopo testado ficam isolados em `abntexto-ufc/compat-nbr6023-2025.def` e possuem regressões próprias. O arquivo deve ser reduzido ou removido quando o suporte equivalente estiver disponível de forma estável no upstream.
+Citações seguem NBR 10520:2023 no escopo implementado. Referências seguem NBR 6023:2025. Compatibilidade temporária necessária ao escopo testado fica isolada em `abntexto-ufc/compat-nbr6023-2025.def` e deve ser reduzida quando o upstream fornecer suporte equivalente.
 
 ## Projetos de pesquisa
 
-Os perfis `projeto` e `projetoanonimizado` adotam NBR 15287:2025 e preservam apenas requisitos UFC compatíveis com a edição vigente. O perfil anonimizado remove dados pessoais usados na seleção sem criar uma norma institucional inexistente.
+Os perfis `projeto` e `projetoanonimizado` adotam NBR 15287:2025. O perfil anonimizado é política do modelo para seleção/processos que exigem supressão de identificação; essa política não é apresentada como requisito ABNT geral.
 
-## Compatibilidade dos pacotes
+## Artigo científico
 
-`abntexto`, `biblatex-abnt`, `tabularray-abnt` e demais pacotes são infraestrutura. A versão de um pacote não define, isoladamente, conformidade normativa.
+O futuro runtime será uma baseline UFC para artigo em publicação periódica. Ele deve preservar a fronteira do próprio guia: instruções do periódico de destino continuam aplicáveis e podem impor requisitos adicionais/específicos.
 
-A V2 exige `abntexto` 1.1 ou superior. Para os perfis portáteis de fonte, pdfLaTeX usa NewTX/TeX Gyre e motores Unicode usam `fontspec`, `unicode-math` e famílias TeX Gyre compatíveis. Módulos opcionais são carregados somente quando ativados.
+B2B deverá implementar diferenças arquiteturais já identificadas, especialmente espaço simples, fluxo contínuo das seções primárias e paginação visível desde a primeira página conforme o contrato reconciliado.
 
 ## Build e gates
 
-`make preflight` executa a validação coordenada por `tests/run.py --mode pr`, incluindo auditoria do repositório, documento de referência, layout, fontes, geometria, matemática, pré-textuais, duplex, objetos, tabelas, código/algoritmos, bibliografia, projetos, matriz de perfis, pós-textuais, multivolume e ficha catalográfica.
+- `make preflight` — regressões coordenadas de PR;
+- `make release-preflight` — regressões profundas incluindo PDF/A;
+- Gate T — proxy público Overleaf + certificação Windows de fontes literais;
+- `make distribution-preflight` — bundles determinísticos, hashes, licenças, CTAN smoke e Overleaf import.
 
-`make release-preflight` usa `tests/run.py --mode release` e acrescenta certificações profundas de PDF/A. O Gate T combina Linux, proxy Overleaf e certificação Windows de fontes literais. `make distribution-preflight` ainda reconstrói e valida deterministicamente todos os bundles, inclusive compilação direta a partir do candidato CTAN extraído.
+O workflow `.github/workflows/latex-preflight.yml` está congelado pelo baseline N12 no blob:
 
-## Fontes institucionais e normativas de verificação
+`aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
 
-- Sistema de Bibliotecas da UFC — Normalização de trabalhos acadêmicos: https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/
-- Guia de Normalização de Trabalhos Acadêmicos: https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf
-- Guia de Normalização para Elaboração de Citações 2025: https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf
-- Sistema de Bibliotecas da UFC — normas para recebimento de teses e dissertações: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/
-- Sistema de Bibliotecas da UFC — normas para recebimento de TCC: https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-tcc/
-- Instrução Normativa Conjunta nº 2/2026: https://biblioteca.ufc.br/wp-content/uploads/2026/02/instrucao-normativa-conjunta-2.pdf
-- Sistema de Bibliotecas da UFC — ficha catalográfica: https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/
-- Sistema de Bibliotecas da UFC — coleção de normas técnicas: https://biblioteca.ufc.br/pt/colecao-de-normas-tecnicas/
-- CAPES — Portaria nº 206/2018: https://www.gov.br/capes/pt-br/centrais-de-conteudo/portaria-no-206-de-4-de-setembro-de-2018.pdf
-- Catálogo ABNT: https://www.abntcatalogo.com.br/
+## Documentação e continuidade
 
-## Manutenção
+A documentação ativa é parte do gate de release:
 
-Antes de nova versão principal:
+- `docs/HANDOFF-V2.2.0.md` — ponto canônico de retomada;
+- `docs/VIGENCIA-NORMATIVA.md` — vigência/precedência;
+- `docs/NAMING.md` — política de nomenclatura/API;
+- `docs/B2R-NAMING-INVENTORY.md` — fase de naming ativa;
+- `release/n15-b2r-a-naming-inventory.json` — ledger máquina-legível da fase.
 
-1. reconfirmar as edições normativas;
-2. revisar atos, páginas e guias da UFC;
-3. revisar políticas de depósito, ficha catalográfica e CAPES;
-4. revisar dependências e remover adaptações upstream que deixaram de ser necessárias;
-5. executar os contratos normativos e resolver divergências classificadas;
-6. executar `make preflight` e `make release-preflight`;
-7. confirmar Gate T, Overleaf, Windows e `distribution-preflight` no mesmo SHA;
-8. não declarar conformidade sem evidência compatível.
+Nenhuma fase deve ser marcada DONE se esses documentos estiverem incompatíveis com o estado real da branch, PR, CI ou próxima ação.
+
+## Manutenção antes de release
+
+1. reconfirmar fontes e edições vigentes;
+2. revisar atos e páginas UFC relevantes;
+3. atualizar contratos/locators somente com evidência adequada;
+4. remover adaptações upstream obsoletas;
+5. executar source contract, preflight, Gate T e Distribution no exact head;
+6. verificar `behind_by=0` antes do merge;
+7. sincronizar documentação antes e depois do merge/certificação;
+8. somente então avançar a fase seguinte.

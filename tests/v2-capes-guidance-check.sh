@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-file="1-pre-textuais/agradecimentos.tex"
+file="frontmatter/agradecimentos.tex"
 
 for token in 'CAPES' 'Ordinance 206/2018' 'Código de Financiamento 001'; do
   grep -Fq "$token" "$file" || {

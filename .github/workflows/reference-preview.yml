@@ -9,7 +9,7 @@ on:
       - '**/*.bib'
       - '**/*.cls'
       - '**/*.sty'
-      - 'figuras/**'
+      - 'figures/**'
       - 'Makefile'
       - '.latexmkrc'
       - 'tools/fetch-reference-images.py'
@@ -41,17 +41,17 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils
             make clean
             make reference-assets
-            test -s figuras/ufc-campus-pici.jpg
-            test -s figuras/ufc-reitoria.jpg
+            test -s figures/ufc-campus-pici.jpg
+            test -s figures/ufc-reitoria.jpg
             make compile
-            sh tests/v2-font-embedding-check.sh documento.pdf
+            sh tests/v2-font-embedding-check.sh main.pdf
       - name: Validate reference PDF/A-2b
-        run: sh tests/v2-pdfa-check.sh documento.pdf
+        run: sh tests/v2-pdfa-check.sh main.pdf
       - name: Upload reference PDF
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: abntexto-ufc-reference-pdf
-          path: documento.pdf
+          path: main.pdf
           if-no-files-found: error
           retention-days: 14
           compression-level: 0

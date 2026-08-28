@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-pdf="${1:-documento.pdf}"
+pdf="${1:-main.pdf}"
 report="/tmp/abntexto-ufc-v2-verapdf.xml"
 
 [ -f "$pdf" ] || {
@@ -24,7 +24,7 @@ fi
 
 if [ -s "$report" ] && grep -Fq 'isCompliant="true"' "$report"; then
   echo 'Gate V2 PDF/A-2b concluído.'
-  if [ "$pdf" = "documento.pdf" ] && [ "${UFC_N13_PDFA_NEGATIVE:-1}" = "1" ]; then
+  if [ "$pdf" = "main.pdf" ] && [ "${UFC_N13_PDFA_NEGATIVE:-1}" = "1" ]; then
     python3 tests/checks/normative_n13_pdfa.py \
       "$pdf" \
       --positive-report "$report" \

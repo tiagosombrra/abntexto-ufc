@@ -19,25 +19,32 @@ O bundle específico para Overleaf inclui uma cópia íntegra e pinada de `abnte
 
 ## Estrutura
 
+O documento de referência e os bundles completos usam o seguinte layout canônico:
+
 ```text
+main.tex
+frontmatter/
+chapters/
+backmatter/
+figures/
 abntexto-ufc.cls
 abntexto-ufc/
 ├── core.def
-├── fontes.def
+├── fonts.def
 ├── layout.def
-├── modulos.def
-├── pretextuais.def
-├── institucional.def
-├── trabalhos.def
-├── projetos.def
-├── objetos.def
-├── bibliografia.def
+├── modules.def
+├── frontmatter.def
+├── institutional.def
+├── academic-works.def
+├── research-projects.def
+├── objects.def
+├── bibliography.def
 ├── compat-abntexto.def
 ├── compat-nbr6023-2025.def
-└── postextuais.def
+└── backmatter.def
 ```
 
-Cada responsabilidade fica concentrada em um módulo. `compat-abntexto.def` e `compat-nbr6023-2025.def` tratam adaptações correntes ao upstream e ao escopo testado da norma de referências.
+`main.tex` é o ponto de entrada padrão para compilação local e para importação no Overleaf. Os diretórios `frontmatter/`, `chapters/`, `backmatter/` e `figures/` organizam o conteúdo editável do exemplo. Cada responsabilidade da classe fica concentrada em um módulo interno; `compat-abntexto.def` e `compat-nbr6023-2025.def` tratam adaptações correntes ao upstream e ao escopo testado da norma de referências.
 
 ## Uso básico
 
@@ -96,7 +103,7 @@ A composição pode ser controlada por:
 }
 ```
 
-Os bundles públicos gerados de classe, template, Overleaf e CTAN não redistribuem o brasão real da UFC. Nos bundles de template e Overleaf, `documento.tex` é distribuído com `brasao = nao` para compilar sem depender de um ativo institucional não incluído. O usuário pode obter o ativo oficial diretamente da Universidade e ativá-lo localmente com `brasao = sim` e `brasao-arquivo`.
+Os bundles públicos gerados de classe, template, Overleaf e CTAN não redistribuem o brasão real da UFC. Nos bundles de template e Overleaf, `main.tex` é distribuído com `brasao = nao` para compilar sem depender de um ativo institucional não incluído. O usuário pode obter o ativo oficial diretamente da Universidade e ativá-lo localmente com `brasao = sim` e `brasao-arquivo`.
 
 A política de redistribuição do ativo institucional é independente da regra normativa de composição da capa e não remove o suporte da classe a um brasão oficial fornecido localmente.
 
@@ -173,19 +180,19 @@ A linha V2 usa `\section` como nível textual primário:
 
 \imprimircapa
 \imprimirfolhaderosto
-\imprimirerrata{1-pre-textuais/errata}
+\imprimirerrata{frontmatter/errata}
 \imprimirfolhadeaprovacao
-\imprimirdedicatoria{1-pre-textuais/dedicatoria}
-\imprimiragradecimentos{1-pre-textuais/agradecimentos}
-\imprimirepigrafe{1-pre-textuais/epigrafe}
-\imprimirresumo{1-pre-textuais/resumo}
-\imprimirabstract{1-pre-textuais/abstract}
+\imprimirdedicatoria{frontmatter/dedicatoria}
+\imprimiragradecimentos{frontmatter/agradecimentos}
+\imprimirepigrafe{frontmatter/epigrafe}
+\imprimirresumo{frontmatter/resumo}
+\imprimirabstract{frontmatter/abstract}
 \imprimirlistadeilustracoes
 \imprimirlistadetabelas
 \imprimirlistadecodigos
 \imprimirlistadealgoritmos
-\imprimirlistadeabreviaturasesiglas{1-pre-textuais/lista-de-abreviaturas-e-siglas}
-\imprimirlistadesimbolos{1-pre-textuais/lista-de-simbolos}
+\imprimirlistadeabreviaturasesiglas{frontmatter/lista-de-abreviaturas-e-siglas}
+\imprimirlistadesimbolos{frontmatter/lista-de-simbolos}
 \imprimirsumario
 ```
 
@@ -200,7 +207,7 @@ A API principal usa a infraestrutura de objetos de `abntexto`:
 \label{fig:exemplo}
 \begin{ufcobjeto}[here]
   \centering
-  \includegraphics[width=.8\linewidth]{figuras/exemplo}
+  \includegraphics[width=.8\linewidth]{figures/exemplo}
 \end{ufcobjeto}
 ```
 
@@ -250,7 +257,7 @@ Os módulos são opcionais e só carregam suas dependências quando ativados.
 ## Referências
 
 ```tex
-\ufcbibliografia{3-pos-textuais/referencias.bib}
+\ufcbibliografia{backmatter/referencias.bib}
 ```
 
 A bibliografia usa `biblatex-abnt` e `biber`. Ajustes específicos ao escopo atualmente testado da NBR 6023:2025 ficam isolados em `abntexto-ufc/compat-nbr6023-2025.def`.
@@ -345,7 +352,7 @@ A release histórica v2.1.0 foi publicada sob a identidade anterior; registros e
 
 A identidade atual dos novos artefatos de classe/CTAN é `abntexto-ufc`.
 
-O repositório também produz bundles completos do modelo para uso local e Overleaf. A candidata CTAN é deliberadamente menor e contém apenas a superfície necessária para instalar, usar e documentar a classe.
+O repositório também produz bundles completos do modelo para uso local e Overleaf. O bundle Overleaf coloca `main.tex` na raiz do projeto importado. A candidata CTAN é deliberadamente menor e contém apenas a superfície necessária para instalar, usar e documentar a classe.
 
 A tag `v2.2.0` só será criada após o gate final de certificação da distribuição.
 
