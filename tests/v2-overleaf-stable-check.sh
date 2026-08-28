@@ -36,11 +36,11 @@ for cmd in latexmk pdffonts pdftotext pdfinfo biber makeglossaries makeindex; do
 done
 
 cleanup() {
-  latexmk -C documento.tex >/dev/null 2>&1 || true
+  latexmk -C main.tex >/dev/null 2>&1 || true
   rm -f latexmkrc
-  rm -f documento.acn documento.acr documento.alg documento.bbl documento.bcf documento.blg
-  rm -f documento.glg documento.glo documento.gls documento.idx documento.ilg documento.ind
-  rm -f documento.ist documento.nlo documento.nls documento.run.xml documento.xdy
+  rm -f main.acn main.acr main.alg main.bbl main.bcf main.blg
+  rm -f main.glg main.glo main.gls main.idx main.ilg main.ind
+  rm -f main.ist main.nlo main.nls main.run.xml main.xdy
 }
 trap cleanup EXIT INT TERM
 
@@ -48,29 +48,29 @@ flags='LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbo
 
 for engine in pdflatex lualatex; do
   echo "Overleaf proxy: validando documento completo com $engine / TeX Live 2025 público..."
-  latexmk -C documento.tex >/dev/null 2>&1 || true
+  latexmk -C main.tex >/dev/null 2>&1 || true
 
   case "$engine" in
     pdflatex) latexmk_mode='-pdf' ;;
     lualatex) latexmk_mode='-lualatex' ;;
   esac
 
-  latexmk "$latexmk_mode" -interaction=nonstopmode -halt-on-error documento.tex \
+  latexmk "$latexmk_mode" -interaction=nonstopmode -halt-on-error main.tex \
     > "/tmp/abntexto-ufc-overleaf-$engine.out" 2>&1 || {
       cat "/tmp/abntexto-ufc-overleaf-$engine.out"
       exit 1
     }
 
-  warnings=$(grep -E "$flags" documento.log || true)
+  warnings=$(grep -E "$flags" main.log || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
     echo "Overleaf proxy: $engine produziu warning ou overflow."
     exit 1
   fi
 
-  sh tests/v2-font-embedding-check.sh documento.pdf
+  sh tests/v2-font-embedding-check.sh main.pdf
 
-  pdfinfo -meta documento.pdf > "/tmp/abntexto-ufc-overleaf-$engine-meta.xml"
+  pdfinfo -meta main.pdf > "/tmp/abntexto-ufc-overleaf-$engine-meta.xml"
   grep -Eq '<pdfaid:part>2</pdfaid:part>' "/tmp/abntexto-ufc-overleaf-$engine-meta.xml" || {
     echo "Overleaf proxy: $engine sem declaração PDF/A parte 2."
     exit 1
@@ -80,7 +80,7 @@ for engine in pdflatex lualatex; do
     exit 1
   }
 
-  pdftotext documento.pdf "/tmp/abntexto-ufc-overleaf-$engine.txt"
+  pdftotext main.pdf "/tmp/abntexto-ufc-overleaf-$engine.txt"
   for marker in 'RESUMO' 'ABSTRACT' 'LISTA DE ILUSTRAÇÕES' 'SUMÁRIO' 'INTRODUÇÃO' 'REFERÊNCIAS' 'GLOSSÁRIO' 'ÍNDICE'; do
     grep -Fq "$marker" "/tmp/abntexto-ufc-overleaf-$engine.txt" || {
       echo "Overleaf proxy: $engine sem marcador esperado: $marker"
