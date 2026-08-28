@@ -6,7 +6,7 @@ Checkpoint: **N15-B2A closure candidate — PR #145 (`audit/n15-b2a-article-cont
 
 Certified stable `main` before N15-B2A: `bc7b3bbe0e7ac21aa16efb1f0bab9a4dfb8e912e`.
 
-Current B2A documentation head at this checkpoint: `e8aa07795efcfdaa8cc97f5187e6a47449061c9f` before this one-line receipt update. Always use the PR's current `head_sha` as the merge/certification authority rather than a prose SHA in this document.
+The current PR `head_sha` is the merge/certification authority. Do not use a prose SHA in this document as a substitute for reading the live PR state.
 
 Canonical receipts already obtained for the B2A implementation head:
 
