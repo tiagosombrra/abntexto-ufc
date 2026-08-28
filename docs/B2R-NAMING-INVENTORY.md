@@ -75,15 +75,13 @@ The implementation synchronizes:
 - reference preview, reference validation and distribution workflows;
 - `tests/smoke/perfil-base.tex`;
 - `normativa/reference-guide-map.json` secondary guide-trace source paths;
-- README, handoff and B2R documentation.
+- README, handoff, naming and normative human documentation.
 
 `tests/v2-distribution-check.sh` rejects reintroduction of legacy A2 top-level paths and scans active tracked text for stale path references. Explicit migration/history ledgers remain allowed to mention old names.
 
 ### Secondary trace-map clarification
 
-`normativa/reference-guide-map.json` lives under `normativa/` but is a secondary documentation/rastreability map. Its declared purpose is to connect the commented reference guide to existing normative sources/rules without creating new requirements, and its policy remains:
-
-`normative_contract_changed=false`
+`normativa/reference-guide-map.json` lives under `normativa/` but is a secondary documentation/rastreability map. Its declared purpose is to connect the commented reference guide to existing normative sources/rules without creating new requirements, and its policy remains `normative_contract_changed=false`.
 
 A2 changed only its `source_file` paths from `2-textuais/...` to `chapters/...`. No source authority, predicate, value, rule ID or normative locator was changed.
 
@@ -95,20 +93,30 @@ A2 changed only its `source_file` paths from `2-textuais/...` to `chapters/...`.
 
 Compatibility is preserved by updating the scripts invoked by that workflow so their default reference artifact is `main.pdf`.
 
-### First exact-head CI cycle
+### Exact-head CI cycles
 
-On PR head `1f80043139ae9fabe68c554c264ef7d8c5087cd8`:
+First cycle, PR head `1f80043139ae9fabe68c554c264ef7d8c5087cd8`:
 
 - Source Contract #368 — SUCCESS;
-- Reference Preview #22 built the complete `main.tex` successfully before subsequent PDF/A/proxy steps;
-- LaTeX preflight #1032 identified two path-only regressions.
+- Reference Preview #22 built complete `main.tex` successfully before later PDF/A/proxy steps;
+- LaTeX preflight #1032 found two path-only regressions.
 
-The two failures were:
+Repairs:
 
-1. reference-guide contract: `normativa/reference-guide-map.json` still pointed to `2-textuais/...`;
-2. profile matrix: `tests/smoke/perfil-base.tex` still pointed to `1-pre-textuais/resumo` and `1-pre-textuais/abstract`.
+1. `normativa/reference-guide-map.json` source-file traces migrated to `chapters/...`;
+2. `tests/smoke/perfil-base.tex` summary/abstract paths migrated to `frontmatter/...`.
 
-Both have been corrected. The failed CI remains recorded as useful migration evidence; it is not reclassified as a formatting/runtime failure.
+Second documented cycle, PR head `8b1a0a8013c10cc73ad43115b25d0beca567e529`:
+
+- Source Contract #376 — FAILED only at the human-documentation assertion in `normative_currency.py`;
+- catalog, precedence, source audit, source-reference integrity and locator audit had already passed;
+- cause: the rewritten `docs/VIGENCIA-NORMATIVA.md` conveyed the supersessions semantically but abbreviated old references as `NBR ...`, while the checker requires exact full strings such as `ABNT NBR 14724:2011` and `ABNT NBR 14724:2024` plus exact CEPE markers.
+
+Repair:
+
+3. `docs/VIGENCIA-NORMATIVA.md` now explicitly lists every full superseded/current ABNT pair from `normativa/version-policy.json`, keeps `ABNT NBR 6022:2018`, the current 2022/corrected-2023 article-guide state, and exact CEPE titles. Repair commit before this documentation sync: `5539e5370447fd97e844dfbadf4663992ab0e176`.
+
+These failures are preserved as migration evidence. They did not require changing normative predicates, values, locators or authority.
 
 ### A2 closure requirements
 
@@ -126,7 +134,7 @@ A2 is not DONE until one exact PR head proves all of the following:
 - UFC institutional mark remains excluded from public bundles;
 - reference-image hashes/licensing unchanged;
 - PR `behind_by=0` immediately before merge;
-- `HANDOFF`, this inventory, release ledger, README and normative human documentation are synchronized as applicable.
+- `HANDOFF`, this inventory, release ledger, README and normative/naming human documentation are synchronized as applicable.
 
 After squash merge, the resulting `main` must be re-certified before B2R-B begins.
 
