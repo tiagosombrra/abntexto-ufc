@@ -3,7 +3,7 @@
 \ExplSyntaxOn
 
 \tl_new:N \g_ufc_coat_of_arms_file_tl
-\tl_gset:Nn \g_ufc_coat_of_arms_file_tl { assets/institucional/brasao-ufc.PNG }
+\tl_gset:Nn \g_ufc_coat_of_arms_file_tl { assets/institutional/ufc-coat-of-arms.png }
 
 \keys_define:nn { ufc }
   {
