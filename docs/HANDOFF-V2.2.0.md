@@ -6,7 +6,7 @@ Checkpoint: **N15-B2R-A2 implementation candidate — PR #147 (`refactor/n15-b2r
 
 Certified stable `main`: `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`.
 
-Current PR head at this checkpoint: `8494ff4f1298ffff05b133264e28dbe30c424e4f` before the documentation-sync commits recorded below. Always read the live PR head before mutation or merge.
+Always read the live PR head and GitHub Actions receipts before mutation or merge. This handoff records the continuation state, but live Git/CI remains the execution authority.
 
 This is the canonical continuation document for v2.2.0. Detailed historical evidence remains in `normativa/`, `release/`, `tests/`, pull requests, GitHub Actions and `docs/history/`.
 
@@ -19,9 +19,9 @@ The following active state documents must be updated whenever a phase changes ma
 1. `docs/HANDOFF-V2.2.0.md` — canonical continuation point;
 2. the active phase-specific human ledger, currently `docs/B2R-NAMING-INVENTORY.md`;
 3. the corresponding machine-readable ledger under `release/`, currently `release/n15-b2r-a-naming-inventory.json`;
-4. user-facing documentation such as `README.md` and `docs/NORMAS.md` whenever paths/API/runtime described there change.
+4. user-facing or policy documentation such as `README.md`, `docs/NORMAS.md`, `docs/VIGENCIA-NORMATIVA.md` and `docs/NAMING.md` whenever the surfaces they describe change.
 
-A phase must not be marked DONE if these documents disagree with the live repository/PR/CI state. Before ending a work session or handing the project to a new conversation, the handoff must contain the exact current phase, stable-main SHA, active branch/PR, known CI receipts/blockers and the next executable action.
+A phase must not be marked DONE if these documents disagree with the live repository/PR/CI state. Before ending a work session or handing the project to a new conversation, the handoff must contain the current phase, stable-main SHA, active branch/PR, known CI receipts/blockers and the next executable action.
 
 ## Source-of-truth hierarchy
 
@@ -58,7 +58,7 @@ Green CI alone never creates a normative requirement or promotes a rule to `PROV
 | N15-B1 | source completeness and authority reconciliation | DONE — PR #144 |
 | N15-B2A | scientific-article source + normative contract | DONE — PR #145 |
 | N15-B2R-A1 | internal module English naming | DONE — PR #146; resulting main re-certified |
-| N15-B2R-A2 | user-example/distribution-facing layout | ACTIVE — PR #147 draft; implementation + CI repair |
+| N15-B2R-A2 | user-example/distribution-facing layout | ACTIVE — PR #147 draft; exact-head CI repair/certification |
 | N15-B2R-B | canonical English public API + Portuguese compatibility aliases | BLOCKED by A2 |
 | N15-B2B | scientific-article runtime | BLOCKED by B2R-B |
 | N15-B2C | scientific-article evidence closure | BLOCKED by B2B |
@@ -193,20 +193,29 @@ The last item is a secondary documentation/rastreability map. Its own policy rem
 
 A2 adapts scripts called by that workflow rather than editing the workflow itself.
 
-### First exact-head CI findings
+### Exact-head CI findings and repairs
 
-PR exact head `1f80043139ae9fabe68c554c264ef7d8c5087cd8` produced:
+First cycle, head `1f80043139ae9fabe68c554c264ef7d8c5087cd8`:
 
 - Source Contract #368 — SUCCESS;
-- Reference Preview #22 — `main.tex` reference build SUCCESS before the later PDF/A/proxy steps;
-- LaTeX preflight #1032 — FAILED in two jobs due to stale path consumers, not formatting/runtime regressions.
+- Reference Preview #22 — `main.tex` reference build SUCCESS before later PDF/A/proxy steps;
+- LaTeX preflight #1032 — FAILED in two jobs due to stale path consumers.
 
-Identified failures:
+Repairs:
 
-1. reference guide contract: `normativa/reference-guide-map.json` still referred to `2-textuais/...`;
-2. profile matrix: `tests/smoke/perfil-base.tex` still referred to `1-pre-textuais/resumo` and `1-pre-textuais/abstract`.
+1. `normativa/reference-guide-map.json`: `source_file` traces moved from `2-textuais/...` to `chapters/...`;
+2. `tests/smoke/perfil-base.tex`: summary/abstract paths moved from `1-pre-textuais/...` to `frontmatter/...`.
 
-Both causes have now been corrected. New exact-head CI after the documentation-sync commits is authoritative; the failed #1032 run remains useful historical evidence and must not be hidden.
+Second documented cycle, head `8b1a0a8013c10cc73ad43115b25d0beca567e529`:
+
+- Source Contract #376 — FAILED in `normative_currency.py` because the rewritten human currency document no longer exposed the exact full strings required for supersession pairs such as `ABNT NBR 14724:2011` → `ABNT NBR 14724:2024`;
+- catalog, precedence, source audit, source references and locator audit all passed before that documentation assertion failed.
+
+Repair:
+
+3. `docs/VIGENCIA-NORMATIVA.md` now preserves the corrected B2A article state **and** explicitly lists every exact superseded/current ABNT reference required by `normativa/version-policy.json`, plus the exact CEPE authority markers expected by the checker. The repair commit before this documentation sync is `5539e5370447fd97e844dfbadf4663992ab0e176`.
+
+The failed #1032 and #376 runs remain historical evidence. Neither failure indicates runtime formatting drift; both exposed stale or incomplete migration/documentation consumers and were fixed without changing normative predicates, values, locators or authority.
 
 ### A2 invariants
 
@@ -231,18 +240,18 @@ A2 can be marked DONE only when all are true on one exact PR head:
 7. N12 workflow blob unchanged;
 8. no active stale A2 path references;
 9. PR `behind_by=0` immediately before merge;
-10. `HANDOFF`, B2R inventory, release ledger, README/NORMAS as applicable synchronized with the exact candidate;
+10. `HANDOFF`, B2R inventory, release ledger, README/NORMAS/VIGENCIA/NAMING as applicable synchronized with the exact candidate;
 11. squash merge completed;
 12. resulting `main` re-certified before B2R-B starts.
 
 ## Next executable action
 
-1. finish documentation/ledger synchronization for the two CI-discovered path fixes;
-2. inspect the newest PR head and its automatically triggered Source Contract / Reference Preview / LaTeX preflight runs;
-3. fix only reproducible remaining A2 path/packaging regressions;
-4. once PR checks are green, run exact-head Gate T and Distribution certification;
+1. treat the new live PR head produced by this documentation synchronization as the sole certification candidate;
+2. inspect its Source Contract, Reference Preview and LaTeX preflight runs;
+3. fix only reproducible remaining A2 path/packaging/documentation regressions and record each finding here/ledger;
+4. once those checks are green, run exact-head Gate T and Distribution certification;
 5. verify `behind_by=0`;
-6. synchronize documentation one final time with exact receipts/head;
+6. synchronize documentation one final time without changing implementation semantics;
 7. squash-merge PR #147;
 8. re-certify resulting `main`;
 9. only then create B2R-B from certified main.
