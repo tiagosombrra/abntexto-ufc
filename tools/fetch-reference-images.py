@@ -10,12 +10,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 ASSETS = (
     (
-        "figuras/ufc-campus-pici.jpg",
+        "figures/ufc-campus-pici.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/2/23/Campus_do_Pici.jpg",
         "5f431612cdbfbb088c37c685a0e3c93852e96ccd",
     ),
     (
-        "figuras/ufc-reitoria.jpg",
+        "figures/ufc-reitoria.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/3/39/Reitoria_da_UFC.jpg",
         "b6746bb53d82dae52330805ca0a08f029b773b2e",
     ),
