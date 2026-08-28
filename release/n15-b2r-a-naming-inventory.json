@@ -3,7 +3,7 @@
   "phase": "N15-B2R-A",
   "reviewed_at": "2026-08-28",
   "base_main_sha": "7699ed205d4554df28fc46908fff3be0b92a38f7",
-  "status": "A1_IMPLEMENTATION_CANDIDATE",
+  "status": "A2_INVENTORY_ACTIVE",
   "purpose": "Bound and track the behavior-preserving English naming migration before public API or article runtime changes.",
   "certified_base_receipts": {
     "source_contract": "#361 SUCCESS",
@@ -16,12 +16,32 @@
     "scope": "internal-package-module-paths-only",
     "atomic_rename_commit": "09ceda01ebbc2427ca3bdf109cdcdec06c3bdc3a",
     "pull_request": 146,
+    "merge_commit": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
+    "merged_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
     "public_api_changed": false,
     "example_layout_changed": false,
     "article_runtime_changed": false,
     "normative_contract_changed": false,
     "latex_preflight_workflow_changed": false,
-    "merge_status": "PENDING_EXACT_HEAD_CERTIFICATION"
+    "merge_status": "MERGED_AND_RECERTIFIED",
+    "post_merge_certification": {
+      "source_contract": "#367 SUCCESS",
+      "latex_preflight_push": "#1030 SUCCESS",
+      "latex_preflight_exact_gate_t": "#1031 SUCCESS",
+      "distribution": "#239 SUCCESS",
+      "pdf_validator": "NOT_TRIGGERED_BY_PATH_FILTER_A1_DID_NOT_CHANGE_VALIDATOR_OR_NORMATIVE_SURFACES",
+      "distribution_release_publication": "SKIPPED_EXPECTED_NON_TAG_MAIN_PUSH"
+    }
+  },
+  "a2": {
+    "scope": "user-example-and-distribution-facing-repository-layout",
+    "base_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
+    "branch": "refactor/n15-b2r-a2-user-layout",
+    "status": "READ_ONLY_INVENTORY",
+    "public_api_change_allowed": false,
+    "normative_contract_change_allowed": false,
+    "article_runtime_change_allowed": false,
+    "first_decision_gate": "inventory every repository, documentation, fixture, build, distribution and Overleaf consumer before approving any visible rename"
   },
   "module_renames": [
     {"from": "abntexto-ufc/fontes.def", "to": "abntexto-ufc/fonts.def"},
@@ -55,9 +75,7 @@
     "canonical English public ufcsetup keys and values",
     "Portuguese public API compatibility aliases",
     "UFC-owned public command/environment canonicalization",
-    "documento.tex and user-example directory renames",
-    "assets/institucional and brasao-ufc.PNG renames",
-    "test/fixture naming cleanup not required by the module migration",
+    "test/fixture naming cleanup not required by the user-example migration",
     "normativa directory or historical normative/evidence identifiers",
     "scientific-article runtime and articles.def"
   ],
@@ -79,5 +97,5 @@
     "Overleaf proxy and required Windows certification pass on the exact merge candidate",
     "branch remains behind_by=0 before merge"
   ],
-  "next_after_a1": "Re-certify merged main, then evaluate user-example/repository skeleton naming as B2R-A2 before B2R-B public API work."
+  "next_after_a1": "Complete the B2R-A2 read-only consumer inventory, approve only renames that preserve the import/distribution contract, then implement them atomically before B2R-B public API work."
 }
