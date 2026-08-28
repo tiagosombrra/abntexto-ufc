@@ -5,8 +5,8 @@ python3 <<'PY'
 from pathlib import Path
 import re
 
-tex_files = [Path('documento.tex')]
-for directory in ('1-pre-textuais', '2-textuais', '3-pos-textuais'):
+tex_files = [Path('main.tex')]
+for directory in ('frontmatter', 'chapters', 'backmatter'):
     tex_files.extend(sorted(Path(directory).rglob('*.tex')))
 
 forbidden = {
@@ -55,7 +55,7 @@ for path in tex_files:
         if not candidate.exists():
             errors.append(f'{path}: arquivo referenciado não existe: {candidate}')
 
-asset = Path('assets/institucional/brasao-ufc.PNG')
+asset = Path('assets/institutional/ufc-coat-of-arms.png')
 if not asset.is_file():
     errors.append(f'ativo institucional ausente: {asset}')
 
@@ -111,11 +111,11 @@ for module in modules:
 institutional = Path('abntexto-ufc/institutional.def').read_text(encoding='utf-8')
 if 'brasao-arquivo' not in institutional:
     errors.append('abntexto-ufc/institutional.def: chave brasao-arquivo ausente')
-if 'assets/institucional/brasao-ufc.PNG' not in institutional:
-    errors.append('abntexto-ufc/institutional.def: caminho compatível padrão do brasão ausente')
+if 'assets/institutional/ufc-coat-of-arms.png' not in institutional:
+    errors.append('abntexto-ufc/institutional.def: caminho canônico padrão do brasão ausente')
 
 builder = Path('tools/build-release-bundles.py').read_text(encoding='utf-8')
-if re.search(r'CLASS_INPUTS\s*=\s*\(.*?assets/institucional', builder, re.DOTALL):
+if re.search(r'CLASS_INPUTS\s*=\s*\(.*?assets/institutional', builder, re.DOTALL):
     errors.append('Class bundle ainda inclui o ativo institucional da UFC')
 if re.search(r'TEMPLATE_INPUTS\s*=\s*\(.*?"assets"', builder, re.DOTALL):
     errors.append('Template/Overleaf bundle ainda inclui a árvore de ativos institucionais')
@@ -133,8 +133,8 @@ if not ctan_match:
     errors.append('tools/build-release-bundles.py: função build_ctan_bundle ausente')
 else:
     ctan_builder = ctan_match.group(0)
-    if 'assets/institucional' in ctan_builder:
-        errors.append('CTAN builder ainda inclui assets/institucional')
+    if 'assets/institutional' in ctan_builder:
+        errors.append('CTAN builder ainda inclui assets/institutional')
     if 'reference_pdf' in ctan_builder or '-reference.pdf' in ctan_builder:
         errors.append('CTAN builder ainda inclui PDF de referência com marca institucional')
     if 'DOC_SOURCE_INPUTS' in ctan_builder or 'doc/example/' in ctan_builder:
@@ -162,13 +162,25 @@ release_infrastructure = (
     'docs/README-CTAN.md',
     'docs/CHANGELOG-CTAN.md',
     'docs/ctan-example.tex',
-    'figuras/LICENCAS.md',
+    'figures/LICENCAS.md',
     '.github/workflows/distribution.yml',
     '.github/workflows/reference-validation.yml',
 )
 for required in release_infrastructure:
     if not Path(required).is_file():
         errors.append(f'infraestrutura de distribuição/validação ausente: {required}')
+
+legacy_user_paths = (
+    'documento.tex',
+    '1-pre-textuais',
+    '2-textuais',
+    '3-pos-textuais',
+    'figuras',
+    'assets/institucional',
+)
+for legacy_user_path in legacy_user_paths:
+    if Path(legacy_user_path).exists():
+        errors.append(f'layout legado A2 ainda presente: {legacy_user_path}')
 
 microsoft_fonts = {
     'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
