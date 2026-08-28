@@ -64,8 +64,8 @@ def main() -> None:
         fail("stale embedded references must never govern")
     if rules.get("conflict_behavior") != "review-required":
         fail("current-source conflicts must require review")
-    if not rules.get("future_profile_promotion"):
-        fail("future-profile runtime promotion boundary must be explicit")
+    if not rules.get("profile_promotion_stages"):
+        fail("profile source/contract/runtime promotion stages must be explicit")
 
     audited_sources = {
         source["id"]: source
@@ -93,6 +93,8 @@ def main() -> None:
     current_ids = policy.get("current_technical_sources")
     if not isinstance(current_ids, list) or not current_ids:
         fail("current_technical_sources must be non-empty")
+    if "abnt-nbr-6022-2018" not in current_ids:
+        fail("current article-presentation standard was not promoted into the technical set")
     for source_id in current_ids:
         source = sources.get(source_id)
         if not source:
@@ -105,22 +107,33 @@ def main() -> None:
     profile_candidates = policy.get("profile_candidates", {})
     article = profile_candidates.get("scientific_article") if isinstance(profile_candidates, dict) else None
     if not isinstance(article, dict):
-        fail("scientific-article profile candidate policy is missing")
-    if article.get("status") != "reconciled-not-runtime":
-        fail("scientific-article candidate must remain reconciled-not-runtime during N15-B1")
-    if article.get("runtime_promotion_phase") != "N15-B2":
-        fail("scientific-article candidate runtime promotion must be deferred to N15-B2")
+        fail("scientific-article profile policy is missing")
+    if article.get("status") != "contract-promotion-in-progress-runtime-pending":
+        fail("scientific-article policy does not expose the B2-A contract state")
+    if article.get("source_and_contract_phase") != "N15-B2A":
+        fail("scientific-article source/contract phase must be N15-B2A")
+    if article.get("runtime_implementation_phase") != "N15-B2B":
+        fail("scientific-article LaTeX implementation must remain deferred to N15-B2B")
+    if article.get("evidence_completion_phase") != "N15-B2C":
+        fail("scientific-article evidence closure must remain deferred to N15-B2C")
     candidate_ids = article.get("candidate_sources")
-    if set(candidate_ids or []) != {"abnt-nbr-6022-2018", "ufc-guia-artigos-2021"}:
-        fail("scientific-article authority candidate set drifted")
+    expected_article_sources = {"abnt-nbr-6022-2018", "ufc-guia-artigos-2022"}
+    if set(candidate_ids or []) != expected_article_sources:
+        fail("scientific-article authority source set drifted")
     for source_id in candidate_ids:
         audited = audited_sources.get(source_id)
         if not audited:
-            fail(f"profile candidate is absent from source audit: {source_id}")
+            fail(f"article authority source is absent from source audit: {source_id}")
         if not str(audited.get("status", "")).startswith("current"):
-            fail(f"profile candidate is not current: {source_id}")
-        if source_id in sources:
-            fail(f"N15-B1 profile candidate entered runtime catalog prematurely: {source_id}")
+            fail(f"article authority source is not current: {source_id}")
+        runtime = sources.get(source_id)
+        if not runtime:
+            fail(f"B2-A article authority source is absent from runtime catalog: {source_id}")
+        if runtime.get("status") not in ACTIVE_STATUSES:
+            fail(f"B2-A article authority source is not active in runtime catalog: {source_id}")
+
+    if (ROOT / "abntexto-ufc" / "artigos.def").exists():
+        fail("B2-A must not introduce the LaTeX article runtime module")
 
     doc = DOC.read_text(encoding="utf-8")
     supersessions = policy.get("supersessions")
@@ -172,15 +185,15 @@ def main() -> None:
     )
     for marker in required_doc_markers:
         if marker not in doc:
-            fail(f"human documentation is missing N15-B1 authority marker: {marker}")
+            fail(f"human documentation is missing article-authority marker: {marker}")
 
     print(
         "Normative currency passed: "
         f"{len(current_ids)} active runtime technical standards, "
-        f"{len(candidate_ids)} reconciled non-runtime article sources, "
+        f"{len(candidate_ids)} promoted article authority sources, "
         f"{len(supersessions)} documented UFC stale-reference mappings, "
         f"{len(machine_files)} active machine files scanned; "
-        "latest applicable edition is mandatory and N15-B1/B2 boundary is enforced."
+        "N15-B2A contract promoted with LaTeX runtime deferred to N15-B2B."
     )
 
 
