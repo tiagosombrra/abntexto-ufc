@@ -13,7 +13,12 @@
       "docs/B2R-NAMING-INVENTORY.md",
       "release/n15-b2r-a-naming-inventory.json"
     ],
-    "update_user_docs_when_affected": ["README.md", "docs/NORMAS.md", "docs/VIGENCIA-NORMATIVA.md", "docs/NAMING.md"],
+    "update_user_docs_when_affected": [
+      "README.md",
+      "docs/NORMAS.md",
+      "docs/VIGENCIA-NORMATIVA.md",
+      "docs/NAMING.md"
+    ],
     "required_events": [
       "material scope or architecture decision",
       "new CI blocker",
@@ -84,26 +89,46 @@
       "observed_candidate_blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
       "mutation_allowed": false
     },
-    "first_exact_head_cycle": {
-      "head_sha": "1f80043139ae9fabe68c554c264ef7d8c5087cd8",
-      "source_contract": "#368 SUCCESS",
-      "reference_preview": "#22 REFERENCE_BUILD_SUCCESS_BEFORE_LATER_STEPS",
-      "latex_preflight": "#1032 FAILED_PATH_CONSUMERS",
-      "failures": [
-        {
-          "surface": "reference-guide-contract",
-          "cause": "normativa/reference-guide-map.json source_file entries still used 2-textuais/...",
-          "classification": "secondary-trace-path-only",
-          "resolved": true
-        },
-        {
-          "surface": "twelve-profile-matrix",
-          "cause": "tests/smoke/perfil-base.tex still used 1-pre-textuais/resumo and 1-pre-textuais/abstract",
-          "classification": "fixture-path-only",
-          "resolved": true
+    "exact_head_cycles": [
+      {
+        "head_sha": "1f80043139ae9fabe68c554c264ef7d8c5087cd8",
+        "source_contract": "#368 SUCCESS",
+        "reference_preview": "#22 REFERENCE_BUILD_SUCCESS_BEFORE_LATER_STEPS",
+        "latex_preflight": "#1032 FAILED_PATH_CONSUMERS",
+        "findings": [
+          {
+            "surface": "reference-guide-contract",
+            "cause": "normativa/reference-guide-map.json source_file entries still used 2-textuais/...",
+            "classification": "secondary-trace-path-only",
+            "resolved": true
+          },
+          {
+            "surface": "twelve-profile-matrix",
+            "cause": "tests/smoke/perfil-base.tex still used 1-pre-textuais/resumo and 1-pre-textuais/abstract",
+            "classification": "fixture-path-only",
+            "resolved": true
+          }
+        ]
+      },
+      {
+        "head_sha": "8b1a0a8013c10cc73ad43115b25d0beca567e529",
+        "source_contract": "#376 FAILED_HUMAN_CURRENCY_MARKERS",
+        "finding": {
+          "surface": "normative-currency-human-documentation",
+          "cause": "docs/VIGENCIA-NORMATIVA.md rewrite omitted exact full ABNT prefixes required by version-policy supersession assertions and abbreviated CEPE date markers",
+          "classification": "human-documentation-contract-only",
+          "other_source_contract_stages_before_failure": [
+            "catalog PASS",
+            "precedence PASS",
+            "source-audit PASS",
+            "source-reference-integrity PASS",
+            "locator-audit PASS"
+          ],
+          "resolved": true,
+          "repair_commit_before_ledger_sync": "5539e5370447fd97e844dfbadf4663992ab0e176"
         }
-      ]
-    },
+      }
+    ],
     "normative_trace_update": {
       "file": "normativa/reference-guide-map.json",
       "file_under_normativa_changed": true,
@@ -114,6 +139,16 @@
       "values_changed": false,
       "rule_ids_changed": false,
       "normative_locators_changed": false
+    },
+    "normative_currency_documentation_repair": {
+      "file": "docs/VIGENCIA-NORMATIVA.md",
+      "preserves_current_article_guide": "ufc-guia-artigos-2022",
+      "preserves_article_technical_source": "abnt-nbr-6022-2018",
+      "preserves_article_contract_phase": "N15-B2A",
+      "preserves_article_runtime_phase": "N15-B2B",
+      "restores_exact_supersession_strings_from_version_policy": true,
+      "restores_exact_cepe_markers_required_by_checker": true,
+      "normative_contract_changed": false
     },
     "pre_pr_audit": {
       "base_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
