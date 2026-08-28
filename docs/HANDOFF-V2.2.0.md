@@ -275,17 +275,9 @@ A2 can be marked DONE only when one exact candidate satisfies all of the followi
 
 ## Next executable action
 
-1. treat the live PR head produced after the #1051 scanner reconciliation and mandatory documentation sync as the sole new certification candidate;
-2. require Source Contract, Reference Preview and full LaTeX preflight green on that exact SHA;
-3. if any gate fails, fix only the reproducible remaining A2 consumer and update this handoff/inventory/ledger;
-4. if all automatic PR gates are green, execute exact-head Gate T and deterministic Distribution certification;
-5. verify `behind_by=0` and frozen N12 blob;
-6. perform final documentation sync with exact receipts without changing implementation semantics;
-7. squash-merge PR #147;
-8. re-certify resulting `main`;
-9. only then begin B2R-B from certified `main`.
+Use the live PR head produced after the #1051 scanner reconciliation and mandatory documentation sync as the sole certification candidate. Require Source Contract, Reference Preview and full LaTeX preflight green on that exact SHA. Only then run exact-head Gate T and deterministic Distribution, verify `behind_by=0`, perform final receipt-only documentation sync, squash-merge PR #147 and re-certify resulting `main` before B2R-B.
 
-The current GitHub connector has fetch/rerun support but may not expose workflow-dispatch creation. If exact-head automatic CI becomes green and workflow dispatch remains unavailable, **do not weaken or bypass Gate T/Distribution**; record the operational blocker and keep A2 open until the required workflows are genuinely executed.
+If the current GitHub tool surface cannot dispatch Gate T or Distribution, keep A2 open and record that operational blocker; do not replace either required gate with a weaker check.
 
 ## Later phases
 
