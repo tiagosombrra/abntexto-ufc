@@ -4,6 +4,7 @@ set -eu
 python3 <<'PY'
 from pathlib import Path
 import re
+import subprocess
 
 tex_files = [Path('main.tex')]
 for directory in ('frontmatter', 'chapters', 'backmatter'):
@@ -181,6 +182,48 @@ legacy_user_paths = (
 for legacy_user_path in legacy_user_paths:
     if Path(legacy_user_path).exists():
         errors.append(f'layout legado A2 ainda presente: {legacy_user_path}')
+
+legacy_reference_tokens = (
+    'documento.tex',
+    'documento.pdf',
+    'documento.log',
+    'documento.toc',
+    'documento.loi',
+    'documento.lot',
+    'documento.loc',
+    'documento.loa',
+    '1-pre-textuais/',
+    '2-textuais/',
+    '3-pos-textuais/',
+    'figuras/',
+    'assets/institucional/',
+    'brasao-ufc.PNG',
+)
+legacy_reference_exempt = {
+    'tests/v2-distribution-check.sh',
+    'docs/NAMING.md',
+    'docs/B2R-NAMING-INVENTORY.md',
+    'docs/HANDOFF-V2.2.0.md',
+    'release/n15-b2r-a-naming-inventory.json',
+}
+tracked = subprocess.check_output(['git', 'ls-files', '-z']).split(b'\0')
+for raw in tracked:
+    if not raw:
+        continue
+    name = raw.decode('utf-8')
+    if name in legacy_reference_exempt or name.startswith('docs/history/') or name.startswith('release/'):
+        continue
+    path = Path(name)
+    try:
+        data = path.read_bytes()
+        if b'\0' in data:
+            continue
+        text = data.decode('utf-8')
+    except (OSError, UnicodeDecodeError):
+        continue
+    stale = [token for token in legacy_reference_tokens if token in text]
+    if stale:
+        errors.append(f'{name}: referência ativa ao layout A2 legado: {", ".join(stale)}')
 
 microsoft_fonts = {
     'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
