@@ -93,7 +93,10 @@ CI cycles found and resolved only bounded migration issues:
 4. bounded N12 historical-content rewrite for two fixture paths;
 5. CAPES gratitude-path consumer;
 6. stale `.gitignore`, compiled-guide, CTAN README and CTAN binary-policy paths;
-7. one scanner substring false positive solved by boundary-aware matching rather than exemption.
+7. one scanner substring false positive solved by boundary-aware matching rather than exemption;
+8. final receipt-sync structure blocker: two missing Markdown final newlines and machine-ledger schema fields consumed by the frozen N12 checker.
+
+The eighth finding is resolved in the current candidate by restoring the complete compatibility contract in the ledger — not by relaxing N12 — and by terminating both active Markdown ledgers with a newline.
 
 No fix changed public API, article runtime, normative contract, formatting intent or pagination intent.
 
@@ -118,11 +121,20 @@ Non-mutating certification refs used:
 - `maintenance/v2.2.0-b2r-a2-gate-t` → `6e252845...`;
 - `release/v2.2.0-b2r-a2-dist` → `6e252845...`.
 
+## Final documentation-head evidence
+
+The first documentation-sync head `ecaf551dd3e2fdb0d25cac12d2498b51147fa124` produced Source #405 and Preview #59 SUCCESS. Preflight #1070 had reference/PDF-A, 12 profiles/PDF-A, objects/bibliography and post-textual SUCCESS; `structure` failed only because:
+
+- this file and the canonical handoff lacked a final newline;
+- the simplified machine ledger no longer exposed the A1/A2 compatibility fields that `normative_n12_matrix.py` consumes to verify behavior-preserving migration.
+
+All other structure subchecks shown in #1070 passed. The current blocker-resolution candidate restores those ledger fields and newlines and must now be re-certified as the sole merge candidate.
+
 ## A2 closure requirements
 
 A2 remains ACTIVE until:
 
-- the current receipt-only documentation-sync PR head itself has live Source + Preview + full PR preflight green;
+- the current blocker-resolution documentation-sync PR head itself has live Source + Preview + full PR preflight green;
 - the same SHA has exact Gate T and Distribution green;
 - N12 blob remains unchanged;
 - PR is mergeable and `behind_by=0` immediately before merge;
@@ -132,7 +144,7 @@ A2 remains ACTIVE until:
 
 ## Next executable action
 
-Use the current documentation-sync head as the sole merge candidate. Do not edit receipt documents again solely to copy its future run numbers. Run Source Contract, Reference Preview and full preflight on the exact SHA, then Gate T and Distribution through non-mutating certification refs. Recheck N12, mergeability and `behind_by=0`; mark PR ready and squash-merge only when all live gates are green. Re-certify resulting `main` before B2R-B.
+Use the current blocker-resolution head as the sole merge candidate. Do not edit receipt documents again solely to copy its future run numbers. Run Source Contract, Reference Preview and full preflight on the exact SHA, then Gate T and Distribution through non-mutating certification refs. Recheck N12, mergeability and `behind_by=0`; mark PR ready and squash-merge only when all live gates are green. Re-certify resulting `main` before B2R-B.
 
 ## B2R-B — BLOCKED BY A2
 
