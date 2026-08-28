@@ -89,6 +89,18 @@
       "observed_candidate_blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
       "mutation_allowed": false
     },
+    "n12_historical_content_rewrites": {
+      "tests/smoke/perfil-base.tex": [
+        {
+          "current": "frontmatter/resumo",
+          "historical": "1-pre-textuais/resumo"
+        },
+        {
+          "current": "frontmatter/abstract",
+          "historical": "1-pre-textuais/abstract"
+        }
+      ]
+    },
     "exact_head_cycles": [
       {
         "head_sha": "1f80043139ae9fabe68c554c264ef7d8c5087cd8",
@@ -127,6 +139,38 @@
           "resolved": true,
           "repair_commit_before_ledger_sync": "5539e5370447fd97e844dfbadf4663992ab0e176"
         }
+      },
+      {
+        "head_sha": "a0bf9d060a188aa963d7e7f7002a538ef3dee2e0",
+        "source_contract": "#380 SUCCESS",
+        "reference_preview": "#34 SUCCESS",
+        "latex_preflight": "#1044 STRUCTURE_FAILED",
+        "confirmed_success_before_structure_repair": [
+          "reference document and PDF/A SUCCESS",
+          "twelve profile build SUCCESS",
+          "twelve profile PDF/A SUCCESS",
+          "post-textual SUCCESS"
+        ],
+        "findings": [
+          {
+            "surface": "distribution-source",
+            "cause": "git ls-files inside the TeX Live container lacked an explicit safe.directory override",
+            "classification": "ci-container-git-safety-only",
+            "resolved": false
+          },
+          {
+            "surface": "normative-complement-n12",
+            "cause": "tests/smoke/perfil-base.tex retained the same path but its two A2 content paths changed, so the frozen N12 historical blob needed a bounded reverse-content rewrite bridge",
+            "classification": "frozen-evidence-path-migration-only",
+            "resolved": true
+          },
+          {
+            "surface": "pretextual-capes-guidance",
+            "cause": "tests/v2-capes-guidance-check.sh still read 1-pre-textuais/agradecimentos.tex directly",
+            "classification": "stale-a2-path-only",
+            "resolved": false
+          }
+        ]
       }
     ],
     "normative_trace_update": {
