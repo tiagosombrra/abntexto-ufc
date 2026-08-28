@@ -53,6 +53,13 @@ def load_json(path: Path) -> dict[str, Any]:
     return data
 
 
+def historical_guide_record(source_audit: dict[str, Any]) -> dict[str, Any] | None:
+    for item in source_audit.get("reviewed_excluded_sources", []):
+        if isinstance(item, dict) and item.get("id") == "ufc-guia-artigos-2021":
+            return item
+    return None
+
+
 def main() -> None:
     ledger = load_json(LEDGER)
     source_audit = load_json(SOURCE_AUDIT)
@@ -79,13 +86,14 @@ def main() -> None:
         fail("current 2022 UFC article guide is absent from the active source registry")
     if "ufc-guia-artigos-2021" in active_audit_ids:
         fail("superseded 2021 article-guide identity remained active")
-    superseded = {
-        item.get("id")
-        for item in source_audit.get("reviewed_superseded_sources", [])
-        if isinstance(item, dict)
-    }
-    if "ufc-guia-artigos-2021" not in superseded:
+
+    historical = historical_guide_record(source_audit)
+    if not historical:
         fail("superseded 2021 article-guide identity is not preserved as reviewed history")
+    if historical.get("status") != "superseded-by-corrected-current-guide":
+        fail("superseded 2021 guide has the wrong historical status")
+    if historical.get("replaced_by") != "ufc-guia-artigos-2022":
+        fail("superseded 2021 guide does not identify the corrected replacement")
 
     missing_sources = sorted(ARTICLE_SOURCES - set(sources))
     if missing_sources:
