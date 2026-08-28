@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "phase": "N14",
+  "purpose": "Exercise shared Web/Lite and CLI/Deep report-contract semantics without requiring numerical equivalence between PDF.js and Poppler/veraPDF.",
+  "verdict_vectors": [
+    {
+      "id": "pass-and-not-applicable",
+      "checks": [
+        {
+          "id": "layout.a4",
+          "status": "APROVADO",
+          "mandatory": true
+        },
+        {
+          "id": "catalog.optional",
+          "status": "NÃO APLICÁVEL",
+          "mandatory": false
+        }
+      ],
+      "expected_verdict": "APROVADO NOS CHECKS AUTOMÁTICOS"
+    },
+    {
+      "id": "nonmandatory-warning",
+      "checks": [
+        {
+          "id": "meta.lang",
+          "status": "ALERTA",
+          "mandatory": false
+        }
+      ],
+      "expected_verdict": "APROVADO NOS CHECKS AUTOMÁTICOS, COM RESSALVAS"
+    },
+    {
+      "id": "mandatory-review",
+      "checks": [
+        {
+          "id": "approval.signatures",
+          "status": "REVISÃO MANUAL",
+          "mandatory": true
+        }
+      ],
+      "expected_verdict": "REVISÃO NECESSÁRIA"
+    },
+    {
+      "id": "mandatory-failure",
+      "checks": [
+        {
+          "id": "layout.a4",
+          "status": "REPROVADO",
+          "mandatory": true
+        }
+      ],
+      "expected_verdict": "REPROVADO"
+    },
+    {
+      "id": "failure-precedence",
+      "checks": [
+        {
+          "id": "access.alt",
+          "status": "REVISÃO MANUAL",
+          "mandatory": true
+        },
+        {
+          "id": "layout.margins",
+          "status": "REPROVADO",
+          "mandatory": true
+        },
+        {
+          "id": "meta.title",
+          "status": "ALERTA",
+          "mandatory": false
+        }
+      ],
+      "expected_verdict": "REPROVADO"
+    }
+  ],
+  "alias_vectors": [
+    {
+      "canonical_id": "font.literal",
+      "web_input_id": "font.family",
+      "cli_id": "font.literal"
+    },
+    {
+      "canonical_id": "font.embedded",
+      "web_input_id": "font.embedding",
+      "cli_id": "font.embedded"
+    }
+  ],
+  "report_vector": {
+    "web_input": {
+      "id": "font.family",
+      "category": "Tipografia",
+      "rule": "Família literal",
+      "source": "Fonte controlada",
+      "status": "APROVADO",
+      "evidence": "synthetic",
+      "correction": "",
+      "mandatory": true,
+      "level": "tipográfico",
+      "normativeRule": "font.family.body",
+      "locator": "synthetic-locator",
+      "normativity": "technical-with-UFC-support"
+    },
+    "cli_input": {
+      "id": "font.literal",
+      "category": "Tipografia",
+      "rule": "Família literal",
+      "source": "Fonte controlada",
+      "status": "APROVADO",
+      "evidence": "synthetic",
+      "correction": "",
+      "mandatory": true,
+      "level": "tipográfico",
+      "normative_rule": "font.family.body",
+      "locator": "synthetic-locator",
+      "normativity": "technical-with-UFC-support"
+    },
+    "expected_id": "font.literal"
+  },
+  "expected": {
+    "verdict_vector_count": 5,
+    "shared_check_count": 24,
+    "canonical_check_count": 28,
+    "baseline_alias_count": 2,
+    "emitted_alias_count": 0,
+    "schema_drift_count": 0,
+    "deep_boundary_count": 2,
+    "deep_boundary_ids": [
+      "font.embedded",
+      "pdfa.deep"
+    ],
+    "measurement_backend_equivalence_required": false,
+    "normative_contract_changed": false,
+    "locator_policy_changed": false,
+    "oracle_tolerances_changed": false,
+    "proof_state_changed": false
+  }
+}
