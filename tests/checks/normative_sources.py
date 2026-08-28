@@ -99,10 +99,14 @@ def validate_status_semantics(
     return restricted, scope_restricted
 
 
-def validate_b1_reconciliation(audit: dict, by_id: dict[str, dict]) -> None:
-    article_guide = by_id.get("ufc-guia-artigos-2021")
+def validate_article_source_reconciliation(audit: dict, by_id: dict[str, dict]) -> None:
+    article_guide = by_id.get("ufc-guia-artigos-2022")
     if not article_guide:
-        fail("missing current UFC scientific-article guide")
+        fail("missing corrected current UFC scientific-article guide")
+    if article_guide.get("edition") != "2022":
+        fail("current UFC scientific-article guide edition must be 2022")
+    if article_guide.get("corrected_file_date") != "2023-04-27":
+        fail("corrected UFC article-guide file date is not recorded")
     if article_guide.get("status") != "current-institutional-with-stale-technical-citations":
         fail("article guide must be restricted from technical-edition authority")
     if article_guide.get("technical_authority") is not False:
@@ -133,6 +137,7 @@ def validate_b1_reconciliation(audit: dict, by_id: dict[str, dict]) -> None:
     excluded = audit.get("reviewed_excluded_sources")
     if not isinstance(excluded, list) or not excluded:
         fail("reviewed_excluded_sources must record reviewed non-current references")
+
     mec_records = [item for item in excluded if item.get("id") == "mec-portaria-1224-2013"]
     if len(mec_records) != 1:
         fail("MEC Portaria 1.224/2013 must have exactly one excluded-source record")
@@ -142,9 +147,18 @@ def validate_b1_reconciliation(audit: dict, by_id: dict[str, dict]) -> None:
     if "mec-portaria-1224-2013" in by_id:
         fail("revoked MEC Portaria 1.224/2013 leaked into the current source registry")
 
+    old_guides = [item for item in excluded if item.get("id") == "ufc-guia-artigos-2021"]
+    if len(old_guides) != 1:
+        fail("historical B1 article-guide identity correction must be explicit")
+    old_guide = old_guides[0]
+    if old_guide.get("replaced_by") != "ufc-guia-artigos-2022":
+        fail("historical article guide does not point to the corrected current source")
+    if "ufc-guia-artigos-2021" in by_id:
+        fail("superseded 2021 article-guide record remained active")
+
     candidates = audit.get("reconciled_profile_candidate_sources", {}).get("scientific-article")
     expected_candidates = {
-        "ufc-guia-artigos-2021",
+        "ufc-guia-artigos-2022",
         "abnt-nbr-6022-2018",
         "abnt-nbr-10520-2023",
         "abnt-nbr-6023-2025",
@@ -208,7 +222,7 @@ def main() -> None:
 
     institutional_guides = {
         "ufc-guia-trabalhos-2022",
-        "ufc-guia-artigos-2021",
+        "ufc-guia-artigos-2022",
         "ufc-guia-citacoes-2025",
         "ufc-guia-referencias-2023",
         "ufc-guia-projetos-2019",
@@ -257,12 +271,13 @@ def main() -> None:
         "abnt-nbr-15287-2011",
         "abnt-nbr-12225-2004",
         "mec-portaria-1224-2013",
+        "ufc-guia-artigos-2021",
     }
     leaked = sorted(forbidden_ids & set(by_id))
     if leaked:
         fail("superseded, revoked or historical sources retained as active entries: " + ", ".join(leaked))
 
-    validate_b1_reconciliation(audit, by_id)
+    validate_article_source_reconciliation(audit, by_id)
 
     print(
         "Normative source audit passed: "
@@ -271,7 +286,7 @@ def main() -> None:
         f"{len(institutional_guides)} UFC guides restricted from edition authority, "
         f"{restricted} restricted runtime sources, "
         f"{scope_restricted} scope-restricted runtime sources; "
-        "N15-B1 article/graduate authority reconciliation present."
+        "corrected UFC article-guide identity and N15 article authority are reconciled."
     )
 
 
