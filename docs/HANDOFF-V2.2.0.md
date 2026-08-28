@@ -2,18 +2,11 @@
 
 Updated: 2026-08-28
 
-Checkpoint: **N15-B2A closure candidate — PR #145 (`audit/n15-b2a-article-contract`)**.
+Checkpoint: **N15-B2R-A1 implementation candidate — PR #146 (`refactor/n15-b2r-a-internal-naming`)**.
 
-Certified stable `main` before N15-B2A: `bc7b3bbe0e7ac21aa16efb1f0bab9a4dfb8e912e`.
+Certified stable `main`: `7699ed205d4554df28fc46908fff3be0b92a38f7`.
 
-The current PR `head_sha` is the merge/certification authority. Do not use a prose SHA in this document as a substitute for reading the live PR state.
-
-Canonical receipts already obtained for the B2A implementation head:
-
-- Source Contract #351 — SUCCESS;
-- LaTeX preflight #1012 — SUCCESS;
-- all Linux regression jobs in #1012 — SUCCESS;
-- Windows/Overleaf jobs in the PR event — intentionally skipped by workflow conditions and reserved for post-merge/main certification.
+The live PR `head_sha` and GitHub Actions receipts are the merge/certification authority. A SHA written in this document is contextual evidence, not a substitute for reading the live PR state.
 
 This is the single dynamic continuation document for the v2.2.0 audit and release. Detailed historical evidence belongs in `normativa/`, `release/`, `tests/`, Git history, pull requests, GitHub Actions logs and `docs/history/`.
 
@@ -50,25 +43,12 @@ Technical validators and release contracts consume normative requirements; they 
 
 | Phase | Scope | Status |
 | --- | --- | --- |
-| N0 | freeze / baseline | DONE |
-| N1 | normative sources and exact locators | DONE |
-| N2 | UFC × current-ABNT reconciliation | DONE |
-| N3 | explicit atomicity gaps | DONE |
-| N4 | false-coverage audit / proof policy | DONE |
-| N5 | final-PDF oracle calibration | DONE |
-| N6 | pre-textual elements | DONE |
-| N7 | layout, pagination, sections, footnotes | DONE |
-| N8 | citations and references | DONE |
-| N9 | objects, tables, equations and code | DONE |
-| N10 | post-textual elements and multivolume | DONE |
-| N11 | research-project profile / NBR 15287 | DONE |
-| N12 | profile, engine and font matrix | DONE |
-| N13 | negative-path validation | DONE |
-| N14 | Web/Lite and CLI/Deep contract unification | DONE |
+| N0–N14 | frozen normative/runtime/evidence baseline | DONE |
 | N15-A | unrestricted final audit | DONE — PR #143 merged and main re-certified |
-| N15-B1 | source completeness and authority reconciliation | DONE — PR #144 merged; main `bc7b3bbe...` re-certified |
-| N15-B2A | scientific-article source + normative contract | CLOSURE CANDIDATE — PR #145 |
-| N15-B2R-A | repository/internal English naming normalization | BLOCKED by B2A merge + main certification |
+| N15-B1 | source completeness and authority reconciliation | DONE — PR #144 merged and main re-certified |
+| N15-B2A | scientific-article source + normative contract | DONE — PR #145 merged; main `7699ed20...` re-certified |
+| N15-B2R-A1 | internal module English naming | ACTIVE — PR #146 implementation candidate |
+| N15-B2R-A2 | user example / distribution-facing repository naming | BLOCKED by A1 merge + main certification |
 | N15-B2R-B | canonical English public API + Portuguese compatibility aliases | BLOCKED by B2R-A |
 | N15-B2B | scientific-article runtime implementation | BLOCKED by B2R-B |
 | N15-B2C | scientific-article evidence closure | BLOCKED by B2B |
@@ -76,7 +56,7 @@ Technical validators and release contracts consume normative requirements; they 
 | N15-C | v2.2.0 release candidate | BLOCKED by B3 |
 | N15-D | exact-head certification and release decision | BLOCKED by N15-C |
 
-N15 remains ACTIVE; the release is not ready while B2A/B2R/B2B/B2C/B3/C/D remain open.
+N15 remains ACTIVE. The release is not ready while B2R/B2B/B2C/B3/C/D remain open.
 
 ## Frozen N0–N14 baseline
 
@@ -93,13 +73,13 @@ Historical certified baseline:
 - N13: seven negative mechanisms represented, five controlled rendered-PDF negative cases;
 - N14: six of six closure criteria and cross-surface semantic contract certified.
 
-The 181/170 counts are the frozen pre-article baseline. N15-B2A deliberately adds source-backed `article.*` predicates. Such growth is explicit and does not retroactively change N0–N14 evidence.
+The 181/170 counts are the frozen pre-article baseline. N15-B2A explicitly added source-backed `article.*` predicates; that growth does not retroactively alter N0–N14 evidence.
 
 ## N15-B1 — closed
 
 PR #144 completed source completeness and authority reconciliation without article runtime behavior.
 
-Resulting certified `main`:
+Certified resulting `main`:
 
 - SHA `bc7b3bbe0e7ac21aa16efb1f0bab9a4dfb8e912e`;
 - Source Contract #345 — SUCCESS;
@@ -108,131 +88,150 @@ Resulting certified `main`:
 - exact Gate T #1006 — SUCCESS;
 - Distribution #237 — SUCCESS.
 
-B1 preserved source history and established the authority model needed for B2A. The previous article-guide identity is retained as reviewed superseded history rather than silently rewritten.
+B1 preserved source history and established the authority model needed for B2A.
 
-## N15-B2A — current closure candidate
+## N15-B2A — closed
 
-PR #145 promotes the scientific-article authority set and machine-readable contract while deliberately leaving LaTeX runtime behavior unchanged.
+PR #145 promoted the scientific-article authority set and machine-readable contract while deliberately leaving LaTeX runtime behavior unchanged.
 
-### Corrected current article source identity
-
-The active UFC source is:
+The active UFC article source is:
 
 - `ufc-guia-artigos-2022`;
 - bibliographic edition/year: 2022;
 - corrected file date: 2023-04-27;
-- current corrected SiBi/UFC PDF;
 - role: institutional guide, not technical-standard authority.
 
-The earlier `ufc-guia-artigos-2021` identity remains only as reviewed superseded history.
+The earlier `ufc-guia-artigos-2021` identity remains only as reviewed superseded history. The current technical article source is `abnt-nbr-6022-2018` under the conservative evidence model recorded in the source/reconciliation ledgers.
 
-The current technical article source is `abnt-nbr-6022-2018` under the conservative evidence model already recorded in the source/reconciliation ledgers.
+B2A adds 13 `article.*` predicates with dedicated locators and phase metadata. Recommendation language remains recommendation language: 150–250 abstract words, a minimum of three keywords, and Arial/Times guidance are not silently promoted into hard mandatory predicates.
 
-### Article normative contract
-
-B2A adds 13 `article.*` predicates with dedicated locators and phase metadata. The contract distinguishes mandatory requirements from recommendations.
-
-In particular, the UFC guide's recommendation wording is preserved:
-
-- 150–250 abstract words is a recommendation, not a hard mandatory predicate;
-- a minimum of three keywords is a recommendation, not a hard mandatory predicate;
-- Arial/Times recommendations are not silently promoted into mandatory technical rules.
-
-B2A also records article-specific requirements needed by the later runtime, including continuous primary-section flow and first-page-visible pagination.
-
-### Deliberate runtime boundary
-
-B2A must close with all of the following still true:
+B2A closed with all runtime boundaries intact:
 
 - no `type=article` / `tipo=artigo` runtime surface;
 - no article runtime module loaded by the class;
 - no article-specific formatting mutation;
-- all pre-existing profiles remain regression-equivalent;
-- N12 `latex-preflight.yml` remains byte-identical to its frozen blob.
+- all pre-existing profiles regression-equivalent;
+- N12 `latex-preflight.yml` byte-identical to the frozen blob.
 
-### B2A evidence
+Post-merge certified `main`:
 
-Canonical B2A artifacts include:
+- SHA `7699ed205d4554df28fc46908fff3be0b92a38f7`;
+- Source Contract #361 — SUCCESS;
+- PDF Validator #135 — SUCCESS;
+- LaTeX preflight push #1022 — SUCCESS;
+- exact Gate T / LaTeX preflight #1023 — SUCCESS;
+- Distribution #238 — SUCCESS.
 
-- `normativa/coverage-rules-article.json`;
-- `normativa/locator-audit-article.json`;
-- corrected `normativa/source-audit.json`;
-- promoted `normativa/catalog.json` and `normativa/precedence.json` entries;
-- `release/n15-b2a-article-contract.json`;
-- `tests/checks/normative_n15_b2a_article_contract.py`;
-- phase-aware historical B1 and N4 checkers.
+Distribution #238 also passed release preflight, release PDF/A-2b validation, deterministic bundles, the Overleaf import proxy and candidate upload. GitHub Release publication was skipped as expected because the certification was a `main` push without a release tag.
 
-Implementation-head receipts:
-
-- Source Contract #351 — SUCCESS;
-- LaTeX preflight #1012 — SUCCESS, including the 12-profile matrix, PDF/A, reference document, post-textuals, objects/bibliography and layout/fonts/pre-textuals/projects.
-
-After the naming-roadmap documentation commits, the final exact PR head must receive fresh green receipts before merge.
+Canonical B2A artifacts include `normativa/coverage-rules-article.json`, `normativa/locator-audit-article.json`, corrected source/catalog/precedence data, `release/n15-b2a-article-contract.json`, and `tests/checks/normative_n15_b2a_article_contract.py`.
 
 ## N15-B2R — English naming and public API normalization
 
-B2R is inserted deliberately **before** article runtime implementation so the new article surface is born under the final naming architecture rather than being created in Portuguese and immediately migrated.
+B2R is intentionally before article runtime so the article surface is created directly under the final naming architecture.
 
-B2R is behavior-preserving by default and is governed by `docs/NAMING.md`.
+B2R is behavior-preserving by default and governed by `docs/NAMING.md`.
 
-### N15-B2R-A — repository and internal naming
+### N15-B2R-A1 — internal package module paths
 
-Goals:
+A1 is the current mutation scope. It changes internal paths only and must not change public API, normative predicates, formatting, pagination, example layout or article runtime.
 
-1. inventory internal/public identifiers before mutation;
-2. normalize internal implementation filenames and new internal identifiers to English;
-3. normalize the user example skeleton to conventional LaTeX/editorial English names where distribution behavior permits;
-4. keep official Portuguese names and normative IDs intact;
-5. update all imports, build scripts, packaging allowlists, tests and documentation atomically;
-6. preserve Overleaf bundle usability, including the chosen root entrypoint contract;
-7. prove behavior equivalence across all existing profiles;
-8. avoid changing normative predicates or formatting semantics.
+Canonical module renames:
 
-Target internal vocabulary includes concepts such as `fonts`, `modules`, `frontmatter`, `backmatter`, `academic-works`, `research-projects`, `objects` and `bibliography`.
+- `fontes.def` → `fonts.def`;
+- `modulos.def` → `modules.def`;
+- `pretextuais.def` → `frontmatter.def`;
+- `institucional.def` → `institutional.def`;
+- `trabalhos.def` → `academic-works.def`;
+- `projetos.def` → `research-projects.def`;
+- `objetos.def` → `objects.def`;
+- `bibliografia.def` → `bibliography.def`;
+- `postextuais.def` → `backmatter.def`.
 
-A repository move into `examples/` is not automatic: it must first prove no degradation of the Overleaf/import/distribution experience. If necessary, source layout and distributed-bundle layout may intentionally differ.
+Retained canonical internal paths include `core.def`, `layout.def`, `compat-abntexto.def` and `compat-nbr6023-2025.def`.
+
+The relative load order is preserved. In particular, `academic-works.def` must load before `research-projects.def`.
+
+A1 implementation evidence:
+
+- inventory ledger: `release/n15-b2r-a-naming-inventory.json`;
+- human inventory: `docs/B2R-NAMING-INVENTORY.md`;
+- atomic rename commit: `09ceda01ebbc2427ca3bdf109cdcdec06c3bdc3a`;
+- PR: #146;
+- class module inputs and each `\ProvidesFile` identity updated atomically;
+- repository audit dependency names updated;
+- dynamic canonical-identity, CTAN-manifest and recursive bundle consumers remain intentionally generic.
+
+A1 exit criteria on the exact merge candidate:
+
+1. no old internal module path is loaded by `abntexto-ufc.cls`;
+2. every canonical module exists exactly once;
+3. every `\ProvidesFile` path matches the canonical path;
+4. module load order is preserved;
+5. repository and canonical-identity audits pass;
+6. twelve-profile matrix and PDF/A checks pass;
+7. reference, layout, pre-textual, project, object, bibliography and post-textual regressions pass;
+8. required Overleaf/Windows certification remains green under the existing gate strategy;
+9. N12 workflow remains unchanged;
+10. PR is `behind_by=0` before merge.
+
+After A1 merge, recertify `main` before A2 begins.
+
+### N15-B2R-A2 — example and distribution-facing repository layout
+
+A2 is separate because these names are visible to template/Overleaf users and distribution tooling.
+
+Candidates to evaluate, not pre-approved renames:
+
+- `documento.tex` → `main.tex`;
+- `1-pre-textuais/` → `frontmatter/`;
+- `2-textuais/` → `chapters/`;
+- `3-pos-textuais/` → `backmatter/`;
+- `figuras/` → `figures/`;
+- `assets/institucional/` → `assets/institutional/`;
+- the institutional image filename → a lowercase English asset name.
+
+Source layout and generated Overleaf-bundle layout may intentionally differ if that gives the best import experience. No A2 rename belongs to A1.
 
 ### N15-B2R-B — canonical English public API
 
-Goals:
+Only after B2R-A is certified:
 
-1. define the public API inventory as a machine-readable contract;
+1. define a machine-readable public API inventory;
 2. introduce canonical English `\ufcsetup` keys and values;
 3. introduce canonical English UFC-owned commands/environments where beneficial;
-4. retain supported Portuguese keys/values/commands/environments as compatibility aliases in v2.x;
+4. retain supported Portuguese keys/values/commands/environments as compatibility aliases throughout v2.x;
 5. distinguish UFC-owned API from upstream compatibility commands;
 6. validate canonical-English and Portuguese-compatibility documents against equivalent output/semantics;
 7. prevent new unreviewed Portuguese engineering identifiers after migration;
-8. document any deprecated aliases explicitly rather than removing them silently.
+8. document deprecated aliases explicitly rather than removing them silently.
 
 Likely canonical setup vocabulary includes `type`, `print-mode`, `cover`, `catalog-card`, `coat-of-arms`, `font`, `strict-font`, `tables`, `code`, `algorithms`, `glossary`, `index`, `author`, `title`, `subtitle`, `approval-date`, `advisor` and `coadvisor`.
 
-Canonical booleans should use `true/false`; existing `sim/nao` remains compatibility input where currently supported.
-
-No public Portuguese API removal belongs to v2.2.0.
+Canonical booleans should use `true/false`; existing `sim/nao` remains compatibility input where currently supported. No public Portuguese API removal belongs to v2.2.0.
 
 ## N15-B2B — scientific-article runtime
 
 Begin only from B2R-certified `main`.
 
-The profile must be a dedicated UFC scientific-article baseline, not a claim to override a target journal's own author instructions.
+The profile is a UFC scientific-article baseline, not a claim to override a target journal's author instructions.
 
-The runtime should use the normalized architecture established by B2R. The article module should therefore be created directly under the canonical English naming scheme (for example `articles.def`) rather than as a temporary Portuguese name.
+The article runtime module should be created directly under canonical English naming, for example `articles.def`.
 
-B2B must also address the architectural differences already identified in the current runtime:
+Architectural differences already identified:
 
-- the general academic-work runtime currently uses one-and-a-half line spacing;
+- general academic-work runtime uses one-and-a-half line spacing;
 - primary sections currently invoke a page-break policy;
-- the article profile requires single spacing and continuous primary-section flow.
+- article profile requires single spacing and continuous primary-section flow.
 
-Do not solve this with scattered `if article` checks. Prefer profile capabilities or an equivalent centralized profile-policy abstraction so future profiles can express behavior such as cover presence, approval-page presence, body spacing, first-page pagination and section-break policy.
+Prefer centralized profile capabilities over scattered `if article` checks. Capabilities should express behavior such as cover presence, approval-page presence, body spacing, first-page pagination and section-break policy.
 
 B2B requirements:
 
-1. add canonical `type=article` plus Portuguese compatibility alias/value as defined by B2R;
+1. add canonical `type=article` plus Portuguese compatibility alias/value defined by B2R;
 2. create the dedicated article runtime module under canonical naming;
 3. implement article metadata and required structure without contaminating academic-work/project modules;
-4. implement profile-level layout capabilities rather than ad-hoc conditionals where practical;
+4. implement profile-level capabilities where practical;
 5. preserve all existing profile behavior;
 6. keep recommendations distinct from mandatory validation;
 7. keep target-journal instructions outside the UFC baseline contract.
@@ -259,7 +258,7 @@ After B2C:
 
 - resolve issue #18 using two production-reference builds under controlled `SOURCE_DATE_EPOCH` and require exact SHA-256 identity;
 - only if that experiment fails, repair nondeterministic PDF metadata/ID generation and retest;
-- update any remaining stale v2.1.0 release-state wording while preserving historical records;
+- update remaining stale v2.1.0 release-state wording while preserving historical records;
 - determine whether `reference-validation.yml` still has a unique supported role under the current main + Gate T + Distribution strategy;
 - resolve additional release blockers exposed by B2R/B2B/B2C;
 - keep branch deletion deferred;
@@ -317,12 +316,12 @@ Physical branch cleanup remains deferred until final v2.2.0 certification/tag. N
 
 ## Immediate next action
 
-1. require Source Contract and full LaTeX preflight green on the final PR #145 exact head after `docs/NAMING.md`/handoff updates;
-2. verify PR #145 remains mergeable and `behind_by=0` against current `main`;
-3. squash-merge PR #145 only with that exact audited head;
-4. re-certify resulting `main`, including full push/manual/Distribution surfaces needed by the existing gate strategy;
-5. mark N15-B2A DONE in this handoff on a fresh B2R branch;
-6. begin N15-B2R-A with a read-only API/naming inventory before renaming files;
-7. complete B2R-A regression proof before introducing canonical-English public API in B2R-B;
+1. finish exact-head PR #146 Source Contract and LaTeX regression checks;
+2. verify the A1 diff remains limited to the naming inventory, nine module renames, synchronized identities/loading, repository audit and handoff/ledger state;
+3. verify PR #146 is mergeable and `behind_by=0`;
+4. squash-merge PR #146 only with that exact audited head;
+5. re-certify the resulting `main` through Source Contract, PDF Validator, push/manual LaTeX preflight/Gate T and Distribution;
+6. mark B2R-A1 DONE and begin B2R-A2 from that certified `main`;
+7. complete A2 distribution/Overleaf evidence before B2R-B public API work;
 8. begin article runtime B2B only after B2R is certified;
-9. leave B2C/B3/C/D and physical branch cleanup blocked until their prerequisites are satisfied.
+9. keep B2C/B3/C/D and physical branch cleanup blocked until their prerequisites are satisfied.
