@@ -272,3 +272,9 @@ Before adding a new engineering-facing name, verify:
 - Does it preserve official institutional/normative wording where that wording is the data itself?
 
 If any answer is unclear, treat the name as an API/design decision rather than a cosmetic rename.
+
+## 11. Phase boundary
+
+This policy document may be committed during B2A as roadmap/documentation preparation. Its presence alone does not constitute a B2R implementation change.
+
+Actual renames, API aliases, compatibility mappings and naming-enforcement checkers begin only after B2A is merged and the resulting `main` is re-certified.
