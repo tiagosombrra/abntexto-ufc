@@ -76,11 +76,15 @@ The implementation synchronizes:
 - `tests/smoke/perfil-base.tex`;
 - `normativa/reference-guide-map.json` secondary guide-trace source paths;
 - `tests/v2-capes-guidance-check.sh`;
-- `tests/v2-distribution-check.sh` container-safe Git scan;
+- `tests/v2-distribution-check.sh`, including container-safe Git access and boundary-aware legacy-path detection;
 - `tests/checks/normative_n12_matrix.py` bounded A2 historical-content bridge;
+- `.gitignore` generated/reference-image paths;
+- the compiled guide's explicit layout/path examples;
+- `docs/README-CTAN.md` canonical institutional-asset compatibility path;
+- `tests/v2-ctan-policy-check.py` canonical binary policy paths;
 - README, handoff, naming and normative human documentation.
 
-`tests/v2-distribution-check.sh` rejects reintroduction of legacy A2 top-level paths and scans active tracked text for stale path references. Explicit migration/history ledgers remain allowed to mention old names.
+`tests/v2-distribution-check.sh` rejects reintroduction of legacy A2 top-level paths and scans active tracked text for stale path references. Explicit migration/history ledgers remain allowed to mention old names. The scanner uses token boundaries so a path such as `figuras/` is not falsely inferred from identifiers such as `imprimirlistadefiguras/before`.
 
 ### Secondary trace-map clarification
 
@@ -131,6 +135,22 @@ Repairs:
 4. distribution-source scan now invokes `git -c safe.directory=<repo> ls-files -z`, avoiding the Git dubious-ownership failure inside the TeX Live container without changing the frozen workflow;
 5. `tests/checks/normative_n12_matrix.py` now uses the machine-ledger-controlled reverse-content bridge for exactly the two profile-fixture paths changed by A2; the N12 manifest, certified hashes and frozen workflow remain unchanged;
 6. `tests/v2-capes-guidance-check.sh` now reads `frontmatter/agradecimentos.tex` instead of the removed `1-pre-textuais/agradecimentos.tex`.
+
+Fourth cycle, PR head `3fcd7a6d8cf09567c9e6c79448b8a3f0dbf3899c`:
+
+- Source Contract #387 — SUCCESS;
+- Reference Preview #41 — SUCCESS, including PDF/A and TeX Live 2025 compatibility proxy;
+- LaTeX preflight #1051: profile matrix 12/12 + 12 PDF/A SUCCESS, reference + PDF/A SUCCESS, post-textual SUCCESS, objects/bibliography SUCCESS;
+- `structure` reached `PASS=13 FAIL=1`: the only failure was the active stale-path scanner under `distribution-source`;
+- the three repairs from #1044 were independently confirmed: `normative-complement` PASS with the bounded N12 content-rewrite bridge, and `pretextual` PASS including CAPES guidance.
+
+The scanner reported nine files. Classification and repair:
+
+7. `.gitignore` contained real old generated/reference-image paths and now uses `main.pdf` and `figures/...`;
+8. the compiled reference-guide chapters still contained five explicit old example paths; those human-facing examples now use `main.tex`, `frontmatter/...` and `backmatter/referencias.bib`;
+9. `docs/README-CTAN.md` now documents the canonical `assets/institutional/ufc-coat-of-arms.png` compatibility path;
+10. `tests/v2-ctan-policy-check.py` now classifies the same binary blobs under their canonical A2 paths, with hashes unchanged;
+11. `abntexto-ufc/layout.def` was a false positive only: the raw substring `figuras/` appeared inside `imprimirlistadefiguras/before`. The scanner was made boundary-aware rather than exempting `layout.def`, so genuine legacy paths still fail while unrelated identifiers do not.
 
 The historical failed runs remain migration evidence. None required changing normative predicates, values, locators, source authority, public API, article runtime or formatting behavior.
 
