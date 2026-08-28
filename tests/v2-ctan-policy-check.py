@@ -7,9 +7,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 BINARY_POLICY = {
-    "assets/institucional/brasao-ufc.PNG": "0cd0bbc38fba2e01c40051d6c4ae9a5e71025f74",
-    "figuras/fluxo-exemplo.png": "cab7ed494b6e2f8606565baf2381f5333b282385",
-    "figuras/grafico-exemplo.jpg": "a9f5d2020677dcc39619d91ca5f2425cbe207140",
+    "assets/institutional/ufc-coat-of-arms.png": "0cd0bbc38fba2e01c40051d6c4ae9a5e71025f74",
+    "figures/fluxo-exemplo.png": "cab7ed494b6e2f8606565baf2381f5333b282385",
+    "figures/grafico-exemplo.jpg": "a9f5d2020677dcc39619d91ca5f2425cbe207140",
 }
 
 
@@ -77,9 +77,9 @@ def main() -> None:
         if phrase not in ctan_readme:
             errors.append(f"docs/README-CTAN.md: required CTAN asset policy missing: {phrase}")
 
-    licenses = (ROOT / "figuras/LICENCAS.md").read_text(encoding="utf-8")
+    licenses = (ROOT / "figures/LICENCAS.md").read_text(encoding="utf-8")
     if "`ufctex`" in licenses:
-        errors.append("figuras/LICENCAS.md: stale ufctex package identity")
+        errors.append("figures/LICENCAS.md: stale ufctex package identity")
 
     if errors:
         for error in errors:
