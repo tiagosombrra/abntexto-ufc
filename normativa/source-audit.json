@@ -2,7 +2,7 @@
   "schema_version": 1,
   "reviewed_at": "2026-08-28",
   "scope": "abntexto-ufc-current-sources",
-  "purpose": "Release-independent current-source inventory for UFC/ABNT authority reconciliation. Runtime normative truth remains normativa/catalog.json plus normativa/precedence.json; sources reconciled for a future profile do not enter runtime until source-backed predicates are deliberately added.",
+  "purpose": "Release-independent current-source inventory for UFC/ABNT authority reconciliation. Runtime normative truth remains normativa/catalog.json plus normativa/precedence.json; sources are promoted only together with deliberately source-backed predicates.",
   "policy": {
     "current_only": true,
     "technical_rule": "Current applicable ABNT editions govern technical requirements.",
@@ -126,17 +126,18 @@
       "technical_authority": false
     },
     {
-      "id": "ufc-guia-artigos-2021",
+      "id": "ufc-guia-artigos-2022",
       "kind": "institutional-guide",
-      "title": "Guia de Normalização de Artigo em Publicação Periódica Científica",
+      "title": "Guia de normalização de artigo em publicação periódica da Universidade Federal do Ceará",
       "publisher": "Universidade Federal do Ceará",
-      "edition": "2021",
-      "url": "https://biblioteca.ufc.br/wp-content/uploads/2022/02/guianormalizacaoartigos.pdf",
+      "edition": "2022",
+      "corrected_file_date": "2023-04-27",
+      "url": "https://biblioteca.ufc.br/wp-content/uploads/2023/04/guia-de-normalizacao-de-artigo-corrigido-27.04.2023.pdf",
       "status": "current-institutional-with-stale-technical-citations",
       "checked_at": "2026-08-28",
       "applies_to": ["scientific-article"],
       "technical_authority": false,
-      "notes": "The current UFC normalization page lists this as one of five official guides. Guide p. 5 cites NBR 6022:2018, NBR 10520:2002, NBR 6023:2018, NBR 6024:2012, NBR 6028:2021 and IBGE 1993. The stale 10520/6023 editions cannot govern; NBR 6022:2018 is reconciled as the current article-presentation source for the future article profile."
+      "notes": "The current UFC normalization page links this corrected file. Its cataloging record identifies Fortaleza, 2022. Guide presentation section cites NBR 6022:2018, NBR 10520:2002, NBR 6023:2018, NBR 6024:2012, NBR 6028:2021 and IBGE 1993. The stale 10520/6023 editions cannot govern; current editions remain determined by the current-source policy."
     },
     {
       "id": "ufc-guia-citacoes-2025",
@@ -228,7 +229,7 @@
       "status": "current",
       "checked_at": "2026-08-28",
       "access": "official-catalog-or-licensed-access",
-      "notes": "Current-edition reconciliation for N15-B1. The UFC current guide/page and current university standards registries continue to identify the 2018 second edition; no later replacement was identified in the current-source review. This source is reconciled for the future article profile but is not consumed by runtime rules during B1."
+      "notes": "Current-edition reconciliation for the article profile. The UFC current guide/page and current university standards registries continue to identify the 2018 second edition; no later replacement was identified in the current-source review. Exact proprietary ABNT text is not asserted where licensed access is unavailable."
     },
     {
       "id": "abnt-nbr-6028-2021",
@@ -328,6 +329,19 @@
       "applies_to": ["academic-records", "record-retention"],
       "technical_authority": false,
       "notes": "The current UFC receiving page still links this act, but the MEC states that it was revoked by Portaria Normativa nº 22/2017 and Portaria nº 315/2018. It is therefore documented as reviewed context and deliberately excluded from the current active source registry."
+    },
+    {
+      "id": "ufc-guia-artigos-2021",
+      "kind": "institutional-guide",
+      "title": "Guia de normalização de artigo em publicação periódica da Universidade Federal do Ceará",
+      "publisher": "Universidade Federal do Ceará",
+      "edition": "2021",
+      "url": "https://biblioteca.ufc.br/wp-content/uploads/2022/02/guianormalizacaoartigos.pdf",
+      "status": "superseded-by-corrected-current-guide",
+      "checked_at": "2026-08-28",
+      "replaced_by": "ufc-guia-artigos-2022",
+      "technical_authority": false,
+      "notes": "N15-B1 used the previously indexed 2021 file while reconciling authority. Before N15-B2 runtime promotion, the current UFC normalization page was re-opened and found to link the corrected 2022 guide file published under the 2023/04 path. The historical B1 ledger is preserved; the active source identity is corrected here rather than silently treating the older file as current."
     }
   ],
   "current_technical_sources": [
@@ -344,7 +358,7 @@
   ],
   "reconciled_profile_candidate_sources": {
     "scientific-article": [
-      "ufc-guia-artigos-2021",
+      "ufc-guia-artigos-2022",
       "abnt-nbr-6022-2018",
       "abnt-nbr-10520-2023",
       "abnt-nbr-6023-2025",
