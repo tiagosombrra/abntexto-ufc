@@ -278,3 +278,7 @@ If any answer is unclear, treat the name as an API/design decision rather than a
 This policy document may be committed during B2A as roadmap/documentation preparation. Its presence alone does not constitute a B2R implementation change.
 
 Actual renames, API aliases, compatibility mappings and naming-enforcement checkers begin only after B2A is merged and the resulting `main` is re-certified.
+
+## 12. Stability note
+
+Once B2R begins, terminology should be changed only through a reviewed API/naming decision. Avoid iterative cosmetic renames across consecutive PRs; the purpose of this phase is to converge on a stable vocabulary before `articles.def` and the article public surface are introduced.
