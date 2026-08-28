@@ -15,6 +15,7 @@ CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 
 sys.path.insert(0, str(ROOT / "tools"))
 from normative_catalog import load_catalog, rule_map  # noqa: E402
+from normative_n14_cross_surface import main as cross_surface_main  # noqa: E402
 
 EXPECTED_PROFILES = ["strict", "portable", "accessibility"]
 EXPECTED_STATUSES = ["APROVADO", "REPROVADO", "ALERTA", "REVISÃO MANUAL", "NÃO APLICÁVEL"]
@@ -83,6 +84,23 @@ EXPECTED_ADOPTION = {
     "normative_contract_changed": False,
     "proof_state_changed": False,
 }
+EXPECTED_CLOSURE = {
+    "state": "DONE",
+    "vector_file": "validator/validation-vectors.json",
+    "verdict_vector_count": 5,
+    "shared_check_count": 24,
+    "canonical_check_count": 28,
+    "baseline_alias_count": 2,
+    "emitted_alias_count": 0,
+    "schema_drift_count": 0,
+    "deep_boundary_count": 2,
+    "exit_criteria_passed": 6,
+    "exit_criteria_total": 6,
+    "normative_contract_changed": False,
+    "locator_policy_changed": False,
+    "oracle_tolerances_changed": False,
+    "proof_state_changed": False,
+}
 
 
 def fail(message: str) -> None:
@@ -113,7 +131,7 @@ def main() -> None:
     data = load_contract()
     if data.get("schema_version") != 1 or data.get("phase") != "N14":
         fail("invalid schema_version/phase")
-    if data.get("status") != "ACTIVE":
+    if data.get("status") != "DONE":
         fail(f"unexpected N14 status: {data.get('status')}")
     if data.get("authority") != "technical-interface-contract":
         fail("N14 contract must remain a technical interface contract")
@@ -159,9 +177,15 @@ def main() -> None:
     if target.get("required_check_fields") != EXPECTED_CHECK_FIELDS:
         fail("target check schema drift")
     if target.get("adoption_state") != "ADOPTED":
-        fail("target schema must be adopted in N14-B")
+        fail("target schema must remain adopted")
     if data.get("adoption") != EXPECTED_ADOPTION:
         fail("N14-B adoption receipt drift")
+    if data.get("closure") != EXPECTED_CLOSURE:
+        fail("N14-C closure receipt drift")
+
+    exit_criteria = data.get("exit_criteria")
+    if not isinstance(exit_criteria, list) or len(exit_criteria) != 6:
+        fail("N14 must retain six explicit exit criteria")
 
     inventory = data.get("check_inventory")
     if not isinstance(inventory, list) or not inventory:
@@ -292,13 +316,13 @@ def main() -> None:
     print(
         "N14-EVIDENCE validator-baseline "
         "status=PASS web_checks=25 cli_checks=27 canonical_checks=28 shared=24 "
-        "baseline_aliases=2 web_only=1 cli_only=3 phase_status=ACTIVE "
+        "baseline_aliases=2 web_only=1 cli_only=3 phase_status=DONE "
         "normative_contract_changed=false proof_state_changed=false"
     )
     print(
         "N14-EVIDENCE schema-adoption "
         "status=PASS web_case=snake_case cli_case=snake_case emitted_aliases=0 "
-        "web_mode=web-lite-local cli_mode=cli-deep-local phase_status=ACTIVE "
+        "web_mode=web-lite-local cli_mode=cli-deep-local phase_status=DONE "
         "normative_contract_changed=false proof_state_changed=false"
     )
     print(
@@ -306,6 +330,7 @@ def main() -> None:
         "status=PASS web_lite_upload=false deep_review_only=font.embedded,pdfa.deep "
         "measurement_backend_equivalence_required=false proof_state_changed=false"
     )
+    cross_surface_main()
 
 
 if __name__ == "__main__":
