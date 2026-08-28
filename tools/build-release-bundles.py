@@ -35,11 +35,11 @@ CLASS_INPUTS = (
 )
 
 TEMPLATE_INPUTS = (
-    "documento.tex",
-    "1-pre-textuais",
-    "2-textuais",
-    "3-pos-textuais",
-    "figuras",
+    "main.tex",
+    "frontmatter",
+    "chapters",
+    "backmatter",
+    "figures",
     "abntexto-ufc.cls",
     "abntexto-ufc",
     LEGACY_CLASS,
@@ -137,7 +137,7 @@ def source_entries(specs: Iterable[str], prefix: str = "") -> list[tuple[str, by
 
 def template_entries(prefix: str) -> list[tuple[str, bytes, int]]:
     entries = source_entries(TEMPLATE_INPUTS, prefix)
-    document_name = f"{prefix}documento.tex"
+    document_name = f"{prefix}main.tex"
     marker = "  brasao = sim,"
     replacement = "  brasao = nao,"
 
@@ -146,11 +146,11 @@ def template_entries(prefix: str) -> list[tuple[str, bytes, int]]:
             continue
         text = content.decode("utf-8")
         if text.count(marker) != 1:
-            raise SystemExit("documento.tex must contain exactly one default brasao = sim setting.")
+            raise SystemExit("main.tex must contain exactly one default brasao = sim setting.")
         entries[index] = (name, text.replace(marker, replacement, 1).encode("utf-8"), mode)
         return entries
 
-    raise SystemExit("documento.tex missing from template bundle inputs.")
+    raise SystemExit("main.tex missing from template bundle inputs.")
 
 
 def write_archive(path: Path, entries: list[tuple[str, bytes, int]], date_time: tuple[int, int, int, int, int, int]) -> None:
