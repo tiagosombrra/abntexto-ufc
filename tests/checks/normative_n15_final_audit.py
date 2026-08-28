@@ -36,6 +36,15 @@ EXPECTED_PROOF = {
     "MANUAL": 6,
     "NOT_APPLICABLE": 1,
 }
+EXPECTED_BLOCKERS = {
+    "N15-F001",
+    "N15-F002",
+    "N15-F003",
+    "N15-F004",
+    "N15-F005",
+    "N15-F006",
+    "N15-F013",
+}
 
 
 def fail(message: str) -> None:
@@ -105,6 +114,8 @@ def main() -> None:
     for key in forbidden_true:
         if boundary.get(key) is not False:
             fail(f"authority boundary {key} must remain false")
+    if boundary.get("article_scope_decision_recorded_only") is not True:
+        fail("article scope must be recorded as a decision only during N15-A")
 
     expected_done = [f"N{index}" for index in range(15)]
     if audit.get("frozen_baseline", {}).get("roadmap_done_phases") != expected_done:
@@ -144,15 +155,17 @@ def main() -> None:
         fail("audit dimension inventory must contain 13 unique dimensions")
 
     findings = audit.get("findings", [])
-    if len(findings) != 12:
-        fail(f"expected 12 audit findings, got {len(findings)}")
+    if len(findings) != 13:
+        fail(f"expected 13 audit findings, got {len(findings)}")
     ids = [item.get("id") for item in findings]
     if len(set(ids)) != len(ids):
         fail("duplicate finding id")
+    if set(ids) != {f"N15-F{index:03d}" for index in range(1, 14)}:
+        fail("finding inventory must contain N15-F001 through N15-F013")
     blockers = [item for item in findings if item.get("blocks_release") is True]
-    if len(blockers) != 6:
-        fail(f"expected six release blockers, got {len(blockers)}")
-    if {item["id"] for item in blockers} != {f"N15-F00{index}" for index in range(1, 7)}:
+    if len(blockers) != 7:
+        fail(f"expected seven release blockers, got {len(blockers)}")
+    if {item["id"] for item in blockers} != EXPECTED_BLOCKERS:
         fail("release-blocker identity drifted")
 
     passes = audit.get("passes", [])
@@ -167,43 +180,58 @@ def main() -> None:
     if active_guides != EXPECTED_GUIDES:
         fail(f"N15-F001 guide observation drifted: {sorted(active_guides)}")
     if any("artigo" in item for item in active_guides):
-        fail("N15-F001 expects the official article guide to remain unclassified in N15-A")
+        fail("article source inclusion belongs to N15-B1, not the N15-A audit branch")
 
     if makefile_version() != "2.1.0" or class_version() != "2.1.0":
         fail("N15-F006 expects release surfaces to remain at 2.1.0 during N15-A")
     if "V2.1.0" not in NORMAS.read_text(encoding="utf-8"):
         fail("N15-F004 expects stale V2.1.0 release-state wording to remain observable in N15-A")
 
+    if finding(audit, "N15-F001").get("severity") != "high":
+        fail("missing article source must remain a high-severity N15-A finding")
+    if finding(audit, "N15-F002").get("severity") != "high":
+        fail("graduate-program authority classification must remain high-severity")
     if finding(audit, "N15-F005").get("status") != "FINDING":
         fail("issue #18 must remain an explicit N15-A finding")
+    article = finding(audit, "N15-F013")
+    if article.get("status") != "FINDING" or article.get("blocks_release") is not True:
+        fail("article profile implementation must remain a release-blocking N15-A finding")
     if finding(audit, "N15-F008").get("status") != "DEFERRED_CLEANUP":
         fail("bulk branch cleanup must remain deferred")
     if finding(audit, "N15-F012").get("status") != "REVIEW":
         fail("planning branch must remain review-required")
 
+    plan = audit.get("n15_plan", {})
+    for phase in ("N15-B1", "N15-B2", "N15-B3", "N15-C", "N15-D"):
+        if not plan.get(phase):
+            fail(f"expanded N15 plan is missing {phase}")
+
     exit_criteria = audit.get("exit_criteria", {})
     if exit_criteria.get("dimensions_recorded") != 13:
         fail("exit criteria dimension count drifted")
-    if exit_criteria.get("release_blocking_findings_identified") != 6:
+    if exit_criteria.get("release_blocking_findings_identified") != 7:
         fail("exit criteria blocker count drifted")
     if exit_criteria.get("cleanup_is_deferred") is not True:
         fail("cleanup must remain deferred")
     if exit_criteria.get("closed_phases_reopened") is not False:
         fail("N15-A must not reopen closed phases")
+    if exit_criteria.get("article_profile_deliberately_in_scope") is not True:
+        fail("article profile must be deliberately in scope before N15-A closes")
     if exit_criteria.get("n15a_ready_to_close") is not True:
         fail("N15-A closure candidate is not marked ready")
 
     print(
         "N15-EVIDENCE unrestricted-audit "
-        "status=PASS dimensions=13 findings=12 release_blockers=6 passes=6 "
-        "cleanup_deferred=true phase=N15-A phase_status=CLOSURE_CANDIDATE "
-        "normative_contract_changed=false proof_state_changed=false version_promoted=false"
+        "status=PASS dimensions=13 findings=13 release_blockers=7 passes=6 "
+        "cleanup_deferred=true article_profile_in_scope=true phase=N15-A "
+        "phase_status=CLOSURE_CANDIDATE normative_contract_changed=false "
+        "proof_state_changed=false version_promoted=false"
     )
     print(
         "N15-EVIDENCE release-readiness "
-        "status=BLOCKED blockers=6 current_version=2.1.0 target_version=2.2.0 "
-        "source_registry_complete=false reference_pdf_reproducibility=UNRESOLVED "
-        "physical_cleanup_deferred=true"
+        "status=BLOCKED blockers=7 current_version=2.1.0 target_version=2.2.0 "
+        "source_registry_complete=false article_profile_implemented=false "
+        "reference_pdf_reproducibility=UNRESOLVED physical_cleanup_deferred=true"
     )
 
 
