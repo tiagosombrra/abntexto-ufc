@@ -47,26 +47,26 @@ def main() -> None:
 
         wrapped_root = project / f"modelo-latex-ufc-overleaf-{v}"
         if wrapped_root.exists():
-            raise SystemExit("Overleaf bundle must place documento.tex at the archive root.")
+            raise SystemExit("Overleaf bundle must place main.tex at the archive root.")
 
         required = (
-            project / "documento.tex",
+            project / "main.tex",
             project / "abntexto-ufc.cls",
             project / "abntexto-ufc" / "core.def",
             project / "ufctex.cls",
             project / "abntexto.cls",
-            project / "1-pre-textuais" / "resumo.tex",
-            project / "3-pos-textuais" / "referencias.bib",
+            project / "frontmatter" / "resumo.tex",
+            project / "backmatter" / "referencias.bib",
         )
         missing = [str(path.relative_to(project)) for path in required if not path.is_file()]
         if missing:
             raise SystemExit(f"Overleaf bundle missing files: {', '.join(missing)}")
 
-        institutional_assets = project / "assets" / "institucional"
+        institutional_assets = project / "assets" / "institutional"
         if institutional_assets.exists() and any(institutional_assets.rglob("*")):
             raise SystemExit("Overleaf bundle must not redistribute UFC institutional assets.")
 
-        document = (project / "documento.tex").read_text(encoding="utf-8")
+        document = (project / "main.tex").read_text(encoding="utf-8")
         if "  brasao = nao," not in document:
             raise SystemExit("Overleaf bundle must disable the undistributed institutional mark by default.")
         if "  brasao = sim," in document:
