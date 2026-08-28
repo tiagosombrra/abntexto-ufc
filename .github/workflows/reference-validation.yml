@@ -45,12 +45,12 @@ jobs:
           name: v2-validation-${{ github.run_id }}
           path: |
             artifacts/validation
-            documento.pdf
-            documento.loi
-            documento.lot
-            documento.loc
-            documento.loa
-            documento.toc
+            main.pdf
+            main.loi
+            main.lot
+            main.loc
+            main.loa
+            main.toc
           if-no-files-found: warn
           retention-days: 30
 
