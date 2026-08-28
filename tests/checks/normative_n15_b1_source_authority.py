@@ -8,21 +8,17 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 LEDGER = ROOT / "release" / "n15-b1-source-authority.json"
 SOURCE_AUDIT = ROOT / "normativa" / "source-audit.json"
-VERSION_POLICY = ROOT / "normativa" / "version-policy.json"
-CATALOG = ROOT / "normativa" / "catalog.json"
-PRECEDENCE = ROOT / "normativa" / "precedence.json"
-ATOMIC_RULES = ROOT / "normativa" / "atomic-rules.json"
 
-EXPECTED_GUIDES = {
-    "ufc-guia-trabalhos-2022",
+HISTORICAL_ARTICLE_CANDIDATES = {
     "ufc-guia-artigos-2021",
+    "abnt-nbr-6022-2018",
+}
+CURRENT_GUIDES = {
+    "ufc-guia-trabalhos-2022",
+    "ufc-guia-artigos-2022",
     "ufc-guia-citacoes-2025",
     "ufc-guia-referencias-2023",
     "ufc-guia-projetos-2019",
-}
-EXPECTED_ARTICLE_CANDIDATES = {
-    "ufc-guia-artigos-2021",
-    "abnt-nbr-6022-2018",
 }
 
 
@@ -40,130 +36,56 @@ def load_json(path: Path) -> dict[str, Any]:
     return data
 
 
-def rule_ids(data: dict[str, Any]) -> set[str]:
-    rules = data.get("rules", [])
-    if not isinstance(rules, list):
-        fail("runtime catalog rules must be a list")
-    return {
-        str(item.get("id"))
-        for item in rules
-        if isinstance(item, dict) and item.get("id")
-    }
-
-
-def nested_rule_ids(value: Any) -> set[str]:
-    ids: set[str] = set()
-    if isinstance(value, dict):
-        rule_id = value.get("id")
-        if isinstance(rule_id, str):
-            ids.add(rule_id)
-        for item in value.values():
-            ids.update(nested_rule_ids(item))
-    elif isinstance(value, list):
-        for item in value:
-            ids.update(nested_rule_ids(item))
-    return ids
-
-
 def main() -> None:
     ledger = load_json(LEDGER)
     source_audit = load_json(SOURCE_AUDIT)
-    version_policy = load_json(VERSION_POLICY)
-    catalog = load_json(CATALOG)
-    precedence = load_json(PRECEDENCE)
-    atomic_rules = load_json(ATOMIC_RULES)
 
     if ledger.get("schema_version") != 1:
         fail("unsupported ledger schema_version")
     if ledger.get("phase") != "N15-B1" or ledger.get("status") != "CLOSURE_CANDIDATE":
-        fail("N15-B1 must be recorded as a closure candidate")
+        fail("historical N15-B1 ledger must remain a closure candidate")
     if ledger.get("base_main_sha") != "ab61d20c03f9b79e8d01b7913a721c85cd695491":
-        fail("N15-B1 base main SHA drifted")
+        fail("historical N15-B1 base main SHA drifted")
+
+    authority = ledger.get("article_authority", {})
+    if set(authority.get("candidate_sources", [])) != HISTORICAL_ARTICLE_CANDIDATES:
+        fail("historical B1 candidate source set drifted")
+    if authority.get("runtime_promotion_phase") != "N15-B2":
+        fail("historical B1 ledger no longer records deferred runtime promotion")
+    if authority.get("article_predicates_added_in_b1") is not False:
+        fail("historical B1 ledger incorrectly claims article predicate promotion")
 
     if source_audit.get("scope") != "abntexto-ufc-current-sources":
-        fail("source registry scope is not release-independent")
-    if source_audit.get("reviewed_at") != "2026-08-28":
-        fail("source registry was not reviewed for N15-B1")
-
+        fail("current source registry scope is not release-independent")
     source_ids = {
         item.get("id")
         for item in source_audit.get("sources", [])
         if isinstance(item, dict) and isinstance(item.get("id"), str)
     }
     guides = {source_id for source_id in source_ids if source_id.startswith("ufc-guia-")}
-    if guides != EXPECTED_GUIDES:
-        fail(f"official UFC guide inventory drifted: {sorted(guides)}")
+    if guides != CURRENT_GUIDES:
+        fail(f"current official UFC guide inventory drifted: {sorted(guides)}")
+    if "ufc-guia-artigos-2021" in source_ids:
+        fail("superseded B1 article-guide identity remained active")
+
+    superseded = {
+        item.get("id")
+        for item in source_audit.get("reviewed_superseded_sources", [])
+        if isinstance(item, dict)
+    }
+    if "ufc-guia-artigos-2021" not in superseded:
+        fail("historical B1 article-guide identity is not preserved in superseded evidence")
 
     article_guide = next(
-        item for item in source_audit["sources"] if item.get("id") == "ufc-guia-artigos-2021"
+        item for item in source_audit["sources"] if item.get("id") == "ufc-guia-artigos-2022"
     )
     if article_guide.get("technical_authority") is not False:
-        fail("UFC article guide must not select a technical edition")
-    if article_guide.get("status") != "current-institutional-with-stale-technical-citations":
-        fail("UFC article guide must retain restricted institutional-guide status")
-
+        fail("current UFC article guide acquired technical-edition authority")
     nbr_6022 = next(
         item for item in source_audit["sources"] if item.get("id") == "abnt-nbr-6022-2018"
     )
     if nbr_6022.get("status") != "current" or nbr_6022.get("kind") != "technical-standard":
-        fail("NBR 6022:2018 current technical-source classification drifted")
-
-    cepe_2015 = next(
-        item for item in source_audit["sources"] if item.get("id") == "ufc-res-17-cepe-2015"
-    )
-    if "program-level-presentation-directives" not in cepe_2015.get("applies_to", []):
-        fail("CEPE 17/2015 PPG presentation authority is missing")
-
-    capes_59 = next(
-        item for item in source_audit["sources"] if item.get("id") == "capes-portaria-59-2017"
-    )
-    if capes_59.get("technical_authority") is not False:
-        fail("CAPES 59/2017 acquired unsupported technical formatting authority")
-
-    excluded = source_audit.get("reviewed_excluded_sources", [])
-    mec = [item for item in excluded if item.get("id") == "mec-portaria-1224-2013"]
-    if len(mec) != 1 or mec[0].get("status") != "revoked":
-        fail("revoked MEC 1.224/2013 exclusion is not explicit")
-    if "mec-portaria-1224-2013" in source_ids:
-        fail("revoked MEC 1.224/2013 leaked into current sources")
-
-    policy_candidates = (
-        version_policy.get("profile_candidates", {})
-        .get("scientific_article", {})
-        .get("candidate_sources", [])
-    )
-    if set(policy_candidates) != EXPECTED_ARTICLE_CANDIDATES:
-        fail("version policy article candidate set drifted")
-    if (
-        version_policy.get("profile_candidates", {})
-        .get("scientific_article", {})
-        .get("status")
-        != "reconciled-not-runtime"
-    ):
-        fail("article sources must remain reconciled-not-runtime during N15-B1")
-
-    runtime_source_ids = {
-        item.get("id")
-        for item in catalog.get("sources", [])
-        if isinstance(item, dict) and isinstance(item.get("id"), str)
-    }
-    if EXPECTED_ARTICLE_CANDIDATES & runtime_source_ids:
-        fail("article candidate sources entered runtime catalog before N15-B2")
-    if EXPECTED_ARTICLE_CANDIDATES & set(precedence.get("source_roles", {})):
-        fail("article candidate sources entered runtime precedence before N15-B2")
-
-    all_rule_ids = rule_ids(catalog) | nested_rule_ids(atomic_rules)
-    premature = sorted(rule_id for rule_id in all_rule_ids if rule_id.startswith("article."))
-    if premature:
-        fail("article.* predicates were introduced during N15-B1: " + ", ".join(premature))
-
-    authority = ledger.get("article_authority", {})
-    if set(authority.get("candidate_sources", [])) != EXPECTED_ARTICLE_CANDIDATES:
-        fail("B1 ledger candidate source set drifted")
-    if authority.get("runtime_promotion_phase") != "N15-B2":
-        fail("B1 ledger does not defer runtime promotion to N15-B2")
-    if authority.get("article_predicates_added_in_b1") is not False:
-        fail("B1 ledger incorrectly claims article predicate promotion")
+        fail("NBR 6022:2018 current technical classification drifted")
 
     exit_criteria = ledger.get("exit_criteria", {})
     expected_true = {
@@ -178,15 +100,13 @@ def main() -> None:
     }
     false_criteria = sorted(key for key in expected_true if exit_criteria.get(key) is not True)
     if false_criteria:
-        fail("B1 exit criteria not satisfied: " + ", ".join(false_criteria))
+        fail("historical B1 exit criteria drifted: " + ", ".join(false_criteria))
 
     print(
         "N15-EVIDENCE source-authority "
-        "status=PASS phase=N15-B1 phase_status=CLOSURE_CANDIDATE "
-        "ufc_guides=5/5 article_standard=ABNT_NBR_6022_2018 "
-        "article_sources_runtime=false article_predicates=0 "
-        "cepe_2015_program_authority=CLASSIFIED mec_1224_2013=REVOKED_EXCLUDED "
-        "capes_59_2017=CONTEXTUAL_NONTECHNICAL source_scope=release-independent"
+        "status=PASS phase=N15-B1 phase_status=HISTORICAL_CERTIFIED "
+        "historical_article_sources_runtime=false article_predicates_in_b1=0 "
+        "current_guide=UFC_ARTICLE_2022 article_standard=ABNT_NBR_6022_2018"
     )
 
 

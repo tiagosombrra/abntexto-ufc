@@ -34,6 +34,7 @@ NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
 NORMATIVE_ATOMIC_CONTRACT = ROOT / "tests" / "checks" / "normative_atomic_contract.py"
 NORMATIVE_FULL_CONTRACT = ROOT / "tests" / "checks" / "normative_full_contract.py"
 N14_VALIDATOR_CONTRACT = ROOT / "tests" / "checks" / "normative_n14_validator_contract.py"
+N15_B2A_ARTICLE_CONTRACT = ROOT / "tests" / "checks" / "normative_n15_b2a_article_contract.py"
 
 
 def fail(message: str) -> None:
@@ -78,6 +79,7 @@ def main() -> None:
         NORMATIVE_ATOMIC_CONTRACT,
         NORMATIVE_FULL_CONTRACT,
         N14_VALIDATOR_CONTRACT,
+        N15_B2A_ARTICLE_CONTRACT,
     ):
         py_compile.compile(str(path), doraise=True)
 
@@ -97,6 +99,7 @@ def main() -> None:
     run_source_check(NORMATIVE_TRACEABILITY, "normative traceability", "--strict-evidence")
     run_source_check(NORMATIVE_PROOF_STATE, "normative proof state")
     run_source_check(N14_VALIDATOR_CONTRACT, "N14 validator contract")
+    run_source_check(N15_B2A_ARTICLE_CONTRACT, "N15-B2A article contract")
 
     completed = subprocess.run(
         [sys.executable, str(CLI), "--help"],

@@ -80,7 +80,9 @@ def main() -> None:
     if "ufc-guia-artigos-2021" in active_audit_ids:
         fail("superseded 2021 article-guide identity remained active")
     superseded = {
-        item.get("id") for item in source_audit.get("reviewed_superseded_sources", []) if isinstance(item, dict)
+        item.get("id")
+        for item in source_audit.get("reviewed_superseded_sources", [])
+        if isinstance(item, dict)
     }
     if "ufc-guia-artigos-2021" not in superseded:
         fail("superseded 2021 article-guide identity is not preserved as reviewed history")
@@ -92,7 +94,7 @@ def main() -> None:
         fail("UFC article guide must have institutional-guide runtime role")
     if sources["abnt-nbr-6022-2018"].get("role") != "technical-standard":
         fail("NBR 6022:2018 must have technical-standard runtime role")
-    if set(precedence.get("source_roles", {})) & {"ufc-guia-artigos-2021"}:
+    if "ufc-guia-artigos-2021" in precedence.get("source_roles", {}):
         fail("superseded 2021 guide identity leaked into runtime precedence")
 
     article_rules = {rule_id: rule for rule_id, rule in rules.items() if rule_id.startswith("article.")}
@@ -122,12 +124,14 @@ def main() -> None:
         fail("article sections must preserve continuous flow")
 
     policy = version_policy.get("profile_candidates", {}).get("scientific_article", {})
-    if policy.get("status") != "contract-promoted-runtime-formatting-pending":
+    if policy.get("status") != "contract-promotion-in-progress-runtime-pending":
         fail("version policy does not expose the B2-A/B2-B boundary")
-    if policy.get("runtime_promotion_phase") != "N15-B2A":
-        fail("article contract promotion phase must be N15-B2A")
-    if policy.get("formatting_implementation_phase") != "N15-B2B":
+    if policy.get("source_and_contract_phase") != "N15-B2A":
+        fail("article source/contract phase must be N15-B2A")
+    if policy.get("runtime_implementation_phase") != "N15-B2B":
         fail("article formatting implementation must remain deferred to N15-B2B")
+    if policy.get("evidence_completion_phase") != "N15-B2C":
+        fail("article evidence closure must remain deferred to N15-B2C")
 
     if (ROOT / "abntexto-ufc" / "artigos.def").exists():
         fail("B2-A introduced the LaTeX article module prematurely")
