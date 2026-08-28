@@ -5,19 +5,21 @@ Updated: 2026-08-28
 Current certified base: `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`.
 
 Active branch: `refactor/n15-b2r-a2-user-layout`.  
-Active PR: #147 (draft).
+Active PR: #147.
 
-This document is the human-readable companion to `release/n15-b2r-a-naming-inventory.json`. `docs/NAMING.md` remains the naming policy. `docs/HANDOFF-V2.2.0.md` is the canonical project continuation point.
+This document is the human-readable companion to `release/n15-b2r-a-naming-inventory.json`. `docs/NAMING.md` remains the naming policy. `docs/HANDOFF-V2.2.0.md` is the canonical continuation point.
 
 ## Mandatory synchronization rule
 
-B2R cannot be closed if this file, the release ledger and the canonical handoff disagree with the live branch/PR/CI state. Update them after material scope decisions, newly discovered CI blockers, blocker fixes, merge/certification events and before handing the project to another conversation.
+B2R cannot close if this file, the machine ledger and the canonical handoff disagree with live Git/PR/CI state.
+
+Final receipt sync follows an anti-loop rule: record the complete implementation-head certification, then certify the receipt-only documentation head using live checks without editing this file again merely to copy those new run numbers. Otherwise every receipt-only edit would create another uncertified SHA.
 
 ## B2R-A1 — DONE
 
-Internal package modules were normalized to canonical English paths:
+Internal module filenames normalized to English:
 
-| Previous path | Canonical path |
+| Previous | Canonical |
 | --- | --- |
 | `abntexto-ufc/fontes.def` | `abntexto-ufc/fonts.def` |
 | `abntexto-ufc/modulos.def` | `abntexto-ufc/modules.def` |
@@ -29,22 +31,15 @@ Internal package modules were normalized to canonical English paths:
 | `abntexto-ufc/bibliografia.def` | `abntexto-ufc/bibliography.def` |
 | `abntexto-ufc/postextuais.def` | `abntexto-ufc/backmatter.def` |
 
-Retained canonical paths are `core.def`, `layout.def`, `compat-abntexto.def` and `compat-nbr6023-2025.def`. Module order is unchanged; `academic-works.def` loads before `research-projects.def`.
+PR #146 was squash-merged. Resulting `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1` was certified by Source #367, preflight #1030, Gate T #1031 and Distribution #239.
 
-PR #146 was squash-merged. Certified resulting `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`:
+## B2R-A2 — FINAL DOCUMENTATION-SYNC CANDIDATE
 
-- Source Contract #367 — SUCCESS;
-- LaTeX preflight push #1030 — SUCCESS;
-- exact Gate T #1031 — SUCCESS;
-- Distribution #239 — SUCCESS.
+A2 normalizes only user-example and distribution-facing repository paths. It does not change public `\ufcsetup` semantics, article runtime or normative predicates/values/locators/authority.
 
-## B2R-A2 — IMPLEMENTATION CANDIDATE
+### Canonical moves
 
-A2 normalizes only the user-example and distribution-facing repository layout. It does not change `\ufcsetup`, public command semantics, article runtime, or normative predicates/values/locators.
-
-### Approved and implemented moves
-
-| Previous path | Canonical path |
+| Previous | Canonical |
 | --- | --- |
 | `documento.tex` | `main.tex` |
 | `1-pre-textuais/` | `frontmatter/` |
@@ -54,138 +49,97 @@ A2 normalizes only the user-example and distribution-facing repository layout. I
 | `assets/institucional/` | `assets/institutional/` |
 | `assets/institucional/brasao-ufc.PNG` | `assets/institutional/ufc-coat-of-arms.png` |
 
-Repository, complete template bundle and Overleaf bundle intentionally share the same canonical content layout. The Overleaf archive keeps `main.tex` at archive root.
+Repository, full-template bundle and Overleaf bundle share this canonical content layout; Overleaf keeps `main.tex` at ZIP root. Portuguese academic leaf filenames remain intentionally retained in A2.
 
-A2 deliberately retains Portuguese leaf filenames that describe academic content, for example `frontmatter/resumo.tex`, `backmatter/apendices/` and `backmatter/anexos/`. Test/evidence fixture names and historical normative identifiers are outside the rename scope unless a direct path consumer must be updated.
+### Key synchronized consumers
 
-### Synchronized consumers
-
-The implementation synchronizes:
-
-- `Makefile` default entrypoint;
-- `main.tex` content and bibliography references;
-- example image/listing/license paths;
-- institutional source-only asset path;
-- reference-image downloader;
-- validation runner;
-- reference, corpus, PDF validator and PDF/A checks;
-- Overleaf stable proxy and import-bundle contract;
+- Makefile/default entrypoint and `main.tex` references;
+- frontmatter/chapter/backmatter/bibliography/image/listing paths;
+- reference-image downloader and validation runner;
+- reference/corpus/PDF-A/profile checks;
+- Overleaf stable/import bundle checks;
 - deterministic release builder and release-package contract;
 - distribution-source validation;
-- reference preview, reference validation and distribution workflows;
-- `tests/smoke/perfil-base.tex`;
-- `normativa/reference-guide-map.json` secondary guide-trace source paths;
-- `tests/v2-capes-guidance-check.sh`;
-- `tests/v2-distribution-check.sh`, including container-safe Git access and boundary-aware legacy-path detection;
-- `tests/checks/normative_n12_matrix.py` bounded A2 historical-content bridge;
+- CAPES guidance;
+- CTAN README/binary policy;
 - `.gitignore` generated/reference-image paths;
-- the compiled guide's explicit layout/path examples;
-- `docs/README-CTAN.md` canonical institutional-asset compatibility path;
-- `tests/v2-ctan-policy-check.py` canonical binary policy paths;
-- README, handoff, naming and normative human documentation.
+- secondary `normativa/reference-guide-map.json` source traces;
+- active user/naming/normative documentation.
 
-`tests/v2-distribution-check.sh` rejects reintroduction of legacy A2 top-level paths and scans active tracked text for stale path references. Explicit migration/history ledgers remain allowed to mention old names. The scanner uses token boundaries so a path such as `figuras/` is not falsely inferred from identifiers such as `imprimirlistadefiguras/before`.
-
-### Secondary trace-map clarification
-
-`normativa/reference-guide-map.json` lives under `normativa/` but is a secondary documentation/rastreability map. Its declared purpose is to connect the commented reference guide to existing normative sources/rules without creating new requirements, and its policy remains `normative_contract_changed=false`.
-
-A2 changed only its `source_file` paths from `2-textuais/...` to `chapters/...`. No source authority, predicate, value, rule ID or normative locator was changed.
+The stale-path gate is boundary-aware and rejects real legacy path tokens without confusing identifiers such as `imprimirlistadefiguras/before` with a `figuras/` directory reference.
 
 ### Frozen N12 boundary
 
-`.github/workflows/latex-preflight.yml` is not modified in A2. Required blob:
+`.github/workflows/latex-preflight.yml` remains byte-identical at:
 
 `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
 
-The N12 matrix manifest and certified historical hashes also remain unchanged. A1 reconstructs historical `\ProvidesFile` identities for renamed modules. A2 reconstructs only the two path strings changed inside `tests/smoke/perfil-base.tex` — `frontmatter/resumo` → `1-pre-textuais/resumo` and `frontmatter/abstract` → `1-pre-textuais/abstract` — before computing the historical blob. Any other content drift remains a failure.
+The historical N12 manifest/hashes are unchanged. Only two authorized path strings in `tests/smoke/perfil-base.tex` are reversed before historical hash comparison:
 
-### Exact-head CI cycles
+- `frontmatter/resumo` → `1-pre-textuais/resumo`;
+- `frontmatter/abstract` → `1-pre-textuais/abstract`.
 
-First cycle, PR head `1f80043139ae9fabe68c554c264ef7d8c5087cd8`:
+### Normative trace clarification
 
-- Source Contract #368 — SUCCESS;
-- Reference Preview #22 built complete `main.tex` successfully before later PDF/A/proxy steps;
-- LaTeX preflight #1032 found two path-only regressions.
+`normativa/reference-guide-map.json` is secondary trace documentation. A2 changed only `source_file` implementation paths to `chapters/...`; `normative_contract_changed=false` remains true and no authority/predicate/value/rule ID/locator changed.
 
-Repairs:
+## Migration evidence
 
-1. `normativa/reference-guide-map.json` source-file traces migrated to `chapters/...`;
-2. `tests/smoke/perfil-base.tex` summary/abstract paths migrated to `frontmatter/...`.
+CI cycles found and resolved only bounded migration issues:
 
-Second documented cycle, PR head `8b1a0a8013c10cc73ad43115b25d0beca567e529`:
+1. stale reference-map and profile-fixture paths;
+2. exact human supersession strings in `VIGENCIA-NORMATIVA.md`;
+3. container Git `safe.directory`;
+4. bounded N12 historical-content rewrite for two fixture paths;
+5. CAPES gratitude-path consumer;
+6. stale `.gitignore`, compiled-guide, CTAN README and CTAN binary-policy paths;
+7. one scanner substring false positive solved by boundary-aware matching rather than exemption.
 
-- Source Contract #376 — FAILED only at the human-documentation assertion in `normative_currency.py`;
-- catalog, precedence, source audit, source-reference integrity and locator audit had already passed;
-- cause: the rewritten `docs/VIGENCIA-NORMATIVA.md` conveyed the supersessions semantically but abbreviated old references as `NBR ...`, while the checker requires exact full strings such as `ABNT NBR 14724:2011` and `ABNT NBR 14724:2024` plus exact CEPE markers.
+No fix changed public API, article runtime, normative contract, formatting intent or pagination intent.
 
-Repair:
+## Certified implementation head before final receipt sync
 
-3. `docs/VIGENCIA-NORMATIVA.md` explicitly lists every full superseded/current ABNT pair from `normativa/version-policy.json`, keeps `ABNT NBR 6022:2018`, the current 2022/corrected-2023 article-guide state, and exact CEPE titles. Repair commit before documentation sync: `5539e5370447fd97e844dfbadf4663992ab0e176`.
+Implementation head:
 
-Third cycle, PR head `a0bf9d060a188aa963d7e7f7002a538ef3dee2e0`:
+`6e2528458e4cf92dda970ecad122054fe9d51f78`
 
-- Source Contract #380 — SUCCESS;
-- Reference Preview #34 — SUCCESS, including reference PDF/A and public TeX Live 2025 proxy;
-- LaTeX preflight #1044 confirmed reference document + PDF/A SUCCESS, twelve-profile build + twelve-profile PDF/A SUCCESS and post-textual SUCCESS;
-- the structure job failed on three migration consumers, while the substantive layout/font/geometry/math/project/build-path/multivolume/catalog-card checks shown after those failures continued to pass.
+Complete receipts:
 
-Repairs:
+- Source Contract **#402 — SUCCESS**;
+- Reference Preview **#56 — SUCCESS**;
+- PR LaTeX preflight **#1066 — SUCCESS**;
+- exact Gate T **#1067 — SUCCESS**, including Overleaf stable proxy, Windows literal Times New Roman/Arial build, independent identity/Unicode/embedding/PDF-A certification, 12-profile matrix/PDF-A, structure, reference, objects/bibliography and post-textual regressions;
+- Distribution **#240 — SUCCESS**, including Gate T reuse, release preflight, release PDF/A, deterministic bundles, Overleaf import-bundle proxy, artifact upload and aggregate `distribution-preflight`.
 
-4. distribution-source scan now invokes `git -c safe.directory=<repo> ls-files -z`, avoiding the Git dubious-ownership failure inside the TeX Live container without changing the frozen workflow;
-5. `tests/checks/normative_n12_matrix.py` now uses the machine-ledger-controlled reverse-content bridge for exactly the two profile-fixture paths changed by A2; the N12 manifest, certified hashes and frozen workflow remain unchanged;
-6. `tests/v2-capes-guidance-check.sh` now reads `frontmatter/agradecimentos.tex` instead of the removed `1-pre-textuais/agradecimentos.tex`.
+`Publish GitHub Release` was correctly skipped because no release tag was involved.
 
-Fourth cycle, PR head `3fcd7a6d8cf09567c9e6c79448b8a3f0dbf3899c`:
+Non-mutating certification refs used:
 
-- Source Contract #387 — SUCCESS;
-- Reference Preview #41 — SUCCESS, including PDF/A and TeX Live 2025 compatibility proxy;
-- LaTeX preflight #1051: profile matrix 12/12 + 12 PDF/A SUCCESS, reference + PDF/A SUCCESS, post-textual SUCCESS, objects/bibliography SUCCESS;
-- `structure` reached `PASS=13 FAIL=1`: the only failure was the active stale-path scanner under `distribution-source`;
-- the three repairs from #1044 were independently confirmed: `normative-complement` PASS with the bounded N12 content-rewrite bridge, and `pretextual` PASS including CAPES guidance.
+- `maintenance/v2.2.0-b2r-a2-gate-t` → `6e252845...`;
+- `release/v2.2.0-b2r-a2-dist` → `6e252845...`.
 
-The scanner reported nine files. Classification and repair:
+## A2 closure requirements
 
-7. `.gitignore` contained real old generated/reference-image paths and now uses `main.pdf` and `figures/...`;
-8. the compiled reference-guide chapters still contained five explicit old example paths; those human-facing examples now use `main.tex`, `frontmatter/...` and `backmatter/referencias.bib`;
-9. `docs/README-CTAN.md` now documents the canonical `assets/institutional/ufc-coat-of-arms.png` compatibility path;
-10. `tests/v2-ctan-policy-check.py` now classifies the same binary blobs under their canonical A2 paths, with hashes unchanged;
-11. `abntexto-ufc/layout.def` was a false positive only: the raw substring `figuras/` appeared inside `imprimirlistadefiguras/before`. The scanner was made boundary-aware rather than exempting `layout.def`, so genuine legacy paths still fail while unrelated identifiers do not.
+A2 remains ACTIVE until:
 
-The historical failed runs remain migration evidence. None required changing normative predicates, values, locators, source authority, public API, article runtime or formatting behavior.
-
-### A2 closure requirements
-
-A2 is not DONE until one exact PR head proves all of the following:
-
-- Source Contract green;
-- reference build, corpus and PDF/A green;
-- twelve-profile matrix and profile PDF/A green;
-- structure, objects/bibliography and post-textual regressions green;
-- Overleaf stable/import proxy green;
-- required Windows literal-font certification green under Gate T;
-- deterministic distribution preflight green;
-- N12 workflow byte-identical;
-- no active stale A2 paths;
-- UFC institutional mark remains excluded from public bundles;
-- reference-image hashes/licensing unchanged;
-- PR `behind_by=0` immediately before merge;
-- `HANDOFF`, this inventory, release ledger, README and normative/naming human documentation are synchronized as applicable.
-
-After squash merge, the resulting `main` must be re-certified before B2R-B begins.
+- the current receipt-only documentation-sync PR head itself has live Source + Preview + full PR preflight green;
+- the same SHA has exact Gate T and Distribution green;
+- N12 blob remains unchanged;
+- PR is mergeable and `behind_by=0` immediately before merge;
+- PR #147 is squash-merged;
+- resulting `main` is fully re-certified;
+- the merged/re-certified state is written to the handoff/ledger before B2R-B implementation begins.
 
 ## Next executable action
 
-Use the live PR head produced after the #1051 scanner reconciliation and this mandatory documentation sync as the sole certification candidate. Require Source Contract, Reference Preview and full LaTeX preflight green on that exact SHA. Only then run exact-head Gate T and deterministic Distribution, verify `behind_by=0`, perform final receipt-only documentation sync, squash-merge PR #147 and re-certify resulting `main` before B2R-B.
-
-If the current GitHub tool surface cannot dispatch Gate T or Distribution, keep A2 open and record that operational blocker; do not replace either required gate with a weaker check.
+Use the current documentation-sync head as the sole merge candidate. Do not edit receipt documents again solely to copy its future run numbers. Run Source Contract, Reference Preview and full preflight on the exact SHA, then Gate T and Distribution through non-mutating certification refs. Recheck N12, mergeability and `behind_by=0`; mark PR ready and squash-merge only when all live gates are green. Re-certify resulting `main` before B2R-B.
 
 ## B2R-B — BLOCKED BY A2
 
-Only after A2 merge + post-merge recertification:
+After A2 merge + post-merge recertification:
 
 - create a machine-readable public API inventory;
 - introduce canonical English project-owned public API surfaces;
-- retain supported Portuguese keys/values/commands/environments as compatibility aliases throughout v2.x;
-- prove canonical-English/Portuguese compatibility semantics and output;
-- prevent new unreviewed engineering identifiers from bypassing the naming policy.
+- preserve supported Portuguese keys/values/commands/environments as v2.x aliases;
+- prove canonical-English/Portuguese semantic/output equivalence;
+- prevent new unreviewed engineering identifiers from bypassing naming policy.
