@@ -70,6 +70,46 @@ def load_b2r_path_migrations() -> dict[str, str]:
     return migrations
 
 
+def load_b2r_content_rewrites() -> dict[str, list[tuple[str, str]]]:
+    if not B2R_LEDGER.is_file():
+        return {}
+
+    ledger = load_json(B2R_LEDGER)
+    a2 = ledger.get("a2", {})
+    if not isinstance(a2, dict):
+        fail("B2R naming ledger is missing the A2 contract")
+    if a2.get("public_api_change_allowed") is not False:
+        fail("B2R A2 public API boundary drifted")
+    if a2.get("normative_contract_change_allowed") is not False:
+        fail("B2R A2 normative contract boundary drifted")
+    if a2.get("article_runtime_change_allowed") is not False:
+        fail("B2R A2 article runtime boundary drifted")
+
+    raw = a2.get("n12_historical_content_rewrites", {})
+    if not isinstance(raw, dict):
+        fail("B2R A2 N12 historical content rewrites must be an object")
+
+    rewrites: dict[str, list[tuple[str, str]]] = {}
+    for relative, entries in raw.items():
+        if not isinstance(relative, str) or not relative or not isinstance(entries, list) or not entries:
+            fail("B2R A2 N12 historical content rewrite entry is invalid")
+        pairs: list[tuple[str, str]] = []
+        seen_current: set[str] = set()
+        for entry in entries:
+            if not isinstance(entry, dict):
+                fail(f"B2R A2 N12 rewrite must be an object: {relative}")
+            current = entry.get("current")
+            historical = entry.get("historical")
+            if not isinstance(current, str) or not current or not isinstance(historical, str) or not historical:
+                fail(f"B2R A2 N12 rewrite is incomplete: {relative}")
+            if current in seen_current:
+                fail(f"duplicate B2R A2 N12 rewrite token: {relative}: {current}")
+            seen_current.add(current)
+            pairs.append((current, historical))
+        rewrites[relative] = pairs
+    return rewrites
+
+
 def resolve_current_path(relative: str, migrations: dict[str, str]) -> Path:
     historical = ROOT / relative
     if historical.is_file():
@@ -82,10 +122,38 @@ def resolve_current_path(relative: str, migrations: dict[str, str]) -> Path:
     return historical
 
 
-def certified_blob_sha1(relative: str, migrations: dict[str, str]) -> str:
+def reconstruct_certified_content(
+    relative: str,
+    path: Path,
+    rewrites: dict[str, list[tuple[str, str]]],
+) -> bytes:
+    payload = path.read_bytes()
+    pairs = rewrites.get(relative)
+    if not pairs:
+        return payload
+    try:
+        text = payload.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        fail(f"cannot decode migrated certified content {relative}: {exc}")
+    for current, historical in pairs:
+        count = text.count(current)
+        if count != 1:
+            fail(
+                f"B2R A2 N12 rewrite token must occur exactly once: "
+                f"{relative}: {current}: found {count}"
+            )
+        text = text.replace(current, historical, 1)
+    return text.encode("utf-8")
+
+
+def certified_blob_sha1(
+    relative: str,
+    migrations: dict[str, str],
+    rewrites: dict[str, list[tuple[str, str]]],
+) -> str:
     historical = ROOT / relative
     if historical.is_file():
-        return git_blob_sha1(historical)
+        return git_blob_sha1_bytes(reconstruct_certified_content(relative, historical, rewrites))
 
     current_relative = migrations.get(relative)
     if not current_relative:
@@ -130,6 +198,7 @@ def forbid_tokens(path: Path, tokens: list[str]) -> None:
 def main() -> None:
     manifest = load_json(MANIFEST)
     migrations = load_b2r_path_migrations()
+    content_rewrites = load_b2r_content_rewrites()
     if manifest.get("schema_version") != 1 or manifest.get("phase") != "N12":
         fail("invalid manifest schema/phase")
     if manifest.get("scope") != "profile-engine-font-certification":
@@ -174,12 +243,15 @@ def main() -> None:
     if not isinstance(certified, dict) or len(certified) < 10:
         fail("certified implementation/gate blob map is incomplete")
     migrated_certified: list[str] = []
+    rewritten_certified: list[str] = []
     for relative, expected_sha in certified.items():
-        actual = certified_blob_sha1(relative, migrations)
+        actual = certified_blob_sha1(relative, migrations, content_rewrites)
         if actual != expected_sha:
             fail(f"certified blob drifted: {relative}: expected {expected_sha}, got {actual}")
         if not (ROOT / relative).is_file() and relative in migrations:
             migrated_certified.append(relative)
+        if relative in content_rewrites:
+            rewritten_certified.append(relative)
 
     profile_script = ROOT / manifest["profile_engine_evidence"]["script"]
     profile_pdfa = ROOT / manifest["profile_engine_evidence"]["pdfa_script"]
@@ -333,6 +405,12 @@ def main() -> None:
             "N12-EVIDENCE b2r-path-migration status=PASS "
             f"historical_blobs_preserved={len(migrated_certified)} "
             f"paths={','.join(sorted(migrated_certified))}"
+        )
+    if rewritten_certified:
+        print(
+            "N12-EVIDENCE b2r-content-rewrite status=PASS "
+            f"historical_blobs_preserved={len(rewritten_certified)} "
+            f"paths={','.join(sorted(rewritten_certified))}"
         )
     print(
         "N12-EVIDENCE stable-main-receipt "
