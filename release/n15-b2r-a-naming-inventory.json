@@ -3,7 +3,7 @@
   "phase": "N15-B2R-A",
   "reviewed_at": "2026-08-28",
   "base_main_sha": "7699ed205d4554df28fc46908fff3be0b92a38f7",
-  "status": "A2_INVENTORY_ACTIVE",
+  "status": "A2_IMPLEMENTATION_APPROVED",
   "purpose": "Bound and track the behavior-preserving English naming migration before public API or article runtime changes.",
   "certified_base_receipts": {
     "source_contract": "#361 SUCCESS",
@@ -37,11 +37,53 @@
     "scope": "user-example-and-distribution-facing-repository-layout",
     "base_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
     "branch": "refactor/n15-b2r-a2-user-layout",
-    "status": "READ_ONLY_INVENTORY",
+    "status": "IMPLEMENTATION_APPROVED",
     "public_api_change_allowed": false,
     "normative_contract_change_allowed": false,
     "article_runtime_change_allowed": false,
-    "first_decision_gate": "inventory every repository, documentation, fixture, build, distribution and Overleaf consumer before approving any visible rename"
+    "source_and_distribution_layout_policy": "use-the-same-canonical-layout-for-repository-template-and-overleaf-bundles",
+    "approved_renames": [
+      {"from": "documento.tex", "to": "main.tex", "risk": "high", "reason": "canonical user entrypoint; Makefile, reference checks and bundle contracts must move together"},
+      {"from": "1-pre-textuais/", "to": "frontmatter/", "risk": "medium", "reason": "canonical example directory; direct document and bundle references are bounded"},
+      {"from": "2-textuais/", "to": "chapters/", "risk": "medium", "reason": "canonical example directory; direct document and bundle references are bounded"},
+      {"from": "3-pos-textuais/", "to": "backmatter/", "risk": "medium", "reason": "canonical example directory; bibliography and appendix/annex references must move atomically"},
+      {"from": "figuras/", "to": "figures/", "risk": "medium", "reason": "canonical example asset directory; downloader, licenses and release hash checks must move together"},
+      {"from": "assets/institucional/", "to": "assets/institutional/", "risk": "medium", "reason": "engineering-facing source-only asset namespace"},
+      {"from": "assets/institucional/brasao-ufc.PNG", "to": "assets/institutional/ufc-coat-of-arms.png", "risk": "medium", "reason": "lowercase canonical source-only institutional asset name; public bundles continue to exclude the file by policy and hash"}
+    ],
+    "retained_paths": [
+      {"path": "frontmatter/*.tex", "reason": "leaf filenames that encode Portuguese academic-element names are retained in A2 to avoid unrelated content churn"},
+      {"path": "chapters/*.tex", "reason": "chapter leaf filenames remain content-oriented Portuguese names in A2"},
+      {"path": "backmatter/apendices/**", "reason": "nested academic-content filenames are retained in A2; only the distribution-facing top-level layout is normalized"},
+      {"path": "backmatter/anexos/**", "reason": "nested academic-content filenames are retained in A2; only the distribution-facing top-level layout is normalized"},
+      {"path": "tests/fixtures/pretextuais/**", "reason": "test/evidence fixture naming is outside A2 and retained for traceability"},
+      {"path": "normativa/**", "reason": "normative/evidence namespace is explicitly preserved by naming policy"}
+    ],
+    "required_consumer_updates": [
+      "Makefile default entrypoint and clean target",
+      "main.tex input/bibliography paths",
+      "chapters/exemplos-de-formatacao.tex figure/listing/license paths",
+      "abntexto-ufc/institutional.def default source-only coat-of-arms path",
+      "tools/fetch-reference-images.py",
+      "tools/build-release-bundles.py",
+      "tests/run.py reference PDF consumers",
+      "tests/v2-reference-check.sh",
+      "tests/v2-pdfa-check.sh default and N13 reference-document trigger",
+      "tests/v2-overleaf-stable-check.sh",
+      "tests/v2-overleaf-bundle-check.py",
+      "tests/v2-release-package-check.py",
+      "tests/v2-distribution-check.sh",
+      ".github/workflows/reference-preview.yml",
+      ".github/workflows/reference-validation.yml",
+      ".github/workflows/distribution.yml",
+      "README.md and active naming/handoff documentation"
+    ],
+    "frozen_workflow_constraint": {
+      "path": ".github/workflows/latex-preflight.yml",
+      "required_blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
+      "mutation_allowed": false,
+      "compatibility_strategy": "update the scripts invoked by the frozen workflow so their defaults resolve main.pdf and the canonical layout without changing the workflow blob"
+    }
   },
   "module_renames": [
     {"from": "abntexto-ufc/fontes.def", "to": "abntexto-ufc/fonts.def"},
@@ -60,23 +102,13 @@
     "abntexto-ufc/compat-abntexto.def",
     "abntexto-ufc/compat-nbr6023-2025.def"
   ],
-  "required_atomic_updates": [
-    "abntexto-ufc.cls module inputs",
-    "each renamed module ProvidesFile identity",
-    "tests/v2-repository-audit.py academic-work/project ordering names",
-    "any direct consumer found by the final reference scan"
-  ],
-  "known_dynamic_consumers": {
-    "tests/v2-canonical-identity-check.py": "derives module paths from abntexto-ufc.cls and validates matching ProvidesFile identities",
-    "tests/v2-ctan-archive-check.py": "derives the CTAN module manifest from abntexto-ufc.cls",
-    "tools/build-release-bundles.py": "packages the abntexto-ufc directory recursively rather than enumerating module filenames"
-  },
   "explicitly_deferred": [
     "canonical English public ufcsetup keys and values",
     "Portuguese public API compatibility aliases",
     "UFC-owned public command/environment canonicalization",
     "test/fixture naming cleanup not required by the user-example migration",
     "normativa directory or historical normative/evidence identifiers",
+    "leaf academic-content filename translation inside frontmatter/chapters/backmatter",
     "scientific-article runtime and articles.def"
   ],
   "behavioral_invariants": [
@@ -84,18 +116,21 @@
     "no normative predicate/value/locator change",
     "no formatting or pagination change",
     "module load order preserved",
-    "N12 latex-preflight workflow remains unchanged",
+    "N12 latex-preflight workflow remains byte-identical",
+    "public bundles continue to exclude the UFC institutional mark",
     "all existing profile, PDF/A, Overleaf and distribution regressions remain green"
   ],
-  "a1_exit_criteria": [
-    "old internal module paths are not loaded by abntexto-ufc.cls",
-    "all canonical module paths exist exactly once",
-    "ProvidesFile identities match canonical paths",
-    "repository and canonical identity audits pass",
-    "twelve-profile matrix and PDF/A checks pass",
-    "reference, layout, pre-textual, project, object, bibliography and post-textual regressions pass",
-    "Overleaf proxy and required Windows certification pass on the exact merge candidate",
+  "a2_exit_criteria": [
+    "canonical main.tex is the only root reference-document entrypoint",
+    "canonical frontmatter/chapters/backmatter/figures directories replace the legacy top-level user-example directories",
+    "source-only institutional asset lives under assets/institutional/ufc-coat-of-arms.png",
+    "all active source/build/test/documentation consumers use canonical paths",
+    "template and Overleaf bundles expose main.tex at their expected roots",
+    "template and Overleaf bundles continue to disable and exclude the undistributed institutional mark",
+    "licensed reference images remain checksum-verified under figures/",
+    "N12 latex-preflight workflow blob remains unchanged",
+    "reference, twelve-profile, PDF/A, Overleaf and distribution gates pass on the exact candidate",
     "branch remains behind_by=0 before merge"
   ],
-  "next_after_a1": "Complete the B2R-A2 read-only consumer inventory, approve only renames that preserve the import/distribution contract, then implement them atomically before B2R-B public API work."
+  "next_after_a2": "After merge and post-merge recertification, begin B2R-B machine-readable public API inventory and canonical English aliases."
 }
