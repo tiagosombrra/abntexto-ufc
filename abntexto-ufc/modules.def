@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/modulos.def}[2026/08/21 UFC optional modules]
+\ProvidesFile{abntexto-ufc/modules.def}[2026/08/21 UFC optional modules]
 
 \RequirePackage{etoolbox}
 

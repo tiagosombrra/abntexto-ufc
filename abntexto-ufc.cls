@@ -19,17 +19,17 @@
 \makeatother
 
 \input{abntexto-ufc/core.def}
-\input{abntexto-ufc/fontes.def}
+\input{abntexto-ufc/fonts.def}
 \input{abntexto-ufc/layout.def}
-\input{abntexto-ufc/modulos.def}
-\input{abntexto-ufc/pretextuais.def}
-\input{abntexto-ufc/institucional.def}
-\input{abntexto-ufc/trabalhos.def}
-\input{abntexto-ufc/projetos.def}
-\input{abntexto-ufc/objetos.def}
+\input{abntexto-ufc/modules.def}
+\input{abntexto-ufc/frontmatter.def}
+\input{abntexto-ufc/institutional.def}
+\input{abntexto-ufc/academic-works.def}
+\input{abntexto-ufc/research-projects.def}
+\input{abntexto-ufc/objects.def}
 \input{abntexto-ufc/compat-abntexto.def}
-\input{abntexto-ufc/bibliografia.def}
+\input{abntexto-ufc/bibliography.def}
 \input{abntexto-ufc/compat-nbr6023-2025.def}
-\input{abntexto-ufc/postextuais.def}
+\input{abntexto-ufc/backmatter.def}
 
 \endinput

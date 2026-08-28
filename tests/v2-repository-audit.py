@@ -207,9 +207,9 @@ def audit_setup_keys(texts: dict[str, str], modules: list[str], errors: list[str
 
 def audit_modules(texts: dict[str, str], modules: list[str], errors: list[str]) -> None:
     by_basename = {Path(module).name: index for index, module in enumerate(modules)}
-    if 'trabalhos.def' in by_basename and 'projetos.def' in by_basename:
-        if by_basename['trabalhos.def'] > by_basename['projetos.def']:
-            errors.append(f'{CANONICAL_CLASS}: trabalhos.def must load before projetos.def')
+    if 'academic-works.def' in by_basename and 'research-projects.def' in by_basename:
+        if by_basename['academic-works.def'] > by_basename['research-projects.def']:
+            errors.append(f'{CANONICAL_CLASS}: academic-works.def must load before research-projects.def')
 
     definitions: dict[str, list[str]] = defaultdict(list)
     for name in modules:

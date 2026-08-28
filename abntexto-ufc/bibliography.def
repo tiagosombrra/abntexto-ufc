@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/bibliografia.def}[2026/08/19 UFC citations and references]
+\ProvidesFile{abntexto-ufc/bibliography.def}[2026/08/19 UFC citations and references]
 
 \RequirePackage[
   backend=biber,
