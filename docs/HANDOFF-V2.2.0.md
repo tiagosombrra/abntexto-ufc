@@ -169,6 +169,26 @@ Receipts:
 
 Gate T was triggered without changing the candidate commit through `maintenance/v2.2.0-b2r-a2-gate-t`; Distribution through `release/v2.2.0-b2r-a2-dist`, both pointing exactly to `6e252845...`.
 
+## Final documentation-sync blocker and resolution
+
+The first recertification of the receipt-only documentation head `ecaf551dd3e2fdb0d25cac12d2498b51147fa124` produced:
+
+- Source Contract #405 — SUCCESS;
+- Reference Preview #59 — SUCCESS;
+- LaTeX preflight #1070 — all runtime/layout/profile/reference/object/post-textual checks PASS, but `structure` failed on two documentation/ledger contract issues only.
+
+The #1070 `structure` failures were:
+
+1. repository audit: `docs/HANDOFF-V2.2.0.md` and `docs/B2R-NAMING-INVENTORY.md` lacked a final newline;
+2. N12 normative complement: the receipt-sync rewrite of `release/n15-b2r-a-naming-inventory.json` had simplified away machine-readable B2R compatibility fields that the frozen N12 checker intentionally consumes, beginning with A1 `public_api_changed=false`.
+
+Resolution in the current candidate:
+
+- both Markdown files end with a final newline;
+- the machine ledger restores the full B2R-A compatibility contract rather than weakening the checker: all five A1 invariants explicitly remain `false`; A2 change boundaries explicitly remain `false`; the A1 `module_renames` map and bounded A2 `n12_historical_content_rewrites` are restored; receipts and final-sync state remain recorded.
+
+No runtime, normative predicate/value/locator/authority, workflow or test expectation is changed by this resolution.
+
 ## A2 closure criteria
 
 A2 is DONE only after all of these are true:
@@ -186,7 +206,7 @@ A2 is DONE only after all of these are true:
 
 ## Next executable action
 
-Treat the head created by this final receipt/documentation synchronization as the **sole merge candidate**. Do not edit receipt documents again merely to copy its run numbers. Require live Source Contract + Reference Preview + full PR preflight on that SHA, then exact-head Gate T + Distribution using non-mutating certification refs. Recheck N12 blob, mergeability and `behind_by=0`; mark PR ready and squash-merge only if all are green. Re-certify resulting `main` before opening B2R-B implementation.
+Treat the head created by this blocker-resolution sync as the **sole merge candidate**. Do not edit receipt documents again merely to copy its run numbers. Require live Source Contract + Reference Preview + full PR preflight on that SHA, then exact-head Gate T + Distribution using non-mutating certification refs. Recheck N12 blob, mergeability and `behind_by=0`; mark PR ready and squash-merge only if all are green. Re-certify resulting `main` before opening B2R-B implementation.
 
 ## Later phases
 
