@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "phase": "N14",
-  "status": "ACTIVE",
+  "status": "DONE",
   "purpose": "Unify the machine-readable validator contract across Web/Lite and CLI/Deep while preserving their intentionally different measurement capabilities.",
   "authority": "technical-interface-contract",
   "policy": {
@@ -102,6 +102,23 @@
     {"canonical_id":"access.alt","web_id":"access.alt","cli_id":"access.alt","web_mode":"manual","cli_mode":"manual","state":"ALIGNED"},
     {"canonical_id":"access.order","web_id":"access.order","cli_id":"access.order","web_mode":"manual","cli_mode":"manual","state":"ALIGNED"}
   ],
+  "closure": {
+    "state": "DONE",
+    "vector_file": "validator/validation-vectors.json",
+    "verdict_vector_count": 5,
+    "shared_check_count": 24,
+    "canonical_check_count": 28,
+    "baseline_alias_count": 2,
+    "emitted_alias_count": 0,
+    "schema_drift_count": 0,
+    "deep_boundary_count": 2,
+    "exit_criteria_passed": 6,
+    "exit_criteria_total": 6,
+    "normative_contract_changed": false,
+    "locator_policy_changed": false,
+    "oracle_tolerances_changed": false,
+    "proof_state_changed": false
+  },
   "exit_criteria": [
     "Both surfaces consume one canonical technical contract for statuses, profiles, report schema and check identity.",
     "All current aliases are eliminated from emitted reports or normalized at the surface boundary.",
