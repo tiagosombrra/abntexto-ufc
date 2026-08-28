@@ -1,17 +1,25 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-22",
+  "reviewed_at": "2026-08-28",
   "mode": "latest-current-applicable-technical-standard-mandatory",
   "decision": "mandatory",
-  "purpose": "Make the abntexto-ufc technical-version rule explicit, auditable and machine-checkable when UFC guides still cite superseded ABNT editions.",
+  "purpose": "Make the abntexto-ufc technical-version rule explicit, auditable and machine-checkable when UFC guides still cite superseded ABNT editions, while keeping reconciled future-profile sources outside runtime until their predicates are deliberately promoted.",
   "institutional_basis": [
     {
       "id": "ufc-res-17-cepe-2017",
       "kind": "institutional-act",
       "title": "Resolução nº 17/CEPE, de 02 de outubro de 2017",
-      "locator": "Art. 1º",
+      "locator": "Art. 1º, §§ 1º-3º",
       "url": "https://ufc.br/images/_files/a_universidade/cepe/resolucao_cepe_2017/resolucao17_cepe_2017.pdf",
-      "rule": "A normalização de trabalhos acadêmicos na UFC é realizada de acordo com as normas técnicas de informação e documentação da ABNT, salvo modelo específico formalmente aprovado no âmbito previsto pela resolução."
+      "rule": "A normalização de trabalhos acadêmicos na UFC é realizada de acordo com as normas técnicas de informação e documentação da ABNT ou com modelo específico formalmente aprovado no rito previsto pela resolução; na ausência desse modelo, aplica-se a orientação institucional da Biblioteca Universitária."
+    },
+    {
+      "id": "ufc-res-17-cepe-2015",
+      "kind": "institutional-act",
+      "title": "Resolução nº 17/CEPE, de 04 de dezembro de 2015",
+      "locator": "Normas Gerais, art. 10, X",
+      "url": "https://normadigital.ufc.br/cepe/resolucao-no-17-cepe-de-04-de-dezembro-de-2015-2/",
+      "rule": "No escopo stricto sensu, o colegiado do programa pode definir diretrizes referentes à forma de apresentação de dissertação, tese ou trabalho equivalente. Essa competência cria uma possível exceção institucional de programa, mas não substitui por si só a base técnica geral sem uma diretriz específica formalmente identificada."
     },
     {
       "id": "ufc-normalizacao-2026",
@@ -20,8 +28,8 @@
       "locator": "Guias de Normalização da UFC",
       "url": "https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/",
       "page_updated_at": "2026-03-04",
-      "checked_at": "2026-08-22",
-      "rule": "A página institucional vigente declara que os Guias de Normalização da UFC estão de acordo com as normas vigentes da ABNT."
+      "checked_at": "2026-08-28",
+      "rule": "A página institucional vigente declara que os cinco Guias de Normalização da UFC, inclusive o guia de artigo científico, estão de acordo com as normas vigentes da ABNT."
     }
   ],
   "policy": {
@@ -30,7 +38,8 @@
     "prior_edition_documentation_context_only": true,
     "current_ufc_act_governs_institutional_scope": true,
     "conflict_behavior": "review-required",
-    "course_specific_exception": "Somente modelo específico formalmente aprovado nos termos da Resolução nº 17/CEPE pode substituir a regra técnica geral dentro de seu escopo; esse ato deve ser cadastrado como fonte institucional vigente antes de ser consumido pelo template."
+    "course_specific_exception": "A Resolução nº 17/CEPE de 2017 admite modelo específico formalmente aprovado no rito previsto no art. 1º, §§ 2º-3º. Para pós-graduação stricto sensu, a Resolução nº 17/CEPE de 2015, Normas Gerais art. 10, X, também atribui ao colegiado do programa competência para definir diretrizes de apresentação. Nenhuma dessas competências altera silenciosamente o template: a diretriz específica deve ser identificada, cadastrada como fonte institucional vigente, ter escopo explícito e ser reconciliada antes de alterar comportamento.",
+    "future_profile_promotion": "Uma fonte técnica reconciliada para perfil ainda não implementado permanece fora do runtime catalog/precedence até que os respectivos predicados, locators e evidências sejam deliberadamente promovidos."
   },
   "current_technical_sources": [
     "abnt-nbr-14724-2024",
@@ -43,6 +52,17 @@
     "abnt-nbr-6034-2004",
     "abnt-nbr-12225-2023"
   ],
+  "profile_candidates": {
+    "scientific_article": {
+      "status": "reconciled-not-runtime",
+      "candidate_sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2021"
+      ],
+      "runtime_promotion_phase": "N15-B2",
+      "rule": "NBR 6022:2018 and the current UFC scientific-article guide are authority inputs for N15-B2, but B1 must not create article.* predicates or alter current academic/project behavior."
+    }
+  },
   "supersessions": [
     {
       "context_source": "ufc-guia-trabalhos-2022",
@@ -68,6 +88,20 @@
       "superseded_reference": "ABNT NBR 12225:2004",
       "current_reference": "ABNT NBR 12225:2023",
       "current_source": "abnt-nbr-12225-2023"
+    },
+    {
+      "context_source": "ufc-guia-artigos-2021",
+      "superseded_reference": "ABNT NBR 10520:2002",
+      "current_reference": "ABNT NBR 10520:2023",
+      "current_source": "abnt-nbr-10520-2023",
+      "note": "O guia de artigos permanece institucionalmente atual, mas a edição de citações nele impressa foi substituída."
+    },
+    {
+      "context_source": "ufc-guia-artigos-2021",
+      "superseded_reference": "ABNT NBR 6023:2018",
+      "current_reference": "ABNT NBR 6023:2025",
+      "current_source": "abnt-nbr-6023-2025",
+      "note": "O guia de artigos permanece institucionalmente atual, mas a edição de referências nele impressa foi substituída."
     },
     {
       "context_source": "ufc-guia-citacoes-2025",

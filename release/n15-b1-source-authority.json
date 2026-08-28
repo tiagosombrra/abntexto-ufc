@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "phase": "N15-B1",
+  "status": "CLOSURE_CANDIDATE",
+  "reviewed_at": "2026-08-28",
+  "base_main_sha": "ab61d20c03f9b79e8d01b7913a721c85cd695491",
+  "purpose": "Record source completeness and authority reconciliation required before any scientific-article runtime contract is introduced.",
+  "source_registry": {
+    "scope": "abntexto-ufc-current-sources",
+    "official_ufc_guides_expected": 5,
+    "official_ufc_guides_registered": 5,
+    "release_independent_scope": true
+  },
+  "article_authority": {
+    "status": "RECONCILED_NOT_RUNTIME",
+    "candidate_sources": [
+      "ufc-guia-artigos-2021",
+      "abnt-nbr-6022-2018"
+    ],
+    "current_article_standard": "ABNT NBR 6022:2018",
+    "verification": {
+      "conclusion": "CURRENT_EDITION_RECONCILED",
+      "published_at": "2018-05-16",
+      "review_basis": [
+        "current UFC normalization page reviewed 2026-08-28 lists the scientific-article guide among five official guides and states that UFC guides follow current ABNT standards",
+        "official UFC scientific-article guide identifies ABNT NBR 6022:2018 as its article-presentation basis",
+        "current public university standards registries reviewed 2026-08-28 continue to identify ABNT NBR 6022:2018 and no later replacement was identified"
+      ],
+      "caveat": "The public ABNT catalog search surface did not expose a directly indexable NBR 6022 record during automated review; the project therefore records the evidence chain instead of inventing a catalog locator."
+    },
+    "stale_embedded_mappings": [
+      {
+        "guide_reference": "ABNT NBR 10520:2002",
+        "current_reference": "ABNT NBR 10520:2023"
+      },
+      {
+        "guide_reference": "ABNT NBR 6023:2018",
+        "current_reference": "ABNT NBR 6023:2025"
+      }
+    ],
+    "runtime_promotion_phase": "N15-B2",
+    "article_predicates_added_in_b1": false
+  },
+  "graduate_authority": {
+    "cepe_17_2015": {
+      "status": "CURRENT_APPLICABLE",
+      "locator": "Normas Gerais, art. 10, X",
+      "scope": "program-level presentation directives for dissertations, theses or equivalent work",
+      "relationship_to_cepe_17_2017": "CEPE 17/2017 supplies the general ABNT/course-model normalization regime. CEPE 17/2015 supplies PPG-level institutional competence. A specific program directive must be identified and registered before it can alter runtime behavior."
+    },
+    "mec_portaria_1224_2013": {
+      "status": "REVOKED_EXCLUDED",
+      "scope": "academic-record maintenance and custody",
+      "technical_formatting_authority": false,
+      "reason": "MEC states that Portaria 1.224/2013 was revoked by Portaria Normativa 22/2017 and Portaria 315/2018."
+    },
+    "capes_portaria_59_2017": {
+      "status": "CURRENT_CONTEXTUAL",
+      "scope": "2017 Quadriennial Evaluation of postgraduate programs",
+      "technical_formatting_authority": false
+    }
+  },
+  "runtime_boundary": {
+    "catalog_changed_for_article": false,
+    "precedence_changed_for_article": false,
+    "article_rule_prefix_present": false,
+    "latex_article_profile_present": false,
+    "proof_state_changed": false,
+    "n12_workflow_changed": false
+  },
+  "exit_criteria": {
+    "five_of_five_ufc_guides_registered": true,
+    "current_article_standard_reconciled": true,
+    "stale_article_guide_references_mapped": true,
+    "cepe_2015_2017_authority_relationship_modeled": true,
+    "mec_and_capes_related_acts_classified": true,
+    "release_independent_source_scope": true,
+    "no_article_runtime_predicates": true,
+    "ready_for_exact_head_source_contract": true
+  }
+}

@@ -1,304 +1,287 @@
 # abntexto-ufc v2.2.0 — Canonical handoff
 
 Updated: 2026-08-28
-Checkpoint: N15-A final unrestricted audit closure candidate in PR #143 (`audit/n15-final-unrestricted-audit`)
-Certified stable main before PR #143: `0a13f4388479f63b9af2d898d3cc0410a4a57c0f`
-Stable-main source contract: #334 — SUCCESS
-Stable-main PDF validator: #133 — source check and Pages deploy SUCCESS
-Stable-main push LaTeX preflight: #992 — SUCCESS
-Stable-main exact Gate T: #993 / run `33130543594` — SUCCESS
-Stable-main Distribution: #235 / run `33130538175` — SUCCESS
 
-This is the single dynamic continuation document for the v2.2.0 audit and release. Detailed historical evidence belongs in `normativa/`, `tests/`, Git history, pull requests, GitHub Actions logs and `docs/history/`.
+Checkpoint: **N15-B1 closure candidate — PR #144 (`audit/n15-b1-source-authority`)**.
+
+Certified stable main before N15-B1: `ab61d20c03f9b79e8d01b7913a721c85cd695491`.
+
+Post-N15-A stable-main receipts:
+
+- Normative source contract #340 — SUCCESS;
+- LaTeX preflight push #999 — SUCCESS;
+- LaTeX preflight exact/manual #1000 — SUCCESS;
+- Distribution #236 — SUCCESS.
+
+Current N15-B1 branch receipts:
+
+- Normative source contract #342 — SUCCESS on `58a061bcac779191e79f04eab759a35f94c8f803`;
+- N15-B1 source-authority ledger step — SUCCESS;
+- LaTeX preflight #1002 — must be green again on the final exact PR head before merge.
+
+This is the single dynamic continuation document for the v2.2.0 audit and release. Detailed historical evidence belongs in `normativa/`, `release/`, `tests/`, Git history, pull requests, GitHub Actions logs and `docs/history/`.
 
 ## Source-of-truth hierarchy
 
-1. `normativa/*.json` — machine-readable normative requirements, locators, precedence and proof policy.
-2. `tests/` + GitHub Actions — executable evidence, validator sensitivity and regressions.
+1. `normativa/*.json` — machine-readable normative sources, rules, locators, precedence and proof policy.
+2. `tests/` + GitHub Actions — executable evidence and regressions.
 3. `docs/NORMAS.md` — human-readable normative map.
 4. `docs/VIGENCIA-NORMATIVA.md` — current-edition and precedence policy.
-5. `release/final-audit.json` — N15 technical audit/release-decision ledger; it is not a normative source.
-6. this handoff — roadmap state, audit decisions and immediate next action.
+5. `release/*.json` — technical audit/release ledgers; these files are not normative sources.
+6. this handoff — roadmap state and immediate continuation point.
 7. Git/PR/Actions history — detailed historical evidence.
 
-Technical validator/release contracts are not normative requirements. They consume normative content but do not create new UFC/ABNT predicates.
+Technical validators and release contracts consume normative requirements; they do not create UFC/ABNT predicates.
 
-Do not create generic progress/checkpoint Markdown files. Historical release audits belong under `docs/history/`.
+## Guardrails
 
-## Governing audit policy
-
-Keep three states separate:
-
-- **positive coverage**: an exact predicate was exercised/measured;
-- **phase gate**: all exit criteria of a roadmap phase were reconciled;
-- **proof-state**: normative confidence under `normativa/proof-policy.json`.
-
-A green CI job, positive fixture, negative fixture or closed phase does not by itself promote a rule to `PROVEN`.
-
-Guardrails:
-
-- unavailable authoritative/licensed text stays unavailable or partial;
-- evidence-only work does not silently change normative values, locators, tolerances or compatibility mappings;
+- unavailable authoritative/licensed text remains unavailable or partial;
+- green CI does not by itself promote any normative rule to `PROVEN`;
+- evidence-only work does not silently alter normative values, locators or tolerances;
 - fixture observations do not strengthen stored predicates;
-- implementation defects exposed by evidence are fixed separately while preserving the predicate;
-- evidence merges require the exact audited head and `behind_by=0`;
-- no closed scope is reopened without changed source, changed predicate or reproducible regression;
-- compile failure is not evidence that a validator rejected a normative violation;
-- negative fixtures and validator receipts are instrumentation, not new normative requirements;
-- the N12-certified `.github/workflows/latex-preflight.yml` remains untouched unless N12 is explicitly reopened;
+- closed phases reopen only for changed source, changed predicate or reproducible regression;
+- compile failure is not proof that a validator rejected a normative violation;
+- N12-certified `.github/workflows/latex-preflight.yml` remains frozen unless N12 is explicitly reopened;
 - Web/Lite remains private-by-design and does not upload PDF bytes;
-- PDF.js and Poppler/veraPDF remain different measurement backends; numerical backend identity is not required;
-- no final release may claim official UFC/SiBi approval unless such approval/publication actually exists;
-- bulk remote-branch deletion remains deferred until final repository cleanup.
+- no release may claim official UFC/SiBi approval unless that institutional status actually exists;
+- physical bulk branch cleanup remains deferred until final certification/tag and evidence reconciliation.
 
-## Canonical N0–N15 roadmap
+## Canonical roadmap
 
 | Phase | Scope | Status |
 | --- | --- | --- |
 | N0 | freeze / baseline | DONE |
 | N1 | normative sources and exact locators | DONE |
 | N2 | UFC × current-ABNT reconciliation | DONE |
-| N3 | classify/resolve 46 explicit atomicity gaps | DONE |
-| N4 | false-coverage audit and safe proof policy | DONE |
-| N5 | final-PDF oracle construction/calibration | DONE |
+| N3 | explicit atomicity gaps | DONE |
+| N4 | false-coverage audit / proof policy | DONE |
+| N5 | final-PDF oracle calibration | DONE |
 | N6 | pre-textual elements | DONE |
-| N7 | layout, pagination, sections and footnotes | DONE — 39/39 bounded positive coverage |
-| N8 | citations and references | DONE — 19/19 bounded positive coverage |
-| N9 | objects, tables, equations and code | DONE — 23/23 bounded positive coverage |
-| N10 | post-textual elements and multivolume | DONE — 20/20 bounded positive coverage |
-| N11 | research-project profile / NBR 15287 | DONE — 5/5 bounded positive coverage |
-| N12 | profile, engine and font matrix | DONE — 20-cell factorized certification + orthogonality gate |
-| N13 | negative fixtures / negative-path validation | DONE — 7/7 mechanisms represented and sensitivity-tested |
-| N14 | Web/Lite and CLI/Deep contract unification | DONE — 6/6 closure criteria; cross-surface vectors certified |
-| N15 | final unrestricted audit, source/profile completion, correction, release candidate and release decision | ACTIVE |
+| N7 | layout, pagination, sections, footnotes | DONE |
+| N8 | citations and references | DONE |
+| N9 | objects, tables, equations and code | DONE |
+| N10 | post-textual elements and multivolume | DONE |
+| N11 | research-project profile / NBR 15287 | DONE |
+| N12 | profile, engine and font matrix | DONE |
+| N13 | negative-path validation | DONE |
+| N14 | Web/Lite and CLI/Deep contract unification | DONE |
+| N15-A | unrestricted final audit | DONE — PR #143 merged and main re-certified |
+| N15-B1 | source completeness and authority reconciliation | CLOSURE CANDIDATE — PR #144 |
+| N15-B2 | UFC scientific-article profile | NEXT |
+| N15-B3 | remaining pre-release corrections | BLOCKED by B1/B2 |
+| N15-C | v2.2.0 release candidate | BLOCKED by B1/B2/B3 |
+| N15-D | exact-head certification and release decision | BLOCKED by N15-C |
 
-Formal roadmap closure remains **15/16 = 93.75%**. This is a phase-gate metric, not normative-conformity or proof percentage.
+N15 remains ACTIVE; the release is not ready while B1–D remain open.
 
-## Frozen N0–N14 normative baseline
+## Frozen N0–N14 baseline
+
+Historical certified baseline, unchanged by B1:
 
 - full atomic rules: 181;
 - normative rules: 170;
-- N1 locator coverage: 170/170;
-- N2 unknown-review relationships: 0;
-- N3 explicit gaps resolved/classified: 46/46;
-- N4 unsafe `PROVEN`: 0;
-- proof-state baseline: `PARTIAL=113`, `NOT_PROVEN=51`, `CONDITIONAL=10`, `MANUAL=6`, `NOT_APPLICABLE=1`, `PROVEN=0`.
+- locator coverage: 170/170;
+- explicit gaps classified/resolved: 46/46;
+- proof state: `PARTIAL=113`, `NOT_PROVEN=51`, `CONDITIONAL=10`, `MANUAL=6`, `NOT_APPLICABLE=1`, `PROVEN=0`;
+- N5 tolerances: page size 1 pt, horizontal 5 pt, vertical 5 pt, font size 1 pt;
+- N11: exactly five `project.*` predicates, 5/5 bounded positive coverage;
+- N12 LaTeX-preflight workflow blob: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`;
+- N13: seven negative mechanisms represented, five controlled rendered-PDF negative cases;
+- N14: six of six closure criteria and cross-surface semantic contract certified.
 
-Frozen N5 tolerances remain unchanged:
+The 181/170 counts are the frozen pre-article baseline. N15-B2 may deliberately add source-backed `article.*` predicates. Such growth must be explicit, atomically inventoried, initialized conservatively in proof state and validated independently; it does not retroactively change N0–N14 evidence.
 
-- page size: 1 pt;
-- horizontal position: 5 pt;
-- vertical position: 5 pt;
-- font size: 1 pt.
+## N15-A — closed
 
-N11 remains exactly five `project.*` predicates with 5/5 bounded positive coverage and `proof_state_changed=false`.
+PR #143 established the unrestricted audit and identified seven release blockers. Its substantive findings remain the release agenda:
 
-N12 remains the factorized 20-cell certification. Literal Windows identity is certified only on the Windows route. The certified `.github/workflows/latex-preflight.yml` blob remains `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
+1. missing fifth UFC guide and article technical-source reconciliation;
+2. incomplete graduate-program authority classification;
+3. release-dependent source-audit scope;
+4. stale current-documentation release-state wording;
+5. unresolved exact reference-PDF bit reproducibility (issue #18);
+6. release metadata still correctly fixed at published v2.1.0 until N15-C;
+7. missing UFC scientific-article runtime profile.
 
-The 181/170 counts above are the certified historical N0–N14 baseline. Because N15-A deliberately expands v2.2.0 scope to include the official UFC scientific-article profile, N15-B may intentionally add new `article.*` rules. Any such growth must be explicit, source-backed, atomically inventoried, conservatively initialized in proof-state and independently validated; it is not a retroactive change to the N0–N14 evidence.
+N15-A also explicitly deferred physical branch cleanup and prohibited merging historical rehearsal branches as release source.
 
-## N13 and N14 — closed
+## N15-B1 — current closure candidate
 
-N13 is closed on stable main and remains re-certified with:
+PR #144 starts from the re-certified N15-A main and resolves the source/authority blockers without implementing article runtime behavior.
 
-- controlled rendered-PDF negative cases: 5/5;
-- mechanism inventory: 7/7 represented;
-- strict configuration rejection sensitivity;
-- PDF/A controlled negative mutation sensitivity;
-- N11: 5/5;
-- structural suite: `PASS=14 FAIL=0 SKIP=0`;
-- no proof-state change.
+### Source completeness
 
-N14 closed through PRs #140, #141 and #142. Stable main now has:
+The audited registry now contains all five current UFC guides:
 
-- 28 canonical validator identities;
-- 24 shared identities;
-- historical alias baseline retained, but zero aliases emitted after adoption;
-- canonical snake_case reports with explicit Web/Lite and CLI/Deep modes;
-- five semantic cross-surface verdict vectors;
-- six of six N14 closure criteria;
-- no change to normative predicates, locators, N5 tolerances or proof state.
+1. trabalhos acadêmicos;
+2. artigo em publicação periódica científica;
+3. citações;
+4. referências;
+5. projetos de pesquisa.
 
-The post-N14 stable main `0a13f438...` is fully certified by Source #334, PDF Validator #133, push preflight #992, exact Gate T #993 and Distribution #235. Gate T reconfirmed N13 5/5 + 7/7, N11 5/5 and structural `PASS=14 FAIL=0 SKIP=0`. Distribution reconfirmed release preflight, PDF/A-2b, deterministic bundles, Overleaf import proxy, candidate upload and aggregate.
+`normativa/source-audit.json` now uses the release-independent scope `abntexto-ufc-current-sources`.
 
-## N15 — final phase structure
+### Scientific-article authority reconciliation
 
-N15 is intentionally broader than a version bump. The final release is blocked until the official source surface, supported document profiles, reproducibility and release metadata are reconciled together.
+N15-B1 registers/reconciles:
 
-### N15-A — final unrestricted audit
+- `ufc-guia-artigos-2021` as a current institutional guide with `technical_authority=false`;
+- `abnt-nbr-6022-2018` as the current article-presentation technical source identified by the current review;
+- article-guide stale citation mapping `ABNT NBR 10520:2002 → ABNT NBR 10520:2023`;
+- article-guide stale reference mapping `ABNT NBR 6023:2018 → ABNT NBR 6023:2025`.
 
-PR #143 records the audit as an executable technical ledger without changing runtime, normative predicates, proof state or version. It now also records the deliberate scope decision that the official UFC scientific-article guide will be implemented for v2.2.0 rather than merely listed as out-of-scope.
+Verification caveat is explicit in `release/n15-b1-source-authority.json`: the public ABNT catalog search surface did not provide a directly indexable NBR 6022 record during automated review. Current-edition reconciliation instead uses the official current UFC guide/page plus current university standards registries; no later replacement was identified. This is recorded as an evidence chain rather than overstated as a direct ABNT-catalog locator.
 
-Candidate file scope remains exactly four files:
+Most importantly, B1 maintains a strict boundary:
 
-1. `release/final-audit.json` — audit dimensions, findings, passes, limitations, article-scope decision and deferred cleanup;
-2. `tests/checks/normative_n15_final_audit.py` — machine-checks the ledger against the current source tree and frozen baselines;
-3. `.github/workflows/normative-source.yml` — observes the ledger and runs the N15 checker; the N12 preflight workflow is untouched;
-4. this handoff.
+- the article guide and NBR 6022 are **reconciled profile candidates**;
+- they do **not** enter `normativa/catalog.json` or `normativa/precedence.json` in B1;
+- no `article.*` predicate is created in B1;
+- no article LaTeX profile is implemented in B1;
+- runtime promotion belongs only to N15-B2 after exact predicates/locators are derived.
 
-N15-A records **13 audit dimensions, 13 findings, seven explicit release blockers and six PASS observations**.
+### Graduate-program authority reconciliation
 
-Release-blocking findings:
+B1 classifies the related acts by actual authority:
 
-1. the official UFC normalization page lists five institutional guides, but the current active source inventory/checker explicitly models four; the fifth scientific-article guide must be added and reconciled against current technical editions;
-2. related UFC graduate-program acts are incompletely classified: CEPE Resolution 17/2015 contains applicable authority for program-level presentation directives and must be reconciled with the general CEPE Resolution 17/2017 regime; the related MEC/CAPES acts must be classified by actual scope;
-3. `normativa/source-audit.json` and its checker still carry a v2.1.0-specific scope identifier;
-4. `docs/NORMAS.md` still describes the prior v2.1.0/Gate-F release state;
-5. issue #18, bit-reproducible reference PDF metadata/ID, remains unresolved and needs an exact two-build SHA-256 proof on the production reference path;
-6. version-bearing release surfaces deliberately remain at 2.1.0 and must be promoted atomically only in N15-C;
-7. the official UFC scientific-article profile is not implemented even though its requirements materially differ from the existing academic-work and research-project profiles.
+- **CEPE Resolution 17/2017** remains the general UFC normalization/model-exception regime;
+- **CEPE Resolution 17/2015**, Normas Gerais art. 10, X, is current and gives a PPG collegiate body competence to define presentation directives for dissertation, thesis or equivalent work;
+- this PPG competence does not invent an automatic template exception: a specific current program directive must be identified, registered, scoped and reconciled before it changes runtime behavior;
+- **MEC Portaria 1.224/2013** is recorded as reviewed but excluded because the MEC identifies it as revoked; it has no technical-formatting authority;
+- **CAPES Portaria 59/2017** is recorded as a current contextual regulation for the 2017 Quadrennial Evaluation, with `technical_authority=false`.
 
-The article-profile finding is intentionally separate from the missing-source finding. Source completeness does not prove runtime support, and runtime support cannot be built safely until source authority, current technical editions and exact locators are reconciled.
+### B1 executable evidence
 
-Non-blocking review/cleanup findings include the older `reference-validation.yml` branch strategy, 131 accumulated remote branches, historical release/N13 branches, `tmp-noop`, and the highly divergent planning branch. Physical deletion is not part of N15-A.
+Canonical B1 evidence:
 
-Positive findings include current GitHub protection/immutable-tag rules, explicit reference-image licensing and public-bundle asset restrictions, current N12 Windows helper consumption, conservative proof-state behavior and fully green Distribution #235.
+- `release/n15-b1-source-authority.json`;
+- `tests/checks/normative_n15_b1_source_authority.py`;
+- updated `normativa/source-audit.json`;
+- updated `normativa/version-policy.json`;
+- updated `normativa/reconciliation.json`;
+- updated source/currentness checks;
+- updated `docs/VIGENCIA-NORMATIVA.md`.
 
-The previous PR #143 preflight #995 had one documentation-only failure: the distribution-identity detector interpreted a sentence in this handoff as a legacy public artifact identity. All 13 other structural checks passed, including N13 7/7, N11 5/5, profile/PDF-A, reference/PDF-A, objects/bibliography and post-textual regressions. The sentence has been rewritten here without changing any runtime or distribution policy; the updated head must be fully revalidated.
+Source Contract #342 passed after synchronizing the reconciliation ledger with the 28/08 source contracts. The successful run confirms:
 
-### N15-B1 — source completeness and authority reconciliation
+- 5/5 UFC guides registered;
+- 10 current technical standards in the audited source inventory, including the non-runtime article candidate;
+- 9 active runtime technical standards remain unchanged;
+- 2 reconciled non-runtime article sources;
+- 12 stale UFC technical-reference mappings reconciled;
+- no article candidate entered runtime prematurely;
+- B1 source-authority ledger passed;
+- proof-state/false-coverage snapshot generation remained green.
 
-Start only after N15-A is merged and stable main is re-certified.
+B1 is not DONE until the final PR head has green source contract + full LaTeX preflight, `behind_by=0`, is squash-merged, and resulting `main` is re-certified.
 
-Required work:
+## N15-B2 — next: UFC scientific-article profile
 
-- add the fifth official UFC guide, **Guia para Elaboração de Artigo em Publicação Periódica Científica**, to the audited institutional source inventory;
-- verify and register the current applicable ABNT article-presentation standard before creating article predicates; current evidence points to ABNT NBR 6022:2018, but current-edition verification is a mandatory gate, not an assumption;
-- classify the UFC article guide so embedded superseded technical references cannot choose the governing edition;
-- explicitly reconcile its stale references to older citation/reference standards with the already adopted current NBR 10520:2023 and NBR 6023:2025 policy;
-- add CEPE Resolution 17/2015 as an applicable institutional source for graduate-program presentation directives and reconcile that authority with the general CEPE Resolution 17/2017 normalization/model-exception framework;
-- classify MEC Portaria 1.224/2013 and CAPES Portaria 59/2017 according to their actual operational, deposit or regulatory scope without granting technical formatting authority by implication;
-- replace the v2.1.0-specific source-audit scope identifier with a release-independent current-source scope;
-- update `docs/VIGENCIA-NORMATIVA.md` and related source/currentness checks to explain the article source set and program-specific exception boundary;
-- preserve existing N0–N14 predicates unless the new source reconciliation identifies a genuine conflict that requires explicit review.
+Begin only from the B1-certified main.
 
-Exit criteria for N15-B1:
+The profile must be a dedicated UFC scientific-article baseline, not a claim to override a target journal's own author instructions.
 
-- five of five official UFC guides present in the audited source registry;
-- current article technical standard explicitly verified;
-- no stale embedded guide citation can govern technical edition selection;
-- CEPE 17/2015 and CEPE 17/2017 authority relationship explicitly modeled;
-- no new article runtime predicate yet unless its governing source/locator has been reconciled;
-- source contract fully green.
+Known article-specific behavior to derive into exact source-backed predicates includes:
 
-### N15-B2 — UFC scientific-article profile
-
-After B1 establishes source authority, define a bounded article contract and implement a dedicated `artigo` profile without altering the defaults of existing academic-work or research-project profiles.
-
-The official guide review already identified material article-specific behavior that must be modeled instead of inherited blindly:
-
-- article-specific required structure and front matter, including title, authorship and submission/approval-date elements;
-- abstract range of **150–250 words** rather than the academic-work 150–500 range;
-- article body using **single line spacing** rather than the academic-work 1.5 baseline;
-- pagination visible **from the first page**;
-- primary article sections continuing on the same page flow instead of forcing each primary section to a new page;
-- article-specific title/authorship/presentation layout;
-- references as a required post-textual element, with other article post-textual elements classified according to the guide;
-- existing current citation/reference rules reused only where their applicability is actually shared.
+- article-specific title/authorship/submission/approval presentation;
+- abstract range 150–250 words;
+- single line spacing for article body;
+- visible pagination from the first page;
+- continuous primary-section flow rather than mandatory new-page starts;
+- article-specific required structure;
+- references as required post-textual content;
+- reuse of current citation/reference predicates only where applicability is genuinely shared.
 
 B2 requirements:
 
-- create source-backed atomic `article.*` rules with exact locators and applicability;
-- initialize all new proof-state entries conservatively; no rule starts `PROVEN` by construction;
-- implement the profile in a dedicated modular runtime surface rather than scattering article conditionals through unrelated modules where avoidable;
-- add positive fixtures and final-PDF measurements for article-only behavior;
-- add negative/sensitivity cases for predicates whose validator sensitivity can be demonstrated safely;
-- extend the profile/engine test matrix to include the article profile and PDF/A route as applicable;
-- update human documentation and the commented reference material so the new profile is discoverable without confusing it with TCC/dissertation/thesis/project profiles;
-- extend Web/Lite and CLI/Deep contracts only for article checks that genuinely belong in PDF validation, preserving the N14 semantic-contract rules;
-- run the complete pre-existing regression suite to prove that academic-work and research-project behavior did not drift.
+1. derive atomic `article.*` rules with exact locators and applicability;
+2. add the reconciled article sources to runtime catalog/precedence only together with their consumed rules;
+3. initialize new proof-state rows conservatively; no new rule starts `PROVEN`;
+4. implement a modular article runtime surface, avoiding scattered conditionals where possible;
+5. add positive fixtures and final-PDF measurements;
+6. add bounded negative/sensitivity cases where rejection can be demonstrated safely;
+7. extend profile/engine/PDF-A coverage as applicable;
+8. update human/reference documentation;
+9. extend Web/Lite and CLI/Deep only for checks that genuinely belong to PDF validation;
+10. run all pre-existing academic-work/project regressions and prove no drift.
 
-The UFC guide itself notes that a target journal may impose different author instructions. Therefore the template's article profile is a **UFC baseline**, not a claim to override journal-specific submission rules. Journal-specific instructions must remain an explicit applicability/override boundary documented for users.
+B2 closes only when source → predicate → locator → implementation → evidence → documentation is complete for the article profile.
 
-B2 closes only when the article source→rule→implementation→test→documentation chain is complete and the full old profile suite plus the new article profile are green.
-
-### N15-B3 — remaining pre-release corrections
+## N15-B3 — remaining pre-release corrections
 
 After B1/B2:
 
-- resolve issue #18 by building the production reference path twice under a controlled `SOURCE_DATE_EPOCH` and requiring exact SHA-256 identity; change PDF metadata generation only if the controlled experiment demonstrates it is necessary;
-- update stale v2.1.0 audit/release-state wording in current documentation while retaining the v2.1.0 historical audit under `docs/history/`;
-- decide whether `reference-validation.yml` still has a unique supported role under the current main + Gate T + Distribution strategy; remove or modernize it only with evidence;
-- resolve any additional release-blocking finding exposed by B1/B2 or their exact-head CI;
-- keep physical branch deletion deferred;
-- do not promote the release version yet.
+- resolve issue #18 using two production-reference builds under controlled `SOURCE_DATE_EPOCH` and require exact SHA-256 identity;
+- only if that experiment fails, repair nondeterministic PDF metadata/ID generation and retest;
+- update stale v2.1.0 release-state wording in current documentation while preserving historical records;
+- determine whether `reference-validation.yml` still has a unique supported role under the current main + Gate T + Distribution strategy;
+- resolve any additional release blocker exposed by B1/B2;
+- keep branch deletion deferred;
+- do not promote version metadata yet.
 
-### N15-C — v2.2.0 release candidate
+## N15-C — release candidate
 
-Only after all release blockers are resolved:
+Only after B1/B2/B3 are closed:
 
-- promote `Makefile`, `abntexto-ufc.cls`, compatibility metadata, CTAN README/changelog and other version-bearing release surfaces atomically to 2.2.0;
-- require the canonical `abntexto-ufc` distribution identity and prevent historical public artifact names based on the deprecated compatibility-class identity from returning;
-- build the production reference twice under the controlled release epoch and require exact SHA-256 identity;
-- build class/template/Overleaf/CTAN candidates, verify checksums, licensing, package allowlists and Overleaf import;
-- include the new article-profile runtime/docs/tests in release-package allowlists where appropriate;
-- keep the UFC institutional mark externalized from public/CTAN bundles and Microsoft font files undistributed.
+- atomically promote all release-bearing surfaces to 2.2.0;
+- build the production reference twice and require exact SHA-256 identity;
+- build class/template/Overleaf/CTAN candidates;
+- verify checksums, licensing, allowlists and Overleaf import;
+- include the article profile in appropriate distribution surfaces;
+- keep the UFC institutional mark out of public/CTAN bundles as already established;
+- do not redistribute proprietary Microsoft font files.
 
-The historical `release/v2.2.0-certification` branch / closed PR #36 is rehearsal evidence only. It must never be merged into current main; N15-C is derived fresh from the then-certified main.
+Historical `release/v2.2.0-certification` / closed PR #36 remains rehearsal evidence only and must not be merged into current main.
 
-### N15-D — final exact-head certification and release decision
+## N15-D — final exact-head certification
 
 Require on the exact final candidate:
 
-- source contract including all five UFC guides and the final article source/currentness model;
-- complete article-profile contract/evidence plus all legacy profile regressions;
+- complete source contract with all five UFC guides and final article authority model;
+- article-profile evidence plus all legacy profile regressions;
 - PDF validator/Pages;
-- complete push/PR preflight;
-- exact Gate T including Windows literal-font independent certification and Overleaf;
-- Distribution through release preflight, PDF/A-2b, deterministic bundles, Overleaf import and aggregate;
-- exact reference-PDF two-build reproducibility receipt;
-- version/tag metadata consistency;
-- no unresolved release-blocking N15 findings;
-- `behind_by=0` and exact audited file scope.
+- complete preflight and exact Gate T;
+- Distribution aggregate;
+- exact two-build reference-PDF reproducibility receipt;
+- version/tag consistency;
+- zero unresolved release-blocking N15 findings;
+- `behind_by=0` and exact audited scope.
 
-Only then may the project make the GO/NO-GO decision for tag `v2.2.0` and subsequent CTAN resubmission.
+Only then make the GO/NO-GO decision for tag `v2.2.0` and CTAN resubmission.
 
-## Normative/source completeness guardrail
+## Distribution / CTAN state
 
-The current UFC Normalização page, reviewed again during N15-A, lists five guides: trabalhos acadêmicos, artigo científico, citações, referências and projetos de pesquisa. The v2.2.0 scope decision is now explicit: **all five guides are to be represented, and the scientific-article guide will receive a supported article profile**.
+- public GitHub release remains v2.1.0;
+- target release remains v2.2.0;
+- canonical distribution identity remains `abntexto-ufc`;
+- official UFC templates page status must not be represented as approval unless it actually changes;
+- CTAN resubmission remains blocked until N15-D GO.
 
-This does not authorize copying old technical editions embedded in the article guide into the runtime contract. N15-B1 must first reconcile technical currentness and authority. N15-B2 then creates only the article predicates justified by that reconciled source set.
+## Repository cleanup policy
 
-The current UFC receiving pages also contain institutional/operational acts beyond the active formatting registry. In particular, CEPE Resolution 17/2015 has been identified as relevant to program-level presentation directives and must be modeled as applicable authority. Other acts remain review-required until classified. None selects an ABNT edition merely by being cited.
+Preserve through final certification:
 
-The official UFC templates page still marks the Overleaf/LaTeX model as `Em atualização`. Do not describe v2.2.0 as an officially published/approved UFC LaTeX template unless institutional status changes.
+- `main`;
+- `1.x`;
+- current N15 work branches until merged/released;
+- historical rehearsal evidence that has not yet been reconciled.
 
-## Distribution / CTAN track
+Review before deletion:
 
-- D0–D4: DONE;
-- D5 rehearsal: historical PR #36, CLOSED without merge;
-- N15-A: ACTIVE in PR #143;
-- N15-B1/B2/B3: BLOCKED until #143 closes, then required before release candidate;
-- D5 final / N15-C-D: BLOCKED by the seven N15 release findings;
-- D6 CTAN resubmission: BLOCKED by final GO decision.
+- `planning/v2.2.0-normative-verification`, because it contains divergent historical planning material.
 
-The latest public GitHub release remains v2.1.0. The intended v2.2.0 distribution identity is `abntexto-ufc`; no public CTAN availability for `abntexto-ufc` is assumed before successful submission/publication.
+Final cleanup candidates include stale audit/docs/fix/release branches whose evidence is already represented by canonical docs, PRs and Actions, plus `tmp-noop` if it still has no unique content.
 
-## Repository hygiene and cleanup policy
-
-Current N15-A inventory observed 131 remote branches.
-
-Protected long-lived branches remain `main` and `1.x`. Version tags `v*` remain immutable.
-
-Cleanup classes:
-
-- **preserve**: `main`, `1.x`, current N15 work until merged/released;
-- **review before deletion**: `planning/v2.2.0-normative-verification` because it has substantial unique historical material;
-- **historical rehearsal/reference until N15-C finishes**: `release/v2.2.0-certification` / PR #36;
-- **cleanup candidates after release**: stale audit/docs/fix/preview/maintenance branches whose evidence is already represented by merged/closed PRs and Actions;
-- **clear cleanup candidate**: `tmp-noop`, which is behind main with no unique changes.
-
-Do not bulk-delete branches before the v2.2.0 final certification/tag. The final cleanup must explicitly reconcile unique planning/history material first.
+Do not bulk-delete before the v2.2.0 final certification/tag.
 
 ## Immediate next action
 
-1. validate PR #143 on its new exact head after the article-scope and handoff updates;
-2. require exactly the four N15-A files listed above and `behind_by=0`;
-3. require the updated N15 receipts with `findings=13`, `release_blockers=7` and `article_profile_in_scope=true`;
-4. require proof-state baseline unchanged and frozen N12 workflow blob unchanged;
-5. require normal LaTeX preflight regression green with N13 7/7, N11 5/5 and structural `PASS=14 FAIL=0 SKIP=0`;
-6. prove pull-request merge-ref tree equivalence to the audited head when possible;
-7. mark #143 ready and squash-merge only with the exact audited head;
-8. re-certify resulting stable main;
-9. begin N15-B1 from that certified main, then N15-B2 article-profile work, then N15-B3 remaining corrections;
-10. only after B1/B2/B3 are fully green create N15-C; leave physical branch deletion for the final post-release cleanup pass.
+1. require Source Contract green on the final PR #144 exact head;
+2. require full LaTeX preflight green on that same final head, including N13/N11/structural regressions;
+3. verify PR #144 `behind_by=0` against current `main`;
+4. verify no `article.*` predicate/runtime implementation entered B1;
+5. squash-merge PR #144 only with the exact audited head;
+6. re-certify resulting stable `main`;
+7. mark N15-B1 DONE in this handoff;
+8. create N15-B2 fresh from that certified `main` and begin the bounded scientific-article contract;
+9. leave N15-B3/C/D and physical branch cleanup blocked until their prerequisites are satisfied.

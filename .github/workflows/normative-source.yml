@@ -8,6 +8,8 @@ on:
       - 'abntexto-ufc/**'
       - 'normativa/**'
       - 'release/final-audit.json'
+      - 'release/n15-b1-source-authority.json'
+      - 'docs/HANDOFF-V2.2.0.md'
       - 'tools/normative_*.py'
       - 'tools/pdf_measurement.py'
       - 'tools/validate-ufc-pdf.py'
@@ -25,6 +27,8 @@ on:
       - 'abntexto-ufc/**'
       - 'normativa/**'
       - 'release/final-audit.json'
+      - 'release/n15-b1-source-authority.json'
+      - 'docs/HANDOFF-V2.2.0.md'
       - 'tools/normative_*.py'
       - 'tools/pdf_measurement.py'
       - 'tools/validate-ufc-pdf.py'
@@ -54,8 +58,8 @@ jobs:
           node-version: '24'
       - name: Validate normative sources and contracts
         run: python3 tests/checks/validator_source.py
-      - name: Validate N15 unrestricted audit ledger
-        run: python3 tests/checks/normative_n15_final_audit.py
+      - name: Validate N15-B1 source-authority ledger
+        run: python3 tests/checks/normative_n15_b1_source_authority.py
       - name: Build normative proof-state and N4 false-coverage snapshots
         env:
           SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

@@ -64,6 +64,8 @@ def main() -> None:
         fail("stale embedded references must never govern")
     if rules.get("conflict_behavior") != "review-required":
         fail("current-source conflicts must require review")
+    if not rules.get("future_profile_promotion"):
+        fail("future-profile runtime promotion boundary must be explicit")
 
     audited_sources = {
         source["id"]: source
@@ -71,9 +73,13 @@ def main() -> None:
         if isinstance(source, dict) and source.get("id")
     }
     basis = policy.get("institutional_basis")
-    if not isinstance(basis, list) or len(basis) < 2:
-        fail("institutional basis must document the UFC act and current SiBi guidance")
-    required_basis = {"ufc-res-17-cepe-2017", "ufc-normalizacao-2026"}
+    if not isinstance(basis, list) or len(basis) < 3:
+        fail("institutional basis must document general UFC, PPG and current SiBi authority")
+    required_basis = {
+        "ufc-res-17-cepe-2015",
+        "ufc-res-17-cepe-2017",
+        "ufc-normalizacao-2026",
+    }
     basis_ids = {item.get("id") for item in basis if isinstance(item, dict)}
     if not required_basis <= basis_ids:
         fail("missing institutional basis: " + ", ".join(sorted(required_basis - basis_ids)))
@@ -95,6 +101,26 @@ def main() -> None:
             fail(f"current technical source is not a technical standard: {source_id}")
         if source.get("status") not in ACTIVE_STATUSES:
             fail(f"current technical source is not active: {source_id}")
+
+    profile_candidates = policy.get("profile_candidates", {})
+    article = profile_candidates.get("scientific_article") if isinstance(profile_candidates, dict) else None
+    if not isinstance(article, dict):
+        fail("scientific-article profile candidate policy is missing")
+    if article.get("status") != "reconciled-not-runtime":
+        fail("scientific-article candidate must remain reconciled-not-runtime during N15-B1")
+    if article.get("runtime_promotion_phase") != "N15-B2":
+        fail("scientific-article candidate runtime promotion must be deferred to N15-B2")
+    candidate_ids = article.get("candidate_sources")
+    if set(candidate_ids or []) != {"abnt-nbr-6022-2018", "ufc-guia-artigos-2021"}:
+        fail("scientific-article authority candidate set drifted")
+    for source_id in candidate_ids:
+        audited = audited_sources.get(source_id)
+        if not audited:
+            fail(f"profile candidate is absent from source audit: {source_id}")
+        if not str(audited.get("status", "")).startswith("current"):
+            fail(f"profile candidate is not current: {source_id}")
+        if source_id in sources:
+            fail(f"N15-B1 profile candidate entered runtime catalog prematurely: {source_id}")
 
     doc = DOC.read_text(encoding="utf-8")
     supersessions = policy.get("supersessions")
@@ -138,15 +164,23 @@ def main() -> None:
             if old in text:
                 fail(f"superseded technical edition leaked into active machine source {path}: {old}")
 
-    if "Resolução nº 17/CEPE" not in doc or "normas vigentes" not in doc:
-        fail("human documentation must state the UFC institutional basis")
+    required_doc_markers = (
+        "Resolução nº 17/CEPE, de 02 de outubro de 2017",
+        "Resolução nº 17/CEPE, de 04 de dezembro de 2015",
+        "ABNT NBR 6022:2018",
+        "N15-B2",
+    )
+    for marker in required_doc_markers:
+        if marker not in doc:
+            fail(f"human documentation is missing N15-B1 authority marker: {marker}")
 
     print(
         "Normative currency passed: "
-        f"{len(current_ids)} current technical standards, "
+        f"{len(current_ids)} active runtime technical standards, "
+        f"{len(candidate_ids)} reconciled non-runtime article sources, "
         f"{len(supersessions)} documented UFC stale-reference mappings, "
         f"{len(machine_files)} active machine files scanned; "
-        "latest applicable edition is mandatory."
+        "latest applicable edition is mandatory and N15-B1/B2 boundary is enforced."
     )
 
 

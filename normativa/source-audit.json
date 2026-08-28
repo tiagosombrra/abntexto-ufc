@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-22",
-  "scope": "abntexto-ufc-v2.1.0-current-sources",
-  "purpose": "Audit inventory for phase N2. Runtime normative truth remains normativa/catalog.json plus normativa/precedence.json until N3 decomposition.",
+  "reviewed_at": "2026-08-28",
+  "scope": "abntexto-ufc-current-sources",
+  "purpose": "Release-independent current-source inventory for UFC/ABNT authority reconciliation. Runtime normative truth remains normativa/catalog.json plus normativa/precedence.json; sources reconciled for a future profile do not enter runtime until source-backed predicates are deliberately added.",
   "policy": {
     "current_only": true,
     "technical_rule": "Current applicable ABNT editions govern technical requirements.",
@@ -18,8 +18,8 @@
       "publisher": "Universidade Federal do Ceará",
       "url": "https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/",
       "status": "current",
-      "checked_at": "2026-08-22",
-      "applies_to": ["normalization", "guides", "tables"]
+      "checked_at": "2026-08-28",
+      "applies_to": ["normalization", "guides", "tables", "scientific-article"]
     },
     {
       "id": "ufc-res-17-cepe-2017",
@@ -29,8 +29,21 @@
       "date": "2017-10-02",
       "url": "https://ufc.br/images/_files/a_universidade/cepe/resolucao_cepe_2017/resolucao17_cepe_2017.pdf",
       "status": "current",
-      "checked_at": "2026-08-22",
-      "applies_to": ["normalization-policy", "course-specific-models"]
+      "checked_at": "2026-08-28",
+      "applies_to": ["normalization-policy", "course-specific-models"],
+      "notes": "Art. 1º establishes ABNT-based normalization or formally approved course models; §§ 2º-3º define the approval/default boundary for specific models."
+    },
+    {
+      "id": "ufc-res-17-cepe-2015",
+      "kind": "institutional-act",
+      "title": "Resolução nº 17/CEPE, de 04 de dezembro de 2015",
+      "publisher": "Universidade Federal do Ceará",
+      "date": "2015-12-04",
+      "url": "https://normadigital.ufc.br/cepe/resolucao-no-17-cepe-de-04-de-dezembro-de-2015-2/",
+      "status": "current",
+      "checked_at": "2026-08-28",
+      "applies_to": ["postgraduate-programs", "program-level-presentation-directives"],
+      "notes": "NormaDigital classifies the act as in force. In the attached Normas Gerais, art. 10, X assigns each PPG collegiate body authority to define presentation directives for dissertations, theses or equivalent work. This is a program-level institutional authority, not blanket technical-formatting authority."
     },
     {
       "id": "ufc-res-05-consuni-2023",
@@ -86,8 +99,9 @@
       "url": "https://biblioteca.ufc.br/pt/normas-sibi/normas-para-o-recebimento-de-teses-e-dissertacoes/",
       "status": "current",
       "updated_at": "2026-03-04",
-      "checked_at": "2026-08-22",
-      "applies_to": ["dissertation", "thesis", "deposit", "pdfa", "approval-sheet", "capes"]
+      "checked_at": "2026-08-28",
+      "applies_to": ["dissertation", "thesis", "deposit", "pdfa", "approval-sheet", "capes"],
+      "notes": "The page still links MEC Portaria 1.224/2013, CEPE Resolution 17/2015 and CAPES Portaria 59/2017. N15-B1 classifies those references independently rather than inferring formatting authority from their presence on the page."
     },
     {
       "id": "ufc-ficha-catalografica-2026",
@@ -110,6 +124,19 @@
       "checked_at": "2026-08-22",
       "applies_to": ["institutional-layout"],
       "technical_authority": false
+    },
+    {
+      "id": "ufc-guia-artigos-2021",
+      "kind": "institutional-guide",
+      "title": "Guia de Normalização de Artigo em Publicação Periódica Científica",
+      "publisher": "Universidade Federal do Ceará",
+      "edition": "2021",
+      "url": "https://biblioteca.ufc.br/wp-content/uploads/2022/02/guianormalizacaoartigos.pdf",
+      "status": "current-institutional-with-stale-technical-citations",
+      "checked_at": "2026-08-28",
+      "applies_to": ["scientific-article"],
+      "technical_authority": false,
+      "notes": "The current UFC normalization page lists this as one of five official guides. Guide p. 5 cites NBR 6022:2018, NBR 10520:2002, NBR 6023:2018, NBR 6024:2012, NBR 6028:2021 and IBGE 1993. The stale 10520/6023 editions cannot govern; NBR 6022:2018 is reconciled as the current article-presentation source for the future article profile."
     },
     {
       "id": "ufc-guia-citacoes-2025",
@@ -192,6 +219,18 @@
       "access": "official-catalog-or-licensed-access"
     },
     {
+      "id": "abnt-nbr-6022-2018",
+      "kind": "technical-standard",
+      "title": "ABNT NBR 6022:2018 — Artigo em publicação periódica técnica e/ou científica — Apresentação",
+      "publisher": "ABNT",
+      "edition": "2018",
+      "published_at": "2018-05-16",
+      "status": "current",
+      "checked_at": "2026-08-28",
+      "access": "official-catalog-or-licensed-access",
+      "notes": "Current-edition reconciliation for N15-B1. The UFC current guide/page and current university standards registries continue to identify the 2018 second edition; no later replacement was identified in the current-source review. This source is reconciled for the future article profile but is not consumed by runtime rules during B1."
+    },
+    {
       "id": "abnt-nbr-6028-2021",
       "kind": "technical-standard",
       "title": "ABNT NBR 6028:2021 — Resumo, resenha e recensão — Apresentação",
@@ -262,6 +301,33 @@
       "status": "current",
       "checked_at": "2026-08-22",
       "applies_to": ["capes-funded-work"]
+    },
+    {
+      "id": "capes-portaria-59-2017",
+      "kind": "external-regulation",
+      "title": "Portaria CAPES nº 59/2017",
+      "publisher": "CAPES",
+      "date": "2017-03-21",
+      "url": "https://cad.capes.gov.br/ato-administrativo-detalhar?idAtoAdmElastic=240",
+      "status": "current",
+      "checked_at": "2026-08-28",
+      "applies_to": ["postgraduate-program-evaluation", "quadriennial-evaluation-2017"],
+      "technical_authority": false,
+      "notes": "CAPES classifies the act as in force; its subject is the 2017 Quadriennial Evaluation regulation. It does not create technical document-formatting requirements for the template."
+    }
+  ],
+  "reviewed_excluded_sources": [
+    {
+      "id": "mec-portaria-1224-2013",
+      "kind": "external-regulation",
+      "title": "Portaria MEC nº 1.224/2013",
+      "publisher": "Ministério da Educação",
+      "date": "2013-12-18",
+      "status": "revoked",
+      "checked_at": "2026-08-28",
+      "applies_to": ["academic-records", "record-retention"],
+      "technical_authority": false,
+      "notes": "The current UFC receiving page still links this act, but the MEC states that it was revoked by Portaria Normativa nº 22/2017 and Portaria nº 315/2018. It is therefore documented as reviewed context and deliberately excluded from the current active source registry."
     }
   ],
   "current_technical_sources": [
@@ -269,10 +335,22 @@
     "abnt-nbr-10520-2023",
     "abnt-nbr-6023-2025",
     "abnt-nbr-15287-2025",
+    "abnt-nbr-6022-2018",
     "abnt-nbr-6028-2021",
     "abnt-nbr-6024-2012",
     "abnt-nbr-6027-2012",
     "abnt-nbr-6034-2004",
     "abnt-nbr-12225-2023"
-  ]
+  ],
+  "reconciled_profile_candidate_sources": {
+    "scientific-article": [
+      "ufc-guia-artigos-2021",
+      "abnt-nbr-6022-2018",
+      "abnt-nbr-10520-2023",
+      "abnt-nbr-6023-2025",
+      "abnt-nbr-6024-2012",
+      "abnt-nbr-6028-2021",
+      "ibge-tabular-1993"
+    ]
+  }
 }
