@@ -206,7 +206,11 @@ legacy_reference_exempt = {
     'docs/HANDOFF-V2.2.0.md',
     'release/n15-b2r-a-naming-inventory.json',
 }
-tracked = subprocess.check_output(['git', 'ls-files', '-z']).split(b'\0')
+root = Path.cwd().resolve()
+tracked = subprocess.check_output(
+    ['git', '-c', f'safe.directory={root}', 'ls-files', '-z'],
+    cwd=root,
+).split(b'\0')
 for raw in tracked:
     if not raw:
         continue
