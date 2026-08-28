@@ -200,7 +200,7 @@ Goals:
 2. introduce canonical English `\ufcsetup` keys and values;
 3. introduce canonical English UFC-owned commands/environments where beneficial;
 4. retain supported Portuguese keys/values/commands/environments as compatibility aliases in v2.x;
-5. distinguish UFC-owned API from upstream `abntexto`/`abntex2` compatibility commands;
+5. distinguish UFC-owned API from upstream compatibility commands;
 6. validate canonical-English and Portuguese-compatibility documents against equivalent output/semantics;
 7. prevent new unreviewed Portuguese engineering identifiers after migration;
 8. document any deprecated aliases explicitly rather than removing them silently.
