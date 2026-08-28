@@ -9,6 +9,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "normativa" / "n12-matrix-reconciliation.json"
+B2R_LEDGER = ROOT / "release" / "n15-b2r-a-naming-inventory.json"
 
 
 def fail(message: str) -> None:
@@ -25,10 +26,88 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def git_blob_sha1(path: Path) -> str:
-    payload = path.read_bytes()
+def git_blob_sha1_bytes(payload: bytes) -> str:
     header = f"blob {len(payload)}\0".encode()
     return hashlib.sha1(header + payload).hexdigest()
+
+
+def git_blob_sha1(path: Path) -> str:
+    return git_blob_sha1_bytes(path.read_bytes())
+
+
+def load_b2r_path_migrations() -> dict[str, str]:
+    if not B2R_LEDGER.is_file():
+        return {}
+
+    ledger = load_json(B2R_LEDGER)
+    if ledger.get("phase") != "N15-B2R-A":
+        fail("B2R naming ledger has an unexpected phase")
+
+    a1 = ledger.get("a1", {})
+    if not isinstance(a1, dict):
+        fail("B2R naming ledger is missing the A1 contract")
+    for invariant in (
+        "public_api_changed",
+        "example_layout_changed",
+        "article_runtime_changed",
+        "normative_contract_changed",
+        "latex_preflight_workflow_changed",
+    ):
+        if a1.get(invariant) is not False:
+            fail(f"B2R A1 invariant is not false: {invariant}")
+
+    migrations: dict[str, str] = {}
+    for entry in ledger.get("module_renames", []):
+        if not isinstance(entry, dict):
+            fail("B2R module rename entry must be an object")
+        old = entry.get("from")
+        new = entry.get("to")
+        if not isinstance(old, str) or not isinstance(new, str) or not old or not new:
+            fail("B2R module rename entry is incomplete")
+        if old in migrations:
+            fail(f"duplicate B2R source path: {old}")
+        migrations[old] = new
+    return migrations
+
+
+def resolve_current_path(relative: str, migrations: dict[str, str]) -> Path:
+    historical = ROOT / relative
+    if historical.is_file():
+        return historical
+    current_relative = migrations.get(relative)
+    if current_relative:
+        current = ROOT / current_relative
+        if current.is_file():
+            return current
+    return historical
+
+
+def certified_blob_sha1(relative: str, migrations: dict[str, str]) -> str:
+    historical = ROOT / relative
+    if historical.is_file():
+        return git_blob_sha1(historical)
+
+    current_relative = migrations.get(relative)
+    if not current_relative:
+        fail(f"certified blob missing: {relative}")
+    current = ROOT / current_relative
+    if not current.is_file():
+        fail(f"certified blob migration target missing: {relative} -> {current_relative}")
+
+    payload = current.read_bytes()
+    if current.suffix != ".def":
+        fail(f"unsupported certified path migration: {relative} -> {current_relative}")
+    try:
+        text = payload.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        fail(f"cannot decode migrated certified module {current_relative}: {exc}")
+
+    current_marker = f"\\ProvidesFile{{{current_relative}}}"
+    historical_marker = f"\\ProvidesFile{{{relative}}}"
+    if text.count(current_marker) != 1:
+        fail(f"migrated module identity is not unique: {current_relative}")
+    reconstructed = text.replace(current_marker, historical_marker, 1).encode("utf-8")
+    return git_blob_sha1_bytes(reconstructed)
 
 
 def require_tokens(path: Path, tokens: list[str]) -> str:
@@ -50,6 +129,7 @@ def forbid_tokens(path: Path, tokens: list[str]) -> None:
 
 def main() -> None:
     manifest = load_json(MANIFEST)
+    migrations = load_b2r_path_migrations()
     if manifest.get("schema_version") != 1 or manifest.get("phase") != "N12":
         fail("invalid manifest schema/phase")
     if manifest.get("scope") != "profile-engine-font-certification":
@@ -93,13 +173,13 @@ def main() -> None:
     certified = manifest.get("certified_git_blobs", {})
     if not isinstance(certified, dict) or len(certified) < 10:
         fail("certified implementation/gate blob map is incomplete")
+    migrated_certified: list[str] = []
     for relative, expected_sha in certified.items():
-        path = ROOT / relative
-        if not path.is_file():
-            fail(f"certified blob missing: {relative}")
-        actual = git_blob_sha1(path)
+        actual = certified_blob_sha1(relative, migrations)
         if actual != expected_sha:
             fail(f"certified blob drifted: {relative}: expected {expected_sha}, got {actual}")
+        if not (ROOT / relative).is_file() and relative in migrations:
+            migrated_certified.append(relative)
 
     profile_script = ROOT / manifest["profile_engine_evidence"]["script"]
     profile_pdfa = ROOT / manifest["profile_engine_evidence"]["pdfa_script"]
@@ -152,14 +232,17 @@ def main() -> None:
     ])
 
     orth = manifest.get("orthogonality", {})
-    core = ROOT / orth["profile_key_file"]
-    fonts = ROOT / orth["font_key_file"]
+    core = resolve_current_path(orth["profile_key_file"], migrations)
+    fonts = resolve_current_path(orth["font_key_file"], migrations)
     require_tokens(core, [f"tipo / {profile}" for profile in profiles])
     require_tokens(fonts, ["fonte / times", "fonte / arial", "AtEndPreamble", "ufc_font_apply"])
     forbid_tokens(core, ["g_ufc_font_family_tl", "ufc_font_apply"])
     forbid_tokens(fonts, ["g_ufc_document_type_tl", "ufcIfProjectTF"])
     for relative in orth.get("profile_render_files", []):
-        forbid_tokens(ROOT / relative, ["g_ufc_font_family_tl", "ufc_font_apply", "fonte / times", "fonte / arial"])
+        forbid_tokens(
+            resolve_current_path(relative, migrations),
+            ["g_ufc_font_family_tl", "ufc_font_apply", "fonte / times", "fonte / arial"],
+        )
 
     stable = manifest.get("stable_main_evidence", {})
     workflow = ROOT / stable["workflow"]
@@ -245,6 +328,12 @@ def main() -> None:
         f"total_certification_cells={total}"
     )
     print("N12-EVIDENCE orthogonality status=PASS factorized_cross_product=true")
+    if migrated_certified:
+        print(
+            "N12-EVIDENCE b2r-path-migration status=PASS "
+            f"historical_blobs_preserved={len(migrated_certified)} "
+            f"paths={','.join(sorted(migrated_certified))}"
+        )
     print(
         "N12-EVIDENCE stable-main-receipt "
         f"sha={stable['source_sha']} run_id={stable['workflow_run_id']} "
