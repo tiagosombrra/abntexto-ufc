@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/trabalhos.def}[2026/08/20 UFC academic work profiles]
+\ProvidesFile{abntexto-ufc/academic-works.def}[2026/08/20 UFC academic work profiles]
 
 % NBR 14724:2024: volume identification and continuous pagination.
 \ExplSyntaxOn

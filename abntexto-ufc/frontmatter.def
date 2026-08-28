@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/pretextuais.def}[2026/08/23 UFC pre-textual elements]
+\ProvidesFile{abntexto-ufc/frontmatter.def}[2026/08/23 UFC pre-textual elements]
 
 \RequirePackage{pdfpages}
 \RequirePackage{ragged2e}
