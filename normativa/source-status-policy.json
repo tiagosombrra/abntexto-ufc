@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-24",
+  "reviewed_at": "2026-08-28",
   "purpose": "Define how complete source-registry statuses map to runtime activity without losing authority restrictions.",
   "registry_statuses": {
     "current": {
