@@ -2,7 +2,7 @@
   "schema_version": 1,
   "phase": "N15-B2R-A",
   "reviewed_at": "2026-08-28",
-  "status": "A2_FINAL_DOCUMENTATION_SYNC_CANDIDATE",
+  "status": "A2_FINAL_BLOCKER_RESOLUTION_CANDIDATE",
   "purpose": "Track behavior-preserving English naming migration before public API or article runtime changes.",
   "documentation_sync_policy": {
     "mandatory": true,
@@ -14,10 +14,26 @@
     ],
     "final_receipt_anti_loop": "Record the complete implementation-head receipts, then certify the resulting receipt-only documentation head through live checks without editing receipt documents again merely to copy those new run numbers."
   },
+  "module_renames": [
+    {"from": "abntexto-ufc/fontes.def", "to": "abntexto-ufc/fonts.def"},
+    {"from": "abntexto-ufc/modulos.def", "to": "abntexto-ufc/modules.def"},
+    {"from": "abntexto-ufc/pretextuais.def", "to": "abntexto-ufc/frontmatter.def"},
+    {"from": "abntexto-ufc/institucional.def", "to": "abntexto-ufc/institutional.def"},
+    {"from": "abntexto-ufc/trabalhos.def", "to": "abntexto-ufc/academic-works.def"},
+    {"from": "abntexto-ufc/projetos.def", "to": "abntexto-ufc/research-projects.def"},
+    {"from": "abntexto-ufc/objetos.def", "to": "abntexto-ufc/objects.def"},
+    {"from": "abntexto-ufc/bibliografia.def", "to": "abntexto-ufc/bibliography.def"},
+    {"from": "abntexto-ufc/postextuais.def", "to": "abntexto-ufc/backmatter.def"}
+  ],
   "a1": {
     "status": "DONE_MERGED_AND_RECERTIFIED",
     "pull_request": 146,
     "merged_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
+    "public_api_changed": false,
+    "example_layout_changed": false,
+    "article_runtime_changed": false,
+    "normative_contract_changed": false,
+    "latex_preflight_workflow_changed": false,
     "certification": {
       "source_contract": "#367 SUCCESS",
       "latex_preflight_push": "#1030 SUCCESS",
@@ -30,7 +46,10 @@
     "base_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
     "branch": "refactor/n15-b2r-a2-user-layout",
     "pull_request": 147,
-    "status": "FINAL_DOCUMENTATION_SYNC_AWAITING_LIVE_EXACT_HEAD_RECERTIFICATION",
+    "status": "FINAL_BLOCKER_RESOLUTION_AWAITING_EXACT_HEAD_RECERTIFICATION",
+    "public_api_change_allowed": false,
+    "normative_contract_change_allowed": false,
+    "article_runtime_change_allowed": false,
     "public_api_changed": false,
     "article_runtime_changed": false,
     "normative_contract_changed": false,
@@ -45,15 +64,17 @@
       {"from": "assets/institucional/", "to": "assets/institutional/"},
       {"from": "assets/institucional/brasao-ufc.PNG", "to": "assets/institutional/ufc-coat-of-arms.png"}
     ],
+    "n12_historical_content_rewrites": {
+      "tests/smoke/perfil-base.tex": [
+        {"current": "frontmatter/resumo", "historical": "1-pre-textuais/resumo"},
+        {"current": "frontmatter/abstract", "historical": "1-pre-textuais/abstract"}
+      ]
+    },
     "frozen_n12": {
       "workflow_path": ".github/workflows/latex-preflight.yml",
       "required_blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
       "manifest_changed": false,
-      "certified_hashes_changed": false,
-      "authorized_profile_fixture_reverse_paths": [
-        {"current": "frontmatter/resumo", "historical": "1-pre-textuais/resumo"},
-        {"current": "frontmatter/abstract", "historical": "1-pre-textuais/abstract"}
-      ]
+      "certified_hashes_changed": false
     },
     "normative_trace_update": {
       "file": "normativa/reference-guide-map.json",
@@ -76,7 +97,9 @@
       "stale compiled-guide example paths",
       "stale CTAN README institutional-asset path",
       "stale CTAN binary-policy paths",
-      "legacy-path scanner substring false positive resolved with token boundaries"
+      "legacy-path scanner substring false positive resolved with token boundaries",
+      "final documentation-sync Markdown final newlines",
+      "final documentation-sync machine-ledger A1/A2 compatibility contract restored"
     ],
     "certified_implementation_head": {
       "sha": "6e2528458e4cf92dda970ecad122054fe9d51f78",
@@ -112,8 +135,21 @@
         "release/v2.2.0-b2r-a2-dist"
       ]
     },
+    "final_documentation_sync_attempt": {
+      "sha": "ecaf551dd3e2fdb0d25cac12d2498b51147fa124",
+      "source_contract": "#405 SUCCESS",
+      "reference_preview": "#59 SUCCESS",
+      "pr_latex_preflight": "#1070 FAILED_STRUCTURE_ONLY",
+      "structure_failure_scope": [
+        "docs/B2R-NAMING-INVENTORY.md missing final newline",
+        "docs/HANDOFF-V2.2.0.md missing final newline",
+        "machine ledger simplified away compatibility fields consumed by frozen N12 checker"
+      ],
+      "all_other_preflight_jobs": "SUCCESS",
+      "resolution": "Restore required ledger compatibility fields and Markdown final newlines without changing runtime, normative contract, N12 workflow or test expectations."
+    },
     "closure_requirements": [
-      "current final documentation-sync PR head has live Source Contract, Reference Preview and full PR preflight green",
+      "current final blocker-resolution PR head has live Source Contract, Reference Preview and full PR preflight green",
       "same current SHA has exact Gate T green including Windows literal fonts and Overleaf",
       "same current SHA has Distribution green",
       "N12 workflow blob unchanged",
@@ -126,5 +162,5 @@
       "merged/re-certified state documented before B2R-B implementation"
     ]
   },
-  "next_action": "Treat the current final documentation-sync head as the sole merge candidate. Do not edit receipt documents again solely to copy its future run numbers. Require live Source Contract, Reference Preview and full PR preflight, then Gate T and Distribution on that same SHA using non-mutating certification refs. Recheck N12 blob, mergeability and behind_by=0; mark PR ready and squash merge only if all are green. Re-certify resulting main before B2R-B."
+  "next_action": "Treat the current blocker-resolution head as the sole merge candidate. Do not edit receipt documents again solely to copy its future run numbers. Require live Source Contract, Reference Preview and full PR preflight, then Gate T and Distribution on that same SHA using non-mutating certification refs. Recheck N12 blob, mergeability and behind_by=0; mark PR ready and squash merge only if all are green. Re-certify resulting main before B2R-B."
 }
