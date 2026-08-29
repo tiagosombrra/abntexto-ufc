@@ -1,139 +1,217 @@
 # N15-B2R naming inventory
 
-Updated: 2026-08-28
+Updated: 2026-08-29
 
-Certified B2R-B1 runtime/checker head: `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
+B2R-A is closed. B2R-B1 is closed and re-certified. **B2R-B2 is ACTIVE on `refactor/n15-b2r-b2-setup-aliases`.**
 
-Current state-sync branch: `docs/n15-b2r-b1-post-merge-sync`.
+Certified B2R-B2 base:
 
-B2R-A is closed. B2R-B is active. **B2R-B1 is DONE, merged via PR #150 and fully post-merge re-certified.**
+`main` `1a3731575f9fe06a7f7d9a132f5152998edc6cee`
 
-This document is the human companion to the active machine ledger `release/n15-b2r-b-public-api.json`. `release/n15-b2r-a-naming-inventory.json` remains historical B2R-A/N12-sensitive evidence and must not be repurposed.
+This document is the human companion to two machine contracts:
 
-## B2R-A — DONE
+- frozen B1 baseline: `release/n15-b2r-b-public-api.json`;
+- active B2 delta: `release/n15-b2r-b2-setup-aliases.json`.
 
-B2R-A1 normalized internal package module filenames to English. B2R-A2 normalized repository/example/distribution-facing engineering paths, including `main.tex`, `frontmatter/`, `chapters/`, `backmatter/`, `figures/` and `assets/institutional/`, while intentionally preserving Portuguese academic leaf filenames.
+`release/n15-b2r-a-naming-inventory.json` remains historical B2R-A/N12-sensitive evidence.
 
 The frozen N12 workflow remains byte-identical at blob:
 
 `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-The certified base used to start B2R-B1 was:
+## B2R-A — DONE
 
-`3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
+B2R-A1 normalized internal package module filenames to English. B2R-A2 normalized repository/example/distribution engineering paths while intentionally preserving Portuguese academic leaf filenames where appropriate.
 
-## B2R-B1 — PUBLIC API BASELINE/CHECKER — DONE
+## B2R-B1 — DONE
 
-PR #150 was squash-merged from exact head:
+PR #150 established the pre-migration public/exported API baseline and executable checker. PR #151 synchronized that result and produced the certified base used by B2.
 
-`6d51593e1a167ae657c8dd019f913dc947c34250`
-
-and produced:
-
-`main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
-
-B1 intentionally adds no canonical-English runtime aliases. It freezes and classifies the pre-migration API/export surface.
-
-### Baseline counts
-
-The machine ledger records:
+B1 baseline counts:
 
 - 2 class entrypoints;
-- 67 `\ufcsetup` keys;
+- 67 setup keys;
 - 45 enumerated setup values scoped by `(setup key, value)`;
 - 47 exported commands;
 - 6 UFC environments;
-- 2 explicit extension hooks: `\ufcsectionhook` and `\ufcobjectlegendhook`.
+- 2 explicit extension hooks.
 
-Setup-value identity is explicitly `(setup key, value)`. Values such as `true`, `false`, `sim` and `nao` may legitimately occur under multiple independent keys.
+The B1 machine ledger is frozen during B2 at blob:
 
-The future `type=article` / `tipo=artigo` pair remains reserved-only; article runtime is still blocked until N15-B2B.
+`c1f545e0e707822959db851a74d29f4068dff731`
 
-### Checker contract
+Post-#151 certification of `main` `1a373157...`:
 
-`tests/checks/public_api_contract.py` fails on missing baseline surfaces, duplicate inventory identities, supported-surface removal, unreviewed new project-owned public identifiers and drift of the frozen N12 workflow blob.
+- Source #425 — SUCCESS;
+- preflight/Gate T #1094 — SUCCESS;
+- Distribution #245 — SUCCESS;
+- Overleaf and Windows literal-font certification — SUCCESS.
 
-`tests/run.py` makes `public-api` a dependency of `repository`, so the frozen workflow transitively enforces the contract.
+## B2R-B2 — canonical English setup aliases — ACTIVE
 
-### Legacy-identity boundary
+### Design rule
 
-The B1 diagnostic cycle proved the new checker was correct and exposed a separate older canonical-identity boundary. The final policy is deliberately narrow: the deprecated legacy compatibility entrypoint's exact identity is confined to the two required structured inventory fields. Narrative or arbitrary new occurrences remain rejected. No broad scanner exemption was introduced.
+Canonical-English setup keys live in one project-owned layer:
 
-### Final pre-merge certification
+`abntexto-ufc/public-api.def`
 
-Exact PR head `6d51593e1a167ae657c8dd019f913dc947c34250` passed:
+The layer is loaded after the existing runtime modules and forwards canonical input to certified Portuguese behavior. Existing Portuguese setup keys/values remain supported throughout v2.x.
 
-- Normative Source Contract #422 — SUCCESS, run `33226621307`;
-- LaTeX preflight #1090 — SUCCESS, run `33226621382`;
-- `behind_by=0` before merge;
-- frozen N12 workflow preserved.
+No command or environment alias is introduced in B2; those surfaces remain B3 scope.
 
-### Post-merge certification
+### Inventory counts
 
-Resulting `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4` passed:
+After B2 additions:
 
-- Normative Source Contract #423 — SUCCESS, run `33227898818`;
-- LaTeX preflight push #1091 — SUCCESS, run `33227898801`;
-- exact/dispatched Gate T #1092 — SUCCESS, run `33227902517`;
-- Distribution #244 — SUCCESS, run `33227898819`.
+- legacy setup keys: 67;
+- canonical setup keys added: 65;
+- total setup keys: 132;
+- legacy enumerated values: 45;
+- canonical enumerated values added: 34;
+- total enumerated `(key,value)` identities: 79;
+- exported commands: 47, unchanged;
+- environments: 6, unchanged;
+- extension hooks: 2, unchanged.
 
-Gate T covered structure/layout/fonts/pre-textuals/projects, reference/PDF-A, complete 12-profile matrix/PDF-A, objects/bibliography, post-textuals, Overleaf stable proxy, Windows literal Times New Roman/Arial build, literal font identity, Unicode extraction, embedding and PDF/A certification.
+`volume` is already an English identifier and remains canonical as-is. The project-specific coat-of-arms compatibility key remains compatibility-only and maps to the existing coat-of-arms behavior.
 
-Distribution #244 passed release preflight, release PDF/A-2b, deterministic bundles, Overleaf import proxy, candidate upload and the aggregate distribution-preflight. GitHub Release publication was correctly skipped because no tag exists.
+### Canonical setup-key map
 
-No B1 change affected public runtime semantics, the normative contract, formatting intent, pagination intent or article runtime.
+Core/profile and presentation:
 
-## B2R-B2 — canonical English setup aliases
+| Compatibility key | Canonical key |
+| --- | --- |
+| `tipo` | `type` |
+| `impressao` | `print-mode` |
+| `capa` | `cover` |
+| `ficha-catalografica` | `catalog-card` |
+| `brasao` | `coat-of-arms` |
+| `ies` | `institution` |
+| `sigla` | `institution-acronym` |
+| `centro` | `center` |
+| `departamento` | `department` |
+| `curso-graduacao` | `undergraduate-program` |
+| `habilitacao` | `undergraduate-degree` |
+| `curso-especializacao` | `specialization-program` |
+| `programa-mestrado` | `masters-graduate-program` |
+| `nome-mestrado` | `masters-program` |
+| `titulo-mestre` | `masters-degree-field` |
+| `area-mestrado` | `masters-concentration` |
+| `programa-doutorado` | `doctoral-graduate-program` |
+| `nome-doutorado` | `doctoral-program` |
+| `titulo-doutor` | `doctoral-degree-field` |
+| `area-doutorado` | `doctoral-concentration` |
+| `programa-projeto` | `project-program` |
+| `tipo-projeto` | `project-type` |
+| `entidade-submissao` | `submission-entity` |
+| `natureza-projeto` | `project-nature-statement` |
+| `identificador-projeto` | `project-identifier` |
+| `autor` | `author` |
+| `titulo` | `title` |
+| `subtitulo` | `subtitle` |
+| `variacao-titulo` | `title-variant` |
+| `volume` | `volume` |
+| `ano` | `year` |
+| `local` | `location` |
+| `data-aprovacao` | `approval-date` |
+| `orientador` | `advisor` |
+| `orientador-ies` | `advisor-institution` |
+| `orientador-unidade` | `advisor-unit` |
+| `orientador-feminino` | `advisor-feminine-label` |
+| `coorientador` | `coadvisor` |
+| `coorientador-ies` | `coadvisor-institution` |
+| `coorientador-unidade` | `coadvisor-unit` |
+| `coorientador-feminino` | `coadvisor-feminine-label` |
+| `autor-epigrafe` | `epigraph-author` |
+| `brasao-arquivo` | `coat-of-arms-file` |
+| `pagina-inicial` | `initial-page` |
 
-B2R-B2 starts only after this B1 state synchronization is merged and its resulting `main` is re-certified.
+Committee members use the systematic pattern:
 
-### Reviewed canonical key direction
+- `banca-N` → `examiner-N`;
+- `banca-N-unidade` → `examiner-N-unit`;
+- `banca-N-ies` → `examiner-N-institution`;
+- current supported `N` values are 2 through 6.
 
-- `tipo` → `type`;
-- `impressao` → `print-mode`;
-- `capa` → `cover`;
-- `ficha-catalografica` → `catalog-card`;
-- `brasao` → `coat-of-arms`;
-- `fonte` → `font`;
-- `fonte-estrita` → `strict-font`;
-- `tabelas` → `tables`;
-- `codigo` → `code`;
-- `algoritmos` → `algorithms`;
-- `glossario` → `glossary`;
-- `indice` → `index`;
-- `autor` → `author`;
-- `titulo` → `title`;
-- `subtitulo` → `subtitle`;
-- `data-aprovacao` → `approval-date`;
-- `orientador` → `advisor`;
-- `coorientador` → `coadvisor`.
+Optional modules:
 
-### Reviewed profile values
+| Compatibility key | Canonical key |
+| --- | --- |
+| `fonte` | `font` |
+| `fonte-estrita` | `strict-font` |
+| `tabelas` | `tables` |
+| `codigo` | `code` |
+| `algoritmos` | `algorithms` |
+| `glossario` | `glossary` |
+| `indice` | `index` |
 
-- `tccgraduacao` → `undergraduate-capstone`;
-- `tccespecializacao` → `specialization-capstone`;
-- `dissertacao` → `masters-thesis`;
-- `tese` → `doctoral-thesis`;
-- `projeto` → `research-project`;
-- `projetoanonimizado` → `anonymized-research-project`.
+### Canonical setup values
 
-Canonical booleans use `true` / `false`; existing `sim` / `nao` remain compatibility values.
+Profiles:
 
-### Review-required boundary
+- `undergraduate-capstone`;
+- `specialization-capstone`;
+- `masters-thesis`;
+- `doctoral-thesis`;
+- `research-project`;
+- `anonymized-research-project`.
 
-Do not invent unresolved canonical vocabulary. In particular:
+Other choice values:
 
-- `print-mode` values remain unresolved;
-- detailed academic metadata (`programa-*`, `nome-*`, `titulo-*`, `area-*`, committee/member fields) requires semantic review;
-- optional-module values such as current `nativo` / `nenhum` forms require an explicit decision;
-- remaining commands and environments require classification/naming review before aliases are introduced.
+- `print-mode`: `single-sided`, `double-sided`;
+- `cover`: `auto`, `true`, `false`;
+- `catalog-card`: `true`, `false`;
+- `coat-of-arms`: `true`, `false`;
+- advisor/coadvisor feminine-label switches: `true`, `false`;
+- `font`: `times`, `arial`;
+- `strict-font`: `true`, `false`;
+- `tables`: `native`, `tabularray`;
+- `code`: `none`, `listings`, `minted`;
+- `algorithms`: `none`, `algpseudocodex`;
+- `glossary`: `none`, `glossaries`;
+- `index`: `none`, `imakeidx`.
 
-Distinct fields such as `programa-mestrado`, `nome-mestrado`, `titulo-mestre` and `area-mestrado` must remain semantically distinct rather than being mechanically translated.
+Package identifiers remain unchanged when they are already the exact package/runtime name.
 
-## Next executable action
+### Semantic naming decisions
 
-1. Complete the four-file state-sync branch.
-2. Open and exact-head certify its PR.
-3. Squash-merge it and re-certify the resulting `main`.
-4. Create `refactor/n15-b2r-b2-setup-aliases` from that exact certified main.
-5. Begin additive setup aliases without scientific-article runtime.
+The detailed academic metadata was reviewed semantically rather than translated token-by-token:
+
+- graduate-program, program, degree-field and concentration remain distinct concepts;
+- `project-nature-statement` denotes the complete override text used in the project nature block;
+- feminine-label flags describe grammatical output behavior rather than personal attributes;
+- committee metadata is represented as examiner/member data, not as a literal translation of the Portuguese collection noun.
+
+The active B2 delta has no unresolved setup-key or setup-value naming entries.
+
+### Executable contract and smoke evidence
+
+`tests/checks/public_api_contract.py` validates the frozen B1 ledger plus the B2 delta and rejects:
+
+- any B1 ledger drift;
+- supported legacy removals;
+- missing or unreviewed canonical setup additions;
+- incomplete legacy-to-canonical mappings;
+- new commands/environments/hooks during B2;
+- live article values;
+- frozen N12 workflow drift.
+
+`tests/normativa/public-api-aliases.tex` exercises all 65 canonical setup keys. `tests/v2-public-api-alias-check.sh` compiles the fixture and requires assertions that canonical input reaches the corresponding certified legacy state.
+
+Full paired Portuguese/English rendered-output equivalence is intentionally B2R-B4 scope.
+
+## Article boundary
+
+`type=article` and its Portuguese compatibility form remain reserved-only surfaces. They are not accepted live in B2. Scientific-article runtime belongs to N15-B2B after all B2R-B phases close and `main` is re-certified.
+
+## B2 closure sequence
+
+1. complete implementation, executable evidence and documentation synchronization;
+2. inspect branch versus certified base and require `behind_by=0`;
+3. open the B2 PR;
+4. stop mutating the final PR head;
+5. obtain exact-head Source and LaTeX preflight SUCCESS;
+6. squash-merge with head protection;
+7. re-certify resulting `main` through Source, Gate T/preflight and Distribution;
+8. synchronize final receipts if necessary without creating an unbounded receipt loop;
+9. begin B2R-B3 only from that certified `main`.
