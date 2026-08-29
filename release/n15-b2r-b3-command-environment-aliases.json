@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "phase": "N15-B2R-B3",
+  "reviewed_at": "2026-08-29",
+  "status": "IMPLEMENTATION_PENDING",
+  "base_main_sha": "cb0df822401a926c4c5987f904b29f5898fb1775",
+  "base_contracts": {
+    "b1": {
+      "path": "release/n15-b2r-b-public-api.json",
+      "blob_sha": "c1f545e0e707822959db851a74d29f4068dff731"
+    },
+    "b2": {
+      "path": "release/n15-b2r-b2-setup-aliases.json",
+      "blob_sha": "19df208fb59af5ea37556d962e5986a43094c7f5"
+    }
+  },
+  "base_certification": {
+    "state_sync_pull_request": 153,
+    "main_sha": "cb0df822401a926c4c5987f904b29f5898fb1775",
+    "normative_source_contract": {"run_number": 429, "run_id": 33249228729, "conclusion": "SUCCESS"},
+    "latex_preflight": {"run_number": 1100, "run_id": 33249228669, "conclusion": "SUCCESS"},
+    "distribution": {
+      "run_number": 247,
+      "run_id": 33249228670,
+      "conclusion": "SUCCESS",
+      "release_pdfa_2b": "SUCCESS",
+      "deterministic_bundles": "SUCCESS",
+      "overleaf_import_proxy": "SUCCESS",
+      "candidate_upload": "SUCCESS",
+      "aggregate": "SUCCESS",
+      "github_release": "SKIPPED_NO_TAG"
+    },
+    "overleaf_stable_proxy": "SUCCESS",
+    "windows_literal_fonts": "SUCCESS"
+  },
+  "policy": {
+    "migration": "additive",
+    "supported_portuguese_v2x_removal_allowed": false,
+    "article_runtime_allowed": false,
+    "setup_surface_change_allowed": false,
+    "normative_behavior_change_allowed": false,
+    "rendered_equivalence_phase": "N15-B2R-B4",
+    "canonical_command_style": "ufc + English UpperCamel semantic name",
+    "canonical_environment_style": "lowercase ufc + English semantic name"
+  },
+  "source_module": "abntexto-ufc/public-api.def",
+  "canonical_command_map": {
+    "\\imprimirabstract": "\\ufcPrintAbstract",
+    "\\imprimiragradecimentos": "\\ufcPrintAcknowledgments",
+    "\\imprimircapa": "\\ufcPrintCover",
+    "\\imprimirdedicatoria": "\\ufcPrintDedication",
+    "\\imprimirepigrafe": "\\ufcPrintEpigraph",
+    "\\imprimirerrata": "\\ufcPrintErrata",
+    "\\imprimirfichacatalografica": "\\ufcPrintCatalogCard",
+    "\\imprimirfolhadeaprovacao": "\\ufcPrintApprovalPage",
+    "\\imprimirfolhaderosto": "\\ufcPrintTitlePage",
+    "\\imprimirglossario": "\\ufcPrintGlossary",
+    "\\imprimirindice": "\\ufcPrintIndex",
+    "\\imprimirlistadeabreviaturasesiglas": "\\ufcPrintListOfAbbreviationsAndAcronyms",
+    "\\imprimirlistadealgoritmos": "\\ufcPrintListOfAlgorithms",
+    "\\imprimirlistadecodigos": "\\ufcPrintListOfCodeListings",
+    "\\imprimirlistadefiguras": "\\ufcPrintListOfFigures",
+    "\\imprimirlistadegraficos": "\\ufcPrintListOfCharts",
+    "\\imprimirlistadeilustracoes": "\\ufcPrintListOfIllustrations",
+    "\\imprimirlistadequadros": "\\ufcPrintListOfTextTables",
+    "\\imprimirlistadesimbolos": "\\ufcPrintListOfSymbols",
+    "\\imprimirlistadetabelas": "\\ufcPrintListOfTables",
+    "\\imprimirreferencias": "\\ufcPrintReferences",
+    "\\imprimirresumo": "\\ufcPrintSummary",
+    "\\imprimirsumario": "\\ufcPrintTableOfContents",
+    "\\palavraschave": "\\ufcSummaryKeywords",
+    "\\ufcbibliografia": "\\ufcAddBibliographyResource",
+    "\\ufcfonte": "\\ufcSource",
+    "\\ufcinputlisting": "\\ufcInputListing",
+    "\\ufcinputminted": "\\ufcInputMinted",
+    "\\ufclistaentrada": "\\ufcListEntry",
+    "\\ufcnota": "\\ufcNote"
+  },
+  "canonical_command_signatures": {
+    "\\ufcPrintAbstract": "m",
+    "\\ufcPrintAcknowledgments": "m",
+    "\\ufcPrintCover": "",
+    "\\ufcPrintDedication": "m",
+    "\\ufcPrintEpigraph": "O{short} m",
+    "\\ufcPrintErrata": "m",
+    "\\ufcPrintCatalogCard": "m",
+    "\\ufcPrintApprovalPage": "",
+    "\\ufcPrintTitlePage": "O{}",
+    "\\ufcPrintGlossary": "",
+    "\\ufcPrintIndex": "",
+    "\\ufcPrintListOfAbbreviationsAndAcronyms": "m",
+    "\\ufcPrintListOfAlgorithms": "",
+    "\\ufcPrintListOfCodeListings": "",
+    "\\ufcPrintListOfFigures": "",
+    "\\ufcPrintListOfCharts": "",
+    "\\ufcPrintListOfIllustrations": "",
+    "\\ufcPrintListOfTextTables": "",
+    "\\ufcPrintListOfSymbols": "m",
+    "\\ufcPrintListOfTables": "",
+    "\\ufcPrintReferences": "",
+    "\\ufcPrintSummary": "m",
+    "\\ufcPrintTableOfContents": "",
+    "\\ufcSummaryKeywords": "m",
+    "\\ufcAddBibliographyResource": "m",
+    "\\ufcSource": "m",
+    "\\ufcInputListing": "O{} m",
+    "\\ufcInputMinted": "O{\\placepos} O{} m m",
+    "\\ufcListEntry": "m m",
+    "\\ufcNote": "m"
+  },
+  "command_special_decisions": {
+    "\\ufcPrintSummary": {
+      "legacy": "\\imprimirresumo",
+      "role": "Portuguese primary-language summary",
+      "must_not_alias_to": "\\ufcPrintAbstract"
+    },
+    "\\ufcPrintAbstract": {
+      "legacy": "\\imprimirabstract",
+      "role": "English-language abstract",
+      "preserve_b1_approved_target": true
+    },
+    "\\ufcPrintEpigraph": {
+      "legacy": "\\imprimirepigrafe",
+      "canonical_optional_values": {"short": "curta", "long": "longa"},
+      "legacy_values_remain_supported": true
+    },
+    "\\ufcPrintListOfTextTables": {
+      "legacy": "\\imprimirlistadequadros",
+      "rationale": "Keep the UFC/ABNT quadro object distinct from statistical tables and charts without retaining a Portuguese canonical identifier."
+    },
+    "\\keywords": {
+      "decision": "retain_upstream_english_api",
+      "new_ufc_wrapper_required": false
+    }
+  },
+  "retained_command_classification": {
+    "canonical_project_api": [
+      "\\ufcsetup", "\\ufcDocumentType", "\\ufcPrintMode", "\\ufcMeta",
+      "\\ufcIfProjectTF", "\\ufcIfAnonymizedProjectTF", "\\ufcMathFontPolicy"
+    ],
+    "project_exported_helper": [
+      "\\ufcPrimarySectionBreak", "\\ufcPretextualBreak", "\\ufcRegisterUncountedPhysicalPage",
+      "\\ufcstarttoc", "\\ufcPretextualHeading", "\\ufcPosttextualHeading",
+      "\\ufcSetupGlossaryModule", "\\ufcIndexHeading", "\\ufcSetupIndexModule"
+    ],
+    "upstream_compatibility_api": ["\\keywords"]
+  },
+  "command_review_required": [],
+  "canonical_environment_map": {
+    "ufcalineas": "ufclettereditems",
+    "ufcsubalineas": "ufcdashedsubitems",
+    "ufclistadefinicoes": "ufcdefinitionlist",
+    "ufcobjeto": "ufcobject",
+    "ufcalgoritmo": "ufcalgorithm"
+  },
+  "canonical_environment_signatures": {
+    "ufclettereditems": "",
+    "ufcdashedsubitems": "",
+    "ufcdefinitionlist": "O{3cm}",
+    "ufcobject": "O{\\placepos}",
+    "ufcalgorithm": "O{\\placepos} O{1}"
+  },
+  "retained_environments": {
+    "ufclisting": {
+      "decision": "retain_canonical_english",
+      "conditional_module": "listings",
+      "signature": "O{\\placepos}"
+    }
+  },
+  "optional_surface_policy": {
+    "\\ufcInputListing": "defined only when the legacy listings input command is live",
+    "\\ufcInputMinted": "defined only when the legacy minted input command is live",
+    "ufclisting": "legacy canonical English environment remains conditional on code=listings",
+    "ufcalgorithm": "canonical alias is defined only when legacy ufcalgoritmo is live"
+  },
+  "environment_review_required": [],
+  "expected_counts": {
+    "setup_keys": 132,
+    "setup_values": 79,
+    "legacy_commands": 47,
+    "canonical_commands_added": 30,
+    "commands": 77,
+    "legacy_environments": 6,
+    "canonical_environments_added": 5,
+    "environments": 11,
+    "extension_hooks": 2
+  },
+  "reserved_future_surfaces": [
+    {"canonical": "type=article", "compatibility": "tipo=artigo", "status": "reserved_not_live", "runtime_phase": "N15-B2B"}
+  ],
+  "evidence": {
+    "frozen_n12_workflow_blob": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
+    "article_runtime": false,
+    "rendered_equivalence_deferred_to": "N15-B2R-B4"
+  }
+}
