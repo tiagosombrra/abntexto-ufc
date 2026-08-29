@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "phase": "N15-B2R-B4",
+  "reviewed_at": "2026-08-29",
+  "status": "IMPLEMENTATION_ACTIVE",
+  "base_main_sha": "92f17418dfeee4d2d45456912af9f8c399457cc1",
+  "base_contracts": {
+    "b1": {
+      "path": "release/n15-b2r-b-public-api.json",
+      "blob_sha": "c1f545e0e707822959db851a74d29f4068dff731"
+    },
+    "b2": {
+      "path": "release/n15-b2r-b2-setup-aliases.json",
+      "blob_sha": "19df208fb59af5ea37556d962e5986a43094c7f5"
+    },
+    "b3": {
+      "path": "release/n15-b2r-b3-command-environment-aliases.json",
+      "blob_sha": "bfcbf8aca3fba3fd602f62895f10fa2d6277b5a4"
+    }
+  },
+  "frozen_runtime": {
+    "path": "abntexto-ufc/public-api.def",
+    "blob_sha": "7b61fe70dd85ed895140f846272e097e3ded72cf"
+  },
+  "b3_closure": {
+    "pull_request": 154,
+    "exact_pr_head": "0630d19cb6ba3274d0e2e1a738343f8c74afe148",
+    "pre_merge_behind_by": 0,
+    "exact_head_certification": {
+      "normative_source_contract": {"run_number": 432, "run_id": 33252829652, "conclusion": "SUCCESS"},
+      "latex_preflight": {"run_number": 1104, "run_id": 33252829650, "conclusion": "SUCCESS"}
+    },
+    "resulting_main_sha": "92f17418dfeee4d2d45456912af9f8c399457cc1",
+    "post_merge_certification": {
+      "normative_source_contract": {"run_number": 433, "run_id": 33253212796, "conclusion": "SUCCESS"},
+      "latex_preflight_push": {"run_number": 1105, "run_id": 33253212823, "conclusion": "SUCCESS"},
+      "gate_t": {
+        "run_number": 1106,
+        "run_id": 33253216564,
+        "conclusion": "SUCCESS",
+        "reference_pdfa_2b": "SUCCESS",
+        "profile_matrix_pdfa_2b": "SUCCESS",
+        "objects_bibliography": "SUCCESS",
+        "posttextual": "SUCCESS",
+        "structure": "SUCCESS",
+        "overleaf_stable_proxy": "SUCCESS",
+        "windows_literal_font_build": "SUCCESS",
+        "windows_literal_font_certification": "SUCCESS"
+      },
+      "distribution": {
+        "run_number": 248,
+        "run_id": 33253212813,
+        "conclusion": "SUCCESS",
+        "gate_t_prerequisite": "SUCCESS",
+        "release_pdfa_2b": "SUCCESS",
+        "deterministic_bundles": "SUCCESS",
+        "overleaf_import_proxy": "SUCCESS",
+        "candidate_upload": "SUCCESS",
+        "aggregate": "SUCCESS",
+        "github_release": "SKIPPED_NO_TAG"
+      }
+    }
+  },
+  "policy": {
+    "migration": "additive",
+    "supported_portuguese_v2x_removal_allowed": false,
+    "article_runtime_allowed": false,
+    "public_api_surface_change_allowed": false,
+    "runtime_change_allowed": false,
+    "normative_behavior_change_allowed": false,
+    "latex_preflight_workflow_change_allowed": false,
+    "comparison_scope": "canonical-English versus supported-Portuguese compatibility API",
+    "raw_pdf_byte_identity_required": false,
+    "observable_equivalence_required": true
+  },
+  "expected_counts": {
+    "setup_keys": 132,
+    "setup_values": 79,
+    "commands": 77,
+    "environments": 11,
+    "extension_hooks": 2
+  },
+  "equivalence_contract": {
+    "setup_forwarding": {
+      "canonical_key_mappings": 64,
+      "retained_same-name_keys": ["volume"],
+      "canonical_value_mappings": 45,
+      "require_exact_forwarding_to_certified_portuguese_behavior": true
+    },
+    "command_forwarding": {
+      "canonical_wrappers": 30,
+      "require_declared_legacy_target_in_wrapper": true,
+      "special_value_forwarding": {
+        "\\ufcPrintEpigraph": {"short": "curta", "long": "longa"}
+      }
+    },
+    "environment_forwarding": {
+      "canonical_wrappers": 5,
+      "retained_same-name_environments": ["ufclisting"],
+      "require_begin_end_forwarding_to_declared_legacy_environment": true
+    },
+    "paired_runtime": {
+      "engine": "pdflatex",
+      "setup_state": "exact normalized internal-state equality",
+      "text": "exact pdftotext -layout equality",
+      "page_geometry": "exact page-count and page-size equality",
+      "auxiliary_lists": "exact equality when produced",
+      "rendering": "per-page raster SHA-256 equality",
+      "pdfa": "both outputs declare PDF/A-2b"
+    }
+  },
+  "evidence": {
+    "contract_checker": "tests/checks/public_api_equivalence_contract.py",
+    "paired_fixture": "tests/normativa/public-api-equivalence.tex",
+    "paired_summary_fixture": "tests/fixtures/public-api-equivalence-summary.tex",
+    "paired_runner": "tests/v2-public-api-equivalence-check.sh",
+    "frozen_n12_workflow_blob": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
+    "article_runtime": false
+  },
+  "closure_gate": {
+    "require_exact_head_source_success": true,
+    "require_exact_head_latex_preflight_success": true,
+    "require_post_merge_source_success": true,
+    "require_post_merge_full_gate_t_success": true,
+    "require_post_merge_distribution_success": true,
+    "scientific_article_runtime_unblocks_only_after_certified_resulting_main": true
+  }
+}
