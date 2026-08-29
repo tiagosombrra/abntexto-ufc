@@ -2,7 +2,7 @@
 
 Updated: 2026-08-29
 
-Status: **active engineering policy for v2.x. N15-B2R setup, command/environment naming and EN/PT behavioral-equivalence certification are DONE. The bounded B4 post-merge state sync is the only remaining transition step before N15-B2B scientific-article runtime.**
+Status: **active engineering policy for v2.x. N15-B2R is fully DONE and re-certified on `main` `ce659b578b4fc9cc929af4aadc3e613df469ba77`. N15-B2B scientific-article runtime is ACTIVE from that exact certified base.**
 
 ## 1. Core principle
 
@@ -27,16 +27,15 @@ Canonical English API may be the documented default without invalidating Portugu
 Use lowercase English names and hyphens where appropriate. Canonical examples include:
 
 - `fonts.def`, `modules.def`, `frontmatter.def`, `institutional.def`;
-- `academic-works.def`, `research-projects.def`, `objects.def`, `bibliography.def`, `backmatter.def`;
-- `public-api.def` as the canonical public-alias layer;
-- article runtime module `articles.def`;
+- `academic-works.def`, `research-projects.def`, `articles.def`, `objects.def`, `bibliography.def`, `backmatter.def`;
+- `public-api.def` as the frozen B2R canonical public-alias layer;
 - `main.tex`, `frontmatter/`, `chapters/`, `backmatter/`, `figures/`, `assets/institutional/`.
 
 Portuguese academic leaf filenames may remain where translation would create unrelated churn. Historical evidence is not renamed for style consistency.
 
 ## 4. Public setup keys — B2 DONE
 
-Canonical `\ufcsetup` keys use lowercase English kebab-case. Final setup inventory:
+Canonical `\ufcsetup` keys use lowercase English kebab-case. Final B2R setup inventory:
 
 - 67 compatibility keys;
 - 65 canonical additions;
@@ -46,6 +45,8 @@ Canonical `\ufcsetup` keys use lowercase English kebab-case. Final setup invento
 - 79 scoped setup-value identities total.
 
 `volume` remains canonical as-is. The project-specific coat-of-arms compatibility synonym remains compatibility-only and does not gain a duplicate English synonym.
+
+N15-B2B does not add a setup key. It activates only the previously reserved scoped values `type=article` and `tipo=artigo` in `articles.def`; these are accounted as the B2B runtime delta rather than by rewriting frozen B2R counts or ledgers.
 
 ## 5. Semantic metadata naming
 
@@ -60,21 +61,22 @@ Canonical metadata names describe runtime role rather than mechanically translat
 
 If a new metadata field cannot be named with this precision, treat it as an API-design decision rather than a cosmetic translation.
 
-## 6. Setup values — B2 DONE
+For the B2B article baseline, no new metadata key is introduced: existing `author`, `title`, `subtitle`, `title-variant` and `approval-date` are reused, and the standard LaTeX `\date{...}` surface carries the submission date. Author curriculum/affiliation/contact may be attached to the existing author content by a footnote, matching the article contract without widening the public API during B2B.
+
+## 6. Setup values — B2 DONE + B2B ARTICLE DELTA
 
 Setup-value identity is `(setup key, value)`, not a global value token. Canonical booleans are `true` / `false`; existing `sim` / `nao` remain compatibility forms where already public.
 
-Canonical document profile values are:
+Canonical document profile values established by B2R are:
 
 - `undergraduate-capstone`;
 - `specialization-capstone`;
 - `masters-thesis`;
 - `doctoral-thesis`;
 - `research-project`;
-- `anonymized-research-project`;
-- reserved `article`, activated only by N15-B2B runtime.
+- `anonymized-research-project`.
 
-Other canonical values include `single-sided` / `double-sided`, `auto`, `times` / `arial`, `native`, `none`, and exact external package identifiers such as `tabularray`, `listings`, `minted`, `algpseudocodex`, `glossaries` and `imakeidx`.
+N15-B2B activates the reserved canonical `article` value and Portuguese compatibility `artigo` value as a separate runtime delta. Other canonical values include `single-sided` / `double-sided`, `auto`, `times` / `arial`, `native`, `none`, and exact external package identifiers such as `tabularray`, `listings`, `minted`, `algpseudocodex`, `glossaries` and `imakeidx`.
 
 ## 7. UFC-owned commands — B3 DONE
 
@@ -93,7 +95,7 @@ Important semantic rules:
 - `\ufcSource` and `\ufcNote` are canonical object-source/note commands;
 - `\ufcInputListing` and `\ufcInputMinted` are conditional on their corresponding certified code modules.
 
-Canonical wrappers live in `abntexto-ufc/public-api.def`; behavior ownership remains in the certified compatibility/runtime modules during v2.x unless a later phase explicitly changes it.
+Canonical wrappers remain in frozen `abntexto-ufc/public-api.def`. B2B adds no new public command: `articles.def` specializes existing behavior owners only when the active profile is article, so both canonical and Portuguese command surfaces continue to converge on the same runtime.
 
 ## 8. UFC-owned environments — B3 DONE
 
@@ -107,13 +109,15 @@ Canonical environment mappings are:
 
 `ufclisting` is already English and remains canonical as-is.
 
-Environment wrappers preserve the certified signatures and nesting behavior.
+Environment wrappers preserve the certified signatures and nesting behavior. B2B introduces no new environment.
 
 ## 9. Exported helpers and upstream surfaces
 
 Do not create aliases merely to make every exported symbol look uniform. Retained project helpers include page-break, heading, TOC and optional-module setup helpers already expressed in English. Upstream compatibility surfaces such as `\keywords`, `\textapud`, `\usechapters` and `\printlegendbox` keep their upstream identities.
 
 Extension hooks remain `\ufcsectionhook` and `\ufcobjectlegendhook`.
+
+For article continuous flow, B2B specializes the already exported `\ufcPrimarySectionBreak` and `\ufcPretextualBreak` commands conditionally. The underlying internal break function remains owned by `layout.def`; `articles.def` must not duplicate or replace that internal owner.
 
 ## 10. Other engineering identifiers
 
@@ -137,7 +141,7 @@ B2R-B uses cumulative machine evidence:
 - `release/n15-b2r-b4-en-pt-equivalence.json` — completed B4 equivalence record;
 - `release/n15-b2r-a-naming-inventory.json` — historical B2R-A/N12 evidence.
 
-Frozen B4 identities:
+Frozen B2R identities:
 
 - B1 blob `c1f545e0e707822959db851a74d29f4068dff731`;
 - B2 blob `19df208fb59af5ea37556d962e5986a43094c7f5`;
@@ -145,7 +149,7 @@ Frozen B4 identities:
 - public-API runtime blob `7b61fe70dd85ed895140f846272e097e3ded72cf`;
 - N12 workflow blob `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-Final public counts are 132 setup keys, 79 scoped values, 77 commands, 11 environments and 2 hooks.
+Final B2R public counts are 132 setup keys, 79 scoped values, 77 commands, 11 environments and 2 hooks. Later profile deltas are recorded by their own phase contracts instead of mutating these historical counts.
 
 ## 13. Behavioral equivalence — B4 DONE
 
@@ -160,7 +164,7 @@ Paired runtime checks certified:
 - equal page count and dimensions;
 - equal generated TOC/list/bibliography artifacts;
 - equal per-page raster SHA-256 at fixed rendering parameters;
-- PDF/A-2b declaration for both outputs.
+- PDF/A-2b declaration for both paired outputs.
 
 Final exact-head B4 evidence on PR #155:
 
@@ -172,29 +176,27 @@ Final exact-head B4 evidence on PR #155:
 - all state/text/geometry/auxiliary/raster/PDF-A predicates true;
 - structural summary `PASS=16 FAIL=0 SKIP=0`.
 
-Protected squash merge produced `main` `a4f2660ef46826c7d61a7dc3d9de6554f6d6a825`, then:
+Protected squash merge produced `main` `a4f2660ef46826c7d61a7dc3d9de6554f6d6a825`, then Source #443, preflight #1116, Gate T #1117 and Distribution #249 all passed.
 
-- Source #443 — SUCCESS, run `33263191118`;
-- preflight push #1116 — SUCCESS, run `33263191096`;
-- Gate T #1117 — SUCCESS, run `33263196260`;
-- Distribution #249 — SUCCESS, run `33263191120`;
-- Overleaf and Windows literal-font build/certification — SUCCESS;
-- PDF/A and deterministic packaging — SUCCESS.
+The bounded B4 state sync then closed in PR #156. Exact head `1a4b5feb5517dd820d010613b24d2fffd346d6e5` passed Source #444 and preflight #1118 with `behind_by=0`; protected squash merge produced `main` `ce659b578b4fc9cc929af4aadc3e613df469ba77`. That exact main passed Source #445 (`33266313000`), Gate T/preflight #1119 (`33266312999`) and Distribution #250 (`33266313007`), including Overleaf, Windows literal fonts, PDF/A and deterministic bundles.
 
-No public-runtime/API divergence was observed during B4.
+No B2R public-runtime/API divergence was observed.
 
-## 14. Scientific-article naming boundary — N15-B2B next
+## 14. Scientific-article naming boundary — N15-B2B ACTIVE
 
-B2R no longer blocks article support. After the bounded B4 state-sync is certified and merged, N15-B2B activates the reserved article profile.
+B2R no longer blocks article support. N15-B2B activates the reserved article profile from certified `main` `ce659b57...`.
 
 Article runtime rules:
 
 - canonical module name: `articles.def`;
 - canonical setup surface: `type=article`;
-- Portuguese compatibility form is additive and must follow the established v2.x policy;
-- reservation before B2B is not runtime support;
-- article behavior should use centralized profile capabilities or equivalent policy rather than scattered language-dependent conditionals;
-- article additions must not regress thesis/dissertation/project profiles or rewrite the frozen B2R compatibility semantics unnecessarily.
+- Portuguese compatibility surface: `tipo=artigo`;
+- the two values form a B2B delta; B1/B2/B3/B4 ledgers and `public-api.def` remain frozen;
+- B2B adds no setup key, public command, environment or extension hook;
+- article behavior uses centralized profile dispatch rather than language-dependent branches spread across modules;
+- article-specific continuous-flow policy is implemented by conditional reuse of existing public break commands while `layout.def` retains internal break ownership;
+- article additions must not regress thesis/dissertation/project profiles;
+- executable B2B state is tracked in `release/n15-b2b-article-runtime.json` and proof-state promotion remains N15-B2C.
 
 ## 15. Current migration state
 
@@ -203,9 +205,11 @@ Article runtime rules:
 - B2R-B1 — DONE, PR #150 + PR #151;
 - B2R-B2 — DONE, PR #152 + PR #153;
 - B2R-B3 — DONE, PR #154;
-- B2R-B4 — DONE, PR #155, certified `main` `a4f2660e...`;
-- bounded B4 post-merge documentation sync — ACTIVE;
-- N15-B2B — next runtime phase after sync certification.
+- B2R-B4 — DONE, PR #155;
+- bounded B4 post-merge documentation sync — DONE, PR #156;
+- certified B2B base — `main` `ce659b578b4fc9cc929af4aadc3e613df469ba77`;
+- N15-B2B — ACTIVE on `feat/n15-b2b-scientific-article-runtime`;
+- N15-B2C — BLOCKED by B2B certification.
 
 ## 16. Mandatory documentation synchronization
 
@@ -213,16 +217,8 @@ After a material naming decision, PR merge/certification or next-action change, 
 
 - `docs/HANDOFF-V2.2.0.md`;
 - `docs/B2R-NAMING-INVENTORY.md`;
-- active B2R machine delta/ledger;
+- active phase machine delta/ledger;
 - this policy when naming decisions/state change;
 - user/release documentation when described public surfaces change.
 
-Historical B2R-A and frozen B1/B2/B3 evidence are not rewritten merely to record later phase state.
-
-Avoid receipt loops: state-sync exact-head/resulting-main receipts may live in the PR/final execution report after the tracked documents already record the primary B4 certification.
-
-## 17. Review checklist
-
-Before adding an engineering-facing identifier, verify ownership, semantic precision, naming convention, duplication, compatibility needs, schema/API impact, optional-module lifetime, preservation of official wording and documentation-sync requirements.
-
-For N15-B2B, additionally verify that article-specific API is genuinely required, is canonical in English, has the necessary Portuguese v2.x compatibility route, and does not leak article assumptions into unrelated profiles.
+Historical B2R-A and frozen B1/B2/B3/B4 evidence are not rewritten merely to record later phase state.
