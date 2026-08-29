@@ -97,6 +97,7 @@ def main() -> None:
     require("\\NewDocumentEnvironment" not in article, "B2B introduced a new environment", errors)
     require("\\ProvideDocumentEnvironment" not in article, "B2B introduced a provided environment", errors)
     require("\\RenewDocumentCommand \\date" not in article, "B2B must not redefine the standard LaTeX date command", errors)
+    require("\\AddToHook{cmd/date/" not in article, "B2B must not instrument the standard LaTeX date command with a generic command hook", errors)
     require("\\ufc_article_base_print_" not in article, "B2B must not alias xparse print-command backends", errors)
     require(
         "\\cs_set_protected:Npn \\ufc_primary_section_break:" not in article,
@@ -130,8 +131,8 @@ def main() -> None:
 
     required_markers = (
         "type / article .meta:n = { tipo = artigo }",
-        "\\AddToHook{cmd/date/after}",
-        "\\g_ufc_article_submission_date_set_bool",
+        "\\cs_new_eq:Nc \\ufc_article_default_date: {@date}",
+        "\\cs_if_eq:NcTF \\ufc_article_default_date: {@date}",
         "Required~article~submission~date~was~not~set",
         "\\ufc_article_base_textual:",
         "\\cs_new_protected:Npn \\ufc_article_install_runtime:",
