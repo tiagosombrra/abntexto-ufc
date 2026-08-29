@@ -96,6 +96,11 @@ def main() -> None:
     require("\\ProvideDocumentCommand" not in article, "B2B introduced a provided public command", errors)
     require("\\NewDocumentEnvironment" not in article, "B2B introduced a new environment", errors)
     require("\\ProvideDocumentEnvironment" not in article, "B2B introduced a provided environment", errors)
+    require(
+        "\\cs_set_protected:Npn \\ufc_primary_section_break:" not in article,
+        "B2B must not take ownership of the layout internal section-break function",
+        errors,
+    )
 
     modules = MODULE_PATTERN.findall(class_text)
     require(modules.count("abntexto-ufc/articles.def") == 1, "articles.def must be loaded exactly once", errors)
@@ -127,7 +132,8 @@ def main() -> None:
         "\\setcounter{page}{1}",
         "\\singlesp",
         "\\setlength{\\parindent}{2cm}",
-        "\\cs_set_protected:Npn \\ufc_primary_section_break:",
+        "\\RenewDocumentCommand \\ufcPrimarySectionBreak",
+        "\\RenewDocumentCommand \\ufcPretextualBreak",
         "Data~de~submissão:",
         "\\cs_use:c {@date}",
         "Data~de~aprovação:",
@@ -161,7 +167,7 @@ def main() -> None:
     print(
         "N15-EVIDENCE article-runtime-contract "
         "predicates=13 setup_values=2 new_keys=0 new_commands=0 new_environments=0 "
-        "b2r_runtime_frozen=true n12_frozen=true status=PASS"
+        "layout_internal_owner_preserved=true b2r_runtime_frozen=true n12_frozen=true status=PASS"
     )
 
 
