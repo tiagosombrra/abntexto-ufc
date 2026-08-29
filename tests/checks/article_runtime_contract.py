@@ -106,27 +106,31 @@ def main() -> None:
     require(modules.count("abntexto-ufc/articles.def") == 1, "articles.def must be loaded exactly once", errors)
     if "abntexto-ufc/articles.def" in modules:
         article_index = modules.index("abntexto-ufc/articles.def")
+        require(
+            article_index == len(modules) - 1,
+            "articles.def must be the final UFC runtime layer",
+            errors,
+        )
         for predecessor in (
             "abntexto-ufc/frontmatter.def",
             "abntexto-ufc/academic-works.def",
             "abntexto-ufc/research-projects.def",
             "abntexto-ufc/bibliography.def",
             "abntexto-ufc/compat-nbr6023-2025.def",
+            "abntexto-ufc/backmatter.def",
+            "abntexto-ufc/public-api.def",
         ):
             require(
                 predecessor in modules and modules.index(predecessor) < article_index,
                 f"articles.def must load after {predecessor}",
                 errors,
             )
-        for successor in ("abntexto-ufc/backmatter.def", "abntexto-ufc/public-api.def"):
-            require(
-                successor in modules and article_index < modules.index(successor),
-                f"articles.def must load before {successor}",
-                errors,
-            )
 
     required_markers = (
         "type / article .meta:n = { tipo = artigo }",
+        "\\RenewDocumentCommand \\date",
+        "\\g_ufc_article_submission_date_set_bool",
+        "Required~article~submission~date~was~not~set",
         "\\ufc_article_base_textual:",
         "\\ufc_layout_one_sided:",
         "\\setcounter{page}{1}",
@@ -167,7 +171,8 @@ def main() -> None:
     print(
         "N15-EVIDENCE article-runtime-contract "
         "predicates=13 setup_values=2 new_keys=0 new_commands=0 new_environments=0 "
-        "layout_internal_owner_preserved=true b2r_runtime_frozen=true n12_frozen=true status=PASS"
+        "explicit_submission_date=true final_runtime_layer=true layout_internal_owner_preserved=true "
+        "b2r_runtime_frozen=true n12_frozen=true status=PASS"
     )
 
 
