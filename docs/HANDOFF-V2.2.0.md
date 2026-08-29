@@ -2,11 +2,15 @@
 
 Updated: 2026-08-28
 
-Checkpoint: **N15-B2R-A2 merged and post-merge re-certified; B2R-B is the next executable phase**.
+Checkpoint: **N15-B2R-B1 public-API baseline/checker is certified on PR #150; documentation-sync head must pass before merge**.
 
-Certified `main`: `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`.
+Certified base `main`: `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-Always read the live repository head and GitHub Actions receipts before mutation or merge. This file is the canonical continuation state; live Git/CI remains the execution authority.
+Current B2R-B branch: `refactor/n15-b2r-b-public-api`.
+
+Last technically certified B2R-B1 head before this documentation-sync commit: `1438d85e22a787ce7ab92bcd7abd06e259afa05d`.
+
+Always read the live repository head, PR state and GitHub Actions receipts before mutation or merge. This file is the canonical continuation state; live Git/CI remains the execution authority.
 
 ## Mandatory documentation-sync policy
 
@@ -16,10 +20,12 @@ Update these active state documents whenever scope changes materially, CI expose
 
 1. `docs/HANDOFF-V2.2.0.md` — canonical continuation point;
 2. `docs/B2R-NAMING-INVENTORY.md` — active B2R human ledger;
-3. `release/n15-b2r-a-naming-inventory.json` — active machine ledger;
-4. user/policy documents when the surfaces they describe change.
+3. `release/n15-b2r-b-public-api.json` — active B2R-B machine ledger;
+4. `docs/NAMING.md` — naming/compatibility policy and migration state when applicable.
 
-A phase must not be marked DONE if these documents disagree with repository/PR/CI state.
+`release/n15-b2r-a-naming-inventory.json` is the historical B2R-A/N12-sensitive ledger. Do not simplify or repurpose it for B2R-B state.
+
+A B2R subphase must not be marked DONE if the active documents disagree with repository/PR/CI state.
 
 ## Source-of-truth hierarchy
 
@@ -39,7 +45,9 @@ Green CI never creates a normative requirement or silently promotes proof state.
 - no invented inaccessible ABNT wording/locators;
 - recommendations remain recommendations;
 - `.github/workflows/latex-preflight.yml` remains frozen unless N12 is explicitly reopened;
+- frozen N12 workflow blob: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`;
 - no supported Portuguese public-API removal in v2.x;
+- B2R public-API migration is additive;
 - no article runtime before B2R closes and the resulting `main` is re-certified;
 - UFC institutional mark and proprietary Microsoft fonts remain excluded from public bundles;
 - physical branch cleanup remains deferred until final certification/tag;
@@ -55,7 +63,10 @@ Green CI never creates a normative requirement or silently promotes proof state.
 | N15-B2A | scientific-article source + normative contract | DONE — PR #145 |
 | N15-B2R-A1 | internal module English naming | DONE — PR #146 |
 | N15-B2R-A2 | user-example/distribution-facing layout | DONE — PR #148; resulting `main` re-certified |
-| N15-B2R-B | canonical English public API + Portuguese aliases | READY — next executable phase |
+| N15-B2R-B1 | public-API inventory + executable baseline checker | CERTIFIED ON PR #150; doc-sync gate pending |
+| N15-B2R-B2 | additive canonical-English setup keys/values + Portuguese aliases | BLOCKED by B1 merge/re-certification |
+| N15-B2R-B3 | canonical commands/environments + compatibility wrappers | BLOCKED by B2 |
+| N15-B2R-B4 | EN/PT semantic/output equivalence + exact-head closure | BLOCKED by B3 |
 | N15-B2B | scientific-article runtime | BLOCKED by B2R-B |
 | N15-B2C | scientific-article evidence closure | BLOCKED by B2B |
 | N15-B3 | remaining pre-release corrections | BLOCKED by B2C |
@@ -90,55 +101,57 @@ A2 normalized user-example and distribution-facing repository paths only:
 
 Repository template, complete-template bundle and Overleaf bundle use this canonical content layout; Overleaf keeps `main.tex` at archive root. Portuguese academic leaf filenames remain intentionally unchanged by A2.
 
-A2 did not change public `\ufcsetup` semantics, article runtime, normative predicates/values/locators/authority, formatting intent or pagination intent.
+The final A2 merge candidate `22e9e4e872aca8aca16b143b249d62fe516c3359` passed Source #408, Reference Preview #62, preflight #1073, Gate T #1074 and Distribution #241. PR #148 was squash-merged, producing `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`, which then passed Source #410, preflight #1076, Gate T #1077, Distribution #242 and PDF Validator #136.
 
-The frozen N12 workflow blob remains:
+The later B2R-A2 documentation-sync closure advanced `main` to the certified base now used by B2R-B: `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-`aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
+## N15-B2R-B1 — current closure state
 
-#### Final pre-merge certification
+PR #150 (`audit: establish B2R-B public API baseline`) starts B2R-B without changing runtime semantics.
 
-The replacement PR #148 pointed to the same certified content SHA as draft PR #147, because #147 could not be transitioned from draft through the automation connector. The final merge candidate was `22e9e4e872aca8aca16b143b249d62fe516c3359`.
+B1 introduced:
 
-Exact-head receipts before merge:
+- `release/n15-b2r-b-public-api.json` as the active pre-migration public/exported API ledger;
+- setup-value identity scoped by `(setup key, value)`, avoiding collisions for repeated values such as `true`, `false`, `sim` and `nao`;
+- inventory of 2 class entrypoints, 67 setup keys, 45 scoped setup values, 47 exported commands, 6 UFC environments and 2 explicit extension hooks;
+- classification of canonical project API, Portuguese compatibility API, exported helpers and upstream compatibility surfaces;
+- reservation of `type=article` / `tipo=artigo` without activating article runtime;
+- `tests/checks/public_api_contract.py`, which rejects removals/unreviewed additions and verifies the frozen N12 workflow blob;
+- integration of `public-api` as a dependency of the existing `repository` validation check, with no change to `.github/workflows/latex-preflight.yml`.
 
-- Source Contract #408 — SUCCESS;
-- Reference Preview #62 — SUCCESS;
-- PR LaTeX preflight #1073 — SUCCESS;
-- Gate T #1074 — SUCCESS, including Windows literal Times New Roman/Arial certification and Overleaf proxy;
-- Distribution #241 — SUCCESS;
-- `behind_by=0` before merge;
-- frozen N12 workflow blob preserved.
+### CI-discovered blocker and correction
 
-PR #148 was squash-merged, producing `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`. PR #147 was closed without merge and is retained only as historical draft context.
+Initial head `d3f55442e22eced43784089c24b5423f092123f2` passed the new public-API checker itself, but preflight #1081 failed only in the older canonical-identity scanner because the new ledger necessarily documents the deprecated `ufctex` wrapper.
 
-#### Post-merge certification
+The correction at head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` added a narrow classification exception for exactly the ledger lines that identify `ufctex` and `ufctex.cls`. It does not exempt the whole ledger or permit additional unclassified legacy identities.
 
-The resulting `main` was re-certified successfully:
+### Certified technical head receipts
 
-- Normative Source Contract #410 — SUCCESS;
-- LaTeX preflight push #1076 — SUCCESS;
-- exact Gate T #1077 — SUCCESS;
-- Distribution preflight #242 — SUCCESS;
-- PDF Validator #136 — SUCCESS.
+Head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` passed:
 
-Therefore all A2 closure requirements are satisfied. No B2R-A2 implementation work remains.
+- Normative Source Contract #414 — SUCCESS;
+- LaTeX preflight #1082 — SUCCESS;
+- structure job — SUCCESS, including `public-api`, repository audit, distribution source, layout, fonts, normative complement, pre-textuals, projects, build path, multi-volume and catalog card;
+- reference document + PDF/A-2b — SUCCESS;
+- 12-profile matrix + profile PDF/A-2b — SUCCESS;
+- objects/bibliography — SUCCESS;
+- post-textuals — SUCCESS.
 
-## Next executable action — N15-B2R-B
+The `public-api` evidence on the prior diagnostic run already reported `keys=67 values=45 commands=47 environments=6 hooks=2`, `value_identity=setup-key/value`, `article_runtime=false` and the frozen N12 blob.
 
-Begin B2R-B on a fresh branch from certified `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`.
+No public API behavior, article runtime, normative contract, formatting intent or pagination intent changed in B1.
 
-B2R-B must proceed additively and in this order:
+## Next executable action
 
-1. create a machine-readable inventory of the current public API before changing it;
-2. classify setup keys, values, commands, environments, class entrypoints and upstream-owned surfaces;
-3. define canonical English names for project-owned public surfaces;
-4. preserve every supported Portuguese v2.x surface as a compatibility alias/wrapper;
-5. add an executable checker that prevents accidental removal of compatibility aliases or introduction of unreviewed public identifiers;
-6. add semantic/output equivalence fixtures for canonical-English versus Portuguese configuration;
-7. re-certify exact-head Source Contract, Reference Preview, full preflight, Gate T and Distribution before closing B2R-B.
+1. Let the final B2R-B1 documentation-sync head pass Source Contract and LaTeX preflight.
+2. Confirm PR #150 remains mergeable and `behind_by=0`.
+3. Squash-merge PR #150 with the exact expected head SHA.
+4. Re-certify the resulting `main` before beginning public aliases.
+5. Start N15-B2R-B2 from that re-certified `main`.
 
-Initial implementation target is `abntexto-ufc/core.def`, where `\ufcsetup` is currently Portuguese-centric. Inventory/checker creation must precede or accompany any alias implementation; do not begin scientific-article runtime in this phase.
+B2R-B2 must introduce setup aliases additively. The safest first implementation is for the already-reviewed mappings such as `type`, `cover`, `catalog-card`, `coat-of-arms`, `font`, `strict-font`, `tables`, `code`, `algorithms`, `glossary`, `index`, `author`, `title`, `subtitle`, `approval-date`, `advisor` and `coadvisor`. English aliases should forward to the certified Portuguese behavior wherever possible.
+
+Terms still marked `review_required` — especially print-mode vocabulary, detailed academic metadata, module values, commands and environments — must be resolved semantically before implementation. Do not introduce `article` runtime in B2R-B2.
 
 ## Later phases
 
