@@ -1,0 +1,242 @@
+\ProvidesFile{abntexto-ufc/articles.def}[2026/08/29 UFC scientific article profile]
+
+% NBR 6022:2018 + compatible UFC scientific-article requirements.
+% Source-backed contract: normativa/coverage-rules-article.json.
+\ExplSyntaxOn
+
+% B2B activates only the setup values reserved during B2R. No new setup key,
+% public command, environment, or extension hook is introduced here.
+\keys_define:nn { ufc }
+  {
+    tipo / artigo .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { artigo }
+        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+      },
+    type / article .meta:n = { tipo = artigo }
+  }
+
+\prg_new_conditional:Npnn \ufc_article_if: { T, F, TF }
+  {
+    \str_if_eq:VnTF \g_ufc_document_type_tl { artigo }
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+
+% Preserve every certified non-article behavior owner and dispatch only for the
+% new article profile.
+\cs_new_eq:NN \ufc_article_base_pretextual: \pretextual
+\cs_new_eq:NN \ufc_article_base_textual: \textual
+\cs_new_eq:NN \ufc_article_base_primary_section_break: \ufc_primary_section_break:
+\cs_new_eq:NN \ufc_article_base_print_cover: \imprimircapa
+\cs_new_eq:NN \ufc_article_base_print_title_page: \imprimirfolhaderosto
+\cs_new_eq:NN \ufc_article_base_print_approval_page: \imprimirfolhadeaprovacao
+\cs_new_eq:NN \ufc_article_base_print_acknowledgments: \imprimiragradecimentos
+\cs_new_eq:NN \ufc_article_base_print_summary: \imprimirresumo
+\cs_new_eq:NN \ufc_article_base_print_abstract: \imprimirabstract
+\cs_new_eq:NN \ufc_article_base_print_toc: \imprimirsumario
+\cs_new_eq:NN \ufc_article_base_print_references: \imprimirreferencias
+
+% Scientific articles are single-sided in the UFC profile, use visible Arabic
+% pagination from the first page, 12 pt body text, 2 cm paragraph indentation,
+% and single line spacing throughout the textual flow.
+\cs_new_protected:Npn \ufc_article_activate:
+  {
+    \ufc_article_if:T
+      {
+        \tl_gset:Nn \g_ufc_print_mode_tl { anverso }
+        \ufc_layout_apply:
+        \ufc_layout_one_sided:
+        \setcounter{page}{1}
+        \singlesp
+        \setlength{\parskip}{0pt}
+        \setlength{\parindent}{2cm}
+      }
+  }
+
+\cs_set_protected:Npn \pretextual
+  {
+    \ufc_article_if:TF
+      { \ufc_article_base_textual: }
+      { \ufc_article_base_pretextual: }
+  }
+
+\cs_set_protected:Npn \textual
+  {
+    \ufc_article_base_textual:
+    \ufc_article_if:T
+      {
+        \singlesp
+        \setlength{\parskip}{0pt}
+        \setlength{\parindent}{2cm}
+      }
+  }
+
+% Primary sections and article post-textual elements remain in continuous flow.
+\cs_set_protected:Npn \ufc_primary_section_break:
+  {
+    \ufc_article_if:F
+      { \ufc_article_base_primary_section_break: }
+  }
+
+\cs_new_protected:Npn \ufc_article_require_metadata:n #1
+  {
+    \ufc_meta_if_blank:nT {#1}
+      {
+        \ClassError{abntexto-ufc}
+          {Required~article~metadata~'#1'~is~empty}
+          {Set~the~corresponding~field~before~printing~the~article~front~matter.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_title_block:
+  {
+    \ufc_article_require_metadata:n {autor}
+    \ufc_article_require_metadata:n {titulo}
+    \ufc_article_require_metadata:n {data-aprovacao}
+    \par
+    \begingroup
+      \singlesp
+      \centering
+      \bfseries
+      \ufc_title_text:\par
+      \ufc_meta_if_blank:nF {variacao-titulo}
+        {
+          \vspace{\baselineskip}
+          \MakeUppercase{\ufc_meta_use:n {variacao-titulo}}\par
+        }
+      \vspace{\baselineskip}
+      \normalfont
+      \ufc_meta_use:n {autor}\par
+    \endgroup
+    \vspace{\baselineskip}
+    \begingroup
+      \singlesp
+      \raggedright
+      Data~de~submissão:\space \cs_use:c {@date}\par
+      Data~de~aprovação:\space \ufc_meta_use:n {data-aprovacao}\par
+    \endgroup
+    \vspace{\baselineskip}
+  }
+
+\cs_new_protected:Npn \ufc_article_summary:n #1
+  {
+    \par
+    \ufc_pretextual_heading:n {Resumo}
+    \begingroup
+      \singlesp
+      \setlength{\parindent}{0pt}
+      \justifying
+      \ufc_input_file:n {#1}
+      \par
+    \endgroup
+    \vspace{\baselineskip}
+  }
+
+\cs_new_protected:Npn \ufc_article_abstract:n #1
+  {
+    \par
+    \begingroup
+      \selectlanguage{english}
+      \singlesp
+      \ufc_pretextual_heading:n {Abstract}
+      \setlength{\parindent}{0pt}
+      \justifying
+      \ufc_input_file:n {#1}
+      \par
+    \endgroup
+    \vspace{\baselineskip}
+  }
+
+\cs_new_protected:Npn \ufc_article_acknowledgments:n #1
+  {
+    \par\vspace{\baselineskip}
+    \ufc_pretextual_heading:n {Agradecimentos}
+    \begingroup
+      \singlesp
+      \justifying
+      \ufc_input_file:n {#1}
+      \par
+    \endgroup
+  }
+
+\cs_new_protected:Npn \ufc_article_references:
+  {
+    \par\vspace{\baselineskip}
+    \cs_if_exist:NT \phantomsection { \phantomsection }
+    \addcontentsline{toc}{section}{\protect\toclabelbox{}Referências}
+    \begingroup
+      \singlesp
+      \parindent=0pt
+      \begin{center}
+        \bfseries REFERÊNCIAS\par
+      \end{center}
+      \vspace{\baselineskip}
+      \raggedright
+      \setlength{\bibitemsep}{\baselineskip}
+      \printbibliography[heading=none]
+    \endgroup
+  }
+
+% A scientific article has no separate cover, title leaf, approval leaf, or
+% table of contents in this profile. Reuse the existing title-page call as the
+% first-page article front-matter entry point so old and canonical v2.x document
+% skeletons remain usable without adding a new public command.
+\RenewDocumentCommand \imprimircapa { }
+  {
+    \ufc_article_if:F
+      { \ufc_article_base_print_cover: }
+  }
+
+\RenewDocumentCommand \imprimirfolhaderosto { O{} }
+  {
+    \ufc_article_if:TF
+      { \ufc_article_title_block: }
+      { \ufc_article_base_print_title_page:[#1] }
+  }
+
+\RenewDocumentCommand \imprimirfolhadeaprovacao { }
+  {
+    \ufc_article_if:F
+      { \ufc_article_base_print_approval_page: }
+  }
+
+\RenewDocumentCommand \imprimiragradecimentos { m }
+  {
+    \ufc_article_if:TF
+      { \ufc_article_acknowledgments:n {#1} }
+      { \ufc_article_base_print_acknowledgments:{#1} }
+  }
+
+\RenewDocumentCommand \imprimirresumo { m }
+  {
+    \ufc_article_if:TF
+      { \ufc_article_summary:n {#1} }
+      { \ufc_article_base_print_summary:{#1} }
+  }
+
+\RenewDocumentCommand \imprimirabstract { m }
+  {
+    \ufc_article_if:TF
+      { \ufc_article_abstract:n {#1} }
+      { \ufc_article_base_print_abstract:{#1} }
+  }
+
+\RenewDocumentCommand \imprimirsumario { }
+  {
+    \ufc_article_if:F
+      { \ufc_article_base_print_toc: }
+  }
+
+\RenewDocumentCommand \imprimirreferencias { }
+  {
+    \ufc_article_if:TF
+      { \ufc_article_references: }
+      { \ufc_article_base_print_references: }
+  }
+
+\AtBeginDocument{\ufc_article_activate:}
+
+\ExplSyntaxOff
+
+\endinput
