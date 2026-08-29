@@ -149,6 +149,16 @@ def find_word(page, token: str):
     return matches[0]
 
 
+def line_bounds(page, anchor, tolerance: float = 1.5):
+    words = [
+        word for word in page['words']
+        if abs(word['yMin'] - anchor['yMin']) <= tolerance
+    ]
+    if not words:
+        raise SystemExit('artigo: linha do título não pôde ser reconstruída')
+    return min(word['xMin'] for word in words), max(word['xMax'] for word in words)
+
+
 def page_index_for_token(all_pages, token: str) -> int:
     for index, page in enumerate(all_pages, 1):
         if any(word['text'].strip('.,:;').casefold() == token.casefold() for word in page['words']):
@@ -212,8 +222,12 @@ title = find_word(first, 'UFCARTICLETITLEMARKER')
 summary = find_word(first, 'UFCARTICLESUMMARYMARKER')
 if not 78.0 <= title['yMin'] <= 115.0:
     raise SystemExit(f'artigo: título não inicia junto à margem superior: y={title["yMin"]:.2f}')
-if abs(((title['xMin'] + title['xMax']) / 2.0) - (A4_W / 2.0)) > 12.0:
-    raise SystemExit('artigo: título principal não está centralizado')
+title_x_min, title_x_max = line_bounds(first, title)
+if abs(((title_x_min + title_x_max) / 2.0) - (A4_W / 2.0)) > 12.0:
+    raise SystemExit(
+        'artigo: linha do título principal não está centralizada: '
+        f'xMin={title_x_min:.2f} xMax={title_x_max:.2f}'
+    )
 if summary['yMin'] <= title['yMin']:
     raise SystemExit('artigo: resumo não aparece após título/autoria/datas')
 
@@ -237,7 +251,7 @@ if abs(intro_marker['xMin'] - expected_indent_x) > 8.0:
 print(
     'N15-EVIDENCE article-runtime '
     f'pages={len(article_pages)} a4=true margins=3-3-2-2 pagination=first-page-upper-right '
-    'single-sided=true section-flow=continuous canonical-pt-equivalent=true '
+    'single-sided=true section-flow=continuous title-line-centered=true canonical-pt-equivalent=true '
     'pdfa=deferred-to-host-gate status=PASS'
 )
 PY
