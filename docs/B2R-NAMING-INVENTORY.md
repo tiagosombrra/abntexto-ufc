@@ -6,7 +6,7 @@ Current certified base: `main` `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
 Current active branch: `refactor/n15-b2r-b-public-api`.
 
-B2R-A is closed. B2R-B is active, with **B2R-B1 technically certified on PR #150 and awaiting final documentation-sync CI before merge**.
+B2R-A is closed. B2R-B is active, with **B2R-B1 technically certified on PR #150 and awaiting final exact-head CI before merge**.
 
 This document is the human-readable companion to the active B2R-B machine ledger `release/n15-b2r-b-public-api.json`. `release/n15-b2r-a-naming-inventory.json` remains the historical B2R-A/N12-sensitive ledger and must not be repurposed. `docs/NAMING.md` remains the naming policy. `docs/HANDOFF-V2.2.0.md` is the canonical continuation point.
 
@@ -64,7 +64,7 @@ The subsequent A2 documentation-sync closure advanced `main` to `3a7d5e55d0bbd8d
 
 ## B2R-B1 — PUBLIC API BASELINE/CHECKER
 
-Status: **TECHNICALLY CERTIFIED ON PR #150; FINAL DOC-SYNC CI PENDING**.
+Status: **TECHNICALLY CERTIFIED ON PR #150; FINAL EXACT-HEAD CI PENDING**.
 
 B1 intentionally contains no canonical-English runtime aliases. Its purpose is to freeze and classify the existing API/export surface before any additive migration.
 
@@ -95,13 +95,15 @@ The `(setup key, value)` identity is deliberate. Repeated values such as `true`,
 
 `tests/run.py` now includes `public-api` as a dependency of `repository`, so the checker is exercised by the existing frozen workflow without editing `.github/workflows/latex-preflight.yml`.
 
-### CI-discovered blocker
+### CI-discovered blockers
 
 Initial head `d3f55442e22eced43784089c24b5423f092123f2` demonstrated that the new checker itself was correct: preflight #1081 logged `public-api PASS` with `keys=67 values=45 commands=47 environments=6 hooks=2` and `article_runtime=false`.
 
-The same run failed only in `distribution-source`, where the older canonical-identity scanner treated the two required ledger fields documenting the deprecated `ufctex` wrapper as unclassified legacy identity.
+The same run failed only in `distribution-source`, where the older canonical-identity scanner had not yet classified the two structured ledger fields required to document the deprecated legacy compatibility entrypoint.
 
-Head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` corrected that boundary narrowly: only exact ledger lines for `"name": "ufctex"` and `"file": "ufctex.cls"` are classified as permitted documentation of the compatibility entrypoint. The ledger as a whole is not exempt, and any additional unclassified `ufctex` identity still fails.
+Head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` corrected that boundary narrowly: only those exact two structured inventory lines are permitted. The ledger as a whole is not exempt, and any additional unclassified legacy identity still fails.
+
+The first documentation-sync head `f722620d1baaaac3cedb66f3e2b58e21bc564f88` passed Source Contract #418 and all substantive LaTeX/normative checks in preflight #1086. Its sole failure was `distribution-source`, because the human documentation repeated the deprecated identity narratively. The correction keeps the legacy identity confined to the two structured inventory fields instead of broadening scanner exemptions.
 
 ### Technical certification receipts
 
@@ -161,11 +163,10 @@ In particular, `programa-mestrado`, `nome-mestrado`, `titulo-mestre` and `area-m
 
 ## Next executable action
 
-1. Complete this documentation synchronization together with `docs/HANDOFF-V2.2.0.md`, `docs/NAMING.md` and `release/n15-b2r-b-public-api.json`.
-2. Require Source Contract and LaTeX preflight to pass on the final documentation-sync head.
-3. Confirm PR #150 mergeability and `behind_by=0`.
-4. Squash-merge PR #150 with exact-head protection.
-5. Re-certify resulting `main`.
-6. Begin B2R-B2 from that re-certified `main`.
+1. Require Source Contract and LaTeX preflight to pass on the corrected final exact head.
+2. Confirm PR #150 mergeability and `behind_by=0`.
+3. Squash-merge PR #150 with exact-head protection.
+4. Re-certify resulting `main`.
+5. Begin B2R-B2 from that re-certified `main`.
 
 Do not start scientific-article runtime until all B2R-B subphases close and the resulting `main` is re-certified.
