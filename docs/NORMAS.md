@@ -1,7 +1,7 @@
 # Base normativa da V2
 
-Última revisão: **2026-08-28**.  
-Estado do projeto: **v2.2.0 em auditoria N15; B2R-A2 ativa**.
+Última revisão: **2026-08-29**.  
+Estado do projeto: **v2.2.0 em auditoria N15; N15-B2R concluída e N15-B2B de artigo científico ativa**.
 
 Este documento é o mapa humano da base normativa e de sua relação com a implementação. A autoridade máquina-legível permanece em `normativa/`; evidência executável permanece em `tests/` e GitHub Actions. Este arquivo não cria requisitos novos.
 
@@ -24,7 +24,7 @@ Conflitos reais entre fontes atuais recebem revisão explícita; não são resol
 | Assunto | Referência adotada | Escopo |
 | --- | --- | --- |
 | Trabalhos acadêmicos | **ABNT NBR 14724:2024**, versão corrigida em 01/04/2025 | estrutura e apresentação |
-| Artigo em publicação periódica | **ABNT NBR 6022:2018** | contrato `article.*`; runtime ainda pendente |
+| Artigo em publicação periódica | **ABNT NBR 6022:2018** | contrato `article.*`; runtime N15-B2B em implementação/certificação |
 | Citações | **ABNT NBR 10520:2023** | citações |
 | Referências | **ABNT NBR 6023:2025** | referências |
 | Projetos de pesquisa | **ABNT NBR 15287:2025** | perfis de projeto |
@@ -49,14 +49,16 @@ A reconciliação detalhada de vigência está em `docs/VIGENCIA-NORMATIVA.md`.
 
 ## Estado do contrato de artigo
 
-N15-B2A/PR #145 já promoveu:
+N15-B2A/PR #145 promoveu:
 
 - `abnt-nbr-6022-2018`;
 - `ufc-guia-artigos-2022`;
 - 13 predicados `article.*`;
 - locators e metadados de fase correspondentes.
 
-Isso **não significa que o runtime do artigo já exista**. A classe ainda não oferece o perfil final de artigo. A implementação pertence a N15-B2B, depois da normalização pública de API em B2R-B.
+Depois do fechamento e recertificação integral de N15-B2R em `main` `ce659b578b4fc9cc929af4aadc3e613df469ba77`, N15-B2B passou a implementar o runtime desse contrato em `abntexto-ufc/articles.def`.
+
+O delta B2B é deliberadamente restrito: ativa `type=article` e `tipo=artigo`, reutiliza metadados/comandos já certificados e não modifica o `public-api.def` congelado. A evidência executável da implementação está em `tests/v2-article-check.sh` e `tests/checks/article_runtime_contract.py`; a promoção final de proof state pertence a N15-B2C.
 
 Recomendações do guia, como 150–250 palavras no resumo, mínimo de três palavras-chave ou família tipográfica quando expressas por `convém`/`recomenda-se`, não são convertidas automaticamente em obrigação.
 
@@ -89,17 +91,19 @@ abntexto-ufc/
 ├── academic-works.def
 ├── research-projects.def
 ├── objects.def
-├── bibliography.def
 ├── compat-abntexto.def
+├── bibliography.def
 ├── compat-nbr6023-2025.def
-└── backmatter.def
+├── articles.def
+├── backmatter.def
+└── public-api.def
 ```
 
-Os nomes antigos dos módulos foram removidos em B2R-A1/PR #146. O `latex-preflight.yml` N12 permanece congelado; a compatibilidade histórica de hash é tratada no checker dedicado sem restaurar os paths antigos.
+Os nomes antigos dos módulos foram removidos em B2R-A1/PR #146. O `public-api.def` B2R permanece congelado no blob `7b61fe70dd85ed895140f846272e097e3ded72cf`; o novo comportamento de artigo é isolado em `articles.def`. O `latex-preflight.yml` N12 permanece congelado no blob `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-## Layout canônico do template em B2R-A2
+## Layout canônico do template
 
-A2 normaliza a superfície visível do projeto para:
+A superfície visível do projeto permanece:
 
 ```text
 main.tex
@@ -133,22 +137,22 @@ O brasão institucional real não é redistribuído nos bundles públicos. O sup
 | projetos | conforme no escopo testado | `research-projects.def`; profile/project checks |
 | apêndices/anexos/índice | conforme no escopo testado | `backmatter.def` + checks dedicados |
 | PDF/A-2b | política técnica do projeto + requisitos de depósito aplicáveis | `\DocumentMetadata`, veraPDF e validator |
-| artigo científico | **contrato normativo ativo; runtime pendente** | `coverage-rules-article.json`; B2B/B2C ainda futuros |
+| artigo científico | **runtime B2B implementado na branch; certificação pendente** | `coverage-rules-article.json`; `articles.def`; `v2-article-check.sh`; B2C ainda futuro |
 
 A cobertura atômica não é duplicada manualmente aqui; consulte `normativa/atomic-rules.json`, coverage manifests, locator audit e proof-state artifacts.
 
 ## Tipografia
 
-A API pública atual ainda usa a superfície portuguesa da v2.x, por exemplo:
+A API canônica v2.x usa, por exemplo:
 
 ```tex
 \ufcsetup{
-  fonte = times,
-  fonte-estrita = nao
+  font = times,
+  strict-font = false
 }
 ```
 
-B2R-B introduzirá nomes canônicos em inglês de forma aditiva, mantendo os nomes portugueses suportados como aliases de compatibilidade em v2.x.
+As formas portuguesas certificadas permanecem aceitas como compatibilidade aditiva.
 
 Fallback portátil não equivale à certificação tipográfica literal. O Gate T Windows certifica Times New Roman e Arial literais, variantes, incorporação, Unicode e PDF/A-2b. Fontes Microsoft proprietárias não são redistribuídas.
 
@@ -160,11 +164,26 @@ Citações seguem NBR 10520:2023 no escopo implementado. Referências seguem NBR
 
 Os perfis `projeto` e `projetoanonimizado` adotam NBR 15287:2025. O perfil anonimizado é política do modelo para seleção/processos que exigem supressão de identificação; essa política não é apresentada como requisito ABNT geral.
 
-## Artigo científico
+## Artigo científico — N15-B2B ACTIVE
 
-O futuro runtime será uma baseline UFC para artigo em publicação periódica. Ele deve preservar a fronteira do próprio guia: instruções do periódico de destino continuam aplicáveis e podem impor requisitos adicionais/específicos.
+O runtime é uma baseline UFC para artigo em publicação periódica. Instruções do periódico de destino continuam aplicáveis e podem impor requisitos adicionais/específicos.
 
-B2B deverá implementar diferenças arquiteturais já identificadas, especialmente espaço simples, fluxo contínuo das seções primárias e paginação visível desde a primeira página conforme o contrato reconciliado.
+O contrato B2A exige e B2B implementa no escopo automatizável:
+
+- `type=article` com compatibilidade `tipo=artigo`;
+- papel A4, margens 3 cm esquerda/superior e 2 cm direita/inferior;
+- paginação arábica visível desde a primeira página, no canto superior direito;
+- texto 12 pt, justificado, espaço simples e recuo de 2 cm na primeira linha;
+- título na primeira página, seguido de autoria e datas de submissão/aprovação;
+- resumo/palavras-chave e abstract/keywords no mesmo fluxo, sem folhas pré-textuais artificiais;
+- Introdução, Desenvolvimento e Considerações finais numerados;
+- seções primárias em fluxo contínuo, sem nova página automática;
+- referências obrigatórias sem quebra automática de página antes do título;
+- ausência de capa, folha de rosto, folha de aprovação e sumário separados para esse perfil.
+
+A implementação não cria novos setup keys, comandos, ambientes ou hooks. `articles.def` especializa apenas comportamentos existentes quando o tipo ativo é artigo e mantém `layout.def` como proprietário das funções internas de quebra.
+
+As recomendações de 150–250 palavras no resumo, pelo menos três palavras-chave e Arial/Times New Roman permanecem advisory, não hard errors.
 
 ## Build e gates
 
@@ -177,6 +196,8 @@ O workflow `.github/workflows/latex-preflight.yml` está congelado pelo baseline
 
 `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
 
+B2B integra a prova de artigo pela dependência do check `profiles` em `tests/run.py`, sem alterar o workflow congelado.
+
 ## Documentação e continuidade
 
 A documentação ativa é parte do gate de release:
@@ -184,8 +205,8 @@ A documentação ativa é parte do gate de release:
 - `docs/HANDOFF-V2.2.0.md` — ponto canônico de retomada;
 - `docs/VIGENCIA-NORMATIVA.md` — vigência/precedência;
 - `docs/NAMING.md` — política de nomenclatura/API;
-- `docs/B2R-NAMING-INVENTORY.md` — fase de naming ativa;
-- `release/n15-b2r-a-naming-inventory.json` — ledger máquina-legível da fase.
+- `docs/B2R-NAMING-INVENTORY.md` — inventário histórico/final B2R;
+- `release/n15-b2b-article-runtime.json` — ledger máquina-legível da fase ativa.
 
 Nenhuma fase deve ser marcada DONE se esses documentos estiverem incompatíveis com o estado real da branch, PR, CI ou próxima ação.
 
