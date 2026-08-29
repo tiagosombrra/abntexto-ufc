@@ -2,7 +2,7 @@
   "schema_version": 1,
   "phase": "N15-B2R-A",
   "reviewed_at": "2026-08-28",
-  "status": "A2_FINAL_BLOCKER_RESOLUTION_CANDIDATE",
+  "status": "DONE_MERGED_AND_RECERTIFIED",
   "purpose": "Track behavior-preserving English naming migration before public API or article runtime changes.",
   "documentation_sync_policy": {
     "mandatory": true,
@@ -44,9 +44,10 @@
   "a2": {
     "scope": "user-example-and-distribution-facing-repository-layout",
     "base_main_sha": "eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1",
-    "branch": "refactor/n15-b2r-a2-user-layout",
-    "pull_request": 147,
-    "status": "FINAL_BLOCKER_RESOLUTION_AWAITING_EXACT_HEAD_RECERTIFICATION",
+    "branch": "refactor/n15-b2r-a2-user-layout-ready",
+    "pull_request": 148,
+    "superseded_draft_pull_request": 147,
+    "status": "DONE_MERGED_AND_RECERTIFIED",
     "public_api_change_allowed": false,
     "normative_contract_change_allowed": false,
     "article_runtime_change_allowed": false,
@@ -148,19 +149,45 @@
       "all_other_preflight_jobs": "SUCCESS",
       "resolution": "Restore required ledger compatibility fields and Markdown final newlines without changing runtime, normative contract, N12 workflow or test expectations."
     },
+    "final_merge_candidate": {
+      "sha": "22e9e4e872aca8aca16b143b249d62fe516c3359",
+      "pull_request": 148,
+      "source_contract": "#408 SUCCESS",
+      "reference_preview": "#62 SUCCESS",
+      "pr_latex_preflight": "#1073 SUCCESS",
+      "gate_t": "#1074 SUCCESS",
+      "distribution": "#241 SUCCESS",
+      "behind_by": 0,
+      "n12_workflow_blob_preserved": true
+    },
+    "merge": {
+      "method": "squash",
+      "pull_request": 148,
+      "merged_main_sha": "c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e",
+      "draft_pull_request_147_merged": false
+    },
+    "post_merge_certification": {
+      "main_sha": "c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e",
+      "source_contract": "#410 SUCCESS",
+      "latex_preflight_push": "#1076 SUCCESS",
+      "gate_t": "#1077 SUCCESS",
+      "distribution": "#242 SUCCESS",
+      "pdf_validator": "#136 SUCCESS"
+    },
     "closure_requirements": [
-      "current final blocker-resolution PR head has live Source Contract, Reference Preview and full PR preflight green",
-      "same current SHA has exact Gate T green including Windows literal fonts and Overleaf",
-      "same current SHA has Distribution green",
-      "N12 workflow blob unchanged",
-      "no active stale A2 paths",
-      "institutional mark excluded from public bundles",
-      "reference image hashes and licensing unchanged",
-      "PR mergeable and behind_by=0 immediately before merge",
-      "PR #147 squash merged",
-      "resulting main fully re-certified",
-      "merged/re-certified state documented before B2R-B implementation"
-    ]
+      "final merge candidate had live Source Contract, Reference Preview and full PR preflight green",
+      "same final candidate SHA had exact Gate T green including Windows literal fonts and Overleaf",
+      "same final candidate SHA had Distribution green",
+      "N12 workflow blob remained unchanged",
+      "no active stale A2 paths remained",
+      "institutional mark remained excluded from public bundles",
+      "reference image hashes and licensing remained unchanged",
+      "PR was mergeable and behind_by=0 immediately before merge",
+      "replacement PR #148 was squash merged",
+      "resulting main was fully re-certified",
+      "merged/re-certified state was documented before B2R-B implementation"
+    ],
+    "closure_complete": true
   },
-  "next_action": "Treat the current blocker-resolution head as the sole merge candidate. Do not edit receipt documents again solely to copy its future run numbers. Require live Source Contract, Reference Preview and full PR preflight, then Gate T and Distribution on that same SHA using non-mutating certification refs. Recheck N12 blob, mergeability and behind_by=0; mark PR ready and squash merge only if all are green. Re-certify resulting main before B2R-B."
+  "next_action": "Start N15-B2R-B from certified main c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e. First create the machine-readable public API inventory and executable contract checker; then introduce canonical English project-owned API names additively while preserving supported Portuguese v2.x aliases and proving semantic/output equivalence."
 }
