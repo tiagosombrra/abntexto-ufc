@@ -54,6 +54,10 @@ LEGACY_DOCUMENTATION_EXEMPT = {
     "docs/README-CTAN.md": (
         re.compile(r"ufctex.*(?:deprecated|compat)", re.IGNORECASE),
     ),
+    "release/n15-b2r-b-public-api.json": (
+        re.compile(r'^\s*"name"\s*:\s*"ufctex"\s*,?\s*$'),
+        re.compile(r'^\s*"file"\s*:\s*"ufctex\.cls"\s*,?\s*$'),
+    ),
 }
 
 
