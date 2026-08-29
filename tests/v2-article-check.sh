@@ -105,6 +105,7 @@ A4_W = 21.0 * PT_PER_CM
 A4_H = 29.7 * PT_PER_CM
 M2 = 2.0 * PT_PER_CM
 M3 = 3.0 * PT_PER_CM
+TEXT_CENTER_X = (M3 + (A4_W - M2)) / 2.0
 
 
 def normalize(path: str) -> str:
@@ -223,10 +224,10 @@ summary = find_word(first, 'UFCARTICLESUMMARYMARKER')
 if not 78.0 <= title['yMin'] <= 115.0:
     raise SystemExit(f'artigo: título não inicia junto à margem superior: y={title["yMin"]:.2f}')
 title_x_min, title_x_max = line_bounds(first, title)
-if abs(((title_x_min + title_x_max) / 2.0) - (A4_W / 2.0)) > 12.0:
+if abs(((title_x_min + title_x_max) / 2.0) - TEXT_CENTER_X) > 7.0:
     raise SystemExit(
-        'artigo: linha do título principal não está centralizada: '
-        f'xMin={title_x_min:.2f} xMax={title_x_max:.2f}'
+        'artigo: linha do título principal não está centralizada na área de texto: '
+        f'xMin={title_x_min:.2f} xMax={title_x_max:.2f} center={TEXT_CENTER_X:.2f}'
     )
 if summary['yMin'] <= title['yMin']:
     raise SystemExit('artigo: resumo não aparece após título/autoria/datas')
@@ -251,7 +252,7 @@ if abs(intro_marker['xMin'] - expected_indent_x) > 8.0:
 print(
     'N15-EVIDENCE article-runtime '
     f'pages={len(article_pages)} a4=true margins=3-3-2-2 pagination=first-page-upper-right '
-    'single-sided=true section-flow=continuous title-line-centered=true canonical-pt-equivalent=true '
+    'single-sided=true section-flow=continuous title-text-area-centered=true canonical-pt-equivalent=true '
     'pdfa=deferred-to-host-gate status=PASS'
 )
 PY
