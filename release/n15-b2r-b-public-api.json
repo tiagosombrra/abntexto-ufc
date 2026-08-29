@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "phase": "N15-B2R-B1",
+  "reviewed_at": "2026-08-28",
+  "base_main_sha": "3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b",
+  "status": "BASELINE_CONTRACT",
+  "purpose": "Freeze the pre-B2R-B public/exported API surface before additive canonical-English aliases.",
+  "policy": {
+    "migration": "additive",
+    "supported_portuguese_v2x_removal_allowed": false,
+    "article_runtime_allowed": false,
+    "unreviewed_new_public_identifiers_allowed": false,
+    "value_identity": "setup-key/value",
+    "frozen_workflow": {
+      "path": ".github/workflows/latex-preflight.yml",
+      "blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"
+    }
+  },
+  "source_modules": [
+    "abntexto-ufc/core.def",
+    "abntexto-ufc/fonts.def",
+    "abntexto-ufc/layout.def",
+    "abntexto-ufc/modules.def",
+    "abntexto-ufc/frontmatter.def",
+    "abntexto-ufc/institutional.def",
+    "abntexto-ufc/academic-works.def",
+    "abntexto-ufc/research-projects.def",
+    "abntexto-ufc/objects.def",
+    "abntexto-ufc/compat-abntexto.def",
+    "abntexto-ufc/bibliography.def",
+    "abntexto-ufc/compat-nbr6023-2025.def",
+    "abntexto-ufc/backmatter.def"
+  ],
+  "class_entrypoints": [
+    {
+      "name": "abntexto-ufc",
+      "file": "abntexto-ufc.cls",
+      "classification": "canonical_project_api",
+      "deprecated": false
+    },
+    {
+      "name": "ufctex",
+      "file": "ufctex.cls",
+      "classification": "compatibility_api",
+      "deprecated": true,
+      "replacement": "abntexto-ufc"
+    }
+  ],
+  "setup_keys_by_source": {
+    "abntexto-ufc/core.def": [
+      "tipo", "impressao", "capa", "ficha-catalografica", "brasao", "brasao-projeto",
+      "ies", "sigla", "centro", "departamento", "curso-graduacao", "habilitacao",
+      "curso-especializacao", "programa-mestrado", "nome-mestrado", "titulo-mestre",
+      "area-mestrado", "programa-doutorado", "nome-doutorado", "titulo-doutor",
+      "area-doutorado", "programa-projeto", "tipo-projeto", "entidade-submissao",
+      "natureza-projeto", "identificador-projeto", "autor", "titulo", "subtitulo",
+      "variacao-titulo", "volume", "ano", "local", "data-aprovacao", "orientador",
+      "orientador-ies", "orientador-unidade", "orientador-feminino", "coorientador",
+      "coorientador-ies", "coorientador-unidade", "coorientador-feminino", "autor-epigrafe",
+      "banca-2", "banca-2-unidade", "banca-2-ies", "banca-3", "banca-3-unidade",
+      "banca-3-ies", "banca-4", "banca-4-unidade", "banca-4-ies", "banca-5",
+      "banca-5-unidade", "banca-5-ies", "banca-6", "banca-6-unidade", "banca-6-ies"
+    ],
+    "abntexto-ufc/fonts.def": ["fonte", "fonte-estrita"],
+    "abntexto-ufc/modules.def": ["tabelas", "codigo", "algoritmos", "glossario", "indice"],
+    "abntexto-ufc/institutional.def": ["brasao-arquivo"],
+    "abntexto-ufc/academic-works.def": ["pagina-inicial"]
+  },
+  "setup_key_kinds": {
+    "choice": [
+      "tipo", "impressao", "capa", "ficha-catalografica", "brasao",
+      "orientador-feminino", "coorientador-feminino", "fonte", "fonte-estrita",
+      "tabelas", "codigo", "algoritmos", "glossario", "indice"
+    ],
+    "meta_alias": ["brasao-projeto"],
+    "token_list": ["brasao-arquivo"],
+    "integer": ["pagina-inicial"]
+  },
+  "canonical_setup_key_map": {
+    "tipo": "type",
+    "impressao": "print-mode",
+    "capa": "cover",
+    "ficha-catalografica": "catalog-card",
+    "brasao": "coat-of-arms",
+    "fonte": "font",
+    "fonte-estrita": "strict-font",
+    "tabelas": "tables",
+    "codigo": "code",
+    "algoritmos": "algorithms",
+    "glossario": "glossary",
+    "indice": "index",
+    "autor": "author",
+    "titulo": "title",
+    "subtitulo": "subtitle",
+    "data-aprovacao": "approval-date",
+    "orientador": "advisor",
+    "coorientador": "coadvisor"
+  },
+  "setup_key_review_required": [
+    "ies", "sigla", "centro", "departamento", "curso-graduacao", "habilitacao",
+    "curso-especializacao", "programa-mestrado", "nome-mestrado", "titulo-mestre",
+    "area-mestrado", "programa-doutorado", "nome-doutorado", "titulo-doutor",
+    "area-doutorado", "programa-projeto", "tipo-projeto", "entidade-submissao",
+    "natureza-projeto", "identificador-projeto", "variacao-titulo", "ano", "local",
+    "orientador-ies", "orientador-unidade", "orientador-feminino", "coorientador-ies",
+    "coorientador-unidade", "coorientador-feminino", "autor-epigrafe", "banca-2",
+    "banca-2-unidade", "banca-2-ies", "banca-3", "banca-3-unidade", "banca-3-ies",
+    "banca-4", "banca-4-unidade", "banca-4-ies", "banca-5", "banca-5-unidade",
+    "banca-5-ies", "banca-6", "banca-6-unidade", "banca-6-ies", "brasao-arquivo",
+    "pagina-inicial"
+  ],
+  "setup_key_special_decisions": {
+    "brasao-projeto": {"decision": "compatibility_alias_only", "aliases_to": "brasao"},
+    "volume": {"decision": "retain", "canonical_english": "volume"}
+  },
+  "setup_values": {
+    "tipo": ["tccgraduacao", "tccespecializacao", "dissertacao", "tese", "projeto", "projetoanonimizado"],
+    "impressao": ["anverso", "frente-verso"],
+    "capa": ["auto", "sim", "nao"],
+    "ficha-catalografica": ["sim", "nao", "true", "false"],
+    "brasao": ["sim", "nao", "true", "false"],
+    "orientador-feminino": ["sim", "nao", "true", "false"],
+    "coorientador-feminino": ["sim", "nao", "true", "false"],
+    "fonte": ["times", "arial"],
+    "fonte-estrita": ["sim", "nao", "true", "false"],
+    "tabelas": ["nativo", "tabularray", "tabularray-abnt"],
+    "codigo": ["nenhum", "listings", "minted"],
+    "algoritmos": ["nenhum", "algpseudocodex"],
+    "glossario": ["nenhum", "glossaries"],
+    "indice": ["nenhum", "imakeidx"]
+  },
+  "canonical_setup_value_map": {
+    "tipo": {
+      "tccgraduacao": "undergraduate-capstone",
+      "tccespecializacao": "specialization-capstone",
+      "dissertacao": "masters-thesis",
+      "tese": "doctoral-thesis",
+      "projeto": "research-project",
+      "projetoanonimizado": "anonymized-research-project"
+    },
+    "boolean_policy": {"sim": "true", "nao": "false", "true": "true", "false": "false"},
+    "capa": {"auto": "auto"},
+    "fonte": {"times": "times", "arial": "arial"}
+  },
+  "setup_value_review_required": [
+    "impressao/anverso", "impressao/frente-verso", "tabelas/nativo", "tabelas/tabularray",
+    "tabelas/tabularray-abnt", "codigo/nenhum", "codigo/listings", "codigo/minted",
+    "algoritmos/nenhum", "algoritmos/algpseudocodex", "glossario/nenhum",
+    "glossario/glossaries", "indice/nenhum", "indice/imakeidx"
+  ],
+  "commands_by_source": {
+    "abntexto-ufc/core.def": [
+      "\\ufcsetup", "\\ufcDocumentType", "\\ufcPrintMode", "\\ufcMeta",
+      "\\ufcIfProjectTF", "\\ufcIfAnonymizedProjectTF"
+    ],
+    "abntexto-ufc/fonts.def": ["\\ufcMathFontPolicy"],
+    "abntexto-ufc/layout.def": [
+      "\\ufcPrimarySectionBreak", "\\ufcPretextualBreak", "\\ufcRegisterUncountedPhysicalPage"
+    ],
+    "abntexto-ufc/frontmatter.def": [
+      "\\ufcstarttoc", "\\ufcPretextualHeading", "\\imprimirfolhadeaprovacao",
+      "\\imprimirdedicatoria", "\\imprimiragradecimentos", "\\imprimirepigrafe",
+      "\\imprimirerrata", "\\palavraschave", "\\keywords", "\\imprimirresumo",
+      "\\imprimirabstract", "\\imprimirlistadeilustracoes", "\\imprimirlistadefiguras",
+      "\\imprimirlistadetabelas", "\\imprimirlistadequadros",
+      "\\imprimirlistadeabreviaturasesiglas", "\\imprimirlistadesimbolos",
+      "\\ufclistaentrada", "\\imprimirsumario"
+    ],
+    "abntexto-ufc/academic-works.def": [
+      "\\imprimircapa", "\\imprimirfolhaderosto", "\\imprimirfichacatalografica"
+    ],
+    "abntexto-ufc/objects.def": [
+      "\\ufcfonte", "\\ufcnota", "\\imprimirlistadegraficos", "\\imprimirlistadecodigos",
+      "\\imprimirlistadealgoritmos", "\\ufcinputlisting", "\\ufcinputminted"
+    ],
+    "abntexto-ufc/bibliography.def": ["\\ufcbibliografia", "\\imprimirreferencias"],
+    "abntexto-ufc/backmatter.def": [
+      "\\ufcPosttextualHeading", "\\ufcSetupGlossaryModule", "\\imprimirglossario",
+      "\\ufcIndexHeading", "\\ufcSetupIndexModule", "\\imprimirindice"
+    ]
+  },
+  "command_classification": {
+    "canonical_project_api": [
+      "\\ufcDocumentType", "\\ufcIfAnonymizedProjectTF", "\\ufcIfProjectTF",
+      "\\ufcMathFontPolicy", "\\ufcMeta", "\\ufcPrintMode", "\\ufcsetup"
+    ],
+    "project_exported_helper": [
+      "\\ufcIndexHeading", "\\ufcPosttextualHeading", "\\ufcPretextualBreak",
+      "\\ufcPretextualHeading", "\\ufcPrimarySectionBreak", "\\ufcRegisterUncountedPhysicalPage",
+      "\\ufcSetupGlossaryModule", "\\ufcSetupIndexModule", "\\ufcstarttoc"
+    ],
+    "portuguese_compatibility_api": [
+      "\\imprimirabstract", "\\imprimiragradecimentos", "\\imprimircapa", "\\imprimirdedicatoria",
+      "\\imprimirepigrafe", "\\imprimirerrata", "\\imprimirfichacatalografica",
+      "\\imprimirfolhadeaprovacao", "\\imprimirfolhaderosto", "\\imprimirglossario",
+      "\\imprimirindice", "\\imprimirlistadeabreviaturasesiglas", "\\imprimirlistadealgoritmos",
+      "\\imprimirlistadecodigos", "\\imprimirlistadefiguras", "\\imprimirlistadegraficos",
+      "\\imprimirlistadeilustracoes", "\\imprimirlistadequadros", "\\imprimirlistadesimbolos",
+      "\\imprimirlistadetabelas", "\\imprimirreferencias", "\\imprimirresumo",
+      "\\imprimirsumario", "\\palavraschave", "\\ufcbibliografia"
+    ],
+    "project_public_review_required": [
+      "\\ufcfonte", "\\ufcinputlisting", "\\ufcinputminted", "\\ufclistaentrada", "\\ufcnota"
+    ],
+    "upstream_compatibility_api": ["\\keywords"]
+  },
+  "canonical_command_map": {
+    "\\imprimircapa": "\\ufcPrintCover",
+    "\\imprimirfolhaderosto": "\\ufcPrintTitlePage",
+    "\\imprimirfolhadeaprovacao": "\\ufcPrintApprovalPage",
+    "\\imprimirfichacatalografica": "\\ufcPrintCatalogCard",
+    "\\imprimirabstract": "\\ufcPrintAbstract",
+    "\\imprimirreferencias": "\\ufcPrintReferences",
+    "\\ufcbibliografia": "\\ufcAddBibliographyResource"
+  },
+  "command_review_required": [
+    "\\imprimirdedicatoria", "\\imprimiragradecimentos", "\\imprimirepigrafe", "\\imprimirerrata",
+    "\\palavraschave", "\\imprimirresumo", "\\imprimirlistadeilustracoes",
+    "\\imprimirlistadefiguras", "\\imprimirlistadetabelas", "\\imprimirlistadequadros",
+    "\\imprimirlistadeabreviaturasesiglas", "\\imprimirlistadesimbolos", "\\ufclistaentrada",
+    "\\imprimirsumario", "\\ufcfonte", "\\ufcnota", "\\imprimirlistadegraficos",
+    "\\imprimirlistadecodigos", "\\imprimirlistadealgoritmos", "\\ufcinputlisting",
+    "\\ufcinputminted", "\\imprimirglossario", "\\imprimirindice"
+  ],
+  "environments_by_source": {
+    "abntexto-ufc/layout.def": ["ufcalineas", "ufcsubalineas"],
+    "abntexto-ufc/frontmatter.def": ["ufclistadefinicoes"],
+    "abntexto-ufc/objects.def": ["ufcobjeto", "ufclisting", "ufcalgoritmo"]
+  },
+  "environment_review_required": [
+    "ufcalineas", "ufcsubalineas", "ufclistadefinicoes", "ufcobjeto", "ufclisting", "ufcalgoritmo"
+  ],
+  "extension_hooks": [
+    {"name": "\\ufcsectionhook", "source": "abntexto-ufc/layout.def"},
+    {"name": "\\ufcobjectlegendhook", "source": "abntexto-ufc/objects.def"}
+  ],
+  "upstream_compatibility_surfaces": [
+    {"name": "\\textapud", "kind": "command", "source": "abntexto-ufc/bibliography.def", "action": "override"},
+    {"name": "\\usechapters", "kind": "command", "source": "abntexto-ufc/layout.def", "action": "override"},
+    {"name": "\\printlegendbox", "kind": "command", "source": "abntexto-ufc/objects.def", "action": "override"}
+  ],
+  "reserved_future_surfaces": [
+    {"canonical": "type=article", "compatibility": "tipo=artigo", "status": "reserved_not_live", "runtime_phase": "N15-B2B"}
+  ],
+  "expected_counts": {
+    "class_entrypoints": 2,
+    "setup_keys": 67,
+    "setup_values": 45,
+    "commands": 47,
+    "environments": 6,
+    "extension_hooks": 2
+  },
+  "checker_contract": {
+    "exact_baseline_sets": true,
+    "setup_values_scoped_by_key": true,
+    "duplicate_inventory_identities_fail": true,
+    "supported_surface_removal_fails": true,
+    "unreviewed_new_surface_fails": true
+  }
+}
