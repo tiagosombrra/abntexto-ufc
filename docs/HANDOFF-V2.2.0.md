@@ -145,7 +145,7 @@ The implementation lives in:
 
 `abntexto-ufc/articles.def`
 
-The class loads it after bibliography compatibility and before backmatter/public API so it can specialize existing behavior only for the article profile while canonical wrappers continue to target the same underlying commands.
+The class loads `articles.def` as the final UFC runtime layer, after `backmatter.def` and the frozen `public-api.def`. Thus the canonical `type` key and every base command exist before the article delta is activated, while the existing canonical wrappers continue to resolve to the conditionally specialized behavior at call time.
 
 ### Article profile behavior under B2A contract
 
@@ -169,7 +169,7 @@ Recommendations such as 150–250 summary words, at least three keywords and Ari
 
 - `author`, `title`, `subtitle`, `title-variant`;
 - `approval-date`;
-- standard LaTeX `\date{...}` for submission date;
+- standard LaTeX `\date{...}` for submission date, which must be explicitly set for an article rather than silently inheriting the LaTeX `\today` default;
 - `\ufcPrintSummary`;
 - `\ufcPrintAbstract`;
 - `\ufcPrintReferences`;
