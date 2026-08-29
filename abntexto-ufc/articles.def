@@ -78,7 +78,7 @@
     \begingroup
       \singlesp
       \raggedright
-      Data~de~submissão:\space \cs_use:c {@date}\par
+      Data~de~submissão:\space \use:c {@date}\par
       Data~de~aprovação:\space \ufc_meta_use:n {data-aprovacao}\par
     \endgroup
     \vspace{\baselineskip}
