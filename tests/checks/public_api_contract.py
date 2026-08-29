@@ -4,10 +4,12 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-INVENTORY_PATH = ROOT / "release/n15-b2r-b-public-api.json"
+BASELINE_PATH = ROOT / "release/n15-b2r-b-public-api.json"
+DELTA_PATH = ROOT / "release/n15-b2r-b2-setup-aliases.json"
 
 KEY_PATTERN = re.compile(
     r"(?m)^\s*([a-z][a-z0-9-]*)\s*\."
@@ -43,6 +45,14 @@ def flatten(mapping: dict[str, list[str]]) -> list[str]:
     return [item for items in mapping.values() for item in items]
 
 
+def scoped_values(mapping: dict[str, list[str]]) -> set[tuple[str, str]]:
+    return {
+        (key, value)
+        for key, values in mapping.items()
+        for value in values
+    }
+
+
 def duplicate_items(items: list[str]) -> list[str]:
     seen: set[str] = set()
     duplicates: set[str] = set()
@@ -72,18 +82,56 @@ def git_blob_sha(data: bytes) -> str:
     return hashlib.sha1(header + data).hexdigest()
 
 
+def pair_id(pair: tuple[str, str]) -> str:
+    return f"{pair[0]}/{pair[1]}"
+
+
+def parse_pair(value: str, label: str, errors: list[str]) -> tuple[str, str] | None:
+    if value.count("/") != 1:
+        errors.append(f"{label}: expected setup-key/value identity: {value}")
+        return None
+    key, item = value.split("/", 1)
+    if not key or not item:
+        errors.append(f"{label}: invalid setup-key/value identity: {value}")
+        return None
+    return key, item
+
+
 def main() -> None:
-    inventory = json.loads(read_text(INVENTORY_PATH))
+    baseline = json.loads(read_text(BASELINE_PATH))
+    delta = json.loads(read_text(DELTA_PATH))
     errors: list[str] = []
 
-    if inventory.get("schema_version") != 1:
-        errors.append("inventory: schema_version must be 1")
-    if inventory.get("phase") != "N15-B2R-B1":
-        errors.append("inventory: phase must be N15-B2R-B1")
-    if inventory.get("policy", {}).get("value_identity") != "setup-key/value":
-        errors.append("inventory: setup values must be scoped by setup key")
+    if baseline.get("schema_version") != 1 or baseline.get("phase") != "N15-B2R-B1":
+        errors.append("baseline: expected certified N15-B2R-B1 schema 1 contract")
+    if delta.get("schema_version") != 1 or delta.get("phase") != "N15-B2R-B2":
+        errors.append("delta: expected N15-B2R-B2 schema 1 contract")
 
-    source_paths = [ROOT / item for item in inventory["source_modules"]]
+    base_contract = delta.get("base_contract", {})
+    if base_contract.get("path") != "release/n15-b2r-b-public-api.json":
+        errors.append("delta: base contract path is invalid")
+    actual_baseline_blob = git_blob_sha(BASELINE_PATH.read_bytes())
+    expected_baseline_blob = base_contract.get("blob_sha")
+    if actual_baseline_blob != expected_baseline_blob:
+        errors.append(
+            "B2R-B1 baseline contract changed: expected "
+            f"{expected_baseline_blob}, got {actual_baseline_blob}"
+        )
+
+    policy = delta.get("policy", {})
+    if policy.get("migration") != "additive":
+        errors.append("delta: B2R-B2 migration must remain additive")
+    if policy.get("supported_portuguese_v2x_removal_allowed") is not False:
+        errors.append("delta: Portuguese v2.x removal must remain forbidden")
+    if policy.get("article_runtime_allowed") is not False:
+        errors.append("delta: article runtime must remain disabled during B2R-B2")
+    if policy.get("value_identity") != "setup-key/value":
+        errors.append("delta: setup values must be scoped by setup key")
+
+    source_names = list(baseline["source_modules"]) + list(delta["source_modules"])
+    if len(source_names) != len(set(source_names)):
+        errors.append("source modules duplicated across baseline and B2R-B2 delta")
+    source_paths = [ROOT / item for item in source_names]
     missing_sources = [
         path.relative_to(ROOT).as_posix()
         for path in source_paths
@@ -101,64 +149,148 @@ def main() -> None:
     }
     combined = "\n".join(source_texts.values())
 
-    expected_keys_list = flatten(inventory["setup_keys_by_source"])
-    key_duplicates = duplicate_items(expected_keys_list)
-    if key_duplicates:
+    legacy_keys_list = flatten(baseline["setup_keys_by_source"])
+    canonical_keys_list = flatten(delta["canonical_setup_keys_by_source"])
+    legacy_key_duplicates = duplicate_items(legacy_keys_list)
+    canonical_key_duplicates = duplicate_items(canonical_keys_list)
+    if legacy_key_duplicates:
         errors.append(
-            "inventory setup keys duplicated: " + ", ".join(key_duplicates)
+            "legacy setup keys duplicated: " + ", ".join(legacy_key_duplicates)
         )
-    expected_keys = set(expected_keys_list)
+    if canonical_key_duplicates:
+        errors.append(
+            "canonical setup keys duplicated: " + ", ".join(canonical_key_duplicates)
+        )
+
+    legacy_keys = set(legacy_keys_list)
+    canonical_keys = set(canonical_keys_list)
+    overlap = sorted(legacy_keys & canonical_keys)
+    if overlap:
+        errors.append(
+            "canonical setup additions overlap legacy keys: " + ", ".join(overlap)
+        )
+
+    expected_keys = legacy_keys | canonical_keys
     actual_keys = set(KEY_PATTERN.findall(combined))
     compare_sets("setup keys", actual_keys, expected_keys, errors)
 
-    expected_value_ids_list = [
-        f"{key}/{value}"
-        for key, values in inventory["setup_values"].items()
-        for value in values
-    ]
-    value_duplicates = duplicate_items(expected_value_ids_list)
-    if value_duplicates:
+    for source, names in delta["canonical_setup_keys_by_source"].items():
+        source_actual = set(KEY_PATTERN.findall(source_texts.get(source, "")))
+        missing = sorted(set(names) - source_actual)
+        if missing:
+            errors.append(
+                f"{source}: canonical setup keys missing: {', '.join(missing)}"
+            )
+
+    legacy_values = scoped_values(baseline["setup_values"])
+    canonical_values = scoped_values(delta["canonical_setup_values"])
+    overlap_values = sorted(legacy_values & canonical_values)
+    if overlap_values:
         errors.append(
-            "inventory setup key/value identities duplicated: "
-            + ", ".join(value_duplicates)
+            "canonical setup values overlap legacy identities: "
+            + ", ".join(pair_id(item) for item in overlap_values)
         )
-    expected_values = {
-        (key, value)
-        for key, values in inventory["setup_values"].items()
-        for value in values
-    }
+
+    expected_values = legacy_values | canonical_values
     actual_values = set(VALUE_PATTERN.findall(combined))
     missing_values = sorted(expected_values - actual_values)
     extra_values = sorted(actual_values - expected_values)
     if missing_values:
         errors.append(
             "setup values missing: "
-            + ", ".join(
-                f"{key}/{value}" for key, value in missing_values
-            )
+            + ", ".join(pair_id(item) for item in missing_values)
         )
     if extra_values:
         errors.append(
             "setup values unreviewed: "
-            + ", ".join(
-                f"{key}/{value}" for key, value in extra_values
+            + ", ".join(pair_id(item) for item in extra_values)
+        )
+
+    canonical_key_map = delta.get("canonical_setup_key_map", {})
+    special = delta.get("setup_key_special_decisions", {})
+    alias_only = {
+        key
+        for key, decision in special.items()
+        if decision.get("decision") == "compatibility_alias_only"
+    }
+    mapped_sources = set(canonical_key_map)
+    if mapped_sources | alias_only != legacy_keys:
+        missing = sorted(legacy_keys - mapped_sources - alias_only)
+        extra = sorted((mapped_sources | alias_only) - legacy_keys)
+        if missing:
+            errors.append(
+                "canonical setup key mapping incomplete: " + ", ".join(missing)
             )
+        if extra:
+            errors.append(
+                "canonical setup key mapping references unknown legacy keys: "
+                + ", ".join(extra)
+            )
+
+    canonical_targets = list(canonical_key_map.values())
+    duplicate_targets = duplicate_items(canonical_targets)
+    if duplicate_targets:
+        errors.append(
+            "canonical setup key targets duplicated: " + ", ".join(duplicate_targets)
+        )
+    unknown_targets = sorted(set(canonical_targets) - expected_keys)
+    if unknown_targets:
+        errors.append(
+            "canonical setup key targets are not live: " + ", ".join(unknown_targets)
+        )
+    compare_sets(
+        "canonical setup key additions",
+        canonical_keys,
+        set(canonical_targets) - legacy_keys,
+        errors,
+    )
+
+    if delta.get("setup_key_review_required"):
+        errors.append("B2R-B2 setup key review_required must be empty")
+    if delta.get("setup_value_review_required"):
+        errors.append("B2R-B2 setup value review_required must be empty")
+
+    value_map = delta.get("canonical_setup_value_map", {})
+    legacy_value_ids = {pair_id(item) for item in legacy_values}
+    compare_sets(
+        "canonical setup value mapping coverage",
+        set(value_map),
+        legacy_value_ids,
+        errors,
+    )
+    canonical_value_ids = {pair_id(item) for item in canonical_values}
+    for source, target in value_map.items():
+        source_pair = parse_pair(source, "canonical setup value source", errors)
+        target_pair = parse_pair(target, "canonical setup value target", errors)
+        if source_pair is not None and source_pair not in legacy_values:
+            errors.append(
+                f"canonical setup value source is not legacy: {source}"
+            )
+        if target_pair is not None and target not in canonical_value_ids:
+            errors.append(
+                f"canonical setup value target is not live: {source} -> {target}"
+            )
+    missing_target_coverage = sorted(canonical_value_ids - set(value_map.values()))
+    if missing_target_coverage:
+        errors.append(
+            "canonical setup values lack legacy behavior mapping: "
+            + ", ".join(missing_target_coverage)
         )
 
     extension_hooks = {
-        item["name"] for item in inventory.get("extension_hooks", [])
+        item["name"] for item in baseline.get("extension_hooks", [])
     }
-    expected_commands_list = flatten(inventory["commands_by_source"])
+    expected_commands_list = flatten(baseline["commands_by_source"])
     command_duplicates = duplicate_items(expected_commands_list)
     if command_duplicates:
         errors.append(
-            "inventory commands duplicated: " + ", ".join(command_duplicates)
+            "baseline commands duplicated: " + ", ".join(command_duplicates)
         )
     expected_commands = set(expected_commands_list)
 
     upstream_command_names = {
         item["name"]
-        for item in inventory.get("upstream_compatibility_surfaces", [])
+        for item in baseline.get("upstream_compatibility_surfaces", [])
         if item.get("kind") == "command"
     }
     xparse_commands = set(XPARSE_COMMAND_PATTERN.findall(combined))
@@ -168,8 +300,8 @@ def main() -> None:
     ) - upstream_command_names
     compare_sets("commands", actual_commands, expected_commands, errors)
 
-    classification_items = flatten(inventory["command_classification"])
-    classification_duplicates = duplicate_items(classification_items)
+    classifications = flatten(baseline["command_classification"])
+    classification_duplicates = duplicate_items(classifications)
     if classification_duplicates:
         errors.append(
             "command classifications overlap: "
@@ -177,16 +309,16 @@ def main() -> None:
         )
     compare_sets(
         "command classification coverage",
-        set(classification_items),
+        set(classifications),
         expected_commands,
         errors,
     )
 
-    expected_envs_list = flatten(inventory["environments_by_source"])
+    expected_envs_list = flatten(baseline["environments_by_source"])
     env_duplicates = duplicate_items(expected_envs_list)
     if env_duplicates:
         errors.append(
-            "inventory environments duplicated: " + ", ".join(env_duplicates)
+            "baseline environments duplicated: " + ", ".join(env_duplicates)
         )
     expected_envs = set(expected_envs_list)
     actual_envs = {
@@ -204,7 +336,7 @@ def main() -> None:
     }
     compare_sets("extension hooks", actual_hooks, extension_hooks, errors)
 
-    for entrypoint in inventory["class_entrypoints"]:
+    for entrypoint in baseline["class_entrypoints"]:
         path = ROOT / entrypoint["file"]
         if not path.is_file():
             errors.append(f"class entrypoint missing: {entrypoint['file']}")
@@ -223,59 +355,26 @@ def main() -> None:
                 "must emit a deprecation diagnostic"
             )
 
-    for surface in inventory.get("upstream_compatibility_surfaces", []):
+    for surface in baseline.get("upstream_compatibility_surfaces", []):
         source = source_texts.get(surface["source"], "")
-        token = surface["name"]
-        if token not in source:
+        if surface["name"] not in source:
             errors.append(
                 "upstream compatibility surface missing: "
-                f"{surface['source']}:{token}"
+                f"{surface['source']}:{surface['name']}"
             )
 
-    canonical_key_map = inventory.get("canonical_setup_key_map", {})
-    unknown_mapped_keys = sorted(set(canonical_key_map) - expected_keys)
-    if unknown_mapped_keys:
+    if ("type", "article") in actual_values or ("tipo", "artigo") in actual_values:
         errors.append(
-            "canonical setup key map references unknown keys: "
-            + ", ".join(unknown_mapped_keys)
-        )
-    duplicate_canonical_keys = duplicate_items(list(canonical_key_map.values()))
-    if duplicate_canonical_keys:
-        errors.append(
-            "canonical setup key names duplicated: "
-            + ", ".join(duplicate_canonical_keys)
+            "article setup value became live during B2R-B2; reserve activation for N15-B2B"
         )
 
-    canonical_command_map = inventory.get("canonical_command_map", {})
-    unknown_mapped_commands = sorted(
-        set(canonical_command_map) - expected_commands
-    )
-    if unknown_mapped_commands:
-        errors.append(
-            "canonical command map references unknown commands: "
-            + ", ".join(unknown_mapped_commands)
-        )
-    duplicate_canonical_commands = duplicate_items(
-        list(canonical_command_map.values())
-    )
-    if duplicate_canonical_commands:
-        errors.append(
-            "canonical command names duplicated: "
-            + ", ".join(duplicate_canonical_commands)
-        )
-
-    for item in inventory.get("reserved_future_surfaces", []):
-        if item.get("canonical") == "type=article":
-            if "type" in actual_keys or ("tipo", "artigo") in actual_values:
-                errors.append(
-                    "article naming surface became live during B2R-B1; "
-                    "reserve runtime/API activation for the reviewed later step"
-                )
-
-    expected_counts = inventory["expected_counts"]
+    expected_counts = delta["expected_counts"]
     actual_counts = {
-        "class_entrypoints": len(inventory["class_entrypoints"]),
+        "legacy_setup_keys": len(legacy_keys),
+        "canonical_setup_keys": len(canonical_keys),
         "setup_keys": len(actual_keys),
+        "legacy_setup_values": len(legacy_values),
+        "canonical_setup_values": len(canonical_values),
         "setup_values": len(actual_values),
         "commands": len(actual_commands),
         "environments": len(actual_envs),
@@ -288,7 +387,7 @@ def main() -> None:
                 f"count {label}: expected {expected_count}, got {actual_count}"
             )
 
-    frozen = inventory["policy"]["frozen_workflow"]
+    frozen = baseline["policy"]["frozen_workflow"]
     workflow_path = ROOT / frozen["path"]
     if not workflow_path.is_file():
         errors.append(f"frozen workflow missing: {frozen['path']}")
@@ -300,6 +399,23 @@ def main() -> None:
                 f"{frozen['blob_sha']}, got {actual_blob}"
             )
 
+    if not errors:
+        completed = subprocess.run(
+            ["sh", "tests/v2-public-api-alias-check.sh"],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            errors="replace",
+            check=False,
+        )
+        if completed.returncode != 0:
+            errors.append(
+                "canonical setup alias smoke failed:\n" + completed.stdout[-4000:]
+            )
+        else:
+            print(completed.stdout, end="")
+
     if errors:
         for error in sorted(set(errors)):
             print(error)
@@ -309,16 +425,19 @@ def main() -> None:
 
     print(
         "N15-EVIDENCE public-api "
+        f"legacy_keys={len(legacy_keys)} "
+        f"canonical_keys={len(canonical_keys)} "
         f"keys={len(actual_keys)} "
+        f"legacy_values={len(legacy_values)} "
+        f"canonical_values={len(canonical_values)} "
         f"values={len(actual_values)} "
         f"commands={len(actual_commands)} "
         f"environments={len(actual_envs)} "
         f"hooks={len(actual_hooks)} "
-        "value_identity=setup-key/value "
         "article_runtime=false "
         f"n12_blob={frozen['blob_sha']}"
     )
-    print("Public API baseline contract passed.")
+    print("Public API additive contract passed.")
 
 
 if __name__ == "__main__":
