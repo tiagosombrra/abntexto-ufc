@@ -1,0 +1,403 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\def\UFCBFourMode{@UFC_API_MODE@}
+\def\UFCBFourEnglishMode{en}
+\newif\ifUFCBFourEnglish
+\ifx\UFCBFourMode\UFCBFourEnglishMode
+  \UFCBFourEnglishtrue
+\else
+  \UFCBFourEnglishfalse
+\fi
+
+\ifUFCBFourEnglish
+  \ufcsetup{
+    type = doctoral-thesis,
+    print-mode = single-sided,
+    cover = true,
+    catalog-card = false,
+    coat-of-arms = false,
+    institution = {Universidade Teste},
+    institution-acronym = {UT},
+    center = {Centro Teste},
+    department = {Depto Teste},
+    undergraduate-program = {Grad Teste},
+    undergraduate-degree = {bacharel},
+    specialization-program = {Esp Teste},
+    masters-graduate-program = {PPG Mestre},
+    masters-program = {Mestrado Teste},
+    masters-degree-field = {Computacao},
+    masters-concentration = {Area Mestre},
+    doctoral-graduate-program = {PPG Doutor},
+    doctoral-program = {Doutorado Teste},
+    doctoral-degree-field = {Computacao},
+    doctoral-concentration = {Computacao Grafica},
+    project-program = {Programa Projeto},
+    project-type = {Projeto de pesquisa},
+    submission-entity = {Entidade Teste},
+    project-nature-statement = {Natureza Teste},
+    project-identifier = {ID-B4},
+    author = {Autor B4},
+    title = {Equivalencia Publica},
+    subtitle = {PT e EN},
+    title-variant = {Variant B4},
+    volume = {1},
+    year = {2026},
+    location = {Fortaleza},
+    approval-date = {29 de agosto de 2026},
+    advisor = {Prof. Orientador},
+    advisor-institution = {UT},
+    advisor-unit = {Depto Teste},
+    advisor-feminine-label = false,
+    coadvisor = {Profa. Coorientadora},
+    coadvisor-institution = {UT},
+    coadvisor-unit = {Depto Teste},
+    coadvisor-feminine-label = true,
+    epigraph-author = {Autor Epigrafe},
+    examiner-2 = {Membro Dois},
+    examiner-2-unit = {Unidade Dois},
+    examiner-2-institution = {IES Dois},
+    examiner-3 = {Membro Tres},
+    examiner-3-unit = {Unidade Tres},
+    examiner-3-institution = {IES Tres},
+    examiner-4 = {Membro Quatro},
+    examiner-4-unit = {Unidade Quatro},
+    examiner-4-institution = {IES Quatro},
+    examiner-5 = {Membro Cinco},
+    examiner-5-unit = {Unidade Cinco},
+    examiner-5-institution = {IES Cinco},
+    examiner-6 = {Membro Seis},
+    examiner-6-unit = {Unidade Seis},
+    examiner-6-institution = {IES Seis},
+    font = times,
+    strict-font = false,
+    tables = tabularray,
+    code = listings,
+    algorithms = algpseudocodex,
+    glossary = none,
+    index = none,
+    coat-of-arms-file = {tests/fixtures/not-used.png},
+    initial-page = 1
+  }
+\else
+  \ufcsetup{
+    tipo = tese,
+    impressao = anverso,
+    capa = sim,
+    ficha-catalografica = nao,
+    brasao = nao,
+    ies = {Universidade Teste},
+    sigla = {UT},
+    centro = {Centro Teste},
+    departamento = {Depto Teste},
+    curso-graduacao = {Grad Teste},
+    habilitacao = {bacharel},
+    curso-especializacao = {Esp Teste},
+    programa-mestrado = {PPG Mestre},
+    nome-mestrado = {Mestrado Teste},
+    titulo-mestre = {Computacao},
+    area-mestrado = {Area Mestre},
+    programa-doutorado = {PPG Doutor},
+    nome-doutorado = {Doutorado Teste},
+    titulo-doutor = {Computacao},
+    area-doutorado = {Computacao Grafica},
+    programa-projeto = {Programa Projeto},
+    tipo-projeto = {Projeto de pesquisa},
+    entidade-submissao = {Entidade Teste},
+    natureza-projeto = {Natureza Teste},
+    identificador-projeto = {ID-B4},
+    autor = {Autor B4},
+    titulo = {Equivalencia Publica},
+    subtitulo = {PT e EN},
+    variacao-titulo = {Variant B4},
+    volume = {1},
+    ano = {2026},
+    local = {Fortaleza},
+    data-aprovacao = {29 de agosto de 2026},
+    orientador = {Prof. Orientador},
+    orientador-ies = {UT},
+    orientador-unidade = {Depto Teste},
+    orientador-feminino = nao,
+    coorientador = {Profa. Coorientadora},
+    coorientador-ies = {UT},
+    coorientador-unidade = {Depto Teste},
+    coorientador-feminino = sim,
+    autor-epigrafe = {Autor Epigrafe},
+    banca-2 = {Membro Dois},
+    banca-2-unidade = {Unidade Dois},
+    banca-2-ies = {IES Dois},
+    banca-3 = {Membro Tres},
+    banca-3-unidade = {Unidade Tres},
+    banca-3-ies = {IES Tres},
+    banca-4 = {Membro Quatro},
+    banca-4-unidade = {Unidade Quatro},
+    banca-4-ies = {IES Quatro},
+    banca-5 = {Membro Cinco},
+    banca-5-unidade = {Unidade Cinco},
+    banca-5-ies = {IES Cinco},
+    banca-6 = {Membro Seis},
+    banca-6-unidade = {Unidade Seis},
+    banca-6-ies = {IES Seis},
+    fonte = times,
+    fonte-estrita = nao,
+    tabelas = tabularray,
+    codigo = listings,
+    algoritmos = algpseudocodex,
+    glossario = nenhum,
+    indice = nenhum,
+    brasao-arquivo = {tests/fixtures/not-used.png},
+    pagina-inicial = 1
+  }
+\fi
+
+\ifUFCBFourEnglish
+  \let\BFourPrintCover\ufcPrintCover
+  \let\BFourPrintTitlePage\ufcPrintTitlePage
+  \let\BFourPrintApprovalPage\ufcPrintApprovalPage
+  \let\BFourPrintCatalogCard\ufcPrintCatalogCard
+  \let\BFourPrintDedication\ufcPrintDedication
+  \let\BFourPrintAcknowledgments\ufcPrintAcknowledgments
+  \let\BFourPrintErrata\ufcPrintErrata
+  \let\BFourSummaryKeywords\ufcSummaryKeywords
+  \let\BFourPrintSummary\ufcPrintSummary
+  \let\BFourPrintAbstract\ufcPrintAbstract
+  \let\BFourPrintListOfIllustrations\ufcPrintListOfIllustrations
+  \let\BFourPrintListOfFigures\ufcPrintListOfFigures
+  \let\BFourPrintListOfTables\ufcPrintListOfTables
+  \let\BFourPrintListOfTextTables\ufcPrintListOfTextTables
+  \let\BFourPrintListOfCharts\ufcPrintListOfCharts
+  \let\BFourPrintListOfCodeListings\ufcPrintListOfCodeListings
+  \let\BFourPrintListOfAlgorithms\ufcPrintListOfAlgorithms
+  \let\BFourPrintListOfAbbreviationsAndAcronyms\ufcPrintListOfAbbreviationsAndAcronyms
+  \let\BFourPrintListOfSymbols\ufcPrintListOfSymbols
+  \let\BFourListEntry\ufcListEntry
+  \let\BFourPrintTableOfContents\ufcPrintTableOfContents
+  \let\BFourSource\ufcSource
+  \let\BFourNote\ufcNote
+  \let\BFourAddBibliographyResource\ufcAddBibliographyResource
+  \let\BFourPrintReferences\ufcPrintReferences
+  \let\BFourPrintGlossary\ufcPrintGlossary
+  \let\BFourPrintIndex\ufcPrintIndex
+
+  \NewDocumentCommand \BFourPrintShortEpigraph { m }
+    { \ufcPrintEpigraph[short]{#1} }
+  \NewDocumentCommand \BFourPrintLongEpigraph { m }
+    { \ufcPrintEpigraph[long]{#1} }
+  \NewDocumentCommand \BFourInputListing { O{} m }
+    { \ufcInputListing[#1]{#2} }
+
+  \NewDocumentEnvironment { BFourLetteredItems } { }
+    { \begin{ufclettereditems} }
+    { \end{ufclettereditems} }
+  \NewDocumentEnvironment { BFourDashedSubitems } { }
+    { \begin{ufcdashedsubitems} }
+    { \end{ufcdashedsubitems} }
+  \NewDocumentEnvironment { BFourDefinitionList } { O{3cm} }
+    { \begin{ufcdefinitionlist}[#1] }
+    { \end{ufcdefinitionlist} }
+  \NewDocumentEnvironment { BFourObject } { O{\placepos} }
+    { \begin{ufcobject}[#1] }
+    { \end{ufcobject} }
+  \NewDocumentEnvironment { BFourAlgorithm } { O{\placepos} O{1} }
+    { \begin{ufcalgorithm}[#1][#2] }
+    { \end{ufcalgorithm} }
+\else
+  \let\BFourPrintCover\imprimircapa
+  \let\BFourPrintTitlePage\imprimirfolhaderosto
+  \let\BFourPrintApprovalPage\imprimirfolhadeaprovacao
+  \let\BFourPrintCatalogCard\imprimirfichacatalografica
+  \let\BFourPrintDedication\imprimirdedicatoria
+  \let\BFourPrintAcknowledgments\imprimiragradecimentos
+  \let\BFourPrintErrata\imprimirerrata
+  \let\BFourSummaryKeywords\palavraschave
+  \let\BFourPrintSummary\imprimirresumo
+  \let\BFourPrintAbstract\imprimirabstract
+  \let\BFourPrintListOfIllustrations\imprimirlistadeilustracoes
+  \let\BFourPrintListOfFigures\imprimirlistadefiguras
+  \let\BFourPrintListOfTables\imprimirlistadetabelas
+  \let\BFourPrintListOfTextTables\imprimirlistadequadros
+  \let\BFourPrintListOfCharts\imprimirlistadegraficos
+  \let\BFourPrintListOfCodeListings\imprimirlistadecodigos
+  \let\BFourPrintListOfAlgorithms\imprimirlistadealgoritmos
+  \let\BFourPrintListOfAbbreviationsAndAcronyms\imprimirlistadeabreviaturasesiglas
+  \let\BFourPrintListOfSymbols\imprimirlistadesimbolos
+  \let\BFourListEntry\ufclistaentrada
+  \let\BFourPrintTableOfContents\imprimirsumario
+  \let\BFourSource\ufcfonte
+  \let\BFourNote\ufcnota
+  \let\BFourAddBibliographyResource\ufcbibliografia
+  \let\BFourPrintReferences\imprimirreferencias
+  \let\BFourPrintGlossary\imprimirglossario
+  \let\BFourPrintIndex\imprimirindice
+
+  \NewDocumentCommand \BFourPrintShortEpigraph { m }
+    { \imprimirepigrafe[curta]{#1} }
+  \NewDocumentCommand \BFourPrintLongEpigraph { m }
+    { \imprimirepigrafe[longa]{#1} }
+  \NewDocumentCommand \BFourInputListing { O{} m }
+    { \ufcinputlisting[#1]{#2} }
+
+  \NewDocumentEnvironment { BFourLetteredItems } { }
+    { \begin{ufcalineas} }
+    { \end{ufcalineas} }
+  \NewDocumentEnvironment { BFourDashedSubitems } { }
+    { \begin{ufcsubalineas} }
+    { \end{ufcsubalineas} }
+  \NewDocumentEnvironment { BFourDefinitionList } { O{3cm} }
+    { \begin{ufclistadefinicoes}[#1] }
+    { \end{ufclistadefinicoes} }
+  \NewDocumentEnvironment { BFourObject } { O{\placepos} }
+    { \begin{ufcobjeto}[#1] }
+    { \end{ufcobjeto} }
+  \NewDocumentEnvironment { BFourAlgorithm } { O{\placepos} O{1} }
+    { \begin{ufcalgoritmo}[#1][#2] }
+    { \end{ufcalgoritmo} }
+\fi
+
+\lstset{
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  numbers=none
+}
+
+\BFourAddBibliographyResource{tests/fixtures/fontes-documentais.bib}
+
+\ExplSyntaxOn
+\cs_new_protected:Npn \ufc_bfour_emit_state:
+  {
+    \typeout{N15-B4-STATE|document-type=\tl_to_str:V \g_ufc_document_type_tl}
+    \typeout{N15-B4-STATE|print-mode=\tl_to_str:V \g_ufc_print_mode_tl}
+    \typeout{N15-B4-STATE|cover-mode=\tl_to_str:V \g_ufc_cover_mode_tl}
+    \bool_if:NTF \g_ufc_catalog_card_bool
+      { \typeout{N15-B4-STATE|catalog-card=true} }
+      { \typeout{N15-B4-STATE|catalog-card=false} }
+    \bool_if:NTF \g_ufc_coat_of_arms_bool
+      { \typeout{N15-B4-STATE|coat-of-arms=true} }
+      { \typeout{N15-B4-STATE|coat-of-arms=false} }
+    \prop_map_inline:Nn \g_ufc_metadata_prop
+      { \typeout{N15-B4-STATE|meta:##1=\tl_to_str:n {##2}} }
+    \typeout{N15-B4-STATE|font=\tl_to_str:V \g_ufc_font_family_tl}
+    \bool_if:NTF \g_ufc_font_strict_bool
+      { \typeout{N15-B4-STATE|strict-font=true} }
+      { \typeout{N15-B4-STATE|strict-font=false} }
+    \typeout{N15-B4-STATE|tables=\tl_to_str:V \g_ufc_table_module_tl}
+    \typeout{N15-B4-STATE|code=\tl_to_str:V \g_ufc_code_module_tl}
+    \typeout{N15-B4-STATE|algorithms=\tl_to_str:V \g_ufc_algorithm_module_tl}
+    \typeout{N15-B4-STATE|glossary=\tl_to_str:V \g_ufc_glossary_module_tl}
+    \typeout{N15-B4-STATE|index=\tl_to_str:V \g_ufc_index_module_tl}
+    \typeout{N15-B4-STATE|coat-file=\tl_to_str:V \g_ufc_coat_of_arms_file_tl}
+    \typeout{N15-B4-STATE|initial-page=\int_use:N \g_ufc_initial_page_int}
+  }
+\ufc_bfour_emit_state:
+\ExplSyntaxOff
+
+\begin{document}
+
+\pretextual
+
+\BFourPrintCover
+\BFourPrintTitlePage
+\BFourPrintCatalogCard{tests/fixtures/not-used-catalog-card}
+\BFourPrintErrata{tests/fixtures/pretextuais/errata}
+\BFourPrintApprovalPage
+\BFourPrintDedication{tests/fixtures/pretextuais/dedicatoria}
+\BFourPrintAcknowledgments{tests/fixtures/pretextuais/agradecimentos}
+\BFourPrintShortEpigraph{tests/fixtures/pretextuais/epigrafe}
+\BFourPrintLongEpigraph{tests/fixtures/pretextuais/epigrafe}
+\BFourPrintSummary{tests/fixtures/public-api-equivalence-summary}
+\BFourPrintAbstract{tests/fixtures/pretextuais/abstract}
+
+\BFourPrintListOfIllustrations
+\BFourPrintListOfFigures
+\BFourPrintListOfTables
+\BFourPrintListOfTextTables
+\BFourPrintListOfCharts
+\BFourPrintListOfCodeListings
+\BFourPrintListOfAlgorithms
+\BFourPrintListOfAbbreviationsAndAcronyms{tests/fixtures/pretextuais/abreviaturas}
+\BFourPrintListOfSymbols{tests/fixtures/pretextuais/simbolos}
+\BFourPrintTableOfContents
+
+\textual
+
+\section{Equivalência pública}
+
+Este conteúdo textual é idêntico nas duas variantes e exercita listas, objetos, código, algoritmo e referências.
+
+\begin{BFourLetteredItems}
+  \item Primeiro item de equivalência;
+  \item Segundo item de equivalência:
+    \begin{BFourDashedSubitems}
+      \item Subitem de equivalência.
+    \end{BFourDashedSubitems}
+\end{BFourLetteredItems}
+
+\begin{BFourDefinitionList}[3cm]
+  \BFourListEntry{API}{Interface pública equivalente.}
+  \BFourListEntry{PT/EN}{Duas superfícies para o mesmo comportamento certificado.}
+\end{BFourDefinitionList}
+
+\legend{figure}{Figura de equivalência pública}
+\BFourSource{Elaboração própria.}
+\BFourNote{Objeto sintético para comparação renderizada.}
+\begin{BFourObject}[here]
+  \centering\rule{7cm}{2cm}
+\end{BFourObject}
+
+\legend{grafico}{Gráfico de equivalência pública}
+\BFourSource{Elaboração própria.}
+\begin{BFourObject}[here]
+  \centering\rule{7cm}{1.5cm}
+\end{BFourObject}
+
+\legend{table}{Tabela de equivalência pública}
+\BFourSource{Elaboração própria.}
+\begin{BFourObject}[here]
+  \begin{tabular}{cc}
+    A & 1 \\
+    B & 2
+  \end{tabular}
+\end{BFourObject}
+
+\legend{quadro}{Quadro de equivalência pública}
+\BFourSource{Elaboração própria.}
+\begin{BFourObject}[here]
+  \begin{tabular}{|c|c|}
+    \hline
+    Item & Descrição \\
+    \hline
+    1 & Equivalência \\
+    \hline
+  \end{tabular}
+\end{BFourObject}
+
+\legend{codigo}{Código externo de equivalência pública}
+\BFourSource{Elaboração própria.}
+\begin{BFourObject}[here]
+  \BFourInputListing[language=Python]{tests/fixtures/exemplo.py}
+\end{BFourObject}
+
+\legend{algoritmo}{Algoritmo de equivalência pública}
+\BFourSource{Elaboração própria.}
+\begin{BFourAlgorithm}[here][1]
+  \State $i \gets 1$
+  \While{$i < 3$}
+    \State $i \gets i + 1$
+  \EndWhile
+  \State \Return $i$
+\end{BFourAlgorithm}
+
+\nocite{silva2026}
+\BFourPrintReferences
+\BFourPrintGlossary
+\BFourPrintIndex
+
+\typeout{N15-EVIDENCE B2R-B4-FIXTURE mode=@UFC_API_MODE@ PASS}
+\end{document}
