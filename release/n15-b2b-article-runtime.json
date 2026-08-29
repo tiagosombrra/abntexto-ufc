@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "phase": "N15-B2B",
+  "status": "IMPLEMENTED_PENDING_CERTIFICATION",
+  "base_main_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
+  "purpose": "Implement the source-backed UFC scientific-article runtime while preserving the fully certified B2R public baseline and every existing academic-work and research-project profile.",
+  "base_contracts": {
+    "article_normative_contract": {
+      "path": "normativa/coverage-rules-article.json",
+      "blob_sha": "5612c07841dad97b915af88474f9b48d8346597e"
+    },
+    "b2r_public_runtime": {
+      "path": "abntexto-ufc/public-api.def",
+      "blob_sha": "7b61fe70dd85ed895140f846272e097e3ded72cf"
+    },
+    "n12_workflow": {
+      "path": ".github/workflows/latex-preflight.yml",
+      "blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"
+    }
+  },
+  "runtime": {
+    "source_module": "abntexto-ufc/articles.def",
+    "class_entrypoint": "abntexto-ufc.cls",
+    "canonical_setup_value": "type/article",
+    "compatibility_setup_value": "tipo/artigo",
+    "new_setup_keys": [],
+    "new_public_commands": [],
+    "new_public_environments": [],
+    "new_extension_hooks": [],
+    "submission_date_surface": "standard-latex-date-command",
+    "approval_date_surface": "approval-date",
+    "author_surface": "author",
+    "author_note_surface": "footnote-inside-author-metadata",
+    "summary_surface": "ufcPrintSummary",
+    "abstract_surface": "ufcPrintAbstract",
+    "references_surface": "ufcPrintReferences"
+  },
+  "profile_invariants": {
+    "paper": "A4",
+    "left_mm": 30,
+    "top_mm": 30,
+    "right_mm": 20,
+    "bottom_mm": 20,
+    "single_sided": true,
+    "pagination_from_first_page": true,
+    "pagination_position": "upper-right",
+    "line_spacing": 1.0,
+    "first_line_indent_mm": 20,
+    "primary_sections_start_new_page": false,
+    "separate_cover": false,
+    "separate_title_leaf": false,
+    "separate_approval_leaf": false,
+    "table_of_contents": false,
+    "required_textual_sections": [
+      "Introdução",
+      "Desenvolvimento",
+      "Considerações finais"
+    ],
+    "required_posttextual": [
+      "Referências"
+    ]
+  },
+  "policy": {
+    "b2r_public_runtime_blob_must_remain_frozen": true,
+    "n12_workflow_must_remain_frozen": true,
+    "existing_profile_behavior_change_allowed": false,
+    "article_public_surface_expansion_beyond_reserved_values_allowed": false,
+    "recommendation_ranges_are_advisory": true,
+    "evidence_closure_deferred_to": "N15-B2C"
+  },
+  "checks": {
+    "contract": "tests/checks/article_runtime_contract.py",
+    "runtime": "tests/v2-article-check.sh",
+    "fixture": "tests/smoke/perfil-artigo.tex"
+  }
+}
