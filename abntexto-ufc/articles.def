@@ -25,79 +25,14 @@
 
 \bool_new:N \g_ufc_article_submission_date_set_bool
 
-% Keep the standard LaTeX date surface, but remember whether the author supplied
-% it explicitly so an article cannot silently inherit LaTeX's \today default.
-\cs_new_eq:NN \ufc_article_base_date: \date
-\RenewDocumentCommand \date { m }
-  {
-    \bool_gset_true:N \g_ufc_article_submission_date_set_bool
-    \ufc_article_base_date:{#1}
-  }
+% Preserve the standard LaTeX date command byte-for-byte. The command hook only
+% records whether the author supplied a submission date explicitly.
+\AddToHook{cmd/date/after}
+  { \bool_gset_true:N \g_ufc_article_submission_date_set_bool }
 
-% Preserve every certified non-article behavior owner and dispatch only for the
-% new article profile.
-\cs_new_eq:NN \ufc_article_base_pretextual: \pretextual
+% The original textual switch is a plain class macro, so it is safe to snapshot
+% as the page-style/layout behavior used by article pre-textual content.
 \cs_new_eq:NN \ufc_article_base_textual: \textual
-\cs_new_eq:NN \ufc_article_base_primary_section_break_command: \ufcPrimarySectionBreak
-\cs_new_eq:NN \ufc_article_base_pretextual_break_command: \ufcPretextualBreak
-\cs_new_eq:NN \ufc_article_base_print_cover: \imprimircapa
-\cs_new_eq:NN \ufc_article_base_print_title_page: \imprimirfolhaderosto
-\cs_new_eq:NN \ufc_article_base_print_approval_page: \imprimirfolhadeaprovacao
-\cs_new_eq:NN \ufc_article_base_print_acknowledgments: \imprimiragradecimentos
-\cs_new_eq:NN \ufc_article_base_print_summary: \imprimirresumo
-\cs_new_eq:NN \ufc_article_base_print_abstract: \imprimirabstract
-\cs_new_eq:NN \ufc_article_base_print_toc: \imprimirsumario
-\cs_new_eq:NN \ufc_article_base_print_references: \imprimirreferencias
-
-% Scientific articles are single-sided in the UFC profile, use visible Arabic
-% pagination from the first page, 12 pt body text, 2 cm paragraph indentation,
-% and single line spacing throughout the textual flow.
-\cs_new_protected:Npn \ufc_article_activate:
-  {
-    \ufc_article_if:T
-      {
-        \tl_gset:Nn \g_ufc_print_mode_tl { anverso }
-        \ufc_layout_apply:
-        \ufc_layout_one_sided:
-        \setcounter{page}{1}
-        \singlesp
-        \setlength{\parskip}{0pt}
-        \setlength{\parindent}{2cm}
-      }
-  }
-
-\cs_set_protected:Npn \pretextual
-  {
-    \ufc_article_if:TF
-      { \ufc_article_base_textual: }
-      { \ufc_article_base_pretextual: }
-  }
-
-\cs_set_protected:Npn \textual
-  {
-    \ufc_article_base_textual:
-    \ufc_article_if:T
-      {
-        \singlesp
-        \setlength{\parskip}{0pt}
-        \setlength{\parindent}{2cm}
-      }
-  }
-
-% Layout internals remain owned by layout.def. Only its existing public break
-% commands are specialized here so article sections and post-textual elements
-% remain in continuous flow.
-\RenewDocumentCommand \ufcPrimarySectionBreak { }
-  {
-    \ufc_article_if:F
-      { \ufc_article_base_primary_section_break_command: }
-  }
-
-\RenewDocumentCommand \ufcPretextualBreak { }
-  {
-    \ufc_article_if:F
-      { \ufc_article_base_pretextual_break_command: }
-  }
 
 \cs_new_protected:Npn \ufc_article_require_metadata:n #1
   {
@@ -206,64 +141,61 @@
     \endgroup
   }
 
-% A scientific article has no separate cover, title leaf, approval leaf, or
-% table of contents in this profile. Reuse the existing title-page call as the
-% first-page article front-matter entry point so old and canonical v2.x document
-% skeletons remain usable without adding a new public command.
-\RenewDocumentCommand \imprimircapa { }
+% Install document-command specializations only when the selected profile is an
+% article. Every non-article document therefore keeps the certified command
+% definitions exactly as they were before B2B.
+\cs_new_protected:Npn \ufc_article_install_runtime:
   {
-    \ufc_article_if:F
-      { \ufc_article_base_print_cover: }
+    \ufc_article_if:T
+      {
+        % Article pre-textual content uses the visible Arabic page style.
+        \cs_set_eq:NN \pretextual \ufc_article_base_textual:
+
+        % Primary sections and pre/post-textual article elements stay in a
+        % continuous flow. layout.def remains the owner of break internals.
+        \RenewDocumentCommand \ufcPrimarySectionBreak { } { }
+        \RenewDocumentCommand \ufcPretextualBreak { } { }
+
+        % A scientific article has no separate cover, title leaf, approval leaf,
+        % or table of contents. The existing title-page call is reused as the
+        % first-page article title/authorship/dates entry point.
+        \RenewDocumentCommand \imprimircapa { } { }
+        \RenewDocumentCommand \imprimirfolhaderosto { O{} }
+          { \ufc_article_title_block: }
+        \RenewDocumentCommand \imprimirfolhadeaprovacao { } { }
+        \RenewDocumentCommand \imprimiragradecimentos { m }
+          { \ufc_article_acknowledgments:n {##1} }
+        \RenewDocumentCommand \imprimirresumo { m }
+          { \ufc_article_summary:n {##1} }
+        \RenewDocumentCommand \imprimirabstract { m }
+          { \ufc_article_abstract:n {##1} }
+        \RenewDocumentCommand \imprimirsumario { } { }
+        \RenewDocumentCommand \imprimirreferencias { }
+          { \ufc_article_references: }
+      }
   }
 
-\RenewDocumentCommand \imprimirfolhaderosto { O{} }
+% Run before ordinary begin-document hooks so the upstream automatic
+% \pretextual call and UFC command hooks observe the article-specific surfaces.
+\AddToHook{begindocument/before}{\ufc_article_install_runtime:}
+
+% Run after ordinary begin-document hooks so the academic-document 1.5-spacing
+% default cannot overwrite the article's required single-spacing policy.
+\cs_new_protected:Npn \ufc_article_finalize_layout:
   {
-    \ufc_article_if:TF
-      { \ufc_article_title_block: }
-      { \ufc_article_base_print_title_page:[#1] }
+    \ufc_article_if:T
+      {
+        \tl_gset:Nn \g_ufc_print_mode_tl { anverso }
+        \ufc_layout_apply:
+        \ufc_layout_one_sided:
+        \setcounter{page}{1}
+        \singlesp
+        \setlength{\parskip}{0pt}
+        \setlength{\parindent}{2cm}
+      }
   }
 
-\RenewDocumentCommand \imprimirfolhadeaprovacao { }
-  {
-    \ufc_article_if:F
-      { \ufc_article_base_print_approval_page: }
-  }
-
-\RenewDocumentCommand \imprimiragradecimentos { m }
-  {
-    \ufc_article_if:TF
-      { \ufc_article_acknowledgments:n {#1} }
-      { \ufc_article_base_print_acknowledgments:{#1} }
-  }
-
-\RenewDocumentCommand \imprimirresumo { m }
-  {
-    \ufc_article_if:TF
-      { \ufc_article_summary:n {#1} }
-      { \ufc_article_base_print_summary:{#1} }
-  }
-
-\RenewDocumentCommand \imprimirabstract { m }
-  {
-    \ufc_article_if:TF
-      { \ufc_article_abstract:n {#1} }
-      { \ufc_article_base_print_abstract:{#1} }
-  }
-
-\RenewDocumentCommand \imprimirsumario { }
-  {
-    \ufc_article_if:F
-      { \ufc_article_base_print_toc: }
-  }
-
-\RenewDocumentCommand \imprimirreferencias { }
-  {
-    \ufc_article_if:TF
-      { \ufc_article_references: }
-      { \ufc_article_base_print_references: }
-  }
-
-\AtBeginDocument{\ufc_article_activate:}
+\AddToHook{begindocument/end}{\ufc_article_finalize_layout:}
 
 \ExplSyntaxOff
 
