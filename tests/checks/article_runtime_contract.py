@@ -96,6 +96,8 @@ def main() -> None:
     require("\\ProvideDocumentCommand" not in article, "B2B introduced a provided public command", errors)
     require("\\NewDocumentEnvironment" not in article, "B2B introduced a new environment", errors)
     require("\\ProvideDocumentEnvironment" not in article, "B2B introduced a provided environment", errors)
+    require("\\RenewDocumentCommand \\date" not in article, "B2B must not redefine the standard LaTeX date command", errors)
+    require("\\ufc_article_base_print_" not in article, "B2B must not alias xparse print-command backends", errors)
     require(
         "\\cs_set_protected:Npn \\ufc_primary_section_break:" not in article,
         "B2B must not take ownership of the layout internal section-break function",
@@ -128,10 +130,14 @@ def main() -> None:
 
     required_markers = (
         "type / article .meta:n = { tipo = artigo }",
-        "\\RenewDocumentCommand \\date",
+        "\\AddToHook{cmd/date/after}",
         "\\g_ufc_article_submission_date_set_bool",
         "Required~article~submission~date~was~not~set",
         "\\ufc_article_base_textual:",
+        "\\cs_new_protected:Npn \\ufc_article_install_runtime:",
+        "\\AddToHook{begindocument/before}{\\ufc_article_install_runtime:}",
+        "\\cs_new_protected:Npn \\ufc_article_finalize_layout:",
+        "\\AddToHook{begindocument/end}{\\ufc_article_finalize_layout:}",
         "\\ufc_layout_one_sided:",
         "\\setcounter{page}{1}",
         "\\singlesp",
@@ -171,8 +177,8 @@ def main() -> None:
     print(
         "N15-EVIDENCE article-runtime-contract "
         "predicates=13 setup_values=2 new_keys=0 new_commands=0 new_environments=0 "
-        "explicit_submission_date=true final_runtime_layer=true layout_internal_owner_preserved=true "
-        "b2r_runtime_frozen=true n12_frozen=true status=PASS"
+        "explicit_submission_date=true article_only_overrides=true final_runtime_layer=true "
+        "layout_internal_owner_preserved=true b2r_runtime_frozen=true n12_frozen=true status=PASS"
     )
 
 
