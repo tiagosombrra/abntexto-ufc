@@ -166,7 +166,7 @@ Do not translate merely for consistency:
 
 Portuguese leaf filenames that directly describe academic content may also remain when translating them would create unrelated churn. A2 therefore keeps names such as `frontmatter/resumo.tex`, `backmatter/apendices/` and `backmatter/anexos/`.
 
-The deprecated `ufctex.cls` entrypoint is intentionally retained as a compatibility wrapper. B2R-B1 records that identity explicitly; the canonical-identity scanner permits only the exact ledger fields required to document that wrapper, not arbitrary new `ufctex` identities.
+The deprecated legacy class entrypoint is intentionally retained as a compatibility wrapper. B2R-B1 records its exact identity only in the structured machine inventory; the canonical-identity scanner does not permit narrative or arbitrary new legacy identities elsewhere.
 
 ## 9. Repository normalization boundary
 
@@ -253,13 +253,15 @@ Internal package-module paths were normalized by PR #146 and the resulting `main
 
 PR #148 replaced draft PR #147 over the same certified content SHA, was squash-merged, and produced `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`. That runtime/layout head passed Source #410, preflight #1076, Gate T #1077, Distribution #242 and PDF Validator #136. The later documentation-sync closure advanced the certified B2R base to `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-### B2R-B1 — CERTIFIED ON PR #150, DOC-SYNC GATE PENDING
+### B2R-B1 — TECHNICALLY CERTIFIED, FINAL EXACT-HEAD CI PENDING ON PR #150
 
 PR #150 establishes the machine-readable pre-migration API baseline and executable checker without adding English runtime aliases.
 
 Technical head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` passed Normative Source Contract #414 and LaTeX preflight #1082. The preflight covered structure, reference/PDF-A, 12 profiles/PDF-A, objects/bibliography and post-textuals.
 
-The prior #1081 diagnostic run proved the new checker itself passed with 67 setup keys, 45 scoped values, 47 exported commands, 6 environments and 2 extension hooks. Its only failure was an older identity scanner that had not classified the ledger's required documentation of the deprecated `ufctex` wrapper; the correction is intentionally restricted to the exact wrapper name/file ledger lines.
+The prior #1081 diagnostic run proved the new checker itself passed with 67 setup keys, 45 scoped values, 47 exported commands, 6 environments and 2 extension hooks. Its only failure was the older identity scanner not yet classifying the two structured machine-ledger fields required for the deprecated legacy compatibility entrypoint. The correction remains intentionally restricted to those exact inventory fields.
+
+The first synchronized documentation head `f722620d1baaaac3cedb66f3e2b58e21bc564f88` passed Source #418 and every substantive LaTeX/normative check in preflight #1086; its sole failure was narrative repetition of the deprecated identity in tracked documentation. The final correction removes those narrative occurrences rather than weakening the scanner.
 
 ### B2R-B2 — NEXT AFTER B1 MERGE/RECERTIFICATION
 
