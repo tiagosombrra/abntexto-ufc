@@ -2,13 +2,13 @@
 
 Updated: 2026-08-28
 
-Checkpoint: **N15-B2R-B1 public-API baseline/checker is certified on PR #150; documentation-sync head must pass before merge**.
+Checkpoint: **N15-B2R-B1 public-API baseline/checker is technically certified on PR #150; final exact-head CI is the only pre-merge gate**.
 
 Certified base `main`: `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
 Current B2R-B branch: `refactor/n15-b2r-b-public-api`.
 
-Last technically certified B2R-B1 head before this documentation-sync commit: `1438d85e22a787ce7ab92bcd7abd06e259afa05d`.
+Last technically certified B2R-B1 runtime/checker head: `1438d85e22a787ce7ab92bcd7abd06e259afa05d`.
 
 Always read the live repository head, PR state and GitHub Actions receipts before mutation or merge. This file is the canonical continuation state; live Git/CI remains the execution authority.
 
@@ -63,7 +63,7 @@ Green CI never creates a normative requirement or silently promotes proof state.
 | N15-B2A | scientific-article source + normative contract | DONE — PR #145 |
 | N15-B2R-A1 | internal module English naming | DONE — PR #146 |
 | N15-B2R-A2 | user-example/distribution-facing layout | DONE — PR #148; resulting `main` re-certified |
-| N15-B2R-B1 | public-API inventory + executable baseline checker | CERTIFIED ON PR #150; doc-sync gate pending |
+| N15-B2R-B1 | public-API inventory + executable baseline checker | TECHNICALLY CERTIFIED; final exact-head CI pending on PR #150 |
 | N15-B2R-B2 | additive canonical-English setup keys/values + Portuguese aliases | BLOCKED by B1 merge/re-certification |
 | N15-B2R-B3 | canonical commands/environments + compatibility wrappers | BLOCKED by B2 |
 | N15-B2R-B4 | EN/PT semantic/output equivalence + exact-head closure | BLOCKED by B3 |
@@ -119,11 +119,13 @@ B1 introduced:
 - `tests/checks/public_api_contract.py`, which rejects removals/unreviewed additions and verifies the frozen N12 workflow blob;
 - integration of `public-api` as a dependency of the existing `repository` validation check, with no change to `.github/workflows/latex-preflight.yml`.
 
-### CI-discovered blocker and correction
+### CI-discovered blockers and corrections
 
-Initial head `d3f55442e22eced43784089c24b5423f092123f2` passed the new public-API checker itself, but preflight #1081 failed only in the older canonical-identity scanner because the new ledger necessarily documents the deprecated `ufctex` wrapper.
+Initial head `d3f55442e22eced43784089c24b5423f092123f2` passed the new public-API checker itself, but preflight #1081 failed only because the older canonical-identity scanner had not classified the required machine-ledger representation of the deprecated legacy compatibility wrapper.
 
-The correction at head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` added a narrow classification exception for exactly the ledger lines that identify `ufctex` and `ufctex.cls`. It does not exempt the whole ledger or permit additional unclassified legacy identities.
+The correction at head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` added a narrow classification exception for exactly the two structured ledger fields that identify that compatibility entrypoint. It does not exempt the whole ledger or permit additional unclassified legacy identities.
+
+The first documentation-sync head `f722620d1baaaac3cedb66f3e2b58e21bc564f88` passed Source Contract #418 and all substantive LaTeX/normative checks in preflight #1086, but failed `distribution-source` because the human documentation repeated the deprecated identity narratively. The correction is to keep that identity confined to the two structured inventory fields rather than broaden the scanner exemptions.
 
 ### Certified technical head receipts
 
@@ -137,13 +139,13 @@ Head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` passed:
 - objects/bibliography — SUCCESS;
 - post-textuals — SUCCESS.
 
-The `public-api` evidence on the prior diagnostic run already reported `keys=67 values=45 commands=47 environments=6 hooks=2`, `value_identity=setup-key/value`, `article_runtime=false` and the frozen N12 blob.
+The `public-api` evidence also reports `keys=67 values=45 commands=47 environments=6 hooks=2`, `value_identity=setup-key/value`, `article_runtime=false` and the frozen N12 blob.
 
 No public API behavior, article runtime, normative contract, formatting intent or pagination intent changed in B1.
 
 ## Next executable action
 
-1. Let the final B2R-B1 documentation-sync head pass Source Contract and LaTeX preflight.
+1. Require Source Contract and LaTeX preflight to pass on the corrected final exact head.
 2. Confirm PR #150 remains mergeable and `behind_by=0`.
 3. Squash-merge PR #150 with the exact expected head SHA.
 4. Re-certify the resulting `main` before beginning public aliases.
