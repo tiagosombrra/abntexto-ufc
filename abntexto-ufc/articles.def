@@ -23,12 +23,10 @@
       { \prg_return_false: }
   }
 
-\bool_new:N \g_ufc_article_submission_date_set_bool
-
-% Preserve the standard LaTeX date command byte-for-byte. The command hook only
-% records whether the author supplied a submission date explicitly.
-\AddToHook{cmd/date/after}
-  { \bool_gset_true:N \g_ufc_article_submission_date_set_bool }
+% Snapshot the kernel's default date value without patching or redefining
+% \date. A later explicit \date{...} call changes \@date's meaning, which can
+% then be detected when the article title block is emitted.
+\cs_new_eq:Nc \ufc_article_default_date: {@date}
 
 % The original textual switch is a plain class macro, so it is safe to snapshot
 % as the page-style/layout behavior used by article pre-textual content.
@@ -46,12 +44,13 @@
 
 \cs_new_protected:Npn \ufc_article_require_submission_date:
   {
-    \bool_if:NF \g_ufc_article_submission_date_set_bool
+    \cs_if_eq:NcTF \ufc_article_default_date: {@date}
       {
         \ClassError{abntexto-ufc}
           {Required~article~submission~date~was~not~set}
           {Use~the~standard~LaTeX~\string\date\{day~month~year\}~command~in~the~preamble.}
       }
+      {}
   }
 
 \cs_new_protected:Npn \ufc_article_title_block:
