@@ -8,67 +8,38 @@ This document defines how engineering-facing names are normalized without transl
 
 ## 1. Core principle
 
-The engineering language of the project is English.
+The engineering language of the project is English for project-owned engineering surfaces: internal identifiers, source comments, tests/checkers/tools, canonical public API and new machine-readable engineering fields.
 
-This applies to new or normalized:
-
-- internal implementation filenames and identifiers;
-- source-code comments and developer diagnostics;
-- test/checker/tool names;
-- canonical public API names owned by `abntexto-ufc`;
-- machine-readable engineering fields when schema/history permits.
-
-It does **not** mean translating:
-
-- academic content;
-- official UFC/ABNT names;
-- bibliographic titles;
-- normative quotations;
-- institutional labels;
-- historical evidence identifiers whose stability matters.
+Do not translate merely for engineering consistency: official UFC/ABNT wording, bibliographic titles, quoted normative text, institutional labels, Portuguese academic example content or historical evidence identifiers whose stability matters.
 
 ## 2. Compatibility principle
 
-Public API work in v2.x is additive.
+Public API migration in v2.x is additive.
 
 - supported Portuguese setup keys remain accepted;
 - supported Portuguese values remain accepted where already public;
-- supported Portuguese UFC-owned commands/environments remain aliases or compatibility wrappers;
-- upstream commands are not renamed merely for local style consistency;
-- removal of a supported public surface requires a separate deprecation/removal policy and normally a major-version boundary.
+- supported Portuguese project-owned commands/environments remain aliases or wrappers when a canonical English equivalent is introduced;
+- upstream commands are not renamed for local style consistency;
+- supported public-surface removal requires an explicit deprecation/removal policy and normally a major-version boundary.
 
 Canonical English API may become the documented default without invalidating Portuguese compatibility input.
 
-## 3. File and directory conventions
+## 3. Engineering file/directory convention
 
-Use lowercase English names with hyphens for multiple words when appropriate.
+Use lowercase English names and hyphens when appropriate. Canonical examples already adopted include:
 
-Canonical examples already adopted:
-
-- `fonts.def`;
-- `modules.def`;
-- `frontmatter.def`;
-- `institutional.def`;
-- `academic-works.def`;
-- `research-projects.def`;
-- `objects.def`;
-- `bibliography.def`;
-- `backmatter.def`;
+- `fonts.def`, `modules.def`, `frontmatter.def`, `institutional.def`;
+- `academic-works.def`, `research-projects.def`, `objects.def`, `bibliography.def`, `backmatter.def`;
 - future `articles.def`;
-- `main.tex`;
-- `frontmatter/`;
-- `chapters/`;
-- `backmatter/`;
-- `figures/`;
-- `assets/institutional/`.
+- `main.tex`, `frontmatter/`, `chapters/`, `backmatter/`, `figures/`, `assets/institutional/`.
 
-Do not rename historical evidence merely for style consistency when the change would damage traceability or create disproportionate churn.
+Portuguese academic leaf filenames may remain where translation would create unrelated churn. Historical evidence is not renamed merely for style consistency.
 
 ## 4. Public setup keys
 
-Canonical `\ufcsetup` keys introduced by B2R-B use lowercase English kebab-case.
+Canonical `\ufcsetup` keys use lowercase English kebab-case.
 
-Reviewed target vocabulary includes:
+Reviewed direction:
 
 - `type`;
 - `print-mode`;
@@ -89,20 +60,13 @@ Reviewed target vocabulary includes:
 - `advisor`;
 - `coadvisor`.
 
-Existing Portuguese keys such as `tipo`, `impressao`, `capa`, `ficha-catalografica`, `brasao`, `fonte`, `codigo`, `autor`, `titulo`, `orientador` and `coorientador` remain compatibility surfaces throughout v2.x.
-
-B2R-B1 inventories this surface but does not activate English aliases. Runtime aliases begin only in B2R-B2 after B1 is merged and the resulting `main` is re-certified.
+B2R-B1 inventories the existing API but introduces no English runtime aliases. B2R-B2 is the setup-key/value alias phase.
 
 ## 5. Setup values
 
-Canonical booleans use:
+Canonical booleans are `true` / `false`. Existing `sim` / `nao` remain compatibility forms where already supported.
 
-- `true`;
-- `false`.
-
-Existing `sim` / `nao` remain compatibility values where currently supported.
-
-Canonical profile values use internationally explicit names:
+Reviewed canonical profile values:
 
 - `undergraduate-capstone`;
 - `specialization-capstone`;
@@ -110,191 +74,126 @@ Canonical profile values use internationally explicit names:
 - `doctoral-thesis`;
 - `research-project`;
 - `anonymized-research-project`;
-- future `article`.
+- future reserved `article`.
 
-Do not choose an English term whose international academic meaning is materially ambiguous when a more precise name exists.
+Setup-value identity in the machine contract is `(setup key, value)`, not a global value string.
 
-Setup-value identity in the machine contract is `(setup key, value)`, not a global value string. This is required because values such as `true`, `false`, `sim` and `nao` legitimately occur under multiple independent keys.
-
-`print-mode` values and several optional-module values remain review-required until their semantics are explicitly approved. Do not infer canonical values merely from literal translation.
+`print-mode` values and optional-module values remain review-required. Do not choose them by literal translation alone.
 
 ## 6. UFC-owned commands and environments
 
-New canonical UFC-owned public commands use a consistent `\ufc...` prefix and English semantics. Reviewed representative direction includes:
+New canonical project-owned public commands use the `\ufc...` prefix and English semantics.
+
+Reviewed command direction includes:
 
 - `\ufcPrintCover`;
 - `\ufcPrintTitlePage`;
 - `\ufcPrintApprovalPage`;
 - `\ufcPrintCatalogCard`;
-- `\ufcPrintAbstract`;
 - `\ufcPrintReferences`;
 - `\ufcAddBibliographyResource`.
 
-Before renaming or aliasing a command, classify it as:
+A canonical abstract command remains a semantic design decision because the current vernacular and foreign-language summary surfaces must not be conflated accidentally.
 
-1. canonical `abntexto-ufc` API;
-2. Portuguese compatibility API;
-3. upstream compatibility API;
-4. project-exported helper;
-5. private/internal implementation.
+Before adding an alias, classify the existing surface as canonical project API, Portuguese compatibility API, upstream compatibility API, exported helper or internal implementation. Environment aliases must preserve semantics and nesting behavior.
 
-No public rename is justified by spelling alone. Environment aliases must preserve semantics and nesting behavior.
-
-B2R-B1 inventories 47 exported commands, 6 UFC environments and 2 explicit extension hooks. It does not automatically promote every exported helper into long-term public API.
+B2R-B1 inventories 47 exported commands, 6 UFC environments and 2 explicit extension hooks; it does not automatically promote every exported helper into long-term public API.
 
 ## 7. Other engineering identifiers
 
-Python uses conventional English `snake_case`; constants use `UPPER_SNAKE_CASE` where appropriate. JavaScript follows the project convention with English semantic names.
+Python uses English `snake_case`; constants use `UPPER_SNAKE_CASE` where appropriate. New source comments and developer diagnostics are English. New JSON engineering fields use English `snake_case` unless schema/history requires stability.
 
-New JSON engineering fields use English `snake_case` unless an established schema requires otherwise. Historical schema fields are not renamed casually; schema migration requires compatibility or a version change.
-
-New source-code comments and developer-facing diagnostics are written in English. User-facing academic text may remain Portuguese.
+Historical schema fields are not renamed casually; migration requires compatibility or schema-version handling.
 
 ## 8. Names intentionally preserved
 
-Do not translate merely for consistency:
+Preserve official UFC units, resolutions, guides and acts; official ABNT titles; bibliographic titles; quoted normative text; Portuguese academic examples; stable normative evidence IDs; release/audit IDs already consumed by ledgers; external/upstream commands; and `normativa/` during B2R.
 
-- official UFC units, resolutions, guides and acts;
-- official ABNT standard titles;
-- bibliographic titles;
-- quoted normative text;
-- Portuguese academic example content;
-- stable `abnt-nbr-*` and `ufc-guia-*` evidence IDs;
-- release/audit identifiers already consumed by ledgers;
-- external/upstream command names;
-- `normativa/` during B2R, because traceability/churn cost outweighs cosmetic benefit.
+The deprecated legacy class entrypoint remains a compatibility wrapper. Its exact identity is recorded only in the structured machine inventory. The canonical-identity scanner intentionally rejects narrative or arbitrary new legacy identities elsewhere.
 
-Portuguese leaf filenames that directly describe academic content may also remain when translating them would create unrelated churn. A2 therefore keeps names such as `frontmatter/resumo.tex`, `backmatter/apendices/` and `backmatter/anexos/`.
+## 9. Public API contract
 
-The deprecated legacy class entrypoint is intentionally retained as a compatibility wrapper. B2R-B1 records its exact identity only in the structured machine inventory; the canonical-identity scanner does not permit narrative or arbitrary new legacy identities elsewhere.
+`release/n15-b2r-b-public-api.json` is the active B2R-B machine contract. `release/n15-b2r-a-naming-inventory.json` remains historical N12-sensitive B2R-A evidence.
 
-## 9. Repository normalization boundary
+The active contract inventories:
 
-B2R-A normalized package/example paths only when every active consumer was updated and regression evidence remained green.
-
-The policy permits source and distributed layouts to differ when user experience requires it. For **B2R-A2, the reviewed decision is more specific**: repository source, complete template bundle and Overleaf bundle use the same canonical content layout, with `main.tex` at the bundle/import root.
-
-Current A2 layout:
-
-```text
-main.tex
-frontmatter/
-chapters/
-backmatter/
-figures/
-assets/institutional/ufc-coat-of-arms.png   # source-only
-```
-
-The institutional asset remains excluded from public bundles. Renaming the source-only asset does not change its licensing or redistribution policy.
-
-CTAN has its own smaller install/document surface and is not required to contain the complete project example tree.
-
-## 10. Public API contract requirement
-
-B2R-B uses `release/n15-b2r-b-public-api.json` as its active machine-readable contract. The historical `release/n15-b2r-a-naming-inventory.json` remains N12-sensitive B2R-A evidence and is not the active B2R-B ledger.
-
-The B2R-B contract inventories at least:
-
-- setup keys;
-- setup/profile values;
-- public/exported commands;
-- public environments;
-- extension hooks;
 - class entrypoints;
-- canonical names;
-- compatibility aliases;
-- upstream compatibility surfaces;
-- deprecation state, if any.
+- setup keys and enumerated values;
+- exported commands;
+- UFC environments;
+- extension hooks;
+- canonical mappings already reviewed;
+- compatibility/upstream classifications;
+- reserved future surfaces.
 
-`tests/checks/public_api_contract.py` must prevent accidental removal of supported aliases/baseline surfaces and introduction of unreviewed project-owned public engineering identifiers. The checker is integrated through the existing `tests/run.py` validation graph without editing the frozen N12 workflow.
+`tests/checks/public_api_contract.py` prevents accidental removal and unreviewed additions and verifies the frozen N12 workflow boundary. It is transitively enforced through `tests/run.py` without changing `.github/workflows/latex-preflight.yml`.
 
-## 11. Behavioral equivalence
+## 10. Behavioral equivalence
 
-Naming work must not change document semantics or formatting merely because identifiers changed.
+Naming work must not change document semantics or formatting merely because identifiers change.
 
-Evidence must cover as applicable:
+Completed B2R-B must cover existing profile builds, PDF/A gates, reference document, structure, objects/bibliography, post-textuals, Overleaf, deterministic distribution, Windows literal-font certification and absence of unintended normative-contract changes.
 
-- existing profile builds;
-- PDF/A gates;
-- reference document;
-- structure, objects/bibliography and post-textual regressions;
-- Overleaf import/stable behavior;
-- deterministic distribution;
-- Windows literal-font certification;
-- absence of unintended normative-predicate changes.
+B2R-B4 will add paired canonical-English/Portuguese semantic and rendered-output equivalence fixtures. B2R-B1 itself is a baseline/checker phase and changes no runtime API behavior.
 
-For completed B2R-B, representative canonical-English and Portuguese-compatibility documents must additionally demonstrate equivalent semantics/output.
+## 11. Article timing
 
-B2R-B1 itself changes no runtime API behavior; therefore its evidence is a baseline-contract/checker certification rather than EN/PT equivalence evidence.
-
-## 12. Article timing
-
-Article runtime is deliberately delayed until B2R closes.
+Scientific-article runtime is delayed until B2R-B closes and the resulting `main` is re-certified.
 
 Therefore:
 
-- do not create a temporary Portuguese `artigos.def` implementation;
-- create the runtime directly as canonical `articles.def`;
-- canonical public surface should be `type=article`;
-- `tipo=artigo` becomes the Portuguese compatibility surface defined by B2R-B;
-- article-specific behavior should use centralized profile capabilities or an equivalent policy, not scattered language-dependent conditionals.
+- do not create a temporary Portuguese article module;
+- eventual runtime module is canonical `articles.def`;
+- canonical surface is reserved as `type=article`;
+- Portuguese compatibility is reserved as `tipo=artigo`;
+- reservation is not runtime support;
+- article-specific behavior should use centralized profile capabilities or an equivalent policy rather than scattered language-dependent conditionals.
 
-The article normative contract already exists from B2A; only runtime/evidence remain future work.
-
-B2R-B1 records `type=article` / `tipo=artigo` as `reserved_not_live`; this reservation must not be interpreted as runtime support.
-
-## 13. Current migration state
+## 12. Current migration state
 
 ### B2R-A1 — DONE
 
-Internal package-module paths were normalized by PR #146 and the resulting `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1` was re-certified.
+Internal module paths normalized by PR #146 and re-certified.
 
 ### B2R-A2 — DONE
 
-PR #148 replaced draft PR #147 over the same certified content SHA, was squash-merged, and produced `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`. That runtime/layout head passed Source #410, preflight #1076, Gate T #1077, Distribution #242 and PDF Validator #136. The later documentation-sync closure advanced the certified B2R base to `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
+User/example/distribution-facing engineering layout normalized by PR #148 plus its state-sync closure. Certified B2R-B1 base: `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-### B2R-B1 — TECHNICALLY CERTIFIED, FINAL EXACT-HEAD CI PENDING ON PR #150
+### B2R-B1 — MERGED; POST-MERGE DISTRIBUTION PENDING
 
-PR #150 establishes the machine-readable pre-migration API baseline and executable checker without adding English runtime aliases.
+PR #150 was squash-merged from exact head `6d51593e1a167ae657c8dd019f913dc947c34250` to `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
 
-Technical head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` passed Normative Source Contract #414 and LaTeX preflight #1082. The preflight covered structure, reference/PDF-A, 12 profiles/PDF-A, objects/bibliography and post-textuals.
+Final PR-head certification:
 
-The prior #1081 diagnostic run proved the new checker itself passed with 67 setup keys, 45 scoped values, 47 exported commands, 6 environments and 2 extension hooks. Its only failure was the older identity scanner not yet classifying the two structured machine-ledger fields required for the deprecated legacy compatibility entrypoint. The correction remains intentionally restricted to those exact inventory fields.
+- Source #422 — SUCCESS;
+- preflight #1090 — SUCCESS.
 
-The first synchronized documentation head `f722620d1baaaac3cedb66f3e2b58e21bc564f88` passed Source #418 and every substantive LaTeX/normative check in preflight #1086; its sole failure was narrative repetition of the deprecated identity in tracked documentation. The final correction removes those narrative occurrences rather than weakening the scanner.
+Post-merge certification already green:
 
-### B2R-B2 — NEXT AFTER B1 MERGE/RECERTIFICATION
+- Source #423 — SUCCESS;
+- preflight push #1091 — SUCCESS;
+- Gate T #1092 — SUCCESS, including Overleaf and Windows literal-font build/certification.
 
-B2R-B2 introduces additive English setup keys/values, forwarding to certified Portuguese behavior wherever possible. Detailed academic metadata, print-mode values, optional-module values and remaining public commands/environments stay review-required until their semantics are explicitly resolved.
+Distribution #244 is the only remaining post-merge receipt at this checkpoint; its Gate T prerequisite is already SUCCESS.
 
-## 14. Mandatory documentation synchronization
+### B2R-B2 — BLOCKED UNTIL STATE-SYNC RE-CERTIFICATION
 
-Naming decisions are easy to lose across long audit sessions, so documentation synchronization is closure-blocking.
+B2R-B2 introduces additive canonical-English setup keys/values, forwarding to certified Portuguese behavior wherever possible. Detailed metadata, print-mode values, optional-module values and remaining commands/environments remain review-required until explicitly resolved.
 
-After a material naming decision, CI-discovered blocker, blocker fix, PR merge/certification or change in the next executable step, update as applicable:
+## 13. Mandatory documentation synchronization
+
+After a material naming decision, CI-discovered blocker/fix, PR merge/certification or next-action change, synchronize as applicable:
 
 - `docs/HANDOFF-V2.2.0.md`;
 - `docs/B2R-NAMING-INVENTORY.md`;
 - `release/n15-b2r-b-public-api.json` while B2R-B is active;
-- this policy when the naming decision itself changes;
-- README/normative human docs when user-visible paths or described implementation change.
+- this policy when naming decisions/state change;
+- user/normative docs if described public surfaces change.
 
-`release/n15-b2r-a-naming-inventory.json` remains a historical/N12-sensitive ledger and must not be simplified or rewritten merely to reflect B2R-B state.
+B2R-A's historical machine ledger is not rewritten merely to reflect B2R-B state.
 
-A B2R subphase cannot be marked DONE while its active documents disagree with live Git/PR/CI state.
+## 14. Review checklist
 
-## 15. Review checklist for a new identifier
+Before adding an engineering-facing identifier, verify ownership, semantic precision, naming convention, duplication, compatibility needs, schema/API impact, preservation of official wording and documentation-sync requirements.
 
-Before adding an engineering-facing name, verify:
-
-- Is it owned by this project rather than upstream?
-- Is English appropriate for this surface?
-- Is the meaning precise in an academic/LaTeX context?
-- Does it follow the convention for its file/language/API type?
-- Does it duplicate an existing concept?
-- Does it need a Portuguese compatibility alias?
-- Does it affect a public API contract or schema?
-- Does it preserve official institutional/normative wording where that wording is data?
-- Are handoff/ledger/documentation updates required by the change?
-
-If any answer is unclear, treat the name as an API/design decision rather than a cosmetic rename.
+If any point is unclear, treat the identifier as an API/design decision rather than a cosmetic rename.
