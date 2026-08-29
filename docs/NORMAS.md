@@ -77,7 +77,7 @@ CI verde não promove automaticamente uma regra para `PROVEN`. A força da evid�
 
 ## Implementação canônica atual
 
-Módulos internos ativos da classe:
+Módulos internos ativos da classe, em ordem de carregamento:
 
 ```text
 abntexto-ufc.cls
@@ -94,12 +94,12 @@ abntexto-ufc/
 ├── compat-abntexto.def
 ├── bibliography.def
 ├── compat-nbr6023-2025.def
-├── articles.def
 ├── backmatter.def
-└── public-api.def
+├── public-api.def
+└── articles.def
 ```
 
-Os nomes antigos dos módulos foram removidos em B2R-A1/PR #146. O `public-api.def` B2R permanece congelado no blob `7b61fe70dd85ed895140f846272e097e3ded72cf`; o novo comportamento de artigo é isolado em `articles.def`. O `latex-preflight.yml` N12 permanece congelado no blob `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
+Os nomes antigos dos módulos foram removidos em B2R-A1/PR #146. O `public-api.def` B2R permanece congelado no blob `7b61fe70dd85ed895140f846272e097e3ded72cf`; o comportamento de artigo é isolado em `articles.def`, carregado como camada final depois de toda a superfície base. O `latex-preflight.yml` N12 permanece congelado no blob `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
 ## Layout canônico do template
 
@@ -175,13 +175,14 @@ O contrato B2A exige e B2B implementa no escopo automatizável:
 - paginação arábica visível desde a primeira página, no canto superior direito;
 - texto 12 pt, justificado, espaço simples e recuo de 2 cm na primeira linha;
 - título na primeira página, seguido de autoria e datas de submissão/aprovação;
+- data de submissão fornecida explicitamente por `\date{...}`, sem aceitar silenciosamente o `\today` padrão do LaTeX como entrada do autor;
 - resumo/palavras-chave e abstract/keywords no mesmo fluxo, sem folhas pré-textuais artificiais;
 - Introdução, Desenvolvimento e Considerações finais numerados;
 - seções primárias em fluxo contínuo, sem nova página automática;
 - referências obrigatórias sem quebra automática de página antes do título;
 - ausência de capa, folha de rosto, folha de aprovação e sumário separados para esse perfil.
 
-A implementação não cria novos setup keys, comandos, ambientes ou hooks. `articles.def` especializa apenas comportamentos existentes quando o tipo ativo é artigo e mantém `layout.def` como proprietário das funções internas de quebra.
+A implementação não cria novos setup keys, comandos, ambientes ou hooks. `articles.def` especializa apenas comportamentos existentes quando o tipo ativo é artigo, é carregado como camada final e mantém `layout.def` como proprietário das funções internas de quebra.
 
 As recomendações de 150–250 palavras no resumo, pelo menos três palavras-chave e Arial/Times New Roman permanecem advisory, não hard errors.
 
