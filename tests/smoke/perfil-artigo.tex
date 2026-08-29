@@ -1,0 +1,54 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = article,
+  print-mode = double-sided,
+  cover = true,
+  catalog-card = false,
+  font = times,
+  strict-font = false,
+  author = {UFCARTICLEAUTHORMARKER\footnote{Pesquisador do Centro de Teste da Universidade Federal do Ceará. Contato institucional: autor@example.org.}},
+  title = {UFCARTICLETITLEMARKER},
+  subtitle = {Scientific article runtime validation},
+  title-variant = {UFCARTICLEOTHERTITLEMARKER},
+  location = {Fortaleza},
+  year = {2026},
+  approval-date = {20 de agosto de 2026}
+}
+
+\date{18 de agosto de 2026}
+\ufcAddBibliographyResource{tests/fixtures/referencias-v2.bib}
+
+\begin{document}
+\pretextual
+
+\ufcPrintCover
+\ufcPrintTitlePage
+\ufcPrintApprovalPage
+\ufcPrintSummary{tests/fixtures/artigo-resumo}
+\ufcPrintAbstract{tests/fixtures/artigo-abstract}
+\ufcPrintTableOfContents
+
+\textual
+\section{Introdução}
+UFCARTICLEINTROMARKER apresenta o contexto do problema, o objetivo do trabalho e a organização da análise. Este parágrafo confirma o recuo de primeira linha e o fluxo textual em espaço simples.
+
+\newpage
+UFCARTICLEFLOWMARKERBEFOREDEVELOPMENT.
+\section{Desenvolvimento}
+UFCARTICLEDEVELOPMENTMARKER descreve os fundamentos, o método e os resultados necessários à validação do perfil científico. O conteúdo permanece no mesmo fluxo da seção primária anterior, sem quebra automática introduzida pelo comando de seção.
+
+UFCARTICLEFLOWMARKERBEFOREFINAL.
+\section{Considerações finais}
+UFCARTICLEFINALMARKER sintetiza os resultados observados e registra as conclusões do artigo. A seção deve permanecer na mesma página do marcador imediatamente anterior quando houver espaço físico suficiente.
+
+\nocite{silva2020}
+\ufcPrintReferences
+
+\end{document}
