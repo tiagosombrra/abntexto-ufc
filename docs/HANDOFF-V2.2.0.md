@@ -2,11 +2,11 @@
 
 Updated: 2026-08-28
 
-Checkpoint: **N15-B2R-A2 final documentation-sync candidate — PR #147 (`refactor/n15-b2r-a2-user-layout`)**.
+Checkpoint: **N15-B2R-A2 merged and post-merge re-certified; B2R-B is the next executable phase**.
 
-Certified stable `main`: `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`.
+Certified `main`: `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`.
 
-Always read the live PR head and GitHub Actions receipts before mutation or merge. This file is the canonical continuation state; live Git/CI is the execution authority.
+Always read the live repository head and GitHub Actions receipts before mutation or merge. This file is the canonical continuation state; live Git/CI remains the execution authority.
 
 ## Mandatory documentation-sync policy
 
@@ -20,12 +20,6 @@ Update these active state documents whenever scope changes materially, CI expose
 4. user/policy documents when the surfaces they describe change.
 
 A phase must not be marked DONE if these documents disagree with repository/PR/CI state.
-
-### Final-receipt anti-loop rule
-
-The final A2 documentation sync records the complete certification set of the immediately preceding implementation head. Because committing those receipts necessarily creates a new SHA, the documentation-sync head itself must be re-certified using live checks, but the receipt documents are not edited again merely to copy those new run numbers. Otherwise every receipt-only edit would invalidate the SHA it documents. The live checks/statuses attached to the final documentation-sync SHA are the merge authority.
-
-After merge, the resulting `main` certification and the transition to B2R-B must be recorded before new implementation work begins.
 
 ## Source-of-truth hierarchy
 
@@ -46,7 +40,7 @@ Green CI never creates a normative requirement or silently promotes proof state.
 - recommendations remain recommendations;
 - `.github/workflows/latex-preflight.yml` remains frozen unless N12 is explicitly reopened;
 - no supported Portuguese public-API removal in v2.x;
-- no article runtime before B2R closes and resulting `main` is re-certified;
+- no article runtime before B2R closes and the resulting `main` is re-certified;
 - UFC institutional mark and proprietary Microsoft fonts remain excluded from public bundles;
 - physical branch cleanup remains deferred until final certification/tag;
 - documentation synchronization is mandatory before phase closure and project handoff.
@@ -59,9 +53,9 @@ Green CI never creates a normative requirement or silently promotes proof state.
 | N15-A | unrestricted final audit | DONE — PR #143 |
 | N15-B1 | source completeness/authority reconciliation | DONE — PR #144 |
 | N15-B2A | scientific-article source + normative contract | DONE — PR #145 |
-| N15-B2R-A1 | internal module English naming | DONE — PR #146; resulting `main` re-certified |
-| N15-B2R-A2 | user-example/distribution-facing layout | ACTIVE — PR #147; final docs-sync head awaiting exact-head recertification/merge |
-| N15-B2R-B | canonical English public API + Portuguese aliases | BLOCKED by A2 |
+| N15-B2R-A1 | internal module English naming | DONE — PR #146 |
+| N15-B2R-A2 | user-example/distribution-facing layout | DONE — PR #148; resulting `main` re-certified |
+| N15-B2R-B | canonical English public API + Portuguese aliases | READY — next executable phase |
 | N15-B2B | scientific-article runtime | BLOCKED by B2R-B |
 | N15-B2C | scientific-article evidence closure | BLOCKED by B2B |
 | N15-B3 | remaining pre-release corrections | BLOCKED by B2C |
@@ -74,27 +68,15 @@ N15 remains ACTIVE.
 
 ### N15-B2A — DONE
 
-PR #145. Article authority/contract promoted without runtime. Current article authority:
-
-- `ufc-guia-artigos-2022`, bibliographic edition 2022, corrected file date 2023-04-27;
-- historical `ufc-guia-artigos-2021` retained only as superseded history;
-- `abnt-nbr-6022-2018` technical source;
-- 13 `article.*` predicates;
-- abstract-length/minimum-keyword/font-family wording remains recommendation where the source uses `convém`/`recomenda-se`.
-
-Certified resulting main `7699ed205d4554df28fc46908fff3be0b92a38f7`: Source #361, PDF Validator #135, preflight #1022, Gate T #1023 and Distribution #238 — SUCCESS.
+PR #145 promoted the scientific-article authority/contract without runtime. Resulting `main` `7699ed205d4554df28fc46908fff3be0b92a38f7` was certified by Source #361, PDF Validator #135, preflight #1022, Gate T #1023 and Distribution #238.
 
 ### N15-B2R-A1 — DONE
 
-PR #146 normalized internal module names to English without public-API or runtime behavior change. Certified resulting main `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`: Source #367, preflight #1030, Gate T #1031 and Distribution #239 — SUCCESS.
+PR #146 normalized internal module names to English without public-API or runtime behavior change. Resulting `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1` was certified by Source #367, preflight #1030, Gate T #1031 and Distribution #239.
 
-## N15-B2R-A2 — ACTIVE
+### N15-B2R-A2 — DONE
 
-Branch: `refactor/n15-b2r-a2-user-layout`  
-PR: #147  
-Base: `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`.
-
-### Canonical layout
+A2 normalized user-example and distribution-facing repository paths only:
 
 | Previous | Canonical |
 | --- | --- |
@@ -106,113 +88,59 @@ Base: `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1`.
 | `assets/institucional/` | `assets/institutional/` |
 | `assets/institucional/brasao-ufc.PNG` | `assets/institutional/ufc-coat-of-arms.png` |
 
-Repository template, complete-template bundle and Overleaf bundle intentionally use the same layout; Overleaf keeps `main.tex` at archive root. Portuguese academic leaf filenames remain intentionally unchanged in A2.
+Repository template, complete-template bundle and Overleaf bundle use this canonical content layout; Overleaf keeps `main.tex` at archive root. Portuguese academic leaf filenames remain intentionally unchanged by A2.
 
-### Behavioral/normative boundaries
+A2 did not change public `\ufcsetup` semantics, article runtime, normative predicates/values/locators/authority, formatting intent or pagination intent.
 
-A2 changes paths only. It does not change public `\ufcsetup` semantics, article runtime, normative predicates/values/locators/authority, formatting intent or pagination intent.
-
-`normativa/reference-guide-map.json` changed only secondary `source_file` implementation traces and remains `normative_contract_changed=false`.
-
-N12 frozen workflow blob remains:
+The frozen N12 workflow blob remains:
 
 `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
 
-The N12 historical fixture checker reverses only the two authorized `perfil-base.tex` path strings before historical hash comparison. Manifest and certified hashes remain unchanged.
+#### Final pre-merge certification
 
-### Migration blockers resolved
+The replacement PR #148 pointed to the same certified content SHA as draft PR #147, because #147 could not be transitioned from draft through the automation connector. The final merge candidate was `22e9e4e872aca8aca16b143b249d62fe516c3359`.
 
-Across PR CI cycles A2 found and fixed only bounded migration consumers:
+Exact-head receipts before merge:
 
-- secondary guide-trace paths;
-- profile fixture frontmatter paths;
-- exact human currency markers in `VIGENCIA-NORMATIVA.md`;
-- container Git `safe.directory`;
-- bounded N12 historical-content path bridge;
-- CAPES-guidance path;
-- stale generated/reference-image paths, compiled-guide example paths and CTAN asset/binary-policy paths;
-- stale-path scanner false positive where `figuras/` occurred inside `imprimirlistadefiguras/before` — solved by boundary-aware matching, not a broad exemption.
+- Source Contract #408 — SUCCESS;
+- Reference Preview #62 — SUCCESS;
+- PR LaTeX preflight #1073 — SUCCESS;
+- Gate T #1074 — SUCCESS, including Windows literal Times New Roman/Arial certification and Overleaf proxy;
+- Distribution #241 — SUCCESS;
+- `behind_by=0` before merge;
+- frozen N12 workflow blob preserved.
 
-No finding required a public-API, article-runtime or normative-contract change.
+PR #148 was squash-merged, producing `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`. PR #147 was closed without merge and is retained only as historical draft context.
 
-## Complete implementation-head certification
+#### Post-merge certification
 
-Implementation head certified before this receipt-only documentation sync:
+The resulting `main` was re-certified successfully:
 
-`6e2528458e4cf92dda970ecad122054fe9d51f78`
+- Normative Source Contract #410 — SUCCESS;
+- LaTeX preflight push #1076 — SUCCESS;
+- exact Gate T #1077 — SUCCESS;
+- Distribution preflight #242 — SUCCESS;
+- PDF Validator #136 — SUCCESS.
 
-Receipts:
+Therefore all A2 closure requirements are satisfied. No B2R-A2 implementation work remains.
 
-- Normative Source Contract **#402 — SUCCESS**;
-- Reference PDF Preview **#56 — SUCCESS**;
-- PR LaTeX preflight **#1066 — SUCCESS**;
-- exact Gate T **#1067 — SUCCESS**, including:
-  - Overleaf stable proxy;
-  - Windows literal Times New Roman/Arial build;
-  - independent literal-font identity/Unicode/embedding/PDF-A certification;
-  - reference + PDF/A;
-  - 12-profile matrix + 12 PDF/A;
-  - structure;
-  - objects/bibliography;
-  - post-textual;
-  - aggregate `latex-preflight` status;
-- Distribution preflight **#240 — SUCCESS**, including:
-  - Gate T prerequisite reuse;
-  - release preflight;
-  - release PDF/A-2b;
-  - deterministic release bundles;
-  - Overleaf import-bundle proxy;
-  - release-candidate artifact upload;
-  - aggregate `distribution-preflight` status.
+## Next executable action — N15-B2R-B
 
-`Publish GitHub Release` was correctly skipped because this was a certification branch push, not a release tag.
+Begin B2R-B on a fresh branch from certified `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`.
 
-Gate T was triggered without changing the candidate commit through `maintenance/v2.2.0-b2r-a2-gate-t`; Distribution through `release/v2.2.0-b2r-a2-dist`, both pointing exactly to `6e252845...`.
+B2R-B must proceed additively and in this order:
 
-## Final documentation-sync blocker and resolution
+1. create a machine-readable inventory of the current public API before changing it;
+2. classify setup keys, values, commands, environments, class entrypoints and upstream-owned surfaces;
+3. define canonical English names for project-owned public surfaces;
+4. preserve every supported Portuguese v2.x surface as a compatibility alias/wrapper;
+5. add an executable checker that prevents accidental removal of compatibility aliases or introduction of unreviewed public identifiers;
+6. add semantic/output equivalence fixtures for canonical-English versus Portuguese configuration;
+7. re-certify exact-head Source Contract, Reference Preview, full preflight, Gate T and Distribution before closing B2R-B.
 
-The first recertification of the receipt-only documentation head `ecaf551dd3e2fdb0d25cac12d2498b51147fa124` produced:
-
-- Source Contract #405 — SUCCESS;
-- Reference Preview #59 — SUCCESS;
-- LaTeX preflight #1070 — all runtime/layout/profile/reference/object/post-textual checks PASS, but `structure` failed on two documentation/ledger contract issues only.
-
-The #1070 `structure` failures were:
-
-1. repository audit: `docs/HANDOFF-V2.2.0.md` and `docs/B2R-NAMING-INVENTORY.md` lacked a final newline;
-2. N12 normative complement: the receipt-sync rewrite of `release/n15-b2r-a-naming-inventory.json` had simplified away machine-readable B2R compatibility fields that the frozen N12 checker intentionally consumes, beginning with A1 `public_api_changed=false`.
-
-Resolution in the current candidate:
-
-- both Markdown files end with a final newline;
-- the machine ledger restores the full B2R-A compatibility contract rather than weakening the checker: all five A1 invariants explicitly remain `false`; A2 change boundaries explicitly remain `false`; the A1 `module_renames` map and bounded A2 `n12_historical_content_rewrites` are restored; receipts and final-sync state remain recorded.
-
-No runtime, normative predicate/value/locator/authority, workflow or test expectation is changed by this resolution.
-
-## A2 closure criteria
-
-A2 is DONE only after all of these are true:
-
-1. current final documentation-sync PR head has live Source Contract, Reference Preview and full PR preflight green;
-2. the same final documentation-sync SHA has Gate T green, including Windows literal fonts and Overleaf;
-3. the same SHA has Distribution green;
-4. N12 workflow blob remains unchanged;
-5. no active stale A2 paths;
-6. institutional mark remains excluded from public bundles and reference-image hashes/licensing remain unchanged;
-7. PR is mergeable and `behind_by=0` immediately before merge;
-8. PR #147 is squash-merged;
-9. resulting `main` is fully re-certified;
-10. handoff/ledger are updated for the merged/re-certified state before B2R-B implementation begins.
-
-## Next executable action
-
-Treat the head created by this blocker-resolution sync as the **sole merge candidate**. Do not edit receipt documents again merely to copy its run numbers. Require live Source Contract + Reference Preview + full PR preflight on that SHA, then exact-head Gate T + Distribution using non-mutating certification refs. Recheck N12 blob, mergeability and `behind_by=0`; mark PR ready and squash-merge only if all are green. Re-certify resulting `main` before opening B2R-B implementation.
+Initial implementation target is `abntexto-ufc/core.def`, where `\ufcsetup` is currently Portuguese-centric. Inventory/checker creation must precede or accompany any alias implementation; do not begin scientific-article runtime in this phase.
 
 ## Later phases
-
-### N15-B2R-B
-
-Create a machine-readable public API inventory; introduce canonical English project-owned keys/values/commands/environments; preserve supported Portuguese API as v2.x aliases; prove semantic/output equivalence.
 
 ### N15-B2B
 
