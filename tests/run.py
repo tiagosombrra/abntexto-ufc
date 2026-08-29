@@ -34,7 +34,13 @@ class Result:
 
 
 CHECKS = (
-    Check("repository", "Repository audit", ("python3", "tests/v2-repository-audit.py")),
+    Check("public-api", "Public API contract", ("python3", "tests/checks/public_api_contract.py")),
+    Check(
+        "repository",
+        "Repository audit",
+        ("python3", "tests/v2-repository-audit.py"),
+        depends=("public-api",),
+    ),
     Check("validator-source", "PDF validator sources", ("python3", "tests/checks/validator_source.py")),
     Check("reference", "Reference document", ("sh", "tests/v2-reference-check.sh")),
     Check("reference-corpus", "Reference corpus", ("sh", "tests/v2-reference-corpus-check.sh"), depends=("reference",)),
