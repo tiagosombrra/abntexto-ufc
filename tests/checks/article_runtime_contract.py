@@ -98,6 +98,7 @@ def main() -> None:
     require("\\ProvideDocumentEnvironment" not in article, "B2B introduced a provided environment", errors)
     require("\\RenewDocumentCommand \\date" not in article, "B2B must not redefine the standard LaTeX date command", errors)
     require("\\AddToHook{cmd/date/" not in article, "B2B must not instrument the standard LaTeX date command with a generic command hook", errors)
+    require("\\cs_use:c" not in article, "B2B must use the supported expl3 dynamic-use interface", errors)
     require("\\ufc_article_base_print_" not in article, "B2B must not alias xparse print-command backends", errors)
     require(
         "\\cs_set_protected:Npn \\ufc_primary_section_break:" not in article,
@@ -146,7 +147,7 @@ def main() -> None:
         "\\RenewDocumentCommand \\ufcPrimarySectionBreak",
         "\\RenewDocumentCommand \\ufcPretextualBreak",
         "Data~de~submissão:",
-        "\\cs_use:c {@date}",
+        "\\use:c {@date}",
         "Data~de~aprovação:",
         "\\ufc_pretextual_heading:n {Resumo}",
         "\\ufc_pretextual_heading:n {Abstract}",
