@@ -2,9 +2,9 @@
 
 Updated: 2026-08-29
 
-B2R-A, B2R-B1, B2R-B2, B2R-B3 and B2R-B4 are closed. **The canonical-English/public-compatibility migration is technically DONE on certified `main` `a4f2660ef46826c7d61a7dc3d9de6554f6d6a825`.**
+B2R-A, B2R-B1, B2R-B2, B2R-B3 and B2R-B4 are closed. **The canonical-English/public-compatibility migration is fully DONE and re-certified on `main` `ce659b578b4fc9cc929af4aadc3e613df469ba77`.**
 
-This document is being synchronized through the bounded post-merge branch `docs/n15-b2r-b4-post-merge-sync`. N15-B2B scientific-article runtime starts only after that state-sync branch is exact-head certified, merged and the resulting `main` is re-certified.
+The bounded B4 post-merge state sync closed in PR #156. N15-B2B scientific-article runtime is now ACTIVE on `feat/n15-b2b-scientific-article-runtime`, created from that exact certified `main`.
 
 ## Machine contracts
 
@@ -14,7 +14,7 @@ This document is being synchronized through the bounded post-merge branch `docs/
 - completed B4 equivalence contract: `release/n15-b2r-b4-en-pt-equivalence.json`;
 - historical B2R-A/N12 evidence: `release/n15-b2r-a-naming-inventory.json`.
 
-Frozen identities used by B4:
+Frozen identities used by B4 and preserved by B2B:
 
 - B1: `c1f545e0e707822959db851a74d29f4068dff731`;
 - B2: `19df208fb59af5ea37556d962e5986a43094c7f5`;
@@ -22,7 +22,7 @@ Frozen identities used by B4:
 - public-API runtime: `7b61fe70dd85ed895140f846272e097e3ded72cf`;
 - N12 workflow: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-## Final live public inventory
+## Final B2R public inventory
 
 - setup keys: 67 compatibility + 65 canonical additions = **132**;
 - scoped setup values: 45 compatibility + 34 canonical additions = **79**;
@@ -30,7 +30,7 @@ Frozen identities used by B4:
 - UFC environments: 6 prior + 5 canonical additions = **11**;
 - extension hooks: **2**.
 
-Portuguese v2.x surfaces remain supported. `type=article` and its compatibility form remain reserved-only until N15-B2B.
+Portuguese v2.x surfaces remain supported. N15-B2B activates the previously reserved `type=article` / `tipo=artigo` pair in the isolated `articles.def` runtime module without rewriting the frozen B2R public-alias layer.
 
 ## Setup naming — B2 DONE
 
@@ -60,9 +60,9 @@ Canonical `\ufcsetup` keys use semantic English kebab-case while preserving comp
 | `glossario` | `glossary` |
 | `indice` | `index` |
 
-Canonical profile values are `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project` and `anonymized-research-project`. Canonical print values are `single-sided` and `double-sided`; boolean-style choices use `true`/`false`.
+Canonical B2R profile values are `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project` and `anonymized-research-project`. Canonical print values are `single-sided` and `double-sided`; boolean-style choices use `true`/`false`.
 
-The full key/value map remains frozen in the B2 machine contract.
+The full B2R key/value map remains frozen in the B2 machine contract. The scientific-article pair is a later N15-B2B runtime delta, not a rewrite of B2 evidence.
 
 ## Command naming — B3 DONE
 
@@ -151,14 +151,26 @@ Post-merge certification:
 - Source #443 — SUCCESS, run `33263191118`;
 - preflight push #1116 — SUCCESS, run `33263191096`;
 - Gate T #1117 — SUCCESS, run `33263196260`;
-- Distribution #249 — SUCCESS, run `33263191120`;
+- Distribution #249 — SUCCESS, run `33263191120`.
+
+### B4 state-sync closure
+
+PR #156 closed the bounded documentation transition. Its exact head `1a4b5feb5517dd820d010613b24d2fffd346d6e5` passed Source #444 (`33265851911`) and preflight #1118 (`33265851907`) with `behind_by=0`, then squash-merged to:
+
+`main` `ce659b578b4fc9cc929af4aadc3e613df469ba77`
+
+That exact resulting `main` was re-certified by:
+
+- Source #445 — SUCCESS, run `33266313000`;
+- preflight/Gate T #1119 — SUCCESS, run `33266312999`;
+- Distribution #250 — SUCCESS, run `33266313007`;
 - Overleaf stable proxy — SUCCESS;
 - Windows literal Times New Roman/Arial build/certification — SUCCESS;
 - reference/profile PDF/A-2b, objects/bibliography, post-textuals, structure and deterministic distribution — SUCCESS;
 - GitHub Release — correctly skipped because no tag exists.
 
-## Article boundary
+## Article boundary — N15-B2B ACTIVE
 
-B2R no longer blocks article support. The only remaining transition guard is the bounded documentation state-sync itself. After this sync is exact-head certified, merged and its resulting `main` is re-certified, N15-B2B may begin from that exact SHA.
+B2R no longer blocks article support. B2B starts from certified `main` `ce659b57...` and uses canonical engineering naming `articles.def` plus `type=article`, with additive Portuguese `tipo=artigo` compatibility.
 
-Article runtime must use canonical engineering naming (`articles.def`, `type=article`) and preserve additive Portuguese v2.x compatibility according to `docs/NAMING.md`.
+B2B is intentionally a later layered delta. It must not rewrite the frozen B2R ledgers or `public-api.def`, must not change the established 132/79/77/11/2 B2R baseline accounting, and must not regress thesis/dissertation/project profiles. Runtime evidence and B2B certification are tracked separately in `release/n15-b2b-article-runtime.json`; proof-state closure remains N15-B2C.
