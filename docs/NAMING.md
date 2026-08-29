@@ -68,7 +68,7 @@ Do not rename historical evidence merely for style consistency when the change w
 
 Canonical `\ufcsetup` keys introduced by B2R-B use lowercase English kebab-case.
 
-Representative target vocabulary:
+Reviewed target vocabulary includes:
 
 - `type`;
 - `print-mode`;
@@ -91,7 +91,7 @@ Representative target vocabulary:
 
 Existing Portuguese keys such as `tipo`, `impressao`, `capa`, `ficha-catalografica`, `brasao`, `fonte`, `codigo`, `autor`, `titulo`, `orientador` and `coorientador` remain compatibility surfaces throughout v2.x.
 
-B2R-A did **not** introduce these public API aliases; that belongs to B2R-B.
+B2R-B1 inventories this surface but does not activate English aliases. Runtime aliases begin only in B2R-B2 after B1 is merged and the resulting `main` is re-certified.
 
 ## 5. Setup values
 
@@ -102,7 +102,7 @@ Canonical booleans use:
 
 Existing `sim` / `nao` remain compatibility values where currently supported.
 
-Canonical profile values should be internationally explicit. Current target vocabulary includes:
+Canonical profile values use internationally explicit names:
 
 - `undergraduate-capstone`;
 - `specialization-capstone`;
@@ -110,13 +110,17 @@ Canonical profile values should be internationally explicit. Current target voca
 - `doctoral-thesis`;
 - `research-project`;
 - `anonymized-research-project`;
-- `article`.
+- future `article`.
 
 Do not choose an English term whose international academic meaning is materially ambiguous when a more precise name exists.
 
+Setup-value identity in the machine contract is `(setup key, value)`, not a global value string. This is required because values such as `true`, `false`, `sim` and `nao` legitimately occur under multiple independent keys.
+
+`print-mode` values and several optional-module values remain review-required until their semantics are explicitly approved. Do not infer canonical values merely from literal translation.
+
 ## 6. UFC-owned commands and environments
 
-New canonical UFC-owned public commands use a consistent `\ufc...` prefix and English semantics. Representative future style:
+New canonical UFC-owned public commands use a consistent `\ufc...` prefix and English semantics. Reviewed representative direction includes:
 
 - `\ufcPrintCover`;
 - `\ufcPrintTitlePage`;
@@ -131,9 +135,12 @@ Before renaming or aliasing a command, classify it as:
 1. canonical `abntexto-ufc` API;
 2. Portuguese compatibility API;
 3. upstream compatibility API;
-4. private/internal implementation.
+4. project-exported helper;
+5. private/internal implementation.
 
 No public rename is justified by spelling alone. Environment aliases must preserve semantics and nesting behavior.
+
+B2R-B1 inventories 47 exported commands, 6 UFC environments and 2 explicit extension hooks. It does not automatically promote every exported helper into long-term public API.
 
 ## 7. Other engineering identifiers
 
@@ -159,6 +166,8 @@ Do not translate merely for consistency:
 
 Portuguese leaf filenames that directly describe academic content may also remain when translating them would create unrelated churn. A2 therefore keeps names such as `frontmatter/resumo.tex`, `backmatter/apendices/` and `backmatter/anexos/`.
 
+The deprecated `ufctex.cls` entrypoint is intentionally retained as a compatibility wrapper. B2R-B1 records that identity explicitly; the canonical-identity scanner permits only the exact ledger fields required to document that wrapper, not arbitrary new `ufctex` identities.
+
 ## 9. Repository normalization boundary
 
 B2R-A normalized package/example paths only when every active consumer was updated and regression evidence remained green.
@@ -182,21 +191,22 @@ CTAN has its own smaller install/document surface and is not required to contain
 
 ## 10. Public API contract requirement
 
-B2R-B must create a machine-readable public API inventory before or together with canonical public aliases.
+B2R-B uses `release/n15-b2r-b-public-api.json` as its active machine-readable contract. The historical `release/n15-b2r-a-naming-inventory.json` remains N12-sensitive B2R-A evidence and is not the active B2R-B ledger.
 
-The contract must inventory at least:
+The B2R-B contract inventories at least:
 
 - setup keys;
 - setup/profile values;
-- public commands;
+- public/exported commands;
 - public environments;
+- extension hooks;
 - class entrypoints;
 - canonical names;
 - compatibility aliases;
 - upstream compatibility surfaces;
 - deprecation state, if any.
 
-A checker must prevent accidental removal of supported aliases and introduction of unreviewed public engineering identifiers outside this policy.
+`tests/checks/public_api_contract.py` must prevent accidental removal of supported aliases/baseline surfaces and introduction of unreviewed project-owned public engineering identifiers. The checker is integrated through the existing `tests/run.py` validation graph without editing the frozen N12 workflow.
 
 ## 11. Behavioral equivalence
 
@@ -213,7 +223,9 @@ Evidence must cover as applicable:
 - Windows literal-font certification;
 - absence of unintended normative-predicate changes.
 
-For B2R-B, representative canonical-English and Portuguese-compatibility documents must additionally demonstrate equivalent semantics/output.
+For completed B2R-B, representative canonical-English and Portuguese-compatibility documents must additionally demonstrate equivalent semantics/output.
+
+B2R-B1 itself changes no runtime API behavior; therefore its evidence is a baseline-contract/checker certification rather than EN/PT equivalence evidence.
 
 ## 12. Article timing
 
@@ -229,19 +241,29 @@ Therefore:
 
 The article normative contract already exists from B2A; only runtime/evidence remain future work.
 
+B2R-B1 records `type=article` / `tipo=artigo` as `reserved_not_live`; this reservation must not be interpreted as runtime support.
+
 ## 13. Current migration state
 
 ### B2R-A1 — DONE
 
-Internal package-module paths were normalized by PR #146 and the resulting main `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1` was re-certified.
+Internal package-module paths were normalized by PR #146 and the resulting `main` `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1` was re-certified.
 
 ### B2R-A2 — DONE
 
-PR #148 replaced draft PR #147 over the same certified content SHA, was squash-merged, and produced `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`. The resulting main passed Source Contract #410, LaTeX preflight #1076, Gate T #1077, Distribution #242 and PDF Validator #136. A2 changed repository/distribution paths only and preserved the frozen N12 workflow boundary.
+PR #148 replaced draft PR #147 over the same certified content SHA, was squash-merged, and produced `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`. That runtime/layout head passed Source #410, preflight #1076, Gate T #1077, Distribution #242 and PDF Validator #136. The later documentation-sync closure advanced the certified B2R base to `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-### B2R-B — READY
+### B2R-B1 — CERTIFIED ON PR #150, DOC-SYNC GATE PENDING
 
-Public English API + Portuguese compatibility aliases are the next executable naming phase. Work begins from certified `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`, starting with the machine-readable API inventory and executable contract checker before or together with alias implementation.
+PR #150 establishes the machine-readable pre-migration API baseline and executable checker without adding English runtime aliases.
+
+Technical head `1438d85e22a787ce7ab92bcd7abd06e259afa05d` passed Normative Source Contract #414 and LaTeX preflight #1082. The preflight covered structure, reference/PDF-A, 12 profiles/PDF-A, objects/bibliography and post-textuals.
+
+The prior #1081 diagnostic run proved the new checker itself passed with 67 setup keys, 45 scoped values, 47 exported commands, 6 environments and 2 extension hooks. Its only failure was an older identity scanner that had not classified the ledger's required documentation of the deprecated `ufctex` wrapper; the correction is intentionally restricted to the exact wrapper name/file ledger lines.
+
+### B2R-B2 — NEXT AFTER B1 MERGE/RECERTIFICATION
+
+B2R-B2 introduces additive English setup keys/values, forwarding to certified Portuguese behavior wherever possible. Detailed academic metadata, print-mode values, optional-module values and remaining public commands/environments stay review-required until their semantics are explicitly resolved.
 
 ## 14. Mandatory documentation synchronization
 
@@ -251,11 +273,13 @@ After a material naming decision, CI-discovered blocker, blocker fix, PR merge/c
 
 - `docs/HANDOFF-V2.2.0.md`;
 - `docs/B2R-NAMING-INVENTORY.md`;
-- `release/n15-b2r-a-naming-inventory.json`;
+- `release/n15-b2r-b-public-api.json` while B2R-B is active;
 - this policy when the naming decision itself changes;
 - README/normative human docs when user-visible paths or described implementation change.
 
-A B2R subphase cannot be marked DONE while those documents disagree with live Git/PR/CI state.
+`release/n15-b2r-a-naming-inventory.json` remains a historical/N12-sensitive ledger and must not be simplified or rewritten merely to reflect B2R-B state.
+
+A B2R subphase cannot be marked DONE while its active documents disagree with live Git/PR/CI state.
 
 ## 15. Review checklist for a new identifier
 
