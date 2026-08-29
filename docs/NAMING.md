@@ -66,7 +66,7 @@ Do not rename historical evidence merely for style consistency when the change w
 
 ## 4. Public setup keys
 
-Canonical future `\ufcsetup` keys use lowercase English kebab-case.
+Canonical `\ufcsetup` keys introduced by B2R-B use lowercase English kebab-case.
 
 Representative target vocabulary:
 
@@ -91,7 +91,7 @@ Representative target vocabulary:
 
 Existing Portuguese keys such as `tipo`, `impressao`, `capa`, `ficha-catalografica`, `brasao`, `fonte`, `codigo`, `autor`, `titulo`, `orientador` and `coorientador` remain compatibility surfaces throughout v2.x.
 
-B2R-A does **not** introduce these public API aliases; that belongs to B2R-B.
+B2R-A did **not** introduce these public API aliases; that belongs to B2R-B.
 
 ## 5. Setup values
 
@@ -161,7 +161,7 @@ Portuguese leaf filenames that directly describe academic content may also remai
 
 ## 9. Repository normalization boundary
 
-B2R-A may normalize package/example paths only when every active consumer is updated and regression evidence remains green.
+B2R-A normalized package/example paths only when every active consumer was updated and regression evidence remained green.
 
 The policy permits source and distributed layouts to differ when user experience requires it. For **B2R-A2, the reviewed decision is more specific**: repository source, complete template bundle and Overleaf bundle use the same canonical content layout, with `main.tex` at the bundle/import root.
 
@@ -235,13 +235,13 @@ The article normative contract already exists from B2A; only runtime/evidence re
 
 Internal package-module paths were normalized by PR #146 and the resulting main `eefa06598b9c99e0e27e70ecad0d2bbe99aa70b1` was re-certified.
 
-### B2R-A2 — ACTIVE
+### B2R-A2 — DONE
 
-PR #147 implements the canonical user/distribution layout above. The first exact-head preflight exposed two stale path consumers in the reference-guide trace map and profile fixture; both were corrected. A2 remains open until one exact head passes Source Contract, reference/PDF-A, full preflight, Gate T and Distribution, is `behind_by=0`, has synchronized documentation, is squash-merged and the resulting main is re-certified.
+PR #148 replaced draft PR #147 over the same certified content SHA, was squash-merged, and produced `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`. The resulting main passed Source Contract #410, LaTeX preflight #1076, Gate T #1077, Distribution #242 and PDF Validator #136. A2 changed repository/distribution paths only and preserved the frozen N12 workflow boundary.
 
-### B2R-B — BLOCKED
+### B2R-B — READY
 
-Public English API + Portuguese compatibility aliases begin only from A2-certified main.
+Public English API + Portuguese compatibility aliases are the next executable naming phase. Work begins from certified `main` `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`, starting with the machine-readable API inventory and executable contract checker before or together with alias implementation.
 
 ## 14. Mandatory documentation synchronization
 
