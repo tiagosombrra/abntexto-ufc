@@ -282,7 +282,7 @@
       { \typeout{N15-B4-STATE|coat-of-arms=true} }
       { \typeout{N15-B4-STATE|coat-of-arms=false} }
     \prop_map_inline:Nn \g_ufc_metadata_prop
-      { \typeout{N15-B4-STATE|meta:#1=\tl_to_str:n {#2}} }
+      { \typeout{N15-B4-STATE|meta:##1=\tl_to_str:n {##2}} }
     \typeout{N15-B4-STATE|font=\tl_to_str:V \g_ufc_font_family_tl}
     \bool_if:NTF \g_ufc_font_strict_bool
       { \typeout{N15-B4-STATE|strict-font=true} }
