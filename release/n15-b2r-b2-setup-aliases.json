@@ -2,7 +2,7 @@
   "schema_version": 1,
   "phase": "N15-B2R-B2",
   "reviewed_at": "2026-08-29",
-  "status": "IMPLEMENTATION_ACTIVE",
+  "status": "PR_CERTIFICATION_PENDING",
   "base_contract": {
     "path": "release/n15-b2r-b-public-api.json",
     "blob_sha": "c1f545e0e707822959db851a74d29f4068dff731",
