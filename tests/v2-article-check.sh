@@ -11,10 +11,18 @@ cleanup_job() {
     "$job".out "$job".toc "$job".run.xml "$job".pdf
 }
 
+cleanup_aux() {
+  job="$1"
+  rm -f "$job".tex "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".log \
+    "$job".out "$job".toc "$job".run.xml
+}
+
 cleanup() {
-  cleanup_job "$canonical_pdflatex"
-  cleanup_job "artigo-canonical-lualatex"
-  cleanup_job "$legacy_pdflatex"
+  # Preserve the generated PDFs for the host-side veraPDF gate that follows
+  # the TeX Live container step in latex-preflight.yml.
+  cleanup_aux "$canonical_pdflatex"
+  cleanup_aux "artigo-canonical-lualatex"
+  cleanup_aux "$legacy_pdflatex"
   rm -f /tmp/artigo-*.txt /tmp/artigo-*.html /tmp/artigo-*.info /tmp/abntexto-ufc-v2-article.log
 }
 trap cleanup EXIT INT TERM
@@ -50,7 +58,6 @@ for engine in pdflatex lualatex; do
     exit 1
   }
 
-  sh tests/v2-pdfa-check.sh "$job.pdf"
   sh tests/v2-font-embedding-check.sh "$job.pdf"
   pdfinfo "$job.pdf" > "/tmp/$job.info"
   pdftotext -layout "$job.pdf" "/tmp/$job.txt"
@@ -73,7 +80,7 @@ if [ -n "$warnings" ]; then
   exit 1
 fi
 
-sh tests/v2-pdfa-check.sh "$legacy_pdflatex.pdf"
+sh tests/v2-font-embedding-check.sh "$legacy_pdflatex.pdf"
 pdftotext -layout "$legacy_pdflatex.pdf" "/tmp/$legacy_pdflatex.txt"
 pdftotext -bbox "$legacy_pdflatex.pdf" "/tmp/$legacy_pdflatex.html"
 
@@ -230,7 +237,8 @@ if abs(intro_marker['xMin'] - expected_indent_x) > 8.0:
 print(
     'N15-EVIDENCE article-runtime '
     f'pages={len(article_pages)} a4=true margins=3-3-2-2 pagination=first-page-upper-right '
-    'single-sided=true section-flow=continuous canonical-pt-equivalent=true pdfa=true status=PASS'
+    'single-sided=true section-flow=continuous canonical-pt-equivalent=true '
+    'pdfa=deferred-to-host-gate status=PASS'
 )
 PY
 
