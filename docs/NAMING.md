@@ -2,7 +2,7 @@
 
 Updated: 2026-08-29
 
-Status: **active engineering policy for N15-B2R and later v2.x work. B2 setup naming is closed; B3 command/environment naming is next.**
+Status: **active engineering policy for N15-B2R and later v2.x work. B2 setup naming is closed; B3 command/environment naming is ACTIVE.**
 
 ## 1. Core principle
 
@@ -15,10 +15,10 @@ Do not translate merely for engineering consistency: official UFC/ABNT wording, 
 Public API migration in v2.x is additive.
 
 - supported Portuguese setup keys and values remain accepted;
-- supported Portuguese project-owned commands/environments remain aliases or wrappers when a canonical English equivalent is introduced;
-- upstream commands are not renamed for local style consistency;
+- supported Portuguese project-owned commands/environments remain supported when canonical English wrappers are introduced;
+- upstream commands are not renamed merely for local style consistency;
 - extension hooks remain stable unless an explicit API decision changes them;
-- supported public-surface removal requires a deprecation/removal policy and normally a major-version boundary.
+- supported public-surface removal requires an explicit deprecation/removal policy and normally a major-version boundary.
 
 Canonical English API may become the documented default without invalidating Portuguese compatibility input.
 
@@ -36,45 +36,37 @@ Portuguese academic leaf filenames may remain where translation would create unr
 
 ## 4. Public setup keys — B2 DONE
 
-Canonical `\ufcsetup` keys use lowercase English kebab-case.
+Canonical `\ufcsetup` keys use lowercase English kebab-case. B2R-B2 established the complete reviewed canonical setup vocabulary while preserving all B1 compatibility keys.
 
-B2R-B2 established the complete reviewed canonical setup-key vocabulary while preserving all B1 compatibility keys. The implementation is centralized in `abntexto-ufc/public-api.def` and forwards to certified runtime behavior.
-
-Final B2 setup inventory:
+Final setup inventory:
 
 - 67 legacy keys;
 - 65 canonical keys added;
 - 132 live setup keys total;
-- 45 legacy enumerated `(key,value)` identities;
-- 34 canonical enumerated identities added;
+- 45 legacy scoped values;
+- 34 canonical scoped values added;
 - 79 scoped setup-value identities total.
 
-Canonical semantic groups include document/profile, institution, academic programs/degrees, project metadata, work metadata, advisors, epigraph, committee/examiners, optional modules, assets and pagination.
-
-`volume` is retained as-is because it is already an appropriate canonical English identifier. A compatibility-only project coat-of-arms key does not receive a second canonical synonym.
+`volume` remains canonical as-is. The project-specific coat-of-arms compatibility key remains compatibility-only and does not gain a duplicate English synonym.
 
 ## 5. Semantic metadata naming
 
-Canonical metadata names describe the role consumed by runtime rather than mechanically translate Portuguese tokens.
-
-Important distinctions include:
+Canonical metadata names describe runtime role rather than mechanically translate Portuguese tokens. Important distinctions include:
 
 - `masters-graduate-program` versus `masters-program`;
 - `masters-degree-field` versus `masters-concentration`;
 - analogous doctorate fields;
 - `project-nature-statement` as the complete nature statement override;
-- `advisor-feminine-label` and `coadvisor-feminine-label` as grammatical output switches;
+- `advisor-feminine-label` / `coadvisor-feminine-label` as grammatical output switches;
 - `examiner-N` / `examiner-N-unit` / `examiner-N-institution` for committee members.
 
-If a new metadata field cannot be named with this semantic precision, treat it as an API design decision rather than a cosmetic translation.
+If a new metadata field cannot be named with this precision, treat it as an API-design decision rather than a cosmetic translation.
 
 ## 6. Setup values — B2 DONE
 
-Setup-value identity is `(setup key, value)`, not a global value token.
+Setup-value identity is `(setup key, value)`, not a global value token. Canonical booleans are `true` / `false`; existing `sim` / `nao` remain compatibility forms where already public.
 
-Canonical booleans are `true` / `false`; existing `sim` / `nao` remain compatibility forms where already supported.
-
-Canonical document profile values:
+Canonical document profile values are:
 
 - `undergraduate-capstone`;
 - `specialization-capstone`;
@@ -84,90 +76,118 @@ Canonical document profile values:
 - `anonymized-research-project`;
 - future reserved `article`.
 
-Other B2 canonical values:
+Other canonical values include `single-sided` / `double-sided`, `auto`, `times` / `arial`, `native`, `none`, and exact external package identifiers such as `tabularray`, `listings`, `minted`, `algpseudocodex`, `glossaries` and `imakeidx`.
 
-- `print-mode`: `single-sided`, `double-sided`;
-- `cover`: `auto`, `true`, `false`;
-- `font`: `times`, `arial`;
-- `tables`: `native`, `tabularray`;
-- `code`: `none`, `listings`, `minted`;
-- `algorithms`: `none`, `algpseudocodex`;
-- `glossary`: `none`, `glossaries`;
-- `index`: `none`, `imakeidx`.
+## 7. UFC-owned commands — B3 policy
 
-External package/runtime identifiers remain unchanged when they identify concrete integrations.
+Canonical project-owned public commands use `\ufc` followed by an English UpperCamel semantic name. B3 does not rename already-canonical commands or exported helpers merely for cosmetic consistency.
 
-## 7. UFC-owned commands and environments — B3 policy
+The B1 47-command surface has complete B3 disposition:
 
-New canonical project-owned public commands use the `\ufc...` prefix and English semantics.
+- 7 canonical project commands retained;
+- 9 exported English helpers retained;
+- upstream `\keywords` retained as upstream API;
+- 25 Portuguese compatibility commands mapped to canonical wrappers;
+- 5 project public commands with non-canonical names mapped to canonical wrappers.
 
-B2R-B3 owns command/environment aliases. It must **not** mechanically create canonical aliases for all 47 exported commands or all 6 UFC environments. Each exported surface must first be classified as one of:
+B3 therefore adds exactly 30 canonical commands without removing any existing command.
 
-- canonical project API;
-- Portuguese compatibility API;
-- upstream compatibility API;
-- exported helper;
-- extension hook;
-- internal implementation accidentally exported.
+Important semantic rules:
 
-Only supported project API receives new canonical wrappers. Existing Portuguese public surfaces remain supported during v2.x.
+- `\ufcPrintAbstract` wraps the existing English-language abstract behavior and preserves the B1-approved target;
+- `\ufcPrintSummary` wraps the Portuguese primary-language `Resumo`; it must not collapse into `\ufcPrintAbstract`;
+- `\ufcSummaryKeywords` wraps `Palavras-chave`; upstream `\keywords` remains the English-label command;
+- `\ufcPrintEpigraph[short|long]` forwards to legacy `[curta|longa]`; Portuguese values remain available through the compatibility command;
+- `\ufcPrintListOfTextTables` denotes the distinct UFC/ABNT `quadro` list and must not collapse into statistical tables or charts;
+- `\ufcAddBibliographyResource` is the canonical bibliography-resource command;
+- `\ufcSource` and `\ufcNote` replace Portuguese project-owned labels in canonical usage;
+- `\ufcInputListing` and `\ufcInputMinted` are conditional and must exist only when their corresponding certified legacy module surface exists.
 
-Known reviewed command directions from the B1 inventory include cover, title page, approval page, catalog card, references and bibliography-resource behavior. Summary/abstract naming requires explicit language-role validation before implementation so vernacular and foreign-language summary semantics are not conflated.
+The canonical wrappers live in `abntexto-ufc/public-api.def`; behavior ownership remains in the certified legacy/runtime modules during v2.x.
 
-Environment wrappers must preserve semantics, optional arguments and nesting behavior.
+## 8. UFC-owned environments — B3 policy
 
-## 8. Other engineering identifiers
+Canonical environment names are lowercase `ufc` plus an English semantic name. B3 mappings are:
+
+- `ufcalineas` → `ufclettereditems`;
+- `ufcsubalineas` → `ufcdashedsubitems`;
+- `ufclistadefinicoes` → `ufcdefinitionlist`;
+- `ufcobjeto` → `ufcobject`;
+- `ufcalgoritmo` → `ufcalgorithm`.
+
+`ufclisting` is already English and remains canonical as-is.
+
+Environment wrappers must preserve nesting and argument behavior. Canonical signatures are:
+
+- `ufclettereditems`: no arguments;
+- `ufcdashedsubitems`: no arguments;
+- `ufcdefinitionlist`: optional width, default `3cm`;
+- `ufcobject`: optional placement, default `\placepos`;
+- `ufcalgorithm`: optional placement and line-number frequency, defaults `\placepos` and `1`;
+- `ufclisting`: optional placement and conditional availability under `code=listings`.
+
+## 9. Exported helpers and upstream surfaces
+
+Do not create aliases merely to make every exported symbol look uniform. Retained project helpers include page-break, heading, TOC and optional-module setup helpers already expressed in English. Upstream compatibility surfaces such as `\keywords`, `\textapud`, `\usechapters` and `\printlegendbox` keep their upstream identities.
+
+Extension hooks remain `\ufcsectionhook` and `\ufcobjectlegendhook` throughout B3.
+
+## 10. Other engineering identifiers
 
 Python uses English `snake_case`; constants use `UPPER_SNAKE_CASE` where appropriate. New source comments and developer diagnostics are English. New JSON engineering fields use English `snake_case` unless schema/history requires stability.
 
 Historical schema fields are not renamed casually; migration requires compatibility or explicit schema-version handling.
 
-## 9. Names intentionally preserved
+## 11. Names intentionally preserved
 
 Preserve official UFC units, resolutions, guides and acts; official ABNT titles; bibliographic titles; quoted normative text; Portuguese academic examples; stable normative evidence IDs; release/audit IDs already consumed by ledgers; external/upstream commands; and `normativa/` during B2R.
 
-The deprecated legacy class entrypoint remains a compatibility wrapper. Its exact identity is confined to structured machine inventory and explicitly exempt historical/compatibility surfaces; arbitrary narrative occurrences remain disallowed.
+The deprecated legacy class entrypoint remains a compatibility wrapper. Its exact identity stays confined to structured machine inventory and explicitly exempt historical/compatibility surfaces; arbitrary narrative occurrences remain disallowed.
 
-## 10. Public API contracts
+## 12. Public API contracts
 
 B2R-B uses layered machine evidence:
 
 - `release/n15-b2r-b-public-api.json` — frozen B1 baseline;
-- `release/n15-b2r-b2-setup-aliases.json` — B2 additive setup delta/closure evidence;
-- `release/n15-b2r-a-naming-inventory.json` — historical B2R-A/N12-sensitive evidence.
+- `release/n15-b2r-b2-setup-aliases.json` — frozen B2 additive setup delta;
+- `release/n15-b2r-b3-command-environment-aliases.json` — active B3 command/environment delta;
+- `release/n15-b2r-a-naming-inventory.json` — historical B2R-A/N12 evidence.
 
-Certified B1 baseline blob:
+Frozen blobs used by B3:
 
-`c1f545e0e707822959db851a74d29f4068dff731`
+- B1: `c1f545e0e707822959db851a74d29f4068dff731`;
+- B2: `19df208fb59af5ea37556d962e5986a43094c7f5`;
+- N12 workflow: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-Frozen N12 workflow blob:
+`tests/checks/public_api_contract.py` validates B1+B2+B3 in layers. B3 may expand commands/environments only; setup surfaces and hooks remain exact.
 
-`aca746454be3ce2e650bd2f50d70b2f42d7d31e1`
-
-`tests/checks/public_api_contract.py` validates B1+B2 exact setup sets, mapping coverage, command/environment/hook stability, disabled article runtime and frozen workflow boundaries.
-
-## 11. Behavioral equivalence
+## 13. Behavioral equivalence
 
 Naming work must not change document semantics or formatting merely because identifiers change.
 
-B2R-B2 verifies semantic setup forwarding with `tests/normativa/public-api-aliases.tex` and `tests/v2-public-api-alias-check.sh`; all 65 canonical setup keys are exercised and asserted against existing runtime state.
+B2 validates setup forwarding through `tests/normativa/public-api-aliases.tex` and `tests/v2-public-api-alias-check.sh`.
 
-B2R-B4 owns complete paired canonical-English/Portuguese semantic and rendered-output equivalence across profiles and representative documents. That gate must cover structure, PDF/A, reference output, objects/bibliography, post-textuals, Overleaf, deterministic distribution and Windows literal-font certification.
+B3 validates command/environment presence and conditional activation through:
 
-## 12. Article timing
+- `tests/normativa/public-api-command-environment-aliases.tex`;
+- `tests/v2-public-api-command-environment-check.sh`.
+
+B2R-B4 owns complete paired Portuguese/canonical semantic and rendered-output equivalence across profiles and representative documents. That later gate must cover structure, PDF/A, reference output, objects/bibliography, post-textuals, Overleaf, deterministic distribution and Windows literal-font certification.
+
+## 14. Article timing
 
 Scientific-article runtime is delayed until B2R-B closes and the resulting `main` is re-certified.
 
 Therefore:
 
-- do not create a temporary Portuguese article module;
+- no temporary Portuguese article module;
 - eventual runtime module is canonical `articles.def`;
-- canonical surface is reserved as `type=article`;
+- canonical surface remains reserved as `type=article`;
 - Portuguese compatibility form remains reserved;
 - reservation is not runtime support;
 - article behavior should use centralized profile capabilities or equivalent policy rather than scattered language-dependent conditionals.
 
-## 13. Current migration state
+## 15. Current migration state
 
 ### B2R-A1 — DONE
 
@@ -179,30 +199,32 @@ User/example/distribution engineering layout normalized by PR #148 plus state-sy
 
 ### B2R-B1 — DONE
 
-PR #150 established the baseline/checker. PR #151 closed documentation synchronization and produced certified B2 base `1a3731575f9fe06a7f7d9a132f5152998edc6cee`.
+PR #150 established the API baseline/checker; PR #151 closed its state sync.
 
-### B2R-B2 — DONE IMPLEMENTATION
+### B2R-B2 — DONE
 
-PR #152 was exact-head certified and squash-merged. Resulting certified implementation main:
+PR #152 implemented canonical setup aliases; PR #153 closed the bounded state sync. Certified B3 base:
 
-`f6ba39bcbe50c324f6ab5f1856595cfcf7f8f0f9`
+`cb0df822401a926c4c5987f904b29f5898fb1775`
 
-Receipts:
+Certification:
 
-- Source #427 — SUCCESS, run `33247641697`;
-- preflight/Gate T #1097 — SUCCESS, run `33247641696`;
-- Distribution #246 — SUCCESS, run `33247641702`;
+- Source #429 — SUCCESS, run `33249228729`;
+- preflight/Gate T #1100 — SUCCESS, run `33249228669`;
+- Distribution #247 — SUCCESS, run `33249228670`;
 - Overleaf and Windows literal-font build/certification — SUCCESS.
 
-Current bounded state-sync branch: `docs/n15-b2r-b2-post-merge-sync`.
+### B2R-B3 — ACTIVE
 
-After this state-sync is merged and its resulting `main` is certified once, B2 is closed without another receipt-only PR.
+Branch: `refactor/n15-b2r-b3-command-environment-aliases`.
 
-### B2R-B3 — NEXT
+Machine contract, wrappers, checker extension and command/environment smoke evidence are implemented. The next gate is exact-head PR certification.
 
-Create `refactor/n15-b2r-b3-command-environment-aliases` from the exact certified main produced after the bounded B2 state sync. First action is classification of the 47 exported commands and 6 UFC environments; implementation follows the reviewed classification.
+### B2R-B4 — BLOCKED BY B3
 
-## 14. Mandatory documentation synchronization
+B4 begins only from the re-certified main produced by B3 closure.
+
+## 16. Mandatory documentation synchronization
 
 After a material naming decision, CI-discovered blocker/fix, PR merge/certification or next-action change, synchronize as applicable:
 
@@ -212,12 +234,12 @@ After a material naming decision, CI-discovered blocker/fix, PR merge/certificat
 - this policy when naming decisions/state change;
 - user/release documentation when described public surfaces change.
 
-Historical B2R-A and frozen B1 evidence are not rewritten merely to record later phase state.
+Historical B2R-A and frozen B1/B2 evidence are not rewritten merely to record later phase state.
 
-A state-sync may be bounded to prevent an infinite receipt loop: once a state-sync PR itself is merged and its resulting main is re-certified, the next implementation branch becomes the place to record continuation state.
+A bounded state sync may be used after B3 merge if final receipts require it, but no unbounded receipt loop is allowed.
 
-## 15. Review checklist
+## 17. Review checklist
 
-Before adding an engineering-facing identifier, verify ownership, semantic precision, naming convention, duplication, compatibility needs, schema/API impact, preservation of official wording and documentation-sync requirements.
+Before adding an engineering-facing identifier, verify ownership, semantic precision, naming convention, duplication, compatibility needs, schema/API impact, optional-module lifetime, preservation of official wording and documentation-sync requirements.
 
 If any point is unclear, treat the identifier as an API/design decision rather than a cosmetic rename.

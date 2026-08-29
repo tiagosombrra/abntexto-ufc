@@ -1,0 +1,106 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = doctoral-thesis,
+  cover = false,
+  coat-of-arms = false,
+  strict-font = false,
+  code = listings,
+  algorithms = algpseudocodex,
+  glossary = none,
+  index = none
+}
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_bthree_fail:n #1
+  { \PackageError{abntexto-ufc-b3-test}{#1}{} }
+
+\cs_new_protected:Npn \ufc_bthree_assert_command:N #1
+  {
+    \cs_if_exist:NF #1
+      { \ufc_bthree_fail:n {Missing~canonical~command~\token_to_str:N #1} }
+  }
+
+\cs_new_protected:Npn \ufc_bthree_assert_environment:n #1
+  {
+    \cs_if_exist:cF {#1}
+      { \ufc_bthree_fail:n {Missing~canonical~environment~#1} }
+    \cs_if_exist:cF {end#1}
+      { \ufc_bthree_fail:n {Missing~canonical~environment~end~#1} }
+  }
+
+\clist_map_inline:nn
+  {
+    ufcPrintAbstract,
+    ufcPrintAcknowledgments,
+    ufcPrintCover,
+    ufcPrintDedication,
+    ufcPrintEpigraph,
+    ufcPrintErrata,
+    ufcPrintCatalogCard,
+    ufcPrintApprovalPage,
+    ufcPrintTitlePage,
+    ufcPrintGlossary,
+    ufcPrintIndex,
+    ufcPrintListOfAbbreviationsAndAcronyms,
+    ufcPrintListOfAlgorithms,
+    ufcPrintListOfCodeListings,
+    ufcPrintListOfFigures,
+    ufcPrintListOfCharts,
+    ufcPrintListOfIllustrations,
+    ufcPrintListOfTextTables,
+    ufcPrintListOfSymbols,
+    ufcPrintListOfTables,
+    ufcPrintReferences,
+    ufcPrintSummary,
+    ufcPrintTableOfContents,
+    ufcSummaryKeywords,
+    ufcAddBibliographyResource,
+    ufcSource,
+    ufcListEntry,
+    ufcNote
+  }
+  {
+    \cs_if_exist:cF {#1}
+      { \ufc_bthree_fail:n {Missing~canonical~command~#1} }
+  }
+
+\ufc_bthree_assert_environment:n {ufclettereditems}
+\ufc_bthree_assert_environment:n {ufcdashedsubitems}
+\ufc_bthree_assert_environment:n {ufcdefinitionlist}
+\ufc_bthree_assert_environment:n {ufcobject}
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\ExplSyntaxOn
+\ufc_bthree_assert_command:N \ufcInputListing
+\cs_if_exist:NT \ufcInputMinted
+  { \ufc_bthree_fail:n {Minted~alias~must~not~be~live~under~code=listings} }
+\ufc_bthree_assert_environment:n {ufcalgorithm}
+\ufc_bthree_assert_environment:n {ufclisting}
+\ExplSyntaxOff
+
+\begin{ufclettereditems}
+  \item Canonical lettered item.
+  \begin{ufcdashedsubitems}
+    \item Canonical dashed subitem.
+  \end{ufcdashedsubitems}
+\end{ufclettereditems}
+
+\begin{ufcdefinitionlist}
+  \ufcListEntry{Term}{Canonical definition-list entry.}
+\end{ufcdefinitionlist}
+
+\ufcSummaryKeywords{alpha; beta}
+
+\typeout{N15-EVIDENCE B2R-B3-COMMAND-ENV PASS}
+\end{document}

@@ -121,6 +121,145 @@
     initial-page .meta:n = { pagina-inicial = {#1} }
   }
 
+% B2R-B3 canonical commands forward to the certified v2.x public behavior.
+% The legacy commands remain the behavior owners during v2.x.
+\NewDocumentCommand \ufcPrintCover { }
+  { \imprimircapa }
+
+\NewDocumentCommand \ufcPrintTitlePage { O{} }
+  { \imprimirfolhaderosto[#1] }
+
+\NewDocumentCommand \ufcPrintApprovalPage { }
+  { \imprimirfolhadeaprovacao }
+
+\NewDocumentCommand \ufcPrintCatalogCard { m }
+  { \imprimirfichacatalografica{#1} }
+
+\NewDocumentCommand \ufcPrintDedication { m }
+  { \imprimirdedicatoria{#1} }
+
+\NewDocumentCommand \ufcPrintAcknowledgments { m }
+  { \imprimiragradecimentos{#1} }
+
+\NewDocumentCommand \ufcPrintEpigraph { O{short} m }
+  {
+    \str_case:nnF {#1}
+      {
+        {short} { \imprimirepigrafe[curta]{#2} }
+        {long}  { \imprimirepigrafe[longa]{#2} }
+      }
+      {
+        \ClassError{abntexto-ufc}
+          {Invalid~canonical~epigraph~type~'#1'}
+          {Use~\string\ufcPrintEpigraph[short]~or~\string\ufcPrintEpigraph[long].}
+      }
+  }
+
+\NewDocumentCommand \ufcPrintErrata { m }
+  { \imprimirerrata{#1} }
+
+\NewDocumentCommand \ufcSummaryKeywords { m }
+  { \palavraschave{#1} }
+
+\NewDocumentCommand \ufcPrintSummary { m }
+  { \imprimirresumo{#1} }
+
+\NewDocumentCommand \ufcPrintAbstract { m }
+  { \imprimirabstract{#1} }
+
+\NewDocumentCommand \ufcPrintListOfIllustrations { }
+  { \imprimirlistadeilustracoes }
+
+\NewDocumentCommand \ufcPrintListOfFigures { }
+  { \imprimirlistadefiguras }
+
+\NewDocumentCommand \ufcPrintListOfTables { }
+  { \imprimirlistadetabelas }
+
+\NewDocumentCommand \ufcPrintListOfTextTables { }
+  { \imprimirlistadequadros }
+
+\NewDocumentCommand \ufcPrintListOfCharts { }
+  { \imprimirlistadegraficos }
+
+\NewDocumentCommand \ufcPrintListOfCodeListings { }
+  { \imprimirlistadecodigos }
+
+\NewDocumentCommand \ufcPrintListOfAlgorithms { }
+  { \imprimirlistadealgoritmos }
+
+\NewDocumentCommand \ufcPrintListOfAbbreviationsAndAcronyms { m }
+  { \imprimirlistadeabreviaturasesiglas{#1} }
+
+\NewDocumentCommand \ufcPrintListOfSymbols { m }
+  { \imprimirlistadesimbolos{#1} }
+
+\NewDocumentCommand \ufcListEntry { m m }
+  { \ufclistaentrada{#1}{#2} }
+
+\NewDocumentCommand \ufcPrintTableOfContents { }
+  { \imprimirsumario }
+
+\NewDocumentCommand \ufcSource { m }
+  { \ufcfonte{#1} }
+
+\NewDocumentCommand \ufcNote { m }
+  { \ufcnota{#1} }
+
+\NewDocumentCommand \ufcAddBibliographyResource { m }
+  { \ufcbibliografia{#1} }
+
+\NewDocumentCommand \ufcPrintReferences { }
+  { \imprimirreferencias }
+
+\NewDocumentCommand \ufcPrintGlossary { }
+  { \imprimirglossario }
+
+\NewDocumentCommand \ufcPrintIndex { }
+  { \imprimirindice }
+
+% Canonical environment aliases preserve the certified legacy environment bodies.
+\NewDocumentEnvironment { ufclettereditems } { }
+  { \begin{ufcalineas} }
+  { \end{ufcalineas} }
+
+\NewDocumentEnvironment { ufcdashedsubitems } { }
+  { \begin{ufcsubalineas} }
+  { \end{ufcsubalineas} }
+
+\NewDocumentEnvironment { ufcdefinitionlist } { O{3cm} }
+  { \begin{ufclistadefinicoes}[#1] }
+  { \end{ufclistadefinicoes} }
+
+\NewDocumentEnvironment { ufcobject } { O{\placepos} }
+  { \begin{ufcobjeto}[#1] }
+  { \end{ufcobjeto} }
+
+% Optional-module aliases are activated only when their certified legacy surface exists.
+\cs_new_protected:Npn \ufc_public_api_setup_optional_aliases:
+  {
+    \cs_if_exist:NT \ufcinputlisting
+      {
+        \NewDocumentCommand \ufcInputListing { O{} m }
+          { \ufcinputlisting[##1]{##2} }
+      }
+
+    \cs_if_exist:NT \ufcinputminted
+      {
+        \NewDocumentCommand \ufcInputMinted { O{\placepos} O{} m m }
+          { \ufcinputminted[##1][##2]{##3}{##4} }
+      }
+
+    \cs_if_exist:cT { ufcalgoritmo }
+      {
+        \NewDocumentEnvironment { ufcalgorithm } { O{\placepos} O{1} }
+          { \begin{ufcalgoritmo}[##1][##2] }
+          { \end{ufcalgoritmo} }
+      }
+  }
+
+\AtBeginDocument{\ufc_public_api_setup_optional_aliases:}
+
 \ExplSyntaxOff
 
 \endinput
