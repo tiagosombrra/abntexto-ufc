@@ -20,7 +20,9 @@ build_mode() {
   job="$2"
 
   cleanup_job "$job"
-  sed "s/@UFC_API_MODE@/$mode/g" "$fixture" > "$job.tex"
+  sed -e "s/@UFC_API_MODE@/$mode/g" \
+      -e "s#tests/fixtures/exemplo.py#tests/fixtures/public-api-equivalence-example.py#g" \
+      "$fixture" > "$job.tex"
 
   echo "Validando equivalência da API pública: mode=$mode engine=$engine..."
   make filename="$job" ENGINE="$engine" compile > "/tmp/$job-build.log" 2>&1 || {
