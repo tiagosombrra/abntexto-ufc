@@ -84,16 +84,7 @@ Setup-value identity in the machine contract is `(setup key, value)`, not a glob
 
 New canonical project-owned public commands use the `\ufc...` prefix and English semantics.
 
-Reviewed command direction includes:
-
-- `\ufcPrintCover`;
-- `\ufcPrintTitlePage`;
-- `\ufcPrintApprovalPage`;
-- `\ufcPrintCatalogCard`;
-- `\ufcPrintReferences`;
-- `\ufcAddBibliographyResource`.
-
-A canonical abstract command remains a semantic design decision because the current vernacular and foreign-language summary surfaces must not be conflated accidentally.
+Reviewed command direction currently recorded in the machine inventory includes cover, title-page, approval-page, catalog-card, references and bibliography-resource surfaces. Any abstract/summary canonicalization must still be semantically validated before implementation so vernacular and foreign-language summary behavior is not conflated.
 
 Before adding an alias, classify the existing surface as canonical project API, Portuguese compatibility API, upstream compatibility API, exported helper or internal implementation. Environment aliases must preserve semantics and nesting behavior.
 
@@ -115,16 +106,7 @@ The deprecated legacy class entrypoint remains a compatibility wrapper. Its exac
 
 `release/n15-b2r-b-public-api.json` is the active B2R-B machine contract. `release/n15-b2r-a-naming-inventory.json` remains historical N12-sensitive B2R-A evidence.
 
-The active contract inventories:
-
-- class entrypoints;
-- setup keys and enumerated values;
-- exported commands;
-- UFC environments;
-- extension hooks;
-- canonical mappings already reviewed;
-- compatibility/upstream classifications;
-- reserved future surfaces.
+The active contract inventories class entrypoints, setup keys/values, exported commands, UFC environments, extension hooks, reviewed canonical mappings, compatibility/upstream classifications and reserved future surfaces.
 
 `tests/checks/public_api_contract.py` prevents accidental removal and unreviewed additions and verifies the frozen N12 workflow boundary. It is transitively enforced through `tests/run.py` without changing `.github/workflows/latex-preflight.yml`.
 
@@ -159,7 +141,7 @@ Internal module paths normalized by PR #146 and re-certified.
 
 User/example/distribution-facing engineering layout normalized by PR #148 plus its state-sync closure. Certified B2R-B1 base: `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-### B2R-B1 — MERGED; POST-MERGE DISTRIBUTION PENDING
+### B2R-B1 — DONE
 
 PR #150 was squash-merged from exact head `6d51593e1a167ae657c8dd019f913dc947c34250` to `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
 
@@ -168,17 +150,18 @@ Final PR-head certification:
 - Source #422 — SUCCESS;
 - preflight #1090 — SUCCESS.
 
-Post-merge certification already green:
+Post-merge certification:
 
 - Source #423 — SUCCESS;
 - preflight push #1091 — SUCCESS;
-- Gate T #1092 — SUCCESS, including Overleaf and Windows literal-font build/certification.
+- Gate T #1092 — SUCCESS, including Overleaf and Windows literal-font build/certification;
+- Distribution #244 — SUCCESS, including release PDF/A, deterministic bundles, Overleaf import proxy and aggregate distribution-preflight.
 
-Distribution #244 is the only remaining post-merge receipt at this checkpoint; its Gate T prerequisite is already SUCCESS.
+B2R-B1 is therefore closed technically. The current documentation state-sync PR must be merged/re-certified before B2R-B2 implementation begins.
 
-### B2R-B2 — BLOCKED UNTIL STATE-SYNC RE-CERTIFICATION
+### B2R-B2 — NEXT AFTER STATE-SYNC
 
-B2R-B2 introduces additive canonical-English setup keys/values, forwarding to certified Portuguese behavior wherever possible. Detailed metadata, print-mode values, optional-module values and remaining commands/environments remain review-required until explicitly resolved.
+B2R-B2 introduces additive canonical-English setup keys/values, forwarding to certified Portuguese behavior wherever possible. Detailed metadata, print-mode values, optional-module values and remaining commands/environments stay review-required until explicitly resolved.
 
 ## 13. Mandatory documentation synchronization
 
