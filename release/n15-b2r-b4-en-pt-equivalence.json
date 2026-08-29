@@ -61,6 +61,22 @@
       }
     }
   },
+  "active_pr": {
+    "pull_request": 155,
+    "branch": "refactor/n15-b2r-b4-en-pt-equivalence",
+    "latest_technical_candidate_before_documentation_sync": "eee967e12a926de647a40aff2a846fc0a8ff155d",
+    "technical_candidate_behind_by": 0,
+    "technical_candidate_source": {"run_number": 439, "run_id": 33262341143, "conclusion": "SUCCESS"},
+    "technical_candidate_preflight": {"run_number": 1112, "run_id": 33262341220, "role": "diagnostic-before-final-documentation-sync"},
+    "known_fixture_fixes": [
+      "rename private TeX helpers from invalid digit-bearing control sequences to BFour helpers",
+      "correct nested expl3 property-map callback parameters",
+      "correct the remaining BFourSummaryKeywords fixture reference",
+      "isolate listings proof with an ASCII-only B4 Python fixture without modifying the shared UTF-8 fixture"
+    ],
+    "runtime_divergence_observed": false,
+    "final_exact_head_certification_required": true
+  },
   "policy": {
     "migration": "additive",
     "supported_portuguese_v2x_removal_allowed": false,
@@ -83,7 +99,7 @@
   "equivalence_contract": {
     "setup_forwarding": {
       "canonical_key_mappings": 65,
-      "retained_same-name_keys": ["volume"],
+      "retained_same_name_keys": ["volume"],
       "canonical_value_mappings": 45,
       "require_exact_forwarding_to_certified_portuguese_behavior": true
     },
@@ -96,7 +112,7 @@
     },
     "environment_forwarding": {
       "canonical_wrappers": 5,
-      "retained_same-name_environments": ["ufclisting"],
+      "retained_same_name_environments": ["ufclisting"],
       "require_begin_end_forwarding_to_declared_legacy_environment": true
     },
     "paired_runtime": {
@@ -113,6 +129,7 @@
     "contract_checker": "tests/checks/public_api_equivalence_contract.py",
     "paired_fixture": "tests/normativa/public-api-equivalence.tex",
     "paired_summary_fixture": "tests/fixtures/public-api-equivalence-summary.tex",
+    "paired_listing_fixture": "tests/fixtures/public-api-equivalence-example.py",
     "paired_runner": "tests/v2-public-api-equivalence-check.sh",
     "frozen_n12_workflow_blob": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
     "article_runtime": false
