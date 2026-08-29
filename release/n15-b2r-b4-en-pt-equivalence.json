@@ -2,7 +2,7 @@
   "schema_version": 1,
   "phase": "N15-B2R-B4",
   "reviewed_at": "2026-08-29",
-  "status": "IMPLEMENTATION_ACTIVE",
+  "status": "PR_CERTIFICATION_PENDING",
   "base_main_sha": "92f17418dfeee4d2d45456912af9f8c399457cc1",
   "base_contracts": {
     "b1": {
