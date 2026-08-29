@@ -1,0 +1,171 @@
+\documentclass{abntexto-ufc}
+
+% Exercise every canonical-English setup key with a side-effect-safe value.
+\ufcsetup{
+  type = doctoral-thesis,
+  print-mode = double-sided,
+  cover = false,
+  catalog-card = true,
+  coat-of-arms = false,
+  institution = {InstitutionX},
+  institution-acronym = {AcronymX},
+  center = {CenterX},
+  department = {DepartmentX},
+  undergraduate-program = {UndergraduateProgramX},
+  undergraduate-degree = {UndergraduateDegreeX},
+  specialization-program = {SpecializationProgramX},
+  masters-graduate-program = {MastersGraduateProgramX},
+  masters-program = {MastersProgramX},
+  masters-degree-field = {MastersDegreeFieldX},
+  masters-concentration = {MastersConcentrationX},
+  doctoral-graduate-program = {DoctoralGraduateProgramX},
+  doctoral-program = {DoctoralProgramX},
+  doctoral-degree-field = {DoctoralDegreeFieldX},
+  doctoral-concentration = {DoctoralConcentrationX},
+  project-program = {ProjectProgramX},
+  project-type = {ProjectTypeX},
+  submission-entity = {SubmissionEntityX},
+  project-nature-statement = {ProjectNatureX},
+  project-identifier = {ProjectIdentifierX},
+  author = {AuthorX},
+  title = {TitleX},
+  subtitle = {SubtitleX},
+  title-variant = {TitleVariantX},
+  year = {2026},
+  location = {LocationX},
+  approval-date = {ApprovalDateX},
+  advisor = {AdvisorX},
+  advisor-institution = {AdvisorInstitutionX},
+  advisor-unit = {AdvisorUnitX},
+  advisor-feminine-label = true,
+  coadvisor = {CoadvisorX},
+  coadvisor-institution = {CoadvisorInstitutionX},
+  coadvisor-unit = {CoadvisorUnitX},
+  coadvisor-feminine-label = false,
+  epigraph-author = {EpigraphAuthorX},
+  examiner-2 = {Examiner2X},
+  examiner-2-unit = {Examiner2UnitX},
+  examiner-2-institution = {Examiner2InstitutionX},
+  examiner-3 = {Examiner3X},
+  examiner-3-unit = {Examiner3UnitX},
+  examiner-3-institution = {Examiner3InstitutionX},
+  examiner-4 = {Examiner4X},
+  examiner-4-unit = {Examiner4UnitX},
+  examiner-4-institution = {Examiner4InstitutionX},
+  examiner-5 = {Examiner5X},
+  examiner-5-unit = {Examiner5UnitX},
+  examiner-5-institution = {Examiner5InstitutionX},
+  examiner-6 = {Examiner6X},
+  examiner-6-unit = {Examiner6UnitX},
+  examiner-6-institution = {Examiner6InstitutionX},
+  font = times,
+  strict-font = false,
+  tables = native,
+  code = none,
+  algorithms = none,
+  glossary = none,
+  index = none,
+  coat-of-arms-file = {assets/test-coat.png},
+  initial-page = 17
+}
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_test_fail:n #1
+  { \PackageError{abntexto-ufc-test}{#1}{} }
+
+\cs_new_protected:Npn \ufc_test_assert_tl:Nn #1#2
+  {
+    \str_if_eq:VnF #1 {#2}
+      { \ufc_test_fail:n {Token~list~mismatch:~#2} }
+  }
+
+\cs_new_protected:Npn \ufc_test_assert_meta:nn #1#2
+  {
+    \str_if_eq:eeF { \ufcMeta{#1} } {#2}
+      { \ufc_test_fail:n {Metadata~mismatch:~#1} }
+  }
+
+\cs_new_protected:Npn \ufc_test_assert_int:Nn #1#2
+  {
+    \int_compare:nNnF { \int_use:N #1 } = {#2}
+      { \ufc_test_fail:n {Integer~mismatch:~#2} }
+  }
+
+\ufc_test_assert_tl:Nn \g_ufc_document_type_tl {tese}
+\ufc_test_assert_tl:Nn \g_ufc_print_mode_tl {frente-verso}
+\ufc_test_assert_tl:Nn \g_ufc_cover_mode_tl {nao}
+\bool_if:NF \g_ufc_catalog_card_bool
+  { \ufc_test_fail:n {Catalog~card~alias~did~not~enable~the~legacy~boolean} }
+\bool_if:NT \g_ufc_coat_of_arms_bool
+  { \ufc_test_fail:n {Coat-of-arms~alias~did~not~disable~the~legacy~boolean} }
+
+\ufc_test_assert_meta:nn {ies} {InstitutionX}
+\ufc_test_assert_meta:nn {sigla} {AcronymX}
+\ufc_test_assert_meta:nn {centro} {CenterX}
+\ufc_test_assert_meta:nn {departamento} {DepartmentX}
+\ufc_test_assert_meta:nn {curso-graduacao} {UndergraduateProgramX}
+\ufc_test_assert_meta:nn {habilitacao} {UndergraduateDegreeX}
+\ufc_test_assert_meta:nn {curso-especializacao} {SpecializationProgramX}
+\ufc_test_assert_meta:nn {programa-mestrado} {MastersGraduateProgramX}
+\ufc_test_assert_meta:nn {nome-mestrado} {MastersProgramX}
+\ufc_test_assert_meta:nn {titulo-mestre} {MastersDegreeFieldX}
+\ufc_test_assert_meta:nn {area-mestrado} {MastersConcentrationX}
+\ufc_test_assert_meta:nn {programa-doutorado} {DoctoralGraduateProgramX}
+\ufc_test_assert_meta:nn {nome-doutorado} {DoctoralProgramX}
+\ufc_test_assert_meta:nn {titulo-doutor} {DoctoralDegreeFieldX}
+\ufc_test_assert_meta:nn {area-doutorado} {DoctoralConcentrationX}
+\ufc_test_assert_meta:nn {programa-projeto} {ProjectProgramX}
+\ufc_test_assert_meta:nn {tipo-projeto} {ProjectTypeX}
+\ufc_test_assert_meta:nn {entidade-submissao} {SubmissionEntityX}
+\ufc_test_assert_meta:nn {natureza-projeto} {ProjectNatureX}
+\ufc_test_assert_meta:nn {identificador-projeto} {ProjectIdentifierX}
+\ufc_test_assert_meta:nn {autor} {AuthorX}
+\ufc_test_assert_meta:nn {titulo} {TitleX}
+\ufc_test_assert_meta:nn {subtitulo} {SubtitleX}
+\ufc_test_assert_meta:nn {variacao-titulo} {TitleVariantX}
+\ufc_test_assert_meta:nn {ano} {2026}
+\ufc_test_assert_meta:nn {local} {LocationX}
+\ufc_test_assert_meta:nn {data-aprovacao} {ApprovalDateX}
+\ufc_test_assert_meta:nn {orientador} {AdvisorX}
+\ufc_test_assert_meta:nn {orientador-ies} {AdvisorInstitutionX}
+\ufc_test_assert_meta:nn {orientador-unidade} {AdvisorUnitX}
+\ufc_test_assert_meta:nn {orientador-feminino} {sim}
+\ufc_test_assert_meta:nn {coorientador} {CoadvisorX}
+\ufc_test_assert_meta:nn {coorientador-ies} {CoadvisorInstitutionX}
+\ufc_test_assert_meta:nn {coorientador-unidade} {CoadvisorUnitX}
+\ufc_test_assert_meta:nn {coorientador-feminino} {nao}
+\ufc_test_assert_meta:nn {autor-epigrafe} {EpigraphAuthorX}
+\ufc_test_assert_meta:nn {banca-2} {Examiner2X}
+\ufc_test_assert_meta:nn {banca-2-unidade} {Examiner2UnitX}
+\ufc_test_assert_meta:nn {banca-2-ies} {Examiner2InstitutionX}
+\ufc_test_assert_meta:nn {banca-3} {Examiner3X}
+\ufc_test_assert_meta:nn {banca-3-unidade} {Examiner3UnitX}
+\ufc_test_assert_meta:nn {banca-3-ies} {Examiner3InstitutionX}
+\ufc_test_assert_meta:nn {banca-4} {Examiner4X}
+\ufc_test_assert_meta:nn {banca-4-unidade} {Examiner4UnitX}
+\ufc_test_assert_meta:nn {banca-4-ies} {Examiner4InstitutionX}
+\ufc_test_assert_meta:nn {banca-5} {Examiner5X}
+\ufc_test_assert_meta:nn {banca-5-unidade} {Examiner5UnitX}
+\ufc_test_assert_meta:nn {banca-5-ies} {Examiner5InstitutionX}
+\ufc_test_assert_meta:nn {banca-6} {Examiner6X}
+\ufc_test_assert_meta:nn {banca-6-unidade} {Examiner6UnitX}
+\ufc_test_assert_meta:nn {banca-6-ies} {Examiner6InstitutionX}
+
+\ufc_test_assert_tl:Nn \g_ufc_font_family_tl {times}
+\bool_if:NT \g_ufc_font_strict_bool
+  { \ufc_test_fail:n {Strict-font~alias~did~not~disable~the~legacy~boolean} }
+\ufc_test_assert_tl:Nn \g_ufc_table_module_tl {nativo}
+\ufc_test_assert_tl:Nn \g_ufc_code_module_tl {nenhum}
+\ufc_test_assert_tl:Nn \g_ufc_algorithm_module_tl {nenhum}
+\ufc_test_assert_tl:Nn \g_ufc_glossary_module_tl {nenhum}
+\ufc_test_assert_tl:Nn \g_ufc_index_module_tl {nenhum}
+\ufc_test_assert_tl:Nn \g_ufc_coat_of_arms_file_tl {assets/test-coat.png}
+\ufc_test_assert_int:Nn \g_ufc_initial_page_int {17}
+
+\ExplSyntaxOff
+
+\begin{document}
+Canonical setup aliases validated.
+\typeout{N15-EVIDENCE B2R-B2-ALIASES PASS}
+\end{document}
