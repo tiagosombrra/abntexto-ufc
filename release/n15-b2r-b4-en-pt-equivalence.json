@@ -82,7 +82,7 @@
   },
   "equivalence_contract": {
     "setup_forwarding": {
-      "canonical_key_mappings": 64,
+      "canonical_key_mappings": 65,
       "retained_same-name_keys": ["volume"],
       "canonical_value_mappings": 45,
       "require_exact_forwarding_to_certified_portuguese_behavior": true
