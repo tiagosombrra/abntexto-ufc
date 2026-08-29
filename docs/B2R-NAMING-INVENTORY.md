@@ -2,11 +2,11 @@
 
 Updated: 2026-08-28
 
-Current merged B2R-B1 runtime/checker head: `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
+Certified B2R-B1 runtime/checker head: `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
 
 Current state-sync branch: `docs/n15-b2r-b1-post-merge-sync`.
 
-B2R-A is closed. B2R-B is active. **B2R-B1 is merged via PR #150 and has Source/preflight/Gate T post-merge certification green; Distribution #244 is the only remaining post-merge receipt at this checkpoint.**
+B2R-A is closed. B2R-B is active. **B2R-B1 is DONE, merged via PR #150 and fully post-merge re-certified.**
 
 This document is the human companion to the active machine ledger `release/n15-b2r-b-public-api.json`. `release/n15-b2r-a-naming-inventory.json` remains historical B2R-A/N12-sensitive evidence and must not be repurposed.
 
@@ -22,9 +22,7 @@ The certified base used to start B2R-B1 was:
 
 `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-## B2R-B1 — PUBLIC API BASELINE/CHECKER
-
-Status: **MERGED; POST-MERGE DISTRIBUTION RECEIPT PENDING**.
+## B2R-B1 — PUBLIC API BASELINE/CHECKER — DONE
 
 PR #150 was squash-merged from exact head:
 
@@ -53,13 +51,7 @@ The future `type=article` / `tipo=artigo` pair remains reserved-only; article ru
 
 ### Checker contract
 
-`tests/checks/public_api_contract.py` fails on:
-
-- missing baseline keys/values/commands/environments/hooks;
-- duplicate inventory identities;
-- supported-surface removal;
-- unreviewed new project-owned public identifiers;
-- drift of the frozen N12 workflow blob.
+`tests/checks/public_api_contract.py` fails on missing baseline surfaces, duplicate inventory identities, supported-surface removal, unreviewed new project-owned public identifiers and drift of the frozen N12 workflow blob.
 
 `tests/run.py` makes `public-api` a dependency of `repository`, so the frozen workflow transitively enforces the contract.
 
@@ -71,34 +63,29 @@ The B1 diagnostic cycle proved the new checker was correct and exposed a separat
 
 Exact PR head `6d51593e1a167ae657c8dd019f913dc947c34250` passed:
 
-- Normative Source Contract #422 — SUCCESS;
-- LaTeX preflight #1090 — SUCCESS;
+- Normative Source Contract #422 — SUCCESS, run `33226621307`;
+- LaTeX preflight #1090 — SUCCESS, run `33226621382`;
 - `behind_by=0` before merge;
 - frozen N12 workflow preserved.
 
 ### Post-merge certification
 
-Resulting `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4` has passed:
+Resulting `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4` passed:
 
-- Normative Source Contract #423 — SUCCESS;
-- LaTeX preflight push #1091 — SUCCESS;
-- exact/dispatched Gate T #1092 — SUCCESS;
-- reference document + PDF/A — SUCCESS;
-- complete 12-profile matrix + PDF/A — SUCCESS;
-- structure/layout/fonts/pre-textuals/projects — SUCCESS;
-- objects/bibliography — SUCCESS;
-- post-textuals — SUCCESS;
-- Overleaf stable proxy — SUCCESS;
-- Windows literal Times New Roman/Arial build — SUCCESS;
-- literal font identity, Unicode extraction, embedding and PDF/A certification — SUCCESS.
+- Normative Source Contract #423 — SUCCESS, run `33227898818`;
+- LaTeX preflight push #1091 — SUCCESS, run `33227898801`;
+- exact/dispatched Gate T #1092 — SUCCESS, run `33227902517`;
+- Distribution #244 — SUCCESS, run `33227898819`.
 
-Distribution #244 remains in progress at this checkpoint; its Gate T prerequisite is already SUCCESS.
+Gate T covered structure/layout/fonts/pre-textuals/projects, reference/PDF-A, complete 12-profile matrix/PDF-A, objects/bibliography, post-textuals, Overleaf stable proxy, Windows literal Times New Roman/Arial build, literal font identity, Unicode extraction, embedding and PDF/A certification.
+
+Distribution #244 passed release preflight, release PDF/A-2b, deterministic bundles, Overleaf import proxy, candidate upload and the aggregate distribution-preflight. GitHub Release publication was correctly skipped because no tag exists.
 
 No B1 change affected public runtime semantics, the normative contract, formatting intent, pagination intent or article runtime.
 
 ## B2R-B2 — canonical English setup aliases
 
-B2R-B2 starts only after B1 state synchronization is merged and the resulting `main` is re-certified.
+B2R-B2 starts only after this B1 state synchronization is merged and its resulting `main` is re-certified.
 
 ### Reviewed canonical key direction
 
@@ -145,10 +132,8 @@ Distinct fields such as `programa-mestrado`, `nome-mestrado`, `titulo-mestre` an
 
 ## Next executable action
 
-1. Close Distribution #244 on `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
-2. Mark B2R-B1 DONE in all four active state documents.
-3. Open/certify/merge the state-sync PR.
-4. Re-certify the resulting `main`.
-5. Begin B2R-B2 from that exact certified commit.
-
-Scientific-article runtime remains blocked until the complete B2R-B migration closes and its resulting `main` is re-certified.
+1. Complete the four-file state-sync branch.
+2. Open and exact-head certify its PR.
+3. Squash-merge it and re-certify the resulting `main`.
+4. Create `refactor/n15-b2r-b2-setup-aliases` from that exact certified main.
+5. Begin additive setup aliases without scientific-article runtime.
