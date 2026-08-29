@@ -3,7 +3,7 @@
   "phase": "N15-B2R-B1",
   "reviewed_at": "2026-08-28",
   "base_main_sha": "3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b",
-  "status": "BASELINE_CONTRACT",
+  "status": "TECHNICALLY_CERTIFIED_DOC_SYNC_PENDING",
   "purpose": "Freeze the pre-B2R-B public/exported API surface before additive canonical-English aliases.",
   "policy": {
     "migration": "additive",
@@ -249,6 +249,39 @@
     "commands": 47,
     "environments": 6,
     "extension_hooks": 2
+  },
+  "certification": {
+    "pull_request": 150,
+    "technical_head_sha": "1438d85e22a787ce7ab92bcd7abd06e259afa05d",
+    "initial_diagnostic_head_sha": "d3f55442e22eced43784089c24b5423f092123f2",
+    "initial_diagnostic": {
+      "latex_preflight_run_number": 1081,
+      "public_api_checker_passed": true,
+      "failure_scope": "canonical identity scanner did not yet classify the required ledger documentation of the deprecated ufctex wrapper"
+    },
+    "technical_head_receipts": {
+      "normative_source_contract": {
+        "run_number": 414,
+        "run_id": 33225265663,
+        "conclusion": "SUCCESS"
+      },
+      "latex_preflight": {
+        "run_number": 1082,
+        "run_id": 33225265658,
+        "conclusion": "SUCCESS"
+      }
+    },
+    "public_api_evidence": {
+      "setup_keys": 67,
+      "setup_values": 45,
+      "commands": 47,
+      "environments": 6,
+      "extension_hooks": 2,
+      "value_identity": "setup-key/value",
+      "article_runtime": false,
+      "n12_blob": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"
+    },
+    "documentation_sync_required_before_merge": true
   },
   "checker_contract": {
     "exact_baseline_sets": true,
