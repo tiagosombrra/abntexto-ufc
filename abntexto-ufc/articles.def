@@ -27,7 +27,8 @@
 % new article profile.
 \cs_new_eq:NN \ufc_article_base_pretextual: \pretextual
 \cs_new_eq:NN \ufc_article_base_textual: \textual
-\cs_new_eq:NN \ufc_article_base_primary_section_break: \ufc_primary_section_break:
+\cs_new_eq:NN \ufc_article_base_primary_section_break_command: \ufcPrimarySectionBreak
+\cs_new_eq:NN \ufc_article_base_pretextual_break_command: \ufcPretextualBreak
 \cs_new_eq:NN \ufc_article_base_print_cover: \imprimircapa
 \cs_new_eq:NN \ufc_article_base_print_title_page: \imprimirfolhaderosto
 \cs_new_eq:NN \ufc_article_base_print_approval_page: \imprimirfolhadeaprovacao
@@ -72,11 +73,19 @@
       }
   }
 
-% Primary sections and article post-textual elements remain in continuous flow.
-\cs_set_protected:Npn \ufc_primary_section_break:
+% Layout internals remain owned by layout.def. Only its existing public break
+% commands are specialized here so article sections and post-textual elements
+% remain in continuous flow.
+\RenewDocumentCommand \ufcPrimarySectionBreak { }
   {
     \ufc_article_if:F
-      { \ufc_article_base_primary_section_break: }
+      { \ufc_article_base_primary_section_break_command: }
+  }
+
+\RenewDocumentCommand \ufcPretextualBreak { }
+  {
+    \ufc_article_if:F
+      { \ufc_article_base_pretextual_break_command: }
   }
 
 \cs_new_protected:Npn \ufc_article_require_metadata:n #1
@@ -126,8 +135,7 @@
     \begingroup
       \singlesp
       \setlength{\parindent}{0pt}
-      \justifying
-      \ufc_input_file:n {#1}
+      \justifying\ufc_input_file:n {#1}
       \par
     \endgroup
     \vspace{\baselineskip}
@@ -141,8 +149,7 @@
       \singlesp
       \ufc_pretextual_heading:n {Abstract}
       \setlength{\parindent}{0pt}
-      \justifying
-      \ufc_input_file:n {#1}
+      \justifying\ufc_input_file:n {#1}
       \par
     \endgroup
     \vspace{\baselineskip}
@@ -154,8 +161,7 @@
     \ufc_pretextual_heading:n {Agradecimentos}
     \begingroup
       \singlesp
-      \justifying
-      \ufc_input_file:n {#1}
+      \justifying\ufc_input_file:n {#1}
       \par
     \endgroup
   }
