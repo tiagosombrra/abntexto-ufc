@@ -2,230 +2,188 @@
 
 Updated: 2026-08-29
 
-B2R-A and B2R-B1 are closed. **B2R-B2 implementation is DONE and fully post-merge certified; only the bounded state-sync branch remains before B2R-B3 starts.**
+B2R-A, B2R-B1 and B2R-B2 are closed. **B2R-B3 is ACTIVE on `refactor/n15-b2r-b3-command-environment-aliases`.**
 
-Certified B2 implementation `main`:
+Certified B3 base:
 
-`f6ba39bcbe50c324f6ab5f1856595cfcf7f8f0f9`
-
-State-sync branch:
-
-`docs/n15-b2r-b2-post-merge-sync`
+`main` `cb0df822401a926c4c5987f904b29f5898fb1775`
 
 Machine contracts:
 
 - frozen B1 baseline: `release/n15-b2r-b-public-api.json`;
-- B2 additive delta: `release/n15-b2r-b2-setup-aliases.json`;
+- frozen B2 setup delta: `release/n15-b2r-b2-setup-aliases.json`;
+- active B3 command/environment delta: `release/n15-b2r-b3-command-environment-aliases.json`;
 - historical B2R-A/N12 evidence: `release/n15-b2r-a-naming-inventory.json`.
 
-Frozen N12 workflow blob:
+Frozen blobs:
 
-`aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
+- B1: `c1f545e0e707822959db851a74d29f4068dff731`;
+- B2: `19df208fb59af5ea37556d962e5986a43094c7f5`;
+- N12 workflow: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-## B2R-A — DONE
+## B2R-B2 — DONE
 
-B2R-A1 normalized internal package module filenames to English. B2R-A2 normalized repository/example/distribution engineering paths while preserving Portuguese academic leaf filenames where appropriate.
+B2 established the canonical setup vocabulary without removing Portuguese compatibility:
 
-## B2R-B1 — DONE
+- 67 legacy setup keys;
+- 65 canonical setup keys;
+- 132 setup keys total;
+- 45 legacy scoped values;
+- 34 canonical scoped values;
+- 79 scoped values total;
+- 47 commands;
+- 6 environments;
+- 2 hooks.
 
-PR #150 established the pre-migration public/exported API baseline and executable checker. PR #151 synchronized that result.
+PR #152 implemented B2; PR #153 was its bounded state sync. Final certified B2 base `cb0df822...` passed:
 
-B1 baseline:
+- Source #429 — SUCCESS, run `33249228729`;
+- preflight/Gate T #1100 — SUCCESS, run `33249228669`;
+- Distribution #247 — SUCCESS, run `33249228670`;
+- Overleaf and Windows literal-font certification — SUCCESS.
 
-- 2 class entrypoints;
-- 67 setup keys;
-- 45 enumerated setup values scoped by `(setup key, value)`;
-- 47 exported commands;
-- 6 UFC environments;
-- 2 explicit extension hooks.
+## B2R-B3 — command and environment aliases — ACTIVE
 
-Frozen B1 machine-ledger blob:
+### Scope rule
 
-`c1f545e0e707822959db851a74d29f4068dff731`
+B3 is additive and changes only canonical command/environment naming. It must not change:
 
-Certified B2 starting point after PR #151:
+- the 132 setup keys;
+- the 79 scoped setup values;
+- the 2 extension hooks;
+- normative/runtime behavior;
+- article runtime;
+- the frozen N12 workflow.
 
-`main` `1a3731575f9fe06a7f7d9a132f5152998edc6cee`
+All new wrappers live in `abntexto-ufc/public-api.def` and forward to certified v2.x behavior.
 
-with Source #425, preflight/Gate T #1094 and Distribution #245 all SUCCESS.
+### Command disposition
 
-## B2R-B2 — canonical English setup aliases — DONE IMPLEMENTATION
+The 47 B1 commands have complete disposition coverage:
 
-### Design rule
+- 7 already-canonical project commands are retained;
+- 9 exported English helpers are retained;
+- upstream `\keywords` is retained as upstream compatibility API;
+- 25 Portuguese compatibility commands receive English wrappers;
+- 5 project public commands still using Portuguese/lowercase names receive English wrappers.
 
-Canonical-English setup keys live in:
+B3 adds 30 commands, for 77 total.
 
-`abntexto-ufc/public-api.def`
+### Canonical command map
 
-The layer is loaded after existing runtime modules and forwards canonical input to certified Portuguese behavior. Existing Portuguese setup keys/values remain supported throughout v2.x.
-
-No command/environment alias and no article runtime were introduced in B2.
-
-### Final inventory counts
-
-- legacy setup keys: 67;
-- canonical setup keys added: 65;
-- total setup keys: 132;
-- legacy enumerated values: 45;
-- canonical enumerated values added: 34;
-- total enumerated `(key,value)` identities: 79;
-- exported commands: 47, unchanged;
-- environments: 6, unchanged;
-- extension hooks: 2, unchanged;
-- article runtime: false.
-
-`volume` is already an English identifier and remains canonical as-is. The project-specific coat-of-arms compatibility key remains compatibility-only.
-
-### Canonical setup-key map
-
-Core/profile and presentation:
-
-| Compatibility key | Canonical key |
+| Compatibility/current command | Canonical command |
 | --- | --- |
-| `tipo` | `type` |
-| `impressao` | `print-mode` |
-| `capa` | `cover` |
-| `ficha-catalografica` | `catalog-card` |
-| `brasao` | `coat-of-arms` |
-| `ies` | `institution` |
-| `sigla` | `institution-acronym` |
-| `centro` | `center` |
-| `departamento` | `department` |
-| `curso-graduacao` | `undergraduate-program` |
-| `habilitacao` | `undergraduate-degree` |
-| `curso-especializacao` | `specialization-program` |
-| `programa-mestrado` | `masters-graduate-program` |
-| `nome-mestrado` | `masters-program` |
-| `titulo-mestre` | `masters-degree-field` |
-| `area-mestrado` | `masters-concentration` |
-| `programa-doutorado` | `doctoral-graduate-program` |
-| `nome-doutorado` | `doctoral-program` |
-| `titulo-doutor` | `doctoral-degree-field` |
-| `area-doutorado` | `doctoral-concentration` |
-| `programa-projeto` | `project-program` |
-| `tipo-projeto` | `project-type` |
-| `entidade-submissao` | `submission-entity` |
-| `natureza-projeto` | `project-nature-statement` |
-| `identificador-projeto` | `project-identifier` |
-| `autor` | `author` |
-| `titulo` | `title` |
-| `subtitulo` | `subtitle` |
-| `variacao-titulo` | `title-variant` |
-| `volume` | `volume` |
-| `ano` | `year` |
-| `local` | `location` |
-| `data-aprovacao` | `approval-date` |
-| `orientador` | `advisor` |
-| `orientador-ies` | `advisor-institution` |
-| `orientador-unidade` | `advisor-unit` |
-| `orientador-feminino` | `advisor-feminine-label` |
-| `coorientador` | `coadvisor` |
-| `coorientador-ies` | `coadvisor-institution` |
-| `coorientador-unidade` | `coadvisor-unit` |
-| `coorientador-feminino` | `coadvisor-feminine-label` |
-| `autor-epigrafe` | `epigraph-author` |
-| `brasao-arquivo` | `coat-of-arms-file` |
-| `pagina-inicial` | `initial-page` |
+| `\imprimirabstract` | `\ufcPrintAbstract` |
+| `\imprimiragradecimentos` | `\ufcPrintAcknowledgments` |
+| `\imprimircapa` | `\ufcPrintCover` |
+| `\imprimirdedicatoria` | `\ufcPrintDedication` |
+| `\imprimirepigrafe` | `\ufcPrintEpigraph` |
+| `\imprimirerrata` | `\ufcPrintErrata` |
+| `\imprimirfichacatalografica` | `\ufcPrintCatalogCard` |
+| `\imprimirfolhadeaprovacao` | `\ufcPrintApprovalPage` |
+| `\imprimirfolhaderosto` | `\ufcPrintTitlePage` |
+| `\imprimirglossario` | `\ufcPrintGlossary` |
+| `\imprimirindice` | `\ufcPrintIndex` |
+| `\imprimirlistadeabreviaturasesiglas` | `\ufcPrintListOfAbbreviationsAndAcronyms` |
+| `\imprimirlistadealgoritmos` | `\ufcPrintListOfAlgorithms` |
+| `\imprimirlistadecodigos` | `\ufcPrintListOfCodeListings` |
+| `\imprimirlistadefiguras` | `\ufcPrintListOfFigures` |
+| `\imprimirlistadegraficos` | `\ufcPrintListOfCharts` |
+| `\imprimirlistadeilustracoes` | `\ufcPrintListOfIllustrations` |
+| `\imprimirlistadequadros` | `\ufcPrintListOfTextTables` |
+| `\imprimirlistadesimbolos` | `\ufcPrintListOfSymbols` |
+| `\imprimirlistadetabelas` | `\ufcPrintListOfTables` |
+| `\imprimirreferencias` | `\ufcPrintReferences` |
+| `\imprimirresumo` | `\ufcPrintSummary` |
+| `\imprimirsumario` | `\ufcPrintTableOfContents` |
+| `\palavraschave` | `\ufcSummaryKeywords` |
+| `\ufcbibliografia` | `\ufcAddBibliographyResource` |
+| `\ufcfonte` | `\ufcSource` |
+| `\ufcinputlisting` | `\ufcInputListing` |
+| `\ufcinputminted` | `\ufcInputMinted` |
+| `\ufclistaentrada` | `\ufcListEntry` |
+| `\ufcnota` | `\ufcNote` |
 
-Committee pattern:
+### Semantic command decisions
 
-- `banca-N` → `examiner-N`;
-- `banca-N-unidade` → `examiner-N-unit`;
-- `banca-N-ies` → `examiner-N-institution`;
-- supported `N`: 2 through 6.
+- `\ufcPrintAbstract` remains the B1-approved wrapper for the English-language `\imprimirabstract` behavior.
+- `\ufcPrintSummary` wraps `\imprimirresumo`; summary and abstract are deliberately distinct.
+- `\ufcSummaryKeywords` wraps Portuguese `Palavras-chave`; upstream `\keywords` remains unchanged for the English label.
+- `\ufcPrintEpigraph` uses canonical option values `short` / `long`, forwarding to legacy `curta` / `longa`.
+- `\ufcPrintListOfTextTables` is the English engineering name for the distinct UFC/ABNT `quadro` list; it must not collapse into statistical tables or charts.
+- Optional listing/minted commands remain conditional on their corresponding module surface.
 
-Optional modules:
+### Retained commands
 
-| Compatibility key | Canonical key |
+Already-canonical project API:
+
+- `\ufcsetup`, `\ufcDocumentType`, `\ufcPrintMode`, `\ufcMeta`;
+- `\ufcIfProjectTF`, `\ufcIfAnonymizedProjectTF`, `\ufcMathFontPolicy`.
+
+Exported helpers retained without cosmetic aliases:
+
+- `\ufcPrimarySectionBreak`, `\ufcPretextualBreak`, `\ufcRegisterUncountedPhysicalPage`;
+- `\ufcstarttoc`, `\ufcPretextualHeading`, `\ufcPosttextualHeading`;
+- `\ufcSetupGlossaryModule`, `\ufcIndexHeading`, `\ufcSetupIndexModule`.
+
+Upstream English API `\keywords` is retained as-is.
+
+### Environment map
+
+| Compatibility/current environment | Canonical environment |
 | --- | --- |
-| `fonte` | `font` |
-| `fonte-estrita` | `strict-font` |
-| `tabelas` | `tables` |
-| `codigo` | `code` |
-| `algoritmos` | `algorithms` |
-| `glossario` | `glossary` |
-| `indice` | `index` |
+| `ufcalineas` | `ufclettereditems` |
+| `ufcsubalineas` | `ufcdashedsubitems` |
+| `ufclistadefinicoes` | `ufcdefinitionlist` |
+| `ufcobjeto` | `ufcobject` |
+| `ufcalgoritmo` | `ufcalgorithm` |
 
-### Canonical setup values
+`ufclisting` is already English and remains canonical as-is.
 
-Profiles:
+B3 adds 5 environments, for 11 total.
 
-- `undergraduate-capstone`;
-- `specialization-capstone`;
-- `masters-thesis`;
-- `doctoral-thesis`;
-- `research-project`;
-- `anonymized-research-project`.
+Signatures are preserved:
 
-Other choices:
+- `ufclettereditems`: no arguments;
+- `ufcdashedsubitems`: no arguments;
+- `ufcdefinitionlist`: optional width, default `3cm`;
+- `ufcobject`: optional placement, default `\placepos`;
+- `ufcalgorithm`: optional placement + line-number frequency, defaults `\placepos` and `1`;
+- `ufclisting`: optional placement, remains conditional on `code=listings`.
 
-- `print-mode`: `single-sided`, `double-sided`;
-- `cover`: `auto`, `true`, `false`;
-- `catalog-card`: `true`, `false`;
-- `coat-of-arms`: `true`, `false`;
-- advisor/coadvisor feminine-label switches: `true`, `false`;
-- `font`: `times`, `arial`;
-- `strict-font`: `true`, `false`;
-- `tables`: `native`, `tabularray`;
-- `code`: `none`, `listings`, `minted`;
-- `algorithms`: `none`, `algpseudocodex`;
-- `glossary`: `none`, `glossaries`;
-- `index`: `none`, `imakeidx`.
+### Executable contract
 
-Package identifiers remain unchanged where they identify exact external integrations.
+`tests/checks/public_api_contract.py` now treats B1+B2+B3 as layered contracts. B3 additionally requires:
 
-### Semantic decisions
+- frozen B1/B2 blobs;
+- 30 unique canonical command additions;
+- complete migration-source coverage;
+- preservation of all B1-approved command mappings;
+- reviewed command signatures;
+- 5 canonical environment additions plus retained `ufclisting`;
+- 77 total commands, 11 total environments and 2 hooks;
+- setup totals still exactly 132/79;
+- article runtime disabled;
+- N12 workflow blob unchanged.
 
-Detailed academic metadata was named by runtime role rather than literal translation. In particular:
+Smoke evidence:
 
-- graduate-program, program, degree-field and concentration remain distinct;
-- `project-nature-statement` denotes the complete nature statement override;
-- feminine-label flags describe grammatical output behavior;
-- committee metadata is represented as examiner/member data.
+- `tests/normativa/public-api-command-environment-aliases.tex`;
+- `tests/v2-public-api-command-environment-check.sh`.
 
-No B2 setup-key or setup-value entry remains unresolved.
-
-### Executable evidence
-
-`tests/checks/public_api_contract.py` validates the frozen B1 ledger plus B2 delta and rejects B1 drift, supported legacy removals, missing/unreviewed canonical setup additions, incomplete mappings, new command/environment/hook surfaces, live article values and frozen N12 workflow drift.
-
-`tests/normativa/public-api-aliases.tex` plus `tests/v2-public-api-alias-check.sh` exercise all 65 canonical setup keys and assert forwarding into certified legacy state.
-
-Exact PR-head certification on `2fd3bc28cc37e6c05f4e37f0b0315adb99765573`:
-
-- Source #426 — SUCCESS, run `33247218637`;
-- preflight #1096 — SUCCESS, run `33247218623`;
-- `N15-EVIDENCE b2r-b2-alias-smoke keys=65 status=PASS`;
-- public-API totals: 132 keys, 79 scoped values, 47 commands, 6 environments, 2 hooks;
-- article runtime false;
-- `behind_by=0` before merge.
-
-PR #152 was squash-merged with exact-head protection and produced:
-
-`main` `f6ba39bcbe50c324f6ab5f1856595cfcf7f8f0f9`.
-
-Post-merge certification:
-
-- Source #427 — SUCCESS, run `33247641697`;
-- preflight/Gate T #1097 — SUCCESS, run `33247641696`;
-- Distribution #246 — SUCCESS, run `33247641702`;
-- reference/PDF-A, profiles/PDF-A, objects/bibliography, post-textuals and structure — SUCCESS;
-- Overleaf stable proxy — SUCCESS;
-- Windows literal Times New Roman/Arial build and identity/Unicode/embedding/PDF-A certification — SUCCESS;
-- release PDF/A, deterministic bundles, Overleaf import proxy, candidate upload and aggregate distribution-preflight — SUCCESS.
+The smoke verifies canonical command/environment existence, exercises lettered/dashed/definition-list wrappers, activates `listings` and `algpseudocodex`, verifies the corresponding conditional aliases and confirms that the minted alias is not live under `code=listings`.
 
 ## Article boundary
 
-`type=article` and its Portuguese compatibility form remain reserved-only. Scientific-article runtime belongs to N15-B2B only after B2R-B3 and B2R-B4 close and the resulting `main` is re-certified.
+`type=article` and its Portuguese compatibility form remain reserved-only. Scientific-article runtime starts only after B2R-B3 and B2R-B4 close and their resulting `main` is re-certified.
 
-## B2 bounded state-sync rule
+## B3 closure sequence
 
-This state-sync branch records B2 closure only. After it is exact-head certified, merged and its resulting `main` is certified once, no further receipt-only state-sync PR is allowed. B3 begins from that certified `main`.
-
-## B2R-B3 next scope
-
-B3 must first classify all 47 exported commands and 6 UFC environments. Canonical wrappers are added only for surfaces that are genuinely supported project API. Portuguese compatibility remains additive. Upstream compatibility surfaces and extension hooks are not renamed for stylistic consistency.
-
-Known reviewed command directions from B1 include cover, title page, approval page, catalog card, references and bibliography-resource surfaces. Summary/abstract naming requires explicit language-role validation before implementation.
-
-Full paired Portuguese/English semantic and rendered-output equivalence remains B2R-B4 scope.
+1. finish documentation and machine-ledger synchronization;
+2. inspect branch against certified `cb0df822...` and require `behind_by=0`;
+3. open PR and freeze final head;
+4. obtain exact-head Source + LaTeX preflight SUCCESS;
+5. squash-merge with expected-head protection;
+6. re-certify resulting main through Source, full Gate T/preflight and Distribution;
+7. use at most one bounded receipt sync if required;
+8. start B2R-B4 from the resulting certified main.
