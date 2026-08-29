@@ -2,7 +2,7 @@
   "schema_version": 1,
   "phase": "N15-B2R-B2",
   "reviewed_at": "2026-08-29",
-  "status": "PR_CERTIFICATION_PENDING",
+  "status": "DONE_STATE_SYNC_PENDING",
   "base_contract": {
     "path": "release/n15-b2r-b-public-api.json",
     "blob_sha": "c1f545e0e707822959db851a74d29f4068dff731",
@@ -211,6 +211,47 @@
       "aggregate": "SUCCESS",
       "github_release": "SKIPPED_NO_TAG"
     }
+  },
+  "implementation_closure": {
+    "pull_request": 152,
+    "exact_pr_head": "2fd3bc28cc37e6c05f4e37f0b0315adb99765573",
+    "pre_merge_behind_by": 0,
+    "exact_head_certification": {
+      "normative_source_contract": {"run_number": 426, "run_id": 33247218637, "conclusion": "SUCCESS"},
+      "latex_preflight": {"run_number": 1096, "run_id": 33247218623, "conclusion": "SUCCESS"},
+      "alias_smoke": {"canonical_setup_keys": 65, "conclusion": "PASS"}
+    },
+    "resulting_main_sha": "f6ba39bcbe50c324f6ab5f1856595cfcf7f8f0f9",
+    "post_merge_certification": {
+      "normative_source_contract": {"run_number": 427, "run_id": 33247641697, "conclusion": "SUCCESS"},
+      "latex_preflight": {
+        "run_number": 1097,
+        "run_id": 33247641696,
+        "conclusion": "SUCCESS",
+        "reference_pdfa_2b": "SUCCESS",
+        "profile_matrix_pdfa_2b": "SUCCESS",
+        "objects_bibliography": "SUCCESS",
+        "posttextual": "SUCCESS",
+        "structure": "SUCCESS",
+        "overleaf_stable_proxy": "SUCCESS",
+        "windows_literal_font_build": "SUCCESS",
+        "windows_literal_font_certification": "SUCCESS"
+      },
+      "distribution": {
+        "run_number": 246,
+        "run_id": 33247641702,
+        "conclusion": "SUCCESS",
+        "gate_t_prerequisite": "SUCCESS",
+        "release_pdfa_2b": "SUCCESS",
+        "deterministic_bundles": "SUCCESS",
+        "overleaf_import_proxy": "SUCCESS",
+        "candidate_upload": "SUCCESS",
+        "aggregate": "SUCCESS",
+        "github_release": "SKIPPED_NO_TAG"
+      }
+    },
+    "state_sync_required_before_b3": true,
+    "receipt_loop_policy": "merge this bounded state sync, certify resulting main once, then begin B2R-B3 without another receipt-only state-sync PR"
   },
   "evidence": {
     "alias_smoke_fixture": "tests/normativa/public-api-aliases.tex",

@@ -2,31 +2,19 @@
 
 Updated: 2026-08-29
 
-Checkpoint: **N15-B2R-B2 is ACTIVE. B2R-B1 and its documentation state sync are merged and fully re-certified. Canonical-English setup aliases are implemented on the active B2 branch and are awaiting exact-head PR certification.**
+Checkpoint: **N15-B2R-B2 implementation is DONE and fully post-merge certified. A bounded documentation state sync is the only remaining B2 closure action before B2R-B3 starts.**
 
-Certified B2R-B2 base `main`:
+Certified B2 implementation `main`:
 
-`1a3731575f9fe06a7f7d9a132f5152998edc6cee`
+`f6ba39bcbe50c324f6ab5f1856595cfcf7f8f0f9`
 
-Active branch:
+State-sync branch:
 
-`refactor/n15-b2r-b2-setup-aliases`
+`docs/n15-b2r-b2-post-merge-sync`
 
-Live Git/PR/CI state is always the execution authority. Do not record a transient implementation head here merely to create another documentation-only commit.
+Live Git/PR/CI state is always the execution authority. This bounded state sync records the completed B2 implementation. After this branch is merged and the resulting `main` is certified once, do **not** open another receipt-only synchronization PR; begin B2R-B3 from that certified `main` and update active state there.
 
-## Mandatory documentation-sync policy
-
-Documentation synchronization is a release gate. The active B2R state set is:
-
-1. `docs/HANDOFF-V2.2.0.md` — canonical continuation point;
-2. `docs/B2R-NAMING-INVENTORY.md` — human naming/API ledger;
-3. `release/n15-b2r-b-public-api.json` — frozen B1 baseline contract;
-4. `release/n15-b2r-b2-setup-aliases.json` — active B2 delta contract;
-5. `docs/NAMING.md` — naming and compatibility policy.
-
-`release/n15-b2r-a-naming-inventory.json` remains historical B2R-A/N12-sensitive evidence and must not be repurposed.
-
-## Guardrails
+## Mandatory guardrails
 
 - current technical standard > compatible UFC institutional requirement > implementation;
 - no invented inaccessible ABNT wording or locators;
@@ -34,11 +22,11 @@ Documentation synchronization is a release gate. The active B2R state set is:
 - frozen N12 workflow blob: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`;
 - public API migration in v2.x is additive;
 - supported Portuguese setup keys/values remain accepted throughout v2.x;
-- B2 must forward to certified behavior rather than rewrite normative/runtime semantics;
-- scientific-article runtime remains disabled until all B2R-B subphases close and resulting `main` is re-certified;
+- canonical aliases forward to certified behavior rather than rewriting normative/runtime semantics;
+- scientific-article runtime remains disabled until B2R-B closes and the resulting `main` is re-certified;
 - UFC institutional mark and proprietary Microsoft fonts remain excluded from public bundles;
 - class version remains v2.1.0 until N15-C release-candidate promotion;
-- physical branch cleanup remains deferred until final certification/tag.
+- branch cleanup remains deferred until final certification/tag.
 
 ## Canonical roadmap
 
@@ -51,8 +39,8 @@ Documentation synchronization is a release gate. The active B2R state set is:
 | N15-B2R-A1 | internal module English naming | DONE — PR #146 |
 | N15-B2R-A2 | user/example/distribution layout naming | DONE — PR #148 + state sync |
 | N15-B2R-B1 | public-API baseline + executable contract | DONE — PR #150 + PR #151 state sync |
-| N15-B2R-B2 | canonical-English setup keys/values + Portuguese compatibility | ACTIVE |
-| N15-B2R-B3 | canonical commands/environments + compatibility wrappers | BLOCKED by B2 |
+| N15-B2R-B2 | canonical-English setup keys/values + Portuguese compatibility | DONE IMPLEMENTATION — state sync pending |
+| N15-B2R-B3 | canonical commands/environments + compatibility wrappers | BLOCKED only by B2 state-sync merge/re-certification |
 | N15-B2R-B4 | EN/PT semantic/output equivalence + exact-head closure | BLOCKED by B3 |
 | N15-B2B | scientific-article runtime | BLOCKED by B2R-B |
 | N15-B2C | scientific-article evidence closure | BLOCKED by B2B |
@@ -64,74 +52,61 @@ N15 remains ACTIVE.
 
 ## B2R-B1 — DONE
 
-PR #150 established the pre-migration API baseline and executable checker. Its exact pre-merge head was:
+PR #150 established the pre-migration public/exported API baseline and executable checker. PR #151 synchronized that result. Its resulting certified `main` was:
 
-`6d51593e1a167ae657c8dd019f913dc947c34250`
+`1a3731575f9fe06a7f7d9a132f5152998edc6cee`
 
-The merge produced `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4` and passed Source #423, preflight #1091, Gate T #1092 and Distribution #244.
+That SHA passed Source #425, preflight/Gate T #1094 and Distribution #245, including reference/PDF-A, 12-profile matrix/PDF-A, objects/bibliography, post-textuals, Overleaf, Windows literal-font certification and deterministic distribution.
 
-PR #151 synchronized the active B2R documentation with that certified state and produced the current B2 base:
-
-`main` `1a3731575f9fe06a7f7d9a132f5152998edc6cee`
-
-Post-#151 certification on this SHA:
-
-- Normative Source Contract #425 — SUCCESS, run `33245817659`;
-- LaTeX preflight/Gate T #1094 — SUCCESS, run `33245817721`;
-- Distribution #245 — SUCCESS, run `33245817632`;
-- reference + PDF/A — SUCCESS;
-- 12-profile matrix + PDF/A — SUCCESS;
-- objects/bibliography — SUCCESS;
-- post-textuals — SUCCESS;
-- Overleaf stable proxy — SUCCESS;
-- Windows literal Times New Roman/Arial build and identity/Unicode/embedding/PDF-A certification — SUCCESS;
-- release PDF/A, deterministic bundles, Overleaf import proxy and candidate upload — SUCCESS.
-
-Therefore `1a373157...` is the formal certified starting point for B2R-B2.
-
-## N15-B2R-B2 — ACTIVE
+## B2R-B2 — implementation DONE
 
 ### Architecture
 
-B2 uses one canonical API layer:
+B2 added one canonical public API layer:
 
 `abntexto-ufc/public-api.def`
 
-It is loaded after the existing runtime modules and defines canonical-English `l3keys` aliases that forward to the already-certified Portuguese behavior. Existing internals remain unchanged. This keeps the migration additive and gives B3 a single extension point for later command/environment wrappers.
+It is loaded after the existing runtime modules and defines canonical-English `l3keys` aliases that forward to the already-certified Portuguese behavior. Existing internals remain unchanged. No command/environment alias and no article runtime were introduced.
 
 ### Machine contracts
 
-The B1 baseline remains immutable during B2 and is verified by blob identity:
+The B1 baseline remains frozen:
 
-- path: `release/n15-b2r-b-public-api.json`;
+- `release/n15-b2r-b-public-api.json`;
 - certified blob: `c1f545e0e707822959db851a74d29f4068dff731`.
 
-B2 additions are recorded separately in:
+B2 additions are recorded in:
 
 `release/n15-b2r-b2-setup-aliases.json`
 
-The executable checker validates the frozen B1 snapshot plus the B2 delta.
-
-### Surface counts
-
-B2 preserves the entire B1 surface and adds only setup aliases:
+### Final B2 surface
 
 - legacy setup keys: 67;
 - canonical setup keys added: 65;
 - total setup keys: 132;
 - legacy enumerated `(key,value)` identities: 45;
-- canonical enumerated `(key,value)` identities added: 34;
+- canonical enumerated identities added: 34;
 - total enumerated setup-value identities: 79;
 - exported commands: 47, unchanged;
 - UFC environments: 6, unchanged;
 - explicit extension hooks: 2, unchanged;
 - article runtime: false.
 
-`volume` remains the same canonical identifier and therefore does not create a duplicate English alias. The project-specific coat-of-arms compatibility key remains compatibility-only and does not gain a second canonical key.
+`volume` remains canonical as-is and therefore does not gain a duplicate alias. The project-specific coat-of-arms compatibility key remains compatibility-only.
 
-### Canonical value decisions
+### Canonical setup decisions
 
-- profile values: `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project`, `anonymized-research-project`;
+Profiles:
+
+- `undergraduate-capstone`;
+- `specialization-capstone`;
+- `masters-thesis`;
+- `doctoral-thesis`;
+- `research-project`;
+- `anonymized-research-project`.
+
+Other choices:
+
 - `print-mode`: `single-sided`, `double-sided`;
 - booleans: `true`, `false`;
 - `cover`: `auto`, `true`, `false`;
@@ -142,55 +117,72 @@ B2 preserves the entire B1 surface and adds only setup aliases:
 - `glossary`: `none`, `glossaries`;
 - `index`: `none`, `imakeidx`.
 
-Package names remain package names rather than being translated.
-
-### Semantic metadata decisions
-
-Detailed metadata names are semantic rather than mechanical translations. Examples include:
-
-- `masters-graduate-program` versus `masters-program`;
-- `masters-degree-field` versus `masters-concentration`;
-- doctorate analogues with the same distinction;
-- `project-nature-statement` for the full nature statement;
-- `advisor-feminine-label` / `coadvisor-feminine-label` for the grammatical-label switches;
-- `examiner-N`, `examiner-N-unit`, `examiner-N-institution` for committee members.
-
-No B2 setup key/value remains `review_required` in the active delta.
+Detailed metadata names were reviewed semantically, including graduate-program/program/degree-field/concentration distinctions, project nature statements, grammatical advisor/coadvisor labels and examiner metadata.
 
 ### Executable evidence
 
-`tests/checks/public_api_contract.py` now verifies:
+`tests/checks/public_api_contract.py` validates the frozen B1 ledger plus the B2 delta. Functional forwarding is exercised by:
 
-- the B1 ledger blob is unchanged;
-- additive setup-key/value sets exactly match the B2 delta;
-- every legacy setup key has a reviewed canonical disposition;
-- every legacy enumerated value maps to a live canonical `(key,value)` identity;
-- command/environment/hook counts remain unchanged;
-- article runtime remains disabled;
-- the frozen N12 workflow blob remains exact;
-- the canonical setup alias smoke test passes.
+- `tests/normativa/public-api-aliases.tex`;
+- `tests/v2-public-api-alias-check.sh`.
 
-Functional smoke evidence:
+Exact PR-head evidence on `2fd3bc28cc37e6c05f4e37f0b0315adb99765573`:
 
-- fixture: `tests/normativa/public-api-aliases.tex`;
-- runner: `tests/v2-public-api-alias-check.sh`;
-- all 65 canonical setup keys are exercised with side-effect-safe values;
-- the fixture asserts the resulting certified legacy state for document type, print mode, cover/catalog/coat booleans, metadata, font/module settings, coat-of-arms file and initial pagination.
+- Normative Source Contract #426 — SUCCESS, run `33247218637`;
+- LaTeX preflight #1096 — SUCCESS, run `33247218623`;
+- alias smoke: `keys=65 status=PASS`;
+- public API evidence: `legacy_keys=67 canonical_keys=65 keys=132 legacy_values=45 canonical_values=34 values=79 commands=47 environments=6 hooks=2 article_runtime=false`;
+- `behind_by=0` immediately before merge.
 
-Rendered EN/PT equivalence remains intentionally reserved for B2R-B4; B2 validates forwarding semantics, not final paired-PDF identity.
+PR #152 was squash-merged with exact-head protection and produced:
 
-## B2 completion gate
+`main` `f6ba39bcbe50c324f6ab5f1856595cfcf7f8f0f9`.
 
-Before B2 can be marked DONE:
+Post-merge certification of that exact `main`:
 
-1. inspect the complete branch diff against certified `main` `1a373157...`;
-2. ensure `behind_by=0`;
-3. open the B2 PR;
-4. freeze its final implementation/documentation head;
-5. require Normative Source Contract and LaTeX preflight SUCCESS on that exact head;
-6. squash-merge with exact-head protection;
-7. re-certify the resulting `main` with Source, push preflight/Gate T and Distribution;
-8. perform a bounded post-merge state sync if receipts must be recorded;
-9. only then create B2R-B3 from the resulting certified `main`.
+- Normative Source Contract #427 — SUCCESS, run `33247641697`;
+- LaTeX preflight/Gate T #1097 — SUCCESS, run `33247641696`;
+- Distribution #246 — SUCCESS, run `33247641702`;
+- reference + PDF/A-2b — SUCCESS;
+- 12-profile matrix + PDF/A-2b — SUCCESS;
+- objects/bibliography — SUCCESS;
+- post-textuals — SUCCESS;
+- structure/layout/fonts/pre-textuals/projects — SUCCESS;
+- Overleaf stable proxy — SUCCESS;
+- Windows literal Times New Roman/Arial build — SUCCESS;
+- Windows literal-font identity, Unicode extraction, embedding and PDF/A-2b certification — SUCCESS;
+- release preflight + release PDF/A-2b — SUCCESS;
+- deterministic release bundles — SUCCESS;
+- Overleaf import-bundle proxy — SUCCESS;
+- release candidate upload + aggregate distribution-preflight — SUCCESS;
+- GitHub Release publication — correctly SKIPPED because no tag exists.
 
-Do not start B2R-B3 or N15-B2B before this closure completes.
+Therefore B2 runtime/API implementation is fully certified.
+
+## B2 bounded state-sync closure
+
+This branch may change only active state/documentation ledgers. It must not change runtime, tests, normative contracts, formatting intent or `.github/workflows/latex-preflight.yml`.
+
+Closure sequence:
+
+1. merge this bounded state-sync PR after exact-head Source/preflight SUCCESS and `behind_by=0`;
+2. certify its resulting `main` once through Source, push preflight/Gate T and Distribution;
+3. do not create another receipt-only state-sync PR;
+4. create `refactor/n15-b2r-b3-command-environment-aliases` from that certified `main`;
+5. begin B3 by classifying the 47 exported commands and 6 UFC environments before adding wrappers;
+6. keep `type=article` / its compatibility form reserved-only until B2R-B4 closes and N15-B2B begins.
+
+## B2R-B3 design boundary
+
+B3 owns canonical project command/environment names and compatibility wrappers. It must not mechanically rename every exported helper. Before implementation each existing exported surface must be classified as:
+
+- canonical project API;
+- Portuguese compatibility API;
+- upstream compatibility API;
+- exported helper;
+- extension hook;
+- internal implementation accidentally exported.
+
+Known reviewed command directions from B1 include cover, title page, approval page, catalog card, references and bibliography-resource surfaces. Summary/abstract canonicalization still requires explicit language-role validation so vernacular and foreign-language summaries are never conflated.
+
+Full paired Portuguese/English semantic and rendered-output equivalence remains B2R-B4 scope.
