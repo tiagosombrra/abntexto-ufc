@@ -2,21 +2,19 @@
 
 Updated: 2026-08-29
 
-B2R-A, B2R-B1, B2R-B2 and B2R-B3 are closed. **B2R-B4 is ACTIVE on `refactor/n15-b2r-b4-en-pt-equivalence`.**
+B2R-A, B2R-B1, B2R-B2, B2R-B3 and B2R-B4 are closed. **The canonical-English/public-compatibility migration is technically DONE on certified `main` `a4f2660ef46826c7d61a7dc3d9de6554f6d6a825`.**
 
-Certified B4 base:
+This document is being synchronized through the bounded post-merge branch `docs/n15-b2r-b4-post-merge-sync`. N15-B2B scientific-article runtime starts only after that state-sync branch is exact-head certified, merged and the resulting `main` is re-certified.
 
-`main` `92f17418dfeee4d2d45456912af9f8c399457cc1`
-
-Machine contracts:
+## Machine contracts
 
 - frozen B1 baseline: `release/n15-b2r-b-public-api.json`;
 - frozen B2 setup delta: `release/n15-b2r-b2-setup-aliases.json`;
 - frozen B3 command/environment delta: `release/n15-b2r-b3-command-environment-aliases.json`;
-- active B4 equivalence contract: `release/n15-b2r-b4-en-pt-equivalence.json`;
+- completed B4 equivalence contract: `release/n15-b2r-b4-en-pt-equivalence.json`;
 - historical B2R-A/N12 evidence: `release/n15-b2r-a-naming-inventory.json`.
 
-Frozen blobs used by B4:
+Frozen identities used by B4:
 
 - B1: `c1f545e0e707822959db851a74d29f4068dff731`;
 - B2: `19df208fb59af5ea37556d962e5986a43094c7f5`;
@@ -24,14 +22,10 @@ Frozen blobs used by B4:
 - public-API runtime: `7b61fe70dd85ed895140f846272e097e3ded72cf`;
 - N12 workflow: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-## Final naming inventory after B3
+## Final live public inventory
 
-B2 established the complete canonical setup vocabulary and B3 completed command/environment naming without removing compatibility surfaces.
-
-Live public inventory:
-
-- setup keys: 67 legacy + 65 canonical additions = **132**;
-- scoped setup values: 45 legacy + 34 canonical additions = **79**;
+- setup keys: 67 compatibility + 65 canonical additions = **132**;
+- scoped setup values: 45 compatibility + 34 canonical additions = **79**;
 - commands: 47 prior + 30 canonical additions = **77**;
 - UFC environments: 6 prior + 5 canonical additions = **11**;
 - extension hooks: **2**.
@@ -40,9 +34,7 @@ Portuguese v2.x surfaces remain supported. `type=article` and its compatibility 
 
 ## Setup naming — B2 DONE
 
-Canonical setup keys use semantic English kebab-case. `volume` is already canonical and remains unchanged; the project-specific coat-of-arms legacy synonym remains compatibility-only.
-
-Representative mappings include:
+Canonical `\ufcsetup` keys use semantic English kebab-case while preserving compatibility keys. Representative mappings include:
 
 | Compatibility key | Canonical key |
 | --- | --- |
@@ -55,12 +47,8 @@ Representative mappings include:
 | `curso-graduacao` | `undergraduate-program` |
 | `programa-mestrado` | `masters-graduate-program` |
 | `nome-mestrado` | `masters-program` |
-| `titulo-mestre` | `masters-degree-field` |
-| `area-mestrado` | `masters-concentration` |
 | `programa-doutorado` | `doctoral-graduate-program` |
 | `nome-doutorado` | `doctoral-program` |
-| `titulo-doutor` | `doctoral-degree-field` |
-| `area-doutorado` | `doctoral-concentration` |
 | `autor` | `author` |
 | `titulo` | `title` |
 | `orientador` | `advisor` |
@@ -72,13 +60,13 @@ Representative mappings include:
 | `glossario` | `glossary` |
 | `indice` | `index` |
 
-Canonical profile values are `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project` and `anonymized-research-project`. Canonical print values are `single-sided` and `double-sided`; boolean-style choices use `true`/`false`; module selectors retain external package names where applicable.
+Canonical profile values are `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project` and `anonymized-research-project`. Canonical print values are `single-sided` and `double-sided`; boolean-style choices use `true`/`false`.
 
-The full key/value map is frozen in the B2 machine contract rather than duplicated here.
+The full key/value map remains frozen in the B2 machine contract.
 
 ## Command naming — B3 DONE
 
-B3 adds 30 canonical commands while preserving all 47 prior commands.
+B3 added 30 canonical commands while preserving all 47 prior commands. Important mappings include:
 
 | Compatibility/current command | Canonical command |
 | --- | --- |
@@ -91,37 +79,21 @@ B3 adds 30 canonical commands while preserving all 47 prior commands.
 | `\imprimirfichacatalografica` | `\ufcPrintCatalogCard` |
 | `\imprimirfolhadeaprovacao` | `\ufcPrintApprovalPage` |
 | `\imprimirfolhaderosto` | `\ufcPrintTitlePage` |
-| `\imprimirglossario` | `\ufcPrintGlossary` |
-| `\imprimirindice` | `\ufcPrintIndex` |
-| `\imprimirlistadeabreviaturasesiglas` | `\ufcPrintListOfAbbreviationsAndAcronyms` |
-| `\imprimirlistadealgoritmos` | `\ufcPrintListOfAlgorithms` |
-| `\imprimirlistadecodigos` | `\ufcPrintListOfCodeListings` |
-| `\imprimirlistadefiguras` | `\ufcPrintListOfFigures` |
-| `\imprimirlistadegraficos` | `\ufcPrintListOfCharts` |
-| `\imprimirlistadeilustracoes` | `\ufcPrintListOfIllustrations` |
-| `\imprimirlistadequadros` | `\ufcPrintListOfTextTables` |
-| `\imprimirlistadesimbolos` | `\ufcPrintListOfSymbols` |
-| `\imprimirlistadetabelas` | `\ufcPrintListOfTables` |
 | `\imprimirreferencias` | `\ufcPrintReferences` |
 | `\imprimirresumo` | `\ufcPrintSummary` |
 | `\imprimirsumario` | `\ufcPrintTableOfContents` |
 | `\palavraschave` | `\ufcSummaryKeywords` |
 | `\ufcbibliografia` | `\ufcAddBibliographyResource` |
 | `\ufcfonte` | `\ufcSource` |
-| `\ufcinputlisting` | `\ufcInputListing` |
-| `\ufcinputminted` | `\ufcInputMinted` |
-| `\ufclistaentrada` | `\ufcListEntry` |
 | `\ufcnota` | `\ufcNote` |
 
-Semantic decisions:
+Semantic decisions remain frozen:
 
-- `\ufcPrintSummary` and `\ufcPrintAbstract` remain separate language-role surfaces;
-- `\ufcSummaryKeywords` preserves the Portuguese summary keyword label while upstream `\keywords` remains the English-label upstream API;
-- `\ufcPrintEpigraph[short|long]` forwards to `[curta|longa]`;
+- `\ufcPrintSummary` and `\ufcPrintAbstract` are distinct language-role surfaces;
+- `\ufcPrintEpigraph[short|long]` forwards to compatibility `[curta|longa]`;
 - `\ufcPrintListOfTextTables` preserves the distinct `quadro` object family;
-- optional listing/minted aliases remain conditional on their selected code module.
-
-Retained project API/helpers remain unchanged rather than receiving cosmetic synonyms.
+- optional listing/minted aliases remain conditional on their certified module surfaces;
+- upstream `\keywords` remains upstream API.
 
 ## Environment naming — B3 DONE
 
@@ -135,75 +107,58 @@ Retained project API/helpers remain unchanged rather than receiving cosmetic syn
 
 `ufclisting` is already English and remains canonical as-is.
 
-The wrappers preserve the certified signatures: no arguments for the two list levels, optional `3cm` definition width, optional `\placepos` object placement, and optional algorithm placement/line-number frequency.
+## B2R-B4 — semantic/output equivalence — DONE
 
-## B3 certification — DONE
+B4 made no API/runtime/normative/workflow change. It certified the completed canonical-English vocabulary against the supported Portuguese compatibility vocabulary.
 
-PR #154 exact head:
-
-`0630d19cb6ba3274d0e2e1a738343f8c74afe148`
-
-Exact-head evidence:
-
-- `behind_by=0`;
-- Source #432 — SUCCESS, run `33252829652`;
-- preflight #1104 — SUCCESS, run `33252829650`.
-
-Resulting certified B4 base:
-
-`92f17418dfeee4d2d45456912af9f8c399457cc1`
-
-Post-merge evidence:
-
-- Source #433 — SUCCESS, run `33253212796`;
-- preflight push #1105 — SUCCESS, run `33253212823`;
-- Gate T #1106 — SUCCESS, run `33253216564`;
-- Distribution #248 — SUCCESS, run `33253212813`;
-- Overleaf stable proxy — SUCCESS;
-- Windows literal Times New Roman/Arial build/certification — SUCCESS;
-- reference/profile PDF/A-2b and deterministic distribution — SUCCESS.
-
-No B3 receipt-only state-sync PR is required.
-
-## B2R-B4 — semantic/output equivalence — ACTIVE
-
-B4 is not another naming phase. It certifies that the completed English canonical vocabulary is behaviorally equivalent to the supported Portuguese compatibility vocabulary.
-
-Scope authority:
-
-- no public API additions/removals;
-- no runtime or normative behavior changes;
-- no N12 workflow edits;
-- no article runtime;
-- `abntexto-ufc/public-api.def` remains frozen at blob `7b61fe70dd85ed895140f846272e097e3ded72cf`.
-
-Static B4 evidence validates:
+Static evidence validated:
 
 - all 65 distinct canonical setup-key mappings plus retained `volume`;
-- all 45 reviewed legacy setup-value source identities forwarding through canonical choices;
+- all 45 reviewed compatibility setup-value source identities;
 - all 30 canonical command wrappers;
 - all 5 canonical environment wrappers;
 - exact B1/B2/B3 contract blobs;
-- exact runtime and N12 blobs.
+- exact public-runtime and N12 workflow blobs;
+- unchanged public counts: 132/79/77/11/2.
 
-Paired runtime evidence compiles the same document through Portuguese and canonical-English surfaces and requires:
+Paired runtime evidence required and passed:
 
 - exact normalized internal-state equality;
-- exact extracted layout text equality;
+- exact extracted layout-text equality;
 - equal page count and dimensions;
-- equal TOC/list/bibliography artifacts when generated;
-- per-page raster SHA-256 equality;
-- PDF/A-2b declarations for both outputs.
+- equal TOC/list/bibliography artifacts;
+- equal per-page raster SHA-256;
+- PDF/A-2b declaration for both outputs.
 
-Evidence files:
+Final paired evidence: 66 state lines, 23 pages, raster equality on all 23 pages, all state/text/geometry/auxiliary/raster/PDF-A predicates true, `PASS=16 FAIL=0 SKIP=0`.
 
-- `tests/checks/public_api_equivalence_contract.py`;
-- `tests/normativa/public-api-equivalence.tex`;
-- `tests/fixtures/public-api-equivalence-summary.tex`;
-- `tests/v2-public-api-equivalence-check.sh`.
+### B4 exact-head certification
 
-`tests/run.py` makes `repository` depend on `public-api-equivalence`, so the existing frozen preflight workflow automatically exercises B4.
+PR #155 exact head:
+
+`44c9c5082598b82e67a0b3ef009c4bb71a584571`
+
+- `behind_by=0`;
+- Source #442 — SUCCESS, run `33262519263`;
+- preflight #1115 — SUCCESS, run `33262519254`.
+
+Resulting `main` after protected squash merge:
+
+`a4f2660ef46826c7d61a7dc3d9de6554f6d6a825`
+
+Post-merge certification:
+
+- Source #443 — SUCCESS, run `33263191118`;
+- preflight push #1116 — SUCCESS, run `33263191096`;
+- Gate T #1117 — SUCCESS, run `33263196260`;
+- Distribution #249 — SUCCESS, run `33263191120`;
+- Overleaf stable proxy — SUCCESS;
+- Windows literal Times New Roman/Arial build/certification — SUCCESS;
+- reference/profile PDF/A-2b, objects/bibliography, post-textuals, structure and deterministic distribution — SUCCESS;
+- GitHub Release — correctly skipped because no tag exists.
 
 ## Article boundary
 
-Scientific-article runtime remains **BLOCKED**. N15-B2B starts only after B4 PR exact-head certification, merge, and full resulting-main re-certification through Source, Gate T and Distribution.
+B2R no longer blocks article support. The only remaining transition guard is the bounded documentation state-sync itself. After this sync is exact-head certified, merged and its resulting `main` is re-certified, N15-B2B may begin from that exact SHA.
+
+Article runtime must use canonical engineering naming (`articles.def`, `type=article`) and preserve additive Portuguese v2.x compatibility according to `docs/NAMING.md`.
