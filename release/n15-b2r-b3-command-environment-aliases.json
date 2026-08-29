@@ -2,7 +2,7 @@
   "schema_version": 1,
   "phase": "N15-B2R-B3",
   "reviewed_at": "2026-08-29",
-  "status": "IMPLEMENTATION_PENDING",
+  "status": "PR_CERTIFICATION_PENDING",
   "base_main_sha": "cb0df822401a926c4c5987f904b29f5898fb1775",
   "base_contracts": {
     "b1": {
@@ -189,6 +189,10 @@
     {"canonical": "type=article", "compatibility": "tipo=artigo", "status": "reserved_not_live", "runtime_phase": "N15-B2B"}
   ],
   "evidence": {
+    "setup_alias_smoke_fixture": "tests/normativa/public-api-aliases.tex",
+    "setup_alias_smoke_runner": "tests/v2-public-api-alias-check.sh",
+    "command_environment_smoke_fixture": "tests/normativa/public-api-command-environment-aliases.tex",
+    "command_environment_smoke_runner": "tests/v2-public-api-command-environment-check.sh",
     "frozen_n12_workflow_blob": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1",
     "article_runtime": false,
     "rendered_equivalence_deferred_to": "N15-B2R-B4"
