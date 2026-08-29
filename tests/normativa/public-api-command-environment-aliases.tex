@@ -62,8 +62,8 @@
     ufcNote
   }
   {
-    \cs_if_exist:cF {##1}
-      { \ufc_bthree_fail:n {Missing~canonical~command~##1} }
+    \cs_if_exist:cF {#1}
+      { \ufc_bthree_fail:n {Missing~canonical~command~#1} }
   }
 
 \ufc_bthree_assert_environment:n {ufclettereditems}
