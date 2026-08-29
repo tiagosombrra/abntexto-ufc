@@ -2,9 +2,9 @@
 
 Updated: 2026-08-28
 
-Checkpoint: **N15-B2R-B1 is merged; post-merge certification is green except for the still-running Distribution #244; state synchronization is active before B2R-B2**.
+Checkpoint: **N15-B2R-B1 is DONE and fully post-merge re-certified; the documentation state-sync PR is the only gate before B2R-B2**.
 
-Current merged `main`: `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
+Certified B2R-B1 `main`: `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
 
 Current state-sync branch: `docs/n15-b2r-b1-post-merge-sync`.
 
@@ -47,8 +47,8 @@ A B2R subphase must not be treated as fully handed off while these active docume
 | N15-B2A | scientific-article source + normative contract | DONE — PR #145 |
 | N15-B2R-A1 | internal module English naming | DONE — PR #146 |
 | N15-B2R-A2 | user/example/distribution layout naming | DONE — PR #148 + state sync |
-| N15-B2R-B1 | public-API inventory + executable baseline checker | MERGED — PR #150; post-merge Distribution #244 pending |
-| N15-B2R-B2 | additive canonical-English setup keys/values + Portuguese aliases | BLOCKED by B1 state-sync merge/re-certification |
+| N15-B2R-B1 | public-API inventory + executable baseline checker | DONE — PR #150; post-merge re-certified |
+| N15-B2R-B2 | additive canonical-English setup keys/values + Portuguese aliases | BLOCKED only by B1 state-sync merge/re-certification |
 | N15-B2R-B3 | canonical commands/environments + compatibility wrappers | BLOCKED by B2 |
 | N15-B2R-B4 | EN/PT semantic/output equivalence + exact-head closure | BLOCKED by B3 |
 | N15-B2B | scientific-article runtime | BLOCKED by B2R-B |
@@ -61,13 +61,13 @@ N15 remains ACTIVE.
 
 ## B2R-A closure
 
-B2R-A1 normalized internal module names. B2R-A2 normalized the repository/example/distribution layout to canonical English engineering paths while preserving Portuguese academic leaf filenames and public API semantics.
+B2R-A1 normalized internal module names. B2R-A2 normalized repository/example/distribution-facing engineering paths while preserving Portuguese academic leaf filenames and public API semantics.
 
 The certified base used to start B2R-B1 was:
 
 `3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b`.
 
-## N15-B2R-B1 — merged implementation
+## N15-B2R-B1 — DONE
 
 PR #150 (`audit: establish B2R-B public API baseline`) was squash-merged with exact-head protection from:
 
@@ -77,7 +77,7 @@ and produced:
 
 `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
 
-B1 introduced no canonical-English runtime aliases. It freezes and classifies the pre-migration API/export surface before additive migration.
+B1 introduced no canonical-English runtime aliases. It froze and classified the pre-migration API/export surface before additive migration.
 
 The machine contract records:
 
@@ -104,8 +104,8 @@ No public API behavior, normative contract, formatting intent, pagination intent
 
 Head `6d51593e1a167ae657c8dd019f913dc947c34250`:
 
-- Normative Source Contract #422 — SUCCESS;
-- LaTeX preflight #1090 — SUCCESS;
+- Normative Source Contract #422 — SUCCESS, run `33226621307`;
+- LaTeX preflight #1090 — SUCCESS, run `33226621382`;
 - `behind_by=0` immediately before merge;
 - frozen N12 workflow blob preserved.
 
@@ -113,17 +113,20 @@ Head `6d51593e1a167ae657c8dd019f913dc947c34250`:
 
 `main` `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`:
 
-- Normative Source Contract #423 — SUCCESS;
-- LaTeX preflight push #1091 — SUCCESS;
-- exact/dispatched Gate T #1092 — SUCCESS;
-- Gate T includes structure, reference/PDF-A, 12 profiles/PDF-A, objects/bibliography, post-textuals, Overleaf proxy, Windows literal Times New Roman/Arial build and literal-font identity/Unicode/embedding/PDF-A certification — all SUCCESS;
-- Distribution #244 — IN PROGRESS at this synchronization checkpoint; Gate T prerequisite already SUCCESS.
+- Normative Source Contract #423 — SUCCESS, run `33227898818`;
+- LaTeX preflight push #1091 — SUCCESS, run `33227898801`;
+- exact/dispatched Gate T #1092 — SUCCESS, run `33227902517`;
+- Distribution #244 — SUCCESS, run `33227898819`.
 
-B2R-B1 will be marked fully post-merge re-certified when Distribution #244 also closes green and this state-sync branch records that result.
+Gate T #1092 certified structure, reference/PDF-A, 12 profiles/PDF-A, objects/bibliography, post-textuals, Overleaf proxy, Windows literal Times New Roman/Arial build and literal-font identity/Unicode/embedding/PDF-A.
+
+Distribution #244 passed release preflight, release PDF/A-2b, deterministic bundles, Overleaf import proxy, candidate upload and aggregate distribution-preflight. `Publish GitHub Release` was correctly skipped because this commit is not a tag.
+
+Therefore **B2R-B1 is DONE**.
 
 ## N15-B2R-B2 — next implementation phase
 
-B2R-B2 begins only from the re-certified `main` produced after this state-sync PR.
+B2R-B2 begins only from the re-certified `main` produced after this documentation state-sync PR.
 
 Implement setup aliases additively and forward to certified Portuguese behavior wherever practical. Already-reviewed canonical key direction includes:
 
@@ -152,8 +155,8 @@ Do not mechanically translate unresolved metadata, print-mode values, optional-m
 
 ## Next executable action
 
-1. Require Distribution #244 to close SUCCESS for `4d9483ea6acd1dbb86622999a1f289fd6f67bce4`.
-2. Finalize this state-sync branch with the Distribution receipt and mark B2R-B1 DONE.
-3. Open and certify the state-sync PR.
-4. Squash-merge it and re-certify the resulting `main`.
-5. Create a fresh B2R-B2 implementation branch from that exact certified `main`.
+1. Finish the four-file B2R-B1 state-sync branch.
+2. Open and exact-head certify its PR.
+3. Squash-merge the state-sync PR.
+4. Re-certify the resulting `main` with Source Contract, push preflight, Gate T and Distribution.
+5. Create a fresh `refactor/n15-b2r-b2-setup-aliases` branch from that exact certified `main`.
