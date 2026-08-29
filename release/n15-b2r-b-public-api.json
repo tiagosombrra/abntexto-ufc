@@ -3,7 +3,7 @@
   "phase": "N15-B2R-B1",
   "reviewed_at": "2026-08-28",
   "base_main_sha": "3a7d5e55d0bbd8df279e3e3f6eecb72b98af709b",
-  "status": "FINAL_HEAD_CERTIFICATION_PENDING",
+  "status": "DONE_STATE_SYNC_PENDING",
   "purpose": "Freeze the pre-B2R-B public/exported API surface before additive canonical-English aliases.",
   "policy": {
     "migration": "additive",
@@ -279,6 +279,55 @@
       "latex_preflight_conclusion": "FAILURE",
       "failure_scope": "canonical identity scanner rejected narrative repetitions of the deprecated legacy identity; substantive runtime, normative, profile, PDF/A, bibliography and post-textual checks passed"
     },
+    "final_pr_head_sha": "6d51593e1a167ae657c8dd019f913dc947c34250",
+    "final_pr_head_receipts": {
+      "normative_source_contract": {
+        "run_number": 422,
+        "run_id": 33226621307,
+        "conclusion": "SUCCESS"
+      },
+      "latex_preflight": {
+        "run_number": 1090,
+        "run_id": 33226621382,
+        "conclusion": "SUCCESS"
+      },
+      "behind_by_before_merge": 0
+    },
+    "merge": {
+      "method": "squash",
+      "resulting_main_sha": "4d9483ea6acd1dbb86622999a1f289fd6f67bce4"
+    },
+    "post_merge_receipts": {
+      "normative_source_contract": {
+        "run_number": 423,
+        "run_id": 33227898818,
+        "conclusion": "SUCCESS"
+      },
+      "latex_preflight": {
+        "run_number": 1091,
+        "run_id": 33227898801,
+        "conclusion": "SUCCESS"
+      },
+      "gate_t": {
+        "run_number": 1092,
+        "run_id": 33227902517,
+        "conclusion": "SUCCESS",
+        "windows_literal_fonts": "SUCCESS",
+        "overleaf_proxy": "SUCCESS"
+      },
+      "distribution": {
+        "run_number": 244,
+        "run_id": 33227898819,
+        "conclusion": "SUCCESS",
+        "release_preflight": "SUCCESS",
+        "release_pdfa_2b": "SUCCESS",
+        "deterministic_bundles": "SUCCESS",
+        "overleaf_import_proxy": "SUCCESS",
+        "candidate_upload": "SUCCESS",
+        "aggregate": "SUCCESS",
+        "github_release": "SKIPPED_NO_TAG"
+      }
+    },
     "public_api_evidence": {
       "setup_keys": 67,
       "setup_values": 45,
@@ -289,8 +338,8 @@
       "article_runtime": false,
       "n12_blob": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"
     },
-    "documentation_sync_required_before_merge": false,
-    "final_exact_head_ci_required_before_merge": true
+    "b2r_b1_done": true,
+    "state_sync_required_before_b2r_b2": true
   },
   "checker_contract": {
     "exact_baseline_sets": true,
