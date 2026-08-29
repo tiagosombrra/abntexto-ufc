@@ -2,7 +2,7 @@
   "schema_version": 1,
   "phase": "N15-B2R-B4",
   "reviewed_at": "2026-08-29",
-  "status": "PR_CERTIFICATION_PENDING",
+  "status": "DONE",
   "base_main_sha": "92f17418dfeee4d2d45456912af9f8c399457cc1",
   "base_contracts": {
     "b1": {
@@ -67,7 +67,7 @@
     "latest_technical_candidate_before_documentation_sync": "eee967e12a926de647a40aff2a846fc0a8ff155d",
     "technical_candidate_behind_by": 0,
     "technical_candidate_source": {"run_number": 439, "run_id": 33262341143, "conclusion": "SUCCESS"},
-    "technical_candidate_preflight": {"run_number": 1112, "run_id": 33262341220, "role": "diagnostic-before-final-documentation-sync"},
+    "technical_candidate_preflight": {"run_number": 1112, "run_id": 33262341220, "role": "diagnostic-before-final-documentation-sync", "conclusion": "SUCCESS"},
     "known_fixture_fixes": [
       "rename private TeX helpers from invalid digit-bearing control sequences to BFour helpers",
       "correct nested expl3 property-map callback parameters",
@@ -75,7 +75,69 @@
       "isolate listings proof with an ASCII-only B4 Python fixture without modifying the shared UTF-8 fixture"
     ],
     "runtime_divergence_observed": false,
-    "final_exact_head_certification_required": true
+    "final_exact_head_certification_required": true,
+    "final_exact_head": "44c9c5082598b82e67a0b3ef009c4bb71a584571",
+    "final_exact_head_behind_by": 0,
+    "final_exact_head_certification": {
+      "normative_source_contract": {"run_number": 442, "run_id": 33262519263, "conclusion": "SUCCESS"},
+      "latex_preflight": {"run_number": 1115, "run_id": 33262519254, "conclusion": "SUCCESS"},
+      "paired_equivalence": {
+        "conclusion": "SUCCESS",
+        "state_lines": 66,
+        "pages": 23,
+        "state_equal": true,
+        "text_equal": true,
+        "geometry_equal": true,
+        "auxiliary_equal": true,
+        "raster_sha256_equal": true,
+        "pdfa_2b": true,
+        "structural_pass": 16,
+        "structural_fail": 0,
+        "structural_skip": 0
+      }
+    },
+    "merge": {
+      "method": "squash",
+      "expected_head_sha": "44c9c5082598b82e67a0b3ef009c4bb71a584571",
+      "resulting_main_sha": "a4f2660ef46826c7d61a7dc3d9de6554f6d6a825"
+    }
+  },
+  "completion": {
+    "resulting_main_sha": "a4f2660ef46826c7d61a7dc3d9de6554f6d6a825",
+    "post_merge_certification": {
+      "normative_source_contract": {"run_number": 443, "run_id": 33263191118, "conclusion": "SUCCESS"},
+      "latex_preflight_push": {"run_number": 1116, "run_id": 33263191096, "conclusion": "SUCCESS"},
+      "gate_t": {
+        "run_number": 1117,
+        "run_id": 33263196260,
+        "conclusion": "SUCCESS",
+        "reference_pdfa_2b": "SUCCESS",
+        "profile_matrix_pdfa_2b": "SUCCESS",
+        "objects_bibliography": "SUCCESS",
+        "posttextual": "SUCCESS",
+        "structure_b4": "SUCCESS",
+        "overleaf_stable_proxy": "SUCCESS",
+        "windows_literal_font_build": "SUCCESS",
+        "windows_literal_font_certification": "SUCCESS",
+        "aggregate": "SUCCESS"
+      },
+      "distribution": {
+        "run_number": 249,
+        "run_id": 33263191120,
+        "conclusion": "SUCCESS",
+        "gate_t_prerequisite": "SUCCESS",
+        "release_preflight": "SUCCESS",
+        "release_pdfa_2b": "SUCCESS",
+        "deterministic_bundles": "SUCCESS",
+        "overleaf_import_proxy": "SUCCESS",
+        "candidate_upload": "SUCCESS",
+        "aggregate": "SUCCESS",
+        "github_release": "SKIPPED_NO_TAG"
+      }
+    },
+    "runtime_divergence_observed": false,
+    "b2r_public_naming_migration_closed": true,
+    "scientific_article_runtime_transition_ready_after_state_sync_certification": true
   },
   "policy": {
     "migration": "additive",

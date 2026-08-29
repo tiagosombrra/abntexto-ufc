@@ -2,21 +2,13 @@
 
 Updated: 2026-08-29
 
-Checkpoint: **N15-B2R-B3 is DONE. N15-B2R-B4 is ACTIVE in PR #155. B4 is evidence-only and must prove Portuguese/canonical-English semantic and rendered equivalence without changing the certified public-API runtime.**
+Checkpoint: **N15-B2R is technically closed. B2R-B4 is DONE and fully certified on `main` `a4f2660ef46826c7d61a7dc3d9de6554f6d6a825`. This branch performs the bounded post-merge documentation sync only. Scientific-article runtime N15-B2B remains blocked until this state-sync is exact-head certified, merged, and the resulting `main` is re-certified.**
 
-Certified B4 base `main`:
+State-sync branch:
 
-`92f17418dfeee4d2d45456912af9f8c399457cc1`
+`docs/n15-b2r-b4-post-merge-sync`
 
-Active branch:
-
-`refactor/n15-b2r-b4-en-pt-equivalence`
-
-Active pull request:
-
-PR #155 — `test: certify EN/PT public API equivalence`
-
-Live Git/PR/CI state is the execution authority. Do not add receipt-only commits merely to record a transient branch head.
+Live Git/PR/CI state is the execution authority. Do not create receipt-only follow-up commits merely to record transient state-sync SHAs.
 
 ## Mandatory guardrails
 
@@ -26,14 +18,12 @@ Live Git/PR/CI state is the execution authority. Do not add receipt-only commits
 - frozen N12 workflow blob: `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`;
 - v2.x public API migration is additive;
 - supported Portuguese setup keys/values/commands/environments remain supported;
-- B4 must not change the public API surface, normative behavior or `abntexto-ufc/public-api.def`;
-- B4 frozen public-API runtime blob: `7b61fe70dd85ed895140f846272e097e3ded72cf`;
-- setup inventory remains exactly 132 keys / 79 scoped values;
-- command/environment inventory remains exactly 77 commands / 11 environments / 2 extension hooks;
-- scientific-article runtime remains disabled until B2R-B4 closes and the resulting `main` is fully re-certified;
+- final B2R public-API runtime blob: `7b61fe70dd85ed895140f846272e097e3ded72cf`;
+- final B2R inventory remains exactly 132 setup keys / 79 scoped values / 77 commands / 11 environments / 2 extension hooks;
 - UFC institutional mark and proprietary Microsoft fonts remain excluded from public bundles;
 - class version remains v2.1.0 until N15-C;
-- physical branch cleanup remains deferred until final certification/tag.
+- physical branch cleanup remains deferred until final certification/tag;
+- N15-B2B must start only from the certified `main` produced after this bounded state-sync.
 
 ## Canonical roadmap
 
@@ -48,8 +38,9 @@ Live Git/PR/CI state is the execution authority. Do not add receipt-only commits
 | N15-B2R-B1 | public-API baseline + executable contract | DONE — PR #150 + PR #151 |
 | N15-B2R-B2 | canonical setup keys/values + Portuguese compatibility | DONE — PR #152 + PR #153 |
 | N15-B2R-B3 | canonical commands/environments + compatibility wrappers | DONE — PR #154 |
-| N15-B2R-B4 | EN/PT semantic/output equivalence + exact-head closure | ACTIVE — PR #155 |
-| N15-B2B | scientific-article runtime | BLOCKED by B2R-B4 |
+| N15-B2R-B4 | EN/PT semantic/output equivalence + exact-head closure | DONE — PR #155 |
+| B2R-B4 state sync | bounded documentation closure | ACTIVE |
+| N15-B2B | scientific-article runtime | BLOCKED only by state-sync certification |
 | N15-B2C | scientific-article evidence closure | BLOCKED by B2B |
 | N15-B3 | remaining pre-release corrections | BLOCKED by B2C |
 | N15-C | v2.2.0 release candidate | BLOCKED by N15-B3 |
@@ -57,151 +48,113 @@ Live Git/PR/CI state is the execution authority. Do not add receipt-only commits
 
 N15 remains ACTIVE.
 
-## B2R-B1/B2 — frozen prerequisites
+## Frozen B2R contracts
 
-Frozen contracts:
+- B1 public-API baseline: `release/n15-b2r-b-public-api.json`, blob `c1f545e0e707822959db851a74d29f4068dff731`;
+- B2 setup aliases: `release/n15-b2r-b2-setup-aliases.json`, blob `19df208fb59af5ea37556d962e5986a43094c7f5`;
+- B3 command/environment aliases: `release/n15-b2r-b3-command-environment-aliases.json`, blob `bfcbf8aca3fba3fd602f62895f10fa2d6277b5a4`;
+- B4 equivalence record: `release/n15-b2r-b4-en-pt-equivalence.json`;
+- public-API runtime: `abntexto-ufc/public-api.def`, blob `7b61fe70dd85ed895140f846272e097e3ded72cf`;
+- N12 workflow: blob `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
 
-- B1: `release/n15-b2r-b-public-api.json`, blob `c1f545e0e707822959db851a74d29f4068dff731`;
-- B2: `release/n15-b2r-b2-setup-aliases.json`, blob `19df208fb59af5ea37556d962e5986a43094c7f5`.
+Final public inventory:
 
-B2 final setup inventory:
+- 67 compatibility setup keys + 65 canonical setup keys = 132;
+- 45 compatibility scoped values + 34 canonical scoped values = 79;
+- 47 prior commands + 30 canonical commands = 77;
+- 6 prior UFC environments + 5 canonical environments = 11;
+- 2 extension hooks unchanged.
 
-- 67 legacy setup keys + 65 canonical keys = 132 live keys;
-- 45 legacy scoped values + 34 canonical scoped values = 79 live `(key,value)` identities;
-- Portuguese compatibility remains supported;
-- `type=article` and its compatibility form remain reserved-only, not runtime support.
+Portuguese v2.x compatibility remains supported. `type=article` and its compatibility form remain reserved-only until N15-B2B implements runtime support.
 
-## B2R-B3 — DONE
+## B2R-B4 — DONE
 
-B3 added canonical command/environment wrappers in `abntexto-ufc/public-api.def` without rewriting certified behavior modules.
+B4 certified that the completed canonical-English public vocabulary is behaviorally equivalent to the supported Portuguese compatibility vocabulary without changing the frozen runtime.
 
-Final inventory:
+Observable equivalence required and passed:
 
-- 47 prior commands preserved + 30 canonical commands = 77 commands;
-- 6 prior UFC environments preserved + 5 canonical environments = 11 environments;
-- 2 extension hooks unchanged;
-- setup surface unchanged at 132/79;
-- article runtime remained false.
+1. exact reviewed setup/command/environment forwarding;
+2. exact normalized internal-state equality;
+3. exact `pdftotext -layout` equality;
+4. equal page count and page dimensions;
+5. equal generated TOC/list/bibliography artifacts;
+6. equal fixed-parameter per-page raster SHA-256;
+7. PDF/A-2b declaration for both paired outputs.
 
-Semantic decisions remain frozen:
+Final B4 runtime evidence on the exact PR head reported:
 
-- `\ufcPrintSummary` and `\ufcPrintAbstract` are distinct;
-- `\ufcPrintEpigraph[short|long]` forwards to compatibility values `[curta|longa]`;
-- `\ufcPrintListOfTextTables` preserves the distinct `quadro` concept;
-- optional listing/minted/algorithm aliases exist only when their certified module surface is live;
-- upstream `\keywords` remains upstream API.
+- 66 normalized state lines equal;
+- 23 pages;
+- raster SHA-256 equality across all 23 pages;
+- state/text/geometry/auxiliary/raster/PDF-A predicates all `true`;
+- structural validation `PASS=16 FAIL=0 SKIP=0`;
+- no public-runtime/API divergence observed.
 
-B3 machine contract:
+### PR #155 exact-head closure
 
-`release/n15-b2r-b3-command-environment-aliases.json`
+Final exact PR head:
 
-Frozen B3 blob for B4:
+`44c9c5082598b82e67a0b3ef009c4bb71a584571`
 
-`bfcbf8aca3fba3fd602f62895f10fa2d6277b5a4`
-
-### B3 exact-head closure
-
-PR #154 final exact head:
-
-`0630d19cb6ba3274d0e2e1a738343f8c74afe148`
-
-Before merge:
+Pre-merge state:
 
 - `behind_by=0`;
-- Normative Source Contract #432 — SUCCESS, run `33252829652`;
-- LaTeX preflight #1104 — SUCCESS, run `33252829650`.
+- Normative Source Contract #442 — SUCCESS, run `33262519263`;
+- LaTeX preflight #1115 — SUCCESS, run `33262519254`;
+- B4 paired equivalence gate — SUCCESS.
 
-PR #154 was squash-merged with expected-head protection, producing:
+PR #155 was squash-merged with expected-head protection, producing:
 
-`main` `92f17418dfeee4d2d45456912af9f8c399457cc1`
+`main` `a4f2660ef46826c7d61a7dc3d9de6554f6d6a825`
 
-Post-merge certification on that exact SHA:
+### Post-merge certification
 
-- Normative Source Contract #433 — SUCCESS, run `33253212796`;
-- LaTeX preflight push #1105 — SUCCESS, run `33253212823`;
-- exact/dispatched Gate T #1106 — SUCCESS, run `33253216564`;
-- Distribution #248 — SUCCESS, run `33253212813`;
-- reference + PDF/A-2b, 12-profile matrix + PDF/A-2b, objects/bibliography, post-textuals, structure, Overleaf stable proxy and Windows literal-font build/certification — SUCCESS;
-- release PDF/A-2b, deterministic bundles, Overleaf import proxy, candidate upload and aggregate distribution-preflight — SUCCESS;
-- GitHub Release publication — correctly SKIPPED because no tag exists.
+On exact `main` `a4f2660e...`:
 
-B3 is closed. No standalone receipt-only B3 state-sync PR is allowed.
+- Normative Source Contract #443 — SUCCESS, run `33263191118`;
+- LaTeX preflight push #1116 — SUCCESS, run `33263191096`;
+- exact/dispatched Gate T #1117 — SUCCESS, run `33263196260`;
+- Distribution #249 — SUCCESS, run `33263191120`.
 
-## B2R-B4 — ACTIVE
+Gate T #1117 confirmed SUCCESS for:
 
-### Authority and machine contract
+- reference document + PDF/A-2b;
+- 12-profile matrix + PDF/A-2b;
+- objects/bibliography;
+- post-textuals;
+- layout/fonts/pre-textuals/projects structure including B4;
+- Overleaf stable proxy;
+- Windows literal Times New Roman/Arial build;
+- Windows literal-font identity, Unicode extraction, embedding and PDF/A-2b certification;
+- aggregate `latex-preflight`.
 
-B4 starts only from certified `main` `92f17418...` and is recorded in:
+Distribution #249 confirmed SUCCESS for:
 
-`release/n15-b2r-b4-en-pt-equivalence.json`
+- Gate T prerequisite;
+- release preflight;
+- release PDF/A-2b;
+- deterministic release bundles;
+- Overleaf import bundle proxy;
+- candidate upload;
+- aggregate distribution preflight.
 
-B4 freezes:
+GitHub Release publication was correctly skipped because no release tag exists.
 
-- B1 contract blob `c1f545e0e707822959db851a74d29f4068dff731`;
-- B2 contract blob `19df208fb59af5ea37556d962e5986a43094c7f5`;
-- B3 contract blob `bfcbf8aca3fba3fd602f62895f10fa2d6277b5a4`;
-- public-API runtime blob `7b61fe70dd85ed895140f846272e097e3ded72cf`;
-- N12 workflow blob `aca746454be3ce2e650bd2f50d70b2f42d7d31e1`.
+## State-sync closure rule
 
-B4 has no authority to add/remove aliases or change formatting/runtime semantics. Any mismatch must first be classified as evidence/fixture defect versus a previously undetected API defect; runtime changes require an explicit scope decision rather than silent repair.
+This branch is documentation-only. It must not modify runtime, tests, normative contracts or workflows. Closure procedure:
 
-### Equivalence model
+1. exact-head Source + LaTeX preflight SUCCESS;
+2. `behind_by=0`;
+3. squash-merge with expected-head protection;
+4. re-certify resulting `main` through Source, Gate T and Distribution;
+5. do not create another receipt-only documentation PR;
+6. after the resulting `main` is certified, begin N15-B2B from that exact SHA.
 
-Raw PDF byte identity is deliberately not required because document metadata/internal identifiers may vary. Observable behavior must be equivalent.
+The state-sync PR body/final execution report may record its own exact-head and resulting-main receipts; the tracked documentation does not need an unbounded receipt loop.
 
-B4 proves:
+## Next phase — N15-B2B
 
-1. static forwarding integrity for the complete reviewed B2/B3 mappings;
-2. exact normalized internal state after equivalent Portuguese and canonical-English setup;
-3. exact `pdftotext -layout` output;
-4. equal page count and page size;
-5. equal generated TOC/list/bibliography artifacts when present;
-6. equal per-page raster SHA-256 at fixed rendering parameters;
-7. PDF/A-2b declaration for both outputs.
+N15-B2B is the first runtime phase after B2R. It must consume the already-approved scientific-article source/normative contract from N15-B2A and implement canonical article support without weakening the certified thesis/dissertation/project profiles.
 
-Evidence surfaces:
-
-- `tests/checks/public_api_equivalence_contract.py`;
-- `tests/normativa/public-api-equivalence.tex`;
-- `tests/fixtures/public-api-equivalence-summary.tex`;
-- `tests/fixtures/public-api-equivalence-example.py`;
-- `tests/v2-public-api-equivalence-check.sh`;
-- `tests/run.py`, where `repository` depends on `public-api-equivalence`.
-
-Expected inventory remains unchanged: 132 setup keys, 79 scoped values, 77 commands, 11 environments and 2 hooks.
-
-### PR #155 certification history
-
-PR #155 was opened from certified B3 `main` and remains evidence-only. All CI failures observed before this synchronization were classified as fixture/evidence defects; no public-runtime/API divergence was observed.
-
-Corrections applied:
-
-1. private TeX helpers containing digit `4` were renamed from invalid `B4...` control sequences to valid `BFour...` helpers;
-2. nested `expl3` property-map callback parameters were corrected to `##1` / `##2`;
-3. the remaining summary helper reference was corrected to `\BFourSummaryKeywords`;
-4. the listings proof was isolated from the shared UTF-8 Python fixture by adding the ASCII-only B4 fixture `tests/fixtures/public-api-equivalence-example.py`; the shared fixture was not modified.
-
-Latest technical candidate before this documentation synchronization:
-
-`eee967e12a926de647a40aff2a846fc0a8ff155d`
-
-Evidence already known for that candidate:
-
-- `behind_by=0` before documentation sync;
-- Normative Source Contract #439 — SUCCESS, run `33262341143`;
-- LaTeX preflight #1112 — diagnostic execution launched, run `33262341220`.
-
-The documentation synchronization creates a new PR head. Therefore #1112 is diagnostic evidence for the technical candidate, not the final exact-head certification. The final PR head must independently pass Source and LaTeX preflight before merge.
-
-### B4 closure gate
-
-Before B4 can be marked DONE:
-
-1. require the synchronized PR #155 final head to be `behind_by=0`;
-2. require Normative Source and LaTeX preflight SUCCESS on that exact head, including the B4 equivalence gate;
-3. squash-merge PR #155 with expected-head protection;
-4. re-certify the resulting `main` through Source, full push preflight/Gate T and Distribution;
-5. require Windows literal-font certification and Overleaf stable proxy SUCCESS through the normal Gate T;
-6. only then mark B2R-B4 DONE and unblock N15-B2B scientific-article runtime.
-
-Do not start scientific-article runtime before this closure completes.
+Before implementation, re-open the B2A contract and current profile-routing code, then define the smallest runtime delta. Expected canonical engineering surface remains `articles.def` and reserved setup value `type=article`; Portuguese compatibility must follow the established additive v2.x policy.
