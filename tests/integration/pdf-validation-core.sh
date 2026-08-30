@@ -1,9 +1,10 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/pdf-oracle-core.tex"
-job="pdf-oracle-core"
-evidence="artifacts/normative-oracle/core.json"
+fixture="tests/documents/pdf-validation-core-test.tex"
+job="pdf-validation-core"
+evidence="artifacts/pdf-validation/core.json"
+log="/tmp/abntexto-ufc-pdf-validation-core.log"
 
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
@@ -16,8 +17,8 @@ for pass in 1 2; do
     -interaction=nonstopmode \
     -halt-on-error \
     -file-line-error \
-    "$fixture" > /tmp/abntexto-ufc-v2-pdf-oracle-core.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-pdf-oracle-core.log
+    "$fixture" > "$log" 2>&1 || {
+      cat "$log"
       exit 1
     }
 done
@@ -26,19 +27,19 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo 'PDF oracle core falhou: warning ou overflow não reconhecido.'
+  echo 'PDF validation core failed: unrecognized warning or overflow.'
   exit 1
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/pdf_oracle_core.py \
+python3 tests/checks/pdf_validation_core.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'PDF oracle core falhou: evidência JSON não foi gerada.'
+  echo 'PDF validation core failed: evidence JSON was not generated.'
   exit 1
 }
 
-echo 'Gate N5 do núcleo do oracle PDF concluído.'
+echo 'PDF validation core gate completed.'

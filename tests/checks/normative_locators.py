@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
 
-AUDIT = ROOT / "normativa" / "locator-audit.json"
+AUDIT = ROOT / "standards" / "locator-audit.json"
 SUPPLEMENT_GLOB = "locator-audit-*.json"
 SOURCE_STATUSES = {"VERIFIED", "UNAVAILABLE_WITH_REASON", "NOT_APPLICABLE"}
 
@@ -135,9 +135,7 @@ def main() -> None:
         fail("incremental locator audit set does not reach the current full-contract review")
 
     rules = {rule["id"]: rule for rule in contract["rules"]}
-    normative_ids = {
-        rule_id for rule_id, rule in rules.items() if rule.get("authority") == "normative"
-    }
+    normative_ids = {rule_id for rule_id, rule in rules.items() if rule.get("authority") == "normative"}
     allowed_statuses = set(audit["policy"]["allowed_statuses"])
 
     rulesets = audit["rulesets"]

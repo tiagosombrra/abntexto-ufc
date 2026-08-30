@@ -21,24 +21,24 @@ from pdf_measurement import (
     typography_runs,
 )
 
-POLICY = ROOT / "normativa" / "oracle-policy.json"
+POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"PDF oracle core failed: {message}")
+    raise SystemExit(f"PDF validation core failed: {message}")
 
 
 def load_policy() -> dict[str, Any]:
     try:
         data = json.loads(POLICY.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        fail(f"cannot load oracle policy: {exc}")
-    if data.get("schema_version") != 1 or data.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail(f"cannot load validation reference policy: {exc}")
+    if data.get("schema_version") != 2:
+        fail("unsupported validation reference policy schema")
     tolerances = data.get("tolerances")
     if not isinstance(tolerances, dict):
-        fail("oracle tolerances are required")
+        fail("validation tolerances are required")
     for key in (
         "page_size_pt",
         "horizontal_position_pt",
@@ -47,7 +47,7 @@ def load_policy() -> dict[str, Any]:
     ):
         value = tolerances.get(key)
         if not isinstance(value, (int, float)) or value <= 0:
-            fail(f"invalid oracle tolerance: {key}")
+            fail(f"invalid validation tolerance: {key}")
     return data
 
 
@@ -89,7 +89,7 @@ def minimum_assertion(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate the N5 PDF oracle core fixture.")
+    parser = argparse.ArgumentParser(description="Validate the isolated PDF measurement reference fixture.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -114,17 +114,17 @@ def main() -> None:
         fonts = font_inventory(pdf)
 
         if len(pages) != 1:
-            fail(f"isolated oracle fixture must contain one page, got {len(pages)}")
+            fail(f"isolated validation fixture must contain one page, got {len(pages)}")
         page = pages[0]
 
-        _, left = find_marker(pages, "UFCORACLELEFT")
-        _, right = find_marker(pages, "UFCORACLERIGHT")
-        _, block = find_marker(pages, "UFCORACLEBLOCK")
-        _, body = find_marker(pages, "UFCORACLEBODY")
-        _, reduced = find_marker(pages, "UFCORACLEREDUCED")
+        _, left = find_marker(pages, "UFCVALIDATIONLEFT")
+        _, right = find_marker(pages, "UFCVALIDATIONRIGHT")
+        _, block = find_marker(pages, "UFCVALIDATIONBLOCK")
+        _, body = find_marker(pages, "UFCVALIDATIONBODY")
+        _, reduced = find_marker(pages, "UFCVALIDATIONREDUCED")
 
-        body_type = find_typography_marker(typography, "UFCORACLEBODY")
-        reduced_type = find_typography_marker(typography, "UFCORACLEREDUCED")
+        body_type = find_typography_marker(typography, "UFCVALIDATIONBODY")
+        reduced_type = find_typography_marker(typography, "UFCVALIDATIONREDUCED")
     except PDFMeasurementError as exc:
         fail(str(exc))
 
@@ -136,71 +136,24 @@ def main() -> None:
     reduced_font_expected = float(reduced_font_rule["values"]["pt"])
 
     checks = [
-        assertion(
-            "page.width",
-            page.width,
-            width_expected,
-            tolerances["page_size_pt"],
-            "pt",
-        ),
-        assertion(
-            "page.height",
-            page.height,
-            height_expected,
-            tolerances["page_size_pt"],
-            "pt",
-        ),
-        assertion(
-            "marker.left.x-min",
-            left.box.x_min,
-            left_expected,
-            tolerances["horizontal_position_pt"],
-            "pt",
-        ),
-        assertion(
-            "marker.right.x-max",
-            right.box.x_max,
-            right_expected,
-            tolerances["horizontal_position_pt"],
-            "pt",
-        ),
-        minimum_assertion(
-            "block.below-page-midpoint",
-            block.box.y_min,
-            page.height / 2.0,
-            tolerances["vertical_position_pt"],
-            "pt",
-        ),
-        assertion(
-            "typography.body.font-size",
-            body_type.font_size,
-            body_font_expected,
-            tolerances["font_size_pt"],
-            "pt",
-        ),
-        assertion(
-            "typography.reduced.font-size",
-            reduced_type.font_size,
-            reduced_font_expected,
-            tolerances["font_size_pt"],
-            "pt",
-        ),
+        assertion("page.width", page.width, width_expected, tolerances["page_size_pt"], "pt"),
+        assertion("page.height", page.height, height_expected, tolerances["page_size_pt"], "pt"),
+        assertion("marker.left.x-min", left.box.x_min, left_expected, tolerances["horizontal_position_pt"], "pt"),
+        assertion("marker.right.x-max", right.box.x_max, right_expected, tolerances["horizontal_position_pt"], "pt"),
+        minimum_assertion("block.below-page-midpoint", block.box.y_min, page.height / 2.0, tolerances["vertical_position_pt"], "pt"),
+        assertion("typography.body.font-size", body_type.font_size, body_font_expected, tolerances["font_size_pt"], "pt"),
+        assertion("typography.reduced.font-size", reduced_type.font_size, reduced_font_expected, tolerances["font_size_pt"], "pt"),
     ]
 
     result = "PASS" if all(item["status"] == "PASS" for item in checks) else "FAIL"
     payload = {
-        "schema_version": 1,
-        "phase": "N5",
-        "fixture": "tests/normativa/pdf-oracle-core.tex",
+        "schema_version": 2,
+        "fixture": "tests/documents/pdf-validation-core-test.tex",
         "pdf": pdf.name,
         "source_commit_sha": args.commit_sha,
         "policy_reviewed_at": policy["reviewed_at"],
         "result": result,
-        "page": {
-            "index": page.index,
-            "width": page.width,
-            "height": page.height,
-        },
+        "page": {"index": page.index, "width": page.width, "height": page.height},
         "markers": {
             "left": left.box.to_dict(),
             "right": right.box.to_dict(),
@@ -208,27 +161,21 @@ def main() -> None:
             "body": body.box.to_dict(),
             "reduced": reduced.box.to_dict(),
         },
-        "typography": {
-            "body": body_type.to_dict(),
-            "reduced": reduced_type.to_dict(),
-        },
+        "typography": {"body": body_type.to_dict(), "reduced": reduced_type.to_dict()},
         "pdfinfo": info,
         "fonts": fonts,
         "assertions": checks,
     }
 
     args.json.parent.mkdir(parents=True, exist_ok=True)
-    args.json.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     failed = [item["id"] for item in checks if item["status"] != "PASS"]
     if failed:
         fail("measurement assertions failed: " + ", ".join(failed))
 
     print(
-        "PDF oracle core passed: "
+        "PDF validation core passed: "
         f"page={page.width:.2f}x{page.height:.2f}pt, "
         f"left={left.box.x_min:.2f}pt, right={right.box.x_max:.2f}pt, "
         f"block-y={block.box.y_min:.2f}pt, "
