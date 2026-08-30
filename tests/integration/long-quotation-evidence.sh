@@ -1,11 +1,11 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-long-quotation.tex"
-job="textual-oracle-long-quotation"
-evidence="artifacts/normative-textual/long-quotation.json"
-reduced_evidence="artifacts/normative-textual/long-quote-reduced-size.json"
-log="/tmp/abntexto-ufc-v2-long-quotation.log"
+fixture="tests/documents/mainmatter-long-quotation-test.tex"
+job="long-quotation-evidence"
+evidence="artifacts/normative/mainmatter/long-quotation.json"
+reduced_evidence="artifacts/normative/mainmatter/long-quotation-reduced-size.json"
+log="/tmp/abntexto-ufc-long-quotation.log"
 
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
@@ -28,7 +28,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Auditoria de citação direta longa falhou: warning ou overflow não reconhecido em $fixture."
+  echo "Long-quotation validation failed: unrecognized warning or overflow in $fixture."
   exit 1
 fi
 
@@ -39,7 +39,7 @@ python3 tests/checks/normative_long_quotation.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Auditoria de citação direta longa falhou: evidência JSON não foi gerada.'
+  echo 'Long-quotation validation failed: JSON evidence was not generated.'
   exit 1
 }
 
@@ -49,8 +49,8 @@ python3 tests/checks/normative_long_quote_reduced_size.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$reduced_evidence" || {
-  echo 'Auditoria N8 de tamanho reduzido da citação longa falhou: evidência JSON não foi gerada.'
+  echo 'Long-quotation reduced-size validation failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência N6/N8 para citação direta longa concluído.'
+echo 'LONG-QUOTATION-EVIDENCE-GATE status=PASS'

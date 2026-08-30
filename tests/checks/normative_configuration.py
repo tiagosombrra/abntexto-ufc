@@ -21,7 +21,7 @@ LITERAL_CASES = (
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N13 configuration receipt failed: {message}")
+    raise SystemExit(f"Configuration rejection validation failed: {message}")
 
 
 def font_rows(names: tuple[str, ...]) -> list[dict[str, str]]:
@@ -48,12 +48,12 @@ def validate_binding(namespace: dict[str, Any], check: Any) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Bind N13 configuration-strict rejection to the existing UFC PDF validator semantics."
+        description="Validate strict versus portable literal-font rejection behavior."
     )
     parser.add_argument(
         "--json",
         type=Path,
-        default=ROOT / "artifacts" / "n13-negative" / "configuration-strict-rejection.json",
+        default=ROOT / "artifacts" / "negative-paths" / "configuration-strict-rejection.json",
     )
     return parser.parse_args()
 
@@ -61,7 +61,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     sys.path.insert(0, str(ROOT / "tools"))
-    namespace = runpy.run_path(str(VALIDATOR), run_name="n13_configuration_validator")
+    namespace = runpy.run_path(str(VALIDATOR), run_name="configuration_rejection_validator")
 
     strict = literal_check(namespace, FALLBACK_NAMES, "strict")
     portable = literal_check(namespace, FALLBACK_NAMES, "portable")
@@ -69,9 +69,9 @@ def main() -> None:
     validate_binding(namespace, portable)
 
     if strict.status != namespace["FAIL"]:
-        fail(f"same textual fallback must be REPROVADO in strict; observed {strict.status}")
+        fail(f"the same textual fallback must fail in strict mode; observed {strict.status}")
     if portable.status != namespace["WARN"]:
-        fail(f"same textual fallback must be ALERTA in portable; observed {portable.status}")
+        fail(f"the same textual fallback must warn in portable mode; observed {portable.status}")
     if not strict.mandatory:
         fail("strict font.literal check must remain mandatory")
     if portable.mandatory:
@@ -82,7 +82,7 @@ def main() -> None:
         check = literal_check(namespace, names, "strict")
         validate_binding(namespace, check)
         if check.status != namespace["PASS"]:
-            fail(f"literal allowed family must pass in strict: {names}: {check.status}")
+            fail(f"literal allowed family must pass in strict mode: {names}: {check.status}")
         literal_results.append(
             {
                 "names": list(names),
@@ -94,8 +94,7 @@ def main() -> None:
 
     rule = namespace["RULES"][RULE_ID]
     payload = {
-        "schema_version": 1,
-        "phase": "N13",
+        "schema_version": 2,
         "mechanism": MECHANISM_ID,
         "source_commit_sha": os.environ.get("SOURCE_COMMIT_SHA", os.environ.get("GITHUB_SHA", "")),
         "result": "PASS",
@@ -120,15 +119,16 @@ def main() -> None:
         "compile_failure_counted_as_rejection": False,
         "normative_contract_changed": False,
         "locator_policy_changed": False,
-        "oracle_tolerances_changed": False,
+        "validator_tolerances_changed": False,
         "proof_state_changed": False,
     }
 
-    args.json.parent.mkdir(parents=True, exist_ok=True)
-    args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output_path = args.json if args.json.is_absolute() else ROOT / args.json
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N13-EVIDENCE mechanism=configuration-strict-rejection status=PASS "
+        "CONFIGURATION-REJECTION-EVIDENCE status=PASS "
         f"rule={RULE_ID} strict={strict.status} portable={portable.status} "
         "same_observation=true compile_failure_counted_as_rejection=false proof_state_changed=false"
     )
