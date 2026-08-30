@@ -1,0 +1,80 @@
+name: R1 constructed path audit
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-rebaseline
+    paths:
+      - .github/workflows/r1-constructed-path-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: refactor/v3-r1-rebaseline
+
+      - name: Audit literal and constructed current paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import re
+          import subprocess
+          from pathlib import Path
+
+          tracked = set(subprocess.check_output(['git', 'ls-files'], text=True).splitlines())
+          roots = ('tests/', 'tools/', 'validator/')
+          excluded = {
+              'tests/checks/canonical_identity.py',
+              'tests/checks/repository_contract.py',
+              'tests/checks/release_package.py',
+              'tests/checks/overleaf_bundle.py',
+              'tests/checks/ctan_archive.py',
+          }
+
+          constructed = re.compile(
+              r'(?:ROOT\s*/\s*["\']standards["\']\s*/\s*["\'](?P<root_name>[^"\']+\.json)["\']'
+              r'|Path\(["\'](?P<path_name>standards/[^"\']+\.json)["\']\)'
+              r'|(?P<literal>standards/[A-Za-z0-9_.-]+\.json))'
+          )
+          missing: list[str] = []
+          refs: list[str] = []
+
+          for item in sorted(tracked):
+              if not item.startswith(roots) or item in excluded:
+                  continue
+              path = Path(item)
+              if not path.is_file() or path.suffix not in {'.py', '.sh', '.tex', '.js', '.html', '.css'}:
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              for match in constructed.finditer(text):
+                  if match.group('root_name'):
+                      candidate = f"standards/{match.group('root_name')}"
+                  elif match.group('path_name'):
+                      candidate = match.group('path_name')
+                  else:
+                      candidate = match.group('literal')
+                  refs.append(f'{item}: {candidate}')
+                  if candidate not in tracked and not Path(candidate).is_file():
+                      missing.append(f'{item}: {candidate}')
+
+          print(f'Current standards references inspected: {len(refs)}')
+          if missing:
+              print('Missing current standards references:')
+              for item in sorted(set(missing)):
+                  print(f'  {item}')
+              raise SystemExit(f'{len(set(missing))} missing current standards reference(s).')
+          print('All current standards references resolve to tracked files.')
+          PY
