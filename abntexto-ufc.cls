@@ -5,7 +5,7 @@
 % V2 redesign and maintenance: Tiago Guimarães Sombra.
 % Historical lineage adapted from ueceTeX2 by Thiago Nascimento.
 % Distributed under LPPL 1.3c or later; see LICENSE.
-% Normative policy and version matrix: docs/NORMAS.md.
+% Normative policy and current technical basis: docs/NORMATIVE-BASE.md.
 % Always target the latest applicable ABNT edition.
 
 \LoadClass[12pt]{abntexto}

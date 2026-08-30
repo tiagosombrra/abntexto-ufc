@@ -2,204 +2,89 @@
 
 Updated: 2026-08-30
 
-## Purpose
+This document defines the target engineering architecture for `abntexto-ufc` v3.0.0. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
 
-This document defines the target engineering architecture for `abntexto-ufc` v3.0.0. It is normative for repository organization and module ownership, but it does not create academic formatting requirements. Academic requirements are governed by the standards and institutional source contracts.
+## Design principles
 
-## Design goals
+The v3 tree must be explicit, English-first for engineering surfaces, easy to navigate, free of duplicate ownership, testable, distribution-safe, and free of runtime compatibility layers whose only purpose is preserving removed v2 project API.
 
-The v3 architecture must be:
+The repository is an active product tree, not an archive. Historical evidence belongs to Git commits, tags, releases, issues, pull requests, and certified SHAs. No `history/` museum directories or dormant future-phase ledgers are part of the active architecture.
 
-- English-first for engineering identifiers and explanations;
-- structurally explicit;
-- easy to navigate for maintainers;
-- stable for local, Overleaf and CTAN distribution;
-- free of runtime compatibility layers whose only purpose is to preserve the removed v2 Portuguese project API;
-- modular without duplicate ownership;
-- testable through machine-readable contracts.
-
-## Top-level responsibilities
-
-### `abntexto-ufc.cls`
-
-Single canonical class entry point. It loads the supported upstream base class and project runtime modules in a documented order.
-
-The v3 product does not ship `ufctex.cls` as a compatibility wrapper.
-
-### `abntexto-ufc/`
-
-Runtime implementation only. User-editable academic content does not live here.
-
-Canonical module responsibilities:
-
-- `core.def` — canonical setup keys, document/profile state, shared metadata primitives and project-wide conditionals;
-- `fonts.def` — typography selection, strict-font policy and engine-specific font resolution;
-- `layout.def` — page geometry, section/page-break policy and structural layout primitives;
-- `modules.def` — optional feature-module selection and initialization;
-- `frontmatter.def` — pre-textual/front-matter rendering capabilities;
-- `institutional.def` — UFC institutional assets/presentation policies;
-- `academic-works.def` — capstone/dissertation/thesis-specific behavior;
-- `research-projects.def` — research-project profiles;
-- `articles.def` — scientific-article profile, introduced only in V3-A1;
-- `objects.def` — figures, charts, text tables, code listings, algorithms and object captions/notes;
-- `bibliography.def` — citation/reference integration and canonical bibliography public surface;
-- `backmatter.def` — appendices, annexes, glossary, index and post-textual/back-matter behavior.
-
-### `abntexto-ufc/integrations/`
-
-Adapters for external packages/classes where the project must account for an upstream implementation detail. These are not deprecated compatibility layers.
-
-Example:
-
-- `abntexto.def` — targeted adaptation to supported `abntexto` behavior.
-
-An integration module must state:
-
-1. which upstream package/class it integrates with;
-2. which upstream behavior requires adaptation;
-3. the minimum supported upstream version;
-4. how the adaptation is tested;
-5. when the adaptation can be removed.
-
-### `abntexto-ufc/standards/`
-
-Narrow runtime adaptations required to satisfy a current technical-standard behavior not yet fully supplied by an upstream dependency.
-
-Example:
-
-- `nbr6023-2025.def` — targeted bibliography adaptation for the current NBR 6023:2025 contract.
-
-These modules must not be called `compat-*`. Their purpose is current conformance, not backward compatibility.
-
-### `template/`
-
-Editable reference academic project. Its engineering paths are English; its rendered academic content may be Portuguese.
+## Top-level layout
 
 ```text
+abntexto-ufc.cls
+abntexto-ufc/
+  core.def
+  fonts.def
+  layout.def
+  modules.def
+  frontmatter.def
+  institutional.def
+  academic-works.def
+  research-projects.def
+  objects.def
+  bibliography.def
+  backmatter.def
+  integrations/abntexto.def
+  standards/nbr6023-2025.def
 template/
-├── main.tex
-├── frontmatter/
-├── chapters/
-├── backmatter/
-└── figures/
+  main.tex
+  frontmatter/
+  chapters/
+  backmatter/
+  figures/
+assets/institutional/
+standards/
+tests/
+  checks/
+  documents/
+  fixtures/
+  integration/
+  smoke/
+tools/
+validator/
+docs/
+release/
 ```
 
-Typical filenames are English even when file contents are Portuguese:
+`articles.def` is introduced only when V3-A1 becomes active. It is not pre-staged as a dormant foundation module.
 
-- `frontmatter/acknowledgments.tex`;
-- `frontmatter/dedication.tex`;
-- `frontmatter/summary.tex`;
-- `chapters/1-introduction.tex`;
-- `chapters/2-theoretical-framework.tex`;
-- `backmatter/references.bib`;
-- `backmatter/appendices/appendix-a.tex`.
+## Runtime ownership
 
-### `standards/`
+`abntexto-ufc.cls` is the only canonical class entry point. v3 does not ship `ufctex.cls`.
 
-Machine-readable source catalog, precedence, atomic rules, coverage rules, locators and normative evidence metadata.
+Runtime responsibilities are separated as follows:
 
-This directory is data/contract infrastructure, not LaTeX runtime. Runtime standard-specific adaptations belong under `abntexto-ufc/standards/`.
+- `core.def`: setup keys, document/profile state, shared metadata, common conditionals;
+- `fonts.def`: font selection, strict-font policy, engine-specific font resolution;
+- `layout.def`: page geometry, section/page-break policy, structural layout primitives;
+- `modules.def`: optional feature selection and initialization;
+- `frontmatter.def`: front-matter rendering capabilities;
+- `institutional.def`: UFC institutional presentation/assets;
+- `academic-works.def`: capstone/dissertation/thesis behavior;
+- `research-projects.def`: research-project behavior;
+- `objects.def`: figures, charts, tables, listings, algorithms, captions, source/note handling;
+- `bibliography.def`: citation/reference integration and public bibliography surface;
+- `backmatter.def`: appendices, annexes, glossary, index, and back-matter behavior.
 
-### `tests/`
+A project-owned internal control sequence has one behavior owner. Public commands are implemented directly by the module that owns the behavior; no forwarding-only compatibility layer is part of the final v3 runtime. `public-api.def` is therefore transitional R2 debt and must disappear after direct ownership is absorbed.
 
-Tests are organized by responsibility:
+## Upstream boundaries
 
-- `checks/` — Python/static/oracle contract checkers;
-- `documents/` — LaTeX documents used to exercise normative/runtime behavior;
-- `fixtures/` — small supporting source/data fixtures;
-- `integration/` — executable shell/Python runners that build or inspect real artifacts;
-- `smoke/` — minimal compile/sanity cases.
+`abntexto-ufc/integrations/` contains current adapters to external package/class behavior. These are not legacy compatibility layers. An upstream identifier may remain non-English when it is genuinely owned by the dependency and must be called at an explicit integration boundary, but it must not be re-exported as canonical project API.
 
-Active tests must not encode a major-version prefix such as `v2-` in their filenames unless the test intentionally validates a historical version.
+`abntexto-ufc/standards/` contains narrow runtime adaptations required for a current technical-standard behavior, such as the current NBR 6023:2025 bibliography adapter.
 
-### `tools/`
+## Editable template and public bundles
 
-Developer/release tooling. Tool names, comments, help text and diagnostics are English.
-
-### `validator/`
-
-User-facing PDF validation application. Engineering implementation is English; human-facing interface language may support Portuguese and/or English independently.
-
-### `docs/`
-
-Active engineering documentation. English is the canonical language for architecture, maintenance, API, build, release and migration documentation.
-
-Historical prose does not need to remain duplicated in active documentation because Git preserves previous versions.
-
-### `release/`
-
-Machine-readable phase, audit, distribution and release ledgers. Active schema/field names are English.
-
-Historical ledgers may preserve historical identifiers when they are evidence, but they must not constrain v3 runtime naming.
-
-## Module loading order
-
-The final exact order is validated during V3-R2/R4, but the architectural dependency direction is:
-
-```text
-core
-  ↓
-fonts / layout
-  ↓
-modules
-  ↓
-frontmatter / institutional
-  ↓
-academic-works / research-projects / articles
-  ↓
-objects
-  ↓
-integrations and standards adapters where required
-  ↓
-bibliography
-  ↓
-backmatter
-```
-
-The class must not load a forwarding-only public API module. Canonical public commands belong to the module that owns their behavior.
-
-## Ownership rule
-
-A project-owned internal control sequence may be defined in exactly one runtime module.
-
-Examples:
-
-- page-break policy belongs to `layout.def`;
-- reference rendering belongs to `bibliography.def`;
-- article code may select or call these capabilities but may not redefine their internal owners.
-
-The repository audit must detect duplicate project-owned internal definitions across runtime modules.
-
-## Public API rule
-
-The v3 public API is implemented directly by behavior owners.
-
-Examples:
-
-- `\ufcPrintReferences` belongs to `bibliography.def`;
-- `\ufcPrintCover` belongs to the academic/institutional module that owns cover rendering;
-- `\ufcPrintSummary` belongs to `frontmatter.def`;
-- `\ufcSource` and `\ufcNote` belong to `objects.def`.
-
-No command exists solely as an alias to a removed Portuguese project command.
-
-## Upstream identifiers
-
-English canonicalization applies only to identifiers owned by this project.
-
-The implementation may legitimately use upstream APIs whose names are outside project control, including `abntexto`, LaTeX, `biblatex`, `babel`, `tabularray-abnt`, `glossaries`, `imakeidx`, and similar dependencies.
-
-An upstream Portuguese identifier is not automatically a violation if it is genuinely owned by an upstream dependency and cannot be replaced without forking that dependency.
-
-## Repository versus bundle layout
-
-Source repository:
+The source repository keeps the editable example under `template/`:
 
 ```text
 template/main.tex
 ```
 
-Template/Overleaf bundle:
+Template and Overleaf bundles flatten `template/` so the user receives:
 
 ```text
 main.tex
@@ -209,26 +94,47 @@ backmatter/
 figures/
 ```
 
-The distribution pipeline is responsible for staging/flattening the editable template. This keeps repository architecture maintainable while preserving a simple end-user project.
+Flattening is a distribution staging responsibility; it must not distort the repository architecture.
 
-## Historical compatibility policy
+## Standards data
 
-v3 is a breaking major release. Runtime compatibility with removed project-owned Portuguese v2 API is not provided.
+Top-level `standards/` contains the current machine-readable source catalog, precedence, rules, locators, and normative evidence metadata needed by the active product. Process ledgers from completed campaigns are not retained merely as historical records.
 
-Migration support is documentation only, through a future `docs/MIGRATION-V2-TO-V3.md` mapping old identifiers to canonical v3 identifiers.
+Scientific-article normative/runtime material is reintroduced only in V3-A1 after current sources are reconfirmed.
 
-Git tags/releases preserve old implementations for users who must remain on v2.
+## Tests and tooling
 
-## Architecture gate
+- `tests/checks/`: static and machine-readable contract checks;
+- `tests/documents/`: LaTeX validation documents;
+- `tests/fixtures/`: supporting test data;
+- `tests/integration/`: executable build/inspection runners;
+- `tests/smoke/`: minimal compilation cases;
+- `tools/`: developer/release tooling.
 
-V3-R4 must enforce at least:
+Active path names must not encode retired major-version or N-phase identities.
 
-- canonical class entry point exists;
+## Validator
+
+`validator/` is project-owned engineering software. Its implementation, controls, technical labels, and diagnostics are English. Portuguese text extracted from or evaluated inside a Brazilian academic PDF is document data, not validator engineering nomenclature.
+
+## Documentation and release state
+
+`docs/` contains current engineering documentation only. `release/` contains current machine-readable migration/release state only. A migration contract remains tracked only while an active migration consumes it; after use it is removed or consolidated.
+
+## Breaking v3 API policy
+
+v3 provides one canonical project API. Removed Portuguese v2 project API is not retained through runtime aliases. Migration support is documentation-only and is written when the migration surface is final; it is not pre-staged as dormant files during R1/R2.
+
+## Architecture gates
+
+The final foundation must prove at least:
+
+- one canonical class entry point;
 - deprecated v2 class wrapper absent;
 - forwarding-only public API module absent;
-- runtime module ownership unique;
+- unique runtime ownership;
 - required runtime modules loaded exactly once;
-- upstream integration modules explicitly scoped;
-- project-owned paths satisfy engineering-language policy;
-- template source tree and distribution output tree are both valid;
-- no generated build artifact is tracked.
+- explicitly scoped upstream integrations;
+- English project-owned engineering paths;
+- valid repository template layout and valid flattened public bundle layout;
+- no generated artifacts, archive directories, or unused migration scaffolding tracked.
