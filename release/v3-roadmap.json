@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "project": "abntexto-ufc",
+  "target_version": "3.0.0",
+  "updated_at": "2026-08-30",
+  "status": "ACTIVE",
+  "certified_source_baseline": {
+    "branch": "main",
+    "sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77"
+  },
+  "active_branch": "refactor/v3-full-internationalization",
+  "superseded_branches": [
+    "refactor/n15-b2r-c-full-english-canonicalization"
+  ],
+  "language_policy": {
+    "engineering_language": "English",
+    "academic_content_language": "not constrained by engineering policy",
+    "portuguese_academic_content_allowed": true,
+    "portuguese_official_source_wording_allowed": true,
+    "portuguese_project_api_allowed": false,
+    "portuguese_project_internal_identifiers_allowed": false,
+    "portuguese_project_source_comments_allowed": false,
+    "portuguese_project_diagnostics_allowed": false,
+    "upstream_non_english_identifiers_allowed_when_required": true
+  },
+  "breaking_change_policy": {
+    "major_release_required": true,
+    "runtime_backward_compatibility_with_v2_portuguese_api": false,
+    "deprecated_ufctex_class_retained": false,
+    "migration_support": "documentation-only"
+  },
+  "architecture": {
+    "repository_template_root": "template/",
+    "machine_readable_standards_root": "standards/",
+    "runtime_integrations_root": "abntexto-ufc/integrations/",
+    "runtime_standard_adapters_root": "abntexto-ufc/standards/",
+    "test_documents_root": "tests/documents/",
+    "test_integration_root": "tests/integration/",
+    "distribution_template_root_flattened": true,
+    "forwarding_only_public_api_module_allowed": false,
+    "duplicate_runtime_ownership_allowed": false
+  },
+  "phases": [
+    {
+      "id": "V3-R0",
+      "name": "Architecture and migration contract",
+      "status": "ACTIVE",
+      "depends_on": [],
+      "exit_criteria": [
+        "every tracked path classified as retain/rename/move/remove",
+        "every project-owned public API identifier classified",
+        "no unresolved architecture or language-policy decision",
+        "deterministic migration inventory completed"
+      ]
+    },
+    {
+      "id": "V3-R1",
+      "name": "Physical repository restructuring",
+      "status": "BLOCKED",
+      "depends_on": ["V3-R0"]
+    },
+    {
+      "id": "V3-R2",
+      "name": "Canonical English runtime",
+      "status": "BLOCKED",
+      "depends_on": ["V3-R1"]
+    },
+    {
+      "id": "V3-R3",
+      "name": "Engineering-language enforcement",
+      "status": "BLOCKED",
+      "depends_on": ["V3-R2"]
+    },
+    {
+      "id": "V3-R4",
+      "name": "Test architecture and regression reconstruction",
+      "status": "BLOCKED",
+      "depends_on": ["V3-R3"]
+    },
+    {
+      "id": "V3-R5",
+      "name": "Documentation and distribution redesign",
+      "status": "BLOCKED",
+      "depends_on": ["V3-R4"]
+    },
+    {
+      "id": "V3-A1",
+      "name": "Scientific article runtime architecture",
+      "status": "BLOCKED",
+      "depends_on": ["V3-R5"],
+      "supersedes": ["N15-B2B"]
+    },
+    {
+      "id": "V3-A2",
+      "name": "Scientific article deep evidence",
+      "status": "BLOCKED",
+      "depends_on": ["V3-A1"],
+      "supersedes": ["N15-B2C"]
+    },
+    {
+      "id": "V3-H1",
+      "name": "Release hardening",
+      "status": "BLOCKED",
+      "depends_on": ["V3-A2"],
+      "absorbs": ["N15-B3"]
+    },
+    {
+      "id": "V3-RC",
+      "name": "v3.0.0 release candidate",
+      "status": "BLOCKED",
+      "depends_on": ["V3-H1"],
+      "supersedes": ["N15-C"]
+    },
+    {
+      "id": "V3-FINAL",
+      "name": "Exact-head certification and release decision",
+      "status": "BLOCKED",
+      "depends_on": ["V3-RC"],
+      "supersedes": ["N15-D"]
+    },
+    {
+      "id": "V3-CLEANUP",
+      "name": "Post-release repository cleanup",
+      "status": "BLOCKED",
+      "depends_on": ["V3-FINAL"]
+    }
+  ],
+  "retained_previous_work": {
+    "N0-N14": "certified historical evidence; do not repeat blindly",
+    "N15-A": "input to V3-R0 and V3-H1",
+    "N15-B1": "source and authority reconciliation retained",
+    "N15-B2A": "article normative contract retained",
+    "N15-B2R": "historical naming evidence retained; additive compatibility architecture superseded"
+  },
+  "release_hardening_known_items": [
+    {
+      "id": "github-issue-18",
+      "topic": "reference PDF bit reproducibility",
+      "status": "OPEN"
+    },
+    {
+      "id": "workflow-review",
+      "topic": "prove unique value or remove obsolete reference-validation workflow",
+      "status": "PENDING"
+    }
+  ],
+  "continuation_protocol": {
+    "read_first": [
+      "docs/ROADMAP-V3.0.0.md",
+      "release/v3-roadmap.json",
+      "docs/ARCHITECTURE.md",
+      "docs/ENGINEERING-LANGUAGE.md"
+    ],
+    "phase_authority": "release/v3-roadmap.json",
+    "phase_close_requires_human_and_machine_roadmap_sync": true,
+    "phase_close_requires_executable_evidence_when_runtime_changes": true
+  },
+  "next_action": "Complete V3-R0 exhaustive tree/API migration inventory before runtime modification."
+}
