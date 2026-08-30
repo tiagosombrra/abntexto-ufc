@@ -1,23 +1,22 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "reviewed_at": "2026-08-24",
-  "phase": "N6",
   "purpose": "Positive final-PDF evidence for academic-work cover requirements, multivolume identification and optional project covers.",
   "fixtures": {
-    "academic": "tests/normativa/pretextual-oracle-cover-academic.tex",
-    "project": "tests/normativa/pretextual-oracle-cover-project-optional.tex",
-    "anonymized_project": "tests/normativa/pretextual-oracle-cover-project-anonymized-optional.tex"
+    "academic": "tests/documents/frontmatter-cover-academic-test.tex",
+    "project": "tests/documents/frontmatter-cover-project-optional-test.tex",
+    "anonymized_project": "tests/documents/frontmatter-cover-project-anonymized-optional-test.tex"
   },
   "academic": {
     "cover_page": 1,
     "title_page": 2,
     "markers": {
-      "institution": "UFCN6COVINST",
-      "author": "UFCN6COVAUTHOR",
-      "title": "UFCN6COVTITLE",
-      "subtitle": "UFCN6COVSUBTITLE",
+      "institution": "UFCFRONTMATTERCOVINST",
+      "author": "UFCFRONTMATTERCOVAUTHOR",
+      "title": "UFCFRONTMATTERCOVTITLE",
+      "subtitle": "UFCFRONTMATTERCOVSUBTITLE",
       "volume": "VOLUME 2",
-      "city": "UFCN6COVCITY",
+      "city": "UFCFRONTMATTERCOVCITY",
       "year": "2099"
     }
   },
@@ -25,15 +24,15 @@
     "profiles": [
       {
         "name": "projeto",
-        "before": "UFCN6PRJBEFORE",
-        "after": "UFCN6PRJAFTER",
-        "hidden_cover_token": "UFCN6PRJTITLE"
+        "before": "UFCFRONTMATTERPRJBEFORE",
+        "after": "UFCFRONTMATTERPRJAFTER",
+        "hidden_cover_token": "UFCFRONTMATTERPRJTITLE"
       },
       {
         "name": "projetoanonimizado",
-        "before": "UFCN6ANONBEFORE",
-        "after": "UFCN6ANONAFTER",
-        "hidden_cover_token": "UFCN6ANONTITLE"
+        "before": "UFCFRONTMATTERANONBEFORE",
+        "after": "UFCFRONTMATTERANONAFTER",
+        "hidden_cover_token": "UFCFRONTMATTERANONTITLE"
       }
     ]
   },

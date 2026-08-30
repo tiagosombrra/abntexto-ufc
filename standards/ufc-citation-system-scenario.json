@@ -9,13 +9,22 @@
   "fixtures": {
     "parenthetical": {
       "citation_key": "silva2020",
-      "source_tokens": ["Silva"],
-      "date_tokens": ["2020"]
+      "source_tokens": [
+        "Silva"
+      ],
+      "date_tokens": [
+        "2020"
+      ]
     },
     "textual": {
       "citation_key": "oliveira2011",
-      "source_tokens": ["Oliveira", "Nunes"],
-      "date_tokens": ["2011"]
+      "source_tokens": [
+        "Oliveira",
+        "Nunes"
+      ],
+      "date_tokens": [
+        "2011"
+      ]
     }
   },
   "markers": {

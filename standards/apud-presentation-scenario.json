@@ -16,16 +16,28 @@
     "parenthetical": {
       "original_citation_key": "eco1983",
       "consulted_citation_key": "koche2009",
-      "original_tokens": ["Eco", "1983"],
+      "original_tokens": [
+        "Eco",
+        "1983"
+      ],
       "apud_token": "apud",
-      "consulted_tokens": ["Koche", "2009"]
+      "consulted_tokens": [
+        "Koche",
+        "2009"
+      ]
     },
     "textual": {
       "original_citation_key": "eco1983",
       "consulted_citation_key": "koche2009",
-      "original_tokens": ["Eco", "1983"],
+      "original_tokens": [
+        "Eco",
+        "1983"
+      ],
       "apud_token": "apud",
-      "consulted_tokens": ["Koche", "2009"]
+      "consulted_tokens": [
+        "Koche",
+        "2009"
+      ]
     }
   },
   "calibration": {

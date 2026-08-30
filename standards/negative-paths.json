@@ -16,22 +16,30 @@
     {
       "id": "final-pdf-geometry",
       "state": "represented",
-      "case_ids": ["page-margins-right"]
+      "case_ids": [
+        "page-margins-right"
+      ]
     },
     {
       "id": "text-typography-extraction",
       "state": "represented",
-      "case_ids": ["body-font-size"]
+      "case_ids": [
+        "body-font-size"
+      ]
     },
     {
       "id": "citation-quotation-presentation",
       "state": "represented",
-      "case_ids": ["short-direct-citation-quotes"]
+      "case_ids": [
+        "short-direct-citation-quotes"
+      ]
     },
     {
       "id": "vector-rule-geometry",
       "state": "represented",
-      "case_ids": ["ibge-table-open-sides"]
+      "case_ids": [
+        "ibge-table-open-sides"
+      ]
     },
     {
       "id": "configuration-strict-rejection",
@@ -46,8 +54,12 @@
     {
       "id": "semantic-structural-observers",
       "state": "represented",
-      "case_ids": ["project-required-resources"],
-      "evidence_paths": ["tests/checks/normative_research_project_structure.py"]
+      "case_ids": [
+        "project-required-resources"
+      ],
+      "evidence_paths": [
+        "tests/checks/normative_research_project_structure.py"
+      ]
     },
     {
       "id": "pdf-archival-validation",
@@ -64,13 +76,19 @@
       "id": "page-margins-right",
       "family": "final-pdf-geometry",
       "fixture": "tests/documents/mainmatter-page-margins-test.tex",
-      "positive_gate": ["sh", "tests/integration/page-margins-evidence.sh"],
+      "positive_gate": [
+        "sh",
+        "tests/integration/page-margins-evidence.sh"
+      ],
       "mutation": {
         "kind": "replace_once",
         "anchor": "\\textual\n\n\\ufctextareaframe",
         "content": "\\textual\n\\newgeometry{twoside=true,inner=3cm,outer=4cm,top=3cm,bottom=2cm}\n\n\\ufctextareaframe"
       },
-      "compile": {"engine": "pdflatex", "passes": 2},
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
       "validator": [
         "python3",
         "tests/checks/normative_page_margins.py",
@@ -84,13 +102,19 @@
       "id": "body-font-size",
       "family": "text-typography-extraction",
       "fixture": "tests/documents/mainmatter-typography-test.tex",
-      "positive_gate": ["sh", "tests/integration/typography-evidence.sh"],
+      "positive_gate": [
+        "sh",
+        "tests/integration/typography-evidence.sh"
+      ],
       "mutation": {
         "kind": "replace_once",
         "anchor": "\\noindent UFCNSevenBodyAlpha\\\\\n",
         "content": "\\noindent {\\fontsize{14}{16}\\selectfont UFCNSevenBodyAlpha}\\\\\n"
       },
-      "compile": {"engine": "pdflatex", "passes": 2},
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
       "validator": [
         "python3",
         "tests/checks/normative_typography.py",
@@ -104,13 +128,19 @@
       "id": "short-direct-citation-quotes",
       "family": "citation-quotation-presentation",
       "fixture": "tests/documents/mainmatter-short-direct-citation-test.tex",
-      "positive_gate": ["sh", "tests/integration/short-direct-citation-evidence.sh"],
+      "positive_gate": [
+        "sh",
+        "tests/integration/short-direct-citation-evidence.sh"
+      ],
       "mutation": {
         "kind": "insert_before",
         "anchor": "\\begin{document}",
         "content": "\\renewcommand{\\enquote}[1]{#1}\n"
       },
-      "compile": {"engine": "pdflatex", "passes": 2},
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
       "validator": [
         "python3",
         "tests/checks/normative_short_direct_citation.py",
@@ -124,13 +154,19 @@
       "id": "ibge-table-open-sides",
       "family": "vector-rule-geometry",
       "fixture": "tests/documents/table-ibge-vector-final-pdf.tex",
-      "positive_gate": ["sh", "tests/integration/table-ibge-vector-evidence.sh"],
+      "positive_gate": [
+        "sh",
+        "tests/integration/table-ibge-vector-evidence.sh"
+      ],
       "mutation": {
         "kind": "replace_once",
         "anchor": "colspec={X[l] X[r]}",
         "content": "colspec={|X[l]| X[r]|}"
       },
-      "compile": {"engine": "pdflatex", "passes": 2},
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 2
+      },
       "validator": [
         "python3",
         "tests/checks/normative_table_ibge_vector.py",
@@ -144,13 +180,20 @@
       "id": "project-required-resources",
       "family": "semantic-structural-observers",
       "fixture": "tests/documents/research-project-15287.tex",
-      "positive_gate": ["sh", "tests/integration/research-project.sh"],
+      "positive_gate": [
+        "sh",
+        "tests/integration/research-project.sh"
+      ],
       "mutation": {
         "kind": "replace_once",
         "anchor": "\\section{Recursos}\nRecursos necessários à execução da pesquisa.",
         "content": "\\section{Infraestrutura}\nInfraestrutura necessária à execução da pesquisa."
       },
-      "compile": {"engine": "pdflatex", "passes": 3, "biber_after_pass": 1},
+      "compile": {
+        "engine": "pdflatex",
+        "passes": 3,
+        "biber_after_pass": 1
+      },
       "validator": [
         "python3",
         "tests/checks/normative_research_project_structure.py",

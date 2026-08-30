@@ -1,7 +1,6 @@
 {
-  "schema_version": 1,
-  "phase": "N6",
-  "component": "optional-pretextual-lists",
+  "schema_version": 2,
+  "component": "optional-frontmatter-lists",
   "rules": [
     "list.illustrations.optional",
     "list.tables.optional",
@@ -9,11 +8,11 @@
     "list.symbols.optional"
   ],
   "fixtures": {
-    "list.illustrations.optional": "tests/normativa/pretextual-oracle-list-illustrations-present.tex",
-    "list.tables.optional": "tests/normativa/pretextual-oracle-list-tables-present.tex",
-    "list.abbreviations.optional": "tests/normativa/pretextual-oracle-list-abbreviations-present.tex",
-    "list.symbols.optional": "tests/normativa/pretextual-oracle-list-symbols-present.tex",
-    "absent": "tests/normativa/pretextual-oracle-lists-absent.tex"
+    "list.illustrations.optional": "tests/documents/frontmatter-list-illustrations-present-test.tex",
+    "list.tables.optional": "tests/documents/frontmatter-list-tables-present-test.tex",
+    "list.abbreviations.optional": "tests/documents/frontmatter-list-abbreviations-present-test.tex",
+    "list.symbols.optional": "tests/documents/frontmatter-list-symbols-present-test.tex",
+    "absent": "tests/documents/frontmatter-lists-absent-test.tex"
   },
   "lists": {
     "list.illustrations.optional": {
@@ -29,5 +28,5 @@
       "heading": "LISTA DE SÍMBOLOS"
     }
   },
-  "sentinel": "N6 list sentinel"
+  "sentinel": "FRONTMATTER list sentinel"
 }

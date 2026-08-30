@@ -18,7 +18,7 @@ from normative_full import load_full_contract
 from pdf_measurement import normalize
 
 SCENARIOS = ROOT / "standards" / "frontmatter-alignment-scenarios.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 QUOTE_CHARS = {'"', '“', '”', '„', '«', '»'}
 

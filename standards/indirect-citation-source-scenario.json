@@ -13,7 +13,10 @@
   },
   "fixture": {
     "citation_key": "silva2020",
-    "source_tokens": ["Silva", "2020"],
+    "source_tokens": [
+      "Silva",
+      "2020"
+    ],
     "controlled_paraphrase": true
   },
   "calibration": {

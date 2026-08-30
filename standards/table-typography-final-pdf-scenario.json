@@ -22,7 +22,7 @@
   "locator_ruleset": "typography.reduced-font",
   "measurement": {
     "tool": "pdftohtml -xml -zoom 1.0",
-    "font_size_tolerance_source": "normativa/oracle-policy.json",
+    "font_size_tolerance_source": "standards/validation-reference-policy.json",
     "family_is_observational_only": true
   },
   "proof_state_changed": false

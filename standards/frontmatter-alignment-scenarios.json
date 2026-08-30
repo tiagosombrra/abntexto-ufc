@@ -1,16 +1,15 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "reviewed_at": "2026-08-24",
-  "phase": "N6",
   "purpose": "Naturally wrapped final-PDF scenarios for dedication and epigraph justification evidence.",
-  "fixture": "tests/normativa/pretextual-oracle-dedication-epigraph-alignment.tex",
-  "tolerance_source": "normativa/oracle-policy.json#tolerances.horizontal_position_pt",
+  "fixture": "tests/documents/frontmatter-dedication-epigraph-alignment-test.tex",
+  "tolerance_source": "standards/validation-reference-policy.json#tolerances.horizontal_position_pt",
   "scenarios": [
     {
       "id": "dedication.wrapped",
       "component": "dedication",
       "route": "\\imprimirdedicatoria",
-      "marker": "UFCN6ALIGNDED",
+      "marker": "UFCFRONTMATTERALIGNDED",
       "alignment_rule": "dedication.alignment",
       "indent_rule": "dedication.indent.left",
       "minimum_lines": 3
@@ -19,7 +18,7 @@
       "id": "epigraph.short.wrapped",
       "component": "epigraph-short",
       "route": "\\imprimirepigrafe[curta]",
-      "marker": "UFCN6ALIGNSHORT",
+      "marker": "UFCFRONTMATTERALIGNSHORT",
       "alignment_rule": "epigraph.short.alignment",
       "indent_rule": "epigraph.short.indent.left",
       "minimum_lines": 3
@@ -28,7 +27,7 @@
       "id": "epigraph.long.wrapped",
       "component": "epigraph-long",
       "route": "\\imprimirepigrafe[longa]",
-      "marker": "UFCN6ALIGNLONG",
+      "marker": "UFCFRONTMATTERALIGNLONG",
       "alignment_rule": "epigraph.long.alignment",
       "indent_rule": "epigraph.long.indent.left",
       "minimum_lines": 3

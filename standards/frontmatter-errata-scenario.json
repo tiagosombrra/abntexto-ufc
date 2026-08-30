@@ -1,6 +1,5 @@
 {
-  "schema_version": 1,
-  "phase": "N6",
+  "schema_version": 2,
   "component": "errata",
   "rules": [
     "errata.element.optional",
@@ -8,15 +7,15 @@
     "errata.contents"
   ],
   "fixtures": {
-    "present": "tests/normativa/pretextual-oracle-errata-present.tex",
-    "absent": "tests/normativa/pretextual-oracle-errata-absent.tex",
-    "content": "tests/fixtures/pretextuais/errata-oracle.tex"
+    "present": "tests/documents/frontmatter-errata-present-test.tex",
+    "absent": "tests/documents/frontmatter-errata-absent-test.tex",
+    "content": "tests/fixtures/frontmatter/errata-validation-fixture.tex"
   },
   "markers": {
-    "title_page": "UFCN6ERRTITLEPAGE",
+    "title_page": "UFCFRONTMATTERERRTITLEPAGE",
     "errata_heading": "ERRATA",
-    "reference": "UFCN6ERRREFERENCE",
-    "correction": "UFCN6ERRCORRECTION",
-    "sentinel": "UFCN6ERRSENTINEL"
+    "reference": "UFCFRONTMATTERERRREFERENCE",
+    "correction": "UFCFRONTMATTERERRCORRECTION",
+    "sentinel": "UFCFRONTMATTERERRSENTINEL"
   }
 }

@@ -1,27 +1,33 @@
 {
-  "schema_version": 1,
-  "phase": "N6",
-  "component": "pretextual-pagination-transition",
+  "schema_version": 2,
+  "component": "frontmatter-pagination-transition",
   "scope": {
-    "categories": ["pagination", "pretextual"],
+    "categories": [
+      "pagination",
+      "frontmatter"
+    ],
     "kinds": [
       "pagination-visibility",
       "pagination-exception",
       "pagination-start",
       "page-side-start"
     ],
-    "validation_checks_any": ["pretextual", "duplex-pretextual", "catalog-card"]
+    "validation_checks_any": [
+      "frontmatter",
+      "duplex-frontmatter",
+      "catalog-card"
+    ]
   },
   "rules": [
-    "pagination.pretextual.counted-not-numbered",
+    "pagination.frontmatter.counted-not-numbered",
     "pagination.catalog-data.not-counted",
     "pagination.textual.display-start",
-    "pretextual.start.recto"
+    "frontmatter.start.recto"
   ],
   "duplex": {
-    "textual_marker": "N6 Pagination Text Body",
-    "pretextual_markers": [
-      "N6 Pagination Title City",
+    "textual_marker": "FRONTMATTER Pagination Text Body",
+    "frontmatter_markers": [
+      "FRONTMATTER Pagination Title City",
       "ERRATA",
       "BANCA EXAMINADORA",
       "À família e às pessoas que contribuíram",
@@ -37,8 +43,8 @@
     ]
   },
   "catalog": {
-    "title_page_marker": "N6 Catalog Author",
-    "card_marker": "N6 Catalog Card",
-    "textual_marker": "N6 Catalog Text"
+    "title_page_marker": "FRONTMATTER Catalog Author",
+    "card_marker": "FRONTMATTER Catalog Card",
+    "textual_marker": "FRONTMATTER Catalog Text"
   }
 }

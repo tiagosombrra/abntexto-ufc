@@ -47,7 +47,9 @@
     },
     {
       "id": "layout.body-spacing",
-      "rule_ids": ["spacing.body"],
+      "rule_ids": [
+        "spacing.body"
+      ],
       "current_locator": "UFC 4.3",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [

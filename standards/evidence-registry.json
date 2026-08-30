@@ -31,7 +31,7 @@
       "description": "Checks that distributed acknowledgement guidance contains the CAPES funding acknowledgement markers required by project policy when applicable.",
       "target": {
         "script": "tests/v2-capes-guidance-check.sh",
-        "runner_gate": "pretextual"
+        "runner_gate": "frontmatter"
       }
     },
     {

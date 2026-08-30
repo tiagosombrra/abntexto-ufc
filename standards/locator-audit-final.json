@@ -5,7 +5,9 @@
   "rulesets": [
     {
       "id": "format.text-color",
-      "rule_ids": ["format.text.color"],
+      "rule_ids": [
+        "format.text.color"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — formato; UFC 4.1(b)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -26,8 +28,10 @@
       ]
     },
     {
-      "id": "pretextual.start-recto",
-      "rule_ids": ["pretextual.start.recto"],
+      "id": "frontmatter.start-recto",
+      "rule_ids": [
+        "frontmatter.start.recto"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — formato; UFC 4.1(d)-4.1(e)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -48,8 +52,10 @@
       ]
     },
     {
-      "id": "posttextual.spine",
-      "rule_ids": ["spine.conditional"],
+      "id": "backmatter.spine",
+      "rule_ids": [
+        "spine.conditional"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — parte externa; ABNT NBR 12225:2023; UFC 3.1.2",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -171,7 +177,9 @@
     },
     {
       "id": "multivolume.cover-title-page",
-      "rule_ids": ["volume.number.cover-title-page"],
+      "rule_ids": [
+        "volume.number.cover-title-page"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — capa/folha de rosto; Guia UFC 2022, 3.1.1 e 3.2.1.1",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [

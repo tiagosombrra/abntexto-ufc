@@ -17,9 +17,16 @@
     "references": "REFERÊNCIAS"
   },
   "excluded_elements": {
-    "summary": ["RESUMO"],
-    "abstract": ["ABSTRACT"],
-    "approval-page": ["BANCA EXAMINADORA", "APROVADA EM"]
+    "summary": [
+      "RESUMO"
+    ],
+    "abstract": [
+      "ABSTRACT"
+    ],
+    "approval-page": [
+      "BANCA EXAMINADORA",
+      "APROVADA EM"
+    ]
   },
   "policy": {
     "observer_tokens_are_not_new_normative_lexical_requirements": true,

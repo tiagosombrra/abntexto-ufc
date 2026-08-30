@@ -5,7 +5,9 @@
   "rulesets": [
     {
       "id": "layout.page-a4",
-      "rule_ids": ["page.a4"],
+      "rule_ids": [
+        "page.a4"
+      ],
       "current_locator": "UFC 4.1",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -82,7 +84,7 @@
     {
       "id": "pagination.general",
       "rule_ids": [
-        "pagination.pretextual.counted-not-numbered",
+        "pagination.frontmatter.counted-not-numbered",
         "pagination.catalog-data.not-counted",
         "pagination.textual.display-start",
         "pagination.recto.position",

@@ -31,7 +31,9 @@
     },
     {
       "id": "citations.direct-source",
-      "rule_ids": ["citation.direct.source"],
+      "rule_ids": [
+        "citation.direct.source"
+      ],
       "current_locator": "ABNT NBR 10520:2023; Guia UFC 2025, 2.3.1",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -53,7 +55,9 @@
     },
     {
       "id": "citations.indirect-source",
-      "rule_ids": ["citation.indirect.source"],
+      "rule_ids": [
+        "citation.indirect.source"
+      ],
       "current_locator": "ABNT NBR 10520:2023; Guia UFC 2025, 2.3.2",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -75,7 +79,9 @@
     },
     {
       "id": "citations.ufc-system",
-      "rule_ids": ["citation.system.ufc"],
+      "rule_ids": [
+        "citation.system.ufc"
+      ],
       "current_locator": "Guia UFC 2025, apresentação e seção 3",
       "status": "VERIFIED",
       "source_checks": [
@@ -90,7 +96,9 @@
     },
     {
       "id": "citations.apud",
-      "rule_ids": ["citation.apud.presentation"],
+      "rule_ids": [
+        "citation.apud.presentation"
+      ],
       "current_locator": "ABNT NBR 10520:2023; Guia UFC 2025, 2.3.3",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [

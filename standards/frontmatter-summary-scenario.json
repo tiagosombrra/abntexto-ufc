@@ -1,31 +1,30 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "reviewed_at": "2026-08-24",
-  "phase": "N6",
   "purpose": "Isolated positive final-PDF scenario for vernacular summary, foreign abstract and keyword presentation.",
-  "fixture": "tests/normativa/pretextual-oracle-summary-abstract.tex",
+  "fixture": "tests/documents/frontmatter-summary-abstract-test.tex",
   "components": {
     "vernacular": {
       "route": "\\imprimirresumo",
       "heading": "RESUMO",
-      "body_start": "UFCN6SUMSTART",
-      "body_end": "UFCN6SUMEND",
+      "body_start": "UFCFRONTMATTERSUMSTART",
+      "body_end": "UFCFRONTMATTERSUMEND",
       "keyword_label": "Palavras-chave:",
       "keyword_text": "malhamento; normalização; pesquisa acadêmica."
     },
     "foreign": {
       "route": "\\imprimirabstract",
       "heading": "ABSTRACT",
-      "body_start": "UFCN6ABSSTART",
-      "body_end": "UFCN6ABSEND",
+      "body_start": "UFCFRONTMATTERABSSTART",
+      "body_end": "UFCFRONTMATTERABSEND",
       "keyword_label": "Keywords:",
       "keyword_text": "meshing; normalization; academic research."
     }
   },
   "calibration": [
-    "UFCN6SUMCALONE",
-    "UFCN6SUMCALTWO",
-    "UFCN6SUMCALTHREE"
+    "UFCFRONTMATTERSUMCALONE",
+    "UFCFRONTMATTERSUMCALTWO",
+    "UFCFRONTMATTERSUMCALTHREE"
   ],
   "minimum_body_lines": 8,
   "tolerances": {

@@ -31,7 +31,9 @@
     },
     {
       "id": "objects.list-routing",
-      "rule_ids": ["list.routing.illustrations"],
+      "rule_ids": [
+        "list.routing.illustrations"
+      ],
       "current_locator": "Guia UFC 2022, 3.2.1.9-3.2.1.10",
       "status": "VERIFIED",
       "source_checks": [

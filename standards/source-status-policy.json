@@ -5,12 +5,16 @@
   "registry_statuses": {
     "current": {
       "runtime_activity": "active",
-      "allowed_runtime_statuses": ["current"],
+      "allowed_runtime_statuses": [
+        "current"
+      ],
       "technical_authority": "preserve"
     },
     "current-institutional-with-stale-technical-citations": {
       "runtime_activity": "active-restricted",
-      "allowed_runtime_statuses": ["current-with-superseded-norm-references"],
+      "allowed_runtime_statuses": [
+        "current-with-superseded-norm-references"
+      ],
       "technical_authority": false,
       "restriction": "May support compatible institutional detail but must not govern a technical-scope rule or select a technical-standard edition."
     },
@@ -24,7 +28,9 @@
   },
   "source_overrides": {
     "ibge-tabular-1993": {
-      "allowed_runtime_statuses": ["current-for-tabular-presentation"],
+      "allowed_runtime_statuses": [
+        "current-for-tabular-presentation"
+      ],
       "reason": "Runtime status narrows the current registry entry to the delegated tabular-presentation scope."
     }
   }

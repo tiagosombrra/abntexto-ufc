@@ -18,8 +18,8 @@ from normative_catalog import get_rule, load_catalog
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
-SCENARIO = ROOT / "standards" / "frontmatter-acknowledgements-scenario.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
+SCENARIO = ROOT / "standards" / "frontmatter-acknowledgments-scenario.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 HEADING = "AGRADECIMENTOS"
 

@@ -5,7 +5,9 @@
   "overrides": {
     "font.size.reduced.catalog-card": {
       "mode": "manual",
-      "checks": ["catalog-card"],
+      "checks": [
+        "catalog-card"
+      ],
       "scope": "external-pdf",
       "reason": "The catalog card is supplied as an external PDF and included without restyling; the class controls inclusion, physical placement and pagination, not the PDF's internal typography."
     }

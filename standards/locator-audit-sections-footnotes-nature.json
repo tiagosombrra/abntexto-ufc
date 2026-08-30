@@ -5,7 +5,9 @@
   "rulesets": [
     {
       "id": "footnotes.line-spacing",
-      "rule_ids": ["footnote.line-spacing"],
+      "rule_ids": [
+        "footnote.line-spacing"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — notas de rodapé; UFC 4.3(a)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -27,7 +29,9 @@
     },
     {
       "id": "footnotes.separator",
-      "rule_ids": ["footnote.separator.length"],
+      "rule_ids": [
+        "footnote.separator.length"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — notas de rodapé; UFC 4.3(e)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -49,7 +53,9 @@
     },
     {
       "id": "footnotes.hanging-alignment",
-      "rule_ids": ["footnote.hanging-alignment"],
+      "rule_ids": [
+        "footnote.hanging-alignment"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — notas de rodapé",
       "status": "UNAVAILABLE_WITH_REASON",
       "source_checks": [
@@ -122,7 +128,9 @@
     },
     {
       "id": "sections.primary-recto-duplex",
-      "rule_ids": ["section.primary.recto-duplex"],
+      "rule_ids": [
+        "section.primary.recto-duplex"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — seções; UFC 4.5.1(i)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -144,7 +152,9 @@
     },
     {
       "id": "sections.primary-after-spacing",
-      "rule_ids": ["section.primary.after-spacing"],
+      "rule_ids": [
+        "section.primary.after-spacing"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — seções; UFC 4.3(b), 4.5.1(i)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -166,7 +176,9 @@
     },
     {
       "id": "sections.subsection-spacing",
-      "rule_ids": ["section.subsection.before-after-spacing"],
+      "rule_ids": [
+        "section.subsection.before-after-spacing"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — seções; UFC 4.3(c), 4.5.1(j)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -188,7 +200,9 @@
     },
     {
       "id": "sections.multiline-hanging",
-      "rule_ids": ["section.multiline.hanging"],
+      "rule_ids": [
+        "section.multiline.hanging"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — seções; UFC 4.5.1(d)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -210,7 +224,9 @@
     },
     {
       "id": "sections.unnumbered-centered",
-      "rule_ids": ["heading.unnumbered.centered"],
+      "rule_ids": [
+        "heading.unnumbered.centered"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — seções; UFC 4.5.1(g)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -231,8 +247,10 @@
       ]
     },
     {
-      "id": "pretextual.nature-line-spacing",
-      "rule_ids": ["nature.line-spacing"],
+      "id": "frontmatter.nature-line-spacing",
+      "rule_ids": [
+        "nature.line-spacing"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — natureza do trabalho; UFC 4.3(a)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -253,8 +271,10 @@
       ]
     },
     {
-      "id": "pretextual.nature-alignment",
-      "rule_ids": ["nature.block.alignment"],
+      "id": "frontmatter.nature-alignment",
+      "rule_ids": [
+        "nature.block.alignment"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — natureza do trabalho; UFC 4.2(d)-4.2(e)",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [

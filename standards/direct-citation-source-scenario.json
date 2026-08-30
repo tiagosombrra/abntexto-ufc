@@ -14,7 +14,11 @@
   },
   "fixture": {
     "citation_key": "oliveira2011",
-    "source_tokens": ["Oliveira", "Nunes", "2011"],
+    "source_tokens": [
+      "Oliveira",
+      "Nunes",
+      "2011"
+    ],
     "locator_token": "103"
   },
   "calibration": {

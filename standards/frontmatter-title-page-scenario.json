@@ -1,6 +1,5 @@
 {
-  "schema_version": 1,
-  "phase": "N6",
+  "schema_version": 2,
   "component": "title-page",
   "rules": [
     "title-page.element.required",
@@ -12,52 +11,52 @@
     "project.anonymization.policy"
   ],
   "fixtures": {
-    "academic": "tests/normativa/pretextual-oracle-title-page-academic.tex",
-    "project": "tests/normativa/pretextual-oracle-title-page-project.tex",
-    "anonymized_project": "tests/normativa/pretextual-oracle-title-page-project-anonymized.tex"
+    "academic": "tests/documents/frontmatter-title-page-academic-test.tex",
+    "project": "tests/documents/frontmatter-title-page-project-test.tex",
+    "anonymized_project": "tests/documents/frontmatter-title-page-project-anonymized-test.tex"
   },
   "academic": {
     "cover_page": 1,
     "title_page": 2,
     "markers": {
-      "author": "UFCN6TPAUTHOR",
-      "title": "UFCN6TPTITLE",
-      "subtitle": "UFCN6TPSUBTITLE",
+      "author": "UFCFRONTMATTERTPAUTHOR",
+      "title": "UFCFRONTMATTERTPTITLE",
+      "subtitle": "UFCFRONTMATTERTPSUBTITLE",
       "volume": "VOLUME 3",
-      "nature": "UFCN6TPNATUREPROGRAM",
-      "advisor": "UFCN6TPADVISOR",
-      "coadvisor": "UFCN6TPCOADVISOR",
-      "city": "UFCN6TPCITY",
+      "nature": "UFCFRONTMATTERTPNATUREPROGRAM",
+      "advisor": "UFCFRONTMATTERTPADVISOR",
+      "coadvisor": "UFCFRONTMATTERTPCOADVISOR",
+      "city": "UFCFRONTMATTERTPCITY",
       "year": "2098"
     }
   },
   "project": {
     "title_page": 1,
     "markers": {
-      "author": "UFCN6TPPROJAUTHOR",
-      "title": "UFCN6TPPROJTITLE",
-      "nature_left": "UFCN6TPL",
-      "nature_right": "UFCN6TPR",
+      "author": "UFCFRONTMATTERTPPROJAUTHOR",
+      "title": "UFCFRONTMATTERTPPROJTITLE",
+      "nature_left": "UFCFRONTMATTERTPL",
+      "nature_right": "UFCFRONTMATTERTPR",
       "nature_lines": [
-        "UFCN6TPNATUREA",
-        "UFCN6TPNATUREB",
-        "UFCN6TPNATUREC"
+        "UFCFRONTMATTERTPNATUREA",
+        "UFCFRONTMATTERTPNATUREB",
+        "UFCFRONTMATTERTPNATUREC"
       ],
-      "advisor": "UFCN6TPPROJADVISOR",
+      "advisor": "UFCFRONTMATTERTPPROJADVISOR",
       "calibration_lines": [
-        "UFCN6TPSINGLEA",
-        "UFCN6TPSINGLEB",
-        "UFCN6TPSINGLEC"
+        "UFCFRONTMATTERTPSINGLEA",
+        "UFCFRONTMATTERTPSINGLEB",
+        "UFCFRONTMATTERTPSINGLEC"
       ]
     }
   },
   "anonymized_project": {
     "title_page": 1,
     "markers": {
-      "public_identifier": "UFCN6TPPUBLICID",
-      "hidden_author": "UFCN6TPSECRETAUTHOR",
-      "hidden_advisor": "UFCN6TPSECRETADVISOR",
-      "title": "UFCN6TPANONTITLE"
+      "public_identifier": "UFCFRONTMATTERTPPUBLICID",
+      "hidden_author": "UFCFRONTMATTERTPSECRETAUTHOR",
+      "hidden_advisor": "UFCFRONTMATTERTPSECRETADVISOR",
+      "title": "UFCFRONTMATTERTPANONTITLE"
     }
   }
 }

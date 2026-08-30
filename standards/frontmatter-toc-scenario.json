@@ -1,9 +1,8 @@
 {
-  "schema_version": 1,
-  "phase": "N6",
+  "schema_version": 2,
   "component": "table-of-contents",
   "rules": [
-    "toc.pretextual-exclusion",
+    "toc.frontmatter-exclusion",
     "toc.heading.alignment",
     "toc.heading.case",
     "toc.page-number.position",
@@ -13,17 +12,32 @@
     "toc.leaders.dotted.project"
   ],
   "heading": "SUMÁRIO",
-  "pretextual_markers": [
+  "frontmatter_markers": [
     "AGRADECIMENTOS",
     "RESUMO",
     "ABSTRACT",
     "LISTA DE ABREVIATURAS E SIGLAS"
   ],
   "hierarchy": [
-    {"level": "section", "marker": "AlphaOne"},
-    {"level": "subsection", "marker": "BetaTwo"},
-    {"level": "subsubsection", "marker": "GammaThree"},
-    {"level": "paragraph", "marker": "DeltaFour"},
-    {"level": "subparagraph", "marker": "EpsilonFive"}
+    {
+      "level": "section",
+      "marker": "AlphaOne"
+    },
+    {
+      "level": "subsection",
+      "marker": "BetaTwo"
+    },
+    {
+      "level": "subsubsection",
+      "marker": "GammaThree"
+    },
+    {
+      "level": "paragraph",
+      "marker": "DeltaFour"
+    },
+    {
+      "level": "subparagraph",
+      "marker": "EpsilonFive"
+    }
   ]
 }

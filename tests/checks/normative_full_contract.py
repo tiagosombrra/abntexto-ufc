@@ -11,7 +11,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_catalog import load_catalog
 from normative_full import full_rule_map, load_full_contract
 
-ARTICLE_RULE_COUNT = 13
+BASE_RULE_COUNT = 100
+MINIMUM_EXTENSION_COUNT = 23
 
 
 def fail(message: str) -> None:
@@ -23,29 +24,53 @@ def main() -> None:
     contract = load_full_contract(catalog)
     rules = full_rule_map(contract)
 
-    if contract["n3_rule_count"] != 100:
-        fail(f"expected 100 certified N3 atomic rules, got {contract['n3_rule_count']}")
-    if len(rules) != contract["n3_rule_count"] + len(contract["promoted_rule_ids"]):
-        fail("full contract count is inconsistent with N3 + promotions")
-    if len(contract["promoted_rule_ids"]) < 23 + ARTICLE_RULE_COUNT:
-        fail("full contract lost a certified promotion block")
+    if contract["base_rule_count"] != BASE_RULE_COUNT:
+        fail(
+            f"expected {BASE_RULE_COUNT} base atomic rules, "
+            f"got {contract['base_rule_count']}"
+        )
+    extension_ids = contract["extended_rule_ids"]
+    if len(rules) != contract["base_rule_count"] + len(extension_ids):
+        fail("full contract count is inconsistent with base rules + extensions")
+    if len(extension_ids) < MINIMUM_EXTENSION_COUNT:
+        fail("full contract lost the certified extension block")
     if "project.standard" in rules:
         fail("retired project.standard umbrella returned to the active contract")
 
+    article_rules = sorted(rule_id for rule_id in rules if rule_id.startswith("article."))
+    if article_rules:
+        fail(
+            "article rules became operational before V3-A1: "
+            + ", ".join(article_rules)
+        )
+
     expected = {
-        "pagination.pretextual.counted-not-numbered": {"counted": True, "number_visible": False},
-        "pagination.catalog-data.not-counted": {"counted": False, "number_visible": False},
+        "pagination.frontmatter.counted-not-numbered": {
+            "counted": True,
+            "number_visible": False,
+        },
+        "pagination.catalog-data.not-counted": {
+            "counted": False,
+            "number_visible": False,
+        },
         "pagination.recto.position": {"position": "upper-right"},
         "pagination.verso.position": {"position": "upper-left"},
         "footnote.line-spacing": {"factor": 1.0},
-        "footnote.separator.length": {"length_mm": 50, "origin": "left-margin"},
+        "footnote.separator.length": {
+            "length_mm": 50,
+            "origin": "left-margin",
+        },
         "footnote.hanging-alignment": {"enabled": True},
         "section.indicator.alignment": {"alignment": "left"},
-        "section.indicator.separator": {"separator": "single-character-space"},
+        "section.indicator.separator": {
+            "separator": "single-character-space",
+        },
         "section.primary.recto-duplex": {"start_side": "recto"},
         "section.multiline.hanging": {"enabled": True},
         "nature.line-spacing": {"factor": 1.0},
-        "nature.block.alignment": {"horizontal_extent": "mid-text-block-to-right-margin"},
+        "nature.block.alignment": {
+            "horizontal_extent": "mid-text-block-to-right-margin",
+        },
     }
     for rule_id, values in expected.items():
         rule = rules.get(rule_id)
@@ -54,17 +79,7 @@ def main() -> None:
         if rule["values"] != values:
             fail(f"{rule_id}: unexpected values {rule['values']}")
 
-    article_rules = {
-        rule_id: rule for rule_id, rule in rules.items() if rule_id.startswith("article.")
-    }
-    if len(article_rules) != ARTICLE_RULE_COUNT:
-        fail(f"expected {ARTICLE_RULE_COUNT} N15-B2A article rules, got {len(article_rules)}")
-    if any(rule.get("phase") != "N15-B2A" for rule in article_rules.values()):
-        fail("article rules are not isolated to the N15-B2A promotion phase")
-    if "N15-B2A" not in contract.get("promotion_phases", []):
-        fail("full contract did not record the N15-B2A promotion phase")
-
-    for rule_id in contract["promoted_rule_ids"]:
+    for rule_id in extension_ids:
         rule = rules[rule_id]
         authority = rule.get("authority")
         if authority == "normative":
@@ -84,23 +99,25 @@ def main() -> None:
         "abnt-nbr-14724-2024",
         "abnt-nbr-6024-2012",
     }:
-        fail("section indicator must be jointly governed by current NBR 14724 and NBR 6024")
+        fail(
+            "section indicator must be jointly governed by current "
+            "NBR 14724 and NBR 6024"
+        )
 
     runner = (ROOT / "tests" / "run.py").read_text(encoding="utf-8")
-    gates = set(re.findall(r'Check\("([^"]+)"', runner))
+    gates = set(re.findall(r'Check\(\s*"([^"]+)"', runner))
     uncovered = sorted(
         rule_id
-        for rule_id in contract["promoted_rule_ids"]
+        for rule_id in extension_ids
         if not (set(rules[rule_id]["validation"]["checks"]) & gates)
     )
     if uncovered:
-        fail("promoted rules without unified evidence: " + ", ".join(uncovered))
+        fail("extended rules without unified evidence: " + ", ".join(uncovered))
 
     print(
         "Full normative contract passed: "
-        f"{len(rules)} atomic rules, {len(contract['promoted_rule_ids'])} promotions "
-        f"across {len(contract.get('coverage_manifests', []))} manifests; "
-        f"phases={','.join(contract.get('promotion_phases', []))}."
+        f"{len(rules)} atomic rules, {len(extension_ids)} extensions "
+        f"across {len(contract.get('coverage_manifests', []))} manifests."
     )
 
 

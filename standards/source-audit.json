@@ -19,7 +19,12 @@
       "url": "https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/",
       "status": "current",
       "checked_at": "2026-08-28",
-      "applies_to": ["normalization", "guides", "tables", "scientific-article"]
+      "applies_to": [
+        "normalization",
+        "guides",
+        "tables",
+        "scientific-article"
+      ]
     },
     {
       "id": "ufc-res-17-cepe-2017",
@@ -30,7 +35,10 @@
       "url": "https://ufc.br/images/_files/a_universidade/cepe/resolucao_cepe_2017/resolucao17_cepe_2017.pdf",
       "status": "current",
       "checked_at": "2026-08-28",
-      "applies_to": ["normalization-policy", "course-specific-models"],
+      "applies_to": [
+        "normalization-policy",
+        "course-specific-models"
+      ],
       "notes": "Art. 1º establishes ABNT-based normalization or formally approved course models; §§ 2º-3º define the approval/default boundary for specific models."
     },
     {
@@ -42,7 +50,10 @@
       "url": "https://normadigital.ufc.br/cepe/resolucao-no-17-cepe-de-04-de-dezembro-de-2015-2/",
       "status": "current",
       "checked_at": "2026-08-28",
-      "applies_to": ["postgraduate-programs", "program-level-presentation-directives"],
+      "applies_to": [
+        "postgraduate-programs",
+        "program-level-presentation-directives"
+      ],
       "notes": "NormaDigital classifies the act as in force. In the attached Normas Gerais, art. 10, X assigns each PPG collegiate body authority to define presentation directives for dissertations, theses or equivalent work. This is a program-level institutional authority, not blanket technical-formatting authority."
     },
     {
@@ -54,7 +65,12 @@
       "url": "https://www.ufc.br/images/_files/a_universidade/consuni/resolucao_consuni_2023/resolucao05_consuni_2023.pdf",
       "status": "current",
       "checked_at": "2026-08-22",
-      "applies_to": ["repository", "deposit", "pdfa", "embargo"]
+      "applies_to": [
+        "repository",
+        "deposit",
+        "pdfa",
+        "embargo"
+      ]
     },
     {
       "id": "ufc-in-2-2024",
@@ -65,7 +81,13 @@
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2025/07/sei-ufc-5371059-instrucao-normativa.pdf",
       "status": "current-with-superseded-provisions",
       "checked_at": "2026-08-22",
-      "applies_to": ["deposit", "pdfa", "approval-sheet", "capes", "metadata"],
+      "applies_to": [
+        "deposit",
+        "pdfa",
+        "approval-sheet",
+        "capes",
+        "metadata"
+      ],
       "notes": "Use only provisions not displaced by later current acts. The visual catalog-card requirement is overridden by the 2026 joint instruction."
     },
     {
@@ -77,8 +99,17 @@
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2026/02/instrucao-normativa-conjunta-2.pdf",
       "status": "current",
       "checked_at": "2026-08-22",
-      "applies_to": ["deposit", "catalog-card", "metadata"],
-      "overrides": [{"source": "ufc-in-2-2024", "scope": "visual-catalog-card-requirement"}]
+      "applies_to": [
+        "deposit",
+        "catalog-card",
+        "metadata"
+      ],
+      "overrides": [
+        {
+          "source": "ufc-in-2-2024",
+          "scope": "visual-catalog-card-requirement"
+        }
+      ]
     },
     {
       "id": "ufc-deposito-tcc-2026",
@@ -89,7 +120,12 @@
       "status": "current",
       "updated_at": "2026-03-04",
       "checked_at": "2026-08-22",
-      "applies_to": ["tcc", "deposit", "pdfa", "approval-sheet"]
+      "applies_to": [
+        "tcc",
+        "deposit",
+        "pdfa",
+        "approval-sheet"
+      ]
     },
     {
       "id": "ufc-deposito-pos-2026",
@@ -100,7 +136,14 @@
       "status": "current",
       "updated_at": "2026-03-04",
       "checked_at": "2026-08-28",
-      "applies_to": ["dissertation", "thesis", "deposit", "pdfa", "approval-sheet", "capes"],
+      "applies_to": [
+        "dissertation",
+        "thesis",
+        "deposit",
+        "pdfa",
+        "approval-sheet",
+        "capes"
+      ],
       "notes": "The page still links MEC Portaria 1.224/2013, CEPE Resolution 17/2015 and CAPES Portaria 59/2017. N15-B1 classifies those references independently rather than inferring formatting authority from their presence on the page."
     },
     {
@@ -111,7 +154,10 @@
       "url": "https://biblioteca.ufc.br/pt/perguntas-frequentes/ficha-catalografica-2/",
       "status": "current",
       "checked_at": "2026-08-22",
-      "applies_to": ["catalog-card", "deposit"]
+      "applies_to": [
+        "catalog-card",
+        "deposit"
+      ]
     },
     {
       "id": "ufc-guia-trabalhos-2022",
@@ -122,7 +168,9 @@
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf",
       "status": "current-institutional-with-stale-technical-citations",
       "checked_at": "2026-08-22",
-      "applies_to": ["institutional-layout"],
+      "applies_to": [
+        "institutional-layout"
+      ],
       "technical_authority": false
     },
     {
@@ -135,7 +183,9 @@
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2023/04/guia-de-normalizacao-de-artigo-corrigido-27.04.2023.pdf",
       "status": "current-institutional-with-stale-technical-citations",
       "checked_at": "2026-08-28",
-      "applies_to": ["scientific-article"],
+      "applies_to": [
+        "scientific-article"
+      ],
       "technical_authority": false,
       "notes": "The current UFC normalization page links this corrected file. Its cataloging record identifies Fortaleza, 2022. Guide presentation section cites NBR 6022:2018, NBR 10520:2002, NBR 6023:2018, NBR 6024:2012, NBR 6028:2021 and IBGE 1993. The stale 10520/6023 editions cannot govern; current editions remain determined by the current-source policy."
     },
@@ -148,7 +198,9 @@
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2025/06/guianormalizacaocitacoes2025.pdf",
       "status": "current-institutional-with-stale-technical-citations",
       "checked_at": "2026-08-22",
-      "applies_to": ["citations"],
+      "applies_to": [
+        "citations"
+      ],
       "technical_authority": false,
       "notes": "Its citation guidance is aligned with the current citation standard, but another embedded technical reference is no longer the current edition."
     },
@@ -161,7 +213,9 @@
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2023/12/guianormalizacaoreferencias.pdf",
       "status": "current-institutional-with-stale-technical-citations",
       "checked_at": "2026-08-22",
-      "applies_to": ["references"],
+      "applies_to": [
+        "references"
+      ],
       "technical_authority": false
     },
     {
@@ -173,7 +227,9 @@
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2019/10/guia-de-projetos-06.10.2019.pdf",
       "status": "current-institutional-with-stale-technical-citations",
       "checked_at": "2026-08-22",
-      "applies_to": ["research-project"],
+      "applies_to": [
+        "research-project"
+      ],
       "technical_authority": false
     },
     {
@@ -290,7 +346,9 @@
       "year": 1993,
       "status": "current",
       "checked_at": "2026-08-22",
-      "applies_to": ["numeric-tables"]
+      "applies_to": [
+        "numeric-tables"
+      ]
     },
     {
       "id": "capes-portaria-206-2018",
@@ -301,7 +359,9 @@
       "url": "https://www.gov.br/capes/pt-br/centrais-de-conteudo/portaria-no-206-de-4-de-setembro-de-2018.pdf",
       "status": "current",
       "checked_at": "2026-08-22",
-      "applies_to": ["capes-funded-work"]
+      "applies_to": [
+        "capes-funded-work"
+      ]
     },
     {
       "id": "capes-portaria-59-2017",
@@ -312,7 +372,10 @@
       "url": "https://cad.capes.gov.br/ato-administrativo-detalhar?idAtoAdmElastic=240",
       "status": "current",
       "checked_at": "2026-08-28",
-      "applies_to": ["postgraduate-program-evaluation", "quadriennial-evaluation-2017"],
+      "applies_to": [
+        "postgraduate-program-evaluation",
+        "quadriennial-evaluation-2017"
+      ],
       "technical_authority": false,
       "notes": "CAPES classifies the act as in force; its subject is the 2017 Quadriennial Evaluation regulation. It does not create technical document-formatting requirements for the template."
     }
@@ -326,7 +389,10 @@
       "date": "2013-12-18",
       "status": "revoked",
       "checked_at": "2026-08-28",
-      "applies_to": ["academic-records", "record-retention"],
+      "applies_to": [
+        "academic-records",
+        "record-retention"
+      ],
       "technical_authority": false,
       "notes": "The current UFC receiving page still links this act, but the MEC states that it was revoked by Portaria Normativa nº 22/2017 and Portaria nº 315/2018. It is therefore documented as reviewed context and deliberately excluded from the current active source registry."
     },

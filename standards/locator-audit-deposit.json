@@ -5,7 +5,9 @@
   "rulesets": [
     {
       "id": "deposit.pdfa-required",
-      "rule_ids": ["deposit.pdfa.required"],
+      "rule_ids": [
+        "deposit.pdfa.required"
+      ],
       "current_locator": "Requisitos de recebimento SiBi/UFC",
       "status": "VERIFIED",
       "source_checks": [
@@ -27,7 +29,9 @@
     },
     {
       "id": "deposit.approval-signatures",
-      "rule_ids": ["deposit.approval-signatures"],
+      "rule_ids": [
+        "deposit.approval-signatures"
+      ],
       "current_locator": "Requisitos de recebimento SiBi/UFC",
       "status": "VERIFIED",
       "source_checks": [
@@ -49,7 +53,9 @@
     },
     {
       "id": "deposit.catalog-card",
-      "rule_ids": ["deposit.catalog-card"],
+      "rule_ids": [
+        "deposit.catalog-card"
+      ],
       "current_locator": "IN Conjunta nº 2/2026, arts. 1º-3º e 7º",
       "status": "VERIFIED",
       "source_checks": [
@@ -64,7 +70,9 @@
     },
     {
       "id": "deposit.capes",
-      "rule_ids": ["deposit.capes"],
+      "rule_ids": [
+        "deposit.capes"
+      ],
       "current_locator": "Portaria CAPES nº 206/2018",
       "status": "VERIFIED",
       "source_checks": [
@@ -86,7 +94,9 @@
     },
     {
       "id": "deposit.metadata-workflow",
-      "rule_ids": ["deposit.metadata.workflow"],
+      "rule_ids": [
+        "deposit.metadata.workflow"
+      ],
       "current_locator": "SiBi/UFC — Normas para o Recebimento de TCC e Normas para o Recebimento de Teses e Dissertações, atualizadas em 04/03/2026",
       "status": "VERIFIED",
       "source_checks": [

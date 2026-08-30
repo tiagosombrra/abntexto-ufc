@@ -4,7 +4,7 @@
   "purpose": "N1 incremental locator classification for glossary, appendix, annex and index post-textual rules.",
   "rulesets": [
     {
-      "id": "posttextual.appendix-heading",
+      "id": "backmatter.appendix-heading",
       "rule_ids": [
         "appendix.page.own",
         "appendix.heading.case",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "id": "posttextual.annex-heading",
+      "id": "backmatter.annex-heading",
       "rule_ids": [
         "annex.page.own",
         "annex.heading.case",
@@ -60,7 +60,7 @@
       ]
     },
     {
-      "id": "posttextual.index-heading",
+      "id": "backmatter.index-heading",
       "rule_ids": [
         "index.heading.case",
         "index.heading.weight",
@@ -87,8 +87,10 @@
       ]
     },
     {
-      "id": "posttextual.glossary-optional",
-      "rule_ids": ["glossary.element.optional"],
+      "id": "backmatter.glossary-optional",
+      "rule_ids": [
+        "glossary.element.optional"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — elementos pós-textuais; Guia UFC 2022, 3.2.3.2",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -109,8 +111,10 @@
       ]
     },
     {
-      "id": "posttextual.appendix-identification",
-      "rule_ids": ["appendix.identification.pattern"],
+      "id": "backmatter.appendix-identification",
+      "rule_ids": [
+        "appendix.identification.pattern"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — apêndice; Guia UFC 2022, 3.2.3.3",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -131,8 +135,10 @@
       ]
     },
     {
-      "id": "posttextual.annex-identification",
-      "rule_ids": ["annex.identification.pattern"],
+      "id": "backmatter.annex-identification",
+      "rule_ids": [
+        "annex.identification.pattern"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — anexo; Guia UFC 2022, 3.2.3.4",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [

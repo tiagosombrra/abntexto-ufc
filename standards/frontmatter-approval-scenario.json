@@ -1,6 +1,5 @@
 {
-  "schema_version": 1,
-  "phase": "N6",
+  "schema_version": 2,
   "component": "approval-page",
   "rules": [
     "approval.element.required",
@@ -16,16 +15,16 @@
     "projeto",
     "projetoanonimizado"
   ],
-  "fixture": "tests/normativa/pretextual-oracle-approval.tex",
+  "fixture": "tests/documents/frontmatter-approval-test.tex",
   "markers": {
-    "author": "UFCN6APAUTHOR",
-    "title": "UFCN6APTITLE",
-    "subtitle": "UFCN6APSUBTITLE",
-    "nature": "UFCN6APNATURE",
-    "approval_date": "UFCN6APDATE",
+    "author": "UFCFRONTMATTERAPAUTHOR",
+    "title": "UFCFRONTMATTERAPTITLE",
+    "subtitle": "UFCFRONTMATTERAPSUBTITLE",
+    "nature": "UFCFRONTMATTERAPNATURE",
+    "approval_date": "UFCFRONTMATTERAPDATE",
     "committee_heading": "BANCA EXAMINADORA",
-    "advisor": "UFCN6APADVISOR",
-    "member": "UFCN6APMEMBER",
-    "sentinel": "UFCN6APSENTINEL"
+    "advisor": "UFCFRONTMATTERAPADVISOR",
+    "member": "UFCFRONTMATTERAPMEMBER",
+    "sentinel": "UFCFRONTMATTERAPSENTINEL"
   }
 }

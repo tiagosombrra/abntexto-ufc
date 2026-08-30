@@ -25,7 +25,7 @@ from pdf_measurement import (
 )
 
 SCENARIOS = ROOT / "standards" / "frontmatter-scenarios.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 QUOTE_CHARS = {'"', '“', '”', '„', '«', '»'}
 

@@ -56,8 +56,8 @@ FORBIDDEN_PATH_SEGMENT = re.compile(
 PORTUGUESE_TECHNICAL_PATH_TOKENS = {
     "normas",
     "vigencia-normativa",
-    "pretextual",
-    "posttextual",
+    "frontmatter",
+    "backmatter",
     "textual-oracle",
 }
 

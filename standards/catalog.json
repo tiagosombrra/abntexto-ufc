@@ -215,320 +215,711 @@
       "id": "page.a4",
       "category": "layout",
       "requirement": "Todas as páginas usam papel A4.",
-      "sources": ["abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-14724-2024",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 4.1",
       "normativity": "required",
       "kind": "page-size",
-      "values": {"width_mm": 210, "height_mm": 297, "tolerance_pt": 1.8},
-      "validation": {"mode": "automatic", "checks": ["layout.a4", "pdf-geometry"]}
+      "values": {
+        "width_mm": 210,
+        "height_mm": 297,
+        "tolerance_pt": 1.8
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "layout.a4",
+          "pdf-geometry"
+        ]
+      }
     },
     {
       "id": "margin.recto",
       "category": "layout",
       "requirement": "No anverso, margens esquerda e superior de 3 cm e direita e inferior de 2 cm.",
-      "sources": ["abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-14724-2024",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 4.2",
       "normativity": "required",
       "kind": "margins",
-      "values": {"left_mm": 30, "top_mm": 30, "right_mm": 20, "bottom_mm": 20},
-      "validation": {"mode": "automatic", "checks": ["layout.margins", "pdf-geometry"]}
+      "values": {
+        "left_mm": 30,
+        "top_mm": 30,
+        "right_mm": 20,
+        "bottom_mm": 20
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "layout.margins",
+          "pdf-geometry"
+        ]
+      }
     },
     {
       "id": "margin.verso",
       "category": "layout",
       "requirement": "No verso, margens direita e superior de 3 cm e esquerda e inferior de 2 cm.",
-      "sources": ["abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-14724-2024",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 4.2",
       "normativity": "required",
       "kind": "margins",
-      "values": {"left_mm": 20, "top_mm": 30, "right_mm": 30, "bottom_mm": 20},
-      "validation": {"mode": "automatic", "checks": ["pdf-geometry", "duplex-pretextual", "duplex-posttextual"]}
+      "values": {
+        "left_mm": 20,
+        "top_mm": 30,
+        "right_mm": 30,
+        "bottom_mm": 20
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "pdf-geometry",
+          "duplex-frontmatter",
+          "duplex-backmatter"
+        ]
+      }
     },
     {
       "id": "font.family.body",
       "category": "typography",
       "requirement": "A família textual institucional é Arial ou Times New Roman.",
-      "sources": ["ufc-guia-trabalhos-2022"],
+      "sources": [
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 4.1(c)",
       "normativity": "required",
       "kind": "font-family",
-      "values": {"allowed": ["Arial", "Times New Roman"]},
-      "validation": {"mode": "automatic-deep", "checks": ["font.literal", "font-config", "windows-font-poc"]}
+      "values": {
+        "allowed": [
+          "Arial",
+          "Times New Roman"
+        ]
+      },
+      "validation": {
+        "mode": "automatic-deep",
+        "checks": [
+          "font.literal",
+          "font-config",
+          "windows-font-poc"
+        ]
+      }
     },
     {
       "id": "font.size.body",
       "category": "typography",
       "requirement": "O corpo textual usa tamanho 12.",
-      "sources": ["ufc-guia-trabalhos-2022"],
+      "sources": [
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 4.1(c)",
       "normativity": "required",
       "kind": "font-size",
-      "values": {"pt": 12},
-      "validation": {"mode": "automatic", "checks": ["font-config", "layout"]}
+      "values": {
+        "pt": 12
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "font-config",
+          "layout"
+        ]
+      }
     },
     {
       "id": "font.size.reduced",
       "category": "typography",
       "requirement": "Exceções tipográficas usam tamanho menor e uniforme; a UFC recomenda tamanho 10.",
-      "sources": ["ufc-guia-trabalhos-2022"],
+      "sources": [
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 4.1(c)",
       "normativity": "recommendation-adopted-as-project-policy",
       "kind": "font-size",
-      "values": {"pt": 10, "applies_to": ["long-quote", "footnote", "pagination", "catalog-card", "illustration-caption", "illustration-source", "table-caption", "table-source"]},
-      "validation": {"mode": "automatic-partial", "checks": ["font-config", "object-geometry", "table-ibge", "normative-complement"]}
+      "values": {
+        "pt": 10,
+        "applies_to": [
+          "long-quote",
+          "footnote",
+          "pagination",
+          "catalog-card",
+          "illustration-caption",
+          "illustration-source",
+          "table-caption",
+          "table-source"
+        ]
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "font-config",
+          "object-geometry",
+          "table-ibge",
+          "normative-complement"
+        ]
+      }
     },
     {
       "id": "spacing.body",
       "category": "layout",
       "requirement": "O texto principal usa espaço 1,5 entre linhas.",
-      "sources": ["ufc-guia-trabalhos-2022", "abnt-nbr-14724-2024"],
+      "sources": [
+        "ufc-guia-trabalhos-2022",
+        "abnt-nbr-14724-2024"
+      ],
       "locator": "UFC 4.3",
       "normativity": "required",
       "kind": "line-spacing",
-      "values": {"factor": 1.5},
-      "validation": {"mode": "automatic-partial", "checks": ["layout", "pretextual"]}
+      "values": {
+        "factor": 1.5
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "layout",
+          "frontmatter"
+        ]
+      }
     },
     {
       "id": "paragraph.first-line",
       "category": "layout",
       "requirement": "Parágrafos do corpo usam recuo de primeira linha de 2 cm e não recebem espaço adicional entre parágrafos.",
-      "sources": ["ufc-guia-trabalhos-2022"],
+      "sources": [
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 4.3",
       "normativity": "institutional-requirement",
       "kind": "paragraph",
-      "values": {"first_line_indent_mm": 20, "paragraph_extra_spacing_pt": 0},
-      "validation": {"mode": "automatic", "checks": ["layout"]}
+      "values": {
+        "first_line_indent_mm": 20,
+        "paragraph_extra_spacing_pt": 0
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "layout"
+        ]
+      }
     },
     {
       "id": "dedication.position",
-      "category": "pretextual",
+      "category": "frontmatter",
       "requirement": "A dedicatória não tem título e inicia abaixo do meio da folha, com recuo de 8 cm, fonte 12, espaço 1,5 e texto justificado.",
-      "sources": ["ufc-guia-trabalhos-2022"],
+      "sources": [
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 3.2.1.4, p. 30-31",
       "normativity": "institutional-requirement",
       "kind": "block-layout",
-      "values": {"heading": false, "start": "below-page-midpoint", "left_indent_mm": 80, "font_pt": 12, "line_spacing": 1.5, "alignment": "justified"},
-      "validation": {"mode": "automatic-partial", "checks": ["pretextual"]}
+      "values": {
+        "heading": false,
+        "start": "below-page-midpoint",
+        "left_indent_mm": 80,
+        "font_pt": 12,
+        "line_spacing": 1.5,
+        "alignment": "justified"
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "frontmatter"
+        ]
+      }
     },
     {
       "id": "epigraph.short",
-      "category": "pretextual",
+      "category": "frontmatter",
       "requirement": "Epígrafe de até 3 linhas inicia abaixo do meio da folha, com recuo de 8 cm, fonte 12, espaço 1,5, justificada e entre aspas.",
-      "sources": ["ufc-guia-trabalhos-2022", "abnt-nbr-10520-2023"],
+      "sources": [
+        "ufc-guia-trabalhos-2022",
+        "abnt-nbr-10520-2023"
+      ],
       "locator": "UFC 3.2.1.6, p. 33-34; regra de citação atualizada pela NBR 10520:2023",
       "normativity": "institutional-requirement-compatible-with-current-abnt",
       "kind": "block-layout",
-      "values": {"max_lines": 3, "start": "below-page-midpoint", "left_indent_mm": 80, "font_pt": 12, "line_spacing": 1.5, "alignment": "justified", "quotation_marks": true},
-      "validation": {"mode": "automatic-partial", "checks": ["pretextual"]}
+      "values": {
+        "max_lines": 3,
+        "start": "below-page-midpoint",
+        "left_indent_mm": 80,
+        "font_pt": 12,
+        "line_spacing": 1.5,
+        "alignment": "justified",
+        "quotation_marks": true
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "frontmatter"
+        ]
+      }
     },
     {
       "id": "epigraph.long",
-      "category": "pretextual",
+      "category": "frontmatter",
       "requirement": "Epígrafe com mais de 3 linhas inicia abaixo do meio da folha, com recuo de 4 cm, fonte 10, espaço simples, justificada e sem aspas.",
-      "sources": ["ufc-guia-trabalhos-2022", "abnt-nbr-10520-2023"],
+      "sources": [
+        "ufc-guia-trabalhos-2022",
+        "abnt-nbr-10520-2023"
+      ],
       "locator": "UFC 3.2.1.6, p. 33-35; regra de citação atualizada pela NBR 10520:2023",
       "normativity": "institutional-requirement-compatible-with-current-abnt",
       "kind": "block-layout",
-      "values": {"min_lines": 4, "start": "below-page-midpoint", "left_indent_mm": 40, "font_pt": 10, "line_spacing": 1.0, "alignment": "justified", "quotation_marks": false},
-      "validation": {"mode": "automatic-partial", "checks": ["pretextual"]}
+      "values": {
+        "min_lines": 4,
+        "start": "below-page-midpoint",
+        "left_indent_mm": 40,
+        "font_pt": 10,
+        "line_spacing": 1.0,
+        "alignment": "justified",
+        "quotation_marks": false
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "frontmatter"
+        ]
+      }
     },
     {
       "id": "acknowledgements.typography",
-      "category": "pretextual",
+      "category": "frontmatter",
       "requirement": "Agradecimentos iniciam em página própria; título centralizado, em maiúsculas, negrito e tamanho 12; texto tamanho 12, espaço 1,5 e justificado.",
-      "sources": ["ufc-guia-trabalhos-2022"],
+      "sources": [
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 3.2.1.5, p. 30-32",
       "normativity": "institutional-requirement",
-      "kind": "pretextual-heading",
-      "values": {"new_page": true, "heading_uppercase": true, "heading_bold": true, "heading_centered": true, "font_pt": 12, "line_spacing": 1.5},
-      "validation": {"mode": "automatic-partial", "checks": ["pretextual"]}
+      "kind": "frontmatter-heading",
+      "values": {
+        "new_page": true,
+        "heading_uppercase": true,
+        "heading_bold": true,
+        "heading_centered": true,
+        "font_pt": 12,
+        "line_spacing": 1.5
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "frontmatter"
+        ]
+      }
     },
     {
       "id": "summary.word-count",
-      "category": "pretextual",
+      "category": "frontmatter",
       "requirement": "Resumo e abstract respeitam a extensão aplicável ao trabalho acadêmico e usam palavras-chave conforme a NBR 6028 vigente.",
-      "sources": ["abnt-nbr-6028-2021", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-6028-2021",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "NBR 6028:2021; UFC 3.2.1.7-3.2.1.8",
       "normativity": "required",
       "kind": "word-count",
-      "values": {"academic_work_min": 150, "academic_work_max": 500},
-      "validation": {"mode": "automatic", "checks": ["reference"]}
+      "values": {
+        "academic_work_min": 150,
+        "academic_work_max": 500
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "reference"
+        ]
+      }
     },
     {
       "id": "summary.paragraph",
-      "category": "pretextual",
+      "category": "frontmatter",
       "requirement": "Resumo e abstract usam texto justificado, tamanho 12, espaço 1,5 e sem recuo de primeira linha.",
-      "sources": ["ufc-guia-trabalhos-2022", "abnt-nbr-6028-2021"],
+      "sources": [
+        "ufc-guia-trabalhos-2022",
+        "abnt-nbr-6028-2021"
+      ],
       "locator": "UFC 3.2.1.7-3.2.1.8",
       "normativity": "institutional-requirement-compatible-with-current-abnt",
       "kind": "paragraph",
-      "values": {"font_pt": 12, "line_spacing": 1.5, "first_line_indent_mm": 0, "alignment": "justified"},
-      "validation": {"mode": "automatic-partial", "checks": ["pretextual"]}
+      "values": {
+        "font_pt": 12,
+        "line_spacing": 1.5,
+        "first_line_indent_mm": 0,
+        "alignment": "justified"
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "frontmatter"
+        ]
+      }
     },
     {
-      "id": "toc.pretextual-exclusion",
+      "id": "toc.frontmatter-exclusion",
       "category": "toc",
       "requirement": "Elementos pré-textuais não constam no sumário.",
-      "sources": ["abnt-nbr-6027-2012", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-6027-2012",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "NBR 6027:2012 6.3; UFC 3.2.1.13",
       "normativity": "required",
       "kind": "toc-structure",
-      "values": {"pretextual_entries": false},
-      "validation": {"mode": "automatic", "checks": ["pretextual", "reference-corpus"]}
+      "values": {
+        "frontmatter_entries": false
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "frontmatter",
+          "reference-corpus"
+        ]
+      }
     },
     {
       "id": "toc.typography",
       "category": "toc",
       "requirement": "O sumário reproduz a hierarquia tipográfica das seções, apresenta paginação à direita e usa o título SUMÁRIO centralizado.",
-      "sources": ["abnt-nbr-6027-2012", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-6027-2012",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "NBR 6027:2012 6.1-6.3; UFC 3.2.1.13",
       "normativity": "required",
       "kind": "toc-layout",
-      "values": {"heading_centered": true, "heading_uppercase": true, "page_numbers": "right", "mirror_section_hierarchy": true},
-      "validation": {"mode": "automatic-partial", "checks": ["reference-corpus", "posttextual"]}
+      "values": {
+        "heading_centered": true,
+        "heading_uppercase": true,
+        "page_numbers": "right",
+        "mirror_section_hierarchy": true
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "reference-corpus",
+          "backmatter"
+        ]
+      }
     },
     {
       "id": "section.hierarchy",
       "category": "textual",
       "requirement": "A numeração progressiva e a hierarquia de seções seguem a NBR 6024 vigente no escopo adotado pelo template.",
-      "sources": ["abnt-nbr-6024-2012", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-6024-2012",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "NBR 6024:2012; UFC 4.5-4.5.1",
       "normativity": "required",
       "kind": "section-hierarchy",
-      "values": {"max_levels": 5, "primary_starts_new_page": true},
-      "validation": {"mode": "automatic-partial", "checks": ["layout", "profile-matrix"]}
+      "values": {
+        "max_levels": 5,
+        "primary_starts_new_page": true
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "layout",
+          "profile-matrix"
+        ]
+      }
     },
     {
       "id": "quotation.long",
       "category": "citations",
       "requirement": "Citação direta com mais de três linhas usa bloco distinto, recuo de 4 cm, fonte reduzida, espaço simples e sem aspas.",
-      "sources": ["abnt-nbr-10520-2023", "ufc-guia-citacoes-2025"],
+      "sources": [
+        "abnt-nbr-10520-2023",
+        "ufc-guia-citacoes-2025"
+      ],
       "locator": "NBR 10520:2023; Guia UFC de Citações 2025",
       "normativity": "required",
       "kind": "block-layout",
-      "values": {"min_lines": 4, "left_indent_mm": 40, "font_pt": 10, "line_spacing": 1.0, "quotation_marks": false},
-      "validation": {"mode": "automatic-partial", "checks": ["normative-complement"]}
+      "values": {
+        "min_lines": 4,
+        "left_indent_mm": 40,
+        "font_pt": 10,
+        "line_spacing": 1.0,
+        "quotation_marks": false
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "normative-complement"
+        ]
+      }
     },
     {
       "id": "references.layout",
       "category": "references",
       "requirement": "Referências usam espaço simples internamente, alinhamento à esquerda e uma linha em branco de espaço simples entre entradas.",
-      "sources": ["abnt-nbr-6023-2025", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-6023-2025",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "NBR 6023:2025 6.3; UFC 3.2.3.1",
       "normativity": "required",
       "kind": "reference-layout",
-      "values": {"font_pt": 12, "line_spacing": 1.0, "alignment": "left", "blank_lines_between": 1},
-      "validation": {"mode": "automatic", "checks": ["bibliography", "reference-spacing"]}
+      "values": {
+        "font_pt": 12,
+        "line_spacing": 1.0,
+        "alignment": "left",
+        "blank_lines_between": 1
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "bibliography",
+          "reference-spacing"
+        ]
+      }
     },
     {
       "id": "illustration.bounds",
       "category": "objects",
       "requirement": "Identificação, título, fonte, legenda e notas acompanham os limites da própria ilustração.",
-      "sources": ["abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-14724-2024",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "NBR 14724:2024 — ilustrações; Guia UFC 2022, 4.9(g)",
       "normativity": "required",
       "kind": "object-bounds",
-      "values": {"caption_within_object_width": true, "source_within_object_width": true, "note_within_object_width": true},
-      "validation": {"mode": "automatic", "checks": ["object-geometry"]}
+      "values": {
+        "caption_within_object_width": true,
+        "source_within_object_width": true,
+        "note_within_object_width": true
+      },
+      "validation": {
+        "mode": "automatic",
+        "checks": [
+          "object-geometry"
+        ]
+      }
     },
     {
       "id": "illustration.source",
       "category": "objects",
       "requirement": "Ilustrações e tabelas apresentam indicação de fonte; fontes externas seguem a NBR 10520 vigente.",
-      "sources": ["abnt-nbr-14724-2024", "abnt-nbr-10520-2023", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-14724-2024",
+        "abnt-nbr-10520-2023",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "NBR 14724:2024; NBR 10520:2023; Guia UFC 2022, 4.9(d)",
       "normativity": "required",
       "kind": "source-attribution",
-      "values": {"source_required": true},
-      "validation": {"mode": "automatic-partial", "checks": ["objects", "documentary-source", "table-ibge"]}
+      "values": {
+        "source_required": true
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "objects",
+          "documentary-source",
+          "table-ibge"
+        ]
+      }
     },
     {
       "id": "table.ibge",
       "category": "objects",
       "requirement": "Tabelas numéricas seguem o padrão tabular do IBGE indicado pela ABNT.",
-      "sources": ["ibge-tabular-1993", "abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "ibge-tabular-1993",
+        "abnt-nbr-14724-2024",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "Normas de apresentação tabular, 3. ed.; Guia UFC 2022, 4.10",
       "normativity": "required-when-applicable",
       "kind": "table-layout",
-      "values": {"open_sides": true, "body_grid": false, "top_rule": true, "header_rule": true, "bottom_rule": true},
-      "validation": {"mode": "automatic-partial", "checks": ["table-ibge"]}
+      "values": {
+        "open_sides": true,
+        "body_grid": false,
+        "top_rule": true,
+        "header_rule": true,
+        "bottom_rule": true
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "table-ibge"
+        ]
+      }
     },
     {
       "id": "appendix.heading",
-      "category": "posttextual",
+      "category": "backmatter",
       "requirement": "Apêndices iniciam em página própria com palavra APÊNDICE, identificador e título em maiúsculas, negrito, tamanho 12 e centralizados.",
-      "sources": ["abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-14724-2024",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 3.2.3.3",
       "normativity": "institutional-requirement-compatible-with-current-abnt",
-      "kind": "posttextual-heading",
-      "values": {"new_page": true, "uppercase": true, "bold": true, "font_pt": 12, "centered": true},
-      "validation": {"mode": "automatic-partial", "checks": ["posttextual", "duplex-posttextual"]}
+      "kind": "backmatter-heading",
+      "values": {
+        "new_page": true,
+        "uppercase": true,
+        "bold": true,
+        "font_pt": 12,
+        "centered": true
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "backmatter",
+          "duplex-backmatter"
+        ]
+      }
     },
     {
       "id": "annex.heading",
-      "category": "posttextual",
+      "category": "backmatter",
       "requirement": "Anexos iniciam em página própria com palavra ANEXO, identificador e título em maiúsculas, negrito, tamanho 12 e centralizados.",
-      "sources": ["abnt-nbr-14724-2024", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-14724-2024",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 3.2.3.4",
       "normativity": "institutional-requirement-compatible-with-current-abnt",
-      "kind": "posttextual-heading",
-      "values": {"new_page": true, "uppercase": true, "bold": true, "font_pt": 12, "centered": true},
-      "validation": {"mode": "automatic-partial", "checks": ["posttextual", "duplex-posttextual"]}
+      "kind": "backmatter-heading",
+      "values": {
+        "new_page": true,
+        "uppercase": true,
+        "bold": true,
+        "font_pt": 12,
+        "centered": true
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "backmatter",
+          "duplex-backmatter"
+        ]
+      }
     },
     {
       "id": "index.presentation",
-      "category": "posttextual",
+      "category": "backmatter",
       "requirement": "Índice opcional segue a NBR 6034 vigente e a apresentação institucional UFC.",
-      "sources": ["abnt-nbr-6034-2004", "ufc-guia-trabalhos-2022"],
+      "sources": [
+        "abnt-nbr-6034-2004",
+        "ufc-guia-trabalhos-2022"
+      ],
       "locator": "UFC 3.2.3.5",
       "normativity": "required-when-present",
       "kind": "index-layout",
-      "values": {"heading_uppercase": true, "heading_bold": true, "heading_centered": true, "font_pt": 12},
-      "validation": {"mode": "automatic-partial", "checks": ["posttextual", "reference-corpus"]}
+      "values": {
+        "heading_uppercase": true,
+        "heading_bold": true,
+        "heading_centered": true,
+        "font_pt": 12
+      },
+      "validation": {
+        "mode": "automatic-partial",
+        "checks": [
+          "backmatter",
+          "reference-corpus"
+        ]
+      }
     },
     {
       "id": "deposit.pdfa",
       "category": "deposit",
       "requirement": "O arquivo eletrônico para depósito deve ser PDF/A.",
-      "sources": ["ufc-deposito-tcc-2026", "ufc-deposito-pos-2026"],
+      "sources": [
+        "ufc-deposito-tcc-2026",
+        "ufc-deposito-pos-2026"
+      ],
       "locator": "Requisitos de recebimento SiBi/UFC",
       "normativity": "institutional-requirement",
       "kind": "pdf-conformance",
-      "values": {"required": "PDF/A", "project_profile": "PDF/A-2b"},
-      "validation": {"mode": "automatic-deep", "checks": ["pdfa.deep", "profile-pdfa", "windows-font-pdfa"]}
+      "values": {
+        "required": "PDF/A",
+        "project_profile": "PDF/A-2b"
+      },
+      "validation": {
+        "mode": "automatic-deep",
+        "checks": [
+          "pdfa.deep",
+          "profile-pdfa",
+          "windows-font-pdfa"
+        ]
+      }
     },
     {
       "id": "deposit.approval-signatures",
       "category": "deposit",
       "requirement": "A folha de aprovação da versão destinada aos repositórios digitais da UFC não contém assinaturas dos membros da banca.",
-      "sources": ["ufc-deposito-tcc-2026", "ufc-deposito-pos-2026"],
+      "sources": [
+        "ufc-deposito-tcc-2026",
+        "ufc-deposito-pos-2026"
+      ],
       "locator": "Requisitos de recebimento SiBi/UFC",
       "normativity": "institutional-requirement",
       "kind": "content-policy",
-      "values": {"digital_signatures_images_allowed": false},
-      "validation": {"mode": "manual", "checks": ["approval.signatures"]}
+      "values": {
+        "digital_signatures_images_allowed": false
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "approval.signatures"
+        ]
+      }
     },
     {
       "id": "deposit.catalog-card",
       "category": "deposit",
       "requirement": "A representação visual da ficha catalográfica é facultativa para TCC, dissertação e tese depositados no Repositório Institucional.",
-      "sources": ["ufc-in-2-2026"],
+      "sources": [
+        "ufc-in-2-2026"
+      ],
       "locator": "IN Conjunta nº 2/2026, arts. 1º-3º e 7º",
       "normativity": "institutional-act",
       "kind": "optional-element",
-      "values": {"required": false, "applies_to": ["tccgraduacao", "tccespecializacao", "dissertacao", "tese"]},
-      "validation": {"mode": "automatic-policy", "checks": ["catalog-card", "catalog.optional"]}
+      "values": {
+        "required": false,
+        "applies_to": [
+          "tccgraduacao",
+          "tccespecializacao",
+          "dissertacao",
+          "tese"
+        ]
+      },
+      "validation": {
+        "mode": "automatic-policy",
+        "checks": [
+          "catalog-card",
+          "catalog.optional"
+        ]
+      }
     },
     {
       "id": "deposit.capes",
       "category": "deposit",
       "requirement": "O agradecimento CAPES é obrigatório quando o trabalho resultar de financiamento total ou parcial da CAPES.",
-      "sources": ["capes-portaria-206-2018", "ufc-deposito-pos-2026"],
+      "sources": [
+        "capes-portaria-206-2018",
+        "ufc-deposito-pos-2026"
+      ],
       "locator": "Portaria CAPES nº 206/2018",
       "normativity": "conditional-requirement",
       "kind": "conditional-content",
-      "values": {"condition": "capes-funded"},
-      "validation": {"mode": "conditional-manual", "checks": ["capes"]}
+      "values": {
+        "condition": "capes-funded"
+      },
+      "validation": {
+        "mode": "conditional-manual",
+        "checks": [
+          "capes"
+        ]
+      }
     }
   ]
 }

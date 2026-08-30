@@ -32,7 +32,9 @@
     },
     {
       "id": "references.doi",
-      "rule_ids": ["references.doi.when-present"],
+      "rule_ids": [
+        "references.doi.when-present"
+      ],
       "current_locator": "ABNT NBR 6023:2025, 7.7.6 e casos aplicáveis",
       "status": "UNAVAILABLE_WITH_REASON",
       "source_checks": [
@@ -47,7 +49,9 @@
     },
     {
       "id": "references.online-access",
-      "rule_ids": ["references.online.url-access"],
+      "rule_ids": [
+        "references.online.url-access"
+      ],
       "current_locator": "ABNT NBR 6023:2025, 6.6 e referências eletrônicas aplicáveis",
       "status": "UNAVAILABLE_WITH_REASON",
       "source_checks": [

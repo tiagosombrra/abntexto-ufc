@@ -16,7 +16,7 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typography_runs
 
 SCENARIO = ROOT / "standards" / "frontmatter-toc-scenario.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ORDER = [
     "toc.frontmatter-exclusion",
     "toc.heading.alignment",

@@ -15,7 +15,7 @@
   },
   "rulesets": [
     {
-      "id": "pretextual.dedication",
+      "id": "frontmatter.dedication",
       "rule_ids": [
         "dedication.heading.present",
         "dedication.position.start",
@@ -37,7 +37,7 @@
       ]
     },
     {
-      "id": "pretextual.acknowledgements",
+      "id": "frontmatter.acknowledgements",
       "rule_ids": [
         "acknowledgements.page.own",
         "acknowledgements.heading.case",
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "id": "pretextual.epigraph.short",
+      "id": "frontmatter.epigraph.short",
       "rule_ids": [
         "epigraph.short.position.start",
         "epigraph.short.indent.left",
@@ -90,7 +90,7 @@
       ]
     },
     {
-      "id": "pretextual.epigraph.long",
+      "id": "frontmatter.epigraph.long",
       "rule_ids": [
         "epigraph.long.position.start",
         "epigraph.long.indent.left",
@@ -119,8 +119,10 @@
       ]
     },
     {
-      "id": "pretextual.cover.required",
-      "rule_ids": ["cover.element.required"],
+      "id": "frontmatter.cover.required",
+      "rule_ids": [
+        "cover.element.required"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — estrutura; Guia UFC 2022, 3.1.1",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -141,8 +143,10 @@
       ]
     },
     {
-      "id": "pretextual.cover.fields-order",
-      "rule_ids": ["cover.fields.order"],
+      "id": "frontmatter.cover.fields-order",
+      "rule_ids": [
+        "cover.fields.order"
+      ],
       "current_locator": "Guia UFC 2022, 3.1.1",
       "status": "VERIFIED",
       "source_checks": [
@@ -156,8 +160,10 @@
       ]
     },
     {
-      "id": "pretextual.title-page.required",
-      "rule_ids": ["title-page.element.required"],
+      "id": "frontmatter.title-page.required",
+      "rule_ids": [
+        "title-page.element.required"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — elementos pré-textuais; Guia UFC 2022, 3.2.1.1",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -178,8 +184,10 @@
       ]
     },
     {
-      "id": "pretextual.title-page.fields-order",
-      "rule_ids": ["title-page.fields.order"],
+      "id": "frontmatter.title-page.fields-order",
+      "rule_ids": [
+        "title-page.fields.order"
+      ],
       "current_locator": "Guia UFC 2022, 3.2.1.1",
       "status": "VERIFIED",
       "source_checks": [
@@ -193,8 +201,10 @@
       ]
     },
     {
-      "id": "pretextual.approval.required",
-      "rule_ids": ["approval.element.required"],
+      "id": "frontmatter.approval.required",
+      "rule_ids": [
+        "approval.element.required"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — elementos pré-textuais; Guia UFC 2022, 3.2.1.3",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -215,8 +225,10 @@
       ]
     },
     {
-      "id": "pretextual.approval.fields-order",
-      "rule_ids": ["approval.fields.order"],
+      "id": "frontmatter.approval.fields-order",
+      "rule_ids": [
+        "approval.fields.order"
+      ],
       "current_locator": "Guia UFC 2022, 3.2.1.3",
       "status": "VERIFIED",
       "source_checks": [
@@ -230,8 +242,10 @@
       ]
     },
     {
-      "id": "pretextual.errata.optional",
-      "rule_ids": ["errata.element.optional"],
+      "id": "frontmatter.errata.optional",
+      "rule_ids": [
+        "errata.element.optional"
+      ],
       "current_locator": "ABNT NBR 14724:2024 — errata; Guia UFC 2022, 3.2.1.2",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -252,8 +266,10 @@
       ]
     },
     {
-      "id": "pretextual.errata.position",
-      "rule_ids": ["errata.position"],
+      "id": "frontmatter.errata.position",
+      "rule_ids": [
+        "errata.position"
+      ],
       "current_locator": "Guia UFC 2022, 3.2.1.2",
       "status": "VERIFIED",
       "source_checks": [
@@ -267,8 +283,10 @@
       ]
     },
     {
-      "id": "pretextual.errata.contents",
-      "rule_ids": ["errata.contents"],
+      "id": "frontmatter.errata.contents",
+      "rule_ids": [
+        "errata.contents"
+      ],
       "current_locator": "Guia UFC 2022, 3.2.1.2",
       "status": "VERIFIED",
       "source_checks": [
@@ -282,8 +300,10 @@
       ]
     },
     {
-      "id": "pretextual.summary.vernacular-required",
-      "rule_ids": ["summary.vernacular.required"],
+      "id": "frontmatter.summary.vernacular-required",
+      "rule_ids": [
+        "summary.vernacular.required"
+      ],
       "current_locator": "ABNT NBR 14724:2024; ABNT NBR 6028:2021; Guia UFC 2022, 3.2.1.7",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -311,8 +331,10 @@
       ]
     },
     {
-      "id": "pretextual.summary.foreign-required",
-      "rule_ids": ["summary.foreign.required"],
+      "id": "frontmatter.summary.foreign-required",
+      "rule_ids": [
+        "summary.foreign.required"
+      ],
       "current_locator": "ABNT NBR 14724:2024; Guia UFC 2022, 3.2.1.8",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -333,7 +355,7 @@
       ]
     },
     {
-      "id": "pretextual.summary.vernacular-format",
+      "id": "frontmatter.summary.vernacular-format",
       "rule_ids": [
         "summary.paragraph.single",
         "summary.keywords.position",
@@ -361,8 +383,10 @@
       ]
     },
     {
-      "id": "pretextual.summary.foreign-keywords",
-      "rule_ids": ["summary.foreign.keywords.required"],
+      "id": "frontmatter.summary.foreign-keywords",
+      "rule_ids": [
+        "summary.foreign.keywords.required"
+      ],
       "current_locator": "ABNT NBR 6028:2021; Guia UFC 2022, 3.2.1.8",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
@@ -383,7 +407,7 @@
       ]
     },
     {
-      "id": "pretextual.lists.optional",
+      "id": "frontmatter.lists.optional",
       "rule_ids": [
         "list.illustrations.optional",
         "list.tables.optional",
@@ -410,7 +434,7 @@
       ]
     },
     {
-      "id": "pretextual.summary.word-count-keywords",
+      "id": "frontmatter.summary.word-count-keywords",
       "rule_ids": [
         "summary.word-count.range",
         "summary.keywords.required"
@@ -435,7 +459,7 @@
       ]
     },
     {
-      "id": "pretextual.summary.paragraph-typography",
+      "id": "frontmatter.summary.paragraph-typography",
       "rule_ids": [
         "summary.font.size",
         "summary.line-spacing",
@@ -462,7 +486,7 @@
       ]
     },
     {
-      "id": "pretextual.toc.typography",
+      "id": "frontmatter.toc.typography",
       "rule_ids": [
         "toc.heading.alignment",
         "toc.heading.case",
@@ -489,8 +513,10 @@
       ]
     },
     {
-      "id": "pretextual.toc.pretextual-exclusion",
-      "rule_ids": ["toc.pretextual-exclusion"],
+      "id": "frontmatter.toc.frontmatter-exclusion",
+      "rule_ids": [
+        "toc.frontmatter-exclusion"
+      ],
       "current_locator": "NBR 6027:2012 6.3; UFC 3.2.1.13",
       "status": "PARTIAL_WITH_REASON",
       "source_checks": [
