@@ -1,9 +1,9 @@
 {
-  "schema_version": 1,
-  "reviewed_at": "2026-08-28",
+  "schema_version": 2,
+  "reviewed_at": "2026-08-30",
   "mode": "latest-current-applicable-technical-standard-mandatory",
   "decision": "mandatory",
-  "purpose": "Make the abntexto-ufc technical-version rule explicit, auditable and machine-checkable when UFC guides still cite superseded ABNT editions, while separating source/rule promotion from later LaTeX runtime implementation.",
+  "purpose": "Define the current technical-edition rule when UFC guides cite superseded ABNT editions, while keeping deferred document profiles outside the active foundation until their sources and predicates are revalidated.",
   "institutional_basis": [
     {
       "id": "ufc-res-17-cepe-2017",
@@ -39,7 +39,7 @@
     "current_ufc_act_governs_institutional_scope": true,
     "conflict_behavior": "review-required",
     "course_specific_exception": "A Resolução nº 17/CEPE de 2017 admite modelo específico formalmente aprovado no rito previsto no art. 1º, §§ 2º-3º. Para pós-graduação stricto sensu, a Resolução nº 17/CEPE de 2015, Normas Gerais art. 10, X, também atribui ao colegiado do programa competência para definir diretrizes de apresentação. Nenhuma dessas competências altera silenciosamente o template: a diretriz específica deve ser identificada, cadastrada como fonte institucional vigente, ter escopo explícito e ser reconciliada antes de alterar comportamento.",
-    "profile_promotion_stages": "Uma fonte reconciliada entra em catalog/precedence somente junto com predicados que a consomem. A existência do contrato normativo não implica que o runtime LaTeX já esteja implementado; implementação e evidência final são fases separadas."
+    "profile_promotion_stages": "A reconciled source enters the active catalog only with predicates that consume it. A normative contract does not imply that runtime implementation or final profile evidence already exists."
   },
   "current_technical_sources": [
     "abnt-nbr-14724-2024",
@@ -55,15 +55,14 @@
   ],
   "profile_candidates": {
     "scientific_article": {
-      "status": "contract-promotion-in-progress-runtime-pending",
+      "status": "deferred-outside-active-foundation",
       "candidate_sources": [
         "abnt-nbr-6022-2018",
         "ufc-guia-artigos-2022"
       ],
-      "source_and_contract_phase": "N15-B2A",
-      "runtime_implementation_phase": "N15-B2B",
-      "evidence_completion_phase": "N15-B2C",
-      "rule": "N15-B2A promotes the corrected current UFC article guide and NBR 6022:2018 only together with explicit article.* predicates and locators. LaTeX formatting remains unchanged until N15-B2B, and final profile evidence remains N15-B2C."
+      "runtime_present": false,
+      "activation_condition": "Revalidate current technical and UFC institutional sources and define explicit article predicates before introducing article runtime behavior.",
+      "rule": "Scientific-article support is not part of the active foundation contract. Historical research remains available through Git history and must be revalidated before the profile is introduced."
     }
   },
   "supersessions": [
@@ -145,7 +144,7 @@
     }
   ],
   "documentation": {
-    "human_map": "docs/VIGENCIA-NORMATIVA.md",
+    "human_map": "docs/NORMATIVE-CURRENCY.md",
     "historical_references_are_allowed_only_as_explanatory_context": true
   }
 }
