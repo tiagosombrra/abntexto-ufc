@@ -27,9 +27,9 @@
 \input{abntexto-ufc/academic-works.def}
 \input{abntexto-ufc/research-projects.def}
 \input{abntexto-ufc/objects.def}
-\input{abntexto-ufc/compat-abntexto.def}
+\input{abntexto-ufc/integrations/abntexto.def}
 \input{abntexto-ufc/bibliography.def}
-\input{abntexto-ufc/compat-nbr6023-2025.def}
+\input{abntexto-ufc/standards/nbr6023-2025.def}
 \input{abntexto-ufc/backmatter.def}
 \input{abntexto-ufc/public-api.def}
 
