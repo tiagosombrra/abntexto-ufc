@@ -1,4 +1,4 @@
-name: R1 residual active-tree audit
+name: R1 exact active-consumer path repair
 
 on:
   push:
@@ -8,10 +8,10 @@ on:
       - .github/workflows/r1-residual-audit.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  audit:
+  repair:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -20,210 +20,208 @@ jobs:
           fetch-depth: 0
           ref: refactor/v3-r1-rebaseline
 
-      - name: Audit residual R1 consumers
+      - name: Repair exact active consumer paths
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from __future__ import annotations
 
-          import ast
-          import json
           import re
           import subprocess
           from pathlib import Path
 
           ROOT = Path('.')
-          tracked = subprocess.check_output(['git', 'ls-files'], text=True).splitlines()
-          tracked_set = set(tracked)
+          tracked = set(subprocess.check_output(['git', 'ls-files'], text=True).splitlines())
 
-          findings: dict[str, list[str]] = {
-              'obsolete_physical_names': [],
-              'obsolete_path_references': [],
-              'retired_engineering_identity': [],
-              'runner_missing_commands': [],
-              'standards_unknown_validation_ids': [],
-              'missing_literal_test_paths': [],
+          excluded = {
+              'tests/checks/canonical_identity.py',
+              'tests/checks/repository_contract.py',
+              'tests/checks/release_package.py',
+              'tests/checks/overleaf_bundle.py',
+              'tests/checks/ctan_archive.py',
+              'tests/integration/distribution.sh',
+              'tests/integration/overleaf-stable.sh',
+              'tests/integration/windows-font-pdfa.sh',
           }
 
-          obsolete_physical = (
-              re.compile(r'(^|/)normativa(/|$)', re.I),
-              re.compile(r'(^|/)pretextuais(/|$)', re.I),
-              re.compile(r'(^|/)v2-[^/]*', re.I),
-              re.compile(r'(^|/)(?:n\d+|n15-[^/]+)[^/]*', re.I),
-              re.compile(r'oracle', re.I),
-              re.compile(r'ufctex\.cls$', re.I),
-              re.compile(r'compat-(?:abntexto|nbr6023-2025)\.def$', re.I),
+          checker_map = {
+              'tests/checks/normative_n10_appendix_annex.py': 'tests/checks/normative_appendix_annex.py',
+              'tests/checks/normative_n10_index_glossary.py': 'tests/checks/normative_index_glossary.py',
+              'tests/checks/normative_n10_scope.py': 'tests/checks/normative_backmatter_scope.py',
+              'tests/checks/normative_n11_project_structure.py': 'tests/checks/normative_research_project_structure.py',
+              'tests/checks/normative_n11_scope.py': 'tests/checks/normative_research_project_scope.py',
+              'tests/checks/normative_n12_matrix.py': 'tests/checks/normative_certification_matrix.py',
+              'tests/checks/normative_n13_campaign.py': 'tests/checks/normative_negative_campaign.py',
+              'tests/checks/normative_n13_configuration.py': 'tests/checks/normative_configuration.py',
+              'tests/checks/normative_n13_negative_paths.py': 'tests/checks/normative_negative_paths.py',
+              'tests/checks/normative_n13_pdfa.py': 'tests/checks/normative_pdfa.py',
+              'tests/checks/normative_n14_cross_surface.py': 'tests/checks/normative_cross_surface.py',
+              'tests/checks/normative_n14_validator_contract.py': 'tests/checks/normative_validator_contract.py',
+              'tests/checks/normative_n9_campaigns.py': 'tests/checks/normative_coverage_campaigns.py',
+              'tests/checks/normative_n9_equation_display.py': 'tests/checks/normative_equation_display.py',
+              'tests/checks/normative_n9_illustration.py': 'tests/checks/normative_illustration.py',
+              'tests/checks/normative_n9_progress.py': 'tests/checks/normative_coverage_progress.py',
+              'tests/checks/normative_n9_scope.py': 'tests/checks/normative_objects_scope.py',
+              'tests/checks/normative_n9_table_ibge_vector.py': 'tests/checks/normative_table_ibge_vector.py',
+              'tests/checks/normative_n9_table_typography.py': 'tests/checks/normative_table_typography.py',
+              'tests/checks/normative_vector_rule_oracle.py': 'tests/checks/normative_vector_rule_validation.py',
+          }
+
+          doc_map = {
+              'algoritmos-linhas.tex': 'algorithm-line-numbering.tex',
+              'build-minimo.tex': 'minimal-build.tex',
+              'citacoes-referencias.tex': 'citations-references.tex',
+              'ficha-catalografica.tex': 'catalog-card.tex',
+              'fontes-arial-poc.tex': 'arial-font-poc.tex',
+              'fontes-classe-poc.tex': 'class-font-poc.tex',
+              'fontes-config.tex': 'font-configuration.tex',
+              'fontes-documentais.tex': 'documentary-sources.tex',
+              'fontes-times-poc.tex': 'times-font-poc.tex',
+              'geometria-pdf.tex': 'pdf-geometry.tex',
+              'layout-anverso.tex': 'layout-single-sided.tex',
+              'layout-frente-verso.tex': 'layout-double-sided.tex',
+              'matematica.tex': 'mathematics.tex',
+              'normativa-complementar.tex': 'normative-complement.tex',
+              'objeto-geometria.tex': 'object-geometry.tex',
+              'objetos-avancados.tex': 'advanced-objects.tex',
+              'objetos-minted.tex': 'minted-objects.tex',
+              'postextuais.tex': 'backmatter.tex',
+              'pretextuais-frente-verso.tex': 'frontmatter-double-sided.tex',
+              'pretextuais-projeto-anonimo.tex': 'frontmatter-anonymized-project.tex',
+              'pretextuais-trabalho.tex': 'frontmatter-academic-work.tex',
+              'projeto-15287.tex': 'research-project-15287.tex',
+              'projeto-sem-capa.tex': 'research-project-without-cover.tex',
+              'referencias-6023-2025.tex': 'references-6023-2025.tex',
+              'tabela-ibge.tex': 'ibge-table.tex',
+              'tipografia-codigo.tex': 'code-typography.tex',
+              'reference-layout-oracle.tex': 'reference-layout-test.tex',
+              'vector-rule-oracle-calibration.tex': 'vector-rule-calibration-test.tex',
+          }
+
+          fixture_map = {
+              'tests/fixtures/exemplo.cpp': 'tests/fixtures/example.cpp',
+              'tests/fixtures/exemplo.py': 'tests/fixtures/example.py',
+              'tests/fixtures/fontes-documentais.bib': 'tests/fixtures/documentary-sources.bib',
+              'tests/fixtures/referencias-6023-2025.bib': 'tests/fixtures/references-6023-2025.bib',
+              'tests/fixtures/referencias-v2.bib': 'tests/fixtures/references.bib',
+              'tests/fixtures/n8-reference-layout.bib': 'tests/fixtures/reference-layout.bib',
+              'tests/fixtures/pretextuais/abreviaturas.tex': 'tests/fixtures/frontmatter/abbreviations.tex',
+              'tests/fixtures/pretextuais/abstract.tex': 'tests/fixtures/frontmatter/abstract.tex',
+              'tests/fixtures/pretextuais/agradecimentos.tex': 'tests/fixtures/frontmatter/acknowledgments.tex',
+              'tests/fixtures/pretextuais/dedicatoria.tex': 'tests/fixtures/frontmatter/dedication.tex',
+              'tests/fixtures/pretextuais/epigrafe.tex': 'tests/fixtures/frontmatter/epigraph.tex',
+              'tests/fixtures/pretextuais/errata.tex': 'tests/fixtures/frontmatter/errata.tex',
+              'tests/fixtures/pretextuais/resumo.tex': 'tests/fixtures/frontmatter/summary.tex',
+              'tests/fixtures/pretextuais/simbolos.tex': 'tests/fixtures/frontmatter/symbols.tex',
+              'tests/smoke/perfil-base.tex': 'tests/smoke/base-profile.tex',
+          }
+
+          for old, new in {**checker_map, **fixture_map}.items():
+              if new not in tracked:
+                  raise SystemExit(f'Exact migration target does not exist: {old} -> {new}')
+
+          def resolve_old_test_path(old: str) -> str | None:
+              if old in checker_map:
+                  return checker_map[old]
+              if old in fixture_map:
+                  return fixture_map[old]
+              if old.startswith('tests/v2-') and old.endswith('-check.sh'):
+                  semantic = old[len('tests/v2-'):-len('-check.sh')]
+                  candidate = f'tests/integration/{semantic}.sh'
+                  return candidate if candidate in tracked else None
+              if old.startswith('tests/normativa/') and old.endswith('.tex'):
+                  basename = old.split('/')[-1]
+                  if basename in doc_map:
+                      candidate = f'tests/documents/{doc_map[basename]}'
+                      return candidate if candidate in tracked else None
+                  if basename.startswith('textual-oracle-'):
+                      stem = basename[len('textual-oracle-'):-4]
+                      candidate = f'tests/documents/mainmatter-{stem}-test.tex'
+                      return candidate if candidate in tracked else None
+                  candidate = f'tests/documents/{basename}'
+                  return candidate if candidate in tracked else None
+              return None
+
+          text_paths = [
+              item for item in sorted(tracked)
+              if item.startswith(('tests/integration/', 'tests/checks/', 'tests/documents/', 'tests/smoke/'))
+              and item not in excluded
+              and Path(item).suffix in {'.sh', '.py', '.tex'}
+          ]
+
+          literal_old = re.compile(
+              r'(tests/(?:v2-[A-Za-z0-9_.-]+-check\.sh|normativa/[A-Za-z0-9_.-]+\.tex|checks/normative_[A-Za-z0-9_]+\.py|fixtures/(?:pretextuais/)?[A-Za-z0-9_.-]+\.(?:tex|bib|py|cpp)|smoke/perfil-base\.tex))'
           )
-          for item in tracked:
-              if item == '.github/workflows/r1-residual-audit.yml':
-                  continue
-              if any(pattern.search(item) for pattern in obsolete_physical):
-                  findings['obsolete_physical_names'].append(item)
 
-          consumer_roots = ('tests/', 'tools/', 'validator/', '.github/workflows/')
-          consumer_files = {
-              'Makefile', 'README.md', 'abntexto-ufc.cls',
-              'abntexto-ufc/core.def', 'abntexto-ufc/modules.def',
-              'abntexto-ufc/integrations/abntexto.def',
-          }
-          path_tokens = (
-              'tests/normativa/',
-              'tests/fixtures/pretextuais/',
-              'tests/v2-',
-              'normativa/',
-              'ufctex.cls',
-              'abntexto-ufc/compat-abntexto.def',
-              'abntexto-ufc/compat-nbr6023-2025.def',
-              'docs/history/',
-              'release/history/',
-          )
-          for item in tracked:
-              if not (item.startswith(consumer_roots) or item in consumer_files):
-                  continue
-              if item == '.github/workflows/r1-residual-audit.yml':
-                  continue
+          changed: set[str] = set()
+          unresolved: list[str] = []
+          replacements: list[str] = []
+
+          for item in text_paths:
               path = Path(item)
-              if not path.is_file():
-                  continue
-              try:
-                  text = path.read_text(encoding='utf-8')
-              except UnicodeDecodeError:
-                  continue
-              for token in path_tokens:
-                  if token in text:
-                      findings['obsolete_path_references'].append(f'{item}: {token}')
+              text = path.read_text(encoding='utf-8')
+              original = text
 
-          technical_roots = ('tests/', 'tools/', 'validator/', 'standards/')
-          identity_patterns = {
-              'N-phase': re.compile(r'(?<![A-Za-z])N(?:[0-9]{1,2})(?:-[A-Z0-9]+)*(?![A-Za-z0-9])'),
-              'B2R': re.compile(r'(?<![A-Za-z0-9])B2R(?![A-Za-z0-9])', re.I),
-              'v2-version': re.compile(r'(?<![A-Za-z0-9])v2(?:\.\d+(?:\.\d+)?)?(?![A-Za-z0-9])', re.I),
-              'oracle': re.compile(r'oracle', re.I),
-              'pretextual': re.compile(r'pretextual', re.I),
-              'posttextual': re.compile(r'posttextual', re.I),
-          }
-          identity_exempt = {
-              'release/v3-api-migration.json',
-              'release/v3-path-migration.json',
-              'release/v3-test-migration.json',
-              'release/v3-roadmap.json',
-              'docs/ROADMAP-V3.0.0.md',
-              'docs/HANDOFF-V3.0.0.md',
-          }
-          for item in tracked:
-              if not item.startswith(technical_roots) or item in identity_exempt:
-                  continue
-              path = Path(item)
-              if not path.is_file():
-                  continue
-              try:
-                  text = path.read_text(encoding='utf-8')
-              except UnicodeDecodeError:
-                  continue
-              if path.suffix == '.tex':
-                  text = text.replace('\\pretextual', '').replace('\\posttextual', '')
-              for label, pattern in identity_patterns.items():
-                  matches = sorted(set(match.group(0) for match in pattern.finditer(text)))
-                  if matches:
-                      findings['retired_engineering_identity'].append(
-                          f'{item}: {label}={matches[:8]}'
-                      )
+              for old, new in checker_map.items():
+                  text = text.replace(old, new)
+              for old, new in fixture_map.items():
+                  text = text.replace(old, new)
 
-          runner_path = Path('tests/run.py')
-          module = ast.parse(runner_path.read_text(encoding='utf-8'))
-          runner_ids: set[str] = set()
-          runner_commands: list[tuple[str, tuple[str, ...]]] = []
-          for node in ast.walk(module):
-              if not isinstance(node, ast.Call):
-                  continue
-              if not isinstance(node.func, ast.Name) or node.func.id != 'Check':
-                  continue
-              if len(node.args) < 3:
-                  continue
-              if not isinstance(node.args[0], ast.Constant) or not isinstance(node.args[0].value, str):
-                  continue
-              check_id = node.args[0].value
-              runner_ids.add(check_id)
-              command: list[str] = []
-              arg = node.args[2]
-              if isinstance(arg, (ast.Tuple, ast.List)):
-                  for elt in arg.elts:
-                      if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
-                          command.append(elt.value)
-              runner_commands.append((check_id, tuple(command)))
+              matches = sorted(set(match.group(1) for match in literal_old.finditer(text)))
+              for old in matches:
+                  new = resolve_old_test_path(old)
+                  if new is None:
+                      unresolved.append(f'{item}: {old}')
+                      continue
+                  text = text.replace(old, new)
+                  replacements.append(f'{item}: {old} -> {new}')
 
-          for check_id, command in runner_commands:
-              if not command:
-                  findings['runner_missing_commands'].append(f'{check_id}: unparsable command')
-                  continue
-              candidates = [part for part in command if '/' in part and not part.startswith('-')]
-              for candidate in candidates:
-                  if candidate.endswith(('.py', '.sh', '.tex', '.json', '.pdf')):
-                      if candidate.endswith('.pdf'):
-                          continue
-                      if candidate not in tracked_set and not Path(candidate).exists():
-                          findings['runner_missing_commands'].append(f'{check_id}: {candidate}')
+              text = text.replace('ROOT / "normativa"', 'ROOT / "standards"')
+              text = text.replace("ROOT / 'normativa'", "ROOT / 'standards'")
+              text = text.replace('Path("normativa")', 'Path("standards")')
+              text = text.replace("Path('normativa')", "Path('standards')")
 
-          declared_validation_ids: dict[str, set[str]] = {}
-          for item in tracked:
-              if not item.startswith('standards/') or not item.endswith('.json'):
-                  continue
-              try:
-                  data = json.loads(Path(item).read_text(encoding='utf-8'))
-              except Exception:
-                  continue
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  changed.add(item)
 
-              def walk(value: object) -> None:
-                  if isinstance(value, dict):
-                      validation = value.get('validation')
-                      if isinstance(validation, dict) and isinstance(validation.get('checks'), list):
-                          for check in validation['checks']:
-                              if isinstance(check, str):
-                                  declared_validation_ids.setdefault(check, set()).add(item)
-                      for child in value.values():
-                          walk(child)
-                  elif isinstance(value, list):
-                      for child in value:
-                          walk(child)
+          if unresolved:
+              raise SystemExit('Unresolved exact active test paths:\n' + '\n'.join(sorted(set(unresolved))))
 
-              walk(data)
+          # Final executable-consumer literal path integrity. Negative legacy guardrails and
+          # distribution/certification families are intentionally outside this topology batch.
+          stale = []
+          for item in text_paths:
+              text = Path(item).read_text(encoding='utf-8')
+              for match in literal_old.finditer(text):
+                  old = match.group(1)
+                  if old.startswith('tests/checks/normative_') and old in tracked:
+                      continue
+                  if old.startswith('tests/fixtures/') and old in tracked:
+                      continue
+                  stale.append(f'{item}: {old}')
+              if 'ROOT / "normativa"' in text or "ROOT / 'normativa'" in text:
+                  stale.append(f'{item}: constructed normativa root')
+          if stale:
+              raise SystemExit('Stale executable consumer references remain:\n' + '\n'.join(sorted(set(stale))))
 
-          for check_id, sources in sorted(declared_validation_ids.items()):
-              if check_id not in runner_ids:
-                  findings['standards_unknown_validation_ids'].append(
-                      f'{check_id}: {sorted(sources)}'
-                  )
-
-          literal_path = re.compile(
-              r'(?P<path>(?:tests|tools|validator|standards)/[A-Za-z0-9_./-]+(?:\.py|\.sh|\.tex|\.json|\.bib))'
-          )
-          for item in tracked:
-              if not item.startswith(('tests/', 'tools/', 'validator/')):
-                  continue
-              path = Path(item)
-              if not path.is_file():
-                  continue
-              try:
-                  text = path.read_text(encoding='utf-8')
-              except UnicodeDecodeError:
-                  continue
-              for match in literal_path.finditer(text):
-                  candidate = match.group('path')
-                  if candidate not in tracked_set and not Path(candidate).exists():
-                      findings['missing_literal_test_paths'].append(f'{item}: {candidate}')
-
-          for key in findings:
-              findings[key] = sorted(set(findings[key]))
-
-          print(json.dumps({
-              'runner_ids': sorted(runner_ids),
-              'declared_validation_ids': sorted(declared_validation_ids),
-              'findings': findings,
-          }, ensure_ascii=False, indent=2))
-
-          failures = sum(len(items) for items in findings.values())
-          if failures:
-              raise SystemExit(f'R1 residual audit found {failures} issue(s).')
-          print('R1 residual active-tree audit passed with zero findings.')
+          print(f'Changed {len(changed)} active consumer files.')
+          print(f'Applied {len(replacements)} resolved literal migrations.')
+          for item in sorted(changed):
+              print(f'  {item}')
           PY
+
+          python3 -m py_compile $(git ls-files 'tests/checks/*.py')
+          for script in $(git ls-files 'tests/integration/*.sh'); do sh -n "$script"; done
+          git diff --check
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tests
+          if git diff --cached --quiet; then
+            echo 'No exact path-consumer changes to commit.'
+            exit 0
+          fi
+          git commit -m 'refactor: reconnect active test consumers'
+          git push origin HEAD:refactor/v3-r1-rebaseline
