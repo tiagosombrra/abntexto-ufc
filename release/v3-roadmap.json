@@ -40,11 +40,24 @@
     "forwarding_only_public_api_module_allowed": false,
     "duplicate_runtime_ownership_allowed": false
   },
+  "phase_evidence": {
+    "V3-R0": {
+      "status": "DONE",
+      "contract_commit": "f512268661acbb79137cdcdacc94b82fa3dc1746",
+      "audited_tree_sha": "657c7da1c4f0bd9e7353569fce59c0907c896ea7",
+      "contracts": [
+        "release/v3-path-migration.json",
+        "release/v3-api-migration.json",
+        "release/v3-test-migration.json"
+      ],
+      "unresolved_architecture_decisions": 0
+    }
+  },
   "phases": [
     {
       "id": "V3-R0",
       "name": "Architecture and migration contract",
-      "status": "ACTIVE",
+      "status": "DONE",
       "depends_on": [],
       "exit_criteria": [
         "every tracked path classified as retain/rename/move/remove",
@@ -56,14 +69,16 @@
     {
       "id": "V3-R1",
       "name": "Physical repository restructuring",
-      "status": "BLOCKED",
-      "depends_on": ["V3-R0"]
+      "status": "ACTIVE",
+      "depends_on": ["V3-R0"],
+      "contract": "release/v3-path-migration.json"
     },
     {
       "id": "V3-R2",
       "name": "Canonical English runtime",
       "status": "BLOCKED",
-      "depends_on": ["V3-R1"]
+      "depends_on": ["V3-R1"],
+      "contract": "release/v3-api-migration.json"
     },
     {
       "id": "V3-R3",
@@ -75,7 +90,8 @@
       "id": "V3-R4",
       "name": "Test architecture and regression reconstruction",
       "status": "BLOCKED",
-      "depends_on": ["V3-R3"]
+      "depends_on": ["V3-R3"],
+      "contract": "release/v3-test-migration.json"
     },
     {
       "id": "V3-R5",
@@ -146,14 +162,19 @@
   ],
   "continuation_protocol": {
     "read_first": [
+      "docs/HANDOFF-V3.0.0.md",
       "docs/ROADMAP-V3.0.0.md",
       "release/v3-roadmap.json",
       "docs/ARCHITECTURE.md",
-      "docs/ENGINEERING-LANGUAGE.md"
+      "docs/ENGINEERING-LANGUAGE.md",
+      "release/v3-path-migration.json",
+      "release/v3-api-migration.json",
+      "release/v3-test-migration.json"
     ],
     "phase_authority": "release/v3-roadmap.json",
+    "handoff_authority": "docs/HANDOFF-V3.0.0.md",
     "phase_close_requires_human_and_machine_roadmap_sync": true,
     "phase_close_requires_executable_evidence_when_runtime_changes": true
   },
-  "next_action": "Complete V3-R0 exhaustive tree/API migration inventory before runtime modification."
+  "next_action": "Execute V3-R1 physical repository restructuring exactly from release/v3-path-migration.json; do not begin runtime API rewriting until V3-R1 exit criteria pass."
 }
