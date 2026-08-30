@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-section-unnumbered-centered.tex"
+fixture="tests/documents/mainmatter-section-unnumbered-centered-test.tex"
 job="textual-oracle-section-unnumbered-centered"
 evidence="artifacts/normative-textual/section-unnumbered-centered.json"
 latex_log="/tmp/abntexto-ufc-v2-section-unnumbered-centered.log"

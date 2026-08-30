@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-footnote-separator.tex"
+fixture="tests/documents/mainmatter-footnote-separator-test.tex"
 job="textual-oracle-footnote-separator"
 evidence="artifacts/normative-layout/footnote-separator.json"
 log="/tmp/abntexto-ufc-v2-footnote-separator.log"

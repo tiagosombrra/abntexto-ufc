@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/fontes-documentais.tex"
+fixture="tests/documents/documentary-sources.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {

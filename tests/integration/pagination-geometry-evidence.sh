@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-pagination-geometry.tex"
+fixture="tests/documents/mainmatter-pagination-geometry-test.tex"
 job="textual-oracle-pagination-geometry"
 evidence="artifacts/normative-layout/pagination-geometry.json"
 log="/tmp/abntexto-ufc-v2-pagination-geometry.log"

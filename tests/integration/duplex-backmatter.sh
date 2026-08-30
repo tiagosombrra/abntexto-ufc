@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-source_fixture="tests/normativa/postextuais.tex"
+source_fixture="tests/documents/backmatter.tex"
 tmp_fixture=".abntexto-ufc-v2-posttextual-duplex.tex"
 job="postextuais-duplex"
 

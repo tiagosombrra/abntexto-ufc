@@ -16,9 +16,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "index-glossary-final-pdf-scenario.json"
-N10_SCOPE = ROOT / "normativa" / "n10-scope-reconciliation.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "index-glossary-final-pdf-scenario.json"
+N10_SCOPE = ROOT / "standards" / "n10-scope-reconciliation.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 PT_PER_MM = 72.0 / 25.4
 
 

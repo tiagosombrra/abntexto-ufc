@@ -15,8 +15,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
 
-SCENARIO = ROOT / "normativa" / "reference-semantics-scenario.json"
-LOCATOR = ROOT / "normativa" / "locator-audit-references.json"
+SCENARIO = ROOT / "standards" / "reference-semantics-scenario.json"
+LOCATOR = ROOT / "standards" / "locator-audit-references.json"
 BIB_FIXTURE = ROOT / "tests" / "fixtures" / "referencias-6023-2025.bib"
 
 RULE_ORDER = [
@@ -328,8 +328,8 @@ def main() -> None:
         "phase": "N8",
         "component": "reference-semantics",
         "source_commit_sha": args.commit_sha,
-        "fixture": "tests/normativa/referencias-6023-2025.tex",
-        "bibliography_fixture": "tests/fixtures/referencias-6023-2025.bib",
+        "fixture": "tests/documents/references-6023-2025.tex",
+        "bibliography_fixture": "tests/fixtures/references-6023-2025.bib",
         "rendered_engine": "lualatex",
         "engine_matrix_deferred_to": "N12",
         "result": result,

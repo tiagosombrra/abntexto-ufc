@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/vector-rule-oracle-calibration.tex"
+fixture="tests/documents/vector-rule-calibration-test.tex"
 job="vector-rule-oracle-calibration"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
@@ -10,7 +10,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-python3 -m py_compile tools/pdf_vector_measurement.py tests/checks/normative_vector_rule_oracle.py
+python3 -m py_compile tools/pdf_vector_measurement.py tests/checks/normative_vector_rule_validation.py
 
 for pass in 1 2; do
   pdflatex -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {
@@ -27,7 +27,7 @@ if [ -n "$warnings" ]; then
   exit 1
 fi
 
-python3 tests/checks/normative_vector_rule_oracle.py "$job.pdf" \
+python3 tests/checks/normative_vector_rule_validation.py "$job.pdf" \
   --json artifacts/normative-layout/vector-rule-oracle-calibration.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 

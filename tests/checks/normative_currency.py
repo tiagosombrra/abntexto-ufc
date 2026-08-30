@@ -10,21 +10,21 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_catalog import ACTIVE_STATUSES, load_catalog, source_map
 
-POLICY = ROOT / "normativa" / "version-policy.json"
-SOURCE_AUDIT = ROOT / "normativa" / "source-audit.json"
+POLICY = ROOT / "standards" / "version-policy.json"
+SOURCE_AUDIT = ROOT / "standards" / "source-audit.json"
 DOC = ROOT / "docs" / "VIGENCIA-NORMATIVA.md"
 STATIC_ACTIVE_MACHINE_FILES = (
-    ROOT / "normativa" / "catalog.json",
-    ROOT / "normativa" / "precedence.json",
-    ROOT / "normativa" / "atomic-rules.json",
-    ROOT / "normativa" / "atomicity-plan.json",
-    ROOT / "normativa" / "coverage-audit.json",
+    ROOT / "standards" / "catalog.json",
+    ROOT / "standards" / "precedence.json",
+    ROOT / "standards" / "atomic-rules.json",
+    ROOT / "standards" / "atomicity-plan.json",
+    ROOT / "standards" / "coverage-audit.json",
 )
 
 
 def active_machine_files() -> list[Path]:
     paths = list(STATIC_ACTIVE_MACHINE_FILES)
-    paths.extend(sorted((ROOT / "normativa").glob("coverage-rules*.json")))
+    paths.extend(sorted((ROOT / "standards").glob("coverage-rules*.json")))
     return list(dict.fromkeys(paths))
 
 

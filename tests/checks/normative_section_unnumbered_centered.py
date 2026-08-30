@@ -15,9 +15,9 @@ from normative_catalog import get_rule, load_catalog
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "section-unnumbered-centered-scenario.json"
-LOCATOR_AUDIT = ROOT / "normativa" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "section-unnumbered-centered-scenario.json"
+LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 RULE_ID = "heading.unnumbered.centered"
 RULESET_ID = "sections.unnumbered-centered"
 PT_PER_MM = 72.0 / 25.4

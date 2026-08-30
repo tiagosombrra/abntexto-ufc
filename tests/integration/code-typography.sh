@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/tipografia-codigo.tex"
+fixture="tests/documents/code-typography.tex"
 tmp="abntexto-ufc-code-typography.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
@@ -156,7 +156,7 @@ for marker in ('UFC-CODE-GEOMETRY-MARKER', 'UFC-ALGORITHM-GEOMETRY-MARKER'):
         )
 PY
 
-    sh tests/v2-font-embedding-check.sh "$job.pdf"
+    sh tests/integration/font-embedding.sh "$job.pdf"
   done
 done
 

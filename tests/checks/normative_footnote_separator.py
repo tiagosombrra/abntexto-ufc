@@ -18,9 +18,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "footnote-separator-scenario.json"
-FOOTNOTE_LOCATORS = ROOT / "normativa" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "footnote-separator-scenario.json"
+FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 RULE_ID = "footnote.separator.length"
 EXPECTED_RULE_IDS = [RULE_ID]
 NUMBER = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?"

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-NORMATIVE = ROOT / "normativa"
+NORMATIVE = ROOT / "standards"
 SOURCE_AUDIT = NORMATIVE / "source-audit.json"
 
 REFERENCE_LIST_KEYS = {

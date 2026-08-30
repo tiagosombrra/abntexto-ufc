@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/objetos-minted.tex"
+fixture="tests/documents/minted-objects.tex"
 tmp="abntexto-ufc-minted-check.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
@@ -77,7 +77,7 @@ for engine in pdflatex lualatex; do
       exit 1
     }
 
-    sh tests/v2-font-embedding-check.sh "$job.pdf"
+    sh tests/integration/font-embedding.sh "$job.pdf"
 
     pages=$(pdfinfo "$job.pdf" | awk '/^Pages:/ {print $2}')
     [ "${pages:-0}" -ge 2 ] || {

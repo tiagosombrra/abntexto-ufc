@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-subsection-spacing.tex"
+fixture="tests/documents/mainmatter-subsection-spacing-test.tex"
 job="textual-oracle-subsection-spacing"
 evidence="artifacts/normative-textual/subsection-spacing.json"
 log="/tmp/abntexto-ufc-v2-subsection-spacing.log"

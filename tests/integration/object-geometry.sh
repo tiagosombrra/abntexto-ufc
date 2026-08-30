@@ -1,10 +1,9 @@
 #!/bin/sh
 set -eu
 
-python3 tests/checks/normative_n9_scope.py
-python3 tests/checks/normative_n9_campaigns.py
+python3 tests/checks/normative_objects_scope.py
 
-fixture="tests/normativa/objeto-geometria.tex"
+fixture="tests/documents/object-geometry.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {
@@ -68,10 +67,9 @@ PY
 
 done
 
-sh tests/v2-illustration-evidence-check.sh
-sh tests/v2-table-typography-equation-evidence-check.sh
-sh tests/v2-table-ibge-vector-evidence-check.sh
-python3 tests/checks/normative_n9_progress.py \
+sh tests/integration/illustration-evidence.sh
+sh tests/integration/table-typography-equation-evidence.sh
+sh tests/integration/table-ibge-vector-evidence.sh
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 echo 'Gate V2 de geometria de objetos concluído.'

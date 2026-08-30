@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-section-primary-after-spacing.tex"
+fixture="tests/documents/mainmatter-section-primary-after-spacing-test.tex"
 job="textual-oracle-section-primary-after-spacing"
 evidence="artifacts/normative-textual/section-primary-after-spacing.json"
 log="/tmp/abntexto-ufc-v2-section-primary-after-spacing.log"

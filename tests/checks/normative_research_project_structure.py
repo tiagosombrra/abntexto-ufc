@@ -15,8 +15,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
 
-SCENARIO = ROOT / "normativa" / "n11-project-structure-final-pdf-scenario.json"
-SCOPE = ROOT / "normativa" / "n11-scope-reconciliation.json"
+SCENARIO = ROOT / "standards" / "n11-project-structure-final-pdf-scenario.json"
+SCOPE = ROOT / "standards" / "n11-scope-reconciliation.json"
 
 
 def fail(message: str) -> None:

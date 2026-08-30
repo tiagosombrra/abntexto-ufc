@@ -1,12 +1,11 @@
 #!/bin/sh
 set -eu
 
-python3 tests/checks/normative_n11_scope.py
 
 compile_project_with_biber() {
   engine="$1"
   job="projeto-15287"
-  fixture="tests/normativa/projeto-15287.tex"
+  fixture="tests/documents/research-project-15287.tex"
 
   rm -f "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".log \
         "$job".out "$job".pdf "$job".run.xml "$job".toc
@@ -68,12 +67,12 @@ for engine in pdflatex lualatex; do
 done
 
 for engine in pdflatex lualatex; do
-  compile_plain_project "$engine" tests/normativa/projeto-sem-capa.tex projeto-sem-capa
+  compile_plain_project "$engine" tests/documents/research-project-without-cover.tex projeto-sem-capa
   check_log projeto-sem-capa.log
 done
 
 for engine in pdflatex lualatex; do
-  compile_plain_project "$engine" tests/normativa/pretextuais-projeto-anonimo.tex pretextuais-projeto-anonimo
+  compile_plain_project "$engine" tests/documents/frontmatter-anonymized-project.tex pretextuais-projeto-anonimo
   check_log pretextuais-projeto-anonimo.log
 done
 
@@ -158,8 +157,8 @@ if grep -Eiq 'resumo|abstract|agradecimentos|dedicat[oó]ria|folha de aprova' pr
   exit 1
 fi
 
-python3 -m py_compile tests/checks/normative_n11_project_structure.py
-python3 tests/checks/normative_n11_project_structure.py \
+python3 -m py_compile tests/checks/normative_research_project_structure.py
+python3 tests/checks/normative_research_project_structure.py \
   projeto-15287.pdf \
   --json artifacts/normative-project/project-structure-final-pdf.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-unknown}}" \

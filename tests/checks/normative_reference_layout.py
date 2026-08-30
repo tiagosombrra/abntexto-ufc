@@ -15,9 +15,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "reference-layout-scenario.json"
-LOCATOR = ROOT / "normativa" / "locator-audit-references.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "reference-layout-scenario.json"
+LOCATOR = ROOT / "standards" / "locator-audit-references.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 
 RULE_ORDER = [
     "references.font.size",
@@ -366,8 +366,8 @@ def main() -> None:
         "phase": "N8",
         "component": "reference-layout",
         "source_commit_sha": args.commit_sha,
-        "fixture": "tests/normativa/reference-layout-oracle.tex",
-        "bibliography_fixture": "tests/fixtures/n8-reference-layout.bib",
+        "fixture": "tests/documents/reference-layout-test.tex",
+        "bibliography_fixture": "tests/fixtures/reference-layout.bib",
         "result": result,
         "status_counts": status_counts,
         "evidence": evidence,

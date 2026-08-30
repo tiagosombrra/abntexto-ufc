@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 
-present_fixture="tests/normativa/index-glossary-present-final-pdf.tex"
-absent_fixture="tests/normativa/index-glossary-absent-final-pdf.tex"
+present_fixture="tests/documents/index-glossary-present-final-pdf.tex"
+absent_fixture="tests/documents/index-glossary-absent-final-pdf.tex"
 present_job="index-glossary-present-final-pdf"
 absent_job="index-glossary-absent-final-pdf"
 evidence="artifacts/normative-posttextual/index-glossary-final-pdf.json"
@@ -63,7 +63,7 @@ done
 check_log "$absent_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_n10_index_glossary.py \
+python3 tests/checks/normative_index_glossary.py \
   "$present_job.pdf" "$absent_job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

@@ -14,8 +14,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "section-primary-recto-duplex-scenario.json"
-LOCATOR_AUDIT = ROOT / "normativa" / "locator-audit-sections-footnotes-nature.json"
+SCENARIO = ROOT / "standards" / "section-primary-recto-duplex-scenario.json"
+LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
 RULE_ID = "section.primary.recto-duplex"
 
 

@@ -19,9 +19,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages
 
-SCENARIO = ROOT / "normativa" / "page-margins-scenario.json"
-LOCATORS = ROOT / "normativa" / "locator-audit-layout-pagination.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "page-margins-scenario.json"
+LOCATORS = ROOT / "standards" / "locator-audit-layout-pagination.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 PT_PER_MM = 72.0 / 25.4
 PAGE_RULE = "page.a4"
 RECTO_RULES = [

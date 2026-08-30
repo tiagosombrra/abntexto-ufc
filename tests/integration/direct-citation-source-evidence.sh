@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-direct-citation-source.tex"
+fixture="tests/documents/mainmatter-direct-citation-source-test.tex"
 job="textual-oracle-direct-citation-source"
 evidence="artifacts/normative-textual/direct-citation-source.json"
 latex_log="/tmp/abntexto-ufc-v2-direct-citation-source.log"

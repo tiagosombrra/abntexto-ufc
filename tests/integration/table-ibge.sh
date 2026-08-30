@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/tabela-ibge.tex"
+fixture="tests/documents/ibge-table.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {
@@ -64,7 +64,7 @@ assert_all('UFC-IBGE-SOURCE-FONTSIZE', 10.0 * pt_per_bp)
 assert_all('UFC-IBGE-NOTE-FONTSIZE', 10.0 * pt_per_bp)
 PY
 
-  sh tests/v2-font-embedding-check.sh "$job.pdf"
+  sh tests/integration/font-embedding.sh "$job.pdf"
 
   pdftotext -layout "$job.pdf" "/tmp/$job.txt"
   python3 - "/tmp/$job.txt" "$job" <<'PY'

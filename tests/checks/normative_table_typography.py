@@ -14,10 +14,10 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "table-typography-final-pdf-scenario.json"
-CAMPAIGN_PLAN = ROOT / "normativa" / "n9-campaign-plan.json"
-LOCATOR = ROOT / "normativa" / "locator-audit-typography-paragraphs.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "table-typography-final-pdf-scenario.json"
+CAMPAIGN_PLAN = ROOT / "standards" / "n9-campaign-plan.json"
+LOCATOR = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 
 RULES = [
     "font.size.reduced.table-caption",

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-section-indicator.tex"
+fixture="tests/documents/mainmatter-section-indicator-test.tex"
 job="textual-oracle-section-indicator"
 evidence="artifacts/normative-textual/section-indicator.json"
 log="/tmp/abntexto-ufc-v2-section-indicator.log"

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-body-paragraph.tex"
+fixture="tests/documents/mainmatter-body-paragraph-test.tex"
 job="textual-oracle-body-paragraph"
 evidence="artifacts/normative-textual/body-paragraph.json"
 log="/tmp/abntexto-ufc-v2-body-paragraph.log"

@@ -1,11 +1,10 @@
 #!/bin/sh
 set -eu
 
-modern="tests/normativa/postextuais.tex"
+modern="tests/documents/backmatter.tex"
 
-python3 tests/checks/normative_n10_scope.py
-sh tests/v2-appendix-annex-final-pdf-evidence-check.sh
-sh tests/v2-index-glossary-final-pdf-evidence-check.sh
+sh tests/integration/appendix-annex-final-pdf-evidence.sh
+sh tests/integration/index-glossary-final-pdf-evidence.sh
 
 cleanup_job() {
   job="$1"

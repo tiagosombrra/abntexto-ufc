@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / "tests" / "checks"))
 from normative_full import load_full_contract
 from normative_traceability import build_matrix as build_traceability_matrix
 
-PROOF_POLICY = ROOT / "normativa" / "proof-policy.json"
+PROOF_POLICY = ROOT / "standards" / "proof-policy.json"
 
 
 def fail(message: str) -> None:

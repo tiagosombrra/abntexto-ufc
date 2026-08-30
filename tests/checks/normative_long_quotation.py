@@ -14,9 +14,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "long-quotation-scenario.json"
-LOCATOR_AUDIT = ROOT / "normativa" / "locator-audit-citations.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "long-quotation-scenario.json"
+LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-citations.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 RULESET_ID = "citations.direct-long"
 RULE_IDS = [
     "quotation.long.block",

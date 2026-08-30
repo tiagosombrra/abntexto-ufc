@@ -5,9 +5,9 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CATALOG = ROOT / "normativa" / "catalog.json"
-PLAN = ROOT / "normativa" / "atomicity-plan.json"
-ATOMIC = ROOT / "normativa" / "atomic-rules.json"
+CATALOG = ROOT / "standards" / "catalog.json"
+PLAN = ROOT / "standards" / "atomicity-plan.json"
+ATOMIC = ROOT / "standards" / "atomic-rules.json"
 
 
 def fail(message: str) -> None:

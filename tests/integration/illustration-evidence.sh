@@ -1,14 +1,13 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/illustration-final-pdf.tex"
+fixture="tests/documents/illustration-final-pdf.tex"
 job="illustration-final-pdf"
 evidence="artifacts/normative-layout/illustration-final-pdf.json"
 log="/tmp/abntexto-ufc-v2-illustration-evidence.log"
 
 python3 -m py_compile \
-  tests/checks/normative_n9_illustration.py \
-  tests/checks/normative_n9_progress.py
+  tests/checks/normative_illustration.py
 
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
@@ -36,7 +35,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_n9_illustration.py \
+python3 tests/checks/normative_illustration.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

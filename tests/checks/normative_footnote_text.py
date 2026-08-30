@@ -19,10 +19,10 @@ from pdf_measurement import (
     typography_runs,
 )
 
-SCENARIO = ROOT / "normativa" / "footnote-text-scenario.json"
-TYPOGRAPHY_LOCATORS = ROOT / "normativa" / "locator-audit-typography-paragraphs.json"
-FOOTNOTE_LOCATORS = ROOT / "normativa" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "footnote-text-scenario.json"
+TYPOGRAPHY_LOCATORS = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
+FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 
 FONT_RULE_ID = "font.size.reduced.footnote"
 SPACING_RULE_ID = "footnote.line-spacing"

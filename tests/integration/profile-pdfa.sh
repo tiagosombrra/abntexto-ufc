@@ -11,7 +11,7 @@ for engine in pdflatex lualatex; do
       exit 1
     }
     echo "Validando PDF/A-2b de $profile/$engine..."
-    sh tests/v2-pdfa-check.sh "$pdf"
+    sh tests/integration/pdfa.sh "$pdf"
   done
 done
 

@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 
 RUNNER = ROOT / "tests" / "run.py"
-EVIDENCE_REGISTRY = ROOT / "normativa" / "evidence-registry.json"
+EVIDENCE_REGISTRY = ROOT / "standards" / "evidence-registry.json"
 
 
 def fail(message: str) -> None:

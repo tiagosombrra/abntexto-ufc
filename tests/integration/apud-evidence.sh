@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-apud-presentation.tex"
+fixture="tests/documents/mainmatter-apud-presentation-test.tex"
 job="textual-oracle-apud-presentation"
 evidence="artifacts/normative-textual/apud-presentation.json"
 latex_log="/tmp/abntexto-ufc-v2-apud-presentation.log"

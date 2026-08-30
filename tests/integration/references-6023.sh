@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/referencias-6023-2025.tex"
+fixture="tests/documents/references-6023-2025.tex"
 job="referencias-6023-2025"
 
 cleanup_job() {

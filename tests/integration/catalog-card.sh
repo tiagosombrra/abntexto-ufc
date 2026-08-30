@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-source_fixture="tests/normativa/ficha-catalografica.tex"
+source_fixture="tests/documents/catalog-card.tex"
 tmp_fixture="abntexto-ufc-v2-catalog-main.tex"
 card_source="abntexto-ufc-v2-catalog-card.tex"
 card_base="abntexto-ufc-v2-catalog-card"

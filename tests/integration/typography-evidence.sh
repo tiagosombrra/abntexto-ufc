@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-typography.tex"
+fixture="tests/documents/mainmatter-typography-test.tex"
 job="textual-oracle-typography"
 evidence="artifacts/normative-layout/typography.json"
 log="/tmp/abntexto-ufc-v2-typography.log"

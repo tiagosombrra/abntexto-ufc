@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/citacoes-referencias.tex"
+fixture="tests/documents/citations-references.tex"
 job="citacoes-referencias"
 
 cleanup_job() {
@@ -126,9 +126,9 @@ done
 grep -Fq 'Referências' "$job.toc" || (echo 'Referências ausentes do Sumário.'; exit 1)
 echo 'Gate V2 de citações e referências concluído.'
 
-sh tests/v2-references-6023-check.sh
-sh tests/v2-short-direct-citation-evidence-check.sh
-sh tests/v2-direct-citation-source-evidence-check.sh
-sh tests/v2-indirect-citation-source-evidence-check.sh
-sh tests/v2-ufc-citation-system-evidence-check.sh
-sh tests/v2-apud-evidence-check.sh
+sh tests/integration/references-6023.sh
+sh tests/integration/short-direct-citation-evidence.sh
+sh tests/integration/direct-citation-source-evidence.sh
+sh tests/integration/indirect-citation-source-evidence.sh
+sh tests/integration/ufc-citation-system-evidence.sh
+sh tests/integration/apud-evidence.sh

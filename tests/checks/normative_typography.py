@@ -15,11 +15,11 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "typography-scenario.json"
-LOCATOR_TYPOGRAPHY = ROOT / "normativa" / "locator-audit-typography-paragraphs.json"
-LOCATOR_FINAL = ROOT / "normativa" / "locator-audit-final.json"
-EVIDENCE_REGISTRY = ROOT / "normativa" / "evidence-registry.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "typography-scenario.json"
+LOCATOR_TYPOGRAPHY = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
+LOCATOR_FINAL = ROOT / "standards" / "locator-audit-final.json"
+EVIDENCE_REGISTRY = ROOT / "standards" / "evidence-registry.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 
 RULE_ORDER = [
     "format.text.color",
@@ -412,7 +412,7 @@ def main() -> None:
         "phase": "N7",
         "component": "typography",
         "source_commit_sha": args.commit_sha,
-        "fixture": "tests/normativa/textual-oracle-typography.tex",
+        "fixture": "tests/documents/mainmatter-typography-test.tex",
         "result": result,
         "status_counts": status_counts,
         "literal_family_baseline": baseline,

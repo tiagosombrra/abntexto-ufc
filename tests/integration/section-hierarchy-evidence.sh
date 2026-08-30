@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-section-hierarchy.tex"
+fixture="tests/documents/mainmatter-section-hierarchy-test.tex"
 job="textual-oracle-section-hierarchy"
 evidence="artifacts/normative-textual/section-hierarchy.json"
 log="/tmp/abntexto-ufc-v2-section-hierarchy.log"

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-section-multiline-hanging.tex"
+fixture="tests/documents/mainmatter-section-multiline-hanging-test.tex"
 job="textual-oracle-section-multiline-hanging"
 evidence="artifacts/normative-textual/section-multiline-hanging.json"
 log="/tmp/abntexto-ufc-v2-section-multiline-hanging.log"

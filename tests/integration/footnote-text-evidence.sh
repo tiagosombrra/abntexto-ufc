@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-footnote.tex"
+fixture="tests/documents/mainmatter-footnote-test.tex"
 job="textual-oracle-footnote"
 evidence="artifacts/normative-layout/footnote-text.json"
 log="/tmp/abntexto-ufc-v2-footnote-text.log"

@@ -2,8 +2,8 @@
 set -eu
 
 commit_sha="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
-table_fixture="tests/normativa/table-typography-final-pdf.tex"
-equation_fixture="tests/normativa/equation-display-final-pdf.tex"
+table_fixture="tests/documents/table-typography-final-pdf.tex"
+equation_fixture="tests/documents/equation-display-final-pdf.tex"
 table_job="n9-table-typography-final-pdf"
 equation_job="n9-equation-display-final-pdf"
 table_evidence="artifacts/normative-layout/table-typography-final-pdf.json"
@@ -18,8 +18,8 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 python3 -m py_compile \
-  tests/checks/normative_n9_table_typography.py \
-  tests/checks/normative_n9_equation_display.py
+  tests/checks/normative_table_typography.py \
+  tests/checks/normative_equation_display.py
 
 compile_fixture() {
   fixture="$1"
@@ -46,11 +46,11 @@ compile_fixture "$table_fixture" "$table_job"
 compile_fixture "$equation_fixture" "$equation_job"
 
 mkdir -p artifacts/normative-layout
-python3 tests/checks/normative_n9_table_typography.py \
+python3 tests/checks/normative_table_typography.py \
   "$table_job.pdf" \
   --json "$table_evidence" \
   --commit-sha "$commit_sha"
-python3 tests/checks/normative_n9_equation_display.py \
+python3 tests/checks/normative_equation_display.py \
   "$equation_job.pdf" \
   --json "$equation_evidence" \
   --commit-sha "$commit_sha"

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/algoritmos-linhas.tex"
+fixture="tests/documents/algorithm-line-numbering.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {

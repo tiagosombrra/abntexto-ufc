@@ -14,9 +14,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "section-primary-after-spacing-scenario.json"
-LOCATOR_AUDIT = ROOT / "normativa" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "section-primary-after-spacing-scenario.json"
+LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 RULE_ID = "section.primary.after-spacing"
 RULESET_ID = "sections.primary-after-spacing"
 

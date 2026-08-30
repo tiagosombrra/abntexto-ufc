@@ -42,7 +42,7 @@ def main() -> None:
     if "abnt-nbr-10520-2023" not in epigraph["resolution"].get("constraint_sources", []):
         fail("epigraph citation behavior must remain constrained by current NBR 10520")
 
-    precedence_path = ROOT / "normativa" / "precedence.json"
+    precedence_path = ROOT / "standards" / "precedence.json"
     precedence = json.loads(precedence_path.read_text(encoding="utf-8"))
     stale = copy.deepcopy(precedence)
     stale["reviewed_at"] = "2026-08-21"
@@ -50,7 +50,7 @@ def main() -> None:
         temp = Path(temp_dir) / "precedence.json"
         temp.write_text(json.dumps(stale), encoding="utf-8")
         try:
-            load_catalog(ROOT / "normativa" / "catalog.json", temp)
+            load_catalog(ROOT / "standards" / "catalog.json", temp)
         except CatalogError:
             pass
         else:

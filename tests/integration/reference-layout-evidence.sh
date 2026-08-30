@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/reference-layout-oracle.tex"
+fixture="tests/documents/reference-layout-test.tex"
 job="reference-layout-oracle"
 evidence="artifacts/normative-references/reference-layout.json"
 latex_log="/tmp/abntexto-ufc-v2-reference-layout.log"

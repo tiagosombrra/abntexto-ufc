@@ -6,10 +6,10 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-AUDIT = ROOT / "normativa" / "source-audit.json"
-CATALOG = ROOT / "normativa" / "catalog.json"
-PRECEDENCE = ROOT / "normativa" / "precedence.json"
-STATUS_POLICY = ROOT / "normativa" / "source-status-policy.json"
+AUDIT = ROOT / "standards" / "source-audit.json"
+CATALOG = ROOT / "standards" / "catalog.json"
+PRECEDENCE = ROOT / "standards" / "precedence.json"
+STATUS_POLICY = ROOT / "standards" / "source-status-policy.json"
 
 
 def fail(message: str) -> None:

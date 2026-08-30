@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/appendix-annex-final-pdf.tex"
+fixture="tests/documents/appendix-annex-final-pdf.tex"
 job="appendix-annex-final-pdf"
 evidence="artifacts/normative-posttextual/appendix-annex-final-pdf.json"
 log="/tmp/abntexto-ufc-v2-appendix-annex-final-pdf.log"
@@ -33,7 +33,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_n10_appendix_annex.py \
+python3 tests/checks/normative_appendix_annex.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

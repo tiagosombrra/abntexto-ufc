@@ -13,8 +13,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 from pdf_measurement import PDFMeasurementError
 from pdf_vector_measurement import vector_rules
 
-EXTENSION = ROOT / "normativa" / "vector-rule-oracle-extension.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+EXTENSION = ROOT / "standards" / "vector-rule-oracle-extension.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 
 
 def fail(message: str) -> None:
@@ -56,7 +56,7 @@ def main() -> None:
         fail("vector tool is not registered in oracle-policy.json")
     if "vector-rule-geometry" not in oracle.get("exit_capabilities", []):
         fail("vector-rule-geometry capability is not registered")
-    if oracle.get("vector_geometry_extension") != "normativa/vector-rule-oracle-extension.json":
+    if oracle.get("vector_geometry_extension") != "standards/vector-rule-validation-extension.json":
         fail("oracle extension binding drifted")
 
     policy = extension.get("policy", {})

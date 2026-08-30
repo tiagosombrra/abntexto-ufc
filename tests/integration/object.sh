@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/objetos-avancados.tex"
+fixture="tests/documents/advanced-objects.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 for engine in pdflatex lualatex; do

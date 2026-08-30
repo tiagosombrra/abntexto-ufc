@@ -4,7 +4,7 @@ set -u
 root=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$root" || exit 1
 
-class_fixture="tests/normativa/fontes-classe-poc.tex"
+class_fixture="tests/documents/class-font-poc.tex"
 class_tmp="abntexto-ufc-font-class-poc.tex"
 compile_only=${UFC_FONT_POC_COMPILE_ONLY:-0}
 trap 'rm -f "$class_tmp"' EXIT INT TERM
@@ -229,7 +229,7 @@ compile_class_case() {
     assert_names "$job.pdf" "$family" || return 1
     assert_no_text_fallback "$job.pdf" || return 1
     assert_text_extraction "$job.pdf" || return 1
-    sh tests/v2-font-embedding-check.sh "$job.pdf" || return 1
+    sh tests/integration/font-embedding.sh "$job.pdf" || return 1
     echo "POC fontes: abntexto-ufc estrito confirmado em $job.pdf"
   else
     echo "POC fontes: artefato Windows gerado em $job.pdf"

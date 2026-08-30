@@ -13,20 +13,20 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
 
-SCENARIO = ROOT / "normativa" / "n9-scope-reconciliation.json"
+SCENARIO = ROOT / "standards" / "n9-scope-reconciliation.json"
 TARGET_CATEGORIES = {"objects", "equations", "code-algorithms"}
 EXPECTED_PROJECT_POLICY = {
     "code.listing.project-policy",
     "algorithm.project-policy",
 }
 PR_CHECK_SCRIPTS = {
-    "object-geometry": "tests/v2-object-geometry-check.sh",
-    "objects": "tests/v2-object-check.sh",
-    "table-ibge": "tests/v2-table-ibge-check.sh",
-    "documentary-source": "tests/v2-documentary-source-check.sh",
-    "normative-complement": "tests/v2-normative-complement-check.sh",
-    "math": "tests/v2-math-check.sh",
-    "code-typography": "tests/v2-code-typography-check.sh",
+    "object-geometry": "tests/integration/object-geometry.sh",
+    "objects": "tests/integration/object.sh",
+    "table-ibge": "tests/integration/table-ibge.sh",
+    "documentary-source": "tests/integration/documentary-source.sh",
+    "normative-complement": "tests/integration/normative-complement.sh",
+    "math": "tests/integration/math.sh",
+    "code-typography": "tests/integration/code-typography.sh",
 }
 
 
@@ -112,7 +112,7 @@ def verify_scope_checker_host(check: str, selected_checks: set[str]) -> str:
     if not path.is_file():
         fail(f"scope checker host script missing: {script}")
     source = path.read_text(encoding="utf-8", errors="replace")
-    invocation = "python3 tests/checks/normative_n9_scope.py"
+    invocation = "python3 tests/checks/normative_objects_scope.py"
     if invocation not in source:
         fail(f"scope checker host no longer invokes N9 checker: {script}")
     return script

@@ -15,11 +15,11 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, Box, bbox_pages, find_marker
 from pdf_vector_measurement import VectorRule, vector_rules
 
-SCENARIO = ROOT / "normativa" / "table-ibge-vector-final-pdf-scenario.json"
-CAMPAIGN_PLAN = ROOT / "normativa" / "n9-campaign-plan.json"
-LOCATOR = ROOT / "normativa" / "locator-audit-final.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
-EXTENSION = ROOT / "normativa" / "vector-rule-oracle-extension.json"
+SCENARIO = ROOT / "standards" / "table-ibge-vector-final-pdf-scenario.json"
+CAMPAIGN_PLAN = ROOT / "standards" / "n9-campaign-plan.json"
+LOCATOR = ROOT / "standards" / "locator-audit-final.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+EXTENSION = ROOT / "standards" / "vector-rule-oracle-extension.json"
 CALIBRATION_RUNTIME = ROOT / "artifacts" / "normative-layout" / "vector-rule-oracle-calibration.json"
 
 RULES = [
@@ -166,7 +166,7 @@ def main() -> None:
         or scenario.get("rules") != RULES
     ):
         fail("invalid scenario schema/phase/component/scope")
-    if scenario.get("oracle_extension") != "normativa/vector-rule-oracle-extension.json":
+    if scenario.get("oracle_extension") != "standards/vector-rule-validation-extension.json":
         fail("scenario oracle-extension binding drifted")
     if scenario.get("locator_ruleset") != "objects.table-ibge":
         fail("scenario locator binding drifted")

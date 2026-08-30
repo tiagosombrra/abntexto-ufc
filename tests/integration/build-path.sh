@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/build-minimo.tex"
+fixture="tests/documents/minimal-build.tex"
 job="abntexto-ufc-build-minimo"
 legacy_job="abntexto-ufc-legacy-compat-minimo"
 stubdir="/tmp/abntexto-ufc-v2-build-stubs"

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/textual-oracle-page-margins.tex"
+fixture="tests/documents/mainmatter-page-margins-test.tex"
 job="textual-oracle-page-margins"
 evidence="artifacts/normative-layout/page-margins.json"
 log="/tmp/abntexto-ufc-v2-page-margins.log"

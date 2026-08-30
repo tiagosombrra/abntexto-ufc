@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/matematica.tex"
+fixture="tests/documents/mathematics.tex"
 tmp="abntexto-ufc-matematica.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
@@ -61,7 +61,7 @@ for engine in pdflatex lualatex; do
         ;;
     esac
 
-    sh tests/v2-font-embedding-check.sh "$job.pdf"
+    sh tests/integration/font-embedding.sh "$job.pdf"
 
     bbox="/tmp/$job.html"
     pdftotext -bbox-layout "$job.pdf" "$bbox"

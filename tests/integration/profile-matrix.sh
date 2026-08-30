@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/smoke/perfil-base.tex"
+fixture="tests/smoke/base-profile.tex"
 profiles="tccgraduacao tccespecializacao dissertacao tese projeto projetoanonimizado"
 
 cleanup_job() {
@@ -74,7 +74,7 @@ for engine in pdflatex lualatex; do
       exit 1
     }
 
-    sh tests/v2-font-embedding-check.sh "$job.pdf"
+    sh tests/integration/font-embedding.sh "$job.pdf"
 
     pdftotext -layout "$job.pdf" "/tmp/$job.txt"
     python3 - "$profile" "$job" <<'PY'

@@ -13,10 +13,10 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "equation-display-final-pdf-scenario.json"
-CAMPAIGN_PLAN = ROOT / "normativa" / "n9-campaign-plan.json"
-LOCATOR = ROOT / "normativa" / "locator-audit-objects-equations.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "equation-display-final-pdf-scenario.json"
+CAMPAIGN_PLAN = ROOT / "standards" / "n9-campaign-plan.json"
+LOCATOR = ROOT / "standards" / "locator-audit-objects-equations.json"
+ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
 RULE_ID = "equation.display"
 EXPECTED = {"displayed": True}
 

@@ -14,8 +14,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "direct-citation-source-scenario.json"
-LOCATOR_AUDIT = ROOT / "normativa" / "locator-audit-citations.json"
+SCENARIO = ROOT / "standards" / "direct-citation-source-scenario.json"
+LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-citations.json"
 RULESET_ID = "citations.direct-source"
 RULE_ID = "citation.direct.source"
 

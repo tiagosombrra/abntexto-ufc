@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/multivolume.tex"
+fixture="tests/documents/multivolume.tex"
 invalid_fixture=".abntexto-ufc-v2-invalid-page.tex"
 
 cleanup_invalid() {
