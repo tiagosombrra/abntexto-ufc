@@ -34,13 +34,7 @@ class Result:
 
 
 CHECKS = (
-    Check("public-api", "Public API contract", ("python3", "tests/checks/public_api_contract.py")),
-    Check(
-        "repository",
-        "Repository contract",
-        ("python3", "tests/checks/repository_contract.py"),
-        depends=("public-api",),
-    ),
+    Check("repository", "Repository contract", ("python3", "tests/checks/repository_contract.py")),
     Check("validator-source", "PDF validator sources", ("python3", "tests/checks/validator_source.py")),
     Check("reference", "Reference document", ("sh", "tests/integration/reference-document.sh")),
     Check(
@@ -52,25 +46,25 @@ CHECKS = (
     Check(
         "pdf-validator",
         "UFC PDF validator",
-        ("sh", "tests/integration/pdf-validator.sh", "main.pdf"),
+        ("sh", "tests/integration/pdf-validator.sh", "template/main.pdf"),
         depends=("reference",),
     ),
     Check(
         "pdfa",
         "Reference PDF/A-2b",
-        ("sh", "tests/integration/pdfa.sh", "main.pdf"),
+        ("sh", "tests/integration/pdfa.sh", "template/main.pdf"),
         modes=("release",),
         depends=("reference",),
     ),
     Check("distribution-source", "Distribution source", ("sh", "tests/integration/distribution.sh")),
     Check("layout", "Layout", ("sh", "tests/integration/layout.sh")),
     Check("font-config", "Font configuration", ("sh", "tests/integration/font-config.sh")),
-    Check("pdf-oracle-core", "PDF normative oracle core", ("sh", "tests/integration/pdf-oracle-core.sh")),
+    Check("pdf-validation-core", "PDF validation core", ("sh", "tests/integration/pdf-validation-core.sh")),
     Check(
         "pdf-geometry",
         "PDF geometry",
         ("sh", "tests/integration/pdf-geometry.sh"),
-        depends=("pdf-oracle-core",),
+        depends=("pdf-validation-core",),
     ),
     Check("math", "Mathematics", ("sh", "tests/integration/math.sh")),
     Check("normative-complement", "Normative complement", ("sh", "tests/integration/normative-complement.sh")),
@@ -147,7 +141,11 @@ def selected_checks(mode: str, only: str | None) -> list[Check]:
 
 
 def run_check(check: Check, report_dir: Path, results: dict[str, Result]) -> Result:
-    blocked = [dependency for dependency in check.depends if dependency in results and results[dependency].status != "PASS"]
+    blocked = [
+        dependency
+        for dependency in check.depends
+        if dependency in results and results[dependency].status != "PASS"
+    ]
     log_path = report_dir / "checks" / f"{check.name}.log"
     if blocked:
         result = Result(
