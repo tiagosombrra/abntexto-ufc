@@ -10,4 +10,4 @@ for token in 'CAPES' 'Ordinance 206/2018' 'Código de Financiamento 001'; do
   }
 done
 
-echo 'Gate V2 de orientação CAPES concluído.'
+echo 'Gate de orientação CAPES concluído.'

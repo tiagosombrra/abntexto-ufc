@@ -1,14 +1,14 @@
 #!/bin/sh
 set -eu
 
-duplex_fixture="tests/normativa/pretextual-oracle-pagination-duplex.tex"
-card_fixture="tests/normativa/pretextual-oracle-pagination-card-source.tex"
-catalog_fixture="tests/normativa/pretextual-oracle-pagination-catalog.tex"
+duplex_fixture="tests/documents/frontmatter-pagination-duplex-test.tex"
+card_fixture="tests/documents/frontmatter-pagination-card-source-test.tex"
+catalog_fixture="tests/documents/frontmatter-pagination-catalog-test.tex"
 
-duplex_job="pretextual-oracle-pagination-duplex"
-card_job="pretextual-oracle-pagination-card-source"
-catalog_job="pretextual-oracle-pagination-catalog"
-evidence="artifacts/normative-pretextual/pagination-transition.json"
+duplex_job="frontmatter-validation-pagination-duplex"
+card_job="frontmatter-validation-pagination-card-source"
+catalog_job="frontmatter-validation-pagination-catalog"
+evidence="artifacts/frontmatter/pagination-transition.json"
 
 cleanup() {
   for job in "$duplex_job" "$card_job" "$catalog_job"; do
@@ -23,15 +23,15 @@ pdflatex \
   -interaction=nonstopmode \
   -halt-on-error \
   -file-line-error \
-  "$card_fixture" > /tmp/abntexto-ufc-v2-pagination-card-source.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-pagination-card-source.log
+  "$card_fixture" > /tmp/abntexto-ufc-pagination-card-source.log 2>&1 || {
+    cat /tmp/abntexto-ufc-pagination-card-source.log
     exit 1
   }
 
 compile_fixture() {
   fixture="$1"
   job="$2"
-  log="/tmp/abntexto-ufc-v2-${job}.log"
+  log="/tmp/abntexto-ufc-${job}.log"
 
   for pass in 1 2 3; do
     pdflatex \
@@ -49,7 +49,7 @@ compile_fixture() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Auditoria de paginação pré-textual falhou: warning ou overflow não reconhecido em $fixture."
+    echo "Auditoria de paginação front matter falhou: warning ou overflow não reconhecido em $fixture."
     exit 1
   fi
 }
@@ -58,15 +58,15 @@ compile_fixture "$duplex_fixture" "$duplex_job"
 compile_fixture "$catalog_fixture" "$catalog_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pretextual_pagination.py \
+python3 tests/checks/normative_frontmatter_pagination.py \
   "$duplex_job.pdf" \
   "$catalog_job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Auditoria de paginação pré-textual falhou: evidência JSON não foi gerada.'
+  echo 'Auditoria de paginação front matter falhou: evidência JSON não foi gerada.'
   exit 1
 }
 
-echo 'Gate de evidência N6 para paginação/transição pré-textual concluído.'
+echo 'Gate de evidência front matter para paginação/transição front matter concluído.'

@@ -18,14 +18,14 @@ from normative_catalog import get_rule, load_catalog
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "pretextual-acknowledgements-scenario.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "frontmatter-acknowledgements-scenario.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
 PT_PER_MM = 72.0 / 25.4
 HEADING = "AGRADECIMENTOS"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Acknowledgements oracle failed: {message}")
+    raise SystemExit(f"Acknowledgements validation failed: {message}")
 
 
 def local(tag: str) -> str:
@@ -203,7 +203,7 @@ def close_status(actual: float, expected: float, tolerance: float) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 acknowledgement-page final-PDF evidence."
+        description="Measure front matter acknowledgement-page final-PDF evidence."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -216,11 +216,11 @@ def main() -> None:
         fail(f"PDF not found: {pdf}")
 
     scenario = load_json(SCENARIO, "acknowledgements scenario")
-    oracle = load_json(ORACLE_POLICY, "oracle policy")
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N6":
-        fail("invalid acknowledgements scenario schema/phase")
-    if oracle.get("schema_version") != 1 or oracle.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+    validation_policy = load_json(VALIDATION_POLICY, "validation policy")
+    if scenario.get("schema_version") != 2:
+        fail("invalid acknowledgements scenario schema")
+    if validation_policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     rules = full_rule_map()
     required = scenario.get("rules")
@@ -230,10 +230,10 @@ def main() -> None:
     if missing:
         fail("scenario rules missing from full contract: " + ", ".join(missing))
 
-    horizontal_tolerance = oracle.get("tolerances", {}).get(
+    horizontal_tolerance = validation_policy.get("tolerances", {}).get(
         "horizontal_position_pt"
     )
-    font_tolerance = oracle.get("tolerances", {}).get("font_size_pt")
+    font_tolerance = validation_policy.get("tolerances", {}).get("font_size_pt")
     spacing_tolerance = scenario.get("tolerances", {}).get("line_spacing_pt")
     if not all(
         isinstance(value, (int, float)) and value > 0
@@ -515,7 +515,7 @@ def main() -> None:
     ]
     payload = {
         "schema_version": 1,
-        "phase": "N6",
+        "validation_scope": "frontmatter",
         "scope": "acknowledgements",
         "mode": "enforce" if args.enforce else "audit",
         "source_commit_sha": args.commit_sha,
@@ -540,7 +540,7 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE acknowledgements-summary "
+        "FRONTMATTER-EVIDENCE acknowledgements-summary "
         + " ".join(
             f"{key}={value}" for key, value in sorted(counts.items())
         )
@@ -548,7 +548,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

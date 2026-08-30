@@ -17,14 +17,14 @@ from normative_catalog import get_rule, load_catalog
 from normative_full import load_full_contract
 from pdf_measurement import normalize
 
-SCENARIOS = ROOT / "normativa" / "pretextual-alignment-scenarios.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIOS = ROOT / "standards" / "frontmatter-alignment-scenarios.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
 PT_PER_MM = 72.0 / 25.4
 QUOTE_CHARS = {'"', '“', '”', '„', '«', '»'}
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Pre-textual alignment oracle failed: {message}")
+    raise SystemExit(f"Front matter alignment validation failed: {message}")
 
 
 def local(tag: str) -> str:
@@ -169,7 +169,7 @@ def audit_scenario(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 dedication and epigraph justification from wrapped PDF text."
+        description="Measure front matter dedication and epigraph justification from wrapped PDF text."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -181,18 +181,18 @@ def main() -> None:
     if not pdf.is_file():
         fail(f"PDF not found: {pdf}")
 
-    scenarios_data = load_json(SCENARIOS, "pre-textual alignment scenarios")
-    oracle_policy = load_json(ORACLE_POLICY, "oracle policy")
-    if scenarios_data.get("schema_version") != 1 or scenarios_data.get("phase") != "N6":
-        fail("invalid alignment scenario schema/phase")
-    if oracle_policy.get("schema_version") != 1 or oracle_policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+    scenarios_data = load_json(SCENARIOS, "front matter alignment scenarios")
+    validation_policy = load_json(VALIDATION_POLICY, "validation policy")
+    if scenarios_data.get("schema_version") != 2:
+        fail("invalid alignment scenario schema")
+    if validation_policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     scenarios = scenarios_data.get("scenarios")
     if not isinstance(scenarios, list) or len(scenarios) != 3:
         fail("expected exactly three wrapped alignment scenarios")
 
-    tolerance_pt = oracle_policy.get("tolerances", {}).get("horizontal_position_pt")
+    tolerance_pt = validation_policy.get("tolerances", {}).get("horizontal_position_pt")
     if not isinstance(tolerance_pt, (int, float)) or tolerance_pt <= 0:
         fail("horizontal_position_pt tolerance must be positive")
 
@@ -233,7 +233,7 @@ def main() -> None:
     findings = [result["rule_id"] for result in results if result["status"] == "FAIL"]
     payload = {
         "schema_version": 1,
-        "phase": "N6",
+        "validation_scope": "frontmatter",
         "scope": "dedication-epigraph-alignment",
         "mode": "enforce" if args.enforce else "audit",
         "source_commit_sha": args.commit_sha,
@@ -252,13 +252,13 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE alignment-summary "
+        "FRONTMATTER-EVIDENCE alignment-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
         + f" distinct_pages={distinct_pages}"
     )
     for result in results:
         print(
-            f"N6-EVIDENCE rule={result['rule_id']} status={result['status']} "
+            f"FRONTMATTER-EVIDENCE rule={result['rule_id']} status={result['status']} "
             f"expected={json.dumps(result['expected'], ensure_ascii=False)} "
             f"measured={json.dumps(result['measured'], ensure_ascii=False, sort_keys=True)}"
         )

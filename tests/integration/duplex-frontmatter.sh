@@ -1,16 +1,16 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/pretextuais-frente-verso.tex"
+fixture="tests/documents/frontmatter-double-sided.tex"
 
 for engine in pdflatex lualatex; do
-  job="pretextuais-duplex-$engine"
+  job="frontmatter-duplex-$engine"
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
 
-  echo "Validando início em anverso dos pré-textuais com $engine..."
+  echo "Validando início em anverso dos front matter com $engine..."
   for pass in 1 2 3; do
-    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-duplex-pretextual.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-duplex-pretextual.log
+    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-duplex-frontmatter.log 2>&1 || {
+      cat /tmp/abntexto-ufc-duplex-frontmatter.log
       exit 1
     }
   done
@@ -19,7 +19,7 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Duplex V2 falhou: $job contém warning ou overflow não reconhecido."
+    echo "Duplex falhou: $job contém warning ou overflow não reconhecido."
     exit 1
   fi
 
@@ -69,6 +69,6 @@ print(f'{job}: todos os elementos auditados iniciam no anverso.')
 PY
 done
 
-sh tests/v2-section-primary-recto-duplex-evidence-check.sh
+sh tests/integration/section-primary-recto-duplex-evidence.sh
 
-echo 'Gate V2 de pré-textuais duplex concluído.'
+echo 'Gate de front matter duplex concluído.'

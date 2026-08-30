@@ -16,11 +16,11 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import normalize
 
-SCENARIO = ROOT / "normativa" / "pretextual-approval-scenario.json"
+SCENARIO = ROOT / "standards" / "frontmatter-approval-scenario.json"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Approval-page oracle failed: {message}")
+    raise SystemExit(f"Approval-page validation failed: {message}")
 
 
 def local(tag: str) -> str:
@@ -270,7 +270,7 @@ def non_applicable_measurement(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 approval-page final-PDF evidence.")
+    parser = argparse.ArgumentParser(description="Measure front matter approval-page final-PDF evidence.")
     parser.add_argument("profile_pdf", nargs="+")
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -278,8 +278,8 @@ def main() -> None:
     args = parser.parse_args()
 
     scenario = load_json(SCENARIO)
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N6":
-        fail("invalid approval scenario schema/phase")
+    if scenario.get("schema_version") != 2:
+        fail("invalid approval scenario schema")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
@@ -374,7 +374,7 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
+        "validation_scope": "frontmatter",
         "component": "approval-page",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -391,19 +391,19 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE approval-summary "
+        "FRONTMATTER-EVIDENCE approval-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" academic_profiles={len(academic_profiles)}"
         + f" supplemental_profiles={len(non_applicable_profiles)}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
     print(
-        "N6-EVIDENCE approval-non-applicable-observation "
+        "FRONTMATTER-EVIDENCE approval-non-applicable-observation "
         + json.dumps(non_applicable, ensure_ascii=False, sort_keys=True)
     )
 

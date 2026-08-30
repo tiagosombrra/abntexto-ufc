@@ -20,13 +20,13 @@ from normative_catalog import get_rule, load_catalog
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "pretextual-summary-scenario.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "frontmatter-summary-scenario.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
 PT_PER_MM = 72.0 / 25.4
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Summary oracle failed: {message}")
+    raise SystemExit(f"Summary validation failed: {message}")
 
 
 def local(tag: str) -> str:
@@ -253,9 +253,9 @@ def component_measurement(
         keywords = [item.strip().rstrip(".") for item in payload.split(";")]
 
     fixture_path = ROOT / (
-        "tests/fixtures/pretextuais/n6-summary.tex"
+        "tests/fixtures/frontmatter/summary-validation-fixture.tex"
         if name == "vernacular"
-        else "tests/fixtures/pretextuais/n6-abstract.tex"
+        else "tests/fixtures/frontmatter/abstract-validation-fixture.tex"
     )
 
     return {
@@ -303,7 +303,7 @@ def component_measurement(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 summary/abstract final-PDF evidence.")
+    parser = argparse.ArgumentParser(description="Measure front matter summary/abstract final-PDF evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -315,11 +315,11 @@ def main() -> None:
         fail(f"PDF not found: {pdf}")
 
     scenario = load_json(SCENARIO, "summary scenario")
-    oracle = load_json(ORACLE_POLICY, "oracle policy")
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N6":
-        fail("invalid summary scenario schema/phase")
-    if oracle.get("schema_version") != 1 or oracle.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+    validation_policy = load_json(VALIDATION_POLICY, "validation policy")
+    if scenario.get("schema_version") != 2:
+        fail("invalid summary scenario schema")
+    if validation_policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     full = load_full_contract()
     rules = {rule["id"]: rule for rule in full["rules"]}
@@ -334,8 +334,8 @@ def main() -> None:
     if len(scenario_rules) != 14:
         fail(f"expected 14 active summary rules, found {len(scenario_rules)}")
 
-    horizontal_tolerance = oracle.get("tolerances", {}).get("horizontal_position_pt")
-    font_tolerance = oracle.get("tolerances", {}).get("font_size_pt")
+    horizontal_tolerance = validation_policy.get("tolerances", {}).get("horizontal_position_pt")
+    font_tolerance = validation_policy.get("tolerances", {}).get("font_size_pt")
     spacing_tolerance = scenario.get("tolerances", {}).get("line_spacing_pt")
     keyword_gap_tolerance = scenario.get("tolerances", {}).get("keyword_blank_line_gap_pt")
     if not all(
@@ -539,7 +539,7 @@ def main() -> None:
     findings = [item["rule_id"] for item in evidence if item["status"] == "FAIL"]
     payload = {
         "schema_version": 1,
-        "phase": "N6",
+        "validation_scope": "frontmatter",
         "scope": "summary-abstract-keywords",
         "mode": "enforce" if args.enforce else "audit",
         "source_commit_sha": args.commit_sha,
@@ -561,14 +561,14 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N6-EVIDENCE summary-abstract-summary "
+        "FRONTMATTER-EVIDENCE summary-abstract-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
         + f" vernacular_page={vern['page']} foreign_page={foreign['page']}"
         + f" words={vern['word_count']}/{foreign['word_count']}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

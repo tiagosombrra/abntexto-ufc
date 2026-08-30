@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "pretextual-lists-scenario.json"
+SCENARIO = ROOT / "standards" / "frontmatter-lists-scenario.json"
 RULE_ORDER = [
     "list.illustrations.optional",
     "list.tables.optional",
@@ -24,7 +24,7 @@ RULE_ORDER = [
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Optional lists oracle failed: {message}")
+    raise SystemExit(f"Optional lists validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -58,7 +58,7 @@ def record(rule_id: str, status: str, expected: Any, measured: Any) -> dict[str,
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 optional pre-textual list final-PDF evidence."
+        description="Measure front matter optional front matter list final-PDF evidence."
     )
     parser.add_argument("illustrations_pdf", type=Path)
     parser.add_argument("tables_pdf", type=Path)
@@ -81,11 +81,11 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     if (
-        scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
-        or scenario.get("component") != "optional-pretextual-lists"
+        scenario.get("schema_version") != 2
+
+        or scenario.get("component") != "optional-frontmatter-lists"
     ):
-        fail("invalid optional-list scenario schema/phase/component")
+        fail("invalid optional-list scenario schema/component")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
@@ -176,8 +176,8 @@ def main() -> None:
 
     payload = {
         "schema_version": 1,
-        "phase": "N6",
-        "component": "optional-pretextual-lists",
+        "validation_scope": "frontmatter",
+        "component": "optional-frontmatter-lists",
         "source_commit_sha": args.commit_sha,
         "result": result,
         "status_counts": status_counts,
@@ -196,14 +196,14 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE optional-lists-summary "
+        "FRONTMATTER-EVIDENCE optional-lists-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" present_fixtures={len(present_pages)}"
         + f" absent_pages={len(absent_pages)}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

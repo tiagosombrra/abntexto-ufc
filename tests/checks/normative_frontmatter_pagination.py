@@ -15,18 +15,18 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "normativa" / "pretextual-pagination-scenario.json"
+SCENARIO = ROOT / "standards" / "frontmatter-pagination-scenario.json"
 RULE_ORDER = [
-    "pagination.pretextual.counted-not-numbered",
+    "pagination.frontmatter.counted-not-numbered",
     "pagination.catalog-data.not-counted",
     "pagination.textual.display-start",
-    "pretextual.start.recto",
+    "frontmatter.start.recto",
 ]
 HEADER_LIMIT_PT = 80.0
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Pre-textual pagination oracle failed: {message}")
+    raise SystemExit(f"Front matter pagination validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -120,7 +120,7 @@ def derive_scope(contract: dict[str, Any], scope: dict[str, Any]) -> list[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 pre-textual pagination/start-side evidence from final PDFs."
+        description="Measure front matter front matter pagination/start-side evidence from final PDFs."
     )
     parser.add_argument("duplex_pdf", type=Path)
     parser.add_argument("catalog_pdf", type=Path)
@@ -134,11 +134,11 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     if (
-        scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
-        or scenario.get("component") != "pretextual-pagination-transition"
+        scenario.get("schema_version") != 2
+
+        or scenario.get("component") != "frontmatter-pagination-transition"
     ):
-        fail("invalid scenario schema/phase/component")
+        fail("invalid scenario schema/component")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
@@ -164,32 +164,32 @@ def main() -> None:
         fail("duplex and catalog scenario blocks are required")
 
     duplex_text_marker = duplex_spec.get("textual_marker")
-    pretextual_markers = duplex_spec.get("pretextual_markers")
+    frontmatter_markers = duplex_spec.get("frontmatter_markers")
     if not isinstance(duplex_text_marker, str) or not duplex_text_marker:
         fail("duplex textual marker is required")
-    if not isinstance(pretextual_markers, list) or not pretextual_markers:
-        fail("duplex pre-textual marker list is required")
-    if not all(isinstance(marker, str) and marker for marker in pretextual_markers):
-        fail("duplex pre-textual markers must be non-empty strings")
+    if not isinstance(frontmatter_markers, list) or not frontmatter_markers:
+        fail("duplex front matter marker list is required")
+    if not all(isinstance(marker, str) and marker for marker in frontmatter_markers):
+        fail("duplex front matter markers must be non-empty strings")
 
     duplex_text_page = unique_phrase_page(duplex_pages, duplex_text_marker)
     if duplex_text_page.index <= 1:
-        fail("duplex textual marker must follow at least one pre-textual page")
-    duplex_pretextual_pages = [page for page in duplex_pages if page.index < duplex_text_page.index]
+        fail("duplex textual marker must follow at least one front matter page")
+    duplex_frontmatter_pages = [page for page in duplex_pages if page.index < duplex_text_page.index]
 
-    pretextual_header_numbers = {
+    frontmatter_header_numbers = {
         page.index: [word.text for word in header_number_tokens(page)]
-        for page in duplex_pretextual_pages
+        for page in duplex_frontmatter_pages
         if header_number_tokens(page)
     }
     duplex_text_number = unique_arabic_header_number(duplex_text_page)
     duplex_text_roman = [word.text for word in header_roman_numbers(duplex_text_page)]
 
     marker_pages: dict[str, int] = {}
-    for marker in pretextual_markers:
+    for marker in frontmatter_markers:
         page = unique_phrase_page(duplex_pages, marker)
         if page.index >= duplex_text_page.index:
-            fail(f"pre-textual marker {marker!r} appears at/after textual start")
+            fail(f"front matter marker {marker!r} appears at/after textual start")
         marker_pages[marker] = page.index
 
     title_marker = catalog_spec.get("title_page_marker")
@@ -218,23 +218,23 @@ def main() -> None:
 
     evidence: list[dict[str, Any]] = []
 
-    counted_rule = rules["pagination.pretextual.counted-not-numbered"]
+    counted_rule = rules["pagination.frontmatter.counted-not-numbered"]
     counted_expected = counted_rule["values"]
     counted_pass = (
         counted_expected.get("counted") is True
         and counted_expected.get("number_visible") is False
-        and not pretextual_header_numbers
+        and not frontmatter_header_numbers
         and duplex_text_number == duplex_text_page.index
         and not duplex_text_roman
     )
     evidence.append(
         record(
-            "pagination.pretextual.counted-not-numbered",
+            "pagination.frontmatter.counted-not-numbered",
             "PASS" if counted_pass else "FAIL",
             counted_expected,
             {
-                "physical_pretextual_pages": len(duplex_pretextual_pages),
-                "pretextual_pages_with_visible_header_numbers": pretextual_header_numbers,
+                "physical_frontmatter_pages": len(duplex_frontmatter_pages),
+                "frontmatter_pages_with_visible_header_numbers": frontmatter_header_numbers,
                 "first_textual_physical_page": duplex_text_page.index,
                 "first_textual_visible_number": duplex_text_number,
                 "first_textual_roman_tokens": duplex_text_roman,
@@ -276,7 +276,7 @@ def main() -> None:
     textual_pass = (
         textual_expected.get("display_start") == "first-textual-page"
         and textual_expected.get("numeral_system") == "arabic"
-        and not pretextual_header_numbers
+        and not frontmatter_header_numbers
         and duplex_text_number is not None
         and not duplex_text_roman
         and not catalog_title_tokens
@@ -294,7 +294,7 @@ def main() -> None:
                     "first_textual_physical_page": duplex_text_page.index,
                     "first_textual_visible_number": duplex_text_number,
                     "first_textual_roman_tokens": duplex_text_roman,
-                    "preceding_visible_number_tokens": pretextual_header_numbers,
+                    "preceding_visible_number_tokens": frontmatter_header_numbers,
                 },
                 "catalog_exception": {
                     "first_textual_physical_page": catalog_text_page.index,
@@ -307,7 +307,7 @@ def main() -> None:
         )
     )
 
-    recto_rule = rules["pretextual.start.recto"]
+    recto_rule = rules["frontmatter.start.recto"]
     recto_expected = recto_rule["values"]
     non_recto_markers = {
         marker: page for marker, page in marker_pages.items() if page % 2 == 0
@@ -325,7 +325,7 @@ def main() -> None:
     )
     evidence.append(
         record(
-            "pretextual.start.recto",
+            "frontmatter.start.recto",
             "PASS" if recto_pass else "FAIL",
             recto_expected,
             {
@@ -344,8 +344,8 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
-        "component": "pretextual-pagination-transition",
+        "validation_scope": "frontmatter",
+        "component": "frontmatter-pagination-transition",
         "source_commit_sha": args.commit_sha,
         "result": result,
         "status_counts": status_counts,
@@ -359,14 +359,14 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE pretextual-pagination-summary "
+        "FRONTMATTER-EVIDENCE frontmatter-pagination-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" duplex_pages={len(duplex_pages)} catalog_pages={len(catalog_pages)}"
         + f" recto_markers={len(marker_pages)}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

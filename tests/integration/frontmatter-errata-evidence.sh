@@ -1,11 +1,11 @@
 #!/bin/sh
 set -eu
 
-present_fixture="tests/normativa/pretextual-oracle-errata-present.tex"
-absent_fixture="tests/normativa/pretextual-oracle-errata-absent.tex"
-present_job="pretextual-oracle-errata-present"
-absent_job="pretextual-oracle-errata-absent"
-evidence="artifacts/normative-pretextual/errata.json"
+present_fixture="tests/documents/frontmatter-errata-present-test.tex"
+absent_fixture="tests/documents/frontmatter-errata-absent-test.tex"
+present_job="frontmatter-validation-errata-present"
+absent_job="frontmatter-validation-errata-absent"
+evidence="artifacts/frontmatter/errata.json"
 
 cleanup() {
   for job in "$present_job" "$absent_job"; do
@@ -17,7 +17,7 @@ trap cleanup EXIT INT TERM
 compile_fixture() {
   fixture="$1"
   job="$2"
-  log="/tmp/abntexto-ufc-v2-${job}.log"
+  log="/tmp/abntexto-ufc-${job}.log"
 
   for pass in 1 2; do
     pdflatex \
@@ -44,7 +44,7 @@ compile_fixture "$present_fixture" "$present_job"
 compile_fixture "$absent_fixture" "$absent_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pretextual_errata.py \
+python3 tests/checks/normative_frontmatter_errata.py \
   "$present_job.pdf" \
   "$absent_job.pdf" \
   --json "$evidence" \
@@ -55,4 +55,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para errata concluído.'
+echo 'Gate de evidência front matter para errata concluído.'

@@ -1,68 +1,68 @@
 #!/bin/sh
 set -eu
 
-sh tests/v2-capes-guidance-check.sh
-sh tests/v2-pretextual-evidence-check.sh
-sh tests/v2-pretextual-alignment-evidence-check.sh
-sh tests/v2-pretextual-acknowledgements-evidence-check.sh
-sh tests/v2-pretextual-summary-evidence-check.sh
-sh tests/v2-pretextual-cover-evidence-check.sh
-sh tests/v2-pretextual-title-page-evidence-check.sh
-sh tests/v2-pretextual-approval-evidence-check.sh
-sh tests/v2-pretextual-errata-evidence-check.sh
-sh tests/v2-pretextual-lists-evidence-check.sh
-sh tests/v2-pretextual-toc-evidence-check.sh
-sh tests/v2-pretextual-pagination-evidence-check.sh
+sh tests/integration/capes-guidance.sh
+sh tests/integration/frontmatter-evidence.sh
+sh tests/integration/frontmatter-alignment-evidence.sh
+sh tests/integration/frontmatter-acknowledgments-evidence.sh
+sh tests/integration/frontmatter-summary-evidence.sh
+sh tests/integration/frontmatter-cover-evidence.sh
+sh tests/integration/frontmatter-title-page-evidence.sh
+sh tests/integration/frontmatter-approval-evidence.sh
+sh tests/integration/frontmatter-errata-evidence.sh
+sh tests/integration/frontmatter-lists-evidence.sh
+sh tests/integration/frontmatter-toc-evidence.sh
+sh tests/integration/frontmatter-pagination-evidence.sh
 
-fixtures="tests/normativa/pretextuais-trabalho.tex tests/normativa/pretextuais-projeto-anonimo.tex"
+fixtures="tests/documents/frontmatter-academic-work.tex tests/documents/frontmatter-anonymized-project.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 for engine in pdflatex lualatex; do
   for fixture in $fixtures; do
     echo "Validando $fixture com $engine..."
     for pass in 1 2; do
-      "$engine" $flags "$fixture" > /tmp/abntexto-ufc-v2-pretextual.log 2>&1 || {
-        cat /tmp/abntexto-ufc-v2-pretextual.log
+      "$engine" $flags "$fixture" > /tmp/abntexto-ufc-frontmatter.log 2>&1 || {
+        cat /tmp/abntexto-ufc-frontmatter.log
         exit 1
       }
     done
-    if [ "$fixture" = "tests/normativa/pretextuais-trabalho.tex" ] && command -v pdftotext >/dev/null 2>&1; then
-      python3 tests/checks/pretextual_definition_alignment.py pretextuais-trabalho.pdf
+    if [ "$fixture" = "tests/documents/frontmatter-academic-work.tex" ] && command -v pdftotext >/dev/null 2>&1; then
+      python3 tests/checks/frontmatter_definition_alignment.py frontmatter-trabalho.pdf
     fi
   done
 done
 
-if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' pretextuais-trabalho.toc; then
-  echo 'Preflight V2 falhou: elemento pré-textual entrou no Sumário.'
-  cat pretextuais-trabalho.toc
+if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' frontmatter-trabalho.toc; then
+  echo 'Front matter validation falhou: elemento front matter entrou no Sumário.'
+  cat frontmatter-trabalho.toc
   exit 1
 fi
 
-grep -Eiq 'Introdu' pretextuais-trabalho.toc || {
-  echo 'Preflight V2 falhou: seção textual ausente do Sumário.'
+grep -Eiq 'Introdu' frontmatter-trabalho.toc || {
+  echo 'Front matter validation falhou: seção textual ausente do Sumário.'
   exit 1
 }
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext pretextuais-trabalho.pdf /tmp/abntexto-ufc-v2-pretextual.txt
+  pdftotext frontmatter-trabalho.pdf /tmp/abntexto-ufc-frontmatter.txt
   for heading in 'AGRADECIMENTOS' 'RESUMO' 'ABSTRACT' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE ABREVIATURAS E SIGLAS' 'LISTA DE SÍMBOLOS' 'SUMÁRIO'; do
-    grep -Fq "$heading" /tmp/abntexto-ufc-v2-pretextual.txt || {
-      echo "Preflight V2 falhou: título pré-textual ausente ou incorreto: $heading"
+    grep -Fq "$heading" /tmp/abntexto-ufc-frontmatter.txt || {
+      echo "Front matter validation falhou: título front matter ausente ou incorreto: $heading"
       exit 1
     }
   done
 
-  if grep -Eiq '^Dedicat[oó]ria$' /tmp/abntexto-ufc-v2-pretextual.txt; then
-    echo 'Preflight V2 falhou: dedicatória recebeu título.'
+  if grep -Eiq '^Dedicat[oó]ria$' /tmp/abntexto-ufc-frontmatter.txt; then
+    echo 'Front matter validation falhou: dedicatória recebeu título.'
     exit 1
   fi
 
-  pdftotext -bbox-layout pretextuais-trabalho.pdf /tmp/abntexto-ufc-v2-pretextual-bbox.html
+  pdftotext -bbox-layout frontmatter-trabalho.pdf /tmp/abntexto-ufc-frontmatter-bbox.html
   python3 - <<'PY'
 import re
 import xml.etree.ElementTree as ET
 
-root = ET.parse('/tmp/abntexto-ufc-v2-pretextual-bbox.html').getroot()
+root = ET.parse('/tmp/abntexto-ufc-frontmatter-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
 
 
@@ -84,30 +84,30 @@ def check_below_midpoint(label, marker):
             first_y = min(float(word.attrib['yMin']) for word in words)
             if first_y <= midpoint:
                 raise SystemExit(
-                    f'Preflight V2 falhou: {label} inicia antes do meio da página: '
+                    f'Front matter validation falhou: {label} inicia antes do meio da página: '
                     f'y={first_y:.2f}, meio={midpoint:.2f}'
                 )
             return
-    raise SystemExit(f'Preflight V2 falhou: página de {label} não localizada.')
+    raise SystemExit(f'Front matter validation falhou: página de {label} não localizada.')
 
 
 check_below_midpoint('dedicatória', 'FAMÍLIA')
 check_below_midpoint('epígrafe', 'CITAÇÃO DE EXEMPLO')
 PY
 
-  pdftotext pretextuais-projeto-anonimo.pdf /tmp/abntexto-ufc-v2-anonimo.txt
-  if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/abntexto-ufc-v2-anonimo.txt; then
-    echo 'Preflight V2 falhou: autor vazou no projeto anonimizado.'
+  pdftotext frontmatter-projeto-anonimo.pdf /tmp/abntexto-ufc-anonimo.txt
+  if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/abntexto-ufc-anonimo.txt; then
+    echo 'Front matter validation falhou: autor vazou no projeto anonimizado.'
     exit 1
   fi
-  if grep -Fq 'ORIENTADOR SIGILOSO TESTE' /tmp/abntexto-ufc-v2-anonimo.txt; then
-    echo 'Preflight V2 falhou: orientador vazou no projeto anonimizado.'
+  if grep -Fq 'ORIENTADOR SIGILOSO TESTE' /tmp/abntexto-ufc-anonimo.txt; then
+    echo 'Front matter validation falhou: orientador vazou no projeto anonimizado.'
     exit 1
   fi
-  grep -Fq 'PROJETO-ANONIMO-001' /tmp/abntexto-ufc-v2-anonimo.txt || {
-    echo 'Preflight V2 falhou: identificador anonimizado ausente.'
+  grep -Fq 'PROJETO-ANONIMO-001' /tmp/abntexto-ufc-anonimo.txt || {
+    echo 'Front matter validation falhou: identificador anonimizado ausente.'
     exit 1
   }
 fi
 
-echo 'Gate V2 de pré-textuais concluído.'
+echo 'Gate de front matter concluído.'

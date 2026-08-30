@@ -16,11 +16,11 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import normalize
 
-SCENARIO = ROOT / "normativa" / "pretextual-errata-scenario.json"
+SCENARIO = ROOT / "standards" / "frontmatter-errata-scenario.json"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Errata oracle failed: {message}")
+    raise SystemExit(f"Errata validation failed: {message}")
 
 
 def local(tag: str) -> str:
@@ -114,7 +114,7 @@ def record(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 errata final-PDF evidence.")
+    parser = argparse.ArgumentParser(description="Measure front matter errata final-PDF evidence.")
     parser.add_argument("present_pdf", type=Path)
     parser.add_argument("absent_pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -128,11 +128,11 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     if (
-        scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+        scenario.get("schema_version") != 2
+
         or scenario.get("component") != "errata"
     ):
-        fail("invalid errata scenario schema/phase/component")
+        fail("invalid errata scenario schema/component")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
@@ -266,7 +266,7 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
+        "validation_scope": "frontmatter",
         "component": "errata",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -289,14 +289,14 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE errata-summary "
+        "FRONTMATTER-EVIDENCE errata-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" present_pages={len(present_pages)}"
         + f" absent_pages={len(absent_pages)}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

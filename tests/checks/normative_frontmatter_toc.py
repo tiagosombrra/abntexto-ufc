@@ -15,10 +15,10 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typography_runs
 
-SCENARIO = ROOT / "normativa" / "pretextual-toc-scenario.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "frontmatter-toc-scenario.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
 RULE_ORDER = [
-    "toc.pretextual-exclusion",
+    "toc.frontmatter-exclusion",
     "toc.heading.alignment",
     "toc.heading.case",
     "toc.page-number.position",
@@ -29,7 +29,7 @@ LEVEL_ORDER = ["section", "subsection", "subsubsection", "paragraph", "subparagr
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"TOC oracle failed: {message}")
+    raise SystemExit(f"TOC validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -76,7 +76,7 @@ def record(rule_id: str, status: str, expected: Any, measured: Any, tool: str) -
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 table-of-contents final-PDF evidence.")
+    parser = argparse.ArgumentParser(description="Measure front matter table-of-contents final-PDF evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -86,15 +86,15 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
     if (
-        scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+        scenario.get("schema_version") != 2
+
         or scenario.get("component") != "table-of-contents"
     ):
-        fail("invalid TOC scenario schema/phase/component")
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid TOC scenario schema/component")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
@@ -133,14 +133,14 @@ def main() -> None:
         fail("dotted-leader project policy authority drift")
 
     heading = scenario.get("heading")
-    pretextual_markers = scenario.get("pretextual_markers")
+    frontmatter_markers = scenario.get("frontmatter_markers")
     hierarchy = scenario.get("hierarchy")
     if not isinstance(heading, str) or not heading:
         fail("TOC heading marker is required")
-    if not isinstance(pretextual_markers, list) or not pretextual_markers:
-        fail("pre-textual markers are required")
-    if not all(isinstance(marker, str) and marker for marker in pretextual_markers):
-        fail("pre-textual markers must be non-empty strings")
+    if not isinstance(frontmatter_markers, list) or not frontmatter_markers:
+        fail("front matter markers are required")
+    if not all(isinstance(marker, str) and marker for marker in frontmatter_markers):
+        fail("front matter markers must be non-empty strings")
     if not isinstance(hierarchy, list) or len(hierarchy) != 5:
         fail("TOC hierarchy must contain exactly five levels")
     if [item.get("level") for item in hierarchy if isinstance(item, dict)] != LEVEL_ORDER:
@@ -156,13 +156,13 @@ def main() -> None:
 
     tolerances = policy.get("tolerances")
     if not isinstance(tolerances, dict):
-        fail("oracle tolerances are required")
+        fail("validation tolerances are required")
     try:
         horizontal_tolerance = float(tolerances["horizontal_position_pt"])
         vertical_tolerance = float(tolerances["vertical_position_pt"])
         font_tolerance = float(tolerances["font_size_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle tolerances: {exc}")
+        fail(f"invalid validation tolerances: {exc}")
 
     try:
         pages = bbox_pages(args.pdf)
@@ -206,18 +206,18 @@ def main() -> None:
 
     evidence: list[dict[str, Any]] = []
 
-    exclusion_rule = rules["toc.pretextual-exclusion"]
-    exclusion_expected = exclusion_rule["values"]["pretextual_entries"]
+    exclusion_rule = rules["toc.frontmatter-exclusion"]
+    exclusion_expected = exclusion_rule["values"]["frontmatter_entries"]
     toc_text = normalize(" ".join(page_text(page) for page in toc_pages))
-    leaked = [marker for marker in pretextual_markers if normalize(marker) in toc_text]
+    leaked = [marker for marker in frontmatter_markers if normalize(marker) in toc_text]
     evidence.append(
         record(
-            "toc.pretextual-exclusion",
+            "toc.frontmatter-exclusion",
             "PASS" if exclusion_expected is False and not leaked else "FAIL",
-            {"pretextual_entries": exclusion_expected},
+            {"frontmatter_entries": exclusion_expected},
             {
                 "toc_pages": sorted(toc_page_indexes),
-                "checked_markers": pretextual_markers,
+                "checked_markers": frontmatter_markers,
                 "leaked_markers": leaked,
             },
             "pdftotext -bbox-layout",
@@ -368,7 +368,7 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
+        "validation_scope": "frontmatter",
         "component": "table-of-contents",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -387,7 +387,7 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE toc-summary "
+        "FRONTMATTER-EVIDENCE toc-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" toc_pages={','.join(str(page) for page in sorted(toc_page_indexes))}"
         + f" hierarchy_levels={len(hierarchy)}"
@@ -395,7 +395,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

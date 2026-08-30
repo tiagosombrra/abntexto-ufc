@@ -20,7 +20,7 @@ DEFINITION_COLUMN_X_PT = 60.0 * PDF_PT_PER_MM
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Pre-textual definition-list alignment failed: {message}")
+    raise SystemExit(f"Front matter definition-list alignment failed: {message}")
 
 
 def locate(pdf: Path, marker: str):
@@ -122,7 +122,7 @@ def main() -> None:
 
     payload = {
         "schema_version": 1,
-        "component": "pretextual-definition-list-alignment",
+        "component": "frontmatter-definition-list-alignment",
         "result": "PASS",
         "alignment_tolerance_pt": ALIGNMENT_TOLERANCE_PT,
         "column_tolerance_pt": COLUMN_TOLERANCE_PT,
@@ -152,7 +152,7 @@ def main() -> None:
         )
 
     print(
-        "LAYOUT-EVIDENCE pretextual-definition-lists status=PASS "
+        "LAYOUT-EVIDENCE frontmatter-definition-lists status=PASS "
         f"rows={len(all_rows)} "
         f"max_vertical_delta_pt={max_vertical_delta:.3f} "
         f"max_label_left_delta_pt={max_label_left_delta:.3f} "

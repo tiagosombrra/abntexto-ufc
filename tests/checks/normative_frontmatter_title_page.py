@@ -17,13 +17,13 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
 from pdf_measurement import normalize
 
-SCENARIO = ROOT / "normativa" / "pretextual-title-page-scenario.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIO = ROOT / "standards" / "frontmatter-title-page-scenario.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-policy.json"
 PT_PER_MM = 72.0 / 25.4
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Title-page oracle failed: {message}")
+    raise SystemExit(f"Title-page validation failed: {message}")
 
 
 def local(tag: str) -> str:
@@ -176,7 +176,7 @@ def record(rule_id: str, status: str, expected: Any, measured: Any, tool: str) -
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 title-page final-PDF evidence.")
+    parser = argparse.ArgumentParser(description="Measure front matter title-page final-PDF evidence.")
     parser.add_argument("academic_pdf", type=Path)
     parser.add_argument("project_pdf", type=Path)
     parser.add_argument("anonymized_project_pdf", type=Path)
@@ -190,9 +190,9 @@ def main() -> None:
             fail(f"PDF not found: {pdf}")
 
     scenario = load_json(SCENARIO)
-    policy = load_json(ORACLE_POLICY)
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N6":
-        fail("invalid title-page scenario schema/phase")
+    policy = load_json(VALIDATION_POLICY)
+    if scenario.get("schema_version") != 2:
+        fail("invalid title-page scenario schema")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
@@ -459,7 +459,7 @@ def main() -> None:
     findings = [item["rule_id"] for item in evidence if item["status"] == "FAIL"]
     payload = {
         "schema_version": 1,
-        "phase": "N6",
+        "validation_scope": "frontmatter",
         "scope": "title-page",
         "mode": "enforce" if args.enforce else "audit",
         "source_commit_sha": args.commit_sha,
@@ -472,13 +472,13 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N6-EVIDENCE title-page-summary "
+        "FRONTMATTER-EVIDENCE title-page-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
         + f" academic_pages={len(academic_pages)} project_pages={len(project_pages)}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"FRONTMATTER-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

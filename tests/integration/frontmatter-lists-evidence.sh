@@ -1,19 +1,19 @@
 #!/bin/sh
 set -eu
 
-illustrations_fixture="tests/normativa/pretextual-oracle-list-illustrations-present.tex"
-tables_fixture="tests/normativa/pretextual-oracle-list-tables-present.tex"
-abbreviations_fixture="tests/normativa/pretextual-oracle-list-abbreviations-present.tex"
-symbols_fixture="tests/normativa/pretextual-oracle-list-symbols-present.tex"
-absent_fixture="tests/normativa/pretextual-oracle-lists-absent.tex"
+illustrations_fixture="tests/documents/frontmatter-list-illustrations-present-test.tex"
+tables_fixture="tests/documents/frontmatter-list-tables-present-test.tex"
+abbreviations_fixture="tests/documents/frontmatter-list-abbreviations-present-test.tex"
+symbols_fixture="tests/documents/frontmatter-list-symbols-present-test.tex"
+absent_fixture="tests/documents/frontmatter-lists-absent-test.tex"
 
-illustrations_job="pretextual-oracle-list-illustrations-present"
-tables_job="pretextual-oracle-list-tables-present"
-abbreviations_job="pretextual-oracle-list-abbreviations-present"
-symbols_job="pretextual-oracle-list-symbols-present"
-absent_job="pretextual-oracle-lists-absent"
-evidence="artifacts/normative-pretextual/optional-lists.json"
-alignment_evidence="artifacts/layout/pretextual-definition-lists.json"
+illustrations_job="frontmatter-validation-list-illustrations-present"
+tables_job="frontmatter-validation-list-tables-present"
+abbreviations_job="frontmatter-validation-list-abbreviations-present"
+symbols_job="frontmatter-validation-list-symbols-present"
+absent_job="frontmatter-validation-lists-absent"
+evidence="artifacts/frontmatter/optional-lists.json"
+alignment_evidence="artifacts/layout/frontmatter-definition-lists.json"
 
 cleanup() {
   for job in \
@@ -31,7 +31,7 @@ trap cleanup EXIT INT TERM
 compile_fixture() {
   fixture="$1"
   job="$2"
-  log="/tmp/abntexto-ufc-v2-${job}.log"
+  log="/tmp/abntexto-ufc-${job}.log"
 
   for pass in 1 2 3; do
     pdflatex \
@@ -61,7 +61,7 @@ compile_fixture "$symbols_fixture" "$symbols_job"
 compile_fixture "$absent_fixture" "$absent_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pretextual_lists.py \
+python3 tests/checks/normative_frontmatter_lists.py \
   "$illustrations_job.pdf" \
   "$tables_job.pdf" \
   "$abbreviations_job.pdf" \
@@ -70,7 +70,7 @@ python3 tests/checks/normative_pretextual_lists.py \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
-python3 tests/checks/pretextual_definition_list_alignment.py \
+python3 tests/checks/frontmatter_definition_list_alignment.py \
   "$abbreviations_job.pdf" \
   "$symbols_job.pdf" \
   --json "$alignment_evidence"
@@ -85,4 +85,4 @@ test -s "$alignment_evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para listas pré-textuais opcionais concluído.'
+echo 'Gate de evidência front matter para listas front matter opcionais concluído.'

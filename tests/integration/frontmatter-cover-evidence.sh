@@ -1,13 +1,13 @@
 #!/bin/sh
 set -eu
 
-academic_fixture="tests/normativa/pretextual-oracle-cover-academic.tex"
-project_fixture="tests/normativa/pretextual-oracle-cover-project-optional.tex"
-anonymized_fixture="tests/normativa/pretextual-oracle-cover-project-anonymized-optional.tex"
-academic_job="pretextual-oracle-cover-academic"
-project_job="pretextual-oracle-cover-project-optional"
-anonymized_job="pretextual-oracle-cover-project-anonymized-optional"
-evidence="artifacts/normative-pretextual/cover.json"
+academic_fixture="tests/documents/frontmatter-cover-academic-test.tex"
+project_fixture="tests/documents/frontmatter-cover-project-optional-test.tex"
+anonymized_fixture="tests/documents/frontmatter-cover-project-anonymized-optional-test.tex"
+academic_job="frontmatter-validation-cover-academic"
+project_job="frontmatter-validation-cover-project-optional"
+anonymized_job="frontmatter-validation-cover-project-anonymized-optional"
+evidence="artifacts/frontmatter/cover.json"
 
 cleanup() {
   for job in "$academic_job" "$project_job" "$anonymized_job"; do
@@ -20,7 +20,7 @@ trap cleanup EXIT INT TERM
 compile_fixture() {
   fixture="$1"
   job="$2"
-  log="/tmp/abntexto-ufc-v2-${job}.log"
+  log="/tmp/abntexto-ufc-${job}.log"
 
   for pass in 1 2; do
     pdflatex \
@@ -48,7 +48,7 @@ compile_fixture "$project_fixture" "$project_job"
 compile_fixture "$anonymized_fixture" "$anonymized_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pretextual_cover.py \
+python3 tests/checks/normative_frontmatter_cover.py \
   "$academic_job.pdf" \
   "$project_job.pdf" \
   "$anonymized_job.pdf" \
@@ -60,4 +60,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para capa concluído.'
+echo 'Gate de evidência front matter para capa concluído.'

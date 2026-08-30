@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/pretextual-oracle-summary-abstract.tex"
-job="pretextual-oracle-summary-abstract"
-evidence="artifacts/normative-pretextual/summary-abstract.json"
+fixture="tests/documents/frontmatter-summary-abstract-test.tex"
+job="frontmatter-validation-summary-abstract"
+evidence="artifacts/frontmatter/summary-abstract.json"
 
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
@@ -16,8 +16,8 @@ for pass in 1 2; do
     -interaction=nonstopmode \
     -halt-on-error \
     -file-line-error \
-    "$fixture" > /tmp/abntexto-ufc-v2-summary-evidence.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-summary-evidence.log
+    "$fixture" > /tmp/abntexto-ufc-summary-evidence.log 2>&1 || {
+      cat /tmp/abntexto-ufc-summary-evidence.log
       exit 1
     }
 done
@@ -31,7 +31,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pretextual_summary.py \
+python3 tests/checks/normative_frontmatter_summary.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
@@ -41,4 +41,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para resumo/abstract concluído.'
+echo 'Gate de evidência front matter para resumo/abstract concluído.'

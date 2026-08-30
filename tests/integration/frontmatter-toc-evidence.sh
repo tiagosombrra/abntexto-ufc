@@ -1,10 +1,10 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/pretextual-oracle-toc.tex"
-job="pretextual-oracle-toc"
-evidence="artifacts/normative-pretextual/toc.json"
-log="/tmp/abntexto-ufc-v2-${job}.log"
+fixture="tests/documents/frontmatter-toc-test.tex"
+job="frontmatter-validation-toc"
+evidence="artifacts/frontmatter/toc.json"
+log="/tmp/abntexto-ufc-${job}.log"
 
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
@@ -32,7 +32,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pretextual_toc.py \
+python3 tests/checks/normative_frontmatter_toc.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
@@ -42,4 +42,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para sumário concluído.'
+echo 'Gate de evidência front matter para sumário concluído.'

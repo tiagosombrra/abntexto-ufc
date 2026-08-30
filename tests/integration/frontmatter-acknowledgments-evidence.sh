@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/normativa/pretextual-oracle-acknowledgements.tex"
-job="pretextual-oracle-acknowledgements"
-evidence="artifacts/normative-pretextual/acknowledgements.json"
+fixture="tests/documents/frontmatter-acknowledgments-test.tex"
+job="frontmatter-validation-acknowledgements"
+evidence="artifacts/frontmatter/acknowledgements.json"
 
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
@@ -16,8 +16,8 @@ for pass in 1 2; do
     -interaction=nonstopmode \
     -halt-on-error \
     -file-line-error \
-    "$fixture" > /tmp/abntexto-ufc-v2-acknowledgements-evidence.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-acknowledgements-evidence.log
+    "$fixture" > /tmp/abntexto-ufc-acknowledgements-evidence.log 2>&1 || {
+      cat /tmp/abntexto-ufc-acknowledgements-evidence.log
       exit 1
     }
 done
@@ -31,7 +31,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pretextual_acknowledgements.py \
+python3 tests/checks/normative_frontmatter_acknowledgments.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
@@ -41,4 +41,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para agradecimentos concluído.'
+echo 'Gate de evidência front matter para agradecimentos concluído.'
