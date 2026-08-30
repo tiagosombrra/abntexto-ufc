@@ -1,9 +1,8 @@
 {
-  "schema_version": 1,
-  "reviewed_at": "2026-08-26",
-  "phase": "N5",
-  "purpose": "Shared final-PDF measurement policy for isolated normative fixtures.",
-  "marker_prefix": "UFCORACLE",
+  "schema_version": 2,
+  "reviewed_at": "2026-08-30",
+  "purpose": "Shared final-PDF measurement policy for isolated normative validation fixtures.",
+  "marker_prefix": "UFCVALIDATION",
   "tools": {
     "bbox": "pdftotext -bbox-layout",
     "typography": "pdftohtml -xml -zoom 1.0",
@@ -17,7 +16,7 @@
     "vertical_position_pt": 5.0,
     "font_size_pt": 1.0
   },
-  "vector_geometry_extension": "normativa/vector-rule-oracle-extension.json",
+  "vector_geometry_extension": "standards/vector-rule-validation-extension.json",
   "evidence_format": "json",
   "exit_capabilities": [
     "page-geometry",

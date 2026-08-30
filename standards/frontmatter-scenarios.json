@@ -1,9 +1,8 @@
 {
-  "schema_version": 1,
-  "reviewed_at": "2026-08-24",
-  "phase": "N6",
-  "purpose": "Isolated positive scenarios for dedication and epigraph final-PDF evidence.",
-  "fixture": "tests/normativa/pretextual-oracle-dedication-epigraph.tex",
+  "schema_version": 2,
+  "reviewed_at": "2026-08-30",
+  "purpose": "Isolated positive scenarios for dedication and epigraph final-PDF validation.",
+  "fixture": "tests/documents/frontmatter-dedication-epigraph-test.tex",
   "tolerances": {
     "line_spacing_pt": 1.5
   },
@@ -13,7 +12,11 @@
       "component": "dedication",
       "route": "\\imprimirdedicatoria",
       "line_count": 3,
-      "markers": ["UFCN6DEDONE", "UFCN6DEDTWO", "UFCN6DEDTHREE"],
+      "markers": [
+        "UFCFRONTMATTERDEDICATIONONE",
+        "UFCFRONTMATTERDEDICATIONTWO",
+        "UFCFRONTMATTERDEDICATIONTHREE"
+      ],
       "rules": [
         "dedication.heading.present",
         "dedication.position.start",
@@ -28,7 +31,11 @@
       "component": "epigraph-short",
       "route": "\\imprimirepigrafe[curta]",
       "line_count": 3,
-      "markers": ["UFCN6SHORTONE", "UFCN6SHORTTWO", "UFCN6SHORTTHREE"],
+      "markers": [
+        "UFCFRONTMATTEREPIGRAPHSHORTONE",
+        "UFCFRONTMATTEREPIGRAPHSHORTTWO",
+        "UFCFRONTMATTEREPIGRAPHSHORTTHREE"
+      ],
       "rules": [
         "epigraph.short.position.start",
         "epigraph.short.indent.left",
@@ -43,7 +50,12 @@
       "component": "epigraph-long",
       "route": "\\imprimirepigrafe[longa]",
       "line_count": 4,
-      "markers": ["UFCN6LONGONE", "UFCN6LONGTWO", "UFCN6LONGTHREE", "UFCN6LONGFOUR"],
+      "markers": [
+        "UFCFRONTMATTEREPIGRAPHLONGONE",
+        "UFCFRONTMATTEREPIGRAPHLONGTWO",
+        "UFCFRONTMATTEREPIGRAPHLONGTHREE",
+        "UFCFRONTMATTEREPIGRAPHLONGFOUR"
+      ],
       "rules": [
         "epigraph.long.position.start",
         "epigraph.long.indent.left",
@@ -55,7 +67,15 @@
     }
   ],
   "calibration": {
-    "onehalf_12pt": ["UFCN6CALHALFONE", "UFCN6CALHALFTWO", "UFCN6CALHALFTHREE"],
-    "single_10pt": ["UFCN6CALSINGLEONE", "UFCN6CALSINGLETWO", "UFCN6CALSINGLETHREE"]
+    "onehalf_12pt": [
+      "UFCFRONTMATTERCALIBRATIONHALFONE",
+      "UFCFRONTMATTERCALIBRATIONHALFTWO",
+      "UFCFRONTMATTERCALIBRATIONHALFTHREE"
+    ],
+    "single_10pt": [
+      "UFCFRONTMATTERCALIBRATIONSINGLEONE",
+      "UFCFRONTMATTERCALIBRATIONSINGLETWO",
+      "UFCFRONTMATTERCALIBRATIONSINGLETHREE"
+    ]
   }
 }

@@ -24,14 +24,14 @@ from pdf_measurement import (
     typography_runs,
 )
 
-SCENARIOS = ROOT / "normativa" / "pretextual-scenarios.json"
-ORACLE_POLICY = ROOT / "normativa" / "oracle-policy.json"
+SCENARIOS = ROOT / "standards" / "frontmatter-scenarios.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 QUOTE_CHARS = {'"', '“', '”', '„', '«', '»'}
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Pre-textual oracle failed: {message}")
+    raise SystemExit(f"Frontmatter validation failed: {message}")
 
 
 def load_json(path: Path, label: str) -> dict[str, Any]:
@@ -136,7 +136,7 @@ def audit_scenario(
     typography: list[Typography],
     rules: dict[str, dict[str, Any]],
     margin_left_pt: float,
-    oracle_tolerances: dict[str, float],
+    validation_tolerances: dict[str, float],
     spacing_tolerance: float,
     calibration: dict[str, float],
 ) -> dict[str, Any]:
@@ -188,10 +188,13 @@ def audit_scenario(
         quote_id = "epigraph.long.quotation-marks"
         spacing_reference = calibration["single_10pt"]
     else:
-        fail(f"unsupported pre-textual component: {component}")
+        fail(f"unsupported frontmatter component: {component}")
 
     position_rule = rules[position_id]
-    below_midpoint = first.box.y_min >= page.height / 2.0 - oracle_tolerances["vertical_position_pt"]
+    below_midpoint = (
+        first.box.y_min
+        >= page.height / 2.0 - validation_tolerances["vertical_position_pt"]
+    )
     evidence.append(
         record(
             position_id,
@@ -202,7 +205,7 @@ def audit_scenario(
                 "page_midpoint_y_pt": round(page.height / 2.0, 4),
             },
             "pdftotext -bbox-layout",
-            tolerance=oracle_tolerances["vertical_position_pt"],
+            tolerance=validation_tolerances["vertical_position_pt"],
         )
     )
 
@@ -212,11 +215,15 @@ def audit_scenario(
     evidence.append(
         record(
             indent_id,
-            close_status(first.box.x_min, expected_x, oracle_tolerances["horizontal_position_pt"]),
+            close_status(
+                first.box.x_min,
+                expected_x,
+                validation_tolerances["horizontal_position_pt"],
+            ),
             {"left_indent_mm": indent_mm, "physical_x_pt": round(expected_x, 4)},
             {"physical_x_pt": round(first.box.x_min, 4)},
             "pdftotext -bbox-layout",
-            tolerance=oracle_tolerances["horizontal_position_pt"],
+            tolerance=validation_tolerances["horizontal_position_pt"],
         )
     )
 
@@ -225,11 +232,15 @@ def audit_scenario(
     evidence.append(
         record(
             font_id,
-            close_status(first_type.font_size, expected_font, oracle_tolerances["font_size_pt"]),
+            close_status(
+                first_type.font_size,
+                expected_font,
+                validation_tolerances["font_size_pt"],
+            ),
             expected_font,
             round(first_type.font_size, 4),
             "pdftohtml -xml",
-            tolerance=oracle_tolerances["font_size_pt"],
+            tolerance=validation_tolerances["font_size_pt"],
         )
     )
 
@@ -256,7 +267,10 @@ def audit_scenario(
             alignment_rule["values"]["alignment"],
             None,
             "isolated explicit-line fixture",
-            reason="Explicit line breaks are suitable for spacing evidence but do not prove paragraph justification.",
+            reason=(
+                "Explicit line breaks are suitable for spacing evidence but do not "
+                "prove paragraph justification."
+            ),
         )
     )
 
@@ -289,7 +303,7 @@ def audit_scenario(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 dedication and epigraph final-PDF evidence."
+        description="Measure dedication and epigraph final-PDF evidence."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -301,12 +315,12 @@ def main() -> None:
     if not pdf.is_file():
         fail(f"PDF not found: {pdf}")
 
-    scenarios_data = load_json(SCENARIOS, "pre-textual scenarios")
-    oracle_policy = load_json(ORACLE_POLICY, "oracle policy")
-    if scenarios_data.get("schema_version") != 1 or scenarios_data.get("phase") != "N6":
-        fail("invalid pre-textual scenario schema/phase")
-    if oracle_policy.get("schema_version") != 1 or oracle_policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+    scenarios_data = load_json(SCENARIOS, "frontmatter scenarios")
+    validation_policy = load_json(VALIDATION_POLICY, "validation reference policy")
+    if scenarios_data.get("schema_version") != 2:
+        fail("unsupported frontmatter scenario schema")
+    if validation_policy.get("schema_version") != 2:
+        fail("unsupported validation reference policy schema")
 
     scenarios = scenarios_data.get("scenarios")
     if not isinstance(scenarios, list) or len(scenarios) != 3:
@@ -316,9 +330,9 @@ def main() -> None:
     if not isinstance(spacing_tolerance, (int, float)) or spacing_tolerance <= 0:
         fail("line_spacing_pt tolerance must be positive")
 
-    oracle_tolerances = oracle_policy.get("tolerances")
-    if not isinstance(oracle_tolerances, dict):
-        fail("oracle tolerances are missing")
+    validation_tolerances = validation_policy.get("tolerances")
+    if not isinstance(validation_tolerances, dict):
+        fail("validation tolerances are missing")
 
     rules = full_rule_map()
     required_rule_ids = {rule_id for scenario in scenarios for rule_id in scenario["rules"]}
@@ -347,7 +361,7 @@ def main() -> None:
                 typography,
                 rules,
                 margin_left_pt,
-                oracle_tolerances,
+                validation_tolerances,
                 float(spacing_tolerance),
                 calibration,
             )
@@ -370,15 +384,13 @@ def main() -> None:
     ]
 
     payload = {
-        "schema_version": 1,
-        "phase": "N6",
+        "schema_version": 2,
+        "contract": "frontmatter-validation",
         "mode": "enforce" if args.enforce else "audit",
         "source_commit_sha": args.commit_sha,
         "fixture": scenarios_data["fixture"],
         "pdf": pdf.name,
-        "calibration": {
-            key: round(value, 4) for key, value in calibration.items()
-        },
+        "calibration": {key: round(value, 4) for key, value in calibration.items()},
         "target_pages_are_distinct": isolated,
         "status_counts": dict(sorted(counts.items())),
         "findings": findings,
@@ -392,16 +404,16 @@ def main() -> None:
     )
 
     print(
-        "Pre-textual oracle audit: "
+        "Frontmatter validation audit: "
         f"rules={len(all_evidence)}, "
         + ", ".join(f"{status}={count}" for status, count in sorted(counts.items()))
         + f"; distinct-pages={isolated}."
     )
     if findings:
-        print("Pre-textual findings: " + ", ".join(findings))
+        print("Frontmatter findings: " + ", ".join(findings))
 
     if args.enforce and (findings or not isolated):
-        fail("enforcement requested with unresolved pre-textual findings")
+        fail("enforcement requested with unresolved frontmatter findings")
 
 
 if __name__ == "__main__":
