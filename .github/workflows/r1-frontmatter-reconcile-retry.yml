@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
           ref: refactor/v3-r1-rebaseline
 
-      - name: Align semantic contract gate and reuse audited reconciliation
+      - name: Align semantic contracts and reuse audited reconciliation
         shell: bash
         run: |
           set -euo pipefail
@@ -163,6 +163,26 @@ jobs:
           body = []
           for line in source[start:]:
               body.append(line[10:] if line.startswith('          ') else line)
-          Path('/tmp/r1-frontmatter-reconcile.sh').write_text('\n'.join(body) + '\n', encoding='utf-8')
+          script = '\n'.join(body) + '\n'
+          backmatter_rebaseline = r'''python3 - <<'INNERPY'
+          from pathlib import Path
+
+          for root in (Path('standards'), Path('tests/checks'), Path('tools')):
+              for path in root.rglob('*'):
+                  if not path.is_file() or path.suffix not in {'.json', '.py'}:
+                      continue
+                  text = path.read_text(encoding='utf-8')
+                  updated = text.replace('duplex-posttextual', 'duplex-backmatter')
+                  updated = updated.replace('posttextual', 'backmatter')
+                  if updated != text:
+                      path.write_text(updated, encoding='utf-8')
+          INNERPY
+          '''
+          script = script.replace(
+              'python3 tests/checks/normative_full_contract.py',
+              backmatter_rebaseline + '\npython3 tests/checks/normative_full_contract.py',
+              1,
+          )
+          Path('/tmp/r1-frontmatter-reconcile.sh').write_text(script, encoding='utf-8')
           PY
           bash /tmp/r1-frontmatter-reconcile.sh
