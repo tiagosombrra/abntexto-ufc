@@ -134,7 +134,7 @@ jobs:
                   )
 
               runner = (ROOT / "tests" / "run.py").read_text(encoding="utf-8")
-              gates = set(re.findall(r'Check\("([^"]+)"', runner))
+              gates = set(re.findall(r'Check\(\s*"([^"]+)"', runner))
               uncovered = sorted(
                   rule_id
                   for rule_id in extension_ids
