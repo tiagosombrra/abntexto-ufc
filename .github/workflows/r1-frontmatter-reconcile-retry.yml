@@ -1,0 +1,39 @@
+name: R1 front matter contract reconciliation retry
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-rebaseline
+    paths:
+      - .github/workflows/r1-frontmatter-reconcile-retry.yml
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refactor/v3-r1-rebaseline
+
+      - name: Apply final fixture identity fix and reuse audited reconciliation
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/oracle/validation/g; s/Oracle/Validation/g' tests/fixtures/frontmatter/epigraph-long-alignment-validation-fixture.tex
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source = Path('.github/workflows/r1-frontmatter-audit.yml').read_text(encoding='utf-8').splitlines()
+          marker = '        run: |'
+          start = source.index(marker) + 1
+          body = []
+          for line in source[start:]:
+              body.append(line[10:] if line.startswith('          ') else line)
+          Path('/tmp/r1-frontmatter-reconcile.sh').write_text('\n'.join(body) + '\n', encoding='utf-8')
+          PY
+          bash /tmp/r1-frontmatter-reconcile.sh
