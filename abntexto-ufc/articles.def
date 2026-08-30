@@ -1,0 +1,223 @@
+\ProvidesFile{abntexto-ufc/articles.def}[2026/08/30 UFC scientific article profile]
+
+% The article profile is isolated from the certified academic-work and research-project profiles.
+% Canonical English setup values are primary; Portuguese setup values remain additive compatibility surfaces.
+\ExplSyntaxOn
+
+\prop_gput:Nnn \g_ufc_metadata_prop {data-submissao} {}
+\prop_gput:Nnn \g_ufc_metadata_prop {curriculo-resumido-autor} {}
+\prop_gput:Nnn \g_ufc_metadata_prop {vinculo-institucional-autor} {}
+\prop_gput:Nnn \g_ufc_metadata_prop {contato-autor} {}
+
+\keys_define:nn { ufc }
+  {
+    tipo / artigo .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { artigo }
+        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+      },
+    type / article .meta:n = { tipo = artigo },
+
+    data-submissao .code:n = { \ufc_meta_set:nn {data-submissao} {#1} },
+    submission-date .meta:n = { data-submissao = {#1} },
+
+    curriculo-resumido-autor .code:n =
+      { \ufc_meta_set:nn {curriculo-resumido-autor} {#1} },
+    author-short-curriculum .meta:n = { curriculo-resumido-autor = {#1} },
+
+    vinculo-institucional-autor .code:n =
+      { \ufc_meta_set:nn {vinculo-institucional-autor} {#1} },
+    author-affiliation .meta:n = { vinculo-institucional-autor = {#1} },
+
+    contato-autor .code:n = { \ufc_meta_set:nn {contato-autor} {#1} },
+    author-contact .meta:n = { contato-autor = {#1} }
+  }
+
+\prg_new_conditional:Npnn \ufc_if_article: { T, F, TF }
+  {
+    \str_if_eq:VnTF \g_ufc_document_type_tl {artigo}
+      { \prg_return_true: }
+      { \prg_return_false: }
+  }
+
+\NewDocumentCommand \ufcIfArticleTF { +m +m }
+  { \ufc_if_article:TF {#1} {#2} }
+
+% Article primary sections are continuous. Other profiles retain the certified break policy.
+\cs_new_eq:NN \ufc_article_base_primary_section_break: \ufc_primary_section_break:
+\cs_set_protected:Npn \ufc_primary_section_break:
+  {
+    \ufc_if_article:TF
+      { }
+      { \ufc_article_base_primary_section_break: }
+  }
+
+\cs_new_protected:Npn \ufc_article_layout:
+  {
+    \newgeometry{
+      twoside = false,
+      left = 3cm,
+      top = 3cm,
+      right = 2cm,
+      bottom = 2cm
+    }
+  }
+
+\cs_new_protected:Npn \ufc_article_apply_runtime:
+  {
+    \ufc_if_article:T
+      {
+        \cs_set_eq:NN \onesidelayout \ufc_article_layout:
+        \cs_set_eq:NN \twosidelayout \ufc_article_layout:
+        \ufc_article_layout:
+        \singlesp
+        \setlength{\parindent}{2cm}
+        \setlength{\parskip}{0pt}
+        % The UFC article guide numbers every page from the first one.
+        \textual
+      }
+  }
+
+\AtBeginDocument{\ufc_article_apply_runtime:}
+
+\bool_new:N \l_ufc_article_author_note_bool
+
+\cs_new_protected:Npn \ufc_article_author_note:
+  {
+    \bool_set_false:N \l_ufc_article_author_note_bool
+    \ufc_meta_if_blank:nF {curriculo-resumido-autor}
+      { \bool_set_true:N \l_ufc_article_author_note_bool }
+    \ufc_meta_if_blank:nF {vinculo-institucional-autor}
+      { \bool_set_true:N \l_ufc_article_author_note_bool }
+    \ufc_meta_if_blank:nF {contato-autor}
+      { \bool_set_true:N \l_ufc_article_author_note_bool }
+
+    \bool_if:NT \l_ufc_article_author_note_bool
+      {
+        \footnote{%
+          \ufc_meta_if_blank:nF {curriculo-resumido-autor}
+            {\ufc_meta_use:n {curriculo-resumido-autor}}%
+          \ufc_meta_if_blank:nF {vinculo-institucional-autor}
+            {\par\ufc_meta_use:n {vinculo-institucional-autor}}%
+          \ufc_meta_if_blank:nF {contato-autor}
+            {\par\ufc_meta_use:n {contato-autor}}%
+        }
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_require_profile:n #1
+  {
+    \ufc_if_article:F
+      {
+        \ClassError{abntexto-ufc}
+          {#1 is available only for the scientific article profile}
+          {Select type=article or tipo=artigo before using this command.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_header:
+  {
+    \ufc_article_require_profile:n {Article header}
+    \ufc_if_article:T
+      {
+        \begingroup
+          \singlesp
+          \centering
+          \bfseries\ufc_title_text:\par
+          \normalfont
+          \ufc_meta_if_blank:nF {variacao-titulo}
+            {
+              \vspace{\baselineskip}
+              \ufc_meta_use:n {variacao-titulo}\par
+            }
+          \vspace{\baselineskip}
+          \ufc_meta_use:n {autor}\ufc_article_author_note:\par
+        \endgroup
+      }
+  }
+
+\NewDocumentCommand \ufcPrintArticleHeader { }
+  { \ufc_article_header: }
+
+\NewDocumentCommand \imprimircabecalhoartigo { }
+  { \ufcPrintArticleHeader }
+
+\cs_new_protected:Npn \ufc_article_dates:
+  {
+    \ufc_article_require_profile:n {Article dates}
+    \ufc_if_article:T
+      {
+        \par\vspace{\baselineskip}
+        \begingroup
+          \singlesp
+          \raggedright
+          Data~de~submissão:\space\ufc_meta_use:n {data-submissao}\par
+          Data~de~aprovação:\space\ufc_meta_use:n {data-aprovacao}\par
+        \endgroup
+      }
+  }
+
+\NewDocumentCommand \ufcPrintArticleDates { }
+  { \ufc_article_dates: }
+
+\NewDocumentCommand \imprimirdatasartigo { }
+  { \ufcPrintArticleDates }
+
+% Article summaries remain on the continuous first-page flow; other profiles keep their page breaks.
+\cs_new_eq:NN \ufc_article_base_print_summary:n \imprimirresumo
+\RenewDocumentCommand \imprimirresumo { m }
+  {
+    \ufc_if_article:TF
+      {
+        \par\vspace{\baselineskip}
+        \ufc_pretextual_heading:n {Resumo}
+        \begingroup
+          \singlesp
+          \setlength{\parindent}{0pt}
+          \justifying\ufc_input_file:n {#1}
+        \endgroup
+      }
+      { \ufc_article_base_print_summary:n {#1} }
+  }
+
+\cs_new_eq:NN \ufc_article_base_print_abstract:n \imprimirabstract
+\RenewDocumentCommand \imprimirabstract { m }
+  {
+    \ufc_if_article:TF
+      {
+        \par\vspace{\baselineskip}
+        \begingroup
+          \selectlanguage{english}
+          \singlesp
+          \ufc_pretextual_heading:n {Abstract}
+          \setlength{\parindent}{0pt}
+          \justifying\ufc_input_file:n {#1}
+        \endgroup
+      }
+      { \ufc_article_base_print_abstract:n {#1} }
+  }
+
+% Article references start one simple line after the final textual element and do not force a page break.
+\cs_new_eq:NN \ufc_article_base_print_references: \ufc_print_references:
+\cs_set_protected:Npn \ufc_print_references:
+  {
+    \ufc_if_article:TF
+      {
+        \par\vspace{\baselineskip}
+        \begin{center}
+          \bfseries REFERÊNCIAS
+        \end{center}
+        \vspace{\baselineskip}
+        \begingroup
+          \singlesp
+          \raggedright
+          \setlength{\bibitemsep}{\baselineskip}
+          \printbibliography[heading=none]
+        \endgroup
+      }
+      { \ufc_article_base_print_references: }
+  }
+
+\ExplSyntaxOff
+
+\endinput

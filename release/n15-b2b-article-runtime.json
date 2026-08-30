@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "phase": "N15-B2B",
+  "status": "IMPLEMENTED_AWAITING_PR_CERTIFICATION",
+  "reviewed_at": "2026-08-30",
+  "base_main_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
+  "base_certification": {
+    "normative_source_contract": {"run_number": 445, "run_id": 33266313000, "conclusion": "SUCCESS"},
+    "gate_t": {"run_number": 1119, "run_id": 33266312999, "conclusion": "SUCCESS"},
+    "distribution": {"run_number": 250, "run_id": 33266313007, "conclusion": "SUCCESS"}
+  },
+  "source_contract": {
+    "path": "release/n15-b2a-article-contract.json",
+    "blob_sha": "39cc32a9d09fa3f79e4d8eea4f3d49dbe17e7dc9"
+  },
+  "frozen_b2r": {
+    "b1": {"path": "release/n15-b2r-b-public-api.json", "blob_sha": "c1f545e0e707822959db851a74d29f4068dff731"},
+    "b2": {"path": "release/n15-b2r-b2-setup-aliases.json", "blob_sha": "19df208fb59af5ea37556d962e5986a43094c7f5"},
+    "b3": {"path": "release/n15-b2r-b3-command-environment-aliases.json", "blob_sha": "bfcbf8aca3fba3fd602f62895f10fa2d6277b5a4"},
+    "b4": {"path": "release/n15-b2r-b4-en-pt-equivalence.json", "blob_sha": "935146ae91e0de9b7325c6f96be0147648c2a5c8"},
+    "public_api_runtime": {"path": "abntexto-ufc/public-api.def", "blob_sha": "7b61fe70dd85ed895140f846272e097e3ded72cf"},
+    "n12_workflow": {"path": ".github/workflows/latex-preflight.yml", "blob_sha": "aca746454be3ce2e650bd2f50d70b2f42d7d31e1"}
+  },
+  "runtime": {
+    "article_profile_available": true,
+    "article_module": "abntexto-ufc/articles.def",
+    "article_module_blob_sha": "6a668a65ba1d5ddf6bd9366823003929a3f8a805",
+    "load_after": "abntexto-ufc/public-api.def",
+    "canonical_type": "type/article",
+    "compatibility_type": "tipo/artigo",
+    "new_metadata_key_pairs": {
+      "submission-date": "data-submissao",
+      "author-short-curriculum": "curriculo-resumido-autor",
+      "author-affiliation": "vinculo-institucional-autor",
+      "author-contact": "contato-autor"
+    },
+    "new_canonical_commands": ["\\ufcIfArticleTF", "\\ufcPrintArticleHeader", "\\ufcPrintArticleDates"],
+    "new_portuguese_compatibility_commands": ["\\imprimircabecalhoartigo", "\\imprimirdatasartigo"],
+    "reused_metadata": ["author", "title", "subtitle", "title-variant", "approval-date"],
+    "reused_commands": ["\\imprimirresumo", "\\imprimirabstract", "\\imprimirreferencias"],
+    "existing_profile_matrix_unchanged": true
+  },
+  "implemented_rules": [
+    "article.structure.required",
+    "article.title.presentation",
+    "article.authorship.presentation",
+    "article.abstract.presentation",
+    "article.dates.required",
+    "article.textual.required-sections",
+    "article.textual.typography",
+    "article.references.required-placement",
+    "article.page.margins",
+    "article.pagination",
+    "article.sections.continuous"
+  ],
+  "advisory_rules": [
+    "article.abstract.length.recommended",
+    "article.font.family.recommended"
+  ],
+  "runtime_policies": {
+    "paper": "A4",
+    "margins_mm": {"left": 30, "top": 30, "right": 20, "bottom": 20},
+    "body_font_pt": 12,
+    "body_line_spacing": 1.0,
+    "first_line_indent_mm": 20,
+    "primary_sections_start_new_page": false,
+    "page_numbering_start": "first-page",
+    "page_numbering": "arabic-upper-right",
+    "references_force_page_break": false,
+    "summary_force_page_break": false,
+    "abstract_force_page_break": false
+  },
+  "evidence": {
+    "static_contract": "tests/checks/normative_n15_b2b_article_runtime.py",
+    "runtime_smoke": "tests/v2-article-runtime-check.sh",
+    "fixture": "tests/smoke/article-base.tex",
+    "deep_evidence_phase": "N15-B2C",
+    "deep_evidence_status": "PENDING"
+  }
+}

@@ -32,5 +32,6 @@
 \input{abntexto-ufc/compat-nbr6023-2025.def}
 \input{abntexto-ufc/backmatter.def}
 \input{abntexto-ufc/public-api.def}
+\input{abntexto-ufc/articles.def}
 
 \endinput

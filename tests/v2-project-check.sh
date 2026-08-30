@@ -165,4 +165,6 @@ python3 tests/checks/normative_n11_project_structure.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-unknown}}" \
   --enforce
 
-echo 'Gate V2 NBR 15287:2025 concluído.'
+sh tests/v2-article-runtime-check.sh
+
+echo 'Gate V2 NBR 15287:2025 + N15-B2B artigo científico concluído.'

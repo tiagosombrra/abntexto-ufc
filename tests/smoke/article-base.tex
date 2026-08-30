@@ -1,0 +1,76 @@
+\DocumentMetadata{pdfstandard=A-2b,pdfversion=1.7,lang=pt-BR}
+\documentclass{abntexto-ufc}
+
+\ifdefined\UFCArticleCompatibilitySetup
+  \ufcsetup{
+    tipo = artigo,
+    impressao = anverso,
+    autor = {Maria Silva},
+    titulo = {Perfil Normativo de Artigo Científico},
+    subtitulo = {Fixture de Validação},
+    variacao-titulo = {Normative Scientific Article Profile: Validation Fixture},
+    data-submissao = {15 de agosto de 2026},
+    data-aprovacao = {29 de agosto de 2026},
+    curriculo-resumido-autor = {Pesquisadora na área de normalização acadêmica},
+    vinculo-institucional-autor = {Universidade Federal do Ceará},
+    contato-autor = {maria.silva@example.org},
+    fonte = times,
+    fonte-estrita = nao
+  }
+\else
+  \ufcsetup{
+    type = article,
+    print-mode = single-sided,
+    author = {Maria Silva},
+    title = {Perfil Normativo de Artigo Científico},
+    subtitle = {Fixture de Validação},
+    title-variant = {Normative Scientific Article Profile: Validation Fixture},
+    submission-date = {15 de agosto de 2026},
+    approval-date = {29 de agosto de 2026},
+    author-short-curriculum = {Pesquisadora na área de normalização acadêmica},
+    author-affiliation = {Universidade Federal do Ceará},
+    author-contact = {maria.silva@example.org},
+    font = times,
+    strict-font = false
+  }
+\fi
+
+\ufcbibliografia{tests/fixtures/referencias-v2.bib}
+
+\begin{document}
+
+\ifdefined\UFCArticleCompatibilitySetup
+  \imprimircabecalhoartigo
+\else
+  \ufcPrintArticleHeader
+\fi
+
+\imprimirresumo{tests/fixtures/article-summary.tex}
+\imprimirabstract{tests/fixtures/article-abstract.tex}
+
+\ifdefined\UFCArticleCompatibilitySetup
+  \imprimirdatasartigo
+\else
+  \ufcPrintArticleDates
+\fi
+
+\section{Introdução}
+O artigo científico exige uma organização contínua dos elementos, sem a quebra automática de página entre as seções primárias. Esta fixture verifica o comportamento básico do perfil implementado para a Universidade Federal do Ceará.
+
+A introdução também confirma o recuo de primeira linha de dois centímetros e o espaçamento simples adotado pelo perfil, preservando o corpo tipográfico de doze pontos definido pela classe.
+
+\section{Desenvolvimento}
+O desenvolvimento utiliza o mesmo fluxo contínuo e mantém a numeração progressiva das seções. A implementação é deliberadamente isolada dos perfis de trabalhos acadêmicos e projetos de pesquisa já certificados.
+
+A bibliografia continua sendo processada pela infraestrutura vigente da classe, com a edição corrente da norma de referências selecionada pela camada de compatibilidade existente.
+
+\subsection{Validação do perfil}
+O teste exercita as formas canônica em inglês e de compatibilidade em português para a seleção do perfil e para os metadados específicos do artigo.
+
+\section{Considerações finais}
+A fixture termina o corpo textual sem solicitar nova página antes das referências, permitindo verificar que o cabeçalho REFERÊNCIAS segue o fluxo contínuo previsto para artigos científicos.
+
+\nocite{silva2020}
+\imprimirreferencias
+
+\end{document}
