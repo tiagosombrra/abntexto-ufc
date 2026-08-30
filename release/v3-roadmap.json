@@ -6,7 +6,8 @@
   "status": "ACTIVE",
   "active_branch": "refactor/v3-r1-rebaseline",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "latest_completed_implementation_sha": "d4a348c6bb1600f0fc616c1ce23c1636db606097",
+  "latest_completed_implementation_sha": "1cd88899bd25592944e37042419aa146e39c1de6",
+  "latest_migration_contract_reconciliation_sha": "66c1005f326ee6523e420165ddb9de595ef49d3d",
   "phase": "V3-R1",
   "active_block": "R1-BLOCK-3",
   "active_block_name": "residual path-consumer reconciliation",
@@ -17,16 +18,25 @@
     "retain_dormant_future_phase_files": false,
     "temporary_migration_contracts_allowed_only_while_consumed": true,
     "delete_or_consolidate_unused_migration_contracts": true,
-    "historical_evidence_storage": ["git_commits", "git_tags", "github_releases", "certified_commit_and_blob_shas", "issues_and_pull_requests"]
+    "historical_evidence_storage": [
+      "git_commits",
+      "git_tags",
+      "github_releases",
+      "certified_commit_and_blob_shas",
+      "issues_and_pull_requests"
+    ]
   },
   "language_policy": {
     "engineering_language": "English",
     "validator_technical_ui_language": "English",
     "portuguese_project_api_allowed_in_final_v3": false,
-    "r1_runtime_api_rewrite_allowed": false
+    "r1_runtime_api_rewrite_allowed": false,
+    "upstream_portuguese_identifiers_allowed_only_at_explicit_boundaries": true
   },
   "ci_policy": {
-    "automatic_workflows_during_r1_reconstruction": false,
+    "permanent_automatic_workflows_during_r1_reconstruction": false,
+    "temporary_one_shot_migration_executor_allowed": true,
+    "temporary_executor_must_be_removed_before_checkpoint": true,
     "automatic_gate_when_restored": "static_and_cheap",
     "path_filters_where_practical": true,
     "cancel_in_progress": true,
@@ -34,8 +44,16 @@
     "workflow_repository_mutation_allowed": false
   },
   "blocks": {
-    "R1-BLOCK-1": {"status": "DONE", "closure_sha": "f8509ba01a208b634c63a28b3c20cbf7ab8c75dd", "name": "canonical physical naming"},
-    "R1-BLOCK-2": {"status": "DONE", "closure_sha": "03d7f5ceb1a325d26c712ba5e619ee85530a022b", "name": "legacy purge and active-tree minimization"},
+    "R1-BLOCK-1": {
+      "status": "DONE",
+      "closure_sha": "f8509ba01a208b634c63a28b3c20cbf7ab8c75dd",
+      "name": "canonical physical naming"
+    },
+    "R1-BLOCK-2": {
+      "status": "DONE",
+      "closure_sha": "03d7f5ceb1a325d26c712ba5e619ee85530a022b",
+      "name": "legacy purge and active-tree minimization"
+    },
     "R1-BLOCK-3": {
       "status": "ACTIVE",
       "name": "residual path-consumer reconciliation",
@@ -44,28 +62,54 @@
         "4fd0e61ea198ed1307e511895b254c59f5ea0dc4",
         "e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3",
         "1b6db7598d69a6a0d8442d09e589fa8d2e151477",
-        "d4a348c6bb1600f0fc616c1ce23c1636db606097"
+        "d4a348c6bb1600f0fc616c1ce23c1636db606097",
+        "1cd88899bd25592944e37042419aa146e39c1de6",
+        "66c1005f326ee6523e420165ddb9de595ef49d3d"
       ],
       "work": [
-        "frontmatter integration and checker reconciliation",
-        "remaining standards path reconciliation",
-        "current document and fixture path reconciliation",
-        "removed N-phase and v2 checker references",
-        "project-owned oracle and retired campaign terminology",
+        "remaining tests/run.py dependency graph audit",
+        "remaining standards validation identifier reconciliation",
+        "remaining active normativa/tests-normativa/tests-v2 path references",
+        "remaining N-phase B2R and project-owned oracle engineering identities",
+        "tools validator and metadata consumer integrity where required by current test graph",
         "runner-to-file integrity",
-        "evidence-to-consumer integrity"
+        "evidence-to-consumer integrity",
+        "permanent repository and static checks"
       ],
       "dependency_adjustments": {
         "makefile_development_build_pulled_forward": true,
         "reason": "reference-document integration directly depends on make compile",
         "runtime_version_change_authorized": false
+      },
+      "frontmatter_rebaseline": {
+        "status": "DONE",
+        "implementation_sha": "1cd88899bd25592944e37042419aa146e39c1de6",
+        "test_migration_contract_sha": "66c1005f326ee6523e420165ddb9de595ef49d3d",
+        "temporary_executors_present": false,
+        "upstream_pretextual_command_preserved": true
       }
     },
-    "R1-BLOCK-4": {"status": "BLOCKED", "name": "remaining tools validator and metadata technical rebaseline", "note": "development Makefile build path was resolved as a Block 3 prerequisite"},
-    "R1-BLOCK-5": {"status": "BLOCKED", "name": "distribution and public bundle flattening"},
-    "R1-BLOCK-6": {"status": "BLOCKED", "name": "permanent static gates"},
-    "R1-BLOCK-7": {"status": "BLOCKED", "name": "optimized workflow restoration"},
-    "R1-BLOCK-8": {"status": "BLOCKED", "name": "repository identity and exhaustive R1 closure"}
+    "R1-BLOCK-4": {
+      "status": "BLOCKED",
+      "name": "remaining tools validator and metadata technical rebaseline",
+      "note": "development Makefile build path was resolved as a Block 3 prerequisite"
+    },
+    "R1-BLOCK-5": {
+      "status": "BLOCKED",
+      "name": "distribution and public bundle flattening"
+    },
+    "R1-BLOCK-6": {
+      "status": "BLOCKED",
+      "name": "permanent static gates"
+    },
+    "R1-BLOCK-7": {
+      "status": "BLOCKED",
+      "name": "optimized workflow restoration"
+    },
+    "R1-BLOCK-8": {
+      "status": "BLOCKED",
+      "name": "repository identity and exhaustive R1 closure"
+    }
   },
   "phases": [
     {"id": "V3-R0", "status": "DONE"},
@@ -81,5 +125,5 @@
     {"id": "V3-FINAL", "status": "BLOCKED", "depends_on": ["V3-RC"]},
     {"id": "V3-CLEANUP", "status": "BLOCKED", "depends_on": ["V3-FINAL"]}
   ],
-  "next_action": "Migrate the front-matter integration and checker family end-to-end, then continue through the remaining tests/run.py dependency graph."
+  "next_action": "Complete the residual active-tree audit across the remaining tests/run.py graph, standards validation IDs, tools, validator and metadata; do not advance to Block 4 while a stale active consumer remains."
 }
