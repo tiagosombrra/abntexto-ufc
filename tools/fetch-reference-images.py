@@ -10,12 +10,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 ASSETS = (
     (
-        "figures/ufc-campus-pici.jpg",
+        "template/figures/ufc-campus-pici.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/2/23/Campus_do_Pici.jpg",
         "5f431612cdbfbb088c37c685a0e3c93852e96ccd",
     ),
     (
-        "figures/ufc-reitoria.jpg",
+        "template/figures/ufc-reitoria.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/3/39/Reitoria_da_UFC.jpg",
         "b6746bb53d82dae52330805ca0a08f029b773b2e",
     ),
@@ -36,7 +36,7 @@ def download(url: str) -> bytes:
         except Exception as exc:
             last_error = exc
             if attempt < 3:
-                time.sleep(2 ** attempt)
+                time.sleep(2**attempt)
     raise SystemExit(f"Unable to download {url}: {last_error}")
 
 

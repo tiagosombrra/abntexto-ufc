@@ -6,10 +6,10 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-NORMATIVE_DIR = ROOT / "normativa"
-MAP_PATH = NORMATIVE_DIR / "reference-guide-map.json"
-CATALOG_PATH = NORMATIVE_DIR / "catalog.json"
-ATOMIC_PATH = NORMATIVE_DIR / "atomic-rules.json"
+STANDARDS_DIR = ROOT / "standards"
+MAP_PATH = STANDARDS_DIR / "reference-guide-map.json"
+CATALOG_PATH = STANDARDS_DIR / "catalog.json"
+ATOMIC_PATH = STANDARDS_DIR / "atomic-rules.json"
 ALLOWED_CLASSIFICATIONS = {"normative", "institutional", "model-policy", "example"}
 
 
@@ -19,7 +19,6 @@ def load_json(path: Path) -> Any:
 
 def collect_declared_rule_ids(value: Any) -> set[str]:
     rule_ids: set[str] = set()
-
     if isinstance(value, dict):
         for key, item in value.items():
             if key in {"rule_id", "expected_rule_id"} and isinstance(item, str):
@@ -31,11 +30,10 @@ def collect_declared_rule_ids(value: Any) -> set[str]:
     elif isinstance(value, list):
         for item in value:
             rule_ids.update(collect_declared_rule_ids(item))
-
     return rule_ids
 
 
-def collect_rule_ids(catalog: dict, atomic: dict) -> set[str]:
+def collect_rule_ids(catalog: dict[str, Any], atomic: dict[str, Any]) -> set[str]:
     rule_ids = {rule["id"] for rule in catalog.get("rules", []) if "id" in rule}
     rule_ids.update(atomic.get("keep_atomic", []))
     for group in atomic.get("groups", {}).values():
@@ -43,11 +41,10 @@ def collect_rule_ids(catalog: dict, atomic: dict) -> set[str]:
             if "id" in rule:
                 rule_ids.add(rule["id"])
 
-    for path in sorted(NORMATIVE_DIR.glob("*.json")):
+    for path in sorted(STANDARDS_DIR.glob("*.json")):
         if path == MAP_PATH:
             continue
         rule_ids.update(collect_declared_rule_ids(load_json(path)))
-
     return rule_ids
 
 
