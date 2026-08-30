@@ -31,7 +31,6 @@ jobs:
           import subprocess
           from pathlib import Path
 
-          ROOT = Path('.')
           tracked = set(subprocess.check_output(['git', 'ls-files'], text=True).splitlines())
 
           excluded = {
@@ -68,7 +67,7 @@ jobs:
               'tests/checks/normative_vector_rule_oracle.py': 'tests/checks/normative_vector_rule_validation.py',
           }
 
-          doc_map = {
+          document_map = {
               'algoritmos-linhas.tex': 'algorithm-line-numbering.tex',
               'build-minimo.tex': 'minimal-build.tex',
               'citacoes-referencias.tex': 'citations-references.tex',
@@ -117,99 +116,130 @@ jobs:
               'tests/smoke/perfil-base.tex': 'tests/smoke/base-profile.tex',
           }
 
-          for old, new in {**checker_map, **fixture_map}.items():
-              if new not in tracked:
-                  raise SystemExit(f'Exact migration target does not exist: {old} -> {new}')
-
-          def resolve_old_test_path(old: str) -> str | None:
-              if old in checker_map:
-                  return checker_map[old]
-              if old in fixture_map:
-                  return fixture_map[old]
-              if old.startswith('tests/v2-') and old.endswith('-check.sh'):
-                  semantic = old[len('tests/v2-'):-len('-check.sh')]
-                  candidate = f'tests/integration/{semantic}.sh'
+          def document_target(old: str) -> str | None:
+              basename = old.rsplit('/', 1)[-1]
+              if basename in document_map:
+                  candidate = f'tests/documents/{document_map[basename]}'
                   return candidate if candidate in tracked else None
-              if old.startswith('tests/normativa/') and old.endswith('.tex'):
-                  basename = old.split('/')[-1]
-                  if basename in doc_map:
-                      candidate = f'tests/documents/{doc_map[basename]}'
-                      return candidate if candidate in tracked else None
-                  if basename.startswith('textual-oracle-'):
-                      stem = basename[len('textual-oracle-'):-4]
-                      candidate = f'tests/documents/mainmatter-{stem}-test.tex'
-                      return candidate if candidate in tracked else None
-                  candidate = f'tests/documents/{basename}'
+              if basename.startswith('textual-oracle-'):
+                  stem = basename[len('textual-oracle-'):-4]
+                  candidate = f'tests/documents/mainmatter-{stem}-test.tex'
                   return candidate if candidate in tracked else None
-              return None
+              candidate = f'tests/documents/{basename}'
+              return candidate if candidate in tracked else None
 
-          text_paths = [
+          legacy_path = re.compile(
+              r'tests/(?:v2-[A-Za-z0-9_.-]+-check\.sh|normativa/[A-Za-z0-9_.-]+\.tex|checks/normative_(?:n[0-9]+_[A-Za-z0-9_]+|vector_rule_oracle)\.py|fixtures/(?:pretextuais/)?[A-Za-z0-9_.-]+\.(?:tex|bib|py|cpp)|smoke/perfil-base\.tex)'
+          )
+          direct_command = re.compile(r'^\s*(?:python3|sh)\s+(?P<path>tests/[^\s]+)(?:\s+.*)?$')
+
+          paths = [
               item for item in sorted(tracked)
               if item.startswith(('tests/integration/', 'tests/checks/', 'tests/documents/', 'tests/smoke/'))
               and item not in excluded
               and Path(item).suffix in {'.sh', '.py', '.tex'}
           ]
 
-          literal_old = re.compile(
-              r'(tests/(?:v2-[A-Za-z0-9_.-]+-check\.sh|normativa/[A-Za-z0-9_.-]+\.tex|checks/normative_[A-Za-z0-9_]+\.py|fixtures/(?:pretextuais/)?[A-Za-z0-9_.-]+\.(?:tex|bib|py|cpp)|smoke/perfil-base\.tex))'
-          )
-
           changed: set[str] = set()
           unresolved: list[str] = []
-          replacements: list[str] = []
+          removed_dead_calls: list[str] = []
+          applied: list[str] = []
 
-          for item in text_paths:
+          for item in paths:
               path = Path(item)
-              text = path.read_text(encoding='utf-8')
-              original = text
+              lines = path.read_text(encoding='utf-8').splitlines()
+              out: list[str] = []
+              file_changed = False
 
-              for old, new in checker_map.items():
-                  text = text.replace(old, new)
-              for old, new in fixture_map.items():
-                  text = text.replace(old, new)
+              for line in lines:
+                  current = line
 
-              matches = sorted(set(match.group(1) for match in literal_old.finditer(text)))
-              for old in matches:
-                  new = resolve_old_test_path(old)
-                  if new is None:
-                      unresolved.append(f'{item}: {old}')
-                      continue
-                  text = text.replace(old, new)
-                  replacements.append(f'{item}: {old} -> {new}')
+                  for old, new in fixture_map.items():
+                      if old in current:
+                          if new not in tracked:
+                              unresolved.append(f'{item}: missing fixture target {old} -> {new}')
+                          else:
+                              current = current.replace(old, new)
+                              applied.append(f'{item}: {old} -> {new}')
 
-              text = text.replace('ROOT / "normativa"', 'ROOT / "standards"')
-              text = text.replace("ROOT / 'normativa'", "ROOT / 'standards'")
-              text = text.replace('Path("normativa")', 'Path("standards")')
-              text = text.replace("Path('normativa')", "Path('standards')")
+                  for old, new in checker_map.items():
+                      if old not in current:
+                          continue
+                      if new in tracked:
+                          current = current.replace(old, new)
+                          applied.append(f'{item}: {old} -> {new}')
+                      else:
+                          command_match = direct_command.match(current)
+                          if command_match and command_match.group('path') == old:
+                              removed_dead_calls.append(f'{item}: {old}')
+                              current = ''
+                          else:
+                              unresolved.append(
+                                  f'{item}: historical checker has no current owner in non-command context: {old}'
+                              )
 
-              if text != original:
-                  path.write_text(text, encoding='utf-8')
+                  for old in sorted(set(legacy_path.findall(current))):
+                      if old.startswith('tests/v2-') and old.endswith('-check.sh'):
+                          semantic = old[len('tests/v2-'):-len('-check.sh')]
+                          target = f'tests/integration/{semantic}.sh'
+                      elif old.startswith('tests/normativa/'):
+                          target = document_target(old)
+                      elif old in fixture_map:
+                          target = fixture_map[old]
+                      elif old in checker_map:
+                          target = checker_map[old] if checker_map[old] in tracked else None
+                      elif old == 'tests/smoke/perfil-base.tex':
+                          target = 'tests/smoke/base-profile.tex'
+                      else:
+                          target = None
+
+                      if target and target in tracked:
+                          current = current.replace(old, target)
+                          applied.append(f'{item}: {old} -> {target}')
+                      else:
+                          command_match = direct_command.match(current)
+                          if command_match and command_match.group('path') == old and old not in tracked:
+                              removed_dead_calls.append(f'{item}: {old}')
+                              current = ''
+                          else:
+                              unresolved.append(f'{item}: unresolved active path {old}')
+
+                  current = current.replace('ROOT / "normativa"', 'ROOT / "standards"')
+                  current = current.replace("ROOT / 'normativa'", "ROOT / 'standards'")
+                  current = current.replace('Path("normativa")', 'Path("standards")')
+                  current = current.replace("Path('normativa')", "Path('standards')")
+
+                  if current != line:
+                      file_changed = True
+                  if current:
+                      out.append(current)
+
+              if file_changed:
+                  path.write_text('\n'.join(out) + '\n', encoding='utf-8')
                   changed.add(item)
 
           if unresolved:
-              raise SystemExit('Unresolved exact active test paths:\n' + '\n'.join(sorted(set(unresolved))))
+              raise SystemExit('Unresolved active path consumers:\n' + '\n'.join(sorted(set(unresolved))))
 
-          # Final executable-consumer literal path integrity. Negative legacy guardrails and
-          # distribution/certification families are intentionally outside this topology batch.
-          stale = []
-          for item in text_paths:
+          stale: list[str] = []
+          for item in paths:
               text = Path(item).read_text(encoding='utf-8')
-              for match in literal_old.finditer(text):
-                  old = match.group(1)
-                  if old.startswith('tests/checks/normative_') and old in tracked:
-                      continue
-                  if old.startswith('tests/fixtures/') and old in tracked:
-                      continue
+              for old in sorted(set(legacy_path.findall(text))):
                   stale.append(f'{item}: {old}')
               if 'ROOT / "normativa"' in text or "ROOT / 'normativa'" in text:
                   stale.append(f'{item}: constructed normativa root')
           if stale:
-              raise SystemExit('Stale executable consumer references remain:\n' + '\n'.join(sorted(set(stale))))
+              raise SystemExit('Stale active consumer paths remain:\n' + '\n'.join(sorted(set(stale))))
 
-          print(f'Changed {len(changed)} active consumer files.')
-          print(f'Applied {len(replacements)} resolved literal migrations.')
+          print(f'Changed files: {len(changed)}')
+          print(f'Applied exact path migrations: {len(applied)}')
+          print(f'Removed dead direct checker/wrapper calls: {len(removed_dead_calls)}')
           for item in sorted(changed):
               print(f'  {item}')
+          if removed_dead_calls:
+              print('Removed dead calls:')
+              for item in sorted(set(removed_dead_calls)):
+                  print(f'  {item}')
           PY
 
           python3 -m py_compile $(git ls-files 'tests/checks/*.py')
@@ -220,7 +250,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add tests
           if git diff --cached --quiet; then
-            echo 'No exact path-consumer changes to commit.'
+            echo 'No active path-consumer changes to commit.'
             exit 0
           fi
           git commit -m 'refactor: reconnect active test consumers'
