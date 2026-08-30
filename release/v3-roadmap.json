@@ -6,7 +6,7 @@
   "status": "ACTIVE",
   "active_branch": "refactor/v3-r1-rebaseline",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "latest_completed_implementation_sha": "e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3",
+  "latest_completed_implementation_sha": "d4a348c6bb1600f0fc616c1ce23c1636db606097",
   "phase": "V3-R1",
   "active_block": "R1-BLOCK-3",
   "active_block_name": "residual path-consumer reconciliation",
@@ -22,7 +22,8 @@
   "language_policy": {
     "engineering_language": "English",
     "validator_technical_ui_language": "English",
-    "portuguese_project_api_allowed_in_final_v3": false
+    "portuguese_project_api_allowed_in_final_v3": false,
+    "r1_runtime_api_rewrite_allowed": false
   },
   "ci_policy": {
     "automatic_workflows_during_r1_reconstruction": false,
@@ -33,26 +34,21 @@
     "workflow_repository_mutation_allowed": false
   },
   "blocks": {
-    "R1-BLOCK-1": {
-      "status": "DONE",
-      "closure_sha": "f8509ba01a208b634c63a28b3c20cbf7ab8c75dd",
-      "name": "canonical physical naming"
-    },
-    "R1-BLOCK-2": {
-      "status": "DONE",
-      "closure_sha": "03d7f5ceb1a325d26c712ba5e619ee85530a022b",
-      "name": "legacy purge and active-tree minimization"
-    },
+    "R1-BLOCK-1": {"status": "DONE", "closure_sha": "f8509ba01a208b634c63a28b3c20cbf7ab8c75dd", "name": "canonical physical naming"},
+    "R1-BLOCK-2": {"status": "DONE", "closure_sha": "03d7f5ceb1a325d26c712ba5e619ee85530a022b", "name": "legacy purge and active-tree minimization"},
     "R1-BLOCK-3": {
       "status": "ACTIVE",
       "name": "residual path-consumer reconciliation",
       "completed_checkpoints": [
         "8d8f7081b123999618d4d6e5ec5009a18ce0a89b",
         "4fd0e61ea198ed1307e511895b254c59f5ea0dc4",
-        "e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3"
+        "e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3",
+        "1b6db7598d69a6a0d8442d09e589fa8d2e151477",
+        "d4a348c6bb1600f0fc616c1ce23c1636db606097"
       ],
       "work": [
-        "standards path reconciliation",
+        "frontmatter integration and checker reconciliation",
+        "remaining standards path reconciliation",
         "current document and fixture path reconciliation",
         "removed N-phase and v2 checker references",
         "project-owned oracle and retired campaign terminology",
@@ -65,11 +61,7 @@
         "runtime_version_change_authorized": false
       }
     },
-    "R1-BLOCK-4": {
-      "status": "BLOCKED",
-      "name": "remaining tools validator and metadata technical rebaseline",
-      "note": "development Makefile build path was resolved as a Block 3 prerequisite"
-    },
+    "R1-BLOCK-4": {"status": "BLOCKED", "name": "remaining tools validator and metadata technical rebaseline", "note": "development Makefile build path was resolved as a Block 3 prerequisite"},
     "R1-BLOCK-5": {"status": "BLOCKED", "name": "distribution and public bundle flattening"},
     "R1-BLOCK-6": {"status": "BLOCKED", "name": "permanent static gates"},
     "R1-BLOCK-7": {"status": "BLOCKED", "name": "optimized workflow restoration"},
@@ -89,5 +81,5 @@
     {"id": "V3-FINAL", "status": "BLOCKED", "depends_on": ["V3-RC"]},
     {"id": "V3-CLEANUP", "status": "BLOCKED", "depends_on": ["V3-FINAL"]}
   ],
-  "next_action": "Audit the remaining tests/run.py integration entry points and their direct dependencies for stale paths and retired engineering identity."
+  "next_action": "Migrate the front-matter integration and checker family end-to-end, then continue through the remaining tests/run.py dependency graph."
 }

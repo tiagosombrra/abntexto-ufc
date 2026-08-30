@@ -8,10 +8,10 @@ Updated: 2026-08-30
 
 - Active branch: `refactor/v3-r1-rebaseline`.
 - Certified v2 baseline: `main` at `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
-- Latest completed implementation checkpoint: `e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3`.
+- Latest completed implementation checkpoint: `d4a348c6bb1600f0fc616c1ce23c1636db606097`.
 - R1 Block 1: **DONE** — canonical physical naming.
 - R1 Block 2: **DONE** — legacy purge and active-tree minimization.
-- Current subgate: **R1 Block 3 — residual path-consumer reconciliation**.
+- R1 Block 3: **ACTIVE** — residual path-consumer reconciliation.
 
 ## Authorities
 
@@ -24,23 +24,17 @@ Updated: 2026-08-30
 
 A subgate cannot close while these authorities disagree.
 
-## Active-tree policy
+## Governing policies
 
-The v3 branch is a working product tree, not an archive. Historical/process evidence belongs to Git commits, tags, releases, certified SHAs, issues, and pull requests. No history directory, completed campaign ledger, dormant future-feature artifact, or compatibility file is retained solely for convenience. Temporary migration contracts remain only while directly consumed by the active migration.
+The active v3 branch is a working product tree, not an archive. Historical/process evidence belongs to Git commits, tags, releases, certified SHAs, issues, and pull requests. No history directory, completed campaign ledger, dormant future-feature artifact, or compatibility file is retained solely for convenience.
 
-## Engineering-language policy
+Project-controlled technical surfaces are English. Portuguese is restricted to academic/rendered content, bibliography data, official UFC/ABNT wording, literal Portuguese output under test, or a necessary upstream/current-runtime identifier at an explicit boundary. Runtime Portuguese keys/values remain unchanged during R1 and migrate only in R2.
 
-Project-controlled technical surfaces are English: paths/files, LaTeX project API and internals, setup state, source comments, diagnostics, scripts, tests, workflows, technical documentation, validator implementation/UI, machine-readable technical keys, and release tooling.
-
-Portuguese is restricted to academic/rendered content, bibliography data, official UFC/ABNT wording, literal Portuguese output under test, or a necessary upstream identifier at an explicit integration boundary.
-
-## CI policy
-
-The R1 reconstruction branch has no automatic workflows. CI returns near R1 closure only after permanent static gates and current paths are stable. Restored intermediate CI must be cheap, filtered, and cancellation-aware; heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine work is candidate/certification-only.
+The R1 reconstruction branch has no automatic workflows. CI returns near R1 closure after permanent static gates and current paths are stable. Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine work is candidate/certification-only.
 
 ## V3-R0
 
-**DONE.** Frozen migration contracts were established before implementation.
+**DONE.** Migration contracts were frozen before implementation.
 
 ## V3-R1
 
@@ -52,31 +46,31 @@ The R1 reconstruction branch has no automatic workflows. CI returns near R1 clos
 
 **DONE** at `03d7f5ceb1a325d26c712ba5e619ee85530a022b`.
 
-The active tree no longer carries v2 handoff/audit files, history directories, N15/B2R ledgers, N9–N12 phase snapshots, the deprecated `ufctex.cls`, dormant article contracts, N4 coverage campaign ledgers, the obsolete N2 reconciliation ledger, or Portuguese v2 normative engineering documents. Current evidence files remain only when consumed by current validators.
-
 ### Block 3 — residual path-consumer reconciliation
 
-**ACTIVE.** Repair remaining stale references inside active files without performing the R2 runtime API rewrite.
+**ACTIVE.** Repair stale references inside active files without performing the R2 runtime API rewrite.
 
-Completed within Block 3:
+Completed checkpoints:
 
-- `8d8f7081b123999618d4d6e5ec5009a18ce0a89b`: central normative loaders moved from `normativa/` to `standards/` and stopped exposing N3/N4 campaign identity as the current full-contract model;
-- `4fd0e61ea198ed1307e511895b254c59f5ea0dc4`: negative-path and normative-complement validation moved to current document/checker paths and dropped N13 campaign identity/duplicate execution;
-- `e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3`: canonical reference build path restored, reference-guide paths moved to `standards/` and `template/`, reference assets moved under `template/figures/`, and stale physical figure/code references that blocked the reference build were removed.
+- `8d8f7081b123999618d4d6e5ec5009a18ce0a89b`: central normative loaders moved from `normativa/` to `standards/`; current full-contract machinery no longer exposes N3/N4 campaign identity.
+- `4fd0e61ea198ed1307e511895b254c59f5ea0dc4`: negative-path and normative-complement validation moved to current paths/checkers; N13 campaign identity and duplicate execution removed.
+- `e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3`: canonical reference build path restored; reference-guide and reference assets moved to current topology; stale physical example references repaired.
+- `1b6db7598d69a6a0d8442d09e589fa8d2e151477`: layout, font-configuration, PDF-validation-core, PDF-geometry, and locator-audit gates reconnected to current fixtures/contracts.
+- `d4a348c6bb1600f0fc616c1ce23c1636db606097`: PDF validator and PDF/A gates moved to `template/main.pdf`; PDF/A controlled negative validation retained while N13 campaign identity was removed.
 
-The Makefile development build entry point was pulled forward from the old Block 4 scope because `reference-document.sh` directly depends on `make compile`. This is a dependency correction, not a runtime/API migration: `VERSION` remains `2.1.0` until the class/runtime version changes in the appropriate phase.
+The Makefile development build was pulled forward from the former Block 4 scope because `reference-document.sh` directly depends on `make compile`. This is dependency correction, not runtime/API migration; class/runtime version remains 2.1.0 until its designated phase.
 
 Remaining Block 3 work:
 
-- inspect every script called by `tests/run.py` and its direct checker/tool dependencies;
-- remove remaining `normativa/`, `tests/normativa/`, removed `tests/v2-*`, N-phase, and project-owned `oracle` path/engineering references;
-- reconcile remaining stale file references in the reference template and current standards/checkers;
-- ensure every active runner target exists and every current evidence artifact has a current consumer;
-- run the permanent repository/static checks once the dependency graph is fully current.
+- migrate the front-matter integration/checker family to `standards/frontmatter-*` and `tests/documents/frontmatter-*`;
+- inspect every remaining `tests/run.py` integration entry point and direct dependency;
+- remove remaining `normativa/`, `tests/normativa/`, removed `tests/v2-*`, N-phase, and project-owned `oracle` engineering references;
+- verify runner-to-file and evidence-to-consumer integrity;
+- run permanent repository/static checks once the dependency graph is current.
 
 ### Remaining R1 blocks
 
-4. Remaining tools, validator, and metadata path/technical-language rebaseline. The Makefile development build path is already resolved as a Block 3 prerequisite.
+4. Remaining tools, validator, and metadata technical rebaseline. The Makefile development build is already resolved as a Block 3 prerequisite.
 5. Distribution/Overleaf/CTAN staging with repository `template/` flattened only in public bundles.
 6. Permanent static gates for topology, language, inventory, and plan consistency.
 7. Optimized workflow restoration.
@@ -88,7 +82,7 @@ Remaining Block 3 work:
 - no history/archive directory;
 - zero obsolete physical paths and stale active references;
 - zero project-owned Portuguese technical paths;
-- zero active v2/N-phase/N15/B2R/`oracle` engineering identity outside explicit upstream/runtime boundaries that are scheduled for R2;
+- zero active v2/N-phase/N15/B2R/`oracle` engineering identity outside current runtime/upstream boundaries scheduled for R2;
 - zero generated artifacts or temporary migration scaffolding;
 - canonical template/class/build/tool/test/distribution paths resolve;
 - static gates pass;
@@ -101,9 +95,9 @@ Remaining Block 3 work:
 - **V3-R3:** standards/tests/language semantic hardening.
 - **V3-R4:** certification only.
 - **V3-R5:** foundation freeze and current migration/user/maintainer documentation only.
-- **V3-A1/A2:** article work returns when active, using Git history as evidence and reconfirming current sources.
+- **V3-A1/A2:** article work returns against the certified v3 foundation.
 - **V3-H1 → V3-RC → V3-FINAL → V3-CLEANUP** follow in order.
 
 ## Immediate action
 
-Continue R1 Block 3 by auditing the remaining `tests/run.py` integration entry points and their direct dependencies. Do not advance to semantic runtime migration or distribution work while a stale active consumer remains.
+Migrate the front-matter integration/checker family end-to-end, then continue through the remaining `tests/run.py` graph. Do not advance to R2 while a stale active consumer remains.
