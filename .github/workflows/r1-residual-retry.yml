@@ -1,0 +1,45 @@
+name: R1 exact active-consumer path repair retry
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-rebaseline
+    paths:
+      - .github/workflows/r1-residual-retry.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: refactor/v3-r1-rebaseline
+
+      - name: Apply final exact standards mapping and reuse audited repair
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          sed -i \
+            's#normativa/vector-rule-oracle-extension.json#standards/vector-rule-validation-extension.json#g' \
+            tests/checks/normative_table_ibge_vector.py \
+            tests/checks/normative_vector_rule_validation.py
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source = Path('.github/workflows/r1-residual-audit.yml').read_text(encoding='utf-8').splitlines()
+          marker = '        run: |'
+          start = source.index(marker) + 1
+          body = []
+          for line in source[start:]:
+              body.append(line[10:] if line.startswith('          ') else line)
+          Path('/tmp/r1-active-consumer-repair.sh').write_text('\n'.join(body) + '\n', encoding='utf-8')
+          PY
+
+          bash /tmp/r1-active-consumer-repair.sh
