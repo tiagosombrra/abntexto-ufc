@@ -1,9 +1,9 @@
 {
-  "schema_version": 1,
-  "phase": "V3-R0",
+  "schema_version": 2,
+  "phase": "V3-R1",
   "kind": "test-documentation-workflow-migration-contract",
   "target_version": "3.0.0",
-  "status": "FROZEN_FOR_V3_R4_R5",
+  "status": "ACTIVE_R1_RECONCILIATION",
   "policy": {
     "active_test_names_are_semantic": true,
     "active_test_names_embed_old_phase_ids": false,
@@ -11,7 +11,9 @@
     "portuguese_engineering_test_names_allowed": false,
     "portuguese_fixture_payload_allowed_when_behavior_under_test": true,
     "compatibility_equivalence_tests_retained": false,
-    "historical_evidence_preserved": true
+    "historical_evidence_preserved": true,
+    "project_owned_oracle_identity_allowed": false,
+    "upstream_abntexto_pretextual_posttextual_commands_are_integration_boundaries": true
   },
   "test_roots": {
     "tests/checks": "fast static and source-level contract checks",
@@ -38,8 +40,7 @@
   "static_checker_renames": {
     "tests/v2-canonical-identity-check.py": "tests/checks/canonical_identity.py",
     "tests/v2-repository-audit.py": "tests/checks/repository_contract.py",
-    "tests/checks/normative_pretextual_oracle.py": "tests/checks/normative_frontmatter_oracle.py",
-    "tests/checks/pretextual_oracle.py": "tests/checks/frontmatter_oracle.py",
+    "tests/checks/pretextual_oracle.py": "tests/checks/frontmatter_evidence.py",
     "tests/checks/normative_n10_appendix_annex.py": "tests/checks/normative_appendix_annex.py",
     "tests/checks/normative_n10_index_glossary.py": "tests/checks/normative_index_glossary.py",
     "tests/checks/normative_n10_scope.py": "tests/checks/normative_backmatter_scope.py",
@@ -62,6 +63,16 @@
     "tests/checks/normative_n9_scope.py": "tests/checks/normative_objects_scope.py",
     "tests/checks/normative_n9_table_ibge_vector.py": "tests/checks/normative_table_ibge_vector.py",
     "tests/checks/normative_n9_table_typography.py": "tests/checks/normative_table_typography.py"
+  },
+  "frontmatter_reconciliation": {
+    "status": "IMPLEMENTED",
+    "implementation_sha": "1cd88899bd25592944e37042419aa146e39c1de6",
+    "canonical_evidence_checker": "tests/checks/frontmatter_evidence.py",
+    "nonexistent_planned_checker_removed": "tests/checks/normative_frontmatter_oracle.py",
+    "validation_reference_policy": "standards/validation-reference-policy.json",
+    "frontmatter_contract_schema": 2,
+    "n_phase_fields_allowed": false,
+    "article_rules_operational_before_v3_a1": false
   },
   "runner_policy": {
     "old_pattern": "tests/v2-*-check.sh",
@@ -122,7 +133,7 @@
     "tests/smoke/perfil-base.tex": "tests/smoke/base-profile.tex"
   },
   "source_rewrite_requirements": [
-    "all test documents use the canonical v3 English setup/API surface",
+    "all test documents use the canonical v3 English setup/API surface after V3-R2",
     "all test code comments and diagnostics are English",
     "Portuguese text is retained only when it is document payload or expected rendered output",
     "test references to normativa/ are rewritten to standards/",
@@ -162,7 +173,7 @@
     },
     ".github/workflows/reference-validation.yml": {
       "responsibility": "pending value review",
-      "action": "retain through restructuring; prove unique value or remove in V3-H1"
+      "action": "retain through restructuring; prove unique value or remove before R1 closure if redundant"
     },
     ".github/workflows/validator-pages.yml": {
       "responsibility": "validator static deployment",
@@ -181,7 +192,7 @@
     ],
     "new_required": ["docs/MIGRATING-TO-V3.md"],
     "migration_document_policy": "document breaking changes and old-to-new names without implementing runtime aliases",
-    "historical_v2_docs": "move to docs/history and do not treat as current instructions",
+    "historical_v2_docs": "preserve only where historical evidence remains intentionally retained; do not treat as current instructions",
     "active_docs_language": "English engineering prose; Portuguese academic examples are allowed"
   },
   "release_records": {
@@ -191,29 +202,24 @@
       "release/v3-api-migration.json",
       "release/v3-test-migration.json"
     ],
-    "v2_phase_records": {
-      "destination": "release/history/v2/",
-      "meaning": "immutable historical evidence, not live v3 contracts"
+    "historical_v2_records": {
+      "meaning": "historical evidence only, not live v3 contracts"
     }
   },
   "required_v3_r4_gates": [
-    "repository-contract",
-    "canonical-identity",
-    "standards-source",
-    "minimal-build-pdflatex",
-    "minimal-build-lualatex",
-    "reference-document",
-    "profile-matrix",
+    "repository",
+    "reference",
+    "profiles",
     "layout",
     "frontmatter",
     "objects",
     "bibliography",
     "backmatter",
-    "research-projects",
+    "research-project",
     "pdfa",
     "overleaf-proxy",
     "windows-literal-fonts",
-    "distribution"
+    "distribution-source"
   ],
-  "exit_condition": "no active v3 test or workflow depends on removed Portuguese project API, v2 path naming, or superseded phase IDs"
+  "exit_condition": "no active v3 test or workflow depends on removed Portuguese project API, v2 path naming, superseded phase IDs, or project-owned pretextual/posttextual/oracle engineering identity"
 }
