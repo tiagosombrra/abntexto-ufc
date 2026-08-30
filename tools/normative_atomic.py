@@ -10,9 +10,9 @@ from typing import Any
 from normative_catalog import CatalogError, load_catalog, rule_map
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_ATOMIC_RULES = ROOT / "normativa" / "atomic-rules.json"
-DEFAULT_ATOMICITY_PLAN = ROOT / "normativa" / "atomicity-plan.json"
-DEFAULT_VALIDATION_OVERRIDES = ROOT / "normativa" / "validation-overrides.json"
+DEFAULT_ATOMIC_RULES = ROOT / "standards" / "atomic-rules.json"
+DEFAULT_ATOMICITY_PLAN = ROOT / "standards" / "atomicity-plan.json"
+DEFAULT_VALIDATION_OVERRIDES = ROOT / "standards" / "validation-overrides.json"
 
 
 def _load_json(path: Path, label: str) -> dict[str, Any]:

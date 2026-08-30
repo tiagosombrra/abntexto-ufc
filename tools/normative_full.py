@@ -11,7 +11,7 @@ from normative_atomic import load_atomic_contract
 from normative_catalog import ACTIVE_STATUSES, CatalogError, load_catalog, source_map
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_COVERAGE_DIR = ROOT / "normativa"
+DEFAULT_COVERAGE_DIR = ROOT / "standards"
 DEFAULT_COVERAGE_GLOB = "coverage-rules*.json"
 
 NON_NORMATIVE_AUTHORITIES = {"project-policy", "technical-profile"}
@@ -91,11 +91,7 @@ def _resolve_sources(
     return resolution
 
 
-def _build_rule(
-    spec: dict[str, Any],
-    catalog: dict[str, Any],
-    default_phase: str,
-) -> dict[str, Any]:
+def _build_rule(spec: dict[str, Any], catalog: dict[str, Any]) -> dict[str, Any]:
     rule_id = spec.get("id")
     if not isinstance(rule_id, str) or not rule_id:
         raise CatalogError("coverage rule requires a non-empty id")
@@ -123,10 +119,6 @@ def _build_rule(
     if authority != "normative" and authority not in NON_NORMATIVE_AUTHORITIES:
         raise CatalogError(f"coverage rule {rule_id}: invalid authority {authority}")
 
-    phase = spec.get("phase", default_phase)
-    if not isinstance(phase, str) or not phase:
-        raise CatalogError(f"coverage rule {rule_id}: phase must be a non-empty string")
-
     rule = {
         "id": rule_id,
         "category": spec["category"],
@@ -137,7 +129,6 @@ def _build_rule(
         "values": copy.deepcopy(values),
         "validation": copy.deepcopy(validation),
         "authority": authority,
-        "phase": phase,
     }
     if "applicability" in spec:
         if not isinstance(spec["applicability"], dict):
@@ -170,18 +161,17 @@ def load_full_contract(
 ) -> dict[str, Any]:
     if catalog is None:
         catalog = load_catalog()
-    n3 = load_atomic_contract(catalog)
+    atomic_contract = load_atomic_contract(catalog)
     paths = list(coverage_paths) if coverage_paths is not None else _default_coverage_paths()
     if not paths:
         raise CatalogError("coverage rule manifest list is empty")
 
     catalog_reviewed = date.fromisoformat(catalog["reviewed_at"])
-    rules = [copy.deepcopy(rule) for rule in n3["rules"]]
+    rules = [copy.deepcopy(rule) for rule in atomic_contract["rules"]]
     seen = {rule["id"] for rule in rules}
-    promoted: list[str] = []
+    extended_rule_ids: list[str] = []
     manifest_names: list[str] = []
     reviewed_dates: list[date] = []
-    promotion_phases: set[str] = set()
 
     for path in paths:
         manifest = _load_json(path, f"coverage rules {path.name}")
@@ -196,23 +186,17 @@ def load_full_contract(
         reviewed_dates.append(coverage_reviewed)
         manifest_names.append(path.name)
 
-        manifest_phase = manifest.get("phase", "N4")
-        if not isinstance(manifest_phase, str) or not manifest_phase:
-            raise CatalogError(f"{path.name}: phase must be a non-empty string")
-        promotion_phases.add(manifest_phase)
-
         specs = manifest.get("rules")
         if not isinstance(specs, list):
             raise CatalogError(f"{path.name}: rules must be a list")
         for spec in specs:
             if not isinstance(spec, dict):
                 raise CatalogError(f"{path.name}: every coverage rule must be an object")
-            rule = _build_rule(spec, catalog, manifest_phase)
+            rule = _build_rule(spec, catalog)
             if rule["id"] in seen:
                 raise CatalogError(f"coverage rule id collides with existing atomic rule: {rule['id']}")
             seen.add(rule["id"])
-            promoted.append(rule["id"])
-            promotion_phases.add(rule["phase"])
+            extended_rule_ids.append(rule["id"])
             rules.append(rule)
 
     return {
@@ -220,11 +204,10 @@ def load_full_contract(
         "reviewed_at": max(reviewed_dates).isoformat(),
         "catalog_reviewed_at": catalog["reviewed_at"],
         "coverage_manifests": manifest_names,
-        "promotion_phases": sorted(promotion_phases),
-        "n3_rule_count": len(n3["rules"]),
-        "promoted_rule_ids": promoted,
+        "base_rule_count": len(atomic_contract["rules"]),
+        "extended_rule_ids": extended_rule_ids,
         "rules": rules,
-        "compatibility_aliases": copy.deepcopy(n3["compatibility_aliases"]),
+        "compatibility_aliases": copy.deepcopy(atomic_contract["compatibility_aliases"]),
     }
 
 
@@ -237,13 +220,12 @@ def main() -> None:
     rules = full_rule_map(contract)
     normative = sum(rule["authority"] == "normative" for rule in rules.values())
     project = len(rules) - normative
-    phases = ",".join(contract.get("promotion_phases", []))
     print(
         "Full normative contract valid: "
-        f"{len(rules)} atomic rules ({contract['n3_rule_count']} N3 + "
-        f"{len(contract['promoted_rule_ids'])} promotions across "
+        f"{len(rules)} rules ({contract['base_rule_count']} base + "
+        f"{len(contract['extended_rule_ids'])} extensions across "
         f"{len(contract['coverage_manifests'])} manifests), {normative} normative, "
-        f"{project} project/technical-profile; phases={phases}."
+        f"{project} project/technical-profile."
     )
 
 
