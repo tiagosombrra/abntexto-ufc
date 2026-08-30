@@ -32,7 +32,6 @@ jobs:
           from pathlib import Path
 
           tracked = set(subprocess.check_output(['git', 'ls-files'], text=True).splitlines())
-
           excluded = {
               'tests/checks/canonical_identity.py',
               'tests/checks/repository_contract.py',
@@ -45,28 +44,27 @@ jobs:
           }
 
           checker_map = {
-              'tests/checks/normative_n10_appendix_annex.py': 'tests/checks/normative_appendix_annex.py',
-              'tests/checks/normative_n10_index_glossary.py': 'tests/checks/normative_index_glossary.py',
-              'tests/checks/normative_n10_scope.py': 'tests/checks/normative_backmatter_scope.py',
-              'tests/checks/normative_n11_project_structure.py': 'tests/checks/normative_research_project_structure.py',
-              'tests/checks/normative_n11_scope.py': 'tests/checks/normative_research_project_scope.py',
-              'tests/checks/normative_n12_matrix.py': 'tests/checks/normative_certification_matrix.py',
-              'tests/checks/normative_n13_campaign.py': 'tests/checks/normative_negative_campaign.py',
-              'tests/checks/normative_n13_configuration.py': 'tests/checks/normative_configuration.py',
-              'tests/checks/normative_n13_negative_paths.py': 'tests/checks/normative_negative_paths.py',
-              'tests/checks/normative_n13_pdfa.py': 'tests/checks/normative_pdfa.py',
-              'tests/checks/normative_n14_cross_surface.py': 'tests/checks/normative_cross_surface.py',
-              'tests/checks/normative_n14_validator_contract.py': 'tests/checks/normative_validator_contract.py',
-              'tests/checks/normative_n9_campaigns.py': 'tests/checks/normative_coverage_campaigns.py',
-              'tests/checks/normative_n9_equation_display.py': 'tests/checks/normative_equation_display.py',
-              'tests/checks/normative_n9_illustration.py': 'tests/checks/normative_illustration.py',
-              'tests/checks/normative_n9_progress.py': 'tests/checks/normative_coverage_progress.py',
-              'tests/checks/normative_n9_scope.py': 'tests/checks/normative_objects_scope.py',
-              'tests/checks/normative_n9_table_ibge_vector.py': 'tests/checks/normative_table_ibge_vector.py',
-              'tests/checks/normative_n9_table_typography.py': 'tests/checks/normative_table_typography.py',
-              'tests/checks/normative_vector_rule_oracle.py': 'tests/checks/normative_vector_rule_validation.py',
+              'normative_n10_appendix_annex.py': 'normative_appendix_annex.py',
+              'normative_n10_index_glossary.py': 'normative_index_glossary.py',
+              'normative_n10_scope.py': 'normative_backmatter_scope.py',
+              'normative_n11_project_structure.py': 'normative_research_project_structure.py',
+              'normative_n11_scope.py': 'normative_research_project_scope.py',
+              'normative_n12_matrix.py': 'normative_certification_matrix.py',
+              'normative_n13_campaign.py': 'normative_negative_campaign.py',
+              'normative_n13_configuration.py': 'normative_configuration.py',
+              'normative_n13_negative_paths.py': 'normative_negative_paths.py',
+              'normative_n13_pdfa.py': 'normative_pdfa.py',
+              'normative_n14_cross_surface.py': 'normative_cross_surface.py',
+              'normative_n14_validator_contract.py': 'normative_validator_contract.py',
+              'normative_n9_campaigns.py': 'normative_coverage_campaigns.py',
+              'normative_n9_equation_display.py': 'normative_equation_display.py',
+              'normative_n9_illustration.py': 'normative_illustration.py',
+              'normative_n9_progress.py': 'normative_coverage_progress.py',
+              'normative_n9_scope.py': 'normative_objects_scope.py',
+              'normative_n9_table_ibge_vector.py': 'normative_table_ibge_vector.py',
+              'normative_n9_table_typography.py': 'normative_table_typography.py',
+              'normative_vector_rule_oracle.py': 'normative_vector_rule_validation.py',
           }
-
           document_map = {
               'algoritmos-linhas.tex': 'algorithm-line-numbering.tex',
               'build-minimo.tex': 'minimal-build.tex',
@@ -97,7 +95,6 @@ jobs:
               'reference-layout-oracle.tex': 'reference-layout-test.tex',
               'vector-rule-oracle-calibration.tex': 'vector-rule-calibration-test.tex',
           }
-
           fixture_map = {
               'tests/fixtures/exemplo.cpp': 'tests/fixtures/example.cpp',
               'tests/fixtures/exemplo.py': 'tests/fixtures/example.py',
@@ -116,22 +113,57 @@ jobs:
               'tests/smoke/perfil-base.tex': 'tests/smoke/base-profile.tex',
           }
 
-          def document_target(old: str) -> str | None:
-              basename = old.rsplit('/', 1)[-1]
-              if basename in document_map:
-                  candidate = f'tests/documents/{document_map[basename]}'
-                  return candidate if candidate in tracked else None
-              if basename.startswith('textual-oracle-'):
-                  stem = basename[len('textual-oracle-'):-4]
-                  candidate = f'tests/documents/mainmatter-{stem}-test.tex'
-                  return candidate if candidate in tracked else None
-              candidate = f'tests/documents/{basename}'
-              return candidate if candidate in tracked else None
-
-          legacy_path = re.compile(
-              r'tests/(?:v2-[A-Za-z0-9_.-]+-check\.sh|normativa/[A-Za-z0-9_.-]+\.tex|checks/normative_(?:n[0-9]+_[A-Za-z0-9_]+|vector_rule_oracle)\.py|fixtures/(?:pretextuais/)?[A-Za-z0-9_.-]+\.(?:tex|bib|py|cpp)|smoke/perfil-base\.tex)'
+          old_checker_re = re.compile(
+              r'tests/checks/(?P<name>normative_(?:n[0-9]+_[A-Za-z0-9_]+|vector_rule_oracle)\.py)'
           )
-          direct_command = re.compile(r'^\s*(?:python3|sh)\s+(?P<path>tests/[^\s]+)(?:\s+.*)?$')
+          old_wrapper_re = re.compile(r'tests/v2-(?P<name>[A-Za-z0-9_.-]+)-check\.sh')
+          old_document_re = re.compile(r'tests/normativa/(?P<name>[A-Za-z0-9_.-]+\.tex)')
+          old_fixture_re = re.compile(
+              r'tests/fixtures/(?:pretextuais/[A-Za-z0-9_.-]+\.tex|(?:exemplo\.(?:py|cpp)|fontes-documentais\.bib|referencias-6023-2025\.bib|referencias-v2\.bib|n8-reference-layout\.bib))'
+          )
+          old_smoke = 'tests/smoke/perfil-base.tex'
+          old_standards_re = re.compile(r'(?<!tests/)normativa/(?P<name>[A-Za-z0-9_.-]+\.json)')
+
+          def target_for(old: str) -> str | None:
+              match = old_checker_re.fullmatch(old)
+              if match:
+                  new_name = checker_map.get(match.group('name'))
+                  if not new_name:
+                      return None
+                  candidate = f'tests/checks/{new_name}'
+                  return candidate if candidate in tracked else None
+              match = old_wrapper_re.fullmatch(old)
+              if match:
+                  candidate = f"tests/integration/{match.group('name')}.sh"
+                  return candidate if candidate in tracked else None
+              match = old_document_re.fullmatch(old)
+              if match:
+                  name = match.group('name')
+                  mapped = document_map.get(name)
+                  if mapped:
+                      candidate = f'tests/documents/{mapped}'
+                      return candidate if candidate in tracked else None
+                  if name.startswith('textual-oracle-'):
+                      stem = name[len('textual-oracle-'):-4]
+                      candidate = f'tests/documents/mainmatter-{stem}-test.tex'
+                      return candidate if candidate in tracked else None
+                  candidate = f'tests/documents/{name}'
+                  return candidate if candidate in tracked else None
+              if old in fixture_map:
+                  return fixture_map[old] if fixture_map[old] in tracked else None
+              if old == old_smoke:
+                  return 'tests/smoke/base-profile.tex' if 'tests/smoke/base-profile.tex' in tracked else None
+              return None
+
+          def legacy_occurrences(text: str) -> list[str]:
+              values: set[str] = set()
+              values.update(match.group(0) for match in old_checker_re.finditer(text))
+              values.update(match.group(0) for match in old_wrapper_re.finditer(text))
+              values.update(match.group(0) for match in old_document_re.finditer(text))
+              values.update(match.group(0) for match in old_fixture_re.finditer(text))
+              if old_smoke in text:
+                  values.add(old_smoke)
+              return sorted(values)
 
           paths = [
               item for item in sorted(tracked)
@@ -141,81 +173,65 @@ jobs:
           ]
 
           changed: set[str] = set()
+          migrations: list[str] = []
+          dead_calls: list[str] = []
           unresolved: list[str] = []
-          removed_dead_calls: list[str] = []
-          applied: list[str] = []
 
           for item in paths:
               path = Path(item)
               lines = path.read_text(encoding='utf-8').splitlines()
-              out: list[str] = []
-              file_changed = False
+              output: list[str] = []
+              touched = False
 
-              for line in lines:
-                  current = line
-
-                  for old, new in fixture_map.items():
-                      if old in current:
-                          if new not in tracked:
-                              unresolved.append(f'{item}: missing fixture target {old} -> {new}')
-                          else:
-                              current = current.replace(old, new)
-                              applied.append(f'{item}: {old} -> {new}')
-
-                  for old, new in checker_map.items():
-                      if old not in current:
+              for original_line in lines:
+                  line = original_line
+                  remove_line = False
+                  for old in legacy_occurrences(line):
+                      new = target_for(old)
+                      if new:
+                          line = line.replace(old, new)
+                          migrations.append(f'{item}: {old} -> {new}')
+                          touched = True
                           continue
-                      if new in tracked:
-                          current = current.replace(old, new)
-                          applied.append(f'{item}: {old} -> {new}')
+
+                      stripped = line.strip().rstrip('\\').strip()
+                      standalone = (
+                          stripped == old
+                          or re.fullmatch(rf'(?:python3|sh)\s+{re.escape(old)}(?:\s+.*)?', stripped)
+                      )
+                      if standalone and old not in tracked:
+                          dead_calls.append(f'{item}: {old}')
+                          remove_line = True
+                          touched = True
+                          break
+                      unresolved.append(f'{item}: {old}')
+
+                  if remove_line:
+                      if output and output[-1].rstrip().endswith('\\'):
+                          output[-1] = output[-1].rstrip()[:-1].rstrip()
+                      continue
+
+                  line = line.replace('ROOT / "normativa"', 'ROOT / "standards"')
+                  line = line.replace("ROOT / 'normativa'", "ROOT / 'standards'")
+                  line = line.replace('Path("normativa")', 'Path("standards")')
+                  line = line.replace("Path('normativa')", "Path('standards')")
+
+                  for match in list(old_standards_re.finditer(line)):
+                      old = match.group(0)
+                      candidate = f"standards/{match.group('name')}"
+                      if candidate in tracked:
+                          line = line.replace(old, candidate)
+                          migrations.append(f'{item}: {old} -> {candidate}')
+                          touched = True
                       else:
-                          command_match = direct_command.match(current)
-                          if command_match and command_match.group('path') == old:
-                              removed_dead_calls.append(f'{item}: {old}')
-                              current = ''
-                          else:
-                              unresolved.append(
-                                  f'{item}: historical checker has no current owner in non-command context: {old}'
-                              )
+                          unresolved.append(f'{item}: {old}')
 
-                  for old in sorted(set(legacy_path.findall(current))):
-                      if old.startswith('tests/v2-') and old.endswith('-check.sh'):
-                          semantic = old[len('tests/v2-'):-len('-check.sh')]
-                          target = f'tests/integration/{semantic}.sh'
-                      elif old.startswith('tests/normativa/'):
-                          target = document_target(old)
-                      elif old in fixture_map:
-                          target = fixture_map[old]
-                      elif old in checker_map:
-                          target = checker_map[old] if checker_map[old] in tracked else None
-                      elif old == 'tests/smoke/perfil-base.tex':
-                          target = 'tests/smoke/base-profile.tex'
-                      else:
-                          target = None
+                  if line != original_line:
+                      touched = True
+                  output.append(line)
 
-                      if target and target in tracked:
-                          current = current.replace(old, target)
-                          applied.append(f'{item}: {old} -> {target}')
-                      else:
-                          command_match = direct_command.match(current)
-                          if command_match and command_match.group('path') == old and old not in tracked:
-                              removed_dead_calls.append(f'{item}: {old}')
-                              current = ''
-                          else:
-                              unresolved.append(f'{item}: unresolved active path {old}')
-
-                  current = current.replace('ROOT / "normativa"', 'ROOT / "standards"')
-                  current = current.replace("ROOT / 'normativa'", "ROOT / 'standards'")
-                  current = current.replace('Path("normativa")', 'Path("standards")')
-                  current = current.replace("Path('normativa')", "Path('standards')")
-
-                  if current != line:
-                      file_changed = True
-                  if current:
-                      out.append(current)
-
-              if file_changed:
-                  path.write_text('\n'.join(out) + '\n', encoding='utf-8')
+              if touched:
+                  path.write_text('\n'.join(output) + '\n', encoding='utf-8')
                   changed.add(item)
 
           if unresolved:
@@ -224,21 +240,19 @@ jobs:
           stale: list[str] = []
           for item in paths:
               text = Path(item).read_text(encoding='utf-8')
-              for old in sorted(set(legacy_path.findall(text))):
-                  stale.append(f'{item}: {old}')
-              if 'ROOT / "normativa"' in text or "ROOT / 'normativa'" in text:
-                  stale.append(f'{item}: constructed normativa root')
+              stale.extend(f'{item}: {old}' for old in legacy_occurrences(text))
+              stale.extend(f'{item}: {match.group(0)}' for match in old_standards_re.finditer(text))
           if stale:
               raise SystemExit('Stale active consumer paths remain:\n' + '\n'.join(sorted(set(stale))))
 
           print(f'Changed files: {len(changed)}')
-          print(f'Applied exact path migrations: {len(applied)}')
-          print(f'Removed dead direct checker/wrapper calls: {len(removed_dead_calls)}')
+          print(f'Exact migrations: {len(migrations)}')
+          print(f'Removed dead direct calls: {len(dead_calls)}')
           for item in sorted(changed):
               print(f'  {item}')
-          if removed_dead_calls:
+          if dead_calls:
               print('Removed dead calls:')
-              for item in sorted(set(removed_dead_calls)):
+              for item in sorted(set(dead_calls)):
                   print(f'  {item}')
           PY
 
