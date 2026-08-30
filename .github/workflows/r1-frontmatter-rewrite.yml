@@ -1,0 +1,246 @@
+name: R1 front matter rewrite
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-rebaseline
+    paths:
+      - .github/workflows/r1-frontmatter-rewrite.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r1-frontmatter-rewrite
+  cancel-in-progress: false
+
+jobs:
+  rewrite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: refactor/v3-r1-rebaseline
+
+      - name: Reconnect front matter consumers
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git show ca2ab12163d16e5eef80c0c8ce9fea543064ab10:tests/checks/pretextual_oracle.py > tests/checks/frontmatter_evidence.py
+
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import re
+          from pathlib import Path
+
+          ROOT = Path('.')
+
+          exact = {
+              'tests/v2-capes-guidance-check.sh': 'tests/integration/capes-guidance.sh',
+              'tests/v2-pretextual-evidence-check.sh': 'tests/integration/frontmatter-evidence.sh',
+              'tests/v2-pretextual-alignment-evidence-check.sh': 'tests/integration/frontmatter-alignment-evidence.sh',
+              'tests/v2-pretextual-acknowledgements-evidence-check.sh': 'tests/integration/frontmatter-acknowledgments-evidence.sh',
+              'tests/v2-pretextual-summary-evidence-check.sh': 'tests/integration/frontmatter-summary-evidence.sh',
+              'tests/v2-pretextual-cover-evidence-check.sh': 'tests/integration/frontmatter-cover-evidence.sh',
+              'tests/v2-pretextual-title-page-evidence-check.sh': 'tests/integration/frontmatter-title-page-evidence.sh',
+              'tests/v2-pretextual-approval-evidence-check.sh': 'tests/integration/frontmatter-approval-evidence.sh',
+              'tests/v2-pretextual-errata-evidence-check.sh': 'tests/integration/frontmatter-errata-evidence.sh',
+              'tests/v2-pretextual-lists-evidence-check.sh': 'tests/integration/frontmatter-lists-evidence.sh',
+              'tests/v2-pretextual-toc-evidence-check.sh': 'tests/integration/frontmatter-toc-evidence.sh',
+              'tests/v2-pretextual-pagination-evidence-check.sh': 'tests/integration/frontmatter-pagination-evidence.sh',
+              'tests/normativa/pretextuais-trabalho.tex': 'tests/documents/frontmatter-academic-work.tex',
+              'tests/normativa/pretextuais-projeto-anonimo.tex': 'tests/documents/frontmatter-anonymized-project.tex',
+              'tests/normativa/pretextual-oracle-dedication-epigraph.tex': 'tests/documents/frontmatter-dedication-epigraph-test.tex',
+              'tests/normativa/pretextual-oracle-dedication-epigraph-alignment.tex': 'tests/documents/frontmatter-dedication-epigraph-alignment-test.tex',
+              'tests/normativa/pretextual-oracle-cover-academic.tex': 'tests/documents/frontmatter-cover-academic-test.tex',
+              'tests/normativa/pretextual-oracle-cover-project-optional.tex': 'tests/documents/frontmatter-cover-project-optional-test.tex',
+              'tests/normativa/pretextual-oracle-cover-project-anonymized-optional.tex': 'tests/documents/frontmatter-cover-project-anonymized-optional-test.tex',
+              'tests/normativa/pretextual-oracle-title-page-academic.tex': 'tests/documents/frontmatter-title-page-academic-test.tex',
+              'tests/normativa/pretextual-oracle-title-page-project.tex': 'tests/documents/frontmatter-title-page-project-test.tex',
+              'tests/normativa/pretextual-oracle-title-page-project-anonymized.tex': 'tests/documents/frontmatter-title-page-project-anonymized-test.tex',
+              'tests/normativa/pretextual-oracle-approval.tex': 'tests/documents/frontmatter-approval-test.tex',
+              'tests/normativa/pretextual-oracle-summary-abstract.tex': 'tests/documents/frontmatter-summary-abstract-test.tex',
+              'tests/normativa/pretextual-oracle-toc.tex': 'tests/documents/frontmatter-toc-test.tex',
+              'tests/normativa/pretextual-oracle-acknowledgements.tex': 'tests/documents/frontmatter-acknowledgments-test.tex',
+              'tests/normativa/pretextual-oracle-errata-present.tex': 'tests/documents/frontmatter-errata-present-test.tex',
+              'tests/normativa/pretextual-oracle-errata-absent.tex': 'tests/documents/frontmatter-errata-absent-test.tex',
+              'tests/normativa/pretextual-oracle-list-abbreviations-present.tex': 'tests/documents/frontmatter-list-abbreviations-present-test.tex',
+              'tests/normativa/pretextual-oracle-list-illustrations-present.tex': 'tests/documents/frontmatter-list-illustrations-present-test.tex',
+              'tests/normativa/pretextual-oracle-list-symbols-present.tex': 'tests/documents/frontmatter-list-symbols-present-test.tex',
+              'tests/normativa/pretextual-oracle-list-tables-present.tex': 'tests/documents/frontmatter-list-tables-present-test.tex',
+              'tests/normativa/pretextual-oracle-lists-absent.tex': 'tests/documents/frontmatter-lists-absent-test.tex',
+              'tests/normativa/pretextual-oracle-pagination-card-source.tex': 'tests/documents/frontmatter-pagination-card-source-test.tex',
+              'tests/normativa/pretextual-oracle-pagination-catalog.tex': 'tests/documents/frontmatter-pagination-catalog-test.tex',
+              'tests/normativa/pretextual-oracle-pagination-duplex.tex': 'tests/documents/frontmatter-pagination-duplex-test.tex',
+              'tests/fixtures/pretextuais/abreviaturas.tex': 'tests/fixtures/frontmatter/abbreviations.tex',
+              'tests/fixtures/pretextuais/abstract.tex': 'tests/fixtures/frontmatter/abstract.tex',
+              'tests/fixtures/pretextuais/agradecimentos.tex': 'tests/fixtures/frontmatter/acknowledgments.tex',
+              'tests/fixtures/pretextuais/dedicatoria.tex': 'tests/fixtures/frontmatter/dedication.tex',
+              'tests/fixtures/pretextuais/epigrafe.tex': 'tests/fixtures/frontmatter/epigraph.tex',
+              'tests/fixtures/pretextuais/errata.tex': 'tests/fixtures/frontmatter/errata.tex',
+              'tests/fixtures/pretextuais/errata-oracle.tex': 'tests/fixtures/frontmatter/errata-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-abstract.tex': 'tests/fixtures/frontmatter/abstract-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-acknowledgements.tex': 'tests/fixtures/frontmatter/acknowledgments-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-dedication-alignment.tex': 'tests/fixtures/frontmatter/dedication-alignment-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-dedication.tex': 'tests/fixtures/frontmatter/dedication-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-epigraph-long-alignment.tex': 'tests/fixtures/frontmatter/epigraph-long-alignment-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-epigraph-long.tex': 'tests/fixtures/frontmatter/epigraph-long-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-epigraph-short-alignment.tex': 'tests/fixtures/frontmatter/epigraph-short-alignment-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-epigraph-short.tex': 'tests/fixtures/frontmatter/epigraph-short-validation-fixture.tex',
+              'tests/fixtures/pretextuais/n6-summary.tex': 'tests/fixtures/frontmatter/summary-validation-fixture.tex',
+              'tests/fixtures/pretextuais/resumo.tex': 'tests/fixtures/frontmatter/summary.tex',
+              'tests/fixtures/pretextuais/simbolos.tex': 'tests/fixtures/frontmatter/symbols.tex',
+              'normativa/pretextual-acknowledgements-scenario.json': 'standards/frontmatter-acknowledgments-scenario.json',
+              'normativa/pretextual-alignment-scenarios.json': 'standards/frontmatter-alignment-scenarios.json',
+              'normativa/pretextual-approval-scenario.json': 'standards/frontmatter-approval-scenario.json',
+              'normativa/pretextual-cover-scenario.json': 'standards/frontmatter-cover-scenario.json',
+              'normativa/pretextual-errata-scenario.json': 'standards/frontmatter-errata-scenario.json',
+              'normativa/pretextual-lists-scenario.json': 'standards/frontmatter-lists-scenario.json',
+              'normativa/pretextual-pagination-scenario.json': 'standards/frontmatter-pagination-scenario.json',
+              'normativa/pretextual-scenarios.json': 'standards/frontmatter-scenarios.json',
+              'normativa/pretextual-summary-scenario.json': 'standards/frontmatter-summary-scenario.json',
+              'normativa/pretextual-title-page-scenario.json': 'standards/frontmatter-title-page-scenario.json',
+              'normativa/pretextual-toc-scenario.json': 'standards/frontmatter-toc-scenario.json',
+              'normativa/coverage-rules-pretextual.json': 'standards/coverage-rules-frontmatter.json',
+              'normativa/oracle-policy.json': 'standards/validation-reference-policy.json',
+              'tests/checks/pretextual_oracle.py': 'tests/checks/frontmatter_evidence.py',
+              'tests/checks/pretextual_definition_alignment.py': 'tests/checks/frontmatter_definition_alignment.py',
+              'tests/checks/pretextual_definition_list_alignment.py': 'tests/checks/frontmatter_definition_list_alignment.py',
+              'tests/checks/normative_pretextual_acknowledgements.py': 'tests/checks/normative_frontmatter_acknowledgments.py',
+              'tests/checks/normative_pretextual_alignment.py': 'tests/checks/normative_frontmatter_alignment.py',
+              'tests/checks/normative_pretextual_approval.py': 'tests/checks/normative_frontmatter_approval.py',
+              'tests/checks/normative_pretextual_cover.py': 'tests/checks/normative_frontmatter_cover.py',
+              'tests/checks/normative_pretextual_errata.py': 'tests/checks/normative_frontmatter_errata.py',
+              'tests/checks/normative_pretextual_lists.py': 'tests/checks/normative_frontmatter_lists.py',
+              'tests/checks/normative_pretextual_pagination.py': 'tests/checks/normative_frontmatter_pagination.py',
+              'tests/checks/normative_pretextual_summary.py': 'tests/checks/normative_frontmatter_summary.py',
+              'tests/checks/normative_pretextual_title_page.py': 'tests/checks/normative_frontmatter_title_page.py',
+              'tests/checks/normative_pretextual_toc.py': 'tests/checks/normative_frontmatter_toc.py',
+              'artifacts/normative-pretextual': 'artifacts/frontmatter',
+          }
+
+          targets = sorted(
+              set((ROOT / 'tests/integration').glob('frontmatter*.sh'))
+              | {ROOT / 'tests/integration/duplex-frontmatter.sh', ROOT / 'tests/integration/capes-guidance.sh'}
+              | set((ROOT / 'tests/checks').glob('normative_frontmatter_*.py'))
+              | set((ROOT / 'tests/checks').glob('frontmatter_definition_*.py'))
+              | {ROOT / 'tests/checks/frontmatter_validation.py', ROOT / 'tests/checks/frontmatter_evidence.py'}
+          )
+
+          changed = []
+          for path in targets:
+              if not path.is_file():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              original = text
+
+              for old, new in exact.items():
+                  text = text.replace(old, new)
+
+              text = text.replace('ROOT / "normativa"', 'ROOT / "standards"')
+              text = text.replace("ROOT / 'normativa'", "ROOT / 'standards'")
+              text = text.replace('/tmp/abntexto-ufc-v2-pretextual', '/tmp/abntexto-ufc-frontmatter')
+              text = text.replace('/tmp/abntexto-ufc-v2-', '/tmp/abntexto-ufc-')
+              text = text.replace('pretextual-oracle-', 'frontmatter-validation-')
+              text = text.replace('normative-pretextual', 'frontmatter')
+              text = text.replace('Pre-textual', 'Front matter')
+              text = text.replace('pre-textual', 'front matter')
+              text = text.replace('pré-textual', 'front matter')
+              text = text.replace('pré-textuais', 'front matter')
+              text = text.replace('pretextuais', 'frontmatter')
+              text = text.replace('pretextual', 'frontmatter')
+              text = text.replace('ORACLE_POLICY', 'VALIDATION_POLICY')
+              text = text.replace('oracle_policy', 'validation_policy')
+              text = text.replace('oracle_tolerances', 'validation_tolerances')
+              text = text.replace('oracle_tolerance', 'validation_tolerance')
+              text = text.replace('oracle = load_json', 'validation_policy = load_json')
+              text = text.replace('oracle.get', 'validation_policy.get')
+              text = text.replace('oracle[', 'validation_policy[')
+              text = text.replace('ORACLE', 'VALIDATION')
+              text = text.replace('Oracle', 'Validation')
+              text = text.replace('oracle', 'validation')
+
+              text = text.replace('.get("schema_version") != 1', '.get("schema_version") != 2')
+              text = re.sub(r' or ([A-Za-z_][A-Za-z0-9_]*)\.get\("phase"\) != "N[56]"', '', text)
+              text = text.replace('schema/phase', 'schema')
+              text = text.replace('"phase": "N6",', '"validation_scope": "frontmatter",')
+              text = text.replace("'phase': 'N6',", "'validation_scope': 'frontmatter',")
+              text = text.replace('N6-EVIDENCE', 'FRONTMATTER-EVIDENCE')
+              text = text.replace('N6 evidence', 'front matter evidence')
+              text = text.replace('N6 ', 'front matter ')
+              text = text.replace(' N6', ' front matter')
+              text = text.replace('N5 ', 'validation-policy ')
+              text = text.replace(' N5', ' validation-policy')
+              text = text.replace('Preflight V2', 'Front matter validation')
+              text = text.replace('Gate V2', 'Gate')
+              text = text.replace(' V2 ', ' ')
+
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  changed.append(path.as_posix())
+
+          print('Changed files:')
+          for item in changed:
+              print(f'  {item}')
+          PY
+
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import re
+          from pathlib import Path
+
+          targets = sorted(
+              set(Path('tests/integration').glob('frontmatter*.sh'))
+              | {Path('tests/integration/duplex-frontmatter.sh'), Path('tests/integration/capes-guidance.sh')}
+              | set(Path('tests/checks').glob('normative_frontmatter_*.py'))
+              | set(Path('tests/checks').glob('frontmatter_definition_*.py'))
+              | {Path('tests/checks/frontmatter_validation.py'), Path('tests/checks/frontmatter_evidence.py')}
+          )
+          forbidden = {
+              'tests/normativa/': re.compile(r'tests/normativa/'),
+              'tests/fixtures/pretextuais/': re.compile(r'tests/fixtures/pretextuais/'),
+              'normativa/': re.compile(r'(?<![A-Za-z])normativa/'),
+              'tests/v2-': re.compile(r'tests/v2-'),
+              'pretextual': re.compile(r'pretextual', re.IGNORECASE),
+              'oracle': re.compile(r'oracle', re.IGNORECASE),
+              'phase-id': re.compile(r'\bN(?:5|6)\b'),
+              'v2-temp': re.compile(r'abntexto-ufc-v2'),
+          }
+
+          failures = []
+          for path in targets:
+              if not path.is_file():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              for label, pattern in forbidden.items():
+                  if pattern.search(text):
+                      failures.append(f'{path}: {label}')
+
+          if failures:
+              raise SystemExit('Front matter rewrite left forbidden engineering identity:\n' + '\n'.join(failures))
+          PY
+
+          python3 -m py_compile \
+            tests/checks/frontmatter_evidence.py \
+            tests/checks/frontmatter_definition_alignment.py \
+            tests/checks/frontmatter_definition_list_alignment.py \
+            tests/checks/frontmatter_validation.py \
+            tests/checks/normative_frontmatter_*.py
+
+          git diff --check
+          git status --short
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tests/checks tests/integration
+          if git diff --cached --quiet; then
+            echo 'No front matter changes to commit.'
+            exit 0
+          fi
+          git commit -m 'refactor: reconnect front matter validation'
+          git push origin HEAD:refactor/v3-r1-rebaseline
