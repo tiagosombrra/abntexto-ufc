@@ -4,217 +4,122 @@ Updated: 2026-08-30
 
 ## Status
 
-**ACTIVE — V3-R1 complete repository rebaseline.**
+**V3-R1 ACTIVE — complete repository rebaseline.**
 
-Certified v2 baseline: `main` at `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
-
-Clean v3 planning baseline: `ca2ab12163d16e5eef80c0c8ce9fea543064ab10`.
-
-Active implementation branch: `refactor/v3-r1-rebaseline`.
-
-Latest completed implementation checkpoint before this authority synchronization: `36375e94ce9c6e2048eff2ec9cdcb9f8573b05b7`.
-
-Superseded branches are evidence only and must not be used as implementation sources:
-
-- `refactor/n15-b2r-c-full-english-canonicalization`;
-- `refactor/v3-full-internationalization`;
-- `refactor/v3-foundation-cleanup`;
-- `refactor/v3-r1-rebaseline-temp`.
+- Active branch: `refactor/v3-r1-rebaseline`.
+- Certified v2 baseline: `main` at `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
+- Latest completed implementation checkpoint: `f8509ba01a208b634c63a28b3c20cbf7ab8c75dd`.
+- Current subgate: **R1 Block 2 — legacy purge and active-tree minimization**.
 
 ## Authorities
 
-Read in this order:
-
-1. `release/v3-roadmap.json` — machine phase authority;
-2. `docs/HANDOFF-V3.0.0.md` — exact continuation checkpoint;
-3. `docs/ROADMAP-V3.0.0.md` — human phase plan;
-4. `docs/ARCHITECTURE.md`;
-5. `docs/ENGINEERING-LANGUAGE.md`;
-6. `release/v3-path-migration.json`;
-7. `release/v3-api-migration.json`;
-8. `release/v3-test-migration.json`.
+1. `release/v3-roadmap.json`
+2. `docs/HANDOFF-V3.0.0.md`
+3. `docs/ROADMAP-V3.0.0.md`
+4. `docs/ARCHITECTURE.md`
+5. `docs/ENGINEERING-LANGUAGE.md`
+6. active v3 migration contracts under `release/`
 
 A subgate cannot close while these authorities disagree.
 
-## Non-negotiable policies
+## Active-tree policy
 
-- target release: `3.0.0`;
-- target physical repository identity: `abntexto-ufc`;
-- project-controlled engineering language: English;
-- project-controlled filenames, paths, code identifiers, LaTeX API, internal state, comments, diagnostics, scripts, tests, workflows, validator code/UI and technical documentation: English;
-- Portuguese is allowed only as academic/rendered document content, bibliography data, official UFC/ABNT wording, test payload text when the Portuguese output itself is under test, or a genuinely required upstream identifier at an explicit integration boundary;
-- no Portuguese project runtime compatibility API;
-- no active `oracle` terminology: use `test`, `validation`, `expected` or another precise semantic name;
-- no active v2/N-phase identifiers as engineering names;
-- no known debt in a phase scope crosses that phase gate;
-- no temporary migration workflow, rewrite script, compatibility shim or path bridge survives V3-R1;
-- V3-R4 is certification only, never cleanup or migration.
+The v3 branch is a working product tree, not an archive.
 
-## CI execution policy
+- No `docs/history/`, `release/history/`, `standards/history/`, or equivalent museum directories.
+- No file is retained solely because it documents a past phase, may be useful later, or provides historical convenience.
+- Historical evidence lives in Git commits, tags, releases, certified SHAs, and issue/PR history.
+- v2/N-phase/N15/B2R ledgers, handoffs, audit snapshots, compatibility inventories, and superseded checkers are removed from the active v3 tree once they have no current consumer.
+- Temporary migration contracts may remain only while they are directly consumed by the active migration. They are removed or consolidated when their migration gate closes.
+- Future-phase material is not pre-staged as dormant files. It is reintroduced when that phase becomes active, using Git history as evidence where needed.
+- Dead references are treated as defects: deletion of an artifact and reconciliation of its consumers belong to the same coherent block.
 
-The earlier CI policy generated excessive, low-value GitHub Actions runs. The v3 policy is therefore deliberately staged:
+## Engineering-language policy
 
-1. **R1 reconstruction branch:** no automatic workflows. Structural edits must not generate heavy CI or email noise.
-2. **Foundation/static gate, when restored:** syntax, JSON/schema validity, repository topology, inventory, engineering-language policy, plan consistency and static API/path checks only.
-3. Every restored automatic workflow must use path filters where practical and `concurrency` with `cancel-in-progress: true`.
-4. Integration jobs run only for affected surfaces, final pull-request validation, or explicit manual dispatch.
-5. Windows literal-font Gate T, Overleaf proxy, PDF/A certification, distribution/CTAN packaging and full multi-engine regression are heavy certification jobs. They do not run on every intermediate commit.
-6. No workflow may mutate the repository, commit migration changes or trigger a chain of heavy workflows during reconstruction.
-7. Final certification uses the sequence: static gate → affected integration gates → one full candidate suite on the exact candidate SHA.
+Project-controlled technical surfaces are English: repository paths/files, LaTeX project API and internals, setup keys/state, source comments, diagnostics, scripts, tests, workflows, technical documentation, validator implementation/UI, and JSON/schema technical keys.
 
-`main` remains the certified v2 baseline and is not modified merely to optimize v3 development CI. The optimized policy is implemented when v3 workflows are deliberately restored near the end of R1.
+Portuguese is allowed only as academic/rendered content, bibliography data, official UFC/ABNT wording, literal Portuguese output under test, or a genuinely required upstream identifier at an explicit integration boundary.
 
-## Target repository architecture
+No final v3 Portuguese project compatibility API is retained.
 
-```text
-.
-├── abntexto-ufc.cls
-├── abntexto-ufc/
-│   ├── core.def
-│   ├── fonts.def
-│   ├── layout.def
-│   ├── modules.def
-│   ├── frontmatter.def
-│   ├── institutional.def
-│   ├── academic-works.def
-│   ├── research-projects.def
-│   ├── articles.def                 # introduced only in V3-A1
-│   ├── objects.def
-│   ├── bibliography.def
-│   ├── backmatter.def
-│   ├── integrations/abntexto.def
-│   └── standards/nbr6023-2025.def
-├── template/
-│   ├── main.tex
-│   ├── frontmatter/
-│   ├── chapters/
-│   ├── backmatter/
-│   └── figures/
-├── assets/institutional/
-├── standards/
-├── tests/
-│   ├── checks/
-│   ├── documents/
-│   ├── fixtures/
-│   ├── integration/
-│   └── smoke/
-├── tools/
-├── validator/
-├── docs/
-├── release/
-└── .github/workflows/               # restored only after deliberate migration
-```
+## CI policy
 
-Repository and public distribution layouts intentionally differ. Editable sources live under `template/`; template and Overleaf bundles flatten that directory to archive root.
+The R1 reconstruction branch has no automatic workflows.
 
-## V3-R0 — Architecture and deterministic migration contracts
+When CI is restored near R1 closure:
 
-Status: **DONE**.
+- automatic checks are static/cheap and path-filtered where practical;
+- `concurrency` uses `cancel-in-progress: true`;
+- integration jobs run only for affected surfaces, final PR validation, or manual dispatch;
+- Windows Gate T, Overleaf, PDF/A, distribution/CTAN, and full multi-engine regression are candidate/certification jobs, not per-commit jobs;
+- workflows never mutate the repository or create migration commits;
+- final candidate sequence is static gate → affected integration gates → one full exact-SHA certification suite.
 
-Contract commit: `f512268661acbb79137cdcdacc94b82fa3dc1746`.
+## V3-R0
 
-Frozen contracts:
+**DONE.** Frozen migration contracts were established before implementation.
 
-- `release/v3-path-migration.json`;
-- `release/v3-api-migration.json`;
-- `release/v3-test-migration.json`.
+## V3-R1
 
-## V3-R1 — Complete repository rebaseline
+**ACTIVE.** R1 owns all physical topology, active-tree cleanup, path consumers, build/tool/validator paths, distribution staging, static structural gates, and optimized workflow restoration.
 
-Status: **ACTIVE**.
+### Block 1 — canonical physical naming
 
-R1 closes the complete structural/path/tool/test/workflow/distribution surface before R2.
+**DONE** at `f8509ba01a208b634c63a28b3c20cbf7ab8c75dd`.
 
-### Completed structural work through checkpoint `36375e94...`
+Completed:
 
-- workflows disabled on the reconstruction branch;
-- repository document source moved under `template/`;
-- template frontmatter, chapters, backmatter and figure filenames migrated to English paths;
-- `normativa/` moved to `standards/`;
-- current runtime integration moved to `abntexto-ufc/integrations/abntexto.def`;
-- current NBR 6023 adapter moved to `abntexto-ufc/standards/nbr6023-2025.def`;
-- test roots established as `tests/checks/`, `tests/documents/`, `tests/fixtures/`, `tests/integration/` and `tests/smoke/`;
-- many test documents, checkers and runners physically moved to semantic roots;
-- `template/main.tex` and class module load paths updated for the new physical topology.
+- editable source under `template/`;
+- standards root under `standards/`;
+- semantic test roots;
+- English template/component paths;
+- removal of active `oracle`, `pretextual`, `posttextual`, and `textual-oracle` path naming;
+- current frontmatter validation paths and fixtures.
 
-### Remaining R1 work — fixed order
+### Block 2 — legacy purge and active-tree minimization
 
-1. eliminate obsolete active test/standards terminology (`oracle`, `textual`, `pretextual`, `posttextual`, v2/N-phase names) and update all references atomically;
-2. isolate v2/N15/B2R evidence under history namespaces while preserving immutable evidence;
-3. migrate all residual active path references and orchestration (`tests/run.py`, checkers, integration scripts, standards JSON references);
-4. migrate `Makefile`, `tools/` and validator path assumptions;
-5. rebuild distribution staging for repository `template/` versus flattened public bundles;
-6. rebuild permanent repository/path and plan-consistency checks from the v3 contracts;
-7. restore workflows deliberately using the optimized CI policy above;
-8. prepare all repository URLs/metadata for the physical GitHub rename `modelo-latex-ufc` → `abntexto-ufc`;
-9. perform the physical repository rename before final v3 certification;
-10. execute the R1 exhaustive structural audit and synchronize roadmap/JSON/handoff.
+**ACTIVE.** Delete, do not archive, artifacts that have no current v3 consumer. Reconcile all direct consumers in the same block.
 
-R1 does **not** perform the full runtime API ownership rewrite. That is R2.
+Scope includes:
 
-### R1 exit gate
+- v2/N15/B2R handoffs, inventories, ledgers, audits, and superseded compatibility policies;
+- N-phase campaign/reconciliation snapshots that are process history rather than current normative inputs;
+- dormant future article artifacts until V3-A1;
+- obsolete v2 compatibility checkers;
+- deprecated `ufctex.cls`;
+- stale technical filenames such as current Portuguese documentation filenames, replacing them with English active names rather than preserving duplicates.
 
-- zero obsolete physical paths;
-- zero stale path references in the active tree;
-- zero project-owned Portuguese technical filenames/directories;
-- zero active `oracle`, `textual`, `pretextual`, `posttextual`, v2 or historical N-phase engineering names;
-- zero active dependencies on historical evidence paths;
-- every active tool/test/restored workflow uses canonical v3 paths;
-- `template/main.tex` resolves from its repository location;
-- `abntexto-ufc.cls` loads only canonical repository paths;
-- public template/Overleaf staging flattens `template/` correctly;
-- no generated artifacts or temporary migration scaffolding are tracked;
-- permanent repository/path and plan-consistency audits pass;
-- optimized CI triggers are installed without heavy automatic reconstruction runs;
-- roadmap, machine roadmap and handoff are synchronized.
+### Remaining R1 blocks
 
-Only then may R1 become DONE and R2 become ACTIVE.
+3. Path-consumer reconciliation across tests/checkers/integration/standards.
+4. `Makefile`, tools, validator, and metadata path reconciliation.
+5. Distribution/Overleaf/CTAN staging with `template/` flattened only in public bundles.
+6. Permanent static gates for topology, language, inventory, and plan consistency.
+7. Optimized workflow restoration.
+8. Canonical repository identity, exhaustive clean-tree audit, and R1 closure.
 
-## V3-R2 — English-only canonical runtime
+### R1 exit criteria
 
-Status: **BLOCKED by V3-R1**.
+- no dead historical/migration artifacts without an active consumer;
+- no history/archive directories in the active tree;
+- zero obsolete physical paths and stale active references;
+- zero project-owned Portuguese technical paths;
+- zero active `oracle`, v2, N-phase, N15, or B2R engineering identities;
+- zero generated artifacts or temporary migration scaffolding;
+- canonical template/class/build/tool/test/distribution paths resolve;
+- static gates pass;
+- optimized CI cannot spam intermediate commits;
+- roadmap, machine state, and handoff agree.
 
-Authority: `release/v3-api-migration.json`.
+## Later phases
 
-R2 rewrites runtime ownership directly into English: setup keys/values, public commands/environments, internal control sequences/state, comments and diagnostics. Portuguese project aliases are removed, forwarding-only `public-api.def` is dismantled after ownership absorption, and `ufctex.cls` is removed. `article` remains reserved for V3-A1.
-
-## V3-R3 — Standards, tests and engineering-language semantic hardening
-
-Status: **BLOCKED by V3-R2**.
-
-Authority: `release/v3-test-migration.json`.
-
-R3 semantically reviews standards and tests, removes obsolete compatibility assumptions, preserves or strengthens regression coverage and enforces the permanent language contract. Validator implementation, UI, diagnostics and technical identifiers are English. Portuguese may appear in validator data only when it is literal academic content/marker text expected inside a Brazilian academic PDF.
-
-## V3-R4 — Certification only
-
-Status: **BLOCKED by V3-R3**.
-
-Certify the already-clean result on Linux/Windows, applicable TeX engines, Windows literal Times New Roman/Arial Gate T, PDF/A-2b technical target, template/Overleaf/CTAN bundles, deterministic distribution and independent clean builds. R4 cannot absorb migration or cleanup debt.
-
-## V3-R5 and later phases
-
-R5 freezes the certified foundation and migration/user/maintainer documentation. Article work resumes only afterward:
-
-- V3-A1 — scientific article runtime architecture;
-- V3-A2 — article deep evidence;
-- V3-H1 — post-article hardening;
-- V3-RC — release candidate;
-- V3-FINAL — exact-head release decision;
-- V3-CLEANUP — post-release branch/history cleanup.
-
-N15-B2A remains authoritative scientific input for article requirements; old competing B2B implementations are not merged wholesale.
-
-## Release guardrails
-
-- never claim official/homologated UFC status;
-- public bundles exclude the UFC institutional mark and proprietary Microsoft fonts unless policy explicitly changes;
-- literal Times New Roman/Arial identity is certified only by Windows Gate T;
-- portable fallback does not prove literal font identity;
-- PDF/A-2b is the project's technical target satisfying the broader UFC PDF/A requirement;
-- no tag/release from an uncertified head;
-- historical Git tags/releases remain immutable evidence.
+- **V3-R2:** English-only direct runtime ownership; remove Portuguese project API/aliases and absorb/remove `public-api.def`.
+- **V3-R3:** standards/tests/language semantic hardening.
+- **V3-R4:** certification only.
+- **V3-R5:** foundation freeze and current migration/user/maintainer documentation only.
+- **V3-A1/A2:** article work is reintroduced when active, using Git history as evidence rather than dormant files.
+- **V3-H1 → V3-RC → V3-FINAL → V3-CLEANUP** follow in order.
 
 ## Immediate action
 
-Continue V3-R1 on `refactor/v3-r1-rebaseline` with workflows disabled. The next implementation block is the atomic cleanup of obsolete active test/standards terminology and its references; no heavy GitHub Actions are restored during that block.
+Execute R1 Block 2 as an atomic active-tree cleanup: delete unconsumed legacy artifacts, update their active consumers, keep Actions disabled, then synchronize authorities before Block 3.

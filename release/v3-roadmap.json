@@ -1,264 +1,108 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
   "updated_at": "2026-08-30",
   "status": "ACTIVE",
-  "certified_source_baseline": {
-    "branch": "main",
-    "sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77"
-  },
-  "planning_baseline": {
-    "sha": "ca2ab12163d16e5eef80c0c8ce9fea543064ab10",
-    "purpose": "last synchronized v3 planning state before the abandoned R1 execution"
-  },
   "active_branch": "refactor/v3-r1-rebaseline",
-  "current_checkpoint": {
-    "implementation_sha": "36375e94ce9c6e2048eff2ec9cdcb9f8573b05b7",
-    "meaning": "latest completed implementation checkpoint before authority synchronization",
-    "phase": "V3-R1",
-    "block": "structural roots established"
+  "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
+  "latest_completed_implementation_sha": "f8509ba01a208b634c63a28b3c20cbf7ab8c75dd",
+  "phase": "V3-R1",
+  "active_block": "R1-BLOCK-2",
+  "active_block_name": "legacy purge and active-tree minimization",
+  "active_tree_policy": {
+    "history_directories_allowed": false,
+    "historical_evidence_storage": [
+      "git_commits",
+      "git_tags",
+      "github_releases",
+      "certified_commit_and_blob_shas",
+      "issues_and_pull_requests"
+    ],
+    "retain_file_only_for_historical_convenience": false,
+    "retain_dormant_future_phase_files": false,
+    "temporary_migration_contracts_allowed_only_while_consumed": true,
+    "delete_or_consolidate_unused_migration_contracts": true,
+    "deletion_requires_same_block_consumer_reconciliation": true
   },
-  "superseded_branches": [
-    "refactor/n15-b2r-c-full-english-canonicalization",
-    "refactor/v3-full-internationalization",
-    "refactor/v3-foundation-cleanup",
-    "refactor/v3-r1-rebaseline-temp"
-  ],
-  "identity_policy": {
-    "canonical_project_name": "abntexto-ufc",
-    "canonical_class": "abntexto-ufc.cls",
-    "target_github_repository_name": "abntexto-ufc",
-    "current_physical_repository_name": "modelo-latex-ufc",
-    "physical_repository_rename_required_before_final_v3_certification": true
-  },
-  "execution_policy": {
-    "no_debt_crosses_phase_gate": true,
-    "no_temporary_migration_scaffolding_after_r1": true,
-    "historical_evidence_may_retain_old_names": true,
-    "active_tree_may_depend_on_historical_names": false,
-    "r1_heavy_ci_automatic_triggers_allowed": false,
-    "r1_workflows_initially_disabled": true,
-    "workflow_repository_mutation_allowed": false,
-    "r4_is_certification_only": true
+  "language_policy": {
+    "engineering_language": "English",
+    "validator_technical_ui_language": "English",
+    "portuguese_project_api_allowed_in_final_v3": false,
+    "allowed_portuguese_scopes": [
+      "academic_rendered_content",
+      "bibliography_data",
+      "official_ufc_abnt_wording",
+      "literal_portuguese_output_under_test",
+      "required_upstream_integration_identifiers"
+    ]
   },
   "ci_policy": {
-    "r1_reconstruction_branch_automatic_workflows": false,
-    "foundation_gate_when_restored": [
-      "syntax",
-      "json_schema",
-      "repository_topology",
-      "inventory",
-      "engineering_language",
-      "plan_consistency",
-      "static_api_and_path_contracts"
-    ],
-    "automatic_workflows_require_path_filters_when_practical": true,
-    "automatic_workflows_require_concurrency_cancel_in_progress": true,
-    "integration_runs_only_for_affected_surfaces_or_final_pr_or_manual_dispatch": true,
-    "heavy_certification_jobs": [
+    "automatic_workflows_during_r1_reconstruction": false,
+    "automatic_gate_when_restored": "static_and_cheap",
+    "path_filters_where_practical": true,
+    "cancel_in_progress": true,
+    "heavy_jobs_on_every_intermediate_commit": false,
+    "heavy_jobs": [
       "windows_literal_font_gate_t",
-      "overleaf_proxy",
+      "overleaf",
       "pdfa",
       "distribution",
       "ctan",
       "full_multi_engine_regression"
     ],
-    "heavy_jobs_run_on_every_intermediate_commit": false,
-    "workflow_chaining_during_reconstruction": false,
-    "final_candidate_sequence": [
-      "static_gate",
-      "affected_integration_gates",
-      "one_full_exact_sha_candidate_suite"
-    ]
+    "workflow_repository_mutation_allowed": false
   },
-  "language_policy": {
-    "engineering_language": "English",
-    "portuguese_academic_content_allowed": true,
-    "portuguese_official_source_wording_allowed": true,
-    "portuguese_bibliography_data_allowed": true,
-    "portuguese_test_payload_allowed_when_portuguese_output_is_under_test": true,
-    "portuguese_project_api_allowed": false,
-    "portuguese_project_internal_identifiers_allowed": false,
-    "portuguese_project_source_comments_allowed": false,
-    "portuguese_project_diagnostics_allowed": false,
-    "portuguese_validator_ui_allowed": false,
-    "portuguese_validator_technical_identifiers_allowed": false,
-    "upstream_non_english_identifiers_allowed_when_genuinely_required_at_explicit_integration_boundary": true,
-    "active_oracle_terminology_allowed": false,
-    "active_version_or_n_phase_engineering_names_allowed": false
-  },
-  "breaking_change_policy": {
-    "major_release_required": true,
-    "runtime_backward_compatibility_with_v2_portuguese_api": false,
-    "deprecated_ufctex_class_retained_in_final_v3": false,
-    "migration_support": "documentation-only"
-  },
-  "architecture": {
-    "repository_template_root": "template/",
-    "machine_readable_standards_root": "standards/",
-    "runtime_integrations_root": "abntexto-ufc/integrations/",
-    "runtime_standard_adapters_root": "abntexto-ufc/standards/",
-    "test_checks_root": "tests/checks/",
-    "test_documents_root": "tests/documents/",
-    "test_fixtures_root": "tests/fixtures/",
-    "test_integration_root": "tests/integration/",
-    "test_smoke_root": "tests/smoke/",
-    "distribution_template_root_flattened": true,
-    "duplicate_runtime_ownership_allowed": false
-  },
-  "phase_evidence": {
-    "V3-R0": {
+  "blocks": {
+    "R1-BLOCK-1": {
       "status": "DONE",
-      "contract_commit": "f512268661acbb79137cdcdacc94b82fa3dc1746",
-      "contracts": [
-        "release/v3-path-migration.json",
-        "release/v3-api-migration.json",
-        "release/v3-test-migration.json"
+      "closure_sha": "f8509ba01a208b634c63a28b3c20cbf7ab8c75dd",
+      "name": "canonical physical naming"
+    },
+    "R1-BLOCK-2": {
+      "status": "ACTIVE",
+      "name": "legacy purge and active-tree minimization",
+      "rules": [
+        "delete unconsumed v2 N-phase N15 B2R artifacts instead of archiving them",
+        "delete dormant future article artifacts until V3-A1",
+        "delete superseded compatibility and phase-specific checkers",
+        "remove deprecated ufctex.cls",
+        "rename current Portuguese technical documentation filenames to English without duplicates",
+        "repair direct consumers in the same cleanup block"
       ]
     },
-    "V3-R1": {
-      "status": "ACTIVE",
-      "completed_structural_work": [
-        "workflows disabled on reconstruction branch",
-        "repository template source established under template/",
-        "template source filenames migrated to English physical paths",
-        "normativa root moved to standards/",
-        "runtime integrations and standard adapters moved to canonical roots",
-        "semantic test roots established",
-        "many test documents/checkers/runners moved to semantic roots",
-        "template/main.tex and class load paths migrated"
-      ],
-      "remaining_blocks": [
-        "obsolete active terminology and physical naming cleanup",
-        "history isolation",
-        "path consumer reconciliation",
-        "Makefile tools validator path reconciliation",
-        "distribution and Overleaf flattening",
-        "permanent static gates",
-        "optimized workflow restoration",
-        "repository identity preparation and physical rename",
-        "exhaustive R1 audit and authority synchronization"
-      ]
-    }
+    "R1-BLOCK-3": {"status": "BLOCKED", "name": "residual path-consumer reconciliation"},
+    "R1-BLOCK-4": {"status": "BLOCKED", "name": "Makefile tools validator and metadata paths"},
+    "R1-BLOCK-5": {"status": "BLOCKED", "name": "distribution and public bundle flattening"},
+    "R1-BLOCK-6": {"status": "BLOCKED", "name": "permanent static gates"},
+    "R1-BLOCK-7": {"status": "BLOCKED", "name": "optimized workflow restoration"},
+    "R1-BLOCK-8": {"status": "BLOCKED", "name": "repository identity and exhaustive R1 closure"}
   },
   "phases": [
-    {
-      "id": "V3-R0",
-      "name": "Architecture and deterministic migration contracts",
-      "status": "DONE",
-      "depends_on": []
-    },
-    {
-      "id": "V3-R1",
-      "name": "Complete repository rebaseline",
-      "status": "ACTIVE",
-      "depends_on": ["V3-R0"],
-      "contract": "release/v3-path-migration.json",
-      "exit_criteria": [
-        "target physical repository structure is complete",
-        "all project-owned technical paths and filenames are English",
-        "zero active oracle or old document-phase engineering terminology",
-        "zero active v2 or historical N-phase engineering names",
-        "zero stale references to moved or renamed paths in the active tree",
-        "template/main.tex resolves from its repository location",
-        "abntexto-ufc.cls loads only canonical v3 repository paths",
-        "Makefile tools validator and restored workflows use canonical v3 paths",
-        "all tests fixtures runners and checkers use canonical v3 paths and semantic names",
-        "distribution and Overleaf staging flatten template/ to bundle root",
-        "historical evidence is isolated from active engineering dependencies",
-        "no generated artifacts are tracked",
-        "no temporary migration workflow or migration scaffolding remains",
-        "permanent repository path audit passes",
-        "plan consistency audit passes",
-        "optimized CI triggers are installed without heavy automatic reconstruction runs",
-        "human roadmap machine roadmap and handoff are synchronized"
-      ]
-    },
-    {
-      "id": "V3-R2",
-      "name": "English-only canonical runtime",
-      "status": "BLOCKED",
-      "depends_on": ["V3-R1"],
-      "contract": "release/v3-api-migration.json"
-    },
-    {
-      "id": "V3-R3",
-      "name": "Standards tests and engineering-language semantic hardening",
-      "status": "BLOCKED",
-      "depends_on": ["V3-R2"],
-      "contract": "release/v3-test-migration.json"
-    },
-    {
-      "id": "V3-R4",
-      "name": "CI release and distribution certification",
-      "status": "BLOCKED",
-      "depends_on": ["V3-R3"]
-    },
-    {
-      "id": "V3-R5",
-      "name": "Foundation freeze and migration documentation",
-      "status": "BLOCKED",
-      "depends_on": ["V3-R4"]
-    },
-    {
-      "id": "V3-A1",
-      "name": "Scientific article runtime architecture",
-      "status": "BLOCKED",
-      "depends_on": ["V3-R5"]
-    },
-    {
-      "id": "V3-A2",
-      "name": "Scientific article deep evidence",
-      "status": "BLOCKED",
-      "depends_on": ["V3-A1"]
-    },
-    {
-      "id": "V3-H1",
-      "name": "Release hardening after article integration",
-      "status": "BLOCKED",
-      "depends_on": ["V3-A2"]
-    },
-    {
-      "id": "V3-RC",
-      "name": "v3.0.0 release candidate",
-      "status": "BLOCKED",
-      "depends_on": ["V3-H1"]
-    },
-    {
-      "id": "V3-FINAL",
-      "name": "Exact-head certification and release decision",
-      "status": "BLOCKED",
-      "depends_on": ["V3-RC"]
-    },
-    {
-      "id": "V3-CLEANUP",
-      "name": "Post-release repository cleanup",
-      "status": "BLOCKED",
-      "depends_on": ["V3-FINAL"]
-    }
+    {"id": "V3-R0", "status": "DONE"},
+    {"id": "V3-R1", "status": "ACTIVE", "depends_on": ["V3-R0"]},
+    {"id": "V3-R2", "status": "BLOCKED", "depends_on": ["V3-R1"]},
+    {"id": "V3-R3", "status": "BLOCKED", "depends_on": ["V3-R2"]},
+    {"id": "V3-R4", "status": "BLOCKED", "depends_on": ["V3-R3"]},
+    {"id": "V3-R5", "status": "BLOCKED", "depends_on": ["V3-R4"]},
+    {"id": "V3-A1", "status": "BLOCKED", "depends_on": ["V3-R5"]},
+    {"id": "V3-A2", "status": "BLOCKED", "depends_on": ["V3-A1"]},
+    {"id": "V3-H1", "status": "BLOCKED", "depends_on": ["V3-A2"]},
+    {"id": "V3-RC", "status": "BLOCKED", "depends_on": ["V3-H1"]},
+    {"id": "V3-FINAL", "status": "BLOCKED", "depends_on": ["V3-RC"]},
+    {"id": "V3-CLEANUP", "status": "BLOCKED", "depends_on": ["V3-FINAL"]}
   ],
-  "retained_previous_work": {
-    "N0-N14": "certified historical evidence; do not repeat blindly",
-    "N15-A": "audit input retained",
-    "N15-B1": "source and authority reconciliation retained",
-    "N15-B2A": "scientific article normative contract retained",
-    "N15-B2R": "historical naming evidence retained; additive compatibility architecture superseded"
-  },
-  "release_guardrails": {
-    "institutional_mark_excluded_from_public_bundles": true,
-    "proprietary_microsoft_fonts_excluded_from_public_bundles": true,
-    "windows_gate_t_required_for_literal_font_identity": true,
-    "pdfa_technical_target": "PDF/A-2b",
-    "no_tag_from_uncertified_head": true,
-    "branch_cleanup_post_release_only": true
-  },
-  "continuation_protocol": {
-    "phase_authority": "release/v3-roadmap.json",
-    "handoff_authority": "docs/HANDOFF-V3.0.0.md",
-    "human_roadmap": "docs/ROADMAP-V3.0.0.md",
-    "subgate_close_requires_authority_sync": true,
-    "phase_close_requires_zero_known_active_tree_debt_in_phase_scope": true
-  },
-  "next_action": "Execute V3-R1 Block 1 on refactor/v3-r1-rebaseline: atomically remove obsolete active test and standards engineering terminology including oracle old document-phase vocabulary and N-phase names, update every affected reference, and keep Actions disabled during the block."
+  "r1_exit_criteria": [
+    "no dead historical or migration artifacts without active consumers",
+    "no history archive directories in the active tree",
+    "zero obsolete physical paths and stale references",
+    "zero project-owned Portuguese technical paths",
+    "zero active oracle v2 N-phase N15 or B2R engineering identity",
+    "zero generated artifacts and temporary migration scaffolding",
+    "canonical template class build tool test and distribution paths resolve",
+    "permanent static gates pass",
+    "optimized CI cannot spam intermediate commits",
+    "roadmap machine state and handoff agree"
+  ],
+  "next_action": "Commit the active-tree-only policy, then execute R1 Block 2 dependency-aware legacy purge with workflows disabled."
 }
