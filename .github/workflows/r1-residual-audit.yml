@@ -1,0 +1,229 @@
+name: R1 residual active-tree audit
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-rebaseline
+    paths:
+      - .github/workflows/r1-residual-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: refactor/v3-r1-rebaseline
+
+      - name: Audit residual R1 consumers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import ast
+          import json
+          import re
+          import subprocess
+          from pathlib import Path
+
+          ROOT = Path('.')
+          tracked = subprocess.check_output(['git', 'ls-files'], text=True).splitlines()
+          tracked_set = set(tracked)
+
+          findings: dict[str, list[str]] = {
+              'obsolete_physical_names': [],
+              'obsolete_path_references': [],
+              'retired_engineering_identity': [],
+              'runner_missing_commands': [],
+              'standards_unknown_validation_ids': [],
+              'missing_literal_test_paths': [],
+          }
+
+          obsolete_physical = (
+              re.compile(r'(^|/)normativa(/|$)', re.I),
+              re.compile(r'(^|/)pretextuais(/|$)', re.I),
+              re.compile(r'(^|/)v2-[^/]*', re.I),
+              re.compile(r'(^|/)(?:n\d+|n15-[^/]+)[^/]*', re.I),
+              re.compile(r'oracle', re.I),
+              re.compile(r'ufctex\.cls$', re.I),
+              re.compile(r'compat-(?:abntexto|nbr6023-2025)\.def$', re.I),
+          )
+          for item in tracked:
+              if item == '.github/workflows/r1-residual-audit.yml':
+                  continue
+              if any(pattern.search(item) for pattern in obsolete_physical):
+                  findings['obsolete_physical_names'].append(item)
+
+          consumer_roots = ('tests/', 'tools/', 'validator/', '.github/workflows/')
+          consumer_files = {
+              'Makefile', 'README.md', 'abntexto-ufc.cls',
+              'abntexto-ufc/core.def', 'abntexto-ufc/modules.def',
+              'abntexto-ufc/integrations/abntexto.def',
+          }
+          path_tokens = (
+              'tests/normativa/',
+              'tests/fixtures/pretextuais/',
+              'tests/v2-',
+              'normativa/',
+              'ufctex.cls',
+              'abntexto-ufc/compat-abntexto.def',
+              'abntexto-ufc/compat-nbr6023-2025.def',
+              'docs/history/',
+              'release/history/',
+          )
+          for item in tracked:
+              if not (item.startswith(consumer_roots) or item in consumer_files):
+                  continue
+              if item == '.github/workflows/r1-residual-audit.yml':
+                  continue
+              path = Path(item)
+              if not path.is_file():
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              for token in path_tokens:
+                  if token in text:
+                      findings['obsolete_path_references'].append(f'{item}: {token}')
+
+          technical_roots = ('tests/', 'tools/', 'validator/', 'standards/')
+          identity_patterns = {
+              'N-phase': re.compile(r'(?<![A-Za-z])N(?:[0-9]{1,2})(?:-[A-Z0-9]+)*(?![A-Za-z0-9])'),
+              'B2R': re.compile(r'(?<![A-Za-z0-9])B2R(?![A-Za-z0-9])', re.I),
+              'v2-version': re.compile(r'(?<![A-Za-z0-9])v2(?:\.\d+(?:\.\d+)?)?(?![A-Za-z0-9])', re.I),
+              'oracle': re.compile(r'oracle', re.I),
+              'pretextual': re.compile(r'pretextual', re.I),
+              'posttextual': re.compile(r'posttextual', re.I),
+          }
+          identity_exempt = {
+              'release/v3-api-migration.json',
+              'release/v3-path-migration.json',
+              'release/v3-test-migration.json',
+              'release/v3-roadmap.json',
+              'docs/ROADMAP-V3.0.0.md',
+              'docs/HANDOFF-V3.0.0.md',
+          }
+          for item in tracked:
+              if not item.startswith(technical_roots) or item in identity_exempt:
+                  continue
+              path = Path(item)
+              if not path.is_file():
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              if path.suffix == '.tex':
+                  text = text.replace('\\pretextual', '').replace('\\posttextual', '')
+              for label, pattern in identity_patterns.items():
+                  matches = sorted(set(match.group(0) for match in pattern.finditer(text)))
+                  if matches:
+                      findings['retired_engineering_identity'].append(
+                          f'{item}: {label}={matches[:8]}'
+                      )
+
+          runner_path = Path('tests/run.py')
+          module = ast.parse(runner_path.read_text(encoding='utf-8'))
+          runner_ids: set[str] = set()
+          runner_commands: list[tuple[str, tuple[str, ...]]] = []
+          for node in ast.walk(module):
+              if not isinstance(node, ast.Call):
+                  continue
+              if not isinstance(node.func, ast.Name) or node.func.id != 'Check':
+                  continue
+              if len(node.args) < 3:
+                  continue
+              if not isinstance(node.args[0], ast.Constant) or not isinstance(node.args[0].value, str):
+                  continue
+              check_id = node.args[0].value
+              runner_ids.add(check_id)
+              command: list[str] = []
+              arg = node.args[2]
+              if isinstance(arg, (ast.Tuple, ast.List)):
+                  for elt in arg.elts:
+                      if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
+                          command.append(elt.value)
+              runner_commands.append((check_id, tuple(command)))
+
+          for check_id, command in runner_commands:
+              if not command:
+                  findings['runner_missing_commands'].append(f'{check_id}: unparsable command')
+                  continue
+              candidates = [part for part in command if '/' in part and not part.startswith('-')]
+              for candidate in candidates:
+                  if candidate.endswith(('.py', '.sh', '.tex', '.json', '.pdf')):
+                      if candidate.endswith('.pdf'):
+                          continue
+                      if candidate not in tracked_set and not Path(candidate).exists():
+                          findings['runner_missing_commands'].append(f'{check_id}: {candidate}')
+
+          declared_validation_ids: dict[str, set[str]] = {}
+          for item in tracked:
+              if not item.startswith('standards/') or not item.endswith('.json'):
+                  continue
+              try:
+                  data = json.loads(Path(item).read_text(encoding='utf-8'))
+              except Exception:
+                  continue
+
+              def walk(value: object) -> None:
+                  if isinstance(value, dict):
+                      validation = value.get('validation')
+                      if isinstance(validation, dict) and isinstance(validation.get('checks'), list):
+                          for check in validation['checks']:
+                              if isinstance(check, str):
+                                  declared_validation_ids.setdefault(check, set()).add(item)
+                      for child in value.values():
+                          walk(child)
+                  elif isinstance(value, list):
+                      for child in value:
+                          walk(child)
+
+              walk(data)
+
+          for check_id, sources in sorted(declared_validation_ids.items()):
+              if check_id not in runner_ids:
+                  findings['standards_unknown_validation_ids'].append(
+                      f'{check_id}: {sorted(sources)}'
+                  )
+
+          literal_path = re.compile(
+              r'(?P<path>(?:tests|tools|validator|standards)/[A-Za-z0-9_./-]+(?:\.py|\.sh|\.tex|\.json|\.bib))'
+          )
+          for item in tracked:
+              if not item.startswith(('tests/', 'tools/', 'validator/')):
+                  continue
+              path = Path(item)
+              if not path.is_file():
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              for match in literal_path.finditer(text):
+                  candidate = match.group('path')
+                  if candidate not in tracked_set and not Path(candidate).exists():
+                      findings['missing_literal_test_paths'].append(f'{item}: {candidate}')
+
+          for key in findings:
+              findings[key] = sorted(set(findings[key]))
+
+          print(json.dumps({
+              'runner_ids': sorted(runner_ids),
+              'declared_validation_ids': sorted(declared_validation_ids),
+              'findings': findings,
+          }, ensure_ascii=False, indent=2))
+
+          failures = sum(len(items) for items in findings.values())
+          if failures:
+              raise SystemExit(f'R1 residual audit found {failures} issue(s).')
+          print('R1 residual active-tree audit passed with zero findings.')
+          PY
