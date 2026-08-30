@@ -1,0 +1,52 @@
+name: R1 front matter residual audit
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-rebaseline
+    paths:
+      - .github/workflows/r1-frontmatter-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: refactor/v3-r1-rebaseline
+
+      - name: Report residual active identity
+        shell: bash
+        run: |
+          set -eu
+          echo '=== pretextual / oracle / N5 / N6 / old paths in tests and standards ==='
+          grep -RInE 'pretextual|oracle|\bN[56]\b|tests/normativa/|tests/v2-|normativa/' tests standards \
+            --exclude-dir='__pycache__' || true
+          echo '=== missing referenced standards/tests paths (literal strings only) ==='
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          roots = [Path('tests'), Path('standards')]
+          pattern = re.compile(r'(?P<path>(?:tests|standards)/[A-Za-z0-9_./-]+(?:\.py|\.sh|\.tex|\.json|\.bib))')
+          missing = set()
+          for root in roots:
+              for path in root.rglob('*'):
+                  if not path.is_file() or path.suffix not in {'.py', '.sh', '.json', '.tex', '.md'}:
+                      continue
+                  try:
+                      text = path.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:
+                      continue
+                  for match in pattern.finditer(text):
+                      candidate = Path(match.group('path'))
+                      if not candidate.exists():
+                          missing.add((path.as_posix(), candidate.as_posix()))
+          for source, target in sorted(missing):
+              print(f'{source} -> {target}')
+          PY
