@@ -24,7 +24,7 @@ POPLER_CONTAINER = "ghcr.io/xu-cheng/texlive-debian:latest"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N13 PDF/A negative validation failed: {message}")
+    raise SystemExit(f"PDF/A negative validation failed: {message}")
 
 
 def run(command: list[str]) -> subprocess.CompletedProcess[str]:
@@ -121,7 +121,7 @@ cmp -s /tmp/source.txt /tmp/mutated.txt
             "/bin/bash",
             "-lc",
             script,
-            "n13-poppler",
+            "pdfa-poppler",
             f"/data/{source_rel}",
             f"/data/{mutated_rel}",
         ]
@@ -164,7 +164,7 @@ def run_verapdf(pdf: Path, report: Path) -> tuple[str, int, str]:
         ]
         runner = "docker-verapdf-1.30.2"
     else:
-        fail("veraPDF or Docker is required for N13 PDF/A negative validation")
+        fail("veraPDF or Docker is required for PDF/A negative validation")
 
     with report.open("w", encoding="utf-8") as handle:
         completed = subprocess.run(
@@ -203,7 +203,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--json",
         type=Path,
-        default=Path("/tmp/abntexto-ufc-n13-pdfa.json"),
+        default=Path("/tmp/abntexto-ufc-pdfa-negative-validation.json"),
     )
     return parser.parse_args()
 
@@ -215,10 +215,10 @@ def main() -> None:
         fail(f"source PDF not found: {source}")
     require_positive_report(args.positive_report)
 
-    with tempfile.TemporaryDirectory(prefix=".n13-pdfa-", dir=ROOT) as temp_dir_name:
+    with tempfile.TemporaryDirectory(prefix=".pdfa-negative-", dir=ROOT) as temp_dir_name:
         temp_dir = Path(temp_dir_name)
         temp_dir.chmod(0o755)
-        mutated = temp_dir / "documento-pdfa-part3-negative.pdf"
+        mutated = temp_dir / "pdfa-part3-negative.pdf"
         negative_report = temp_dir / "verapdf-negative.xml"
 
         mutate_pdf(source, mutated)
@@ -236,7 +236,6 @@ def main() -> None:
 
     payload: dict[str, Any] = {
         "schema_version": 1,
-        "phase": "N13",
         "mechanism": MECHANISM_ID,
         "source_commit_sha": os.environ.get("SOURCE_COMMIT_SHA", os.environ.get("GITHUB_SHA", "")),
         "result": "PASS",
@@ -255,14 +254,15 @@ def main() -> None:
         "compile_failure_counted_as_rejection": False,
         "normative_contract_changed": False,
         "locator_policy_changed": False,
-        "oracle_tolerances_changed": False,
+        "validation_tolerances_changed": False,
         "proof_state_changed": False,
     }
+
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N13-EVIDENCE mechanism=pdf-pdfa-validation status=PASS "
+        "PDFA-EVIDENCE mechanism=pdf-pdfa-validation status=PASS "
         "mutation=pdfaid-part-2-to-3 readable=true text_unchanged=true "
         "verapdf_compliant=false specification=ISO_19005_2 clause=6.6.4 test=2 "
         "compile_failure_counted_as_rejection=false proof_state_changed=false"

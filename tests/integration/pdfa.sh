@@ -1,11 +1,12 @@
 #!/bin/sh
 set -eu
 
-pdf="${1:-main.pdf}"
-report="/tmp/abntexto-ufc-v2-verapdf.xml"
+pdf="${1:-template/main.pdf}"
+report="/tmp/abntexto-ufc-verapdf.xml"
+negative_evidence="/tmp/abntexto-ufc-pdfa-negative-validation.json"
 
 [ -f "$pdf" ] || {
-  echo "PDF/A V2 falhou: arquivo não encontrado: $pdf"
+  echo "PDF/A validation failed: file not found: $pdf"
   exit 1
 }
 
@@ -18,21 +19,21 @@ elif command -v docker >/dev/null 2>&1; then
     verapdf/cli:v1.30.2 \
     -f 2b "/data/$pdf" > "$report" || status=$?
 else
-  echo 'PDF/A V2 falhou: instale veraPDF ou Docker para a validação de release.'
+  echo 'PDF/A validation failed: veraPDF or Docker is required for release validation.'
   exit 1
 fi
 
 if [ -s "$report" ] && grep -Fq 'isCompliant="true"' "$report"; then
-  echo 'Gate V2 PDF/A-2b concluído.'
-  if [ "$pdf" = "main.pdf" ] && [ "${UFC_N13_PDFA_NEGATIVE:-1}" = "1" ]; then
-    python3 tests/checks/normative_n13_pdfa.py \
+  echo 'PDF/A-2b validation completed.'
+  if [ "$pdf" = "template/main.pdf" ] && [ "${UFC_PDFA_NEGATIVE_VALIDATION:-1}" = "1" ]; then
+    python3 tests/checks/normative_pdfa.py \
       "$pdf" \
       --positive-report "$report" \
-      --json /tmp/abntexto-ufc-n13-pdfa.json
+      --json "$negative_evidence"
   fi
   exit 0
 fi
 
 [ -s "$report" ] && cat "$report"
-echo "PDF/A V2 falhou: veraPDF rejeitou o documento como PDF/A-2b (exit $status)."
+echo "PDF/A validation failed: veraPDF rejected the document as PDF/A-2b (exit $status)."
 exit 1
