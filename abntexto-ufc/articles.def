@@ -110,14 +110,14 @@
     \ufc_if_article:F
       {
         \ClassError{abntexto-ufc}
-          {#1 is available only for the scientific article profile}
-          {Select type=article or tipo=artigo before using this command.}
+          {#1~is~available~only~for~the~scientific~article~profile}
+          {Select~type=article~or~tipo=artigo~before~using~this~command.}
       }
   }
 
 \cs_new_protected:Npn \ufc_article_header:
   {
-    \ufc_article_require_profile:n {Article header}
+    \ufc_article_require_profile:n {Article~header}
     \ufc_if_article:T
       {
         \begingroup
@@ -144,7 +144,7 @@
 
 \cs_new_protected:Npn \ufc_article_dates:
   {
-    \ufc_article_require_profile:n {Article dates}
+    \ufc_article_require_profile:n {Article~dates}
     \ufc_if_article:T
       {
         \par\vspace{\baselineskip}
@@ -163,8 +163,7 @@
 \NewDocumentCommand \imprimirdatasartigo { }
   { \ufcPrintArticleDates }
 
-% Article summaries remain on the continuous first-page flow; other profiles keep their page breaks.
-\cs_new_eq:NN \ufc_article_base_print_summary:n \imprimirresumo
+% Article summaries remain in continuous flow. The non-article branch repeats the certified body verbatim.
 \RenewDocumentCommand \imprimirresumo { m }
   {
     \ufc_if_article:TF
@@ -177,10 +176,18 @@
           \justifying\ufc_input_file:n {#1}
         \endgroup
       }
-      { \ufc_article_base_print_summary:n {#1} }
+      {
+        \clearpage
+        \thispagestyle{empty}
+        \ufc_pretextual_heading:n {Resumo}
+        \begingroup
+          \setlength{\parindent}{0pt}
+          \justifying\ufc_input_file:n {#1}
+        \endgroup
+        \clearpage
+      }
   }
 
-\cs_new_eq:NN \ufc_article_base_print_abstract:n \imprimirabstract
 \RenewDocumentCommand \imprimirabstract { m }
   {
     \ufc_if_article:TF
@@ -194,7 +201,17 @@
           \justifying\ufc_input_file:n {#1}
         \endgroup
       }
-      { \ufc_article_base_print_abstract:n {#1} }
+      {
+        \clearpage
+        \thispagestyle{empty}
+        \begingroup
+          \selectlanguage{english}
+          \ufc_pretextual_heading:n {Abstract}
+          \setlength{\parindent}{0pt}
+          \justifying\ufc_input_file:n {#1}
+        \endgroup
+        \clearpage
+      }
   }
 
 % Article references start one simple line after the final textual element and do not force a page break.

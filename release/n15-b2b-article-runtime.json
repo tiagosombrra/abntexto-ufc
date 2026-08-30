@@ -24,7 +24,7 @@
   "runtime": {
     "article_profile_available": true,
     "article_module": "abntexto-ufc/articles.def",
-    "article_module_blob_sha": "6a668a65ba1d5ddf6bd9366823003929a3f8a805",
+    "article_module_blob_sha": "b66f61a175c08739d1c40977f9f968a4711e286e",
     "load_after": "abntexto-ufc/public-api.def",
     "canonical_type": "type/article",
     "compatibility_type": "tipo/artigo",
