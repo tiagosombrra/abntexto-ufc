@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
   "updated_at": "2026-08-30",
@@ -8,10 +8,26 @@
     "branch": "main",
     "sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77"
   },
-  "active_branch": "refactor/v3-full-internationalization",
+  "planning_baseline": {
+    "sha": "ca2ab12163d16e5eef80c0c8ce9fea543064ab10",
+    "purpose": "last synchronized v3 planning state before the abandoned R1 execution"
+  },
+  "active_branch": "refactor/v3-r1-rebaseline",
   "superseded_branches": [
-    "refactor/n15-b2r-c-full-english-canonicalization"
+    "refactor/n15-b2r-c-full-english-canonicalization",
+    "refactor/v3-full-internationalization",
+    "refactor/v3-foundation-cleanup",
+    "refactor/v3-r1-rebaseline-temp"
   ],
+  "execution_policy": {
+    "no_debt_crosses_phase_gate": true,
+    "no_temporary_migration_scaffolding_after_r1": true,
+    "historical_evidence_may_retain_old_names": true,
+    "active_tree_may_depend_on_historical_names": false,
+    "r1_heavy_ci_automatic_triggers_allowed": false,
+    "r1_workflows_initially_disabled": true,
+    "r4_is_certification_only": true
+  },
   "language_policy": {
     "engineering_language": "English",
     "academic_content_language": "not constrained by engineering policy",
@@ -56,46 +72,56 @@
   "phases": [
     {
       "id": "V3-R0",
-      "name": "Architecture and migration contract",
+      "name": "Architecture and deterministic migration contracts",
       "status": "DONE",
-      "depends_on": [],
-      "exit_criteria": [
-        "every tracked path classified as retain/rename/move/remove",
-        "every project-owned public API identifier classified",
-        "no unresolved architecture or language-policy decision",
-        "deterministic migration inventory completed"
-      ]
+      "depends_on": []
     },
     {
       "id": "V3-R1",
-      "name": "Physical repository restructuring",
+      "name": "Complete repository rebaseline",
       "status": "ACTIVE",
       "depends_on": ["V3-R0"],
-      "contract": "release/v3-path-migration.json"
+      "contract": "release/v3-path-migration.json",
+      "exit_criteria": [
+        "target physical repository structure is complete",
+        "all project-owned technical paths and filenames are English",
+        "zero stale references to moved or renamed paths in the active tree",
+        "template/main.tex resolves and builds from its repository location",
+        "abntexto-ufc.cls loads only canonical v3 repository paths",
+        "Makefile, tools, validator and all active workflows use canonical v3 paths",
+        "all tests, fixtures, runners and checkers use canonical v3 paths and semantic names",
+        "distribution and Overleaf staging flatten template/ to bundle root",
+        "zero active references to obsolete roots or phase-version technical names",
+        "historical evidence is isolated from active engineering dependencies",
+        "no generated artifacts are tracked",
+        "no temporary migration workflow or migration scaffolding remains",
+        "permanent structural/path audit passes",
+        "human roadmap, machine roadmap and handoff are synchronized"
+      ]
     },
     {
       "id": "V3-R2",
-      "name": "Canonical English runtime",
+      "name": "English-only canonical runtime",
       "status": "BLOCKED",
       "depends_on": ["V3-R1"],
       "contract": "release/v3-api-migration.json"
     },
     {
       "id": "V3-R3",
-      "name": "Engineering-language enforcement",
+      "name": "Standards, tests and engineering-language semantic hardening",
       "status": "BLOCKED",
-      "depends_on": ["V3-R2"]
-    },
-    {
-      "id": "V3-R4",
-      "name": "Test architecture and regression reconstruction",
-      "status": "BLOCKED",
-      "depends_on": ["V3-R3"],
+      "depends_on": ["V3-R2"],
       "contract": "release/v3-test-migration.json"
     },
     {
+      "id": "V3-R4",
+      "name": "CI, release and distribution certification",
+      "status": "BLOCKED",
+      "depends_on": ["V3-R3"]
+    },
+    {
       "id": "V3-R5",
-      "name": "Documentation and distribution redesign",
+      "name": "Foundation freeze and migration documentation",
       "status": "BLOCKED",
       "depends_on": ["V3-R4"]
     },
@@ -115,7 +141,7 @@
     },
     {
       "id": "V3-H1",
-      "name": "Release hardening",
+      "name": "Release hardening after article integration",
       "status": "BLOCKED",
       "depends_on": ["V3-A2"],
       "absorbs": ["N15-B3"]
@@ -143,23 +169,19 @@
   ],
   "retained_previous_work": {
     "N0-N14": "certified historical evidence; do not repeat blindly",
-    "N15-A": "input to V3-R0 and V3-H1",
+    "N15-A": "audit input retained",
     "N15-B1": "source and authority reconciliation retained",
-    "N15-B2A": "article normative contract retained",
+    "N15-B2A": "scientific article normative contract retained",
     "N15-B2R": "historical naming evidence retained; additive compatibility architecture superseded"
   },
-  "release_hardening_known_items": [
-    {
-      "id": "github-issue-18",
-      "topic": "reference PDF bit reproducibility",
-      "status": "OPEN"
-    },
-    {
-      "id": "workflow-review",
-      "topic": "prove unique value or remove obsolete reference-validation workflow",
-      "status": "PENDING"
-    }
-  ],
+  "release_guardrails": {
+    "institutional_mark_excluded_from_public_bundles": true,
+    "proprietary_microsoft_fonts_excluded_from_public_bundles": true,
+    "windows_gate_t_required_for_literal_font_identity": true,
+    "pdfa_technical_target": "PDF/A-2b",
+    "no_tag_from_uncertified_head": true,
+    "branch_cleanup_post_release_only": true
+  },
   "continuation_protocol": {
     "read_first": [
       "docs/HANDOFF-V3.0.0.md",
@@ -174,7 +196,8 @@
     "phase_authority": "release/v3-roadmap.json",
     "handoff_authority": "docs/HANDOFF-V3.0.0.md",
     "phase_close_requires_human_and_machine_roadmap_sync": true,
-    "phase_close_requires_executable_evidence_when_runtime_changes": true
+    "phase_close_requires_executable_evidence_when_runtime_changes": true,
+    "phase_close_requires_zero_known_active_tree_debt_in_phase_scope": true
   },
-  "next_action": "Execute V3-R1 physical repository restructuring exactly from release/v3-path-migration.json; do not begin runtime API rewriting until V3-R1 exit criteria pass."
+  "next_action": "Execute V3-R1 as a clean repository rebaseline on refactor/v3-r1-rebaseline with workflows initially disabled; close every active-tree structural/path/tool/test/distribution/workflow dependency before starting V3-R2."
 }
