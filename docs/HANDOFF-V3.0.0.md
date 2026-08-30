@@ -5,78 +5,73 @@ Updated: 2026-08-30
 ## Checkpoint
 
 - Phase: **V3-R1 ACTIVE**.
-- Active block: **R1 Block 2 — legacy purge and active-tree minimization**.
+- Active block: **R1 Block 3 — residual path-consumer reconciliation**.
 - Branch: `refactor/v3-r1-rebaseline`.
-- Latest completed implementation SHA: `f8509ba01a208b634c63a28b3c20cbf7ab8c75dd`.
+- Latest completed implementation SHA: `03d7f5ceb1a325d26c712ba5e619ee85530a022b`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
 
-## Clean-tree rule
+## Non-negotiable clean-tree rule
 
-Do not create or retain repository museums.
+The active v3 repository is not an archive. Historical/process evidence belongs to Git history, tags, releases, issues, pull requests, and certified SHAs. No history directories, dormant future-feature files, or completed campaign ledgers remain merely for convenience.
 
-Historical evidence belongs to Git history, tags, releases, certified commit/blob SHAs, issues, and pull requests. The active v3 tree contains only:
-
-1. files required by the current v3 product/runtime/tests/build/distribution; or
-2. temporary migration contracts directly consumed by the active migration.
-
-Therefore:
-
-- no `docs/history/`, `release/history/`, or `standards/history/`;
-- no v2/N15/B2R/N-phase handoff, ledger, campaign snapshot, audit report, or compatibility inventory without an active v3 consumer;
-- no dormant future-phase article files before V3-A1;
-- no compatibility checker retained merely to prove past compatibility;
-- no duplicate old/new documentation during renames;
-- temporary migration contracts are deleted or consolidated when no longer needed.
-
-A deletion and the repair/removal of all current consumers are one atomic cleanup responsibility.
+Temporary migration contracts may remain only while directly consumed by R1/R2. Remove or consolidate them when their consumer disappears.
 
 ## CI rule
 
-`.github/workflows/` remains absent during structural R1 work. When restored, automatic CI must be cheap, filtered, and cancel superseded runs. Gate T, Overleaf, PDF/A, distribution/CTAN, and full multi-engine suites are candidate/certification jobs rather than intermediate-commit jobs.
+`.github/workflows/` remains absent during structural R1 reconstruction. CI is restored only after the permanent static gates and current paths are stable. Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not intermediate-commit work.
 
 ## Engineering-language rule
 
-Every project-owned technical surface is English, including validator implementation and UI. Portuguese is limited to academic output/data, official names/wording, literal Portuguese payload under test, and necessary upstream integration identifiers.
+Every project-owned technical surface is English, including validator implementation and technical UI. Portuguese is limited to academic/rendered content, bibliography data, official UFC/ABNT wording, literal Portuguese output under test, and required upstream identifiers at explicit integration boundaries.
 
-## Block 1 — DONE
+## R1 Block 1 — DONE
 
-Closed at `f8509ba01a208b634c63a28b3c20cbf7ab8c75dd`.
+Canonical physical naming closed at `f8509ba01a208b634c63a28b3c20cbf7ab8c75dd`.
 
-The active physical tree now uses the canonical `template/`, `standards/`, semantic test roots, current integration/standard-adapter roots, and no `oracle`/old document-phase terminology in tracked path names.
+## R1 Block 2 — DONE
 
-## Block 2 — ACTIVE
+Closed at `03d7f5ceb1a325d26c712ba5e619ee85530a022b`.
 
-Perform a dependency-aware purge. Current confirmed removal candidates include:
+Completed cleanup:
 
-- `docs/history/` and its v2 audit;
-- `docs/B2R-NAMING-INVENTORY.md`;
-- `docs/HANDOFF-V2.2.0.md`;
-- obsolete v2 `docs/NAMING.md`;
-- historical `release/final-audit.json` and `release/n15-*` ledgers;
-- N9–N12 process/reconciliation snapshots under `standards/` when they are not current normative inputs;
-- dormant article-only standards/checkers until V3-A1;
-- `tests/checks/public_api_contract.py` and other phase-specific v2 audit/source-authority checkers;
-- deprecated `ufctex.cls`.
+- deleted v2 handoff/audit/naming inventory and history directory;
+- deleted N15/B2R release ledgers and compatibility-only checkers;
+- deleted deprecated `ufctex.cls`;
+- deleted N9–N12 campaign/reconciliation snapshots and phase-only checkers;
+- deleted dedicated dormant article rule/locator files until V3-A1;
+- deleted N4 coverage promotion/audit ledgers and rewrote coverage validation against the current contract;
+- deleted obsolete N2 reconciliation ledger/checker;
+- replaced Portuguese v2 normative technical docs with `docs/NORMATIVE-BASE.md` and `docs/NORMATIVE-CURRENCY.md`;
+- rewrote active README/architecture/language policy for the v3 active tree.
 
-Current v3 migration contracts remain only because R1/R2 still consume them.
+A physical-tree audit found no active history directory, N15/B2R physical artifact, dedicated article rule file, or obsolete reconciliation ledger. Current locator/source evidence stays because active validators consume it.
 
-Current Portuguese technical documentation filenames must be renamed, not duplicated: `docs/NORMAS.md` and `docs/VIGENCIA-NORMATIVA.md` require English active names with consumers updated.
+## R1 Block 3 — ACTIVE
 
-## Required reconciliation in this block
+Goal: remove stale references and retired engineering terminology from active consumers without performing the R2 runtime API rewrite.
 
-`tests/run.py` is known stale and must be fixed together with the purge: remove the historical public-API gate, replace `pdf-oracle-core` with current PDF validation naming, and use `template/main.pdf` where the reference document path is required.
+Known work:
 
-Do not leave deleted-file references for a later block when they are direct consequences of this purge.
+1. migrate central normative tool paths from `normativa/` to `standards/`;
+2. migrate active checker paths from `normativa/` to `standards/`;
+3. migrate integration fixtures from `tests/normativa/` to `tests/documents/` or current fixtures;
+4. remove references to deleted N-phase/v2 checkers;
+5. eliminate active `oracle`, `pretextual`, `posttextual`, and v2 engineering labels where they are project-owned technical terminology;
+6. update the repository contract for the new normative documentation and forbidden old names;
+7. validate that every active runner points to an existing file and every current evidence file has a current consumer.
+
+`tests/integration/normative-complement.sh` is a confirmed stale consumer: it still calls a removed N12 checker, `tests/normativa/...`, `tests/v2-*` scripts, uses v2 temp-log names, and emits Portuguese technical diagnostics. It must be rebuilt rather than patched cosmetically.
+
+The central loaders `tools/normative_catalog.py`, `tools/normative_atomic.py`, and `tools/normative_full.py` still resolve `normativa/`; they are first-order Block 3 fixes.
 
 ## Remaining R1 order
 
-3. residual path-consumer reconciliation;
-4. Makefile/tools/validator/metadata paths;
-5. distribution and public bundle flattening;
-6. permanent static gates;
-7. optimized workflow restoration;
-8. canonical repository identity plus exhaustive clean-tree R1 closure.
+4. Makefile/tools/validator/metadata technical rebaseline.
+5. Distribution and public bundle flattening.
+6. Permanent static gates.
+7. Optimized workflow restoration.
+8. Repository identity plus exhaustive clean-tree R1 closure.
 
 ## Immediate action
 
-Commit the active-tree policy authorities, then execute the dependency-aware legacy purge on the same branch with Actions disabled. Verify the resulting tracked tree before advancing the roadmap.
+Start Block 3 with the central normative loaders and the runner-called integration scripts. Re-run structural inventory after each coherent migration set; do not defer a known stale consumer to R2.

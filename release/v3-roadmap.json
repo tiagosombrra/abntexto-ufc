@@ -1,41 +1,34 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
   "updated_at": "2026-08-30",
   "status": "ACTIVE",
   "active_branch": "refactor/v3-r1-rebaseline",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "latest_completed_implementation_sha": "f8509ba01a208b634c63a28b3c20cbf7ab8c75dd",
+  "latest_completed_implementation_sha": "03d7f5ceb1a325d26c712ba5e619ee85530a022b",
   "phase": "V3-R1",
-  "active_block": "R1-BLOCK-2",
-  "active_block_name": "legacy purge and active-tree minimization",
+  "active_block": "R1-BLOCK-3",
+  "active_block_name": "residual path-consumer reconciliation",
   "active_tree_policy": {
     "history_directories_allowed": false,
+    "retain_file_only_for_historical_convenience": false,
+    "retain_completed_campaign_ledgers": false,
+    "retain_dormant_future_phase_files": false,
+    "temporary_migration_contracts_allowed_only_while_consumed": true,
+    "delete_or_consolidate_unused_migration_contracts": true,
     "historical_evidence_storage": [
       "git_commits",
       "git_tags",
       "github_releases",
       "certified_commit_and_blob_shas",
       "issues_and_pull_requests"
-    ],
-    "retain_file_only_for_historical_convenience": false,
-    "retain_dormant_future_phase_files": false,
-    "temporary_migration_contracts_allowed_only_while_consumed": true,
-    "delete_or_consolidate_unused_migration_contracts": true,
-    "deletion_requires_same_block_consumer_reconciliation": true
+    ]
   },
   "language_policy": {
     "engineering_language": "English",
     "validator_technical_ui_language": "English",
-    "portuguese_project_api_allowed_in_final_v3": false,
-    "allowed_portuguese_scopes": [
-      "academic_rendered_content",
-      "bibliography_data",
-      "official_ufc_abnt_wording",
-      "literal_portuguese_output_under_test",
-      "required_upstream_integration_identifiers"
-    ]
+    "portuguese_project_api_allowed_in_final_v3": false
   },
   "ci_policy": {
     "automatic_workflows_during_r1_reconstruction": false,
@@ -43,14 +36,6 @@
     "path_filters_where_practical": true,
     "cancel_in_progress": true,
     "heavy_jobs_on_every_intermediate_commit": false,
-    "heavy_jobs": [
-      "windows_literal_font_gate_t",
-      "overleaf",
-      "pdfa",
-      "distribution",
-      "ctan",
-      "full_multi_engine_regression"
-    ],
     "workflow_repository_mutation_allowed": false
   },
   "blocks": {
@@ -60,24 +45,44 @@
       "name": "canonical physical naming"
     },
     "R1-BLOCK-2": {
-      "status": "ACTIVE",
+      "status": "DONE",
+      "closure_sha": "03d7f5ceb1a325d26c712ba5e619ee85530a022b",
       "name": "legacy purge and active-tree minimization",
-      "rules": [
-        "delete unconsumed v2 N-phase N15 B2R artifacts instead of archiving them",
-        "delete dormant future article artifacts until V3-A1",
-        "delete superseded compatibility and phase-specific checkers",
-        "remove deprecated ufctex.cls",
-        "rename current Portuguese technical documentation filenames to English without duplicates",
-        "repair direct consumers in the same cleanup block"
+      "validated_absent": [
+        "history directories",
+        "v2 handoff and audit artifacts",
+        "N15 and B2R ledgers",
+        "N9-N12 campaign snapshots",
+        "deprecated ufctex.cls",
+        "dedicated dormant article rule and locator artifacts",
+        "N4 coverage campaign ledgers",
+        "obsolete N2 reconciliation ledger"
       ]
     },
-    "R1-BLOCK-3": {"status": "BLOCKED", "name": "residual path-consumer reconciliation"},
-    "R1-BLOCK-4": {"status": "BLOCKED", "name": "Makefile tools validator and metadata paths"},
+    "R1-BLOCK-3": {
+      "status": "ACTIVE",
+      "name": "residual path-consumer reconciliation",
+      "work": [
+        "normativa to standards active references",
+        "tests/normativa to current document and fixture paths",
+        "removed N-phase and v2 checker references",
+        "oracle pretextual posttextual and v2 technical terminology",
+        "current normative documentation references",
+        "active runner-to-file and evidence-to-consumer integrity"
+      ]
+    },
+    "R1-BLOCK-4": {"status": "BLOCKED", "name": "Makefile tools validator and metadata technical rebaseline"},
     "R1-BLOCK-5": {"status": "BLOCKED", "name": "distribution and public bundle flattening"},
     "R1-BLOCK-6": {"status": "BLOCKED", "name": "permanent static gates"},
     "R1-BLOCK-7": {"status": "BLOCKED", "name": "optimized workflow restoration"},
     "R1-BLOCK-8": {"status": "BLOCKED", "name": "repository identity and exhaustive R1 closure"}
   },
+  "known_block3_first_order_consumers": [
+    "tools/normative_catalog.py",
+    "tools/normative_atomic.py",
+    "tools/normative_full.py",
+    "tests/integration/normative-complement.sh"
+  ],
   "phases": [
     {"id": "V3-R0", "status": "DONE"},
     {"id": "V3-R1", "status": "ACTIVE", "depends_on": ["V3-R0"]},
@@ -92,17 +97,5 @@
     {"id": "V3-FINAL", "status": "BLOCKED", "depends_on": ["V3-RC"]},
     {"id": "V3-CLEANUP", "status": "BLOCKED", "depends_on": ["V3-FINAL"]}
   ],
-  "r1_exit_criteria": [
-    "no dead historical or migration artifacts without active consumers",
-    "no history archive directories in the active tree",
-    "zero obsolete physical paths and stale references",
-    "zero project-owned Portuguese technical paths",
-    "zero active oracle v2 N-phase N15 or B2R engineering identity",
-    "zero generated artifacts and temporary migration scaffolding",
-    "canonical template class build tool test and distribution paths resolve",
-    "permanent static gates pass",
-    "optimized CI cannot spam intermediate commits",
-    "roadmap machine state and handoff agree"
-  ],
-  "next_action": "Commit the active-tree-only policy, then execute R1 Block 2 dependency-aware legacy purge with workflows disabled."
+  "next_action": "Reconcile central normative loaders and runner-called stale integration consumers against the v3 paths."
 }
