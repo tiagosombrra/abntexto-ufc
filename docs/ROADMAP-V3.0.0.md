@@ -8,7 +8,8 @@ Updated: 2026-08-30
 
 - Active branch: `refactor/v3-r1-rebaseline`.
 - Certified v2 baseline: `main` at `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
-- Latest completed implementation checkpoint: `1cd88899bd25592944e37042419aa146e39c1de6`.
+- Latest completed implementation checkpoint: `91424aab55b08d0931654cd895db9ac7925ca15c`.
+- Latest clean checkpoint: `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6`.
 - Latest migration-contract reconciliation: `66c1005f326ee6523e420165ddb9de595ef49d3d`.
 - R1 Block 1: **DONE** — canonical physical naming.
 - R1 Block 2: **DONE** — legacy purge and active-tree minimization.
@@ -60,25 +61,33 @@ Completed checkpoints:
 - `d4a348c6bb1600f0fc616c1ce23c1636db606097`: PDF validator and PDF/A gates moved to `template/main.pdf`; PDF/A controlled negative validation retained while N13 campaign identity was removed.
 - `1cd88899bd25592944e37042419aa146e39c1de6`: front matter contracts, fixtures, documents, checkers, and integration consumers were rebaselined to current semantic identities; obsolete project-owned `pretextual`, `posttextual`, `oracle`, and N6 validation identities were removed while upstream `\pretextual` boundaries were preserved; full normative-contract consistency passed.
 - `66c1005f326ee6523e420165ddb9de595ef49d3d`: the v3 test-migration contract was reconciled with the implemented front matter evidence architecture; nonexistent oracle checker targets were removed.
-
-All temporary `r1-frontmatter-*` workflow executors were removed before this checkpoint.
+- `bde108b7ff0076605643e870ae7cd86ce69a7e76`: standards consumers were reconciled with current physical contracts, stale constructed standard paths were eliminated, generated Python bytecode was purged and permanently ignored, and full-contract, object-scope, normative-currency, Python syntax, shell syntax, and diff checks passed.
+- `91424aab55b08d0931654cd895db9ac7925ca15c`: validation ownership was normalized against canonical `tests/run.py` check IDs; obsolete aliases were collapsed to semantic owners, manual checks remained manual, the Windows literal-font/PDF-A gate remains an explicit external owner for workflow restoration, and fifteen validation-policy consumers were migrated from the retired N5 policy contract to `validation-reference-policy.json` schema 2. Static gates passed before publication.
+- `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6`: all four R1 one-shot workflow executors/auditors were removed after use. The branch contains no temporary workflow scaffolding at this checkpoint and, by policy, no permanent automatic workflows until Block 7 restoration.
 
 The Makefile development build was pulled forward from the former Block 4 scope because `reference-document.sh` directly depends on `make compile`. This is dependency correction, not runtime/API migration; class/runtime version remains 2.1.0 until its designated phase.
 
+Validation-owner policy after `91424aab...`:
+
+- automatic validation metadata uses canonical semantic `tests/run.py` owners;
+- `approval.signatures` and `capes` remain manual/conditional-manual requirements and therefore do not require a runner owner;
+- `windows-font-pdfa` remains a platform-specific external gate and must receive its permanent workflow owner in Block 7;
+- no permanent workflow is currently present in the R1 reconstruction branch.
+
 Remaining Block 3 work:
 
-- inspect every remaining `tests/run.py` integration entry point and direct dependency;
-- remove remaining active `normativa/`, `tests/normativa/`, removed `tests/v2-*`, N-phase, B2R, and project-owned `oracle` engineering references outside explicit current-runtime/upstream boundaries;
-- reconcile remaining standards validation-check IDs with current semantic runner IDs;
-- verify runner-to-file and evidence-to-consumer integrity across tests, tools, validator, and active metadata;
-- run permanent repository/static checks once the dependency graph is current.
+- remove remaining active N-phase/N15/B2R campaign identity from standards scenarios, validators, checkers, and integration scripts by migrating producers and consumers together;
+- replace remaining project-owned `oracle` engineering terminology with semantic validation terminology without changing normative values, rule IDs, evidence predicates, or runtime behavior;
+- remove active `v2`/`V2` engineering identity from test temporary paths, messages, contracts, and metadata where it is operational rather than immutable evidence;
+- verify runner-to-file and evidence-to-consumer integrity across tests, tools, validator, and active metadata after the identity migration;
+- run permanent repository/static checks once the dependency graph and engineering identity are current.
 
 ### Remaining R1 blocks
 
 4. Remaining tools, validator, and metadata technical rebaseline. The Makefile development build is already resolved as a Block 3 prerequisite.
 5. Distribution/Overleaf/CTAN staging with repository `template/` flattened only in public bundles.
 6. Permanent static gates for topology, language, inventory, and plan consistency.
-7. Optimized workflow restoration.
+7. Optimized workflow restoration, including the permanent owner of the Windows literal-font/PDF-A gate.
 8. Canonical repository identity, exhaustive clean-tree audit, and R1 closure.
 
 ### R1 exit criteria
@@ -105,4 +114,4 @@ Remaining Block 3 work:
 
 ## Immediate action
 
-Complete the residual active-tree audit across the remaining `tests/run.py` graph, standards validation IDs, tools, validator, and metadata. Do not advance to Block 4 while a stale active consumer remains.
+Migrate the remaining active N-phase/N15/B2R/`oracle`/v2 engineering identity across standards producers and their checker/integration/validator consumers as one bounded Block 3 operation. Preserve normative semantics and do not advance to Block 4 while any stale active consumer or process identity remains.
