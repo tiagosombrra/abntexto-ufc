@@ -24,7 +24,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sed -i 's/VIGENCIA-NORMATIVA\.md/NORMATIVE-CURRENCY.md/g' tests/checks/normative_currency.py
           python3 tools/r1_standard_consumers_repair.py
 
           git rm -r --ignore-unmatch tests/checks/__pycache__ tools/__pycache__
