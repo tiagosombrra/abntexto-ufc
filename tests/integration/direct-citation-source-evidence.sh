@@ -59,4 +59,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para atribuição de fonte em citação direta concluído.'
+echo 'Gate de evidência para atribuição de fonte em citação direta concluído.'

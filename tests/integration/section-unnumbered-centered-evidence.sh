@@ -59,4 +59,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para centralização de títulos sem indicativo concluído.'
+echo 'Gate de evidência para centralização de títulos sem indicativo concluído.'

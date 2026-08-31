@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "ufc-citation-system",
   "locator_ruleset": "citations.ufc-system",
   "rules": [
@@ -28,10 +27,10 @@
     }
   },
   "markers": {
-    "parenthetical_before": "N6CSAPRE",
-    "parenthetical_after": "N6CSAPST",
-    "textual_before": "N6CSBPRE",
-    "textual_after": "N6CSBPST"
+    "parenthetical_before": "CSCSAPRE",
+    "parenthetical_after": "CSCSAPST",
+    "textual_before": "CSCSBPRE",
+    "textual_after": "CSCSBPST"
   },
   "calibration": {
     "system_evidence": "positive final-PDF evidence that supported default citation surfaces preserve identifiable author token(s) and date token(s)",

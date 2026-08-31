@@ -24,7 +24,7 @@ DASH_CHARS = "-‐‑‒–—―"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N10 appendix/annex validation failed: {message}")
+    raise SystemExit(f"appendix/annex validation failed: {message}")
 
 
 def load_json(path: Path, label: str) -> dict[str, Any]:
@@ -184,7 +184,7 @@ def page_has_number(page: ET.Element, number: int) -> bool:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N10 appendix/annex final-PDF evidence.")
+    parser = argparse.ArgumentParser(description="Measure appendix/annex final-PDF evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -196,7 +196,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO, "scenario")
     validation = load_json(VALIDATION_POLICY, "validation policy")
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N10":
+    if scenario.get("schema_version") != 1:
         fail("invalid scenario schema/phase")
     if validation.get("schema_version") != 2:
         fail("invalid validation policy schema")
@@ -485,7 +485,6 @@ def main() -> None:
     remaining = int(scope["total_rules"]) - current
     payload = {
         "schema_version": 1,
-        "phase": "N10",
         "campaign": "appendix-annex-final-pdf",
         "source_commit_sha": args.commit_sha,
         "fixture": scenario["fixture"],
@@ -507,19 +506,19 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N10-EVIDENCE appendix-annex-final-pdf-summary "
+        "VALIDATION-EVIDENCE appendix-annex-final-pdf-summary "
         f"PASS={counts.get('PASS', 0)} FAIL={counts.get('FAIL', 0)} "
         f"appendix_pages={','.join(str(item['physical_page']) for item in appendix_samples)} "
         f"annex_pages={','.join(str(item['physical_page']) for item in annex_samples)}"
     )
     for item in evidence:
         print(
-            f"N10-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
     print(
-        "N10-EVIDENCE bounded-progress "
+        "VALIDATION-EVIDENCE bounded-progress "
         f"total={scope['total_rules']} baseline_existing_bounded_positive={baseline} "
         f"promoted_bounded_positive={promoted} current_bounded_positive={current} "
         f"current_support_only={remaining} proof_state_changed=false"

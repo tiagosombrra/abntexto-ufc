@@ -39,7 +39,7 @@ HEADER_LIMIT_PT = 80.0
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 typography validation failed: {message}")
+    raise SystemExit(f"typography validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -109,7 +109,7 @@ def evidence_record(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure bounded N7 typography evidence.")
+    parser = argparse.ArgumentParser(description="Measure bounded typography evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -126,7 +126,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N7"
+
         or scenario.get("component") != "typography"
         or scenario.get("rules") != RULE_ORDER
         or scenario.get("direct_pdf_rules") != DIRECT_RULES
@@ -409,7 +409,6 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N7",
         "component": "typography",
         "source_commit_sha": args.commit_sha,
         "fixture": "tests/documents/mainmatter-typography-test.tex",
@@ -426,14 +425,14 @@ def main() -> None:
     )
 
     print(
-        "N7-EVIDENCE typography-summary "
+        "VALIDATION-EVIDENCE typography-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" body_gaps={','.join(f'{value:.4f}' for value in body_gaps)}"
         + f" calibration_gap={calibration_gap:.4f}"
     )
     for item in evidence:
         print(
-            f"N7-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

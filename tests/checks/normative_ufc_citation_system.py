@@ -138,7 +138,7 @@ def measure_surface(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 UFC author-date citation-system evidence from a final PDF."
+        description="Measure UFC author-date citation-system evidence from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -153,7 +153,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "ufc-citation-system"
         or scenario.get("locator_ruleset") != RULESET_ID
         or scenario.get("rules") != [RULE_ID]
@@ -246,7 +246,6 @@ def main() -> None:
     result = "PASS" if rule_passed else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "ufc-citation-system",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -260,13 +259,13 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE ufc-citation-system-summary "
+        "VALIDATION-EVIDENCE ufc-citation-system-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" surfaces={len(surfaces)}"
         + f" author_date_surfaces={passed_surfaces}/{len(surfaces)}"
     )
     print(
-        f"N6-EVIDENCE rule={RULE_ID} status={evidence[0]['status']} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={evidence[0]['status']} "
         f"expected={json.dumps(values, ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(measured, ensure_ascii=False, sort_keys=True)}"
     )

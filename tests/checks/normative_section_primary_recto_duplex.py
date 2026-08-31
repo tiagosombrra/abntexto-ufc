@@ -57,7 +57,7 @@ def record(status: str, expected: Any, measured: Any) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 primary-section recto evidence from a duplex final PDF.")
+    parser = argparse.ArgumentParser(description="Measure primary-section recto evidence from a duplex final PDF.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -70,7 +70,7 @@ def main() -> None:
     locator = load_json(LOCATOR_AUDIT)
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "section-primary-recto-duplex"
         or scenario.get("locator_ruleset") != "sections.primary-recto-duplex"
     ):
@@ -186,7 +186,6 @@ def main() -> None:
     result = evidence["status"]
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "section-primary-recto-duplex",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -198,12 +197,12 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N6-EVIDENCE section-primary-recto-duplex-summary "
+        "VALIDATION-EVIDENCE section-primary-recto-duplex-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" primaries={len(measured_primaries)} pages={','.join(str(page) for page in title_pages)}"
     )
     print(
-        f"N6-EVIDENCE rule={RULE_ID} status={evidence['status']} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={evidence['status']} "
         f"expected={json.dumps(expected, ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(evidence['measured'], ensure_ascii=False, sort_keys=True)}"
     )

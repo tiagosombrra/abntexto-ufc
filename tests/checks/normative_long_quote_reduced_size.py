@@ -43,7 +43,6 @@ def main() -> None:
     scenario = load_json(SCENARIO)
     expected_scenario = {
         "schema_version": 1,
-        "phase": "N8",
         "component": "long-quote-reduced-size",
         "rule_id": RULE_ID,
         "measurement_source_rule_id": SOURCE_RULE_ID,
@@ -90,7 +89,7 @@ def main() -> None:
     source = load_json(args.source_evidence)
     if (
         source.get("schema_version") != 1
-        or source.get("phase") != "N6"
+
         or source.get("component") != "long-quotation"
         or source.get("result") != "PASS"
     ):
@@ -170,7 +169,6 @@ def main() -> None:
     }
     payload = {
         "schema_version": 1,
-        "phase": "N8",
         "component": "long-quote-reduced-size",
         "source_commit_sha": args.commit_sha,
         "result": "PASS",
@@ -184,7 +182,7 @@ def main() -> None:
         encoding="utf-8",
     )
     print(
-        f"N8-EVIDENCE rule={RULE_ID} status=PASS "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status=PASS "
         f"expected={json.dumps(values, ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(evidence['measured'], ensure_ascii=False, sort_keys=True)}"
     )

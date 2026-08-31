@@ -22,7 +22,7 @@ PT_PER_MM = 72.0 / 25.4
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N10 index/glossary validation failed: {message}")
+    raise SystemExit(f"index/glossary validation failed: {message}")
 
 
 def load_json(path: Path, label: str) -> dict[str, Any]:
@@ -161,7 +161,7 @@ def require_value(rules: dict[str, dict[str, Any]], rule_id: str, expected: dict
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N10 index/glossary final-PDF evidence.")
+    parser = argparse.ArgumentParser(description="Measure index/glossary final-PDF evidence.")
     parser.add_argument("present_pdf", type=Path)
     parser.add_argument("absent_pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -176,7 +176,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO, "scenario")
     validation = load_json(VALIDATION_POLICY, "validation policy")
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N10":
+    if scenario.get("schema_version") != 1:
         fail("invalid scenario schema/phase")
     if validation.get("schema_version") != 2:
         fail("invalid validation policy schema")
@@ -327,7 +327,6 @@ def main() -> None:
     failed = len(evidence) - passed
     payload = {
         "schema_version": 1,
-        "phase": "N10",
         "campaign": "index-glossary-final-pdf",
         "source_commit_sha": args.commit_sha or None,
         "rendered_engine": "lualatex",
@@ -348,18 +347,18 @@ def main() -> None:
     )
 
     print(
-        "N10-EVIDENCE index-glossary-final-pdf-summary "
+        "VALIDATION-EVIDENCE index-glossary-final-pdf-summary "
         f"PASS={passed} FAIL={failed} index_page={index_page} "
         f"index_heading={json.dumps(raw_heading, ensure_ascii=False)}"
     )
     for item in evidence:
         print(
-            f"N10-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
     print(
-        "N10-EVIDENCE bounded-progress total=20 "
+        "VALIDATION-EVIDENCE bounded-progress total=20 "
         "baseline_existing_bounded_positive=2 appendix_annex_bounded_positive=13 "
         f"promoted_bounded_positive={passed} current_bounded_positive={15 + passed} "
         f"current_support_only={5 - passed} proof_state_changed=false"

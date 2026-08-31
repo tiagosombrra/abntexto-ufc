@@ -116,6 +116,6 @@ PY
   done
 done
 
-echo 'N6-EVIDENCE rule=deposit.catalog-card status=PASS measured=enabled-and-disabled-routes'
-echo 'N6-BOUNDARY rule=font.size.reduced.catalog-card status=MANUAL scope=external-pdf'
+echo 'VALIDATION-EVIDENCE rule=deposit.catalog-card status=PASS measured=enabled-and-disabled-routes'
+echo 'VALIDATION-BOUNDARY rule=font.size.reduced.catalog-card status=MANUAL scope=external-pdf'
 echo 'Gate V2 da ficha catalográfica concluído.'

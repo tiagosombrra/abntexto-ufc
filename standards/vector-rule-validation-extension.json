@@ -1,9 +1,8 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-08-26",
-  "phase": "N5",
   "component": "vector-rule-geometry",
-  "purpose": "Calibrate an additive final-PDF oracle capability for thin horizontal and vertical vector rules before N9 uses it for IBGE table geometry.",
+  "purpose": "Calibrate an additive final-PDF oracle capability for thin horizontal and vertical vector rules for IBGE table geometry.",
   "tool": "pdftocairo -svg",
   "implementation": "tools/pdf_vector_measurement.py",
   "calibration_fixture": "tests/documents/vector-rule-calibration-test.tex",

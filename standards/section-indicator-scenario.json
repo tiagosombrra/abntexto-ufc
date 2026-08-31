@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "section-indicator",
   "locator_ruleset": "sections.indicator",
   "rules": [
@@ -10,38 +9,38 @@
   "levels": [
     {
       "level": "section",
-      "title_marker": "N6Sect",
+      "title_marker": "SISECT",
       "number": "1",
-      "calibration_left": "N6SCalA",
-      "calibration_right": "N6SCalB"
+      "calibration_left": "SISCALA",
+      "calibration_right": "SISCALB"
     },
     {
       "level": "subsection",
-      "title_marker": "N6Sub",
+      "title_marker": "SISUB",
       "number": "1.1",
-      "calibration_left": "N6UCalA",
-      "calibration_right": "N6UCalB"
+      "calibration_left": "SIUCALA",
+      "calibration_right": "SIUCALB"
     },
     {
       "level": "subsubsection",
-      "title_marker": "N6Subsub",
+      "title_marker": "SISUBSUB",
       "number": "1.1.1",
-      "calibration_left": "N6VCalA",
-      "calibration_right": "N6VCalB"
+      "calibration_left": "SIVCALA",
+      "calibration_right": "SIVCALB"
     },
     {
       "level": "paragraph",
-      "title_marker": "N6Para",
+      "title_marker": "SIPARA",
       "number": "1.1.1.1",
-      "calibration_left": "N6PCalA",
-      "calibration_right": "N6PCalB"
+      "calibration_left": "SIPCALA",
+      "calibration_right": "SIPCALB"
     },
     {
       "level": "subparagraph",
-      "title_marker": "N6Subpara",
+      "title_marker": "SISUBPARA",
       "number": "1.1.1.1.1",
-      "calibration_left": "N6QCalA",
-      "calibration_right": "N6QCalB"
+      "calibration_left": "SIQCALA",
+      "calibration_right": "SIQCALB"
     }
   ]
 }

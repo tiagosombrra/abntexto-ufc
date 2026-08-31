@@ -42,4 +42,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para espaçamento de subseção concluído.'
+echo 'Gate de evidência para espaçamento de subseção concluído.'

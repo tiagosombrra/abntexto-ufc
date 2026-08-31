@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N7",
   "component": "page-margins",
   "rules": [
     "page.a4",

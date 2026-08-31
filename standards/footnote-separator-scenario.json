@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N7",
   "component": "footnote-separator",
   "rules": [
     "footnote.separator.length"
@@ -9,8 +8,8 @@
     "footnote.separator.length": "footnotes.separator"
   },
   "markers": {
-    "margin_control": "UFCN7SeparatorMargin",
-    "footnote_text": "UFCN7SeparatorFootnote"
+    "margin_control": "UFCSeparatorMargin",
+    "footnote_text": "UFCSeparatorFootnote"
   },
   "measurement": {
     "vector_tool": "pdftocairo -svg",

@@ -26,7 +26,7 @@ EXPECTED = {rule_id: {"pt": 10} for rule_id in RULES}
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 table typography validation failed: {message}")
+    raise SystemExit(f"table typography validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -58,7 +58,7 @@ def unique_run(runs: list[Any], marker: str) -> Any:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure bounded N9 table typography evidence.")
+    parser = argparse.ArgumentParser(description="Measure bounded table typography evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -72,7 +72,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N9"
+
         or scenario.get("component") != "table-typography-final-pdf"
         or scenario.get("rules") != RULES
         or scenario.get("campaign_id") != "table-final-pdf"
@@ -96,7 +96,7 @@ def main() -> None:
     except (KeyError, TypeError, ValueError) as exc:
         fail(f"invalid validation font-size tolerance: {exc}")
     if "pdftohtml -xml -zoom 1.0" not in set(validation.get("tools", {}).values()):
-        fail("table typography tool left N5 validation policy")
+        fail("table typography tool left validation policy")
 
     fixture = scenario.get("fixture", {})
     markers = scenario.get("markers", {})
@@ -131,7 +131,6 @@ def main() -> None:
     result = "PASS" if counts.get("FAIL", 0) == 0 else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N9",
         "component": "table-typography-final-pdf",
         "source_commit_sha": args.commit_sha or "",
         "pdf": str(args.pdf),
@@ -146,12 +145,12 @@ def main() -> None:
     )
 
     print(
-        f"N9-EVIDENCE table-typography-final-pdf-summary "
+        f"VALIDATION-EVIDENCE table-typography-final-pdf-summary "
         f"PASS={counts.get('PASS', 0)} FAIL={counts.get('FAIL', 0)}"
     )
     for item in evidence:
         print(
-            f"N9-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

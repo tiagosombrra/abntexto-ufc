@@ -38,7 +38,7 @@ EXPECTED = {
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 IBGE vector validation failed: {message}")
+    raise SystemExit(f"IBGE vector validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -142,7 +142,7 @@ def evidence(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure the five residual N9 IBGE table predicates.")
+    parser = argparse.ArgumentParser(description="Measure the five residual IBGE table predicates.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -158,7 +158,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N9"
+
         or scenario.get("component") != "table-ibge-vector-final-pdf"
         or scenario.get("campaign_id") != "table-final-pdf"
         or scenario.get("rules") != RULES
@@ -181,12 +181,12 @@ def main() -> None:
         fail(f"IBGE contract values drifted: {values}")
 
     if validation.get("tools", {}).get("vector_geometry") != "pdftocairo -svg":
-        fail("vector geometry tool left N5 validation policy")
+        fail("vector geometry tool left validation policy")
     if "vector-rule-geometry" not in validation.get("exit_capabilities", []):
         fail("vector-rule-geometry capability is not active")
     if extension.get("component") != "vector-rule-geometry" or extension.get("tool") != "pdftocairo -svg":
         fail("invalid vector-rule validation extension")
-    if calibration.get("phase") != "N5" or calibration.get("component") != "vector-rule-geometry" or calibration.get("result") != "PASS":
+    if calibration.get("component") != "vector-rule-geometry" or calibration.get("result") != "PASS":
         fail("same-run vector-rule calibration did not PASS")
     if calibration.get("proof_state_changed") is not False:
         fail("vector-rule calibration changed proof-state")
@@ -428,7 +428,6 @@ def main() -> None:
     result = "PASS" if counts.get("FAIL", 0) == 0 else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N9",
         "component": "table-ibge-vector-final-pdf",
         "source_commit_sha": args.commit_sha or "",
         "pdf": str(args.pdf),
@@ -441,18 +440,18 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N9-EVIDENCE table-ibge-vector-inventory "
+        "VALIDATION-EVIDENCE table-ibge-vector-inventory "
         + json.dumps(vector_inventory, ensure_ascii=False, sort_keys=True)
     )
     print(
-        "N9-EVIDENCE table-ibge-vector-final-pdf-summary "
+        "VALIDATION-EVIDENCE table-ibge-vector-final-pdf-summary "
         f"PASS={counts.get('PASS', 0)} FAIL={counts.get('FAIL', 0)} "
         f"raw_horizontal_rules={len(raw_horizontal)} raw_vertical_rules={len(raw_vertical)} "
         f"logical_horizontal_rules={len(horizontal)} logical_vertical_rules={len(vertical)}"
     )
     for item in evidence_items:
         print(
-            f"N9-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

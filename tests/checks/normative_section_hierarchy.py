@@ -77,7 +77,7 @@ def record(rule_id: str, status: str, expected: Any, measured: Any) -> dict[str,
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 section-hierarchy evidence from a final PDF.")
+    parser = argparse.ArgumentParser(description="Measure section-hierarchy evidence from a final PDF.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -90,7 +90,7 @@ def main() -> None:
     policy = load_json(VALIDATION_POLICY)
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "section-hierarchy"
         or scenario.get("parent_rule") != "section.hierarchy"
     ):
@@ -256,7 +256,6 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "section-hierarchy",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -268,14 +267,14 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N6-EVIDENCE section-hierarchy-summary "
+        "VALIDATION-EVIDENCE section-hierarchy-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" levels={len(measured_levels)} first_primary_page={first_group_page}"
         + f" second_primary_page={second_page.index}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

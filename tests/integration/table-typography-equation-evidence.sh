@@ -56,12 +56,12 @@ python3 tests/checks/normative_equation_display.py \
   --commit-sha "$commit_sha"
 
 test -s "$table_evidence" || {
-  echo 'N9 table typography evidence JSON was not generated.'
+  echo 'table typography evidence JSON was not generated.'
   exit 1
 }
 test -s "$equation_evidence" || {
-  echo 'N9 equation display evidence JSON was not generated.'
+  echo 'equation display evidence JSON was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência N9 para tipografia de tabela e equação destacada concluído.'
+echo 'Gate de evidência para tipografia de tabela e equação destacada concluído.'

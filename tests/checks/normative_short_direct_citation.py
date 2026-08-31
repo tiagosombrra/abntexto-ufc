@@ -129,7 +129,7 @@ def boundary_quote_chars(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 short direct citation presentation from a final PDF."
+        description="Measure short direct citation presentation from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -145,7 +145,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "short-direct-citation"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
@@ -319,7 +319,6 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "short-direct-citation",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -333,7 +332,7 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE short-direct-citation-summary "
+        "VALIDATION-EVIDENCE short-direct-citation-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" lines={line_count}"
         + f" opening_marks={json.dumps(opening_chars, ensure_ascii=False)}"
@@ -342,7 +341,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

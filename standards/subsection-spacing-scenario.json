@@ -1,17 +1,16 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "subsection-spacing",
   "locator_ruleset": "sections.subsection-spacing",
   "rules": [
     "section.subsection.before-after-spacing"
   ],
   "markers": {
-    "before": "N6SubsectionBefore",
-    "heading": "N6SubsectionHeading",
-    "after": "N6SubsectionAfter",
-    "calibration_top": "N6SubsectionCalTop",
-    "calibration_bottom": "N6SubsectionCalBottom"
+    "before": "SSSUBSECTIONBEFORE",
+    "heading": "SSSUBSECTIONHEADING",
+    "after": "SSSUBSECTIONAFTER",
+    "calibration_top": "SSSUBSECTIONCALTOP",
+    "calibration_bottom": "SSSUBSECTIONCALBOTTOM"
   },
   "calibration": {
     "before_factor": 1.5,

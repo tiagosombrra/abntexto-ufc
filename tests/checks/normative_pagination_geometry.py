@@ -32,7 +32,7 @@ RULE_ORDER = [
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 pagination geometry validation failed: {message}")
+    raise SystemExit(f"pagination geometry validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -132,7 +132,7 @@ def position_assertion(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure bounded N7 pagination geometry evidence.")
+    parser = argparse.ArgumentParser(description="Measure bounded pagination geometry evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -146,7 +146,7 @@ def main() -> None:
     policy = load_json(POLICY)
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N7"
+
         or scenario.get("component") != "pagination-geometry"
         or scenario.get("rules") != RULE_ORDER
         or scenario.get("locator_ruleset") != "pagination.general"
@@ -188,7 +188,7 @@ def main() -> None:
         horizontal_tolerance = float(tolerances["horizontal_position_pt"])
         vertical_tolerance = float(tolerances["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid N5 position tolerances: {exc}")
+        fail(f"invalid position tolerances: {exc}")
 
     try:
         pages = bbox_pages(args.pdf)
@@ -299,7 +299,6 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N7",
         "component": "pagination-geometry",
         "source_commit_sha": args.commit_sha,
         "fixture": scenario["fixture"],
@@ -315,7 +314,7 @@ def main() -> None:
     )
 
     print(
-        "N7-EVIDENCE pagination-geometry-summary "
+        "VALIDATION-EVIDENCE pagination-geometry-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
         + f" recto_box={recto_number.box.x_min:.4f},{recto_number.box.y_min:.4f},"
         f"{recto_number.box.x_max:.4f},{recto_number.box.y_max:.4f}"
@@ -324,7 +323,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N7-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

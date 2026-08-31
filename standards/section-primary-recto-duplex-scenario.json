@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "section-primary-recto-duplex",
   "locator_ruleset": "sections.primary-recto-duplex",
   "rules": [
@@ -8,16 +7,16 @@
   ],
   "primaries": [
     {
-      "title_marker": "N6RectoAlpha",
-      "body_marker": "N6RectoBodyAlpha"
+      "title_marker": "RDRECTOALPHA",
+      "body_marker": "RDRECTOBODYALPHA"
     },
     {
-      "title_marker": "N6RectoBeta",
-      "body_marker": "N6RectoBodyBeta"
+      "title_marker": "RDRECTOBETA",
+      "body_marker": "RDRECTOBODYBETA"
     },
     {
-      "title_marker": "N6RectoGamma",
-      "body_marker": "N6RectoBodyGamma"
+      "title_marker": "RDRECTOGAMMA",
+      "body_marker": "RDRECTOBODYGAMMA"
     }
   ]
 }

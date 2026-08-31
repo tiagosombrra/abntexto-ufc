@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "long-quotation",
   "locator_ruleset": "citations.direct-long",
   "rules": [
@@ -11,14 +10,14 @@
     "quotation.long.quotation-marks"
   ],
   "markers": {
-    "margin_control": "N6LongQuoteMarginControl",
-    "before": "N6LongQuoteBefore",
-    "quote_start": "N6LongQuoteStart",
-    "quote_middle": "N6LongQuoteMiddle",
-    "quote_end": "N6LongQuoteEnd",
-    "after": "N6LongQuoteAfter",
-    "calibration_top": "N6LongQuoteCalTop",
-    "calibration_bottom": "N6LongQuoteCalBottom"
+    "margin_control": "LQLONGQUOTEMARGINCONTROL",
+    "before": "LQLONGQUOTEBEFORE",
+    "quote_start": "LQLONGQUOTESTART",
+    "quote_middle": "LQLONGQUOTEMIDDLE",
+    "quote_end": "LQLONGQUOTEEND",
+    "after": "LQLONGQUOTEAFTER",
+    "calibration_top": "LQLONGQUOTECALTOP",
+    "calibration_bottom": "LQLONGQUOTECALBOTTOM"
   },
   "calibration": {
     "indent_reference": "same-font noindent body line at the text left edge",

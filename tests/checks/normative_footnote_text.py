@@ -31,7 +31,7 @@ EXPECTED_RULE_IDS = [FONT_RULE_ID, SPACING_RULE_ID, HANGING_RULE_ID]
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 footnote text validation failed: {message}")
+    raise SystemExit(f"footnote text validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -82,7 +82,7 @@ def unique_typography_containing(runs: list[Any], marker: str) -> Any:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N7 footnote font size, line spacing and hanging alignment from a final PDF."
+        description="Measure footnote font size, line spacing and hanging alignment from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -99,7 +99,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N7"
+
         or scenario.get("component") != "footnote-text"
     ):
         fail("invalid scenario schema/phase/component")
@@ -288,7 +288,6 @@ def main() -> None:
     status_counts = dict(Counter(item["status"] for item in evidence))
     payload = {
         "schema_version": 1,
-        "phase": "N7",
         "component": "footnote-text",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -303,19 +302,19 @@ def main() -> None:
     )
 
     print(
-        "N7-EVIDENCE footnote-text-summary "
+        "VALIDATION-EVIDENCE footnote-text-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" calibration_gap_pt={cal_gap:.4f}"
         + f" footnote_gaps_pt={foot_gap_one:.4f},{foot_gap_two:.4f}"
     )
     for item in evidence:
         print(
-            f"N7-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
     print(
-        "N7-RESIDUAL rule=footnote.separator.length status=UNASSESSED "
+        "VALIDATION-RESIDUAL rule=footnote.separator.length status=UNASSESSED "
         "reason=requires-final-pdf-vector-measurement"
     )
 

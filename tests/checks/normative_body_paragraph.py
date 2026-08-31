@@ -55,7 +55,7 @@ def unique_word(pages: list[Any], marker: str) -> tuple[Any, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 body paragraph indentation and extra spacing from a final PDF."
+        description="Measure body paragraph indentation and extra spacing from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -71,7 +71,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "body-paragraph"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
@@ -244,7 +244,6 @@ def main() -> None:
     result = "PASS" if indent_passed and spacing_passed else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "body-paragraph",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -258,7 +257,7 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE body-paragraph-summary "
+        "VALIDATION-EVIDENCE body-paragraph-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" indent_one_pt={first_indent_pt:.4f}"
         + f" indent_two_pt={second_indent_pt:.4f}"
@@ -267,7 +266,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

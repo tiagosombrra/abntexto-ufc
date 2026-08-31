@@ -53,7 +53,7 @@ def unique_word(pages: list[Any], marker: str) -> tuple[Any, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 subsection before/after spacing from a final PDF."
+        description="Measure subsection before/after spacing from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -68,7 +68,7 @@ def main() -> None:
     policy = load_json(VALIDATION_POLICY)
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "subsection-spacing"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
@@ -204,7 +204,6 @@ def main() -> None:
     result = "PASS" if passed else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "subsection-spacing",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -218,14 +217,14 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE subsection-spacing-summary "
+        "VALIDATION-EVIDENCE subsection-spacing-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" before_pt={before_gap:.4f} after_pt={after_gap:.4f} "
         + f"calibration_pt={calibration_gap:.4f}"
     )
     item = evidence[0]
     print(
-        f"N6-EVIDENCE rule={RULE_ID} status={item['status']} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={item['status']} "
         f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
     )

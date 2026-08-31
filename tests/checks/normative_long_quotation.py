@@ -89,7 +89,7 @@ def typography_containing(runs: list[Any], marker: str) -> Any:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 long direct quotation layout from a final PDF."
+        description="Measure long direct quotation layout from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -105,7 +105,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "long-quotation"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
@@ -394,7 +394,6 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "long-quotation",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -412,7 +411,7 @@ def main() -> None:
     max_spacing_delta = max(spacing_deltas)
     max_font_delta = max(font_deltas)
     print(
-        "N6-EVIDENCE long-quotation-summary "
+        "VALIDATION-EVIDENCE long-quotation-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" lines={line_count}"
         + f" max_indent_delta_pt={max_indent_delta:.4f}"
@@ -424,7 +423,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

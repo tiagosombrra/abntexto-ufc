@@ -70,7 +70,7 @@ def normalized_words(words: list[Any]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 indirect-citation source attribution from a final PDF."
+        description="Measure indirect-citation source attribution from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -85,7 +85,7 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "indirect-citation-source"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
@@ -211,7 +211,6 @@ def main() -> None:
     result = "PASS" if source_present else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "indirect-citation-source",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -226,14 +225,14 @@ def main() -> None:
 
     present_count = sum(1 for present in source_token_presence.values() if present)
     print(
-        "N6-EVIDENCE indirect-citation-source-summary "
+        "VALIDATION-EVIDENCE indirect-citation-source-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" source_tokens={present_count}/{len(source_tokens)}"
         + f" source_present={str(source_present).lower()}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

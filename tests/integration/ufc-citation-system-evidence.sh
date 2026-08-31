@@ -59,4 +59,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para sistema autor-data UFC concluído.'
+echo 'Gate de evidência para sistema autor-data UFC concluído.'

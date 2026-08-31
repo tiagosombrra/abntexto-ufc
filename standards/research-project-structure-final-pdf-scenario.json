@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N11",
   "campaign": "project-structure-final-pdf",
   "fixture": "tests/documents/research-project-15287.tex",
   "pdf": "projeto-15287.pdf",
