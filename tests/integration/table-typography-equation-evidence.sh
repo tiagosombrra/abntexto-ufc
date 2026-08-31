@@ -4,8 +4,8 @@ set -eu
 commit_sha="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 table_fixture="tests/documents/table-typography-final-pdf.tex"
 equation_fixture="tests/documents/equation-display-final-pdf.tex"
-table_job="n9-table-typography-final-pdf"
-equation_job="n9-equation-display-final-pdf"
+table_job="table-typography-final-pdf"
+equation_job="equation-display-final-pdf"
 table_evidence="artifacts/normative-layout/table-typography-final-pdf.json"
 equation_evidence="artifacts/normative-layout/equation-display-final-pdf.json"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
@@ -56,12 +56,12 @@ python3 tests/checks/normative_equation_display.py \
   --commit-sha "$commit_sha"
 
 test -s "$table_evidence" || {
-  echo 'N9 table typography evidence JSON was not generated.'
+  echo 'table typography evidence JSON was not generated.'
   exit 1
 }
 test -s "$equation_evidence" || {
-  echo 'N9 equation display evidence JSON was not generated.'
+  echo 'equation display evidence JSON was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência N9 para tipografia de tabela e equação destacada concluído.'
+echo 'Gate de evidência para tipografia de tabela e equação destacada concluído.'

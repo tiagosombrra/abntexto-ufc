@@ -21,7 +21,7 @@ VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ID = "section.multiline.hanging"
 LEVEL_ORDER = ["section", "subsection", "subsubsection", "paragraph", "subparagraph"]
 NUMBER_RE = re.compile(r"[0-9]+(?:\.[0-9]+)*")
-PREFIX_RE = re.compile(r"N6H[A-Z]")
+PREFIX_RE = re.compile(r"HLH[A-Z]")
 
 
 def fail(message: str) -> None:
@@ -103,7 +103,7 @@ def record(status: str, expected: Any, measured: Any) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure N6 multiline section hanging alignment from a final PDF.")
+    parser = argparse.ArgumentParser(description="Measure multiline section hanging alignment from a final PDF.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -118,12 +118,12 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "section-multiline-hanging"
         or scenario.get("locator_ruleset") != "sections.multiline-hanging"
         or scenario.get("rules") != [RULE_ID]
     ):
-        fail("invalid scenario schema/phase/component/ruleset/rules")
+        fail("invalid scenario schema/component/ruleset/rules")
     if policy.get("schema_version") != 2:
         fail("invalid validation policy schema")
 
@@ -241,7 +241,6 @@ def main() -> None:
     result = "PASS" if passed else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "section-multiline-hanging",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -254,13 +253,13 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N6-EVIDENCE section-multiline-hanging-summary "
+        "VALIDATION-EVIDENCE section-multiline-hanging-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" levels={len(measurements)} continuation_lines={total_continuation_lines}"
     )
     for item in evidence:
         print(
-            f"N6-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

@@ -64,7 +64,7 @@ def record(status: str, expected: Any, measured: Any, tolerance: float) -> dict[
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 primary-section after-spacing evidence from a final PDF."
+        description="Measure primary-section after-spacing evidence from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -80,11 +80,11 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "section-primary-after-spacing"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
-        fail("invalid scenario schema/phase/component/ruleset")
+        fail("invalid scenario schema/component/ruleset")
     if policy.get("schema_version") != 2:
         fail("invalid validation policy schema")
 
@@ -196,7 +196,6 @@ def main() -> None:
     result = "PASS" if passed else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "section-primary-after-spacing",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -211,13 +210,13 @@ def main() -> None:
     )
 
     print(
-        "N6-EVIDENCE section-primary-after-spacing-summary "
+        "VALIDATION-EVIDENCE section-primary-after-spacing-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" gap_pt={measured_gap:.4f} calibration_pt={calibration_gap:.4f}"
     )
     item = evidence[0]
     print(
-        f"N6-EVIDENCE rule={RULE_ID} status={item['status']} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={item['status']} "
         f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
     )

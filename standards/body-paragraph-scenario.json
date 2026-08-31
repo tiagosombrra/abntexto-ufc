@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "body-paragraph",
   "locator_ruleset": "layout.body-paragraph",
   "rules": [
@@ -8,11 +7,11 @@
     "paragraph.spacing.extra"
   ],
   "markers": {
-    "indent_first": "N6ParagraphIndentOne",
-    "indent_second": "N6ParagraphIndentTwo",
-    "margin_control": "N6ParagraphMarginControl",
-    "calibration_top": "N6ParagraphCalTop",
-    "calibration_bottom": "N6ParagraphCalBottom"
+    "indent_first": "BPPARAGRAPHINDENTONE",
+    "indent_second": "BPPARAGRAPHINDENTTWO",
+    "margin_control": "BPPARAGRAPHMARGINCONTROL",
+    "calibration_top": "BPPARAGRAPHCALTOP",
+    "calibration_bottom": "BPPARAGRAPHCALBOTTOM"
   },
   "calibration": {
     "indent_reference": "same-font noindent line at the text left edge",

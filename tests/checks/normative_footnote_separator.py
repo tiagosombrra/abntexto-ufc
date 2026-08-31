@@ -36,7 +36,7 @@ VECTOR_AXIS_TOLERANCE_PT = 0.5
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 footnote separator validation failed: {message}")
+    raise SystemExit(f"footnote separator validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -161,7 +161,7 @@ def extract_horizontal_lines(svg_path: Path) -> list[dict[str, float | str]]:
 
 
 def render_svg(pdf: Path, page: int) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
-    temp_dir = tempfile.TemporaryDirectory(prefix="ufc-n7-footnote-separator-")
+    temp_dir = tempfile.TemporaryDirectory(prefix="ufc-footnote-separator-")
     output = Path(temp_dir.name) / "page.svg"
     try:
         completed = subprocess.run(
@@ -192,7 +192,7 @@ def render_svg(pdf: Path, page: int) -> tuple[Path, tempfile.TemporaryDirectory[
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure the N7 footnote separator directly from final-PDF vector content."
+        description="Measure the footnote separator directly from final-PDF vector content."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -208,10 +208,10 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N7"
+
         or scenario.get("component") != "footnote-separator"
     ):
-        fail("invalid scenario schema/phase/component")
+        fail("invalid scenario schema/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"footnote separator scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 2:
@@ -322,7 +322,6 @@ def main() -> None:
     }
     payload = {
         "schema_version": 1,
-        "phase": "N7",
         "component": "footnote-separator",
         "source_commit_sha": args.commit_sha,
         "result": status,
@@ -336,14 +335,14 @@ def main() -> None:
     )
 
     print(
-        f"N7-EVIDENCE footnote-separator-summary {status}=1 "
+        f"VALIDATION-EVIDENCE footnote-separator-summary {status}=1 "
         f"expected_length_pt={expected_length_pt:.4f} "
         f"measured_length_pt={measured_length_pt:.4f} "
         f"length_delta_pt={length_delta_pt:.4f} "
         f"origin_delta_pt={origin_delta_pt:.4f}"
     )
     print(
-        f"N7-EVIDENCE rule={RULE_ID} status={status} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={status} "
         f"expected={json.dumps(expected, ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(measured, ensure_ascii=False, sort_keys=True)}"
     )

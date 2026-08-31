@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N7",
   "component": "pagination-geometry",
   "rules": [
     "pagination.recto.position",
@@ -25,5 +24,5 @@
     "verso_top_reference": "top edge of page-number glyph box from physical page top",
     "verso_left_reference": "physical page left edge to page-number glyph box left edge"
   },
-  "tolerance_policy": "Reuse N5 horizontal_position_pt and vertical_position_pt unchanged."
+  "tolerance_policy": "Reuse horizontal_position_pt and vertical_position_pt unchanged."
 }

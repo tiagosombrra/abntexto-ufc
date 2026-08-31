@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N10",
   "component": "index-glossary-final-pdf",
   "rules": [
     "index.heading.case",
@@ -12,11 +11,11 @@
   "present_fixture": "tests/documents/index-glossary-present-final-pdf.tex",
   "absent_fixture": "tests/documents/index-glossary-absent-final-pdf.tex",
   "markers": {
-    "regular_calibration": "UFCN10RegularControl",
-    "bold_calibration": "UFCN10BoldControl",
-    "present_index_entry": "N10INDEXALPHA",
-    "absent_index_entry": "N10INDEXABSENTROUTE",
-    "present_glossary_entry": "N10GLOSSARYTERM",
+    "regular_calibration": "UFCRegularControl",
+    "bold_calibration": "UFCBoldControl",
+    "present_index_entry": "IGINDEXALPHA",
+    "absent_index_entry": "IGINDEXABSENTROUTE",
+    "present_glossary_entry": "IGGLOSSARYTERM",
     "index_heading_keyword": "ÍNDICE",
     "glossary_heading_keyword": "GLOSSÁRIO"
   },
@@ -26,7 +25,7 @@
     "index_heading_vertical_position_frozen": false,
     "index_heading_spacing_frozen": false,
     "glossary_typography_is_predicate": false,
-    "engine_matrix_deferred_to_n12": true,
+    "index_glossary_engine_matrix_deferred": true,
     "proof_state_changed": false
   }
 }

@@ -42,4 +42,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para recuo suspenso de títulos de seção concluído.'
+echo 'Gate de evidência para recuo suspenso de títulos de seção concluído.'

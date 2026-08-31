@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "short-direct-citation",
   "locator_ruleset": "citations.direct-short",
   "rules": [
@@ -9,12 +8,12 @@
     "citation.direct-short.emphasis"
   ],
   "markers": {
-    "body_control": "N6SCCTL",
-    "body_before": "N6SCBEF",
-    "quote_open": "N6SCOPN",
-    "quote_middle": "N6SCMID",
-    "quote_close": "N6SCCLS",
-    "body_after": "N6SCAFT"
+    "body_control": "SDSCCTL",
+    "body_before": "SDSCBEF",
+    "quote_open": "SDSCOPN",
+    "quote_middle": "SDSCMID",
+    "quote_close": "SDSCCLS",
+    "body_after": "SDSCAFT"
   },
   "calibration": {
     "typography_reference": "same-document ordinary body text",

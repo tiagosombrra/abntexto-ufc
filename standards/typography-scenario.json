@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N7",
   "component": "typography",
   "rules": [
     "format.text.color",

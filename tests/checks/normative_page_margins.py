@@ -48,7 +48,7 @@ THIN_LIMIT_PT = 2.0
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 page/margins validation failed: {message}")
+    raise SystemExit(f"page/margins validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -220,7 +220,7 @@ def iter_shapes(
 
 
 def render_svg(pdf: Path, page: int) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
-    temp_dir = tempfile.TemporaryDirectory(prefix=f"ufc-n7-page-margins-{page}-")
+    temp_dir = tempfile.TemporaryDirectory(prefix=f"ufc-page-margins-{page}-")
     output = Path(temp_dir.name) / "page.svg"
     try:
         completed = subprocess.run(
@@ -337,7 +337,7 @@ def measurement(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N7 A4 page size and recto/verso margins from final-PDF geometry."
+        description="Measure A4 page size and recto/verso margins from final-PDF geometry."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -352,10 +352,10 @@ def main() -> None:
     policy = load_json(VALIDATION_POLICY)
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N7"
+
         or scenario.get("component") != "page-margins"
     ):
-        fail("invalid scenario schema/phase/component")
+        fail("invalid scenario schema/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"page/margins scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 2:
@@ -515,7 +515,6 @@ def main() -> None:
     status_counts = dict(Counter(item["status"] for item in evidence))
     payload = {
         "schema_version": 1,
-        "phase": "N7",
         "component": "page-margins",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -531,7 +530,7 @@ def main() -> None:
     recto_frame = frames[1]
     verso_frame = frames[2]
     print(
-        "N7-EVIDENCE page-margins-summary "
+        "VALIDATION-EVIDENCE page-margins-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" recto_frame={recto_frame['left_x']:.4f},{recto_frame['top_y']:.4f},"
         + f"{recto_frame['right_x']:.4f},{recto_frame['bottom_y']:.4f}"
@@ -540,7 +539,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N7-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

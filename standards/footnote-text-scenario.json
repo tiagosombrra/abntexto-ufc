@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N7",
   "component": "footnote-text",
   "rules": [
     "font.size.reduced.footnote",
@@ -13,11 +12,11 @@
     "footnote.hanging-alignment": "footnotes.hanging-alignment"
   },
   "markers": {
-    "calibration_top": "UFCN7FootCalOne",
-    "calibration_bottom": "UFCN7FootCalTwo",
-    "footnote_first": "UFCN7FootFirst",
-    "footnote_second": "UFCN7FootSecond",
-    "footnote_third": "UFCN7FootThird"
+    "calibration_top": "UFCFootCalOne",
+    "calibration_bottom": "UFCFootCalTwo",
+    "footnote_first": "UFCFootFirst",
+    "footnote_second": "UFCFootSecond",
+    "footnote_third": "UFCFootThird"
   },
   "calibration": {
     "line_spacing_reference": "same-document 10 pt single-spaced two-line calibration",

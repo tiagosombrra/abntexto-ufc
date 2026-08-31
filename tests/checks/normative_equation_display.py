@@ -21,7 +21,7 @@ EXPECTED = {"displayed": True}
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 equation display validation failed: {message}")
+    raise SystemExit(f"equation display validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -56,7 +56,7 @@ def unique_word(pages: list[Any], marker: str) -> tuple[Any, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure bounded N9 equation display evidence.")
+    parser = argparse.ArgumentParser(description="Measure bounded equation display evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -70,12 +70,12 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N9"
+
         or scenario.get("component") != "equation-display-final-pdf"
         or scenario.get("campaign_id") != "equation-display-final-pdf"
         or scenario.get("rules") != [RULE_ID]
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
 
     presentation_rules = ruleset(locator, "equations.presentation").get("rule_ids", [])
@@ -94,7 +94,7 @@ def main() -> None:
     except (KeyError, TypeError, ValueError) as exc:
         fail(f"invalid validation vertical tolerance: {exc}")
     if "pdftotext -bbox-layout" not in set(validation.get("tools", {}).values()):
-        fail("equation display tool left N5 validation policy")
+        fail("equation display tool left validation policy")
 
     fixture = scenario.get("fixture", {})
     markers = scenario.get("markers", {})
@@ -152,7 +152,6 @@ def main() -> None:
     result = evidence["status"]
     payload = {
         "schema_version": 1,
-        "phase": "N9",
         "component": "equation-display-final-pdf",
         "source_commit_sha": args.commit_sha or "",
         "pdf": str(args.pdf),
@@ -167,11 +166,11 @@ def main() -> None:
     )
 
     print(
-        f"N9-EVIDENCE equation-display-final-pdf-summary {result}=1 "
+        f"VALIDATION-EVIDENCE equation-display-final-pdf-summary {result}=1 "
         f"before_gap_pt={before_gap:.4f} after_gap_pt={after_gap:.4f}"
     )
     print(
-        f"N9-EVIDENCE rule={RULE_ID} status={result} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={result} "
         f"expected={json.dumps(EXPECTED, ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(measured, ensure_ascii=False, sort_keys=True)}"
     )

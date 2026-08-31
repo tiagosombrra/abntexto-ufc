@@ -19,7 +19,7 @@ SCENARIO = ROOT / "standards" / "research-project-structure-final-pdf-scenario.j
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N11 project structure oracle failed: {message}")
+    raise SystemExit(f"project structure oracle failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -59,7 +59,7 @@ def record(rule_id: str, status: str, expected: Any, measured: Any) -> dict[str,
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure the final N11 project-structure predicates.")
+    parser = argparse.ArgumentParser(description="Measure the final project-structure predicates.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -70,8 +70,8 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N11":
-        fail("invalid scenario schema/phase")
+    if scenario.get("schema_version") != 1:
+        fail("invalid scenario schema")
     if scenario.get("campaign") != "project-structure-final-pdf":
         fail("unexpected campaign id")
 
@@ -179,7 +179,6 @@ def main() -> None:
 
     payload = {
         "schema_version": 1,
-        "phase": "N11",
         "campaign": scenario["campaign"],
         "source_commit_sha": args.commit_sha,
         "fixture": scenario["fixture"],
@@ -192,12 +191,12 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N11-EVIDENCE project-structure-final-pdf-summary "
+        "VALIDATION-EVIDENCE project-structure-final-pdf-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
     )
     for item in evidence:
         print(
-            f"N11-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

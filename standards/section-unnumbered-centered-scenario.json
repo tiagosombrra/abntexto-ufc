@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "section-unnumbered-centered",
   "locator_ruleset": "sections.unnumbered-centered",
   "rules": [
@@ -19,7 +18,7 @@
     },
     {
       "id": "backmatter-shared",
-      "marker": "N6POSTCENTER",
+      "marker": "UCPOSTCENTER",
       "implementation": "ufc_backmatter_heading"
     }
   ]

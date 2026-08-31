@@ -42,4 +42,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para início de seção primária em anverso concluído.'
+echo 'Gate de evidência para início de seção primária em anverso concluído.'

@@ -18,7 +18,7 @@ VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N5 vector rule validation calibration failed: {message}")
+    raise SystemExit(f"vector rule validation calibration failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -32,7 +32,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Calibrate the additive N5 vector-rule validation.")
+    parser = argparse.ArgumentParser(description="Calibrate the additive vector-rule validation.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -44,10 +44,10 @@ def main() -> None:
     validation = load_json(VALIDATION_POLICY)
     if (
         extension.get("schema_version") != 1
-        or extension.get("phase") != "N5"
+
         or extension.get("component") != "vector-rule-geometry"
     ):
-        fail("invalid extension schema/phase/component")
+        fail("invalid extension schema/component")
     if validation.get("schema_version") != 2:
         fail("invalid validation policy schema")
     if extension.get("tool") != "pdftocairo -svg":
@@ -136,7 +136,6 @@ def main() -> None:
     ]
     payload = {
         "schema_version": 1,
-        "phase": "N5",
         "component": "vector-rule-geometry",
         "source_commit_sha": args.commit_sha or "",
         "pdf": str(args.pdf),
@@ -148,14 +147,14 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N5-EVIDENCE vector-rule-validation-calibration "
+        "VALIDATION-EVIDENCE vector-rule-validation-calibration "
         f"PASS={sum(item['status'] == 'PASS' for item in checks)} "
         f"FAIL={sum(item['status'] == 'FAIL' for item in checks)} "
         f"horizontal_length_pt={horizontal[0].length:.4f} "
         f"vertical_length_pt={vertical[0].length:.4f}"
     )
     for item in checks:
-        print("N5-EVIDENCE vector-rule-check " + json.dumps(item, ensure_ascii=False, sort_keys=True))
+        print("VALIDATION-EVIDENCE vector-rule-check " + json.dumps(item, ensure_ascii=False, sort_keys=True))
     if result != "PASS":
         raise SystemExit(1)
 

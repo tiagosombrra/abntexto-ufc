@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N14 cross-surface validation failed: {message}")
+    raise SystemExit(f"Cross-surface validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -101,10 +101,10 @@ def load_cli() -> dict[str, Any]:
 def main() -> None:
     contract = load_json(CONTRACT)
     vectors = load_json(VECTORS)
-    if contract.get("phase") != "N14" or contract.get("status") != "DONE":
-        fail("contract must represent closed N14")
-    if vectors.get("schema_version") != 1 or vectors.get("phase") != "N14":
-        fail("invalid vector schema/phase")
+    if contract.get("status") != "DONE":
+        fail("contract must be complete")
+    if vectors.get("schema_version") != 1:
+        fail("invalid vector schema")
 
     expected = vectors.get("expected")
     verdict_vectors = vectors.get("verdict_vectors")
@@ -140,7 +140,7 @@ def main() -> None:
                 id=str(check.get("id", "synthetic")),
                 category="Synthetic",
                 rule="Synthetic",
-                source="N14",
+                source="validator-contract",
                 status=str(check.get("status", "")),
                 evidence="synthetic",
                 mandatory=bool(check.get("mandatory", True)),
@@ -233,7 +233,7 @@ def main() -> None:
         "measurement_backend_equivalence_required": policy.get("measurement_backend_equivalence_required"),
         "normative_contract_changed": policy.get("normative_contract_changed"),
         "locator_policy_changed": policy.get("locator_policy_changed"),
-        "oracle_tolerances_changed": policy.get("oracle_tolerances_changed"),
+        "reference_tolerances_changed": policy.get("reference_tolerances_changed"),
         "proof_state_changed": policy.get("proof_state_changed"),
     }
     normalized_expected = dict(expected)
@@ -243,22 +243,22 @@ def main() -> None:
 
     exit_criteria = contract.get("exit_criteria")
     if not isinstance(exit_criteria, list) or len(exit_criteria) != 6:
-        fail("N14 exit criteria must remain six explicit conditions")
+        fail("validator contract exit criteria must remain six explicit conditions")
     if closure.get("exit_criteria_passed") != 6 or closure.get("exit_criteria_total") != 6:
-        fail("N14 closure must record six of six exit criteria")
+        fail("validator contract closure must record six of six exit criteria")
 
     print(
-        "N14-EVIDENCE cross-surface-vectors "
+        "VALIDATION-EVIDENCE cross-surface-vectors "
         f"status=PASS verdict_vectors={len(verdict_vectors)} shared_checks={len(shared)} "
         f"canonical_checks={len(inventory)} baseline_aliases={baseline.get('alias_count')} "
         f"emitted_aliases={adoption.get('emitted_alias_count')} schema_drift={closure.get('schema_drift_count')} "
         f"deep_boundaries={len(deep)} backend_equivalence_required=false proof_state_changed=false"
     )
     print(
-        "N14-EVIDENCE n14-closure "
-        "status=PASS exit_criteria=6/6 phase_status=DONE "
+        "VALIDATION-EVIDENCE contract-consistency "
+        "status=PASS exit_criteria=6/6 contract_status=DONE "
         "normative_contract_changed=false locator_policy_changed=false "
-        "oracle_tolerances_changed=false proof_state_changed=false"
+        "reference_tolerances_changed=false proof_state_changed=false"
     )
 
 

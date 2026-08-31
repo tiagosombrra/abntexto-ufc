@@ -44,7 +44,7 @@ EXPECTED = {
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 illustration validation failed: {message}")
+    raise SystemExit(f"illustration validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -119,7 +119,7 @@ def record(rule_id: str, passed: bool, measured: Any, tool: str, tolerance: floa
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure bounded N9 illustration evidence.")
+    parser = argparse.ArgumentParser(description="Measure bounded illustration evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -133,8 +133,8 @@ def main() -> None:
     loc_final = load_json(LOCATOR_FINAL)
     validation = load_json(VALIDATION_POLICY)
 
-    if scenario.get("schema_version") != 1 or scenario.get("phase") != "N9" or scenario.get("component") != "illustration-final-pdf" or scenario.get("rules") != RULES:
-        fail("invalid scenario schema/phase/component/scope")
+    if scenario.get("schema_version") != 1 or scenario.get("component") != "illustration-final-pdf" or scenario.get("rules") != RULES:
+        fail("invalid scenario schema/component/scope")
 
 
     reduced = ruleset(loc_typ, "typography.reduced-font").get("rule_ids", [])
@@ -160,7 +160,7 @@ def main() -> None:
         fail(f"invalid validation tolerances: {exc}")
     allowed_tools = set(validation.get("tools", {}).values())
     if not {"pdftotext -bbox-layout", "pdftohtml -xml -zoom 1.0"} <= allowed_tools:
-        fail("required illustration tools left N5 validation policy")
+        fail("required illustration tools left validation policy")
 
     fixture = scenario.get("fixture", {})
     markers = scenario.get("markers", {})
@@ -235,7 +235,6 @@ def main() -> None:
     result = "PASS" if counts.get("FAIL", 0) == 0 else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N9",
         "component": "illustration-final-pdf",
         "source_commit_sha": args.commit_sha or "",
         "pdf": str(args.pdf),
@@ -247,9 +246,9 @@ def main() -> None:
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    print(f"N9-EVIDENCE illustration-final-pdf-summary PASS={counts.get('PASS', 0)} FAIL={counts.get('FAIL', 0)} object_width_pt={object_box.width:.4f}")
+    print(f"VALIDATION-EVIDENCE illustration-final-pdf-summary PASS={counts.get('PASS', 0)} FAIL={counts.get('FAIL', 0)} object_width_pt={object_box.width:.4f}")
     for item in evidence:
-        print(f"N9-EVIDENCE rule={item['rule_id']} status={item['status']} expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}")
+        print(f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}")
     if result != "PASS":
         fail("one or more illustration predicates failed")
 

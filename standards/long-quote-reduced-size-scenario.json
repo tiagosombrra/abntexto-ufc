@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N8",
   "component": "long-quote-reduced-size",
   "rule_id": "font.size.reduced.long-quote",
   "measurement_source_rule_id": "quotation.long.font.size",

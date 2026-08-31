@@ -26,7 +26,7 @@ RULE_ORDER = [
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N8 reference semantics oracle failed: {message}")
+    raise SystemExit(f"reference semantics oracle failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -161,7 +161,7 @@ def audit_compatibility_boundary(scenario: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Validate bounded N8 DOI and online-access reference semantics."
+        description="Validate bounded DOI and online-access reference semantics."
     )
     parser.add_argument("text", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -175,11 +175,11 @@ def main() -> None:
     locator = load_json(LOCATOR)
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N8"
+
         or scenario.get("component") != "reference-semantics"
         or scenario.get("rules") != RULE_ORDER
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
     policy = scenario.get("evidence_policy")
     if not isinstance(policy, dict) or not all(
@@ -188,7 +188,7 @@ def main() -> None:
             "positive_applicable_cases_only",
             "entry_local_evidence",
             "full_reference_string_is_not_a_predicate",
-            "engine_matrix_is_deferred_to_N12",
+            "engine_matrix_deferred",
         )
     ):
         fail("reference semantics evidence policy drifted")
@@ -325,13 +325,12 @@ def main() -> None:
     )
     payload = {
         "schema_version": 1,
-        "phase": "N8",
         "component": "reference-semantics",
         "source_commit_sha": args.commit_sha,
         "fixture": "tests/documents/references-6023-2025.tex",
         "bibliography_fixture": "tests/fixtures/references-6023-2025.bib",
         "rendered_engine": "lualatex",
-        "engine_matrix_deferred_to": "N12",
+        "engine_matrix_deferred": true,
         "result": result,
         "status_counts": status_counts,
         "compatibility_boundary": boundary,
@@ -345,18 +344,18 @@ def main() -> None:
     )
 
     print(
-        "N8-EVIDENCE reference-semantics-summary "
+        "VALIDATION-EVIDENCE reference-semantics-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" compat_boundary={boundary['status']}"
     )
     for item in evidence:
         print(
-            f"N8-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
     print(
-        "N8-EVIDENCE compatibility-boundary "
+        "VALIDATION-EVIDENCE compatibility-boundary "
         + json.dumps(boundary, ensure_ascii=False, sort_keys=True)
     )
 

@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "section-hierarchy",
   "parent_rule": "section.hierarchy",
   "rules": [
@@ -11,33 +10,33 @@
   "levels": [
     {
       "level": "section",
-      "marker": "N6Alpha",
+      "marker": "SHALPHA",
       "number": "1"
     },
     {
       "level": "subsection",
-      "marker": "N6Beta",
+      "marker": "SHBETA",
       "number": "1.1"
     },
     {
       "level": "subsubsection",
-      "marker": "N6Gamma",
+      "marker": "SHGAMMA",
       "number": "1.1.1"
     },
     {
       "level": "paragraph",
-      "marker": "N6Delta",
+      "marker": "SHDELTA",
       "number": "1.1.1.1"
     },
     {
       "level": "subparagraph",
-      "marker": "N6Epsilon",
+      "marker": "SHEPSILON",
       "number": "1.1.1.1.1"
     }
   ],
-  "first_primary_body_marker": "N6Omega",
+  "first_primary_body_marker": "SHOMEGA",
   "second_primary": {
-    "marker": "N6Zeta",
+    "marker": "SHZETA",
     "number": "2"
   }
 }

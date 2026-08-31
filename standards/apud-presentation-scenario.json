@@ -1,16 +1,15 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "apud-presentation",
   "locator_ruleset": "citations.apud",
   "rules": [
     "citation.apud.presentation"
   ],
   "markers": {
-    "parenthetical_before": "N6APUPRE",
-    "parenthetical_after": "N6APUPOST",
-    "textual_before": "N6APTPRE",
-    "textual_after": "N6APTPOST"
+    "parenthetical_before": "APAPUPRE",
+    "parenthetical_after": "APAPUPOST",
+    "textual_before": "APAPTPRE",
+    "textual_after": "APAPTPOST"
   },
   "fixtures": {
     "parenthetical": {

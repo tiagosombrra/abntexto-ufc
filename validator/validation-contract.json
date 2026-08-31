@@ -1,13 +1,12 @@
 {
   "schema_version": 1,
-  "phase": "N14",
   "status": "DONE",
   "purpose": "Unify the machine-readable validator contract across Web/Lite and CLI/Deep while preserving their intentionally different measurement capabilities.",
   "authority": "technical-interface-contract",
   "policy": {
     "normative_contract_changed": false,
     "locator_policy_changed": false,
-    "oracle_tolerances_changed": false,
+    "reference_tolerances_changed": false,
     "proof_state_changed": false,
     "shared_normative_catalog_required": true,
     "lite_deep_capability_separation_required": true,
@@ -116,7 +115,7 @@
     "exit_criteria_total": 6,
     "normative_contract_changed": false,
     "locator_policy_changed": false,
-    "oracle_tolerances_changed": false,
+    "reference_tolerances_changed": false,
     "proof_state_changed": false
   },
   "exit_criteria": [
@@ -125,6 +124,6 @@
     "Shared checks bind the same normative_rule, locator and normativity metadata where a normative rule exists.",
     "Deep-only capabilities remain explicit and Web/Lite never auto-approves a check it cannot execute.",
     "Cross-surface contract tests pass without requiring PDF.js and Poppler measurements to be numerically identical.",
-    "Normative predicates, locators, N5 tolerances and proof state remain unchanged."
+    "Normative predicates, locators, reference tolerances and proof state remain unchanged."
   ]
 }

@@ -1,15 +1,14 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "indirect-citation-source",
   "locator_ruleset": "citations.indirect-source",
   "rules": [
     "citation.indirect.source"
   ],
   "markers": {
-    "body_before": "N6ISBEF",
-    "source_before": "N6ISSRC",
-    "body_after": "N6ISAFT"
+    "body_before": "ICISBEF",
+    "source_before": "ICISSRC",
+    "body_after": "ICISAFT"
   },
   "fixture": {
     "citation_key": "silva2020",

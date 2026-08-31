@@ -1,16 +1,15 @@
 {
   "schema_version": 1,
-  "phase": "N6",
   "component": "direct-citation-source",
   "locator_ruleset": "citations.direct-source",
   "rules": [
     "citation.direct.source"
   ],
   "markers": {
-    "body_before": "N6DSBEF",
-    "quote_start": "N6DSOPN",
-    "quote_end": "N6DSCLS",
-    "body_after": "N6DSAFT"
+    "body_before": "DCDSBEF",
+    "quote_start": "DCDSOPN",
+    "quote_end": "DCDSCLS",
+    "body_after": "DCDSAFT"
   },
   "fixture": {
     "citation_key": "oliveira2011",

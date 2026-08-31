@@ -70,7 +70,7 @@ def normalized_words(words: list[Any]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 direct-citation source attribution from a final PDF."
+        description="Measure direct-citation source attribution from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -85,12 +85,12 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "direct-citation-source"
         or scenario.get("locator_ruleset") != RULESET_ID
         or scenario.get("rules") != [RULE_ID]
     ):
-        fail("invalid scenario schema/phase/component/rule scope")
+        fail("invalid scenario schema/component/rule scope")
 
     locator_matches = [
         item
@@ -218,7 +218,6 @@ def main() -> None:
     result = "PASS" if rule_passed else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "direct-citation-source",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -233,14 +232,14 @@ def main() -> None:
 
     found_count = sum(1 for present in token_presence.values() if present)
     print(
-        "N6-EVIDENCE direct-citation-source-summary "
+        "VALIDATION-EVIDENCE direct-citation-source-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" source_tokens={found_count}/{len(source_tokens)}"
         + f" locator={locator_token}"
         + f" locator_present={str(locator_present).lower()}"
     )
     print(
-        f"N6-EVIDENCE rule={RULE_ID} status={evidence[0]['status']} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={evidence[0]['status']} "
         f"expected={json.dumps(values, ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(measured, ensure_ascii=False, sort_keys=True)}"
     )

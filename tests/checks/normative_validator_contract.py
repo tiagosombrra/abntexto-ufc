@@ -28,7 +28,7 @@ EXPECTED_VERDICTS = [
 EXPECTED_POLICY = {
     "normative_contract_changed": False,
     "locator_policy_changed": False,
-    "oracle_tolerances_changed": False,
+    "reference_tolerances_changed": False,
     "proof_state_changed": False,
     "shared_normative_catalog_required": True,
     "lite_deep_capability_separation_required": True,
@@ -98,13 +98,13 @@ EXPECTED_CLOSURE = {
     "exit_criteria_total": 6,
     "normative_contract_changed": False,
     "locator_policy_changed": False,
-    "oracle_tolerances_changed": False,
+    "reference_tolerances_changed": False,
     "proof_state_changed": False,
 }
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N14 validator contract failed: {message}")
+    raise SystemExit(f"Validator contract failed: {message}")
 
 
 def load_contract() -> dict[str, Any]:
@@ -129,14 +129,14 @@ def forbid_marker(text: str, marker: str, label: str) -> None:
 
 def main() -> None:
     data = load_contract()
-    if data.get("schema_version") != 1 or data.get("phase") != "N14":
-        fail("invalid schema_version/phase")
+    if data.get("schema_version") != 1:
+        fail("invalid schema_version")
     if data.get("status") != "DONE":
-        fail(f"unexpected N14 status: {data.get('status')}")
+        fail(f"unexpected validator-contract status: {data.get('status')}")
     if data.get("authority") != "technical-interface-contract":
-        fail("N14 contract must remain a technical interface contract")
+        fail("validator contract must remain a technical interface contract")
     if data.get("policy") != EXPECTED_POLICY:
-        fail("N14 policy drift")
+        fail("validator policy drift")
     if data.get("profiles") != EXPECTED_PROFILES:
         fail("profile drift")
     if data.get("statuses") != EXPECTED_STATUSES:
@@ -179,13 +179,13 @@ def main() -> None:
     if target.get("adoption_state") != "ADOPTED":
         fail("target schema must remain adopted")
     if data.get("adoption") != EXPECTED_ADOPTION:
-        fail("N14-B adoption receipt drift")
+        fail("adoption receipt drift")
     if data.get("closure") != EXPECTED_CLOSURE:
-        fail("N14-C closure receipt drift")
+        fail("closure receipt drift")
 
     exit_criteria = data.get("exit_criteria")
     if not isinstance(exit_criteria, list) or len(exit_criteria) != 6:
-        fail("N14 must retain six explicit exit criteria")
+        fail("validator contract must retain six explicit exit criteria")
 
     inventory = data.get("check_inventory")
     if not isinstance(inventory, list) or not inventory:
@@ -314,19 +314,19 @@ def main() -> None:
         fail(f"deep capability boundary drift: {deep_boundaries}")
 
     print(
-        "N14-EVIDENCE validator-baseline "
+        "VALIDATION-EVIDENCE validator-baseline "
         "status=PASS web_checks=25 cli_checks=27 canonical_checks=28 shared=24 "
-        "baseline_aliases=2 web_only=1 cli_only=3 phase_status=DONE "
+        "baseline_aliases=2 web_only=1 cli_only=3 contract_status=DONE "
         "normative_contract_changed=false proof_state_changed=false"
     )
     print(
-        "N14-EVIDENCE schema-adoption "
+        "VALIDATION-EVIDENCE schema-adoption "
         "status=PASS web_case=snake_case cli_case=snake_case emitted_aliases=0 "
-        "web_mode=web-lite-local cli_mode=cli-deep-local phase_status=DONE "
+        "web_mode=web-lite-local cli_mode=cli-deep-local contract_status=DONE "
         "normative_contract_changed=false proof_state_changed=false"
     )
     print(
-        "N14-EVIDENCE capability-boundary "
+        "VALIDATION-EVIDENCE capability-boundary "
         "status=PASS web_lite_upload=false deep_review_only=font.embedded,pdfa.deep "
         "measurement_backend_equivalence_required=false proof_state_changed=false"
     )

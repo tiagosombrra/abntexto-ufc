@@ -29,7 +29,7 @@ LINE_CLUSTER_TOLERANCE_PT = 2.5
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N8 reference layout validation failed: {message}")
+    raise SystemExit(f"reference layout validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -138,7 +138,7 @@ def evidence_record(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Measure bounded N8 reference layout evidence.")
+    parser = argparse.ArgumentParser(description="Measure bounded reference layout evidence.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -153,12 +153,12 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N8"
+
         or scenario.get("component") != "reference-layout"
         or scenario.get("rules") != RULE_ORDER
         or scenario.get("locator_ruleset") != "references.layout"
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
     locator_scope = ruleset(locator, "references.layout").get("rule_ids")
     if locator_scope != RULE_ORDER:
@@ -363,7 +363,6 @@ def main() -> None:
     result = "PASS" if all(item["status"] == "PASS" for item in evidence) else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N8",
         "component": "reference-layout",
         "source_commit_sha": args.commit_sha,
         "fixture": "tests/documents/reference-layout-test.tex",
@@ -380,7 +379,7 @@ def main() -> None:
     )
 
     print(
-        "N8-EVIDENCE reference-layout-summary "
+        "VALIDATION-EVIDENCE reference-layout-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" internal_gap_pt={sum(internal_gaps) / len(internal_gaps):.4f}"
         + f" calibration_gap_pt={calibration_gap:.4f}"
@@ -388,7 +387,7 @@ def main() -> None:
     )
     for item in evidence:
         print(
-            f"N8-EVIDENCE rule={item['rule_id']} status={item['status']} "
+            f"VALIDATION-EVIDENCE rule={item['rule_id']} status={item['status']} "
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )

@@ -42,4 +42,4 @@ test -s "$evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência N6 para citação direta curta concluído.'
+echo 'Gate de evidência para citação direta curta concluído.'

@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N8",
   "component": "reference-layout",
   "rules": [
     "references.font.size",
@@ -10,11 +9,11 @@
   ],
   "locator_ruleset": "references.layout",
   "markers": {
-    "margin_control": "UFCN8MarginControl",
-    "calibration_alpha": "UFCN8CalAlpha",
-    "calibration_beta": "UFCN8CalBeta",
-    "entry_alpha": "UFCN8ALPHAREF",
-    "entry_beta": "UFCN8BETAREF"
+    "margin_control": "UFCMarginControl",
+    "calibration_alpha": "UFCCalAlpha",
+    "calibration_beta": "UFCCalBeta",
+    "entry_alpha": "UFCALPHAREF",
+    "entry_beta": "UFCBETAREF"
   },
   "measurement": {
     "bbox_tool": "pdftotext -bbox-layout",

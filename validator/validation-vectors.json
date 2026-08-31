@@ -1,6 +1,5 @@
 {
   "schema_version": 1,
-  "phase": "N14",
   "purpose": "Exercise shared Web/Lite and CLI/Deep report-contract semantics without requiring numerical equivalence between PDF.js and Poppler/veraPDF.",
   "verdict_vectors": [
     {
@@ -132,7 +131,7 @@
     "measurement_backend_equivalence_required": false,
     "normative_contract_changed": false,
     "locator_policy_changed": false,
-    "oracle_tolerances_changed": false,
+    "reference_tolerances_changed": false,
     "proof_state_changed": false
   }
 }

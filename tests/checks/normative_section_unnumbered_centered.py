@@ -55,7 +55,7 @@ def unique_word(pages: list[Any], marker: str) -> tuple[Any, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Measure N6 unnumbered-heading centering from a final PDF."
+        description="Measure unnumbered-heading centering from a final PDF."
     )
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
@@ -70,12 +70,12 @@ def main() -> None:
     policy = load_json(VALIDATION_POLICY)
     if (
         scenario.get("schema_version") != 1
-        or scenario.get("phase") != "N6"
+
         or scenario.get("component") != "section-unnumbered-centered"
         or scenario.get("locator_ruleset") != RULESET_ID
         or scenario.get("rules") != [RULE_ID]
     ):
-        fail("invalid scenario schema/phase/component/ruleset/rules")
+        fail("invalid scenario schema/component/ruleset/rules")
     if policy.get("schema_version") != 2:
         fail("invalid validation policy schema")
 
@@ -172,7 +172,6 @@ def main() -> None:
     result = "PASS" if passed else "FAIL"
     payload = {
         "schema_version": 1,
-        "phase": "N6",
         "component": "section-unnumbered-centered",
         "source_commit_sha": args.commit_sha,
         "result": result,
@@ -189,12 +188,12 @@ def main() -> None:
 
     max_delta = max(item["delta_pt"] for item in measurements)
     print(
-        "N6-EVIDENCE section-unnumbered-centered-summary "
+        "VALIDATION-EVIDENCE section-unnumbered-centered-summary "
         + " ".join(f"{key}={value}" for key, value in sorted(status_counts.items()))
         + f" surfaces={len(measurements)} max_delta_pt={max_delta:.4f}"
     )
     print(
-        f"N6-EVIDENCE rule={RULE_ID} status={evidence[0]['status']} "
+        f"VALIDATION-EVIDENCE rule={RULE_ID} status={evidence[0]['status']} "
         f"expected={json.dumps(expected, ensure_ascii=False, sort_keys=True)} "
         f"measured={json.dumps(evidence[0]['measured'], ensure_ascii=False, sort_keys=True)}"
     )

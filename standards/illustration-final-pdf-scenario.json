@@ -1,7 +1,6 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-08-26",
-  "phase": "N9",
   "component": "illustration-final-pdf",
   "purpose": "Bounded final-PDF evidence for the eight residual illustration typography, bounds and relative-position predicates.",
   "rules": [
@@ -32,18 +31,18 @@
     "object_height_mm": 20
   },
   "markers": {
-    "caption_start": "N9CAPA",
-    "caption_end": "N9CAPZ",
-    "source_start": "N9SRCA",
-    "source_end": "N9SRCZ",
-    "note_start": "N9NOTA",
-    "note_end": "N9NOTZ",
-    "object_left_top": "N9OBJA",
-    "object_right_bottom": "N9OBJZ"
+    "caption_start": "ILCAPA",
+    "caption_end": "ILCAPZ",
+    "source_start": "ILSRCA",
+    "source_end": "ILSRCZ",
+    "note_start": "ILNOTA",
+    "note_end": "ILNOTZ",
+    "object_left_top": "ILOBJA",
+    "object_right_bottom": "ILOBJZ"
   },
   "measurement": {
-    "bounds": "full rendered block must stay within the controlled object left/right edges using the existing N5 horizontal tolerance",
+    "bounds": "full rendered block must stay within the controlled object left/right edges using the existing horizontal tolerance",
     "positions": "relative ordering only; no exact vertical gap is frozen",
-    "typography": "caption/source marker runs are measured with pdftohtml XML using the existing N5 font-size tolerance"
+    "typography": "caption/source marker runs are measured with pdftohtml XML using the existing font-size tolerance"
   }
 }
