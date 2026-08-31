@@ -17,7 +17,7 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "section-multiline-hanging-scenario.json"
 LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ID = "section.multiline.hanging"
 LEVEL_ORDER = ["section", "subsection", "subsubsection", "paragraph", "subparagraph"]
 NUMBER_RE = re.compile(r"[0-9]+(?:\.[0-9]+)*")
@@ -25,7 +25,7 @@ PREFIX_RE = re.compile(r"N6H[A-Z]")
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Section multiline hanging oracle failed: {message}")
+    raise SystemExit(f"Section multiline hanging validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -114,7 +114,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     locator = load_json(LOCATOR_AUDIT)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -125,7 +125,7 @@ def main() -> None:
     ):
         fail("invalid scenario schema/phase/component/ruleset/rules")
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
 
     locator_matches = [
         item
@@ -169,7 +169,7 @@ def main() -> None:
         horizontal_tolerance = float(policy["tolerances"]["horizontal_position_pt"])
         vertical_tolerance = float(policy["tolerances"]["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle tolerances: {exc}")
+        fail(f"invalid validation tolerances: {exc}")
 
     try:
         pages = bbox_pages(args.pdf)

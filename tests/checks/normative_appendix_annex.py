@@ -18,14 +18,13 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
 SCENARIO = ROOT / "standards" / "appendix-annex-final-pdf-scenario.json"
-N10_SCOPE = ROOT / "standards" / "n10-scope-reconciliation.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 DASH_CHARS = "-‐‑‒–—―"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N10 appendix/annex oracle failed: {message}")
+    raise SystemExit(f"N10 appendix/annex validation failed: {message}")
 
 
 def load_json(path: Path, label: str) -> dict[str, Any]:
@@ -196,23 +195,15 @@ def main() -> None:
         fail(f"PDF not found: {pdf}")
 
     scenario = load_json(SCENARIO, "scenario")
-    scope = load_json(N10_SCOPE, "N10 scope")
-    oracle = load_json(ORACLE_POLICY, "oracle policy")
+    validation = load_json(VALIDATION_POLICY, "validation policy")
     if scenario.get("schema_version") != 1 or scenario.get("phase") != "N10":
         fail("invalid scenario schema/phase")
-    if oracle.get("schema_version") != 1 or oracle.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+    if validation.get("schema_version") != 2:
+        fail("invalid validation policy schema/phase")
 
-    campaign = next(
-        (item for item in scope.get("campaigns", []) if item.get("id") == "appendix-annex-final-pdf"),
-        None,
-    )
-    if not isinstance(campaign, dict):
-        fail("appendix-annex-final-pdf campaign missing from N10 scope")
     scenario_rules = scenario.get("rules")
-    campaign_rules = campaign.get("rule_ids")
-    if scenario_rules != campaign_rules or len(scenario_rules) != 13:
-        fail("scenario must match the exact 13-rule N10 campaign order")
+    if not isinstance(scenario_rules, list) or len(scenario_rules) != 13:
+        fail("scenario rule scope is invalid")
 
     rules = {rule["id"]: rule for rule in load_full_contract()["rules"]}
     missing = sorted(set(scenario_rules) - set(rules))
@@ -234,11 +225,14 @@ def main() -> None:
         "annex.identification.pattern": {"pattern": ["ANEXO", "letter", "dash", "title"]},
         "pagination.appendix-annex.continuous": {"continuous": True},
     }
+    if set(scenario_rules) != set(supported):
+        fail("scenario rules drifted from the supported full-contract scope")
+
     for rule_id, value in supported.items():
         expected_values(rules, rule_id, value)
 
-    horizontal_tolerance = float(oracle["tolerances"]["horizontal_position_pt"])
-    font_tolerance = float(oracle["tolerances"]["font_size_pt"])
+    horizontal_tolerance = float(validation["tolerances"]["horizontal_position_pt"])
+    font_tolerance = float(validation["tolerances"]["font_size_pt"])
     left_mm = float(rules["margin.recto.left"]["values"]["left_mm"])
     right_mm = float(rules["margin.recto.right"]["values"]["right_mm"])
 

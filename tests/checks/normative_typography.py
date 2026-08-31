@@ -19,7 +19,7 @@ SCENARIO = ROOT / "standards" / "typography-scenario.json"
 LOCATOR_TYPOGRAPHY = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
 LOCATOR_FINAL = ROOT / "standards" / "locator-audit-final.json"
 EVIDENCE_REGISTRY = ROOT / "standards" / "evidence-registry.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 RULE_ORDER = [
     "format.text.color",
@@ -39,7 +39,7 @@ HEADER_LIMIT_PT = 80.0
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 typography oracle failed: {message}")
+    raise SystemExit(f"N7 typography validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -122,7 +122,7 @@ def main() -> None:
     locator_typography = load_json(LOCATOR_TYPOGRAPHY)
     locator_final = load_json(LOCATOR_FINAL)
     registry = load_json(EVIDENCE_REGISTRY)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -181,7 +181,7 @@ def main() -> None:
         font_tolerance = float(tolerances["font_size_pt"])
         vertical_tolerance = float(tolerances["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle tolerances: {exc}")
+        fail(f"invalid validation tolerances: {exc}")
 
     baseline = scenario.get("literal_family_baseline")
     if not isinstance(baseline, dict):

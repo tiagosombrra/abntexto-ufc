@@ -16,13 +16,13 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "section-primary-after-spacing-scenario.json"
 LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ID = "section.primary.after-spacing"
 RULESET_ID = "sections.primary-after-spacing"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Primary section after-spacing oracle failed: {message}")
+    raise SystemExit(f"Primary section after-spacing validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -76,7 +76,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     locator = load_json(LOCATOR_AUDIT)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -86,7 +86,7 @@ def main() -> None:
     ):
         fail("invalid scenario schema/phase/component/ruleset")
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
 
     locator_matches = [
         item

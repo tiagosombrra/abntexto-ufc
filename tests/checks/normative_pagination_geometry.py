@@ -17,7 +17,7 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "pagination-geometry-scenario.json"
 LOCATORS = ROOT / "standards" / "locator-audit-layout-pagination.json"
-POLICY = ROOT / "standards" / "oracle-policy.json"
+POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 HEADER_REGION_PT = 100.0
 
@@ -32,7 +32,7 @@ RULE_ORDER = [
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 pagination geometry oracle failed: {message}")
+    raise SystemExit(f"N7 pagination geometry validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:

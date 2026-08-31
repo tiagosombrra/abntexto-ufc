@@ -17,7 +17,7 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typograp
 
 SCENARIO = ROOT / "standards" / "reference-layout-scenario.json"
 LOCATOR = ROOT / "standards" / "locator-audit-references.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 RULE_ORDER = [
     "references.font.size",
@@ -29,7 +29,7 @@ LINE_CLUSTER_TOLERANCE_PT = 2.5
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N8 reference layout oracle failed: {message}")
+    raise SystemExit(f"N8 reference layout validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -149,7 +149,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     locator = load_json(LOCATOR)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -190,7 +190,7 @@ def main() -> None:
         horizontal_tolerance = float(tolerances["horizontal_position_pt"])
         vertical_tolerance = float(tolerances["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle tolerances: {exc}")
+        fail(f"invalid validation tolerances: {exc}")
 
     markers = scenario.get("markers")
     required_markers = {

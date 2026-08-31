@@ -16,7 +16,7 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "body-paragraph-scenario.json"
 LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULESET_ID = "layout.body-paragraph"
 INDENT_RULE_ID = "paragraph.first-line.indent"
 SPACING_RULE_ID = "paragraph.spacing.extra"
@@ -24,7 +24,7 @@ MM_TO_PT = 72.0 / 25.4
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Body paragraph oracle failed: {message}")
+    raise SystemExit(f"Body paragraph validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -67,7 +67,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     locator = load_json(LOCATOR_AUDIT)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -77,7 +77,7 @@ def main() -> None:
     ):
         fail("invalid scenario schema/phase/component/ruleset")
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
 
     locator_matches = [
         item

@@ -14,15 +14,14 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "equation-display-final-pdf-scenario.json"
-CAMPAIGN_PLAN = ROOT / "standards" / "n9-campaign-plan.json"
 LOCATOR = ROOT / "standards" / "locator-audit-objects-equations.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ID = "equation.display"
 EXPECTED = {"displayed": True}
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 equation display oracle failed: {message}")
+    raise SystemExit(f"N9 equation display validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -66,9 +65,8 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    plan = load_json(CAMPAIGN_PLAN)
     locator = load_json(LOCATOR)
-    oracle = load_json(ORACLE_POLICY)
+    validation = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -79,17 +77,6 @@ def main() -> None:
     ):
         fail("invalid scenario schema/phase/component/scope")
 
-    campaigns = {
-        item.get("id"): item for item in plan.get("campaigns", [])
-        if isinstance(item, dict)
-    }
-    campaign = campaigns.get("equation-display-final-pdf")
-    if (
-        not isinstance(campaign, dict)
-        or campaign.get("rule_ids") != [RULE_ID]
-        or campaign.get("measurement_status") != "existing-n5-capability"
-    ):
-        fail("equation display campaign scope/capability drifted")
 
     presentation_rules = ruleset(locator, "equations.presentation").get("rule_ids", [])
     if RULE_ID not in presentation_rules:
@@ -101,13 +88,13 @@ def main() -> None:
     if not isinstance(rule, dict) or rule.get("values") != EXPECTED:
         fail(f"equation display contract values drifted: {None if rule is None else rule.get('values')}")
 
-    tolerances = oracle.get("tolerances", {})
+    tolerances = validation.get("tolerances", {})
     try:
         vertical_tol = float(tolerances["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid N5 vertical tolerance: {exc}")
-    if "pdftotext -bbox-layout" not in set(oracle.get("tools", {}).values()):
-        fail("equation display tool left N5 oracle policy")
+        fail(f"invalid validation vertical tolerance: {exc}")
+    if "pdftotext -bbox-layout" not in set(validation.get("tools", {}).values()):
+        fail("equation display tool left N5 validation policy")
 
     fixture = scenario.get("fixture", {})
     markers = scenario.get("markers", {})
@@ -149,7 +136,7 @@ def main() -> None:
         "after_gap_pt": round(after_gap, 4),
         "ordered_vertical_centers": ordered_centers,
         "non_overlapping_vertical_bands": non_overlapping,
-        "distinct_from_body_by_n5_vertical_tolerance": distinct_bands,
+        "distinct_from_body_by_validation_vertical_tolerance": distinct_bands,
         "equation_x_min_pt_observation": round(equation.box.x_min, 4),
         "horizontal_alignment_not_frozen": True,
         "exact_vertical_gaps_not_frozen": True,

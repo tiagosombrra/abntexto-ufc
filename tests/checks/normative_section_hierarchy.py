@@ -16,7 +16,7 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "section-hierarchy-scenario.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ORDER = [
     "section.numbering.progressive",
     "section.levels.max",
@@ -27,7 +27,7 @@ NUMBER_RE = re.compile(r"[0-9]+(?:\.[0-9]+)*")
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Section hierarchy oracle failed: {message}")
+    raise SystemExit(f"Section hierarchy validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -87,7 +87,7 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
     if (
         scenario.get("schema_version") != 1
         or scenario.get("phase") != "N6"
@@ -96,7 +96,7 @@ def main() -> None:
     ):
         fail("invalid scenario schema/phase/component/parent")
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}

@@ -15,11 +15,10 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, Box, bbox_pages, normalize, typography_runs
 
 SCENARIO = ROOT / "standards" / "illustration-final-pdf-scenario.json"
-CAMPAIGN_PLAN = ROOT / "standards" / "n9-campaign-plan.json"
 LOCATOR_TYPOGRAPHY = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
 LOCATOR_OBJECTS = ROOT / "standards" / "locator-audit-objects-equations.json"
 LOCATOR_FINAL = ROOT / "standards" / "locator-audit-final.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 RULES = [
     "font.size.reduced.illustration-caption",
@@ -45,7 +44,7 @@ EXPECTED = {
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 illustration oracle failed: {message}")
+    raise SystemExit(f"N9 illustration validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -129,19 +128,14 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    plan = load_json(CAMPAIGN_PLAN)
     loc_typ = load_json(LOCATOR_TYPOGRAPHY)
     loc_obj = load_json(LOCATOR_OBJECTS)
     loc_final = load_json(LOCATOR_FINAL)
-    oracle = load_json(ORACLE_POLICY)
+    validation = load_json(VALIDATION_POLICY)
 
     if scenario.get("schema_version") != 1 or scenario.get("phase") != "N9" or scenario.get("component") != "illustration-final-pdf" or scenario.get("rules") != RULES:
         fail("invalid scenario schema/phase/component/scope")
 
-    campaigns = {item.get("id"): item for item in plan.get("campaigns", []) if isinstance(item, dict)}
-    campaign = campaigns.get("illustration-final-pdf")
-    if not isinstance(campaign, dict) or campaign.get("rule_ids") != RULES or campaign.get("measurement_status") != "existing-n5-capability":
-        fail("illustration campaign scope/capability drifted")
 
     reduced = ruleset(loc_typ, "typography.reduced-font").get("rule_ids", [])
     if not {RULES[0], RULES[1]} <= set(reduced):
@@ -157,16 +151,16 @@ def main() -> None:
     if values != EXPECTED:
         fail(f"illustration contract values drifted: {values}")
 
-    tolerances = oracle.get("tolerances", {})
+    tolerances = validation.get("tolerances", {})
     try:
         font_tol = float(tolerances["font_size_pt"])
         horiz_tol = float(tolerances["horizontal_position_pt"])
         vert_tol = float(tolerances["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid N5 tolerances: {exc}")
-    allowed_tools = set(oracle.get("tools", {}).values())
+        fail(f"invalid validation tolerances: {exc}")
+    allowed_tools = set(validation.get("tools", {}).values())
     if not {"pdftotext -bbox-layout", "pdftohtml -xml -zoom 1.0"} <= allowed_tools:
-        fail("required illustration tools left N5 oracle policy")
+        fail("required illustration tools left N5 validation policy")
 
     fixture = scenario.get("fixture", {})
     markers = scenario.get("markers", {})

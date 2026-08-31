@@ -13,12 +13,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 from pdf_measurement import PDFMeasurementError
 from pdf_vector_measurement import vector_rules
 
-EXTENSION = ROOT / "standards" / "vector-rule-oracle-extension.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+EXTENSION = ROOT / "standards" / "vector-rule-validation-extension.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N5 vector rule oracle calibration failed: {message}")
+    raise SystemExit(f"N5 vector rule validation calibration failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -32,7 +32,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Calibrate the additive N5 vector-rule oracle.")
+    parser = argparse.ArgumentParser(description="Calibrate the additive N5 vector-rule validation.")
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
@@ -41,23 +41,23 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     extension = load_json(EXTENSION)
-    oracle = load_json(ORACLE_POLICY)
+    validation = load_json(VALIDATION_POLICY)
     if (
         extension.get("schema_version") != 1
         or extension.get("phase") != "N5"
         or extension.get("component") != "vector-rule-geometry"
     ):
         fail("invalid extension schema/phase/component")
-    if oracle.get("schema_version") != 1 or oracle.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+    if validation.get("schema_version") != 2:
+        fail("invalid validation policy schema/phase")
     if extension.get("tool") != "pdftocairo -svg":
         fail("vector tool drifted")
-    if oracle.get("tools", {}).get("vector_geometry") != extension.get("tool"):
-        fail("vector tool is not registered in oracle-policy.json")
-    if "vector-rule-geometry" not in oracle.get("exit_capabilities", []):
+    if validation.get("tools", {}).get("vector_geometry") != extension.get("tool"):
+        fail("vector tool is not registered in validation-policy.json")
+    if "vector-rule-geometry" not in validation.get("exit_capabilities", []):
         fail("vector-rule-geometry capability is not registered")
-    if oracle.get("vector_geometry_extension") != "standards/vector-rule-validation-extension.json":
-        fail("oracle extension binding drifted")
+    if validation.get("vector_geometry_extension") != "standards/vector-rule-validation-extension.json":
+        fail("validation extension binding drifted")
 
     policy = extension.get("policy", {})
     if not all(
@@ -76,17 +76,17 @@ def main() -> None:
         axis_tol = float(parser_cfg["axis_classification_tolerance_pt"])
         max_thickness = float(parser_cfg["max_rule_thickness_pt"])
         min_length = float(parser_cfg["min_rule_length_pt"])
-        horizontal_tol = float(oracle["tolerances"]["horizontal_position_pt"])
-        vertical_tol = float(oracle["tolerances"]["vertical_position_pt"])
+        horizontal_tol = float(validation["tolerances"]["horizontal_position_pt"])
+        vertical_tol = float(validation["tolerances"]["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid vector/oracle numeric configuration: {exc}")
+        fail(f"invalid vector/validation numeric configuration: {exc}")
 
     calibration = extension.get("calibration", {})
     if calibration.get("expected_horizontal_rules") != 1 or calibration.get("expected_vertical_rules") != 1:
         fail("calibration rule-count contract drifted")
-    if calibration.get("horizontal_length_tolerance_binding") != "oracle-policy.tolerances.horizontal_position_pt":
+    if calibration.get("horizontal_length_tolerance_binding") != "validation-policy.tolerances.horizontal_position_pt":
         fail("horizontal tolerance binding drifted")
-    if calibration.get("vertical_length_tolerance_binding") != "oracle-policy.tolerances.vertical_position_pt":
+    if calibration.get("vertical_length_tolerance_binding") != "validation-policy.tolerances.vertical_position_pt":
         fail("vertical tolerance binding drifted")
 
     try:
@@ -148,7 +148,7 @@ def main() -> None:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "N5-EVIDENCE vector-rule-oracle-calibration "
+        "N5-EVIDENCE vector-rule-validation-calibration "
         f"PASS={sum(item['status'] == 'PASS' for item in checks)} "
         f"FAIL={sum(item['status'] == 'FAIL' for item in checks)} "
         f"horizontal_length_pt={horizontal[0].length:.4f} "

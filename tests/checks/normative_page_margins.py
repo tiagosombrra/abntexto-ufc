@@ -21,7 +21,7 @@ from pdf_measurement import PDFMeasurementError, bbox_pages
 
 SCENARIO = ROOT / "standards" / "page-margins-scenario.json"
 LOCATORS = ROOT / "standards" / "locator-audit-layout-pagination.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 PT_PER_MM = 72.0 / 25.4
 PAGE_RULE = "page.a4"
 RECTO_RULES = [
@@ -48,7 +48,7 @@ THIN_LIMIT_PT = 2.0
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 page/margins oracle failed: {message}")
+    raise SystemExit(f"N7 page/margins validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -349,7 +349,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     locator_rulesets = ruleset_map(load_json(LOCATORS))
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
     if (
         scenario.get("schema_version") != 1
         or scenario.get("phase") != "N7"
@@ -359,7 +359,7 @@ def main() -> None:
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"page/margins scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
 
     expected_locator_map = {PAGE_RULE: "layout.page-a4"}
     expected_locator_map.update({rule_id: "layout.margin-recto" for rule_id in RECTO_RULES})
@@ -421,9 +421,9 @@ def main() -> None:
         horizontal_tolerance = float(policy["tolerances"]["horizontal_position_pt"])
         vertical_tolerance = float(policy["tolerances"]["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle tolerance configuration: {exc}")
+        fail(f"invalid validation tolerance configuration: {exc}")
     if min(page_tolerance, horizontal_tolerance, vertical_tolerance) <= 0:
-        fail("oracle tolerances must be positive")
+        fail("validation tolerances must be positive")
 
     try:
         pages = bbox_pages(args.pdf)

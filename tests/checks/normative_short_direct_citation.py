@@ -16,7 +16,7 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typograp
 
 SCENARIO = ROOT / "standards" / "short-direct-citation-scenario.json"
 LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-citations.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULESET_ID = "citations.direct-short"
 RULE_IDS = [
     "citation.direct-short.max-lines",
@@ -29,7 +29,7 @@ SINGLE_QUOTE_CHARS = set("'‘’‚‛‹›")
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Short direct citation oracle failed: {message}")
+    raise SystemExit(f"Short direct citation validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -141,7 +141,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     locator = load_json(LOCATOR_AUDIT)
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -190,7 +190,7 @@ def main() -> None:
         )
 
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
     font_tolerance = float(policy["tolerances"]["font_size_pt"])
 
     markers = scenario.get("markers")

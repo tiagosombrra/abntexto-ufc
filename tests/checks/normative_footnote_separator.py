@@ -20,7 +20,7 @@ from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "footnote-separator-scenario.json"
 FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ID = "footnote.separator.length"
 EXPECTED_RULE_IDS = [RULE_ID]
 NUMBER = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?"
@@ -36,7 +36,7 @@ VECTOR_AXIS_TOLERANCE_PT = 0.5
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 footnote separator oracle failed: {message}")
+    raise SystemExit(f"N7 footnote separator validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -204,7 +204,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     locators = ruleset_map(load_json(FOOTNOTE_LOCATORS))
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -215,7 +215,7 @@ def main() -> None:
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"footnote separator scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
 
     declared_locator_map = scenario.get("locator_rulesets")
     if not isinstance(declared_locator_map, dict):
@@ -239,9 +239,9 @@ def main() -> None:
         horizontal_tolerance = float(policy["tolerances"]["horizontal_position_pt"])
         vertical_tolerance = float(policy["tolerances"]["vertical_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle tolerance configuration: {exc}")
+        fail(f"invalid validation tolerance configuration: {exc}")
     if min(horizontal_tolerance, vertical_tolerance) <= 0:
-        fail("oracle tolerances must be positive")
+        fail("validation tolerances must be positive")
 
     markers = scenario.get("markers")
     if not isinstance(markers, dict) or set(markers) != {"margin_control", "footnote_text"}:

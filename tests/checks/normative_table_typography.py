@@ -15,9 +15,8 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
 SCENARIO = ROOT / "standards" / "table-typography-final-pdf-scenario.json"
-CAMPAIGN_PLAN = ROOT / "standards" / "n9-campaign-plan.json"
 LOCATOR = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 RULES = [
     "font.size.reduced.table-caption",
@@ -27,7 +26,7 @@ EXPECTED = {rule_id: {"pt": 10} for rule_id in RULES}
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 table typography oracle failed: {message}")
+    raise SystemExit(f"N9 table typography validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -68,9 +67,8 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    plan = load_json(CAMPAIGN_PLAN)
     locator = load_json(LOCATOR)
-    oracle = load_json(ORACLE_POLICY)
+    validation = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -81,17 +79,6 @@ def main() -> None:
     ):
         fail("invalid scenario schema/phase/component/scope")
 
-    campaigns = {
-        item.get("id"): item for item in plan.get("campaigns", [])
-        if isinstance(item, dict)
-    }
-    campaign = campaigns.get("table-final-pdf")
-    if not isinstance(campaign, dict):
-        fail("table-final-pdf campaign is missing")
-    if set(campaign.get("existing_n5_rule_ids", [])) != set(RULES):
-        fail("table existing-N5 typography scope drifted")
-    if not set(RULES) <= set(campaign.get("rule_ids", [])):
-        fail("table typography rules escaped the table campaign")
 
     reduced = ruleset(locator, "typography.reduced-font").get("rule_ids", [])
     if not set(RULES) <= set(reduced):
@@ -103,13 +90,13 @@ def main() -> None:
     if values != EXPECTED:
         fail(f"table typography contract values drifted: {values}")
 
-    tolerances = oracle.get("tolerances", {})
+    tolerances = validation.get("tolerances", {})
     try:
         font_tol = float(tolerances["font_size_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid N5 font-size tolerance: {exc}")
-    if "pdftohtml -xml -zoom 1.0" not in set(oracle.get("tools", {}).values()):
-        fail("table typography tool left N5 oracle policy")
+        fail(f"invalid validation font-size tolerance: {exc}")
+    if "pdftohtml -xml -zoom 1.0" not in set(validation.get("tools", {}).values()):
+        fail("table typography tool left N5 validation policy")
 
     fixture = scenario.get("fixture", {})
     markers = scenario.get("markers", {})

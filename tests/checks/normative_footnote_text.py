@@ -22,7 +22,7 @@ from pdf_measurement import (
 SCENARIO = ROOT / "standards" / "footnote-text-scenario.json"
 TYPOGRAPHY_LOCATORS = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
 FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 FONT_RULE_ID = "font.size.reduced.footnote"
 SPACING_RULE_ID = "footnote.line-spacing"
@@ -31,7 +31,7 @@ EXPECTED_RULE_IDS = [FONT_RULE_ID, SPACING_RULE_ID, HANGING_RULE_ID]
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N7 footnote text oracle failed: {message}")
+    raise SystemExit(f"N7 footnote text validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -95,7 +95,7 @@ def main() -> None:
     scenario = load_json(SCENARIO)
     typography_locators = ruleset_map(load_json(TYPOGRAPHY_LOCATORS))
     footnote_locators = ruleset_map(load_json(FOOTNOTE_LOCATORS))
-    policy = load_json(ORACLE_POLICY)
+    policy = load_json(VALIDATION_POLICY)
 
     if (
         scenario.get("schema_version") != 1
@@ -106,7 +106,7 @@ def main() -> None:
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"footnote text scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid oracle policy schema/phase")
+        fail("invalid validation policy schema/phase")
 
     expected_locator_map = {
         FONT_RULE_ID: (typography_locators, "typography.reduced-font"),
@@ -147,9 +147,9 @@ def main() -> None:
         vertical_tolerance = float(policy["tolerances"]["vertical_position_pt"])
         horizontal_tolerance = float(policy["tolerances"]["horizontal_position_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle tolerance configuration: {exc}")
+        fail(f"invalid validation tolerance configuration: {exc}")
     if min(font_tolerance, vertical_tolerance, horizontal_tolerance) <= 0:
-        fail("oracle tolerances must be positive")
+        fail("validation tolerances must be positive")
 
     markers = scenario.get("markers")
     required_markers = {

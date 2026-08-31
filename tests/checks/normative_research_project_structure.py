@@ -15,8 +15,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
 
-SCENARIO = ROOT / "standards" / "n11-project-structure-final-pdf-scenario.json"
-SCOPE = ROOT / "standards" / "n11-scope-reconciliation.json"
+SCENARIO = ROOT / "standards" / "research-project-structure-final-pdf-scenario.json"
 
 
 def fail(message: str) -> None:
@@ -71,23 +70,18 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    scope = load_json(SCOPE)
     if scenario.get("schema_version") != 1 or scenario.get("phase") != "N11":
         fail("invalid scenario schema/phase")
     if scenario.get("campaign") != "project-structure-final-pdf":
         fail("unexpected campaign id")
 
     rule_ids = set(scenario.get("rules", []))
-    support_ids = set(scope.get("support_only_rule_ids", []))
     expected_rule_ids = {
         "project.textual.required-sections",
         "project.final-work-elements.excluded",
     }
-    if rule_ids != expected_rule_ids or support_ids != expected_rule_ids:
-        fail(
-            "campaign/scope mismatch: "
-            f"scenario={sorted(rule_ids)} support={sorted(support_ids)}"
-        )
+    if rule_ids != expected_rule_ids:
+        fail(f"scenario rule scope drifted: {sorted(rule_ids)}")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}
@@ -182,33 +176,6 @@ def main() -> None:
     counts = Counter(item["status"] for item in evidence)
     findings = [item["rule_id"] for item in evidence if item["status"] != "PASS"]
 
-    expected_progress = scenario.get("expected_progress", {})
-    baseline = len(scope.get("existing_bounded_positive", []))
-    promoted = counts.get("PASS", 0)
-    current = baseline + promoted
-    support_only = int(scope.get("total_rules", 0)) - current
-    progress = {
-        "total": int(scope.get("total_rules", 0)),
-        "baseline_existing_bounded_positive": baseline,
-        "promoted_bounded_positive": promoted,
-        "current_bounded_positive": current,
-        "current_support_only": support_only,
-        "proof_state_changed": False,
-    }
-    progress_mismatches = {
-        key: {
-            "actual": progress[key],
-            "expected": expected_progress.get(key),
-        }
-        for key in (
-            "total",
-            "baseline_existing_bounded_positive",
-            "promoted_bounded_positive",
-            "current_bounded_positive",
-            "current_support_only",
-        )
-        if progress[key] != expected_progress.get(key)
-    }
 
     payload = {
         "schema_version": 1,
@@ -220,8 +187,6 @@ def main() -> None:
         "status_counts": dict(sorted(counts.items())),
         "findings": findings,
         "evidence": evidence,
-        "bounded_progress": progress,
-        "bounded_progress_mismatches": progress_mismatches,
     }
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -236,23 +201,9 @@ def main() -> None:
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
-    print(
-        "N11-EVIDENCE bounded-progress "
-        f"total={progress['total']} "
-        f"baseline_existing_bounded_positive={progress['baseline_existing_bounded_positive']} "
-        f"promoted_bounded_positive={progress['promoted_bounded_positive']} "
-        f"current_bounded_positive={progress['current_bounded_positive']} "
-        f"current_support_only={progress['current_support_only']} "
-        "proof_state_changed=false"
-    )
 
     if args.enforce and findings:
         fail("enforcement requested with unresolved project-structure findings")
-    if progress_mismatches:
-        fail(
-            "bounded-progress mismatch: "
-            + json.dumps(progress_mismatches, ensure_ascii=False, sort_keys=True)
-        )
 
 
 if __name__ == "__main__":

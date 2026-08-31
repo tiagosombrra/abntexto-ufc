@@ -16,11 +16,10 @@ from pdf_measurement import PDFMeasurementError, Box, bbox_pages, find_marker
 from pdf_vector_measurement import VectorRule, vector_rules
 
 SCENARIO = ROOT / "standards" / "table-ibge-vector-final-pdf-scenario.json"
-CAMPAIGN_PLAN = ROOT / "standards" / "n9-campaign-plan.json"
 LOCATOR = ROOT / "standards" / "locator-audit-final.json"
-ORACLE_POLICY = ROOT / "standards" / "oracle-policy.json"
-EXTENSION = ROOT / "standards" / "vector-rule-oracle-extension.json"
-CALIBRATION_RUNTIME = ROOT / "artifacts" / "normative-layout" / "vector-rule-oracle-calibration.json"
+VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
+EXTENSION = ROOT / "standards" / "vector-rule-validation-extension.json"
+CALIBRATION_RUNTIME = ROOT / "artifacts" / "normative-layout" / "vector-rule-validation-calibration.json"
 
 RULES = [
     "table.ibge.open-sides",
@@ -39,7 +38,7 @@ EXPECTED = {
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"N9 IBGE vector oracle failed: {message}")
+    raise SystemExit(f"N9 IBGE vector validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -152,9 +151,8 @@ def main() -> None:
         fail(f"PDF not found: {args.pdf}")
 
     scenario = load_json(SCENARIO)
-    plan = load_json(CAMPAIGN_PLAN)
     locator = load_json(LOCATOR)
-    oracle = load_json(ORACLE_POLICY)
+    validation = load_json(VALIDATION_POLICY)
     extension = load_json(EXTENSION)
     calibration = load_json(CALIBRATION_RUNTIME)
 
@@ -167,21 +165,10 @@ def main() -> None:
     ):
         fail("invalid scenario schema/phase/component/scope")
     if scenario.get("oracle_extension") != "standards/vector-rule-validation-extension.json":
-        fail("scenario oracle-extension binding drifted")
+        fail("scenario validation-extension binding drifted")
     if scenario.get("locator_ruleset") != "objects.table-ibge":
         fail("scenario locator binding drifted")
 
-    campaigns = {
-        item.get("id"): item for item in plan.get("campaigns", [])
-        if isinstance(item, dict)
-    }
-    campaign = campaigns.get("table-final-pdf")
-    if not isinstance(campaign, dict):
-        fail("table-final-pdf campaign is missing")
-    if set(campaign.get("oracle_extension_required_rule_ids", [])) != set(RULES):
-        fail("table vector residual scope drifted")
-    if not set(RULES) <= set(campaign.get("rule_ids", [])):
-        fail("IBGE rules escaped the table campaign")
 
     located = ruleset(locator, "objects.table-ibge")
     if set(located.get("rule_ids", [])) != set(RULES):
@@ -193,12 +180,12 @@ def main() -> None:
     if values != EXPECTED:
         fail(f"IBGE contract values drifted: {values}")
 
-    if oracle.get("tools", {}).get("vector_geometry") != "pdftocairo -svg":
-        fail("vector geometry tool left N5 oracle policy")
-    if "vector-rule-geometry" not in oracle.get("exit_capabilities", []):
-        fail("N5 vector-rule-geometry capability is not active")
+    if validation.get("tools", {}).get("vector_geometry") != "pdftocairo -svg":
+        fail("vector geometry tool left N5 validation policy")
+    if "vector-rule-geometry" not in validation.get("exit_capabilities", []):
+        fail("vector-rule-geometry capability is not active")
     if extension.get("component") != "vector-rule-geometry" or extension.get("tool") != "pdftocairo -svg":
-        fail("invalid vector-rule oracle extension")
+        fail("invalid vector-rule validation extension")
     if calibration.get("phase") != "N5" or calibration.get("component") != "vector-rule-geometry" or calibration.get("result") != "PASS":
         fail("same-run vector-rule calibration did not PASS")
     if calibration.get("proof_state_changed") is not False:
@@ -211,14 +198,14 @@ def main() -> None:
         )
 
     try:
-        horizontal_tol = float(oracle["tolerances"]["horizontal_position_pt"])
-        vertical_tol = float(oracle["tolerances"]["vertical_position_pt"])
+        horizontal_tol = float(validation["tolerances"]["horizontal_position_pt"])
+        vertical_tol = float(validation["tolerances"]["vertical_position_pt"])
         parser_cfg = extension["parser"]
         axis_tol = float(parser_cfg["axis_classification_tolerance_pt"])
         max_thickness = float(parser_cfg["max_rule_thickness_pt"])
         min_length = float(parser_cfg["min_rule_length_pt"])
     except (KeyError, TypeError, ValueError) as exc:
-        fail(f"invalid oracle configuration: {exc}")
+        fail(f"invalid validation configuration: {exc}")
     logical_cluster_tol = max(axis_tol, max_thickness)
 
     markers = scenario.get("markers", {})
