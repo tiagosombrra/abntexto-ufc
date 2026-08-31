@@ -177,7 +177,7 @@ def main() -> None:
     scenario = load_json(SCENARIO, "scenario")
     validation = load_json(VALIDATION_POLICY, "validation policy")
     if scenario.get("schema_version") != 1:
-        fail("invalid scenario schema/phase")
+        fail("invalid scenario schema")
     if validation.get("schema_version") != 2:
         fail("invalid validation policy schema")
 
@@ -330,14 +330,14 @@ def main() -> None:
         "campaign": "index-glossary-final-pdf",
         "source_commit_sha": args.commit_sha or None,
         "rendered_engine": "lualatex",
-        "engine_matrix_deferred_to_n12": True,
+        "index_glossary_engine_matrix_deferred": True,
         "proof_state_changed": False,
         "rules": evidence,
         "summary": {
             "pass": passed,
             "fail": failed,
-            "n10_current_bounded_positive": 15 + passed,
-            "n10_current_support_only": 5 - passed,
+            "index_glossary_bounded_positive": 15 + passed,
+            "index_glossary_support_only": 5 - passed,
         },
     }
     args.json.parent.mkdir(parents=True, exist_ok=True)

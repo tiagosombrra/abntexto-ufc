@@ -75,7 +75,7 @@ def main() -> None:
         or scenario.get("campaign_id") != "equation-display-final-pdf"
         or scenario.get("rules") != [RULE_ID]
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
 
     presentation_rules = ruleset(locator, "equations.presentation").get("rule_ids", [])

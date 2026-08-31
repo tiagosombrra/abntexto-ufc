@@ -158,7 +158,7 @@ def main() -> None:
         or scenario.get("rules") != RULE_ORDER
         or scenario.get("locator_ruleset") != "references.layout"
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
     locator_scope = ruleset(locator, "references.layout").get("rule_ids")
     if locator_scope != RULE_ORDER:

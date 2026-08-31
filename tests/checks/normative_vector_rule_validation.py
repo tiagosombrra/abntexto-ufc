@@ -47,7 +47,7 @@ def main() -> None:
 
         or extension.get("component") != "vector-rule-geometry"
     ):
-        fail("invalid extension schema/phase/component")
+        fail("invalid extension schema/component")
     if validation.get("schema_version") != 2:
         fail("invalid validation policy schema")
     if extension.get("tool") != "pdftocairo -svg":

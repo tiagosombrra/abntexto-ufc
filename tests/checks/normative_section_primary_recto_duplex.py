@@ -74,7 +74,7 @@ def main() -> None:
         or scenario.get("component") != "section-primary-recto-duplex"
         or scenario.get("locator_ruleset") != "sections.primary-recto-duplex"
     ):
-        fail("invalid scenario schema/phase/component/ruleset")
+        fail("invalid scenario schema/component/ruleset")
 
     locator_matches = [
         item

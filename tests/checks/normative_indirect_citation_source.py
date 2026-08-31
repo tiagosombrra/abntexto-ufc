@@ -89,7 +89,7 @@ def main() -> None:
         or scenario.get("component") != "indirect-citation-source"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
-        fail("invalid scenario schema/phase/component/ruleset")
+        fail("invalid scenario schema/component/ruleset")
 
     if scenario.get("rules") != [RULE_ID]:
         fail(f"indirect citation source rule scope drift: {scenario.get('rules')}")

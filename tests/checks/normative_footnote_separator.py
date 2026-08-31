@@ -161,7 +161,7 @@ def extract_horizontal_lines(svg_path: Path) -> list[dict[str, float | str]]:
 
 
 def render_svg(pdf: Path, page: int) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
-    temp_dir = tempfile.TemporaryDirectory(prefix="ufc-n7-footnote-separator-")
+    temp_dir = tempfile.TemporaryDirectory(prefix="ufc-footnote-separator-")
     output = Path(temp_dir.name) / "page.svg"
     try:
         completed = subprocess.run(
@@ -211,7 +211,7 @@ def main() -> None:
 
         or scenario.get("component") != "footnote-separator"
     ):
-        fail("invalid scenario schema/phase/component")
+        fail("invalid scenario schema/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"footnote separator scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 2:

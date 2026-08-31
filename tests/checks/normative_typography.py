@@ -131,7 +131,7 @@ def main() -> None:
         or scenario.get("rules") != RULE_ORDER
         or scenario.get("direct_pdf_rules") != DIRECT_RULES
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
     expected_locator_map = {
         "format.text.color": "format.text-color",

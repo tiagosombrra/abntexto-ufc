@@ -163,7 +163,7 @@ def main() -> None:
         or scenario.get("campaign_id") != "table-final-pdf"
         or scenario.get("rules") != RULES
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
     if scenario.get("oracle_extension") != "standards/vector-rule-validation-extension.json":
         fail("scenario validation-extension binding drifted")
     if scenario.get("locator_ruleset") != "objects.table-ibge":

@@ -109,7 +109,7 @@ def main() -> None:
         or scenario.get("component") != "long-quotation"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
-        fail("invalid scenario schema/phase/component/ruleset")
+        fail("invalid scenario schema/component/ruleset")
     if policy.get("schema_version") != 2:
         fail("invalid validation policy schema")
 

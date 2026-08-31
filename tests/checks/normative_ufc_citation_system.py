@@ -158,7 +158,7 @@ def main() -> None:
         or scenario.get("locator_ruleset") != RULESET_ID
         or scenario.get("rules") != [RULE_ID]
     ):
-        fail("invalid scenario schema/phase/component/rule scope")
+        fail("invalid scenario schema/component/rule scope")
 
     locator_matches = [
         item

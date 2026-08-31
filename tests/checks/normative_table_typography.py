@@ -77,7 +77,7 @@ def main() -> None:
         or scenario.get("rules") != RULES
         or scenario.get("campaign_id") != "table-final-pdf"
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
 
     reduced = ruleset(locator, "typography.reduced-font").get("rule_ids", [])

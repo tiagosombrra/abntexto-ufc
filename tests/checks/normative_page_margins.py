@@ -220,7 +220,7 @@ def iter_shapes(
 
 
 def render_svg(pdf: Path, page: int) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
-    temp_dir = tempfile.TemporaryDirectory(prefix=f"ufc-n7-page-margins-{page}-")
+    temp_dir = tempfile.TemporaryDirectory(prefix=f"ufc-page-margins-{page}-")
     output = Path(temp_dir.name) / "page.svg"
     try:
         completed = subprocess.run(
@@ -355,7 +355,7 @@ def main() -> None:
 
         or scenario.get("component") != "page-margins"
     ):
-        fail("invalid scenario schema/phase/component")
+        fail("invalid scenario schema/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"page/margins scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 2:

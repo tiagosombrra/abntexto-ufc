@@ -25,7 +25,7 @@
     "index_heading_vertical_position_frozen": false,
     "index_heading_spacing_frozen": false,
     "glossary_typography_is_predicate": false,
-    "engine_matrix_deferred_to_n12": true,
+    "index_glossary_engine_matrix_deferred": true,
     "proof_state_changed": false
   }
 }

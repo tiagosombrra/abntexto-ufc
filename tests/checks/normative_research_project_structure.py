@@ -71,7 +71,7 @@ def main() -> None:
 
     scenario = load_json(SCENARIO)
     if scenario.get("schema_version") != 1:
-        fail("invalid scenario schema/phase")
+        fail("invalid scenario schema")
     if scenario.get("campaign") != "project-structure-final-pdf":
         fail("unexpected campaign id")
 

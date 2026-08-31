@@ -134,7 +134,7 @@ def main() -> None:
     validation = load_json(VALIDATION_POLICY)
 
     if scenario.get("schema_version") != 1 or scenario.get("component") != "illustration-final-pdf" or scenario.get("rules") != RULES:
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
 
     reduced = ruleset(loc_typ, "typography.reduced-font").get("rule_ids", [])

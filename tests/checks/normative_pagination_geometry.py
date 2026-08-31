@@ -151,7 +151,7 @@ def main() -> None:
         or scenario.get("rules") != RULE_ORDER
         or scenario.get("locator_ruleset") != "pagination.general"
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
     locator_matches = [
         item

@@ -97,7 +97,7 @@ if '10.1234/exemplo.2025.1' not in identifiers or '0000-0002-1825-0097' not in i
     raise SystemExit('NBR 6023:2025: DOI ou ORCID complementar ausente.')
 PY
 
-  evidence_json="${UFC_EVIDENCE_DIR:-artifacts/validation/reference-semantics}/n8-reference-semantics.json"
+  evidence_json="${UFC_EVIDENCE_DIR:-artifacts/validation/reference-semantics}/reference-semantics.json"
   set -- python3 tests/checks/normative_reference_semantics.py \
     /tmp/abntexto-ufc-v2-6023.txt --json "$evidence_json"
   if [ -n "${GITHUB_SHA:-}" ]; then

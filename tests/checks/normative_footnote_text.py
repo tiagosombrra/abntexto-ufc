@@ -102,7 +102,7 @@ def main() -> None:
 
         or scenario.get("component") != "footnote-text"
     ):
-        fail("invalid scenario schema/phase/component")
+        fail("invalid scenario schema/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"footnote text scenario scope drift: {scenario.get('rules')}")
     if policy.get("schema_version") != 2:

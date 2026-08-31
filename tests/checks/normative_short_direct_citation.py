@@ -149,7 +149,7 @@ def main() -> None:
         or scenario.get("component") != "short-direct-citation"
         or scenario.get("locator_ruleset") != RULESET_ID
     ):
-        fail("invalid scenario schema/phase/component/ruleset")
+        fail("invalid scenario schema/component/ruleset")
 
     locator_matches = [
         item

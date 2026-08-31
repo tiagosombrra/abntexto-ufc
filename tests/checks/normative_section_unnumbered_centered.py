@@ -75,7 +75,7 @@ def main() -> None:
         or scenario.get("locator_ruleset") != RULESET_ID
         or scenario.get("rules") != [RULE_ID]
     ):
-        fail("invalid scenario schema/phase/component/ruleset/rules")
+        fail("invalid scenario schema/component/ruleset/rules")
     if policy.get("schema_version") != 2:
         fail("invalid validation policy schema")
 

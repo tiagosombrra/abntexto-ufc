@@ -179,7 +179,7 @@ def main() -> None:
         or scenario.get("component") != "reference-semantics"
         or scenario.get("rules") != RULE_ORDER
     ):
-        fail("invalid scenario schema/phase/component/scope")
+        fail("invalid scenario schema/component/scope")
 
     policy = scenario.get("evidence_policy")
     if not isinstance(policy, dict) or not all(

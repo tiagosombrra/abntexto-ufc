@@ -94,7 +94,7 @@ def main() -> None:
         or scenario.get("component") != "section-hierarchy"
         or scenario.get("parent_rule") != "section.hierarchy"
     ):
-        fail("invalid scenario schema/phase/component/parent")
+        fail("invalid scenario schema/component/parent")
     if policy.get("schema_version") != 2:
         fail("invalid validation policy schema")
 

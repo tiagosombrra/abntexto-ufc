@@ -197,7 +197,7 @@ def main() -> None:
     scenario = load_json(SCENARIO, "scenario")
     validation = load_json(VALIDATION_POLICY, "validation policy")
     if scenario.get("schema_version") != 1:
-        fail("invalid scenario schema/phase")
+        fail("invalid scenario schema")
     if validation.get("schema_version") != 2:
         fail("invalid validation policy schema")
 
