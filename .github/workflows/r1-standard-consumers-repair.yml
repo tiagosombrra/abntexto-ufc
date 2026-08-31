@@ -37,7 +37,7 @@ jobs:
           path.write_text(text, encoding='utf-8')
           PY
           python3 tools/r1_semantic_rebaseline.py
-          git rm tools/r1_semantic_rebaseline.py
+          git rm -f tools/r1_semantic_rebaseline.py
 
           python3 -m py_compile $(git ls-files 'tests/checks/*.py')
           for script in $(git ls-files 'tests/integration/*.sh'); do sh -n "$script"; done
