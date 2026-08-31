@@ -21,8 +21,8 @@
     "vertical_length_mm": 30,
     "expected_horizontal_rules": 1,
     "expected_vertical_rules": 1,
-    "horizontal_length_tolerance_binding": "oracle-policy.tolerances.horizontal_position_pt",
-    "vertical_length_tolerance_binding": "oracle-policy.tolerances.vertical_position_pt"
+    "horizontal_length_tolerance_binding": "validation-policy.tolerances.horizontal_position_pt",
+    "vertical_length_tolerance_binding": "validation-policy.tolerances.vertical_position_pt"
   },
   "policy": {
     "additive_capability_only": true,
