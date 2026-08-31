@@ -1,4 +1,4 @@
-name: R1 integration root audit
+name: R1 path-consumer repair
 
 on:
   push:
@@ -8,10 +8,10 @@ on:
       - .github/workflows/r1-semantic-identity-audit.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  audit:
+  repair:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -20,13 +20,24 @@ jobs:
           fetch-depth: 0
           ref: refactor/v3-r1-rebaseline
 
-      - name: Audit integration root resolution
+      - name: Repair path consumers
         shell: bash
         run: |
           set -euo pipefail
-          echo '--- ROOT EXPRESSIONS ---'
-          git grep -nE 'dirname[[:space:]]+"?\$0|dirname[[:space:]]+\$0|BASH_SOURCE' -- tests/integration || true
-          echo '--- ROOT VARIABLES ---'
-          git grep -nE '^(root|ROOT|repo_root|REPO_ROOT)=' -- tests/integration || true
-          echo '--- CURRENT DIRECTORY ASSUMPTIONS ---'
-          git grep -nE 'cd[[:space:]]+"?\$root|cd[[:space:]]+"?\$ROOT|Path\('\''main\.tex'\''\)|tests/documents/' -- tests/integration/distribution.sh tests/integration/font-poc.sh tests/integration/overleaf-stable.sh tests/integration/windows-font-pdfa.sh || true
+          python3 tools/r1_path_consumers_repair.py
+          git rm -f tools/r1_path_consumers_repair.py
+
+          python3 -m py_compile $(git ls-files 'tests/checks/*.py')
+          for script in $(git ls-files 'tests/integration/*.sh'); do sh -n "$script"; done
+          sh tests/integration/distribution.sh
+          python3 tests/checks/normative_full_contract.py
+          python3 tests/checks/normative_objects_scope.py
+          python3 tests/checks/normative_currency.py
+          python3 tests/checks/validator_source.py
+          git diff --check
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add standards tests tools validator
+          git commit -m 'refactor: reconcile remaining R1 path consumers'
+          git push origin HEAD:refactor/v3-r1-rebaseline
