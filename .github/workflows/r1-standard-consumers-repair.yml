@@ -1,4 +1,4 @@
-name: R1 standards consumer repair
+name: R1 semantic rebaseline executor
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  repair:
+  rebaseline:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -20,56 +20,22 @@ jobs:
           fetch-depth: 0
           ref: refactor/v3-r1-rebaseline
 
-      - name: Repair standards consumers
+      - name: Rebaseline validation consumers and owners
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/r1_standard_consumers_repair.py
-
-          git rm -r --ignore-unmatch tests/checks/__pycache__ tools/__pycache__
-          git rm tools/r1_standard_consumers_repair.py
-          if ! grep -qxF '__pycache__/' .gitignore; then
-            printf '\n# Python generated files\n__pycache__/\n*.py[cod]\n' >> .gitignore
-          fi
+          python3 tools/r1_semantic_rebaseline.py
+          git rm tools/r1_semantic_rebaseline.py
 
           python3 -m py_compile $(git ls-files 'tests/checks/*.py')
           for script in $(git ls-files 'tests/integration/*.sh'); do sh -n "$script"; done
           python3 tests/checks/normative_full_contract.py
           python3 tests/checks/normative_objects_scope.py
           python3 tests/checks/normative_currency.py
-
-          python3 - <<'PY'
-          import re
-          import subprocess
-          from pathlib import Path
-
-          tracked = set(subprocess.check_output(['git', 'ls-files'], text=True).splitlines())
-          pattern = re.compile(
-              r'ROOT\s*/\s*["\x27]standards["\x27]\s*/\s*["\x27]([^"\x27]+\.json)["\x27]'
-          )
-          missing = []
-          for item in sorted(tracked):
-              if not item.startswith(('tests/', 'tools/', 'validator/')):
-                  continue
-              path = Path(item)
-              if not path.is_file() or path.suffix not in {'.py', '.sh', '.tex', '.js'}:
-                  continue
-              text = path.read_text(encoding='utf-8', errors='replace')
-              for name in pattern.findall(text):
-                  candidate = f'standards/{name}'
-                  if candidate not in tracked:
-                      missing.append(f'{item}: {candidate}')
-          if missing:
-              raise SystemExit('Missing standards references:\n' + '\n'.join(sorted(set(missing))))
-
-          generated = [item for item in tracked if '/__pycache__/' in item or item.endswith(('.pyc', '.pyo'))]
-          if generated:
-              raise SystemExit('Tracked Python generated files remain:\n' + '\n'.join(generated))
-          PY
-
           git diff --check
+
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .gitignore tests tools
-          git commit -m 'refactor: reconcile standards consumers'
+          git add standards tests tools
+          git commit -m 'refactor: normalize validation owners and policy consumers'
           git push origin HEAD:refactor/v3-r1-rebaseline
