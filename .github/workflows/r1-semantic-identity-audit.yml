@@ -1,0 +1,73 @@
+name: R1 semantic identity inventory
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-rebaseline
+    paths:
+      - .github/workflows/r1-semantic-identity-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          ref: refactor/v3-r1-rebaseline
+
+      - name: Inventory active semantic debt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import re
+          import subprocess
+          from collections import Counter, defaultdict
+          from pathlib import Path
+
+          roots = ('standards/', 'tests/checks/', 'tests/integration/', 'tools/', 'validator/')
+          suffixes = {'.json', '.py', '.sh', '.tex', '.js', '.html', '.css'}
+          tracked = subprocess.check_output(['git', 'ls-files'], text=True).splitlines()
+          patterns = {
+              'stale-standards-path': re.compile(r'(?<![A-Za-z0-9_])normativa/'),
+              'stale-test-path': re.compile(r'tests/normativa/'),
+              'n-phase': re.compile(r'(?<![A-Za-z0-9])N(?:[0-9]{1,2})(?:-[A-Z0-9]+)*(?![A-Za-z0-9])'),
+              'b2r': re.compile(r'(?<![A-Za-z0-9])B2R(?![A-Za-z0-9])', re.I),
+              'oracle': re.compile(r'oracle', re.I),
+              'v2': re.compile(r'(?<![A-Za-z0-9])v2(?:\.\d+(?:\.\d+)?)?(?![A-Za-z0-9])', re.I),
+          }
+          exclusions = {
+              'tests/checks/canonical_identity.py',
+              'tests/checks/repository_contract.py',
+              'tests/checks/release_package.py',
+              'tests/checks/overleaf_bundle.py',
+              'tests/checks/ctan_archive.py',
+          }
+          counts = Counter()
+          files = defaultdict(set)
+          for item in tracked:
+              if item in exclusions or not item.startswith(roots):
+                  continue
+              path = Path(item)
+              if path.suffix not in suffixes or not path.is_file():
+                  continue
+              lines = path.read_text(encoding='utf-8', errors='replace').splitlines()
+              for lineno, line in enumerate(lines, start=1):
+                  labels = [label for label, pattern in patterns.items() if pattern.search(line)]
+                  if not labels:
+                      continue
+                  for label in labels:
+                      counts[label] += 1
+                      files[label].add(item)
+                  print(f"{item}:{lineno}: {','.join(labels)} :: {line.strip()}")
+          print('--- SUMMARY ---')
+          for label in patterns:
+              print(f'{label}: lines={counts[label]} files={len(files[label])}')
+          PY
