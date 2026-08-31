@@ -6,31 +6,29 @@ Updated: 2026-08-31
 
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-3 — Semantic / Path-Consumer Closure**.
-- Active branch: `main`.
+- Active branch/trunk: `main`.
+- Current clean `main` checkpoint: `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
 - R1-S2 trunk promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 control-plane closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
-- Previous certified clean implementation checkpoint before the control rebaseline: `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
+
+`main` remains the canonical trunk and merge target. Short-lived task branches are permitted by `AGENTS.md`, but canonical phase/stage authority remains in the control-plane files on `main`.
 
 ## R1-S0 — Repository sanitation
 
 **DONE.**
 
 - A verified mirror and full-history Git bundle were created before destructive ref cleanup.
-- The remote branch namespace was reduced from 154 branches to `main` and the temporary v3 rebaseline branch.
 - Legacy `1.x`, v2.x, N-phase/N15/B2R, audit, preview, maintenance, release, temporary, and abandoned v3 branches were removed from the active namespace after preservation.
 - Pull requests #157 and #158 were closed as superseded by the v3 reconstruction.
 - Immutable version tags remain protected and unchanged.
+- The steady-state remote development namespace is `main` plus short-lived task branches only.
 
 ## R1-S1 — Control plane repair
 
 **DONE** at `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 
-The audit of `38f21f...` through pre-repair HEAD `54dfcb6...` established that the 12 intervening commits did not leave a product migration delta in `standards/`, `tests/`, or `validator/`. Their net delta was limited to a temporary workflow, its repair script, and control documentation/state.
-
-The workflow expected to create `refactor: reconcile remaining R1 path consumers`, but no such commit exists. Therefore that attempted migration is not a completed Block 3 checkpoint.
-
-S1 removed `.github/workflows/r1-semantic-identity-audit.yml` and `tools/r1_path_consumers_repair.py`, added root `AGENTS.md`, and synchronized machine state, handoff, and roadmap.
+S1 removed the abandoned temporary migration workflow/executor, added root `AGENTS.md`, and synchronized machine state, handoff, and roadmap. The abandoned executor did not produce a certified Block 3 migration checkpoint.
 
 ## R1-S2 — Trunk rebaseline
 
@@ -41,37 +39,83 @@ The v3 line was promoted to `main` without rewriting history.
 Verified promotion facts:
 
 - source checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`;
-- former `main`: `ce659b578b4fc9cc929af4aadc3e613df469ba77`;
-- ancestry at promotion: 95 commits ahead, 0 behind;
-- merge base: exactly the former `main` SHA;
-- operation: direct fast-forward `ce659b5... -> d7d4b9d...`;
-- no merge commit, squash, rebase, or history rewrite;
+- former certified v2 `main`: `ce659b578b4fc9cc929af4aadc3e613df469ba77`;
+- promotion mode: direct fast-forward;
 - reference build passed on TeX Live 2026;
 - agreed Python, shell, normative, validator-source, and diff-integrity gates passed;
-- no temporary migration executor or temporary workflow remained at the promotion checkpoint.
-
-The stable-branch ruleset was temporarily reduced to deletion protection, non-fast-forward protection, and linear-history enforcement so the history-preserving fast-forward could occur. The stale `latex-preflight` requirement must not be restored before optimized CI returns in R1-BLOCK-7.
-
-The temporary `refactor/v3-r1-rebaseline` branch was retired during S2 closeout. The steady-state active development branch namespace is `main` only.
+- permanent CI remained intentionally absent;
+- the stale `latex-preflight` status requirement remains deferred until R1-BLOCK-7.
 
 ## R1 Block 3 — Semantic / Path-Consumer Closure
 
 **ACTIVE.**
 
-Resume from an audit of the actual `main` tree. Do not infer that the abandoned S1 executor completed residual migration work.
+### B3-A — Path-consumer reconciliation
 
-Known residual classes to evaluate in Block 3 include:
+**DONE** via PR #159, merged at `e4bf60836ac7a9cd1d544232b9a4e1ef019efe04`.
 
-- active N-phase/N15/B2R process identity;
-- project-owned `oracle` engineering terminology;
-- operational v2/V2 identity in active technical surfaces;
-- stale producer-consumer references;
-- runner-to-file integrity;
-- evidence-to-consumer integrity;
-- validator/scenario naming and ownership;
-- Windows/Python subprocess encoding portability findings observed during S2, where still relevant.
+- stale active project paths and consumers were reconciled;
+- producer/consumer path references were normalized to the current repository layout;
+- no later-block distribution/CI work was absorbed.
 
-Do not broaden Block 3 into CI/distribution reconstruction. Distribution workflows, permanent CI, and heavyweight certification remain later-block work.
+### B3-B — Normative process-identity closure
+
+**DONE** via PR #160, squash-merged at `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
+
+B3-B removed obsolete active process identity from validator/scenario/checker/fixture/evidence surfaces while preserving normative semantics.
+
+Verified closure evidence:
+
+- validator phase ownership removed;
+- active scenario `phase` metadata/readers removed where obsolete;
+- 172 phase-qualified markers migrated to functional namespaces;
+- final functional namespaces include `IL` (illustration), `HL` (multiline hanging), `SI` (section indicator), and `SS` (subsection spacing);
+- active N6/N9/N10 markers: 0;
+- stale active phase diagnostics: 0;
+- active lower-case N5–N15 process identities in B3-B scope: 0;
+- active legacy `N*-EVIDENCE` labels: 0; `VALIDATION-EVIDENCE` is the shared active label;
+- migrated producer/consumer mismatches: 0;
+- namespace collisions: 0;
+- normative rule IDs changed: 0;
+- numeric expected values changed: 0;
+- numeric tolerances changed: 0;
+- proof state changed: false;
+- runtime/API R2 changes: 0;
+- B5/B6/B7/B8/control-plane/CI changes in B3-B: 0.
+
+Functional differential validation for B3-B classified 29/29 relevant tests:
+
+- 21 PASS;
+- 8 BASELINE_EQUIVALENT_BLOCKED;
+- 0 regressions introduced by B3-B;
+- 0 unresolved classifications.
+
+### B3-C — Runner/evidence integrity and bounded portability
+
+**NEXT / ACTIVE WORK ITEM.**
+
+Eight pre-existing defects were exposed during B3-B differential validation and remain outside B3-B closure:
+
+1. appendix/annex — undefined `scope` consumer;
+2. catalog card — `FileNotFoundError` in runner/file handoff;
+3. footnote separator — missing evidence vector;
+4. long quotation — Windows path-separator handling;
+5. research project — Biber invoked without a generated `.bcf`;
+6. short direct citation — CP1252 `UnicodeEncodeError` while emitting evidence;
+7. table IBGE vector — missing vector calibration;
+8. vector-rule validation — horizontal-tolerance binding drift.
+
+B3-C must repair these as bounded runner-to-file, evidence-to-consumer, or Windows portability defects. It must not rewrite normative values/tolerances or broaden into distribution/CI work.
+
+### Remaining Block 3 sequence
+
+After B3-C:
+
+- **B3-D:** close operational `v2`/`V2` identity in active technical surfaces;
+- **B3-E:** close project-owned `oracle` engineering terminology where it is not a legitimate domain/testing term;
+- **B3-F:** final live-tree residual audit and Block 3 closure.
+
+Do not broaden Block 3 into CI/distribution reconstruction. Distribution workflows, permanent CI, Overleaf/CTAN, Windows-font certification, PDF/A certification, and heavyweight certification remain later-block work.
 
 ## Non-negotiable rules
 
@@ -100,7 +144,9 @@ Do not rerun completed checks unless the current state or a relevant change just
 8. `bde108b7ff0076605643e870ae7cd86ce69a7e76` — standards consumers and generated-bytecode hygiene reconciled.
 9. `91424aab55b08d0931654cd895db9ac7925ca15c` — validation ownership normalized to current runner IDs.
 10. `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6` — prior one-shot workflow scaffolding removed; latest certified clean implementation checkpoint before S0/S1.
+11. `e4bf60836ac7a9cd1d544232b9a4e1ef019efe04` — B3-A path-consumer reconciliation merged through PR #159.
+12. `dbc7f774df2cd0ac1b0f6479653290c6f19b6809` — B3-B normative process-identity closure merged through PR #160.
 
 ## Immediate action
 
-Continue **R1-BLOCK-3** on `main` with a live-tree residual audit. Do not repeat already completed S2 promotion gates unless a current change justifies them. Keep distribution/CI reconstruction in their assigned later blocks.
+Start **B3-C — runner/evidence integrity and bounded portability** from clean remote `main` at `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`. Treat the eight known defects above as the initial bounded audit set. Do not repeat B3-B or completed S2 gates unless a B3-C change directly invalidates them.
