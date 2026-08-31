@@ -2,7 +2,7 @@
   "schema_version": 1,
   "reviewed_at": "2026-08-28",
   "scope": "abntexto-ufc-current-sources",
-  "purpose": "Release-independent current-source inventory for UFC/ABNT authority reconciliation. Runtime normative truth remains normativa/catalog.json plus normativa/precedence.json; sources are promoted only together with deliberately source-backed predicates.",
+  "purpose": "Release-independent current-source inventory for UFC/ABNT authority reconciliation. Runtime normative truth remains standards/catalog.json plus standards/precedence.json; sources are promoted only together with deliberately source-backed predicates.",
   "policy": {
     "current_only": true,
     "technical_rule": "Current applicable ABNT editions govern technical requirements.",

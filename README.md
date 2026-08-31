@@ -2,7 +2,7 @@
 
 LaTeX class and reference template for academic works at the Federal University of Ceará (UFC), built on top of `abntexto`.
 
-The canonical project identity is `abntexto-ufc`. The current development line is the breaking v3 reconstruction. The last certified public baseline remains v2.1.0 on `main`; v3.0.0 is not yet a released version.
+The canonical project identity is `abntexto-ufc`. The active `main` branch carries the unreleased v3 reconstruction. The last certified public baseline remains v2.1.0 and is recoverable through immutable tags, releases, Git history, and the verified external backup.
 
 ## Current v3 repository layout
 
@@ -41,7 +41,7 @@ The editable repository example lives under `template/`. Public template and Ove
 
 ## Engineering policy
 
-Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. The v3 line has one canonical project API and does not retain Portuguese compatibility aliases from v2.
+Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. During R1 the current runtime API remains unchanged while engineering surfaces are rebaselined; direct runtime/API internationalization belongs to R2.
 
 Historical implementation evidence is kept by Git history, tags, releases, pull requests, issues, and certified SHAs rather than by archive directories inside the active tree.
 

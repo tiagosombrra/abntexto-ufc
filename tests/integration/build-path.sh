@@ -2,19 +2,31 @@
 set -eu
 
 fixture="tests/documents/minimal-build.tex"
-job="abntexto-ufc-build-minimo"
-legacy_job="abntexto-ufc-legacy-compat-minimo"
-stubdir="/tmp/abntexto-ufc-v2-build-stubs"
+job="abntexto-ufc-minimal-build"
+template_job="template/$job"
+stubdir="/tmp/abntexto-ufc-build-stubs"
 
 cleanup() {
   rm -rf "$stubdir"
-  for target in "$job" "$legacy_job"; do
-    rm -f "$target".tex "$target".aux "$target".bbl "$target".bcf "$target".blg "$target".log \
-      "$target".out "$target".pdf "$target".run.xml "$target".toc "$target".glo "$target".gls \
-      "$target".glg "$target".idx "$target".ind "$target".ilg
-  done
+  target="$template_job"
+  rm -f "$target".tex "$target".aux "$target".bbl "$target".bcf "$target".blg "$target".log \
+    "$target".out "$target".pdf "$target".run.xml "$target".toc "$target".glo "$target".gls \
+    "$target".glg "$target".idx "$target".ind "$target".ilg
 }
 trap cleanup EXIT INT TERM
+
+MAKE_CMD=""
+for candidate in make mingw32-make gmake; do
+  if command -v "$candidate" >/dev/null 2>&1; then
+    MAKE_CMD="$candidate"
+    break
+  fi
+done
+
+if [ -z "$MAKE_CMD" ]; then
+  echo "SKIP: no compatible make implementation found (make/mingw32-make/gmake)."
+  exit 77
+fi
 
 for engine in pdflatex lualatex; do
   cleanup
@@ -28,54 +40,35 @@ SH
     chmod +x "$stubdir/$tool"
   done
 
-  cp "$fixture" "$job.tex"
-  echo "Validando fluxo make modular canônico com $engine..."
-  PATH="$stubdir:$PATH" make filename="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-v2-build.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-build.log
+  cp "$fixture" "$template_job.tex"
+  echo "Validating canonical modular Makefile flow with $engine..."
+  PATH="$stubdir:$PATH" "$MAKE_CMD" DOCUMENT="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-build.log 2>&1 || {
+    cat /tmp/abntexto-ufc-build.log
     exit 1
   }
 
-  [ -f "$job.pdf" ] || {
-    echo "$engine: make compile não gerou PDF."
+  [ -f "$template_job.pdf" ] || {
+    echo "$engine: make compile did not produce the expected PDF."
     exit 1
   }
 
-  if [ -s "$job.glo" ] || [ -s "$job.idx" ]; then
-    echo "$engine: módulos desativados geraram entrada de glossário ou índice."
+  if [ -s "$template_job.glo" ] || [ -s "$template_job.idx" ]; then
+    echo "$engine: disabled modules generated glossary or index input."
     exit 1
   fi
 
-  if [ -s "$job.bcf" ] && grep -q '<bcf:datasource' "$job.bcf"; then
-    echo "$engine: documento sem bibliografia declarou datasource inesperada."
+  if [ -s "$template_job.bcf" ] && grep -q '<bcf:datasource' "$template_job.bcf"; then
+    echo "$engine: bibliography-free document declared an unexpected datasource."
     exit 1
   fi
 
-  pdftotext -layout "$job.pdf" /tmp/abntexto-ufc-v2-build.txt
-  grep -Fqi 'Marcador do build modular' /tmp/abntexto-ufc-v2-build.txt || {
-    echo "$engine: conteúdo esperado ausente do PDF."
+  pdftotext -layout "$template_job.pdf" /tmp/abntexto-ufc-build.txt
+  grep -Fqi 'Marcador do build modular' /tmp/abntexto-ufc-build.txt || {
+    echo "$engine: expected content is missing from the generated PDF."
     exit 1
   }
 done
 
 cleanup
-sed 's/\\documentclass{abntexto-ufc}/\\documentclass{ufctex}/' "$fixture" > "$legacy_job.tex"
-echo 'Validando shim legado ufctex com pdflatex...'
-pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$legacy_job.tex" > /tmp/abntexto-ufc-legacy-compat-build.log 2>&1 || {
-  cat /tmp/abntexto-ufc-legacy-compat-build.log
-  exit 1
-}
-[ -f "$legacy_job.pdf" ] || {
-  echo 'Shim legado ufctex não gerou PDF.'
-  exit 1
-}
-grep -Fqi 'deprecated' "$legacy_job.log" || {
-  echo 'Shim legado ufctex não registrou a depreciação.'
-  exit 1
-}
-pdftotext -layout "$legacy_job.pdf" /tmp/abntexto-ufc-legacy-compat-build.txt
-grep -Fqi 'Marcador do build modular' /tmp/abntexto-ufc-legacy-compat-build.txt || {
-  echo 'Conteúdo esperado ausente do PDF gerado pelo shim legado ufctex.'
-  exit 1
-}
 
-echo 'Gate V2 do fluxo make modular e compatibilidade de classe concluído.'
+echo 'Canonical modular build-path gate completed.'

@@ -9,8 +9,8 @@
     "index.heading.font-size",
     "glossary.element.optional"
   ],
-  "present_fixture": "tests/normativa/index-glossary-present-final-pdf.tex",
-  "absent_fixture": "tests/normativa/index-glossary-absent-final-pdf.tex",
+  "present_fixture": "tests/documents/index-glossary-present-final-pdf.tex",
+  "absent_fixture": "tests/documents/index-glossary-absent-final-pdf.tex",
   "markers": {
     "regular_calibration": "UFCN10RegularControl",
     "bold_calibration": "UFCN10BoldControl",

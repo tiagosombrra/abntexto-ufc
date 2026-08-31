@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/compat-abntexto.def}[2026/08/27 ABNTexto compatibility]
+\ProvidesFile{abntexto-ufc/integrations/abntexto.def}[2026/08/27 ABNTexto compatibility]
 
 % ABNTexto 1.1 writes legend entries with \addcontentsline, while older
 % development builds route them through \addtoext. Normalize both paths here.

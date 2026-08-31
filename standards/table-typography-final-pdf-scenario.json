@@ -10,7 +10,7 @@
     "font.size.reduced.table-source"
   ],
   "fixture": {
-    "path": "tests/normativa/table-typography-final-pdf.tex",
+    "path": "tests/documents/table-typography-final-pdf.tex",
     "engine": "pdflatex",
     "passes": 2,
     "expected_pages": 1

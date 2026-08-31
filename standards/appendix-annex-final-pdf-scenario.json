@@ -17,7 +17,7 @@
     "annex.identification.pattern",
     "pagination.appendix-annex.continuous"
   ],
-  "fixture": "tests/normativa/appendix-annex-final-pdf.tex",
+  "fixture": "tests/documents/appendix-annex-final-pdf.tex",
   "engine": "pdflatex",
   "engine_matrix_deferred_to": "N12",
   "page_control": {

@@ -1,6 +1,6 @@
 \ProvidesFile{abntexto-ufc/core.def}[2026/08/19 UFC core configuration]
 
-% Normative mapping: docs/NORMAS.md.
+% Normative mapping: docs/NORMATIVE-BASE.md.
 
 \RequirePackage{iftex}
 \RequirePackage[english,brazilian]{babel}

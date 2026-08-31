@@ -9,7 +9,7 @@
     "equation.display"
   ],
   "fixture": {
-    "path": "tests/normativa/equation-display-final-pdf.tex",
+    "path": "tests/documents/equation-display-final-pdf.tex",
     "engine": "pdflatex",
     "passes": 2,
     "expected_pages": 1
