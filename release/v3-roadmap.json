@@ -1,51 +1,89 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
   "updated_at": "2026-08-30",
   "status": "ACTIVE",
+  "phase": "V3-R1",
+  "stage": "R1-S1",
+  "stage_name": "control plane repair",
   "active_branch": "refactor/v3-r1-rebaseline",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "latest_completed_implementation_sha": "91424aab55b08d0931654cd895db9ac7925ca15c",
-  "latest_clean_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
-  "latest_migration_contract_reconciliation_sha": "66c1005f326ee6523e420165ddb9de595ef49d3d",
-  "phase": "V3-R1",
-  "active_block": "R1-BLOCK-3",
-  "active_block_name": "residual path-consumer reconciliation",
-  "active_tree_policy": {
-    "history_directories_allowed": false,
-    "retain_file_only_for_historical_convenience": false,
-    "retain_completed_campaign_ledgers": false,
-    "retain_dormant_future_phase_files": false,
-    "temporary_migration_contracts_allowed_only_while_consumed": true,
-    "delete_or_consolidate_unused_migration_contracts": true,
-    "historical_evidence_storage": [
-      "git_commits",
-      "git_tags",
-      "github_releases",
-      "certified_commit_and_blob_shas",
-      "issues_and_pull_requests"
+  "last_certified_clean_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
+  "observed_pre_control_repair_head_sha": "54dfcb6a3a4303c7ecc41a0577c49d4ab2d4a723",
+  "authorities": {
+    "git_facts_must_match_machine_state": true,
+    "machine_state": "release/v3-roadmap.json",
+    "handoff": "docs/HANDOFF-V3.0.0.md",
+    "roadmap": "docs/ROADMAP-V3.0.0.md",
+    "bootstrap": "AGENTS.md",
+    "fail_closed_on_disagreement": true,
+    "memory_is_not_an_authority": true
+  },
+  "sanitation": {
+    "stage": "R1-S0",
+    "status": "DONE",
+    "remote_branch_count_before": 154,
+    "remote_branch_count_after": 2,
+    "retained_remote_branches": [
+      "main",
+      "refactor/v3-r1-rebaseline"
+    ],
+    "external_full_history_backup_verified": true,
+    "backup_forms": [
+      "git_mirror",
+      "git_bundle"
+    ],
+    "stale_pull_requests_closed": [157, 158],
+    "archive_branches_created": false,
+    "legacy_1x_branch_removed": true,
+    "immutable_version_tags_preserved": true
+  },
+  "control_plane": {
+    "status": "ACTIVE_REPAIR",
+    "comparison_base_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
+    "comparison_observed_head_sha": "54dfcb6a3a4303c7ecc41a0577c49d4ab2d4a723",
+    "commits_ahead": 12,
+    "commits_behind": 0,
+    "net_product_migration_delta_present": false,
+    "expected_executor_commit_found": false,
+    "expected_executor_commit_message": "refactor: reconcile remaining R1 path consumers",
+    "temporary_workflows_after_this_checkpoint": [],
+    "temporary_executors_after_this_checkpoint": [],
+    "abandoned_temporary_artifacts_removed_in_this_checkpoint": [
+      ".github/workflows/r1-semantic-identity-audit.yml",
+      "tools/r1_path_consumers_repair.py"
+    ],
+    "blocking_inconsistencies_after_this_checkpoint": [
+      "S1 publication must be verified from the resulting Git HEAD before S2 can start"
     ]
   },
-  "language_policy": {
-    "engineering_language": "English",
-    "validator_technical_ui_language": "English",
-    "portuguese_project_api_allowed_in_final_v3": false,
+  "policies": {
+    "active_repository_is_archive": false,
+    "history_directories_allowed": false,
+    "archive_branches_allowed": false,
+    "project_owned_engineering_language": "English",
     "r1_runtime_api_rewrite_allowed": false,
-    "upstream_portuguese_identifiers_allowed_only_at_explicit_boundaries": true
-  },
-  "ci_policy": {
+    "portuguese_runtime_api_migrates_in": "V3-R2",
     "permanent_automatic_workflows_during_r1_reconstruction": false,
-    "temporary_one_shot_migration_executor_allowed": true,
     "temporary_executor_must_be_removed_before_checkpoint": true,
-    "automatic_gate_when_restored": "static_and_cheap",
-    "path_filters_where_practical": true,
-    "cancel_in_progress": true,
     "heavy_jobs_on_every_intermediate_commit": false,
-    "workflow_repository_mutation_allowed": false,
-    "current_permanent_workflow_count": 0,
-    "current_temporary_workflow_count": 0,
-    "windows_font_pdfa_owner": "external-gate-reserved-for-R1-BLOCK-7"
+    "rerun_completed_checks_without_current_state_need": false
+  },
+  "stages": {
+    "R1-S0": {
+      "status": "DONE",
+      "name": "repository sanitation and control rebaseline"
+    },
+    "R1-S1": {
+      "status": "ACTIVE",
+      "name": "control plane repair"
+    },
+    "R1-S2": {
+      "status": "BLOCKED",
+      "name": "trunk rebaseline",
+      "depends_on": ["R1-S1"]
+    }
   },
   "blocks": {
     "R1-BLOCK-1": {
@@ -59,64 +97,19 @@
       "name": "legacy purge and active-tree minimization"
     },
     "R1-BLOCK-3": {
-      "status": "ACTIVE",
-      "name": "residual path-consumer reconciliation",
-      "completed_checkpoints": [
-        "8d8f7081b123999618d4d6e5ec5009a18ce0a89b",
-        "4fd0e61ea198ed1307e511895b254c59f5ea0dc4",
-        "e6d7a1ce5864387ba1ccae15d21de78ddd05c2f3",
-        "1b6db7598d69a6a0d8442d09e589fa8d2e151477",
-        "d4a348c6bb1600f0fc616c1ce23c1636db606097",
-        "1cd88899bd25592944e37042419aa146e39c1de6",
-        "66c1005f326ee6523e420165ddb9de595ef49d3d",
-        "bde108b7ff0076605643e870ae7cd86ce69a7e76",
-        "91424aab55b08d0931654cd895db9ac7925ca15c",
-        "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6"
-      ],
-      "work": [
-        "remaining N-phase N15 B2R and project-owned oracle engineering identity migration",
-        "remaining operational v2 identity migration in standards tests integrations validator and metadata",
-        "producer-consumer scenario and validator identity reconciliation",
-        "runner-to-file integrity",
-        "evidence-to-consumer integrity",
-        "permanent repository and static checks"
-      ],
-      "dependency_adjustments": {
-        "makefile_development_build_pulled_forward": true,
-        "reason": "reference-document integration directly depends on make compile",
-        "runtime_version_change_authorized": false
-      },
-      "frontmatter_rebaseline": {
-        "status": "DONE",
-        "implementation_sha": "1cd88899bd25592944e37042419aa146e39c1de6",
-        "test_migration_contract_sha": "66c1005f326ee6523e420165ddb9de595ef49d3d",
-        "temporary_executors_present": false,
-        "upstream_pretextual_command_preserved": true
-      },
-      "standards_consumer_reconciliation": {
-        "status": "DONE",
-        "implementation_sha": "bde108b7ff0076605643e870ae7cd86ce69a7e76",
-        "validation_owner_sha": "91424aab55b08d0931654cd895db9ac7925ca15c",
-        "clean_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
-        "validation_policy_schema": 2,
-        "manual_checks_without_runner_owner": [
-          "approval.signatures",
-          "capes"
-        ],
-        "external_checks_reserved_for_workflow_restoration": [
-          "windows-font-pdfa"
-        ],
-        "temporary_executors_present": false
-      }
+      "status": "PAUSED",
+      "name": "semantic and path-consumer closure",
+      "resume_after": ["R1-S1", "R1-S2"],
+      "latest_certified_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
+      "abandoned_executor_does_not_close_additional_work": true
     },
     "R1-BLOCK-4": {
       "status": "BLOCKED",
-      "name": "remaining tools validator and metadata technical rebaseline",
-      "note": "development Makefile build path was resolved as a Block 3 prerequisite"
+      "name": "tools validator and metadata technical rebaseline"
     },
     "R1-BLOCK-5": {
       "status": "BLOCKED",
-      "name": "distribution and public bundle flattening"
+      "name": "distribution and public bundle rebaseline"
     },
     "R1-BLOCK-6": {
       "status": "BLOCKED",
@@ -124,29 +117,12 @@
     },
     "R1-BLOCK-7": {
       "status": "BLOCKED",
-      "name": "optimized workflow restoration",
-      "must_restore_external_owners": [
-        "windows-font-pdfa"
-      ]
+      "name": "optimized workflow restoration"
     },
     "R1-BLOCK-8": {
       "status": "BLOCKED",
-      "name": "repository identity and exhaustive R1 closure"
+      "name": "final R1 certification"
     }
   },
-  "phases": [
-    {"id": "V3-R0", "status": "DONE"},
-    {"id": "V3-R1", "status": "ACTIVE", "depends_on": ["V3-R0"]},
-    {"id": "V3-R2", "status": "BLOCKED", "depends_on": ["V3-R1"]},
-    {"id": "V3-R3", "status": "BLOCKED", "depends_on": ["V3-R2"]},
-    {"id": "V3-R4", "status": "BLOCKED", "depends_on": ["V3-R3"]},
-    {"id": "V3-R5", "status": "BLOCKED", "depends_on": ["V3-R4"]},
-    {"id": "V3-A1", "status": "BLOCKED", "depends_on": ["V3-R5"]},
-    {"id": "V3-A2", "status": "BLOCKED", "depends_on": ["V3-A1"]},
-    {"id": "V3-H1", "status": "BLOCKED", "depends_on": ["V3-A2"]},
-    {"id": "V3-RC", "status": "BLOCKED", "depends_on": ["V3-H1"]},
-    {"id": "V3-FINAL", "status": "BLOCKED", "depends_on": ["V3-RC"]},
-    {"id": "V3-CLEANUP", "status": "BLOCKED", "depends_on": ["V3-FINAL"]}
-  ],
-  "next_action": "Migrate remaining active N-phase/N15/B2R/oracle/v2 engineering identity across standards producers and checker/integration/validator consumers as one bounded Block 3 operation; preserve normative semantics and do not advance to Block 4 while a stale active process identity remains."
+  "next_action": "Verify the resulting S1 control checkpoint from Git: exactly two remote branches, no open PRs, no temporary workflow or executor, and consistent AGENTS/HANDOFF/ROADMAP/machine state. If and only if that verification passes, close S1 and begin S2 trunk-rebaseline planning."
 }
