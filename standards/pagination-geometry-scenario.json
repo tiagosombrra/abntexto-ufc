@@ -11,7 +11,7 @@
     "pagination.verso.offset.left"
   ],
   "locator_ruleset": "pagination.general",
-  "fixture": "tests/normativa/textual-oracle-pagination-geometry.tex",
+  "fixture": "tests/documents/mainmatter-pagination-geometry-test.tex",
   "markers": {
     "recto": "UFCNSevenPaginationRecto",
     "verso": "UFCNSevenPaginationVerso"

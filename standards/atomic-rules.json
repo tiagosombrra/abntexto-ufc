@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-08-22",
-  "purpose": "N3 atomic rule contract. Expected values inherit from normativa/catalog.json unless explicitly supplied for a dimension stated in the parent requirement. Aggregated parent rules remain temporary compatibility aliases for existing validators.",
+  "purpose": "N3 atomic rule contract. Expected values inherit from standards/catalog.json unless explicitly supplied for a dimension stated in the parent requirement. Aggregated parent rules remain temporary compatibility aliases for existing validators.",
   "keep_atomic": [
     "page.a4",
     "font.family.body",

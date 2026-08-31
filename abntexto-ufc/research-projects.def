@@ -1,7 +1,7 @@
 \ProvidesFile{abntexto-ufc/research-projects.def}[2026/08/19 UFC research project profile]
 
 % NBR 15287:2025 + compatible UFC institutional requirements.
-% Full normative mapping: docs/NORMAS.md.
+% Full normative mapping: docs/NORMATIVE-BASE.md.
 
 \ExplSyntaxOn
 

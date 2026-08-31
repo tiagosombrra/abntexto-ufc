@@ -25,7 +25,7 @@
     "illustration.note.position": "objects.illustration-presentation"
   },
   "fixture": {
-    "path": "tests/normativa/illustration-final-pdf.tex",
+    "path": "tests/documents/illustration-final-pdf.tex",
     "engine": "pdflatex",
     "passes": 2,
     "object_width_mm": 60,

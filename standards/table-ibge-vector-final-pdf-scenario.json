@@ -13,7 +13,7 @@
     "table.ibge.bottom-rule"
   ],
   "fixture": {
-    "path": "tests/normativa/table-ibge-vector-final-pdf.tex",
+    "path": "tests/documents/table-ibge-vector-final-pdf.tex",
     "engine": "pdflatex",
     "passes": 2,
     "expected_pages": 1
@@ -28,7 +28,7 @@
     "table_source_marker": "UFCN9IBGESRC"
   },
   "locator_ruleset": "objects.table-ibge",
-  "oracle_extension": "normativa/vector-rule-oracle-extension.json",
+  "oracle_extension": "standards/vector-rule-validation-extension.json",
   "measurement": {
     "vector_tool": "pdftocairo -svg",
     "text_tool": "pdftotext -bbox-layout",

@@ -1,6 +1,6 @@
 \ProvidesFile{abntexto-ufc/backmatter.def}[2026/08/19 UFC post-textual elements]
 
-% Normative mapping: docs/NORMAS.md.
+% Normative mapping: docs/NORMATIVE-BASE.md.
 % References are implemented in bibliography.def. This module owns the optional
 % glossary and index presentation; appendices and annexes use abntexto public APIs.
 

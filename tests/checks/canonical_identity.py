@@ -6,7 +6,7 @@ import subprocess
 from collections import Counter
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CLASS = ROOT / "abntexto-ufc.cls"
 MODULE_RE = re.compile(r"\\input\{(abntexto-ufc/[^}]+\.def)\}")
 LEGACY_CLASS_MESSAGE_RE = re.compile(
@@ -30,33 +30,42 @@ TEXT_SUFFIXES = {
     ".yml",
 }
 LEGACY_FULL_FILE_EXEMPT = {
-    "ufctex.cls",
-    "docs/CHANGELOG-CTAN.md",
-    "tests/v2-build-path-check.sh",
-    "tests/v2-canonical-identity-check.py",
-    "tests/v2-ctan-archive-check.py",
-    "tests/v2-ctan-policy-check.py",
-    "tests/v2-distribution-check.sh",
-    "tests/v2-overleaf-bundle-check.py",
-    "tests/v2-release-metadata-check.py",
-    "tests/v2-release-package-check.py",
-    "tests/v2-repository-audit.py",
+    # Current migration/control records legitimately identify the removed
+    # legacy entrypoint while documenting its retirement.
+    "release/v3-api-migration.json",
+    "release/v3-path-migration.json",
+    "release/v3-test-migration.json",
+
+    # Negative-assertion and later-block distribution surfaces must name
+    # the legacy entrypoint in order to reject or package it deliberately.
+    "tests/checks/canonical_identity.py",
+    "tests/checks/repository_contract.py",
+
+    # Distribution/CTAN surfaces intentionally inspect legacy identity.
+    # Their reconstruction belongs to later R1 blocks.
+    "tests/checks/ctan_policy.py",
+    "tests/checks/overleaf_bundle.py",
+    "tests/integration/distribution.sh",
+    "tests/checks/release_package.py",
     "tools/build-release-bundles.py",
+
+    # Historical public distribution documentation remains evidence.
+    "docs/CHANGELOG-CTAN.md",
 }
-LEGACY_FULL_DIRECTORY_EXEMPT = (
-    "docs/history/",
-)
+LEGACY_FULL_DIRECTORY_EXEMPT = ()
 LEGACY_DOCUMENTATION_EXEMPT = {
+    "docs/ARCHITECTURE.md": (
+        re.compile(
+            r"does not ship `ufctex\.cls`",
+            re.IGNORECASE,
+        ),
+    ),
     "README.md": (
         re.compile(r"ufctex\.cls.*(?:shim|compat)", re.IGNORECASE),
         re.compile(r"\\documentclass\{ufctex\}"),
     ),
     "docs/README-CTAN.md": (
         re.compile(r"ufctex.*(?:deprecated|compat)", re.IGNORECASE),
-    ),
-    "release/n15-b2r-b-public-api.json": (
-        re.compile(r'^\s*"name"\s*:\s*"ufctex"\s*,?\s*$'),
-        re.compile(r'^\s*"file"\s*:\s*"ufctex\.cls"\s*,?\s*$'),
     ),
 }
 
@@ -122,10 +131,6 @@ def main() -> None:
             errors.append(f"{module}: legacy ProvidesFile identity")
         if LEGACY_CLASS_MESSAGE_RE.search(text):
             errors.append(f"{module}: legacy ufctex class-message identity")
-
-    normas = (ROOT / "docs/NORMAS.md").read_text(encoding="utf-8")
-    if "`ufctex/" in normas:
-        errors.append("docs/NORMAS.md: legacy module path remains in CTAN documentation")
 
     audit_global_identity(errors)
 

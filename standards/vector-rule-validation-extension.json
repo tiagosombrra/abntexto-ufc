@@ -6,8 +6,8 @@
   "purpose": "Calibrate an additive final-PDF oracle capability for thin horizontal and vertical vector rules before N9 uses it for IBGE table geometry.",
   "tool": "pdftocairo -svg",
   "implementation": "tools/pdf_vector_measurement.py",
-  "calibration_fixture": "tests/normativa/vector-rule-oracle-calibration.tex",
-  "calibration_checker": "tests/checks/normative_vector_rule_oracle.py",
+  "calibration_fixture": "tests/documents/vector-rule-calibration-test.tex",
+  "calibration_checker": "tests/checks/normative_vector_rule_validation.py",
   "parser": {
     "axis_classification_tolerance_pt": 0.5,
     "max_rule_thickness_pt": 2.0,

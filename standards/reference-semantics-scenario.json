@@ -24,7 +24,7 @@
     }
   },
   "compatibility_boundary": {
-    "file": "abntexto-ufc/compat-nbr6023-2025.def",
+    "file": "abntexto-ufc/standards/nbr6023-2025.def",
     "general_doi_url_formatting": "delegated-to-biblatex-abnt",
     "forbid_global_doi_url_formatter_override": true,
     "custom_driver_macro_use_is_allowed": true
