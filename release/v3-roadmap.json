@@ -5,12 +5,12 @@
   "updated_at": "2026-08-30",
   "status": "ACTIVE",
   "phase": "V3-R1",
-  "stage": "R1-S1",
-  "stage_name": "control plane repair",
+  "stage": "R1-S2",
+  "stage_name": "trunk rebaseline",
   "active_branch": "refactor/v3-r1-rebaseline",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
-  "observed_pre_control_repair_head_sha": "54dfcb6a3a4303c7ecc41a0577c49d4ab2d4a723",
+  "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "authorities": {
     "git_facts_must_match_machine_state": true,
     "machine_state": "release/v3-roadmap.json",
@@ -40,7 +40,9 @@
     "immutable_version_tags_preserved": true
   },
   "control_plane": {
-    "status": "ACTIVE_REPAIR",
+    "stage": "R1-S1",
+    "status": "DONE",
+    "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
     "comparison_base_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
     "comparison_observed_head_sha": "54dfcb6a3a4303c7ecc41a0577c49d4ab2d4a723",
     "commits_ahead": 12,
@@ -48,14 +50,33 @@
     "net_product_migration_delta_present": false,
     "expected_executor_commit_found": false,
     "expected_executor_commit_message": "refactor: reconcile remaining R1 path consumers",
-    "temporary_workflows_after_this_checkpoint": [],
-    "temporary_executors_after_this_checkpoint": [],
-    "abandoned_temporary_artifacts_removed_in_this_checkpoint": [
-      ".github/workflows/r1-semantic-identity-audit.yml",
-      "tools/r1_path_consumers_repair.py"
-    ],
-    "blocking_inconsistencies_after_this_checkpoint": [
-      "S1 publication must be verified from the resulting Git HEAD before S2 can start"
+    "temporary_workflows": [],
+    "temporary_executors": [],
+    "post_publication_verification": {
+      "remote_branch_count": 2,
+      "open_pull_request_count": 0,
+      "temporary_workflow_present": false,
+      "temporary_executor_present": false,
+      "passed": true
+    },
+    "blocking_inconsistencies": []
+  },
+  "trunk_rebaseline": {
+    "stage": "R1-S2",
+    "status": "ACTIVE",
+    "target_branch": "main",
+    "source_branch": "refactor/v3-r1-rebaseline",
+    "history_rewrite_allowed": false,
+    "delete_source_branch_after_verified_promotion": true,
+    "retain_legacy_branch_for_archive_only": false,
+    "required_checks": [
+      "confirm ancestry from certified v2 baseline",
+      "inspect main ruleset and required status checks",
+      "run minimal current-state promotion gates",
+      "verify zero temporary artifacts",
+      "verify synchronized control state",
+      "verify main after promotion",
+      "verify steady-state branch namespace"
     ]
   },
   "policies": {
@@ -76,11 +97,12 @@
       "name": "repository sanitation and control rebaseline"
     },
     "R1-S1": {
-      "status": "ACTIVE",
-      "name": "control plane repair"
+      "status": "DONE",
+      "name": "control plane repair",
+      "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02"
     },
     "R1-S2": {
-      "status": "BLOCKED",
+      "status": "ACTIVE",
       "name": "trunk rebaseline",
       "depends_on": ["R1-S1"]
     }
@@ -99,7 +121,7 @@
     "R1-BLOCK-3": {
       "status": "PAUSED",
       "name": "semantic and path-consumer closure",
-      "resume_after": ["R1-S1", "R1-S2"],
+      "resume_after": ["R1-S2"],
       "latest_certified_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
       "abandoned_executor_does_not_close_additional_work": true
     },
@@ -124,5 +146,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Verify the resulting S1 control checkpoint from Git: exactly two remote branches, no open PRs, no temporary workflow or executor, and consistent AGENTS/HANDOFF/ROADMAP/machine state. If and only if that verification passes, close S1 and begin S2 trunk-rebaseline planning."
+  "next_action": "Complete R1-S2: confirm ancestry and main protection constraints, run minimal promotion-safety gates, promote the v3 line to main without history rewrite, verify the resulting main, delete the temporary rebaseline branch, and verify the steady-state branch namespace before resuming Block 3."
 }

@@ -4,15 +4,15 @@ Updated: 2026-08-30
 
 ## Status
 
-**V3-R1 ACTIVE — repository control rebaseline before functional continuation.**
+**V3-R1 ACTIVE — repository trunk rebaseline before functional continuation.**
 
 Current sequence:
 
-**R1-S0 DONE → R1-S1 ACTIVE → R1-S2 BLOCKED → R1-B3 PAUSED → R1-B4…B8 BLOCKED → R2+ BLOCKED**
+**R1-S0 DONE → R1-S1 DONE → R1-S2 ACTIVE → R1-B3 PAUSED → R1-B4…B8 BLOCKED → R2+ BLOCKED**
 
 - Active branch: `refactor/v3-r1-rebaseline`.
-- Observed pre-S1-repair HEAD: `54dfcb6a3a4303c7ecc41a0577c49d4ab2d4a723`.
-- Latest certified clean implementation checkpoint: `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6`.
+- R1-S1 closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
+- Latest certified clean implementation checkpoint before the control rebaseline: `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6`.
 - Certified v2 baseline: `main` at `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
 
 ## Authority and bootstrap
@@ -25,69 +25,55 @@ If Git, machine state, handoff, roadmap, workflow inventory, or temporary-artifa
 
 **DONE.**
 
-Results:
-
-- full mirror plus verified full-history bundle created before ref deletion;
+- verified Git mirror and full-history bundle created before ref deletion;
 - remote branches reduced from 154 to exactly `main` plus `refactor/v3-r1-rebaseline`;
 - stale/abandoned audit, v2.x, N-phase/N15/B2R, preview, maintenance, release, temporary, legacy `1.x`, and abandoned v3 refs removed from the active namespace;
 - PRs #157 and #158 closed as superseded;
 - immutable release tags preserved;
 - stable-branch ruleset narrowed to `main` after legacy `1.x` removal.
 
-Historical work remains recoverable through Git objects, tags, releases, PRs, and the verified external backup. No `archive/*` replacement branches are permitted in the active repository.
+No archive replacement branches are permitted in the active repository.
 
 ## R1-S1 — Control Plane Repair
 
-**ACTIVE.**
+**DONE** at `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 
-Purpose: make actual Git state, machine state, documentation, workflow inventory, and temporary-artifact inventory describe the same repository.
-
-Findings from `38f21f...` to pre-repair HEAD `54dfcb6...`:
+Audit result for `38f21f...` → pre-repair `54dfcb6...`:
 
 - 12 commits ahead, 0 behind;
 - no net product migration delta in `standards/`, `tests/`, or `validator/`;
-- net changes are confined to a temporary workflow, its repair script, and control documentation/state;
-- the workflow's expected product commit `refactor: reconcile remaining R1 path consumers` does not exist;
-- therefore the attempted residual path-consumer migration is not a completed Block 3 checkpoint.
+- net changes confined to a temporary workflow, repair script, and control state/docs;
+- expected workflow product commit `refactor: reconcile remaining R1 path consumers` absent;
+- attempted residual migration therefore not certified as completed.
 
-S1 actions:
-
-- remove `.github/workflows/r1-semantic-identity-audit.yml`;
-- remove `tools/r1_path_consumers_repair.py`;
-- add root `AGENTS.md` with mandatory fail-closed bootstrap;
-- synchronize this roadmap, the canonical handoff, and machine state;
-- verify after publication that no temporary workflow/executor remains and the repository has exactly the intended two branches.
-
-S1 exit criteria:
-
-- Git × machine state × handoff × roadmap agree;
-- zero forgotten temporary workflows/executors;
-- active stage and last certified implementation checkpoint are unambiguous;
-- the failed/unfinished temporary migration is not represented as completed work.
+S1 removed the temporary workflow and repair executor, added `AGENTS.md`, synchronized canonical state/docs, and passed post-publication verification: exactly two remote branches, no open PRs, no temporary workflow, and no temporary executor.
 
 ## R1-S2 — Trunk Rebaseline
 
-**BLOCKED by S1.**
+**ACTIVE.**
 
-Goal: make v3 the unambiguous repository trunk without rewriting history.
+Goal: make v3 the unambiguous repository trunk while preserving ancestry and release history.
 
-Before promotion:
+Required sequence:
 
-- confirm v3 ancestry against the certified v2 baseline;
-- inspect current `main` protections/status-check requirements;
-- run only the minimal current-state gates needed for safe promotion;
-- require clean tree, no temporary artifacts, and synchronized control state.
+1. confirm v3 is a descendant of the certified v2 `main` baseline;
+2. inspect `main` ruleset/protection and required status checks;
+3. run only minimal current-state gates needed for promotion safety;
+4. require clean control state and zero temporary artifacts;
+5. perform a controlled history-preserving promotion to `main`;
+6. verify the resulting `main` HEAD and repository default branch;
+7. delete `refactor/v3-r1-rebaseline` after successful promotion;
+8. verify the steady-state branch namespace.
 
 Planned end state:
 
-- `main` becomes current v3 development;
-- v2.1 remains recoverable through immutable tag/release history;
-- `refactor/v3-r1-rebaseline` is deleted after successful promotion;
-- no permanent v2 maintenance branch is retained unless an actual maintenance requirement exists.
+- `main` = current v3 development;
+- v2.1 recoverable through immutable version tags, GitHub Releases, Git history, and verified external backup;
+- no permanent v2 maintenance branch unless a real maintenance requirement exists.
 
 ## R1 Block 3 — Semantic / Path-Consumer Closure
 
-**PAUSED until S1 and S2 are resolved.**
+**PAUSED until S2 closes.**
 
 Previously certified checkpoints remain valid through `38f21f...`; the abandoned temporary executor after that checkpoint does not close additional Block 3 work.
 
@@ -139,4 +125,4 @@ Required conditions include:
 
 ## Immediate action
 
-Close R1-S1 by validating the published control checkpoint. Do not resume Block 3 and do not promote v3 to `main` until S1 is verified closed.
+Complete R1-S2 and verify trunk promotion. Do not resume Block 3 until `main` is the unambiguous v3 trunk and the temporary rebaseline branch has been retired.

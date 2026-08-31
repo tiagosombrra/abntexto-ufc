@@ -5,39 +5,61 @@ Updated: 2026-08-30
 ## Checkpoint
 
 - Phase: **V3-R1 ACTIVE**.
-- Active control stage: **R1-S1 — Control Plane Repair**.
-- Functional R1 Block 3 work is paused until S1 closes and S2 trunk rebaseline is decided.
+- Active control stage: **R1-S2 — Trunk Rebaseline**.
+- Functional R1 Block 3 work remains paused until S2 closes.
 - Active branch: `refactor/v3-r1-rebaseline`.
-- Observed pre-repair HEAD: `54dfcb6a3a4303c7ecc41a0577c49d4ab2d4a723`.
-- Latest certified clean checkpoint before the control repair: `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6`.
+- R1-S1 control-plane closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
+- Latest certified clean implementation checkpoint before the control rebaseline: `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
 
-## Repository sanitation status
+## R1-S0 — Repository sanitation
 
-**R1-S0 is complete.**
+**DONE.**
 
 - A verified mirror and full-history Git bundle were created before destructive ref cleanup.
 - The remote branch namespace was reduced from 154 branches to exactly two: `main` and `refactor/v3-r1-rebaseline`.
-- Legacy `1.x`, v2.x, N-phase/N15/B2R, audit, preview, maintenance, release, temporary, and abandoned v3 branches were removed from the active repository namespace after preservation.
+- Legacy `1.x`, v2.x, N-phase/N15/B2R, audit, preview, maintenance, release, temporary, and abandoned v3 branches were removed from the active namespace after preservation.
 - Pull requests #157 and #158 were closed as superseded by the v3 reconstruction.
 - Immutable version tags remain protected and unchanged.
 - `main` remains protected by the stable-branch ruleset.
 
-## Control-plane findings
+## R1-S1 — Control plane repair
 
-The old clean checkpoint `38f21f...` is 12 commits behind the observed pre-repair HEAD `54dfcb6...`.
+**DONE** at `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 
-Those 12 commits do not leave a product migration delta in `standards/`, `tests/`, or `validator/`. The net delta from `38f21f...` to `54dfcb6...` is limited to:
+The audit of `38f21f...` through pre-repair HEAD `54dfcb6...` established that the 12 intervening commits did not leave a product migration delta in `standards/`, `tests/`, or `validator/`. Their net delta was limited to a temporary workflow, its repair script, and control documentation/state.
+
+The workflow expected to create `refactor: reconcile remaining R1 path consumers`, but no such commit exists. Therefore that attempted migration is not a completed Block 3 checkpoint.
+
+S1 removed:
 
 - `.github/workflows/r1-semantic-identity-audit.yml`;
-- `tools/r1_path_consumers_repair.py`;
-- `docs/HANDOFF-V3.0.0.md`;
-- `docs/ROADMAP-V3.0.0.md`;
-- `release/v3-roadmap.json`.
+- `tools/r1_path_consumers_repair.py`.
 
-The temporary workflow was intended to produce a commit named `refactor: reconcile remaining R1 path consumers`, but no such commit exists. Therefore the intended residual path-consumer migration is **not certified as completed**.
+S1 added root `AGENTS.md` and synchronized machine state, handoff, and roadmap. Post-publication verification confirmed:
 
-The temporary workflow and repair script are being removed as abandoned control scaffolding during S1. They must not be interpreted as completed Block 3 implementation.
+- exactly two remote branches;
+- no open pull requests;
+- no temporary workflow;
+- no temporary repair executor;
+- canonical control files describe the same stage and repository policy.
+
+## R1-S2 — Trunk rebaseline
+
+**ACTIVE.**
+
+Goal: make v3 the unambiguous repository trunk without rewriting history.
+
+Before promotion to `main`:
+
+1. confirm current v3 ancestry against the certified v2 baseline;
+2. inspect the `main` ruleset and required status checks;
+3. run only the minimal current-state validation needed for safe promotion;
+4. require no temporary artifacts and synchronized control state;
+5. promote by a controlled history-preserving operation;
+6. verify `main` points to v3 and then delete `refactor/v3-r1-rebaseline`.
+
+The v2.1 public baseline remains recoverable by immutable tag/release history and the verified external backup. No permanent legacy branch is required solely for archival convenience.
 
 ## Non-negotiable rules
 
@@ -45,14 +67,14 @@ The active v3 repository is not an archive. Historical/process evidence belongs 
 
 Every project-owned technical surface is English. Portuguese is limited to academic/rendered content, bibliography data, official UFC/ABNT wording, literal Portuguese output under test, and current runtime/upstream identifiers at explicit boundaries. R1 must not rewrite the current Portuguese runtime API; that belongs to R2.
 
-Permanent automatic CI remains absent during structural R1 reconstruction. A temporary executor may exist only for a bounded operation and must be removed before its checkpoint. Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs remain candidate/certification work.
+Permanent automatic CI remains absent during structural R1 reconstruction. Temporary executors must be removed before checkpoint. Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs remain candidate/certification work.
 
 ## Previously closed R1 implementation blocks
 
 - **Block 1 — canonical physical naming:** `f8509ba01a208b634c63a28b3c20cbf7ab8c75dd`.
 - **Block 2 — legacy purge and active-tree minimization:** `03d7f5ceb1a325d26c712ba5e619ee85530a022b`.
 
-## Certified Block 3 checkpoints before control rebaseline
+## Certified Block 3 checkpoints before the control rebaseline
 
 1. `8d8f7081b123999618d4d6e5ec5009a18ce0a89b` — central normative loaders use `standards/`.
 2. `4fd0e61ea198ed1307e511895b254c59f5ea0dc4` — negative-path and normative-complement consumers use current paths/checkers.
@@ -63,12 +85,10 @@ Permanent automatic CI remains absent during structural R1 reconstruction. A tem
 7. `66c1005f326ee6523e420165ddb9de595ef49d3d` — test-migration contract reconciled.
 8. `bde108b7ff0076605643e870ae7cd86ce69a7e76` — standards consumers and generated-bytecode hygiene reconciled.
 9. `91424aab55b08d0931654cd895db9ac7925ca15c` — validation ownership normalized to current runner IDs.
-10. `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6` — prior one-shot workflow scaffolding removed; this remains the latest certified clean implementation checkpoint before S1.
+10. `38f21f0271d67fa99ef2e6bf1e91b122ac61daf6` — prior one-shot workflow scaffolding removed; latest certified clean implementation checkpoint before S0/S1.
 
 ## Immediate action
 
-Finish **R1-S1** by verifying that Git, `release/v3-roadmap.json`, this handoff, the engineering roadmap, workflow inventory, and temporary-artifact inventory agree after the control repair.
+Complete **R1-S2**. Do not resume Block 3 until the trunk promotion is validated and the branch namespace is reduced to the intended steady state.
 
-Then perform **R1-S2 — Trunk Rebaseline** planning and minimal validation before any promotion of v3 to `main`.
-
-Only after S1/S2 may Block 3 resume. When it resumes, audit the actual current tree first and migrate only residual N-phase/N15/B2R/`oracle`/operational-v2 engineering identity that still exists. Do not assume the abandoned temporary executor completed that work.
+After S2 closes, Block 3 must resume from an audit of the actual current tree. Migrate only residual N-phase/N15/B2R/`oracle`/operational-v2 engineering identity that still exists; do not infer that the abandoned executor completed it.
