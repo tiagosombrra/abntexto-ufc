@@ -6,7 +6,8 @@
   "status": "ACTIVE",
   "active_branch": "refactor/v3-r1-rebaseline",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "latest_completed_implementation_sha": "1cd88899bd25592944e37042419aa146e39c1de6",
+  "latest_completed_implementation_sha": "91424aab55b08d0931654cd895db9ac7925ca15c",
+  "latest_clean_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
   "latest_migration_contract_reconciliation_sha": "66c1005f326ee6523e420165ddb9de595ef49d3d",
   "phase": "V3-R1",
   "active_block": "R1-BLOCK-3",
@@ -41,7 +42,10 @@
     "path_filters_where_practical": true,
     "cancel_in_progress": true,
     "heavy_jobs_on_every_intermediate_commit": false,
-    "workflow_repository_mutation_allowed": false
+    "workflow_repository_mutation_allowed": false,
+    "current_permanent_workflow_count": 0,
+    "current_temporary_workflow_count": 0,
+    "windows_font_pdfa_owner": "external-gate-reserved-for-R1-BLOCK-7"
   },
   "blocks": {
     "R1-BLOCK-1": {
@@ -64,14 +68,15 @@
         "1b6db7598d69a6a0d8442d09e589fa8d2e151477",
         "d4a348c6bb1600f0fc616c1ce23c1636db606097",
         "1cd88899bd25592944e37042419aa146e39c1de6",
-        "66c1005f326ee6523e420165ddb9de595ef49d3d"
+        "66c1005f326ee6523e420165ddb9de595ef49d3d",
+        "bde108b7ff0076605643e870ae7cd86ce69a7e76",
+        "91424aab55b08d0931654cd895db9ac7925ca15c",
+        "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6"
       ],
       "work": [
-        "remaining tests/run.py dependency graph audit",
-        "remaining standards validation identifier reconciliation",
-        "remaining active normativa/tests-normativa/tests-v2 path references",
-        "remaining N-phase B2R and project-owned oracle engineering identities",
-        "tools validator and metadata consumer integrity where required by current test graph",
+        "remaining N-phase N15 B2R and project-owned oracle engineering identity migration",
+        "remaining operational v2 identity migration in standards tests integrations validator and metadata",
+        "producer-consumer scenario and validator identity reconciliation",
         "runner-to-file integrity",
         "evidence-to-consumer integrity",
         "permanent repository and static checks"
@@ -87,6 +92,21 @@
         "test_migration_contract_sha": "66c1005f326ee6523e420165ddb9de595ef49d3d",
         "temporary_executors_present": false,
         "upstream_pretextual_command_preserved": true
+      },
+      "standards_consumer_reconciliation": {
+        "status": "DONE",
+        "implementation_sha": "bde108b7ff0076605643e870ae7cd86ce69a7e76",
+        "validation_owner_sha": "91424aab55b08d0931654cd895db9ac7925ca15c",
+        "clean_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
+        "validation_policy_schema": 2,
+        "manual_checks_without_runner_owner": [
+          "approval.signatures",
+          "capes"
+        ],
+        "external_checks_reserved_for_workflow_restoration": [
+          "windows-font-pdfa"
+        ],
+        "temporary_executors_present": false
       }
     },
     "R1-BLOCK-4": {
@@ -104,7 +124,10 @@
     },
     "R1-BLOCK-7": {
       "status": "BLOCKED",
-      "name": "optimized workflow restoration"
+      "name": "optimized workflow restoration",
+      "must_restore_external_owners": [
+        "windows-font-pdfa"
+      ]
     },
     "R1-BLOCK-8": {
       "status": "BLOCKED",
@@ -125,5 +148,5 @@
     {"id": "V3-FINAL", "status": "BLOCKED", "depends_on": ["V3-RC"]},
     {"id": "V3-CLEANUP", "status": "BLOCKED", "depends_on": ["V3-FINAL"]}
   ],
-  "next_action": "Complete the residual active-tree audit across the remaining tests/run.py graph, standards validation IDs, tools, validator and metadata; do not advance to Block 4 while a stale active consumer remains."
+  "next_action": "Migrate remaining active N-phase/N15/B2R/oracle/v2 engineering identity across standards producers and checker/integration/validator consumers as one bounded Block 3 operation; preserve normative semantics and do not advance to Block 4 while a stale active process identity remains."
 }
