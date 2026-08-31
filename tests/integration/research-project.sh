@@ -11,7 +11,7 @@ compile_project_with_biber() {
         "$job".out "$job".pdf "$job".run.xml "$job".toc
 
   echo "Validando $fixture com $engine + Biber..."
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
@@ -19,11 +19,11 @@ compile_project_with_biber() {
     cat /tmp/abntexto-ufc-v2-project-biber.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
@@ -36,15 +36,15 @@ compile_plain_project() {
 
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
   echo "Validando $fixture com $engine..."
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-v2-project.log
     exit 1
   }
