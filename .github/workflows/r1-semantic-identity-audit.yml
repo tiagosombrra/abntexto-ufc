@@ -1,4 +1,4 @@
-name: R1 semantic identity inventory
+name: R1 integration root audit
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  inventory:
+  audit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -20,67 +20,13 @@ jobs:
           fetch-depth: 0
           ref: refactor/v3-r1-rebaseline
 
-      - name: Inventory active contract ownership
+      - name: Audit integration root resolution
         shell: bash
         run: |
           set -euo pipefail
-          echo '--- SELECTED CONTRACT CONSUMERS ---'
-          for name in \
-            evidence-registry.json \
-            false-coverage-policy.json \
-            proof-policy.json \
-            validation-contract.json \
-            validation-vectors.json \
-            vector-rule-validation-extension.json; do
-            echo "### $name"
-            git grep -nF "$name" -- ':!docs/ROADMAP-V3.0.0.md' ':!docs/HANDOFF-V3.0.0.md' ':!release/v3-roadmap.json' || true
-          done
-
-          echo '--- CURRENT SEMANTIC TEST OWNERS ---'
-          git ls-files tests/checks tests/integration | sort
-
-          echo '--- STALE PHYSICAL REFERENCES ---'
-          git grep -nE '(^|[^A-Za-z0-9_])(normativa/|tests/normativa/|tests/v2-)' -- standards tests tools validator || true
-
-          echo '--- PROCESS IDENTITY COUNTS ---'
-          python3 - <<'PY'
-          from __future__ import annotations
-
-          import re
-          import subprocess
-          from collections import Counter, defaultdict
-          from pathlib import Path
-
-          roots = ('standards/', 'tests/checks/', 'tests/integration/', 'tools/', 'validator/')
-          suffixes = {'.json', '.py', '.sh', '.tex', '.js', '.html', '.css'}
-          tracked = subprocess.check_output(['git', 'ls-files'], text=True).splitlines()
-          patterns = {
-              'n-phase': re.compile(r'(?<![A-Za-z0-9])N(?:[0-9]{1,2})(?:-[A-Z0-9]+)*(?![A-Za-z0-9])'),
-              'b2r': re.compile(r'(?<![A-Za-z0-9])B2R(?![A-Za-z0-9])', re.I),
-              'oracle': re.compile(r'oracle', re.I),
-              'v2': re.compile(r'(?<![A-Za-z0-9])v2(?:\.\d+(?:\.\d+)?)?(?![A-Za-z0-9])', re.I),
-          }
-          exclusions = {
-              'tests/checks/canonical_identity.py',
-              'tests/checks/repository_contract.py',
-              'tests/checks/release_package.py',
-              'tests/checks/overleaf_bundle.py',
-              'tests/checks/ctan_archive.py',
-          }
-          counts = Counter()
-          files = defaultdict(set)
-          for item in tracked:
-              if item in exclusions or not item.startswith(roots):
-                  continue
-              path = Path(item)
-              if path.suffix not in suffixes or not path.is_file():
-                  continue
-              text = path.read_text(encoding='utf-8', errors='replace')
-              for label, pattern in patterns.items():
-                  matches = list(pattern.finditer(text))
-                  counts[label] += len(matches)
-                  if matches:
-                      files[label].add(item)
-          for label in patterns:
-              print(f'{label}: occurrences={counts[label]} files={len(files[label])}')
-          PY
+          echo '--- ROOT EXPRESSIONS ---'
+          git grep -nE 'dirname[[:space:]]+"?\$0|dirname[[:space:]]+\$0|BASH_SOURCE' -- tests/integration || true
+          echo '--- ROOT VARIABLES ---'
+          git grep -nE '^(root|ROOT|repo_root|REPO_ROOT)=' -- tests/integration || true
+          echo '--- CURRENT DIRECTORY ASSUMPTIONS ---'
+          git grep -nE 'cd[[:space:]]+"?\$root|cd[[:space:]]+"?\$ROOT|Path\('\''main\.tex'\''\)|tests/documents/' -- tests/integration/distribution.sh tests/integration/font-poc.sh tests/integration/overleaf-stable.sh tests/integration/windows-font-pdfa.sh || true
