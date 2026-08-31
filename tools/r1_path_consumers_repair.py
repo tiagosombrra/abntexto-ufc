@@ -18,7 +18,7 @@ EXACT_PATH_MAP = {
     "tests/normativa/appendix-annex-final-pdf.tex": "tests/documents/appendix-annex-final-pdf.tex",
     "tests/normativa/equation-display-final-pdf.tex": "tests/documents/equation-display-final-pdf.tex",
     "tests/normativa/illustration-final-pdf.tex": "tests/documents/illustration-final-pdf.tex",
-    "tests/normativa/index-glossary-final-pdf.tex": "tests/documents/index-glossary-final-pdf.tex",
+    "tests/normativa/index-glossary-final-pdf.tex": "tests/documents/index-glossary-present-final-pdf.tex",
     "tests/normativa/index-glossary-absent-final-pdf.tex": "tests/documents/index-glossary-absent-final-pdf.tex",
     "tests/normativa/textual-oracle-pagination-geometry.tex": "tests/documents/mainmatter-pagination-geometry-test.tex",
     "tests/normativa/projeto-15287.tex": "tests/documents/research-project-15287.tex",
