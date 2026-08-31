@@ -2,15 +2,16 @@
   "schema_version": 6,
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
-  "updated_at": "2026-08-30",
+  "updated_at": "2026-08-31",
   "status": "ACTIVE",
   "phase": "V3-R1",
-  "stage": "R1-S2",
-  "stage_name": "trunk rebaseline",
-  "active_branch": "refactor/v3-r1-rebaseline",
+  "stage": "R1-BLOCK-3",
+  "stage_name": "semantic and path-consumer closure",
+  "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
+  "last_certified_clean_checkpoint_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
+  "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
     "git_facts_must_match_machine_state": true,
     "machine_state": "release/v3-roadmap.json",
@@ -24,8 +25,8 @@
     "stage": "R1-S0",
     "status": "DONE",
     "remote_branch_count_before": 154,
-    "remote_branch_count_after": 2,
-    "retained_remote_branches": [
+    "remote_branch_count_after_s0": 2,
+    "retained_remote_branches_after_s0": [
       "main",
       "refactor/v3-r1-rebaseline"
     ],
@@ -34,10 +35,17 @@
       "git_mirror",
       "git_bundle"
     ],
-    "stale_pull_requests_closed": [157, 158],
+    "stale_pull_requests_closed": [
+      157,
+      158
+    ],
     "archive_branches_created": false,
     "legacy_1x_branch_removed": true,
-    "immutable_version_tags_preserved": true
+    "immutable_version_tags_preserved": true,
+    "remote_branch_count_final": 1,
+    "retained_remote_branches_final": [
+      "main"
+    ]
   },
   "control_plane": {
     "stage": "R1-S1",
@@ -63,21 +71,40 @@
   },
   "trunk_rebaseline": {
     "stage": "R1-S2",
-    "status": "ACTIVE",
+    "status": "DONE",
     "target_branch": "main",
     "source_branch": "refactor/v3-r1-rebaseline",
+    "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
+    "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
+    "commits_ahead_at_promotion": 95,
+    "commits_behind_at_promotion": 0,
+    "merge_base_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
+    "promotion_mode": "fast-forward",
     "history_rewrite_allowed": false,
-    "delete_source_branch_after_verified_promotion": true,
+    "history_rewritten": false,
+    "source_branch_role_after_promotion": "retire during closeout",
+    "steady_state_development_branch": "main",
     "retain_legacy_branch_for_archive_only": false,
-    "required_checks": [
-      "confirm ancestry from certified v2 baseline",
-      "inspect main ruleset and required status checks",
-      "run minimal current-state promotion gates",
-      "verify zero temporary artifacts",
-      "verify synchronized control state",
-      "verify main after promotion",
-      "verify steady-state branch namespace"
-    ]
+    "minimal_gates_passed": true,
+    "reference_build_passed": true,
+    "validator_source_passed": true,
+    "temporary_workflows_present": false,
+    "temporary_executors_present": false,
+    "stale_required_status_removed_for_promotion": "latex-preflight",
+    "restore_stale_status_before_r1_block_7": false,
+    "source_branch_retired": true,
+    "steady_state_remote_branch_count": 1,
+    "steady_state_remote_branches": [
+      "main"
+    ],
+    "interim_main_protection": {
+      "deletion_protected": true,
+      "non_fast_forward_protected": true,
+      "linear_history_required": true,
+      "pull_request_required": true,
+      "required_status_checks": [],
+      "latex_preflight_restored": false
+    }
   },
   "policies": {
     "active_repository_is_archive": false,
@@ -102,9 +129,12 @@
       "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02"
     },
     "R1-S2": {
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "trunk rebaseline",
-      "depends_on": ["R1-S1"]
+      "depends_on": [
+        "R1-S1"
+      ],
+      "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1"
     }
   },
   "blocks": {
@@ -119,11 +149,24 @@
       "name": "legacy purge and active-tree minimization"
     },
     "R1-BLOCK-3": {
-      "status": "PAUSED",
+      "status": "ACTIVE",
       "name": "semantic and path-consumer closure",
-      "resume_after": ["R1-S2"],
-      "latest_certified_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
-      "abandoned_executor_does_not_close_additional_work": true
+      "resumed_after": [
+        "R1-S2"
+      ],
+      "previous_certified_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
+      "promotion_checkpoint_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
+      "abandoned_executor_does_not_close_additional_work": true,
+      "known_residual_classes": [
+        "N-phase/N15/B2R process identity",
+        "project-owned oracle terminology",
+        "operational v2/V2 identity",
+        "stale producer-consumer references",
+        "runner-to-file integrity",
+        "evidence-to-consumer integrity",
+        "validator/scenario naming and ownership",
+        "bounded Windows subprocess encoding portability"
+      ]
     },
     "R1-BLOCK-4": {
       "status": "BLOCKED",
@@ -146,5 +189,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Complete R1-S2: confirm ancestry and main protection constraints, run minimal promotion-safety gates, promote the v3 line to main without history rewrite, verify the resulting main, delete the temporary rebaseline branch, and verify the steady-state branch namespace before resuming Block 3."
+  "next_action": "Continue R1-BLOCK-3 on main with a live-tree residual audit. Close remaining N-phase/N15/B2R identity, project-owned oracle terminology, operational v2/V2 references, stale producer-consumer links, runner/evidence integrity, validator/scenario ownership, and bounded portability residuals without absorbing later distribution or CI reconstruction."
 }
