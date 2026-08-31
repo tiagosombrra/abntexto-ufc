@@ -24,6 +24,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tools/r1_semantic_rebaseline.py')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace('PREFLIGHT = ROOT / ".github" / "workflows" / "latex-preflight.yml"\n', '')
+          block = '''\n    preflight = PREFLIGHT.read_text(encoding="utf-8")\n    if "tests/integration/windows-font-pdfa.sh" not in preflight:\n        fail("external check windows-font-pdfa has no workflow owner")\n'''
+          if block not in text:
+              raise SystemExit('expected external-owner block not found')
+          path.write_text(text.replace(block, '\n'), encoding='utf-8')
+          PY
           python3 tools/r1_semantic_rebaseline.py
           git rm tools/r1_semantic_rebaseline.py
 
