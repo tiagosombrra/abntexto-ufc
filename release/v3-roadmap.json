@@ -9,7 +9,7 @@
   "stage_name": "semantic and path-consumer closure",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
+  "last_certified_clean_checkpoint_sha": "dbc7f774df2cd0ac1b0f6479653290c6f19b6809",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -158,13 +158,11 @@
       "promotion_checkpoint_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
       "abandoned_executor_does_not_close_additional_work": true,
       "known_residual_classes": [
-        "N-phase/N15/B2R process identity",
         "project-owned oracle terminology",
         "operational v2/V2 identity",
         "stale producer-consumer references",
         "runner-to-file integrity",
         "evidence-to-consumer integrity",
-        "validator/scenario naming and ownership",
         "bounded Windows subprocess encoding portability"
       ]
     },
@@ -189,5 +187,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Continue R1-BLOCK-3 on main with a live-tree residual audit. Close remaining N-phase/N15/B2R identity, project-owned oracle terminology, operational v2/V2 references, stale producer-consumer links, runner/evidence integrity, validator/scenario ownership, and bounded portability residuals without absorbing later distribution or CI reconstruction."
+  "next_action": "Start B3-C on clean remote main at dbc7f774df2cd0ac1b0f6479653290c6f19b6809. Repair the eight known runner/evidence integrity and bounded Windows portability defects discovered during B3-B differential validation, preserving normative values and tolerances. Then continue B3-D operational v2/V2 identity, B3-E project-owned oracle terminology, and B3-F final Block 3 residual closure without absorbing later distribution or CI reconstruction."
 }
