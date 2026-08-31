@@ -24,6 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Run the bounded, fail-closed R1 path-consumer migration.
           python3 tools/r1_path_consumers_repair.py
           git rm -f tools/r1_path_consumers_repair.py
 
