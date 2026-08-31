@@ -16,7 +16,7 @@
       "validation": {
         "mode": "automatic-partial",
         "checks": [
-          "project",
+          "research-project",
           "profiles"
         ]
       },
@@ -44,7 +44,7 @@
       "validation": {
         "mode": "automatic",
         "checks": [
-          "project",
+          "research-project",
           "profiles"
         ]
       },
@@ -79,7 +79,7 @@
       "validation": {
         "mode": "automatic-partial",
         "checks": [
-          "project",
+          "research-project",
           "profiles"
         ]
       },
@@ -111,7 +111,7 @@
       "validation": {
         "mode": "automatic",
         "checks": [
-          "project",
+          "research-project",
           "profiles"
         ]
       },
@@ -134,7 +134,7 @@
       "validation": {
         "mode": "automatic",
         "checks": [
-          "project",
+          "research-project",
           "profiles"
         ]
       },

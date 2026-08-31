@@ -100,8 +100,8 @@ def main() -> None:
         or scenario.get("locator_ruleset") != "sections.indicator"
     ):
         fail("invalid scenario schema/phase/component/ruleset")
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid validation policy schema/phase")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     locator_matches = [
         item

@@ -214,8 +214,8 @@ def main() -> None:
         fail("invalid scenario schema/phase/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"footnote separator scenario scope drift: {scenario.get('rules')}")
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid validation policy schema/phase")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     declared_locator_map = scenario.get("locator_rulesets")
     if not isinstance(declared_locator_map, dict):

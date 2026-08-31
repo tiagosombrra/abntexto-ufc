@@ -49,7 +49,7 @@ def main() -> None:
     ):
         fail("invalid extension schema/phase/component")
     if validation.get("schema_version") != 2:
-        fail("invalid validation policy schema/phase")
+        fail("invalid validation policy schema")
     if extension.get("tool") != "pdftocairo -svg":
         fail("vector tool drifted")
     if validation.get("tools", {}).get("vector_geometry") != extension.get("tool"):

@@ -189,8 +189,8 @@ def main() -> None:
             f"citation_emphasis={citation_emphasis}"
         )
 
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid validation policy schema/phase")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
     font_tolerance = float(policy["tolerances"]["font_size_pt"])
 
     markers = scenario.get("markers")

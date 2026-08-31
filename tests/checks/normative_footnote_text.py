@@ -105,8 +105,8 @@ def main() -> None:
         fail("invalid scenario schema/phase/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"footnote text scenario scope drift: {scenario.get('rules')}")
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid validation policy schema/phase")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     expected_locator_map = {
         FONT_RULE_ID: (typography_locators, "typography.reduced-font"),

@@ -179,7 +179,7 @@ def main() -> None:
     if scenario.get("schema_version") != 1 or scenario.get("phase") != "N10":
         fail("invalid scenario schema/phase")
     if validation.get("schema_version") != 2:
-        fail("invalid validation policy schema/phase")
+        fail("invalid validation policy schema")
 
     scenario_rules = scenario.get("rules")
     if not isinstance(scenario_rules, list) or len(scenario_rules) != 5:

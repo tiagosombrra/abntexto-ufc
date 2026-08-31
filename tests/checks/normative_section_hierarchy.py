@@ -95,8 +95,8 @@ def main() -> None:
         or scenario.get("parent_rule") != "section.hierarchy"
     ):
         fail("invalid scenario schema/phase/component/parent")
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid validation policy schema/phase")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     contract = load_full_contract()
     rules = {rule["id"]: rule for rule in contract["rules"]}

@@ -76,8 +76,8 @@ def main() -> None:
         or scenario.get("rules") != [RULE_ID]
     ):
         fail("invalid scenario schema/phase/component/ruleset/rules")
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid validation policy schema/phase")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     locator_matches = [
         item

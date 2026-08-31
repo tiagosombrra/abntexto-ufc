@@ -358,8 +358,8 @@ def main() -> None:
         fail("invalid scenario schema/phase/component")
     if scenario.get("rules") != EXPECTED_RULE_IDS:
         fail(f"page/margins scenario scope drift: {scenario.get('rules')}")
-    if policy.get("schema_version") != 1 or policy.get("phase") != "N5":
-        fail("invalid validation policy schema/phase")
+    if policy.get("schema_version") != 2:
+        fail("invalid validation policy schema")
 
     expected_locator_map = {PAGE_RULE: "layout.page-a4"}
     expected_locator_map.update({rule_id: "layout.margin-recto" for rule_id in RECTO_RULES})

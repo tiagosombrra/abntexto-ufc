@@ -230,7 +230,6 @@
       "validation": {
         "mode": "automatic",
         "checks": [
-          "layout.a4",
           "pdf-geometry"
         ]
       }
@@ -255,7 +254,6 @@
       "validation": {
         "mode": "automatic",
         "checks": [
-          "layout.margins",
           "pdf-geometry"
         ]
       }
@@ -305,9 +303,8 @@
       "validation": {
         "mode": "automatic-deep",
         "checks": [
-          "font.literal",
-          "font-config",
-          "windows-font-poc"
+          "windows-font-pdfa",
+          "font-config"
         ]
       }
     },
@@ -624,7 +621,7 @@
         "mode": "automatic-partial",
         "checks": [
           "layout",
-          "profile-matrix"
+          "profiles"
         ]
       }
     },
@@ -846,7 +843,7 @@
       "validation": {
         "mode": "automatic-deep",
         "checks": [
-          "pdfa.deep",
+          "pdfa",
           "profile-pdfa",
           "windows-font-pdfa"
         ]
@@ -895,8 +892,7 @@
       "validation": {
         "mode": "automatic-policy",
         "checks": [
-          "catalog-card",
-          "catalog.optional"
+          "catalog-card"
         ]
       }
     },
