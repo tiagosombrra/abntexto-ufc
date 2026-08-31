@@ -40,7 +40,12 @@ jobs:
           if old not in text and new not in text:
               raise SystemExit('stale-path audit exclusion anchor not found')
           text = text.replace(old, new, 1)
-          path.write_text(text, encoding='utf-8')
+          lines = text.splitlines()
+          matches = [index for index, line in enumerate(lines) if 'modules = re.findall(' in line]
+          if len(matches) != 1:
+              raise SystemExit(f'expected one distribution module-regex line, found {len(matches)}')
+          lines[matches[0]] = 'modules = re.findall(r"\\\\input\\{(abntexto-ufc/[^}]+\\.def)\\}", source)'
+          path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
           PY
 
           # Run the bounded, fail-closed R1 path-consumer migration.
