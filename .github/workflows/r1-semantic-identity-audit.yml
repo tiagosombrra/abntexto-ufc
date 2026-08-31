@@ -20,10 +20,29 @@ jobs:
           fetch-depth: 0
           ref: refactor/v3-r1-rebaseline
 
-      - name: Inventory active semantic debt
+      - name: Inventory active contract ownership
         shell: bash
         run: |
           set -euo pipefail
+          echo '--- SELECTED CONTRACT CONSUMERS ---'
+          for name in \
+            evidence-registry.json \
+            false-coverage-policy.json \
+            proof-policy.json \
+            validation-contract.json \
+            validation-vectors.json \
+            vector-rule-validation-extension.json; do
+            echo "### $name"
+            git grep -nF "$name" -- ':!docs/ROADMAP-V3.0.0.md' ':!docs/HANDOFF-V3.0.0.md' ':!release/v3-roadmap.json' || true
+          done
+
+          echo '--- CURRENT SEMANTIC TEST OWNERS ---'
+          git ls-files tests/checks tests/integration | sort
+
+          echo '--- STALE PHYSICAL REFERENCES ---'
+          git grep -nE '(^|[^A-Za-z0-9_])(normativa/|tests/normativa/|tests/v2-)' -- standards tests tools validator || true
+
+          echo '--- PROCESS IDENTITY COUNTS ---'
           python3 - <<'PY'
           from __future__ import annotations
 
@@ -36,8 +55,6 @@ jobs:
           suffixes = {'.json', '.py', '.sh', '.tex', '.js', '.html', '.css'}
           tracked = subprocess.check_output(['git', 'ls-files'], text=True).splitlines()
           patterns = {
-              'stale-standards-path': re.compile(r'(?<![A-Za-z0-9_])normativa/'),
-              'stale-test-path': re.compile(r'tests/normativa/'),
               'n-phase': re.compile(r'(?<![A-Za-z0-9])N(?:[0-9]{1,2})(?:-[A-Z0-9]+)*(?![A-Za-z0-9])'),
               'b2r': re.compile(r'(?<![A-Za-z0-9])B2R(?![A-Za-z0-9])', re.I),
               'oracle': re.compile(r'oracle', re.I),
@@ -58,16 +75,12 @@ jobs:
               path = Path(item)
               if path.suffix not in suffixes or not path.is_file():
                   continue
-              lines = path.read_text(encoding='utf-8', errors='replace').splitlines()
-              for lineno, line in enumerate(lines, start=1):
-                  labels = [label for label, pattern in patterns.items() if pattern.search(line)]
-                  if not labels:
-                      continue
-                  for label in labels:
-                      counts[label] += 1
+              text = path.read_text(encoding='utf-8', errors='replace')
+              for label, pattern in patterns.items():
+                  matches = list(pattern.finditer(text))
+                  counts[label] += len(matches)
+                  if matches:
                       files[label].add(item)
-                  print(f"{item}:{lineno}: {','.join(labels)} :: {line.strip()}")
-          print('--- SUMMARY ---')
           for label in patterns:
-              print(f'{label}: lines={counts[label]} files={len(files[label])}')
+              print(f'{label}: occurrences={counts[label]} files={len(files[label])}')
           PY
