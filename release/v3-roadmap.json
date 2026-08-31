@@ -187,5 +187,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start B3-C on clean remote main at dbc7f774df2cd0ac1b0f6479653290c6f19b6809. Repair the eight known runner/evidence integrity and bounded Windows portability defects discovered during B3-B differential validation, preserving normative values and tolerances. Then continue B3-D operational v2/V2 identity, B3-E project-owned oracle terminology, and B3-F final Block 3 residual closure without absorbing later distribution or CI reconstruction."
+  "next_action": "Start B3-C from canonical remote main. The last_certified_clean_checkpoint_sha remains dbc7f774df2cd0ac1b0f6479653290c6f19b6809 as the latest certified implementation checkpoint before control-plane-only synchronization. Repair the eight known runner/evidence integrity and bounded Windows portability defects discovered during B3-B differential validation, preserving normative values and tolerances. Then continue B3-D operational v2/V2 identity, B3-E project-owned oracle terminology, and B3-F final Block 3 residual closure without absorbing later distribution or CI reconstruction."
 }
