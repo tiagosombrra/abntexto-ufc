@@ -7,7 +7,7 @@ Updated: 2026-08-31
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-3 — Semantic / Path-Consumer Closure**.
 - Active branch/trunk: `main`.
-- Current clean `main` checkpoint: `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
+- Latest certified clean implementation checkpoint: `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
 - R1-S2 trunk promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 control-plane closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -149,4 +149,4 @@ Do not rerun completed checks unless the current state or a relevant change just
 
 ## Immediate action
 
-Start **B3-C — runner/evidence integrity and bounded portability** from clean remote `main` at `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`. Treat the eight known defects above as the initial bounded audit set. Do not repeat B3-B or completed S2 gates unless a B3-C change directly invalidates them.
+Start **B3-C — runner/evidence integrity and bounded portability** from canonical remote `main`. The latest certified clean implementation checkpoint preceding the control-plane synchronization is `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`. Treat the eight known defects above as the initial bounded audit set. Do not repeat B3-B or completed S2 gates unless a B3-C change directly invalidates them.
