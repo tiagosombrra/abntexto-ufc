@@ -15,7 +15,7 @@ Block 3 internal sequence:
 **B3-A DONE → B3-B DONE → B3-C NEXT → B3-D PENDING → B3-E PENDING → B3-F PENDING**
 
 - Active branch/trunk: `main`.
-- Current clean `main` checkpoint: `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
+- Latest certified clean implementation checkpoint: `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -156,4 +156,4 @@ Required conditions include:
 
 ## Immediate action
 
-Start **B3-C — runner/evidence integrity and bounded portability** from clean remote `main` at `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`. Audit and repair only the eight known defects above first, using proportional validation and preserving normative semantics. Do not repeat B3-B or completed S2 gates unless a B3-C change directly invalidates them.
+Start **B3-C — runner/evidence integrity and bounded portability** from canonical remote `main`. The latest certified clean implementation checkpoint preceding the control-plane synchronization is `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`. Audit and repair only the eight known defects above first, using proportional validation and preserving normative semantics. Do not repeat B3-B or completed S2 gates unless a B3-C change directly invalidates them.
