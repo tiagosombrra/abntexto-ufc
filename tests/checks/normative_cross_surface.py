@@ -73,6 +73,7 @@ process.stdout.write(JSON.stringify(output));
         cwd=ROOT,
         input=json.dumps(vectors, ensure_ascii=False),
         text=True,
+        encoding="utf-8",
         capture_output=True,
         check=False,
     )

@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tests" / "checks"))
 
 from normative_atomic import atomic_rule_map, load_atomic_contract
 from normative_catalog import load_catalog, rule_map
+from normative_traceability import load_runner_checks
 
 
 def fail(message: str) -> None:
@@ -92,13 +95,36 @@ def main() -> None:
     if leaked:
         fail("aggregated split rules leaked into atomic contract: " + ", ".join(leaked))
 
-    runner = (ROOT / "tests" / "run.py").read_text(encoding="utf-8")
-    gate_checks = set(re.findall(r'Check\("([^"]+)"', runner))
+    gate_checks = set(load_runner_checks())
     cli = (ROOT / "tools" / "validate-ufc-pdf.py").read_text(encoding="utf-8")
     web = (ROOT / "validator" / "app.js").read_text(encoding="utf-8")
     validator_checks = {check for check, _ in quoted_pairs(cli, "norm_check")}
     validator_checks |= {check for check, _ in quoted_pairs(web, "nck")}
-    known_checks = gate_checks | validator_checks
+    registry_path = ROOT / "standards" / "evidence-registry.json"
+    try:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"cannot load evidence registry: {exc}")
+
+    if registry.get("schema_version") != 1:
+        fail("unsupported evidence-registry schema_version")
+
+    entries = registry.get("evidence")
+    if not isinstance(entries, list) or not entries:
+        fail("evidence registry must contain a non-empty evidence list")
+
+    registered_checks: set[str] = set()
+    for entry in entries:
+        if not isinstance(entry, dict):
+            fail("every evidence registry entry must be an object")
+        evidence_id = entry.get("id")
+        if not isinstance(evidence_id, str) or not evidence_id:
+            fail("every evidence registry entry requires a non-empty id")
+        if evidence_id in registered_checks:
+            fail(f"duplicate evidence registry id: {evidence_id}")
+        registered_checks.add(evidence_id)
+
+    known_checks = gate_checks | validator_checks | registered_checks
 
     uncovered = sorted(
         rule_id

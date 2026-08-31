@@ -12,18 +12,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 PDF_MEASUREMENT = ROOT / "tools" / "pdf_measurement.py"
-PDF_ORACLE_CORE = ROOT / "tests" / "checks" / "pdf_oracle_core.py"
-PRETEXTUAL_ORACLE = ROOT / "tests" / "checks" / "frontmatter_oracle.py"
+PDF_VALIDATION_CORE = ROOT / "tests" / "checks" / "pdf_validation_core.py"
+FRONTMATTER_EVIDENCE = ROOT / "tests" / "checks" / "frontmatter_evidence.py"
 APP = ROOT / "validator" / "app.js"
 INDEX = ROOT / "validator" / "index.html"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
 NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
 NORMATIVE_FULL_TOOL = ROOT / "tools" / "normative_full.py"
 NORMATIVE_COVERAGE = ROOT / "tests" / "checks" / "normative_coverage.py"
-NORMATIVE_COVERAGE_AUDIT = ROOT / "tests" / "checks" / "normative_coverage_audit.py"
 NORMATIVE_CURRENCY = ROOT / "tests" / "checks" / "normative_currency.py"
 NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
-NORMATIVE_RECONCILIATION = ROOT / "tests" / "checks" / "normative_reconciliation.py"
 NORMATIVE_FALSE_COVERAGE = ROOT / "tests" / "checks" / "normative_false_coverage.py"
 NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
 NORMATIVE_SOURCE_REFERENCES = ROOT / "tests" / "checks" / "normative_source_references.py"
@@ -33,8 +31,7 @@ NORMATIVE_PROOF_STATE = ROOT / "tests" / "checks" / "normative_proof_state.py"
 NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
 NORMATIVE_ATOMIC_CONTRACT = ROOT / "tests" / "checks" / "normative_atomic_contract.py"
 NORMATIVE_FULL_CONTRACT = ROOT / "tests" / "checks" / "normative_full_contract.py"
-N14_VALIDATOR_CONTRACT = ROOT / "tests" / "checks" / "normative_n14_validator_contract.py"
-N15_B2A_ARTICLE_CONTRACT = ROOT / "tests" / "checks" / "normative_n15_b2a_article_contract.py"
+VALIDATOR_CONTRACT = ROOT / "tests" / "checks" / "normative_validator_contract.py"
 
 
 def fail(message: str) -> None:
@@ -59,16 +56,14 @@ def main() -> None:
     for path in (
         CLI,
         PDF_MEASUREMENT,
-        PDF_ORACLE_CORE,
-        PRETEXTUAL_ORACLE,
+        PDF_VALIDATION_CORE,
+        FRONTMATTER_EVIDENCE,
         NORMATIVE_TOOL,
         NORMATIVE_ATOMIC_TOOL,
         NORMATIVE_FULL_TOOL,
         NORMATIVE_COVERAGE,
-        NORMATIVE_COVERAGE_AUDIT,
         NORMATIVE_CURRENCY,
         NORMATIVE_PRECEDENCE,
-        NORMATIVE_RECONCILIATION,
         NORMATIVE_FALSE_COVERAGE,
         NORMATIVE_SOURCES,
         NORMATIVE_SOURCE_REFERENCES,
@@ -78,8 +73,7 @@ def main() -> None:
         NORMATIVE_ATOMICITY,
         NORMATIVE_ATOMIC_CONTRACT,
         NORMATIVE_FULL_CONTRACT,
-        N14_VALIDATOR_CONTRACT,
-        N15_B2A_ARTICLE_CONTRACT,
+        VALIDATOR_CONTRACT,
     ):
         py_compile.compile(str(path), doraise=True)
 
@@ -89,7 +83,6 @@ def main() -> None:
     run_source_check(NORMATIVE_SOURCE_REFERENCES, "normative source references")
     run_source_check(NORMATIVE_LOCATORS, "normative locators")
     run_source_check(NORMATIVE_CURRENCY, "normative currency")
-    run_source_check(NORMATIVE_RECONCILIATION, "normative reconciliation")
     run_source_check(NORMATIVE_FALSE_COVERAGE, "normative false coverage")
     run_source_check(NORMATIVE_ATOMICITY, "normative atomicity")
     run_source_check(NORMATIVE_ATOMIC_CONTRACT, "normative atomic contract")
@@ -98,8 +91,7 @@ def main() -> None:
     run_source_check(NORMATIVE_COVERAGE, "normative coverage")
     run_source_check(NORMATIVE_TRACEABILITY, "normative traceability", "--strict-evidence")
     run_source_check(NORMATIVE_PROOF_STATE, "normative proof state")
-    run_source_check(N14_VALIDATOR_CONTRACT, "N14 validator contract")
-    run_source_check(N15_B2A_ARTICLE_CONTRACT, "N15-B2A article contract")
+    run_source_check(VALIDATOR_CONTRACT, "validator contract")
 
     completed = subprocess.run(
         [sys.executable, str(CLI), "--help"],

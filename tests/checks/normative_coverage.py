@@ -8,9 +8,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tests" / "checks"))
 
 from normative_catalog import load_catalog, rule_map
 from normative_full import full_rule_map, load_full_contract
+from normative_traceability import load_evidence_registry, load_runner_checks
 
 
 def fail(message: str) -> None:
@@ -42,8 +44,9 @@ def main() -> None:
                 f"full-contract review {contract_reviewed}; review affected rules first"
             )
 
-    runner = (ROOT / "tests" / "run.py").read_text(encoding="utf-8")
-    gate_checks = set(re.findall(r'Check\("([^"]+)"', runner))
+    runner_checks = load_runner_checks()
+    gate_checks = set(runner_checks)
+    registered_checks = set(load_evidence_registry(runner_checks))
 
     cli = (ROOT / "tools" / "validate-ufc-pdf.py").read_text(encoding="utf-8")
     web = (ROOT / "validator" / "app.js").read_text(encoding="utf-8")
@@ -54,7 +57,7 @@ def main() -> None:
     if unknown_rules:
         fail("validator references unknown base rules: " + ", ".join(unknown_rules))
 
-    known_checks = gate_checks | validator_checks
+    known_checks = gate_checks | validator_checks | registered_checks
     uncovered = sorted(
         rule_id
         for rule_id, rule in rules.items()
@@ -78,6 +81,7 @@ def main() -> None:
         f"sources={len(catalog['sources'])} rules={len(rules)} "
         f"automatic={automatic} manual_or_conditional={manual} "
         f"project_policy={project_policy} runner_gates={len(gate_checks)} "
+        f"registered_evidence={len(registered_checks)} "
         f"validator_checks={len(validator_checks)} "
         f"reviewed={contract_reviewed.isoformat()}"
     )

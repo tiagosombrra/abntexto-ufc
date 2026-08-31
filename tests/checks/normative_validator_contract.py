@@ -15,7 +15,7 @@ CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 
 sys.path.insert(0, str(ROOT / "tools"))
 from normative_catalog import load_catalog, rule_map  # noqa: E402
-from normative_n14_cross_surface import main as cross_surface_main  # noqa: E402
+from normative_cross_surface import main as cross_surface_main  # noqa: E402
 
 EXPECTED_PROFILES = ["strict", "portable", "accessibility"]
 EXPECTED_STATUSES = ["APROVADO", "REPROVADO", "ALERTA", "REVISÃO MANUAL", "NÃO APLICÁVEL"]

@@ -122,7 +122,7 @@ def build_false_coverage_matrix(source_commit_sha: str | None = None) -> dict[st
     proof = build_proof_matrix(source_commit_sha)
 
     atomic_ids = {rule["id"] for rule in atomic["rules"]}
-    promoted_ids = set(full["promoted_rule_ids"])
+    promoted_ids = set(full["extended_rule_ids"])
     full_ids = {rule["id"] for rule in full["rules"]}
     trace_rows = {row["rule_id"]: row for row in traceability["rows"]}
     proof_rows = {row["rule_id"]: row for row in proof["rows"]}

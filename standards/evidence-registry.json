@@ -30,7 +30,7 @@
       "type": "lower-level-check",
       "description": "Checks that distributed acknowledgement guidance contains the CAPES funding acknowledgement markers required by project policy when applicable.",
       "target": {
-        "script": "tests/v2-capes-guidance-check.sh",
+        "script": "tests/integration/capes-guidance.sh",
         "runner_gate": "frontmatter"
       }
     },
@@ -40,7 +40,7 @@
       "description": "Policy assertion that the visual catalog card is optional under the current UFC institutional act; behavior is exercised by the catalog-card gate.",
       "target": {
         "runner_gate": "catalog-card",
-        "script": "tests/v2-catalog-card-check.sh"
+        "script": "tests/integration/catalog-card.sh"
       }
     },
     {
@@ -49,8 +49,8 @@
       "description": "Literal font identity evidence, requiring inspection beyond portable fallback configuration.",
       "target": {
         "scripts": [
-          "tests/v2-font-config-check.sh",
-          "tests/v2-font-poc.sh"
+          "tests/integration/font-config.sh",
+          "tests/integration/font-poc.sh"
         ],
         "ci_evidence": [
           "windows-font-poc",
@@ -64,7 +64,7 @@
       "description": "Rendered PDF A4 page-size assertion.",
       "target": {
         "runner_gate": "pdf-geometry",
-        "script": "tests/v2-pdf-geometry-check.sh"
+        "script": "tests/integration/pdf-geometry.sh"
       }
     },
     {
@@ -73,7 +73,7 @@
       "description": "Rendered PDF margin geometry assertion.",
       "target": {
         "runner_gate": "pdf-geometry",
-        "script": "tests/v2-pdf-geometry-check.sh"
+        "script": "tests/integration/pdf-geometry.sh"
       }
     },
     {
@@ -86,8 +86,8 @@
           "profile-pdfa"
         ],
         "scripts": [
-          "tests/v2-pdfa-check.sh",
-          "tests/v2-profile-pdfa-check.sh"
+          "tests/integration/pdfa.sh",
+          "tests/integration/profile-pdfa.sh"
         ]
       }
     },
@@ -97,7 +97,7 @@
       "description": "Semantic alias for the document-profile matrix runner gate.",
       "target": {
         "runner_gate": "profiles",
-        "script": "tests/v2-profile-matrix-check.sh"
+        "script": "tests/integration/profile-matrix.sh"
       }
     },
     {
@@ -105,9 +105,7 @@
       "type": "ci-job",
       "description": "Windows literal-font certification path including embedding and PDF/A evidence.",
       "target": {
-        "workflow": ".github/workflows/latex-preflight.yml",
-        "job": "v2-font-windows-pdfa",
-        "status_context": "abntexto-ufc/windows-font-poc"
+        "script": "tests/integration/windows-font-pdfa.sh"
       }
     },
     {
@@ -115,9 +113,7 @@
       "type": "ci-job",
       "description": "Windows literal-font build proof using Microsoft font files and TeX Live 2026.",
       "target": {
-        "workflow": ".github/workflows/latex-preflight.yml",
-        "job": "v2-font-windows-poc",
-        "status_context": "abntexto-ufc/windows-font-build"
+        "script": "tests/integration/font-poc.sh"
       }
     }
   ]
