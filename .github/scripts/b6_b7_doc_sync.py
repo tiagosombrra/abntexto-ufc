@@ -1,0 +1,238 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+CHECKPOINT = "4c25c27b758e4b99db11187b34b9043776566871"
+B6_RUN = 33529190303
+
+
+def replace_once(text: str, old: str, new: str, label: str) -> str:
+    if old not in text:
+        raise SystemExit(f"{label} expected text missing: {old}")
+    return text.replace(old, new, 1)
+
+
+handoff_path = Path("docs/HANDOFF-V3.0.0.md")
+handoff = handoff_path.read_text(encoding="utf-8")
+for old, new in {
+    "- Active implementation stage: **R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates**.": "- Active implementation stage: **R1-BLOCK-7 — Optimized Remote Workflow Restoration**.",
+    "- Active B6 work item: **B6-B — canonical cheap/static validation gate**.": "- Active B7 work item: **B7-A — workflow/runner dependency inventory and orchestration design**.",
+    "- Active B6 focus: **implement one side-effect-free source-only gate from the completed B6-A dependency/runtime classification**.": "- Active B7 focus: **restore remote orchestration as a thin layer over certified repository entry points without duplicating gate logic**.",
+    "- B6 operational issue: **#207**.": "- B7 operational issue: **#213**.",
+    "- Latest certified clean implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.": f"- Latest certified clean implementation checkpoint: **`{CHECKPOINT}`**.",
+    "Permanent CI remains intentionally absent during structural R1 reconstruction.": "Permanent workflow orchestration is now B7-owned; B6 closed with zero permanent workflows on `main` and a certified local/static entry point for B7 to consume.",
+}.items():
+    handoff = replace_once(handoff, old, new, "HANDOFF")
+
+handoff_tail = f"""## R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates
+
+**DONE.** Operational issue #207 closed; certified B6 functional closure checkpoint: **`{CHECKPOINT}`**.
+
+B6 established a single permanent side-effect-free source-only validation entry point while keeping the broad integration/release runner separate.
+
+### B6-A — Validation inventory and dependency classification
+
+**DONE.** Run `33525282652` PASS inventoried 69 Python checkers, 74 shell integrations, four validator files and 26 broad-runner checks. Refinement run `33525499620` failed closed only to classify two exclusions: one checker requires generated PDF inputs and one cheap checker writes evidence. Nineteen other measured candidates passed without working-tree side effects. Redundancy analysis established `validator_source.py` as the aggregate normative/validator source contract.
+
+### B6-B — Canonical permanent static gate
+
+**DONE** through PR #211 at **`{CHECKPOINT}`**. The permanent surface is `tests/static.py` plus `make static-check`. It validates tracked Python/JSON/shell/JavaScript syntax, diff integrity, canonical identity, repository contract, aggregate validator/normative source contracts, normative object scope and reference-guide contract. README and architecture document the ownership boundary. Runs `33527802639` and `33528078426` PASS certified normal execution, pre-existing dirty-tree preservation, malformed tracked JSON rejection and failure-path status protection. No permanent workflow was added in B6.
+
+### B6-C — Residual audit and B7 handoff
+
+**DONE — zero-diff certification.** Final run **`{B6_RUN}` PASS** reconfirmed exact five-check ownership, both classified exclusions, zero TeX/PDF/network/distribution/Windows-font/PDF-A behavior, zero side effects and zero permanent workflows on `main`. Observed `make static-check` cost was **1.859 s** on the hosted Ubuntu runner. The temporary executor self-removed and the audit branch is zero-diff versus `main`; no B6-C implementation merge was required.
+
+## R1-BLOCK-7 — Optimized Remote Workflow Restoration
+
+**ACTIVE.** Operational issue #213. Entry certified implementation checkpoint: `{CHECKPOINT}`.
+
+B7 restores GitHub Actions as a thin orchestration layer over repository-owned entry points. It must consume `make static-check`, `make check` and `make release-check` where appropriate rather than duplicate their internal checks in YAML. Remote validation is the canonical CI execution path; developer-local state is not required for certification.
+
+Planned lots:
+
+- **B7-A ACTIVE:** historical/current workflow and runner dependency inventory; define stable job names, triggers, concurrency, caching and PR/release ownership;
+- **B7-B PENDING:** permanent fast/static workflow consuming `make static-check`;
+- **B7-C PENDING:** optimized Linux integration/release orchestration without forcing heavy/release-only work onto every intermediate commit;
+- **B7-D PENDING:** residual workflow audit, status-check/branch-protection recommendation and B8 handoff.
+
+B8 retains final Windows/font/PDF-A certification. V3-R2 retains runtime/API migration. Actual CTAN submission remains an explicit release action outside B7.
+"""
+handoff, count = re.subn(r"## R1-BLOCK-6[\s\S]*\Z", handoff_tail, handoff, count=1)
+if count != 1:
+    raise SystemExit("HANDOFF B6 tail replacement failed")
+handoff_path.write_text(handoff.rstrip() + "\n", encoding="utf-8")
+
+roadmap_path = Path("docs/ROADMAP-V3.0.0.md")
+roadmap = roadmap_path.read_text(encoding="utf-8")
+for old, new in {
+    "**V3-R1 ACTIVE — R1-BLOCK-5 done; R1-BLOCK-6 active; B6-A done; B6-B active.**": "**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A active.**",
+    "**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 DONE → R1-B6 ACTIVE → R1-B7…B8 BLOCKED → R2+ BLOCKED**": "**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 DONE → R1-B6 DONE → R1-B7 ACTIVE → R1-B8 BLOCKED → R2+ BLOCKED**",
+    "- B5 operational issue: #199.": "- B7 operational issue: #213.",
+    "- Latest certified implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.": f"- Latest certified implementation checkpoint: **`{CHECKPOINT}`**.",
+}.items():
+    roadmap = replace_once(roadmap, old, new, "ROADMAP")
+
+roadmap_tail = f"""## R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates
+
+**DONE.** Operational issue #207 closed. Certified functional closure checkpoint: **`{CHECKPOINT}`**.
+
+### B6-A — Validation inventory and dependency classification
+
+**DONE.** Run `33525282652` inventoried 69 Python checkers, 74 shell integrations, four validator files and 26 broad-runner checks. Run `33525499620` failed closed only to classify one PDF-input checker and one evidence-writing checker out of the source-only tier. Nineteen other candidates passed without working-tree side effects. The final composition avoids redundant execution because `validator_source.py` already aggregates the central normative/validator source chain.
+
+### B6-B — Canonical permanent static gate
+
+**DONE** via PR #211 at **`{CHECKPOINT}`**. `tests/static.py` + `make static-check` is the permanent cheap/source-only contract. Runs `33527802639` and `33528078426` PASS certified syntax/data checks, identity/contracts, no-side-effect behavior, dirty-tree preservation and malformed JSON rejection. README and architecture record the validation-tier ownership; `tests/run.py` remains the broader integration/release runner.
+
+### B6-C — Residual audit and B7 handoff
+
+**DONE — zero-diff.** Run **`{B6_RUN}` PASS** reconfirmed exact gate composition, both exclusions, zero heavy/runtime leakage, zero side effects and zero permanent workflows. Observed cost was **1.859 s** on hosted Ubuntu. No B6-C implementation merge was required.
+
+## R1-BLOCK-7 — Optimized Remote Workflow Restoration
+
+**ACTIVE.** Operational issue #213. Entry checkpoint: `{CHECKPOINT}`.
+
+B7 restores permanent GitHub Actions as orchestration over current repository entry points; workflow YAML must not duplicate gate internals.
+
+### B7-A — Workflow/runner dependency inventory and orchestration design
+
+**ACTIVE.** Inventory successful historical workflows, current `make static-check`/`make check`/`make release-check` dependencies, stable job names, triggers, concurrency, caching and path ownership before creating permanent workflows.
+
+### B7-B — Permanent fast/static workflow
+
+**PENDING.** Add the permanent remote fast job consuming `make static-check` directly.
+
+### B7-C — Optimized Linux integration/release orchestration
+
+**PENDING.** Restore integration/release jobs around current entry points, keeping heavy or release-only work off every intermediate commit.
+
+### B7-D — Residual audit and B8 handoff
+
+**PENDING.** Audit workflow ownership/status semantics and hand final Windows/font/PDF-A certification to B8.
+
+## Remaining R1 blocks
+
+- **R1-B4 DONE** — tools/validator/metadata rebaseline.
+- **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
+- **R1-B6 DONE** — permanent cheap/static fail-closed gate at `{CHECKPOINT}`.
+- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-A active.
+- **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
+
+## Later phases
+
+- **V3-R2:** direct runtime/API internationalization and Portuguese project API migration.
+- **V3-R3:** standards/tests/language semantic hardening.
+- **V3-R4:** certification only.
+- **V3-R5:** foundation freeze plus current migration/user/maintainer documentation.
+- **V3-A1/A2:** article work resumes only against the certified v3 foundation.
+
+## Immediate action
+
+Start **B7-A** from canonical remote `main` at certified implementation checkpoint `{CHECKPOINT}` using issue #213. Inventory historical/current workflow patterns and current runner dependencies, then define optimized permanent orchestration that consumes repository entry points rather than duplicating them. B8 retains final Windows/font/PDF-A certification and V3-R2 retains runtime/API migration.
+"""
+roadmap, count = re.subn(r"## R1-BLOCK-6[\s\S]*\Z", roadmap_tail, roadmap, count=1)
+if count != 1:
+    raise SystemExit("ROADMAP B6 tail replacement failed")
+roadmap_path.write_text(roadmap.rstrip() + "\n", encoding="utf-8")
+
+state_path = Path("release/v3-roadmap.json")
+state = json.loads(state_path.read_text(encoding="utf-8"))
+state["stage"] = "R1-BLOCK-7"
+state["stage_name"] = "optimized remote workflow restoration"
+state["last_certified_clean_checkpoint_sha"] = CHECKPOINT
+b6 = state["blocks"]["R1-BLOCK-6"]
+b6.update({
+    "status": "DONE",
+    "closure_sha": CHECKPOINT,
+    "active_work_item": None,
+    "active_sub_item": None,
+    "b6_a_status": "DONE",
+    "b6_b_status": "DONE",
+    "b6_c_status": "DONE",
+    "planned_lots": {
+        "B6-A": "DONE - validation inventory dependency measurement and cheap/static classification",
+        "B6-B": "DONE - canonical permanent cheap/static gate implementation and consumer reconciliation",
+        "B6-C": "DONE - final residual audit zero-diff closeout and B7 handoff",
+    },
+    "b6_a_results": {
+        "inventory_run_id": 33525282652,
+        "refinement_run_id": 33525499620,
+        "python_checkers": 69,
+        "shell_integrations": 74,
+        "validator_files": 4,
+        "broad_runner_checks": 26,
+        "source_only_exclusions": 2,
+        "classification_complete": True,
+    },
+    "b6_b_results": {
+        "implementation_pr": 211,
+        "closure_sha": CHECKPOINT,
+        "validation_runs": [33527802639, 33528078426],
+        "entry_point": "make static-check",
+        "implementation": "tests/static.py",
+        "source_checks": 5,
+        "side_effects": 0,
+        "tex_pdf": 0,
+        "network": 0,
+        "permanent_workflows_added": 0,
+    },
+    "b6_c_results": {
+        "final_audit_run_id": B6_RUN,
+        "observed_static_gate_seconds": 1.859,
+        "source_checks": 5,
+        "excluded_pdf_input_checkers": 1,
+        "excluded_evidence_writers": 1,
+        "side_effects": 0,
+        "heavy_runtime_leakage": 0,
+        "permanent_workflows_present": 0,
+        "audit_branch_changed_files_vs_main": 0,
+        "implementation_merge_required": False,
+        "normative_semantics_changed": False,
+        "proof_state_changed": False,
+    },
+})
+state["blocks"]["R1-BLOCK-7"] = {
+    "status": "ACTIVE",
+    "name": "optimized remote workflow restoration",
+    "entry_checkpoint_sha": CHECKPOINT,
+    "operational_issue": 213,
+    "active_work_item": "B7-A",
+    "active_sub_item": "B7-A",
+    "scope": [
+        "historical and current workflow/runner dependency inventory",
+        "permanent remote orchestration consuming repository-owned validation entry points",
+        "fast static job using make static-check without duplicated YAML logic",
+        "optimized Linux integration and release orchestration with bounded heavy-job cadence",
+        "stable job names concurrency caching and evidence receipts for later branch protection",
+    ],
+    "constraints": [
+        "do not duplicate repository gate internals in workflow YAML",
+        "do not perform V3-R2 runtime API migration",
+        "do not perform actual CTAN submission or immutable tag changes",
+        "leave final Windows font and PDF-A certification to B8",
+        "preserve normative rule IDs values tolerances locators and proof state",
+        "workflow changes require remote validation before merge",
+    ],
+    "planned_lots": {
+        "B7-A": "ACTIVE - workflow and runner dependency inventory plus orchestration design",
+        "B7-B": "PENDING - permanent fast/static workflow consuming make static-check",
+        "B7-C": "PENDING - optimized Linux integration/release workflow restoration",
+        "B7-D": "PENDING - residual workflow audit branch-protection recommendation and B8 handoff",
+    },
+    "b7_a_status": "ACTIVE",
+    "b7_b_status": "PENDING",
+    "b7_c_status": "PENDING",
+    "b7_d_status": "PENDING",
+}
+state["blocks"]["R1-BLOCK-8"]["status"] = "BLOCKED"
+state["next_action"] = (
+    "Start R1-BLOCK-7 B7-A from canonical remote main at certified implementation checkpoint "
+    f"{CHECKPOINT} using issue #213. Inventory historical/current workflow patterns, current "
+    "make static-check/make check/make release-check dependencies, job names, triggers, concurrency "
+    "and caching before restoring permanent workflows. Keep B8 Windows/font/PDF-A certification "
+    "and V3-R2 runtime/API work out of scope."
+)
+state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
