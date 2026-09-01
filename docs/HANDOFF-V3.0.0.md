@@ -4,14 +4,17 @@ Updated: 2026-09-01
 
 ## Checkpoint
 
+- Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-3 — Semantic / Path-Consumer Closure**.
 - Active Block 3 work item: **B3-D — Operational v1/v2 identity and legacy-code purge**.
 - Active branch/trunk: `main`.
-- Latest certified clean implementation checkpoint: `094b369a077009f212adb33e8a814ee9bb167b4a`.
+- Latest certified clean implementation checkpoint: `2ad7da8eae03c40fbea3d875843628387ec0e25d`.
 - R1-S2 trunk promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 control-plane closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
+
+The repository was renamed from its former GitHub repository name to `abntexto-ufc` on 2026-09-01. The GitHub repository ID, history, `main`, tags, issues, pull requests, and governance remain the same. The old repository name is not an active project identity and must not be reintroduced into project-owned technical surfaces.
 
 `main` remains the canonical trunk and merge target. Short-lived task branches are permitted by `AGENTS.md`, but canonical phase/stage authority remains in the control-plane files on `main`.
 
@@ -123,15 +126,19 @@ Completed bounded lots:
 
 - **B3-D1:** stale runner identity removed from catalog-card, research-project and font POC;
 - **B3-D2A:** stale V2 diagnostic/gate labels removed from six internal runners; merged at `f4d703b34df53868f782598dd9502c0da684c345`;
-- **B3-D2B:** stale v2-qualified temp/log identity removed from algorithm-numbering, object-geometry, minted, duplex-backmatter and multivolume; producer/consumer paths were changed together; merged at `094b369a077009f212adb33e8a814ee9bb167b4a`.
+- **B3-D2B:** stale v2-qualified temp/log identity removed from algorithm-numbering, object-geometry, minted, duplex-backmatter and multivolume; producer/consumer paths were changed together; merged at `094b369a077009f212adb33e8a814ee9bb167b4a`;
+- **B3-D3:** canonical active version identity moved from v2.1.0 to v3.0.0 in `Makefile` and `abntexto-ufc.cls`; the broken legacy `distribution-source` coordinated gate was removed; the 281-line dead `tests/integration/distribution.sh` runner was deleted; merged at `2ad7da8eae03c40fbea3d875843628387ec0e25d`.
+
+B3-D3 established that the deleted distribution runner was not a valid compatibility surface: it referenced missing `tests/v2-*` files, missing legacy `ufctex.cls`, removed workflows, and the obsolete root `main.tex`/`frontmatter`/`chapters`/`backmatter` layout. Distribution/public-bundle validation will be rebuilt from the current architecture in R1-BLOCK-5 rather than preserving or repairing that dead script.
 
 The live-tree audit distinguishes four legitimate retained legacy-reference classes: **certified history**, **migration contract**, **compatibility boundary**, and **negative test**. Everything else must be treated as active residue until proven otherwise.
 
-New non-negotiable B3-D closure rule: **dead or superseded legacy implementation/test code is removed, not renamed or stored as an archive inside the active tree.** In particular, surviving `tests/v2-*` and other v1/v2-era helpers must be audited for a real current or assigned future consumer. A file that has no such consumer is deletion candidate; a file assigned to B5/R2 may remain only with an explicit classification.
+Non-negotiable B3-D closure rule: **dead or superseded legacy implementation/test code is removed, not renamed or stored as an archive inside the active tree.** Surviving v1/v2-era helpers must be audited for a real current or assigned future consumer. A file that has no such consumer is a deletion candidate; a file assigned to B5/R2 may remain only with an explicit classification.
 
 B3-D closes only when:
 
 - current file/directory, runner, temp, log and gate identity is free of v1/V1/v2/V2 qualification;
+- canonical current package/class metadata identifies target v3.0.0;
 - no dead legacy implementation/test artifact remains merely for reference;
 - every remaining textual legacy-version reference is explicitly classified;
 - runtime/API compatibility work assigned to R2 has not been rewritten prematurely.
@@ -177,8 +184,9 @@ Do not rerun completed checks unless the current state or a relevant change just
 13. `da775552be190bf09d8a790c33e9f7f4582da699` — B3-C1 runner/evidence integrity repairs merged through PR #168.
 14. `625e82f9ef4780989d4635e500d72d09eab02992` — B3-C2 final checker repairs merged through PR #169; B3-C closure checkpoint.
 15. `f4d703b34df53868f782598dd9502c0da684c345` — B3-D2A stale diagnostic identity cleanup.
-16. `094b369a077009f212adb33e8a814ee9bb167b4a` — B3-D2B stale temp/log identity cleanup; current certified implementation checkpoint.
+16. `094b369a077009f212adb33e8a814ee9bb167b4a` — B3-D2B stale temp/log identity cleanup.
+17. `2ad7da8eae03c40fbea3d875843628387ec0e25d` — B3-D3 active v3 identity and dead distribution-runner purge; current certified implementation checkpoint.
 
 ## Immediate action
 
-Continue **B3-D** from canonical remote `main` at `094b369a077009f212adb33e8a814ee9bb167b4a`. Finish the remaining operational v2/V2 runner cleanup, then audit surviving v1/v2-era test/distribution helpers for actual consumers. Delete dead/superseded artifacts, classify legitimate retained references, and only then advance to B3-E and B3-F.
+Continue **B3-D** from canonical remote `main` at `2ad7da8eae03c40fbea3d875843628387ec0e25d`. Finish remaining operational v2/V2 runner cleanup, classify surviving v1/v2 references, and audit distribution/release helpers for a real B5 consumer. Delete dead/superseded artifacts rather than preserving them. Then advance to B3-E and B3-F.
