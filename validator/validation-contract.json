@@ -15,8 +15,8 @@
     "browser_network_upload_allowed": false
   },
   "profiles": ["strict", "portable", "accessibility"],
-  "statuses": ["APROVADO", "REPROVADO", "ALERTA", "REVISÃO MANUAL", "NÃO APLICÁVEL"],
-  "verdicts": ["REPROVADO", "REVISÃO NECESSÁRIA", "APROVADO NOS CHECKS AUTOMÁTICOS, COM RESSALVAS", "APROVADO NOS CHECKS AUTOMÁTICOS"],
+  "statuses": ["PASS", "FAIL", "WARNING", "MANUAL REVIEW", "NOT APPLICABLE"],
+  "verdicts": ["FAIL", "REVIEW REQUIRED", "AUTOMATED CHECKS PASSED WITH WARNINGS", "AUTOMATED CHECKS PASSED"],
   "surfaces": {
     "web-lite": {
       "implementation": "validator/app.js",

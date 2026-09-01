@@ -6,7 +6,7 @@ from pathlib import Path
 
 from normative_catalog import get_rule, load_catalog, rule_map, source_label
 
-PASS='APROVADO'; FAIL='REPROVADO'; WARN='ALERTA'; REVIEW='REVISÃO MANUAL'; NA='NÃO APLICÁVEL'
+PASS='PASS'; FAIL='FAIL'; WARN='WARNING'; REVIEW='MANUAL REVIEW'; NA='NOT APPLICABLE'
 MM=72/25.4
 CATALOG=load_catalog(); RULES=rule_map(CATALOG)
 PAGE=RULES['page.a4']['values']; RECTO=RULES['margin.recto']['values']
@@ -75,9 +75,9 @@ def norm(s):
 def compact(s): return re.sub(r'[^a-z0-9]','',norm(s).lower())
 def verdict(cs):
     if any(c.mandatory and c.status==FAIL for c in cs): return FAIL
-    if any(c.mandatory and c.status==REVIEW for c in cs): return 'REVISÃO NECESSÁRIA'
-    if any(c.status in (WARN,REVIEW) for c in cs): return 'APROVADO NOS CHECKS AUTOMÁTICOS, COM RESSALVAS'
-    return 'APROVADO NOS CHECKS AUTOMÁTICOS'
+    if any(c.mandatory and c.status==REVIEW for c in cs): return 'REVIEW REQUIRED'
+    if any(c.status in (WARN,REVIEW) for c in cs): return 'AUTOMATED CHECKS PASSED WITH WARNINGS'
+    return 'AUTOMATED CHECKS PASSED'
 
 def check_layout(pages):
     bad=[i for i,(w,h,_) in enumerate(pages,1) if abs(w-A4[0])>A4_TOLERANCE or abs(h-A4[1])>A4_TOLERANCE]

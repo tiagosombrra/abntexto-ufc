@@ -7,70 +7,70 @@
       "checks": [
         {
           "id": "layout.a4",
-          "status": "APROVADO",
+          "status": "PASS",
           "mandatory": true
         },
         {
           "id": "catalog.optional",
-          "status": "NÃO APLICÁVEL",
+          "status": "NOT APPLICABLE",
           "mandatory": false
         }
       ],
-      "expected_verdict": "APROVADO NOS CHECKS AUTOMÁTICOS"
+      "expected_verdict": "AUTOMATED CHECKS PASSED"
     },
     {
       "id": "nonmandatory-warning",
       "checks": [
         {
           "id": "meta.lang",
-          "status": "ALERTA",
+          "status": "WARNING",
           "mandatory": false
         }
       ],
-      "expected_verdict": "APROVADO NOS CHECKS AUTOMÁTICOS, COM RESSALVAS"
+      "expected_verdict": "AUTOMATED CHECKS PASSED WITH WARNINGS"
     },
     {
       "id": "mandatory-review",
       "checks": [
         {
           "id": "approval.signatures",
-          "status": "REVISÃO MANUAL",
+          "status": "MANUAL REVIEW",
           "mandatory": true
         }
       ],
-      "expected_verdict": "REVISÃO NECESSÁRIA"
+      "expected_verdict": "REVIEW REQUIRED"
     },
     {
       "id": "mandatory-failure",
       "checks": [
         {
           "id": "layout.a4",
-          "status": "REPROVADO",
+          "status": "FAIL",
           "mandatory": true
         }
       ],
-      "expected_verdict": "REPROVADO"
+      "expected_verdict": "FAIL"
     },
     {
       "id": "failure-precedence",
       "checks": [
         {
           "id": "access.alt",
-          "status": "REVISÃO MANUAL",
+          "status": "MANUAL REVIEW",
           "mandatory": true
         },
         {
           "id": "layout.margins",
-          "status": "REPROVADO",
+          "status": "FAIL",
           "mandatory": true
         },
         {
           "id": "meta.title",
-          "status": "ALERTA",
+          "status": "WARNING",
           "mandatory": false
         }
       ],
-      "expected_verdict": "REPROVADO"
+      "expected_verdict": "FAIL"
     }
   ],
   "alias_vectors": [
@@ -91,7 +91,7 @@
       "category": "Tipografia",
       "rule": "Família literal",
       "source": "Fonte controlada",
-      "status": "APROVADO",
+      "status": "PASS",
       "evidence": "synthetic",
       "correction": "",
       "mandatory": true,
@@ -105,7 +105,7 @@
       "category": "Tipografia",
       "rule": "Família literal",
       "source": "Fonte controlada",
-      "status": "APROVADO",
+      "status": "PASS",
       "evidence": "synthetic",
       "correction": "",
       "mandatory": true,
