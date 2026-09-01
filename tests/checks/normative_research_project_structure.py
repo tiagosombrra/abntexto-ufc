@@ -19,7 +19,7 @@ SCENARIO = ROOT / "standards" / "research-project-structure-final-pdf-scenario.j
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"project structure oracle failed: {message}")
+    raise SystemExit(f"project structure validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:

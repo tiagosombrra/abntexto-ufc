@@ -27,7 +27,7 @@
     "table_source_marker": "UFCIBGESRC"
   },
   "locator_ruleset": "objects.table-ibge",
-  "oracle_extension": "standards/vector-rule-validation-extension.json",
+  "validation_extension": "standards/vector-rule-validation-extension.json",
   "measurement": {
     "vector_tool": "pdftocairo -svg",
     "text_tool": "pdftotext -bbox-layout",

@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-section-hierarchy-test.tex"
-job="textual-oracle-section-hierarchy"
+job="validation-section-hierarchy"
 evidence="artifacts/normative-textual/section-hierarchy.json"
 log="/tmp/abntexto-ufc-v2-section-hierarchy.log"
 

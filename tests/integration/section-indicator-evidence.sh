@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-section-indicator-test.tex"
-job="textual-oracle-section-indicator"
+job="validation-section-indicator"
 evidence="artifacts/normative-textual/section-indicator.json"
 log="/tmp/abntexto-ufc-v2-section-indicator.log"
 

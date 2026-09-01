@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-apud-presentation-test.tex"
-job="textual-oracle-apud-presentation"
+job="validation-apud-presentation"
 evidence="artifacts/normative-textual/apud-presentation.json"
 latex_log="/tmp/abntexto-ufc-v2-apud-presentation.log"
 biber_log="/tmp/abntexto-ufc-v2-apud-presentation-biber.log"

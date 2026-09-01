@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-subsection-spacing-test.tex"
-job="textual-oracle-subsection-spacing"
+job="validation-subsection-spacing"
 evidence="artifacts/normative-textual/subsection-spacing.json"
 log="/tmp/abntexto-ufc-v2-subsection-spacing.log"
 

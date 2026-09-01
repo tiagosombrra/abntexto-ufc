@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-section-multiline-hanging-test.tex"
-job="textual-oracle-section-multiline-hanging"
+job="validation-section-multiline-hanging"
 evidence="artifacts/normative-textual/section-multiline-hanging.json"
 log="/tmp/abntexto-ufc-v2-section-multiline-hanging.log"
 

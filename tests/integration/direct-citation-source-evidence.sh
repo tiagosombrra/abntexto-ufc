@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-direct-citation-source-test.tex"
-job="textual-oracle-direct-citation-source"
+job="validation-direct-citation-source"
 evidence="artifacts/normative-textual/direct-citation-source.json"
 latex_log="/tmp/abntexto-ufc-v2-direct-citation-source.log"
 biber_log="/tmp/abntexto-ufc-v2-direct-citation-source-biber.log"

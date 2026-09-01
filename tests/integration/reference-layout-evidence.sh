@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/reference-layout-test.tex"
-job="reference-layout-oracle"
+job="reference-layout-validation"
 evidence="artifacts/normative-references/reference-layout.json"
 latex_log="/tmp/abntexto-ufc-v2-reference-layout.log"
 biber_log="/tmp/abntexto-ufc-v2-reference-layout-biber.log"

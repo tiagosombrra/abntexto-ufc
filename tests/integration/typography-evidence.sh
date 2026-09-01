@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-typography-test.tex"
-job="textual-oracle-typography"
+job="validation-typography"
 evidence="artifacts/normative-layout/typography.json"
 log="/tmp/abntexto-ufc-v2-typography.log"
 

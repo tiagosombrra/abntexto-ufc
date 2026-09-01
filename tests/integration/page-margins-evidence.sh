@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-page-margins-test.tex"
-job="textual-oracle-page-margins"
+job="validation-page-margins"
 evidence="artifacts/normative-layout/page-margins.json"
 log="/tmp/abntexto-ufc-v2-page-margins.log"
 

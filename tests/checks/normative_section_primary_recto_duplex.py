@@ -20,7 +20,7 @@ RULE_ID = "section.primary.recto-duplex"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Primary recto duplex oracle failed: {message}")
+    raise SystemExit(f"Primary recto duplex validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:

@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/vector-rule-calibration-test.tex"
-job="vector-rule-oracle-calibration"
+job="vector-rule-validation-calibration"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {
