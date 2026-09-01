@@ -67,12 +67,12 @@ required = {
 missing = sorted(required - checks.keys())
 if missing:
     raise SystemExit(f'missing validator checks: {missing}')
-failed = [item for item in report['checks'] if item['mandatory'] and item['status'] == 'REPROVADO']
+failed = [item for item in report['checks'] if item['mandatory'] and item['status'] == 'FAIL']
 if failed:
     raise SystemExit('; '.join(f"{item['id']}: {item['evidence']}" for item in failed))
-if checks['layout.margins']['status'] != 'APROVADO':
+if checks['layout.margins']['status'] != 'PASS':
     raise SystemExit(checks['layout.margins']['evidence'])
-if checks['font.literal']['status'] not in {'APROVADO', 'ALERTA'}:
+if checks['font.literal']['status'] not in {'PASS', 'WARNING'}:
     raise SystemExit('portable profile must not fail only because a textual fallback is used')
 PY
 

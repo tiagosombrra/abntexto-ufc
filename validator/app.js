@@ -2,7 +2,7 @@ import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build
 import {normativeCatalog,normativeRules,normativeSources} from "./normative-catalog.js";
 pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/build/pdf.worker.mjs";
 
-const PASS="APROVADO",FAIL="REPROVADO",WARN="ALERTA",REVIEW="REVISÃO MANUAL",NA="NÃO APLICÁVEL";
+const PASS="PASS",FAIL="FAIL",WARN="WARNING",REVIEW="MANUAL REVIEW",NA="NOT APPLICABLE";
 const MM=72/25.4,pageRule=normativeRules["page.a4"],rectoRule=normativeRules["margin.recto"];
 const A4=[pageRule.values.width_mm*MM,pageRule.values.height_mm*MM],TOL=pageRule.values.tolerance_pt??1.8,LEFT=rectoRule.values.left_mm*MM,RIGHT=rectoRule.values.right_mm*MM;
 const $=s=>document.querySelector(s); let report=null;
@@ -13,7 +13,7 @@ const sourceLabel=ruleId=>normativeRules[ruleId].sources.map(id=>normativeSource
 const normSource=ruleId=>`${sourceLabel(ruleId)} · ${normativeRules[ruleId].locator}`;
 const nck=(id,ruleId,category,label,status,evidence,correction="",mandatory=true,level="automático")=>{const r=normativeRules[ruleId];return ck(id,category,label,normSource(ruleId),status,evidence,correction,mandatory,level,ruleId,r.locator,r.normativity)};
 const isTextFallback=s=>{const x=compact(s);return x.includes("TEXGYRETERMESX")||(x.includes("TEXGYRETERMES")&&!x.includes("MATH"))||x.includes("TEXGYREHEROS")};
-const verdict=cs=>cs.some(c=>c.mandatory&&c.status===FAIL)?FAIL:cs.some(c=>c.mandatory&&c.status===REVIEW)?"REVISÃO NECESSÁRIA":cs.some(c=>[WARN,REVIEW].includes(c.status))?"APROVADO NOS CHECKS AUTOMÁTICOS, COM RESSALVAS":"APROVADO NOS CHECKS AUTOMÁTICOS";
+const verdict=cs=>cs.some(c=>c.mandatory&&c.status===FAIL)?FAIL:cs.some(c=>c.mandatory&&c.status===REVIEW)?"REVIEW REQUIRED":cs.some(c=>[WARN,REVIEW].includes(c.status))?"AUTOMATED CHECKS PASSED WITH WARNINGS":"AUTOMATED CHECKS PASSED";
 const CHECK_ID_ALIASES={"font.family":"font.literal","font.embedding":"font.embedded"};
 const reportCheck=c=>({id:CHECK_ID_ALIASES[c.id]??c.id,category:c.category,rule:c.rule,source:c.source,status:c.status,evidence:c.evidence,correction:c.correction,mandatory:c.mandatory,level:c.level,normative_rule:c.normativeRule,locator:c.locator,normativity:c.normativity});
 

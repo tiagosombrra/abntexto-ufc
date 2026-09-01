@@ -18,12 +18,12 @@ from normative_catalog import load_catalog, rule_map  # noqa: E402
 from normative_cross_surface import main as cross_surface_main  # noqa: E402
 
 EXPECTED_PROFILES = ["strict", "portable", "accessibility"]
-EXPECTED_STATUSES = ["APROVADO", "REPROVADO", "ALERTA", "REVISÃO MANUAL", "NÃO APLICÁVEL"]
+EXPECTED_STATUSES = ["PASS", "FAIL", "WARNING", "MANUAL REVIEW", "NOT APPLICABLE"]
 EXPECTED_VERDICTS = [
-    "REPROVADO",
-    "REVISÃO NECESSÁRIA",
-    "APROVADO NOS CHECKS AUTOMÁTICOS, COM RESSALVAS",
-    "APROVADO NOS CHECKS AUTOMÁTICOS",
+    "FAIL",
+    "REVIEW REQUIRED",
+    "AUTOMATED CHECKS PASSED WITH WARNINGS",
+    "AUTOMATED CHECKS PASSED",
 ]
 EXPECTED_POLICY = {
     "normative_contract_changed": False,
