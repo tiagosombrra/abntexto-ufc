@@ -189,9 +189,7 @@
       },
       "validation": {
         "mode": "not-applicable",
-        "checks": [
-          "distribution-source"
-        ]
+        "checks": []
       },
       "scope": "technical",
       "sources": [
