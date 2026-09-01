@@ -14,11 +14,14 @@ Block 3 internal sequence:
 
 **B3-A DONE → B3-B DONE → B3-C DONE → B3-D ACTIVE → B3-E PENDING → B3-F PENDING**
 
+- Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active branch/trunk: `main`.
-- Latest certified clean implementation checkpoint: `094b369a077009f212adb33e8a814ee9bb167b4a`.
+- Latest certified clean implementation checkpoint: `2ad7da8eae03c40fbea3d875843628387ec0e25d`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
+
+The GitHub repository was renamed to `abntexto-ufc` on 2026-09-01 without changing repository identity, history, tags, issues, pull requests, or governance. The former repository name is not an active technical identity.
 
 ## Authority and bootstrap
 
@@ -109,24 +112,28 @@ Issue #163 is closed as the B3-C operational continuity record. No temporary val
 
 **ACTIVE.**
 
-B3-D no longer means only cosmetic removal of `v2`/`V2` labels. It now closes both stale version-qualified technical identity and dead/superseded legacy implementation artifacts that survived earlier structural cleanup.
+B3-D closes stale version-qualified technical identity and dead/superseded legacy implementation artifacts that survived earlier structural cleanup.
 
 Completed bounded lots:
 
 - **B3-D1** — stale runner identity in catalog-card, research-project and font POC;
 - **B3-D2A** — stale `V2` gate/diagnostic labels removed from six runners, merged at `f4d703b34df53868f782598dd9502c0da684c345`;
-- **B3-D2B** — stale v2-qualified temporary fixture/log identity removed from five runners with producer/consumer paths changed together, merged at `094b369a077009f212adb33e8a814ee9bb167b4a`.
+- **B3-D2B** — stale v2-qualified temporary fixture/log identity removed from five runners with producer/consumer paths changed together, merged at `094b369a077009f212adb33e8a814ee9bb167b4a`;
+- **B3-D3** — active version identity moved from 2.1.0 to target 3.0.0 in `Makefile` and `abntexto-ufc.cls`; the broken `distribution-source` coordinated gate was removed; dead `tests/integration/distribution.sh` was deleted, merged at `2ad7da8eae03c40fbea3d875843628387ec0e25d`.
+
+B3-D3 confirmed that the removed distribution runner was dead legacy code, not a compatibility boundary: it required missing `tests/v2-*` helpers, missing `ufctex.cls`, removed workflows, and obsolete root-layout paths. Current distribution/public-bundle validation will be reconstructed in B5 from current paths and contracts.
 
 B3-D acceptance criteria:
 
 - zero active file/directory names that identify current engineering surfaces as `v1`, `V1`, `v2`, or `V2`;
 - zero current runner/log/temp/gate identity qualified as v1/v2;
+- canonical current package/class metadata identifies target v3.0.0;
 - dead or superseded v1/v2-era code/tests with no current consumer are removed rather than renamed or archived in the active tree;
 - every remaining textual v1/v2 reference is explicitly classifiable as certified history, migration contract, compatibility boundary, or negative test;
-- references to legacy distribution infrastructure are audited before deferral: they may remain only if they have an assigned current/future consumer in B5 or R2;
+- references to distribution/release helpers are audited before deferral and may remain only with an assigned future consumer;
 - no runtime/API compatibility boundary assigned to R2 is rewritten early.
 
-The live-tree audit has already confirmed that the current physical product layout is v3-oriented and does not contain an active v1/v2 product directory hierarchy. The remaining work is concentrated in inherited runner/test/distribution surfaces and explicit migration/compatibility references.
+The current physical product layout is v3-oriented and does not contain an active v1/v2 product hierarchy. Remaining B3-D work is concentrated in inherited runners and explicit legacy references.
 
 ### B3-E — Project-owned oracle terminology
 
@@ -182,4 +189,4 @@ Required conditions include:
 
 ## Immediate action
 
-Continue **B3-D** from canonical remote `main` at implementation checkpoint `094b369a077009f212adb33e8a814ee9bb167b4a`. Finish remaining operational v2/V2 runner cleanup, then audit the surviving v1/v2-era tests and distribution helpers. Delete dead/superseded code with no current or assigned future consumer; explicitly classify everything that remains as certified history, migration contract, compatibility boundary, or negative test. Then proceed to B3-E and B3-F without absorbing R2 or B5–B8 implementation work.
+Continue **B3-D** from canonical remote `main` at implementation checkpoint `2ad7da8eae03c40fbea3d875843628387ec0e25d`. Finish remaining operational v2/V2 runner cleanup, classify surviving legacy-version references, and audit release/distribution helpers for real B5 consumers. Delete dead/superseded artifacts rather than preserving them. Then proceed to B3-E and B3-F without absorbing R2 or B5–B8 implementation work.
