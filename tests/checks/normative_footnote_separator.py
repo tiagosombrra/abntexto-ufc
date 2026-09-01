@@ -3,36 +3,22 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
-import re
-import subprocess
 import sys
-import tempfile
-import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
+from pdf_vector_measurement import vector_rules
 
 SCENARIO = ROOT / "standards" / "footnote-separator-scenario.json"
 FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
 VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 RULE_ID = "footnote.separator.length"
 EXPECTED_RULE_IDS = [RULE_ID]
-NUMBER = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?"
-LINE_PATTERN = re.compile(
-    rf"^\s*M\s*({NUMBER})[\s,]+({NUMBER})\s+L\s*({NUMBER})[\s,]+({NUMBER})\s*$"
-)
-MATRIX_PATTERN = re.compile(
-    rf"^\s*matrix\(\s*({NUMBER})[\s,]+({NUMBER})[\s,]+({NUMBER})[\s,]+"
-    rf"({NUMBER})[\s,]+({NUMBER})[\s,]+({NUMBER})\s*\)\s*$"
-)
-IDENTITY = (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-VECTOR_AXIS_TOLERANCE_PT = 0.5
 
 
 def fail(message: str) -> None:
@@ -74,122 +60,6 @@ def unique_word(pages: list[Any], marker: str) -> tuple[Any, Any]:
     return matches[0]
 
 
-def local_name(tag: str) -> str:
-    return tag.rsplit("}", 1)[-1]
-
-
-def parse_matrix(value: str | None) -> tuple[float, float, float, float, float, float]:
-    if value is None:
-        return IDENTITY
-    match = MATRIX_PATTERN.fullmatch(value)
-    if not match:
-        fail(f"unsupported SVG transform: {value!r}")
-    return tuple(float(item) for item in match.groups())  # type: ignore[return-value]
-
-
-def compose(
-    outer: tuple[float, float, float, float, float, float],
-    inner: tuple[float, float, float, float, float, float],
-) -> tuple[float, float, float, float, float, float]:
-    a1, b1, c1, d1, e1, f1 = outer
-    a2, b2, c2, d2, e2, f2 = inner
-    return (
-        a1 * a2 + c1 * b2,
-        b1 * a2 + d1 * b2,
-        a1 * c2 + c1 * d2,
-        b1 * c2 + d1 * d2,
-        a1 * e2 + c1 * f2 + e1,
-        b1 * e2 + d1 * f2 + f1,
-    )
-
-
-def transform_point(
-    matrix: tuple[float, float, float, float, float, float],
-    x: float,
-    y: float,
-) -> tuple[float, float]:
-    a, b, c, d, e, f = matrix
-    return a * x + c * y + e, b * x + d * y + f
-
-
-def iter_vector_paths(
-    element: ET.Element,
-    inherited: tuple[float, float, float, float, float, float] = IDENTITY,
-    in_defs: bool = False,
-) -> Iterator[tuple[ET.Element, tuple[float, float, float, float, float, float]]]:
-    name = local_name(element.tag)
-    current_defs = in_defs or name == "defs"
-    current = compose(inherited, parse_matrix(element.attrib.get("transform")))
-    if name == "path" and not current_defs:
-        yield element, current
-    for child in element:
-        yield from iter_vector_paths(child, current, current_defs)
-
-
-def extract_horizontal_lines(svg_path: Path) -> list[dict[str, float | str]]:
-    try:
-        root = ET.parse(svg_path).getroot()
-    except (OSError, ET.ParseError) as exc:
-        fail(f"cannot parse SVG {svg_path}: {exc}")
-
-    lines: list[dict[str, float | str]] = []
-    for element, matrix in iter_vector_paths(root):
-        if element.attrib.get("fill") != "none":
-            continue
-        stroke = element.attrib.get("stroke")
-        if not stroke or stroke == "none":
-            continue
-        match = LINE_PATTERN.fullmatch(element.attrib.get("d", ""))
-        if not match:
-            continue
-        x1, y1, x2, y2 = (float(item) for item in match.groups())
-        tx1, ty1 = transform_point(matrix, x1, y1)
-        tx2, ty2 = transform_point(matrix, x2, y2)
-        if abs(ty2 - ty1) > VECTOR_AXIS_TOLERANCE_PT:
-            continue
-        length = math.hypot(tx2 - tx1, ty2 - ty1)
-        lines.append(
-            {
-                "x_min": min(tx1, tx2),
-                "x_max": max(tx1, tx2),
-                "y": (ty1 + ty2) / 2.0,
-                "length": length,
-                "stroke_width": element.attrib.get("stroke-width", ""),
-            }
-        )
-    return lines
-
-
-def render_svg(pdf: Path, page: int) -> tuple[Path, tempfile.TemporaryDirectory[str]]:
-    temp_dir = tempfile.TemporaryDirectory(prefix="ufc-footnote-separator-")
-    output = Path(temp_dir.name) / "page.svg"
-    try:
-        completed = subprocess.run(
-            [
-                "pdftocairo",
-                "-svg",
-                "-f",
-                str(page),
-                "-l",
-                str(page),
-                str(pdf),
-                str(output),
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            errors="replace",
-            check=False,
-        )
-    except FileNotFoundError as exc:
-        temp_dir.cleanup()
-        fail(f"pdftocairo not found: {exc}")
-    if completed.returncode != 0 or not output.is_file():
-        temp_dir.cleanup()
-        fail(f"pdftocairo failed: {completed.stdout.strip()}")
-    return output, temp_dir
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Measure the footnote separator directly from final-PDF vector content."
@@ -208,7 +78,6 @@ def main() -> None:
 
     if (
         scenario.get("schema_version") != 1
-
         or scenario.get("component") != "footnote-separator"
     ):
         fail("invalid scenario schema/component")
@@ -272,20 +141,26 @@ def main() -> None:
             f"margin={margin_page.index}, footnote={footnote_page.index}"
         )
 
-    svg_path, temp_dir = render_svg(args.pdf.resolve(), margin_page.index)
     try:
-        horizontal_lines = extract_horizontal_lines(svg_path)
-    finally:
-        temp_dir.cleanup()
+        horizontal_rules = [
+            item
+            for item in vector_rules(args.pdf.resolve(), page=margin_page.index)
+            if item.orientation == "horizontal"
+        ]
+    except PDFMeasurementError as exc:
+        fail(str(exc))
 
-    if len(horizontal_lines) != 1:
-        fail(f"expected one non-glyph horizontal stroked vector path, found {horizontal_lines}")
-    line = horizontal_lines[0]
+    if len(horizontal_rules) != 1:
+        fail(
+            "expected one non-glyph horizontal vector rule, found "
+            f"{[item.to_dict() for item in horizontal_rules]}"
+        )
+    line = horizontal_rules[0]
 
     expected_length_pt = float(expected["length_mm"]) * 72.0 / 25.4
-    measured_length_pt = float(line["length"])
-    measured_start_x_pt = float(line["x_min"])
-    measured_y_pt = float(line["y"])
+    measured_length_pt = float(line.length)
+    measured_start_x_pt = float(line.box.x_min)
+    measured_y_pt = float(line.box.center_y)
     length_delta_pt = abs(measured_length_pt - expected_length_pt)
     origin_delta_pt = abs(measured_start_x_pt - margin_word.box.x_min)
     separator_above_footnote = measured_y_pt <= footnote_word.box.y_min + vertical_tolerance
@@ -306,7 +181,8 @@ def main() -> None:
         "vector_y_pt": round(measured_y_pt, 4),
         "footnote_text_y_min_pt": round(footnote_word.box.y_min, 4),
         "separator_above_footnote_text": separator_above_footnote,
-        "stroke_width": line["stroke_width"],
+        "vector_thickness_pt": round(float(line.thickness), 4),
+        "vector_paint": line.paint,
     }
     evidence = {
         "rule_id": RULE_ID,
