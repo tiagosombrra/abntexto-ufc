@@ -4,7 +4,7 @@ Updated: 2026-08-31
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-3 remains active; B3-A and B3-B are closed on `main`; B3-C is next.**
+**V3-R1 ACTIVE — R1-BLOCK-3 remains active; B3-A, B3-B and B3-C are closed on `main`; B3-D is next.**
 
 Current sequence:
 
@@ -12,10 +12,10 @@ Current sequence:
 
 Block 3 internal sequence:
 
-**B3-A DONE → B3-B DONE → B3-C NEXT → B3-D PENDING → B3-E PENDING → B3-F PENDING**
+**B3-A DONE → B3-B DONE → B3-C DONE → B3-D NEXT → B3-E PENDING → B3-F PENDING**
 
 - Active branch/trunk: `main`.
-- Latest certified clean implementation checkpoint: `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
+- Latest certified clean implementation checkpoint: `625e82f9ef4780989d4635e500d72d09eab02992`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -83,26 +83,35 @@ Functional differential validation classified 29/29 relevant tests: 21 PASS, 8 b
 
 ### B3-C — Runner/evidence integrity and bounded portability
 
-**NEXT.**
+**DONE.**
 
-Initial bounded defect set, discovered during B3-B differential validation:
+B3-C closed the eight defects exposed by B3-B differential validation without changing normative rule IDs, expected numeric values, numeric tolerances, proof state, or runtime/API semantics.
 
-1. appendix/annex — undefined `scope`;
-2. catalog card — runner/file `FileNotFoundError`;
-3. footnote separator — missing evidence vector;
-4. long quotation — Windows path-separator handling;
-5. research project — Biber invoked without `.bcf`;
-6. short direct citation — CP1252 `UnicodeEncodeError`;
-7. table IBGE vector — missing vector calibration;
-8. vector-rule validation — horizontal-tolerance binding drift.
+B3-C1 merged through replacement PR #168 at `da775552be190bf09d8a790c33e9f7f4582da699` and reconciled:
 
-B3-C owns runner-to-file integrity, evidence-to-consumer integrity, and bounded Windows/Python portability for these defects. It must not silently change normative values or tolerances.
+- catalog-card runner/file handoff;
+- long-quotation evidence producer/consumer path;
+- research-project TeX job/Biber artifact naming;
+- short direct citation UTF-8 checker process;
+- vector-rule validation tolerance-key bindings;
+- table-IBGE same-run vector calibration production.
+
+The original draft PR #164 was closed unmerged solely because the connector could not transition its draft state; PR #168 used the same implementation branch/content.
+
+B3-C2 merged through PR #169 at `625e82f9ef4780989d4635e500d72d09eab02992` and reconciled:
+
+- appendix/annex obsolete undefined-`scope` process-progress accounting while preserving the exact 13-rule campaign;
+- footnote separator vector extraction by replacing the bespoke stroked-line-only parser with the shared vector-rule parser, retaining the same 50 mm length, left-margin origin, vertical relation, and validation-policy tolerances.
+
+Issue #163 is closed as the B3-C operational continuity record. No temporary validation workflow remains.
 
 ### B3-D — Operational v2/V2 identity
 
-**PENDING.**
+**NEXT.**
 
-Close stale operational `v2`/`V2` identity only where it remains active technical identity. Preserve legitimate historical/negative references and do not rewrite runtime API boundaries assigned to R2.
+Close stale operational `v2`/`V2` identity only where it remains active technical identity. Preserve legitimate historical/negative/compatibility references and do not rewrite runtime API boundaries assigned to R2.
+
+B3-D begins with a fresh live-tree inventory on current `main`; prior occurrence counts are advisory only and must not be treated as current authority.
 
 ### B3-E — Project-owned oracle terminology
 
@@ -114,7 +123,7 @@ Replace project-owned engineering `oracle` terminology where it represents obsol
 
 **PENDING.**
 
-Run a live-tree residual audit after B3-C/D/E, verify producer/consumer integrity and control-plane agreement, and close R1-BLOCK-3 only if no active Block 3 residue remains.
+Run a live-tree residual audit after B3-D/E, verify producer/consumer integrity and control-plane agreement, and close R1-BLOCK-3 only if no active Block 3 residue remains.
 
 Do not absorb later-block responsibilities into B3. Distribution/public bundle reconstruction, permanent CI, Overleaf/CTAN, Windows-font certification, PDF/A certification, and other heavyweight surfaces stay in their assigned later blocks.
 
@@ -125,8 +134,8 @@ R1 must not rewrite the Portuguese runtime API; that belongs to R2.
 - **R1-B4:** tools, validator, and metadata technical rebaseline.
 - **R1-B5:** distribution/public bundle flattening and reproducibility.
 - **R1-B6:** permanent cheap/static fail-closed gates.
-- **R1-B7:** optimized permanent workflow restoration; temporary executor lifecycle is create → execute → validate → delete within one checkpoint.
-- **R1-B8:** final clean-tree, repository identity, branch policy, documentation, state, checks, and asset certification.
+- **R1-B7:** optimized permanent workflow restoration.
+- **R1-B8:** final clean-tree, repository identity, branch policy, documentation, state, checks, and asset certification, including final Windows/font/PDF-A certification.
 
 ## R1 exit criteria
 
@@ -156,4 +165,4 @@ Required conditions include:
 
 ## Immediate action
 
-Start **B3-C — runner/evidence integrity and bounded portability** from canonical remote `main`. The latest certified clean implementation checkpoint preceding the control-plane synchronization is `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`. Audit and repair only the eight known defects above first, using proportional validation and preserving normative semantics. Do not repeat B3-B or completed S2 gates unless a B3-C change directly invalidates them.
+Start **B3-D — operational v2/V2 identity cleanup** from canonical remote `main` at certified implementation checkpoint `625e82f9ef4780989d4635e500d72d09eab02992`. Re-audit the current live tree, classify occurrences as stale active technical identity vs legitimate compatibility/history/negative-test use, and change only stale active identity. Preserve runtime API boundaries assigned to R2 and do not absorb B3-E oracle cleanup or later CI/distribution reconstruction.
