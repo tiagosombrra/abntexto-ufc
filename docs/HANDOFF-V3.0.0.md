@@ -8,9 +8,10 @@ Updated: 2026-09-01
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-4 — Tools, Validator, and Metadata Technical Rebaseline**.
 - Active B4 work item: **B4-C — validator/tool technical-language rebaseline**.
+- Active B4-C lot: **B4-C2 — technical categories, diagnostics, report labels, and Web UI**.
 - Active branch/trunk: `main`.
 - B4 operational issue: **#187**.
-- Latest certified clean implementation checkpoint: **`001d63dbc4ecd6e555ee735cd0515b6c9203225e`**.
+- Latest certified clean implementation checkpoint: **`97c808081f5a964498b7a3e71d902aeb8a9bbcf8`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -108,17 +109,34 @@ Final bounded validation run **`33500381847` PASS** covered the atomic contract,
 
 ### B4-C — Validator/tool technical-language rebaseline
 
-**ACTIVE / NEXT.** Separate project-owned engineering diagnostics, web/CLI labels, report/export keys and internal metadata from legitimate Portuguese document/runtime surfaces before editing.
+**ACTIVE.** Entry language-boundary inventory run **`33501038117` PASS** classified the current surfaces before editing.
 
-Allowed boundaries that must not be blindly translated:
+Preserved boundaries:
 
-- academic/rendered Portuguese;
-- official UFC/ABNT wording and normative requirement text;
-- literal test vectors/output under explicit contract;
-- dependency-owned spelling;
-- current Portuguese runtime/API identifiers, which migrate only in V3-R2.
+- stable report schema fields, check/rule IDs, profiles and modes already use canonical English identifiers and remain unchanged;
+- academic/rendered Portuguese such as `Capa`, `Folha de aprovação`, `Resumo`, `Sumário` and `Referências` remains document-domain wording;
+- official UFC/ABNT requirements and normative source text remain unchanged;
+- dependency-owned spelling and literal document tokens remain unchanged;
+- Portuguese LaTeX runtime/API identifiers remain deferred to V3-R2.
 
-B4-C should normalize only project-owned technical UI/output/diagnostics and internal metadata when a consumer-safe change is possible without changing the runtime API or normative semantics.
+Project-owned technical validator vocabulary, generic categories, diagnostics/evidence/correction messages, report/export headings and Web controls are B4-C candidates only when all producers/consumers move together.
+
+#### B4-C1 — shared status/verdict vocabulary
+
+**DONE** through PR #193, squash-merged at **`97c808081f5a964498b7a3e71d902aeb8a9bbcf8`**.
+
+The shared technical interface now uses:
+
+- statuses: `PASS`, `FAIL`, `WARNING`, `MANUAL REVIEW`, `NOT APPLICABLE`;
+- verdicts: `FAIL`, `REVIEW REQUIRED`, `AUTOMATED CHECKS PASSED WITH WARNINGS`, `AUTOMATED CHECKS PASSED`.
+
+CLI, Web, `validation-contract.json`, `validation-vectors.json`, validator-contract expectations, PDF-validator integration consumer and Web status legend changed together. Stable schema fields/check IDs, normative/academic wording, measurement behavior and LaTeX runtime/API were not changed.
+
+Remote validation run **`33501306482` PASS** covered Python/JS syntax, JSON parsing, `normative_validator_contract.py`, complete `validator_source.py`, `canonical_identity.py`, `repository_contract.py`, explicit vocabulary assertions and `git diff --check`. Temporary B4-C1 workflow was removed before merge.
+
+#### B4-C2 — technical categories, diagnostics, report labels, and Web UI
+
+**ACTIVE / NEXT.** Normalize only project-owned human-facing technical text in Web/CLI surfaces, while preserving academic/normative labels and all stable machine identifiers. Producer/consumer tests must move together where a literal is contracted.
 
 ### B4-D — Final B4 residual audit/closeout
 
@@ -134,4 +152,4 @@ B4-C should normalize only project-owned technical UI/output/diagnostics and int
 
 ## Immediate action
 
-Start B4-C from canonical remote `main` using `001d63dbc4ecd6e555ee735cd0515b6c9203225e` as the latest certified implementation checkpoint. Inventory project-owned Portuguese technical strings in `tools/validate-ufc-pdf.py`, `validator/app.js`, `validator/index.html`, validator contracts/vectors, and their tests/consumers. Classify each string before editing and preserve every academic, normative, literal-test, dependency-owned and R2 runtime/API boundary. Make only bounded producer/consumer-safe changes and validate proportionally.
+Start B4-C2 from canonical remote `main` using `97c808081f5a964498b7a3e71d902aeb8a9bbcf8` as the latest certified implementation checkpoint. Normalize only project-owned technical categories, evidence/correction diagnostics, report/export headings and Web validator controls. Preserve academic element labels, official normative text, stable schema/check IDs, dependency strings and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally and keep temporary executors out of the checkpoint.
