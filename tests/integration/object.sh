@@ -7,8 +7,8 @@ flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 for engine in pdflatex lualatex; do
   echo "Validando $fixture com $engine..."
   for pass in 1 2; do
-    "$engine" $flags "$fixture" > /tmp/abntexto-ufc-v2-objects.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-objects.log
+    "$engine" $flags "$fixture" > /tmp/abntexto-ufc-objects.log 2>&1 || {
+      cat /tmp/abntexto-ufc-objects.log
       exit 1
     }
   done
@@ -20,7 +20,7 @@ if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
   echo 'Contexto das caixas excedentes:'
   grep -n -A4 -B1 -E 'Overfull \\hbox|Overfull \\vbox' objetos-avancados.log || true
-  echo 'Preflight V2 falhou: fixture de objetos contém warnings ou overflow não reconhecidos.'
+  echo 'Preflight falhou: fixture de objetos contém warnings ou overflow não reconhecidos.'
   exit 1
 fi
 
@@ -35,15 +35,15 @@ grep -Fq 'Figura normativa de teste' objetos-avancados.loi || { echo 'Figura aus
 grep -Fq 'Gráfico normativo de teste' objetos-avancados.loi || { echo 'Gráfico ausente da lista unificada.'; exit 1; }
 grep -Fq 'Quadro multipágina de teste' objetos-avancados.loi || { echo 'Quadro ausente da lista unificada.'; exit 1; }
 if grep -Fq 'Tabela acadêmica de teste' objetos-avancados.loi; then
-  echo 'Preflight V2 falhou: tabela entrou indevidamente na lista de ilustrações.'
+  echo 'Preflight falhou: tabela entrou indevidamente na lista de ilustrações.'
   exit 1
 fi
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext -layout objetos-avancados.pdf /tmp/abntexto-ufc-v2-objects.txt
+  pdftotext -layout objetos-avancados.pdf /tmp/abntexto-ufc-objects.txt
   for heading in 'LISTA DE ILUSTRAÇÕES' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE QUADROS' 'LISTA DE GRÁFICOS' 'LISTA DE CÓDIGOS' 'LISTA DE ALGORITMOS'; do
-    grep -Fq "$heading" /tmp/abntexto-ufc-v2-objects.txt || {
-      echo "Preflight V2 falhou: lista de objeto ausente: $heading"
+    grep -Fq "$heading" /tmp/abntexto-ufc-objects.txt || {
+      echo "Preflight falhou: lista de objeto ausente: $heading"
       exit 1
     }
   done
@@ -52,7 +52,7 @@ if command -v pdftotext >/dev/null 2>&1; then
 import re
 from pathlib import Path
 
-text = Path('/tmp/abntexto-ufc-v2-objects.txt').read_text(encoding='utf-8', errors='replace')
+text = Path('/tmp/abntexto-ufc-objects.txt').read_text(encoding='utf-8', errors='replace')
 
 markers = (
     'Figura normativa de teste',
@@ -68,12 +68,12 @@ for marker in markers:
     pattern = re.compile(re.escape(marker) + r'[^\n]*\.\s*(?:\.\s*)*\d+\s*$', re.M)
     if not pattern.search(text):
         raise SystemExit(
-            f'Preflight V2 falhou: líder pontilhado ausente na lista de objeto: {marker}'
+            f'Preflight falhou: líder pontilhado ausente na lista de objeto: {marker}'
         )
 PY
 
-  grep -Fq 'Fonte:' /tmp/abntexto-ufc-v2-objects.txt || { echo 'Fonte de objeto ausente.'; exit 1; }
-  grep -Fq 'Nota:' /tmp/abntexto-ufc-v2-objects.txt || { echo 'Nota de objeto ausente.'; exit 1; }
+  grep -Fq 'Fonte:' /tmp/abntexto-ufc-objects.txt || { echo 'Fonte de objeto ausente.'; exit 1; }
+  grep -Fq 'Nota:' /tmp/abntexto-ufc-objects.txt || { echo 'Nota de objeto ausente.'; exit 1; }
 fi
 
-echo 'Gate V2 de objetos concluído.'
+echo 'Gate de objetos concluído.'

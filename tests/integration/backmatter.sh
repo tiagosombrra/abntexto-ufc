@@ -19,7 +19,7 @@ check_log() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Gate V2 falhou: $job contém warning ou overflow não reconhecido."
+    echo "Gate falhou: $job contém warning ou overflow não reconhecido."
     exit 1
   fi
 }
@@ -29,25 +29,25 @@ for engine in pdflatex lualatex; do
   cleanup_job "$job"
   echo "Validando pós-textuais com $engine..."
 
-  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/abntexto-ufc-v2-post.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-post.log
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/abntexto-ufc-post.log 2>&1 || {
+    cat /tmp/abntexto-ufc-post.log
     exit 1
   }
-  biber "$job" > /tmp/abntexto-ufc-v2-post-biber.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-post-biber.log
+  biber "$job" > /tmp/abntexto-ufc-post-biber.log 2>&1 || {
+    cat /tmp/abntexto-ufc-post-biber.log
     exit 1
   }
-  makeglossaries "$job" > /tmp/abntexto-ufc-v2-post-glossary.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-post-glossary.log
+  makeglossaries "$job" > /tmp/abntexto-ufc-post-glossary.log 2>&1 || {
+    cat /tmp/abntexto-ufc-post-glossary.log
     exit 1
   }
-  makeindex "$job" > /tmp/abntexto-ufc-v2-post-index.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-post-index.log
+  makeindex "$job" > /tmp/abntexto-ufc-post-index.log 2>&1 || {
+    cat /tmp/abntexto-ufc-post-index.log
     exit 1
   }
   for pass in 1 2 3; do
-    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/abntexto-ufc-v2-post.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-post.log
+    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/abntexto-ufc-post.log 2>&1 || {
+      cat /tmp/abntexto-ufc-post.log
       exit 1
     }
   done
@@ -103,4 +103,4 @@ PY
   done
 done
 
-echo 'Gate V2 de pós-textuais concluído.'
+echo 'Gate de pós-textuais concluído.'

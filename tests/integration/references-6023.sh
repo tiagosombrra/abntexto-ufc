@@ -13,22 +13,22 @@ for engine in pdflatex lualatex; do
   cleanup_job
   echo "Validando $fixture com $engine + Biber..."
 
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-6023.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-6023.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
+    cat /tmp/abntexto-ufc-6023.log
     exit 1
   }
 
-  biber "$job" > /tmp/abntexto-ufc-v2-6023-biber.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-6023-biber.log
+  biber "$job" > /tmp/abntexto-ufc-6023-biber.log 2>&1 || {
+    cat /tmp/abntexto-ufc-6023-biber.log
     exit 1
   }
 
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-6023.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-6023.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
+    cat /tmp/abntexto-ufc-6023.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-6023.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-6023.log
+  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
+    cat /tmp/abntexto-ufc-6023.log
     exit 1
   }
 
@@ -36,20 +36,20 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Preflight V2 falhou: regressão NBR 6023:2025 contém warning ou overflow não reconhecido."
+    echo "Preflight falhou: regressão NBR 6023:2025 contém warning ou overflow não reconhecido."
     exit 1
   fi
 
 done
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext -layout "$job.pdf" /tmp/abntexto-ufc-v2-6023.txt
+  pdftotext -layout "$job.pdf" /tmp/abntexto-ufc-6023.txt
   python3 - <<'PY'
 import re
 import unicodedata
 from pathlib import Path
 
-text = Path('/tmp/abntexto-ufc-v2-6023.txt').read_text(encoding='utf-8')
+text = Path('/tmp/abntexto-ufc-6023.txt').read_text(encoding='utf-8')
 text = unicodedata.normalize('NFC', text)
 chunks = [re.sub(r'\s+', ' ', part).strip() for part in re.split(r'\n\s*\n', text) if part.strip()]
 
@@ -99,11 +99,11 @@ PY
 
   evidence_json="${UFC_EVIDENCE_DIR:-artifacts/validation/reference-semantics}/reference-semantics.json"
   set -- python3 tests/checks/normative_reference_semantics.py \
-    /tmp/abntexto-ufc-v2-6023.txt --json "$evidence_json"
+    /tmp/abntexto-ufc-6023.txt --json "$evidence_json"
   if [ -n "${GITHUB_SHA:-}" ]; then
     set -- "$@" --commit-sha "$GITHUB_SHA"
   fi
   "$@"
 fi
 
-echo 'Gate V2 NBR 6023:2025 concluído.'
+echo 'Gate NBR 6023:2025 concluído.'
