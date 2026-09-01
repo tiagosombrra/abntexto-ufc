@@ -555,5 +555,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-5 B5-C from canonical remote main using 426b506da9f6bf6255263efdb4caad19d4bcd16d as the latest certified implementation checkpoint and issue #199 as the operational log. Extend the current distribution producer with the class/runtime and CTAN-candidate archives plus deterministic checksum metadata; validate exact archive structure and CTAN install/compile behavior. Keep B6 permanent gates, B7 permanent workflows, B8 final Windows/font/PDF-A certification and V3-R2 runtime/API work out of scope."
+  "next_action": "Run the final R1-BLOCK-5 B5-D residual/reproducibility audit from canonical remote main using 4bc0f544020234bc14a8f2261927f65721b6eddb as the latest certified implementation checkpoint and issue #199 as the operational log. Verify all B5 producers, consumers, artifact layouts, checksums, exclusions, documentation and control-plane state. Close B5 and activate R1-BLOCK-6 only after a clean zero-residual audit. Keep B7 permanent workflow restoration, B8 final Windows/font/PDF-A certification, actual CTAN submission and V3-R2 runtime/API work out of scope."
 }
