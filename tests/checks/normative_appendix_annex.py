@@ -479,10 +479,6 @@ def main() -> None:
 
     counts = Counter(item["status"] for item in evidence)
     findings = [item["rule_id"] for item in evidence if item["status"] != "PASS"]
-    baseline = len(scope.get("existing_bounded_positive", []))
-    promoted = len(evidence) if not findings else sum(item["status"] == "PASS" for item in evidence)
-    current = baseline + promoted
-    remaining = int(scope["total_rules"]) - current
     payload = {
         "schema_version": 1,
         "campaign": "appendix-annex-final-pdf",
@@ -493,13 +489,6 @@ def main() -> None:
         "status_counts": dict(sorted(counts.items())),
         "findings": findings,
         "evidence_policy": scenario["evidence_policy"],
-        "bounded_progress": {
-            "total": scope["total_rules"],
-            "baseline_existing_bounded_positive": baseline,
-            "promoted_bounded_positive": promoted,
-            "current_bounded_positive": current,
-            "current_support_only": remaining,
-        },
         "evidence": evidence,
     }
     args.json.parent.mkdir(parents=True, exist_ok=True)
@@ -517,12 +506,6 @@ def main() -> None:
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
-    print(
-        "VALIDATION-EVIDENCE bounded-progress "
-        f"total={scope['total_rules']} baseline_existing_bounded_positive={baseline} "
-        f"promoted_bounded_positive={promoted} current_bounded_positive={current} "
-        f"current_support_only={remaining} proof_state_changed=false"
-    )
 
     if findings:
         fail("campaign has unresolved findings: " + ", ".join(findings))
