@@ -12,6 +12,7 @@ from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ID = "abntexto-ufc"
+CTAN_DIR = ROOT / "release" / "ctan"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -103,31 +104,60 @@ def validate_class(path: Path, v: str) -> None:
         fail(f"{path.name}: class archive must keep abntexto as an external dependency.")
 
 
-def validate_ctan(path: Path) -> None:
+def validate_ctan(path: Path, v: str) -> None:
     archive_entries = entries(path)
     prefix = f"{PACKAGE_ID}/"
     if any(not name.startswith(prefix) for name in archive_entries):
         fail(f"{path.name}: every entry must be rooted at {prefix}")
-    require(
-        archive_entries,
-        {
-            f"{prefix}README.md",
-            f"{prefix}LICENSE",
-            f"{prefix}doc/{PACKAGE_ID}-example.tex",
-            f"{prefix}tex/abntexto-ufc.cls",
-            f"{prefix}tex/abntexto-ufc/core.def",
-            f"{prefix}tex/abntexto-ufc/public-api.def",
-            f"{prefix}tex/abntexto-ufc/integrations/abntexto.def",
-            f"{prefix}tex/abntexto-ufc/standards/nbr6023-2025.def",
-        },
-        path.name,
-    )
-    if f"{prefix}tex/abntexto.cls" in archive_entries:
+    required = {
+        f"{prefix}README.md",
+        f"{prefix}LICENSE",
+        f"{prefix}{PACKAGE_ID}.tex",
+        f"{prefix}{PACKAGE_ID}.pdf",
+        f"{prefix}{PACKAGE_ID}-example.tex",
+        f"{prefix}abntexto-ufc.cls",
+        f"{prefix}abntexto-ufc/core.def",
+        f"{prefix}abntexto-ufc/public-api.def",
+        f"{prefix}abntexto-ufc/integrations/abntexto.def",
+        f"{prefix}abntexto-ufc/standards/nbr6023-2025.def",
+    }
+    require(archive_entries, required, path.name)
+
+    for directory in ("doc/", "tex/", "source/"):
+        if any(name.startswith(f"{prefix}{directory}") for name in archive_entries):
+            fail(f"{path.name}: modest CTAN candidate must use browsing-friendly package layout, not {directory}")
+    if f"{prefix}abntexto.cls" in archive_entries:
         fail(f"{path.name}: CTAN candidate must keep abntexto as an external dependency.")
+
     with zipfile.ZipFile(path) as archive:
-        bundled_example = archive.read(f"{prefix}doc/{PACKAGE_ID}-example.tex")
-    if bundled_example != (ROOT / "docs" / "ctan-example.tex").read_bytes():
+        bundled_readme = archive.read(f"{prefix}README.md")
+        bundled_manual = archive.read(f"{prefix}{PACKAGE_ID}.tex")
+        bundled_pdf = archive.read(f"{prefix}{PACKAGE_ID}.pdf")
+        bundled_example = archive.read(f"{prefix}{PACKAGE_ID}-example.tex")
+
+    expected_readme = (CTAN_DIR / "README.md").read_bytes()
+    expected_manual = (CTAN_DIR / f"{PACKAGE_ID}.tex").read_bytes()
+    expected_example = (ROOT / "docs" / "ctan-example.tex").read_bytes()
+    if bundled_readme != expected_readme:
+        fail(f"{path.name}: CTAN README differs from the current tracked package source.")
+    if bundled_manual != expected_manual:
+        fail(f"{path.name}: CTAN manual source differs from the current tracked package source.")
+    if bundled_example != expected_example:
         fail(f"{path.name}: CTAN example differs from the current tracked source.")
+    if not bundled_pdf.startswith(b"%PDF-") or len(bundled_pdf) < 5000:
+        fail(f"{path.name}: CTAN documentation PDF is missing or invalid.")
+
+    readme_text = bundled_readme.decode("utf-8")
+    required_readme_literals = (
+        f"Version: {v}",
+        "LaTeX Project Public License",
+        "https://github.com/tiagosombrra/abntexto-ufc",
+        "https://ctan.org/pkg/abntexto",
+        "unofficial",
+    )
+    missing_literals = [item for item in required_readme_literals if item not in readme_text]
+    if missing_literals:
+        fail(f"{path.name}: CTAN README missing package metadata: {', '.join(missing_literals)}")
 
 
 def validate_checksums(output: Path, expected_zips: set[str]) -> None:
@@ -201,11 +231,12 @@ def main() -> None:
 
         validate_checksums(first, expected_zips)
         validate_class(first / f"{PACKAGE_ID}-{v}.zip", v)
-        validate_ctan(first / f"{PACKAGE_ID}-ctan-{v}.zip")
+        validate_ctan(first / f"{PACKAGE_ID}-ctan-{v}.zip", v)
 
     print(
         "DISTRIBUTION-BUNDLE-EVIDENCE status=PASS artifacts=5 reproducible=5 checksums=PASS "
-        "class_layout=PASS ctan_layout=PASS external_abntexto=PASS institutional_assets=excluded"
+        "class_layout=PASS ctan_layout=PASS ctan_readme=PASS documentation_pdf=PASS "
+        "external_abntexto=PASS institutional_assets=excluded"
     )
 
 
