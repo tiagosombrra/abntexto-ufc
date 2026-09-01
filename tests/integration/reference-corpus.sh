@@ -1,6 +1,9 @@
 #!/bin/sh
 set -eu
 
+ROOT=$(CDPATH= cd "$(dirname "$0")/../.." && pwd)
+cd "$ROOT/template"
+
 [ -s main.pdf ] || {
   echo 'Corpus falhou: main.pdf ausente.'
   exit 1
