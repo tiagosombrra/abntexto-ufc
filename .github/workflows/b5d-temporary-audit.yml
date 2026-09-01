@@ -1,0 +1,97 @@
+name: B5-D temporary closeout audit
+
+on:
+  push:
+    branches:
+      - audit/v3-r1-b5d-closeout
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: "github.event.head_commit.message == 'chore: add temporary B5-D closeout audit'"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit complete B5 distribution contract
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -euo pipefail
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends git
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+            python3 -m py_compile \
+              tools/build-public-bundles.py \
+              tools/build-distribution-bundles.py \
+              tools/fetch-abntexto.py \
+              tests/checks/public_bundles.py \
+              tests/checks/distribution_bundles.py
+
+            test -z "$(git ls-files 'dist/*')"
+            test -z "$(find .github/workflows -maxdepth 1 -type f ! -name 'b5d-temporary-audit.yml' -print)"
+
+            python3 tools/fetch-reference-images.py
+            python3 tools/fetch-abntexto.py --output /tmp/abntexto-ufc-b5d.cls
+            python3 tests/checks/distribution_bundles.py --abntexto /tmp/abntexto-ufc-b5d.cls
+            python3 tests/checks/public_bundles.py --abntexto /tmp/abntexto-ufc-b5d.cls
+            python3 tests/checks/canonical_identity.py
+            python3 tests/checks/repository_contract.py
+
+            python3 - <<'PY'
+            import json
+            from pathlib import Path
+
+            state = json.loads(Path('release/v3-roadmap.json').read_text(encoding='utf-8'))
+            block = state['blocks']['R1-BLOCK-5'] if 'blocks' in state else state['R1-BLOCK-5']
+            assert state['stage'] == 'R1-BLOCK-5'
+            assert state['last_certified_clean_checkpoint_sha'] == '4bc0f544020234bc14a8f2261927f65721b6eddb'
+            assert block['status'] == 'ACTIVE'
+            assert block['active_work_item'] == 'B5-D'
+            assert block['b5_a_status'] == 'DONE'
+            assert block['b5_b_status'] == 'DONE'
+            assert block['b5_c_status'] == 'DONE'
+            assert block['b5_d_status'] == 'ACTIVE'
+            assert block['b5_c_closure_sha'] == '4bc0f544020234bc14a8f2261927f65721b6eddb'
+            assert block['b5_c_results']['ctan_pkgcheck_passed'] is True
+            assert block['b5_c_results']['documentation_pdf_present'] is True
+            assert block['b5_c_results']['institutional_assets_excluded'] is True
+            assert block['b5_c_results']['proprietary_microsoft_fonts_excluded'] is True
+            assert block['b5_c_results']['permanent_ci_added'] is False
+            print('B5-D-CONTROL-PLANE status=PASS')
+            PY
+
+            grep -Fq '### B5-D — Residual/reproducibility closeout' docs/ROADMAP-V3.0.0.md
+            grep -Fq '**ACTIVE.** Final B5 distribution audit and closeout.' docs/ROADMAP-V3.0.0.md
+            grep -Fq 'Active B5 work item: **B5-D' docs/HANDOFF-V3.0.0.md
+            grep -Fq 'docs/CTAN-RELEASE.md' README.md
+            grep -Fq 'pkgcheck' docs/CTAN-RELEASE.md
+            grep -Fq 'abntexto-uece' docs/CTAN-RELEASE.md
+
+            if grep -Eq 'B5-C[^\n]*(ACTIVE|NEXT)|Class/CTAN-candidate packaging is still being completed' README.md docs/ARCHITECTURE.md docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md; then
+              echo 'Stale B5-C active-state documentation remains.' >&2
+              exit 1
+            fi
+
+            git diff --check
+            echo 'B5-D-AUDIT status=PASS implementation_checkpoint=4bc0f544020234bc14a8f2261927f65721b6eddb generated_outputs_tracked=0 permanent_workflows=0 distribution_reproducibility=PASS public_reproducibility=PASS control_plane=PASS'
+
+      - name: Self-remove temporary audit
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b5d-temporary-audit.yml
+          git commit -m 'chore: remove temporary B5-D closeout audit'
+          git push origin HEAD:audit/v3-r1-b5d-closeout
