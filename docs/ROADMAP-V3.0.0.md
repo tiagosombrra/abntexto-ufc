@@ -146,11 +146,11 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ### B5-C — Class/CTAN candidate and distribution metadata
 
-**ACTIVE.** Add the current-identity class/runtime archive and CTAN candidate plus deterministic checksum metadata using only live v3 files. Validate exact layout, external dependency semantics, institutional/proprietary asset exclusion and CTAN-style compile smoke. Do not reconstruct deleted historical CTAN documentation without a current need.
+**DONE** via PR #204 at **`4bc0f544020234bc14a8f2261927f65721b6eddb`**. The complete distribution producer now emits the class/runtime, CTAN, template and Overleaf ZIPs plus `SHA256SUMS`. CTAN packaging was benchmarked against accepted `abntexto-uece` and reconciled with current CTAN guidance: one browsing-friendly package root, CTAN-specific English README, tracked manual source/PDF, example, current runtime and external `abntexto`. Run **`33519160480` PASS** proved reproducibility, metadata/layout, checksums and TeX Live 2026 installation smoke; run **`33519793206` PASS** ran CTAN `pkgcheck 4.1.0` with zero error/warning diagnostics. CTAN submission remains a later explicit release action and `docs/CTAN-RELEASE.md` records the maintainer procedure.
 
 ### B5-D — Residual/reproducibility closeout
 
-**PENDING.** Final distribution consumer/policy/evidence audit and B5 closure.
+**ACTIVE.** Final distribution producer/consumer/policy/evidence, documentation and reproducibility audit; remove any residual temporary executor and close B5 before activating B6.
 
 ## Remaining R1 blocks
 
@@ -170,4 +170,4 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## Immediate action
 
-Start **B5-C** from canonical `main` with implementation checkpoint `426b506da9f6bf6255263efdb4caad19d4bcd16d` and issue #199. Extend the current distribution producer with a class/runtime archive, CTAN candidate and deterministic checksum metadata; validate archive structure and CTAN install/compile behavior. Keep B6/B7/B8 and V3-R2 boundaries explicit.
+Start **B5-D** from canonical `main` with implementation checkpoint `4bc0f544020234bc14a8f2261927f65721b6eddb` and issue #199. Perform the final distribution residual/reproducibility and documentation audit, reconcile all B5 consumers/policies/evidence, and close Block 5 only if the canonical artifact contracts remain deterministic and clean. Keep B6/B7/B8, actual CTAN submission and V3-R2 boundaries explicit.
