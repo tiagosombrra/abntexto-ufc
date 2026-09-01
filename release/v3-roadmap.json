@@ -388,8 +388,8 @@
       "name": "distribution and public bundle rebaseline",
       "entry_checkpoint_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
       "operational_issue": 199,
-      "active_work_item": "B5-A",
-      "active_sub_item": "B5-A",
+      "active_work_item": "B5-B",
+      "active_sub_item": "B5-B",
       "scope": [
         "public and distribution bundle producer consumer inventory",
         "canonical source set and flatten copy rules",
@@ -404,8 +404,44 @@
         "temporary validation workflows must be removed before checkpoint",
         "classify distribution residue before editing"
       ],
-      "b5_a_status": "ACTIVE",
-      "b5_a_scope": "fresh remote distribution and public-bundle inventory plus contract definition"
+      "b5_a_status": "DONE",
+      "b5_a_scope": "fresh remote distribution and public-bundle inventory plus contract definition",
+      "b5_a_validation_run_id": 33512036280,
+      "b5_a_results": {
+        "zero_diff_certification": true,
+        "bundle_producer_present": false,
+        "tracked_distribution_output_present": false,
+        "template_flattening_required": true,
+        "institutional_mark_redistribution_allowed": false,
+        "fetch_abntexto_verified_pinned_helper": true,
+        "fetch_abntexto_functional_consumer_present": false,
+        "build_path_gate_live": true,
+        "overleaf_staging_gate_present": true,
+        "overleaf_staging_producer_present": false,
+        "overleaf_gate_removed_font_check_path_present": true,
+        "overleaf_gate_registered_in_tests_run": false,
+        "distribution_policy_normative_claim": false,
+        "historical_distribution_implementation_authoritative": false,
+        "temporary_workflow_removed": true
+      },
+      "planned_lots": {
+        "B5-A": "DONE - inventory and distribution contract definition",
+        "B5-B": "ACTIVE - deterministic v3 staging and public/Overleaf bundles",
+        "B5-C": "PENDING - class/CTAN candidate and distribution metadata",
+        "B5-D": "PENDING - final residual/reproducibility audit and closeout"
+      },
+      "b5_b_status": "ACTIVE",
+      "b5_b_scope": [
+        "canonical deterministic distribution staging producer",
+        "current class and runtime module source set",
+        "flattened template bundle layout",
+        "Overleaf bundle with pinned upstream abntexto class",
+        "public asset and proprietary-font exclusions",
+        "structure reproducibility and safe-archive validation",
+        "bounded repair of current Overleaf distribution consumer"
+      ],
+      "b5_c_status": "PENDING",
+      "b5_d_status": "PENDING"
     },
     "R1-BLOCK-6": {
       "status": "BLOCKED",
@@ -420,5 +456,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-5 B5-A from canonical remote main using 1a126c37653728941ce1ada762376c5fec69cb02 as the latest certified implementation checkpoint and issue #199 as the operational log. Inventory public/distribution bundle producers and consumers, Makefile/build-path targets, manifests/policies/evidence, runtime/support source files, upstream inputs, and tracked distribution residue. Classify before editing and keep B6, B7, B8 and V3-R2 work out of scope."
+  "next_action": "Start R1-BLOCK-5 B5-B from canonical remote main using 1a126c37653728941ce1ada762376c5fec69cb02 as the latest certified implementation checkpoint and issue #199 as the operational log. Implement one deterministic current-v3 staging/archive producer for class/runtime, flattened template and Overleaf bundle; use tools/fetch-abntexto.py only for the pinned Overleaf upstream dependency; add structure/reproducibility validation and repair the distribution-owned Overleaf staging consumer. Keep CTAN/class-package completion in B5-C and B6/B7/B8/V3-R2 out of scope."
 }

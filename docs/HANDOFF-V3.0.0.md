@@ -7,8 +7,8 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-5 — Distribution and Public Bundle Rebaseline**.
-- Active B5 work item: **B5-A — distribution/public-bundle inventory and contract definition**.
-- Active B5 focus: **canonical bundle source set, producer/consumer map, flatten/copy rules, manifests, and reproducibility boundaries**.
+- Active B5 work item: **B5-B — deterministic v3 staging and public/Overleaf bundles**.
+- Active B5 focus: **canonical source set, flattened template staging, pinned upstream `abntexto.cls`, deterministic archives, and structure/reproducibility validation**.
 - Active branch/trunk: `main`.
 - B5 operational issue: **#199**.
 - Latest certified clean implementation checkpoint: **`1a126c37653728941ce1ada762376c5fec69cb02`**.
@@ -168,7 +168,21 @@ B5 does not own V3-R2 runtime/API migration, B6 permanent static gates, B7 perma
 
 ### B5-A — Inventory and distribution contract
 
-**ACTIVE / NEXT.** Build a fresh remote producer/consumer matrix for public-bundle targets, Makefile/build-path integration, manifests/policies/evidence, current runtime/support source files, upstream inputs, and any tracked distribution-era residue. Classify before editing and split later work into bounded lots only after this inventory.
+**DONE — zero-diff certification.** Remote run `33512036280` PASS established the current distribution contract and self-removed its temporary workflow; the audit branch has zero changed files versus `main`. There is no current bundle producer or tracked `dist/` tree. `Makefile` exposes build/check entry points only. `tools/fetch-abntexto.py` is a valid pinned upstream fetcher but has no functional consumer. `build-path.sh` validates the repository build; `overleaf-stable.sh` assumes an already-flattened staging root, is not wired into `tests/run.py`, and still contains a removed font-check path plus stale engineering diagnostics.
+
+The current architecture requires `template/` to be flattened for public/Overleaf bundles, excludes the UFC institutional mark from public redistribution, and keeps distribution/Overleaf/TeX Live/CTAN as project policy rather than UFC/ABNT normativity. Historical distribution code is advisory only; reusable principles are deterministic archives, explicit source sets, SHA256 manifests, safe paths, pinned upstream `abntexto.cls`, and exclusion of institutional/proprietary assets. Retired legacy class/module identities, old artifact names, and permanent workflows are not reusable.
+
+### B5-B — Deterministic v3 staging and public/Overleaf bundles
+
+**ACTIVE / NEXT.** Implement one current v3 staging/archive producer for the class/runtime plus flattened template and Overleaf import bundle. Wire `fetch-abntexto.py` only for the Overleaf upstream pin; add structure/reproducibility checks; repair the Overleaf staging consumer path/engineering language as required by this contract. Deep Windows font/PDF-A certification remains B8-owned.
+
+### B5-C — Class/CTAN candidate and distribution metadata
+
+**PENDING.** Define the current class/CTAN-candidate archive and remaining distribution metadata/checksum validation using only current files and current `abntexto-ufc` identity; do not resurrect deleted CTAN documentation blindly.
+
+### B5-D — Final B5 residual/reproducibility audit
+
+**PENDING.** Reconcile remaining distribution consumers/policy/evidence, prove deterministic outputs and excluded assets, remove temporary executors, close B5, and activate B6.
 
 ## Remaining R1 sequence
 
@@ -180,4 +194,4 @@ B5 does not own V3-R2 runtime/API migration, B6 permanent static gates, B7 perma
 
 ## Immediate action
 
-Start B5-A from canonical remote `main` using `1a126c37653728941ce1ada762376c5fec69cb02` as the latest certified implementation checkpoint and issue #199 as the operational log. Inventory all current distribution/public-bundle producers, consumers, Makefile/build-path targets, manifests/policies/evidence, required runtime/support files, upstream inputs, and tracked distribution residue. Classify before editing; do not implement B6/B7/B8 or V3-R2 work inside B5.
+Start B5-B from canonical remote `main` using `1a126c37653728941ce1ada762376c5fec69cb02` as the latest certified implementation checkpoint and issue #199 as the operational log. Implement the bounded deterministic v3 staging/archive producer for class/runtime, flattened template, and Overleaf import bundle; wire the pinned upstream fetcher only where required; add current structure/reproducibility checks and repair the current Overleaf staging consumer. Keep CTAN/class-package completion in B5-C and B6/B7/B8/V3-R2 out of scope.
