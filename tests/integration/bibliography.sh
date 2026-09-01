@@ -55,7 +55,7 @@ for engine in pdflatex lualatex; do
   cleanup_job
   echo "Validando $fixture com $engine + Biber..."
 
-  if ! "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-bib.log 2>&1; then
+  if ! "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-bib.log 2>&1; then
     cat /tmp/abntexto-ufc-bib.log
     exit 1
   fi
@@ -65,12 +65,12 @@ for engine in pdflatex lualatex; do
     exit 1
   fi
 
-  if ! "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-bib.log 2>&1; then
+  if ! "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-bib.log 2>&1; then
     cat /tmp/abntexto-ufc-bib.log
     exit 1
   fi
 
-  if ! "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-bib.log 2>&1; then
+  if ! "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-bib.log 2>&1; then
     cat /tmp/abntexto-ufc-bib.log
     exit 1
   fi
