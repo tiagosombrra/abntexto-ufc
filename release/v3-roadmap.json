@@ -10,7 +10,7 @@
   "stage_name": "optimized remote workflow restoration",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
+  "last_certified_clean_checkpoint_sha": "643397ee2fa49e6bd496889cb287f43167d49b0f",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -29,7 +29,8 @@
     "project_owned_engineering_language": "English",
     "r1_runtime_api_rewrite_allowed": false,
     "portuguese_runtime_api_migrates_in": "V3-R2",
-    "permanent_automatic_workflows_during_r1_reconstruction": false,
+    "permanent_automatic_workflows_during_r1_reconstruction": true,
+    "permanent_workflow_restoration_owned_by": "R1-BLOCK-7",
     "temporary_executor_must_be_removed_before_checkpoint": true,
     "heavy_jobs_on_every_intermediate_commit": false,
     "rerun_completed_checks_without_current_state_need": false,
@@ -344,7 +345,7 @@
         "normative_semantics_changed": false,
         "proof_state_changed": false,
         "runtime_api_changed": false,
-        "temporary_workflows_removed_before_merge": true
+        "temporary_workflow_removed_before_merge": true
       },
       "closure_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
       "b4_d_validation_runs": [
@@ -671,8 +672,8 @@
       "name": "optimized remote workflow restoration",
       "entry_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
       "operational_issue": 213,
-      "active_work_item": "B7-A",
-      "active_sub_item": "B7-A",
+      "active_work_item": "B7-C",
+      "active_sub_item": "B7-C1",
       "scope": [
         "historical and current workflow/runner dependency inventory",
         "permanent remote orchestration consuming repository-owned validation entry points",
@@ -689,14 +690,64 @@
         "workflow changes require remote validation before merge"
       ],
       "planned_lots": {
-        "B7-A": "ACTIVE - workflow and runner dependency inventory plus orchestration design",
-        "B7-B": "PENDING - permanent fast/static workflow consuming make static-check",
-        "B7-C": "PENDING - optimized Linux integration/release workflow restoration",
+        "B7-A": "DONE - workflow and runner dependency inventory plus orchestration design",
+        "B7-B": "DONE - permanent fast/static workflow consuming make static-check",
+        "B7-C": "ACTIVE - optimized Linux integration/release workflow restoration",
         "B7-D": "PENDING - residual workflow audit branch-protection recommendation and B8 handoff"
       },
-      "b7_a_status": "ACTIVE",
-      "b7_b_status": "PENDING",
-      "b7_c_status": "PENDING",
+      "b7_a_status": "DONE",
+      "b7_a_validation_run_id": 33530309579,
+      "b7_a_results": {
+        "inventory_job_passed": true,
+        "pr_checks": 30,
+        "release_checks": 32,
+        "release_only_checks": [
+          "pdfa",
+          "profile-pdfa"
+        ],
+        "historical_linux_runner_pattern_recovered": true,
+        "clean_runner_integration_probe_seconds": 501,
+        "clean_runner_integration_probe_passed": false,
+        "clean_runner_pass": 22,
+        "clean_runner_fail": 7,
+        "clean_runner_skip": 1,
+        "failure_class": "execution-and-artifact-contract-drift",
+        "normative_regression_established": false
+      },
+      "b7_b_status": "DONE",
+      "b7_b_issue": 215,
+      "b7_b_pr": 216,
+      "b7_b_closure_sha": "643397ee2fa49e6bd496889cb287f43167d49b0f",
+      "b7_b_validation_run_id": 33530718380,
+      "b7_b_results": {
+        "workflow": ".github/workflows/static-contract.yml",
+        "workflow_name": "Static contract",
+        "job_name": "Static contract",
+        "entry_point": "make static-check",
+        "runner": "ubuntu-24.04",
+        "python": "3.13",
+        "node": "24",
+        "contents_permission": "read",
+        "concurrency_cancel_in_progress": true,
+        "permanent_workflows_added": 1,
+        "yaml_gate_logic_duplicated": false,
+        "heavy_runtime_leakage": 0,
+        "remote_validation_passed": true
+      },
+      "b7_c_status": "ACTIVE",
+      "b7_c1_status": "ACTIVE",
+      "b7_c1_scope": [
+        "repair reference corpus consumption of template-produced main artifacts",
+        "repair CAPES front-matter repository-root path",
+        "repair object geometry evidence argument wiring",
+        "repair academic-object fixture job-name drift",
+        "repair bibliography fixture job-name drift",
+        "replace obsolete profile-matrix filename Makefile invocation with current explicit compilation semantics",
+        "align appendix-annex evidence output with current engine_matrix_deferred scenario metadata",
+        "prove make check on a clean TeX Live 2026 Linux runner before permanent heavy workflow restoration"
+      ],
+      "b7_c2_status": "PENDING",
+      "b7_c3_status": "PENDING",
       "b7_d_status": "PENDING"
     },
     "R1-BLOCK-8": {
@@ -704,5 +755,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-7 B7-A from canonical remote main at certified implementation checkpoint 4c25c27b758e4b99db11187b34b9043776566871 using issue #213. Inventory historical/current workflow patterns, current make static-check/make check/make release-check dependencies, job names, triggers, concurrency and caching before restoring permanent workflows. Keep B8 Windows/font/PDF-A certification and V3-R2 runtime/API work out of scope."
+  "next_action": "Execute R1-BLOCK-7 B7-C1 after control-plane reconciliation. Repair the seven clean-runner execution/artifact-contract defects exposed by run 33530309579, validate make static-check, then prove make check under the TeX Live 2026 Linux runner before adding permanent heavy workflow YAML. Keep B8 Windows/font/final PDF-A certification and V3-R2 runtime/API work out of scope."
 }
