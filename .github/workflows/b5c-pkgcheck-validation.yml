@@ -1,0 +1,78 @@
+name: B5-C CTAN pkgcheck validation
+
+on:
+  push:
+    branches:
+      - feat/v3-r1-b5c-package-ctan
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    if: "github.event.head_commit.message == 'chore: add temporary B5-C pkgcheck validation'"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build candidate and run CTAN pkgcheck
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends poppler-utils file
+
+          python3 tools/fetch-reference-images.py
+          make distribution-bundles
+          test ! -e .abntexto-ufc-upstream.cls
+
+          rm -rf /tmp/abntexto-ufc-ctan-candidate /tmp/ctan-pkgcheck
+          mkdir -p /tmp/abntexto-ufc-ctan-candidate /tmp/ctan-pkgcheck
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+          archive = Path('dist/abntexto-ufc-ctan-3.0.0.zip')
+          target = Path('/tmp/abntexto-ufc-ctan-candidate')
+          with zipfile.ZipFile(archive) as zf:
+              zf.extractall(target)
+          PY
+
+          curl -fsSL https://mirrors.ctan.org/support/pkgcheck.zip -o /tmp/pkgcheck.zip
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('/tmp/pkgcheck.zip') as zf:
+              zf.extractall('/tmp/ctan-pkgcheck')
+          PY
+
+          PKGCHECK=""
+          while IFS= read -r candidate; do
+            if file "$candidate" | grep -q 'ELF 64-bit'; then
+              PKGCHECK="$candidate"
+              break
+            fi
+          done < <(find /tmp/ctan-pkgcheck -type f -name 'pkgcheck*' | sort)
+          test -n "$PKGCHECK"
+          chmod +x "$PKGCHECK"
+          "$PKGCHECK" --version
+          "$PKGCHECK" --no-colors -d /tmp/abntexto-ufc-ctan-candidate/abntexto-ufc | tee /tmp/pkgcheck-report.txt
+
+          if grep -Eq '(^|[[:space:]])E[0-9]{4}([[:space:]]|:)' /tmp/pkgcheck-report.txt; then
+            echo 'pkgcheck reported CTAN errors.' >&2
+            exit 1
+          fi
+          echo 'B5-C-PKGCHECK status=PASS candidate=abntexto-ufc-ctan-3.0.0.zip'
+
+      - name: Self-remove temporary workflow
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b5c-pkgcheck-validation.yml
+          git commit -m 'chore: remove temporary B5-C pkgcheck validation'
+          git push origin HEAD:feat/v3-r1-b5c-package-ctan
