@@ -160,4 +160,4 @@ PY
   done
 done
 
-echo 'Gate V2 de tipografia e geometria de código e algoritmos concluído.'
+echo 'Gate de tipografia e geometria de código e algoritmos concluído.'
