@@ -76,7 +76,7 @@ B4-A changes:
 - `normative_full_contract.py`, `normative_traceability.py`, and `normative_coverage.py` share that distinction;
 - stale `distribution-source` evidence ID was removed from the distribution policy; live `build-path` evidence remains and distribution implementation stays B5-owned;
 - reference-image User-Agent changed from `abntexto-ufc/2.1.0` to `abntexto-ufc/3.0.0`;
-- validator project identity changed from inherited `ufctex` to `abntexto-ufc · standalone validator`.
+- validator project identity changed from the retired legacy identity to `abntexto-ufc · standalone validator`.
 
 Remote validation was deliberately fail-closed:
 
@@ -88,7 +88,7 @@ Final B4-A gate covered Python compilation, standards JSON parsing, `normative_f
 
 ### B4-B — Stale identity and metadata cleanup
 
-**ACTIVE / NEXT.** Two entry identities were already repaired in B4-A (`2.1.0` User-Agent and `ufctex` validator branding). B4-B now performs a fresh residual audit across project/package/version/repository/ownership metadata and removes only stale active technical identity. Historical, migration, B5/B8 and negative-test references remain classified rather than blindly rewritten.
+**ACTIVE / NEXT.** Two entry identities were already repaired in B4-A (`2.1.0` User-Agent and retired validator branding). B4-B now performs a fresh residual audit across project/package/version/repository/ownership metadata and removes only stale active technical identity. Historical, migration, B5/B8 and negative-test references remain classified rather than blindly rewritten.
 
 ### B4-C — Validator/tool technical-language rebaseline
 

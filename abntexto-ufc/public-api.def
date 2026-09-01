@@ -1,7 +1,7 @@
 \ProvidesFile{abntexto-ufc/public-api.def}[2026/08/29 UFC canonical public API]
 
-% Canonical English setup keys forward to the certified Portuguese v2.x behavior.
-% Portuguese keys remain supported compatibility surfaces throughout v2.x.
+% Canonical English setup keys forward to the retained Portuguese compatibility behavior.
+% Portuguese keys remain supported compatibility surfaces until V3-R2.
 \ExplSyntaxOn
 
 \keys_define:nn { ufc }
@@ -121,8 +121,8 @@
     initial-page .meta:n = { pagina-inicial = {#1} }
   }
 
-% B2R-B3 canonical commands forward to the certified v2.x public behavior.
-% The legacy commands remain the behavior owners during v2.x.
+% Canonical commands forward to the retained Portuguese compatibility behavior.
+% The Portuguese compatibility commands remain behavior owners until V3-R2.
 \NewDocumentCommand \ufcPrintCover { }
   { \imprimircapa }
 
