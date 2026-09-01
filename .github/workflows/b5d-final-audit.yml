@@ -1,0 +1,119 @@
+name: B5-D final audit
+
+on:
+  push:
+    branches:
+      - audit/v3-r1-b5d-final
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: "github.event.head_commit.message == 'chore: add final temporary B5-D audit'"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Certify B5 closeout state
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -euo pipefail
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends git
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+            python3 -m py_compile \
+              tools/build-public-bundles.py \
+              tools/build-distribution-bundles.py \
+              tools/fetch-abntexto.py \
+              tests/checks/public_bundles.py \
+              tests/checks/distribution_bundles.py
+            sh -n tests/integration/overleaf-stable.sh
+            sh -n tests/integration/build-path.sh
+
+            test -z "$(git ls-files 'dist/*')"
+            test -z "$(find .github/workflows -maxdepth 1 -type f ! -name 'b5d-final-audit.yml' -print)"
+
+            python3 tools/fetch-reference-images.py
+            python3 tools/fetch-abntexto.py --output /tmp/abntexto-ufc-b5d-final.cls
+            python3 tests/checks/distribution_bundles.py --abntexto /tmp/abntexto-ufc-b5d-final.cls
+            python3 tests/checks/public_bundles.py --abntexto /tmp/abntexto-ufc-b5d-final.cls
+            python3 tests/checks/canonical_identity.py
+            python3 tests/checks/repository_contract.py
+
+            python3 - <<'PY'
+            import json
+            from pathlib import Path
+
+            state = json.loads(Path('release/v3-roadmap.json').read_text(encoding='utf-8'))
+            block = state['blocks']['R1-BLOCK-5']
+            policy = state['policies']
+            results = block['b5_c_results']
+
+            assert state['stage'] == 'R1-BLOCK-5'
+            assert state['last_certified_clean_checkpoint_sha'] == '4bc0f544020234bc14a8f2261927f65721b6eddb'
+            assert 'B5-D' in state['next_action']
+            assert 'Start R1-BLOCK-5 B5-C' not in state['next_action']
+            assert block['status'] == 'ACTIVE'
+            assert block['active_work_item'] == 'B5-D'
+            assert block['active_sub_item'] == 'B5-D'
+            assert block['b5_a_status'] == 'DONE'
+            assert block['b5_b_status'] == 'DONE'
+            assert block['b5_c_status'] == 'DONE'
+            assert block['b5_d_status'] == 'ACTIVE'
+            assert block['b5_c_closure_sha'] == '4bc0f544020234bc14a8f2261927f65721b6eddb'
+            assert results['artifact_count_including_checksums'] == 5
+            assert results['all_outputs_reproducible'] is True
+            assert results['ctan_documentation_pdf_deterministic'] is True
+            assert results['ctan_pkgcheck_error_count'] == 0
+            assert results['ctan_pkgcheck_warning_count'] == 0
+            assert results['external_abntexto_preserved_for_class_and_ctan'] is True
+            assert results['overleaf_only_vendors_pinned_abntexto'] is True
+            assert results['institutional_assets_excluded'] is True
+            assert results['proprietary_microsoft_fonts_excluded'] is True
+            assert results['actual_ctan_submission_performed'] is False
+            assert results['temporary_workflows_removed'] is True
+            assert policy['permanent_automatic_workflows_during_r1_reconstruction'] is False
+            print('B5-D-CONTROL-PLANE status=PASS')
+            PY
+
+            grep -Fq 'B5-C done; B5-D active' docs/ROADMAP-V3.0.0.md
+            grep -Fq 'Latest certified implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**' docs/ROADMAP-V3.0.0.md
+            grep -Fq 'Active B5 work item: **B5-D' docs/HANDOFF-V3.0.0.md
+            grep -Fq 'docs/CTAN-RELEASE.md' README.md
+            grep -Fq 'pkgcheck' docs/CTAN-RELEASE.md
+            grep -Fq 'abntexto-uece' docs/CTAN-RELEASE.md
+            grep -Fq '"id": "distribution.overleaf-ctan.policy"' standards/coverage-rules-closure.json
+            grep -Fq '"build-path"' standards/coverage-rules-closure.json
+
+            if grep -Eiq 'B5-C[^\n]*(active|next)|Class/CTAN-candidate packaging is still being completed' README.md docs/ARCHITECTURE.md docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md; then
+              echo 'Stale B5-C active-state documentation remains.' >&2
+              exit 1
+            fi
+
+            if grep -Fq 'tests/v2-font-embedding-check.sh' tests/integration/overleaf-stable.sh; then
+              echo 'Removed Overleaf consumer path remains.' >&2
+              exit 1
+            fi
+
+            git diff --check
+            echo 'B5-D-AUDIT status=PASS implementation_checkpoint=4bc0f544020234bc14a8f2261927f65721b6eddb artifacts=5 reproducible=PASS checksums=PASS public_contract=PASS ctan_contract=PASS distribution_policy=PASS generated_outputs_tracked=0 permanent_workflows=0 control_plane=PASS'
+
+      - name: Self-remove final temporary audit
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b5d-final-audit.yml
+          git commit -m 'chore: remove final temporary B5-D audit'
+          git push origin HEAD:audit/v3-r1-b5d-final
