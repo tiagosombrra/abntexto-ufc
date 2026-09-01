@@ -1,0 +1,71 @@
+name: B5-B temporary public bundle validation
+
+on:
+  push:
+    branches:
+      - feat/v3-r1-b5b-public-bundles
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    if: "github.event.head_commit.message == 'chore: add temporary B5-B validation'"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate producer and deterministic archive contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/build-public-bundles.py tools/fetch-abntexto.py tests/checks/public_bundles.py
+          python3 tools/fetch-reference-images.py
+          python3 tools/fetch-abntexto.py --output .abntexto-ufc-upstream.cls
+          make public-bundles
+          python3 tests/checks/public_bundles.py --abntexto .abntexto-ufc-upstream.cls
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          git diff --check
+          test ! -e .abntexto-ufc-upstream.cls
+          echo 'B5-B-STRUCTURE status=PASS'
+
+      - name: Validate flattened Overleaf staging on TeX Live 2025
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80
+        with:
+          texlive_version: 2025
+          os: debian
+          run: |
+            set -euo pipefail
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils
+            python3 tools/fetch-reference-images.py
+            python3 tools/fetch-abntexto.py --output .abntexto-ufc-upstream.cls
+            python3 tools/build-public-bundles.py --abntexto .abntexto-ufc-upstream.cls
+            rm -rf /tmp/abntexto-ufc-overleaf-stage
+            mkdir -p /tmp/abntexto-ufc-overleaf-stage
+            python3 - <<'PY'
+            import zipfile
+            from pathlib import Path
+            archive = Path('dist/abntexto-ufc-overleaf-3.0.0.zip')
+            target = Path('/tmp/abntexto-ufc-overleaf-stage')
+            with zipfile.ZipFile(archive) as zf:
+                zf.extractall(target)
+            PY
+            sh tests/integration/overleaf-stable.sh /tmp/abntexto-ufc-overleaf-stage
+            echo 'B5-B-OVERLEAF status=PASS'
+
+      - name: Self-remove temporary workflow
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b5b-temporary-validation.yml
+          git commit -m 'chore: remove temporary B5-B validation'
+          git push origin HEAD:feat/v3-r1-b5b-public-bundles
