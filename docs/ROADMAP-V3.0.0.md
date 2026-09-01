@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A active.**
+**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B done; B7-C active.**
 
 Current sequence:
 
@@ -14,10 +14,14 @@ B4 internal sequence:
 
 **B4-A DONE → B4-B DONE → B4-C DONE [C1 DONE → C2a DONE → C2b DONE] → B4-D DONE**
 
+B7 internal sequence:
+
+**B7-A DONE → B7-B DONE → B7-C ACTIVE [C1 ACTIVE → C2 PENDING → C3 PENDING] → B7-D PENDING**
+
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
 - B7 operational issue: #213.
-- Latest certified implementation checkpoint: **`4c25c27b758e4b99db11187b34b9043776566871`**.
+- Latest certified implementation checkpoint: **`643397ee2fa49e6bd496889cb287f43167d49b0f`**.
 - R1-BLOCK-3 closure: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -118,7 +122,7 @@ Remote validation run **`33501306482` PASS** covered Python/JS syntax, JSON, `no
 
 **DONE** via PR #195 at **`3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8`**. Generic project-owned technical categories, validation levels, synthetic cross-surface taxonomy and CLI report headings were normalized to English while academic/domain terms remained Portuguese.
 
-Run **`33502021542` PASS** validated cross-surface/validator contracts, full validator source, canonical identity, repository contract, syntax/JSON/diff integrity and explicit academic-label preservation. Run **`33502137178` PASS** removed the initial executor. Review found and blocked one accidental substring artifact before merge; run **`33506189097` PASS** repaired it, reran proportional gates and self-removed the repair workflow.
+Run **`33502021542` PASS** validated cross-surface/validator contracts, full validator source, canonical identity, repository contract, syntax/JSON/diff integrity and explicit academic-label preservation. Run **`33502137178` PASS** removed the initial executor. Review found and blocked one accidental substring artifact before merge; run **`33506189097` PASS** repaired it, reran the proportional gates and self-removed the repair workflow.
 
 ##### B4-C2b — diagnostics, report/export labels and Web UI
 
@@ -170,32 +174,56 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`.
+**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`643397ee2fa49e6bd496889cb287f43167d49b0f`**.
 
 B7 restores permanent GitHub Actions as orchestration over current repository entry points; workflow YAML must not duplicate gate internals.
 
 ### B7-A — Workflow/runner dependency inventory and orchestration design
 
-**ACTIVE.** Inventory successful historical workflows, current `make static-check`/`make check`/`make release-check` dependencies, stable job names, triggers, concurrency, caching and path ownership before creating permanent workflows.
+**DONE.** Run `33530309579` inventoried the current runner surface and established the orchestration boundary: 30 PR checks, 32 release checks, with only `pdfa` and `profile-pdfa` release-only. The broad runner is TeX/PDF-heavy and depends on pdflatex/lualatex, Biber, Poppler, glossary/index/minted tooling. Historical successful CI establishes pinned checkout/setup actions, Python 3.13, Node 24 and TeX Live 2026 as the current Linux runner pattern; B8 retains hosted Windows/font certification.
+
+The clean-runner integration probe in the same run took 501 s and ended `PASS=22 FAIL=7 SKIP=1`. Its failures are current execution/artifact-contract defects, not evidence of a normative-rule regression: reference corpus path mismatch, stale CAPES path, detached object-geometry argument, objects/bibliography job-name drift, obsolete profile-matrix Makefile variable, stale appendix/annex evidence metadata, plus dependent reference-spacing skip. This makes clean-runner repair a prerequisite of permanent heavy orchestration.
 
 ### B7-B — Permanent fast/static workflow
 
-**PENDING.** Add the permanent remote fast job consuming `make static-check` directly.
+**DONE** via PR #216 at **`643397ee2fa49e6bd496889cb287f43167d49b0f`**. `.github/workflows/static-contract.yml` is the permanent fast CI surface. Stable workflow/job name is `Static contract`; it runs for PRs to `main`, pushes to `main`, and manual dispatch, with read-only contents permission, bounded concurrency/cancellation, Ubuntu 24.04, Python 3.13 and Node 24. Its only product validation command is `make static-check`; YAML does not duplicate gate internals. Remote run **`33530718380` PASS** certified the workflow.
 
 ### B7-C — Optimized Linux integration/release orchestration
 
-**PENDING.** Restore integration/release jobs around current entry points, keeping heavy or release-only work off every intermediate commit.
+**ACTIVE.** Permanent heavy YAML remains blocked until the repository-owned integration entry point is clean-runner safe.
+
+#### B7-C1 — Clean-runner integration contract repair
+
+**ACTIVE.** Repair only the execution/fixture/evidence wiring exposed by run `33530309579`, then validate `make check` on a clean TeX Live 2026 runner. Do not change normative rule IDs, values, tolerances, locators, proof state, runtime/API or B8-owned certification semantics.
+
+Expected bounded repair set:
+
+- align reference corpus consumption with `template/main.*` production;
+- resolve CAPES front-matter path from the repository root reliably;
+- repair the object-geometry evidence argument invocation;
+- make object and bibliography fixture job names match their inspected artifacts;
+- replace the obsolete profile-matrix `filename=` Makefile call with current explicit compilation semantics;
+- align appendix/annex evidence output with the current `engine_matrix_deferred` scenario field;
+- rerun broad PR-mode validation and classify any newly exposed failure before touching workflow orchestration.
+
+#### B7-C2 — Permanent Linux PR integration orchestration
+
+**PENDING.** After B7-C1 passes, add a bounded permanent job that consumes `make check`, uses the proven Linux/TeX runner contract and avoids forcing heavy validation on every intermediate commit where the fast contract is sufficient.
+
+#### B7-C3 — Release orchestration
+
+**PENDING.** Define the Linux `make release-check` trigger/cadence and artifact/evidence handling without treating it as final B8 Windows/font/PDF-A certification.
 
 ### B7-D — Residual audit and B8 handoff
 
-**PENDING.** Audit workflow ownership/status semantics and hand final Windows/font/PDF-A certification to B8.
+**PENDING.** Audit permanent workflow ownership, stable check names, status semantics, concurrency/caching, temporary artifact absence and branch-protection recommendations, then activate B8.
 
 ## Remaining R1 blocks
 
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
 - **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
 - **R1-B6 DONE** — permanent cheap/static fail-closed gate at `4c25c27b758e4b99db11187b34b9043776566871`.
-- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-A active.
+- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C1 active after B7-A/B completion.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
 ## Later phases
@@ -208,4 +236,4 @@ B7 restores permanent GitHub Actions as orchestration over current repository en
 
 ## Immediate action
 
-Start **B7-A** from canonical remote `main` at certified implementation checkpoint `4c25c27b758e4b99db11187b34b9043776566871` using issue #213. Inventory historical/current workflow patterns and current runner dependencies, then define optimized permanent orchestration that consumes repository entry points rather than duplicating them. B8 retains final Windows/font/PDF-A certification and V3-R2 retains runtime/API migration.
+Execute **B7-C1** from canonical remote `main` after control-plane reconciliation. Repair the seven clean-runner execution/artifact-contract defects exposed by run `33530309579`, validate `make static-check`, then prove `make check` under the TeX Live 2026 Linux runner before adding permanent heavy workflow YAML. Keep B8 Windows/font/final PDF-A certification and V3-R2 runtime/API migration out of scope.
