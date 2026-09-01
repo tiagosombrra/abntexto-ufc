@@ -1,0 +1,114 @@
+name: B4-D final residual audit
+
+on:
+  push:
+    branches:
+      - audit/v3-r1-b4d-closeout
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: "github.event.head_commit.message == 'chore: add temporary B4-D final audit'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Inventory ownership consumers and residuals
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import subprocess
+          from pathlib import Path
+
+          expected_tools = {
+              'convert-encoding-to-unicode.ps1': 'B8-owned-live-windows-font-chain',
+              'fetch-abntexto.py': 'B5-owned-upstream-bundle-helper',
+              'fetch-reference-images.py': 'current-Makefile-consumer',
+              'normative_atomic.py': 'current-validator-source-infrastructure',
+              'normative_catalog.py': 'current-validator-source-infrastructure',
+              'normative_full.py': 'current-validator-source-infrastructure',
+              'pdf_measurement.py': 'current-validation-infrastructure',
+              'pdf_vector_measurement.py': 'current-vector-validation-infrastructure',
+              'prepare-windows-fonts.ps1': 'B8-owned-live-windows-font-chain',
+              'validate-ufc-pdf.py': 'current-validator-product-surface',
+          }
+          expected_validator = {'app.js','index.html','validation-contract.json','validation-vectors.json'}
+          actual_tools = {p.name for p in Path('tools').iterdir() if p.is_file()}
+          actual_validator = {p.name for p in Path('validator').iterdir() if p.is_file()}
+          if actual_tools != set(expected_tools):
+              raise SystemExit(f'tools inventory drift: {sorted(actual_tools)}')
+          if actual_validator != expected_validator:
+              raise SystemExit(f'validator inventory drift: {sorted(actual_validator)}')
+          print(f'TOOLS_COUNT={len(actual_tools)} VALIDATOR_COUNT={len(actual_validator)}')
+
+          def refs(needle):
+              cp=subprocess.run(['git','grep','-l','-F',needle,'--','.'],text=True,capture_output=True)
+              return [x for x in cp.stdout.splitlines() if x]
+
+          for name, ownership in expected_tools.items():
+              stem=name.rsplit('.',1)[0].replace('-','_')
+              paths=sorted(set(refs(name)+refs(stem)))
+              paths=[p for p in paths if p != f'tools/{name}' and not p.startswith('.github/workflows/')]
+              print(f'OWNERSHIP {name} {ownership} consumers={len(paths)}')
+              for p in paths[:20]: print(f'  CONSUMER {p}')
+              if ownership.startswith('current-') and name not in {'pdf_measurement.py','pdf_vector_measurement.py'} and not paths:
+                  raise SystemExit(f'{name}: current helper has no textual consumer')
+
+          for name in sorted(expected_validator):
+              paths=sorted(p for p in refs(name) if p != f'validator/{name}' and not p.startswith('.github/workflows/'))
+              print(f'VALIDATOR {name} consumers={len(paths)}')
+              if not paths:
+                  raise SystemExit(f'validator/{name}: no textual consumer')
+          PY
+
+          echo '=== B4-owned stale identity/process markers ==='
+          git grep -n -i -E 'ufctex|(^|[^A-Za-z0-9])v2([.0-9]|[^A-Za-z0-9]|$)|B2R|project-owned oracle|oracle calibration' -- tools validator || true
+
+          echo '=== B4-owned remaining Portuguese/non-English candidates ==='
+          git grep -n -E '[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]' -- tools/validate-ufc-pdf.py validator || true
+
+          echo '=== font integration legacy/version candidates ==='
+          git grep -n -i -E 'v2|ufctex|oracle|B2R' -- tests/integration/font-embedding.sh tests/integration/windows-fonts.sh 2>/dev/null || true
+
+          echo '=== temporary artifacts ==='
+          if git ls-files | grep -E '(^|/)(_b4.*_temp\.py|.*temporary.*|b4c2b-.*\.yml|b4c2a-.*\.yml)$'; then
+            echo 'Unexpected temporary artifact in tracked tree.' >&2
+            exit 1
+          fi
+          workflows=$(git ls-files '.github/workflows/*' | grep -v '^.github/workflows/b4d-final-audit.yml$' || true)
+          if [ -n "$workflows" ]; then
+            echo "Unexpected workflow(s): $workflows" >&2
+            exit 1
+          fi
+
+      - name: Run B4 closure gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/*.py tests/checks/validator_source.py tests/checks/normative_validator_contract.py tests/checks/normative_cross_surface.py tests/checks/canonical_identity.py tests/checks/repository_contract.py
+          node --check validator/app.js
+          python3 -m json.tool validator/validation-contract.json >/dev/null
+          python3 -m json.tool validator/validation-vectors.json >/dev/null
+          python3 tests/checks/normative_atomic_contract.py
+          python3 tests/checks/normative_cross_surface.py
+          python3 tests/checks/normative_validator_contract.py
+          python3 tests/checks/validator_source.py
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          git diff --check
+          echo 'B4-D-FINAL-AUDIT status=PASS'
+
+      - name: Remove temporary audit workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b4d-final-audit.yml
+          git commit -m 'chore: remove temporary B4-D final audit'
+          git push origin HEAD:audit/v3-r1-b4d-closeout
