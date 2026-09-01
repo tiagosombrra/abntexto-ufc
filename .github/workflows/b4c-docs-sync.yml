@@ -1,0 +1,39 @@
+name: B4-C canonical docs sync
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b4c-close-b4d-open
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: "github.event.head_commit.message == 'chore: add temporary B4-C docs executor'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Synchronize canonical control plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/_b4c_docs_sync_temp.py
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          grep -F 'B4-D — final residual audit and closeout' docs/HANDOFF-V3.0.0.md >/dev/null
+          grep -F 'B4-C done; B4-D active' docs/ROADMAP-V3.0.0.md >/dev/null
+          grep -F '1a126c37653728941ce1ada762376c5fec69cb02' docs/HANDOFF-V3.0.0.md >/dev/null
+          git diff --check
+      - name: Commit sync and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git commit -m 'docs: close B4-C and activate B4-D'
+          git rm tools/_b4c_docs_sync_temp.py .github/workflows/b4c-docs-sync.yml
+          git commit -m 'chore: remove temporary B4-C docs sync'
+          git push origin HEAD:docs/v3-r1-b4c-close-b4d-open
