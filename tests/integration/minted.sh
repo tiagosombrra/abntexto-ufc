@@ -59,8 +59,8 @@ for engine in pdflatex lualatex; do
     echo "Validando minted $family com $engine..."
 
     for pass in 1 2; do
-      "$engine" -jobname="$job" -shell-escape $flags "$tmp" > /tmp/abntexto-ufc-v2-minted.log 2>&1 || {
-        cat /tmp/abntexto-ufc-v2-minted.log
+      "$engine" -jobname="$job" -shell-escape $flags "$tmp" > /tmp/abntexto-ufc-minted.log 2>&1 || {
+        cat /tmp/abntexto-ufc-minted.log
         exit 1
       }
     done
@@ -94,4 +94,4 @@ for engine in pdflatex lualatex; do
   done
 done
 
-echo 'Gate V2 de minted concluído.'
+echo 'Gate de minted concluído.'
