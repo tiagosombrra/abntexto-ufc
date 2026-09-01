@@ -1,0 +1,110 @@
+name: B6-A candidate classification
+
+on:
+  push:
+    branches:
+      - audit/v3-r1-b6a-inventory
+
+permissions:
+  contents: write
+
+jobs:
+  classify:
+    if: "github.event.head_commit.message == 'chore: add temporary B6-A candidate classification'"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Execute candidate source-only checks and measure cost
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from __future__ import annotations
+          import json
+          import subprocess
+          import time
+          from pathlib import Path
+
+          candidates = [
+              'frontmatter_definition_list_alignment.py',
+              'normative_atomicity.py',
+              'normative_configuration.py',
+              'normative_coverage.py',
+              'normative_currency.py',
+              'normative_false_coverage.py',
+              'normative_full_contract.py',
+              'normative_locators.py',
+              'normative_objects_scope.py',
+              'normative_precedence.py',
+              'normative_proof_state.py',
+              'normative_source_references.py',
+              'normative_sources.py',
+              'normative_validator_contract.py',
+              'reference_guide_contract.py',
+              # Heuristic false-positive/bounded candidates to measure explicitly.
+              'canonical_identity.py',
+              'repository_contract.py',
+              'normative_atomic_contract.py',
+              'normative_cross_surface.py',
+              'normative_traceability.py',
+              'validator_source.py',
+          ]
+
+          results = []
+          start_total = time.perf_counter()
+          for name in candidates:
+              path = Path('tests/checks') / name
+              if not path.is_file():
+                  raise SystemExit(f'Missing candidate: {path}')
+              cmd = ['python3', str(path)]
+              if name == 'normative_traceability.py':
+                  cmd.append('--strict-evidence')
+              before = subprocess.run(['git','status','--porcelain'], text=True, capture_output=True, check=True).stdout
+              start = time.perf_counter()
+              cp = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, errors='replace')
+              elapsed = time.perf_counter() - start
+              after = subprocess.run(['git','status','--porcelain'], text=True, capture_output=True, check=True).stdout
+              results.append({
+                  'name': name[:-3],
+                  'seconds': round(elapsed, 3),
+                  'exit_code': cp.returncode,
+                  'working_tree_changed': before != after,
+                  'tail': cp.stdout.splitlines()[-3:],
+              })
+          total = time.perf_counter() - start_total
+          print('B6-A-CANDIDATE-TIMINGS ' + json.dumps(results, ensure_ascii=False))
+          print(f'B6-A-CANDIDATE-TOTAL seconds={total:.3f} candidates={len(results)}')
+          failed = [r for r in results if r['exit_code'] != 0 or r['working_tree_changed']]
+          if failed:
+              print('B6-A-CANDIDATE-NONPASS ' + json.dumps(failed, ensure_ascii=False))
+              raise SystemExit(1)
+          print('B6-A-CANDIDATE-CLASSIFICATION status=PASS source_only_executed=21 working_tree_side_effects=0')
+          PY
+
+          # Universal syntax/data gate cost as a separate class.
+          t0=$(date +%s%N)
+          git ls-files '*.py' -z | xargs -0 -r -n 40 python3 -m py_compile
+          git ls-files '*.json' -z | xargs -0 -r python3 -c 'import json,sys; [json.load(open(p, encoding="utf-8")) for p in sys.argv[1:]]'
+          git ls-files '*.sh' -z | xargs -0 -r -n 1 sh -n
+          for f in $(git ls-files '*.js'); do node --check "$f" >/dev/null; done
+          t1=$(date +%s%N)
+          python3 - "$t0" "$t1" <<'PY'
+          import sys
+          print(f'B6-A-UNIVERSAL-SYNTAX seconds={(int(sys.argv[2])-int(sys.argv[1]))/1e9:.3f} status=PASS')
+          PY
+          git diff --check
+
+      - name: Self-remove temporary classification
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b6a-temporary-classification.yml
+          git commit -m 'chore: remove temporary B6-A classification'
+          git push origin HEAD:audit/v3-r1-b6a-inventory
