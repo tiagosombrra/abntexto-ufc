@@ -2,9 +2,9 @@
 set -eu
 
 source_fixture="tests/documents/catalog-card.tex"
-tmp_fixture="abntexto-ufc-v2-catalog-main.tex"
-card_source="abntexto-ufc-v2-catalog-card.tex"
-card_base="abntexto-ufc-v2-catalog-card"
+tmp_fixture="abntexto-ufc-catalog-main.tex"
+card_source="abntexto-ufc-catalog-card.tex"
+card_base="abntexto-ufc-catalog-card"
 
 cleanup() {
   rm -f "$tmp_fixture" "$card_source" "$card_base".aux "$card_base".log "$card_base".pdf \
@@ -27,8 +27,8 @@ FICHA-CATALOGRAFICA-TESTE
 \end{document}
 TEX
 
-pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$card_source" > /tmp/abntexto-ufc-v2-card-source.log 2>&1 || {
-  cat /tmp/abntexto-ufc-v2-card-source.log
+pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$card_source" > /tmp/abntexto-ufc-card-source.log 2>&1 || {
+  cat /tmp/abntexto-ufc-card-source.log
   exit 1
 }
 
@@ -43,8 +43,8 @@ for engine in pdflatex lualatex; do
 
       echo "Validando ficha catalográfica: $mode/$card_mode/$engine..."
       for pass in 1 2 3; do
-        "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/abntexto-ufc-v2-card.log 2>&1 || {
-          cat /tmp/abntexto-ufc-v2-card.log
+        "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/abntexto-ufc-card.log 2>&1 || {
+          cat /tmp/abntexto-ufc-card.log
           exit 1
         }
       done
@@ -119,4 +119,4 @@ done
 
 echo 'VALIDATION-EVIDENCE rule=deposit.catalog-card status=PASS measured=enabled-and-disabled-routes'
 echo 'VALIDATION-BOUNDARY rule=font.size.reduced.catalog-card status=MANUAL scope=external-pdf'
-echo 'Gate V2 da ficha catalográfica concluído.'
+echo 'Gate da ficha catalográfica concluído.'
