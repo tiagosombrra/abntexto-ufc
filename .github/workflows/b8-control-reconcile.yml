@@ -1,0 +1,66 @@
+name: B8 control-plane reconcile
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b8-reconcile
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout task branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Reconcile established B7/B8 facts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          handoff = Path('docs/HANDOFF-V3.0.0.md')
+          text = handoff.read_text(encoding='utf-8')
+          replacements = {
+              '- B7 operational issue: **#213 — complete; close after this control-plane transition merges**.':
+                  '- B7 operational issue: **#213 — CLOSED (`completed`)**.',
+              '## R1-BLOCK-7 — Optimized Remote Workflow Restoration\n\n**ACTIVE.** Operational issue #213.':
+                  '## R1-BLOCK-7 — Optimized Remote Workflow Restoration\n\n**DONE.** Operational issue #213 is closed (`completed`).',
+              '**ACTIVE** via issue #227. Entry implementation checkpoint remains `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the B7-D control-plane audit was performed against `main` at `5f0ec947bb123567b5fe4548f04e9a15b2bb915d`.':
+                  '**ACTIVE** via issue #227. Entry implementation checkpoint remains `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the B7-D workflow audit was performed against `main` at `5f0ec947bb123567b5fe4548f04e9a15b2bb915d`, and the B7→B8 control-plane transition merged through PR #228 at `4abff2c0ff4b8ae31166b8b6a03aed30b1ae8aa8` with post-merge `Static contract` run `33569583824` PASS.'
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'HANDOFF replacement cardinality failed: {count}: {old[:80]}')
+              text = text.replace(old, new)
+          handoff.write_text(text, encoding='utf-8')
+
+          roadmap = Path('release/v3-roadmap.json')
+          data = json.loads(roadmap.read_text(encoding='utf-8'))
+          b8 = data['blocks']['R1-BLOCK-8']
+          if b8.get('entry_control_plane_sha') != '5f0ec947bb123567b5fe4548f04e9a15b2bb915d':
+              raise SystemExit('unexpected B8 entry_control_plane_sha')
+          b8['entry_control_plane_sha'] = '4abff2c0ff4b8ae31166b8b6a03aed30b1ae8aa8'
+          b8['entry_control_plane_pr'] = 228
+          b8['entry_control_plane_static_run_id'] = 33569583824
+          b8['b7_operational_issue_closed'] = True
+          roadmap.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          grep -Fq '**DONE.** Operational issue #213 is closed (`completed`).' docs/HANDOFF-V3.0.0.md
+          grep -Fq '4abff2c0ff4b8ae31166b8b6a03aed30b1ae8aa8' docs/HANDOFF-V3.0.0.md
+          make static-check
+          git diff --check
+
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add docs/HANDOFF-V3.0.0.md release/v3-roadmap.json
+          git rm -f .github/workflows/b8-control-reconcile.yml
+          git commit -m 'docs: reconcile B7 closure and B8 entry receipts'
+          git push origin HEAD:docs/v3-r1-b8-reconcile
