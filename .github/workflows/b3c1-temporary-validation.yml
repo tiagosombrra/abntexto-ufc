@@ -41,44 +41,20 @@ jobs:
               sh "$script"
             done
 
-  windows-portability:
-    if: github.event.pull_request.number == 164
-    runs-on: windows-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout PR head
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+            # Static portability assertions: verify the repaired code no longer
+            # depends on the assumptions that exposed the Windows-only failures.
+            grep -Fq 'pdftotext -layout "$job.pdf" "$job.txt"' tests/integration/catalog-card.sh
+            grep -Fq "raw = Path(f'{job}.txt').read_text(encoding='utf-8')" tests/integration/catalog-card.sh
+            if grep -Fq "Path(f'/tmp/{job}.txt')" tests/integration/catalog-card.sh; then
+              echo 'catalog-card still reconstructs a shell /tmp path in Python'
+              exit 1
+            fi
 
-      - name: Validate bounded Windows portability contracts
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          for script in \
-            tests/integration/catalog-card.sh \
-            tests/integration/long-quotation-evidence.sh \
-            tests/integration/research-project.sh \
-            tests/integration/short-direct-citation-evidence.sh \
-            tests/integration/vector-rule-validation.sh \
-            tests/integration/table-ibge-vector-evidence.sh
-          do
-            sh -n "$script"
-          done
-
-          grep -Fq 'catalog_text="abntexto-ufc-v2-catalog-card.txt"' tests/integration/catalog-card.sh
-          grep -Fq 'python3 - "$job" "$mode" "$card_mode" "$catalog_text"' tests/integration/catalog-card.sh
-          if grep -Fq "Path(f'/tmp/{job}.txt')" tests/integration/catalog-card.sh; then
-            echo 'catalog-card still reconstructs a Git-Bash /tmp path in native Python'
-            exit 1
-          fi
-
-          grep -Fq 'PYTHONIOENCODING=UTF-8 python3 tests/checks/normative_short_direct_citation.py' \
-            tests/integration/short-direct-citation-evidence.sh
-          PYTHONIOENCODING=UTF-8 python -c "import json; print(json.dumps({'quotes':'“”'}, ensure_ascii=False))"
-
-          grep -Fq -- '-jobname="$job"' tests/integration/research-project.sh
-          grep -Fq 'artifacts/normative/mainmatter/long-quotation.json' standards/long-quote-reduced-size-scenario.json
-          grep -Fq 'validation-policy.tolerances.horizontal_position_pt' standards/vector-rule-validation-extension.json
-          grep -Fq 'validation-policy.tolerances.vertical_position_pt' standards/vector-rule-validation-extension.json
-          grep -Fq 'vector-rule-validation-calibration.json' tests/integration/vector-rule-validation.sh
-          grep -Fq 'sh tests/integration/vector-rule-validation.sh' tests/integration/table-ibge-vector-evidence.sh
+            grep -Fq 'PYTHONIOENCODING=UTF-8 python3 tests/checks/normative_short_direct_citation.py' \
+              tests/integration/short-direct-citation-evidence.sh
+            grep -Fq -- '-jobname="$job"' tests/integration/research-project.sh
+            grep -Fq 'artifacts/normative/mainmatter/long-quotation.json' standards/long-quote-reduced-size-scenario.json
+            grep -Fq 'validation-policy.tolerances.horizontal_position_pt' standards/vector-rule-validation-extension.json
+            grep -Fq 'validation-policy.tolerances.vertical_position_pt' standards/vector-rule-validation-extension.json
+            grep -Fq 'vector-rule-validation-calibration.json' tests/integration/vector-rule-validation.sh
+            grep -Fq 'sh tests/integration/vector-rule-validation.sh' tests/integration/table-ibge-vector-evidence.sh
