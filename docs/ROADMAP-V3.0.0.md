@@ -1,10 +1,10 @@
 # abntexto-ufc v3.0.0 — Engineering Roadmap
 
-Updated: 2026-08-31
+Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-3 remains active; B3-A, B3-B and B3-C are closed on `main`; B3-D is next.**
+**V3-R1 ACTIVE — R1-BLOCK-3 remains active; B3-A, B3-B and B3-C are closed on `main`; B3-D is active.**
 
 Current sequence:
 
@@ -12,10 +12,10 @@ Current sequence:
 
 Block 3 internal sequence:
 
-**B3-A DONE → B3-B DONE → B3-C DONE → B3-D NEXT → B3-E PENDING → B3-F PENDING**
+**B3-A DONE → B3-B DONE → B3-C DONE → B3-D ACTIVE → B3-E PENDING → B3-F PENDING**
 
 - Active branch/trunk: `main`.
-- Latest certified clean implementation checkpoint: `625e82f9ef4780989d4635e500d72d09eab02992`.
+- Latest certified clean implementation checkpoint: `094b369a077009f212adb33e8a814ee9bb167b4a`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -105,13 +105,28 @@ B3-C2 merged through PR #169 at `625e82f9ef4780989d4635e500d72d09eab02992` and r
 
 Issue #163 is closed as the B3-C operational continuity record. No temporary validation workflow remains.
 
-### B3-D — Operational v2/V2 identity
+### B3-D — Operational v1/v2 identity and legacy-code purge
 
-**NEXT.**
+**ACTIVE.**
 
-Close stale operational `v2`/`V2` identity only where it remains active technical identity. Preserve legitimate historical/negative/compatibility references and do not rewrite runtime API boundaries assigned to R2.
+B3-D no longer means only cosmetic removal of `v2`/`V2` labels. It now closes both stale version-qualified technical identity and dead/superseded legacy implementation artifacts that survived earlier structural cleanup.
 
-B3-D begins with a fresh live-tree inventory on current `main`; prior occurrence counts are advisory only and must not be treated as current authority.
+Completed bounded lots:
+
+- **B3-D1** — stale runner identity in catalog-card, research-project and font POC;
+- **B3-D2A** — stale `V2` gate/diagnostic labels removed from six runners, merged at `f4d703b34df53868f782598dd9502c0da684c345`;
+- **B3-D2B** — stale v2-qualified temporary fixture/log identity removed from five runners with producer/consumer paths changed together, merged at `094b369a077009f212adb33e8a814ee9bb167b4a`.
+
+B3-D acceptance criteria:
+
+- zero active file/directory names that identify current engineering surfaces as `v1`, `V1`, `v2`, or `V2`;
+- zero current runner/log/temp/gate identity qualified as v1/v2;
+- dead or superseded v1/v2-era code/tests with no current consumer are removed rather than renamed or archived in the active tree;
+- every remaining textual v1/v2 reference is explicitly classifiable as certified history, migration contract, compatibility boundary, or negative test;
+- references to legacy distribution infrastructure are audited before deferral: they may remain only if they have an assigned current/future consumer in B5 or R2;
+- no runtime/API compatibility boundary assigned to R2 is rewritten early.
+
+The live-tree audit has already confirmed that the current physical product layout is v3-oriented and does not contain an active v1/v2 product directory hierarchy. The remaining work is concentrated in inherited runner/test/distribution surfaces and explicit migration/compatibility references.
 
 ### B3-E — Project-owned oracle terminology
 
@@ -145,9 +160,11 @@ Required conditions include:
 
 - no historical/process artifact competing with active state;
 - no dead migration artifact without an active consumer;
+- no dead legacy implementation/test artifact retained merely for reference;
 - no archive/history tree in the active product repository;
 - zero obsolete physical paths and stale active references;
 - zero generated or temporary migration scaffolding;
+- every retained legacy-version reference has an explicit active classification;
 - project-owned technical surfaces follow the engineering-language policy;
 - canonical build/tool/test/distribution paths resolve;
 - static gates pass;
@@ -165,4 +182,4 @@ Required conditions include:
 
 ## Immediate action
 
-Start **B3-D — operational v2/V2 identity cleanup** from canonical remote `main` at certified implementation checkpoint `625e82f9ef4780989d4635e500d72d09eab02992`. Re-audit the current live tree, classify occurrences as stale active technical identity vs legitimate compatibility/history/negative-test use, and change only stale active identity. Preserve runtime API boundaries assigned to R2 and do not absorb B3-E oracle cleanup or later CI/distribution reconstruction.
+Continue **B3-D** from canonical remote `main` at implementation checkpoint `094b369a077009f212adb33e8a814ee9bb167b4a`. Finish remaining operational v2/V2 runner cleanup, then audit the surviving v1/v2-era tests and distribution helpers. Delete dead/superseded code with no current or assigned future consumer; explicitly classify everything that remains as certified history, migration contract, compatibility boundary, or negative test. Then proceed to B3-E and B3-F without absorbing R2 or B5–B8 implementation work.

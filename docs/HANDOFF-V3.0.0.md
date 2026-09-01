@@ -1,14 +1,14 @@
 # abntexto-ufc v3.0.0 — Canonical Handoff
 
-Updated: 2026-08-31
+Updated: 2026-09-01
 
 ## Checkpoint
 
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-3 — Semantic / Path-Consumer Closure**.
-- Active Block 3 work item: **B3-D — Operational v2/V2 identity cleanup**.
+- Active Block 3 work item: **B3-D — Operational v1/v2 identity and legacy-code purge**.
 - Active branch/trunk: `main`.
-- Latest certified clean implementation checkpoint: `625e82f9ef4780989d4635e500d72d09eab02992`.
+- Latest certified clean implementation checkpoint: `094b369a077009f212adb33e8a814ee9bb167b4a`.
 - R1-S2 trunk promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 control-plane closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -115,13 +115,26 @@ B3-C2 closed the two remaining checker defects through PR #169, squash-merged at
 
 Issue #163 is closed as the operational B3-C continuity record. No temporary validation workflow remains in the repository.
 
-### B3-D — Operational v2/V2 identity
+### B3-D — Operational v1/v2 identity and legacy-code purge
 
-**NEXT / ACTIVE WORK ITEM.**
+**ACTIVE.** Operational continuity is tracked in issue #171.
 
-Close stale operational `v2`/`V2` identity only where it remains active technical identity. Preserve legitimate historical/negative references and do not rewrite runtime API boundaries assigned to R2.
+Completed bounded lots:
 
-The first action is a fresh live-tree inventory classified by active technical identity vs legitimate compatibility/history/negative-test use. Do not use prior occurrence counts as authority without re-auditing current `main`.
+- **B3-D1:** stale runner identity removed from catalog-card, research-project and font POC;
+- **B3-D2A:** stale V2 diagnostic/gate labels removed from six internal runners; merged at `f4d703b34df53868f782598dd9502c0da684c345`;
+- **B3-D2B:** stale v2-qualified temp/log identity removed from algorithm-numbering, object-geometry, minted, duplex-backmatter and multivolume; producer/consumer paths were changed together; merged at `094b369a077009f212adb33e8a814ee9bb167b4a`.
+
+The live-tree audit distinguishes four legitimate retained legacy-reference classes: **certified history**, **migration contract**, **compatibility boundary**, and **negative test**. Everything else must be treated as active residue until proven otherwise.
+
+New non-negotiable B3-D closure rule: **dead or superseded legacy implementation/test code is removed, not renamed or stored as an archive inside the active tree.** In particular, surviving `tests/v2-*` and other v1/v2-era helpers must be audited for a real current or assigned future consumer. A file that has no such consumer is deletion candidate; a file assigned to B5/R2 may remain only with an explicit classification.
+
+B3-D closes only when:
+
+- current file/directory, runner, temp, log and gate identity is free of v1/V1/v2/V2 qualification;
+- no dead legacy implementation/test artifact remains merely for reference;
+- every remaining textual legacy-version reference is explicitly classified;
+- runtime/API compatibility work assigned to R2 has not been rewritten prematurely.
 
 ### Remaining Block 3 sequence
 
@@ -130,7 +143,7 @@ After B3-D:
 - **B3-E:** close project-owned `oracle` engineering terminology where it is not a legitimate domain/testing term;
 - **B3-F:** final live-tree residual audit and Block 3 closure.
 
-Do not broaden Block 3 into CI/distribution reconstruction. Distribution workflows, permanent CI, Overleaf/CTAN, Windows-font certification, PDF/A certification, and heavyweight certification remain later-block work.
+Do not broaden Block 3 into permanent CI or distribution reconstruction. However, B3-D must audit whether legacy distribution/test helpers are actually live; dead code can be deleted now, while active distribution reconstruction remains B5.
 
 ## Non-negotiable rules
 
@@ -163,7 +176,9 @@ Do not rerun completed checks unless the current state or a relevant change just
 12. `dbc7f774df2cd0ac1b0f6479653290c6f19b6809` — B3-B normative process-identity closure merged through PR #160.
 13. `da775552be190bf09d8a790c33e9f7f4582da699` — B3-C1 runner/evidence integrity repairs merged through PR #168.
 14. `625e82f9ef4780989d4635e500d72d09eab02992` — B3-C2 final checker repairs merged through PR #169; B3-C closure checkpoint.
+15. `f4d703b34df53868f782598dd9502c0da684c345` — B3-D2A stale diagnostic identity cleanup.
+16. `094b369a077009f212adb33e8a814ee9bb167b4a` — B3-D2B stale temp/log identity cleanup; current certified implementation checkpoint.
 
 ## Immediate action
 
-Start **B3-D — operational v2/V2 identity cleanup** from canonical remote `main` at certified implementation checkpoint `625e82f9ef4780989d4635e500d72d09eab02992`. Perform a fresh live-tree inventory, classify each occurrence as stale active technical identity or legitimate compatibility/history/negative-test use, and change only the stale active identity. Preserve runtime API boundaries assigned to R2 and do not absorb B3-E oracle cleanup or later CI/distribution work.
+Continue **B3-D** from canonical remote `main` at `094b369a077009f212adb33e8a814ee9bb167b4a`. Finish the remaining operational v2/V2 runner cleanup, then audit surviving v1/v2-era test/distribution helpers for actual consumers. Delete dead/superseded artifacts, classify legitimate retained references, and only then advance to B3-E and B3-F.
