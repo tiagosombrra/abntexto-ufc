@@ -239,7 +239,7 @@ compile_class_case() {
 fail_case() {
   code=$1
   label=$2
-  echo "::error title=V2 Windows literal font failure::$label"
+  echo "::error title=Windows literal font failure::$label"
   exit "$code"
 }
 
