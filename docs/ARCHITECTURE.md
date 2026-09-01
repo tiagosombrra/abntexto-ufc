@@ -34,6 +34,8 @@ template/
   chapters/
   backmatter/
   figures/
+.github/
+  workflows/static-contract.yml
 assets/institutional/
 standards/
 tests/
@@ -110,7 +112,7 @@ Top-level `standards/` contains the current machine-readable source catalog, pre
 
 Scientific-article normative/runtime material is reintroduced only in V3-A1 after current sources are reconfirmed.
 
-## Tests and tooling
+## Tests, validation, and workflow orchestration
 
 - `tests/static.py`: canonical cheap/source-only fail-closed gate. It validates tracked Python/JSON/shell/JavaScript syntax, diff integrity, canonical/repository identity, the aggregate validator/normative source contract, object-scope metadata and reference-guide contract. It snapshots repository status before/after and fails if its own execution changes that state. It must not compile TeX/PDF, access the network, generate distribution bundles or run evidence-producing/platform-certification checks;
 - `tests/checks/`: static and machine-readable contract checks, some of which are source-only and some of which consume generated evidence;
@@ -119,9 +121,12 @@ Scientific-article normative/runtime material is reintroduced only in V3-A1 afte
 - `tests/fixtures/`: supporting test data;
 - `tests/integration/`: executable build/inspection runners;
 - `tests/smoke/`: minimal compilation cases;
-- `tools/`: developer/release tooling.
+- `tools/`: developer/release tooling;
+- `.github/workflows/static-contract.yml`: permanent fast remote orchestration. It exposes the stable workflow/job name `Static contract` and delegates validation to `make static-check`; workflow YAML does not own or duplicate the gate internals.
 
-`make static-check` is the permanent local entry point for the cheap source-only tier. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
+`make static-check` is the permanent local source-only entry point. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
+
+R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 owns clean-runner repair of the repository integration contract before any permanent heavy Linux workflow is introduced. B7-C2/C3 own the later PR integration and release orchestration. B8 remains the owner of final Windows/font/PDF-A certification.
 
 Active path names must not encode retired major-version or N-phase identities.
 
@@ -149,6 +154,8 @@ The final foundation must prove at least:
 - explicitly scoped upstream integrations;
 - English project-owned engineering paths;
 - one permanent side-effect-free cheap/source-only validation entry point distinct from integration/release validation;
+- permanent fast remote orchestration that delegates to the repository-owned cheap gate rather than duplicating it;
+- clean-runner-safe repository-owned integration/release entry points before permanent heavy orchestration is activated;
 - valid repository template layout and valid flattened public bundle layout;
 - deterministic class/runtime and CTAN distribution candidates with checksum metadata;
 - no institutional/proprietary assets in public distribution;
