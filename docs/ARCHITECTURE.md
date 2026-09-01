@@ -128,7 +128,7 @@ Scientific-article normative/runtime material is reintroduced only in V3-A1 afte
 
 `make static-check` is the permanent local source-only entry point. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
 
-R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 implements bounded permanent PR orchestration through `Linux integration`: orchestration owns only scope/cadence/concurrency, while the repository-owned `make check` entry point owns the integration gate itself. B7-C3 owns later release orchestration. B8 remains the owner of final Windows/font/PDF-A certification.
+R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 certified bounded permanent PR orchestration through `Linux integration`: orchestration owns only scope/cadence/concurrency, while the repository-owned `make check` entry point owns the integration gate itself. B7-C3 is now active and owns bounded Linux release orchestration as a thin consumer of `make release-check`; B8 remains the owner of final Windows/font/PDF-A certification.
 
 Active path names must not encode retired major-version or N-phase identities.
 

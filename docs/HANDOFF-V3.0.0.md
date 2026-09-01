@@ -8,11 +8,11 @@ Updated: 2026-09-01
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-7 — Optimized Remote Workflow Restoration**.
 - Active B7 work item: **B7-C — optimized Linux integration/release orchestration**.
-- Active B7 sub-item: **B7-C2 — permanent Linux PR integration orchestration consuming the certified repository-owned `make check` contract**.
-- Active B7 focus: **introduce a bounded permanent Linux PR integration workflow that delegates to `make check`, keeps gate logic repository-owned, and avoids heavy execution on every intermediate commit**.
+- Active B7 sub-item: **B7-C3 — permanent Linux release orchestration consuming the repository-owned `make release-check` contract**.
+- Active B7 focus: **introduce bounded permanent Linux release orchestration that delegates to `make release-check`, preserves repository-owned gate logic, and does not claim B8 Windows/font/final PDF/A certification**.
 - Active branch/trunk: `main`.
 - B7 operational issue: **#213**.
-- Latest certified clean implementation checkpoint: **`ced68313ed2c362a6617d7df6ef9adfd2df6c0b5`**.
+- Latest certified clean implementation checkpoint: **`cea59bcf4927da9a9c4a48268dca67cc9535854e`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -228,8 +228,8 @@ The same run deliberately probed `make check` on a clean TeX Live 2026 runner. I
 **ACTIVE.** B7-C starts with a repository-owned clean-runner repair before permanent heavy workflow YAML is introduced.
 
 - **B7-C1 DONE — clean-runner integration contract repair:** PR #220 merged at `ced68313ed2c362a6617d7df6ef9adfd2df6c0b5` after final TeX Live 2026 run `33545418119` proved `make check` with `PASS=30 FAIL=0 SKIP=0`; final `Static contract` run `33547122520` passed after temporary workflow removal. The repair changed execution/artifact wiring and synthetic fixture markers only; normative IDs, values, tolerances, proof state and runtime/API behavior were preserved.
-- **B7-C2 ACTIVE — permanent Linux PR integration orchestration:** add a bounded workflow that delegates to the now-certified `make check` entry point and avoids heavy execution on every intermediate commit when the permanent `Static contract` status is sufficient.
-- **B7-C3 PENDING — release orchestration:** define the Linux `make release-check` cadence/trigger without claiming B8 Windows/font/final PDF-A certification.
+- **B7-C2 DONE — permanent Linux PR integration orchestration:** PR #222 squash-merged at `cea59bcf4927da9a9c4a48268dca67cc9535854e`. Permanent `Linux integration` delegates to `make check`, keeps a stable PR status, skips heavy TeX only for drafts and a narrow documentation/control-plane allowlist, fails closed to full integration for every other or unknown path, cancels superseded PR runs, and forces full execution on manual dispatch. PR validation runs `33548124803` (`Static contract`) and `33548124851` (`Linux integration`) passed; the integration run ended `PASS=30 FAIL=0 SKIP=0`.
+- **B7-C3 ACTIVE — release orchestration:** define and prove bounded permanent Linux `make release-check` trigger/cadence and evidence handling without claiming B8 Windows/font/final PDF-A certification.
 
 ### B7-D — Residual audit and B8 handoff
 
