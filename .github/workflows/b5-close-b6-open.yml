@@ -1,0 +1,233 @@
+name: B5 close and B6 activation sync
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b5-close-b6-open
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: "github.event.head_commit.message == 'chore: add temporary B5 close B6 activation sync'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Close B5 and activate B6 in canonical docs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          CHECKPOINT = '4bc0f544020234bc14a8f2261927f65721b6eddb'
+          FINAL_AUDIT = 33524219575
+
+          # Machine state.
+          path = Path('release/v3-roadmap.json')
+          state = json.loads(path.read_text(encoding='utf-8'))
+          assert state['stage'] == 'R1-BLOCK-5'
+          assert state['last_certified_clean_checkpoint_sha'] == CHECKPOINT
+          b5 = state['blocks']['R1-BLOCK-5']
+          assert b5['b5_d_status'] == 'ACTIVE'
+          assert b5['active_work_item'] == 'B5-D'
+
+          state['stage'] = 'R1-BLOCK-6'
+          state['stage_name'] = 'permanent cheap/static fail-closed gates'
+          state['last_certified_clean_checkpoint_sha'] = CHECKPOINT
+
+          b5['status'] = 'DONE'
+          b5['closure_sha'] = CHECKPOINT
+          b5['active_work_item'] = None
+          b5['active_sub_item'] = None
+          b5['b5_d_status'] = 'DONE'
+          b5['planned_lots']['B5-D'] = 'DONE - final residual/reproducibility audit and closeout'
+          b5['b5_d_validation_runs'] = [
+              {
+                  'run_id': 33523356265,
+                  'conclusion': 'failure',
+                  'finding': 'distribution/public reproducibility, canonical identity and repository contract passed; executor referenced a nonexistent machine-state key and manual review found two stale control-plane residues; no distribution product defect'
+              },
+              {
+                  'run_id': 33523899178,
+                  'conclusion': 'success',
+                  'finding': 'bounded control-plane repair validated roadmap and machine-state B5-D alignment and self-removed its temporary workflow'
+              },
+              {
+                  'run_id': FINAL_AUDIT,
+                  'conclusion': 'success',
+                  'finding': 'final B5 zero-diff certification passed for five deterministic artifacts, checksums, public/CTAN contracts, distribution policy, exclusions, control plane and absence of permanent workflows'
+              }
+          ]
+          b5['b5_d_results'] = {
+              'final_audit_run_id': FINAL_AUDIT,
+              'certified_implementation_checkpoint': CHECKPOINT,
+              'artifact_count_including_checksums': 5,
+              'distribution_reproducibility_passed': True,
+              'public_reproducibility_passed': True,
+              'checksums_passed': True,
+              'public_contract_passed': True,
+              'ctan_contract_passed': True,
+              'distribution_policy_reconciled': True,
+              'generated_distribution_outputs_tracked': 0,
+              'permanent_workflows_present': 0,
+              'control_plane_passed': True,
+              'audit_branch_changed_files_vs_main': 0,
+              'implementation_merge_required': False,
+              'temporary_workflow_removed': True,
+              'actual_ctan_submission_performed': False,
+              'runtime_api_changed': False,
+              'normative_semantics_changed': False,
+              'proof_state_changed': False,
+              'locator_policy_changed': False,
+              'reference_tolerances_changed': False
+          }
+
+          b6 = state['blocks']['R1-BLOCK-6']
+          assert b6['status'] == 'BLOCKED'
+          b6.clear()
+          b6.update({
+              'status': 'ACTIVE',
+              'name': 'permanent cheap/static fail-closed gates',
+              'entry_checkpoint_sha': CHECKPOINT,
+              'operational_issue': 207,
+              'active_work_item': 'B6-A',
+              'active_sub_item': 'B6-A',
+              'scope': [
+                  'fresh inventory and dependency classification of current validation checks',
+                  'one canonical cheap/static fail-closed gate contract for local development and later B7 consumption',
+                  'source-only deterministic syntax identity metadata and normative contract checks where proven cheap',
+                  'producer consumer and evidence reconciliation for permanent static validation entry points'
+              ],
+              'constraints': [
+                  'do not restore permanent GitHub Actions or workflow orchestration before B7',
+                  'do not absorb TeX PDF compilation network mutable external service Windows font or final PDF-A certification into the cheap static gate',
+                  'do not implement V3-R2 runtime API migration',
+                  'preserve normative rule IDs values tolerances locators and proof state',
+                  'classify current checks and dependencies before editing',
+                  'temporary validation executors must be removed before checkpoint'
+              ],
+              'planned_lots': {
+                  'B6-A': 'ACTIVE - validation inventory dependency measurement and cheap/static classification',
+                  'B6-B': 'PENDING - canonical permanent cheap/static gate implementation and consumer reconciliation',
+                  'B6-C': 'PENDING - final B6 residual audit closeout and B7 handoff'
+              },
+              'b6_a_status': 'ACTIVE',
+              'b6_b_status': 'PENDING',
+              'b6_c_status': 'PENDING'
+          })
+          state['next_action'] = (
+              'Start R1-BLOCK-6 B6-A from canonical remote main using '
+              + CHECKPOINT
+              + ' as the latest certified implementation checkpoint and issue #207 as the operational log. '
+              'Inventory tests/checks, source-only portions of tests/integration, tests/run.py, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers; measure runtime/dependency requirements and classify cheap/static versus bounded/heavy checks before designing the permanent gate. Keep permanent workflow restoration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6, and V3-R2 runtime/API work out of scope.'
+          )
+          path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # Human roadmap.
+          path = Path('docs/ROADMAP-V3.0.0.md')
+          text = path.read_text(encoding='utf-8')
+          replacements = {
+              '**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B done; B5-C done; B5-D active.**':
+              '**V3-R1 ACTIVE — R1-BLOCK-5 done; R1-BLOCK-6 active; B6-A inventory active.**',
+              '**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 ACTIVE → R1-B6…B8 BLOCKED → R2+ BLOCKED**':
+              '**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 DONE → R1-B6 ACTIVE → R1-B7…B8 BLOCKED → R2+ BLOCKED**',
+              '**ACTIVE.** Operational issue #199. Entry checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`.':
+              '**DONE.** Operational closure log: issue #199. Entry checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`; certified B5 implementation/closure checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.',
+              '**ACTIVE.** Final distribution producer/consumer/policy/evidence, documentation and reproducibility audit; remove any residual temporary executor and close B5 before activating B6.':
+              '**DONE — zero-diff certification.** Initial run `33523356265` reconfirmed distribution/public reproducibility and repository identity but failed closed on an executor machine-key mismatch; manual review simultaneously found two stale control-plane residues. PR #206 repaired only those roadmap/machine-state residues, validated by `33523899178` PASS. Final run **`33524219575` PASS** certified five deterministic outputs including checksums, public and CTAN contracts, distribution-policy alignment, zero tracked generated `dist/` files, zero permanent workflows, canonical identity/repository contract and coherent control plane. The temporary audit self-removed and the audit branch is zero-diff versus `main`, so no B5-D implementation merge was required. The certified functional checkpoint remains `4bc0f544020234bc14a8f2261927f65721b6eddb`.',
+              '- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.':
+              '- **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.',
+              '- **R1-B6 BLOCKED** — permanent cheap/static fail-closed gates.':
+              '- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A inventory/classification.',
+              'Start **B5-D** from canonical `main` with implementation checkpoint `4bc0f544020234bc14a8f2261927f65721b6eddb` and issue #199. Perform the final distribution residual/reproducibility and documentation audit, reconcile all B5 consumers/policies/evidence, and close Block 5 only if the canonical artifact contracts remain deterministic and clean. Keep B6/B7/B8, actual CTAN submission and V3-R2 boundaries explicit.':
+              'Start **B6-A** from canonical remote `main` with certified implementation checkpoint `4bc0f544020234bc14a8f2261927f65721b6eddb` and issue #207. Inventory and classify the current validation surface by dependency/runtime cost before changing any permanent gate: source-only/static checks belong to B6 candidates; TeX/PDF/network/Windows/font/final-certification work stays outside the cheap gate. B7 owns permanent workflow orchestration, B8 owns final Windows/font/PDF-A certification, and V3-R2 owns runtime/API migration.'
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'Roadmap replacement cardinality {count} for: {old[:80]}')
+              text = text.replace(old, new)
+          marker = '## Remaining R1 blocks\n'
+          b6_section = '''## R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates\n\n**ACTIVE.** Operational issue #207. Entry certified implementation checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.\n\nB6 establishes the permanent source-only/static validation contract that developers and later B7 workflows can invoke cheaply and deterministically. It begins with classification rather than implementation: current checks must be measured for dependencies, runtime and side effects before inclusion. The broad `tests/run.py` integration suite is not automatically a cheap/static gate.\n\n### B6-A — Validation inventory and dependency classification\n\n**ACTIVE / NEXT.** Inventory `tests/checks/`, source-only portions of `tests/integration/`, `tests/run.py`, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers. Classify each candidate as cheap/static, bounded deterministic, or heavy/runtime/platform-dependent. No permanent workflow is created in this lot.\n\n### B6-B — Canonical permanent static gate\n\n**PENDING.** Implement the minimal fail-closed source-only gate and reconcile its producers/consumers/evidence based on B6-A findings.\n\n### B6-C — Residual audit and B7 handoff\n\n**PENDING.** Prove the static gate contract is complete, cheap and deterministic, then close B6 and hand workflow orchestration to B7.\n\n'''
+          if text.count(marker) != 1:
+              raise SystemExit('Roadmap Remaining R1 marker not unique')
+          text = text.replace(marker, b6_section + marker)
+          path.write_text(text, encoding='utf-8')
+
+          # Canonical handoff.
+          path = Path('docs/HANDOFF-V3.0.0.md')
+          text = path.read_text(encoding='utf-8')
+          replacements = {
+              '- Active implementation stage: **R1-BLOCK-5 — Distribution and Public Bundle Rebaseline**.':
+              '- Active implementation stage: **R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates**.',
+              '- Active B5 work item: **B5-D — final distribution residual/reproducibility audit**.':
+              '- Active B6 work item: **B6-A — validation inventory and dependency classification**.',
+              '- Active B5 focus: **final producer/consumer/policy/evidence reconciliation, reproducibility closure, and Block 5 certification**.':
+              '- Active B6 focus: **classify current validation checks by dependency/runtime cost before designing the permanent cheap/static gate**.',
+              '- B5 operational issue: **#199**.':
+              '- B6 operational issue: **#207**.',
+              '**ACTIVE.** Operational continuity: issue #199. Entry implementation checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`.':
+              '**DONE.** Operational closure log: issue #199. Entry implementation checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`; certified B5 implementation/closure checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.',
+              '**ACTIVE / NEXT.** Reconcile remaining distribution producers/consumers, policy/evidence references and release documentation; rerun only proportional deterministic/archive/identity checks needed by the final state; prove no temporary executors or unclassified distribution residue remain; then close B5 and activate B6.':
+              '**DONE — zero-diff certification.** Run `33523356265` reconfirmed all distribution/public product checks but failed on an audit-key mismatch; the same review exposed two stale roadmap/machine-state residues. PR #206 repaired those control-plane residues and run `33523899178` PASS validated the repair. Final run **`33524219575` PASS** certified five deterministic outputs including `SHA256SUMS`, public/CTAN contracts, distribution policy, zero tracked generated `dist/` files, zero permanent workflows, canonical identity/repository contract and coherent control plane. The temporary executor self-removed and the final audit branch is zero-diff versus `main`; no B5-D implementation merge was required.',
+              '- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.':
+              '- **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.',
+              '- **R1-B6 BLOCKED** — permanent cheap/static fail-closed gates.':
+              '- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A inventory/classification.',
+              'Start B5-D from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint and issue #199 as the operational log. Perform the final distribution producer/consumer/policy/evidence and reproducibility audit, including the B5-B/B5-C artifact contracts and CTAN release documentation. Keep B6 permanent gates, B7 permanent workflows, B8 final Windows/font/PDF-A certification, actual CTAN submission, and V3-R2 runtime/API work out of scope.':
+              'Start B6-A from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint and issue #207 as the operational log. Inventory `tests/checks/`, source-only portions of `tests/integration/`, `tests/run.py`, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers. Measure dependencies/runtime and classify before designing the permanent cheap/static gate. Keep permanent workflow restoration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6, and V3-R2 runtime/API work out of scope.'
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'Handoff replacement cardinality {count} for: {old[:80]}')
+              text = text.replace(old, new)
+          marker = '## Remaining R1 sequence\n'
+          b6_section = '''## R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates\n\n**ACTIVE.** Operational issue #207. Entry certified implementation checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.\n\nB6 begins with B6-A inventory/classification. The target is one permanent source-only/static gate contract that is deterministic and inexpensive enough for routine development and later B7 workflow reuse. Current integration-heavy validation remains separate. No GitHub Actions restoration belongs to B6.\n\n- **B6-A ACTIVE / NEXT:** inventory current checks and measure runtime/dependencies/side effects; classify cheap/static vs bounded/heavy.\n- **B6-B PENDING:** implement and reconcile the canonical cheap/static gate from the proven inventory.\n- **B6-C PENDING:** residual audit, close B6 and hand orchestration to B7.\n\n'''
+          if text.count(marker) != 1:
+              raise SystemExit('Handoff Remaining R1 marker not unique')
+          text = text.replace(marker, b6_section + marker)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          state = json.loads(Path('release/v3-roadmap.json').read_text(encoding='utf-8'))
+          assert state['stage'] == 'R1-BLOCK-6'
+          assert state['last_certified_clean_checkpoint_sha'] == '4bc0f544020234bc14a8f2261927f65721b6eddb'
+          assert state['blocks']['R1-BLOCK-5']['status'] == 'DONE'
+          assert state['blocks']['R1-BLOCK-5']['b5_d_status'] == 'DONE'
+          assert state['blocks']['R1-BLOCK-5']['b5_d_results']['audit_branch_changed_files_vs_main'] == 0
+          assert state['blocks']['R1-BLOCK-6']['status'] == 'ACTIVE'
+          assert state['blocks']['R1-BLOCK-6']['active_work_item'] == 'B6-A'
+          assert state['blocks']['R1-BLOCK-6']['operational_issue'] == 207
+          assert 'B6-A' in state['next_action']
+          PY
+          grep -Fq 'R1-BLOCK-5 done; R1-BLOCK-6 active' docs/ROADMAP-V3.0.0.md
+          grep -Fq 'R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates' docs/ROADMAP-V3.0.0.md
+          grep -Fq 'Active implementation stage: **R1-BLOCK-6' docs/HANDOFF-V3.0.0.md
+          grep -Fq 'B6 operational issue: **#207**' docs/HANDOFF-V3.0.0.md
+          grep -Fq '33524219575' docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git diff --check
+
+      - name: Commit canonical sync and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git commit -m 'docs: close B5 and activate B6'
+          git rm .github/workflows/b5-close-b6-open.yml
+          git commit -m 'chore: remove temporary B5 B6 sync'
+          git push origin HEAD:docs/v3-r1-b5-close-b6-open
