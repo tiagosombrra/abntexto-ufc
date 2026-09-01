@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   sync:
-    if: "github.event.head_commit.message == 'chore: add temporary B5-A docs sync'"
+    if: "github.event.head_commit.message == 'chore: rerun temporary B5-A docs sync'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
                '**ACTIVE / NEXT.** Build a fresh remote producer/consumer matrix for public-bundle targets, Makefile/build-path integration, manifests/policies/evidence, current runtime/support source files, upstream inputs, and any tracked distribution-era residue. Classify before editing and split later work into bounded lots only after this inventory.')
           new=('### B5-A — Inventory and distribution contract\n\n'
                '**DONE — zero-diff certification.** Remote run `33512036280` PASS established the current distribution contract and self-removed its temporary workflow; the audit branch has zero changed files versus `main`. There is no current bundle producer or tracked `dist/` tree. `Makefile` exposes build/check entry points only. `tools/fetch-abntexto.py` is a valid pinned upstream fetcher but has no functional consumer. `build-path.sh` validates the repository build; `overleaf-stable.sh` assumes an already-flattened staging root, is not wired into `tests/run.py`, and still contains a removed font-check path plus stale engineering diagnostics.\n\n'
-               'The current architecture requires `template/` to be flattened for public/Overleaf bundles, excludes the UFC institutional mark from public redistribution, and keeps distribution/Overleaf/TeX Live/CTAN as project policy rather than UFC/ABNT normativity. Historical distribution code is advisory only; reusable principles are deterministic archives, explicit source sets, SHA256 manifests, safe paths, pinned upstream `abntexto.cls`, and exclusion of institutional/proprietary assets. Retired v2 identities, `ufctex`, old artifact names, and permanent workflows are not reusable.\n\n'
+               'The current architecture requires `template/` to be flattened for public/Overleaf bundles, excludes the UFC institutional mark from public redistribution, and keeps distribution/Overleaf/TeX Live/CTAN as project policy rather than UFC/ABNT normativity. Historical distribution code is advisory only; reusable principles are deterministic archives, explicit source sets, SHA256 manifests, safe paths, pinned upstream `abntexto.cls`, and exclusion of institutional/proprietary assets. Retired legacy class/module identities, old artifact names, and permanent workflows are not reusable.\n\n'
                '### B5-B — Deterministic v3 staging and public/Overleaf bundles\n\n'
                '**ACTIVE / NEXT.** Implement one current v3 staging/archive producer for the class/runtime plus flattened template and Overleaf import bundle. Wire `fetch-abntexto.py` only for the Overleaf upstream pin; add structure/reproducibility checks; repair the Overleaf staging consumer path/engineering language as required by this contract. Deep Windows font/PDF-A certification remains B8-owned.\n\n'
                '### B5-C — Class/CTAN candidate and distribution metadata\n\n'
