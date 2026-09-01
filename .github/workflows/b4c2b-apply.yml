@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   migrate:
-    if: "github.event.head_commit.message == 'chore: install compact B4-C2b executor'"
+    if: "github.event.head_commit.message == 'chore: rerun compact B4-C2b executor'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,13 +18,17 @@ jobs:
           fetch-depth: 0
 
       - name: Apply bounded migration
-        run: python3 tools/_b4c2b_migrate_temp.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/_b4c2b_migrate_temp.py
+          python3 tools/_b4c2b_consumer_patch_temp.py
 
       - name: Validate B4-C2b
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile tools/validate-ufc-pdf.py tests/checks/normative_validator_contract.py
+          python3 -m py_compile tools/validate-ufc-pdf.py tests/checks/normative_validator_contract.py tests/checks/validator_source.py
           node --check validator/app.js
           python3 tests/checks/normative_cross_surface.py
           python3 tests/checks/normative_validator_contract.py
@@ -54,8 +58,8 @@ jobs:
           set -euo pipefail
           git config user.name 'Tiago Sombra'
           git config user.email 'tiagosombrra@users.noreply.github.com'
-          git add tools/validate-ufc-pdf.py validator/app.js validator/index.html tests/checks/normative_validator_contract.py
+          git add tools/validate-ufc-pdf.py validator/app.js validator/index.html tests/checks/normative_validator_contract.py tests/checks/validator_source.py
           git commit -m 'refactor: normalize validator diagnostics and Web UI'
-          git rm tools/_b4c2b_migrate_temp.py .github/workflows/b4c2b-apply.yml
+          git rm tools/_b4c2b_migrate_temp.py tools/_b4c2b_consumer_patch_temp.py .github/workflows/b4c2b-apply.yml
           git commit -m 'chore: remove temporary B4-C2b executor'
           git push origin HEAD:refactor/v3-r1-b4c2b-diagnostics-ui
