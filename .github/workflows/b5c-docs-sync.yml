@@ -1,0 +1,143 @@
+name: B5-C canonical docs sync
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b5c-checkpoint
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: "github.event.head_commit.message == 'chore: add temporary B5-C docs sync'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record B5-C and activate B5-D
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          checkpoint = '4bc0f544020234bc14a8f2261927f65721b6eddb'
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one replacement, found {count}: {old[:80]!r}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          handoff = 'docs/HANDOFF-V3.0.0.md'
+          replace_once(handoff,
+              '- Active B5 work item: **B5-C — class/CTAN candidate and distribution metadata**.',
+              '- Active B5 work item: **B5-D — final distribution residual/reproducibility audit**.')
+          replace_once(handoff,
+              '- Active B5 focus: **current class/runtime archive, CTAN-candidate layout, checksum manifest, package metadata, and install/compile smoke validation**.',
+              '- Active B5 focus: **final producer/consumer/policy/evidence reconciliation, reproducibility closure, and Block 5 certification**.')
+          replace_once(handoff,
+              '- Latest certified clean implementation checkpoint: **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**.',
+              f'- Latest certified clean implementation checkpoint: **`{checkpoint}`**.')
+          replace_once(handoff,
+              '### B5-C — Class/CTAN candidate and distribution metadata\n\n**ACTIVE / NEXT.** Extend the current distribution producer with a current-identity class/runtime archive and CTAN candidate plus checksum metadata. Use only live v3 files, current README/LICENSE/example material, and external `abntexto` dependency semantics. Do not recreate deleted historical CTAN documents by assumption. Validate exact archive structure, institutional/proprietary asset exclusion, determinism/checksums, and a CTAN-style install/compile smoke. Permanent distribution CI remains B7-owned and final Windows/font/PDF-A certification remains B8-owned.',
+              '''### B5-C — Class/CTAN candidate and distribution metadata\n\n**DONE** through PR #204, squash-merged at **`4bc0f544020234bc14a8f2261927f65721b6eddb`**. `make distribution-bundles` now composes the certified B5-B public bundles with a deterministic class/runtime archive, a CTAN submission candidate and `SHA256SUMS`. The CTAN candidate uses one browsing-friendly `abntexto-ufc/` directory, a dedicated English package README, tracked manual source plus deterministic PDF, a minimal example, current class/runtime modules and LICENSE. `abntexto` remains an external dependency for class/CTAN packages and is vendored only by the separate Overleaf bundle.\n\nThe accepted `abntexto-uece` package was used as a practical packaging benchmark, then reconciled with current CTAN upload guidance rather than copied blindly. Initial run `33516334003` PASS proved the first deterministic package contract. The benchmark exposed the need for CTAN-facing README/PDF documentation and a simpler browsing layout. Corrected run **`33519160480` PASS** proved five reproducible outputs, checksums, class/CTAN layouts, README metadata, deterministic documentation PDF, external `abntexto`, canonical identity, repository contract and TeX Live 2026 install/compile smoke. Run `33519663437` was executor-only (ubuntu-latest lacked `pdflatex`). Final run **`33519793206` PASS** executed CTAN `pkgcheck 4.1.0` on the extracted candidate with no error or warning diagnostics. All temporary workflows self-removed. CTAN acceptance/submission itself remains a later explicit release action; see `docs/CTAN-RELEASE.md`.''')
+          replace_once(handoff,
+              '### B5-D — Final B5 residual/reproducibility audit\n\n**PENDING.** Reconcile remaining distribution consumers/policy/evidence, prove deterministic outputs and excluded assets, remove temporary executors, close B5, and activate B6.',
+              '### B5-D — Final B5 residual/reproducibility audit\n\n**ACTIVE / NEXT.** Reconcile remaining distribution producers/consumers, policy/evidence references and release documentation; rerun only proportional deterministic/archive/identity checks needed by the final state; prove no temporary executors or unclassified distribution residue remain; then close B5 and activate B6.')
+          replace_once(handoff,
+              'Start B5-C from canonical remote `main` using `426b506da9f6bf6255263efdb4caad19d4bcd16d` as the latest certified implementation checkpoint and issue #199 as the operational log. Extend the current distribution producer with the class/runtime and CTAN-candidate archives plus deterministic checksum metadata; validate exact archive layout and CTAN install/compile behavior. Keep permanent gates/workflows, final Windows/font/PDF-A certification, and V3-R2 runtime/API work out of scope.',
+              f'Start B5-D from canonical remote `main` using `{checkpoint}` as the latest certified implementation checkpoint and issue #199 as the operational log. Perform the final distribution producer/consumer/policy/evidence and reproducibility audit, including the B5-B/B5-C artifact contracts and CTAN release documentation. Keep B6 permanent gates, B7 permanent workflows, B8 final Windows/font/PDF-A certification, actual CTAN submission, and V3-R2 runtime/API work out of scope.')
+
+          roadmap = 'docs/ROADMAP-V3.0.0.md'
+          replace_once(roadmap,
+              '### B5-C — Class/CTAN candidate and distribution metadata\n\n**ACTIVE.** Add the current-identity class/runtime archive and CTAN candidate plus deterministic checksum metadata using only live v3 files. Validate exact layout, external dependency semantics, institutional/proprietary asset exclusion and CTAN-style compile smoke. Do not reconstruct deleted historical CTAN documentation without a current need.',
+              '''### B5-C — Class/CTAN candidate and distribution metadata\n\n**DONE** via PR #204 at **`4bc0f544020234bc14a8f2261927f65721b6eddb`**. The complete distribution producer now emits the class/runtime, CTAN, template and Overleaf ZIPs plus `SHA256SUMS`. CTAN packaging was benchmarked against accepted `abntexto-uece` and reconciled with current CTAN guidance: one browsing-friendly package root, CTAN-specific English README, tracked manual source/PDF, example, current runtime and external `abntexto`. Run **`33519160480` PASS** proved reproducibility, metadata/layout, checksums and TeX Live 2026 installation smoke; run **`33519793206` PASS** ran CTAN `pkgcheck 4.1.0` with zero error/warning diagnostics. CTAN submission remains a later explicit release action and `docs/CTAN-RELEASE.md` records the maintainer procedure.''')
+          replace_once(roadmap,
+              '### B5-D — Residual/reproducibility closeout\n\n**PENDING.** Final distribution consumer/policy/evidence audit and B5 closure.',
+              '### B5-D — Residual/reproducibility closeout\n\n**ACTIVE.** Final distribution producer/consumer/policy/evidence, documentation and reproducibility audit; remove any residual temporary executor and close B5 before activating B6.')
+          replace_once(roadmap,
+              'Start **B5-C** from canonical `main` with implementation checkpoint `426b506da9f6bf6255263efdb4caad19d4bcd16d` and issue #199. Extend the current distribution producer with a class/runtime archive, CTAN candidate and deterministic checksum metadata; validate archive structure and CTAN install/compile behavior. Keep B6/B7/B8 and V3-R2 boundaries explicit.',
+              f'Start **B5-D** from canonical `main` with implementation checkpoint `{checkpoint}` and issue #199. Perform the final distribution residual/reproducibility and documentation audit, reconcile all B5 consumers/policies/evidence, and close Block 5 only if the canonical artifact contracts remain deterministic and clean. Keep B6/B7/B8, actual CTAN submission and V3-R2 boundaries explicit.')
+
+          machine = Path('release/v3-roadmap.json')
+          data = json.loads(machine.read_text(encoding='utf-8'))
+          if data['last_certified_clean_checkpoint_sha'] != '426b506da9f6bf6255263efdb4caad19d4bcd16d':
+              raise SystemExit('machine state checkpoint mismatch before B5-C sync')
+          b5 = data['blocks']['R1-BLOCK-5']
+          if b5.get('active_work_item') != 'B5-C' or b5.get('b5_c_status') != 'ACTIVE':
+              raise SystemExit('machine state is not at expected B5-C entry')
+          data['last_certified_clean_checkpoint_sha'] = checkpoint
+          b5['active_work_item'] = 'B5-D'
+          b5['active_sub_item'] = 'B5-D'
+          b5['planned_lots']['B5-C'] = 'DONE - class/CTAN candidate and distribution metadata'
+          b5['planned_lots']['B5-D'] = 'ACTIVE - final residual/reproducibility audit and closeout'
+          b5['b5_c_status'] = 'DONE'
+          b5['b5_d_status'] = 'ACTIVE'
+          b5['b5_c_closure_sha'] = checkpoint
+          b5['b5_c_pr'] = 204
+          b5['b5_c_validation_runs'] = [
+              {'run_id': 33516334003, 'conclusion': 'success', 'finding': 'initial deterministic class/CTAN distribution, checksums and TeX Live 2026 install smoke passed'},
+              {'run_id': 33519160480, 'conclusion': 'success', 'finding': 'CTAN benchmark correction passed: browsing layout, README, deterministic documentation PDF, external abntexto, reproducibility and install smoke'},
+              {'run_id': 33519663437, 'conclusion': 'failure', 'finding': 'pkgcheck executor lacked pdflatex before checker execution; no product finding'},
+              {'run_id': 33519793206, 'conclusion': 'success', 'finding': 'CTAN pkgcheck 4.1.0 returned no error or warning diagnostics for extracted candidate'}
+          ]
+          b5['b5_c_results'] = {
+              'class_bundle': 'abntexto-ufc-3.0.0.zip',
+              'ctan_bundle': 'abntexto-ufc-ctan-3.0.0.zip',
+              'template_bundle': 'abntexto-ufc-template-3.0.0.zip',
+              'overleaf_bundle': 'abntexto-ufc-overleaf-3.0.0.zip',
+              'checksum_manifest': 'SHA256SUMS',
+              'artifact_count_including_checksums': 5,
+              'all_outputs_reproducible': True,
+              'class_runtime_layout_passed': True,
+              'ctan_browsing_friendly_layout_passed': True,
+              'ctan_readme_passed': True,
+              'ctan_documentation_source_present': True,
+              'ctan_documentation_pdf_deterministic': True,
+              'ctan_example_install_compile_passed': True,
+              'ctan_pkgcheck_version': '4.1.0',
+              'ctan_pkgcheck_error_count': 0,
+              'ctan_pkgcheck_warning_count': 0,
+              'abntexto_uece_used_as_practical_benchmark': True,
+              'external_abntexto_preserved_for_class_and_ctan': True,
+              'overleaf_only_vendors_pinned_abntexto': True,
+              'institutional_assets_excluded': True,
+              'proprietary_microsoft_fonts_excluded': True,
+              'ctan_release_guide': 'docs/CTAN-RELEASE.md',
+              'actual_ctan_submission_performed': False,
+              'temporary_workflows_removed': True,
+              'runtime_api_changed': False,
+              'normative_semantics_changed': False,
+              'proof_state_changed': False
+          }
+          machine.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          grep -Fq 'B5-D — final distribution residual/reproducibility audit' docs/HANDOFF-V3.0.0.md
+          grep -Fq '**ACTIVE.** Final distribution producer/consumer/policy/evidence' docs/ROADMAP-V3.0.0.md
+          grep -Fq 'pkgcheck 4.1.0' docs/CTAN-RELEASE.md
+          grep -Fq 'make distribution-bundles' README.md
+          grep -Fq 'CTAN candidate uses a browsing-friendly' docs/ARCHITECTURE.md
+          git diff --check
+
+      - name: Commit sync and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add README.md docs/ARCHITECTURE.md docs/CTAN-RELEASE.md docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git commit -m 'docs: record B5-C and activate B5-D'
+          git rm .github/workflows/b5c-docs-sync.yml
+          git commit -m 'chore: remove temporary B5-C docs sync'
+          git push origin HEAD:docs/v3-r1-b5c-checkpoint
