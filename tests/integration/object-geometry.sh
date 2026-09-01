@@ -70,6 +70,5 @@ done
 sh tests/integration/illustration-evidence.sh
 sh tests/integration/table-typography-equation-evidence.sh
 sh tests/integration/table-ibge-vector-evidence.sh
-  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 echo 'Gate de geometria de objetos concluído.'
