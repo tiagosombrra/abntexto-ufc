@@ -7,8 +7,8 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates**.
-- Active B6 work item: **B6-A — validation inventory and dependency classification**.
-- Active B6 focus: **classify current validation checks by dependency/runtime cost before designing the permanent cheap/static gate**.
+- Active B6 work item: **B6-B — canonical cheap/static validation gate**.
+- Active B6 focus: **implement one side-effect-free source-only gate from the completed B6-A dependency/runtime classification**.
 - Active branch/trunk: `main`.
 - B6 operational issue: **#207**.
 - Latest certified clean implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.
@@ -192,20 +192,20 @@ The accepted `abntexto-uece` package was used as a practical packaging benchmark
 
 **ACTIVE.** Operational issue #207. Entry certified implementation checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.
 
-B6 begins with B6-A inventory/classification. The target is one permanent source-only/static gate contract that is deterministic and inexpensive enough for routine development and later B7 workflow reuse. Current integration-heavy validation remains separate. No GitHub Actions restoration belongs to B6.
+B6 establishes one permanent source-only/static validation contract for routine development and later B7 workflow reuse while preserving the integration-heavy runner separately. GitHub Actions orchestration remains B7-owned.
 
-- **B6-A ACTIVE / NEXT:** inventory current checks and measure runtime/dependencies/side effects; classify cheap/static vs bounded/heavy.
-- **B6-B PENDING:** implement and reconcile the canonical cheap/static gate from the proven inventory.
+- **B6-A DONE:** run `33525282652` inventoried 69 Python checkers, 74 shell integrations, four validator files and 26 broad-runner checks. Universal Python/JSON/shell/JS source syntax passed in about 2.6 s combined. Refinement run `33525499620` failed closed only to classify two exclusions: `frontmatter_definition_list_alignment.py` requires generated PDFs and `normative_configuration.py` writes evidence. Nineteen other measured candidates passed without working-tree side effects. Redundancy review proved `validator_source.py` already aggregates the central normative source/contract chain and its validator contract executes cross-surface vectors.
+- **B6-B ACTIVE / NEXT:** issue #209; implement one canonical gate containing tracked Python/JSON/shell/JS syntax, `git diff --check`, canonical identity, repository contract, aggregate `validator_source.py`, normative objects scope and reference-guide contract, with before/after repository-status protection against gate-introduced side effects.
 - **B6-C PENDING:** residual audit, close B6 and hand orchestration to B7.
 
 ## Remaining R1 sequence
 
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
 - **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
-- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A inventory/classification.
+- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A done, B6-B active.
 - **R1-B7 BLOCKED** — optimized permanent workflow restoration.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
 ## Immediate action
 
-Start B6-A from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint and issue #207 as the operational log. Inventory `tests/checks/`, source-only portions of `tests/integration/`, `tests/run.py`, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers. Measure dependencies/runtime and classify before designing the permanent cheap/static gate. Keep permanent workflow restoration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6, and V3-R2 runtime/API work out of scope.
+Start B6-B from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint, issue #207 as the Block 6 log and issue #209 as the implementation lot. Implement only the proven source-only composition from B6-A, keep the broad integration runner intact, and fail closed on any gate-introduced working-tree side effect. Keep permanent workflow orchestration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6, and V3-R2 runtime/API work out of scope.

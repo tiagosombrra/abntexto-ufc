@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-5 done; R1-BLOCK-6 active; B6-A inventory active.**
+**V3-R1 ACTIVE — R1-BLOCK-5 done; R1-BLOCK-6 active; B6-A done; B6-B active.**
 
 Current sequence:
 
@@ -160,11 +160,11 @@ B6 establishes the permanent source-only/static validation contract that develop
 
 ### B6-A — Validation inventory and dependency classification
 
-**ACTIVE / NEXT.** Inventory `tests/checks/`, source-only portions of `tests/integration/`, `tests/run.py`, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers. Classify each candidate as cheap/static, bounded deterministic, or heavy/runtime/platform-dependent. No permanent workflow is created in this lot.
+**DONE.** Run `33525282652` inventoried 69 Python checkers, 74 shell integrations, four validator files and 26 broad-runner checks; universal tracked Python/JSON/shell/JS source syntax passed in about 2.6 s combined. Refinement run `33525499620` intentionally failed closed on two non-static candidates: `frontmatter_definition_list_alignment.py` requires generated PDF inputs and `normative_configuration.py` writes an evidence artifact. Nineteen other measured candidates passed without working-tree side effects. `validator_source.py` already aggregates the central normative source/contract chain and the validator contract executes cross-surface vectors, so B6-B must not duplicate those checks individually.
 
 ### B6-B — Canonical permanent static gate
 
-**PENDING.** Implement the minimal fail-closed source-only gate and reconcile its producers/consumers/evidence based on B6-A findings.
+**ACTIVE / NEXT.** Issue #209. Implement one canonical side-effect-free source-only gate: tracked Python/JSON/shell/JS syntax, `git diff --check`, canonical identity, repository contract, aggregate validator-source contract, normative objects scope and reference-guide contract. Preserve `tests/run.py` as the broad integration runner and do not add permanent workflow orchestration in B6.
 
 ### B6-C — Residual audit and B7 handoff
 
@@ -174,7 +174,7 @@ B6 establishes the permanent source-only/static validation contract that develop
 
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
 - **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
-- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A inventory/classification.
+- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A done, B6-B active.
 - **R1-B7 BLOCKED** — optimized permanent workflow restoration.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
@@ -188,4 +188,4 @@ B6 establishes the permanent source-only/static validation contract that develop
 
 ## Immediate action
 
-Start **B6-A** from canonical remote `main` with certified implementation checkpoint `4bc0f544020234bc14a8f2261927f65721b6eddb` and issue #207. Inventory and classify the current validation surface by dependency/runtime cost before changing any permanent gate: source-only/static checks belong to B6 candidates; TeX/PDF/network/Windows/font/final-certification work stays outside the cheap gate. B7 owns permanent workflow orchestration, B8 owns final Windows/font/PDF-A certification, and V3-R2 owns runtime/API migration.
+Start **B6-B** from canonical remote `main` with certified implementation checkpoint `4bc0f544020234bc14a8f2261927f65721b6eddb`, Block 6 issue #207 and implementation issue #209. Implement the proven source-only composition from B6-A with explicit no-side-effect protection and preserve the broad integration runner separately. B7 owns permanent workflow orchestration, B8 owns final Windows/font/PDF-A certification, and V3-R2 owns runtime/API migration.
