@@ -6,12 +6,12 @@ Updated: 2026-09-01
 
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
-- Active implementation stage: **R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates**.
-- Active B6 work item: **B6-B — canonical cheap/static validation gate**.
-- Active B6 focus: **implement one side-effect-free source-only gate from the completed B6-A dependency/runtime classification**.
+- Active implementation stage: **R1-BLOCK-7 — Optimized Remote Workflow Restoration**.
+- Active B7 work item: **B7-A — workflow/runner dependency inventory and orchestration design**.
+- Active B7 focus: **restore remote orchestration as a thin layer over certified repository entry points without duplicating gate logic**.
 - Active branch/trunk: `main`.
-- B6 operational issue: **#207**.
-- Latest certified clean implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.
+- B7 operational issue: **#213**.
+- Latest certified clean implementation checkpoint: **`4c25c27b758e4b99db11187b34b9043776566871`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -27,7 +27,7 @@ Updated: 2026-09-01
 - **R1-BLOCK-2 DONE** at `03d7f5ceb1a325d26c712ba5e619ee85530a022b`: legacy purge and active-tree minimization.
 - **R1-BLOCK-3 DONE** at `7a3b018a43630ed46b375117790acc732ae67b40`: semantic/path-consumer closure.
 
-Permanent CI remains intentionally absent during structural R1 reconstruction.
+Permanent workflow orchestration is now B7-owned; B6 closed with zero permanent workflows on `main` and a certified local/static entry point for B7 to consume.
 
 ## R1-BLOCK-3 summary
 
@@ -190,22 +190,33 @@ The accepted `abntexto-uece` package was used as a practical packaging benchmark
 
 ## R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates
 
-**ACTIVE.** Operational issue #207. Entry certified implementation checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.
+**DONE.** Operational issue #207 closed; certified B6 functional closure checkpoint: **`4c25c27b758e4b99db11187b34b9043776566871`**.
 
-B6 establishes one permanent source-only/static validation contract for routine development and later B7 workflow reuse while preserving the integration-heavy runner separately. GitHub Actions orchestration remains B7-owned.
+B6 established a single permanent side-effect-free source-only validation entry point while keeping the broad integration/release runner separate.
 
-- **B6-A DONE:** run `33525282652` inventoried 69 Python checkers, 74 shell integrations, four validator files and 26 broad-runner checks. Universal Python/JSON/shell/JS source syntax passed in about 2.6 s combined. Refinement run `33525499620` failed closed only to classify two exclusions: `frontmatter_definition_list_alignment.py` requires generated PDFs and `normative_configuration.py` writes evidence. Nineteen other measured candidates passed without working-tree side effects. Redundancy review proved `validator_source.py` already aggregates the central normative source/contract chain and its validator contract executes cross-surface vectors.
-- **B6-B ACTIVE / NEXT:** issue #209; implement one canonical gate containing tracked Python/JSON/shell/JS syntax, `git diff --check`, canonical identity, repository contract, aggregate `validator_source.py`, normative objects scope and reference-guide contract, with before/after repository-status protection against gate-introduced side effects.
-- **B6-C PENDING:** residual audit, close B6 and hand orchestration to B7.
+### B6-A — Validation inventory and dependency classification
 
-## Remaining R1 sequence
+**DONE.** Run `33525282652` PASS inventoried 69 Python checkers, 74 shell integrations, four validator files and 26 broad-runner checks. Refinement run `33525499620` failed closed only to classify two exclusions: one checker requires generated PDF inputs and one cheap checker writes evidence. Nineteen other measured candidates passed without working-tree side effects. Redundancy analysis established `validator_source.py` as the aggregate normative/validator source contract.
 
-- **R1-B4 DONE** — tools/validator/metadata rebaseline.
-- **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
-- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A done, B6-B active.
-- **R1-B7 BLOCKED** — optimized permanent workflow restoration.
-- **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
+### B6-B — Canonical permanent static gate
 
-## Immediate action
+**DONE** through PR #211 at **`4c25c27b758e4b99db11187b34b9043776566871`**. The permanent surface is `tests/static.py` plus `make static-check`. It validates tracked Python/JSON/shell/JavaScript syntax, diff integrity, canonical identity, repository contract, aggregate validator/normative source contracts, normative object scope and reference-guide contract. README and architecture document the ownership boundary. Runs `33527802639` and `33528078426` PASS certified normal execution, pre-existing dirty-tree preservation, malformed tracked JSON rejection and failure-path status protection. No permanent workflow was added in B6.
 
-Start B6-B from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint, issue #207 as the Block 6 log and issue #209 as the implementation lot. Implement only the proven source-only composition from B6-A, keep the broad integration runner intact, and fail closed on any gate-introduced working-tree side effect. Keep permanent workflow orchestration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6, and V3-R2 runtime/API work out of scope.
+### B6-C — Residual audit and B7 handoff
+
+**DONE — zero-diff certification.** Final run **`33529190303` PASS** reconfirmed exact five-check ownership, both classified exclusions, zero TeX/PDF/network/distribution/Windows-font/PDF-A behavior, zero side effects and zero permanent workflows on `main`. Observed `make static-check` cost was **1.859 s** on the hosted Ubuntu runner. The temporary executor self-removed and the audit branch is zero-diff versus `main`; no B6-C implementation merge was required.
+
+## R1-BLOCK-7 — Optimized Remote Workflow Restoration
+
+**ACTIVE.** Operational issue #213. Entry certified implementation checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`.
+
+B7 restores GitHub Actions as a thin orchestration layer over repository-owned entry points. It must consume `make static-check`, `make check` and `make release-check` where appropriate rather than duplicate their internal checks in YAML. Remote validation is the canonical CI execution path; developer-local state is not required for certification.
+
+Planned lots:
+
+- **B7-A ACTIVE:** historical/current workflow and runner dependency inventory; define stable job names, triggers, concurrency, caching and PR/release ownership;
+- **B7-B PENDING:** permanent fast/static workflow consuming `make static-check`;
+- **B7-C PENDING:** optimized Linux integration/release orchestration without forcing heavy/release-only work onto every intermediate commit;
+- **B7-D PENDING:** residual workflow audit, status-check/branch-protection recommendation and B8 handoff.
+
+B8 retains final Windows/font/PDF-A certification. V3-R2 retains runtime/API migration. Actual CTAN submission remains an explicit release action outside B7.

@@ -6,11 +6,11 @@
   "updated_at": "2026-09-01",
   "status": "ACTIVE",
   "phase": "V3-R1",
-  "stage": "R1-BLOCK-6",
-  "stage_name": "permanent cheap/static fail-closed gates",
+  "stage": "R1-BLOCK-7",
+  "stage_name": "optimized remote workflow restoration",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "4bc0f544020234bc14a8f2261927f65721b6eddb",
+  "last_certified_clean_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -584,12 +584,12 @@
       }
     },
     "R1-BLOCK-6": {
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "permanent cheap/static fail-closed gates",
       "entry_checkpoint_sha": "4bc0f544020234bc14a8f2261927f65721b6eddb",
       "operational_issue": 207,
-      "active_work_item": "B6-B",
-      "active_sub_item": "B6-B",
+      "active_work_item": null,
+      "active_sub_item": null,
       "scope": [
         "fresh inventory and dependency classification of current validation checks",
         "one canonical cheap/static fail-closed gate contract for local development and later B7 consumption",
@@ -606,12 +606,12 @@
       ],
       "planned_lots": {
         "B6-A": "DONE - validation inventory dependency measurement and cheap/static classification",
-        "B6-B": "ACTIVE - canonical permanent cheap/static gate implementation and consumer reconciliation",
-        "B6-C": "PENDING - final B6 residual audit closeout and B7 handoff"
+        "B6-B": "DONE - canonical permanent cheap/static gate implementation and consumer reconciliation",
+        "B6-C": "DONE - final residual audit zero-diff closeout and B7 handoff"
       },
       "b6_a_status": "DONE",
-      "b6_b_status": "ACTIVE",
-      "b6_c_status": "PENDING",
+      "b6_b_status": "DONE",
+      "b6_c_status": "DONE",
       "b6_b_issue": 209,
       "b6_a_validation_runs": [
         {
@@ -626,33 +626,83 @@
         }
       ],
       "b6_a_results": {
+        "inventory_run_id": 33525282652,
+        "refinement_run_id": 33525499620,
         "python_checkers": 69,
         "shell_integrations": 74,
         "validator_files": 4,
-        "broad_runner_registered_checks": 26,
-        "raw_source_only_checker_candidates": 15,
-        "raw_bounded_checker_candidates": 7,
-        "raw_runtime_platform_checker_candidates": 47,
-        "measured_candidate_count": 21,
-        "measured_side_effect_free_pass_count": 19,
-        "excluded_generated_pdf_input_check": "tests/checks/frontmatter_definition_list_alignment.py",
-        "excluded_evidence_writer_check": "tests/checks/normative_configuration.py",
-        "validator_source_is_aggregate": true,
-        "validator_contract_executes_cross_surface": true,
-        "permanent_workflow_added": false,
-        "runtime_api_changed": false,
+        "broad_runner_checks": 26,
+        "source_only_exclusions": 2,
+        "classification_complete": true
+      },
+      "closure_sha": "4c25c27b758e4b99db11187b34b9043776566871",
+      "b6_b_results": {
+        "implementation_pr": 211,
+        "closure_sha": "4c25c27b758e4b99db11187b34b9043776566871",
+        "validation_runs": [
+          33527802639,
+          33528078426
+        ],
+        "entry_point": "make static-check",
+        "implementation": "tests/static.py",
+        "source_checks": 5,
+        "side_effects": 0,
+        "tex_pdf": 0,
+        "network": 0,
+        "permanent_workflows_added": 0
+      },
+      "b6_c_results": {
+        "final_audit_run_id": 33529190303,
+        "observed_static_gate_seconds": 1.859,
+        "source_checks": 5,
+        "excluded_pdf_input_checkers": 1,
+        "excluded_evidence_writers": 1,
+        "side_effects": 0,
+        "heavy_runtime_leakage": 0,
+        "permanent_workflows_present": 0,
+        "audit_branch_changed_files_vs_main": 0,
+        "implementation_merge_required": false,
         "normative_semantics_changed": false,
         "proof_state_changed": false
       }
     },
     "R1-BLOCK-7": {
-      "status": "BLOCKED",
-      "name": "optimized workflow restoration"
+      "status": "ACTIVE",
+      "name": "optimized remote workflow restoration",
+      "entry_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
+      "operational_issue": 213,
+      "active_work_item": "B7-A",
+      "active_sub_item": "B7-A",
+      "scope": [
+        "historical and current workflow/runner dependency inventory",
+        "permanent remote orchestration consuming repository-owned validation entry points",
+        "fast static job using make static-check without duplicated YAML logic",
+        "optimized Linux integration and release orchestration with bounded heavy-job cadence",
+        "stable job names concurrency caching and evidence receipts for later branch protection"
+      ],
+      "constraints": [
+        "do not duplicate repository gate internals in workflow YAML",
+        "do not perform V3-R2 runtime API migration",
+        "do not perform actual CTAN submission or immutable tag changes",
+        "leave final Windows font and PDF-A certification to B8",
+        "preserve normative rule IDs values tolerances locators and proof state",
+        "workflow changes require remote validation before merge"
+      ],
+      "planned_lots": {
+        "B7-A": "ACTIVE - workflow and runner dependency inventory plus orchestration design",
+        "B7-B": "PENDING - permanent fast/static workflow consuming make static-check",
+        "B7-C": "PENDING - optimized Linux integration/release workflow restoration",
+        "B7-D": "PENDING - residual workflow audit branch-protection recommendation and B8 handoff"
+      },
+      "b7_a_status": "ACTIVE",
+      "b7_b_status": "PENDING",
+      "b7_c_status": "PENDING",
+      "b7_d_status": "PENDING"
     },
     "R1-BLOCK-8": {
       "status": "BLOCKED",
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-6 B6-B from canonical remote main using 4bc0f544020234bc14a8f2261927f65721b6eddb as the latest certified implementation checkpoint, issue #207 as the Block 6 log and issue #209 as the implementation lot. Implement one permanent side-effect-free source-only gate containing tracked Python/JSON/shell/JS syntax, git diff --check, canonical identity, repository contract, aggregate validator_source, normative objects scope and reference-guide contract. Preserve the broad integration runner separately. Keep permanent workflow orchestration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6 and V3-R2 runtime/API migration out of scope."
+  "next_action": "Start R1-BLOCK-7 B7-A from canonical remote main at certified implementation checkpoint 4c25c27b758e4b99db11187b34b9043776566871 using issue #213. Inventory historical/current workflow patterns, current make static-check/make check/make release-check dependencies, job names, triggers, concurrency and caching before restoring permanent workflows. Keep B8 Windows/font/PDF-A certification and V3-R2 runtime/API work out of scope."
 }
