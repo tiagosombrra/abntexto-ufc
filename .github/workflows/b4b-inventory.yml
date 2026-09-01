@@ -1,0 +1,47 @@
+name: B4-B metadata inventory
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-b4b-metadata
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inventory active identity and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== TRACKED METADATA-LIKE FILES ==='
+          git ls-files | grep -Ei '(^|/)(README|CHANGELOG|LICENSE|CITATION|Makefile|.*\.cls$|.*\.def$|.*\.json$|.*\.toml$|.*\.yml$|.*\.yaml$|.*\.cfg$)' || true
+
+          echo '=== B4 SURFACE VERSION / LEGACY IDENTITY ==='
+          git grep -n -i -E '(2\.1\.0|1\.[0-9]+\.[0-9]+|\bv[12]\b|ufctex|modelo-latex-ufc)' -- \
+            'tools/**' 'validator/**' 'Makefile' 'abntexto-ufc.cls' 'abntexto-ufc/**' \
+            ':!.github/workflows/b4b-inventory.yml' || true
+
+          echo '=== B4 SURFACE REPOSITORY / PACKAGE / OWNERSHIP METADATA ==='
+          git grep -n -i -E '(user-agent|repository|github\.com|homepage|version|maintainer|author|copyright|package|project)' -- \
+            'tools/**' 'validator/**' 'Makefile' 'abntexto-ufc.cls' 'abntexto-ufc/**' \
+            ':!.github/workflows/b4b-inventory.yml' || true
+
+          echo '=== OLD REPOSITORY NAME GLOBAL ==='
+          git grep -n -F 'modelo-latex-ufc' -- ':!.github/workflows/b4b-inventory.yml' || true
+
+          echo '=== UFCTEX GLOBAL ==='
+          git grep -n -i -E '\bufctex\b' -- ':!.github/workflows/b4b-inventory.yml' || true
+
+          echo '=== VERSION 2.1.0 GLOBAL ==='
+          git grep -n -F '2.1.0' -- ':!.github/workflows/b4b-inventory.yml' || true
+
+          echo '=== CLASS / BUILD IDENTITY ==='
+          grep -n -E '(ProvidesClass|VERSION|version|abntexto-ufc)' abntexto-ufc.cls Makefile || true
+
+          git diff --check
+          echo 'B4-B-INVENTORY status=PASS'
