@@ -1,0 +1,187 @@
+name: B4 close and B5 activation docs sync
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b4-close-b5-open
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: "github.event.head_commit.message == 'chore: add temporary B4 close B5 docs sync'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize canonical control plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          checkpoint = '1a126c37653728941ce1ada762376c5fec69cb02'
+          b4_first = 33508301453
+          b4_final = 33511105257
+          b5_issue = 199
+
+          handoff = Path('docs/HANDOFF-V3.0.0.md')
+          text = handoff.read_text(encoding='utf-8')
+          text = re.sub(
+              r'- Active implementation stage: \*\*R1-BLOCK-4[^\n]*\n- Active B4 work item:[^\n]*\n- Active B4-D focus:[^\n]*\n- Active branch/trunk: `main`\.\n- B4 operational issue: \*\*#187\*\*\.',
+              '- Active implementation stage: **R1-BLOCK-5 — Distribution and Public Bundle Rebaseline**.\n'
+              '- Active B5 work item: **B5-A — distribution/public-bundle inventory and contract definition**.\n'
+              '- Active B5 focus: **canonical bundle source set, producer/consumer map, flatten/copy rules, manifests, and reproducibility boundaries**.\n'
+              '- Active branch/trunk: `main`.\n'
+              f'- B5 operational issue: **#{b5_issue}**.',
+              text,
+              count=1,
+          )
+          text = text.replace('**ACTIVE.** Operational continuity: issue #187.', '**DONE.** Operational issue #187 closed after B4-D zero-diff certification; latest implementation checkpoint remains `'+checkpoint+'`.')
+          old = ('### B4-D — Final B4 residual audit/closeout\n\n'
+                 '**ACTIVE / NEXT.** Re-audit helper ownership/current role, live consumers, temporary-executor absence, project-owned identity/language residue, and the bounded validator/tool contract. Any residual must be classified before editing. Closure requires proportional source/contract/syntax/diff checks PASS with no normative semantic, proof-state, tolerance, or runtime/API drift.')
+          new = ('### B4-D — Final B4 residual audit/closeout\n\n'
+                 '**DONE.** Initial remote audit run `33508301453` completed the ownership/consumer inventory and exposed two fail-closed facts: the temporary audit workflow itself contained retired-identity search literals, and five version-labelled messages remain in `tests/integration/font-embedding.sh`. Those five messages are classified as B8-owned font-certification residue and were not pulled into B4.\n\n'
+                 '**Final run `33511105257` PASS.** It reconfirmed all 10 tools and all four validator files, live consumers, B5/B8 ownership assignments, classified document-language residue, normative atomic/cross-surface/validator contracts, full validator-source checks, 14-module canonical identity, repository contract, and diff integrity. The workflow self-removed at audit-branch commit `c042ffb`; compare against `main` reported zero changed files. B4-D therefore required no implementation merge and changed no normative semantics, proof state, locator policy, reference tolerance, measurement behavior, or runtime/API.')
+          if old not in text:
+              raise SystemExit('HANDOFF B4-D block drift')
+          text = text.replace(old, new, 1)
+          marker = '## Remaining R1 sequence\n'
+          b5 = ('## R1-BLOCK-5 — Distribution and Public Bundle Rebaseline\n\n'
+                '**ACTIVE.** Operational continuity: issue #199. Entry implementation checkpoint: `'+checkpoint+'`.\n\n'
+                'B5 owns the current public/distribution bundle contract: producer and consumer inventory, canonical source set, flatten/copy rules, manifests, deterministic generation, reproducibility, and current build-path/distribution-policy reconciliation. `tools/fetch-abntexto.py` enters B5 as an explicitly assigned upstream/bundle helper and must be retained, replaced, or removed only through a proven current distribution role.\n\n'
+                'B5 does not own V3-R2 runtime/API migration, B6 permanent static gates, B7 permanent workflow restoration, or B8 Windows/font/PDF-A certification. The five version-labelled messages classified in the font-only integration gate remain B8-owned.\n\n'
+                '### B5-A — Inventory and distribution contract\n\n'
+                '**ACTIVE / NEXT.** Build a fresh remote producer/consumer matrix for public-bundle targets, Makefile/build-path integration, manifests/policies/evidence, current runtime/support source files, upstream inputs, and any tracked distribution-era residue. Classify before editing and split later work into bounded lots only after this inventory.\n\n')
+          if marker not in text:
+              raise SystemExit('HANDOFF remaining-sequence marker missing')
+          text = text.replace(marker, b5 + marker, 1)
+          text = text.replace('- **R1-B4 ACTIVE** — tools/validator/metadata rebaseline.\n- **R1-B5 BLOCKED** — distribution/public bundle flattening and reproducibility.', '- **R1-B4 DONE** — tools/validator/metadata rebaseline.\n- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.', 1)
+          text = re.sub(r'## Immediate action\n\n.*\Z', '## Immediate action\n\nStart B5-A from canonical remote `main` using `'+checkpoint+'` as the latest certified implementation checkpoint and issue #199 as the operational log. Inventory all current distribution/public-bundle producers, consumers, Makefile/build-path targets, manifests/policies/evidence, required runtime/support files, upstream inputs, and tracked distribution residue. Classify before editing; do not implement B6/B7/B8 or V3-R2 work inside B5.\n', text, count=1, flags=re.S)
+          handoff.write_text(text, encoding='utf-8')
+
+          roadmap = Path('docs/ROADMAP-V3.0.0.md')
+          text = roadmap.read_text(encoding='utf-8')
+          text = re.sub(r'\*\*V3-R1 ACTIVE — R1-BLOCK-4 active; B4-A done; B4-B done; B4-C done; B4-D active\.\*\*', '**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A active.**', text, count=1)
+          text = text.replace('**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 ACTIVE → R1-B5…B8 BLOCKED → R2+ BLOCKED**', '**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 ACTIVE → R1-B6…B8 BLOCKED → R2+ BLOCKED**', 1)
+          text = text.replace('**B4-A DONE → B4-B DONE → B4-C DONE [C1 DONE → C2a DONE → C2b DONE] → B4-D ACTIVE**', '**B4-A DONE → B4-B DONE → B4-C DONE [C1 DONE → C2a DONE → C2b DONE] → B4-D DONE**', 1)
+          text = text.replace('- B4 operational issue: #187.', '- B5 operational issue: #199.', 1)
+          text = text.replace('**ACTIVE.** Operational issue #187.', '**DONE.** Operational issue #187 closed after zero-diff B4-D certification.', 1)
+          old = ('### B4-D — Residual audit and closeout\n\n'
+                 '**ACTIVE.** Reconfirm every B4 helper is current or explicitly later-block-owned, all current consumers resolve, no temporary executor/workflow remains, and all residual project-owned identity/language occurrences are classified. Run proportional source/contract/syntax/diff gates and repair only proven B4-owned residue. Close B4 only with runtime/API and normative semantics unchanged.')
+          new = ('### B4-D — Residual audit and closeout\n\n'
+                 '**DONE.** Run `33508301453` performed the final ownership/consumer inventory and failed closed only because the temporary audit workflow contained its own retired-identity search literals; it also classified five version-labelled messages in the font-only integration gate as B8-owned residue. Corrected run **`33511105257` PASS** reconfirmed 10 tools, four validator files, all live consumers, B5/B8 assignments, language boundaries, atomic/cross-surface/validator contracts, validator-source checks, canonical identity, repository contract and diff integrity. The audit workflow self-removed and the audit branch has zero changed files versus `main`; no implementation merge was required.')
+          if old not in text:
+              raise SystemExit('ROADMAP B4-D block drift')
+          text = text.replace(old, new, 1)
+          marker = '## Remaining R1 blocks\n'
+          b5 = ('## R1-BLOCK-5 — Distribution and Public Bundle Rebaseline\n\n'
+                '**ACTIVE.** Operational issue #199. Entry checkpoint: `'+checkpoint+'`.\n\n'
+                'Purpose: reconstruct the current public/distribution bundle contract from the v3 canonical tree. B5 will inventory producers and consumers, define the canonical source set and flatten/copy rules, reconcile manifests/policies/build-path integration, determine the current role of `tools/fetch-abntexto.py`, and make bundle generation deterministic and reproducible without reviving retired release scaffolding.\n\n'
+                '### B5-A — Inventory and distribution contract\n\n'
+                '**ACTIVE.** Fresh remote inventory first; historical distribution assumptions are advisory only. Map Makefile targets, build-path consumers, public bundle manifests/policies/evidence, runtime/support files, upstream inputs, and tracked distribution residue. Classify before editing.\n\n')
+          if marker not in text:
+              raise SystemExit('ROADMAP remaining-block marker missing')
+          text = text.replace(marker, b5 + marker, 1)
+          text = text.replace('- **R1-B4 ACTIVE** — tools/validator/metadata rebaseline.\n- **R1-B5 BLOCKED** — distribution/public bundle flattening and reproducibility.', '- **R1-B4 DONE** — tools/validator/metadata rebaseline.\n- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.', 1)
+          text = re.sub(r'## Immediate action\n\n.*\Z', '## Immediate action\n\nStart **B5-A** from canonical `main` with implementation checkpoint `'+checkpoint+'` and issue #199. Produce a fresh remote distribution/public-bundle producer/consumer inventory and classify each current or residual surface before implementation. Keep B6 permanent gates, B7 permanent workflow restoration, B8 final certification and V3-R2 runtime/API work out of scope.\n', text, count=1, flags=re.S)
+          roadmap.write_text(text, encoding='utf-8')
+
+          machine = Path('release/v3-roadmap.json')
+          data = json.loads(machine.read_text(encoding='utf-8'))
+          data['stage'] = 'R1-BLOCK-5'
+          data['stage_name'] = 'distribution and public bundle rebaseline'
+          b4 = data['blocks']['R1-BLOCK-4']
+          b4['status'] = 'DONE'
+          b4['closure_sha'] = checkpoint
+          b4['b4_d_status'] = 'DONE'
+          b4['active_work_item'] = None
+          b4['active_sub_item'] = None
+          b4['b4_d_validation_runs'] = [
+              {'run_id': b4_first, 'conclusion': 'failure', 'finding': 'inventory completed; temporary audit workflow self-triggered canonical-identity literals; five font-gate version-labelled messages classified B8-owned'},
+              {'run_id': b4_final, 'conclusion': 'success', 'finding': 'zero-diff B4 final certification passed and temporary audit workflow self-removed'},
+          ]
+          b4['b4_d_results'] = {
+              'tools_classified': 10,
+              'validator_files_classified': 4,
+              'all_current_consumers_resolved': True,
+              'b5_fetch_helper_assignment_reconfirmed': True,
+              'b8_windows_font_helper_assignment_reconfirmed': True,
+              'b8_deferred_font_gate_identity_occurrences': 5,
+              'b4_language_residue_classified': True,
+              'atomic_contract_passed': True,
+              'cross_surface_contract_passed': True,
+              'validator_contract_passed': True,
+              'validator_source_passed': True,
+              'canonical_modules_aligned': 14,
+              'repository_contract_passed': True,
+              'audit_branch_changed_files_vs_main': 0,
+              'implementation_merge_required': False,
+              'temporary_workflow_removed': True,
+              'normative_semantics_changed': False,
+              'proof_state_changed': False,
+              'locator_policy_changed': False,
+              'reference_tolerances_changed': False,
+              'runtime_api_changed': False,
+          }
+          b4['planned_lots']['B4-D'] = 'DONE - final residual audit and zero-diff closeout'
+
+          b5 = data['blocks']['R1-BLOCK-5']
+          b5.clear()
+          b5.update({
+              'status': 'ACTIVE',
+              'name': 'distribution and public bundle rebaseline',
+              'entry_checkpoint_sha': checkpoint,
+              'operational_issue': b5_issue,
+              'active_work_item': 'B5-A',
+              'active_sub_item': 'B5-A',
+              'scope': [
+                  'public and distribution bundle producer consumer inventory',
+                  'canonical source set and flatten copy rules',
+                  'manifest policy evidence and build-path reconciliation',
+                  'current role of tools/fetch-abntexto.py and required upstream inputs',
+                  'deterministic reproducible bundle generation without retired release scaffolding'
+              ],
+              'constraints': [
+                  'do not implement V3-R2 runtime API migration',
+                  'do not implement B6 permanent gates B7 permanent workflows or B8 final certification',
+                  'preserve normative rule IDs values tolerances locators and proof state',
+                  'temporary validation workflows must be removed before checkpoint',
+                  'classify distribution residue before editing'
+              ],
+              'b5_a_status': 'ACTIVE',
+              'b5_a_scope': 'fresh remote distribution and public-bundle inventory plus contract definition'
+          })
+          data['blocks']['R1-BLOCK-6']['status'] = 'BLOCKED'
+          data['blocks']['R1-BLOCK-7']['status'] = 'BLOCKED'
+          data['blocks']['R1-BLOCK-8']['status'] = 'BLOCKED'
+          data['next_action'] = ('Start R1-BLOCK-5 B5-A from canonical remote main using '+checkpoint+' as the latest certified implementation checkpoint and issue #199 as the operational log. Inventory public/distribution bundle producers and consumers, Makefile/build-path targets, manifests/policies/evidence, runtime/support source files, upstream inputs, and tracked distribution residue. Classify before editing and keep B6, B7, B8 and V3-R2 work out of scope.')
+          machine.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+          PY
+
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          grep -F 'R1-BLOCK-5 — Distribution and Public Bundle Rebaseline' docs/HANDOFF-V3.0.0.md >/dev/null
+          grep -F 'R1-BLOCK-5 — Distribution and Public Bundle Rebaseline' docs/ROADMAP-V3.0.0.md >/dev/null
+          grep -F 'B4-D-FINAL-AUDIT' /dev/null 2>/dev/null || true
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          git diff --check
+          echo 'B4-CLOSE-B5-ACTIVATE-DOCS status=PASS'
+
+      - name: Commit sync and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git commit -m 'docs: close B4 and activate B5'
+          git rm .github/workflows/b4-close-b5-open-docs.yml
+          git commit -m 'chore: remove temporary B4 B5 docs sync'
+          git push origin HEAD:docs/v3-r1-b4-close-b5-open
