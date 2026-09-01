@@ -4,19 +4,19 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-4 active; B4-A done; B4-B done; B4-C done; B4-D active.**
+**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A active.**
 
 Current sequence:
 
-**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 ACTIVE → R1-B5…B8 BLOCKED → R2+ BLOCKED**
+**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 ACTIVE → R1-B6…B8 BLOCKED → R2+ BLOCKED**
 
 B4 internal sequence:
 
-**B4-A DONE → B4-B DONE → B4-C DONE [C1 DONE → C2a DONE → C2b DONE] → B4-D ACTIVE**
+**B4-A DONE → B4-B DONE → B4-C DONE [C1 DONE → C2a DONE → C2b DONE] → B4-D DONE**
 
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
-- B4 operational issue: #187.
+- B5 operational issue: #199.
 - Latest certified implementation checkpoint: **`1a126c37653728941ce1ada762376c5fec69cb02`**.
 - R1-BLOCK-3 closure: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
@@ -39,7 +39,7 @@ Block 3 removed stale path/process/version identity, dead distribution-era imple
 
 ## R1-BLOCK-4 — Tools, Validator, and Metadata Technical Rebaseline
 
-**ACTIVE.** Operational issue #187.
+**DONE.** Operational issue #187 closed after zero-diff B4-D certification.
 
 Purpose: every active project-owned tooling/validator/metadata surface must reflect current v3 architecture, have a real consumer/current role or an explicit later-block assignment, and use coherent project-owned technical identity. B4 does not implement B5 distribution, B6 permanent gates, B7 CI, B8 final certification or R2 runtime/API migration.
 
@@ -128,12 +128,22 @@ Evidence: `33506603720` inventory PASS; `33506913061` invalid oversized executor
 
 ### B4-D — Residual audit and closeout
 
-**ACTIVE.** Reconfirm every B4 helper is current or explicitly later-block-owned, all current consumers resolve, no temporary executor/workflow remains, and all residual project-owned identity/language occurrences are classified. Run proportional source/contract/syntax/diff gates and repair only proven B4-owned residue. Close B4 only with runtime/API and normative semantics unchanged.
+**DONE.** Run `33508301453` performed the final ownership/consumer inventory and failed closed only because the temporary audit workflow contained its own retired-identity search literals; it also classified five version-labelled messages in the font-only integration gate as B8-owned residue. Corrected run **`33511105257` PASS** reconfirmed 10 tools, four validator files, all live consumers, B5/B8 assignments, language boundaries, atomic/cross-surface/validator contracts, validator-source checks, canonical identity, repository contract and diff integrity. The audit workflow self-removed and the audit branch has zero changed files versus `main`; no implementation merge was required.
+
+## R1-BLOCK-5 — Distribution and Public Bundle Rebaseline
+
+**ACTIVE.** Operational issue #199. Entry checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`.
+
+Purpose: reconstruct the current public/distribution bundle contract from the v3 canonical tree. B5 will inventory producers and consumers, define the canonical source set and flatten/copy rules, reconcile manifests/policies/build-path integration, determine the current role of `tools/fetch-abntexto.py`, and make bundle generation deterministic and reproducible without reviving retired release scaffolding.
+
+### B5-A — Inventory and distribution contract
+
+**ACTIVE.** Fresh remote inventory first; historical distribution assumptions are advisory only. Map Makefile targets, build-path consumers, public bundle manifests/policies/evidence, runtime/support files, upstream inputs, and tracked distribution residue. Classify before editing.
 
 ## Remaining R1 blocks
 
-- **R1-B4 ACTIVE** — tools/validator/metadata rebaseline.
-- **R1-B5 BLOCKED** — distribution/public bundle flattening and reproducibility.
+- **R1-B4 DONE** — tools/validator/metadata rebaseline.
+- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.
 - **R1-B6 BLOCKED** — permanent cheap/static fail-closed gates.
 - **R1-B7 BLOCKED** — optimized permanent workflow restoration.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
@@ -148,4 +158,4 @@ Evidence: `33506603720` inventory PASS; `33506913061` invalid oversized executor
 
 ## Immediate action
 
-Start **B4-D** from canonical `main` with implementation checkpoint `1a126c37653728941ce1ada762376c5fec69cb02`. Run the final branch-only B4 residual audit across helper ownership, consumer resolution, temporary-executor absence and project-owned identity/language residue. Classify before editing, repair only proven B4-owned residue, run proportional source/contract/syntax/diff gates, then close B4 and synchronize the control plane before B5 activation.
+Start **B5-A** from canonical `main` with implementation checkpoint `1a126c37653728941ce1ada762376c5fec69cb02` and issue #199. Produce a fresh remote distribution/public-bundle producer/consumer inventory and classify each current or residual surface before implementation. Keep B6 permanent gates, B7 permanent workflow restoration, B8 final certification and V3-R2 runtime/API work out of scope.

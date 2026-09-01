@@ -6,8 +6,8 @@
   "updated_at": "2026-09-01",
   "status": "ACTIVE",
   "phase": "V3-R1",
-  "stage": "R1-BLOCK-4",
-  "stage_name": "tools validator and metadata technical rebaseline",
+  "stage": "R1-BLOCK-5",
+  "stage_name": "distribution and public bundle rebaseline",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
@@ -97,13 +97,13 @@
       }
     },
     "R1-BLOCK-4": {
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "tools validator and metadata technical rebaseline",
       "entry_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
       "activation_control_plane_sha": "3512d8b29f2b3634f4ba69bdbc160fa1bc667c19",
       "operational_issue": 187,
-      "active_work_item": "B4-D",
-      "active_sub_item": "B4-D",
+      "active_work_item": null,
+      "active_sub_item": null,
       "scope": [
         "tools live-tree ownership and dead-helper audit",
         "validator project-owned identifiers diagnostics controls and technical labels",
@@ -246,7 +246,7 @@
         "report export headings and generic Web validator controls",
         "preserve academic element labels official normative text stable machine identifiers and runtime API"
       ],
-      "b4_d_status": "ACTIVE",
+      "b4_d_status": "DONE",
       "b4_d_scope": [
         "final helper ownership and later-block assignment audit",
         "live consumer resolution and dead-helper audit",
@@ -259,7 +259,7 @@
         "B4-B": "DONE - stale identity and metadata cleanup",
         "B4-C1": "DONE - shared validator status and verdict vocabulary",
         "B4-C2": "DONE - C2a and C2b complete",
-        "B4-D": "ACTIVE - final residual audit and closeout",
+        "B4-D": "DONE - final residual audit and zero-diff closeout",
         "B4-C2a": "DONE - technical taxonomy validation levels and CLI report headings",
         "B4-C2b": "DONE - diagnostics report export labels and Web UI"
       },
@@ -345,11 +345,67 @@
         "proof_state_changed": false,
         "runtime_api_changed": false,
         "temporary_workflows_removed_before_merge": true
+      },
+      "closure_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
+      "b4_d_validation_runs": [
+        {
+          "run_id": 33508301453,
+          "conclusion": "failure",
+          "finding": "inventory completed; temporary audit workflow self-triggered canonical-identity literals; five font-gate version-labelled messages classified B8-owned"
+        },
+        {
+          "run_id": 33511105257,
+          "conclusion": "success",
+          "finding": "zero-diff B4 final certification passed and temporary audit workflow self-removed"
+        }
+      ],
+      "b4_d_results": {
+        "tools_classified": 10,
+        "validator_files_classified": 4,
+        "all_current_consumers_resolved": true,
+        "b5_fetch_helper_assignment_reconfirmed": true,
+        "b8_windows_font_helper_assignment_reconfirmed": true,
+        "b8_deferred_font_gate_identity_occurrences": 5,
+        "b4_language_residue_classified": true,
+        "atomic_contract_passed": true,
+        "cross_surface_contract_passed": true,
+        "validator_contract_passed": true,
+        "validator_source_passed": true,
+        "canonical_modules_aligned": 14,
+        "repository_contract_passed": true,
+        "audit_branch_changed_files_vs_main": 0,
+        "implementation_merge_required": false,
+        "temporary_workflow_removed": true,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false,
+        "locator_policy_changed": false,
+        "reference_tolerances_changed": false,
+        "runtime_api_changed": false
       }
     },
     "R1-BLOCK-5": {
-      "status": "BLOCKED",
-      "name": "distribution and public bundle rebaseline"
+      "status": "ACTIVE",
+      "name": "distribution and public bundle rebaseline",
+      "entry_checkpoint_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
+      "operational_issue": 199,
+      "active_work_item": "B5-A",
+      "active_sub_item": "B5-A",
+      "scope": [
+        "public and distribution bundle producer consumer inventory",
+        "canonical source set and flatten copy rules",
+        "manifest policy evidence and build-path reconciliation",
+        "current role of tools/fetch-abntexto.py and required upstream inputs",
+        "deterministic reproducible bundle generation without retired release scaffolding"
+      ],
+      "constraints": [
+        "do not implement V3-R2 runtime API migration",
+        "do not implement B6 permanent gates B7 permanent workflows or B8 final certification",
+        "preserve normative rule IDs values tolerances locators and proof state",
+        "temporary validation workflows must be removed before checkpoint",
+        "classify distribution residue before editing"
+      ],
+      "b5_a_status": "ACTIVE",
+      "b5_a_scope": "fresh remote distribution and public-bundle inventory plus contract definition"
     },
     "R1-BLOCK-6": {
       "status": "BLOCKED",
@@ -364,5 +420,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-4 B4-D from canonical remote main using 1a126c37653728941ce1ada762376c5fec69cb02 as the latest certified implementation checkpoint. Run a branch-only final residual audit across B4-owned tools, validator, metadata and their consumers. Confirm every helper is current or explicitly B5/B8-assigned, all live consumers resolve, no dead helper or temporary executor remains, and all residual project-owned identity/language occurrences are classified before editing. Repair only proven B4-owned residue, validate source/contract/syntax/diff gates proportionally, then close B4 and synchronize the control plane before activating B5."
+  "next_action": "Start R1-BLOCK-5 B5-A from canonical remote main using 1a126c37653728941ce1ada762376c5fec69cb02 as the latest certified implementation checkpoint and issue #199 as the operational log. Inventory public/distribution bundle producers and consumers, Makefile/build-path targets, manifests/policies/evidence, runtime/support source files, upstream inputs, and tracked distribution residue. Classify before editing and keep B6, B7, B8 and V3-R2 work out of scope."
 }

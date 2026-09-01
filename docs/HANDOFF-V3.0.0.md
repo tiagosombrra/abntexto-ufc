@@ -6,11 +6,11 @@ Updated: 2026-09-01
 
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
-- Active implementation stage: **R1-BLOCK-4 — Tools, Validator, and Metadata Technical Rebaseline**.
-- Active B4 work item: **B4-D — final residual audit and closeout**.
-- Active B4-D focus: **helper ownership, consumer integrity, residual identity/language classification, and temporary-executor absence**.
+- Active implementation stage: **R1-BLOCK-5 — Distribution and Public Bundle Rebaseline**.
+- Active B5 work item: **B5-A — distribution/public-bundle inventory and contract definition**.
+- Active B5 focus: **canonical bundle source set, producer/consumer map, flatten/copy rules, manifests, and reproducibility boundaries**.
 - Active branch/trunk: `main`.
-- B4 operational issue: **#187**.
+- B5 operational issue: **#199**.
 - Latest certified clean implementation checkpoint: **`1a126c37653728941ce1ada762376c5fec69cb02`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
@@ -46,7 +46,7 @@ Final B3 evidence included repository contract PASS, 14 canonical modules aligne
 
 ## R1-BLOCK-4 — Tools, Validator, and Metadata Technical Rebaseline
 
-**ACTIVE.** Operational continuity: issue #187.
+**DONE.** Operational issue #187 closed after B4-D zero-diff certification; latest implementation checkpoint remains `1a126c37653728941ce1ada762376c5fec69cb02`.
 
 B4 owns current technical surfaces in `tools/`, `validator/`, and metadata consumed by them. It does not own R2 runtime/API migration, B5 distribution implementation, B6 permanent gates, B7 workflow restoration, or B8 final Windows/font/PDF-A certification.
 
@@ -154,16 +154,30 @@ Validation remained fail-closed: inventory `33506603720` PASS; oversized executo
 
 ### B4-D — Final B4 residual audit/closeout
 
-**ACTIVE / NEXT.** Re-audit helper ownership/current role, live consumers, temporary-executor absence, project-owned identity/language residue, and the bounded validator/tool contract. Any residual must be classified before editing. Closure requires proportional source/contract/syntax/diff checks PASS with no normative semantic, proof-state, tolerance, or runtime/API drift.
+**DONE.** Initial remote audit run `33508301453` completed the ownership/consumer inventory and exposed two fail-closed facts: the temporary audit workflow itself contained retired-identity search literals, and five version-labelled messages remain in `tests/integration/font-embedding.sh`. Those five messages are classified as B8-owned font-certification residue and were not pulled into B4.
+
+**Final run `33511105257` PASS.** It reconfirmed all 10 tools and all four validator files, live consumers, B5/B8 ownership assignments, classified document-language residue, normative atomic/cross-surface/validator contracts, full validator-source checks, 14-module canonical identity, repository contract, and diff integrity. The workflow self-removed at audit-branch commit `c042ffb`; compare against `main` reported zero changed files. B4-D therefore required no implementation merge and changed no normative semantics, proof state, locator policy, reference tolerance, measurement behavior, or runtime/API.
+
+## R1-BLOCK-5 — Distribution and Public Bundle Rebaseline
+
+**ACTIVE.** Operational continuity: issue #199. Entry implementation checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`.
+
+B5 owns the current public/distribution bundle contract: producer and consumer inventory, canonical source set, flatten/copy rules, manifests, deterministic generation, reproducibility, and current build-path/distribution-policy reconciliation. `tools/fetch-abntexto.py` enters B5 as an explicitly assigned upstream/bundle helper and must be retained, replaced, or removed only through a proven current distribution role.
+
+B5 does not own V3-R2 runtime/API migration, B6 permanent static gates, B7 permanent workflow restoration, or B8 Windows/font/PDF-A certification. The five version-labelled messages classified in the font-only integration gate remain B8-owned.
+
+### B5-A — Inventory and distribution contract
+
+**ACTIVE / NEXT.** Build a fresh remote producer/consumer matrix for public-bundle targets, Makefile/build-path integration, manifests/policies/evidence, current runtime/support source files, upstream inputs, and any tracked distribution-era residue. Classify before editing and split later work into bounded lots only after this inventory.
 
 ## Remaining R1 sequence
 
-- **R1-B4 ACTIVE** — tools/validator/metadata rebaseline.
-- **R1-B5 BLOCKED** — distribution/public bundle flattening and reproducibility.
+- **R1-B4 DONE** — tools/validator/metadata rebaseline.
+- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.
 - **R1-B6 BLOCKED** — permanent cheap/static fail-closed gates.
 - **R1-B7 BLOCKED** — optimized permanent workflow restoration.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
 ## Immediate action
 
-Start B4-D from canonical remote `main` using `1a126c37653728941ce1ada762376c5fec69cb02` as the latest certified implementation checkpoint. Run a branch-only residual audit over B4-owned tools/validator/metadata surfaces and their consumers. Confirm every helper is current or explicitly B5/B8-assigned, no dead helper or temporary executor remains, and every residual project-owned identity/language occurrence is classified. Repair only proven B4-owned residue, validate proportionally, and then close B4 and synchronize the control plane before activating B5.
+Start B5-A from canonical remote `main` using `1a126c37653728941ce1ada762376c5fec69cb02` as the latest certified implementation checkpoint and issue #199 as the operational log. Inventory all current distribution/public-bundle producers, consumers, Makefile/build-path targets, manifests/policies/evidence, required runtime/support files, upstream inputs, and tracked distribution residue. Classify before editing; do not implement B6/B7/B8 or V3-R2 work inside B5.
