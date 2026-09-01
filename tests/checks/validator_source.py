@@ -120,7 +120,7 @@ def main() -> None:
     if re.search(forbidden, app):
         fail("browser code contains a network upload API")
 
-    if "não é enviado para servidor" not in html:
+    if "is not sent to a server" not in html:
         fail("local-processing disclosure is missing")
     for marker in ('id="normative-base"', 'id="norm-reviewed"', 'id="norm-sources"'):
         if marker not in html:
