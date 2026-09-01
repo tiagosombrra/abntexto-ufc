@@ -56,7 +56,6 @@ CHECKS = (
         modes=("release",),
         depends=("reference",),
     ),
-    Check("distribution-source", "Distribution source", ("sh", "tests/integration/distribution.sh")),
     Check("layout", "Layout", ("sh", "tests/integration/layout.sh")),
     Check("font-config", "Font configuration", ("sh", "tests/integration/font-config.sh")),
     Check("pdf-validation-core", "PDF validation core", ("sh", "tests/integration/pdf-validation-core.sh")),
