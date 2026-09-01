@@ -10,7 +10,7 @@
   "stage_name": "tools validator and metadata technical rebaseline",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
+  "last_certified_clean_checkpoint_sha": "a4fbbdcb381709cb542c8f991ef152d8a635f790",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -102,8 +102,7 @@
       "entry_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
       "activation_control_plane_sha": "3512d8b29f2b3634f4ba69bdbc160fa1bc667c19",
       "operational_issue": 187,
-      "working_branch": "refactor/v3-r1-b4-tools-validator",
-      "active_work_item": "B4-A",
+      "active_work_item": "B4-B",
       "scope": [
         "tools live-tree ownership and dead-helper audit",
         "validator project-owned identifiers diagnostics controls and technical labels",
@@ -122,43 +121,84 @@
         "run_id": 33496512650,
         "inventory_steps_passed": true,
         "stale_identity_scan_passed": true,
-        "bounded_source_check_passed": false,
-        "overall_run_conclusion": "failure",
-        "failure_class": "validator-source-contract-blocker",
-        "failure_detail": "extended rules without unified evidence: spine.conditional",
+        "bounded_source_check_passed_at_entry": false,
+        "entry_failure_class": "validator-source-contract-semantics",
+        "entry_failure_detail": "spine.conditional was not-applicable but referenced deleted executable evidence",
         "tools_file_count": 10,
         "validator_file_count": 4,
         "validator_files_all_have_live_consumers": true,
         "old_repository_identity_occurrences": 0,
-        "temporary_inventory_workflow_on_working_branch": ".github/workflows/b4-inventory.yml",
         "temporary_inventory_workflow_on_main": false
       },
       "consumer_classification": {
-        "convert_encoding_to_unicode": "consumed-by-prepare-windows-fonts",
-        "fetch_abntexto": "unclassified-zero-textual-consumers",
-        "fetch_reference_images": "consumed-by-Makefile",
+        "convert_encoding_to_unicode": "B8-owned-live-windows-font-chain",
+        "fetch_abntexto": "B5-owned-upstream-bundle-helper",
+        "fetch_reference_images": "current-consumed-by-Makefile",
         "normative_atomic": "current-validator-source-consumer",
         "normative_catalog": "current-validator-source-consumer",
         "normative_full": "current-coverage-and-validator-source-consumer",
         "pdf_measurement": "current-validator-source-consumer",
         "pdf_vector_measurement": "current-vector-validation-consumers",
-        "prepare_windows_fonts": "preliminary-B8-owned-live-consumer",
+        "prepare_windows_fonts": "B8-owned-live-windows-font-chain",
         "validate_ufc_pdf": "current-eight-consumers",
         "validator_app_js": "current-live-consumer-surface",
         "validator_index_html": "current-live-consumer-surface",
         "validator_validation_contract": "current-live-consumer-surface",
         "validator_validation_vectors": "current-live-consumer-surface"
       },
-      "confirmed_cleanup_candidates": [
-        "tools/fetch-reference-images.py User-Agent still identifies abntexto-ufc/2.1.0",
-        "validator/index.html still presents ufctex technical identity",
-        "project-owned validator and CLI technical UI/report/diagnostic language requires English-boundary classification"
+      "b4_a_status": "DONE",
+      "b4_a_closure_sha": "a4fbbdcb381709cb542c8f991ef152d8a635f790",
+      "b4_a_results": {
+        "spine_conditional_not_applicable_mode_reconciled": true,
+        "spine_conditional_normative_values_changed": false,
+        "not_applicable_requires_empty_checks": true,
+        "not_applicable_requires_explicit_applicability": true,
+        "executable_modes_require_non_empty_checks": true,
+        "dead_distribution_source_evidence_removed": true,
+        "distribution_policy_retains_live_build_path_evidence": true,
+        "reference_assets_user_agent": "abntexto-ufc/3.0.0 reference-assets",
+        "validator_project_identity": "abntexto-ufc · standalone validator",
+        "fetch_abntexto_classification": "B5-owned-upstream-bundle-helper",
+        "windows_font_helpers_classification": "B8-owned-live-certification-chain",
+        "temporary_workflow_removed_before_merge": true,
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
+      },
+      "b4_a_validation_runs": [
+        {
+          "run_id": 33498491307,
+          "conclusion": "failure",
+          "finding": "traceability assumed every rule requires evidence IDs"
+        },
+        {
+          "run_id": 33498624481,
+          "conclusion": "failure",
+          "finding": "coverage/dead distribution-source evidence residue"
+        },
+        {
+          "run_id": 33498811794,
+          "conclusion": "success",
+          "finding": "full bounded B4-A validation passed"
+        }
       ],
+      "b4_b_status": "ACTIVE",
+      "b4_b_scope": [
+        "fresh residual active version package repository and ownership identity audit",
+        "tool headers User-Agent and generated metadata identity",
+        "validator product ownership identity",
+        "classification of retained old-version references before editing",
+        "producer-consumer metadata alignment"
+      ],
+      "b4_c_status": "PENDING",
+      "b4_c_scope": "validator and tool project-owned technical-language rebaseline without runtime/API migration",
+      "b4_d_status": "PENDING",
+      "b4_d_scope": "final helper ownership consumer residual and temporary-executor audit",
       "planned_lots": {
-        "B4-A": "inventory blockers and ownership classification",
-        "B4-B": "stale identity and metadata cleanup",
-        "B4-C": "validator and tool technical-language rebaseline",
-        "B4-D": "final residual audit and closeout"
+        "B4-A": "DONE - inventory blockers and ownership classification",
+        "B4-B": "ACTIVE - stale identity and metadata cleanup",
+        "B4-C": "PENDING - validator and tool technical-language rebaseline",
+        "B4-D": "PENDING - final residual audit and closeout"
       }
     },
     "R1-BLOCK-5": {
@@ -178,5 +218,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Continue R1-BLOCK-4 B4-A from issue #187. Classify the spine.conditional unified-evidence blocker and tools/fetch-abntexto.py zero-consumer status. Remove the branch-only b4-inventory.yml before any B4 checkpoint PR. Then execute B4-B as a bounded identity/metadata cleanup for the stale 2.1.0 User-Agent and ufctex validator identity, keeping runtime/API, normative semantics, B5-B8 implementation, and permanent CI out of scope."
+  "next_action": "Start R1-BLOCK-4 B4-B from canonical remote main using a4fbbdcb381709cb542c8f991ef152d8a635f790 as the latest certified implementation checkpoint. Run a fresh residual identity and metadata audit across active version package repository ownership labels tool headers and validator product identifiers. Classify retained old-version or later-block references before editing. Keep B4-C technical-language rebaseline separate unless a finding is unambiguously identity metadata, validate bounded changes proportionally, remove any temporary executor before checkpoint, and update issue #187 plus the three canonical control-plane files after each merged lot."
 }
