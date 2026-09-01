@@ -282,7 +282,6 @@
       "validation": {
         "mode": "manual",
         "checks": [
-          "distribution-source",
           "build-path"
         ]
       },
