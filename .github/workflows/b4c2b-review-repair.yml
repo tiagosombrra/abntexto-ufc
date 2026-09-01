@@ -1,0 +1,61 @@
+name: B4-C2b review repair
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-b4c2b-diagnostics-ui
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: "github.event.head_commit.message == 'chore: add temporary B4-C2b review repair'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repair residual technical strings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('tools/validate-ufc-pdf.py')
+          text=path.read_text(encoding='utf-8')
+          pairs=[
+            ("'PDF/UA-1 com veraPDF'", "'PDF/UA-1 with veraPDF'"),
+            ("'Execute veraPDF -f ua1.'", "'Run veraPDF -f ua1.'"),
+          ]
+          for old,new in pairs:
+              if text.count(old) != 1:
+                  raise SystemExit(f'expected one {old!r}, found {text.count(old)}')
+              text=text.replace(old,new)
+          path.write_text(text,encoding='utf-8')
+          PY
+          python3 -m py_compile tools/validate-ufc-pdf.py tests/checks/normative_validator_contract.py tests/checks/validator_source.py
+          node --check validator/app.js
+          python3 tests/checks/normative_cross_surface.py
+          python3 tests/checks/normative_validator_contract.py
+          python3 tests/checks/validator_source.py
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          ! grep -F 'PDF/UA-1 com veraPDF' tools/validate-ufc-pdf.py
+          ! grep -F 'Execute veraPDF -f ua1.' tools/validate-ufc-pdf.py
+          for term in 'Capa' 'Folha de aprovação' 'Resumo' 'Sumário' 'Referências'; do
+            grep -F "$term" tools/validate-ufc-pdf.py >/dev/null
+            grep -F "$term" validator/app.js >/dev/null
+          done
+          git diff --check
+      - name: Commit repair and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add tools/validate-ufc-pdf.py
+          git commit -m 'fix: complete B4-C2b technical-language review'
+          git rm .github/workflows/b4c2b-review-repair.yml
+          git commit -m 'chore: remove temporary B4-C2b review repair'
+          git push origin HEAD:refactor/v3-r1-b4c2b-diagnostics-ui
