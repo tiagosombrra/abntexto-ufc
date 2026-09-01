@@ -4,11 +4,11 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B/C done; B7-D active.**
+**V3-R1 ACTIVE — R1-BLOCK-7 done; R1-BLOCK-8 active.**
 
 Current sequence:
 
-**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 DONE → R1-B6 DONE → R1-B7 ACTIVE → R1-B8 BLOCKED → R2+ BLOCKED**
+**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 DONE → R1-B6 DONE → R1-B7 DONE → R1-B8 ACTIVE → R2+ BLOCKED**
 
 B4 internal sequence:
 
@@ -16,7 +16,7 @@ B4 internal sequence:
 
 B7 internal sequence:
 
-**B7-A DONE → B7-B DONE → B7-C DONE [C1 DONE → C2 DONE → C3 DONE] → B7-D ACTIVE**
+**B7-A DONE → B7-B DONE → B7-C DONE [C1 DONE → C2 DONE → C3 DONE] → B7-D DONE**
 
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
@@ -174,7 +174,7 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
+**DONE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; certified implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**. B7-D completed the residual workflow/status/ruleset audit and handed certification ownership to B8.
 
 B7 restores permanent GitHub Actions as orchestration over current repository entry points; workflow YAML must not duplicate gate internals.
 
@@ -216,15 +216,15 @@ Completed bounded repair set:
 
 ### B7-D — Residual audit and B8 handoff
 
-**ACTIVE.** Audit the three permanent workflow owners and stable check names, permissions/action pins/concurrency, status semantics, zero temporary workflow residue and the current `main` ruleset. Record the required-status recommendation, then activate B8 without rerunning already-certified heavy product gates unless current state requires it.
+**DONE.** Canonical `main` contains exactly three permanent workflows (`Static contract`, `Linux integration`, `Linux release check`) and no temporary executor. All three use read-only repository permissions, pinned actions and bounded concurrency. Ruleset `Stable branches` (20984822) currently has no required-status rule; the recorded recommendation is to require `Static contract` and `Linux integration`, while `Linux release check` remains post-merge/manual. No branch-protection mutation or heavy product rerun was required for B7-D.
 
 ## Remaining R1 blocks
 
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
 - **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
 - **R1-B6 DONE** — permanent cheap/static fail-closed gate at `4c25c27b758e4b99db11187b34b9043776566871`.
-- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C is complete and B7-D residual audit/B8 handoff is active.
-- **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
+- **R1-B7 DONE** — optimized remote workflow restoration is complete through B7-D.
+- **R1-B8 ACTIVE** — final R1 certification via issue #227: hosted Windows, literal fonts, supported engine matrix, Unicode extraction/font embedding, and final PDF/A-2b evidence.
 
 ## Later phases
 
@@ -236,4 +236,4 @@ Completed bounded repair set:
 
 ## Immediate action
 
-Execute **B7-D** from canonical remote `main`. Audit the three permanent workflows (`Static contract`, `Linux integration`, `Linux release check`), their stable status semantics, pinned actions, read-only permissions, bounded concurrency and temporary-workflow absence; inspect the current `main` ruleset and record the required-status recommendation. Do not rerun completed heavy product checks without current-state need. Hand final Windows/literal-font/PDF-A certification to B8; keep V3-R2 runtime/API migration and actual CTAN submission out of scope.
+Execute **R1-BLOCK-8** via issue #227 from canonical remote `main`. Audit the existing Windows/font/PDF-A preparation and validation tooling first, then certify the current v3 candidate on hosted Windows with literal Times New Roman and Arial where required, the supported pdfLaTeX/LuaLaTeX matrix, Unicode extraction/font embedding, and final PDF/A-2b evidence. Do not rerun completed Linux product gates without current-state need, perform V3-R2 runtime/API migration, redistribute proprietary fonts, or perform an actual CTAN submission.

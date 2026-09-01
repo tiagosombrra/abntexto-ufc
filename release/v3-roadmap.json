@@ -6,8 +6,8 @@
   "updated_at": "2026-09-01",
   "status": "ACTIVE",
   "phase": "V3-R1",
-  "stage": "R1-BLOCK-7",
-  "stage_name": "optimized remote workflow restoration",
+  "stage": "R1-BLOCK-8",
+  "stage_name": "final R1 certification",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "d7327db7efd5cc1e0ff9255195bcb9767d853d3e",
@@ -668,12 +668,10 @@
       }
     },
     "R1-BLOCK-7": {
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "optimized remote workflow restoration",
       "entry_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
       "operational_issue": 213,
-      "active_work_item": "B7-D",
-      "active_sub_item": "B7-D",
       "scope": [
         "historical and current workflow/runner dependency inventory",
         "permanent remote orchestration consuming repository-owned validation entry points",
@@ -693,7 +691,7 @@
         "B7-A": "DONE - workflow and runner dependency inventory plus orchestration design",
         "B7-B": "DONE - permanent fast/static workflow consuming make static-check",
         "B7-C": "DONE - C1 clean-runner integration contract, C2 permanent Linux PR integration orchestration, and C3 permanent Linux release orchestration certified",
-        "B7-D": "ACTIVE - residual workflow audit, branch-protection recommendation, and B8 handoff"
+        "B7-D": "DONE - residual workflow audit, branch-protection recommendation, and B8 handoff"
       },
       "b7_a_status": "DONE",
       "b7_a_validation_run_id": 33530309579,
@@ -748,7 +746,7 @@
       ],
       "b7_c2_status": "DONE",
       "b7_c3_status": "DONE",
-      "b7_d_status": "ACTIVE",
+      "b7_d_status": "DONE",
       "b7_c1_issue": 219,
       "b7_c1_pr": 220,
       "b7_c1_closure_sha": "ced68313ed2c362a6617d7df6ef9adfd2df6c0b5",
@@ -863,12 +861,78 @@
         "runtime_api_changed": false,
         "normative_semantics_changed": false,
         "proof_state_changed": false
+      },
+      "b7_d_results": {
+        "audit_main_sha": "5f0ec947bb123567b5fe4548f04e9a15b2bb915d",
+        "permanent_workflow_count": 3,
+        "permanent_workflows": [
+          ".github/workflows/static-contract.yml",
+          ".github/workflows/linux-integration.yml",
+          ".github/workflows/linux-release-check.yml"
+        ],
+        "stable_status_names": [
+          "Static contract",
+          "Linux integration",
+          "Linux release check"
+        ],
+        "temporary_workflows_present": false,
+        "repository_owned_entry_points": [
+          "make static-check",
+          "make check",
+          "make release-check"
+        ],
+        "contents_permissions_read_only": true,
+        "actions_pinned_to_immutable_shas": true,
+        "bounded_concurrency_cancel_in_progress": true,
+        "main_ruleset_id": 20984822,
+        "main_ruleset_name": "Stable branches",
+        "required_status_checks_present": false,
+        "recommended_required_pr_checks": [
+          "Static contract",
+          "Linux integration"
+        ],
+        "linux_release_check_required_on_pr": false,
+        "branch_protection_mutation_applied": false,
+        "branch_protection_recommendation_recorded": true,
+        "b8_operational_issue": 227,
+        "heavy_product_gates_rerun": false,
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       }
     },
     "R1-BLOCK-8": {
-      "status": "BLOCKED",
-      "name": "final R1 certification"
+      "status": "ACTIVE",
+      "name": "final R1 certification",
+      "operational_issue": 227,
+      "entry_implementation_checkpoint_sha": "d7327db7efd5cc1e0ff9255195bcb9767d853d3e",
+      "entry_control_plane_sha": "5f0ec947bb123567b5fe4548f04e9a15b2bb915d",
+      "scope": [
+        "hosted Windows certification for the current v3 candidate",
+        "literal Times New Roman and Arial identity certification without redistributing proprietary fonts",
+        "supported pdfLaTeX and LuaLaTeX certification matrix",
+        "Unicode text extraction and font embedding verification",
+        "final PDF/A-2b certification with machine-readable evidence receipts",
+        "reconcile B8-owned version-labelled diagnostics or certification metadata only when current-state evidence requires it"
+      ],
+      "constraints": [
+        "do not perform V3-R2 Portuguese runtime API migration",
+        "do not change normative rule IDs expected values tolerances locators or proof state without explicit new normative evidence",
+        "do not redistribute proprietary Microsoft font files",
+        "do not treat Linux B7 release evidence as final Windows literal-font certification",
+        "do not perform actual CTAN submission or claim CTAN acceptance",
+        "temporary workflow executor lifecycle must remain atomic"
+      ],
+      "b8_status": "ACTIVE",
+      "entry_evidence": {
+        "b7_clean_runner_make_check": "PASS=30 FAIL=0 SKIP=0",
+        "b7_linux_release_run_id": 33566835570,
+        "b7_linux_release_result": "PASS=32 FAIL=0 SKIP=0",
+        "release_only_pdfa_passed": true,
+        "release_only_profile_pdfa_passed": true,
+        "b7_permanent_workflow_inventory_clean": true
+      }
     }
   },
-  "next_action": "Execute R1-BLOCK-7 B7-D. Audit the three permanent workflows, stable status semantics, permissions, pinned actions, concurrency, temporary-workflow absence, and the current main ruleset; record the branch-protection/status-check recommendation and hand final Windows/literal-font/PDF-A certification to R1-BLOCK-8. Do not rerun completed heavy product checks without current-state need, perform V3-R2 runtime/API migration, or perform an actual CTAN submission."
+  "next_action": "Execute R1-BLOCK-8 via issue #227 from canonical main. Audit and use the repository-owned Windows/font/PDF-A preparation and validation tooling, certify the current v3 candidate on hosted Windows with literal Times New Roman and Arial where required, prove the supported pdfLaTeX/LuaLaTeX matrix, Unicode extraction, embedding and final PDF/A-2b evidence. Do not rerun completed Linux product gates without current-state need, perform V3-R2 runtime/API migration, redistribute proprietary fonts, or perform an actual CTAN submission."
 }

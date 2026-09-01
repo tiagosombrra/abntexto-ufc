@@ -6,12 +6,12 @@ Updated: 2026-09-01
 
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
-- Active implementation stage: **R1-BLOCK-7 — Optimized Remote Workflow Restoration**.
-- Active B7 work item: **B7-D — residual workflow audit and B8 handoff**.
-- Active B7 sub-item: **B7-D — permanent workflow/status/ruleset residual audit and B8 handoff**.
-- Active B7 focus: **audit the three permanent workflow surfaces and stable status semantics, record the current branch-protection recommendation, prove zero temporary workflow residue, and hand final Windows/literal-font/PDF-A certification to B8**.
+- Active implementation stage: **R1-BLOCK-8 — Final R1 Certification**.
+- R1-BLOCK-7 status: **DONE**.
+- Active B8 issue: **#227 — final R1 certification**.
+- Active B8 focus: **hosted Windows certification, literal Times New Roman/Arial identity, supported engine matrix, Unicode extraction/font embedding, and final PDF/A-2b evidence for the current v3 candidate**.
 - Active branch/trunk: `main`.
-- B7 operational issue: **#213**.
+- B7 operational issue: **#213 — complete; close after this control-plane transition merges**.
 - Latest certified clean implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
@@ -233,6 +233,8 @@ The same run deliberately probed `make check` on a clean TeX Live 2026 runner. I
 
 ### B7-D — Residual audit and B8 handoff
 
-**ACTIVE.** Audit workflow ownership/status semantics, confirm pinned actions/read-only permissions/bounded concurrency, prove zero temporary workflow residue, record the stable required-check/branch-protection recommendation, and hand final Windows/literal-font/PDF-A certification to B8. Heavy TeX/PDF product gates already certified by B7-C are not rerun without a current-state need.
+**DONE.** B7-D audited canonical `main` at `5f0ec947bb123567b5fe4548f04e9a15b2bb915d`: exactly three permanent workflows remain; no temporary executor survives; workflow permissions are read-only; actions are pinned; concurrency is bounded/cancelable; and stable status ownership remains `Static contract`, `Linux integration`, and `Linux release check`. Ruleset `Stable branches` (20984822) currently has no required-status rule. The recorded recommendation is to require `Static contract` and `Linux integration`; `Linux release check` remains post-merge/manual and is not a PR-required status. No branch-protection mutation, heavy product rerun, runtime/API change, normative semantic change, or proof-state change was part of B7-D.
 
-B8 retains final Windows/font/PDF-A certification. V3-R2 retains runtime/API migration. Actual CTAN submission remains an explicit release action outside B7.
+## R1-BLOCK-8 — Final R1 certification
+
+**ACTIVE** via issue #227. Entry implementation checkpoint remains `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the B7-D control-plane audit was performed against `main` at `5f0ec947bb123567b5fe4548f04e9a15b2bb915d`. B8 owns hosted Windows execution, literal Times New Roman/Arial identity, supported pdfLaTeX/LuaLaTeX certification, Unicode extraction/font embedding, and final PDF/A-2b evidence. It must use repository-owned tooling, must not redistribute proprietary Microsoft fonts, and must not absorb V3-R2 runtime/API migration or actual CTAN submission.
