@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   validate:
-    if: "github.event.head_commit.message == 'chore: add temporary B5-B validation'"
+    if: "github.event.head_commit.message == 'chore: rerun temporary B5-B validation'"
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -24,13 +24,15 @@ jobs:
           set -euo pipefail
           python3 -m py_compile tools/build-public-bundles.py tools/fetch-abntexto.py tests/checks/public_bundles.py
           python3 tools/fetch-reference-images.py
-          python3 tools/fetch-abntexto.py --output .abntexto-ufc-upstream.cls
           make public-bundles
-          python3 tests/checks/public_bundles.py --abntexto .abntexto-ufc-upstream.cls
+          test -f dist/abntexto-ufc-template-3.0.0.zip
+          test -f dist/abntexto-ufc-overleaf-3.0.0.zip
+          test ! -e .abntexto-ufc-upstream.cls
+          python3 tools/fetch-abntexto.py --output /tmp/abntexto-ufc-upstream.cls
+          python3 tests/checks/public_bundles.py --abntexto /tmp/abntexto-ufc-upstream.cls
           python3 tests/checks/canonical_identity.py
           python3 tests/checks/repository_contract.py
           git diff --check
-          test ! -e .abntexto-ufc-upstream.cls
           echo 'B5-B-STRUCTURE status=PASS'
 
       - name: Validate flattened Overleaf staging on TeX Live 2025
@@ -44,8 +46,8 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends poppler-utils
             python3 tools/fetch-reference-images.py
-            python3 tools/fetch-abntexto.py --output .abntexto-ufc-upstream.cls
-            python3 tools/build-public-bundles.py --abntexto .abntexto-ufc-upstream.cls
+            python3 tools/fetch-abntexto.py --output /tmp/abntexto-ufc-overleaf.cls
+            python3 tools/build-public-bundles.py --abntexto /tmp/abntexto-ufc-overleaf.cls
             rm -rf /tmp/abntexto-ufc-overleaf-stage
             mkdir -p /tmp/abntexto-ufc-overleaf-stage
             python3 - <<'PY'
