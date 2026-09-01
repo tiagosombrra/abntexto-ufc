@@ -94,7 +94,7 @@ backmatter/
 figures/
 ```
 
-Flattening is a distribution staging responsibility; it must not distort the repository architecture.
+Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, currently produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Public staging excludes the UFC institutional asset and proprietary Microsoft fonts, and `tests/checks/public_bundles.py` proves archive structure, safe paths and reproducibility. Class/CTAN-candidate packaging is a separate B5-C responsibility.
 
 ## Standards data
 
