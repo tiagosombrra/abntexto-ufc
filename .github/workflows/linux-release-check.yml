@@ -39,8 +39,9 @@ jobs:
           run: |
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
-            apt-get install -y --no-install-recommends make poppler-utils nodejs
+            apt-get install -y --no-install-recommends make poppler-utils nodejs docker.io
             node --version
+            docker --version
             make release-check
 
       - name: Publish validation summary
