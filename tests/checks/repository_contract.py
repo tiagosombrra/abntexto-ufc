@@ -114,8 +114,11 @@ STALE_CONTENT_FRAGMENTS = (
 )
 
 CONTENT_SCAN_EXEMPT = {
+    # Canonical control-plane files may document a stale path while tracking
+    # its removal; they remain subject to path/existence and state checks.
     "docs/ROADMAP-V3.0.0.md",
     "docs/HANDOFF-V3.0.0.md",
+    "release/v3-roadmap.json",
     "release/v3-path-migration.json",
     "release/v3-api-migration.json",
     "release/v3-test-migration.json",
