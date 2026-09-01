@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eu
 
-file="frontmatter/agradecimentos.tex"
+ROOT=$(CDPATH= cd "$(dirname "$0")/../.." && pwd)
+file="$ROOT/template/frontmatter/agradecimentos.tex"
 
 for token in 'CAPES' 'Ordinance 206/2018' 'Código de Financiamento 001'; do
   grep -Fq "$token" "$file" || {
