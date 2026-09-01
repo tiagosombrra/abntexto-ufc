@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   repair:
-    if: ${{ !startsWith(github.event.head_commit.message, 'fix: rebaseline B4-B active metadata') }}
+    if: "github.event.head_commit.message != 'fix: rebaseline B4-B active metadata'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
