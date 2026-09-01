@@ -10,7 +10,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 TEX_ENV := TEXINPUTS=..//:
 
 .PHONY: all pdf compile lua version clean reference-assets \
-	check release-check preflight release-preflight package distribution-preflight
+	check release-check preflight release-preflight
 
 all: compile
 pdf: compile
@@ -62,18 +62,6 @@ preflight: check
 release-preflight: release-check
 	@echo "Release preflight completed."
 
-package: reference-assets
-	@$(MAKE) release-preflight
-	@python3 tools/fetch-abntexto.py --output .abntexto-ufc-upstream.cls
-	@python3 tools/build-release-bundles.py --abntexto .abntexto-ufc-upstream.cls
-	@rm -f .abntexto-ufc-upstream.cls
-	@echo "Distribution bundles generated."
-
-distribution-preflight: package
-	@python3 tests/checks/release_package.py
-	@python3 tests/checks/ctan_archive.py "dist/abntexto-ufc-ctan-$(VERSION).zip"
-	@echo "Distribution preflight completed."
-
 clean:
 	@echo "Cleaning generated document artifacts..."
 	@rm -f \
@@ -102,6 +90,5 @@ clean:
 		"$(TEMPLATE_DIR)/$(DOCUMENT).run.xml" \
 		"$(TEMPLATE_DIR)/$(DOCUMENT).synctex.gz" \
 		"$(TEMPLATE_DIR)/$(DOCUMENT).toc"
-	@rm -rf "$(TEMPLATE_DIR)/_minted-$(DOCUMENT)" _minted-* dist
-	@rm -f .abntexto-ufc-upstream.cls
+	@rm -rf "$(TEMPLATE_DIR)/_minted-$(DOCUMENT)" _minted-*
 	@echo "Generated artifacts removed."

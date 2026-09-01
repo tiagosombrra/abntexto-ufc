@@ -56,8 +56,9 @@ FORBIDDEN_PATH_SEGMENT = re.compile(
 PORTUGUESE_TECHNICAL_PATH_TOKENS = {
     "normas",
     "vigencia-normativa",
-    "frontmatter",
-    "backmatter",
+    "pretextuais",
+    "pos-textuais",
+    "pós-textuais",
     "textual-oracle",
 }
 
@@ -120,6 +121,14 @@ CONTENT_SCAN_EXEMPT = {
     "release/v3-test-migration.json",
 }
 
+# These active technical/documentation surfaces intentionally name the removed
+# class entrypoint only to assert that it must remain absent.
+NEGATIVE_FRAGMENT_EXEMPT = {
+    "docs/ARCHITECTURE.md": {"ufctex.cls"},
+    "tests/checks/canonical_identity.py": {"ufctex.cls"},
+    "tests/checks/repository_contract.py": {"ufctex.cls"},
+}
+
 MODULE_PATTERN = re.compile(r"\\input\{((?:abntexto-ufc)/[^}]+\.def)\}")
 
 
@@ -172,7 +181,10 @@ def main() -> int:
         text = read_text(path)
         if text is None:
             continue
+        allowed_fragments = NEGATIVE_FRAGMENT_EXEMPT.get(path, set())
         for fragment in STALE_CONTENT_FRAGMENTS:
+            if fragment in allowed_fragments:
+                continue
             if fragment in text:
                 errors.append(f"{path}: stale active path reference: {fragment}")
 
