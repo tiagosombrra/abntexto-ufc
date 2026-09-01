@@ -73,10 +73,10 @@
 \setcounter{secnumdepth}{5}
 \setcounter{tocdepth}{5}
 
-% The v2 normative profile is section-based. Chapter mode is intentionally disabled.
+% The current UFC normative profile is section-based. Chapter mode is intentionally disabled.
 \renewcommand{\usechapters}{%
   \ClassError{abntexto-ufc}
-    {Chapter mode is not supported by the UFC v2 normative profile}
+    {Chapter mode is not supported by the current UFC normative profile}
     {Use section as the primary textual level.}%
 }
 

@@ -67,7 +67,7 @@ Results:
 - full contract, traceability, coverage and validator-source checks now share the same fail-closed semantics;
 - dead `distribution-source` evidence ID removed; B5 policy retains live `build-path` evidence;
 - active reference-assets User-Agent updated from 2.1.0 to 3.0.0;
-- validator project identity updated from `ufctex` to `abntexto-ufc`.
+- validator project identity updated from the retired legacy branding to `abntexto-ufc`.
 
 Normative rule ID, values, requirement, locator, sources, applicability, proof state, expected numeric values and tolerances were unchanged.
 
