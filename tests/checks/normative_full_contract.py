@@ -104,20 +104,34 @@ def main() -> None:
             "NBR 14724 and NBR 6024"
         )
 
+    not_applicable = sorted(
+        rule_id
+        for rule_id in extension_ids
+        if rules[rule_id]["validation"]["mode"] == "not-applicable"
+    )
+    for rule_id in not_applicable:
+        rule = rules[rule_id]
+        if rule["validation"]["checks"]:
+            fail(f"{rule_id}: not-applicable validation declares executable checks")
+        if not rule.get("applicability"):
+            fail(f"{rule_id}: not-applicable validation lacks explicit applicability")
+
     runner = (ROOT / "tests" / "run.py").read_text(encoding="utf-8")
     gates = set(re.findall(r'Check\(\s*"([^"]+)"', runner))
     uncovered = sorted(
         rule_id
         for rule_id in extension_ids
-        if not (set(rules[rule_id]["validation"]["checks"]) & gates)
+        if rules[rule_id]["validation"]["mode"] != "not-applicable"
+        and not (set(rules[rule_id]["validation"]["checks"]) & gates)
     )
     if uncovered:
-        fail("extended rules without unified evidence: " + ", ".join(uncovered))
+        fail("extended executable rules without unified evidence: " + ", ".join(uncovered))
 
     print(
         "Full normative contract passed: "
         f"{len(rules)} atomic rules, {len(extension_ids)} extensions "
-        f"across {len(contract.get('coverage_manifests', []))} manifests."
+        f"across {len(contract.get('coverage_manifests', []))} manifests, "
+        f"{len(not_applicable)} explicitly not-applicable."
     )
 
 

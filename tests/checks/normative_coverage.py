@@ -61,10 +61,11 @@ def main() -> None:
     uncovered = sorted(
         rule_id
         for rule_id, rule in rules.items()
-        if not set(rule["validation"]["checks"]) & known_checks
+        if rule["validation"]["mode"] != "not-applicable"
+        and not set(rule["validation"]["checks"]) & known_checks
     )
     if uncovered:
-        fail("current rules without a known gate or validator check: " + ", ".join(uncovered))
+        fail("current executable rules without a known gate or validator check: " + ", ".join(uncovered))
 
     automatic = sum(
         rule["validation"]["mode"].startswith("automatic")

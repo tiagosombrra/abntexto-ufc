@@ -189,9 +189,7 @@
       },
       "validation": {
         "mode": "not-applicable",
-        "checks": [
-          "distribution-source"
-        ]
+        "checks": []
       },
       "scope": "technical",
       "sources": [
@@ -284,7 +282,6 @@
       "validation": {
         "mode": "manual",
         "checks": [
-          "distribution-source",
           "build-path"
         ]
       },
