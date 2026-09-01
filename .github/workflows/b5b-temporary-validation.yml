@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   validate:
-    if: "github.event.head_commit.message == 'chore: rerun temporary B5-B validation'"
+    if: "github.event.head_commit.message == 'chore: rerun B5-B Overleaf staging validation'"
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -45,9 +45,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends poppler-utils
-            python3 tools/fetch-reference-images.py
-            python3 tools/fetch-abntexto.py --output /tmp/abntexto-ufc-overleaf.cls
-            python3 tools/build-public-bundles.py --abntexto /tmp/abntexto-ufc-overleaf.cls
+            test -f dist/abntexto-ufc-overleaf-3.0.0.zip
             rm -rf /tmp/abntexto-ufc-overleaf-stage
             mkdir -p /tmp/abntexto-ufc-overleaf-stage
             python3 - <<'PY'
