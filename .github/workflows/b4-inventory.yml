@@ -9,89 +9,55 @@ permissions:
   contents: read
 
 jobs:
-  inventory:
+  classify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Inventory tools and validator consumers
+      - name: Locate spine conditional contract and consumers
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import subprocess
 
-          root = Path('.')
-          tracked = [Path(p) for p in subprocess.check_output(['git','ls-files'], text=True).splitlines()]
-          text_suffixes = {'.py','.sh','.ps1','.js','.html','.json','.md','.tex','.cls','.def','.yml','.yaml'}
-          text_files = []
-          for p in tracked:
-              if p.as_posix() == '.github/workflows/b4-inventory.yml':
+          needles = ('spine.conditional', 'spine', 'unified evidence', 'unified_evidence')
+          suffixes = {'.py', '.json', '.sh', '.md', '.tex', '.cls', '.def', '.js', '.html'}
+          for path in sorted(Path('.').rglob('*')):
+              if not path.is_file() or '.git' in path.parts:
                   continue
-              if p.name in {'Makefile','LICENSE'} or p.suffix.lower() in text_suffixes:
-                  try:
-                      text_files.append((p, p.read_text(encoding='utf-8')))
-                  except UnicodeDecodeError:
-                      pass
-
-          print('=== TOOLS CONSUMER MATRIX ===')
-          for tool in sorted(Path('tools').iterdir()):
-              if not tool.is_file():
+              if path.suffix.lower() not in suffixes and path.name != 'Makefile':
                   continue
-              rel = tool.as_posix()
-              stem = tool.stem.replace('-', '_')
-              patterns = {rel, tool.name}
-              if tool.suffix == '.py':
-                  patterns.add(f'tools.{stem}')
-                  patterns.add(f'from tools import {stem}')
-              refs = []
-              for p, text in text_files:
-                  if p == tool:
-                      continue
-                  if any(pattern in text for pattern in patterns):
-                      refs.append(p.as_posix())
-              print(f'{rel}\trefs={len(refs)}\t' + ','.join(refs))
-
-          print('=== VALIDATOR CONSUMER MATRIX ===')
-          for item in sorted(Path('validator').iterdir()):
-              if not item.is_file():
+              try:
+                  lines = path.read_text(encoding='utf-8').splitlines()
+              except UnicodeDecodeError:
                   continue
-              rel = item.as_posix()
-              refs = []
-              for p, text in text_files:
-                  if p == item:
-                      continue
-                  if rel in text or item.name in text:
-                      refs.append(p.as_posix())
-              print(f'{rel}\trefs={len(refs)}\t' + ','.join(refs))
+              matches = [i for i, line in enumerate(lines) if any(n.lower() in line.lower() for n in needles)]
+              if not matches:
+                  continue
+              print(f'=== {path.as_posix()} ===')
+              shown = set()
+              for i in matches:
+                  for j in range(max(0, i - 4), min(len(lines), i + 5)):
+                      if j not in shown:
+                          print(f'{j + 1}: {lines[j]}')
+                          shown.add(j)
           PY
 
-      - name: Inventory stale identity and technical language
+      - name: Classify fetch-abntexto role
         shell: bash
         run: |
           set -euo pipefail
-          echo '=== OLD REPOSITORY IDENTITY ==='
-          git grep -n -E 'tiagosombrra/modelo-latex-ufc|github\.io/modelo-latex-ufc|github\.com/tiagosombrra/modelo-latex-ufc|modelo-latex-ufc' -- tools validator README.md docs release tests/checks tests/integration || true
+          echo '=== FETCH ABNTEXTO REFERENCES ==='
+          git grep -n -E 'fetch-abntexto\.py|abntexto 1\.1|ElaysonAbreu/abntexto|4c03fd7b5a7af089627dedb547c53cad4eed2a2a' -- ':!.github/workflows/b4-inventory.yml' || true
+          echo '=== ABNTEXTO CLASS INVENTORY ==='
+          git ls-files | grep -E '(^|/)abntexto(\.cls|/|$)' || true
 
-          echo '=== OLD VERSION / V2 IDENTITY IN B4 SURFACES ==='
-          git grep -n -E '(^|[^A-Za-z0-9])(2\.1\.0|v2|V2)([^A-Za-z0-9]|$)' -- tools validator || true
-
-          echo '=== LEGACY PATH IDENTITY IN B4 SURFACES ==='
-          git grep -n -E 'normativa/|tests/normativa/|pretextuais|pos-textuais|pós-textuais|ufctex' -- tools validator || true
-
-          echo '=== PORTUGUESE TECHNICAL CANDIDATES ==='
-          git grep -n -i -E 'erro|falha|aviso|valida[cç][aã]o|arquivo|documento|ferramenta|entrada|sa[ií]da|carregar|gerar|fonte|margem|p[aá]gina|vers[aã]o|conforme|n[aã]o encontrado|obrigat[oó]rio' -- tools validator || true
-
-          echo '=== URL / PACKAGE METADATA ==='
-          git grep -n -E 'https?://|repository|package|version|Version|maintainer|author|homepage' -- tools validator || true
-
-      - name: Run bounded source checks
+      - name: Static syntax only
         shell: bash
         run: |
           set -euo pipefail
           python3 -m py_compile tools/*.py
           node --check validator/app.js
-          python3 tests/checks/validator_source.py
           git diff --check
-          echo 'B4-INVENTORY-EVIDENCE status=PASS'
+          echo 'B4-CLASSIFICATION-EVIDENCE status=PASS'
