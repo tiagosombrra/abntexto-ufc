@@ -1,15 +1,15 @@
 #!/bin/sh
 set -eu
 
-pdf="${1:?uso: v2-font-embedding-check.sh arquivo.pdf}"
+pdf="${1:?usage: font-embedding.sh file.pdf}"
 
 [ -s "$pdf" ] || {
-  echo "Fontes V2: PDF não encontrado: $pdf"
+  echo "Font embedding: PDF not found: $pdf"
   exit 1
 }
 
 command -v pdffonts >/dev/null 2>&1 || {
-  echo 'Fontes V2: pdffonts não disponível.'
+  echo 'Font embedding: pdffonts is not available.'
   exit 1
 }
 
@@ -32,8 +32,8 @@ if ! pdffonts "$pdf" | tail -n +3 | awk '
   }
 '; then
   pdffonts "$pdf"
-  echo "Fontes V2: há fonte não incorporada, nenhuma fonte detectada ou linha não reconhecida em $pdf."
+  echo "Font embedding: an unembedded font, no detected fonts, or an unrecognized pdffonts row was found in $pdf."
   exit 1
 fi
 
-echo "Fontes V2 autocontidas (emb=yes): $pdf"
+echo "Font embedding complete (emb=yes): $pdf"
