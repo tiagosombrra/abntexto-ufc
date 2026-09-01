@@ -36,21 +36,9 @@ LEGACY_FULL_FILE_EXEMPT = {
     "release/v3-path-migration.json",
     "release/v3-test-migration.json",
 
-    # Negative-assertion and later-block distribution surfaces must name
-    # the legacy entrypoint in order to reject or package it deliberately.
+    # Negative assertions must name the legacy entrypoint to reject it.
     "tests/checks/canonical_identity.py",
     "tests/checks/repository_contract.py",
-
-    # Distribution/CTAN surfaces intentionally inspect legacy identity.
-    # Their reconstruction belongs to later R1 blocks.
-    "tests/checks/ctan_policy.py",
-    "tests/checks/overleaf_bundle.py",
-    "tests/integration/distribution.sh",
-    "tests/checks/release_package.py",
-    "tools/build-release-bundles.py",
-
-    # Historical public distribution documentation remains evidence.
-    "docs/CHANGELOG-CTAN.md",
 }
 LEGACY_FULL_DIRECTORY_EXEMPT = ()
 LEGACY_DOCUMENTATION_EXEMPT = {
@@ -59,13 +47,6 @@ LEGACY_DOCUMENTATION_EXEMPT = {
             r"does not ship `ufctex\.cls`",
             re.IGNORECASE,
         ),
-    ),
-    "README.md": (
-        re.compile(r"ufctex\.cls.*(?:shim|compat)", re.IGNORECASE),
-        re.compile(r"\\documentclass\{ufctex\}"),
-    ),
-    "docs/README-CTAN.md": (
-        re.compile(r"ufctex.*(?:deprecated|compat)", re.IGNORECASE),
     ),
 }
 
