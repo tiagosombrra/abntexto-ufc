@@ -1,0 +1,10 @@
+name: B6A probe
+on:
+  push:
+    branches:
+      - docs/v3-r1-b6a-close-b6b-open
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo B6A-PROBE-PASS
