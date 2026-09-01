@@ -8,10 +8,10 @@ Updated: 2026-09-01
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-4 — Tools, Validator, and Metadata Technical Rebaseline**.
 - Active B4 work item: **B4-C — validator/tool technical-language rebaseline**.
-- Active B4-C lot: **B4-C2 — technical categories, diagnostics, report labels, and Web UI**.
+- Active B4-C lot: **B4-C2b — diagnostics, report/export labels, and Web UI**.
 - Active branch/trunk: `main`.
 - B4 operational issue: **#187**.
-- Latest certified clean implementation checkpoint: **`97c808081f5a964498b7a3e71d902aeb8a9bbcf8`**.
+- Latest certified clean implementation checkpoint: **`3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -136,7 +136,19 @@ Remote validation run **`33501306482` PASS** covered Python/JS syntax, JSON pars
 
 #### B4-C2 — technical categories, diagnostics, report labels, and Web UI
 
-**ACTIVE / NEXT.** Normalize only project-owned human-facing technical text in Web/CLI surfaces, while preserving academic/normative labels and all stable machine identifiers. Producer/consumer tests must move together where a literal is contracted.
+**ACTIVE.** Split into bounded producer/consumer-safe sublots.
+
+##### B4-C2a — technical taxonomy and validation levels
+
+**DONE** through PR #195, squash-merged at **`3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8`**.
+
+C2a normalized only project-owned generic technical categories (`Typography`, `Structure`, `Metadata`, `Accessibility`, `Integrity`, `UFC Deposit`), validation levels (`automatic`, `geometric`, `typographic`, `heuristic`, `deep`, `conditional`), synthetic validation-vector taxonomy, and CLI report headings. Academic/domain labels such as `Capa`, `Folha de aprovação`, `Resumo`, `Sumário` and `Referências` were explicitly preserved.
+
+Remote run **`33502021542` PASS** covered Python/JS/JSON syntax, cross-surface/validator contracts, complete validator-source, canonical identity, repository contract, explicit taxonomy and academic-label assertions, and diff integrity. Cleanup run **`33502137178` PASS** removed the first temporary executor. Pre-merge review then found one substring artifact (`checks automatics`); repair run **`33506189097` PASS** restored the Portuguese diagnostic message because detailed-message translation belongs to C2b, reran the proportional gates, and removed its own temporary workflow.
+
+##### B4-C2b — diagnostics, report/export labels, and Web UI
+
+**ACTIVE / NEXT.** Translate remaining project-owned human-facing diagnostics, evidence/correction messages, report/export headings and generic Web controls/disclosures. Preserve academic/normative wording, stable machine identifiers, dependency strings, measurement behavior and Portuguese LaTeX runtime/API.
 
 ### B4-D — Final B4 residual audit/closeout
 
@@ -152,4 +164,4 @@ Remote validation run **`33501306482` PASS** covered Python/JS syntax, JSON pars
 
 ## Immediate action
 
-Start B4-C2 from canonical remote `main` using `97c808081f5a964498b7a3e71d902aeb8a9bbcf8` as the latest certified implementation checkpoint. Normalize only project-owned technical categories, evidence/correction diagnostics, report/export headings and Web validator controls. Preserve academic element labels, official normative text, stable schema/check IDs, dependency strings and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally and keep temporary executors out of the checkpoint.
+Start B4-C2b from canonical remote `main` using `3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8` as the latest certified implementation checkpoint. Translate only remaining project-owned diagnostic/evidence/correction text, report/export labels and generic Web validator UI whose ownership is clear. Preserve academic element labels, official normative text, stable schema/check/rule identifiers, dependency strings, measurement behavior and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally and remove temporary executors before checkpoint.
