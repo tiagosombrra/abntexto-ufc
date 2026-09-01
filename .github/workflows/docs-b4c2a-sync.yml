@@ -1,0 +1,115 @@
+name: B4-C2a canonical docs sync
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b4c2a-checkpoint
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: "github.event.head_commit.message == 'chore: add temporary B4-C2a docs sync'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize handoff roadmap and machine state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          old_sha = '97c808081f5a964498b7a3e71d902aeb8a9bbcf8'
+          new_sha = '3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8'
+
+          handoff = Path('docs/HANDOFF-V3.0.0.md')
+          text = handoff.read_text(encoding='utf-8')
+          exact = {
+              '- Active B4-C lot: **B4-C2 — technical categories, diagnostics, report labels, and Web UI**.': '- Active B4-C lot: **B4-C2b — diagnostics, report/export labels, and Web UI**.',
+              f'- Latest certified clean implementation checkpoint: **`{old_sha}`**.': f'- Latest certified clean implementation checkpoint: **`{new_sha}`**.',
+              '#### B4-C2 — technical categories, diagnostics, report labels, and Web UI\n\n**ACTIVE / NEXT.** Normalize only project-owned human-facing technical text in Web/CLI surfaces, while preserving academic/normative labels and all stable machine identifiers. Producer/consumer tests must move together where a literal is contracted.': '''#### B4-C2 — technical categories, diagnostics, report labels, and Web UI\n\n**ACTIVE.** Split into bounded producer/consumer-safe sublots.\n\n##### B4-C2a — technical taxonomy and validation levels\n\n**DONE** through PR #195, squash-merged at **`3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8`**.\n\nC2a normalized only project-owned generic technical categories (`Typography`, `Structure`, `Metadata`, `Accessibility`, `Integrity`, `UFC Deposit`), validation levels (`automatic`, `geometric`, `typographic`, `heuristic`, `deep`, `conditional`), synthetic validation-vector taxonomy, and CLI report headings. Academic/domain labels such as `Capa`, `Folha de aprovação`, `Resumo`, `Sumário` and `Referências` were explicitly preserved.\n\nRemote run **`33502021542` PASS** covered Python/JS/JSON syntax, cross-surface/validator contracts, complete validator-source, canonical identity, repository contract, explicit taxonomy and academic-label assertions, and diff integrity. Cleanup run **`33502137178` PASS** removed the first temporary executor. Pre-merge review then found one substring artifact (`checks automatics`); repair run **`33506189097` PASS** restored the Portuguese diagnostic message because detailed-message translation belongs to C2b, reran the proportional gates, and removed its own temporary workflow.\n\n##### B4-C2b — diagnostics, report/export labels, and Web UI\n\n**ACTIVE / NEXT.** Translate remaining project-owned human-facing diagnostics, evidence/correction messages, report/export headings and generic Web controls/disclosures. Preserve academic/normative wording, stable machine identifiers, dependency strings, measurement behavior and Portuguese LaTeX runtime/API.''',
+              f'Start B4-C2 from canonical remote `main` using `{old_sha}` as the latest certified implementation checkpoint. Normalize only project-owned technical categories, evidence/correction diagnostics, report/export headings and Web validator controls. Preserve academic element labels, official normative text, stable schema/check IDs, dependency strings and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally and keep temporary executors out of the checkpoint.': f'Start B4-C2b from canonical remote `main` using `{new_sha}` as the latest certified implementation checkpoint. Translate only remaining project-owned diagnostic/evidence/correction text, report/export labels and generic Web validator UI whose ownership is clear. Preserve academic element labels, official normative text, stable schema/check/rule identifiers, dependency strings, measurement behavior and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally and remove temporary executors before checkpoint.'
+          }
+          for old, new in exact.items():
+              if text.count(old) != 1:
+                  raise SystemExit(f'HANDOFF expected exactly one marker: {old[:100]!r}, found {text.count(old)}')
+              text = text.replace(old, new)
+          handoff.write_text(text, encoding='utf-8')
+
+          roadmap = Path('docs/ROADMAP-V3.0.0.md')
+          text = roadmap.read_text(encoding='utf-8')
+          replacements = {
+              '**V3-R1 ACTIVE — R1-BLOCK-4 active; B4-A done; B4-B done; B4-C active (C1 done, C2 active).**': '**V3-R1 ACTIVE — R1-BLOCK-4 active; B4-A done; B4-B done; B4-C active (C1 done, C2a done, C2b active).**',
+              '**B4-A DONE → B4-B DONE → B4-C ACTIVE [C1 DONE → C2 ACTIVE] → B4-D PENDING**': '**B4-A DONE → B4-B DONE → B4-C ACTIVE [C1 DONE → C2a DONE → C2b ACTIVE] → B4-D PENDING**',
+              f'- Latest certified implementation checkpoint: **`{old_sha}`**.': f'- Latest certified implementation checkpoint: **`{new_sha}`**.',
+              '#### B4-C2 — technical categories, diagnostics, report labels and Web UI\n\n**ACTIVE.** Normalize project-owned human-facing technical text while preserving academic/normative labels and all stable machine identifiers. Candidate groups include:\n\n- generic technical categories such as metadata, integrity, typography and accessibility;\n- technical levels such as automatic, geometric, typographic, heuristic, deep and conditional;\n- evidence/correction diagnostics generated by Web/CLI;\n- report/table/export headings and generic Web controls/disclosures.\n\nAcademic element names such as `Capa`, `Folha de aprovação`, `Resumo`, `Sumário` and `Referências` remain Portuguese domain terms unless a later explicit localization policy says otherwise.': '''#### B4-C2 — technical categories, diagnostics, report labels and Web UI\n\n**ACTIVE.** Implemented as bounded sublots.\n\n##### B4-C2a — technical taxonomy and levels\n\n**DONE** via PR #195 at **`3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8`**. Generic project-owned technical categories, validation levels, synthetic cross-surface taxonomy and CLI report headings were normalized to English while academic/domain terms remained Portuguese.\n\nRun **`33502021542` PASS** validated cross-surface/validator contracts, full validator source, canonical identity, repository contract, syntax/JSON/diff integrity and explicit academic-label preservation. Run **`33502137178` PASS** removed the initial executor. Review found and blocked one accidental substring artifact before merge; run **`33506189097` PASS** repaired it, reran proportional gates and self-removed the repair workflow.\n\n##### B4-C2b — diagnostics, report/export labels and Web UI\n\n**ACTIVE.** Remaining scope is project-owned diagnostic/evidence/correction messages, report/export labels and generic Web controls/disclosures. Academic/normative text, machine identifiers, dependencies, measurement behavior and Portuguese runtime/API remain protected boundaries.''',
+              f'Start **B4-C2** from canonical `main` with implementation checkpoint `{old_sha}`. Audit the remaining project-owned human-facing technical strings and translate only categories/levels/diagnostics/report/export/UI text whose ownership and consumers are clear. Preserve academic/normative terms, stable machine contracts and the Portuguese LaTeX API; validate Web/CLI producer-consumer alignment proportionally and remove temporary executors before checkpoint.': f'Start **B4-C2b** from canonical `main` with implementation checkpoint `{new_sha}`. Translate only remaining project-owned diagnostics/evidence/correction text, report/export labels and generic Web UI with clear ownership. Preserve academic/normative terms, stable machine contracts, dependency strings, measurement behavior and the Portuguese LaTeX API; validate Web/CLI producer-consumer alignment proportionally and remove temporary executors before checkpoint.'
+          }
+          for old, new in replacements.items():
+              if text.count(old) != 1:
+                  raise SystemExit(f'ROADMAP expected exactly one marker: {old[:100]!r}, found {text.count(old)}')
+              text = text.replace(old, new)
+          roadmap.write_text(text, encoding='utf-8')
+
+          state_path = Path('release/v3-roadmap.json')
+          state = json.loads(state_path.read_text(encoding='utf-8'))
+          if state['last_certified_clean_checkpoint_sha'] != old_sha:
+              raise SystemExit('machine-state checkpoint drift')
+          block = state['blocks']['R1-BLOCK-4']
+          if block.get('active_sub_item') != 'B4-C2' or block.get('b4_c2_status') != 'ACTIVE':
+              raise SystemExit('machine-state B4-C2 activation drift')
+          state['last_certified_clean_checkpoint_sha'] = new_sha
+          block['active_sub_item'] = 'B4-C2b'
+          block['b4_c2a_status'] = 'DONE'
+          block['b4_c2a_closure_sha'] = new_sha
+          block['b4_c2a_validation_runs'] = [
+              {'run_id': 33502021542, 'conclusion': 'success', 'finding': 'technical taxonomy/levels and academic-boundary assertions passed'},
+              {'run_id': 33502137178, 'conclusion': 'success', 'finding': 'initial temporary executor removed'},
+              {'run_id': 33506189097, 'conclusion': 'success', 'finding': 'pre-merge substring artifact repaired; proportional gates passed; repair workflow removed'},
+          ]
+          block['b4_c2a_results'] = {
+              'generic_technical_categories_normalized': True,
+              'validation_levels_normalized': True,
+              'cli_report_headings_normalized': True,
+              'academic_domain_labels_preserved': True,
+              'stable_machine_identifiers_changed': False,
+              'normative_semantics_changed': False,
+              'proof_state_changed': False,
+              'runtime_api_changed': False,
+              'temporary_workflow_removed_before_merge': True,
+          }
+          block['b4_c2b_status'] = 'ACTIVE'
+          block['b4_c2b_scope'] = [
+              'project-owned diagnostic evidence and correction messages',
+              'report export labels and generic Web validator controls/disclosures',
+              'preserve academic and normative wording stable machine identifiers dependency strings measurement behavior and runtime API',
+          ]
+          block['planned_lots']['B4-C2'] = 'ACTIVE - split into C2a DONE and C2b ACTIVE'
+          block['planned_lots']['B4-C2a'] = 'DONE - technical taxonomy validation levels and CLI report headings'
+          block['planned_lots']['B4-C2b'] = 'ACTIVE - diagnostics report export labels and Web UI'
+          state['next_action'] = f'Start R1-BLOCK-4 B4-C2b from canonical remote main using {new_sha} as the latest certified implementation checkpoint. Translate only remaining project-owned diagnostic, evidence and correction messages, report/export labels and generic Web validator controls/disclosures whose ownership and consumers are clear. Preserve academic document-element labels, official UFC/ABNT wording, stable schema/check/rule identifiers, dependency-owned spelling, measurement behavior and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally, remove temporary executors before checkpoint, and update issue #187 plus the canonical control-plane files after the merged lot.'
+          state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          grep -F '3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8' docs/HANDOFF-V3.0.0.md >/dev/null
+          grep -F 'B4-C2b' docs/ROADMAP-V3.0.0.md >/dev/null
+          git diff --check
+
+      - name: Commit canonical sync and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git commit -m 'docs: record B4-C2a checkpoint and activate C2b'
+          git rm .github/workflows/docs-b4c2a-sync.yml
+          git commit -m 'chore: remove temporary B4-C2a docs sync'
+          git push origin HEAD:docs/v3-r1-b4c2a-checkpoint
