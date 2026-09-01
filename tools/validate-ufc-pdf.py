@@ -139,12 +139,12 @@ def check_verapdf(pdf,profile):
     exe=shutil.which('verapdf'); required=profile!='portable'; profile_name=RULES['deposit.pdfa']['values']['project_profile']
     if not exe:
         cs=[norm_check('pdfa.deep','deposit.pdfa','PDF/A',f'veraPDF validation {profile_name}',REVIEW,'veraPDF is not installed.','Run Deep mode with veraPDF.',mandatory=required,level='deep')]
-        if profile=='accessibility': cs.append(Check('access.pdfua','Accessibility','PDF/UA-1 com veraPDF','PDF/UA-1',REVIEW,'veraPDF is not installed.','Execute veraPDF -f ua1.',mandatory=True,level='deep'))
+        if profile=='accessibility': cs.append(Check('access.pdfua','Accessibility','PDF/UA-1 with veraPDF','PDF/UA-1',REVIEW,'veraPDF is not installed.','Run veraPDF -f ua1.',mandatory=True,level='deep'))
         return cs
     def valid(flavour): return 'isCompliant="true"' in run([exe,'-f',flavour,str(pdf)],check=False).stdout
     ok=valid('2b'); cs=[norm_check('pdfa.deep','deposit.pdfa','PDF/A',f'veraPDF validation {profile_name}',PASS if ok else FAIL,'Compliant.' if ok else 'Failed by veraPDF.','Fix the veraPDF violations.' if not ok else '',mandatory=required,level='deep')]
     if profile=='accessibility':
-        ua=valid('ua1'); cs.append(Check('access.pdfua','Accessibility','PDF/UA-1 com veraPDF','PDF/UA-1',PASS if ua else FAIL,'Compliant in automated checks.' if ua else 'Failed.','Fix tagging/structure.',mandatory=True,level='deep'))
+        ua=valid('ua1'); cs.append(Check('access.pdfua','Accessibility','PDF/UA-1 with veraPDF','PDF/UA-1',PASS if ua else FAIL,'Compliant in automated checks.' if ua else 'Failed.','Fix tagging/structure.',mandatory=True,level='deep'))
     return cs
 
 def render_table(cs): return '\n'.join(f'{c.status:18} | {c.category:16} | {c.rule[:48]:48} | {c.evidence[:70]}' for c in cs)
