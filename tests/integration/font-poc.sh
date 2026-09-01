@@ -194,8 +194,8 @@ assert_text_extraction() {
 compile_case() {
   engine=$1
   family=$2
-  fixture="tests/normativa/fontes-${family}-poc.tex"
-  job="fontes-${family}-${engine}-poc"
+  fixture="tests/documents/${family}-font-poc.tex"
+  job="${family}-font-${engine}-poc"
 
   cleanup "$job"
   echo "POC fontes: infraestrutura $family com $engine"
