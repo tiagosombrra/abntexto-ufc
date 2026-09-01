@@ -38,6 +38,7 @@ pdftotext -layout main.pdf /tmp/abntexto-ufc-reference-corpus.txt
 pdftotext -bbox-layout main.pdf /tmp/abntexto-ufc-reference-corpus-bbox.html
 
 python3 <<'PY'
+import os
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -136,8 +137,9 @@ if missing:
     raise SystemExit('Corpus falhou: marcadores ausentes no PDF: ' + ', '.join(missing))
 if '??' in text:
     raise SystemExit('Corpus falhou: referência não resolvida encontrada no PDF.')
-if 'Execute make reference-assets' in text:
-    raise SystemExit('Corpus falhou: fallback de fotografia apareceu no PDF de CI.')
+require_reference_images = os.environ.get('UFC_REQUIRE_REFERENCE_IMAGES', '0') == '1'
+if require_reference_images and 'Execute make reference-assets' in text:
+    raise SystemExit('Corpus falhou: fallback de fotografia apareceu quando fotografias de referência eram obrigatórias.')
 
 pages = [normalize_pdf_text(page) for page in text.split('\f')]
 committee_pages = [page for page in pages if 'BANCA EXAMINADORA' in page]

@@ -13,7 +13,7 @@ for engine in pdflatex lualatex; do
   cleanup_job
   echo "Validando $fixture com $engine + Biber..."
 
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
     cat /tmp/abntexto-ufc-6023.log
     exit 1
   }
@@ -23,11 +23,11 @@ for engine in pdflatex lualatex; do
     exit 1
   }
 
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
     cat /tmp/abntexto-ufc-6023.log
     exit 1
   }
-  "$engine" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
+  "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
     cat /tmp/abntexto-ufc-6023.log
     exit 1
   }
