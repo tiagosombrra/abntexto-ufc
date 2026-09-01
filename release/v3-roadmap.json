@@ -22,60 +22,6 @@
     "fail_closed_on_disagreement": true,
     "memory_is_not_an_authority": true
   },
-  "sanitation": {
-    "stage": "R1-S0",
-    "status": "DONE",
-    "remote_branch_count_before": 154,
-    "remote_branch_count_after_s0": 2,
-    "retained_remote_branches_after_s0": ["main", "refactor/v3-r1-rebaseline"],
-    "external_full_history_backup_verified": true,
-    "backup_forms": ["git_mirror", "git_bundle"],
-    "stale_pull_requests_closed": [157, 158],
-    "archive_branches_created": false,
-    "legacy_1x_branch_removed": true,
-    "immutable_version_tags_preserved": true,
-    "remote_branch_count_final": 1,
-    "retained_remote_branches_final": ["main"]
-  },
-  "control_plane": {
-    "stage": "R1-S1",
-    "status": "DONE",
-    "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
-    "comparison_base_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
-    "comparison_observed_head_sha": "54dfcb6a3a4303c7ecc41a0577c49d4ab2d4a723",
-    "commits_ahead": 12,
-    "commits_behind": 0,
-    "net_product_migration_delta_present": false,
-    "expected_executor_commit_found": false,
-    "temporary_workflows": [],
-    "temporary_executors": [],
-    "blocking_inconsistencies": []
-  },
-  "trunk_rebaseline": {
-    "stage": "R1-S2",
-    "status": "DONE",
-    "target_branch": "main",
-    "source_branch": "refactor/v3-r1-rebaseline",
-    "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
-    "merge_base_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-    "promotion_mode": "fast-forward",
-    "history_rewritten": false,
-    "minimal_gates_passed": true,
-    "reference_build_passed": true,
-    "validator_source_passed": true,
-    "temporary_workflows_present": false,
-    "temporary_executors_present": false,
-    "source_branch_retired": true,
-    "steady_state_remote_branches": ["main"],
-    "interim_main_protection": {
-      "deletion_protected": true,
-      "non_fast_forward_protected": true,
-      "linear_history_required": true,
-      "pull_request_required": true,
-      "required_status_checks": [],
-      "latex_preflight_restored": false
-    }
-  },
   "policies": {
     "active_repository_is_archive": false,
     "history_directories_allowed": false,
@@ -97,9 +43,20 @@
     ]
   },
   "stages": {
-    "R1-S0": {"status": "DONE", "name": "repository sanitation and control rebaseline"},
-    "R1-S1": {"status": "DONE", "name": "control plane repair", "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02"},
-    "R1-S2": {"status": "DONE", "name": "trunk rebaseline", "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1"}
+    "R1-S0": {
+      "status": "DONE",
+      "name": "repository sanitation and control rebaseline"
+    },
+    "R1-S1": {
+      "status": "DONE",
+      "name": "control plane repair",
+      "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02"
+    },
+    "R1-S2": {
+      "status": "DONE",
+      "name": "trunk rebaseline",
+      "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1"
+    }
   },
   "blocks": {
     "R1-BLOCK-1": {
@@ -116,7 +73,6 @@
       "status": "DONE",
       "closure_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
       "name": "semantic and path-consumer closure",
-      "resumed_after": ["R1-S2"],
       "b3_d_status": "DONE",
       "b3_d_closure_sha": "8f7c05b32f228633e4802a6fa8c14babf16fd685",
       "b3_e_status": "DONE",
@@ -144,6 +100,10 @@
       "status": "ACTIVE",
       "name": "tools validator and metadata technical rebaseline",
       "entry_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
+      "activation_control_plane_sha": "3512d8b29f2b3634f4ba69bdbc160fa1bc667c19",
+      "operational_issue": 187,
+      "working_branch": "refactor/v3-r1-b4-tools-validator",
+      "active_work_item": "B4-A",
       "scope": [
         "tools live-tree ownership and dead-helper audit",
         "validator project-owned identifiers diagnostics controls and technical labels",
@@ -157,12 +117,66 @@
         "do not implement B5 distribution B6 permanent gates B7 workflows or B8 certification",
         "temporary executors must be removed before checkpoint",
         "delete dead helpers instead of archiving them"
-      ]
+      ],
+      "entry_inventory": {
+        "run_id": 33496512650,
+        "inventory_steps_passed": true,
+        "stale_identity_scan_passed": true,
+        "bounded_source_check_passed": false,
+        "overall_run_conclusion": "failure",
+        "failure_class": "validator-source-contract-blocker",
+        "failure_detail": "extended rules without unified evidence: spine.conditional",
+        "tools_file_count": 10,
+        "validator_file_count": 4,
+        "validator_files_all_have_live_consumers": true,
+        "old_repository_identity_occurrences": 0,
+        "temporary_inventory_workflow_on_working_branch": ".github/workflows/b4-inventory.yml",
+        "temporary_inventory_workflow_on_main": false
+      },
+      "consumer_classification": {
+        "convert_encoding_to_unicode": "consumed-by-prepare-windows-fonts",
+        "fetch_abntexto": "unclassified-zero-textual-consumers",
+        "fetch_reference_images": "consumed-by-Makefile",
+        "normative_atomic": "current-validator-source-consumer",
+        "normative_catalog": "current-validator-source-consumer",
+        "normative_full": "current-coverage-and-validator-source-consumer",
+        "pdf_measurement": "current-validator-source-consumer",
+        "pdf_vector_measurement": "current-vector-validation-consumers",
+        "prepare_windows_fonts": "preliminary-B8-owned-live-consumer",
+        "validate_ufc_pdf": "current-eight-consumers",
+        "validator_app_js": "current-live-consumer-surface",
+        "validator_index_html": "current-live-consumer-surface",
+        "validator_validation_contract": "current-live-consumer-surface",
+        "validator_validation_vectors": "current-live-consumer-surface"
+      },
+      "confirmed_cleanup_candidates": [
+        "tools/fetch-reference-images.py User-Agent still identifies abntexto-ufc/2.1.0",
+        "validator/index.html still presents ufctex technical identity",
+        "project-owned validator and CLI technical UI/report/diagnostic language requires English-boundary classification"
+      ],
+      "planned_lots": {
+        "B4-A": "inventory blockers and ownership classification",
+        "B4-B": "stale identity and metadata cleanup",
+        "B4-C": "validator and tool technical-language rebaseline",
+        "B4-D": "final residual audit and closeout"
+      }
     },
-    "R1-BLOCK-5": {"status": "BLOCKED", "name": "distribution and public bundle rebaseline"},
-    "R1-BLOCK-6": {"status": "BLOCKED", "name": "permanent static gates"},
-    "R1-BLOCK-7": {"status": "BLOCKED", "name": "optimized workflow restoration"},
-    "R1-BLOCK-8": {"status": "BLOCKED", "name": "final R1 certification"}
+    "R1-BLOCK-5": {
+      "status": "BLOCKED",
+      "name": "distribution and public bundle rebaseline"
+    },
+    "R1-BLOCK-6": {
+      "status": "BLOCKED",
+      "name": "permanent static gates"
+    },
+    "R1-BLOCK-7": {
+      "status": "BLOCKED",
+      "name": "optimized workflow restoration"
+    },
+    "R1-BLOCK-8": {
+      "status": "BLOCKED",
+      "name": "final R1 certification"
+    }
   },
-  "next_action": "Start R1-BLOCK-4 from canonical remote main at implementation checkpoint 7a3b018a43630ed46b375117790acc732ae67b40. Open a B4 operational issue, inventory tools/, validator/, and active project-owned technical metadata, classify each finding as current v3, B5-owned, B8-owned, upstream/document-language exception, dead/superseded, or R2-deferred, then execute bounded cleanup lots with proportional checks and no permanent workflow."
+  "next_action": "Continue R1-BLOCK-4 B4-A from issue #187. Classify the spine.conditional unified-evidence blocker and tools/fetch-abntexto.py zero-consumer status. Remove the branch-only b4-inventory.yml before any B4 checkpoint PR. Then execute B4-B as a bounded identity/metadata cleanup for the stale 2.1.0 User-Agent and ufctex validator identity, keeping runtime/API, normative semantics, B5-B8 implementation, and permanent CI out of scope."
 }
