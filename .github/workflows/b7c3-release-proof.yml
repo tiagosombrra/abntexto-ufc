@@ -1,0 +1,167 @@
+name: B7-C3 release proof
+
+on:
+  push:
+    branches:
+      - ci/v3-r1-b7c3-linux-release-check
+
+permissions:
+  contents: write
+
+jobs:
+  release-proof:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout task branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ci/v3-r1-b7c3-linux-release-check
+          fetch-depth: 0
+
+      - name: Run repository release contract
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs docker.io
+            node --version
+            docker --version
+            make release-check
+
+      - name: Verify coordinated release evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('artifacts/validation/validation-report.json')
+          if not path.is_file():
+              raise SystemExit('release validation report missing')
+          report = json.loads(path.read_text(encoding='utf-8'))
+          checks = report.get('checks', [])
+          by_name = {item.get('name'): item for item in checks}
+          expected = {
+              'mode': 'release',
+              'complete': True,
+              'result': 'PASS',
+              'count': 32,
+              'pdfa': 'PASS',
+              'profile-pdfa': 'PASS',
+          }
+          observed = {
+              'mode': report.get('mode'),
+              'complete': report.get('complete'),
+              'result': report.get('result'),
+              'count': len(checks),
+              'pdfa': by_name.get('pdfa', {}).get('status'),
+              'profile-pdfa': by_name.get('profile-pdfa', {}).get('status'),
+          }
+          if observed != expected:
+              raise SystemExit(f'release evidence mismatch: expected={expected} observed={observed}')
+          non_pass = [item.get('name') for item in checks if item.get('status') != 'PASS']
+          if non_pass:
+              raise SystemExit(f'non-PASS release checks: {non_pass}')
+          print('B7-C3 release evidence verified: 32/32 PASS including pdfa and profile-pdfa.')
+          PY
+
+      - name: Publish validation summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '## B7-C3 temporary Linux release proof'
+            echo
+            echo '> Linux release validation is engineering evidence only; B8 retains final Windows/literal-font/PDF-A certification ownership.'
+            echo
+            if [[ -f artifacts/validation/validation-report.md ]]; then
+              cat artifacts/validation/validation-report.md
+            else
+              echo 'No repository validation report was produced.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload validation evidence
+        if: always() && hashFiles('artifacts/validation/**') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: b7c3-release-proof-${{ github.run_id }}
+          path: artifacts/validation/**
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Document B7-C3 orchestration and remove executor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one replacement target, found {count}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          replace_once(
+              'README.md',
+              '`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. B7-C1 certified `make check` on a clean TeX Live 2026 Linux runner (`PASS=30 FAIL=0 SKIP=0`). B7-C2 then certified the permanent `.github/workflows/linux-integration.yml` workflow through PR #222: its stable `Linux integration` status always evaluates PR scope, skips the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, runs full integration for every other or unknown path, cancels superseded PR runs, delegates the heavy gate to `make check`, and forces full integration on `workflow_dispatch`; its first full permanent run also closed `PASS=30 FAIL=0 SKIP=0`. B7-C3 is active and owns Linux release orchestration over `make release-check`; final Windows/font/PDF-A certification remains B8-owned.',
+              '`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. B7-C1 certified `make check` on a clean TeX Live 2026 Linux runner (`PASS=30 FAIL=0 SKIP=0`). B7-C2 then certified the permanent `.github/workflows/linux-integration.yml` workflow through PR #222: its stable `Linux integration` status always evaluates PR scope, skips the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, runs full integration for every other or unknown path, cancels superseded PR runs, delegates the heavy gate to `make check`, and forces full integration on `workflow_dispatch`; its first full permanent run also closed `PASS=30 FAIL=0 SKIP=0`. B7-C3 adds `.github/workflows/linux-release-check.yml` with stable workflow/job name `Linux release check`: it delegates to `make release-check` after technical merges to `main` and on manual dispatch, ignores documentation/control-plane-only main pushes, cancels superseded release runs, publishes the repository validation report in the job summary, and retains `artifacts/validation/**` for 14 days. This Linux gate is engineering evidence and does not replace final B8 Windows/literal-font/PDF-A certification.'
+          )
+
+          replace_once(
+              'AGENTS.md',
+              '- B7-C1 certified the repository-owned `make check` contract on a clean TeX Live 2026 runner. B7-C2 is DONE and permanently provides `.github/workflows/linux-integration.yml` with stable `Linux integration` status: draft and narrowly allowlisted documentation/control-plane-only PRs skip the expensive TeX step, every other or unknown path runs `make check`, superseded PR runs are cancelled, and manual dispatch forces full integration. B7-C3 is ACTIVE and may add only bounded release orchestration as a thin consumer of `make release-check`. Final Windows/font/PDF-A certification remains B8-owned.',
+              '- B7-C1 certified the repository-owned `make check` contract on a clean TeX Live 2026 runner. B7-C2 is DONE and permanently provides `.github/workflows/linux-integration.yml` with stable `Linux integration` status: draft and narrowly allowlisted documentation/control-plane-only PRs skip the expensive TeX step, every other or unknown path runs `make check`, superseded PR runs are cancelled, and manual dispatch forces full integration. B7-C3 is ACTIVE and adds `.github/workflows/linux-release-check.yml` as bounded release orchestration: technical merges to `main` and manual dispatch delegate to `make release-check`; documentation/control-plane-only main pushes are ignored; validation reports are retained as short-lived engineering evidence. Final Windows/literal-font/PDF-A certification remains B8-owned.'
+          )
+
+          architecture = Path('docs/ARCHITECTURE.md')
+          text = architecture.read_text(encoding='utf-8')
+          old_layout = '  workflows/static-contract.yml\n  workflows/linux-integration.yml\n'
+          new_layout = '  workflows/static-contract.yml\n  workflows/linux-integration.yml\n  workflows/linux-release-check.yml\n'
+          if text.count(old_layout) != 1:
+              raise SystemExit('architecture workflow layout target mismatch')
+          text = text.replace(old_layout, new_layout, 1)
+          old_bullet = '- `.github/workflows/linux-integration.yml`: permanent bounded PR integration orchestration. It exposes the stable workflow/job name `Linux integration`, keeps a status on relevant PR lifecycle events, suppresses the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, treats unknown paths fail-closed as integration-relevant, cancels superseded PR runs, forces full execution on manual dispatch, and delegates heavy validation to `make check`.\n'
+          new_bullet = old_bullet[:-1] + ';\n- `.github/workflows/linux-release-check.yml`: bounded permanent Linux release orchestration. It exposes the stable workflow/job name `Linux release check`, runs after technical changes land on `main` and on manual dispatch, ignores documentation/control-plane-only main pushes, cancels superseded runs, delegates the release gate to `make release-check`, mirrors the repository report into the job summary, and retains `artifacts/validation/**` for 14 days. Its Linux PDF/A observations are engineering evidence; final Windows/literal-font/PDF-A certification remains B8-owned.\n'
+          if text.count(old_bullet) != 1:
+              raise SystemExit('architecture integration workflow bullet target mismatch')
+          text = text.replace(old_bullet, new_bullet, 1)
+          old_phase = 'R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 certified bounded permanent PR orchestration through `Linux integration`: orchestration owns only scope/cadence/concurrency, while the repository-owned `make check` entry point owns the integration gate itself. B7-C3 is now active and owns bounded Linux release orchestration as a thin consumer of `make release-check`; B8 remains the owner of final Windows/font/PDF-A certification.'
+          new_phase = 'R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 certified bounded permanent PR orchestration through `Linux integration`: orchestration owns only scope/cadence/concurrency, while the repository-owned `make check` entry point owns the integration gate itself. B7-C3 is active and adds bounded `Linux release check` orchestration as a thin consumer of `make release-check`, with post-merge/manual cadence and short-lived validation evidence; B8 remains the owner of final Windows/literal-font/PDF-A certification.'
+          if text.count(old_phase) != 1:
+              raise SystemExit('architecture B7 phase target mismatch')
+          text = text.replace(old_phase, new_phase, 1)
+          architecture.write_text(text, encoding='utf-8')
+
+          ctan = Path('docs/CTAN-RELEASE.md')
+          text = ctan.read_text(encoding='utf-8')
+          marker = '## Automated validation\n\n'
+          section = '''## Linux release validation\n\nBefore building or submitting a release candidate, run the coordinated repository release gate:\n\n```bash\nmake release-check\n```\n\nThe permanent `.github/workflows/linux-release-check.yml` workflow, named `Linux release check`, runs this entry point after technical changes land on `main` and on manual dispatch. It publishes the generated `artifacts/validation/validation-report.md` in the Actions job summary and retains `artifacts/validation/**` as short-lived evidence for 14 days. The Linux release mode contains 32 checks, including the release-only `pdfa` and `profile-pdfa` checks.\n\nThis evidence is a Linux engineering gate, not final release certification. Literal Times New Roman/Arial identity and final Windows/font/PDF-A certification remain B8-owned, and CTAN packaging/`pkgcheck` validation remains a separate release procedure below. Validation evidence under `artifacts/validation/` is not a distribution artifact and must not be inserted into public bundles.\n\n'''
+          if text.count(marker) != 1:
+              raise SystemExit('CTAN automated validation marker mismatch')
+          text = text.replace(marker, section + marker, 1)
+          old_list = '''1. Build from the intended release commit/tag, not from an unrecorded local modification.\n2. Run `make distribution-bundles`.\n3. Verify `SHA256SUMS` and the exact artifact names.\n4. Run the repository distribution checker.\n5. Extract the CTAN candidate and compile the shipped example with the external `abntexto` dependency.\n6. Run the current CTAN `pkgcheck` on the extracted `abntexto-ufc/` directory.\n7. Confirm the README/manual version and release metadata.\n8. Confirm that no institutional/proprietary assets or generated auxiliary files are present.\n9. Confirm the GitHub release/tag and user-facing release notes are final when that release stage is reached.\n10. Only then perform the explicit CTAN upload and preserve the submission/acceptance receipt in the release record.\n'''
+          new_list = '''1. Build from the intended release commit/tag, not from an unrecorded local modification.\n2. Run or confirm a successful `make release-check` / `Linux release check` for that candidate commit; preserve its validation evidence.\n3. Complete the separate B8 Windows/literal-font/PDF-A certification required for the release candidate.\n4. Run `make distribution-bundles`.\n5. Verify `SHA256SUMS` and the exact artifact names.\n6. Run the repository distribution checker.\n7. Extract the CTAN candidate and compile the shipped example with the external `abntexto` dependency.\n8. Run the current CTAN `pkgcheck` on the extracted `abntexto-ufc/` directory.\n9. Confirm the README/manual version and release metadata.\n10. Confirm that no institutional/proprietary assets, validation evidence, or generated auxiliary files are present in public bundles.\n11. Confirm the GitHub release/tag and user-facing release notes are final when that release stage is reached.\n12. Only then perform the explicit CTAN upload and preserve the submission/acceptance receipt in the release record.\n'''
+          if text.count(old_list) != 1:
+              raise SystemExit('CTAN final checklist target mismatch')
+          text = text.replace(old_list, new_list, 1)
+          ctan.write_text(text, encoding='utf-8')
+          PY
+
+          make static-check
+          git diff --check
+          rm .github/workflows/b7c3-release-proof.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md AGENTS.md docs/ARCHITECTURE.md docs/CTAN-RELEASE.md .github/workflows/b7c3-release-proof.yml
+          git commit -m 'docs: document B7-C3 Linux release orchestration'
+          git push origin HEAD:ci/v3-r1-b7c3-linux-release-check
