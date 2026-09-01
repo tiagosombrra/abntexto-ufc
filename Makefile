@@ -10,7 +10,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 TEX_ENV := TEXINPUTS=..//:
 
 .PHONY: all pdf compile lua version clean reference-assets public-bundles distribution-bundles \
-	check release-check preflight release-preflight
+	static-check check release-check preflight release-preflight
 
 all: compile
 pdf: compile
@@ -63,6 +63,9 @@ compile:
 lua:
 	@$(MAKE) clean
 	@$(MAKE) ENGINE=lualatex compile
+
+static-check:
+	@python3 tests/static.py
 
 check:
 	@python3 tests/run.py --mode pr

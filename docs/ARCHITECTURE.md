@@ -37,6 +37,7 @@ template/
 assets/institutional/
 standards/
 tests/
+  static.py
   checks/
   documents/
   fixtures/
@@ -111,12 +112,16 @@ Scientific-article normative/runtime material is reintroduced only in V3-A1 afte
 
 ## Tests and tooling
 
-- `tests/checks/`: static and machine-readable contract checks;
+- `tests/static.py`: canonical cheap/source-only fail-closed gate. It validates tracked Python/JSON/shell/JavaScript syntax, diff integrity, canonical/repository identity, the aggregate validator/normative source contract, object-scope metadata and reference-guide contract. It snapshots repository status before/after and fails if its own execution changes that state. It must not compile TeX/PDF, access the network, generate distribution bundles or run evidence-producing/platform-certification checks;
+- `tests/checks/`: static and machine-readable contract checks, some of which are source-only and some of which consume generated evidence;
+- `tests/run.py`: coordinated broad integration/release runner. It remains separate from the cheap gate and may compile or inspect generated documents;
 - `tests/documents/`: LaTeX validation documents;
 - `tests/fixtures/`: supporting test data;
 - `tests/integration/`: executable build/inspection runners;
 - `tests/smoke/`: minimal compilation cases;
 - `tools/`: developer/release tooling.
+
+`make static-check` is the permanent local entry point for the cheap source-only tier. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
 
 Active path names must not encode retired major-version or N-phase identities.
 
@@ -143,6 +148,7 @@ The final foundation must prove at least:
 - required runtime modules loaded exactly once;
 - explicitly scoped upstream integrations;
 - English project-owned engineering paths;
+- one permanent side-effect-free cheap/source-only validation entry point distinct from integration/release validation;
 - valid repository template layout and valid flattened public bundle layout;
 - deterministic class/runtime and CTAN distribution candidates with checksum metadata;
 - no institutional/proprietary assets in public distribution;
