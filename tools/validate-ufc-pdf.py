@@ -144,7 +144,7 @@ def check_verapdf(pdf,profile):
     def valid(flavour): return 'isCompliant="true"' in run([exe,'-f',flavour,str(pdf)],check=False).stdout
     ok=valid('2b'); cs=[norm_check('pdfa.deep','deposit.pdfa','PDF/A',f'Validação veraPDF {profile_name}',PASS if ok else FAIL,'Conforme.' if ok else 'Reprovado pelo veraPDF.','Corrija as violações do veraPDF.' if not ok else '',mandatory=required,level='deep')]
     if profile=='accessibility':
-        ua=valid('ua1'); cs.append(Check('access.pdfua','Accessibility','PDF/UA-1 com veraPDF','PDF/UA-1',PASS if ua else FAIL,'Conforme nos checks automatics.' if ua else 'Reprovado.','Corrija tagging/estrutura.',mandatory=True,level='deep'))
+        ua=valid('ua1'); cs.append(Check('access.pdfua','Accessibility','PDF/UA-1 com veraPDF','PDF/UA-1',PASS if ua else FAIL,'Conforme nos checks automáticos.' if ua else 'Reprovado.','Corrija tagging/estrutura.',mandatory=True,level='deep'))
     return cs
 
 def render_table(cs): return '\n'.join(f'{c.status:18} | {c.category:16} | {c.rule[:48]:48} | {c.evidence[:70]}' for c in cs)
