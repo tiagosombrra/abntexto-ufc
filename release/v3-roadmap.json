@@ -10,7 +10,7 @@
   "stage_name": "tools validator and metadata technical rebaseline",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8",
+  "last_certified_clean_checkpoint_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -102,8 +102,8 @@
       "entry_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
       "activation_control_plane_sha": "3512d8b29f2b3634f4ba69bdbc160fa1bc667c19",
       "operational_issue": 187,
-      "active_work_item": "B4-C",
-      "active_sub_item": "B4-C2b",
+      "active_work_item": "B4-D",
+      "active_sub_item": "B4-D",
       "scope": [
         "tools live-tree ownership and dead-helper audit",
         "validator project-owned identifiers diagnostics controls and technical labels",
@@ -206,7 +206,7 @@
           "finding": "bounded B4-B metadata and identity validation passed"
         }
       ],
-      "b4_c_status": "ACTIVE",
+      "b4_c_status": "DONE",
       "b4_c_inventory": {
         "run_id": 33501038117,
         "conclusion": "success",
@@ -239,23 +239,29 @@
         "runtime_api_changed": false,
         "temporary_workflow_removed_before_merge": true
       },
-      "b4_c2_status": "ACTIVE",
+      "b4_c2_status": "DONE",
       "b4_c2_scope": [
         "generic technical categories and validation levels",
         "project-owned evidence and correction diagnostics",
         "report export headings and generic Web validator controls",
         "preserve academic element labels official normative text stable machine identifiers and runtime API"
       ],
-      "b4_d_status": "PENDING",
-      "b4_d_scope": "final helper ownership consumer residual and temporary-executor audit",
+      "b4_d_status": "ACTIVE",
+      "b4_d_scope": [
+        "final helper ownership and later-block assignment audit",
+        "live consumer resolution and dead-helper audit",
+        "temporary executor workflow and helper absence",
+        "residual project-owned identity and technical-language classification",
+        "proportional validator source contract syntax and diff closure gates"
+      ],
       "planned_lots": {
         "B4-A": "DONE - inventory blockers and ownership classification",
         "B4-B": "DONE - stale identity and metadata cleanup",
         "B4-C1": "DONE - shared validator status and verdict vocabulary",
-        "B4-C2": "ACTIVE - split into C2a DONE and C2b ACTIVE",
-        "B4-D": "PENDING - final residual audit and closeout",
+        "B4-C2": "DONE - C2a and C2b complete",
+        "B4-D": "ACTIVE - final residual audit and closeout",
         "B4-C2a": "DONE - technical taxonomy validation levels and CLI report headings",
-        "B4-C2b": "ACTIVE - diagnostics report export labels and Web UI"
+        "B4-C2b": "DONE - diagnostics report export labels and Web UI"
       },
       "b4_c2a_status": "DONE",
       "b4_c2a_closure_sha": "3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8",
@@ -287,12 +293,59 @@
         "runtime_api_changed": false,
         "temporary_workflow_removed_before_merge": true
       },
-      "b4_c2b_status": "ACTIVE",
+      "b4_c2b_status": "DONE",
       "b4_c2b_scope": [
         "project-owned diagnostic evidence and correction messages",
         "report export labels and generic Web validator controls/disclosures",
         "preserve academic and normative wording stable machine identifiers dependency strings measurement behavior and runtime API"
-      ]
+      ],
+      "b4_c_closure_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
+      "b4_c2_closure_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
+      "b4_c2b_closure_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
+      "b4_c2b_validation_runs": [
+        {
+          "run_id": 33506603720,
+          "conclusion": "success",
+          "finding": "B4-C2b language-boundary inventory passed"
+        },
+        {
+          "run_id": 33506913061,
+          "conclusion": "failure",
+          "finding": "oversized workflow invalid before jobs; no functional change"
+        },
+        {
+          "run_id": 33507239950,
+          "conclusion": "failure",
+          "finding": "migration applied in workspace; validator-source exposed additional disclosure consumer; no commit"
+        },
+        {
+          "run_id": 33507392053,
+          "conclusion": "success",
+          "finding": "reconciled migration and bounded validator gates passed; temporary helpers removed"
+        },
+        {
+          "run_id": 33507630613,
+          "conclusion": "failure",
+          "finding": "review repair failed closed on actual two-occurrence PDF/UA cardinality; no commit"
+        },
+        {
+          "run_id": 33507724964,
+          "conclusion": "success",
+          "finding": "PDF/UA residual review repair passed and self-removed"
+        }
+      ],
+      "b4_c2b_results": {
+        "diagnostics_evidence_corrections_normalized": true,
+        "report_export_labels_normalized": true,
+        "web_ui_language": "en",
+        "local_processing_consumers_reconciled": true,
+        "academic_domain_labels_preserved": true,
+        "stable_machine_identifiers_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false,
+        "runtime_api_changed": false,
+        "temporary_workflows_removed_before_merge": true
+      }
     },
     "R1-BLOCK-5": {
       "status": "BLOCKED",
@@ -311,5 +364,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-4 B4-C2b from canonical remote main using 3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8 as the latest certified implementation checkpoint. Translate only remaining project-owned diagnostic, evidence and correction messages, report/export labels and generic Web validator controls/disclosures whose ownership and consumers are clear. Preserve academic document-element labels, official UFC/ABNT wording, stable schema/check/rule identifiers, dependency-owned spelling, measurement behavior and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally, remove temporary executors before checkpoint, and update issue #187 plus the canonical control-plane files after the merged lot."
+  "next_action": "Start R1-BLOCK-4 B4-D from canonical remote main using 1a126c37653728941ce1ada762376c5fec69cb02 as the latest certified implementation checkpoint. Run a branch-only final residual audit across B4-owned tools, validator, metadata and their consumers. Confirm every helper is current or explicitly B5/B8-assigned, all live consumers resolve, no dead helper or temporary executor remains, and all residual project-owned identity/language occurrences are classified before editing. Repair only proven B4-owned residue, validate source/contract/syntax/diff gates proportionally, then close B4 and synchronize the control plane before activating B5."
 }
