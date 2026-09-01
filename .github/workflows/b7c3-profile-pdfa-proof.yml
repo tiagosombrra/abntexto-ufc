@@ -1,0 +1,60 @@
+name: B7-C3 profile PDF/A proof
+
+on:
+  push:
+    branches:
+      - ci/v3-r1-b7c3-profile-pdfa-proof
+
+permissions:
+  contents: read
+
+jobs:
+  profile-pdfa-proof:
+    name: B7-C3 profile PDF/A proof
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Run profile PDF/A dependency chain
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli
+            docker --version
+            python3 tests/run.py --mode release --only profile-pdfa
+
+      - name: Verify targeted evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('artifacts/validation/validation-report.json').read_text(encoding='utf-8'))
+          checks = report.get('checks', [])
+          observed = [(item.get('name'), item.get('status')) for item in checks]
+          expected = [('profiles', 'PASS'), ('profile-pdfa', 'PASS')]
+          if report.get('mode') != 'release' or report.get('complete') is not True or report.get('result') != 'PASS':
+              raise SystemExit(f'invalid release report header: {report.get("mode")=} {report.get("complete")=} {report.get("result")=}')
+          if observed != expected:
+              raise SystemExit(f'targeted evidence mismatch: expected={expected} observed={observed}')
+          print('B7-C3 targeted proof PASS: profiles + profile-pdfa.')
+          PY
+
+      - name: Upload targeted evidence
+        if: always() && hashFiles('artifacts/validation/**') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: b7c3-profile-pdfa-proof-${{ github.run_id }}
+          path: artifacts/validation/**
+          retention-days: 14
+          if-no-files-found: error
