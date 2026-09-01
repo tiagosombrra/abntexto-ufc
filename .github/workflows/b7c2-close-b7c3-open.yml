@@ -60,8 +60,8 @@ jobs:
           )
           replace_once(
               "docs/HANDOFF-V3.0.0.md",
-              "- **B7-C3 PENDING — release orchestration:** define the Linux `make release-check` cadence/trigger without claiming B8 Windows/font/final PDF/A certification.",
-              "- **B7-C3 ACTIVE — release orchestration:** define and prove a bounded permanent Linux `make release-check` trigger/cadence and evidence policy without claiming B8 Windows/font/final PDF/A certification."
+              "- **B7-C3 PENDING — release orchestration:** define the Linux `make release-check` cadence/trigger without claiming B8 Windows/font/final PDF-A certification.",
+              "- **B7-C3 ACTIVE — release orchestration:** define and prove a bounded permanent Linux `make release-check` trigger/cadence and evidence policy without claiming B8 Windows/font/final PDF-A certification."
           )
 
           replace_once(
