@@ -1,6 +1,7 @@
 {
   "schema_version": 6,
   "project": "abntexto-ufc",
+  "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
   "updated_at": "2026-09-01",
   "status": "ACTIVE",
@@ -9,7 +10,7 @@
   "stage_name": "semantic and path-consumer closure",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "2ad7da8eae03c40fbea3d875843628387ec0e25d",
+  "last_certified_clean_checkpoint_sha": "8f7c05b32f228633e4802a6fa8c14babf16fd685",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -35,17 +36,12 @@
       "git_mirror",
       "git_bundle"
     ],
-    "stale_pull_requests_closed": [
-      157,
-      158
-    ],
+    "stale_pull_requests_closed": [157, 158],
     "archive_branches_created": false,
     "legacy_1x_branch_removed": true,
     "immutable_version_tags_preserved": true,
     "remote_branch_count_final": 1,
-    "retained_remote_branches_final": [
-      "main"
-    ]
+    "retained_remote_branches_final": ["main"]
   },
   "control_plane": {
     "stage": "R1-S1",
@@ -94,9 +90,7 @@
     "restore_stale_status_before_r1_block_7": false,
     "source_branch_retired": true,
     "steady_state_remote_branch_count": 1,
-    "steady_state_remote_branches": [
-      "main"
-    ],
+    "steady_state_remote_branches": ["main"],
     "interim_main_protection": {
       "deletion_protected": true,
       "non_fast_forward_protected": true,
@@ -139,9 +133,7 @@
     "R1-S2": {
       "status": "DONE",
       "name": "trunk rebaseline",
-      "depends_on": [
-        "R1-S1"
-      ],
+      "depends_on": ["R1-S1"],
       "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1"
     }
   },
@@ -159,31 +151,37 @@
     "R1-BLOCK-3": {
       "status": "ACTIVE",
       "name": "semantic and path-consumer closure",
-      "resumed_after": [
-        "R1-S2"
-      ],
+      "resumed_after": ["R1-S2"],
       "previous_certified_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
       "promotion_checkpoint_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
       "abandoned_executor_does_not_close_additional_work": true,
-      "active_work_item": "B3-D",
+      "active_work_item": "B3-E",
+      "b3_d_status": "DONE",
+      "b3_d_closure_sha": "8f7c05b32f228633e4802a6fa8c14babf16fd685",
       "b3_d_completed_lots": [
         "B3-D1",
         "B3-D2A",
         "B3-D2B",
-        "B3-D3"
+        "B3-D3",
+        "B3-D4",
+        "B3-D5"
       ],
       "b3_d_policy": "remove stale operational v1/v2 identity and dead legacy code; preserve only explicitly classified history, migration, compatibility, or negative-test references",
-      "b3_d3_results": {
+      "b3_d_results": {
         "active_makefile_version": "3.0.0",
         "active_class_version": "3.0.0",
+        "active_version_qualified_runner_identity_closed": true,
         "dead_distribution_runner_removed": true,
         "broken_distribution_source_check_removed": true,
-        "distribution_rebuild_deferred_to": "R1-BLOCK-5"
+        "obsolete_release_distribution_surface_removed": true,
+        "deleted_release_surface_lines_in_b3_d5": 1129,
+        "distribution_rebuild_deferred_to": "R1-BLOCK-5",
+        "migration_contracts_checked_against_deleted_helpers": true,
+        "remaining_legacy_references_classified": true
       },
+      "b3_e_status": "ACTIVE",
+      "b3_e_scope": "project-owned oracle terminology cleanup with legitimate testing/domain uses preserved",
       "known_residual_classes": [
-        "remaining operational v2/V2 identity in active runners",
-        "remaining legacy version references requiring classification",
-        "future distribution/release helpers requiring B5 audit",
         "project-owned oracle terminology",
         "final Block 3 residual audit"
       ]
@@ -209,5 +207,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Continue B3-D from canonical remote main at implementation checkpoint 2ad7da8eae03c40fbea3d875843628387ec0e25d. Finish stale operational v2/V2 cleanup in the remaining active runners, then classify surviving legacy-version references and audit future distribution/release helpers for a real B5 consumer. Delete dead artifacts rather than preserving them in the active tree. Preserve runtime/API boundaries assigned to V3-R2. Then continue B3-E project-owned oracle terminology and B3-F final Block 3 residual closure."
+  "next_action": "Start B3-E from canonical remote main at certified implementation checkpoint 8f7c05b32f228633e4802a6fa8c14babf16fd685. Perform a fresh live-tree inventory of project-owned oracle terminology, classify each occurrence as obsolete project engineering identity or legitimate testing/domain terminology, and change only obsolete identity. Preserve normative rule IDs, expected values, tolerances, proof state and runtime/API boundaries. Then continue B3-F final Block 3 residual closure."
 }
