@@ -7,11 +7,11 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-4 — Tools, Validator, and Metadata Technical Rebaseline**.
-- Active B4 work item: **B4-C — validator/tool technical-language rebaseline**.
-- Active B4-C lot: **B4-C2b — diagnostics, report/export labels, and Web UI**.
+- Active B4 work item: **B4-D — final residual audit and closeout**.
+- Active B4-D focus: **helper ownership, consumer integrity, residual identity/language classification, and temporary-executor absence**.
 - Active branch/trunk: `main`.
 - B4 operational issue: **#187**.
-- Latest certified clean implementation checkpoint: **`3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8`**.
+- Latest certified clean implementation checkpoint: **`1a126c37653728941ce1ada762376c5fec69cb02`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -109,7 +109,7 @@ Final bounded validation run **`33500381847` PASS** covered the atomic contract,
 
 ### B4-C — Validator/tool technical-language rebaseline
 
-**ACTIVE.** Entry language-boundary inventory run **`33501038117` PASS** classified the current surfaces before editing.
+**DONE** through PR #197, with final implementation checkpoint **`1a126c37653728941ce1ada762376c5fec69cb02`**. Entry language-boundary inventory run **`33501038117` PASS** classified the current surfaces before editing.
 
 Preserved boundaries:
 
@@ -136,7 +136,7 @@ Remote validation run **`33501306482` PASS** covered Python/JS syntax, JSON pars
 
 #### B4-C2 — technical categories, diagnostics, report labels, and Web UI
 
-**ACTIVE.** Split into bounded producer/consumer-safe sublots.
+**DONE.** Implemented as bounded producer/consumer-safe sublots.
 
 ##### B4-C2a — technical taxonomy and validation levels
 
@@ -148,11 +148,13 @@ Remote run **`33502021542` PASS** covered Python/JS/JSON syntax, cross-surface/v
 
 ##### B4-C2b — diagnostics, report/export labels, and Web UI
 
-**ACTIVE / NEXT.** Translate remaining project-owned human-facing diagnostics, evidence/correction messages, report/export headings and generic Web controls/disclosures. Preserve academic/normative wording, stable machine identifiers, dependency strings, measurement behavior and Portuguese LaTeX runtime/API.
+**DONE** through PR #197, squash-merged at **`1a126c37653728941ce1ada762376c5fec69cb02`**. CLI/Deep and Web/Lite project-owned diagnostics/evidence/corrections, report/export labels, download names, and generic Web controls/disclosures are now English. The Web surface declares `lang=en`; both local-processing disclosure consumers moved with the UI literal.
+
+Validation remained fail-closed: inventory `33506603720` PASS; oversized executor `33506913061` failed before jobs with no functional change; compact run `33507239950` exposed an additional disclosure consumer; migration run **`33507392053` PASS** after reconciliation. Patch review found two remaining PDF/UA technical strings; repair run `33507630613` failed closed on the actual two-occurrence cardinality, and corrected run **`33507724964` PASS** completed the translation and self-removed. Academic/domain labels (`Capa`, `Folha de aprovação`, `Resumo`, `Sumário`, `Referências`), official normative content, stable schema/check/rule IDs, dependency spelling, measurement behavior, proof state, and Portuguese LaTeX runtime/API were preserved.
 
 ### B4-D — Final B4 residual audit/closeout
 
-**PENDING.** Require all helpers classified, no dead helper retained, all live consumers resolving, validator/tool source checks PASS, temporary workflows absent, and canonical docs/machine state synchronized.
+**ACTIVE / NEXT.** Re-audit helper ownership/current role, live consumers, temporary-executor absence, project-owned identity/language residue, and the bounded validator/tool contract. Any residual must be classified before editing. Closure requires proportional source/contract/syntax/diff checks PASS with no normative semantic, proof-state, tolerance, or runtime/API drift.
 
 ## Remaining R1 sequence
 
@@ -164,4 +166,4 @@ Remote run **`33502021542` PASS** covered Python/JS/JSON syntax, cross-surface/v
 
 ## Immediate action
 
-Start B4-C2b from canonical remote `main` using `3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8` as the latest certified implementation checkpoint. Translate only remaining project-owned diagnostic/evidence/correction text, report/export labels and generic Web validator UI whose ownership is clear. Preserve academic element labels, official normative text, stable schema/check/rule identifiers, dependency strings, measurement behavior and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally and remove temporary executors before checkpoint.
+Start B4-D from canonical remote `main` using `1a126c37653728941ce1ada762376c5fec69cb02` as the latest certified implementation checkpoint. Run a branch-only residual audit over B4-owned tools/validator/metadata surfaces and their consumers. Confirm every helper is current or explicitly B5/B8-assigned, no dead helper or temporary executor remains, and every residual project-owned identity/language occurrence is classified. Repair only proven B4-owned residue, validate proportionally, and then close B4 and synchronize the control plane before activating B5.
