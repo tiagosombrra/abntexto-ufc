@@ -1,0 +1,137 @@
+name: B4-C2a validator technical taxonomy
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-b4c2-taxonomy
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: "github.event.head_commit.message != 'refactor: normalize validator technical taxonomy'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded taxonomy and report-heading replacements
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          common = [
+              ('automático', 'automatic'),
+              ('geométrico', 'geometric'),
+              ('tipográfico', 'typographic'),
+              ('heurístico', 'heuristic'),
+              ('profundo', 'deep'),
+              ('condicional', 'conditional'),
+              ('Tipografia', 'Typography'),
+              ('Estrutura', 'Structure'),
+              ('Metadados', 'Metadata'),
+              ('Acessibilidade', 'Accessibility'),
+              ('Integridade', 'Integrity'),
+              ('Depósito UFC', 'UFC Deposit'),
+          ]
+
+          targets = {
+              Path('tools/validate-ufc-pdf.py'): common + [
+                  ('# Relatório de validação UFC', '# UFC validation report'),
+                  ('Arquivo: `', 'File: `'),
+                  ('Perfil: `', 'Profile: `'),
+                  ('Veredito: **', 'Verdict: **'),
+                  ('Base normativa revisada em: `', 'Normative base reviewed on: `'),
+                  ('| Status | Categoria | Regra | Fonte | Evidência | Como corrigir |', '| Status | Category | Rule | Source | Evidence | Correction |'),
+                  ('Arquivo: {pdf.name}', 'File: {pdf.name}'),
+                  ('Perfil: {a.profile}', 'Profile: {a.profile}'),
+                  ('Veredito: {v}', 'Verdict: {v}'),
+                  ('Base normativa: {CATALOG["reviewed_at"]}', 'Normative base: {CATALOG["reviewed_at"]}'),
+              ],
+              Path('validator/app.js'): common,
+              Path('validator/validation-vectors.json'): common + [
+                  ('Família literal', 'Literal font family'),
+                  ('Fonte controlada', 'Controlled source'),
+              ],
+          }
+
+          for path, mappings in targets.items():
+              text = path.read_text(encoding='utf-8')
+              original = text
+              for old, new in mappings:
+                  text = text.replace(old, new)
+              if text == original:
+                  raise SystemExit(f'{path}: no bounded taxonomy changes applied')
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate B4-C2a boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/validate-ufc-pdf.py
+          node --check validator/app.js
+          python3 -m json.tool validator/validation-vectors.json >/dev/null
+          python3 tests/checks/normative_cross_surface.py
+          python3 tests/checks/normative_validator_contract.py
+          python3 tests/checks/validator_source.py
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+
+          python3 - <<'PY'
+          import json
+          import runpy
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, 'tools')
+          module = runpy.run_path('tools/validate-ufc-pdf.py', run_name='ufc_pdf_validator')
+          sample = module['Check']('x', 'Metadata', 'rule', 'source', module['PASS'], 'evidence')
+          assert sample.level == 'automatic'
+
+          vectors = json.loads(Path('validator/validation-vectors.json').read_text(encoding='utf-8'))
+          for side in ('web_input', 'cli_input'):
+              item = vectors['report_vector'][side]
+              assert item['category'] == 'Typography'
+              assert item['rule'] == 'Literal font family'
+              assert item['source'] == 'Controlled source'
+              assert item['level'] == 'typographic'
+          PY
+
+          if git grep -n -E 'automático|geométrico|tipográfico|heurístico|profundo|condicional|Tipografia|Estrutura|Metadados|Acessibilidade|Integridade|Depósito UFC' -- \
+            tools/validate-ufc-pdf.py validator/app.js validator/validation-vectors.json; then
+            echo 'Old technical taxonomy remains in B4-C2a target surfaces.' >&2
+            exit 1
+          fi
+
+          # Academic/domain labels must remain untouched.
+          grep -F "'Capa'" tools/validate-ufc-pdf.py >/dev/null
+          grep -F "'Folha de aprovação'" tools/validate-ufc-pdf.py >/dev/null
+          grep -F "'Resumo'" tools/validate-ufc-pdf.py >/dev/null
+          grep -F "'Sumário'" tools/validate-ufc-pdf.py >/dev/null
+          grep -F "'Referências'" tools/validate-ufc-pdf.py >/dev/null
+          grep -F '"Capa"' validator/app.js >/dev/null
+          grep -F '"Folha de aprovação"' validator/app.js >/dev/null
+          grep -F '"Resumo"' validator/app.js >/dev/null
+          grep -F '"Sumário"' validator/app.js >/dev/null
+          grep -F '"Referências"' validator/app.js >/dev/null
+
+          grep -F '# UFC validation report' tools/validate-ufc-pdf.py >/dev/null
+          grep -F '| Status | Category | Rule | Source | Evidence | Correction |' tools/validate-ufc-pdf.py >/dev/null
+          git diff --check
+          echo 'B4-C2A-TAXONOMY status=PASS'
+
+      - name: Commit B4-C2a
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add tools/validate-ufc-pdf.py validator/app.js validator/validation-vectors.json
+          git diff --cached --quiet && { echo 'No B4-C2a changes to commit'; exit 1; }
+          git commit -m 'refactor: normalize validator technical taxonomy'
+          git push origin HEAD:refactor/v3-r1-b4c2-taxonomy
