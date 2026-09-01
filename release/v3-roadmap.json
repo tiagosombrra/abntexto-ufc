@@ -10,7 +10,7 @@
   "stage_name": "tools validator and metadata technical rebaseline",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "a4fbbdcb381709cb542c8f991ef152d8a635f790",
+  "last_certified_clean_checkpoint_sha": "001d63dbc4ecd6e555ee735cd0515b6c9203225e",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -102,7 +102,7 @@
       "entry_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
       "activation_control_plane_sha": "3512d8b29f2b3634f4ba69bdbc160fa1bc667c19",
       "operational_issue": 187,
-      "active_work_item": "B4-B",
+      "active_work_item": "B4-C",
       "scope": [
         "tools live-tree ownership and dead-helper audit",
         "validator project-owned identifiers diagnostics controls and technical labels",
@@ -182,7 +182,8 @@
           "finding": "full bounded B4-A validation passed"
         }
       ],
-      "b4_b_status": "ACTIVE",
+      "b4_b_status": "DONE",
+      "b4_b_closure_sha": "001d63dbc4ecd6e555ee735cd0515b6c9203225e",
       "b4_b_scope": [
         "fresh residual active version package repository and ownership identity audit",
         "tool headers User-Agent and generated metadata identity",
@@ -190,14 +191,40 @@
         "classification of retained old-version references before editing",
         "producer-consumer metadata alignment"
       ],
-      "b4_c_status": "PENDING",
-      "b4_c_scope": "validator and tool project-owned technical-language rebaseline without runtime/API migration",
+      "b4_b_results": {
+        "inventory_run_id": 33499411771,
+        "inventory_passed": true,
+        "old_repository_identity_occurrences": 0,
+        "active_v2_process_metadata_reconciled": true,
+        "pdfa_project_policy_locator_rebased": true,
+        "canonical_identity_docs_reconciled": true,
+        "temporary_workflows_removed_before_merge": true,
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false,
+        "locator_policy_changed": false,
+        "reference_tolerances_changed": false
+      },
+      "b4_b_validation_runs": [
+        {
+          "run_id": 33500381847,
+          "conclusion": "success",
+          "finding": "bounded B4-B metadata and identity validation passed"
+        }
+      ],
+      "b4_c_status": "ACTIVE",
+      "b4_c_scope": [
+        "inventory project-owned Portuguese technical strings across validator and CLI surfaces",
+        "classify technical UI diagnostics report export labels and internal metadata before editing",
+        "preserve academic rendered Portuguese official normative wording literal test contracts dependency spelling and current runtime API",
+        "apply only producer-consumer-safe language changes without schema or runtime API migration"
+      ],
       "b4_d_status": "PENDING",
       "b4_d_scope": "final helper ownership consumer residual and temporary-executor audit",
       "planned_lots": {
         "B4-A": "DONE - inventory blockers and ownership classification",
-        "B4-B": "ACTIVE - stale identity and metadata cleanup",
-        "B4-C": "PENDING - validator and tool technical-language rebaseline",
+        "B4-B": "DONE - stale identity and metadata cleanup",
+        "B4-C": "ACTIVE - validator and tool technical-language rebaseline",
         "B4-D": "PENDING - final residual audit and closeout"
       }
     },
@@ -218,5 +245,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-4 B4-B from canonical remote main using a4fbbdcb381709cb542c8f991ef152d8a635f790 as the latest certified implementation checkpoint. Run a fresh residual identity and metadata audit across active version package repository ownership labels tool headers and validator product identifiers. Classify retained old-version or later-block references before editing. Keep B4-C technical-language rebaseline separate unless a finding is unambiguously identity metadata, validate bounded changes proportionally, remove any temporary executor before checkpoint, and update issue #187 plus the three canonical control-plane files after each merged lot."
+  "next_action": "Start R1-BLOCK-4 B4-C from canonical remote main using 001d63dbc4ecd6e555ee735cd0515b6c9203225e as the latest certified implementation checkpoint. Run a branch-only read-only language-boundary inventory across tools/validate-ufc-pdf.py, validator/app.js, validator/index.html, validator/validation-contract.json, validator/validation-vectors.json and their tests/consumers. Classify every project-owned Portuguese technical string before editing. Preserve academic/rendered Portuguese, official UFC/ABNT wording, literal test contracts, dependency-owned spelling and current Portuguese runtime/API identifiers until V3-R2. Apply only bounded producer-consumer-safe technical-language changes, validate proportionally, remove temporary executors before checkpoint, and update issue #187 plus the canonical control-plane files after the merged lot."
 }
