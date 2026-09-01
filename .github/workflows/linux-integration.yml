@@ -1,0 +1,101 @@
+name: Linux integration
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-integration-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux-integration:
+    name: Linux integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Determine integration scope
+        id: scope
+        shell: bash
+        env:
+          PR_DRAFT: ${{ github.event.pull_request.draft || false }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
+        run: |
+          set -euo pipefail
+
+          run_integration=true
+          reason=manual-dispatch
+
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            if [[ "$PR_DRAFT" == "true" ]]; then
+              run_integration=false
+              reason=draft-pr
+            else
+              mapfile -t changed_paths < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+
+              if (( ${#changed_paths[@]} == 0 )); then
+                run_integration=true
+                reason=empty-diff-fail-closed
+              else
+                run_integration=false
+                reason=documentation-only
+
+                for path in "${changed_paths[@]}"; do
+                  case "$path" in
+                    README.md|AGENTS.md|LICENSE|.gitignore|docs/*|release/v3-roadmap.json)
+                      ;;
+                    *)
+                      run_integration=true
+                      reason="technical-path:$path"
+                      break
+                      ;;
+                  esac
+                done
+              fi
+            fi
+          fi
+
+          echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"
+          echo "reason=$reason" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Linux integration scope"
+            echo
+            echo "- run integration: \`$run_integration\`"
+            echo "- reason: \`$reason\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Report scoped skip
+        if: steps.scope.outputs.run_integration != 'true'
+        env:
+          SKIP_REASON: ${{ steps.scope.outputs.reason }}
+        run: echo "Heavy integration skipped by B7-C2 orchestration policy ($SKIP_REASON)."
+
+      - name: Run repository integration contract
+        if: steps.scope.outputs.run_integration == 'true'
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs
+            node --version
+            make check

@@ -25,7 +25,7 @@ Memory, old pull requests, workflow names, historical branches, and prior chat c
 - Do not create archive/history branches in the active repository.
 - Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before a checkpoint.
 - Permanent automatic CI is introduced only through R1-BLOCK-7 and must remain a thin orchestration layer over repository-owned entry points. `Static contract` is the current permanent fast workflow and delegates to `make static-check`.
-- B7-C1 certified the repository-owned `make check` contract on a clean TeX Live 2026 runner. B7-C2 may now add bounded permanent Linux PR integration orchestration as a thin consumer of that entry point; B7-C3 owns release orchestration. Final Windows/font/PDF-A certification remains B8-owned.
+- B7-C1 certified the repository-owned `make check` contract on a clean TeX Live 2026 runner. B7-C2 provides permanent `.github/workflows/linux-integration.yml` orchestration with stable `Linux integration` status: draft and narrowly allowlisted documentation/control-plane-only PRs skip the expensive TeX step, every other or unknown path runs `make check`, superseded PR runs are cancelled, and manual dispatch forces full integration. B7-C3 owns release orchestration. Final Windows/font/PDF-A certification remains B8-owned.
 - Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.
 - Do not rerun completed checks unless current-state validation requires it.
 

@@ -36,6 +36,7 @@ template/
   figures/
 .github/
   workflows/static-contract.yml
+  workflows/linux-integration.yml
 assets/institutional/
 standards/
 tests/
@@ -122,11 +123,12 @@ Scientific-article normative/runtime material is reintroduced only in V3-A1 afte
 - `tests/integration/`: executable build/inspection runners;
 - `tests/smoke/`: minimal compilation cases;
 - `tools/`: developer/release tooling;
-- `.github/workflows/static-contract.yml`: permanent fast remote orchestration. It exposes the stable workflow/job name `Static contract` and delegates validation to `make static-check`; workflow YAML does not own or duplicate the gate internals.
+- `.github/workflows/static-contract.yml`: permanent fast remote orchestration. It exposes the stable workflow/job name `Static contract` and delegates validation to `make static-check`; workflow YAML does not own or duplicate the gate internals;
+- `.github/workflows/linux-integration.yml`: permanent bounded PR integration orchestration. It exposes the stable workflow/job name `Linux integration`, keeps a status on relevant PR lifecycle events, suppresses the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, treats unknown paths fail-closed as integration-relevant, cancels superseded PR runs, forces full execution on manual dispatch, and delegates heavy validation to `make check`.
 
 `make static-check` is the permanent local source-only entry point. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
 
-R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 now owns bounded permanent PR integration orchestration over that entry point; B7-C3 owns later release orchestration. B8 remains the owner of final Windows/font/PDF-A certification.
+R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 implements bounded permanent PR orchestration through `Linux integration`: orchestration owns only scope/cadence/concurrency, while the repository-owned `make check` entry point owns the integration gate itself. B7-C3 owns later release orchestration. B8 remains the owner of final Windows/font/PDF-A certification.
 
 Active path names must not encode retired major-version or N-phase identities.
 
