@@ -1,0 +1,76 @@
+name: B5-D control-plane repair
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b5d-reconcile
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: "github.event.head_commit.message == 'chore: add temporary B5-D control-plane repair'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconcile B5-D control plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          roadmap = Path('docs/ROADMAP-V3.0.0.md')
+          text = roadmap.read_text(encoding='utf-8')
+          old_status = '**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B done; B5-C active.**'
+          new_status = '**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B done; B5-C done; B5-D active.**'
+          if text.count(old_status) != 1:
+              raise SystemExit(f'Expected exactly one stale roadmap status, found {text.count(old_status)}')
+          text = text.replace(old_status, new_status)
+          old_checkpoint = '- Latest certified implementation checkpoint: **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**.'
+          new_checkpoint = '- Latest certified implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.'
+          if text.count(old_checkpoint) != 1:
+              raise SystemExit(f'Expected exactly one stale roadmap checkpoint, found {text.count(old_checkpoint)}')
+          roadmap.write_text(text.replace(old_checkpoint, new_checkpoint), encoding='utf-8')
+
+          machine = Path('release/v3-roadmap.json')
+          lines = machine.read_text(encoding='utf-8').splitlines()
+          replacement = '  "next_action": "Run the final R1-BLOCK-5 B5-D residual/reproducibility audit from canonical remote main using 4bc0f544020234bc14a8f2261927f65721b6eddb as the latest certified implementation checkpoint and issue #199 as the operational log. Verify all B5 producers, consumers, artifact layouts, checksums, exclusions, documentation and control-plane state. Close B5 and activate R1-BLOCK-6 only after a clean zero-residual audit. Keep B7 permanent workflow restoration, B8 final Windows/font/PDF-A certification, actual CTAN submission and V3-R2 runtime/API work out of scope."'
+          indices = [i for i, line in enumerate(lines) if line.startswith('  "next_action":')]
+          if len(indices) != 1:
+              raise SystemExit(f'Expected one root next_action, found {len(indices)}')
+          lines[indices[0]] = replacement
+          machine.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+
+          state = json.loads(machine.read_text(encoding='utf-8'))
+          block = state['blocks']['R1-BLOCK-5']
+          assert state['stage'] == 'R1-BLOCK-5'
+          assert state['last_certified_clean_checkpoint_sha'] == '4bc0f544020234bc14a8f2261927f65721b6eddb'
+          assert block['b5_c_status'] == 'DONE'
+          assert block['b5_d_status'] == 'ACTIVE'
+          assert block['active_work_item'] == 'B5-D'
+          assert 'B5-D' in state['next_action'] and 'B5-C from canonical' not in state['next_action']
+          PY
+
+          grep -Fq 'B5-C done; B5-D active' docs/ROADMAP-V3.0.0.md
+          grep -Fq 'Latest certified implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**' docs/ROADMAP-V3.0.0.md
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          git diff --check
+
+      - name: Commit repair and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git commit -m 'docs: reconcile B5-D control-plane residuals'
+          git rm .github/workflows/b5d-control-plane-repair.yml
+          git commit -m 'chore: remove temporary B5-D control-plane repair'
+          git push origin HEAD:docs/v3-r1-b5d-reconcile
