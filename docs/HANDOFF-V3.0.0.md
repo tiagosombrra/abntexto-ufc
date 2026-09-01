@@ -7,12 +7,12 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-7 — Optimized Remote Workflow Restoration**.
-- Active B7 work item: **B7-C — optimized Linux integration/release orchestration**.
-- Active B7 sub-item: **B7-C3 — permanent Linux release orchestration consuming the repository-owned `make release-check` contract**.
-- Active B7 focus: **introduce bounded permanent Linux release orchestration that delegates to `make release-check`, preserves repository-owned gate logic, and does not claim B8 Windows/font/final PDF/A certification**.
+- Active B7 work item: **B7-D — residual workflow audit and B8 handoff**.
+- Active B7 sub-item: **B7-D — permanent workflow/status/ruleset residual audit and B8 handoff**.
+- Active B7 focus: **audit the three permanent workflow surfaces and stable status semantics, record the current branch-protection recommendation, prove zero temporary workflow residue, and hand final Windows/literal-font/PDF-A certification to B8**.
 - Active branch/trunk: `main`.
 - B7 operational issue: **#213**.
-- Latest certified clean implementation checkpoint: **`cea59bcf4927da9a9c4a48268dca67cc9535854e`**.
+- Latest certified clean implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -209,7 +209,7 @@ B6 established a single permanent side-effect-free source-only validation entry 
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry certified implementation checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`ced68313ed2c362a6617d7df6ef9adfd2df6c0b5`**.
+**ACTIVE.** Operational issue #213. Entry certified implementation checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
 
 B7 restores GitHub Actions as a thin orchestration layer over repository-owned entry points. Workflow YAML must consume `make static-check`, `make check` and `make release-check` where appropriate rather than duplicate their internal checks. Remote validation is the canonical CI execution path; developer-local state is not required for certification.
 
@@ -225,14 +225,14 @@ The same run deliberately probed `make check` on a clean TeX Live 2026 runner. I
 
 ### B7-C — Optimized Linux integration/release orchestration
 
-**ACTIVE.** B7-C starts with a repository-owned clean-runner repair before permanent heavy workflow YAML is introduced.
+**DONE.** B7-C established and certified the repository-owned clean-runner contract plus bounded permanent Linux PR and release orchestration without absorbing B8 certification responsibilities.
 
 - **B7-C1 DONE — clean-runner integration contract repair:** PR #220 merged at `ced68313ed2c362a6617d7df6ef9adfd2df6c0b5` after final TeX Live 2026 run `33545418119` proved `make check` with `PASS=30 FAIL=0 SKIP=0`; final `Static contract` run `33547122520` passed after temporary workflow removal. The repair changed execution/artifact wiring and synthetic fixture markers only; normative IDs, values, tolerances, proof state and runtime/API behavior were preserved.
 - **B7-C2 DONE — permanent Linux PR integration orchestration:** PR #222 squash-merged at `cea59bcf4927da9a9c4a48268dca67cc9535854e`. Permanent `Linux integration` delegates to `make check`, keeps a stable PR status, skips heavy TeX only for drafts and a narrow documentation/control-plane allowlist, fails closed to full integration for every other or unknown path, cancels superseded PR runs, and forces full execution on manual dispatch. PR validation runs `33548124803` (`Static contract`) and `33548124851` (`Linux integration`) passed; the integration run ended `PASS=30 FAIL=0 SKIP=0`.
-- **B7-C3 ACTIVE — release orchestration:** define and prove bounded permanent Linux `make release-check` trigger/cadence and evidence handling without claiming B8 Windows/font/final PDF-A certification.
+- **B7-C3 DONE — permanent Linux release orchestration:** PR #225 squash-merged at `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`. Targeted run `33563893128` proved the repaired profile PDF/A dependency chain; PR runs `33564594657` (`Static contract`) and `33564594625` (`Linux integration`, `PASS=30 FAIL=0 SKIP=0`) passed; post-merge `Static contract` run `33566835558` passed; and the first permanent `Linux release check` on merged `main`, run `33566835570`, closed `PASS=32 FAIL=0 SKIP=0`, including release-only `pdfa` and `profile-pdfa`. The workflow retains validation evidence for 14 days and remains engineering evidence rather than B8 final certification.
 
 ### B7-D — Residual audit and B8 handoff
 
-**PENDING.** Audit workflow ownership/status semantics, recommend stable required checks/branch-protection policy, remove any temporary executors, and hand final Windows/font/PDF-A certification to B8.
+**ACTIVE.** Audit workflow ownership/status semantics, confirm pinned actions/read-only permissions/bounded concurrency, prove zero temporary workflow residue, record the stable required-check/branch-protection recommendation, and hand final Windows/literal-font/PDF-A certification to B8. Heavy TeX/PDF product gates already certified by B7-C are not rerun without a current-state need.
 
 B8 retains final Windows/font/PDF-A certification. V3-R2 retains runtime/API migration. Actual CTAN submission remains an explicit release action outside B7.

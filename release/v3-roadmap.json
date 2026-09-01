@@ -10,7 +10,7 @@
   "stage_name": "optimized remote workflow restoration",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "cea59bcf4927da9a9c4a48268dca67cc9535854e",
+  "last_certified_clean_checkpoint_sha": "d7327db7efd5cc1e0ff9255195bcb9767d853d3e",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -672,8 +672,8 @@
       "name": "optimized remote workflow restoration",
       "entry_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
       "operational_issue": 213,
-      "active_work_item": "B7-C",
-      "active_sub_item": "B7-C3",
+      "active_work_item": "B7-D",
+      "active_sub_item": "B7-D",
       "scope": [
         "historical and current workflow/runner dependency inventory",
         "permanent remote orchestration consuming repository-owned validation entry points",
@@ -692,8 +692,8 @@
       "planned_lots": {
         "B7-A": "DONE - workflow and runner dependency inventory plus orchestration design",
         "B7-B": "DONE - permanent fast/static workflow consuming make static-check",
-        "B7-C": "ACTIVE - C1 clean-runner contract certified; C2 permanent Linux PR integration orchestration active; C3 release orchestration pending",
-        "B7-D": "PENDING - residual workflow audit branch-protection recommendation and B8 handoff"
+        "B7-C": "DONE - C1 clean-runner integration contract, C2 permanent Linux PR integration orchestration, and C3 permanent Linux release orchestration certified",
+        "B7-D": "ACTIVE - residual workflow audit, branch-protection recommendation, and B8 handoff"
       },
       "b7_a_status": "DONE",
       "b7_a_validation_run_id": 33530309579,
@@ -734,7 +734,7 @@
         "heavy_runtime_leakage": 0,
         "remote_validation_passed": true
       },
-      "b7_c_status": "ACTIVE",
+      "b7_c_status": "DONE",
       "b7_c1_status": "DONE",
       "b7_c1_scope": [
         "repair reference corpus consumption of template-produced main artifacts",
@@ -747,8 +747,8 @@
         "prove make check on a clean TeX Live 2026 Linux runner before permanent heavy workflow restoration"
       ],
       "b7_c2_status": "DONE",
-      "b7_c3_status": "ACTIVE",
-      "b7_d_status": "PENDING",
+      "b7_c3_status": "DONE",
+      "b7_d_status": "ACTIVE",
       "b7_c1_issue": 219,
       "b7_c1_pr": 220,
       "b7_c1_closure_sha": "ced68313ed2c362a6617d7df6ef9adfd2df6c0b5",
@@ -800,6 +800,69 @@
         "runtime_api_changed": false,
         "normative_semantics_changed": false,
         "proof_state_changed": false
+      },
+      "b7_c3_pr": 225,
+      "b7_c3_closure_sha": "d7327db7efd5cc1e0ff9255195bcb9767d853d3e",
+      "b7_c3_validation_runs": [
+        {
+          "run_id": 33563893128,
+          "scope": "targeted profile PDF/A dependency-chain proof",
+          "conclusion": "success"
+        },
+        {
+          "run_id": 33564594657,
+          "workflow": "Static contract",
+          "scope": "PR #225",
+          "conclusion": "success"
+        },
+        {
+          "run_id": 33564594625,
+          "workflow": "Linux integration",
+          "scope": "PR #225",
+          "conclusion": "success",
+          "pass": 30,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "run_id": 33566835558,
+          "workflow": "Static contract",
+          "scope": "merged main",
+          "conclusion": "success"
+        },
+        {
+          "run_id": 33566835570,
+          "workflow": "Linux release check",
+          "scope": "first permanent merged-main release run",
+          "conclusion": "success",
+          "pass": 32,
+          "fail": 0,
+          "skip": 0
+        }
+      ],
+      "b7_c3_results": {
+        "permanent_workflow": ".github/workflows/linux-release-check.yml",
+        "stable_workflow_job_name": "Linux release check",
+        "delegates_to": "make release-check",
+        "technical_main_push_trigger": true,
+        "documentation_control_plane_main_push_ignored": true,
+        "manual_dispatch_enabled": true,
+        "superseded_release_runs_cancelled": true,
+        "contents_permission": "read",
+        "validation_evidence_retention_days": 14,
+        "validation_artifact_id": 9823866898,
+        "validation_artifact_digest": "0b39350f7fcd69c35fe9a0290342df3612feecf63f17a5d93a4595de71f17375",
+        "validation_artifact_files": 35,
+        "release_checks": 32,
+        "full_permanent_run_pass": 32,
+        "full_permanent_run_fail": 0,
+        "full_permanent_run_skip": 0,
+        "reference_pdfa_release_only_passed": true,
+        "profile_pdfa_release_only_passed": true,
+        "final_windows_literal_font_pdfa_certification_owned_by": "R1-BLOCK-8",
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       }
     },
     "R1-BLOCK-8": {
@@ -807,5 +870,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Execute R1-BLOCK-7 B7-C3. Define and prove bounded permanent Linux release orchestration that delegates to make release-check, with explicit trigger/cadence and artifact/evidence handling. Do not claim Linux release validation as final B8 Windows/font/PDF-A certification, and keep V3-R2 runtime/API work out of scope."
+  "next_action": "Execute R1-BLOCK-7 B7-D. Audit the three permanent workflows, stable status semantics, permissions, pinned actions, concurrency, temporary-workflow absence, and the current main ruleset; record the branch-protection/status-check recommendation and hand final Windows/literal-font/PDF-A certification to R1-BLOCK-8. Do not rerun completed heavy product checks without current-state need, perform V3-R2 runtime/API migration, or perform an actual CTAN submission."
 }
