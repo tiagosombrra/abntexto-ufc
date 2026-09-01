@@ -1,6 +1,6 @@
 # abntexto-ufc v3 Architecture
 
-Updated: 2026-08-30
+Updated: 2026-09-01
 
 This document defines the target engineering architecture for `abntexto-ufc` v3.0.0. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
 
@@ -46,6 +46,7 @@ tools/
 validator/
 docs/
 release/
+  ctan/
 ```
 
 `articles.def` is introduced only when V3-A1 becomes active. It is not pre-staged as a dormant foundation module.
@@ -76,7 +77,7 @@ A project-owned internal control sequence has one behavior owner. Public command
 
 `abntexto-ufc/standards/` contains narrow runtime adaptations required for a current technical-standard behavior, such as the current NBR 6023:2025 bibliography adapter.
 
-## Editable template and public bundles
+## Editable template and distribution bundles
 
 The source repository keeps the editable example under `template/`:
 
@@ -94,7 +95,13 @@ backmatter/
 figures/
 ```
 
-Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, currently produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Public staging excludes the UFC institutional asset and proprietary Microsoft fonts, and `tests/checks/public_bundles.py` proves archive structure, safe paths and reproducibility. Class/CTAN-candidate packaging is a separate B5-C responsibility.
+Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Public staging excludes the UFC institutional asset and proprietary Microsoft fonts, and `tests/checks/public_bundles.py` proves archive structure, safe paths and reproducibility.
+
+`tools/build-distribution-bundles.py`, exposed through `make distribution-bundles`, composes that public delivery with a class/runtime archive, a CTAN submission candidate, and `SHA256SUMS`. The class/runtime archive contains only the current class, runtime modules, project README and license under a versioned root. It keeps `abntexto` external.
+
+The CTAN candidate uses a browsing-friendly top-level `abntexto-ufc/` directory rather than exposing internal TDS `tex/` and `doc/` staging. `release/ctan/README.md` is the package-facing README. `release/ctan/abntexto-ufc.tex` is the tracked manual source; the distribution producer builds its deterministic PDF and places source and PDF together with the current class/runtime, example and license. `tests/checks/distribution_bundles.py` proves the complete artifact set, checksum integrity, deterministic outputs, expected class/CTAN layouts, package metadata, external-upstream semantics, and asset exclusions.
+
+The accepted `abntexto-uece` package is retained only as a practical CTAN packaging benchmark. Current CTAN guidance and the current `pkgcheck` release govern the technical submission check. See `docs/CTAN-RELEASE.md` for the maintainer procedure. CTAN acceptance is an external release event, not an architectural state inferred from local or CI validation.
 
 ## Standards data
 
@@ -119,7 +126,7 @@ Active path names must not encode retired major-version or N-phase identities.
 
 ## Documentation and release state
 
-`docs/` contains current engineering documentation only. `release/` contains current machine-readable migration/release state only. A migration contract remains tracked only while an active migration consumes it; after use it is removed or consolidated.
+`docs/` contains current engineering and maintainer documentation. `release/` contains current machine-readable migration/release state plus source material required to construct current release candidates, such as `release/ctan/`. A migration contract remains tracked only while an active migration consumes it; after use it is removed or consolidated.
 
 ## Breaking v3 API policy
 
@@ -137,4 +144,6 @@ The final foundation must prove at least:
 - explicitly scoped upstream integrations;
 - English project-owned engineering paths;
 - valid repository template layout and valid flattened public bundle layout;
+- deterministic class/runtime and CTAN distribution candidates with checksum metadata;
+- no institutional/proprietary assets in public distribution;
 - no generated artifacts, archive directories, or unused migration scaffolding tracked.

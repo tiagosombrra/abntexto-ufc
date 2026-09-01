@@ -35,6 +35,7 @@ tools/
 validator/
 docs/
 release/
+  ctan/
 ```
 
 The editable repository example lives under `template/`. Public template and Overleaf bundles flatten the contents of `template/` to the archive root so the user receives `main.tex` at the project root.
@@ -49,6 +50,7 @@ See:
 
 - `docs/ARCHITECTURE.md`
 - `docs/ENGINEERING-LANGUAGE.md`
+- `docs/CTAN-RELEASE.md`
 - `docs/ROADMAP-V3.0.0.md`
 - `docs/HANDOFF-V3.0.0.md`
 
@@ -66,14 +68,28 @@ The repository development document is `template/main.tex`.
 make compile
 ```
 
-Public template and Overleaf bundles can be built from the canonical checkout after fetching the licensed reference images:
+The narrow public delivery interface builds the editable template and Overleaf bundles:
 
 ```bash
 make reference-assets
 make public-bundles
 ```
 
-The current B5 producer writes `dist/abntexto-ufc-template-3.0.0.zip` and `dist/abntexto-ufc-overleaf-3.0.0.zip`. The standard template archive has a versioned root; the Overleaf archive places `main.tex` at the ZIP root and vendors the project-pinned `abntexto.cls`. Both bundles flatten `template/`, disable the undistributed institutional mark by default, and exclude the UFC coat-of-arms file and proprietary Microsoft fonts. Class/CTAN-candidate packaging is still being completed in B5-C; the roadmap remains authoritative during reconstruction.
+The complete distribution candidate interface builds all current release artifacts and their checksums:
+
+```bash
+make distribution-bundles
+```
+
+The current v3 distribution set is:
+
+- `dist/abntexto-ufc-3.0.0.zip` — class/runtime archive;
+- `dist/abntexto-ufc-ctan-3.0.0.zip` — CTAN submission candidate;
+- `dist/abntexto-ufc-template-3.0.0.zip` — version-rooted editable template;
+- `dist/abntexto-ufc-overleaf-3.0.0.zip` — root-flat self-contained Overleaf import;
+- `dist/SHA256SUMS` — SHA-256 digests for all four ZIP archives.
+
+The template and Overleaf archives flatten `template/`. Only the Overleaf archive vendors the project-pinned upstream `abntexto.cls`; the class/runtime and CTAN candidates keep `abntexto` as an external dependency. Public distribution disables/excludes the undistributed UFC institutional mark and rejects proprietary Microsoft fonts. The CTAN candidate contains a dedicated English README, package manual source/PDF and minimal example in a browsing-friendly top-level `abntexto-ufc/` directory. See `docs/CTAN-RELEASE.md` for the release checklist and CTAN-specific validation contract.
 
 ## Institutional assets
 

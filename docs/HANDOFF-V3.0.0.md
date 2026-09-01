@@ -7,11 +7,11 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-5 — Distribution and Public Bundle Rebaseline**.
-- Active B5 work item: **B5-C — class/CTAN candidate and distribution metadata**.
-- Active B5 focus: **current class/runtime archive, CTAN-candidate layout, checksum manifest, package metadata, and install/compile smoke validation**.
+- Active B5 work item: **B5-D — final distribution residual/reproducibility audit**.
+- Active B5 focus: **final producer/consumer/policy/evidence reconciliation, reproducibility closure, and Block 5 certification**.
 - Active branch/trunk: `main`.
 - B5 operational issue: **#199**.
-- Latest certified clean implementation checkpoint: **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**.
+- Latest certified clean implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -180,11 +180,13 @@ Remote validation was fail-closed. Run `33514329081` exposed an executor misuse 
 
 ### B5-C — Class/CTAN candidate and distribution metadata
 
-**ACTIVE / NEXT.** Extend the current distribution producer with a current-identity class/runtime archive and CTAN candidate plus checksum metadata. Use only live v3 files, current README/LICENSE/example material, and external `abntexto` dependency semantics. Do not recreate deleted historical CTAN documents by assumption. Validate exact archive structure, institutional/proprietary asset exclusion, determinism/checksums, and a CTAN-style install/compile smoke. Permanent distribution CI remains B7-owned and final Windows/font/PDF-A certification remains B8-owned.
+**DONE** through PR #204, squash-merged at **`4bc0f544020234bc14a8f2261927f65721b6eddb`**. `make distribution-bundles` now composes the certified B5-B public bundles with a deterministic class/runtime archive, a CTAN submission candidate and `SHA256SUMS`. The CTAN candidate uses one browsing-friendly `abntexto-ufc/` directory, a dedicated English package README, tracked manual source plus deterministic PDF, a minimal example, current class/runtime modules and LICENSE. `abntexto` remains an external dependency for class/CTAN packages and is vendored only by the separate Overleaf bundle.
+
+The accepted `abntexto-uece` package was used as a practical packaging benchmark, then reconciled with current CTAN upload guidance rather than copied blindly. Initial run `33516334003` PASS proved the first deterministic package contract. The benchmark exposed the need for CTAN-facing README/PDF documentation and a simpler browsing layout. Corrected run **`33519160480` PASS** proved five reproducible outputs, checksums, class/CTAN layouts, README metadata, deterministic documentation PDF, external `abntexto`, canonical identity, repository contract and TeX Live 2026 install/compile smoke. Run `33519663437` was executor-only (ubuntu-latest lacked `pdflatex`). Final run **`33519793206` PASS** executed CTAN `pkgcheck 4.1.0` on the extracted candidate with no error or warning diagnostics. All temporary workflows self-removed. CTAN acceptance/submission itself remains a later explicit release action; see `docs/CTAN-RELEASE.md`.
 
 ### B5-D — Final B5 residual/reproducibility audit
 
-**PENDING.** Reconcile remaining distribution consumers/policy/evidence, prove deterministic outputs and excluded assets, remove temporary executors, close B5, and activate B6.
+**ACTIVE / NEXT.** Reconcile remaining distribution producers/consumers, policy/evidence references and release documentation; rerun only proportional deterministic/archive/identity checks needed by the final state; prove no temporary executors or unclassified distribution residue remain; then close B5 and activate B6.
 
 ## Remaining R1 sequence
 
@@ -196,4 +198,4 @@ Remote validation was fail-closed. Run `33514329081` exposed an executor misuse 
 
 ## Immediate action
 
-Start B5-C from canonical remote `main` using `426b506da9f6bf6255263efdb4caad19d4bcd16d` as the latest certified implementation checkpoint and issue #199 as the operational log. Extend the current distribution producer with the class/runtime and CTAN-candidate archives plus deterministic checksum metadata; validate exact archive layout and CTAN install/compile behavior. Keep permanent gates/workflows, final Windows/font/PDF-A certification, and V3-R2 runtime/API work out of scope.
+Start B5-D from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint and issue #199 as the operational log. Perform the final distribution producer/consumer/policy/evidence and reproducibility audit, including the B5-B/B5-C artifact contracts and CTAN release documentation. Keep B6 permanent gates, B7 permanent workflows, B8 final Windows/font/PDF-A certification, actual CTAN submission, and V3-R2 runtime/API work out of scope.
