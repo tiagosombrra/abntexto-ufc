@@ -1,0 +1,142 @@
+name: B8 Windows font certification
+
+on:
+  push:
+    branches:
+      - fix/v3-r1-b8-windows-certification-wiring
+
+permissions:
+  contents: write
+
+jobs:
+  windows-build:
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - name: Checkout task branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Install TeX Live 2026
+        uses: zauguin/install-texlive@f5e7d0b117035fff797d4392ea94131747e03d60 # v4
+        with:
+          texlive_version: 2026
+          cache: false
+          packages: |
+            scheme-medium
+            collection-bibtexextra
+            collection-fontsrecommended
+            collection-langportuguese
+            collection-latexextra
+            abntexto
+            biber
+            newtx
+            unicode-math
+            winfonts
+
+      - name: Verify Windows TeX and font inputs
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('pdflatex','lualatex','kpsewhich','ttf2tfm','vptovf','mktexlsr','biber')) {
+            $command = Get-Command $name -ErrorAction Stop
+            Write-Host "COMMAND $name = $($command.Source)"
+          }
+          foreach ($file in @('times.ttf','timesi.ttf','timesbd.ttf','timesbi.ttf','arial.ttf','ariali.ttf','arialbd.ttf','arialbi.ttf')) {
+            $path = Join-Path $env:WINDIR "Fonts\$file"
+            if (-not (Test-Path $path)) { throw "Required Windows font is missing: $path" }
+            Write-Host "FONT $file = present"
+          }
+          Write-Host "abntexto.cls = $(kpsewhich abntexto.cls)"
+          Write-Host "tex256.enc = $(kpsewhich tex256.enc)"
+          Write-Host "ts1-winfonts.enc = $(kpsewhich ts1-winfonts.enc)"
+
+      - name: Prepare local literal Windows font support
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./tools/prepare-windows-fonts.ps1
+          foreach ($file in @('abntexto-ufc-winfonts-ready.tex','t1times-ttf.fd','t1arial.fd','abntexto-ufc-windows.map')) {
+            $resolved = (& kpsewhich $file).Trim()
+            if (-not $resolved) { throw "Prepared font support not found by Kpathsea: $file" }
+            Write-Host "PREPARED $file = $resolved"
+          }
+
+      - name: Build strict literal-font matrix
+        shell: bash
+        env:
+          UFC_FONT_POC_COMPILE_ONLY: '1'
+        run: |
+          set -euo pipefail
+          sh tests/integration/font-poc.sh
+          for pdf in \
+            abntexto-ufc-times-pdflatex-strict-poc.pdf \
+            abntexto-ufc-arial-pdflatex-strict-poc.pdf \
+            abntexto-ufc-times-lualatex-strict-poc.pdf \
+            abntexto-ufc-arial-lualatex-strict-poc.pdf; do
+            test -s "$pdf"
+          done
+
+      - name: Upload strict Windows PDFs for certification
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: b8-windows-font-pdfs-${{ github.run_id }}
+          path: abntexto-ufc-*-strict-poc.pdf
+          retention-days: 1
+          if-no-files-found: error
+
+  linux-certify:
+    needs: windows-build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout task branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Download strict Windows PDFs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: b8-windows-font-pdfs-${{ github.run_id }}
+          path: windows-font-pdfs
+
+      - name: Certify literal identity, Unicode, embedding, and PDF/A-2b
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils docker-cli
+            mkdir -p artifacts/validation/b8-windows
+            sh tests/integration/windows-font-pdfa.sh windows-font-pdfs 2>&1 | tee artifacts/validation/b8-windows/windows-font-pdfa.log
+
+      - name: Upload B8 certification log
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: b8-windows-certification-log-${{ github.run_id }}
+          path: artifacts/validation/b8-windows/**
+          retention-days: 14
+          if-no-files-found: warn
+
+  cleanup:
+    needs: [windows-build, linux-certify]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout task branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: fix/v3-r1-b8-windows-certification-wiring
+
+      - name: Remove temporary certification workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Tiago Sombra"
+          git config user.email "tiagosombrra@users.noreply.github.com"
+          git rm -f .github/workflows/b8-windows-font-certification.yml
+          git commit -m "ci: remove temporary B8 Windows font certification"
+          git push origin HEAD:fix/v3-r1-b8-windows-certification-wiring
