@@ -10,203 +10,17 @@ permissions:
 
 jobs:
   migrate:
-    if: "github.event.head_commit.message == 'chore: add temporary B4-C2b executor'"
+    if: "github.event.head_commit.message == 'chore: install compact B4-C2b executor'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Apply exact bounded language replacements
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
+      - name: Apply bounded migration
+        run: python3 tools/_b4c2b_migrate_temp.py
 
-          def apply(path, pairs):
-              p = Path(path)
-              text = p.read_text(encoding='utf-8')
-              for old, new, count in pairs:
-                  found = text.count(old)
-                  if found != count:
-                      raise SystemExit(f'{path}: expected {count} occurrences of {old!r}, found {found}')
-                  text = text.replace(old, new)
-              p.write_text(text, encoding='utf-8')
-
-          apply('tools/validate-ufc-pdf.py', [
-              ("f'Ferramenta obrigatória não encontrada: {name}'", "f'Required tool not found: {name}'", 1),
-              ("'Todas as páginas em A4.'", "'All pages are A4.'", 1),
-              ("f'Páginas fora de A4: {bad}'", "f'Pages outside A4: {bad}'", 1),
-              ("'Configure papel A4 em todas as páginas.'", "'Configure A4 paper size for all pages.'", 1),
-              ("'Nenhum texto ultrapassa as margens.'", "'No text exceeds the margins.'", 1),
-              ("f'Exemplos: {out[:8]}'", "f'Examples: {out[:8]}'", 1),
-              ("'Recuar o elemento para dentro da mancha gráfica.'", "'Move the element inside the text block.'", 1),
-              ("'Todas as fontes incorporadas'", "'All fonts embedded'", 1),
-              ("'PDF/A / preservação'", "'PDF/A / preservation'", 1),
-              ("'Todas incorporadas.'", "'All fonts embedded.'", 1),
-              ("'Não incorporadas/indeterminadas: ", "'Not embedded/undetermined: ", 1),
-              ('nenhuma fonte analisável', 'no analyzable font', 1),
-              ("'Recompile incorporando todas as fontes.'", "'Recompile with all fonts embedded.'", 1),
-              ("allowed_label=' ou '.join(allowed)", "allowed_label=' or '.join(allowed)", 1),
-              ("f'Literais: {literal or \"nenhuma\"}; fallback textual: {fallback or \"nenhum\"}'", "f'Literal fonts: {literal or \"none\"}; text fallback: {fallback or \"none\"}'", 1),
-              ("f'Use fonte-estrita=sim com {allowed_label} literal.'", "f'Use fonte-estrita=sim with literal {allowed_label}.'", 1),
-              ("'Elemento localizado.'", "'Element found.'", 1),
-              ("'Elemento não localizado.'", "'Element not found.'", 1),
-              ("f'Inclua {label.lower()}.'", "f'Include {label.lower()}.'", 1),
-              ("'Campo localizado.'", "'Field found.'", 1),
-              ("'Campo ausente.'", "'Field missing.'", 1),
-              ("f'Inclua {token.lower()}.'", "f'Include {token.lower()}.'", 1),
-              ("'A representação visual é facultativa.'", "'The visual representation is optional.'", 1),
-              ("'Exige inspeção visual.'", "'Requires visual inspection.'", 1),
-              ("'No arquivo de depósito, use a folha de aprovação sem assinaturas.'", "'For repository submission, use the Folha de aprovação without signatures.'", 1),
-              ("'Depende do financiamento.'", "'Depends on funding.'", 1),
-              ("'Inclua a redação obrigatória se houver financiamento CAPES.'", "'Include the required wording when CAPES funding applies.'", 1),
-              ("'Idioma principal'", "'Primary language'", 1),
-              ("'WCAG PDF16 / preservação'", "'WCAG PDF16 / preservation'", 1),
-              ("lang or 'ausente'", "lang or 'missing'", 1),
-              ("'Defina pt-BR.'", "'Set pt-BR.'", 1),
-              ("'Título do PDF'", "'PDF title'", 1),
-              ("'Boa prática de repositório'", "'Repository best practice'", 2),
-              ("inf.get('Title') or 'ausente'", "inf.get('Title') or 'missing'", 1),
-              ("'Defina o título PDF/XMP.'", "'Set the PDF/XMP title.'", 1),
-              ("'Autor do PDF'", "'PDF author'", 1),
-              ("inf.get('Author') or 'ausente'", "inf.get('Author') or 'missing'", 1),
-              ("'Defina o autor PDF/XMP.'", "'Set the PDF/XMP author.'", 1),
-              ("'PDF estruturado/tagged'", "'Tagged/structured PDF'", 1),
-              ("f\"Tagged: {inf.get('Tagged','desconhecido')}\"", "f\"Tagged: {inf.get('Tagged','unknown')}\"", 1),
-              ("'Gere PDF tagged.'", "'Generate a tagged PDF.'", 1),
-              ("'Detectados.'", "'Detected.'", 1),
-              ("'Não detectados.'", "'Not detected.'", 1),
-              ("'Adicione bookmarks hierárquicos.'", "'Add hierarchical bookmarks.'", 1),
-              ("'Sem criptografia'", "'No encryption'", 1),
-              ("'Depósito/repositório'", "'Repository submission'", 1),
-              ("inf.get('Encrypted','desconhecido')", "inf.get('Encrypted','unknown')", 1),
-              ("'Remova senha/criptografia.'", "'Remove password/encryption.'", 1),
-              ("f'Declaração {profile_name}'", "f'{profile_name} declaration'", 1),
-              ("f'XMP declara {profile_name}.'", "f'XMP declares {profile_name}.'", 1),
-              ("'Declaração não detectada.'", "'Declaration not detected.'", 1),
-              ("f'Gere metadados {profile_name}.'", "f'Generate {profile_name} metadata.'", 1),
-              ("f'Validação veraPDF {profile_name}'", "f'veraPDF validation {profile_name}'", 2),
-              ("'veraPDF não instalado.'", "'veraPDF is not installed.'", 2),
-              ("'Execute o modo Deep com veraPDF.'", "'Run Deep mode with veraPDF.'", 1),
-              ("'Conforme.'", "'Compliant.'", 1),
-              ("'Reprovado pelo veraPDF.'", "'Failed by veraPDF.'", 1),
-              ("'Corrija as violações do veraPDF.'", "'Fix the veraPDF violations.'", 1),
-              ("'Conforme nos checks automáticos.'", "'Compliant in automated checks.'", 1),
-              ("'Reprovado.'", "'Failed.'", 1),
-              ("'Corrija tagging/estrutura.'", "'Fix tagging/structure.'", 1),
-              ("description='Valida PDF acadêmico UFC/ABNT.'", "description='Validate an academic UFC/ABNT PDF.'", 1),
-              ("f'Arquivo não encontrado: {pdf}'", "f'File not found: {pdf}'", 1),
-              ("'PDF legível'", "'Readable PDF'", 1),
-              ("'Pré-requisito técnico'", "'Technical prerequisite'", 1),
-              ("f\"{inf.get('Pages','?')} páginas; PDF {inf.get('PDF version','?')}.\"", "f\"{inf.get('Pages','?')} pages; PDF {inf.get('PDF version','?')}.\"", 1),
-              ("'Texto alternativo adequado'", "'Adequate alternative text'", 1),
-              ("'Qualidade exige revisão humana.'", "'Quality requires human review.'", 1),
-              ("'Revise /Alt e artefatos decorativos.'", "'Review /Alt and decorative artifacts.'", 1),
-              ("'Ordem de leitura lógica'", "'Logical reading order'", 1),
-              ("'Exige teste com tecnologia assistiva.'", "'Requires testing with assistive technology.'", 1),
-              ("'Revise a ordem de leitura.'", "'Review the reading order.'", 1),
-          ])
-
-          apply('validator/app.js', [
-              ('`${normativeCatalog.rules.length} regras · ${normativeCatalog.sources.length} fontes versionadas`', '`${normativeCatalog.rules.length} rules · ${normativeCatalog.sources.length} versioned sources`', 1),
-              ('"PDF legível"', '"Readable PDF"', 1),
-              ('"Pré-requisito técnico"', '"Technical prerequisite"', 1),
-              ('`${pdf.numPages} páginas processadas localmente.`', '`${pdf.numPages} pages processed locally.`', 1),
-              ('`Páginas fora de A4: ${bad.join(", ")}`', '`Pages outside A4: ${bad.join(", ")}`', 1),
-              ('"Todas as páginas em A4."', '"All pages are A4."', 1),
-              ('"Configure A4 em todas as páginas."', '"Configure A4 paper size for all pages."', 1),
-              ('`Exemplos: ${JSON.stringify(out.slice(0,8))}`', '`Examples: ${JSON.stringify(out.slice(0,8))}`', 1),
-              ('"Nenhum texto ultrapassa as margens."', '"No text exceeds the margins."', 1),
-              ('"Recuar o elemento para dentro da mancha gráfica."', '"Move the element inside the text block."', 1),
-              ('allowed.join(" ou ")', 'allowed.join(" or ")', 1),
-              ('`Literais: ${lit.join(", ")||"nenhuma"}; fallback textual: ${fb.join(", ")||"nenhum"}.`', '`Literal fonts: ${lit.join(", ")||"none"}; text fallback: ${fb.join(", ")||"none"}.`', 1),
-              ('`Use fonte-estrita=sim com ${fontLabel} e confirme no modo Deep/CLI.`', '`Use fonte-estrita=sim with ${fontLabel} and confirm in Deep/CLI mode.`', 1),
-              ('"Todas as fontes incorporadas"', '"All fonts embedded"', 1),
-              ('"PDF/A / preservação"', '"PDF/A / preservation"', 1),
-              ('"Web/Lite não certifica incorporação de todas as fontes."', '"Web/Lite does not certify that all fonts are embedded."', 1),
-              ('"Execute o modo Deep/CLI."', '"Run Deep/CLI mode."', 1),
-              ('"Elemento localizado."', '"Element found."', 1),
-              ('"Elemento não localizado."', '"Element not found."', 1),
-              ('`Inclua ${label.toLowerCase()}.`', '`Include ${label.toLowerCase()}.`', 1),
-              ('"Campo localizado."', '"Field found."', 1),
-              ('"Campo ausente."', '"Field missing."', 1),
-              ('`Inclua ${t.toLowerCase()}.`', '`Include ${t.toLowerCase()}.`', 1),
-              ('"Idioma principal"', '"Primary language"', 1),
-              ('"WCAG / preservação"', '"WCAG / preservation"', 1),
-              ('"Não exposto pelo PDF.js."', '"Not exposed by PDF.js."', 1),
-              ('"Defina pt-BR."', '"Set pt-BR."', 1),
-              ('"Título do PDF"', '"PDF title"', 1),
-              ('"Boa prática de repositório"', '"Repository best practice"', 2),
-              ('"Ausente."', '"Missing."', 2),
-              ('"Defina o título PDF/XMP."', '"Set the PDF/XMP title."', 1),
-              ('"Autor do PDF"', '"PDF author"', 1),
-              ('"Defina o autor PDF/XMP."', '"Set the PDF/XMP author."', 1),
-              ('"PDF estruturado/tagged"', '"Tagged/structured PDF"', 1),
-              ('"Árvore de estrutura detectada."', '"Structure tree detected."', 1),
-              ('"Árvore de estrutura não detectada."', '"Structure tree not detected."', 1),
-              ('"Gere PDF tagged."', '"Generate a tagged PDF."', 1),
-              ('`${outline.length} entradas de nível superior.`', '`${outline.length} top-level entries.`', 1),
-              ('"Não detectados."', '"Not detected."', 1),
-              ('"Adicione bookmarks."', '"Add bookmarks."', 1),
-              ('"Sem JavaScript embutido"', '"No embedded JavaScript"', 1),
-              ('"Preservação"', '"Preservation"', 1),
-              ('"Ações JavaScript detectadas."', '"JavaScript actions detected."', 1),
-              ('"Nenhuma ação JavaScript detectada."', '"No JavaScript actions detected."', 1),
-              ('`Validação estrutural ${pdfa}`', '`Structural validation ${pdfa}`', 1),
-              ('"Web/Lite não substitui validação ISO completa."', '"Web/Lite does not replace full ISO validation."', 1),
-              ('`Execute o CLI/Deep com veraPDF -f 2b.`', '`Run CLI/Deep with veraPDF -f 2b.`', 1),
-              ('"Representação visual facultativa."', '"Visual representation is optional."', 1),
-              ('"Exige inspeção visual."', '"Requires visual inspection."', 1),
-              ('"Use a folha sem assinaturas no depósito."', '"For repository submission, use the Folha de aprovação without signatures."', 1),
-              ('"Depende do financiamento."', '"Depends on funding."', 1),
-              ('"Inclua a redação obrigatória se aplicável."', '"Include the required wording when applicable."', 1),
-              ('"Texto alternativo adequado"', '"Adequate alternative text"', 1),
-              ('"Qualidade exige revisão humana."', '"Quality requires human review."', 1),
-              ('"Revise /Alt e artefatos decorativos."', '"Review /Alt and decorative artifacts."', 1),
-              ('"Ordem de leitura lógica"', '"Logical reading order"', 1),
-              ('"Exige teste com tecnologia assistiva."', '"Requires testing with assistive technology."', 1),
-              ('"Revise a ordem de leitura."', '"Review the reading order."', 1),
-              ('alert("Selecione um PDF.")', 'alert("Select a PDF.")', 1),
-              ('b.textContent="Validando..."', 'b.textContent="Validating..."', 1),
-              ('alert(`Falha na validação: ${e.message||e}`)', 'alert(`Validation failed: ${e.message||e}`)', 1),
-              ('b.textContent="Validar PDF"', 'b.textContent="Validate PDF"', 1),
-              ('save("relatorio-validacao-ufc.json"', 'save("ufc-validation-report.json"', 1),
-              ('["Status","Categoria","Regra","Fonte","Evidência","Como corrigir","Nível","Obrigatório","Regra normativa","Localizador","Natureza"]', '["Status","Category","Rule","Source","Evidence","Correction","Level","Mandatory","Normative rule","Locator","Normativity"]', 1),
-              ('c.mandatory?"sim":"não"', 'c.mandatory?"yes":"no"', 1),
-              ('save("relatorio-validacao-ufc.csv"', 'save("ufc-validation-report.csv"', 1),
-          ])
-
-          old_html = Path('validator/index.html').read_text(encoding='utf-8')
-          new_html = '''<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>UFC/ABNT PDF Validator</title>
-<meta name="description" content="Local validation of academic PDFs against UFC/ABNT requirements and accessibility checks.">
-<style>
-:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#20262c;background:#f5f7f8}*{box-sizing:border-box}body{margin:0}.shell{width:min(1240px,calc(100% - 32px));margin:42px auto 70px}h1{font-size:clamp(2rem,4vw,3.3rem);margin:.1em 0}.eyebrow{font-size:.76rem;text-transform:uppercase;letter-spacing:.13em;font-weight:700}.lead,.note{color:#5d6871;max-width:900px}.panel{background:#fff;border:1px solid #d9e0e4;border-radius:14px;padding:20px;margin-top:18px}.grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}.field{display:grid;gap:7px;font-weight:650}input,select{padding:11px;border:1px solid #aeb8c0;border-radius:8px;background:#fff;font:inherit}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}button{padding:10px 14px;border:1px solid #1f2933;border-radius:8px;background:#1f2933;color:#fff;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#fff;color:#1f2933}button:disabled{opacity:.45}.summary{display:grid;grid-template-columns:2fr 2fr 1fr;gap:16px}.summary span,.norm-meta span{display:block;color:#6a747c;font-size:.8rem;text-transform:uppercase}.norm-meta{display:flex;gap:28px;flex-wrap:wrap}.source-list{columns:2;padding-left:20px}.source-list li{break-inside:avoid;margin:.35rem 0}.source-list a{color:inherit}.hidden{display:none}.head{display:flex;justify-content:space-between;gap:18px;align-items:baseline}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;vertical-align:top;padding:9px;border-bottom:1px solid #e6eaed}th{background:#f8fafb}td:first-child{font-weight:750;white-space:nowrap}.status-pass{color:#17643a}.status-fail{color:#a11919}.status-warn{color:#8a5b00}.status-review{color:#505a63}@media(max-width:760px){.grid,.summary{grid-template-columns:1fr}.source-list{columns:1}.shell{width:calc(100% - 20px);margin-top:20px}}@media print{.controls,header .lead,.eyebrow,#norm-sources-details{display:none!important}.shell{width:100%;margin:0}.panel{border:0;padding:0}table{font-size:8.5pt}}
-</style>
-</head>
-<body><main class="shell">
-<header><p class="eyebrow">abntexto-ufc · standalone validator</p><h1>UFC/ABNT PDF Validator</h1><p class="lead">Analyzes the PDF in the browser. In Web/Lite mode, the file is not sent to a server. The result does not replace official review by the Sistema de Bibliotecas da UFC.</p></header>
-<section class="panel" id="normative-base"><h2>Normative basis</h2><p class="note">Validation rules are loaded from a single versioned catalog. Newer UFC sources and current ABNT standards take precedence over older references in institutional guides. Normative updates must be audited in the catalog before changing validation results.</p><div class="norm-meta"><div><span>Catalog reviewed on</span><strong id="norm-reviewed"></strong></div><div><span>Registered coverage</span><strong id="norm-stats"></strong></div></div><details id="norm-sources-details"><summary>Sources and versions considered</summary><ul id="norm-sources" class="source-list"></ul></details></section>
-<section class="panel controls"><h2>File and profile</h2><div class="grid"><label class="field"><span>PDF</span><input id="pdf-file" type="file" accept="application/pdf,.pdf"></label><label class="field"><span>Profile</span><select id="profile"><option value="strict">UFC strict / repository submission</option><option value="portable">Portability / Overleaf</option><option value="accessibility">Advanced accessibility</option></select></label></div><div class="actions"><button id="analyze">Validate PDF</button><button id="export-json" class="secondary" disabled>Export JSON</button><button id="export-csv" class="secondary" disabled>Export CSV</button><button id="print-report" class="secondary" disabled>Print report</button></div><p class="note"><strong>Privacy:</strong> PDF bytes are processed locally. Checks that require veraPDF, visual inspection, or semantic judgment remain under review instead of receiving presumed approval.</p></section>
-<section id="summary" class="panel summary hidden" aria-live="polite"><div><span>Verdict</span><strong id="verdict"></strong></div><div><span>File</span><strong id="file-name"></strong></div><div><span>Pages</span><strong id="page-count"></strong></div></section>
-<section id="report-section" class="panel hidden"><div class="head"><h2>Report</h2><div id="counts" class="note"></div></div><div class="table-wrap"><table><thead><tr><th>Status</th><th>Category</th><th>Rule</th><th>Normative basis</th><th>Evidence</th><th>Correction</th></tr></thead><tbody id="report-body"></tbody></table></div><p class="note">States: PASS, FAIL, WARNING, MANUAL REVIEW, and NOT APPLICABLE. The tool does not claim conformance where sufficient automated evidence is unavailable.</p></section>
-</main><script type="module" src="app.js"></script></body></html>
-'''
-          if old_html.count('não é enviado para servidor') != 1:
-              raise SystemExit('index local-processing disclosure drift')
-          Path('validator/index.html').write_text(new_html, encoding='utf-8')
-
-          apply('tests/checks/normative_validator_contract.py', [
-              ('require_marker(html, "não é enviado para servidor", "Web/Lite local-processing disclosure")', 'require_marker(html, "is not sent to a server", "Web/Lite local-processing disclosure")', 1),
-          ])
-          PY
-
-      - name: Validate C2b boundaries and consumers
+      - name: Validate B4-C2b
         shell: bash
         run: |
           set -euo pipefail
@@ -217,30 +31,24 @@ jobs:
           python3 tests/checks/validator_source.py
           python3 tests/checks/canonical_identity.py
           python3 tests/checks/repository_contract.py
-
-          # Protected document-domain terms remain literal on both validator surfaces.
           for term in 'Capa' 'Folha de aprovação' 'Resumo' 'Sumário' 'Referências'; do
             grep -F "$term" tools/validate-ufc-pdf.py >/dev/null
             grep -F "$term" validator/app.js >/dev/null
           done
-
           grep -F '<html lang="en">' validator/index.html >/dev/null
           grep -F 'is not sent to a server' validator/index.html >/dev/null
           grep -F 'UFC/ABNT PDF Validator' validator/index.html >/dev/null
           grep -F 'ufc-validation-report.json' validator/app.js >/dev/null
           grep -F 'ufc-validation-report.csv' validator/app.js >/dev/null
           grep -F "description='Validate an academic UFC/ABNT PDF.'" tools/validate-ufc-pdf.py >/dev/null
-
-          # Known project-owned diagnostic/UI Portuguese markers must be gone.
           if git grep -n -E 'Ferramenta obrigatória não encontrada|Páginas fora de A4|Todas as páginas em A4|Nenhum texto ultrapassa|Todas as fontes incorporadas|Não incorporadas/indeterminadas|Elemento localizado|Elemento não localizado|Campo localizado|Campo ausente|veraPDF não instalado|Arquivo não encontrado|PDF legível|Pré-requisito técnico|Selecione um PDF|Validando\.\.\.|Falha na validação|Validador de PDF|Privacidade:|Veredito|Imprimir relatório|Como corrigir|relatorio-validacao-ufc' -- tools/validate-ufc-pdf.py validator/app.js validator/index.html; then
             echo 'B4-C2b project-owned Portuguese diagnostic/UI residue remains.' >&2
             exit 1
           fi
-
           git diff --check
           echo 'B4-C2B-DIAGNOSTICS-UI status=PASS'
 
-      - name: Commit C2b and remove temporary executor
+      - name: Commit and remove temporary executor
         shell: bash
         run: |
           set -euo pipefail
@@ -248,6 +56,6 @@ jobs:
           git config user.email 'tiagosombrra@users.noreply.github.com'
           git add tools/validate-ufc-pdf.py validator/app.js validator/index.html tests/checks/normative_validator_contract.py
           git commit -m 'refactor: normalize validator diagnostics and Web UI'
-          git rm .github/workflows/b4c2b-apply.yml
+          git rm tools/_b4c2b_migrate_temp.py .github/workflows/b4c2b-apply.yml
           git commit -m 'chore: remove temporary B4-C2b executor'
           git push origin HEAD:refactor/v3-r1-b4c2b-diagnostics-ui
