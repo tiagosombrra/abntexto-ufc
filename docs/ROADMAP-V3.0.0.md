@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B done; B5-C active.**
+**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B done; B5-C done; B5-D active.**
 
 Current sequence:
 
@@ -17,7 +17,7 @@ B4 internal sequence:
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
 - B5 operational issue: #199.
-- Latest certified implementation checkpoint: **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**.
+- Latest certified implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.
 - R1-BLOCK-3 closure: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
