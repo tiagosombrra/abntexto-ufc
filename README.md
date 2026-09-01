@@ -87,7 +87,7 @@ make check
 make release-check
 ```
 
-`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. During R1-BLOCK-7, permanent heavy Linux orchestration is restored only after these repository-owned entry points are proven on a clean runner. B7-C1 currently owns clean-runner `make check` contract repair; B7-C2/C3 own later permanent integration/release orchestration. Final Windows/font/PDF-A certification remains B8-owned.
+`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. B7-C1 certified `make check` on a clean TeX Live 2026 Linux runner (`PASS=30 FAIL=0 SKIP=0`); B7-C2 now owns bounded permanent PR integration orchestration, while B7-C3 owns later release orchestration. Final Windows/font/PDF-A certification remains B8-owned.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 

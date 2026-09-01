@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B done; B7-C active.**
+**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B/C1 done; B7-C2 active.**
 
 Current sequence:
 
@@ -16,12 +16,12 @@ B4 internal sequence:
 
 B7 internal sequence:
 
-**B7-A DONE → B7-B DONE → B7-C ACTIVE [C1 ACTIVE → C2 PENDING → C3 PENDING] → B7-D PENDING**
+**B7-A DONE → B7-B DONE → B7-C ACTIVE [C1 DONE → C2 ACTIVE → C3 PENDING] → B7-D PENDING**
 
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
 - B7 operational issue: #213.
-- Latest certified implementation checkpoint: **`643397ee2fa49e6bd496889cb287f43167d49b0f`**.
+- Latest certified implementation checkpoint: **`ced68313ed2c362a6617d7df6ef9adfd2df6c0b5`**.
 - R1-BLOCK-3 closure: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -174,7 +174,7 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`643397ee2fa49e6bd496889cb287f43167d49b0f`**.
+**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`ced68313ed2c362a6617d7df6ef9adfd2df6c0b5`**.
 
 B7 restores permanent GitHub Actions as orchestration over current repository entry points; workflow YAML must not duplicate gate internals.
 
@@ -194,9 +194,9 @@ The clean-runner integration probe in the same run took 501 s and ended `PASS=22
 
 #### B7-C1 — Clean-runner integration contract repair
 
-**ACTIVE.** Repair only the execution/fixture/evidence wiring exposed by run `33530309579`, then validate `make check` on a clean TeX Live 2026 runner. Do not change normative rule IDs, values, tolerances, locators, proof state, runtime/API or B8-owned certification semantics.
+**DONE.** PR #220 squash-merged at **`ced68313ed2c362a6617d7df6ef9adfd2df6c0b5`**. Final clean TeX Live 2026 run **`33545418119` PASS** proved the repository-owned PR integration contract with **`PASS=30 FAIL=0 SKIP=0`**. Final `Static contract` run **`33547122520` PASS** executed after the temporary certification workflow was removed. No normative rule ID, expected value, tolerance, proof state, runtime/API or B8-owned certification semantic changed.
 
-Expected bounded repair set:
+Completed bounded repair set:
 
 - align reference corpus consumption with `template/main.*` production;
 - resolve CAPES front-matter path from the repository root reliably;
@@ -208,7 +208,7 @@ Expected bounded repair set:
 
 #### B7-C2 — Permanent Linux PR integration orchestration
 
-**PENDING.** After B7-C1 passes, add a bounded permanent job that consumes `make check`, uses the proven Linux/TeX runner contract and avoids forcing heavy validation on every intermediate commit where the fast contract is sufficient.
+**ACTIVE.** Add a bounded permanent PR integration job that consumes the certified `make check` contract, uses the proven Linux/TeX runner environment, keeps validation logic out of workflow YAML, and avoids forcing heavy validation on every intermediate commit where the fast `Static contract` status is sufficient.
 
 #### B7-C3 — Release orchestration
 
@@ -223,7 +223,7 @@ Expected bounded repair set:
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
 - **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
 - **R1-B6 DONE** — permanent cheap/static fail-closed gate at `4c25c27b758e4b99db11187b34b9043776566871`.
-- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C1 active after B7-A/B completion.
+- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C2 active after B7-C1 clean-runner certification.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
 ## Later phases
@@ -236,4 +236,4 @@ Expected bounded repair set:
 
 ## Immediate action
 
-Execute **B7-C1** from canonical remote `main` after control-plane reconciliation. Repair the seven clean-runner execution/artifact-contract defects exposed by run `33530309579`, validate `make static-check`, then prove `make check` under the TeX Live 2026 Linux runner before adding permanent heavy workflow YAML. Keep B8 Windows/font/final PDF-A certification and V3-R2 runtime/API migration out of scope.
+Execute **B7-C2** from canonical remote `main` after this control-plane reconciliation. Add permanent Linux PR integration orchestration as a thin consumer of the certified `make check` contract, choose bounded triggers/concurrency so heavy TeX validation is not forced on every intermediate commit, and keep B7-C3 release orchestration, B8 Windows/font/final PDF-A certification, and V3-R2 runtime/API migration out of scope.
