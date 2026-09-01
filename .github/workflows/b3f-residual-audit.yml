@@ -1,0 +1,138 @@
+name: B3-F residual audit
+
+on:
+  push:
+    branches:
+      - fix/v3-r1-b3f-residual-closure
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-audit:
+    if: ${{ !contains(github.event.head_commit.message, '[b3f-apply]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply bounded font POC repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('tests/integration/font-poc.sh')
+          text = path.read_text(encoding='utf-8')
+
+          old_fixture = 'fixture="tests/' + 'norma' + 'tiva/fontes-${family}-poc.tex"'
+          new_fixture = 'fixture="tests/documents/${family}-font-poc.tex"'
+          old_job = 'job="fontes-${family}-${engine}-poc"'
+          new_job = 'job="${family}-font-${engine}-poc"'
+
+          for old, new in ((old_fixture, new_fixture), (old_job, new_job)):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'font-poc.sh: expected exactly one {old!r}, found {count}')
+              text = text.replace(old, new, 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Run final Block 3 static contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f tests/documents/times-font-poc.tex
+          test -f tests/documents/arial-font-poc.tex
+
+          python3 -m py_compile \
+            tests/checks/repository_contract.py \
+            tests/checks/canonical_identity.py
+          sh -n tests/integration/font-poc.sh
+
+          python3 tests/checks/repository_contract.py
+          python3 tests/checks/canonical_identity.py
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          state = json.loads(Path('release/v3-roadmap.json').read_text(encoding='utf-8'))
+          block = state['blocks']['R1-BLOCK-3']
+          assert state['phase'] == 'V3-R1'
+          assert state['stage'] == 'R1-BLOCK-3'
+          assert state['active_branch'] == 'main'
+          assert state['last_certified_clean_checkpoint_sha'] == 'bf36982ab2ff08b8585c4acc570c48364e9ecc1f'
+          assert block['status'] == 'ACTIVE'
+          assert block['active_work_item'] == 'B3-F'
+          assert block['b3_d_status'] == 'DONE'
+          assert block['b3_e_status'] == 'DONE'
+          assert block['b3_f_status'] == 'ACTIVE'
+
+          handoff = Path('docs/HANDOFF-V3.0.0.md').read_text(encoding='utf-8')
+          roadmap = Path('docs/ROADMAP-V3.0.0.md').read_text(encoding='utf-8')
+          assert 'B3-F — Final Block 3 residual audit' in handoff
+          assert 'B3-F — Final Block 3 residual audit' in roadmap
+          assert 'bf36982ab2ff08b8585c4acc570c48364e9ecc1f' in handoff
+          assert 'bf36982ab2ff08b8585c4acc570c48364e9ecc1f' in roadmap
+          print('CONTROL-PLANE-EVIDENCE status=PASS active_work_item=B3-F')
+          PY
+
+      - name: Run final residual inventories
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo '=== VERSION/PROCESS PATH IDENTITIES ==='
+          path_residual="$(git ls-files | grep -Ei '(^|/)(v2|n(9|10|11|12|13|14|15)|b2r)([-_.]|/|$)' || true)"
+          printf '%s\n' "$path_residual"
+          if [ -n "$path_residual" ]; then
+            echo 'Unexpected retired version/process identity remains in an active path.'
+            exit 1
+          fi
+
+          echo '=== ORACLE CLASSIFICATION ==='
+          oracle_residual="$(git grep -n -i -E 'oracle' -- ':!*.png' ':!*.jpg' ':!*.jpeg' ':!*.pdf' || true)"
+          printf '%s\n' "$oracle_residual"
+          unexpected_oracle="$(printf '%s\n' "$oracle_residual" | grep -Ev '^(\.github/workflows/b3f-residual-audit\.yml|docs/HANDOFF-V3\.0\.0\.md|docs/ROADMAP-V3\.0\.0\.md|release/v3-path-migration\.json|release/v3-roadmap\.json|release/v3-test-migration\.json|tests/checks/repository_contract\.py):' || true)"
+          if [ -n "$unexpected_oracle" ]; then
+            echo 'Unexpected project-owned oracle terminology remains:'
+            printf '%s\n' "$unexpected_oracle"
+            exit 1
+          fi
+
+          echo '=== TEMPORARY WORKFLOW INVENTORY ==='
+          workflows="$(git ls-files '.github/workflows/*' || true)"
+          printf '%s\n' "$workflows"
+          unexpected_workflows="$(printf '%s\n' "$workflows" | grep -v '^\.github/workflows/b3f-residual-audit\.yml$' || true)"
+          if [ -n "$unexpected_workflows" ]; then
+            echo 'Unexpected permanent/temporary workflow exists during R1 reconstruction:'
+            printf '%s\n' "$unexpected_workflows"
+            exit 1
+          fi
+
+          echo '=== FONT POC CANONICAL BINDING ==='
+          grep -F 'fixture="tests/documents/${family}-font-poc.tex"' tests/integration/font-poc.sh
+          grep -F 'job="${family}-font-${engine}-poc"' tests/integration/font-poc.sh
+          if grep -Fq 'fixture="tests/'"norma"'tiva/' tests/integration/font-poc.sh; then
+            echo 'Stale font POC fixture path remains.'
+            exit 1
+          fi
+
+          git diff --check
+          echo 'B3-F-RESIDUAL-EVIDENCE status=PASS'
+
+      - name: Commit bounded residual repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tests/integration/font-poc.sh
+          if git diff --cached --quiet; then
+            echo 'No font POC repair to commit.'
+            exit 1
+          fi
+          git commit -m 'fix: align font POC with canonical fixtures [b3f-apply]'
+          git push origin HEAD:fix/v3-r1-b3f-residual-closure
