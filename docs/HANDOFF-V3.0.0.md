@@ -7,11 +7,12 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-7 — Optimized Remote Workflow Restoration**.
-- Active B7 work item: **B7-A — workflow/runner dependency inventory and orchestration design**.
-- Active B7 focus: **restore remote orchestration as a thin layer over certified repository entry points without duplicating gate logic**.
+- Active B7 work item: **B7-C — optimized Linux integration/release orchestration**.
+- Active B7 sub-item: **B7-C1 — repair the clean-runner integration contract before adding permanent heavy workflow orchestration**.
+- Active B7 focus: **make the repository-owned `make check` contract pass on a clean TeX Live 2026 runner, then restore Linux orchestration as a thin workflow layer**.
 - Active branch/trunk: `main`.
 - B7 operational issue: **#213**.
-- Latest certified clean implementation checkpoint: **`4c25c27b758e4b99db11187b34b9043776566871`**.
+- Latest certified clean implementation checkpoint: **`643397ee2fa49e6bd496889cb287f43167d49b0f`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -27,7 +28,7 @@ Updated: 2026-09-01
 - **R1-BLOCK-2 DONE** at `03d7f5ceb1a325d26c712ba5e619ee85530a022b`: legacy purge and active-tree minimization.
 - **R1-BLOCK-3 DONE** at `7a3b018a43630ed46b375117790acc732ae67b40`: semantic/path-consumer closure.
 
-Permanent workflow orchestration is now B7-owned; B6 closed with zero permanent workflows on `main` and a certified local/static entry point for B7 to consume.
+Permanent workflow orchestration is B7-owned. B6 closed with zero permanent workflows and a certified local/static entry point; B7-B has now restored the first permanent workflow, `Static contract`, as a direct `make static-check` consumer.
 
 ## R1-BLOCK-3 summary
 
@@ -208,15 +209,30 @@ B6 established a single permanent side-effect-free source-only validation entry 
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry certified implementation checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`.
+**ACTIVE.** Operational issue #213. Entry certified implementation checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`643397ee2fa49e6bd496889cb287f43167d49b0f`**.
 
-B7 restores GitHub Actions as a thin orchestration layer over repository-owned entry points. It must consume `make static-check`, `make check` and `make release-check` where appropriate rather than duplicate their internal checks in YAML. Remote validation is the canonical CI execution path; developer-local state is not required for certification.
+B7 restores GitHub Actions as a thin orchestration layer over repository-owned entry points. Workflow YAML must consume `make static-check`, `make check` and `make release-check` where appropriate rather than duplicate their internal checks. Remote validation is the canonical CI execution path; developer-local state is not required for certification.
 
-Planned lots:
+### B7-A — Workflow/runner inventory and orchestration design
 
-- **B7-A ACTIVE:** historical/current workflow and runner dependency inventory; define stable job names, triggers, concurrency, caching and PR/release ownership;
-- **B7-B PENDING:** permanent fast/static workflow consuming `make static-check`;
-- **B7-C PENDING:** optimized Linux integration/release orchestration without forcing heavy/release-only work onto every intermediate commit;
-- **B7-D PENDING:** residual workflow audit, status-check/branch-protection recommendation and B8 handoff.
+**DONE.** Remote inventory run `33530309579` established the current orchestration contract: 30 checks in PR mode and 32 in release mode; only `pdfa` and `profile-pdfa` are release-only. The integration surface depends heavily on TeX/PDF tooling (`pdflatex`, `lualatex`, Biber, Poppler, glossary/index/minted paths). The successful historical pattern uses pinned checkout/setup actions, Python 3.13, Node 24 and TeX Live 2026 in a Debian-based TeX runner, with hosted Windows work still reserved for B8.
+
+The same run deliberately probed `make check` on a clean TeX Live 2026 runner. It completed in 501 s with `PASS=22 FAIL=7 SKIP=1`, proving that permanent heavy orchestration must not be restored before the repository-owned runner itself is repaired. The failures are execution/artifact-contract drift: reference-corpus root/output mismatch; stale CAPES front-matter path; detached object-geometry `--commit-sha`; fixture/job-name drift in objects and bibliography; obsolete `filename=` Makefile invocation in profile matrix; stale appendix/annex scenario key; and the dependent reference-spacing skip. No normative-rule regression was established by the probe.
+
+### B7-B — Permanent fast/static workflow
+
+**DONE** through PR #216, squash-merged at **`643397ee2fa49e6bd496889cb287f43167d49b0f`**. `.github/workflows/static-contract.yml` provides stable workflow/job name **`Static contract`**, triggers on pull requests to `main`, pushes to `main`, and manual dispatch, uses read-only repository permissions and concurrency cancellation, pins checkout/setup actions, runs Ubuntu 24.04 with Python 3.13 and Node 24, and delegates the complete validation contract to exactly one command: `make static-check`. Remote run **`33530718380` PASS** certified the permanent workflow. No TeX/PDF/network/distribution/Windows/font/PDF-A behavior was duplicated into YAML.
+
+### B7-C — Optimized Linux integration/release orchestration
+
+**ACTIVE.** B7-C starts with a repository-owned clean-runner repair before permanent heavy workflow YAML is introduced.
+
+- **B7-C1 ACTIVE — clean-runner integration contract repair:** reconcile paths, generated artifact/job names, current Makefile invocation semantics, shell argument wiring and stale evidence metadata exposed by run `33530309579`; then prove `make check` on a clean TeX Live 2026 runner. Preserve normative IDs, values, tolerances, locators, proof state and runtime/API behavior.
+- **B7-C2 PENDING — permanent Linux PR integration orchestration:** only after B7-C1 passes, add a bounded workflow that delegates to `make check` and avoids heavy execution on every intermediate commit when a cheaper status is sufficient.
+- **B7-C3 PENDING — release orchestration:** define the Linux `make release-check` cadence/trigger without claiming B8 Windows/font/final PDF-A certification.
+
+### B7-D — Residual audit and B8 handoff
+
+**PENDING.** Audit workflow ownership/status semantics, recommend stable required checks/branch-protection policy, remove any temporary executors, and hand final Windows/font/PDF-A certification to B8.
 
 B8 retains final Windows/font/PDF-A certification. V3-R2 retains runtime/API migration. Actual CTAN submission remains an explicit release action outside B7.
