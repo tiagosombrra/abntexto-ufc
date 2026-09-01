@@ -1,0 +1,42 @@
+name: B7-C1 final residual patch executor
+on:
+  push:
+    branches: ['fix/v3-r1-b7c1-clean-runner-contract']
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - name: Patch
+        run: |
+          sed -i 's/"engine_matrix_deferred": true,/"engine_matrix_deferred": True,/' tests/checks/normative_reference_semantics.py
+          for f in tests/documents/frontmatter-title-page-project-test.tex standards/frontmatter-title-page-scenario.json; do
+            sed -i \
+              -e 's/UFCFRONTMATTERTPPROJAUTHOR/TPPAUTHOR/g' \
+              -e 's/UFCFRONTMATTERTPPROJTITLE/TPPTITLE/g' \
+              -e 's/UFCFRONTMATTERTPPROJADVISOR/TPPADVISOR/g' \
+              -e 's/UFCFRONTMATTERTPL/TPPLEFT/g' \
+              -e 's/UFCFRONTMATTERTPR/TPPRIGHT/g' \
+              -e 's/UFCFRONTMATTERTPNATUREA/TPPNATUREA/g' \
+              -e 's/UFCFRONTMATTERTPNATUREB/TPPNATUREB/g' \
+              -e 's/UFCFRONTMATTERTPNATUREC/TPPNATUREC/g' \
+              -e 's/UFCFRONTMATTERTPSINGLEA/TPPSINGLEA/g' \
+              -e 's/UFCFRONTMATTERTPSINGLEB/TPPSINGLEB/g' \
+              -e 's/UFCFRONTMATTERTPSINGLEC/TPPSINGLEC/g' "$f"
+          done
+          python3 -m py_compile tests/checks/normative_reference_semantics.py
+          python3 -m json.tool standards/frontmatter-title-page-scenario.json >/dev/null
+          git diff --check
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/b7c1-final-residual-patch.yml
+          git add tests/checks/normative_reference_semantics.py tests/documents/frontmatter-title-page-project-test.tex standards/frontmatter-title-page-scenario.json
+          git commit -m '[b7c1-final-residual] test: repair final clean-runner fixtures'
+          git push origin HEAD:fix/v3-r1-b7c1-clean-runner-contract
