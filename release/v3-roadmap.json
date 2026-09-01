@@ -345,7 +345,7 @@
         "normative_semantics_changed": false,
         "proof_state_changed": false,
         "runtime_api_changed": false,
-        "temporary_workflow_removed_before_merge": true
+        "temporary_workflows_removed_before_merge": true
       },
       "closure_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
       "b4_d_validation_runs": [
