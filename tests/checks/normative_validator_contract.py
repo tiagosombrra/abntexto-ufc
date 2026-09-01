@@ -271,7 +271,7 @@ def main() -> None:
     require_marker(web, "pdfjs-dist@6.2.108", "Web/Lite PDF.js pin")
     require_marker(web, 'mode:"web-lite-local"', "Web/Lite mode")
     require_marker(cli, "'mode':'cli-deep-local'", "CLI/Deep mode")
-    require_marker(html, "não é enviado para servidor", "Web/Lite local-processing disclosure")
+    require_marker(html, "is not sent to a server", "Web/Lite local-processing disclosure")
 
     forbidden = r"FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\(|\bfetch\s*\("
     if re.search(forbidden, web):
