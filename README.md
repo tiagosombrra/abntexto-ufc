@@ -68,6 +68,25 @@ The repository development document is `template/main.tex`.
 make compile
 ```
 
+## Validation
+
+Use the permanent source-only gate during routine development:
+
+```bash
+make static-check
+```
+
+`static-check` validates tracked Python, JSON, shell and JavaScript sources, repository/canonical identity, the aggregate normative/validator source contract, object-scope metadata and the reference-guide contract. It does not compile TeX/PDF documents, fetch network resources or generate distribution artifacts, and it fails if its own execution changes the repository status.
+
+The broader validation entry points remain separate:
+
+```bash
+make check
+make release-check
+```
+
+`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. Permanent GitHub workflow orchestration is intentionally separate from these local entry points.
+
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 
 ```bash
