@@ -1,0 +1,51 @@
+name: B4-A bounded validation
+
+on:
+  push:
+    branches:
+      - fix/v3-r1-b4a-contract-identity
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate B4-A contracts and identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/*.py tests/checks/normative_full_contract.py tests/checks/validator_source.py
+          node --check validator/app.js
+          python3 -m json.tool standards/coverage-rules-closure.json >/dev/null
+          python3 tests/checks/normative_full_contract.py
+          python3 tests/checks/validator_source.py
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          rules = json.loads(Path('standards/coverage-rules-closure.json').read_text(encoding='utf-8'))['rules']
+          spine = next(rule for rule in rules if rule['id'] == 'spine.conditional')
+          assert spine['validation'] == {'mode': 'not-applicable', 'checks': []}
+          assert spine['applicability'] == {'printed_spine': True}
+          assert spine['values'] == {
+              'required': False,
+              'printed_when_present_standard': 'ABNT NBR 12225:2023',
+              'electronic_package': 'not-applicable',
+          }
+
+          fetch = Path('tools/fetch-reference-images.py').read_text(encoding='utf-8')
+          assert 'abntexto-ufc/3.0.0 reference-assets' in fetch
+          assert 'abntexto-ufc/2.1.0 reference-assets' not in fetch
+
+          index = Path('validator/index.html').read_text(encoding='utf-8')
+          assert 'abntexto-ufc · standalone validator' in index
+          assert 'ufctex · ferramenta independente' not in index
+          PY
+
+          git diff --check HEAD^..HEAD || git diff --check
+          echo 'B4-A-EVIDENCE status=PASS'
