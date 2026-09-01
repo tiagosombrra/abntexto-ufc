@@ -79,6 +79,18 @@ Only the separate Overleaf bundle vendors the pinned upstream `abntexto.cls` for
 
 A version mismatch among `Makefile`, `abntexto-ufc.cls`, the CTAN README, and the manual fails closed.
 
+## Linux release validation
+
+Before building or submitting a release candidate, run the coordinated repository release gate:
+
+```bash
+make release-check
+```
+
+B7-C3 adds the permanent `.github/workflows/linux-release-check.yml` workflow, named `Linux release check`. It runs this repository-owned entry point after technical changes land on `main` and on manual dispatch, publishes `artifacts/validation/validation-report.md` in the Actions job summary, and retains `artifacts/validation/**` as short-lived engineering evidence for 14 days. Release mode contains 32 checks, including the release-only `pdfa` and `profile-pdfa` checks.
+
+This Linux result is an engineering gate, not final release certification. Literal Times New Roman/Arial identity and final Windows/font/PDF-A certification remain B8-owned. CTAN packaging and current `pkgcheck` validation also remain separate release procedures below. Validation evidence under `artifacts/validation/` is not a distribution artifact and must not be inserted into public bundles.
+
 ## Automated validation
 
 The repository checker is:
@@ -117,12 +129,14 @@ The actual CTAN submission is an explicit release action. Building or certifying
 ## Final pre-upload checklist
 
 1. Build from the intended release commit/tag, not from an unrecorded local modification.
-2. Run `make distribution-bundles`.
-3. Verify `SHA256SUMS` and the exact artifact names.
-4. Run the repository distribution checker.
-5. Extract the CTAN candidate and compile the shipped example with the external `abntexto` dependency.
-6. Run the current CTAN `pkgcheck` on the extracted `abntexto-ufc/` directory.
-7. Confirm the README/manual version and release metadata.
-8. Confirm that no institutional/proprietary assets or generated auxiliary files are present.
-9. Confirm the GitHub release/tag and user-facing release notes are final when that release stage is reached.
-10. Only then perform the explicit CTAN upload and preserve the submission/acceptance receipt in the release record.
+2. Run or confirm a successful `make release-check` / `Linux release check` for that candidate commit and preserve its validation evidence.
+3. Complete the separate B8 Windows/literal-font/PDF-A certification required for the release candidate.
+4. Run `make distribution-bundles`.
+5. Verify `SHA256SUMS` and the exact artifact names.
+6. Run the repository distribution checker.
+7. Extract the CTAN candidate and compile the shipped example with the external `abntexto` dependency.
+8. Run the current CTAN `pkgcheck` on the extracted `abntexto-ufc/` directory.
+9. Confirm the README/manual version and release metadata.
+10. Confirm that no institutional/proprietary assets, validation evidence, or generated auxiliary files are present in public bundles.
+11. Confirm the GitHub release/tag and user-facing release notes are final when that release stage is reached.
+12. Only then perform the explicit CTAN upload and preserve the submission/acceptance receipt in the release record.

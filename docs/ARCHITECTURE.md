@@ -37,6 +37,7 @@ template/
 .github/
   workflows/static-contract.yml
   workflows/linux-integration.yml
+  workflows/linux-release-check.yml
 assets/institutional/
 standards/
 tests/
@@ -124,11 +125,12 @@ Scientific-article normative/runtime material is reintroduced only in V3-A1 afte
 - `tests/smoke/`: minimal compilation cases;
 - `tools/`: developer/release tooling;
 - `.github/workflows/static-contract.yml`: permanent fast remote orchestration. It exposes the stable workflow/job name `Static contract` and delegates validation to `make static-check`; workflow YAML does not own or duplicate the gate internals;
-- `.github/workflows/linux-integration.yml`: permanent bounded PR integration orchestration. It exposes the stable workflow/job name `Linux integration`, keeps a status on relevant PR lifecycle events, suppresses the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, treats unknown paths fail-closed as integration-relevant, cancels superseded PR runs, forces full execution on manual dispatch, and delegates heavy validation to `make check`.
+- `.github/workflows/linux-integration.yml`: permanent bounded PR integration orchestration. It exposes the stable workflow/job name `Linux integration`, keeps a status on relevant PR lifecycle events, suppresses the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, treats unknown paths fail-closed as integration-relevant, cancels superseded PR runs, forces full execution on manual dispatch, and delegates heavy validation to `make check`.;
+- `.github/workflows/linux-release-check.yml`: bounded permanent Linux release orchestration. It exposes the stable workflow/job name `Linux release check`, runs after technical changes land on `main` and on manual dispatch, ignores documentation/control-plane-only main pushes, cancels superseded runs, delegates release validation to `make release-check`, mirrors the repository report into the job summary, and retains `artifacts/validation/**` for 14 days. The Linux observations are engineering evidence; final Windows/literal-font/PDF-A certification remains B8-owned.
 
 `make static-check` is the permanent local source-only entry point. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
 
-R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 certified bounded permanent PR orchestration through `Linux integration`: orchestration owns only scope/cadence/concurrency, while the repository-owned `make check` entry point owns the integration gate itself. B7-C3 is now active and owns bounded Linux release orchestration as a thin consumer of `make release-check`; B8 remains the owner of final Windows/font/PDF-A certification.
+R1-BLOCK-7 restores permanent orchestration incrementally. B7-B established the `Static contract` workflow. B7-C1 certified the repository-owned `make check` integration contract on a clean TeX Live 2026 runner. B7-C2 certified bounded permanent PR orchestration through `Linux integration`: orchestration owns only scope/cadence/concurrency, while the repository-owned `make check` entry point owns the integration gate itself. B7-C3 is active and adds bounded `Linux release check` orchestration as a thin consumer of `make release-check`, with post-merge/manual cadence and short-lived validation evidence; closure requires its first permanent main run to pass all 32 release checks. B8 remains the owner of final Windows/literal-font/PDF-A certification.
 
 Active path names must not encode retired major-version or N-phase identities.
 
