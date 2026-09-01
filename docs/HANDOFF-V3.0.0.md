@@ -11,7 +11,7 @@ Updated: 2026-09-01
 - Active B8 issue: **#227 — final R1 certification**.
 - Active B8 focus: **hosted Windows certification, literal Times New Roman/Arial identity, supported engine matrix, Unicode extraction/font embedding, and final PDF/A-2b evidence for the current v3 candidate**.
 - Active branch/trunk: `main`.
-- B7 operational issue: **#213 — complete; close after this control-plane transition merges**.
+- B7 operational issue: **#213 — CLOSED (`completed`)**.
 - Latest certified clean implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
@@ -209,7 +209,7 @@ B6 established a single permanent side-effect-free source-only validation entry 
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry certified implementation checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
+**DONE.** Operational issue #213 is closed (`completed`). Entry certified implementation checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
 
 B7 restores GitHub Actions as a thin orchestration layer over repository-owned entry points. Workflow YAML must consume `make static-check`, `make check` and `make release-check` where appropriate rather than duplicate their internal checks. Remote validation is the canonical CI execution path; developer-local state is not required for certification.
 
@@ -237,4 +237,4 @@ The same run deliberately probed `make check` on a clean TeX Live 2026 runner. I
 
 ## R1-BLOCK-8 — Final R1 certification
 
-**ACTIVE** via issue #227. Entry implementation checkpoint remains `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the B7-D control-plane audit was performed against `main` at `5f0ec947bb123567b5fe4548f04e9a15b2bb915d`. B8 owns hosted Windows execution, literal Times New Roman/Arial identity, supported pdfLaTeX/LuaLaTeX certification, Unicode extraction/font embedding, and final PDF/A-2b evidence. It must use repository-owned tooling, must not redistribute proprietary Microsoft fonts, and must not absorb V3-R2 runtime/API migration or actual CTAN submission.
+**ACTIVE** via issue #227. Entry implementation checkpoint remains `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the B7-D workflow audit was performed against `main` at `5f0ec947bb123567b5fe4548f04e9a15b2bb915d`, and the B7→B8 control-plane transition merged through PR #228 at `4abff2c0ff4b8ae31166b8b6a03aed30b1ae8aa8` with post-merge `Static contract` run `33569583824` PASS. B8 owns hosted Windows execution, literal Times New Roman/Arial identity, supported pdfLaTeX/LuaLaTeX certification, Unicode extraction/font embedding, and final PDF/A-2b evidence. It must use repository-owned tooling, must not redistribute proprietary Microsoft fonts, and must not absorb V3-R2 runtime/API migration or actual CTAN submission.
