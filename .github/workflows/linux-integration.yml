@@ -83,7 +83,9 @@ jobs:
 
       - name: Report scoped skip
         if: steps.scope.outputs.run_integration != 'true'
-        run: echo "Heavy integration skipped by B7-C2 orchestration policy (${% raw %}{{ steps.scope.outputs.reason }}{% endraw %})."
+        env:
+          SKIP_REASON: ${{ steps.scope.outputs.reason }}
+        run: echo "Heavy integration skipped by B7-C2 orchestration policy ($SKIP_REASON)."
 
       - name: Run repository integration contract
         if: steps.scope.outputs.run_integration == 'true'
