@@ -7,10 +7,10 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-4 — Tools, Validator, and Metadata Technical Rebaseline**.
-- Active B4 work item: **B4-B — stale identity / metadata residual audit and cleanup**.
+- Active B4 work item: **B4-C — validator/tool technical-language rebaseline**.
 - Active branch/trunk: `main`.
 - B4 operational issue: **#187**.
-- Latest certified clean implementation checkpoint: **`a4fbbdcb381709cb542c8f991ef152d8a635f790`**.
+- Latest certified clean implementation checkpoint: **`001d63dbc4ecd6e555ee735cd0515b6c9203225e`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -88,11 +88,37 @@ Final B4-A gate covered Python compilation, standards JSON parsing, `normative_f
 
 ### B4-B — Stale identity and metadata cleanup
 
-**ACTIVE / NEXT.** Two entry identities were already repaired in B4-A (`2.1.0` User-Agent and retired validator branding). B4-B now performs a fresh residual audit across project/package/version/repository/ownership metadata and removes only stale active technical identity. Historical, migration, B5/B8 and negative-test references remain classified rather than blindly rewritten.
+**DONE** through PR #191, squash-merged at **`001d63dbc4ecd6e555ee735cd0515b6c9203225e`**.
+
+B4-B performed a fresh active-tree metadata/identity audit rather than relying on GitHub code-search zeros. Remote inventory run **`33499411771` PASS** confirmed:
+
+- zero old repository-name occurrences;
+- retired validator identity retained only at classified migration/negative-test/history boundaries;
+- active version/process residue isolated to `layout.def`, `public-api.def`, and the PDF/A project-policy locator;
+- current class/build identity is v3.0.0.
+
+Corrections:
+
+- `layout.def` chapter-mode comment/error now refers to the current UFC profile rather than a v2 profile;
+- `public-api.def` comments describe the retained Portuguese compatibility behavior and explicitly defer API migration to V3-R2, removing v2.x/B2R-B3 process identity without changing any commands or keys;
+- `pdfa.profile.project` retains the same project-policy rule/value but its locator now identifies the current PDF/A-2b implementation policy without a stale v2.1.0 version label;
+- three literal retired-validator references introduced by the prior checkpoint documentation were rewritten so `canonical_identity.py` remains fail-closed.
+
+Final bounded validation run **`33500381847` PASS** covered the atomic contract, complete `validator_source.py`, `canonical_identity.py`, `repository_contract.py`, JSON parsing, exact residual assertions, and `git diff --check`. Validator-source evidence reported `normative_contract_changed=false`, `proof_state_changed=false`, `locator_policy_changed=false`, and `reference_tolerances_changed=false`. Temporary B4-B workflows were removed before PR merge.
 
 ### B4-C — Validator/tool technical-language rebaseline
 
-**PENDING.** Separate project-owned engineering diagnostics/labels from legitimate Portuguese document/runtime surfaces before editing. Academic/rendered Portuguese, official UFC/ABNT wording, literal output under test and current Portuguese runtime/API identifiers remain allowed boundaries; the runtime API itself moves only in R2.
+**ACTIVE / NEXT.** Separate project-owned engineering diagnostics, web/CLI labels, report/export keys and internal metadata from legitimate Portuguese document/runtime surfaces before editing.
+
+Allowed boundaries that must not be blindly translated:
+
+- academic/rendered Portuguese;
+- official UFC/ABNT wording and normative requirement text;
+- literal test vectors/output under explicit contract;
+- dependency-owned spelling;
+- current Portuguese runtime/API identifiers, which migrate only in V3-R2.
+
+B4-C should normalize only project-owned technical UI/output/diagnostics and internal metadata when a consumer-safe change is possible without changing the runtime API or normative semantics.
 
 ### B4-D — Final B4 residual audit/closeout
 
@@ -108,4 +134,4 @@ Final B4-A gate covered Python compilation, standards JSON parsing, `normative_f
 
 ## Immediate action
 
-Start B4-B from canonical remote `main` using `a4fbbdcb381709cb542c8f991ef152d8a635f790` as the latest certified implementation checkpoint. Perform a fresh residual identity/metadata audit, classify every retained old-version/upstream/later-block occurrence, and make bounded producer/consumer-safe corrections. Keep B4-C technical-language work separate unless a finding is unambiguously identity metadata.
+Start B4-C from canonical remote `main` using `001d63dbc4ecd6e555ee735cd0515b6c9203225e` as the latest certified implementation checkpoint. Inventory project-owned Portuguese technical strings in `tools/validate-ufc-pdf.py`, `validator/app.js`, `validator/index.html`, validator contracts/vectors, and their tests/consumers. Classify each string before editing and preserve every academic, normative, literal-test, dependency-owned and R2 runtime/API boundary. Make only bounded producer/consumer-safe changes and validate proportionally.
