@@ -87,7 +87,7 @@ Before building or submitting a release candidate, run the coordinated repositor
 make release-check
 ```
 
-B7-C3 adds the permanent `.github/workflows/linux-release-check.yml` workflow, named `Linux release check`. It runs this repository-owned entry point after technical changes land on `main` and on manual dispatch, publishes `artifacts/validation/validation-report.md` in the Actions job summary, and retains `artifacts/validation/**` as short-lived engineering evidence for 14 days. Release mode contains 32 checks, including the release-only `pdfa` and `profile-pdfa` checks.
+B7-C3 established and certified the permanent `.github/workflows/linux-release-check.yml` workflow, named `Linux release check`. It runs the repository-owned `make release-check` entry point after technical changes land on `main` and on manual dispatch, publishes `artifacts/validation/validation-report.md` in the Actions job summary, and retains `artifacts/validation/**` as short-lived engineering evidence for 14 days. PR #225 merged at `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the first permanent merged-main release run `33566835570` passed all 32 checks (`PASS=32 FAIL=0 SKIP=0`), including release-only `pdfa` and `profile-pdfa`. This Linux evidence is not final B8 Windows/literal-font/PDF-A certification and is not CTAN acceptance.
 
 This Linux result is an engineering gate, not final release certification. Literal Times New Roman/Arial identity and final Windows/font/PDF-A certification remain B8-owned. CTAN packaging and current `pkgcheck` validation also remain separate release procedures below. Validation evidence under `artifacts/validation/` is not a distribution artifact and must not be inserted into public bundles.
 

@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B/C1/C2 done; B7-C3 active.**
+**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B/C done; B7-D active.**
 
 Current sequence:
 
@@ -16,12 +16,12 @@ B4 internal sequence:
 
 B7 internal sequence:
 
-**B7-A DONE → B7-B DONE → B7-C ACTIVE [C1 DONE → C2 DONE → C3 ACTIVE] → B7-D PENDING**
+**B7-A DONE → B7-B DONE → B7-C DONE [C1 DONE → C2 DONE → C3 DONE] → B7-D ACTIVE**
 
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
 - B7 operational issue: #213.
-- Latest certified implementation checkpoint: **`cea59bcf4927da9a9c4a48268dca67cc9535854e`**.
+- Latest certified implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
 - R1-BLOCK-3 closure: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -174,7 +174,7 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`cea59bcf4927da9a9c4a48268dca67cc9535854e`**.
+**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**.
 
 B7 restores permanent GitHub Actions as orchestration over current repository entry points; workflow YAML must not duplicate gate internals.
 
@@ -190,7 +190,7 @@ The clean-runner integration probe in the same run took 501 s and ended `PASS=22
 
 ### B7-C — Optimized Linux integration/release orchestration
 
-**ACTIVE.** Permanent heavy YAML remains blocked until the repository-owned integration entry point is clean-runner safe.
+**DONE.** The repository-owned clean-runner contract and bounded permanent Linux PR/release orchestration are certified; B7-D now owns the residual orchestration/status/ruleset audit and B8 handoff.
 
 #### B7-C1 — Clean-runner integration contract repair
 
@@ -212,18 +212,18 @@ Completed bounded repair set:
 
 #### B7-C3 — Release orchestration
 
-**ACTIVE.** Define and prove bounded permanent Linux release orchestration over `make release-check`, including trigger/cadence and artifact/evidence handling, without treating Linux release validation as final B8 Windows/font/PDF-A certification.
+**DONE** via PR #225 at **`d7327db7efd5cc1e0ff9255195bcb9767d853d3e`**. `Linux release check` delegates to `make release-check`, runs after technical merges to `main` and on manual dispatch, ignores documentation/control-plane-only main pushes, cancels superseded runs, and retains validation evidence for 14 days. Targeted run `33563893128` proved the repaired profile PDF/A chain; PR runs `33564594657` and `33564594625` passed; post-merge `Static contract` run `33566835558` passed; and first permanent merged-main release run **`33566835570`** closed **`PASS=32 FAIL=0 SKIP=0`**, including release-only `pdfa` and `profile-pdfa`. Final Windows/literal-font/PDF-A certification remains B8-owned.
 
 ### B7-D — Residual audit and B8 handoff
 
-**PENDING.** Audit permanent workflow ownership, stable check names, status semantics, concurrency/caching, temporary artifact absence and branch-protection recommendations, then activate B8.
+**ACTIVE.** Audit the three permanent workflow owners and stable check names, permissions/action pins/concurrency, status semantics, zero temporary workflow residue and the current `main` ruleset. Record the required-status recommendation, then activate B8 without rerunning already-certified heavy product gates unless current state requires it.
 
 ## Remaining R1 blocks
 
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
 - **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
 - **R1-B6 DONE** — permanent cheap/static fail-closed gate at `4c25c27b758e4b99db11187b34b9043776566871`.
-- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C2 is complete and B7-C3 release orchestration is active.
+- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C is complete and B7-D residual audit/B8 handoff is active.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
 ## Later phases
@@ -236,4 +236,4 @@ Completed bounded repair set:
 
 ## Immediate action
 
-Execute **B7-C2** from canonical remote `main` after this control-plane reconciliation. Add permanent Linux PR integration orchestration as a thin consumer of the certified `make check` contract, choose bounded triggers/concurrency so heavy TeX validation is not forced on every intermediate commit, and keep B7-C3 release orchestration, B8 Windows/font/final PDF-A certification, and V3-R2 runtime/API migration out of scope.
+Execute **B7-D** from canonical remote `main`. Audit the three permanent workflows (`Static contract`, `Linux integration`, `Linux release check`), their stable status semantics, pinned actions, read-only permissions, bounded concurrency and temporary-workflow absence; inspect the current `main` ruleset and record the required-status recommendation. Do not rerun completed heavy product checks without current-state need. Hand final Windows/literal-font/PDF-A certification to B8; keep V3-R2 runtime/API migration and actual CTAN submission out of scope.
