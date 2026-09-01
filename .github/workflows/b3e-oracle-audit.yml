@@ -1,0 +1,25 @@
+name: B3-E oracle audit
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-b3e-oracle-terminology
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory oracle terminology
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== ORACLE OCCURRENCES ==='
+          git grep -n -i -E 'oracle' -- ':!*.png' ':!*.jpg' ':!*.jpeg' ':!*.pdf' || true
+          echo '=== ORACLE PATHS ==='
+          git ls-files | grep -i 'oracle' || true
+          echo '=== REPOSITORY CONTRACT ==='
+          python3 tests/checks/repository_contract.py
