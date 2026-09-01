@@ -152,8 +152,16 @@ def build_matrix() -> dict[str, Any]:
             fail(f"rule missing id or locator: {rule_id}")
         if not isinstance(validation, dict):
             fail(f"rule {rule_id}: validation block is required")
+        validation_mode = validation.get("mode")
         checks = validation.get("checks")
-        if not isinstance(checks, list) or not checks:
+        if not isinstance(checks, list):
+            fail(f"rule {rule_id}: validation.checks must be a list")
+        if validation_mode == "not-applicable":
+            if checks:
+                fail(f"rule {rule_id}: not-applicable validation declares evidence IDs")
+            if not rule.get("applicability"):
+                fail(f"rule {rule_id}: not-applicable validation lacks applicability")
+        elif not checks:
             fail(f"rule {rule_id}: validation.checks must be non-empty")
 
         evidence: list[dict[str, Any]] = []
@@ -193,7 +201,7 @@ def build_matrix() -> dict[str, Any]:
                 "locator": locator,
                 "sources": rule.get("sources", []),
                 "governing_sources": resolution.get("governing_sources", []),
-                "validation_mode": validation.get("mode"),
+                "validation_mode": validation_mode,
                 "evidence": evidence,
             }
         )
@@ -207,7 +215,8 @@ def build_matrix() -> dict[str, Any]:
         for row in rows
     )
     only_unclassified = sum(
-        all(item["kind"] == "unclassified" for item in row["evidence"])
+        bool(row["evidence"])
+        and all(item["kind"] == "unclassified" for item in row["evidence"])
         for row in rows
     )
 
