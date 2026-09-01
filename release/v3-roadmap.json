@@ -10,7 +10,7 @@
   "stage_name": "tools validator and metadata technical rebaseline",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "97c808081f5a964498b7a3e71d902aeb8a9bbcf8",
+  "last_certified_clean_checkpoint_sha": "3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -103,7 +103,7 @@
       "activation_control_plane_sha": "3512d8b29f2b3634f4ba69bdbc160fa1bc667c19",
       "operational_issue": 187,
       "active_work_item": "B4-C",
-      "active_sub_item": "B4-C2",
+      "active_sub_item": "B4-C2b",
       "scope": [
         "tools live-tree ownership and dead-helper audit",
         "validator project-owned identifiers diagnostics controls and technical labels",
@@ -219,8 +219,19 @@
       "b4_c1_closure_sha": "97c808081f5a964498b7a3e71d902aeb8a9bbcf8",
       "b4_c1_validation_run_id": 33501306482,
       "b4_c1_results": {
-        "statuses": ["PASS", "FAIL", "WARNING", "MANUAL REVIEW", "NOT APPLICABLE"],
-        "verdicts": ["FAIL", "REVIEW REQUIRED", "AUTOMATED CHECKS PASSED WITH WARNINGS", "AUTOMATED CHECKS PASSED"],
+        "statuses": [
+          "PASS",
+          "FAIL",
+          "WARNING",
+          "MANUAL REVIEW",
+          "NOT APPLICABLE"
+        ],
+        "verdicts": [
+          "FAIL",
+          "REVIEW REQUIRED",
+          "AUTOMATED CHECKS PASSED WITH WARNINGS",
+          "AUTOMATED CHECKS PASSED"
+        ],
         "web_cli_contract_vectors_updated_together": true,
         "stable_schema_ids_changed": false,
         "normative_semantics_changed": false,
@@ -241,9 +252,47 @@
         "B4-A": "DONE - inventory blockers and ownership classification",
         "B4-B": "DONE - stale identity and metadata cleanup",
         "B4-C1": "DONE - shared validator status and verdict vocabulary",
-        "B4-C2": "ACTIVE - technical categories diagnostics report labels and Web UI",
-        "B4-D": "PENDING - final residual audit and closeout"
-      }
+        "B4-C2": "ACTIVE - split into C2a DONE and C2b ACTIVE",
+        "B4-D": "PENDING - final residual audit and closeout",
+        "B4-C2a": "DONE - technical taxonomy validation levels and CLI report headings",
+        "B4-C2b": "ACTIVE - diagnostics report export labels and Web UI"
+      },
+      "b4_c2a_status": "DONE",
+      "b4_c2a_closure_sha": "3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8",
+      "b4_c2a_validation_runs": [
+        {
+          "run_id": 33502021542,
+          "conclusion": "success",
+          "finding": "technical taxonomy/levels and academic-boundary assertions passed"
+        },
+        {
+          "run_id": 33502137178,
+          "conclusion": "success",
+          "finding": "initial temporary executor removed"
+        },
+        {
+          "run_id": 33506189097,
+          "conclusion": "success",
+          "finding": "pre-merge substring artifact repaired; proportional gates passed; repair workflow removed"
+        }
+      ],
+      "b4_c2a_results": {
+        "generic_technical_categories_normalized": true,
+        "validation_levels_normalized": true,
+        "cli_report_headings_normalized": true,
+        "academic_domain_labels_preserved": true,
+        "stable_machine_identifiers_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false,
+        "runtime_api_changed": false,
+        "temporary_workflow_removed_before_merge": true
+      },
+      "b4_c2b_status": "ACTIVE",
+      "b4_c2b_scope": [
+        "project-owned diagnostic evidence and correction messages",
+        "report export labels and generic Web validator controls/disclosures",
+        "preserve academic and normative wording stable machine identifiers dependency strings measurement behavior and runtime API"
+      ]
     },
     "R1-BLOCK-5": {
       "status": "BLOCKED",
@@ -262,5 +311,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-4 B4-C2 from canonical remote main using 97c808081f5a964498b7a3e71d902aeb8a9bbcf8 as the latest certified implementation checkpoint. Normalize only project-owned technical categories, levels, evidence/correction diagnostics, report/export headings and generic Web validator controls whose ownership and consumers are clear. Preserve academic document-element labels, official UFC/ABNT wording, stable schema/check/rule identifiers, dependency-owned spelling and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally, remove temporary executors before checkpoint, and update issue #187 plus the canonical control-plane files after the merged lot."
+  "next_action": "Start R1-BLOCK-4 B4-C2b from canonical remote main using 3a24ae4f148ea6fd60a6e66eb7cbf42aecd629c8 as the latest certified implementation checkpoint. Translate only remaining project-owned diagnostic, evidence and correction messages, report/export labels and generic Web validator controls/disclosures whose ownership and consumers are clear. Preserve academic document-element labels, official UFC/ABNT wording, stable schema/check/rule identifiers, dependency-owned spelling, measurement behavior and the Portuguese LaTeX runtime/API. Validate Web/CLI/contract consumers proportionally, remove temporary executors before checkpoint, and update issue #187 plus the canonical control-plane files after the merged lot."
 }
