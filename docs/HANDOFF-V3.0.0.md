@@ -7,11 +7,11 @@ Updated: 2026-09-01
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
 - Active implementation stage: **R1-BLOCK-5 — Distribution and Public Bundle Rebaseline**.
-- Active B5 work item: **B5-B — deterministic v3 staging and public/Overleaf bundles**.
-- Active B5 focus: **canonical source set, flattened template staging, pinned upstream `abntexto.cls`, deterministic archives, and structure/reproducibility validation**.
+- Active B5 work item: **B5-C — class/CTAN candidate and distribution metadata**.
+- Active B5 focus: **current class/runtime archive, CTAN-candidate layout, checksum manifest, package metadata, and install/compile smoke validation**.
 - Active branch/trunk: `main`.
 - B5 operational issue: **#199**.
-- Latest certified clean implementation checkpoint: **`1a126c37653728941ce1ada762376c5fec69cb02`**.
+- Latest certified clean implementation checkpoint: **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -174,11 +174,13 @@ The current architecture requires `template/` to be flattened for public/Overlea
 
 ### B5-B — Deterministic v3 staging and public/Overleaf bundles
 
-**ACTIVE / NEXT.** Implement one current v3 staging/archive producer for the class/runtime plus flattened template and Overleaf import bundle. Wire `fetch-abntexto.py` only for the Overleaf upstream pin; add structure/reproducibility checks; repair the Overleaf staging consumer path/engineering language as required by this contract. Deep Windows font/PDF-A certification remains B8-owned.
+**DONE** through PR #202, squash-merged at **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**. The lot introduced `tools/build-public-bundles.py`, the `make public-bundles` producer entry point, `tests/checks/public_bundles.py`, an explicit flattened-staging Overleaf consumer, and the v3 public-template header. It now emits deterministic `abntexto-ufc-template-3.0.0.zip` and `abntexto-ufc-overleaf-3.0.0.zip`; the template bundle is version-rooted and the Overleaf bundle is import-root-flat. Only the Overleaf archive vendors the pinned upstream `abntexto.cls`. Public archives disable and exclude the UFC institutional mark and reject proprietary Microsoft font files and development-only paths.
+
+Remote validation was fail-closed. Run `33514329081` exposed an executor misuse of a correctly cleaned temporary upstream file; run `33514454139` proved structure/reproducibility and exposed that the TeX container itself lacked Git; final run **`33514846706` PASS** reported `PUBLIC-BUNDLE-EVIDENCE status=PASS artifacts=2 reproducible=2 safe_paths=PASS institutional_assets=excluded`, canonical identity PASS, repository contract PASS, and successfully compiled the extracted Overleaf bundle with both `pdflatex` and `lualatex` on TeX Live 2025. Existing font-embedding and PDF/A proxy assertions also passed. The temporary workflow self-removed before merge. No runtime/API or normative semantic/proof/tolerance/locator change occurred.
 
 ### B5-C — Class/CTAN candidate and distribution metadata
 
-**PENDING.** Define the current class/CTAN-candidate archive and remaining distribution metadata/checksum validation using only current files and current `abntexto-ufc` identity; do not resurrect deleted CTAN documentation blindly.
+**ACTIVE / NEXT.** Extend the current distribution producer with a current-identity class/runtime archive and CTAN candidate plus checksum metadata. Use only live v3 files, current README/LICENSE/example material, and external `abntexto` dependency semantics. Do not recreate deleted historical CTAN documents by assumption. Validate exact archive structure, institutional/proprietary asset exclusion, determinism/checksums, and a CTAN-style install/compile smoke. Permanent distribution CI remains B7-owned and final Windows/font/PDF-A certification remains B8-owned.
 
 ### B5-D — Final B5 residual/reproducibility audit
 
@@ -194,4 +196,4 @@ The current architecture requires `template/` to be flattened for public/Overlea
 
 ## Immediate action
 
-Start B5-B from canonical remote `main` using `1a126c37653728941ce1ada762376c5fec69cb02` as the latest certified implementation checkpoint and issue #199 as the operational log. Implement the bounded deterministic v3 staging/archive producer for class/runtime, flattened template, and Overleaf import bundle; wire the pinned upstream fetcher only where required; add current structure/reproducibility checks and repair the current Overleaf staging consumer. Keep CTAN/class-package completion in B5-C and B6/B7/B8/V3-R2 out of scope.
+Start B5-C from canonical remote `main` using `426b506da9f6bf6255263efdb4caad19d4bcd16d` as the latest certified implementation checkpoint and issue #199 as the operational log. Extend the current distribution producer with the class/runtime and CTAN-candidate archives plus deterministic checksum metadata; validate exact archive layout and CTAN install/compile behavior. Keep permanent gates/workflows, final Windows/font/PDF-A certification, and V3-R2 runtime/API work out of scope.

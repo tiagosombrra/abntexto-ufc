@@ -10,7 +10,7 @@
   "stage_name": "distribution and public bundle rebaseline",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
+  "last_certified_clean_checkpoint_sha": "426b506da9f6bf6255263efdb4caad19d4bcd16d",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -388,8 +388,8 @@
       "name": "distribution and public bundle rebaseline",
       "entry_checkpoint_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
       "operational_issue": 199,
-      "active_work_item": "B5-B",
-      "active_sub_item": "B5-B",
+      "active_work_item": "B5-C",
+      "active_sub_item": "B5-C",
       "scope": [
         "public and distribution bundle producer consumer inventory",
         "canonical source set and flatten copy rules",
@@ -426,11 +426,11 @@
       },
       "planned_lots": {
         "B5-A": "DONE - inventory and distribution contract definition",
-        "B5-B": "ACTIVE - deterministic v3 staging and public/Overleaf bundles",
-        "B5-C": "PENDING - class/CTAN candidate and distribution metadata",
+        "B5-B": "DONE - deterministic v3 staging and public/Overleaf bundles",
+        "B5-C": "ACTIVE - class/CTAN candidate and distribution metadata",
         "B5-D": "PENDING - final residual/reproducibility audit and closeout"
       },
-      "b5_b_status": "ACTIVE",
+      "b5_b_status": "DONE",
       "b5_b_scope": [
         "canonical deterministic distribution staging producer",
         "current class and runtime module source set",
@@ -440,8 +440,54 @@
         "structure reproducibility and safe-archive validation",
         "bounded repair of current Overleaf distribution consumer"
       ],
-      "b5_c_status": "PENDING",
-      "b5_d_status": "PENDING"
+      "b5_c_status": "ACTIVE",
+      "b5_d_status": "PENDING",
+      "b5_b_closure_sha": "426b506da9f6bf6255263efdb4caad19d4bcd16d",
+      "b5_b_pr": 202,
+      "b5_b_validation_runs": [
+        {
+          "run_id": 33514329081,
+          "conclusion": "failure",
+          "finding": "temporary executor reused upstream temp file after the Makefile target correctly cleaned it; no product defect"
+        },
+        {
+          "run_id": 33514454139,
+          "conclusion": "failure",
+          "finding": "bundle structure/reproducibility passed; TeX container lacked Git and could not rebuild; no product defect"
+        },
+        {
+          "run_id": 33514846706,
+          "conclusion": "success",
+          "finding": "deterministic public bundles and extracted Overleaf staging passed structural and TeX Live 2025 compilation validation"
+        }
+      ],
+      "b5_b_results": {
+        "template_bundle": "abntexto-ufc-template-3.0.0.zip",
+        "overleaf_bundle": "abntexto-ufc-overleaf-3.0.0.zip",
+        "template_layout_version_rooted": true,
+        "overleaf_layout_import_root_flat": true,
+        "overleaf_vendors_pinned_abntexto": true,
+        "standard_template_vendors_abntexto": false,
+        "institutional_mark_disabled_in_distributed_main": true,
+        "institutional_asset_redistributed": false,
+        "proprietary_microsoft_fonts_rejected": true,
+        "safe_archive_paths_passed": true,
+        "reproducibility_passed": true,
+        "pdflatex_overleaf_smoke_passed": true,
+        "lualatex_overleaf_smoke_passed": true,
+        "temporary_workflow_removed_before_merge": true,
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
+      },
+      "b5_c_scope": [
+        "current class and runtime archive",
+        "current CTAN-candidate archive layout",
+        "deterministic SHA256 checksum manifest",
+        "current README LICENSE and CTAN example metadata only",
+        "institutional and proprietary asset exclusion",
+        "CTAN-style install and compile smoke validation"
+      ]
     },
     "R1-BLOCK-6": {
       "status": "BLOCKED",
@@ -456,5 +502,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start R1-BLOCK-5 B5-B from canonical remote main using 1a126c37653728941ce1ada762376c5fec69cb02 as the latest certified implementation checkpoint and issue #199 as the operational log. Implement one deterministic current-v3 staging/archive producer for class/runtime, flattened template and Overleaf bundle; use tools/fetch-abntexto.py only for the pinned Overleaf upstream dependency; add structure/reproducibility validation and repair the distribution-owned Overleaf staging consumer. Keep CTAN/class-package completion in B5-C and B6/B7/B8/V3-R2 out of scope."
+  "next_action": "Start R1-BLOCK-5 B5-C from canonical remote main using 426b506da9f6bf6255263efdb4caad19d4bcd16d as the latest certified implementation checkpoint and issue #199 as the operational log. Extend the current distribution producer with the class/runtime and CTAN-candidate archives plus deterministic checksum metadata; validate exact archive structure and CTAN install/compile behavior. Keep B6 permanent gates, B7 permanent workflows, B8 final Windows/font/PDF-A certification and V3-R2 runtime/API work out of scope."
 }

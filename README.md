@@ -66,7 +66,14 @@ The repository development document is `template/main.tex`.
 make compile
 ```
 
-Additional validation and distribution targets are being rebaselined during V3-R1. The roadmap is authoritative while this branch is under reconstruction.
+Public template and Overleaf bundles can be built from the canonical checkout after fetching the licensed reference images:
+
+```bash
+make reference-assets
+make public-bundles
+```
+
+The current B5 producer writes `dist/abntexto-ufc-template-3.0.0.zip` and `dist/abntexto-ufc-overleaf-3.0.0.zip`. The standard template archive has a versioned root; the Overleaf archive places `main.tex` at the ZIP root and vendors the project-pinned `abntexto.cls`. Both bundles flatten `template/`, disable the undistributed institutional mark by default, and exclude the UFC coat-of-arms file and proprietary Microsoft fonts. Class/CTAN-candidate packaging is still being completed in B5-C; the roadmap remains authoritative during reconstruction.
 
 ## Institutional assets
 

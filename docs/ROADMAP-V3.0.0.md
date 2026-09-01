@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B active.**
+**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B done; B5-C active.**
 
 Current sequence:
 
@@ -17,7 +17,7 @@ B4 internal sequence:
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
 - B5 operational issue: #199.
-- Latest certified implementation checkpoint: **`1a126c37653728941ce1ada762376c5fec69cb02`**.
+- Latest certified implementation checkpoint: **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**.
 - R1-BLOCK-3 closure: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -142,11 +142,11 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ### B5-B — Deterministic v3 staging and public/Overleaf bundles
 
-**ACTIVE.** Add the current deterministic staging/archive producer for class/runtime, flattened template, and Overleaf bundle; wire the pinned upstream class for Overleaf; add structure/reproducibility validation; repair only distribution-owned Overleaf consumer drift. B8 retains deep font/PDF-A certification.
+**DONE** via PR #202 at **`426b506da9f6bf6255263efdb4caad19d4bcd16d`**. Current v3 distribution now has deterministic template and Overleaf ZIP producers, a public-bundle structure/reproducibility checker, a `make public-bundles` entry point, explicit flattened staging, pinned upstream `abntexto.cls` only for Overleaf, and fail-closed institutional/proprietary asset exclusion. Final run **`33514846706` PASS** validated reproducible archives, safe paths, canonical identity/repository contract, and `pdflatex` + `lualatex` compilation of the extracted Overleaf bundle on TeX Live 2025. Temporary validation workflow removed.
 
 ### B5-C — Class/CTAN candidate and distribution metadata
 
-**PENDING.** Reconstruct current class/CTAN candidate packaging and metadata/checksum validation without restoring retired identities or deleted CTAN documentation by assumption.
+**ACTIVE.** Add the current-identity class/runtime archive and CTAN candidate plus deterministic checksum metadata using only live v3 files. Validate exact layout, external dependency semantics, institutional/proprietary asset exclusion and CTAN-style compile smoke. Do not reconstruct deleted historical CTAN documentation without a current need.
 
 ### B5-D — Residual/reproducibility closeout
 
@@ -170,4 +170,4 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## Immediate action
 
-Start **B5-B** from canonical `main` with implementation checkpoint `1a126c37653728941ce1ada762376c5fec69cb02` and issue #199. Implement the bounded deterministic v3 staging/archive producer for class/runtime, flattened template, and Overleaf import; wire the pinned upstream fetcher only for the bundle contract; add structure/reproducibility checks and repair the current Overleaf staging consumer. Keep B5-C, B6, B7, B8 and V3-R2 boundaries explicit.
+Start **B5-C** from canonical `main` with implementation checkpoint `426b506da9f6bf6255263efdb4caad19d4bcd16d` and issue #199. Extend the current distribution producer with a class/runtime archive, CTAN candidate and deterministic checksum metadata; validate archive structure and CTAN install/compile behavior. Keep B6/B7/B8 and V3-R2 boundaries explicit.
