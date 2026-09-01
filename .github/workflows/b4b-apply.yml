@@ -59,6 +59,22 @@ jobs:
                       '"locator": "Política técnica do abntexto-ufc — perfil de implementação PDF/A-2b"',
                   ),
               ],
+              Path('docs/HANDOFF-V3.0.0.md'): [
+                  (
+                      '- validator project identity changed from inherited `ufctex` to `abntexto-ufc · standalone validator`.',
+                      '- validator project identity changed from the retired legacy identity to `abntexto-ufc · standalone validator`.',
+                  ),
+                  (
+                      '**ACTIVE / NEXT.** Two entry identities were already repaired in B4-A (`2.1.0` User-Agent and `ufctex` validator branding). B4-B now performs a fresh residual audit across project/package/version/repository/ownership metadata and removes only stale active technical identity.',
+                      '**ACTIVE / NEXT.** Two entry identities were already repaired in B4-A (`2.1.0` User-Agent and retired validator branding). B4-B now performs a fresh residual audit across project/package/version/repository/ownership metadata and removes only stale active technical identity.',
+                  ),
+              ],
+              Path('docs/ROADMAP-V3.0.0.md'): [
+                  (
+                      '- validator project identity updated from `ufctex` to `abntexto-ufc`.',
+                      '- validator project identity updated from the retired legacy branding to `abntexto-ufc`.',
+                  ),
+              ],
           }
 
           for path, pairs in replacements.items():
@@ -85,8 +101,9 @@ jobs:
           ! grep -n -E 'UFC v2 normative profile|certified Portuguese v2\.x behavior|throughout v2\.x|B2R-B3 canonical commands|during v2\.x' \
             abntexto-ufc/layout.def abntexto-ufc/public-api.def
           ! grep -n -F 'Política técnica abntexto-ufc v2.1.0' standards/atomic-rules.json
+          ! grep -n -i -E '\bufctex\b' docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md
 
-          git diff -- abntexto-ufc/layout.def abntexto-ufc/public-api.def standards/atomic-rules.json
+          git diff -- abntexto-ufc/layout.def abntexto-ufc/public-api.def standards/atomic-rules.json docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md
           echo 'B4-B-BOUNDED-EVIDENCE status=PASS'
 
       - name: Commit bounded repair
@@ -95,7 +112,7 @@ jobs:
           set -euo pipefail
           git config user.name 'Tiago Sombra'
           git config user.email 'tiagosombrra@users.noreply.github.com'
-          git add abntexto-ufc/layout.def abntexto-ufc/public-api.def standards/atomic-rules.json
+          git add abntexto-ufc/layout.def abntexto-ufc/public-api.def standards/atomic-rules.json docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md
           git diff --cached --quiet && { echo 'No target changes to commit'; exit 1; }
           git commit -m 'fix: rebaseline B4-B active metadata'
           git push origin HEAD:refactor/v3-r1-b4b-metadata
