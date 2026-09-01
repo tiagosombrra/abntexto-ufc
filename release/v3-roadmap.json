@@ -6,11 +6,11 @@
   "updated_at": "2026-09-01",
   "status": "ACTIVE",
   "phase": "V3-R1",
-  "stage": "R1-BLOCK-3",
-  "stage_name": "semantic and path-consumer closure",
+  "stage": "R1-BLOCK-4",
+  "stage_name": "tools validator and metadata technical rebaseline",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "bf36982ab2ff08b8585c4acc570c48364e9ecc1f",
+  "last_certified_clean_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -27,10 +27,7 @@
     "status": "DONE",
     "remote_branch_count_before": 154,
     "remote_branch_count_after_s0": 2,
-    "retained_remote_branches_after_s0": [
-      "main",
-      "refactor/v3-r1-rebaseline"
-    ],
+    "retained_remote_branches_after_s0": ["main", "refactor/v3-r1-rebaseline"],
     "external_full_history_backup_verified": true,
     "backup_forms": ["git_mirror", "git_bundle"],
     "stale_pull_requests_closed": [157, 158],
@@ -50,16 +47,8 @@
     "commits_behind": 0,
     "net_product_migration_delta_present": false,
     "expected_executor_commit_found": false,
-    "expected_executor_commit_message": "refactor: reconcile remaining R1 path consumers",
     "temporary_workflows": [],
     "temporary_executors": [],
-    "post_publication_verification": {
-      "remote_branch_count": 2,
-      "open_pull_request_count": 0,
-      "temporary_workflow_present": false,
-      "temporary_executor_present": false,
-      "passed": true
-    },
     "blocking_inconsistencies": []
   },
   "trunk_rebaseline": {
@@ -67,26 +56,16 @@
     "status": "DONE",
     "target_branch": "main",
     "source_branch": "refactor/v3-r1-rebaseline",
-    "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
     "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
-    "commits_ahead_at_promotion": 95,
-    "commits_behind_at_promotion": 0,
     "merge_base_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
     "promotion_mode": "fast-forward",
-    "history_rewrite_allowed": false,
     "history_rewritten": false,
-    "source_branch_role_after_promotion": "retire during closeout",
-    "steady_state_development_branch": "main",
-    "retain_legacy_branch_for_archive_only": false,
     "minimal_gates_passed": true,
     "reference_build_passed": true,
     "validator_source_passed": true,
     "temporary_workflows_present": false,
     "temporary_executors_present": false,
-    "stale_required_status_removed_for_promotion": "latex-preflight",
-    "restore_stale_status_before_r1_block_7": false,
     "source_branch_retired": true,
-    "steady_state_remote_branch_count": 1,
     "steady_state_remote_branches": ["main"],
     "interim_main_protection": {
       "deletion_protected": true,
@@ -118,21 +97,9 @@
     ]
   },
   "stages": {
-    "R1-S0": {
-      "status": "DONE",
-      "name": "repository sanitation and control rebaseline"
-    },
-    "R1-S1": {
-      "status": "DONE",
-      "name": "control plane repair",
-      "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02"
-    },
-    "R1-S2": {
-      "status": "DONE",
-      "name": "trunk rebaseline",
-      "depends_on": ["R1-S1"],
-      "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1"
-    }
+    "R1-S0": {"status": "DONE", "name": "repository sanitation and control rebaseline"},
+    "R1-S1": {"status": "DONE", "name": "control plane repair", "closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02"},
+    "R1-S2": {"status": "DONE", "name": "trunk rebaseline", "promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1"}
   },
   "blocks": {
     "R1-BLOCK-1": {
@@ -146,67 +113,56 @@
       "name": "legacy purge and active-tree minimization"
     },
     "R1-BLOCK-3": {
-      "status": "ACTIVE",
+      "status": "DONE",
+      "closure_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
       "name": "semantic and path-consumer closure",
       "resumed_after": ["R1-S2"],
-      "previous_certified_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
-      "promotion_checkpoint_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
-      "abandoned_executor_does_not_close_additional_work": true,
-      "active_work_item": "B3-F",
       "b3_d_status": "DONE",
       "b3_d_closure_sha": "8f7c05b32f228633e4802a6fa8c14babf16fd685",
-      "b3_d_completed_lots": ["B3-D1", "B3-D2A", "B3-D2B", "B3-D3", "B3-D4", "B3-D5"],
-      "b3_d_results": {
-        "active_makefile_version": "3.0.0",
-        "active_class_version": "3.0.0",
-        "active_version_qualified_runner_identity_closed": true,
-        "dead_distribution_runner_removed": true,
-        "obsolete_release_distribution_surface_removed": true,
-        "distribution_rebuild_deferred_to": "R1-BLOCK-5",
-        "migration_contracts_checked_against_deleted_helpers": true,
-        "remaining_legacy_references_classified": true
-      },
       "b3_e_status": "DONE",
       "b3_e_closure_sha": "bf36982ab2ff08b8585c4acc570c48364e9ecc1f",
-      "b3_e_results": {
-        "implementation_files_changed": 31,
-        "insertions": 31,
-        "deletions": 31,
-        "runner_job_identities_migrated": 20,
-        "checker_diagnostics_migrated": 7,
-        "producer_consumer_binding_migrated": "oracle_extension -> validation_extension",
-        "active_obsolete_project_owned_oracle_occurrences_after_audit": 0,
+      "b3_f_status": "DONE",
+      "b3_f_closure_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
+      "b3_f_results": {
+        "repository_contract_passed": true,
+        "tracked_files": 392,
+        "history_directories": 0,
+        "legacy_class": 0,
+        "canonical_modules_aligned": 14,
+        "retired_version_process_active_paths": 0,
+        "unclassified_project_owned_oracle_occurrences": 0,
+        "font_poc_canonical_binding_passed": true,
+        "python_compile_passed": true,
+        "shell_syntax_passed": true,
+        "diff_check_passed": true,
         "temporary_executor_removed_before_merge": true,
-        "normative_semantics_changed": false,
-        "runtime_api_changed": false
-      },
-      "b3_f_status": "ACTIVE",
-      "b3_f_known_entry_residuals": [
-        "tests/checks/repository_contract.py self-matches its own forbidden path literals",
-        "tests/integration/font-poc.sh contains obsolete normativa/ and tests/normativa/ path literals"
-      ],
-      "known_residual_classes": ["final Block 3 residual audit"]
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false
+      }
     },
     "R1-BLOCK-4": {
-      "status": "BLOCKED",
-      "name": "tools validator and metadata technical rebaseline"
+      "status": "ACTIVE",
+      "name": "tools validator and metadata technical rebaseline",
+      "entry_checkpoint_sha": "7a3b018a43630ed46b375117790acc732ae67b40",
+      "scope": [
+        "tools live-tree ownership and dead-helper audit",
+        "validator project-owned identifiers diagnostics controls and technical labels",
+        "active technical metadata repository package version and ownership identity",
+        "classification of B5 and B8 assigned helpers",
+        "bounded technical-language cleanup without runtime/API migration"
+      ],
+      "constraints": [
+        "preserve normative rule IDs expected numeric values tolerances and proof state",
+        "do not rewrite Portuguese runtime API before V3-R2",
+        "do not implement B5 distribution B6 permanent gates B7 workflows or B8 certification",
+        "temporary executors must be removed before checkpoint",
+        "delete dead helpers instead of archiving them"
+      ]
     },
-    "R1-BLOCK-5": {
-      "status": "BLOCKED",
-      "name": "distribution and public bundle rebaseline"
-    },
-    "R1-BLOCK-6": {
-      "status": "BLOCKED",
-      "name": "permanent static gates"
-    },
-    "R1-BLOCK-7": {
-      "status": "BLOCKED",
-      "name": "optimized workflow restoration"
-    },
-    "R1-BLOCK-8": {
-      "status": "BLOCKED",
-      "name": "final R1 certification"
-    }
+    "R1-BLOCK-5": {"status": "BLOCKED", "name": "distribution and public bundle rebaseline"},
+    "R1-BLOCK-6": {"status": "BLOCKED", "name": "permanent static gates"},
+    "R1-BLOCK-7": {"status": "BLOCKED", "name": "optimized workflow restoration"},
+    "R1-BLOCK-8": {"status": "BLOCKED", "name": "final R1 certification"}
   },
-  "next_action": "Start B3-F from canonical remote main using bf36982ab2ff08b8585c4acc570c48364e9ecc1f as the latest certified implementation checkpoint. Repair repository_contract.py self-matching negative path literals and stale normativa/tests/normativa literals in tests/integration/font-poc.sh, then run a lightweight final Block 3 residual audit covering repository/canonical identity, stale paths, v1/v2/process identity, classified oracle residue, producer-consumer alignment, temporary workflow absence, control-plane agreement, proportional syntax checks, and git diff --check. Remove any temporary executor before checkpoint. Close R1-BLOCK-3 only if clean, then activate R1-BLOCK-4."
+  "next_action": "Start R1-BLOCK-4 from canonical remote main at implementation checkpoint 7a3b018a43630ed46b375117790acc732ae67b40. Open a B4 operational issue, inventory tools/, validator/, and active project-owned technical metadata, classify each finding as current v3, B5-owned, B8-owned, upstream/document-language exception, dead/superseded, or R2-deferred, then execute bounded cleanup lots with proportional checks and no permanent workflow."
 }
