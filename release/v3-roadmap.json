@@ -10,7 +10,7 @@
   "stage_name": "optimized remote workflow restoration",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "643397ee2fa49e6bd496889cb287f43167d49b0f",
+  "last_certified_clean_checkpoint_sha": "ced68313ed2c362a6617d7df6ef9adfd2df6c0b5",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -673,7 +673,7 @@
       "entry_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
       "operational_issue": 213,
       "active_work_item": "B7-C",
-      "active_sub_item": "B7-C1",
+      "active_sub_item": "B7-C2",
       "scope": [
         "historical and current workflow/runner dependency inventory",
         "permanent remote orchestration consuming repository-owned validation entry points",
@@ -692,7 +692,7 @@
       "planned_lots": {
         "B7-A": "DONE - workflow and runner dependency inventory plus orchestration design",
         "B7-B": "DONE - permanent fast/static workflow consuming make static-check",
-        "B7-C": "ACTIVE - optimized Linux integration/release workflow restoration",
+        "B7-C": "ACTIVE - C1 clean-runner contract certified; C2 permanent Linux PR integration orchestration active; C3 release orchestration pending",
         "B7-D": "PENDING - residual workflow audit branch-protection recommendation and B8 handoff"
       },
       "b7_a_status": "DONE",
@@ -735,7 +735,7 @@
         "remote_validation_passed": true
       },
       "b7_c_status": "ACTIVE",
-      "b7_c1_status": "ACTIVE",
+      "b7_c1_status": "DONE",
       "b7_c1_scope": [
         "repair reference corpus consumption of template-produced main artifacts",
         "repair CAPES front-matter repository-root path",
@@ -746,14 +746,33 @@
         "align appendix-annex evidence output with current engine_matrix_deferred scenario metadata",
         "prove make check on a clean TeX Live 2026 Linux runner before permanent heavy workflow restoration"
       ],
-      "b7_c2_status": "PENDING",
+      "b7_c2_status": "ACTIVE",
       "b7_c3_status": "PENDING",
-      "b7_d_status": "PENDING"
+      "b7_d_status": "PENDING",
+      "b7_c1_issue": 219,
+      "b7_c1_pr": 220,
+      "b7_c1_closure_sha": "ced68313ed2c362a6617d7df6ef9adfd2df6c0b5",
+      "b7_c1_validation_run_id": 33545418119,
+      "b7_c1_results": {
+        "clean_runner_make_check_passed": true,
+        "clean_runner_pass": 30,
+        "clean_runner_fail": 0,
+        "clean_runner_skip": 0,
+        "clean_runner_validation_run_id": 33545418119,
+        "final_static_contract_run_id": 33547122520,
+        "temporary_workflow_removed_before_merge": true,
+        "runtime_api_changed": false,
+        "normative_rule_ids_changed": false,
+        "normative_expected_values_changed": false,
+        "normative_tolerances_changed": false,
+        "proof_state_changed": false,
+        "synthetic_fixture_markers_rebased": true
+      }
     },
     "R1-BLOCK-8": {
       "status": "BLOCKED",
       "name": "final R1 certification"
     }
   },
-  "next_action": "Execute R1-BLOCK-7 B7-C1 after control-plane reconciliation. Repair the seven clean-runner execution/artifact-contract defects exposed by run 33530309579, validate make static-check, then prove make check under the TeX Live 2026 Linux runner before adding permanent heavy workflow YAML. Keep B8 Windows/font/final PDF-A certification and V3-R2 runtime/API work out of scope."
+  "next_action": "Execute R1-BLOCK-7 B7-C2. Add bounded permanent Linux PR integration orchestration that delegates to the certified make check entry point without duplicating repository gate logic; use optimized triggers/concurrency so heavy TeX validation is not forced on every intermediate commit. Keep B7-C3 release orchestration, B8 Windows/font/final PDF-A certification, and V3-R2 runtime/API work out of scope."
 }
