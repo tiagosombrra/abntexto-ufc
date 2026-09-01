@@ -141,7 +141,7 @@
         "pdf_measurement": "current-validator-source-consumer",
         "pdf_vector_measurement": "current-vector-validation-consumers",
         "prepare_windows_fonts": "B8-owned-live-windows-font-chain",
-        "validate_ufc_pdf": "current-eight-consumers",
+        "validate_ufc_pdf": "current-eleven-consumers",
         "validator_app_js": "current-live-consumer-surface",
         "validator_index_html": "current-live-consumer-surface",
         "validator_validation_contract": "current-live-consumer-surface",

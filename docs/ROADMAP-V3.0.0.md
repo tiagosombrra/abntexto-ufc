@@ -52,7 +52,7 @@ Ownership classifications:
 - `fetch-abntexto.py` → **B5-owned upstream/bundle helper**;
 - `prepare-windows-fonts.ps1` + `convert-encoding-to-unicode.ps1` → **B8-owned Windows/font certification chain**;
 - normative/measurement helpers → current validation infrastructure;
-- `validate-ufc-pdf.py` → current, eight live consumers;
+- `validate-ufc-pdf.py` → current, 11 live consumers;
 - all four files in `validator/` → current product surfaces.
 
 ### B4-A — Inventory blockers and ownership classification

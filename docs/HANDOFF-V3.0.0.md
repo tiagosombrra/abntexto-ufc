@@ -59,7 +59,7 @@ Observed ownership:
 - `fetch-abntexto.py` has no current textual consumer but is explicitly an upstream `abntexto` pin/fetch helper for Overleaf/public bundle construction: **classified B5-owned**, retained for B5 unless B5 supersedes it.
 - `prepare-windows-fonts.ps1` and `convert-encoding-to-unicode.ps1` form a live Windows-font preparation chain consumed by `abntexto-ufc/fonts.def`: **classified B8-owned**.
 - normative contract/measurement helpers are live validator/test infrastructure.
-- `validate-ufc-pdf.py` has eight live consumers.
+- `validate-ufc-pdf.py` has 11 live consumers.
 - all four files under `validator/` have live consumers and are current product surfaces.
 
 No old repository-name identity was found in the audited B4 surfaces.
