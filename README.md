@@ -87,7 +87,7 @@ make check
 make release-check
 ```
 
-`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. B7-C1 certified `make check` on a clean TeX Live 2026 Linux runner (`PASS=30 FAIL=0 SKIP=0`); B7-C2 now owns bounded permanent PR integration orchestration, while B7-C3 owns later release orchestration. Final Windows/font/PDF-A certification remains B8-owned.
+`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. B7-C1 certified `make check` on a clean TeX Live 2026 Linux runner (`PASS=30 FAIL=0 SKIP=0`). The permanent `.github/workflows/linux-integration.yml` workflow exposes the stable `Linux integration` status: it always evaluates PR scope, skips the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, runs full integration for every other or unknown path, cancels superseded PR runs, and delegates the heavy gate to `make check`. `workflow_dispatch` always forces a full integration run. B7-C3 owns later release orchestration; final Windows/font/PDF-A certification remains B8-owned.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 
