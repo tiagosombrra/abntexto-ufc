@@ -13,7 +13,7 @@ trap cleanup EXIT INT TERM
 
 for cmd in pdffonts pdftotext; do
   command -v "$cmd" >/dev/null 2>&1 || {
-    echo "Matemática V2: comando ausente: $cmd"
+    echo "Matemática: comando ausente: $cmd"
     exit 1
   }
 done
@@ -105,4 +105,4 @@ PY
   done
 done
 
-echo 'Gate V2 de matemática e equações concluído.'
+echo 'Gate de matemática e equações concluído.'
