@@ -33,20 +33,20 @@
   "project": {
     "title_page": 1,
     "markers": {
-      "author": "UFCFRONTMATTERTPPROJAUTHOR",
-      "title": "UFCFRONTMATTERTPPROJTITLE",
-      "nature_left": "UFCFRONTMATTERTPL",
-      "nature_right": "UFCFRONTMATTERTPR",
+      "author": "TPPAUTHOR",
+      "title": "TPPTITLE",
+      "nature_left": "TPPLEFT",
+      "nature_right": "TPPRIGHT",
       "nature_lines": [
-        "UFCFRONTMATTERTPNATUREA",
-        "UFCFRONTMATTERTPNATUREB",
-        "UFCFRONTMATTERTPNATUREC"
+        "TPPNATUREA",
+        "TPPNATUREB",
+        "TPPNATUREC"
       ],
-      "advisor": "UFCFRONTMATTERTPPROJADVISOR",
+      "advisor": "TPPADVISOR",
       "calibration_lines": [
-        "UFCFRONTMATTERTPSINGLEA",
-        "UFCFRONTMATTERTPSINGLEB",
-        "UFCFRONTMATTERTPSINGLEC"
+        "TPPSINGLEA",
+        "TPPSINGLEB",
+        "TPPSINGLEC"
       ]
     }
   },

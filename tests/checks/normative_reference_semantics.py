@@ -330,7 +330,7 @@ def main() -> None:
         "fixture": "tests/documents/references-6023-2025.tex",
         "bibliography_fixture": "tests/fixtures/references-6023-2025.bib",
         "rendered_engine": "lualatex",
-        "engine_matrix_deferred": true,
+        "engine_matrix_deferred": True,
         "result": result,
         "status_counts": status_counts,
         "compatibility_boundary": boundary,
