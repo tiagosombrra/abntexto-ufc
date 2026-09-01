@@ -38,7 +38,9 @@ jobs:
               tests/integration/vector-rule-validation.sh \
               tests/integration/table-ibge-vector-evidence.sh
             do
+              echo "B3-C1 SYNTAX $script"
               sh -n "$script"
+              echo "B3-C1 FUNCTIONAL $script"
               sh "$script"
             done
 
@@ -55,6 +57,13 @@ jobs:
         run: |
           set -euo pipefail
 
+          check() {
+            label="$1"
+            shift
+            echo "B3-C1 WINDOWS CHECK: $label"
+            "$@"
+          }
+
           for script in \
             tests/integration/catalog-card.sh \
             tests/integration/long-quotation-evidence.sh \
@@ -63,23 +72,27 @@ jobs:
             tests/integration/vector-rule-validation.sh \
             tests/integration/table-ibge-vector-evidence.sh
           do
-            sh -n "$script"
+            check "syntax $script" sh -n "$script"
           done
 
-          grep -Fq 'catalog_text="abntexto-ufc-v2-catalog-card.txt"' tests/integration/catalog-card.sh
-          grep -Fq 'python3 - "$job" "$mode" "$card_mode" "$catalog_text"' tests/integration/catalog-card.sh
+          check "catalog-card runner-local pdftotext output" \
+            grep -Fq 'pdftotext -layout "$job.pdf" "$job.txt"' tests/integration/catalog-card.sh
+          check "catalog-card native Python reads runner-local output" \
+            grep -Fq "raw = Path(f'{job}.txt').read_text(encoding='utf-8')" tests/integration/catalog-card.sh
           if grep -Fq "Path(f'/tmp/{job}.txt')" tests/integration/catalog-card.sh; then
             echo 'catalog-card still reconstructs a Git-Bash /tmp path in native Python'
             exit 1
           fi
 
-          grep -Fq 'PYTHONIOENCODING=UTF-8 python3 tests/checks/normative_short_direct_citation.py' \
+          check "short citation forces UTF-8 checker process" \
+            grep -Fq 'PYTHONIOENCODING=UTF-8 python3 tests/checks/normative_short_direct_citation.py' \
             tests/integration/short-direct-citation-evidence.sh
+          echo 'B3-C1 WINDOWS CHECK: UTF-8 Unicode diagnostic smoke'
           PYTHONIOENCODING=UTF-8 python -c "import json; print(json.dumps({'quotes':'“”'}, ensure_ascii=False))"
 
-          grep -Fq -- '-jobname="$job"' tests/integration/research-project.sh
-          grep -Fq 'artifacts/normative/mainmatter/long-quotation.json' standards/long-quote-reduced-size-scenario.json
-          grep -Fq 'validation-policy.tolerances.horizontal_position_pt' standards/vector-rule-validation-extension.json
-          grep -Fq 'validation-policy.tolerances.vertical_position_pt' standards/vector-rule-validation-extension.json
-          grep -Fq 'vector-rule-validation-calibration.json' tests/integration/vector-rule-validation.sh
-          grep -Fq 'sh tests/integration/vector-rule-validation.sh' tests/integration/table-ibge-vector-evidence.sh
+          check "research project jobname binding" grep -Fq -- '-jobname="$job"' tests/integration/research-project.sh
+          check "long quotation canonical evidence path" grep -Fq 'artifacts/normative/mainmatter/long-quotation.json' standards/long-quote-reduced-size-scenario.json
+          check "horizontal validation tolerance binding" grep -Fq 'validation-policy.tolerances.horizontal_position_pt' standards/vector-rule-validation-extension.json
+          check "vertical validation tolerance binding" grep -Fq 'validation-policy.tolerances.vertical_position_pt' standards/vector-rule-validation-extension.json
+          check "vector calibration artifact producer" grep -Fq 'vector-rule-validation-calibration.json' tests/integration/vector-rule-validation.sh
+          check "IBGE runner invokes same-run calibration" grep -Fq 'sh tests/integration/vector-rule-validation.sh' tests/integration/table-ibge-vector-evidence.sh
