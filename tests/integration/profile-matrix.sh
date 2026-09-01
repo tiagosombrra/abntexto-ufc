@@ -2,48 +2,54 @@
 set -eu
 
 fixture="tests/smoke/base-profile.tex"
+template_dir="template"
 profiles="tccgraduacao tccespecializacao dissertacao tese projeto projetoanonimizado"
 
 cleanup_job() {
   job="$1"
-  rm -f "$job".tex "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".log \
-    "$job".out "$job".toc "$job".run.xml
+  rm -f "$template_dir/$job".tex "$template_dir/$job".aux "$template_dir/$job".bbl \
+    "$template_dir/$job".bcf "$template_dir/$job".blg "$template_dir/$job".log \
+    "$template_dir/$job".out "$template_dir/$job".toc "$template_dir/$job".run.xml \
+    "$template_dir/$job".pdf
 }
 
 for engine in pdflatex lualatex; do
   for profile in $profiles; do
     job="perfil-${profile}-${engine}"
+    output="$template_dir/$job"
     cleanup_job "$job"
-    rm -f "$job.pdf"
-    sed "s/@UFC_TYPE@/$profile/g" "$fixture" > "$job.tex"
+    sed \
+      -e "s/@UFC_TYPE@/$profile/g" \
+      -e 's#tests/fixtures/references.bib#../tests/fixtures/references.bib#g' \
+      "$fixture" > "$output.tex"
 
     echo "Validando perfil completo $profile com $engine..."
-    make filename="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-profile.log 2>&1 || {
+    make DOCUMENT="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-profile.log 2>&1 || {
       cat /tmp/abntexto-ufc-profile.log
       exit 1
     }
-    rm -f "$job.tex"
+    rm -f "$output.tex"
 
-    warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
+    warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$output.log" || true)
     if [ -n "$warnings" ]; then
       printf '%s\n' "$warnings"
       echo "Preflight falhou: perfil $profile/$engine contém warning ou overflow não reconhecido."
       exit 1
     fi
 
-    if [ -f "$job.blg" ] && grep -Eq 'WARN|ERROR' "$job.blg"; then
-      cat "$job.blg"
+    if [ -f "$output.blg" ] && grep -Eq 'WARN|ERROR' "$output.blg"; then
+      cat "$output.blg"
       echo "Preflight falhou: Biber reportou warning/error em $profile/$engine."
       exit 1
     fi
 
-    [ -s "$job.pdf" ] || {
+    [ -s "$output.pdf" ] || {
       echo "Perfil $profile/$engine: PDF não foi gerado."
       exit 1
     }
 
     meta="/tmp/$job-meta.xml"
-    pdfinfo -meta "$job.pdf" > "$meta"
+    pdfinfo -meta "$output.pdf" > "$meta"
     grep -Fq '<pdfaid:part>2</pdfaid:part>' "$meta" || {
       echo "Perfil $profile/$engine: declaração PDF/A part 2 ausente."
       exit 1
@@ -53,7 +59,7 @@ for engine in pdflatex lualatex; do
       exit 1
     }
 
-    if ! pdfinfo "$job.pdf" | awk '
+    if ! pdfinfo "$output.pdf" | awk '
       /^Page size:/ {
         width = $3 + 0
         height = $5 + 0
@@ -63,20 +69,20 @@ for engine in pdflatex lualatex; do
       }
       END { if (!found) exit 1 }
     '; then
-      pdfinfo "$job.pdf"
+      pdfinfo "$output.pdf"
       echo "Perfil $profile/$engine: página não é A4."
       exit 1
     fi
 
-    pages=$(pdfinfo "$job.pdf" | awk '/^Pages:/ {print $2}')
+    pages=$(pdfinfo "$output.pdf" | awk '/^Pages:/ {print $2}')
     [ "${pages:-0}" -ge 6 ] || {
       echo "Perfil $profile/$engine: documento completo gerou apenas ${pages:-0} páginas."
       exit 1
     }
 
-    sh tests/integration/font-embedding.sh "$job.pdf"
+    sh tests/integration/font-embedding.sh "$output.pdf"
 
-    pdftotext -layout "$job.pdf" "/tmp/$job.txt"
+    pdftotext -layout "$output.pdf" "/tmp/$job.txt"
     python3 - "$profile" "$job" <<'PY'
 import re
 import sys
@@ -155,19 +161,19 @@ if profile in {'projeto', 'projetoanonimizado'}:
             raise SystemExit(f'Perfil {profile}: elemento de trabalho acadêmico apareceu indevidamente: {forbidden}')
 PY
 
-    grep -Fqi 'Introdu' "$job.toc" || {
+    grep -Fqi 'Introdu' "$output.toc" || {
       echo "Perfil $profile/$engine: Introdução ausente do Sumário."
-      cat "$job.toc"
+      cat "$output.toc"
       exit 1
     }
-    grep -Fqi 'Metodologia' "$job.toc" || {
+    grep -Fqi 'Metodologia' "$output.toc" || {
       echo "Perfil $profile/$engine: Metodologia ausente do Sumário."
-      cat "$job.toc"
+      cat "$output.toc"
       exit 1
     }
-    if grep -Eq '\\contentsline \{section\}\{[^}]*\*' "$job.toc"; then
+    if grep -Eq '\\contentsline \{section\}\{[^}]*\*' "$output.toc"; then
       echo "Perfil $profile/$engine: entrada anômala com asterisco no Sumário."
-      cat "$job.toc"
+      cat "$output.toc"
       exit 1
     fi
   done

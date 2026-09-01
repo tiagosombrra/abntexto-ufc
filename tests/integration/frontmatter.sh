@@ -27,24 +27,24 @@ for engine in pdflatex lualatex; do
       }
     done
     if [ "$fixture" = "tests/documents/frontmatter-academic-work.tex" ] && command -v pdftotext >/dev/null 2>&1; then
-      python3 tests/checks/frontmatter_definition_alignment.py frontmatter-trabalho.pdf
+      python3 tests/checks/frontmatter_definition_alignment.py frontmatter-academic-work.pdf
     fi
   done
 done
 
-if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' frontmatter-trabalho.toc; then
+if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' frontmatter-academic-work.toc; then
   echo 'Front matter validation falhou: elemento front matter entrou no Sumário.'
-  cat frontmatter-trabalho.toc
+  cat frontmatter-academic-work.toc
   exit 1
 fi
 
-grep -Eiq 'Introdu' frontmatter-trabalho.toc || {
+grep -Eiq 'Introdu' frontmatter-academic-work.toc || {
   echo 'Front matter validation falhou: seção textual ausente do Sumário.'
   exit 1
 }
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext frontmatter-trabalho.pdf /tmp/abntexto-ufc-frontmatter.txt
+  pdftotext frontmatter-academic-work.pdf /tmp/abntexto-ufc-frontmatter.txt
   for heading in 'AGRADECIMENTOS' 'RESUMO' 'ABSTRACT' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE ABREVIATURAS E SIGLAS' 'LISTA DE SÍMBOLOS' 'SUMÁRIO'; do
     grep -Fq "$heading" /tmp/abntexto-ufc-frontmatter.txt || {
       echo "Front matter validation falhou: título front matter ausente ou incorreto: $heading"
@@ -57,7 +57,7 @@ if command -v pdftotext >/dev/null 2>&1; then
     exit 1
   fi
 
-  pdftotext -bbox-layout frontmatter-trabalho.pdf /tmp/abntexto-ufc-frontmatter-bbox.html
+  pdftotext -bbox-layout frontmatter-academic-work.pdf /tmp/abntexto-ufc-frontmatter-bbox.html
   python3 - <<'PY'
 import re
 import xml.etree.ElementTree as ET
@@ -95,7 +95,7 @@ check_below_midpoint('dedicatória', 'FAMÍLIA')
 check_below_midpoint('epígrafe', 'CITAÇÃO DE EXEMPLO')
 PY
 
-  pdftotext frontmatter-projeto-anonimo.pdf /tmp/abntexto-ufc-anonimo.txt
+  pdftotext frontmatter-anonymized-project.pdf /tmp/abntexto-ufc-anonimo.txt
   if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/abntexto-ufc-anonimo.txt; then
     echo 'Front matter validation falhou: autor vazou no projeto anonimizado.'
     exit 1

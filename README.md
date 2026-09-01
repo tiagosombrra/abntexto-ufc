@@ -78,6 +78,8 @@ make static-check
 
 `static-check` validates tracked Python, JSON, shell and JavaScript sources, repository/canonical identity, the aggregate normative/validator source contract, object-scope metadata and the reference-guide contract. It does not compile TeX/PDF documents, fetch network resources or generate distribution artifacts, and it fails if its own execution changes the repository status.
 
+The permanent remote fast workflow is `.github/workflows/static-contract.yml`. Its stable workflow/job name is `Static contract`, and it delegates the complete product validation contract to `make static-check` rather than duplicating checks in workflow YAML.
+
 The broader validation entry points remain separate:
 
 ```bash
@@ -85,7 +87,7 @@ make check
 make release-check
 ```
 
-`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. Permanent GitHub workflow orchestration is intentionally separate from these local entry points.
+`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. During R1-BLOCK-7, permanent heavy Linux orchestration is restored only after these repository-owned entry points are proven on a clean runner. B7-C1 currently owns clean-runner `make check` contract repair; B7-C2/C3 own later permanent integration/release orchestration. Final Windows/font/PDF-A certification remains B8-owned.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 

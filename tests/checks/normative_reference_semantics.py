@@ -17,7 +17,7 @@ from normative_full import load_full_contract
 
 SCENARIO = ROOT / "standards" / "reference-semantics-scenario.json"
 LOCATOR = ROOT / "standards" / "locator-audit-references.json"
-BIB_FIXTURE = ROOT / "tests" / "fixtures" / "referencias-6023-2025.bib"
+BIB_FIXTURE = ROOT / "tests" / "fixtures" / "references-6023-2025.bib"
 
 RULE_ORDER = [
     "references.doi.when-present",
@@ -330,7 +330,7 @@ def main() -> None:
         "fixture": "tests/documents/references-6023-2025.tex",
         "bibliography_fixture": "tests/fixtures/references-6023-2025.bib",
         "rendered_engine": "lualatex",
-        "engine_matrix_deferred": true,
+        "engine_matrix_deferred": True,
         "result": result,
         "status_counts": status_counts,
         "compatibility_boundary": boundary,

@@ -24,7 +24,8 @@ Memory, old pull requests, workflow names, historical branches, and prior chat c
 - The active repository is not an archive. Historical evidence belongs in Git history, tags, releases, issues, pull requests, certified SHAs, and external verified backups.
 - Do not create archive/history branches in the active repository.
 - Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before a checkpoint.
-- Permanent automatic CI is not restored until the designated R1 workflow-restoration block.
+- Permanent automatic CI is introduced only through R1-BLOCK-7 and must remain a thin orchestration layer over repository-owned entry points. `Static contract` is the current permanent fast workflow and delegates to `make static-check`.
+- Permanent heavy Linux integration/release orchestration remains B7-C-owned and must not precede a clean-runner PASS of the repository-owned `make check` contract. Final Windows/font/PDF-A certification remains B8-owned.
 - Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.
 - Do not rerun completed checks unless current-state validation requires it.
 
