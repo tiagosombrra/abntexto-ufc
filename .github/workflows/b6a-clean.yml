@@ -1,0 +1,24 @@
+name: B6A cleanup
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b6a-close-b6b-open
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Remove temporary B6A workflows
+        run: |
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b6a-apply.yml .github/workflows/b6a-clean.yml .github/workflows/b6a-probe.yml
+          git commit -m 'chore: remove temporary B6-A transition workflows'
+          git push origin HEAD:docs/v3-r1-b6a-close-b6b-open
