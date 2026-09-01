@@ -119,6 +119,9 @@ CONTENT_SCAN_EXEMPT = {
     "release/v3-path-migration.json",
     "release/v3-api-migration.json",
     "release/v3-test-migration.json",
+    # This checker defines the forbidden literals above; scanning its own
+    # source would report those policy definitions as active stale references.
+    "tests/checks/repository_contract.py",
 }
 
 # These active technical/documentation surfaces intentionally name the removed
