@@ -18,8 +18,8 @@ for engine in pdflatex lualatex; do
     sed "s/@UFC_TYPE@/$profile/g" "$fixture" > "$job.tex"
 
     echo "Validando perfil completo $profile com $engine..."
-    make filename="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-v2-profile.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-profile.log
+    make filename="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-profile.log 2>&1 || {
+      cat /tmp/abntexto-ufc-profile.log
       exit 1
     }
     rm -f "$job.tex"
@@ -27,13 +27,13 @@ for engine in pdflatex lualatex; do
     warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
     if [ -n "$warnings" ]; then
       printf '%s\n' "$warnings"
-      echo "Preflight V2 falhou: perfil $profile/$engine contém warning ou overflow não reconhecido."
+      echo "Preflight falhou: perfil $profile/$engine contém warning ou overflow não reconhecido."
       exit 1
     fi
 
     if [ -f "$job.blg" ] && grep -Eq 'WARN|ERROR' "$job.blg"; then
       cat "$job.blg"
-      echo "Preflight V2 falhou: Biber reportou warning/error em $profile/$engine."
+      echo "Preflight falhou: Biber reportou warning/error em $profile/$engine."
       exit 1
     fi
 
@@ -173,4 +173,4 @@ PY
   done
 done
 
-echo 'Gate V2 da matriz completa de perfis concluído.'
+echo 'Gate da matriz completa de perfis concluído.'
