@@ -107,12 +107,25 @@ def _build_rule(spec: dict[str, Any], catalog: dict[str, Any]) -> dict[str, Any]
     validation = spec.get("validation")
     if not isinstance(validation, dict):
         raise CatalogError(f"coverage rule {rule_id}: validation must be an object")
-    if validation.get("mode") not in ALLOWED_VALIDATION_MODES:
+    validation_mode = validation.get("mode")
+    if validation_mode not in ALLOWED_VALIDATION_MODES:
         raise CatalogError(
-            f"coverage rule {rule_id}: invalid validation mode {validation.get('mode')}"
+            f"coverage rule {rule_id}: invalid validation mode {validation_mode}"
         )
     checks = validation.get("checks")
-    if not isinstance(checks, list) or not checks:
+    if not isinstance(checks, list):
+        raise CatalogError(f"coverage rule {rule_id}: validation checks must be a list")
+    if validation_mode == "not-applicable":
+        if checks:
+            raise CatalogError(
+                f"coverage rule {rule_id}: not-applicable validation must not declare executable checks"
+            )
+        applicability = spec.get("applicability")
+        if not isinstance(applicability, dict) or not applicability:
+            raise CatalogError(
+                f"coverage rule {rule_id}: not-applicable validation requires explicit applicability"
+            )
+    elif not checks:
         raise CatalogError(f"coverage rule {rule_id}: validation checks are required")
 
     authority = spec.get("authority", "normative")
