@@ -6,8 +6,8 @@
   "updated_at": "2026-09-01",
   "status": "ACTIVE",
   "phase": "V3-R1",
-  "stage": "R1-BLOCK-5",
-  "stage_name": "distribution and public bundle rebaseline",
+  "stage": "R1-BLOCK-6",
+  "stage_name": "permanent cheap/static fail-closed gates",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "4bc0f544020234bc14a8f2261927f65721b6eddb",
@@ -384,12 +384,12 @@
       }
     },
     "R1-BLOCK-5": {
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "distribution and public bundle rebaseline",
       "entry_checkpoint_sha": "1a126c37653728941ce1ada762376c5fec69cb02",
       "operational_issue": 199,
-      "active_work_item": "B5-D",
-      "active_sub_item": "B5-D",
+      "active_work_item": null,
+      "active_sub_item": null,
       "scope": [
         "public and distribution bundle producer consumer inventory",
         "canonical source set and flatten copy rules",
@@ -428,7 +428,7 @@
         "B5-A": "DONE - inventory and distribution contract definition",
         "B5-B": "DONE - deterministic v3 staging and public/Overleaf bundles",
         "B5-C": "DONE - class/CTAN candidate and distribution metadata",
-        "B5-D": "ACTIVE - final residual/reproducibility audit and closeout"
+        "B5-D": "DONE - final residual/reproducibility audit and closeout"
       },
       "b5_b_status": "DONE",
       "b5_b_scope": [
@@ -441,7 +441,7 @@
         "bounded repair of current Overleaf distribution consumer"
       ],
       "b5_c_status": "DONE",
-      "b5_d_status": "ACTIVE",
+      "b5_d_status": "DONE",
       "b5_b_closure_sha": "426b506da9f6bf6255263efdb4caad19d4bcd16d",
       "b5_b_pr": 202,
       "b5_b_validation_runs": [
@@ -540,11 +540,78 @@
         "runtime_api_changed": false,
         "normative_semantics_changed": false,
         "proof_state_changed": false
+      },
+      "closure_sha": "4bc0f544020234bc14a8f2261927f65721b6eddb",
+      "b5_d_validation_runs": [
+        {
+          "run_id": 33523356265,
+          "conclusion": "failure",
+          "finding": "distribution/public reproducibility, canonical identity and repository contract passed; executor referenced a nonexistent machine-state key and manual review found two stale control-plane residues; no distribution product defect"
+        },
+        {
+          "run_id": 33523899178,
+          "conclusion": "success",
+          "finding": "bounded control-plane repair validated roadmap and machine-state B5-D alignment and self-removed its temporary workflow"
+        },
+        {
+          "run_id": 33524219575,
+          "conclusion": "success",
+          "finding": "final B5 zero-diff certification passed for five deterministic artifacts, checksums, public/CTAN contracts, distribution policy, exclusions, control plane and absence of permanent workflows"
+        }
+      ],
+      "b5_d_results": {
+        "final_audit_run_id": 33524219575,
+        "certified_implementation_checkpoint": "4bc0f544020234bc14a8f2261927f65721b6eddb",
+        "artifact_count_including_checksums": 5,
+        "distribution_reproducibility_passed": true,
+        "public_reproducibility_passed": true,
+        "checksums_passed": true,
+        "public_contract_passed": true,
+        "ctan_contract_passed": true,
+        "distribution_policy_reconciled": true,
+        "generated_distribution_outputs_tracked": 0,
+        "permanent_workflows_present": 0,
+        "control_plane_passed": true,
+        "audit_branch_changed_files_vs_main": 0,
+        "implementation_merge_required": false,
+        "temporary_workflow_removed": true,
+        "actual_ctan_submission_performed": false,
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false,
+        "locator_policy_changed": false,
+        "reference_tolerances_changed": false
       }
     },
     "R1-BLOCK-6": {
-      "status": "BLOCKED",
-      "name": "permanent static gates"
+      "status": "ACTIVE",
+      "name": "permanent cheap/static fail-closed gates",
+      "entry_checkpoint_sha": "4bc0f544020234bc14a8f2261927f65721b6eddb",
+      "operational_issue": 207,
+      "active_work_item": "B6-A",
+      "active_sub_item": "B6-A",
+      "scope": [
+        "fresh inventory and dependency classification of current validation checks",
+        "one canonical cheap/static fail-closed gate contract for local development and later B7 consumption",
+        "source-only deterministic syntax identity metadata and normative contract checks where proven cheap",
+        "producer consumer and evidence reconciliation for permanent static validation entry points"
+      ],
+      "constraints": [
+        "do not restore permanent GitHub Actions or workflow orchestration before B7",
+        "do not absorb TeX PDF compilation network mutable external service Windows font or final PDF-A certification into the cheap static gate",
+        "do not implement V3-R2 runtime API migration",
+        "preserve normative rule IDs values tolerances locators and proof state",
+        "classify current checks and dependencies before editing",
+        "temporary validation executors must be removed before checkpoint"
+      ],
+      "planned_lots": {
+        "B6-A": "ACTIVE - validation inventory dependency measurement and cheap/static classification",
+        "B6-B": "PENDING - canonical permanent cheap/static gate implementation and consumer reconciliation",
+        "B6-C": "PENDING - final B6 residual audit closeout and B7 handoff"
+      },
+      "b6_a_status": "ACTIVE",
+      "b6_b_status": "PENDING",
+      "b6_c_status": "PENDING"
     },
     "R1-BLOCK-7": {
       "status": "BLOCKED",
@@ -555,5 +622,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Run the final R1-BLOCK-5 B5-D residual/reproducibility audit from canonical remote main using 4bc0f544020234bc14a8f2261927f65721b6eddb as the latest certified implementation checkpoint and issue #199 as the operational log. Verify all B5 producers, consumers, artifact layouts, checksums, exclusions, documentation and control-plane state. Close B5 and activate R1-BLOCK-6 only after a clean zero-residual audit. Keep B7 permanent workflow restoration, B8 final Windows/font/PDF-A certification, actual CTAN submission and V3-R2 runtime/API work out of scope."
+  "next_action": "Start R1-BLOCK-6 B6-A from canonical remote main using 4bc0f544020234bc14a8f2261927f65721b6eddb as the latest certified implementation checkpoint and issue #207 as the operational log. Inventory tests/checks, source-only portions of tests/integration, tests/run.py, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers; measure runtime/dependency requirements and classify cheap/static versus bounded/heavy checks before designing the permanent gate. Keep permanent workflow restoration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6, and V3-R2 runtime/API work out of scope."
 }

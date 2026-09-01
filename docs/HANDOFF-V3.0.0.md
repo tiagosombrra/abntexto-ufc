@@ -6,11 +6,11 @@ Updated: 2026-09-01
 
 - Repository: **`tiagosombrra/abntexto-ufc`**.
 - Phase: **V3-R1 ACTIVE**.
-- Active implementation stage: **R1-BLOCK-5 — Distribution and Public Bundle Rebaseline**.
-- Active B5 work item: **B5-D — final distribution residual/reproducibility audit**.
-- Active B5 focus: **final producer/consumer/policy/evidence reconciliation, reproducibility closure, and Block 5 certification**.
+- Active implementation stage: **R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates**.
+- Active B6 work item: **B6-A — validation inventory and dependency classification**.
+- Active B6 focus: **classify current validation checks by dependency/runtime cost before designing the permanent cheap/static gate**.
 - Active branch/trunk: `main`.
-- B5 operational issue: **#199**.
+- B6 operational issue: **#207**.
 - Latest certified clean implementation checkpoint: **`4bc0f544020234bc14a8f2261927f65721b6eddb`**.
 - R1-BLOCK-3 closure checkpoint: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
@@ -160,7 +160,7 @@ Validation remained fail-closed: inventory `33506603720` PASS; oversized executo
 
 ## R1-BLOCK-5 — Distribution and Public Bundle Rebaseline
 
-**ACTIVE.** Operational continuity: issue #199. Entry implementation checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`.
+**DONE.** Operational closure log: issue #199. Entry implementation checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`; certified B5 implementation/closure checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.
 
 B5 owns the current public/distribution bundle contract: producer and consumer inventory, canonical source set, flatten/copy rules, manifests, deterministic generation, reproducibility, and current build-path/distribution-policy reconciliation. `tools/fetch-abntexto.py` enters B5 as an explicitly assigned upstream/bundle helper and must be retained, replaced, or removed only through a proven current distribution role.
 
@@ -186,16 +186,26 @@ The accepted `abntexto-uece` package was used as a practical packaging benchmark
 
 ### B5-D — Final B5 residual/reproducibility audit
 
-**ACTIVE / NEXT.** Reconcile remaining distribution producers/consumers, policy/evidence references and release documentation; rerun only proportional deterministic/archive/identity checks needed by the final state; prove no temporary executors or unclassified distribution residue remain; then close B5 and activate B6.
+**DONE — zero-diff certification.** Run `33523356265` reconfirmed all distribution/public product checks but failed on an audit-key mismatch; the same review exposed two stale roadmap/machine-state residues. PR #206 repaired those control-plane residues and run `33523899178` PASS validated the repair. Final run **`33524219575` PASS** certified five deterministic outputs including `SHA256SUMS`, public/CTAN contracts, distribution policy, zero tracked generated `dist/` files, zero permanent workflows, canonical identity/repository contract and coherent control plane. The temporary executor self-removed and the final audit branch is zero-diff versus `main`; no B5-D implementation merge was required.
+
+## R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates
+
+**ACTIVE.** Operational issue #207. Entry certified implementation checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.
+
+B6 begins with B6-A inventory/classification. The target is one permanent source-only/static gate contract that is deterministic and inexpensive enough for routine development and later B7 workflow reuse. Current integration-heavy validation remains separate. No GitHub Actions restoration belongs to B6.
+
+- **B6-A ACTIVE / NEXT:** inventory current checks and measure runtime/dependencies/side effects; classify cheap/static vs bounded/heavy.
+- **B6-B PENDING:** implement and reconcile the canonical cheap/static gate from the proven inventory.
+- **B6-C PENDING:** residual audit, close B6 and hand orchestration to B7.
 
 ## Remaining R1 sequence
 
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
-- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.
-- **R1-B6 BLOCKED** — permanent cheap/static fail-closed gates.
+- **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
+- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A inventory/classification.
 - **R1-B7 BLOCKED** — optimized permanent workflow restoration.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
 ## Immediate action
 
-Start B5-D from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint and issue #199 as the operational log. Perform the final distribution producer/consumer/policy/evidence and reproducibility audit, including the B5-B/B5-C artifact contracts and CTAN release documentation. Keep B6 permanent gates, B7 permanent workflows, B8 final Windows/font/PDF-A certification, actual CTAN submission, and V3-R2 runtime/API work out of scope.
+Start B6-A from canonical remote `main` using `4bc0f544020234bc14a8f2261927f65721b6eddb` as the latest certified implementation checkpoint and issue #207 as the operational log. Inventory `tests/checks/`, source-only portions of `tests/integration/`, `tests/run.py`, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers. Measure dependencies/runtime and classify before designing the permanent cheap/static gate. Keep permanent workflow restoration in B7, final Windows/font/PDF-A certification in B8, actual CTAN submission outside B6, and V3-R2 runtime/API work out of scope.
