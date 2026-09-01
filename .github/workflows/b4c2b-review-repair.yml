@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   repair:
-    if: "github.event.head_commit.message == 'chore: add temporary B4-C2b review repair'"
+    if: "github.event.head_commit.message == 'chore: rerun temporary B4-C2b review repair'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,12 +25,12 @@ jobs:
           path=Path('tools/validate-ufc-pdf.py')
           text=path.read_text(encoding='utf-8')
           pairs=[
-            ("'PDF/UA-1 com veraPDF'", "'PDF/UA-1 with veraPDF'"),
-            ("'Execute veraPDF -f ua1.'", "'Run veraPDF -f ua1.'"),
+            ("'PDF/UA-1 com veraPDF'", "'PDF/UA-1 with veraPDF'", 2),
+            ("'Execute veraPDF -f ua1.'", "'Run veraPDF -f ua1.'", 1),
           ]
-          for old,new in pairs:
-              if text.count(old) != 1:
-                  raise SystemExit(f'expected one {old!r}, found {text.count(old)}')
+          for old,new,count in pairs:
+              if text.count(old) != count:
+                  raise SystemExit(f'expected {count} {old!r}, found {text.count(old)}')
               text=text.replace(old,new)
           path.write_text(text,encoding='utf-8')
           PY
