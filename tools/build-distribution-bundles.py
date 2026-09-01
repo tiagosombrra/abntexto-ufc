@@ -6,15 +6,16 @@ import hashlib
 import io
 import os
 import re
-import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import zipfile
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
+CTAN_DIR = ROOT / "release" / "ctan"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -40,6 +41,12 @@ def read_version() -> str:
     class_text = (ROOT / "abntexto-ufc.cls").read_text(encoding="utf-8")
     if f"v{version} UFC academic document class" not in class_text:
         fail(f"abntexto-ufc.cls does not match VERSION {version}.")
+    manual_text = (CTAN_DIR / f"{PACKAGE_ID}.tex").read_text(encoding="utf-8")
+    if f"\\newcommand{{\\version}}{{{version}}}" not in manual_text:
+        fail(f"CTAN manual does not match VERSION {version}.")
+    readme_text = (CTAN_DIR / "README.md").read_text(encoding="utf-8")
+    if f"Version: {version}" not in readme_text:
+        fail(f"CTAN README does not match VERSION {version}.")
     return version
 
 
@@ -126,6 +133,10 @@ def file_entry(source: Path, arcname: str) -> tuple[str, bytes, int]:
     return arcname, source.read_bytes(), mode_for(source)
 
 
+def bytes_entry(content: bytes, arcname: str, mode: int = 0o644) -> tuple[str, bytes, int]:
+    return arcname, content, mode
+
+
 def class_entries(runtime: list[str], version: str) -> list[tuple[str, bytes, int]]:
     prefix = f"{PACKAGE_ID}-{version}/"
     entries = [
@@ -137,15 +148,56 @@ def class_entries(runtime: list[str], version: str) -> list[tuple[str, bytes, in
     return entries
 
 
-def ctan_entries(runtime: list[str]) -> list[tuple[str, bytes, int]]:
+def build_ctan_manual(epoch: int) -> tuple[bytes, bytes]:
+    source = CTAN_DIR / f"{PACKAGE_ID}.tex"
+    source_bytes = source.read_bytes()
+    with tempfile.TemporaryDirectory(prefix=f"{PACKAGE_ID}-ctan-manual-") as temp:
+        work = Path(temp)
+        target = work / source.name
+        target.write_bytes(source_bytes)
+        env = os.environ.copy()
+        env["SOURCE_DATE_EPOCH"] = str(epoch)
+        env["FORCE_SOURCE_DATE"] = "1"
+        command = [
+            "pdflatex",
+            "-interaction=nonstopmode",
+            "-halt-on-error",
+            "-file-line-error",
+            source.name,
+        ]
+        for _ in range(2):
+            result = subprocess.run(
+                command,
+                cwd=work,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            if result.returncode != 0:
+                fail("CTAN manual build failed:\n" + result.stdout[-6000:])
+        pdf = work / f"{PACKAGE_ID}.pdf"
+        if not pdf.is_file() or pdf.stat().st_size == 0:
+            fail("CTAN manual PDF was not generated.")
+        pdf_bytes = pdf.read_bytes()
+        if not pdf_bytes.startswith(b"%PDF-"):
+            fail("CTAN manual output is not a PDF.")
+        return source_bytes, pdf_bytes
+
+
+def ctan_entries(runtime: list[str], manual_source: bytes, manual_pdf: bytes) -> list[tuple[str, bytes, int]]:
     prefix = f"{PACKAGE_ID}/"
     entries = [
-        file_entry(ROOT / "README.md", f"{prefix}README.md"),
+        file_entry(CTAN_DIR / "README.md", f"{prefix}README.md"),
         file_entry(ROOT / "LICENSE", f"{prefix}LICENSE"),
-        file_entry(ROOT / "docs" / "ctan-example.tex", f"{prefix}doc/{PACKAGE_ID}-example.tex"),
+        bytes_entry(manual_source, f"{prefix}{PACKAGE_ID}.tex"),
+        bytes_entry(manual_pdf, f"{prefix}{PACKAGE_ID}.pdf"),
+        file_entry(ROOT / "docs" / "ctan-example.tex", f"{prefix}{PACKAGE_ID}-example.tex"),
     ]
     for relative in runtime:
-        entries.append(file_entry(ROOT / relative, f"{prefix}tex/{relative}"))
+        entries.append(file_entry(ROOT / relative, f"{prefix}{relative}"))
     return entries
 
 
@@ -190,11 +242,13 @@ def main() -> None:
         cwd=ROOT,
     )
 
-    date_time = zip_datetime(source_date_epoch())
+    epoch = source_date_epoch()
+    date_time = zip_datetime(epoch)
+    manual_source, manual_pdf = build_ctan_manual(epoch)
     class_zip = output / f"{PACKAGE_ID}-{version}.zip"
     ctan_zip = output / f"{PACKAGE_ID}-ctan-{version}.zip"
     write_zip(class_zip, class_entries(runtime, version), date_time)
-    write_zip(ctan_zip, ctan_entries(runtime), date_time)
+    write_zip(ctan_zip, ctan_entries(runtime, manual_source, manual_pdf), date_time)
 
     artifacts = sorted(output.glob("*.zip"), key=lambda item: item.name)
     expected = {
