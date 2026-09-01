@@ -1,4 +1,5 @@
 name: B3-C1 temporary remote validation
+# PR #164 trigger marker; temporary workflow will be removed after certification.
 
 on:
   pull_request:
