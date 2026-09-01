@@ -28,7 +28,7 @@ if [ -n "$warnings" ]; then
 fi
 
 python3 tests/checks/normative_vector_rule_validation.py "$job.pdf" \
-  --json artifacts/normative-layout/vector-rule-oracle-calibration.json \
+  --json artifacts/normative-layout/vector-rule-validation-calibration.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 echo 'Gate de calibração para geometria vetorial concluído.'

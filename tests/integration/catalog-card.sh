@@ -9,7 +9,8 @@ card_base="abntexto-ufc-v2-catalog-card"
 cleanup() {
   rm -f "$tmp_fixture" "$card_source" "$card_base".aux "$card_base".log "$card_base".pdf \
         ficha-catalografica-*.aux ficha-catalografica-*.log \
-        ficha-catalografica-*.out ficha-catalografica-*.pdf ficha-catalografica-*.toc
+        ficha-catalografica-*.out ficha-catalografica-*.pdf ficha-catalografica-*.toc \
+        ficha-catalografica-*.txt
 }
 trap cleanup EXIT INT TERM
 
@@ -74,7 +75,7 @@ for engine in pdflatex lualatex; do
         exit 1
       }
 
-      pdftotext -layout "$job.pdf" "/tmp/$job.txt"
+      pdftotext -layout "$job.pdf" "$job.txt"
       python3 - "$job" "$mode" "$card_mode" <<'PY'
 import re
 import sys
@@ -82,7 +83,7 @@ import unicodedata
 from pathlib import Path
 
 job, mode, card_mode = sys.argv[1:]
-raw = Path(f'/tmp/{job}.txt').read_text(encoding='utf-8')
+raw = Path(f'{job}.txt').read_text(encoding='utf-8')
 pages = raw.split('\f')
 if pages and not pages[-1].strip():
     pages.pop()

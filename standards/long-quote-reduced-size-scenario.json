@@ -3,6 +3,6 @@
   "component": "long-quote-reduced-size",
   "rule_id": "font.size.reduced.long-quote",
   "measurement_source_rule_id": "quotation.long.font.size",
-  "source_evidence": "artifacts/normative-textual/long-quotation.json",
+  "source_evidence": "artifacts/normative/mainmatter/long-quotation.json",
   "independent_physical_sample": false
 }

@@ -46,7 +46,7 @@ def main() -> None:
         "component": "long-quote-reduced-size",
         "rule_id": RULE_ID,
         "measurement_source_rule_id": SOURCE_RULE_ID,
-        "source_evidence": "artifacts/normative-textual/long-quotation.json",
+        "source_evidence": "artifacts/normative/mainmatter/long-quotation.json",
         "independent_physical_sample": False,
     }
     if scenario != expected_scenario:
