@@ -1,0 +1,114 @@
+name: B4-C1 validator interface vocabulary
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-b4c-technical-language
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: "github.event.head_commit.message != 'refactor: normalize validator status vocabulary'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply coordinated status and verdict vocabulary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files = [
+              Path('tools/validate-ufc-pdf.py'),
+              Path('validator/app.js'),
+              Path('validator/index.html'),
+              Path('validator/validation-contract.json'),
+              Path('validator/validation-vectors.json'),
+              Path('tests/checks/normative_validator_contract.py'),
+              Path('tests/integration/pdf-validator.sh'),
+          ]
+
+          mappings = [
+              ('APROVADO NOS CHECKS AUTOMÁTICOS, COM RESSALVAS', 'AUTOMATED CHECKS PASSED WITH WARNINGS'),
+              ('APROVADO NOS CHECKS AUTOMÁTICOS', 'AUTOMATED CHECKS PASSED'),
+              ('REVISÃO NECESSÁRIA', 'REVIEW REQUIRED'),
+              ('REVISÃO MANUAL', 'MANUAL REVIEW'),
+              ('NÃO APLICÁVEL', 'NOT APPLICABLE'),
+              ('REPROVADO', 'FAIL'),
+              ('APROVADO', 'PASS'),
+              ('ALERTA', 'WARNING'),
+          ]
+
+          changed = 0
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              original = text
+              for old, new in mappings:
+                  text = text.replace(old, new)
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+                  changed += 1
+          if changed != len(files):
+              raise SystemExit(f'expected all {len(files)} coordinated files to change, changed={changed}')
+          PY
+
+      - name: Validate B4-C1 interface contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/validate-ufc-pdf.py tests/checks/normative_validator_contract.py
+          node --check validator/app.js
+          python3 -m json.tool validator/validation-contract.json >/dev/null
+          python3 -m json.tool validator/validation-vectors.json >/dev/null
+          sh -n tests/integration/pdf-validator.sh
+
+          python3 tests/checks/normative_validator_contract.py
+          python3 tests/checks/validator_source.py
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+
+          python3 - <<'PY'
+          import json
+          import runpy
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, 'tools')
+          module = runpy.run_path('tools/validate-ufc-pdf.py', run_name='ufc_pdf_validator')
+          assert [module['PASS'], module['FAIL'], module['WARN'], module['REVIEW'], module['NA']] == [
+              'PASS', 'FAIL', 'WARNING', 'MANUAL REVIEW', 'NOT APPLICABLE'
+          ]
+          assert module['verdict']([]) == 'AUTOMATED CHECKS PASSED'
+
+          contract = json.loads(Path('validator/validation-contract.json').read_text(encoding='utf-8'))
+          assert contract['statuses'] == ['PASS', 'FAIL', 'WARNING', 'MANUAL REVIEW', 'NOT APPLICABLE']
+          assert contract['verdicts'] == [
+              'FAIL', 'REVIEW REQUIRED', 'AUTOMATED CHECKS PASSED WITH WARNINGS', 'AUTOMATED CHECKS PASSED'
+          ]
+          PY
+
+          if git grep -n -E 'APROVADO|REPROVADO|ALERTA|REVISÃO MANUAL|NÃO APLICÁVEL|REVISÃO NECESSÁRIA|APROVADO NOS CHECKS AUTOMÁTICOS' -- \
+            tools/validate-ufc-pdf.py validator/app.js validator/index.html validator/validation-contract.json validator/validation-vectors.json tests/checks/normative_validator_contract.py tests/integration/pdf-validator.sh; then
+            echo 'Old validator status/verdict vocabulary remains in coordinated surfaces.' >&2
+            exit 1
+          fi
+
+          git diff --check
+          echo 'B4-C1-INTERFACE-VOCABULARY status=PASS'
+
+      - name: Commit coordinated B4-C1 change
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add tools/validate-ufc-pdf.py validator/app.js validator/index.html validator/validation-contract.json validator/validation-vectors.json tests/checks/normative_validator_contract.py tests/integration/pdf-validator.sh
+          git diff --cached --quiet && { echo 'No B4-C1 changes to commit'; exit 1; }
+          git commit -m 'refactor: normalize validator status vocabulary'
+          git push origin HEAD:refactor/v3-r1-b4c-technical-language
