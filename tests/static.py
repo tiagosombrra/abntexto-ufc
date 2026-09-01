@@ -79,11 +79,11 @@ def check_python(paths: Iterable[Path]) -> int:
     for path in paths:
         if path.suffix != ".py":
             continue
-        source = path.read_text(encoding="utf-8")
         try:
+            source = path.read_text(encoding="utf-8")
             compile(source, str(path.relative_to(ROOT)), "exec")
-        except SyntaxError as exc:
-            fail(f"Python syntax error in {path.relative_to(ROOT)}: {exc}")
+        except (OSError, UnicodeError, SyntaxError) as exc:
+            fail(f"Python source error in {path.relative_to(ROOT)}: {exc}")
         count += 1
     return count
 
@@ -95,7 +95,7 @@ def check_json(paths: Iterable[Path]) -> int:
             continue
         try:
             json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
             fail(f"JSON parse error in {path.relative_to(ROOT)}: {exc}")
         count += 1
     return count
@@ -121,11 +121,7 @@ def check_javascript(paths: Iterable[Path]) -> int:
     return count
 
 
-def main() -> None:
-    for command in ("git", "sh", "node"):
-        require_command(command)
-
-    before = repository_status()
+def execute_checks() -> tuple[int, int, int, int]:
     files = tracked_files()
 
     python_count = check_python(files)
@@ -142,8 +138,22 @@ def main() -> None:
             fail(f"required source check is missing: {relative}")
         run([sys.executable, relative], relative)
 
-    after = repository_status()
-    if after != before:
+    return python_count, json_count, shell_count, javascript_count
+
+
+def main() -> None:
+    for command in ("git", "sh", "node"):
+        require_command(command)
+
+    before = repository_status()
+    try:
+        python_count, json_count, shell_count, javascript_count = execute_checks()
+    except BaseException:
+        if repository_status() != before:
+            fail("gate execution changed repository status while another check failed")
+        raise
+
+    if repository_status() != before:
         fail("gate execution changed repository status")
 
     print(
