@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-3 remains active; B3-A, B3-B and B3-C are closed on `main`; B3-D is active.**
+**V3-R1 ACTIVE — R1-BLOCK-3 remains active; B3-A through B3-D are closed on `main`; B3-E is active.**
 
 Current sequence:
 
@@ -12,48 +12,36 @@ Current sequence:
 
 Block 3 internal sequence:
 
-**B3-A DONE → B3-B DONE → B3-C DONE → B3-D ACTIVE → B3-E PENDING → B3-F PENDING**
+**B3-A DONE → B3-B DONE → B3-C DONE → B3-D DONE → B3-E ACTIVE → B3-F PENDING**
 
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active branch/trunk: `main`.
-- Latest certified clean implementation checkpoint: `2ad7da8eae03c40fbea3d875843628387ec0e25d`.
+- Latest certified clean implementation checkpoint: `8f7c05b32f228633e4802a6fa8c14babf16fd685`.
 - R1-S2 promotion checkpoint: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - R1-S1 closure: `1c7291592689f10a0e6fb043d404597ae8e53c02`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
 
-The GitHub repository was renamed to `abntexto-ufc` on 2026-09-01 without changing repository identity, history, tags, issues, pull requests, or governance. The former repository name is not an active technical identity.
+The GitHub repository was renamed to `abntexto-ufc` on 2026-09-01 without changing repository ID, history, tags, issues, pull requests, or governance. The former repository name is not an active technical identity.
 
 ## Authority and bootstrap
 
 Current Git facts and the canonical machine state must agree. `release/v3-roadmap.json` declares intended phase/stage; `docs/HANDOFF-V3.0.0.md` and this roadmap explain that state. `AGENTS.md` defines the mandatory session bootstrap.
 
-`main` is the canonical trunk and merge target. Short-lived task branches are permitted, but they do not replace `main` as the control-plane `active_branch`.
+`main` is the canonical trunk and merge target. Short-lived task branches are permitted but do not replace `main` as the control-plane `active_branch`.
 
-If Git, machine state, handoff, roadmap, workflow inventory, or temporary-artifact inventory disagree, advancement fails closed. Memory, historical branches, old PRs, old workflows, and prior chat context are not phase authorities.
+If Git, machine state, handoff, roadmap, workflow inventory, or temporary-artifact inventory disagree, advancement fails closed. Memory, historical branches, old PRs, old workflows and prior chat context are not phase authorities.
 
-## R1-S0 — Repository Sanitation & Control Rebaseline
+## R1-S0 — Repository sanitation and control rebaseline
 
-**DONE.**
+**DONE.** Verified mirror/full-history backup preceded destructive ref cleanup. Legacy 1.x/v2.x/process/audit/temporary refs were removed from the active namespace, immutable tags were preserved, stale PRs were closed, and steady-state remote development was reduced to `main` plus short-lived task branches.
 
-- verified Git mirror and full-history bundle created before ref deletion;
-- stale/abandoned audit, v2.x, N-phase/N15/B2R, preview, maintenance, release, temporary, legacy `1.x`, and abandoned v3 refs removed from the active namespace;
-- PRs #157 and #158 closed as superseded;
-- immutable release tags preserved;
-- active branch governance reduced to `main` plus short-lived task branches.
+## R1-S1 — Control plane repair
 
-No archive replacement branches are permitted in the active repository.
+**DONE** at `1c7291592689f10a0e6fb043d404597ae8e53c02`. Removed abandoned temporary migration executor/workflow, added root `AGENTS.md`, and synchronized control-plane state.
 
-## R1-S1 — Control Plane Repair
+## R1-S2 — Trunk rebaseline
 
-**DONE** at `1c7291592689f10a0e6fb043d404597ae8e53c02`.
-
-The abandoned temporary migration workflow/executor was removed, root `AGENTS.md` was added, and canonical state/docs were synchronized. The abandoned executor did not certify additional Block 3 implementation work.
-
-## R1-S2 — Trunk Rebaseline
-
-**DONE.**
-
-The v3 line was promoted to `main` by direct fast-forward without rewriting history. Reference build and agreed promotion gates passed; permanent CI remained intentionally absent. The stale `latex-preflight` requirement remains deferred until Block 7.
+**DONE.** The v3 line was promoted to `main` by fast-forward without history rewrite. Reference build and agreed promotion gates passed. Permanent CI remains intentionally absent until B7.
 
 ## R1 Block 3 — Semantic / Path-Consumer Closure
 
@@ -63,93 +51,63 @@ The v3 line was promoted to `main` by direct fast-forward without rewriting hist
 
 **DONE** through PR #159 at `e4bf60836ac7a9cd1d544232b9a4e1ef019efe04`.
 
-This lot reconciled stale active paths and producer/consumer path references without absorbing later distribution or CI work.
-
 ### B3-B — Normative process-identity closure
 
 **DONE** through PR #160 at `dbc7f774df2cd0ac1b0f6479653290c6f19b6809`.
 
-Closure evidence:
-
-- obsolete validator/scenario phase ownership removed;
-- obsolete active phase-qualified marker/process identity removed;
-- 172 markers migrated to functional namespaces;
-- active N6/N9/N10 markers: 0;
-- stale active phase diagnostics: 0;
-- active lower-case N5–N15 process identity in B3-B scope: 0;
-- active legacy `N*-EVIDENCE` labels: 0;
-- producer/consumer mismatches: 0;
-- marker namespace collisions: 0;
-- rule IDs, numeric expected values, numeric tolerances, proof state, and runtime/API semantics preserved.
-
-Functional differential validation classified 29/29 relevant tests: 21 PASS, 8 baseline-equivalent pre-existing blocks, 0 introduced regressions, and 0 unresolved classifications.
+Obsolete phase/process identity was removed and 172 markers migrated to functional namespaces. Normative rule IDs, expected numeric values, numeric tolerances, proof state and runtime/API semantics were preserved. Differential validation: 21 PASS, 8 baseline-equivalent pre-existing blocks, 0 introduced regressions, 0 unresolved.
 
 ### B3-C — Runner/evidence integrity and bounded portability
 
-**DONE.**
+**DONE.** PR #168 at `da775552be190bf09d8a790c33e9f7f4582da699` closed six runner/evidence defects; PR #169 at `625e82f9ef4780989d4635e500d72d09eab02992` closed appendix/annex stale scope accounting and footnote vector parsing. Issue #163 is closed. No temporary validation workflow remains.
 
-B3-C closed the eight defects exposed by B3-B differential validation without changing normative rule IDs, expected numeric values, numeric tolerances, proof state, or runtime/API semantics.
+### B3-D — Operational legacy identity and dead-code purge
 
-B3-C1 merged through replacement PR #168 at `da775552be190bf09d8a790c33e9f7f4582da699` and reconciled:
+**DONE** at `8f7c05b32f228633e4802a6fa8c14babf16fd685`.
 
-- catalog-card runner/file handoff;
-- long-quotation evidence producer/consumer path;
-- research-project TeX job/Biber artifact naming;
-- short direct citation UTF-8 checker process;
-- vector-rule validation tolerance-key bindings;
-- table-IBGE same-run vector calibration production.
+B3-D expanded from label cleanup into explicit active-tree legacy purge. Dead/superseded v1/v2-era implementation and tests were removed rather than renamed or archived. Surviving legacy references are permitted only as certified history, migration contracts, compatibility boundaries, or negative tests.
 
-The original draft PR #164 was closed unmerged solely because the connector could not transition its draft state; PR #168 used the same implementation branch/content.
+Completed lots:
 
-B3-C2 merged through PR #169 at `625e82f9ef4780989d4635e500d72d09eab02992` and reconciled:
+- **D1** `c506df5afc16263f797df80b9c2561d5007da9a7`: catalog-card, research-project and font-POC runner identity.
+- **D2A** `f4d703b34df53868f782598dd9502c0da684c345`: six stale V2 gate/diagnostic labels.
+- **D2B** `094b369a077009f212adb33e8a814ee9bb167b4a`: five v2-qualified temp/log producer-consumer paths.
+- **D3** `2ad7da8eae03c40fbea3d875843628387ec0e25d`: current package/class identity moved to v3.0.0; dead distribution runner and coordinated gate removed.
+- **D4** `456186a7f963c78af3cf00e5f561a616f5072c30`: final active runner v2/V2 identity removed from six current runners.
+- **D5** `8f7c05b32f228633e4802a6fa8c14babf16fd685`: obsolete release/distribution implementation purged; 12 files, +17/-1129. Removed stale Make targets, release builder, five release/CTAN/Overleaf checkers, v2 CTAN docs, unused Actions artifact downloader, and stale identity exemptions.
 
-- appendix/annex obsolete undefined-`scope` process-progress accounting while preserving the exact 13-rule campaign;
-- footnote separator vector extraction by replacing the bespoke stroked-line-only parser with the shared vector-rule parser, retaining the same 50 mm length, left-margin origin, vertical relation, and validation-policy tolerances.
+B3-D closure evidence:
 
-Issue #163 is closed as the B3-C operational continuity record. No temporary validation workflow remains.
-
-### B3-D — Operational v1/v2 identity and legacy-code purge
-
-**ACTIVE.**
-
-B3-D closes stale version-qualified technical identity and dead/superseded legacy implementation artifacts that survived earlier structural cleanup.
-
-Completed bounded lots:
-
-- **B3-D1** — stale runner identity in catalog-card, research-project and font POC;
-- **B3-D2A** — stale `V2` gate/diagnostic labels removed from six runners, merged at `f4d703b34df53868f782598dd9502c0da684c345`;
-- **B3-D2B** — stale v2-qualified temporary fixture/log identity removed from five runners with producer/consumer paths changed together, merged at `094b369a077009f212adb33e8a814ee9bb167b4a`;
-- **B3-D3** — active version identity moved from 2.1.0 to target 3.0.0 in `Makefile` and `abntexto-ufc.cls`; the broken `distribution-source` coordinated gate was removed; dead `tests/integration/distribution.sh` was deleted, merged at `2ad7da8eae03c40fbea3d875843628387ec0e25d`.
-
-B3-D3 confirmed that the removed distribution runner was dead legacy code, not a compatibility boundary: it required missing `tests/v2-*` helpers, missing `ufctex.cls`, removed workflows, and obsolete root-layout paths. Current distribution/public-bundle validation will be reconstructed in B5 from current paths and contracts.
-
-B3-D acceptance criteria:
-
-- zero active file/directory names that identify current engineering surfaces as `v1`, `V1`, `v2`, or `V2`;
-- zero current runner/log/temp/gate identity qualified as v1/v2;
-- canonical current package/class metadata identifies target v3.0.0;
-- dead or superseded v1/v2-era code/tests with no current consumer are removed rather than renamed or archived in the active tree;
-- every remaining textual v1/v2 reference is explicitly classifiable as certified history, migration contract, compatibility boundary, or negative test;
-- references to distribution/release helpers are audited before deferral and may remain only with an assigned future consumer;
-- no runtime/API compatibility boundary assigned to R2 is rewritten early.
-
-The current physical product layout is v3-oriented and does not contain an active v1/v2 product hierarchy. Remaining B3-D work is concentrated in inherited runners and explicit legacy references.
+- current package/class metadata identifies 3.0.0;
+- active product hierarchy has no v1/v2 version-qualified engineering layout;
+- current runners have no known v1/v2-qualified temp/log/gate identity;
+- dead release/distribution surface is removed instead of preserved as compatibility;
+- `README.md` v2.1.0 statement is certified-history context;
+- `release/v3-api-migration.json`, `release/v3-path-migration.json`, and `release/v3-test-migration.json` remain explicit migration contracts and do not reference the D5-deleted helpers;
+- `canonical_identity.py`, `repository_contract.py`, and the architecture absence statement retain only negative legacy assertions;
+- `docs/ctan-example.tex` and `tools/fetch-abntexto.py` are assigned to B5; reference-image tooling remains current; Windows font helper chain is assigned to B8.
 
 ### B3-E — Project-owned oracle terminology
 
-**PENDING.**
+**ACTIVE.**
 
-Replace project-owned engineering `oracle` terminology where it represents obsolete implementation naming. Preserve legitimate theoretical/testing uses of the term.
+Run a fresh live-tree audit of `oracle` terminology. Replace project-owned engineering `oracle` naming when it is inherited implementation/process identity. Preserve a use only when `oracle` is genuinely the correct testing/theoretical concept.
+
+B3-E invariants:
+
+- no normative rule-ID changes;
+- no expected numeric-value changes;
+- no numeric-tolerance changes;
+- no proof-state changes;
+- no runtime/API migration;
+- no B5 distribution reconstruction;
+- no permanent CI or B8 certification work.
+
+Known historical/advisory examples are not authority and must be re-audited on current `main`; one previously deferred example was the `vector-rule-oracle-calibration` runner/job identity.
 
 ### B3-F — Final Block 3 residual audit
 
-**PENDING.**
-
-Run a live-tree residual audit after B3-D/E, verify producer/consumer integrity and control-plane agreement, and close R1-BLOCK-3 only if no active Block 3 residue remains.
-
-Do not absorb later-block responsibilities into B3. Distribution/public bundle reconstruction, permanent CI, Overleaf/CTAN, Windows-font certification, PDF/A certification, and other heavyweight surfaces stay in their assigned later blocks.
-
-R1 must not rewrite the Portuguese runtime API; that belongs to R2.
+**PENDING.** After B3-E, run a fresh live-tree residual audit, verify producer/consumer integrity, control-plane agreement, active-tree minimization and absence of obsolete Block 3 identities. Close R1-BLOCK-3 only if no active Block 3 residue remains.
 
 ## Remaining R1 blocks
 
@@ -157,36 +115,20 @@ R1 must not rewrite the Portuguese runtime API; that belongs to R2.
 - **R1-B5:** distribution/public bundle flattening and reproducibility.
 - **R1-B6:** permanent cheap/static fail-closed gates.
 - **R1-B7:** optimized permanent workflow restoration.
-- **R1-B8:** final clean-tree, repository identity, branch policy, documentation, state, checks, and asset certification, including final Windows/font/PDF-A certification.
+- **R1-B8:** final clean-tree, repository identity, branch policy, documentation, state, checks, assets, Windows/font and PDF/A certification.
 
 ## R1 exit criteria
 
-R1 closes only when a new maintainer or agent can open the repository and determine the current state without reconstructing historical context.
-
-Required conditions include:
-
-- no historical/process artifact competing with active state;
-- no dead migration artifact without an active consumer;
-- no dead legacy implementation/test artifact retained merely for reference;
-- no archive/history tree in the active product repository;
-- zero obsolete physical paths and stale active references;
-- zero generated or temporary migration scaffolding;
-- every retained legacy-version reference has an explicit active classification;
-- project-owned technical surfaces follow the engineering-language policy;
-- canonical build/tool/test/distribution paths resolve;
-- static gates pass;
-- optimized CI cannot spam intermediate commits;
-- branch policy, roadmap, machine state, and handoff agree.
+R1 closes only when a new maintainer or agent can determine current state without reconstructing historical context. Required conditions include no dead legacy or migration artifacts without consumers, no archive/history tree in the active product, no obsolete physical paths or stale references, no generated migration scaffolding, explicit classification of retained legacy references, coherent English project-owned technical surfaces, resolvable build/test/distribution paths at their assigned block, fail-closed static gates, optimized CI, and agreement among Git facts, roadmap, handoff and machine state.
 
 ## Later phases
 
 - **V3-R2:** direct runtime/API internationalization and removal/absorption of Portuguese project API aliases.
 - **V3-R3:** standards/tests/language semantic hardening.
 - **V3-R4:** certification only.
-- **V3-R5:** foundation freeze and current migration/user/maintainer documentation only.
-- **V3-A1/A2:** article work returns only against the certified v3 foundation.
-- Later H1/RC/FINAL/CLEANUP phases follow in order.
+- **V3-R5:** foundation freeze and current migration/user/maintainer documentation.
+- **V3-A1/A2:** article work resumes only against the certified v3 foundation.
 
 ## Immediate action
 
-Continue **B3-D** from canonical remote `main` at implementation checkpoint `2ad7da8eae03c40fbea3d875843628387ec0e25d`. Finish remaining operational v2/V2 runner cleanup, classify surviving legacy-version references, and audit release/distribution helpers for real B5 consumers. Delete dead/superseded artifacts rather than preserving them. Then proceed to B3-E and B3-F without absorbing R2 or B5–B8 implementation work.
+Start **B3-E — project-owned oracle terminology cleanup** from canonical remote `main` at certified implementation checkpoint `8f7c05b32f228633e4802a6fa8c14babf16fd685`. Re-audit the live tree, classify every `oracle` occurrence, change obsolete project-owned engineering identity only, preserve legitimate testing/domain terminology and all normative semantics, then proceed to B3-F.
