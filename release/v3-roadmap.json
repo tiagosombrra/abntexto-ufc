@@ -10,7 +10,7 @@
   "stage_name": "semantic and path-consumer closure",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "8f7c05b32f228633e4802a6fa8c14babf16fd685",
+  "last_certified_clean_checkpoint_sha": "bf36982ab2ff08b8585c4acc570c48364e9ecc1f",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -32,10 +32,7 @@
       "refactor/v3-r1-rebaseline"
     ],
     "external_full_history_backup_verified": true,
-    "backup_forms": [
-      "git_mirror",
-      "git_bundle"
-    ],
+    "backup_forms": ["git_mirror", "git_bundle"],
     "stale_pull_requests_closed": [157, 158],
     "archive_branches_created": false,
     "legacy_1x_branch_removed": true,
@@ -155,36 +152,40 @@
       "previous_certified_checkpoint_sha": "38f21f0271d67fa99ef2e6bf1e91b122ac61daf6",
       "promotion_checkpoint_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
       "abandoned_executor_does_not_close_additional_work": true,
-      "active_work_item": "B3-E",
+      "active_work_item": "B3-F",
       "b3_d_status": "DONE",
       "b3_d_closure_sha": "8f7c05b32f228633e4802a6fa8c14babf16fd685",
-      "b3_d_completed_lots": [
-        "B3-D1",
-        "B3-D2A",
-        "B3-D2B",
-        "B3-D3",
-        "B3-D4",
-        "B3-D5"
-      ],
-      "b3_d_policy": "remove stale operational v1/v2 identity and dead legacy code; preserve only explicitly classified history, migration, compatibility, or negative-test references",
+      "b3_d_completed_lots": ["B3-D1", "B3-D2A", "B3-D2B", "B3-D3", "B3-D4", "B3-D5"],
       "b3_d_results": {
         "active_makefile_version": "3.0.0",
         "active_class_version": "3.0.0",
         "active_version_qualified_runner_identity_closed": true,
         "dead_distribution_runner_removed": true,
-        "broken_distribution_source_check_removed": true,
         "obsolete_release_distribution_surface_removed": true,
-        "deleted_release_surface_lines_in_b3_d5": 1129,
         "distribution_rebuild_deferred_to": "R1-BLOCK-5",
         "migration_contracts_checked_against_deleted_helpers": true,
         "remaining_legacy_references_classified": true
       },
-      "b3_e_status": "ACTIVE",
-      "b3_e_scope": "project-owned oracle terminology cleanup with legitimate testing/domain uses preserved",
-      "known_residual_classes": [
-        "project-owned oracle terminology",
-        "final Block 3 residual audit"
-      ]
+      "b3_e_status": "DONE",
+      "b3_e_closure_sha": "bf36982ab2ff08b8585c4acc570c48364e9ecc1f",
+      "b3_e_results": {
+        "implementation_files_changed": 31,
+        "insertions": 31,
+        "deletions": 31,
+        "runner_job_identities_migrated": 20,
+        "checker_diagnostics_migrated": 7,
+        "producer_consumer_binding_migrated": "oracle_extension -> validation_extension",
+        "active_obsolete_project_owned_oracle_occurrences_after_audit": 0,
+        "temporary_executor_removed_before_merge": true,
+        "normative_semantics_changed": false,
+        "runtime_api_changed": false
+      },
+      "b3_f_status": "ACTIVE",
+      "b3_f_known_entry_residuals": [
+        "tests/checks/repository_contract.py self-matches its own forbidden path literals",
+        "tests/integration/font-poc.sh contains obsolete normativa/ and tests/normativa/ path literals"
+      ],
+      "known_residual_classes": ["final Block 3 residual audit"]
     },
     "R1-BLOCK-4": {
       "status": "BLOCKED",
@@ -207,5 +208,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Start B3-E from canonical remote main at certified implementation checkpoint 8f7c05b32f228633e4802a6fa8c14babf16fd685. Perform a fresh live-tree inventory of project-owned oracle terminology, classify each occurrence as obsolete project engineering identity or legitimate testing/domain terminology, and change only obsolete identity. Preserve normative rule IDs, expected values, tolerances, proof state and runtime/API boundaries. Then continue B3-F final Block 3 residual closure."
+  "next_action": "Start B3-F from canonical remote main using bf36982ab2ff08b8585c4acc570c48364e9ecc1f as the latest certified implementation checkpoint. Repair repository_contract.py self-matching negative path literals and stale normativa/tests/normativa literals in tests/integration/font-poc.sh, then run a lightweight final Block 3 residual audit covering repository/canonical identity, stale paths, v1/v2/process identity, classified oracle residue, producer-consumer alignment, temporary workflow absence, control-plane agreement, proportional syntax checks, and git diff --check. Remove any temporary executor before checkpoint. Close R1-BLOCK-3 only if clean, then activate R1-BLOCK-4."
 }
