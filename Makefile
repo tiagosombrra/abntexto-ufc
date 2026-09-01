@@ -9,7 +9,7 @@ ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 TEX_ENV := TEXINPUTS=..//:
 
-.PHONY: all pdf compile lua version clean reference-assets \
+.PHONY: all pdf compile lua version clean reference-assets public-bundles \
 	check release-check preflight release-preflight
 
 all: compile
@@ -20,6 +20,13 @@ version:
 
 reference-assets:
 	@python3 tools/fetch-reference-images.py
+
+public-bundles:
+	@set -e; \
+		upstream=".abntexto-ufc-upstream.cls"; \
+		trap 'rm -f "$$upstream"' EXIT INT TERM; \
+		python3 tools/fetch-abntexto.py --output "$$upstream"; \
+		python3 tools/build-public-bundles.py --abntexto "$$upstream"
 
 compile:
 	@echo "Compiling $(TEMPLATE_DIR)/$(DOCUMENT).tex with $(ENGINE)..."
