@@ -1,0 +1,65 @@
+name: B4 B5 docs review repair
+
+on:
+  push:
+    branches:
+      - docs/v3-r1-b4-close-b5-open
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: "github.event.head_commit.message == 'chore: add temporary B4 B5 docs review repair'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repair final consumer count
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          p=Path('docs/HANDOFF-V3.0.0.md')
+          t=p.read_text(encoding='utf-8')
+          old='`validate-ufc-pdf.py` has eight live consumers.'
+          new='`validate-ufc-pdf.py` has 11 live consumers.'
+          if t.count(old) != 1:
+              raise SystemExit(f'HANDOFF consumer-count drift: {t.count(old)}')
+          p.write_text(t.replace(old,new,1),encoding='utf-8')
+
+          p=Path('docs/ROADMAP-V3.0.0.md')
+          t=p.read_text(encoding='utf-8')
+          old='`validate-ufc-pdf.py` → current, eight live consumers;'
+          new='`validate-ufc-pdf.py` → current, 11 live consumers;'
+          if t.count(old) != 1:
+              raise SystemExit(f'ROADMAP consumer-count drift: {t.count(old)}')
+          p.write_text(t.replace(old,new,1),encoding='utf-8')
+
+          p=Path('release/v3-roadmap.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          data['blocks']['R1-BLOCK-4']['consumer_classification']['validate_ufc_pdf']='current-eleven-consumers'
+          p.write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          PY
+          grep -F '`validate-ufc-pdf.py` has 11 live consumers.' docs/HANDOFF-V3.0.0.md >/dev/null
+          grep -F '`validate-ufc-pdf.py` → current, 11 live consumers;' docs/ROADMAP-V3.0.0.md >/dev/null
+          grep -F '"validate_ufc_pdf": "current-eleven-consumers"' release/v3-roadmap.json >/dev/null
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          git diff --check
+      - name: Commit repair and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add docs/HANDOFF-V3.0.0.md docs/ROADMAP-V3.0.0.md release/v3-roadmap.json
+          git commit -m 'docs: reconcile final B4 consumer count'
+          git rm .github/workflows/b4-b5-docs-review-repair.yml
+          git commit -m 'chore: remove temporary B4 B5 docs review repair'
+          git push origin HEAD:docs/v3-r1-b4-close-b5-open
