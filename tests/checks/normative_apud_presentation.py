@@ -21,7 +21,7 @@ RULE_ID = "citation.apud.presentation"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Apud presentation oracle failed: {message}")
+    raise SystemExit(f"Apud presentation validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:

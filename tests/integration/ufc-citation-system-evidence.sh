@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-ufc-citation-system-test.tex"
-job="textual-oracle-ufc-citation-system"
+job="validation-ufc-citation-system"
 evidence="artifacts/normative-textual/ufc-citation-system.json"
 latex_log="/tmp/abntexto-ufc-v2-ufc-citation-system.log"
 biber_log="/tmp/abntexto-ufc-v2-ufc-citation-system-biber.log"

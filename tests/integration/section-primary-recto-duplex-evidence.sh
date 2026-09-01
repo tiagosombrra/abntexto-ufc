@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-section-primary-recto-duplex-test.tex"
-job="textual-oracle-section-primary-recto-duplex"
+job="validation-section-primary-recto-duplex"
 evidence="artifacts/normative-textual/section-primary-recto-duplex.json"
 log="/tmp/abntexto-ufc-v2-section-primary-recto-duplex.log"
 

@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-footnote-test.tex"
-job="textual-oracle-footnote"
+job="validation-footnote"
 evidence="artifacts/normative-layout/footnote-text.json"
 log="/tmp/abntexto-ufc-v2-footnote-text.log"
 

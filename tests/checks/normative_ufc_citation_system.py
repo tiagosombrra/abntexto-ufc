@@ -21,7 +21,7 @@ RULE_ID = "citation.system.ufc"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"UFC citation system oracle failed: {message}")
+    raise SystemExit(f"UFC citation system validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:

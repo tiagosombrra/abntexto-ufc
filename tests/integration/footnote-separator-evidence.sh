@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-footnote-separator-test.tex"
-job="textual-oracle-footnote-separator"
+job="validation-footnote-separator"
 evidence="artifacts/normative-layout/footnote-separator.json"
 log="/tmp/abntexto-ufc-v2-footnote-separator.log"
 

@@ -26,7 +26,7 @@ RULE_ORDER = [
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"reference semantics oracle failed: {message}")
+    raise SystemExit(f"reference semantics validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:

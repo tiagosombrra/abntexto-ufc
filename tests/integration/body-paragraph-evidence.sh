@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-body-paragraph-test.tex"
-job="textual-oracle-body-paragraph"
+job="validation-body-paragraph"
 evidence="artifacts/normative-textual/body-paragraph.json"
 log="/tmp/abntexto-ufc-v2-body-paragraph.log"
 

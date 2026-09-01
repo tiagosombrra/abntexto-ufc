@@ -21,7 +21,7 @@ RULE_ID = "citation.indirect.source"
 
 
 def fail(message: str) -> None:
-    raise SystemExit(f"Indirect citation source oracle failed: {message}")
+    raise SystemExit(f"Indirect citation source validation failed: {message}")
 
 
 def load_json(path: Path) -> dict[str, Any]:

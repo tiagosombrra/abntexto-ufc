@@ -164,7 +164,7 @@ def main() -> None:
         or scenario.get("rules") != RULES
     ):
         fail("invalid scenario schema/component/scope")
-    if scenario.get("oracle_extension") != "standards/vector-rule-validation-extension.json":
+    if scenario.get("validation_extension") != "standards/vector-rule-validation-extension.json":
         fail("scenario validation-extension binding drifted")
     if scenario.get("locator_ruleset") != "objects.table-ibge":
         fail("scenario locator binding drifted")

@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/mainmatter-pagination-geometry-test.tex"
-job="textual-oracle-pagination-geometry"
+job="validation-pagination-geometry"
 evidence="artifacts/normative-layout/pagination-geometry.json"
 log="/tmp/abntexto-ufc-v2-pagination-geometry.log"
 
