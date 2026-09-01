@@ -485,7 +485,7 @@ def main() -> None:
         "source_commit_sha": args.commit_sha,
         "fixture": scenario["fixture"],
         "rendered_engine": scenario["engine"],
-        "engine_matrix_deferred_to": scenario["engine_matrix_deferred_to"],
+        "engine_matrix_deferred": scenario["engine_matrix_deferred"],
         "status_counts": dict(sorted(counts.items())),
         "findings": findings,
         "evidence_policy": scenario["evidence_policy"],
