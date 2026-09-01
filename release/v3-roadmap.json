@@ -906,7 +906,7 @@
       "name": "final R1 certification",
       "operational_issue": 227,
       "entry_implementation_checkpoint_sha": "d7327db7efd5cc1e0ff9255195bcb9767d853d3e",
-      "entry_control_plane_sha": "5f0ec947bb123567b5fe4548f04e9a15b2bb915d",
+      "entry_control_plane_sha": "4abff2c0ff4b8ae31166b8b6a03aed30b1ae8aa8",
       "scope": [
         "hosted Windows certification for the current v3 candidate",
         "literal Times New Roman and Arial identity certification without redistributing proprietary fonts",
@@ -931,7 +931,10 @@
         "release_only_pdfa_passed": true,
         "release_only_profile_pdfa_passed": true,
         "b7_permanent_workflow_inventory_clean": true
-      }
+      },
+      "entry_control_plane_pr": 228,
+      "entry_control_plane_static_run_id": 33569583824,
+      "b7_operational_issue_closed": true
     }
   },
   "next_action": "Execute R1-BLOCK-8 via issue #227 from canonical main. Audit and use the repository-owned Windows/font/PDF-A preparation and validation tooling, certify the current v3 candidate on hosted Windows with literal Times New Roman and Arial where required, prove the supported pdfLaTeX/LuaLaTeX matrix, Unicode extraction, embedding and final PDF/A-2b evidence. Do not rerun completed Linux product gates without current-state need, perform V3-R2 runtime/API migration, redistribute proprietary fonts, or perform an actual CTAN submission."
