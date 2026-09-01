@@ -1,0 +1,101 @@
+name: B4-B bounded metadata repair
+
+on:
+  push:
+    branches:
+      - refactor/v3-r1-b4b-metadata
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: ${{ !startsWith(github.event.head_commit.message, 'fix: rebaseline B4-B active metadata') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply exact B4-B replacements
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('abntexto-ufc/layout.def'): [
+                  (
+                      '% The v2 normative profile is section-based. Chapter mode is intentionally disabled.',
+                      '% The current UFC normative profile is section-based. Chapter mode is intentionally disabled.',
+                  ),
+                  (
+                      '{Chapter mode is not supported by the UFC v2 normative profile}',
+                      '{Chapter mode is not supported by the current UFC normative profile}',
+                  ),
+              ],
+              Path('abntexto-ufc/public-api.def'): [
+                  (
+                      '% Canonical English setup keys forward to the certified Portuguese v2.x behavior.',
+                      '% Canonical English setup keys forward to the retained Portuguese compatibility behavior.',
+                  ),
+                  (
+                      '% Portuguese keys remain supported compatibility surfaces throughout v2.x.',
+                      '% Portuguese keys remain supported compatibility surfaces until V3-R2.',
+                  ),
+                  (
+                      '% B2R-B3 canonical commands forward to the certified v2.x public behavior.',
+                      '% Canonical commands forward to the retained Portuguese compatibility behavior.',
+                  ),
+                  (
+                      '% The legacy commands remain the behavior owners during v2.x.',
+                      '% The Portuguese compatibility commands remain behavior owners until V3-R2.',
+                  ),
+              ],
+              Path('standards/atomic-rules.json'): [
+                  (
+                      '"locator": "Política técnica abntexto-ufc v2.1.0"',
+                      '"locator": "Política técnica do abntexto-ufc — perfil de implementação PDF/A-2b"',
+                  ),
+              ],
+          }
+
+          for path, pairs in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              for old, new in pairs:
+                  count = text.count(old)
+                  if count != 1:
+                      raise SystemExit(f'{path}: expected exactly one occurrence of {old!r}, found {count}')
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate bounded B4-B change
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m json.tool standards/atomic-rules.json >/dev/null
+          python3 tools/normative_atomic.py
+          python3 tests/checks/validator_source.py
+          python3 tests/checks/canonical_identity.py
+          python3 tests/checks/repository_contract.py
+          git diff --check
+
+          ! grep -n -E 'UFC v2 normative profile|certified Portuguese v2\.x behavior|throughout v2\.x|B2R-B3 canonical commands|during v2\.x' \
+            abntexto-ufc/layout.def abntexto-ufc/public-api.def
+          ! grep -n -F 'Política técnica abntexto-ufc v2.1.0' standards/atomic-rules.json
+
+          git diff -- abntexto-ufc/layout.def abntexto-ufc/public-api.def standards/atomic-rules.json
+          echo 'B4-B-BOUNDED-EVIDENCE status=PASS'
+
+      - name: Commit bounded repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git add abntexto-ufc/layout.def abntexto-ufc/public-api.def standards/atomic-rules.json
+          git diff --cached --quiet && { echo 'No target changes to commit'; exit 1; }
+          git commit -m 'fix: rebaseline B4-B active metadata'
+          git push origin HEAD:refactor/v3-r1-b4b-metadata
