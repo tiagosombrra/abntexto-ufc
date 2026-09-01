@@ -2,10 +2,11 @@
 set -eu
 
 profiles="tccgraduacao tccespecializacao dissertacao tese projeto projetoanonimizado"
+template_dir="template"
 
 for engine in pdflatex lualatex; do
   for profile in $profiles; do
-    pdf="perfil-${profile}-${engine}.pdf"
+    pdf="$template_dir/perfil-${profile}-${engine}.pdf"
     [ -s "$pdf" ] || {
       echo "PDF/A da matriz falhou: arquivo ausente: $pdf"
       exit 1
