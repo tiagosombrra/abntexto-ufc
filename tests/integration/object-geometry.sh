@@ -16,8 +16,8 @@ for engine in pdflatex lualatex; do
   echo "Validando geometria de objetos com $engine..."
 
   for pass in 1 2; do
-    "$engine" -jobname="$job" $flags "$fixture" > /tmp/abntexto-ufc-v2-object-geometry.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-object-geometry.log
+    "$engine" -jobname="$job" $flags "$fixture" > /tmp/abntexto-ufc-object-geometry.log 2>&1 || {
+      cat /tmp/abntexto-ufc-object-geometry.log
       exit 1
     }
   done
@@ -72,4 +72,4 @@ sh tests/integration/table-typography-equation-evidence.sh
 sh tests/integration/table-ibge-vector-evidence.sh
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
-echo 'Gate V2 de geometria de objetos concluído.'
+echo 'Gate de geometria de objetos concluído.'

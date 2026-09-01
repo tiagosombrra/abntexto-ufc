@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/multivolume.tex"
-invalid_fixture=".abntexto-ufc-v2-invalid-page.tex"
+invalid_fixture=".abntexto-ufc-invalid-page.tex"
 
 cleanup_invalid() {
   rm -f "$invalid_fixture" invalid-page.aux invalid-page.log invalid-page.out invalid-page.pdf invalid-page.toc
@@ -15,8 +15,8 @@ for engine in pdflatex lualatex; do
 
   echo "Validando trabalho multivolume com $engine..."
   for pass in 1 2 3; do
-    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-v2-multivolume.log 2>&1 || {
-      cat /tmp/abntexto-ufc-v2-multivolume.log
+    "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-multivolume.log 2>&1 || {
+      cat /tmp/abntexto-ufc-multivolume.log
       exit 1
     }
   done
@@ -25,7 +25,7 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Multivolume V2 falhou: $job contém warning ou overflow não reconhecido."
+    echo "Multivolume falhou: $job contém warning ou overflow não reconhecido."
     exit 1
   fi
 
@@ -75,11 +75,11 @@ done
 
 cleanup_invalid
 sed 's/pagina-inicial = 101/pagina-inicial = 0/' "$fixture" > "$invalid_fixture"
-if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-line-error "$invalid_fixture" > /tmp/abntexto-ufc-v2-invalid-page.log 2>&1; then
-  echo 'Multivolume V2 falhou: pagina-inicial=0 foi aceita.'
+if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-line-error "$invalid_fixture" > /tmp/abntexto-ufc-invalid-page.log 2>&1; then
+  echo 'Multivolume falhou: pagina-inicial=0 foi aceita.'
   exit 1
 fi
-if ! python3 - /tmp/abntexto-ufc-v2-invalid-page.log <<'PY'
+if ! python3 - /tmp/abntexto-ufc-invalid-page.log <<'PY'
 import re
 import sys
 from pathlib import Path
@@ -90,9 +90,9 @@ expected = "Classabntexto-ufcError:Invalidpagina-inicial'0'."
 raise SystemExit(0 if expected in compact else 1)
 PY
 then
-  cat /tmp/abntexto-ufc-v2-invalid-page.log
-  echo 'Multivolume V2 falhou: pagina-inicial inválida não produziu o erro esperado.'
+  cat /tmp/abntexto-ufc-invalid-page.log
+  echo 'Multivolume falhou: pagina-inicial inválida não produziu o erro esperado.'
   exit 1
 fi
 
-echo 'Gate V2 de trabalhos multivolume concluído.'
+echo 'Gate de trabalhos multivolume concluído.'

@@ -11,12 +11,12 @@ trap cleanup EXIT INT TERM
 
 for engine in pdflatex lualatex; do
   job="algoritmo-linhas-$engine"
-  "$engine" -jobname="$job" $flags "$fixture" >/tmp/abntexto-ufc-v2-algorithm-numbering.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-algorithm-numbering.log
+  "$engine" -jobname="$job" $flags "$fixture" >/tmp/abntexto-ufc-algorithm-numbering.log 2>&1 || {
+    cat /tmp/abntexto-ufc-algorithm-numbering.log
     exit 1
   }
-  "$engine" -jobname="$job" $flags "$fixture" >/tmp/abntexto-ufc-v2-algorithm-numbering.log 2>&1 || {
-    cat /tmp/abntexto-ufc-v2-algorithm-numbering.log
+  "$engine" -jobname="$job" $flags "$fixture" >/tmp/abntexto-ufc-algorithm-numbering.log 2>&1 || {
+    cat /tmp/abntexto-ufc-algorithm-numbering.log
     exit 1
   }
 
@@ -85,4 +85,4 @@ PY
 
 done
 
-echo 'Gate V2 de numeração de algoritmos concluído.'
+echo 'Gate de numeração de algoritmos concluído.'
