@@ -17,7 +17,7 @@ from normative_full import load_full_contract
 
 SCENARIO = ROOT / "standards" / "reference-semantics-scenario.json"
 LOCATOR = ROOT / "standards" / "locator-audit-references.json"
-BIB_FIXTURE = ROOT / "tests" / "fixtures" / "referencias-6023-2025.bib"
+BIB_FIXTURE = ROOT / "tests" / "fixtures" / "references-6023-2025.bib"
 
 RULE_ORDER = [
     "references.doi.when-present",

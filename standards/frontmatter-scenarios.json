@@ -32,9 +32,9 @@
       "route": "\\imprimirepigrafe[curta]",
       "line_count": 3,
       "markers": [
-        "UFCFRONTMATTEREPIGRAPHSHORTONE",
-        "UFCFRONTMATTEREPIGRAPHSHORTTWO",
-        "UFCFRONTMATTEREPIGRAPHSHORTTHREE"
+        "FMEPISHORTONE",
+        "FMEPISHORTTWO",
+        "FMEPISHORTTHREE"
       ],
       "rules": [
         "epigraph.short.position.start",
