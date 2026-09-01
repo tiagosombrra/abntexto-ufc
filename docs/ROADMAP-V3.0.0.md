@@ -4,11 +4,11 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B done; B5-C done; B5-D active.**
+**V3-R1 ACTIVE — R1-BLOCK-5 done; R1-BLOCK-6 active; B6-A inventory active.**
 
 Current sequence:
 
-**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 ACTIVE → R1-B6…B8 BLOCKED → R2+ BLOCKED**
+**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 DONE → R1-B6 ACTIVE → R1-B7…B8 BLOCKED → R2+ BLOCKED**
 
 B4 internal sequence:
 
@@ -132,7 +132,7 @@ Evidence: `33506603720` inventory PASS; `33506913061` invalid oversized executor
 
 ## R1-BLOCK-5 — Distribution and Public Bundle Rebaseline
 
-**ACTIVE.** Operational issue #199. Entry checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`.
+**DONE.** Operational closure log: issue #199. Entry checkpoint: `1a126c37653728941ce1ada762376c5fec69cb02`; certified B5 implementation/closure checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.
 
 Purpose: reconstruct the current public/distribution bundle contract from the v3 canonical tree. B5 will inventory producers and consumers, define the canonical source set and flatten/copy rules, reconcile manifests/policies/build-path integration, determine the current role of `tools/fetch-abntexto.py`, and make bundle generation deterministic and reproducible without reviving retired release scaffolding.
 
@@ -150,13 +150,31 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ### B5-D — Residual/reproducibility closeout
 
-**ACTIVE.** Final distribution producer/consumer/policy/evidence, documentation and reproducibility audit; remove any residual temporary executor and close B5 before activating B6.
+**DONE — zero-diff certification.** Initial run `33523356265` reconfirmed distribution/public reproducibility and repository identity but failed closed on an executor machine-key mismatch; manual review simultaneously found two stale control-plane residues. PR #206 repaired only those roadmap/machine-state residues, validated by `33523899178` PASS. Final run **`33524219575` PASS** certified five deterministic outputs including checksums, public and CTAN contracts, distribution-policy alignment, zero tracked generated `dist/` files, zero permanent workflows, canonical identity/repository contract and coherent control plane. The temporary audit self-removed and the audit branch is zero-diff versus `main`, so no B5-D implementation merge was required. The certified functional checkpoint remains `4bc0f544020234bc14a8f2261927f65721b6eddb`.
+
+## R1-BLOCK-6 — Permanent Cheap/Static Fail-Closed Gates
+
+**ACTIVE.** Operational issue #207. Entry certified implementation checkpoint: `4bc0f544020234bc14a8f2261927f65721b6eddb`.
+
+B6 establishes the permanent source-only/static validation contract that developers and later B7 workflows can invoke cheaply and deterministically. It begins with classification rather than implementation: current checks must be measured for dependencies, runtime and side effects before inclusion. The broad `tests/run.py` integration suite is not automatically a cheap/static gate.
+
+### B6-A — Validation inventory and dependency classification
+
+**ACTIVE / NEXT.** Inventory `tests/checks/`, source-only portions of `tests/integration/`, `tests/run.py`, Makefile check/preflight entry points, validator/source contracts and syntax/static helpers. Classify each candidate as cheap/static, bounded deterministic, or heavy/runtime/platform-dependent. No permanent workflow is created in this lot.
+
+### B6-B — Canonical permanent static gate
+
+**PENDING.** Implement the minimal fail-closed source-only gate and reconcile its producers/consumers/evidence based on B6-A findings.
+
+### B6-C — Residual audit and B7 handoff
+
+**PENDING.** Prove the static gate contract is complete, cheap and deterministic, then close B6 and hand workflow orchestration to B7.
 
 ## Remaining R1 blocks
 
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
-- **R1-B5 ACTIVE** — distribution/public bundle flattening and reproducibility.
-- **R1-B6 BLOCKED** — permanent cheap/static fail-closed gates.
+- **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
+- **R1-B6 ACTIVE** — permanent cheap/static fail-closed gates; B6-A inventory/classification.
 - **R1-B7 BLOCKED** — optimized permanent workflow restoration.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
@@ -170,4 +188,4 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## Immediate action
 
-Start **B5-D** from canonical `main` with implementation checkpoint `4bc0f544020234bc14a8f2261927f65721b6eddb` and issue #199. Perform the final distribution residual/reproducibility and documentation audit, reconcile all B5 consumers/policies/evidence, and close Block 5 only if the canonical artifact contracts remain deterministic and clean. Keep B6/B7/B8, actual CTAN submission and V3-R2 boundaries explicit.
+Start **B6-A** from canonical remote `main` with certified implementation checkpoint `4bc0f544020234bc14a8f2261927f65721b6eddb` and issue #207. Inventory and classify the current validation surface by dependency/runtime cost before changing any permanent gate: source-only/static checks belong to B6 candidates; TeX/PDF/network/Windows/font/final-certification work stays outside the cheap gate. B7 owns permanent workflow orchestration, B8 owns final Windows/font/PDF-A certification, and V3-R2 owns runtime/API migration.
