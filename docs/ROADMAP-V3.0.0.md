@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A active.**
+**V3-R1 ACTIVE — R1-BLOCK-4 done; R1-BLOCK-5 active; B5-A done; B5-B active.**
 
 Current sequence:
 
@@ -138,7 +138,19 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ### B5-A — Inventory and distribution contract
 
-**ACTIVE.** Fresh remote inventory first; historical distribution assumptions are advisory only. Map Makefile targets, build-path consumers, public bundle manifests/policies/evidence, runtime/support files, upstream inputs, and tracked distribution residue. Classify before editing.
+**DONE — zero-diff.** Run `33512036280` PASS found no current bundle producer or tracked distribution artifacts. The repository contract says public/Overleaf bundles flatten `template/`; public archives exclude the UFC institutional mark. `fetch-abntexto.py` remains a verified pinned fetcher without a functional consumer. `build-path.sh` is live; `overleaf-stable.sh` expects staging that does not currently exist and contains a removed font-check path. Distribution policy remains project policy with `build-path` as current evidence. The audit workflow self-removed and the branch is zero-diff.
+
+### B5-B — Deterministic v3 staging and public/Overleaf bundles
+
+**ACTIVE.** Add the current deterministic staging/archive producer for class/runtime, flattened template, and Overleaf bundle; wire the pinned upstream class for Overleaf; add structure/reproducibility validation; repair only distribution-owned Overleaf consumer drift. B8 retains deep font/PDF-A certification.
+
+### B5-C — Class/CTAN candidate and distribution metadata
+
+**PENDING.** Reconstruct current class/CTAN candidate packaging and metadata/checksum validation without restoring retired identities or deleted CTAN documentation by assumption.
+
+### B5-D — Residual/reproducibility closeout
+
+**PENDING.** Final distribution consumer/policy/evidence audit and B5 closure.
 
 ## Remaining R1 blocks
 
@@ -158,4 +170,4 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## Immediate action
 
-Start **B5-A** from canonical `main` with implementation checkpoint `1a126c37653728941ce1ada762376c5fec69cb02` and issue #199. Produce a fresh remote distribution/public-bundle producer/consumer inventory and classify each current or residual surface before implementation. Keep B6 permanent gates, B7 permanent workflow restoration, B8 final certification and V3-R2 runtime/API work out of scope.
+Start **B5-B** from canonical `main` with implementation checkpoint `1a126c37653728941ce1ada762376c5fec69cb02` and issue #199. Implement the bounded deterministic v3 staging/archive producer for class/runtime, flattened template, and Overleaf import; wire the pinned upstream fetcher only for the bundle contract; add structure/reproducibility checks and repair the current Overleaf staging consumer. Keep B5-C, B6, B7, B8 and V3-R2 boundaries explicit.
