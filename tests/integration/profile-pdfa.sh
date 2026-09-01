@@ -15,4 +15,4 @@ for engine in pdflatex lualatex; do
   done
 done
 
-echo 'Gate V2 PDF/A-2b dos 12 perfis concluído.'
+echo 'Gate PDF/A-2b dos 12 perfis concluído.'

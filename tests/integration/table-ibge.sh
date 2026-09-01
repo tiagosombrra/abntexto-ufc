@@ -94,4 +94,4 @@ for marker in (
 PY
 done
 
-echo 'Gate V2 do subconjunto tabular IBGE concluído.'
+echo 'Gate do subconjunto tabular IBGE concluído.'

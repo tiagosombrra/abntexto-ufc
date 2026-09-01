@@ -76,4 +76,4 @@ PY
 
 done
 
-echo 'Gate V2 de fontes documentais concluído.'
+echo 'Gate de fontes documentais concluído.'
