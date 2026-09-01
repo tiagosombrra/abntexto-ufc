@@ -1,0 +1,117 @@
+name: B7-A temporary workflow inventory
+
+on:
+  push:
+    branches:
+      - audit/v3-r1-b7a-workflow-inventory
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    name: inventory
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Inventory current and historical orchestration contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'B7-A current PR checks:'
+          python3 tests/run.py --mode pr --list | tee /tmp/pr-checks.txt
+          echo 'B7-A current release checks:'
+          python3 tests/run.py --mode release --list | tee /tmp/release-checks.txt
+          pr_count=$(wc -l < /tmp/pr-checks.txt)
+          release_count=$(wc -l < /tmp/release-checks.txt)
+          release_only=$((release_count-pr_count))
+          echo "B7-A-RUNNER-SUMMARY pr_checks=$pr_count release_checks=$release_count release_only=$release_only"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          binaries = [
+              'pdflatex','lualatex','xelatex','latexmk','biber','makeglossaries','makeindex',
+              'latexminted','pdfinfo','pdftotext','pdftocairo','pdffonts','python3','node','git','make'
+          ]
+          files = sorted(Path('tests/integration').glob('*.sh'))
+          hits = {binary: [] for binary in binaries}
+          for path in files:
+              text = path.read_text(encoding='utf-8', errors='replace')
+              for binary in binaries:
+                  if re.search(rf'(?<![A-Za-z0-9_.-]){re.escape(binary)}(?![A-Za-z0-9_.-])', text):
+                      hits[binary].append(path.name)
+          for binary, paths in hits.items():
+              if paths:
+                  print(f'B7-A-DEPENDENCY binary={binary} consumers={len(paths)} files={",".join(paths)}')
+          PY
+
+          historical=f6ba39bcbe50c324f6ab5f1856595cfcf7f8f0f9
+          echo 'B7-A historical workflows at certified PR-era commit:'
+          git ls-tree --name-only "$historical" .github/workflows/ | sed 's#^#  #'
+          for file in normative-source.yml latex-preflight.yml distribution.yml; do
+            echo "--- historical $file signals ---"
+            git show "$historical:.github/workflows/$file" | grep -E "^(name:|  [A-Za-z0-9_-]+:|    name:|    runs-on:|    timeout-minutes:)|texlive_version:|apt-get install|setup-python@|setup-node@|actions/checkout@|upload-artifact@|concurrency:" | head -n 160 || true
+          done
+
+          grep -Fq $'static-check:\n\t@python3 tests/static.py' Makefile
+          grep -Fq $'check:\n\t@python3 tests/run.py --mode pr' Makefile
+          grep -Fq $'release-check:\n\t@python3 tests/run.py --mode release' Makefile
+          permanent=$(git ls-tree -r --name-only origin/main .github/workflows | wc -l)
+          echo "B7-A-CURRENT-WORKFLOWS main_count=$permanent"
+          [ "$permanent" -eq 0 ]
+          make static-check
+          echo 'B7-A-INVENTORY status=PASS static_entry=make-static-check pr_entry=make-check release_entry=make-release-check historical_texlive=2026 historical_os=debian historical_poppler=true historical_python=3.13 historical_node=24'
+
+  integration-probe:
+    name: integration-probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Measure current PR integration contract on TeX Live 2026
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -euo pipefail
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs git
+            start=$(date +%s)
+            set +e
+            make check
+            status=$?
+            set -e
+            end=$(date +%s)
+            echo "B7-A-INTEGRATION-PROBE exit_code=$status seconds=$((end-start))"
+            exit "$status"
+
+  cleanup:
+    name: cleanup
+    if: always()
+    needs: [inventory, integration-probe]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: audit/v3-r1-b7a-workflow-inventory
+          fetch-depth: 0
+      - name: Self-remove temporary inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Tiago Sombra'
+          git config user.email 'tiagosombrra@users.noreply.github.com'
+          git rm .github/workflows/b7a-temporary-inventory.yml
+          git commit -m 'chore: remove temporary B7-A workflow inventory'
+          git push origin HEAD:audit/v3-r1-b7a-workflow-inventory
