@@ -4,7 +4,7 @@ Updated: 2026-09-01
 
 ## Status
 
-**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B/C1 done; B7-C2 active.**
+**V3-R1 ACTIVE — R1-BLOCK-6 done; R1-BLOCK-7 active; B7-A/B/C1/C2 done; B7-C3 active.**
 
 Current sequence:
 
@@ -16,12 +16,12 @@ B4 internal sequence:
 
 B7 internal sequence:
 
-**B7-A DONE → B7-B DONE → B7-C ACTIVE [C1 DONE → C2 ACTIVE → C3 PENDING] → B7-D PENDING**
+**B7-A DONE → B7-B DONE → B7-C ACTIVE [C1 DONE → C2 DONE → C3 ACTIVE] → B7-D PENDING**
 
 - Canonical repository: `tiagosombrra/abntexto-ufc`.
 - Active trunk: `main`.
 - B7 operational issue: #213.
-- Latest certified implementation checkpoint: **`ced68313ed2c362a6617d7df6ef9adfd2df6c0b5`**.
+- Latest certified implementation checkpoint: **`cea59bcf4927da9a9c4a48268dca67cc9535854e`**.
 - R1-BLOCK-3 closure: `7a3b018a43630ed46b375117790acc732ae67b40`.
 - R1-S2 promotion: `d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1`.
 - Certified v2 baseline: `ce659b578b4fc9cc929af4aadc3e613df469ba77`.
@@ -174,7 +174,7 @@ Purpose: reconstruct the current public/distribution bundle contract from the v3
 
 ## R1-BLOCK-7 — Optimized Remote Workflow Restoration
 
-**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`ced68313ed2c362a6617d7df6ef9adfd2df6c0b5`**.
+**ACTIVE.** Operational issue #213. Entry checkpoint: `4c25c27b758e4b99db11187b34b9043776566871`; latest certified implementation checkpoint: **`cea59bcf4927da9a9c4a48268dca67cc9535854e`**.
 
 B7 restores permanent GitHub Actions as orchestration over current repository entry points; workflow YAML must not duplicate gate internals.
 
@@ -208,11 +208,11 @@ Completed bounded repair set:
 
 #### B7-C2 — Permanent Linux PR integration orchestration
 
-**ACTIVE.** Add a bounded permanent PR integration job that consumes the certified `make check` contract, uses the proven Linux/TeX runner environment, keeps validation logic out of workflow YAML, and avoids forcing heavy validation on every intermediate commit where the fast `Static contract` status is sufficient.
+**DONE** via PR #222 at **`cea59bcf4927da9a9c4a48268dca67cc9535854e`**. Permanent `Linux integration` uses the proven Linux/TeX runner environment, delegates the heavy gate to `make check`, exposes a stable PR status, skips heavy execution only for drafts and a narrow documentation/control-plane allowlist, fails closed for every other or unknown path, cancels superseded runs, and forces full validation on manual dispatch. PR runs `33548124803` (`Static contract`) and `33548124851` (`Linux integration`) passed; the integration contract closed `PASS=30 FAIL=0 SKIP=0`.
 
 #### B7-C3 — Release orchestration
 
-**PENDING.** Define the Linux `make release-check` trigger/cadence and artifact/evidence handling without treating it as final B8 Windows/font/PDF-A certification.
+**ACTIVE.** Define and prove bounded permanent Linux release orchestration over `make release-check`, including trigger/cadence and artifact/evidence handling, without treating Linux release validation as final B8 Windows/font/PDF-A certification.
 
 ### B7-D — Residual audit and B8 handoff
 
@@ -223,7 +223,7 @@ Completed bounded repair set:
 - **R1-B4 DONE** — tools/validator/metadata rebaseline.
 - **R1-B5 DONE** — deterministic public/class/CTAN/Overleaf distribution and reproducibility.
 - **R1-B6 DONE** — permanent cheap/static fail-closed gate at `4c25c27b758e4b99db11187b34b9043776566871`.
-- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C2 active after B7-C1 clean-runner certification.
+- **R1-B7 ACTIVE** — optimized remote workflow restoration; B7-C2 is complete and B7-C3 release orchestration is active.
 - **R1-B8 BLOCKED** — final R1 certification including Windows/font/PDF-A.
 
 ## Later phases

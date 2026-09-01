@@ -10,7 +10,7 @@
   "stage_name": "optimized remote workflow restoration",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "ced68313ed2c362a6617d7df6ef9adfd2df6c0b5",
+  "last_certified_clean_checkpoint_sha": "cea59bcf4927da9a9c4a48268dca67cc9535854e",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -673,7 +673,7 @@
       "entry_checkpoint_sha": "4c25c27b758e4b99db11187b34b9043776566871",
       "operational_issue": 213,
       "active_work_item": "B7-C",
-      "active_sub_item": "B7-C2",
+      "active_sub_item": "B7-C3",
       "scope": [
         "historical and current workflow/runner dependency inventory",
         "permanent remote orchestration consuming repository-owned validation entry points",
@@ -746,8 +746,8 @@
         "align appendix-annex evidence output with current engine_matrix_deferred scenario metadata",
         "prove make check on a clean TeX Live 2026 Linux runner before permanent heavy workflow restoration"
       ],
-      "b7_c2_status": "ACTIVE",
-      "b7_c3_status": "PENDING",
+      "b7_c2_status": "DONE",
+      "b7_c3_status": "ACTIVE",
       "b7_d_status": "PENDING",
       "b7_c1_issue": 219,
       "b7_c1_pr": 220,
@@ -767,6 +767,39 @@
         "normative_tolerances_changed": false,
         "proof_state_changed": false,
         "synthetic_fixture_markers_rebased": true
+      },
+      "b7_c2_pr": 222,
+      "b7_c2_closure_sha": "cea59bcf4927da9a9c4a48268dca67cc9535854e",
+      "b7_c2_validation_runs": [
+        {
+          "run_id": 33548124803,
+          "workflow": "Static contract",
+          "conclusion": "success"
+        },
+        {
+          "run_id": 33548124851,
+          "workflow": "Linux integration",
+          "conclusion": "success",
+          "pass": 30,
+          "fail": 0,
+          "skip": 0
+        }
+      ],
+      "b7_c2_results": {
+        "permanent_workflow": ".github/workflows/linux-integration.yml",
+        "stable_workflow_job_name": "Linux integration",
+        "delegates_to": "make check",
+        "draft_pr_heavy_step_skipped": true,
+        "documentation_control_plane_allowlist_skips_heavy_step": true,
+        "unknown_path_fails_closed_to_full_integration": true,
+        "superseded_pr_runs_cancelled": true,
+        "manual_dispatch_forces_full_integration": true,
+        "full_permanent_run_pass": 30,
+        "full_permanent_run_fail": 0,
+        "full_permanent_run_skip": 0,
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       }
     },
     "R1-BLOCK-8": {
@@ -774,5 +807,5 @@
       "name": "final R1 certification"
     }
   },
-  "next_action": "Execute R1-BLOCK-7 B7-C2. Add bounded permanent Linux PR integration orchestration that delegates to the certified make check entry point without duplicating repository gate logic; use optimized triggers/concurrency so heavy TeX validation is not forced on every intermediate commit. Keep B7-C3 release orchestration, B8 Windows/font/final PDF-A certification, and V3-R2 runtime/API work out of scope."
+  "next_action": "Execute R1-BLOCK-7 B7-C3. Define and prove bounded permanent Linux release orchestration that delegates to make release-check, with explicit trigger/cadence and artifact/evidence handling. Do not claim Linux release validation as final B8 Windows/font/PDF-A certification, and keep V3-R2 runtime/API work out of scope."
 }
