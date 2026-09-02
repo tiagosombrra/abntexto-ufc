@@ -12,7 +12,7 @@ jobs:
   windows:
     name: Windows full candidate matrix
     runs-on: windows-2025
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - name: Checkout canonical B8 candidate
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -28,11 +28,6 @@ jobs:
             scheme-basic
             abntexto
             collection-langportuguese
-            collection-latexrecommended
-            collection-latexextra
-            collection-mathscience
-            collection-pictures
-            collection-fontsrecommended
             microtype
             etoolbox
             newtx
@@ -54,8 +49,6 @@ jobs:
             carlisle
             mweights
             fontaxes
-            tabularray
-            tabularray-abnt
             listings
             algpseudocodex
             glossaries
@@ -167,12 +160,8 @@ jobs:
               pdffonts "$pdf" | tee "artifacts/b8-final/${family}-${engine}-pdffonts.txt"
               names=$(pdffonts "$pdf" | tail -n +3 | awk 'NF {print $1}')
               case "$family" in
-                times)
-                  printf '%s\n' "$names" | grep -Fq 'TimesNewRomanPSMT'
-                  ;;
-                arial)
-                  printf '%s\n' "$names" | grep -Fq 'ArialMT'
-                  ;;
+                times) printf '%s\n' "$names" | grep -Fq 'TimesNewRomanPSMT' ;;
+                arial) printf '%s\n' "$names" | grep -Fq 'ArialMT' ;;
                 *) exit 2 ;;
               esac
 
