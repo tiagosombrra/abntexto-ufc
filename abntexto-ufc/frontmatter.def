@@ -238,9 +238,9 @@
 \cs_new_protected:Npn \ufc_examiner_signature:n #1
   {
     \ufc_signature_from_keys:nnn
-      {banca-#1}
-      {banca-#1-unidade}
-      {banca-#1-ies}
+      {examiner-#1}
+      {examiner-#1-unit}
+      {examiner-#1-institution}
   }
 
 \cs_new_protected:Npn \ufc_approval_page:
