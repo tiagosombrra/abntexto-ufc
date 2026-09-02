@@ -31,18 +31,18 @@ if (-not $TexmfRoot) {
 }
 
 $encT1 = (& kpsewhich 'tex256.enc').Trim()
-$encTs1 = (& kpsewhich 'ts1-winfonts.enc').Trim()
+$encTs1UnicodeSource = (& kpsewhich 'q-ts1-uni.enc').Trim()
 if (-not $encT1 -or -not (Test-Path $encT1)) {
-  throw 'tex256.enc was not found. Install the winfonts support files first.'
+  throw 'tex256.enc was not found in the active TeX distribution.'
 }
-if (-not $encTs1 -or -not (Test-Path $encTs1)) {
-  throw 'ts1-winfonts.enc was not found. Install the winfonts support files first.'
+if (-not $encTs1UnicodeSource -or -not (Test-Path $encTs1UnicodeSource)) {
+  throw 'q-ts1-uni.enc was not found in the active TeX distribution.'
 }
 
 $fonts = @(
   @{ File = 'times.ttf';   T1 = 'mtmr8t';  RawT1 = 'rmtmr8t';  TS1 = 'mtmr8c';  RawTS1 = 'rmtmr8c';  Ps = 'TimesNewRomanPSMT' },
   @{ File = 'timesi.ttf';  T1 = 'mtmri8t'; RawT1 = 'rmtmri8t'; TS1 = 'mtmri8c'; RawTS1 = 'rmtmri8c'; Ps = 'TimesNewRomanPS-ItalicMT' },
-  @{ File = 'timesbd.ttf'; T1 = 'mtmb8t';  RawT1 = 'rmtmb8t';  TS1 = 'mtmb8c';  RawTS1 = 'rmtmb8c';  Ps = 'TimesNewRomanPS-BoldMT' },
+  @{ File = 'timesbd.ttf'; T1 = 'mtmb8t';  RawT1 = 'rmtmb8t';  TS1 = 'mtmb8c';  RawTS1 = 'rmtmb8c'; Ps = 'TimesNewRomanPS-BoldMT' },
   @{ File = 'timesbi.ttf'; T1 = 'mtmbi8t'; RawT1 = 'rmtmbi8t'; TS1 = 'mtmbi8c'; RawTS1 = 'rmtmbi8c'; Ps = 'TimesNewRomanPS-BoldItalicMT' },
   @{ File = 'arial.ttf';   T1 = 'malr8t';  RawT1 = 'rmalr8t';  TS1 = 'malr8c';  RawTS1 = 'rmalr8c';  Ps = 'ArialMT' },
   @{ File = 'ariali.ttf';  T1 = 'malri8t'; RawT1 = 'rmalri8t'; TS1 = 'malri8c'; RawTS1 = 'rmalri8c'; Ps = 'Arial-ItalicMT' },
@@ -67,13 +67,25 @@ $texDir = Join-Path $TexmfRoot 'tex\latex\abntexto-ufc-winfonts'
 
 New-Item -ItemType Directory -Force -Path $work, $tfmDir, $vfDir, $ttfDir, $encDir, $mapDir, $texDir | Out-Null
 Copy-Item $encT1 (Join-Path $encDir 'tex256.enc') -Force
-Copy-Item $encTs1 (Join-Path $encDir 'ts1-winfonts.enc') -Force
 
+$metricScript = Join-Path $PSScriptRoot 'convert-unicode-encoding-to-glyphs.ps1'
 $unicodeScript = Join-Path $PSScriptRoot 'convert-encoding-to-unicode.ps1'
+$metricTs1 = Join-Path $encDir 'abntexto-ufc-ts1-metric.enc'
 $unicodeT1 = Join-Path $encDir 'abntexto-ufc-t1-unicode.enc'
 $unicodeTs1 = Join-Path $encDir 'abntexto-ufc-ts1-unicode.enc'
-& $unicodeScript -InputEncoding $encT1 -OutputEncoding $unicodeT1 -OutputEncodingName 'abntextoUfcT1UnicodeEncoding'
-& $unicodeScript -InputEncoding $encTs1 -OutputEncoding $unicodeTs1 -OutputEncodingName 'abntextoUfcTS1UnicodeEncoding'
+
+& $metricScript \
+  -InputEncoding $encTs1UnicodeSource \
+  -OutputEncoding $metricTs1 \
+  -OutputEncodingName 'abntextoUfcTS1MetricEncoding'
+& $unicodeScript \
+  -InputEncoding $encT1 \
+  -OutputEncoding $unicodeT1 \
+  -OutputEncodingName 'abntextoUfcT1UnicodeEncoding'
+& $unicodeScript \
+  -InputEncoding $metricTs1 \
+  -OutputEncoding $unicodeTs1 \
+  -OutputEncodingName 'abntextoUfcTS1UnicodeEncoding'
 
 Push-Location $work
 try {
@@ -83,7 +95,7 @@ try {
 
     Run-Command 'ttf2tfm' @($source, '-q', '-T', $encT1, '-v', "$($font.T1).vpl", "$($font.RawT1).tfm")
     Run-Command 'vptovf' @("$($font.T1).vpl", "$($font.T1).vf", "$($font.T1).tfm")
-    Run-Command 'ttf2tfm' @($source, '-q', '-T', $encTs1, '-v', "$($font.TS1).vpl", "$($font.RawTS1).tfm")
+    Run-Command 'ttf2tfm' @($source, '-q', '-T', $metricTs1, '-v', "$($font.TS1).vpl", "$($font.RawTS1).tfm")
     Run-Command 'vptovf' @("$($font.TS1).vpl", "$($font.TS1).vf", "$($font.TS1).tfm")
 
     Copy-Item "$($font.RawT1).tfm", "$($font.T1).tfm", "$($font.RawTS1).tfm", "$($font.TS1).tfm" -Destination $tfmDir -Force
