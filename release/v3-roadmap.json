@@ -6,8 +6,8 @@
   "updated_at": "2026-09-02",
   "status": "ACTIVE",
   "phase": "V3-R2",
-  "stage": "R2-B2",
-  "stage_name": "academic and front-matter public rendering API",
+  "stage": "R2-B3",
+  "stage_name": "structural/object environments optional object API and extension hooks",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,12 +978,12 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R2 / R2-B2 through issue #237 from canonical main. Move the academic and front-matter public rendering commands into their responsibility-owning modules, rebind layout hooks to canonical commands, migrate template/test consumers atomically, and remove the corresponding Portuguese project commands and forwarding definitions without adding runtime aliases.",
+  "next_action": "Execute V3-R2 / R2-B3 through issue #238 from canonical main. Move structural/object environments, source/note and object-list APIs, optional listing/minted APIs, extension hooks and project-owned object IDs into direct ownership; migrate consumers atomically; preserve genuine upstream boundaries and rendered Portuguese labels; remove only B3 forwards; validate with strengthened residual scan, make static-check and Linux integration.",
   "r1_status": "DONE",
   "r2": {
     "status": "ACTIVE",
-    "stage": "R2-B2",
-    "stage_name": "academic and front-matter public rendering API",
+    "stage": "R2-B3",
+    "stage_name": "structural/object environments optional object API and extension hooks",
     "entry_main_sha": "0a2c2c3879986ca27b731f54b974db12524258df",
     "r1_certified_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
     "r2_a": {
@@ -1012,15 +1012,31 @@
         "proof_state_changed": false
       },
       "R2-B2": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 237,
         "name": "academic and front-matter public rendering API",
-        "entry_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4"
+        "entry_main_sha": "e418893ee5c89f12cc4ac8d845111c894ec946e4",
+        "implementation_head_sha": "4341a2adb4633b634d1e2ad905b1731e8126354b",
+        "merge_pr": 242,
+        "closure_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949",
+        "static_contract_run_id": 33680378948,
+        "linux_integration_run_id": 33680378846,
+        "linux_integration_job_id": 100415223907,
+        "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+        "strengthened_residual_audit_run_id": 33680252116,
+        "strengthened_residual_audit_job_id": 100414804865,
+        "fail_closed_executor_run_id": 33679535751,
+        "corrected_executor_run_id": 33679827267,
+        "corrected_executor_job_id": 100413437018,
+        "runtime_alias_layer_added": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       },
       "R2-B3": {
-        "status": "PENDING",
+        "status": "ACTIVE",
         "issue": 238,
-        "name": "structural/object environments optional object API and extension hooks"
+        "name": "structural/object environments optional object API and extension hooks",
+        "entry_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949"
       },
       "R2-B4": {
         "status": "PENDING",
