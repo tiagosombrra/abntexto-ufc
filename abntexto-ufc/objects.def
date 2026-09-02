@@ -71,7 +71,7 @@
     \group_end:
   }
 
-\RenewDocumentCommand \imprimirlistadeilustracoes { }
+\RenewDocumentCommand \ufcPrintListOfIllustrations { }
   { \ufc_objects_print_illustration_list: }
 
 \NewDocumentCommand \ufcfonte { m }

@@ -279,11 +279,11 @@
       }
   }
 
-\NewDocumentCommand \imprimirfolhadeaprovacao { }
+\NewDocumentCommand \ufcPrintApprovalPage { }
   { \ufc_approval_page: }
 
 % UFC dedicatory and epigraph blocks start below the physical page midpoint.
-\NewDocumentCommand \imprimirdedicatoria { m }
+\NewDocumentCommand \ufcPrintDedication { m }
   {
     \clearpage
     \thispagestyle{empty}
@@ -298,7 +298,7 @@
     \clearpage
   }
 
-\NewDocumentCommand \imprimiragradecimentos { m }
+\NewDocumentCommand \ufcPrintAcknowledgments { m }
   {
     \clearpage
     \thispagestyle{empty}
@@ -341,21 +341,21 @@
     \clearpage
   }
 
-\NewDocumentCommand \imprimirepigrafe { O{curta} m }
+\NewDocumentCommand \ufcPrintEpigraph { O{short} m }
   {
     \str_case:nnF {#1}
       {
-        {curta} { \ufc_epigraph_short:n {#2} }
-        {longa} { \ufc_epigraph_long:n {#2} }
+        {short} { \ufc_epigraph_short:n {#2} }
+        {long} { \ufc_epigraph_long:n {#2} }
       }
       {
         \ClassError{abntexto-ufc}
           {Invalid~epigraph~type~'#1'}
-          {Use~\string\imprimirepigrafe[curta]~or~\string\imprimirepigrafe[longa].}
+          {Use~\string\ufcPrintEpigraph[short]~or~\string\ufcPrintEpigraph[long].}
       }
   }
 
-\NewDocumentCommand \imprimirerrata { m }
+\NewDocumentCommand \ufcPrintErrata { m }
   {
     \clearpage
     \thispagestyle{empty}
@@ -365,7 +365,7 @@
     \clearpage
   }
 
-\ProvideDocumentCommand \palavraschave { m }
+\ProvideDocumentCommand \ufcSummaryKeywords { m }
   {
     \par\vspace{\baselineskip}
     \noindent\textbf{Palavras-chave:}\space #1
@@ -377,7 +377,7 @@
     \noindent\textbf{Keywords:}\space #1
   }
 
-\NewDocumentCommand \imprimirresumo { m }
+\NewDocumentCommand \ufcPrintSummary { m }
   {
     \clearpage
     \thispagestyle{empty}
@@ -389,7 +389,7 @@
     \clearpage
   }
 
-\NewDocumentCommand \imprimirabstract { m }
+\NewDocumentCommand \ufcPrintAbstract { m }
   {
     \clearpage
     \thispagestyle{empty}
@@ -411,26 +411,26 @@
     \clearpage
   }
 
-\NewDocumentCommand \imprimirlistadeilustracoes { }
+\NewDocumentCommand \ufcPrintListOfIllustrations { }
   { \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}} }
 
-\NewDocumentCommand \imprimirlistadefiguras { }
+\NewDocumentCommand \ufcPrintListOfFigures { }
   { \ufc_pretextual_list:nn {Lista~de~Figuras} {\ufcstarttoc{lof}} }
 
-\NewDocumentCommand \imprimirlistadetabelas { }
+\NewDocumentCommand \ufcPrintListOfTables { }
   { \ufc_pretextual_list:nn {Lista~de~Tabelas} {\ufcstarttoc{lot}} }
 
-\NewDocumentCommand \imprimirlistadequadros { }
+\NewDocumentCommand \ufcPrintListOfTextTables { }
   { \ufc_pretextual_list:nn {Lista~de~Quadros} {\ufcstarttoc{loq}} }
 
-\NewDocumentCommand \imprimirlistadeabreviaturasesiglas { m }
+\NewDocumentCommand \ufcPrintListOfAbbreviationsAndAcronyms { m }
   {
     \ufc_pretextual_list:nn
       {Lista~de~Abreviaturas~e~Siglas}
       {\ufc_input_file:n {#1}}
   }
 
-\NewDocumentCommand \imprimirlistadesimbolos { m }
+\NewDocumentCommand \ufcPrintListOfSymbols { m }
   {
     \ufc_pretextual_list:nn
       {Lista~de~Símbolos}
@@ -453,10 +453,10 @@
   }
   { \end{description} }
 
-\NewDocumentCommand \ufclistaentrada { m m }
+\NewDocumentCommand \ufcListEntry { m m }
   { \item[#1] #2 }
 
-\NewDocumentCommand \imprimirsumario { }
+\NewDocumentCommand \ufcPrintTableOfContents { }
   {
     \clearpage
     \thispagestyle{empty}

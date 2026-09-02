@@ -4,7 +4,7 @@
   "purpose": "Isolated positive final-PDF scenario for acknowledgement-page typography and body layout.",
   "fixture": "tests/documents/frontmatter-acknowledgments-test.tex",
   "component": "acknowledgements",
-  "route": "\\imprimiragradecimentos",
+  "route": "\\ufcPrintAcknowledgments",
   "markers": {
     "previous_page": "UFCFRONTMATTERACKPREV",
     "body_start": "UFCFRONTMATTERACKSTART",

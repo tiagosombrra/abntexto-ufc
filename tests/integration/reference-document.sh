@@ -37,7 +37,7 @@ import re
 from pathlib import Path
 
 cases = (
-    ('template/frontmatter/summary.tex', r'\\palavraschave', 'Summary'),
+    ('template/frontmatter/summary.tex', r'\\ufcSummaryKeywords', 'Summary'),
     ('template/frontmatter/abstract.tex', r'\\keywords', 'Abstract'),
 )
 

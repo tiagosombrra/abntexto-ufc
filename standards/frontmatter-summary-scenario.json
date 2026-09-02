@@ -5,7 +5,7 @@
   "fixture": "tests/documents/frontmatter-summary-abstract-test.tex",
   "components": {
     "vernacular": {
-      "route": "\\imprimirresumo",
+      "route": "\\ufcPrintSummary",
       "heading": "RESUMO",
       "body_start": "UFCFRONTMATTERSUMSTART",
       "body_end": "UFCFRONTMATTERSUMEND",
@@ -13,7 +13,7 @@
       "keyword_text": "malhamento; normalização; pesquisa acadêmica."
     },
     "foreign": {
-      "route": "\\imprimirabstract",
+      "route": "\\ufcPrintAbstract",
       "heading": "ABSTRACT",
       "body_start": "UFCFRONTMATTERABSSTART",
       "body_end": "UFCFRONTMATTERABSEND",
