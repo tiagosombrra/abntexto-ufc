@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-profiles="tccgraduacao tccespecializacao dissertacao tese projeto projetoanonimizado"
+profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
 template_dir="template"
 
 for engine in pdflatex lualatex; do

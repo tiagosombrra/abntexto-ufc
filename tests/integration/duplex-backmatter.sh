@@ -12,7 +12,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-sed 's/impressao = anverso/impressao = frente-verso/' "$source_fixture" > "$tmp_fixture"
+sed 's/print-mode = single-sided/print-mode = double-sided/' "$source_fixture" > "$tmp_fixture"
 
 pdflatex -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/abntexto-ufc-post-duplex.log 2>&1 || {
   cat /tmp/abntexto-ufc-post-duplex.log

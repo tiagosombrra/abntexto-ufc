@@ -7,7 +7,7 @@
 
 \keys_define:nn { ufc }
   {
-    brasao-arquivo .tl_gset:N = \g_ufc_coat_of_arms_file_tl
+    coat-of-arms-file .tl_gset:N = \g_ufc_coat_of_arms_file_tl
   }
 
 \cs_new_protected:Npn \ufc_include_coat_of_arms:n #1
@@ -19,7 +19,7 @@
       }
       {
         \ClassWarningNoLine{abntexto-ufc}
-          {UFC~coat~of~arms~asset~not~found;~configure~brasao-arquivo}
+          {UFC~coat~of~arms~asset~not~found;~configure~coat-of-arms-file}
       }
   }
 

@@ -30,7 +30,7 @@ for engine in pdflatex lualatex; do
   fi
 
   grep -Fq 'UFC-PAGE-AFTER-COVER=101' "$job.log" || {
-    echo "$job: pagina-inicial não foi preservada após a capa."
+    echo "$job: initial-page was not preserved após a capa."
     exit 1
   }
   grep -Fq 'UFC-PAGE-AFTER-TITLE=102' "$job.log" || {
@@ -74,9 +74,9 @@ PY
 done
 
 cleanup_invalid
-sed 's/pagina-inicial = 101/pagina-inicial = 0/' "$fixture" > "$invalid_fixture"
+sed 's/initial-page = 101/initial-page = 0/' "$fixture" > "$invalid_fixture"
 if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-line-error "$invalid_fixture" > /tmp/abntexto-ufc-invalid-page.log 2>&1; then
-  echo 'Multivolume falhou: pagina-inicial=0 foi aceita.'
+  echo 'Multivolume falhou: initial-page=0 was accepted.'
   exit 1
 fi
 if ! python3 - /tmp/abntexto-ufc-invalid-page.log <<'PY'
@@ -86,12 +86,12 @@ from pathlib import Path
 
 text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
 compact = re.sub(r'\s+', '', text)
-expected = "Classabntexto-ufcError:Invalidpagina-inicial'0'."
+expected = "Classabntexto-ufcError:Invalidinitial-page'0'."
 raise SystemExit(0 if expected in compact else 1)
 PY
 then
   cat /tmp/abntexto-ufc-invalid-page.log
-  echo 'Multivolume falhou: pagina-inicial inválida não produziu o erro esperado.'
+  echo 'Multivolume falhou: invalid initial-page did not produce the expected error.'
   exit 1
 fi
 

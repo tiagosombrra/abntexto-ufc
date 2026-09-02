@@ -36,9 +36,9 @@ build_mode() {
   pdftotext -bbox "$job.pdf" "$job.html"
 }
 
-# Portuguese values below are the current runtime contract and are migrated in R2.
-build_mode single-sided anverso
-build_mode double-sided frente-verso
+# Validate the canonical print-mode values directly.
+build_mode single-sided single-sided
+build_mode double-sided double-sided
 
 python3 <<'PY'
 import xml.etree.ElementTree as ET

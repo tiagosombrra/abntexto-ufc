@@ -130,14 +130,14 @@
 
 \cs_new_protected:Npn \ufc_primary_section_break:
   {
-    \str_if_eq:VnTF \g_ufc_print_mode_tl { frente-verso }
+    \str_if_eq:VnTF \g_ufc_print_mode_tl { double-sided }
       { \ufc_next_odd_physical_page: }
       { \clearpage }
   }
 
 \cs_new_protected:Npn \ufc_layout_apply:
   {
-    \str_if_eq:VnTF \g_ufc_print_mode_tl { frente-verso }
+    \str_if_eq:VnTF \g_ufc_print_mode_tl { double-sided }
       {
         \cs_set_eq:NN \onesidelayout \ufc_layout_two_sided:
         \cs_set_eq:NN \twosidelayout \ufc_layout_two_sided:

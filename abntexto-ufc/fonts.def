@@ -44,25 +44,23 @@
 
 \keys_define:nn { ufc }
   {
-    fonte .choice:,
-    fonte / times .code:n =
+    font .choice:,
+    font / times .code:n =
       { \tl_gset:Nn \g_ufc_font_family_tl { times } },
-    fonte / arial .code:n =
+    font / arial .code:n =
       { \tl_gset:Nn \g_ufc_font_family_tl { arial } },
 
-    fonte-estrita .choice:,
-    fonte-estrita / sim .code:n =
+    strict-font .choice:,
+    strict-font / true .code:n =
       { \bool_gset_true:N \g_ufc_font_strict_bool },
-    fonte-estrita / nao .code:n =
+    strict-font / false .code:n =
       { \bool_gset_false:N \g_ufc_font_strict_bool },
-    fonte-estrita / true .meta:n = { fonte-estrita = sim },
-    fonte-estrita / false .meta:n = { fonte-estrita = nao }
   }
 
 \keys_set:nn { ufc }
   {
-    fonte = times,
-    fonte-estrita = nao
+    font = times,
+    strict-font = false
   }
 
 \cs_new_protected:Npn \ufc_font_check_files:n #1
@@ -165,7 +163,7 @@
           {
             \ClassError{abntexto-ufc}
               {Times~New~Roman~not~found}
-              {Install~Times~New~Roman~or~set~fonte-estrita=nao.}
+              {Install~Times~New~Roman~or~set~strict-font=false.}
           }
           {
             \ClassInfo{abntexto-ufc}{Times~New~Roman~not~found;~using~TeX~Gyre~Termes~compatibility~fallback}
@@ -186,7 +184,7 @@
           {
             \ClassError{abntexto-ufc}
               {Arial~not~found}
-              {Install~Arial~or~set~fonte-estrita=nao.}
+              {Install~Arial~or~set~strict-font=false.}
           }
           {
             \ClassInfo{abntexto-ufc}{Arial~not~found;~using~TeX~Gyre~Heros~compatibility~fallback}

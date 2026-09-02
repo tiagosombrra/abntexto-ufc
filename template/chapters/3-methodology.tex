@@ -6,7 +6,7 @@ A apresentação do texto deve ser controlada pela classe, e não por ajustes ma
 
 \guianormativa{ABNT NBR 14724:2024}{O documento é produzido em papel A4. No anverso, a configuração adotada utiliza margens esquerda e superior de 3 cm e margens direita e inferior de 2 cm. Em impressão frente e verso, as margens laterais são espelhadas para preservar a margem interna maior \parencite{abnt14724}.}
 
-\guiaexemplo{Este PDF usa \texttt{impressao=anverso}. Os testes do repositório também geram páginas de verso e medem a geometria final para verificar o espelhamento das margens.}
+\guiaexemplo{Este PDF usa \texttt{print-mode=single-sided}. Os testes do repositório também geram páginas de verso e medem a geometria final para verificar o espelhamento das margens.}
 
 \subsection{Fonte, tamanho e cor}
 
@@ -14,7 +14,7 @@ O corpo textual do documento usa tamanho 12. A API pública oferece as famílias
 
 \guianormativa{ABNT NBR 14724:2024 e política tipográfica UFC adotada}{O corpo textual é apresentado em tamanho 12 e em cor preta; tamanhos reduzidos são usados em contextos específicos, como citações longas, notas, paginação e partes de objetos.}
 
-\guiapolitica{Quando \texttt{fonte-estrita=sim}, a compilação deve falhar se a família literal solicitada não estiver disponível. Quando \texttt{fonte-estrita=nao}, o template pode usar uma família substituta explicitamente identificada para portabilidade. A certificação de Times New Roman e Arial literais é feita em uma rota Windows separada.}
+\guiapolitica{Quando \texttt{strict-font=true}, a compilação deve falhar se a família literal solicitada não estiver disponível. Quando \texttt{strict-font=false}, o template pode usar uma família substituta explicitamente identificada para portabilidade. A certificação de Times New Roman e Arial literais é feita em uma rota Windows separada.}
 
 \subsection{Espaçamento e parágrafos}
 
