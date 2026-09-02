@@ -1,0 +1,53 @@
+name: R2-B1 dynamic metadata fix temporary
+
+on:
+  push:
+    branches: [refactor/v3-r2-b1-canonical-setup-state]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout B1 branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: refactor/v3-r2-b1-canonical-setup-state
+          fetch-depth: 0
+
+      - name: Fix dynamic examiner metadata keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          path = Path('abntexto-ufc/frontmatter.def')
+          text = path.read_text(encoding='utf-8')
+          replacements = {
+              '{banca-#1}': '{examiner-#1}',
+              '{banca-#1-unidade}': '{examiner-#1-unit}',
+              '{banca-#1-ies}': '{examiner-#1-institution}',
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'missing expected dynamic metadata key: {old}')
+              text = text.replace(old, new)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+          if grep -R -n -E '\{(banca-[0-9#]|curso-graduacao|curso-especializacao|programa-mestrado|nome-mestrado|titulo-mestre|area-mestrado|programa-doutorado|nome-doutorado|titulo-doutor|area-doutorado|programa-projeto|tipo-projeto|entidade-submissao|natureza-projeto|identificador-projeto|orientador(-ies|-unidade|-feminino)?|coorientador(-ies|-unidade|-feminino)?)' abntexto-ufc --include='*.def'; then
+            echo 'R2-B1 dynamic/metadata residual scan failed.'
+            exit 1
+          fi
+
+          git diff --check
+          make static-check
+
+          rm -f .github/workflows/r2-b1-frontmatter-fix-temp.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "refactor: migrate dynamic examiner metadata keys"
+          git push origin HEAD:refactor/v3-r2-b1-canonical-setup-state
