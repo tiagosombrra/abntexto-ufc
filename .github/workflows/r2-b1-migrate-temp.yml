@@ -1,0 +1,214 @@
+name: R2-B1 bounded migration temporary
+
+on:
+  push:
+    branches: [refactor/v3-r2-b1-canonical-setup-state]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout B1 branch
+        uses: actions/checkout@v4
+        with:
+          ref: refactor/v3-r2-b1-canonical-setup-state
+          fetch-depth: 0
+
+      - name: Apply and validate bounded B1 migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          executor=.github/workflows/r2-b1-migrate-temp.yml
+          rollback() {
+            status=$?
+            if [ "$status" -ne 0 ]; then
+              git reset --hard HEAD
+              rm -f "$executor"
+              git config user.name github-actions[bot]
+              git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+              git add -A
+              if ! git diff --cached --quiet; then
+                git commit -m "ci: remove failed R2-B1 migration executor"
+                git push origin HEAD:refactor/v3-r2-b1-canonical-setup-state
+              fi
+            fi
+            exit "$status"
+          }
+          trap rollback EXIT
+
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          ROOT = Path('.')
+
+          META = {
+              'ies':'institution','sigla':'institution-acronym','centro':'center','departamento':'department',
+              'curso-graduacao':'undergraduate-program','habilitacao':'undergraduate-degree',
+              'curso-especializacao':'specialization-program','programa-mestrado':'masters-graduate-program',
+              'nome-mestrado':'masters-program','titulo-mestre':'masters-degree-field','area-mestrado':'masters-concentration',
+              'programa-doutorado':'doctoral-graduate-program','nome-doutorado':'doctoral-program',
+              'titulo-doutor':'doctoral-degree-field','area-doutorado':'doctoral-concentration',
+              'programa-projeto':'project-program','tipo-projeto':'project-type','entidade-submissao':'submission-entity',
+              'natureza-projeto':'project-nature-statement','identificador-projeto':'project-identifier',
+              'autor':'author','titulo':'title','subtitulo':'subtitle','variacao-titulo':'title-variant',
+              'ano':'year','local':'location','data-aprovacao':'approval-date','orientador':'advisor',
+              'orientador-ies':'advisor-institution','orientador-unidade':'advisor-unit',
+              'orientador-feminino':'advisor-feminine-label','coorientador':'coadvisor',
+              'coorientador-ies':'coadvisor-institution','coorientador-unidade':'coadvisor-unit',
+              'coorientador-feminino':'coadvisor-feminine-label','autor-epigrafe':'epigraph-author',
+              'banca-2':'examiner-2','banca-2-unidade':'examiner-2-unit','banca-2-ies':'examiner-2-institution',
+              'banca-3':'examiner-3','banca-3-unidade':'examiner-3-unit','banca-3-ies':'examiner-3-institution',
+              'banca-4':'examiner-4','banca-4-unidade':'examiner-4-unit','banca-4-ies':'examiner-4-institution',
+              'banca-5':'examiner-5','banca-5-unidade':'examiner-5-unit','banca-5-ies':'examiner-5-institution',
+              'banca-6':'examiner-6','banca-6-unidade':'examiner-6-unit','banca-6-ies':'examiner-6-institution',
+          }
+          KEYS = {
+              'tipo':'type','impressao':'print-mode','capa':'cover','ficha-catalografica':'catalog-card',
+              'brasao':'coat-of-arms',**META,'fonte':'font','fonte-estrita':'strict-font','tabelas':'tables',
+              'codigo':'code','algoritmos':'algorithms','glossario':'glossary','indice':'index',
+              'brasao-arquivo':'coat-of-arms-file','pagina-inicial':'initial-page',
+          }
+          TYPES = {
+              'tccgraduacao':'undergraduate-capstone','tccespecializacao':'specialization-capstone',
+              'dissertacao':'masters-thesis','tese':'doctoral-thesis','projeto':'research-project',
+              'projetoanonimizado':'anonymized-research-project',
+          }
+
+          def read(path):
+              return (ROOT/path).read_text(encoding='utf-8')
+          def write(path, text):
+              (ROOT/path).write_text(text, encoding='utf-8')
+          def must(text, old, new, path):
+              if old not in text:
+                  raise SystemExit(f'{path}: required source fragment absent: {old!r}')
+              return text.replace(old, new)
+
+          # core.def: canonical setup producers plus canonical metadata/state storage.
+          path = 'abntexto-ufc/core.def'
+          text = read(path)
+          for old, new in META.items():
+              text = text.replace('{'+old+'}', '{'+new+'}')
+              text = re.sub(rf'(?m)^    {re.escape(old)}(?=\s*=)', new, text)
+              text = re.sub(rf'(?m)^    {re.escape(old)}(?=\s+\.(?:code|choice))', new, text)
+          for old, new in {
+              '    tipo .choice:,':'    type .choice:,','    impressao .choice:,':'    print-mode .choice:,',
+              '    capa .choice:,':'    cover .choice:,','    ficha-catalografica .choice:,':'    catalog-card .choice:,',
+              '    brasao .choice:,':'    coat-of-arms .choice:,','    tipo = tccgraduacao,':'    type = undergraduate-capstone,',
+              '    impressao = anverso,':'    print-mode = single-sided,','    capa = auto,':'    cover = auto,',
+              '    ficha-catalografica = nao,':'    catalog-card = false,','    brasao = sim':'    coat-of-arms = true',
+              '    brasao-projeto .meta:n = { brasao = #1 },\n':'',
+          }.items():
+              text = must(text, old, new, path)
+          for old, new in TYPES.items():
+              text = text.replace(f'    tipo / {old} .code:n =', f'    type / {new} .code:n =')
+              text = text.replace('{ '+old+' }', '{ '+new+' }').replace('{'+old+'}', '{'+new+'}')
+          text = text.replace('    impressao / anverso .code:n =','    print-mode / single-sided .code:n =').replace('{ anverso }','{ single-sided }')
+          text = text.replace('    impressao / frente-verso .code:n =','    print-mode / double-sided .code:n =').replace('{ frente-verso }','{ double-sided }')
+          text = text.replace('    capa / sim .code:n =','    cover / true .code:n =').replace('    capa / nao .code:n =','    cover / false .code:n =')
+          text = text.replace('    ficha-catalografica / sim .code:n =','    catalog-card / true .code:n =').replace('    ficha-catalografica / nao .code:n =','    catalog-card / false .code:n =')
+          text = re.sub(r'^    ficha-catalografica / (?:true|false) \.meta:n = .*\n','',text,flags=re.M)
+          text = text.replace('    brasao / sim .code:n =','    coat-of-arms / true .code:n =').replace('    brasao / nao .code:n =','    coat-of-arms / false .code:n =')
+          text = re.sub(r'^    brasao / (?:true|false) \.meta:n = .*\n','',text,flags=re.M)
+          text = text.replace('    advisor-feminine-label / sim .code:n =','    advisor-feminine-label / true .code:n =').replace('    advisor-feminine-label / nao .code:n =','    advisor-feminine-label / false .code:n =')
+          text = re.sub(r'^    advisor-feminine-label / (?:true|false) \.meta:n = .*\n','',text,flags=re.M)
+          text = text.replace('    coadvisor-feminine-label / sim .code:n =','    coadvisor-feminine-label / true .code:n =').replace('    coadvisor-feminine-label / nao .code:n =','    coadvisor-feminine-label / false .code:n =')
+          text = re.sub(r'^    coadvisor-feminine-label / (?:true|false) \.meta:n = .*\n','',text,flags=re.M)
+          text = text.replace('{advisor-feminine-label} {sim}','{advisor-feminine-label} {true}').replace('{advisor-feminine-label} {nao}','{advisor-feminine-label} {false}')
+          text = text.replace('{coadvisor-feminine-label} {sim}','{coadvisor-feminine-label} {true}').replace('{coadvisor-feminine-label} {nao}','{coadvisor-feminine-label} {false}')
+          write(path, text)
+
+          # fonts.def: canonical font setup is direct.
+          path = 'abntexto-ufc/fonts.def'; text = read(path)
+          text = text.replace('fonte .choice:','font .choice:').replace('fonte / times','font / times').replace('fonte / arial','font / arial')
+          text = text.replace('fonte-estrita .choice:','strict-font .choice:').replace('fonte-estrita / sim .code:n','strict-font / true .code:n').replace('fonte-estrita / nao .code:n','strict-font / false .code:n')
+          text = re.sub(r'^    fonte-estrita / (?:true|false) \.meta:n = .*\n','',text,flags=re.M)
+          text = text.replace('fonte = times','font = times').replace('fonte-estrita = nao','strict-font = false').replace('set~fonte-estrita=nao','set~strict-font=false')
+          write(path,text)
+
+          # modules.def: canonical keys/values and internal state.
+          path='abntexto-ufc/modules.def'; text=read(path)
+          for old,new in {'tabelas':'tables','codigo':'code','algoritmos':'algorithms','glossario':'glossary','indice':'index'}.items():
+              text=re.sub(rf'(?m)^    {old}(?=\s+(?:\.|/))',new,text)
+          text=text.replace('tables / nativo','tables / native').replace('{ nativo }','{ native }')
+          text=text.replace('code / nenhum','code / none').replace('algorithms / nenhum','algorithms / none').replace('glossary / nenhum','glossary / none').replace('index / nenhum','index / none').replace('{ nenhum }','{ none }')
+          text=re.sub(r'^    tables / tabularray-abnt \.meta:n = .*\n','',text,flags=re.M).replace('tabelas=tabularray','tables=tabularray')
+          write(path,text)
+
+          path='abntexto-ufc/institutional.def'; text=read(path).replace('brasao-arquivo .tl_gset:N','coat-of-arms-file .tl_gset:N').replace('configure~brasao-arquivo','configure~coat-of-arms-file'); write(path,text)
+          path='abntexto-ufc/academic-works.def'; text=read(path).replace('pagina-inicial .code:n','initial-page .code:n').replace("Invalid~pagina-inicial~'#1'","Invalid~initial-page~'#1'"); write(path,text)
+
+          # Runtime state consumers.
+          for path in ['abntexto-ufc/frontmatter.def','abntexto-ufc/academic-works.def','abntexto-ufc/research-projects.def']:
+              text=read(path)
+              for old,new in META.items(): text=text.replace('{'+old+'}','{'+new+'}')
+              for old,new in TYPES.items(): text=text.replace('{'+old+'}','{'+new+'}').replace('{ '+old+' }','{ '+new+' }')
+              text=text.replace('{frente-verso}','{double-sided}').replace('{ frente-verso }','{ double-sided }')
+              text=text.replace('{nao}','{false}').replace('{ nao }','{ false }').replace('{sim}','{true}').replace('{ sim }','{ true }')
+              write(path,text)
+          path='abntexto-ufc/layout.def'; write(path,read(path).replace('{ frente-verso }','{ double-sided }'))
+
+          # Remove only setup forwarding from transitional public-api.def.
+          path='abntexto-ufc/public-api.def'; text=read(path)
+          start=text.index('\\keys_define:nn { ufc }'); end=text.index('% Canonical commands forward')
+          text=text[:start]+'% Canonical setup keys are owned directly by responsibility modules after R2-B1.\n\n'+text[end:]
+          text=text.replace('% Canonical English setup keys forward to the retained Portuguese compatibility behavior.\n% Portuguese keys remain supported compatibility surfaces until V3-R2.\n','% R2-B1 removed setup forwarding. Remaining entries are transitional command/environment forwards.\n')
+          write(path,text)
+
+          # Canonicalize setup syntax in tracked template/test LaTeX sources, including inline setup snippets.
+          tex_files=list(Path('template').rglob('*.tex'))+list(Path('tests').rglob('*.tex'))
+          values={
+              'type':TYPES,'print-mode':{'anverso':'single-sided','frente-verso':'double-sided'},
+              'cover':{'sim':'true','nao':'false'},'catalog-card':{'sim':'true','nao':'false'},
+              'coat-of-arms':{'sim':'true','nao':'false'},'advisor-feminine-label':{'sim':'true','nao':'false'},
+              'coadvisor-feminine-label':{'sim':'true','nao':'false'},'strict-font':{'sim':'true','nao':'false'},
+              'tables':{'nativo':'native'},'code':{'nenhum':'none'},'algorithms':{'nenhum':'none'},
+              'glossary':{'nenhum':'none'},'index':{'nenhum':'none'},
+          }
+          for file in tex_files:
+              text=file.read_text(encoding='utf-8')
+              for old,new in KEYS.items(): text=re.sub(rf'(?<![\w-]){re.escape(old)}(?=\s*=)',new,text)
+              for key,mapping in values.items():
+                  for old,new in mapping.items(): text=re.sub(rf'({re.escape(key)}\s*=\s*){re.escape(old)}(?=\s*(?:,|\}}|$))',rf'\1{new}',text,flags=re.M)
+              for old,new in META.items(): text=re.sub(rf'(\\ufcMeta\s*\{{\s*){re.escape(old)}(\s*\}})',rf'\1{new}\2',text)
+              file.write_text(text,encoding='utf-8')
+
+          # Explicit engineering consumers of canonical profile values.
+          path='tests/integration/profile-matrix.sh'; text=read(path)
+          text=text.replace('profiles="tccgraduacao tccespecializacao dissertacao tese projeto projetoanonimizado"','profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"')
+          for old,new in TYPES.items(): text=text.replace(f"    '{old}': (",f"    '{new}': (")
+          text=text.replace("if profile == 'projetoanonimizado':","if profile == 'anonymized-research-project':").replace("if profile in {'projeto', 'projetoanonimizado'}:","if profile in {'research-project', 'anonymized-research-project'}:")
+          write(path,text)
+          path='tests/integration/profile-pdfa.sh'; write(path,read(path).replace('profiles="tccgraduacao tccespecializacao dissertacao tese projeto projetoanonimizado"','profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"'))
+          PY
+
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          failures=[]
+          legacy_keys=['tipo','impressao','capa','ficha-catalografica','brasao','ies','sigla','centro','departamento','curso-graduacao','habilitacao','curso-especializacao','programa-mestrado','nome-mestrado','titulo-mestre','area-mestrado','programa-doutorado','nome-doutorado','titulo-doutor','area-doutorado','programa-projeto','tipo-projeto','entidade-submissao','natureza-projeto','identificador-projeto','autor','titulo','subtitulo','variacao-titulo','ano','local','data-aprovacao','orientador','orientador-ies','orientador-unidade','orientador-feminino','coorientador','coorientador-ies','coorientador-unidade','coorientador-feminino','autor-epigrafe','banca-2','banca-2-unidade','banca-2-ies','banca-3','banca-3-unidade','banca-3-ies','banca-4','banca-4-unidade','banca-4-ies','banca-5','banca-5-unidade','banca-5-ies','banca-6','banca-6-unidade','banca-6-ies','fonte','fonte-estrita','tabelas','codigo','algoritmos','glossario','indice','brasao-arquivo','pagina-inicial']
+          assignment=re.compile(r'(?<![\w-])(?:'+'|'.join(map(re.escape,legacy_keys))+r')\s*=')
+          for p in list(Path('template').rglob('*.tex'))+list(Path('tests').rglob('*.tex')):
+              if assignment.search(p.read_text(encoding='utf-8',errors='replace')): failures.append(f'{p}: legacy setup assignment remains')
+          runtime='\n'.join(p.read_text(encoding='utf-8',errors='replace') for p in Path('abntexto-ufc').rglob('*.def'))
+          for token in ('tccgraduacao','tccespecializacao','projetoanonimizado','frente-verso','fonte-estrita','brasao-arquivo','pagina-inicial','brasao-projeto'):
+              if token in runtime: failures.append(f'runtime legacy token remains: {token}')
+          for token in ('{curso-graduacao}','{programa-mestrado}','{programa-doutorado}','{orientador-feminino}','{banca-2}'):
+              if token in runtime: failures.append(f'runtime legacy metadata remains: {token}')
+          if failures: raise SystemExit('\n'.join(failures))
+          PY
+
+          git diff --check
+          make static-check
+
+          rm -f "$executor"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "refactor: migrate canonical setup and runtime state"
+          git push origin HEAD:refactor/v3-r2-b1-canonical-setup-state
+          trap - EXIT
