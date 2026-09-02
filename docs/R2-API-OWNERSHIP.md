@@ -17,6 +17,8 @@ Authoritative migration contract: `release/v3-api-migration.json`.
 
 The editable reference document and tests use the canonical B1/B2 surfaces but still contain structural/object consumers owned by B3 and bibliography/back-matter consumers owned by B4. Each remaining runtime lot therefore migrates the corresponding `template/` and test consumers atomically with the behavior owner.
 
+A late B2-closeout audit also found four active release consumers outside the primary template/test sweep: `docs/ctan-example.tex`, `release/ctan/abntexto-ufc.tex`, `tools/build-public-bundles.py`, and `tests/checks/public_bundles.py`. Their residual v2 setup assumptions were repaired immediately and classified as B1/B2 consumer reconciliation, not B3 work. Final audit run `33696155771` / job `100465339990` passed source compilation, public/distribution bundle validation, reproducibility, stale-token scanning, cleanup, `git diff --check`, and `make static-check`.
+
 ## Responsibility ownership
 
 | Runtime surface | Direct/current behavior owner | R2 responsibility/status |
@@ -55,11 +57,13 @@ The first full post-migration integration run `33665983360` failed closed at `PA
 
 Operational issue: #237. Implementation PR: #242. Entry `main`: `e418893ee5c89f12cc4ac8d845111c894ec946e4`. Merged `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`.
 
-B2 moved cover/title/approval/catalog-card, dedication/acknowledgments/epigraph/errata, summary/abstract, front-matter lists, list-entry and table-of-contents commands into direct owners; rebound layout hooks; migrated template/test/reference/CTAN/scenario consumers; and removed B2 forwards from `public-api.def`. The first executor run `33679535751` failed closed on its own cleanup order. Corrected run `33679827267` passed, then strengthened residual audit `33680252116` caught and closed hook/specialization gaps. Final head `4341a2adb4633b634d1e2ad905b1731e8126354b` passed `Static contract` `33680378948` and `Linux integration` `33680378846` / job `100415223907` with `PASS=30 FAIL=0 SKIP=0`. No normative semantics/proof state changed and no compatibility alias layer was introduced.
+B2 moved cover/title/approval/catalog-card, dedication/acknowledgments/epigraph/errata, summary/abstract, front-matter lists, list-entry and table-of-contents commands into direct owners; rebound layout hooks; migrated template/test/reference/CTAN/scenario consumers; and removed B2 forwards from `public-api.def`. The first executor run `33679535751` failed closed on its own cleanup order. Corrected run `33679827267` passed, then strengthened residual audit `33680252116` caught and closed hook/specialization gaps. Final head `4341a2adb4633b634d1e2ad905b1731e8126354b` passed `Static contract` `33680378948` and `Linux integration` `33680378846` / job `100415223907` with `PASS=30 FAIL=0 SKIP=0`; merged-main `Linux release check` `33687588772` passed `PASS=32 FAIL=0 SKIP=0`.
+
+The B2→B3 closeout then exposed a separate active-release-consumer residue: the CTAN example/manual and public-bundle producer/checker still assumed v2 setup vocabulary. Those consumers were reconciled to canonical v3 setup before B3 activation. Audit run `33696155771`, job `100465339990`, passed both CTAN-source compilations, public and distribution bundle reproducibility/layout/asset checks, residual scanning and clean self-removal. No generated reference photograph, runtime alias, normative semantics/proof-state change, proprietary font redistribution or CTAN submission was introduced.
 
 ### R2-B3 — structural/object environments, optional object API and extension hooks — ACTIVE
 
-Operational issue: #238. Entry `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`.
+Operational issue: #238. Entry `main`: the canonical B2→B3 closeout merge, after PR #243 passes final permanent gates and lands on `main`.
 
 Make `ufclettereditems`, `ufcdashedsubitems`, `ufcdefinitionlist`, `ufcobject`, `ufclisting`, and `ufcalgorithm` the direct environments in their owners. Update `integrations/abntexto.def` together with `ufcdefinitionlist`. Move source/note/list-of-chart/code/algorithm and optional listing/minted APIs to direct canonical ownership. Rename project extension hooks to `\ufcSectionHook` and `\ufcObjectLegendHook`. Replace project-owned object IDs `codigo` / `algoritmo`; preserve genuine upstream `grafico` / `quadro` only at integration boundaries.
 
@@ -89,4 +93,4 @@ Migrate any remaining template/test/documentation consumers, remove `abntexto-uf
 
 ## R2-A exit condition
 
-R2-A is complete. The ownership map, machine contracts and control plane agree on the B1–B5 sequence. B1 and B2 are complete; B3/#238 is the sole active implementation lot.
+R2-A is complete. The ownership map, machine contracts and control plane agree on the B1–B5 sequence. B1 and B2 are complete; B3/#238 becomes the sole active implementation lot only after the B2→B3 closeout PR #243 is merged green.
