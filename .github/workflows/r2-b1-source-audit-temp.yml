@@ -1,0 +1,125 @@
+name: R2-B1 source audit temporary
+
+on:
+  push:
+    branches: [refactor/v3-r2-b1-canonical-setup-state]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout B1 branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: refactor/v3-r2-b1-canonical-setup-state
+          fetch-depth: 0
+
+      - name: Audit canonical setup and state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          runtime_files = list(Path('abntexto-ufc').rglob('*.def'))
+          runtime = '\n'.join(p.read_text(encoding='utf-8', errors='replace') for p in runtime_files)
+
+          forbidden_runtime = (
+              'tccgraduacao', 'tccespecializacao', 'projetoanonimizado',
+              'frente-verso', 'anverso', 'fonte-estrita', 'brasao-arquivo',
+              'pagina-inicial', 'brasao-projeto', 'tables / tabularray-abnt .meta:n',
+              'capa /', 'orientador-feminino /', 'coorientador-feminino /',
+          )
+          failures = []
+          for token in forbidden_runtime:
+              if token in runtime:
+                  failures.append(f'runtime legacy setup/state token remains: {token}')
+
+          legacy_metadata = (
+              'ies', 'sigla', 'centro', 'departamento', 'curso-graduacao',
+              'habilitacao', 'curso-especializacao', 'programa-mestrado',
+              'nome-mestrado', 'titulo-mestre', 'area-mestrado',
+              'programa-doutorado', 'nome-doutorado', 'titulo-doutor',
+              'area-doutorado', 'programa-projeto', 'tipo-projeto',
+              'entidade-submissao', 'natureza-projeto', 'identificador-projeto',
+              'autor', 'titulo', 'subtitulo', 'variacao-titulo', 'ano', 'local',
+              'data-aprovacao', 'orientador', 'orientador-ies',
+              'orientador-unidade', 'orientador-feminino', 'coorientador',
+              'coorientador-ies', 'coorientador-unidade', 'coorientador-feminino',
+              'autor-epigrafe', 'banca-2', 'banca-2-unidade', 'banca-2-ies',
+              'banca-3', 'banca-3-unidade', 'banca-3-ies', 'banca-4',
+              'banca-4-unidade', 'banca-4-ies', 'banca-5', 'banca-5-unidade',
+              'banca-5-ies', 'banca-6', 'banca-6-unidade', 'banca-6-ies',
+          )
+          for key in legacy_metadata:
+              patterns = (
+                  rf'\\ufc_meta_(?:use|set|if_blank):n[nTF]*\s*\{{{re.escape(key)}\}}',
+                  rf'(?m)^\s*{re.escape(key)}\s*=\s*\{{',
+              )
+              if any(re.search(pattern, runtime) for pattern in patterns):
+                  failures.append(f'runtime legacy metadata key remains: {key}')
+
+          public_api = Path('abntexto-ufc/public-api.def').read_text(encoding='utf-8')
+          if '\\keys_define:nn { ufc }' in public_api:
+              failures.append('public-api.def still owns setup forwarding')
+
+          canonical_core = Path('abntexto-ufc/core.def').read_text(encoding='utf-8')
+          required_core = (
+              'type / undergraduate-capstone .code:n',
+              'type / anonymized-research-project .code:n',
+              'print-mode / single-sided .code:n',
+              'print-mode / double-sided .code:n',
+              'cover / auto .code:n',
+              'cover / true .code:n',
+              'cover / false .code:n',
+              'advisor-feminine-label / true .code:n',
+              'advisor-feminine-label / false .code:n',
+              'coadvisor-feminine-label / true .code:n',
+              'coadvisor-feminine-label / false .code:n',
+          )
+          for token in required_core:
+              if token not in canonical_core:
+                  failures.append(f'core canonical producer missing: {token}')
+
+          legacy_assignments = re.compile(
+              r'(?<![\w-])(?:tipo|impressao|capa|ficha-catalografica|brasao|fonte|fonte-estrita|tabelas|codigo|algoritmos|glossario|indice|brasao-arquivo|pagina-inicial)\s*='
+          )
+          for root in (Path('template'), Path('tests')):
+              for path in root.rglob('*.tex'):
+                  text = path.read_text(encoding='utf-8', errors='replace')
+                  if legacy_assignments.search(text):
+                      failures.append(f'legacy setup assignment remains in {path}')
+
+          profile_matrix = Path('tests/integration/profile-matrix.sh').read_text(encoding='utf-8')
+          for profile in (
+              'undergraduate-capstone', 'specialization-capstone', 'masters-thesis',
+              'doctoral-thesis', 'research-project', 'anonymized-research-project',
+          ):
+              if profile not in profile_matrix:
+                  failures.append(f'profile matrix missing canonical ID: {profile}')
+
+          if failures:
+              raise SystemExit('\n'.join(failures))
+          print('R2-B1 source audit passed.')
+          PY
+          git diff --check
+          make static-check
+
+      - name: Remove temporary audit workflow
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/r2-b1-source-audit-temp.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "ci: remove R2-B1 source audit executor"
+            git push origin HEAD:refactor/v3-r2-b1-canonical-setup-state
+          fi
