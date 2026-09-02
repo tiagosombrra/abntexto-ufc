@@ -1,12 +1,12 @@
-\ProvidesFile{abntexto-ufc/public-api.def}[2026/08/29 UFC canonical public API]
+\ProvidesFile{abntexto-ufc/public-api.def}[2026/09/02 UFC transitional public API]
 
 % R2-B1 removed setup forwarding. Remaining entries are transitional command/environment forwards.
 \ExplSyntaxOn
 
 % Canonical setup keys are owned directly by responsibility modules after R2-B1.
 
-% Canonical commands forward to the retained Portuguese compatibility behavior.
-% The Portuguese compatibility commands remain behavior owners until V3-R2.
+% Canonical commands still forward to Portuguese project-owned behavior.
+% These forwarding entries are removed by the bounded R2-B2 through R2-B4 lots.
 \NewDocumentCommand \ufcPrintCover { }
   { \imprimircapa }
 
