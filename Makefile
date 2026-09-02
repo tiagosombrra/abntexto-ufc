@@ -7,7 +7,13 @@ TEMPLATE_DIR := template
 DOCUMENT ?= main
 ENGINE ?= pdflatex
 LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
-TEX_ENV := TEXINPUTS=..//:
+
+ifeq ($(OS),Windows_NT)
+TEXINPUTS_SEPARATOR := ;
+else
+TEXINPUTS_SEPARATOR := :
+endif
+TEX_ENV := TEXINPUTS='..//$(TEXINPUTS_SEPARATOR)'
 
 .PHONY: all pdf compile lua version clean reference-assets public-bundles distribution-bundles \
 	static-check check release-check preflight release-preflight
