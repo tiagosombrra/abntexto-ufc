@@ -3,7 +3,7 @@ set -eu
 
 fixture="tests/smoke/base-profile.tex"
 template_dir="template"
-profiles="tccgraduacao tccespecializacao dissertacao tese projeto projetoanonimizado"
+profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
 
 cleanup_job() {
   job="$1"
@@ -95,39 +95,39 @@ raw = re.sub(r'(?<=\w)-[ \t]*\n[ \t]*(?=\w)', '', raw)
 text = re.sub(r'\s+', ' ', unicodedata.normalize('NFC', raw)).strip().casefold()
 
 expected = {
-    'tccgraduacao': (
+    'undergraduate-capstone': (
         'curso de graduação em ciência da computação',
         'trabalho de conclusão de curso',
         'banca examinadora',
         'resumo',
         'abstract',
     ),
-    'tccespecializacao': (
+    'specialization-capstone': (
         'curso de especialização em computação aplicada',
         'trabalho de conclusão de curso',
         'especialista em computação aplicada',
         'banca examinadora',
     ),
-    'dissertacao': (
+    'masters-thesis': (
         'dissertação apresentada',
         'mestre em ciência da computação',
         'área de concentração: computação gráfica',
         'banca examinadora',
     ),
-    'tese': (
+    'doctoral-thesis': (
         'tese apresentada',
         'doutor em ciência da computação',
         'área de concentração: computação gráfica',
         'banca examinadora',
     ),
-    'projeto': (
+    'research-project': (
         'projeto de pesquisa apresentado',
         'processo seletivo de teste',
         'referencial teórico',
         'recursos',
         'cronograma',
     ),
-    'projetoanonimizado': (
+    'anonymized-research-project': (
         'projeto de pesquisa apresentado',
         'perfil-anonimo-001',
         'referencial teórico',
@@ -147,7 +147,7 @@ for marker in ('introdução', 'metodologia', 'referências', 'fundamentos de me
 if 'capítulo' in text or 'capitulo' in text:
     raise SystemExit(f'Perfil {profile}: estrutura de capítulo reapareceu.')
 
-if profile == 'projetoanonimizado':
+if profile == 'anonymized-research-project':
     for secret in ('autor matriz teste', 'prof. orientador matriz teste', 'prof. membro matriz teste'):
         if secret in text:
             raise SystemExit(f'Perfil anonimizado vazou dado protegido: {secret}')
@@ -155,7 +155,7 @@ else:
     if 'autor matriz teste' not in text:
         raise SystemExit(f'Perfil {profile}: autor esperado ausente.')
 
-if profile in {'projeto', 'projetoanonimizado'}:
+if profile in {'research-project', 'anonymized-research-project'}:
     for forbidden in ('banca examinadora', 'abstract'):
         if forbidden in text:
             raise SystemExit(f'Perfil {profile}: elemento de trabalho acadêmico apareceu indevidamente: {forbidden}')

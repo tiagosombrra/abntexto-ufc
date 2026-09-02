@@ -7,15 +7,15 @@
 
 \cs_new_protected:Npn \ufc_project_entity_line:
   {
-    \ufc_meta_if_blank:nTF {entidade-submissao}
-      { \MakeUppercase{\ufc_meta_use:n {ies}}\par }
-      { \MakeUppercase{\ufc_meta_use:n {entidade-submissao}}\par }
+    \ufc_meta_if_blank:nTF {submission-entity}
+      { \MakeUppercase{\ufc_meta_use:n {institution}}\par }
+      { \MakeUppercase{\ufc_meta_use:n {submission-entity}}\par }
   }
 
 \cs_new_protected:Npn \ufc_project_title_extras:
   {
-    \ufc_meta_if_blank:nF {variacao-titulo}
-      { \MakeUppercase{\ufc_meta_use:n {variacao-titulo}}\par }
+    \ufc_meta_if_blank:nF {title-variant}
+      { \MakeUppercase{\ufc_meta_use:n {title-variant}}\par }
     \ufc_meta_if_blank:nF {volume}
       { VOLUME~\ufc_meta_use:n {volume}\par }
   }
@@ -28,17 +28,17 @@
       \centering\bfseries
       \ufc_print_coat_of_arms:
       \ufc_project_entity_line:
-      \ufc_optional_upper_line:n {centro}
-      \ufc_optional_upper_line:n {departamento}
-      \ufc_optional_upper_line:n {programa-projeto}
+      \ufc_optional_upper_line:n {center}
+      \ufc_optional_upper_line:n {department}
+      \ufc_optional_upper_line:n {project-program}
       \vspace{2cm}
       \ufc_print_visible_author:
       \vfill
       \ufc_title_text:\par
       \ufc_project_title_extras:
       \vfill
-      \MakeUppercase{\ufc_meta_use:n {local}}\par
-      \ufc_meta_use:n {ano}\par
+      \MakeUppercase{\ufc_meta_use:n {location}}\par
+      \ufc_meta_use:n {year}\par
     \endgroup
     \clearpage
     \setcounter{page}{1}
@@ -63,15 +63,15 @@
         \ufc_print_advisors:
       \end{minipage}\par
       \vfill
-      \MakeUppercase{\ufc_meta_use:n {local}}\par
-      \ufc_meta_use:n {ano}\par
+      \MakeUppercase{\ufc_meta_use:n {location}}\par
+      \ufc_meta_use:n {year}\par
     \endgroup
     \clearpage
   }
 
 \RenewDocumentCommand \imprimircapa { }
   {
-    \str_if_eq:VnF \g_ufc_cover_mode_tl {nao}
+    \str_if_eq:VnF \g_ufc_cover_mode_tl {false}
       {
         \ufcIfProjectTF
           { \ufc_project_cover: }
