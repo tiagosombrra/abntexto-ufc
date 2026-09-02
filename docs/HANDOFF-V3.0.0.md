@@ -5,11 +5,11 @@ Updated: 2026-09-02
 ## Checkpoint
 
 - Repository: `tiagosombrra/abntexto-ufc`.
-- Canonical trunk: `main` at `0a2c2c3879986ca27b731f54b974db12524258df` entering the R2-A closeout documentation lot.
+- R2-A entry checkpoint on `main`: `0a2c2c3879986ca27b731f54b974db12524258df`.
 - Phase: **V3-R2 ACTIVE**.
 - Active stage: **R2-B1 — canonical setup and internal state vocabulary**.
 - Active implementation issue: **#234**.
-- R2-A inventory issue #232: **DONE pending merge of this documentation closeout**.
+- R2-A inventory issue #232: **DONE through the ownership inventory and closeout PR #235**.
 - V3-R1 / R1-B8: **DONE**; issue #227 closed completed.
 - Certified R1 product candidate: `9b1752565ac217c04ffa22a9ef272cdf078af380`.
 
@@ -56,4 +56,4 @@ Key findings:
 
 ## Immediate action
 
-Execute R2-B1 through issue #234 from canonical `main` after this R2-A closeout merges. Start with a complete consumer inventory for core setup/state vocabulary, then change producers and consumers atomically and validate with the permanent gates.
+Execute R2-B1 through issue #234 from canonical `main`. Start with a complete consumer inventory for core setup/state vocabulary, then change producers and consumers atomically and validate with the permanent gates.
