@@ -1,0 +1,130 @@
+name: B8 Windows TEXINPUTS proof temporary
+
+on:
+  push:
+    branches:
+      - fix/v3-r1-b8-windows-texinputs
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows canonical make compile proof
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - name: Checkout proof candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Install bounded TeX Live 2026 set
+        uses: zauguin/install-texlive@f5e7d0b117035fff797d4392ea94131747e03d60
+        with:
+          texlive_version: 2026
+          cache: false
+          packages: |
+            scheme-basic
+            abntexto
+            collection-langportuguese
+            microtype
+            etoolbox
+            newtx
+            fontspec
+            unicode-math
+            pdfpages
+            ragged2e
+            biblatex
+            biblatex-abnt
+            biber
+            ttfutils
+            fontware
+            csquotes
+            enumitem
+            xpatch
+            xcolor
+            xkeyval
+            xstring
+            carlisle
+            mweights
+            fontaxes
+            listings
+            algpseudocodex
+            glossaries
+            imakeidx
+            tabularray
+            varwidth
+
+      - name: Ensure repository build prerequisite
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not (Get-Command make -ErrorAction SilentlyContinue)) {
+            choco install make -y --no-progress
+          }
+          make --version
+
+      - name: Prepare literal Windows fonts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./tools/prepare-windows-fonts.ps1
+
+      - name: Prove canonical Makefile compile on Windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp template/main.tex template/main.tex.b8-original
+          restore_main() {
+            cp template/main.tex.b8-original template/main.tex
+            rm -f template/main.tex.b8-original
+          }
+          trap restore_main EXIT INT TERM
+
+          python - <<'PY'
+          import pathlib
+          import re
+          path = pathlib.Path('template/main.tex')
+          text = path.read_text(encoding='utf-8')
+          text, n = re.subn(r'(?m)^\s*fonte-estrita\s*=\s*nao\s*,', '  fonte-estrita = sim,', text, count=1)
+          if n != 1:
+              raise SystemExit(f'strict patch cardinality failed: {n}')
+          path.write_text(text, encoding='utf-8')
+          PY
+
+          make DOCUMENT=main ENGINE=pdflatex compile
+          test -s template/main.pdf
+          make DOCUMENT=main clean
+          restore_main
+          trap - EXIT INT TERM
+          git diff --exit-code -- template/main.tex
+
+  cleanup:
+    name: Remove temporary Windows TEXINPUTS proof
+    if: always()
+    needs: windows
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout proof branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: fix/v3-r1-b8-windows-texinputs
+          fetch-depth: 0
+
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/b8-windows-texinputs-proof-temp.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A .github/workflows/b8-windows-texinputs-proof-temp.yml
+          if git diff --cached --quiet; then
+            echo 'Temporary Windows TEXINPUTS proof already absent.'
+            exit 0
+          fi
+          git commit -m 'ci: remove temporary B8 Windows TEXINPUTS proof'
+          git push origin HEAD:fix/v3-r1-b8-windows-texinputs
