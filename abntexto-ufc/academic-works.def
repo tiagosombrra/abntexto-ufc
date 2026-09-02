@@ -94,7 +94,7 @@
       { \ufc_cover: }
   }
 
-\AddToHook{cmd/imprimircapa/after}
+\AddToHook{cmd/ufcPrintCover/after}
   { \setcounter{page}{\int_use:N \g_ufc_initial_page_int} }
 
 \cs_new_protected:Npn \ufc_title_page:
