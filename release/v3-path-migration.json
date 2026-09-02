@@ -7,6 +7,9 @@
   "audited_tree_sha": "657c7da1c4f0bd9e7353569fce59c0907c896ea7",
   "target_version": "3.0.0",
   "status": "R1_PATHS_DONE_R2_RUNTIME_ABSORPTION_PENDING",
+  "current_stage": "R2-B1",
+  "r1_path_restructuring_status": "DONE",
+  "remaining_runtime_path_action": {"path": "abntexto-ufc/public-api.def", "action": "remove-after-absorption", "planned_lot": "R2-B5"},
   "policy": {
     "repository_engineering_language": "English",
     "academic_content_language": "preserve source language",
@@ -17,257 +20,68 @@
     "version_prefixes_in_active_test_paths_allowed": false
   },
   "top_level": [
-    {
-      "from": "main.tex",
-      "to": "template/main.tex",
-      "action": "move"
-    },
-    {
-      "from": "frontmatter/",
-      "to": "template/frontmatter/",
-      "action": "move"
-    },
-    {
-      "from": "chapters/",
-      "to": "template/chapters/",
-      "action": "move"
-    },
-    {
-      "from": "backmatter/",
-      "to": "template/backmatter/",
-      "action": "move"
-    },
-    {
-      "from": "figures/",
-      "to": "template/figures/",
-      "action": "move"
-    },
-    {
-      "from": "normativa/",
-      "to": "standards/",
-      "action": "move"
-    },
-    {
-      "from": "ufctex.cls",
-      "action": "remove"
-    }
+    {"from": "main.tex", "to": "template/main.tex", "action": "move"},
+    {"from": "frontmatter/", "to": "template/frontmatter/", "action": "move"},
+    {"from": "chapters/", "to": "template/chapters/", "action": "move"},
+    {"from": "backmatter/", "to": "template/backmatter/", "action": "move"},
+    {"from": "figures/", "to": "template/figures/", "action": "move"},
+    {"from": "normativa/", "to": "standards/", "action": "move"},
+    {"from": "ufctex.cls", "action": "remove"}
   ],
   "runtime": [
-    {
-      "from": "abntexto-ufc/compat-abntexto.def",
-      "to": "abntexto-ufc/integrations/abntexto.def",
-      "action": "move",
-      "reason": "current upstream integration, not legacy compatibility"
-    },
-    {
-      "from": "abntexto-ufc/compat-nbr6023-2025.def",
-      "to": "abntexto-ufc/standards/nbr6023-2025.def",
-      "action": "move",
-      "reason": "current standards adapter"
-    },
-    {
-      "from": "abntexto-ufc/public-api.def",
-      "action": "remove-after-absorption",
-      "reason": "v3 canonical API is implemented directly by responsibility-owning modules"
-    },
-    {
-      "from": "abntexto-ufc/core.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/fonts.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/layout.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/modules.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/frontmatter.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/institutional.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/academic-works.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/research-projects.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/objects.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/bibliography.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc/backmatter.def",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "abntexto-ufc.cls",
-      "action": "retain-and-rewrite"
-    }
+    {"from": "abntexto-ufc/compat-abntexto.def", "to": "abntexto-ufc/integrations/abntexto.def", "action": "move", "reason": "current upstream integration, not legacy compatibility"},
+    {"from": "abntexto-ufc/compat-nbr6023-2025.def", "to": "abntexto-ufc/standards/nbr6023-2025.def", "action": "move", "reason": "current standards adapter"},
+    {"from": "abntexto-ufc/public-api.def", "action": "remove-after-absorption", "reason": "v3 canonical API is implemented directly by responsibility-owning modules"},
+    {"from": "abntexto-ufc/core.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/fonts.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/layout.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/modules.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/frontmatter.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/institutional.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/academic-works.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/research-projects.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/objects.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/bibliography.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc/backmatter.def", "action": "retain-and-rewrite"},
+    {"from": "abntexto-ufc.cls", "action": "retain-and-rewrite"}
   ],
   "template_frontmatter": [
-    {
-      "from": "frontmatter/abstract.tex",
-      "to": "template/frontmatter/abstract.tex",
-      "action": "move"
-    },
-    {
-      "from": "frontmatter/agradecimentos.tex",
-      "to": "template/frontmatter/acknowledgments.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "frontmatter/dedicatoria.tex",
-      "to": "template/frontmatter/dedication.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "frontmatter/epigrafe.tex",
-      "to": "template/frontmatter/epigraph.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "frontmatter/errata.tex",
-      "to": "template/frontmatter/errata.tex",
-      "action": "move"
-    },
-    {
-      "from": "frontmatter/lista-de-abreviaturas-e-siglas.tex",
-      "to": "template/frontmatter/abbreviations-and-acronyms.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "frontmatter/lista-de-simbolos.tex",
-      "to": "template/frontmatter/symbols.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "frontmatter/resumo.tex",
-      "to": "template/frontmatter/summary.tex",
-      "action": "move-rename"
-    }
+    {"from": "frontmatter/abstract.tex", "to": "template/frontmatter/abstract.tex", "action": "move"},
+    {"from": "frontmatter/agradecimentos.tex", "to": "template/frontmatter/acknowledgments.tex", "action": "move-rename"},
+    {"from": "frontmatter/dedicatoria.tex", "to": "template/frontmatter/dedication.tex", "action": "move-rename"},
+    {"from": "frontmatter/epigrafe.tex", "to": "template/frontmatter/epigraph.tex", "action": "move-rename"},
+    {"from": "frontmatter/errata.tex", "to": "template/frontmatter/errata.tex", "action": "move"},
+    {"from": "frontmatter/lista-de-abreviaturas-e-siglas.tex", "to": "template/frontmatter/abbreviations-and-acronyms.tex", "action": "move-rename"},
+    {"from": "frontmatter/lista-de-simbolos.tex", "to": "template/frontmatter/symbols.tex", "action": "move-rename"},
+    {"from": "frontmatter/resumo.tex", "to": "template/frontmatter/summary.tex", "action": "move-rename"}
   ],
   "template_chapters": [
-    {
-      "from": "chapters/1-introducao.tex",
-      "to": "template/chapters/1-introduction.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "chapters/2-fundamentacao-teorica.tex",
-      "to": "template/chapters/2-theoretical-framework.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "chapters/3-metodologia.tex",
-      "to": "template/chapters/3-methodology.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "chapters/4-resultados.tex",
-      "to": "template/chapters/4-results.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "chapters/5-conclusao.tex",
-      "to": "template/chapters/5-conclusion.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "chapters/exemplos-de-formatacao.tex",
-      "to": "template/chapters/formatting-examples.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "chapters/trabalhos-relacionados.tex",
-      "to": "template/chapters/related-work.tex",
-      "action": "move-rename"
-    }
+    {"from": "chapters/1-introducao.tex", "to": "template/chapters/1-introduction.tex", "action": "move-rename"},
+    {"from": "chapters/2-fundamentacao-teorica.tex", "to": "template/chapters/2-theoretical-framework.tex", "action": "move-rename"},
+    {"from": "chapters/3-metodologia.tex", "to": "template/chapters/3-methodology.tex", "action": "move-rename"},
+    {"from": "chapters/4-resultados.tex", "to": "template/chapters/4-results.tex", "action": "move-rename"},
+    {"from": "chapters/5-conclusao.tex", "to": "template/chapters/5-conclusion.tex", "action": "move-rename"},
+    {"from": "chapters/exemplos-de-formatacao.tex", "to": "template/chapters/formatting-examples.tex", "action": "move-rename"},
+    {"from": "chapters/trabalhos-relacionados.tex", "to": "template/chapters/related-work.tex", "action": "move-rename"}
   ],
   "template_backmatter": [
-    {
-      "from": "backmatter/apendices/apendice-a.tex",
-      "to": "template/backmatter/appendices/appendix-a.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "backmatter/apendices/apendice-b.tex",
-      "to": "template/backmatter/appendices/appendix-b.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "backmatter/apendices/apendice-c.tex",
-      "to": "template/backmatter/appendices/appendix-c.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "backmatter/apendices/apendice-d.tex",
-      "to": "template/backmatter/appendices/appendix-d.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "backmatter/anexos/anexo-a.tex",
-      "to": "template/backmatter/annexes/annex-a.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "backmatter/anexos/anexo-b.tex",
-      "to": "template/backmatter/annexes/annex-b.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "backmatter/glossario.tex",
-      "to": "template/backmatter/glossary.tex",
-      "action": "move-rename"
-    },
-    {
-      "from": "backmatter/referencias.bib",
-      "to": "template/backmatter/references.bib",
-      "action": "move-rename"
-    }
+    {"from": "backmatter/apendices/apendice-a.tex", "to": "template/backmatter/appendices/appendix-a.tex", "action": "move-rename"},
+    {"from": "backmatter/apendices/apendice-b.tex", "to": "template/backmatter/appendices/appendix-b.tex", "action": "move-rename"},
+    {"from": "backmatter/apendices/apendice-c.tex", "to": "template/backmatter/appendices/appendix-c.tex", "action": "move-rename"},
+    {"from": "backmatter/apendices/apendice-d.tex", "to": "template/backmatter/appendices/appendix-d.tex", "action": "move-rename"},
+    {"from": "backmatter/anexos/anexo-a.tex", "to": "template/backmatter/annexes/annex-a.tex", "action": "move-rename"},
+    {"from": "backmatter/anexos/anexo-b.tex", "to": "template/backmatter/annexes/annex-b.tex", "action": "move-rename"},
+    {"from": "backmatter/glossario.tex", "to": "template/backmatter/glossary.tex", "action": "move-rename"},
+    {"from": "backmatter/referencias.bib", "to": "template/backmatter/references.bib", "action": "move-rename"}
   ],
   "template_figures": [
-    {
-      "from": "figures/LICENCAS.md",
-      "to": "template/figures/LICENSES.md",
-      "action": "move-rename"
-    },
-    {
-      "from": "figures/exemplo.py",
-      "to": "template/figures/example.py",
-      "action": "move-rename"
-    },
-    {
-      "from": "figures/fluxo-exemplo.png",
-      "to": "template/figures/example-flow.png",
-      "action": "move-rename"
-    },
-    {
-      "from": "figures/grafico-exemplo.jpg",
-      "to": "template/figures/example-chart.jpg",
-      "action": "move-rename"
-    }
+    {"from": "figures/LICENCAS.md", "to": "template/figures/LICENSES.md", "action": "move-rename"},
+    {"from": "figures/exemplo.py", "to": "template/figures/example.py", "action": "move-rename"},
+    {"from": "figures/fluxo-exemplo.png", "to": "template/figures/example-flow.png", "action": "move-rename"},
+    {"from": "figures/grafico-exemplo.jpg", "to": "template/figures/example-chart.jpg", "action": "move-rename"}
   ],
   "standards": {
-    "root_rule": {
-      "from_prefix": "normativa/",
-      "to_prefix": "standards/",
-      "action": "move"
-    },
+    "root_rule": {"from_prefix": "normativa/", "to_prefix": "standards/", "action": "move"},
     "historical_phase_records": {
       "match": "standards/n[0-9]+-*",
       "to_prefix": "release/history/v2/standards/",
@@ -296,261 +110,76 @@
     ]
   },
   "documentation": [
-    {
-      "from": "docs/NORMAS.md",
-      "to": "docs/NORMATIVE-BASE.md",
-      "action": "rename-and-rewrite"
-    },
-    {
-      "from": "docs/VIGENCIA-NORMATIVA.md",
-      "to": "docs/NORMATIVE-CURRENCY.md",
-      "action": "rename-and-rewrite"
-    },
-    {
-      "from": "docs/NAMING.md",
-      "to": "docs/history/NAMING-V2.md",
-      "action": "move",
-      "reason": "superseded additive v2 naming policy"
-    },
-    {
-      "from": "docs/B2R-NAMING-INVENTORY.md",
-      "to": "docs/history/B2R-NAMING-INVENTORY-V2.md",
-      "action": "move"
-    },
-    {
-      "from": "docs/HANDOFF-V2.2.0.md",
-      "to": "docs/history/HANDOFF-V2.2.0.md",
-      "action": "move"
-    },
-    {
-      "from": "docs/history/AUDITORIA-FINAL-V2.1.0.md",
-      "to": "docs/history/FINAL-AUDIT-V2.1.0.md",
-      "action": "rename"
-    },
-    {
-      "from": "docs/ARCHITECTURE.md",
-      "action": "retain"
-    },
-    {
-      "from": "docs/ENGINEERING-LANGUAGE.md",
-      "action": "retain"
-    },
-    {
-      "from": "docs/ROADMAP-V3.0.0.md",
-      "action": "retain"
-    },
-    {
-      "from": "docs/README-CTAN.md",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "docs/CHANGELOG-CTAN.md",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "docs/ctan-example.tex",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": "README.md",
-      "action": "retain-and-rewrite"
-    }
+    {"from": "docs/NORMAS.md", "to": "docs/NORMATIVE-BASE.md", "action": "rename-and-rewrite"},
+    {"from": "docs/VIGENCIA-NORMATIVA.md", "to": "docs/NORMATIVE-CURRENCY.md", "action": "rename-and-rewrite"},
+    {"from": "docs/NAMING.md", "to": "docs/history/NAMING-V2.md", "action": "move", "reason": "superseded additive v2 naming policy"},
+    {"from": "docs/B2R-NAMING-INVENTORY.md", "to": "docs/history/B2R-NAMING-INVENTORY-V2.md", "action": "move"},
+    {"from": "docs/HANDOFF-V2.2.0.md", "to": "docs/history/HANDOFF-V2.2.0.md", "action": "move"},
+    {"from": "docs/history/AUDITORIA-FINAL-V2.1.0.md", "to": "docs/history/FINAL-AUDIT-V2.1.0.md", "action": "rename"},
+    {"from": "docs/ARCHITECTURE.md", "action": "retain"},
+    {"from": "docs/ENGINEERING-LANGUAGE.md", "action": "retain"},
+    {"from": "docs/ROADMAP-V3.0.0.md", "action": "retain"},
+    {"from": "docs/README-CTAN.md", "action": "retain-and-rewrite"},
+    {"from": "docs/CHANGELOG-CTAN.md", "action": "retain-and-rewrite"},
+    {"from": "docs/ctan-example.tex", "action": "retain-and-rewrite"},
+    {"from": "README.md", "action": "retain-and-rewrite"}
   ],
   "release_records": {
-    "active": [
-      "release/v3-roadmap.json",
-      "release/v3-path-migration.json",
-      "release/v3-api-migration.json",
-      "release/v3-test-migration.json"
-    ],
+    "active": ["release/v3-roadmap.json", "release/v3-path-migration.json", "release/v3-api-migration.json", "release/v3-test-migration.json"],
     "historical_rule": {
-      "match": [
-        "release/final-audit.json",
-        "release/n15-*.json"
-      ],
+      "match": ["release/final-audit.json", "release/n15-*.json"],
       "to_prefix": "release/history/v2/",
       "action": "move",
       "reason": "preserve certified evidence while removing superseded phase contracts from the active release surface"
     }
   },
   "test_structure": [
-    {
-      "from": "tests/normativa/",
-      "to": "tests/documents/",
-      "action": "move"
-    },
-    {
-      "from": "tests/fixtures/pretextuais/",
-      "to": "tests/fixtures/frontmatter/",
-      "action": "move"
-    },
-    {
-      "from": "tests/smoke/perfil-base.tex",
-      "to": "tests/smoke/base-profile.tex",
-      "action": "rename"
-    },
-    {
-      "from_pattern": "tests/v2-*-check.sh",
-      "to_pattern": "tests/integration/<semantic-name>.sh",
-      "action": "move-rename"
-    },
-    {
-      "from_pattern": "tests/v2-*.py",
-      "to_pattern": "tests/checks/<semantic-name>.py",
-      "action": "move-rename"
-    }
+    {"from": "tests/normativa/", "to": "tests/documents/", "action": "move"},
+    {"from": "tests/fixtures/pretextuais/", "to": "tests/fixtures/frontmatter/", "action": "move"},
+    {"from": "tests/smoke/perfil-base.tex", "to": "tests/smoke/base-profile.tex", "action": "rename"},
+    {"from_pattern": "tests/v2-*-check.sh", "to_pattern": "tests/integration/<semantic-name>.sh", "action": "move-rename"},
+    {"from_pattern": "tests/v2-*.py", "to_pattern": "tests/checks/<semantic-name>.py", "action": "move-rename"}
   ],
   "test_document_renames": [
-    [
-      "algoritmos-linhas.tex",
-      "algorithm-line-numbering.tex"
-    ],
-    [
-      "build-minimo.tex",
-      "minimal-build.tex"
-    ],
-    [
-      "citacoes-referencias.tex",
-      "citations-references.tex"
-    ],
-    [
-      "ficha-catalografica.tex",
-      "catalog-card.tex"
-    ],
-    [
-      "fontes-arial-poc.tex",
-      "arial-font-poc.tex"
-    ],
-    [
-      "fontes-classe-poc.tex",
-      "class-font-poc.tex"
-    ],
-    [
-      "fontes-config.tex",
-      "font-configuration.tex"
-    ],
-    [
-      "fontes-documentais.tex",
-      "documentary-sources.tex"
-    ],
-    [
-      "fontes-times-poc.tex",
-      "times-font-poc.tex"
-    ],
-    [
-      "geometria-pdf.tex",
-      "pdf-geometry.tex"
-    ],
-    [
-      "layout-anverso.tex",
-      "layout-single-sided.tex"
-    ],
-    [
-      "layout-frente-verso.tex",
-      "layout-double-sided.tex"
-    ],
-    [
-      "matematica.tex",
-      "mathematics.tex"
-    ],
-    [
-      "normativa-complementar.tex",
-      "normative-complement.tex"
-    ],
-    [
-      "objeto-geometria.tex",
-      "object-geometry.tex"
-    ],
-    [
-      "objetos-avancados.tex",
-      "advanced-objects.tex"
-    ],
-    [
-      "objetos-minted.tex",
-      "minted-objects.tex"
-    ],
-    [
-      "postextuais.tex",
-      "backmatter.tex"
-    ],
-    [
-      "pretextuais-frente-verso.tex",
-      "frontmatter-double-sided.tex"
-    ],
-    [
-      "pretextuais-projeto-anonimo.tex",
-      "frontmatter-anonymized-project.tex"
-    ],
-    [
-      "pretextuais-trabalho.tex",
-      "frontmatter-academic-work.tex"
-    ],
-    [
-      "projeto-15287.tex",
-      "research-project-15287.tex"
-    ],
-    [
-      "projeto-sem-capa.tex",
-      "research-project-without-cover.tex"
-    ],
-    [
-      "referencias-6023-2025.tex",
-      "references-6023-2025.tex"
-    ],
-    [
-      "tabela-ibge.tex",
-      "ibge-table.tex"
-    ],
-    [
-      "tipografia-codigo.tex",
-      "code-typography.tex"
-    ]
+    ["algoritmos-linhas.tex", "algorithm-line-numbering.tex"],
+    ["build-minimo.tex", "minimal-build.tex"],
+    ["citacoes-referencias.tex", "citations-references.tex"],
+    ["ficha-catalografica.tex", "catalog-card.tex"],
+    ["fontes-arial-poc.tex", "arial-font-poc.tex"],
+    ["fontes-classe-poc.tex", "class-font-poc.tex"],
+    ["fontes-config.tex", "font-configuration.tex"],
+    ["fontes-documentais.tex", "documentary-sources.tex"],
+    ["fontes-times-poc.tex", "times-font-poc.tex"],
+    ["geometria-pdf.tex", "pdf-geometry.tex"],
+    ["layout-anverso.tex", "layout-single-sided.tex"],
+    ["layout-frente-verso.tex", "layout-double-sided.tex"],
+    ["matematica.tex", "mathematics.tex"],
+    ["normativa-complementar.tex", "normative-complement.tex"],
+    ["objeto-geometria.tex", "object-geometry.tex"],
+    ["objetos-avancados.tex", "advanced-objects.tex"],
+    ["objetos-minted.tex", "minted-objects.tex"],
+    ["postextuais.tex", "backmatter.tex"],
+    ["pretextuais-frente-verso.tex", "frontmatter-double-sided.tex"],
+    ["pretextuais-projeto-anonimo.tex", "frontmatter-anonymized-project.tex"],
+    ["pretextuais-trabalho.tex", "frontmatter-academic-work.tex"],
+    ["projeto-15287.tex", "research-project-15287.tex"],
+    ["projeto-sem-capa.tex", "research-project-without-cover.tex"],
+    ["referencias-6023-2025.tex", "references-6023-2025.tex"],
+    ["tabela-ibge.tex", "ibge-table.tex"],
+    ["tipografia-codigo.tex", "code-typography.tex"]
   ],
   "fixture_renames": [
-    [
-      "tests/fixtures/exemplo.cpp",
-      "tests/fixtures/example.cpp"
-    ],
-    [
-      "tests/fixtures/exemplo.py",
-      "tests/fixtures/example.py"
-    ],
-    [
-      "tests/fixtures/fontes-documentais.bib",
-      "tests/fixtures/documentary-sources.bib"
-    ],
-    [
-      "tests/fixtures/referencias-6023-2025.bib",
-      "tests/fixtures/references-6023-2025.bib"
-    ],
-    [
-      "tests/fixtures/referencias-v2.bib",
-      "tests/fixtures/references.bib"
-    ],
-    [
-      "tests/fixtures/pretextuais/abreviaturas.tex",
-      "tests/fixtures/frontmatter/abbreviations.tex"
-    ],
-    [
-      "tests/fixtures/pretextuais/agradecimentos.tex",
-      "tests/fixtures/frontmatter/acknowledgments.tex"
-    ],
-    [
-      "tests/fixtures/pretextuais/dedicatoria.tex",
-      "tests/fixtures/frontmatter/dedication.tex"
-    ],
-    [
-      "tests/fixtures/pretextuais/epigrafe.tex",
-      "tests/fixtures/frontmatter/epigraph.tex"
-    ],
-    [
-      "tests/fixtures/pretextuais/resumo.tex",
-      "tests/fixtures/frontmatter/summary.tex"
-    ],
-    [
-      "tests/fixtures/pretextuais/simbolos.tex",
-      "tests/fixtures/frontmatter/symbols.tex"
-    ]
+    ["tests/fixtures/exemplo.cpp", "tests/fixtures/example.cpp"],
+    ["tests/fixtures/exemplo.py", "tests/fixtures/example.py"],
+    ["tests/fixtures/fontes-documentais.bib", "tests/fixtures/documentary-sources.bib"],
+    ["tests/fixtures/referencias-6023-2025.bib", "tests/fixtures/references-6023-2025.bib"],
+    ["tests/fixtures/referencias-v2.bib", "tests/fixtures/references.bib"],
+    ["tests/fixtures/pretextuais/abreviaturas.tex", "tests/fixtures/frontmatter/abbreviations.tex"],
+    ["tests/fixtures/pretextuais/agradecimentos.tex", "tests/fixtures/frontmatter/acknowledgments.tex"],
+    ["tests/fixtures/pretextuais/dedicatoria.tex", "tests/fixtures/frontmatter/dedication.tex"],
+    ["tests/fixtures/pretextuais/epigrafe.tex", "tests/fixtures/frontmatter/epigraph.tex"],
+    ["tests/fixtures/pretextuais/resumo.tex", "tests/fixtures/frontmatter/summary.tex"],
+    ["tests/fixtures/pretextuais/simbolos.tex", "tests/fixtures/frontmatter/symbols.tex"]
   ],
   "remove_active_compatibility_tests": [
     "tests/normativa/public-api-aliases.tex",
@@ -564,32 +193,12 @@
     "tests/checks/public_api_equivalence_contract.py"
   ],
   "workflow": [
-    {
-      "from": ".github/workflows/normative-source.yml",
-      "to": ".github/workflows/standards.yml",
-      "action": "rename-and-rewrite"
-    },
-    {
-      "from": ".github/workflows/latex-preflight.yml",
-      "action": "retain-and-rewrite",
-      "note": "the v2 N12 frozen-blob constraint is historical and does not govern v3"
-    },
-    {
-      "from": ".github/workflows/distribution.yml",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": ".github/workflows/reference-preview.yml",
-      "action": "retain-and-rewrite"
-    },
-    {
-      "from": ".github/workflows/reference-validation.yml",
-      "action": "retain-pending-V3-H1-value-review"
-    },
-    {
-      "from": ".github/workflows/validator-pages.yml",
-      "action": "retain-and-audit"
-    }
+    {"from": ".github/workflows/normative-source.yml", "to": ".github/workflows/standards.yml", "action": "rename-and-rewrite"},
+    {"from": ".github/workflows/latex-preflight.yml", "action": "retain-and-rewrite", "note": "the v2 N12 frozen-blob constraint is historical and does not govern v3"},
+    {"from": ".github/workflows/distribution.yml", "action": "retain-and-rewrite"},
+    {"from": ".github/workflows/reference-preview.yml", "action": "retain-and-rewrite"},
+    {"from": ".github/workflows/reference-validation.yml", "action": "retain-pending-V3-H1-value-review"},
+    {"from": ".github/workflows/validator-pages.yml", "action": "retain-and-audit"}
   ],
   "forbidden_active_path_tokens_after_v3_r3": [
     "normativa",
@@ -617,13 +226,5 @@
     "official source titles and historical evidence payloads may contain Portuguese text",
     "third-party/upstream identifiers may remain when technically required",
     "academic content inside English-named template/test files may remain Portuguese"
-  ],
-  "current_stage": "R2-B1",
-  "r1_path_restructuring_status": "DONE",
-  "remaining_runtime_path_action": {
-    "path": "abntexto-ufc/public-api.def",
-    "action": "remove-after-absorption",
-    "planned_lot": "R2-B5",
-    "owner_inventory": "docs/R2-API-OWNERSHIP.md"
-  }
+  ]
 }
