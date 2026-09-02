@@ -1,0 +1,124 @@
+name: Temporary R2-B2 final audit
+
+on:
+  push:
+    branches:
+      - refactor/v3-r2-b2-frontmatter-api
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+
+      - name: Audit B2 ownership and residuals
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root = Path('.')
+          forbidden_macros = [
+              'imprimircapa', 'imprimirfolhaderosto', 'imprimirfolhadeaprovacao',
+              'imprimirfichacatalografica', 'imprimirdedicatoria', 'imprimiragradecimentos',
+              'imprimirepigrafe', 'imprimirerrata', 'palavraschave', 'imprimirresumo',
+              'imprimirabstract', 'imprimirlistadeilustracoes', 'imprimirlistadefiguras',
+              'imprimirlistadetabelas', 'imprimirlistadequadros',
+              'imprimirlistadeabreviaturasesiglas', 'imprimirlistadesimbolos',
+              'ufclistaentrada', 'imprimirsumario'
+          ]
+          roots = [root/'abntexto-ufc', root/'template', root/'tests', root/'standards', root/'release'/'ctan']
+          files = []
+          for base in roots:
+              for path in base.rglob('*'):
+                  if path.is_file() and path.suffix.lower() in {'.tex','.def','.cls','.py','.sh','.json','.md','.yml','.yaml'}:
+                      files.append(path)
+          files.append(root/'docs'/'ctan-example.tex')
+
+          failures = []
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              for name in forbidden_macros:
+                  if '\\' + name in text:
+                      failures.append(f'{path}: \\{name}')
+                  if 'cmd/' + name in text:
+                      failures.append(f'{path}: cmd/{name}')
+              if 'ufcPrintEpigraph[curta]' in text or 'ufcPrintEpigraph[longa]' in text:
+                  failures.append(f'{path}: legacy epigraph value')
+
+          public_api = (root/'abntexto-ufc'/'public-api.def').read_text(encoding='utf-8')
+          canonical_b2 = [
+              'ufcPrintCover','ufcPrintTitlePage','ufcPrintApprovalPage','ufcPrintCatalogCard',
+              'ufcPrintDedication','ufcPrintAcknowledgments','ufcPrintEpigraph','ufcPrintErrata',
+              'ufcSummaryKeywords','ufcPrintSummary','ufcPrintAbstract','ufcPrintListOfIllustrations',
+              'ufcPrintListOfFigures','ufcPrintListOfTables','ufcPrintListOfTextTables',
+              'ufcPrintListOfAbbreviationsAndAcronyms','ufcPrintListOfSymbols','ufcListEntry',
+              'ufcPrintTableOfContents'
+          ]
+          for name in canonical_b2:
+              if '\\NewDocumentCommand \\' + name in public_api or '\\ProvideDocumentCommand \\' + name in public_api:
+                  failures.append(f'public-api.def still forwards {name}')
+
+          ownership = {
+              root/'abntexto-ufc'/'academic-works.def': ['ufcPrintCover','ufcPrintTitlePage','ufcPrintCatalogCard'],
+              root/'abntexto-ufc'/'frontmatter.def': [
+                  'ufcPrintApprovalPage','ufcPrintDedication','ufcPrintAcknowledgments','ufcPrintEpigraph',
+                  'ufcPrintErrata','ufcSummaryKeywords','ufcPrintSummary','ufcPrintAbstract',
+                  'ufcPrintListOfIllustrations','ufcPrintListOfFigures','ufcPrintListOfTables',
+                  'ufcPrintListOfTextTables','ufcPrintListOfAbbreviationsAndAcronyms',
+                  'ufcPrintListOfSymbols','ufcListEntry','ufcPrintTableOfContents'
+              ],
+              root/'abntexto-ufc'/'research-projects.def': ['ufcPrintCover','ufcPrintTitlePage'],
+          }
+          for path, names in ownership.items():
+              text = path.read_text(encoding='utf-8')
+              for name in names:
+                  if '\\' + name not in text:
+                      failures.append(f'{path}: missing direct owner {name}')
+
+          layout = (root/'abntexto-ufc'/'layout.def').read_text(encoding='utf-8')
+          for name in ['ufcPrintTitlePage','ufcPrintApprovalPage','ufcPrintDedication','ufcPrintAcknowledgments',
+                       'ufcPrintEpigraph','ufcPrintErrata','ufcPrintSummary','ufcPrintAbstract',
+                       'ufcPrintListOfIllustrations','ufcPrintListOfFigures','ufcPrintListOfTables',
+                       'ufcPrintListOfTextTables','ufcPrintListOfAbbreviationsAndAcronyms',
+                       'ufcPrintListOfSymbols','ufcPrintTableOfContents']:
+              if 'cmd/' + name + '/before' not in layout:
+                  failures.append(f'layout.def missing canonical hook {name}')
+          for deferred in ['imprimirlistadegraficos','imprimirlistadecodigos','imprimirlistadealgoritmos']:
+              if 'cmd/' + deferred + '/before' not in layout:
+                  failures.append(f'layout.def unexpectedly changed deferred B3 hook {deferred}')
+
+          academic = (root/'abntexto-ufc'/'academic-works.def').read_text(encoding='utf-8')
+          if 'cmd/ufcPrintCover/after' not in academic:
+              failures.append('academic-works.def missing canonical cover hook')
+
+          if failures:
+              print('R2-B2 final residual audit failed:')
+              for item in failures:
+                  print('-', item)
+              raise SystemExit(1)
+          print('R2-B2-FINAL-AUDIT status=PASS legacy_b2_runtime=0 legacy_b2_hooks=0 b2_forwards=0 deferred_b3_hooks=3')
+          PY
+          make static-check
+          git diff --check
+
+      - name: Remove audit workflow and validate final tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/_tmp-r2-b2-final-audit.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "test: finalize R2-B2 residual gate"
+          make static-check
+          git diff --check HEAD^ HEAD
+          git push origin HEAD:${GITHUB_REF_NAME}
