@@ -1,0 +1,137 @@
+name: B8 Windows certification temporary
+
+on:
+  push:
+    branches:
+      - fix/v3-r1-b8-windows-certification-final
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows strict font POC
+    runs-on: windows-2025
+    timeout-minutes: 20
+    steps:
+      - name: Checkout certification branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+
+      - name: Install bounded TeX Live 2026 set
+        uses: zauguin/install-texlive@f5e7d0b117035fff797d4392ea94131747e03d60
+        with:
+          texlive_version: 2026
+          cache: false
+          packages: |
+            scheme-basic
+            abntexto
+            collection-langportuguese
+            microtype
+            etoolbox
+            newtx
+            fontspec
+            unicode-math
+            pdfpages
+            ragged2e
+            biblatex
+            biblatex-abnt
+            biber
+            ttfutils
+            fontware
+            csquotes
+            enumitem
+
+      - name: Prepare literal Windows fonts for pdfLaTeX
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./tools/prepare-windows-fonts.ps1
+          foreach ($file in @('t1times-ttf.fd','ts1times-ttf.fd','t1arial.fd','ts1arial.fd','abntexto-ufc-windows.map','abntexto-ufc-ts1-metric.enc')) {
+            $resolved = (& kpsewhich $file).Trim()
+            if (-not $resolved) { throw "Prepared support file not found: $file" }
+            Write-Host "PREPARED $file = $resolved"
+          }
+
+      - name: Compile strict Times and Arial matrix
+        shell: bash
+        env:
+          UFC_FONT_POC_COMPILE_ONLY: '1'
+        run: |
+          set -euo pipefail
+          sh tests/integration/font-poc.sh
+          for pdf in abntexto-ufc-times-pdflatex-strict-poc.pdf abntexto-ufc-arial-pdflatex-strict-poc.pdf abntexto-ufc-times-lualatex-strict-poc.pdf abntexto-ufc-arial-lualatex-strict-poc.pdf; do
+            test -s "$pdf"
+          done
+
+      - name: Upload Windows strict PDFs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-font-pdfs
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            abntexto-ufc-times-pdflatex-strict-poc.pdf
+            abntexto-ufc-arial-pdflatex-strict-poc.pdf
+            abntexto-ufc-times-lualatex-strict-poc.pdf
+            abntexto-ufc-arial-lualatex-strict-poc.pdf
+
+  linux:
+    name: Linux font and PDF-A certification
+    needs: windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout certification branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+
+      - name: Install PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          docker --version
+
+      - name: Download Windows strict PDFs
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: windows-font-pdfs
+          path: windows-font-pdfs
+
+      - name: Certify literal identity, Unicode, embedding, and PDF/A-2b
+        run: sh tests/integration/windows-font-pdfa.sh windows-font-pdfs
+
+  cleanup:
+    name: Remove temporary certification workflow
+    if: always()
+    needs:
+      - windows
+      - linux
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout certification branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: fix/v3-r1-b8-windows-certification-final
+          fetch-depth: 0
+
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/b8-windows-certification-temp.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/b8-windows-certification-temp.yml
+          if git diff --cached --quiet; then
+            echo 'Temporary workflow already absent.'
+            exit 0
+          fi
+          git commit -m 'ci: remove temporary B8 Windows certification'
+          git push origin HEAD:fix/v3-r1-b8-windows-certification-final
