@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/modules.def}[2026/08/21 UFC optional modules]
+\ProvidesFile{abntexto-ufc/modules.def}[2026/09/02 UFC optional modules]
 
 \RequirePackage{etoolbox}
 
@@ -54,10 +54,10 @@
 
 \keys_define:nn { ufc }
   {
-tables .choice:,
-tables / native .code:n =
+    tables .choice:,
+    tables / native .code:n =
       { \tl_gset:Nn \g_ufc_table_module_tl { native } },
-tables / tabularray .code:n =
+    tables / tabularray .code:n =
       {
         \tl_gset:Nn \g_ufc_table_module_tl { tabularray }
         \RequirePackage{xcolor}
@@ -67,19 +67,18 @@ tables / tabularray .code:n =
         \SetAbntTblrFont{\normalsize}
         \ufc_table_apply_typography:
       },
-tables / tabularray-abnt .meta:n = { tabelas = tabularray },
 
-code .choice:,
-code / none .code:n =
+    code .choice:,
+    code / none .code:n =
       { \tl_gset:Nn \g_ufc_code_module_tl { none } },
-code / listings .code:n =
+    code / listings .code:n =
       {
         \tl_gset:Nn \g_ufc_code_module_tl { listings }
         \RequirePackage{listings}
         % Source code remains in the institutional text family and body size.
         \lstset{basicstyle=\ttfamily\normalsize}
       },
-code / minted .code:n =
+    code / minted .code:n =
       {
         \tl_gset:Nn \g_ufc_code_module_tl { minted }
         \RequirePackage{minted}
@@ -87,10 +86,10 @@ code / minted .code:n =
         \setminted{fontfamily=tt,fontsize=\normalsize}
       },
 
-algorithms .choice:,
-algorithms / none .code:n =
+    algorithms .choice:,
+    algorithms / none .code:n =
       { \tl_gset:Nn \g_ufc_algorithm_module_tl { none } },
-algorithms / algpseudocodex .code:n =
+    algorithms / algpseudocodex .code:n =
       {
         \tl_gset:Nn \g_ufc_algorithm_module_tl { algpseudocodex }
         % Keep EndIf/EndWhile visible: hidden block endings still consume line
@@ -99,10 +98,10 @@ algorithms / algpseudocodex .code:n =
         \RequirePackage{algpseudocodex}
       },
 
-glossary .choice:,
-glossary / none .code:n =
+    glossary .choice:,
+    glossary / none .code:n =
       { \tl_gset:Nn \g_ufc_glossary_module_tl { none } },
-glossary / glossaries .code:n =
+    glossary / glossaries .code:n =
       {
         \tl_gset:Nn \g_ufc_glossary_module_tl { glossaries }
         \bool_if:NF \g_ufc_glossary_initialized_bool
@@ -115,10 +114,10 @@ glossary / glossaries .code:n =
           }
       },
 
-index .choice:,
-index / none .code:n =
+    index .choice:,
+    index / none .code:n =
       { \tl_gset:Nn \g_ufc_index_module_tl { none } },
-index / imakeidx .code:n =
+    index / imakeidx .code:n =
       {
         \tl_gset:Nn \g_ufc_index_module_tl { imakeidx }
         \bool_if:NF \g_ufc_index_initialized_bool
