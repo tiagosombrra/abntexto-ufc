@@ -9,7 +9,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-for token in '\toprule' '\midrule' '\bottomrule' 'row{even}' 'remark{Fonte}' 'remark{Nota}' 'tabelas = tabularray'; do
+for token in '\toprule' '\midrule' '\bottomrule' 'row{even}' 'remark{Fonte}' 'remark{Nota}' 'tables = tabularray'; do
   grep -Fq "$token" "$fixture" || {
     echo "Tabela IBGE: estrutura obrigatória ausente no fixture: $token"
     exit 1

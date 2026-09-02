@@ -59,7 +59,7 @@ for engine in pdflatex lualatex; do
     baseline_log=''
 
     for slot in rm sf tt; do
-      render_fixture "$family" nao "$slot"
+      render_fixture "$family" false "$slot"
       job="font-config-$family-$slot-$engine"
       echo "Validating $family/$slot in portable mode with $engine..."
       "$engine" -jobname="$job" $flags "$tmp" > "/tmp/$job.out" 2>&1 || {
@@ -78,7 +78,7 @@ for engine in pdflatex lualatex; do
       if [ "$slot" = rm ]; then baseline_log="$job.log"; fi
     done
 
-    render_fixture "$family" sim rm
+    render_fixture "$family" true rm
     strict_job="font-config-$family-$engine-strict"
     if literal_available "$engine" "$family" "$baseline_log"; then
       echo "Validating literal $family in strict mode with $engine..."

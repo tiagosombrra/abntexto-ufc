@@ -33,8 +33,8 @@ pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$card_source"
 }
 
 for engine in pdflatex lualatex; do
-  for mode in anverso frente-verso; do
-    for card_mode in sim nao; do
+  for mode in single-sided double-sided; do
+    for card_mode in true false; do
       job="ficha-catalografica-$mode-$card_mode-$engine"
       sed -e "s/@UFC_PRINT@/$mode/g" \
           -e "s/@UFC_CARD@/$card_mode/g" \
@@ -67,7 +67,7 @@ for engine in pdflatex lualatex; do
       }
 
       expected_text_page=2
-      if [ "$mode" = "frente-verso" ] && [ "$card_mode" = "nao" ]; then
+      if [ "$mode" = "double-sided" ] && [ "$card_mode" = "false" ]; then
         expected_text_page=3
       fi
       grep -Fq "UFC-TEXT-PAGE=$expected_text_page" "$job.log" || {
@@ -91,7 +91,7 @@ norm = [re.sub(r'\s+', ' ', unicodedata.normalize('NFC', p)).strip().casefold() 
 card_marker = 'ficha-catalografica-teste'
 text_marker = 'marcador textual após a ficha catalográfica'
 
-if card_mode == 'sim':
+if card_mode == 'true':
     if len(norm) != 3:
         raise SystemExit(f'{job}: esperado folha de rosto, ficha e texto em 3 páginas físicas; obtido {len(norm)}.')
     if card_marker not in norm[1]:
@@ -100,18 +100,18 @@ if card_mode == 'sim':
         raise SystemExit(f'{job}: texto posterior à ficha não iniciou no anverso físico seguinte.')
 else:
     if any(card_marker in page for page in norm):
-        raise SystemExit(f'{job}: ficha externa foi incluída apesar de ficha-catalografica=nao.')
+        raise SystemExit(f'{job}: ficha externa foi incluída although catalog-card=false.')
     text_pages = [index for index, page in enumerate(norm) if text_marker in page]
     if len(text_pages) != 1:
         raise SystemExit(f'{job}: marcador textual ausente ou duplicado com ficha desabilitada.')
-    expected_physical_index = 1 if mode == 'anverso' else 2
+    expected_physical_index = 1 if mode == 'single-sided' else 2
     if text_pages[0] != expected_physical_index:
         raise SystemExit(
             f'{job}: texto em página física inesperada com ficha desabilitada; '
             f'esperado índice {expected_physical_index}, obtido {text_pages[0]}.'
         )
-    if mode == 'frente-verso' and (len(norm) != 3 or norm[1]):
-        raise SystemExit(f'{job}: frente-verso sem ficha deve preservar verso físico em branco antes do texto.')
+    if mode == 'double-sided' and (len(norm) != 3 or norm[1]):
+        raise SystemExit(f'{job}: double-sided mode without a catalog card deve preservar verso físico em branco antes do texto.')
 PY
     done
   done
