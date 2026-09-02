@@ -4,21 +4,15 @@ Updated: 2026-09-02
 
 ## Status
 
-**V3-R1 DONE. V3-R2 ACTIVE — R2-A runtime/API ownership inventory and migration planning.**
+**V3-R1 DONE. V3-R2 ACTIVE — R2-B1 canonical setup and internal state vocabulary.**
 
-**R1-S0 DONE → R1-S1 DONE → R1-S2 DONE → R1-B1 DONE → R1-B2 DONE → R1-B3 DONE → R1-B4 DONE → R1-B5 DONE → R1-B6 DONE → R1-B7 DONE → R1-B8 DONE → R2-A ACTIVE → R2-B+ PENDING**
+Canonical `main` after R1 closeout: `0a2c2c3879986ca27b731f54b974db12524258df`. Certified R1 product candidate: `9b1752565ac217c04ffa22a9ef272cdf078af380`.
 
-Canonical repository: `tiagosombrra/abntexto-ufc`. Active trunk: `main`.
-
-Certified R1 product candidate: **`9b1752565ac217c04ffa22a9ef272cdf078af380`**. R1 closure issue: #227. Active R2-A issue: #232.
-
-## Authority
-
-`release/v3-roadmap.json` is the machine authority. This roadmap, `docs/HANDOFF-V3.0.0.md`, `AGENTS.md`, and current Git facts form the human-readable control plane. Disagreement fails closed.
+R2-A ownership inventory is DONE through issue #232. Active implementation issue: #234. Machine authority: `release/v3-roadmap.json`.
 
 ## Roadmap summary
 
-| Stage | Status | Checkpoint / evidence | Result | Remaining work |
+| Stage | Status | Checkpoint / issue | Result | Remaining work |
 |---|---|---|---|---|
 | R1-S0 | DONE | repository sanitation | History governance rebaselined | None |
 | R1-S1 | DONE | `1c7291592689f10a0e6fb043d404597ae8e53c02` | Control plane repaired | None |
@@ -27,49 +21,32 @@ Certified R1 product candidate: **`9b1752565ac217c04ffa22a9ef272cdf078af380`**. 
 | R1-B2 | DONE | `03d7f5ceb1a325d26c712ba5e619ee85530a022b` | Legacy purge/minimization | None |
 | R1-B3 | DONE | `7a3b018a43630ed46b375117790acc732ae67b40` | Semantic/path-consumer closure | None |
 | R1-B4 | DONE | `1a126c37653728941ce1ada762376c5fec69cb02` | Tools/validator/metadata/language rebaseline | None |
-| R1-B5 | DONE | `4bc0f544020234bc14a8f2261927f65721b6eddb` | Deterministic release/public bundles | CTAN upload is a later explicit release action |
+| R1-B5 | DONE | `4bc0f544020234bc14a8f2261927f65721b6eddb` | Deterministic release/public bundles | Actual CTAN submission is a later explicit action |
 | R1-B6 | DONE | `4c25c27b758e4b99db11187b34b9043776566871` | Permanent `make static-check` | None |
 | R1-B7 | DONE | `d7327db7efd5cc1e0ff9255195bcb9767d853d3e` | Permanent optimized workflows | Optional branch-rule enforcement |
-| R1-B8 | DONE | `9b1752565ac217c04ffa22a9ef272cdf078af380`; runs `33649620219` + `33655108349` | Full Windows/font/Unicode/embedding/PDF-A certification | None |
-| V3-R2 / R2-A | ACTIVE | issue #232 | Runtime/API ownership inventory and migration planning | Complete classification before behavioral migration |
-| V3-R2 / R2-B+ | PENDING | — | Direct-ownership migration lots | Defined by R2-A |
+| R1-B8 | DONE | candidate `9b1752565ac217c04ffa22a9ef272cdf078af380` | Complete Windows/font/Unicode/embedding/PDF-A-2b certification | None |
+| V3-R1 closeout | DONE | PR #233 → `0a2c2c3879986ca27b731f54b974db12524258df` | R1 control plane closed; #227 completed | None |
+| R2-A | DONE | issue #232; `docs/R2-API-OWNERSHIP.md` | Direct owners, upstream boundaries and migration lots classified | None |
+| R2-B1 | ACTIVE | issue #234 | Canonical setup/internal state migration | Implement and validate |
+| R2-B2 | PENDING | — | Academic/front-matter public rendering API | After B1 |
+| R2-B3 | PENDING | — | Structural/object environments, optional object API and hooks | After B2 |
+| R2-B4 | PENDING | — | Bibliography/back-matter API and plumbing internalization | After B3 |
+| R2-B5 | PENDING | — | Final consumer migration, `public-api.def` removal and migration documentation | After B4 |
 | V3-R3 | BLOCKED | — | Standards/tests/language semantic hardening | After R2 |
-| V3-R4 | BLOCKED | — | Final certification phase | After R3 |
-| V3-R5 | BLOCKED | — | Foundation freeze and migration/user/maintainer docs | After R4 |
+| V3-R4 | BLOCKED | — | Final certification | After R3 |
+| V3-R5 | BLOCKED | — | Foundation freeze and final user/maintainer docs | After R4 |
 | V3-A1/A2 | BLOCKED | — | Scientific-article work | After certified foundation |
 
-## Final R1-B8 certification
+## R1 certification record
 
-B8-A tooling repair merged through PR #230 at `d2c24fc85351a410ea1f0101887b2a5228077741`. B8-B strict POC run `33609817951` proved the literal-font pipeline.
+R1-B8 certified the complete `template/main.tex` matrix on Windows run `33649620219` and final Linux inspection run `33655108349`. Literal institutional text-family identity, engine-appropriate math-font policy, Unicode extraction, full embedding and PDF/A-2b all passed. The final R1→R2 control-plane PR #233 passed `Static contract` run `33656361564` and `Linux integration` run `33656361474` with `PASS=30 FAIL=0 SKIP=0`, then merged at `0a2c2c3879986ca27b731f54b974db12524258df`. Issue #227 is closed completed.
 
-B8-C certified complete `template/main.tex`:
+## R2 ownership result
 
-- Windows run `33649620219`, job `100313006509`: all Times New Roman/Arial × pdfLaTeX/LuaLaTeX builds PASS;
-- Windows artifact `9854415113`, digest `sha256:138b9a4e3c2969db33c512bec91b323cba339bb6ae18afc76786b59d2e0f7a21`;
-- final Linux inspection run `33655108349`, job `100331601354`: PASS;
-- evidence artifact `9856387211`, digest `sha256:256c96e1c32d839b5b3a3e55f7a355913b7b217609c2f6e2d27104e7e12ffeeb`;
-- literal institutional text-family identity: PASS;
-- independent engine-appropriate math-font policy: PASS;
-- Unicode extraction: PASS;
-- font embedding (`emb=yes`): PASS;
-- PDF/A-2b: PASS.
+`public-api.def` is confirmed as transitional forwarding debt rather than a true behavior owner. Canonical surfaces must move into the module that already owns the underlying behavior. `template/main.tex` and test consumers still use the Portuguese project API, so consumer migration is part of each behavioral lot rather than a final bulk replacement.
 
-The earlier `TeXGyreTermesX-Regular` flag was a checker false positive: it is part of the pdfLaTeX `newtxmath` stack and is not institutional text-family fallback. The final inspection separates text-family identity from math-font policy.
-
-No runtime/API, normative semantics, locator/tolerance, proof-state, or proprietary-font distribution change occurred. Temporary B8 executors were removed.
-
-## V3-R2 — Runtime/API internationalization
-
-### R2-A — Ownership inventory and migration plan
-
-**ACTIVE via issue #232.** This stage is inventory/classification only. It must inventory remaining project-owned Portuguese setup keys/values, commands, environments, hooks and internal behavior owners; classify genuine upstream non-English boundaries; map every canonical English forwarding surface in `abntexto-ufc/public-api.def` to a direct responsibility owner; and define atomic producer/consumer/test/template/documentation migration lots.
-
-`release/v3-api-migration.json` is active. `public-api.def` is transitional R2 debt. Final v3 exposes one canonical project API implemented directly by responsibility-owning modules; removed Portuguese v2 project API is not retained through runtime aliases.
-
-### R2-A exit condition
-
-Every remaining project-owned Portuguese runtime/API surface and every `public-api.def` forwarding mapping has an explicit classification, direct owner, migration lot and validation plan.
+See `docs/R2-API-OWNERSHIP.md` for the direct-owner matrix, upstream-boundary classification and exact R2-B1…B5 sequence.
 
 ## Immediate action
 
-Execute R2-A issue #232. Inventory and classify first; do not perform blind global replacement, normative semantic changes without new evidence, proprietary font redistribution, or actual CTAN submission.
+Execute **R2-B1 issue #234**. Migrate canonical setup keys/values and internal state vocabulary with all live consumers atomically. Do not migrate unrelated public rendering commands, add runtime compatibility aliases, change normative semantics without new evidence, redistribute proprietary fonts, or perform actual CTAN submission.

@@ -29,13 +29,14 @@ Memory, old pull requests, workflow names, historical branches, and prior chat c
 - The `Stable branches` ruleset currently has no required-status rule. The recorded recommendation is to require `Static contract` and `Linux integration`; `Linux release check` remains post-merge/manual.
 - R1-BLOCK-8 is DONE. The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`.
 - Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX matrix; final Linux run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b.
-- V3-R2 is ACTIVE in R2-A via issue #232. R2-A is inventory/classification and migration planning before behavioral changes.
-- `public-api.def` is transitional R2 debt. Final canonical public behavior must be implemented directly by responsibility-owning modules; removed Portuguese v2 project API is not retained through runtime aliases.
-- Preserve rendered behavior and normative rule IDs, values, tolerances, locators and proof state during R2-A unless explicit new evidence authorizes a normative change.
+- V3-R2 is ACTIVE in R2-B1 via issue #234. R2-A ownership inventory is complete and recorded in `docs/R2-API-OWNERSHIP.md`.
+- R2-B1 owns canonical setup keys/values and project-owned internal state/metadata vocabulary. Producers, state consumers, `template/`, and tests must move atomically; do not perform a blind global replacement.
+- `public-api.def` is transitional R2 debt. Remove migrated forwarding entries as each owner absorbs them; do not add a reverse compatibility layer. The file is removed completely in R2-B5.
+- Preserve rendered behavior and normative rule IDs, values, tolerances, locators and proof state during R2 unless explicit new evidence authorizes a normative change.
 - Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.
 - Do not rerun completed checks unless current-state validation requires it.
 - Do not redistribute proprietary Microsoft fonts.
-- Do not perform actual CTAN submission during R2-A.
+- Do not perform actual CTAN submission during R2 implementation.
 
 ## Branch governance
 

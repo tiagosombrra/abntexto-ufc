@@ -3,12 +3,12 @@
   "phase": "V3-R2",
   "kind": "api-runtime-migration-contract",
   "target_version": "3.0.0",
-  "status": "ACTIVE_R2_A_INVENTORY",
+  "status": "R2_A_DONE_R2_B1_ACTIVE",
   "activated_at": "2026-09-02",
   "operational_issue": 232,
   "entry_certified_r1_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
-  "current_stage": "R2-A",
-  "current_stage_goal": "inventory runtime/API ownership and define bounded migration lots before behavioral changes",
+  "current_stage": "R2-B1",
+  "current_stage_goal": "canonical setup and internal state vocabulary",
   "policy": {
     "canonical_public_language": "English",
     "canonical_internal_language": "English",
@@ -20,65 +20,233 @@
     "rendered_academic_language": "independent from engineering identifier language"
   },
   "class_entrypoints": [
-    {"identifier": "abntexto-ufc", "action": "retain", "role": "sole canonical class"},
-    {"identifier": "ufctex", "action": "remove", "role": "v2 compatibility entrypoint"}
+    {
+      "identifier": "abntexto-ufc",
+      "action": "retain",
+      "role": "sole canonical class"
+    },
+    {
+      "identifier": "ufctex",
+      "action": "remove",
+      "role": "v2 compatibility entrypoint"
+    }
   ],
   "module_ownership": {
-    "abntexto-ufc/core.def": ["document type", "print mode", "cover policy", "catalog card policy", "coat-of-arms policy", "core metadata", "project predicates"],
-    "abntexto-ufc/fonts.def": ["font family", "strict font policy", "math font policy"],
-    "abntexto-ufc/layout.def": ["page geometry", "section flow", "frontmatter breaks", "footnotes", "list hierarchy"],
-    "abntexto-ufc/modules.def": ["optional table/code/algorithm/glossary/index module selection"],
-    "abntexto-ufc/frontmatter.def": ["approval page", "dedication", "acknowledgments", "epigraph", "errata", "summary", "abstract", "frontmatter lists", "table of contents"],
-    "abntexto-ufc/institutional.def": ["institutional assets"],
-    "abntexto-ufc/academic-works.def": ["academic-work cover/title page/catalog card", "initial page"],
-    "abntexto-ufc/research-projects.def": ["research-project cover/title-page specialization"],
-    "abntexto-ufc/objects.def": ["figures/charts/text tables/code/algorithms and object lists"],
-    "abntexto-ufc/bibliography.def": ["citation adjustments", "bibliography resource registration", "reference section"],
-    "abntexto-ufc/backmatter.def": ["glossary", "index", "backmatter headings"],
-    "abntexto-ufc/integrations/abntexto.def": ["current upstream ABNTexto adaptations only"],
-    "abntexto-ufc/standards/nbr6023-2025.def": ["current NBR 6023:2025 adaptations not yet provided upstream"]
+    "abntexto-ufc/core.def": [
+      "document type",
+      "print mode",
+      "cover policy",
+      "catalog card policy",
+      "coat-of-arms policy",
+      "core metadata",
+      "project predicates"
+    ],
+    "abntexto-ufc/fonts.def": [
+      "font family",
+      "strict font policy",
+      "math font policy"
+    ],
+    "abntexto-ufc/layout.def": [
+      "page geometry",
+      "section flow",
+      "frontmatter breaks",
+      "footnotes",
+      "list hierarchy"
+    ],
+    "abntexto-ufc/modules.def": [
+      "optional table/code/algorithm/glossary/index module selection"
+    ],
+    "abntexto-ufc/frontmatter.def": [
+      "approval page",
+      "dedication",
+      "acknowledgments",
+      "epigraph",
+      "errata",
+      "summary",
+      "abstract",
+      "frontmatter lists",
+      "table of contents"
+    ],
+    "abntexto-ufc/institutional.def": [
+      "institutional assets"
+    ],
+    "abntexto-ufc/academic-works.def": [
+      "academic-work cover/title page/catalog card",
+      "initial page"
+    ],
+    "abntexto-ufc/research-projects.def": [
+      "research-project cover/title-page specialization"
+    ],
+    "abntexto-ufc/objects.def": [
+      "figures/charts/text tables/code/algorithms and object lists"
+    ],
+    "abntexto-ufc/bibliography.def": [
+      "citation adjustments",
+      "bibliography resource registration",
+      "reference section"
+    ],
+    "abntexto-ufc/backmatter.def": [
+      "glossary",
+      "index",
+      "backmatter headings"
+    ],
+    "abntexto-ufc/integrations/abntexto.def": [
+      "current upstream ABNTexto adaptations only"
+    ],
+    "abntexto-ufc/standards/nbr6023-2025.def": [
+      "current NBR 6023:2025 adaptations not yet provided upstream"
+    ]
   },
   "setup_keys": {
     "core": [
-      "type", "print-mode", "cover", "catalog-card", "coat-of-arms",
-      "institution", "institution-acronym", "center", "department",
-      "undergraduate-program", "undergraduate-degree", "specialization-program",
-      "masters-graduate-program", "masters-program", "masters-degree-field", "masters-concentration",
-      "doctoral-graduate-program", "doctoral-program", "doctoral-degree-field", "doctoral-concentration",
-      "project-program", "project-type", "submission-entity", "project-nature-statement", "project-identifier",
-      "author", "title", "subtitle", "title-variant", "volume", "year", "location", "approval-date",
-      "advisor", "advisor-institution", "advisor-unit", "advisor-feminine-label",
-      "coadvisor", "coadvisor-institution", "coadvisor-unit", "coadvisor-feminine-label",
+      "type",
+      "print-mode",
+      "cover",
+      "catalog-card",
+      "coat-of-arms",
+      "institution",
+      "institution-acronym",
+      "center",
+      "department",
+      "undergraduate-program",
+      "undergraduate-degree",
+      "specialization-program",
+      "masters-graduate-program",
+      "masters-program",
+      "masters-degree-field",
+      "masters-concentration",
+      "doctoral-graduate-program",
+      "doctoral-program",
+      "doctoral-degree-field",
+      "doctoral-concentration",
+      "project-program",
+      "project-type",
+      "submission-entity",
+      "project-nature-statement",
+      "project-identifier",
+      "author",
+      "title",
+      "subtitle",
+      "title-variant",
+      "volume",
+      "year",
+      "location",
+      "approval-date",
+      "advisor",
+      "advisor-institution",
+      "advisor-unit",
+      "advisor-feminine-label",
+      "coadvisor",
+      "coadvisor-institution",
+      "coadvisor-unit",
+      "coadvisor-feminine-label",
       "epigraph-author",
-      "examiner-2", "examiner-2-unit", "examiner-2-institution",
-      "examiner-3", "examiner-3-unit", "examiner-3-institution",
-      "examiner-4", "examiner-4-unit", "examiner-4-institution",
-      "examiner-5", "examiner-5-unit", "examiner-5-institution",
-      "examiner-6", "examiner-6-unit", "examiner-6-institution"
+      "examiner-2",
+      "examiner-2-unit",
+      "examiner-2-institution",
+      "examiner-3",
+      "examiner-3-unit",
+      "examiner-3-institution",
+      "examiner-4",
+      "examiner-4-unit",
+      "examiner-4-institution",
+      "examiner-5",
+      "examiner-5-unit",
+      "examiner-5-institution",
+      "examiner-6",
+      "examiner-6-unit",
+      "examiner-6-institution"
     ],
-    "fonts": ["font", "strict-font"],
-    "modules": ["tables", "code", "algorithms", "glossary", "index"],
-    "institutional": ["coat-of-arms-file"],
-    "academic_works": ["initial-page"]
+    "fonts": [
+      "font",
+      "strict-font"
+    ],
+    "modules": [
+      "tables",
+      "code",
+      "algorithms",
+      "glossary",
+      "index"
+    ],
+    "institutional": [
+      "coat-of-arms-file"
+    ],
+    "academic_works": [
+      "initial-page"
+    ]
   },
   "setup_values": {
-    "type": ["undergraduate-capstone", "specialization-capstone", "masters-thesis", "doctoral-thesis", "research-project", "anonymized-research-project"],
-    "print-mode": ["single-sided", "double-sided"],
-    "cover": ["auto", "true", "false"],
-    "catalog-card": ["true", "false"],
-    "coat-of-arms": ["true", "false"],
-    "advisor-feminine-label": ["true", "false"],
-    "coadvisor-feminine-label": ["true", "false"],
-    "font": ["times", "arial"],
-    "strict-font": ["true", "false"],
-    "tables": ["native", "tabularray"],
-    "code": ["none", "listings", "minted"],
-    "algorithms": ["none", "algpseudocodex"],
-    "glossary": ["none", "glossaries"],
-    "index": ["none", "imakeidx"]
+    "type": [
+      "undergraduate-capstone",
+      "specialization-capstone",
+      "masters-thesis",
+      "doctoral-thesis",
+      "research-project",
+      "anonymized-research-project"
+    ],
+    "print-mode": [
+      "single-sided",
+      "double-sided"
+    ],
+    "cover": [
+      "auto",
+      "true",
+      "false"
+    ],
+    "catalog-card": [
+      "true",
+      "false"
+    ],
+    "coat-of-arms": [
+      "true",
+      "false"
+    ],
+    "advisor-feminine-label": [
+      "true",
+      "false"
+    ],
+    "coadvisor-feminine-label": [
+      "true",
+      "false"
+    ],
+    "font": [
+      "times",
+      "arial"
+    ],
+    "strict-font": [
+      "true",
+      "false"
+    ],
+    "tables": [
+      "native",
+      "tabularray"
+    ],
+    "code": [
+      "none",
+      "listings",
+      "minted"
+    ],
+    "algorithms": [
+      "none",
+      "algpseudocodex"
+    ],
+    "glossary": [
+      "none",
+      "glossaries"
+    ],
+    "index": [
+      "none",
+      "imakeidx"
+    ]
   },
   "reserved_future_values": {
-    "type": [{"value": "article", "phase": "V3-A1", "live_during_V3_R2": false}]
+    "type": [
+      {
+        "value": "article",
+        "phase": "V3-A1",
+        "live_during_V3_R2": false
+      }
+    ]
   },
   "legacy_setup_key_to_v3": {
     "tipo": "type",
@@ -166,17 +334,43 @@
   },
   "public_commands": {
     "retain": [
-      "\\ufcsetup", "\\ufcDocumentType", "\\ufcPrintMode", "\\ufcMeta",
-      "\\ufcIfProjectTF", "\\ufcIfAnonymizedProjectTF", "\\ufcMathFontPolicy",
-      "\\ufcPrintCover", "\\ufcPrintTitlePage", "\\ufcPrintApprovalPage", "\\ufcPrintCatalogCard",
-      "\\ufcPrintDedication", "\\ufcPrintAcknowledgments", "\\ufcPrintEpigraph", "\\ufcPrintErrata",
-      "\\ufcSummaryKeywords", "\\ufcPrintSummary", "\\ufcPrintAbstract",
-      "\\ufcPrintListOfIllustrations", "\\ufcPrintListOfFigures", "\\ufcPrintListOfTables",
-      "\\ufcPrintListOfTextTables", "\\ufcPrintListOfCharts", "\\ufcPrintListOfCodeListings",
-      "\\ufcPrintListOfAlgorithms", "\\ufcPrintListOfAbbreviationsAndAcronyms", "\\ufcPrintListOfSymbols",
-      "\\ufcListEntry", "\\ufcPrintTableOfContents", "\\ufcSource", "\\ufcNote",
-      "\\ufcAddBibliographyResource", "\\ufcPrintReferences", "\\ufcPrintGlossary", "\\ufcPrintIndex",
-      "\\ufcInputListing", "\\ufcInputMinted"
+      "\\ufcsetup",
+      "\\ufcDocumentType",
+      "\\ufcPrintMode",
+      "\\ufcMeta",
+      "\\ufcIfProjectTF",
+      "\\ufcIfAnonymizedProjectTF",
+      "\\ufcMathFontPolicy",
+      "\\ufcPrintCover",
+      "\\ufcPrintTitlePage",
+      "\\ufcPrintApprovalPage",
+      "\\ufcPrintCatalogCard",
+      "\\ufcPrintDedication",
+      "\\ufcPrintAcknowledgments",
+      "\\ufcPrintEpigraph",
+      "\\ufcPrintErrata",
+      "\\ufcSummaryKeywords",
+      "\\ufcPrintSummary",
+      "\\ufcPrintAbstract",
+      "\\ufcPrintListOfIllustrations",
+      "\\ufcPrintListOfFigures",
+      "\\ufcPrintListOfTables",
+      "\\ufcPrintListOfTextTables",
+      "\\ufcPrintListOfCharts",
+      "\\ufcPrintListOfCodeListings",
+      "\\ufcPrintListOfAlgorithms",
+      "\\ufcPrintListOfAbbreviationsAndAcronyms",
+      "\\ufcPrintListOfSymbols",
+      "\\ufcListEntry",
+      "\\ufcPrintTableOfContents",
+      "\\ufcSource",
+      "\\ufcNote",
+      "\\ufcAddBibliographyResource",
+      "\\ufcPrintReferences",
+      "\\ufcPrintGlossary",
+      "\\ufcPrintIndex",
+      "\\ufcInputListing",
+      "\\ufcInputMinted"
     ],
     "implementation_rule": "each retained command is implemented directly by its responsibility-owning module; public-api.def forwarding is forbidden"
   },
@@ -213,7 +407,14 @@
     "\\ufcnota": "\\ufcNote"
   },
   "public_environments": {
-    "canonical": ["ufclettereditems", "ufcdashedsubitems", "ufcdefinitionlist", "ufcobject", "ufclisting", "ufcalgorithm"],
+    "canonical": [
+      "ufclettereditems",
+      "ufcdashedsubitems",
+      "ufcdefinitionlist",
+      "ufcobject",
+      "ufclisting",
+      "ufcalgorithm"
+    ],
     "removed": {
       "ufcalineas": "ufclettereditems",
       "ufcsubalineas": "ufcdashedsubitems",
@@ -223,44 +424,113 @@
     }
   },
   "exported_helpers": {
-    "retain_public": ["\\ufcDocumentType", "\\ufcPrintMode", "\\ufcMeta", "\\ufcIfProjectTF", "\\ufcIfAnonymizedProjectTF", "\\ufcMathFontPolicy"],
+    "retain_public": [
+      "\\ufcDocumentType",
+      "\\ufcPrintMode",
+      "\\ufcMeta",
+      "\\ufcIfProjectTF",
+      "\\ufcIfAnonymizedProjectTF",
+      "\\ufcMathFontPolicy"
+    ],
     "internalize": [
-      "\\ufcPrimarySectionBreak", "\\ufcPretextualBreak", "\\ufcRegisterUncountedPhysicalPage",
-      "\\ufcstarttoc", "\\ufcPretextualHeading", "\\ufcPosttextualHeading",
-      "\\ufcSetupGlossaryModule", "\\ufcIndexHeading", "\\ufcSetupIndexModule"
+      "\\ufcPrimarySectionBreak",
+      "\\ufcPretextualBreak",
+      "\\ufcRegisterUncountedPhysicalPage",
+      "\\ufcstarttoc",
+      "\\ufcPretextualHeading",
+      "\\ufcPosttextualHeading",
+      "\\ufcSetupGlossaryModule",
+      "\\ufcIndexHeading",
+      "\\ufcSetupIndexModule"
     ],
     "reason": "v3 public API exposes semantic document capabilities, not implementation plumbing"
   },
   "extension_hooks": {
-    "\\ufcsectionhook": {"to": "\\ufcSectionHook", "action": "rename"},
-    "\\ufcobjectlegendhook": {"to": "\\ufcObjectLegendHook", "action": "rename"}
+    "\\ufcsectionhook": {
+      "to": "\\ufcSectionHook",
+      "action": "rename"
+    },
+    "\\ufcobjectlegendhook": {
+      "to": "\\ufcObjectLegendHook",
+      "action": "rename"
+    }
   },
   "internal_naming": {
     "required_rewrites": [
-      ["pretextual", "frontmatter"],
-      ["posttextual", "backmatter"],
-      ["frente-verso", "double-sided"],
-      ["anverso", "single-sided"],
-      ["tccgraduacao", "undergraduate-capstone"],
-      ["tccespecializacao", "specialization-capstone"],
-      ["dissertacao", "masters-thesis"],
-      ["tese", "doctoral-thesis"],
-      ["projeto", "research-project"],
-      ["projetoanonimizado", "anonymized-research-project"]
+      [
+        "pretextual",
+        "frontmatter"
+      ],
+      [
+        "posttextual",
+        "backmatter"
+      ],
+      [
+        "frente-verso",
+        "double-sided"
+      ],
+      [
+        "anverso",
+        "single-sided"
+      ],
+      [
+        "tccgraduacao",
+        "undergraduate-capstone"
+      ],
+      [
+        "tccespecializacao",
+        "specialization-capstone"
+      ],
+      [
+        "dissertacao",
+        "masters-thesis"
+      ],
+      [
+        "tese",
+        "doctoral-thesis"
+      ],
+      [
+        "projeto",
+        "research-project"
+      ],
+      [
+        "projetoanonimizado",
+        "anonymized-research-project"
+      ]
     ],
     "metadata_storage_rule": "internal metadata property keys use the canonical English setup-key vocabulary",
     "diagnostic_rule": "all project-owned diagnostic text is English"
   },
   "object_type_boundary": {
-    "canonical_project_types": ["figure", "table", "chart", "text-table", "code", "algorithm"],
+    "canonical_project_types": [
+      "figure",
+      "table",
+      "chart",
+      "text-table",
+      "code",
+      "algorithm"
+    ],
     "rendered_labels_may_be_portuguese": true,
-    "upstream_ids": ["grafico", "quadro"],
+    "upstream_ids": [
+      "grafico",
+      "quadro"
+    ],
     "upstream_id_policy": "non-English upstream identifiers may exist only inside the ABNTexto/tabularray integration boundary and must not be documented as the canonical v3 project API",
-    "project_defined_portuguese_ids": ["codigo", "algoritmo"],
+    "project_defined_portuguese_ids": [
+      "codigo",
+      "algoritmo"
+    ],
     "project_defined_portuguese_id_action": "replace with English project-owned identifiers while preserving Portuguese rendered labels when the document language requires them"
   },
   "upstream_api": {
-    "retain_when_required": ["\\legend", "\\keywords", "\\appendix", "\\annex", "\\pretextual", "\\textual"],
+    "retain_when_required": [
+      "\\legend",
+      "\\keywords",
+      "\\appendix",
+      "\\annex",
+      "\\pretextual",
+      "\\textual"
+    ],
     "policy": "upstream API is not renamed by the project solely for cosmetic consistency; project documentation distinguishes upstream surfaces from abntexto-ufc surfaces"
   },
   "forbidden_after_v3_r2": {
@@ -276,5 +546,44 @@
     "runtime_aliases": false,
     "migration_document": "docs/MIGRATING-TO-V3.md",
     "old_to_new_tables_source": "this contract"
+  },
+  "r2_a_inventory": {
+    "status": "DONE",
+    "completed_at": "2026-09-02",
+    "canonical_main_sha": "0a2c2c3879986ca27b731f54b974db12524258df",
+    "r1_certified_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
+    "operational_issue": 232,
+    "ownership_document": "docs/R2-API-OWNERSHIP.md",
+    "findings": [
+      "public-api.def is a forwarding-only canonical-English-to-Portuguese project API layer loaded last by the class",
+      "behavior ownership is already distributed across responsibility modules and can be absorbed without adding another compatibility layer",
+      "template/main.tex remains a Portuguese project-API consumer and must migrate atomically with each behavior lot",
+      "integrations/abntexto.def overrides the project definition-list environment and must move atomically with that environment",
+      "rendered Portuguese academic labels are domain content and are not migration targets",
+      "genuine upstream non-English identifiers are retained only at explicit integration boundaries"
+    ],
+    "implementation_lots": {
+      "R2-B1": {
+        "status": "ACTIVE",
+        "issue": 234,
+        "name": "canonical setup and internal state vocabulary"
+      },
+      "R2-B2": {
+        "status": "PENDING",
+        "name": "academic and front-matter public rendering API"
+      },
+      "R2-B3": {
+        "status": "PENDING",
+        "name": "structural/object environments optional object API and extension hooks"
+      },
+      "R2-B4": {
+        "status": "PENDING",
+        "name": "bibliography back-matter API and plumbing internalization"
+      },
+      "R2-B5": {
+        "status": "PENDING",
+        "name": "final consumer migration forwarding-layer removal and migration documentation"
+      }
+    }
   }
 }

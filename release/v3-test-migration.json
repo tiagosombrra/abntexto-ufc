@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "phase": "V3-R1",
+  "phase": "V3-R2",
   "kind": "test-documentation-workflow-migration-contract",
   "target_version": "3.0.0",
-  "status": "ACTIVE_R1_RECONCILIATION",
+  "status": "ACTIVE_R2_API_CONSUMER_MIGRATION",
   "policy": {
     "active_test_names_are_semantic": true,
     "active_test_names_embed_old_phase_ids": false,
@@ -23,8 +23,16 @@
     "tests/smoke": "minimal compilation smoke cases"
   },
   "directory_moves": [
-    {"from": "tests/normativa/", "to": "tests/documents/", "action": "move"},
-    {"from": "tests/fixtures/pretextuais/", "to": "tests/fixtures/frontmatter/", "action": "move"}
+    {
+      "from": "tests/normativa/",
+      "to": "tests/documents/",
+      "action": "move"
+    },
+    {
+      "from": "tests/fixtures/pretextuais/",
+      "to": "tests/fixtures/frontmatter/",
+      "action": "move"
+    }
   ],
   "remove_compatibility_only_evidence_from_active_suite": [
     "tests/normativa/public-api-aliases.tex",
@@ -156,7 +164,10 @@
     ".github/workflows/standards.yml": {
       "from": ".github/workflows/normative-source.yml",
       "responsibility": "standards source/authority/contracts",
-      "required_path_updates": ["normativa/** -> standards/**", "renamed semantic checkers"]
+      "required_path_updates": [
+        "normativa/** -> standards/**",
+        "renamed semantic checkers"
+      ]
     },
     ".github/workflows/latex-preflight.yml": {
       "responsibility": "cross-platform LaTeX regression and Gate T orchestration",
@@ -190,7 +201,9 @@
       "release/v3-api-migration.json",
       "release/v3-test-migration.json"
     ],
-    "new_required": ["docs/MIGRATING-TO-V3.md"],
+    "new_required": [
+      "docs/MIGRATING-TO-V3.md"
+    ],
     "migration_document_policy": "document breaking changes and old-to-new names without implementing runtime aliases",
     "historical_v2_docs": "preserve only where historical evidence remains intentionally retained; do not treat as current instructions",
     "active_docs_language": "English engineering prose; Portuguese academic examples are allowed"
@@ -221,5 +234,14 @@
     "windows-literal-fonts",
     "distribution-source"
   ],
-  "exit_condition": "no active v3 test or workflow depends on removed Portuguese project API, v2 path naming, superseded phase IDs, or project-owned pretextual/posttextual/oracle engineering identity"
+  "exit_condition": "no active v3 test or workflow depends on removed Portuguese project API, v2 path naming, superseded phase IDs, or project-owned pretextual/posttextual/oracle engineering identity",
+  "current_stage": "R2-B1",
+  "r1_reconciliation_status": "DONE",
+  "r2_api_consumer_policy": {
+    "owner_inventory": "docs/R2-API-OWNERSHIP.md",
+    "active_setup_consumer_migration_lot": "R2-B1",
+    "final_portuguese_api_residual_closeout_lot": "R2-B5",
+    "template_and_tests_move_atomically_with_runtime_owner": true,
+    "compatibility_alias_tests_allowed": false
+  }
 }

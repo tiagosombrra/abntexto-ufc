@@ -6,8 +6,8 @@
   "updated_at": "2026-09-02",
   "status": "ACTIVE",
   "phase": "V3-R2",
-  "stage": "R2-A",
-  "stage_name": "runtime/API ownership inventory and migration plan",
+  "stage": "R2-B1",
+  "stage_name": "canonical setup and internal state vocabulary",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,24 +978,49 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R2 / R2-A through issue #232. Inventory and classify every remaining project-owned Portuguese runtime/API surface and every forwarding mapping in abntexto-ufc/public-api.def, assign direct behavior owners, and define bounded migration lots before changing runtime behavior. Preserve rendered semantics and normative proof state; do not perform actual CTAN submission or redistribute proprietary fonts.",
+  "next_action": "Execute V3-R2 / R2-B1 through issue #234 from canonical main. Move canonical English setup keys and values plus project-owned internal state/metadata vocabulary into their responsibility-owning modules, migrate every live state consumer/template/test atomically, and remove the migrated setup forwarding entries from public-api.def.",
   "r1_status": "DONE",
   "r2": {
     "status": "ACTIVE",
-    "stage": "R2-A",
-    "stage_name": "runtime/API ownership inventory and migration plan",
-    "operational_issue": 232,
-    "entry_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
-    "entry_scope": [
-      "inventory remaining project-owned Portuguese runtime/API surface",
-      "classify upstream non-English identifiers separately",
-      "map public-api.def forwarding aliases to direct responsibility owners",
-      "define bounded migration lots and atomic producer/consumer/test/template changes"
-    ],
+    "stage": "R2-B1",
+    "stage_name": "canonical setup and internal state vocabulary",
+    "entry_main_sha": "0a2c2c3879986ca27b731f54b974db12524258df",
+    "r1_certified_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
+    "r2_a": {
+      "status": "DONE",
+      "issue": 232,
+      "ownership_document": "docs/R2-API-OWNERSHIP.md",
+      "result": "all current project-owned API/runtime surfaces classified by direct behavior owner and bounded implementation lot"
+    },
+    "lots": {
+      "R2-B1": {
+        "status": "ACTIVE",
+        "issue": 234,
+        "name": "canonical setup and internal state vocabulary"
+      },
+      "R2-B2": {
+        "status": "PENDING",
+        "name": "academic and front-matter public rendering API"
+      },
+      "R2-B3": {
+        "status": "PENDING",
+        "name": "structural/object environments optional object API and extension hooks"
+      },
+      "R2-B4": {
+        "status": "PENDING",
+        "name": "bibliography back-matter API and plumbing internalization"
+      },
+      "R2-B5": {
+        "status": "PENDING",
+        "name": "final consumer migration forwarding-layer removal and migration documentation"
+      }
+    },
     "constraints": [
-      "inventory and classification before behavioral migration",
-      "preserve rendered document behavior during ownership mapping",
-      "preserve normative rule IDs values tolerances locators and proof state without new evidence",
+      "no blind global replacement",
+      "producer state consumer template and tests move atomically",
+      "preserve rendered Portuguese academic and official wording",
+      "retain genuine upstream non-English identifiers only at explicit integration boundaries",
+      "preserve normative rule IDs values tolerances locators and proof state absent new evidence",
       "do not add another runtime compatibility layer",
       "do not perform actual CTAN submission",
       "do not redistribute proprietary Microsoft fonts"

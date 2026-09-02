@@ -76,6 +76,10 @@ Runtime responsibilities are separated as follows:
 
 A project-owned internal control sequence has one behavior owner. Public commands are implemented directly by the module that owns the behavior; no forwarding-only compatibility layer is part of the final v3 runtime. `public-api.def` is therefore transitional R2 debt and must disappear after direct ownership is absorbed.
 
+## R2 migration sequencing
+
+The target architecture above is implemented through bounded owner-based lots documented in `docs/R2-API-OWNERSHIP.md`. R2-A classified the current forwarding surface and direct owners. R2-B1 migrates setup/state vocabulary first because those values are consumed across layout and profile modules; later lots migrate rendering commands, structural/object APIs, bibliography/back-matter APIs, and finally remove `public-api.def`. Template and test consumers move atomically with each behavior owner.
+
 ## Upstream boundaries
 
 `abntexto-ufc/integrations/` contains current adapters to external package/class behavior. These are not legacy compatibility layers. An upstream identifier may remain non-English when it is genuinely owned by the dependency and must be called at an explicit integration boundary, but it must not be re-exported as canonical project API.
