@@ -90,7 +90,7 @@ jobs:
           set -euo pipefail
           rm -f template/figures/ufc-campus-pici.jpg template/figures/ufc-reitoria.jpg
           rm -rf dist
-          rm .github/workflows/_tmp-r2-b2-release-source-audit-v4.yml
+          git rm .github/workflows/_tmp-r2-b2-release-source-audit-v4.yml
 
           if git status --porcelain | grep -E 'ufc-campus-pici\.jpg|ufc-reitoria\.jpg|^.. dist/'; then
             echo 'Generated release assets remain in the working tree.' >&2
