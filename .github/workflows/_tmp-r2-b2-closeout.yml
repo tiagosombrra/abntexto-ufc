@@ -1,0 +1,69 @@
+name: Temporary R2-B2 closeout
+
+on:
+  push:
+    branches:
+      - docs/v3-r2-b2-closeout-b3-entry
+
+permissions:
+  contents: write
+
+jobs:
+  closeout:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+
+      - name: Reconcile B2 closeout and B3 entry
+        run: python3 tools/_tmp-r2-b2-closeout.py
+
+      - name: Remove temporary executor and validate final tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm tools/_tmp-r2-b2-closeout.py .github/workflows/_tmp-r2-b2-closeout.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: close R2-B2 and activate R2-B3"
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          expected = {
+              "release/v3-roadmap.json": "R2-B3",
+              "release/v3-api-migration.json": "R2-B3",
+              "release/v3-test-migration.json": "R2-B3",
+              "release/v3-path-migration.json": "R2-B3",
+          }
+          for name, stage in expected.items():
+              data = json.loads(Path(name).read_text(encoding="utf-8"))
+              current = data.get("stage", data.get("current_stage"))
+              if current != stage:
+                  raise SystemExit(f"{name}: stage={current!r}, expected {stage!r}")
+
+          roadmap = json.loads(Path("release/v3-roadmap.json").read_text(encoding="utf-8"))
+          if roadmap["r2"]["lots"]["R2-B2"]["status"] != "DONE":
+              raise SystemExit("R2-B2 is not DONE")
+          if roadmap["r2"]["lots"]["R2-B3"]["status"] != "ACTIVE":
+              raise SystemExit("R2-B3 is not ACTIVE")
+
+          workflows = sorted(str(p) for p in Path(".github/workflows").glob("*.yml"))
+          expected_workflows = [
+              ".github/workflows/linux-integration.yml",
+              ".github/workflows/linux-release-check.yml",
+              ".github/workflows/static-contract.yml",
+          ]
+          if workflows != expected_workflows:
+              raise SystemExit(f"unexpected workflow inventory: {workflows}")
+          PY
+
+          git diff --check HEAD^ HEAD
+          make static-check
+          test -z "$(git status --porcelain)"
+          git push origin HEAD:docs/v3-r2-b2-closeout-b3-entry
