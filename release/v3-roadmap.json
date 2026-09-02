@@ -3,14 +3,14 @@
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
-  "updated_at": "2026-09-01",
+  "updated_at": "2026-09-02",
   "status": "ACTIVE",
-  "phase": "V3-R1",
-  "stage": "R1-BLOCK-8",
-  "stage_name": "final R1 certification",
+  "phase": "V3-R2",
+  "stage": "R2-A",
+  "stage_name": "runtime/API ownership inventory and migration plan",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
-  "last_certified_clean_checkpoint_sha": "d7327db7efd5cc1e0ff9255195bcb9767d853d3e",
+  "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
   "r1_s1_closure_sha": "1c7291592689f10a0e6fb043d404597ae8e53c02",
   "r1_s2_promotion_sha": "d7d4b9d2c04a032b76795cbdcae45c566fe3f7f1",
   "authorities": {
@@ -902,7 +902,7 @@
       }
     },
     "R1-BLOCK-8": {
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "final R1 certification",
       "operational_issue": 227,
       "entry_implementation_checkpoint_sha": "d7327db7efd5cc1e0ff9255195bcb9767d853d3e",
@@ -923,7 +923,7 @@
         "do not perform actual CTAN submission or claim CTAN acceptance",
         "temporary workflow executor lifecycle must remain atomic"
       ],
-      "b8_status": "ACTIVE",
+      "b8_status": "DONE",
       "entry_evidence": {
         "b7_clean_runner_make_check": "PASS=30 FAIL=0 SKIP=0",
         "b7_linux_release_run_id": 33566835570,
@@ -934,8 +934,71 @@
       },
       "entry_control_plane_pr": 228,
       "entry_control_plane_static_run_id": 33569583824,
-      "b7_operational_issue_closed": true
+      "b7_operational_issue_closed": true,
+      "certified_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
+      "tooling_checkpoint_sha": "d2c24fc85351a410ea1f0101887b2a5228077741",
+      "b8_a_status": "DONE",
+      "b8_a_pr": 230,
+      "b8_b_status": "DONE",
+      "b8_b_strict_poc_run_id": 33609817951,
+      "b8_c_status": "DONE",
+      "b8_d_status": "DONE",
+      "closure_date": "2026-09-02",
+      "final_certification": {
+        "candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
+        "windows_source_run_id": 33649620219,
+        "windows_job_id": 100313006509,
+        "windows_matrix_result": "PASS",
+        "windows_artifact_id": 9854415113,
+        "windows_artifact_digest": "138b9a4e3c2969db33c512bec91b323cba339bb6ae18afc76786b59d2e0f7a21",
+        "linux_final_inspection_run_id": 33655108349,
+        "linux_final_inspection_job_id": 100331601354,
+        "linux_final_inspection_result": "PASS",
+        "evidence_artifact_id": 9856387211,
+        "evidence_artifact_digest": "256c96e1c32d839b5b3a3e55f7a355913b7b217609c2f6e2d27104e7e12ffeeb",
+        "matrix": [
+          "times/pdflatex",
+          "arial/pdflatex",
+          "times/lualatex",
+          "arial/lualatex"
+        ],
+        "literal_text_family_passed": true,
+        "math_font_policy_separated_from_text_family": true,
+        "pdftex_math_policy": "NEW-TX-MATH",
+        "unicode_extraction_passed": true,
+        "font_embedding_passed": true,
+        "pdfa_2b_passed": true,
+        "false_positive_reconciled": "TeXGyreTermesX-Regular is a legitimate newtxmath component in pdfLaTeX, not institutional text fallback",
+        "runtime_api_changed": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false,
+        "proprietary_fonts_redistributed": false,
+        "temporary_workflows_present": false
+      },
+      "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute R1-BLOCK-8 via issue #227 from canonical main. Audit and use the repository-owned Windows/font/PDF-A preparation and validation tooling, certify the current v3 candidate on hosted Windows with literal Times New Roman and Arial where required, prove the supported pdfLaTeX/LuaLaTeX matrix, Unicode extraction, embedding and final PDF/A-2b evidence. Do not rerun completed Linux product gates without current-state need, perform V3-R2 runtime/API migration, redistribute proprietary fonts, or perform an actual CTAN submission."
+  "next_action": "Execute V3-R2 / R2-A through issue #232. Inventory and classify every remaining project-owned Portuguese runtime/API surface and every forwarding mapping in abntexto-ufc/public-api.def, assign direct behavior owners, and define bounded migration lots before changing runtime behavior. Preserve rendered semantics and normative proof state; do not perform actual CTAN submission or redistribute proprietary fonts.",
+  "r1_status": "DONE",
+  "r2": {
+    "status": "ACTIVE",
+    "stage": "R2-A",
+    "stage_name": "runtime/API ownership inventory and migration plan",
+    "operational_issue": 232,
+    "entry_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
+    "entry_scope": [
+      "inventory remaining project-owned Portuguese runtime/API surface",
+      "classify upstream non-English identifiers separately",
+      "map public-api.def forwarding aliases to direct responsibility owners",
+      "define bounded migration lots and atomic producer/consumer/test/template changes"
+    ],
+    "constraints": [
+      "inventory and classification before behavioral migration",
+      "preserve rendered document behavior during ownership mapping",
+      "preserve normative rule IDs values tolerances locators and proof state without new evidence",
+      "do not add another runtime compatibility layer",
+      "do not perform actual CTAN submission",
+      "do not redistribute proprietary Microsoft fonts"
+    ]
+  }
 }

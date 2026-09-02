@@ -27,13 +27,15 @@ Memory, old pull requests, workflow names, historical branches, and prior chat c
 - Permanent automatic CI is introduced only through R1-BLOCK-7 and must remain a thin orchestration layer over repository-owned entry points.
 - R1-BLOCK-7 is DONE. `Static contract`, `Linux integration`, and `Linux release check` are the only permanent workflows. B7-D confirmed read-only permissions, pinned actions, bounded concurrency, stable repository-owned entry points, and zero temporary workflow residue.
 - The `Stable branches` ruleset currently has no required-status rule. The recorded recommendation is to require `Static contract` and `Linux integration`; `Linux release check` remains post-merge/manual.
-- R1-BLOCK-8 is ACTIVE via issue #227. PR #230 merged the bounded Windows/literal-font tooling repair at `d2c24fc85351a410ea1f0101887b2a5228077741`.
-- B8 strict POC certification is DONE: run `33609817951` generated Times New Roman/Arial × pdfLaTeX/LuaLaTeX on hosted Windows; Linux certification verified literal identity, Unicode extraction, embedding and PDF/A-2b for all four artifacts.
-- B8 is not closed by the POC. The immediate product gate is full `template/main.tex` certification from the canonical merged B8 tooling checkpoint, followed by final control-plane reconciliation and issue #227 closure only if that candidate proof passes fail-closed.
+- R1-BLOCK-8 is DONE. The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`.
+- Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX matrix; final Linux run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b.
+- V3-R2 is ACTIVE in R2-A via issue #232. R2-A is inventory/classification and migration planning before behavioral changes.
+- `public-api.def` is transitional R2 debt. Final canonical public behavior must be implemented directly by responsibility-owning modules; removed Portuguese v2 project API is not retained through runtime aliases.
+- Preserve rendered behavior and normative rule IDs, values, tolerances, locators and proof state during R2-A unless explicit new evidence authorizes a normative change.
 - Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.
 - Do not rerun completed checks unless current-state validation requires it.
 - Do not redistribute proprietary Microsoft fonts.
-- Do not perform actual CTAN submission or V3-R2 runtime/API migration while R1-BLOCK-8 remains active.
+- Do not perform actual CTAN submission during R2-A.
 
 ## Branch governance
 

@@ -6,9 +6,9 @@ The canonical project identity is `abntexto-ufc`. The active `main` branch carri
 
 ## Current v3 status
 
-V3-R1 is active in **R1-BLOCK-8 — final R1 certification**. R1-BLOCK-7 is complete. The current B8 tooling checkpoint is PR #230, merged at `d2c24fc85351a410ea1f0101887b2a5228077741`.
+**V3-R1 is DONE. V3-R2 is ACTIVE in R2-A — runtime/API ownership inventory and migration plan, tracked by issue #232.**
 
-The strict literal-font POC has already passed: hosted Windows Server 2025 / TeX Live 2026 generated Times New Roman and Arial artifacts with both pdfLaTeX and LuaLaTeX, and Linux certification verified literal font identity, Unicode extraction, font embedding and PDF/A-2b for all four artifacts. R1-BLOCK-8 remains active because the complete `template/main.tex` candidate still requires final certification from the canonical merged checkpoint before R1 can close.
+The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`. Windows run `33649620219` built the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX `template/main.tex` matrix. Final Linux inspection run `33655108349` passed literal institutional text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b for all four artifacts. No runtime/API, normative semantics or proof-state change was required, and no proprietary Microsoft font was redistributed.
 
 See `docs/ROADMAP-V3.0.0.md` for the consolidated roadmap/status table and `docs/HANDOFF-V3.0.0.md` for the exact continuation point.
 
@@ -50,7 +50,7 @@ The editable repository example lives under `template/`. Public template and Ove
 
 ## Engineering policy
 
-Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. During R1 the current runtime API remains unchanged while engineering surfaces are rebaselined; direct runtime/API internationalization belongs to R2.
+Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 preserved the runtime/API while rebuilding and certifying the foundation. R2 is now active; R2-A performs ownership inventory and migration planning before any direct runtime/API migration.
 
 Historical implementation evidence is kept by Git history, tags, releases, pull requests, issues, and certified SHAs rather than by archive directories inside the active tree.
 
@@ -101,7 +101,7 @@ R1-BLOCK-7 is DONE: B7-C1 certified `make check` on clean TeX Live 2026 (`PASS=3
 
 The current `Stable branches` ruleset does not yet require statuses; the recorded recommendation is `Static contract` plus `Linux integration`, while `Linux release check` remains post-merge/manual.
 
-R1-BLOCK-8 is ACTIVE through issue #227. The bounded Windows/font tooling repair is merged through PR #230. Strict POC run `33609817951` passed the Times New Roman/Arial × pdfLaTeX/LuaLaTeX matrix and downstream literal-font/Unicode/embedding/PDF-A inspection. The remaining R1 product gate is final certification of the complete `template/main.tex` candidate from the canonical merged B8 tooling checkpoint.
+R1-BLOCK-8 is DONE. Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. Final Linux inspection run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. V3-R2/R2-A is active through issue #232.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 

@@ -1,6 +1,6 @@
 # abntexto-ufc v3 Architecture
 
-Updated: 2026-09-01
+Updated: 2026-09-02
 
 This document defines the target engineering architecture for `abntexto-ufc` v3.0.0. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
 
@@ -130,7 +130,7 @@ Scientific-article normative/runtime material is reintroduced only in V3-A1 afte
 
 `make static-check` is the permanent local source-only entry point. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
 
-R1-BLOCK-7 is DONE. The permanent orchestration surface is exactly `Static contract`, `Linux integration`, and `Linux release check`, each delegating to its repository-owned entry point (`make static-check`, `make check`, and `make release-check`). B7-D confirmed read-only permissions, immutable action pins, bounded concurrency, stable status semantics, and zero temporary workflow residue. The current `Stable branches` ruleset has no required-status rule; the recorded recommendation is to require `Static contract` and `Linux integration`, while `Linux release check` remains a post-merge/manual release gate. R1-BLOCK-8 is ACTIVE via issue #227 and owns final Windows/literal-font/PDF-A certification.
+R1-BLOCK-7 and R1-BLOCK-8 are DONE. The permanent orchestration surface is exactly `Static contract`, `Linux integration`, and `Linux release check`, each delegating to its repository-owned entry point (`make static-check`, `make check`, and `make release-check`). B7-D confirmed read-only permissions, immutable action pins, bounded concurrency, stable status semantics, and zero temporary workflow residue. The current `Stable branches` ruleset has no required-status rule; the recorded recommendation is to require `Static contract` and `Linux integration`, while `Linux release check` remains a post-merge/manual release gate. B8 certified complete candidate `9b1752565ac217c04ffa22a9ef272cdf078af380` across Times New Roman/Arial × pdfLaTeX/LuaLaTeX with final literal text-family, math-policy, Unicode, embedding and PDF/A-2b inspection. V3-R2 is active; `public-api.def` remains transitional R2 debt until canonical public behavior is absorbed directly by responsibility-owning modules.
 
 Active path names must not encode retired major-version or N-phase identities.
 
