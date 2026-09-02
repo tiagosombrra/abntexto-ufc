@@ -4,6 +4,14 @@ LaTeX class and reference template for academic works at the Federal University 
 
 The canonical project identity is `abntexto-ufc`. The active `main` branch carries the unreleased v3 reconstruction. The last certified public baseline remains v2.1.0 and is recoverable through immutable tags, releases, Git history, and the verified external backup.
 
+## Current v3 status
+
+V3-R1 is active in **R1-BLOCK-8 — final R1 certification**. R1-BLOCK-7 is complete. The current B8 tooling checkpoint is PR #230, merged at `d2c24fc85351a410ea1f0101887b2a5228077741`.
+
+The strict literal-font POC has already passed: hosted Windows Server 2025 / TeX Live 2026 generated Times New Roman and Arial artifacts with both pdfLaTeX and LuaLaTeX, and Linux certification verified literal font identity, Unicode extraction, font embedding and PDF/A-2b for all four artifacts. R1-BLOCK-8 remains active because the complete `template/main.tex` candidate still requires final certification from the canonical merged checkpoint before R1 can close.
+
+See `docs/ROADMAP-V3.0.0.md` for the consolidated roadmap/status table and `docs/HANDOFF-V3.0.0.md` for the exact continuation point.
+
 ## Current v3 repository layout
 
 ```text
@@ -87,7 +95,13 @@ make check
 make release-check
 ```
 
-`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks. R1-BLOCK-7 is DONE: B7-C1 certified `make check` on clean TeX Live 2026 (`PASS=30 FAIL=0 SKIP=0`); B7-C2 permanently established `Linux integration`; and B7-C3 permanently established `Linux release check`, whose first merged-main run `33566835570` closed `PASS=32 FAIL=0 SKIP=0`, including release-only `pdfa` and `profile-pdfa`, with 14-day evidence retention. B7-D then audited the final orchestration state: exactly three permanent workflows, read-only permissions, pinned actions, bounded concurrency, and no temporary executors. The current `Stable branches` ruleset does not yet require statuses; the recorded recommendation is `Static contract` plus `Linux integration`, while `Linux release check` remains post-merge/manual. R1-BLOCK-8 is ACTIVE through issue #227 for final Windows/literal Times New Roman and Arial/PDF-A certification.
+`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks.
+
+R1-BLOCK-7 is DONE: B7-C1 certified `make check` on clean TeX Live 2026 (`PASS=30 FAIL=0 SKIP=0`); B7-C2 permanently established `Linux integration`; and B7-C3 permanently established `Linux release check`, whose first merged-main run `33566835570` closed `PASS=32 FAIL=0 SKIP=0`, including release-only `pdfa` and `profile-pdfa`, with 14-day evidence retention. B7-D audited exactly three permanent workflows, read-only permissions, pinned actions, bounded concurrency, and no temporary executors.
+
+The current `Stable branches` ruleset does not yet require statuses; the recorded recommendation is `Static contract` plus `Linux integration`, while `Linux release check` remains post-merge/manual.
+
+R1-BLOCK-8 is ACTIVE through issue #227. The bounded Windows/font tooling repair is merged through PR #230. Strict POC run `33609817951` passed the Times New Roman/Arial × pdfLaTeX/LuaLaTeX matrix and downstream literal-font/Unicode/embedding/PDF-A inspection. The remaining R1 product gate is final certification of the complete `template/main.tex` candidate from the canonical merged B8 tooling checkpoint.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 
