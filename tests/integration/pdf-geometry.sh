@@ -36,7 +36,7 @@ build_mode() {
   pdftotext -bbox "$job.pdf" "$job.html"
 }
 
-# Canonical print-mode values are validated directly.
+# Validate the canonical print-mode values directly.
 build_mode single-sided single-sided
 build_mode double-sided double-sided
 
