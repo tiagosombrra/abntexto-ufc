@@ -167,24 +167,24 @@
 
 % In duplex mode, every pre-textual element except the catalog card starts on recto.
 \AtBeginDocument{%
-  \AddToHook{cmd/imprimirfolhaderosto/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirfolhadeaprovacao/before}{\ufcIfProjectTF{}{\ufcPretextualBreak}}%
-  \AddToHook{cmd/imprimirdedicatoria/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimiragradecimentos/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirepigrafe/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirerrata/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirresumo/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirabstract/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadeilustracoes/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadefiguras/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadetabelas/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadequadros/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintTitlePage/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintApprovalPage/before}{\ufcIfProjectTF{}{\ufcPretextualBreak}}%
+  \AddToHook{cmd/ufcPrintDedication/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintAcknowledgments/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintEpigraph/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintErrata/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintSummary/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintAbstract/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfIllustrations/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfFigures/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfTables/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfTextTables/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/imprimirlistadegraficos/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/imprimirlistadecodigos/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/imprimirlistadealgoritmos/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadeabreviaturasesiglas/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadesimbolos/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirsumario/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfAbbreviationsAndAcronyms/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfSymbols/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintTableOfContents/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/appendix/before}{\ufcPrimarySectionBreak}%
   \AddToHook{cmd/annex/before}{\ufcPrimarySectionBreak}%
 }
