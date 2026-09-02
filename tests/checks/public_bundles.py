@@ -86,10 +86,15 @@ def reject_forbidden(entries: dict[str, zipfile.ZipInfo], archive_name: str) -> 
 def assert_public_main(archive_path: Path, entry: str) -> None:
     with zipfile.ZipFile(archive_path) as archive:
         text = archive.read(entry).decode("utf-8")
-    if "  brasao = nao," not in text:
-        fail(f"{archive_path.name}: distributed main.tex does not disable the institutional mark.")
-    if "  brasao = sim," in text:
+    enabled = "  coat-of-arms = true,"
+    disabled = "  coat-of-arms = false,"
+    if text.count(disabled) != 1:
+        fail(f"{archive_path.name}: distributed main.tex must disable the institutional mark exactly once using the canonical v3 setup key.")
+    if enabled in text:
         fail(f"{archive_path.name}: distributed main.tex still enables the institutional mark.")
+    legacy_tokens = ("  brasao = sim,", "  brasao = nao,")
+    if any(token in text for token in legacy_tokens):
+        fail(f"{archive_path.name}: distributed main.tex contains a removed v2 coat-of-arms setup key.")
 
 
 def assert_upstream(archive_path: Path) -> None:
@@ -196,7 +201,7 @@ def main() -> None:
         validate_template(first / template_name, v)
         validate_overleaf(first / overleaf_name)
 
-    print("PUBLIC-BUNDLE-EVIDENCE status=PASS artifacts=2 reproducible=2 safe_paths=PASS institutional_assets=excluded")
+    print("PUBLIC-BUNDLE-EVIDENCE status=PASS artifacts=2 reproducible=2 safe_paths=PASS institutional_assets=excluded canonical_setup=PASS")
 
 
 if __name__ == "__main__":
