@@ -48,10 +48,15 @@ The observational `FRONTMATTER-EVIDENCE` internal FAIL records seen inside the p
 - `Static contract`: run `33680378948`, PASS;
 - final `Linux integration`: run `33680378846`, job `100415223907`, `PASS=30 FAIL=0 SKIP=0`;
 - strengthened residual audit: run `33680252116`, job `100414804865`, PASS;
+- merged-main `Linux release check`: run `33687588772`, `PASS=32 FAIL=0 SKIP=0`;
+- late active release-source reconciliation: run `33696155771`, job `100465339990`, PASS; `docs/ctan-example.tex`, the CTAN manual, public-bundle producer, and public-bundle checker now consume the canonical v3 setup; public and distribution bundles passed reproducibility/layout/asset-exclusion validation;
+- the late audit removed downloaded reference photographs, `dist/`, and its temporary workflow before publishing the clean checkpoint; no generated institutional/reference asset was committed;
 - initial executor run `33679535751` failed closed on temporary cleanup order and did not publish a product checkpoint;
 - corrected executor run `33679827267`, job `100413437018`, passed;
 - zero B2 Portuguese runtime commands/hooks/forwards remain;
 - no runtime alias layer, normative semantic/proof-state change, proprietary font redistribution or CTAN submission.
+
+The late release-source reconciliation was discovered during B2 closeout but belongs to the already-migrated B1/B2 consumer surface; it is not B3 scope. The permanent B2 runtime gates were already green, and the additional release audit specifically proved the live CTAN/example/distribution path after the repair.
 
 ## Current runtime/API state
 
@@ -62,7 +67,7 @@ The remaining forwarding surface is bounded to B3 structural/object environments
 ## R2 implementation sequence
 
 1. **R2-B1 / #234 — DONE.** Canonical setup and internal state vocabulary directly owned and fully validated.
-2. **R2-B2 / #237 — DONE.** Academic/front-matter rendering API directly owned; PR #242 merged with permanent integration green.
+2. **R2-B2 / #237 — DONE.** Academic/front-matter rendering API directly owned; PR #242 merged with permanent integration and post-merge release validation green; late active release-source reconciliation also passed.
 3. **R2-B3 / #238 — ACTIVE.** Structural/object environments, optional object API, extension hooks and project-owned object IDs.
 4. **R2-B4 / #239 — PENDING.** Bibliography/back-matter API and plumbing internalization.
 5. **R2-B5 / #240 — PENDING.** Final consumer migration, forwarding-layer removal, residual scan and `docs/MIGRATING-TO-V3.md`.
@@ -80,4 +85,4 @@ The remaining forwarding surface is bounded to B3 structural/object environments
 
 ## Immediate action
 
-Execute R2-B3 through issue #238 from canonical `main`. Migrate structural environments and the definition-list ABNTexto override atomically; move object/source/note/listing/minted/algorithm APIs and extension hooks to direct canonical ownership; replace project-owned `codigo` / `algoritmo` object IDs with English project identifiers while preserving rendered Portuguese labels; migrate all live template/test consumers; and remove only B3 forwarding debt. Run the strengthened residual scan, `make static-check`, and permanent `Linux integration` before B3 closure.
+Execute R2-B3 through issue #238 from canonical `main` after the B2→B3 control-plane closeout is merged. Migrate structural environments and the definition-list ABNTexto override atomically; move object/source/note/listing/minted/algorithm APIs and extension hooks to direct canonical ownership; replace project-owned `codigo` / `algoritmo` object IDs with English project identifiers while preserving rendered Portuguese labels; migrate all live template/test consumers; and remove only B3 forwarding debt. Run the strengthened residual scan, `make static-check`, and permanent `Linux integration` before B3 closure.
