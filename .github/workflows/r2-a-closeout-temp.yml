@@ -1,0 +1,50 @@
+name: R2-A closeout temporary
+
+on:
+  push:
+    branches:
+      - docs/v3-r2-a-inventory-closeout
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout closeout branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: docs/v3-r2-a-inventory-closeout
+          fetch-depth: 0
+
+      - name: Apply R2-A closeout
+        run: python3 .tmp/r2-a-closeout.py
+
+      - name: Validate control plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          python3 -m json.tool release/v3-api-migration.json >/dev/null
+          python3 -m json.tool release/v3-path-migration.json >/dev/null
+          python3 -m json.tool release/v3-test-migration.json >/dev/null
+          git diff --check
+          test -f docs/R2-API-OWNERSHIP.md
+          grep -q '"stage": "R2-B1"' release/v3-roadmap.json
+          grep -q '"status": "R2_A_DONE_R2_B1_ACTIVE"' release/v3-api-migration.json
+          grep -q 'R2-B1' docs/ROADMAP-V3.0.0.md
+          grep -q 'issue #234' docs/HANDOFF-V3.0.0.md
+
+      - name: Remove temporary executor and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/r2-a-closeout-temp.yml .tmp/r2-a-closeout.py
+          rmdir .tmp 2>/dev/null || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'docs: close R2-A inventory and activate R2-B1'
+          git push origin HEAD:docs/v3-r2-a-inventory-closeout
