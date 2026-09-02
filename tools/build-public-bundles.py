@@ -110,10 +110,12 @@ def file_mode(path: Path) -> int:
 
 def public_main(content: bytes) -> bytes:
     text = content.decode("utf-8")
-    enabled = "  brasao = sim,"
-    disabled = "  brasao = nao,"
+    enabled = "  coat-of-arms = true,"
+    disabled = "  coat-of-arms = false,"
     if text.count(enabled) != 1:
-        raise SystemExit("template/main.tex must enable the institutional mark exactly once in source.")
+        raise SystemExit("template/main.tex must enable the institutional mark exactly once using the canonical v3 setup key.")
+    if disabled in text:
+        raise SystemExit("template/main.tex must not contain a second disabled coat-of-arms setup entry.")
     return text.replace(enabled, disabled, 1).encode("utf-8")
 
 
@@ -258,21 +260,19 @@ def main() -> None:
 
     version = read_version()
     output = args.output.resolve()
-    names = (
+    date_time = zip_datetime(source_date_epoch())
+
+    filenames = [
         f"{PACKAGE_ID}-template-{version}.zip",
         f"{PACKAGE_ID}-overleaf-{version}.zip",
-    )
-    remove_previous(output, names)
+    ]
+    remove_previous(output, filenames)
 
-    date_time = zip_datetime(source_date_epoch())
-    artifacts = (
-        build_template_bundle(output, version, date_time),
-        build_overleaf_bundle(output, version, date_time, args.abntexto.resolve()),
-    )
+    build_template_bundle(output, version, date_time)
+    build_overleaf_bundle(output, version, date_time, args.abntexto.resolve())
 
-    print(f"Public bundles generated in {output}")
-    for artifact in artifacts:
-        print(artifact.name)
+    for filename in filenames:
+        print(output / filename)
 
 
 if __name__ == "__main__":
