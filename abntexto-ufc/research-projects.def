@@ -69,7 +69,7 @@
     \clearpage
   }
 
-\RenewDocumentCommand \imprimircapa { }
+\RenewDocumentCommand \ufcPrintCover { }
   {
     \str_if_eq:VnF \g_ufc_cover_mode_tl {false}
       {
@@ -79,7 +79,7 @@
       }
   }
 
-\RenewDocumentCommand \imprimirfolhaderosto { O{} }
+\RenewDocumentCommand \ufcPrintTitlePage { O{} }
   {
     \ufcIfProjectTF
       { \ufc_project_title_page: }

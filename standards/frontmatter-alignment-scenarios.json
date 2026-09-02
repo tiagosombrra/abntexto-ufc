@@ -8,7 +8,7 @@
     {
       "id": "dedication.wrapped",
       "component": "dedication",
-      "route": "\\imprimirdedicatoria",
+      "route": "\\ufcPrintDedication",
       "marker": "UFCFRONTMATTERALIGNDED",
       "alignment_rule": "dedication.alignment",
       "indent_rule": "dedication.indent.left",
@@ -17,7 +17,7 @@
     {
       "id": "epigraph.short.wrapped",
       "component": "epigraph-short",
-      "route": "\\imprimirepigrafe[curta]",
+      "route": "\\ufcPrintEpigraph[short]",
       "marker": "UFCFRONTMATTERALIGNSHORT",
       "alignment_rule": "epigraph.short.alignment",
       "indent_rule": "epigraph.short.indent.left",
@@ -26,7 +26,7 @@
     {
       "id": "epigraph.long.wrapped",
       "component": "epigraph-long",
-      "route": "\\imprimirepigrafe[longa]",
+      "route": "\\ufcPrintEpigraph[long]",
       "marker": "UFCFRONTMATTERALIGNLONG",
       "alignment_rule": "epigraph.long.alignment",
       "indent_rule": "epigraph.long.indent.left",

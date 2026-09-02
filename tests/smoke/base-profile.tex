@@ -49,14 +49,14 @@
 \begin{document}
 \pretextual
 
-\imprimircapa
-\imprimirfolhaderosto
+\ufcPrintCover
+\ufcPrintTitlePage
 \ufcIfProjectTF{}{
-  \imprimirfolhadeaprovacao
-  \imprimirresumo{frontmatter/summary}
-  \imprimirabstract{frontmatter/abstract}
+  \ufcPrintApprovalPage
+  \ufcPrintSummary{frontmatter/summary}
+  \ufcPrintAbstract{frontmatter/abstract}
 }
-\imprimirsumario
+\ufcPrintTableOfContents
 
 \textual
 \section{Introdução}

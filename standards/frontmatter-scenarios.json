@@ -10,7 +10,7 @@
     {
       "id": "dedication.three-lines",
       "component": "dedication",
-      "route": "\\imprimirdedicatoria",
+      "route": "\\ufcPrintDedication",
       "line_count": 3,
       "markers": [
         "UFCFRONTMATTERDEDICATIONONE",
@@ -29,7 +29,7 @@
     {
       "id": "epigraph.short.three-lines",
       "component": "epigraph-short",
-      "route": "\\imprimirepigrafe[curta]",
+      "route": "\\ufcPrintEpigraph[short]",
       "line_count": 3,
       "markers": [
         "FMEPISHORTONE",
@@ -48,7 +48,7 @@
     {
       "id": "epigraph.long.four-lines",
       "component": "epigraph-long",
-      "route": "\\imprimirepigrafe[longa]",
+      "route": "\\ufcPrintEpigraph[long]",
       "line_count": 4,
       "markers": [
         "UFCFRONTMATTEREPIGRAPHLONGONE",

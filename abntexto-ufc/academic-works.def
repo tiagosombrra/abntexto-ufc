@@ -88,7 +88,7 @@
     \setcounter{page}{\int_use:N \g_ufc_initial_page_int}
   }
 
-\NewDocumentCommand \imprimircapa { }
+\NewDocumentCommand \ufcPrintCover { }
   {
     \str_if_eq:VnF \g_ufc_cover_mode_tl {false}
       { \ufc_cover: }
@@ -122,7 +122,7 @@
     \clearpage
   }
 
-\NewDocumentCommand \imprimirfolhaderosto { O{} }
+\NewDocumentCommand \ufcPrintTitlePage { O{} }
   { \ufc_title_page: }
 
 % NBR 14724:2024: the catalog-data verso is physical but neither counted nor numbered.
@@ -154,7 +154,7 @@
       }
   }
 
-\NewDocumentCommand \imprimirfichacatalografica { m }
+\NewDocumentCommand \ufcPrintCatalogCard { m }
   { \ufc_catalog_card:n {#1} }
 
 \ExplSyntaxOff
