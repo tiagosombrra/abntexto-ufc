@@ -74,18 +74,9 @@ $metricTs1 = Join-Path $encDir 'abntexto-ufc-ts1-metric.enc'
 $unicodeT1 = Join-Path $encDir 'abntexto-ufc-t1-unicode.enc'
 $unicodeTs1 = Join-Path $encDir 'abntexto-ufc-ts1-unicode.enc'
 
-& $metricScript \
-  -InputEncoding $encTs1UnicodeSource \
-  -OutputEncoding $metricTs1 \
-  -OutputEncodingName 'abntextoUfcTS1MetricEncoding'
-& $unicodeScript \
-  -InputEncoding $encT1 \
-  -OutputEncoding $unicodeT1 \
-  -OutputEncodingName 'abntextoUfcT1UnicodeEncoding'
-& $unicodeScript \
-  -InputEncoding $metricTs1 \
-  -OutputEncoding $unicodeTs1 \
-  -OutputEncodingName 'abntextoUfcTS1UnicodeEncoding'
+& $metricScript -InputEncoding $encTs1UnicodeSource -OutputEncoding $metricTs1 -OutputEncodingName 'abntextoUfcTS1MetricEncoding'
+& $unicodeScript -InputEncoding $encT1 -OutputEncoding $unicodeT1 -OutputEncodingName 'abntextoUfcT1UnicodeEncoding'
+& $unicodeScript -InputEncoding $metricTs1 -OutputEncoding $unicodeTs1 -OutputEncodingName 'abntextoUfcTS1UnicodeEncoding'
 
 Push-Location $work
 try {
