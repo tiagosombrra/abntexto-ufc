@@ -10,7 +10,7 @@ This document describes how `abntexto-ufc` prepares and validates a CTAN submiss
 - License: LaTeX Project Public License 1.3c or later.
 - Upstream dependency: `abntexto` 1.1 or newer (`https://ctan.org/pkg/abntexto`).
 - Status: unofficial, community-maintained UFC-oriented class. Do not describe it as official or UFC-homologated unless the University explicitly grants that status.
-- Development gate: V3-R2 runtime/API migration is active. A v3.0.0 CTAN upload must not be performed from an intermediate R2 lot; release publication remains a later explicit action after the roadmap reaches its release-ready stage and the intended release candidate is revalidated proportionally.
+- Development gate: V3-R2 runtime/API migration is active in R2-B2. R2-B1 setup/state migration is complete at `ded5e77733795aa2958606e899d4e27f12f64df4`. A v3.0.0 CTAN upload must not be performed from an intermediate R2 lot; release publication remains a later explicit action after the roadmap reaches its release-ready stage and the intended release candidate is revalidated proportionally.
 
 ## Acceptance benchmark
 

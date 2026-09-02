@@ -78,7 +78,7 @@ A project-owned internal control sequence has one behavior owner. Public command
 
 ## R2 migration sequencing
 
-The target architecture above is implemented through bounded owner-based lots documented in `docs/R2-API-OWNERSHIP.md`. R2-A classified the current forwarding surface and direct owners. R2-B1 migrates setup/state vocabulary first because those values are consumed across layout and profile modules; later lots migrate rendering commands, structural/object APIs, bibliography/back-matter APIs, and finally remove `public-api.def`. Template and test consumers move atomically with each behavior owner.
+The target architecture above is implemented through bounded owner-based lots documented in `docs/R2-API-OWNERSHIP.md`. R2-A classified the forwarding surface and direct owners. R2-B1 is complete: canonical setup/state vocabulary is directly owned and all live setup/state consumers use it. R2-B2 is active and migrates academic/front-matter rendering commands plus layout-hook consumers; later lots migrate structural/object APIs, bibliography/back-matter APIs, and finally remove `public-api.def`. Template and test consumers move atomically with each behavior owner.
 
 ## Upstream boundaries
 
