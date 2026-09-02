@@ -6,8 +6,8 @@
   "updated_at": "2026-09-02",
   "status": "ACTIVE",
   "phase": "V3-R2",
-  "stage": "R2-B1",
-  "stage_name": "canonical setup and internal state vocabulary",
+  "stage": "R2-B2",
+  "stage_name": "academic and front-matter public rendering API",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,12 +978,12 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R2 / R2-B1 through issue #234 from canonical main. Move canonical English setup keys and values plus project-owned internal state/metadata vocabulary into their responsibility-owning modules, migrate every live state consumer/template/test atomically, and remove the migrated setup forwarding entries from public-api.def.",
+  "next_action": "Execute V3-R2 / R2-B2 through issue #237 from canonical main. Move the academic and front-matter public rendering commands into their responsibility-owning modules, rebind layout hooks to canonical commands, migrate template/test consumers atomically, and remove the corresponding Portuguese project commands and forwarding definitions without adding runtime aliases.",
   "r1_status": "DONE",
   "r2": {
     "status": "ACTIVE",
-    "stage": "R2-B1",
-    "stage_name": "canonical setup and internal state vocabulary",
+    "stage": "R2-B2",
+    "stage_name": "academic and front-matter public rendering API",
     "entry_main_sha": "0a2c2c3879986ca27b731f54b974db12524258df",
     "r1_certified_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
     "r2_a": {
@@ -994,24 +994,42 @@
     },
     "lots": {
       "R2-B1": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 234,
-        "name": "canonical setup and internal state vocabulary"
+        "name": "canonical setup and internal state vocabulary",
+        "implementation_head_sha": "99fb58deaa1594ca19fb3a00ca9418623e5b25aa",
+        "merge_pr": 236,
+        "closure_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4",
+        "static_contract_run_id": 33668283912,
+        "linux_integration_run_id": 33668283890,
+        "linux_integration_job_id": 100375428004,
+        "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+        "fail_closed_intermediate_run_id": 33665983360,
+        "fail_closed_intermediate_result": "PASS=24 FAIL=6 SKIP=0",
+        "dynamic_consumers_repaired": 6,
+        "runtime_alias_layer_added": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       },
       "R2-B2": {
-        "status": "PENDING",
-        "name": "academic and front-matter public rendering API"
+        "status": "ACTIVE",
+        "issue": 237,
+        "name": "academic and front-matter public rendering API",
+        "entry_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4"
       },
       "R2-B3": {
         "status": "PENDING",
+        "issue": 238,
         "name": "structural/object environments optional object API and extension hooks"
       },
       "R2-B4": {
         "status": "PENDING",
+        "issue": 239,
         "name": "bibliography back-matter API and plumbing internalization"
       },
       "R2-B5": {
         "status": "PENDING",
+        "issue": 240,
         "name": "final consumer migration forwarding-layer removal and migration documentation"
       }
     },
