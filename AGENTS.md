@@ -24,10 +24,16 @@ Memory, old pull requests, workflow names, historical branches, and prior chat c
 - The active repository is not an archive. Historical evidence belongs in Git history, tags, releases, issues, pull requests, certified SHAs, and external verified backups.
 - Do not create archive/history branches in the active repository.
 - Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before a checkpoint.
-- Permanent automatic CI is introduced only through R1-BLOCK-7 and must remain a thin orchestration layer over repository-owned entry points. `Static contract` is the current permanent fast workflow and delegates to `make static-check`.
-- R1-BLOCK-7 is DONE. `Static contract`, `Linux integration`, and `Linux release check` are the only permanent workflows; B7-D confirmed stable repository-owned entry points, read-only permissions, pinned actions, bounded concurrency, and zero temporary workflow residue. The `Stable branches` ruleset currently has no required-status rule; the recorded recommendation is to require `Static contract` and `Linux integration`, while `Linux release check` remains post-merge/manual. R1-BLOCK-8 is ACTIVE via issue #227 for final Windows/literal-font/PDF-A certification.
+- Permanent automatic CI is introduced only through R1-BLOCK-7 and must remain a thin orchestration layer over repository-owned entry points.
+- R1-BLOCK-7 is DONE. `Static contract`, `Linux integration`, and `Linux release check` are the only permanent workflows. B7-D confirmed read-only permissions, pinned actions, bounded concurrency, stable repository-owned entry points, and zero temporary workflow residue.
+- The `Stable branches` ruleset currently has no required-status rule. The recorded recommendation is to require `Static contract` and `Linux integration`; `Linux release check` remains post-merge/manual.
+- R1-BLOCK-8 is ACTIVE via issue #227. PR #230 merged the bounded Windows/literal-font tooling repair at `d2c24fc85351a410ea1f0101887b2a5228077741`.
+- B8 strict POC certification is DONE: run `33609817951` generated Times New Roman/Arial × pdfLaTeX/LuaLaTeX on hosted Windows; Linux certification verified literal identity, Unicode extraction, embedding and PDF/A-2b for all four artifacts.
+- B8 is not closed by the POC. The immediate product gate is full `template/main.tex` certification from the canonical merged B8 tooling checkpoint, followed by final control-plane reconciliation and issue #227 closure only if that candidate proof passes fail-closed.
 - Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.
 - Do not rerun completed checks unless current-state validation requires it.
+- Do not redistribute proprietary Microsoft fonts.
+- Do not perform actual CTAN submission or V3-R2 runtime/API migration while R1-BLOCK-8 remains active.
 
 ## Branch governance
 
@@ -35,4 +41,4 @@ The intended steady state is `main` plus only short-lived task branches. Merged 
 
 ## Fail-closed rule
 
-If a required fact cannot be established from the current Git repository and canonical state files, record the ambiguity and stop advancement to the next stage. Do not infer closure from naming, memory, or historical intent.
+If a required fact cannot be established from the current Git repository and canonical state files, record the ambiguity and stop advancement to the next stage. Do not infer closure from naming, memory, historical intent, or a partial certification milestone.
