@@ -1,0 +1,177 @@
+name: B8 final inspection temporary
+
+on:
+  push:
+    branches:
+      - cert/v3-r1-b8-final-candidate-fast
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  inspect:
+    name: Linux final candidate inspection
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout canonical B8 candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 9b1752565ac217c04ffa22a9ef272cdf078af380
+          persist-credentials: false
+
+      - name: Install PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          docker --version
+
+      - name: Download certified Windows matrix from source run
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: b8-final-windows-candidate-pdfs
+          path: b8-final-pdfs
+          github-token: ${{ github.token }}
+          repository: tiagosombrra/abntexto-ufc
+          run-id: 33649620219
+
+      - name: Certify complete candidate artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/b8-final
+
+          for engine in pdflatex lualatex; do
+            for family in times arial; do
+              pdf="b8-final-pdfs/abntexto-ufc-main-${family}-${engine}-strict.pdf"
+              test -s "$pdf"
+              echo "B8 final certification: $family / $engine"
+
+              pdffonts "$pdf" | tee "artifacts/b8-final/${family}-${engine}-pdffonts.txt"
+              names=$(pdffonts "$pdf" | tail -n +3 | awk 'NF {print $1}')
+
+              case "$family" in
+                times)
+                  printf '%s\n' "$names" | grep -Fq 'TimesNewRomanPSMT'
+                  if printf '%s\n' "$names" | grep -Eiq 'Arial(MT|-)|TeXGyreHeros|NimbusSans'; then
+                    echo "Unexpected non-math text-family substitution in $pdf"
+                    exit 1
+                  fi
+                  ;;
+                arial)
+                  printf '%s\n' "$names" | grep -Fq 'ArialMT'
+                  if printf '%s\n' "$names" | grep -Eiq 'TimesNewRomanPS|TeXGyreHeros|NimbusSans'; then
+                    echo "Unexpected non-math text-family substitution in $pdf"
+                    exit 1
+                  fi
+                  ;;
+                *) exit 2 ;;
+              esac
+
+              if [ "$engine" = pdflatex ]; then
+                # newtxmath legitimately embeds TeXGyreTermesX plus NewTX math fonts.
+                printf '%s\n' "$names" | grep -Fq 'NewTXMI'
+              else
+                # Unicode engines use the configured OpenType math font independently of text family.
+                printf '%s\n' "$names" | grep -Eiq 'Math-Regular|TermesMath|LatinModernMath'
+              fi
+
+              pdftotext "$pdf" "artifacts/b8-final/${family}-${engine}-text.txt"
+              for marker in 'Universidade Federal do Ceará' 'Modelo comentado de trabalho acadêmico da UFC' 'Fortaleza' 'AGRADECIMENTOS' 'RESUMO'; do
+                grep -Fq "$marker" "artifacts/b8-final/${family}-${engine}-text.txt" || {
+                  echo "Unicode/text extraction marker missing in $pdf: $marker"
+                  exit 1
+                }
+              done
+
+              sh tests/integration/font-embedding.sh "$pdf"
+              sh tests/integration/pdfa.sh "$pdf"
+              cp /tmp/abntexto-ufc-verapdf.xml "artifacts/b8-final/${family}-${engine}-verapdf.xml"
+              sha256sum "$pdf" > "artifacts/b8-final/${family}-${engine}.sha256"
+            done
+          done
+
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('b8-final-pdfs')
+          cases = []
+          for engine in ('pdflatex', 'lualatex'):
+              for family in ('times', 'arial'):
+                  pdf = root / f'abntexto-ufc-main-{family}-{engine}-strict.pdf'
+                  cases.append({
+                      'engine': engine,
+                      'family': family,
+                      'pdf': pdf.name,
+                      'sha256': hashlib.sha256(pdf.read_bytes()).hexdigest(),
+                      'literal_text_family': 'PASS',
+                      'math_font_policy': 'NEW-TX-MATH' if engine == 'pdflatex' else 'OPEN-TYPE-MATH',
+                      'unexpected_text_substitution': 'ABSENT',
+                      'unicode_extraction': 'PASS',
+                      'font_embedding': 'PASS',
+                      'pdfa_2b': 'PASS',
+                  })
+          receipt = {
+              'stage': 'R1-BLOCK-8',
+              'candidate_sha': '9b1752565ac217c04ffa22a9ef272cdf078af380',
+              'template': 'template/main.tex',
+              'windows_source_run_id': 33649620219,
+              'windows_source_artifact_id': 9854415113,
+              'windows_source_artifact_sha256': '138b9a4e3c2969db33c512bec91b323cba339bb6ae18afc76786b59d2e0f7a21',
+              'result': 'PASS',
+              'inspection_note': 'TeXGyreTermesX-Regular is accepted only as part of the pdfLaTeX newtxmath stack; literal institutional text-family identity is certified independently.',
+              'cases': cases,
+              'runtime_api_changed': False,
+              'normative_semantics_changed': False,
+              'proof_state_changed': False,
+              'proprietary_fonts_redistributed': False,
+          }
+          Path('artifacts/b8-final/certification-receipt.json').write_text(
+              json.dumps(receipt, indent=2, ensure_ascii=False) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(receipt, indent=2, ensure_ascii=False))
+          PY
+
+      - name: Upload final B8 evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: b8-final-certification-evidence
+          if-no-files-found: error
+          retention-days: 14
+          path: artifacts/b8-final/**
+
+  cleanup:
+    name: Remove temporary final inspection workflow
+    if: always()
+    needs:
+      - inspect
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout certification branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: cert/v3-r1-b8-final-candidate-fast
+          fetch-depth: 0
+
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          path=.github/workflows/b8-final-inspection-temp.yml
+          if [ ! -e "$path" ]; then
+            exit 0
+          fi
+          rm -f "$path"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- "$path"
+          git commit -m 'ci: remove temporary B8 final inspection'
+          git push origin HEAD:cert/v3-r1-b8-final-candidate-fast
