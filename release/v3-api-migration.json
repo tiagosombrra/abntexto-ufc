@@ -1,9 +1,14 @@
 {
   "schema_version": 1,
-  "phase": "V3-R0",
+  "phase": "V3-R2",
   "kind": "api-runtime-migration-contract",
   "target_version": "3.0.0",
-  "status": "FROZEN_FOR_V3_R2",
+  "status": "ACTIVE_R2_A_INVENTORY",
+  "activated_at": "2026-09-02",
+  "operational_issue": 232,
+  "entry_certified_r1_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
+  "current_stage": "R2-A",
+  "current_stage_goal": "inventory runtime/API ownership and define bounded migration lots before behavioral changes",
   "policy": {
     "canonical_public_language": "English",
     "canonical_internal_language": "English",

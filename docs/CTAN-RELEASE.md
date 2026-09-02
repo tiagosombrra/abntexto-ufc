@@ -89,7 +89,7 @@ make release-check
 
 B7-C3 established and certified the permanent `.github/workflows/linux-release-check.yml` workflow, named `Linux release check`. It runs the repository-owned `make release-check` entry point after technical changes land on `main` and on manual dispatch, publishes `artifacts/validation/validation-report.md` in the Actions job summary, and retains `artifacts/validation/**` as short-lived engineering evidence for 14 days. PR #225 merged at `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the first permanent merged-main release run `33566835570` passed all 32 checks (`PASS=32 FAIL=0 SKIP=0`), including release-only `pdfa` and `profile-pdfa`. This Linux evidence is not final B8 Windows/literal-font/PDF-A certification and is not CTAN acceptance.
 
-R1-BLOCK-7 is complete. Its Linux result is an engineering gate, not final release certification. B7-D confirmed the permanent workflow inventory and recorded `Static contract` plus `Linux integration` as the recommended required PR checks; `Linux release check` remains post-merge/manual. R1-BLOCK-8 is now ACTIVE via issue #227 for literal Times New Roman/Arial identity and final Windows/font/PDF-A certification. CTAN packaging and current `pkgcheck` validation remain separate release procedures below. Validation evidence under `artifacts/validation/` is not a distribution artifact and must not be inserted into public bundles.
+R1-BLOCK-7 and R1-BLOCK-8 are complete. B7-D confirmed the permanent workflow inventory and recorded `Static contract` plus `Linux integration` as the recommended required PR checks; `Linux release check` remains post-merge/manual. B8 certified complete candidate `9b1752565ac217c04ffa22a9ef272cdf078af380`: Windows run `33649620219` passed Times New Roman/Arial × pdfLaTeX/LuaLaTeX, and final Linux inspection run `33655108349` passed literal text-family identity, expected math-font policy, Unicode extraction, embedding and PDF/A-2b. This engineering certification is not CTAN acceptance. CTAN packaging and current `pkgcheck` validation remain separate release procedures below. Validation/B8 evidence is not a distribution artifact and must not be inserted into public bundles.
 
 ## Automated validation
 
@@ -130,7 +130,7 @@ The actual CTAN submission is an explicit release action. Building or certifying
 
 1. Build from the intended release commit/tag, not from an unrecorded local modification.
 2. Run or confirm a successful `make release-check` / `Linux release check` for that candidate commit and preserve its validation evidence.
-3. Complete the separate B8 Windows/literal-font/PDF-A certification required for the release candidate.
+3. Confirm that the intended release commit is still covered by, or has proportionally re-established, the completed Windows/literal-font/PDF-A certification baseline from R1-BLOCK-8.
 4. Run `make distribution-bundles`.
 5. Verify `SHA256SUMS` and the exact artifact names.
 6. Run the repository distribution checker.
