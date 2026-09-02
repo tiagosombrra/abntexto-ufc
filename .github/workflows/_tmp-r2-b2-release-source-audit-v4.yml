@@ -1,0 +1,107 @@
+name: Temporary R2-B2 release-source audit v4
+
+on:
+  push:
+    branches:
+      - docs/v3-r2-b2-closeout-b3-entry
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+
+      - name: Validate active release sources and bundle tooling
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -eu
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+            work="$(mktemp -d)"
+            trap 'rm -rf "$work"' EXIT INT TERM
+            python3 tools/fetch-abntexto.py --output "$work/abntexto.cls"
+
+            mkdir -p "$work/example"
+            cd "$work/example"
+            TEXINPUTS="$GITHUB_WORKSPACE//:$work//:" pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$GITHUB_WORKSPACE/docs/ctan-example.tex" >/tmp/ctan-example.log 2>&1
+            TEXINPUTS="$GITHUB_WORKSPACE//:$work//:" pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$GITHUB_WORKSPACE/docs/ctan-example.tex" >>/tmp/ctan-example.log 2>&1
+            test -s ctan-example.pdf
+
+            mkdir -p "$work/manual"
+            cp "$GITHUB_WORKSPACE/release/ctan/abntexto-ufc.tex" "$work/manual/"
+            cd "$work/manual"
+            pdflatex -interaction=nonstopmode -halt-on-error -file-line-error abntexto-ufc.tex >/tmp/ctan-manual.log 2>&1
+            pdflatex -interaction=nonstopmode -halt-on-error -file-line-error abntexto-ufc.tex >>/tmp/ctan-manual.log 2>&1
+            test -s abntexto-ufc.pdf
+            if grep -E 'Package babel Warning: Name .brazil. is deprecated|Overfull \\hbox|Overfull \\vbox' abntexto-ufc.log; then
+              cat /tmp/ctan-manual.log
+              echo 'Unexpected CTAN manual warning/overflow.' >&2
+              exit 1
+            fi
+
+            cd "$GITHUB_WORKSPACE"
+            make reference-assets
+            python3 tests/checks/public_bundles.py --abntexto "$work/abntexto.cls"
+            python3 tests/checks/distribution_bundles.py --abntexto "$work/abntexto.cls"
+
+            python3 - <<'PY'
+            from pathlib import Path
+
+            sources = [Path('docs/ctan-example.tex'), Path('release/ctan/abntexto-ufc.tex')]
+            forbidden = [
+                'tipo =', 'impressao =', 'capa =', 'ficha-catalografica', 'brasao =',
+                'fonte =', 'fonte-estrita', 'programa-doutorado', 'titulo-doutor',
+                'autor =', 'titulo =', 'local =', 'ano =', 'orientador =',
+                'tabelas =', 'codigo =', 'algoritmos =', 'glossario =', 'indice =',
+                'Portuguese public API during the R1 reconstruction', '\\chapter{',
+            ]
+            failures = []
+            for source in sources:
+                text = source.read_text(encoding='utf-8')
+                for token in forbidden:
+                    if token in text:
+                        failures.append(f'{source}: stale release-source token {token!r}')
+            producer = Path('tools/build-public-bundles.py').read_text(encoding='utf-8')
+            if 'coat-of-arms = true' not in producer or 'coat-of-arms = false' not in producer:
+                failures.append('public bundle producer does not own canonical coat-of-arms staging')
+            if 'brasao = sim' in producer or 'brasao = nao' in producer:
+                failures.append('public bundle producer still consumes removed v2 coat-of-arms setup')
+            if failures:
+                raise SystemExit('\n'.join(failures))
+            print('R2-B2 RELEASE-SOURCE-AUDIT status=PASS sources=2 public_bundles=PASS distribution_bundles=PASS canonical_setup=PASS')
+            PY
+
+      - name: Remove generated assets and temporary audit before checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f template/figures/ufc-campus-pici.jpg template/figures/ufc-reitoria.jpg
+          rm -rf dist
+          rm .github/workflows/_tmp-r2-b2-release-source-audit-v4.yml
+
+          if git status --porcelain | grep -E 'ufc-campus-pici\.jpg|ufc-reitoria\.jpg|^.. dist/'; then
+            echo 'Generated release assets remain in the working tree.' >&2
+            exit 1
+          fi
+
+          git diff --check
+          make static-check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "test: finalize release-source reconciliation"
+          test -z "$(git status --porcelain)"
+          git push origin HEAD:docs/v3-r2-b2-closeout-b3-entry
