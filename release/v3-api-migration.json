@@ -3,12 +3,27 @@
   "phase": "V3-R2",
   "kind": "api-runtime-migration-contract",
   "target_version": "3.0.0",
-  "status": "ACTIVE_R2_A_INVENTORY",
+  "status": "R2_A_DONE_R2_B1_ACTIVE",
   "activated_at": "2026-09-02",
   "operational_issue": 232,
   "entry_certified_r1_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
-  "current_stage": "R2-A",
-  "current_stage_goal": "inventory runtime/API ownership and define bounded migration lots before behavioral changes",
+  "current_stage": "R2-B1",
+  "current_stage_goal": "canonical setup and internal state vocabulary",
+  "r2_a_inventory": {
+    "status": "DONE",
+    "completed_at": "2026-09-02",
+    "canonical_main_sha": "0a2c2c3879986ca27b731f54b974db12524258df",
+    "operational_issue": 232,
+    "ownership_document": "docs/R2-API-OWNERSHIP.md",
+    "active_implementation_lot": {"stage": "R2-B1", "issue": 234},
+    "planned_lots": ["R2-B1", "R2-B2", "R2-B3", "R2-B4", "R2-B5"],
+    "key_findings": [
+      "public-api.def is forwarding-only transitional debt rather than a behavior owner",
+      "template and test consumers migrate atomically with each direct behavior owner",
+      "genuine upstream non-English identifiers remain only at explicit integration boundaries",
+      "rendered Portuguese academic labels are protected document content"
+    ]
+  },
   "policy": {
     "canonical_public_language": "English",
     "canonical_internal_language": "English",

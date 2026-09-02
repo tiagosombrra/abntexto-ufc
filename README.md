@@ -6,7 +6,7 @@ The canonical project identity is `abntexto-ufc`. The active `main` branch carri
 
 ## Current v3 status
 
-**V3-R1 is DONE. V3-R2 is ACTIVE in R2-A — runtime/API ownership inventory and migration plan, tracked by issue #232.**
+**V3-R1 is DONE. V3-R2 is ACTIVE in R2-B1 — canonical setup and internal state vocabulary, tracked by issue #234.**
 
 The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`. Windows run `33649620219` built the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX `template/main.tex` matrix. Final Linux inspection run `33655108349` passed literal institutional text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b for all four artifacts. No runtime/API, normative semantics or proof-state change was required, and no proprietary Microsoft font was redistributed.
 
@@ -50,7 +50,7 @@ The editable repository example lives under `template/`. Public template and Ove
 
 ## Engineering policy
 
-Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 preserved the runtime/API while rebuilding and certifying the foundation. R2 is now active; R2-A performs ownership inventory and migration planning before any direct runtime/API migration.
+Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 rebuilt and certified the foundation. R2-A has completed the runtime/API ownership inventory; R2-B1 now begins direct canonical setup/state migration through responsibility-owning modules. See `docs/R2-API-OWNERSHIP.md` for the bounded migration sequence.
 
 Historical implementation evidence is kept by Git history, tags, releases, pull requests, issues, and certified SHAs rather than by archive directories inside the active tree.
 
@@ -101,7 +101,7 @@ R1-BLOCK-7 is DONE: B7-C1 certified `make check` on clean TeX Live 2026 (`PASS=3
 
 The current `Stable branches` ruleset does not yet require statuses; the recorded recommendation is `Static contract` plus `Linux integration`, while `Linux release check` remains post-merge/manual.
 
-R1-BLOCK-8 is DONE. Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. Final Linux inspection run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. V3-R2/R2-A is active through issue #232.
+R1-BLOCK-8 is DONE. Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. Final Linux inspection run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. R2-A ownership inventory is complete; V3-R2/R2-B1 is active through issue #234.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 

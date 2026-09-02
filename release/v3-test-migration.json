@@ -1,9 +1,12 @@
 {
   "schema_version": 2,
-  "phase": "V3-R1",
+  "phase": "V3-R2",
   "kind": "test-documentation-workflow-migration-contract",
   "target_version": "3.0.0",
-  "status": "ACTIVE_R1_RECONCILIATION",
+  "status": "ACTIVE_R2_API_CONSUMER_MIGRATION",
+  "current_stage": "R2-B1",
+  "r1_reconciliation_status": "DONE",
+  "r2_api_consumer_policy": {"owner_inventory": "docs/R2-API-OWNERSHIP.md", "active_lot": "R2-B1", "final_residual_lot": "R2-B5", "runtime_alias_tests_allowed": false},
   "policy": {
     "active_test_names_are_semantic": true,
     "active_test_names_embed_old_phase_ids": false,

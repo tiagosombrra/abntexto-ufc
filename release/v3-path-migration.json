@@ -1,12 +1,15 @@
 {
   "schema_version": 1,
-  "phase": "V3-R0",
+  "phase": "V3-R2",
   "kind": "path-migration-contract",
   "source_branch": "refactor/v3-full-internationalization",
   "source_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "audited_tree_sha": "657c7da1c4f0bd9e7353569fce59c0907c896ea7",
   "target_version": "3.0.0",
-  "status": "FROZEN_FOR_V3_R1",
+  "status": "R1_PATHS_DONE_R2_RUNTIME_ABSORPTION_PENDING",
+  "current_stage": "R2-B1",
+  "r1_path_restructuring_status": "DONE",
+  "remaining_runtime_path_action": {"path": "abntexto-ufc/public-api.def", "action": "remove-after-absorption", "planned_lot": "R2-B5"},
   "policy": {
     "repository_engineering_language": "English",
     "academic_content_language": "preserve source language",
