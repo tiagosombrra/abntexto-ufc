@@ -201,16 +201,9 @@ def main() -> None:
     migrate_consumers()
     assert_direct_ownership()
     residual_scan()
-
-    # Remove the temporary executor before repository contract/static checks.
-    for path in TEMP_FILES:
-        if path.exists():
-            path.unlink()
-            print(f"removed {path.relative_to(ROOT)}")
-
     run("make", "static-check")
     run("git", "diff", "--check")
-    print("R2-B2 bounded migration: PASS")
+    print("R2-B2 bounded migration before temporary cleanup: PASS")
 
 
 if __name__ == "__main__":
