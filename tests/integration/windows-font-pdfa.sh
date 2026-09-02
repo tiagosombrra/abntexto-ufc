@@ -4,13 +4,13 @@ set -eu
 root="${1:-windows-font-pdfs}"
 
 [ -d "$root" ] || {
-  echo "Fontes Windows PDF/A: diretório ausente: $root"
+  echo "Windows font/PDF-A gate: directory not found: $root"
   exit 1
 }
 
 for cmd in pdffonts pdftotext; do
   command -v "$cmd" >/dev/null 2>&1 || {
-    echo "Fontes Windows PDF/A: comando ausente: $cmd"
+    echo "Windows font/PDF-A gate: required command not found: $cmd"
     exit 2
   }
 done
@@ -36,7 +36,7 @@ assert_names() {
 
   for pattern in $patterns; do
     printf '%s\n' "$names" | grep -Fq "$pattern" || {
-      echo "Fontes Windows PDF/A: $pdf não contém $pattern"
+      echo "Windows font/PDF-A gate: $pdf does not contain $pattern"
       pdffonts "$pdf"
       return 1
     }
@@ -48,7 +48,7 @@ assert_no_text_fallback() {
   names=$(font_names "$pdf")
 
   if printf '%s\n' "$names" | grep -Eiq 'TeXGyreTermesX|TeXGyreTermes|TeXGyreHeros|NimbusSans'; then
-    echo "Fontes Windows PDF/A: $pdf contém fallback textual inesperado."
+    echo "Windows font/PDF-A gate: $pdf contains an unexpected text-font fallback."
     pdffonts "$pdf"
     return 1
   fi
@@ -61,7 +61,7 @@ assert_text_extraction() {
 
   for marker in 'Texto normal para prova literal da classe.' 'ação' 'ciência' 'computação' 'orientação' 'avaliação' 'João' 'Ceará' 'São Luís'; do
     grep -Fq "$marker" "$txt" || {
-      echo "Fontes Windows PDF/A: extração ausente/incorreta em $pdf: $marker"
+      echo "Windows font/PDF-A gate: text extraction missing/incorrect in $pdf: $marker"
       cat "$txt"
       return 1
     }
@@ -72,17 +72,17 @@ for engine in pdflatex lualatex; do
   for family in times arial; do
     pdf="$root/abntexto-ufc-${family}-${engine}-strict-poc.pdf"
     [ -s "$pdf" ] || {
-      echo "Fontes Windows PDF/A: arquivo ausente: $pdf"
+      echo "Windows font/PDF-A gate: file not found: $pdf"
       exit 1
     }
 
-    echo "Fontes Windows PDF/A: certificando $family/$engine..."
+    echo "Windows font/PDF-A gate: certifying $family/$engine..."
     assert_names "$pdf" "$family"
     assert_no_text_fallback "$pdf"
     assert_text_extraction "$pdf"
-    sh tests/v2-font-embedding-check.sh "$pdf"
-    sh tests/v2-pdfa-check.sh "$pdf"
+    sh tests/integration/font-embedding.sh "$pdf"
+    sh tests/integration/pdfa.sh "$pdf"
   done
 done
 
-echo 'Gate Windows: identidade literal, Unicode, embedding e PDF/A-2b concluídos.'
+echo 'Windows gate: literal font identity, Unicode extraction, embedding, and PDF/A-2b completed.'
