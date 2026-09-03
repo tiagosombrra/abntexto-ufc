@@ -102,6 +102,27 @@ def line_bounds(line: ET.Element) -> tuple[float, float]:
         raise AssertionError from exc
 
 
+def coalesce_right_edge_fragments(
+    bounds: list[tuple[float, float]],
+    expected_left: float,
+    expected_right: float,
+    tolerance_pt: float,
+) -> list[tuple[float, float]]:
+    result: list[tuple[float, float]] = []
+    for x_min, x_max in bounds:
+        if (
+            result
+            and x_min > expected_left + tolerance_pt
+            and abs(x_max - expected_right) <= tolerance_pt
+            and abs(result[-1][1] - expected_right) > tolerance_pt
+        ):
+            previous_min, previous_max = result[-1]
+            result[-1] = (min(previous_min, x_min), max(previous_max, x_max))
+            continue
+        result.append((x_min, x_max))
+    return result
+
+
 def audit_scenario(
     scenario: dict[str, Any],
     root: ET.Element,
@@ -133,7 +154,15 @@ def audit_scenario(
     expected_left = (margin_left_mm + indent_mm) * PT_PER_MM
     expected_right = page_width - margin_right_mm * PT_PER_MM
 
-    bounds = [line_bounds(line) for line in lines]
+    raw_bounds = [line_bounds(line) for line in lines]
+    bounds = coalesce_right_edge_fragments(
+        raw_bounds, expected_left, expected_right, tolerance_pt
+    )
+    if len(bounds) < minimum_lines:
+        fail(
+            f"{scenario['id']}: expected at least {minimum_lines} physical lines after "
+            f"fragment coalescing, found {len(bounds)}"
+        )
     left_deltas = [abs(x_min - expected_left) for x_min, _ in bounds]
     right_deltas = [abs(x_max - expected_right) for _, x_max in bounds[:-1]]
     passed = (
@@ -152,7 +181,8 @@ def audit_scenario(
         "status": "PASS" if passed else "FAIL",
         "expected": expected_alignment,
         "measured": {
-            "line_count": len(lines),
+            "raw_line_count": len(lines),
+            "line_count": len(bounds),
             "expected_left_pt": round(expected_left, 4),
             "expected_right_pt": round(expected_right, 4),
             "line_bounds_pt": [
@@ -163,7 +193,7 @@ def audit_scenario(
             "non_final_right_deltas_pt": [round(delta, 4) for delta in right_deltas],
         },
         "tolerance_pt": tolerance_pt,
-        "tool": "pdftotext -bbox-layout",
+        "tool": "pdftotext -bbox-layout + geometric fragment coalescing",
     }
 
 

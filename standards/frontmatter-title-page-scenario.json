@@ -23,9 +23,9 @@
       "title": "UFCFRONTMATTERTPTITLE",
       "subtitle": "UFCFRONTMATTERTPSUBTITLE",
       "volume": "VOLUME 3",
-      "nature": "UFCFRONTMATTERTPNATUREPROGRAM",
-      "advisor": "UFCFRONTMATTERTPADVISOR",
-      "coadvisor": "UFCFRONTMATTERTPCOADVISOR",
+      "nature": "TPNATURE",
+      "advisor": "TPADVISOR",
+      "coadvisor": "TPCOADVISOR",
       "city": "UFCFRONTMATTERTPCITY",
       "year": "2098"
     }
