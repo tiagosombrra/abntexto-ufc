@@ -1,21 +1,7 @@
 \ProvidesFile{abntexto-ufc/public-api.def}[2026/09/03 UFC transitional public API]
 
-% R2-B1 through R2-B3 forwarding has been absorbed by direct behavior owners.
-% Only R2-B4 bibliography and back-matter forwarding remains here.
-\ExplSyntaxOn
-
-\NewDocumentCommand \ufcAddBibliographyResource { m }
-  { \ufcbibliografia{#1} }
-
-\NewDocumentCommand \ufcPrintReferences { }
-  { \imprimirreferencias }
-
-\NewDocumentCommand \ufcPrintGlossary { }
-  { \imprimirglossario }
-
-\NewDocumentCommand \ufcPrintIndex { }
-  { \imprimirindice }
-
-\ExplSyntaxOff
+% R2-B1 through R2-B4 forwarding has been absorbed by direct behavior owners.
+% This empty transitional file is intentionally retained until R2-B5 removes the
+% forwarding layer from the class load path and closes the residual migration.
 
 \endinput

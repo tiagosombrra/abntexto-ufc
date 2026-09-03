@@ -3,10 +3,11 @@
 \ufcsetup{
   type = doctoral-thesis,
   print-mode = single-sided,
-  coat-of-arms = false
+  coat-of-arms = false,
+  index = imakeidx
 }
 
-\ufcbibliografia{tests/fixtures/references.bib}
+\ufcAddBibliographyResource{tests/fixtures/references.bib}
 
 \begin{document}
 \pretextual
@@ -15,11 +16,11 @@
 
 \textual
 \section{UCCENTERCONTEXT}
+\index{UCINDEXENTRY}
 \nocite{silva2020}
 
-\imprimirreferencias
+\ufcPrintReferences
 
-\ufcPosttextualHeading{UCPOSTCENTER}
-UCPOSTCENTERBODY
+\ufcPrintIndex
 
 \end{document}

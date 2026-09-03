@@ -18,8 +18,8 @@
     },
     {
       "id": "backmatter-shared",
-      "marker": "UCPOSTCENTER",
-      "implementation": "ufc_backmatter_heading"
+      "marker": "REMISSIVO",
+      "implementation": "ufc_index_heading"
     }
   ]
 }

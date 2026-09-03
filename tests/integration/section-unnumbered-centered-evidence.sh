@@ -6,10 +6,11 @@ job="validation-section-unnumbered-centered"
 evidence="artifacts/normative-textual/section-unnumbered-centered.json"
 latex_log="/tmp/abntexto-ufc-v2-section-unnumbered-centered.log"
 biber_log="/tmp/abntexto-ufc-v2-section-unnumbered-centered-biber.log"
+index_log="/tmp/abntexto-ufc-v3-section-unnumbered-centered-index.log"
 
 cleanup() {
   rm -f "$job.aux" "$job.bbl" "$job.bcf" "$job.blg" "$job.log" \
-        "$job.out" "$job.pdf" "$job.run.xml" "$job.toc"
+        "$job.idx" "$job.ilg" "$job.ind" "$job.out" "$job.pdf" "$job.run.xml" "$job.toc"
 }
 trap cleanup EXIT INT TERM
 
@@ -22,6 +23,11 @@ pdflatex \
     cat "$latex_log"
     exit 1
   }
+
+makeindex "$job" > "$index_log" 2>&1 || {
+  cat "$index_log"
+  exit 1
+}
 
 biber "$job" > "$biber_log" 2>&1 || {
   cat "$biber_log"
