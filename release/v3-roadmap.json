@@ -3,11 +3,11 @@
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
-  "updated_at": "2026-09-02",
+  "updated_at": "2026-09-03",
   "status": "ACTIVE",
   "phase": "V3-R2",
-  "stage": "R2-B4",
-  "stage_name": "bibliography and back-matter API ownership",
+  "stage": "R2-B5",
+  "stage_name": "final consumer migration and forwarding-layer removal",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,12 +978,12 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute R2-B4 issue #239: move bibliography/reference/glossary/index public commands to direct owners, internalize non-semantic plumbing, migrate live consumers atomically, and leave final public-api.def removal to R2-B5.",
+  "next_action": "Execute R2-B5 issue #240: remove public-api.def and its class load, run fail-closed residual API/engineering-language scans, create docs/MIGRATING-TO-V3.md from the authoritative migration contract, reconcile consumed migration contracts, and close V3-R2 only after current-state gates are green.",
   "r1_status": "DONE",
   "r2": {
     "status": "ACTIVE",
-    "stage": "R2-B3",
-    "stage_name": "structural/object environments optional object API and extension hooks",
+    "stage": "R2-B5",
+    "stage_name": "final consumer migration and forwarding-layer removal",
     "entry_main_sha": "0a2c2c3879986ca27b731f54b974db12524258df",
     "r1_certified_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
     "r2_a": {
@@ -1052,15 +1052,29 @@
         "merge_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df"
       },
       "R2-B4": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 239,
         "name": "bibliography back-matter API and plumbing internalization",
-        "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df"
+        "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+        "product_entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+        "control_plane_entry_main_sha": "ab900797836eb068b3f100574759816eadb039d5",
+        "implementation_head_sha": "c2afa9e283380a1ae008638c73d12561eb97e537",
+        "pr": 247,
+        "merge_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+        "static_contract_run_id": 33736117556,
+        "static_contract_job_id": 100586938889,
+        "linux_integration_run_id": 33736117558,
+        "linux_integration_job_id": 100587276948,
+        "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+        "runtime_alias_layer_added": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       },
       "R2-B5": {
-        "status": "PENDING",
+        "status": "ACTIVE",
         "issue": 240,
-        "name": "final consumer migration forwarding-layer removal and migration documentation"
+        "name": "final consumer migration and forwarding-layer removal",
+        "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261"
       }
     },
     "constraints": [
@@ -1093,9 +1107,49 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "stage": "R2-B4",
+    "stage": "R2-B5",
+    "issue": 240,
+    "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+    "status": "ACTIVE",
+    "implementation_branch_rule": "branch from the merged B4-to-B5 control-plane closeout checkpoint"
+  },
+  "r2_b4_closeout": {
+    "status": "DONE",
     "issue": 239,
-    "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
-    "status": "ACTIVE"
+    "pr": 247,
+    "product_entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+    "control_plane_entry_main_sha": "ab900797836eb068b3f100574759816eadb039d5",
+    "implementation_head_sha": "c2afa9e283380a1ae008638c73d12561eb97e537",
+    "merge_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+    "static_run_id": 33736117556,
+    "static_job_id": 100586938889,
+    "linux_integration_run_id": 33736117558,
+    "linux_integration_job_id": 100587276948,
+    "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+    "fail_closed_linux_runs": [
+      {
+        "run_id": 33708110732,
+        "result": "PASS=29 FAIL=1 SKIP=0",
+        "finding": "generic index evidence locator was ambiguous"
+      },
+      {
+        "run_id": 33731936681,
+        "result": "PASS=29 FAIL=1 SKIP=0",
+        "finding": "synthetic locator was not rendered by imakeidx"
+      },
+      {
+        "run_id": 33733036724,
+        "result": "PASS=29 FAIL=1 SKIP=0",
+        "finding": "indexname override did not control the rendered imakeidx heading"
+      }
+    ],
+    "heading_observer_repaired": true,
+    "heading_observer_final_rendered_text": "ÍNDICE REMISSIVO",
+    "heading_observer_final_delta_pt": 0.0002,
+    "runtime_alias_layer_added": false,
+    "normative_semantics_changed": false,
+    "locator_policy_changed": false,
+    "reference_tolerances_changed": false,
+    "proof_state_changed": false
   }
 }

@@ -6,9 +6,9 @@ The canonical project identity is `abntexto-ufc`. The active `main` branch carri
 
 ## Current v3 status
 
-**V3-R1 is DONE. V3-R2 is ACTIVE in R2-B4 — bibliography and back-matter API ownership, tracked by issue #239.**
+**V3-R1 is DONE. V3-R2 is ACTIVE in R2-B5 — final consumer migration and forwarding-layer removal, tracked by issue #240.**
 
-The canonical R2-B4 product entry checkpoint is `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` after B3 PR #245 passed Static `33704346418` and Linux `33704346429` at `PASS=30 FAIL=0 SKIP=0`. The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`. Windows run `33649620219` built the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX `template/main.tex` matrix. Final Linux inspection run `33655108349` passed literal institutional text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b for all four artifacts. No runtime/API, normative semantics or proof-state change was required, and no proprietary Microsoft font was redistributed.
+The R2-B4 product merge is `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` after PR #247 passed Static `33736117556` and Linux `33736117558` at `PASS=30 FAIL=0 SKIP=0`; this is the product entry for the B4-to-B5 closeout. The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`. Windows run `33649620219` built the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX `template/main.tex` matrix. Final Linux inspection run `33655108349` passed literal institutional text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b for all four artifacts. No runtime/API, normative semantics or proof-state change was required, and no proprietary Microsoft font was redistributed.
 
 See `docs/ROADMAP-V3.0.0.md` for the consolidated roadmap/status table and `docs/HANDOFF-V3.0.0.md` for the exact continuation point.
 
@@ -50,7 +50,7 @@ The editable repository example lives under `template/`. Public template and Ove
 
 ## Engineering policy
 
-Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 rebuilt and certified the foundation. R2-A completed the runtime/API ownership inventory, R2-B1 completed direct canonical setup/state migration, and R2-B2 completed direct academic/front-matter rendering ownership. R2-B3 completed structural/object direct ownership. R2-B4 now moves bibliography/reference/glossary/index commands directly into responsibility-owning modules. See `docs/R2-API-OWNERSHIP.md` for the bounded migration sequence.
+Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 rebuilt and certified the foundation. R2-A and R2-B1 through R2-B4 completed direct ownership of setup/state, academic/front-matter, structural/object, and bibliography/back-matter surfaces. R2-B5 now removes the empty forwarding layer, closes residual engineering identifiers and produces the v3 migration guide. See `docs/R2-API-OWNERSHIP.md` for the bounded migration sequence.
 
 Historical implementation evidence is kept by Git history, tags, releases, pull requests, issues, and certified SHAs rather than by archive directories inside the active tree.
 
@@ -101,7 +101,7 @@ R1-BLOCK-7 is DONE: B7-C1 certified `make check` on clean TeX Live 2026 (`PASS=3
 
 The current `Stable branches` ruleset does not yet require statuses; the recorded recommendation is `Static contract` plus `Linux integration`, while `Linux release check` remains post-merge/manual.
 
-R1-BLOCK-8 is DONE. Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. Final Linux inspection run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. R2-A, R2-B1, R2-B2 and R2-B3 are complete. B3 PR #245 merged at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` after full Linux integration `33704346429` passed `PASS=30 FAIL=0 SKIP=0`. V3-R2/R2-B4 is active through issue #239.
+R1-BLOCK-8 is DONE. Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. Final Linux inspection run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. R2-A and R2-B1 through R2-B4 are complete. B4 PR #247 merged at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` after full Linux integration `33736117558` passed `PASS=30 FAIL=0 SKIP=0`. V3-R2/R2-B5 is active through issue #240.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 

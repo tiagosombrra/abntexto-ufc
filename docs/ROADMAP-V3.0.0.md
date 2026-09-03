@@ -1,12 +1,12 @@
 # abntexto-ufc v3.0.0 — Engineering Roadmap
 
-Updated: 2026-09-02
+Updated: 2026-09-03
 
 ## Status
 
-**V3-R1 DONE. V3-R2 ACTIVE — R2-B4 bibliography and back-matter API ownership.**
+**V3-R1 DONE. V3-R2 ACTIVE — R2-B5 final consumer migration and forwarding-layer removal.**
 
-Canonical R2-B4 product entry on `main`: `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`. Certified R1 product candidate: `9b1752565ac217c04ffa22a9ef272cdf078af380`. Active implementation issue: #239. Machine authority: `release/v3-roadmap.json`.
+R2-B4 product merge on `main`: `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261`. Active implementation issue: #240. Certified R1 product candidate: `9b1752565ac217c04ffa22a9ef272cdf078af380`. Machine authority: `release/v3-roadmap.json`.
 
 ## Roadmap summary
 
@@ -26,11 +26,11 @@ Canonical R2-B4 product entry on `main`: `fb71eb0cb50f065d75aec6bbc704dcaf9091d1
 | V3-R1 closeout | DONE | PR #233 → `0a2c2c3879986ca27b731f54b974db12524258df` | R1 closed | None |
 | R2-A | DONE | issue #232 | Direct owners/upstream boundaries/lots classified | None |
 | R2-B1 | DONE | PR #236 → `ded5e77733795aa2958606e899d4e27f12f64df4` | Setup/state direct ownership; `30/0/0` | None |
-| R2-B2 | DONE | PR #242 → `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; closeout #243 → `0650845b922271fc134d20ef2a8c36ebb999ef91` | Academic/front-matter direct ownership; final `30/0/0`; release `32/0/0` | None |
-| R2-B3 | DONE | issue #238; PR #245 → `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | Structural/object direct ownership; Static `33704346418` PASS; Linux `33704346429` `PASS=30 FAIL=0 SKIP=0` | None |
-| R2-B4 | ACTIVE | issue #239; entry `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | Bibliography/references/glossary/index direct ownership | Implement and validate B4 |
-| R2-B5 | PENDING | issue #240 | Final residual migration, remove `public-api.def`, create `docs/MIGRATING-TO-V3.md` | After B4 |
-| V3-R3 | BLOCKED | — | Standards/tests/language semantic hardening | After R2 |
+| R2-B2 | DONE | PR #242 → `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; closeout #243 → `0650845b922271fc134d20ef2a8c36ebb999ef91` | Academic/front-matter direct ownership; `30/0/0`; release `32/0/0` | None |
+| R2-B3 | DONE | issue #238; PR #245 → `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | Structural/object direct ownership; Linux `33704346429` = `30/0/0` | None |
+| R2-B4 | DONE | issue #239; PR #247 → `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` | Bibliography/reference/glossary/index direct ownership; Static `33736117556`; Linux `33736117558` = `30/0/0` | None |
+| R2-B5 | ACTIVE | issue #240; product entry `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` | Final residual migration and forwarding-layer removal | Remove `public-api.def`/class load; residual scan; migration guide; close R2 |
+| V3-R3 | BLOCKED | no issue activated yet | Standards/tests/language semantic hardening | After R2 |
 | V3-R4 | BLOCKED | — | Final certification | After R3 |
 | V3-R5 | BLOCKED | — | Foundation freeze and final docs | After R4 |
 | V3-A1/A2 | BLOCKED | — | Scientific-article work | After certified foundation |
@@ -46,12 +46,14 @@ R2-A established direct behavior ownership and the B1–B5 sequence. `public-api
 
 R2-B1 moved canonical setup/state into direct owners. Its first full integration failed closed at `24/6/0`, exposing six stale dynamic consumers; final run `33668283890` passed `30/0/0`, and PR #236 merged at `ded5e77733795aa2958606e899d4e27f12f64df4`.
 
-R2-B2 moved academic/front-matter rendering into direct ownership, rebound hooks and migrated live consumers. PR #242 merged at `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; closeout #243 established B3 entry `0650845b922271fc134d20ef2a8c36ebb999ef91`. Release-source audit `33696155771` reconciled CTAN/example/public-bundle consumers.
+R2-B2 moved academic/front-matter rendering into direct ownership. PR #242 merged at `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; closeout #243 established B3 entry `0650845b922271fc134d20ef2a8c36ebb999ef91`. Release-source audit `33696155771` reconciled CTAN/example/public-bundle consumers.
 
-R2-B3 started from reconciled `main` `ca1b789d44343f202f23dd193a391ef85d57986e`. The migration made structural/object environments, source/note/list APIs, optional listing/minted APIs, hooks and project-owned object IDs direct owners. Corrected bounded executor `33703865896` / job `100488717954` passed. Final head `e08592e90072cc6b42b1e7c61163003dc0bf7e28` passed Static `33704346418` and full Linux integration `33704346429` / job `100490158816` at `PASS=30 FAIL=0 SKIP=0`. PR #245 squash-merged at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`; issue #238 is completed. `public-api.def` now contains only the four B4 bibliography/back-matter forwards.
+R2-B3 made structural/object environments, source/note/list APIs, optional listing/minted APIs, hooks and project-owned object IDs direct owners. Final Linux `33704346429` passed `30/0/0`; PR #245 squash-merged at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`.
+
+R2-B4 used control-plane entry `ab900797836eb068b3f100574759816eadb039d5`. Bibliography/reference/glossary/index commands became direct owners and non-semantic plumbing became private. Three integration attempts failed closed at `29/1/0` on the shared unnumbered-heading evidence locator while the dedicated index gate remained green. The final observer measures the complete rendered heading line instead of a single locator word; `ÍNDICE REMISSIVO` passed at delta `0.0002 pt`. Final head `c2afa9e283380a1ae008638c73d12561eb97e537` passed Static `33736117556` and Linux `33736117558` / `100587276948` at `PASS=30 FAIL=0 SKIP=0`. PR #247 squash-merged at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` and issue #239 closed completed. `public-api.def` is now empty and reserved solely for physical removal in B5.
 
 The pre-existing observational `FRONTMATTER-EVIDENCE` FAIL records remain baseline observations inside passing aggregate gates and were not changed by the API migration.
 
 ## Immediate action
 
-Execute **R2-B4 issue #239** from `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`. Move `\ufcAddBibliographyResource` and `\ufcPrintReferences` into `bibliography.def`; move `\ufcPrintGlossary` and `\ufcPrintIndex` into `backmatter.def`; internalize non-semantic plumbing; migrate consumers atomically; remove only B4 forwarding debt. Preserve rendered Portuguese headings and genuine upstream behavior. B5 alone removes `public-api.def`. No runtime aliases, normative proof-state changes, proprietary-font redistribution or CTAN submission.
+Execute **R2-B5 issue #240** only after this B4-to-B5 control-plane closeout is merged. Remove `abntexto-ufc/public-api.def` and its load from `abntexto-ufc.cls`; run the fail-closed repository-wide residual scan for project-owned Portuguese runtime/API/internal identifiers; create `docs/MIGRATING-TO-V3.md` from `release/v3-api-migration.json`; reconcile the migration contracts as consumed; validate with Static/Linux and release checks when warranted; then close R2. Do not activate an R3 issue until one is explicitly created.
