@@ -56,8 +56,8 @@ jobs:
           ]
           consumer_paths = sorted(Path("template").rglob("*.tex")) + sorted(Path("tests").rglob("*.tex"))
 
-          changed = set()
           hit_counts = {key: 0 for key in replacements}
+          changed = set()
           for path in owner_paths + consumer_paths:
               text = path.read_text(encoding="utf-8")
               original = text
@@ -70,42 +70,35 @@ jobs:
                   path.write_text(text, encoding="utf-8")
                   changed.add(str(path))
 
-          required_hits = [
-              "ufcalineas", "ufcsubalineas", "ufclistadefinicoes", "ufcobjeto",
-              "ufcalgoritmo", "ufcfonte", "ufcnota", "ufcinputlisting",
-              "ufcinputminted", "ufcsectionhook", "ufcobjectlegendhook",
-              "imprimirlistadegraficos", "imprimirlistadecodigos",
-              "imprimirlistadealgoritmos", "IDcodigo", "IDalgoritmo",
-              "definelegendplace{codigo}", "definelegendplace{algoritmo}",
-              "legend{codigo}", "legend{algoritmo}",
-          ]
-          missing = [item for item in required_hits if hit_counts[item] == 0]
+          missing = [key for key, count in hit_counts.items() if count == 0]
           if missing:
               raise SystemExit(f"expected B3 migration hits missing: {missing}")
 
+          public_api_lines = [
+              r"\ProvidesFile{abntexto-ufc/public-api.def}[2026/09/03 UFC transitional public API]",
+              "",
+              "% R2-B1 through R2-B3 forwarding has been absorbed by direct behavior owners.",
+              "% Only R2-B4 bibliography and back-matter forwarding remains here.",
+              r"\ExplSyntaxOn",
+              "",
+              r"\NewDocumentCommand \ufcAddBibliographyResource { m }",
+              r"  { \ufcbibliografia{#1} }",
+              "",
+              r"\NewDocumentCommand \ufcPrintReferences { }",
+              r"  { \imprimirreferencias }",
+              "",
+              r"\NewDocumentCommand \ufcPrintGlossary { }",
+              r"  { \imprimirglossario }",
+              "",
+              r"\NewDocumentCommand \ufcPrintIndex { }",
+              r"  { \imprimirindice }",
+              "",
+              r"\ExplSyntaxOff",
+              "",
+              r"\endinput",
+          ]
           public_api = Path("abntexto-ufc/public-api.def")
-          public_api.write_text(r'''\ProvidesFile{abntexto-ufc/public-api.def}[2026/09/03 UFC transitional public API]
-
-% R2-B1 through R2-B3 forwarding has been absorbed by direct behavior owners.
-% Only R2-B4 bibliography and back-matter forwarding remains here.
-\ExplSyntaxOn
-
-\NewDocumentCommand \ufcAddBibliographyResource { m }
-  { \ufcbibliografia{#1} }
-
-\NewDocumentCommand \ufcPrintReferences { }
-  { \imprimirreferencias }
-
-\NewDocumentCommand \ufcPrintGlossary { }
-  { \imprimirglossario }
-
-\NewDocumentCommand \ufcPrintIndex { }
-  { \imprimirindice }
-
-\ExplSyntaxOff
-
-\endinput
-''', encoding="utf-8")
+          public_api.write_text("\n".join(public_api_lines) + "\n", encoding="utf-8")
           changed.add(str(public_api))
 
           print("changed files:")
@@ -147,7 +140,6 @@ jobs:
           test "$(grep -c '\\NewDocumentCommand' abntexto-ufc/public-api.def)" -eq 4
           ! grep -Fq '\NewDocumentEnvironment' abntexto-ufc/public-api.def
 
-          # Genuine dependency-facing non-English identifiers remain bounded.
           grep -Fq '\definelegendplace{grafico}{Gráfico}{logr}' abntexto-ufc/objects.def
           grep -Fq '\definelegendplace{quadro}{Quadro}{loq}' abntexto-ufc/objects.def
           grep -Fq '\ufc_table_patch_theme:n { quadro }' abntexto-ufc/modules.def
