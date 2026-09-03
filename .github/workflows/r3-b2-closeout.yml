@@ -24,10 +24,51 @@ jobs:
         run: |
           set -euo pipefail
           python3 .github/scripts/r3-b2-closeout.py
-          rm -f .github/scripts/r3-b2-closeout.py .github/workflows/r3-b2-closeout.yml
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          RELEASE_RUN = 33772854355
+          RELEASE_JOB = 100707196590
+          RELEASE_RESULT = "PASS=33 FAIL=0 SKIP=0"
+          MERGE_SHA = "1d9e6373ed674fb7503b968b3e852e4be5fc14ea"
+
+          def patch(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              if old not in text:
+                  raise SystemExit(f"release-evidence anchor not found in {path}: {old}")
+              p.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          patch(
+              "docs/HANDOFF-V3.0.0.md",
+              f"- Post-merge technical release run: `{RELEASE_RUN}` — recorded as the current-state release gate for `{MERGE_SHA}`; its final conclusion must be green before this closeout PR is merged.",
+              f"- Post-merge technical release run: `{RELEASE_RUN}` / job `{RELEASE_JOB}` — `{RELEASE_RESULT}` for `{MERGE_SHA}`.",
+          )
+          patch(
+              "docs/ROADMAP-V3.0.0.md",
+              "Source authority, precedence, rule IDs, expected values, tolerances, locators, applicability, proof-state defaults and public runtime API were unchanged.",
+              f"Post-merge Linux release `{RELEASE_RUN}` / job `{RELEASE_JOB}` passed `{RELEASE_RESULT}`. Source authority, precedence, rule IDs, expected values, tolerances, locators, applicability, proof-state defaults and public runtime API were unchanged.",
+          )
+          patch(
+              "README.md",
+              "No normative semantics, proof-state defaults or public runtime API changed. R3-B3/#254 is active.",
+              f"Post-merge Linux release `{RELEASE_RUN}` passed `{RELEASE_RESULT}`. No normative semantics, proof-state defaults or public runtime API changed. R3-B3/#254 is active.",
+          )
+
+          for path in ("release/v3-roadmap.json", "release/v3-r3-inventory.json"):
+              p = Path(path)
+              data = json.loads(p.read_text(encoding="utf-8"))
+              closeout = data.setdefault("r3_b2_closeout", {})
+              closeout["post_merge_release_run_id"] = RELEASE_RUN
+              closeout["post_merge_release_job_id"] = RELEASE_JOB
+              closeout["post_merge_release_result"] = RELEASE_RESULT
+              p.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          PY
           python3 -m json.tool release/v3-roadmap.json >/dev/null
           python3 -m json.tool release/v3-r3-inventory.json >/dev/null
           make static-check
+          rm -f .github/scripts/r3-b2-closeout.py .github/workflows/r3-b2-closeout.yml
           git diff --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
