@@ -67,6 +67,7 @@ def main() -> None:
     parser.add_argument("absent_pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
+    parser.add_argument("--enforce", action="store_true")
     args = parser.parse_args()
 
     present_pdfs = {
@@ -179,6 +180,7 @@ def main() -> None:
         "validation_scope": "frontmatter",
         "component": "optional-frontmatter-lists",
         "source_commit_sha": args.commit_sha,
+        "mode": "enforce" if args.enforce else "audit",
         "result": result,
         "status_counts": status_counts,
         "present_fixtures": fixture_summary,
@@ -207,6 +209,10 @@ def main() -> None:
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
+
+
+    if args.enforce and result != "PASS":
+        fail("enforcement requested with unresolved optional-list findings")
 
 
 if __name__ == "__main__":

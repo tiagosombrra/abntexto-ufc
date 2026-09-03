@@ -22,8 +22,7 @@
         "dedication.position.start",
         "dedication.indent.left",
         "dedication.font.size",
-        "dedication.line-spacing",
-        "dedication.alignment"
+        "dedication.line-spacing"
       ]
     },
     {
@@ -41,7 +40,6 @@
         "epigraph.short.indent.left",
         "epigraph.short.font.size",
         "epigraph.short.line-spacing",
-        "epigraph.short.alignment",
         "epigraph.short.quotation-marks"
       ]
     },
@@ -61,7 +59,6 @@
         "epigraph.long.indent.left",
         "epigraph.long.font.size",
         "epigraph.long.line-spacing",
-        "epigraph.long.alignment",
         "epigraph.long.quotation-marks"
       ]
     }

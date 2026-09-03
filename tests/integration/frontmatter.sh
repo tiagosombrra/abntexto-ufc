@@ -4,6 +4,7 @@ set -eu
 sh tests/integration/capes-guidance.sh
 sh tests/integration/frontmatter-evidence.sh
 sh tests/integration/frontmatter-alignment-evidence.sh
+sh tests/integration/frontmatter-enforcement-negative.sh
 sh tests/integration/frontmatter-acknowledgments-evidence.sh
 sh tests/integration/frontmatter-summary-evidence.sh
 sh tests/integration/frontmatter-cover-evidence.sh

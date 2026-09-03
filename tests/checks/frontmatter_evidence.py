@@ -169,14 +169,12 @@ def audit_scenario(
         indent_id = "dedication.indent.left"
         font_id = "dedication.font.size"
         spacing_id = "dedication.line-spacing"
-        alignment_id = "dedication.alignment"
         spacing_reference = calibration["onehalf_12pt"]
     elif component == "epigraph-short":
         position_id = "epigraph.short.position.start"
         indent_id = "epigraph.short.indent.left"
         font_id = "epigraph.short.font.size"
         spacing_id = "epigraph.short.line-spacing"
-        alignment_id = "epigraph.short.alignment"
         quote_id = "epigraph.short.quotation-marks"
         spacing_reference = calibration["onehalf_12pt"]
     elif component == "epigraph-long":
@@ -184,7 +182,6 @@ def audit_scenario(
         indent_id = "epigraph.long.indent.left"
         font_id = "epigraph.long.font.size"
         spacing_id = "epigraph.long.line-spacing"
-        alignment_id = "epigraph.long.alignment"
         quote_id = "epigraph.long.quotation-marks"
         spacing_reference = calibration["single_10pt"]
     else:
@@ -245,18 +242,6 @@ def audit_scenario(
             {"average_marker_gap_pt": round(gap, 4)},
             "pdftotext -bbox-layout + same-document spacing calibration",
             tolerance=spacing_tolerance,
-        )
-    )
-
-    alignment_rule = rules[alignment_id]
-    evidence.append(
-        record(
-            alignment_id,
-            "UNASSESSED",
-            alignment_rule["values"]["alignment"],
-            None,
-            "isolated explicit-line fixture",
-            reason="Explicit line breaks are suitable for spacing evidence but do not prove paragraph justification.",
         )
     )
 

@@ -22,7 +22,27 @@ for profile in $all_profiles; do
   generated="/tmp/abntexto-ufc-approval-$profile.tex"
   log="/tmp/abntexto-ufc-approval-$profile.log"
 
-  sed "s/tipo = tese,/tipo = $profile,/" "$fixture" > "$generated"
+  case "$profile" in
+    tccgraduacao) document_type="undergraduate-capstone" ;;
+    tccespecializacao) document_type="specialization-capstone" ;;
+    dissertacao) document_type="masters-thesis" ;;
+    tese) document_type="doctoral-thesis" ;;
+    projeto) document_type="research-project" ;;
+    projetoanonimizado) document_type="anonymized-research-project" ;;
+    *)
+      echo "Unknown approval profile label: $profile"
+      exit 1
+      ;;
+  esac
+
+  sed "s/type = doctoral-thesis,/type = $document_type,/" "$fixture" > "$generated"
+
+  type_lines=$(grep -Ec '^[[:space:]]*type[[:space:]]*=' "$generated" || true)
+  if [ "$type_lines" -ne 1 ] || ! grep -Fq "type = $document_type," "$generated"; then
+    echo "Approval profile generation failed for $profile -> $document_type."
+    cat "$generated"
+    exit 1
+  fi
 
   for pass in 1 2; do
     pdflatex \
@@ -52,7 +72,8 @@ mkdir -p "$(dirname "$evidence")"
 python3 tests/checks/normative_frontmatter_approval.py \
   $profile_args \
   --json "$evidence" \
-  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
+  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}" \
+  --enforce
 
 test -s "$evidence" || {
   echo 'Auditoria de folha de aprovação falhou: evidência JSON não foi gerada.'
