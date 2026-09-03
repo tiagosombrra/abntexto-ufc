@@ -53,6 +53,18 @@ def unique_word(pages: list[Any], marker: str) -> tuple[Any, Any]:
     return matches[0]
 
 
+def heading_line_words(page: Any, anchor: Any) -> list[Any]:
+    words = [
+        word
+        for word in page.words
+        if min(word.box.y_max, anchor.box.y_max)
+        > max(word.box.y_min, anchor.box.y_min)
+    ]
+    if not words:
+        fail(f"cannot resolve heading line for marker {anchor.text!r}")
+    return sorted(words, key=lambda word: word.box.x_min)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Measure unnumbered-heading centering from a final PDF."
@@ -137,16 +149,21 @@ def main() -> None:
     measurements: list[dict[str, Any]] = []
     for surface in surfaces:
         page, word = unique_word(pages, surface["marker"])
+        line_words = heading_line_words(page, word)
+        heading_left = min(item.box.x_min for item in line_words)
+        heading_right = max(item.box.x_max for item in line_words)
+        heading_center = (heading_left + heading_right) / 2.0
+        heading_text = " ".join(item.text for item in line_words)
         text_left = left_mm * PT_PER_MM
         text_right = page.width - right_mm * PT_PER_MM
         text_center = (text_left + text_right) / 2.0
-        heading_center = word.box.center_x
         delta = abs(heading_center - text_center)
         measurements.append(
             {
                 "surface": surface["id"],
                 "implementation": surface["implementation"],
                 "marker": word.text,
+                "heading_text": heading_text,
                 "page": page.index,
                 "heading_center_pt": round(heading_center, 4),
                 "text_area_center_pt": round(text_center, 4),
