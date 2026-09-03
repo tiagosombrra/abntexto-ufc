@@ -68,7 +68,8 @@ python3 tests/checks/normative_frontmatter_lists.py \
   "$symbols_job.pdf" \
   "$absent_job.pdf" \
   --json "$evidence" \
-  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
+  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}" \
+  --enforce
 
 python3 tests/checks/frontmatter_definition_list_alignment.py \
   "$abbreviations_job.pdf" \

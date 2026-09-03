@@ -80,6 +80,7 @@ def main() -> None:
     parser.add_argument("pdf", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--commit-sha")
+    parser.add_argument("--enforce", action="store_true")
     args = parser.parse_args()
 
     if not args.pdf.is_file():
@@ -371,6 +372,7 @@ def main() -> None:
         "validation_scope": "frontmatter",
         "component": "table-of-contents",
         "source_commit_sha": args.commit_sha,
+        "mode": "enforce" if args.enforce else "audit",
         "result": result,
         "status_counts": status_counts,
         "normative_rules": RULE_ORDER,
@@ -399,6 +401,10 @@ def main() -> None:
             f"expected={json.dumps(item['expected'], ensure_ascii=False, sort_keys=True)} "
             f"measured={json.dumps(item['measured'], ensure_ascii=False, sort_keys=True)}"
         )
+
+
+    if args.enforce and result != "PASS":
+        fail("enforcement requested with unresolved TOC findings")
 
 
 if __name__ == "__main__":
