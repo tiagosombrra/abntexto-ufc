@@ -1,0 +1,86 @@
+name: Temporary R3-B1 evidence audit
+
+on:
+  push:
+    branches:
+      - r3-b1-frontmatter-evidence
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-r3-b1-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout R3-B1 branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Remove accidental generated residue
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm -r --ignore-unmatch artifacts
+          git rm --ignore-unmatch frontmatter-academic-work.pdf frontmatter-anonymized-project.pdf
+      - name: Apply evidence repairs
+        run: python3 .github/scripts/r3-b1-evidence-repair.py
+      - name: Validate source contract
+        run: make static-check
+      - name: Run isolated front-matter audit
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs
+            python3 tests/run.py --mode pr --only frontmatter --report-dir artifacts/r3-b1-evidence-audit
+            echo '--- R3-B1 structured front-matter evidence ---'
+            grep '^FRONTMATTER-EVIDENCE ' artifacts/r3-b1-evidence-audit/checks/frontmatter.log || true
+      - name: Require zero normative findings
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts/r3-b1-evidence-audit/checks/frontmatter.log
+          if grep -Eq '^FRONTMATTER-EVIDENCE .*status=(FAIL|UNASSESSED)' "$log"; then
+            echo 'Unresolved front-matter evidence remains:'
+            grep -E '^FRONTMATTER-EVIDENCE .*status=(FAIL|UNASSESSED)' "$log"
+            exit 1
+          fi
+          if grep -Eq '^FRONTMATTER-EVIDENCE .*FAIL=[1-9]|^FRONTMATTER-EVIDENCE .*UNASSESSED=[1-9]' "$log"; then
+            echo 'Front-matter summary still reports unresolved findings.'
+            exit 1
+          fi
+      - name: Remove temporary executor and commit repaired sources
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts
+          rm -f frontmatter-*.pdf
+          rm -f .github/scripts/r3-b1-evidence-repair.py
+          rm -f .github/workflows/r3-b1-evidence-audit.yml
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No source changes to commit.'
+          else
+            git commit -m "test: make front-matter evidence extraction stable"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
