@@ -5,9 +5,9 @@
   "target_version": "3.0.0",
   "updated_at": "2026-09-03",
   "status": "ACTIVE",
-  "phase": "V3-R2",
-  "stage": "R2-B5",
-  "stage_name": "final consumer migration and forwarding-layer removal",
+  "phase": "V3-R3",
+  "stage": "R3-A",
+  "stage_name": "standards tests and engineering-language hardening inventory",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,10 +978,10 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute R2-B5 issue #240: remove public-api.def and its class load, run fail-closed residual API/engineering-language scans, create docs/MIGRATING-TO-V3.md from the authoritative migration contract, reconcile consumed migration contracts, and close V3-R2 only after current-state gates are green.",
+  "next_action": "Execute V3-R3/R3-A issue #250: inventory current standards, semantic test coverage, engineering-language enforcement and proof-state gaps; define bounded R3 implementation lots before any semantic or normative change.",
   "r1_status": "DONE",
   "r2": {
-    "status": "ACTIVE",
+    "status": "DONE",
     "stage": "R2-B5",
     "stage_name": "final consumer migration and forwarding-layer removal",
     "entry_main_sha": "0a2c2c3879986ca27b731f54b974db12524258df",
@@ -1071,10 +1071,26 @@
         "proof_state_changed": false
       },
       "R2-B5": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 240,
         "name": "final consumer migration and forwarding-layer removal",
-        "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261"
+        "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+        "implementation_head_sha": "2a8d7223a4aa9ffc80908adc9a84d0784f8dcaf4",
+        "pr": 249,
+        "merge_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+        "static_contract_run_id": 33743809498,
+        "linux_integration_run_id": 33743809431,
+        "linux_integration_job_id": 100611794384,
+        "linux_integration_result": "PASS",
+        "linux_release_check_run_id": 33745603468,
+        "linux_release_check_job_id": 100617225595,
+        "linux_release_check_result": "PASS=32 FAIL=0 SKIP=0",
+        "forwarding_layer_removed": true,
+        "migration_guide": "docs/MIGRATING-TO-V3.md",
+        "permanent_residual_gate": "tests/checks/v3_api_residual.py",
+        "runtime_alias_layer_added": false,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       }
     },
     "constraints": [
@@ -1086,7 +1102,10 @@
       "do not add another runtime compatibility layer",
       "do not perform actual CTAN submission",
       "do not redistribute proprietary Microsoft fonts"
-    ]
+    ],
+    "closure_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "closure_issue": 240,
+    "closure_pr": 249
   },
   "r2_b3_closeout": {
     "status": "DONE",
@@ -1107,11 +1126,11 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "stage": "R2-B5",
-    "issue": 240,
-    "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+    "stage": "R3-A",
+    "issue": 250,
+    "entry_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
     "status": "ACTIVE",
-    "implementation_branch_rule": "branch from the merged B4-to-B5 control-plane closeout checkpoint"
+    "implementation_branch_rule": "branch from the merged R2 closeout control-plane checkpoint"
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1151,5 +1170,42 @@
     "locator_policy_changed": false,
     "reference_tolerances_changed": false,
     "proof_state_changed": false
+  },
+  "r2_b5_closeout": {
+    "status": "DONE",
+    "issue": 240,
+    "pr": 249,
+    "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+    "implementation_head_sha": "2a8d7223a4aa9ffc80908adc9a84d0784f8dcaf4",
+    "merge_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "static_run_id": 33743809498,
+    "linux_integration_run_id": 33743809431,
+    "linux_integration_job_id": 100611794384,
+    "linux_integration_result": "PASS",
+    "linux_release_check_run_id": 33745603468,
+    "linux_release_check_job_id": 100617225595,
+    "linux_release_check_result": "PASS=32 FAIL=0 SKIP=0",
+    "forwarding_layer_absent": true,
+    "migration_guide_present": true,
+    "permanent_residual_gate_present": true,
+    "runtime_alias_layer_added": false,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false
+  },
+  "r3": {
+    "status": "ACTIVE",
+    "stage": "R3-A",
+    "stage_name": "standards tests and engineering-language hardening inventory",
+    "issue": 250,
+    "entry_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "goal": "Inventory the current standards/evidence model, semantic test suite and project-owned engineering-language enforcement before defining bounded R3 changes.",
+    "implementation_lots_defined": false,
+    "constraints": [
+      "preserve the closed v3 API and do not reintroduce runtime compatibility aliases",
+      "do not change normative rule IDs values tolerances locators or proof state without explicit current evidence",
+      "do not start R4 final certification R5 foundation freeze V3-A1/A2 or CTAN submission during R3-A",
+      "classify gaps before editing runtime semantics"
+    ],
+    "exit": "Current-state inventory is recorded, gaps are classified by owner/evidence, and bounded R3 implementation lots with proportional gates are defined."
   }
 }

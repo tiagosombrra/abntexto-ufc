@@ -4,9 +4,9 @@ Updated: 2026-09-03
 
 ## Status
 
-**V3-R1 DONE. V3-R2 ACTIVE — R2-B5 final consumer migration and forwarding-layer removal.**
+**V3-R1 DONE. V3-R2 DONE. V3-R3 ACTIVE — R3-A standards/tests/engineering-language hardening inventory.**
 
-R2-B4 product merge on `main`: `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261`. Active implementation issue: #240. Certified R1 product candidate: `9b1752565ac217c04ffa22a9ef272cdf078af380`. Machine authority: `release/v3-roadmap.json`.
+R2 closed on product merge `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` after PR #249, Static `33743809498`, Linux integration `33743809431`, and post-merge Linux release check `33745603468` = `PASS=32 FAIL=0 SKIP=0`. Active R3 entry issue: #250. Machine authority: `release/v3-roadmap.json`.
 
 ## Roadmap summary
 
@@ -25,35 +25,38 @@ R2-B4 product merge on `main`: `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261`. Activ
 | R1-B8 | DONE | candidate `9b1752565ac217c04ffa22a9ef272cdf078af380` | Windows/font/Unicode/embedding/PDF-A-2b certification | None |
 | V3-R1 closeout | DONE | PR #233 → `0a2c2c3879986ca27b731f54b974db12524258df` | R1 closed | None |
 | R2-A | DONE | issue #232 | Direct owners/upstream boundaries/lots classified | None |
-| R2-B1 | DONE | PR #236 → `ded5e77733795aa2958606e899d4e27f12f64df4` | Setup/state direct ownership; `30/0/0` | None |
-| R2-B2 | DONE | PR #242 → `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; closeout #243 → `0650845b922271fc134d20ef2a8c36ebb999ef91` | Academic/front-matter direct ownership; `30/0/0`; release `32/0/0` | None |
-| R2-B3 | DONE | issue #238; PR #245 → `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | Structural/object direct ownership; Linux `33704346429` = `30/0/0` | None |
-| R2-B4 | DONE | issue #239; PR #247 → `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` | Bibliography/reference/glossary/index direct ownership; Static `33736117556`; Linux `33736117558` = `30/0/0` | None |
-| R2-B5 | ACTIVE | issue #240; product entry `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` | Final residual migration and forwarding-layer removal | Remove `public-api.def`/class load; residual scan; migration guide; close R2 |
-| V3-R3 | BLOCKED | no issue activated yet | Standards/tests/language semantic hardening | After R2 |
+| R2-B1 | DONE | PR #236 → `ded5e77733795aa2958606e899d4e27f12f64df4` | Setup/state direct ownership | None |
+| R2-B2 | DONE | PR #242 / closeout #243 | Academic/front-matter direct ownership | None |
+| R2-B3 | DONE | PR #245 → `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | Structural/object direct ownership | None |
+| R2-B4 | DONE | PR #247 → `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` | Bibliography/back-matter direct ownership | None |
+| R2-B5 | DONE | PR #249 → `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` | Forwarding layer removed; migration guide + permanent residual gate | None |
+| V3-R2 closeout | DONE | issue #240 | v3 project API/runtime migration closed | None |
+| R3-A | ACTIVE | issue #250 | Standards/tests/language current-state inventory and lot definition | Complete inventory; classify gaps; define bounded R3 lots |
+| V3-R3 implementation | PENDING | defined by R3-A evidence | Semantic hardening | Do not predefine lots before inventory |
 | V3-R4 | BLOCKED | — | Final certification | After R3 |
 | V3-R5 | BLOCKED | — | Foundation freeze and final docs | After R4 |
 | V3-A1/A2 | BLOCKED | — | Scientific-article work | After certified foundation |
-| CTAN submission | FUTURE | explicit release action | No upload during R2 | Release-ready stage only |
+| CTAN submission | FUTURE | explicit release action | No upload yet | Release-ready stage only |
 
-## R1 certification record
+## R2 closure record
 
-R1-B8 certified the complete `template/main.tex` matrix on Windows run `33649620219` and final Linux inspection run `33655108349`. Literal institutional text-family identity, engine-appropriate math-font policy, Unicode extraction, embedding and PDF/A-2b passed. PR #233 closed R1 with Static `33656361564` and Linux integration `33656361474`, `PASS=30 FAIL=0 SKIP=0`.
+R2-A classified direct owners and upstream boundaries. B1 moved setup/state to direct ownership; B2 moved academic/front-matter rendering; B3 moved structural/object APIs and hooks; B4 moved bibliography/reference/glossary/index APIs. B5 removed the empty forwarding-only `public-api.def`, removed its class load, published the v3 migration guide, and added the permanent fail-closed residual API gate.
 
-## R2 progress record
+B5 PR #249 head `2a8d7223a4aa9ffc80908adc9a84d0784f8dcaf4` passed Static `33743809498` and Linux integration `33743809431` before squash merge `ecd5926760080003148e8b1621dc8d4e4e8c7e5e`. The merged-main `Linux release check` `33745603468` then passed all 32 release checks. No runtime aliases, normative semantic changes, or proof-state changes were introduced by B5.
 
-R2-A established direct behavior ownership and the B1–B5 sequence. `public-api.def` is transitional forwarding debt, not a behavior owner.
+The pre-existing observational `FRONTMATTER-EVIDENCE` FAIL records remain baseline observations inside passing aggregate gates; R2 did not promote them into normative failures.
 
-R2-B1 moved canonical setup/state into direct owners. Its first full integration failed closed at `24/6/0`, exposing six stale dynamic consumers; final run `33668283890` passed `30/0/0`, and PR #236 merged at `ded5e77733795aa2958606e899d4e27f12f64df4`.
+## R3 entry rule
 
-R2-B2 moved academic/front-matter rendering into direct ownership. PR #242 merged at `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; closeout #243 established B3 entry `0650845b922271fc134d20ef2a8c36ebb999ef91`. Release-source audit `33696155771` reconciled CTAN/example/public-bundle consumers.
+R3 is intentionally activated through **R3-A inventory/planning**, because the prior roadmap defined the R3 objective but did not define trustworthy implementation lots. Issue #250 must first inventory:
 
-R2-B3 made structural/object environments, source/note/list APIs, optional listing/minted APIs, hooks and project-owned object IDs direct owners. Final Linux `33704346429` passed `30/0/0`; PR #245 squash-merged at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`.
+- current `standards/` source authority, rule coverage, currency and proof state;
+- semantic test/check/document coverage, duplicated/orphaned assertions and missing invariants;
+- project-owned engineering-language enforcement across runtime, tests, tools, validator, documentation and machine contracts;
+- gaps that require new normative evidence versus engineering-only hardening.
 
-R2-B4 used control-plane entry `ab900797836eb068b3f100574759816eadb039d5`. Bibliography/reference/glossary/index commands became direct owners and non-semantic plumbing became private. Three integration attempts failed closed at `29/1/0` on the shared unnumbered-heading evidence locator while the dedicated index gate remained green. The final observer measures the complete rendered heading line instead of a single locator word; `ÍNDICE REMISSIVO` passed at delta `0.0002 pt`. Final head `c2afa9e283380a1ae008638c73d12561eb97e537` passed Static `33736117556` and Linux `33736117558` / `100587276948` at `PASS=30 FAIL=0 SKIP=0`. PR #247 squash-merged at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` and issue #239 closed completed. `public-api.def` is now empty and reserved solely for physical removal in B5.
-
-The pre-existing observational `FRONTMATTER-EVIDENCE` FAIL records remain baseline observations inside passing aggregate gates and were not changed by the API migration.
+Only after that inventory may bounded R3 implementation lots and proportional gates be recorded.
 
 ## Immediate action
 
-Execute **R2-B5 issue #240** only after this B4-to-B5 control-plane closeout is merged. Remove `abntexto-ufc/public-api.def` and its load from `abntexto-ufc.cls`; run the fail-closed repository-wide residual scan for project-owned Portuguese runtime/API/internal identifiers; create `docs/MIGRATING-TO-V3.md` from `release/v3-api-migration.json`; reconcile the migration contracts as consumed; validate with Static/Linux and release checks when warranted; then close R2. Do not activate an R3 issue until one is explicitly created.
+Execute **R3-A issue #250**. Do not start R4, R5, V3-A1/A2, or CTAN submission and do not change normative semantics merely to satisfy an inventory finding.
