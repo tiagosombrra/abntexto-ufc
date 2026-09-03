@@ -30,6 +30,13 @@ DIAGNOSTIC_MARKERS = (
     "throw new Error",
     "console.",
 )
+MULTILINE_MARKERS = (
+    "raise SystemExit",
+    "errors.append",
+    "print(",
+    "ArgumentParser(",
+    "throw new Error",
+)
 PORTUGUESE_TECHNICAL_TERMS = re.compile(
     r"\b(?:auditoria|validando|falhou|conclu[ií]d[oa]|ausente(?:s)?|incorret[oa]|"
     r"desconhecid[oa]|evid[eê]ncia|p[aá]gina(?:s)?|r[oó]tulo(?:s)?|descri[cç][aã]o|"
@@ -37,7 +44,17 @@ PORTUGUESE_TECHNICAL_TERMS = re.compile(
     r"t[ií]tulo(?:s)?|refer[eê]ncia(?:s)?|cita[cç][aã]o|espa[cç]amento|se[cç][aã]o|"
     r"perfil(?:s)?|sum[aá]rio|capa|orientador|identificador|navega[cç][aã]o|"
     r"fotografia(?:s)?|ap[eê]ndice|anexo|[ií]ndice|gloss[aá]rio|dedicat[oó]ria|"
-    r"ep[ií]grafe|agradecimentos|bras[aã]o)\b",
+    r"ep[ií]grafe|agradecimentos|bras[aã]o|contexto|caixas|bibliogr[aá]fic[oa]|"
+    r"desambigua[cç][aã]o|ordem|cronol[oó]gica|autoria|hom[oô]nim[oa]|simult[aâ]neos|"
+    r"jur[ií]dica|iniciado|consultada|original|evento|cidade|indevidamente|licenciada|"
+    r"divergente|esperad[oa]s?|exatamente|encontrad[oa]s?|entrada(?:s)?|l[ií]der|"
+    r"pontilhad[oa]|resolvida|fallback|apareceu|quando|obrigat[oó]ri[oa]s?|banca|"
+    r"inteiramente|folha|preservad[oa]|convertid[oa]|alta|principal|fim|antes|"
+    r"primeir[oa]|poucas|paginadas|comentad[oa]|intervalo|f[ií]sico|excede|prim[aá]ri[oa]|"
+    r"introdu[cç][aã]o|metodologia|an[oô]mal[oa]|asterisco|sem[aâ]ntic[oa]|estrutural|"
+    r"cap[ií]tulo|reapareceu|vazou|dado|protegid[oa]|acad[eê]mic[oa]|declara[cç][aã]o|"
+    r"documento|completo|gerou|apenas|reportou|julgamento|complementar|entidade|"
+    r"submiss[aã]o|impresso|impressa|apesar|p[uú]blico|pr[eé]-textual)\b",
     re.IGNORECASE,
 )
 RETIRED_PROFILE_IDS = re.compile(
@@ -77,16 +94,42 @@ def tracked() -> list[Path]:
     return [ROOT / item.decode() for item in output.split(b"\0") if item]
 
 
-def diagnostic_scope(line: str) -> str | None:
-    stripped = line.lstrip()
-    if stripped.startswith("#!"):
-        return None
-    if stripped.startswith(("#", "//", "/*", "* ")):
-        return stripped
-    positions = [line.find(marker) for marker in DIAGNOSTIC_MARKERS if line.find(marker) >= 0]
-    if not positions:
-        return None
-    return line[min(positions) :]
+def diagnostic_scopes(lines: list[str]):
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        stripped = line.lstrip()
+        if stripped.startswith("#!"):
+            index += 1
+            continue
+        if stripped.startswith(("#", "//", "/*", "* ")):
+            yield index + 1, stripped
+            index += 1
+            continue
+
+        positions = [
+            (line.find(marker), marker)
+            for marker in DIAGNOSTIC_MARKERS
+            if line.find(marker) >= 0
+        ]
+        if not positions:
+            index += 1
+            continue
+        position, marker = min(positions, key=lambda item: item[0])
+        scope_lines = [line[position:]]
+
+        if marker in MULTILINE_MARKERS:
+            balance = scope_lines[0].count("(") - scope_lines[0].count(")")
+            cursor = index + 1
+            while balance > 0 and cursor < len(lines):
+                scope_lines.append(lines[cursor])
+                balance += lines[cursor].count("(") - lines[cursor].count(")")
+                cursor += 1
+            index = cursor
+        else:
+            index += 1
+
+        yield index - len(scope_lines) + 1, "\n".join(scope_lines)
 
 
 def normalized_diagnostic(scope: str) -> str:
@@ -104,14 +147,12 @@ def audit() -> list[str]:
             continue
         if rel == "tests/checks/engineering_language.py":
             continue
-        text = path.read_text(encoding="utf-8")
-        for number, line in enumerate(text.splitlines(), 1):
-            scope = diagnostic_scope(line)
-            if scope is not None and PORTUGUESE_TECHNICAL_TERMS.search(
-                normalized_diagnostic(scope)
-            ):
+        lines = path.read_text(encoding="utf-8").splitlines()
+        for number, scope in diagnostic_scopes(lines):
+            if PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(scope)):
+                rendered = " ".join(item.strip() for item in scope.splitlines())
                 errors.append(
-                    f"{rel}:{number}: Portuguese project-owned engineering text: {scope.strip()}"
+                    f"{rel}:{number}: Portuguese project-owned engineering text: {rendered}"
                 )
 
     def visit_machine_values(value, location: str) -> None:
@@ -162,23 +203,34 @@ def audit() -> list[str]:
 
 
 def self_test() -> None:
-    portuguese = diagnostic_scope("grep -Fq 'REFERÊNCIAS' x || echo 'Auditoria falhou: evidência ausente.'")
-    assert portuguese is not None
+    portuguese_lines = [
+        "grep -Fq 'REFERÊNCIAS' x || echo 'Auditoria falhou: evidência ausente.'"
+    ]
+    portuguese = list(diagnostic_scopes(portuguese_lines))[0][1]
     assert PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(portuguese))
 
-    mixed = diagnostic_scope("grep -Fq 'Referências' x || echo 'References missing from the table of contents.'")
-    assert mixed is not None
+    mixed_lines = [
+        "grep -Fq 'Referências' x || echo 'References missing from the table of contents.'"
+    ]
+    mixed = list(diagnostic_scopes(mixed_lines))[0][1]
     assert not PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(mixed))
 
-    academic = diagnostic_scope("echo 'Expected rendered heading: SUMÁRIO'")
-    assert academic is not None
+    multiline = [
+        "    raise SystemExit(",
+        "        f'Validation falhou: página não localizada.'",
+        "    )",
+    ]
+    multiline_scope = list(diagnostic_scopes(multiline))[0][1]
+    assert PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(multiline_scope))
+
+    academic = list(diagnostic_scopes(["echo 'Expected rendered heading: SUMÁRIO'"]))[0][1]
     assert not PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(academic))
 
     assert RETIRED_PROFILE_IDS.search('\"profile\": \"tccgraduacao\"')
     assert not RETIRED_PROFILE_IDS.search('\"profile\": \"undergraduate-capstone\"')
     normative = json.loads('{"requirement":"A capa é elemento obrigatório."}')
     assert "obrigatório" in normative["requirement"]
-    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=6")
+    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=7")
 
 
 def main() -> None:
