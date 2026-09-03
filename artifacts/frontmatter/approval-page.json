@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "validation_scope": "frontmatter",
+  "component": "approval-page",
+  "source_commit_sha": "52ab8a10574ff145a785ce151e02becc21a595fe",
+  "result": "FAIL",
+  "status_counts": {
+    "FAIL": 2
+  },
+  "academic_profiles": {
+    "tccgraduacao": {
+      "profile": "tccgraduacao",
+      "page_count": 2,
+      "approval_page": 1,
+      "sentinel_page": 2,
+      "marker_pages": {
+        "author": 1,
+        "title": 1,
+        "subtitle": 1,
+        "nature": 1,
+        "approval_date": 1,
+        "committee_heading": 1,
+        "advisor": 1,
+        "member": 1
+      },
+      "present": true,
+      "positions_y_pt": {
+        "author": 88.883,
+        "title": 150.827,
+        "subtitle": 150.827,
+        "nature": 229.313,
+        "approval_date": 289.319,
+        "committee_heading": 330.563,
+        "advisor": 371.774,
+        "member": 440.429
+      },
+      "title_before_subtitle": true,
+      "subtitle_same_line": true,
+      "order_pass": true
+    },
+    "tccespecializacao": {
+      "profile": "tccespecializacao",
+      "page_count": 2,
+      "approval_page": 1,
+      "sentinel_page": 2,
+      "marker_pages": {
+        "author": 1,
+        "title": 1,
+        "subtitle": 1,
+        "nature": 1,
+        "approval_date": 1,
+        "committee_heading": 1,
+        "advisor": 1,
+        "member": 1
+      },
+      "present": true,
+      "positions_y_pt": {
+        "author": 88.883,
+        "title": 150.827,
+        "subtitle": 150.827,
+        "nature": 229.313,
+        "approval_date": 289.319,
+        "committee_heading": 330.563,
+        "advisor": 371.774,
+        "member": 440.429
+      },
+      "title_before_subtitle": true,
+      "subtitle_same_line": true,
+      "order_pass": true
+    },
+    "dissertacao": {
+      "profile": "dissertacao",
+      "page_count": 2,
+      "approval_page": 1,
+      "sentinel_page": 2,
+      "marker_pages": {
+        "author": 1,
+        "title": 1,
+        "subtitle": 1,
+        "nature": null,
+        "approval_date": 1,
+        "committee_heading": 1,
+        "advisor": 1,
+        "member": 1
+      },
+      "present": false,
+      "positions_y_pt": {
+        "author": 88.883,
+        "title": 150.827,
+        "subtitle": 150.827,
+        "nature": null,
+        "approval_date": 303.119,
+        "committee_heading": 344.363,
+        "advisor": 385.574,
+        "member": 454.229
+      },
+      "title_before_subtitle": true,
+      "subtitle_same_line": true,
+      "order_pass": false
+    },
+    "tese": {
+      "profile": "tese",
+      "page_count": 2,
+      "approval_page": 1,
+      "sentinel_page": 2,
+      "marker_pages": {
+        "author": 1,
+        "title": 1,
+        "subtitle": 1,
+        "nature": null,
+        "approval_date": 1,
+        "committee_heading": 1,
+        "advisor": 1,
+        "member": 1
+      },
+      "present": false,
+      "positions_y_pt": {
+        "author": 88.883,
+        "title": 150.827,
+        "subtitle": 150.827,
+        "nature": null,
+        "approval_date": 289.319,
+        "committee_heading": 330.563,
+        "advisor": 371.774,
+        "member": 440.429
+      },
+      "title_before_subtitle": true,
+      "subtitle_same_line": true,
+      "order_pass": false
+    }
+  },
+  "supplemental_non_applicable_profiles": {
+    "projeto": {
+      "profile": "projeto",
+      "page_count": 1,
+      "sentinel_page": 1,
+      "approval_marker_presence": {
+        "UFCFRONTMATTERAPAUTHOR": false,
+        "UFCFRONTMATTERAPTITLE": false,
+        "UFCFRONTMATTERAPSUBTITLE": false,
+        "UFCFRONTMATTERAPNATURE": false,
+        "UFCFRONTMATTERAPDATE": false,
+        "BANCA EXAMINADORA": false,
+        "UFCFRONTMATTERAPADVISOR": false,
+        "UFCFRONTMATTERAPMEMBER": false
+      },
+      "current_route_suppressed": true
+    },
+    "projetoanonimizado": {
+      "profile": "projetoanonimizado",
+      "page_count": 1,
+      "sentinel_page": 1,
+      "approval_marker_presence": {
+        "UFCFRONTMATTERAPAUTHOR": false,
+        "UFCFRONTMATTERAPTITLE": false,
+        "UFCFRONTMATTERAPSUBTITLE": false,
+        "UFCFRONTMATTERAPNATURE": false,
+        "UFCFRONTMATTERAPDATE": false,
+        "BANCA EXAMINADORA": false,
+        "UFCFRONTMATTERAPADVISOR": false,
+        "UFCFRONTMATTERAPMEMBER": false
+      },
+      "current_route_suppressed": true
+    }
+  },
+  "evidence": [
+    {
+      "rule_id": "approval.element.required",
+      "status": "FAIL",
+      "expected": {
+        "required": true,
+        "profiles": [
+          "tccgraduacao",
+          "tccespecializacao",
+          "dissertacao",
+          "tese"
+        ]
+      },
+      "measured": {
+        "tccgraduacao": {
+          "present": true,
+          "approval_page": 1,
+          "sentinel_page": 2
+        },
+        "tccespecializacao": {
+          "present": true,
+          "approval_page": 1,
+          "sentinel_page": 2
+        },
+        "dissertacao": {
+          "present": false,
+          "approval_page": 1,
+          "sentinel_page": 2
+        },
+        "tese": {
+          "present": false,
+          "approval_page": 1,
+          "sentinel_page": 2
+        }
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "approval.fields.order",
+      "status": "FAIL",
+      "expected": [
+        "author",
+        "title",
+        "subtitle-if-present",
+        "nature",
+        "approval-date",
+        "committee"
+      ],
+      "measured": {
+        "tccgraduacao": {
+          "positions_y_pt": {
+            "author": 88.883,
+            "title": 150.827,
+            "subtitle": 150.827,
+            "nature": 229.313,
+            "approval_date": 289.319,
+            "committee_heading": 330.563,
+            "advisor": 371.774,
+            "member": 440.429
+          },
+          "title_before_subtitle": true,
+          "subtitle_same_line": true,
+          "order_pass": true
+        },
+        "tccespecializacao": {
+          "positions_y_pt": {
+            "author": 88.883,
+            "title": 150.827,
+            "subtitle": 150.827,
+            "nature": 229.313,
+            "approval_date": 289.319,
+            "committee_heading": 330.563,
+            "advisor": 371.774,
+            "member": 440.429
+          },
+          "title_before_subtitle": true,
+          "subtitle_same_line": true,
+          "order_pass": true
+        },
+        "dissertacao": {
+          "positions_y_pt": {
+            "author": 88.883,
+            "title": 150.827,
+            "subtitle": 150.827,
+            "nature": null,
+            "approval_date": 303.119,
+            "committee_heading": 344.363,
+            "advisor": 385.574,
+            "member": 454.229
+          },
+          "title_before_subtitle": true,
+          "subtitle_same_line": true,
+          "order_pass": false
+        },
+        "tese": {
+          "positions_y_pt": {
+            "author": 88.883,
+            "title": 150.827,
+            "subtitle": 150.827,
+            "nature": null,
+            "approval_date": 289.319,
+            "committee_heading": 330.563,
+            "advisor": 371.774,
+            "member": 440.429
+          },
+          "title_before_subtitle": true,
+          "subtitle_same_line": true,
+          "order_pass": false
+        }
+      },
+      "tool": "pdftotext -bbox-layout"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "validation_scope": "frontmatter",
+  "scope": "cover",
+  "mode": "audit",
+  "source_commit_sha": "52ab8a10574ff145a785ce151e02becc21a595fe",
+  "fixtures": {
+    "academic": "tests/documents/frontmatter-cover-academic-test.tex",
+    "project": "tests/documents/frontmatter-cover-project-optional-test.tex",
+    "anonymized_project": "tests/documents/frontmatter-cover-project-anonymized-optional-test.tex"
+  },
+  "status_counts": {
+    "PASS": 4
+  },
+  "findings": [],
+  "evidence": [
+    {
+      "rule_id": "cover.element.required",
+      "status": "PASS",
+      "expected": true,
+      "measured": {
+        "cover_page": 1,
+        "image_count": 1,
+        "text_presence": {
+          "UFCFRONTMATTERCOVINST": true,
+          "UFCFRONTMATTERCOVAUTHOR": true,
+          "UFCFRONTMATTERCOVTITLE": true,
+          "UFCFRONTMATTERCOVSUBTITLE": true,
+          "UFCFRONTMATTERCOVCITY": true,
+          "2099": true
+        },
+        "volume_present": true
+      },
+      "tool": "pdftotext -bbox-layout + pdftohtml -xml"
+    },
+    {
+      "rule_id": "cover.fields.order",
+      "status": "PASS",
+      "expected": [
+        "ufc-emblem",
+        "institution",
+        "author",
+        "title",
+        "subtitle-if-present",
+        "volume-if-present",
+        "city",
+        "year"
+      ],
+      "measured": {
+        "image_top": 85.0,
+        "institution_top": 197.0,
+        "author_top": 274.0,
+        "title_top": 505.0,
+        "subtitle_top": 505.0,
+        "volume_top": 526.0,
+        "city_top": 756.0,
+        "year_top": 777.0,
+        "title_before_subtitle": true
+      },
+      "tool": "pdftohtml -xml + pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "volume.number.cover-title-page",
+      "status": "PASS",
+      "expected": [
+        "cover",
+        "title-page"
+      ],
+      "measured": {
+        "volume_marker": "VOLUME 2",
+        "cover_page": 1,
+        "cover_present": true,
+        "title_page": 2,
+        "title_page_present": true
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "project.cover.optional",
+      "status": "PASS",
+      "expected": {
+        "required": false,
+        "profiles": [
+          "projeto",
+          "projetoanonimizado"
+        ]
+      },
+      "measured": {
+        "projeto": {
+          "pages": 1,
+          "before_page": 1,
+          "after_page": 1,
+          "hidden_cover_token_present": false,
+          "cover_suppressed": true
+        },
+        "projetoanonimizado": {
+          "pages": 1,
+          "before_page": 1,
+          "after_page": 1,
+          "hidden_cover_token_present": false,
+          "cover_suppressed": true
+        }
+      },
+      "tool": "pdftotext -bbox-layout"
+    }
+  ]
+}

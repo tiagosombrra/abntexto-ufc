@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "validation_scope": "frontmatter",
+  "scope": "title-page",
+  "mode": "audit",
+  "source_commit_sha": "52ab8a10574ff145a785ce151e02becc21a595fe",
+  "fixtures": {
+    "academic": "tests/documents/frontmatter-title-page-academic-test.tex",
+    "project": "tests/documents/frontmatter-title-page-project-test.tex",
+    "anonymized_project": "tests/documents/frontmatter-title-page-project-anonymized-test.tex"
+  },
+  "status_counts": {
+    "FAIL": 2,
+    "PASS": 5
+  },
+  "findings": [
+    "title-page.element.required",
+    "title-page.fields.order"
+  ],
+  "evidence": [
+    {
+      "rule_id": "title-page.element.required",
+      "status": "FAIL",
+      "expected": true,
+      "measured": {
+        "title_page": 2,
+        "page_count": 2,
+        "markers": {
+          "UFCFRONTMATTERTPAUTHOR": true,
+          "UFCFRONTMATTERTPTITLE": true,
+          "UFCFRONTMATTERTPSUBTITLE": true,
+          "VOLUME 3": true,
+          "UFCFRONTMATTERTPNATUREPROGRAM": false,
+          "UFCFRONTMATTERTPADVISOR": false,
+          "UFCFRONTMATTERTPCOADVISOR": false,
+          "UFCFRONTMATTERTPCITY": true,
+          "2098": true
+        }
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "title-page.fields.order",
+      "status": "FAIL",
+      "expected": [
+        "author",
+        "title",
+        "subtitle-if-present",
+        "volume-if-present",
+        "nature",
+        "advisor-and-coadvisor-if-present",
+        "city",
+        "year"
+      ],
+      "measured": {
+        "author_y_pt": 88.883,
+        "title_y_pt": 222.813,
+        "subtitle_y_pt": 222.813,
+        "volume_y_pt": 243.513,
+        "nature_y_pt": null,
+        "advisor_y_pt": null,
+        "coadvisor_y_pt": null,
+        "city_y_pt": 756.385,
+        "year_y_pt": 777.085,
+        "title_before_subtitle": true
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "volume.number.cover-title-page",
+      "status": "PASS",
+      "expected": [
+        "cover",
+        "title-page"
+      ],
+      "measured": {
+        "volume_marker": "VOLUME 3",
+        "cover_page": 1,
+        "cover_present": true,
+        "title_page": 2,
+        "title_page_present": true
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "nature.line-spacing",
+      "status": "PASS",
+      "expected": {
+        "factor": 1.0,
+        "same_document_calibration": "singlesp"
+      },
+      "measured": {
+        "nature_average_gap_pt": 13.799999999999983,
+        "calibration_average_gap_pt": 13.800000000000004,
+        "delta_pt": 2.1316282072803006e-14
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "nature.block.alignment",
+      "status": "PASS",
+      "expected": {
+        "horizontal_extent": "mid-text-block-to-right-margin",
+        "expected_left_pt": 311.8112,
+        "expected_right_pt": 538.5831
+      },
+      "measured": {
+        "measured_left_pt": 311.439,
+        "measured_right_pt": 538.215,
+        "left_delta_pt": 0.3722,
+        "right_delta_pt": 0.3681
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "project.title-page.required",
+      "status": "PASS",
+      "expected": {
+        "required": true,
+        "profiles": [
+          "projeto",
+          "projetoanonimizado"
+        ]
+      },
+      "measured": {
+        "projeto": {
+          "title_page": 1,
+          "present": true
+        },
+        "projetoanonimizado": {
+          "title_page": 1,
+          "present": true
+        }
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "project.anonymization.policy",
+      "status": "PASS",
+      "expected": {
+        "hide": [
+          "author",
+          "advisor"
+        ],
+        "public_identifier_required": true
+      },
+      "measured": {
+        "hidden_author_present": false,
+        "hidden_advisor_present": false,
+        "public_identifier_present": true
+      },
+      "tool": "pdftotext -bbox-layout"
+    }
+  ]
+}

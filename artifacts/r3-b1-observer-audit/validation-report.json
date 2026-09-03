@@ -1,0 +1,20 @@
+{
+  "mode": "pr",
+  "complete": true,
+  "result": "PASS",
+  "checks": [
+    {
+      "name": "frontmatter",
+      "label": "Front matter",
+      "status": "PASS",
+      "command": [
+        "sh",
+        "tests/integration/frontmatter.sh"
+      ],
+      "duration_seconds": 98.546,
+      "exit_code": 0,
+      "log": "artifacts/r3-b1-observer-audit/checks/frontmatter.log",
+      "reason": ""
+    }
+  ]
+}

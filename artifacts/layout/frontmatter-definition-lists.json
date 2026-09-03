@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "component": "frontmatter-definition-list-alignment",
+  "result": "PASS",
+  "alignment_tolerance_pt": 1.0,
+  "column_tolerance_pt": 1.0,
+  "position_tolerance_pt": 1.0,
+  "expected_text_margin_left_pt": 85.03937007874016,
+  "expected_definition_column_x_pt": 170.07874015748033,
+  "abbreviation_rows": [
+    {
+      "page": 1,
+      "label": "ABNT",
+      "definition_start": "Associação",
+      "label_x": 85.039,
+      "definition_x": 169.651,
+      "label_y": 143.234,
+      "definition_y": 143.234,
+      "vertical_delta_pt": 0.0,
+      "label_left_delta_pt": 0.0003700787401612615,
+      "definition_x_delta_pt": 0.427740157480315
+    },
+    {
+      "page": 1,
+      "label": "UFC",
+      "definition_start": "Universidade",
+      "label_x": 85.039,
+      "definition_x": 170.083,
+      "label_y": 163.934,
+      "definition_y": 163.934,
+      "vertical_delta_pt": 0.0,
+      "label_left_delta_pt": 0.0003700787401612615,
+      "definition_x_delta_pt": 0.0042598425196729295
+    }
+  ],
+  "symbol_rows": [
+    {
+      "page": 1,
+      "label": "SYMALIGN",
+      "definition_start": "DEFALIGN",
+      "label_x": 85.039,
+      "definition_x": 170.083,
+      "label_y": 184.634,
+      "definition_y": 184.634,
+      "vertical_delta_pt": 0.0,
+      "label_left_delta_pt": 0.0003700787401612615,
+      "definition_x_delta_pt": 0.0042598425196729295
+    }
+  ],
+  "symbol_probe": {
+    "kind": "textual-control-row",
+    "purpose": "measure generic list-row alignment without math-glyph bbox bias",
+    "math_symbols_retained_in_fixture": true
+  },
+  "label_x_spread_pt": 0.0,
+  "definition_x_spread_pt": 0.43199999999998795,
+  "max_vertical_delta_pt": 0.0,
+  "max_label_left_delta_pt": 0.0003700787401612615,
+  "max_definition_x_delta_pt": 0.427740157480315,
+  "normative_contract_changed": false
+}

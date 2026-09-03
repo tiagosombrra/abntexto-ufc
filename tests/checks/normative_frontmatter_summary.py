@@ -143,7 +143,9 @@ def source_body_paragraphs(path: Path) -> int:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
         fail(f"cannot read fixture {path}: {exc}")
-    before_macro = re.split(r"\\(?:palavraschave|keywords)\s*\{", text, maxsplit=1)[0].strip()
+    before_macro = re.split(
+        r"\\(?:ufcSummaryKeywords|keywords)\s*\{", text, maxsplit=1
+    )[0].strip()
     paragraphs = [chunk.strip() for chunk in re.split(r"\n\s*\n", before_macro) if chunk.strip()]
     return len(paragraphs)
 

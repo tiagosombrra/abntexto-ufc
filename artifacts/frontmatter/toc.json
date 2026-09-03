@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "validation_scope": "frontmatter",
+  "component": "table-of-contents",
+  "source_commit_sha": "52ab8a10574ff145a785ce151e02becc21a595fe",
+  "result": "PASS",
+  "status_counts": {
+    "PASS": 5
+  },
+  "normative_rules": [
+    "toc.frontmatter-exclusion",
+    "toc.heading.alignment",
+    "toc.heading.case",
+    "toc.page-number.position",
+    "toc.section-hierarchy.mirror"
+  ],
+  "non_normative_rules": [
+    "toc.leaders.dotted.project"
+  ],
+  "toc_pages": [
+    5
+  ],
+  "first_text_page": 6,
+  "evidence": [
+    {
+      "rule_id": "toc.frontmatter-exclusion",
+      "status": "PASS",
+      "expected": {
+        "frontmatter_entries": false
+      },
+      "measured": {
+        "toc_pages": [
+          5
+        ],
+        "checked_markers": [
+          "AGRADECIMENTOS",
+          "RESUMO",
+          "ABSTRACT",
+          "LISTA DE ABREVIATURAS E SIGLAS"
+        ],
+        "leaked_markers": []
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "toc.heading.alignment",
+      "status": "PASS",
+      "expected": {
+        "heading_centered": true
+      },
+      "measured": {
+        "page": 5,
+        "heading_center_pt": 311.811,
+        "text_area_center_pt": 311.8112,
+        "delta_pt": 0.0002
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "toc.heading.case",
+      "status": "PASS",
+      "expected": {
+        "heading_uppercase": true
+      },
+      "measured": {
+        "text": "SUMÁRIO",
+        "uppercase": true
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "toc.page-number.position",
+      "status": "PASS",
+      "expected": {
+        "page_numbers": "right"
+      },
+      "measured": {
+        "section": {
+          "page": 5,
+          "page_number": "6",
+          "x_max_pt": 538.579,
+          "expected_right_pt": 538.5831,
+          "delta_pt": 0.0041
+        },
+        "subsection": {
+          "page": 5,
+          "page_number": "6",
+          "x_max_pt": 538.579,
+          "expected_right_pt": 538.5831,
+          "delta_pt": 0.0041
+        },
+        "subsubsection": {
+          "page": 5,
+          "page_number": "6",
+          "x_max_pt": 538.579,
+          "expected_right_pt": 538.5831,
+          "delta_pt": 0.0041
+        },
+        "paragraph": {
+          "page": 5,
+          "page_number": "6",
+          "x_max_pt": 538.579,
+          "expected_right_pt": 538.5831,
+          "delta_pt": 0.0041
+        },
+        "subparagraph": {
+          "page": 5,
+          "page_number": "6",
+          "x_max_pt": 538.579,
+          "expected_right_pt": 538.5831,
+          "delta_pt": 0.0041
+        }
+      },
+      "tool": "pdftotext -bbox-layout"
+    },
+    {
+      "rule_id": "toc.section-hierarchy.mirror",
+      "status": "PASS",
+      "expected": {
+        "mirror_section_hierarchy": true
+      },
+      "measured": {
+        "section": {
+          "marker": "AlphaOne",
+          "toc": {
+            "page": 5,
+            "text": "ALPHAONE .",
+            "font_id": "0",
+            "family": "VZOTGQ+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "body": {
+            "page": 6,
+            "text": "1 ALPHAONE",
+            "font_id": "0",
+            "family": "VZOTGQ+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "font_size_delta_pt": 0.0,
+          "style_match": true
+        },
+        "subsection": {
+          "marker": "BetaTwo",
+          "toc": {
+            "page": 5,
+            "text": "BetaTwo . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+            "font_id": "0",
+            "family": "VZOTGQ+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "body": {
+            "page": 6,
+            "text": "1.1 BetaTwo",
+            "font_id": "0",
+            "family": "VZOTGQ+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "font_size_delta_pt": 0.0,
+          "style_match": true
+        },
+        "subsubsection": {
+          "marker": "GammaThree",
+          "toc": {
+            "page": 5,
+            "text": "GammaThree . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+            "font_id": "2",
+            "family": "IXKYBP+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "body": {
+            "page": 6,
+            "text": "1.1.1 GammaThree",
+            "font_id": "2",
+            "family": "IXKYBP+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "font_size_delta_pt": 0.0,
+          "style_match": true
+        },
+        "paragraph": {
+          "marker": "DeltaFour",
+          "toc": {
+            "page": 5,
+            "text": "DeltaFour . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+            "font_id": "3",
+            "family": "TJPIZP+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "body": {
+            "page": 6,
+            "text": "1.1.1.1 DeltaFour",
+            "font_id": "3",
+            "family": "TJPIZP+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "font_size_delta_pt": 0.0,
+          "style_match": true
+        },
+        "subparagraph": {
+          "marker": "EpsilonFive",
+          "toc": {
+            "page": 5,
+            "text": "EpsilonFive . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+            "font_id": "1",
+            "family": "JCIVSQ+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "body": {
+            "page": 6,
+            "text": "1.1.1.1.1 EpsilonFive",
+            "font_id": "1",
+            "family": "JCIVSQ+TeXGyreTermesX",
+            "font_pt": 12.0
+          },
+          "font_size_delta_pt": 0.0,
+          "style_match": true
+        }
+      },
+      "tool": "pdftohtml -xml -zoom 1.0"
+    }
+  ]
+}
