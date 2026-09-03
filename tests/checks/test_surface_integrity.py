@@ -64,29 +64,40 @@ def control_files(candidates: set[Path]) -> set[Path]:
     return {path for path in files if path.is_file()}
 
 
-def python_import_targets(nodes: set[Path]) -> dict[str, Path]:
-    by_stem: dict[str, Path] = {}
+def unique_index(nodes: set[Path], key) -> dict[str, Path]:
+    index: dict[str, Path] = {}
     duplicates: set[str] = set()
     for path in nodes:
-        if path.suffix != ".py":
-            continue
-        stem = path.stem
-        if stem in by_stem:
-            duplicates.add(stem)
+        value = key(path)
+        if value in index:
+            duplicates.add(value)
         else:
-            by_stem[stem] = path
-    for stem in duplicates:
-        by_stem.pop(stem, None)
-    return by_stem
+            index[value] = path
+    for value in duplicates:
+        index.pop(value, None)
+    return index
 
 
-def direct_references(source: Path, nodes: set[Path], by_stem: dict[str, Path]) -> set[Path]:
+def direct_references(
+    source: Path,
+    nodes: set[Path],
+    by_stem: dict[str, Path],
+    by_name: dict[str, Path],
+) -> set[Path]:
     text = source.read_text(encoding="utf-8")
     references = {
         target
         for target in nodes
         if target != source and target.relative_to(ROOT).as_posix() in text
     }
+
+    # Project control code often constructs paths with pathlib components, for
+    # example ROOT / "tests" / "checks" / "normative_currency.py". A unique
+    # filename mention is therefore a conservative executable-reference signal.
+    for filename, target in by_name.items():
+        if target != source and filename in text:
+            references.add(target)
+
     if source.suffix != ".py":
         return references
 
@@ -248,9 +259,10 @@ def main() -> None:
 
     candidates = candidate_files()
     nodes = control_files(candidates)
-    by_stem = python_import_targets(nodes)
+    by_stem = unique_index({path for path in nodes if path.suffix == ".py"}, lambda path: path.stem)
+    by_name = unique_index(nodes, lambda path: path.name)
     graph = {
-        node: direct_references(node, nodes, by_stem)
+        node: direct_references(node, nodes, by_stem, by_name)
         for node in nodes
     }
 
