@@ -44,7 +44,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Audit for reference layout failed: unrecognized warning or overflow em $fixture."
+  echo "Reference layout audit failed: unrecognized warning or overflow in $fixture."
   exit 1
 fi
 
@@ -55,8 +55,8 @@ python3 tests/checks/normative_reference_layout.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Audit for reference layout failed: JSON evidence was not generated.'
+  echo 'Reference layout audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate for evidence for reference layout completed.'
+echo 'Evidence for reference layout gate completed.'

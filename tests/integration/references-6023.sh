@@ -11,7 +11,7 @@ cleanup_job() {
 
 for engine in pdflatex lualatex; do
   cleanup_job
-  echo "Validating $fixture com $engine + Biber..."
+  echo "Validating $fixture with $engine + Biber..."
 
   "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
     cat /tmp/abntexto-ufc-6023.log
@@ -57,7 +57,7 @@ def entry(marker):
     marker_fold = marker.casefold()
     matches = [part for part in chunks if marker_fold in part.casefold()]
     if not matches:
-        raise SystemExit(f'entry de teste missing: {marker}\n{text}')
+        raise SystemExit(f'entry of teste missing: {marker}\n{text}')
     return ' '.join(matches)
 
 event = entry('Congresso Brasileiro de Teste')
@@ -70,11 +70,11 @@ if 'e202501' not in article:
 
 judgment = entry('Recurso extraordinário de teste')
 if 'julgado em' not in judgment.casefold() or '2025' not in judgment:
-    raise SystemExit('NBR 6023:2025: data de judgment missing.')
+    raise SystemExit('NBR 6023:2025: data of judgment missing.')
 
 online = entry('Preservação de documentos digitais')
 if re.search(r'\[\s*[Ss]\.\s*[Ll]\.', online) or re.search(r'\[\s*[Ss]\.\s*[Nn]\.', online):
-    raise SystemExit('NBR 6023:2025: documento eletrônico recebeu indicador de publicação unknown.')
+    raise SystemExit('NBR 6023:2025: documento eletrônico recebeu indicador of publicação unknown.')
 
 printed = entry('Preservação de documentos impressos')
 if not re.search(r'[Ss]\.\s*[Ll]\.', printed) or not re.search(r'[Ss]\.\s*[Nn]\.', printed):
@@ -82,19 +82,19 @@ if not re.search(r'[Ss]\.\s*[Ll]\.', printed) or not re.search(r'[Ss]\.\s*[Nn]\.
 
 supplement = entry('Indicadores acadêmicos brasileiros')
 if 'suplemento' not in supplement.casefold() or supplement.find('2025') > supplement.casefold().find('suplemento'):
-    raise SystemExit('NBR 6023:2025: suplemento is not posicionado após a data.')
+    raise SystemExit('NBR 6023:2025: suplemento não está posicionado após a data.')
 
 interview = entry('Eficiência e inovação na gestão')
 if 'hamel' not in interview.casefold():
-    raise SystemExit('NBR 6023:2025: entrevistado não aparece como author principal.')
+    raise SystemExit('NBR 6023:2025: entrevistado não aparece como autor principal.')
 
 periodical = entry('REVISTA BRASILEIRA DE TESTE. Fortaleza')
 if '1234-5678' not in periodical:
-    raise SystemExit('NBR 6023:2025: ISSN optional was not preserved.')
+    raise SystemExit('NBR 6023:2025: ISSN opcional não foi preservado.')
 
 identifiers = entry('Identificadores persistentes em referências')
 if '10.1234/exemplo.2025.1' not in identifiers or '0000-0002-1825-0097' not in identifiers:
-    raise SystemExit('NBR 6023:2025: DOI ou ORCID supplemental missing.')
+    raise SystemExit('NBR 6023:2025: DOI or ORCID supplemental missing.')
 PY
 
   evidence_json="${UFC_EVIDENCE_DIR:-artifacts/validation/reference-semantics}/reference-semantics.json"

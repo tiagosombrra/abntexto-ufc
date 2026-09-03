@@ -10,7 +10,7 @@ compile_project_with_biber() {
   rm -f "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".log \
         "$job".out "$job".pdf "$job".run.xml "$job".toc
 
-  echo "Validating $fixture com $engine + Biber..."
+  echo "Validating $fixture with $engine + Biber..."
   "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-project.log
     exit 1
@@ -35,7 +35,7 @@ compile_plain_project() {
   job="$3"
 
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
-  echo "Validating $fixture com $engine..."
+  echo "Validating $fixture with $engine..."
   "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-project.log
     exit 1
@@ -56,7 +56,7 @@ check_log() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Preflight failed: fixture de research project contains unrecognized warning or overflow."
+    echo "Preflight failed: fixture of research project contains unrecognized warning or overflow."
     exit 1
   fi
 }
@@ -77,12 +77,12 @@ for engine in pdflatex lualatex; do
 done
 
 if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' research-project-15287.log; then
-  echo 'NBR 15287/UFC: coat of arms foi loaded por default na cover de research project.'
+  echo 'NBR 15287/UFC: coat of arms was loaded by default in the cover of research project.'
   exit 1
 fi
 
 if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' frontmatter-anonymized-research-project.log; then
-  echo 'NBR 15287/UFC: coat of arms foi loaded por default no research project anonymized.'
+  echo 'NBR 15287/UFC: coat of arms was loaded by default in the research project anonymized.'
   exit 1
 fi
 
@@ -120,24 +120,24 @@ for expected in (
     'REFERÊNCIAS',
 ):
     if expected.casefold() not in project.casefold():
-        raise SystemExit(f'NBR 15287:2025: content required da fixture missing: {expected}')
+        raise SystemExit(f'NBR 15287:2025: content required of the fixture missing: {expected}')
 
 if 'INSTITUIÇÃO DE ORIGEM TESTE'.casefold() in project.casefold():
-    raise SystemExit('NBR 15287:2025: cover de research project used the institution instead of the submission entity.')
+    raise SystemExit('NBR 15287:2025: cover of research project usou a IES in the lugar of the entidade of submissão.')
 
 for forbidden in ('RESUMO', 'ABSTRACT', 'BANCA EXAMINADORA', 'APROVADA EM'):
     if forbidden.casefold() in project.casefold():
-        raise SystemExit(f'NBR 15287:2025: element de work final apareceu no research project: {forbidden}')
+        raise SystemExit(f'NBR 15287:2025: elemento de trabalho final apareceu no projeto: {forbidden}')
 
 if 'MARCADOR CAPA OPCIONAL'.casefold() in no_cover.casefold():
-    raise SystemExit('NBR 15287:2025: cover optional foi impressa apesar de cover = false.')
+    raise SystemExit('NBR 15287:2025: cover optional was impressa apesar of cover = false.')
 if 'AUTOR SEM CAPA TESTE'.casefold() not in no_cover.casefold():
-    raise SystemExit('NBR 15287:2025: title page required missing no research project sem cover.')
+    raise SystemExit('NBR 15287:2025: title page required missing in the research project without cover.')
 
 if 'AUTOR SIGILOSO TESTE'.casefold() in anon.casefold():
-    raise SystemExit('research project anonymized: author vazou no PDF.')
+    raise SystemExit('Projeto anonimizado: autor vazou no PDF.')
 if 'ORIENTADOR SIGILOSO TESTE'.casefold() in anon.casefold():
-    raise SystemExit('research project anonymized: advisor vazou no PDF.')
+    raise SystemExit('research project anonymized: advisor vazou in the PDF.')
 if 'PROJETO-ANONIMO-001'.casefold() not in anon.casefold():
     raise SystemExit('research project anonymized: identifier público missing.')
 PY
@@ -152,7 +152,7 @@ for expected in 'Introdução' 'Referencial teórico' 'Metodologia' 'Recursos' '
 done
 
 if grep -Eiq 'resumo|abstract|agradecimentos|dedicat[oó]ria|folha de aprova' research-project-15287.toc; then
-  echo 'NBR 15287:2025: front-matter element invalid leaked into the table of contents do research project.'
+  echo 'NBR 15287:2025: element pré-textual indevido leaked into the table of contents of the research project.'
   cat research-project-15287.toc
   exit 1
 fi

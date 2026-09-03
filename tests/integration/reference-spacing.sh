@@ -18,7 +18,7 @@ text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
 def metric(name):
     match = re.search(rf'{re.escape(name)}=([0-9.]+)', text)
     if not match:
-        raise SystemExit(f'references: metric missing no log: {name}')
+        raise SystemExit(f'references: metric missing in the log: {name}')
     return float(match.group(1))
 
 itemsep = metric('UFC-BIBITEMSEP')
@@ -44,7 +44,7 @@ if not 0.99 <= stretch <= 1.01:
         f'Referências: espaçamento interno deve ser simples; baselinestretch={stretch:.4f}'
     )
 
-print('Gate for reference spacing completed.')
+print('Reference spacing gate completed.')
 PY
 
 sh tests/integration/reference-layout-evidence.sh

@@ -40,7 +40,7 @@ for engine in pdflatex lualatex; do
       exit 1
     fi
 
-    echo "Validating profile completo $profile com $engine..."
+    echo "Validating profile completo $profile with $engine..."
     make DOCUMENT="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-profile.log 2>&1 || {
       cat /tmp/abntexto-ufc-profile.log
       exit 1
@@ -56,7 +56,7 @@ for engine in pdflatex lualatex; do
 
     if [ -f "$output.blg" ] && grep -Eq 'WARN|ERROR' "$output.blg"; then
       cat "$output.blg"
-      echo "Preflight failed: Biber reportou warning/error em $profile/$engine."
+      echo "Preflight failed: Biber reportou warning/error in $profile/$engine."
       exit 1
     fi
 
@@ -87,7 +87,7 @@ for engine in pdflatex lualatex; do
       END { if (!found) exit 1 }
     '; then
       pdfinfo "$output.pdf"
-      echo "profile $profile/$engine: page não é A4."
+      echo "profile $profile/$engine: page não is A4."
       exit 1
     fi
 
@@ -162,7 +162,7 @@ for marker in ('introdução', 'metodologia', 'referências', 'fundamentos de me
         raise SystemExit(f'profile {profile}: content estrutural missing: {marker}')
 
 if 'capítulo' in text or 'capitulo' in text:
-    raise SystemExit(f'profile {profile}: structure de capítulo reapareceu.')
+    raise SystemExit(f'profile {profile}: structure of capítulo reapareceu.')
 
 if profile == 'anonymized-research-project':
     for secret in ('autor matriz teste', 'prof. orientador matriz teste', 'prof. membro matriz teste'):
@@ -175,7 +175,7 @@ else:
 if profile in {'research-project', 'anonymized-research-project'}:
     for forbidden in ('banca examinadora', 'abstract'):
         if forbidden in text:
-            raise SystemExit(f'profile {profile}: element de work acadêmico apareceu indevidamente: {forbidden}')
+            raise SystemExit(f'profile {profile}: element of work acadêmico apareceu incorrectly: {forbidden}')
 PY
 
     grep -Fqi 'Introdu' "$output.toc" || {
@@ -189,11 +189,11 @@ PY
       exit 1
     }
     if grep -Eq '\\contentsline \{section\}\{[^}]*\*' "$output.toc"; then
-      echo "profile $profile/$engine: entry anômala com asterisco no table of contents."
+      echo "profile $profile/$engine: entry anômala with asterisco in the table of contents."
       cat "$output.toc"
       exit 1
     fi
   done
 done
 
-echo 'Gate for matrix completa de profiles completed.'
+echo 'Matrix completa of profiles gate completed.'

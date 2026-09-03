@@ -49,7 +49,7 @@ compile_fixture() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Audit for pagination front matter failed: unrecognized warning or overflow em $fixture."
+    echo "Pagination front matter audit failed: unrecognized warning or overflow in $fixture."
     exit 1
   fi
 }
@@ -65,8 +65,8 @@ python3 tests/checks/normative_frontmatter_pagination.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Audit for pagination front matter failed: JSON evidence was not generated.'
+  echo 'Pagination front matter audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate for evidence front matter for pagination/transição front matter completed.'
+echo 'Evidence front matter for pagination/transição front matter gate completed.'

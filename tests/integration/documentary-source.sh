@@ -13,7 +13,7 @@ trap cleanup EXIT INT TERM
 
 for engine in pdflatex lualatex; do
   job="fontes-documentais-$engine"
-  echo "Validating documentary sources com $engine..."
+  echo "Validating documentary sources with $engine..."
 
   "$engine" -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {
     cat "/tmp/$job.out"
@@ -63,19 +63,19 @@ for marker in (
 
 source_match = re.search(r'adaptado de.{0,120}silva.{0,120}2026', fold)
 if not source_match:
-    raise SystemExit('external source was not presented em form de citation author-date.')
+    raise SystemExit('external source was not presented in form of citation author-date.')
 
 annex_pos = fold.find('anexo a')
 fullref_pos = fold.find('manual de dados de teste')
 if annex_pos < 0 or fullref_pos < annex_pos:
-    raise SystemExit('reference bibliográfica própria não permaneceu dentro do annex.')
+    raise SystemExit('reference bibliográfica própria não permaneceu dentro of the annex.')
 
 if 'referências' in fold[annex_pos:]:
-    raise SystemExit('fixture criou list global de references; o caso deve permanecer local ao annex.')
+    raise SystemExit('fixture criou list global of references; o caso deve permanecer local ao annex.')
 PY
 
   echo 'VALIDATION-EVIDENCE rule=illustration.source.external-citation status=PASS expected=author-date-citation measured=adapted-source-citation-present'
 
 done
 
-echo 'Gate for documentary sources completed.'
+echo 'Documentary sources gate completed.'

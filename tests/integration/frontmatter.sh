@@ -20,7 +20,7 @@ flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 for engine in pdflatex lualatex; do
   for fixture in $fixtures; do
-    echo "Validating $fixture com $engine..."
+    echo "Validating $fixture with $engine..."
     for pass in 1 2; do
       "$engine" $flags "$fixture" > /tmp/abntexto-ufc-frontmatter.log 2>&1 || {
         cat /tmp/abntexto-ufc-frontmatter.log
@@ -48,7 +48,7 @@ if command -v pdftotext >/dev/null 2>&1; then
   pdftotext frontmatter-academic-work.pdf /tmp/abntexto-ufc-frontmatter.txt
   for heading in 'AGRADECIMENTOS' 'RESUMO' 'ABSTRACT' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE ABREVIATURAS E SIGLAS' 'LISTA DE SÍMBOLOS' 'SUMÁRIO'; do
     grep -Fq "$heading" /tmp/abntexto-ufc-frontmatter.txt || {
-      echo "Front matter validation failed: heading front matter missing ou incorrect: $heading"
+      echo "Front matter validation failed: heading front matter missing or incorrect: $heading"
       exit 1
     }
   done
@@ -89,7 +89,7 @@ def check_below_midpoint(label, marker):
                     f'y={first_y:.2f}, meio={midpoint:.2f}'
                 )
             return
-    raise SystemExit(f'Front matter validation failed: page de {label} not found.')
+    raise SystemExit(f'Front matter validation failed: page of {label} not found.')
 
 
 check_below_midpoint('dedicatória', 'FAMÍLIA')
@@ -111,4 +111,4 @@ PY
   }
 fi
 
-echo 'Gate for front matter completed.'
+echo 'Front matter gate completed.'

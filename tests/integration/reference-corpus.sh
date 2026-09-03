@@ -11,7 +11,7 @@ cd "$ROOT/template"
 
 for file in main.loi main.lot main.loc main.loa main.toc; do
   [ -s "$file" ] || {
-    echo "Corpus failed: file de navigation missing: $file"
+    echo "Corpus failed: file of navigation missing: $file"
     exit 1
   }
 done
@@ -27,10 +27,10 @@ expected = {
 }
 for path, digest in expected.items():
     if not path.is_file():
-        raise SystemExit(f'Corpus failed: photograph licensed missing: {path}')
+        raise SystemExit(f'Corpus failed: photograph licenciada missing: {path}')
     actual = hashlib.sha1(path.read_bytes()).hexdigest()
     if actual != digest:
-        raise SystemExit(f'Corpus failed: SHA-1 divergente em {path}: {actual}')
+        raise SystemExit(f'Corpus failed: SHA-1 divergente in {path}: {actual}')
 PY
 fi
 
@@ -72,7 +72,7 @@ def require_dotted_entry(source, start, end, marker):
     start_at = source.find(start)
     end_at = source.find(end, start_at + len(start))
     if start_at < 0 or end_at < 0:
-        raise SystemExit(f'Corpus failed: block de list not found: {start}.')
+        raise SystemExit(f'Corpus failed: block of list not found: {start}.')
 
     entries = list_entries(source[start_at:end_at])
     matches = [(raw, normalized) for raw, normalized in entries if marker in normalized]
@@ -84,7 +84,7 @@ def require_dotted_entry(source, start, end, marker):
 
     _, normalized_entry = matches[0]
     if not re.search(spaced_leader_pattern(), normalized_entry):
-        raise SystemExit(f'Corpus failed: spaced dotted leader missing em {start}: {marker}')
+        raise SystemExit(f'Corpus failed: spaced dotted leader missing in {start}: {marker}')
 
 
 text = Path('/tmp/abntexto-ufc-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
@@ -134,17 +134,17 @@ required = (
 )
 missing = [marker for marker in required if marker not in flat]
 if missing:
-    raise SystemExit('Corpus failed: markers missing no PDF: ' + ', '.join(missing))
+    raise SystemExit('Corpus failed: markers missing in the PDF: ' + ', '.join(missing))
 if '??' in text:
-    raise SystemExit('Corpus failed: reference não resolvida found no PDF.')
+    raise SystemExit('Corpus failed: reference não resolvida found in the PDF.')
 require_reference_images = os.environ.get('UFC_REQUIRE_REFERENCE_IMAGES', '0') == '1'
 if require_reference_images and 'Execute make reference-assets' in text:
-    raise SystemExit('Corpus failed: fallback de photograph apareceu quando photographs de reference eram required.')
+    raise SystemExit('Corpus failed: fallback of photograph apareceu quando photographs of reference eram required.')
 
 pages = [normalize_pdf_text(page) for page in text.split('\f')]
 committee_pages = [page for page in pages if 'BANCA EXAMINADORA' in page]
 if len(committee_pages) != 1:
-    raise SystemExit(f'Corpus failed: expected exatamente um block de banca, found {len(committee_pages)}.')
+    raise SystemExit(f'Corpus failed: expected exatamente a block of banca, found {len(committee_pages)}.')
 committee = committee_pages[0]
 committee_members = (
     'Nome do Orientador',
@@ -156,7 +156,7 @@ committee_members = (
 )
 missing_committee = [name for name in committee_members if name not in committee]
 if missing_committee:
-    raise SystemExit('Corpus failed: banca does not fit entirely na approval page: ' + ', '.join(missing_committee))
+    raise SystemExit('Corpus failed: banca does not fit entirely in the approval page: ' + ', '.join(missing_committee))
 
 list_blocks = (
     ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Figura estreita com legenda curta'),
@@ -168,12 +168,12 @@ for start, end, marker in list_blocks:
     start_at = flat.find(start)
     end_at = flat.find(end, start_at + len(start))
     if start_at < 0 or end_at < 0:
-        raise SystemExit(f'Corpus failed: block de list not found: {start}.')
+        raise SystemExit(f'Corpus failed: block of list not found: {start}.')
     block = flat[start_at:end_at]
     if marker not in block:
-        raise SystemExit(f'Corpus failed: entry com case preserved missing de {start}: {marker}')
+        raise SystemExit(f'Corpus failed: entry with case preserved missing of {start}: {marker}')
     if marker.upper() in block:
-        raise SystemExit(f'Corpus failed: entry indevidamente converted for case uppercase em {start}.')
+        raise SystemExit(f'Corpus failed: entry incorrectly converted for case uppercase in {start}.')
     require_dotted_entry(text, start, end, marker)
 
 raw_pages = text.split('\f')
@@ -182,7 +182,7 @@ toc_starts = [
     if 'SUMÁRIO' in page and 'INTRODUÇÃO E USO DESTE MODELO' in page
 ]
 if len(toc_starts) != 1:
-    raise SystemExit(f'Corpus failed: expected um table of contents principal, found {len(toc_starts)}.')
+    raise SystemExit(f'Corpus failed: expected a table of contents principal, found {len(toc_starts)}.')
 
 toc_start = toc_starts[0]
 toc_end = None
@@ -191,7 +191,7 @@ for index in range(toc_start + 1, len(raw_pages)):
         toc_end = index
         break
 if toc_end is None:
-    raise SystemExit('Corpus failed: fim do table of contents not found antes da first section textual.')
+    raise SystemExit('Corpus failed: fim of the table of contents not found antes of the first section textual.')
 
 toc = '\n'.join(raw_pages[toc_start:toc_end])
 toc_flat = normalize_pdf_text(toc)
@@ -213,11 +213,11 @@ for marker in (
     'ÍNDICE REMISSIVO',
 ):
     if marker not in toc_flat:
-        raise SystemExit(f'Corpus failed: entry required missing do table of contents: {marker}.')
+        raise SystemExit(f'Corpus failed: entry required missing of the table of contents: {marker}.')
 
 entry_lines = [line for line in toc.splitlines() if re.search(r'\d+\s*$', line)]
 if len(entry_lines) < 30:
-    raise SystemExit(f'Corpus failed: too few entries paginadas no table of contents comentado: {len(entry_lines)}.')
+    raise SystemExit(f'Corpus failed: too few entries paginadas in the table of contents comentado: {len(entry_lines)}.')
 undotted = [
     line.strip() for line in entry_lines
     if not re.search(spaced_leader_pattern(), line)
@@ -281,7 +281,7 @@ check_list() {
   shift
   for marker in "$@"; do
     grep -Fq "$marker" "$file" || {
-      echo "Corpus failed: '$marker' missing de $file"
+      echo "Corpus failed: '$marker' missing of $file"
       exit 1
     }
   done
@@ -312,4 +312,4 @@ check_list main.loa \
   'Máximo divisor comum com números de linha' \
   'Seleção do maior valor sem números de linha'
 
-echo 'Corpus visual, didático e semântico do documento de reference validado.'
+echo 'Corpus visual, didático and semântico of the documento of reference validado.'

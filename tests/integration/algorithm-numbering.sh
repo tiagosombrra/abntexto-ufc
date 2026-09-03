@@ -24,7 +24,7 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "$job: unrecognized warning or overflow."
+    echo "$job: warning ou overflow não reconhecido."
     exit 1
   fi
 
@@ -55,7 +55,7 @@ expected_markers = {
 for number, marker in expected_markers.items():
     line = line_for(marker)
     if not re.search(rf'(^|\s){number}:\s+\S', line):
-        raise SystemExit(f'linha {number} sem prefixo/content expected: {line!r}')
+        raise SystemExit(f'linha {number} without prefixo/content expected: {line!r}')
 
 numbered = {}
 for line in lines:
@@ -85,4 +85,4 @@ PY
 
 done
 
-echo 'Gate for algorithm numbering completed.'
+echo 'Algorithm numbering gate completed.'

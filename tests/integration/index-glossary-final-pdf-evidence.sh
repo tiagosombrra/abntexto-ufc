@@ -27,7 +27,7 @@ check_log() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Audit for index/glossary failed: $job contains unrecognized warning or overflow."
+    echo "Index/glossary audit failed: $job contains unrecognized warning or overflow."
     exit 1
   fi
 }
@@ -69,8 +69,8 @@ python3 tests/checks/normative_index_glossary.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Audit for index/glossary failed: JSON evidence was not generated.'
+  echo 'Index/glossary audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate for evidence final-PDF for index/glossary completed.'
+echo 'Evidence final-pdf for index/glossary gate completed.'

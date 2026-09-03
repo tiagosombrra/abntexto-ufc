@@ -8,12 +8,12 @@ for engine in pdflatex lualatex; do
   for profile in $profiles; do
     pdf="$template_dir/perfil-${profile}-${engine}.pdf"
     [ -s "$pdf" ] || {
-      echo "PDF/A da matrix failed: file missing: $pdf"
+      echo "PDF/A of the matrix failed: file missing: $pdf"
       exit 1
     }
-    echo "Validating PDF/A-2b de $profile/$engine..."
+    echo "Validating PDF/A-2b of $profile/$engine..."
     sh tests/integration/pdfa.sh "$pdf"
   done
 done
 
-echo 'Gate PDF/A-2b dos 12 profiles completed.'
+echo 'Gate PDF/A-2b of the 12 profiles completed.'

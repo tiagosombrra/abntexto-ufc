@@ -26,7 +26,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo 'Audit for acknowledgements failed: unrecognized warning or overflow.'
+  echo 'Acknowledgements audit failed: unrecognized warning or overflow.'
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_frontmatter_acknowledgments.py \
   --enforce
 
 test -s "$evidence" || {
-  echo 'Audit for acknowledgements failed: JSON evidence was not generated.'
+  echo 'Acknowledgements audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate for evidence front matter for acknowledgements completed.'
+echo 'Evidence front matter for acknowledgements gate completed.'

@@ -27,7 +27,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Audit for section hierarchy failed: unrecognized warning or overflow em $fixture."
+  echo "Section hierarchy audit failed: unrecognized warning or overflow in $fixture."
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_section_hierarchy.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Audit for section hierarchy failed: JSON evidence was not generated.'
+  echo 'Section hierarchy audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate for evidence for section hierarchy completed.'
+echo 'Evidence for section hierarchy gate completed.'

@@ -117,7 +117,7 @@ def main() -> None:
         ],
     )
 
-    print("Alinhamento das lists de abreviaturas/siglas e símbolos validado.")
+    print("Alinhamento das listas de abreviaturas/siglas e símbolos validado.")
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Audit for footnotes failed: unrecognized warning or overflow em $fixture."
+  echo "Footnotes audit failed: unrecognized warning or overflow in $fixture."
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_footnote_text.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Audit for footnotes failed: JSON evidence was not generated.'
+  echo 'Footnotes audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate for evidence for text presentation de footnotes completed.'
+echo 'Evidence for apresentação textual of footnotes gate completed.'

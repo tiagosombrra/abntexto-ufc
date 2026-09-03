@@ -15,7 +15,7 @@ for engine in pdflatex lualatex; do
   for family in times arial; do
     sed "s/@UFC_FONT@/$family/g" "$fixture" > "$tmp"
     job="tipografia-codigo-$family-$engine"
-    echo "Validating code/algorithm typography $family com $engine..."
+    echo "Validating code/algorithm typography $family with $engine..."
 
     "$engine" -jobname="$job" $flags "$tmp" > "/tmp/$job.out" 2>&1 || {
       cat "/tmp/$job.out"
@@ -53,14 +53,14 @@ code_family = normalize_family(marker('UFC-CODE-FAMILY'))
 algorithm_family = normalize_family(marker('UFC-ALGORITHM-FAMILY'))
 
 if code_family != text_family:
-    raise SystemExit(f'code mudou de família: text={text_family}, code={code_family}')
+    raise SystemExit(f'código mudou de família: texto={text_family}, código={code_family}')
 if algorithm_family != text_family:
-    raise SystemExit(f'algorithm mudou de família: text={text_family}, algorithm={algorithm_family}')
+    raise SystemExit(f'algoritmo mudou de família: texto={text_family}, algoritmo={algorithm_family}')
 
 for name in ('UFC-TEXT-FONTSIZE', 'UFC-CODE-FONTSIZE', 'UFC-ALGORITHM-FONTSIZE'):
     actual = scalar(name)
     if abs(actual - 12.0) > 0.1:
-        raise SystemExit(f'{name}: expected 12 pt nominal, obtido {actual:.4f}')
+        raise SystemExit(f'{name}: esperado 12 pt nominal, obtido {actual:.4f}')
 PY
 
     pdftotext -bbox-layout "$job.pdf" "/tmp/$job-bbox.html"
@@ -115,7 +115,7 @@ def locate_marker_line(marker):
         } for word in line_words]
         content = [word for word in data if not re.fullmatch(r'\d+:?', word['text'].strip())]
         if not content:
-            raise SystemExit(f'marker geometric sem content: {marker}')
+            raise SystemExit(f'marker geometric without content: {marker}')
         return {
             'content_x0': min(word['x0'] for word in content),
             'y0': min(word['y0'] for word in data),
@@ -137,7 +137,7 @@ def line_number_for(marker_box):
         if re.fullmatch(r'\d+:?', word['text'].strip()):
             candidates.append(word)
     if not candidates:
-        raise SystemExit('número de linha not found junto ao marker geometric')
+        raise SystemExit('número of linha not found junto ao marker geometric')
     return min(candidates, key=lambda word: word['x0'])
 
 
@@ -160,4 +160,4 @@ PY
   done
 done
 
-echo 'Gate for typography and geometry de code e algorithms completed.'
+echo 'Tipografia and geometria of code and algorithms gate completed.'

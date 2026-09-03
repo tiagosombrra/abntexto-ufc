@@ -13,7 +13,7 @@ for engine in pdflatex lualatex; do
   job="multivolume-$engine"
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
 
-  echo "Validating multi-volume work com $engine..."
+  echo "Validating multi-volume work with $engine..."
   for pass in 1 2 3; do
     "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-multivolume.log 2>&1 || {
       cat /tmp/abntexto-ufc-multivolume.log
@@ -34,11 +34,11 @@ for engine in pdflatex lualatex; do
     exit 1
   }
   grep -Fq 'UFC-PAGE-AFTER-TITLE=102' "$job.log" || {
-    echo "$job: title page não avançou a sequência 101 → 102."
+    echo "$job: folha de rosto não avançou a sequência 101 → 102."
     exit 1
   }
   grep -Fq 'UFC-TEXT-PAGE=102' "$job.log" || {
-    echo "$job: content textual não continuou na page lógica 102."
+    echo "$job: content textual não continuou in the page lógica 102."
     exit 1
   }
 
@@ -62,11 +62,11 @@ norm = [
 text = ' '.join(norm)
 
 if len(norm) < 3:
-    raise SystemExit(f'{job}: expected cover, title page e content textual.')
+    raise SystemExit(f'{job}: expected cover, title page and content textual.')
 if 'curso de graduação em ciência da computação' not in norm[0]:
-    raise SystemExit(f'{job}: identificação completa do curso missing da cover.')
+    raise SystemExit(f'{job}: identificação completa of the curso missing of the cover.')
 if text.count('volume 2') < 2:
-    raise SystemExit(f'{job}: volume não aparece na cover e na title page.')
+    raise SystemExit(f'{job}: volume não aparece in the cover and in the title page.')
 for marker in ('autor multivolume teste', 'trabalho multivolume de teste', 'marcador textual do volume dois'):
     if marker not in text:
         raise SystemExit(f'{job}: content expected missing: {marker}')
@@ -95,4 +95,4 @@ then
   exit 1
 fi
 
-echo 'Gate for multi-volume works completed.'
+echo 'Multi-volume works gate completed.'

@@ -7,7 +7,7 @@ for engine in pdflatex lualatex; do
   job="frontmatter-duplex-$engine"
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
 
-  echo "Validating recto start dos front matter com $engine..."
+  echo "Validating início in recto of the front matter with $engine..."
   for pass in 1 2 3; do
     "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-duplex-frontmatter.log 2>&1 || {
       cat /tmp/abntexto-ufc-duplex-frontmatter.log
@@ -63,12 +63,12 @@ for marker in markers:
         raise SystemExit(f'{job}: marker missing: {marker}')
     page = matches[0]
     if page % 2 == 0:
-        raise SystemExit(f'{job}: element deveria iniciar no recto, mas apareceu na page física {page}: {marker}')
+        raise SystemExit(f'{job}: element deveria iniciar in the recto, mas apareceu in the page física {page}: {marker}')
 
-print(f'{job}: todos os elements auditados iniciam no recto.')
+print(f'{job}: todos os elementos auditados iniciam no anverso.')
 PY
 done
 
 sh tests/integration/section-primary-recto-duplex-evidence.sh
 
-echo 'Gate for front matter duplex completed.'
+echo 'Front matter duplex gate completed.'

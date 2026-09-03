@@ -41,7 +41,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo 'Pós-textuais duplex contêm unrecognized warning or overflow.'
+  echo 'Pós-textuais duplex contêm warning ou overflow não reconhecido.'
   exit 1
 fi
 
@@ -76,15 +76,15 @@ for marker, label in checks:
     if not matches:
         raise SystemExit(f'{job}: marker pós-textual missing: {label}')
     if matches[0] % 2 == 0:
-        raise SystemExit(f'{job}: {label} iniciou no verso, page física {matches[0]}')
+        raise SystemExit(f'{job}: {label} iniciou in the verso, page física {matches[0]}')
 
 index_pages = [i + 1 for i, page in enumerate(normalized) if 'índice' in page]
 if not index_pages:
     raise SystemExit(f'{job}: index missing')
 if index_pages[-1] % 2 == 0:
-    raise SystemExit(f'{job}: index iniciou no verso, page física {index_pages[-1]}')
+    raise SystemExit(f'{job}: index iniciou in the verso, page física {index_pages[-1]}')
 
-print(f'{job}: pós-textuais auditados iniciam no recto.')
+print(f'{job}: pós-textuais auditados iniciam no anverso.')
 PY
 
-echo 'Gate for pós-textuais duplex completed.'
+echo 'Pós-textuais duplex gate completed.'

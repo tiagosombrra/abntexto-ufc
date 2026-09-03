@@ -28,7 +28,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo 'Audit for appendix/annex failed: unrecognized warning or overflow.'
+  echo 'Appendix/annex audit failed: unrecognized warning or overflow.'
   exit 1
 fi
 
@@ -39,8 +39,8 @@ python3 tests/checks/normative_appendix_annex.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Audit for appendix/annex failed: JSON evidence was not generated.'
+  echo 'Appendix/annex audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate for evidence final-PDF for appendix/annex completed.'
+echo 'Evidence final-pdf for appendix/annex gate completed.'

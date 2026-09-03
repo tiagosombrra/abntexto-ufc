@@ -53,7 +53,7 @@ for engine in pdflatex lualatex; do
         grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
       if [ -n "$warnings" ]; then
         printf '%s\n' "$warnings"
-        echo "$job: unrecognized warning or overflow."
+        echo "$job: warning ou overflow não reconhecido."
         exit 1
       fi
 
@@ -93,17 +93,17 @@ text_marker = 'marcador textual após a ficha catalográfica'
 
 if card_mode == 'true':
     if len(norm) != 3:
-        raise SystemExit(f'{job}: expected title page, ficha e text em 3 pages físicas; obtido {len(norm)}.')
+        raise SystemExit(f'{job}: expected title page, ficha and text in 3 pages físicas; obtido {len(norm)}.')
     if card_marker not in norm[1]:
-        raise SystemExit(f'{job}: ficha habilitada não ocupa o verso físico da title page.')
+        raise SystemExit(f'{job}: ficha habilitada não ocupa o verso físico da folha de rosto.')
     if text_marker not in norm[2]:
-        raise SystemExit(f'{job}: text posterior à ficha não iniciou no recto físico seguinte.')
+        raise SystemExit(f'{job}: texto posterior à ficha não iniciou no anverso físico seguinte.')
 else:
     if any(card_marker in page for page in norm):
         raise SystemExit(f'{job}: ficha externa foi incluída although catalog-card=false.')
     text_pages = [index for index, page in enumerate(norm) if text_marker in page]
     if len(text_pages) != 1:
-        raise SystemExit(f'{job}: marker textual missing ou duplicado com ficha desabilitada.')
+        raise SystemExit(f'{job}: marker textual missing or duplicado with ficha desabilitada.')
     expected_physical_index = 1 if mode == 'single-sided' else 2
     if text_pages[0] != expected_physical_index:
         raise SystemExit(
@@ -111,7 +111,7 @@ else:
             f'esperado índice {expected_physical_index}, obtido {text_pages[0]}.'
         )
     if mode == 'double-sided' and (len(norm) != 3 or norm[1]):
-        raise SystemExit(f'{job}: double-sided mode without a catalog card deve preservar verso físico em branco antes do text.')
+        raise SystemExit(f'{job}: double-sided mode without a catalog card deve preservar verso físico em branco antes do texto.')
 PY
     done
   done
@@ -119,4 +119,4 @@ done
 
 echo 'VALIDATION-EVIDENCE rule=deposit.catalog-card status=PASS measured=enabled-and-disabled-routes'
 echo 'VALIDATION-BOUNDARY rule=font.size.reduced.catalog-card status=MANUAL scope=external-pdf'
-echo 'Gate for catalog card completed.'
+echo 'Catalog card gate completed.'

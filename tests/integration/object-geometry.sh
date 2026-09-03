@@ -13,7 +13,7 @@ trap cleanup EXIT INT TERM
 
 for engine in pdflatex lualatex; do
   job="objeto-geometria-$engine"
-  echo "Validating object geometry com $engine..."
+  echo "Validating object geometry with $engine..."
 
   for pass in 1 2; do
     "$engine" -jobname="$job" $flags "$fixture" > /tmp/abntexto-ufc-object-geometry.log 2>&1 || {
@@ -26,7 +26,7 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "$job: unrecognized warning or overflow."
+    echo "$job: warning ou overflow não reconhecido."
     exit 1
   fi
 
@@ -51,7 +51,7 @@ def scalar(name):
 
 def close(name, actual, expected, tolerance=0.06):
     if abs(actual - expected) > tolerance:
-        raise SystemExit(f'{name}: expected {expected:.4f}, obtido {actual:.4f}')
+        raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {actual:.4f}')
 
 pt_per_cm = 72.27 / 2.54
 pt_per_bp = 72.27 / 72.0
@@ -71,4 +71,4 @@ sh tests/integration/illustration-evidence.sh
 sh tests/integration/table-typography-equation-evidence.sh
 sh tests/integration/table-ibge-vector-evidence.sh
 
-echo 'Gate for object geometry completed.'
+echo 'Object geometry gate completed.'

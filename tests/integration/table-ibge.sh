@@ -11,19 +11,19 @@ trap cleanup EXIT INT TERM
 
 for token in '\toprule' '\midrule' '\bottomrule' 'row{even}' 'remark{Fonte}' 'remark{Nota}' 'tables = tabularray'; do
   grep -Fq "$token" "$fixture" || {
-    echo "table IBGE: structure required missing no fixture: $token"
+    echo "table IBGE: structure required missing in the fixture: $token"
     exit 1
   }
 done
 
 if grep -Eq '(^|[^[:alpha:]])(vlines|hlines)([^[:alpha:]]|$)' "$fixture"; then
-  echo 'table IBGE: table numérica não pode usar fechamento lateral ou grade no corpo.'
+  echo 'Tabela IBGE: tabela numérica não pode usar fechamento lateral ou grade no corpo.'
   exit 1
 fi
 
 for engine in pdflatex lualatex; do
   job="tabela-ibge-$engine"
-  echo "Validating table IBGE com $engine..."
+  echo "Validating table IBGE with $engine..."
 
   for pass in 1 2; do
     "$engine" -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {
@@ -35,7 +35,7 @@ for engine in pdflatex lualatex; do
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "$job: unrecognized warning or overflow."
+    echo "$job: warning ou overflow não reconhecido."
     exit 1
   fi
 
@@ -55,7 +55,7 @@ def metric(name):
 def assert_all(name, expected, tolerance=0.06):
     for value in metric(name):
         if abs(value - expected) > tolerance:
-            raise SystemExit(f'{name}: expected {expected:.4f}, obtido {value:.4f}')
+            raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {value:.4f}')
 
 pt_per_bp = 72.27 / 72.0
 assert_all('UFC-IBGE-BODY-FONTSIZE', 12.0)
@@ -94,4 +94,4 @@ for marker in (
 PY
 done
 
-echo 'Gate for subconjunto tabular IBGE completed.'
+echo 'Subconjunto tabular ibge gate completed.'
