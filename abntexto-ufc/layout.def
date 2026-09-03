@@ -6,7 +6,7 @@
 \AtBeginDocument{\onehalfsp}
 
 % Tagging-safe ABNT alíneas and subalíneas using LaTeX block-list keys.
-\NewDocumentEnvironment{ufcalineas}{}
+\NewDocumentEnvironment{ufclettereditems}{}
   {\begin{enumerate}[
     item-label={\alph{enumi})},
     item-vspace=0pt,
@@ -20,7 +20,7 @@
     label-align=left
   ]}
   {\end{enumerate}}
-\NewDocumentEnvironment{ufcsubalineas}{}
+\NewDocumentEnvironment{ufcdashedsubitems}{}
   {\begin{enumerate}[
     item-label={---},
     item-vspace=0pt,
@@ -162,8 +162,8 @@
 \ExplSyntaxOff
 
 % Keep one public extension point instead of relying on abntexto internals.
-\providecommand{\ufcsectionhook}{}
-\def\hooksection{\ufcPrimarySectionBreak\ufcsectionhook}
+\providecommand{\ufcSectionHook}{}
+\def\hooksection{\ufcPrimarySectionBreak\ufcSectionHook}
 
 % In duplex mode, every pre-textual element except the catalog card starts on recto.
 \AtBeginDocument{%
@@ -179,9 +179,9 @@
   \AddToHook{cmd/ufcPrintListOfFigures/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfTables/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfTextTables/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadegraficos/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadecodigos/before}{\ufcPretextualBreak}%
-  \AddToHook{cmd/imprimirlistadealgoritmos/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfCharts/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfCodeListings/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintListOfAlgorithms/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfAbbreviationsAndAcronyms/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfSymbols/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintTableOfContents/before}{\ufcPretextualBreak}%
