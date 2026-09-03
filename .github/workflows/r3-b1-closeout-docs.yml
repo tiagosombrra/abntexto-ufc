@@ -31,12 +31,6 @@ jobs:
           node-version: '24'
       - name: Reconcile R3-B1 closeout and R3-B2 entry
         run: python3 .github/scripts/r3-b1-closeout-docs.py
-      - name: Remove temporary executor before validation
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -f .github/scripts/r3-b1-closeout-docs.py
-          rm -f .github/workflows/r3-b1-closeout-docs.yml
       - name: Verify intentionally unchanged authority documents
         shell: bash
         run: |
@@ -47,6 +41,12 @@ jobs:
             docs/MIGRATING-TO-V3.md
       - name: Validate reconciled control plane
         run: make static-check
+      - name: Remove temporary executor after validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/r3-b1-closeout-docs.py
+          rm -f .github/workflows/r3-b1-closeout-docs.yml
       - name: Commit reconciled documentation
         shell: bash
         run: |
