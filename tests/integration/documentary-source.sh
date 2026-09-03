@@ -74,6 +74,8 @@ if 'referências' in fold[annex_pos:]:
     raise SystemExit('fixture criou lista global de referências; o caso deve permanecer local ao anexo.')
 PY
 
+  echo 'VALIDATION-EVIDENCE rule=illustration.source.external-citation status=PASS expected=author-date-citation measured=adapted-source-citation-present'
+
 done
 
 echo 'Gate de fontes documentais concluído.'

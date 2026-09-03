@@ -16,6 +16,7 @@
       "validation": {
         "mode": "automatic-partial",
         "checks": [
+          "frontmatter",
           "research-project",
           "profiles"
         ]

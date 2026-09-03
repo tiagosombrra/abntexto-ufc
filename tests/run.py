@@ -274,13 +274,45 @@ def main() -> int:
     ordered_results: list[Result] = []
     write_reports(report_dir, args.mode, ordered_results, complete=False)
 
-    print(f"abntexto-ufc validation: mode={args.mode}, checks={len(checks)}")
+    contribution_enabled = args.only is None
+    total_checks = len(checks) + (1 if contribution_enabled else 0)
+    print(f"abntexto-ufc validation: mode={args.mode}, checks={total_checks}")
     for index, check in enumerate(checks, 1):
-        print(f"[{index:02}/{len(checks):02}] {check.label} ...", flush=True)
+        print(f"[{index:02}/{total_checks:02}] {check.label} ...", flush=True)
         result = run_check(check, report_dir, results_by_name)
         results_by_name[result.name] = result
         ordered_results.append(result)
         write_reports(report_dir, args.mode, ordered_results, complete=False)
+        suffix = f" ({result.duration_seconds:.1f}s)" if result.duration_seconds else ""
+        print(f"         {result.status}{suffix}")
+        if result.status == "PASS":
+            print_structured_evidence(result)
+        if result.status == "FAIL":
+            print_failure_tail(result)
+
+    if contribution_enabled:
+        contribution_check = Check(
+            "evidence-contribution",
+            "Normative evidence contribution",
+            (
+                sys.executable,
+                "tests/checks/normative_evidence_contribution.py",
+                "--log-dir",
+                str(report_dir / "checks"),
+                "--mode",
+                args.mode,
+                "--strict-partial",
+                "--json",
+                str(report_dir / "normative-evidence-contribution.json"),
+                "--markdown",
+                str(report_dir / "normative-evidence-contribution.md"),
+            ),
+            depends=tuple(check.name for check in checks),
+        )
+        print(f"[{total_checks:02}/{total_checks:02}] {contribution_check.label} ...", flush=True)
+        result = run_check(contribution_check, report_dir, results_by_name)
+        results_by_name[result.name] = result
+        ordered_results.append(result)
         suffix = f" ({result.duration_seconds:.1f}s)" if result.duration_seconds else ""
         print(f"         {result.status}{suffix}")
         if result.status == "PASS":

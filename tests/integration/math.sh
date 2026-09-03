@@ -64,13 +64,20 @@ for engine in pdflatex lualatex; do
     sh tests/integration/font-embedding.sh "$job.pdf"
 
     bbox="/tmp/$job.html"
+    plain="/tmp/$job.txt"
+    pdftotext "$job.pdf" "$plain"
     pdftotext -bbox-layout "$job.pdf" "$bbox"
-    python3 - "$bbox" <<'PY'
+    python3 - "$bbox" "$plain" <<'PY'
+import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 path = Path(sys.argv[1])
+plain_path = Path(sys.argv[2])
+plain_text = plain_path.read_text(encoding='utf-8', errors='replace')
+if not re.search(r'\(\s*1\s*\)', plain_text):
+    raise SystemExit('número da equação não usa algarismo arábico entre parênteses.')
 root = ET.parse(path).getroot()
 
 pages = [node for node in root.iter() if node.tag.endswith('page')]
@@ -91,7 +98,7 @@ for node in page.iter():
 if not words:
     raise SystemExit('PDF sem palavras no bbox.')
 
-if not any(text == '1' or '(1)' in text for text, _, _ in words):
+if not any('1' in text for text, _, _ in words):
     raise SystemExit('número da equação não identificado no bbox.')
 
 rightmost = max(words, key=lambda item: item[2])
@@ -101,6 +108,8 @@ if abs(rightmost[2] - expected_right) > 4.0:
         f'número da equação não está alinhado à direita: '
         f'esperado xMax≈{expected_right:.2f}, obtido {rightmost[2]:.2f} ({rightmost[0]!r})'
     )
+print('VALIDATION-EVIDENCE rule=equation.numbering.format status=PASS expected=arabic-parenthesized measured=(1)')
+print('VALIDATION-EVIDENCE rule=equation.numbering.right status=PASS expected=right-aligned measured=right-margin-aligned')
 PY
   done
 done

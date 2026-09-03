@@ -42,6 +42,7 @@
       "validation": {
         "mode": "automatic-partial",
         "checks": [
+          "frontmatter",
           "duplex-frontmatter",
           "catalog-card"
         ]

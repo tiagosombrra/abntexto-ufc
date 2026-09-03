@@ -142,6 +142,7 @@
       "validation": {
         "mode": "automatic-partial",
         "checks": [
+          "object-geometry",
           "math"
         ]
       },

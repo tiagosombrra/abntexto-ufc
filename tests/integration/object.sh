@@ -75,6 +75,7 @@ PY
 
   grep -Fq 'Fonte:' /tmp/abntexto-ufc-objects.txt || { echo 'Fonte de objeto ausente.'; exit 1; }
   grep -Fq 'Nota:' /tmp/abntexto-ufc-objects.txt || { echo 'Nota de objeto ausente.'; exit 1; }
+  echo 'VALIDATION-EVIDENCE rule=illustration.source.required status=PASS expected=source-required measured=rendered-source-marker-present'
 fi
 
 echo 'Gate de objetos concluído.'
