@@ -1,0 +1,50 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = doctoral-thesis,
+  print-mode = single-sided
+}
+
+\begin{document}
+\pretextual
+
+% Deliberately violate the dedication start position while preserving the
+% remaining evidence shape. The negative integration test must reject it.
+\clearpage
+\thispagestyle{empty}
+\noindent\hspace*{8cm}%
+\begin{minipage}{\dimexpr\textwidth-8cm\relax}
+  \onehalfsp
+  \justifying
+  \setlength{\parindent}{0pt}
+  \input{tests/fixtures/frontmatter/dedication-validation-fixture.tex}
+\end{minipage}\par
+\vfill
+\clearpage
+
+\ufcPrintEpigraph[short]{tests/fixtures/frontmatter/epigraph-short-validation-fixture.tex}
+\ufcPrintEpigraph[long]{tests/fixtures/frontmatter/epigraph-long-validation-fixture.tex}
+
+\clearpage
+\thispagestyle{empty}
+
+\begingroup
+\onehalfsp
+UFCFRONTMATTERCALIBRATIONHALFONE control line.\\
+UFCFRONTMATTERCALIBRATIONHALFTWO control line.\\
+UFCFRONTMATTERCALIBRATIONHALFTHREE control line.
+\par
+\endgroup
+
+\vspace{3\baselineskip}
+
+\begingroup
+\fontsize{10}{12}\selectfont
+\singlesp
+UFCFRONTMATTERCALIBRATIONSINGLEONE control line.\\
+UFCFRONTMATTERCALIBRATIONSINGLETWO control line.\\
+UFCFRONTMATTERCALIBRATIONSINGLETHREE control line.
+\par
+\endgroup
+
+\end{document}
