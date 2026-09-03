@@ -44,7 +44,7 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 - PR Static contract: `33792280764` — PASS;
 - PR Linux integration: `33792280797` / job `100771483526` — `PASS=31 FAIL=0 SKIP=0`;
 - post-merge Linux release: `33794112546` / job `100777542613` — `PASS=33 FAIL=0 SKIP=0`;
-- residual scope: 134 LaTeX + 169 engineering = 303 sources; runtime aliases = 0; forwarding layer absent;
+- residual scope: 134 LaTeX + 168 engineering = 302 sources; runtime aliases = 0; forwarding layer absent;
 - test surface: 147/147 retained scripts reachable, 3 standalone classified, 0 orphaned;
 - profile generator: six canonical values, six distinct generated sources, fail-closed no-op detection;
 - negative paths require same-`rule_id` positive PASS before controlled rejection;

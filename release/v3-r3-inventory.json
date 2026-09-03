@@ -156,7 +156,7 @@
       "fact": "v3_api_residual scans selected LaTeX/runtime sources but not project-owned shell/Python/workflow/machine generators, allowing stale v2 literals in scripts.",
       "status": "RESOLVED",
       "resolved_by": "R3-B3",
-      "resolution": "Residual enforcement covers 134 LaTeX plus 169 behavior-affecting engineering sources with narrow explicit exemptions; runtime aliases remain zero.",
+      "resolution": "Residual enforcement covers 134 LaTeX plus 168 behavior-affecting engineering sources with narrow explicit exemptions; runtime aliases remain zero.",
       "closure_sha": "fbee5bd329f98a389c2880932af40547c8d1674e"
     },
     {
@@ -249,8 +249,8 @@
       "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
       "residual_sources": {
         "latex": 134,
-        "engineering": 169,
-        "total": 303
+        "engineering": 168,
+        "total": 302
       },
       "test_surface": {
         "retained": 147,
@@ -365,8 +365,8 @@
     "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
     "residual_sources": {
       "latex": 134,
-      "engineering": 169,
-      "total": 303
+      "engineering": 168,
+      "total": 302
     },
     "test_surface": {
       "retained": 147,

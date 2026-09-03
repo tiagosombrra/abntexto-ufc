@@ -18,7 +18,7 @@ Updated: 2026-09-03
 - R3-B3 closure/main SHA: `fbee5bd329f98a389c2880932af40547c8d1674e`.
 - R3-B3 PR gates: Static `33792280764` PASS; Linux `33792280797` / job `100771483526` = `PASS=31 FAIL=0 SKIP=0`.
 - R3-B3 post-merge release: `33794112546` / job `100777542613` = `PASS=33 FAIL=0 SKIP=0`.
-- R3-B3 integrity: 303 residual-scanned sources (134 LaTeX + 169 engineering), 147/147 retained scripts reachable, 3 standalone checks classified, 0 orphaned, negative evidence coupled to positive PASS by identical `rule_id`.
+- R3-B3 integrity: 302 residual-scanned sources (134 LaTeX + 168 engineering), 147/147 retained scripts reachable, 3 standalone checks classified, 0 orphaned, negative evidence coupled to positive PASS by identical `rule_id`.
 - Active phase: **V3-R3**.
 - Active stage: **R3-B4 — engineering-language enforcement and closed-contract consolidation**.
 - Active issue: **#255**.

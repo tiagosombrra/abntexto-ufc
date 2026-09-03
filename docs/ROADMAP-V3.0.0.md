@@ -26,7 +26,7 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 
 | R3-A | DONE | issue #250 | standards/test/language/proof gaps classified; five bounded lots defined | None |
 | R3-B1 | DONE | issue #252; PR #258 → `afb9f16403aafd8752a0aa8b0713f85c41204d1b` | front-matter observers/generators repaired; proof-contributing evidence fail-closed; negative rejection proven | None |
 | R3-B2 | DONE | issue #253; PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` | 17 non-automatic rules classified; 113/113 `automatic-partial` bounded-positive; explicit enforced/support-only semantics | None |
-| R3-B3 | DONE | issue #254; PR #262; canonical entry `44874c84b375396de8b9e3b24a40c47b5006f19b`; merge `fbee5bd329f98a389c2880932af40547c8d1674e` | 303-source residual gate; 147/147 reachable checks; zero orphaned scripts; Linux 31/0/0; release 33/0/0 | None |
+| R3-B3 | DONE | issue #254; PR #262; canonical entry `44874c84b375396de8b9e3b24a40c47b5006f19b`; merge `fbee5bd329f98a389c2880932af40547c8d1674e` | 302-source residual gate; 147/147 reachable checks; zero orphaned scripts; Linux 31/0/0; release 33/0/0 | None |
 | R3-B4 | ACTIVE | issue #255; entry `fbee5bd329f98a389c2880932af40547c8d1674e` | engineering-language enforcement + contract consolidation | enforce scoped English engineering policy; migrate technical profile IDs; audit closed migration-contract consumers |
 | R3-B5 | PENDING | issue #256 | R3 closeout and immutable R4 entry | after B4 |
 | V3-R4 | BLOCKED | — | final certification | after R3-B5 |

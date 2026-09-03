@@ -1271,8 +1271,8 @@
         "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
         "residual_sources": {
           "latex": 134,
-          "engineering": 169,
-          "total": 303
+          "engineering": 168,
+          "total": 302
         },
         "test_surface": {
           "retained": 147,
@@ -1346,8 +1346,8 @@
       "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
       "residual_sources": {
         "latex": 134,
-        "engineering": 169,
-        "total": 303
+        "engineering": 168,
+        "total": 302
       },
       "test_surface": {
         "retained": 147,
@@ -1376,8 +1376,8 @@
       "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
       "residual_sources": {
         "latex": 134,
-        "engineering": 169,
-        "total": 303
+        "engineering": 168,
+        "total": 302
       },
       "test_surface": {
         "retained": 147,
@@ -1453,8 +1453,8 @@
     "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
     "residual_sources": {
       "latex": 134,
-      "engineering": 169,
-      "total": 303
+      "engineering": 168,
+      "total": 302
     },
     "test_surface": {
       "retained": 147,
