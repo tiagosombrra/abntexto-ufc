@@ -1025,6 +1025,14 @@
         "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
         "strengthened_residual_audit_run_id": 33680252116,
         "strengthened_residual_audit_job_id": 100414804865,
+        "control_plane_closeout_pr": 243,
+        "control_plane_closeout_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91",
+        "closeout_static_contract_run_id": 33696690560,
+        "closeout_linux_integration_run_id": 33696690567,
+        "closeout_linux_integration_job_id": 100467032281,
+        "closeout_linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+        "release_source_audit_run_id": 33696155771,
+        "release_source_audit_job_id": 100465339990,
         "fail_closed_executor_run_id": 33679535751,
         "corrected_executor_run_id": 33679827267,
         "corrected_executor_job_id": 100413437018,
@@ -1036,7 +1044,7 @@
         "status": "ACTIVE",
         "issue": 238,
         "name": "structural/object environments optional object API and extension hooks",
-        "entry_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949"
+        "entry_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91"
       },
       "R2-B4": {
         "status": "PENDING",

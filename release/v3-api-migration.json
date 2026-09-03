@@ -9,10 +9,10 @@
   "entry_certified_r1_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
   "current_stage": "R2-B3",
   "current_stage_goal": "structural and object API ownership",
-  "current_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949",
+  "current_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91",
   "r2_b1_closeout": {"status": "DONE", "issue": 234, "pr": 236, "implementation_head_sha": "99fb58deaa1594ca19fb3a00ca9418623e5b25aa", "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4", "static_run_id": 33668283912, "linux_integration_run_id": 33668283890, "linux_integration_result": "PASS=30 FAIL=0 SKIP=0", "normative_semantics_changed": false, "proof_state_changed": false},
-  "r2_b2_closeout": {"status": "DONE", "issue": 237, "pr": 242, "entry_main_sha": "e418893ee5c89f12cc4ac8d845111c894ec946e4", "implementation_head_sha": "4341a2adb4633b634d1e2ad905b1731e8126354b", "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949", "static_run_id": 33680378948, "linux_integration_run_id": 33680378846, "linux_integration_job_id": 100415223907, "linux_integration_result": "PASS=30 FAIL=0 SKIP=0", "strengthened_residual_audit_run_id": 33680252116, "runtime_alias_layer_added": false, "normative_semantics_changed": false, "proof_state_changed": false},
-  "active_implementation_lot": {"stage": "R2-B3", "issue": 238},
+  "r2_b2_closeout": {"status": "DONE", "issue": 237, "pr": 242, "control_plane_pr": 243, "entry_main_sha": "e418893ee5c89f12cc4ac8d845111c894ec946e4", "implementation_head_sha": "4341a2adb4633b634d1e2ad905b1731e8126354b", "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949", "control_plane_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91", "static_run_id": 33680378948, "linux_integration_run_id": 33680378846, "linux_integration_job_id": 100415223907, "linux_integration_result": "PASS=30 FAIL=0 SKIP=0", "strengthened_residual_audit_run_id": 33680252116, "closeout_static_run_id": 33696690560, "closeout_linux_integration_run_id": 33696690567, "closeout_linux_integration_job_id": 100467032281, "closeout_linux_integration_result": "PASS=30 FAIL=0 SKIP=0", "release_source_audit_run_id": 33696155771, "release_source_audit_job_id": 100465339990, "runtime_alias_layer_added": false, "normative_semantics_changed": false, "proof_state_changed": false},
+  "active_implementation_lot": {"stage": "R2-B3", "issue": 238, "entry_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91"},
   "r2_a_inventory": {
     "status": "DONE",
     "completed_at": "2026-09-02",

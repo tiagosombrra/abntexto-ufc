@@ -9,7 +9,7 @@
   "status": "R1_PATHS_DONE_R2_RUNTIME_ABSORPTION_ACTIVE",
   "current_stage": "R2-B3",
   "r2_b1_closeout": {"status": "DONE", "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4", "next_lot": "R2-B2", "next_issue": 237},
-  "r2_b2_closeout": {"status": "DONE", "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949", "next_lot": "R2-B3", "next_issue": 238, "public_api_absorption": "B1 setup plus B2 academic/front-matter forwarding removed; B3/B4 debt remains"},
+  "r2_b2_closeout": {"status": "DONE", "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949", "control_plane_pr": 243, "control_plane_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91", "next_lot": "R2-B3", "next_issue": 238, "next_lot_entry_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91", "public_api_absorption": "B1 setup plus B2 academic/front-matter forwarding removed; B3/B4 debt remains"},
   "r1_path_restructuring_status": "DONE",
   "remaining_runtime_path_action": {"path": "abntexto-ufc/public-api.def", "action": "remove-after-absorption", "planned_lot": "R2-B5"},
   "policy": {

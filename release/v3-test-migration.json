@@ -6,7 +6,7 @@
   "status": "ACTIVE_R2_API_CONSUMER_MIGRATION",
   "current_stage": "R2-B3",
   "r2_b1_closeout": {"status": "DONE", "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4", "linux_integration_run_id": 33668283890, "result": "PASS=30 FAIL=0 SKIP=0"},
-  "r2_b2_closeout": {"status": "DONE", "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949", "linux_integration_run_id": 33680378846, "result": "PASS=30 FAIL=0 SKIP=0", "consumer_migration": "academic/front-matter owners, hooks, template/tests/reference/CTAN/scenario consumers migrated atomically"},
+  "r2_b2_closeout": {"status": "DONE", "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949", "control_plane_pr": 243, "control_plane_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91", "linux_integration_run_id": 33680378846, "result": "PASS=30 FAIL=0 SKIP=0", "closeout_linux_integration_run_id": 33696690567, "closeout_result": "PASS=30 FAIL=0 SKIP=0", "release_source_audit_run_id": 33696155771, "consumer_migration": "academic/front-matter owners, hooks, template/tests/reference/CTAN/scenario/release-source consumers migrated atomically"},
   "r1_reconciliation_status": "DONE",
   "r2_api_consumer_policy": {"owner_inventory": "docs/R2-API-OWNERSHIP.md", "active_lot": "R2-B3", "final_residual_lot": "R2-B5", "runtime_alias_tests_allowed": false},
   "policy": {
