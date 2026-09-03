@@ -1,6 +1,6 @@
 # Engineering Language Policy
 
-Updated: 2026-08-30
+Updated: 2026-09-03
 
 `abntexto-ufc` v3 uses English for every project-owned engineering surface.
 
