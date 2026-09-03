@@ -13,6 +13,7 @@ STATIC_RUNNER = ROOT / "tests/static.py"
 MAKEFILE = ROOT / "Makefile"
 EVIDENCE_REGISTRY = ROOT / "standards/evidence-registry.json"
 NEGATIVE_PATHS = ROOT / "standards/negative-paths.json"
+TEST_SURFACE_POLICY = ROOT / "standards/test-surface-policy.json"
 CANDIDATE_ROOTS = (ROOT / "tests/checks", ROOT / "tests/integration")
 CANDIDATE_SUFFIXES = {".py", ".sh"}
 CONTROL_ROOTS = (
@@ -146,6 +147,44 @@ def collect_registry_scripts(registry: dict[str, object]) -> set[Path]:
     return scripts
 
 
+def collect_standalone_surfaces(candidates: set[Path]) -> set[Path]:
+    policy = json.loads(TEST_SURFACE_POLICY.read_text(encoding="utf-8"))
+    if policy.get("schema_version") != 1:
+        fail("unsupported test-surface policy schema")
+    allowed_classes = policy.get("allowed_classes")
+    if not isinstance(allowed_classes, list) or not all(
+        isinstance(value, str) and value for value in allowed_classes
+    ):
+        fail("test-surface policy has an invalid allowed_classes list")
+    allowed = set(allowed_classes)
+    entries = policy.get("standalone")
+    if not isinstance(entries, list):
+        fail("test-surface policy has no standalone list")
+
+    paths: list[Path] = []
+    for item in entries:
+        if not isinstance(item, dict):
+            fail("test-surface policy contains a non-object entry")
+        value = item.get("path")
+        evidence_class = item.get("class")
+        owner_stage = item.get("owner_stage")
+        purpose = item.get("purpose")
+        reason = item.get("reason_not_permanent_runner")
+        if not isinstance(value, str) or not value.startswith("tests/"):
+            fail(f"invalid standalone test path: {value}")
+        path = ROOT / value
+        if path not in candidates:
+            fail(f"standalone policy points to missing/non-candidate test surface: {value}")
+        if evidence_class not in allowed:
+            fail(f"standalone test {value} has unsupported class {evidence_class}")
+        if not all(isinstance(field, str) and field for field in (owner_stage, purpose, reason)):
+            fail(f"standalone test {value} lacks owner/purpose/reason")
+        paths.append(path)
+    if len(paths) != len(set(paths)):
+        fail("test-surface policy contains duplicate standalone paths")
+    return set(paths)
+
+
 def main() -> None:
     runner_ns = runpy.run_path(str(RUNNER))
     static_ns = runpy.run_path(str(STATIC_RUNNER))
@@ -258,6 +297,9 @@ def main() -> None:
         fail("negative-path manifest contains duplicate case ids")
 
     candidates = candidate_files()
+    standalone = collect_standalone_surfaces(candidates)
+    roots.update(standalone)
+
     nodes = control_files(candidates)
     by_stem = unique_index({path for path in nodes if path.suffix == ".py"}, lambda path: path.stem)
     by_name = unique_index(nodes, lambda path: path.name)
@@ -285,8 +327,8 @@ def main() -> None:
         "TEST-SURFACE-INTEGRITY-EVIDENCE status=PASS "
         f"runner_gates={len(checks)} static_checks={len(static_checks)} "
         f"evidence_ids={len(evidence_ids)} negative_cases={len(case_ids)} "
-        f"control_nodes={len(nodes)} test_scripts={len(candidates)} "
-        f"reachable={len(reachable_candidates)} orphaned=0"
+        f"standalone={len(standalone)} control_nodes={len(nodes)} "
+        f"test_scripts={len(candidates)} reachable={len(reachable_candidates)} orphaned=0"
     )
 
 
