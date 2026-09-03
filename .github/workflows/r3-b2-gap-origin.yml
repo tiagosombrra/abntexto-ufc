@@ -1,4 +1,4 @@
-name: Temporary R3-B2 implementation
+name: Temporary R3-B2 full validation
 
 on:
   push:
@@ -6,45 +6,27 @@ on:
       - audit/v3-r3-b2-proof-inventory
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  implement:
+  validate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 35
     steps:
       - name: Checkout implementation branch
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           ref: r3-b2-proof-semantics
           fetch-depth: 0
-          persist-credentials: true
-      - name: Checkout temporary executor
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          ref: audit/v3-r3-b2-proof-inventory
-          path: .executor
           persist-credentials: false
-      - name: Apply and validate B2 source changes
-        shell: bash
-        run: |
-          set -euo pipefail
-          sed -i 's/read_text(encoding="utf-8")n$/read_text(encoding="utf-8")/' .executor/.github/r3-b2-apply.py
-          python3 .executor/.github/r3-b2-apply.py
-          python3 -m py_compile \
-            tests/checks/normative_evidence_contribution.py \
-            tests/checks/normative_coverage.py \
-            tests/checks/validator_source.py \
-            tests/run.py
-          python3 tests/checks/normative_evidence_contribution.py --static
-          python3 tests/checks/normative_false_coverage.py
-          python3 tests/checks/normative_traceability.py --strict-evidence
-          python3 tests/checks/normative_coverage.py
-          python3 tests/checks/normative_proof_state.py
-          git diff --check
-          rm -rf .executor
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add standards tests
-          git commit -m 'test: harden normative evidence contribution semantics'
-          git push origin HEAD:r3-b2-proof-semantics
+      - name: Run full PR integration contract
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs
+            node --version
+            make check
