@@ -13,7 +13,7 @@ trap cleanup EXIT INT TERM
 
 for cmd in pdffonts pdftotext; do
   command -v "$cmd" >/dev/null 2>&1 || {
-    echo "Matemática: comando ausente: $cmd"
+    echo "Matemática: command missing: $cmd"
     exit 1
   }
 done
@@ -22,7 +22,7 @@ for engine in pdflatex lualatex; do
   for family in times arial; do
     sed "s/@UFC_FONT@/$family/g" "$fixture" > "$tmp"
     job="matematica-$family-$engine"
-    echo "Validando política matemática $family com $engine..."
+    echo "Validating política matemática $family with $engine..."
 
     for pass in 1 2; do
       "$engine" -jobname="$job" $flags "$tmp" > "/tmp/$job.out" 2>&1 || {
@@ -54,7 +54,7 @@ for engine in pdflatex lualatex; do
           exit 1
         fi
         pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
-          echo "$job: fonte matemática esperada não identificada: $expected"
+          echo "$job: expected mathematics font was not identified: $expected"
           pdffonts "$job.pdf"
           exit 1
         }
@@ -82,7 +82,7 @@ root = ET.parse(path).getroot()
 
 pages = [node for node in root.iter() if node.tag.endswith('page')]
 if not pages:
-    raise SystemExit('PDF sem página no bbox.')
+    raise SystemExit('PDF without page in the bbox.')
 
 page = pages[0]
 page_width = float(page.attrib['width'])
@@ -105,8 +105,8 @@ rightmost = max(words, key=lambda item: item[2])
 expected_right = page_width - 2.0 * 72.0 / 2.54
 if abs(rightmost[2] - expected_right) > 4.0:
     raise SystemExit(
-        f'número da equação não está alinhado à direita: '
-        f'esperado xMax≈{expected_right:.2f}, obtido {rightmost[2]:.2f} ({rightmost[0]!r})'
+        f'equation number is not right-aligned: '
+        f'expected xMax≈{expected_right:.2f}, measured {rightmost[2]:.2f} ({rightmost[0]!r})'
     )
 print('VALIDATION-EVIDENCE rule=equation.numbering.format status=PASS expected=arabic-parenthesized measured=(1)')
 print('VALIDATION-EVIDENCE rule=equation.numbering.right status=PASS expected=right-aligned measured=right-margin-aligned')
@@ -114,4 +114,4 @@ PY
   done
 done
 
-echo 'Gate de matemática e equações concluído.'
+echo 'Mathematics and equations gate completed.'

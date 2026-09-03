@@ -13,7 +13,7 @@ for engine in pdflatex lualatex; do
   job="multivolume-$engine"
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
 
-  echo "Validando trabalho multivolume com $engine..."
+  echo "Validating multi-volume work with $engine..."
   for pass in 1 2 3; do
     "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-multivolume.log 2>&1 || {
       cat /tmp/abntexto-ufc-multivolume.log
@@ -25,20 +25,20 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Multivolume falhou: $job contém warning ou overflow não reconhecido."
+    echo "Multivolume failed: $job contains unrecognized warning or overflow."
     exit 1
   fi
 
   grep -Fq 'UFC-PAGE-AFTER-COVER=101' "$job.log" || {
-    echo "$job: initial-page was not preserved após a capa."
+    echo "$job: initial-page was not preserved após a cover."
     exit 1
   }
   grep -Fq 'UFC-PAGE-AFTER-TITLE=102' "$job.log" || {
-    echo "$job: folha de rosto não avançou a sequência 101 → 102."
+    echo "$job: title page did not advance the sequence 101 → 102."
     exit 1
   }
   grep -Fq 'UFC-TEXT-PAGE=102' "$job.log" || {
-    echo "$job: conteúdo textual não continuou na página lógica 102."
+    echo "$job: content textual não continuou in the page lógica 102."
     exit 1
   }
 
@@ -62,21 +62,21 @@ norm = [
 text = ' '.join(norm)
 
 if len(norm) < 3:
-    raise SystemExit(f'{job}: esperado capa, folha de rosto e conteúdo textual.')
+    raise SystemExit(f'{job}: expected cover, title page and content textual.')
 if 'curso de graduação em ciência da computação' not in norm[0]:
-    raise SystemExit(f'{job}: identificação completa do curso ausente da capa.')
+    raise SystemExit(f'{job}: identificação completa of the curso missing of the cover.')
 if text.count('volume 2') < 2:
-    raise SystemExit(f'{job}: volume não aparece na capa e na folha de rosto.')
+    raise SystemExit(f'{job}: volume não aparece in the cover and in the title page.')
 for marker in ('autor multivolume teste', 'trabalho multivolume de teste', 'marcador textual do volume dois'):
     if marker not in text:
-        raise SystemExit(f'{job}: conteúdo esperado ausente: {marker}')
+        raise SystemExit(f'{job}: content expected missing: {marker}')
 PY
 done
 
 cleanup_invalid
 sed 's/initial-page = 101/initial-page = 0/' "$fixture" > "$invalid_fixture"
 if pdflatex -jobname=invalid-page -interaction=nonstopmode -halt-on-error -file-line-error "$invalid_fixture" > /tmp/abntexto-ufc-invalid-page.log 2>&1; then
-  echo 'Multivolume falhou: initial-page=0 was accepted.'
+  echo 'Multivolume failed: initial-page=0 was accepted.'
   exit 1
 fi
 if ! python3 - /tmp/abntexto-ufc-invalid-page.log <<'PY'
@@ -91,8 +91,8 @@ raise SystemExit(0 if expected in compact else 1)
 PY
 then
   cat /tmp/abntexto-ufc-invalid-page.log
-  echo 'Multivolume falhou: invalid initial-page did not produce the expected error.'
+  echo 'Multivolume failed: invalid initial-page did not produce the expected error.'
   exit 1
 fi
 
-echo 'Gate de trabalhos multivolume concluído.'
+echo 'Multi-volume works gate completed.'

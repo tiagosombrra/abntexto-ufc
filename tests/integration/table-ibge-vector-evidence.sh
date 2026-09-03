@@ -35,4 +35,4 @@ python3 tests/checks/normative_table_ibge_vector.py "$job.pdf" \
   --json artifacts/normative-layout/table-ibge-vector-final-pdf.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
-echo 'Gate de evidência para geometria vetorial de tabelas IBGE concluído.'
+echo 'Evidence for vector geometry of tables ibge gate completed.'

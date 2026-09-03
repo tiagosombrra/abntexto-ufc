@@ -15,7 +15,7 @@ for engine in pdflatex lualatex; do
   for family in times arial; do
     sed "s/@UFC_FONT@/$family/g" "$fixture" > "$tmp"
     job="tipografia-codigo-$family-$engine"
-    echo "Validando tipografia de código/algoritmo $family com $engine..."
+    echo "Validating code/algorithm typography $family with $engine..."
 
     "$engine" -jobname="$job" $flags "$tmp" > "/tmp/$job.out" 2>&1 || {
       cat "/tmp/$job.out"
@@ -33,7 +33,7 @@ text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
 def marker(name):
     match = re.search(rf'{re.escape(name)}=([^\r\n]+)', text)
     if not match:
-        raise SystemExit(f'marcador ausente: {name}')
+        raise SystemExit(f'marker missing: {name}')
     return match.group(1).strip()
 
 
@@ -60,7 +60,7 @@ if algorithm_family != text_family:
 for name in ('UFC-TEXT-FONTSIZE', 'UFC-CODE-FONTSIZE', 'UFC-ALGORITHM-FONTSIZE'):
     actual = scalar(name)
     if abs(actual - 12.0) > 0.1:
-        raise SystemExit(f'{name}: esperado 12 pt nominal, obtido {actual:.4f}')
+        raise SystemExit(f'{name}: expected nominal size 12 pt, measured {actual:.4f}')
 PY
 
     pdftotext -bbox-layout "$job.pdf" "/tmp/$job-bbox.html"
@@ -115,14 +115,14 @@ def locate_marker_line(marker):
         } for word in line_words]
         content = [word for word in data if not re.fullmatch(r'\d+:?', word['text'].strip())]
         if not content:
-            raise SystemExit(f'marcador geométrico sem conteúdo: {marker}')
+            raise SystemExit(f'marker geometric without content: {marker}')
         return {
             'content_x0': min(word['x0'] for word in content),
             'y0': min(word['y0'] for word in data),
             'x1': max(word['x1'] for word in data),
             'y1': max(word['y1'] for word in data),
         }
-    raise SystemExit(f'marcador geométrico ausente: {marker}')
+    raise SystemExit(f'marker geometric missing: {marker}')
 
 
 def line_number_for(marker_box):
@@ -137,7 +137,7 @@ def line_number_for(marker_box):
         if re.fullmatch(r'\d+:?', word['text'].strip()):
             candidates.append(word)
     if not candidates:
-        raise SystemExit('número de linha não localizado junto ao marcador geométrico')
+        raise SystemExit('número of linha not found junto ao marker geometric')
     return min(candidates, key=lambda word: word['x0'])
 
 
@@ -151,8 +151,8 @@ for marker in ('UFC-CODE-GEOMETRY-MARKER', 'UFC-ALGORITHM-GEOMETRY-MARKER'):
         )
     if box['x1'] > A4_WIDTH - RIGHT + TOL:
         raise SystemExit(
-            f"{marker}: conteúdo invade margem direita: "
-            f"x={box['x1']:.2f}, limite={A4_WIDTH - RIGHT:.2f}"
+            f"{marker}: content crosses the right margin: "
+            f"x={box['x1']:.2f}, limit={A4_WIDTH - RIGHT:.2f}"
         )
 PY
 
@@ -160,4 +160,4 @@ PY
   done
 done
 
-echo 'Gate de tipografia e geometria de código e algoritmos concluído.'
+echo 'Tipografia and geometria of code and algorithms gate completed.'

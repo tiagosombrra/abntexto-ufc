@@ -96,7 +96,7 @@ for cmd in $required; do
 done
 
 if [ -n "$missing" ]; then
-  echo "POC fontes: comandos ausentes:$missing"
+  echo "POC sources: commands missing:$missing"
   echo 'POC fontes: verifique a instalação/PATH do TeX Live ou MiKTeX.'
   exit 2
 fi
@@ -171,7 +171,7 @@ assert_no_text_fallback() {
   names=$(font_names "$pdf")
 
   if printf '%s\n' "$names" | grep -Eiq 'TeXGyreTermesX|TeXGyreTermes|TeXGyreHeros|NimbusSans'; then
-    echo "POC fontes: $pdf contém família textual de fallback inesperada."
+    echo "Font POC: $pdf contains an unexpected fallback text family."
     pdffonts "$pdf"
     return 1
   fi
@@ -184,7 +184,7 @@ assert_text_extraction() {
 
   for marker in 'Texto normal para prova literal da classe.' 'ação' 'ciência' 'computação' 'orientação' 'avaliação' 'João' 'Ceará' 'São Luís'; do
     grep -Fq "$marker" "$txt" || {
-      echo "POC fontes: extração de texto ausente ou incorreta em $pdf: $marker"
+      echo "POC sources: extraction of text missing or incorrect in $pdf: $marker"
       cat "$txt"
       return 1
     }

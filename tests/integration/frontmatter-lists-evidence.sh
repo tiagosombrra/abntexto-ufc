@@ -49,7 +49,7 @@ compile_fixture() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Auditoria de listas opcionais falhou: warning ou overflow não reconhecido em $fixture."
+    echo "Optional lists audit failed: unrecognized warning or overflow in $fixture."
     exit 1
   fi
 }
@@ -77,13 +77,13 @@ python3 tests/checks/frontmatter_definition_list_alignment.py \
   --json "$alignment_evidence"
 
 test -s "$evidence" || {
-  echo 'Auditoria de listas opcionais falhou: evidência JSON não foi gerada.'
+  echo 'Optional lists audit failed: JSON evidence was not generated.'
   exit 1
 }
 
 test -s "$alignment_evidence" || {
-  echo 'Auditoria de listas opcionais falhou: evidência de alinhamento não foi gerada.'
+  echo 'Optional lists audit failed: alignment evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência front matter para listas front matter opcionais concluído.'
+echo 'Evidence front matter for lists front matter opcionais gate completed.'

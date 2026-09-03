@@ -13,7 +13,7 @@ trap cleanup EXIT INT TERM
 
 for engine in pdflatex lualatex; do
   job="fontes-documentais-$engine"
-  echo "Validando fontes documentais com $engine..."
+  echo "Validating documentary sources with $engine..."
 
   "$engine" -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {
     cat "/tmp/$job.out"
@@ -34,7 +34,7 @@ for engine in pdflatex lualatex; do
 
   if grep -Eq 'WARN|ERROR' "$job.blg"; then
     cat "$job.blg"
-    echo "$job: Biber reportou warning/error."
+    echo "$job: Biber reported a warning/error."
     exit 1
   fi
 
@@ -59,23 +59,23 @@ for marker in (
     'editora acadêmica',
 ):
     if marker.casefold() not in fold:
-        raise SystemExit(f'marcador documental ausente: {marker}')
+        raise SystemExit(f'marker documental missing: {marker}')
 
 source_match = re.search(r'adaptado de.{0,120}silva.{0,120}2026', fold)
 if not source_match:
-    raise SystemExit('fonte externa não foi apresentada em forma de citação autor-data.')
+    raise SystemExit('external source was not presented in form of citation author-date.')
 
 annex_pos = fold.find('anexo a')
 fullref_pos = fold.find('manual de dados de teste')
 if annex_pos < 0 or fullref_pos < annex_pos:
-    raise SystemExit('referência bibliográfica própria não permaneceu dentro do anexo.')
+    raise SystemExit('The annex-specific bibliographic reference did not remain inside the annex.')
 
 if 'referências' in fold[annex_pos:]:
-    raise SystemExit('fixture criou lista global de referências; o caso deve permanecer local ao anexo.')
+    raise SystemExit('fixture criou list global of references; o caso deve permanecer local ao annex.')
 PY
 
   echo 'VALIDATION-EVIDENCE rule=illustration.source.external-citation status=PASS expected=author-date-citation measured=adapted-source-citation-present'
 
 done
 
-echo 'Gate de fontes documentais concluído.'
+echo 'Documentary sources gate completed.'

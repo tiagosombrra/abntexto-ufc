@@ -41,7 +41,7 @@ def line_for(marker):
     for line in lines:
         if marker in line:
             return line
-    raise SystemExit(f'marcador ausente: {marker}')
+    raise SystemExit(f'marker missing: {marker}')
 
 
 expected_markers = {
@@ -55,7 +55,7 @@ expected_markers = {
 for number, marker in expected_markers.items():
     line = line_for(marker)
     if not re.search(rf'(^|\s){number}:\s+\S', line):
-        raise SystemExit(f'linha {number} sem prefixo/conteúdo esperado: {line!r}')
+        raise SystemExit(f'linha {number} without prefixo/content expected: {line!r}')
 
 numbered = {}
 for line in lines:
@@ -85,4 +85,4 @@ PY
 
 done
 
-echo 'Gate de numeração de algoritmos concluído.'
+echo 'Algorithm numbering gate completed.'

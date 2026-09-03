@@ -31,4 +31,4 @@ python3 tests/checks/normative_vector_rule_validation.py "$job.pdf" \
   --json artifacts/normative-layout/vector-rule-validation-calibration.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
-echo 'Gate de calibração para geometria vetorial concluído.'
+echo 'Calibração for vector geometry gate completed.'

@@ -7,7 +7,7 @@ for engine in pdflatex lualatex; do
   job="frontmatter-duplex-$engine"
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
 
-  echo "Validando início em anverso dos front matter com $engine..."
+  echo "Validating início in recto of the front matter with $engine..."
   for pass in 1 2 3; do
     "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-duplex-frontmatter.log 2>&1 || {
       cat /tmp/abntexto-ufc-duplex-frontmatter.log
@@ -19,7 +19,7 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Duplex falhou: $job contém warning ou overflow não reconhecido."
+    echo "Duplex failed: $job contains unrecognized warning or overflow."
     exit 1
   fi
 
@@ -60,10 +60,10 @@ markers = (
 for marker in markers:
     matches = [i + 1 for i, page in enumerate(normalized) if marker.casefold() in page]
     if not matches:
-        raise SystemExit(f'{job}: marcador ausente: {marker}')
+        raise SystemExit(f'{job}: marker missing: {marker}')
     page = matches[0]
     if page % 2 == 0:
-        raise SystemExit(f'{job}: elemento deveria iniciar no anverso, mas apareceu na página física {page}: {marker}')
+        raise SystemExit(f'{job}: element should start on a recto but appeared on physical page {page}: {marker}')
 
 print(f'{job}: todos os elementos auditados iniciam no anverso.')
 PY
@@ -71,4 +71,4 @@ done
 
 sh tests/integration/section-primary-recto-duplex-evidence.sh
 
-echo 'Gate de front matter duplex concluído.'
+echo 'Front matter duplex gate completed.'

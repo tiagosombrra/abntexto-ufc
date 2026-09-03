@@ -37,7 +37,7 @@ def find_page(root: ET.Element, heading: str) -> ET.Element:
         text = normalize(" ".join(word_text(word) for word in page_words(page)))
         if wanted in text:
             return page
-    raise SystemExit(f"Front matter validation falhou: página não localizada: {heading}.")
+    raise SystemExit(f"Front matter validation failed: page not found: {heading}.")
 
 
 def find_word(page: ET.Element, value: str) -> ET.Element:
@@ -45,7 +45,7 @@ def find_word(page: ET.Element, value: str) -> ET.Element:
     for word in page_words(page):
         if normalize(word_text(word)) == wanted:
             return word
-    raise SystemExit(f"Front matter validation falhou: palavra não localizada: {value}.")
+    raise SystemExit(f"Front matter validation failed: word not found: {value}.")
 
 
 def aligned_row(page: ET.Element, description_first_word: str) -> tuple[float, float]:
@@ -60,13 +60,13 @@ def aligned_row(page: ET.Element, description_first_word: str) -> tuple[float, f
     ]
     if not candidates:
         raise SystemExit(
-            f"Front matter validation falhou: rótulo não localizado para {description_first_word}."
+            f"Front matter validation failed: label not found for {description_first_word}."
         )
     label = min(candidates, key=lambda word: abs(center_y(word) - desc_y))
     delta = abs(center_y(label) - desc_y)
     if delta > VERTICAL_TOLERANCE_PT:
         raise SystemExit(
-            "Front matter validation falhou: rótulo e descrição estão verticalmente desalinhados "
+            "Front matter validation failed: label and description are vertically misaligned "
             f"em {description_first_word}: delta={delta:.2f} pt."
         )
     return float(label.attrib["xMin"]), desc_x
@@ -77,12 +77,12 @@ def assert_columns(label: str, rows: list[tuple[float, float]]) -> None:
     description_positions = [row[1] for row in rows]
     if max(label_positions) - min(label_positions) > COLUMN_TOLERANCE_PT:
         raise SystemExit(
-            f"Front matter validation falhou: coluna de rótulos desalinhada na lista de {label}: "
+            f"Front matter validation failed: label column is misaligned in the {label} list: "
             f"{label_positions}."
         )
     if max(description_positions) - min(description_positions) > COLUMN_TOLERANCE_PT:
         raise SystemExit(
-            f"Front matter validation falhou: coluna de descrições desalinhada na lista de {label}: "
+            f"Front matter validation failed: description column is misaligned in the {label} list: "
             f"{description_positions}."
         )
 

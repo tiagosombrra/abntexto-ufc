@@ -64,4 +64,4 @@ test -s "$equation_evidence" || {
   exit 1
 }
 
-echo 'Gate de evidência para tipografia de tabela e equação destacada concluído.'
+echo 'Evidence for table typography and displayed equation gate completed.'

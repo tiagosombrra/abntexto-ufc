@@ -74,17 +74,17 @@ checks = (
 for marker, label in checks:
     matches = [i + 1 for i, page in enumerate(normalized) if marker in page]
     if not matches:
-        raise SystemExit(f'{job}: marcador pós-textual ausente: {label}')
+        raise SystemExit(f'{job}: marker pós-textual missing: {label}')
     if matches[0] % 2 == 0:
-        raise SystemExit(f'{job}: {label} iniciou no verso, página física {matches[0]}')
+        raise SystemExit(f'{job}: {label} iniciou in the verso, page física {matches[0]}')
 
 index_pages = [i + 1 for i, page in enumerate(normalized) if 'índice' in page]
 if not index_pages:
-    raise SystemExit(f'{job}: índice ausente')
+    raise SystemExit(f'{job}: index missing')
 if index_pages[-1] % 2 == 0:
-    raise SystemExit(f'{job}: Índice iniciou no verso, página física {index_pages[-1]}')
+    raise SystemExit(f'{job}: index iniciou in the verso, page física {index_pages[-1]}')
 
 print(f'{job}: pós-textuais auditados iniciam no anverso.')
 PY
 
-echo 'Gate de pós-textuais duplex concluído.'
+echo 'Pós-textuais duplex gate completed.'

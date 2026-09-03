@@ -26,7 +26,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo 'Auditoria de resumo/abstract falhou: warning ou overflow não reconhecido.'
+  echo 'Summary/abstract audit failed: unrecognized warning or overflow.'
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_frontmatter_summary.py \
   --enforce
 
 test -s "$evidence" || {
-  echo 'Auditoria de resumo/abstract falhou: evidência JSON não foi gerada.'
+  echo 'Summary/abstract audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência front matter para resumo/abstract concluído.'
+echo 'Evidence front matter for summary/abstract gate completed.'

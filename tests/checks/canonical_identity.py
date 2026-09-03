@@ -33,8 +33,6 @@ LEGACY_FULL_FILE_EXEMPT = {
     # Current migration/control records legitimately identify the removed
     # legacy entrypoint while documenting its retirement.
     "release/v3-api-migration.json",
-    "release/v3-path-migration.json",
-    "release/v3-test-migration.json",
     "docs/MIGRATING-TO-V3.md",
 
     # Negative assertions must name the legacy entrypoint to reject it.

@@ -27,7 +27,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Auditoria de indicativos de seção falhou: warning ou overflow não reconhecido em $fixture."
+  echo "Section indicators audit failed: unrecognized warning or overflow in $fixture."
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_section_indicator.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Auditoria de indicativos de seção falhou: evidência JSON não foi gerada.'
+  echo 'Section indicators audit failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência para indicativos de seção concluído.'
+echo 'Evidence for section indicators gate completed.'

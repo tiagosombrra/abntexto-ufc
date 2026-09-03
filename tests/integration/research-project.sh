@@ -4,13 +4,13 @@ set -eu
 
 compile_project_with_biber() {
   engine="$1"
-  job="projeto-15287"
+  job="research-project-15287"
   fixture="tests/documents/research-project-15287.tex"
 
   rm -f "$job".aux "$job".bbl "$job".bcf "$job".blg "$job".log \
         "$job".out "$job".pdf "$job".run.xml "$job".toc
 
-  echo "Validando $fixture com $engine + Biber..."
+  echo "Validating $fixture with $engine + Biber..."
   "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-project.log
     exit 1
@@ -35,7 +35,7 @@ compile_plain_project() {
   job="$3"
 
   rm -f "$job".aux "$job".log "$job".out "$job".pdf "$job".toc
-  echo "Validando $fixture com $engine..."
+  echo "Validating $fixture with $engine..."
   "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-project.log 2>&1 || {
     cat /tmp/abntexto-ufc-project.log
     exit 1
@@ -56,40 +56,40 @@ check_log() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Preflight falhou: fixture de projeto contém warning ou overflow não reconhecido."
+    echo "Preflight failed: fixture of research project contains unrecognized warning or overflow."
     exit 1
   fi
 }
 
 for engine in pdflatex lualatex; do
   compile_project_with_biber "$engine"
-  check_log projeto-15287.log
+  check_log research-project-15287.log
 done
 
 for engine in pdflatex lualatex; do
-  compile_plain_project "$engine" tests/documents/research-project-without-cover.tex projeto-sem-capa
-  check_log projeto-sem-capa.log
+  compile_plain_project "$engine" tests/documents/research-project-without-cover.tex research-project-without-cover
+  check_log research-project-without-cover.log
 done
 
 for engine in pdflatex lualatex; do
-  compile_plain_project "$engine" tests/documents/frontmatter-anonymized-project.tex pretextuais-projeto-anonimo
-  check_log pretextuais-projeto-anonimo.log
+  compile_plain_project "$engine" tests/documents/frontmatter-anonymized-project.tex frontmatter-anonymized-research-project
+  check_log frontmatter-anonymized-research-project.log
 done
 
-if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' projeto-15287.log; then
-  echo 'NBR 15287/UFC: brasão foi carregado por padrão na capa de projeto.'
+if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' research-project-15287.log; then
+  echo 'NBR 15287/UFC: coat of arms was loaded by default on the research-project cover.'
   exit 1
 fi
 
-if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' pretextuais-projeto-anonimo.log; then
-  echo 'NBR 15287/UFC: brasão foi carregado por padrão no projeto anonimizado.'
+if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' frontmatter-anonymized-research-project.log; then
+  echo 'NBR 15287/UFC: coat of arms was loaded by default in the anonymized research project.'
   exit 1
 fi
 
 if command -v pdftotext >/dev/null 2>&1; then
-  pdftotext -layout projeto-15287.pdf /tmp/abntexto-ufc-project.txt
-  pdftotext -layout projeto-sem-capa.pdf /tmp/abntexto-ufc-project-no-cover.txt
-  pdftotext -layout pretextuais-projeto-anonimo.pdf /tmp/abntexto-ufc-project-anon.txt
+  pdftotext -layout research-project-15287.pdf /tmp/abntexto-ufc-project.txt
+  pdftotext -layout research-project-without-cover.pdf /tmp/abntexto-ufc-project-no-cover.txt
+  pdftotext -layout frontmatter-anonymized-research-project.pdf /tmp/abntexto-ufc-project-anon.txt
 
   python3 - <<'PY'
 import re
@@ -120,48 +120,48 @@ for expected in (
     'REFERÊNCIAS',
 ):
     if expected.casefold() not in project.casefold():
-        raise SystemExit(f'NBR 15287:2025: conteúdo obrigatório da fixture ausente: {expected}')
+        raise SystemExit(f'NBR 15287:2025: required fixture content is missing: {expected}')
 
 if 'INSTITUIÇÃO DE ORIGEM TESTE'.casefold() in project.casefold():
-    raise SystemExit('NBR 15287:2025: capa de projeto usou a IES no lugar da entidade de submissão.')
+    raise SystemExit('NBR 15287:2025: research-project cover used the institution instead of the submission entity.')
 
 for forbidden in ('RESUMO', 'ABSTRACT', 'BANCA EXAMINADORA', 'APROVADA EM'):
     if forbidden.casefold() in project.casefold():
-        raise SystemExit(f'NBR 15287:2025: elemento de trabalho final apareceu no projeto: {forbidden}')
+        raise SystemExit(f'NBR 15287:2025: final-academic-work element appeared in the research project: {forbidden}')
 
 if 'MARCADOR CAPA OPCIONAL'.casefold() in no_cover.casefold():
-    raise SystemExit('NBR 15287:2025: capa opcional foi impressa apesar de cover = false.')
+    raise SystemExit('NBR 15287:2025: optional cover was rendered despite cover = false.')
 if 'AUTOR SEM CAPA TESTE'.casefold() not in no_cover.casefold():
-    raise SystemExit('NBR 15287:2025: folha de rosto obrigatória ausente no projeto sem capa.')
+    raise SystemExit('NBR 15287:2025: required title page is missing from the research project without a cover.')
 
 if 'AUTOR SIGILOSO TESTE'.casefold() in anon.casefold():
-    raise SystemExit('Projeto anonimizado: autor vazou no PDF.')
+    raise SystemExit('Anonymized research project: author leaked into the PDF.')
 if 'ORIENTADOR SIGILOSO TESTE'.casefold() in anon.casefold():
-    raise SystemExit('Projeto anonimizado: orientador vazou no PDF.')
+    raise SystemExit('Anonymized research project: advisor leaked into the PDF.')
 if 'PROJETO-ANONIMO-001'.casefold() not in anon.casefold():
-    raise SystemExit('Projeto anonimizado: identificador público ausente.')
+    raise SystemExit('Anonymized research project: public identifier is missing.')
 PY
 fi
 
 for expected in 'Introdução' 'Referencial teórico' 'Metodologia' 'Recursos' 'Cronograma' 'Referências'; do
-  grep -Fqi "$expected" projeto-15287.toc || {
-    echo "NBR 15287:2025: item ausente do Sumário: $expected"
-    cat projeto-15287.toc
+  grep -Fqi "$expected" research-project-15287.toc || {
+    echo "NBR 15287:2025: item is missing from the table of contents: $expected"
+    cat research-project-15287.toc
     exit 1
   }
 done
 
-if grep -Eiq 'resumo|abstract|agradecimentos|dedicat[oó]ria|folha de aprova' projeto-15287.toc; then
-  echo 'NBR 15287:2025: elemento pré-textual indevido entrou no Sumário do projeto.'
-  cat projeto-15287.toc
+if grep -Eiq 'resumo|abstract|agradecimentos|dedicat[oó]ria|folha de aprova' research-project-15287.toc; then
+  echo 'NBR 15287:2025: invalid front-matter element leaked into the research-project table of contents.'
+  cat research-project-15287.toc
   exit 1
 fi
 
 python3 -m py_compile tests/checks/normative_research_project_structure.py
 python3 tests/checks/normative_research_project_structure.py \
-  projeto-15287.pdf \
+  research-project-15287.pdf \
   --json artifacts/normative-project/project-structure-final-pdf.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-unknown}}" \
   --enforce
 
-echo 'Gate NBR 15287:2025 concluído.'
+echo 'Gate NBR 15287:2025 completed.'
