@@ -14,9 +14,11 @@ def apply(relative: str, replacements: dict[str, str]) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-# The checker must not treat the English word "fallback" as Portuguese.
+# The checker must not treat ambiguous English words as Portuguese.
 checker = ROOT / "tests/checks/engineering_language.py"
-text = checker.read_text(encoding="utf-8").replace("|fallback|apareceu", "|apareceu")
+text = checker.read_text(encoding="utf-8")
+text = text.replace("|fallback|apareceu", "|apareceu")
+text = text.replace("|consultada|original|evento", "|consultada|evento")
 checker.write_text(text, encoding="utf-8")
 
 apply(
