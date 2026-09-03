@@ -29,9 +29,10 @@ Memory, old pull requests, workflow names, historical branches, and prior chat c
 - The `Stable branches` ruleset currently has no required-status rule. The recorded recommendation is to require `Static contract` and `Linux integration`; `Linux release check` remains post-merge/manual.
 - R1-BLOCK-8 is DONE. The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`.
 - Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX matrix; final Linux run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b.
-- V3-R2 is ACTIVE in R2-B2 via issue #237. R2-A ownership inventory and R2-B1 setup/internal-state migration are complete and recorded in `docs/R2-API-OWNERSHIP.md`.
+- V3-R2 is ACTIVE in R2-B3 via issue #238. R2-A ownership inventory plus R2-B1 setup/internal-state and R2-B2 academic/front-matter migrations are complete and recorded in `docs/R2-API-OWNERSHIP.md`.
 - R2-B1 merged through PR #236 at `ded5e77733795aa2958606e899d4e27f12f64df4`; final `Linux integration` run `33668283890` passed `PASS=30 FAIL=0 SKIP=0`.
-- R2-B2 owns academic/front-matter public rendering commands and the corresponding layout-hook rebinding. Behavior owner, template consumers and tests move atomically; do not perform a blind global replacement.
+- R2-B2 merged through PR #242 at `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; final `Linux integration` run `33680378846` passed `PASS=30 FAIL=0 SKIP=0`, with strengthened residual audit `33680252116` green.
+- R2-B3 owns structural/object environments, source/note and object-list APIs, optional listing/minted APIs, extension hooks, project-owned `codigo` / `algoritmo` IDs, and their atomic template/test consumers. `ufcdefinitionlist` and the ABNTexto override move together. Do not perform a blind global replacement.
 - `public-api.def` is transitional R2 debt. Remove migrated forwarding entries as each owner absorbs them; do not add a reverse compatibility layer. The file is removed completely in R2-B5.
 - Preserve rendered behavior and normative rule IDs, values, tolerances, locators and proof state during R2 unless explicit new evidence authorizes a normative change.
 - Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.

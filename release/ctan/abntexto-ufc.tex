@@ -4,7 +4,7 @@
 \documentclass[11pt,a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[brazil,english]{babel}
+\usepackage[brazilian,english]{babel}
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{enumitem}
@@ -49,20 +49,21 @@ The canonical upstream package page is \url{https://ctan.org/pkg/abntexto}.
 
 \section{Minimal configuration pattern}
 
-The current v3 runtime keeps the Portuguese public API during the R1 reconstruction. A typical document configures metadata with \texttt{\string\ufcsetup} and then prints the required document elements. The full editable template distributed by the project contains the complete set of fields and examples.
+Version 3 uses one canonical English project API. Setup keys and project-owned public commands are English; Portuguese remains appropriate for rendered Brazilian academic content. Removed v2 Portuguese project API is not kept through runtime aliases. The full editable template distributed by the project contains the complete set of fields and examples.
 
 \begin{Verbatim}[frame=single]
 \documentclass{abntexto-ufc}
 
 \ufcsetup{
-  tipo = tccgraduacao,
-  autor = {Nome Sobrenome},
-  titulo = {Titulo do trabalho},
-  local = {Fortaleza},
-  ano = {2026},
-  orientador = {Prof. Dr. Nome do Orientador},
-  ies = {Universidade Federal do Ceara},
-  curso-graduacao = {Nome do Curso}
+  type = undergraduate-capstone,
+  print-mode = single-sided,
+  author = {Nome Sobrenome},
+  title = {Titulo do trabalho},
+  location = {Fortaleza},
+  year = {2026},
+  advisor = {Prof. Dr. Nome do Orientador},
+  institution = {Universidade Federal do Ceara},
+  undergraduate-program = {Nome do Curso}
 }
 
 \begin{document}
@@ -72,16 +73,18 @@ The current v3 runtime keeps the Portuguese public API during the R1 reconstruct
 \ufcPrintTableOfContents
 
 \textual
-\chapter{Introducao}
+\section{Introducao}
 Texto do trabalho.
 \end{document}
 \end{Verbatim}
 
-The distribution also contains \texttt{abntexto-ufc-example.tex}, which is used by the release validation as an installation smoke test.
+The distribution also contains \texttt{abntexto-ufc-example.tex}, the minimal package example used as a release-source fixture.
 
 \section{Architecture}
 
-The public class file \texttt{abntexto-ufc.cls} loads the external \upstream{} class and then the project-owned modules under \texttt{abntexto-ufc/}. Those modules separate core behavior, fonts, layout, front matter, academic-work profiles, research projects, objects, bibliography, integrations, standards adaptations, back matter, and the public API.
+The public class file \texttt{abntexto-ufc.cls} loads the external \upstream{} class and then project-owned responsibility modules under \texttt{abntexto-ufc/}. Those modules separate core behavior, fonts, layout, front matter, academic-work profiles, research projects, objects, bibliography, current upstream integrations, standards adaptations, and back matter.
+
+During the v3 runtime/API migration, \texttt{public-api.def} is transitional forwarding debt only; it is not a behavior owner and is removed before the release-ready v3 foundation is frozen. Public behavior is implemented directly by the module that owns it.
 
 This modular layout is intentional: the CTAN candidate keeps the class and module directory together and does not vendor \texttt{abntexto.cls}.
 
@@ -93,10 +96,10 @@ The project produces distinct release artifacts for different consumers:
   \item a class/runtime archive;
   \item a CTAN submission candidate;
   \item a flattened editable template archive;
-  \item a flattened Overleaf archive containing the pinned upstream \texttt{abntexto.cls} for self-contained import.
+  \item a self-contained flattened Overleaf archive.
 \end{itemize}
 
-Only the Overleaf bundle vendors the pinned upstream class. The CTAN candidate keeps \upstream{} as a normal external TeX dependency.
+Only the Overleaf bundle vendors the pinned upstream \texttt{abntexto.cls}. The CTAN candidate keeps \upstream{} as a normal external TeX dependency.
 
 \section{License and support}
 
