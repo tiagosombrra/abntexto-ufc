@@ -3,7 +3,7 @@
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
   "phase": "V3-R3",
-  "stage": "R3-B2",
+  "stage": "R3-B3",
   "status": "ACTIVE",
   "reviewed_at": "2026-09-03",
   "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
@@ -14,7 +14,16 @@
     "r2_release_result": "PASS=32 FAIL=0 SKIP=0",
     "r2_closeout_static_run_id": 33747658673,
     "r2_closeout_linux_run_id": 33747658602,
-    "r2_closeout_linux_result": "PASS=30 FAIL=0 SKIP=0"
+    "r2_closeout_linux_result": "PASS=30 FAIL=0 SKIP=0",
+    "r3_b2_product_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+    "r3_b2_inventory_run_id": 33764122865,
+    "r3_b2_static_run_id": 33768911131,
+    "r3_b2_linux_run_id": 33768911126,
+    "r3_b2_linux_job_id": 100694266254,
+    "r3_b2_linux_result": "PASS=31 FAIL=0 SKIP=0",
+    "r3_b2_independent_run_id": 33768364069,
+    "r3_b2_independent_result": "PASS=31 FAIL=0 SKIP=0",
+    "r3_b2_post_merge_release_run_id": 33772854355
   },
   "normative_baseline": {
     "sources": 19,
@@ -112,7 +121,10 @@
       "owner": "R3-B2",
       "issue": 253,
       "fact": "normative_coverage proves that rules name known checks, not that those checks enforce the predicates.",
-      "status": "OPEN"
+      "status": "RESOLVED",
+      "resolved_by": "R3-B2",
+      "resolution": "Complete-run contribution intersects rule-specific PASS evidence with declared owners; mechanism registration alone is not enforcement.",
+      "closure_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea"
     },
     {
       "id": "manual-conditional-rules-require-classification",
@@ -121,7 +133,10 @@
       "owner": "R3-B2",
       "issue": 253,
       "fact": "17 rules are manual or conditional and must be individually justified rather than assumed to be automation debt.",
-      "status": "OPEN"
+      "status": "RESOLVED",
+      "resolved_by": "R3-B2",
+      "resolution": "All 17 non-automatic rules are explicit: 10 conditional-review, 6 manual-review, 1 not-applicable; no green-gate auto-promotion.",
+      "closure_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea"
     },
     {
       "id": "residual-gate-engineering-scope-gap",
@@ -130,7 +145,7 @@
       "owner": "R3-B3",
       "issue": 254,
       "fact": "v3_api_residual scans selected LaTeX/runtime sources but not project-owned shell/Python/workflow/machine generators, allowing stale v2 literals in scripts.",
-      "status": "OPEN"
+      "status": "ACTIVE"
     },
     {
       "id": "engineering-language-diagnostics-gap",
@@ -175,14 +190,41 @@
     },
     "R3-B2": {
       "issue": 253,
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "normative proof-state and coverage semantics hardening",
-      "entry_product_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
+      "entry_product_main_sha": "32c3221c813790e938ffb29d1f4ee55c2812c47d",
+      "pr": 260,
+      "implementation_head_sha": "55a833fc17daddc2526c4f42e6830470de6df873",
+      "merge_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+      "inventory_run_id": 33764122865,
+      "static_contract_run_id": 33768911131,
+      "linux_integration_run_id": 33768911126,
+      "linux_integration_job_id": 100694266254,
+      "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+      "independent_validation_run_id": 33768364069,
+      "independent_validation_result": "PASS=31 FAIL=0 SKIP=0",
+      "post_merge_release_run_id": 33772854355,
+      "contribution": {
+        "rules": 181,
+        "automatic_declared": 164,
+        "automatic_partial": 113,
+        "automatic_partial_bounded_positive": 113,
+        "enforced_automatic": 37,
+        "support_only": 14,
+        "conditional_review": 10,
+        "manual_review": 6,
+        "not_applicable": 1,
+        "automation_gap": 0
+      },
+      "normative_semantics_changed": false,
+      "proof_state_changed": false,
+      "public_runtime_api_changed": false
     },
     "R3-B3": {
       "issue": 254,
-      "status": "PENDING",
-      "name": "semantic test integrity and expanded residual enforcement"
+      "status": "ACTIVE",
+      "name": "semantic test integrity and expanded residual enforcement",
+      "entry_product_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea"
     },
     "R3-B4": {
       "issue": 255,
@@ -211,10 +253,10 @@
     "scientific_article_work_allowed_before_certified_foundation": false,
     "ctan_submission_allowed_during_r3": false
   },
-  "next_stage": "R3-B2",
-  "next_issue": 253,
+  "next_stage": "R3-B3",
+  "next_issue": 254,
   "r3_a_source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
-  "current_entry_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
+  "current_entry_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
   "r3_b1_closeout": {
     "issue": 252,
     "pr": 258,
@@ -229,5 +271,44 @@
     "unresolved_positive_frontmatter_findings": 0,
     "normative_semantics_changed": false,
     "proof_state_changed": false
+  },
+  "r3_b2_closeout": {
+    "issue": 253,
+    "pr": 260,
+    "entry_main_sha": "32c3221c813790e938ffb29d1f4ee55c2812c47d",
+    "implementation_head_sha": "55a833fc17daddc2526c4f42e6830470de6df873",
+    "merge_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+    "inventory_run_id": 33764122865,
+    "static_contract_run_id": 33768911131,
+    "linux_integration_run_id": 33768911126,
+    "linux_integration_job_id": 100694266254,
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "independent_validation_run_id": 33768364069,
+    "independent_validation_result": "PASS=31 FAIL=0 SKIP=0",
+    "post_merge_release_run_id": 33772854355,
+    "contribution": {
+      "rules": 181,
+      "automatic_declared": 164,
+      "automatic_partial": 113,
+      "automatic_partial_bounded_positive": 113,
+      "enforced_automatic": 37,
+      "support_only": 14,
+      "conditional_review": 10,
+      "manual_review": 6,
+      "not_applicable": 1,
+      "automation_gap": 0
+    },
+    "proof_state_baseline": {
+      "PARTIAL": 113,
+      "NOT_PROVEN": 51,
+      "MANUAL": 6,
+      "CONDITIONAL": 10,
+      "NOT_APPLICABLE": 1
+    },
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false,
+    "post_merge_release_job_id": 100707196590,
+    "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0"
   }
 }

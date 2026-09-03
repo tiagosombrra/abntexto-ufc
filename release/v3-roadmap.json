@@ -6,8 +6,8 @@
   "updated_at": "2026-09-03",
   "status": "ACTIVE",
   "phase": "V3-R3",
-  "stage": "R3-B2",
-  "stage_name": "normative proof-state and coverage semantics hardening",
+  "stage": "R3-B3",
+  "stage_name": "semantic test integrity and expanded residual enforcement",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,7 +978,7 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R3/R3-B2 issue #253 from afb9f16403aafd8752a0aa8b0713f85c41204d1b: classify all 17 manual/conditional rules, audit automatic-partial proof claims, reconcile strict traceability with proof/evidence registries, and make coverage metrics distinguish enforcement from support-only observation without changing normative meaning.",
+  "next_action": "Execute V3-R3/R3-B3 issue #254 from 1d9e6373ed674fb7503b968b3e852e4be5fc14ea: audit semantic generator integrity and expand permanent removed-v2 residual enforcement across behavior-affecting project-owned engineering surfaces.",
   "r1_status": "DONE",
   "r2": {
     "status": "DONE",
@@ -1126,11 +1126,11 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "stage": "R3-B2",
-    "issue": 253,
-    "entry_product_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
-    "status": "ACTIVE",
-    "implementation_branch_rule": "branch from the merged R3-B1 fail-closed evidence checkpoint"
+    "phase": "V3-R3",
+    "stage": "R3-B3",
+    "issue": 254,
+    "entry_product_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+    "name": "semantic test integrity and expanded residual enforcement"
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1194,8 +1194,8 @@
   },
   "r3": {
     "status": "ACTIVE",
-    "stage": "R3-B2",
-    "stage_name": "normative proof-state and coverage semantics hardening",
+    "stage": "R3-B3",
+    "stage_name": "semantic test integrity and expanded residual enforcement",
     "issue": 253,
     "entry_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
     "goal": "Harden evidence truthfulness, normative proof semantics, semantic test integrity, engineering-language enforcement, and closed-contract hygiene before R4 certification.",
@@ -1247,15 +1247,18 @@
         "proof_state_changed": false
       },
       "R3-B2": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 253,
         "name": "normative proof-state and coverage semantics hardening",
-        "entry_product_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
+        "entry_product_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
+        "pr": 260,
+        "merge_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea"
       },
       "R3-B3": {
-        "status": "PENDING",
+        "status": "ACTIVE",
         "issue": 254,
-        "name": "semantic test integrity and expanded residual enforcement"
+        "name": "semantic test integrity and expanded residual enforcement",
+        "entry_product_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea"
       },
       "R3-B4": {
         "status": "PENDING",
@@ -1267,6 +1270,45 @@
         "issue": 256,
         "name": "R3 closeout and R4 certification entry"
       }
+    },
+    "pr": 260,
+    "merge_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+    "active_issue": 254,
+    "b2_closeout": {
+      "issue": 253,
+      "pr": 260,
+      "entry_main_sha": "32c3221c813790e938ffb29d1f4ee55c2812c47d",
+      "implementation_head_sha": "55a833fc17daddc2526c4f42e6830470de6df873",
+      "merge_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+      "inventory_run_id": 33764122865,
+      "static_contract_run_id": 33768911131,
+      "linux_integration_run_id": 33768911126,
+      "linux_integration_job_id": 100694266254,
+      "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+      "independent_validation_run_id": 33768364069,
+      "independent_validation_result": "PASS=31 FAIL=0 SKIP=0",
+      "post_merge_release_run_id": 33772854355,
+      "contribution": {
+        "rules": 181,
+        "automatic_declared": 164,
+        "automatic_partial": 113,
+        "automatic_partial_bounded_positive": 113,
+        "enforced_automatic": 37,
+        "support_only": 14,
+        "conditional_review": 10,
+        "manual_review": 6,
+        "not_applicable": 1,
+        "automation_gap": 0
+      },
+      "normative_semantics_changed": false,
+      "proof_state_changed": false,
+      "public_runtime_api_changed": false
+    },
+    "b3": {
+      "issue": 254,
+      "status": "ACTIVE",
+      "entry_product_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+      "name": "semantic test integrity and expanded residual enforcement"
     }
   },
   "r3_a_closeout": {
@@ -1309,5 +1351,10 @@
     "locator_policy_changed": false,
     "reference_tolerances_changed": false,
     "proof_state_changed": false
+  },
+  "r3_b2_closeout": {
+    "post_merge_release_run_id": 33772854355,
+    "post_merge_release_job_id": 100707196590,
+    "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0"
   }
 }

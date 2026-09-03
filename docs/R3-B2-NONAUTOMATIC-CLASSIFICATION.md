@@ -25,3 +25,5 @@ R3-B2 reviewed every full-contract rule whose validation mode is not automatic. 
 | `list.symbols.optional` | conditional | conditional-review | The list is optional and evaluated through present/absent routes. |
 
 No rule in this set was reclassified as automatic merely because a related gate is green. The proof-state baseline remains conservative: six `MANUAL`, ten `CONDITIONAL`, one `NOT_APPLICABLE`, 113 `PARTIAL`, and 51 `NOT_PROVEN` rules.
+
+R3-B2 closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` with this 17-rule classification unchanged and with no non-automatic rule promoted merely from a green related gate.

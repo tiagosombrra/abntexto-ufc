@@ -4,9 +4,9 @@ Updated: 2026-09-03
 
 ## Status
 
-**V3-R1 DONE. V3-R2 DONE. V3-R3 ACTIVE — R3-A DONE; R3-B1 DONE; R3-B2 ACTIVE.**
+**V3-R1 DONE. V3-R2 DONE. V3-R3 ACTIVE — R3-A DONE; R3-B1 DONE; R3-B2 DONE; R3-B3 ACTIVE.**
 
-R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 closed through PR #258: implementation head `347a80a8f88dd03c037ff19faf4f741cfbab7d6f`, squash-merged main `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. Focused enforcement run `33758202351` passed; PR Static `33758758911` passed; Linux integration `33758758877` / job `100659542227` passed `PASS=30 FAIL=0 SKIP=0`. The deliberate negative front-matter fixture was rejected on `dedication.position.start`. No normative rule ID, expected value, locator, tolerance, applicability, or proof-state policy changed. Active implementation issue: #253. Machine authority: `release/v3-roadmap.json`.
+R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 closed through PR #260: final implementation head `55a833fc17daddc2526c4f42e6830470de6df873`, squash-merged main `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. Inventory run `33764122865` found 113 `automatic-partial` rules, 94 with direct owner evidence and 19 ownership/evidence gaps. Independent full validation `33768364069` and PR Linux `33768911126` / job `100694266254` both passed `PASS=31 FAIL=0 SKIP=0`; PR Static `33768911131` passed. The final contribution gate classified all 113/113 `automatic-partial` rules as bounded-positive with zero automation gaps, while preserving conservative proof states. No normative rule ID, expected value, locator, tolerance, applicability, source authority/precedence, proof-state default, or public runtime API changed. Active implementation issue: #254. Machine authority: `release/v3-roadmap.json`.
 
 ## Roadmap summary
 
@@ -25,8 +25,8 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 
 | V3-R2 closeout | DONE | PR #251 → `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5` | canonical control plane reconciled; R3-A opened | None |
 | R3-A | DONE | issue #250 | standards/test/language/proof gaps classified; five bounded lots defined | None |
 | R3-B1 | DONE | issue #252; PR #258 → `afb9f16403aafd8752a0aa8b0713f85c41204d1b` | front-matter observers/generators repaired; proof-contributing evidence fail-closed; negative rejection proven | None |
-| R3-B2 | ACTIVE | issue #253; entry `afb9f16403aafd8752a0aa8b0713f85c41204d1b` | harden normative proof-state and coverage semantics | classify 17 manual/conditional rules; distinguish enforced, bounded-positive, conditional/manual and support-only evidence |
-| R3-B3 | PENDING | issue #254 | semantic test integrity + expanded residual enforcement | after B2 |
+| R3-B2 | DONE | issue #253; PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` | 17 non-automatic rules classified; 113/113 `automatic-partial` bounded-positive; explicit enforced/support-only semantics | None |
+| R3-B3 | ACTIVE | issue #254; entry `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` | semantic test integrity + expanded residual enforcement | audit generators/check semantics; expand fail-closed residual scope; couple positive/negative evidence |
 | R3-B4 | PENDING | issue #255 | engineering-language enforcement + contract consolidation | after B3 |
 | R3-B5 | PENDING | issue #256 | R3 closeout and immutable R4 entry | after B4 |
 | V3-R4 | BLOCKED | — | final certification | after R3-B5 |
@@ -42,12 +42,20 @@ Spacing and alignment are now intentionally separated: explicit-line fixtures pr
 
 The full PR gate passed all 30 integration checks. The R3-A front-matter findings are therefore resolved as observer/generator/enforcement defects, not as evidence requiring a normative or runtime-format change.
 
-## R3-B2 entry
+## R3-B2 closeout
 
-The baseline remains 19 sources and 181 active rules: 164 currently classified automatic and 17 manual/conditional, with 11 project-policy/technical-profile rules, 32 runner gates, 10 registered evidence checks and 9 validator checks. B1 makes front-matter enforcement trustworthy but does not by itself prove that the aggregate coverage vocabulary distinguishes enforcement from mere observation.
+B2 repaired the distinction between traceable mechanisms, current-run rule-specific contribution, and conservative proof state. The 17 non-automatic rules are explicitly classified as 10 `conditional-review`, 6 `manual-review`, and 1 `not-applicable`; none was promoted merely because a related gate was green.
 
-B2/#253 must inventory all 17 manual/conditional rules, audit every `automatic-partial` rule, reconcile strict traceability/proof-state/evidence registries, and expose coverage counts that do not call a rule covered merely because a named check ran. Source authority, precedence, rule IDs, expected values, tolerances, locators and applicability stay fixed absent new current normative evidence.
+The coordinated contribution gate now runs after complete validation and intersects current-run structured evidence with each rule's declared owners. The final PR run closed with 181 rules: 113/113 `automatic-partial` as `bounded-positive`, 37 `enforced-automatic`, 14 `support-only`, 10 `conditional-review`, 6 `manual-review`, 1 `not-applicable`, and zero `automation-gap`. `bounded-positive` remains `PARTIAL`, not `PROVEN`.
+
+B2 entered from `32c3221c813790e938ffb29d1f4ee55c2812c47d`, used inventory run `33764122865`, and merged through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. Static `33768911131` passed; Linux integration `33768911126` / job `100694266254` and independent validation `33768364069` both passed `PASS=31 FAIL=0 SKIP=0`. Post-merge Linux release `33772854355` / job `100707196590` passed `PASS=33 FAIL=0 SKIP=0`. Source authority, precedence, rule IDs, expected values, tolerances, locators, applicability, proof-state defaults and public runtime API were unchanged.
+
+## R3-B3 entry
+
+R3-B3/#254 starts from `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. It must prove that active test/generator labels correspond to real semantic variation and expand the permanent removed-v2 residual contract across behavior-affecting project-owned engineering surfaces. The lot audits `.sh`, `.py`, workflows, machine JSON/tool surfaces, generator substitutions, duplicate/orphan/support-only checks, and positive/negative rule-ID coupling while preserving explicit migration records, negative tests, rendered academic content and genuine upstream boundaries.
+
+B3 gates are proportional but fail closed: `make static-check` must include the expanded residual contract, each repaired generator gets a focused semantic assertion, and full `make check` is required before merge.
 
 ## Immediate action
 
-Execute **R3-B2 / issue #253** from `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. Start with source-only inventory and targeted normative/validator checks. Use `make check` before merge only if integration evidence semantics are touched, and `make release-check` only if release-only proof-state behavior changes.
+Execute **R3-B3 / issue #254** from `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. Start with the generator/residual-scope inventory, then repair bounded semantic no-op risks and extend permanent residual enforcement. Do not start R3-B4, R3-B5, R4, R5, V3-A1/A2, or CTAN submission before their recorded entry conditions.
