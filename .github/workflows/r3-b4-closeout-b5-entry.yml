@@ -1,0 +1,56 @@
+name: R3-B4 closeout reconciliation
+
+on:
+  push:
+    branches:
+      - docs/v3-r3-b4-closeout-b5-entry
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r3-b4-closeout-b5-entry
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+
+      - name: Reconcile B4 closeout and B5 entry
+        run: python3 .github/scripts/r3-b4-closeout-b5-entry.py
+
+      - name: Verify authority documents intentionally unchanged
+        run: |
+          git diff --exit-code origin/main -- docs/NORMATIVE-BASE.md docs/NORMATIVE-CURRENCY.md docs/MIGRATING-TO-V3.md
+
+      - name: Validate static contract
+        run: make static-check
+
+      - name: Validate diff integrity
+        run: git diff --check
+
+      - name: Remove bounded executor and commit permanent checkpoint
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/scripts/r3-b4-closeout-b5-entry.py .github/workflows/r3-b4-closeout-b5-entry.yml
+          git add -A
+          git diff --cached --check
+          git commit -m 'docs: close R3-B4 and activate R3-B5'
+          git push origin HEAD:docs/v3-r3-b4-closeout-b5-entry
