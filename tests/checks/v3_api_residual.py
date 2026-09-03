@@ -10,17 +10,33 @@ ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "release/v3-api-migration.json"
 CLASS = ROOT / "abntexto-ufc.cls"
 REMOVED_LAYER = ROOT / "abntexto-ufc/public-api.def"
-ACTIVE_ROOTS = (
+LATEX_ROOTS = (
     ROOT / "abntexto-ufc",
     ROOT / "template",
     ROOT / "tests/documents",
     ROOT / "tests/fixtures",
 )
-ACTIVE_FILES = (
+LATEX_FILES = (
     ROOT / "docs/ctan-example.tex",
     ROOT / "docs/ctan-manual.tex",
 )
-TEXT_SUFFIXES = {".tex", ".def", ".cls", ".sty"}
+LATEX_SUFFIXES = {".tex", ".def", ".cls", ".sty"}
+ENGINEERING_ROOTS = (
+    ROOT / "tests/checks",
+    ROOT / "tests/integration",
+    ROOT / "tools",
+    ROOT / "validator",
+    ROOT / ".github/workflows",
+)
+ENGINEERING_FILES = (
+    ROOT / "tests/run.py",
+    ROOT / "tests/static.py",
+    ROOT / "Makefile",
+)
+ENGINEERING_SUFFIXES = {".py", ".sh", ".ps1", ".js", ".json", ".yml", ".yaml"}
+ENGINEERING_EXEMPT = {
+    ROOT / "tests/checks/v3_api_residual.py",
+}
 
 
 def fail(message: str) -> None:
@@ -44,22 +60,88 @@ def tracked_paths() -> set[Path]:
     }
 
 
-def active_sources(tracked: set[Path]) -> list[Path]:
+def collect_sources(
+    tracked: set[Path],
+    roots: tuple[Path, ...],
+    files: tuple[Path, ...],
+    suffixes: set[str],
+    exempt: set[Path] | None = None,
+) -> list[Path]:
+    excluded = exempt or set()
     paths: set[Path] = set()
-    for root in ACTIVE_ROOTS:
+    for root in roots:
         if not root.exists():
             continue
         for path in root.rglob("*"):
-            if path.is_file() and path.suffix in TEXT_SUFFIXES and path in tracked:
+            if (
+                path.is_file()
+                and path in tracked
+                and path not in excluded
+                and (path.suffix in suffixes or path.name == "Makefile")
+            ):
                 paths.add(path)
-    for path in ACTIVE_FILES:
-        if path.is_file() and path in tracked:
+    for path in files:
+        if path.is_file() and path in tracked and path not in excluded:
             paths.add(path)
     return sorted(paths)
 
 
 def command_pattern(command: str) -> re.Pattern[str]:
     return re.compile(re.escape(command) + r"(?![A-Za-z@:_])")
+
+
+def engineering_key_pattern(key: str) -> re.Pattern[str]:
+    # Engineering sources may legitimately use Portuguese variable names until R3-B4.
+    # B3 rejects a legacy setup key only when it appears inside a quoted assignment-like
+    # payload that can affect generated/runtime LaTeX.
+    return re.compile(
+        r"(?:['\"])"
+        r"[^'\"\n]{0,240}"
+        + re.escape(key)
+        + r"\s*="
+    )
+
+
+def engineering_value_pattern(value: str) -> re.Pattern[str]:
+    # Legacy document-type values are API residue only when assigned to the canonical
+    # or retired setup key, not when retained as scenario labels owned by R3-B4.
+    return re.compile(
+        r"(?<![A-Za-z0-9_-])(?:type|tipo)\s*=\s*(?:\{\s*)?"
+        + re.escape(value)
+        + r"(?:\s*\})?\s*(?=[,}\n'\"])",
+        flags=re.IGNORECASE,
+    )
+
+
+def scan_source(
+    path: Path,
+    text: str,
+    *,
+    command_patterns: list[tuple[str, re.Pattern[str]]],
+    hook_patterns: list[tuple[str, re.Pattern[str]]],
+    environment_patterns: list[tuple[str, re.Pattern[str]]],
+    setup_key_patterns: list[tuple[str, str, re.Pattern[str]]],
+    setup_value_patterns: list[tuple[str, str, re.Pattern[str]]],
+    object_id_patterns: list[tuple[str, re.Pattern[str]]],
+) -> list[str]:
+    relative = path.relative_to(ROOT)
+    violations: list[str] = []
+    for name, pattern in command_patterns + hook_patterns:
+        if pattern.search(text):
+            violations.append(f"{relative}: removed project command/hook {name}")
+    for name, pattern in environment_patterns:
+        if pattern.search(text):
+            violations.append(f"{relative}: removed project environment {name}")
+    for old, new, pattern in setup_key_patterns:
+        if pattern.search(text):
+            violations.append(f"{relative}: legacy setup key {old} -> {new}")
+    for old, new, pattern in setup_value_patterns:
+        if pattern.search(text):
+            violations.append(f"{relative}: legacy setup value {old} -> {new}")
+    for old, pattern in object_id_patterns:
+        if pattern.search(text):
+            violations.append(f"{relative}: project-owned legacy object id {old}")
+    return violations
 
 
 def main() -> None:
@@ -86,18 +168,17 @@ def main() -> None:
         if old != new
     }
 
-    violations: list[str] = []
     command_patterns = [(name, command_pattern(name)) for name in removed_commands]
     hook_patterns = [(name, command_pattern(name)) for name in removed_hooks]
     environment_patterns = [
         (name, re.compile(r"\\(?:begin|end)\s*\{\s*" + re.escape(name) + r"\s*\}"))
         for name in removed_environments
     ]
-    setup_key_patterns = [
+    latex_setup_key_patterns = [
         (old, new, re.compile(r"(?<![A-Za-z0-9_-])" + re.escape(old) + r"\s*="))
         for old, new in sorted(legacy_keys.items())
     ]
-    setup_value_patterns = [
+    latex_setup_value_patterns = [
         (
             old,
             new,
@@ -107,36 +188,63 @@ def main() -> None:
         )
         for old, new in sorted(legacy_values.items())
     ]
+    engineering_setup_key_patterns = [
+        (old, new, engineering_key_pattern(old))
+        for old, new in sorted(legacy_keys.items())
+    ]
+    engineering_setup_value_patterns = [
+        (old, new, engineering_value_pattern(old))
+        for old, new in sorted(legacy_values.items())
+    ]
     object_id_patterns = [
         ("codigo", re.compile(r"\\(?:legend|definelegendplace)\s*\{\s*codigo\s*\}")),
         ("algoritmo", re.compile(r"\\(?:legend|definelegendplace)\s*\{\s*algoritmo\s*\}")),
     ]
 
-    for path in active_sources(tracked):
-        text = path.read_text(encoding="utf-8")
-        relative = path.relative_to(ROOT)
-        for name, pattern in command_patterns + hook_patterns:
-            if pattern.search(text):
-                violations.append(f"{relative}: removed project command/hook {name}")
-        for name, pattern in environment_patterns:
-            if pattern.search(text):
-                violations.append(f"{relative}: removed project environment {name}")
-        for old, new, pattern in setup_key_patterns:
-            if pattern.search(text):
-                violations.append(f"{relative}: legacy setup key {old} -> {new}")
-        for old, new, pattern in setup_value_patterns:
-            if pattern.search(text):
-                violations.append(f"{relative}: legacy setup value {old} -> {new}")
-        for old, pattern in object_id_patterns:
-            if pattern.search(text):
-                violations.append(f"{relative}: project-owned legacy object id {old}")
+    latex_sources = collect_sources(tracked, LATEX_ROOTS, LATEX_FILES, LATEX_SUFFIXES)
+    engineering_sources = collect_sources(
+        tracked,
+        ENGINEERING_ROOTS,
+        ENGINEERING_FILES,
+        ENGINEERING_SUFFIXES,
+        ENGINEERING_EXEMPT,
+    )
+
+    violations: list[str] = []
+    for path in latex_sources:
+        violations.extend(
+            scan_source(
+                path,
+                path.read_text(encoding="utf-8"),
+                command_patterns=command_patterns,
+                hook_patterns=hook_patterns,
+                environment_patterns=environment_patterns,
+                setup_key_patterns=latex_setup_key_patterns,
+                setup_value_patterns=latex_setup_value_patterns,
+                object_id_patterns=object_id_patterns,
+            )
+        )
+    for path in engineering_sources:
+        violations.extend(
+            scan_source(
+                path,
+                path.read_text(encoding="utf-8"),
+                command_patterns=command_patterns,
+                hook_patterns=hook_patterns,
+                environment_patterns=environment_patterns,
+                setup_key_patterns=engineering_setup_key_patterns,
+                setup_value_patterns=engineering_setup_value_patterns,
+                object_id_patterns=object_id_patterns,
+            )
+        )
 
     if violations:
         fail("\n" + "\n".join(sorted(set(violations))))
 
     print(
         "V3-API-RESIDUAL-EVIDENCE status=PASS "
-        f"active_sources={len(active_sources(tracked))} "
+        f"latex_sources={len(latex_sources)} engineering_sources={len(engineering_sources)} "
+        f"total_sources={len(latex_sources) + len(engineering_sources)} "
         f"removed_commands={len(removed_commands)} "
         f"removed_environments={len(removed_environments)} "
         f"removed_hooks={len(removed_hooks)} "
