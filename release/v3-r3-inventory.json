@@ -4,7 +4,7 @@
   "target_version": "3.0.0",
   "phase": "V3-R3",
   "stage": "R3-A",
-  "status": "DONE_PENDING_CONTROL_PLANE_MERGE",
+  "status": "DONE",
   "reviewed_at": "2026-09-03",
   "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
   "planning_issue": 250,
@@ -133,7 +133,7 @@
   "lots": {
     "R3-B1": {
       "issue": 252,
-      "status": "ACTIVE_AFTER_R3_A_MERGE",
+      "status": "ACTIVE",
       "name": "front-matter evidence truthfulness and fail-closed enforcement"
     },
     "R3-B2": {
@@ -172,5 +172,7 @@
     "r5_foundation_freeze_allowed_before_r4": false,
     "scientific_article_work_allowed_before_certified_foundation": false,
     "ctan_submission_allowed_during_r3": false
-  }
+  },
+  "next_stage": "R3-B1",
+  "next_issue": 252
 }

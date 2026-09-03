@@ -35,7 +35,9 @@ Memory, old pull requests, workflow names, historical branches, and prior chat c
 - R2-B3 is DONE through PR #245 at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`; Static `33704346418` and Linux `33704346429` passed `PASS=30 FAIL=0 SKIP=0`. Structural/object APIs and project-owned object IDs are directly owned; genuine upstream `grafico` / `quadro` remain only at integration boundaries.
 - R2-B4 is DONE through PR #247 at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261`; final Static `33736117556` and Linux `33736117558` passed `PASS=30 FAIL=0 SKIP=0`. Bibliography/reference/glossary/index commands are directly owned; B4 left `public-api.def` empty for its B5 physical removal.
 - R2-B5/#240 is DONE. `public-api.def` and its class load are absent; `docs/MIGRATING-TO-V3.md` is the user migration guide; `tests/checks/v3_api_residual.py` is the permanent fail-closed residual gate. Static `33743809498`, Linux `33743809431`, and post-merge release `33745603468` are green.
-- V3-R3 is ACTIVE in R3-A via issue #250. R3-A is inventory/planning only: classify standards/proof-state, semantic-test, and engineering-language gaps before defining implementation lots.
+- V3-R3 is ACTIVE. R3-A/#250 is DONE from source baseline `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`; `docs/R3-HARDENING-INVENTORY.md` and `release/v3-r3-inventory.json` define the evidence-driven lot sequence.
+- R3-B1/#252 is ACTIVE and owns front-matter evidence truthfulness/fail-closed enforcement. R3-B2/#253, B3/#254, B4/#255, and B5/#256 remain ordered and pending.
+- Repair fixture/observer defects before changing runtime behavior in response to an audit finding. An aggregate PASS must not be treated as proof when its proof-contributing evidence contains an unclassified FAIL/UNASSESSED record.
 - Preserve rendered behavior and normative rule IDs, values, tolerances, locators and proof state unless explicit current evidence authorizes a normative change.
 - Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.
 - Do not rerun completed checks unless current-state validation requires it.
