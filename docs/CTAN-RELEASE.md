@@ -10,7 +10,7 @@ This document describes how `abntexto-ufc` prepares and validates a CTAN submiss
 - License: LaTeX Project Public License 1.3c or later.
 - Upstream dependency: `abntexto` 1.1 or newer (`https://ctan.org/pkg/abntexto`).
 - Status: unofficial, community-maintained UFC-oriented class. Do not describe it as official or UFC-homologated unless the University explicitly grants that status.
-- Development gate: V3-R2 runtime/API migration is active in R2-B4. R2-B3 structural/object migration is complete through PR #245 at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`, with Static `33704346418` PASS and Linux `33704346429` `PASS=30 FAIL=0 SKIP=0`. Only B4 bibliography/back-matter ownership and B5 final forwarding-layer removal remain before R2 can close. A v3.0.0 CTAN upload must not be performed from an intermediate R2 lot; publication remains a later explicit action after the roadmap reaches its release-ready stage and the intended candidate is revalidated proportionally.
+- Development gate: V3-R2 runtime/API migration is active in R2-B5. R2-B4 bibliography/back-matter ownership is complete through PR #247 at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261`, with Static `33736117556` PASS and Linux `33736117558` `PASS=30 FAIL=0 SKIP=0`. Only the B5 forwarding-layer removal, residual migration closure and migration documentation remain before R2 can close. A v3.0.0 CTAN upload must not be performed from an intermediate R2 lot; publication remains a later explicit action after the roadmap reaches its release-ready stage and the intended candidate is revalidated proportionally.
 
 ## Acceptance benchmark
 

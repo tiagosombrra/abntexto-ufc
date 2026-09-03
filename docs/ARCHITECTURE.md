@@ -78,7 +78,7 @@ A project-owned internal control sequence has one behavior owner. Public command
 
 ## R2 migration sequencing
 
-The target architecture above is implemented through bounded owner-based lots documented in `docs/R2-API-OWNERSHIP.md`. R2-A, B1, B2 and B3 are complete. B3 merged through PR #245 at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` after Static `33704346418` and Linux `33704346429` passed `PASS=30 FAIL=0 SKIP=0`. R2-B4/#239 is active from that checkpoint and absorbs bibliography/reference/glossary/index public ownership. R2-B5 then removes `public-api.def` and closes the residual migration. Template and test consumers move atomically with each behavior owner.
+The target architecture above is implemented through bounded owner-based lots documented in `docs/R2-API-OWNERSHIP.md`. R2-A and B1 through B4 are complete. B4 merged through PR #247 at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` after Static `33736117556` and Linux `33736117558` passed `PASS=30 FAIL=0 SKIP=0`. Bibliography/reference/glossary/index commands are now directly owned; `public-api.def` is empty. R2-B5/#240 is active and removes that forwarding-only file/load, closes residual project-owned runtime/internal naming debt, generates the migration guide, and reconciles the R2 contracts. Template and test consumers move atomically with each behavior owner.
 
 ## Upstream boundaries
 

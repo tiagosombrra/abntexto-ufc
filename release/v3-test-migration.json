@@ -4,7 +4,7 @@
   "kind": "test-documentation-workflow-migration-contract",
   "target_version": "3.0.0",
   "status": "ACTIVE_R2_API_CONSUMER_MIGRATION",
-  "current_stage": "R2-B4",
+  "current_stage": "R2-B5",
   "r2_b1_closeout": {
     "status": "DONE",
     "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4",
@@ -26,7 +26,7 @@
   "r1_reconciliation_status": "DONE",
   "r2_api_consumer_policy": {
     "owner_inventory": "docs/R2-API-OWNERSHIP.md",
-    "active_lot": "R2-B4",
+    "active_lot": "R2-B5",
     "final_residual_lot": "R2-B5",
     "runtime_alias_tests_allowed": false
   },
@@ -281,8 +281,48 @@
     "consumer_migration": "structural/object owners, hooks, object IDs, template/tests/fixtures migrated atomically"
   },
   "active_implementation_lot": {
-    "stage": "R2-B4",
+    "stage": "R2-B5",
+    "issue": 240,
+    "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261"
+  },
+  "r2_b4_closeout": {
+    "status": "DONE",
     "issue": 239,
-    "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df"
+    "pr": 247,
+    "product_entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+    "control_plane_entry_main_sha": "ab900797836eb068b3f100574759816eadb039d5",
+    "implementation_head_sha": "c2afa9e283380a1ae008638c73d12561eb97e537",
+    "merge_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+    "static_run_id": 33736117556,
+    "static_job_id": 100586938889,
+    "linux_integration_run_id": 33736117558,
+    "linux_integration_job_id": 100587276948,
+    "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+    "fail_closed_linux_runs": [
+      {
+        "run_id": 33708110732,
+        "result": "PASS=29 FAIL=1 SKIP=0",
+        "finding": "generic index evidence locator was ambiguous"
+      },
+      {
+        "run_id": 33731936681,
+        "result": "PASS=29 FAIL=1 SKIP=0",
+        "finding": "synthetic locator was not rendered by imakeidx"
+      },
+      {
+        "run_id": 33733036724,
+        "result": "PASS=29 FAIL=1 SKIP=0",
+        "finding": "indexname override did not control the rendered imakeidx heading"
+      }
+    ],
+    "heading_observer_repaired": true,
+    "heading_observer_final_rendered_text": "ÍNDICE REMISSIVO",
+    "heading_observer_final_delta_pt": 0.0002,
+    "runtime_alias_layer_added": false,
+    "normative_semantics_changed": false,
+    "locator_policy_changed": false,
+    "reference_tolerances_changed": false,
+    "proof_state_changed": false,
+    "consumer_migration": "bibliography/back-matter owners, template/tests and shared heading observer migrated atomically"
   }
 }

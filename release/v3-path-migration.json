@@ -7,7 +7,7 @@
   "audited_tree_sha": "657c7da1c4f0bd9e7353569fce59c0907c896ea7",
   "target_version": "3.0.0",
   "status": "R1_PATHS_DONE_R2_RUNTIME_ABSORPTION_ACTIVE",
-  "current_stage": "R2-B4",
+  "current_stage": "R2-B5",
   "r2_b1_closeout": {
     "status": "DONE",
     "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4",
@@ -666,5 +666,16 @@
     "stage": "R2-B4",
     "issue": 239,
     "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df"
+  },
+  "r2_b4_closeout": {
+    "status": "DONE",
+    "issue": 239,
+    "pr": 247,
+    "control_plane_entry_main_sha": "ab900797836eb068b3f100574759816eadb039d5",
+    "implementation_head_sha": "c2afa9e283380a1ae008638c73d12561eb97e537",
+    "merge_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+    "public_api_state": "empty transitional file retained for physical removal in R2-B5",
+    "next_lot": "R2-B5",
+    "next_issue": 240
   }
 }
