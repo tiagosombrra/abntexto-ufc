@@ -106,7 +106,7 @@ def check_fonts(fs,profile):
     ok=bool(literal) and not fallback
     st=PASS if ok else (WARN if profile=='portable' else FAIL)
     allowed_label=' or '.join(allowed)
-    cs.append(norm_check('font.literal','font.family.body','Typography',f'{allowed_label} literal',st,f'Literal fonts: {literal or "none"}; text fallback: {fallback or "none"}',f'Use fonte-estrita=sim with literal {allowed_label}.' if not ok else '',mandatory=profile!='portable',level='typographic'))
+    cs.append(norm_check('font.literal','font.family.body','Typography',f'{allowed_label} literal',st,f'Literal fonts: {literal or "none"}; text fallback: {fallback or "none"}',f'Use strict-font = true with literal {allowed_label}.' if not ok else '',mandatory=profile!='portable',level='typographic'))
     return cs
 
 def check_structure(t):

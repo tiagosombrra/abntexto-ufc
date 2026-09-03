@@ -13,6 +13,7 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ID = "abntexto-ufc"
 CTAN_DIR = ROOT / "release" / "ctan"
+REMOVED_FORWARDING_LAYER = "abntexto-ufc/public-api.def"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -76,7 +77,10 @@ def reject_runtime_archive_drift(archive_entries: dict[str, zipfile.ZipInfo], pr
         f"{prefix}tools/",
         f"{prefix}validator/",
     )
+    removed = f"{prefix}{REMOVED_FORWARDING_LAYER}"
     for name in archive_entries:
+        if name == removed:
+            fail(f"{archive_name} contains removed forwarding layer: {name}")
         if name.startswith(forbidden):
             fail(f"{archive_name} contains non-runtime development content: {name}")
 
@@ -93,7 +97,6 @@ def validate_class(path: Path, v: str) -> None:
             f"{prefix}LICENSE",
             f"{prefix}abntexto-ufc.cls",
             f"{prefix}abntexto-ufc/core.def",
-            f"{prefix}abntexto-ufc/public-api.def",
             f"{prefix}abntexto-ufc/integrations/abntexto.def",
             f"{prefix}abntexto-ufc/standards/nbr6023-2025.def",
         },
@@ -117,11 +120,12 @@ def validate_ctan(path: Path, v: str) -> None:
         f"{prefix}{PACKAGE_ID}-example.tex",
         f"{prefix}abntexto-ufc.cls",
         f"{prefix}abntexto-ufc/core.def",
-        f"{prefix}abntexto-ufc/public-api.def",
         f"{prefix}abntexto-ufc/integrations/abntexto.def",
         f"{prefix}abntexto-ufc/standards/nbr6023-2025.def",
     }
     require(archive_entries, required, path.name)
+    if f"{prefix}{REMOVED_FORWARDING_LAYER}" in archive_entries:
+        fail(f"{path.name}: removed forwarding layer must not be distributed.")
 
     for directory in ("doc/", "tex/", "source/"):
         if any(name.startswith(f"{prefix}{directory}") for name in archive_entries):
@@ -236,7 +240,7 @@ def main() -> None:
     print(
         "DISTRIBUTION-BUNDLE-EVIDENCE status=PASS artifacts=5 reproducible=5 checksums=PASS "
         "class_layout=PASS ctan_layout=PASS ctan_readme=PASS documentation_pdf=PASS "
-        "external_abntexto=PASS institutional_assets=excluded"
+        "external_abntexto=PASS institutional_assets=excluded forwarding_layer=absent"
     )
 
 

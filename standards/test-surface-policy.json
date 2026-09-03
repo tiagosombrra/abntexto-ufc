@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-03",
+  "purpose": "Classify retained executable test surfaces that are intentionally outside the permanent PR/release runner graph but still have a current bounded validation purpose.",
+  "allowed_classes": [
+    "release-candidate",
+    "platform-staging"
+  ],
+  "standalone": [
+    {
+      "path": "tests/checks/public_bundles.py",
+      "class": "release-candidate",
+      "owner_stage": "V3-R5",
+      "purpose": "Validate deterministic public template and Overleaf bundle structure against an explicitly supplied pinned upstream abntexto.cls.",
+      "reason_not_permanent_runner": "Requires a separately materialized pinned upstream class and validates distribution staging rather than the ordinary source/runtime contract."
+    },
+    {
+      "path": "tests/checks/distribution_bundles.py",
+      "class": "release-candidate",
+      "owner_stage": "V3-R5",
+      "purpose": "Validate deterministic class, CTAN, template and Overleaf distribution candidates, checksums and package metadata.",
+      "reason_not_permanent_runner": "Candidate packaging is a release-stage responsibility and requires an explicitly supplied pinned upstream class."
+    },
+    {
+      "path": "tests/integration/overleaf-stable.sh",
+      "class": "platform-staging",
+      "owner_stage": "V3-R4",
+      "purpose": "Compile and inspect a flattened Overleaf-style project with the pinned local upstream class across pdfLaTeX and LuaLaTeX.",
+      "reason_not_permanent_runner": "Requires a materialized flattened staging project and release/platform dependencies rather than the canonical repository layout."
+    }
+  ]
+}

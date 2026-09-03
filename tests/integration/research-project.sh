@@ -130,7 +130,7 @@ for forbidden in ('RESUMO', 'ABSTRACT', 'BANCA EXAMINADORA', 'APROVADA EM'):
         raise SystemExit(f'NBR 15287:2025: elemento de trabalho final apareceu no projeto: {forbidden}')
 
 if 'MARCADOR CAPA OPCIONAL'.casefold() in no_cover.casefold():
-    raise SystemExit('NBR 15287:2025: capa opcional foi impressa apesar de capa=nao.')
+    raise SystemExit('NBR 15287:2025: capa opcional foi impressa apesar de cover = false.')
 if 'AUTOR SEM CAPA TESTE'.casefold() not in no_cover.casefold():
     raise SystemExit('NBR 15287:2025: folha de rosto obrigatória ausente no projeto sem capa.')
 

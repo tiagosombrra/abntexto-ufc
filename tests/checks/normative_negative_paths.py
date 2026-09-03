@@ -144,6 +144,19 @@ def run_command(command: list[str], env: dict[str, str] | None = None) -> subpro
     )
 
 
+def positive_rule_pass_line(output: str, rule_id: str) -> str:
+    matches = [
+        line
+        for line in output.splitlines()
+        if f"rule={rule_id}" in line and re.search(r"(?:^|\s)status=PASS(?:\s|$)", line)
+    ]
+    if not matches:
+        raise CaseFailure(
+            f"positive baseline did not emit PASS evidence for expected rule {rule_id}"
+        )
+    return matches[-1]
+
+
 def mutate_source(source: str, mutation: dict[str, Any], case_id: str) -> str:
     anchor = mutation["anchor"]
     occurrences = source.count(anchor)
@@ -243,6 +256,7 @@ def compile_negative_fixture(
 
 def run_case(case: dict[str, Any], env: dict[str, str]) -> dict[str, Any]:
     case_id = case["id"]
+    expected_rule_id = case["expected_rule_id"]
     positive_gate = list(case["positive_gate"])
     positive = run_command(positive_gate, env=env)
     if positive.returncode != 0:
@@ -250,6 +264,7 @@ def run_case(case: dict[str, Any], env: dict[str, str]) -> dict[str, Any]:
             f"positive baseline failed for {case_id}: {' '.join(positive_gate)}\n"
             + output_tail(positive.stdout)
         )
+    positive_rule_evidence = positive_rule_pass_line(positive.stdout, expected_rule_id)
 
     fixture = ROOT / case["fixture"]
     mutated = mutate_source(fixture.read_text(encoding="utf-8"), case["mutation"], case_id)
@@ -270,7 +285,7 @@ def run_case(case: dict[str, Any], env: dict[str, str]) -> dict[str, Any]:
             raise CaseFailure(
                 f"target validator accepted the controlled violation for {case_id}: {' '.join(validator_command)}"
             )
-        failed_evidence = failed_rule_from_evidence(evidence_json, case["expected_rule_id"])
+        failed_evidence = failed_rule_from_evidence(evidence_json, expected_rule_id)
 
         return {
             "id": case_id,
@@ -278,11 +293,13 @@ def run_case(case: dict[str, Any], env: dict[str, str]) -> dict[str, Any]:
             "status": "PASS",
             "fixture": case["fixture"],
             "positive_gate": positive_gate,
+            "positive_rule_evidence": positive_rule_evidence,
+            "positive_negative_rule_coupled": True,
             "mutation": case["mutation"],
             "compile": case["compile"],
             "validator": list(case["validator"]),
             "validator_exit_code": validation.returncode,
-            "expected_rule_id": case["expected_rule_id"],
+            "expected_rule_id": expected_rule_id,
             "failed_rule_evidence": failed_evidence,
             "compile_failure_counted_as_rejection": False,
             "temporary_mutation": True,
@@ -327,7 +344,8 @@ def main() -> None:
             print(
                 "NEGATIVE-PATH-EVIDENCE "
                 f"id={result['id']} status=PASS family={result['family']} "
-                f"expected_rule={result['expected_rule_id']} validator_exit={result['validator_exit_code']}"
+                f"expected_rule={result['expected_rule_id']} positive_rule=PASS "
+                f"validator_exit={result['validator_exit_code']}"
             )
         except CaseFailure as exc:
             failures.append(
@@ -365,7 +383,7 @@ def main() -> None:
     print(
         "NEGATIVE-PATH-SUMMARY "
         f"PASS={len(results)} FAIL={len(failures)} selected={len(selected)} "
-        "proof_state_changed=false"
+        "positive_negative_rule_coupled=true proof_state_changed=false"
     )
     if failures:
         raise SystemExit(1)
