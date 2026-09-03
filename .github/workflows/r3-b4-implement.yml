@@ -22,13 +22,17 @@ jobs:
         with:
           node-version: '24'
       - name: Apply R3-B4 implementation
-        run: python3 .github/scripts/r3-b4-implement.py
+        run: |
+          python3 .github/scripts/r3-b4-implement.py
+          git add -A
       - name: Validate language boundary self-tests
         run: python3 tests/checks/engineering_language.py --self-test
       - name: Validate permanent static contract
         run: make static-check
       - name: Validate diff integrity
-        run: git diff --check
+        run: |
+          git diff --check
+          git diff --cached --check
       - name: Commit permanent implementation and remove executor
         run: |
           set -euo pipefail
