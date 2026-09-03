@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "project": "abntexto-ufc",
+  "phase": "V3-R3",
+  "stage": "R3-B2",
+  "issue": 253,
+  "reviewed_at": "2026-09-03",
+  "entry_main_sha": "32c3221c813790e938ffb29d1f4ee55c2812c47d",
+  "implementation_branch": "r3-b2-proof-semantics",
+  "rule_count": 181,
+  "validation_mode_counts": {
+    "automatic": 42,
+    "automatic-deep": 5,
+    "automatic-partial": 113,
+    "automatic-policy": 4,
+    "conditional": 9,
+    "conditional-manual": 1,
+    "manual": 6,
+    "not-applicable": 1
+  },
+  "nonautomatic_rule_count": 17,
+  "automatic_partial_rule_count": 113,
+  "entry_inventory": {
+    "run_id": 33764122865,
+    "technical_result": "PASS=28 FAIL=0 SKIP=0",
+    "automatic_partial_with_direct_owned_evidence": 94,
+    "automatic_partial_ownership_or_evidence_gaps": 19,
+    "unsafe_proven": 0
+  },
+  "implementation": {
+    "evidence_contribution_policy": "standards/evidence-contribution-policy.json",
+    "contribution_checker": "tests/checks/normative_evidence_contribution.py",
+    "coordinated_gate": "tests/run.py",
+    "complete_pr_run_required_bounded_positive": 113,
+    "automation_gap_allowed_at_closeout": 0,
+    "proof_state_changed": false,
+    "normative_semantics_changed": false,
+    "runtime_public_api_changed": false
+  },
+  "evidence_classes": [
+    "enforced-automatic",
+    "bounded-positive",
+    "manual-review",
+    "conditional-review",
+    "support-only",
+    "not-applicable",
+    "automation-gap"
+  ],
+  "closeout_status": "VALIDATION_PENDING"
+}
