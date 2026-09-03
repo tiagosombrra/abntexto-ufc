@@ -1,0 +1,44 @@
+name: V3 R2 B3 inventory temp
+
+on:
+  push:
+    branches:
+      - refactor/v3-r2-b3-structural-object-api
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+
+      - name: Inventory B3 project-owned legacy API
+        shell: bash
+        run: |
+          set -euo pipefail
+          pattern='ufcalineas|ufcsubalineas|ufclistadefinicoes|ufcobjeto|ufcalgoritmo|ufcfonte|ufcnota|ufcinputlisting|ufcinputminted|ufcsectionhook|ufcobjectlegendhook|imprimirlistadegraficos|imprimirlistadecodigos|imprimirlistadealgoritmos|legend\{codigo\}|legend\{algoritmo\}|IDcodigo|IDalgoritmo|definelegendplace\{codigo\}|definelegendplace\{algoritmo\}'
+          echo '=== B3 legacy API inventory ==='
+          git grep -n -E "$pattern" -- \
+            'abntexto-ufc/**' \
+            'abntexto-ufc.cls' \
+            'template/**' \
+            'tests/**' \
+            'tools/**' \
+            'docs/ctan-example.tex' \
+            'release/ctan/**' \
+            'Makefile' || true
+          echo '=== Upstream non-English object boundary inventory ==='
+          git grep -n -E 'grafico|quadro' -- 'abntexto-ufc/**' 'template/**' 'tests/**' || true
+
+          git rm .github/workflows/v3-r2-b3-inventory-temp.yml
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "ci: remove R2-B3 inventory executor"
+          git push origin HEAD:refactor/v3-r2-b3-structural-object-api
