@@ -4,9 +4,9 @@ Updated: 2026-09-03
 
 ## Status
 
-**V3-R1 DONE. V3-R2 DONE. V3-R3 ACTIVE — R3-A DONE; R3-B1 ACTIVE.**
+**V3-R1 DONE. V3-R2 DONE. V3-R3 ACTIVE — R3-A DONE; R3-B1 DONE; R3-B2 ACTIVE.**
 
-R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. Its validating Static `33747658673` passed and Linux integration `33747658602` passed `PASS=30 FAIL=0 SKIP=0`. The inventory is recorded in `docs/R3-HARDENING-INVENTORY.md` and `release/v3-r3-inventory.json`. Active implementation issue: #252. Machine authority: `release/v3-roadmap.json`.
+R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 closed through PR #258: implementation head `347a80a8f88dd03c037ff19faf4f741cfbab7d6f`, squash-merged main `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. Focused enforcement run `33758202351` passed; PR Static `33758758911` passed; Linux integration `33758758877` / job `100659542227` passed `PASS=30 FAIL=0 SKIP=0`. The deliberate negative front-matter fixture was rejected on `dedication.position.start`. No normative rule ID, expected value, locator, tolerance, applicability, or proof-state policy changed. Active implementation issue: #253. Machine authority: `release/v3-roadmap.json`.
 
 ## Roadmap summary
 
@@ -23,9 +23,9 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. Its validat
 | R2-B4 | DONE | PR #247 → `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` | bibliography/back-matter direct ownership | None |
 | R2-B5 | DONE | PR #249 → `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` | forwarding layer removed; migration guide + permanent residual gate | None |
 | V3-R2 closeout | DONE | PR #251 → `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5` | canonical control plane reconciled; R3-A opened | None |
-| R3-A | DONE | issue #250; inventory source `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5` | current standards/test/language/proof gaps classified; five bounded lots defined | None |
-| R3-B1 | ACTIVE | issue #252 | make front-matter evidence truthful and fail-closed | repair generator/observer defects; discriminate remaining findings; enforce proof |
-| R3-B2 | PENDING | issue #253 | harden normative proof-state and coverage semantics | after B1 |
+| R3-A | DONE | issue #250 | standards/test/language/proof gaps classified; five bounded lots defined | None |
+| R3-B1 | DONE | issue #252; PR #258 → `afb9f16403aafd8752a0aa8b0713f85c41204d1b` | front-matter observers/generators repaired; proof-contributing evidence fail-closed; negative rejection proven | None |
+| R3-B2 | ACTIVE | issue #253; entry `afb9f16403aafd8752a0aa8b0713f85c41204d1b` | harden normative proof-state and coverage semantics | classify 17 manual/conditional rules; distinguish enforced, bounded-positive, conditional/manual and support-only evidence |
 | R3-B3 | PENDING | issue #254 | semantic test integrity + expanded residual enforcement | after B2 |
 | R3-B4 | PENDING | issue #255 | engineering-language enforcement + contract consolidation | after B3 |
 | R3-B5 | PENDING | issue #256 | R3 closeout and immutable R4 entry | after B4 |
@@ -34,18 +34,20 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. Its validat
 | V3-A1/A2 | BLOCKED | — | scientific-article work | after certified foundation |
 | CTAN submission | FUTURE | explicit release action | no upload yet | release-ready stage only |
 
-## R3-A inventory summary
+## R3-B1 closeout
 
-The current source/contract baseline is green: 19 sources, 181 active rules, 164 automatic, 17 manual/conditional, 11 project-policy/technical-profile rules, 32 runner gates, 10 registered evidence checks and 9 validator checks. No new normative source/currency evidence was introduced, so the normative-base and currency documents remain unchanged.
+B1 repaired the evidence model before considering runtime changes. The approval matrix now exercises the intended six canonical v3 types rather than relying on a stale v2 substitution. Summary paragraph counting recognizes `\ufcSummaryKeywords`. Title-page/approval markers were shortened to survive PDF extraction, dedication spacing fixtures no longer create accidental physical-line wrapping, and short-epigraph geometry coalesces extractor fragments without relaxing the normative tolerance.
 
-The major hardening issue is evidence truthfulness rather than broad runtime instability. `make check` is green, but several front-matter checkers are audit-only even when they emit `FAIL`. R3-A also found a stale v2 profile substitution in the approval generator, a canonical-keyword observer bug in summary evidence, a residual-gate scope gap for scripts/engineering sources, Portuguese project-owned diagnostics/machine identifiers not covered by the current language enforcement, and two closed R2 migration contracts requiring consumer audit before consolidation.
+Spacing and alignment are now intentionally separated: explicit-line fixtures prove spacing while natural-wrap fixtures prove justification. Proof-contributing front-matter runners execute enforced semantics; optional-list and TOC checkers expose enforcement explicitly, while pagination retains its pre-existing intrinsic fail-closed behavior. The negative fixture deliberately places the dedication above its permitted start and the gate proves rejection at `dedication.position.start`.
 
-See `docs/R3-HARDENING-INVENTORY.md` for the classified findings and ownership.
+The full PR gate passed all 30 integration checks. The R3-A front-matter findings are therefore resolved as observer/generator/enforcement defects, not as evidence requiring a normative or runtime-format change.
 
-## Lot sequencing rationale
+## R3-B2 entry
 
-B1 comes first because proof must be truthful before any later coverage metric can be trusted. B2 then hardens proof-state/coverage semantics using corrected evidence. B3 generalizes the lesson to all test generators and the permanent residual gate. B4 makes the engineering-language policy executable and removes only closed contracts proven to be unconsumed. B5 performs R3 closeout and records a single exact R4 entry checkpoint.
+The baseline remains 19 sources and 181 active rules: 164 currently classified automatic and 17 manual/conditional, with 11 project-policy/technical-profile rules, 32 runner gates, 10 registered evidence checks and 9 validator checks. B1 makes front-matter enforcement trustworthy but does not by itself prove that the aggregate coverage vocabulary distinguishes enforcement from mere observation.
+
+B2/#253 must inventory all 17 manual/conditional rules, audit every `automatic-partial` rule, reconcile strict traceability/proof-state/evidence registries, and expose coverage counts that do not call a rule covered merely because a named check ran. Source authority, precedence, rule IDs, expected values, tolerances, locators and applicability stay fixed absent new current normative evidence.
 
 ## Immediate action
 
-Execute **R3-B1 / issue #252**. Use targeted front-matter validation during iteration, then full `make check` before merge. Do not treat current audit findings as authority to change normative values or runtime semantics until fixture/observer defects are excluded.
+Execute **R3-B2 / issue #253** from `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. Start with source-only inventory and targeted normative/validator checks. Use `make check` before merge only if integration evidence semantics are touched, and `make release-check` only if release-only proof-state behavior changes.

@@ -6,8 +6,8 @@
   "updated_at": "2026-09-03",
   "status": "ACTIVE",
   "phase": "V3-R3",
-  "stage": "R3-B1",
-  "stage_name": "front-matter evidence truthfulness and fail-closed enforcement",
+  "stage": "R3-B2",
+  "stage_name": "normative proof-state and coverage semantics hardening",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,7 +978,7 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R3/R3-B1 issue #252: repair front-matter fixture/observer truthfulness, discriminate unresolved findings, and make proof-contributing front-matter evidence fail-closed before changing normative semantics.",
+  "next_action": "Execute V3-R3/R3-B2 issue #253 from afb9f16403aafd8752a0aa8b0713f85c41204d1b: classify all 17 manual/conditional rules, audit automatic-partial proof claims, reconcile strict traceability with proof/evidence registries, and make coverage metrics distinguish enforcement from support-only observation without changing normative meaning.",
   "r1_status": "DONE",
   "r2": {
     "status": "DONE",
@@ -1126,11 +1126,11 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "stage": "R3-B1",
-    "issue": 252,
-    "entry_product_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
+    "stage": "R3-B2",
+    "issue": 253,
+    "entry_product_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
     "status": "ACTIVE",
-    "implementation_branch_rule": "branch from the merged R3-A inventory/control-plane checkpoint"
+    "implementation_branch_rule": "branch from the merged R3-B1 fail-closed evidence checkpoint"
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1194,9 +1194,9 @@
   },
   "r3": {
     "status": "ACTIVE",
-    "stage": "R3-B1",
-    "stage_name": "front-matter evidence truthfulness and fail-closed enforcement",
-    "issue": 252,
+    "stage": "R3-B2",
+    "stage_name": "normative proof-state and coverage semantics hardening",
+    "issue": 253,
     "entry_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
     "goal": "Harden evidence truthfulness, normative proof semantics, semantic test integrity, engineering-language enforcement, and closed-contract hygiene before R4 certification.",
     "implementation_lots_defined": true,
@@ -1209,7 +1209,7 @@
     "exit": "R3-B1 through R3-B5 are complete, proof-contributing evidence is fail-closed, the engineering policy is enforced, and an immutable R4 certification entry is recorded.",
     "inventory_document": "docs/R3-HARDENING-INVENTORY.md",
     "inventory_contract": "release/v3-r3-inventory.json",
-    "next_issue": 252,
+    "next_issue": 253,
     "r3_a": {
       "status": "DONE",
       "issue": 250,
@@ -1229,15 +1229,28 @@
     },
     "lots": {
       "R3-B1": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 252,
         "name": "front-matter evidence truthfulness and fail-closed enforcement",
-        "entry_product_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5"
+        "entry_product_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
+        "implementation_head_sha": "347a80a8f88dd03c037ff19faf4f741cfbab7d6f",
+        "pr": 258,
+        "merge_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
+        "focused_enforcement_run_id": 33758202351,
+        "static_contract_run_id": 33758758911,
+        "linux_integration_run_id": 33758758877,
+        "linux_integration_job_id": 100659542227,
+        "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+        "negative_rejection_rule": "dedication.position.start",
+        "proof_contributing_frontmatter_fail_closed": true,
+        "normative_semantics_changed": false,
+        "proof_state_changed": false
       },
       "R3-B2": {
-        "status": "PENDING",
+        "status": "ACTIVE",
         "issue": 253,
-        "name": "normative proof-state and coverage semantics hardening"
+        "name": "normative proof-state and coverage semantics hardening",
+        "entry_product_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
       },
       "R3-B3": {
         "status": "PENDING",
@@ -1273,6 +1286,28 @@
       256
     ],
     "normative_semantics_changed": false,
+    "proof_state_changed": false
+  },
+  "r3_b1_closeout": {
+    "status": "DONE",
+    "issue": 252,
+    "pr": 258,
+    "entry_main_sha": "9bc2861d581c5562bcb1791a3ca294506298a911",
+    "implementation_head_sha": "347a80a8f88dd03c037ff19faf4f741cfbab7d6f",
+    "merge_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
+    "focused_enforcement_run_id": 33758202351,
+    "static_contract_run_id": 33758758911,
+    "linux_integration_run_id": 33758758877,
+    "linux_integration_job_id": 100659542227,
+    "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+    "positive_frontmatter_findings_unresolved": 0,
+    "negative_rejection_rule": "dedication.position.start",
+    "explicit_enforced_frontmatter_runners": 10,
+    "pagination_intrinsic_fail_closed": true,
+    "runtime_api_changed": false,
+    "normative_semantics_changed": false,
+    "locator_policy_changed": false,
+    "reference_tolerances_changed": false,
     "proof_state_changed": false
   }
 }

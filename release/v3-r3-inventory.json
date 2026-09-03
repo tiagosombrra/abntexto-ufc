@@ -3,8 +3,8 @@
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
   "phase": "V3-R3",
-  "stage": "R3-A",
-  "status": "DONE",
+  "stage": "R3-B2",
+  "status": "ACTIVE",
   "reviewed_at": "2026-09-03",
   "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
   "planning_issue": 250,
@@ -39,7 +39,11 @@
       "severity": "high",
       "owner": "R3-B1",
       "issue": 252,
-      "fact": "Front-matter evidence checkers expose --enforce but integration runners invoke audit mode, so aggregate PASS can contain normative FAIL records."
+      "fact": "Front-matter evidence checkers expose --enforce but integration runners invoke audit mode, so aggregate PASS can contain normative FAIL records.",
+      "status": "RESOLVED",
+      "resolved_by": "R3-B1",
+      "resolution": "Proof-contributing front-matter evidence is enforced; pagination retains intrinsic fail-closed behavior.",
+      "closure_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
     },
     {
       "id": "approval-profile-generator-stale-v2-substitution",
@@ -47,7 +51,11 @@
       "severity": "high",
       "owner": "R3-B1",
       "issue": 252,
-      "fact": "frontmatter-approval-evidence.sh substitutes 'tipo = tese' although the canonical fixture uses 'type = doctoral-thesis'; the profile substitution is a no-op."
+      "fact": "frontmatter-approval-evidence.sh substitutes 'tipo = tese' although the canonical fixture uses 'type = doctoral-thesis'; the profile substitution is a no-op.",
+      "status": "RESOLVED",
+      "resolved_by": "R3-B1",
+      "resolution": "Canonical type variants are generated and asserted before compilation.",
+      "closure_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
     },
     {
       "id": "summary-canonical-keyword-macro-not-recognized",
@@ -55,7 +63,11 @@
       "severity": "medium",
       "owner": "R3-B1",
       "issue": 252,
-      "fact": "source_body_paragraphs excludes legacy/upstream keyword macros but not canonical \\ufcSummaryKeywords, causing a false two-paragraph observation."
+      "fact": "source_body_paragraphs excludes legacy/upstream keyword macros but not canonical \\ufcSummaryKeywords, causing a false two-paragraph observation.",
+      "status": "RESOLVED",
+      "resolved_by": "R3-B1",
+      "resolution": "Canonical \\ufcSummaryKeywords is recognized by source paragraph observation.",
+      "closure_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
     },
     {
       "id": "dedication-spacing-discrepancy",
@@ -63,7 +75,11 @@
       "severity": "medium",
       "owner": "R3-B1",
       "issue": 252,
-      "fact": "dedication.line-spacing reports 41.4 pt against same-document calibrated 20.7 pt; runtime changes are forbidden until discrimination."
+      "fact": "dedication.line-spacing reports 41.4 pt against same-document calibrated 20.7 pt; runtime changes are forbidden until discrimination.",
+      "status": "RESOLVED",
+      "resolved_by": "R3-B1",
+      "resolution": "Fixture marker wrapping caused the doubled gap; controlled markers now match calibrated spacing.",
+      "closure_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
     },
     {
       "id": "short-epigraph-alignment-discrepancy",
@@ -71,7 +87,11 @@
       "severity": "medium",
       "owner": "R3-B1",
       "issue": 252,
-      "fact": "epigraph.short.alignment reports FAIL; the short route does not explicitly apply the justification setup used by other routes, but current evidence is not sufficient to classify a runtime defect."
+      "fact": "epigraph.short.alignment reports FAIL; the short route does not explicitly apply the justification setup used by other routes, but current evidence is not sufficient to classify a runtime defect.",
+      "status": "RESOLVED",
+      "resolved_by": "R3-B1",
+      "resolution": "Extractor fragments are geometrically coalesced; natural-wrap alignment passes without tolerance relaxation.",
+      "closure_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
     },
     {
       "id": "title-approval-marker-discrepancies",
@@ -79,7 +99,11 @@
       "severity": "medium",
       "owner": "R3-B1",
       "issue": 252,
-      "fact": "title-page and approval evidence report missing/undetected nature/advisor markers and require robust extraction review after fixture repair."
+      "fact": "title-page and approval evidence report missing/undetected nature/advisor markers and require robust extraction review after fixture repair.",
+      "status": "RESOLVED",
+      "resolved_by": "R3-B1",
+      "resolution": "Short extraction-stable markers prove title/approval order and the intended academic/project profile behavior.",
+      "closure_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
     },
     {
       "id": "coverage-check-name-does-not-imply-enforcement",
@@ -87,7 +111,8 @@
       "severity": "high",
       "owner": "R3-B2",
       "issue": 253,
-      "fact": "normative_coverage proves that rules name known checks, not that those checks enforce the predicates."
+      "fact": "normative_coverage proves that rules name known checks, not that those checks enforce the predicates.",
+      "status": "OPEN"
     },
     {
       "id": "manual-conditional-rules-require-classification",
@@ -95,7 +120,8 @@
       "severity": "medium",
       "owner": "R3-B2",
       "issue": 253,
-      "fact": "17 rules are manual or conditional and must be individually justified rather than assumed to be automation debt."
+      "fact": "17 rules are manual or conditional and must be individually justified rather than assumed to be automation debt.",
+      "status": "OPEN"
     },
     {
       "id": "residual-gate-engineering-scope-gap",
@@ -103,7 +129,8 @@
       "severity": "high",
       "owner": "R3-B3",
       "issue": 254,
-      "fact": "v3_api_residual scans selected LaTeX/runtime sources but not project-owned shell/Python/workflow/machine generators, allowing stale v2 literals in scripts."
+      "fact": "v3_api_residual scans selected LaTeX/runtime sources but not project-owned shell/Python/workflow/machine generators, allowing stale v2 literals in scripts.",
+      "status": "OPEN"
     },
     {
       "id": "engineering-language-diagnostics-gap",
@@ -111,7 +138,8 @@
       "severity": "medium",
       "owner": "R3-B4",
       "issue": 255,
-      "fact": "Portuguese project-owned technical diagnostics remain in integration scripts while repository_contract enforces mainly path-level language constraints."
+      "fact": "Portuguese project-owned technical diagnostics remain in integration scripts while repository_contract enforces mainly path-level language constraints.",
+      "status": "OPEN"
     },
     {
       "id": "engineering-profile-identifiers-portuguese",
@@ -119,7 +147,8 @@
       "severity": "medium",
       "owner": "R3-B4",
       "issue": 255,
-      "fact": "front-matter scenario/applicability machine identifiers remain Portuguese although canonical runtime type values are English."
+      "fact": "front-matter scenario/applicability machine identifiers remain Portuguese although canonical runtime type values are English.",
+      "status": "OPEN"
     },
     {
       "id": "closed-migration-contract-cleanup",
@@ -127,19 +156,28 @@
       "severity": "low",
       "owner": "R3-B4",
       "issue": 255,
-      "fact": "v3-api-migration is a live residual-gate dependency; v3-test-migration and v3-path-migration require a final consumer audit before consolidation/removal."
+      "fact": "v3-api-migration is a live residual-gate dependency; v3-test-migration and v3-path-migration require a final consumer audit before consolidation/removal.",
+      "status": "OPEN"
     }
   ],
   "lots": {
     "R3-B1": {
       "issue": 252,
-      "status": "ACTIVE",
-      "name": "front-matter evidence truthfulness and fail-closed enforcement"
+      "status": "DONE",
+      "name": "front-matter evidence truthfulness and fail-closed enforcement",
+      "pr": 258,
+      "implementation_head_sha": "347a80a8f88dd03c037ff19faf4f741cfbab7d6f",
+      "merge_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
+      "focused_enforcement_run_id": 33758202351,
+      "static_contract_run_id": 33758758911,
+      "linux_integration_run_id": 33758758877,
+      "linux_integration_result": "PASS=30 FAIL=0 SKIP=0"
     },
     "R3-B2": {
       "issue": 253,
-      "status": "PENDING",
-      "name": "normative proof-state and coverage semantics hardening"
+      "status": "ACTIVE",
+      "name": "normative proof-state and coverage semantics hardening",
+      "entry_product_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b"
     },
     "R3-B3": {
       "issue": 254,
@@ -173,6 +211,23 @@
     "scientific_article_work_allowed_before_certified_foundation": false,
     "ctan_submission_allowed_during_r3": false
   },
-  "next_stage": "R3-B1",
-  "next_issue": 252
+  "next_stage": "R3-B2",
+  "next_issue": 253,
+  "r3_a_source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
+  "current_entry_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
+  "r3_b1_closeout": {
+    "issue": 252,
+    "pr": 258,
+    "implementation_head_sha": "347a80a8f88dd03c037ff19faf4f741cfbab7d6f",
+    "merge_main_sha": "afb9f16403aafd8752a0aa8b0713f85c41204d1b",
+    "focused_enforcement_run_id": 33758202351,
+    "static_contract_run_id": 33758758911,
+    "linux_integration_run_id": 33758758877,
+    "linux_integration_job_id": 100659542227,
+    "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+    "negative_rejection_rule": "dedication.position.start",
+    "unresolved_positive_frontmatter_findings": 0,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false
+  }
 }
