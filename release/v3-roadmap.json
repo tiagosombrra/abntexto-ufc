@@ -6,8 +6,8 @@
   "updated_at": "2026-09-02",
   "status": "ACTIVE",
   "phase": "V3-R2",
-  "stage": "R2-B3",
-  "stage_name": "structural/object environments optional object API and extension hooks",
+  "stage": "R2-B4",
+  "stage_name": "bibliography and back-matter API ownership",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,7 +978,7 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R2 / R2-B3 through issue #238 from canonical main. Move structural/object environments, source/note and object-list APIs, optional listing/minted APIs, extension hooks and project-owned object IDs into direct ownership; migrate consumers atomically; preserve genuine upstream boundaries and rendered Portuguese labels; remove only B3 forwards; validate with strengthened residual scan, make static-check and Linux integration.",
+  "next_action": "Execute R2-B4 issue #239: move bibliography/reference/glossary/index public commands to direct owners, internalize non-semantic plumbing, migrate live consumers atomically, and leave final public-api.def removal to R2-B5.",
   "r1_status": "DONE",
   "r2": {
     "status": "ACTIVE",
@@ -1041,15 +1041,21 @@
         "proof_state_changed": false
       },
       "R2-B3": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 238,
         "name": "structural/object environments optional object API and extension hooks",
-        "entry_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91"
+        "entry_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91",
+        "pr": 245,
+        "closure_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+        "linux_integration_run_id": 33704346429,
+        "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+        "merge_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df"
       },
       "R2-B4": {
-        "status": "PENDING",
+        "status": "ACTIVE",
         "issue": 239,
-        "name": "bibliography back-matter API and plumbing internalization"
+        "name": "bibliography back-matter API and plumbing internalization",
+        "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df"
       },
       "R2-B5": {
         "status": "PENDING",
@@ -1067,5 +1073,29 @@
       "do not perform actual CTAN submission",
       "do not redistribute proprietary Microsoft fonts"
     ]
+  },
+  "r2_b3_closeout": {
+    "status": "DONE",
+    "issue": 238,
+    "pr": 245,
+    "entry_main_sha": "ca1b789d44343f202f23dd193a391ef85d57986e",
+    "implementation_head_sha": "e08592e90072cc6b42b1e7c61163003dc0bf7e28",
+    "merge_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+    "bounded_executor_run_id": 33703865896,
+    "bounded_executor_job_id": 100488717954,
+    "static_run_id": 33704346418,
+    "static_job_id": 100490158634,
+    "linux_integration_run_id": 33704346429,
+    "linux_integration_job_id": 100490158816,
+    "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+    "runtime_alias_layer_added": false,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false
+  },
+  "active_implementation_lot": {
+    "stage": "R2-B4",
+    "issue": 239,
+    "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+    "status": "ACTIVE"
   }
 }

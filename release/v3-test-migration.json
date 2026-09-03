@@ -4,11 +4,32 @@
   "kind": "test-documentation-workflow-migration-contract",
   "target_version": "3.0.0",
   "status": "ACTIVE_R2_API_CONSUMER_MIGRATION",
-  "current_stage": "R2-B3",
-  "r2_b1_closeout": {"status": "DONE", "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4", "linux_integration_run_id": 33668283890, "result": "PASS=30 FAIL=0 SKIP=0"},
-  "r2_b2_closeout": {"status": "DONE", "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949", "control_plane_pr": 243, "control_plane_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91", "linux_integration_run_id": 33680378846, "result": "PASS=30 FAIL=0 SKIP=0", "closeout_linux_integration_run_id": 33696690567, "closeout_result": "PASS=30 FAIL=0 SKIP=0", "release_source_audit_run_id": 33696155771, "consumer_migration": "academic/front-matter owners, hooks, template/tests/reference/CTAN/scenario/release-source consumers migrated atomically"},
+  "current_stage": "R2-B4",
+  "r2_b1_closeout": {
+    "status": "DONE",
+    "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4",
+    "linux_integration_run_id": 33668283890,
+    "result": "PASS=30 FAIL=0 SKIP=0"
+  },
+  "r2_b2_closeout": {
+    "status": "DONE",
+    "merge_main_sha": "8e3e0f2a165e488a00f08a0031ba6fb4a01f9949",
+    "control_plane_pr": 243,
+    "control_plane_main_sha": "0650845b922271fc134d20ef2a8c36ebb999ef91",
+    "linux_integration_run_id": 33680378846,
+    "result": "PASS=30 FAIL=0 SKIP=0",
+    "closeout_linux_integration_run_id": 33696690567,
+    "closeout_result": "PASS=30 FAIL=0 SKIP=0",
+    "release_source_audit_run_id": 33696155771,
+    "consumer_migration": "academic/front-matter owners, hooks, template/tests/reference/CTAN/scenario/release-source consumers migrated atomically"
+  },
   "r1_reconciliation_status": "DONE",
-  "r2_api_consumer_policy": {"owner_inventory": "docs/R2-API-OWNERSHIP.md", "active_lot": "R2-B3", "final_residual_lot": "R2-B5", "runtime_alias_tests_allowed": false},
+  "r2_api_consumer_policy": {
+    "owner_inventory": "docs/R2-API-OWNERSHIP.md",
+    "active_lot": "R2-B4",
+    "final_residual_lot": "R2-B5",
+    "runtime_alias_tests_allowed": false
+  },
   "policy": {
     "active_test_names_are_semantic": true,
     "active_test_names_embed_old_phase_ids": false,
@@ -28,8 +49,16 @@
     "tests/smoke": "minimal compilation smoke cases"
   },
   "directory_moves": [
-    {"from": "tests/normativa/", "to": "tests/documents/", "action": "move"},
-    {"from": "tests/fixtures/pretextuais/", "to": "tests/fixtures/frontmatter/", "action": "move"}
+    {
+      "from": "tests/normativa/",
+      "to": "tests/documents/",
+      "action": "move"
+    },
+    {
+      "from": "tests/fixtures/pretextuais/",
+      "to": "tests/fixtures/frontmatter/",
+      "action": "move"
+    }
   ],
   "remove_compatibility_only_evidence_from_active_suite": [
     "tests/normativa/public-api-aliases.tex",
@@ -161,7 +190,10 @@
     ".github/workflows/standards.yml": {
       "from": ".github/workflows/normative-source.yml",
       "responsibility": "standards source/authority/contracts",
-      "required_path_updates": ["normativa/** -> standards/**", "renamed semantic checkers"]
+      "required_path_updates": [
+        "normativa/** -> standards/**",
+        "renamed semantic checkers"
+      ]
     },
     ".github/workflows/latex-preflight.yml": {
       "responsibility": "cross-platform LaTeX regression and Gate T orchestration",
@@ -195,7 +227,9 @@
       "release/v3-api-migration.json",
       "release/v3-test-migration.json"
     ],
-    "new_required": ["docs/MIGRATING-TO-V3.md"],
+    "new_required": [
+      "docs/MIGRATING-TO-V3.md"
+    ],
     "migration_document_policy": "document breaking changes and old-to-new names without implementing runtime aliases",
     "historical_v2_docs": "preserve only where historical evidence remains intentionally retained; do not treat as current instructions",
     "active_docs_language": "English engineering prose; Portuguese academic examples are allowed"
@@ -226,5 +260,29 @@
     "windows-literal-fonts",
     "distribution-source"
   ],
-  "exit_condition": "no active v3 test or workflow depends on removed Portuguese project API, v2 path naming, superseded phase IDs, or project-owned pretextual/posttextual/oracle engineering identity"
+  "exit_condition": "no active v3 test or workflow depends on removed Portuguese project API, v2 path naming, superseded phase IDs, or project-owned pretextual/posttextual/oracle engineering identity",
+  "r2_b3_closeout": {
+    "status": "DONE",
+    "issue": 238,
+    "pr": 245,
+    "entry_main_sha": "ca1b789d44343f202f23dd193a391ef85d57986e",
+    "implementation_head_sha": "e08592e90072cc6b42b1e7c61163003dc0bf7e28",
+    "merge_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df",
+    "bounded_executor_run_id": 33703865896,
+    "bounded_executor_job_id": 100488717954,
+    "static_run_id": 33704346418,
+    "static_job_id": 100490158634,
+    "linux_integration_run_id": 33704346429,
+    "linux_integration_job_id": 100490158816,
+    "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+    "runtime_alias_layer_added": false,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "consumer_migration": "structural/object owners, hooks, object IDs, template/tests/fixtures migrated atomically"
+  },
+  "active_implementation_lot": {
+    "stage": "R2-B4",
+    "issue": 239,
+    "entry_main_sha": "fb71eb0cb50f065d75aec6bbc704dcaf9091d1df"
+  }
 }
