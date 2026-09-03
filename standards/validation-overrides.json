@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-26",
-  "purpose": "Validation-mode exceptions for atomic rules whose normative value is preserved but whose evidence mechanism differs from the parent rule.",
+  "reviewed_at": "2026-09-03",
+  "purpose": "Rule-local validation ownership for atomic rules whose normative value and provenance stay inherited while their proof-contributing evidence differs from the aggregate parent.",
   "overrides": {
     "font.size.reduced.catalog-card": {
       "mode": "manual",
@@ -10,6 +10,110 @@
       ],
       "scope": "external-pdf",
       "reason": "The catalog card is supplied as an external PDF and included without restyling; the class controls inclusion, physical placement and pagination, not the PDF's internal typography."
+    },
+    "font.size.reduced.footnote": {
+      "mode": "automatic-partial",
+      "checks": [
+        "layout"
+      ],
+      "scope": "footnote",
+      "reason": "The layout gate measures the rendered 10 pt footnote sample for this exact atomic dimension."
+    },
+    "font.size.reduced.pagination": {
+      "mode": "automatic-partial",
+      "checks": [
+        "layout"
+      ],
+      "scope": "pagination",
+      "reason": "The layout gate measures rendered pagination glyphs at 10 pt for this exact atomic dimension."
+    },
+    "toc.heading.alignment": {
+      "mode": "automatic-partial",
+      "checks": [
+        "frontmatter"
+      ],
+      "scope": "toc",
+      "reason": "The frontmatter gate measures the Sumário heading against the text-area center."
+    },
+    "toc.heading.case": {
+      "mode": "automatic-partial",
+      "checks": [
+        "frontmatter"
+      ],
+      "scope": "toc",
+      "reason": "The frontmatter gate observes and asserts the uppercase Sumário heading."
+    },
+    "toc.page-number.position": {
+      "mode": "automatic-partial",
+      "checks": [
+        "frontmatter"
+      ],
+      "scope": "toc",
+      "reason": "The frontmatter gate measures TOC page-number alignment at the right text boundary."
+    },
+    "toc.section-hierarchy.mirror": {
+      "mode": "automatic-partial",
+      "checks": [
+        "frontmatter"
+      ],
+      "scope": "toc",
+      "reason": "The frontmatter gate compares TOC and body hierarchy styles for the controlled five-level fixture."
+    },
+    "illustration.source.required": {
+      "mode": "automatic-partial",
+      "checks": [
+        "objects"
+      ],
+      "scope": "illustration-source",
+      "reason": "The objects gate requires a rendered source marker and emits rule-specific bounded evidence."
+    },
+    "illustration.source.external-citation": {
+      "mode": "automatic-partial",
+      "checks": [
+        "documentary-source"
+      ],
+      "scope": "illustration-source",
+      "reason": "The documentary-source gate asserts an external adapted source rendered with author-date citation tokens."
+    },
+    "table.ibge.open-sides": {
+      "mode": "automatic-partial",
+      "checks": [
+        "object-geometry"
+      ],
+      "scope": "ibge-table",
+      "reason": "The object-geometry gate inspects final-PDF vector boundaries and asserts open table sides."
+    },
+    "table.ibge.body-grid": {
+      "mode": "automatic-partial",
+      "checks": [
+        "object-geometry"
+      ],
+      "scope": "ibge-table",
+      "reason": "The object-geometry gate inspects final-PDF vectors and asserts absence of the body grid."
+    },
+    "table.ibge.top-rule": {
+      "mode": "automatic-partial",
+      "checks": [
+        "object-geometry"
+      ],
+      "scope": "ibge-table",
+      "reason": "The object-geometry gate identifies the final-PDF top boundary rule."
+    },
+    "table.ibge.header-rule": {
+      "mode": "automatic-partial",
+      "checks": [
+        "object-geometry"
+      ],
+      "scope": "ibge-table",
+      "reason": "The object-geometry gate identifies the final-PDF header separator rule."
+    },
+    "table.ibge.bottom-rule": {
+      "mode": "automatic-partial",
+      "checks": [
+        "object-geometry"
+      ],
+      "scope": "ibge-table",
+      "reason": "The object-geometry gate identifies the final-PDF bottom boundary rule."
     }
   }
 }

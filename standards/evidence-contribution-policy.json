@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-03",
+  "purpose": "Conservative evidence-contribution semantics. A declared or green mechanism is support-only until the current coordinated run emits rule-specific PASS evidence from a check owned by that rule.",
+  "allowed_classes": [
+    "enforced-automatic",
+    "bounded-positive",
+    "manual-review",
+    "conditional-review",
+    "support-only",
+    "not-applicable",
+    "automation-gap"
+  ],
+  "proof_contributing_classes": [
+    "enforced-automatic",
+    "bounded-positive"
+  ],
+  "runtime_rule_evidence_pattern": "rule=<rule-id> status=PASS",
+  "automatic_partial_requires_current_owned_rule_evidence": true,
+  "nonautomatic_rules": {
+    "deposit.approval-signatures": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "Signature-image and handwritten/digital-signature review remains a deposit-time manual inspection."
+    },
+    "deposit.capes": {
+      "class": "conditional-review",
+      "mode": "conditional-manual",
+      "rationale": "CAPES acknowledgement applies only to funded work and retains a conditional institutional review boundary."
+    },
+    "font.size.reduced.catalog-card": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "The catalog card is an externally supplied PDF whose internal typography is outside class styling control."
+    },
+    "format.text.color": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "Automated fixture observations support the rule, but full-document color compliance remains conservatively manual."
+    },
+    "spine.conditional": {
+      "class": "not-applicable",
+      "mode": "not-applicable",
+      "rationale": "Printed-spine presentation is outside the standard electronic package; applicability is explicitly conditional."
+    },
+    "deposit.metadata.workflow": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "Repository metadata belongs to the institutional DSpace deposit workflow rather than PDF rendering."
+    },
+    "accessibility.pdfua.profile": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "PDF/UA is an additional technical profile and is not certified by the current portable release gate."
+    },
+    "distribution.overleaf-ctan.policy": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "Distribution readiness is project policy and requires release/distribution review beyond document rendering."
+    },
+    "glossary.element.optional": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "The glossary is optional; evidence is meaningful only for present/absent applicability routes."
+    },
+    "volume.number.cover-title-page": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "Volume numbering applies only to multi-volume documents."
+    },
+    "errata.element.optional": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "Errata is optional and is evaluated through explicit present/absent routes."
+    },
+    "errata.position": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "Errata position is relevant only when an errata element is present."
+    },
+    "errata.contents": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "Errata contents are relevant only when an errata element is present."
+    },
+    "list.illustrations.optional": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "The illustration list is optional and evaluated only when the corresponding content route applies."
+    },
+    "list.tables.optional": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "The table list is optional and evaluated only when the corresponding content route applies."
+    },
+    "list.abbreviations.optional": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "The abbreviations list is optional and evaluated through present/absent routes."
+    },
+    "list.symbols.optional": {
+      "class": "conditional-review",
+      "mode": "conditional",
+      "rationale": "The symbols list is optional and evaluated through present/absent routes."
+    }
+  }
+}

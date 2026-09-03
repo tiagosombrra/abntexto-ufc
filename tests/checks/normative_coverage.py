@@ -71,7 +71,18 @@ def main() -> None:
         rule["validation"]["mode"].startswith("automatic")
         for rule in rules.values()
     )
-    manual = len(rules) - automatic
+    manual_review = sum(
+        rule["validation"]["mode"] == "manual"
+        for rule in rules.values()
+    )
+    conditional_review = sum(
+        rule["validation"]["mode"] in {"conditional", "conditional-manual"}
+        for rule in rules.values()
+    )
+    not_applicable = sum(
+        rule["validation"]["mode"] == "not-applicable"
+        for rule in rules.values()
+    )
     project_policy = sum(
         rule["authority"] in {"project-policy", "technical-profile"}
         for rule in rules.values()
@@ -80,10 +91,12 @@ def main() -> None:
     print(
         "NORMATIVE-COVERAGE-EVIDENCE status=PASS "
         f"sources={len(catalog['sources'])} rules={len(rules)} "
-        f"automatic={automatic} manual_or_conditional={manual} "
+        f"automatic_declared={automatic} manual_review={manual_review} "
+        f"conditional_review={conditional_review} not_applicable={not_applicable} "
         f"project_policy={project_policy} runner_gates={len(gate_checks)} "
         f"registered_evidence={len(registered_checks)} "
         f"validator_checks={len(validator_checks)} "
+        f"coverage_semantics=runtime-rule-contribution "
         f"reviewed={contract_reviewed.isoformat()}"
     )
 

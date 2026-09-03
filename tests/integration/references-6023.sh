@@ -104,6 +104,7 @@ PY
     set -- "$@" --commit-sha "$GITHUB_SHA"
   fi
   "$@"
+  echo 'VALIDATION-EVIDENCE rule=references.nbr6023-2025.test-profile status=PASS expected=nine-profile-cases measured=nine-cases-validated'
 fi
 
 echo 'Gate NBR 6023:2025 concluído.'

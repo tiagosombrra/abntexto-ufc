@@ -492,6 +492,7 @@
       "validation": {
         "mode": "automatic-partial",
         "checks": [
+          "layout",
           "frontmatter",
           "reference-corpus",
           "backmatter"

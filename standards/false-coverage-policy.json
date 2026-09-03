@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-26",
+  "reviewed_at": "2026-09-03",
   "phase": "N4",
   "phase_status": "complete",
   "purpose": "Machine-readable policy for auditing false atomic coverage. Traceable or green parent/gate evidence must not be mistaken for proof of every atomic dimension derived from that parent.",
@@ -11,7 +11,20 @@
     "rule-local-override": "N3 split target whose normative value and provenance remain inherited but whose validation mechanism is explicitly overridden for that atomic dimension. The override does not by itself imply PROVEN."
   },
   "rule_local_overrides": [
-    "font.size.reduced.catalog-card"
+    "font.size.reduced.catalog-card",
+    "font.size.reduced.footnote",
+    "font.size.reduced.pagination",
+    "illustration.source.external-citation",
+    "illustration.source.required",
+    "table.ibge.body-grid",
+    "table.ibge.bottom-rule",
+    "table.ibge.header-rule",
+    "table.ibge.open-sides",
+    "table.ibge.top-rule",
+    "toc.heading.alignment",
+    "toc.heading.case",
+    "toc.page-number.position",
+    "toc.section-hierarchy.mirror"
   ],
   "proof_safety": {
     "parent_inherited_evidence_alone_may_prove": false,
