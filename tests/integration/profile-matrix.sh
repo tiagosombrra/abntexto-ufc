@@ -5,6 +5,12 @@ fixture="tests/smoke/base-profile.tex"
 template_dir="template"
 profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
 
+placeholder_count=$(awk '{ count += gsub(/@UFC_TYPE@/, "&") } END { print count + 0 }' "$fixture")
+if [ "$placeholder_count" -ne 1 ]; then
+  echo "Profile matrix generation failed: expected exactly one @UFC_TYPE@ placeholder, found $placeholder_count."
+  exit 1
+fi
+
 cleanup_job() {
   job="$1"
   rm -f "$template_dir/$job".tex "$template_dir/$job".aux "$template_dir/$job".bbl \
@@ -22,6 +28,17 @@ for engine in pdflatex lualatex; do
       -e "s/@UFC_TYPE@/$profile/g" \
       -e 's#tests/fixtures/references.bib#../tests/fixtures/references.bib#g' \
       "$fixture" > "$output.tex"
+
+    if grep -Fq '@UFC_TYPE@' "$output.tex"; then
+      echo "Profile matrix generation failed: placeholder survived for $profile."
+      exit 1
+    fi
+    type_lines=$(grep -Ec '^[[:space:]]*type[[:space:]]*=' "$output.tex" || true)
+    if [ "$type_lines" -ne 1 ] || ! grep -Eq "^[[:space:]]*type[[:space:]]*=[[:space:]]*$profile[[:space:]]*," "$output.tex"; then
+      echo "Profile matrix generation failed: generated source does not contain exactly type = $profile,."
+      cat "$output.tex"
+      exit 1
+    fi
 
     echo "Validando perfil completo $profile com $engine..."
     make DOCUMENT="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-profile.log 2>&1 || {
