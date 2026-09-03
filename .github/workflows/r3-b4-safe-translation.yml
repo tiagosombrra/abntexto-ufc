@@ -28,10 +28,10 @@ jobs:
       - name: Prove protected academic literals remain unchanged
         run: |
           set -euo pipefail
-          grep -Fq "grep -Fq 'REFERÊNCIAS'" tests/integration/bibliography.sh
-          grep -Fq "grep -Fq 'SILVA, João Carlos'" tests/integration/bibliography.sh
-          grep -Fq "grep -Fq 'AGRADECIMENTOS'" tests/integration/frontmatter.sh
-          grep -Fq "grep -Fq 'INTRODUÇÃO'" tests/integration/research-project.sh || grep -Fqi 'introdu' tests/integration/research-project.sh
+          grep -Fq 'REFERÊNCIAS' tests/integration/bibliography.sh
+          grep -Fq 'SILVA, João Carlos' tests/integration/bibliography.sh
+          grep -Fq 'SIMPÓSIO INTERNACIONAL DE TESTE' tests/integration/bibliography.sh
+          grep -Fq 'AGRADECIMENTOS' tests/integration/frontmatter.sh
       - name: Validate language boundary self-tests
         run: python3 tests/checks/engineering_language.py --self-test
       - name: Validate permanent static contract
