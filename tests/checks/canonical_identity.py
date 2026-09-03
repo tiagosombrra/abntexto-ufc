@@ -35,6 +35,7 @@ LEGACY_FULL_FILE_EXEMPT = {
     "release/v3-api-migration.json",
     "release/v3-path-migration.json",
     "release/v3-test-migration.json",
+    "docs/MIGRATING-TO-V3.md",
 
     # Negative assertions must name the legacy entrypoint to reject it.
     "tests/checks/canonical_identity.py",

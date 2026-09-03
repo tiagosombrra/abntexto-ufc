@@ -16,6 +16,7 @@ SOURCE_CHECKS = (
     "tests/checks/validator_source.py",
     "tests/checks/normative_objects_scope.py",
     "tests/checks/reference_guide_contract.py",
+    "tests/checks/v3_api_residual.py",
 )
 
 

@@ -31,6 +31,5 @@
 \input{abntexto-ufc/bibliography.def}
 \input{abntexto-ufc/standards/nbr6023-2025.def}
 \input{abntexto-ufc/backmatter.def}
-\input{abntexto-ufc/public-api.def}
 
 \endinput
