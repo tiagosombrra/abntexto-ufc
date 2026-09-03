@@ -1,0 +1,63 @@
+name: Temporary R3-B2 gap origin
+
+on:
+  push:
+    branches:
+      - audit/v3-r3-b2-proof-inventory
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Classify gap origins
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+
+          root = Path.cwd()
+          sys.path.insert(0, str(root / 'tools'))
+          sys.path.insert(0, str(root / 'tests' / 'checks'))
+          from normative_false_coverage import build_false_coverage_matrix
+
+          gaps = {
+              'font.size.reduced.footnote',
+              'font.size.reduced.pagination',
+              'toc.heading.alignment',
+              'toc.heading.case',
+              'toc.page-number.position',
+              'toc.section-hierarchy.mirror',
+              'illustration.source.required',
+              'illustration.source.external-citation',
+              'table.ibge.open-sides',
+              'table.ibge.body-grid',
+              'table.ibge.top-rule',
+              'table.ibge.header-rule',
+              'table.ibge.bottom-rule',
+              'frontmatter.start.recto',
+              'references.nbr6023-2025.test-profile',
+              'equation.display',
+              'equation.numbering.format',
+              'project.cover.optional',
+              'heading.unnumbered.centered',
+          }
+          matrix = build_false_coverage_matrix()
+          rows = {row['rule_id']: row for row in matrix['rows']}
+          for rule_id in sorted(gaps):
+              row = rows[rule_id]
+              print(
+                  f"R3-B2-GAP-ORIGIN id={rule_id} origin={row['evidence_origin']} "
+                  f"parent={row['parent_rule'] or '-'} mode={row['validation_mode']} "
+                  f"evidence={','.join(row['evidence_ids']) or '-'}"
+              )
+          PY
