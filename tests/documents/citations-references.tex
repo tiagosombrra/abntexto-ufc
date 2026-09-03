@@ -1,6 +1,6 @@
 \documentclass{abntexto-ufc}
 
-\ufcbibliografia{tests/fixtures/references.bib}
+\ufcAddBibliographyResource{tests/fixtures/references.bib}
 
 \AtBeginBibliography{%
   \typeout{UFC-BIBITEMSEP=\the\bibitemsep}%
@@ -54,6 +54,6 @@ Citação de citação textual: \textapud{eco1983}{koche2009}.
 Referência eletrônica com DOI: \cite{doi2025}.
 
 \nocite{evento2025}
-\imprimirreferencias
+\ufcPrintReferences
 
 \end{document}

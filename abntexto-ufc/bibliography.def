@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/bibliography.def}[2026/08/19 UFC citations and references]
+\ProvidesFile{abntexto-ufc/bibliography.def}[2026/09/03 UFC citations and references]
 
 \RequirePackage[
   backend=biber,
@@ -288,7 +288,7 @@
 
 \ExplSyntaxOn
 
-\NewDocumentCommand \ufcbibliografia { m }
+\NewDocumentCommand \ufcAddBibliographyResource { m }
   { \addbibresource{#1} }
 
 \cs_new_protected:Npn \ufc_print_references:
@@ -309,7 +309,7 @@
     \endgroup
   }
 
-\NewDocumentCommand \imprimirreferencias { }
+\NewDocumentCommand \ufcPrintReferences { }
   { \ufc_print_references: }
 
 \ExplSyntaxOff

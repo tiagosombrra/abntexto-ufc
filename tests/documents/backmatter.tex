@@ -7,7 +7,7 @@
   index = imakeidx
 }
 
-\ufcbibliografia{tests/fixtures/references.bib}
+\ufcAddBibliographyResource{tests/fixtures/references.bib}
 
 \newglossaryentry{malha}{
   name = {malha},
@@ -28,8 +28,8 @@
 Uma \gls{malha} pode compartilhar uma \gls{curva}.\index{malha}\index{curva compartilhada}
 A referência normativa é exercitada por \parencite{silva2020}.
 
-\imprimirreferencias
-\imprimirglossario
+\ufcPrintReferences
+\ufcPrintGlossary
 
 \appendix{Questionário produzido pelo autor}
 Conteúdo do apêndice de validação.
@@ -37,6 +37,6 @@ Conteúdo do apêndice de validação.
 \annex{Documento institucional externo}
 Conteúdo do anexo de validação.
 
-\imprimirindice
+\ufcPrintIndex
 
 \end{document}

@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/backmatter.def}[2026/08/19 UFC post-textual elements]
+\ProvidesFile{abntexto-ufc/backmatter.def}[2026/09/03 UFC post-textual elements]
 
 % Normative mapping: docs/NORMATIVE-BASE.md.
 % References are implemented in bibliography.def. This module owns the optional
@@ -17,10 +17,7 @@
     \vspace{\baselineskip}
   }
 
-\NewDocumentCommand \ufcPosttextualHeading { m }
-  { \ufc_posttextual_heading:n {#1} }
-
-\NewDocumentCommand \ufcSetupGlossaryModule { }
+\cs_new_protected:Npn \ufc_setup_glossary_module:
   {
     \newglossarystyle{ufc}
       {
@@ -40,7 +37,7 @@
     \glstocfalse
   }
 
-\NewDocumentCommand \imprimirglossario { }
+\NewDocumentCommand \ufcPrintGlossary { }
   {
     \cs_if_exist:NTF \printglossary
       {
@@ -54,17 +51,17 @@
       }
       {
         \ClassWarningNoLine{abntexto-ufc}
-          {Glossary~requested~without~glossario=glossaries}
+          {Glossary~requested~without~glossary=glossaries}
       }
   }
 
-\NewDocumentCommand \ufcIndexHeading { m }
+\cs_new_protected:Npn \ufc_index_heading:n #1
   { \ufc_posttextual_heading:n {#1} }
 
-\NewDocumentCommand \ufcSetupIndexModule { }
-  { \indexsetup{level=\ufcIndexHeading} }
+\cs_new_protected:Npn \ufc_setup_index_module:
+  { \indexsetup{level=\ufc_index_heading:n} }
 
-\NewDocumentCommand \imprimirindice { }
+\NewDocumentCommand \ufcPrintIndex { }
   {
     \cs_if_exist:NTF \printindex
       {
@@ -75,7 +72,7 @@
       }
       {
         \ClassWarningNoLine{abntexto-ufc}
-          {Index~requested~without~indice=imakeidx}
+          {Index~requested~without~index=imakeidx}
       }
   }
 

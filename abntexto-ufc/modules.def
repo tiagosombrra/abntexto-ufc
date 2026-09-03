@@ -109,7 +109,7 @@
             \PassOptionsToPackage{lang-warn=false}{datatool-base}
             \RequirePackage[acronym,toc=false]{glossaries}
             \makeglossaries
-            \ufcSetupGlossaryModule
+            \ufc_setup_glossary_module:
             \bool_gset_true:N \g_ufc_glossary_initialized_bool
           }
       },
@@ -124,7 +124,7 @@
           {
             \RequirePackage{imakeidx}
             \makeindex
-            \ufcSetupIndexModule
+            \ufc_setup_index_module:
             \bool_gset_true:N \g_ufc_index_initialized_bool
           }
       },
