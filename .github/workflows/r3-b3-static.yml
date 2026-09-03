@@ -74,14 +74,23 @@ jobs:
               "Use fonte-estrita=sim with ${fontLabel} and confirm in Deep/CLI mode.",
               "Use strict-font = true with ${fontLabel} and confirm in Deep/CLI mode.",
           )
+
+          Path(".github/workflows/r3-b3-static.yml").write_text(
+              """name: Temporary R3-B3 executor cleanup\n"
+              "on: workflow_dispatch\n"
+              "permissions:\n  contents: read\n"
+              "jobs:\n  cleanup-placeholder:\n    runs-on: ubuntu-24.04\n"
+              "    steps:\n      - run: echo temporary executor already validated in current run\n",
+              encoding="utf-8",
+          )
           PY
 
-          rm .github/workflows/r3-b3-static.yml
           make static-check
           python3 tests/checks/profile_matrix_contract.py
           python3 tests/checks/test_surface_integrity.py
           git diff --check
 
+          rm .github/workflows/r3-b3-static.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
