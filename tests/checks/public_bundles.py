@@ -13,6 +13,7 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ID = "abntexto-ufc"
 UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
+REMOVED_FORWARDING_LAYER = "abntexto-ufc/public-api.def"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -71,14 +72,14 @@ def reject_forbidden(entries: dict[str, zipfile.ZipInfo], archive_name: str) -> 
         "tools/",
         "validator/",
     )
-    forbidden_names = {"Makefile", ".gitignore"}
+    forbidden_names = {"Makefile", ".gitignore", REMOVED_FORWARDING_LAYER}
     for name in entries:
         normalized = name.lstrip("./")
         parts = PurePosixPath(normalized).parts
         if any(part.lower() in MICROSOFT_FONTS for part in parts):
             fail(f"{archive_name} contains a proprietary Microsoft font: {name}")
         if normalized in forbidden_names or normalized.startswith(forbidden_prefixes):
-            fail(f"{archive_name} contains a development-only path: {name}")
+            fail(f"{archive_name} contains a development-only or removed path: {name}")
         if "assets/institutional/" in normalized:
             fail(f"{archive_name} redistributes an institutional asset path: {name}")
 
@@ -113,7 +114,6 @@ def validate_template(path: Path, v: str) -> None:
         f"{prefix}main.tex",
         f"{prefix}abntexto-ufc.cls",
         f"{prefix}abntexto-ufc/core.def",
-        f"{prefix}abntexto-ufc/public-api.def",
         f"{prefix}frontmatter/abstract.tex",
         f"{prefix}chapters/1-introduction.tex",
         f"{prefix}backmatter/references.bib",
@@ -125,6 +125,8 @@ def validate_template(path: Path, v: str) -> None:
     require(entries, required, path.name)
     if f"{prefix}abntexto.cls" in entries:
         fail(f"{path.name}: standard template bundle must not vendor abntexto.cls.")
+    if f"{prefix}{REMOVED_FORWARDING_LAYER}" in entries:
+        fail(f"{path.name}: removed forwarding layer must not be distributed.")
     stripped = {name[len(prefix):]: info for name, info in entries.items()}
     reject_forbidden(stripped, path.name)
     assert_public_main(path, f"{prefix}main.tex")
@@ -137,7 +139,6 @@ def validate_overleaf(path: Path) -> None:
         "abntexto.cls",
         "abntexto-ufc.cls",
         "abntexto-ufc/core.def",
-        "abntexto-ufc/public-api.def",
         "frontmatter/abstract.tex",
         "chapters/1-introduction.tex",
         "backmatter/references.bib",
@@ -147,6 +148,8 @@ def validate_overleaf(path: Path) -> None:
         "LICENSE",
     }
     require(entries, required, path.name)
+    if REMOVED_FORWARDING_LAYER in entries:
+        fail(f"{path.name}: removed forwarding layer must not be distributed.")
     if any(name.startswith(f"{PACKAGE_ID}-overleaf-") for name in entries):
         fail(f"{path.name}: Overleaf import must place main.tex at archive root.")
     reject_forbidden(entries, path.name)
@@ -201,7 +204,7 @@ def main() -> None:
         validate_template(first / template_name, v)
         validate_overleaf(first / overleaf_name)
 
-    print("PUBLIC-BUNDLE-EVIDENCE status=PASS artifacts=2 reproducible=2 safe_paths=PASS institutional_assets=excluded canonical_setup=PASS")
+    print("PUBLIC-BUNDLE-EVIDENCE status=PASS artifacts=2 reproducible=2 safe_paths=PASS institutional_assets=excluded canonical_setup=PASS forwarding_layer=absent")
 
 
 if __name__ == "__main__":
