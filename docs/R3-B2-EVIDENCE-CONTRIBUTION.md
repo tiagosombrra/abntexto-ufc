@@ -39,7 +39,6 @@ Targeted `--only` executions intentionally do not run the global contribution cl
 
 A complete PR-mode run must finish with all 113 `automatic-partial` rules classified as `bounded-positive` and zero `automation-gap` entries. Non-partial automatic rules without rule-specific current-run evidence remain visible as `support-only` rather than being counted as enforced.
 
-
 ## Closeout evidence
 
-R3-B2 closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. Static `33768911131` passed; Linux `33768911126` / job `100694266254` and independent validation `33768364069` passed `PASS=31 FAIL=0 SKIP=0`. The final contribution projection was 113/113 `automatic-partial` = `bounded-positive`, 37 `enforced-automatic`, 14 `support-only`, 10 `conditional-review`, 6 `manual-review`, 1 `not-applicable`, and zero `automation-gap`. Proof-state defaults were unchanged.
+R3-B2 closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. Static `33768911131` passed; Linux `33768911126` / job `100694266254` and independent validation `33768364069` passed `PASS=31 FAIL=0 SKIP=0`. The merged-main release run `33772854355` / job `100707196590` passed `PASS=33 FAIL=0 SKIP=0`. The final contribution projection was 113/113 `automatic-partial` = `bounded-positive`, 37 `enforced-automatic`, 14 `support-only`, 10 `conditional-review`, 6 `manual-review`, 1 `not-applicable`, and zero `automation-gap`. Proof-state defaults were unchanged.
