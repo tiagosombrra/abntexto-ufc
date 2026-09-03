@@ -34,13 +34,13 @@ for engine in pdflatex lualatex; do
 done
 
 if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' frontmatter-academic-work.toc; then
-  echo 'Front matter validation failed: element front matter leaked into the table of contents.'
+  echo 'Front matter validation failed: front-matter element leaked into the table of contents.'
   cat frontmatter-academic-work.toc
   exit 1
 fi
 
 grep -Eiq 'Introdu' frontmatter-academic-work.toc || {
-  echo 'Front matter validation failed: section textual missing from the table of contents.'
+  echo 'Front matter validation failed: textual section is missing from the table of contents.'
   exit 1
 }
 
@@ -48,7 +48,7 @@ if command -v pdftotext >/dev/null 2>&1; then
   pdftotext frontmatter-academic-work.pdf /tmp/abntexto-ufc-frontmatter.txt
   for heading in 'AGRADECIMENTOS' 'RESUMO' 'ABSTRACT' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE ABREVIATURAS E SIGLAS' 'LISTA DE SÍMBOLOS' 'SUMÁRIO'; do
     grep -Fq "$heading" /tmp/abntexto-ufc-frontmatter.txt || {
-      echo "Front matter validation failed: heading front matter missing or incorrect: $heading"
+      echo "Front matter validation failed: front-matter heading is missing or incorrect: $heading"
       exit 1
     }
   done
@@ -85,8 +85,8 @@ def check_below_midpoint(label, marker):
             first_y = min(float(word.attrib['yMin']) for word in words)
             if first_y <= midpoint:
                 raise SystemExit(
-                    f'Front matter validation falhou: {label} inicia antes do meio da página: '
-                    f'y={first_y:.2f}, meio={midpoint:.2f}'
+                    f'Front matter validation failed: {label} starts before the page midpoint: '
+                    f'y={first_y:.2f}, midpoint={midpoint:.2f}'
                 )
             return
     raise SystemExit(f'Front matter validation failed: page of {label} not found.')
@@ -106,7 +106,7 @@ PY
     exit 1
   fi
   grep -Fq 'PROJETO-ANONIMO-001' /tmp/abntexto-ufc-anonimo.txt || {
-    echo 'Front matter validation failed: identifier anonymized missing.'
+    echo 'Front matter validation failed: anonymized identifier is missing.'
     exit 1
   }
 fi

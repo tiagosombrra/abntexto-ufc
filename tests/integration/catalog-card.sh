@@ -58,11 +58,11 @@ for engine in pdflatex lualatex; do
       fi
 
       grep -Fq 'UFC-BEFORE-CARD=2' "$job.log" || {
-        echo "$job: contador inesperado antes da ficha."
+        echo "$job: unexpected page counter before the catalog card."
         exit 1
       }
       grep -Fq 'UFC-AFTER-CARD=2' "$job.log" || {
-        echo "$job: rota da ficha alterou indevidamente a contagem lógica."
+        echo "$job: catalog-card route incorrectly changed the logical page count."
         exit 1
       }
 
@@ -95,9 +95,9 @@ if card_mode == 'true':
     if len(norm) != 3:
         raise SystemExit(f'{job}: expected title page, ficha and text in 3 pages físicas; obtido {len(norm)}.')
     if card_marker not in norm[1]:
-        raise SystemExit(f'{job}: ficha habilitada não ocupa o verso físico da folha de rosto.')
+        raise SystemExit(f'{job}: enabled catalog card does not occupy the physical verso of the title page.')
     if text_marker not in norm[2]:
-        raise SystemExit(f'{job}: texto posterior à ficha não iniciou no anverso físico seguinte.')
+        raise SystemExit(f'{job}: text after the catalog card did not start on the next physical recto.')
 else:
     if any(card_marker in page for page in norm):
         raise SystemExit(f'{job}: ficha externa foi incluída although catalog-card=false.')
@@ -107,11 +107,11 @@ else:
     expected_physical_index = 1 if mode == 'single-sided' else 2
     if text_pages[0] != expected_physical_index:
         raise SystemExit(
-            f'{job}: texto em página física inesperada com ficha desabilitada; '
-            f'esperado índice {expected_physical_index}, obtido {text_pages[0]}.'
+            f'{job}: text is on an unexpected physical page with the catalog card disabled; '
+            f'expected index {expected_physical_index}, measured {text_pages[0]}.'
         )
     if mode == 'double-sided' and (len(norm) != 3 or norm[1]):
-        raise SystemExit(f'{job}: double-sided mode without a catalog card deve preservar verso físico em branco antes do texto.')
+        raise SystemExit(f'{job}: double-sided mode without a catalog card must preserve a blank physical verso before the text.')
 PY
     done
   done

@@ -77,12 +77,12 @@ for engine in pdflatex lualatex; do
 done
 
 if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' research-project-15287.log; then
-  echo 'NBR 15287/UFC: coat of arms was loaded by default in the cover of research project.'
+  echo 'NBR 15287/UFC: coat of arms was loaded by default on the research-project cover.'
   exit 1
 fi
 
 if grep -Eq 'brasao-ufc\.pdf|logo-ufc\.PNG' frontmatter-anonymized-research-project.log; then
-  echo 'NBR 15287/UFC: coat of arms was loaded by default in the research project anonymized.'
+  echo 'NBR 15287/UFC: coat of arms was loaded by default in the anonymized research project.'
   exit 1
 fi
 
@@ -120,39 +120,39 @@ for expected in (
     'REFERÊNCIAS',
 ):
     if expected.casefold() not in project.casefold():
-        raise SystemExit(f'NBR 15287:2025: content required of the fixture missing: {expected}')
+        raise SystemExit(f'NBR 15287:2025: required fixture content is missing: {expected}')
 
 if 'INSTITUIÇÃO DE ORIGEM TESTE'.casefold() in project.casefold():
-    raise SystemExit('NBR 15287:2025: cover of research project usou a IES in the lugar of the entidade of submissão.')
+    raise SystemExit('NBR 15287:2025: research-project cover used the institution instead of the submission entity.')
 
 for forbidden in ('RESUMO', 'ABSTRACT', 'BANCA EXAMINADORA', 'APROVADA EM'):
     if forbidden.casefold() in project.casefold():
-        raise SystemExit(f'NBR 15287:2025: elemento de trabalho final apareceu no projeto: {forbidden}')
+        raise SystemExit(f'NBR 15287:2025: final-academic-work element appeared in the research project: {forbidden}')
 
 if 'MARCADOR CAPA OPCIONAL'.casefold() in no_cover.casefold():
-    raise SystemExit('NBR 15287:2025: cover optional was impressa apesar of cover = false.')
+    raise SystemExit('NBR 15287:2025: optional cover was rendered despite cover = false.')
 if 'AUTOR SEM CAPA TESTE'.casefold() not in no_cover.casefold():
-    raise SystemExit('NBR 15287:2025: title page required missing in the research project without cover.')
+    raise SystemExit('NBR 15287:2025: required title page is missing from the research project without a cover.')
 
 if 'AUTOR SIGILOSO TESTE'.casefold() in anon.casefold():
-    raise SystemExit('Projeto anonimizado: autor vazou no PDF.')
+    raise SystemExit('Anonymized research project: author leaked into the PDF.')
 if 'ORIENTADOR SIGILOSO TESTE'.casefold() in anon.casefold():
-    raise SystemExit('research project anonymized: advisor vazou in the PDF.')
+    raise SystemExit('Anonymized research project: advisor leaked into the PDF.')
 if 'PROJETO-ANONIMO-001'.casefold() not in anon.casefold():
-    raise SystemExit('research project anonymized: identifier público missing.')
+    raise SystemExit('Anonymized research project: public identifier is missing.')
 PY
 fi
 
 for expected in 'Introdução' 'Referencial teórico' 'Metodologia' 'Recursos' 'Cronograma' 'Referências'; do
   grep -Fqi "$expected" research-project-15287.toc || {
-    echo "NBR 15287:2025: item missing from the table of contents: $expected"
+    echo "NBR 15287:2025: item is missing from the table of contents: $expected"
     cat research-project-15287.toc
     exit 1
   }
 done
 
 if grep -Eiq 'resumo|abstract|agradecimentos|dedicat[oó]ria|folha de aprova' research-project-15287.toc; then
-  echo 'NBR 15287:2025: element pré-textual indevido leaked into the table of contents of the research project.'
+  echo 'NBR 15287:2025: invalid front-matter element leaked into the research-project table of contents.'
   cat research-project-15287.toc
   exit 1
 fi

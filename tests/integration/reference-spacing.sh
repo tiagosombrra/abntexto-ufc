@@ -36,12 +36,12 @@ for name, value in (
     ratio = value / baseline
     if not 0.99 <= ratio <= 1.01:
         raise SystemExit(
-            f'Referências: {name} deve equivaler a uma linha simples; razão={ratio:.4f}'
+            f'References: {name} must equal one single-spaced line; ratio={ratio:.4f}'
         )
 
 if not 0.99 <= stretch <= 1.01:
     raise SystemExit(
-        f'Referências: espaçamento interno deve ser simples; baselinestretch={stretch:.4f}'
+        f'References: internal spacing must be single; baselinestretch={stretch:.4f}'
     )
 
 print('Reference spacing gate completed.')

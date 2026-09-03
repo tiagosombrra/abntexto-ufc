@@ -11,7 +11,7 @@ cd "$ROOT/template"
 
 for file in main.loi main.lot main.loc main.loa main.toc; do
   [ -s "$file" ] || {
-    echo "Corpus failed: file of navigation missing: $file"
+    echo "Corpus failed: navigation file is missing: $file"
     exit 1
   }
 done
@@ -27,10 +27,10 @@ expected = {
 }
 for path, digest in expected.items():
     if not path.is_file():
-        raise SystemExit(f'Corpus failed: photograph licenciada missing: {path}')
+        raise SystemExit(f'Corpus failed: licensed photograph is missing: {path}')
     actual = hashlib.sha1(path.read_bytes()).hexdigest()
     if actual != digest:
-        raise SystemExit(f'Corpus failed: SHA-1 divergente in {path}: {actual}')
+        raise SystemExit(f'Corpus failed: SHA-1 mismatch in {path}: {actual}')
 PY
 fi
 
@@ -78,8 +78,8 @@ def require_dotted_entry(source, start, end, marker):
     matches = [(raw, normalized) for raw, normalized in entries if marker in normalized]
     if len(matches) != 1:
         raise SystemExit(
-            f'Corpus falhou: esperado exatamente uma entrada para {start}: '
-            f'{marker}; encontradas {len(matches)}.'
+            f'Corpus failed: expected exactly one entry for {start}: '
+            f'{marker}; found {len(matches)}.'
         )
 
     _, normalized_entry = matches[0]
@@ -136,15 +136,15 @@ missing = [marker for marker in required if marker not in flat]
 if missing:
     raise SystemExit('Corpus failed: markers missing in the PDF: ' + ', '.join(missing))
 if '??' in text:
-    raise SystemExit('Corpus failed: reference não resolvida found in the PDF.')
+    raise SystemExit('Corpus failed: unresolved reference found in the PDF.')
 require_reference_images = os.environ.get('UFC_REQUIRE_REFERENCE_IMAGES', '0') == '1'
 if require_reference_images and 'Execute make reference-assets' in text:
-    raise SystemExit('Corpus failed: fallback of photograph apareceu quando photographs of reference eram required.')
+    raise SystemExit('Corpus failed: photograph fallback appeared while reference photographs were required.')
 
 pages = [normalize_pdf_text(page) for page in text.split('\f')]
 committee_pages = [page for page in pages if 'BANCA EXAMINADORA' in page]
 if len(committee_pages) != 1:
-    raise SystemExit(f'Corpus failed: expected exatamente a block of banca, found {len(committee_pages)}.')
+    raise SystemExit(f'Corpus failed: expected exactly one committee block, found {len(committee_pages)}.')
 committee = committee_pages[0]
 committee_members = (
     'Nome do Orientador',
@@ -156,7 +156,7 @@ committee_members = (
 )
 missing_committee = [name for name in committee_members if name not in committee]
 if missing_committee:
-    raise SystemExit('Corpus failed: banca does not fit entirely in the approval page: ' + ', '.join(missing_committee))
+    raise SystemExit('Corpus failed: committee does not fit entirely on the approval page: ' + ', '.join(missing_committee))
 
 list_blocks = (
     ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Figura estreita com legenda curta'),
@@ -171,9 +171,9 @@ for start, end, marker in list_blocks:
         raise SystemExit(f'Corpus failed: block of list not found: {start}.')
     block = flat[start_at:end_at]
     if marker not in block:
-        raise SystemExit(f'Corpus failed: entry with case preserved missing of {start}: {marker}')
+        raise SystemExit(f'Corpus failed: case-preserved entry is missing from {start}: {marker}')
     if marker.upper() in block:
-        raise SystemExit(f'Corpus failed: entry incorrectly converted for case uppercase in {start}.')
+        raise SystemExit(f'Corpus failed: entry was incorrectly converted to uppercase in {start}.')
     require_dotted_entry(text, start, end, marker)
 
 raw_pages = text.split('\f')
@@ -182,7 +182,7 @@ toc_starts = [
     if 'SUMÁRIO' in page and 'INTRODUÇÃO E USO DESTE MODELO' in page
 ]
 if len(toc_starts) != 1:
-    raise SystemExit(f'Corpus failed: expected a table of contents principal, found {len(toc_starts)}.')
+    raise SystemExit(f'Corpus failed: expected one main table of contents, found {len(toc_starts)}.')
 
 toc_start = toc_starts[0]
 toc_end = None
@@ -191,7 +191,7 @@ for index in range(toc_start + 1, len(raw_pages)):
         toc_end = index
         break
 if toc_end is None:
-    raise SystemExit('Corpus failed: fim of the table of contents not found antes of the first section textual.')
+    raise SystemExit('Corpus failed: end of the table of contents was not found before the first textual section.')
 
 toc = '\n'.join(raw_pages[toc_start:toc_end])
 toc_flat = normalize_pdf_text(toc)
@@ -213,11 +213,11 @@ for marker in (
     'ÍNDICE REMISSIVO',
 ):
     if marker not in toc_flat:
-        raise SystemExit(f'Corpus failed: entry required missing of the table of contents: {marker}.')
+        raise SystemExit(f'Corpus failed: required entry is missing from the table of contents: {marker}.')
 
 entry_lines = [line for line in toc.splitlines() if re.search(r'\d+\s*$', line)]
 if len(entry_lines) < 30:
-    raise SystemExit(f'Corpus failed: too few entries paginadas in the table of contents comentado: {len(entry_lines)}.')
+    raise SystemExit(f'Corpus failed: too few paginated entries in the annotated table of contents: {len(entry_lines)}.')
 undotted = [
     line.strip() for line in entry_lines
     if not re.search(spaced_leader_pattern(), line)
@@ -225,7 +225,7 @@ undotted = [
 if undotted:
     sample = ' | '.join(undotted[:8])
     raise SystemExit(
-        f'Corpus falhou: {len(undotted)} entrada(s) do sumário sem líder pontilhado espaçado: {sample}'
+        f'Corpus failed: {len(undotted)} table-of-contents entries lack spaced dotted leaders: {sample}'
     )
 
 root = ET.parse('/tmp/abntexto-ufc-reference-corpus-bbox.html').getroot()
@@ -233,7 +233,7 @@ local = lambda tag: tag.rsplit('}', 1)[-1]
 bbox_pages = [node for node in root.iter() if local(node.tag) == 'page']
 if toc_end > len(bbox_pages):
     raise SystemExit(
-        f'Corpus falhou: intervalo físico do sumário excede páginas BBox: '
+        f'Corpus failed: physical table-of-contents range exceeds BBox pages: '
         f'toc_end={toc_end}, bbox_pages={len(bbox_pages)}.'
     )
 
@@ -252,7 +252,7 @@ def toc_title_x(marker):
             matches.append((raw, float(words[0].attrib['xMin']), page_index + 1))
     if len(matches) != 1:
         raise SystemExit(
-            f'Corpus falhou: esperado um título primário no sumário para {marker}; encontrados {len(matches)}.'
+            f'Corpus failed: expected one primary table-of-contents heading for {marker}; found {len(matches)}.'
         )
     return matches[0][1]
 
@@ -271,8 +271,8 @@ for marker in (
     actual_x = toc_title_x(marker)
     if abs(actual_x - reference_x) > 1.5:
         raise SystemExit(
-            f'Corpus falhou: {marker} desalinhado no sumário: '
-            f'x={actual_x:.2f}, referência={reference_x:.2f}'
+            f'Corpus failed: {marker} is misaligned in the table of contents: '
+            f'x={actual_x:.2f}, reference={reference_x:.2f}'
         )
 PY
 
@@ -281,7 +281,7 @@ check_list() {
   shift
   for marker in "$@"; do
     grep -Fq "$marker" "$file" || {
-      echo "Corpus failed: '$marker' missing of $file"
+      echo "Corpus failed: '$marker' is missing from $file"
       exit 1
     }
   done
@@ -312,4 +312,4 @@ check_list main.loa \
   'Máximo divisor comum com números de linha' \
   'Seleção do maior valor sem números de linha'
 
-echo 'Corpus visual, didático and semântico of the documento of reference validado.'
+echo 'Visual, instructional, and semantic reference corpus validated.'

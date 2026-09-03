@@ -62,7 +62,7 @@ def entry(marker):
 
 event = entry('Congresso Brasileiro de Teste')
 if re.search(r'\[\s*[Ss]\.\s*[Ll]\.\s*\]', event):
-    raise SystemExit('NBR 6023:2025: evento sem cidade recebeu sine loco.')
+    raise SystemExit('NBR 6023:2025: event without a city received a sine loco marker.')
 
 article = entry('Preservação digital em ambientes acadêmicos')
 if 'e202501' not in article:
@@ -74,11 +74,11 @@ if 'julgado em' not in judgment.casefold() or '2025' not in judgment:
 
 online = entry('Preservação de documentos digitais')
 if re.search(r'\[\s*[Ss]\.\s*[Ll]\.', online) or re.search(r'\[\s*[Ss]\.\s*[Nn]\.', online):
-    raise SystemExit('NBR 6023:2025: documento eletrônico recebeu indicador of publicação unknown.')
+    raise SystemExit('NBR 6023:2025: electronic document received an unknown publication marker.')
 
 printed = entry('Preservação de documentos impressos')
 if not re.search(r'[Ss]\.\s*[Ll]\.', printed) or not re.search(r'[Ss]\.\s*[Nn]\.', printed):
-    raise SystemExit('NBR 6023:2025: documento impresso sem dados perdeu [S. l.] ou [s. n.].')
+    raise SystemExit('NBR 6023:2025: print document without publication data lost [S. l.] or [s. n.].')
 
 supplement = entry('Indicadores acadêmicos brasileiros')
 if 'suplemento' not in supplement.casefold() or supplement.find('2025') > supplement.casefold().find('suplemento'):
@@ -86,11 +86,11 @@ if 'suplemento' not in supplement.casefold() or supplement.find('2025') > supple
 
 interview = entry('Eficiência e inovação na gestão')
 if 'hamel' not in interview.casefold():
-    raise SystemExit('NBR 6023:2025: entrevistado não aparece como autor principal.')
+    raise SystemExit('NBR 6023:2025: interviewee does not appear as the primary author.')
 
 periodical = entry('REVISTA BRASILEIRA DE TESTE. Fortaleza')
 if '1234-5678' not in periodical:
-    raise SystemExit('NBR 6023:2025: ISSN opcional não foi preservado.')
+    raise SystemExit('NBR 6023:2025: optional ISSN was not preserved.')
 
 identifiers = entry('Identificadores persistentes em referências')
 if '10.1234/exemplo.2025.1' not in identifiers or '0000-0002-1825-0097' not in identifiers:

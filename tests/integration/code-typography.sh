@@ -60,7 +60,7 @@ if algorithm_family != text_family:
 for name in ('UFC-TEXT-FONTSIZE', 'UFC-CODE-FONTSIZE', 'UFC-ALGORITHM-FONTSIZE'):
     actual = scalar(name)
     if abs(actual - 12.0) > 0.1:
-        raise SystemExit(f'{name}: esperado 12 pt nominal, obtido {actual:.4f}')
+        raise SystemExit(f'{name}: expected nominal size 12 pt, measured {actual:.4f}')
 PY
 
     pdftotext -bbox-layout "$job.pdf" "/tmp/$job-bbox.html"
@@ -151,8 +151,8 @@ for marker in ('UFC-CODE-GEOMETRY-MARKER', 'UFC-ALGORITHM-GEOMETRY-MARKER'):
         )
     if box['x1'] > A4_WIDTH - RIGHT + TOL:
         raise SystemExit(
-            f"{marker}: conteúdo invade margem direita: "
-            f"x={box['x1']:.2f}, limite={A4_WIDTH - RIGHT:.2f}"
+            f"{marker}: content crosses the right margin: "
+            f"x={box['x1']:.2f}, limit={A4_WIDTH - RIGHT:.2f}"
         )
 PY
 

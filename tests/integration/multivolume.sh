@@ -34,7 +34,7 @@ for engine in pdflatex lualatex; do
     exit 1
   }
   grep -Fq 'UFC-PAGE-AFTER-TITLE=102' "$job.log" || {
-    echo "$job: folha de rosto não avançou a sequência 101 → 102."
+    echo "$job: title page did not advance the sequence 101 → 102."
     exit 1
   }
   grep -Fq 'UFC-TEXT-PAGE=102' "$job.log" || {

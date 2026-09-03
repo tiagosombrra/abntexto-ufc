@@ -80,7 +80,7 @@ for marker in markers:
         raise SystemExit(f'{job}: element pós-textual missing: {marker}')
     positions.append(pos)
 if positions != sorted(positions):
-    raise SystemExit(f'{job}: ordem pós-textual incorrect: {list(zip(markers, positions))}')
+    raise SystemExit(f'{job}: incorrect back-matter order: {list(zip(markers, positions))}')
 
 for content in (
     'discretização de um domínio geométrico',
@@ -91,7 +91,7 @@ for content in (
         raise SystemExit(f'{job}: content pós-textual missing: {content}')
 
 if 'capítulo' in fold or 'capitulo' in fold:
-    raise SystemExit(f'{job}: estrutura baseada em capítulo reapareceu.')
+    raise SystemExit(f'{job}: chapter-based structure reappeared.')
 PY
 
   for marker in 'Referências' 'Glossário' 'Questionário produzido pelo autor' 'Documento institucional externo' 'Remissivo'; do

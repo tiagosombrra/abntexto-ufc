@@ -40,7 +40,7 @@ for engine in pdflatex lualatex; do
       exit 1
     fi
 
-    echo "Validating profile completo $profile with $engine..."
+    echo "Validating complete profile $profile with $engine..."
     make DOCUMENT="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-profile.log 2>&1 || {
       cat /tmp/abntexto-ufc-profile.log
       exit 1
@@ -56,7 +56,7 @@ for engine in pdflatex lualatex; do
 
     if [ -f "$output.blg" ] && grep -Eq 'WARN|ERROR' "$output.blg"; then
       cat "$output.blg"
-      echo "Preflight failed: Biber reportou warning/error in $profile/$engine."
+      echo "Preflight failed: Biber reported a warning/error in $profile/$engine."
       exit 1
     fi
 
@@ -68,11 +68,11 @@ for engine in pdflatex lualatex; do
     meta="/tmp/$job-meta.xml"
     pdfinfo -meta "$output.pdf" > "$meta"
     grep -Fq '<pdfaid:part>2</pdfaid:part>' "$meta" || {
-      echo "profile $profile/$engine: declaração PDF/A part 2 missing."
+      echo "Profile $profile/$engine: PDF/A part 2 declaration is missing."
       exit 1
     }
     grep -Eq '<pdfaid:conformance>[Bb]</pdfaid:conformance>' "$meta" || {
-      echo "profile $profile/$engine: declaração PDF/A-2b missing."
+      echo "Profile $profile/$engine: PDF/A-2b declaration is missing."
       exit 1
     }
 
@@ -87,13 +87,13 @@ for engine in pdflatex lualatex; do
       END { if (!found) exit 1 }
     '; then
       pdfinfo "$output.pdf"
-      echo "profile $profile/$engine: page não is A4."
+      echo "Profile $profile/$engine: page is not A4."
       exit 1
     fi
 
     pages=$(pdfinfo "$output.pdf" | awk '/^Pages:/ {print $2}')
     [ "${pages:-0}" -ge 6 ] || {
-      echo "profile $profile/$engine: documento completo gerou apenas ${pages:-0} pages."
+      echo "Profile $profile/$engine: complete document generated only ${pages:-0} pages."
       exit 1
     }
 
@@ -155,45 +155,45 @@ expected = {
 
 for marker in expected[profile]:
     if marker not in text:
-        raise SystemExit(f'profile {profile}: content semântico missing: {marker}')
+        raise SystemExit(f'Profile {profile}: semantic content is missing: {marker}')
 
 for marker in ('introdução', 'metodologia', 'referências', 'fundamentos de metodologia acadêmica'):
     if marker not in text:
-        raise SystemExit(f'profile {profile}: content estrutural missing: {marker}')
+        raise SystemExit(f'Profile {profile}: structural content is missing: {marker}')
 
 if 'capítulo' in text or 'capitulo' in text:
-    raise SystemExit(f'profile {profile}: structure of capítulo reapareceu.')
+    raise SystemExit(f'Profile {profile}: chapter-based structure reappeared.')
 
 if profile == 'anonymized-research-project':
     for secret in ('autor matriz teste', 'prof. orientador matriz teste', 'prof. membro matriz teste'):
         if secret in text:
-            raise SystemExit(f'profile anonymized vazou dado protegido: {secret}')
+            raise SystemExit(f'Anonymized profile leaked protected data: {secret}')
 else:
     if 'autor matriz teste' not in text:
-        raise SystemExit(f'profile {profile}: author expected missing.')
+        raise SystemExit(f'Profile {profile}: expected author is missing.')
 
 if profile in {'research-project', 'anonymized-research-project'}:
     for forbidden in ('banca examinadora', 'abstract'):
         if forbidden in text:
-            raise SystemExit(f'profile {profile}: element of work acadêmico apareceu incorrectly: {forbidden}')
+            raise SystemExit(f'Profile {profile}: academic-work element appeared incorrectly: {forbidden}')
 PY
 
     grep -Fqi 'Introdu' "$output.toc" || {
-      echo "profile $profile/$engine: Introdução missing from the table of contents."
+      echo "Profile $profile/$engine: Introduction is missing from the table of contents."
       cat "$output.toc"
       exit 1
     }
     grep -Fqi 'Metodologia' "$output.toc" || {
-      echo "profile $profile/$engine: Metodologia missing from the table of contents."
+      echo "Profile $profile/$engine: Methodology is missing from the table of contents."
       cat "$output.toc"
       exit 1
     }
     if grep -Eq '\\contentsline \{section\}\{[^}]*\*' "$output.toc"; then
-      echo "profile $profile/$engine: entry anômala with asterisco in the table of contents."
+      echo "Profile $profile/$engine: anomalous asterisk entry found in the table of contents."
       cat "$output.toc"
       exit 1
     fi
   done
 done
 
-echo 'Matrix completa of profiles gate completed.'
+echo 'Complete profile matrix gate completed.'

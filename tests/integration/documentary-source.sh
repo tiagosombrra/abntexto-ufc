@@ -34,7 +34,7 @@ for engine in pdflatex lualatex; do
 
   if grep -Eq 'WARN|ERROR' "$job.blg"; then
     cat "$job.blg"
-    echo "$job: Biber reportou warning/error."
+    echo "$job: Biber reported a warning/error."
     exit 1
   fi
 
@@ -68,7 +68,7 @@ if not source_match:
 annex_pos = fold.find('anexo a')
 fullref_pos = fold.find('manual de dados de teste')
 if annex_pos < 0 or fullref_pos < annex_pos:
-    raise SystemExit('reference bibliográfica própria não permaneceu dentro of the annex.')
+    raise SystemExit('The annex-specific bibliographic reference did not remain inside the annex.')
 
 if 'referências' in fold[annex_pos:]:
     raise SystemExit('fixture criou list global of references; o caso deve permanecer local ao annex.')

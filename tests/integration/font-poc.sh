@@ -171,7 +171,7 @@ assert_no_text_fallback() {
   names=$(font_names "$pdf")
 
   if printf '%s\n' "$names" | grep -Eiq 'TeXGyreTermesX|TeXGyreTermes|TeXGyreHeros|NimbusSans'; then
-    echo "POC fontes: $pdf contém família textual de fallback inesperada."
+    echo "Font POC: $pdf contains an unexpected fallback text family."
     pdffonts "$pdf"
     return 1
   fi

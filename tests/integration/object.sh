@@ -19,7 +19,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo 'Contexto das caixas excedentes:'
+  echo 'Context for overfull boxes:'
   grep -n -A4 -B1 -E 'Overfull \\hbox|Overfull \\vbox' "$job.log" || true
   echo 'Preflight failed: fixture of objetos contains warnings or overflow unrecognized.'
   exit 1
@@ -69,7 +69,7 @@ for marker in markers:
     pattern = re.compile(re.escape(marker) + r'[^\n]*\.\s*(?:\.\s*)*\d+\s*$', re.M)
     if not pattern.search(text):
         raise SystemExit(
-            f'Preflight falhou: líder pontilhado ausente na lista de objeto: {marker}'
+            f'Preflight failed: dotted leader is missing from the object list: {marker}'
         )
 PY
 

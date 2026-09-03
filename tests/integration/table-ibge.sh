@@ -55,7 +55,7 @@ def metric(name):
 def assert_all(name, expected, tolerance=0.06):
     for value in metric(name):
         if abs(value - expected) > tolerance:
-            raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {value:.4f}')
+            raise SystemExit(f'{name}: expected {expected:.4f}, measured {value:.4f}')
 
 pt_per_bp = 72.27 / 72.0
 assert_all('UFC-IBGE-BODY-FONTSIZE', 12.0)

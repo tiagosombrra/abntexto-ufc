@@ -63,7 +63,7 @@ for marker in markers:
         raise SystemExit(f'{job}: marker missing: {marker}')
     page = matches[0]
     if page % 2 == 0:
-        raise SystemExit(f'{job}: element deveria iniciar in the recto, mas apareceu in the page física {page}: {marker}')
+        raise SystemExit(f'{job}: element should start on a recto but appeared on physical page {page}: {marker}')
 
 print(f'{job}: todos os elementos auditados iniciam no anverso.')
 PY

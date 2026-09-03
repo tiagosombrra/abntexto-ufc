@@ -51,7 +51,7 @@ def scalar(name):
 
 def close(name, actual, expected, tolerance=0.06):
     if abs(actual - expected) > tolerance:
-        raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {actual:.4f}')
+        raise SystemExit(f'{name}: expected {expected:.4f}, measured {actual:.4f}')
 
 pt_per_cm = 72.27 / 2.54
 pt_per_bp = 72.27 / 72.0

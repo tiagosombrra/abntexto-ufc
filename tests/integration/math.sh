@@ -54,7 +54,7 @@ for engine in pdflatex lualatex; do
           exit 1
         fi
         pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
-          echo "$job: fonte matemática esperada não identificada: $expected"
+          echo "$job: expected mathematics font was not identified: $expected"
           pdffonts "$job.pdf"
           exit 1
         }
@@ -105,8 +105,8 @@ rightmost = max(words, key=lambda item: item[2])
 expected_right = page_width - 2.0 * 72.0 / 2.54
 if abs(rightmost[2] - expected_right) > 4.0:
     raise SystemExit(
-        f'número da equação não está alinhado à direita: '
-        f'esperado xMax≈{expected_right:.2f}, obtido {rightmost[2]:.2f} ({rightmost[0]!r})'
+        f'equation number is not right-aligned: '
+        f'expected xMax≈{expected_right:.2f}, measured {rightmost[2]:.2f} ({rightmost[0]!r})'
     )
 print('VALIDATION-EVIDENCE rule=equation.numbering.format status=PASS expected=arabic-parenthesized measured=(1)')
 print('VALIDATION-EVIDENCE rule=equation.numbering.right status=PASS expected=right-aligned measured=right-margin-aligned')
