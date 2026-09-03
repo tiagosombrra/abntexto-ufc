@@ -9,6 +9,7 @@ This document records the completed R2-A ownership inventory, the closed R2-B1 s
 R2-A entry checkpoint: `0a2c2c3879986ca27b731f54b974db12524258df`.
 R2-B1 merged checkpoint: `ded5e77733795aa2958606e899d4e27f12f64df4`.
 R2-B2 merged checkpoint: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`.
+R2-B3 canonical entry checkpoint after closeout PR #243: `0650845b922271fc134d20ef2a8c36ebb999ef91`.
 Authoritative migration contract: `release/v3-api-migration.json`.
 
 ## Current-state finding
@@ -55,7 +56,7 @@ The first full post-migration integration run `33665983360` failed closed at `PA
 
 ### R2-B2 — academic and front-matter public rendering API — DONE
 
-Operational issue: #237. Implementation PR: #242. Entry `main`: `e418893ee5c89f12cc4ac8d845111c894ec946e4`. Merged `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`.
+Operational issue: #237, closed completed. Implementation PR: #242. Entry `main`: `e418893ee5c89f12cc4ac8d845111c894ec946e4`. Merged B2 implementation `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`. Control-plane closeout PR: #243; canonical B3 entry `main`: `0650845b922271fc134d20ef2a8c36ebb999ef91`.
 
 B2 moved cover/title/approval/catalog-card, dedication/acknowledgments/epigraph/errata, summary/abstract, front-matter lists, list-entry and table-of-contents commands into direct owners; rebound layout hooks; migrated template/test/reference/CTAN/scenario consumers; and removed B2 forwards from `public-api.def`. The first executor run `33679535751` failed closed on its own cleanup order. Corrected run `33679827267` passed, then strengthened residual audit `33680252116` caught and closed hook/specialization gaps. Final head `4341a2adb4633b634d1e2ad905b1731e8126354b` passed `Static contract` `33680378948` and `Linux integration` `33680378846` / job `100415223907` with `PASS=30 FAIL=0 SKIP=0`; merged-main `Linux release check` `33687588772` passed `PASS=32 FAIL=0 SKIP=0`.
 
@@ -63,7 +64,7 @@ The B2→B3 closeout then exposed a separate active-release-consumer residue: th
 
 ### R2-B3 — structural/object environments, optional object API and extension hooks — ACTIVE
 
-Operational issue: #238. Entry `main`: the canonical B2→B3 closeout merge, after PR #243 passes final permanent gates and lands on `main`.
+Operational issue: #238. Entry `main`: `0650845b922271fc134d20ef2a8c36ebb999ef91` from the green squash merge of closeout PR #243.
 
 Make `ufclettereditems`, `ufcdashedsubitems`, `ufcdefinitionlist`, `ufcobject`, `ufclisting`, and `ufcalgorithm` the direct environments in their owners. Update `integrations/abntexto.def` together with `ufcdefinitionlist`. Move source/note/list-of-chart/code/algorithm and optional listing/minted APIs to direct canonical ownership. Rename project extension hooks to `\ufcSectionHook` and `\ufcObjectLegendHook`. Replace project-owned object IDs `codigo` / `algoritmo`; preserve genuine upstream `grafico` / `quadro` only at integration boundaries.
 
@@ -93,4 +94,4 @@ Migrate any remaining template/test/documentation consumers, remove `abntexto-uf
 
 ## R2-A exit condition
 
-R2-A is complete. The ownership map, machine contracts and control plane agree on the B1–B5 sequence. B1 and B2 are complete; B3/#238 becomes the sole active implementation lot only after the B2→B3 closeout PR #243 is merged green.
+R2-A is complete. The ownership map, machine contracts and control plane agree on the B1–B5 sequence. B1 and B2 are complete; B3/#238 is the sole active implementation lot from canonical entry `main` `0650845b922271fc134d20ef2a8c36ebb999ef91` after closeout PR #243 merged green.

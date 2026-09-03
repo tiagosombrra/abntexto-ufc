@@ -5,11 +5,11 @@ Updated: 2026-09-02
 ## Checkpoint
 
 - Repository: `tiagosombrra/abntexto-ufc`.
-- R2-B2 merged checkpoint on `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`.
+- Canonical R2-B3 entry checkpoint on `main`: `0650845b922271fc134d20ef2a8c36ebb999ef91`.
 - Phase: **V3-R2 ACTIVE**.
 - Active stage: **R2-B3 — structural/object API ownership**.
 - Active implementation issue: **#238**.
-- R2-B2 issue #237: **DONE through PR #242**.
+- R2-B2 issue #237: **DONE through PR #242 and closeout PR #243; issue closed completed**.
 - R2-B1 issue #234: **DONE through PR #236**.
 - R2-A inventory issue #232: **DONE through ownership inventory and closeout PR #235**.
 - V3-R1 / R1-B8: **DONE**; issue #227 closed completed.
@@ -44,7 +44,10 @@ The observational `FRONTMATTER-EVIDENCE` internal FAIL records seen inside the p
 - entry `main`: `e418893ee5c89f12cc4ac8d845111c894ec946e4`;
 - implementation head: `4341a2adb4633b634d1e2ad905b1731e8126354b`;
 - PR: #242;
-- merged `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`;
+- merged B2 implementation `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`;
+- B2→B3 closeout PR: #243; canonical B3 entry `main`: `0650845b922271fc134d20ef2a8c36ebb999ef91`;
+- final closeout `Static contract`: run `33696690560`, PASS;
+- final closeout `Linux integration`: run `33696690567`, job `100467032281`, `PASS=30 FAIL=0 SKIP=0`;
 - `Static contract`: run `33680378948`, PASS;
 - final `Linux integration`: run `33680378846`, job `100415223907`, `PASS=30 FAIL=0 SKIP=0`;
 - strengthened residual audit: run `33680252116`, job `100414804865`, PASS;
@@ -85,4 +88,4 @@ The remaining forwarding surface is bounded to B3 structural/object environments
 
 ## Immediate action
 
-Execute R2-B3 through issue #238 from canonical `main` after the B2→B3 control-plane closeout is merged. Migrate structural environments and the definition-list ABNTexto override atomically; move object/source/note/listing/minted/algorithm APIs and extension hooks to direct canonical ownership; replace project-owned `codigo` / `algoritmo` object IDs with English project identifiers while preserving rendered Portuguese labels; migrate all live template/test consumers; and remove only B3 forwarding debt. Run the strengthened residual scan, `make static-check`, and permanent `Linux integration` before B3 closure.
+Execute R2-B3 through issue #238 from canonical `main` `0650845b922271fc134d20ef2a8c36ebb999ef91`. Migrate structural environments and the definition-list ABNTexto override atomically; move object/source/note/listing/minted/algorithm APIs and extension hooks to direct canonical ownership; replace project-owned `codigo` / `algoritmo` object IDs with English project identifiers while preserving rendered Portuguese labels; migrate all live template/test consumers; and remove only B3 forwarding debt. Run the strengthened residual scan, `make static-check`, and permanent `Linux integration` before B3 closure.
