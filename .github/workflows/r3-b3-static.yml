@@ -75,14 +75,18 @@ jobs:
               "Use strict-font = true with ${fontLabel} and confirm in Deep/CLI mode.",
           )
 
-          Path(".github/workflows/r3-b3-static.yml").write_text(
-              """name: Temporary R3-B3 executor cleanup\n"
+          cleanup_workflow = (
+              "name: Temporary R3-B3 executor cleanup\n"
               "on: workflow_dispatch\n"
-              "permissions:\n  contents: read\n"
-              "jobs:\n  cleanup-placeholder:\n    runs-on: ubuntu-24.04\n"
-              "    steps:\n      - run: echo temporary executor already validated in current run\n",
-              encoding="utf-8",
+              "permissions:\n"
+              "  contents: read\n"
+              "jobs:\n"
+              "  cleanup-placeholder:\n"
+              "    runs-on: ubuntu-24.04\n"
+              "    steps:\n"
+              "      - run: echo temporary executor already validated in current run\n"
           )
+          Path(".github/workflows/r3-b3-static.yml").write_text(cleanup_workflow, encoding="utf-8")
           PY
 
           make static-check
