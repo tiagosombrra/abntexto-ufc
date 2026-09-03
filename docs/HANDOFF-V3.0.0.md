@@ -5,87 +5,34 @@ Updated: 2026-09-02
 ## Checkpoint
 
 - Repository: `tiagosombrra/abntexto-ufc`.
-- Canonical R2-B3 entry checkpoint on `main`: `0650845b922271fc134d20ef2a8c36ebb999ef91`.
+- Canonical R2-B4 product entry on `main`: `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`.
 - Phase: **V3-R2 ACTIVE**.
-- Active stage: **R2-B3 — structural/object API ownership**.
-- Active implementation issue: **#238**.
-- R2-B2 issue #237: **DONE through PR #242 and closeout PR #243; issue closed completed**.
-- R2-B1 issue #234: **DONE through PR #236**.
-- R2-A inventory issue #232: **DONE through ownership inventory and closeout PR #235**.
-- V3-R1 / R1-B8: **DONE**; issue #227 closed completed.
-- Certified R1 product candidate: `9b1752565ac217c04ffa22a9ef272cdf078af380`.
+- Active stage: **R2-B4 — bibliography and back-matter API ownership**.
+- Active issue: **#239**.
+- R2-B3 / #238: **DONE through PR #245; issue closed completed**.
+- R2-B2 / #237, R2-B1 / #234 and R2-A / #232: **DONE**.
+- Certified R1 candidate: `9b1752565ac217c04ffa22a9ef272cdf078af380`.
 
-Git facts, `release/v3-roadmap.json`, this handoff, `docs/ROADMAP-V3.0.0.md`, `AGENTS.md`, and `release/v3-api-migration.json` must agree. Disagreement fails closed.
+Git facts, machine contracts, this handoff, the roadmap and `AGENTS.md` must agree. Disagreement fails closed.
 
-## Stable foundation
+## R2 evidence
 
-All R1 structural, distribution, static-gate, permanent-workflow and Windows/literal-font/PDF-A certification blocks are complete. Permanent validation remains `make static-check`, `make check`, and `make release-check`, orchestrated by `Static contract`, `Linux integration`, and `Linux release check`.
-
-R2-A classified direct behavior owners and upstream boundaries. R2-B1 moved the complete canonical setup/internal-state vocabulary into those owners. R2-B2 then moved academic/front-matter rendering commands and their live consumers/hooks into direct canonical ownership.
-
-## R2-B1 closure evidence
-
-- implementation head: `99fb58deaa1594ca19fb3a00ca9418623e5b25aa`;
-- PR: #236;
-- merged `main`: `ded5e77733795aa2958606e899d4e27f12f64df4`;
-- `Static contract`: run `33668283912`, PASS;
-- first complete integration after migration: run `33665983360`, `PASS=24 FAIL=6 SKIP=0`, correctly fail-closed on six stale dynamic setup consumers;
-- final `Linux integration`: run `33668283890`, job `100375428004`, `PASS=30 FAIL=0 SKIP=0`;
-- issue #234: closed completed;
-- no runtime alias layer introduced;
-- no normative rule/value/tolerance/locator/proof-state change;
-- no proprietary font redistribution;
-- no CTAN submission.
-
-The observational `FRONTMATTER-EVIDENCE` internal FAIL records seen inside the passing front-matter gate predate B1 and match the certified green baseline. They are not B1 regressions and remain outside this API migration lot absent new normative evidence.
-
-## R2-B2 closure evidence
-
-- entry `main`: `e418893ee5c89f12cc4ac8d845111c894ec946e4`;
-- implementation head: `4341a2adb4633b634d1e2ad905b1731e8126354b`;
-- PR: #242;
-- merged B2 implementation `main`: `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`;
-- B2→B3 closeout PR: #243; canonical B3 entry `main`: `0650845b922271fc134d20ef2a8c36ebb999ef91`;
-- final closeout `Static contract`: run `33696690560`, PASS;
-- final closeout `Linux integration`: run `33696690567`, job `100467032281`, `PASS=30 FAIL=0 SKIP=0`;
-- `Static contract`: run `33680378948`, PASS;
-- final `Linux integration`: run `33680378846`, job `100415223907`, `PASS=30 FAIL=0 SKIP=0`;
-- strengthened residual audit: run `33680252116`, job `100414804865`, PASS;
-- merged-main `Linux release check`: run `33687588772`, `PASS=32 FAIL=0 SKIP=0`;
-- late active release-source reconciliation: run `33696155771`, job `100465339990`, PASS; `docs/ctan-example.tex`, the CTAN manual, public-bundle producer, and public-bundle checker now consume the canonical v3 setup; public and distribution bundles passed reproducibility/layout/asset-exclusion validation;
-- the late audit removed downloaded reference photographs, `dist/`, and its temporary workflow before publishing the clean checkpoint; no generated institutional/reference asset was committed;
-- initial executor run `33679535751` failed closed on temporary cleanup order and did not publish a product checkpoint;
-- corrected executor run `33679827267`, job `100413437018`, passed;
-- zero B2 Portuguese runtime commands/hooks/forwards remain;
-- no runtime alias layer, normative semantic/proof-state change, proprietary font redistribution or CTAN submission.
-
-The late release-source reconciliation was discovered during B2 closeout but belongs to the already-migrated B1/B2 consumer surface; it is not B3 scope. The permanent B2 runtime gates were already green, and the additional release audit specifically proved the live CTAN/example/distribution path after the repair.
+| Lot | Status | Main checkpoint | Validation |
+|---|---|---|---|
+| B1 | DONE | `ded5e77733795aa2958606e899d4e27f12f64df4` | Linux `33668283890` = `30/0/0` |
+| B2 | DONE | `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; closeout `0650845b922271fc134d20ef2a8c36ebb999ef91` | Linux `33680378846` = `30/0/0`; release `33687588772` = `32/0/0` |
+| B3 | DONE | `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | Static `33704346418` PASS; Linux `33704346429` = `PASS=30 FAIL=0 SKIP=0` |
+| B4 | ACTIVE | entry `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | implementation pending |
+| B5 | PENDING | issue #240 | after B4 |
 
 ## Current runtime/API state
 
-`public-api.def` remains transitional R2 debt, but B1 removed setup forwarding and B2 removed academic/front-matter command forwarding. Canonical setup/state and academic/front-matter rendering behavior are now directly owned by their responsibility modules and all live B2 consumers use the canonical API.
-
-The remaining forwarding surface is bounded to B3 structural/object environments/APIs plus B4 bibliography/back-matter commands. B3 is active and owns structural/object environments, source/note and object-list APIs, optional listing/minted APIs, extension hooks, and project-owned object IDs. B4 owns bibliography/back-matter commands and plumbing internalization. B5 owns the final residual consumer sweep plus removal of `public-api.def`.
-
-## R2 implementation sequence
-
-1. **R2-B1 / #234 — DONE.** Canonical setup and internal state vocabulary directly owned and fully validated.
-2. **R2-B2 / #237 — DONE.** Academic/front-matter rendering API directly owned; PR #242 merged with permanent integration and post-merge release validation green; late active release-source reconciliation also passed.
-3. **R2-B3 / #238 — ACTIVE.** Structural/object environments, optional object API, extension hooks and project-owned object IDs.
-4. **R2-B4 / #239 — PENDING.** Bibliography/back-matter API and plumbing internalization.
-5. **R2-B5 / #240 — PENDING.** Final consumer migration, forwarding-layer removal, residual scan and `docs/MIGRATING-TO-V3.md`.
-
-## Hard boundaries
-
-- No blind global replacement.
-- Producer/behavior owner/template/test changes move together.
-- No new compatibility alias layer.
-- Preserve rendered Portuguese academic and official wording.
-- Preserve normative rule IDs, expected values, tolerances, locators and proof state absent explicit new evidence.
-- Do not rename genuine upstream identifiers solely for cosmetic consistency.
-- Do not redistribute proprietary Microsoft fonts.
-- Do not perform actual CTAN submission during R2 implementation.
+B1 setup/state, B2 academic/front-matter and B3 structural/object surfaces are directly owned. B3 migrated project-owned `codigo` / `algoritmo` to `code` / `algorithm`; genuine upstream `grafico` / `quadro` remain only at integration boundaries. `public-api.def` now contains exactly four B4 forwards: bibliography resource registration, references, glossary and index.
 
 ## Immediate action
 
-Execute R2-B3 through issue #238 from canonical `main` `0650845b922271fc134d20ef2a8c36ebb999ef91`. Migrate structural environments and the definition-list ABNTexto override atomically; move object/source/note/listing/minted/algorithm APIs and extension hooks to direct canonical ownership; replace project-owned `codigo` / `algoritmo` object IDs with English project identifiers while preserving rendered Portuguese labels; migrate all live template/test consumers; and remove only B3 forwarding debt. Run the strengthened residual scan, `make static-check`, and permanent `Linux integration` before B3 closure.
+Execute #239 from `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`. Absorb the four remaining commands into `bibliography.def` and `backmatter.def`, internalize implementation-only plumbing, migrate live consumers atomically and validate. B5 removes `public-api.def` and creates `docs/MIGRATING-TO-V3.md`.
+
+## Hard boundaries
+
+No runtime aliases; preserve rendered Portuguese academic wording and genuine upstream APIs; no normative rule/value/tolerance/locator/proof-state changes without evidence; no proprietary-font redistribution; no CTAN submission during R2.
