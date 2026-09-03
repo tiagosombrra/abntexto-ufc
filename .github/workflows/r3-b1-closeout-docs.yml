@@ -1,0 +1,63 @@
+name: Temporary R3-B1 closeout reconciliation
+
+on:
+  push:
+    branches:
+      - docs/v3-r3-b1-closeout-b2-entry
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-r3-b1-closeout-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout closeout branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Reconcile R3-B1 closeout and R3-B2 entry
+        run: python3 .github/scripts/r3-b1-closeout-docs.py
+      - name: Remove temporary executor before validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/r3-b1-closeout-docs.py
+          rm -f .github/workflows/r3-b1-closeout-docs.yml
+      - name: Verify intentionally unchanged authority documents
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code origin/main -- \
+            docs/NORMATIVE-BASE.md \
+            docs/NORMATIVE-CURRENCY.md \
+            docs/MIGRATING-TO-V3.md
+      - name: Validate reconciled control plane
+        run: make static-check
+      - name: Commit reconciled documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No reconciliation changes to commit.'
+            exit 1
+          fi
+          git commit -m "docs: close R3-B1 and open R3-B2"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
