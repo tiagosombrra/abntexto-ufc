@@ -1,0 +1,27 @@
+name: R3-B4 inventory
+
+on:
+  push:
+    branches:
+      - r3-b4-engineering-language
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - name: Run bounded inventory
+        run: bash .github/scripts/r3-b4-inventory.sh
+      - name: Remove temporary executor
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/scripts/r3-b4-inventory.sh .github/workflows/r3-b4-inventory.yml
+          git commit -m 'ci: remove bounded R3-B4 inventory executor'
+          git push origin HEAD:r3-b4-engineering-language
