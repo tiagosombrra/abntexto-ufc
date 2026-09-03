@@ -2,7 +2,7 @@
 
 % Keep object titles within the real object width and use the reduced normative size.
 \makeatletter
-\providecommand{\ufcobjectlegendhook}{}
+\providecommand{\ufcObjectLegendHook}{}
 \def\printlegendbox{\hfil\vtop{%
   \leavevmode\targetlegend
   \setbox0=\hbox{{\legendlabel}\savedlegend}%
@@ -16,7 +16,7 @@
     \hsize=\wd0
   \fi
   \abntsmall\singlesp
-  \ufcobjectlegendhook
+  \ufcObjectLegendHook
   \hangfrom{\legendlabel}\savedlegend\strut
 }}
 \makeatother
@@ -26,10 +26,10 @@
 % Native abntexto legend areas used by the UFC profile.
 \cs_if_exist:cF { IDgrafico }
   { \definelegendplace{grafico}{Gráfico}{logr} }
-\cs_if_exist:cF { IDcodigo }
-  { \definelegendplace{codigo}{Código}{loc} }
-\cs_if_exist:cF { IDalgoritmo }
-  { \definelegendplace{algoritmo}{Algoritmo}{loa} }
+\cs_if_exist:cF { IDcode }
+  { \definelegendplace{code}{Código}{loc} }
+\cs_if_exist:cF { IDalgorithm }
+  { \definelegendplace{algorithm}{Algoritmo}{loa} }
 
 % tabularray-abnt defines quadro itself when loaded with abntexto.
 \cs_new_protected:Npn \ufc_objects_setup_quadro:
@@ -74,23 +74,23 @@
 \RenewDocumentCommand \ufcPrintListOfIllustrations { }
   { \ufc_objects_print_illustration_list: }
 
-\NewDocumentCommand \ufcfonte { m }
+\NewDocumentCommand \ufcSource { m }
   { \src{#1} }
 
-\NewDocumentCommand \ufcnota { m }
+\NewDocumentCommand \ufcNote { m }
   { \abntextonote{#1} }
 
-\NewDocumentEnvironment { ufcobjeto } { O{\placepos} }
+\NewDocumentEnvironment { ufcobject } { O{\placepos} }
   { \begin{place}[#1] }
   { \end{place} }
 
-\NewDocumentCommand \imprimirlistadegraficos { }
+\NewDocumentCommand \ufcPrintListOfCharts { }
   { \ufc_pretextual_list:nn {Lista~de~Gráficos} {\ufcstarttoc{logr}} }
 
-\NewDocumentCommand \imprimirlistadecodigos { }
+\NewDocumentCommand \ufcPrintListOfCodeListings { }
   { \ufc_pretextual_list:nn {Lista~de~Códigos} {\ufcstarttoc{loc}} }
 
-\NewDocumentCommand \imprimirlistadealgoritmos { }
+\NewDocumentCommand \ufcPrintListOfAlgorithms { }
   { \ufc_pretextual_list:nn {Lista~de~Algoritmos} {\ufcstarttoc{loa}} }
 
 \cs_new_protected:Npn \ufc_listing_apply_number_margins:
@@ -111,13 +111,13 @@
         \egroup\endplace
       }
 
-    \NewDocumentCommand \ufcinputlisting { O{} m }
+    \NewDocumentCommand \ufcInputListing { O{} m }
       { \lstinputlisting[##1]{##2} }
   }
 
 \cs_new_protected:Npn \ufc_objects_setup_minted:
   {
-    \NewDocumentCommand \ufcinputminted { O{\placepos} O{} m m }
+    \NewDocumentCommand \ufcInputMinted { O{\placepos} O{} m m }
       {
         \place[##1]\vbox\bgroup
           \inputminted[##2]{##3}{##4}
@@ -164,7 +164,7 @@
 
 \cs_new_protected:Npn \ufc_objects_setup_algorithms:
   {
-    \NewDocumentEnvironment { ufcalgoritmo } { O{\placepos} O{1} }
+    \NewDocumentEnvironment { ufcalgorithm } { O{\placepos} O{1} }
       {
         \place[##1]\vbox\bgroup
         \normalsize

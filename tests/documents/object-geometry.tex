@@ -1,7 +1,7 @@
 \documentclass{abntexto-ufc}
 
 \makeatletter
-\renewcommand{\ufcobjectlegendhook}{%
+\renewcommand{\ufcObjectLegendHook}{%
   \typeout{UFC-OBJECT-TITLE-WIDTH=\the\hsize}%
   \typeout{UFC-OBJECT-CONTENT-WIDTH=\the\savedplacewidth}%
   \typeout{UFC-OBJECT-TITLE-FONTSIZE=\f@size}%
@@ -19,10 +19,10 @@
 \begin{document}
 
 \legend{figure}{Título deliberadamente longo para validar que a legenda respeita a largura física da ilustração}
-\ufcfonte{\ufcSourceProbe Elaboração própria com texto deliberadamente longo para validar a largura da fonte.}
-\ufcnota{\ufcNoteProbe Validação geométrica de nota deliberadamente longa em um objeto estreito.}
-\begin{ufcobjeto}[here]
+\ufcSource{\ufcSourceProbe Elaboração própria com texto deliberadamente longo para validar a largura da fonte.}
+\ufcNote{\ufcNoteProbe Validação geométrica de nota deliberadamente longa em um objeto estreito.}
+\begin{ufcobject}[here]
   \rule{6cm}{2cm}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \end{document}

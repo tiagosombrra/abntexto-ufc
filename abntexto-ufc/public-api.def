@@ -1,24 +1,8 @@
-\ProvidesFile{abntexto-ufc/public-api.def}[2026/09/02 UFC transitional public API]
+\ProvidesFile{abntexto-ufc/public-api.def}[2026/09/03 UFC transitional public API]
 
-% R2-B1 removed setup forwarding. Remaining entries are transitional command/environment forwards.
+% R2-B1 through R2-B3 forwarding has been absorbed by direct behavior owners.
+% Only R2-B4 bibliography and back-matter forwarding remains here.
 \ExplSyntaxOn
-
-% Canonical setup keys are owned directly by responsibility modules after R2-B1.
-
-\NewDocumentCommand \ufcPrintListOfCharts { }
-  { \imprimirlistadegraficos }
-
-\NewDocumentCommand \ufcPrintListOfCodeListings { }
-  { \imprimirlistadecodigos }
-
-\NewDocumentCommand \ufcPrintListOfAlgorithms { }
-  { \imprimirlistadealgoritmos }
-
-\NewDocumentCommand \ufcSource { m }
-  { \ufcfonte{#1} }
-
-\NewDocumentCommand \ufcNote { m }
-  { \ufcnota{#1} }
 
 \NewDocumentCommand \ufcAddBibliographyResource { m }
   { \ufcbibliografia{#1} }
@@ -31,48 +15,6 @@
 
 \NewDocumentCommand \ufcPrintIndex { }
   { \imprimirindice }
-
-% Canonical environment aliases preserve the certified legacy environment bodies.
-\NewDocumentEnvironment { ufclettereditems } { }
-  { \begin{ufcalineas} }
-  { \end{ufcalineas} }
-
-\NewDocumentEnvironment { ufcdashedsubitems } { }
-  { \begin{ufcsubalineas} }
-  { \end{ufcsubalineas} }
-
-\NewDocumentEnvironment { ufcdefinitionlist } { O{3cm} }
-  { \begin{ufclistadefinicoes}[#1] }
-  { \end{ufclistadefinicoes} }
-
-\NewDocumentEnvironment { ufcobject } { O{\placepos} }
-  { \begin{ufcobjeto}[#1] }
-  { \end{ufcobjeto} }
-
-% Optional-module aliases are activated only when their certified legacy surface exists.
-\cs_new_protected:Npn \ufc_public_api_setup_optional_aliases:
-  {
-    \cs_if_exist:NT \ufcinputlisting
-      {
-        \NewDocumentCommand \ufcInputListing { O{} m }
-          { \ufcinputlisting[##1]{##2} }
-      }
-
-    \cs_if_exist:NT \ufcinputminted
-      {
-        \NewDocumentCommand \ufcInputMinted { O{\placepos} O{} m m }
-          { \ufcinputminted[##1][##2]{##3}{##4} }
-      }
-
-    \cs_if_exist:cT { ufcalgoritmo }
-      {
-        \NewDocumentEnvironment { ufcalgorithm } { O{\placepos} O{1} }
-          { \begin{ufcalgoritmo}[##1][##2] }
-          { \end{ufcalgoritmo} }
-      }
-  }
-
-\AtBeginDocument{\ufc_public_api_setup_optional_aliases:}
 
 \ExplSyntaxOff
 

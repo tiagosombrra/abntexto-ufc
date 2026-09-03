@@ -437,7 +437,7 @@
       {\ufc_input_file:n {#1}}
   }
 
-\NewDocumentEnvironment { ufclistadefinicoes } { O{3cm} }
+\NewDocumentEnvironment { ufcdefinitionlist } { O{3cm} }
   {
     \begin{description}[
       style=standard,

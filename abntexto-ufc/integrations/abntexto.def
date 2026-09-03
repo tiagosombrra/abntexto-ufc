@@ -40,7 +40,7 @@
 % Keep labels on the same baseline as their definitions and left-align the
 % first column at the text-area margin. The definition column keeps the public
 % 3 cm offset (label column plus 0.3 cm separation).
-\RenewDocumentEnvironment{ufclistadefinicoes}{O{3cm}}
+\RenewDocumentEnvironment{ufcdefinitionlist}{O{3cm}}
   {%
     \begin{list}{}{%
       \setlength{\leftmargin}{#1}%

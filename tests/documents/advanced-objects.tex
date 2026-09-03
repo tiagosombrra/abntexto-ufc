@@ -19,35 +19,35 @@
 \ufcPrintListOfFigures
 \ufcPrintListOfTables
 \ufcPrintListOfTextTables
-\imprimirlistadegraficos
-\imprimirlistadecodigos
-\imprimirlistadealgoritmos
+\ufcPrintListOfCharts
+\ufcPrintListOfCodeListings
+\ufcPrintListOfAlgorithms
 
 \legend{figure}{Figura normativa de teste}
-\ufcfonte{Elaboração própria.}
-\ufcnota{Objeto gráfico sintético para validação.}
+\ufcSource{Elaboração própria.}
+\ufcNote{Objeto gráfico sintético para validação.}
 \label{fig:objeto}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering\rule{8cm}{3cm}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \legend{grafico}{Gráfico normativo de teste}
-\ufcfonte{Elaboração própria.}
+\ufcSource{Elaboração própria.}
 \label{graf:objeto}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering\rule{8cm}{2cm}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \legend{table}{Tabela acadêmica de teste}
-\ufcfonte{Elaboração própria.}
+\ufcSource{Elaboração própria.}
 \label{tab:objeto}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \begin{tabular*}{8cm}{@{\extracolsep{\fill}}rr}
     1 & 10 \\
     2 & 20 \\
     3 & 30
   \end{tabular*}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \begin{longabnttblr}
 [
@@ -100,8 +100,8 @@ Item & Descrição \\
 35 & Linha de validação 35
 \end{longabnttblr}
 
-\legend{codigo}{Trecho C++ embutido}
-\ufcfonte{Elaboração própria.}
+\legend{code}{Trecho C++ embutido}
+\ufcSource{Elaboração própria.}
 \label{cod:inline}
 \begin{ufclisting}[here]
 int soma(int a, int b) {
@@ -109,17 +109,17 @@ int soma(int a, int b) {
 }
 \end{ufclisting}
 
-\legend{codigo}{Arquivo C++ externo}
-\ufcfonte{Elaboração própria.}
+\legend{code}{Arquivo C++ externo}
+\ufcSource{Elaboração própria.}
 \label{cod:arquivo}
-\begin{ufcobjeto}[here]
-  \ufcinputlisting[language=C++]{tests/fixtures/example.cpp}
-\end{ufcobjeto}
+\begin{ufcobject}[here]
+  \ufcInputListing[language=C++]{tests/fixtures/example.cpp}
+\end{ufcobject}
 
-\legend{algoritmo}{Busca linear}
-\ufcfonte{Elaboração própria.}
+\legend{algorithm}{Busca linear}
+\ufcSource{Elaboração própria.}
 \label{alg:busca}
-\begin{ufcalgoritmo}[here][1]
+\begin{ufcalgorithm}[here][1]
   \State $i \gets 1$
   \While{$i \leq n$}
     \If{$A[i] = x$}
@@ -128,6 +128,6 @@ int soma(int a, int b) {
     \State $i \gets i + 1$
   \EndWhile
   \State \Return $-1$
-\end{ufcalgoritmo}
+\end{ufcalgorithm}
 
 \end{document}

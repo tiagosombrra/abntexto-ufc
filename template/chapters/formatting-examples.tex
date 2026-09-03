@@ -11,66 +11,66 @@ Esta seção funciona como catálogo visual e corpus de regressão. Cada grupo a
 \subsection{Figuras em diferentes larguras e formatos}
 
 \legend{figure}{Figura estreita com legenda curta}
-\ufcfonte{Elaboração própria.}
+\ufcSource{Elaboração própria.}
 \label{fig:estreita}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \fbox{\parbox[c][2.6cm][c]{5.5cm}{\centering Figura sintética\\5,5 cm}}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \guiaexemplo{A Figura~\ref{fig:estreita} demonstra que uma figura estreita não deve fazer seu título ou sua fonte ocuparem arbitrariamente toda a mancha gráfica.}
 
 \legend{figure}{Figura de largura intermediária com uma legenda deliberadamente longa para validar quebra de linha, alinhamento e limite horizontal do título do objeto}
-\ufcfonte{Elaboração própria.}
-\ufcnota{Exemplo sintético usado para verificar título, fonte e nota em um objeto de largura intermediária.}
+\ufcSource{Elaboração própria.}
+\ufcNote{Exemplo sintético usado para verificar título, fonte e nota em um objeto de largura intermediária.}
 \label{fig:media}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \fbox{\parbox[c][3cm][c]{9cm}{\centering Figura sintética de largura intermediária\\9 cm}}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \legend{figure}{Figura larga próxima à largura útil da mancha gráfica}
-\ufcfonte{Elaboração própria.}
+\ufcSource{Elaboração própria.}
 \label{fig:larga}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \fbox{\parbox[c][3cm][c]{0.78\linewidth}{\centering Figura sintética larga\\78\% da largura disponível}}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \legend{figure}{Fluxo de processamento em arquivo PNG raster}
-\ufcfonte{Elaboração própria.}
-\ufcnota{O arquivo é incluído diretamente com \texttt{\string\includegraphics}.}
+\ufcSource{Elaboração própria.}
+\ufcNote{O arquivo é incluído diretamente com \texttt{\string\includegraphics}.}
 \label{fig:png-fluxo}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \includegraphics[width=0.65\linewidth]{figures/example-flow.png}
-\end{ufcobjeto}
+\end{ufcobject}
 
 As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larguras progressivamente maiores, quebra de título, fonte, nota e inclusão de imagem raster.
 
 \subsection{Imagens institucionais reais da UFC}
 
 \legend{figure}{Campus do Pici, onde se localiza o Departamento de Computação da UFC}
-\ufcfonte{Universidadefederalceara (2018), Wikimedia Commons, CC BY-SA 4.0.}
-\ufcnota{Vista da Lagoa do Pici no Campus do Pici.}
+\ufcSource{Universidadefederalceara (2018), Wikimedia Commons, CC BY-SA 4.0.}
+\ufcNote{Vista da Lagoa do Pici no Campus do Pici.}
 \label{fig:campus-pici-computacao}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \IfFileExists{figures/ufc-campus-pici.jpg}
     {\includegraphics[width=0.72\linewidth]{figures/ufc-campus-pici.jpg}}
     {\fbox{\parbox[c][4cm][c]{0.72\linewidth}{\centering Execute \texttt{make reference-assets} para baixar a fotografia licenciada do Campus do Pici.}}}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \legend{figure}{Reitoria da Universidade Federal do Ceará}
-\ufcfonte{Joelkaula (2018), Wikimedia Commons, CC BY-SA 4.0.}
-\ufcnota{Fotografia externa usada sem modificação e distribuída sob licença própria; ver \texttt{figures/LICENSES.md}.}
+\ufcSource{Joelkaula (2018), Wikimedia Commons, CC BY-SA 4.0.}
+\ufcNote{Fotografia externa usada sem modificação e distribuída sob licença própria; ver \texttt{figures/LICENSES.md}.}
 \label{fig:reitoria-ufc}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \IfFileExists{figures/ufc-reitoria.jpg}
     {\includegraphics[width=0.62\linewidth]{figures/ufc-reitoria.jpg}}
     {\fbox{\parbox[c][5cm][c]{0.62\linewidth}{\centering Execute \texttt{make reference-assets} para baixar a fotografia licenciada da Reitoria da UFC.}}}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \guiapolitica{Fotografias externas de demonstração não são incorporadas aos bundles públicos/CTAN sem controle de licença. O comando \texttt{make reference-assets} baixa os arquivos de referência e verifica sua integridade; as licenças ficam registradas separadamente.}
 
@@ -79,10 +79,10 @@ As Figuras~\ref{fig:media}, \ref{fig:larga} e~\ref{fig:png-fluxo} exercitam larg
 Gráficos são tratados como ilustrações e participam da Lista de Ilustrações no modelo de referência.
 
 \legend{grafico}{Distribuição sintética de três categorias}
-\ufcfonte{Elaboração própria.}
-\ufcnota{Valores meramente ilustrativos.}
+\ufcSource{Elaboração própria.}
+\ufcNote{Valores meramente ilustrativos.}
 \label{graf:barras}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \begingroup
   \setlength{\unitlength}{1pt}
@@ -111,7 +111,7 @@ Gráficos são tratados como ilustrações e participam da Lista de Ilustraçõe
     \put(8,90){\rotatebox{90}{Valor}}
   \end{picture}
   \endgroup
-\end{ufcobjeto}
+\end{ufcobject}
 
 \guiaexemplo{O Gráfico~\ref{graf:barras} é desenhado diretamente em \LaTeX{} para que a regressão visual não dependa de um arquivo externo. Em uma pesquisa real, escolha o tipo de gráfico de acordo com os dados e informe claramente escalas, unidades, categorias e fonte.}
 
@@ -120,9 +120,9 @@ Gráficos são tratados como ilustrações e participam da Lista de Ilustraçõe
 O projeto distingue quadros de tabelas numéricas. Quadros são úteis para organizar conteúdo predominantemente textual.
 
 \legend{quadro}{Comparação de configurações editoriais do exemplo}
-\ufcfonte{Elaboração própria.}
+\ufcSource{Elaboração própria.}
 \label{qua:configuracoes}
-\begin{ufcobjeto}[here]
+\begin{ufcobject}[here]
   \centering
   \begin{tabular}{lll}
     \hline
@@ -133,7 +133,7 @@ O projeto distingue quadros de tabelas numéricas. Quadros são úteis para orga
     Algoritmo & sem linhas & com linhas \\
     \hline
   \end{tabular}
-\end{ufcobjeto}
+\end{ufcobject}
 
 \guiaexemplo{O Quadro~\ref{qua:configuracoes} demonstra informação textual organizada em linhas e colunas. Não use a denominação ``tabela'' apenas porque um conteúdo foi produzido com o ambiente \texttt{tabular}; a escolha do tipo deve considerar a natureza da informação apresentada.}
 
@@ -174,8 +174,8 @@ Código-fonte não é convertido artificialmente em uma regra ABNT específica. 
 \guiapolitica{O documento de referência usa \texttt{listings}. A política de numeração das linhas pode variar conforme a finalidade do exemplo; o importante é manter legibilidade, identificação consistente e fonte do conteúdo quando aplicável.}
 
 \lstset{language=Python,numbers=left,stepnumber=1,numbersep=8pt}
-\legend{codigo}{Função de média em Python com números de linha}
-\ufcfonte{Elaboração própria.}
+\legend{code}{Função de média em Python com números de linha}
+\ufcSource{Elaboração própria.}
 \label{cod:python-numerado}
 \begin{ufclisting}[here]
 def media(valores):
@@ -183,8 +183,8 @@ def media(valores):
 \end{ufclisting}
 
 \lstset{language=C++,numbers=none}
-\legend{codigo}{Função de máximo em C++ sem números de linha}
-\ufcfonte{Elaboração própria.}
+\legend{code}{Função de máximo em C++ sem números de linha}
+\ufcSource{Elaboração própria.}
 \label{cod:cpp-sem-numero}
 \begin{ufclisting}[here]
 int maximo(int a, int b) {
@@ -192,16 +192,16 @@ int maximo(int a, int b) {
 }
 \end{ufclisting}
 
-\legend{codigo}{Arquivo Python externo com números de linha}
-\ufcfonte{Elaboração própria.}
+\legend{code}{Arquivo Python externo com números de linha}
+\ufcSource{Elaboração própria.}
 \label{cod:python-externo}
-\begin{ufcobjeto}[here]
-  \ufcinputlisting[language=Python,numbers=left,numbersep=8pt]{figures/example.py}
-\end{ufcobjeto}
+\begin{ufcobject}[here]
+  \ufcInputListing[language=Python,numbers=left,numbersep=8pt]{figures/example.py}
+\end{ufcobject}
 
 \lstset{language=Java,numbers=left,stepnumber=2,numbersep=8pt}
-\legend{codigo}{Método Java com numeração a cada duas linhas}
-\ufcfonte{Elaboração própria.}
+\legend{code}{Método Java com numeração a cada duas linhas}
+\ufcSource{Elaboração própria.}
 \label{cod:java}
 \begin{ufclisting}[here]
 static int dobro(int valor) {
@@ -219,28 +219,28 @@ Algoritmos em pseudocódigo são apresentados como objetos próprios da V2. O m�
 
 \guiapolitica{Numeração de linhas em pseudocódigo é uma opção editorial do exemplo e não uma exigência normativa geral. A identificação e a fonte continuam sendo tratadas de forma consistente com os demais objetos do template.}
 
-\legend{algoritmo}{Máximo divisor comum com números de linha}
-\ufcfonte{Elaboração própria.}
+\legend{algorithm}{Máximo divisor comum com números de linha}
+\ufcSource{Elaboração própria.}
 \label{alg:mdc-numerado}
-\begin{ufcalgoritmo}[here][1]
+\begin{ufcalgorithm}[here][1]
   \While{$b \neq 0$}
     \State $r \gets a \bmod b$
     \State $a \gets b$
     \State $b \gets r$
   \EndWhile
   \State \Return $a$
-\end{ufcalgoritmo}
+\end{ufcalgorithm}
 
-\legend{algoritmo}{Seleção do maior valor sem números de linha}
-\ufcfonte{Elaboração própria.}
+\legend{algorithm}{Seleção do maior valor sem números de linha}
+\ufcSource{Elaboração própria.}
 \label{alg:maior-sem-numero}
-\begin{ufcalgoritmo}[here][0]
+\begin{ufcalgorithm}[here][0]
   \If{$a > b$}
     \State \Return $a$
   \Else
     \State \Return $b$
   \EndIf
-\end{ufcalgoritmo}
+\end{ufcalgorithm}
 
 \subsection{Equações}
 
@@ -261,13 +261,13 @@ Uma citação direta longa também é exercitada no documento de referência. O 
 
 Exemplo de alíneas e subalíneas:
 
-\begin{ufcalineas}
+\begin{ufclettereditems}
   \item primeiro item de validação;
   \item segundo item de validação:
-    \begin{ufcsubalineas}
+    \begin{ufcdashedsubitems}
       \item subitem de validação.
-    \end{ufcsubalineas}
-\end{ufcalineas}
+    \end{ufcdashedsubitems}
+\end{ufclettereditems}
 
 Exemplo de enumeração comum:
 
