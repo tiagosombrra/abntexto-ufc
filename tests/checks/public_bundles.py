@@ -93,7 +93,7 @@ def assert_public_main(archive_path: Path, entry: str) -> None:
         fail(f"{archive_path.name}: distributed main.tex must disable the institutional mark exactly once using the canonical v3 setup key.")
     if enabled in text:
         fail(f"{archive_path.name}: distributed main.tex still enables the institutional mark.")
-    legacy_tokens = ("  brasao = sim,", "  brasao = nao,")
+    legacy_tokens = ("  brasao = sim,", "  brasao = nao,")  # v3-api-residual: negative-test-literal
     if any(token in text for token in legacy_tokens):
         fail(f"{archive_path.name}: distributed main.tex contains a removed v2 coat-of-arms setup key.")
 

@@ -97,6 +97,7 @@ def engineering_key_pattern(key: str) -> re.Pattern[str]:
     return re.compile(
         r"(?:['\"])"
         r"[^'\"\n]{0,240}"
+        + r"(?<![A-Za-z0-9_-])"
         + re.escape(key)
         + r"\s*="
     )
@@ -225,10 +226,16 @@ def main() -> None:
             )
         )
     for path in engineering_sources:
+        source_text = path.read_text(encoding="utf-8")
+        scan_text = "\n".join(
+            line
+            for line in source_text.splitlines()
+            if "v3-api-residual: negative-test-literal" not in line
+        )
         violations.extend(
             scan_source(
                 path,
-                path.read_text(encoding="utf-8"),
+                scan_text,
                 command_patterns=command_patterns,
                 hook_patterns=hook_patterns,
                 environment_patterns=environment_patterns,
