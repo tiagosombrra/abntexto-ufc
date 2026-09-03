@@ -45,33 +45,30 @@ jobs:
           texlive_version: 2026
           os: debian
           run: |
+            set -eu
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils nodejs
             python3 tests/run.py --mode pr --only frontmatter --report-dir artifacts/r3-b1-evidence-audit
+            log=artifacts/r3-b1-evidence-audit/checks/frontmatter.log
             echo '--- R3-B1 structured front-matter evidence ---'
-            grep '^FRONTMATTER-EVIDENCE ' artifacts/r3-b1-evidence-audit/checks/frontmatter.log || true
-      - name: Require zero normative findings
-        shell: bash
-        run: |
-          set -euo pipefail
-          log=artifacts/r3-b1-evidence-audit/checks/frontmatter.log
-          if grep -Eq '^FRONTMATTER-EVIDENCE .*status=(FAIL|UNASSESSED)' "$log"; then
-            echo 'Unresolved front-matter evidence remains:'
-            grep -E '^FRONTMATTER-EVIDENCE .*status=(FAIL|UNASSESSED)' "$log"
-            exit 1
-          fi
-          if grep -Eq '^FRONTMATTER-EVIDENCE .*FAIL=[1-9]|^FRONTMATTER-EVIDENCE .*UNASSESSED=[1-9]' "$log"; then
-            echo 'Front-matter summary still reports unresolved findings.'
-            exit 1
-          fi
+            grep '^FRONTMATTER-EVIDENCE ' "$log" || true
+            if grep -Eq '^FRONTMATTER-EVIDENCE .*status=(FAIL|UNASSESSED)' "$log"; then
+              echo 'Unresolved front-matter evidence remains:'
+              grep -E '^FRONTMATTER-EVIDENCE .*status=(FAIL|UNASSESSED)' "$log"
+              exit 1
+            fi
+            if grep -Eq '^FRONTMATTER-EVIDENCE .*FAIL=[1-9]|^FRONTMATTER-EVIDENCE .*UNASSESSED=[1-9]' "$log"; then
+              echo 'Front-matter summary still reports unresolved findings.'
+              exit 1
+            fi
+            rm -rf artifacts
+            rm -f frontmatter-*.pdf
       - name: Remove temporary executor and commit repaired sources
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf artifacts
-          rm -f frontmatter-*.pdf
           rm -f .github/scripts/r3-b1-evidence-repair.py
           rm -f .github/workflows/r3-b1-evidence-audit.yml
           git diff --check
