@@ -162,7 +162,7 @@ jobs:
             bash tests/integration/object.sh
             bash tests/integration/minted.sh
             bash tests/integration/algorithm-numbering.sh
-            bash tests/integration/documentary-sources.sh
+            bash tests/integration/documentary-source.sh
             bash tests/integration/frontmatter.sh
 
       - name: Publish clean B3 checkpoint
