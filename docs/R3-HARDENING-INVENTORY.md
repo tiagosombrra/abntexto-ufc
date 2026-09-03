@@ -27,6 +27,7 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 - independent complete validation: `33768364069` — `PASS=31 FAIL=0 SKIP=0`;
 - PR Static contract: `33768911131` — PASS;
 - PR Linux integration: `33768911126` / job `100694266254` — `PASS=31 FAIL=0 SKIP=0`;
+- post-merge Linux release: `33772854355` / job `100707196590` — `PASS=33 FAIL=0 SKIP=0`;
 - final contribution: 113/113 `automatic-partial` = `bounded-positive`; 37 `enforced-automatic`; 14 `support-only`; 10 `conditional-review`; 6 `manual-review`; 1 `not-applicable`; 0 `automation-gap`;
 - proof-state baseline preserved: `PARTIAL=113`, `NOT_PROVEN=51`, `MANUAL=6`, `CONDITIONAL=10`, `NOT_APPLICABLE=1`;
 - normative rule IDs/values/locators/tolerances/applicability/source authority/precedence changed: **no**;
@@ -63,7 +64,7 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 |---|---|---|
 | R3-A/#250 | DONE | inventory source `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5` |
 | R3-B1/#252 | DONE | PR #258 → `afb9f16403aafd8752a0aa8b0713f85c41204d1b`; `PASS=30 FAIL=0 SKIP=0` |
-| R3-B2/#253 | DONE | PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`; `PASS=31 FAIL=0 SKIP=0`; 113/113 bounded-positive, automation-gap=0 |
+| R3-B2/#253 | DONE | PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0`; 113/113 bounded-positive, automation-gap=0 |
 | R3-B3/#254 | ACTIVE | entry `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` |
 | R3-B4/#255 | PENDING | after B3 |
 | R3-B5/#256 | PENDING | after B4; closes R3 and records immutable R4 entry |
