@@ -29,7 +29,7 @@ Git facts, `release/v3-roadmap.json`, this handoff, the roadmap and `AGENTS.md` 
 
 ## What R3-B3 established
 
-The active semantic-test surface is now fail-closed against generator no-ops and removed-v2 API residue across behavior-affecting engineering sources. The six-profile generator asserts canonical variation, the residual gate scans 303 sources, and deliberate historical/negative literals require narrow explicit annotation rather than broad file exemptions.
+The active semantic-test surface is now fail-closed against generator no-ops and removed-v2 API residue across behavior-affecting engineering sources. The six-profile generator asserts canonical variation, the residual gate scans 302 sources, and deliberate historical/negative literals require narrow explicit annotation rather than broad file exemptions.
 
 Every retained test/check script is either reachable from a repository-owned gate or explicitly classified as standalone certification/release support: 147/147 reachable, three standalone, zero orphaned. Negative-path cases must observe a current positive PASS for the same normative `rule_id` before controlled rejection can count.
 
