@@ -6,9 +6,9 @@ The canonical project identity is `abntexto-ufc`. The active `main` branch carri
 
 ## Current v3 status
 
-**V3-R1 and V3-R2 are DONE. V3-R3 is ACTIVE in R3-A — standards/tests/engineering-language hardening inventory, tracked by issue #250.**
+**V3-R1 and V3-R2 are DONE. V3-R3 is ACTIVE: R3-A inventory is DONE and R3-B1 front-matter evidence hardening is ACTIVE through issue #252.**
 
-R2 closed through B5/PR #249 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e`. B5 Static `33743809498` and Linux integration `33743809431` passed before merge; the merged-main Linux release check `33745603468` then passed `PASS=32 FAIL=0 SKIP=0`. The certified R1 candidate remains `9b1752565ac217c04ffa22a9ef272cdf078af380`; its Windows/Linux font, Unicode, embedding, and PDF/A-2b certification record remains unchanged. R3-A is an inventory/planning stage and does not itself recertify the product.
+R2 closed through B5/PR #249 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` and its control plane was reconciled at `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-A then classified the current standards/test/language/proof gaps without changing normative semantics. Its source baseline remains green under Static `33747658673` and Linux `33747658602` = `PASS=30 FAIL=0 SKIP=0`. The certified R1 candidate remains `9b1752565ac217c04ffa22a9ef272cdf078af380`; final Windows/literal-font recertification remains R4-owned.
 
 See `docs/ROADMAP-V3.0.0.md` for the consolidated roadmap/status table and `docs/HANDOFF-V3.0.0.md` for the exact continuation point.
 
@@ -50,7 +50,7 @@ The editable repository example lives under `template/`. Public template and Ove
 
 ## Engineering policy
 
-Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 rebuilt and certified the foundation. R2-A and R2-B1 through R2-B5 are complete. The v3 public/runtime API is directly owned, the forwarding-only layer is absent, `docs/MIGRATING-TO-V3.md` documents the breaking migration, and `tests/checks/v3_api_residual.py` permanently rejects removed project API in active consumers. R3-A now inventories standards, semantic test coverage, and engineering-language enforcement before bounded hardening lots are defined.
+Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 rebuilt and certified the foundation. R2-A and R2-B1 through R2-B5 are complete. The v3 public/runtime API is directly owned, the forwarding-only layer is absent, `docs/MIGRATING-TO-V3.md` documents the breaking migration, and `tests/checks/v3_api_residual.py` permanently rejects removed project API in its current source scope. R3-A is complete; `docs/R3-HARDENING-INVENTORY.md` records the evidence gaps and issues #252–#256 define the bounded R3 sequence. R3-B1 is active.
 
 Historical implementation evidence is kept by Git history, tags, releases, pull requests, issues, and certified SHAs rather than by archive directories inside the active tree.
 
@@ -61,6 +61,7 @@ See:
 - `docs/CTAN-RELEASE.md`
 - `docs/ROADMAP-V3.0.0.md`
 - `docs/HANDOFF-V3.0.0.md`
+- `docs/R3-HARDENING-INVENTORY.md`
 
 ## Requirements
 
@@ -101,7 +102,7 @@ R1-BLOCK-7 is DONE: B7-C1 certified `make check` on clean TeX Live 2026 (`PASS=3
 
 The current `Stable branches` ruleset does not yet require statuses; the recorded recommendation is `Static contract` plus `Linux integration`, while `Linux release check` remains post-merge/manual.
 
-R1-BLOCK-8 is DONE. Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. Final Linux inspection run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. R2-A and R2-B1 through R2-B5 are complete. B5 PR #249 merged at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` after Static `33743809498` and Linux integration `33743809431` passed; merged-main release run `33745603468` passed `PASS=32 FAIL=0 SKIP=0`. V3-R3/R3-A is active through issue #250.
+R1-BLOCK-8 is DONE. Windows run `33649620219` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. Final Linux inspection run `33655108349` passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. R2-A and R2-B1 through R2-B5 are complete. B5 PR #249 merged at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` and R2 closeout PR #251 established `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-A/#250 is complete and the active hardening lot is R3-B1/#252; issues #253–#256 define the remaining R3 sequence.
 
 The narrow public delivery interface builds the editable template and Overleaf bundles:
 

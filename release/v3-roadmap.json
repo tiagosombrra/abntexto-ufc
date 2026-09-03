@@ -6,8 +6,8 @@
   "updated_at": "2026-09-03",
   "status": "ACTIVE",
   "phase": "V3-R3",
-  "stage": "R3-A",
-  "stage_name": "standards tests and engineering-language hardening inventory",
+  "stage": "R3-B1",
+  "stage_name": "front-matter evidence truthfulness and fail-closed enforcement",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,7 +978,7 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R3/R3-A issue #250: inventory current standards, semantic test coverage, engineering-language enforcement and proof-state gaps; define bounded R3 implementation lots before any semantic or normative change.",
+  "next_action": "Execute V3-R3/R3-B1 issue #252: repair front-matter fixture/observer truthfulness, discriminate unresolved findings, and make proof-contributing front-matter evidence fail-closed before changing normative semantics.",
   "r1_status": "DONE",
   "r2": {
     "status": "DONE",
@@ -1126,11 +1126,11 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "stage": "R3-A",
-    "issue": 250,
-    "entry_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "stage": "R3-B1",
+    "issue": 252,
+    "entry_product_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
     "status": "ACTIVE",
-    "implementation_branch_rule": "branch from the merged R2 closeout control-plane checkpoint"
+    "implementation_branch_rule": "branch from the merged R3-A inventory/control-plane checkpoint"
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1194,18 +1194,85 @@
   },
   "r3": {
     "status": "ACTIVE",
-    "stage": "R3-A",
-    "stage_name": "standards tests and engineering-language hardening inventory",
-    "issue": 250,
+    "stage": "R3-B1",
+    "stage_name": "front-matter evidence truthfulness and fail-closed enforcement",
+    "issue": 252,
     "entry_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
-    "goal": "Inventory the current standards/evidence model, semantic test suite and project-owned engineering-language enforcement before defining bounded R3 changes.",
-    "implementation_lots_defined": false,
+    "goal": "Harden evidence truthfulness, normative proof semantics, semantic test integrity, engineering-language enforcement, and closed-contract hygiene before R4 certification.",
+    "implementation_lots_defined": true,
     "constraints": [
       "preserve the closed v3 API and do not reintroduce runtime compatibility aliases",
       "do not change normative rule IDs values tolerances locators or proof state without explicit current evidence",
       "do not start R4 final certification R5 foundation freeze V3-A1/A2 or CTAN submission during R3-A",
       "classify gaps before editing runtime semantics"
     ],
-    "exit": "Current-state inventory is recorded, gaps are classified by owner/evidence, and bounded R3 implementation lots with proportional gates are defined."
+    "exit": "R3-B1 through R3-B5 are complete, proof-contributing evidence is fail-closed, the engineering policy is enforced, and an immutable R4 certification entry is recorded.",
+    "inventory_document": "docs/R3-HARDENING-INVENTORY.md",
+    "inventory_contract": "release/v3-r3-inventory.json",
+    "next_issue": 252,
+    "r3_a": {
+      "status": "DONE",
+      "issue": 250,
+      "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
+      "inventory_document": "docs/R3-HARDENING-INVENTORY.md",
+      "inventory_contract": "release/v3-r3-inventory.json",
+      "static_run_id": 33747658673,
+      "linux_integration_run_id": 33747658602,
+      "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+      "normative_sources": 19,
+      "normative_rules": 181,
+      "automatic_rules": 164,
+      "manual_or_conditional_rules": 17,
+      "implementation_lots_defined": true,
+      "normative_semantics_changed": false,
+      "proof_state_changed": false
+    },
+    "lots": {
+      "R3-B1": {
+        "status": "ACTIVE",
+        "issue": 252,
+        "name": "front-matter evidence truthfulness and fail-closed enforcement",
+        "entry_product_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5"
+      },
+      "R3-B2": {
+        "status": "PENDING",
+        "issue": 253,
+        "name": "normative proof-state and coverage semantics hardening"
+      },
+      "R3-B3": {
+        "status": "PENDING",
+        "issue": 254,
+        "name": "semantic test integrity and expanded residual enforcement"
+      },
+      "R3-B4": {
+        "status": "PENDING",
+        "issue": 255,
+        "name": "engineering-language enforcement and closed-contract consolidation"
+      },
+      "R3-B5": {
+        "status": "PENDING",
+        "issue": 256,
+        "name": "R3 closeout and R4 certification entry"
+      }
+    }
+  },
+  "r3_a_closeout": {
+    "status": "DONE",
+    "issue": 250,
+    "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
+    "inventory_document": "docs/R3-HARDENING-INVENTORY.md",
+    "inventory_contract": "release/v3-r3-inventory.json",
+    "static_run_id": 33747658673,
+    "linux_integration_run_id": 33747658602,
+    "linux_integration_result": "PASS=30 FAIL=0 SKIP=0",
+    "lots": [
+      252,
+      253,
+      254,
+      255,
+      256
+    ],
+    "normative_semantics_changed": false,
+    "proof_state_changed": false
   }
 }

@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "project": "abntexto-ufc",
+  "target_version": "3.0.0",
+  "phase": "V3-R3",
+  "stage": "R3-A",
+  "status": "DONE",
+  "reviewed_at": "2026-09-03",
+  "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
+  "planning_issue": 250,
+  "evidence": {
+    "r2_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "r2_release_run_id": 33745603468,
+    "r2_release_result": "PASS=32 FAIL=0 SKIP=0",
+    "r2_closeout_static_run_id": 33747658673,
+    "r2_closeout_linux_run_id": 33747658602,
+    "r2_closeout_linux_result": "PASS=30 FAIL=0 SKIP=0"
+  },
+  "normative_baseline": {
+    "sources": 19,
+    "rules": 181,
+    "automatic": 164,
+    "manual_or_conditional": 17,
+    "project_policy": 11,
+    "runner_gates": 32,
+    "registered_evidence": 10,
+    "validator_checks": 9,
+    "reviewed": "2026-08-28",
+    "reference_guide_pass": 20,
+    "reference_guide_fail": 0,
+    "object_scope_uncovered": 0,
+    "new_normative_evidence_in_r3_a": false,
+    "normative_base_docs_changed": false
+  },
+  "findings": [
+    {
+      "id": "frontmatter-audit-not-enforced",
+      "class": "evidence-model-gap",
+      "severity": "high",
+      "owner": "R3-B1",
+      "issue": 252,
+      "fact": "Front-matter evidence checkers expose --enforce but integration runners invoke audit mode, so aggregate PASS can contain normative FAIL records."
+    },
+    {
+      "id": "approval-profile-generator-stale-v2-substitution",
+      "class": "test-generator-defect",
+      "severity": "high",
+      "owner": "R3-B1",
+      "issue": 252,
+      "fact": "frontmatter-approval-evidence.sh substitutes 'tipo = tese' although the canonical fixture uses 'type = doctoral-thesis'; the profile substitution is a no-op."
+    },
+    {
+      "id": "summary-canonical-keyword-macro-not-recognized",
+      "class": "observer-defect",
+      "severity": "medium",
+      "owner": "R3-B1",
+      "issue": 252,
+      "fact": "source_body_paragraphs excludes legacy/upstream keyword macros but not canonical \\ufcSummaryKeywords, causing a false two-paragraph observation."
+    },
+    {
+      "id": "dedication-spacing-discrepancy",
+      "class": "unresolved-observer-fixture-runtime-discrepancy",
+      "severity": "medium",
+      "owner": "R3-B1",
+      "issue": 252,
+      "fact": "dedication.line-spacing reports 41.4 pt against same-document calibrated 20.7 pt; runtime changes are forbidden until discrimination."
+    },
+    {
+      "id": "short-epigraph-alignment-discrepancy",
+      "class": "unresolved-observer-runtime-discrepancy",
+      "severity": "medium",
+      "owner": "R3-B1",
+      "issue": 252,
+      "fact": "epigraph.short.alignment reports FAIL; the short route does not explicitly apply the justification setup used by other routes, but current evidence is not sufficient to classify a runtime defect."
+    },
+    {
+      "id": "title-approval-marker-discrepancies",
+      "class": "observer-fixture-gap",
+      "severity": "medium",
+      "owner": "R3-B1",
+      "issue": 252,
+      "fact": "title-page and approval evidence report missing/undetected nature/advisor markers and require robust extraction review after fixture repair."
+    },
+    {
+      "id": "coverage-check-name-does-not-imply-enforcement",
+      "class": "proof-state-gap",
+      "severity": "high",
+      "owner": "R3-B2",
+      "issue": 253,
+      "fact": "normative_coverage proves that rules name known checks, not that those checks enforce the predicates."
+    },
+    {
+      "id": "manual-conditional-rules-require-classification",
+      "class": "coverage-review",
+      "severity": "medium",
+      "owner": "R3-B2",
+      "issue": 253,
+      "fact": "17 rules are manual or conditional and must be individually justified rather than assumed to be automation debt."
+    },
+    {
+      "id": "residual-gate-engineering-scope-gap",
+      "class": "enforcement-gap",
+      "severity": "high",
+      "owner": "R3-B3",
+      "issue": 254,
+      "fact": "v3_api_residual scans selected LaTeX/runtime sources but not project-owned shell/Python/workflow/machine generators, allowing stale v2 literals in scripts."
+    },
+    {
+      "id": "engineering-language-diagnostics-gap",
+      "class": "policy-enforcement-gap",
+      "severity": "medium",
+      "owner": "R3-B4",
+      "issue": 255,
+      "fact": "Portuguese project-owned technical diagnostics remain in integration scripts while repository_contract enforces mainly path-level language constraints."
+    },
+    {
+      "id": "engineering-profile-identifiers-portuguese",
+      "class": "policy-enforcement-gap",
+      "severity": "medium",
+      "owner": "R3-B4",
+      "issue": 255,
+      "fact": "front-matter scenario/applicability machine identifiers remain Portuguese although canonical runtime type values are English."
+    },
+    {
+      "id": "closed-migration-contract-cleanup",
+      "class": "cleanup-only-debt",
+      "severity": "low",
+      "owner": "R3-B4",
+      "issue": 255,
+      "fact": "v3-api-migration is a live residual-gate dependency; v3-test-migration and v3-path-migration require a final consumer audit before consolidation/removal."
+    }
+  ],
+  "lots": {
+    "R3-B1": {
+      "issue": 252,
+      "status": "ACTIVE",
+      "name": "front-matter evidence truthfulness and fail-closed enforcement"
+    },
+    "R3-B2": {
+      "issue": 253,
+      "status": "PENDING",
+      "name": "normative proof-state and coverage semantics hardening"
+    },
+    "R3-B3": {
+      "issue": 254,
+      "status": "PENDING",
+      "name": "semantic test integrity and expanded residual enforcement"
+    },
+    "R3-B4": {
+      "issue": 255,
+      "status": "PENDING",
+      "name": "engineering-language enforcement and closed-contract consolidation"
+    },
+    "R3-B5": {
+      "issue": 256,
+      "status": "PENDING",
+      "name": "R3 closeout and R4 certification entry"
+    }
+  },
+  "retained_contracts": {
+    "release/v3-api-migration.json": "live dependency of tests/checks/v3_api_residual.py",
+    "release/v3-roadmap.json": "canonical machine state"
+  },
+  "contracts_pending_consumer_audit": [
+    "release/v3-test-migration.json",
+    "release/v3-path-migration.json"
+  ],
+  "boundaries": {
+    "runtime_alias_layer_allowed": false,
+    "normative_change_without_new_evidence_allowed": false,
+    "r4_certification_allowed_before_r3_closeout": false,
+    "r5_foundation_freeze_allowed_before_r4": false,
+    "scientific_article_work_allowed_before_certified_foundation": false,
+    "ctan_submission_allowed_during_r3": false
+  },
+  "next_stage": "R3-B1",
+  "next_issue": 252
+}
