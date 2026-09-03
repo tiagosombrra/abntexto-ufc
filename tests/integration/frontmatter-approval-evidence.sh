@@ -72,7 +72,8 @@ mkdir -p "$(dirname "$evidence")"
 python3 tests/checks/normative_frontmatter_approval.py \
   $profile_args \
   --json "$evidence" \
-  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
+  --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}" \
+  --enforce
 
 test -s "$evidence" || {
   echo 'Auditoria de folha de aprovação falhou: evidência JSON não foi gerada.'
