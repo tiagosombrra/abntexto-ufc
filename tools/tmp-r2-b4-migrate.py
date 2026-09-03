@@ -169,6 +169,50 @@ def main() -> None:
         "\\ufc_setup_index_module:",
     )
 
+    # The normative centering fixture used an internal back-matter heading helper as
+    # a synthetic surface. Exercise the same shared heading behavior through the
+    # supported index API instead, preserving the three-surface normative proof.
+    fixture = "tests/documents/mainmatter-section-unnumbered-centered-test.tex"
+    replace_required(
+        fixture,
+        "  coat-of-arms = false\n}",
+        "  coat-of-arms = false,\n  index = imakeidx\n}",
+    )
+    replace_required(
+        fixture,
+        "\\section{UCCENTERCONTEXT}\n\\nocite{silva2020}",
+        "\\section{UCCENTERCONTEXT}\n\\index{UCINDEXENTRY}\n\\nocite{silva2020}",
+    )
+    replace_required(
+        fixture,
+        "\\ufcPosttextualHeading{UCPOSTCENTER}\nUCPOSTCENTERBODY",
+        "\\ufcPrintIndex",
+    )
+
+    scenario = "standards/section-unnumbered-centered-scenario.json"
+    replace_required(
+        scenario,
+        '      "marker": "UCPOSTCENTER",\n      "implementation": "ufc_backmatter_heading"',
+        '      "marker": "ÍNDICE",\n      "implementation": "ufc_index_heading"',
+    )
+
+    integration = "tests/integration/section-unnumbered-centered-evidence.sh"
+    replace_required(
+        integration,
+        'biber_log="/tmp/abntexto-ufc-v2-section-unnumbered-centered-biber.log"',
+        'biber_log="/tmp/abntexto-ufc-v2-section-unnumbered-centered-biber.log"\nindex_log="/tmp/abntexto-ufc-v3-section-unnumbered-centered-index.log"',
+    )
+    replace_required(
+        integration,
+        '        "$job.out" "$job.pdf" "$job.run.xml" "$job.toc"',
+        '        "$job.idx" "$job.ilg" "$job.ind" "$job.out" "$job.pdf" "$job.run.xml" "$job.toc"',
+    )
+    replace_required(
+        integration,
+        '\nbiber "$job" > "$biber_log" 2>&1 || {',
+        '\nmakeindex "$job" > "$index_log" 2>&1 || {\n  cat "$index_log"\n  exit 1\n}\n\nbiber "$job" > "$biber_log" 2>&1 || {',
+    )
+
     migrate_consumers()
 
     public_api = """\\ProvidesFile{abntexto-ufc/public-api.def}[2026/09/03 UFC transitional public API]\n\n% R2-B1 through R2-B4 forwarding has been absorbed by direct behavior owners.\n% This empty transitional file is intentionally retained until R2-B5 removes the\n% forwarding layer from the class load path and closes the residual migration.\n\n\\endinput\n"""
