@@ -24,6 +24,7 @@ jobs:
       - name: Apply R3-B4 implementation
         run: |
           python3 .github/scripts/r3-b4-implement.py
+          python3 .github/scripts/r3-b4-checker-repair.py
           git add -A
       - name: Validate language boundary self-tests
         run: python3 tests/checks/engineering_language.py --self-test
@@ -38,7 +39,7 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git rm .github/scripts/r3-b4-implement.py .github/workflows/r3-b4-implement.yml
+          git rm .github/scripts/r3-b4-implement.py .github/scripts/r3-b4-checker-repair.py .github/workflows/r3-b4-implement.yml
           git add -A
           git commit -m 'test: enforce engineering-language contract'
           git push origin HEAD:r3-b4-engineering-language
