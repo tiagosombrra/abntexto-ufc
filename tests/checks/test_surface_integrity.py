@@ -10,10 +10,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RUNNER = ROOT / "tests/run.py"
 STATIC_RUNNER = ROOT / "tests/static.py"
+MAKEFILE = ROOT / "Makefile"
 EVIDENCE_REGISTRY = ROOT / "standards/evidence-registry.json"
 NEGATIVE_PATHS = ROOT / "standards/negative-paths.json"
 CANDIDATE_ROOTS = (ROOT / "tests/checks", ROOT / "tests/integration")
 CANDIDATE_SUFFIXES = {".py", ".sh"}
+CONTROL_ROOTS = (
+    ROOT / "tests/checks",
+    ROOT / "tests/integration",
+    ROOT / "tools",
+    ROOT / "validator",
+    ROOT / ".github/workflows",
+)
+CONTROL_SUFFIXES = {".py", ".sh", ".ps1", ".js", ".json", ".yml", ".yaml"}
+PERMANENT_WORKFLOWS = (
+    ROOT / ".github/workflows/static-contract.yml",
+    ROOT / ".github/workflows/linux-integration.yml",
+    ROOT / ".github/workflows/linux-release-check.yml",
+)
 
 
 def fail(message: str) -> None:
@@ -28,21 +42,50 @@ def repository_path(value: str) -> Path | None:
     return path if path.exists() else None
 
 
-def candidate_files() -> set[Path]:
+def collect_files(roots: tuple[Path, ...], suffixes: set[str]) -> set[Path]:
     files: set[Path] = set()
-    for root in CANDIDATE_ROOTS:
+    for root in roots:
+        if not root.exists():
+            continue
         for path in root.rglob("*"):
-            if path.is_file() and path.suffix in CANDIDATE_SUFFIXES:
+            if path.is_file() and path.suffix in suffixes:
                 files.add(path)
     return files
 
 
-def direct_references(source: Path, candidates: set[Path], by_stem: dict[str, Path]) -> set[Path]:
+def candidate_files() -> set[Path]:
+    return collect_files(CANDIDATE_ROOTS, CANDIDATE_SUFFIXES)
+
+
+def control_files(candidates: set[Path]) -> set[Path]:
+    files = collect_files(CONTROL_ROOTS, CONTROL_SUFFIXES)
+    files.update(candidates)
+    files.update({RUNNER, STATIC_RUNNER, MAKEFILE})
+    return {path for path in files if path.is_file()}
+
+
+def python_import_targets(nodes: set[Path]) -> dict[str, Path]:
+    by_stem: dict[str, Path] = {}
+    duplicates: set[str] = set()
+    for path in nodes:
+        if path.suffix != ".py":
+            continue
+        stem = path.stem
+        if stem in by_stem:
+            duplicates.add(stem)
+        else:
+            by_stem[stem] = path
+    for stem in duplicates:
+        by_stem.pop(stem, None)
+    return by_stem
+
+
+def direct_references(source: Path, nodes: set[Path], by_stem: dict[str, Path]) -> set[Path]:
     text = source.read_text(encoding="utf-8")
     references = {
-        candidate
-        for candidate in candidates
-        if candidate != source and candidate.relative_to(ROOT).as_posix() in text
+        target
+        for target in nodes
+        if target != source and target.relative_to(ROOT).as_posix() in text
     }
     if source.suffix != ".py":
         return references
@@ -113,7 +156,11 @@ def main() -> None:
         fail("tests/run.py contains duplicate top-level commands")
 
     name_to_index = {name: index for index, name in enumerate(names)}
-    roots: set[Path] = set()
+    roots: set[Path] = {RUNNER, STATIC_RUNNER, MAKEFILE, *PERMANENT_WORKFLOWS}
+    for root in roots:
+        if not root.is_file():
+            fail(f"control root is missing: {root.relative_to(ROOT)}")
+
     for index, check in enumerate(checks):
         for dependency in check.depends:
             if dependency not in name_to_index:
@@ -174,7 +221,6 @@ def main() -> None:
     negative = json.loads(NEGATIVE_PATHS.read_text(encoding="utf-8"))
     cases = negative.get("cases", [])
     case_ids: list[str] = []
-    case_families: list[str] = []
     for case in cases:
         case_id = case.get("id")
         family = case.get("family")
@@ -182,11 +228,9 @@ def main() -> None:
         if not all(isinstance(value, str) and value for value in (case_id, family, expected_rule)):
             fail("negative-path case has incomplete id/family/expected_rule_id")
         case_ids.append(case_id)
-        case_families.append(family)
-        for key in ("fixture",):
-            path_value = case.get(key)
-            if not isinstance(path_value, str) or not (ROOT / path_value).is_file():
-                fail(f"negative-path case {case_id} references missing {key}: {path_value}")
+        path_value = case.get("fixture")
+        if not isinstance(path_value, str) or not (ROOT / path_value).is_file():
+            fail(f"negative-path case {case_id} references missing fixture: {path_value}")
         for key in ("positive_gate", "validator"):
             command = case.get(key)
             if not isinstance(command, list) or not command:
@@ -203,38 +247,24 @@ def main() -> None:
         fail("negative-path manifest contains duplicate case ids")
 
     candidates = candidate_files()
-    by_stem: dict[str, Path] = {}
-    duplicate_stems: set[str] = set()
-    for candidate in candidates:
-        stem = candidate.stem
-        if stem in by_stem:
-            duplicate_stems.add(stem)
-        else:
-            by_stem[stem] = candidate
-    for stem in duplicate_stems:
-        by_stem.pop(stem, None)
-
-    controller_text = RUNNER.read_text(encoding="utf-8") + "\n" + STATIC_RUNNER.read_text(encoding="utf-8")
-    roots.update(
-        candidate
-        for candidate in candidates
-        if candidate.relative_to(ROOT).as_posix() in controller_text
-    )
-
+    nodes = control_files(candidates)
+    by_stem = python_import_targets(nodes)
     graph = {
-        candidate: direct_references(candidate, candidates, by_stem)
-        for candidate in candidates
+        node: direct_references(node, nodes, by_stem)
+        for node in nodes
     }
-    reachable: set[Path] = set()
-    queue = deque(path for path in roots if path in candidates)
+
+    reachable_nodes: set[Path] = set()
+    queue = deque(path for path in roots if path in nodes)
     while queue:
         current = queue.popleft()
-        if current in reachable:
+        if current in reachable_nodes:
             continue
-        reachable.add(current)
-        queue.extend(graph.get(current, set()) - reachable)
+        reachable_nodes.add(current)
+        queue.extend(graph.get(current, set()) - reachable_nodes)
 
-    orphaned = sorted(candidates - reachable)
+    reachable_candidates = candidates & reachable_nodes
+    orphaned = sorted(candidates - reachable_candidates)
     if orphaned:
         rendered = ", ".join(path.relative_to(ROOT).as_posix() for path in orphaned)
         fail(f"unreachable retained test/check scripts: {rendered}")
@@ -243,7 +273,8 @@ def main() -> None:
         "TEST-SURFACE-INTEGRITY-EVIDENCE status=PASS "
         f"runner_gates={len(checks)} static_checks={len(static_checks)} "
         f"evidence_ids={len(evidence_ids)} negative_cases={len(case_ids)} "
-        f"test_scripts={len(candidates)} reachable={len(reachable)} orphaned=0"
+        f"control_nodes={len(nodes)} test_scripts={len(candidates)} "
+        f"reachable={len(reachable_candidates)} orphaned=0"
     )
 
 
