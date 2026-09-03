@@ -11,7 +11,7 @@ cleanup_job() {
 
 for engine in pdflatex lualatex; do
   cleanup_job
-  echo "Validando $fixture com $engine + Biber..."
+  echo "Validating $fixture com $engine + Biber..."
 
   "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$fixture" > /tmp/abntexto-ufc-6023.log 2>&1 || {
     cat /tmp/abntexto-ufc-6023.log
@@ -36,7 +36,7 @@ for engine in pdflatex lualatex; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Preflight falhou: regressão NBR 6023:2025 contém warning ou overflow não reconhecido."
+    echo "Preflight failed: regression NBR 6023:2025 contains unrecognized warning or overflow."
     exit 1
   fi
 
@@ -57,7 +57,7 @@ def entry(marker):
     marker_fold = marker.casefold()
     matches = [part for part in chunks if marker_fold in part.casefold()]
     if not matches:
-        raise SystemExit(f'Entrada de teste ausente: {marker}\n{text}')
+        raise SystemExit(f'entry de teste missing: {marker}\n{text}')
     return ' '.join(matches)
 
 event = entry('Congresso Brasileiro de Teste')
@@ -66,15 +66,15 @@ if re.search(r'\[\s*[Ss]\.\s*[Ll]\.\s*\]', event):
 
 article = entry('Preservação digital em ambientes acadêmicos')
 if 'e202501' not in article:
-    raise SystemExit('NBR 6023:2025: e-location ausente.')
+    raise SystemExit('NBR 6023:2025: e-location missing.')
 
 judgment = entry('Recurso extraordinário de teste')
 if 'julgado em' not in judgment.casefold() or '2025' not in judgment:
-    raise SystemExit('NBR 6023:2025: data de julgamento ausente.')
+    raise SystemExit('NBR 6023:2025: data de judgment missing.')
 
 online = entry('Preservação de documentos digitais')
 if re.search(r'\[\s*[Ss]\.\s*[Ll]\.', online) or re.search(r'\[\s*[Ss]\.\s*[Nn]\.', online):
-    raise SystemExit('NBR 6023:2025: documento eletrônico recebeu indicador de publicação desconhecida.')
+    raise SystemExit('NBR 6023:2025: documento eletrônico recebeu indicador de publicação unknown.')
 
 printed = entry('Preservação de documentos impressos')
 if not re.search(r'[Ss]\.\s*[Ll]\.', printed) or not re.search(r'[Ss]\.\s*[Nn]\.', printed):
@@ -82,19 +82,19 @@ if not re.search(r'[Ss]\.\s*[Ll]\.', printed) or not re.search(r'[Ss]\.\s*[Nn]\.
 
 supplement = entry('Indicadores acadêmicos brasileiros')
 if 'suplemento' not in supplement.casefold() or supplement.find('2025') > supplement.casefold().find('suplemento'):
-    raise SystemExit('NBR 6023:2025: suplemento não está posicionado após a data.')
+    raise SystemExit('NBR 6023:2025: suplemento is not posicionado após a data.')
 
 interview = entry('Eficiência e inovação na gestão')
 if 'hamel' not in interview.casefold():
-    raise SystemExit('NBR 6023:2025: entrevistado não aparece como autor principal.')
+    raise SystemExit('NBR 6023:2025: entrevistado não aparece como author principal.')
 
 periodical = entry('REVISTA BRASILEIRA DE TESTE. Fortaleza')
 if '1234-5678' not in periodical:
-    raise SystemExit('NBR 6023:2025: ISSN opcional não foi preservado.')
+    raise SystemExit('NBR 6023:2025: ISSN optional was not preserved.')
 
 identifiers = entry('Identificadores persistentes em referências')
 if '10.1234/exemplo.2025.1' not in identifiers or '0000-0002-1825-0097' not in identifiers:
-    raise SystemExit('NBR 6023:2025: DOI ou ORCID complementar ausente.')
+    raise SystemExit('NBR 6023:2025: DOI ou ORCID supplemental missing.')
 PY
 
   evidence_json="${UFC_EVIDENCE_DIR:-artifacts/validation/reference-semantics}/reference-semantics.json"
@@ -107,4 +107,4 @@ PY
   echo 'VALIDATION-EVIDENCE rule=references.nbr6023-2025.test-profile status=PASS expected=nine-profile-cases measured=nine-cases-validated'
 fi
 
-echo 'Gate NBR 6023:2025 concluído.'
+echo 'Gate NBR 6023:2025 completed.'

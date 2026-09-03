@@ -3,8 +3,8 @@ set -eu
 
 fixture="tests/documents/frontmatter-approval-test.tex"
 evidence="artifacts/frontmatter/approval-page.json"
-academic_profiles="tccgraduacao tccespecializacao dissertacao tese"
-suppressed_profiles="projeto projetoanonimizado"
+academic_profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis"
+suppressed_profiles="research-project anonymized-research-project"
 all_profiles="$academic_profiles $suppressed_profiles"
 
 cleanup() {
@@ -22,18 +22,7 @@ for profile in $all_profiles; do
   generated="/tmp/abntexto-ufc-approval-$profile.tex"
   log="/tmp/abntexto-ufc-approval-$profile.log"
 
-  case "$profile" in
-    tccgraduacao) document_type="undergraduate-capstone" ;;
-    tccespecializacao) document_type="specialization-capstone" ;;
-    dissertacao) document_type="masters-thesis" ;;
-    tese) document_type="doctoral-thesis" ;;
-    projeto) document_type="research-project" ;;
-    projetoanonimizado) document_type="anonymized-research-project" ;;
-    *)
-      echo "Unknown approval profile label: $profile"
-      exit 1
-      ;;
-  esac
+  document_type="$profile"
 
   sed "s/type = doctoral-thesis,/type = $document_type,/" "$fixture" > "$generated"
 
@@ -60,7 +49,7 @@ for profile in $all_profiles; do
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Auditoria de folha de aprovação falhou: warning ou overflow não reconhecido no perfil $profile."
+    echo "Audit for approval page failed: unrecognized warning or overflow no profile $profile."
     exit 1
   fi
 
@@ -76,8 +65,8 @@ python3 tests/checks/normative_frontmatter_approval.py \
   --enforce
 
 test -s "$evidence" || {
-  echo 'Auditoria de folha de aprovação falhou: evidência JSON não foi gerada.'
+  echo 'Audit for approval page failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência front matter para folha de aprovação concluído.'
+echo 'Gate for evidence front matter for approval page completed.'

@@ -423,8 +423,8 @@ def main() -> None:
             "profiles": rule.get("applicability", {}).get("profiles"),
         },
         {
-            "projeto": {"title_page": project_title_index, "present": project_present},
-            "projetoanonimizado": {"title_page": anon_title_index, "present": anon_present},
+            "research-project": {"title_page": project_title_index, "present": project_present},
+            "anonymized-research-project": {"title_page": anon_title_index, "present": anon_present},
         },
         "pdftotext -bbox-layout",
     ))

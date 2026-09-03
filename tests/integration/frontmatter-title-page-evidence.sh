@@ -37,7 +37,7 @@ compile_fixture() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Auditoria de folha de rosto falhou: warning ou overflow não reconhecido em $fixture."
+    echo "Audit for title page failed: unrecognized warning or overflow em $fixture."
     exit 1
   fi
 }
@@ -56,8 +56,8 @@ python3 tests/checks/normative_frontmatter_title_page.py \
   --enforce
 
 test -s "$evidence" || {
-  echo 'Auditoria de folha de rosto falhou: evidência JSON não foi gerada.'
+  echo 'Audit for title page failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência front matter para folha de rosto concluído.'
+echo 'Gate for evidence front matter for title page completed.'

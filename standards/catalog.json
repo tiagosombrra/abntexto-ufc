@@ -883,10 +883,10 @@
       "values": {
         "required": false,
         "applies_to": [
-          "tccgraduacao",
-          "tccespecializacao",
-          "dissertacao",
-          "tese"
+          "undergraduate-capstone",
+          "specialization-capstone",
+          "masters-thesis",
+          "doctoral-thesis"
         ]
       },
       "validation": {

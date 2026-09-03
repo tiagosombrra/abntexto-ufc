@@ -27,8 +27,8 @@
       ],
       "applicability": {
         "profiles": [
-          "projeto",
-          "projetoanonimizado"
+          "research-project",
+          "anonymized-research-project"
         ]
       }
     },
@@ -55,8 +55,8 @@
       ],
       "applicability": {
         "profiles": [
-          "projeto",
-          "projetoanonimizado"
+          "research-project",
+          "anonymized-research-project"
         ]
       }
     },
@@ -90,8 +90,8 @@
       ],
       "applicability": {
         "profiles": [
-          "projeto",
-          "projetoanonimizado"
+          "research-project",
+          "anonymized-research-project"
         ]
       }
     },
@@ -121,8 +121,8 @@
     {
       "id": "project.anonymization.policy",
       "category": "project",
-      "requirement": "O perfil projetoanonimizado não expõe autor nem orientador e usa identificador público.",
-      "locator": "Política do perfil projetoanonimizado do abntexto-ufc",
+      "requirement": "O perfil anonymized-research-project não expõe autor nem orientador e usa identificador público.",
+      "locator": "Política do perfil anonymized-research-project do abntexto-ufc",
       "normativity": "project-policy",
       "kind": "anonymization",
       "values": {
@@ -141,7 +141,7 @@
       },
       "authority": "project-policy",
       "applicability": {
-        "profile": "projetoanonimizado"
+        "profile": "anonymized-research-project"
       }
     }
   ]

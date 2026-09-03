@@ -19,7 +19,7 @@ check_log() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Gate falhou: $job contém warning ou overflow não reconhecido."
+    echo "Gate failed: $job contains unrecognized warning or overflow."
     exit 1
   fi
 }
@@ -27,7 +27,7 @@ check_log() {
 for engine in pdflatex lualatex; do
   job="postextuais-$engine"
   cleanup_job "$job"
-  echo "Validando pós-textuais com $engine..."
+  echo "Validating pós-textuais com $engine..."
 
   "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$modern" > /tmp/abntexto-ufc-post.log 2>&1 || {
     cat /tmp/abntexto-ufc-post.log
@@ -77,10 +77,10 @@ positions = []
 for marker in markers:
     pos = fold.find(marker)
     if pos < 0:
-        raise SystemExit(f'{job}: elemento pós-textual ausente: {marker}')
+        raise SystemExit(f'{job}: back-matter element missing: {marker}')
     positions.append(pos)
 if positions != sorted(positions):
-    raise SystemExit(f'{job}: ordem pós-textual incorreta: {list(zip(markers, positions))}')
+    raise SystemExit(f'{job}: ordem pós-textual incorrect: {list(zip(markers, positions))}')
 
 for content in (
     'discretização de um domínio geométrico',
@@ -88,19 +88,19 @@ for content in (
     'documento institucional externo',
 ):
     if content.casefold() not in fold:
-        raise SystemExit(f'{job}: conteúdo pós-textual ausente: {content}')
+        raise SystemExit(f'{job}: back-matter content missing: {content}')
 
 if 'capítulo' in fold or 'capitulo' in fold:
-    raise SystemExit(f'{job}: estrutura baseada em capítulo reapareceu.')
+    raise SystemExit(f'{job}: structure baseada em capítulo reapareceu.')
 PY
 
   for marker in 'Referências' 'Glossário' 'Questionário produzido pelo autor' 'Documento institucional externo' 'Remissivo'; do
     grep -Fqi "$marker" "$job.toc" || {
-      echo "$job: item pós-textual ausente do Sumário: $marker"
+      echo "$job: back-matter item missing from the table of contents: $marker"
       cat "$job.toc"
       exit 1
     }
   done
 done
 
-echo 'Gate de pós-textuais concluído.'
+echo 'Gate for pós-textuais completed.'

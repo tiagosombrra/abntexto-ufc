@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_CHECKS = (
     "tests/checks/canonical_identity.py",
     "tests/checks/repository_contract.py",
+    "tests/checks/engineering_language.py",
     "tests/checks/validator_source.py",
     "tests/checks/normative_objects_scope.py",
     "tests/checks/reference_guide_contract.py",

@@ -26,7 +26,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo 'Auditoria de alinhamento front matter falhou: warning ou overflow não reconhecido.'
+  echo 'Audit for alinhamento front matter failed: unrecognized warning or overflow.'
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_frontmatter_alignment.py \
   --enforce
 
 test -s "$evidence" || {
-  echo 'Auditoria de alinhamento front matter falhou: evidência JSON não foi gerada.'
+  echo 'Audit for alinhamento front matter failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência front matter para alinhamento de dedicatória e epígrafes concluído.'
+echo 'Gate for evidence front matter for alinhamento de dedication and epigraphs completed.'

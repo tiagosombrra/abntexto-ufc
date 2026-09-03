@@ -56,7 +56,7 @@ for engine in pdflatex lualatex; do
   for family in times arial; do
     sed "s/@UFC_FONT@/$family/g" "$fixture" > "$tmp"
     job="objetos-minted-$family-$engine"
-    echo "Validando minted $family com $engine..."
+    echo "Validating minted $family com $engine..."
 
     for pass in 1 2; do
       "$engine" -jobname="$job" -shell-escape $flags "$tmp" > /tmp/abntexto-ufc-minted.log 2>&1 || {
@@ -68,12 +68,12 @@ for engine in pdflatex lualatex; do
     overflow=$(grep -E 'Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
     if [ -n "$overflow" ]; then
       printf '%s\n' "$overflow"
-      echo "$job: fixture minted contém overflow."
+      echo "$job: fixture minted contains overflow."
       exit 1
     fi
 
     grep -Fq 'Arquivo Python com minted' "$job.loc" || {
-      echo "$job: minted ausente da lista de códigos."
+      echo "$job: minted missing da list of code listings."
       exit 1
     }
 
@@ -81,17 +81,17 @@ for engine in pdflatex lualatex; do
 
     pages=$(pdfinfo "$job.pdf" | awk '/^Pages:/ {print $2}')
     [ "${pages:-0}" -ge 2 ] || {
-      echo "$job: página isolada de código não foi gerada."
+      echo "$job: page isolada de code was not generated."
       exit 1
     }
 
     expected=$(expected_family "$engine" "$family" "$job.log")
     pdffonts -f "$pages" -l "$pages" "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
-      echo "$job: página isolada de minted não usa a família esperada: $expected"
+      echo "$job: page isolada de minted não usa a família expected: $expected"
       pdffonts -f "$pages" -l "$pages" "$job.pdf"
       exit 1
     }
   done
 done
 
-echo 'Gate de minted concluído.'
+echo 'Gate for minted completed.'

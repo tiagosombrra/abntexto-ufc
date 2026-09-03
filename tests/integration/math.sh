@@ -13,7 +13,7 @@ trap cleanup EXIT INT TERM
 
 for cmd in pdffonts pdftotext; do
   command -v "$cmd" >/dev/null 2>&1 || {
-    echo "Matemática: comando ausente: $cmd"
+    echo "Matemática: command missing: $cmd"
     exit 1
   }
 done
@@ -22,7 +22,7 @@ for engine in pdflatex lualatex; do
   for family in times arial; do
     sed "s/@UFC_FONT@/$family/g" "$fixture" > "$tmp"
     job="matematica-$family-$engine"
-    echo "Validando política matemática $family com $engine..."
+    echo "Validating mathematics policy $family com $engine..."
 
     for pass in 1 2; do
       "$engine" -jobname="$job" $flags "$tmp" > "/tmp/$job.out" 2>&1 || {
@@ -34,11 +34,11 @@ for engine in pdflatex lualatex; do
     case "$engine" in
       pdflatex)
         grep -Fq 'UFC-MATH-POLICY=NEW-TX-MATH' "$job.log" || {
-          echo "$job: política newtxmath não confirmada."
+          echo "$job: policy newtxmath não confirmada."
           exit 1
         }
         pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Eiq 'ntx|txmi|txsy' || {
-          echo "$job: fonte matemática NewTX não identificada no PDF."
+          echo "$job: source matemática NewTX não identificada no PDF."
           pdffonts "$job.pdf"
           exit 1
         }
@@ -49,12 +49,12 @@ for engine in pdflatex lualatex; do
         elif grep -Fq 'UFC-MATH-POLICY=LATIN-MODERN-MATH' "$job.log"; then
           expected='LatinModernMath'
         else
-          echo "$job: política matemática OpenType não reconhecida."
+          echo "$job: mathematics policy OpenType unrecognized."
           grep 'UFC-MATH-POLICY' "$job.log" || true
           exit 1
         fi
         pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
-          echo "$job: fonte matemática esperada não identificada: $expected"
+          echo "$job: source matemática expected não identificada: $expected"
           pdffonts "$job.pdf"
           exit 1
         }
@@ -82,7 +82,7 @@ root = ET.parse(path).getroot()
 
 pages = [node for node in root.iter() if node.tag.endswith('page')]
 if not pages:
-    raise SystemExit('PDF sem página no bbox.')
+    raise SystemExit('PDF sem page no bbox.')
 
 page = pages[0]
 page_width = float(page.attrib['width'])
@@ -114,4 +114,4 @@ PY
   done
 done
 
-echo 'Gate de matemática e equações concluído.'
+echo 'Gate for mathematics and equations completed.'

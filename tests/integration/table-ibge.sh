@@ -11,19 +11,19 @@ trap cleanup EXIT INT TERM
 
 for token in '\toprule' '\midrule' '\bottomrule' 'row{even}' 'remark{Fonte}' 'remark{Nota}' 'tables = tabularray'; do
   grep -Fq "$token" "$fixture" || {
-    echo "Tabela IBGE: estrutura obrigatória ausente no fixture: $token"
+    echo "table IBGE: structure required missing no fixture: $token"
     exit 1
   }
 done
 
 if grep -Eq '(^|[^[:alpha:]])(vlines|hlines)([^[:alpha:]]|$)' "$fixture"; then
-  echo 'Tabela IBGE: tabela numérica não pode usar fechamento lateral ou grade no corpo.'
+  echo 'table IBGE: table numérica não pode usar fechamento lateral ou grade no corpo.'
   exit 1
 fi
 
 for engine in pdflatex lualatex; do
   job="tabela-ibge-$engine"
-  echo "Validando tabela IBGE com $engine..."
+  echo "Validating table IBGE com $engine..."
 
   for pass in 1 2; do
     "$engine" -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {
@@ -35,7 +35,7 @@ for engine in pdflatex lualatex; do
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "$job: warning ou overflow não reconhecido."
+    echo "$job: unrecognized warning or overflow."
     exit 1
   fi
 
@@ -49,13 +49,13 @@ text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
 def metric(name):
     values = [float(v) for v in re.findall(rf'{re.escape(name)}=([0-9.]+)', text)]
     if not values:
-        raise SystemExit(f'métrica ausente: {name}')
+        raise SystemExit(f'metric missing: {name}')
     return values
 
 def assert_all(name, expected, tolerance=0.06):
     for value in metric(name):
         if abs(value - expected) > tolerance:
-            raise SystemExit(f'{name}: esperado {expected:.4f}, obtido {value:.4f}')
+            raise SystemExit(f'{name}: expected {expected:.4f}, obtido {value:.4f}')
 
 pt_per_bp = 72.27 / 72.0
 assert_all('UFC-IBGE-BODY-FONTSIZE', 12.0)
@@ -90,8 +90,8 @@ for marker in (
     'Valores sintéticos para validação',
 ):
     if marker not in text:
-        raise SystemExit(f'{job}: conteúdo tabular ausente: {marker}')
+        raise SystemExit(f'{job}: content tabular missing: {marker}')
 PY
 done
 
-echo 'Gate do subconjunto tabular IBGE concluído.'
+echo 'Gate for subconjunto tabular IBGE completed.'

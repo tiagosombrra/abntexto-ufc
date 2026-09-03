@@ -38,7 +38,7 @@ compile_fixture() {
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
   if [ -n "$warnings" ]; then
     printf '%s\n' "$warnings"
-    echo "Auditoria de capa falhou: warning ou overflow não reconhecido em $fixture."
+    echo "Audit for cover failed: unrecognized warning or overflow em $fixture."
     exit 1
   fi
 }
@@ -57,8 +57,8 @@ python3 tests/checks/normative_frontmatter_cover.py \
   --enforce
 
 test -s "$evidence" || {
-  echo 'Auditoria de capa falhou: evidência JSON não foi gerada.'
+  echo 'Audit for cover failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência front matter para capa concluído.'
+echo 'Gate for evidence front matter for cover completed.'

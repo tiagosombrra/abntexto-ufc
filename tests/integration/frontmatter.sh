@@ -20,7 +20,7 @@ flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 for engine in pdflatex lualatex; do
   for fixture in $fixtures; do
-    echo "Validando $fixture com $engine..."
+    echo "Validating $fixture com $engine..."
     for pass in 1 2; do
       "$engine" $flags "$fixture" > /tmp/abntexto-ufc-frontmatter.log 2>&1 || {
         cat /tmp/abntexto-ufc-frontmatter.log
@@ -34,13 +34,13 @@ for engine in pdflatex lualatex; do
 done
 
 if grep -Eiq 'dedicat[oó]ria|agradecimentos|resumo|abstract|lista de' frontmatter-academic-work.toc; then
-  echo 'Front matter validation falhou: elemento front matter entrou no Sumário.'
+  echo 'Front matter validation failed: element front matter leaked into the table of contents.'
   cat frontmatter-academic-work.toc
   exit 1
 fi
 
 grep -Eiq 'Introdu' frontmatter-academic-work.toc || {
-  echo 'Front matter validation falhou: seção textual ausente do Sumário.'
+  echo 'Front matter validation failed: section textual missing from the table of contents.'
   exit 1
 }
 
@@ -48,13 +48,13 @@ if command -v pdftotext >/dev/null 2>&1; then
   pdftotext frontmatter-academic-work.pdf /tmp/abntexto-ufc-frontmatter.txt
   for heading in 'AGRADECIMENTOS' 'RESUMO' 'ABSTRACT' 'LISTA DE FIGURAS' 'LISTA DE TABELAS' 'LISTA DE ABREVIATURAS E SIGLAS' 'LISTA DE SÍMBOLOS' 'SUMÁRIO'; do
     grep -Fq "$heading" /tmp/abntexto-ufc-frontmatter.txt || {
-      echo "Front matter validation falhou: título front matter ausente ou incorreto: $heading"
+      echo "Front matter validation failed: heading front matter missing ou incorrect: $heading"
       exit 1
     }
   done
 
   if grep -Eiq '^Dedicat[oó]ria$' /tmp/abntexto-ufc-frontmatter.txt; then
-    echo 'Front matter validation falhou: dedicatória recebeu título.'
+    echo 'Front matter validation failed: dedication received a heading.'
     exit 1
   fi
 
@@ -89,7 +89,7 @@ def check_below_midpoint(label, marker):
                     f'y={first_y:.2f}, meio={midpoint:.2f}'
                 )
             return
-    raise SystemExit(f'Front matter validation falhou: página de {label} não localizada.')
+    raise SystemExit(f'Front matter validation failed: page de {label} not found.')
 
 
 check_below_midpoint('dedicatória', 'FAMÍLIA')
@@ -98,17 +98,17 @@ PY
 
   pdftotext frontmatter-anonymized-project.pdf /tmp/abntexto-ufc-anonimo.txt
   if grep -Fq 'AUTOR SIGILOSO TESTE' /tmp/abntexto-ufc-anonimo.txt; then
-    echo 'Front matter validation falhou: autor vazou no projeto anonimizado.'
+    echo 'Front matter validation failed: author leaked into the anonymized research project.'
     exit 1
   fi
   if grep -Fq 'ORIENTADOR SIGILOSO TESTE' /tmp/abntexto-ufc-anonimo.txt; then
-    echo 'Front matter validation falhou: orientador vazou no projeto anonimizado.'
+    echo 'Front matter validation failed: advisor leaked into the anonymized research project.'
     exit 1
   fi
   grep -Fq 'PROJETO-ANONIMO-001' /tmp/abntexto-ufc-anonimo.txt || {
-    echo 'Front matter validation falhou: identificador anonimizado ausente.'
+    echo 'Front matter validation failed: identifier anonymized missing.'
     exit 1
   }
 fi
 
-echo 'Gate de front matter concluído.'
+echo 'Gate for front matter completed.'

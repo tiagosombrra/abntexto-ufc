@@ -27,7 +27,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Auditoria de paginação falhou: warning ou overflow não reconhecido em $fixture."
+  echo "Audit for pagination failed: unrecognized warning or overflow em $fixture."
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_pagination_geometry.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Auditoria de paginação falhou: evidência JSON não foi gerada.'
+  echo 'Audit for pagination failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência para geometria da paginação concluído.'
+echo 'Gate for evidence for pagination geometry completed.'

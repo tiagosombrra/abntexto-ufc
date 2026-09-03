@@ -27,7 +27,7 @@ warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|O
   grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
 if [ -n "$warnings" ]; then
   printf '%s\n' "$warnings"
-  echo "Auditoria de recuo suspenso de títulos de seção falhou: warning ou overflow não reconhecido em $fixture."
+  echo "Audit for hanging indent de section headings failed: unrecognized warning or overflow em $fixture."
   exit 1
 fi
 
@@ -38,8 +38,8 @@ python3 tests/checks/normative_section_multiline_hanging.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
 test -s "$evidence" || {
-  echo 'Auditoria de recuo suspenso de títulos de seção falhou: evidência JSON não foi gerada.'
+  echo 'Audit for hanging indent de section headings failed: JSON evidence was not generated.'
   exit 1
 }
 
-echo 'Gate de evidência para recuo suspenso de títulos de seção concluído.'
+echo 'Gate for evidence for hanging indent de section headings completed.'

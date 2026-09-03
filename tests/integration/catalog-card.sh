@@ -41,7 +41,7 @@ for engine in pdflatex lualatex; do
           -e "s/\.abntexto-ufc-catalog-card/$card_base/g" \
           "$source_fixture" > "$tmp_fixture"
 
-      echo "Validando ficha catalográfica: $mode/$card_mode/$engine..."
+      echo "Validating catalog card: $mode/$card_mode/$engine..."
       for pass in 1 2 3; do
         "$engine" -jobname="$job" -interaction=nonstopmode -halt-on-error -file-line-error "$tmp_fixture" > /tmp/abntexto-ufc-card.log 2>&1 || {
           cat /tmp/abntexto-ufc-card.log
@@ -53,7 +53,7 @@ for engine in pdflatex lualatex; do
         grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
       if [ -n "$warnings" ]; then
         printf '%s\n' "$warnings"
-        echo "$job: warning ou overflow não reconhecido."
+        echo "$job: unrecognized warning or overflow."
         exit 1
       fi
 
@@ -71,7 +71,7 @@ for engine in pdflatex lualatex; do
         expected_text_page=3
       fi
       grep -Fq "UFC-TEXT-PAGE=$expected_text_page" "$job.log" || {
-        echo "$job: página lógica textual inesperada; esperado $expected_text_page."
+        echo "$job: page lógica textual inesperada; expected $expected_text_page."
         exit 1
       }
 
@@ -93,17 +93,17 @@ text_marker = 'marcador textual após a ficha catalográfica'
 
 if card_mode == 'true':
     if len(norm) != 3:
-        raise SystemExit(f'{job}: esperado folha de rosto, ficha e texto em 3 páginas físicas; obtido {len(norm)}.')
+        raise SystemExit(f'{job}: expected title page, ficha e text em 3 pages físicas; obtido {len(norm)}.')
     if card_marker not in norm[1]:
-        raise SystemExit(f'{job}: ficha habilitada não ocupa o verso físico da folha de rosto.')
+        raise SystemExit(f'{job}: ficha habilitada não ocupa o verso físico da title page.')
     if text_marker not in norm[2]:
-        raise SystemExit(f'{job}: texto posterior à ficha não iniciou no anverso físico seguinte.')
+        raise SystemExit(f'{job}: text posterior à ficha não iniciou no recto físico seguinte.')
 else:
     if any(card_marker in page for page in norm):
         raise SystemExit(f'{job}: ficha externa foi incluída although catalog-card=false.')
     text_pages = [index for index, page in enumerate(norm) if text_marker in page]
     if len(text_pages) != 1:
-        raise SystemExit(f'{job}: marcador textual ausente ou duplicado com ficha desabilitada.')
+        raise SystemExit(f'{job}: marker textual missing ou duplicado com ficha desabilitada.')
     expected_physical_index = 1 if mode == 'single-sided' else 2
     if text_pages[0] != expected_physical_index:
         raise SystemExit(
@@ -111,7 +111,7 @@ else:
             f'esperado índice {expected_physical_index}, obtido {text_pages[0]}.'
         )
     if mode == 'double-sided' and (len(norm) != 3 or norm[1]):
-        raise SystemExit(f'{job}: double-sided mode without a catalog card deve preservar verso físico em branco antes do texto.')
+        raise SystemExit(f'{job}: double-sided mode without a catalog card deve preservar verso físico em branco antes do text.')
 PY
     done
   done
@@ -119,4 +119,4 @@ done
 
 echo 'VALIDATION-EVIDENCE rule=deposit.catalog-card status=PASS measured=enabled-and-disabled-routes'
 echo 'VALIDATION-BOUNDARY rule=font.size.reduced.catalog-card status=MANUAL scope=external-pdf'
-echo 'Gate da ficha catalográfica concluído.'
+echo 'Gate for catalog card completed.'

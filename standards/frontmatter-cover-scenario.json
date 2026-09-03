@@ -23,13 +23,13 @@
   "project_optional": {
     "profiles": [
       {
-        "name": "projeto",
+        "name": "research-project",
         "before": "UFCFRONTMATTERPRJBEFORE",
         "after": "UFCFRONTMATTERPRJAFTER",
         "hidden_cover_token": "UFCFRONTMATTERPRJTITLE"
       },
       {
-        "name": "projetoanonimizado",
+        "name": "anonymized-research-project",
         "before": "UFCFRONTMATTERANONBEFORE",
         "after": "UFCFRONTMATTERANONAFTER",
         "hidden_cover_token": "UFCFRONTMATTERANONTITLE"

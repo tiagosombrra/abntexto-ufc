@@ -135,10 +135,10 @@
       ],
       "applicability": {
         "profiles": [
-          "tccgraduacao",
-          "tccespecializacao",
-          "dissertacao",
-          "tese"
+          "undergraduate-capstone",
+          "specialization-capstone",
+          "masters-thesis",
+          "doctoral-thesis"
         ]
       }
     },

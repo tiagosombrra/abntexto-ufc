@@ -3,7 +3,7 @@ set -eu
 
 log="citacoes-referencias.log"
 [ -f "$log" ] || {
-  echo "Referências falharam: log ausente: $log"
+  echo "references falharam: log missing: $log"
   exit 1
 }
 
@@ -18,7 +18,7 @@ text = Path(sys.argv[1]).read_text(encoding='utf-8', errors='replace')
 def metric(name):
     match = re.search(rf'{re.escape(name)}=([0-9.]+)', text)
     if not match:
-        raise SystemExit(f'Referências: métrica ausente no log: {name}')
+        raise SystemExit(f'references: metric missing no log: {name}')
     return float(match.group(1))
 
 itemsep = metric('UFC-BIBITEMSEP')
@@ -27,7 +27,7 @@ baseline = metric('UFC-BIBBASELINE')
 stretch = metric('UFC-BIBSTRETCH')
 
 if baseline <= 0:
-    raise SystemExit('Referências: entrelinha inválida.')
+    raise SystemExit('references: entrelinha inválida.')
 
 for name, value in (
     ('bibitemsep', itemsep),
@@ -44,7 +44,7 @@ if not 0.99 <= stretch <= 1.01:
         f'Referências: espaçamento interno deve ser simples; baselinestretch={stretch:.4f}'
     )
 
-print('Gate de espaçamento das referências concluído.')
+print('Gate for reference spacing completed.')
 PY
 
 sh tests/integration/reference-layout-evidence.sh

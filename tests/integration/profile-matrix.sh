@@ -40,7 +40,7 @@ for engine in pdflatex lualatex; do
       exit 1
     fi
 
-    echo "Validando perfil completo $profile com $engine..."
+    echo "Validating profile completo $profile com $engine..."
     make DOCUMENT="$job" ENGINE="$engine" compile > /tmp/abntexto-ufc-profile.log 2>&1 || {
       cat /tmp/abntexto-ufc-profile.log
       exit 1
@@ -50,29 +50,29 @@ for engine in pdflatex lualatex; do
     warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$output.log" || true)
     if [ -n "$warnings" ]; then
       printf '%s\n' "$warnings"
-      echo "Preflight falhou: perfil $profile/$engine contém warning ou overflow não reconhecido."
+      echo "Preflight failed: profile $profile/$engine contains unrecognized warning or overflow."
       exit 1
     fi
 
     if [ -f "$output.blg" ] && grep -Eq 'WARN|ERROR' "$output.blg"; then
       cat "$output.blg"
-      echo "Preflight falhou: Biber reportou warning/error em $profile/$engine."
+      echo "Preflight failed: Biber reportou warning/error em $profile/$engine."
       exit 1
     fi
 
     [ -s "$output.pdf" ] || {
-      echo "Perfil $profile/$engine: PDF não foi gerado."
+      echo "profile $profile/$engine: PDF was not generated."
       exit 1
     }
 
     meta="/tmp/$job-meta.xml"
     pdfinfo -meta "$output.pdf" > "$meta"
     grep -Fq '<pdfaid:part>2</pdfaid:part>' "$meta" || {
-      echo "Perfil $profile/$engine: declaração PDF/A part 2 ausente."
+      echo "profile $profile/$engine: declaração PDF/A part 2 missing."
       exit 1
     }
     grep -Eq '<pdfaid:conformance>[Bb]</pdfaid:conformance>' "$meta" || {
-      echo "Perfil $profile/$engine: declaração PDF/A-2b ausente."
+      echo "profile $profile/$engine: declaração PDF/A-2b missing."
       exit 1
     }
 
@@ -87,13 +87,13 @@ for engine in pdflatex lualatex; do
       END { if (!found) exit 1 }
     '; then
       pdfinfo "$output.pdf"
-      echo "Perfil $profile/$engine: página não é A4."
+      echo "profile $profile/$engine: page não é A4."
       exit 1
     fi
 
     pages=$(pdfinfo "$output.pdf" | awk '/^Pages:/ {print $2}')
     [ "${pages:-0}" -ge 6 ] || {
-      echo "Perfil $profile/$engine: documento completo gerou apenas ${pages:-0} páginas."
+      echo "profile $profile/$engine: documento completo gerou apenas ${pages:-0} pages."
       exit 1
     }
 
@@ -155,45 +155,45 @@ expected = {
 
 for marker in expected[profile]:
     if marker not in text:
-        raise SystemExit(f'Perfil {profile}: conteúdo semântico ausente: {marker}')
+        raise SystemExit(f'profile {profile}: content semântico missing: {marker}')
 
 for marker in ('introdução', 'metodologia', 'referências', 'fundamentos de metodologia acadêmica'):
     if marker not in text:
-        raise SystemExit(f'Perfil {profile}: conteúdo estrutural ausente: {marker}')
+        raise SystemExit(f'profile {profile}: content estrutural missing: {marker}')
 
 if 'capítulo' in text or 'capitulo' in text:
-    raise SystemExit(f'Perfil {profile}: estrutura de capítulo reapareceu.')
+    raise SystemExit(f'profile {profile}: structure de capítulo reapareceu.')
 
 if profile == 'anonymized-research-project':
     for secret in ('autor matriz teste', 'prof. orientador matriz teste', 'prof. membro matriz teste'):
         if secret in text:
-            raise SystemExit(f'Perfil anonimizado vazou dado protegido: {secret}')
+            raise SystemExit(f'profile anonymized vazou dado protegido: {secret}')
 else:
     if 'autor matriz teste' not in text:
-        raise SystemExit(f'Perfil {profile}: autor esperado ausente.')
+        raise SystemExit(f'profile {profile}: author expected missing.')
 
 if profile in {'research-project', 'anonymized-research-project'}:
     for forbidden in ('banca examinadora', 'abstract'):
         if forbidden in text:
-            raise SystemExit(f'Perfil {profile}: elemento de trabalho acadêmico apareceu indevidamente: {forbidden}')
+            raise SystemExit(f'profile {profile}: element de work acadêmico apareceu indevidamente: {forbidden}')
 PY
 
     grep -Fqi 'Introdu' "$output.toc" || {
-      echo "Perfil $profile/$engine: Introdução ausente do Sumário."
+      echo "profile $profile/$engine: Introdução missing from the table of contents."
       cat "$output.toc"
       exit 1
     }
     grep -Fqi 'Metodologia' "$output.toc" || {
-      echo "Perfil $profile/$engine: Metodologia ausente do Sumário."
+      echo "profile $profile/$engine: Metodologia missing from the table of contents."
       cat "$output.toc"
       exit 1
     }
     if grep -Eq '\\contentsline \{section\}\{[^}]*\*' "$output.toc"; then
-      echo "Perfil $profile/$engine: entrada anômala com asterisco no Sumário."
+      echo "profile $profile/$engine: entry anômala com asterisco no table of contents."
       cat "$output.toc"
       exit 1
     fi
   done
 done
 
-echo 'Gate da matriz completa de perfis concluído.'
+echo 'Gate for matrix completa de profiles completed.'

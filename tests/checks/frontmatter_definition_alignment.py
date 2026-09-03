@@ -37,7 +37,7 @@ def find_page(root: ET.Element, heading: str) -> ET.Element:
         text = normalize(" ".join(word_text(word) for word in page_words(page)))
         if wanted in text:
             return page
-    raise SystemExit(f"Front matter validation falhou: página não localizada: {heading}.")
+    raise SystemExit(f"Front matter validation failed: page not found: {heading}.")
 
 
 def find_word(page: ET.Element, value: str) -> ET.Element:
@@ -45,7 +45,7 @@ def find_word(page: ET.Element, value: str) -> ET.Element:
     for word in page_words(page):
         if normalize(word_text(word)) == wanted:
             return word
-    raise SystemExit(f"Front matter validation falhou: palavra não localizada: {value}.")
+    raise SystemExit(f"Front matter validation failed: word not found: {value}.")
 
 
 def aligned_row(page: ET.Element, description_first_word: str) -> tuple[float, float]:
@@ -117,7 +117,7 @@ def main() -> None:
         ],
     )
 
-    print("Alinhamento das listas de abreviaturas/siglas e símbolos validado.")
+    print("Alinhamento das lists de abreviaturas/siglas e símbolos validado.")
 
 
 if __name__ == "__main__":
