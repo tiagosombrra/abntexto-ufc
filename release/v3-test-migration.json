@@ -3,8 +3,8 @@
   "phase": "V3-R2",
   "kind": "test-documentation-workflow-migration-contract",
   "target_version": "3.0.0",
-  "status": "ACTIVE_R2_API_CONSUMER_MIGRATION",
-  "current_stage": "R2-B5",
+  "status": "R2_CONSUMER_MIGRATION_DONE",
+  "current_stage": "R2-CLOSED",
   "r2_b1_closeout": {
     "status": "DONE",
     "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4",
@@ -26,7 +26,7 @@
   "r1_reconciliation_status": "DONE",
   "r2_api_consumer_policy": {
     "owner_inventory": "docs/R2-API-OWNERSHIP.md",
-    "active_lot": "R2-B5",
+    "active_lot": null,
     "final_residual_lot": "R2-B5",
     "runtime_alias_tests_allowed": false
   },
@@ -324,5 +324,15 @@
     "reference_tolerances_changed": false,
     "proof_state_changed": false,
     "consumer_migration": "bibliography/back-matter owners, template/tests and shared heading observer migrated atomically"
+  },
+  "r2_b5_closeout": {
+    "status": "DONE",
+    "issue": 240,
+    "pr": 249,
+    "merge_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "static_run_id": 33743809498,
+    "linux_integration_run_id": 33743809431,
+    "linux_release_check_run_id": 33745603468,
+    "permanent_residual_gate": "tests/checks/v3_api_residual.py"
   }
 }

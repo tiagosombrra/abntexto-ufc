@@ -1,6 +1,6 @@
 # abntexto-ufc v3 Architecture
 
-Updated: 2026-09-02
+Updated: 2026-09-03
 
 This document defines the target engineering architecture for `abntexto-ufc` v3.0.0. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
 
@@ -74,11 +74,11 @@ Runtime responsibilities are separated as follows:
 - `bibliography.def`: citation/reference integration and public bibliography surface;
 - `backmatter.def`: appendices, annexes, glossary, index, and back-matter behavior.
 
-A project-owned internal control sequence has one behavior owner. Public commands are implemented directly by the module that owns the behavior; no forwarding-only compatibility layer is part of the final v3 runtime. `public-api.def` is therefore transitional R2 debt and must disappear after direct ownership is absorbed.
+A project-owned internal control sequence has one behavior owner. Public commands are implemented directly by the module that owns the behavior; no forwarding-only compatibility layer is part of the final v3 runtime. R2-B5 completed this invariant: `public-api.def` and its class load are absent.
 
 ## R2 migration sequencing
 
-The target architecture above is implemented through bounded owner-based lots documented in `docs/R2-API-OWNERSHIP.md`. R2-A and B1 through B4 are complete. B4 merged through PR #247 at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` after Static `33736117556` and Linux `33736117558` passed `PASS=30 FAIL=0 SKIP=0`. Bibliography/reference/glossary/index commands are now directly owned; `public-api.def` is empty. R2-B5/#240 is active and removes that forwarding-only file/load, closes residual project-owned runtime/internal naming debt, generates the migration guide, and reconciles the R2 contracts. Template and test consumers move atomically with each behavior owner.
+The target architecture above was implemented through bounded owner-based lots documented in `docs/R2-API-OWNERSHIP.md`. R2-A and B1 through B5 are complete. B5 merged through PR #249 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e`, removed the forwarding-only file/load, published `docs/MIGRATING-TO-V3.md`, and added `tests/checks/v3_api_residual.py` as a permanent fail-closed residual gate. Template and test consumers moved atomically with each behavior owner.
 
 ## Upstream boundaries
 
@@ -134,7 +134,7 @@ Scientific-article normative/runtime material is reintroduced only in V3-A1 afte
 
 `make static-check` is the permanent local source-only entry point. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
 
-R1-BLOCK-7 and R1-BLOCK-8 are DONE. The permanent orchestration surface is exactly `Static contract`, `Linux integration`, and `Linux release check`, each delegating to its repository-owned entry point (`make static-check`, `make check`, and `make release-check`). B7-D confirmed read-only permissions, immutable action pins, bounded concurrency, stable status semantics, and zero temporary workflow residue. The current `Stable branches` ruleset has no required-status rule; the recorded recommendation is to require `Static contract` and `Linux integration`, while `Linux release check` remains a post-merge/manual release gate. B8 certified complete candidate `9b1752565ac217c04ffa22a9ef272cdf078af380` across Times New Roman/Arial × pdfLaTeX/LuaLaTeX with final literal text-family, math-policy, Unicode, embedding and PDF/A-2b inspection. V3-R2 is active in R2-B3; B1/B2 forwarding debt has been absorbed, and `public-api.def` now contains only remaining B3/B4 transitional forwarding until canonical public behavior is fully owned and the file is removed in B5.
+R1-BLOCK-7 and R1-BLOCK-8 are DONE. The permanent orchestration surface is exactly `Static contract`, `Linux integration`, and `Linux release check`, each delegating to its repository-owned entry point (`make static-check`, `make check`, and `make release-check`). B7-D confirmed read-only permissions, immutable action pins, bounded concurrency, stable status semantics, and zero temporary workflow residue. The current `Stable branches` ruleset has no required-status rule; the recorded recommendation is to require `Static contract` and `Linux integration`, while `Linux release check` remains a post-merge/manual release gate. B8 certified complete candidate `9b1752565ac217c04ffa22a9ef272cdf078af380` across Times New Roman/Arial × pdfLaTeX/LuaLaTeX with final literal text-family, math-policy, Unicode, embedding and PDF/A-2b inspection. V3-R2 is DONE through B5 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e`; the forwarding-only API layer is absent and permanent residual enforcement is part of `make static-check`. V3-R3 is active only at the R3-A inventory/planning boundary.
 
 Active path names must not encode retired major-version or N-phase identities.
 
@@ -144,7 +144,7 @@ Active path names must not encode retired major-version or N-phase identities.
 
 ## Documentation and release state
 
-`docs/` contains current engineering and maintainer documentation. `release/` contains current machine-readable migration/release state plus source material required to construct current release candidates, such as `release/ctan/`. A migration contract remains tracked only while an active migration consumes it; after use it is removed or consolidated.
+`docs/` contains current engineering and maintainer documentation. `release/` contains current machine-readable migration/release state plus source material required to construct current release candidates, such as `release/ctan/`. A closed migration mapping may remain only when a permanent gate or the active reconstruction control plane still consumes it; otherwise it is removed or consolidated rather than kept as a historical ledger.
 
 ## Breaking v3 API policy
 

@@ -3,13 +3,13 @@
   "phase": "V3-R2",
   "kind": "api-runtime-migration-contract",
   "target_version": "3.0.0",
-  "status": "R2_B4_DONE_R2_B5_ACTIVE",
+  "status": "R2_DONE",
   "activated_at": "2026-09-02",
   "operational_issue": 232,
   "entry_certified_r1_candidate_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
-  "current_stage": "R2-B5",
+  "current_stage": "R2-CLOSED",
   "current_stage_goal": "final consumer migration and forwarding-layer removal",
-  "current_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
+  "current_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
   "r2_b1_closeout": {
     "status": "DONE",
     "issue": 234,
@@ -49,8 +49,8 @@
   "active_implementation_lot": {
     "stage": "R2-B5",
     "issue": 240,
-    "product_entry_main_sha": "bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261",
-    "status": "ACTIVE"
+    "status": "DONE",
+    "merge_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e"
   },
   "r2_a_inventory": {
     "status": "DONE",
@@ -670,5 +670,18 @@
     "locator_policy_changed": false,
     "reference_tolerances_changed": false,
     "proof_state_changed": false
-  }
+  },
+  "r2_b5_closeout": {
+    "status": "DONE",
+    "issue": 240,
+    "pr": 249,
+    "merge_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "static_run_id": 33743809498,
+    "linux_integration_run_id": 33743809431,
+    "linux_release_check_run_id": 33745603468,
+    "forwarding_layer_removed": true,
+    "migration_guide": "docs/MIGRATING-TO-V3.md",
+    "permanent_residual_gate": "tests/checks/v3_api_residual.py"
+  },
+  "retention": "Retained as the machine-readable v3 API migration mapping and as input to the permanent fail-closed residual API gate."
 }

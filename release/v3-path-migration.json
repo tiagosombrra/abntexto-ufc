@@ -6,8 +6,8 @@
   "source_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "audited_tree_sha": "657c7da1c4f0bd9e7353569fce59c0907c896ea7",
   "target_version": "3.0.0",
-  "status": "R1_PATHS_DONE_R2_RUNTIME_ABSORPTION_ACTIVE",
-  "current_stage": "R2-B5",
+  "status": "R1_PATHS_DONE_R2_RUNTIME_ABSORPTION_DONE",
+  "current_stage": "R2-CLOSED",
   "r2_b1_closeout": {
     "status": "DONE",
     "merge_main_sha": "ded5e77733795aa2958606e899d4e27f12f64df4",
@@ -25,11 +25,6 @@
     "public_api_absorption": "B1 setup plus B2 academic/front-matter forwarding removed; B3/B4 debt remains"
   },
   "r1_path_restructuring_status": "DONE",
-  "remaining_runtime_path_action": {
-    "path": "abntexto-ufc/public-api.def",
-    "action": "remove-after-absorption",
-    "planned_lot": "R2-B5"
-  },
   "policy": {
     "repository_engineering_language": "English",
     "academic_content_language": "preserve source language",
@@ -677,5 +672,20 @@
     "public_api_state": "empty transitional file retained for physical removal in R2-B5",
     "next_lot": "R2-B5",
     "next_issue": 240
+  },
+  "r2_b5_closeout": {
+    "status": "DONE",
+    "issue": 240,
+    "pr": 249,
+    "merge_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
+    "removed_path": "abntexto-ufc/public-api.def",
+    "class_load_removed": true
+  },
+  "completed_runtime_path_action": {
+    "path": "abntexto-ufc/public-api.def",
+    "action": "remove-after-absorption",
+    "planned_lot": "R2-B5",
+    "status": "DONE",
+    "closure_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e"
   }
 }
