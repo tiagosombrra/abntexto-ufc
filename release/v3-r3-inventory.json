@@ -5,7 +5,7 @@
   "phase": "V3-R3",
   "stage": "R3-B5",
   "status": "DONE",
-  "reviewed_at": "2026-09-03",
+  "reviewed_at": "2026-09-04",
   "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
   "planning_issue": 250,
   "evidence": {
@@ -568,6 +568,21 @@
     "post_product_release_result": "PASS=33 FAIL=0 SKIP=0",
     "all_r3_findings_resolved": true,
     "temporary_executor_residue": 0,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false
+  },
+  "r4_transition": {
+    "status": "CERTIFIED_PENDING_CANONICAL_CLOSEOUT",
+    "issue": 267,
+    "r5_issue": 272,
+    "product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "r4_entry_predecessor_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
+    "certification_run_id": 33855800767,
+    "certification_result": "PASS",
+    "evidence_artifact_id": 9930304564,
+    "evidence_artifact_digest": "sha256:ca21bf1771c45e2003b2448ea019b6eb7b93c8468eff1330df76340a943eeca2",
+    "exact_r5_entry_activation_pending": true,
     "normative_semantics_changed": false,
     "proof_state_changed": false,
     "public_runtime_api_changed": false
