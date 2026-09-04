@@ -36,6 +36,23 @@ jobs:
           test "$(git rev-parse origin/main)" = "c4bf51b574647226ee488440579ec2a204c16c79"
           test "$(git merge-base HEAD origin/main)" = "c4bf51b574647226ee488440579ec2a204c16c79"
 
+      - name: Repair and preflight temporary mutator syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/scripts/a2-runtime-implement.py')
+          text = path.read_text(encoding='utf-8')
+          old = '    print-mode .choice:,\n",'
+          new = '    print-mode .choice:,\\n",'
+          count = text.count(old)
+          if count != 2:
+              raise SystemExit(f'expected two malformed temporary string endings; found {count}')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+          python -m py_compile .github/scripts/a2-runtime-implement.py
+
       - name: Apply bounded A2 runtime lot
         run: python .github/scripts/a2-runtime-implement.py
 
@@ -78,7 +95,7 @@ jobs:
             echo 'Temporary A2 executor residue remains.'
             exit 1
           fi
-          allowed='^(AGENTS\.md|README\.md|abntexto-ufc\.cls|abntexto-ufc/(articles|core|layout)\.def|docs/(ARCHITECTURE|ARTICLE-NORMATIVE-CONTRACT|HANDOFF-V3\.0\.0|NORMATIVE-BASE|NORMATIVE-CURRENCY|ROADMAP-V3\.0\.0)\.md|release/v3-api-migration\.json|release/v3-roadmap\.json|standards/(source-audit|version-policy)\.json|tests/checks/profile_matrix_contract\.py|tests/integration/profile-(matrix|pdfa)\.sh|tests/smoke/scientific-article-profile\.tex)$'
+          allowed='^(AGENTS\.md|README\.md|abntexto-ufc\.cls|abntexto-ufc/(articles|core|layout)\.def|docs/(ARCHITECTURE|ARTICLE-NORMATIVE-CONTRACT|HANDOFF-V3\.0\.0|NORMATIVE-BASE|NORMATIVE-CURRENCY|ROADMAP-V3\.0\.0)\.md|release/v3-api-migration\.json|release/v3-roadmap\.json|standards/(source-audit|version-policy)\.json|tests/checks/(normative_currency|profile_matrix_contract)\.py|tests/integration/profile-(matrix|pdfa)\.sh|tests/smoke/scientific-article-profile\.tex)$'
           bad=$(git diff --name-only c4bf51b574647226ee488440579ec2a204c16c79 | grep -Ev "$allowed" || true)
           if [ -n "$bad" ]; then
             printf 'Unexpected permanent paths:\n%s\n' "$bad"
