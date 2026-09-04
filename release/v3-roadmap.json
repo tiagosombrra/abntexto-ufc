@@ -1134,7 +1134,10 @@
     "id": "R3-B5",
     "status": "ACTIVE",
     "entry_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
-    "activation_pr": 265
+    "activation_pr": 265,
+    "final_r3_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "technical_validation_status": "DONE",
+    "exact_r4_entry_activation_pending": true
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1309,7 +1312,12 @@
         "name": "R3 closeout and R4 certification entry",
         "entry_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
         "entry_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
-        "activation_pr": 265
+        "activation_pr": 265,
+        "control_plane_reconciliation_pr": 266,
+        "control_plane_reconciliation_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+        "final_r3_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+        "technical_validation_status": "DONE",
+        "exact_r4_entry_activation_pending": true
       }
     },
     "active_issue": 256,
@@ -1404,7 +1412,52 @@
       "public_runtime_api_changed": false
     },
     "activation_control_plane_pr": 265,
-    "activation_control_plane_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b"
+    "activation_control_plane_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
+    "b5_validation": {
+      "status": "DONE",
+      "candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+      "control_plane_reconciliation_pr": 266,
+      "control_plane_reconciliation_head_sha": "268f515c0b9b1f9d3d563925fc68d3f65b85c76d",
+      "static_contract_run_id": 33822238687,
+      "linux_integration_run_id": 33822238656,
+      "linux_integration_job_id": 100867206797,
+      "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+      "post_merge_static_run_id": 33824038991,
+      "post_merge_release_run_id": 33824039033,
+      "post_merge_release_job_id": 100872747975,
+      "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
+      "contribution": {
+        "rules": 181,
+        "automatic_partial": 113,
+        "automatic_partial_bounded_positive": 113,
+        "enforced_automatic": 37,
+        "support_only": 14,
+        "conditional_review": 10,
+        "manual_review": 6,
+        "not_applicable": 1,
+        "automation_gap": 0
+      },
+      "residual_sources": {
+        "latex": 134,
+        "engineering": 171,
+        "total": 305
+      },
+      "test_surface": {
+        "retained": 148,
+        "reachable": 148,
+        "orphaned": 0
+      },
+      "engineering_language": {
+        "portuguese_technical_diagnostics": 0,
+        "retired_profile_ids": 0,
+        "closed_unconsumed_contracts": 0,
+        "live_api_contract_consumers": 2
+      },
+      "temporary_executor_residue": 0,
+      "normative_semantics_changed": false,
+      "proof_state_changed": false,
+      "public_runtime_api_changed": false
+    }
   },
   "r3_a_closeout": {
     "status": "DONE",
@@ -1506,5 +1559,15 @@
     "normative_semantics_changed": false,
     "proof_state_changed": false,
     "public_runtime_api_changed": false
-  }
+  },
+  "r4_preparation": {
+    "status": "PREPARED",
+    "issue": 267,
+    "product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "entry_main_sha": null,
+    "certification_started": false,
+    "blocked_until_exact_entry_activation": true
+  },
+  "next_stage": "R3-B5",
+  "next_issue": 256
 }
