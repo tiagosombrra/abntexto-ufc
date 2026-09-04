@@ -656,5 +656,16 @@
     "entry_main_sha": null,
     "blocked_until_exact_r5_closeout": true,
     "work_started": false
+  },
+  "post_foundation_state": {
+    "r5_status": "DONE",
+    "r5_issue": 272,
+    "r5_closeout_pr": 276,
+    "r5_closeout_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "a1_status": "ACTIVE",
+    "a1_issue": 275,
+    "a1_entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "r3_inventory_remains_historical": true
   }
 }
