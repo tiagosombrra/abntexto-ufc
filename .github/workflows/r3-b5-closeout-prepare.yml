@@ -74,6 +74,10 @@ jobs:
                   'r"R3-B5/#256 is ACTIVE from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and owns only R3 closeout/R4 entry\\."',
               'r"R3-B5 now owns final cross-surface reconciliation and the immutable R4 entry checkpoint\\."':
                   'r"R3-B5 now owns final cross-surface reconciliation from `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and the immutable R4 entry checkpoint\\."',
+              'r"R3-B5/#256 is ACTIVE and owns R3 closeout/R4 entry; it must not broaden this policy or change the public runtime API\\."':
+                  'r"R3-B5/#256 is ACTIVE from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and owns R3 closeout/R4 entry; it must not broaden this policy or change the public runtime API\\."',
+              'r"R3-B5/#256 is active and remains required before R4\\."':
+                  'r"R3-B5/#256 is active from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and remains required before R4\\."',
           }
           for old, new in replacements.items():
               count = text.count(old)
