@@ -67,6 +67,8 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends git make poppler-utils nodejs docker-cli
+            git config --global --add safe.directory "$PWD"
+            test -n "$(git ls-files -- template | head -n 1)"
             upstream="$(mktemp --suffix=.cls)"
             trap 'rm -f "$upstream"' EXIT INT TERM
             python3 tools/fetch-abntexto.py --output "$upstream"
