@@ -1,0 +1,49 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = @UFC_TYPE@,
+  print-mode = single-sided,
+  cover = false,
+  catalog-card = false,
+  author = {Autor Artigo Teste},
+  author-note = {Universidade Federal do Ceará. Contato: autor@example.invalid},
+  title = {Artigo de Validação do Perfil Científico},
+  foreign-title = {Scientific Article Profile Validation},
+  submission-date = {1 de setembro de 2026},
+  approval-date = {2 de setembro de 2026},
+  location = {Fortaleza},
+  year = {2026}
+}
+
+\ufcAddBibliographyResource{tests/fixtures/references.bib}
+
+\begin{document}
+\pretextual
+\ufcPrintArticleFrontMatter{%
+  Este resumo valida o perfil de artigo científico sem alterar a modalidade das recomendações do contrato A1.
+  \ufcSummaryKeywords{artigo científico; normalização; LaTeX}%
+}
+\ufcPrintArticleForeignSummary{%
+  This abstract validates the optional foreign-language article element.
+  \keywords{scientific article; standards; LaTeX}%
+}
+
+\textual
+\section{Introdução}
+Texto introdutório do artigo para validação do perfil canônico.
+
+\section{Desenvolvimento}
+Desenvolvimento sintético que reutiliza a infraestrutura compartilhada de seções, citações e objetos.
+
+\section{Considerações finais}
+Considerações finais sintéticas para fechar a estrutura textual mínima da fixture.
+
+\nocite{silva2020}
+\ufcPrintReferences
+\end{document}

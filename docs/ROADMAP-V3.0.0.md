@@ -32,7 +32,7 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 
 | V3-R4 | DONE | issue #267; run `33855800767`; closeout PR #273 → `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` | 4/4 strict font/engine cells PASS; Unicode, embedding and PDF/A-2b PASS; temporary executor removed | None |
 | V3-R5 | DONE | issue #272; entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; PR #276 → `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; frozen product `c79f3c73f1d51a30175e8259269504d029442a1c` | release `33/0/0`; package/bundle/checksum/asset audit PASS; PR Linux `31/0/0`; zero residue | None |
 | V3-A1 | DONE | issue #275; entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; PR #279 → `4d018a92697e8f39e3a53b034c451e55996c84fb`; closeout PR #281 → `7a7562d23e8bf6c92abb635718639d617a2ed6ff` | current article authority reconfirmed; 18-rule conservative contract; source/Static/Linux gates green; no runtime in A1 | None |
-| V3-A2 | ACTIVE | issue #280; exact entry `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; A1 contract `4d018a92697e8f39e3a53b034c451e55996c84fb` | bounded `scientific-article` implementation/test contract active | implement runtime/profile + article-specific evidence; keep CTAN blocked |
+| V3-A2 | ACTIVE | issue #280; exact entry `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; A1 contract `4d018a92697e8f39e3a53b034c451e55996c84fb` | canonical runtime/profile-matrix lot implemented; proof state unchanged | add rule-specific article evidence + safe negatives; reconcile contribution; keep CTAN blocked |
 | CTAN submission | FUTURE | explicit release action | no upload yet | release-ready stage only |
 
 ## R3-B1 closeout
@@ -99,7 +99,7 @@ V3-A2 implementation scope is issue #280 and the contract in `docs/ARTICLE-NORMA
 
 ## V3-A2 entry
 
-A2 begins from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff` and source-contract product `4d018a92697e8f39e3a53b034c451e55996c84fb` while preserving certified non-article foundation `c79f3c73f1d51a30175e8259269504d029442a1c`. A2 may implement only the canonical `scientific-article` profile. Required predicates may become enforceable only with article-specific positive evidence and safe negative rejection where applicable. Optional/recommended predicates remain non-mandatory, and journal-specific instructions remain a conditional applicability boundary.
+A2 begins from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff` and source-contract product `4d018a92697e8f39e3a53b034c451e55996c84fb` while preserving certified non-article foundation `c79f3c73f1d51a30175e8259269504d029442a1c`. The first bounded lot introduces the canonical `scientific-article` runtime, article-only front matter and profile-matrix coverage while reusing shared cross-cutting infrastructure. Article proof state is unchanged. The next lot must add article-specific positive evidence and safe negative rejection where applicable before any required predicate is promoted; optional/recommended predicates remain non-mandatory and journal-specific instructions remain conditional.
 
 ## Immediate action
 

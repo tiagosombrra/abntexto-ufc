@@ -14,7 +14,7 @@ See `docs/ROADMAP-V3.0.0.md` for the consolidated roadmap/status table and `docs
 
 ## V3-A1 scientific-article contract
 
-A1 closed through PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff` after PR #279 established the current source-backed 18-rule article contract. V3-A2/#280 is now active and owns the bounded `scientific-article` implementation: required, optional, recommended and conditional semantics must remain distinct, and article proof may advance only from article-specific evidence. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
+A1 closed through PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff` after PR #279 established the current source-backed 18-rule article contract. V3-A2/#280 is active and the canonical `scientific-article` runtime/profile-matrix lot is now implemented on its bounded branch. Required, optional, recommended and conditional semantics remain distinct; article proof still advances only from article-specific evidence. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
 
 ## Current v3 repository layout
 

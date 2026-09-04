@@ -38,7 +38,7 @@ The project must distinguish mandatory requirements, recommendations, conditiona
 
 ## Current runtime scope
 
-The certified v3 foundation covers academic works and research projects. V3-A1 has now reintroduced a source-backed scientific-article normative contract without adding article runtime behavior. Article rules are manual/conditional during A1 and become implementation candidates only in V3-A2. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
+The certified non-article v3 foundation covers academic works and research projects. V3-A1 reintroduced the source-backed scientific-article normative contract, and V3-A2 now activates the canonical `scientific-article` runtime against that unchanged source set. Article proof states remain manual/conditional until article-specific rule evidence is added and validated. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
 
 ## Fonts and PDF/A
 

@@ -1,0 +1,117 @@
+\ProvidesFile{abntexto-ufc/articles.def}[2026/09/04 UFC scientific article profile]
+
+% Scientific-article behavior is owned directly by V3-A2.
+% Normative mapping: docs/ARTICLE-NORMATIVE-CONTRACT.md.
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_article_require_profile:
+  {
+    \str_if_eq:VnF \g_ufc_document_type_tl { scientific-article }
+      {
+        \ClassError{abntexto-ufc}
+          {Scientific-article~command~used~outside~the~scientific-article~profile}
+          {Set~type=scientific-article~before~using~article-specific~commands.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_require_meta:n #1
+  {
+    \ufc_meta_if_blank:nT {#1}
+      {
+        \ClassError{abntexto-ufc}
+          {Required~scientific-article~metadata~'#1'~is~missing}
+          {Provide~the~required~value~through~\string\ufcsetup.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_primary_title:
+  {
+    \begin{center}
+      \begingroup
+        \normalsize\singlesp\bfseries
+        \ufc_title_text:\par
+      \endgroup
+      \ufc_meta_if_blank:nF {foreign-title}
+        {
+          \vspace{.5\baselineskip}
+          \ufc_meta_use:n {foreign-title}
+          \ufc_meta_if_blank:nF {foreign-subtitle}
+            {:\space\ufc_meta_use:n {foreign-subtitle}}
+          \par
+        }
+    \end{center}
+  }
+
+\cs_new_protected:Npn \ufc_article_author:
+  {
+    \begingroup
+      \raggedleft
+      \ufc_meta_use:n {author}%
+      \footnote{\ufc_meta_use:n {author-note}}\par
+    \endgroup
+  }
+
+\cs_new_protected:Npn \ufc_article_dates:
+  {
+    \par\noindent
+    Submetido~em:~\ufc_meta_use:n {submission-date}.\space
+    Aprovado~em:~\ufc_meta_use:n {approval-date}.\par
+  }
+
+\cs_new_protected:Npn \ufc_article_summary:n #1
+  {
+    \par\vspace{\baselineskip}
+    \begingroup
+      \singlesp
+      \setlength{\parindent}{0pt}
+      \justifying
+      \noindent\textbf{Resumo:}\space #1\par
+    \endgroup
+  }
+
+\cs_new_protected:Npn \ufc_article_foreign_summary:n #1
+  {
+    \par\vspace{\baselineskip}
+    \begingroup
+      \selectlanguage{english}
+      \singlesp
+      \setlength{\parindent}{0pt}
+      \justifying
+      \noindent\textbf{Abstract:}\space #1\par
+    \endgroup
+  }
+
+\NewDocumentCommand \ufcPrintArticleFrontMatter { +m }
+  {
+    \ufc_article_require_profile:
+    \ufc_article_require_meta:n {title}
+    \ufc_article_require_meta:n {author}
+    \ufc_article_require_meta:n {author-note}
+    \ufc_article_require_meta:n {submission-date}
+    \ufc_article_require_meta:n {approval-date}
+    \ufc_article_primary_title:
+    \ufc_article_author:
+    \ufc_article_dates:
+    \ufc_article_summary:n {#1}
+  }
+
+\NewDocumentCommand \ufcPrintArticleForeignSummary { +m }
+  {
+    \ufc_article_require_profile:
+    \ufc_article_foreign_summary:n {#1}
+  }
+
+% The guide's article body uses the same 12 pt class size, 2 cm paragraph
+% indentation and justified paragraphs as shared infrastructure, but single spacing.
+% This hook runs after layout.def's general one-and-a-half-spacing default.
+\AtBeginDocument
+  {
+    \ufcIfScientificArticleTF
+      { \singlesp\justifying }
+      { }
+  }
+
+\ExplSyntaxOff
+
+\endinput

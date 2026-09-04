@@ -29,6 +29,7 @@
 \input{abntexto-ufc/objects.def}
 \input{abntexto-ufc/integrations/abntexto.def}
 \input{abntexto-ufc/bibliography.def}
+\input{abntexto-ufc/articles.def}
 \input{abntexto-ufc/standards/nbr6023-2025.def}
 \input{abntexto-ufc/backmatter.def}
 

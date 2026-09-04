@@ -1887,7 +1887,7 @@
     "source_contract_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
     "entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
     "blocked_until_exact_a1_closeout": false,
-    "runtime_implementation_started": false
+    "runtime_implementation_started": true
   },
   "a1_closeout": {
     "status": "DONE",
@@ -1915,7 +1915,7 @@
     "entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
     "source_contract_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
     "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
-    "runtime_implementation_started": false,
+    "runtime_implementation_started": true,
     "article_rule_count": 18,
     "constraints": [
       "implement only the canonical scientific-article profile defined by the A1 source contract",
@@ -1924,6 +1924,15 @@
       "promote proof only from current article-specific rule evidence",
       "do not add runtime compatibility aliases or retired Portuguese machine identifiers",
       "do not perform CTAN submission during A2"
-    ]
+    ],
+    "runtime_lot": {
+      "status": "ACTIVE",
+      "name": "canonical scientific-article runtime and profile-matrix ownership",
+      "branch": "feat/v3-a2-scientific-article-runtime",
+      "implementation_base_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
+      "canonical_a2_entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+      "inventory_run_id": 33908634568,
+      "proof_state_promoted": false
+    }
   }
 }

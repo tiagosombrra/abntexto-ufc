@@ -70,6 +70,7 @@ Runtime responsibilities are separated as follows:
 - `institutional.def`: UFC institutional presentation/assets;
 - `academic-works.def`: capstone/dissertation/thesis behavior;
 - `research-projects.def`: research-project behavior;
+- `articles.def`: canonical scientific-article front matter and article-only presentation behavior, reusing shared section/reference/summary infrastructure;
 - `objects.def`: figures, charts, tables, listings, algorithms, captions, source/note handling;
 - `bibliography.def`: citation/reference integration and public bibliography surface;
 - `backmatter.def`: appendices, annexes, glossary, index, and back-matter behavior.
@@ -182,4 +183,4 @@ The final foundation must prove at least:
 
 ## V3-A1 scientific-article boundary
 
-V3-A1 adds only the source/rule contract under `standards/`. `coverage-rules-article.json` is consumed by the existing full-contract loader, while `locator-audit-article.json`, `article.source-review`, proof-state and contribution policy keep every article rule manual/conditional until A2. No article runtime module, profile implementation, template branch, validator shortcut or compatibility alias is introduced in A1. Cross-cutting citation/reference/section/table machinery remains shared rather than forked.
+V3-A1 adds only the source/rule contract under `standards/`. `coverage-rules-article.json` is consumed by the existing full-contract loader, while `locator-audit-article.json`, `article.source-review`, proof-state and contribution policy keep every article rule manual/conditional until A2. A1 introduced no article runtime module, profile implementation, template branch, validator shortcut or compatibility alias. A2 now introduces `articles.def` as direct `scientific-article` ownership while cross-cutting citation/reference/section/table machinery remains shared rather than forked. Article-specific evidence is still required before proof promotion.

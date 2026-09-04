@@ -14,13 +14,13 @@ Updated: 2026-09-04
 - A1 source-only validation `33894907220` PASS; Static `33895016834` PASS; Linux `33895016774` / job `101095498647` = `PASS=31 FAIL=0 SKIP=0`.
 - Scientific-article source contract: 18 rules = 17 manual + 1 conditional-manual; no runtime/proof promotion occurred in A1.
 - V3-A2/#280: **ACTIVE** from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`.
-- A2 runtime implementation has not started yet.
+- A2 runtime implementation: **STARTED** in the bounded canonical-profile lot; article proof promotion remains pending article-specific evidence.
 
 Git facts, `release/v3-roadmap.json`, this handoff, `docs/ROADMAP-V3.0.0.md`, and `AGENTS.md` must agree. Disagreement fails closed.
 
 ## Immediate action
 
-Begin V3-A2/#280 from `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. Implement only the canonical `scientific-article` profile bounded by `docs/ARTICLE-NORMATIVE-CONTRACT.md`: reuse cross-cutting infrastructure, preserve required/optional/recommended/conditional semantics, and add article-specific fail-closed evidence before any proof-state promotion.
+Continue V3-A2/#280 from its exact entry `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. The canonical `scientific-article` runtime/profile-matrix lot is in progress; next add article-specific fail-closed rule evidence, then promote only the rules actually proven by that evidence.
 
 ## Hard boundaries
 

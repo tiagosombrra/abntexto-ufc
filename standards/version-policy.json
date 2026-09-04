@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "reviewed_at": "2026-08-30",
+  "reviewed_at": "2026-09-04",
   "mode": "latest-current-applicable-technical-standard-mandatory",
   "decision": "mandatory",
-  "purpose": "Define the current technical-edition rule when UFC guides cite superseded ABNT editions, while keeping deferred document profiles outside the active foundation until their sources and predicates are revalidated.",
+  "purpose": "Define the current technical-edition rule when UFC guides cite superseded ABNT editions and enforce staged profile activation from reconfirmed source contract to current runtime.",
   "institutional_basis": [
     {
       "id": "ufc-res-17-cepe-2017",
@@ -55,14 +55,14 @@
   ],
   "profile_candidates": {
     "scientific_article": {
-      "status": "deferred-outside-active-foundation",
+      "status": "active-current-runtime",
       "candidate_sources": [
         "abnt-nbr-6022-2018",
         "ufc-guia-artigos-2022"
       ],
-      "runtime_present": false,
-      "activation_condition": "Revalidate current technical and UFC institutional sources and define explicit article predicates before introducing article runtime behavior.",
-      "rule": "Scientific-article support is not part of the active foundation contract. Historical research remains available through Git history and must be revalidated before the profile is introduced."
+      "runtime_present": true,
+      "activation_condition": "Satisfied by V3-A1 source-contract closeout at 7a7562d23e8bf6c92abb635718639d617a2ed6ff and V3-A2 activation; runtime is implemented only against the reconfirmed source set.",
+      "rule": "Scientific-article runtime is active in V3-A2. Current source authority, precedence and requirement modalities remain those reconfirmed by V3-A1."
     }
   },
   "supersessions": [

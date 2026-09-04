@@ -195,6 +195,10 @@
       "title",
       "subtitle",
       "title-variant",
+      "foreign-title",
+      "foreign-subtitle",
+      "submission-date",
+      "author-note",
       "volume",
       "year",
       "location",
@@ -249,7 +253,8 @@
       "masters-thesis",
       "doctoral-thesis",
       "research-project",
-      "anonymized-research-project"
+      "anonymized-research-project",
+      "scientific-article"
     ],
     "print-mode": [
       "single-sided",
@@ -683,5 +688,11 @@
     "migration_guide": "docs/MIGRATING-TO-V3.md",
     "permanent_residual_gate": "tests/checks/v3_api_residual.py"
   },
-  "retention": "Retained as the machine-readable v3 API migration mapping and as input to the permanent fail-closed residual API gate."
+  "retention": "Retained as the machine-readable v3 API migration mapping and as input to the permanent fail-closed residual API gate.",
+  "runtime_ownership": {
+    "abntexto-ufc/articles.def": [
+      "scientific-article front matter",
+      "scientific-article body spacing and profile-specific presentation"
+    ]
+  }
 }

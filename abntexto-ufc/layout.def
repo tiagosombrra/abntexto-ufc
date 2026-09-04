@@ -130,9 +130,12 @@
 
 \cs_new_protected:Npn \ufc_primary_section_break:
   {
-    \str_if_eq:VnTF \g_ufc_print_mode_tl { double-sided }
-      { \ufc_next_odd_physical_page: }
-      { \clearpage }
+    \str_if_eq:VnF \g_ufc_document_type_tl { scientific-article }
+      {
+        \str_if_eq:VnTF \g_ufc_print_mode_tl { double-sided }
+          { \ufc_next_odd_physical_page: }
+          { \clearpage }
+      }
   }
 
 \cs_new_protected:Npn \ufc_layout_apply:

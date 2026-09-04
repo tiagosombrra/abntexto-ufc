@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
+profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project scientific-article"
 template_dir="template"
 
 for engine in pdflatex lualatex; do
@@ -16,4 +16,4 @@ for engine in pdflatex lualatex; do
   done
 done
 
-echo 'Gate PDF/A-2b of the 12 profiles completed.'
+echo 'Gate PDF/A-2b of the 14 profile PDFs completed.'

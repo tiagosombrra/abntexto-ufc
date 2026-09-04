@@ -41,6 +41,10 @@
     title = {},
     subtitle = {},
     title-variant = {},
+    foreign-title = {},
+    foreign-subtitle = {},
+    submission-date = {},
+    author-note = {},
     volume = {},
     year = {},
     location = {Fortaleza},
@@ -117,6 +121,12 @@
         \tl_gset:Nn \g_ufc_document_type_tl { anonymized-research-project }
         \bool_gset_false:N \g_ufc_coat_of_arms_bool
       },
+    type / scientific-article .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { scientific-article }
+        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+        \bool_gset_false:N \g_ufc_catalog_card_bool
+      },
 
     print-mode .choice:,
     print-mode / single-sided .code:n =
@@ -168,6 +178,10 @@
     title .code:n = { \ufc_meta_set:nn {title} {#1} },
     subtitle .code:n = { \ufc_meta_set:nn {subtitle} {#1} },
     title-variant .code:n = { \ufc_meta_set:nn {title-variant} {#1} },
+    foreign-title .code:n = { \ufc_meta_set:nn {foreign-title} {#1} },
+    foreign-subtitle .code:n = { \ufc_meta_set:nn {foreign-subtitle} {#1} },
+    submission-date .code:n = { \ufc_meta_set:nn {submission-date} {#1} },
+    author-note .code:n = { \ufc_meta_set:nn {author-note} {#1} },
     volume .code:n = { \ufc_meta_set:nn {volume} {#1} },
     year .code:n = { \ufc_meta_set:nn {year} {#1} },
     location .code:n = { \ufc_meta_set:nn {location} {#1} },
@@ -240,6 +254,11 @@
 \NewDocumentCommand \ufcIfAnonymizedProjectTF { +m +m }
   {
     \str_if_eq:VnTF \g_ufc_document_type_tl {anonymized-research-project} {#1} {#2}
+  }
+
+\NewDocumentCommand \ufcIfScientificArticleTF { +m +m }
+  {
+    \str_if_eq:VnTF \g_ufc_document_type_tl {scientific-article} {#1} {#2}
   }
 
 \ExplSyntaxOff

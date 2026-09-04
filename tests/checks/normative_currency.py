@@ -106,10 +106,10 @@ def main() -> None:
     article = profile_candidates.get("scientific_article") if isinstance(profile_candidates, dict) else None
     if not isinstance(article, dict):
         fail("scientific-article profile policy is missing")
-    if article.get("status") != "deferred-outside-active-foundation":
-        fail("scientific-article profile must remain outside the active foundation")
-    if article.get("runtime_present") is not False:
-        fail("scientific-article runtime must remain absent from the active foundation")
+    if article.get("status") != "active-current-runtime":
+        fail("scientific-article profile must be active in the current A2 runtime")
+    if article.get("runtime_present") is not True:
+        fail("scientific-article runtime must be present after A2 activation")
     if not article.get("activation_condition"):
         fail("scientific-article activation condition is required")
     candidate_ids = article.get("candidate_sources")
@@ -126,8 +126,8 @@ def main() -> None:
         if not runtime or runtime.get("status") not in ACTIVE_STATUSES:
             fail(f"article candidate source is not active in the runtime catalog: {source_id}")
 
-    if (ROOT / "abntexto-ufc" / "articles.def").exists():
-        fail("scientific-article runtime appeared before foundation activation")
+    if not (ROOT / "abntexto-ufc" / "articles.def").is_file():
+        fail("scientific-article runtime module is missing after A2 activation")
 
     documentation = policy.get("documentation")
     if not isinstance(documentation, dict):

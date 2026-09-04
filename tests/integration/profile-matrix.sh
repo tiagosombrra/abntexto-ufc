@@ -1,15 +1,18 @@
 #!/bin/sh
 set -eu
 
-fixture="tests/smoke/base-profile.tex"
+base_fixture="tests/smoke/base-profile.tex"
+article_fixture="tests/smoke/scientific-article-profile.tex"
 template_dir="template"
-profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
+profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project scientific-article"
 
-placeholder_count=$(awk '{ count += gsub(/@UFC_TYPE@/, "&") } END { print count + 0 }' "$fixture")
-if [ "$placeholder_count" -ne 1 ]; then
-  echo "Profile matrix generation failed: expected exactly one @UFC_TYPE@ placeholder, found $placeholder_count."
-  exit 1
-fi
+for fixture in "$base_fixture" "$article_fixture"; do
+  placeholder_count=$(awk '{ count += gsub(/@UFC_TYPE@/, "&") } END { print count + 0 }' "$fixture")
+  if [ "$placeholder_count" -ne 1 ]; then
+    echo "Profile matrix generation failed: $fixture must contain exactly one @UFC_TYPE@ placeholder; found $placeholder_count."
+    exit 1
+  fi
+done
 
 cleanup_job() {
   job="$1"
@@ -23,6 +26,11 @@ for engine in pdflatex lualatex; do
   for profile in $profiles; do
     job="perfil-${profile}-${engine}"
     output="$template_dir/$job"
+    fixture="$base_fixture"
+    if [ "$profile" = "scientific-article" ]; then
+      fixture="$article_fixture"
+    fi
+
     cleanup_job "$job"
     sed \
       -e "s/@UFC_TYPE@/$profile/g" \
@@ -92,10 +100,17 @@ for engine in pdflatex lualatex; do
     fi
 
     pages=$(pdfinfo "$output.pdf" | awk '/^Pages:/ {print $2}')
-    [ "${pages:-0}" -ge 6 ] || {
-      echo "Profile $profile/$engine: complete document generated only ${pages:-0} pages."
-      exit 1
-    }
+    if [ "$profile" = "scientific-article" ]; then
+      [ "${pages:-0}" -ge 1 ] || {
+        echo "Profile $profile/$engine: article PDF has no pages."
+        exit 1
+      }
+    else
+      [ "${pages:-0}" -ge 6 ] || {
+        echo "Profile $profile/$engine: complete document generated only ${pages:-0} pages."
+        exit 1
+      }
+    fi
 
     sh tests/integration/font-embedding.sh "$output.pdf"
 
@@ -151,15 +166,34 @@ expected = {
         'recursos',
         'cronograma',
     ),
+    'scientific-article': (
+        'artigo de validação do perfil científico',
+        'scientific article profile validation',
+        'autor artigo teste',
+        'universidade federal do ceará. contato: autor@example.invalid',
+        'submetido em: 1 de setembro de 2026',
+        'aprovado em: 2 de setembro de 2026',
+        'resumo:',
+        'abstract:',
+        'introdução',
+        'desenvolvimento',
+        'considerações finais',
+        'referências',
+    ),
 }
 
 for marker in expected[profile]:
     if marker not in text:
         raise SystemExit(f'Profile {profile}: semantic content is missing: {marker}')
 
-for marker in ('introdução', 'metodologia', 'referências', 'fundamentos de metodologia acadêmica'):
-    if marker not in text:
-        raise SystemExit(f'Profile {profile}: structural content is missing: {marker}')
+if profile == 'scientific-article':
+    for forbidden in ('banca examinadora', 'trabalho de conclusão de curso', 'dissertação apresentada', 'tese apresentada'):
+        if forbidden in text:
+            raise SystemExit(f'Article profile leaked non-article element: {forbidden}')
+else:
+    for marker in ('introdução', 'metodologia', 'referências', 'fundamentos de metodologia acadêmica'):
+        if marker not in text:
+            raise SystemExit(f'Profile {profile}: structural content is missing: {marker}')
 
 if 'capítulo' in text or 'capitulo' in text:
     raise SystemExit(f'Profile {profile}: chapter-based structure reappeared.')
@@ -168,7 +202,7 @@ if profile == 'anonymized-research-project':
     for secret in ('autor matriz teste', 'prof. orientador matriz teste', 'prof. membro matriz teste'):
         if secret in text:
             raise SystemExit(f'Anonymized profile leaked protected data: {secret}')
-else:
+elif profile != 'scientific-article':
     if 'autor matriz teste' not in text:
         raise SystemExit(f'Profile {profile}: expected author is missing.')
 
@@ -178,20 +212,22 @@ if profile in {'research-project', 'anonymized-research-project'}:
             raise SystemExit(f'Profile {profile}: academic-work element appeared incorrectly: {forbidden}')
 PY
 
-    grep -Fqi 'Introdu' "$output.toc" || {
-      echo "Profile $profile/$engine: Introduction is missing from the table of contents."
-      cat "$output.toc"
-      exit 1
-    }
-    grep -Fqi 'Metodologia' "$output.toc" || {
-      echo "Profile $profile/$engine: Methodology is missing from the table of contents."
-      cat "$output.toc"
-      exit 1
-    }
-    if grep -Eq '\\contentsline \{section\}\{[^}]*\*' "$output.toc"; then
-      echo "Profile $profile/$engine: anomalous asterisk entry found in the table of contents."
-      cat "$output.toc"
-      exit 1
+    if [ "$profile" != "scientific-article" ]; then
+      grep -Fqi 'Introdu' "$output.toc" || {
+        echo "Profile $profile/$engine: Introduction is missing from the table of contents."
+        cat "$output.toc"
+        exit 1
+      }
+      grep -Fqi 'Metodologia' "$output.toc" || {
+        echo "Profile $profile/$engine: Methodology is missing from the table of contents."
+        cat "$output.toc"
+        exit 1
+      }
+      if grep -Eq '\\contentsline \{section\}\{[^}]*\*' "$output.toc"; then
+        echo "Profile $profile/$engine: anomalous asterisk entry found in the table of contents."
+        cat "$output.toc"
+        exit 1
+      fi
     fi
   done
 done

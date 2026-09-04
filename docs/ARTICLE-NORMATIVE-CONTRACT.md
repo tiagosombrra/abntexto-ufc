@@ -56,7 +56,7 @@ Public UFC guide locators are verified directly. Where a rule also depends on pr
 
 ## V3-A2 bounded implementation contract
 
-A2 may implement only the canonical `scientific-article` profile and executable tests needed to realize the A1 rule set. It must reuse the current cross-cutting citation/reference/section/table machinery rather than fork it; preserve the certified non-article foundation; keep recommendation/optional semantics distinct from requirements; add positive and negative article-specific evidence before promoting proof state; and keep journal-specific instructions as a conditional boundary. Any source conflict discovered in A2 returns to source review instead of being resolved by runtime guesswork.
+A2 implements only the canonical `scientific-article` profile and executable tests needed to realize the A1 rule set. The runtime lot introduces direct article ownership and reuses current citation/reference/section/summary/table machinery rather than forking it. Recommendation/optional semantics remain distinct from requirements, journal-specific instructions remain a conditional boundary, and every article proof promotion still requires current positive/negative article-specific evidence. Any source conflict discovered in A2 returns to source review instead of being resolved by runtime guesswork.
 
 
 ## V3-A1 validation closeout
@@ -66,4 +66,4 @@ PR #279 merged this source-backed contract at `4d018a92697e8f39e3a53b034c451e559
 
 ## V3-A2 canonical entry
 
-V3-A1/#275 closed through PR #281 at exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A2/#280 is ACTIVE from that SHA and owns only the bounded `scientific-article` runtime/test implementation described above. The source-contract product remains `4d018a92697e8f39e3a53b034c451e55996c84fb` and the certified non-article foundation remains `c79f3c73f1d51a30175e8259269504d029442a1c`. No article runtime implementation had started at the activation checkpoint.
+V3-A1/#275 closed through PR #281 at exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A2/#280 is ACTIVE from that SHA and owns only the bounded `scientific-article` runtime/test implementation described above. The source-contract product remains `4d018a92697e8f39e3a53b034c451e55996c84fb` and the certified non-article foundation remains `c79f3c73f1d51a30175e8259269504d029442a1c`. No article runtime implementation had started at the activation checkpoint; the first A2 runtime lot now implements the canonical profile without promoting article proof state.

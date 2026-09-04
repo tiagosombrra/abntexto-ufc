@@ -452,5 +452,18 @@
       "abnt-nbr-6023-2018": "abnt-nbr-6023-2025"
     },
     "runtime_implementation_started": false
+  },
+  "v3_a2_article_runtime_activation": {
+    "status": "ACTIVE",
+    "reviewed_at": "2026-09-04",
+    "entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "implementation_base_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
+    "profile": "scientific-article",
+    "runtime_module": "abntexto-ufc/articles.def",
+    "source_authority_changed": false,
+    "rule_ids_changed": false,
+    "locators_changed": false,
+    "modalities_changed": false,
+    "proof_state_promoted": false
   }
 }
