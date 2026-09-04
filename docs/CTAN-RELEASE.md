@@ -10,7 +10,7 @@ This document describes how `abntexto-ufc` prepares and validates a CTAN submiss
 - License: LaTeX Project Public License 1.3c or later.
 - Upstream dependency: `abntexto` 1.1 or newer (`https://ctan.org/pkg/abntexto`).
 - Status: unofficial, community-maintained UFC-oriented class. Do not describe it as official or UFC-homologated unless the University explicitly grants that status.
-- Development gate: V3-R1 through V3-R4 are complete. V3-R4/#267 certified exact product `c79f3c73f1d51a30175e8259269504d029442a1c` in run `33855800767` across Times New Roman/Arial × pdfLaTeX/LuaLaTeX, Unicode extraction, embedding and PDF/A-2b, then closed through PR #273 at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`. V3-R5/#272 is ACTIVE from that exact entry. A v3.0.0 CTAN upload remains forbidden until R5 foundation freeze/final documentation closes and the roadmap explicitly reaches release-ready state.
+- Development gate: V3-R1 through V3-R4 are complete. V3-R4/#267 certified exact product `c79f3c73f1d51a30175e8259269504d029442a1c` in run `33855800767` and closed through PR #273 at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`. V3-R5/#272 has completed technical freeze/release validation: the 33-check release gate passed in run `33866258865`, and package run `33869888601` passed reproducible public/distribution bundles, SHA-256 checksums, external-upstream semantics and institutional/proprietary asset exclusions. Canonical R5 closeout is still required before V3-A1/#275 may start. Actual CTAN upload remains a separate explicit release action and has not occurred.
 
 ## Acceptance benchmark
 

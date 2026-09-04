@@ -4,7 +4,7 @@ Updated: 2026-09-04
 
 ## Status
 
-**V3-R1 DONE. V3-R2 DONE. V3-R3 DONE. V3-R4/#267 DONE. V3-R5/#272 ACTIVE from exact predecessor `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; certified foundation product `c79f3c73f1d51a30175e8259269504d029442a1c` is frozen as the R5 product baseline.**
+**V3-R1 DONE. V3-R2 DONE. V3-R3 DONE. V3-R4/#267 DONE. V3-R5/#272 TECHNICALLY VALIDATED from exact entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` against frozen product `c79f3c73f1d51a30175e8259269504d029442a1c`; canonical closeout is pending. V3-A1/#275 is PREPARED / BLOCKED until the real R5 closeout SHA exists.**
 
 R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`, with 113/113 `automatic-partial` rules bounded-positive and zero automation gaps. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`: Static `33792280764` PASS; Linux `33792280797` / job `100771483526` = `PASS=31 FAIL=0 SKIP=0`; post-merge release `33794112546` / job `100777542613` = `PASS=33 FAIL=0 SKIP=0`. Its permanent residual contract covers 302 sources (134 LaTeX + 168 engineering), retained test/check reachability is 147/147 with zero orphaned scripts, and controlled negative paths require a positive PASS for the same `rule_id`. No normative rule ID, expected value, locator, tolerance, applicability, source authority/precedence, proof-state default, rendered requirement, or public runtime API changed. R3-B4/#255 closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`: bounded run `33814870180` PASS; Static `33814977737` PASS; Linux `33814977730` / job `100844995945` = `PASS=31 FAIL=0 SKIP=0`; post-merge release `33816137774` / job `100848593542` = `PASS=33 FAIL=0 SKIP=0`. Permanent B4 baseline is 305 sources (134 LaTeX + 171 engineering), 148/148 retained scripts reachable, zero orphans, zero Portuguese technical diagnostics, zero retired profile IDs and zero closed unconsumed contracts. Active foundation-freeze issue: #272 (V3-R5). Machine authority: `release/v3-roadmap.json`.
 
@@ -30,8 +30,9 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 
 | R3-B4 | DONE | issue #255; PR #264; canonical entry `f0b3df319501bef0a6257ac23d42f28c59ad73a0`; merge `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390` | permanent engineering-language enforcement; canonical profile IDs; closed-contract consolidation; PR `31/0/0`; release `33/0/0` | None |
 | R3-B5 | DONE | issue #256; PR #268 → `d90a675a844724c33a5727d8d980027c46291eb0`; product candidate `c79f3c73f1d51a30175e8259269504d029442a1c` | final R3 gates green; all findings resolved; immutable R4 predecessor recorded | None |
 | V3-R4 | DONE | issue #267; run `33855800767`; closeout PR #273 → `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` | 4/4 strict font/engine cells PASS; Unicode, embedding and PDF/A-2b PASS; temporary executor removed | None |
-| V3-R5 | ACTIVE | issue #272; entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; certified product `c79f3c73f1d51a30175e8259269504d029442a1c` | foundation-freeze/final-documentation contract active | freeze product baseline; reconcile release docs; validate bundles/checksums/assets/metadata and proportional release gates |
-| V3-A1/A2 | BLOCKED | — | scientific-article work | after certified foundation |
+| V3-R5 | VALIDATED — CLOSEOUT PENDING | issue #272; entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; frozen product `c79f3c73f1d51a30175e8259269504d029442a1c` | release gate `33866258865` = `33/0/0`; package run `33869888601` PASS; bundles/checksums/assets/residue PASS | merge validated closeout and record immutable A1 entry |
+| V3-A1 | PREPARED / BLOCKED | issue #275; entry SHA pending R5 closeout | source/normative article contract only; no runtime work started | activate only from real canonical R5 closeout SHA |
+| V3-A2 | BLOCKED | — | article runtime/test implementation | after A1 source contract closes |
 | CTAN submission | FUTURE | explicit release action | no upload yet | release-ready stage only |
 
 ## R3-B1 closeout
@@ -78,6 +79,12 @@ The evidence artifact is `9930304564` with digest `sha256:ca21bf1771c45e2003b244
 
 R4 closed canonically through PR #273 at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`. This immutable closeout SHA is the exact V3-R5 entry. V3-R4/#267 is DONE; V3-R5/#272 is ACTIVE. The certified product remains `c79f3c73f1d51a30175e8259269504d029442a1c` and must not be modified merely for release-documentation cleanup.
 
+## V3-R5 foundation-freeze validation
+
+V3-R5/#272 is bound to exact entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` and preserves R4-certified product `c79f3c73f1d51a30175e8259269504d029442a1c` unchanged. The R5 audit proved product-tree invariance and unchanged normative-base, normative-currency and migration-guide files. The full repository release gate completed `PASS=33 FAIL=0 SKIP=0` in run `33866258865` / job `101001704635`. That workflow later failed only because the first packaging sequence lacked its runtime preparation; no product check failed. Final package run `33869888601` / job `101013093747` then passed the complete freeze contract: source-only validation, licensed reference-asset preparation with cleanup, reproducible public bundles, reproducible complete distribution set, SHA-256 checksums, expected class/CTAN layouts, external `abntexto` semantics, institutional/proprietary asset exclusions and zero tracked/untracked residue.
+
+No public runtime API, normative semantics, source/currency fact, locator/tolerance/applicability rule, proof-state default or rendered requirement changed. The foundation is therefore technically frozen, but R5 is intentionally not marked DONE before the closeout merge produces the immutable successor SHA required as V3-A1 entry.
+
 ## Immediate action
 
-Execute V3-R5/#272 from `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`: freeze the certified foundation, reconcile current release/user/maintainer documentation, verify normative-source/currency and migration documentation remain truthful, validate public/distribution bundles, checksums, asset exclusions and release metadata, run proportional release validation, and prove zero temporary/stale cleanup residue. Keep V3-A1/A2 and CTAN submission blocked until R5 closes canonically.
+Merge the validated R5 closeout checkpoint after permanent `Static contract` and `Linux integration` gates pass. Capture the resulting immutable main SHA, then perform a minimal exact-entry activation: mark V3-R5/#272 DONE and activate V3-A1/#275 from that real SHA. A1 must reconfirm scientific-article authority/normative sources before any article runtime implementation. V3-A2 and actual CTAN submission remain blocked.
