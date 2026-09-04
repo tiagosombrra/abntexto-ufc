@@ -66,7 +66,7 @@ jobs:
             set -euo pipefail
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
-            apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli
+            apt-get install -y --no-install-recommends git make poppler-utils nodejs docker-cli
             upstream="$(mktemp --suffix=.cls)"
             trap 'rm -f "$upstream"' EXIT INT TERM
             python3 tools/fetch-abntexto.py --output "$upstream"
