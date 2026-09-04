@@ -485,7 +485,7 @@
     "public_runtime_api_changed": false
   },
   "r3_b5_activation": {
-    "status": "ACTIVE",
+    "status": "DONE",
     "issue": 256,
     "activation_pr": 265,
     "b4_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
@@ -545,12 +545,13 @@
     "public_runtime_api_changed": false
   },
   "r4_preparation": {
-    "status": "ACTIVE",
+    "status": "DONE",
     "issue": 267,
     "product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "entry_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
-    "certification_started": false,
-    "blocked_until_exact_entry_activation": false
+    "certification_started": true,
+    "blocked_until_exact_entry_activation": false,
+    "certification_status": "DONE"
   },
   "r3_b5_closeout": {
     "status": "DONE",
@@ -573,7 +574,7 @@
     "public_runtime_api_changed": false
   },
   "r4_transition": {
-    "status": "CERTIFIED_PENDING_CANONICAL_CLOSEOUT",
+    "status": "DONE",
     "issue": 267,
     "r5_issue": 272,
     "product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
@@ -582,10 +583,12 @@
     "certification_result": "PASS",
     "evidence_artifact_id": 9930304564,
     "evidence_artifact_digest": "sha256:ca21bf1771c45e2003b2448ea019b6eb7b93c8468eff1330df76340a943eeca2",
-    "exact_r5_entry_activation_pending": true,
+    "exact_r5_entry_activation_pending": false,
     "normative_semantics_changed": false,
     "proof_state_changed": false,
-    "public_runtime_api_changed": false
+    "public_runtime_api_changed": false,
+    "closeout_pr": 273,
+    "closeout_merge_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb"
   },
   "r4_closeout": {
     "status": "DONE",
@@ -610,15 +613,18 @@
     "proprietary_fonts_redistributed": false
   },
   "r5_preparation": {
-    "status": "VALIDATED_PENDING_CANONICAL_CLOSEOUT",
+    "status": "DONE",
     "issue": 272,
     "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
     "foundation_freeze_started": true,
     "technical_validation_status": "DONE",
-    "exact_a1_entry_activation_pending": true,
+    "exact_a1_entry_activation_pending": false,
     "validation_run_id": 33869888601,
-    "validation_job_id": 101013093747
+    "validation_job_id": 101013093747,
+    "closeout_pr": 276,
+    "closeout_merge_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "a1_entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9"
   },
   "r5_validation": {
     "status": "DONE",
@@ -651,10 +657,10 @@
     "scientific_article_work_started": false
   },
   "a1_preparation": {
-    "status": "PREPARED",
+    "status": "ACTIVE",
     "issue": 275,
-    "entry_main_sha": null,
-    "blocked_until_exact_r5_closeout": true,
+    "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "blocked_until_exact_r5_closeout": false,
     "work_started": false
   },
   "post_foundation_state": {
