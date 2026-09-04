@@ -46,5 +46,22 @@
     "not-applicable",
     "automation-gap"
   ],
-  "closeout_status": "VALIDATION_PENDING"
+  "closeout_status": "DONE",
+  "closeout": {
+    "issue": 253,
+    "pr": 260,
+    "merge_main_sha": "1d9e6373ed674fb7503b968b3e852e4be5fc14ea",
+    "static_contract_run_id": 33768911131,
+    "linux_integration_run_id": 33768911126,
+    "linux_integration_job_id": 100694266254,
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "post_merge_release_run_id": 33772854355,
+    "post_merge_release_job_id": 100707196590,
+    "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
+    "automatic_partial_bounded_positive": 113,
+    "automation_gap": 0,
+    "proof_state_changed": false,
+    "normative_semantics_changed": false,
+    "runtime_public_api_changed": false
+  }
 }

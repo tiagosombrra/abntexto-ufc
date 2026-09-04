@@ -1127,13 +1127,14 @@
   },
   "active_implementation_lot": {
     "phase": "V3-R3",
-    "stage": "R3-B4",
+    "stage": "R3-B5",
     "issue": 256,
-    "entry_product_main_sha": "fbee5bd329f98a389c2880932af40547c8d1674e",
-    "name": "engineering-language enforcement and closed-contract consolidation",
+    "entry_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+    "name": "R3 closeout and R4 certification entry",
     "id": "R3-B5",
     "status": "ACTIVE",
-    "entry_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390"
+    "entry_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
+    "activation_pr": 265
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1197,9 +1198,9 @@
   },
   "r3": {
     "status": "ACTIVE",
-    "stage": "R3-B4",
-    "stage_name": "engineering-language enforcement and closed-contract consolidation",
-    "issue": 255,
+    "stage": "R3-B5",
+    "stage_name": "R3 closeout and R4 certification entry",
+    "issue": 256,
     "entry_product_main_sha": "ecd5926760080003148e8b1621dc8d4e4e8c7e5e",
     "goal": "Harden evidence truthfulness, normative proof semantics, semantic test integrity, engineering-language enforcement, and closed-contract hygiene before R4 certification.",
     "implementation_lots_defined": true,
@@ -1212,7 +1213,7 @@
     "exit": "R3-B1 through R3-B5 are complete, proof-contributing evidence is fail-closed, the engineering policy is enforced, and an immutable R4 certification entry is recorded.",
     "inventory_document": "docs/R3-HARDENING-INVENTORY.md",
     "inventory_contract": "release/v3-r3-inventory.json",
-    "next_issue": 255,
+    "next_issue": 256,
     "r3_a": {
       "status": "DONE",
       "issue": 250,
@@ -1306,12 +1307,12 @@
         "status": "ACTIVE",
         "issue": 256,
         "name": "R3 closeout and R4 certification entry",
-        "entry_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390"
+        "entry_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
+        "entry_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+        "activation_pr": 265
       }
     },
-    "pr": 262,
-    "merge_main_sha": "fbee5bd329f98a389c2880932af40547c8d1674e",
-    "active_issue": 255,
+    "active_issue": 256,
     "b2_closeout": {
       "issue": 253,
       "pr": 260,
@@ -1401,7 +1402,9 @@
       "normative_semantics_changed": false,
       "proof_state_changed": false,
       "public_runtime_api_changed": false
-    }
+    },
+    "activation_control_plane_pr": 265,
+    "activation_control_plane_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b"
   },
   "r3_a_closeout": {
     "status": "DONE",
