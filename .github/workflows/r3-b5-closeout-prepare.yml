@@ -1,0 +1,111 @@
+name: Temporary R3-B5 closeout preparation
+
+on:
+  push:
+    branches:
+      - docs/v3-r3-b5-closeout-r4-prepare
+
+permissions:
+  contents: write
+
+env:
+  BASE_SHA: c79f3c73f1d51a30175e8259269504d029442a1c
+  RELEASE_RUN_ID: '33824039033'
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+
+      - name: Require exact-main release success
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import time
+          import urllib.request
+
+          url = "https://api.github.com/repos/tiagosombrra/abntexto-ufc/actions/runs/33824039033"
+          for _ in range(60):
+              with urllib.request.urlopen(url, timeout=30) as response:
+                  run = json.load(response)
+              status = run.get("status")
+              conclusion = run.get("conclusion")
+              head_sha = run.get("head_sha")
+              if head_sha != "c79f3c73f1d51a30175e8259269504d029442a1c":
+                  raise SystemExit(f"release run head mismatch: {head_sha}")
+              if status == "completed":
+                  if conclusion != "success":
+                      raise SystemExit(f"release run did not succeed: {conclusion}")
+                  print("Exact-main release run completed successfully")
+                  break
+              time.sleep(30)
+          else:
+              raise SystemExit("release run did not complete within bounded polling window")
+          PY
+
+      - name: Reconcile B5 validation state
+        run: python .github/scripts/r3-b5-closeout-prepare.py
+
+      - name: Verify authority documents unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code "$BASE_SHA" -- \
+            docs/NORMATIVE-BASE.md \
+            docs/NORMATIVE-CURRENCY.md \
+            docs/MIGRATING-TO-V3.md
+
+      - name: Run repository static contract
+        run: make static-check
+
+      - name: Remove temporary executor and validate permanent diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/r3-b5-closeout-prepare.py
+          rm -f .github/workflows/r3-b5-closeout-prepare.yml
+          rmdir .github/scripts 2>/dev/null || true
+          git diff --check "$BASE_SHA"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA")
+          expected=(
+            AGENTS.md
+            README.md
+            docs/ARCHITECTURE.md
+            docs/CTAN-RELEASE.md
+            docs/ENGINEERING-LANGUAGE.md
+            docs/HANDOFF-V3.0.0.md
+            docs/R3-HARDENING-INVENTORY.md
+            docs/ROADMAP-V3.0.0.md
+            release/v3-r3-inventory.json
+            release/v3-roadmap.json
+          )
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' "${expected[@]}" | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+      - name: Commit permanent closeout preparation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'docs: record validated R3-B5 closeout preparation'
+          git push origin HEAD:docs/v3-r3-b5-closeout-r4-prepare
