@@ -1,0 +1,110 @@
+name: Temporary A1 article normative contract
+
+on:
+  push:
+    branches:
+      - a1-scientific-article-normative-contract
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+
+      - name: Require exact A1 activation checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git merge-base HEAD origin/main)" = "e40a56deeca8c22797398b0c95835964aefd2b15"
+          test "$(git rev-parse origin/main)" = "e40a56deeca8c22797398b0c95835964aefd2b15"
+
+      - name: Materialize historical discovery contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show 14e55ef3d4700ea729173fe85c8e2a6f8ef71927:standards/coverage-rules-article.json > /tmp/coverage-rules-article-historical.json
+
+      - name: Build current A1 contract
+        run: python .github/scripts/a1-article-contract.py
+
+      - name: Verify no runtime implementation entered A1
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only e40a56deeca8c22797398b0c95835964aefd2b15)
+          allowed=(
+            .github/scripts/a1-article-contract.py
+            .github/workflows/a1-article-contract.yml
+            docs/A1-ARTICLE-NORMATIVE-CONTRACT.md
+            docs/NORMATIVE-BASE.md
+            docs/NORMATIVE-CURRENCY.md
+            release/v3-roadmap.json
+            standards/coverage-rules-article.json
+          )
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' "${allowed[@]}" | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+      - name: Run targeted normative source contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tests/checks/normative_sources.py
+          python tests/checks/normative_full_contract.py
+          python tests/checks/normative_currency.py
+          python tests/checks/normative_precedence.py
+          python tests/checks/normative_locators.py
+          python tests/checks/normative_traceability.py --strict-evidence
+          python tests/checks/normative_proof_state.py
+          python tests/checks/normative_coverage.py
+
+      - name: Run repository static contract
+        run: make static-check
+
+      - name: Remove temporary executor and validate permanent diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/a1-article-contract.py
+          rm -f .github/workflows/a1-article-contract.yml
+          rmdir .github/scripts 2>/dev/null || true
+          git diff --check e40a56deeca8c22797398b0c95835964aefd2b15
+          mapfile -t changed < <(git diff --name-only e40a56deeca8c22797398b0c95835964aefd2b15)
+          expected=(
+            docs/A1-ARTICLE-NORMATIVE-CONTRACT.md
+            docs/NORMATIVE-BASE.md
+            docs/NORMATIVE-CURRENCY.md
+            release/v3-roadmap.json
+            standards/coverage-rules-article.json
+          )
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' "${expected[@]}" | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+      - name: Commit permanent A1 source contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'docs: establish A1 scientific-article normative contract'
+          git push origin HEAD:a1-scientific-article-normative-contract
