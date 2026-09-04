@@ -1,0 +1,78 @@
+name: Temporary R3-B5 control-plane reconciliation
+
+on:
+  push:
+    branches:
+      - docs/v3-r3-b5-control-plane-reconcile
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-r3-b5-control-plane-reconcile
+  cancel-in-progress: true
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Reconcile control plane
+        run: |
+          git fetch origin main
+          python3 .github/scripts/r3-b5-control-plane-reconcile.py
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          python3 -m json.tool release/v3-r3-inventory.json >/dev/null
+          python3 -m json.tool release/v3-r3-b2-proof-semantics.json >/dev/null
+      - name: Verify authority documents unchanged
+        run: |
+          git diff --exit-code origin/main -- \
+            docs/NORMATIVE-BASE.md \
+            docs/NORMATIVE-CURRENCY.md \
+            docs/MIGRATING-TO-V3.md
+      - name: Run repository static contract
+        run: make static-check
+      - name: Remove temporary executor and validate permanent diff
+        run: |
+          git rm .github/scripts/r3-b5-control-plane-reconcile.py
+          git rm .github/workflows/r3-b5-control-plane-reconcile.yml
+          git diff --check origin/main
+          actual="$(git diff --name-only origin/main | sort)"
+          expected="$(cat <<'EOF' | sort
+          AGENTS.md
+          README.md
+          docs/ARCHITECTURE.md
+          docs/CTAN-RELEASE.md
+          docs/ENGINEERING-LANGUAGE.md
+          docs/HANDOFF-V3.0.0.md
+          docs/R3-HARDENING-INVENTORY.md
+          docs/ROADMAP-V3.0.0.md
+          release/v3-r3-b2-proof-semantics.json
+          release/v3-r3-inventory.json
+          release/v3-roadmap.json
+          EOF
+          )"
+          if [ "$actual" != "$expected" ]; then
+            echo "Unexpected permanent diff:" >&2
+            printf '%s\n' "$actual" >&2
+            exit 1
+          fi
+      - name: Commit permanent reconciliation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "docs: reconcile canonical R3-B5 entry state"
+          git push origin HEAD:docs/v3-r3-b5-control-plane-reconcile
