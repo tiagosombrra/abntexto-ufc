@@ -57,3 +57,8 @@ Public UFC guide locators are verified directly. Where a rule also depends on pr
 ## V3-A2 bounded implementation contract
 
 A2 may implement only the canonical `scientific-article` profile and executable tests needed to realize the A1 rule set. It must reuse the current cross-cutting citation/reference/section/table machinery rather than fork it; preserve the certified non-article foundation; keep recommendation/optional semantics distinct from requirements; add positive and negative article-specific evidence before promoting proof state; and keep journal-specific instructions as a conditional boundary. Any source conflict discovered in A2 returns to source review instead of being resolved by runtime guesswork.
+
+
+## V3-A1 validation closeout
+
+PR #279 merged this source-backed contract at `4d018a92697e8f39e3a53b034c451e55996c84fb` after source-only run `33894907220`, Static `33895016834`, and Linux integration `33895016774` / job `101095498647` all passed; Linux closed `PASS=31 FAIL=0 SKIP=0`. No article runtime/profile code was introduced and no article proof state was promoted. V3-A2 implementation is bounded by issue #280, but remains blocked until the A1 closeout checkpoint is merged and its immutable entry predecessor is recorded.
