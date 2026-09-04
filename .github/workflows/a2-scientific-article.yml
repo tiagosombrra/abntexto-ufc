@@ -1,0 +1,108 @@
+name: Temporary A2 scientific article implementation
+
+on:
+  push:
+    branches:
+      - feat/v3-a2-scientific-article
+
+permissions:
+  contents: write
+
+jobs:
+  implement-and-validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Require exact A2 entry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "c4bf51b574647226ee488440579ec2a204c16c79"
+          test "$(git merge-base HEAD origin/main)" = "c4bf51b574647226ee488440579ec2a204c16c79"
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+
+      - name: Stage A2 implementation
+        run: python .github/scripts/a2-scientific-article.py
+
+      - name: Run source contract
+        run: make static-check
+
+      - name: Run bounded TeX article and profile validation
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs
+            sh tests/integration/scientific-article.sh
+            sh tests/integration/profile-matrix.sh
+
+      - name: Remove generated artifacts and temporary executor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clean -fdx template
+          rm -f .github/scripts/a2-scientific-article.py
+          rm -f .github/workflows/a2-scientific-article.yml
+          rmdir .github/scripts 2>/dev/null || true
+
+      - name: Validate permanent diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=c4bf51b574647226ee488440579ec2a204c16c79
+          git diff --check "$base"
+          mapfile -t changed < <(git diff --name-only "$base")
+          expected=(
+            abntexto-ufc.cls
+            abntexto-ufc/core.def
+            abntexto-ufc/scientific-articles.def
+            release/v3-api-migration.json
+            release/v3-roadmap.json
+            standards/coverage-rules-article.json
+            standards/evidence-contribution-policy.json
+            tests/documents/scientific-article-journal-negative.tex
+            tests/documents/scientific-article-positive.tex
+            tests/documents/scientific-article-summary-negative.tex
+            tests/fixtures/article-abstract.tex
+            tests/fixtures/article-summary.tex
+            tests/integration/profile-matrix.sh
+            tests/integration/profile-pdfa.sh
+            tests/integration/scientific-article.sh
+            tests/run.py
+            tests/smoke/base-profile.tex
+          )
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' "${expected[@]}" | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+          test -z "$(git ls-files '.github/scripts/a2-scientific-article.py' '.github/workflows/a2-scientific-article.yml')" || {
+            echo 'Temporary executor remains tracked in the working tree.'
+            exit 1
+          }
+
+      - name: Commit permanent A2 implementation checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: implement scientific article profile'
+          git push origin HEAD:feat/v3-a2-scientific-article
