@@ -89,10 +89,11 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils nodejs
             python3 tests/run.py --mode pr --only profiles --report-dir /tmp/a2-profile-validation
 
-      - name: Remove temporary executor and validate permanent diff
+      - name: Remove generated artifacts and temporary executor
         shell: bash
         run: |
           set -euo pipefail
+          git clean -fdx template
           rm -f .github/scripts/a2-runtime-implement.py
           rm -f .github/workflows/a2-runtime-inventory.yml
           rmdir .github/scripts 2>/dev/null || true
