@@ -36,6 +36,13 @@ jobs:
           test "$(git merge-base HEAD origin/main)" = "0b0f5d989163dc6b1429feeb2d8a7c66988647bb"
           test "$(git rev-parse origin/main)" = "0b0f5d989163dc6b1429feeb2d8a7c66988647bb"
 
+      - name: Align temporary reconciler with canonical receipt key
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/certification_run_id") != R4_RUN/workflow_run_id") != R4_RUN/' .github/scripts/r4-r5-entry-activate.py
+          grep -F 'cert.get("status") != "DONE" or cert.get("workflow_run_id") != R4_RUN' .github/scripts/r4-r5-entry-activate.py
+
       - name: Activate exact R5 entry
         run: python .github/scripts/r4-r5-entry-activate.py
 
