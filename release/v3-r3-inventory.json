@@ -4,7 +4,7 @@
   "target_version": "3.0.0",
   "phase": "V3-R3",
   "stage": "R3-B5",
-  "status": "ACTIVE",
+  "status": "DONE",
   "reviewed_at": "2026-09-03",
   "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
   "planning_issue": 250,
@@ -326,7 +326,7 @@
     },
     "R3-B5": {
       "issue": 256,
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "R3 closeout and R4 certification entry",
       "entry_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
       "entry_control_plane_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
@@ -336,7 +336,15 @@
       "control_plane_reconciliation_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
       "final_r3_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
       "technical_validation_status": "DONE",
-      "exact_r4_entry_activation_pending": true
+      "exact_r4_entry_activation_pending": false,
+      "closeout_pr": 268,
+      "closeout_head_sha": "2a8f80b53113e56f074c62382f7e31c561fe305b",
+      "closeout_merge_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
+      "closeout_static_contract_run_id": 33825615520,
+      "closeout_linux_integration_run_id": 33825615541,
+      "closeout_linux_integration_job_id": 100877511446,
+      "closeout_linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+      "r4_entry_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0"
     }
   },
   "retained_contracts": {
@@ -352,10 +360,10 @@
     "scientific_article_work_allowed_before_certified_foundation": false,
     "ctan_submission_allowed_during_r3": false
   },
-  "next_stage": "R3-B5",
-  "next_issue": 256,
+  "next_stage": "V3-R4",
+  "next_issue": 267,
   "r3_a_source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
-  "current_entry_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+  "current_entry_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
   "r3_b1_closeout": {
     "issue": 252,
     "pr": 258,
@@ -537,11 +545,31 @@
     "public_runtime_api_changed": false
   },
   "r4_preparation": {
-    "status": "PREPARED",
+    "status": "ACTIVE",
     "issue": 267,
     "product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
-    "entry_main_sha": null,
+    "entry_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
     "certification_started": false,
-    "blocked_until_exact_entry_activation": true
+    "blocked_until_exact_entry_activation": false
+  },
+  "r3_b5_closeout": {
+    "status": "DONE",
+    "issue": 256,
+    "pr": 268,
+    "entry_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
+    "product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "closeout_head_sha": "2a8f80b53113e56f074c62382f7e31c561fe305b",
+    "merge_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
+    "static_contract_run_id": 33825615520,
+    "linux_integration_run_id": 33825615541,
+    "linux_integration_job_id": 100877511446,
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "post_product_release_run_id": 33824039033,
+    "post_product_release_result": "PASS=33 FAIL=0 SKIP=0",
+    "all_r3_findings_resolved": true,
+    "temporary_executor_residue": 0,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false
   }
 }

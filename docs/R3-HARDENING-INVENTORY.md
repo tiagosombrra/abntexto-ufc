@@ -6,7 +6,7 @@ Updated: 2026-09-03
 
 R3 hardens the truthfulness of the v3 foundation before final certification. The original R3-A inventory was taken from `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`; its baseline had 19 sources, 181 rules, 164 automatic declarations, 17 manual/conditional rules, 11 project-policy/technical-profile rules, 32 runner gates, 10 registered evidence checks and 9 validator checks.
 
-R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 is closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 is closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`. R3-B4/#255 is closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. R3-B5/#256 is active.
+R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 is closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 is closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`. R3-B4/#255 is closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. R3-B5/#256 is closed through PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`; V3-R3 is DONE and V3-R4/#267 is active.
 
 ## R3-B1 closeout evidence
 
@@ -95,12 +95,12 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 | R3-B2/#253 | DONE | PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0`; 113/113 bounded-positive, automation-gap=0 |
 | R3-B3/#254 | DONE | entry `44874c84b375396de8b9e3b24a40c47b5006f19b`; PR #262 → `fbee5bd329f98a389c2880932af40547c8d1674e`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0` |
 | R3-B4/#255 | DONE | entry `f0b3df319501bef0a6257ac23d42f28c59ad73a0`; PR #264 → `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0` |
-| R3-B5/#256 | ACTIVE — VALIDATED | candidate `c79f3c73f1d51a30175e8259269504d029442a1c`; PR Linux `31/0/0`; release `33/0/0`; exact-entry activation pending |
+| R3-B5/#256 | DONE | candidate `c79f3c73f1d51a30175e8259269504d029442a1c`; PR #268 → `d90a675a844724c33a5727d8d980027c46291eb0`; PR Linux `31/0/0`; release `33/0/0`; R4 predecessor recorded |
 
 ## R3-B5 validation closeout
 
 B5 entered canonically at `e5d6ab1962ee04935ee68a6ae36f268350d59a3b`, reconciled stale control-plane state through PR #266, and produced final candidate `c79f3c73f1d51a30175e8259269504d029442a1c`. PR Static `33822238687` passed; PR Linux `33822238656` / job `100867206797` passed `PASS=31 FAIL=0 SKIP=0`; exact-main Static `33824038991` passed; exact-main release `33824039033` / job `100872747975` passed `PASS=33 FAIL=0 SKIP=0`. All 12 R3-A findings are resolved; no proof-contributing FAIL/UNASSESSED is represented as PASS; automation-gap is zero; residual/language/test-surface contracts remain green; no temporary executor or closed cleanup-only migration residue remains.
 
-R4 issue #267 is prepared but blocked. This checkpoint deliberately does not perform Windows/literal-font certification and does not invent the future merge SHA required as the exact R4 entry. The next action is a minimal exact-entry activation after this validated closeout merges.
+R4 issue #267 is active from exact predecessor `d90a675a844724c33a5727d8d980027c46291eb0`. This R3 closeout did not perform Windows/literal-font certification; that certification is now the bounded R4 responsibility on product candidate `c79f3c73f1d51a30175e8259269504d029442a1c`.
 
 No source/currency fact, normative semantics, proof-state default, locator/tolerance/applicability policy, rendered requirement, or public runtime API changed in B5; `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md`, and `docs/MIGRATING-TO-V3.md` remain intentionally unchanged.
