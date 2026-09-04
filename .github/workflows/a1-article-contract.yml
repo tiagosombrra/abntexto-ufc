@@ -59,6 +59,7 @@ jobs:
             docs/NORMATIVE-CURRENCY.md
             release/v3-roadmap.json
             standards/coverage-rules-article.json
+            tests/checks/normative_full_contract.py
           )
           printf '%s\n' "${changed[@]}" | sort > /tmp/actual
           printf '%s\n' "${allowed[@]}" | sort > /tmp/expected
@@ -95,6 +96,7 @@ jobs:
             docs/NORMATIVE-CURRENCY.md
             release/v3-roadmap.json
             standards/coverage-rules-article.json
+            tests/checks/normative_full_contract.py
           )
           printf '%s\n' "${changed[@]}" | sort > /tmp/actual
           printf '%s\n' "${expected[@]}" | sort > /tmp/expected
