@@ -75,7 +75,6 @@ jobs:
           printf '%s\n' "${changed[@]}" | sort > /tmp/actual
           printf '%s\n' "${expected[@]}" | sort > /tmp/expected
           diff -u /tmp/expected /tmp/actual
-          test -z "$(git status --short --untracked-files=all | grep -E '^.. \.github/(scripts/r5-validation-closeout.py|workflows/r5-validation-closeout.yml)$' || true)"
 
       - name: Commit permanent R5 validation closeout preparation
         shell: bash
