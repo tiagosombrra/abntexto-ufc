@@ -37,7 +37,22 @@ jobs:
           test "$(git rev-parse origin/main)" = "d90a675a844724c33a5727d8d980027c46291eb0"
 
       - name: Reconcile exact R4 entry state
-        run: python .github/scripts/r3-r4-entry-activate.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/scripts/r3-r4-entry-activate.py')
+          text = path.read_text(encoding='utf-8')
+          old = 'r"R3-B5/#256 is ACTIVE from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and owns R3 closeout/R4 entry; it must not broaden this policy or change the public runtime API\\."'
+          new = 'r"R3-B5/#256 is technically validated on `c79f3c73f1d51a30175e8259269504d029442a1c`; only exact-entry activation remains\\. R4/#267 is prepared but not started, and neither stage may broaden this policy or change the public runtime API without separately justified evidence\\."'
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f'expected one language-policy transformer pattern, found {count}')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+          python .github/scripts/r3-r4-entry-activate.py
 
       - name: Verify authority documents unchanged
         shell: bash
