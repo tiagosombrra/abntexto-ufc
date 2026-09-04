@@ -18,4 +18,4 @@ Permanent enforcement must be scoped so valid Brazilian academic content is not 
 
 ## V3-A1 article identifiers
 
-The A1 machine namespace is `article.*` and the future profile name is `scientific-article`. These are project-owned English identifiers. Portuguese remains in the academic requirements and rendered content where appropriate. Historical Portuguese machine IDs are discovery evidence only and are not restored.
+The article rule namespace is `article.*` and the canonical profile name is `scientific-article`. These are project-owned English identifiers. Portuguese remains in the academic requirements and rendered content where appropriate. Historical Portuguese machine IDs are discovery evidence only and are not restored.
