@@ -1,0 +1,46 @@
+name: Temporary A2 runtime inventory
+
+on:
+  push:
+    branches:
+      - feat/v3-a2-scientific-article-runtime
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Require current A2 control-plane main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "c4bf51b574647226ee488440579ec2a204c16c79"
+          test "$(git merge-base HEAD origin/main)" = "c4bf51b574647226ee488440579ec2a204c16c79"
+
+      - name: Inventory profile and test consumers
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== document type consumers ==='
+          git grep -nE 'undergraduate-capstone|specialization-capstone|masters-thesis|doctoral-thesis|research-project|anonymized-research-project' -- abntexto-ufc tests tools Makefile release ':!release/v3-roadmap.json' || true
+          echo '=== profile matrix ==='
+          sed -n '1,260p' tests/integration/profile-matrix.sh
+          echo '=== profile fixtures ==='
+          find tests -maxdepth 3 -type f \( -name '*profile*' -o -name '*research-project*' \) -print | sort
+          echo '=== static residual scope references ==='
+          git grep -nE 'academic-works\.def|research-projects\.def|frontmatter\.def|layout\.def|modules\.def' -- tests/checks tests/static.py Makefile || true
+          echo '=== article terms already tracked ==='
+          git grep -nE 'scientific-article|article\.' -- ':!.github/workflows/a2-runtime-inventory.yml' || true
+
+      - name: Baseline static contract
+        run: make static-check
