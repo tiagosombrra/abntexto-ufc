@@ -66,9 +66,17 @@ jobs:
           run: |
             set -euo pipefail
             git config --global --add safe.directory "$(pwd)"
+            cleanup_reference_assets() {
+              rm -f template/figures/ufc-campus-pici.jpg template/figures/ufc-reitoria.jpg
+            }
+            trap cleanup_reference_assets EXIT INT TERM
+            make reference-assets
             python3 tools/fetch-abntexto.py --output /tmp/abntexto.cls
             python3 tests/checks/public_bundles.py --abntexto /tmp/abntexto.cls
             python3 tests/checks/distribution_bundles.py --abntexto /tmp/abntexto.cls
+            cleanup_reference_assets
+            trap - EXIT INT TERM
+            test -z "$(git status --short --untracked-files=all)"
             echo 'R5-PACKAGE-EVIDENCE release_run=33866258865 release_result=PASS=33_FAIL=0_SKIP=0 public_bundles=PASS distribution_bundles=PASS checksums=PASS asset_exclusions=PASS'
 
       - name: Verify no tracked audit side effects
@@ -77,5 +85,6 @@ jobs:
           set -euo pipefail
           git diff --exit-code
           git diff --check
+          test -z "$(git status --short --untracked-files=all)"
           test -z "$(git ls-files '.github/workflows/*' | grep -E '(temporary|executor|audit)' | grep -v '^.github/workflows/r5-foundation-freeze-audit.yml$' || true)"
-          echo 'R5-HYGIENE-EVIDENCE tracked_side_effects=0 stale_temporary_executors=0'
+          echo 'R5-HYGIENE-EVIDENCE tracked_side_effects=0 untracked_side_effects=0 stale_temporary_executors=0'
