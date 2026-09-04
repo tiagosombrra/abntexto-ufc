@@ -4,7 +4,7 @@ Updated: 2026-09-04
 
 ## Status
 
-**V3-R1 through V3-R5 DONE. V3-A1/#275 source contract VALIDATED and MERGED through PR #279 at `4d018a92697e8f39e3a53b034c451e55996c84fb`; canonical A1 closeout is pending. V3-A2/#280 is PREPARED/BLOCKED until the immutable A1 closeout predecessor is recorded.**
+**V3-R1 through V3-R5 DONE. V3-A1/#275 DONE through source-contract PR #279 at `4d018a92697e8f39e3a53b034c451e55996c84fb` and closeout PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A2/#280 is ACTIVE from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; runtime implementation has not started yet.**
 
 R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`, with 113/113 `automatic-partial` rules bounded-positive and zero automation gaps. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`: Static `33792280764` PASS; Linux `33792280797` / job `100771483526` = `PASS=31 FAIL=0 SKIP=0`; post-merge release `33794112546` / job `100777542613` = `PASS=33 FAIL=0 SKIP=0`. Its permanent residual contract covers 302 sources (134 LaTeX + 168 engineering), retained test/check reachability is 147/147 with zero orphaned scripts, and controlled negative paths require a positive PASS for the same `rule_id`. No normative rule ID, expected value, locator, tolerance, applicability, source authority/precedence, proof-state default, rendered requirement, or public runtime API changed. R3-B4/#255 closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`: bounded run `33814870180` PASS; Static `33814977737` PASS; Linux `33814977730` / job `100844995945` = `PASS=31 FAIL=0 SKIP=0`; post-merge release `33816137774` / job `100848593542` = `PASS=33 FAIL=0 SKIP=0`. Permanent B4 baseline is 305 sources (134 LaTeX + 171 engineering), 148/148 retained scripts reachable, zero orphans, zero Portuguese technical diagnostics, zero retired profile IDs and zero closed unconsumed contracts. Active foundation-freeze issue: #272 (V3-R5). Machine authority: `release/v3-roadmap.json`.
 
@@ -31,8 +31,8 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 
 | R3-B5 | DONE | issue #256; PR #268 → `d90a675a844724c33a5727d8d980027c46291eb0`; product candidate `c79f3c73f1d51a30175e8259269504d029442a1c` | final R3 gates green; all findings resolved; immutable R4 predecessor recorded | None |
 | V3-R4 | DONE | issue #267; run `33855800767`; closeout PR #273 → `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` | 4/4 strict font/engine cells PASS; Unicode, embedding and PDF/A-2b PASS; temporary executor removed | None |
 | V3-R5 | DONE | issue #272; entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; PR #276 → `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; frozen product `c79f3c73f1d51a30175e8259269504d029442a1c` | release `33/0/0`; package/bundle/checksum/asset audit PASS; PR Linux `31/0/0`; zero residue | None |
-| V3-A1 | VALIDATED — CLOSEOUT PENDING | issue #275; entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; PR #279 → `4d018a92697e8f39e3a53b034c451e55996c84fb` | 18 source-backed rules; source run `33894907220` PASS; Static `33895016834` PASS; Linux `33895016774` = `31/0/0`; runtime absent | merge canonical closeout and record exact A2 entry |
-| V3-A2 | PREPARED / BLOCKED | issue #280; A1 contract `4d018a92697e8f39e3a53b034c451e55996c84fb` | bounded `scientific-article` runtime/test scope defined | activate only after exact A1 closeout predecessor is known |
+| V3-A1 | DONE | issue #275; entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; PR #279 → `4d018a92697e8f39e3a53b034c451e55996c84fb`; closeout PR #281 → `7a7562d23e8bf6c92abb635718639d617a2ed6ff` | current article authority reconfirmed; 18-rule conservative contract; source/Static/Linux gates green; no runtime in A1 | None |
+| V3-A2 | ACTIVE | issue #280; exact entry `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; A1 contract `4d018a92697e8f39e3a53b034c451e55996c84fb` | bounded `scientific-article` implementation/test contract active | implement runtime/profile + article-specific evidence; keep CTAN blocked |
 | CTAN submission | FUTURE | explicit release action | no upload yet | release-ready stage only |
 
 ## R3-B1 closeout
@@ -95,8 +95,12 @@ A1 reconfirmed the corrected UFC article guide, NBR 6022:2018 and current cross-
 
 Source-only run `33894907220` passed. PR Static `33895016834` passed. PR Linux `33895016774` / job `101095498647` passed `PASS=31 FAIL=0 SKIP=0`. The full gate observed 199 rules, 188 normative rules with complete locator classification, zero UNASSESSED/unclassified evidence IDs, and final current-run contribution `113/113` bounded-positive, 37 enforced-automatic, 14 support-only, 11 conditional-review, 23 manual-review and 1 not-applicable. None of that promotes an article rule before article-specific A2 evidence exists.
 
-V3-A2 implementation scope is now issue #280 and the contract in `docs/ARTICLE-NORMATIVE-CONTRACT.md`. A2 remains blocked until this closeout is canonical and its exact immutable SHA is recorded.
+V3-A2 implementation scope is issue #280 and the contract in `docs/ARTICLE-NORMATIVE-CONTRACT.md`. The exact immutable A2 entry is `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A1/#275 is DONE; V3-A2/#280 is ACTIVE and runtime implementation has not started yet.
+
+## V3-A2 entry
+
+A2 begins from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff` and source-contract product `4d018a92697e8f39e3a53b034c451e55996c84fb` while preserving certified non-article foundation `c79f3c73f1d51a30175e8259269504d029442a1c`. A2 may implement only the canonical `scientific-article` profile. Required predicates may become enforceable only with article-specific positive evidence and safe negative rejection where applicable. Optional/recommended predicates remain non-mandatory, and journal-specific instructions remain a conditional applicability boundary.
 
 ## Immediate action
 
-Merge this A1 closeout checkpoint, capture its immutable main SHA, then perform the minimal exact-entry activation: V3-A1/#275 DONE and V3-A2/#280 ACTIVE from that predecessor. Do not start article runtime before the activation checkpoint is canonical. CTAN submission remains a future explicit release action.
+Implement V3-A2/#280 in bounded lots: profile/runtime ownership first, then article-specific fixtures/evidence, then contribution/proof reconciliation and full PR gates. Reuse existing citation/reference/section/summary/table machinery and do not fork cross-cutting behavior. CTAN submission remains blocked until the post-A2 release decision.

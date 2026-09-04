@@ -62,3 +62,8 @@ A2 may implement only the canonical `scientific-article` profile and executable 
 ## V3-A1 validation closeout
 
 PR #279 merged this source-backed contract at `4d018a92697e8f39e3a53b034c451e55996c84fb` after source-only run `33894907220`, Static `33895016834`, and Linux integration `33895016774` / job `101095498647` all passed; Linux closed `PASS=31 FAIL=0 SKIP=0`. No article runtime/profile code was introduced and no article proof state was promoted. V3-A2 implementation is bounded by issue #280, but remains blocked until the A1 closeout checkpoint is merged and its immutable entry predecessor is recorded.
+
+
+## V3-A2 canonical entry
+
+V3-A1/#275 closed through PR #281 at exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A2/#280 is ACTIVE from that SHA and owns only the bounded `scientific-article` runtime/test implementation described above. The source-contract product remains `4d018a92697e8f39e3a53b034c451e55996c84fb` and the certified non-article foundation remains `c79f3c73f1d51a30175e8259269504d029442a1c`. No article runtime implementation had started at the activation checkpoint.

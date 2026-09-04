@@ -5,9 +5,9 @@
   "target_version": "3.0.0",
   "updated_at": "2026-09-04",
   "status": "ACTIVE",
-  "phase": "V3-A1",
-  "stage": "V3-A1",
-  "stage_name": "scientific-article normative contract closeout",
+  "phase": "V3-A2",
+  "stage": "V3-A2",
+  "stage_name": "implement and validate scientific-article profile",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -1126,16 +1126,16 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "phase": "V3-A1",
-    "stage": "V3-A1",
-    "issue": 275,
-    "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "phase": "V3-A2",
+    "stage": "V3-A2",
+    "issue": 280,
+    "entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "source_contract_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
     "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
-    "name": "scientific-article normative contract closeout",
-    "id": "V3-A1",
-    "status": "VALIDATED_PENDING_CANONICAL_CLOSEOUT",
-    "source_contract_merge_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
-    "runtime_implementation_allowed": false
+    "name": "implement and validate scientific-article profile",
+    "id": "V3-A2",
+    "status": "ACTIVE",
+    "runtime_implementation_started": false
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1575,8 +1575,8 @@
     "blocked_until_exact_entry_activation": false,
     "certification_status": "DONE"
   },
-  "next_stage": "V3-A1",
-  "next_issue": 275,
+  "next_stage": "V3-A2",
+  "next_issue": 280,
   "r3_b5_closeout": {
     "status": "DONE",
     "issue": 256,
@@ -1819,7 +1819,7 @@
     "public_runtime_api_changed": false
   },
   "a1": {
-    "status": "VALIDATED_PENDING_CANONICAL_CLOSEOUT",
+    "status": "DONE",
     "issue": 275,
     "name": "reconfirm scientific-article authority and normative contract",
     "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
@@ -1842,10 +1842,15 @@
     "static_contract_run_id": 33895016834,
     "linux_integration_run_id": 33895016774,
     "linux_integration_job_id": 101095498647,
-    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0"
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "closeout_pr": 281,
+    "closeout_merge_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "closeout_static_contract_run_id": 33901640982,
+    "closeout_linux_integration_run_id": 33901640967,
+    "a2_entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff"
   },
   "a1_contract_candidate": {
-    "status": "VALIDATED_MERGED_PENDING_CLOSEOUT",
+    "status": "DONE",
     "issue": 275,
     "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
     "implementation_base_main_sha": "e40a56deeca8c22797398b0c95835964aefd2b15",
@@ -1863,7 +1868,7 @@
       "NBR 10520:2002": "NBR 10520:2023",
       "NBR 6023:2018": "NBR 6023:2025"
     },
-    "a2_activation_pending": true,
+    "a2_activation_pending": false,
     "pr": 279,
     "implementation_head_sha": "83aed74af6ba966a0db63c093cafdfc2fd74a619",
     "merge_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
@@ -1871,15 +1876,54 @@
     "static_contract_run_id": 33895016834,
     "linux_integration_run_id": 33895016774,
     "linux_integration_job_id": 101095498647,
-    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0"
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "closeout_merge_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "a2_entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff"
   },
   "a2_preparation": {
-    "status": "PREPARED_BLOCKED",
+    "status": "ACTIVE",
     "issue": 280,
     "name": "implement and validate scientific-article profile",
     "source_contract_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
-    "entry_main_sha": null,
-    "blocked_until_exact_a1_closeout": true,
+    "entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "blocked_until_exact_a1_closeout": false,
     "runtime_implementation_started": false
+  },
+  "a1_closeout": {
+    "status": "DONE",
+    "issue": 275,
+    "source_contract_pr": 279,
+    "source_contract_merge_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
+    "closeout_pr": 281,
+    "closeout_merge_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "source_validation_run_id": 33894907220,
+    "static_contract_run_id": 33895016834,
+    "linux_integration_run_id": 33895016774,
+    "linux_integration_job_id": 101095498647,
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "article_rule_count": 18,
+    "manual_rules": 17,
+    "conditional_manual_rules": 1,
+    "runtime_files_added": 0,
+    "proof_state_promoted": false,
+    "certified_foundation_changed": false
+  },
+  "a2": {
+    "status": "ACTIVE",
+    "issue": 280,
+    "name": "implement and validate scientific-article profile",
+    "entry_main_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "source_contract_main_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
+    "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "runtime_implementation_started": false,
+    "article_rule_count": 18,
+    "constraints": [
+      "implement only the canonical scientific-article profile defined by the A1 source contract",
+      "reuse cross-cutting citation reference section summary and tabular machinery",
+      "preserve required optional recommended and conditional modalities",
+      "promote proof only from current article-specific rule evidence",
+      "do not add runtime compatibility aliases or retired Portuguese machine identifiers",
+      "do not perform CTAN submission during A2"
+    ]
   }
 }

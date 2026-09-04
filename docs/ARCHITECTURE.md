@@ -54,7 +54,7 @@ release/
   ctan/
 ```
 
-`articles.def` is introduced only in V3-A2 after the V3-A1 source contract closes canonically. It is not pre-staged as a dormant foundation module.
+`articles.def` is V3-A2-owned and may now be introduced from the canonical A2 entry. It must directly own scientific-article behavior rather than act as a compatibility/forwarding layer.
 
 ## Runtime ownership
 
@@ -116,7 +116,7 @@ The accepted `abntexto-uece` package is retained only as a practical CTAN packag
 
 Top-level `standards/` contains the current machine-readable source catalog, precedence, rules, locators, and normative evidence metadata needed by the active product. Process ledgers from completed campaigns are not retained merely as historical records.
 
-Scientific-article normative material was reintroduced in V3-A1 from current sources; runtime/profile material remains V3-A2-owned and may start only after exact-entry activation.
+Scientific-article normative material was reintroduced in V3-A1 from current sources. V3-A2 is now active and owns only the bounded runtime/profile and article-specific evidence needed to realize that contract.
 
 ## Tests, validation, and workflow orchestration
 
