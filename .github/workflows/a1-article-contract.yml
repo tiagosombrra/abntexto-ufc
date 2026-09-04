@@ -49,6 +49,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git add -N docs/A1-ARTICLE-NORMATIVE-CONTRACT.md standards/coverage-rules-article.json
           mapfile -t changed < <(git diff --name-only e40a56deeca8c22797398b0c95835964aefd2b15)
           allowed=(
             .github/scripts/a1-article-contract.py
