@@ -1,0 +1,413 @@
+name: R4 final candidate certification temporary
+
+on:
+  push:
+    branches:
+      - cert/v3-r4-final-candidate
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    name: R4 exact-candidate preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout certification branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+
+      - name: Require exact R4 launch state and product equivalence
+        shell: bash
+        run: |
+          set -euo pipefail
+          launch_main=438217d004ab0b6fdc430131082b4d749adc5266
+          product=c79f3c73f1d51a30175e8259269504d029442a1c
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$launch_main"
+          test "$(git merge-base HEAD origin/main)" = "$launch_main"
+          test "$(git merge-base "$product" origin/main)" = "$product"
+
+          mapfile -t changed < <(git diff --name-only "$product"..origin/main)
+          expected=(
+            AGENTS.md
+            README.md
+            docs/ARCHITECTURE.md
+            docs/CTAN-RELEASE.md
+            docs/ENGINEERING-LANGUAGE.md
+            docs/HANDOFF-V3.0.0.md
+            docs/R3-HARDENING-INVENTORY.md
+            docs/ROADMAP-V3.0.0.md
+            release/v3-r3-inventory.json
+            release/v3-roadmap.json
+          )
+          printf '%s\n' "${changed[@]}" | sort > /tmp/r4-actual
+          printf '%s\n' "${expected[@]}" | sort > /tmp/r4-expected
+          diff -u /tmp/r4-expected /tmp/r4-actual
+          echo "R4_PRODUCT_EQUIVALENCE=PASS candidate=$product launch_main=$launch_main"
+
+      - name: Run source-only contract
+        run: make static-check
+
+  windows:
+    name: Windows strict candidate matrix
+    needs: preflight
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact R4 product candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: c79f3c73f1d51a30175e8259269504d029442a1c
+          persist-credentials: false
+
+      - name: Verify exact product checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "c79f3c73f1d51a30175e8259269504d029442a1c"
+
+      - name: Install bounded TeX Live 2026 set
+        uses: zauguin/install-texlive@f5e7d0b117035fff797d4392ea94131747e03d60
+        with:
+          texlive_version: 2026
+          repository: http://ctan.mirrors.hoobly.com/systems/texlive/tlnet/
+          cache: false
+          packages: |
+            scheme-basic
+            abntexto
+            collection-langportuguese
+            microtype
+            etoolbox
+            newtx
+            fontspec
+            unicode-math
+            pdfpages
+            ragged2e
+            biblatex
+            biblatex-abnt
+            biber
+            ttfutils
+            fontware
+            csquotes
+            enumitem
+            xpatch
+            xcolor
+            xkeyval
+            xstring
+            carlisle
+            mweights
+            fontaxes
+            tabularray
+            tabularray-abnt
+            varwidth
+            booktabs
+            listings
+            algorithmicx
+            fifo-stack
+            tabto-ltx
+            totcount
+            pgf
+            tikzmark
+            algpseudocodex
+            glossaries
+            imakeidx
+
+      - name: Ensure repository build prerequisites
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not (Get-Command make -ErrorAction SilentlyContinue)) {
+            choco install make -y --no-progress
+          }
+          make --version
+          biber --version
+          makeglossaries --version
+
+      - name: Prepare literal Windows fonts for pdfLaTeX
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./tools/prepare-windows-fonts.ps1
+          foreach ($file in @('t1times-ttf.fd','ts1times-ttf.fd','t1arial.fd','ts1arial.fd','abntexto-ufc-windows.map','abntexto-ufc-ts1-metric.enc')) {
+            $resolved = (& kpsewhich $file).Trim()
+            if (-not $resolved) { throw "Prepared support file not found: $file" }
+            Write-Host "PREPARED $file = $resolved"
+          }
+
+      - name: Verify Windows candidate dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s template/main.tex
+          resolved=$(cd template && TEXINPUTS=".;..//;" kpsewhich main.tex)
+          printf 'KPATHSEA_MAIN=%s\n' "$resolved"
+          test -n "$resolved"
+          case "$resolved" in
+            *main.tex) ;;
+            *) echo "Unexpected main.tex resolution: $resolved"; exit 1 ;;
+          esac
+          for dependency in \
+            tabularray.sty tabularray-abnt.sty varwidth.sty booktabs.sty listings.sty \
+            algorithmicx.sty fifo-stack.sty tabto.sty totcount.sty tikz.sty algpseudocodex.sty \
+            glossaries.sty imakeidx.sty; do
+            dep=$(kpsewhich "$dependency")
+            printf 'KPATHSEA_DEP=%s=%s\n' "$dependency" "$dep"
+            test -n "$dep"
+          done
+          for library in calc fit tikzmark; do
+            dep=$(kpsewhich "tikzlibrary${library}.code.tex")
+            printf 'KPATHSEA_TIKZLIB=%s=%s\n' "$library" "$dep"
+            test -n "$dep"
+          done
+
+      - name: Compile complete strict candidate matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p r4-final-pdfs
+          cp template/main.tex template/main.tex.r4-original
+          restore_main() {
+            if [ -f template/main.tex.r4-original ]; then
+              cp template/main.tex.r4-original template/main.tex
+              rm -f template/main.tex.r4-original
+            fi
+          }
+          trap restore_main EXIT INT TERM
+
+          make_shell='C:/Program Files/Git/bin/bash.exe'
+          test -x "$make_shell"
+
+          for engine in pdflatex lualatex; do
+            for family in times arial; do
+              cp template/main.tex.r4-original template/main.tex
+              python - template/main.tex "$family" <<'PY'
+          import pathlib
+          import re
+          import sys
+
+          path = pathlib.Path(sys.argv[1])
+          family = sys.argv[2]
+          text = path.read_text(encoding='utf-8')
+          text, n_family = re.subn(r'(?m)^\s*font\s*=\s*times\s*,', f'  font = {family},', text, count=1)
+          text, n_strict = re.subn(r'(?m)^\s*strict-font\s*=\s*false\s*,', '  strict-font = true,', text, count=1)
+          if n_family != 1 or n_strict != 1:
+              raise SystemExit(f'candidate patch cardinality failed: family={n_family} strict={n_strict}')
+          path.write_text(text, encoding='utf-8')
+          PY
+
+              echo "R4 final candidate: $family / $engine"
+              make SHELL="$make_shell" 'TEX_ENV=TEXINPUTS=".;..//;"' DOCUMENT=main ENGINE="$engine" compile
+              test -s template/main.pdf
+              cp template/main.pdf "r4-final-pdfs/abntexto-ufc-main-${family}-${engine}-strict.pdf"
+              make SHELL="$make_shell" DOCUMENT=main clean
+            done
+          done
+
+          restore_main
+          trap - EXIT INT TERM
+          git diff --exit-code -- template/main.tex
+          test "$(find r4-final-pdfs -maxdepth 1 -name '*.pdf' | wc -l)" -eq 4
+
+      - name: Upload complete Windows candidate PDFs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: r4-final-windows-candidate-pdfs
+          if-no-files-found: error
+          retention-days: 14
+          path: r4-final-pdfs/*.pdf
+
+  linux:
+    name: Linux final font and PDF-A certification
+    needs:
+      - preflight
+      - windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact R4 product candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: c79f3c73f1d51a30175e8259269504d029442a1c
+          persist-credentials: false
+
+      - name: Verify exact product checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "c79f3c73f1d51a30175e8259269504d029442a1c"
+
+      - name: Install PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          docker --version
+
+      - name: Download complete Windows candidate PDFs
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: r4-final-windows-candidate-pdfs
+          path: r4-final-pdfs
+
+      - name: Certify complete candidate artifacts
+        shell: bash
+        env:
+          R4_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/r4-final
+
+          for engine in pdflatex lualatex; do
+            for family in times arial; do
+              pdf="r4-final-pdfs/abntexto-ufc-main-${family}-${engine}-strict.pdf"
+              test -s "$pdf"
+              echo "R4 final certification: $family / $engine"
+
+              pdffonts "$pdf" | tee "artifacts/r4-final/${family}-${engine}-pdffonts.txt"
+              names=$(pdffonts "$pdf" | tail -n +3 | awk 'NF {print $1}')
+
+              case "$family" in
+                times)
+                  printf '%s\n' "$names" | grep -Fq 'TimesNewRomanPSMT'
+                  if printf '%s\n' "$names" | grep -Eiq 'Arial(MT|-)|TeXGyreHeros|NimbusSans'; then
+                    echo "Unexpected non-math text-family substitution in $pdf"
+                    exit 1
+                  fi
+                  ;;
+                arial)
+                  printf '%s\n' "$names" | grep -Fq 'ArialMT'
+                  if printf '%s\n' "$names" | grep -Eiq 'TimesNewRomanPS|TeXGyreHeros|NimbusSans'; then
+                    echo "Unexpected non-math text-family substitution in $pdf"
+                    exit 1
+                  fi
+                  ;;
+                *) exit 2 ;;
+              esac
+
+              if [ "$engine" = pdflatex ]; then
+                # newtxmath legitimately embeds TeXGyreTermesX plus NewTX math fonts.
+                printf '%s\n' "$names" | grep -Fq 'NewTXMI'
+              else
+                # Unicode engines use the configured OpenType math font independently of text family.
+                printf '%s\n' "$names" | grep -Eiq 'Math-Regular|TermesMath|LatinModernMath'
+              fi
+
+              pdftotext "$pdf" "artifacts/r4-final/${family}-${engine}-text.txt"
+              for marker in 'Universidade Federal do Ceará' 'Modelo comentado de trabalho acadêmico da UFC' 'Fortaleza' 'AGRADECIMENTOS' 'RESUMO'; do
+                grep -Fq "$marker" "artifacts/r4-final/${family}-${engine}-text.txt" || {
+                  echo "Unicode/text extraction marker missing in $pdf: $marker"
+                  exit 1
+                }
+              done
+
+              sh tests/integration/font-embedding.sh "$pdf"
+              sh tests/integration/pdfa.sh "$pdf"
+              cp /tmp/abntexto-ufc-verapdf.xml "artifacts/r4-final/${family}-${engine}-verapdf.xml"
+              sha256sum "$pdf" > "artifacts/r4-final/${family}-${engine}.sha256"
+            done
+          done
+
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path('r4-final-pdfs')
+          cases = []
+          for engine in ('pdflatex', 'lualatex'):
+              for family in ('times', 'arial'):
+                  pdf = root / f'abntexto-ufc-main-{family}-{engine}-strict.pdf'
+                  cases.append({
+                      'engine': engine,
+                      'family': family,
+                      'pdf': pdf.name,
+                      'sha256': hashlib.sha256(pdf.read_bytes()).hexdigest(),
+                      'literal_text_family': 'PASS',
+                      'math_font_policy': 'NEW-TX-MATH' if engine == 'pdflatex' else 'OPEN-TYPE-MATH',
+                      'unexpected_text_substitution': 'ABSENT',
+                      'unicode_extraction': 'PASS',
+                      'font_embedding': 'PASS',
+                      'pdfa_2b': 'PASS',
+                  })
+          receipt = {
+              'stage': 'V3-R4',
+              'issue': 267,
+              'candidate_sha': 'c79f3c73f1d51a30175e8259269504d029442a1c',
+              'r4_entry_predecessor_sha': 'd90a675a844724c33a5727d8d980027c46291eb0',
+              'certification_launch_main_sha': '438217d004ab0b6fdc430131082b4d749adc5266',
+              'workflow_run_id': int(os.environ['R4_RUN_ID']),
+              'template': 'template/main.tex',
+              'product_equivalence_to_launch_main': 'PASS',
+              'result': 'PASS',
+              'inspection_note': 'TeXGyreTermesX-Regular is accepted only as part of the pdfLaTeX newtxmath stack; literal institutional text-family identity is certified independently.',
+              'cases': cases,
+              'runtime_api_changed': False,
+              'normative_semantics_changed': False,
+              'proof_state_changed': False,
+              'proprietary_fonts_redistributed': False,
+          }
+          Path('artifacts/r4-final/certification-receipt.json').write_text(
+              json.dumps(receipt, indent=2, ensure_ascii=False) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(receipt, indent=2, ensure_ascii=False))
+          PY
+
+      - name: Upload final R4 evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: r4-final-certification-evidence
+          if-no-files-found: error
+          retention-days: 14
+          path: artifacts/r4-final/**
+
+  cleanup:
+    name: Remove temporary R4 certification workflow
+    if: always()
+    needs:
+      - preflight
+      - windows
+      - linux
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout certification branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: cert/v3-r4-final-candidate
+          fetch-depth: 0
+
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          path=.github/workflows/r4-final-candidate-certification-temp.yml
+          if [ ! -e "$path" ]; then
+            echo 'Temporary R4 certification workflow already absent.'
+            exit 0
+          fi
+          rm -f "$path"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- "$path"
+          if git diff --cached --quiet; then
+            echo 'Temporary R4 certification workflow already absent from index.'
+            exit 0
+          fi
+          git commit -m 'ci: remove temporary R4 final certification'
+          git push origin HEAD:cert/v3-r4-final-candidate
