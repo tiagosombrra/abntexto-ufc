@@ -1,0 +1,87 @@
+name: Temporary exact R5 entry activation
+
+on:
+  push:
+    branches:
+      - docs/v3-r4-closeout-r5-entry
+
+permissions:
+  contents: write
+
+jobs:
+  activate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+
+      - name: Require exact R4 closeout predecessor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git merge-base HEAD origin/main)" = "0b0f5d989163dc6b1429feeb2d8a7c66988647bb"
+          test "$(git rev-parse origin/main)" = "0b0f5d989163dc6b1429feeb2d8a7c66988647bb"
+
+      - name: Activate exact R5 entry
+        run: python .github/scripts/r4-r5-entry-activate.py
+
+      - name: Verify authority documents unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code 0b0f5d989163dc6b1429feeb2d8a7c66988647bb -- \
+            docs/NORMATIVE-BASE.md \
+            docs/NORMATIVE-CURRENCY.md \
+            docs/MIGRATING-TO-V3.md
+
+      - name: Run repository static contract
+        run: make static-check
+
+      - name: Remove temporary executor and validate permanent diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/r4-r5-entry-activate.py
+          rm -f .github/workflows/r4-r5-entry-activate.yml
+          rmdir .github/scripts 2>/dev/null || true
+          git diff --check 0b0f5d989163dc6b1429feeb2d8a7c66988647bb
+          mapfile -t changed < <(git diff --name-only 0b0f5d989163dc6b1429feeb2d8a7c66988647bb)
+          expected=(
+            AGENTS.md
+            README.md
+            docs/ARCHITECTURE.md
+            docs/CTAN-RELEASE.md
+            docs/ENGINEERING-LANGUAGE.md
+            docs/HANDOFF-V3.0.0.md
+            docs/R3-HARDENING-INVENTORY.md
+            docs/ROADMAP-V3.0.0.md
+            release/v3-r3-inventory.json
+            release/v3-roadmap.json
+          )
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' "${expected[@]}" | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+
+      - name: Commit permanent exact-entry activation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'docs: close R4 and activate R5 entry'
+          git push origin HEAD:docs/v3-r4-closeout-r5-entry
