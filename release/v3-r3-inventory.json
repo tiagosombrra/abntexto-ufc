@@ -42,7 +42,14 @@
     "r3_b4_linux_result": "PASS=31 FAIL=0 SKIP=0",
     "r3_b4_post_merge_release_run_id": 33816137774,
     "r3_b4_post_merge_release_job_id": 100848593542,
-    "r3_b4_post_merge_release_result": "PASS=33 FAIL=0 SKIP=0"
+    "r3_b4_post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
+    "r3_b5_activation_pr": 265,
+    "r3_b5_control_plane_entry_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
+    "r3_b5_activation_static_run_id": 33817862525,
+    "r3_b5_activation_linux_run_id": 33817846901,
+    "r3_b5_activation_linux_job_id": 100853855647,
+    "r3_b5_activation_linux_result": "PASS=31 FAIL=0 SKIP=0",
+    "r3_b5_entry_post_merge_static_run_id": 33821489030
   },
   "normative_baseline": {
     "sources": 19,
@@ -321,7 +328,9 @@
       "issue": 256,
       "status": "ACTIVE",
       "name": "R3 closeout and R4 certification entry",
-      "entry_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390"
+      "entry_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+      "entry_control_plane_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
+      "activation_pr": 265
     }
   },
   "retained_contracts": {
@@ -340,7 +349,7 @@
   "next_stage": "R3-B5",
   "next_issue": 256,
   "r3_a_source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
-  "current_entry_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+  "current_entry_main_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
   "r3_b1_closeout": {
     "issue": 252,
     "pr": 258,
@@ -457,6 +466,21 @@
       "closed_unconsumed_contracts": 0,
       "live_api_contract_consumers": 2
     },
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false
+  },
+  "r3_b5_activation": {
+    "status": "ACTIVE",
+    "issue": 256,
+    "activation_pr": 265,
+    "b4_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+    "control_plane_entry_sha": "e5d6ab1962ee04935ee68a6ae36f268350d59a3b",
+    "static_contract_run_id": 33817862525,
+    "linux_integration_run_id": 33817846901,
+    "linux_integration_job_id": 100853855647,
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "post_merge_static_run_id": 33821489030,
     "normative_semantics_changed": false,
     "proof_state_changed": false,
     "public_runtime_api_changed": false

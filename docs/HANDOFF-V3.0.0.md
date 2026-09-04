@@ -17,7 +17,10 @@ Updated: 2026-09-03
 - R3-B4 permanent baseline: 305 residual-scanned sources (134 LaTeX + 171 engineering); 148/148 retained test/check scripts reachable; zero orphans; zero Portuguese project-owned technical diagnostics; zero retired profile IDs; zero closed unconsumed migration contracts; two live `v3-api-migration` consumers.
 - Active stage: **R3-B5 — R3 closeout and exact R4 certification entry**.
 - Active issue: **#256**.
-- B5 entry product checkpoint: `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; the canonical B5 control-plane checkpoint is the merge produced by this B4→B5 reconciliation.
+- B5 product predecessor: `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`.
+- Canonical B5 execution/control-plane entry: `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` from PR #265.
+- B5 activation PR gates: Static `33817862525` — PASS; Linux `33817846901` / job `100853855647` — `PASS=31 FAIL=0 SKIP=0`.
+- B5 entry post-merge Static `33821489030` — PASS; the post-merge release run is current-state evidence and is recorded when it completes.
 - Certified R1 candidate remains `9b1752565ac217c04ffa22a9ef272cdf078af380`; final Windows/literal-font recertification remains R4-owned.
 
 Git facts, `release/v3-roadmap.json`, this handoff, `docs/ROADMAP-V3.0.0.md` and `AGENTS.md` must agree. Disagreement fails closed.
@@ -40,7 +43,7 @@ The consumer audit retained `release/v3-api-migration.json` because permanent ch
 
 ## Immediate action
 
-Execute issue #256 from the canonical B4→B5 control-plane checkpoint. Reconcile every control-plane surface, prove that evidence semantics remain truthful, run `make static-check` and full `make check` on the final R3 candidate, verify temporary workflows/executors and cleanup-only migration artifacts are absent, and record the exact immutable R4 entry SHA. Do not perform the R4 Windows/literal-font certification inside B5.
+Execute issue #256 from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b`. Reconcile every control-plane surface, prove that evidence semantics remain truthful, run `make static-check` and full `make check` on the final R3 candidate, verify temporary workflows/executors and cleanup-only migration artifacts are absent, and record the exact immutable R4 entry SHA. Do not perform the R4 Windows/literal-font certification inside B5.
 
 ## Hard boundaries
 

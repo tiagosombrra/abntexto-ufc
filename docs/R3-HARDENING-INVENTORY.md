@@ -95,10 +95,10 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 | R3-B2/#253 | DONE | PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0`; 113/113 bounded-positive, automation-gap=0 |
 | R3-B3/#254 | DONE | entry `44874c84b375396de8b9e3b24a40c47b5006f19b`; PR #262 → `fbee5bd329f98a389c2880932af40547c8d1674e`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0` |
 | R3-B4/#255 | DONE | entry `f0b3df319501bef0a6257ac23d42f28c59ad73a0`; PR #264 → `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0` |
-| R3-B5/#256 | ACTIVE | entry product `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; closes R3 and records immutable R4 entry |
+| R3-B5/#256 | ACTIVE | product predecessor `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; control-plane entry `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` (PR #265); closes R3 and records immutable R4 entry |
 
 ## R3-B5 entry contract
 
-B5 starts only after the B4→B5 control-plane checkpoint merges. Its product entry is `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. It must reconcile all canonical control-plane surfaces against Git facts, confirm that no unclassified FAIL/UNASSESSED is represented as proof-contributing PASS, confirm proof/coverage/residual/language gates remain green, run `make static-check` and full `make check`, verify temporary executors and cleanup-only migration artifacts are absent, and record the exact immutable R4 certification entry. R4 Windows/literal-font certification is explicitly out of scope.
+B5 starts from the merged B4→B5 control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` (PR #265); its product predecessor is `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. It must reconcile all canonical control-plane surfaces against Git facts, confirm that no unclassified FAIL/UNASSESSED is represented as proof-contributing PASS, confirm proof/coverage/residual/language gates remain green, run `make static-check` and full `make check`, verify temporary executors and cleanup-only migration artifacts are absent, and record the exact immutable R4 certification entry. R4 Windows/literal-font certification is explicitly out of scope.
 
 No source/currency fact or public runtime API changed in B4, so `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md` and `docs/MIGRATING-TO-V3.md` remain intentionally unchanged.

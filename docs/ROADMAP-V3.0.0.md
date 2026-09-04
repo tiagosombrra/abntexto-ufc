@@ -28,7 +28,7 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 
 | R3-B2 | DONE | issue #253; PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` | 17 non-automatic rules classified; 113/113 `automatic-partial` bounded-positive; explicit enforced/support-only semantics | None |
 | R3-B3 | DONE | issue #254; PR #262; canonical entry `44874c84b375396de8b9e3b24a40c47b5006f19b`; merge `fbee5bd329f98a389c2880932af40547c8d1674e` | 302-source residual gate; 147/147 reachable checks; zero orphaned scripts; Linux 31/0/0; release 33/0/0 | None |
 | R3-B4 | DONE | issue #255; PR #264; canonical entry `f0b3df319501bef0a6257ac23d42f28c59ad73a0`; merge `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390` | permanent engineering-language enforcement; canonical profile IDs; closed-contract consolidation; PR `31/0/0`; release `33/0/0` | None |
-| R3-B5 | ACTIVE | issue #256; entry `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390` | R3 closeout and immutable R4 entry | reconcile final candidate; run Static + full Linux; record exact R4 entry SHA |
+| R3-B5 | ACTIVE | issue #256; control-plane entry `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` | R3 closeout and immutable R4 entry | reconcile final candidate; run Static + full Linux; record exact R4 entry SHA |
 | V3-R4 | BLOCKED | — | final certification | after R3-B5 |
 | V3-R5 | BLOCKED | — | foundation freeze and final docs | after R4 |
 | V3-A1/A2 | BLOCKED | — | scientific-article work | after certified foundation |
@@ -64,8 +64,8 @@ R3-B4/#255 entered canonically from `f0b3df319501bef0a6257ac23d42f28c59ad73a0`, 
 
 ## R3-B5 entry
 
-R3-B5/#256 starts after this B4→B5 control-plane checkpoint, from product SHA `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. It owns final R3 reconciliation, truthful-evidence confirmation, `make static-check`, full `make check`, temporary-executor/migration-artifact absence, and recording the exact immutable R4 certification entry. It must not perform R4 certification.
+R3-B5/#256 starts from the canonical B4→B5 control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` (PR #265); its product predecessor remains `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. It owns final R3 reconciliation, truthful-evidence confirmation, `make static-check`, full `make check`, temporary-executor/migration-artifact absence, and recording the exact immutable R4 certification entry. It must not perform R4 certification.
 
 ## Immediate action
 
-Execute **R3-B5 / issue #256** from the canonical B4→B5 checkpoint. Do not start R4 final certification, R5, V3-A1/A2, or CTAN submission before B5 records the immutable R4 entry.
+Execute **R3-B5 / issue #256** from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b`. Do not start R4 final certification, R5, V3-A1/A2, or CTAN submission before B5 records the immutable R4 entry.
