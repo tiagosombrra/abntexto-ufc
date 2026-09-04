@@ -5,9 +5,9 @@
   "target_version": "3.0.0",
   "updated_at": "2026-09-04",
   "status": "ACTIVE",
-  "phase": "V3-R4",
-  "stage": "V3-R4",
-  "stage_name": "R4 certification closeout and R5 entry",
+  "phase": "V3-R5",
+  "stage": "V3-R5",
+  "stage_name": "freeze certified foundation and finalize release-ready documentation",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -978,7 +978,7 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R3/R3-B4 issue #255 from fbee5bd329f98a389c2880932af40547c8d1674e: enforce scoped English project engineering language, migrate technical profile/scenario identifiers consumer-safely, and audit closed migration-contract consumers.",
+  "next_action": "Execute V3-R5/#272 from exact entry 0b0f5d989163dc6b1429feeb2d8a7c66988647bb without modifying certified product c79f3c73f1d51a30175e8259269504d029442a1c: freeze the foundation, reconcile release/user/maintainer documentation, verify normative/current migration truthfulness, public/distribution bundles, checksums, asset exclusions and release metadata, run proportional release gates, and prove zero temporary/stale cleanup residue. Keep V3-A1/A2 and CTAN submission blocked until R5 closes.",
   "r1_status": "DONE",
   "r2": {
     "status": "DONE",
@@ -1126,16 +1126,15 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "phase": "V3-R4",
-    "stage": "V3-R4",
-    "issue": 267,
+    "phase": "V3-R5",
+    "stage": "V3-R5",
+    "issue": 272,
     "entry_product_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
-    "name": "R4 certification closeout and R5 entry",
-    "id": "V3-R4",
+    "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
+    "name": "freeze certified foundation and finalize release-ready documentation",
+    "id": "V3-R5",
     "status": "ACTIVE",
-    "entry_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
-    "certification_status": "DONE",
-    "exact_r5_entry_activation_pending": true
+    "foundation_freeze_started": false
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1575,8 +1574,8 @@
     "blocked_until_exact_entry_activation": false,
     "certification_status": "DONE"
   },
-  "next_stage": "V3-R4",
-  "next_issue": 267,
+  "next_stage": "V3-R5",
+  "next_issue": 272,
   "r3_b5_closeout": {
     "status": "DONE",
     "issue": 256,
@@ -1689,11 +1688,43 @@
     "inspection_note": "TeXGyreTermesX-Regular is accepted only as part of the pdfLaTeX newtxmath stack; literal institutional text-family identity is certified independently."
   },
   "r5_preparation": {
-    "status": "PREPARED",
+    "status": "ACTIVE",
     "issue": 272,
     "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
-    "entry_main_sha": null,
-    "blocked_until_exact_r4_closeout": true,
+    "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
+    "blocked_until_exact_r4_closeout": false,
     "foundation_freeze_started": false
+  },
+  "r4_closeout": {
+    "status": "DONE",
+    "issue": 267,
+    "closeout_pr": 273,
+    "closeout_merge_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
+    "r4_entry_predecessor_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
+    "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "certification_run_id": 33855800767,
+    "preflight_job_id": 100968686875,
+    "windows_matrix_job_id": 100968747942,
+    "linux_final_job_id": 100970109387,
+    "cleanup_job_id": 100970307670,
+    "matrix_cells_passed": 4,
+    "unicode_extraction_passed": true,
+    "font_embedding_passed": true,
+    "pdfa_2b_passed": true,
+    "temporary_executor_residue": 0,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false,
+    "proprietary_fonts_redistributed": false
+  },
+  "r5": {
+    "status": "ACTIVE",
+    "issue": 272,
+    "name": "freeze certified foundation and finalize release-ready documentation",
+    "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
+    "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "foundation_freeze_started": false,
+    "scientific_article_work_started": false,
+    "ctan_submission_started": false
   }
 }
