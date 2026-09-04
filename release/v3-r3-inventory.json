@@ -3,7 +3,7 @@
   "project": "abntexto-ufc",
   "target_version": "3.0.0",
   "phase": "V3-R3",
-  "stage": "R3-B4",
+  "stage": "R3-B5",
   "status": "ACTIVE",
   "reviewed_at": "2026-09-03",
   "source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
@@ -32,7 +32,17 @@
     "r3_b3_linux_result": "PASS=31 FAIL=0 SKIP=0",
     "r3_b3_post_merge_release_run_id": 33794112546,
     "r3_b3_post_merge_release_job_id": 100777542613,
-    "r3_b3_post_merge_release_result": "PASS=33 FAIL=0 SKIP=0"
+    "r3_b3_post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
+    "r3_b4_control_plane_entry_sha": "f0b3df319501bef0a6257ac23d42f28c59ad73a0",
+    "r3_b4_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+    "r3_b4_bounded_run_id": 33814870180,
+    "r3_b4_static_run_id": 33814977737,
+    "r3_b4_linux_run_id": 33814977730,
+    "r3_b4_linux_job_id": 100844995945,
+    "r3_b4_linux_result": "PASS=31 FAIL=0 SKIP=0",
+    "r3_b4_post_merge_release_run_id": 33816137774,
+    "r3_b4_post_merge_release_job_id": 100848593542,
+    "r3_b4_post_merge_release_result": "PASS=33 FAIL=0 SKIP=0"
   },
   "normative_baseline": {
     "sources": 19,
@@ -166,7 +176,10 @@
       "owner": "R3-B4",
       "issue": 255,
       "fact": "Portuguese project-owned technical diagnostics remain in integration scripts while repository_contract enforces mainly path-level language constraints.",
-      "status": "ACTIVE"
+      "status": "RESOLVED",
+      "resolved_by": "R3-B4",
+      "closure_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+      "resolution": "Permanent engineering-language enforcement reports zero Portuguese project-owned technical diagnostics while protecting academic/normative/bibliographic Portuguese."
     },
     {
       "id": "engineering-profile-identifiers-portuguese",
@@ -175,7 +188,10 @@
       "owner": "R3-B4",
       "issue": 255,
       "fact": "front-matter scenario/applicability machine identifiers remain Portuguese although canonical runtime type values are English.",
-      "status": "ACTIVE"
+      "status": "RESOLVED",
+      "resolved_by": "R3-B4",
+      "closure_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+      "resolution": "Project-owned technical profile/scenario identifiers use canonical v3 English values without changing applicability semantics."
     },
     {
       "id": "closed-migration-contract-cleanup",
@@ -184,7 +200,10 @@
       "owner": "R3-B4",
       "issue": 255,
       "fact": "v3-api-migration is a live residual-gate dependency; v3-test-migration and v3-path-migration require a final consumer audit before consolidation/removal.",
-      "status": "ACTIVE"
+      "status": "RESOLVED",
+      "resolved_by": "R3-B4",
+      "closure_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+      "resolution": "v3-api-migration remains for two live consumers; closed unconsumed test/path migration contracts were removed."
     }
   ],
   "lots": {
@@ -264,24 +283,52 @@
     },
     "R3-B4": {
       "issue": 255,
-      "status": "ACTIVE",
+      "status": "DONE",
       "name": "engineering-language enforcement and closed-contract consolidation",
-      "entry_product_main_sha": "fbee5bd329f98a389c2880932af40547c8d1674e"
+      "entry_product_main_sha": "f0b3df319501bef0a6257ac23d42f28c59ad73a0",
+      "implementation_head_sha": "4c22a9444db6720c0c8ae59ec8cec4bff6344672",
+      "pr": 264,
+      "merge_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+      "bounded_validation_run_id": 33814870180,
+      "static_contract_run_id": 33814977737,
+      "linux_integration_run_id": 33814977730,
+      "linux_integration_job_id": 100844995945,
+      "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+      "post_merge_release_run_id": 33816137774,
+      "post_merge_release_job_id": 100848593542,
+      "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
+      "residual_sources": {
+        "latex": 134,
+        "engineering": 171,
+        "total": 305
+      },
+      "test_surface": {
+        "retained": 148,
+        "reachable": 148,
+        "orphaned": 0
+      },
+      "engineering_language": {
+        "portuguese_technical_diagnostics": 0,
+        "retired_profile_ids": 0,
+        "closed_unconsumed_contracts": 0,
+        "live_api_contract_consumers": 2
+      },
+      "normative_semantics_changed": false,
+      "proof_state_changed": false,
+      "public_runtime_api_changed": false
     },
     "R3-B5": {
       "issue": 256,
-      "status": "PENDING",
-      "name": "R3 closeout and R4 certification entry"
+      "status": "ACTIVE",
+      "name": "R3 closeout and R4 certification entry",
+      "entry_product_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390"
     }
   },
   "retained_contracts": {
-    "release/v3-api-migration.json": "live dependency of tests/checks/v3_api_residual.py",
+    "release/v3-api-migration.json": "live dependency of permanent residual/engineering-language enforcement",
     "release/v3-roadmap.json": "canonical machine state"
   },
-  "contracts_pending_consumer_audit": [
-    "release/v3-test-migration.json",
-    "release/v3-path-migration.json"
-  ],
+  "contracts_pending_consumer_audit": [],
   "boundaries": {
     "runtime_alias_layer_allowed": false,
     "normative_change_without_new_evidence_allowed": false,
@@ -290,10 +337,10 @@
     "scientific_article_work_allowed_before_certified_foundation": false,
     "ctan_submission_allowed_during_r3": false
   },
-  "next_stage": "R3-B4",
-  "next_issue": 255,
+  "next_stage": "R3-B5",
+  "next_issue": 256,
   "r3_a_source_main_sha": "345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5",
-  "current_entry_main_sha": "fbee5bd329f98a389c2880932af40547c8d1674e",
+  "current_entry_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
   "r3_b1_closeout": {
     "issue": 252,
     "pr": 258,
@@ -373,6 +420,42 @@
       "reachable": 147,
       "standalone_classified": 3,
       "orphaned": 0
+    },
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false
+  },
+  "r3_b4_closeout": {
+    "issue": 255,
+    "status": "DONE",
+    "name": "engineering-language enforcement and closed-contract consolidation",
+    "entry_product_main_sha": "f0b3df319501bef0a6257ac23d42f28c59ad73a0",
+    "implementation_head_sha": "4c22a9444db6720c0c8ae59ec8cec4bff6344672",
+    "pr": 264,
+    "merge_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+    "bounded_validation_run_id": 33814870180,
+    "static_contract_run_id": 33814977737,
+    "linux_integration_run_id": 33814977730,
+    "linux_integration_job_id": 100844995945,
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "post_merge_release_run_id": 33816137774,
+    "post_merge_release_job_id": 100848593542,
+    "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
+    "residual_sources": {
+      "latex": 134,
+      "engineering": 171,
+      "total": 305
+    },
+    "test_surface": {
+      "retained": 148,
+      "reachable": 148,
+      "orphaned": 0
+    },
+    "engineering_language": {
+      "portuguese_technical_diagnostics": 0,
+      "retired_profile_ids": 0,
+      "closed_unconsumed_contracts": 0,
+      "live_api_contract_consumers": 2
     },
     "normative_semantics_changed": false,
     "proof_state_changed": false,

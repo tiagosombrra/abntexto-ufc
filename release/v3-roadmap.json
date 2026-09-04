@@ -6,8 +6,8 @@
   "updated_at": "2026-09-03",
   "status": "ACTIVE",
   "phase": "V3-R3",
-  "stage": "R3-B4",
-  "stage_name": "engineering-language enforcement and closed-contract consolidation",
+  "stage": "R3-B5",
+  "stage_name": "R3 closeout and R4 certification entry",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -1128,9 +1128,12 @@
   "active_implementation_lot": {
     "phase": "V3-R3",
     "stage": "R3-B4",
-    "issue": 255,
+    "issue": 256,
     "entry_product_main_sha": "fbee5bd329f98a389c2880932af40547c8d1674e",
-    "name": "engineering-language enforcement and closed-contract consolidation"
+    "name": "engineering-language enforcement and closed-contract consolidation",
+    "id": "R3-B5",
+    "status": "ACTIVE",
+    "entry_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390"
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1285,15 +1288,25 @@
         "public_runtime_api_changed": false
       },
       "R3-B4": {
-        "status": "ACTIVE",
+        "status": "DONE",
         "issue": 255,
         "name": "engineering-language enforcement and closed-contract consolidation",
-        "entry_product_main_sha": "fbee5bd329f98a389c2880932af40547c8d1674e"
+        "entry_product_main_sha": "fbee5bd329f98a389c2880932af40547c8d1674e",
+        "pr": 264,
+        "entry_main_sha": "f0b3df319501bef0a6257ac23d42f28c59ad73a0",
+        "implementation_head_sha": "4c22a9444db6720c0c8ae59ec8cec4bff6344672",
+        "merge_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+        "static_contract_run_id": 33814977737,
+        "linux_integration_run_id": 33814977730,
+        "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+        "post_merge_release_run_id": 33816137774,
+        "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0"
       },
       "R3-B5": {
-        "status": "PENDING",
+        "status": "ACTIVE",
         "issue": 256,
-        "name": "R3 closeout and R4 certification entry"
+        "name": "R3 closeout and R4 certification entry",
+        "entry_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390"
       }
     },
     "pr": 262,
@@ -1462,6 +1475,31 @@
       "standalone_classified": 3,
       "orphaned": 0
     },
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false
+  },
+  "r3_b4_closeout": {
+    "issue": 255,
+    "pr": 264,
+    "entry_main_sha": "f0b3df319501bef0a6257ac23d42f28c59ad73a0",
+    "implementation_head_sha": "4c22a9444db6720c0c8ae59ec8cec4bff6344672",
+    "merge_main_sha": "59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390",
+    "bounded_validation_run_id": 33814870180,
+    "static_contract_run_id": 33814977737,
+    "linux_integration_run_id": 33814977730,
+    "linux_integration_job_id": 100844995945,
+    "linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "post_merge_release_run_id": 33816137774,
+    "post_merge_release_job_id": 100848593542,
+    "post_merge_release_result": "PASS=33 FAIL=0 SKIP=0",
+    "residual_sources": 305,
+    "reachable_test_scripts": 148,
+    "orphaned_test_scripts": 0,
+    "portuguese_technical_diagnostics": 0,
+    "retired_profile_ids": 0,
+    "closed_unconsumed_contracts": 0,
+    "live_api_contract_consumers": 2,
     "normative_semantics_changed": false,
     "proof_state_changed": false,
     "public_runtime_api_changed": false

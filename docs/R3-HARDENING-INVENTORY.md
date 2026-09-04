@@ -6,7 +6,7 @@ Updated: 2026-09-03
 
 R3 hardens the truthfulness of the v3 foundation before final certification. The original R3-A inventory was taken from `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`; its baseline had 19 sources, 181 rules, 164 automatic declarations, 17 manual/conditional rules, 11 project-policy/technical-profile rules, 32 runner gates, 10 registered evidence checks and 9 validator checks.
 
-R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 is closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 is closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`. R3-B4/#255 is active.
+R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 is closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 is closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`. R3-B4/#255 is closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. R3-B5/#256 is active.
 
 ## R3-B1 closeout evidence
 
@@ -50,6 +50,21 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 - negative paths require same-`rule_id` positive PASS before controlled rejection;
 - normative semantics / proof-state defaults / public runtime API changed: **no**.
 
+## R3-B4 closeout evidence
+
+- canonical B4 entry/control-plane checkpoint: `f0b3df319501bef0a6257ac23d42f28c59ad73a0`;
+- final implementation head: `4c22a9444db6720c0c8ae59ec8cec4bff6344672`;
+- merge/main SHA: `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`;
+- issue / PR: #255 / #264;
+- bounded validation run: `33814870180` — PASS;
+- PR Static contract: `33814977737` — PASS;
+- PR Linux integration: `33814977730` / job `100844995945` — `PASS=31 FAIL=0 SKIP=0`;
+- post-merge Linux release: `33816137774` / job `100848593542` — `PASS=33 FAIL=0 SKIP=0`;
+- engineering-language audit: Portuguese technical diagnostics=0, retired profile IDs=0, closed unconsumed contracts=0, live API-contract consumers=2;
+- permanent residual scope: 134 LaTeX + 171 engineering = 305 sources;
+- test surface: 148/148 retained scripts reachable, zero orphaned;
+- normative semantics / proof-state defaults / public runtime API changed: **no**.
+
 ## Findings resolved
 
 | R3-A finding | Resolution | Lot |
@@ -63,13 +78,13 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 | Coverage check name does not imply enforcement | Runtime contribution gate intersects rule-specific current-run evidence with declared owners; green mechanism registration alone is not proof. | R3-B2 |
 | 17 manual/conditional rules require classification | All 17 are individually classified: 10 conditional-review, 6 manual-review, 1 not-applicable; none is auto-promoted from a green gate. | R3-B2 |
 
-## Findings still open
+## Findings resolved in R3-B4
 
 | Finding | Owner | Issue | Status | Required result |
 |---|---|---:|---|---|
-| Engineering-language diagnostics gap | R3-B4 | #255 | ACTIVE | Enforce English technical diagnostics/comments/UI without touching rendered academic Portuguese. |
-| Engineering profile identifiers remain Portuguese | R3-B4 | #255 | ACTIVE | Migrate project-owned machine identifiers where consumer-safe and preserve genuine content/upstream boundaries. |
-| Closed migration contract cleanup | R3-B4 | #255 | ACTIVE | Prove consumers before consolidating/removing closed R2 contracts. |
+| Engineering-language diagnostics gap | R3-B4 | #255 | RESOLVED | Permanent checker enforces English project-owned technical diagnostics/comments/UI while protecting rendered academic Portuguese. |
+| Engineering profile identifiers remain Portuguese | R3-B4 | #255 | RESOLVED | Project-owned profile/scenario machine IDs use canonical v3 English values; protected content/upstream boundaries remain unchanged. |
+| Closed migration contract cleanup | R3-B4 | #255 | RESOLVED | `v3-api-migration.json` retained for two live consumers; closed unconsumed test/path contracts removed. |
 
 ## R3 lot state
 
@@ -79,13 +94,11 @@ R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1
 | R3-B1/#252 | DONE | PR #258 → `afb9f16403aafd8752a0aa8b0713f85c41204d1b`; `PASS=30 FAIL=0 SKIP=0` |
 | R3-B2/#253 | DONE | PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0`; 113/113 bounded-positive, automation-gap=0 |
 | R3-B3/#254 | DONE | entry `44874c84b375396de8b9e3b24a40c47b5006f19b`; PR #262 → `fbee5bd329f98a389c2880932af40547c8d1674e`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0` |
-| R3-B4/#255 | ACTIVE | entry `fbee5bd329f98a389c2880932af40547c8d1674e` |
-| R3-B5/#256 | PENDING | after B4; closes R3 and records immutable R4 entry |
+| R3-B4/#255 | DONE | entry `f0b3df319501bef0a6257ac23d42f28c59ad73a0`; PR #264 → `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; PR `PASS=31 FAIL=0 SKIP=0`; release `PASS=33 FAIL=0 SKIP=0` |
+| R3-B5/#256 | ACTIVE | entry product `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; closes R3 and records immutable R4 entry |
 
-## R3-B4 entry contract
+## R3-B5 entry contract
 
-B4 starts from `fbee5bd329f98a389c2880932af40547c8d1674e`. It must make the English-first engineering policy executable without confusing rendered Brazilian academic content, official normative wording, bibliography data, literal output under test, or genuine upstream identifiers with project-owned engineering nomenclature. It owns a scoped permanent source checker, consumer-safe migration of remaining project-owned Portuguese profile/scenario identifiers, translation of project-owned technical diagnostics/comments/UI, and a fail-closed consumer audit of closed migration contracts.
+B5 starts only after the B4→B5 control-plane checkpoint merges. Its product entry is `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. It must reconcile all canonical control-plane surfaces against Git facts, confirm that no unclassified FAIL/UNASSESSED is represented as proof-contributing PASS, confirm proof/coverage/residual/language gates remain green, run `make static-check` and full `make check`, verify temporary executors and cleanup-only migration artifacts are absent, and record the exact immutable R4 certification entry. R4 Windows/literal-font certification is explicitly out of scope.
 
-`release/v3-api-migration.json` remains a live dependency of `tests/checks/v3_api_residual.py` and must be retained while consumed. `release/v3-test-migration.json` and `release/v3-path-migration.json` may be consolidated or removed only after current consumers are proven absent or migrated. B4 requires `make static-check`, targeted exemption/false-positive tests, and full `make check` when scenario identifiers or integration scripts change.
-
-No source/currency fact changed in B3, so `docs/NORMATIVE-BASE.md` and `docs/NORMATIVE-CURRENCY.md` remain intentionally unchanged. The v3 migration guide also remains unchanged because B3 changed no public runtime API.
+No source/currency fact or public runtime API changed in B4, so `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md` and `docs/MIGRATING-TO-V3.md` remain intentionally unchanged.
