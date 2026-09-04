@@ -1,0 +1,88 @@
+name: Temporary R5 validation closeout
+
+on:
+  push:
+    branches:
+      - r5-foundation-freeze
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+
+      - name: Require exact canonical R5 base
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "ff833d814133d33887df8971f6a0af702d6c2143"
+          test "$(git merge-base HEAD origin/main)" = "ff833d814133d33887df8971f6a0af702d6c2143"
+
+      - name: Reconcile R5 validation closeout state
+        run: python .github/scripts/r5-validation-closeout.py
+
+      - name: Verify normative and migration authorities unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code ff833d814133d33887df8971f6a0af702d6c2143 -- \
+            docs/NORMATIVE-BASE.md \
+            docs/NORMATIVE-CURRENCY.md \
+            docs/MIGRATING-TO-V3.md
+
+      - name: Run repository static contract
+        run: make static-check
+
+      - name: Remove temporary reconciler and validate permanent diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/r5-validation-closeout.py
+          rm -f .github/workflows/r5-validation-closeout.yml
+          rmdir .github/scripts 2>/dev/null || true
+          git diff --check ff833d814133d33887df8971f6a0af702d6c2143
+          mapfile -t changed < <(git diff --name-only ff833d814133d33887df8971f6a0af702d6c2143)
+          expected=(
+            AGENTS.md
+            README.md
+            docs/ARCHITECTURE.md
+            docs/CTAN-RELEASE.md
+            docs/ENGINEERING-LANGUAGE.md
+            docs/HANDOFF-V3.0.0.md
+            docs/R3-HARDENING-INVENTORY.md
+            docs/ROADMAP-V3.0.0.md
+            release/v3-r3-inventory.json
+            release/v3-roadmap.json
+          )
+          printf '%s\n' "${changed[@]}" | sort > /tmp/actual
+          printf '%s\n' "${expected[@]}" | sort > /tmp/expected
+          diff -u /tmp/expected /tmp/actual
+          test -z "$(git status --short --untracked-files=all | grep -E '^.. \.github/(scripts/r5-validation-closeout.py|workflows/r5-validation-closeout.yml)$' || true)"
+
+      - name: Commit permanent R5 validation closeout preparation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'docs: record validated R5 foundation freeze'
+          git push origin HEAD:r5-foundation-freeze
