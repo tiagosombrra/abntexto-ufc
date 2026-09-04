@@ -1,4 +1,4 @@
-name: Temporary exact R4 entry activation
+name: Temporary final R3/R4 reconciliation
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  activate:
+  reconcile:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -36,23 +36,8 @@ jobs:
           test "$(git merge-base HEAD origin/main)" = "d90a675a844724c33a5727d8d980027c46291eb0"
           test "$(git rev-parse origin/main)" = "d90a675a844724c33a5727d8d980027c46291eb0"
 
-      - name: Normalize known pre-activation wording
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          path = Path('docs/ENGINEERING-LANGUAGE.md')
-          text = path.read_text(encoding='utf-8')
-          old = 'R3-B5/#256 is technically validated on `c79f3c73f1d51a30175e8259269504d029442a1c`; only exact-entry activation remains. R4/#267 is prepared but not started, and neither stage may broaden this policy or change the public runtime API without separately justified evidence.'
-          new = 'R3-B5/#256 is ACTIVE from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and owns R3 closeout/R4 entry; it must not broaden this policy or change the public runtime API.'
-          if text.count(old) != 1:
-              raise SystemExit('unexpected ENGINEERING-LANGUAGE pre-activation wording')
-          path.write_text(text.replace(old, new), encoding='utf-8')
-          PY
-
-      - name: Reconcile exact R4 entry state
-        run: python .github/scripts/r3-r4-entry-activate.py
+      - name: Reconcile final control plane
+        run: python .github/scripts/r3-r4-final-reconcile.py
 
       - name: Verify authority documents unchanged
         shell: bash
@@ -70,9 +55,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -f .github/scripts/r3-r4-entry-activate.py
+          rm -f .github/scripts/r3-r4-final-reconcile.py
           rm -f .github/workflows/r3-r4-entry-activate.yml
           rmdir .github/scripts 2>/dev/null || true
+
           git diff --check d90a675a844724c33a5727d8d980027c46291eb0
           mapfile -t changed < <(git diff --name-only d90a675a844724c33a5727d8d980027c46291eb0)
           expected=(
@@ -91,12 +77,15 @@ jobs:
           printf '%s\n' "${expected[@]}" | sort > /tmp/expected
           diff -u /tmp/expected /tmp/actual
 
-      - name: Commit permanent exact-entry activation
+          test ! -e .github/scripts/r3-r4-final-reconcile.py
+          test ! -e .github/workflows/r3-r4-entry-activate.yml
+
+      - name: Commit permanent reconciliation
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'docs: close R3 and activate R4 entry'
+          git commit -m 'docs: finalize R3 closeout and R4 entry'
           git push origin HEAD:docs/v3-r3-closeout-r4-entry
