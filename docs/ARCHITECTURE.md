@@ -179,3 +179,7 @@ The final foundation must prove at least:
 - deterministic class/runtime and CTAN distribution candidates with checksum metadata;
 - no institutional/proprietary assets in public distribution;
 - no generated artifacts, archive directories, or unused migration scaffolding tracked.
+
+## V3-A1 scientific-article boundary
+
+V3-A1 adds only the source/rule contract under `standards/`. `coverage-rules-article.json` is consumed by the existing full-contract loader, while `locator-audit-article.json`, `article.source-review`, proof-state and contribution policy keep every article rule manual/conditional until A2. No article runtime module, profile implementation, template branch, validator shortcut or compatibility alias is introduced in A1. Cross-cutting citation/reference/section/table machinery remains shared rather than forked.

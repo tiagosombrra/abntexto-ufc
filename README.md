@@ -12,6 +12,10 @@ R2 closed through B5/PR #249 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` and i
 
 See `docs/ROADMAP-V3.0.0.md` for the consolidated roadmap/status table and `docs/HANDOFF-V3.0.0.md` for the exact continuation point.
 
+## V3-A1 scientific-article contract
+
+The current A1 candidate reconfirms the UFC article guide and applicable current ABNT/cross-cutting sources, then registers 18 article rules without implementing an article runtime profile. Seventeen rules are manual and one is conditional-manual; inaccessible licensed ABNT clause locators remain explicitly partial rather than inferred. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
+
 ## Current v3 repository layout
 
 ```text

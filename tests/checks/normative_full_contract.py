@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -38,11 +39,19 @@ def main() -> None:
         fail("retired project.standard umbrella returned to the active contract")
 
     article_rules = sorted(rule_id for rule_id in rules if rule_id.startswith("article."))
-    if article_rules:
-        fail(
-            "article rules became operational before V3-A1: "
-            + ", ".join(article_rules)
-        )
+    roadmap = json.loads((ROOT / "release" / "v3-roadmap.json").read_text(encoding="utf-8"))
+    phase = roadmap.get("phase")
+    if article_rules and phase not in {"V3-A1", "V3-A2"}:
+        fail("article rules are active outside the article roadmap phases")
+    if phase == "V3-A1":
+        if not article_rules:
+            fail("V3-A1 requires the source-backed article rule contract")
+        for rule_id in article_rules:
+            validation = rules[rule_id]["validation"]
+            if validation["mode"] not in {"manual", "conditional-manual"}:
+                fail(f"{rule_id}: A1 must not claim executable article validation")
+            if validation["checks"] != ["article.source-review"]:
+                fail(f"{rule_id}: A1 article evidence must be source-review only")
 
     expected = {
         "pagination.frontmatter.counted-not-numbered": {
@@ -118,10 +127,11 @@ def main() -> None:
 
     runner = (ROOT / "tests" / "run.py").read_text(encoding="utf-8")
     gates = set(re.findall(r'Check\(\s*"([^"]+)"', runner))
+    runner_required_modes = {"automatic", "automatic-deep", "automatic-partial", "automatic-policy", "conditional"}
     uncovered = sorted(
         rule_id
         for rule_id in extension_ids
-        if rules[rule_id]["validation"]["mode"] != "not-applicable"
+        if rules[rule_id]["validation"]["mode"] in runner_required_modes
         and not (set(rules[rule_id]["validation"]["checks"]) & gates)
     )
     if uncovered:

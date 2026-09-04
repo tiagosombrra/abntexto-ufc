@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-04",
+  "rulesets": [
+    {
+      "id": "article-structure-core",
+      "status": "PARTIAL_WITH_REASON",
+      "rule_ids": [
+        "article.title.primary.required",
+        "article.authorship.required",
+        "article.summary.primary.required"
+      ],
+      "current_locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6022-2018",
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-09-04",
+          "locator": null,
+          "reason": "The current edition was reconfirmed, but licensed ABNT clause text was not directly available to the A1 executor; no proprietary clause wording or locator is asserted from memory."
+        },
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 8"
+        }
+      ]
+    },
+    {
+      "id": "article-dates",
+      "status": "PARTIAL_WITH_REASON",
+      "rule_ids": [
+        "article.dates.submission-approval.required"
+      ],
+      "current_locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 11",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6022-2018",
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-09-04",
+          "locator": null,
+          "reason": "The current edition was reconfirmed, but licensed ABNT clause text was not directly available to the A1 executor; no proprietary clause wording or locator is asserted from memory."
+        },
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 8, 11"
+        }
+      ]
+    },
+    {
+      "id": "article-text-core",
+      "status": "PARTIAL_WITH_REASON",
+      "rule_ids": [
+        "article.introduction.required",
+        "article.development.required",
+        "article.final-considerations.required",
+        "article.references.required"
+      ],
+      "current_locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 12",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6022-2018",
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-09-04",
+          "locator": null,
+          "reason": "The current edition was reconfirmed, but licensed ABNT clause text was not directly available to the A1 executor; no proprietary clause wording or locator is asserted from memory."
+        },
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 8, 12"
+        }
+      ]
+    },
+    {
+      "id": "article-foreign-title",
+      "status": "PARTIAL_WITH_REASON",
+      "rule_ids": [
+        "article.title.foreign.optional"
+      ],
+      "current_locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8-9",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6022-2018",
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-09-04",
+          "locator": null,
+          "reason": "The current edition was reconfirmed, but licensed ABNT clause text was not directly available to the A1 executor; no proprietary clause wording or locator is asserted from memory."
+        },
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 8-9"
+        }
+      ]
+    },
+    {
+      "id": "article-foreign-summary",
+      "status": "PARTIAL_WITH_REASON",
+      "rule_ids": [
+        "article.summary.foreign.optional"
+      ],
+      "current_locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 11",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6022-2018",
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-09-04",
+          "locator": null,
+          "reason": "The current edition was reconfirmed, but licensed ABNT clause text was not directly available to the A1 executor; no proprietary clause wording or locator is asserted from memory."
+        },
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 8, 11"
+        }
+      ]
+    },
+    {
+      "id": "article-title-typography",
+      "status": "VERIFIED",
+      "rule_ids": [
+        "article.title.primary.typography"
+      ],
+      "current_locator": "Guia UFC de Artigos 2022, p. 9",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 9"
+        }
+      ]
+    },
+    {
+      "id": "article-author-metadata",
+      "status": "VERIFIED",
+      "rule_ids": [
+        "article.authorship.metadata.footnote"
+      ],
+      "current_locator": "Guia UFC de Artigos 2022, p. 9",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 9"
+        }
+      ]
+    },
+    {
+      "id": "article-author-alignment",
+      "status": "VERIFIED",
+      "rule_ids": [
+        "article.authorship.alignment.recommended"
+      ],
+      "current_locator": "Guia UFC de Artigos 2022, p. 9",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 9"
+        }
+      ]
+    },
+    {
+      "id": "article-body-typography",
+      "status": "VERIFIED",
+      "rule_ids": [
+        "article.body.typography"
+      ],
+      "current_locator": "Guia UFC de Artigos 2022, p. 12",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 12"
+        }
+      ]
+    },
+    {
+      "id": "article-summary-recommendations",
+      "status": "PARTIAL_WITH_REASON",
+      "rule_ids": [
+        "article.summary.word-count.recommended",
+        "article.summary.keywords.minimum.recommended",
+        "article.summary.single-paragraph.recommended"
+      ],
+      "current_locator": "ABNT NBR 6028:2021; Guia UFC de Artigos 2022, p. 10-11",
+      "source_checks": [
+        {
+          "source_id": "abnt-nbr-6028-2021",
+          "status": "UNAVAILABLE_WITH_REASON",
+          "checked_at": "2026-09-04",
+          "locator": null,
+          "reason": "The current edition was reconfirmed, but licensed ABNT clause text was not directly available to the A1 executor; no proprietary clause wording or locator is asserted from memory."
+        },
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 10-11"
+        }
+      ]
+    },
+    {
+      "id": "article-journal-boundary",
+      "status": "VERIFIED",
+      "rule_ids": [
+        "article.journal-guidelines.precedence"
+      ],
+      "current_locator": "Guia UFC de Artigos 2022, p. 6",
+      "source_checks": [
+        {
+          "source_id": "ufc-guia-artigos-2022",
+          "status": "VERIFIED",
+          "checked_at": "2026-09-04",
+          "locator": "p. 6"
+        }
+      ]
+    }
+  ]
+}

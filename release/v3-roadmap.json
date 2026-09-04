@@ -1779,9 +1779,17 @@
     "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
     "blocked_until_exact_r5_closeout": false,
-    "work_started": false,
+    "work_started": true,
     "runtime_implementation_allowed": false,
-    "ctan_submission_allowed": false
+    "ctan_submission_allowed": false,
+    "source_reconfirmation_status": "DONE",
+    "source_reconfirmation_reviewed_at": "2026-09-04",
+    "normative_contract_status": "CANDIDATE",
+    "implementation_base_main_sha": "e40a56deeca8c22797398b0c95835964aefd2b15",
+    "article_rule_count": 18,
+    "article_manual_rules": 17,
+    "article_conditional_manual_rules": 1,
+    "runtime_implementation_started": false
   },
   "r5_closeout": {
     "status": "DONE",
@@ -1817,7 +1825,36 @@
     "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
     "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "runtime_implementation_allowed": false,
-    "work_started": false,
-    "ctan_submission_allowed": false
+    "work_started": true,
+    "ctan_submission_allowed": false,
+    "source_reconfirmation_status": "DONE",
+    "source_reconfirmation_reviewed_at": "2026-09-04",
+    "normative_contract_status": "CANDIDATE",
+    "implementation_base_main_sha": "e40a56deeca8c22797398b0c95835964aefd2b15",
+    "article_rule_count": 18,
+    "article_manual_rules": 17,
+    "article_conditional_manual_rules": 1,
+    "runtime_implementation_started": false
+  },
+  "a1_contract_candidate": {
+    "status": "READY_FOR_GATES",
+    "issue": 275,
+    "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "implementation_base_main_sha": "e40a56deeca8c22797398b0c95835964aefd2b15",
+    "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "reviewed_at": "2026-09-04",
+    "article_rule_count": 18,
+    "manual_rules": 17,
+    "conditional_manual_rules": 1,
+    "source_evidence_id": "article.source-review",
+    "runtime_files_added": 0,
+    "public_runtime_api_changed": false,
+    "certified_foundation_changed": false,
+    "proof_state_promoted": false,
+    "stale_embedded_editions": {
+      "NBR 10520:2002": "NBR 10520:2023",
+      "NBR 6023:2018": "NBR 6023:2025"
+    },
+    "a2_activation_pending": true
   }
 }

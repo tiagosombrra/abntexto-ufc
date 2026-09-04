@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-23",
+  "reviewed_at": "2026-09-04",
   "purpose": "Typed registry for normative evidence identifiers that are not coordinated runner gates in tests/run.py.",
   "policy": {
     "runner_gates_source": "tests/run.py",
@@ -114,6 +114,14 @@
       "description": "Windows literal-font build proof using Microsoft font files and TeX Live 2026.",
       "target": {
         "script": "tests/integration/font-poc.sh"
+      }
+    },
+    {
+      "id": "article.source-review",
+      "type": "manual",
+      "description": "V3-A1 manual source/locator/applicability review for scientific-article rules. This classifies source evidence only and is not article runtime proof.",
+      "target": {
+        "review": "docs/ARTICLE-NORMATIVE-CONTRACT.md"
       }
     }
   ]

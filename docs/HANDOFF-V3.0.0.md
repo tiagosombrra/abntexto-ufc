@@ -17,14 +17,16 @@ Updated: 2026-09-04
 - Public/distribution bundles, reproducibility, SHA-256 checksums, external-upstream semantics and institutional/proprietary asset exclusions: **PASS**.
 - Validation residue: **0**.
 - `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md`, and `docs/MIGRATING-TO-V3.md`: unchanged through R5.
-- V3-A1/#275: **ACTIVE** from exact entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`.
-- A1 is source/normative-contract work only; article runtime implementation is forbidden in A1.
+- V3-A1/#275: **ACTIVE — SOURCE CONTRACT CANDIDATE** from exact entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`.
+- A1 implementation base: `e40a56deeca8c22797398b0c95835964aefd2b15`.
+- Current article authority set reconfirmed on 2026-09-04; 18 article rules are registered as 17 manual + 1 conditional-manual.
+- A1 evidence is source-only (`article.source-review`); no article runtime/profile implementation or article proof promotion is allowed in A1.
 
 Git facts, `release/v3-roadmap.json`, this handoff, `docs/ROADMAP-V3.0.0.md`, and `AGENTS.md` must agree. Disagreement fails closed.
 
 ## Immediate action
 
-Execute V3-A1/#275 from exact entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`. Reconfirm current UFC scientific-article guidance and applicable ABNT authorities, currency, precedence, locators, applicability and requirement/recommendation distinctions. Build a conservative article normative contract before any article runtime implementation. Historical pre-v3 article research is discovery evidence only, never authority to restore blindly.
+Validate and merge the V3-A1 source-contract candidate. The source set and 18-rule conservative contract are now reconstructed; ABNT clause locators not directly available are recorded as partial-with-reason rather than guessed. After merge, capture the immutable A1 closeout SHA, close #275 and activate V3-A2. Do not implement article runtime before that exact-entry checkpoint.
 
 ## Hard boundaries
 
