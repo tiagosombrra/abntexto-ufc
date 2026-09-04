@@ -1,0 +1,86 @@
+name: Temporary R5 foundation freeze audit
+
+on:
+  push:
+    branches:
+      - docs/v3-r5-foundation-freeze
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact R5 control-plane and frozen product
+        shell: bash
+        run: |
+          set -euo pipefail
+          product='c79f3c73f1d51a30175e8259269504d029442a1c'
+          main='ff833d814133d33887df8971f6a0af702d6c2143'
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$main"
+          test "$(git merge-base HEAD origin/main)" = "$main"
+
+          expected=(
+            AGENTS.md
+            README.md
+            docs/ARCHITECTURE.md
+            docs/CTAN-RELEASE.md
+            docs/ENGINEERING-LANGUAGE.md
+            docs/HANDOFF-V3.0.0.md
+            docs/R3-HARDENING-INVENTORY.md
+            docs/ROADMAP-V3.0.0.md
+            release/v3-r3-inventory.json
+            release/v3-roadmap.json
+          )
+          git diff --name-only "$product" origin/main | sort > /tmp/actual-product-diff
+          printf '%s\n' "${expected[@]}" | sort > /tmp/expected-product-diff
+          diff -u /tmp/expected-product-diff /tmp/actual-product-diff
+
+          git diff --exit-code "$product" origin/main -- \
+            docs/NORMATIVE-BASE.md \
+            docs/NORMATIVE-CURRENCY.md \
+            docs/MIGRATING-TO-V3.md
+
+          branch_expected='.github/workflows/r5-foundation-freeze-audit.yml'
+          test "$(git diff --name-only origin/main...HEAD)" = "$branch_expected"
+          echo 'R5-FREEZE-EVIDENCE status=PASS product_runtime_changed=0 authority_docs_changed=0 temporary_only_branch=PASS'
+
+      - name: Run source-only contract
+        run: make static-check
+
+      - name: Run release and distribution contracts
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -euo pipefail
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli
+            upstream="$(mktemp --suffix=.cls)"
+            trap 'rm -f "$upstream"' EXIT INT TERM
+            python3 tools/fetch-abntexto.py --output "$upstream"
+            python3 tests/checks/public_bundles.py --abntexto "$upstream"
+            python3 tests/checks/distribution_bundles.py --abntexto "$upstream"
+            make release-check
+            git diff --exit-code
+            echo 'R5-RELEASE-EVIDENCE status=PASS public_bundles=PASS distribution_bundles=PASS checksums=PASS assets=excluded release_check=PASS'
+
+      - name: Upload validation evidence
+        if: always() && hashFiles('artifacts/validation/**') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: r5-foundation-freeze-audit-${{ github.run_id }}
+          path: artifacts/validation/**
+          retention-days: 14
+          if-no-files-found: error
