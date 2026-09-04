@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-09-03",
+  "reviewed_at": "2026-09-04",
   "purpose": "Conservative evidence-contribution semantics. A declared or green mechanism is support-only until the current coordinated run emits rule-specific PASS evidence from a check owned by that rule.",
   "allowed_classes": [
     "enforced-automatic",
@@ -102,6 +102,96 @@
       "class": "conditional-review",
       "mode": "conditional",
       "rationale": "The symbols list is optional and evaluated through present/absent routes."
+    },
+    "article.title.primary.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.authorship.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.summary.primary.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.dates.submission-approval.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.introduction.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.development.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.final-considerations.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.references.required": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.title.foreign.optional": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.summary.foreign.optional": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.title.primary.typography": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.authorship.metadata.footnote": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.authorship.alignment.recommended": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.body.typography": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.summary.word-count.recommended": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.summary.keywords.minimum.recommended": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.summary.single-paragraph.recommended": {
+      "class": "manual-review",
+      "mode": "manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
+    },
+    "article.journal-guidelines.precedence": {
+      "class": "conditional-review",
+      "mode": "conditional-manual",
+      "rationale": "V3-A1 classifies the rule from current source evidence only; article runtime and executable rule evidence are intentionally deferred to V3-A2."
     }
   }
 }

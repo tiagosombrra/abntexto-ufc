@@ -147,3 +147,7 @@ The actual CTAN submission is an explicit release action. Building or certifying
 10. Confirm that no institutional/proprietary assets, validation evidence, temporary workflows, downloaded reference photographs, or generated auxiliary files are present in public bundles or the release commit.
 11. Confirm the GitHub release/tag and user-facing release notes are final when that release stage is reached.
 12. Only then perform the explicit CTAN upload and preserve the submission/acceptance receipt in the release record.
+
+## V3-A1 release boundary
+
+A1 changes the normative source/rule contract but does not authorize CTAN submission. V3-A2 article runtime/test implementation must close and the roadmap must explicitly reach a release action before any upload. The certified non-article foundation remains unchanged during A1.

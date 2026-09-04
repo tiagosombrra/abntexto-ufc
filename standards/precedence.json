@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-28",
+  "reviewed_at": "2026-09-04",
   "description": "Política de resolução de vigência e precedência da base normativa abntexto-ufc.",
   "catalog_policy_mode": "replace-embedded-policy",
   "principles": [
@@ -8,7 +8,8 @@
     "Atos e requisitos institucionais UFC vigentes governam matérias institucionais dentro de seu escopo.",
     "Guias UFC complementam normas vigentes, mas não reativam edições técnicas substituídas.",
     "Fontes superseded ou historical nunca governam uma regra ativa.",
-    "Conflitos não resolvidos retornam review-required e não podem alimentar validadores automáticos."
+    "Conflitos não resolvidos retornam review-required e não podem alimentar validadores automáticos.",
+    "No perfil de artigo científico, guias UFC específicos de domínio e normas ABNT vigentes substituem referências técnicas obsoletas embutidas no guia de artigos sem invalidar requisitos institucionais compatíveis."
   ],
   "active_source_statuses": [
     "current",

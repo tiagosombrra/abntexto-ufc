@@ -24,6 +24,7 @@ A superseded technical edition is not reactivated merely because an older UFC gu
 | Citations | ABNT NBR 10520:2023 |
 | References | ABNT NBR 6023:2025 |
 | Research projects | ABNT NBR 15287:2025 |
+| Scientific articles | ABNT NBR 6022:2018, with current cross-cutting citation/reference/summary standards |
 | Abstracts/reviews | ABNT NBR 6028:2021 |
 | Progressive section numbering | ABNT NBR 6024:2012 |
 | Table of contents | ABNT NBR 6027:2012 |
@@ -37,7 +38,7 @@ The project must distinguish mandatory requirements, recommendations, conditiona
 
 ## Current runtime scope
 
-The active v3 foundation covers academic works and research projects. The scientific-article profile is not part of the active foundation tree during V3-R1 through V3-R5. Its previously researched normative evidence remains recoverable from Git history and is reintroduced only when V3-A1 starts.
+The certified v3 foundation covers academic works and research projects. V3-A1 has now reintroduced a source-backed scientific-article normative contract without adding article runtime behavior. Article rules are manual/conditional during A1 and become implementation candidates only in V3-A2. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
 
 ## Fonts and PDF/A
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-28",
+  "reviewed_at": "2026-09-04",
   "scope": "abntexto-ufc-current-sources",
   "purpose": "Release-independent current-source inventory for UFC/ABNT authority reconciliation. Runtime normative truth remains standards/catalog.json plus standards/precedence.json; sources are promoted only together with deliberately source-backed predicates.",
   "policy": {
@@ -18,7 +18,7 @@
       "publisher": "Universidade Federal do Ceará",
       "url": "https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/",
       "status": "current",
-      "checked_at": "2026-08-28",
+      "checked_at": "2026-09-04",
       "applies_to": [
         "normalization",
         "guides",
@@ -182,7 +182,7 @@
       "corrected_file_date": "2023-04-27",
       "url": "https://biblioteca.ufc.br/wp-content/uploads/2023/04/guia-de-normalizacao-de-artigo-corrigido-27.04.2023.pdf",
       "status": "current-institutional-with-stale-technical-citations",
-      "checked_at": "2026-08-28",
+      "checked_at": "2026-09-04",
       "applies_to": [
         "scientific-article"
       ],
@@ -250,7 +250,7 @@
       "publisher": "ABNT",
       "edition": "2023",
       "status": "current",
-      "checked_at": "2026-08-22",
+      "checked_at": "2026-09-04",
       "access": "official-catalog-or-licensed-access"
     },
     {
@@ -261,7 +261,7 @@
       "edition": "2025",
       "published_at": "2025-05-21",
       "status": "current",
-      "checked_at": "2026-08-22",
+      "checked_at": "2026-09-04",
       "access": "official-catalog-or-licensed-access"
     },
     {
@@ -283,7 +283,7 @@
       "edition": "2018",
       "published_at": "2018-05-16",
       "status": "current",
-      "checked_at": "2026-08-28",
+      "checked_at": "2026-09-04",
       "access": "official-catalog-or-licensed-access",
       "notes": "Current-edition reconciliation for the article profile. The UFC current guide/page and current university standards registries continue to identify the 2018 second edition; no later replacement was identified in the current-source review. Exact proprietary ABNT text is not asserted where licensed access is unavailable."
     },
@@ -294,7 +294,7 @@
       "publisher": "ABNT",
       "edition": "2021",
       "status": "current",
-      "checked_at": "2026-08-22",
+      "checked_at": "2026-09-04",
       "access": "official-catalog-or-licensed-access"
     },
     {
@@ -304,7 +304,7 @@
       "publisher": "ABNT",
       "edition": "2012",
       "status": "current",
-      "checked_at": "2026-08-22",
+      "checked_at": "2026-09-04",
       "access": "official-catalog-or-licensed-access"
     },
     {
@@ -345,7 +345,7 @@
       "edition": "3",
       "year": 1993,
       "status": "current",
-      "checked_at": "2026-08-22",
+      "checked_at": "2026-09-04",
       "applies_to": [
         "numeric-tables"
       ]
@@ -432,5 +432,25 @@
       "abnt-nbr-6028-2021",
       "ibge-tabular-1993"
     ]
+  },
+  "v3_a1_article_reconfirmation": {
+    "status": "DONE",
+    "reviewed_at": "2026-09-04",
+    "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "implementation_base_main_sha": "e40a56deeca8c22797398b0c95835964aefd2b15",
+    "current_article_guide": "ufc-guia-artigos-2022",
+    "current_article_presentation_standard": "abnt-nbr-6022-2018",
+    "current_cross_cutting_standards": [
+      "abnt-nbr-10520-2023",
+      "abnt-nbr-6023-2025",
+      "abnt-nbr-6024-2012",
+      "abnt-nbr-6028-2021",
+      "ibge-tabular-1993"
+    ],
+    "stale_embedded_references": {
+      "abnt-nbr-10520-2002": "abnt-nbr-10520-2023",
+      "abnt-nbr-6023-2018": "abnt-nbr-6023-2025"
+    },
+    "runtime_implementation_started": false
   }
 }

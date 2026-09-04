@@ -34,7 +34,7 @@ UFC normalization guides are institutional sources interpreted under the precede
 
 ## Scientific articles
 
-Scientific-article support is intentionally outside the active foundation scope until V3-A1. The previously researched article source contract is preserved by Git history rather than by dormant v3 files. When V3-A1 starts, article sources and predicates must be reconfirmed against then-current technical and UFC institutional sources before runtime implementation resumes.
+V3-A1 reconfirmed the corrected UFC scientific-article guide (2022, corrected file dated 2023-04-27) and ABNT NBR 6022:2018 as the current article-presentation basis. The guide's embedded NBR 10520:2002 and NBR 6023:2018 references are superseded for their technical domains by NBR 10520:2023 and NBR 6023:2025. The A1 contract therefore preserves compatible institutional article guidance while using current cross-cutting technical editions. No article runtime implementation is part of A1.
 
 ## Source updates
 

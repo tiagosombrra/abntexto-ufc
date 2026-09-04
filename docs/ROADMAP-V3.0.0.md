@@ -31,7 +31,7 @@ R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 
 | R3-B5 | DONE | issue #256; PR #268 → `d90a675a844724c33a5727d8d980027c46291eb0`; product candidate `c79f3c73f1d51a30175e8259269504d029442a1c` | final R3 gates green; all findings resolved; immutable R4 predecessor recorded | None |
 | V3-R4 | DONE | issue #267; run `33855800767`; closeout PR #273 → `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` | 4/4 strict font/engine cells PASS; Unicode, embedding and PDF/A-2b PASS; temporary executor removed | None |
 | V3-R5 | DONE | issue #272; entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; PR #276 → `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; frozen product `c79f3c73f1d51a30175e8259269504d029442a1c` | release `33/0/0`; package/bundle/checksum/asset audit PASS; PR Linux `31/0/0`; zero residue | None |
-| V3-A1 | ACTIVE | issue #275; exact entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; certified foundation `c79f3c73f1d51a30175e8259269504d029442a1c` | source/normative article contract only; runtime work not started | reconfirm article authorities/currency/precedence and derive conservative rule contract |
+| V3-A1 | ACTIVE — CONTRACT CANDIDATE | issue #275; exact entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; implementation base `e40a56deeca8c22797398b0c95835964aefd2b15`; certified foundation `c79f3c73f1d51a30175e8259269504d029442a1c` | current article sources reconfirmed; 18 source-backed rules; 17 manual + 1 conditional-manual; runtime still absent | validate/merge A1 source contract, then record exact A2 entry |
 | V3-A2 | BLOCKED | — | article runtime/test implementation | after A1 source contract closes |
 | CTAN submission | FUTURE | explicit release action | no upload yet | release-ready stage only |
 
@@ -89,6 +89,10 @@ No product-affecting path, public runtime API, normative semantics, source/curre
 
 V3-A1/#275 is ACTIVE from `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`. A1 must reconfirm the current authoritative source set for the UFC scientific-article profile and applicable ABNT standards, derive current predicates/locators/applicability and requirement-versus-recommendation distinctions, integrate them with current currency/precedence/traceability/proof-state machinery, and define a bounded V3-A2 implementation contract. Historical pre-v3 article research is discovery evidence only. No article runtime/profile implementation is allowed in A1.
 
+## V3-A1 source-contract candidate
+
+A1 reconfirmed the corrected UFC article guide, NBR 6022:2018 and the current cross-cutting NBR 10520:2023, NBR 6023:2025, NBR 6024:2012, NBR 6028:2021 and IBGE tabular basis. The new article contract contains 18 rules. All remain manual or conditional-manual, and ABNT locators unavailable without licensed clause access are explicitly `PARTIAL_WITH_REASON`. The certified foundation is unchanged and no article runtime/profile code exists in this lot.
+
 ## Immediate action
 
-Execute V3-A1/#275 source reconciliation. Keep the certified non-article foundation `c79f3c73f1d51a30175e8259269504d029442a1c` unchanged unless current source evidence demonstrates a separately bounded cross-cutting conflict. V3-A2 and actual CTAN submission remain blocked.
+Validate and merge the A1 source-contract candidate. After its immutable main SHA exists, close #275 and activate V3-A2 from that exact predecessor. V3-A2 runtime work and actual CTAN submission remain blocked until that checkpoint is canonical.
