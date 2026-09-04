@@ -73,8 +73,9 @@ jobs:
           rm -f .github/scripts/a1-article-contract.py
           rm -f .github/workflows/a1-article-contract.yml
           rmdir .github/scripts 2>/dev/null || true
-          git diff --check e40a56deeca8c22797398b0c95835964aefd2b15
-          mapfile -t changed < <(git diff --name-only e40a56deeca8c22797398b0c95835964aefd2b15)
+          git add -A
+          git diff --cached --check e40a56deeca8c22797398b0c95835964aefd2b15
+          mapfile -t changed < <(git diff --cached --name-only e40a56deeca8c22797398b0c95835964aefd2b15)
           expected=(
             AGENTS.md
             README.md
@@ -107,6 +108,5 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
           git commit -m 'docs: reconstruct V3-A1 article normative contract'
           git push origin HEAD:docs/v3-a1-article-normative-contract
