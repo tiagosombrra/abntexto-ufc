@@ -5,9 +5,9 @@
   "target_version": "3.0.0",
   "updated_at": "2026-09-04",
   "status": "ACTIVE",
-  "phase": "V3-R5",
-  "stage": "V3-R5",
-  "stage_name": "freeze certified foundation and finalize release-ready documentation",
+  "phase": "V3-A1",
+  "stage": "V3-A1",
+  "stage_name": "reconfirm scientific-article authority and normative contract",
   "active_branch": "main",
   "certified_v2_baseline_sha": "ce659b578b4fc9cc929af4aadc3e613df469ba77",
   "last_certified_clean_checkpoint_sha": "9b1752565ac217c04ffa22a9ef272cdf078af380",
@@ -1126,17 +1126,16 @@
     "proof_state_changed": false
   },
   "active_implementation_lot": {
-    "phase": "V3-R5",
-    "stage": "V3-R5",
-    "issue": 272,
+    "phase": "V3-A1",
+    "stage": "V3-A1",
+    "issue": 275,
+    "id": "V3-A1",
+    "name": "reconfirm scientific-article authority and normative contract",
+    "status": "ACTIVE",
+    "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
     "entry_product_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
-    "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
-    "name": "freeze certified foundation and finalize release-ready documentation",
-    "id": "V3-R5",
-    "status": "VALIDATED_PENDING_CANONICAL_CLOSEOUT",
-    "foundation_freeze_started": true,
-    "technical_validation_status": "DONE",
-    "exact_a1_entry_activation_pending": true
+    "runtime_implementation_allowed": false,
+    "work_started": false
   },
   "r2_b4_closeout": {
     "status": "DONE",
@@ -1576,8 +1575,8 @@
     "blocked_until_exact_entry_activation": false,
     "certification_status": "DONE"
   },
-  "next_stage": "V3-R5",
-  "next_issue": 272,
+  "next_stage": "V3-A1",
+  "next_issue": 275,
   "r3_b5_closeout": {
     "status": "DONE",
     "issue": 256,
@@ -1690,16 +1689,19 @@
     "inspection_note": "TeXGyreTermesX-Regular is accepted only as part of the pdfLaTeX newtxmath stack; literal institutional text-family identity is certified independently."
   },
   "r5_preparation": {
-    "status": "VALIDATED_PENDING_CANONICAL_CLOSEOUT",
+    "status": "DONE",
     "issue": 272,
     "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
     "blocked_until_exact_r4_closeout": false,
     "foundation_freeze_started": true,
     "technical_validation_status": "DONE",
-    "exact_a1_entry_activation_pending": true,
+    "exact_a1_entry_activation_pending": false,
     "validation_run_id": 33869888601,
-    "validation_job_id": 101013093747
+    "validation_job_id": 101013093747,
+    "closeout_pr": 276,
+    "closeout_merge_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "a1_entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9"
   },
   "r4_closeout": {
     "status": "DONE",
@@ -1724,7 +1726,7 @@
     "proprietary_fonts_redistributed": false
   },
   "r5": {
-    "status": "VALIDATED_PENDING_CANONICAL_CLOSEOUT",
+    "status": "DONE",
     "issue": 272,
     "name": "freeze certified foundation and finalize release-ready documentation",
     "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
@@ -1733,9 +1735,12 @@
     "scientific_article_work_started": false,
     "ctan_submission_started": false,
     "technical_validation_status": "DONE",
-    "exact_a1_entry_activation_pending": true,
+    "exact_a1_entry_activation_pending": false,
     "validation_run_id": 33869888601,
-    "validation_job_id": 101013093747
+    "validation_job_id": 101013093747,
+    "closeout_pr": 276,
+    "closeout_merge_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "a1_entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9"
   },
   "r5_validation": {
     "status": "DONE",
@@ -1768,14 +1773,51 @@
     "scientific_article_work_started": false
   },
   "a1_preparation": {
-    "status": "PREPARED",
+    "status": "ACTIVE",
     "issue": 275,
     "name": "reconfirm scientific-article authority and normative contract",
     "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
-    "entry_main_sha": null,
-    "blocked_until_exact_r5_closeout": true,
+    "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "blocked_until_exact_r5_closeout": false,
     "work_started": false,
     "runtime_implementation_allowed": false,
+    "ctan_submission_allowed": false
+  },
+  "r5_closeout": {
+    "status": "DONE",
+    "issue": 272,
+    "pr": 276,
+    "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
+    "merge_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "full_release_run_id": 33866258865,
+    "full_release_result": "PASS=33 FAIL=0 SKIP=0",
+    "package_validation_run_id": 33869888601,
+    "package_validation_job_id": 101013093747,
+    "package_validation_result": "PASS",
+    "pr_static_contract_run_id": 33872118250,
+    "pr_linux_integration_run_id": 33872118241,
+    "pr_linux_integration_job_id": 101020688121,
+    "pr_linux_integration_result": "PASS=31 FAIL=0 SKIP=0",
+    "product_tree_unchanged_since_certification": true,
+    "public_bundles_passed": true,
+    "distribution_bundles_passed": true,
+    "checksums_passed": true,
+    "institutional_assets_excluded": true,
+    "proprietary_assets_excluded": true,
+    "temporary_executor_residue": 0,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false
+  },
+  "a1": {
+    "status": "ACTIVE",
+    "issue": 275,
+    "name": "reconfirm scientific-article authority and normative contract",
+    "entry_main_sha": "908ee2eb2ec04c030d74a9a4b146fba38fb745a9",
+    "certified_foundation_product_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "runtime_implementation_allowed": false,
+    "work_started": false,
     "ctan_submission_allowed": false
   }
 }

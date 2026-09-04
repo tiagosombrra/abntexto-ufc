@@ -9,23 +9,23 @@ Updated: 2026-09-04
 - V3-R2: **DONE**.
 - V3-R3: **DONE**.
 - V3-R4/#267: **DONE**.
-- R4 certified product: `c79f3c73f1d51a30175e8259269504d029442a1c`; certification run `33855800767` — SUCCESS.
-- Exact V3-R5 entry: `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` from R4 closeout PR #273.
-- V3-R5/#272: **TECHNICALLY VALIDATED; canonical closeout pending**.
-- Certified product invariance: **PASS** — no product-affecting path changed after `c79f3c73f1d51a30175e8259269504d029442a1c`.
-- Full release gate: run `33866258865` / job `101001704635` completed `PASS=33 FAIL=0 SKIP=0`; that workflow later failed only during its initial packaging-precondition sequence, not in the release gate.
-- Final package/freeze validation: run `33869888601` / job `101013093747` — SUCCESS.
-- Public bundles: **PASS**; complete distribution bundles: **PASS**; reproducibility/checksums: **PASS**; institutional/proprietary asset exclusions: **PASS**.
-- Tracked/untracked validation residue: **0**.
-- `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md`, and `docs/MIGRATING-TO-V3.md`: intentionally unchanged; no source/currency/API fact required an edit.
-- V3-A1/#275: **PREPARED / BLOCKED**. Its exact entry SHA does not exist until R5 closes canonically.
+- V3-R5/#272: **DONE** through PR #276 at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`.
+- Certified foundation product: `c79f3c73f1d51a30175e8259269504d029442a1c`; unchanged throughout R5.
+- R5 release gate: run `33866258865` / job `101001704635` — `PASS=33 FAIL=0 SKIP=0`.
+- R5 package/freeze validation: run `33869888601` / job `101013093747` — SUCCESS.
+- R5 PR gates: Static `33872118250` — PASS; Linux `33872118241` / job `101020688121` — `PASS=31 FAIL=0 SKIP=0`.
+- Public/distribution bundles, reproducibility, SHA-256 checksums, external-upstream semantics and institutional/proprietary asset exclusions: **PASS**.
+- Validation residue: **0**.
+- `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md`, and `docs/MIGRATING-TO-V3.md`: unchanged through R5.
+- V3-A1/#275: **ACTIVE** from exact entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`.
+- A1 is source/normative-contract work only; article runtime implementation is forbidden in A1.
 
 Git facts, `release/v3-roadmap.json`, this handoff, `docs/ROADMAP-V3.0.0.md`, and `AGENTS.md` must agree. Disagreement fails closed.
 
 ## Immediate action
 
-Promote the validated R5 documentation/control-plane checkpoint through the permanent PR gates. After its squash merge, capture the real immutable main SHA and perform one minimal exact-entry activation that marks V3-R5 DONE and activates V3-A1/#275 from that SHA. Do not invent the A1 entry before the merge and do not start article runtime work in A1.
+Execute V3-A1/#275 from exact entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`. Reconfirm current UFC scientific-article guidance and applicable ABNT authorities, currency, precedence, locators, applicability and requirement/recommendation distinctions. Build a conservative article normative contract before any article runtime implementation. Historical pre-v3 article research is discovery evidence only, never authority to restore blindly.
 
 ## Hard boundaries
 
-Preserve certified foundation `c79f3c73f1d51a30175e8259269504d029442a1c` and the closed v3 API; no runtime aliases. Do not change normative authority, precedence, rule IDs, values, locators, tolerances, applicability, proof-state defaults, or rendered requirements without current evidence. Do not redistribute proprietary Microsoft fonts or claim UFC homologation/CTAN acceptance. V3-A2 and actual CTAN submission remain blocked.
+Preserve certified foundation `c79f3c73f1d51a30175e8259269504d029442a1c` and the closed v3 API. Do not implement article runtime/profile behavior in A1. Do not restore historical rule values, locators, source status, proof state or retired machine identifiers without current evidence. Do not redistribute proprietary Microsoft fonts or perform CTAN submission. V3-A2 remains blocked until A1 closes with a bounded implementation contract.
