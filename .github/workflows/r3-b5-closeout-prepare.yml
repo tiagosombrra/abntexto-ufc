@@ -61,7 +61,28 @@ jobs:
           PY
 
       - name: Reconcile B5 validation state
-        run: python .github/scripts/r3-b5-closeout-prepare.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/scripts/r3-b5-closeout-prepare.py')
+          text = path.read_text(encoding='utf-8')
+          replacements = {
+              'r"R3-B5/#256 is ACTIVE and owns only R3 closeout/R4 entry\\."':
+                  'r"R3-B5/#256 is ACTIVE from canonical control-plane checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and owns only R3 closeout/R4 entry\\."',
+              'r"R3-B5 now owns final cross-surface reconciliation and the immutable R4 entry checkpoint\\."':
+                  'r"R3-B5 now owns final cross-surface reconciliation from `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and the immutable R4 entry checkpoint\\."',
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'expected one transformer pattern, found {count}: {old}')
+              text = text.replace(old, new)
+          path.write_text(text, encoding='utf-8')
+          PY
+          python .github/scripts/r3-b5-closeout-prepare.py
 
       - name: Verify authority documents unchanged
         shell: bash
