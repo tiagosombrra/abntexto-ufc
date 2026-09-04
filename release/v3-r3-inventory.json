@@ -610,10 +610,51 @@
     "proprietary_fonts_redistributed": false
   },
   "r5_preparation": {
-    "status": "ACTIVE",
+    "status": "VALIDATED_PENDING_CANONICAL_CLOSEOUT",
     "issue": 272,
     "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
-    "foundation_freeze_started": false
+    "foundation_freeze_started": true,
+    "technical_validation_status": "DONE",
+    "exact_a1_entry_activation_pending": true,
+    "validation_run_id": 33869888601,
+    "validation_job_id": 101013093747
+  },
+  "r5_validation": {
+    "status": "DONE",
+    "issue": 272,
+    "entry_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb",
+    "control_plane_validation_base_main_sha": "ff833d814133d33887df8971f6a0af702d6c2143",
+    "certified_product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "r4_certification_run_id": 33855800767,
+    "full_release_run_id": 33866258865,
+    "full_release_job_id": 101001704635,
+    "full_release_gate_result": "PASS=33 FAIL=0 SKIP=0",
+    "full_release_workflow_conclusion": "failure-after-green-release-gate-during-initial-packaging-precondition",
+    "package_validation_run_id": 33869888601,
+    "package_validation_job_id": 101013093747,
+    "package_validation_result": "PASS",
+    "public_bundles_passed": true,
+    "distribution_bundles_passed": true,
+    "checksums_passed": true,
+    "institutional_assets_excluded": true,
+    "proprietary_assets_excluded": true,
+    "product_tree_unchanged_since_certification": true,
+    "normative_base_changed": false,
+    "normative_currency_changed": false,
+    "migration_guide_changed": false,
+    "temporary_executor_residue": 0,
+    "normative_semantics_changed": false,
+    "proof_state_changed": false,
+    "public_runtime_api_changed": false,
+    "ctan_submission_started": false,
+    "scientific_article_work_started": false
+  },
+  "a1_preparation": {
+    "status": "PREPARED",
+    "issue": 275,
+    "entry_main_sha": null,
+    "blocked_until_exact_r5_closeout": true,
+    "work_started": false
   }
 }
