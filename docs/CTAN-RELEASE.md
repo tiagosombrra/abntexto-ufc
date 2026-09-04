@@ -137,7 +137,7 @@ The actual CTAN submission is an explicit release action. Building or certifying
 
 1. Build from the intended release commit/tag, not from an unrecorded local modification.
 2. Run or confirm a successful `make release-check` / `Linux release check` for that candidate commit and preserve its validation evidence.
-3. Confirm that the intended release commit is still covered by, or has proportionally re-established, the completed Windows/literal-font/PDF-A certification baseline from R1-BLOCK-8.
+3. Confirm that the intended release commit is still covered by the current V3-R4 certification of `c79f3c73f1d51a30175e8259269504d029442a1c` (run `33855800767`), or has proportionally re-established equivalent Windows/literal-font/Unicode/embedding/PDF-A evidence after any product-affecting change.
 4. Run `make distribution-bundles`.
 5. Verify `SHA256SUMS` and the exact artifact names.
 6. Run the repository distribution checker.

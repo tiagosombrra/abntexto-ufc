@@ -978,7 +978,7 @@
       "operational_issue_close_after_control_plane_merge": 227
     }
   },
-  "next_action": "Execute V3-R5/#272 from exact entry 0b0f5d989163dc6b1429feeb2d8a7c66988647bb without modifying certified product c79f3c73f1d51a30175e8259269504d029442a1c: freeze the foundation, reconcile release/user/maintainer documentation, verify normative/current migration truthfulness, public/distribution bundles, checksums, asset exclusions and release metadata, run proportional release gates, and prove zero temporary/stale cleanup residue. Keep V3-A1/A2 and CTAN submission blocked until R5 closes.",
+  "next_action": "Execute V3-A1/#275 from exact entry 908ee2eb2ec04c030d74a9a4b146fba38fb745a9: reconfirm current UFC scientific-article guidance and applicable ABNT authorities, currency, precedence, locators, applicability and requirement/recommendation distinctions; derive a conservative article normative contract and a bounded V3-A2 implementation contract before any article runtime work. Keep certified foundation c79f3c73f1d51a30175e8259269504d029442a1c unchanged unless current evidence proves a separately bounded cross-cutting conflict; keep CTAN submission blocked.",
   "r1_status": "DONE",
   "r2": {
     "status": "DONE",
@@ -1567,7 +1567,7 @@
     "public_runtime_api_changed": false
   },
   "r4_preparation": {
-    "status": "ACTIVE",
+    "status": "DONE",
     "issue": 267,
     "product_candidate_main_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "entry_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
@@ -1598,7 +1598,7 @@
     "public_runtime_api_changed": false
   },
   "r4": {
-    "status": "ACTIVE",
+    "status": "DONE",
     "issue": 267,
     "name": "final certification of hardened v3 foundation",
     "entry_main_sha": "d90a675a844724c33a5727d8d980027c46291eb0",
@@ -1614,7 +1614,9 @@
     ],
     "certification_status": "DONE",
     "certification_run_id": 33855800767,
-    "exact_r5_entry_activation_pending": true
+    "exact_r5_entry_activation_pending": false,
+    "closeout_pr": 273,
+    "closeout_merge_main_sha": "0b0f5d989163dc6b1429feeb2d8a7c66988647bb"
   },
   "r4_certification": {
     "status": "DONE",

@@ -6,7 +6,7 @@ Updated: 2026-09-04
 
 R3 hardens the truthfulness of the v3 foundation before final certification. The original R3-A inventory was taken from `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`; its baseline had 19 sources, 181 rules, 164 automatic declarations, 17 manual/conditional rules, 11 project-policy/technical-profile rules, 32 runner gates, 10 registered evidence checks and 9 validator checks.
 
-R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 is closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 is closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`. R3-B4/#255 is closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. R3-B5/#256 is closed through PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`; V3-R3 is DONE and V3-R4/#267 is active.
+R3-B1/#252 is closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 is closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 is closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`. R3-B4/#255 is closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. R3-B5/#256 is closed through PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`; V3-R3 is DONE. V3-R4/#267 subsequently closed through PR #273 at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`, V3-R5/#272 closed through PR #276 at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`, and V3-A1/#275 is ACTIVE.
 
 ## R3-B1 closeout evidence
 
