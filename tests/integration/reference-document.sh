@@ -69,6 +69,16 @@ path = Path(sys.argv[1])
 raw = unicodedata.normalize('NFC', path.read_text(encoding='utf-8', errors='replace'))
 flat = re.sub(r'\s+', ' ', raw)
 
+complete_author = 'NOME COMPLETO DO AUTOR'
+if complete_author not in flat:
+    raise SystemExit(
+        'Reference document failed: complete-author-name placeholder is missing from generated pre-textual output.'
+    )
+print(
+    'LIBRARIAN-REVIEW-EVIDENCE item=2 status=PASS '
+    'context=canonical-reference-pdf complete_author_placeholder_rendered=true'
+)
+
 object_titles = (
     'Figura estreita com legenda curta',
     'Fluxo de processamento em arquivo PNG raster',
@@ -130,6 +140,14 @@ print(
     'LIBRARIAN-REVIEW-EVIDENCE item=28 status=PASS '
     f'context=canonical-reference-pdf sentence_case_headings={len(heading_markers)} legacy_headings=0 malformed_etc=0'
 )
+
+annex_heading_tokens = ('ANEXO A', 'DOCUMENTO COMPLEMENTAR EXTERNO')
+for marker in annex_heading_tokens:
+    if marker not in flat:
+        raise SystemExit(f'Reference document failed: canonical annex heading token is missing: {marker}')
+source_marker = 'Instituição ou autor responsável pelo documento externo (ano)'
+if source_marker not in flat:
+    raise SystemExit('Reference document failed: canonical annex source attribution is missing.')
 PY
 fi
 
@@ -140,6 +158,7 @@ grep -Eiq 'Introdu' "$toc" || {
 
 python3 <<'PY'
 import re
+import unicodedata
 from pathlib import Path
 
 toc = Path('template/main.toc').read_text(encoding='utf-8', errors='replace')
@@ -150,6 +169,17 @@ for title in ('RESUMO', 'ABSTRACT', 'LISTA DE ILUSTRAÇÕES'):
     )
     if pattern.search(toc):
         raise SystemExit(f'Reference document failed: front-matter element entered the table of contents: {title}')
+
+normalized_toc = unicodedata.normalize('NFC', toc).casefold()
+for marker in ('anexo', 'documento complementar externo'):
+    if marker.casefold() not in normalized_toc:
+        raise SystemExit(f'Reference document failed: canonical annex TOC marker is missing: {marker}')
+
+print(
+    'LIBRARIAN-REVIEW-EVIDENCE item=34 status=PASS '
+    'context=canonical-reference-pdf source_attribution=true heading_present=true toc_entry_present=true '
+    'bold_heading_runtime_evidence=appendix-annex-final-pdf'
+)
 PY
 
 echo 'Reference document validated.'

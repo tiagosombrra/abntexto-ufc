@@ -13,6 +13,7 @@ cleanup() {
     rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
     rm -f "/tmp/abntexto-ufc-approval-$profile.tex"
   done
+  rm -f /tmp/abntexto-ufc-approval-doctoral.txt
 }
 trap cleanup EXIT INT TERM
 
@@ -55,6 +56,27 @@ for profile in $all_profiles; do
 
   profile_args="$profile_args $profile=$job.pdf"
 done
+
+pdftotext -layout frontmatter-validation-approval-doctoral-thesis.pdf /tmp/abntexto-ufc-approval-doctoral.txt
+python3 - <<'PY'
+import re
+import unicodedata
+from pathlib import Path
+
+text = Path('/tmp/abntexto-ufc-approval-doctoral.txt').read_text(
+    encoding='utf-8', errors='replace'
+)
+flat = re.sub(r'\s+', ' ', unicodedata.normalize('NFC', text))
+marker = 'Instituição Externa de Teste (IET)'
+if marker not in flat:
+    raise SystemExit(
+        'Approval page audit failed: committee institution/acronym marker is missing.'
+    )
+print(
+    'LIBRARIAN-REVIEW-EVIDENCE item=7 status=PASS '
+    'context=approval-page institution-acronym-rendered=true'
+)
+PY
 
 mkdir -p "$(dirname "$evidence")"
 # shellcheck disable=SC2086
