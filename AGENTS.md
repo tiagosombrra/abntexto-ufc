@@ -1,6 +1,6 @@
 # AGENTS.md — Repository Bootstrap and Control Rules
 
-This repository uses fail-closed state reconciliation during the v3 reconstruction.
+This repository uses fail-closed state reconciliation for v3 development.
 
 ## Mandatory session bootstrap
 
@@ -10,47 +10,85 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. Compare Git facts, machine state, handoff, and roadmap.
-6. If phase, stage, branch, checkpoint, or temporary-artifact state disagrees, stop feature work and reconcile the control plane first.
-7. Only after reconciliation inspect implementation details, pull requests, workflow history, or old commits.
+5. During **Reference PDF Validation**, also read `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+6. Compare Git facts, machine state, handoff, roadmap and the active phase documents.
+7. If phase, checkpoint, acceptance state, artifact provenance, visual-review state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
-Memory, old pull requests, workflow names, historical branches, and prior chat context never override the current repository state.
+Memory, prior chats, historical branch names, old pull requests, and workflow names never override current repository state.
 
-## Current reconstruction rules
+## Current state
 
-- v3 target: `3.0.0`.
-- R1 is structural reconstruction. Do not perform the Portuguese runtime API rewrite during R1; that belongs to R2.
+- Target version: `3.0.0`.
+- Active phase: **Reference PDF Validation**.
+- Core Corrections immutable phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041` and full Linux `33982156042` success; Linux summary `PASS=31 FAIL=0 SKIP=0`.
+- Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Fresh canonical artifact build: SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, run `33983729996`, artifact `9974546873`.
+- Canonical PDF SHA-256: `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`; 55 A4 pages; PDF 1.7; TeX Live 2026/pdfLaTeX; preflight PASS; all listed fonts embedded.
+- Temporary PDF-build executor is removed after successful artifact recovery.
+- Complete 200 DPI visual review: **PASS, 55/55 pages, 0 unexplained visual FAIL**.
+- Visual evidence record: `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`.
+- Pre-existing 2026-09-04 reference PDF remains comparison-only.
+- Current batch: **Reference PDF Validation — immutable phase-end regression candidate**.
+- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+- Scientific Article runtime remains deferred until Reference PDF Validation closes.
+
+## Readable phase model
+
+1. **Regression Audit** — closed
+2. **Core Corrections** — closed; phase-end regression accepted at `5f67560a...`
+3. **Reference PDF Validation** — active; visual review PASS, phase-end candidate gate
+4. **Scientific Article** — queued
+5. **Final Certification** — queued
+6. **Release** — queued
+
+Do not create new opaque work identifiers such as nested letter/number codes. GitHub issue/PR numbers and immutable SHAs provide traceability. Historical labels may appear only to identify old evidence.
+
+## Engineering rules
+
 - Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
-- The active repository is not an archive. Historical evidence belongs in Git history, tags, releases, issues, pull requests, certified SHAs, and external verified backups.
-- Do not create archive/history branches in the active repository.
-- Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before a checkpoint.
-- Permanent automatic CI is introduced only through R1-BLOCK-7 and must remain a thin orchestration layer over repository-owned entry points.
-- R1-BLOCK-7 is DONE. `Static contract`, `Linux integration`, and `Linux release check` are the only permanent workflows. B7-D confirmed read-only permissions, pinned actions, bounded concurrency, stable repository-owned entry points, and zero temporary workflow residue.
-- The `Stable branches` ruleset currently has no required-status rule. The recorded recommendation is to require `Static contract` and `Linux integration`; `Linux release check` remains post-merge/manual.
-- R1-BLOCK-8 is DONE. The certified R1 candidate is `9b1752565ac217c04ffa22a9ef272cdf078af380`.
-- In source workflow run `33649620219`, Windows full-candidate-matrix job `100313006509` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX matrix. The workflow-level conclusion was failure because its Linux inspection job failed; separate final Linux inspection run `33655108349` / job `100331601354` subsequently passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b.
-- V3-R2 is DONE through R2-B5/PR #249 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e`. R2-A plus R2-B1 through R2-B5 are complete and recorded in `docs/R2-API-OWNERSHIP.md`.
-- R2-B1 merged through PR #236 at `ded5e77733795aa2958606e899d4e27f12f64df4`; final `Linux integration` run `33668283890` passed `PASS=30 FAIL=0 SKIP=0`.
-- R2-B2 merged through PR #242 at `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`; final `Linux integration` run `33680378846` passed `PASS=30 FAIL=0 SKIP=0`, with strengthened residual audit `33680252116` green. Closeout PR #243 passed `Static contract` `33696690560` and `Linux integration` `33696690567` at `PASS=30 FAIL=0 SKIP=0`, then squash-merged as canonical B3 entry `0650845b922271fc134d20ef2a8c36ebb999ef91`; issue #237 is closed completed.
-- R2-B3 is DONE through PR #245 at `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df`; Static `33704346418` and Linux `33704346429` passed `PASS=30 FAIL=0 SKIP=0`. Structural/object APIs and project-owned object IDs are directly owned; genuine upstream `grafico` / `quadro` remain only at integration boundaries.
-- R2-B4 is DONE through PR #247 at `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261`; final Static `33736117556` and Linux `33736117558` passed `PASS=30 FAIL=0 SKIP=0`. Bibliography/reference/glossary/index commands are directly owned; B4 left `public-api.def` empty for its B5 physical removal.
-- R2-B5/#240 is DONE. `public-api.def` and its class load are absent; `docs/MIGRATING-TO-V3.md` is the user migration guide; `tests/checks/v3_api_residual.py` is the permanent fail-closed residual gate. Static `33743809498`, Linux `33743809431`, and post-merge release `33745603468` are green.
-- V3-R3, V3-R4, V3-R5 and V3-A1 are DONE. A1/#275 source contract merged through PR #279 at `4d018a92697e8f39e3a53b034c451e55996c84fb` and closed through PR #281 at exact A2 predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A2/#280 is ACTIVE from that SHA; runtime implementation has not started yet. A2 must implement only canonical `scientific-article`, reuse cross-cutting infrastructure, preserve modality, and require article-specific evidence before proof promotion.
-- R3-B1/#252 is DONE through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. Static `33758758911` and Linux `33758758877` passed, with Linux `PASS=30 FAIL=0 SKIP=0`; the deliberate front-matter negative fixture was rejected on `dedication.position.start`.
-- R3-B2/#253 is DONE through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. Static `33768911131` passed; Linux `33768911126` / job `100694266254` and independent validation `33768364069` passed `PASS=31 FAIL=0 SKIP=0`. Final contribution was 113/113 `automatic-partial` bounded-positive, 37 enforced-automatic, 14 support-only, 10 conditional-review, 6 manual-review, 1 not-applicable, zero automation gaps.
-- R3-B3/#254 is DONE through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`, entered canonically after the B2→B3 control-plane checkpoint `44874c84b375396de8b9e3b24a40c47b5006f19b`. Static `33792280764` passed; Linux `33792280797` / job `100771483526` passed `PASS=31 FAIL=0 SKIP=0`; post-merge release `33794112546` / job `100777542613` passed `PASS=33 FAIL=0 SKIP=0`. The residual gate covers 302 behavior-relevant sources (134 LaTeX + 168 engineering), test/check reachability is 147/147 with zero orphans, and negative paths are coupled to positive PASS evidence by the same `rule_id`.
-- R3-B4/#255 is DONE through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. R3-B5/#256 is DONE: product candidate `c79f3c73f1d51a30175e8259269504d029442a1c` passed PR #266 Linux `PASS=31 FAIL=0 SKIP=0` and exact-main release `PASS=33 FAIL=0 SKIP=0`; validated closeout PR #268 passed Static `33825615520` and Linux `33825615541` / job `100877511446` = `PASS=31 FAIL=0 SKIP=0`, then merged at exact R4 predecessor `d90a675a844724c33a5727d8d980027c46291eb0`. V3-R4/#267 certification run `33855800767` passed the exact Times/Arial × pdfLaTeX/LuaLaTeX matrix, Unicode extraction, embedding and PDF/A-2b; the temporary executor was removed. R4 closed through PR #273 at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`. V3-R5/#272 is DONE through PR #276 at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; V3-A1/#275 is DONE through PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; V3-A2/#280 is ACTIVE from that exact entry.
-- R3-B1 established the front-matter fail-closed invariant. R3-B2 generalized evidence truthfulness: mechanism traceability, current rule-specific contribution and conservative proof state are distinct; `automatic-partial` contribution must come from a declared owner, `bounded-positive` is not `PROVEN`, and support-only evidence is never counted as enforcement.
-- Preserve rendered behavior and normative rule IDs, values, tolerances, locators and proof state unless explicit current evidence authorizes a normative change.
-- Heavy Windows/font, Overleaf, PDF/A, distribution/CTAN, and full multi-engine jobs are candidate/certification work, not default cheap checks.
-- Do not rerun completed checks unless current-state validation requires it.
+- Treat an engineering-language gate that misses known project-owned Portuguese diagnostics as a false-negative defect. Fix the detector and diagnostics; do not weaken the policy or flag legitimate academic Portuguese.
+- Preserve the closed v3 public API unless a current requirement explicitly authorizes a change.
+- Do not silently change normative rule IDs, expected values, tolerances, locators, applicability, source precedence, or proof-state semantics.
+- A green test proves only the contract encoded by that test. Current authority and presentation acceptance remain separate obligations.
+- Reviewer comments are evidence, not automatic normative authority.
+- Presentation requirements require canonical PDF evidence in addition to source-level checks.
+- Do not weaken tests merely to recover green CI.
+- Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before checkpoint closeout.
+- Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
+- Heavy Windows/literal-font/PDF-A/distribution checks belong to Final Certification or an explicitly justified correction task.
 - Do not redistribute proprietary Microsoft fonts.
-- Do not perform actual CTAN submission before the roadmap reaches its explicit release-ready stage.
+- Do not perform actual CTAN submission before **Release**.
 
-## Branch governance
+## Progress documentation discipline
 
-The intended steady state is `main` plus only short-lived task branches. Merged or abandoned task branches are deleted promptly. Releases are preserved by immutable version tags and GitHub Releases, not permanent release/audit branches.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, artifact provenance, visual-validation status, temporary-executor lifecycle, or release/certification state.
 
-## Fail-closed rule
+For every material advance, update the relevant execution document/review matrix and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, artifact, or temporary-executor facts change.
 
-If a required fact cannot be established from the current Git repository and canonical state files, record the ambiguity and stop advancement to the next stage. Do not infer closure from naming, memory, historical intent, or a partial certification milestone.
+## Mandatory phase-end regression
+
+No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
+
+The machine contract intentionally represents this invariant with `phase_end_regression.candidate = one-immutable-sha`. Do not replace that sentinel with prose or an actual self-referential SHA. Exact Git candidate SHAs are recorded in evidence after immutable commits exist.
+
+Core Corrections satisfied this rule with candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, Static `33982156041`, and Linux `33982156042`.
+
+Reference PDF Validation now has accepted provenance and a complete visual PASS. The final synchronized repository state for this phase must be treated as one immutable candidate and pass Static plus full Linux before Scientific Article can become active.
+
+## Reference PDF Validation acceptance model
+
+- Use only a real LaTeX-generated canonical artifact tied to a concrete repository SHA.
+- Do not use a stale, synthetic or recreated PDF as acceptance evidence.
+- Render the complete PDF and inspect every page; source checks and automated geometry do not replace visual review.
+- Confirm no clipping, overlap, broken glyphs, unexpected page breaks, object overflow, heading drift or pagination anomalies.
+- Reconfirm presentation-sensitive librarian-review items and preserve item 33 as an explicit authority gap.
+- The accepted normal-build fallback boxes for optional licensed reference photographs are intentional when `make reference-assets` has not been run.
+- Any defect must be classified before code/test changes; after a correction, rebuild, re-render and re-inspect.
+- Temporary canonical-build executor must remain absent after provenance acceptance.
+- Scientific Article remains blocked until this phase and its phase-end regression close.
+
+## Branch governance and fail-closed rule
+
+The steady state is `main` plus short-lived task branches. Releases are preserved by immutable tags and GitHub Releases, not permanent audit branches.
+
+If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement to the next phase. Do not infer closure from naming, memory, historical intent, old PDFs, or partial certification evidence.
