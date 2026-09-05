@@ -19,9 +19,11 @@ Every phase has a mandatory **phase-end regression** on one immutable candidate 
 
 Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing item 21.
 
-Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28. Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28.
 
-Engineering-language hardening remains open. Static `33971849196` on synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` passed repository/phase governance checks and exposed five project-owned Portuguese diagnostics in `tests/integration/backmatter.sh`. Current implementation `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete back-matter technical diagnostic surface and normalizes the technical job identifier. Acceptance still requires a synchronized Static/full Linux checkpoint.
+Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`. The permanent audit reports zero project-owned Portuguese technical diagnostics, so that additional regression finding is closed.
+
+Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
 ## Priority model
 
@@ -32,9 +34,9 @@ Engineering-language hardening remains open. Static `33971849196` on synchronize
 
 ## Work order
 
-### 1. Control Plane and Regression Harness — VALIDATED / ACTIVE GUARD
+### 1. Control Plane and Regression Harness — VALIDATED
 
-Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static `33970988780` proved governance drift is fail-closed; subsequent Static runs have confirmed the restored governance contract.
+Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static failures during the correction cycle demonstrated that the permanent governance checker rejects documentation drift instead of silently accepting it.
 
 ### 2. Front Matter and Institutional Metadata — PARTIAL
 
@@ -48,36 +50,28 @@ Items 11-20 and 24-29 have their current automated/source/PDF contracts accepted
 
 Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identification/title, 10 pt single-spaced lower source/legend/note where applicable, all constrained to object width.
 
-### 5. Engineering-language evidence hardening — ACTIVE
+### 5. Engineering-language evidence hardening — VALIDATED
 
-The strengthened detector is being used as both a discovery mechanism and a permanent policy gate. Newly exposed project-owned Portuguese technical diagnostics are corrected rather than allowlisted.
+Accepted at checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` with Static `33972111694` and full Linux `33972111696` both green. The stronger detector progressively exposed previously missed project-owned Portuguese diagnostics; all discovered engineering surfaces were corrected instead of weakening the detector. Permanent evidence now reports `portuguese_technical_diagnostics=0`.
 
-Progress:
+### 6. References and NBR 6023:2025 — ACTIVE / FAIL-CLOSED BOUNDARY
 
-1. initial hardening translated known mixed diagnostics and strengthened phrase detection;
-2. `33970711005` exposed `algorithm-numbering.sh`, whose complete diagnostic surface was translated;
-3. `33970988780` exposed temporary control-document drift, which was corrected;
-4. `33971156481` exposed catalog-card/duplex/vector diagnostic surfaces, which were translated by `1129935...`;
-5. `33971849196` then exposed the remaining `backmatter.sh` technical diagnostic surface;
-6. implementation `a1c139...` translates that complete surface and changes its technical job identifier from Portuguese to English while preserving rendered Portuguese literals under test.
+Safe bounded work:
 
-Acceptance:
+- item 30: retain current electronic-resource unknown-publication-data behavior and add reviewer-case regression coverage without strengthening unresolved current-edition semantics;
+- item 31: add an explicit thesis/dissertation negative regression preventing duplicate or contradictory year output;
+- item 32: add bibliography-specific standard and multivolume fixture/evidence cases using current accepted project/source data;
+- item 33: remain `NORMATIVE-REVIEW` until authoritative current NBR 6023:2025 text is available for the disputed DOI/availability/repeated-author/corporate-author edge cases.
 
-1. publish a synchronized documentation checkpoint on top of `a1c139...`;
-2. run Static contract and full Linux integration on that exact checkpoint;
-3. require zero project-owned Portuguese technical diagnostics;
-4. correct any further violations exposed by stronger detection instead of weakening the detector;
-5. close only when the permanent language audit is truthful and full Linux remains green.
+Important boundary: `tests/integration/multivolume.sh` validates pagination of a multivolume academic document; it is not evidence for a multivolume bibliographic entry. Bibliography evidence must use a separate fixture/reference gate.
 
-### 6. References and NBR 6023:2025 — PARTIAL / FAIL-CLOSED
+Acceptance for this batch:
 
-Safe work after the language gate batch:
-
-- item 30: expand reviewer-specific electronic-resource coverage around unknown place/publisher behavior already supported by the current compatibility layer;
-- item 31: add explicit thesis/dissertation duplicate-year negative regression;
-- item 32: add clear standard and multivolume bibliography fixture/evidence cases supported by current authority.
-
-Item 33 remains `NORMATIVE-REVIEW` until authoritative current NBR 6023:2025 text is available. Do not encode older review examples as current runtime law without current-edition authority.
+1. no normative runtime change unless directly supported by current authority already in the evidence corpus;
+2. add positive/negative reviewer-specific evidence where bounded behavior is already established;
+3. keep item 33 untouched;
+4. synchronize affected execution documentation in the same material advance;
+5. require Static contract and full Linux integration green before accepting the batch.
 
 ### 7. Appendices, Annexes and External Source Attribution — PARTIAL
 
@@ -120,9 +114,9 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 27 | PASS | P3 | Preserve alphabetic alínea ordering. |
 | 28 | PASS | P2 | Source/PDF sentence-case and `etc.` evidence accepted. |
 | 29 | PASS | P3 | Preserve 2 cm first-line indent/no extra paragraph spacing. |
-| 30 | PASS/PARTIAL | P1/P3 | Expand reviewer-case electronic-resource fixtures. |
-| 31 | PASS | P3 | Add duplicate-year negative fixture. |
-| 32 | PARTIAL | P1/P2 | Add current-authority standard/multivolume cases. |
+| 30 | PASS/PARTIAL | P1/P3 | Add reviewer-specific electronic-resource regression while preserving current bounded behavior. |
+| 31 | PASS | P3 | Add duplicate/contradictory-year negative fixture. |
+| 32 | PARTIAL | P1/P2 | Add bibliography-specific standard/multivolume cases. |
 | 33 | NORMATIVE-REVIEW | P1 | Wait for authoritative NBR 6023:2025 edge-case text. |
 | 34 | PARTIAL | P1/P2 | Final canonical annex source/heading/TOC confirmation. |
 
@@ -131,12 +125,12 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | Finding | State | Next action |
 |---|---|---|
 | Hidden historical phase-name coupling | CLOSED | Keep semantic phase governance regression. |
-| Documentation can drift from implementation | ACTIVE GUARD | Preserve `material advance` / `phase-end regression` requirements. |
+| Documentation can drift from implementation | ACTIVE GUARD | Preserve mandatory reconciliation on every material advance. |
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
 | Stale V2 wording/current API vocabulary in V3 reference | CORRECTED/PROTECTED | Keep negative reference hygiene. |
 | Object typography tests certified wrong upper-title size | CLOSED | Preserve current authority decision/evidence. |
-| Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve accepted source/PDF evidence. |
-| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Validate synchronized checkpoint on top of `a1c139...`; continue fail-closed if more violations surface. |
+| Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve `3ae9dd...` + `c4c59...` evidence. |
+| Engineering-language gate had mixed-diagnostic false negatives | CLOSED | Accepted at `edeb14...`; retain permanent stronger detector and self-tests. |
 
 ## Phase transition gates
 

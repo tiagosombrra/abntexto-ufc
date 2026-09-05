@@ -28,8 +28,10 @@ The object-title authority conflict is resolved and accepted. Checkpoint `3f4708
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, closing review items 11, 16 and 28. Current librarian-review state is therefore **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-The engineering-language false-negative finding is being exercised fail-closed. Successive Static runs exposed `algorithm-numbering.sh`, a temporary documentation-governance drift, catalog-card/duplex/vector diagnostic surfaces, and most recently five technical diagnostics in `tests/integration/backmatter.sh` at synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` / Static `33971849196`.
+The engineering-language false-negative finding is also resolved. The stronger detector intentionally exposed successive project-owned Portuguese technical diagnostics rather than reporting a false zero. After complete related-surface cleanup, synchronized checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports `portuguese_technical_diagnostics=0`.
 
-Current implementation `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete back-matter engineering diagnostic surface and normalizes its technical job identifier while preserving academic Portuguese literals. This hardening is not accepted until a synchronized Static/full Linux checkpoint is green.
+Core Corrections now proceeds to bounded reference evidence for items 30-32. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence. Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
 
-Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence. Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
+## Regression discipline retained after audit
+
+Every material advance continues to update the active execution documentation. Every phase requires a phase-end regression on one immutable candidate before closure; targeted correction checks never replace that phase-level regression.

@@ -11,10 +11,9 @@ Updated: 2026-09-05
 - Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`; Static `33937439818` and Linux `33937439846` succeeded.
 - Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` succeeded, `PASS=31 FAIL=0 SKIP=0`.
 - Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` succeeded, `PASS=31 FAIL=0 SKIP=0`; librarian items 11, 16 and 28 closed.
+- Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and Linux `33972111696` succeeded; the permanent detector reports zero project-owned Portuguese technical diagnostics.
 - Current 34-item state: `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
-- Engineering-language hardening remains active. Static `33971849196` on synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` passed repository/phase governance checks and then exposed five project-owned Portuguese diagnostics in `tests/integration/backmatter.sh`.
-- Current implementation checkpoint `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete back-matter technical diagnostic surface and normalizes its technical job identifier while preserving Portuguese academic literals under test.
-- `a1c139...` is not accepted until a synchronized branch checkpoint passes Static contract and full Linux integration.
+- Current bounded batch: **Core Corrections — References**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
@@ -24,23 +23,21 @@ Git facts, machine state, roadmap and this handoff must describe the same active
 
 ## Immediate action
 
-Continue **Core Corrections — Engineering Language Evidence Hardening**:
+Continue **Core Corrections — References** with bounded, authority-safe evidence only:
 
-1. publish a synchronized documentation checkpoint on top of `a1c139...`;
-2. run normal Static contract and full Linux integration on that exact checkpoint;
-3. require `ENGINEERING-LANGUAGE-EVIDENCE` to report zero project-owned Portuguese technical diagnostics;
-4. if stronger detection exposes further diagnostics, translate the complete related engineering surface instead of weakening detection;
-5. when Static/full Linux are green, close the language-hardening finding and synchronize all control documents;
-6. then continue bounded NBR 6023:2025 work for items 30-32, keeping item 33 fail-closed, followed by canonical confirmation for items 1, 2, 7 and 34.
+1. add an explicit negative regression proving thesis/dissertation references do not duplicate or contradict the year (item 31 hardening);
+2. add a bibliography-specific standard example using the current ABNT publisher/year data already present in the canonical reference corpus (item 32);
+3. add a bibliography-specific multivolume physical-description example and evidence without confusing it with the document-pagination `multivolume.sh` gate (item 32);
+4. retain existing electronic-resource unknown-publication-data coverage for item 30 and add only reviewer-specific evidence that does not strengthen unresolved NBR 6023:2025 semantics;
+5. keep item 33 untouched and fail-closed because DOI/online/repeated-author/corporate-author edge-case clause text remains unavailable;
+6. synchronize all affected execution documents in the same material advance;
+7. run Static contract and full Linux integration before accepting the bounded reference batch.
 
-## Failure classification
+## Accepted engineering-language closeout
 
-- Static `33970711005`: fail-closed discovery from stronger language evidence (`algorithm-numbering.sh`).
-- Static `33970988780`: temporary documentation-governance drift; no LaTeX runtime regression.
-- Static `33971156481`: governance recovered; stronger language evidence exposed catalog-card/duplex/vector diagnostics.
-- Static `33971849196`: governance remained green; stronger language evidence exposed the back-matter diagnostic surface.
+The strengthened detector progressively exposed previously missed project-owned Portuguese diagnostics in several integration gates. The project corrected the diagnostic surfaces instead of weakening detection. Checkpoint `edeb14...` is accepted because Static `33972111694` and full Linux `33972111696` both passed on the same SHA, with `ENGINEERING-LANGUAGE-EVIDENCE ... portuguese_technical_diagnostics=0`.
 
-These failures do not change the 34-item librarian-review classification. They are evidence-governance findings being removed systematically.
+Historical failed discovery runs remain useful evidence and are not erased: they demonstrate fail-closed detection and documentation-governance enforcement.
 
 ## Mandatory operating discipline
 

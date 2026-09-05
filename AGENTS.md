@@ -23,9 +23,9 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Regression baseline `c4bf51b574647226ee488440579ec2a204c16c79`: Static `33937439818` and Linux `33937439846` success.
 - Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` success, `PASS=31 FAIL=0 SKIP=0`.
 - Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` success, `PASS=31 FAIL=0 SKIP=0`; items 11, 16 and 28 closed.
+- Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and Linux `33972111696` success; permanent audit reports `portuguese_technical_diagnostics=0`.
 - Current 34-item state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Engineering-language hardening is active. Static `33970711005` exposed `algorithm-numbering.sh`; Static `33970988780` exposed documentation-governance drift; Static `33971156481` exposed catalog-card/duplex/vector diagnostics; Static `33971849196` then exposed the remaining back-matter diagnostic surface.
-- Current implementation checkpoint `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete `backmatter.sh` engineering diagnostic surface and normalizes its technical job identifier. It is not accepted until a synchronized Static/full Linux checkpoint passes.
+- Current bounded batch: **Core Corrections — References**, limited to safe evidence for items 30-32.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 
@@ -74,7 +74,7 @@ At minimum this includes Static contract, full relevant Linux integration, phase
 
 A correction closes only when the applicable combination is established: current authority/project classification, correct runtime/reference behavior, automated positive evidence or explicit manual review, negative evidence where practical, and canonical-PDF evidence when presentation is part of the requirement.
 
-Item 33 remains fail-closed until current authoritative NBR 6023:2025 text supports any additional runtime change.
+For the active References batch, prefer bounded regression additions supported by current behavior/authority. Do not strengthen DOI, online-access, repeated-author, or corporate-author runtime semantics beyond the available current-edition evidence. Item 33 remains fail-closed.
 
 ## Branch governance and fail-closed rule
 

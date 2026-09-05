@@ -17,9 +17,9 @@ This document converts the union of the two annotated v1.1.1 review PDFs supplie
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`. Explicit PDF evidence closed review items 11, 16 and 28.
 
-Current review state: **28 PASS, 5 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 items**.
+Engineering-language hardening is accepted at checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and full Linux `33972111696` both succeeded. This additional regression finding does not change the librarian-review item count.
 
-The active engineering-language hardening does not change these 34 review classifications. Static `33971849196` on synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` passed repository/phase governance and exposed five remaining technical diagnostics in `tests/integration/backmatter.sh`. Current implementation `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates that complete engineering surface; acceptance is pending synchronized Static/full Linux evidence.
+Current review state: **28 PASS, 5 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 items**.
 
 ## Consolidated review contract
 
