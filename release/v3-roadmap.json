@@ -46,7 +46,7 @@
     "required": true,
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
-    "candidate": "current-commit-first-introducing-core-corrections-phase-end-contract",
+    "candidate": "one-immutable-sha",
     "candidate_state": "pending-workflow-results",
     "minimum_checks": [
       "Static contract",
@@ -139,7 +139,7 @@
     "latest_fully_validated_checkpoint_state": "static-green-linux-green-frontmatter-annex-closeout-accepted",
     "acceptance_state_checkpoint_sha": "c066697691df748a3b24a716ba69d5e4cb168f5d",
     "current_correction_batch": [
-      "Core Corrections phase-end regression candidate"
+      "Core Corrections corrected phase-end regression candidate"
     ],
     "review_items_confirmed_by_latest_full_linux": [1, 2, 4, 7, 11, 16, 17, 19, 20, 21, 23, 28, 30, 31, 32, 34],
     "review_items_source_evidence_accepted": [11, 16, 28, 30, 31, 32],
@@ -148,10 +148,11 @@
       "historical Static 33970711005: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostics",
       "historical Static 33970988780: phase governance rejected roadmap missing required material advance concept",
       "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup",
-      "historical Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change"
+      "historical Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change",
+      "Static 33981960024 on rejected candidate 3b247637: phase_end_regression.candidate did not equal the required one-immutable-sha sentinel"
     ],
     "pending_acceptance_gates": [
-      "Core Corrections immutable phase-end candidate must pass Static contract and full Linux integration on the same SHA"
+      "Corrected Core Corrections immutable phase-end candidate must pass Static contract and full Linux integration on the same SHA"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
@@ -190,7 +191,10 @@
     "frontmatter_annex_closeout_linux_run": 33980847189,
     "frontmatter_annex_closeout_linux_conclusion": "success",
     "frontmatter_annex_closeout_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "core_corrections_phase_end_candidate": "current-commit-first-introducing-docs/V3-CORE-CORRECTIONS-PHASE-END.md",
+    "rejected_core_corrections_phase_end_candidate_sha": "3b2476371e1df5180d8ee25ea53aed6a13fa2da2",
+    "rejected_core_corrections_phase_end_static_run": 33981960024,
+    "rejected_core_corrections_phase_end_static_classification": "phase-governance-candidate-sentinel-mismatch",
+    "core_corrections_phase_end_candidate": "one-immutable-sha",
     "core_corrections_phase_end_acceptance": "pending-static-and-linux",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true

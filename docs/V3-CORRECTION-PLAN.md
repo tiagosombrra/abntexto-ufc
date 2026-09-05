@@ -15,36 +15,25 @@ Every **material advance** updates the relevant implementation/review state and 
 
 ## Current evidence state
 
-Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8` passed Static `33980847191` and full Linux `33980847189`, `PASS=31 FAIL=0 SKIP=0`. Explicit reviewer evidence passed for items 1, 2, 7 and 34.
+Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8` passed Static `33980847191` and full Linux `33980847189`, `PASS=31 FAIL=0 SKIP=0`. Current librarian-review state is **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Current librarian-review state is **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
-
-Acceptance-state synchronization checkpoint: `c066697691df748a3b24a716ba69d5e4cb168f5d`.
+Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 ## Work status
 
-All correction batches that can be safely resolved with current authority are validated:
+All correction batches that can be safely resolved with current authority are validated. Items 1-32 and 34 are PASS; item 33 is NORMATIVE-REVIEW. No PARTIAL or FAIL item remains.
 
-- Control Plane and Regression Harness — VALIDATED;
-- Front Matter and Institutional Metadata — VALIDATED;
-- Body Structure, Headings, Citations and Lists — VALIDATED;
-- Figures, Tables and Documentary Objects — VALIDATED;
-- Engineering-language evidence hardening — VALIDATED/PERMANENT GUARD;
-- References items 30-32 — VALIDATED;
-- Appendices, Annexes and External Source Attribution — VALIDATED;
-- Canonical V3 Reference Corpus Cleanup — VALIDATED/PROTECTED.
+## Phase-end candidate history
 
-Item 33 remains `NORMATIVE-REVIEW`, not a runtime FAIL.
+Candidate `3b2476371e1df5180d8ee25ea53aed6a13fa2da2` is rejected because Static `33981960024` correctly enforced the machine invariant `phase_end_regression.candidate = one-immutable-sha`. The candidate had replaced that sentinel with descriptive text. No runtime or review-evidence failure was observed by Static before the governance stop.
 
-## Complete 34-item implementation state
+The fix restores the exact governance invariant; `tests/checks/phase_governance.py` remains unchanged.
 
-Items 1-32 and 34 are PASS. Item 33 is NORMATIVE-REVIEW. No PARTIAL or FAIL item remains.
+## Current batch — corrected Core Corrections phase-end candidate
 
-## Current batch — Core Corrections phase-end regression
+`docs/V3-CORE-CORRECTIONS-PHASE-END.md` defines the corrected immutable-candidate semantics. The commit that first contains the corrected synchronized state is the new candidate. Its SHA is recorded later with CI results; the candidate is not modified after publication.
 
-`docs/V3-CORE-CORRECTIONS-PHASE-END.md` defines the immutable candidate semantics and acceptance gate. The commit that first introduces that synchronized document is the candidate.
-
-The candidate must pass Static contract, full Linux integration and the existing phase-specific evidence matrix on the same SHA. No phase transition occurs until the candidate result is recorded.
+The candidate must pass Static contract, full Linux integration and the existing phase-specific evidence matrix on the same SHA. No phase transition occurs until those results are recorded.
 
 ## Phase transition gates
 

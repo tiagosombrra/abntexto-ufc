@@ -8,10 +8,11 @@ Updated: 2026-09-05
 - Canonical branch: `main`.
 - Active task branch: `plan/v3-regression-reset`.
 - Active phase: **Core Corrections**.
-- Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8`: Static `33980847191`, Linux `33980847189` success, `PASS=31 FAIL=0 SKIP=0`; explicit reviewer evidence PASS for items 1, 2, 7 and 34.
+- Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8`: Static `33980847191`, Linux `33980847189` success, `PASS=31 FAIL=0 SKIP=0`.
 - Acceptance-state synchronization checkpoint: `c066697691df748a3b24a716ba69d5e4cb168f5d`.
 - Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Current batch: **Core Corrections — Phase-end Regression Candidate**.
+- Rejected phase-end candidate: `3b2476371e1df5180d8ee25ea53aed6a13fa2da2`; Static `33981960024` failed the phase-governance contract because the machine sentinel was not exactly `one-immutable-sha`.
+- Current batch: **Core Corrections — Corrected Phase-end Regression Candidate**.
 - Candidate contract: `docs/V3-CORE-CORRECTIONS-PHASE-END.md`.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
@@ -20,9 +21,15 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 Git facts, machine state, roadmap and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
 
+## Rejected candidate classification
+
+Static `33981960024` rejected `3b247637...` before feature/runtime validation because `release/v3-roadmap.json` changed the governance sentinel from `one-immutable-sha` to descriptive text. `tests/checks/phase_governance.py` explicitly requires the sentinel and correctly failed closed.
+
+This is a control-plane representation defect. The governance test is unchanged. The corrected state restores `phase_end_regression.candidate = one-immutable-sha`.
+
 ## Current candidate rule
 
-The commit that first introduces `docs/V3-CORE-CORRECTIONS-PHASE-END.md` in this synchronized state is the immutable Core Corrections phase-end candidate. Its SHA is recorded only after the commit exists.
+The commit that first contains this corrected synchronized state is the new immutable Core Corrections phase-end candidate. Its exact SHA is recorded with workflow results in the later phase-transition commit. The candidate is not amended after CI begins.
 
 Required gate on that exact SHA:
 
@@ -34,11 +41,11 @@ Required gate on that exact SHA:
 
 ## Immediate action
 
-1. publish the synchronized phase-end candidate commit;
+1. publish the corrected synchronized phase-end candidate;
 2. wait for Static and full Linux on that exact SHA;
 3. classify any failure before changing code/tests;
 4. if both pass, record candidate SHA/run IDs and close Core Corrections;
-5. activate **Reference PDF Validation** in the same phase-transition documentation cycle;
+5. activate **Reference PDF Validation** in the phase-transition documentation cycle;
 6. do not start Scientific Article until Reference PDF Validation closes.
 
 ## Mandatory operating discipline
