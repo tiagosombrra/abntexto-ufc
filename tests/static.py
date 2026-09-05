@@ -20,6 +20,7 @@ SOURCE_CHECKS = (
     "tests/checks/profile_matrix_contract.py",
     "tests/checks/test_surface_integrity.py",
     "tests/checks/v3_api_residual.py",
+    "tests/checks/librarian_review_contract.py",
 )
 
 
