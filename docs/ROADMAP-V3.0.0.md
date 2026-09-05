@@ -12,7 +12,7 @@ Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`
 
 Current 34-point state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
-Current implementation checkpoint `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee` starts **Core Corrections — Engineering Language Evidence Hardening**. It strengthens mixed-language diagnostic detection and translates known project-owned mixed diagnostics. Synchronized Static/full Linux acceptance is pending.
+Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` because the strengthened detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Correction implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates the complete diagnostic surface in that gate and expands the detector/self-test. Synchronized Static/full Linux acceptance is pending.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -20,12 +20,6 @@ Correction queue: `docs/V3-CORRECTION-PLAN.md`.
 Librarian review: `docs/UFC-LIBRARIAN-REVIEW.md`.
 Engineering language policy: `docs/ENGINEERING-LANGUAGE.md`.
 Object typography decision: `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
-
-## Operating discipline
-
-Every material advance must update the relevant execution documentation and canonical handoff in the same work cycle. Phase/machine-state changes also update this roadmap and `release/v3-roadmap.json`.
-
-Every phase ends with a mandatory phase-end regression on one immutable candidate SHA. Targeted checks accumulated during a phase do not replace this gate.
 
 ## Phase plan
 
@@ -55,27 +49,20 @@ Every phase ends with a mandatory phase-end regression on one immutable candidat
 - external-illustration source locator evidence;
 - code/body typography consistency evidence;
 - object typography authority/runtime/test migration accepted by Static `33965794475` + Linux `33965794519`;
-- source-level reviewed reference-content evidence for items 11, 16 and 28 accepted at `3ae9dd...`;
-- generated-PDF reviewed reference-content evidence for items 11, 16 and 28 accepted at `c4c59...` with Static `33969505681` + Linux `33969505614`.
+- source and generated-PDF reviewed reference-content evidence for items 11, 16 and 28 accepted through `c4c59...`.
 
 ### Current work — Engineering Language Evidence Hardening
 
-The permanent engineering-language gate had a false-negative class: mixed Portuguese/English project-owned diagnostics could remain while the static audit reported zero violations.
+Initial hardening `5d74c0c...` added high-confidence mixed-language detection, self-tests and translations in `multivolume.sh` and `references-6023.sh`.
 
-Implementation `5d74c0c...`:
-
-- adds high-confidence mixed-language phrase detection to `tests/checks/engineering_language.py`;
-- extends the self-test to 11 cases, including known former false negatives;
-- translates mixed project-owned diagnostics in `tests/integration/multivolume.sh`;
-- translates mixed project-owned diagnostics in `tests/integration/references-6023.sh`;
-- keeps academic/rendered Portuguese, bibliography data and official wording protected.
+The synchronized checkpoint `fd3727...` correctly failed Static `33970711005` after exposing an additional diagnostic in `algorithm-numbering.sh`. The script contained multiple Portuguese/mixed failure messages, so correction `5c5b9593...` translates the entire project-owned diagnostic surface and extends detector coverage/self-test from 11 to 13 cases.
 
 Acceptance gate:
 
-1. publish a synchronized branch checkpoint containing `5d74c0c...` and current control docs;
+1. publish a synchronized branch checkpoint containing `5c5b9593...` and current control docs;
 2. run normal Static and full Linux integration;
-3. if the stronger detector finds additional project-owned mixed diagnostics, correct them rather than weakening the detector;
-4. close the finding only when Static/full Linux are green and the permanent audit truthfully reports zero violations.
+3. if the stronger detector exposes additional project-owned mixed diagnostics, correct them rather than weakening it;
+4. close the finding only when the permanent audit truthfully reports zero violations and full Linux remains green.
 
 ### Remaining Core Corrections
 
@@ -105,8 +92,6 @@ Use descriptive work names such as `Core Corrections — Engineering Language Ev
 - pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`;
 - regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
 - accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
-- accepted canonical-reference source checkpoint: `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`;
 - accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
-- engineering-language hardening implementation: `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee` (branch acceptance pending).
-
-Detailed history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.
+- language-hardening first synchronized checkpoint: `fd3727d89848eb52a9c79021cd9765ad9e1806db` (Static failure classified);
+- current language-hardening correction implementation: `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` (acceptance pending).

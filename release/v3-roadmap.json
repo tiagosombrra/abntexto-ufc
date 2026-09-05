@@ -132,13 +132,13 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "5d74c0c5b85ec501b04c5050af81180ad7e3f2ee",
+    "latest_implementation_checkpoint_sha": "5c5b9593cd12f3b6fa3108b579514c3c25edcb54",
     "latest_fully_validated_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green-canonical-reference-pdf-evidence",
     "current_correction_batch": [
       "engineering-language detector false-negative hardening",
-      "mixed Portuguese/English project-owned technical diagnostic cleanup",
-      "engineering-language self-test coverage for known false negatives"
+      "algorithm-numbering project-owned diagnostic cleanup",
+      "engineering-language self-test expansion after fail-closed discovery"
     ],
     "review_items_confirmed_by_latest_full_linux": [
       4,
@@ -157,8 +157,11 @@
       28
     ],
     "known_runtime_failures": [],
+    "known_gate_failures": [
+      "Static 33970711005 on fd3727d: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostic"
+    ],
     "pending_acceptance_gates": [
-      "engineering-language hardening: synchronized Static contract and full Linux integration required"
+      "engineering-language correction 5c5b9593: synchronized Static contract and full Linux integration required"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
@@ -190,18 +193,6 @@
     "object_core_static_run": 33965794475,
     "object_core_linux_run": 33965794519,
     "object_core_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "canonical_reference_source_checkpoint_sha": "3ae9dd698e021a117ba2b64ebf970dc8c507fa8f",
-    "canonical_reference_source_static_run": 33968579418,
-    "canonical_reference_source_static_conclusion": "success",
-    "canonical_reference_source_linux_run": 33968579449,
-    "canonical_reference_source_linux_conclusion": "success",
-    "canonical_reference_source_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "canonical_reference_source_items": [
-      11,
-      16,
-      28
-    ],
-    "canonical_reference_pdf_implementation_sha": "a1149f169f06b2db620bc5df69d0870b60fe583c",
     "canonical_reference_pdf_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
     "canonical_reference_pdf_static_run": 33969505681,
     "canonical_reference_pdf_static_conclusion": "success",
@@ -213,8 +204,13 @@
       16,
       28
     ],
-    "engineering_language_hardening_implementation_sha": "5d74c0c5b85ec501b04c5050af81180ad7e3f2ee",
-    "engineering_language_hardening_state": "branch-acceptance-pending",
+    "engineering_language_hardening_initial_implementation_sha": "5d74c0c5b85ec501b04c5050af81180ad7e3f2ee",
+    "engineering_language_hardening_initial_checkpoint_sha": "fd3727d89848eb52a9c79021cd9765ad9e1806db",
+    "engineering_language_hardening_initial_static_run": 33970711005,
+    "engineering_language_hardening_initial_static_conclusion": "failure",
+    "engineering_language_hardening_initial_static_failure": "tests/integration/algorithm-numbering.sh project-owned Portuguese diagnostic exposed by stronger detector",
+    "engineering_language_hardening_correction_implementation_sha": "5c5b9593cd12f3b6fa3108b579514c3c25edcb54",
+    "engineering_language_hardening_state": "acceptance-pending-after-exposed-diagnostic-fix",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,

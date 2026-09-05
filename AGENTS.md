@@ -23,11 +23,11 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
 - Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
 - Regression baseline Static `33937439818` and Linux `33937439846`: success.
-- Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success with `PASS=31 FAIL=0 SKIP=0`.
-- Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`: Static `33968579418` success; Linux `33968579449` success with `PASS=31 FAIL=0 SKIP=0`.
-- Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` success; Linux `33969505614` success with `PASS=31 FAIL=0 SKIP=0`. Librarian items 11, 16 and 28 are closed.
+- Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success with `PASS=31 FAIL=0 SKIP=0`.
+- Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` success; Linux `33969505614` success with `PASS=31 FAIL=0 SKIP=0`; librarian items 11, 16 and 28 are closed.
 - Current 34-item state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Current implementation checkpoint: `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee`, hardening engineering-language detection and translating known mixed project-owned diagnostics. Synchronized branch acceptance is pending.
+- Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db`: Static `33970711005` failed after the stronger detector exposed an additional project-owned Portuguese diagnostic in `algorithm-numbering.sh`.
+- Current correction implementation: `5c5b9593cd12f3b6fa3108b579514c3c25edcb54`; synchronized Static/full Linux acceptance is pending.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence for disputed edge cases.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 - Every material advance updates the active documentation/control state in the same work cycle.
@@ -47,7 +47,8 @@ Do not create new opaque work identifiers such as nested letter/number codes. Gi
 ## Engineering rules
 
 - Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
-- Treat an engineering-language gate that misses known project-owned Portuguese diagnostics as a false-negative defect. Fix the detector and the diagnostics; do not weaken the policy or flag legitimate academic Portuguese.
+- Treat an engineering-language gate that misses known project-owned Portuguese diagnostics as a false-negative defect. Fix the detector and diagnostics; do not weaken the policy or flag legitimate academic Portuguese.
+- When stronger detection exposes an additional violation, inspect and clean the complete related diagnostic surface instead of patching only the first reported line.
 - Preserve the closed v3 public API unless a current requirement explicitly authorizes a change.
 - Do not silently change normative rule IDs, expected values, tolerances, locators, applicability, source precedence, or proof-state semantics.
 - A green test proves only the contract encoded by that test. Current authority and presentation acceptance remain separate obligations.
@@ -83,7 +84,7 @@ At minimum this includes Static contract, full relevant Linux integration, phase
 
 A correction closes only when the applicable combination is established: current authority/project classification, correct runtime/reference behavior, automated positive evidence or explicit manual review, negative evidence where practical, and canonical-PDF evidence when presentation is part of the requirement.
 
-The object-title typography authority decision is final for the current evidence state and is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`. Item 33 remains fail-closed until current authoritative NBR 6023:2025 text supports any additional runtime change.
+Item 33 remains fail-closed until current authoritative NBR 6023:2025 text supports any additional runtime change.
 
 ## Branch governance and fail-closed rule
 

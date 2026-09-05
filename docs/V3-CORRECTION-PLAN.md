@@ -9,19 +9,13 @@ This is the executable correction queue produced by Regression Audit. It combine
 
 Canonical companions: `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`, `docs/ENGINEERING-LANGUAGE.md`, `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md`, and `release/v3-roadmap.json`.
 
-## Execution discipline
-
-Every material advance updates the relevant implementation/review state and canonical handoff in the same work cycle. If phase state, acceptance state, current batch, evidence state or branch/checkpoint facts change, update the roadmap and machine state in the same checkpoint. Every phase has a mandatory phase-end regression; targeted green checks do not replace it.
-
 ## Current evidence state
 
 Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing item 21.
 
-Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` passed Static `33968579418` and Linux `33968579449`. Generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` then passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`. Items 11, 16 and 28 are therefore PASS.
+Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28. Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Current librarian-review state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-
-Current implementation `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee` hardens the engineering-language detector and translates known mixed project-owned diagnostics. Synchronized branch acceptance is pending.
+Engineering-language synchronized checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` after the stronger detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Current correction `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates that gate's complete diagnostic surface and expands detector/self-test coverage. Acceptance is pending.
 
 ## Priority model
 
@@ -38,21 +32,11 @@ Readable six-phase model, machine-protected 34-item contract, semantic phase gov
 
 ### 2. Front Matter and Institutional Metadata — PARTIAL
 
-Covers items 1-10. Core behavior for subtitle propagation, co-advisor optionality, concentration area, variable committee size, CAPES guidance, advisor punctuation, complete-name placeholder and institution/acronym examples is implemented. Remaining: canonical blank/filled department confirmation, complete-author-name guidance confirmation, final approval-page `Instituição (sigla)` confirmation, and final canonical-PDF front-matter inspection.
+Covers items 1-10. Remaining: canonical blank/filled department confirmation, complete-author-name guidance confirmation, final approval-page `Instituição (sigla)` confirmation, and final canonical-PDF front-matter inspection.
 
 ### 3. Body Structure, Headings, Citations and Lists — VALIDATED
 
-Covers items 11-20 and 24-29.
-
-Validated: list alignment, TOC exclusion, appendix/annex direct flow, current NBR 10520 capitalization, reviewer long-quotation locator/punctuation, alínea/subalínea rules, paragraph indentation, code/body typography, and source/PDF reviewed-content evidence for items 11, 16 and 28.
-
-Generated-PDF acceptance at `c4c59...` explicitly proves:
-
-- item 11: reviewed sentence-case object titles and absence of legacy casing;
-- item 16: rendered `Universidade Federal do Ceará (UFC)` plus source first-use guard;
-- item 28: reviewed sentence-case headings, absence of legacy headings, and malformed `etc` punctuation rejection.
-
-Static `33969505681` and Linux `33969505614` are green.
+Items 11-20 and 24-29 have their current automated/source/PDF contracts accepted. Items 11, 16 and 28 closed at `c4c59...` with explicit generated-PDF evidence.
 
 ### 4. Figures, Tables and Documentary Objects — VALIDATED
 
@@ -60,26 +44,23 @@ Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identificat
 
 ### 5. Engineering-language evidence hardening — ACTIVE
 
-A permanent-gate false negative was confirmed: mixed Portuguese/English project-owned diagnostics could remain while `engineering_language.py` reported zero violations.
+Initial implementation `5d74c0c...` strengthened mixed-language detection and translated known diagnostics in `multivolume.sh` and `references-6023.sh`.
 
-Implementation `5d74c0c...`:
+Static `33970711005` on synchronized checkpoint `fd3727...` correctly exposed `tests/integration/algorithm-numbering.sh:66`. Inspection showed multiple project-owned Portuguese/mixed diagnostics in the same script. Correction `5c5b9593...` therefore:
 
-1. adds high-confidence mixed-language phrase detection rather than broad Portuguese stopwords that could flag legitimate academic literals;
-2. extends the self-test from 7 to 11 cases with known former false negatives;
-3. translates affected project-owned diagnostics in `tests/integration/multivolume.sh`;
-4. translates affected project-owned diagnostics in `tests/integration/references-6023.sh`;
-5. preserves academic/rendered Portuguese, bibliography data and official wording.
+1. translates the entire diagnostic surface of `algorithm-numbering.sh` to English rather than patching only the first failing line;
+2. expands high-confidence mixed-language detection for line-numbering diagnostic phrases;
+3. expands self-test coverage from 11 to 13 cases;
+4. preserves academic/rendered Portuguese and bibliography data.
 
 Acceptance:
 
-1. synchronize implementation and control documentation on the branch;
+1. synchronize `5c5b9593...` with control documentation;
 2. run Static contract and full Linux integration;
-3. if stronger detection exposes additional project-owned mixed diagnostics, correct them rather than weakening the detector;
-4. close only when the permanent audit truthfully reports zero violations and the full Linux contract remains green.
+3. correct any further project-owned diagnostics exposed by the stronger detector instead of weakening it;
+4. close only when the permanent audit truthfully reports zero violations and full Linux remains green.
 
 ### 6. References and NBR 6023:2025 — PARTIAL / FAIL-CLOSED
-
-Covers items 30-33.
 
 Safe work after the language gate batch:
 
@@ -115,7 +96,7 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 12 | PASS | P3 | Preserve 3 cm list alignment. |
 | 13 | PASS | P3 | Preserve pre-textual TOC exclusion. |
 | 14 | PASS | P3 | Preserve direct appendix/annex flow. |
-| 15 | PASS | P3 | Final visual TOC confirmation remains a presentation-phase check, not a reopened item. |
+| 15 | PASS | P3 | Final visual TOC confirmation remains a presentation-phase check. |
 | 16 | PASS | P2 | Source/PDF first-use evidence accepted. |
 | 17 | PASS | P1/P3 | Preserve code/body typography regression. |
 | 18 | PASS | P3 | Preserve current NBR 10520 capitalization. |
@@ -145,13 +126,11 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
 | Stale V2 wording/current API vocabulary in V3 reference | CORRECTED/PROTECTED | Keep negative reference hygiene. |
 | Object typography tests certified wrong upper-title size | CLOSED | Preserve current authority decision/evidence. |
-| Independent table adapter retained 10 pt table caption | CLOSED | Preserve corrected regression. |
-| Legacy IBGE observer retained retired 10 pt caption expectation | CLOSED | Preserve corrected observer. |
 | Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve `3ae9dd...` + `c4c59...` evidence. |
-| Engineering-language gate has false negatives for mixed diagnostics | IMPLEMENTED / ACCEPTANCE PENDING | Validate `5d74c0c...` on synchronized Static/full Linux; correct any additional findings. |
+| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Static `33970711005` exposed another case; validate `5c5b9593...` and correct any further findings. |
 
 ## Phase transition gates
 
 Core Corrections -> Reference PDF Validation requires all blocking shared P0/P1 corrections implemented, affected normative mappings/tests updated atomically, executable checks green, no shared runtime FAIL, authority gaps explicit/fail-closed, documentation synchronized, and one immutable Core Corrections candidate passing Static plus full Linux.
 
-Reference PDF Validation -> Scientific Article additionally requires the corrected canonical V3 PDF to pass page-level review and reproducible presentation evidence. Subsequent phases retain their heavy certification/release gates defined in the roadmap.
+Reference PDF Validation -> Scientific Article additionally requires the corrected canonical V3 PDF to pass page-level review and reproducible presentation evidence.
