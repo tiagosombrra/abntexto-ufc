@@ -69,10 +69,67 @@ jobs:
           import json
           from pathlib import Path
 
-          path = Path("standards/validation-overrides.json")
-          data = json.loads(path.read_text(encoding="utf-8"))
-          data["reviewed_at"] = "2026-09-05"
-          path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          def load(path: str):
+              return json.loads(Path(path).read_text(encoding="utf-8"))
+
+          def write(path: str, data):
+              Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          overrides = load("standards/validation-overrides.json")
+          overrides["reviewed_at"] = "2026-09-05"
+          write("standards/validation-overrides.json", overrides)
+
+          locator = load("standards/locator-audit-typography-paragraphs.json")
+          combined_id = "typography.object-identification-title"
+          locator["rulesets"] = [item for item in locator["rulesets"] if item.get("id") != combined_id]
+          reduced_index = next(i for i, item in enumerate(locator["rulesets"]) if item.get("id") == "typography.reduced-font")
+          locator["rulesets"][reduced_index + 1:reduced_index + 1] = [
+              {
+                  "id": "typography.illustration-identification-title",
+                  "rule_ids": ["illustration.identification.font-size"],
+                  "current_locator": "Guia UFC 2022, 4.1(c) e 4.9(c-e)",
+                  "status": "VERIFIED",
+                  "source_checks": [{
+                      "source_id": "ufc-guia-trabalhos-2022",
+                      "locator": "4.1(c); 4.9(c-e)",
+                      "status": "VERIFIED",
+                      "checked_at": "2026-09-05",
+                      "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+                  }]
+              },
+              {
+                  "id": "typography.table-identification-title",
+                  "rule_ids": ["table.identification.font-size"],
+                  "current_locator": "Guia UFC 2022, 4.1(c) e 4.10(b-c)",
+                  "status": "VERIFIED",
+                  "source_checks": [{
+                      "source_id": "ufc-guia-trabalhos-2022",
+                      "locator": "4.1(c); 4.10(b-c)",
+                      "status": "VERIFIED",
+                      "checked_at": "2026-09-05",
+                      "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
+                  }]
+              }
+          ]
+          write("standards/locator-audit-typography-paragraphs.json", locator)
+
+          illustration = load("standards/illustration-final-pdf-scenario.json")
+          illustration["locator_rulesets"]["illustration.identification.font-size"] = "typography.illustration-identification-title"
+          write("standards/illustration-final-pdf-scenario.json", illustration)
+
+          table = load("standards/table-typography-final-pdf-scenario.json")
+          table["locator_rulesets"]["table.identification.font-size"] = "typography.table-identification-title"
+          write("standards/table-typography-final-pdf-scenario.json", table)
+
+          for path, old, new in [
+              ("tests/checks/normative_illustration.py", "typography.object-identification-title", "typography.illustration-identification-title"),
+              ("tests/checks/normative_table_typography.py", "typography.object-identification-title", "typography.table-identification-title"),
+          ]:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              if text.count(old) != 1:
+                  raise SystemExit(f"{path}: expected one locator ruleset reference, found {text.count(old)}")
+              p.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
           git checkout HEAD -- tools/tmp-object-typography-migration.py .github/workflows/tmp-object-typography-migration.yml
       - name: Run repository-owned static contract on migrated tree
