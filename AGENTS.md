@@ -23,7 +23,9 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Core Corrections immutable phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041` and full Linux `33982156042` success; Linux summary `PASS=31 FAIL=0 SKIP=0`.
 - Core Corrections is CLOSED.
 - Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Current batch: **Reference PDF Validation — canonical artifact provenance and page-level review**.
+- Pre-existing 2026-09-04 reference PDF is comparison-only because it predates accepted Core Corrections.
+- Current batch: **Reference PDF Validation — fresh provenance-bound canonical build**.
+- Temporary executor `.github/workflows/tmp-reference-pdf.yml` is ACTIVE and must be removed immediately after artifact recovery.
 - Active phase contract: `docs/V3-REFERENCE-PDF-VALIDATION.md`.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Reference PDF Validation closes.
@@ -57,9 +59,9 @@ Do not create new opaque work identifiers such as nested letter/number codes. Gi
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, artifact provenance, visual-validation status, or release/certification state.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, artifact provenance, visual-validation status, temporary-executor lifecycle, or release/certification state.
 
-For every material advance, update the relevant execution document/review matrix and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, or artifact facts change.
+For every material advance, update the relevant execution document/review matrix and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, artifact, or temporary-executor facts change.
 
 ## Mandatory phase-end regression
 
@@ -72,11 +74,12 @@ Core Corrections satisfied this rule with candidate `5f67560aeded1e6b4f77f4a31e1
 ## Reference PDF Validation acceptance model
 
 - Use only a real LaTeX-generated canonical artifact tied to a concrete repository SHA.
-- Do not use a synthetic/recreated PDF as acceptance evidence.
+- Do not use a stale, synthetic or recreated PDF as acceptance evidence.
 - Render the complete PDF and inspect every page; source checks and automated geometry do not replace visual review.
 - Confirm no clipping, overlap, broken glyphs, unexpected page breaks, object overflow, heading drift or pagination anomalies.
 - Reconfirm presentation-sensitive librarian-review items and preserve item 33 as an explicit authority gap.
 - Any defect must be classified before code/test changes; after a correction, rebuild, re-render and re-inspect.
+- Remove the temporary canonical-build workflow immediately after artifact recovery.
 - Scientific Article remains blocked until this phase and its own phase-end regression close.
 
 ## Branch governance and fail-closed rule

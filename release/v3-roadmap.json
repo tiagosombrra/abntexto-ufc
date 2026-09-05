@@ -77,134 +77,65 @@
     "article_runtime_started_before_regression": false
   },
   "phases": [
-    {
-      "id": "regression-audit",
-      "name": "Regression Audit",
-      "status": "CLOSED",
-      "purpose": "Revalidate the shared V3 foundation and classify all recovered review requirements and newly discovered defects.",
-      "exit_gate": "Closed with the 34-item contract, classified additional findings, readable control plane, and green static/full-integration phase-end regression.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "core-corrections",
-      "name": "Core Corrections",
-      "status": "CLOSED",
-      "purpose": "Correct shared runtime, template, normative mapping, documentation and tests identified by the regression.",
-      "exit_gate": "Accepted candidate 5f67560aeded1e6b4f77f4a31e14a91f3181a4da passed Static 33982156041 and Linux 33982156042 with no shared runtime FAIL.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "reference-pdf-validation",
-      "name": "Reference PDF Validation",
-      "status": "ACTIVE",
-      "purpose": "Validate the corrected canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and the V2.1 preservation baseline where applicable.",
-      "exit_gate": "Provenance-bound canonical PDF, complete visual checklist and reproducible presentation evidence pass, followed by a green phase-end regression on one immutable candidate.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "scientific-article",
-      "name": "Scientific Article",
-      "status": "QUEUED",
-      "purpose": "Implement the article profile on the corrected shared foundation using the retained authority contract.",
-      "exit_gate": "Article runtime, modality, positive/negative evidence, canonical rendering and phase-end regression pass on the same candidate.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "final-certification",
-      "name": "Final Certification",
-      "status": "QUEUED",
-      "purpose": "Run complete profile, engine, literal-font, Unicode, embedding, PDF-A and distribution certification on one immutable candidate.",
-      "exit_gate": "Complete certification matrix and phase-end regression are green on the same candidate SHA.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "release",
-      "name": "Release",
-      "status": "QUEUED",
-      "purpose": "Finalize documentation, bundles, release assets, checksums and publication actions.",
-      "exit_gate": "Release checklist complete with no unresolved roadmap/normative item and final release regression/verification recorded.",
-      "phase_end_regression_required": true
-    }
+    {"id":"regression-audit","name":"Regression Audit","status":"CLOSED","purpose":"Revalidate the shared V3 foundation and classify all recovered review requirements and newly discovered defects.","exit_gate":"Closed with the 34-item contract, classified additional findings, readable control plane, and green static/full-integration phase-end regression.","phase_end_regression_required":true},
+    {"id":"core-corrections","name":"Core Corrections","status":"CLOSED","purpose":"Correct shared runtime, template, normative mapping, documentation and tests identified by the regression.","exit_gate":"Accepted candidate 5f67560aeded1e6b4f77f4a31e14a91f3181a4da passed Static 33982156041 and Linux 33982156042 with no shared runtime FAIL.","phase_end_regression_required":true},
+    {"id":"reference-pdf-validation","name":"Reference PDF Validation","status":"ACTIVE","purpose":"Validate the corrected canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and the V2.1 preservation baseline where applicable.","exit_gate":"Provenance-bound canonical PDF, complete visual checklist and reproducible presentation evidence pass, temporary executor removed, followed by a green phase-end regression on one immutable candidate.","phase_end_regression_required":true},
+    {"id":"scientific-article","name":"Scientific Article","status":"QUEUED","purpose":"Implement the article profile on the corrected shared foundation using the retained authority contract.","exit_gate":"Article runtime, modality, positive/negative evidence, canonical rendering and phase-end regression pass on the same candidate.","phase_end_regression_required":true},
+    {"id":"final-certification","name":"Final Certification","status":"QUEUED","purpose":"Run complete profile, engine, literal-font, Unicode, embedding, PDF-A and distribution certification on one immutable candidate.","exit_gate":"Complete certification matrix and phase-end regression are green on the same candidate SHA.","phase_end_regression_required":true},
+    {"id":"release","name":"Release","status":"QUEUED","purpose":"Finalize documentation, bundles, release assets, checksums and publication actions.","exit_gate":"Release checklist complete with no unresolved roadmap/normative item and final release regression/verification recorded.","phase_end_regression_required":true}
   ],
   "active_work": {
     "review_items": 34,
-    "review_status": {
-      "pass": 33,
-      "partial": 0,
-      "fail": 0,
-      "normative_review": 1
-    },
+    "review_status": {"pass":33,"partial":0,"fail":0,"normative_review":1},
     "review_contract": "docs/UFC-LIBRARIAN-REVIEW.md",
-    "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
-    "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "reference_pdf_validation_contract": "docs/V3-REFERENCE-PDF-VALIDATION.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
+    "latest_implementation_checkpoint_sha": "a6bd8a7385162ca8a83c0d938ebec7a95538f88e",
     "latest_fully_validated_checkpoint_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
     "latest_fully_validated_checkpoint_state": "core-corrections-phase-end-static-green-linux-green",
     "core_corrections_closed": true,
     "core_corrections_phase_end_candidate_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
     "current_correction_batch": [
-      "Reference PDF Validation canonical artifact provenance",
-      "Reference PDF Validation complete page-level visual review",
-      "Reference PDF Validation presentation-sensitive librarian reconfirmation"
+      "Reference PDF Validation fresh provenance-bound canonical build",
+      "Reference PDF Validation complete page-level visual review"
     ],
-    "review_items_confirmed_by_latest_full_linux": [1, 2, 4, 7, 11, 16, 17, 19, 20, 21, 23, 28, 30, 31, 32, 34],
-    "review_items_source_evidence_accepted": [11, 16, 28, 30, 31, 32],
     "known_runtime_failures": [],
     "known_gate_failures": [
-      "historical Static 33970711005: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostics",
-      "historical Static 33970988780: phase governance rejected roadmap missing required material advance concept",
-      "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup",
-      "historical Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change",
-      "historical Static 33981960024 on rejected candidate 3b247637: phase_end_regression.candidate did not equal the required one-immutable-sha sentinel"
+      "historical Static 33980486317: project-owned diagnostic language violation",
+      "historical Static 33981960024 on rejected candidate 3b247637: phase-end candidate sentinel mismatch"
     ],
     "pending_acceptance_gates": [
-      "Reference PDF Validation requires canonical V3 PDF provenance tied to a Git SHA",
-      "Reference PDF Validation requires complete page-level visual checklist with no unexplained FAIL",
-      "Reference PDF Validation requires one immutable phase-end candidate passing Static and full Linux"
+      "recover fresh canonical PDF artifact from current branch",
+      "remove temporary PDF-build workflow after artifact recovery",
+      "complete page-level visual checklist with no unexplained FAIL",
+      "run Reference PDF Validation phase-end regression on one immutable SHA"
     ],
-    "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
     ],
-    "reference_pdf_validation_state": "active-provenance-pending"
-  },
-  "authority_decisions": {
-    "object_typography": {
-      "status": "accepted",
-      "decision_document": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
-      "upper_identification_title_pt": 12,
-      "lower_source_legend_note_pt": 10,
-      "line_spacing": "single",
-      "review_item": 21,
-      "current_state": "PASS"
+    "reference_pdf_validation_state": "canonical-build-in-progress",
+    "stale_reference_pdf": {
+      "generated_at": "2026-09-04",
+      "state": "rejected-as-current-canonical-comparison-only",
+      "reason": "rendered content predates accepted Core Corrections"
+    },
+    "temporary_executor": {
+      "path": ".github/workflows/tmp-reference-pdf.yml",
+      "state": "active",
+      "purpose": "build provenance-bound canonical V3 reference PDF",
+      "must_remove_after_artifact_recovery": true
     }
   },
+  "authority_decisions": {
+    "object_typography": {"status":"accepted","decision_document":"docs/V3-OBJECT-TYPOGRAPHY-DECISION.md","upper_identification_title_pt":12,"lower_source_legend_note_pt":10,"line_spacing":"single","review_item":21,"current_state":"PASS"}
+  },
   "evidence": {
-    "regression_static_run": 33937439818,
-    "full_regression_integration_run": 33937439846,
-    "object_core_static_run": 33965794475,
-    "object_core_linux_run": 33965794519,
-    "canonical_reference_pdf_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
-    "canonical_reference_pdf_static_run": 33969505681,
-    "canonical_reference_pdf_linux_run": 33969505614,
-    "engineering_language_hardening_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
-    "engineering_language_hardening_static_run": 33972111694,
-    "engineering_language_hardening_linux_run": 33972111696,
-    "reference_evidence_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
-    "reference_evidence_static_run": 33974062993,
-    "reference_evidence_linux_run": 33974063103,
     "frontmatter_annex_closeout_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
-    "frontmatter_annex_closeout_items": [1, 2, 7, 34],
     "frontmatter_annex_closeout_static_run": 33980847191,
-    "frontmatter_annex_closeout_static_conclusion": "success",
     "frontmatter_annex_closeout_linux_run": 33980847189,
-    "frontmatter_annex_closeout_linux_conclusion": "success",
     "frontmatter_annex_closeout_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "rejected_core_corrections_phase_end_candidate_sha": "3b2476371e1df5180d8ee25ea53aed6a13fa2da2",
     "rejected_core_corrections_phase_end_static_run": 33981960024,
-    "rejected_core_corrections_phase_end_static_classification": "phase-governance-candidate-sentinel-mismatch",
     "core_corrections_phase_end_candidate_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
     "core_corrections_phase_end_static_run": 33982156041,
     "core_corrections_phase_end_static_conclusion": "success",
@@ -212,7 +143,10 @@
     "core_corrections_phase_end_linux_conclusion": "success",
     "core_corrections_phase_end_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "core_corrections_phase_end_acceptance": "accepted",
-    "reference_pdf_validation_artifact_state": "provenance-pending",
+    "reference_pdf_validation_transition_sha": "a6bd8a7385162ca8a83c0d938ebec7a95538f88e",
+    "reference_pdf_validation_transition_static_run": 33983464772,
+    "reference_pdf_validation_transition_static_conclusion": "success",
+    "reference_pdf_validation_artifact_state": "fresh-build-in-progress",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

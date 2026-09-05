@@ -1,13 +1,19 @@
 # V3 Reference PDF Validation
 
 Updated: 2026-09-05
-Status: ACTIVE
+Status: ACTIVE — CANONICAL REBUILD IN PROGRESS
 
 ## Purpose
 
 This phase validates the corrected canonical V3 reference PDF as a rendered document. Source-level and integration tests remain necessary but are not sufficient for presentation acceptance.
 
 Core Corrections closed on immutable candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, which passed Static `33982156041` and full Linux `33982156042`; Linux summary: `PASS=31 FAIL=0 SKIP=0`.
+
+## Artifact provenance finding
+
+The pre-existing local PDF generated on 2026-09-04 (`abntexto-ufc-v3-template-example.pdf`, 55 pages, 449654 bytes) is **REJECTED as the canonical acceptance artifact**. It is a real LaTeX PDF, but its rendered content predates accepted Core Corrections: extraction still shows `NOME SOBRENOME`, a populated department line, and the title-page advisor line without the accepted final punctuation. It therefore remains comparison-only and must not be used to close this phase.
+
+A fresh canonical build is being generated from the current remote branch using temporary workflow `.github/workflows/tmp-reference-pdf.yml`. The workflow records Git SHA, workflow run, TeX Live 2026, pdfLaTeX, `pdfinfo` and SHA-256 and uploads the resulting PDF as a short-lived artifact. The temporary workflow must be removed after the artifact is recovered and validated.
 
 ## Artifact rule
 
@@ -30,9 +36,9 @@ A PDF generated from an older checkpoint may be used only as a comparison artifa
 
 ## Page-level review groups
 
-| Group | Scope | Initial state |
+| Group | Scope | Current state |
 |---|---|---|
-| Artifact provenance and preflight | SHA, engine, A4, page count, metadata, extraction | PENDING |
+| Artifact provenance and preflight | SHA, engine, A4, page count, metadata, extraction | BUILDING FRESH ARTIFACT |
 | Cover/title/approval pages | optional department, complete author, punctuation, committee institution/acronym | PENDING |
 | Other pre-textual pages | errata, dedication, acknowledgements, epigraph, RESUMO/ABSTRACT, lists, TOC | PENDING |
 | Main text | headings, paragraphs, citations, quotations, alíneas, pagination | PENDING |
@@ -52,6 +58,7 @@ Reference PDF Validation -> Scientific Article requires:
 - canonical PDF provenance tied to an accepted repository SHA;
 - complete page-level visual checklist with no unexplained FAIL;
 - reproducible evidence for presentation-sensitive requirements;
+- temporary PDF-build executor removed;
 - documentation and machine state synchronized;
 - Static contract and full Linux integration green on one immutable Reference PDF Validation phase-end candidate.
 
