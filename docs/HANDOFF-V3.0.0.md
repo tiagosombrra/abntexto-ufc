@@ -2,26 +2,48 @@
 
 Updated: 2026-09-04
 
-## Checkpoint
+## Current checkpoint
 
 - Repository: `tiagosombrra/abntexto-ufc`.
-- V3-R1 through V3-R5: **DONE**.
-- Certified non-article foundation: `c79f3c73f1d51a30175e8259269504d029442a1c`.
-- V3-A1/#275: **DONE**.
-- A1 exact entry: `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`.
-- A1 source-contract PR #279: `4d018a92697e8f39e3a53b034c451e55996c84fb`.
-- A1 closeout PR #281: `7a7562d23e8bf6c92abb635718639d617a2ed6ff`.
-- A1 source-only validation `33894907220` PASS; Static `33895016834` PASS; Linux `33895016774` / job `101095498647` = `PASS=31 FAIL=0 SKIP=0`.
-- Scientific-article source contract: 18 rules = 17 manual + 1 conditional-manual; no runtime/proof promotion occurred in A1.
-- V3-A2/#280: **ACTIVE** from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`.
-- A2 runtime implementation has not started yet.
+- Canonical branch: `main`; task branches are short-lived.
+- Active phase: **Regression Audit**.
+- Pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
+- Certified non-article foundation retained for comparison: `c79f3c73f1d51a30175e8259269504d029442a1c`.
+- Scientific-article authority reconstruction is retained, but article runtime implementation is deferred and had not started when this regression reset began.
+- Active regression plan: `docs/V3-REGRESSION-AUDIT.md`.
+- Consolidated review input: `docs/UFC-LIBRARIAN-REVIEW.md` with exactly 34 tracked requirements.
+- Initial review state: 19 `PASS`, 11 `PARTIAL`, 1 `FAIL`, 3 `NORMATIVE-REVIEW`.
 
-Git facts, `release/v3-roadmap.json`, this handoff, `docs/ROADMAP-V3.0.0.md`, and `AGENTS.md` must agree. Disagreement fails closed.
+Git facts, `release/v3-roadmap.json`, this handoff, `docs/ROADMAP-V3.0.0.md`, and `AGENTS.md` must describe the same active phase. Disagreement fails closed.
 
 ## Immediate action
 
-Begin V3-A2/#280 from `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. Implement only the canonical `scientific-article` profile bounded by `docs/ARTICLE-NORMATIVE-CONTRACT.md`: reuse cross-cutting infrastructure, preserve required/optional/recommended/conditional semantics, and add article-specific fail-closed evidence before any proof-state promotion.
+Continue **Regression Audit** before making broad runtime corrections:
+
+1. run the full current integration contract on the regression branch;
+2. treat any failure as a finding until proven otherwise;
+3. finish authority reconciliation for shared normative disputes;
+4. close the audit matrix with owning files/tests for every item;
+5. advance to **Core Corrections** only after the audit gate is satisfied.
+
+The first high-priority authority review is object typography. The recovered librarian comments mark object titles as body-size text, while current V3 applies the reduced size to the complete object title box. The current UFC guide distinguishes the upper identification/title from legend/source text, so title and auxiliary object text must be audited separately.
+
+## Known correction groups
+
+- front-matter/reference placeholders and advisor punctuation;
+- object title/source/legend/note typography and page-locator guidance;
+- sentence-case examples and first-use acronym presentation;
+- long-quotation locator/punctuation fixtures;
+- selected NBR 6023:2025 edge cases;
+- annex source example;
+- stale V2 wording and retired V2-era profile vocabulary in the V3 reference document;
+- final canonical-PDF visual parity/acceptance.
 
 ## Hard boundaries
 
-Preserve certified foundation `c79f3c73f1d51a30175e8259269504d029442a1c` and the closed v3 API. Do not change article authority, modality, rule IDs, locators, applicability or proof state without new current evidence. No runtime aliases or retired Portuguese machine identifiers. No proprietary-font redistribution. CTAN submission remains a separate future release action.
+- Do not resume Scientific Article runtime while shared regression/correction gates are open.
+- Preserve the closed V3 public API unless current evidence authorizes a change.
+- Do not convert reviewer comments directly into normative runtime behavior when current authority is unresolved.
+- Do not weaken tests merely to recover a green build; correct the rule, generator, observer, or fixture according to the classified finding.
+- Do not redistribute proprietary fonts.
+- CTAN submission remains a future action owned by the explicit **Release** phase.

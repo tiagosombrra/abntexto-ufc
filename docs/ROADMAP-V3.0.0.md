@@ -2,105 +2,152 @@
 
 Updated: 2026-09-04
 
-## Status
+## Current status
 
-**V3-R1 through V3-R5 DONE. V3-A1/#275 DONE through source-contract PR #279 at `4d018a92697e8f39e3a53b034c451e55996c84fb` and closeout PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A2/#280 is ACTIVE from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; runtime implementation has not started yet.**
+**Regression Audit is ACTIVE.**
 
-R3-A inventory source is `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 closed through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`, with 113/113 `automatic-partial` rules bounded-positive and zero automation gaps. The B2→B3 control-plane checkpoint is `44874c84b375396de8b9e3b24a40c47b5006f19b`. R3-B3/#254 closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`: Static `33792280764` PASS; Linux `33792280797` / job `100771483526` = `PASS=31 FAIL=0 SKIP=0`; post-merge release `33794112546` / job `100777542613` = `PASS=33 FAIL=0 SKIP=0`. Its permanent residual contract covers 302 sources (134 LaTeX + 168 engineering), retained test/check reachability is 147/147 with zero orphaned scripts, and controlled negative paths require a positive PASS for the same `rule_id`. No normative rule ID, expected value, locator, tolerance, applicability, source authority/precedence, proof-state default, rendered requirement, or public runtime API changed. R3-B4/#255 closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`: bounded run `33814870180` PASS; Static `33814977737` PASS; Linux `33814977730` / job `100844995945` = `PASS=31 FAIL=0 SKIP=0`; post-merge release `33816137774` / job `100848593542` = `PASS=33 FAIL=0 SKIP=0`. Permanent B4 baseline is 305 sources (134 LaTeX + 171 engineering), 148/148 retained scripts reachable, zero orphans, zero Portuguese technical diagnostics, zero retired profile IDs and zero closed unconsumed contracts. Active implementation issue: #280 (V3-A2). Machine authority: `release/v3-roadmap.json`.
+The previously planned scientific-article runtime implementation is intentionally deferred. At the regression entry checkpoint it had not started, so there is no partial runtime work to preserve. The shared V3 foundation is being revalidated first against current implementation, current normative authority, the canonical rendered PDF, and the recovered librarian review evidence.
 
-## Roadmap summary
+Machine authority: `release/v3-roadmap.json`.
+Detailed audit: `docs/V3-REGRESSION-AUDIT.md`.
+Librarian review contract: `docs/UFC-LIBRARIAN-REVIEW.md`.
 
-| Stage | Status | Checkpoint / issue | Result | Remaining work |
-|---|---|---|---|---|
-| R1-S0/S1/S2 | DONE | reconstruction bootstrap | sanitation, control plane and v3 trunk promotion complete | None |
-| R1-B1…B7 | DONE | through `d7327db7efd5cc1e0ff9255195bcb9767d853d3e` | architecture, bundles, static contract and permanent CI complete | Optional branch-rule enforcement only |
-| R1-B8 | DONE | candidate `9b1752565ac217c04ffa22a9ef272cdf078af380` | Windows/font/Unicode/embedding/PDF-A-2b certification complete | None |
-| V3-R1 closeout | DONE | PR #233 → `0a2c2c3879986ca27b731f54b974db12524258df` | R1 closed | None |
-| R2-A | DONE | issue #232 | owner/upstream-boundary inventory | None |
-| R2-B1 | DONE | PR #236 → `ded5e77733795aa2958606e899d4e27f12f64df4` | setup/state direct ownership | None |
-| R2-B2 | DONE | PR #242 / #243 | academic/front-matter direct ownership | None |
-| R2-B3 | DONE | PR #245 → `fb71eb0cb50f065d75aec6bbc704dcaf9091d1df` | structural/object direct ownership | None |
-| R2-B4 | DONE | PR #247 → `bbf34a3d0cef3a402b6847c7d0a6f5f31f8b4261` | bibliography/back-matter direct ownership | None |
-| R2-B5 | DONE | PR #249 → `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` | forwarding layer removed; migration guide + permanent residual gate | None |
-| V3-R2 closeout | DONE | PR #251 → `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5` | canonical control plane reconciled; R3-A opened | None |
-| R3-A | DONE | issue #250 | standards/test/language/proof gaps classified; five bounded lots defined | None |
-| R3-B1 | DONE | issue #252; PR #258 → `afb9f16403aafd8752a0aa8b0713f85c41204d1b` | front-matter observers/generators repaired; proof-contributing evidence fail-closed; negative rejection proven | None |
-| R3-B2 | DONE | issue #253; PR #260 → `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` | 17 non-automatic rules classified; 113/113 `automatic-partial` bounded-positive; explicit enforced/support-only semantics | None |
-| R3-B3 | DONE | issue #254; PR #262; canonical entry `44874c84b375396de8b9e3b24a40c47b5006f19b`; merge `fbee5bd329f98a389c2880932af40547c8d1674e` | 302-source residual gate; 147/147 reachable checks; zero orphaned scripts; Linux 31/0/0; release 33/0/0 | None |
-| R3-B4 | DONE | issue #255; PR #264; canonical entry `f0b3df319501bef0a6257ac23d42f28c59ad73a0`; merge `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390` | permanent engineering-language enforcement; canonical profile IDs; closed-contract consolidation; PR `31/0/0`; release `33/0/0` | None |
-| R3-B5 | DONE | issue #256; PR #268 → `d90a675a844724c33a5727d8d980027c46291eb0`; product candidate `c79f3c73f1d51a30175e8259269504d029442a1c` | final R3 gates green; all findings resolved; immutable R4 predecessor recorded | None |
-| V3-R4 | DONE | issue #267; run `33855800767`; closeout PR #273 → `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` | 4/4 strict font/engine cells PASS; Unicode, embedding and PDF/A-2b PASS; temporary executor removed | None |
-| V3-R5 | DONE | issue #272; entry `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; PR #276 → `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; frozen product `c79f3c73f1d51a30175e8259269504d029442a1c` | release `33/0/0`; package/bundle/checksum/asset audit PASS; PR Linux `31/0/0`; zero residue | None |
-| V3-A1 | DONE | issue #275; entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; PR #279 → `4d018a92697e8f39e3a53b034c451e55996c84fb`; closeout PR #281 → `7a7562d23e8bf6c92abb635718639d617a2ed6ff` | current article authority reconfirmed; 18-rule conservative contract; source/Static/Linux gates green; no runtime in A1 | None |
-| V3-A2 | ACTIVE | issue #280; exact entry `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; A1 contract `4d018a92697e8f39e3a53b034c451e55996c84fb` | bounded `scientific-article` implementation/test contract active | implement runtime/profile + article-specific evidence; keep CTAN blocked |
-| CTAN submission | FUTURE | explicit release action | no upload yet | release-ready stage only |
+## Why the roadmap was reset
 
-## R3-B1 closeout
+The repository has strong engineering and certification infrastructure, but the regression found that internal consistency and green tests were not sufficient to guarantee that every encoded presentation rule matched the recovered institutional review. It also found stale V2-era wording and retired profile vocabulary inside the current V3 reference document.
 
-B1 repaired the evidence model before considering runtime changes. The approval matrix now exercises the intended six canonical v3 types rather than relying on a stale v2 substitution. Summary paragraph counting recognizes `\ufcSummaryKeywords`. Title-page/approval markers were shortened to survive PDF extraction, dedication spacing fixtures no longer create accidental physical-line wrapping, and short-epigraph geometry coalesces extractor fragments without relaxing the normative tolerance.
+The reset therefore places foundation verification and correction ahead of new feature work.
 
-Spacing and alignment are now intentionally separated: explicit-line fixtures prove spacing while natural-wrap fixtures prove justification. Proof-contributing front-matter runners execute enforced semantics; optional-list and TOC checkers expose enforcement explicitly, while pagination retains its pre-existing intrinsic fail-closed behavior. The negative fixture deliberately places the dedication above its permitted start and the gate proves rejection at `dedication.position.start`.
+## Phase plan
 
-The full PR gate passed all 30 integration checks. The R3-A front-matter findings are therefore resolved as observer/generator/enforcement defects, not as evidence requiring a normative or runtime-format change.
+| Phase | Status | Goal | Exit gate |
+|---|---|---|---|
+| **Regression Audit** | ACTIVE | Revalidate the shared V3 foundation and classify every recovered review requirement and newly discovered defect. | Every finding has an authority classification, owning surface, correction decision, and acceptance evidence plan. |
+| **Core Corrections** | QUEUED | Correct shared runtime, template, normative mapping, documentation, and tests identified by the audit. | No unresolved shared `FAIL`; no `NORMATIVE-REVIEW` is silently encoded as runtime behavior. |
+| **Reference PDF Validation** | QUEUED | Compile the canonical V3 reference and inspect it page by page against the accepted UFC requirements, the recovered reviews, and the V2.1 visual baseline where behavior should have been preserved. | Visual checklist passes; every presentation correction has reproducible evidence. |
+| **Scientific Article** | QUEUED | Implement the article profile using the already reconstructed article authority contract after the shared foundation is stable. | Article runtime, modality, positive/negative evidence, and canonical article rendering pass. |
+| **Final Certification** | QUEUED | Re-run the full profile/engine/font/Unicode/embedding/PDF-A/distribution matrix on one immutable corrected candidate. | Complete certification matrix is green on the same candidate SHA. |
+| **Release** | QUEUED | Finalize user documentation, bundles, release assets, checksums, and publication steps. | Release checklist is complete and no roadmap/normative item remains unresolved. |
 
-## R3-B2 closeout
+## Active phase — Regression Audit
 
-B2 repaired the distinction between traceable mechanisms, current-run rule-specific contribution, and conservative proof state. The 17 non-automatic rules are explicitly classified as 10 `conditional-review`, 6 `manual-review`, and 1 `not-applicable`; none was promoted merely because a related gate was green.
+### Control plane
 
-The coordinated contribution gate now runs after complete validation and intersects current-run structured evidence with each rule's declared owners. The final PR run closed with 181 rules: 113/113 `automatic-partial` as `bounded-positive`, 37 `enforced-automatic`, 14 `support-only`, 10 `conditional-review`, 6 `manual-review`, 1 `not-applicable`, and zero `automation-gap`. `bounded-positive` remains `PARTIAL`, not `PROVEN`.
+- confirm branch/HEAD and canonical state agreement;
+- replace history-heavy active-state prose with the readable phase model;
+- keep only immutable checkpoints that are still required to validate the current product;
+- preserve old implementation history in Git, PRs, issues, releases, and tags instead of the active roadmap.
 
-B2 entered from `32c3221c813790e938ffb29d1f4ee55c2812c47d`, used inventory run `33764122865`, and merged through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`. Static `33768911131` passed; Linux integration `33768911126` / job `100694266254` and independent validation `33768364069` both passed `PASS=31 FAIL=0 SKIP=0`. Post-merge Linux release `33772854355` / job `100707196590` passed `PASS=33 FAIL=0 SKIP=0`. Source authority, precedence, rule IDs, expected values, tolerances, locators, applicability, proof-state defaults and public runtime API were unchanged.
+### Normative authority
 
-## R3-B3 closeout
+- reconfirm current UFC institutional sources and applicable ABNT editions;
+- map all 34 librarian-review items through the project precedence policy;
+- distinguish title, legend, source, and note typography instead of treating every object text element as one undifferentiated caption rule;
+- reconcile disputed NBR 6023:2025 reference cases before changing bibliography runtime.
 
-R3-B3/#254 entered from the reconciled B2→B3 control-plane checkpoint `44874c84b375396de8b9e3b24a40c47b5006f19b`, not directly from the earlier B2 product SHA. Its implementation head was `5c35979e2d86b0559c5ad5373a88b83be2daf829` and PR #262 squash-merged at `fbee5bd329f98a389c2880932af40547c8d1674e`.
+### Front matter
 
-The six-profile generator is fail-closed and bound to canonical v3 values; `tests/checks/v3_api_residual.py` now covers 134 LaTeX plus 168 behavior-affecting engineering sources; deliberate removed-v2 literals require narrow `negative-test-literal` annotation; retained test/check scripts are 147/147 reachable with three standalone certification/release checks explicitly classified and zero orphaned scripts; obsolete `frontmatter_validation.py` was removed; public/distribution bundle checks reject the removed forwarding layer; and negative-path evidence requires a positive PASS for the same `rule_id`.
+- optional department/unit presentation;
+- complete-author-name guidance;
+- subtitle propagation;
+- advisor/co-advisor punctuation;
+- concentration-area behavior;
+- committee size and institution/acronym presentation;
+- summary, lists, and table-of-contents positioning.
 
-Static `33792280764` passed. PR Linux integration `33792280797` / job `100771483526` passed `PASS=31 FAIL=0 SKIP=0`. Post-merge Linux release `33794112546` / job `100777542613` passed `PASS=33 FAIL=0 SKIP=0`, including release-only PDF/A checks. Normative semantics, proof-state defaults and the public runtime API did not change.
+### Text and structure
 
-## R3-B4 closeout
+- body spacing and first-line indentation;
+- heading capitalization;
+- first-use acronym presentation;
+- alíneas and subalíneas;
+- long quotations and citation punctuation;
+- appendices and annexes.
 
-R3-B4/#255 entered canonically from `f0b3df319501bef0a6257ac23d42f28c59ad73a0`, implemented on `4c22a9444db6720c0c8ae59ec8cec4bff6344672` and squash-merged through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`. `tests/checks/engineering_language.py` is now a permanent static contract; project-owned technical profile IDs use canonical v3 values; academic/normative/bibliographic Portuguese remains protected; `release/v3-api-migration.json` is retained for its two permanent consumers; and the two closed unconsumed migration contracts were removed. The permanent baseline is 305 residual-scanned sources and 148/148 reachable retained scripts with zero orphans. Static, PR Linux and post-merge release are green, and no normative semantics, proof-state defaults or public runtime API changed.
+### Objects
 
-## R3-B5 closeout
+- title versus legend/source/note typography;
+- single spacing;
+- real object-width binding;
+- source/page-locator guidance;
+- figures, charts, tables, code, and algorithms.
 
-R3-B5/#256 entered through `e5d6ab1962ee04935ee68a6ae36f268350d59a3b`, validated product candidate `c79f3c73f1d51a30175e8259269504d029442a1c`, and closed canonically through PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`. PR #268 Static `33825615520` passed and Linux integration `33825615541` / job `100877511446` passed `PASS=31 FAIL=0 SKIP=0`. The underlying exact-main candidate had already passed Static `33824038991` and release `33824039033` / job `100872747975` at `PASS=33 FAIL=0 SKIP=0`.
+### References
 
-All R3-A findings are resolved. Permanent evidence remains 113/113 `automatic-partial` bounded-positive, 37 enforced-automatic, 14 support-only, 10 conditional-review, 6 manual-review, 1 not-applicable, and zero automation gaps. Residual scope remains 305 sources, retained test/check reachability remains 148/148 with zero orphans, and engineering-language/closed-contract invariants remain green. No normative authority, precedence, rule ID, expected value, locator, tolerance, applicability, proof-state default, rendered requirement, source/currency fact, or public runtime API changed.
+- current NBR 6023:2025 compatibility layer;
+- thesis/dissertation cases;
+- unknown place/publisher data for online resources;
+- standards and multivolume works;
+- DOI/URL/availability cases;
+- repeated-author and institutional-author cases.
 
-The immutable predecessor required by R4 is therefore `d90a675a844724c33a5727d8d980027c46291eb0`. V3-R3 and R3-B5 are DONE. V3-R4/#267 is ACTIVE, bound to product candidate `c79f3c73f1d51a30175e8259269504d029442a1c`; certification execution has not started.
+### Tests and rendered evidence
 
-## V3-R4 certification result
+- retain current source/repository/test-surface contracts;
+- protect all 34 librarian-review items from disappearing from the plan;
+- add rule-specific positive and negative fixtures as corrections are made;
+- use the canonical V3 PDF as the visual acceptance artifact for presentation rules.
 
-V3-R4/#267 certification run `33855800767` completed successfully against exact product candidate `c79f3c73f1d51a30175e8259269504d029442a1c`. Preflight job `100968686875` proved the launch `main` differed from the product only in the expected ten documentation/control-plane files and passed `make static-check`. Windows job `100968747942` compiled the strict four-cell Times New Roman/Arial × pdfLaTeX/LuaLaTeX matrix. Linux job `100970109387` verified literal institutional text-family identity independently from math-font policy, Unicode extraction, complete font embedding and PDF/A-2b for all four artifacts. Cleanup job `100970307670` removed the temporary certification workflow.
+## Initial review matrix
 
-The evidence artifact is `9930304564` with digest `sha256:ca21bf1771c45e2003b2448ea019b6eb7b93c8468eff1330df76340a943eeca2`; the Windows PDF matrix artifact is `9930280624` with digest `sha256:934044738f21261137014984114d33516b8601c0710107687903ad2f59a6b565`. pdfLaTeX correctly uses `NEW-TX-MATH`; `TeXGyreTermesX-Regular` is accepted only as part of that math stack and is not treated as institutional text fallback. LuaLaTeX uses the independent OpenType math route. No runtime API, normative semantics or proof-state default changed, and proprietary Microsoft fonts were not redistributed.
+The first machine-protected pass over the 34 recovered review requirements reports:
 
-R4 closed canonically through PR #273 at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`. This immutable closeout SHA is the exact V3-R5 entry. V3-R4/#267 is DONE; V3-R5/#272 is ACTIVE. The certified product remains `c79f3c73f1d51a30175e8259269504d029442a1c` and must not be modified merely for release-documentation cleanup.
+- `PASS`: 19
+- `PARTIAL`: 11
+- `FAIL`: 1
+- `NORMATIVE-REVIEW`: 3
 
-## V3-R5 foundation-freeze closeout
+These are audit states, not completion statistics. A `PASS` remains subject to final rendered verification when the requirement is visual.
 
-V3-R5/#272 entered from `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` and preserved R4-certified product `c79f3c73f1d51a30175e8259269504d029442a1c` unchanged. The full release gate completed `PASS=33 FAIL=0 SKIP=0` in run `33866258865` / job `101001704635`; final package/freeze run `33869888601` / job `101013093747` passed source-only validation, reproducible public and complete distribution bundles, SHA-256 checksums, expected class/CTAN layouts, external `abntexto` semantics, institutional/proprietary asset exclusions and zero tracked/untracked residue. PR #276 then passed Static `33872118250` and Linux `33872118241` / job `101020688121` at `PASS=31 FAIL=0 SKIP=0` and squash-merged at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`.
+The direct implementation defect already identified is the title-page advisor punctuation. Partial items include reference/template communication gaps such as the optional department, complete-name placeholder, committee institution acronym, source-page guidance, selected heading examples, bibliography edge-case fixtures, and annex-source guidance.
 
-No product-affecting path, public runtime API, normative semantics, source/currency fact, locator/tolerance/applicability policy, proof-state default or rendered requirement changed in R5. `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md`, and `docs/MIGRATING-TO-V3.md` remain unchanged. V3-R5 is DONE and `908ee2eb2ec04c030d74a9a4b146fba38fb745a9` is the exact immutable V3-A1 entry.
+The audit also found defects outside the 34 review items, including stale V2 wording in the current V3 reference guide and a retired Portuguese profile value (`tccgraduacao`) still described in the V3 introduction.
 
-## V3-A1 entry
+## Current normative clarification: object text
 
-V3-A1/#275 is ACTIVE from `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`. A1 must reconfirm the current authoritative source set for the UFC scientific-article profile and applicable ABNT standards, derive current predicates/locators/applicability and requirement-versus-recommendation distinctions, integrate them with current currency/precedence/traceability/proof-state machinery, and define a bounded V3-A2 implementation contract. Historical pre-v3 article research is discovery evidence only. No article runtime/profile implementation is allowed in A1.
+The current UFC normalisation page states that its guides remain the institutional requirements and track applicable ABNT standards. The current academic-work guide distinguishes the upper identification/title of an illustration from its source, legend, and notes. It requires the identification/title to use single spacing and requires page location in the source when the illustration is not author-produced. Its general typography rule reserves the smaller uniform size recommendation for long quotations, footnotes, pagination, catalog-card data, legends, and illustration/table sources.
 
-## V3-A1 validated source contract
+The current V3 implementation instead applies `\abntsmall` to the entire object title box, and the machine catalog currently maps `illustration-caption` and `table-caption` into the 10 pt reduced-size policy. Combined with the recovered librarian markings on object titles, this mapping must be re-audited in **Core Corrections** rather than accepted merely because current tests are green.
 
-A1 reconfirmed the corrected UFC article guide, NBR 6022:2018 and current cross-cutting NBR 10520:2023, NBR 6023:2025, NBR 6024:2012, NBR 6028:2021 and IBGE tabular basis. PR #279 merged the 18-rule conservative contract at `4d018a92697e8f39e3a53b034c451e55996c84fb` without article runtime/profile code. Seventeen article rules remain manual and one conditional-manual; unavailable licensed ABNT clause locators remain `PARTIAL_WITH_REASON` rather than guessed.
+## Required gates before Core Corrections
 
-Source-only run `33894907220` passed. PR Static `33895016834` passed. PR Linux `33895016774` / job `101095498647` passed `PASS=31 FAIL=0 SKIP=0`. The full gate observed 199 rules, 188 normative rules with complete locator classification, zero UNASSESSED/unclassified evidence IDs, and final current-run contribution `113/113` bounded-positive, 37 enforced-automatic, 14 support-only, 11 conditional-review, 23 manual-review and 1 not-applicable. None of that promotes an article rule before article-specific A2 evidence exists.
+Regression Audit closes only when:
 
-V3-A2 implementation scope is issue #280 and the contract in `docs/ARTICLE-NORMATIVE-CONTRACT.md`. The exact immutable A2 entry is `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. V3-A1/#275 is DONE; V3-A2/#280 is ACTIVE and runtime implementation has not started yet.
+1. the 34-point review contract is complete and machine-protected;
+2. all additional regression findings are listed;
+3. current authority is identified for every normative dispute that affects shared runtime;
+4. the current full integration suite is green or every failure is classified as a regression finding;
+5. the control plane consistently reports this readable phase model.
 
-## V3-A2 entry
+## Required gates before Scientific Article
 
-A2 begins from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff` and source-contract product `4d018a92697e8f39e3a53b034c451e55996c84fb` while preserving certified non-article foundation `c79f3c73f1d51a30175e8259269504d029442a1c`. A2 may implement only the canonical `scientific-article` profile. Required predicates may become enforceable only with article-specific positive evidence and safe negative rejection where applicable. Optional/recommended predicates remain non-mandatory, and journal-specific instructions remain a conditional applicability boundary.
+Scientific Article starts only after:
 
-## Immediate action
+1. shared Core Corrections are complete;
+2. the 34-point contract has no unexplained shared `FAIL` or `NORMATIVE-REVIEW` state;
+3. stale V2/reference-vocabulary defects are removed;
+4. the canonical V3 reference PDF passes page-level visual validation;
+5. the corrected foundation has a green integration baseline.
 
-Implement V3-A2/#280 in bounded lots: profile/runtime ownership first, then article-specific fixtures/evidence, then contribution/proof reconciliation and full PR gates. Reuse existing citation/reference/section/summary/table machinery and do not fork cross-cutting behavior. CTAN submission remains blocked until the post-A2 release decision.
+## Naming policy
+
+New work packages use descriptive names such as:
+
+- `Regression Audit — Front Matter`
+- `Regression Audit — Objects`
+- `Core Corrections — References`
+- `Reference PDF Validation — Pre-textual Pages`
+- `Scientific Article — Runtime Profile`
+
+Do not create new opaque nested identifiers. Issue/PR numbers and immutable SHAs provide traceability without making the roadmap unreadable.
+
+## Retained certified checkpoints
+
+Only checkpoints that still matter to the current plan remain in the active roadmap:
+
+- certified non-article foundation: `c79f3c73f1d51a30175e8259269504d029442a1c`;
+- article source-contract implementation: `4d018a92697e8f39e3a53b034c451e55996c84fb`;
+- article source-contract closeout / pre-runtime predecessor: `7a7562d23e8bf6c92abb635718639d617a2ed6ff`;
+- pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
+
+Detailed historical milestones remain available from Git history, pull requests, issues, workflow runs, tags, and releases. They are intentionally not duplicated in this active roadmap.
