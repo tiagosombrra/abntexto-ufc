@@ -42,11 +42,15 @@ jobs:
 
           path = Path("tools/tmp-object-typography-migration.py")
           text = path.read_text(encoding="utf-8")
-          text = text.replace(
-              'parent["applies_to"]',
-              'parent["values"]["applies_to"]',
-              1,
-          )
+          old_parent = '''parent["applies_to"] = [
+              item
+              for item in parent["applies_to"]'''
+          new_parent = '''parent["values"]["applies_to"] = [
+              item
+              for item in parent["values"]["applies_to"]'''
+          if old_parent not in text:
+              raise SystemExit("compatibility parent migration block not found")
+          text = text.replace(old_parent, new_parent, 1)
           old = '''allowed_retired_paths = {
               "standards/rule-migrations.json",
               "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
