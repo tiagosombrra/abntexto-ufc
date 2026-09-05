@@ -72,7 +72,7 @@ flat = re.sub(r'\s+', ' ', raw)
 complete_author = 'NOME COMPLETO DO AUTOR'
 if complete_author not in flat:
     raise SystemExit(
-        'Reference document failed: complete-author-name placeholder is missing from generated pre-textual output.'
+        'Reference document failed: complete-author-name placeholder is missing from generated output.'
     )
 print(
     'LIBRARIAN-REVIEW-EVIDENCE item=2 status=PASS '
