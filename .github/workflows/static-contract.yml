@@ -37,8 +37,29 @@ jobs:
           node-version: '24'
       - name: Apply one-shot object typography migration
         run: |
-          sed -i 's/parent\["applies_to"\]/parent["values"]["applies_to"]/g' tools/tmp-object-typography-migration.py
-          sed -i '/"standards\/rule-migrations.json",/a\    "tools/tmp-object-typography-migration.py",' tools/tmp-object-typography-migration.py
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("tools/tmp-object-typography-migration.py")
+          text = path.read_text(encoding="utf-8")
+          text = text.replace(
+              'parent["applies_to"]',
+              'parent["values"]["applies_to"]',
+              1,
+          )
+          old = '''allowed_retired_paths = {
+              "standards/rule-migrations.json",
+              "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
+          }'''
+          new = '''allowed_retired_paths = {
+              "standards/rule-migrations.json",
+              "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
+              "tools/tmp-object-typography-migration.py",
+          }'''
+          if old not in text:
+              raise SystemExit("temporary migration allowlist block not found")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          PY
           python3 tools/tmp-object-typography-migration.py
       - name: Run repository-owned static contract on migrated tree
         run: make static-check
