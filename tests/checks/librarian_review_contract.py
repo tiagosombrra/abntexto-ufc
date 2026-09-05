@@ -56,10 +56,12 @@ def main() -> int:
         if not status.startswith(ALLOWED_STATUS_PREFIXES):
             return fail(f"review item {number} has unsupported status: {status}")
 
-    if "34-item review contract" not in audit_text:
-        return fail("regression audit does not bind itself to the 34-item review contract")
-    if "Phase 1" not in audit_text or "Regression Audit" not in audit_text:
-        return fail("regression audit does not expose the readable active phase model")
+    if "docs/UFC-LIBRARIAN-REVIEW.md" not in audit_text:
+        return fail("regression audit is not bound to the canonical librarian review contract")
+    if "Regression Audit" not in audit_text or "Core Corrections" not in audit_text:
+        return fail("regression audit does not record the readable phase transition")
+    if not re.search(r"Status:\s*CLOSED", audit_text):
+        return fail("regression audit closeout status is not explicit")
 
     normative_review_count = sum(
         status.startswith("NORMATIVE-REVIEW") for _, _, status, _ in rows
