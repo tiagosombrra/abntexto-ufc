@@ -131,14 +131,14 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "1eab2539e418224e2a6ce85ef09065941b719ef7",
+    "latest_implementation_checkpoint_sha": "f2f5124c4adcb34069a667f1ef80c76fb17728bd",
     "latest_fully_validated_checkpoint_sha": "f6ca012164273e67480dca127fe17b392e8a8a21",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green",
     "current_correction_batch": [
-      "object upper identification/title typography",
-      "normative rule-ID migration/provenance for object title size",
-      "object final-PDF typography evidence",
-      "typography locator-audit correction"
+      "object typography branch-level final regression",
+      "12 pt upper identification/title final-PDF confirmation",
+      "10 pt lower source/note final-PDF confirmation",
+      "review item 21 acceptance synchronization"
     ],
     "review_items_confirmed_by_latest_full_linux": [
       4,
@@ -147,24 +147,27 @@
       20,
       23
     ],
-    "known_runtime_failures": [
-      "review item 21: upper illustration/table identification/title still rendered at reduced 10 pt"
+    "known_runtime_failures": [],
+    "pending_acceptance_gates": [
+      "review item 21: implementation committed; normal Static/full Linux evidence required before PASS"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
     ],
-    "object_typography_implementation_state": "implemented-ci-pending",
-    "object_typography_rule_migration_manifest": "standards/rule-migrations.json"
+    "object_typography_implementation_state": "implemented-final-regression-pending",
+    "object_typography_implementation_checkpoint_sha": "f2f5124c4adcb34069a667f1ef80c76fb17728bd",
+    "object_typography_rule_migration_manifest": "standards/rule-migrations.json",
+    "object_typography_temporary_executor_removed": true
   },
   "authority_decisions": {
     "object_typography": {
-      "status": "accepted-for-implementation",
+      "status": "implemented-final-regression-pending",
       "decision_document": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
       "upper_identification_title_pt": 12,
       "lower_source_legend_note_pt": 10,
       "line_spacing": "single",
       "review_item": 21,
-      "current_state": "IMPLEMENTED-CI-PENDING"
+      "current_state": "IMPLEMENTED-FINAL-REGRESSION-PENDING"
     }
   },
   "evidence": {
@@ -177,6 +180,9 @@
     "latest_validated_core_linux_run": 33939512019,
     "latest_validated_core_linux_conclusion": "success",
     "latest_validated_core_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "object_typography_generated_tree_static_run": 33963033293,
+    "object_typography_generated_tree_static_conclusion": "success",
+    "object_typography_branch_regression_state": "pending",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },
