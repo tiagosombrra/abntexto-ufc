@@ -17,13 +17,13 @@ Every phase has a mandatory **phase-end regression** on one immutable candidate 
 
 ## Current evidence state
 
-Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing item 21.
+Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475`, Linux `33965794519`, item 21 closed.
 
-Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28.
+Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681`, Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, items 11, 16 and 28 closed.
 
-Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports zero project-owned Portuguese technical diagnostics.
+Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694`, Linux `33972111696`, permanent audit `portuguese_technical_diagnostics=0`.
 
-Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358` passed Static `33974062993` and full Linux `33974063103`, `PASS=31 FAIL=0 SKIP=0`. Reviewer-specific evidence for items 30, 31 and 32 passed without changing NBR 6023 runtime; item 32 is closed.
+Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358`: Static `33974062993`, Linux `33974063103`, `PASS=31 FAIL=0 SKIP=0`; bounded evidence for items 30, 31 and 32 passed and item 32 closed.
 
 Current librarian-review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
@@ -40,61 +40,51 @@ Current librarian-review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-R
 
 Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained.
 
-### 2. Front Matter and Institutional Metadata — ACTIVE / IMPLEMENTED, CI PENDING
+### 2. Front Matter and Institutional Metadata — ACTIVE / CORRECTED IMPLEMENTATION, CI PENDING
 
-Current implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds bounded evidence for remaining PARTIAL items 1, 2 and 7 without changing runtime:
+Initial implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` added bounded evidence for items 1, 2 and 7 without changing runtime:
 
-- item 1: the academic cover is compiled both without a department and with a generated `UFCFRONTMATTERCOVDEPT` department marker; the blank case must omit it and the filled case must render it;
-- item 2: the canonical generated PDF must contain the complete-name author placeholder `NOME COMPLETO DO AUTOR` in pre-textual output;
-- item 7: the approval-page fixture now carries `Instituição Externa de Teste (IET)` and the rendered doctoral approval page must preserve that `Instituição (sigla)` form.
+- item 1: blank department omitted / filled department rendered;
+- item 2: canonical complete-author-name placeholder rendered in generated output;
+- item 7: approval page renders `Instituição Externa de Teste (IET)`.
 
-Acceptance requires synchronized Static contract and full Linux integration. Runtime changes are prohibited unless those checks expose an actual implementation defect.
+Synchronized checkpoint `48e7e6841b63ea62d6811e734dde09931b8f608c` failed Static `33980486317` because the item-2 failure diagnostic itself contained a project-prohibited Portuguese technical term. The evidence predicate and runtime were not implicated. Correction `dc381d4517341062d53ae5e93082c7856fc4af17` changes only that diagnostic to engineering English. Corrected synchronized Static/full Linux acceptance is pending.
 
 ### 3. Body Structure, Headings, Citations and Lists — VALIDATED
 
-Items 11-20 and 24-29 have their current automated/source/PDF contracts accepted. Items 11, 16 and 28 closed at `c4c59...` with explicit generated-PDF evidence.
+Items 11-20 and 24-29 retain accepted automated/source/PDF contracts.
 
 ### 4. Figures, Tables and Documentary Objects — VALIDATED
 
-Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identification/title, 10 pt single-spaced lower source/legend/note where applicable, all constrained to object width.
+Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identification/title and 10 pt single-spaced lower source/legend/note where applicable.
 
-### 5. Engineering-language evidence hardening — VALIDATED
+### 5. Engineering-language evidence hardening — VALIDATED/PERMANENT GUARD
 
-Accepted at `edeb14b7a96d1cab3ad9551701087ddf4dff059a` with Static `33972111694` and full Linux `33972111696` green. Permanent evidence reports `portuguese_technical_diagnostics=0`.
+Accepted at `edeb14...`. The current `33980486317` failure demonstrates the permanent guard is working: new project-owned technical diagnostics must remain English.
 
 ### 6. References and NBR 6023:2025 — VALIDATED BOUNDED BATCH
 
-Reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f`, synchronized at `bcd851b3176b516091a254bc57b5ae4e8add9358`, added reviewer-specific evidence without changing normative runtime.
+`bcd851b...` accepted reviewer-specific items 30-32 evidence without runtime changes. Item 33 remains `NORMATIVE-REVIEW`; no disputed DOI/availability/repeated-author/corporate-author runtime change is authorized without current authoritative text.
 
-Accepted evidence:
+### 7. Appendices, Annexes and External Source Attribution — ACTIVE / CORRECTED IMPLEMENTATION, CI PENDING
 
-- item 30: controlled online entry verifies omission of obsolete unknown-publication markers for the established electronic case;
-- item 31: controlled thesis/dissertation entry verifies work type, institution/location and exactly one consistent year;
-- item 32: controlled ABNT standard verifies publisher/year data and a bibliography-specific `@mvbook` verifies the reviewed `2 v.` physical-description form.
-
-Static `33974062993` and Linux `33974063103` passed. `tests/integration/multivolume.sh` remains academic-document pagination evidence and was not reused as bibliography evidence.
-
-Item 33 remains `NORMATIVE-REVIEW`. No runtime change is authorized for disputed DOI/availability/repeated-author/corporate-author cases without current authoritative text.
-
-### 7. Appendices, Annexes and External Source Attribution — ACTIVE / IMPLEMENTED, CI PENDING
-
-Implementation `33bdd0bd...` extends the canonical reference-document gate for item 34. It requires the generated canonical PDF to contain the annex heading and source attribution, and the generated TOC to contain the annex entry. Existing independent final-PDF evidence continues to prove uppercase/bold/12 pt/centered annex heading behavior.
+Implementation `33bdd0bd...` extends the canonical reference-document gate for item 34: generated canonical PDF must contain the annex heading/source attribution and generated TOC must contain the annex entry. Existing independent final-PDF evidence continues to prove uppercase/bold/12 pt/centered annex heading behavior. The `dc381d45...` correction does not alter item-34 evidence.
 
 ### 8. Canonical V3 Reference Corpus Cleanup — VALIDATED/PROTECTED
 
-Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeholders, implementation-history prose presented as current user instruction, reviewed legacy object-title casing, malformed UFC first-use, and legacy heading/`etc.` forms.
+Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeholders, reviewed legacy title casing, malformed UFC first-use and legacy heading/`etc.` forms.
 
 ## Complete 34-item implementation matrix
 
 | # | State | Priority | Remaining action / acceptance |
 |---:|---|---|---|
-| 1 | PARTIAL | P2 | `33bdd0bd...` blank/filled department evidence; synchronized CI pending. |
-| 2 | PARTIAL | P2 | `33bdd0bd...` canonical complete-name generated-output evidence; synchronized CI pending. |
-| 3 | PASS | P3 | Preserve subtitle propagation regression. |
-| 4 | PASS | P1 | Preserve advisor/co-advisor punctuation regression. |
+| 1 | PARTIAL | P2 | Blank/filled department evidence implemented; corrected synchronized CI pending. |
+| 2 | PARTIAL | P2 | Complete-name canonical output evidence implemented; diagnostic corrected at `dc381d45...`; CI pending. |
+| 3 | PASS | P3 | Preserve subtitle propagation. |
+| 4 | PASS | P1 | Preserve advisor/co-advisor punctuation. |
 | 5 | PASS | P3 | Preserve conditional co-advisor rendering. |
 | 6 | PASS | P3 | Preserve concentration behavior. |
-| 7 | PARTIAL | P2 | `33bdd0bd...` approval-page institution/acronym evidence; synchronized CI pending. |
+| 7 | PARTIAL | P2 | Approval-page institution/acronym evidence implemented; corrected synchronized CI pending. |
 | 8 | PASS | P3 | Preserve variable committee size. |
 | 9 | PASS | P3 | Preserve CAPES guidance. |
 | 10 | PASS | P3 | Reconfirm in corrected canonical PDF. |
@@ -106,9 +96,9 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 16 | PASS | P2 | Source/PDF first-use evidence accepted. |
 | 17 | PASS | P1/P3 | Preserve code/body typography regression. |
 | 18 | PASS | P3 | Preserve current NBR 10520 capitalization. |
-| 19 | PASS | P1 | Preserve long-quotation locator fixture. |
-| 20 | PASS | P1 | Preserve punctuation positive/negative reviewer gate. |
-| 21 | PASS | P1 | Preserve 12 pt upper / 10 pt lower final-PDF and IBGE evidence. |
+| 19 | PASS | P1 | Preserve long-quotation locator. |
+| 20 | PASS | P1 | Preserve punctuation positive/negative gate. |
+| 21 | PASS | P1 | Preserve 12 pt upper / 10 pt lower object evidence. |
 | 22 | PASS | P3 | Preserve object single spacing. |
 | 23 | PASS | P1 | Preserve external-source locator evidence. |
 | 24 | PASS | P3 | Preserve lowercase alínea starts. |
@@ -116,32 +106,31 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 26 | PASS | P3 | Preserve colon/subalínea punctuation. |
 | 27 | PASS | P3 | Preserve alphabetic alínea ordering. |
 | 28 | PASS | P2 | Source/PDF sentence-case and `etc.` evidence accepted. |
-| 29 | PASS | P3 | Preserve 2 cm first-line indent/no extra paragraph spacing. |
+| 29 | PASS | P3 | Preserve body paragraph indentation/spacing. |
 | 30 | PASS | P1/P3 | Reviewer-specific electronic evidence accepted at `bcd851b...`. |
 | 31 | PASS | P3 | Single-year thesis/dissertation evidence accepted at `bcd851b...`. |
-| 32 | PASS | P1/P2 | Standard/multivolume bibliography evidence accepted at `bcd851b...`. |
+| 32 | PASS | P1/P2 | Standard/multivolume evidence accepted at `bcd851b...`. |
 | 33 | NORMATIVE-REVIEW | P1 | Wait for authoritative NBR 6023:2025 edge-case text. |
-| 34 | PARTIAL | P1/P2 | `33bdd0bd...` canonical annex source/heading/TOC evidence; synchronized CI pending. |
+| 34 | PARTIAL | P1/P2 | Canonical annex source/heading/TOC evidence implemented; corrected synchronized CI pending. |
 
 ## Additional regression findings
 
 | Finding | State | Next action |
 |---|---|---|
-| Hidden historical phase-name coupling | CLOSED | Keep semantic phase governance regression. |
-| Documentation can drift from implementation | ACTIVE GUARD | Preserve mandatory reconciliation on every material advance. |
+| Hidden historical phase-name coupling | CLOSED | Keep semantic phase governance. |
+| Documentation can drift from implementation | ACTIVE GUARD | Keep mandatory reconciliation on every material advance. |
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
-| Stale V2 wording/current API vocabulary in V3 reference | CORRECTED/PROTECTED | Keep negative reference hygiene. |
-| Object typography tests certified wrong upper-title size | CLOSED | Preserve current authority decision/evidence. |
-| Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve accepted source/PDF evidence. |
-| Engineering-language gate had mixed-diagnostic false negatives | CLOSED | Retain permanent stronger detector and self-tests. |
-| Reviewer bibliography edge cases lacked bounded evidence | CLOSED FOR 30-32 | Preserve `bcd851b...`; keep 33 fail-closed. |
+| Stale V2/current API wording | CORRECTED/PROTECTED | Keep negative reference hygiene. |
+| Object typography test encoded wrong upper size | CLOSED | Preserve accepted authority/evidence. |
+| Engineering-language false negatives | CLOSED/PERMANENT GUARD | Keep stronger detector; `33980486317` is a successful fail-closed discovery. |
+| Current closeout diagnostic used prohibited engineering wording | CORRECTED, CI PENDING | `dc381d45...`; synchronize and re-run Static/full Linux. |
 
 ## Current batch acceptance
 
-If the synchronized checkpoint containing `33bdd0bd...` passes Static and full Linux and emits PASS evidence for items 1, 2, 7 and 34, promote the matrix to **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Then prepare a separate immutable Core Corrections phase-end regression candidate. Do not transition phases on the targeted batch result alone.
+If the corrected synchronized checkpoint passes Static and full Linux and emits PASS evidence for items 1, 2, 7 and 34, promote the matrix to **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Then prepare a separate immutable Core Corrections phase-end regression candidate. Do not transition phases on the targeted batch result alone.
 
 ## Phase transition gates
 
-Core Corrections -> Reference PDF Validation requires all blocking shared P0/P1 corrections implemented, affected normative mappings/tests updated atomically, executable checks green, no shared runtime FAIL, authority gaps explicit/fail-closed, documentation synchronized, and one immutable Core Corrections candidate passing Static plus full Linux.
+Core Corrections -> Reference PDF Validation requires all blocking shared P0/P1 corrections implemented, no shared runtime FAIL, authority gaps explicit/fail-closed, documentation synchronized, and one immutable Core Corrections candidate passing Static plus full Linux and phase-specific acceptance checks.
 
 Reference PDF Validation -> Scientific Article additionally requires the corrected canonical V3 PDF to pass page-level review and reproducible presentation evidence.

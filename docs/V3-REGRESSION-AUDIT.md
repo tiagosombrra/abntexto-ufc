@@ -7,37 +7,23 @@ Closeout checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`
 
 ## Closeout
 
-Regression Audit closed after the shared V3 foundation was rechecked before scientific-article runtime work.
+Regression Audit closed after the shared V3 foundation was rechecked before scientific-article runtime work. The two reviewed PDFs are represented by exactly 34 tracked requirements in `docs/UFC-LIBRARIAN-REVIEW.md`; the correction queue is `docs/V3-CORRECTION-PLAN.md`; Static `33937439818` and full Linux `33937439846` passed at audit closeout.
 
-Evidence at closeout: the two reviewed PDFs are represented by exactly 34 tracked requirements in `docs/UFC-LIBRARIAN-REVIEW.md`; `docs/V3-CORRECTION-PLAN.md` contains the executable correction queue; the active roadmap uses readable phase names; object typography and selected NBR 6023:2025 disputes had explicit unresolved authority status at audit closeout; Static `33937439818` passed; full Linux `33937439846` passed; scientific-article runtime had not started before the regression reset.
-
-The project therefore advanced to **Core Corrections**. This closeout does not mean the 34 review items were already corrected.
-
-## Initial 34-item baseline
-
-- `PASS`: 19
-- `PARTIAL`: 11
-- `FAIL`: 1
-- `NORMATIVE-REVIEW`: 3
-
-These are historical audit closeout facts.
+Initial historical state: **19 PASS / 11 PARTIAL / 1 FAIL / 3 NORMATIVE-REVIEW**.
 
 ## Post-audit disposition in Core Corrections
 
-The object-title authority conflict is resolved and accepted. Checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and full Linux `33965794519`; review item 21 is PASS.
+- Object-title authority/runtime correction accepted at `3f47081c...`; item 21 PASS.
+- Canonical-reference source/PDF evidence accepted at `c4c59f83...`; items 11, 16 and 28 PASS.
+- Engineering-language hardening accepted at `edeb14b7...`; Static `33972111694` and Linux `33972111696`, permanent diagnostics audit zero.
+- Bounded reference evidence accepted at `bcd851b...`; Static `33974062993`, Linux `33974063103`; items 30, 31 and 32 reviewer-specific evidence PASS and item 32 closed.
 
-Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, closing review items 11, 16 and 28.
+Current review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Engineering-language false-negative hardening is resolved. Checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports `portuguese_technical_diagnostics=0`.
+Front Matter and Annex Closeout implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence for the four remaining PARTIAL items 1, 2, 7 and 34. Synchronized checkpoint `48e7e6841b63ea62d6811e734dde09931b8f608c` failed Static `33980486317` because the newly added item-2 failure diagnostic contained the prohibited project-owned technical term `pre-textual`. This is a guardrail discovery, not a runtime/review contradiction. Correction `dc381d4517341062d53ae5e93082c7856fc4af17` changes only that diagnostic wording; corrected synchronized CI remains pending.
 
-Bounded reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f`, synchronized at `bcd851b3176b516091a254bc57b5ae4e8add9358`, passed Static `33974062993` and full Linux `33974063103`. Reviewer-specific evidence for items 30, 31 and 32 passed without changing normative runtime; item 32 is closed.
-
-Current librarian-review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. The remaining PARTIAL items are 1, 2, 7 and 34.
-
-Current closeout implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence for those four remaining PARTIAL items. It is not accepted until a synchronized Static/full Linux checkpoint is green. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
-
-Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
+Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence. Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
 
 ## Regression discipline retained after audit
 
-Every **material advance** continues to update the active execution documentation. Every phase requires a **phase-end regression** on one immutable candidate before closure; targeted correction checks never replace that phase-level regression.
+Every **material advance** updates the active execution documentation. Every phase requires a **phase-end regression** on one immutable candidate before closure; targeted correction checks never replace that phase-level regression.

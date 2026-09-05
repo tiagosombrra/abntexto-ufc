@@ -132,7 +132,7 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "33bdd0bd5f9360c645b4166071c32dbba6c647f0",
+    "latest_implementation_checkpoint_sha": "dc381d4517341062d53ae5e93082c7856fc4af17",
     "latest_fully_validated_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green-bounded-reference-evidence-accepted",
     "current_correction_batch": [
@@ -147,17 +147,18 @@
     "known_gate_failures": [
       "historical Static 33970711005: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostics",
       "historical Static 33970988780: phase governance rejected roadmap missing required material advance concept",
-      "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup"
+      "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup",
+      "Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change"
     ],
     "pending_acceptance_gates": [
-      "front-matter-and-annex implementation 33bdd0bd requires synchronized Static contract and full Linux integration",
+      "front-matter-and-annex corrected implementation dc381d45 requires synchronized Static contract and full Linux integration",
       "Core Corrections phase closure requires a separate immutable phase-end regression candidate after remaining PARTIAL items are closed"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
     ],
-    "engineering_language_hardening_state": "accepted",
+    "engineering_language_hardening_state": "accepted-permanent-guard-active",
     "engineering_language_hardening_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
     "object_typography_implementation_state": "accepted",
     "object_typography_implementation_checkpoint_sha": "3f47081cbbd00a44b9ee86a6b406580e79b593c0",
@@ -208,9 +209,12 @@
     "reference_evidence_linux_run": 33974063103,
     "reference_evidence_linux_conclusion": "success",
     "reference_evidence_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "frontmatter_annex_closeout_implementation_sha": "33bdd0bd5f9360c645b4166071c32dbba6c647f0",
+    "frontmatter_annex_closeout_initial_implementation_sha": "33bdd0bd5f9360c645b4166071c32dbba6c647f0",
+    "frontmatter_annex_closeout_language_fix_sha": "dc381d4517341062d53ae5e93082c7856fc4af17",
     "frontmatter_annex_closeout_items": [1, 2, 7, 34],
-    "frontmatter_annex_closeout_acceptance": "pending-synchronized-static-and-linux",
+    "frontmatter_annex_closeout_failed_static_run": 33980486317,
+    "frontmatter_annex_closeout_failed_static_classification": "engineering-language-diagnostic-only",
+    "frontmatter_annex_closeout_acceptance": "pending-corrected-synchronized-static-and-linux",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,

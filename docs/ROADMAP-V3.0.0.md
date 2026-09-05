@@ -6,22 +6,23 @@ Updated: 2026-09-05
 
 **Core Corrections is ACTIVE.**
 
-Regression Audit is closed. Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing review item 21.
+Accepted checkpoints:
 
-Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`, closing review items 11, 16 and 28.
+- object/Core: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`, Static `33965794475`, Linux `33965794519`;
+- canonical reference content: `c4c59f83b67cb152ed9a88345541457b8f18021c`, Static `33969505681`, Linux `33969505614`;
+- engineering-language hardening: `edeb14b7a96d1cab3ad9551701087ddf4dff059a`, Static `33972111694`, Linux `33972111696`;
+- bounded reference evidence: `bcd851b3176b516091a254bc57b5ae4e8add9358`, Static `33974062993`, Linux `33974063103`, `PASS=31 FAIL=0 SKIP=0`.
 
-Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports `portuguese_technical_diagnostics=0`.
+Current review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. The remaining PARTIAL items are 1, 2, 7 and 34.
 
-Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358` passed Static `33974062993` and full Linux `33974063103`, with `PASS=31 FAIL=0 SKIP=0`. Reviewer-specific items 30, 31 and 32 evidence passed; item 32 is closed.
+Current closeout evidence began at implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0`. Synchronized checkpoint `48e7e6841b63ea62d6811e734dde09931b8f608c` failed Static `33980486317` because a newly added project-owned error diagnostic contained the prohibited Portuguese technical term `pre-textual`. Correction `dc381d4517341062d53ae5e93082c7856fc4af17` changes only that diagnostic wording to engineering English. Evidence predicates and runtime are unchanged.
 
-Current 34-point state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Current implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence for remaining PARTIAL items 1, 2, 7 and 34. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
 Correction queue: `docs/V3-CORRECTION-PLAN.md`.
 Librarian review: `docs/UFC-LIBRARIAN-REVIEW.md`.
-Engineering language policy: `docs/ENGINEERING-LANGUAGE.md`.
-Object typography decision: `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
 
 ## Operating discipline
 
@@ -33,72 +34,55 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 
 | Phase | Status | Goal | Exit gate |
 |---|---|---|---|
-| **Regression Audit** | CLOSED | Revalidate the shared V3 foundation and classify recovered review requirements and newly discovered defects. | Closed with 34-item contract, classified findings and green Static/full Linux phase-end regression. |
-| **Core Corrections** | ACTIVE | Correct shared runtime, template, normative mapping, documentation and tests identified by the audit. | No unresolved shared FAIL; blocking P0/P1 evidence complete; authority gaps explicit/fail-closed; phase-end regression green on one immutable SHA. |
-| **Reference PDF Validation** | QUEUED | Compile the corrected canonical V3 reference and inspect it page by page against accepted UFC requirements, recovered reviews and V2.1 preservation baseline where applicable. | Page-level visual checklist and reproducible presentation evidence pass, then phase-end regression green. |
-| **Scientific Article** | QUEUED | Implement the article profile on the corrected shared foundation using the retained article authority contract. | Article runtime, modality, positive/negative evidence, canonical rendering and phase-end regression pass. |
-| **Final Certification** | QUEUED | Run complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution certification. | Complete heavy certification matrix and phase-end regression green on one immutable candidate. |
-| **Release** | QUEUED | Finalize user documentation, bundles, release assets, checksums and publication actions. | No unresolved roadmap/normative item; release checklist and final regression/verification recorded. |
+| **Regression Audit** | CLOSED | Revalidate the shared V3 foundation and classify recovered review requirements and newly discovered defects. | 34-item contract plus green Static/full Linux phase-end regression. |
+| **Core Corrections** | ACTIVE | Correct shared runtime, template, normative mapping, documentation and tests identified by the audit. | No unresolved shared FAIL; blocking evidence complete; authority gaps explicit/fail-closed; phase-end regression green on one immutable SHA. |
+| **Reference PDF Validation** | QUEUED | Inspect the corrected canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and preservation baseline. | Visual checklist and reproducible presentation evidence pass; phase-end regression green. |
+| **Scientific Article** | QUEUED | Implement the article profile on the corrected shared foundation. | Article runtime/evidence/rendering and phase-end regression pass. |
+| **Final Certification** | QUEUED | Complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution certification. | Heavy certification matrix and phase-end regression green on one SHA. |
+| **Release** | QUEUED | Finalize documentation, bundles, release assets, checksums and publication actions. | Release checklist complete and final regression recorded. |
 
 ## Active phase — Core Corrections
 
-### Completed/validated work
+### Validated work
 
-- readable phase/control-plane migration;
-- machine-protected 34-item librarian contract;
-- mandatory documentation-on-material-advance and phase-end regression governance;
-- advisor/co-advisor punctuation and committee/front-matter implementation support;
-- first textual UFC full-name reference and stale V2/current-reference hygiene;
-- reviewer-specific long-direct-quotation locator/punctuation evidence;
-- external-illustration source locator evidence;
-- code/body typography consistency evidence;
-- object typography migration accepted by Static `33965794475` + Linux `33965794519`;
-- source/generated-PDF evidence for items 11, 16 and 28 accepted through `c4c59...`;
-- engineering-language false-negative hardening accepted at `edeb14...`, Static `33972111694` + Linux `33972111696`;
-- bounded references evidence accepted at `bcd851b...`, Static `33974062993` + Linux `33974063103`, closing item 32 while preserving item 33 fail-closed.
+- readable control plane and machine-protected 34-item review contract;
+- documentation-on-material-advance and phase-end regression governance;
+- front-matter advisor/co-advisor and committee foundations;
+- citation/locator/body/list corrections and evidence;
+- object typography authority/runtime/evidence;
+- canonical source/PDF evidence for items 11, 16 and 28;
+- engineering-language hardening accepted at `edeb14...`;
+- bounded bibliography evidence for items 30-32 accepted at `bcd851b...`, leaving item 33 fail-closed.
 
 ### Current work — Front Matter and Annex Closeout
 
-Implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence-only checks for:
+Evidence scope:
 
-1. item 1 — blank department omitted and filled department rendered on the academic cover;
-2. item 2 — canonical complete-author-name placeholder rendered in generated pre-textual output;
-3. item 7 — approval-page committee institution rendered in `Instituição (sigla)` form;
-4. item 34 — canonical annex source attribution, heading presence and TOC entry, combined with existing independent bold-heading runtime evidence.
+1. item 1 — academic cover blank department omitted / filled department rendered;
+2. item 2 — canonical complete-author-name placeholder rendered in generated output;
+3. item 7 — approval-page committee institution preserved in `Instituição (sigla)` form;
+4. item 34 — canonical annex source attribution, heading presence and TOC entry, combined with independent bold-heading final-PDF evidence.
 
-Acceptance gate:
+Current failure classification:
 
-1. synchronize documentation/machine state on top of `33bdd0bd...`;
-2. require Static contract and full Linux integration on that exact checkpoint;
-3. require explicit PASS evidence for items 1, 2, 7 and 34;
-4. classify failures before any runtime change;
-5. on green CI, promote the matrix to **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**;
-6. keep item 33 untouched.
+- Static `33980486317`: engineering-language guard failure only; new item-2 diagnostic used `pre-textual`;
+- correction `dc381d4517341062d53ae5e93082c7856fc4af17`: diagnostic wording only, no predicate/runtime change;
+- corrected synchronized Static/full Linux acceptance pending.
 
-### Remaining Core Corrections after this batch
+If corrected CI is green and all four items emit PASS, update to **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-If items 1, 2, 7 and 34 close, prepare a separate immutable Core Corrections phase-end regression candidate. Targeted closeout success is not itself the phase transition gate. Reference PDF Validation may become ACTIVE only after the complete phase-end regression is green and recorded in synchronized documentation.
+### Core Corrections closeout after item acceptance
+
+Do not close the phase immediately after targeted evidence passes. Create a separate immutable Core Corrections phase-end candidate with all documentation synchronized. Run Static contract, full Linux integration and all phase-specific acceptance checks on that same SHA. Only a green recorded result can close Core Corrections and activate Reference PDF Validation.
 
 ## Gate before Reference PDF Validation
 
-Core Corrections closes only when all shared blocking P0/P1 corrections have implementation/reference behavior and evidence, affected normative mappings/tests are updated atomically where authority changed, no shared runtime FAIL remains, remaining NORMATIVE-REVIEW items are explicitly fail-closed/non-contradictory or resolved, documentation/review matrices match the candidate SHA, and Static plus full Linux pass on the same immutable phase-end candidate.
+No shared runtime FAIL; all blocking P0/P1 corrections have evidence; item 33 is explicit, non-contradictory and fail-closed; documentation/machine state match the candidate; one immutable candidate passes the complete Core Corrections phase-end regression.
 
 ## Gate before Scientific Article
 
-Scientific Article starts only after Core Corrections closes and the corrected canonical V3 reference PDF passes Reference PDF Validation, including its own phase-end regression.
+Scientific Article starts only after Core Corrections closes and the corrected canonical V3 reference PDF passes Reference PDF Validation and its own phase-end regression.
 
 ## Naming policy
 
-Use descriptive work names such as `Core Corrections — Front Matter and Annex Closeout`, `Reference PDF Validation — Pre-textual Pages`. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
-
-## Retained checkpoints
-
-- certified non-article foundation: `c79f3c73f1d51a30175e8259269504d029442a1c`;
-- article source-contract implementation: `4d018a92697e8f39e3a53b034c451e55996c84fb`;
-- article pre-runtime checkpoint: `7a7562d23e8bf6c92abb635718639d617a2ed6ff`;
-- pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`;
-- accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
-- accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
-- accepted engineering-language hardening checkpoint: `edeb14b7a96d1cab3ad9551701087ddf4dff059a`;
-- accepted bounded references checkpoint: `bcd851b3176b516091a254bc57b5ae4e8add9358`;
-- current Front Matter and Annex Closeout implementation: `33bdd0bd5f9360c645b4166071c32dbba6c647f0` (acceptance pending synchronized CI).
+Use descriptive work names. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.

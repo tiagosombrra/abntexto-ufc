@@ -27,7 +27,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358`: Static `33974062993` and Linux `33974063103` success, `PASS=31 FAIL=0 SKIP=0`; items 30, 31 and 32 reviewer-specific evidence passed and item 32 closed.
 - Current 34-item state: **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Current bounded batch: **Core Corrections — Front Matter and Annex Closeout**.
-- Current implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence for items 1, 2, 7 and 34; acceptance requires synchronized Static and full Linux.
+- Initial closeout implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0`; synchronized checkpoint `48e7e6841b63ea62d6811e734dde09931b8f608c` failed Static `33980486317` only on engineering-language wording in a new diagnostic.
+- Correction `dc381d4517341062d53ae5e93082c7856fc4af17` replaces that diagnostic wording with engineering English without changing its predicate/runtime; corrected synchronized CI is pending.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 
@@ -76,7 +77,7 @@ At minimum this includes Static contract, full relevant Linux integration, phase
 
 A correction closes only when the applicable combination is established: current authority/project classification, correct runtime/reference behavior, automated positive evidence or explicit manual review, negative evidence where practical, and canonical-PDF evidence when presentation is part of the requirement.
 
-For the active Front Matter and Annex Closeout batch, current implementation `33bdd0bd...` is evidence-only: blank/filled department rendering, complete-author-name canonical output, committee institution/acronym output, and canonical annex source/heading/TOC output. Do not change runtime unless the synchronized regression exposes a genuine defect. Item 33 remains fail-closed.
+For the active Front Matter and Annex Closeout batch, blank/filled department rendering, complete-author-name canonical output, committee institution/acronym output, and canonical annex source/heading/TOC output are evidence-only changes. Static `33980486317` classified one prohibited diagnostic phrase; `dc381d45...` fixes only that engineering text. Do not change runtime unless the corrected synchronized regression exposes a genuine defect. Item 33 remains fail-closed.
 
 ## Branch governance and fail-closed rule
 
