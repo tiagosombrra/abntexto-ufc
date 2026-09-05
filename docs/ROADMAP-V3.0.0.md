@@ -6,17 +6,13 @@ Updated: 2026-09-05
 
 **Core Corrections is ACTIVE.**
 
-Regression Audit is closed. The latest fully validated Core Corrections/control checkpoint remains `f6ca012164273e67480dca127fe17b392e8a8a21`, with Static contract run `33939512055` and full Linux integration run `33939512019` both successful. The Linux run completed the full repository integration contract with `PASS=31 FAIL=0 SKIP=0`.
+Regression Audit is closed. Core Corrections validated checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and full Linux `33965794519` with `PASS=31 FAIL=0 SKIP=0`.
 
-The object-typography correction is materially implemented across shared object runtime, table runtime and regression observers. The implementation sequence is now:
+That regression closes the object-typography correction. Review item 21 is now PASS: illustration/table/object upper identification/title is 12 pt, lower source/legend/note remains 10 pt where applicable, and the final-PDF plus IBGE table evidence is green.
 
-- `f2f5124c4adcb34069a667f1ef80c76fb17728bd`: normative rule-ID/locator migration plus shared illustration/object runtime and final-PDF evidence changes;
-- `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c`: residual `tabularray-abnt` table adapter corrected so upper table caption surfaces use body size;
-- `faa487ed38ca130c9eb9da597d2902603f269a0a`: documentation/control checkpoint that passed Static run `33964421654`;
-- full Linux run `33964421597`: `PASS=29 FAIL=1 SKIP=1`, with all object final-PDF measurements green and one stale legacy IBGE assertion isolated;
-- `a3ce2d82899162d12b06c7335b149dc2b44ecfa3`: legacy IBGE caption observer updated from the retired 10 pt expectation to 12 pt while retaining 10 pt source/note checks.
+Current implementation checkpoint `c464a1bc2ca04a4ce398878f25e9521f5840d48e` adds explicit canonical-reference source regressions for librarian items 11, 16 and 28. The next synchronized branch checkpoint must pass Static/full Linux before this batch advances to generated-PDF text evidence.
 
-The 34-point librarian contract therefore still stands at **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW** until review item 21 receives a fully green normal branch Static/full Linux acceptance run on a synchronized checkpoint containing `a3ce2d8...`. Items 19, 20 and 23 are closed by reviewer-specific evidence in full integration. Item 17 is closed by code-typography evidence. Item 4 is closed after the advisor/co-advisor punctuation correction.
+Current 34-point state: **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -26,20 +22,20 @@ Object typography decision: `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
 
 ## Operating discipline
 
-Every material advance must update the relevant execution documentation and the canonical handoff in the same work cycle. Phase/machine-state changes must also update this roadmap and `release/v3-roadmap.json`. Documentation reconciliation is part of the advance, not deferred cleanup.
+Every material advance must update the relevant execution documentation and canonical handoff in the same work cycle. Phase/machine-state changes also update this roadmap and `release/v3-roadmap.json`.
 
-Every phase ends with a mandatory phase-end regression on one immutable candidate SHA. Targeted checks accumulated during a phase do not replace this gate. At minimum, phase closeout requires Static contract, full relevant Linux integration, phase-specific acceptance evidence and recorded SHA/run results. Presentation phases additionally require canonical-PDF inspection. Final Certification additionally requires the heavy literal-font/Windows/PDF-A/distribution matrix.
+Every phase ends with a mandatory phase-end regression on one immutable candidate SHA. Targeted checks accumulated during a phase do not replace this gate.
 
 ## Phase plan
 
 | Phase | Status | Goal | Exit gate |
 |---|---|---|---|
-| **Regression Audit** | CLOSED | Revalidate the shared V3 foundation and classify recovered review requirements and newly discovered defects. | Closed with 34-item contract, classified findings and green static/full-integration phase-end regression. |
-| **Core Corrections** | ACTIVE | Correct shared runtime, template, normative mapping, documentation and tests identified by the audit. | No unresolved shared FAIL; all blocking P0/P1 corrections have evidence; remaining normative reviews are explicit/fail-closed; phase-end regression green on one immutable SHA. |
-| **Reference PDF Validation** | QUEUED | Compile the corrected canonical V3 reference and inspect it page by page against accepted UFC requirements, recovered reviews and the V2.1 preservation baseline where applicable. | Page-level visual checklist and reproducible presentation evidence pass, then phase-end regression is green. |
-| **Scientific Article** | QUEUED | Implement the article profile on the corrected shared foundation using the retained article authority contract. | Article runtime, modality, positive/negative evidence, canonical rendering and phase-end regression pass on the same candidate. |
+| **Regression Audit** | CLOSED | Revalidate the shared V3 foundation and classify recovered review requirements and newly discovered defects. | Closed with 34-item contract, classified findings and green Static/full Linux phase-end regression. |
+| **Core Corrections** | ACTIVE | Correct shared runtime, template, normative mapping, documentation and tests identified by the audit. | No unresolved shared FAIL; blocking P0/P1 evidence complete; authority gaps explicit/fail-closed; phase-end regression green on one immutable SHA. |
+| **Reference PDF Validation** | QUEUED | Compile the corrected canonical V3 reference and inspect it page by page against accepted UFC requirements, recovered reviews and V2.1 preservation baseline where applicable. | Page-level visual checklist and reproducible presentation evidence pass, then phase-end regression green. |
+| **Scientific Article** | QUEUED | Implement the article profile on the corrected shared foundation using the retained article authority contract. | Article runtime, modality, positive/negative evidence, canonical rendering and phase-end regression pass. |
 | **Final Certification** | QUEUED | Run complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution certification. | Complete heavy certification matrix and phase-end regression green on one immutable candidate. |
-| **Release** | QUEUED | Finalize user documentation, bundles, release assets, checksums and publication actions. | No unresolved roadmap/normative item; release checklist and final release regression/verification recorded. |
+| **Release** | QUEUED | Finalize user documentation, bundles, release assets, checksums and publication actions. | No unresolved roadmap/normative item; release checklist and final regression/verification recorded. |
 
 ## Active phase — Core Corrections
 
@@ -47,53 +43,49 @@ Every phase ends with a mandatory phase-end regression on one immutable candidat
 
 - readable phase/control-plane migration;
 - machine-protected 34-item librarian contract;
-- mandatory documentation-on-material-advance governance;
-- mandatory phase-end regression governance;
-- advisor/co-advisor final punctuation correction;
-- optional department and complete-author-name guidance improvements;
+- mandatory documentation-on-material-advance and phase-end regression governance;
+- advisor/co-advisor final punctuation;
+- optional department/full-name guidance improvements;
 - committee institution/acronym examples;
-- first textual `Universidade Federal do Ceará (UFC)` reference update;
-- stale V2/current-reference vocabulary protection begun;
-- explicit annex-source example added;
-- long-direct-quotation locator evidence (`p. 42`);
-- long-direct-quotation punctuation evidence rejecting an extraneous full stop before the parenthetical citation;
-- external-illustration source locator evidence (`p. 42`);
-- mixed-language engineering diagnostics cleaned in touched gates;
-- full Core Corrections/control integration checkpoint green at `f6ca012...`.
+- first textual UFC full-name reference update;
+- stale V2/current-reference vocabulary protection;
+- annex-source example;
+- reviewer-specific long-direct-quotation locator/punctuation evidence;
+- external-illustration source locator evidence;
+- code/body typography consistency evidence;
+- object typography authority/runtime/test migration accepted by Static `33965794475` + Linux `33965794519`.
 
-### Current work — Objects: synchronized acceptance regression
+### Current work — Canonical Reference Content
 
-Review item 21 is the active P1 acceptance gate.
+Implementation checkpoint `c464a1b...` protects source-level reviewed content for:
 
-Authority reconciliation is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
+- item 11 — object-title sentence case;
+- item 16 — first body-text `Universidade Federal do Ceará (UFC)`;
+- item 28 — heading sentence case and `etc.` punctuation.
 
-- upper identification/title: **12 pt**, single spacing;
-- lower source/legend/note: **10 pt**, single spacing where applicable;
-- all object text remains bound to object width;
-- historical rule IDs are not silently repurposed to mean the opposite value.
+Current gate:
 
-The previous Linux run `33964421597` is diagnostically important: object geometry and both illustration/table final-PDF typography checks passed the accepted 12 pt/10 pt split. Its only failure came from a separate legacy `table-ibge.sh` assertion that still expected the retired 10 pt caption. Commit `a3ce2d8...` corrects that observer and keeps the stronger 12 pt title requirement intact.
+1. publish synchronized documentation/control state on top of `c464a1b...`;
+2. run normal Static and full Linux integration;
+3. if green, add PDF-text assertions in `tests/integration/reference-corpus.sh` for the same reviewed requirements;
+4. reclassify only when generated-PDF evidence supports closure.
 
-The remaining object gate is now a clean acceptance rerun: one synchronized branch checkpoint containing `a3ce2d8...` and the current control documentation must pass normal Static contract plus full Linux integration. Item 21 remains FAIL until that happens.
+### Remaining Core Corrections
 
-### Remaining Core Corrections after Objects
-
-- finish canonical/visual confirmation for partial front-matter items 1, 2 and 7;
-- finish sentence-case/reference examples for item 11 and item 28;
-- confirm first-use UFC acronym presentation in the corrected canonical PDF (item 16);
-- expand safe/current NBR 6023:2025 regression cases for items 30-32;
-- keep item 33 as NORMATIVE-REVIEW until authoritative current-edition text supports the disputed edge cases;
-- confirm annex external-source presentation and heading/TOC styling in the corrected canonical PDF (item 34);
-- run the complete Core Corrections phase-end regression on one immutable SHA.
+- canonical confirmation for partial front-matter items 1, 2 and 7;
+- safe/current NBR 6023:2025 regression expansion for items 30-32;
+- keep item 33 as NORMATIVE-REVIEW until authoritative current-edition evidence exists;
+- canonical annex external-source/heading/TOC confirmation for item 34;
+- complete Core Corrections phase-end regression on one immutable SHA.
 
 ## Gate before Reference PDF Validation
 
 Core Corrections closes only when:
 
 1. all shared blocking P0/P1 corrections have implementation/reference behavior and evidence;
-2. affected normative mappings and tests are updated atomically where authority changed;
+2. affected normative mappings/tests are updated atomically where authority changed;
 3. no shared runtime FAIL remains;
-4. remaining NORMATIVE-REVIEW items are explicitly fail-closed and proven non-blocking for the shared canonical output, or resolved;
+4. remaining NORMATIVE-REVIEW items are explicitly fail-closed and non-contradictory to the canonical shared output, or resolved;
 5. documentation/review matrices match the candidate SHA;
 6. Static contract and full Linux integration pass on the same immutable phase-end candidate;
 7. required phase-specific/manual results are recorded before Reference PDF Validation becomes active.
@@ -104,7 +96,7 @@ Scientific Article starts only after Core Corrections closes and the corrected c
 
 ## Naming policy
 
-Use descriptive work names such as `Core Corrections — Objects`, `Core Corrections — References`, `Reference PDF Validation — Pre-textual Pages`. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
+Use descriptive work names such as `Core Corrections — Canonical Reference Content`, `Core Corrections — References`, `Reference PDF Validation — Pre-textual Pages`. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
 
 ## Retained checkpoints
 
@@ -114,9 +106,7 @@ Use descriptive work names such as `Core Corrections — Objects`, `Core Correct
 - pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`;
 - regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
 - reviewer evidence implementation checkpoint: `1eab2539e418224e2a6ce85ef09065941b719ef7`;
-- latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`;
-- object normative/shared-runtime migration checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`;
-- table adapter runtime correction: `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c`;
-- legacy IBGE observer correction: `a3ce2d82899162d12b06c7335b149dc2b44ecfa3` (synchronized branch regression pending).
+- validated object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
+- canonical-reference source evidence implementation: `c464a1bc2ca04a4ce398878f25e9521f5840d48e` (synchronized branch acceptance pending).
 
-Detailed implementation history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.
+Detailed history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.

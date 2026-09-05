@@ -5,35 +5,24 @@ Updated: 2026-09-05
 ## Current checkpoint
 
 - Repository: `tiagosombrra/abntexto-ufc`.
-- Canonical branch: `main`; task branches are short-lived.
+- Canonical branch: `main`.
 - Active task branch: `plan/v3-regression-reset`.
 - Active phase: **Core Corrections**.
-- Pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
+- Pre-regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
 - Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
-- Regression baseline Static run `33937439818`: success.
-- Regression baseline Linux run `33937439846`: success.
-- Reviewer evidence implementation checkpoint: `1eab2539e418224e2a6ce85ef09065941b719ef7`.
-- Latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`.
-- Static contract run `33939512055`: success.
-- Full Linux integration run `33939512019`: success, `PASS=31 FAIL=0 SKIP=0`.
-- Object-typography contract/runtime migration checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`.
-- Table adapter runtime correction: `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c`.
-- Documentation/control checkpoint after that correction: `faa487ed38ca130c9eb9da597d2902603f269a0a`.
-- Static run `33964421654`: success.
-- Full Linux run `33964421597`: failure, `PASS=29 FAIL=1 SKIP=1`.
-- Crucial object evidence from that failed Linux run is green: illustration title 12 pt, illustration source 10 pt, table title 12 pt, table source 10 pt.
-- The only failure was the legacy `tests/integration/table-ibge.sh` observer still expecting a 10 pt table caption.
-- Legacy observer correction checkpoint: `a3ce2d82899162d12b06c7335b149dc2b44ecfa3`.
-- Normal Static/full Linux acceptance on a synchronized branch checkpoint containing `a3ce2d8...`: pending.
-- Review items 19, 20 and 23 are confirmed PASS by full Linux evidence.
-- Review item 17 is confirmed PASS by the code-typography regression evidence.
-- Review item 4 is confirmed PASS after the advisor/co-advisor punctuation runtime correction and green integration.
-- Review item 21 implementation/final-PDF evidence is correct but remains FAIL until the synchronized branch checkpoint passes Static/full Linux without the retired IBGE assertion.
-- Current 34-item state: `24 PASS / 8 PARTIAL / 1 FAIL / 1 NORMATIVE-REVIEW`.
-- Remaining unresolved normative review: NBR 6023:2025 edge cases in item 33.
+- Regression baseline Static `33937439818`: success.
+- Regression baseline Linux `33937439846`: success.
+- Validated Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`.
+- Static `33965794475`: success.
+- Full Linux `33965794519`: success, `PASS=31 FAIL=0 SKIP=0`.
+- Object typography review item 21: **PASS**. Automated final-PDF evidence confirms illustration/table upper identification/title at 12 pt and lower source at 10 pt; the IBGE table subset also passes.
+- Current implementation checkpoint: `c464a1bc2ca04a4ce398878f25e9521f5840d48e`, adding canonical-reference source regressions for librarian items 11, 16 and 28.
+- Current synchronized documentation checkpoint is being built on top of `c464a1b...`; branch acceptance for that reference-content batch is pending.
+- Current 34-item state: `25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
+- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
-Canonical control/evidence documents:
+Canonical control documents:
 
 - `release/v3-roadmap.json`
 - `docs/ROADMAP-V3.0.0.md`
@@ -42,53 +31,39 @@ Canonical control/evidence documents:
 - `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`
 - `docs/V3-REGRESSION-AUDIT.md`
 
-Git facts, machine state, roadmap and this handoff must describe the same active phase. Disagreement fails closed.
+Git facts, machine state, roadmap and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
 
 ## Mandatory operating discipline
 
-Every material advance must update the relevant execution documentation and this handoff in the same work cycle. If phase state, acceptance state, current correction batch, evidence state, or branch/checkpoint facts change, update `docs/ROADMAP-V3.0.0.md` and `release/v3-roadmap.json` in the same checkpoint.
+Every material advance updates the relevant execution documentation and this handoff in the same work cycle. Phase state, acceptance state, current correction batch, evidence state, and machine-readable facts must also be synchronized in `docs/ROADMAP-V3.0.0.md` and `release/v3-roadmap.json`.
 
-Every phase requires a phase-end regression before closure. Targeted checks collected while implementing individual corrections are necessary evidence but do not authorize a phase transition. One immutable candidate SHA must pass the complete relevant regression, required visual/canonical checks must be complete, and the control documentation must record the result before the next phase becomes active.
+Every phase requires a phase-end regression before closure. Targeted checks are necessary evidence for individual corrections but never authorize a phase transition by themselves.
 
 ## Immediate action
 
-Close **Core Corrections — Objects** only after branch-level evidence on the synchronized checkpoint containing `a3ce2d82899162d12b06c7335b149dc2b44ecfa3`:
+Continue **Core Corrections — Canonical Reference Content**:
 
-1. run the normal Static contract;
-2. run full Linux integration on the same checkpoint;
-3. confirm object geometry, illustration final-PDF and table final-PDF evidence retain the 12 pt upper / 10 pt lower split;
-4. confirm the IBGE table subset gate now expects 12 pt caption and 10 pt source/note and passes;
-5. if green, move review item 21 from FAIL to PASS and synchronize all control documents;
-6. if any check fails, classify the actual failing runtime/contract/observer surface and correct it without weakening the accepted evidence.
+1. publish the synchronized checkpoint containing `c464a1bc2ca04a4ce398878f25e9521f5840d48e` plus this documentation update;
+2. require normal Static contract and full Linux integration on that branch checkpoint;
+3. verify the new source-level evidence for items 11, 16 and 28 is green;
+4. extend canonical `reference-corpus.sh` evidence so the generated PDF explicitly confirms reviewed sentence-case object titles/headings and first body-text `Universidade Federal do Ceará (UFC)`;
+5. only then reclassify items 11/16/28 if the PDF evidence supports closure;
+6. continue bounded reference work for items 30-32 without changing item 33 absent authoritative current-edition evidence.
 
-The object correction chain is now explicit:
-
-- `f2f5124c...`: shared object runtime + normative rule-ID/locator/final-PDF migration;
-- `7ec385e...`: table-theme adapter corrected from reduced caption to body-size caption;
-- `33964421597`: final-PDF object evidence all green, one stale IBGE assertion isolated;
-- `a3ce2d8...`: legacy IBGE assertion aligned to 12 pt title / 10 pt lower auxiliary text; project-owned technical diagnostics in the touched gate converted to English.
-
-After objects, continue the remaining bounded work:
-
-- front-matter/reference canonical visual confirmations for partial items;
-- sentence-case/reference-corpus cleanup;
-- unambiguous NBR 6023:2025 regression cases;
-- keep item 33 fail-closed until authoritative current-edition evidence exists;
-- annex/reference-PDF visual confirmation;
-- Core Corrections phase-end regression on one immutable SHA.
+After those bounded corrections, finish canonical front-matter and annex confirmation, then freeze one Core Corrections phase-end candidate and run the complete Static/full Linux phase-end regression.
 
 ## Phase-end regression rule
 
 For every phase closeout:
 
-1. freeze the candidate SHA after implementation and documentation synchronization;
-2. run Static contract plus the full relevant Linux integration contract;
+1. freeze one immutable candidate SHA after implementation and documentation synchronization;
+2. run Static contract plus full relevant Linux integration;
 3. run phase-specific acceptance surfaces on the same candidate;
-4. include canonical-PDF visual checks whenever presentation is in scope;
+4. include canonical-PDF checks whenever presentation is in scope;
 5. include the heavy literal-font/Windows/PDF-A/distribution matrix when closing Final Certification;
-6. record SHA, workflow run IDs, conclusions and manual/visual results;
-7. any unexplained failure keeps/reopens the phase and blocks transition;
-8. update handoff, roadmap, machine state and review/correction matrices after the regression result.
+6. record SHA, workflow IDs, conclusions and required manual/visual results;
+7. any unexplained failure keeps the phase open;
+8. synchronize handoff, roadmap, machine state and review/correction matrices after the result.
 
 ## Hard boundaries
 
