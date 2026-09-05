@@ -16,10 +16,13 @@ Updated: 2026-09-05
 - Latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`.
 - Static contract run `33939512055`: success.
 - Full Linux integration run `33939512019`: success, `PASS=31 FAIL=0 SKIP=0`.
-- Review items 19, 20 and 23 are now confirmed PASS by the full Linux run.
+- Object-typography implementation checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`.
+- Object migration generated-tree Static preflight: workflow run `33963033293`, success.
+- Object migration branch-level final Static/full Linux regression: pending on the current user-authored documentation/control checkpoint.
+- Review items 19, 20 and 23 are confirmed PASS by the full Linux run.
 - Review item 17 is confirmed PASS by the code-typography regression evidence.
 - Review item 4 is confirmed PASS after the advisor/co-advisor punctuation runtime correction and green integration.
-- Review item 21 has been authority-reconciled and is now a known FAIL: upper object identification/title is still rendered at 10 pt and must migrate to 12 pt while lower source/legend/note remain reduced.
+- Review item 21 implementation is complete but remains FAIL until normal branch-level Static/full Linux evidence confirms 12 pt upper identification/title and 10 pt lower source/note behavior.
 - Current 34-item state: `24 PASS / 8 PARTIAL / 1 FAIL / 1 NORMATIVE-REVIEW`.
 - Remaining unresolved normative review: NBR 6023:2025 edge cases in item 33.
 - Scientific Article runtime remains deferred.
@@ -43,15 +46,23 @@ Every phase requires a phase-end regression before closure. Targeted checks coll
 
 ## Immediate action
 
-Continue **Core Corrections — Objects**:
+Close **Core Corrections — Objects** only after branch-level evidence:
 
-1. migrate the normative contract so upper illustration/table identification/title is no longer classified as a reduced-font exception;
-2. preserve old rule-ID provenance rather than silently assigning an opposite meaning to a historical ID;
-3. change `objects.def` so the upper identification/title is 12 pt with single spacing;
-4. keep lower source/legend/note at reduced 10 pt with single spacing;
-5. update locator audits, final-PDF scenarios/checkers and evidence expectations atomically;
-6. run Static contract and full Linux integration;
-7. if green, move review item 21 from FAIL to PASS and synchronize all control documents before starting the next correction batch.
+1. run the normal Static contract on the current user-authored checkpoint;
+2. run full Linux integration on the same checkpoint;
+3. inspect object geometry, illustration final-PDF and table final-PDF evidence for the 12 pt / 10 pt split;
+4. if green, move review item 21 from FAIL to PASS and synchronize all control documents;
+5. if any check fails, classify the failure and correct the real contract/runtime/evidence defect without weakening the test.
+
+The semantic migration itself is already committed at `f2f5124c4adcb34069a667f1ef80c76fb17728bd`:
+
+- upper illustration/table identification/title is no longer a reduced-font child;
+- historical incorrect rule IDs are retired with provenance in `standards/rule-migrations.json`;
+- `objects.def` uses 12 pt upper identification/title with single spacing;
+- source/legend/note remain reduced 10 pt where applicable;
+- illustration/table locator ownership is separated into exact rule-specific locators;
+- final-PDF expectations and object geometry checks were updated atomically;
+- temporary migration executor/workflow surfaces were removed before the generated checkpoint.
 
 After objects, continue the remaining bounded work:
 
@@ -61,10 +72,6 @@ After objects, continue the remaining bounded work:
 - keep item 33 fail-closed until authoritative current-edition evidence exists;
 - annex/reference-PDF visual confirmation;
 - Core Corrections phase-end regression on one immutable SHA.
-
-## Object typography implementation candidate
-
-The active object batch has migrated the runtime, normative contract, locator ownership and final-PDF expectations to 12 pt upper identification/title and 10 pt lower source/note behavior. The two historically incorrect reduced-title rule IDs are retired with explicit provenance in `standards/rule-migrations.json`. Item 21 remains `FAIL` until the candidate passes Static contract and full Linux integration; the latest fully validated checkpoint remains `f6ca012164273e67480dca127fe17b392e8a8a21` until then.
 
 ## Phase-end regression rule
 
