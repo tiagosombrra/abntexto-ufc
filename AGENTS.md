@@ -24,9 +24,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` success, `PASS=31 FAIL=0 SKIP=0`.
 - Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` success, `PASS=31 FAIL=0 SKIP=0`; items 11, 16 and 28 closed.
 - Current 34-item state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Language-hardening checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db`: Static `33970711005` exposed an additional Portuguese project-owned diagnostic in `algorithm-numbering.sh`.
-- Correction implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates that gate's complete diagnostic surface and expands the detector/self-test.
-- First synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec`: Static `33970988780` failed because the rewritten roadmap omitted the required `material advance` governance concept. Roadmap and correction plan are being reconciled before CI rerun.
+- Engineering-language hardening is active. Static `33970711005` exposed `algorithm-numbering.sh`; Static `33970988780` then exposed documentation-governance drift; Static `33971156481` confirmed governance recovery and exposed four further project-owned Portuguese diagnostics in catalog-card/duplex/vector integration gates.
+- Current implementation checkpoint `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those newly exposed diagnostic surfaces and expands the language detector self-test to 18 cases. It is not accepted until a synchronized Static/full Linux checkpoint passes.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 

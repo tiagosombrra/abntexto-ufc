@@ -21,9 +21,9 @@ Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` pa
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28. Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` after the stronger detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Correction `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates that gate's complete diagnostic surface and expands detector/self-test coverage.
+Engineering-language hardening is still open. Static `33970711005` exposed an `algorithm-numbering.sh` diagnostic. Static `33970988780` then exposed a temporary documentation-governance omission. After governance restoration, Static `33971156481` passed phase governance and exposed four additional project-owned Portuguese diagnostic surfaces: `catalog-card.sh`, `duplex-backmatter.sh`, `table-ibge-vector-evidence.sh`, and `vector-rule-validation.sh`.
 
-The first synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec` then failed Static `33970988780` because a documentation rewrite had omitted the required `material advance` governance concept from the roadmap. The phase-governance checker stops at the first missing document concept, so this correction restores both required concepts (`material advance` and `phase-end regression`) in this correction plan and the roadmap before rerun.
+Current implementation checkpoint `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those newly exposed diagnostics and expands the detector self-test to 18 cases. Acceptance still requires a synchronized Static/full Linux checkpoint.
 
 ## Priority model
 
@@ -34,9 +34,9 @@ The first synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb3
 
 ## Work order
 
-### 1. Control Plane and Regression Harness — VALIDATED / GOVERNANCE DRIFT CORRECTED
+### 1. Control Plane and Regression Harness — VALIDATED / ACTIVE GUARD
 
-Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static `33970988780` demonstrated that the permanent governance checker correctly rejects documentation rewrites that drop those contracts; the missing language is restored before further feature work.
+Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static `33970988780` demonstrated that documentation drift is fail-closed; Static `33971156481` confirmed the governance contract is restored.
 
 ### 2. Front Matter and Institutional Metadata — PARTIAL
 
@@ -52,23 +52,23 @@ Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identificat
 
 ### 5. Engineering-language evidence hardening — ACTIVE
 
-Initial implementation `5d74c0c...` strengthened mixed-language detection and translated known diagnostics in `multivolume.sh` and `references-6023.sh`.
+The strengthened detector is being used as a discovery tool as well as a permanent policy gate. New findings are fixed rather than allowlisted away.
 
-Static `33970711005` on synchronized checkpoint `fd3727...` correctly exposed `tests/integration/algorithm-numbering.sh:66`. Inspection showed multiple project-owned Portuguese/mixed diagnostics in the same script. Correction `5c5b9593...` therefore:
+Progress:
 
-1. translates the entire diagnostic surface of `algorithm-numbering.sh` to English rather than patching only the first failing line;
-2. expands high-confidence mixed-language detection for line-numbering diagnostic phrases;
-3. expands self-test coverage from 11 to 13 cases;
-4. preserves academic/rendered Portuguese and bibliography data.
-
-The subsequent Static failure `33970988780` is classified separately as documentation-governance drift, not a language/runtime failure.
+1. initial mixed-language hardening translated known diagnostics and strengthened phrase detection;
+2. `33970711005` exposed `algorithm-numbering.sh`, whose diagnostic surface was translated;
+3. `33970988780` exposed control-document drift; required governance language was restored;
+4. `33971156481` then exposed four further old diagnostic surfaces;
+5. implementation `1129935...` translates those four surfaces and expands self-test coverage to 18 cases while preserving academic/rendered Portuguese.
 
 Acceptance:
 
-1. publish the synchronized governance-corrected checkpoint containing implementation `5c5b9593...`;
-2. run Static contract and full Linux integration;
-3. correct any further project-owned diagnostics exposed by the stronger detector instead of weakening it;
-4. close only when the permanent language audit truthfully reports zero violations, governance contracts are intact, and full Linux remains green.
+1. publish a synchronized documentation checkpoint on top of `1129935...`;
+2. run Static contract and full Linux integration on that exact checkpoint;
+3. require zero project-owned Portuguese technical diagnostics and green language self-tests;
+4. correct any further violations exposed by stronger detection instead of weakening the detector;
+5. close only when the permanent language audit is truthful and full Linux remains green.
 
 ### 6. References and NBR 6023:2025 — PARTIAL / FAIL-CLOSED
 
@@ -132,12 +132,12 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | Finding | State | Next action |
 |---|---|---|
 | Hidden historical phase-name coupling | CLOSED | Keep semantic phase governance regression. |
-| Documentation can drift from implementation | ACTIVE GUARD / LATEST DRIFT CORRECTED | Static `33970988780` rejected missing governance wording; preserve required concepts in active control docs. |
+| Documentation can drift from implementation | ACTIVE GUARD | `33970988780` rejected drift; `33971156481` confirmed governance recovery. |
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
 | Stale V2 wording/current API vocabulary in V3 reference | CORRECTED/PROTECTED | Keep negative reference hygiene. |
 | Object typography tests certified wrong upper-title size | CLOSED | Preserve current authority decision/evidence. |
-| Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve `3ae9dd...` + `c4c59...` evidence. |
-| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Static `33970711005` exposed another case; validate `5c5b9593...` after governance-doc correction. |
+| Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve accepted source/PDF evidence. |
+| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Validate synchronized checkpoint on top of `1129935...`; continue fail-closed if more violations surface. |
 
 ## Phase transition gates
 

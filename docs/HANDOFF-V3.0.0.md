@@ -12,9 +12,9 @@ Updated: 2026-09-05
 - Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` succeeded, `PASS=31 FAIL=0 SKIP=0`.
 - Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` succeeded, `PASS=31 FAIL=0 SKIP=0`; librarian items 11, 16 and 28 closed.
 - Current 34-item state: `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
-- Language-hardening checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db`: Static `33970711005` failed after the stronger detector exposed a Portuguese project-owned diagnostic in `algorithm-numbering.sh`.
-- Correction implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates the full diagnostic surface in that gate and expands detector/self-test coverage.
-- First synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec`: Static `33970988780` failed because a shortened roadmap dropped the required `material advance` governance concept. The same concept is restored in both roadmap and correction plan before rerun.
+- Engineering-language discovery checkpoints remain classified: Static `33970711005` exposed `algorithm-numbering.sh`; Static `33970988780` exposed a temporary roadmap governance omission; Static `33971156481` confirmed governance recovery and then exposed four more project-owned Portuguese diagnostics in catalog-card, duplex-backmatter, table-IBGE-vector and vector-rule-validation integration gates.
+- Current implementation checkpoint: `1129935fe5e4f97d6fe3798fd5e4777760f0d61b`. It translates the newly exposed diagnostic surfaces and expands `engineering_language.py` self-test coverage to 18 cases while preserving academic Portuguese.
+- `1129935...` is not accepted until a synchronized branch checkpoint passes Static contract and full Linux integration.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
@@ -26,19 +26,20 @@ Git facts, machine state, roadmap and this handoff must describe the same active
 
 Continue **Core Corrections — Engineering Language Evidence Hardening**:
 
-1. publish the governance-corrected synchronized checkpoint containing implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54`;
-2. run normal Static contract and full Linux integration;
-3. require the strengthened language audit/self-test to report zero project-owned Portuguese technical diagnostics;
-4. if more diagnostics are exposed, correct them rather than weakening detection;
-5. if governance checks expose documentation drift, reconcile the control plane before feature work;
-6. when Static/full Linux are green, close the language-hardening finding and update all control documents;
-7. then continue bounded NBR 6023:2025 work for items 30-32, keeping item 33 fail-closed, followed by canonical confirmation for items 1, 2, 7 and 34.
+1. publish a synchronized documentation checkpoint on top of `1129935...`;
+2. run normal Static contract and full Linux integration on that exact branch checkpoint;
+3. require `ENGINEERING-LANGUAGE-EVIDENCE` to report zero project-owned Portuguese technical diagnostics and require the 18-case self-test to pass;
+4. if stronger detection exposes further diagnostics, inspect and translate the complete related engineering surface rather than weakening detection;
+5. when Static/full Linux are green, close the language-hardening finding and synchronize all control documents;
+6. then continue bounded NBR 6023:2025 work for items 30-32, keeping item 33 fail-closed, followed by canonical confirmation for items 1, 2, 7 and 34.
 
 ## Failure classification
 
-Static `33970711005` is an expected fail-closed discovery from stronger language evidence. Static `33970988780` is a separate documentation-governance failure introduced by a control-document rewrite; it does not indicate a LaTeX runtime regression. Both are recorded rather than hidden.
+- Static `33970711005`: expected fail-closed discovery from stronger language evidence.
+- Static `33970988780`: documentation-governance regression caused by a shortened roadmap; no LaTeX runtime regression. The required `material advance` / `phase-end regression` wording was restored.
+- Static `33971156481`: phase governance passed, then stronger language evidence exposed four additional old technical diagnostics. This is another expected hardening discovery.
 
-The governance correction explicitly restores the required concepts `material advance` and `phase-end regression` in both roadmap and correction plan, matching the permanent `phase_governance.py` contract.
+None of these failures changes the 34-item librarian-review state. The language finding remains an evidence-governance task until a synchronized green checkpoint exists.
 
 ## Mandatory operating discipline
 

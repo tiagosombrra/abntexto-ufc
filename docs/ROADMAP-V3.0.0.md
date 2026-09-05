@@ -8,13 +8,13 @@ Updated: 2026-09-05
 
 Regression Audit is closed. Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing review item 21.
 
-Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` passed Static `33968579418` and Linux `33968579449`. Generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` then passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`, closing review items 11, 16 and 28.
+Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`, closing review items 11, 16 and 28.
 
 Current 34-point state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
-Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` because the strengthened detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Correction implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates the complete diagnostic surface in that gate and expands the detector/self-test.
+Engineering-language hardening remains active. Static `33970711005` exposed a previously missed diagnostic in `algorithm-numbering.sh`. Static `33970988780` exposed documentation-governance drift caused by a shortened roadmap; the required governance wording was restored. Static `33971156481` then passed phase governance and exposed four further project-owned Portuguese diagnostics in `catalog-card.sh`, `duplex-backmatter.sh`, `table-ibge-vector-evidence.sh`, and `vector-rule-validation.sh`.
 
-The first synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec` then failed Static `33970988780` in phase governance because a documentation rewrite had omitted the required literal concept `material advance` from this roadmap. The same contract is restored here and proactively restored in the correction plan before rerunning CI. This is a documentation-governance defect, not a runtime or librarian-review regression.
+Current implementation checkpoint `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those newly exposed engineering diagnostics and expands the permanent language self-test to 18 cases. It awaits a synchronized Static/full Linux acceptance checkpoint.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -61,19 +61,22 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 
 ### Current work — Engineering Language Evidence Hardening
 
-Initial hardening `5d74c0c...` added high-confidence mixed-language detection, self-tests and translations in `multivolume.sh` and `references-6023.sh`.
+The detector is intentionally being strengthened fail-closed. Each newly exposed diagnostic is treated as evidence debt, not as a reason to weaken the language policy.
 
-Synchronized checkpoint `fd3727...` correctly failed Static `33970711005` after exposing additional diagnostics in `algorithm-numbering.sh`. Correction `5c5b9593...` translates the entire project-owned diagnostic surface and extends detector/self-test coverage from 11 to 13 cases.
+Current progression:
 
-Synchronized checkpoint `6c23a49...` then exposed a separate documentation-governance regression: this roadmap no longer contained the required `material advance` contract phrase. The correction restores both required governance concepts — `material advance` and `phase-end regression` — here and in `docs/V3-CORRECTION-PLAN.md`.
+1. `fd3727...` / Static `33970711005` exposed `algorithm-numbering.sh`;
+2. `6c23a49...` / Static `33970988780` exposed temporary documentation-governance drift, which was corrected;
+3. `da7fbf7...` / Static `33971156481` confirmed governance recovery and exposed four additional old diagnostic surfaces;
+4. implementation `1129935...` translates those surfaces and expands the self-test to 18 cases.
 
 Acceptance gate:
 
-1. publish the corrected synchronized documentation checkpoint containing implementation `5c5b9593...`;
-2. run normal Static and full Linux integration;
-3. if the stronger language detector exposes additional project-owned mixed diagnostics, correct them rather than weakening it;
-4. if governance checks expose documentation drift, reconcile the control plane before feature work;
-5. close the language finding only when the permanent audit truthfully reports zero violations and full Linux remains green.
+1. publish a synchronized documentation checkpoint on top of `1129935...`;
+2. run normal Static and full Linux integration on the same checkpoint;
+3. require zero project-owned Portuguese technical diagnostics and a green detector self-test;
+4. if stronger detection exposes more violations, clean the complete related engineering surface;
+5. close the finding only when Static/full Linux are green and control documents record the accepted SHA/runs.
 
 ### Remaining Core Corrections
 
@@ -104,5 +107,5 @@ Use descriptive work names such as `Core Corrections — Engineering Language Ev
 - accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
 - accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
 - language-hardening discovery checkpoint: `fd3727d89848eb52a9c79021cd9765ad9e1806db`;
-- language-hardening correction implementation: `5c5b9593cd12f3b6fa3108b579514c3c25edcb54`;
-- first synchronized correction checkpoint: `6c23a49a86944d646db35b56af877d3bb351c0ec` (Static documentation-governance failure classified).
+- governance-recovery checkpoint with additional language discovery: `da7fbf7614ed8e50ee600bf010db7ecd3694f310`;
+- current language-hardening implementation: `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` (acceptance pending).
