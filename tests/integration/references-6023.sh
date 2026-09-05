@@ -57,7 +57,7 @@ def entry(marker):
     marker_fold = marker.casefold()
     matches = [part for part in chunks if marker_fold in part.casefold()]
     if not matches:
-        raise SystemExit(f'entry of teste missing: {marker}\n{text}')
+        raise SystemExit(f'test entry missing: {marker}\n{text}')
     return ' '.join(matches)
 
 event = entry('Congresso Brasileiro de Teste')
@@ -70,7 +70,7 @@ if 'e202501' not in article:
 
 judgment = entry('Recurso extraordinário de teste')
 if 'julgado em' not in judgment.casefold() or '2025' not in judgment:
-    raise SystemExit('NBR 6023:2025: data of judgment missing.')
+    raise SystemExit('NBR 6023:2025: judgment date missing.')
 
 online = entry('Preservação de documentos digitais')
 if re.search(r'\[\s*[Ss]\.\s*[Ll]\.', online) or re.search(r'\[\s*[Ss]\.\s*[Nn]\.', online):
@@ -82,7 +82,7 @@ if not re.search(r'[Ss]\.\s*[Ll]\.', printed) or not re.search(r'[Ss]\.\s*[Nn]\.
 
 supplement = entry('Indicadores acadêmicos brasileiros')
 if 'suplemento' not in supplement.casefold() or supplement.find('2025') > supplement.casefold().find('suplemento'):
-    raise SystemExit('NBR 6023:2025: suplemento não está posicionado após a data.')
+    raise SystemExit('NBR 6023:2025: supplement is not positioned after the date.')
 
 interview = entry('Eficiência e inovação na gestão')
 if 'hamel' not in interview.casefold():

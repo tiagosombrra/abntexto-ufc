@@ -57,6 +57,20 @@ PORTUGUESE_TECHNICAL_TERMS = re.compile(
     r"submiss[aã]o|impresso|impressa|apesar|p[uú]blico|pr[eé]-textual)\b",
     re.IGNORECASE,
 )
+MIXED_PORTUGUESE_TECHNICAL_PHRASES = re.compile(
+    r"(?:\bap[oó]s\s+a\s+(?:capa|cover)\b|"
+    r"\bconte[uú]do\s+textual\s+n[aã]o\b|"
+    r"\bp[aá]gina\s+l[oó]gica\b|"
+    r"\bidentifica[cç][aã]o\s+completa\b|"
+    r"\bvolume\s+n[aã]o\s+aparece\b|"
+    r"\b(?:entry\s+of|entrada\s+de)\s+teste\b|"
+    r"\bdata\s+(?:of|de|do)\s+julgamento\b|"
+    r"\bsuplemento\s+n[aã]o\s+est[aá]\s+posicionado\b|"
+    r"\bc[oó]digo\s+mudou\s+de\s+fam[ií]lia\b|"
+    r"\bn[uú]mero\s+de\s+linha\b|"
+    r"\btipografia\s+(?:e|and)\s+geometria\b)",
+    re.IGNORECASE,
+)
 RETIRED_PROFILE_IDS = re.compile(
     r"(?<![A-Za-z0-9_-])(?:tccgraduacao|tccespecializacao|dissertacao|tese|"
     r"projetoanonimizado|projeto)(?![A-Za-z0-9_-])"
@@ -139,6 +153,14 @@ def normalized_diagnostic(scope: str) -> str:
     return result
 
 
+def contains_portuguese_engineering_text(scope: str) -> bool:
+    normalized = normalized_diagnostic(scope)
+    return bool(
+        PORTUGUESE_TECHNICAL_TERMS.search(normalized)
+        or MIXED_PORTUGUESE_TECHNICAL_PHRASES.search(normalized)
+    )
+
+
 def audit() -> list[str]:
     errors: list[str] = []
     for path in tracked():
@@ -149,7 +171,7 @@ def audit() -> list[str]:
             continue
         lines = path.read_text(encoding="utf-8").splitlines()
         for number, scope in diagnostic_scopes(lines):
-            if PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(scope)):
+            if contains_portuguese_engineering_text(scope):
                 rendered = " ".join(item.strip() for item in scope.splitlines())
                 errors.append(
                     f"{rel}:{number}: Portuguese project-owned engineering text: {rendered}"
@@ -207,13 +229,13 @@ def self_test() -> None:
         "grep -Fq 'REFERÊNCIAS' x || echo 'Auditoria falhou: evidência ausente.'"
     ]
     portuguese = list(diagnostic_scopes(portuguese_lines))[0][1]
-    assert PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(portuguese))
+    assert contains_portuguese_engineering_text(portuguese)
 
     mixed_lines = [
         "grep -Fq 'Referências' x || echo 'References missing from the table of contents.'"
     ]
     mixed = list(diagnostic_scopes(mixed_lines))[0][1]
-    assert not PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(mixed))
+    assert not contains_portuguese_engineering_text(mixed)
 
     multiline = [
         "    raise SystemExit(",
@@ -221,16 +243,26 @@ def self_test() -> None:
         "    )",
     ]
     multiline_scope = list(diagnostic_scopes(multiline))[0][1]
-    assert PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(multiline_scope))
+    assert contains_portuguese_engineering_text(multiline_scope)
+
+    false_negative_cases = (
+        "echo \"$job: initial-page was not preserved após a cover.\"",
+        "raise SystemExit(f'{job}: identificação completa of the curso missing of the cover.')",
+        "raise SystemExit('NBR 6023:2025: suplemento não está posicionado após a data.')",
+        "raise SystemExit('código mudou de família.')",
+    )
+    for line in false_negative_cases:
+        scope = list(diagnostic_scopes([line]))[0][1]
+        assert contains_portuguese_engineering_text(scope)
 
     academic = list(diagnostic_scopes(["echo 'Expected rendered heading: SUMÁRIO'"]))[0][1]
-    assert not PORTUGUESE_TECHNICAL_TERMS.search(normalized_diagnostic(academic))
+    assert not contains_portuguese_engineering_text(academic)
 
     assert RETIRED_PROFILE_IDS.search('\"profile\": \"tccgraduacao\"')
     assert not RETIRED_PROFILE_IDS.search('\"profile\": \"undergraduate-capstone\"')
     normative = json.loads('{"requirement":"A capa é elemento obrigatório."}')
     assert "obrigatório" in normative["requirement"]
-    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=7")
+    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=11")
 
 
 def main() -> None:
