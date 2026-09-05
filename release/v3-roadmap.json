@@ -1,1 +1,221 @@
-{"schema_version":9,"project":"abntexto-ufc","canonical_repository":"tiagosombrra/abntexto-ufc","target_version":"3.0.0","updated_at":"2026-09-05","status":"ACTIVE","phase":"reference-pdf-validation","stage":"reference-pdf-validation","stage_name":"Reference PDF Validation","active_branch":"plan/v3-regression-reset","authorities":{"git_facts_must_match_machine_state":true,"machine_state":"release/v3-roadmap.json","handoff":"docs/HANDOFF-V3.0.0.md","roadmap":"docs/ROADMAP-V3.0.0.md","bootstrap":"AGENTS.md","regression_audit":"docs/V3-REGRESSION-AUDIT.md","correction_plan":"docs/V3-CORRECTION-PLAN.md","librarian_review":"docs/UFC-LIBRARIAN-REVIEW.md","core_corrections_phase_end":"docs/V3-CORE-CORRECTIONS-PHASE-END.md","reference_pdf_validation":"docs/V3-REFERENCE-PDF-VALIDATION.md","engineering_language":"docs/ENGINEERING-LANGUAGE.md","object_typography_decision":"docs/V3-OBJECT-TYPOGRAPHY-DECISION.md","fail_closed_on_disagreement":true,"memory_is_not_an_authority":true},"policies":{"active_repository_is_archive":false,"history_directories_allowed":false,"archive_branches_allowed":false,"project_owned_engineering_language":"English","new_opaque_work_ids_allowed":false,"review_comments_are_automatic_normative_authority":false,"green_tests_alone_close_visual_or_normative_findings":false,"temporary_executor_must_be_removed_before_checkpoint":true,"heavy_jobs_on_every_intermediate_commit":false,"rerun_completed_certification_without_current_state_need":false,"dead_legacy_code_allowed_in_active_tree":false,"actual_ctan_submission_before_release_phase":false,"documentation_updated_on_every_material_advance":true,"phase_end_regression_required":true,"phase_transition_requires_recorded_regression_checkpoint":true,"targeted_checks_replace_phase_end_regression":false,"synthetic_pdf_can_satisfy_reference_validation":false,"reference_pdf_requires_git_provenance":true,"reference_pdf_requires_complete_page_review":true},"phase_end_regression":{"required":true,"must_complete_before_phase_closure":true,"must_complete_before_next_phase_activation":true,"candidate":"one-immutable-sha","candidate_state":"not-started-for-reference-pdf-validation","minimum_checks":["Static contract","full relevant Linux integration","phase-specific acceptance checks"],"presentation_scope_requires_canonical_pdf_inspection":true,"final_certification_requires_heavy_platform_font_pdfa_distribution_matrix":true,"failure_policy":"fail-closed-and-reopen-phase-work","record":["candidate_sha","workflow_run_ids","workflow_conclusions","required_manual_or_visual_results"],"documentation_must_be_updated_after_result":true},"baseline":{"pre_regression_main_sha":"c4bf51b574647226ee488440579ec2a204c16c79","regression_planning_checkpoint_sha":"ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2","certified_non_article_foundation_sha":"c79f3c73f1d51a30175e8259269504d029442a1c","article_source_contract_sha":"4d018a92697e8f39e3a53b034c451e55996c84fb","article_pre_runtime_checkpoint_sha":"7a7562d23e8bf6c92abb635718639d617a2ed6ff","article_runtime_started_before_regression":false},"phases":[{"id":"regression-audit","name":"Regression Audit","status":"CLOSED","purpose":"Revalidate shared V3 foundation and findings.","exit_gate":"Green phase-end regression and stable 34-item contract.","phase_end_regression_required":true},{"id":"core-corrections","name":"Core Corrections","status":"CLOSED","purpose":"Correct shared runtime, template, normative mapping, documentation and tests.","exit_gate":"Candidate 5f67560aeded1e6b4f77f4a31e14a91f3181a4da passed Static 33982156041 and Linux 33982156042.","phase_end_regression_required":true},{"id":"reference-pdf-validation","name":"Reference PDF Validation","status":"ACTIVE","purpose":"Validate corrected canonical V3 PDF page by page.","exit_gate":"Provenance-bound PDF, complete visual checklist, reproducible presentation evidence and green phase-end regression.","phase_end_regression_required":true},{"id":"scientific-article","name":"Scientific Article","status":"QUEUED","purpose":"Implement article profile on corrected shared foundation.","exit_gate":"Article runtime, evidence, rendering and phase-end regression pass.","phase_end_regression_required":true},{"id":"final-certification","name":"Final Certification","status":"QUEUED","purpose":"Run complete certification matrix.","exit_gate":"Complete certification and phase-end regression green.","phase_end_regression_required":true},{"id":"release","name":"Release","status":"QUEUED","purpose":"Finalize documentation, bundles and publication actions.","exit_gate":"Release checklist and final regression complete.","phase_end_regression_required":true}],"active_work":{"review_items":34,"review_status":{"pass":33,"partial":0,"fail":0,"normative_review":1},"review_contract":"docs/UFC-LIBRARIAN-REVIEW.md","reference_pdf_validation_contract":"docs/V3-REFERENCE-PDF-VALIDATION.md","scientific_article_runtime_deferred":true,"latest_implementation_checkpoint_sha":"da02f17df4d2d0a1568edbbe8bfbbfffb7208966","latest_fully_validated_checkpoint_sha":"5f67560aeded1e6b4f77f4a31e14a91f3181a4da","latest_fully_validated_checkpoint_state":"core-corrections-phase-end-static-green-linux-green","core_corrections_closed":true,"current_correction_batch":["Reference PDF Validation complete 200 DPI page-level visual review","Reference PDF Validation presentation-sensitive librarian reconfirmation"],"known_runtime_failures":[],"pending_acceptance_gates":["complete page-level visual checklist with no unexplained FAIL","run Reference PDF Validation phase-end regression on one immutable SHA"],"deferred_authority_conflicts":["review item 33: selected NBR 6023:2025 edge cases"],"reference_pdf_validation_state":"artifact-provenance-accepted-visual-review-active","stale_reference_pdf":{"generated_at":"2026-09-04","state":"comparison-only","reason":"predates accepted Core Corrections"},"temporary_executor":{"path":".github/workflows/tmp-reference-pdf.yml","state":"removed-after-successful-artifact-recovery","build_sha":"da02f17df4d2d0a1568edbbe8bfbbfffb7208966","workflow_run":33983729996,"artifact_id":9974546873}},"authority_decisions":{"object_typography":{"status":"accepted","decision_document":"docs/V3-OBJECT-TYPOGRAPHY-DECISION.md","upper_identification_title_pt":12,"lower_source_legend_note_pt":10,"line_spacing":"single","review_item":21,"current_state":"PASS"}},"evidence":{"core_corrections_phase_end_candidate_sha":"5f67560aeded1e6b4f77f4a31e14a91f3181a4da","core_corrections_phase_end_static_run":33982156041,"core_corrections_phase_end_linux_run":33982156042,"core_corrections_phase_end_linux_summary":"PASS=31 FAIL=0 SKIP=0","core_corrections_phase_end_acceptance":"accepted","reference_pdf_build_sha":"da02f17df4d2d0a1568edbbe8bfbbfffb7208966","reference_pdf_build_workflow_run":33983729996,"reference_pdf_build_workflow_conclusion":"success","reference_pdf_artifact_id":9974546873,"reference_pdf_artifact_name":"v3-reference-pdf-da02f17df4d2d0a1568edbbe8bfbbfffb7208966","reference_pdf_sha256":"bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c","reference_pdf_bytes":450652,"reference_pdf_pages":55,"reference_pdf_page_size":"A4 595.276 x 841.89 pt","reference_pdf_version":"1.7","reference_pdf_engine":"pdfLaTeX/pdfTeX 1.40.29","reference_pdf_texlive":"2026","reference_pdf_encrypted":false,"reference_pdf_preflight":"pass-openable-text-based-no-xfa","reference_pdf_fonts_embedded":true,"reference_pdf_artifact_state":"provenance-accepted","librarian_review_contract_items":34,"librarian_review_contract_machine_protected":true},"release_policy":{"ctan_submission":"blocked-until-release-phase","proprietary_fonts_redistributed":false,"history_storage":"git-tags-releases-issues-pull-requests-certified-shas"}}
+{
+  "schema_version": 9,
+  "project": "abntexto-ufc",
+  "canonical_repository": "tiagosombrra/abntexto-ufc",
+  "target_version": "3.0.0",
+  "updated_at": "2026-09-05",
+  "status": "ACTIVE",
+  "phase": "reference-pdf-validation",
+  "stage": "reference-pdf-validation",
+  "stage_name": "Reference PDF Validation",
+  "active_branch": "plan/v3-regression-reset",
+  "authorities": {
+    "git_facts_must_match_machine_state": true,
+    "machine_state": "release/v3-roadmap.json",
+    "handoff": "docs/HANDOFF-V3.0.0.md",
+    "roadmap": "docs/ROADMAP-V3.0.0.md",
+    "bootstrap": "AGENTS.md",
+    "regression_audit": "docs/V3-REGRESSION-AUDIT.md",
+    "correction_plan": "docs/V3-CORRECTION-PLAN.md",
+    "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
+    "core_corrections_phase_end": "docs/V3-CORE-CORRECTIONS-PHASE-END.md",
+    "reference_pdf_validation": "docs/V3-REFERENCE-PDF-VALIDATION.md",
+    "reference_pdf_visual_review": "docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md",
+    "engineering_language": "docs/ENGINEERING-LANGUAGE.md",
+    "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
+    "fail_closed_on_disagreement": true,
+    "memory_is_not_an_authority": true
+  },
+  "policies": {
+    "active_repository_is_archive": false,
+    "history_directories_allowed": false,
+    "archive_branches_allowed": false,
+    "project_owned_engineering_language": "English",
+    "new_opaque_work_ids_allowed": false,
+    "review_comments_are_automatic_normative_authority": false,
+    "green_tests_alone_close_visual_or_normative_findings": false,
+    "temporary_executor_must_be_removed_before_checkpoint": true,
+    "heavy_jobs_on_every_intermediate_commit": false,
+    "rerun_completed_certification_without_current_state_need": false,
+    "dead_legacy_code_allowed_in_active_tree": false,
+    "actual_ctan_submission_before_release_phase": false,
+    "documentation_updated_on_every_material_advance": true,
+    "phase_end_regression_required": true,
+    "phase_transition_requires_recorded_regression_checkpoint": true,
+    "targeted_checks_replace_phase_end_regression": false,
+    "synthetic_pdf_can_satisfy_reference_validation": false,
+    "reference_pdf_requires_git_provenance": true,
+    "reference_pdf_requires_complete_page_review": true
+  },
+  "phase_end_regression": {
+    "required": true,
+    "must_complete_before_phase_closure": true,
+    "must_complete_before_next_phase_activation": true,
+    "candidate": "one-immutable-sha",
+    "candidate_state": "pending-workflow-results",
+    "minimum_checks": [
+      "Static contract",
+      "full relevant Linux integration",
+      "phase-specific acceptance checks"
+    ],
+    "presentation_scope_requires_canonical_pdf_inspection": true,
+    "final_certification_requires_heavy_platform_font_pdfa_distribution_matrix": true,
+    "failure_policy": "fail-closed-and-reopen-phase-work",
+    "record": [
+      "candidate_sha",
+      "workflow_run_ids",
+      "workflow_conclusions",
+      "required_manual_or_visual_results"
+    ],
+    "documentation_must_be_updated_after_result": true
+  },
+  "baseline": {
+    "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
+    "regression_planning_checkpoint_sha": "ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2",
+    "certified_non_article_foundation_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
+    "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
+    "article_pre_runtime_checkpoint_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
+    "article_runtime_started_before_regression": false
+  },
+  "phases": [
+    {
+      "id": "regression-audit",
+      "name": "Regression Audit",
+      "status": "CLOSED",
+      "purpose": "Revalidate shared V3 foundation and findings.",
+      "exit_gate": "Green phase-end regression and stable 34-item contract.",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "core-corrections",
+      "name": "Core Corrections",
+      "status": "CLOSED",
+      "purpose": "Correct shared runtime, template, normative mapping, documentation and tests.",
+      "exit_gate": "Candidate 5f67560aeded1e6b4f77f4a31e14a91f3181a4da passed Static 33982156041 and Linux 33982156042.",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "reference-pdf-validation",
+      "name": "Reference PDF Validation",
+      "status": "ACTIVE",
+      "purpose": "Validate corrected canonical V3 PDF page by page.",
+      "exit_gate": "Provenance-bound PDF, complete 55-page visual PASS, reproducible presentation evidence and green phase-end regression on one immutable SHA.",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "scientific-article",
+      "name": "Scientific Article",
+      "status": "QUEUED",
+      "purpose": "Implement article profile on corrected shared foundation.",
+      "exit_gate": "Article runtime, evidence, rendering and phase-end regression pass.",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "final-certification",
+      "name": "Final Certification",
+      "status": "QUEUED",
+      "purpose": "Run complete certification matrix.",
+      "exit_gate": "Complete certification and phase-end regression green.",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "release",
+      "name": "Release",
+      "status": "QUEUED",
+      "purpose": "Finalize documentation, bundles and publication actions.",
+      "exit_gate": "Release checklist and final regression complete.",
+      "phase_end_regression_required": true
+    }
+  ],
+  "active_work": {
+    "review_items": 34,
+    "review_status": {
+      "pass": 33,
+      "partial": 0,
+      "fail": 0,
+      "normative_review": 1
+    },
+    "review_contract": "docs/UFC-LIBRARIAN-REVIEW.md",
+    "reference_pdf_validation_contract": "docs/V3-REFERENCE-PDF-VALIDATION.md",
+    "reference_pdf_visual_review": "docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md",
+    "scientific_article_runtime_deferred": true,
+    "latest_implementation_checkpoint_sha": "da02f17df4d2d0a1568edbbe8bfbbfffb7208966",
+    "latest_fully_validated_checkpoint_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
+    "latest_fully_validated_checkpoint_state": "core-corrections-phase-end-static-green-linux-green",
+    "core_corrections_closed": true,
+    "current_correction_batch": [
+      "Reference PDF Validation immutable phase-end regression candidate"
+    ],
+    "known_runtime_failures": [],
+    "pending_acceptance_gates": [
+      "Reference PDF Validation immutable candidate must pass Static contract and full Linux integration on the same SHA"
+    ],
+    "deferred_authority_conflicts": [
+      "review item 33: selected NBR 6023:2025 edge cases"
+    ],
+    "reference_pdf_validation_state": "visual-review-pass-phase-end-candidate",
+    "stale_reference_pdf": {
+      "generated_at": "2026-09-04",
+      "state": "comparison-only",
+      "reason": "predates accepted Core Corrections"
+    },
+    "temporary_executor": {
+      "path": ".github/workflows/tmp-reference-pdf.yml",
+      "state": "removed-after-successful-artifact-recovery",
+      "build_sha": "da02f17df4d2d0a1568edbbe8bfbbfffb7208966",
+      "workflow_run": 33983729996,
+      "artifact_id": 9974546873
+    }
+  },
+  "authority_decisions": {
+    "object_typography": {
+      "status": "accepted",
+      "decision_document": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
+      "upper_identification_title_pt": 12,
+      "lower_source_legend_note_pt": 10,
+      "line_spacing": "single",
+      "review_item": 21,
+      "current_state": "PASS"
+    }
+  },
+  "evidence": {
+    "core_corrections_phase_end_candidate_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
+    "core_corrections_phase_end_static_run": 33982156041,
+    "core_corrections_phase_end_linux_run": 33982156042,
+    "core_corrections_phase_end_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "core_corrections_phase_end_acceptance": "accepted",
+    "reference_pdf_build_sha": "da02f17df4d2d0a1568edbbe8bfbbfffb7208966",
+    "reference_pdf_build_workflow_run": 33983729996,
+    "reference_pdf_build_workflow_conclusion": "success",
+    "reference_pdf_artifact_id": 9974546873,
+    "reference_pdf_artifact_name": "v3-reference-pdf-da02f17df4d2d0a1568edbbe8bfbbfffb7208966",
+    "reference_pdf_sha256": "bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c",
+    "reference_pdf_bytes": 450652,
+    "reference_pdf_pages": 55,
+    "reference_pdf_page_size": "A4 595.276 x 841.89 pt",
+    "reference_pdf_version": "1.7",
+    "reference_pdf_engine": "pdfLaTeX/pdfTeX 1.40.29",
+    "reference_pdf_texlive": "2026",
+    "reference_pdf_encrypted": false,
+    "reference_pdf_preflight": "pass-openable-text-based-no-xfa",
+    "reference_pdf_fonts_embedded": true,
+    "reference_pdf_artifact_state": "provenance-accepted",
+    "reference_pdf_visual_review_status": "pass",
+    "reference_pdf_visual_review_pages": "55/55",
+    "reference_pdf_visual_review_dpi": 200,
+    "reference_pdf_visual_unexplained_failures": 0,
+    "reference_pdf_visual_replacement_glyphs": 0,
+    "reference_pdf_optional_photo_fallback": "intentional-normal-build-behavior",
+    "reference_pdf_stale_comparison_pages": 55,
+    "reference_pdf_stale_comparison_identical_pages": 28,
+    "reference_pdf_stale_comparison_changed_pages": 27,
+    "reference_pdf_phase_end_acceptance": "pending-static-and-linux",
+    "librarian_review_contract_items": 34,
+    "librarian_review_contract_machine_protected": true
+  },
+  "release_policy": {
+    "ctan_submission": "blocked-until-release-phase",
+    "proprietary_fonts_redistributed": false,
+    "history_storage": "git-tags-releases-issues-pull-requests-certified-shas"
+  }
+}

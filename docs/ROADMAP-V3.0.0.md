@@ -4,23 +4,25 @@ Updated: 2026-09-05
 
 ## Current status
 
-**Reference PDF Validation is ACTIVE — canonical provenance accepted, visual review active.**
+**Reference PDF Validation is ACTIVE — visual review PASS, phase-end regression candidate gate.**
 
 Core Corrections closed on immutable candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, with Static `33982156041` and full Linux `33982156042` successful; Linux summary `PASS=31 FAIL=0 SKIP=0`.
 
-The librarian review matrix remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 is an explicit authority gap and remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+The librarian review matrix remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains an explicit fail-closed authority gap.
 
-Fresh canonical PDF provenance is accepted from build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, temporary workflow run `33983729996`, artifact `9974546873`. PDF SHA-256: `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`. The temporary executor is removed in the synchronized provenance checkpoint.
+Canonical PDF provenance is accepted from build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, workflow run `33983729996`, artifact `9974546873`, SHA-256 `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`.
 
-Machine authority: `release/v3-roadmap.json`.
-Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
-Active presentation-validation contract: `docs/V3-REFERENCE-PDF-VALIDATION.md`.
+The complete 55-page, 200 DPI visual review is **PASS** with zero unexplained visual failures. Detailed evidence is in `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`.
+
+Machine authority: `release/v3-roadmap.json`.  
+Canonical handoff: `docs/HANDOFF-V3.0.0.md`.  
+Active phase contract: `docs/V3-REFERENCE-PDF-VALIDATION.md`.
 
 ## Operating discipline
 
-Every **material advance** must update the relevant execution documentation and canonical handoff in the same work cycle. Changes to phase state, acceptance state, evidence state, current work, artifact provenance, temporary-executor lifecycle, or branch/checkpoint facts must also update this roadmap and `release/v3-roadmap.json`.
+Every **material advance** must update the relevant execution documentation and canonical handoff in the same work cycle. Changes to phase state, acceptance state, evidence state, current work, artifact provenance, visual-review status or branch/checkpoint facts must also update this roadmap and `release/v3-roadmap.json`.
 
-Every phase ends with a mandatory **phase-end regression** on one immutable candidate SHA. Targeted checks accumulated during a phase do not replace this gate.
+Every phase ends with a mandatory **phase-end regression** on one immutable candidate SHA. Targeted checks and visual inspection do not replace this gate.
 
 ## Phase plan
 
@@ -28,31 +30,35 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 |---|---|---|---|
 | **Regression Audit** | CLOSED | Revalidate the shared V3 foundation and classify recovered review requirements and newly discovered defects. | Green phase-end regression and stable 34-item contract. |
 | **Core Corrections** | CLOSED | Correct shared runtime, template, normative mapping, documentation and tests identified by the audit. | Candidate `5f67560a...` passed Static `33982156041` and Linux `33982156042`. |
-| **Reference PDF Validation** | ACTIVE — VISUAL REVIEW | Inspect the corrected canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and preservation baseline. | Provenance-bound canonical PDF, complete visual checklist, reproducible presentation evidence and green phase-end regression. |
+| **Reference PDF Validation** | ACTIVE — PHASE-END CANDIDATE | Validate the corrected canonical V3 PDF page by page. | Provenance PASS + 55/55 visual PASS + immutable candidate passes Static/full Linux. |
 | **Scientific Article** | QUEUED | Implement the article profile on the corrected shared foundation. | Article runtime/evidence/rendering and phase-end regression pass. |
 | **Final Certification** | QUEUED | Complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution certification. | Heavy certification matrix and phase-end regression green on one SHA. |
 | **Release** | QUEUED | Finalize documentation, bundles, release assets, checksums and publication actions. | Release checklist complete and final regression recorded. |
 
-## Active phase — Reference PDF Validation
+## Reference PDF Validation evidence
 
-Canonical artifact facts:
+| Evidence | State |
+|---|---|
+| Git-bound canonical build | PASS — `da02f17d...` |
+| Build workflow | PASS — `33983729996` |
+| Artifact digest / local digest | PASS — exact SHA-256 match |
+| Preflight | PASS — 55 A4 pages, PDF 1.7, text based, unencrypted, no XFA, fonts embedded |
+| Complete 200 DPI page sequence | PASS — 55/55 |
+| Global clipping/overlap/broken glyph review | PASS |
+| Presentation-sensitive librarian reconfirmation | PASS |
+| Stale-PDF comparison | Preservation-only; 28 unchanged / 27 changed pages, no page-count drift |
+| Item 33 | NORMATIVE-REVIEW — authority deferred |
+| Temporary executor | Removed |
 
-- build SHA `da02f17d...`;
-- TeX Live 2026 / pdfLaTeX;
-- 55 A4 pages, PDF 1.7, 450652 bytes;
-- SHA-256 `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`;
-- workflow/local digest match;
-- openable, text-based, unencrypted, no XFA;
-- all listed fonts embedded;
-- stale 2026-09-04 PDF remains comparison-only.
+The optional licensed-photo placeholders on page 36 are intentional normal-build fallback behavior and are documented by the reference source itself.
 
-Next execution batch is full 200 DPI rendering and page-level review. Presentation-sensitive librarian items 10, 15, 21 and 34 receive explicit visual reconfirmation. Canonical examples for 1, 2, 7, 11, 16 and 28 are also checked in the rendered artifact.
+## Current gate
 
-If a visual defect is discovered, classify it before changing runtime/reference content. Rebuild and re-render after every correction.
+The repository state containing the complete visual-review record is the next immutable Reference PDF Validation phase-end candidate. It must pass Static contract and full Linux integration on the same SHA. Only a later result-recording commit may close this phase.
 
 ## Gate before Scientific Article
 
-Scientific Article starts only after the corrected canonical V3 reference PDF has accepted provenance, the complete page-level visual checklist contains no unexplained FAIL, presentation evidence is reproducible, documentation is synchronized, and one immutable Reference PDF Validation candidate passes Static plus full Linux.
+Scientific Article starts only after the accepted canonical V3 reference PDF has provenance PASS, complete visual PASS, synchronized documentation, and one immutable Reference PDF Validation candidate with Static and full Linux both green.
 
 ## Naming policy
 

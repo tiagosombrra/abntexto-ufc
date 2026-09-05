@@ -8,47 +8,45 @@ Updated: 2026-09-05
 - Canonical branch: `main`.
 - Active task branch: `plan/v3-regression-reset`.
 - Active phase: **Reference PDF Validation**.
-- Core Corrections immutable phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da` passed Static `33982156041` and full Linux `33982156042`; Linux summary `PASS=31 FAIL=0 SKIP=0`.
-- Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Fresh canonical artifact build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`.
-- Temporary build run `33983729996`: SUCCESS.
-- Artifact `9974546873`, `v3-reference-pdf-da02f17df4d2d0a1568edbbe8bfbbfffb7208966`.
-- Canonical PDF SHA-256: `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`.
-- Canonical PDF: 55 pages, 450652 bytes, A4, PDF 1.7, pdfTeX 1.40.29 / TeX Live 2026, unencrypted; preflight openable and all `pdffonts` entries embedded.
+- Core Corrections candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
+- Librarian-review state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Canonical PDF build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, run `33983729996`, artifact `9974546873`.
+- PDF SHA-256 `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`; 55 pages; A4; PDF 1.7; TeX Live 2026/pdfLaTeX; unencrypted; fonts embedded.
 - Artifact provenance/preflight: **PASS**.
-- Current batch: **Reference PDF Validation — complete 200 DPI page-level visual review**.
-- Temporary workflow `.github/workflows/tmp-reference-pdf.yml` is removed in the provenance-acceptance checkpoint; permanent workflows are unchanged.
-- Pre-existing 2026-09-04 PDF remains comparison-only because it predates accepted Core Corrections.
+- Complete 200 DPI page review: **PASS — 55/55 pages, 0 unexplained visual FAIL**.
+- Visual review record: `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`.
+- Page 36 licensed-photo fallback boxes are intentional normal-build behavior when optional reference assets are absent.
+- Stale 2026-09-04 PDF remains comparison-only.
+- Temporary PDF-build workflow is absent.
+- Current batch: **Reference PDF Validation — immutable phase-end regression candidate**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
-Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`, `docs/V3-REGRESSION-AUDIT.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`, `docs/V3-REGRESSION-AUDIT.md`, and `docs/ENGINEERING-LANGUAGE.md`.
 
-Git facts, machine state, roadmap, active phase document and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
+Git facts, machine state, roadmap, active phase documents and this handoff must describe the same phase and acceptance state. Disagreement fails closed.
 
-## Canonical artifact provenance
+## Visual review result
 
-Temporary workflow run `33983729996` built `template/main.tex` directly from `da02f17d...` with TeX Live 2026/pdfLaTeX. The uploaded provenance record identifies the same Git SHA and run ID. Workflow and local SHA-256 values match exactly.
+All 55 pages were rendered at 200 DPI and inspected in order through grouped contact sheets, with targeted full-page inspection of front matter, TOC, dense main-text pages, figures/tables/code/algorithms/equations, references and appendices/annexes/index.
 
-`pdfinfo` reports 55 A4 pages, PDF 1.7, no encryption and no structural suspect flag. Repository-independent preflight opened the PDF successfully, found it text-based rather than scanned and found no XFA. `pdffonts` reports every listed font embedded.
+No clipping, overlap, replacement glyph, unexpected blank page, object overflow, unexplained heading drift or pagination anomaly was found. Presentation-sensitive review items 1, 2, 7, 10, 11, 15, 16, 21, 28 and 34 were visually reconfirmed without changing their normative classifications.
 
-A front-matter text precheck confirms the fresh artifact contains the accepted complete-author placeholder, omits the blank department field, prints the advisor line with final punctuation, and renders committee institutions/acronyms from the current canonical configuration. These observations are not substitutes for the visual page review.
+A comparison against the stale 2026-09-04 PDF is preservation evidence only: both PDFs have 55 pages; 28 pages were pixel-identical at 120 DPI and 27 changed in accepted correction/reference-content areas.
 
 ## Immediate action
 
-1. render all 55 canonical pages at 200 DPI;
-2. inspect every page, using grouped contact sheets plus targeted full-page inspection;
-3. record page-level PASS/FAIL results and presentation-sensitive librarian evidence;
-4. classify every visual defect before modifying runtime/reference content;
-5. rebuild/re-render after any correction;
-6. once the visual checklist is clean, synchronize documentation and prepare one immutable Reference PDF Validation phase-end candidate;
-7. require Static and full Linux on that same candidate before activating Scientific Article.
+1. freeze this synchronized visual-review-complete state as the Reference PDF Validation phase-end candidate;
+2. wait for Static contract and full Linux integration on that exact immutable SHA;
+3. classify any failure before changing implementation/tests;
+4. if both pass, record the candidate SHA/run IDs and mark Reference PDF Validation `CLOSED`;
+5. activate **Scientific Article** only in the subsequent synchronized phase-transition commit.
 
 ## Mandatory operating discipline
 
-Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Phase/acceptance/evidence state, branch/checkpoint facts, artifact provenance and temporary-executor lifecycle must remain synchronized with the roadmap and machine state.
+Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Phase/acceptance/evidence state, branch/checkpoint facts and artifact provenance must remain synchronized with the roadmap and machine state.
 
-Every phase requires a **phase-end regression** on one immutable candidate before closure. Targeted checks and visual spot checks never authorize a phase transition by themselves.
+Every phase requires a **phase-end regression** on one immutable candidate before closure. Targeted checks and visual review never authorize a phase transition by themselves.
 
 ## Hard boundaries
 

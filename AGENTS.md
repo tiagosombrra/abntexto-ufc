@@ -10,9 +10,9 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Reference PDF Validation**, also read `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, and `docs/ENGINEERING-LANGUAGE.md`.
-6. Compare Git facts, machine state, handoff, roadmap and the active phase document.
-7. If phase, checkpoint, acceptance state, artifact provenance, or temporary-artifact state disagrees, reconcile the control plane before feature work.
+5. During **Reference PDF Validation**, also read `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+6. Compare Git facts, machine state, handoff, roadmap and the active phase documents.
+7. If phase, checkpoint, acceptance state, artifact provenance, visual-review state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
 Memory, prior chats, historical branch names, old pull requests, and workflow names never override current repository state.
 
@@ -24,10 +24,11 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Fresh canonical artifact build: SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, run `33983729996`, artifact `9974546873`.
 - Canonical PDF SHA-256: `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`; 55 A4 pages; PDF 1.7; TeX Live 2026/pdfLaTeX; preflight PASS; all listed fonts embedded.
-- Temporary PDF-build executor has completed its purpose and is removed in the synchronized provenance-acceptance checkpoint.
-- Pre-existing 2026-09-04 reference PDF is comparison-only because it predates accepted Core Corrections.
-- Current batch: **Reference PDF Validation — complete 200 DPI page-level visual review**.
-- Active phase contract: `docs/V3-REFERENCE-PDF-VALIDATION.md`.
+- Temporary PDF-build executor is removed after successful artifact recovery.
+- Complete 200 DPI visual review: **PASS, 55/55 pages, 0 unexplained visual FAIL**.
+- Visual evidence record: `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`.
+- Pre-existing 2026-09-04 reference PDF remains comparison-only.
+- Current batch: **Reference PDF Validation — immutable phase-end regression candidate**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Reference PDF Validation closes.
 
@@ -35,7 +36,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed; phase-end regression accepted at `5f67560a...`
-3. **Reference PDF Validation** — active
+3. **Reference PDF Validation** — active; visual review PASS, phase-end candidate gate
 4. **Scientific Article** — queued
 5. **Final Certification** — queued
 6. **Release** — queued
@@ -72,6 +73,8 @@ The machine contract intentionally represents this invariant with `phase_end_reg
 
 Core Corrections satisfied this rule with candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, Static `33982156041`, and Linux `33982156042`.
 
+Reference PDF Validation now has accepted provenance and a complete visual PASS. The final synchronized repository state for this phase must be treated as one immutable candidate and pass Static plus full Linux before Scientific Article can become active.
+
 ## Reference PDF Validation acceptance model
 
 - Use only a real LaTeX-generated canonical artifact tied to a concrete repository SHA.
@@ -79,9 +82,10 @@ Core Corrections satisfied this rule with candidate `5f67560aeded1e6b4f77f4a31e1
 - Render the complete PDF and inspect every page; source checks and automated geometry do not replace visual review.
 - Confirm no clipping, overlap, broken glyphs, unexpected page breaks, object overflow, heading drift or pagination anomalies.
 - Reconfirm presentation-sensitive librarian-review items and preserve item 33 as an explicit authority gap.
+- The accepted normal-build fallback boxes for optional licensed reference photographs are intentional when `make reference-assets` has not been run.
 - Any defect must be classified before code/test changes; after a correction, rebuild, re-render and re-inspect.
 - Temporary canonical-build executor must remain absent after provenance acceptance.
-- Scientific Article remains blocked until this phase and its own phase-end regression close.
+- Scientific Article remains blocked until this phase and its phase-end regression close.
 
 ## Branch governance and fail-closed rule
 

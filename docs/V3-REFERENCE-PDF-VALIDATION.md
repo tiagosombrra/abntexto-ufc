@@ -1,7 +1,7 @@
 # V3 Reference PDF Validation
 
-Updated: 2026-09-05
-Status: ACTIVE — PROVENANCE ACCEPTED / VISUAL REVIEW ACTIVE
+Updated: 2026-09-05  
+Status: ACTIVE — VISUAL REVIEW PASS / PHASE-END CANDIDATE
 
 ## Purpose
 
@@ -11,7 +11,7 @@ Core Corrections closed on immutable candidate `5f67560aeded1e6b4f77f4a31e14a91f
 
 ## Accepted canonical artifact provenance
 
-Fresh canonical PDF build is accepted for visual validation:
+Fresh canonical PDF build:
 
 - source/build SHA: `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`;
 - temporary workflow run: `33983729996` — SUCCESS;
@@ -26,66 +26,76 @@ Fresh canonical PDF build is accepted for visual validation:
 - page geometry: A4, `595.276 x 841.89 pt`;
 - PDF version: 1.7;
 - encrypted: no;
-- PyMuPDF openability: PASS;
-- likely scanned: no;
-- XFA: no;
-- font embedding preflight: all fonts reported embedded by `pdffonts`.
+- preflight: PASS;
+- fonts: all listed entries embedded.
 
-The downloaded artifact's local SHA-256 exactly matched the workflow-generated SHA-256 record.
+The temporary build executor is removed. The older 2026-09-04 PDF is comparison-only.
 
-Text extraction from the fresh front matter also confirms the corrected canonical inputs are present before visual acceptance: `NOME COMPLETO DO AUTOR`, no blank department line, final punctuation on `Orientador: Prof. Dr. Nome do Orientador.`, and committee institutions with `(UFC)` / `(SIGLA)` where configured.
+## Visual review
 
-The temporary executor `.github/workflows/tmp-reference-pdf.yml` is removed in the same synchronized checkpoint that records this provenance. It is not a permanent workflow.
+The complete visual-review record is `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`.
 
-## Rejected comparison artifact
+Result:
 
-The pre-existing local PDF generated on 2026-09-04 (`abntexto-ufc-v3-template-example.pdf`, 55 pages, 449654 bytes) remains **REJECTED as the canonical acceptance artifact**. It is real LaTeX output but predates accepted Core Corrections and contains stale rendered front-matter content. It may be used only for comparison.
+- rendered at 200 DPI;
+- pages reviewed: 55/55;
+- unexplained visual FAIL: 0;
+- clipping/overlap/broken replacement glyph: 0;
+- unexpected blank page: 0;
+- presentation-sensitive librarian reconfirmation: PASS;
+- optional page-36 licensed-photo fallback: intentional normal-build behavior.
 
-## Artifact rule
-
-Only a real LaTeX build is admissible. The canonical PDF must be compiled from the repository with TeX Live 2026 or an equivalent explicitly recorded environment. Synthetic ReportLab or hand-recreated PDFs are not acceptable evidence.
-
-A PDF generated from an older checkpoint may be used only as a comparison artifact. It must not be promoted to the canonical candidate when later runtime or canonical-reference changes can affect rendered output.
+A preservation-only raster comparison against the older V3 PDF retained 55 pages in both documents; 28 pages were pixel-identical at 120 DPI and 27 changed in accepted correction/reference-content areas.
 
 ## Validation loop
 
-1. Establish artifact provenance and bind the PDF to a concrete Git SHA. — **PASS**
-2. Preflight the PDF: page count, A4 geometry, PDF version, fonts/embedding observations, extraction viability and obvious structural warnings. — **PASS**
-3. Render every page at 200 DPI with the repository-independent PDF review tooling. — **NEXT**
-4. Inspect the complete page sequence for clipping, overlap, broken glyphs, incorrect blank pages, unexpected pagination, inconsistent margins, heading drift and object overflow.
-5. Reconfirm presentation-sensitive librarian-review items, especially 10, 15, 21 and 34, plus canonical examples for 1, 2, 7, 11, 16 and 28.
-6. Compare unchanged surfaces with the accepted V2.1 preservation baseline where useful. V2.1 is preservation evidence, not current normative authority.
-7. Record every visual finding as PASS, FAIL or NOT-APPLICABLE with page evidence.
-8. If a defect is found, classify it as runtime, reference-content, evidence-observer or artifact-provenance failure before changing implementation.
-9. Rebuild, re-render and re-inspect after any correction.
-10. Close the phase only after the accepted canonical artifact and one immutable phase-end regression candidate are both green.
+1. Establish artifact provenance and bind PDF to a concrete Git SHA. — **PASS**
+2. Preflight page count, A4 geometry, PDF version, fonts/embedding and extraction viability. — **PASS**
+3. Render every page at 200 DPI. — **PASS**
+4. Inspect complete page sequence for clipping, overlap, glyphs, pagination, margins, headings and object overflow. — **PASS**
+5. Reconfirm presentation-sensitive librarian-review items 10, 15, 21 and 34 plus canonical examples 1, 2, 7, 11, 16 and 28. — **PASS**
+6. Compare older preserved surfaces where useful, without treating the old PDF as authority. — **PASS**
+7. Record all visual findings. — **PASS**
+8. Classify defects before modification. — **NOT TRIGGERED: no visual defect found**
+9. Rebuild/re-render after correction. — **NOT APPLICABLE: no correction required**
+10. Freeze synchronized repository state and run phase-end regression. — **CURRENT**
 
 ## Page-level review groups
 
-| Group | Scope | Current state |
+| Group | Scope | State |
 |---|---|---|
 | Artifact provenance and preflight | SHA, engine, A4, page count, metadata, extraction, embedding | PASS |
-| Cover/title/approval pages | optional department, complete author, punctuation, committee institution/acronym | TEXT PRECHECK PASS / VISUAL PENDING |
-| Other pre-textual pages | errata, dedication, acknowledgements, epigraph, RESUMO/ABSTRACT, lists, TOC | PENDING |
-| Main text | headings, paragraphs, citations, quotations, alíneas, pagination | PENDING |
-| Figures/tables/code/algorithms/equations | title/source typography, bounds, spacing, locators | PENDING |
-| References | layout and controlled examples; item 33 remains authority-deferred | PENDING |
-| Appendices/annexes/index | heading/TOC presentation, source attribution, pagination | PENDING |
-| Global visual quality | clipping, overlap, glyphs, whitespace anomalies, page-side behavior | PENDING |
+| Cover/title/approval pages | optional department, complete author, punctuation, committee institution/acronym | PASS |
+| Other pre-textual pages | errata, dedication, acknowledgements, epigraph, RESUMO/ABSTRACT, lists, TOC | PASS |
+| Main text | headings, paragraphs, citations, quotations, alíneas, pagination | PASS |
+| Figures/tables/code/algorithms/equations | title/source typography, bounds, spacing, locators | PASS |
+| References | layout and controlled examples; item 33 authority-deferred | PASS — VISUAL |
+| Appendices/annexes/index | heading/TOC presentation, source attribution, pagination | PASS |
+| Global visual quality | clipping, overlap, glyphs, whitespace anomalies, page-side behavior | PASS |
 
 ## Known authority boundary
 
-Librarian-review item 33 remains `NORMATIVE-REVIEW`. This phase may observe the current rendered bibliography but must not convert disputed NBR 6023:2025 edge cases into runtime requirements without authoritative current-edition text.
+Librarian-review item 33 remains `NORMATIVE-REVIEW`. This phase observes current bibliography presentation but does not convert disputed NBR 6023:2025 edge cases into runtime requirements without authoritative current-edition text.
+
+## Current phase-end candidate rule
+
+This synchronized visual-review-complete repository state is frozen as one immutable Reference PDF Validation phase-end candidate. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`; the actual candidate SHA is recorded after commit creation and later written with workflow results.
+
+The candidate must pass:
+
+1. Static contract;
+2. full Linux integration;
+3. existing phase-specific acceptance evidence.
 
 ## Exit gate
 
 Reference PDF Validation -> Scientific Article requires:
 
-- canonical PDF provenance tied to an accepted repository SHA;
-- complete page-level visual checklist with no unexplained FAIL;
-- reproducible evidence for presentation-sensitive requirements;
-- temporary PDF-build executor removed;
-- documentation and machine state synchronized;
-- Static contract and full Linux integration green on one immutable Reference PDF Validation phase-end candidate.
+- accepted canonical PDF provenance;
+- complete page-level visual PASS;
+- reproducible presentation evidence;
+- temporary executor absent;
+- documentation/machine state synchronized;
+- Static contract and full Linux integration green on one immutable Reference PDF Validation candidate.
 
 Scientific Article runtime remains deferred until this gate closes.
