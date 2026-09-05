@@ -123,8 +123,8 @@
   "active_work": {
     "review_items": 34,
     "review_status": {
-      "pass": 29,
-      "partial": 4,
+      "pass": 33,
+      "partial": 0,
       "fail": 0,
       "normative_review": 1
     },
@@ -132,27 +132,23 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "dc381d4517341062d53ae5e93082c7856fc4af17",
-    "latest_fully_validated_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
-    "latest_fully_validated_checkpoint_state": "static-green-linux-green-bounded-reference-evidence-accepted",
+    "latest_implementation_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
+    "latest_fully_validated_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
+    "latest_fully_validated_checkpoint_state": "static-green-linux-green-frontmatter-annex-closeout-accepted",
     "current_correction_batch": [
-      "front matter item 1 blank-filled department evidence",
-      "front matter item 2 complete-author-name generated-output evidence",
-      "front matter item 7 committee institution-acronym approval-page evidence",
-      "annex item 34 canonical source-heading-toc evidence"
+      "Core Corrections phase-end regression candidate preparation"
     ],
-    "review_items_confirmed_by_latest_full_linux": [4, 11, 16, 17, 19, 20, 21, 23, 28, 30, 31, 32],
+    "review_items_confirmed_by_latest_full_linux": [1, 2, 4, 7, 11, 16, 17, 19, 20, 21, 23, 28, 30, 31, 32, 34],
     "review_items_source_evidence_accepted": [11, 16, 28, 30, 31, 32],
     "known_runtime_failures": [],
     "known_gate_failures": [
       "historical Static 33970711005: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostics",
       "historical Static 33970988780: phase governance rejected roadmap missing required material advance concept",
       "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup",
-      "Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change"
+      "historical Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change"
     ],
     "pending_acceptance_gates": [
-      "front-matter-and-annex corrected implementation dc381d45 requires synchronized Static contract and full Linux integration",
-      "Core Corrections phase closure requires a separate immutable phase-end regression candidate after remaining PARTIAL items are closed"
+      "Core Corrections phase closure requires a separate immutable phase-end regression candidate passing Static contract and full Linux integration"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
@@ -185,44 +181,32 @@
     "full_regression_integration_conclusion": "success",
     "object_core_static_run": 33965794475,
     "object_core_linux_run": 33965794519,
-    "object_core_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "canonical_reference_pdf_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
     "canonical_reference_pdf_static_run": 33969505681,
-    "canonical_reference_pdf_static_conclusion": "success",
     "canonical_reference_pdf_linux_run": 33969505614,
-    "canonical_reference_pdf_linux_conclusion": "success",
-    "canonical_reference_pdf_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "canonical_reference_pdf_items": [11, 16, 28],
     "engineering_language_hardening_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
     "engineering_language_hardening_static_run": 33972111694,
-    "engineering_language_hardening_static_conclusion": "success",
     "engineering_language_hardening_linux_run": 33972111696,
-    "engineering_language_hardening_linux_conclusion": "success",
-    "engineering_language_hardening_state": "accepted",
     "engineering_language_permanent_audit": "portuguese_technical_diagnostics=0",
-    "reference_evidence_implementation_sha": "63d20de2894e6ba4149bac0b2aba3efeb1aef27f",
     "reference_evidence_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
     "reference_evidence_items": [30, 31, 32],
     "reference_evidence_acceptance": "accepted",
     "reference_evidence_static_run": 33974062993,
-    "reference_evidence_static_conclusion": "success",
     "reference_evidence_linux_run": 33974063103,
-    "reference_evidence_linux_conclusion": "success",
     "reference_evidence_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "frontmatter_annex_closeout_initial_implementation_sha": "33bdd0bd5f9360c645b4166071c32dbba6c647f0",
     "frontmatter_annex_closeout_language_fix_sha": "dc381d4517341062d53ae5e93082c7856fc4af17",
+    "frontmatter_annex_closeout_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
     "frontmatter_annex_closeout_items": [1, 2, 7, 34],
     "frontmatter_annex_closeout_failed_static_run": 33980486317,
     "frontmatter_annex_closeout_failed_static_classification": "engineering-language-diagnostic-only",
-    "frontmatter_annex_closeout_acceptance": "pending-corrected-synchronized-static-and-linux",
-    "object_typography_final_pdf_measurements": {
-      "illustration_identification_pt": 12,
-      "illustration_source_pt": 10,
-      "table_identification_pt": 12,
-      "table_source_pt": 10,
-      "ibge_table_subset": "success",
-      "result": "success"
-    },
+    "frontmatter_annex_closeout_acceptance": "accepted",
+    "frontmatter_annex_closeout_static_run": 33980847191,
+    "frontmatter_annex_closeout_static_conclusion": "success",
+    "frontmatter_annex_closeout_linux_run": 33980847189,
+    "frontmatter_annex_closeout_linux_conclusion": "success",
+    "frontmatter_annex_closeout_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "frontmatter_annex_closeout_explicit_review_items": [1, 2, 7, 34],
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

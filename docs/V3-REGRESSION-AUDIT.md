@@ -15,14 +15,17 @@ Initial historical state: **19 PASS / 11 PARTIAL / 1 FAIL / 3 NORMATIVE-REVIEW**
 
 - Object-title authority/runtime correction accepted at `3f47081c...`; item 21 PASS.
 - Canonical-reference source/PDF evidence accepted at `c4c59f83...`; items 11, 16 and 28 PASS.
-- Engineering-language hardening accepted at `edeb14b7...`; Static `33972111694` and Linux `33972111696`, permanent diagnostics audit zero.
-- Bounded reference evidence accepted at `bcd851b...`; Static `33974062993`, Linux `33974063103`; items 30, 31 and 32 reviewer-specific evidence PASS and item 32 closed.
+- Engineering-language hardening accepted at `edeb14b7...`; Static `33972111694` and Linux `33972111696`.
+- Bounded reference evidence accepted at `bcd851b...`; Static `33974062993`, Linux `33974063103`; items 30-32 PASS.
+- Front Matter and Annex Closeout accepted at `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8`; Static `33980847191`, Linux `33980847189`, `PASS=31 FAIL=0 SKIP=0`; explicit reviewer evidence PASS for items 1, 2, 7 and 34.
 
-Current review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+Current review state is **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Front Matter and Annex Closeout implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence for the four remaining PARTIAL items 1, 2, 7 and 34. Synchronized checkpoint `48e7e6841b63ea62d6811e734dde09931b8f608c` failed Static `33980486317` because the newly added item-2 failure diagnostic contained the prohibited project-owned technical term `pre-textual`. This is a guardrail discovery, not a runtime/review contradiction. Correction `dc381d4517341062d53ae5e93082c7856fc4af17` changes only that diagnostic wording; corrected synchronized CI remains pending.
+Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence. This is an unresolved authority classification, not a shared runtime failure. Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
 
-Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence. Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
+## Core Corrections closeout requirement
+
+Targeted correction evidence is complete for all review items that can be safely closed with current authority. Core Corrections still requires a separate immutable phase-end regression candidate passing Static and full Linux on the same SHA before the phase may close.
 
 ## Regression discipline retained after audit
 

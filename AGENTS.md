@@ -20,22 +20,16 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Core Corrections**.
-- Regression baseline `c4bf51b574647226ee488440579ec2a204c16c79`: Static `33937439818` and Linux `33937439846` success.
-- Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` success, `PASS=31 FAIL=0 SKIP=0`.
-- Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` success, `PASS=31 FAIL=0 SKIP=0`; items 11, 16 and 28 closed.
-- Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and Linux `33972111696` success; permanent audit reports `portuguese_technical_diagnostics=0`.
-- Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358`: Static `33974062993` and Linux `33974063103` success, `PASS=31 FAIL=0 SKIP=0`; items 30, 31 and 32 reviewer-specific evidence passed and item 32 closed.
-- Current 34-item state: **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Current bounded batch: **Core Corrections — Front Matter and Annex Closeout**.
-- Initial closeout implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0`; synchronized checkpoint `48e7e6841b63ea62d6811e734dde09931b8f608c` failed Static `33980486317` only on engineering-language wording in a new diagnostic.
-- Correction `dc381d4517341062d53ae5e93082c7856fc4af17` replaces that diagnostic wording with engineering English without changing its predicate/runtime; corrected synchronized CI is pending.
+- Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8`: Static `33980847191` and Linux `33980847189` success, `PASS=31 FAIL=0 SKIP=0`; explicit reviewer evidence PASS for items 1, 2, 7 and 34.
+- Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Current batch: **Core Corrections — Phase-end Regression Preparation**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 
 ## Readable phase model
 
 1. **Regression Audit** — closed
-2. **Core Corrections** — active
+2. **Core Corrections** — active, closeout pending phase-end regression
 3. **Reference PDF Validation** — queued
 4. **Scientific Article** — queued
 5. **Final Certification** — queued
@@ -73,11 +67,13 @@ No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`
 
 At minimum this includes Static contract, full relevant Linux integration, phase-specific acceptance evidence, and canonical-PDF checks when presentation is in scope. Final Certification additionally requires the heavy literal-font/Windows/PDF-A/distribution matrix. Any unexplained failure keeps the phase open.
 
+The next material action is to create a separate immutable **Core Corrections phase-end regression candidate** after the accepted `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` state is synchronized. Do not use the targeted closeout run itself as the phase transition gate.
+
 ## Core Corrections acceptance model
 
 A correction closes only when the applicable combination is established: current authority/project classification, correct runtime/reference behavior, automated positive evidence or explicit manual review, negative evidence where practical, and canonical-PDF evidence when presentation is part of the requirement.
 
-For the active Front Matter and Annex Closeout batch, blank/filled department rendering, complete-author-name canonical output, committee institution/acronym output, and canonical annex source/heading/TOC output are evidence-only changes. Static `33980486317` classified one prohibited diagnostic phrase; `dc381d45...` fixes only that engineering text. Do not change runtime unless the corrected synchronized regression exposes a genuine defect. Item 33 remains fail-closed.
+All currently resolvable librarian-review corrections are accepted. Item 33 remains a fail-closed authority gap and must not be converted into speculative runtime behavior merely to obtain a fully-PASS matrix.
 
 ## Branch governance and fail-closed rule
 
