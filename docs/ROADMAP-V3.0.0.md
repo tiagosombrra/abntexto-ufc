@@ -12,7 +12,9 @@ Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`
 
 Current 34-point state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
-Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` because the strengthened detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Correction implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates the complete diagnostic surface in that gate and expands the detector/self-test. Synchronized Static/full Linux acceptance is pending.
+Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` because the strengthened detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Correction implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates the complete diagnostic surface in that gate and expands the detector/self-test.
+
+The first synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec` then failed Static `33970988780` in phase governance because a documentation rewrite had omitted the required literal concept `material advance` from this roadmap. The same contract is restored here and proactively restored in the correction plan before rerunning CI. This is a documentation-governance defect, not a runtime or librarian-review regression.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -20,6 +22,12 @@ Correction queue: `docs/V3-CORRECTION-PLAN.md`.
 Librarian review: `docs/UFC-LIBRARIAN-REVIEW.md`.
 Engineering language policy: `docs/ENGINEERING-LANGUAGE.md`.
 Object typography decision: `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
+
+## Operating discipline
+
+Every **material advance** must update the relevant execution documentation and canonical handoff in the same work cycle. Changes to phase state, acceptance state, evidence state, current correction batch, or branch/checkpoint facts must also update this roadmap and `release/v3-roadmap.json`.
+
+Every phase ends with a mandatory **phase-end regression** on one immutable candidate SHA. Targeted checks accumulated during a phase do not replace this gate.
 
 ## Phase plan
 
@@ -55,14 +63,17 @@ Object typography decision: `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
 
 Initial hardening `5d74c0c...` added high-confidence mixed-language detection, self-tests and translations in `multivolume.sh` and `references-6023.sh`.
 
-The synchronized checkpoint `fd3727...` correctly failed Static `33970711005` after exposing an additional diagnostic in `algorithm-numbering.sh`. The script contained multiple Portuguese/mixed failure messages, so correction `5c5b9593...` translates the entire project-owned diagnostic surface and extends detector coverage/self-test from 11 to 13 cases.
+Synchronized checkpoint `fd3727...` correctly failed Static `33970711005` after exposing additional diagnostics in `algorithm-numbering.sh`. Correction `5c5b9593...` translates the entire project-owned diagnostic surface and extends detector/self-test coverage from 11 to 13 cases.
+
+Synchronized checkpoint `6c23a49...` then exposed a separate documentation-governance regression: this roadmap no longer contained the required `material advance` contract phrase. The correction restores both required governance concepts — `material advance` and `phase-end regression` — here and in `docs/V3-CORRECTION-PLAN.md`.
 
 Acceptance gate:
 
-1. publish a synchronized branch checkpoint containing `5c5b9593...` and current control docs;
+1. publish the corrected synchronized documentation checkpoint containing implementation `5c5b9593...`;
 2. run normal Static and full Linux integration;
-3. if the stronger detector exposes additional project-owned mixed diagnostics, correct them rather than weakening it;
-4. close the finding only when the permanent audit truthfully reports zero violations and full Linux remains green.
+3. if the stronger language detector exposes additional project-owned mixed diagnostics, correct them rather than weakening it;
+4. if governance checks expose documentation drift, reconcile the control plane before feature work;
+5. close the language finding only when the permanent audit truthfully reports zero violations and full Linux remains green.
 
 ### Remaining Core Corrections
 
@@ -90,8 +101,8 @@ Use descriptive work names such as `Core Corrections — Engineering Language Ev
 - article source-contract implementation: `4d018a92697e8f39e3a53b034c451e55996c84fb`;
 - article pre-runtime checkpoint: `7a7562d23e8bf6c92abb635718639d617a2ed6ff`;
 - pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`;
-- regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
 - accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
 - accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
-- language-hardening first synchronized checkpoint: `fd3727d89848eb52a9c79021cd9765ad9e1806db` (Static failure classified);
-- current language-hardening correction implementation: `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` (acceptance pending).
+- language-hardening discovery checkpoint: `fd3727d89848eb52a9c79021cd9765ad9e1806db`;
+- language-hardening correction implementation: `5c5b9593cd12f3b6fa3108b579514c3c25edcb54`;
+- first synchronized correction checkpoint: `6c23a49a86944d646db35b56af877d3bb351c0ec` (Static documentation-governance failure classified).

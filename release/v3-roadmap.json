@@ -138,7 +138,7 @@
     "current_correction_batch": [
       "engineering-language detector false-negative hardening",
       "algorithm-numbering project-owned diagnostic cleanup",
-      "engineering-language self-test expansion after fail-closed discovery"
+      "phase-governance documentation contract restoration"
     ],
     "review_items_confirmed_by_latest_full_linux": [
       4,
@@ -158,10 +158,11 @@
     ],
     "known_runtime_failures": [],
     "known_gate_failures": [
-      "Static 33970711005 on fd3727d: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostic"
+      "Static 33970711005 on fd3727d: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostic",
+      "Static 33970988780 on 6c23a49: phase governance rejected roadmap missing required material advance concept"
     ],
     "pending_acceptance_gates": [
-      "engineering-language correction 5c5b9593: synchronized Static contract and full Linux integration required"
+      "governance-corrected engineering-language batch: synchronized Static contract and full Linux integration required"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
@@ -210,7 +211,11 @@
     "engineering_language_hardening_initial_static_conclusion": "failure",
     "engineering_language_hardening_initial_static_failure": "tests/integration/algorithm-numbering.sh project-owned Portuguese diagnostic exposed by stronger detector",
     "engineering_language_hardening_correction_implementation_sha": "5c5b9593cd12f3b6fa3108b579514c3c25edcb54",
-    "engineering_language_hardening_state": "acceptance-pending-after-exposed-diagnostic-fix",
+    "engineering_language_hardening_first_sync_checkpoint_sha": "6c23a49a86944d646db35b56af877d3bb351c0ec",
+    "engineering_language_hardening_first_sync_static_run": 33970988780,
+    "engineering_language_hardening_first_sync_static_conclusion": "failure",
+    "engineering_language_hardening_first_sync_static_failure": "phase governance: docs/ROADMAP-V3.0.0.md missing required material advance concept",
+    "engineering_language_hardening_state": "acceptance-pending-after-language-and-governance-fixes",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,

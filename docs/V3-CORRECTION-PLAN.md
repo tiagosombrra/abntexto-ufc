@@ -9,13 +9,21 @@ This is the executable correction queue produced by Regression Audit. It combine
 
 Canonical companions: `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`, `docs/ENGINEERING-LANGUAGE.md`, `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md`, and `release/v3-roadmap.json`.
 
+## Execution discipline
+
+Every **material advance** updates the relevant implementation/review state and canonical handoff in the same work cycle. Changes to phase state, acceptance state, evidence state, current batch, or branch/checkpoint facts also update the roadmap and machine state.
+
+Every phase has a mandatory **phase-end regression** on one immutable candidate SHA. Targeted green checks are evidence for bounded corrections but never replace the phase-end regression.
+
 ## Current evidence state
 
 Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing item 21.
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28. Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Engineering-language synchronized checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` after the stronger detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Current correction `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates that gate's complete diagnostic surface and expands detector/self-test coverage. Acceptance is pending.
+Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` after the stronger detector exposed another project-owned Portuguese diagnostic in `tests/integration/algorithm-numbering.sh`. Correction `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates that gate's complete diagnostic surface and expands detector/self-test coverage.
+
+The first synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec` then failed Static `33970988780` because a documentation rewrite had omitted the required `material advance` governance concept from the roadmap. The phase-governance checker stops at the first missing document concept, so this correction restores both required concepts (`material advance` and `phase-end regression`) in this correction plan and the roadmap before rerun.
 
 ## Priority model
 
@@ -26,9 +34,9 @@ Engineering-language synchronized checkpoint `fd3727d89848eb52a9c79021cd9765ad9e
 
 ## Work order
 
-### 1. Control Plane and Regression Harness — VALIDATED
+### 1. Control Plane and Regression Harness — VALIDATED / GOVERNANCE DRIFT CORRECTED
 
-Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, phase-end regression requirement, and baseline Static/Linux validation are complete.
+Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static `33970988780` demonstrated that the permanent governance checker correctly rejects documentation rewrites that drop those contracts; the missing language is restored before further feature work.
 
 ### 2. Front Matter and Institutional Metadata — PARTIAL
 
@@ -53,12 +61,14 @@ Static `33970711005` on synchronized checkpoint `fd3727...` correctly exposed `t
 3. expands self-test coverage from 11 to 13 cases;
 4. preserves academic/rendered Portuguese and bibliography data.
 
+The subsequent Static failure `33970988780` is classified separately as documentation-governance drift, not a language/runtime failure.
+
 Acceptance:
 
-1. synchronize `5c5b9593...` with control documentation;
+1. publish the synchronized governance-corrected checkpoint containing implementation `5c5b9593...`;
 2. run Static contract and full Linux integration;
 3. correct any further project-owned diagnostics exposed by the stronger detector instead of weakening it;
-4. close only when the permanent audit truthfully reports zero violations and full Linux remains green.
+4. close only when the permanent language audit truthfully reports zero violations, governance contracts are intact, and full Linux remains green.
 
 ### 6. References and NBR 6023:2025 — PARTIAL / FAIL-CLOSED
 
@@ -122,12 +132,12 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | Finding | State | Next action |
 |---|---|---|
 | Hidden historical phase-name coupling | CLOSED | Keep semantic phase governance regression. |
-| Documentation can drift from implementation | CLOSED/POLICY | Update docs with every material advance. |
+| Documentation can drift from implementation | ACTIVE GUARD / LATEST DRIFT CORRECTED | Static `33970988780` rejected missing governance wording; preserve required concepts in active control docs. |
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
 | Stale V2 wording/current API vocabulary in V3 reference | CORRECTED/PROTECTED | Keep negative reference hygiene. |
 | Object typography tests certified wrong upper-title size | CLOSED | Preserve current authority decision/evidence. |
 | Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve `3ae9dd...` + `c4c59...` evidence. |
-| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Static `33970711005` exposed another case; validate `5c5b9593...` and correct any further findings. |
+| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Static `33970711005` exposed another case; validate `5c5b9593...` after governance-doc correction. |
 
 ## Phase transition gates
 

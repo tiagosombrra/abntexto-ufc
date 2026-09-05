@@ -20,18 +20,15 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Core Corrections**.
-- Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
-- Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
-- Regression baseline Static `33937439818` and Linux `33937439846`: success.
-- Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success with `PASS=31 FAIL=0 SKIP=0`.
-- Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` success; Linux `33969505614` success with `PASS=31 FAIL=0 SKIP=0`; librarian items 11, 16 and 28 are closed.
+- Regression baseline `c4bf51b574647226ee488440579ec2a204c16c79`: Static `33937439818` and Linux `33937439846` success.
+- Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` success, `PASS=31 FAIL=0 SKIP=0`.
+- Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` success, `PASS=31 FAIL=0 SKIP=0`; items 11, 16 and 28 closed.
 - Current 34-item state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Engineering-language checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db`: Static `33970711005` failed after the stronger detector exposed an additional project-owned Portuguese diagnostic in `algorithm-numbering.sh`.
-- Current correction implementation: `5c5b9593cd12f3b6fa3108b579514c3c25edcb54`; synchronized Static/full Linux acceptance is pending.
-- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence for disputed edge cases.
+- Language-hardening checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db`: Static `33970711005` exposed an additional Portuguese project-owned diagnostic in `algorithm-numbering.sh`.
+- Correction implementation `5c5b9593cd12f3b6fa3108b579514c3c25edcb54` translates that gate's complete diagnostic surface and expands the detector/self-test.
+- First synchronized correction checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec`: Static `33970988780` failed because the rewritten roadmap omitted the required `material advance` governance concept. Roadmap and correction plan are being reconciled before CI rerun.
+- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
-- Every material advance updates the active documentation/control state in the same work cycle.
-- Every phase ends with a recorded phase-end regression before the next phase becomes active.
 
 ## Readable phase model
 
@@ -64,19 +61,13 @@ Do not create new opaque work identifiers such as nested letter/number codes. Gi
 
 ## Progress documentation discipline
 
-A material advance is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, or release/certification state.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, or release/certification state.
 
-For every material advance:
-
-1. update the relevant execution document or review matrix in the same work cycle;
-2. update `docs/HANDOFF-V3.0.0.md` with the checkpoint, evidence, unresolved blockers, and next action;
-3. update `docs/ROADMAP-V3.0.0.md` and `release/v3-roadmap.json` whenever phase state, acceptance state, current batch, or machine-readable evidence changes;
-4. keep Git branch/HEAD facts and machine state synchronized;
-5. do not defer documentation reconciliation to phase closeout.
+For every material advance, update the relevant execution document/review matrix and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, or branch facts change.
 
 ## Mandatory phase-end regression
 
-No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant regression and the result is recorded.
+No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
 
 At minimum this includes Static contract, full relevant Linux integration, phase-specific acceptance evidence, and canonical-PDF checks when presentation is in scope. Final Certification additionally requires the heavy literal-font/Windows/PDF-A/distribution matrix. Any unexplained failure keeps the phase open.
 
