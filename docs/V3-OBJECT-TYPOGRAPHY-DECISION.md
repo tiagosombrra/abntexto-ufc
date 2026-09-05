@@ -1,11 +1,11 @@
 # V3 Object Typography Decision
 
 Updated: 2026-09-05
-Status: IMPLEMENTED — FINAL BRANCH REGRESSION PENDING
+Status: IMPLEMENTED — TABLE ADAPTER FIX CI PENDING
 
 ## Decision
 
-The v3 object typography contract must distinguish the upper identification/title from lower auxiliary text.
+The v3 object typography contract distinguishes the upper identification/title from lower auxiliary text.
 
 Accepted project behavior:
 
@@ -34,50 +34,76 @@ The guide establishes the relevant distinction:
 
 This reading avoids conflating the guide's lower `legenda` exception with the upper identification/title that the same guide describes separately.
 
-## Defect that was corrected
+## Original defect and first migration
 
-Before this migration, `abntexto-ufc/objects.def` applied `\abntsmall\singlesp` inside the overridden `\printlegendbox`. Because that box is the upper object identification/title, the runtime forced it to 10 pt.
+Before the first migration, `abntexto-ufc/objects.def` applied `\abntsmall\singlesp` inside the overridden `\printlegendbox`. Because that box is the upper illustration/object identification/title, the runtime forced it to 10 pt.
 
 The old final-PDF contract also certified that defect through:
 
 - `font.size.reduced.illustration-caption`;
 - `font.size.reduced.table-caption`.
 
-A green test for those historical rules proved the encoded 10 pt contract, not institutional correctness.
-
-## Implemented contract migration
-
-Implementation checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`.
-
-The correction was applied as one semantic migration across source contract, runtime and evidence:
+Implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` corrected the shared object path and migrated the normative contract:
 
 1. upper illustration/table identification/title was removed from the reduced-font exception;
 2. semantically correct 12 pt rules were introduced as `illustration.identification.font-size` and `table.identification.font-size`;
 3. historical 10 pt rule IDs were retired rather than silently repurposed;
 4. `standards/rule-migrations.json` records retired/replacement IDs and values;
-5. `objects.def` now uses body-size typography for the upper identification/title while preserving single spacing;
+5. `objects.def` uses body-size typography for the upper object identification/title while preserving single spacing;
 6. lower source/legend/note reduced typography remains 10 pt where applicable;
-7. locator ownership is split between exact illustration and table locator sets instead of using one overbroad combined locator;
-8. final-PDF scenarios/checkers now expect 12 pt upper title and 10 pt lower source independently;
+7. locator ownership is split between exact illustration and table locator sets;
+8. final-PDF scenarios/checkers expect 12 pt upper title and 10 pt lower source independently;
 9. object geometry regression directly distinguishes title size from source/note size;
-10. the temporary migration executor and temporary workflow were removed before the generated checkpoint.
+10. temporary migration executor/workflow surfaces were removed before the generated checkpoint.
+
+## Branch regression finding
+
+Branch-level Static contract run `33963240056` passed. Full Linux integration run `33963240297` then provided a useful negative result rather than a false green:
+
+- illustration identification/title: **PASS**, measured 12 pt;
+- illustration source: **PASS**, measured 10 pt;
+- table source: **PASS**, measured 10 pt;
+- table identification/title: **FAIL**, expected 12 pt, measured 10 pt;
+- overall Linux summary: `PASS=29 FAIL=1 SKIP=1`.
+
+The failure was isolated to the `tabularray-abnt` compatibility adapter in `abntexto-ufc/modules.def`. That adapter still appended:
+
+```tex
+\SetTblrStyle{caption,lasthead,capcont}{font=\abntsmall}
+```
+
+This overrode the table theme independently of the corrected `objects.def` path. The upstream `tabularray-abnt` ABNT/quadro themes use body-size typography for `caption,lasthead,capcont` and reduced typography for continuation/footer text, so retaining the project override contradicted both the accepted project decision and the package theme semantics.
+
+## Residual correction
+
+Implementation commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` corrects the remaining adapter surface:
+
+```tex
+\SetTblrStyle{caption,lasthead,capcont}{font=\normalsize}
+\SetTblrStyle{firsthead-text,lasthead-text,conthead-text,lastfoot}{font=\abntsmall}
+```
+
+This preserves the intended split:
+
+- upper table identification/title and continued caption surfaces remain body size;
+- lower continuation/source/note auxiliary text remains reduced;
+- the final-PDF checker remains unchanged and continues to require 12 pt for the upper table identification and 10 pt for the lower source.
+
+The test was not weakened to recover green CI. The failed acceptance run identified a real second runtime surface and the runtime was corrected instead.
 
 ## Evidence state
 
-Workflow run `33963033293` successfully:
+Review item 21 remains `FAIL` until a normal branch checkpoint containing `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` passes:
 
-- generated the migration;
-- ran the repository-owned Static contract successfully against the migrated tree;
-- restored the permanent Static workflow;
-- removed temporary executor surfaces;
-- committed and pushed `f2f5124c4adcb34069a667f1ef80c76fb17728bd`.
+1. Static contract;
+2. full Linux integration;
+3. illustration final-PDF 12 pt title / 10 pt source evidence;
+4. table final-PDF 12 pt title / 10 pt source evidence.
 
-The immediate PR workflows emitted for the bot-authored generated checkpoint required an external action and therefore produced no executable jobs. They are not acceptance evidence and are not being treated as pass/fail results.
-
-Review item 21 therefore remains `FAIL` only until the normal user-authored branch checkpoint passes Static contract and full Linux integration, including the corrected final-PDF measurements. No semantic implementation work remains open in this object batch unless that regression exposes a real defect.
+Only then may the review matrix move item 21 to `PASS`.
 
 ## Current-edition technical boundary
 
 The repository identifies ABNT NBR 14724:2024 as current technical authority, but exact authoritative clause text for this point is not available in the repository/public evidence corpus. This decision therefore uses the current UFC institutional guidance plus the recovered UFC librarian review evidence and remains reopenable if licensed current-edition ABNT text establishes a contrary rule.
 
-This limitation does not justify retaining the former conflation: the available institutional evidence explicitly separates upper identification/title from lower source/legend/note surfaces.
+This limitation does not justify retaining either former conflation. The available institutional evidence distinguishes upper identification/title from lower source/legend/note surfaces, and the regression now enforces that distinction independently for illustrations and tables.

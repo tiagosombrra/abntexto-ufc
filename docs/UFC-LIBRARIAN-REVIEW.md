@@ -19,7 +19,9 @@ Reviewer annotations are evidence, not automatic normative truth. When a review 
 
 Validated checkpoint `f6ca012164273e67480dca127fe17b392e8a8a21` passed Static contract run `33939512055` and full Linux integration run `33939512019`.
 
-Object-typography implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` now contains the runtime/contract/evidence migration for review item 21. The migration candidate passed its repository-owned Static contract preflight in workflow run `33963033293` before the generated checkpoint was committed. The normal branch-level Static/full Linux regression on a user-authored follow-up checkpoint is still required before item 21 can close.
+Object-typography implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` migrated the illustration/object path, normative rule IDs, locators and final-PDF expectations. Branch-level Static run `33963240056` passed, but full Linux run `33963240297` correctly failed the object-geometry gate with one isolated residual: illustration identification measured 12 pt and illustration/table sources measured 10 pt, while the `tabularray-abnt` table identification still measured 10 pt instead of 12 pt.
+
+The root cause was the project compatibility adapter in `abntexto-ufc/modules.def`, which still overrode `caption,lasthead,capcont` to `\abntsmall`. Follow-up implementation commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` restores those upper table styles to `\normalsize` while retaining reduced lower continuation/source/note typography. Review item 21 remains `FAIL` until the corrected branch checkpoint passes Static contract and full Linux integration.
 
 Current review state: **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW = 34 items**.
 
@@ -47,7 +49,7 @@ Current review state: **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW = 34 item
 | 18 | Author/corporate-author names in citations must follow current NBR 10520 capitalization rather than legacy all-caps output. | PASS | `bibliography.def`, citation checks |
 | 19 | Long direct quotations must include the page or other required locator when the source provides one. | PASS — reviewer fixture renders `p. 42`; full Linux integration green. | citation fixtures/checks |
 | 20 | Parenthetical citation punctuation after a long direct quotation must not contain an extraneous full stop before the citation. | PASS — explicit positive/negative reviewer gate; full Linux integration green. | citation fixtures/checks |
-| 21 | Figure/table/object upper identification/title must use body-size typography (12 pt); lower legend/source/note remain reduced where applicable. | FAIL — implementation is committed at `f2f5124...` and its generated-tree Static preflight is green; branch-level Static/full Linux confirmation is still required before closure. | `objects.def`, normative contract, object final-PDF checks |
+| 21 | Figure/table/object upper identification/title must use body-size typography (12 pt); lower legend/source/note remain reduced where applicable. | FAIL — branch regression isolated the remaining table adapter at 10 pt; commit `7ec385e...` corrects it to body size, but Static/full Linux confirmation is still required before closure. | `objects.def`, `modules.def`, normative contract, object final-PDF checks |
 | 22 | Object title, source, and note blocks must use single spacing. | PASS | `objects.def`, object geometry checks |
 | 23 | Object source indication should include a page locator when applicable. | PASS — external illustration fixture renders `p. 42`; full Linux integration green. | documentary-source fixture/check |
 | 24 | Alínea items begin with lowercase text when grammatically continuing the introductory sentence. | PASS | `layout.def`, reference fixture |
@@ -72,9 +74,9 @@ Therefore the project classifies review item 21 as an actual runtime/contract de
 - lower source/legend/note: **10 pt** where the reduced-font rule applies, single spaced;
 - title/source/note remain bound to the object width.
 
-The implementation at `f2f5124c4adcb34069a667f1ef80c76fb17728bd` retires the two semantically incorrect reduced-title rule IDs, records their replacement mapping in `standards/rule-migrations.json`, separates illustration/table locator ownership, and updates runtime plus final-PDF measurement expectations atomically. The detailed reasoning and provenance are recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
+The initial migration at `f2f5124c4adcb34069a667f1ef80c76fb17728bd` retires the two semantically incorrect reduced-title rule IDs, records their replacement mapping in `standards/rule-migrations.json`, separates illustration/table locator ownership, and updates object runtime plus final-PDF measurement expectations. Full Linux run `33963240297` then exposed a second independent styling surface: the `tabularray-abnt` compatibility adapter still forced the table caption family to reduced size. Commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` corrects that residual without weakening the 12 pt/10 pt evidence contract.
 
-Exact current NBR 14724:2024 clause text remains unavailable in the repository; if authoritative licensed text later contradicts this institutional interpretation, the decision must be reopened fail-closed.
+The detailed reasoning and provenance are recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`. Exact current NBR 14724:2024 clause text remains unavailable in the repository; if authoritative licensed text later contradicts this institutional interpretation, the decision must be reopened fail-closed.
 
 ## Remaining normative conflict
 

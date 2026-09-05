@@ -8,9 +8,11 @@ Updated: 2026-09-05
 
 Regression Audit is closed. The latest fully validated Core Corrections/control checkpoint remains `f6ca012164273e67480dca127fe17b392e8a8a21`, with Static contract run `33939512055` and full Linux integration run `33939512019` both successful. The Linux run completed the full repository integration contract with `PASS=31 FAIL=0 SKIP=0`.
 
-The object-typography correction is now materially implemented at checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd`. Its generated-tree repository-owned Static contract passed in workflow run `33963033293` before the checkpoint was committed. Normal branch-level Static/full Linux confirmation is pending on the subsequent user-authored documentation/control checkpoint.
+The first object-typography migration at `f2f5124c4adcb34069a667f1ef80c76fb17728bd` passed generated-tree Static preflight `33963033293`. Branch-level Static run `33963240056` then passed, while full Linux run `33963240297` failed exactly one object predicate: table identification/title expected 12 pt but measured 10 pt. Illustration identification was already 12 pt and illustration/table sources were already 10 pt.
 
-The 34-point librarian contract therefore still stands at **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW** until review item 21 receives the required branch-level integration evidence. Items 19, 20 and 23 are closed by reviewer-specific evidence in full integration. Item 17 is closed by code-typography evidence. Item 4 is closed after the advisor/co-advisor punctuation correction. Item 21 is implemented but not yet accepted.
+The failed regression isolated a second styling surface in `abntexto-ufc/modules.def`: the `tabularray-abnt` compatibility adapter still forced `caption,lasthead,capcont` to `\abntsmall`. Residual correction commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` restores those upper styles to `\normalsize` while keeping lower continuation/source/note text reduced. A new Static/full Linux acceptance run is now required.
+
+The 34-point librarian contract therefore still stands at **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW** until review item 21 receives green evidence after the table-adapter fix. Items 19, 20 and 23 are closed by reviewer-specific evidence in full integration. Item 17 is closed by code-typography evidence. Item 4 is closed after the advisor/co-advisor punctuation correction.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -55,9 +57,9 @@ Every phase ends with a mandatory phase-end regression on one immutable candidat
 - mixed-language engineering diagnostics cleaned in touched gates;
 - full Core Corrections/control integration checkpoint green at `f6ca012...`.
 
-### Current work — Objects: final branch regression
+### Current work — Objects: table adapter acceptance
 
-Review item 21 is the active P1 acceptance gate.
+Review item 21 remains the active P1 gate.
 
 Authority reconciliation is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 
@@ -66,9 +68,14 @@ Authority reconciliation is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 - all object text remains bound to object width;
 - historical rule IDs are not silently repurposed to mean the opposite value.
 
-Implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` has already updated runtime, normative contract, rule-ID provenance, exact locator ownership and final-PDF evidence expectations atomically. The temporary migration executor and workflow are absent from the generated checkpoint.
+The object batch now has two explicit implementation checkpoints:
 
-The remaining object gate is evidence-only: the current user-authored checkpoint must pass normal Static contract plus full Linux integration. Item 21 remains FAIL until those runs prove the corrected final-PDF 12 pt upper title / 10 pt lower source contract.
+| Checkpoint | Purpose | Evidence |
+|---|---|---|
+| `f2f5124c...` | normative/rule-ID/locator migration and shared illustration/object runtime correction | Static preflight green; later Linux exposed table-specific residual |
+| `7ec385ebe...` | restore `tabularray-abnt` upper caption styles to body size | CI rerun pending |
+
+The failed Linux run `33963240297` is retained as useful regression evidence rather than hidden: it proves the test suite distinguished illustration and table runtime paths and rejected the remaining 10 pt table title.
 
 ### Remaining Core Corrections after Objects
 
@@ -109,6 +116,7 @@ Use descriptive work names such as `Core Corrections — Objects`, `Core Correct
 - regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
 - reviewer evidence implementation checkpoint: `1eab2539e418224e2a6ce85ef09065941b719ef7`;
 - latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`;
-- object-typography implementation checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd` (final branch regression pending).
+- first object migration: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`;
+- residual table-adapter fix: `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` (acceptance regression pending).
 
 Detailed implementation history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.

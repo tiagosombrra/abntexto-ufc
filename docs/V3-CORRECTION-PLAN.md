@@ -30,7 +30,15 @@ Latest fully validated Core Corrections/control checkpoint remains `f6ca01216427
 - full Linux integration `33939512019`: success;
 - Linux summary: `PASS=31 FAIL=0 SKIP=0`.
 
-Object-typography implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` was generated after a successful repository-owned Static preflight in workflow run `33963033293`. It contains the complete runtime/contract/locator/final-PDF migration, with temporary executor surfaces removed. Normal branch-level Static/full Linux confirmation is pending on the subsequent user-authored documentation checkpoint.
+The first object-typography migration at `f2f5124c4adcb34069a667f1ef80c76fb17728bd` passed generated-tree Static preflight `33963033293`. The normal user-authored acceptance checkpoint then produced:
+
+- Static contract `33963240056`: success;
+- full Linux integration `33963240297`: failure;
+- Linux summary: `PASS=29 FAIL=1 SKIP=1`;
+- isolated failure: `table.identification.font-size`, expected 12 pt, measured 10 pt;
+- illustration identification already measured 12 pt and both illustration/table sources measured 10 pt.
+
+Root cause analysis found a second runtime surface in `abntexto-ufc/modules.def`: the `tabularray-abnt` compatibility adapter still forced `caption,lasthead,capcont` to `\abntsmall`. Implementation commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` restores those upper table styles to `\normalsize` while preserving reduced lower continuation/source/note typography. A new Static/full Linux regression is now required.
 
 Current librarian-review state remains **24 PASS / 8 PARTIAL / 1 FAIL / 1 NORMATIVE-REVIEW** until that regression closes item 21.
 
@@ -97,11 +105,11 @@ Remaining:
 - final canonical confirmation of first-use `Universidade Federal do Ceará (UFC)`;
 - final reference-corpus sweep for stale V2/current-state wording.
 
-### 4. Figures, Tables and Documentary Objects — IMPLEMENTED / FINAL REGRESSION PENDING
+### 4. Figures, Tables and Documentary Objects — ACTIVE RESIDUAL FIX / REGRESSION PENDING
 
 Covers items 21-23.
 
-Item 23 is PASS. Item 22 is PASS. Item 21 remains the only recorded FAIL until branch-level regression confirms the implemented correction.
+Item 23 is PASS. Item 22 is PASS. Item 21 remains the only recorded FAIL until branch-level regression confirms the residual table adapter correction.
 
 Authority decision is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 
@@ -109,24 +117,24 @@ Authority decision is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 - lower source/legend/note: **10 pt**, single spacing where applicable;
 - object text remains constrained to the object width.
 
-Implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` completed the atomic migration:
+The first implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` completed the normative migration and corrected the shared illustration/object path. Full Linux run `33963240297` proved that the final-PDF evidence was strong enough to detect a second, table-specific styling path instead of falsely passing the batch.
 
-1. removed upper identification/title from the reduced-font rule group;
-2. introduced semantically correct body-size title rules;
-3. preserved historical rule provenance in `standards/rule-migrations.json` instead of silently changing old ID meaning;
-4. updated `objects.def` to render upper identification/title at 12 pt and single spacing;
-5. retained reduced 10 pt source/legend/note behavior;
-6. split illustration/table locator ownership to exact rule-specific locators;
-7. updated final-PDF scenarios/checkers and expected evidence;
-8. updated object geometry assertions to distinguish 12 pt title from 10 pt source/note;
-9. removed the temporary executor/workflow before the generated checkpoint.
+Observed acceptance evidence from `33963240297`:
 
-Acceptance still required:
+| Surface | Expected | Measured | Result |
+|---|---:|---:|---|
+| Illustration identification/title | 12 pt | 12 pt | PASS |
+| Illustration source | 10 pt | 10 pt | PASS |
+| Table identification/title | 12 pt | 10 pt | FAIL |
+| Table source | 10 pt | 10 pt | PASS |
 
-1. normal Static contract on a user-authored branch checkpoint;
-2. full Linux integration on that same checkpoint;
-3. verify corrected final-PDF evidence reports 12 pt upper identification/title and 10 pt lower source;
-4. only after green evidence, move item 21 from FAIL to PASS and synchronize all control documents.
+Residual correction at `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c`:
+
+1. keep `caption,lasthead,capcont` at `\normalsize` in the project `tabularray-abnt` adapter;
+2. keep `firsthead-text,lasthead-text,conthead-text,lastfoot` at `\abntsmall`;
+3. preserve the existing final-PDF checker unchanged;
+4. rerun Static contract and full Linux integration;
+5. only after green evidence, move item 21 from FAIL to PASS and synchronize all control documents.
 
 ### 5. References and NBR 6023:2025 — PARTIAL / FAIL-CLOSED
 
@@ -183,7 +191,7 @@ Continue rejecting/removing:
 | 18 | PASS | P3 | Preserve current NBR 10520 capitalization. |
 | 19 | PASS | P1 | Preserve reviewer long-quotation locator fixture. |
 | 20 | PASS | P1 | Preserve punctuation positive/negative reviewer gate. |
-| 21 | FAIL | P1 | Implementation committed at `f2f5124...`; close only after normal Static + full Linux confirm 12 pt title / 10 pt lower source evidence. |
+| 21 | FAIL | P1 | Residual table adapter corrected at `7ec385e...`; close only after normal Static + full Linux confirm 12 pt title / 10 pt lower source evidence. |
 | 22 | PASS | P3 | Preserve object single spacing. |
 | 23 | PASS | P1 | Preserve external-source locator evidence (`p. 42`). |
 | 24 | PASS | P3 | Preserve lowercase alínea starts. |
@@ -207,7 +215,8 @@ Continue rejecting/removing:
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
 | Stale V2 wording in current V3 reference | PARTIAL | Complete reference-corpus sweep. |
 | Retired `tccgraduacao` in V3 current guidance | CORRECTED/PROTECTED | Preserve negative regression. |
-| Object typography tests certified wrong upper-title size | IMPLEMENTED / REGRESSION PENDING | Confirm migrated final-PDF measurements in normal branch-level Static/full Linux. |
+| Shared object title path certified wrong size | CORRECTED | Preserve migrated rule IDs and illustration evidence. |
+| `tabularray-abnt` adapter independently forced table title to 10 pt | CORRECTED / REGRESSION PENDING | Confirm `7ec385e...` with unchanged final-PDF table checker. |
 | Mixed-language engineering diagnostics | CORRECTED IN TOUCHED GATES | Continue language sweep when adjacent files are modified. |
 
 ## Phase transition gates
