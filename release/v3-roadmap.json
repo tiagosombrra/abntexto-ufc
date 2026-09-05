@@ -18,6 +18,7 @@
     "regression_audit": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
+    "core_corrections_phase_end": "docs/V3-CORE-CORRECTIONS-PHASE-END.md",
     "engineering_language": "docs/ENGINEERING-LANGUAGE.md",
     "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
     "fail_closed_on_disagreement": true,
@@ -45,7 +46,8 @@
     "required": true,
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
-    "candidate": "one-immutable-sha",
+    "candidate": "current-commit-first-introducing-core-corrections-phase-end-contract",
+    "candidate_state": "pending-workflow-results",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -135,8 +137,9 @@
     "latest_implementation_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
     "latest_fully_validated_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green-frontmatter-annex-closeout-accepted",
+    "acceptance_state_checkpoint_sha": "c066697691df748a3b24a716ba69d5e4cb168f5d",
     "current_correction_batch": [
-      "Core Corrections phase-end regression candidate preparation"
+      "Core Corrections phase-end regression candidate"
     ],
     "review_items_confirmed_by_latest_full_linux": [1, 2, 4, 7, 11, 16, 17, 19, 20, 21, 23, 28, 30, 31, 32, 34],
     "review_items_source_evidence_accepted": [11, 16, 28, 30, 31, 32],
@@ -148,20 +151,12 @@
       "historical Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change"
     ],
     "pending_acceptance_gates": [
-      "Core Corrections phase closure requires a separate immutable phase-end regression candidate passing Static contract and full Linux integration"
+      "Core Corrections immutable phase-end candidate must pass Static contract and full Linux integration on the same SHA"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
-    ],
-    "engineering_language_hardening_state": "accepted-permanent-guard-active",
-    "engineering_language_hardening_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
-    "object_typography_implementation_state": "accepted",
-    "object_typography_implementation_checkpoint_sha": "3f47081cbbd00a44b9ee86a6b406580e79b593c0",
-    "object_typography_rule_migration_manifest": "standards/rule-migrations.json",
-    "object_typography_temporary_executor_removed": true,
-    "object_typography_final_pdf_contract_confirmed": true,
-    "object_typography_remaining_failure_classification": null
+    ]
   },
   "authority_decisions": {
     "object_typography": {
@@ -176,9 +171,7 @@
   },
   "evidence": {
     "regression_static_run": 33937439818,
-    "regression_static_conclusion": "success",
     "full_regression_integration_run": 33937439846,
-    "full_regression_integration_conclusion": "success",
     "object_core_static_run": 33965794475,
     "object_core_linux_run": 33965794519,
     "canonical_reference_pdf_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
@@ -187,26 +180,18 @@
     "engineering_language_hardening_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
     "engineering_language_hardening_static_run": 33972111694,
     "engineering_language_hardening_linux_run": 33972111696,
-    "engineering_language_permanent_audit": "portuguese_technical_diagnostics=0",
     "reference_evidence_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
-    "reference_evidence_items": [30, 31, 32],
-    "reference_evidence_acceptance": "accepted",
     "reference_evidence_static_run": 33974062993,
     "reference_evidence_linux_run": 33974063103,
-    "reference_evidence_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "frontmatter_annex_closeout_initial_implementation_sha": "33bdd0bd5f9360c645b4166071c32dbba6c647f0",
-    "frontmatter_annex_closeout_language_fix_sha": "dc381d4517341062d53ae5e93082c7856fc4af17",
     "frontmatter_annex_closeout_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
     "frontmatter_annex_closeout_items": [1, 2, 7, 34],
-    "frontmatter_annex_closeout_failed_static_run": 33980486317,
-    "frontmatter_annex_closeout_failed_static_classification": "engineering-language-diagnostic-only",
-    "frontmatter_annex_closeout_acceptance": "accepted",
     "frontmatter_annex_closeout_static_run": 33980847191,
     "frontmatter_annex_closeout_static_conclusion": "success",
     "frontmatter_annex_closeout_linux_run": 33980847189,
     "frontmatter_annex_closeout_linux_conclusion": "success",
     "frontmatter_annex_closeout_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "frontmatter_annex_closeout_explicit_review_items": [1, 2, 7, 34],
+    "core_corrections_phase_end_candidate": "current-commit-first-introducing-docs/V3-CORE-CORRECTIONS-PHASE-END.md",
+    "core_corrections_phase_end_acceptance": "pending-static-and-linux",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

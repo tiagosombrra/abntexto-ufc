@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Core Corrections**, also read `docs/V3-CORRECTION-PLAN.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+5. During **Core Corrections**, also read `docs/V3-CORRECTION-PLAN.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, and `docs/ENGINEERING-LANGUAGE.md`.
 6. Compare Git facts, machine state, handoff, and roadmap.
 7. If phase, checkpoint, acceptance state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
@@ -20,16 +20,18 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Core Corrections**.
-- Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8`: Static `33980847191` and Linux `33980847189` success, `PASS=31 FAIL=0 SKIP=0`; explicit reviewer evidence PASS for items 1, 2, 7 and 34.
+- Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8`: Static `33980847191` and Linux `33980847189` success, `PASS=31 FAIL=0 SKIP=0`.
+- Acceptance-state synchronization checkpoint: `c066697691df748a3b24a716ba69d5e4cb168f5d`.
 - Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Current batch: **Core Corrections — Phase-end Regression Preparation**.
+- Current batch: **Core Corrections — Phase-end Regression Candidate**.
+- Candidate contract: `docs/V3-CORE-CORRECTIONS-PHASE-END.md`.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 
 ## Readable phase model
 
 1. **Regression Audit** — closed
-2. **Core Corrections** — active, closeout pending phase-end regression
+2. **Core Corrections** — active, phase-end candidate gate
 3. **Reference PDF Validation** — queued
 4. **Scientific Article** — queued
 5. **Final Certification** — queued
@@ -67,11 +69,9 @@ No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`
 
 At minimum this includes Static contract, full relevant Linux integration, phase-specific acceptance evidence, and canonical-PDF checks when presentation is in scope. Final Certification additionally requires the heavy literal-font/Windows/PDF-A/distribution matrix. Any unexplained failure keeps the phase open.
 
-The next material action is to create a separate immutable **Core Corrections phase-end regression candidate** after the accepted `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` state is synchronized. Do not use the targeted closeout run itself as the phase transition gate.
+The commit that first introduces `docs/V3-CORE-CORRECTIONS-PHASE-END.md` is the Core Corrections phase-end candidate. Once its SHA exists, do not mutate that candidate. Record results in a later phase-transition commit.
 
 ## Core Corrections acceptance model
-
-A correction closes only when the applicable combination is established: current authority/project classification, correct runtime/reference behavior, automated positive evidence or explicit manual review, negative evidence where practical, and canonical-PDF evidence when presentation is part of the requirement.
 
 All currently resolvable librarian-review corrections are accepted. Item 33 remains a fail-closed authority gap and must not be converted into speculative runtime behavior merely to obtain a fully-PASS matrix.
 
