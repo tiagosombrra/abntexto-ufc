@@ -30,7 +30,7 @@ Therefore the repository is in a safe state for a regression/replanning checkpoi
 The v3 repository reconstruction has meaningful engineering value and should not be discarded. Current strengths include:
 
 - canonical `abntexto-ufc` physical identity and modular ownership;
-- no active legacy `ufctex.cls` entrypoint;
+- no active legacy class entrypoint remains;
 - fail-closed source and repository contracts;
 - direct ownership of public setup/front-matter/object/back-matter APIs;
 - permanent static, Linux integration, and Linux release workflows;
