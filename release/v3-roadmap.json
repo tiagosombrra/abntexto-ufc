@@ -3,7 +3,7 @@
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
-  "updated_at": "2026-09-04",
+  "updated_at": "2026-09-05",
   "status": "ACTIVE",
   "phase": "core-corrections",
   "stage": "core-corrections",
@@ -18,6 +18,7 @@
     "regression_audit": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
+    "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
     "fail_closed_on_disagreement": true,
     "memory_is_not_an_authority": true
   },
@@ -82,14 +83,14 @@
       "name": "Core Corrections",
       "status": "ACTIVE",
       "purpose": "Correct shared runtime, template, normative mapping, documentation and tests identified by the regression.",
-      "exit_gate": "No unresolved shared FAIL; all shared P0/P1 corrections have evidence; no NORMATIVE-REVIEW is silently encoded as runtime behavior; phase-end regression green on one immutable SHA.",
+      "exit_gate": "No unresolved shared runtime FAIL; all blocking P0/P1 corrections have evidence; unresolved authority items remain explicit/fail-closed; phase-end regression green on one immutable SHA.",
       "phase_end_regression_required": true
     },
     {
       "id": "reference-pdf-validation",
       "name": "Reference PDF Validation",
       "status": "QUEUED",
-      "purpose": "Validate the canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and the V2.1 preservation baseline where applicable.",
+      "purpose": "Validate the corrected canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and the V2.1 preservation baseline where applicable.",
       "exit_gate": "Visual checklist and reproducible presentation evidence pass, followed by a green phase-end regression on the accepted canonical artifact.",
       "phase_end_regression_required": true
     },
@@ -105,7 +106,7 @@
       "id": "final-certification",
       "name": "Final Certification",
       "status": "QUEUED",
-      "purpose": "Run the complete profile, engine, literal-font, Unicode, embedding, PDF-A and distribution matrix on one immutable candidate.",
+      "purpose": "Run complete profile, engine, literal-font, Unicode, embedding, PDF-A and distribution certification on one immutable candidate.",
       "exit_gate": "Complete certification matrix and phase-end regression are green on the same candidate SHA.",
       "phase_end_regression_required": true
     },
@@ -114,55 +115,66 @@
       "name": "Release",
       "status": "QUEUED",
       "purpose": "Finalize documentation, bundles, release assets, checksums and publication actions.",
-      "exit_gate": "Release checklist complete with no unresolved roadmap or normative item and final release regression/verification recorded.",
+      "exit_gate": "Release checklist complete with no unresolved roadmap/normative item and final release regression/verification recorded.",
       "phase_end_regression_required": true
     }
   ],
   "active_work": {
     "review_items": 34,
-    "audit_baseline_review_status": {
-      "pass": 19,
-      "partial": 11,
+    "review_status": {
+      "pass": 24,
+      "partial": 8,
       "fail": 1,
-      "normative_review": 3
+      "normative_review": 1
     },
     "review_contract": "docs/UFC-LIBRARIAN-REVIEW.md",
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
     "latest_implementation_checkpoint_sha": "1eab2539e418224e2a6ce85ef09065941b719ef7",
-    "latest_implementation_checkpoint_state": "static-green-linux-in-progress",
+    "latest_fully_validated_checkpoint_sha": "f6ca012164273e67480dca127fe17b392e8a8a21",
+    "latest_fully_validated_checkpoint_state": "static-green-linux-green",
     "current_correction_batch": [
-      "title-page advisor and co-advisor punctuation",
-      "optional department and complete author guidance",
-      "committee institution acronym examples",
-      "first textual UFC acronym introduction",
-      "canonical V3 API vocabulary cleanup",
-      "annex source example",
-      "reference-guide regression hygiene",
-      "long-direct-quotation locator evidence",
-      "long-direct-quotation punctuation evidence",
-      "external-illustration source locator evidence"
+      "object upper identification/title typography",
+      "normative rule-ID migration/provenance for object title size",
+      "object final-PDF typography evidence",
+      "typography locator-audit correction"
     ],
-    "review_items_implemented_pending_full_linux_confirmation": [
+    "review_items_confirmed_by_latest_full_linux": [
+      4,
+      17,
       19,
       20,
       23
     ],
+    "known_runtime_failures": [
+      "review item 21: upper illustration/table identification/title still rendered at reduced 10 pt"
+    ],
     "deferred_authority_conflicts": [
-      "object upper-title versus lower legend/source/note typography",
-      "selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
+      "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
     ]
+  },
+  "authority_decisions": {
+    "object_typography": {
+      "status": "accepted-for-implementation",
+      "decision_document": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
+      "upper_identification_title_pt": 12,
+      "lower_source_legend_note_pt": 10,
+      "line_spacing": "single",
+      "review_item": 21,
+      "current_state": "FAIL-until-runtime-and-evidence-migrate"
+    }
   },
   "evidence": {
     "regression_static_run": 33937439818,
     "regression_static_conclusion": "success",
     "full_regression_integration_run": 33937439846,
     "full_regression_integration_conclusion": "success",
-    "latest_core_corrections_static_run": 33939021386,
-    "latest_core_corrections_static_conclusion": "success",
-    "latest_core_corrections_linux_run": 33939021352,
-    "latest_core_corrections_linux_conclusion": "in_progress",
+    "latest_validated_core_static_run": 33939512055,
+    "latest_validated_core_static_conclusion": "success",
+    "latest_validated_core_linux_run": 33939512019,
+    "latest_validated_core_linux_conclusion": "success",
+    "latest_validated_core_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },
