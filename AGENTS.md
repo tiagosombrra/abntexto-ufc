@@ -23,10 +23,11 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
 - Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
 - Regression baseline Linux run `33937439846`: success.
-- Validated Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success with `PASS=31 FAIL=0 SKIP=0`.
+- Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success with `PASS=31 FAIL=0 SKIP=0`.
+- Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`: Static `33968579418` success; Linux `33968579449` success with `PASS=31 FAIL=0 SKIP=0`. Source-level librarian evidence for items 11, 16 and 28 is accepted.
+- Current implementation checkpoint: `a1149f169f06b2db620bc5df69d0870b60fe583c`, extending the canonical `reference-document` gate with generated-PDF text evidence for items 11, 16 and 28. Branch acceptance is pending.
 - Review item 21 is closed: upper illustration/table/object identification/title is 12 pt and lower source/legend/note remains 10 pt where applicable.
-- Current implementation checkpoint: `c464a1bc2ca04a4ce398878f25e9521f5840d48e`, adding source-level canonical-reference evidence for librarian items 11, 16 and 28. Branch acceptance is pending until the synchronized documentation checkpoint is published and CI is green.
-- Current 34-item state before that reference-content acceptance: **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Current 34-item state before generated-PDF acceptance: **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence for disputed edge cases.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 - Every material advance updates the active documentation/control state in the same work cycle.

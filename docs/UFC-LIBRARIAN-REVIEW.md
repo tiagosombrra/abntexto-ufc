@@ -15,11 +15,11 @@ This document converts the union of the two annotated v1.1.1 review PDFs supplie
 
 ## Current summary
 
-Regression Audit closed with Static `33937439818` and Linux `33937439846` green. Core Corrections subsequently reached synchronized checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`, which passed Static `33965794475` and full Linux `33965794519` with `PASS=31 FAIL=0 SKIP=0`.
+Regression Audit is closed. Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` closed item 21 with Static `33965794475` and Linux `33965794519` green (`PASS=31 FAIL=0 SKIP=0`).
 
-That acceptance closes review item 21. The final-PDF evidence measured illustration title 12 pt/source 10 pt and table title 12 pt/source 10 pt; the independent IBGE table gate also passed under the corrected contract. The object decision is documented in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
+Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` subsequently passed Static `33968579418` and full Linux `33968579449`, again with `PASS=31 FAIL=0 SKIP=0`. Both runs emit source-level PASS evidence for review items 11, 16 and 28.
 
-Implementation checkpoint `c464a1bc2ca04a4ce398878f25e9521f5840d48e` adds explicit source-level canonical-reference regressions for review items 11, 16 and 28. Those items remain `PARTIAL` until the synchronized branch checkpoint is green and final-PDF text evidence is added/accepted.
+Implementation checkpoint `a1149f169f06b2db620bc5df69d0870b60fe583c` extends the compiled canonical-reference gate with PDF-text evidence for those same three items. They remain `PARTIAL` until that implementation is synchronized to the branch and Static/full Linux acceptance is green.
 
 Current review state: **25 PASS, 8 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 items**.
 
@@ -37,12 +37,12 @@ Current review state: **25 PASS, 8 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 item
 | 8 | Approval-page committee must support additional members and remain variable in size. | PASS | `frontmatter.def`, `template/main.tex` |
 | 9 | CAPES-funded works must carry guidance for the mandatory acknowledgment from Portaria CAPES nº 206/2018. | PASS | `template/frontmatter/acknowledgments.tex`, normative catalog |
 | 10 | `RESUMO` must begin at the first usable text line/heading position instead of being vertically displaced. | PASS — retain final visual confirmation. | `frontmatter.def`, front-matter geometry tests |
-| 11 | Figure/table/object titles must follow sentence-case capitalization where applicable. | PARTIAL — source-level reviewed-content regression added at `c464a1b...`; branch/PDF acceptance pending. | reference content, object fixtures, `reference_guide_contract.py` |
+| 11 | Figure/table/object titles must follow sentence-case capitalization where applicable. | PARTIAL — source evidence accepted at `3ae9dd...`; generated-PDF gate implemented at `a1149...`, branch acceptance pending. | reference content, `reference_guide_contract.py`, `reference-document.sh` |
 | 12 | Lists of abbreviations/acronyms and symbols must align with the 3 cm left text margin. | PASS | front-matter alignment checks |
 | 13 | Pre-textual elements must not appear in the table of contents. | PASS | TOC checks |
 | 14 | Do not create synthetic aggregate `APÊNDICES` or `ANEXOS` pages/TOC entries. | PASS | appendix/annex checks |
 | 15 | Appendix and annex entries in the TOC must use the required uppercase/bold presentation. | PASS — retain final visual confirmation. | appendix/annex integration and checks |
-| 16 | First body-text use of UFC should present the full institutional name followed by `(UFC)`. | PARTIAL — source-level first-use regression added at `c464a1b...`; PDF confirmation remains. | reference prose/examples, `reference_guide_contract.py` |
+| 16 | First body-text use of UFC should present the full institutional name followed by `(UFC)`. | PARTIAL — source evidence accepted at `3ae9dd...`; rendered full-name gate implemented at `a1149...`, branch acceptance pending. | reference prose/examples, source/PDF reference gates |
 | 17 | Academic text/code demonstrations must not accidentally change the adopted text family/nominal size. | PASS — code typography regression proves same family and nominal 12 pt across exercised body/code/algorithm paths. | `fonts.def`, `tests/integration/code-typography.sh` |
 | 18 | Author/corporate-author names in citations must follow current NBR 10520 capitalization rather than legacy all-caps output. | PASS | `bibliography.def`, citation checks |
 | 19 | Long direct quotations must include the page or other required locator when the source provides one. | PASS — reviewer fixture renders `p. 42`; full Linux green. | citation fixtures/checks |
@@ -54,7 +54,7 @@ Current review state: **25 PASS, 8 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 item
 | 25 | Alínea items use semicolons between intermediate items and appropriate final punctuation. | PASS | `layout.def`, reference fixture |
 | 26 | A nested subalínea sequence is introduced with a colon and uses the required subordinate punctuation. | PASS | `layout.def`, reference fixture |
 | 27 | Alíneas are ordered alphabetically, not by Arabic numerals. | PASS | `ufclettereditems`, reference fixture |
-| 28 | Example section/subsection headings must follow sentence case where appropriate, including correct `etc.` punctuation. | PARTIAL — source-level reviewed-heading regression added at `c464a1b...`; branch/PDF acceptance pending. | reference content/headings, `reference_guide_contract.py` |
+| 28 | Example section/subsection headings must follow sentence case where appropriate, including correct `etc.` punctuation. | PARTIAL — source evidence accepted at `3ae9dd...`; generated-PDF gate implemented at `a1149...`, branch acceptance pending. | reference content/headings, source/PDF reference gates |
 | 29 | First-line paragraph indentation must be consistent with the adopted UFC body-text rule. | PASS | body-paragraph checks |
 | 30 | Unknown place/publisher data must not emit obsolete/inappropriate patterns for online resources; electronic examples must follow current NBR 6023 handling. | PASS/PARTIAL — compatibility and current profile tests exist; reviewer-case coverage remains. | `nbr6023-2025.def`, bibliography fixtures |
 | 31 | Thesis/dissertation references must use the correct work-type structure and must not duplicate or contradict the year. | PASS — retain/add negative duplicate-year regression. | bibliography fixtures |
@@ -64,9 +64,7 @@ Current review state: **25 PASS, 8 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 item
 
 ## Resolved authority decision — object title typography
 
-The project accepts 12 pt, single-spaced upper illustration/table/object identification/title and reduced 10 pt, single-spaced lower source/legend/note where applicable. The available UFC guide distinguishes the upper identification/title from lower auxiliary text, and the two librarian reviews independently marked upper titles as body-size text.
-
-Acceptance evidence is now complete for the automated contract: Static `33965794475`, Linux `33965794519`, `PASS=31 FAIL=0 SKIP=0`, illustration and table final-PDF checks green, and the IBGE table subset green. Item 21 is therefore `PASS`.
+The project accepts 12 pt, single-spaced upper illustration/table/object identification/title and reduced 10 pt, single-spaced lower source/legend/note where applicable. Acceptance evidence is complete for the automated contract: Static `33965794475`, Linux `33965794519`, illustration/table final-PDF checks and the IBGE table subset are green. Item 21 is `PASS`.
 
 ## Remaining normative conflict
 
@@ -74,4 +72,4 @@ Review item 33 remains fail-closed. Current NBR 6023:2025 is the governing techn
 
 ## Acceptance rule
 
-No item is closed merely because a PDF looks plausible or a related test is green. Closure requires the applicable combination of authority/project classification, correct runtime/reference behavior, positive regression evidence, negative evidence where machine-detectable, and canonical presentation evidence when presentation is part of the requirement.
+No item is closed merely because source text looks plausible or a related test is green. Closure requires the applicable combination of authority/project classification, correct runtime/reference behavior, positive regression evidence, negative evidence where machine-detectable, and canonical presentation evidence when presentation is part of the requirement.

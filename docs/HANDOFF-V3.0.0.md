@@ -12,13 +12,11 @@ Updated: 2026-09-05
 - Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
 - Regression baseline Static `33937439818`: success.
 - Regression baseline Linux `33937439846`: success.
-- Validated Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`.
-- Static `33965794475`: success.
-- Full Linux `33965794519`: success, `PASS=31 FAIL=0 SKIP=0`.
-- Object typography review item 21: **PASS**. Automated final-PDF evidence confirms illustration/table upper identification/title at 12 pt and lower source at 10 pt; the IBGE table subset also passes.
-- Current implementation checkpoint: `c464a1bc2ca04a4ce398878f25e9521f5840d48e`, adding canonical-reference source regressions for librarian items 11, 16 and 28.
-- Current synchronized documentation checkpoint is being built on top of `c464a1b...`; branch acceptance for that reference-content batch is pending.
-- Current 34-item state: `25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
+- Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success, `PASS=31 FAIL=0 SKIP=0`.
+- Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`: Static `33968579418` success; Linux `33968579449` success, `PASS=31 FAIL=0 SKIP=0`.
+- Source-level librarian evidence for items 11, 16 and 28 is accepted at `3ae9dd...`.
+- Current implementation checkpoint: `a1149f169f06b2db620bc5df69d0870b60fe583c`, adding compiled canonical-PDF text evidence for items 11, 16 and 28. Branch acceptance is pending.
+- Current 34-item state: `25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` until generated-PDF acceptance closes any of those items.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
@@ -43,14 +41,20 @@ Every phase requires a phase-end regression before closure. Targeted checks are 
 
 Continue **Core Corrections — Canonical Reference Content**:
 
-1. publish the synchronized checkpoint containing `c464a1bc2ca04a4ce398878f25e9521f5840d48e` plus this documentation update;
-2. require normal Static contract and full Linux integration on that branch checkpoint;
-3. verify the new source-level evidence for items 11, 16 and 28 is green;
-4. extend canonical `reference-corpus.sh` evidence so the generated PDF explicitly confirms reviewed sentence-case object titles/headings and first body-text `Universidade Federal do Ceará (UFC)`;
-5. only then reclassify items 11/16/28 if the PDF evidence supports closure;
+1. publish the synchronized branch checkpoint containing `a1149f169f06b2db620bc5df69d0870b60fe583c` plus this documentation state;
+2. require normal Static contract and full Linux integration on that checkpoint;
+3. inspect the `Reference document` gate for explicit generated-PDF evidence lines for items 11, 16 and 28;
+4. if green, reclassify items 11, 16 and 28 from PARTIAL to PASS and synchronize all control documents; expected review totals become `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`;
+5. then fix the newly identified engineering-language coverage gap: mixed Portuguese/English project-owned diagnostics in `tests/integration/multivolume.sh` and `tests/integration/references-6023.sh` currently evade the static language detector; strengthen the detector without flagging legitimate academic Portuguese and translate the affected diagnostics;
 6. continue bounded reference work for items 30-32 without changing item 33 absent authoritative current-edition evidence.
 
 After those bounded corrections, finish canonical front-matter and annex confirmation, then freeze one Core Corrections phase-end candidate and run the complete Static/full Linux phase-end regression.
+
+## Newly classified regression finding
+
+The latest source-level acceptance exposed an independent evidence-quality issue: `tests/checks/engineering_language.py` reports zero Portuguese project-owned technical diagnostics, but mixed diagnostics remain in at least `multivolume.sh` and `references-6023.sh`. The current term matcher does not detect phrases such as `após a cover`, `não continuou`, `identificação completa`, `não aparece`, or the mixed NBR 6023 diagnostic using `após a data`.
+
+This is not a runtime formatting defect, but it is a false-negative in a permanent governance gate. It must be corrected as a bounded Core Corrections evidence-hardening task after the current canonical-PDF batch, with self-tests that prove detection while preserving academic Portuguese literals.
 
 ## Phase-end regression rule
 

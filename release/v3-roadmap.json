@@ -1,5 +1,5 @@
 {
-  "schema_version": 8,
+  "schema_version": 9,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -131,15 +131,14 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "c464a1bc2ca04a4ce398878f25e9521f5840d48e",
-    "latest_fully_validated_checkpoint_sha": "3f47081cbbd00a44b9ee86a6b406580e79b593c0",
-    "latest_fully_validated_checkpoint_state": "static-green-linux-green",
+    "latest_implementation_checkpoint_sha": "a1149f169f06b2db620bc5df69d0870b60fe583c",
+    "latest_fully_validated_checkpoint_sha": "3ae9dd698e021a117ba2b64ebf970dc8c507fa8f",
+    "latest_fully_validated_checkpoint_state": "static-green-linux-green-source-reference-evidence",
     "current_correction_batch": [
-      "canonical reference content source acceptance",
-      "review item 11 sentence-case object title evidence",
-      "review item 16 first body-text UFC full-name evidence",
-      "review item 28 sentence-case heading and etc. punctuation evidence",
-      "generated-PDF evidence extension after branch acceptance"
+      "canonical reference generated-PDF evidence",
+      "review item 11 sentence-case object title PDF evidence",
+      "review item 16 full-name UFC first-use PDF evidence",
+      "review item 28 sentence-case heading and etc. punctuation PDF evidence"
     ],
     "review_items_confirmed_by_latest_full_linux": [
       4,
@@ -149,10 +148,18 @@
       21,
       23
     ],
+    "review_items_source_evidence_accepted": [
+      11,
+      16,
+      28
+    ],
     "known_runtime_failures": [],
     "pending_acceptance_gates": [
-      "canonical reference source batch c464a1b: synchronized Static/full Linux run required",
-      "items 11, 16 and 28: generated-PDF text evidence required before closure"
+      "a1149f1 canonical reference PDF-evidence batch: synchronized Static/full Linux run required",
+      "items 11, 16 and 28: explicit generated-PDF evidence must be green before closure"
+    ],
+    "queued_evidence_hardening": [
+      "engineering-language detector false negatives for mixed Portuguese/English diagnostics in multivolume.sh and references-6023.sh"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
@@ -180,11 +187,18 @@
     "regression_static_conclusion": "success",
     "full_regression_integration_run": 33937439846,
     "full_regression_integration_conclusion": "success",
-    "latest_validated_core_static_run": 33965794475,
-    "latest_validated_core_static_conclusion": "success",
-    "latest_validated_core_linux_run": 33965794519,
-    "latest_validated_core_linux_conclusion": "success",
-    "latest_validated_core_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "object_core_static_run": 33965794475,
+    "object_core_linux_run": 33965794519,
+    "object_core_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "canonical_reference_source_checkpoint_sha": "3ae9dd698e021a117ba2b64ebf970dc8c507fa8f",
+    "canonical_reference_source_static_run": 33968579418,
+    "canonical_reference_source_static_conclusion": "success",
+    "canonical_reference_source_linux_run": 33968579449,
+    "canonical_reference_source_linux_conclusion": "success",
+    "canonical_reference_source_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "canonical_reference_source_items": [11, 16, 28],
+    "canonical_reference_pdf_evidence_sha": "a1149f169f06b2db620bc5df69d0870b60fe583c",
+    "canonical_reference_pdf_evidence_state": "branch-acceptance-pending",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,
@@ -193,9 +207,6 @@
       "ibge_table_subset": "success",
       "result": "success"
     },
-    "object_typography_acceptance_sha": "3f47081cbbd00a44b9ee86a6b406580e79b593c0",
-    "canonical_reference_source_evidence_sha": "c464a1bc2ca04a4ce398878f25e9521f5840d48e",
-    "canonical_reference_source_evidence_state": "branch-acceptance-pending",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

@@ -6,13 +6,13 @@ Updated: 2026-09-05
 
 **Core Corrections is ACTIVE.**
 
-Regression Audit is closed. Core Corrections validated checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and full Linux `33965794519` with `PASS=31 FAIL=0 SKIP=0`.
+Regression Audit is closed. Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing review item 21.
 
-That regression closes the object-typography correction. Review item 21 is now PASS: illustration/table/object upper identification/title is 12 pt, lower source/legend/note remains 10 pt where applicable, and the final-PDF plus IBGE table evidence is green.
+Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` passed Static `33968579418` and full Linux `33968579449`, with `PASS=31 FAIL=0 SKIP=0`. Source-level librarian evidence for items 11, 16 and 28 is accepted.
 
-Current implementation checkpoint `c464a1bc2ca04a4ce398878f25e9521f5840d48e` adds explicit canonical-reference source regressions for librarian items 11, 16 and 28. The next synchronized branch checkpoint must pass Static/full Linux before this batch advances to generated-PDF text evidence.
+Current implementation checkpoint `a1149f169f06b2db620bc5df69d0870b60fe583c` adds generated-PDF text assertions to the canonical `Reference document` gate for those same three items. The synchronized branch checkpoint must now pass Static/full Linux before reclassification.
 
-Current 34-point state: **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+Current 34-point state remains **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** pending that PDF-evidence acceptance. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -53,22 +53,29 @@ Every phase ends with a mandatory phase-end regression on one immutable candidat
 - reviewer-specific long-direct-quotation locator/punctuation evidence;
 - external-illustration source locator evidence;
 - code/body typography consistency evidence;
-- object typography authority/runtime/test migration accepted by Static `33965794475` + Linux `33965794519`.
+- object typography authority/runtime/test migration accepted by Static `33965794475` + Linux `33965794519`;
+- canonical-reference source evidence for items 11, 16 and 28 accepted by Static `33968579418` + Linux `33968579449`.
 
-### Current work — Canonical Reference Content
+### Current work — Canonical Reference PDF Evidence
 
-Implementation checkpoint `c464a1b...` protects source-level reviewed content for:
+Implementation `a1149...` extends the existing canonical reference build, rather than introducing a synthetic PDF, and asserts in the generated PDF:
 
-- item 11 — object-title sentence case;
-- item 16 — first body-text `Universidade Federal do Ceará (UFC)`;
-- item 28 — heading sentence case and `etc.` punctuation.
+- item 11 reviewed sentence-case object titles are present and reviewed legacy casing is absent;
+- item 16 rendered `Universidade Federal do Ceará (UFC)` is present and the source-level first-use contract remains intact;
+- item 28 reviewed sentence-case headings are present, legacy headings are absent and malformed `etc` punctuation is rejected.
 
 Current gate:
 
-1. publish synchronized documentation/control state on top of `c464a1b...`;
+1. publish a synchronized branch checkpoint containing `a1149...` and current control docs;
 2. run normal Static and full Linux integration;
-3. if green, add PDF-text assertions in `tests/integration/reference-corpus.sh` for the same reviewed requirements;
-4. reclassify only when generated-PDF evidence supports closure.
+3. inspect explicit generated-PDF evidence in the Reference document gate;
+4. if green, move items 11, 16 and 28 to PASS and update counts to `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
+
+### Queued evidence hardening — Engineering language
+
+A false-negative was discovered in the permanent language gate. Mixed Portuguese/English project-owned diagnostics remain in `tests/integration/multivolume.sh` and `tests/integration/references-6023.sh`, while `engineering_language.py` reports zero diagnostics because its vocabulary misses the relevant mixed phrases.
+
+After the current PDF batch, strengthen that detector with high-confidence mixed-language phrase cases and self-tests, translate the affected diagnostics, and run Static/relevant integration. Preserve valid academic/rendered Portuguese.
 
 ### Remaining Core Corrections
 
@@ -80,15 +87,7 @@ Current gate:
 
 ## Gate before Reference PDF Validation
 
-Core Corrections closes only when:
-
-1. all shared blocking P0/P1 corrections have implementation/reference behavior and evidence;
-2. affected normative mappings/tests are updated atomically where authority changed;
-3. no shared runtime FAIL remains;
-4. remaining NORMATIVE-REVIEW items are explicitly fail-closed and non-contradictory to the canonical shared output, or resolved;
-5. documentation/review matrices match the candidate SHA;
-6. Static contract and full Linux integration pass on the same immutable phase-end candidate;
-7. required phase-specific/manual results are recorded before Reference PDF Validation becomes active.
+Core Corrections closes only when all shared blocking P0/P1 corrections have implementation/reference behavior and evidence, affected normative mappings/tests are updated atomically where authority changed, no shared runtime FAIL remains, remaining NORMATIVE-REVIEW items are explicitly fail-closed/non-contradictory or resolved, documentation/review matrices match the candidate SHA, and Static plus full Linux pass on the same immutable phase-end candidate.
 
 ## Gate before Scientific Article
 
@@ -105,8 +104,8 @@ Use descriptive work names such as `Core Corrections — Canonical Reference Con
 - article pre-runtime checkpoint: `7a7562d23e8bf6c92abb635718639d617a2ed6ff`;
 - pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`;
 - regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
-- reviewer evidence implementation checkpoint: `1eab2539e418224e2a6ce85ef09065941b719ef7`;
-- validated object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
-- canonical-reference source evidence implementation: `c464a1bc2ca04a4ce398878f25e9521f5840d48e` (synchronized branch acceptance pending).
+- accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
+- accepted canonical-reference source checkpoint: `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`;
+- canonical-reference PDF-evidence implementation: `a1149f169f06b2db620bc5df69d0870b60fe583c` (branch acceptance pending).
 
 Detailed history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.
