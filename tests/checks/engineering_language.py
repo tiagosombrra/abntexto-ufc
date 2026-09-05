@@ -61,6 +61,8 @@ MIXED_PORTUGUESE_TECHNICAL_PHRASES = re.compile(
     r"(?:\bap[oó]s\s+a\s+(?:capa|cover)\b|"
     r"\bconte[uú]do\s+textual\s+n[aã]o\b|"
     r"\bp[aá]gina\s+l[oó]gica\b|"
+    r"\bpage\s+l[oó]gica\s+textual\b|"
+    r"\bpages?\s+f[ií]sicas?\b|"
     r"\bidentifica[cç][aã]o\s+completa\b|"
     r"\bvolume\s+n[aã]o\s+aparece\b|"
     r"\b(?:entry\s+of|entrada\s+de)\s+teste\b|"
@@ -73,6 +75,11 @@ MIXED_PORTUGUESE_TECHNICAL_PHRASES = re.compile(
     r"\bsem\s+numera[cç][aã]o\b|"
     r"\bdeveria\s+tornar\b|"
     r"\bwarning\s+ou\s+overflow\s+n[aã]o\s+reconhecido\b|"
+    r"\bficha\s+(?:externa|desabilitada)\b|"
+    r"\bmarker\s+textual\b.*\bduplicad[oa]\b|"
+    r"\bp[oó]s-textua(?:l|is)\b|"
+    r"\biniciou\s+in\s+the\s+verso\b|"
+    r"\bcalibra[cç][aã]o\s+for\b|"
     r"\btipografia\s+(?:e|and)\s+geometria\b)",
     re.IGNORECASE,
 )
@@ -257,6 +264,11 @@ def self_test() -> None:
         "raise SystemExit('código mudou de família.')",
         "raise SystemExit('número de linha duplicado 2')",
         "raise SystemExit('linha numerada vazia: 2')",
+        "echo 'page lógica textual inesperada'",
+        "raise SystemExit('expected title and text in 3 pages físicas')",
+        "raise SystemExit('ficha externa foi incluída although disabled')",
+        "echo 'Pós-textuais duplex contêm warning.'",
+        "echo 'Calibração for vector geometry gate completed.'",
     )
     for line in false_negative_cases:
         scope = list(diagnostic_scopes([line]))[0][1]
@@ -269,7 +281,7 @@ def self_test() -> None:
     assert not RETIRED_PROFILE_IDS.search('\"profile\": \"undergraduate-capstone\"')
     normative = json.loads('{"requirement":"A capa é elemento obrigatório."}')
     assert "obrigatório" in normative["requirement"]
-    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=13")
+    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=18")
 
 
 def main() -> None:
