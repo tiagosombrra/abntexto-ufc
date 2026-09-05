@@ -7,7 +7,7 @@ Status: ACTIVE — CORE CORRECTIONS
 
 This is the executable correction queue produced by Regression Audit. It combines the 34 librarian-review requirements, additional regression findings, authority decisions, implementation order and phase gates.
 
-Canonical companions: `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`, `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md`, and `release/v3-roadmap.json`.
+Canonical companions: `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`, `docs/ENGINEERING-LANGUAGE.md`, `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md`, and `release/v3-roadmap.json`.
 
 ## Execution discipline
 
@@ -17,11 +17,11 @@ Every material advance updates the relevant implementation/review state and cano
 
 Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing item 21.
 
-Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` passed Static `33968579418` and full Linux `33968579449`, both green; Linux summary is `PASS=31 FAIL=0 SKIP=0`. Source-level PASS evidence for items 11, 16 and 28 is therefore accepted.
+Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` passed Static `33968579418` and Linux `33968579449`. Generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` then passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`. Items 11, 16 and 28 are therefore PASS.
 
-Current implementation `a1149f169f06b2db620bc5df69d0870b60fe583c` extends `tests/integration/reference-document.sh` so the compiled canonical PDF must contain the reviewed sentence-case object titles/headings and full-name UFC first-use marker while rejecting reviewed legacy forms. Branch acceptance is pending.
+Current librarian-review state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Current librarian-review state before that acceptance: **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+Current implementation `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee` hardens the engineering-language detector and translates known mixed project-owned diagnostics. Synchronized branch acceptance is pending.
 
 ## Priority model
 
@@ -40,35 +40,42 @@ Readable six-phase model, machine-protected 34-item contract, semantic phase gov
 
 Covers items 1-10. Core behavior for subtitle propagation, co-advisor optionality, concentration area, variable committee size, CAPES guidance, advisor punctuation, complete-name placeholder and institution/acronym examples is implemented. Remaining: canonical blank/filled department confirmation, complete-author-name guidance confirmation, final approval-page `Instituição (sigla)` confirmation, and final canonical-PDF front-matter inspection.
 
-### 3. Body Structure, Headings, Citations and Lists — ACTIVE CANONICAL-PDF BATCH
+### 3. Body Structure, Headings, Citations and Lists — VALIDATED
 
 Covers items 11-20 and 24-29.
 
-Validated: list alignment, TOC exclusion, appendix/annex direct flow, current NBR 10520 capitalization, reviewer long-quotation locator/punctuation, alínea/subalínea rules, paragraph indentation, code/body typography, and source-level reviewed-content evidence for items 11, 16 and 28.
+Validated: list alignment, TOC exclusion, appendix/annex direct flow, current NBR 10520 capitalization, reviewer long-quotation locator/punctuation, alínea/subalínea rules, paragraph indentation, code/body typography, and source/PDF reviewed-content evidence for items 11, 16 and 28.
 
-Current implementation `a1149...` adds generated-PDF checks for:
+Generated-PDF acceptance at `c4c59...` explicitly proves:
 
 - item 11: reviewed sentence-case object titles and absence of legacy casing;
 - item 16: rendered `Universidade Federal do Ceará (UFC)` plus source first-use guard;
 - item 28: reviewed sentence-case headings, absence of legacy headings, and malformed `etc` punctuation rejection.
 
-Acceptance: synchronize branch, run normal Static/full Linux, inspect explicit item 11/16/28 PDF evidence in the Reference document gate, then reclassify only if green.
+Static `33969505681` and Linux `33969505614` are green.
 
 ### 4. Figures, Tables and Documentary Objects — VALIDATED
 
 Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identification/title, 10 pt single-spaced lower source/legend/note where applicable, all constrained to object width.
 
-### 5. Engineering-language evidence hardening — QUEUED NEXT
+### 5. Engineering-language evidence hardening — ACTIVE
 
-A new regression finding was identified after the source-level reference batch: the permanent engineering-language gate reports zero Portuguese project-owned diagnostics while mixed Portuguese/English diagnostics remain in at least `tests/integration/multivolume.sh` and `tests/integration/references-6023.sh`.
+A permanent-gate false negative was confirmed: mixed Portuguese/English project-owned diagnostics could remain while `engineering_language.py` reported zero violations.
 
-Required bounded correction:
+Implementation `5d74c0c...`:
 
-1. strengthen `tests/checks/engineering_language.py` with high-confidence mixed-language phrase detection rather than broad Portuguese stopwords that could flag legitimate academic literals;
-2. extend its self-test with known false-negative mixed diagnostics;
-3. translate affected project-owned diagnostics to English;
-4. run Static contract and relevant integration; document any additional files exposed by the strengthened detector;
-5. keep academic/rendered Portuguese explicitly protected.
+1. adds high-confidence mixed-language phrase detection rather than broad Portuguese stopwords that could flag legitimate academic literals;
+2. extends the self-test from 7 to 11 cases with known former false negatives;
+3. translates affected project-owned diagnostics in `tests/integration/multivolume.sh`;
+4. translates affected project-owned diagnostics in `tests/integration/references-6023.sh`;
+5. preserves academic/rendered Portuguese, bibliography data and official wording.
+
+Acceptance:
+
+1. synchronize implementation and control documentation on the branch;
+2. run Static contract and full Linux integration;
+3. if stronger detection exposes additional project-owned mixed diagnostics, correct them rather than weakening the detector;
+4. close only when the permanent audit truthfully reports zero violations and the full Linux contract remains green.
 
 ### 6. References and NBR 6023:2025 — PARTIAL / FAIL-CLOSED
 
@@ -86,9 +93,9 @@ Item 33 remains `NORMATIVE-REVIEW` until authoritative current NBR 6023:2025 tex
 
 Automated heading/pagination behavior is green and the canonical annex source example exists. Final closure requires canonical-PDF confirmation of source attribution, heading and TOC presentation.
 
-### 8. Canonical V3 Reference Corpus Cleanup — ACTIVE
+### 8. Canonical V3 Reference Corpus Cleanup — VALIDATED/PROTECTED
 
-Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeholders, and implementation-history prose presented as current user instruction. The source/PDF gates now explicitly protect the reviewed sentence-case/acronym content.
+Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeholders, implementation-history prose presented as current user instruction, reviewed legacy object-title casing, malformed UFC first-use, and legacy heading/`etc.` forms.
 
 ## Complete 34-item implementation matrix
 
@@ -104,12 +111,12 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 8 | PASS | P3 | Preserve variable committee size. |
 | 9 | PASS | P3 | Preserve CAPES guidance. |
 | 10 | PASS | P3 | Reconfirm in corrected canonical PDF. |
-| 11 | PARTIAL | P2 | Source evidence green at `3ae9dd...`; PDF evidence implemented at `a1149...`, acceptance pending. |
+| 11 | PASS | P2 | Source/PDF evidence accepted at `3ae9dd...` / `c4c59...`. |
 | 12 | PASS | P3 | Preserve 3 cm list alignment. |
 | 13 | PASS | P3 | Preserve pre-textual TOC exclusion. |
 | 14 | PASS | P3 | Preserve direct appendix/annex flow. |
-| 15 | PASS | P3 | Final visual TOC confirmation. |
-| 16 | PARTIAL | P2 | Source evidence green; PDF evidence implemented, acceptance pending. |
+| 15 | PASS | P3 | Final visual TOC confirmation remains a presentation-phase check, not a reopened item. |
+| 16 | PASS | P2 | Source/PDF first-use evidence accepted. |
 | 17 | PASS | P1/P3 | Preserve code/body typography regression. |
 | 18 | PASS | P3 | Preserve current NBR 10520 capitalization. |
 | 19 | PASS | P1 | Preserve long-quotation locator fixture. |
@@ -121,7 +128,7 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 25 | PASS | P3 | Preserve intermediate/final punctuation. |
 | 26 | PASS | P3 | Preserve colon/subalínea punctuation. |
 | 27 | PASS | P3 | Preserve alphabetic alínea ordering. |
-| 28 | PARTIAL | P2 | Source evidence green; PDF evidence implemented, acceptance pending. |
+| 28 | PASS | P2 | Source/PDF sentence-case and `etc.` evidence accepted. |
 | 29 | PASS | P3 | Preserve 2 cm first-line indent/no extra paragraph spacing. |
 | 30 | PASS/PARTIAL | P1/P3 | Expand reviewer-case electronic-resource fixtures. |
 | 31 | PASS | P3 | Add duplicate-year negative fixture. |
@@ -140,8 +147,8 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | Object typography tests certified wrong upper-title size | CLOSED | Preserve current authority decision/evidence. |
 | Independent table adapter retained 10 pt table caption | CLOSED | Preserve corrected regression. |
 | Legacy IBGE observer retained retired 10 pt caption expectation | CLOSED | Preserve corrected observer. |
-| Reviewed reference-content requirements lacked source/PDF guards | IN PROGRESS | Source green at `3ae9dd...`; PDF gate `a1149...` pending acceptance. |
-| Engineering-language gate has false negatives for mixed diagnostics | OPEN/P3 | Strengthen detector + translate mixed diagnostics after current batch. |
+| Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve `3ae9dd...` + `c4c59...` evidence. |
+| Engineering-language gate has false negatives for mixed diagnostics | IMPLEMENTED / ACCEPTANCE PENDING | Validate `5d74c0c...` on synchronized Static/full Linux; correct any additional findings. |
 
 ## Phase transition gates
 

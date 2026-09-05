@@ -8,16 +8,17 @@ Updated: 2026-09-05
 
 Regression Audit is closed. Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and Linux `33965794519`, closing review item 21.
 
-Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` passed Static `33968579418` and full Linux `33968579449`, with `PASS=31 FAIL=0 SKIP=0`. Source-level librarian evidence for items 11, 16 and 28 is accepted.
+Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f` passed Static `33968579418` and Linux `33968579449`. Generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` then passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`, closing review items 11, 16 and 28.
 
-Current implementation checkpoint `a1149f169f06b2db620bc5df69d0870b60fe583c` adds generated-PDF text assertions to the canonical `Reference document` gate for those same three items. The synchronized branch checkpoint must now pass Static/full Linux before reclassification.
+Current 34-point state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
-Current 34-point state remains **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** pending that PDF-evidence acceptance. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+Current implementation checkpoint `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee` starts **Core Corrections — Engineering Language Evidence Hardening**. It strengthens mixed-language diagnostic detection and translates known project-owned mixed diagnostics. Synchronized Static/full Linux acceptance is pending.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
 Correction queue: `docs/V3-CORRECTION-PLAN.md`.
 Librarian review: `docs/UFC-LIBRARIAN-REVIEW.md`.
+Engineering language policy: `docs/ENGINEERING-LANGUAGE.md`.
 Object typography decision: `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`.
 
 ## Operating discipline
@@ -54,28 +55,27 @@ Every phase ends with a mandatory phase-end regression on one immutable candidat
 - external-illustration source locator evidence;
 - code/body typography consistency evidence;
 - object typography authority/runtime/test migration accepted by Static `33965794475` + Linux `33965794519`;
-- canonical-reference source evidence for items 11, 16 and 28 accepted by Static `33968579418` + Linux `33968579449`.
+- source-level reviewed reference-content evidence for items 11, 16 and 28 accepted at `3ae9dd...`;
+- generated-PDF reviewed reference-content evidence for items 11, 16 and 28 accepted at `c4c59...` with Static `33969505681` + Linux `33969505614`.
 
-### Current work — Canonical Reference PDF Evidence
+### Current work — Engineering Language Evidence Hardening
 
-Implementation `a1149...` extends the existing canonical reference build, rather than introducing a synthetic PDF, and asserts in the generated PDF:
+The permanent engineering-language gate had a false-negative class: mixed Portuguese/English project-owned diagnostics could remain while the static audit reported zero violations.
 
-- item 11 reviewed sentence-case object titles are present and reviewed legacy casing is absent;
-- item 16 rendered `Universidade Federal do Ceará (UFC)` is present and the source-level first-use contract remains intact;
-- item 28 reviewed sentence-case headings are present, legacy headings are absent and malformed `etc` punctuation is rejected.
+Implementation `5d74c0c...`:
 
-Current gate:
+- adds high-confidence mixed-language phrase detection to `tests/checks/engineering_language.py`;
+- extends the self-test to 11 cases, including known former false negatives;
+- translates mixed project-owned diagnostics in `tests/integration/multivolume.sh`;
+- translates mixed project-owned diagnostics in `tests/integration/references-6023.sh`;
+- keeps academic/rendered Portuguese, bibliography data and official wording protected.
 
-1. publish a synchronized branch checkpoint containing `a1149...` and current control docs;
+Acceptance gate:
+
+1. publish a synchronized branch checkpoint containing `5d74c0c...` and current control docs;
 2. run normal Static and full Linux integration;
-3. inspect explicit generated-PDF evidence in the Reference document gate;
-4. if green, move items 11, 16 and 28 to PASS and update counts to `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
-
-### Queued evidence hardening — Engineering language
-
-A false-negative was discovered in the permanent language gate. Mixed Portuguese/English project-owned diagnostics remain in `tests/integration/multivolume.sh` and `tests/integration/references-6023.sh`, while `engineering_language.py` reports zero diagnostics because its vocabulary misses the relevant mixed phrases.
-
-After the current PDF batch, strengthen that detector with high-confidence mixed-language phrase cases and self-tests, translate the affected diagnostics, and run Static/relevant integration. Preserve valid academic/rendered Portuguese.
+3. if the stronger detector finds additional project-owned mixed diagnostics, correct them rather than weakening the detector;
+4. close the finding only when Static/full Linux are green and the permanent audit truthfully reports zero violations.
 
 ### Remaining Core Corrections
 
@@ -95,7 +95,7 @@ Scientific Article starts only after Core Corrections closes and the corrected c
 
 ## Naming policy
 
-Use descriptive work names such as `Core Corrections — Canonical Reference Content`, `Core Corrections — References`, `Reference PDF Validation — Pre-textual Pages`. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
+Use descriptive work names such as `Core Corrections — Engineering Language Evidence Hardening`, `Core Corrections — References`, `Reference PDF Validation — Pre-textual Pages`. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
 
 ## Retained checkpoints
 
@@ -106,6 +106,7 @@ Use descriptive work names such as `Core Corrections — Canonical Reference Con
 - regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
 - accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
 - accepted canonical-reference source checkpoint: `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`;
-- canonical-reference PDF-evidence implementation: `a1149f169f06b2db620bc5df69d0870b60fe583c` (branch acceptance pending).
+- accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
+- engineering-language hardening implementation: `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee` (branch acceptance pending).
 
 Detailed history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.

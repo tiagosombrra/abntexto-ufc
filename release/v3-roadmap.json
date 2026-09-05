@@ -18,6 +18,7 @@
     "regression_audit": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
+    "engineering_language": "docs/ENGINEERING-LANGUAGE.md",
     "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
     "fail_closed_on_disagreement": true,
     "memory_is_not_an_authority": true
@@ -122,8 +123,8 @@
   "active_work": {
     "review_items": 34,
     "review_status": {
-      "pass": 25,
-      "partial": 8,
+      "pass": 28,
+      "partial": 5,
       "fail": 0,
       "normative_review": 1
     },
@@ -131,22 +132,24 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "a1149f169f06b2db620bc5df69d0870b60fe583c",
-    "latest_fully_validated_checkpoint_sha": "3ae9dd698e021a117ba2b64ebf970dc8c507fa8f",
-    "latest_fully_validated_checkpoint_state": "static-green-linux-green-source-reference-evidence",
+    "latest_implementation_checkpoint_sha": "5d74c0c5b85ec501b04c5050af81180ad7e3f2ee",
+    "latest_fully_validated_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
+    "latest_fully_validated_checkpoint_state": "static-green-linux-green-canonical-reference-pdf-evidence",
     "current_correction_batch": [
-      "canonical reference generated-PDF evidence",
-      "review item 11 sentence-case object title PDF evidence",
-      "review item 16 full-name UFC first-use PDF evidence",
-      "review item 28 sentence-case heading and etc. punctuation PDF evidence"
+      "engineering-language detector false-negative hardening",
+      "mixed Portuguese/English project-owned technical diagnostic cleanup",
+      "engineering-language self-test coverage for known false negatives"
     ],
     "review_items_confirmed_by_latest_full_linux": [
       4,
+      11,
+      16,
       17,
       19,
       20,
       21,
-      23
+      23,
+      28
     ],
     "review_items_source_evidence_accepted": [
       11,
@@ -155,12 +158,9 @@
     ],
     "known_runtime_failures": [],
     "pending_acceptance_gates": [
-      "a1149f1 canonical reference PDF-evidence batch: synchronized Static/full Linux run required",
-      "items 11, 16 and 28: explicit generated-PDF evidence must be green before closure"
+      "engineering-language hardening: synchronized Static contract and full Linux integration required"
     ],
-    "queued_evidence_hardening": [
-      "engineering-language detector false negatives for mixed Portuguese/English diagnostics in multivolume.sh and references-6023.sh"
-    ],
+    "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
     ],
@@ -196,9 +196,25 @@
     "canonical_reference_source_linux_run": 33968579449,
     "canonical_reference_source_linux_conclusion": "success",
     "canonical_reference_source_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "canonical_reference_source_items": [11, 16, 28],
-    "canonical_reference_pdf_evidence_sha": "a1149f169f06b2db620bc5df69d0870b60fe583c",
-    "canonical_reference_pdf_evidence_state": "branch-acceptance-pending",
+    "canonical_reference_source_items": [
+      11,
+      16,
+      28
+    ],
+    "canonical_reference_pdf_implementation_sha": "a1149f169f06b2db620bc5df69d0870b60fe583c",
+    "canonical_reference_pdf_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
+    "canonical_reference_pdf_static_run": 33969505681,
+    "canonical_reference_pdf_static_conclusion": "success",
+    "canonical_reference_pdf_linux_run": 33969505614,
+    "canonical_reference_pdf_linux_conclusion": "success",
+    "canonical_reference_pdf_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "canonical_reference_pdf_items": [
+      11,
+      16,
+      28
+    ],
+    "engineering_language_hardening_implementation_sha": "5d74c0c5b85ec501b04c5050af81180ad7e3f2ee",
+    "engineering_language_hardening_state": "branch-acceptance-pending",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,

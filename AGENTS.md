@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Core Corrections**, also read `docs/V3-CORRECTION-PLAN.md`, `docs/V3-REGRESSION-AUDIT.md`, and `docs/UFC-LIBRARIAN-REVIEW.md`.
+5. During **Core Corrections**, also read `docs/V3-CORRECTION-PLAN.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and `docs/ENGINEERING-LANGUAGE.md`.
 6. Compare Git facts, machine state, handoff, and roadmap.
 7. If phase, checkpoint, acceptance state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
@@ -22,12 +22,12 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Active phase: **Core Corrections**.
 - Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
 - Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
-- Regression baseline Linux run `33937439846`: success.
+- Regression baseline Static `33937439818` and Linux `33937439846`: success.
 - Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success with `PASS=31 FAIL=0 SKIP=0`.
-- Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`: Static `33968579418` success; Linux `33968579449` success with `PASS=31 FAIL=0 SKIP=0`. Source-level librarian evidence for items 11, 16 and 28 is accepted.
-- Current implementation checkpoint: `a1149f169f06b2db620bc5df69d0870b60fe583c`, extending the canonical `reference-document` gate with generated-PDF text evidence for items 11, 16 and 28. Branch acceptance is pending.
-- Review item 21 is closed: upper illustration/table/object identification/title is 12 pt and lower source/legend/note remains 10 pt where applicable.
-- Current 34-item state before generated-PDF acceptance: **25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`: Static `33968579418` success; Linux `33968579449` success with `PASS=31 FAIL=0 SKIP=0`.
+- Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` success; Linux `33969505614` success with `PASS=31 FAIL=0 SKIP=0`. Librarian items 11, 16 and 28 are closed.
+- Current 34-item state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Current implementation checkpoint: `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee`, hardening engineering-language detection and translating known mixed project-owned diagnostics. Synchronized branch acceptance is pending.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence for disputed edge cases.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 - Every material advance updates the active documentation/control state in the same work cycle.
@@ -47,6 +47,7 @@ Do not create new opaque work identifiers such as nested letter/number codes. Gi
 ## Engineering rules
 
 - Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
+- Treat an engineering-language gate that misses known project-owned Portuguese diagnostics as a false-negative defect. Fix the detector and the diagnostics; do not weaken the policy or flag legitimate academic Portuguese.
 - Preserve the closed v3 public API unless a current requirement explicitly authorizes a change.
 - Do not silently change normative rule IDs, expected values, tolerances, locators, applicability, source precedence, or proof-state semantics.
 - A green test proves only the contract encoded by that test. Current authority and presentation acceptance remain separate obligations.

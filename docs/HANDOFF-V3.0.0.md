@@ -14,9 +14,9 @@ Updated: 2026-09-05
 - Regression baseline Linux `33937439846`: success.
 - Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` success; Linux `33965794519` success, `PASS=31 FAIL=0 SKIP=0`.
 - Canonical-reference source checkpoint `3ae9dd698e021a117ba2b64ebf970dc8c507fa8f`: Static `33968579418` success; Linux `33968579449` success, `PASS=31 FAIL=0 SKIP=0`.
-- Source-level librarian evidence for items 11, 16 and 28 is accepted at `3ae9dd...`.
-- Current implementation checkpoint: `a1149f169f06b2db620bc5df69d0870b60fe583c`, adding compiled canonical-PDF text evidence for items 11, 16 and 28. Branch acceptance is pending.
-- Current 34-item state: `25 PASS / 8 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` until generated-PDF acceptance closes any of those items.
+- Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` success; Linux `33969505614` success, `PASS=31 FAIL=0 SKIP=0`. Explicit generated-PDF evidence closed librarian items 11, 16 and 28.
+- Current 34-item state: `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
+- Current implementation checkpoint: `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee`, hardening engineering-language detection and translating known mixed diagnostics. Branch-level Static/full Linux acceptance is pending.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
@@ -28,6 +28,7 @@ Canonical control documents:
 - `docs/UFC-LIBRARIAN-REVIEW.md`
 - `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`
 - `docs/V3-REGRESSION-AUDIT.md`
+- `docs/ENGINEERING-LANGUAGE.md`
 
 Git facts, machine state, roadmap and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
 
@@ -39,22 +40,40 @@ Every phase requires a phase-end regression before closure. Targeted checks are 
 
 ## Immediate action
 
-Continue **Core Corrections — Canonical Reference Content**:
+Continue **Core Corrections — Engineering Language Evidence Hardening**:
 
-1. publish the synchronized branch checkpoint containing `a1149f169f06b2db620bc5df69d0870b60fe583c` plus this documentation state;
+1. publish the synchronized branch checkpoint containing implementation `5d74c0c5b85ec501b04c5050af81180ad7e3f2ee` plus this documentation state;
 2. require normal Static contract and full Linux integration on that checkpoint;
-3. inspect the `Reference document` gate for explicit generated-PDF evidence lines for items 11, 16 and 28;
-4. if green, reclassify items 11, 16 and 28 from PARTIAL to PASS and synchronize all control documents; expected review totals become `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`;
-5. then fix the newly identified engineering-language coverage gap: mixed Portuguese/English project-owned diagnostics in `tests/integration/multivolume.sh` and `tests/integration/references-6023.sh` currently evade the static language detector; strengthen the detector without flagging legitimate academic Portuguese and translate the affected diagnostics;
-6. continue bounded reference work for items 30-32 without changing item 33 absent authoritative current-edition evidence.
+3. verify the strengthened `engineering_language.py` self-test and the permanent audit both report zero project-owned Portuguese technical diagnostics after translating the known mixed diagnostics in `multivolume.sh` and `references-6023.sh`;
+4. if the strengthened detector exposes additional project-owned mixed diagnostics, correct them rather than weakening the detector;
+5. once Static/full Linux are green, close this evidence-hardening finding and synchronize all control documents;
+6. then continue bounded reference work for items 30-32 without changing item 33 absent authoritative current-edition evidence.
 
-After those bounded corrections, finish canonical front-matter and annex confirmation, then freeze one Core Corrections phase-end candidate and run the complete Static/full Linux phase-end regression.
+After the bounded reference work, finish canonical front-matter items 1, 2 and 7 plus annex item 34, then freeze one Core Corrections phase-end candidate and run the complete Static/full Linux phase-end regression.
 
-## Newly classified regression finding
+## Closed canonical-reference evidence batch
 
-The latest source-level acceptance exposed an independent evidence-quality issue: `tests/checks/engineering_language.py` reports zero Portuguese project-owned technical diagnostics, but mixed diagnostics remain in at least `multivolume.sh` and `references-6023.sh`. The current term matcher does not detect phrases such as `após a cover`, `não continuou`, `identificação completa`, `não aparece`, or the mixed NBR 6023 diagnostic using `após a data`.
+Checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` closed the prior canonical-reference PDF batch. Static `33969505681` and Linux `33969505614` are green; Linux reported `PASS=31 FAIL=0 SKIP=0` and emitted explicit generated-PDF PASS evidence for:
 
-This is not a runtime formatting defect, but it is a false-negative in a permanent governance gate. It must be corrected as a bounded Core Corrections evidence-hardening task after the current canonical-PDF batch, with self-tests that prove detection while preserving academic Portuguese literals.
+- item 11 — sentence-case object titles and absence of reviewed legacy casing;
+- item 16 — rendered `Universidade Federal do Ceará (UFC)` with source-level first-use guard;
+- item 28 — sentence-case headings, absence of reviewed legacy headings, and correct `etc.` punctuation.
+
+These items are now PASS and the review totals are `28/5/0/1`.
+
+## Active regression finding — engineering-language false negatives
+
+The permanent engineering-language gate previously reported zero Portuguese project-owned technical diagnostics while mixed diagnostics still existed. The defect is evidence-quality, not document runtime behavior.
+
+Implementation `5d74c0c...` addresses the known gap by:
+
+- adding high-confidence mixed-language phrase detection to `tests/checks/engineering_language.py`;
+- extending the self-test from 7 to 11 cases with known former false negatives;
+- translating project-owned diagnostics in `tests/integration/multivolume.sh`;
+- translating project-owned diagnostics in `tests/integration/references-6023.sh`;
+- preserving Portuguese bibliography data, rendered academic strings, official wording and other allowed academic literals.
+
+This finding remains open until synchronized Static/full Linux acceptance is green.
 
 ## Phase-end regression rule
 
