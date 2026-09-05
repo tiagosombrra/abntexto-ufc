@@ -5,9 +5,9 @@
   "target_version": "3.0.0",
   "updated_at": "2026-09-05",
   "status": "ACTIVE",
-  "phase": "reference-pdf-validation",
-  "stage": "reference-pdf-validation",
-  "stage_name": "Reference PDF Validation",
+  "phase": "scientific-article",
+  "stage": "scientific-article",
+  "stage_name": "Scientific Article",
   "active_branch": "plan/v3-regression-reset",
   "authorities": {
     "git_facts_must_match_machine_state": true,
@@ -21,6 +21,9 @@
     "core_corrections_phase_end": "docs/V3-CORE-CORRECTIONS-PHASE-END.md",
     "reference_pdf_validation": "docs/V3-REFERENCE-PDF-VALIDATION.md",
     "reference_pdf_visual_review": "docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md",
+    "scientific_article_plan": "docs/V3-SCIENTIFIC-ARTICLE.md",
+    "scientific_article_contract": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
+    "article_coverage_contract": "standards/coverage-rules-article.json",
     "engineering_language": "docs/ENGINEERING-LANGUAGE.md",
     "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
     "fail_closed_on_disagreement": true,
@@ -45,14 +48,17 @@
     "targeted_checks_replace_phase_end_regression": false,
     "synthetic_pdf_can_satisfy_reference_validation": false,
     "reference_pdf_requires_git_provenance": true,
-    "reference_pdf_requires_complete_page_review": true
+    "reference_pdf_requires_complete_page_review": true,
+    "article_shared_mechanism_is_proof": false,
+    "article_recommendations_are_hard_requirements": false,
+    "article_runtime_aliases_allowed": false
   },
   "phase_end_regression": {
     "required": true,
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "pending-workflow-results",
+    "candidate_state": "not-started-for-scientific-article",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -97,25 +103,25 @@
     {
       "id": "reference-pdf-validation",
       "name": "Reference PDF Validation",
-      "status": "ACTIVE",
-      "purpose": "Validate corrected canonical V3 PDF page by page.",
-      "exit_gate": "Provenance-bound PDF, complete 55-page visual PASS, reproducible presentation evidence and green phase-end regression on one immutable SHA.",
+      "status": "CLOSED",
+      "purpose": "Validate corrected canonical V3 academic-work PDF page by page.",
+      "exit_gate": "Candidate b64074c64941895f97fbe0f795ce826c798d17ce passed Static 33985595790 and Linux 33985595798 after accepted provenance and complete 55-page visual PASS.",
       "phase_end_regression_required": true
     },
     {
       "id": "scientific-article",
       "name": "Scientific Article",
-      "status": "QUEUED",
-      "purpose": "Implement article profile on corrected shared foundation.",
-      "exit_gate": "Article runtime, evidence, rendering and phase-end regression pass.",
+      "status": "ACTIVE",
+      "purpose": "Implement one canonical scientific-article profile on the corrected shared foundation using the retained 18-rule source contract.",
+      "exit_gate": "Article runtime, article-specific positive/negative evidence, canonical article rendering and phase-end regression pass on one immutable SHA.",
       "phase_end_regression_required": true
     },
     {
       "id": "final-certification",
       "name": "Final Certification",
       "status": "QUEUED",
-      "purpose": "Run complete certification matrix.",
-      "exit_gate": "Complete certification and phase-end regression green.",
+      "purpose": "Run complete profile, engine, literal-font, Unicode, embedding, PDF-A and distribution certification.",
+      "exit_gate": "Complete certification and phase-end regression green on one immutable SHA.",
       "phase_end_regression_required": true
     },
     {
@@ -136,35 +142,36 @@
       "normative_review": 1
     },
     "review_contract": "docs/UFC-LIBRARIAN-REVIEW.md",
-    "reference_pdf_validation_contract": "docs/V3-REFERENCE-PDF-VALIDATION.md",
-    "reference_pdf_visual_review": "docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md",
-    "scientific_article_runtime_deferred": true,
+    "scientific_article_plan": "docs/V3-SCIENTIFIC-ARTICLE.md",
+    "scientific_article_contract": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
+    "scientific_article_rules": 18,
+    "scientific_article_runtime_deferred": false,
+    "scientific_article_runtime_started": false,
+    "scientific_article_profile_present_at_entry": false,
     "latest_implementation_checkpoint_sha": "da02f17df4d2d0a1568edbbe8bfbbfffb7208966",
-    "latest_fully_validated_checkpoint_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
-    "latest_fully_validated_checkpoint_state": "core-corrections-phase-end-static-green-linux-green",
+    "latest_fully_validated_checkpoint_sha": "b64074c64941895f97fbe0f795ce826c798d17ce",
+    "latest_fully_validated_checkpoint_state": "reference-pdf-validation-phase-end-static-green-linux-green-visual-pass",
     "core_corrections_closed": true,
+    "reference_pdf_validation_state": "closed",
     "current_correction_batch": [
-      "Reference PDF Validation immutable phase-end regression candidate"
+      "Scientific Article — profile and metadata surface"
     ],
     "known_runtime_failures": [],
+    "known_entry_gaps": [
+      "abntexto-ufc/core.def has no canonical scientific-article type at phase entry"
+    ],
     "pending_acceptance_gates": [
-      "Reference PDF Validation immutable candidate must pass Static contract and full Linux integration on the same SHA"
+      "Implement canonical scientific-article profile without aliases",
+      "Add article-specific positive evidence before proof-state promotion",
+      "Implement required/optional/recommended/conditional article semantics",
+      "Produce and visually inspect provenance-bound canonical article PDF",
+      "Pass Scientific Article phase-end regression on one immutable SHA"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
-    "reference_pdf_validation_state": "visual-review-pass-phase-end-candidate",
-    "stale_reference_pdf": {
-      "generated_at": "2026-09-04",
-      "state": "comparison-only",
-      "reason": "predates accepted Core Corrections"
-    },
     "temporary_executor": {
-      "path": ".github/workflows/tmp-reference-pdf.yml",
-      "state": "removed-after-successful-artifact-recovery",
-      "build_sha": "da02f17df4d2d0a1568edbbe8bfbbfffb7208966",
-      "workflow_run": 33983729996,
-      "artifact_id": 9974546873
+      "state": "none-active"
     }
   },
   "authority_decisions": {
@@ -176,6 +183,14 @@
       "line_spacing": "single",
       "review_item": 21,
       "current_state": "PASS"
+    },
+    "scientific_article": {
+      "status": "source-contract-accepted-runtime-active",
+      "rule_count": 18,
+      "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
+      "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
+      "required_optional_recommended_conditional_distinct": true,
+      "shared_mechanism_counts_as_proof": false
     }
   },
   "evidence": {
@@ -199,17 +214,21 @@
     "reference_pdf_encrypted": false,
     "reference_pdf_preflight": "pass-openable-text-based-no-xfa",
     "reference_pdf_fonts_embedded": true,
-    "reference_pdf_artifact_state": "provenance-accepted",
     "reference_pdf_visual_review_status": "pass",
     "reference_pdf_visual_review_pages": "55/55",
     "reference_pdf_visual_review_dpi": 200,
     "reference_pdf_visual_unexplained_failures": 0,
-    "reference_pdf_visual_replacement_glyphs": 0,
-    "reference_pdf_optional_photo_fallback": "intentional-normal-build-behavior",
-    "reference_pdf_stale_comparison_pages": 55,
-    "reference_pdf_stale_comparison_identical_pages": 28,
-    "reference_pdf_stale_comparison_changed_pages": 27,
-    "reference_pdf_phase_end_acceptance": "pending-static-and-linux",
+    "reference_pdf_phase_end_candidate_sha": "b64074c64941895f97fbe0f795ce826c798d17ce",
+    "reference_pdf_phase_end_static_run": 33985595790,
+    "reference_pdf_phase_end_static_conclusion": "success",
+    "reference_pdf_phase_end_linux_run": 33985595798,
+    "reference_pdf_phase_end_linux_conclusion": "success",
+    "reference_pdf_phase_end_acceptance": "accepted",
+    "reference_pdf_corroborating_static_run": 33987639785,
+    "reference_pdf_corroborating_linux_run": 33987639788,
+    "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
+    "article_rule_count": 18,
+    "article_entry_proof_state": "manual-and-conditional-manual",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

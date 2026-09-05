@@ -110,8 +110,12 @@ def main() -> int:
     active = [phase for phase in phases if phase.get("status") == "ACTIVE"]
     if len(active) != 1:
         return fail(f"expected exactly one active phase, found {len(active)}")
-    if active[0].get("id") != state.get("phase") or state.get("stage") != state.get("phase"):
+    active_phase = active[0]
+    if active_phase.get("id") != state.get("phase") or state.get("stage") != state.get("phase"):
         return fail("machine phase/stage does not match the active phase entry")
+    active_name = active_phase.get("name")
+    if not isinstance(active_name, str) or not active_name.strip():
+        return fail("active phase must expose a readable name")
 
     branch = state.get("active_branch")
     if not isinstance(branch, str) or not branch.strip():
@@ -126,15 +130,14 @@ def main() -> int:
 
     if branch not in documents["docs/HANDOFF-V3.0.0.md"]:
         return fail("handoff does not record the machine-state active branch")
-    if "Core Corrections" not in documents["docs/HANDOFF-V3.0.0.md"]:
-        return fail("handoff does not record the active readable phase")
-    if "Core Corrections" not in documents["docs/ROADMAP-V3.0.0.md"]:
-        return fail("roadmap does not record the active readable phase")
+    for path in ("AGENTS.md", "docs/HANDOFF-V3.0.0.md", "docs/ROADMAP-V3.0.0.md"):
+        if active_name not in documents[path]:
+            return fail(f"{path} does not record the active readable phase {active_name!r}")
 
     print(
         "PHASE-GOVERNANCE-EVIDENCE status=PASS "
         f"schema={state['schema_version']} phases={len(phases)} "
-        f"active={state['phase']} branch={branch} "
+        f"active={state['phase']} active_name={active_name!r} branch={branch} "
         "material_advance_docs=required phase_end_regression=required"
     )
     return 0

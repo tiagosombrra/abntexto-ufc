@@ -1,22 +1,40 @@
 # abntexto-ufc
 
-LaTeX class and reference template for academic works at the Federal University of Ceará (UFC), built on top of `abntexto`.
+Community LaTeX class and reference template for academic works at the Federal University of Ceará (UFC), built on top of `abntexto`.
 
-The canonical project identity is `abntexto-ufc`. The active `main` branch carries the unreleased v3 reconstruction. The last certified public baseline remains v2.1.0 and is recoverable through immutable tags, releases, Git history, and the verified external backup.
+> **Development status:** v3.0.0 is not released yet. The last public release is **v2.1.0**. The v3 shared academic-work foundation has completed Regression Audit, Core Corrections and Reference PDF Validation. **Scientific Article** is the active development phase and is not yet a released profile.
 
-## Current v3 status
+This project is community maintained. It must not be described as an official or UFC-homologated template unless the University explicitly grants that status.
 
-**V3-R1 through V3-R5 and V3-A1/#275 are DONE. A1 closed through PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff` after source-contract PR #279 at `4d018a92697e8f39e3a53b034c451e55996c84fb`. V3-A2/#280 is ACTIVE from exact predecessor `7a7562d23e8bf6c92abb635718639d617a2ed6ff` and owns the canonical `scientific-article` runtime/test implementation.**
+## Current v3 roadmap
 
-R2 closed through B5/PR #249 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` and its control plane was reconciled at `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-A classified the remaining foundation gaps; R3-B1 closed front-matter evidence truthfulness through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 then closed through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea`: Static `33768911131` passed and Linux `33768911126` passed `PASS=31 FAIL=0 SKIP=0` with 113/113 `automatic-partial` rules contributing bounded-positive evidence and zero automation gaps. Post-merge Linux release `33772854355` passed `PASS=33 FAIL=0 SKIP=0`. No normative semantics, proof-state defaults or public runtime API changed. R3-B3/#254 closed through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`: Static `33792280764` passed, Linux `33792280797` / job `100771483526` passed `PASS=31 FAIL=0 SKIP=0`, and post-merge Linux release `33794112546` / job `100777542613` passed `PASS=33 FAIL=0 SKIP=0`. The permanent residual gate now covers 134 LaTeX and 168 behavior-affecting engineering sources (302 total), retained test/check reachability is 147/147 with zero orphaned scripts, and negative paths require positive evidence for the same `rule_id`. R3-B4/#255 closed through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`: the executable engineering-language contract is green, the permanent residual scope is 305 sources (134 LaTeX + 171 engineering), retained test/check reachability is 148/148 with zero orphans, PR Linux passed `PASS=31 FAIL=0 SKIP=0`, and post-merge Linux release `33816137774` / job `100848593542` passed `PASS=33 FAIL=0 SKIP=0`. R3-B5/#256 entered from the canonical B4->B5 checkpoint `e5d6ab1962ee04935ee68a6ae36f268350d59a3b` and is technically validated on `c79f3c73f1d51a30175e8259269504d029442a1c`: PR #266 Linux passed `PASS=31 FAIL=0 SKIP=0`, exact-main Static passed, and exact-main release passed `PASS=33 FAIL=0 SKIP=0`. R3-B5 closed through PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`. R4/#267 then certified exact product `c79f3c73f1d51a30175e8259269504d029442a1c` in run `33855800767`: preflight, Windows strict matrix, Linux literal-font/Unicode/embedding/PDF-A inspection and cleanup all passed. R4 closeout PR #273 merged at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`; V3-R4/#267 and V3-R5/#272 are DONE. The historical R1 candidate remains `9b1752565ac217c04ffa22a9ef272cdf078af380` only as historical certification evidence.
+| Phase | Status | Evidence |
+|---|---|---|
+| Regression Audit | CLOSED | 34-point librarian-review contract reconstructed and regression baseline accepted |
+| Core Corrections | CLOSED | Candidate `5f67560a...`; Static `33982156041`; Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0` |
+| Reference PDF Validation | CLOSED | Candidate `b64074c...`; 55/55-page visual PASS; Static `33985595790`; Linux `33985595798` |
+| Scientific Article | **ACTIVE** | Source-backed 18-rule article contract; runtime/evidence implementation starts from the corrected shared foundation |
+| Final Certification | QUEUED | Full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution matrix |
+| Release | QUEUED | Release assets, checksums and publication actions |
 
-See `docs/ROADMAP-V3.0.0.md` for the consolidated roadmap/status table and `docs/HANDOFF-V3.0.0.md` for the exact continuation point.
+The consolidated librarian-review state is **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains intentionally fail-closed pending authoritative current NBR 6023:2025 evidence for disputed edge cases.
 
-## V3-A1 scientific-article contract
+See `docs/ROADMAP-V3.0.0.md`, `docs/HANDOFF-V3.0.0.md` and `release/v3-roadmap.json` for the current execution state.
 
-A1 closed through PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff` after PR #279 established the current source-backed 18-rule article contract. V3-A2/#280 is now active and owns the bounded `scientific-article` implementation: required, optional, recommended and conditional semantics must remain distinct, and article proof may advance only from article-specific evidence. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
+## Current profiles
 
-## Current v3 repository layout
+The v3 runtime currently supports:
+
+- `undergraduate-capstone`
+- `specialization-capstone`
+- `masters-thesis`
+- `doctoral-thesis`
+- `research-project`
+- `anonymized-research-project`
+
+The canonical `scientific-article` profile is the active implementation target and must not be treated as available until its phase closes.
+
+## Repository layout
 
 ```text
 abntexto-ufc.cls
@@ -50,96 +68,142 @@ release/
   ctan/
 ```
 
-The editable repository example lives under `template/`. Public template and Overleaf bundles flatten the contents of `template/` to the archive root so the user receives `main.tex` at the project root.
-
-## Engineering policy
-
-Project-owned technical surfaces use English. Brazilian academic content may remain in Portuguese where appropriate. R1 rebuilt and certified the foundation. R2-A and R2-B1 through R2-B5 are complete. The v3 public/runtime API is directly owned, the forwarding-only layer is absent, `docs/MIGRATING-TO-V3.md` documents the breaking migration, and `tests/checks/v3_api_residual.py` permanently rejects removed project API in its current source scope. R3-A, R3-B1 and R3-B2 are complete; `docs/R3-HARDENING-INVENTORY.md` records the resolved evidence findings and remaining lots. R3-B3/#254 and R3-B4/#255 are complete; R3-B5/#256 and V3-R3 are complete through PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`. R4/#267 is DONE. R5/#272 has completed foundation-freeze validation: full release gate `PASS=33 FAIL=0 SKIP=0` in run `33866258865`, and package validation run `33869888601` passed public/distribution bundle reproducibility, checksums and asset exclusions with zero workspace residue. R5 is closed at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`. V3-A1/#275 is DONE through closeout `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; V3-A2/#280 is ACTIVE from that exact predecessor and owns the scientific-article runtime/test implementation.
-
-Historical implementation evidence is kept by Git history, tags, releases, pull requests, issues, and certified SHAs rather than by archive directories inside the active tree.
-
-See:
-
-- `docs/ARCHITECTURE.md`
-- `docs/ENGINEERING-LANGUAGE.md`
-- `docs/CTAN-RELEASE.md`
-- `docs/ROADMAP-V3.0.0.md`
-- `docs/HANDOFF-V3.0.0.md`
-- `docs/R3-HARDENING-INVENTORY.md`
+The editable development example lives under `template/`. Public template and Overleaf bundles flatten that directory so users receive `main.tex` at the archive root.
 
 ## Requirements
 
 Development targets TeX Live 2026 and `abntexto` 1.1 or newer. The class also uses `biblatex`/`biber`; optional modules load their own dependencies only when enabled.
 
-Literal Times New Roman and Arial certification is performed on Windows. Portable environments may use allowed fallback families when strict literal-font mode is not requested. Proprietary Microsoft font files are never distributed by this repository.
+Literal Times New Roman and Arial certification is performed on Windows. Portable environments may use approved fallback families when strict literal-font mode is not requested. Proprietary Microsoft font files are never distributed by this repository.
 
-## Build
-
-The repository development document is `template/main.tex`.
+## Build the reference document
 
 ```bash
 make compile
 ```
 
+The development document is `template/main.tex`.
+
+Optional reference photographs used by the documentation can be fetched separately:
+
+```bash
+make reference-assets
+```
+
+When those optional licensed assets are absent, the canonical reference document intentionally renders labeled fallback boxes instead of failing the build.
+
 ## Validation
 
-Use the permanent source-only gate during routine development:
+Routine source-only validation:
 
 ```bash
 make static-check
 ```
 
-`static-check` validates tracked Python, JSON, shell and JavaScript sources, repository/canonical identity, the aggregate normative/validator source contract, object-scope metadata and the reference-guide contract. It does not compile TeX/PDF documents, fetch network resources or generate distribution artifacts, and it fails if its own execution changes the repository status.
-
-The permanent remote fast workflow is `.github/workflows/static-contract.yml`. Its stable workflow/job name is `Static contract`, and it delegates the complete product validation contract to `make static-check` rather than duplicating checks in workflow YAML.
-
-The broader validation entry points remain separate:
+Full PR-oriented integration validation:
 
 ```bash
 make check
+```
+
+Release-oriented integration validation:
+
+```bash
 make release-check
 ```
 
-`check` runs the PR-oriented integration suite and may compile or inspect generated documents. `release-check` includes the release-only integration checks.
+The permanent GitHub Actions workflows are:
 
-R1-BLOCK-7 is DONE: B7-C1 certified `make check` on clean TeX Live 2026 (`PASS=30 FAIL=0 SKIP=0`); B7-C2 permanently established `Linux integration`; and B7-C3 permanently established `Linux release check`, whose first merged-main run `33566835570` closed `PASS=32 FAIL=0 SKIP=0`, including release-only `pdfa` and `profile-pdfa`, with 14-day evidence retention. B7-D audited exactly three permanent workflows, read-only permissions, pinned actions, bounded concurrency, and no temporary executors.
+- `Static contract`
+- `Linux integration`
+- `Linux release check`
 
-The current `Stable branches` ruleset does not yet require statuses; the recorded recommendation is `Static contract` plus `Linux integration`, while `Linux release check` remains post-merge/manual.
+Every material development advance must keep the execution documentation synchronized. Every roadmap phase ends with a mandatory **phase-end regression** on one immutable candidate SHA; targeted checks never replace that gate.
 
-R1-BLOCK-8 is DONE. In source workflow run `33649620219`, Windows full-candidate-matrix job `100313006509` passed the complete Times New Roman/Arial × pdfLaTeX/LuaLaTeX candidate matrix. The workflow-level conclusion was failure because its Linux inspection job failed; separate final Linux inspection run `33655108349` / job `100331601354` subsequently passed literal text-family identity, expected independent math-font policy, Unicode extraction, embedding and PDF/A-2b. `TeXGyreTermesX-Regular` under pdfLaTeX is a legitimate `newtxmath` component, not institutional text fallback. R2-A and R2-B1 through R2-B5 are complete. B5 PR #249 merged at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e` and R2 closeout PR #251 established `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-A/#250, R3-B1/#252 and R3-B2/#253 are complete. B2 merged through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` after Static `33768911131` and Linux `33768911126` = `PASS=31 FAIL=0 SKIP=0`; R3-B3/#254 is complete through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`; R3-B4/#255 is complete through PR #264; R3-B5/#256 closed through PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`; V3-R4, V3-R5 and V3-A1/#275 are DONE; V3-A2/#280 is ACTIVE from `7a7562d23e8bf6c92abb635718639d617a2ed6ff`.
+## Canonical V3 reference PDF
 
-The narrow public delivery interface builds the editable template and Overleaf bundles:
+The corrected academic-work reference PDF was rebuilt with TeX Live 2026 from Git-bound source and inspected page by page.
+
+- build source SHA: `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`
+- build run: `33983729996`
+- pages: 55, A4
+- PDF version: 1.7
+- visual review: **55/55 PASS, 0 unexplained visual failures**
+- phase-end candidate: `b64074c64941895f97fbe0f795ce826c798d17ce`
+- phase-end Static: `33985595790` — SUCCESS
+- phase-end Linux: `33985595798` — SUCCESS
+
+Detailed evidence is in `docs/V3-REFERENCE-PDF-VALIDATION.md` and `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`.
+
+## Scientific Article development
+
+The active phase is **Scientific Article**. Its source-backed contract contains 18 rules derived from the current article-specific authority set and preserves the distinction between required, optional, recommended and conditional requirements.
+
+Implementation must:
+
+- add one canonical `scientific-article` profile without compatibility aliases;
+- reuse shared citation, bibliography, section, summary and object infrastructure rather than fork it;
+- add article-specific positive and negative evidence before proof-state promotion;
+- preserve recommendations as recommendations rather than converting them into hard failures;
+- keep journal-specific submission instructions as an applicability boundary;
+- preserve the already validated non-article foundation.
+
+See `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `docs/V3-SCIENTIFIC-ARTICLE.md`.
+
+## Public bundles
+
+Editable template and Overleaf bundles:
 
 ```bash
 make reference-assets
 make public-bundles
 ```
 
-The complete distribution candidate interface builds all current release artifacts and their checksums:
+Complete distribution candidate:
 
 ```bash
 make distribution-bundles
 ```
 
-The current v3 distribution set is:
+The current v3 distribution layout produces:
 
-- `dist/abntexto-ufc-3.0.0.zip` — class/runtime archive;
-- `dist/abntexto-ufc-ctan-3.0.0.zip` — CTAN submission candidate;
-- `dist/abntexto-ufc-template-3.0.0.zip` — version-rooted editable template;
-- `dist/abntexto-ufc-overleaf-3.0.0.zip` — root-flat self-contained Overleaf import;
-- `dist/SHA256SUMS` — SHA-256 digests for all four ZIP archives.
+- `dist/abntexto-ufc-3.0.0.zip`
+- `dist/abntexto-ufc-ctan-3.0.0.zip`
+- `dist/abntexto-ufc-template-3.0.0.zip`
+- `dist/abntexto-ufc-overleaf-3.0.0.zip`
+- `dist/SHA256SUMS`
 
-The template and Overleaf archives flatten `template/`. Only the Overleaf archive vendors the project-pinned upstream `abntexto.cls`; the class/runtime and CTAN candidates keep `abntexto` as an external dependency. Public distribution disables/excludes the undistributed UFC institutional mark and rejects proprietary Microsoft fonts. The CTAN candidate contains a dedicated English README, package manual source/PDF and minimal example in a browsing-friendly top-level `abntexto-ufc/` directory. See `docs/CTAN-RELEASE.md` for the release checklist and CTAN-specific validation contract.
+These are development/release-candidate outputs until the **Release** phase closes. Actual CTAN submission is blocked until that phase.
+
+## Standards and evidence
+
+The repository maintains a machine-readable standards/evidence model under `standards/`. Current cross-cutting work includes, among others, UFC institutional guidance and the applicable ABNT standards tracked by the project, including NBR 14724:2024, NBR 10520:2023, NBR 6023:2025, NBR 6024:2012 and NBR 6028:2021. The scientific-article profile additionally uses NBR 6022:2018 with the UFC article guide and current cross-cutting citation/reference rules.
+
+PDF/A-2b is a project certification target for generated candidates; this does not mean UFC specifically mandates that conformance level.
+
+Reviewer comments are treated as evidence, not automatic normative authority. When current authority is insufficient, the project records the gap and fails closed instead of guessing runtime behavior.
+
+## Migration and project documentation
+
+Useful documents:
+
+- `docs/MIGRATING-TO-V3.md`
+- `docs/ARCHITECTURE.md`
+- `docs/ROADMAP-V3.0.0.md`
+- `docs/HANDOFF-V3.0.0.md`
+- `docs/UFC-LIBRARIAN-REVIEW.md`
+- `docs/V3-REFERENCE-PDF-VALIDATION.md`
+- `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`
+- `docs/ARTICLE-NORMATIVE-CONTRACT.md`
+- `docs/V3-SCIENTIFIC-ARTICLE.md`
+- `docs/ENGINEERING-LANGUAGE.md`
+- `docs/CTAN-RELEASE.md`
+
+Historical implementation evidence is retained through Git history, immutable tags, GitHub Releases, issues, pull requests and certified SHAs rather than archive directories inside the active tree.
 
 ## Institutional assets
 
-The source repository may contain the UFC coat-of-arms asset for local development and validation. Public bundles must not redistribute institutional marks unless their distribution status has been explicitly cleared. The build must remain usable when the user provides an approved institutional asset locally.
-
-## Standards and certification
-
-The project tracks current applicable UFC and ABNT requirements through the `standards/` evidence model. PDF/A-2b is the project's technical certification target for generated candidate documents; this does not mean UFC specifically requires the PDF/A-2b conformance level.
-
-The project must not be described as an official or UFC-homologated template unless the University explicitly grants that status.
+The source repository may contain UFC institutional assets for local development and validation. Public bundles must not redistribute institutional marks unless their distribution status has been explicitly cleared. Builds must remain usable when users provide an approved institutional asset locally.
 
 ## License
 

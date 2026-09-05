@@ -1,11 +1,11 @@
 # V3 Reference PDF Validation
 
 Updated: 2026-09-05  
-Status: ACTIVE — VISUAL REVIEW PASS / PHASE-END CANDIDATE
+Status: CLOSED — ACCEPTED
 
 ## Purpose
 
-This phase validates the corrected canonical V3 reference PDF as a rendered document. Source-level and integration tests remain necessary but are not sufficient for presentation acceptance.
+This phase validates the corrected canonical V3 academic-work reference PDF as a rendered document. Source-level and integration tests remain necessary but are not sufficient for presentation acceptance.
 
 Core Corrections closed on immutable candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, which passed Static `33982156041` and full Linux `33982156042`; Linux summary: `PASS=31 FAIL=0 SKIP=0`.
 
@@ -29,7 +29,7 @@ Fresh canonical PDF build:
 - preflight: PASS;
 - fonts: all listed entries embedded.
 
-The temporary build executor is removed. The older 2026-09-04 PDF is comparison-only.
+The temporary build executor is removed. The older 2026-09-04 PDF remains comparison-only.
 
 ## Visual review
 
@@ -45,20 +45,40 @@ Result:
 - presentation-sensitive librarian reconfirmation: PASS;
 - optional page-36 licensed-photo fallback: intentional normal-build behavior.
 
+An independent follow-up inspection of the recovered artifact repeated PDF preflight and a complete 55-page contact-sheet scan. It confirmed the accepted page count, A4 geometry, embedded fonts and absence of visible clipping, overlap, broken glyphs or unexplained blank pages. No correction was required.
+
 A preservation-only raster comparison against the older V3 PDF retained 55 pages in both documents; 28 pages were pixel-identical at 120 DPI and 27 changed in accepted correction/reference-content areas.
 
 ## Validation loop
 
-1. Establish artifact provenance and bind PDF to a concrete Git SHA. — **PASS**
-2. Preflight page count, A4 geometry, PDF version, fonts/embedding and extraction viability. — **PASS**
-3. Render every page at 200 DPI. — **PASS**
-4. Inspect complete page sequence for clipping, overlap, glyphs, pagination, margins, headings and object overflow. — **PASS**
-5. Reconfirm presentation-sensitive librarian-review items 10, 15, 21 and 34 plus canonical examples 1, 2, 7, 11, 16 and 28. — **PASS**
-6. Compare older preserved surfaces where useful, without treating the old PDF as authority. — **PASS**
-7. Record all visual findings. — **PASS**
-8. Classify defects before modification. — **NOT TRIGGERED: no visual defect found**
-9. Rebuild/re-render after correction. — **NOT APPLICABLE: no correction required**
-10. Freeze synchronized repository state and run phase-end regression. — **CURRENT**
+| Step | Result |
+|---|---|
+| Establish artifact provenance and bind PDF to a concrete Git SHA | PASS |
+| Preflight page count, A4 geometry, PDF version, fonts/embedding and extraction viability | PASS |
+| Render every page at 200 DPI | PASS |
+| Inspect complete page sequence for clipping, overlap, glyphs, pagination, margins, headings and object overflow | PASS |
+| Reconfirm presentation-sensitive librarian-review items | PASS |
+| Compare older preserved surfaces where useful without treating old PDF as authority | PASS |
+| Record visual findings | PASS |
+| Classify defects before modification | NOT TRIGGERED — no visual defect found |
+| Rebuild/re-render after correction | NOT APPLICABLE — no correction required |
+| Freeze synchronized repository state and run phase-end regression | PASS |
+
+## Phase-end regression
+
+Immutable Reference PDF Validation candidate:
+
+`b64074c64941895f97fbe0f795ce826c798d17ce`
+
+Required same-SHA results:
+
+- Static contract `33985595790` — **SUCCESS**;
+- full Linux integration `33985595798` — **SUCCESS**;
+- accepted canonical-PDF provenance — **PASS**;
+- complete visual-review record — **PASS**;
+- temporary executor absent — **PASS**.
+
+Later reruns `33987639785` and `33987639788` also succeeded and corroborate the accepted state; they do not replace the primary immutable phase-end binding above.
 
 ## Page-level review groups
 
@@ -77,25 +97,12 @@ A preservation-only raster comparison against the older V3 PDF retained 55 pages
 
 Librarian-review item 33 remains `NORMATIVE-REVIEW`. This phase observes current bibliography presentation but does not convert disputed NBR 6023:2025 edge cases into runtime requirements without authoritative current-edition text.
 
-## Current phase-end candidate rule
+## Exit result
 
-This synchronized visual-review-complete repository state is frozen as one immutable Reference PDF Validation phase-end candidate. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`; the actual candidate SHA is recorded after commit creation and later written with workflow results.
+All Reference PDF Validation exit criteria are satisfied. The phase is **CLOSED** and the roadmap may activate **Scientific Article**.
 
-The candidate must pass:
+The accepted academic-work PDF remains a preservation baseline for later phases. Scientific Article work must not regress shared behavior merely to simplify the new profile.
 
-1. Static contract;
-2. full Linux integration;
-3. existing phase-specific acceptance evidence.
+## Regression discipline retained
 
-## Exit gate
-
-Reference PDF Validation -> Scientific Article requires:
-
-- accepted canonical PDF provenance;
-- complete page-level visual PASS;
-- reproducible presentation evidence;
-- temporary executor absent;
-- documentation/machine state synchronized;
-- Static contract and full Linux integration green on one immutable Reference PDF Validation candidate.
-
-Scientific Article runtime remains deferred until this gate closes.
+Every **material advance** after this phase still requires synchronized documentation. Every later phase still requires its own **phase-end regression** on one immutable candidate before closure.
