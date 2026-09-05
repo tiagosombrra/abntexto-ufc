@@ -10,9 +10,11 @@ Regression Audit is closed. Object/Core Corrections checkpoint `3f47081cbbd00a44
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`, closing review items 11, 16 and 28.
 
-Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports `portuguese_technical_diagnostics=0`. That finding is closed.
+Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports `portuguese_technical_diagnostics=0`.
 
-Current 34-point state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358` passed Static `33974062993` and full Linux `33974063103`, with `PASS=31 FAIL=0 SKIP=0`. Reviewer-specific items 30, 31 and 32 evidence passed; item 32 is closed.
+
+Current 34-point state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. The remaining PARTIAL items are 1, 2, 7 and 34. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -45,38 +47,30 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 - readable phase/control-plane migration;
 - machine-protected 34-item librarian contract;
 - mandatory documentation-on-material-advance and phase-end regression governance;
-- advisor/co-advisor punctuation, optional department/full-name guidance and committee examples;
+- advisor/co-advisor punctuation and committee/front-matter implementation support;
 - first textual UFC full-name reference and stale V2/current-reference hygiene;
 - reviewer-specific long-direct-quotation locator/punctuation evidence;
 - external-illustration source locator evidence;
 - code/body typography consistency evidence;
 - object typography migration accepted by Static `33965794475` + Linux `33965794519`;
 - source/generated-PDF evidence for items 11, 16 and 28 accepted through `c4c59...`;
-- engineering-language false-negative hardening accepted at `edeb14...`, Static `33972111694` + Linux `33972111696`.
+- engineering-language false-negative hardening accepted at `edeb14...`, Static `33972111694` + Linux `33972111696`;
+- bounded references evidence accepted at `bcd851b...`, Static `33974062993` + Linux `33974063103`, closing item 32 while preserving item 33 fail-closed.
 
-### Current work — References
+### Current work — Front Matter and Annex Closeout
 
-Reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` is prepared and deliberately does not alter normative runtime.
+The remaining PARTIAL review items are 1, 2, 7 and 34. The next bounded evidence step must confirm:
 
-It adds controlled evidence for:
+1. item 1 — blank department is omitted cleanly and a filled department is rendered;
+2. item 2 — the canonical complete-name author placeholder reaches generated pre-textual output;
+3. item 7 — approval-page committee institution supports/render `Instituição (sigla)`;
+4. item 34 — canonical annex source attribution is present together with accepted annex heading and TOC presentation.
 
-1. item 30 — online unknown-publication markers remain omitted for the established controlled electronic case;
-2. item 31 — thesis/dissertation work type and institution/location are present and the year is rendered exactly once with no contradictory year;
-3. item 32 — a standard entry contains accepted ABNT publisher/year data and a bibliography-specific `@mvbook` renders the reviewed `2 v.` physical description.
+Prefer evidence additions over runtime changes unless a test exposes a real implementation defect. Keep item 33 untouched.
 
-Acceptance gate:
+### Remaining Core Corrections after this closeout batch
 
-1. publish the synchronized checkpoint containing `63d20de...` and current documentation;
-2. require Static contract and full Linux integration on that exact checkpoint;
-3. do not change runtime merely to satisfy a reviewer-form expectation if the bounded evidence fails; classify and re-audit authority instead;
-4. on green CI, item 32 may move from PARTIAL to PASS and the matrix becomes **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**;
-5. item 33 remains untouched.
-
-### Remaining Core Corrections after References
-
-- canonical confirmation for partial front-matter items 1, 2 and 7;
-- canonical annex external-source/heading/TOC confirmation for item 34;
-- complete Core Corrections phase-end regression on one immutable SHA.
+If items 1, 2, 7 and 34 close, no librarian-review `PARTIAL` or `FAIL` remains. Core Corrections still does **not** close automatically: prepare one immutable candidate and run the complete Core Corrections phase-end regression, with documentation synchronized to that SHA. Only then may Reference PDF Validation become ACTIVE.
 
 ## Gate before Reference PDF Validation
 
@@ -88,7 +82,7 @@ Scientific Article starts only after Core Corrections closes and the corrected c
 
 ## Naming policy
 
-Use descriptive work names such as `Core Corrections — References`, `Reference PDF Validation — Pre-textual Pages`. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
+Use descriptive work names such as `Core Corrections — Front Matter and Annex Closeout`, `Reference PDF Validation — Pre-textual Pages`. Do not create new opaque nested letter/number identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
 
 ## Retained checkpoints
 
@@ -99,4 +93,4 @@ Use descriptive work names such as `Core Corrections — References`, `Reference
 - accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
 - accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
 - accepted engineering-language hardening checkpoint: `edeb14b7a96d1cab3ad9551701087ddf4dff059a`;
-- current reference evidence implementation: `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` (acceptance pending synchronized CI).
+- accepted bounded references checkpoint: `bcd851b3176b516091a254bc57b5ae4e8add9358`.

@@ -26,11 +26,13 @@ These are historical audit closeout facts.
 
 The object-title authority conflict is resolved and accepted. Checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` passed Static `33965794475` and full Linux `33965794519`; review item 21 is PASS.
 
-Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, closing review items 11, 16 and 28. Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, closing review items 11, 16 and 28.
 
 Engineering-language false-negative hardening is resolved. Checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports `portuguese_technical_diagnostics=0`.
 
-The next bounded post-audit correction is reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` for review items 30-32. It changes fixtures/evidence only, not normative runtime, and remains acceptance-pending until its synchronized checkpoint passes Static and full Linux. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+Bounded reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f`, synchronized at `bcd851b3176b516091a254bc57b5ae4e8add9358`, passed Static `33974062993` and full Linux `33974063103`. Reviewer-specific evidence for items 30, 31 and 32 passed without changing normative runtime; item 32 is closed.
+
+Current librarian-review state is therefore **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. The remaining PARTIAL items are 1, 2, 7 and 34. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
 

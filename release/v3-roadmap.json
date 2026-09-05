@@ -123,8 +123,8 @@
   "active_work": {
     "review_items": 34,
     "review_status": {
-      "pass": 28,
-      "partial": 5,
+      "pass": 29,
+      "partial": 4,
       "fail": 0,
       "normative_review": 1
     },
@@ -132,16 +132,17 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "63d20de2894e6ba4149bac0b2aba3efeb1aef27f",
-    "latest_fully_validated_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
-    "latest_fully_validated_checkpoint_state": "static-green-linux-green-engineering-language-hardening-accepted",
+    "latest_implementation_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
+    "latest_fully_validated_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
+    "latest_fully_validated_checkpoint_state": "static-green-linux-green-bounded-reference-evidence-accepted",
     "current_correction_batch": [
-      "references item 30 reviewer-specific electronic-resource evidence",
-      "references item 31 duplicate-or-contradictory-year negative regression",
-      "references item 32 bibliography-specific standard and multivolume evidence"
+      "front matter item 1 blank-filled department evidence",
+      "front matter item 2 complete-author-name generated-output evidence",
+      "front matter item 7 committee institution-acronym approval-page evidence",
+      "annex item 34 canonical source-heading-toc evidence"
     ],
-    "review_items_confirmed_by_latest_full_linux": [4, 11, 16, 17, 19, 20, 21, 23, 28],
-    "review_items_source_evidence_accepted": [11, 16, 28],
+    "review_items_confirmed_by_latest_full_linux": [4, 11, 16, 17, 19, 20, 21, 23, 28, 30, 31, 32],
+    "review_items_source_evidence_accepted": [11, 16, 28, 30, 31, 32],
     "known_runtime_failures": [],
     "known_gate_failures": [
       "historical Static 33970711005: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostics",
@@ -149,7 +150,8 @@
       "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup"
     ],
     "pending_acceptance_gates": [
-      "reference implementation 63d20de: synchronized Static contract and full Linux integration required"
+      "front-matter-and-annex closeout evidence requires synchronized Static contract and full Linux integration",
+      "Core Corrections phase closure requires a separate immutable phase-end regression candidate after remaining PARTIAL items are closed"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
@@ -198,8 +200,14 @@
     "engineering_language_hardening_state": "accepted",
     "engineering_language_permanent_audit": "portuguese_technical_diagnostics=0",
     "reference_evidence_implementation_sha": "63d20de2894e6ba4149bac0b2aba3efeb1aef27f",
+    "reference_evidence_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
     "reference_evidence_items": [30, 31, 32],
-    "reference_evidence_acceptance": "pending-synchronized-static-and-linux",
+    "reference_evidence_acceptance": "accepted",
+    "reference_evidence_static_run": 33974062993,
+    "reference_evidence_static_conclusion": "success",
+    "reference_evidence_linux_run": 33974063103,
+    "reference_evidence_linux_conclusion": "success",
+    "reference_evidence_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,
