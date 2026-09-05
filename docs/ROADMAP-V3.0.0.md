@@ -14,7 +14,7 @@ Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff0
 
 Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358` passed Static `33974062993` and full Linux `33974063103`, with `PASS=31 FAIL=0 SKIP=0`. Reviewer-specific items 30, 31 and 32 evidence passed; item 32 is closed.
 
-Current 34-point state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. The remaining PARTIAL items are 1, 2, 7 and 34. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+Current 34-point state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Current implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence for remaining PARTIAL items 1, 2, 7 and 34. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -59,18 +59,25 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 
 ### Current work — Front Matter and Annex Closeout
 
-The remaining PARTIAL review items are 1, 2, 7 and 34. The next bounded evidence step must confirm:
+Implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence-only checks for:
 
-1. item 1 — blank department is omitted cleanly and a filled department is rendered;
-2. item 2 — the canonical complete-name author placeholder reaches generated pre-textual output;
-3. item 7 — approval-page committee institution supports/render `Instituição (sigla)`;
-4. item 34 — canonical annex source attribution is present together with accepted annex heading and TOC presentation.
+1. item 1 — blank department omitted and filled department rendered on the academic cover;
+2. item 2 — canonical complete-author-name placeholder rendered in generated pre-textual output;
+3. item 7 — approval-page committee institution rendered in `Instituição (sigla)` form;
+4. item 34 — canonical annex source attribution, heading presence and TOC entry, combined with existing independent bold-heading runtime evidence.
 
-Prefer evidence additions over runtime changes unless a test exposes a real implementation defect. Keep item 33 untouched.
+Acceptance gate:
 
-### Remaining Core Corrections after this closeout batch
+1. synchronize documentation/machine state on top of `33bdd0bd...`;
+2. require Static contract and full Linux integration on that exact checkpoint;
+3. require explicit PASS evidence for items 1, 2, 7 and 34;
+4. classify failures before any runtime change;
+5. on green CI, promote the matrix to **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**;
+6. keep item 33 untouched.
 
-If items 1, 2, 7 and 34 close, no librarian-review `PARTIAL` or `FAIL` remains. Core Corrections still does **not** close automatically: prepare one immutable candidate and run the complete Core Corrections phase-end regression, with documentation synchronized to that SHA. Only then may Reference PDF Validation become ACTIVE.
+### Remaining Core Corrections after this batch
+
+If items 1, 2, 7 and 34 close, prepare a separate immutable Core Corrections phase-end regression candidate. Targeted closeout success is not itself the phase transition gate. Reference PDF Validation may become ACTIVE only after the complete phase-end regression is green and recorded in synchronized documentation.
 
 ## Gate before Reference PDF Validation
 
@@ -93,4 +100,5 @@ Use descriptive work names such as `Core Corrections — Front Matter and Annex 
 - accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
 - accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
 - accepted engineering-language hardening checkpoint: `edeb14b7a96d1cab3ad9551701087ddf4dff059a`;
-- accepted bounded references checkpoint: `bcd851b3176b516091a254bc57b5ae4e8add9358`.
+- accepted bounded references checkpoint: `bcd851b3176b516091a254bc57b5ae4e8add9358`;
+- current Front Matter and Annex Closeout implementation: `33bdd0bd5f9360c645b4166071c32dbba6c647f0` (acceptance pending synchronized CI).

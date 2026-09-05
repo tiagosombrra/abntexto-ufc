@@ -32,10 +32,12 @@ Engineering-language false-negative hardening is resolved. Checkpoint `edeb14b7a
 
 Bounded reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f`, synchronized at `bcd851b3176b516091a254bc57b5ae4e8add9358`, passed Static `33974062993` and full Linux `33974063103`. Reviewer-specific evidence for items 30, 31 and 32 passed without changing normative runtime; item 32 is closed.
 
-Current librarian-review state is therefore **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. The remaining PARTIAL items are 1, 2, 7 and 34. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+Current librarian-review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. The remaining PARTIAL items are 1, 2, 7 and 34.
+
+Current closeout implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds evidence for those four remaining PARTIAL items. It is not accepted until a synchronized Static/full Linux checkpoint is green. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.
 
 ## Regression discipline retained after audit
 
-Every material advance continues to update the active execution documentation. Every phase requires a phase-end regression on one immutable candidate before closure; targeted correction checks never replace that phase-level regression.
+Every **material advance** continues to update the active execution documentation. Every phase requires a **phase-end regression** on one immutable candidate before closure; targeted correction checks never replace that phase-level regression.

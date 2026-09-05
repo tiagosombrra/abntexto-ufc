@@ -14,7 +14,8 @@ Updated: 2026-09-05
 - Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and Linux `33972111696` succeeded; permanent detector reports zero project-owned Portuguese technical diagnostics.
 - Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358`: Static `33974062993` and Linux `33974063103` succeeded, `PASS=31 FAIL=0 SKIP=0`; reviewer-specific items 30, 31 and 32 evidence passed and item 32 closed.
 - Current 34-item state: `29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
-- Current bounded batch: **Core Corrections — Front Matter and Annex Closeout** for items 1, 2, 7 and 34.
+- Current bounded batch: **Core Corrections — Front Matter and Annex Closeout**.
+- Current implementation: `33bdd0bd5f9360c645b4166071c32dbba6c647f0`; evidence for items 1, 2, 7 and 34 is implemented but acceptance is pending synchronized Static/full Linux.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
@@ -22,29 +23,24 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 Git facts, machine state, roadmap and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
 
-## Accepted reference closeout
+## Current front-matter and annex implementation
 
-Implementation `63d20de...`, synchronized at `bcd851b...`, was evidence-only and did not change `abntexto-ufc/standards/nbr6023-2025.def` or any normative runtime rule.
+Implementation `33bdd0bd...` is evidence-only unless CI exposes a real implementation defect:
 
-Linux `33974063103` emitted explicit PASS evidence for:
-
-1. item 30 — electronic unknown-publication markers omitted for the controlled online entry;
-2. item 31 — thesis/dissertation work type plus a single consistent year;
-3. item 32 — ABNT standard publisher/year and bibliography-specific multivolume `2 v.` physical description.
-
-The existing `tests/integration/multivolume.sh` remains document-pagination evidence only and was not reused as bibliography evidence.
+1. item 1 — `frontmatter-cover-evidence.sh` now compiles a blank-department academic cover and a generated filled-department variant; blank must omit the marker and filled must render it;
+2. item 2 — the canonical reference PDF must render `NOME COMPLETO DO AUTOR` in pre-textual output;
+3. item 7 — the approval-page fixture uses `Instituição Externa de Teste (IET)` and the generated doctoral approval page must preserve the institution/acronym presentation;
+4. item 34 — the canonical reference gate requires annex heading/source attribution in generated PDF and annex entry in generated TOC, while the existing independent appendix/annex final-PDF gate continues to prove bold/uppercase/12 pt/centered heading behavior.
 
 ## Immediate action
 
-Continue **Core Corrections — Front Matter and Annex Closeout**:
-
-1. add explicit blank/filled department evidence for item 1;
-2. prove the canonical complete-author-name placeholder is present in generated pre-textual output for item 2;
-3. prove the approval-page committee institution renders an `Instituição (sigla)` example for item 7;
-4. prove canonical annex source attribution together with annex heading and TOC presentation for item 34;
-5. synchronize all affected control documents in the same material advance;
-6. run Static contract and full Linux integration on the synchronized checkpoint;
-7. if items 1, 2, 7 and 34 close, prepare one immutable **Core Corrections phase-end regression** candidate before activating Reference PDF Validation;
+1. publish a synchronized documentation checkpoint on top of `33bdd0bd...`;
+2. run Static contract and full Linux integration on that exact checkpoint;
+3. require explicit `LIBRARIAN-REVIEW-EVIDENCE` PASS lines for items 1, 2, 7 and 34;
+4. classify any failure before changing runtime; do not weaken the evidence;
+5. if both gates pass, promote the 34-item matrix to `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` and synchronize all control documents;
+6. prepare a **separate immutable Core Corrections phase-end regression candidate** and run the complete phase regression;
+7. activate Reference PDF Validation only after that phase-end regression is green and recorded;
 8. keep item 33 untouched/fail-closed.
 
 ## Mandatory operating discipline

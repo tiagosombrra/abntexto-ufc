@@ -132,7 +132,7 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
+    "latest_implementation_checkpoint_sha": "33bdd0bd5f9360c645b4166071c32dbba6c647f0",
     "latest_fully_validated_checkpoint_sha": "bcd851b3176b516091a254bc57b5ae4e8add9358",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green-bounded-reference-evidence-accepted",
     "current_correction_batch": [
@@ -150,7 +150,7 @@
       "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup"
     ],
     "pending_acceptance_gates": [
-      "front-matter-and-annex closeout evidence requires synchronized Static contract and full Linux integration",
+      "front-matter-and-annex implementation 33bdd0bd requires synchronized Static contract and full Linux integration",
       "Core Corrections phase closure requires a separate immutable phase-end regression candidate after remaining PARTIAL items are closed"
     ],
     "queued_evidence_hardening": [],
@@ -208,6 +208,9 @@
     "reference_evidence_linux_run": 33974063103,
     "reference_evidence_linux_conclusion": "success",
     "reference_evidence_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "frontmatter_annex_closeout_implementation_sha": "33bdd0bd5f9360c645b4166071c32dbba6c647f0",
+    "frontmatter_annex_closeout_items": [1, 2, 7, 34],
+    "frontmatter_annex_closeout_acceptance": "pending-synchronized-static-and-linux",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,

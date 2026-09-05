@@ -21,7 +21,7 @@ Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` pa
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28.
 
-Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; the permanent audit reports zero project-owned Portuguese technical diagnostics.
+Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports zero project-owned Portuguese technical diagnostics.
 
 Reference evidence checkpoint `bcd851b3176b516091a254bc57b5ae4e8add9358` passed Static `33974062993` and full Linux `33974063103`, `PASS=31 FAIL=0 SKIP=0`. Reviewer-specific evidence for items 30, 31 and 32 passed without changing NBR 6023 runtime; item 32 is closed.
 
@@ -40,15 +40,15 @@ Current librarian-review state is **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-R
 
 Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained.
 
-### 2. Front Matter and Institutional Metadata — ACTIVE CLOSEOUT
+### 2. Front Matter and Institutional Metadata — ACTIVE / IMPLEMENTED, CI PENDING
 
-Covers items 1-10. Remaining PARTIAL items are 1, 2 and 7. The next bounded evidence step must prove:
+Current implementation `33bdd0bd5f9360c645b4166071c32dbba6c647f0` adds bounded evidence for remaining PARTIAL items 1, 2 and 7 without changing runtime:
 
-- item 1: department/unit omitted cleanly when blank and rendered when filled;
-- item 2: canonical pre-textual author presentation uses the complete-name placeholder in generated output;
-- item 7: approval-page committee institution can render `Instituição (sigla)` explicitly.
+- item 1: the academic cover is compiled both without a department and with a generated `UFCFRONTMATTERCOVDEPT` department marker; the blank case must omit it and the filled case must render it;
+- item 2: the canonical generated PDF must contain the complete-name author placeholder `NOME COMPLETO DO AUTOR` in pre-textual output;
+- item 7: the approval-page fixture now carries `Instituição Externa de Teste (IET)` and the rendered doctoral approval page must preserve that `Instituição (sigla)` form.
 
-No runtime change is planned unless the evidence exposes a real implementation defect.
+Acceptance requires synchronized Static contract and full Linux integration. Runtime changes are prohibited unless those checks expose an actual implementation defect.
 
 ### 3. Body Structure, Headings, Citations and Lists — VALIDATED
 
@@ -76,9 +76,9 @@ Static `33974062993` and Linux `33974063103` passed. `tests/integration/multivol
 
 Item 33 remains `NORMATIVE-REVIEW`. No runtime change is authorized for disputed DOI/availability/repeated-author/corporate-author cases without current authoritative text.
 
-### 7. Appendices, Annexes and External Source Attribution — ACTIVE CLOSEOUT
+### 7. Appendices, Annexes and External Source Attribution — ACTIVE / IMPLEMENTED, CI PENDING
 
-Automated heading/pagination behavior is green and the canonical annex source example exists. Remaining item 34 requires canonical/source evidence that the external source indication is present together with the already-established annex heading and TOC presentation.
+Implementation `33bdd0bd...` extends the canonical reference-document gate for item 34. It requires the generated canonical PDF to contain the annex heading and source attribution, and the generated TOC to contain the annex entry. Existing independent final-PDF evidence continues to prove uppercase/bold/12 pt/centered annex heading behavior.
 
 ### 8. Canonical V3 Reference Corpus Cleanup — VALIDATED/PROTECTED
 
@@ -88,13 +88,13 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 
 | # | State | Priority | Remaining action / acceptance |
 |---:|---|---|---|
-| 1 | PARTIAL | P2 | Canonical blank/filled department evidence. |
-| 2 | PARTIAL | P2 | Canonical complete-name generated-output evidence. |
+| 1 | PARTIAL | P2 | `33bdd0bd...` blank/filled department evidence; synchronized CI pending. |
+| 2 | PARTIAL | P2 | `33bdd0bd...` canonical complete-name generated-output evidence; synchronized CI pending. |
 | 3 | PASS | P3 | Preserve subtitle propagation regression. |
 | 4 | PASS | P1 | Preserve advisor/co-advisor punctuation regression. |
 | 5 | PASS | P3 | Preserve conditional co-advisor rendering. |
 | 6 | PASS | P3 | Preserve concentration behavior. |
-| 7 | PARTIAL | P2 | Canonical `Instituição (sigla)` approval-page evidence. |
+| 7 | PARTIAL | P2 | `33bdd0bd...` approval-page institution/acronym evidence; synchronized CI pending. |
 | 8 | PASS | P3 | Preserve variable committee size. |
 | 9 | PASS | P3 | Preserve CAPES guidance. |
 | 10 | PASS | P3 | Reconfirm in corrected canonical PDF. |
@@ -121,7 +121,7 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 31 | PASS | P3 | Single-year thesis/dissertation evidence accepted at `bcd851b...`. |
 | 32 | PASS | P1/P2 | Standard/multivolume bibliography evidence accepted at `bcd851b...`. |
 | 33 | NORMATIVE-REVIEW | P1 | Wait for authoritative NBR 6023:2025 edge-case text. |
-| 34 | PARTIAL | P1/P2 | Canonical annex source/heading/TOC evidence. |
+| 34 | PARTIAL | P1/P2 | `33bdd0bd...` canonical annex source/heading/TOC evidence; synchronized CI pending. |
 
 ## Additional regression findings
 
@@ -135,6 +135,10 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve accepted source/PDF evidence. |
 | Engineering-language gate had mixed-diagnostic false negatives | CLOSED | Retain permanent stronger detector and self-tests. |
 | Reviewer bibliography edge cases lacked bounded evidence | CLOSED FOR 30-32 | Preserve `bcd851b...`; keep 33 fail-closed. |
+
+## Current batch acceptance
+
+If the synchronized checkpoint containing `33bdd0bd...` passes Static and full Linux and emits PASS evidence for items 1, 2, 7 and 34, promote the matrix to **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Then prepare a separate immutable Core Corrections phase-end regression candidate. Do not transition phases on the targeted batch result alone.
 
 ## Phase transition gates
 
