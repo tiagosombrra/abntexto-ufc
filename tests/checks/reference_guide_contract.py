@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -10,7 +11,17 @@ STANDARDS_DIR = ROOT / "standards"
 MAP_PATH = STANDARDS_DIR / "reference-guide-map.json"
 CATALOG_PATH = STANDARDS_DIR / "catalog.json"
 ATOMIC_PATH = STANDARDS_DIR / "atomic-rules.json"
+REFERENCE_ROOT = ROOT / "template"
 ALLOWED_CLASSIFICATIONS = {"normative", "institutional", "model-policy", "example"}
+RETIRED_REFERENCE_TOKENS = (
+    "tccgraduacao",
+    "tccespecializacao",
+    "projetoanonimizado",
+    "ficha-catalografica",
+    "fonte-estrita",
+    "backmatter/referencias.bib",
+    "frontmatter/dedicatoria.tex",
+)
 
 
 def load_json(path: Path) -> Any:
@@ -48,6 +59,51 @@ def collect_rule_ids(catalog: dict[str, Any], atomic: dict[str, Any]) -> set[str
     return rule_ids
 
 
+def audit_reference_hygiene() -> list[str]:
+    failures: list[str] = []
+    tex_files = sorted(REFERENCE_ROOT.rglob("*.tex"))
+    for path in tex_files:
+        text = path.read_text(encoding="utf-8")
+        rel = path.relative_to(ROOT).as_posix()
+        if re.search(r"\bV2\b", text):
+            failures.append(f"{rel}: stale V2 wording remains in the canonical V3 reference")
+        for token in RETIRED_REFERENCE_TOKENS:
+            if token in text:
+                failures.append(f"{rel}: retired V3 reference token remains: {token}")
+        if re.search(r"\\texttt\{tipo\}", text):
+            failures.append(f"{rel}: retired public profile key is still documented: tipo")
+
+    main = (REFERENCE_ROOT / "main.tex").read_text(encoding="utf-8")
+    intro = (REFERENCE_ROOT / "chapters" / "1-introduction.tex").read_text(encoding="utf-8")
+    annex = (REFERENCE_ROOT / "backmatter" / "annexes" / "annex-a.tex").read_text(
+        encoding="utf-8"
+    )
+
+    required = {
+        "template/main.tex": (
+            "department = {}",
+            "author = {Nome Completo do Autor}",
+            "Universidade Federal do Ceará (UFC)",
+        ),
+        "template/chapters/1-introduction.tex": (
+            "Universidade Federal do Ceará (UFC)",
+            "\\texttt{undergraduate-capstone}",
+        ),
+        "template/backmatter/annexes/annex-a.tex": ("\\textbf{Fonte:}",),
+    }
+    sources = {
+        "template/main.tex": main,
+        "template/chapters/1-introduction.tex": intro,
+        "template/backmatter/annexes/annex-a.tex": annex,
+    }
+    for rel, markers in required.items():
+        for marker in markers:
+            if marker not in sources[rel]:
+                failures.append(f"{rel}: required V3 reference marker missing: {marker}")
+
+    return failures
+
+
 def main() -> None:
     guide = load_json(MAP_PATH)
     catalog = load_json(CATALOG_PATH)
@@ -57,7 +113,7 @@ def main() -> None:
     rule_ids = collect_rule_ids(catalog, atomic)
 
     seen_topics: set[str] = set()
-    failures: list[str] = []
+    failures: list[str] = audit_reference_hygiene()
     passes = 0
 
     for topic in guide.get("topics", []):
@@ -113,6 +169,12 @@ def main() -> None:
             print(f"GUIDE-EVIDENCE topic={topic_id} reasons={'|'.join(reasons)}")
 
     total = len(guide.get("topics", []))
+    hygiene_failures = [item for item in failures if item.startswith("template/")]
+    print(
+        "GUIDE-EVIDENCE hygiene_status="
+        + ("FAIL" if hygiene_failures else "PASS")
+        + f" failures={len(hygiene_failures)}"
+    )
     print(f"GUIDE-EVIDENCE summary PASS={passes} FAIL={len(failures)} total={total}")
     print("GUIDE-EVIDENCE normative_contract_changed=false")
 

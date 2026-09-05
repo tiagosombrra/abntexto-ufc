@@ -5,9 +5,9 @@
   "target_version": "3.0.0",
   "updated_at": "2026-09-04",
   "status": "ACTIVE",
-  "phase": "regression-audit",
-  "stage": "regression-audit",
-  "stage_name": "Regression Audit",
+  "phase": "core-corrections",
+  "stage": "core-corrections",
+  "stage_name": "Core Corrections",
   "active_branch": "main",
   "authorities": {
     "git_facts_must_match_machine_state": true,
@@ -16,6 +16,7 @@
     "roadmap": "docs/ROADMAP-V3.0.0.md",
     "bootstrap": "AGENTS.md",
     "regression_audit": "docs/V3-REGRESSION-AUDIT.md",
+    "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
     "fail_closed_on_disagreement": true,
     "memory_is_not_an_authority": true
@@ -36,6 +37,7 @@
   },
   "baseline": {
     "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
+    "regression_planning_checkpoint_sha": "ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2",
     "certified_non_article_foundation_sha": "c79f3c73f1d51a30175e8259269504d029442a1c",
     "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
     "article_pre_runtime_checkpoint_sha": "7a7562d23e8bf6c92abb635718639d617a2ed6ff",
@@ -45,16 +47,16 @@
     {
       "id": "regression-audit",
       "name": "Regression Audit",
-      "status": "ACTIVE",
+      "status": "CLOSED",
       "purpose": "Revalidate the shared V3 foundation and classify all recovered review requirements and newly discovered defects.",
-      "exit_gate": "Every finding has authority classification, owner, correction decision and acceptance evidence; current integration is green or every failure is classified."
+      "exit_gate": "Closed with the 34-item contract, classified additional findings, readable control plane, and green static/full-integration baseline."
     },
     {
       "id": "core-corrections",
       "name": "Core Corrections",
-      "status": "QUEUED",
+      "status": "ACTIVE",
       "purpose": "Correct shared runtime, template, normative mapping, documentation and tests identified by the regression.",
-      "exit_gate": "No unresolved shared FAIL and no NORMATIVE-REVIEW silently encoded as runtime behavior."
+      "exit_gate": "No unresolved shared FAIL; all shared P0/P1 corrections have evidence; no NORMATIVE-REVIEW is silently encoded as runtime behavior."
     },
     {
       "id": "reference-pdf-validation",
@@ -87,7 +89,7 @@
   ],
   "active_work": {
     "review_items": 34,
-    "review_status": {
+    "audit_baseline_review_status": {
       "pass": 19,
       "partial": 11,
       "fail": 1,
@@ -95,24 +97,30 @@
     },
     "review_contract": "docs/UFC-LIBRARIAN-REVIEW.md",
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
+    "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "known_shared_priorities": [
-      "front-matter placeholders and advisor punctuation",
-      "object title versus legend/source/note typography",
-      "source page-locator guidance",
-      "long-quotation locator and punctuation fixtures",
-      "NBR 6023:2025 edge cases",
+    "current_correction_batch": [
+      "title-page advisor and co-advisor punctuation",
+      "optional department and complete author guidance",
+      "committee institution acronym examples",
+      "first textual UFC acronym introduction",
+      "canonical V3 API vocabulary cleanup",
+      "long-quotation locator guidance",
       "annex source example",
-      "stale V2 wording and retired profile vocabulary in the V3 reference document",
-      "canonical reference-PDF visual validation"
+      "reference-guide regression hygiene"
+    ],
+    "deferred_authority_conflicts": [
+      "object upper-title versus lower legend/source/note typography",
+      "selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
     ]
   },
   "evidence": {
-    "pre_migration_static_run": 33936888386,
-    "pre_migration_static_conclusion": "success",
+    "regression_static_run": 33937439818,
+    "regression_static_conclusion": "success",
+    "full_regression_integration_run": 33937439846,
+    "full_regression_integration_conclusion": "success",
     "librarian_review_contract_items": 34,
-    "librarian_review_contract_machine_protected": true,
-    "full_regression_integration": "pending-on-regression-branch"
+    "librarian_review_contract_machine_protected": true
   },
   "release_policy": {
     "ctan_submission": "blocked-until-release-phase",

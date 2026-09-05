@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. If the active phase is `Regression Audit` or `Core Corrections`, also read `docs/V3-REGRESSION-AUDIT.md` and `docs/UFC-LIBRARIAN-REVIEW.md`.
+5. During **Core Corrections**, also read `docs/V3-CORRECTION-PLAN.md`, `docs/V3-REGRESSION-AUDIT.md`, and `docs/UFC-LIBRARIAN-REVIEW.md`.
 6. Compare Git facts, machine state, handoff, and roadmap.
 7. If the current phase, checkpoint, or temporary-artifact state disagrees, stop feature work and reconcile the control plane first.
 
@@ -19,55 +19,52 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 ## Current state
 
 - Target version: `3.0.0`.
-- Active phase: **Regression Audit**.
-- Scientific-article runtime work is deferred until the shared foundation passes regression, correction, and canonical reference-PDF validation.
-- Regression baseline on `main`: `c4bf51b574647226ee488440579ec2a204c16c79`.
-- Certified non-article foundation retained for comparison/certification: `c79f3c73f1d51a30175e8259269504d029442a1c`.
-- Scientific-article authority reconstruction is retained; its runtime implementation had not started when the regression reset began.
-- The two librarian-reviewed PDFs are external evidence. Their union is tracked as the 34-item contract in `docs/UFC-LIBRARIAN-REVIEW.md`.
+- Active phase: **Core Corrections**.
+- Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
+- Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
+- Full regression integration run `33937439846` passed before Core Corrections began.
+- Scientific-article runtime remains deferred until shared corrections and canonical reference-PDF validation are complete.
+- The union of the two librarian-reviewed PDFs is tracked as exactly 34 requirements in `docs/UFC-LIBRARIAN-REVIEW.md`.
 
 ## Readable phase model
 
-New work uses descriptive phase and work-package names:
+1. **Regression Audit** — closed
+2. **Core Corrections** — active
+3. **Reference PDF Validation** — queued
+4. **Scientific Article** — queued
+5. **Final Certification** — queued
+6. **Release** — queued
 
-1. **Regression Audit**
-2. **Core Corrections**
-3. **Reference PDF Validation**
-4. **Scientific Article**
-5. **Final Certification**
-6. **Release**
-
-Do not create new opaque work identifiers such as nested letter/number codes. GitHub issue/PR numbers and immutable SHAs provide traceability. Historical stage labels may appear only when needed to identify old evidence; they are not the naming scheme for new work.
+Do not create new opaque work identifiers such as nested letter/number codes. GitHub issue/PR numbers and immutable SHAs provide traceability. Historical stage labels may appear only when needed to identify old evidence.
 
 ## Engineering rules
 
 - Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
-- The active repository is not an archive. Historical evidence belongs in Git history, tags, releases, issues, pull requests, certified SHAs, and external verified backups.
-- Do not create archive/history branches in the active repository.
+- The active repository is not an archive. Historical evidence belongs in Git history, tags, releases, issues, pull requests, and certified SHAs.
 - Preserve the closed v3 public API unless a current requirement explicitly authorizes a change.
 - Do not silently change normative rule IDs, expected values, tolerances, locators, applicability, source precedence, or proof-state semantics.
-- A green test proves only the contract encoded by that test. Regression review must separately establish that the encoded contract is current and correct.
-- Reviewer comments are evidence, not automatic normative authority. Reconcile them against current institutional acts, current ABNT editions, compatible UFC requirements, and the project precedence policy before changing normative behavior.
+- A green test proves only the contract encoded by that test. Current authority and visual acceptance remain separate obligations.
+- Reviewer comments are evidence, not automatic normative authority. Reconcile them against current institutional acts, current ABNT editions, compatible UFC requirements, and project precedence before changing normative behavior.
 - For every automatically enforceable correction, add positive evidence and a negative case where practical.
 - Presentation requirements require canonical PDF inspection in addition to source-level checks.
+- Do not weaken tests merely to recover a green build. Correct the rule, generator, observer, or fixture according to the classified finding.
 - Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before checkpoint closeout.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
-- Heavy Windows/literal-font/PDF-A/distribution checks belong to final certification or an explicitly justified regression task, not every small edit.
-- Do not rerun completed certification unless current-state validation requires it.
+- Heavy Windows/literal-font/PDF-A/distribution checks belong to Final Certification or an explicitly justified correction task.
 - Do not redistribute proprietary Microsoft fonts.
-- Do not perform actual CTAN submission before the explicit **Release** phase is ready.
+- Do not perform actual CTAN submission before **Release**.
 
-## Regression acceptance model
+## Core Corrections acceptance model
 
-The regression is not closed by a plausible-looking PDF or by an all-green test run. A shared rule closes only when its relevant evidence is established:
+A correction closes only when the applicable evidence is established:
 
 1. current authority or explicit project-policy classification;
 2. runtime/reference behavior consistent with that classification;
 3. automated positive evidence or an explicitly manual review contract;
-4. negative evidence where the failure is machine-detectable;
+4. negative evidence where failure is machine-detectable;
 5. visual inspection of the canonical V3 PDF when presentation is part of the requirement.
 
-The 34 librarian-review items use `PASS`, `PARTIAL`, `FAIL`, and `NORMATIVE-REVIEW` until their final disposition is proven.
+Do not change disputed object-title typography or NBR 6023:2025 edge-case runtime merely to match older review comments. Those remain fail-closed until their current authority decision is explicit.
 
 ## Branch governance
 
@@ -75,4 +72,4 @@ The steady state is `main` plus short-lived task branches. Merged or abandoned t
 
 ## Fail-closed rule
 
-If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, or the reviewed source material, record the ambiguity and stop advancement to the next phase. Do not infer closure from naming, memory, historical intent, or a partial certification milestone.
+If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, or reviewed source material, record the ambiguity and stop advancement to the next phase. Do not infer closure from naming, memory, historical intent, or a partial certification milestone.
