@@ -25,6 +25,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Full regression integration run `33937439846` passed before Core Corrections began.
 - Scientific-article runtime remains deferred until shared corrections and canonical reference-PDF validation are complete.
 - The union of the two librarian-reviewed PDFs is tracked as exactly 34 requirements in `docs/UFC-LIBRARIAN-REVIEW.md`.
+- Every material advance must update the active documentation/control state in the same work cycle.
+- Every phase must end with a recorded phase-end regression before the next phase becomes active.
 
 ## Readable phase model
 
@@ -53,6 +55,36 @@ Do not create new opaque work identifiers such as nested letter/number codes. Gi
 - Heavy Windows/literal-font/PDF-A/distribution checks belong to Final Certification or an explicitly justified correction task.
 - Do not redistribute proprietary Microsoft fonts.
 - Do not perform actual CTAN submission before **Release**.
+
+## Progress documentation discipline
+
+A material advance is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, or release/certification state.
+
+For every material advance:
+
+1. update the relevant execution document or review matrix in the same work cycle;
+2. update `docs/HANDOFF-V3.0.0.md` with the new checkpoint, evidence, unresolved blockers, and next action;
+3. update `docs/ROADMAP-V3.0.0.md` and `release/v3-roadmap.json` whenever phase state, acceptance state, current batch, or machine-readable evidence changes;
+4. keep Git branch/HEAD facts and machine state synchronized;
+5. do not defer documentation reconciliation to phase closeout.
+
+Pure comment/wording cleanup that changes no project state does not require rewriting every control file, but any claimed project advancement does.
+
+## Mandatory phase-end regression
+
+No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until a phase-end regression has passed and its evidence has been recorded.
+
+The phase-end regression must:
+
+1. run on one immutable candidate SHA after the phase implementation/documentation work is complete;
+2. include `Static contract` and the full relevant Linux integration contract, not only targeted tests from the last correction;
+3. include every phase-specific acceptance surface, including canonical-PDF checks when presentation is in scope;
+4. include the heavy literal-font/Windows/PDF-A/distribution matrix when closing **Final Certification**;
+5. record the candidate SHA, workflow run IDs, conclusions, and any manual visual result required by the phase;
+6. fail closed: any unexplained failure reopens the phase and blocks transition;
+7. update handoff, roadmap, machine state, and the relevant review/correction matrix after the regression result is known.
+
+Targeted green checks during a phase are evidence for individual corrections; they do not replace the phase-end regression.
 
 ## Core Corrections acceptance model
 

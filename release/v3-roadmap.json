@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -8,7 +8,7 @@
   "phase": "core-corrections",
   "stage": "core-corrections",
   "stage_name": "Core Corrections",
-  "active_branch": "main",
+  "active_branch": "plan/v3-regression-reset",
   "authorities": {
     "git_facts_must_match_machine_state": true,
     "machine_state": "release/v3-roadmap.json",
@@ -33,7 +33,32 @@
     "heavy_jobs_on_every_intermediate_commit": false,
     "rerun_completed_certification_without_current_state_need": false,
     "dead_legacy_code_allowed_in_active_tree": false,
-    "actual_ctan_submission_before_release_phase": false
+    "actual_ctan_submission_before_release_phase": false,
+    "documentation_updated_on_every_material_advance": true,
+    "phase_end_regression_required": true,
+    "phase_transition_requires_recorded_regression_checkpoint": true,
+    "targeted_checks_replace_phase_end_regression": false
+  },
+  "phase_end_regression": {
+    "required": true,
+    "must_complete_before_phase_closure": true,
+    "must_complete_before_next_phase_activation": true,
+    "candidate": "one-immutable-sha",
+    "minimum_checks": [
+      "Static contract",
+      "full relevant Linux integration",
+      "phase-specific acceptance checks"
+    ],
+    "presentation_scope_requires_canonical_pdf_inspection": true,
+    "final_certification_requires_heavy_platform_font_pdfa_distribution_matrix": true,
+    "failure_policy": "fail-closed-and-reopen-phase-work",
+    "record": [
+      "candidate_sha",
+      "workflow_run_ids",
+      "workflow_conclusions",
+      "required_manual_or_visual_results"
+    ],
+    "documentation_must_be_updated_after_result": true
   },
   "baseline": {
     "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
@@ -49,42 +74,48 @@
       "name": "Regression Audit",
       "status": "CLOSED",
       "purpose": "Revalidate the shared V3 foundation and classify all recovered review requirements and newly discovered defects.",
-      "exit_gate": "Closed with the 34-item contract, classified additional findings, readable control plane, and green static/full-integration baseline."
+      "exit_gate": "Closed with the 34-item contract, classified additional findings, readable control plane, and green static/full-integration phase-end regression.",
+      "phase_end_regression_required": true
     },
     {
       "id": "core-corrections",
       "name": "Core Corrections",
       "status": "ACTIVE",
       "purpose": "Correct shared runtime, template, normative mapping, documentation and tests identified by the regression.",
-      "exit_gate": "No unresolved shared FAIL; all shared P0/P1 corrections have evidence; no NORMATIVE-REVIEW is silently encoded as runtime behavior."
+      "exit_gate": "No unresolved shared FAIL; all shared P0/P1 corrections have evidence; no NORMATIVE-REVIEW is silently encoded as runtime behavior; phase-end regression green on one immutable SHA.",
+      "phase_end_regression_required": true
     },
     {
       "id": "reference-pdf-validation",
       "name": "Reference PDF Validation",
       "status": "QUEUED",
       "purpose": "Validate the canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and the V2.1 preservation baseline where applicable.",
-      "exit_gate": "Visual checklist and reproducible presentation evidence pass."
+      "exit_gate": "Visual checklist and reproducible presentation evidence pass, followed by a green phase-end regression on the accepted canonical artifact.",
+      "phase_end_regression_required": true
     },
     {
       "id": "scientific-article",
       "name": "Scientific Article",
       "status": "QUEUED",
       "purpose": "Implement the article profile on the corrected shared foundation using the retained authority contract.",
-      "exit_gate": "Article runtime, modality, positive/negative evidence and canonical rendering pass."
+      "exit_gate": "Article runtime, modality, positive/negative evidence, canonical rendering and phase-end regression pass on the same candidate.",
+      "phase_end_regression_required": true
     },
     {
       "id": "final-certification",
       "name": "Final Certification",
       "status": "QUEUED",
       "purpose": "Run the complete profile, engine, literal-font, Unicode, embedding, PDF-A and distribution matrix on one immutable candidate.",
-      "exit_gate": "Complete certification matrix is green on the same candidate SHA."
+      "exit_gate": "Complete certification matrix and phase-end regression are green on the same candidate SHA.",
+      "phase_end_regression_required": true
     },
     {
       "id": "release",
       "name": "Release",
       "status": "QUEUED",
       "purpose": "Finalize documentation, bundles, release assets, checksums and publication actions.",
-      "exit_gate": "Release checklist complete with no unresolved roadmap or normative item."
+      "exit_gate": "Release checklist complete with no unresolved roadmap or normative item and final release regression/verification recorded.",
+      "phase_end_regression_required": true
     }
   ],
   "active_work": {
@@ -99,15 +130,24 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
+    "latest_implementation_checkpoint_sha": "1eab2539e418224e2a6ce85ef09065941b719ef7",
+    "latest_implementation_checkpoint_state": "static-green-linux-in-progress",
     "current_correction_batch": [
       "title-page advisor and co-advisor punctuation",
       "optional department and complete author guidance",
       "committee institution acronym examples",
       "first textual UFC acronym introduction",
       "canonical V3 API vocabulary cleanup",
-      "long-quotation locator guidance",
       "annex source example",
-      "reference-guide regression hygiene"
+      "reference-guide regression hygiene",
+      "long-direct-quotation locator evidence",
+      "long-direct-quotation punctuation evidence",
+      "external-illustration source locator evidence"
+    ],
+    "review_items_implemented_pending_full_linux_confirmation": [
+      19,
+      20,
+      23
     ],
     "deferred_authority_conflicts": [
       "object upper-title versus lower legend/source/note typography",
@@ -119,6 +159,10 @@
     "regression_static_conclusion": "success",
     "full_regression_integration_run": 33937439846,
     "full_regression_integration_conclusion": "success",
+    "latest_core_corrections_static_run": 33939021386,
+    "latest_core_corrections_static_conclusion": "success",
+    "latest_core_corrections_linux_run": 33939021352,
+    "latest_core_corrections_linux_conclusion": "in_progress",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },
