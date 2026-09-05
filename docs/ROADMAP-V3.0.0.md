@@ -6,9 +6,11 @@ Updated: 2026-09-05
 
 **Core Corrections is ACTIVE.**
 
-Regression Audit is closed. The latest fully validated Core Corrections/control checkpoint is `f6ca012164273e67480dca127fe17b392e8a8a21`, with Static contract run `33939512055` and full Linux integration run `33939512019` both successful. The Linux run completed the full repository integration contract with `PASS=31 FAIL=0 SKIP=0`.
+Regression Audit is closed. The latest fully validated Core Corrections/control checkpoint remains `f6ca012164273e67480dca127fe17b392e8a8a21`, with Static contract run `33939512055` and full Linux integration run `33939512019` both successful. The Linux run completed the full repository integration contract with `PASS=31 FAIL=0 SKIP=0`.
 
-The 34-point librarian contract now stands at **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW**. Items 19, 20 and 23 are closed by reviewer-specific evidence in full integration. Item 17 is closed by code-typography evidence. Item 4 is closed after the advisor/co-advisor punctuation correction. Item 21 is now a classified runtime/contract FAIL rather than an unresolved authority question.
+The object-typography correction is now materially implemented at checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd`. Its generated-tree repository-owned Static contract passed in workflow run `33963033293` before the checkpoint was committed. Normal branch-level Static/full Linux confirmation is pending on the subsequent user-authored documentation/control checkpoint.
+
+The 34-point librarian contract therefore still stands at **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW** until review item 21 receives the required branch-level integration evidence. Items 19, 20 and 23 are closed by reviewer-specific evidence in full integration. Item 17 is closed by code-typography evidence. Item 4 is closed after the advisor/co-advisor punctuation correction. Item 21 is implemented but not yet accepted.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -53,18 +55,20 @@ Every phase ends with a mandatory phase-end regression on one immutable candidat
 - mixed-language engineering diagnostics cleaned in touched gates;
 - full Core Corrections/control integration checkpoint green at `f6ca012...`.
 
-### Current work — Objects
+### Current work — Objects: final branch regression
 
-Review item 21 is the active P1 correction.
+Review item 21 is the active P1 acceptance gate.
 
-Current runtime and final-PDF tests still certify the upper illustration/table identification/title at 10 pt. Authority reconciliation is now recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
+Authority reconciliation is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 
 - upper identification/title: **12 pt**, single spacing;
 - lower source/legend/note: **10 pt**, single spacing where applicable;
 - all object text remains bound to object width;
-- historical rule IDs must not be silently repurposed to mean the opposite value.
+- historical rule IDs are not silently repurposed to mean the opposite value.
 
-The implementation batch has now updated runtime, normative contract, locator audits and final-PDF evidence atomically. Item 21 remains FAIL while Static/full Linux confirmation is pending; only green corrected final-PDF measurements can close it.
+Implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` has already updated runtime, normative contract, rule-ID provenance, exact locator ownership and final-PDF evidence expectations atomically. The temporary migration executor and workflow are absent from the generated checkpoint.
+
+The remaining object gate is evidence-only: the current user-authored checkpoint must pass normal Static contract plus full Linux integration. Item 21 remains FAIL until those runs prove the corrected final-PDF 12 pt upper title / 10 pt lower source contract.
 
 ### Remaining Core Corrections after Objects
 
@@ -104,6 +108,7 @@ Use descriptive work names such as `Core Corrections — Objects`, `Core Correct
 - pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`;
 - regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
 - reviewer evidence implementation checkpoint: `1eab2539e418224e2a6ce85ef09065941b719ef7`;
-- latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`.
+- latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`;
+- object-typography implementation checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd` (final branch regression pending).
 
 Detailed implementation history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.
