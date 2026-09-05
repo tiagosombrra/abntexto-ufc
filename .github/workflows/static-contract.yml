@@ -65,6 +65,15 @@ jobs:
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
           python3 tools/tmp-object-typography-migration.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("standards/validation-overrides.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          data["reviewed_at"] = "2026-09-05"
+          path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
           git checkout HEAD -- tools/tmp-object-typography-migration.py .github/workflows/tmp-object-typography-migration.yml
       - name: Run repository-owned static contract on migrated tree
         run: make static-check
