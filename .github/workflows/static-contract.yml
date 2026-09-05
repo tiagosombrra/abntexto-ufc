@@ -38,6 +38,7 @@ jobs:
       - name: Apply one-shot object typography migration
         run: |
           sed -i 's/parent\["applies_to"\]/parent["values"]["applies_to"]/g' tools/tmp-object-typography-migration.py
+          sed -i '/"standards\/rule-migrations.json",/a\    "tools/tmp-object-typography-migration.py",' tools/tmp-object-typography-migration.py
           python3 tools/tmp-object-typography-migration.py
       - name: Run repository-owned static contract on migrated tree
         run: make static-check
