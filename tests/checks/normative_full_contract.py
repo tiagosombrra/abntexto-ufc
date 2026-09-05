@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from normative_catalog import load_catalog
 from normative_full import full_rule_map, load_full_contract
 
-BASE_RULE_COUNT = 100
+BASE_RULE_COUNT = 98
 MINIMUM_EXTENSION_COUNT = 23
 
 PRE_ARTICLE_RUNTIME_PHASES = {

@@ -64,7 +64,7 @@ Current runtime and final-PDF tests still certify the upper illustration/table i
 - all object text remains bound to object width;
 - historical rule IDs must not be silently repurposed to mean the opposite value.
 
-The implementation batch must update runtime, normative contract, locator audits and final-PDF evidence atomically. Item 21 remains FAIL until the corrected final-PDF measurements pass.
+The implementation batch has now updated runtime, normative contract, locator audits and final-PDF evidence atomically. Item 21 remains FAIL while Static/full Linux confirmation is pending; only green corrected final-PDF measurements can close it.
 
 ### Remaining Core Corrections after Objects
 

@@ -62,6 +62,10 @@ After objects, continue the remaining bounded work:
 - annex/reference-PDF visual confirmation;
 - Core Corrections phase-end regression on one immutable SHA.
 
+## Object typography implementation candidate
+
+The active object batch has migrated the runtime, normative contract, locator ownership and final-PDF expectations to 12 pt upper identification/title and 10 pt lower source/note behavior. The two historically incorrect reduced-title rule IDs are retired with explicit provenance in `standards/rule-migrations.json`. Item 21 remains `FAIL` until the candidate passes Static contract and full Linux integration; the latest fully validated checkpoint remains `f6ca012164273e67480dca127fe17b392e8a8a21` until then.
+
 ## Phase-end regression rule
 
 For every phase closeout:

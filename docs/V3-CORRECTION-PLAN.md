@@ -107,7 +107,7 @@ Authority decision is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 - lower source/legend/note: **10 pt**, single spacing where applicable;
 - object text remains constrained to the object width.
 
-Current defect: `abntexto-ufc/objects.def` applies `\abntsmall` to the complete upper `\printlegendbox`, and the final-PDF rule set currently certifies 10 pt upper titles.
+Implementation candidate: `abntexto-ufc/objects.def`, the active normative contract, locator ownership and final-PDF rules have been migrated to the accepted 12 pt upper-title semantics. Item 21 intentionally remains FAIL until Static/full Linux evidence is green.
 
 Required atomic migration:
 

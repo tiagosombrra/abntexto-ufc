@@ -16,6 +16,7 @@ SOURCE_CHECKS = (
     "tests/checks/phase_governance.py",
     "tests/checks/engineering_language.py",
     "tests/checks/validator_source.py",
+    "tests/checks/normative_rule_migrations.py",
     "tests/checks/normative_objects_scope.py",
     "tests/checks/reference_guide_contract.py",
     "tests/checks/profile_matrix_contract.py",

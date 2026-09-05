@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: static-contract-${{ github.event.pull_request.number || github.ref }}
@@ -22,11 +22,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Checkout migration branch
+      - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          ref: plan/v3-regression-reset
-          fetch-depth: 0
       - name: Set up Python 3.13
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
@@ -35,113 +32,5 @@ jobs:
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24'
-      - name: Apply one-shot object typography migration
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path("tools/tmp-object-typography-migration.py")
-          text = path.read_text(encoding="utf-8")
-          old_parent = '''parent["applies_to"] = [
-              item
-              for item in parent["applies_to"]'''
-          new_parent = '''parent["values"]["applies_to"] = [
-              item
-              for item in parent["values"]["applies_to"]'''
-          if old_parent not in text:
-              raise SystemExit("compatibility parent migration block not found")
-          text = text.replace(old_parent, new_parent, 1)
-          old = '''allowed_retired_paths = {
-              "standards/rule-migrations.json",
-              "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
-          }'''
-          new = '''allowed_retired_paths = {
-              "standards/rule-migrations.json",
-              "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
-              "tools/tmp-object-typography-migration.py",
-          }'''
-          if old not in text:
-              raise SystemExit("temporary migration allowlist block not found")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          PY
-          python3 tools/tmp-object-typography-migration.py
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          def load(path: str):
-              return json.loads(Path(path).read_text(encoding="utf-8"))
-
-          def write(path: str, data):
-              Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-          overrides = load("standards/validation-overrides.json")
-          overrides["reviewed_at"] = "2026-09-05"
-          write("standards/validation-overrides.json", overrides)
-
-          locator = load("standards/locator-audit-typography-paragraphs.json")
-          combined_id = "typography.object-identification-title"
-          locator["rulesets"] = [item for item in locator["rulesets"] if item.get("id") != combined_id]
-          reduced_index = next(i for i, item in enumerate(locator["rulesets"]) if item.get("id") == "typography.reduced-font")
-          locator["rulesets"][reduced_index + 1:reduced_index + 1] = [
-              {
-                  "id": "typography.illustration-identification-title",
-                  "rule_ids": ["illustration.identification.font-size"],
-                  "current_locator": "Guia UFC 2022, 4.1(c) e 4.9(c-e)",
-                  "status": "VERIFIED",
-                  "source_checks": [{
-                      "source_id": "ufc-guia-trabalhos-2022",
-                      "locator": "4.1(c); 4.9(c-e)",
-                      "status": "VERIFIED",
-                      "checked_at": "2026-09-05",
-                      "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
-                  }]
-              },
-              {
-                  "id": "typography.table-identification-title",
-                  "rule_ids": ["table.identification.font-size"],
-                  "current_locator": "Guia UFC 2022, 4.1(c) e 4.10(b-c)",
-                  "status": "VERIFIED",
-                  "source_checks": [{
-                      "source_id": "ufc-guia-trabalhos-2022",
-                      "locator": "4.1(c); 4.10(b-c)",
-                      "status": "VERIFIED",
-                      "checked_at": "2026-09-05",
-                      "basis_url": "https://biblioteca.ufc.br/wp-content/uploads/2022/05/guianormalizacaotrabalhosacademicos-17.05.2022.pdf"
-                  }]
-              }
-          ]
-          write("standards/locator-audit-typography-paragraphs.json", locator)
-
-          illustration = load("standards/illustration-final-pdf-scenario.json")
-          illustration["locator_rulesets"]["illustration.identification.font-size"] = "typography.illustration-identification-title"
-          write("standards/illustration-final-pdf-scenario.json", illustration)
-
-          table = load("standards/table-typography-final-pdf-scenario.json")
-          table["locator_rulesets"]["table.identification.font-size"] = "typography.table-identification-title"
-          write("standards/table-typography-final-pdf-scenario.json", table)
-
-          for path, old, new in [
-              ("tests/checks/normative_illustration.py", "typography.object-identification-title", "typography.illustration-identification-title"),
-              ("tests/checks/normative_table_typography.py", "typography.object-identification-title", "typography.table-identification-title"),
-          ]:
-              p = Path(path)
-              text = p.read_text(encoding="utf-8")
-              if text.count(old) != 1:
-                  raise SystemExit(f"{path}: expected one locator ruleset reference, found {text.count(old)}")
-              p.write_text(text.replace(old, new, 1), encoding="utf-8")
-          PY
-          git checkout HEAD -- tools/tmp-object-typography-migration.py .github/workflows/tmp-object-typography-migration.yml
-      - name: Run repository-owned static contract on migrated tree
+      - name: Run repository-owned static contract
         run: make static-check
-      - name: Restore permanent workflow and commit migrated checkpoint
-        run: |
-          set -euo pipefail
-          git show 63a8cedd509924366535e6c2550b0034b1cc5291:.github/workflows/static-contract.yml > .github/workflows/static-contract.yml
-          git rm -f tools/tmp-object-typography-migration.py .github/workflows/tmp-object-typography-migration.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git diff --cached --check
-          git commit -m 'fix: correct object title typography contract'
-          git push origin HEAD:plan/v3-regression-reset

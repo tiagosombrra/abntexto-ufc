@@ -1,7 +1,7 @@
 # V3 Object Typography Decision
 
 Updated: 2026-09-05
-Status: ACCEPTED FOR CORE CORRECTIONS IMPLEMENTATION
+Status: IMPLEMENTED — CI CONFIRMATION PENDING
 
 ## Decision
 
@@ -59,6 +59,10 @@ The correction must be atomic across source contract, runtime and evidence.
 6. Update final-PDF scenarios/checkers to measure 12 pt upper title and 10 pt lower source independently.
 7. Run Static contract and full Linux integration after the migration.
 8. Keep item 21 as `FAIL` until the corrected final-PDF measurements are green; only then move it to `PASS`.
+
+## Implementation checkpoint state
+
+The runtime, active normative contract, locator ownership and final-PDF expectations have now been migrated according to this decision. The historical 10 pt title IDs are preserved only through `standards/rule-migrations.json`; they are no longer active rules. Item 21 remains `FAIL` until Static contract and full Linux integration prove the generated candidate, including measured 12 pt upper identification/title and 10 pt lower source evidence.
 
 ## Current-edition technical boundary
 

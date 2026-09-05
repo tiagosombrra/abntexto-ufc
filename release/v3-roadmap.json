@@ -152,7 +152,9 @@
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
-    ]
+    ],
+    "object_typography_implementation_state": "implemented-ci-pending",
+    "object_typography_rule_migration_manifest": "standards/rule-migrations.json"
   },
   "authority_decisions": {
     "object_typography": {
@@ -162,7 +164,7 @@
       "lower_source_legend_note_pt": 10,
       "line_spacing": "single",
       "review_item": 21,
-      "current_state": "FAIL-until-runtime-and-evidence-migrate"
+      "current_state": "IMPLEMENTED-CI-PENDING"
     }
   },
   "evidence": {
