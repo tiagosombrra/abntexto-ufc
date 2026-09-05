@@ -10,29 +10,29 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Core Corrections**, also read `docs/V3-CORRECTION-PLAN.md`, `docs/V3-REGRESSION-AUDIT.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, and `docs/ENGINEERING-LANGUAGE.md`.
-6. Compare Git facts, machine state, handoff, and roadmap.
-7. If phase, checkpoint, acceptance state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
+5. During **Reference PDF Validation**, also read `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/V3-CORE-CORRECTIONS-PHASE-END.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+6. Compare Git facts, machine state, handoff, roadmap and the active phase document.
+7. If phase, checkpoint, acceptance state, artifact provenance, or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
 Memory, prior chats, historical branch names, old pull requests, and workflow names never override current repository state.
 
 ## Current state
 
 - Target version: `3.0.0`.
-- Active phase: **Core Corrections**.
-- Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8`: Static `33980847191` and Linux `33980847189` success, `PASS=31 FAIL=0 SKIP=0`.
+- Active phase: **Reference PDF Validation**.
+- Core Corrections immutable phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041` and full Linux `33982156042` success; Linux summary `PASS=31 FAIL=0 SKIP=0`.
+- Core Corrections is CLOSED.
 - Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Rejected phase-end candidate `3b2476371e1df5180d8ee25ea53aed6a13fa2da2`: Static `33981960024` failed only because the machine candidate sentinel did not equal `one-immutable-sha`.
-- Current batch: **Core Corrections — Corrected Phase-end Regression Candidate**.
-- Candidate contract: `docs/V3-CORE-CORRECTIONS-PHASE-END.md`.
+- Current batch: **Reference PDF Validation — canonical artifact provenance and page-level review**.
+- Active phase contract: `docs/V3-REFERENCE-PDF-VALIDATION.md`.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
-- Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
+- Scientific Article runtime remains deferred until Reference PDF Validation closes.
 
 ## Readable phase model
 
 1. **Regression Audit** — closed
-2. **Core Corrections** — active, corrected phase-end candidate gate
-3. **Reference PDF Validation** — queued
+2. **Core Corrections** — closed; phase-end regression accepted at `5f67560a...`
+3. **Reference PDF Validation** — active
 4. **Scientific Article** — queued
 5. **Final Certification** — queued
 6. **Release** — queued
@@ -57,24 +57,30 @@ Do not create new opaque work identifiers such as nested letter/number codes. Gi
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, or release/certification state.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, phase status, acceptance status, artifact provenance, visual-validation status, or release/certification state.
 
-For every material advance, update the relevant execution document/review matrix and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, or branch facts change.
+For every material advance, update the relevant execution document/review matrix and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, or artifact facts change.
 
 ## Mandatory phase-end regression
 
 No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
 
-The machine contract intentionally represents this invariant with `phase_end_regression.candidate = one-immutable-sha`. Do not replace that sentinel with prose or an actual self-referential SHA. The exact Git candidate SHA is recorded in evidence after the immutable commit exists.
+The machine contract intentionally represents this invariant with `phase_end_regression.candidate = one-immutable-sha`. Do not replace that sentinel with prose or an actual self-referential SHA. Exact Git candidate SHAs are recorded in evidence after immutable commits exist.
 
-Candidate `3b247637...` was rejected because it violated this representation invariant. The corrected candidate restores the sentinel; `tests/checks/phase_governance.py` remains unchanged.
+Core Corrections satisfied this rule with candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, Static `33982156041`, and Linux `33982156042`.
 
-## Core Corrections acceptance model
+## Reference PDF Validation acceptance model
 
-All currently resolvable librarian-review corrections are accepted. Item 33 remains a fail-closed authority gap and must not be converted into speculative runtime behavior merely to obtain a fully-PASS matrix.
+- Use only a real LaTeX-generated canonical artifact tied to a concrete repository SHA.
+- Do not use a synthetic/recreated PDF as acceptance evidence.
+- Render the complete PDF and inspect every page; source checks and automated geometry do not replace visual review.
+- Confirm no clipping, overlap, broken glyphs, unexpected page breaks, object overflow, heading drift or pagination anomalies.
+- Reconfirm presentation-sensitive librarian-review items and preserve item 33 as an explicit authority gap.
+- Any defect must be classified before code/test changes; after a correction, rebuild, re-render and re-inspect.
+- Scientific Article remains blocked until this phase and its own phase-end regression close.
 
 ## Branch governance and fail-closed rule
 
 The steady state is `main` plus short-lived task branches. Releases are preserved by immutable tags and GitHub Releases, not permanent audit branches.
 
-If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, or reviewed source material, record the ambiguity and stop advancement to the next phase. Do not infer closure from naming, memory, historical intent, or partial certification evidence.
+If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement to the next phase. Do not infer closure from naming, memory, historical intent, old PDFs, or partial certification evidence.

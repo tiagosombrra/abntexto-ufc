@@ -1,42 +1,46 @@
 # Core Corrections — Phase-end Regression
 
 Updated: 2026-09-05
-Status: CANDIDATE-PENDING
+Status: CLOSED
+
+## Accepted candidate
+
+Immutable candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da` closed Core Corrections.
+
+- Static contract `33982156041`: SUCCESS.
+- Full Linux integration `33982156042`: SUCCESS.
+- Linux validation summary: `PASS=31 FAIL=0 SKIP=0`.
+- Repository/phase-governance/engineering-language guards: PASS.
+- Existing phase-specific reviewer evidence remained green.
+- No shared runtime FAIL was opened.
+- Librarian review remained `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
+
+The candidate was not amended after CI began.
+
+## Evidence retained from Linux
+
+The accepted Linux run re-exercised the complete 31-check PR contract, including reference document, layout, front matter, object geometry, code typography, documentary sources, bibliography, research-project profiles, back matter, build path and normative evidence contribution.
+
+Explicit reviewer evidence remained present for the resolved review surfaces, including items 1, 2, 7, 11, 16, 19, 20, 23, 28, 30, 31, 32 and 34. The run ended with no FAIL or SKIP.
 
 ## Candidate history
 
-Candidate `3b2476371e1df5180d8ee25ea53aed6a13fa2da2` is rejected. Static `33981960024` failed only because `release/v3-roadmap.json` changed the governance sentinel from the contractually required `one-immutable-sha` to a descriptive phrase. `tests/checks/phase_governance.py` correctly failed closed with `phase-end regression must bind to one immutable SHA`.
+Candidate `3b2476371e1df5180d8ee25ea53aed6a13fa2da2` is rejected. Static `33981960024` failed because `release/v3-roadmap.json` had replaced the contractually required `one-immutable-sha` governance sentinel with descriptive text. `tests/checks/phase_governance.py` correctly failed closed.
 
-This is a control-plane representation defect, not a LaTeX/runtime, normative, librarian-review, or evidence-predicate failure. The governance test is not weakened.
+That was a control-plane representation defect, not a LaTeX/runtime, normative, librarian-review, or evidence-predicate failure. The governance test was not weakened.
 
-## Corrected candidate contract
-
-The machine invariant is restored to:
+Candidate `5f67560a...` restored:
 
 `phase_end_regression.candidate = one-immutable-sha`
 
-The commit that first contains this corrected synchronized state is the new immutable **Core Corrections phase-end regression candidate**. Its exact SHA is obtained from Git after creation and is recorded with workflow results in the later phase-transition commit. The candidate itself is not amended after CI starts.
+and then passed the complete phase-end gate.
 
-## Preconditions satisfied
+## Authority boundary at closure
 
-- Front Matter and Annex Closeout checkpoint `6d7a8fb8c7005030f5e1d64a42152d0364fa68c8` passed Static `33980847191` and Linux `33980847189`, `PASS=31 FAIL=0 SKIP=0`.
-- Librarian review state is `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
-- Item 33 remains explicit and fail-closed pending authoritative current NBR 6023:2025 evidence.
-- No shared runtime FAIL is open.
-- Scientific Article runtime remains deferred.
+Review item 33 remains explicit and fail-closed pending authoritative current NBR 6023:2025 evidence. Core Corrections closure does not reinterpret that unresolved authority item as PASS and does not authorize speculative bibliography runtime changes.
 
-## Required regression gate
+## Closure decision
 
-The new candidate must pass, on the same immutable SHA:
+Core Corrections is CLOSED. Reference PDF Validation is ACTIVE under `docs/V3-REFERENCE-PDF-VALIDATION.md`.
 
-1. Static contract;
-2. full Linux integration;
-3. existing phase-specific reviewer evidence;
-4. repository, phase-governance and engineering-language guards;
-5. canonical reference-document build checks already exercised by Linux integration.
-
-A failure is classified before any correction. Tests must not be weakened to obtain green status.
-
-## Exit rule
-
-Only after Static and Linux are green and their run IDs/conclusions are recorded may Core Corrections be marked `CLOSED` and Reference PDF Validation become `ACTIVE`.
+Scientific Article remains deferred until the canonical V3 PDF passes complete page-level presentation validation and the Reference PDF Validation phase-end regression.

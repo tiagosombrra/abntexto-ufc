@@ -5,9 +5,9 @@
   "target_version": "3.0.0",
   "updated_at": "2026-09-05",
   "status": "ACTIVE",
-  "phase": "core-corrections",
-  "stage": "core-corrections",
-  "stage_name": "Core Corrections",
+  "phase": "reference-pdf-validation",
+  "stage": "reference-pdf-validation",
+  "stage_name": "Reference PDF Validation",
   "active_branch": "plan/v3-regression-reset",
   "authorities": {
     "git_facts_must_match_machine_state": true,
@@ -19,6 +19,7 @@
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
     "core_corrections_phase_end": "docs/V3-CORE-CORRECTIONS-PHASE-END.md",
+    "reference_pdf_validation": "docs/V3-REFERENCE-PDF-VALIDATION.md",
     "engineering_language": "docs/ENGINEERING-LANGUAGE.md",
     "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
     "fail_closed_on_disagreement": true,
@@ -40,14 +41,17 @@
     "documentation_updated_on_every_material_advance": true,
     "phase_end_regression_required": true,
     "phase_transition_requires_recorded_regression_checkpoint": true,
-    "targeted_checks_replace_phase_end_regression": false
+    "targeted_checks_replace_phase_end_regression": false,
+    "synthetic_pdf_can_satisfy_reference_validation": false,
+    "reference_pdf_requires_git_provenance": true,
+    "reference_pdf_requires_complete_page_review": true
   },
   "phase_end_regression": {
     "required": true,
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "pending-workflow-results",
+    "candidate_state": "not-started-for-reference-pdf-validation",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -84,17 +88,17 @@
     {
       "id": "core-corrections",
       "name": "Core Corrections",
-      "status": "ACTIVE",
+      "status": "CLOSED",
       "purpose": "Correct shared runtime, template, normative mapping, documentation and tests identified by the regression.",
-      "exit_gate": "No unresolved shared runtime FAIL; all blocking P0/P1 corrections have evidence; unresolved authority items remain explicit/fail-closed; phase-end regression green on one immutable SHA.",
+      "exit_gate": "Accepted candidate 5f67560aeded1e6b4f77f4a31e14a91f3181a4da passed Static 33982156041 and Linux 33982156042 with no shared runtime FAIL.",
       "phase_end_regression_required": true
     },
     {
       "id": "reference-pdf-validation",
       "name": "Reference PDF Validation",
-      "status": "QUEUED",
+      "status": "ACTIVE",
       "purpose": "Validate the corrected canonical V3 PDF page by page against accepted UFC requirements, recovered reviews and the V2.1 preservation baseline where applicable.",
-      "exit_gate": "Visual checklist and reproducible presentation evidence pass, followed by a green phase-end regression on the accepted canonical artifact.",
+      "exit_gate": "Provenance-bound canonical PDF, complete visual checklist and reproducible presentation evidence pass, followed by a green phase-end regression on one immutable candidate.",
       "phase_end_regression_required": true
     },
     {
@@ -133,13 +137,17 @@
     "review_contract": "docs/UFC-LIBRARIAN-REVIEW.md",
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
+    "reference_pdf_validation_contract": "docs/V3-REFERENCE-PDF-VALIDATION.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
-    "latest_fully_validated_checkpoint_sha": "6d7a8fb8c7005030f5e1d64a42152d0364fa68c8",
-    "latest_fully_validated_checkpoint_state": "static-green-linux-green-frontmatter-annex-closeout-accepted",
-    "acceptance_state_checkpoint_sha": "c066697691df748a3b24a716ba69d5e4cb168f5d",
+    "latest_implementation_checkpoint_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
+    "latest_fully_validated_checkpoint_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
+    "latest_fully_validated_checkpoint_state": "core-corrections-phase-end-static-green-linux-green",
+    "core_corrections_closed": true,
+    "core_corrections_phase_end_candidate_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
     "current_correction_batch": [
-      "Core Corrections corrected phase-end regression candidate"
+      "Reference PDF Validation canonical artifact provenance",
+      "Reference PDF Validation complete page-level visual review",
+      "Reference PDF Validation presentation-sensitive librarian reconfirmation"
     ],
     "review_items_confirmed_by_latest_full_linux": [1, 2, 4, 7, 11, 16, 17, 19, 20, 21, 23, 28, 30, 31, 32, 34],
     "review_items_source_evidence_accepted": [11, 16, 28, 30, 31, 32],
@@ -149,15 +157,18 @@
       "historical Static 33970988780: phase governance rejected roadmap missing required material advance concept",
       "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup",
       "historical Static 33980486317 on 48e7e684: new reference-document failure diagnostic used prohibited Portuguese technical term pre-textual; corrected by dc381d45 without predicate/runtime change",
-      "Static 33981960024 on rejected candidate 3b247637: phase_end_regression.candidate did not equal the required one-immutable-sha sentinel"
+      "historical Static 33981960024 on rejected candidate 3b247637: phase_end_regression.candidate did not equal the required one-immutable-sha sentinel"
     ],
     "pending_acceptance_gates": [
-      "Corrected Core Corrections immutable phase-end candidate must pass Static contract and full Linux integration on the same SHA"
+      "Reference PDF Validation requires canonical V3 PDF provenance tied to a Git SHA",
+      "Reference PDF Validation requires complete page-level visual checklist with no unexplained FAIL",
+      "Reference PDF Validation requires one immutable phase-end candidate passing Static and full Linux"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
-    ]
+    ],
+    "reference_pdf_validation_state": "active-provenance-pending"
   },
   "authority_decisions": {
     "object_typography": {
@@ -194,8 +205,14 @@
     "rejected_core_corrections_phase_end_candidate_sha": "3b2476371e1df5180d8ee25ea53aed6a13fa2da2",
     "rejected_core_corrections_phase_end_static_run": 33981960024,
     "rejected_core_corrections_phase_end_static_classification": "phase-governance-candidate-sentinel-mismatch",
-    "core_corrections_phase_end_candidate": "one-immutable-sha",
-    "core_corrections_phase_end_acceptance": "pending-static-and-linux",
+    "core_corrections_phase_end_candidate_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
+    "core_corrections_phase_end_static_run": 33982156041,
+    "core_corrections_phase_end_static_conclusion": "success",
+    "core_corrections_phase_end_linux_run": 33982156042,
+    "core_corrections_phase_end_linux_conclusion": "success",
+    "core_corrections_phase_end_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "core_corrections_phase_end_acceptance": "accepted",
+    "reference_pdf_validation_artifact_state": "provenance-pending",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },
