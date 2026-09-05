@@ -54,7 +54,7 @@ PORTUGUESE_TECHNICAL_TERMS = re.compile(
     r"introdu[cç][aã]o|metodologia|an[oô]mal[oa]|asterisco|sem[aâ]ntic[oa]|estrutural|"
     r"cap[ií]tulo|reapareceu|vazou|dado|protegid[oa]|acad[eê]mic[oa]|declara[cç][aã]o|"
     r"documento|completo|gerou|apenas|reportou|julgamento|complementar|entidade|"
-    r"submiss[aã]o|impresso|impressa|apesar|p[uú]blico|pr[eé]-textual)\b",
+    r"submiss[aã]o|impresso|impressa|apesar|p[uú]blico|pr[eé]-textual|prefixo)\b",
     re.IGNORECASE,
 )
 MIXED_PORTUGUESE_TECHNICAL_PHRASES = re.compile(
@@ -68,6 +68,11 @@ MIXED_PORTUGUESE_TECHNICAL_PHRASES = re.compile(
     r"\bsuplemento\s+n[aã]o\s+est[aá]\s+posicionado\b|"
     r"\bc[oó]digo\s+mudou\s+de\s+fam[ií]lia\b|"
     r"\bn[uú]mero\s+de\s+linha\b|"
+    r"\blinha\s+numerada\b|"
+    r"\bsequ[eê]ncia\s+numerada\b|"
+    r"\bsem\s+numera[cç][aã]o\b|"
+    r"\bdeveria\s+tornar\b|"
+    r"\bwarning\s+ou\s+overflow\s+n[aã]o\s+reconhecido\b|"
     r"\btipografia\s+(?:e|and)\s+geometria\b)",
     re.IGNORECASE,
 )
@@ -250,6 +255,8 @@ def self_test() -> None:
         "raise SystemExit(f'{job}: identificação completa of the curso missing of the cover.')",
         "raise SystemExit('NBR 6023:2025: suplemento não está posicionado após a data.')",
         "raise SystemExit('código mudou de família.')",
+        "raise SystemExit('número de linha duplicado 2')",
+        "raise SystemExit('linha numerada vazia: 2')",
     )
     for line in false_negative_cases:
         scope = list(diagnostic_scopes([line]))[0][1]
@@ -262,7 +269,7 @@ def self_test() -> None:
     assert not RETIRED_PROFILE_IDS.search('\"profile\": \"undergraduate-capstone\"')
     normative = json.loads('{"requirement":"A capa é elemento obrigatório."}')
     assert "obrigatório" in normative["requirement"]
-    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=11")
+    print("ENGINEERING-LANGUAGE-SELFTEST status=PASS cases=13")
 
 
 def main() -> None:
