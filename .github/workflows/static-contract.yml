@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: plan/v3-regression-reset
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Set up Python 3.13
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
@@ -36,13 +36,15 @@ jobs:
         with:
           node-version: '24'
       - name: Apply one-shot object typography migration
-        run: python3 tools/tmp-object-typography-migration.py
+        run: |
+          sed -i 's/parent\["applies_to"\]/parent["values"]["applies_to"]/g' tools/tmp-object-typography-migration.py
+          python3 tools/tmp-object-typography-migration.py
       - name: Run repository-owned static contract on migrated tree
         run: make static-check
       - name: Restore permanent workflow and commit migrated checkpoint
         run: |
           set -euo pipefail
-          git show HEAD^:.github/workflows/static-contract.yml > .github/workflows/static-contract.yml
+          git show 63a8cedd509924366535e6c2550b0034b1cc5291:.github/workflows/static-contract.yml > .github/workflows/static-contract.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
