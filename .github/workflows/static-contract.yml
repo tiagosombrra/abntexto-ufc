@@ -65,12 +65,14 @@ jobs:
           path.write_text(text.replace(old, new, 1), encoding="utf-8")
           PY
           python3 tools/tmp-object-typography-migration.py
+          git checkout HEAD -- tools/tmp-object-typography-migration.py .github/workflows/tmp-object-typography-migration.yml
       - name: Run repository-owned static contract on migrated tree
         run: make static-check
       - name: Restore permanent workflow and commit migrated checkpoint
         run: |
           set -euo pipefail
           git show 63a8cedd509924366535e6c2550b0034b1cc5291:.github/workflows/static-contract.yml > .github/workflows/static-contract.yml
+          git rm -f tools/tmp-object-typography-migration.py .github/workflows/tmp-object-typography-migration.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
