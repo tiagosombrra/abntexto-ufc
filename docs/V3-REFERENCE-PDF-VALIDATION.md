@@ -1,7 +1,7 @@
 # V3 Reference PDF Validation
 
 Updated: 2026-09-05
-Status: ACTIVE — CANONICAL REBUILD IN PROGRESS
+Status: ACTIVE — PROVENANCE ACCEPTED / VISUAL REVIEW ACTIVE
 
 ## Purpose
 
@@ -9,11 +9,37 @@ This phase validates the corrected canonical V3 reference PDF as a rendered docu
 
 Core Corrections closed on immutable candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, which passed Static `33982156041` and full Linux `33982156042`; Linux summary: `PASS=31 FAIL=0 SKIP=0`.
 
-## Artifact provenance finding
+## Accepted canonical artifact provenance
 
-The pre-existing local PDF generated on 2026-09-04 (`abntexto-ufc-v3-template-example.pdf`, 55 pages, 449654 bytes) is **REJECTED as the canonical acceptance artifact**. It is a real LaTeX PDF, but its rendered content predates accepted Core Corrections: extraction still shows `NOME SOBRENOME`, a populated department line, and the title-page advisor line without the accepted final punctuation. It therefore remains comparison-only and must not be used to close this phase.
+Fresh canonical PDF build is accepted for visual validation:
 
-A fresh canonical build is being generated from the current remote branch using temporary workflow `.github/workflows/tmp-reference-pdf.yml`. The workflow records Git SHA, workflow run, TeX Live 2026, pdfLaTeX, `pdfinfo` and SHA-256 and uploads the resulting PDF as a short-lived artifact. The temporary workflow must be removed after the artifact is recovered and validated.
+- source/build SHA: `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`;
+- temporary workflow run: `33983729996` — SUCCESS;
+- artifact ID: `9974546873`;
+- artifact name: `v3-reference-pdf-da02f17df4d2d0a1568edbbe8bfbbfffb7208966`;
+- source: `template/main.tex`;
+- engine: pdfLaTeX / pdfTeX `1.40.29`;
+- TeX Live: 2026;
+- PDF SHA-256: `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`;
+- size: 450652 bytes;
+- pages: 55;
+- page geometry: A4, `595.276 x 841.89 pt`;
+- PDF version: 1.7;
+- encrypted: no;
+- PyMuPDF openability: PASS;
+- likely scanned: no;
+- XFA: no;
+- font embedding preflight: all fonts reported embedded by `pdffonts`.
+
+The downloaded artifact's local SHA-256 exactly matched the workflow-generated SHA-256 record.
+
+Text extraction from the fresh front matter also confirms the corrected canonical inputs are present before visual acceptance: `NOME COMPLETO DO AUTOR`, no blank department line, final punctuation on `Orientador: Prof. Dr. Nome do Orientador.`, and committee institutions with `(UFC)` / `(SIGLA)` where configured.
+
+The temporary executor `.github/workflows/tmp-reference-pdf.yml` is removed in the same synchronized checkpoint that records this provenance. It is not a permanent workflow.
+
+## Rejected comparison artifact
+
+The pre-existing local PDF generated on 2026-09-04 (`abntexto-ufc-v3-template-example.pdf`, 55 pages, 449654 bytes) remains **REJECTED as the canonical acceptance artifact**. It is real LaTeX output but predates accepted Core Corrections and contains stale rendered front-matter content. It may be used only for comparison.
 
 ## Artifact rule
 
@@ -23,9 +49,9 @@ A PDF generated from an older checkpoint may be used only as a comparison artifa
 
 ## Validation loop
 
-1. Establish artifact provenance and bind the PDF to a concrete Git SHA.
-2. Preflight the PDF: page count, A4 geometry, PDF version, fonts/embedding observations, extraction viability and obvious structural warnings.
-3. Render every page at 200 DPI with the repository-independent PDF review tooling.
+1. Establish artifact provenance and bind the PDF to a concrete Git SHA. — **PASS**
+2. Preflight the PDF: page count, A4 geometry, PDF version, fonts/embedding observations, extraction viability and obvious structural warnings. — **PASS**
+3. Render every page at 200 DPI with the repository-independent PDF review tooling. — **NEXT**
 4. Inspect the complete page sequence for clipping, overlap, broken glyphs, incorrect blank pages, unexpected pagination, inconsistent margins, heading drift and object overflow.
 5. Reconfirm presentation-sensitive librarian-review items, especially 10, 15, 21 and 34, plus canonical examples for 1, 2, 7, 11, 16 and 28.
 6. Compare unchanged surfaces with the accepted V2.1 preservation baseline where useful. V2.1 is preservation evidence, not current normative authority.
@@ -38,8 +64,8 @@ A PDF generated from an older checkpoint may be used only as a comparison artifa
 
 | Group | Scope | Current state |
 |---|---|---|
-| Artifact provenance and preflight | SHA, engine, A4, page count, metadata, extraction | BUILDING FRESH ARTIFACT |
-| Cover/title/approval pages | optional department, complete author, punctuation, committee institution/acronym | PENDING |
+| Artifact provenance and preflight | SHA, engine, A4, page count, metadata, extraction, embedding | PASS |
+| Cover/title/approval pages | optional department, complete author, punctuation, committee institution/acronym | TEXT PRECHECK PASS / VISUAL PENDING |
 | Other pre-textual pages | errata, dedication, acknowledgements, epigraph, RESUMO/ABSTRACT, lists, TOC | PENDING |
 | Main text | headings, paragraphs, citations, quotations, alíneas, pagination | PENDING |
 | Figures/tables/code/algorithms/equations | title/source typography, bounds, spacing, locators | PENDING |

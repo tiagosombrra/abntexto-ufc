@@ -36,9 +36,9 @@ Corrected candidate `5f67560a...` restored the exact invariant and passed both r
 
 The correction queue is not reopened merely to perform visual inspection. The active phase validates the canonical rendered artifact against the accepted shared foundation.
 
-If visual inspection exposes a real defect, add a classified correction entry before changing runtime/reference content, then rebuild, re-render and revalidate. A presentation defect discovered here keeps Reference PDF Validation open; it does not authorize Scientific Article work.
+Fresh canonical artifact provenance is accepted from build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, temporary build run `33983729996`, artifact `9974546873`, PDF SHA-256 `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`. Preflight is green and the temporary build workflow is removed after artifact recovery.
 
-The canonical PDF must be a real LaTeX build tied to a concrete Git SHA. Older PDFs are comparison-only when later changes can affect output. Synthetic PDFs are never acceptance evidence.
+The next batch is full 200 DPI rendering and visual inspection of all 55 pages. If inspection exposes a real defect, add a classified correction entry before changing runtime/reference content, then rebuild, re-render and revalidate. A presentation defect discovered here keeps Reference PDF Validation open; it does not authorize Scientific Article work.
 
 ## Remaining authority boundary
 

@@ -21,11 +21,12 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Target version: `3.0.0`.
 - Active phase: **Reference PDF Validation**.
 - Core Corrections immutable phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041` and full Linux `33982156042` success; Linux summary `PASS=31 FAIL=0 SKIP=0`.
-- Core Corrections is CLOSED.
 - Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Fresh canonical artifact build: SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, run `33983729996`, artifact `9974546873`.
+- Canonical PDF SHA-256: `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`; 55 A4 pages; PDF 1.7; TeX Live 2026/pdfLaTeX; preflight PASS; all listed fonts embedded.
+- Temporary PDF-build executor has completed its purpose and is removed in the synchronized provenance-acceptance checkpoint.
 - Pre-existing 2026-09-04 reference PDF is comparison-only because it predates accepted Core Corrections.
-- Current batch: **Reference PDF Validation — fresh provenance-bound canonical build**.
-- Temporary executor `.github/workflows/tmp-reference-pdf.yml` is ACTIVE and must be removed immediately after artifact recovery.
+- Current batch: **Reference PDF Validation — complete 200 DPI page-level visual review**.
 - Active phase contract: `docs/V3-REFERENCE-PDF-VALIDATION.md`.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Reference PDF Validation closes.
@@ -79,7 +80,7 @@ Core Corrections satisfied this rule with candidate `5f67560aeded1e6b4f77f4a31e1
 - Confirm no clipping, overlap, broken glyphs, unexpected page breaks, object overflow, heading drift or pagination anomalies.
 - Reconfirm presentation-sensitive librarian-review items and preserve item 33 as an explicit authority gap.
 - Any defect must be classified before code/test changes; after a correction, rebuild, re-render and re-inspect.
-- Remove the temporary canonical-build workflow immediately after artifact recovery.
+- Temporary canonical-build executor must remain absent after provenance acceptance.
 - Scientific Article remains blocked until this phase and its own phase-end regression close.
 
 ## Branch governance and fail-closed rule

@@ -9,13 +9,16 @@ Updated: 2026-09-05
 - Active task branch: `plan/v3-regression-reset`.
 - Active phase: **Reference PDF Validation**.
 - Core Corrections immutable phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da` passed Static `33982156041` and full Linux `33982156042`; Linux summary `PASS=31 FAIL=0 SKIP=0`.
-- Core Corrections is CLOSED.
 - Current 34-item state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Phase-transition checkpoint: `a6bd8a7385162ca8a83c0d938ebec7a95538f88e`; Static `33983464772` passed; its full Linux run may be superseded by the dedicated artifact-build commit and is not the Core Corrections closure gate.
-- Pre-existing 2026-09-04 canonical-looking PDF is rejected as current acceptance evidence because its rendered content predates accepted corrections.
-- Current batch: **Reference PDF Validation — fresh provenance-bound canonical build**.
-- Temporary executor: `.github/workflows/tmp-reference-pdf.yml`; lifecycle state `ACTIVE`, must be removed after artifact recovery/validation.
-- Active phase contract: `docs/V3-REFERENCE-PDF-VALIDATION.md`.
+- Fresh canonical artifact build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`.
+- Temporary build run `33983729996`: SUCCESS.
+- Artifact `9974546873`, `v3-reference-pdf-da02f17df4d2d0a1568edbbe8bfbbfffb7208966`.
+- Canonical PDF SHA-256: `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`.
+- Canonical PDF: 55 pages, 450652 bytes, A4, PDF 1.7, pdfTeX 1.40.29 / TeX Live 2026, unencrypted; preflight openable and all `pdffonts` entries embedded.
+- Artifact provenance/preflight: **PASS**.
+- Current batch: **Reference PDF Validation — complete 200 DPI page-level visual review**.
+- Temporary workflow `.github/workflows/tmp-reference-pdf.yml` is removed in the provenance-acceptance checkpoint; permanent workflows are unchanged.
+- Pre-existing 2026-09-04 PDF remains comparison-only because it predates accepted Core Corrections.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
@@ -23,29 +26,23 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 Git facts, machine state, roadmap, active phase document and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
 
-## Core Corrections closure
+## Canonical artifact provenance
 
-The corrected immutable candidate `5f67560a...` preserved `phase_end_regression.candidate = one-immutable-sha`, passed Static `33982156041`, and passed full Linux `33982156042`. The Linux run executed all 31 PR checks and ended with `PASS=31 FAIL=0 SKIP=0`.
+Temporary workflow run `33983729996` built `template/main.tex` directly from `da02f17d...` with TeX Live 2026/pdfLaTeX. The uploaded provenance record identifies the same Git SHA and run ID. Workflow and local SHA-256 values match exactly.
 
-The same run retained explicit evidence for the resolved librarian-review surfaces. No shared runtime FAIL remained. Item 33 stayed explicit and fail-closed.
+`pdfinfo` reports 55 A4 pages, PDF 1.7, no encryption and no structural suspect flag. Repository-independent preflight opened the PDF successfully, found it text-based rather than scanned and found no XFA. `pdffonts` reports every listed font embedded.
 
-## Reference PDF provenance finding
-
-The local `abntexto-ufc-v3-template-example.pdf` generated on 2026-09-04 is real LaTeX output but is stale relative to the accepted shared foundation. Its extracted pages still show the old complete-author placeholder and title-page advisor presentation. It is therefore comparison-only.
-
-A dedicated temporary GitHub Actions executor now rebuilds `template/main.tex` from the current branch with TeX Live 2026/pdfLaTeX and uploads the PDF together with Git SHA, workflow run, `pdfinfo` and SHA-256 provenance. The executor is temporary by policy and must be removed once the artifact is recovered.
+A front-matter text precheck confirms the fresh artifact contains the accepted complete-author placeholder, omits the blank department field, prints the advisor line with final punctuation, and renders committee institutions/acronyms from the current canonical configuration. These observations are not substitutes for the visual page review.
 
 ## Immediate action
 
-1. publish and execute the temporary canonical build;
-2. recover the uploaded artifact and verify provenance;
-3. remove the temporary workflow in the next synchronized repository checkpoint;
-4. preflight and render every page at 200 DPI;
-5. inspect the complete page sequence and record page-level results;
-6. classify any defect before changing runtime/reference content;
-7. rebuild/re-render after any correction;
-8. prepare one immutable Reference PDF Validation phase-end candidate only after the visual checklist is clean;
-9. do not start Scientific Article until that candidate passes Static/full Linux.
+1. render all 55 canonical pages at 200 DPI;
+2. inspect every page, using grouped contact sheets plus targeted full-page inspection;
+3. record page-level PASS/FAIL results and presentation-sensitive librarian evidence;
+4. classify every visual defect before modifying runtime/reference content;
+5. rebuild/re-render after any correction;
+6. once the visual checklist is clean, synchronize documentation and prepare one immutable Reference PDF Validation phase-end candidate;
+7. require Static and full Linux on that same candidate before activating Scientific Article.
 
 ## Mandatory operating discipline
 
@@ -59,7 +56,6 @@ Every phase requires a **phase-end regression** on one immutable candidate befor
 - Preserve the closed V3 public API unless current evidence explicitly authorizes a change.
 - Do not translate reviewer comments directly into normative runtime behavior when current authority remains unresolved.
 - Do not use stale or synthetic PDFs as canonical acceptance evidence.
-- Do not leave the temporary PDF-build workflow in the repository after artifact recovery.
 - Do not weaken tests merely to recover green CI.
 - Do not redistribute proprietary fonts.
 - CTAN submission remains blocked until **Release**.
