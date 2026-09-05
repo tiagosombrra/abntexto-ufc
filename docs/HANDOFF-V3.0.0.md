@@ -11,9 +11,10 @@ Updated: 2026-09-05
 - Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`; Static `33937439818` and Linux `33937439846` succeeded.
 - Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` succeeded, `PASS=31 FAIL=0 SKIP=0`.
 - Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` succeeded, `PASS=31 FAIL=0 SKIP=0`; librarian items 11, 16 and 28 closed.
-- Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and Linux `33972111696` succeeded; the permanent detector reports zero project-owned Portuguese technical diagnostics.
+- Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and Linux `33972111696` succeeded; permanent detector reports zero project-owned Portuguese technical diagnostics.
 - Current 34-item state: `28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`.
 - Current bounded batch: **Core Corrections — References**.
+- Reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` adds controlled reviewer-specific cases for items 30-32; acceptance is pending synchronized Static/full Linux.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred.
 
@@ -21,23 +22,27 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 Git facts, machine state, roadmap and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
 
+## Current reference implementation
+
+Implementation `63d20de...` is intentionally evidence-only: it does not change `abntexto-ufc/standards/nbr6023-2025.def` or any normative runtime rule.
+
+It adds:
+
+1. reviewer-specific evidence that an online entry without location/publisher does not receive unknown-publication markers under the already-established compatibility behavior (item 30);
+2. a controlled thesis/dissertation entry whose work type, institution/location and single consistent year are checked explicitly (item 31 hardening);
+3. a controlled ABNT standard entry checking publisher/year data and a bibliography-specific `@mvbook` entry checking the reviewed `2 v.` physical description (item 32);
+4. explicit `LIBRARIAN-REVIEW-EVIDENCE` lines for items 30, 31 and 32.
+
+The existing `tests/integration/multivolume.sh` remains document-pagination evidence only and is not reused as bibliography evidence.
+
 ## Immediate action
 
-Continue **Core Corrections — References** with bounded, authority-safe evidence only:
-
-1. add an explicit negative regression proving thesis/dissertation references do not duplicate or contradict the year (item 31 hardening);
-2. add a bibliography-specific standard example using the current ABNT publisher/year data already present in the canonical reference corpus (item 32);
-3. add a bibliography-specific multivolume physical-description example and evidence without confusing it with the document-pagination `multivolume.sh` gate (item 32);
-4. retain existing electronic-resource unknown-publication-data coverage for item 30 and add only reviewer-specific evidence that does not strengthen unresolved NBR 6023:2025 semantics;
-5. keep item 33 untouched and fail-closed because DOI/online/repeated-author/corporate-author edge-case clause text remains unavailable;
-6. synchronize all affected execution documents in the same material advance;
-7. run Static contract and full Linux integration before accepting the bounded reference batch.
-
-## Accepted engineering-language closeout
-
-The strengthened detector progressively exposed previously missed project-owned Portuguese diagnostics in several integration gates. The project corrected the diagnostic surfaces instead of weakening detection. Checkpoint `edeb14...` is accepted because Static `33972111694` and full Linux `33972111696` both passed on the same SHA, with `ENGINEERING-LANGUAGE-EVIDENCE ... portuguese_technical_diagnostics=0`.
-
-Historical failed discovery runs remain useful evidence and are not erased: they demonstrate fail-closed detection and documentation-governance enforcement.
+1. publish the synchronized checkpoint containing implementation `63d20de...` and these control-document updates;
+2. run Static contract and full Linux integration on that exact checkpoint;
+3. if the multivolume `@mvbook` expectation does not render as reviewed, classify the evidence failure and do not change runtime without sufficient authority;
+4. if both gates pass, promote item 32 from PARTIAL to PASS and update the 34-item matrix to `29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`;
+5. then continue canonical confirmation for items 1, 2, 7 and 34;
+6. keep item 33 untouched/fail-closed.
 
 ## Mandatory operating discipline
 

@@ -132,7 +132,7 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
+    "latest_implementation_checkpoint_sha": "63d20de2894e6ba4149bac0b2aba3efeb1aef27f",
     "latest_fully_validated_checkpoint_sha": "edeb14b7a96d1cab3ad9551701087ddf4dff059a",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green-engineering-language-hardening-accepted",
     "current_correction_batch": [
@@ -140,22 +140,8 @@
       "references item 31 duplicate-or-contradictory-year negative regression",
       "references item 32 bibliography-specific standard and multivolume evidence"
     ],
-    "review_items_confirmed_by_latest_full_linux": [
-      4,
-      11,
-      16,
-      17,
-      19,
-      20,
-      21,
-      23,
-      28
-    ],
-    "review_items_source_evidence_accepted": [
-      11,
-      16,
-      28
-    ],
+    "review_items_confirmed_by_latest_full_linux": [4, 11, 16, 17, 19, 20, 21, 23, 28],
+    "review_items_source_evidence_accepted": [11, 16, 28],
     "known_runtime_failures": [],
     "known_gate_failures": [
       "historical Static 33970711005: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostics",
@@ -163,7 +149,7 @@
       "historical Static 33971156481 and 33971849196: stronger detector exposed additional project-owned diagnostics before accepted cleanup"
     ],
     "pending_acceptance_gates": [
-      "bounded references batch: Static contract and full Linux integration required after evidence implementation"
+      "reference implementation 63d20de: synchronized Static contract and full Linux integration required"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
@@ -211,6 +197,9 @@
     "engineering_language_hardening_linux_conclusion": "success",
     "engineering_language_hardening_state": "accepted",
     "engineering_language_permanent_audit": "portuguese_technical_diagnostics=0",
+    "reference_evidence_implementation_sha": "63d20de2894e6ba4149bac0b2aba3efeb1aef27f",
+    "reference_evidence_items": [30, 31, 32],
+    "reference_evidence_acceptance": "pending-synchronized-static-and-linux",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,

@@ -17,9 +17,11 @@ This document converts the union of the two annotated v1.1.1 review PDFs supplie
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`. Explicit PDF evidence closed review items 11, 16 and 28.
 
-Engineering-language hardening is accepted at checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and full Linux `33972111696` both succeeded. This additional regression finding does not change the librarian-review item count.
+Engineering-language hardening is accepted at `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and full Linux `33972111696` succeeded.
 
-Current review state: **28 PASS, 5 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 items**.
+Reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` adds bounded reviewer-specific evidence for items 30-32 without changing normative runtime. Those new assertions remain acceptance-pending until the synchronized checkpoint passes Static and full Linux.
+
+Current review state remains **28 PASS, 5 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 items** until that acceptance gate closes.
 
 ## Consolidated review contract
 
@@ -54,9 +56,9 @@ Current review state: **28 PASS, 5 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 item
 | 27 | Alíneas are ordered alphabetically, not by Arabic numerals. | PASS | `ufclettereditems`, reference fixture |
 | 28 | Example section/subsection headings must follow sentence case where appropriate, including correct `etc.` punctuation. | PASS — source and generated-PDF evidence accepted. | reference content/headings, source/PDF reference gates |
 | 29 | First-line paragraph indentation must be consistent with the adopted UFC body-text rule. | PASS | body-paragraph checks |
-| 30 | Unknown place/publisher data must not emit obsolete/inappropriate patterns for online resources; electronic examples must follow current NBR 6023 handling. | PASS/PARTIAL — compatibility and current profile tests exist; reviewer-case coverage remains. | `nbr6023-2025.def`, bibliography fixtures |
-| 31 | Thesis/dissertation references must use the correct work-type structure and must not duplicate or contradict the year. | PASS — retain/add negative duplicate-year regression. | bibliography fixtures |
-| 32 | Standard and multivolume examples must use the accepted publisher/year and physical-description conventions when applicable. | PARTIAL | bibliography fixtures/reference guide |
+| 30 | Unknown place/publisher data must not emit obsolete/inappropriate patterns for online resources; electronic examples must follow current NBR 6023 handling. | PASS/PARTIAL — reviewer-specific controlled electronic evidence implemented at `63d20de...`; synchronized CI pending. | `nbr6023-2025.def`, bibliography fixtures |
+| 31 | Thesis/dissertation references must use the correct work-type structure and must not duplicate or contradict the year. | PASS — explicit single-year negative regression implemented at `63d20de...`; synchronized CI pending. | bibliography fixtures |
+| 32 | Standard and multivolume examples must use the accepted publisher/year and physical-description conventions when applicable. | PARTIAL — bibliography-specific standard and `@mvbook`/`2 v.` evidence implemented at `63d20de...`; synchronized CI pending. | bibliography fixtures/reference guide |
 | 33 | DOI/availability, repeated-author treatment, `São Paulo (Estado)` and related edge cases must be reconciled against current NBR 6023:2025 before runtime changes. | NORMATIVE-REVIEW | bibliography runtime/fixtures/locator audit |
 | 34 | Appendix/annex headings must use the required bold presentation, and annexed external material must explicitly identify its source. | PARTIAL — source example and heading behavior exist; canonical visual confirmation remains. | appendix/annex integration, canonical annex |
 

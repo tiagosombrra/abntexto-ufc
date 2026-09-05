@@ -21,7 +21,7 @@ Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` pa
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28.
 
-Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`. The permanent audit reports zero project-owned Portuguese technical diagnostics, so that additional regression finding is closed.
+Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; the permanent audit reports zero project-owned Portuguese technical diagnostics.
 
 Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
@@ -36,7 +36,7 @@ Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-R
 
 ### 1. Control Plane and Regression Harness — VALIDATED
 
-Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static failures during the correction cycle demonstrated that the permanent governance checker rejects documentation drift instead of silently accepting it.
+Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained.
 
 ### 2. Front Matter and Institutional Metadata — PARTIAL
 
@@ -52,26 +52,30 @@ Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identificat
 
 ### 5. Engineering-language evidence hardening — VALIDATED
 
-Accepted at checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` with Static `33972111694` and full Linux `33972111696` both green. The stronger detector progressively exposed previously missed project-owned Portuguese diagnostics; all discovered engineering surfaces were corrected instead of weakening the detector. Permanent evidence now reports `portuguese_technical_diagnostics=0`.
+Accepted at `edeb14b7a96d1cab3ad9551701087ddf4dff059a` with Static `33972111694` and full Linux `33972111696` green. Permanent evidence reports `portuguese_technical_diagnostics=0`.
 
-### 6. References and NBR 6023:2025 — ACTIVE / FAIL-CLOSED BOUNDARY
+### 6. References and NBR 6023:2025 — ACTIVE / IMPLEMENTED, CI PENDING
 
-Safe bounded work:
+Implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` adds bounded reviewer-specific evidence and does not change normative runtime.
 
-- item 30: retain current electronic-resource unknown-publication-data behavior and add reviewer-case regression coverage without strengthening unresolved current-edition semantics;
-- item 31: add an explicit thesis/dissertation negative regression preventing duplicate or contradictory year output;
-- item 32: add bibliography-specific standard and multivolume fixture/evidence cases using current accepted project/source data;
-- item 33: remain `NORMATIVE-REVIEW` until authoritative current NBR 6023:2025 text is available for the disputed DOI/availability/repeated-author/corporate-author edge cases.
+Implemented evidence:
 
-Important boundary: `tests/integration/multivolume.sh` validates pagination of a multivolume academic document; it is not evidence for a multivolume bibliographic entry. Bibliography evidence must use a separate fixture/reference gate.
+- item 30: controlled online entry verifies the already-established omission of `[S. l.]` / `[s. n.]`-style unknown publication markers for the electronic case;
+- item 31: controlled thesis/dissertation entry verifies work type, institution/location, and exactly one consistent year (`2024`), rejecting duplicate or contradictory year output;
+- item 32: controlled ABNT standard verifies publisher/year data; a separate bibliography-specific `@mvbook` verifies the reviewed `2 v.` physical-description form;
+- structured `LIBRARIAN-REVIEW-EVIDENCE` is emitted for items 30, 31 and 32.
 
-Acceptance for this batch:
+Important boundary: `tests/integration/multivolume.sh` remains academic-document pagination evidence and is not treated as bibliography evidence.
 
-1. no normative runtime change unless directly supported by current authority already in the evidence corpus;
-2. add positive/negative reviewer-specific evidence where bounded behavior is already established;
-3. keep item 33 untouched;
-4. synchronize affected execution documentation in the same material advance;
-5. require Static contract and full Linux integration green before accepting the batch.
+Item 33 remains `NORMATIVE-REVIEW`. No runtime change is authorized for disputed DOI/availability/repeated-author/corporate-author cases without current authoritative text.
+
+Acceptance:
+
+1. publish a synchronized documentation checkpoint containing `63d20de...`;
+2. run Static contract and full Linux integration on that exact checkpoint;
+3. if the `@mvbook` reviewer form fails, classify the discrepancy and re-audit authority rather than changing runtime reflexively;
+4. if both gates pass, promote item 32 to PASS and update counts to **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**;
+5. keep item 33 fail-closed.
 
 ### 7. Appendices, Annexes and External Source Attribution — PARTIAL
 
@@ -114,9 +118,9 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | 27 | PASS | P3 | Preserve alphabetic alínea ordering. |
 | 28 | PASS | P2 | Source/PDF sentence-case and `etc.` evidence accepted. |
 | 29 | PASS | P3 | Preserve 2 cm first-line indent/no extra paragraph spacing. |
-| 30 | PASS/PARTIAL | P1/P3 | Add reviewer-specific electronic-resource regression while preserving current bounded behavior. |
-| 31 | PASS | P3 | Add duplicate/contradictory-year negative fixture. |
-| 32 | PARTIAL | P1/P2 | Add bibliography-specific standard/multivolume cases. |
+| 30 | PASS/PARTIAL | P1/P3 | Reviewer-specific controlled electronic case implemented at `63d20de...`; CI pending. |
+| 31 | PASS | P3 | Duplicate/contradictory-year negative evidence implemented at `63d20de...`; CI pending. |
+| 32 | PARTIAL | P1/P2 | Standard/multivolume bibliography evidence implemented at `63d20de...`; CI pending. |
 | 33 | NORMATIVE-REVIEW | P1 | Wait for authoritative NBR 6023:2025 edge-case text. |
 | 34 | PARTIAL | P1/P2 | Final canonical annex source/heading/TOC confirmation. |
 

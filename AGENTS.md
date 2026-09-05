@@ -25,7 +25,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` success, `PASS=31 FAIL=0 SKIP=0`; items 11, 16 and 28 closed.
 - Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a`: Static `33972111694` and Linux `33972111696` success; permanent audit reports `portuguese_technical_diagnostics=0`.
 - Current 34-item state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Current bounded batch: **Core Corrections — References**, limited to safe evidence for items 30-32.
+- Current bounded batch: **Core Corrections — References**.
+- Reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` adds bounded reviewer-specific cases for items 30-32; acceptance requires synchronized Static and full Linux on the documentation checkpoint that contains it.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 

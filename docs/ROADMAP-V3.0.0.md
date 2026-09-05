@@ -10,7 +10,7 @@ Regression Audit is closed. Object/Core Corrections checkpoint `3f47081cbbd00a44
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, with `PASS=31 FAIL=0 SKIP=0`, closing review items 11, 16 and 28.
 
-Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; the permanent audit reports `portuguese_technical_diagnostics=0`. That finding is closed.
+Engineering-language hardening checkpoint `edeb14b7a96d1cab3ad9551701087ddf4dff059a` passed Static `33972111694` and full Linux `33972111696`; permanent evidence reports `portuguese_technical_diagnostics=0`. That finding is closed.
 
 Current 34-point state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
@@ -56,16 +56,21 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 
 ### Current work — References
 
-The next bounded batch covers only safe evidence for review items 30-32.
+Reference evidence implementation `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` is prepared and deliberately does not alter normative runtime.
 
-Planned acceptance work:
+It adds controlled evidence for:
 
-1. item 30 — retain the existing electronic-resource unknown-publication-data behavior and add reviewer-specific regression coverage without extrapolating unresolved current-edition rules;
-2. item 31 — add explicit thesis/dissertation negative evidence preventing duplicate or contradictory year output;
-3. item 32 — add bibliography-specific standard and multivolume examples/evidence using already accepted project/current-source data;
-4. item 33 — no runtime change; remain `NORMATIVE-REVIEW` until authoritative current NBR 6023:2025 clause text is available.
+1. item 30 — online unknown-publication markers remain omitted for the established controlled electronic case;
+2. item 31 — thesis/dissertation work type and institution/location are present and the year is rendered exactly once with no contradictory year;
+3. item 32 — a standard entry contains accepted ABNT publisher/year data and a bibliography-specific `@mvbook` renders the reviewed `2 v.` physical description.
 
-The existing `tests/integration/multivolume.sh` validates academic-document pagination and is not bibliography evidence; reference multivolume coverage must be separate.
+Acceptance gate:
+
+1. publish the synchronized checkpoint containing `63d20de...` and current documentation;
+2. require Static contract and full Linux integration on that exact checkpoint;
+3. do not change runtime merely to satisfy a reviewer-form expectation if the bounded evidence fails; classify and re-audit authority instead;
+4. on green CI, item 32 may move from PARTIAL to PASS and the matrix becomes **29 PASS / 4 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**;
+5. item 33 remains untouched.
 
 ### Remaining Core Corrections after References
 
@@ -93,4 +98,5 @@ Use descriptive work names such as `Core Corrections — References`, `Reference
 - pre-regression `main` baseline: `c4bf51b574647226ee488440579ec2a204c16c79`;
 - accepted object/Core Corrections checkpoint: `3f47081cbbd00a44b9ee86a6b406580e79b593c0`;
 - accepted canonical-reference PDF checkpoint: `c4c59f83b67cb152ed9a88345541457b8f18021c`;
-- accepted engineering-language hardening checkpoint: `edeb14b7a96d1cab3ad9551701087ddf4dff059a`.
+- accepted engineering-language hardening checkpoint: `edeb14b7a96d1cab3ad9551701087ddf4dff059a`;
+- current reference evidence implementation: `63d20de2894e6ba4149bac0b2aba3efeb1aef27f` (acceptance pending synchronized CI).
