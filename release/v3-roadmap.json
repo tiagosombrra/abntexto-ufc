@@ -131,13 +131,14 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c",
+    "latest_implementation_checkpoint_sha": "a3ce2d82899162d12b06c7335b149dc2b44ecfa3",
     "latest_fully_validated_checkpoint_sha": "f6ca012164273e67480dca127fe17b392e8a8a21",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green",
     "current_correction_batch": [
-      "object typography table adapter acceptance",
-      "12 pt table identification/title final-PDF confirmation",
-      "10 pt lower table source final-PDF confirmation",
+      "object typography synchronized acceptance regression",
+      "legacy IBGE caption observer confirmation",
+      "12 pt upper identification/title final-PDF confirmation",
+      "10 pt lower source/note final-PDF confirmation",
       "review item 21 acceptance synchronization"
     ],
     "review_items_confirmed_by_latest_full_linux": [
@@ -149,25 +150,27 @@
     ],
     "known_runtime_failures": [],
     "pending_acceptance_gates": [
-      "review item 21: prior branch Linux run isolated table title at 10 pt; residual adapter fix 7ec385e requires new Static/full Linux confirmation"
+      "review item 21: runtime and final-PDF evidence are correct; synchronized Static/full Linux run after a3ce2d8 is required before PASS"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 DOI/online/repeated-author/corporate-author cases"
     ],
-    "object_typography_implementation_state": "table-adapter-fix-ci-pending",
-    "object_typography_implementation_checkpoint_sha": "7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c",
+    "object_typography_implementation_state": "implemented-legacy-observer-regression-pending",
+    "object_typography_implementation_checkpoint_sha": "a3ce2d82899162d12b06c7335b149dc2b44ecfa3",
     "object_typography_rule_migration_manifest": "standards/rule-migrations.json",
-    "object_typography_temporary_executor_removed": true
+    "object_typography_temporary_executor_removed": true,
+    "object_typography_final_pdf_contract_confirmed_in_failed_linux": true,
+    "object_typography_remaining_failure_classification": "stale-legacy-test-observer-corrected"
   },
   "authority_decisions": {
     "object_typography": {
-      "status": "implemented-table-adapter-fix-ci-pending",
+      "status": "implemented-legacy-observer-regression-pending",
       "decision_document": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
       "upper_identification_title_pt": 12,
       "lower_source_legend_note_pt": 10,
       "line_spacing": "single",
       "review_item": 21,
-      "current_state": "IMPLEMENTED-TABLE-ADAPTER-FIX-CI-PENDING"
+      "current_state": "IMPLEMENTED-LEGACY-OBSERVER-REGRESSION-PENDING"
     }
   },
   "evidence": {
@@ -182,13 +185,26 @@
     "latest_validated_core_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "object_typography_generated_tree_static_run": 33963033293,
     "object_typography_generated_tree_static_conclusion": "success",
-    "object_typography_branch_static_run": 33963240056,
-    "object_typography_branch_static_conclusion": "success",
-    "object_typography_branch_linux_run": 33963240297,
-    "object_typography_branch_linux_conclusion": "failure",
-    "object_typography_branch_linux_summary": "PASS=29 FAIL=1 SKIP=1",
-    "object_typography_branch_linux_failure": "table.identification.font-size expected 12 pt measured 10 pt",
-    "object_typography_branch_regression_state": "failed-residual-fixed-rerun-pending",
+    "object_typography_first_branch_static_run": 33963240056,
+    "object_typography_first_branch_static_conclusion": "success",
+    "object_typography_first_branch_linux_run": 33963240297,
+    "object_typography_first_branch_linux_conclusion": "failure",
+    "object_typography_first_branch_linux_failure": "table identification still 10 pt through tabularray-abnt adapter",
+    "object_typography_second_branch_static_run": 33964421654,
+    "object_typography_second_branch_static_conclusion": "success",
+    "object_typography_second_branch_linux_run": 33964421597,
+    "object_typography_second_branch_linux_conclusion": "failure",
+    "object_typography_second_branch_linux_summary": "PASS=29 FAIL=1 SKIP=1",
+    "object_typography_second_branch_final_pdf_measurements": {
+      "illustration_identification_pt": 12,
+      "illustration_source_pt": 10,
+      "table_identification_pt": 12,
+      "table_source_pt": 10,
+      "result": "success"
+    },
+    "object_typography_second_branch_linux_failure": "legacy table-ibge.sh caption assertion expected retired 10 pt value",
+    "object_typography_legacy_observer_fix_sha": "a3ce2d82899162d12b06c7335b149dc2b44ecfa3",
+    "object_typography_branch_regression_state": "pending-after-legacy-observer-fix",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

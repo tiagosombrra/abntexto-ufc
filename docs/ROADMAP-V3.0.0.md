@@ -8,11 +8,15 @@ Updated: 2026-09-05
 
 Regression Audit is closed. The latest fully validated Core Corrections/control checkpoint remains `f6ca012164273e67480dca127fe17b392e8a8a21`, with Static contract run `33939512055` and full Linux integration run `33939512019` both successful. The Linux run completed the full repository integration contract with `PASS=31 FAIL=0 SKIP=0`.
 
-The first object-typography migration at `f2f5124c4adcb34069a667f1ef80c76fb17728bd` passed generated-tree Static preflight `33963033293`. Branch-level Static run `33963240056` then passed, while full Linux run `33963240297` failed exactly one object predicate: table identification/title expected 12 pt but measured 10 pt. Illustration identification was already 12 pt and illustration/table sources were already 10 pt.
+The object-typography correction is materially implemented across shared object runtime, table runtime and regression observers. The implementation sequence is now:
 
-The failed regression isolated a second styling surface in `abntexto-ufc/modules.def`: the `tabularray-abnt` compatibility adapter still forced `caption,lasthead,capcont` to `\abntsmall`. Residual correction commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` restores those upper styles to `\normalsize` while keeping lower continuation/source/note text reduced. A new Static/full Linux acceptance run is now required.
+- `f2f5124c4adcb34069a667f1ef80c76fb17728bd`: normative rule-ID/locator migration plus shared illustration/object runtime and final-PDF evidence changes;
+- `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c`: residual `tabularray-abnt` table adapter corrected so upper table caption surfaces use body size;
+- `faa487ed38ca130c9eb9da597d2902603f269a0a`: documentation/control checkpoint that passed Static run `33964421654`;
+- full Linux run `33964421597`: `PASS=29 FAIL=1 SKIP=1`, with all object final-PDF measurements green and one stale legacy IBGE assertion isolated;
+- `a3ce2d82899162d12b06c7335b149dc2b44ecfa3`: legacy IBGE caption observer updated from the retired 10 pt expectation to 12 pt while retaining 10 pt source/note checks.
 
-The 34-point librarian contract therefore still stands at **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW** until review item 21 receives green evidence after the table-adapter fix. Items 19, 20 and 23 are closed by reviewer-specific evidence in full integration. Item 17 is closed by code-typography evidence. Item 4 is closed after the advisor/co-advisor punctuation correction.
+The 34-point librarian contract therefore still stands at **24 PASS, 8 PARTIAL, 1 FAIL, 1 NORMATIVE-REVIEW** until review item 21 receives a fully green normal branch Static/full Linux acceptance run on a synchronized checkpoint containing `a3ce2d8...`. Items 19, 20 and 23 are closed by reviewer-specific evidence in full integration. Item 17 is closed by code-typography evidence. Item 4 is closed after the advisor/co-advisor punctuation correction.
 
 Machine authority: `release/v3-roadmap.json`.
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.
@@ -57,9 +61,9 @@ Every phase ends with a mandatory phase-end regression on one immutable candidat
 - mixed-language engineering diagnostics cleaned in touched gates;
 - full Core Corrections/control integration checkpoint green at `f6ca012...`.
 
-### Current work — Objects: table adapter acceptance
+### Current work — Objects: synchronized acceptance regression
 
-Review item 21 remains the active P1 gate.
+Review item 21 is the active P1 acceptance gate.
 
 Authority reconciliation is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 
@@ -68,14 +72,9 @@ Authority reconciliation is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 - all object text remains bound to object width;
 - historical rule IDs are not silently repurposed to mean the opposite value.
 
-The object batch now has two explicit implementation checkpoints:
+The previous Linux run `33964421597` is diagnostically important: object geometry and both illustration/table final-PDF typography checks passed the accepted 12 pt/10 pt split. Its only failure came from a separate legacy `table-ibge.sh` assertion that still expected the retired 10 pt caption. Commit `a3ce2d8...` corrects that observer and keeps the stronger 12 pt title requirement intact.
 
-| Checkpoint | Purpose | Evidence |
-|---|---|---|
-| `f2f5124c...` | normative/rule-ID/locator migration and shared illustration/object runtime correction | Static preflight green; later Linux exposed table-specific residual |
-| `7ec385ebe...` | restore `tabularray-abnt` upper caption styles to body size | CI rerun pending |
-
-The failed Linux run `33963240297` is retained as useful regression evidence rather than hidden: it proves the test suite distinguished illustration and table runtime paths and rejected the remaining 10 pt table title.
+The remaining object gate is now a clean acceptance rerun: one synchronized branch checkpoint containing `a3ce2d8...` and the current control documentation must pass normal Static contract plus full Linux integration. Item 21 remains FAIL until that happens.
 
 ### Remaining Core Corrections after Objects
 
@@ -116,7 +115,8 @@ Use descriptive work names such as `Core Corrections — Objects`, `Core Correct
 - regression planning/full-integration checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`;
 - reviewer evidence implementation checkpoint: `1eab2539e418224e2a6ce85ef09065941b719ef7`;
 - latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`;
-- first object migration: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`;
-- residual table-adapter fix: `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` (acceptance regression pending).
+- object normative/shared-runtime migration checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`;
+- table adapter runtime correction: `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c`;
+- legacy IBGE observer correction: `a3ce2d82899162d12b06c7335b149dc2b44ecfa3` (synchronized branch regression pending).
 
 Detailed implementation history remains in Git, pull requests, issues, workflow runs, tags and releases rather than being duplicated in active control files.

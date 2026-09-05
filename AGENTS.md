@@ -23,6 +23,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Regression baseline: `c4bf51b574647226ee488440579ec2a204c16c79`.
 - Regression planning checkpoint: `ee2ab6e6404cbeb15447f694e998c78a9d5d8dc2`.
 - Full regression integration run `33937439846` passed before Core Corrections began.
+- Latest fully validated Core Corrections/control checkpoint: `f6ca012164273e67480dca127fe17b392e8a8a21`.
+- Current object-typography/test implementation checkpoint: `a3ce2d82899162d12b06c7335b149dc2b44ecfa3`; branch-level acceptance regression is pending.
 - Scientific-article runtime remains deferred until shared corrections and canonical reference-PDF validation are complete.
 - The union of the two librarian-reviewed PDFs is tracked as exactly 34 requirements in `docs/UFC-LIBRARIAN-REVIEW.md`.
 - Every material advance must update the active documentation/control state in the same work cycle.
@@ -96,7 +98,7 @@ A correction closes only when the applicable evidence is established:
 4. negative evidence where failure is machine-detectable;
 5. visual inspection of the canonical V3 PDF when presentation is part of the requirement.
 
-Do not change disputed object-title typography or NBR 6023:2025 edge-case runtime merely to match older review comments. Those remain fail-closed until their current authority decision is explicit.
+The object-title typography authority decision is now explicit in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`: upper illustration/table/object identification/title is 12 pt, while lower source/legend/note remains reduced where applicable. Do not reopen or reinterpret that decision merely to satisfy a stale test; update stale observers to the accepted contract. NBR 6023:2025 edge cases in review item 33 remain fail-closed until current authoritative text supports them.
 
 ## Branch governance
 

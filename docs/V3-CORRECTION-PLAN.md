@@ -30,17 +30,13 @@ Latest fully validated Core Corrections/control checkpoint remains `f6ca01216427
 - full Linux integration `33939512019`: success;
 - Linux summary: `PASS=31 FAIL=0 SKIP=0`.
 
-The first object-typography migration at `f2f5124c4adcb34069a667f1ef80c76fb17728bd` passed generated-tree Static preflight `33963033293`. The normal user-authored acceptance checkpoint then produced:
+Object-typography implementation progressed through three bounded checkpoints:
 
-- Static contract `33963240056`: success;
-- full Linux integration `33963240297`: failure;
-- Linux summary: `PASS=29 FAIL=1 SKIP=1`;
-- isolated failure: `table.identification.font-size`, expected 12 pt, measured 10 pt;
-- illustration identification already measured 12 pt and both illustration/table sources measured 10 pt.
+1. `f2f5124c4adcb34069a667f1ef80c76fb17728bd` migrated the normative rule IDs, shared object runtime, locators and final-PDF expectations.
+2. Full Linux run `33963240297` exposed an independent `tabularray-abnt` compatibility adapter that still forced table identification to 10 pt; runtime commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` corrected that residual.
+3. Checkpoint `faa487ed38ca130c9eb9da597d2902603f269a0a` passed Static run `33964421654`. Full Linux run `33964421597` then confirmed the corrected final-PDF object split — illustration title 12 pt, illustration source 10 pt, table title 12 pt, table source 10 pt — but failed one independent legacy assertion in `tests/integration/table-ibge.sh` that still expected a 10 pt table caption. Commit `a3ce2d82899162d12b06c7335b149dc2b44ecfa3` aligns that stale observer with the accepted contract.
 
-Root cause analysis found a second runtime surface in `abntexto-ufc/modules.def`: the `tabularray-abnt` compatibility adapter still forced `caption,lasthead,capcont` to `\abntsmall`. Implementation commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` restores those upper table styles to `\normalsize` while preserving reduced lower continuation/source/note typography. A new Static/full Linux regression is now required.
-
-Current librarian-review state remains **24 PASS / 8 PARTIAL / 1 FAIL / 1 NORMATIVE-REVIEW** until that regression closes item 21.
+Current librarian-review state remains **24 PASS / 8 PARTIAL / 1 FAIL / 1 NORMATIVE-REVIEW** until a normal branch checkpoint containing `a3ce2d8...` passes Static contract and full Linux integration.
 
 Confirmed closures already retained in this cycle:
 
@@ -105,11 +101,11 @@ Remaining:
 - final canonical confirmation of first-use `Universidade Federal do Ceará (UFC)`;
 - final reference-corpus sweep for stale V2/current-state wording.
 
-### 4. Figures, Tables and Documentary Objects — ACTIVE RESIDUAL FIX / REGRESSION PENDING
+### 4. Figures, Tables and Documentary Objects — IMPLEMENTED / FINAL REGRESSION PENDING
 
 Covers items 21-23.
 
-Item 23 is PASS. Item 22 is PASS. Item 21 remains the only recorded FAIL until branch-level regression confirms the residual table adapter correction.
+Item 23 is PASS. Item 22 is PASS. Item 21 remains the only recorded FAIL until branch-level regression confirms the complete implementation plus observer migration.
 
 Authority decision is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 
@@ -117,23 +113,19 @@ Authority decision is recorded in `docs/V3-OBJECT-TYPOGRAPHY-DECISION.md`:
 - lower source/legend/note: **10 pt**, single spacing where applicable;
 - object text remains constrained to the object width.
 
-The first implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` completed the normative migration and corrected the shared illustration/object path. Full Linux run `33963240297` proved that the final-PDF evidence was strong enough to detect a second, table-specific styling path instead of falsely passing the batch.
+Implementation chain:
 
-Observed acceptance evidence from `33963240297`:
+1. `f2f5124c...` removed upper identification/title from the reduced-font rule group, introduced semantically correct body-size title rules, preserved historical rule provenance in `standards/rule-migrations.json`, updated `objects.def`, split illustration/table locator ownership and updated final-PDF scenarios/checkers.
+2. Linux run `33963240297` exposed the separate table-theme adapter; `7ec385e...` changed `caption,lasthead,capcont` to `\normalsize` while retaining reduced lower auxiliary styles.
+3. Linux run `33964421597` proved both final-PDF title/source splits correct but exposed a stale independent IBGE gate still asserting 10 pt for the table caption.
+4. `a3ce2d8...` updates the IBGE caption observer to 12 pt while preserving source/note at 10 pt and converts its project-owned technical diagnostics to English.
 
-| Surface | Expected | Measured | Result |
-|---|---:|---:|---|
-| Illustration identification/title | 12 pt | 12 pt | PASS |
-| Illustration source | 10 pt | 10 pt | PASS |
-| Table identification/title | 12 pt | 10 pt | FAIL |
-| Table source | 10 pt | 10 pt | PASS |
+Acceptance still required:
 
-Residual correction at `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c`:
-
-1. keep `caption,lasthead,capcont` at `\normalsize` in the project `tabularray-abnt` adapter;
-2. keep `firsthead-text,lasthead-text,conthead-text,lastfoot` at `\abntsmall`;
-3. preserve the existing final-PDF checker unchanged;
-4. rerun Static contract and full Linux integration;
+1. normal Static contract on a branch checkpoint containing `a3ce2d8...` plus synchronized documentation;
+2. full Linux integration on that same checkpoint;
+3. confirm illustration and table final-PDF evidence remain 12 pt upper identification/title and 10 pt lower source;
+4. confirm the IBGE subset gate passes with the same contract;
 5. only after green evidence, move item 21 from FAIL to PASS and synchronize all control documents.
 
 ### 5. References and NBR 6023:2025 — PARTIAL / FAIL-CLOSED
@@ -191,7 +183,7 @@ Continue rejecting/removing:
 | 18 | PASS | P3 | Preserve current NBR 10520 capitalization. |
 | 19 | PASS | P1 | Preserve reviewer long-quotation locator fixture. |
 | 20 | PASS | P1 | Preserve punctuation positive/negative reviewer gate. |
-| 21 | FAIL | P1 | Residual table adapter corrected at `7ec385e...`; close only after normal Static + full Linux confirm 12 pt title / 10 pt lower source evidence. |
+| 21 | FAIL | P1 | Runtime and final-PDF contract are aligned; `a3ce2d8...` fixes the stale IBGE 10 pt observer. Close only after normal Static + full Linux are green on the synchronized branch checkpoint. |
 | 22 | PASS | P3 | Preserve object single spacing. |
 | 23 | PASS | P1 | Preserve external-source locator evidence (`p. 42`). |
 | 24 | PASS | P3 | Preserve lowercase alínea starts. |
@@ -215,8 +207,9 @@ Continue rejecting/removing:
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
 | Stale V2 wording in current V3 reference | PARTIAL | Complete reference-corpus sweep. |
 | Retired `tccgraduacao` in V3 current guidance | CORRECTED/PROTECTED | Preserve negative regression. |
-| Shared object title path certified wrong size | CORRECTED | Preserve migrated rule IDs and illustration evidence. |
-| `tabularray-abnt` adapter independently forced table title to 10 pt | CORRECTED / REGRESSION PENDING | Confirm `7ec385e...` with unchanged final-PDF table checker. |
+| Object typography tests certified wrong upper-title size | RUNTIME/CONTRACT CORRECTED; ACCEPTANCE PENDING | Confirm synchronized branch Static/full Linux after `a3ce2d8...`. |
+| Independent `tabularray-abnt` adapter retained 10 pt table caption | CORRECTED | Preserve 12 pt upper / 10 pt lower regression. |
+| Legacy IBGE integration observer retained retired 10 pt caption expectation | CORRECTED; CI PENDING | Rerun full Linux on synchronized checkpoint. |
 | Mixed-language engineering diagnostics | CORRECTED IN TOUCHED GATES | Continue language sweep when adjacent files are modified. |
 
 ## Phase transition gates

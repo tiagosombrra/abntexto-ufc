@@ -1,7 +1,7 @@
 # V3 Object Typography Decision
 
 Updated: 2026-09-05
-Status: IMPLEMENTED — TABLE ADAPTER FIX CI PENDING
+Status: IMPLEMENTED — LEGACY IBGE OBSERVER FIX CI PENDING
 
 ## Decision
 
@@ -56,7 +56,7 @@ Implementation checkpoint `f2f5124c4adcb34069a667f1ef80c76fb17728bd` corrected t
 9. object geometry regression directly distinguishes title size from source/note size;
 10. temporary migration executor/workflow surfaces were removed before the generated checkpoint.
 
-## Branch regression finding
+## First branch regression finding
 
 Branch-level Static contract run `33963240056` passed. Full Linux integration run `33963240297` then provided a useful negative result rather than a false green:
 
@@ -74,9 +74,9 @@ The failure was isolated to the `tabularray-abnt` compatibility adapter in `abnt
 
 This overrode the table theme independently of the corrected `objects.def` path. The upstream `tabularray-abnt` ABNT/quadro themes use body-size typography for `caption,lasthead,capcont` and reduced typography for continuation/footer text, so retaining the project override contradicted both the accepted project decision and the package theme semantics.
 
-## Residual correction
+## Runtime residual correction
 
-Implementation commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` corrects the remaining adapter surface:
+Implementation commit `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` corrected that adapter:
 
 ```tex
 \SetTblrStyle{caption,lasthead,capcont}{font=\normalsize}
@@ -89,16 +89,49 @@ This preserves the intended split:
 - lower continuation/source/note auxiliary text remains reduced;
 - the final-PDF checker remains unchanged and continues to require 12 pt for the upper table identification and 10 pt for the lower source.
 
-The test was not weakened to recover green CI. The failed acceptance run identified a real second runtime surface and the runtime was corrected instead.
+## Second branch regression finding
+
+Checkpoint `faa487ed38ca130c9eb9da597d2902603f269a0a` passed Static contract run `33964421654`. Full Linux integration run `33964421597` then proved that the runtime and the new object evidence were aligned:
+
+- `illustration.identification.font-size`: **PASS**, measured 12 pt;
+- `font.size.reduced.illustration-source`: **PASS**, measured 10 pt;
+- `table.identification.font-size`: **PASS**, measured 12 pt;
+- `font.size.reduced.table-source`: **PASS**, measured 10 pt;
+- object geometry gate: **PASS**;
+- the only Linux failure occurred later in the independent legacy `IBGE tables` gate;
+- overall Linux summary: `PASS=29 FAIL=1 SKIP=1`.
+
+The failing assertion was not a runtime defect. `tests/integration/table-ibge.sh` still encoded:
+
+```python
+assert_all('UFC-IBGE-CAPTION-FONTSIZE', 10.0 * pt_per_bp)
+```
+
+That expectation belonged to the retired 10 pt title contract and contradicted the already-green final-PDF table evidence.
+
+## Legacy observer correction
+
+Commit `a3ce2d82899162d12b06c7335b149dc2b44ecfa3` updates the stale IBGE observer to the accepted contract:
+
+```python
+assert_all('UFC-IBGE-CAPTION-FONTSIZE', 12.0 * pt_per_bp)
+assert_all('UFC-IBGE-SOURCE-FONTSIZE', 10.0 * pt_per_bp)
+assert_all('UFC-IBGE-NOTE-FONTSIZE', 10.0 * pt_per_bp)
+```
+
+The same commit converts project-owned technical diagnostics in that shell gate from Portuguese to English, preserving the repository engineering-language policy.
+
+This is a contract reconciliation, not a test weakening. The 12 pt title expectation is stricter than the historical assertion and agrees with the resolved authority decision, runtime behavior and final-PDF observer.
 
 ## Evidence state
 
-Review item 21 remains `FAIL` until a normal branch checkpoint containing `7ec385ebecf21ba17e59db1e7ec16d3336f4bf4c` passes:
+Review item 21 remains `FAIL` until a normal branch checkpoint containing `a3ce2d82899162d12b06c7335b149dc2b44ecfa3` passes:
 
 1. Static contract;
 2. full Linux integration;
 3. illustration final-PDF 12 pt title / 10 pt source evidence;
-4. table final-PDF 12 pt title / 10 pt source evidence.
+4. table final-PDF 12 pt title / 10 pt source evidence;
+5. IBGE table subset gate under the same 12 pt/10 pt split.
 
 Only then may the review matrix move item 21 to `PASS`.
 
