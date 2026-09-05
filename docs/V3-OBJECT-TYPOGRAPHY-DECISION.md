@@ -1,7 +1,7 @@
 # V3 Object Typography Decision
 
 Updated: 2026-09-05
-Status: IMPLEMENTED — CI CONFIRMATION PENDING
+Status: IMPLEMENTED — FINAL BRANCH REGRESSION PENDING
 
 ## Decision
 
@@ -13,8 +13,6 @@ Accepted project behavior:
 - lower source: 10 pt, single spacing;
 - lower legend/note/other auxiliary information: 10 pt, single spacing where applicable;
 - identification/title/source/legend/note remain constrained to the object width rather than the page width.
-
-The current implementation is therefore incorrect where `\abntsmall` is applied to the complete upper `\printlegendbox` identification/title block.
 
 ## Authority basis
 
@@ -36,36 +34,50 @@ The guide establishes the relevant distinction:
 
 This reading avoids conflating the guide's lower `legenda` exception with the upper identification/title that the same guide describes separately.
 
-## Current implementation defect
+## Defect that was corrected
 
-`abntexto-ufc/objects.def` currently applies `\abntsmall\singlesp` inside the overridden `\printlegendbox`. Because that box is the upper object identification/title, the runtime forces it to 10 pt.
+Before this migration, `abntexto-ufc/objects.def` applied `\abntsmall\singlesp` inside the overridden `\printlegendbox`. Because that box is the upper object identification/title, the runtime forced it to 10 pt.
 
-The final-PDF evidence currently certifies that same defect through rule IDs including:
+The old final-PDF contract also certified that defect through:
 
 - `font.size.reduced.illustration-caption`;
 - `font.size.reduced.table-caption`.
 
-A green test for those rules proves the encoded 10 pt contract, not that the contract is institutionally correct.
+A green test for those historical rules proved the encoded 10 pt contract, not institutional correctness.
 
-## Contract migration policy
+## Implemented contract migration
 
-The correction must be atomic across source contract, runtime and evidence.
+Implementation checkpoint: `f2f5124c4adcb34069a667f1ef80c76fb17728bd`.
 
-1. Stop classifying the upper illustration/table identification/title as a reduced-font exception.
-2. Introduce semantically correct title-size rules using body-size value 12 pt.
-3. Preserve reduced-font rules for source/legend/note surfaces.
-4. Preserve provenance for retired/migrated rule IDs; do not silently repurpose an old ID to mean the opposite value.
-5. Update locator audits so 4.1(c) no longer falsely groups upper titles under the reduced-font exception.
-6. Update final-PDF scenarios/checkers to measure 12 pt upper title and 10 pt lower source independently.
-7. Run Static contract and full Linux integration after the migration.
-8. Keep item 21 as `FAIL` until the corrected final-PDF measurements are green; only then move it to `PASS`.
+The correction was applied as one semantic migration across source contract, runtime and evidence:
 
-## Implementation checkpoint state
+1. upper illustration/table identification/title was removed from the reduced-font exception;
+2. semantically correct 12 pt rules were introduced as `illustration.identification.font-size` and `table.identification.font-size`;
+3. historical 10 pt rule IDs were retired rather than silently repurposed;
+4. `standards/rule-migrations.json` records retired/replacement IDs and values;
+5. `objects.def` now uses body-size typography for the upper identification/title while preserving single spacing;
+6. lower source/legend/note reduced typography remains 10 pt where applicable;
+7. locator ownership is split between exact illustration and table locator sets instead of using one overbroad combined locator;
+8. final-PDF scenarios/checkers now expect 12 pt upper title and 10 pt lower source independently;
+9. object geometry regression directly distinguishes title size from source/note size;
+10. the temporary migration executor and temporary workflow were removed before the generated checkpoint.
 
-The runtime, active normative contract, locator ownership and final-PDF expectations have now been migrated according to this decision. The historical 10 pt title IDs are preserved only through `standards/rule-migrations.json`; they are no longer active rules. Item 21 remains `FAIL` until Static contract and full Linux integration prove the generated candidate, including measured 12 pt upper identification/title and 10 pt lower source evidence.
+## Evidence state
+
+Workflow run `33963033293` successfully:
+
+- generated the migration;
+- ran the repository-owned Static contract successfully against the migrated tree;
+- restored the permanent Static workflow;
+- removed temporary executor surfaces;
+- committed and pushed `f2f5124c4adcb34069a667f1ef80c76fb17728bd`.
+
+The immediate PR workflows emitted for the bot-authored generated checkpoint required an external action and therefore produced no executable jobs. They are not acceptance evidence and are not being treated as pass/fail results.
+
+Review item 21 therefore remains `FAIL` only until the normal user-authored branch checkpoint passes Static contract and full Linux integration, including the corrected final-PDF measurements. No semantic implementation work remains open in this object batch unless that regression exposes a real defect.
 
 ## Current-edition technical boundary
 
 The repository identifies ABNT NBR 14724:2024 as current technical authority, but exact authoritative clause text for this point is not available in the repository/public evidence corpus. This decision therefore uses the current UFC institutional guidance plus the recovered UFC librarian review evidence and remains reopenable if licensed current-edition ABNT text establishes a contrary rule.
 
-This limitation does not justify retaining the current known conflation: the available institutional evidence explicitly separates upper identification/title from lower source/legend/note surfaces.
+This limitation does not justify retaining the former conflation: the available institutional evidence explicitly separates upper identification/title from lower source/legend/note surfaces.
