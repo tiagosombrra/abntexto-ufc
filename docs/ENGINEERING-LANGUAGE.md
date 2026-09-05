@@ -17,13 +17,13 @@ A gate that reports zero violations while known project-owned Portuguese technic
 The current hardening cycle deliberately uses stronger detection to discover old evidence debt.
 
 - Initial hardening translated known mixed diagnostics in `multivolume.sh` and `references-6023.sh` and strengthened the mixed-language matcher.
-- Synchronized checkpoint `fd3727d89848eb52a9c79021cd9765ad9e1806db` failed Static `33970711005` after exposing `algorithm-numbering.sh`.
-- The algorithm-numbering diagnostic surface was translated and the self-test expanded.
-- Synchronized checkpoint `6c23a49a86944d646db35b56af877d3bb351c0ec` failed Static `33970988780` because a documentation rewrite had dropped the required `material advance` governance phrase; this was classified as control-plane drift and corrected.
-- Checkpoint `da7fbf7614ed8e50ee600bf010db7ecd3694f310` then passed phase governance but failed Static `33971156481`, exposing four additional project-owned Portuguese diagnostic surfaces: `catalog-card.sh`, `duplex-backmatter.sh`, `table-ibge-vector-evidence.sh`, and `vector-rule-validation.sh`.
-- Current implementation `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those newly exposed diagnostics and expands the detector self-test to 18 cases.
+- Static `33970711005` exposed `algorithm-numbering.sh`; its complete diagnostic surface was translated.
+- Static `33970988780` exposed temporary documentation-governance drift; this was corrected without weakening the language gate.
+- Static `33971156481` then exposed catalog-card/duplex/vector diagnostic surfaces; implementation `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translated those surfaces and expanded detector self-tests to 18 cases.
+- Static `33971849196` on synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` passed repository and phase-governance checks, then exposed five remaining technical diagnostics in `tests/integration/backmatter.sh`.
+- Current implementation `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete `backmatter.sh` engineering diagnostic surface and changes its technical job identifier from Portuguese to English while preserving rendered Portuguese literals used as evidence.
 
-The finding remains open until a synchronized checkpoint on top of `1129935...` passes Static contract and full Linux integration. Any further diagnostic exposed by the stronger detector must be corrected rather than hidden.
+The finding remains open until a synchronized checkpoint on top of `a1c139...` passes Static contract and full Linux integration. Any further diagnostic exposed by the stronger detector must be corrected rather than hidden.
 
 ## Detection design rule
 

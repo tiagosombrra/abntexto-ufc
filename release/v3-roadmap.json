@@ -132,15 +132,13 @@
     "audit_contract": "docs/V3-REGRESSION-AUDIT.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "scientific_article_runtime_deferred": true,
-    "latest_implementation_checkpoint_sha": "1129935fe5e4f97d6fe3798fd5e4777760f0d61b",
+    "latest_implementation_checkpoint_sha": "a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd",
     "latest_fully_validated_checkpoint_sha": "c4c59f83b67cb152ed9a88345541457b8f18021c",
     "latest_fully_validated_checkpoint_state": "static-green-linux-green-canonical-reference-pdf-evidence",
     "current_correction_batch": [
       "engineering-language detector false-negative hardening",
-      "catalog-card diagnostic cleanup",
-      "duplex-backmatter diagnostic cleanup",
-      "table-IBGE/vector diagnostic cleanup",
-      "engineering-language self-test expansion to 18 cases"
+      "back-matter technical diagnostic cleanup",
+      "back-matter technical job identifier normalization"
     ],
     "review_items_confirmed_by_latest_full_linux": [
       4,
@@ -162,10 +160,11 @@
     "known_gate_failures": [
       "Static 33970711005 on fd3727d: stronger engineering-language detector exposed algorithm-numbering.sh project-owned Portuguese diagnostic",
       "Static 33970988780 on 6c23a49: phase governance rejected roadmap missing required material advance concept",
-      "Static 33971156481 on da7fbf7: phase governance passed, then stronger engineering-language detector exposed four additional project-owned Portuguese diagnostic surfaces"
+      "Static 33971156481 on da7fbf7: phase governance passed, then stronger engineering-language detector exposed catalog-card/duplex/vector project-owned Portuguese diagnostics",
+      "Static 33971849196 on 0818bc2: repository and phase governance passed, then stronger engineering-language detector exposed five backmatter.sh project-owned Portuguese diagnostics"
     ],
     "pending_acceptance_gates": [
-      "1129935 engineering-language sweep: synchronized Static contract and full Linux integration required"
+      "a1c139 back-matter language sweep: synchronized Static contract and full Linux integration required"
     ],
     "queued_evidence_hardening": [],
     "deferred_authority_conflicts": [
@@ -208,17 +207,18 @@
       16,
       28
     ],
-    "engineering_language_hardening_initial_checkpoint_sha": "fd3727d89848eb52a9c79021cd9765ad9e1806db",
-    "engineering_language_hardening_initial_static_run": 33970711005,
-    "engineering_language_hardening_initial_static_conclusion": "failure",
-    "engineering_language_hardening_governance_checkpoint_sha": "6c23a49a86944d646db35b56af877d3bb351c0ec",
-    "engineering_language_hardening_governance_static_run": 33970988780,
-    "engineering_language_hardening_governance_static_conclusion": "failure",
-    "engineering_language_hardening_discovery_checkpoint_sha": "da7fbf7614ed8e50ee600bf010db7ecd3694f310",
-    "engineering_language_hardening_discovery_static_run": 33971156481,
-    "engineering_language_hardening_discovery_static_conclusion": "failure",
-    "engineering_language_hardening_current_implementation_sha": "1129935fe5e4f97d6fe3798fd5e4777760f0d61b",
-    "engineering_language_hardening_state": "acceptance-pending-after-expanded-diagnostic-sweep",
+    "engineering_language_hardening_discovery_static_runs": [
+      33970711005,
+      33971156481,
+      33971849196
+    ],
+    "engineering_language_governance_failure_run": 33970988780,
+    "engineering_language_latest_discovery_checkpoint_sha": "0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd",
+    "engineering_language_latest_discovery_static_run": 33971849196,
+    "engineering_language_latest_discovery_static_conclusion": "failure",
+    "engineering_language_current_implementation_sha": "a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd",
+    "engineering_language_self_test_cases": 18,
+    "engineering_language_hardening_state": "acceptance-pending-after-backmatter-sweep",
     "object_typography_final_pdf_measurements": {
       "illustration_identification_pt": 12,
       "illustration_source_pt": 10,

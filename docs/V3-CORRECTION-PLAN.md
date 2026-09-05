@@ -21,9 +21,7 @@ Object/Core Corrections checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0` pa
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, `PASS=31 FAIL=0 SKIP=0`, closing items 11, 16 and 28. Current librarian-review state is **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-Engineering-language hardening is still open. Static `33970711005` exposed an `algorithm-numbering.sh` diagnostic. Static `33970988780` then exposed a temporary documentation-governance omission. After governance restoration, Static `33971156481` passed phase governance and exposed four additional project-owned Portuguese diagnostic surfaces: `catalog-card.sh`, `duplex-backmatter.sh`, `table-ibge-vector-evidence.sh`, and `vector-rule-validation.sh`.
-
-Current implementation checkpoint `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those newly exposed diagnostics and expands the detector self-test to 18 cases. Acceptance still requires a synchronized Static/full Linux checkpoint.
+Engineering-language hardening remains open. Static `33971849196` on synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` passed repository/phase governance checks and exposed five project-owned Portuguese diagnostics in `tests/integration/backmatter.sh`. Current implementation `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete back-matter technical diagnostic surface and normalizes the technical job identifier. Acceptance still requires a synchronized Static/full Linux checkpoint.
 
 ## Priority model
 
@@ -36,7 +34,7 @@ Current implementation checkpoint `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` tra
 
 ### 1. Control Plane and Regression Harness — VALIDATED / ACTIVE GUARD
 
-Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static `33970988780` demonstrated that documentation drift is fail-closed; Static `33971156481` confirmed the governance contract is restored.
+Readable six-phase model, machine-protected 34-item contract, semantic phase governance, documentation-on-material-advance policy, and mandatory phase-end regression are retained. Static `33970988780` proved governance drift is fail-closed; subsequent Static runs have confirmed the restored governance contract.
 
 ### 2. Front Matter and Institutional Metadata — PARTIAL
 
@@ -52,21 +50,22 @@ Items 21-23 are PASS. Accepted contract is 12 pt single-spaced upper identificat
 
 ### 5. Engineering-language evidence hardening — ACTIVE
 
-The strengthened detector is being used as a discovery tool as well as a permanent policy gate. New findings are fixed rather than allowlisted away.
+The strengthened detector is being used as both a discovery mechanism and a permanent policy gate. Newly exposed project-owned Portuguese technical diagnostics are corrected rather than allowlisted.
 
 Progress:
 
-1. initial mixed-language hardening translated known diagnostics and strengthened phrase detection;
-2. `33970711005` exposed `algorithm-numbering.sh`, whose diagnostic surface was translated;
-3. `33970988780` exposed control-document drift; required governance language was restored;
-4. `33971156481` then exposed four further old diagnostic surfaces;
-5. implementation `1129935...` translates those four surfaces and expands self-test coverage to 18 cases while preserving academic/rendered Portuguese.
+1. initial hardening translated known mixed diagnostics and strengthened phrase detection;
+2. `33970711005` exposed `algorithm-numbering.sh`, whose complete diagnostic surface was translated;
+3. `33970988780` exposed temporary control-document drift, which was corrected;
+4. `33971156481` exposed catalog-card/duplex/vector diagnostic surfaces, which were translated by `1129935...`;
+5. `33971849196` then exposed the remaining `backmatter.sh` technical diagnostic surface;
+6. implementation `a1c139...` translates that complete surface and changes its technical job identifier from Portuguese to English while preserving rendered Portuguese literals under test.
 
 Acceptance:
 
-1. publish a synchronized documentation checkpoint on top of `1129935...`;
+1. publish a synchronized documentation checkpoint on top of `a1c139...`;
 2. run Static contract and full Linux integration on that exact checkpoint;
-3. require zero project-owned Portuguese technical diagnostics and green language self-tests;
+3. require zero project-owned Portuguese technical diagnostics;
 4. correct any further violations exposed by stronger detection instead of weakening the detector;
 5. close only when the permanent language audit is truthful and full Linux remains green.
 
@@ -132,12 +131,12 @@ Keep rejecting stale V2 wording, retired profile/API vocabulary, obsolete placeh
 | Finding | State | Next action |
 |---|---|---|
 | Hidden historical phase-name coupling | CLOSED | Keep semantic phase governance regression. |
-| Documentation can drift from implementation | ACTIVE GUARD | `33970988780` rejected drift; `33971156481` confirmed governance recovery. |
+| Documentation can drift from implementation | ACTIVE GUARD | Preserve `material advance` / `phase-end regression` requirements. |
 | Phase closure can rely on targeted tests only | CLOSED/POLICY | Require phase-end regression on one SHA. |
 | Stale V2 wording/current API vocabulary in V3 reference | CORRECTED/PROTECTED | Keep negative reference hygiene. |
 | Object typography tests certified wrong upper-title size | CLOSED | Preserve current authority decision/evidence. |
 | Reviewed reference-content requirements lacked source/PDF guards | CLOSED | Preserve accepted source/PDF evidence. |
-| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Validate synchronized checkpoint on top of `1129935...`; continue fail-closed if more violations surface. |
+| Engineering-language gate had mixed-diagnostic false negatives | CORRECTION IN PROGRESS | Validate synchronized checkpoint on top of `a1c139...`; continue fail-closed if more violations surface. |
 
 ## Phase transition gates
 

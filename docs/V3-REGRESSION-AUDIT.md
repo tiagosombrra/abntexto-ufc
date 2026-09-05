@@ -13,14 +13,6 @@ Evidence at closeout: the two reviewed PDFs are represented by exactly 34 tracke
 
 The project therefore advanced to **Core Corrections**. This closeout does not mean the 34 review items were already corrected.
 
-## Findings transferred to Core Corrections
-
-Unambiguous defects included title-page advisor/co-advisor punctuation, incomplete optional-department/full-name guidance, incomplete committee acronym examples, missing annex source demonstration, stale V2-era wording, retired public API vocabulary, and stale reference paths in the canonical V3 guide.
-
-At audit closeout, object-title size was intentionally unresolved because existing tests certified reduced-size upper object titles while the recovered reviews requested body-size titles and the institutional guide distinguished upper identification/title from lower source/legend/note elements. Selected DOI, online-availability, repeated-author, and corporate-author cases also remained under current-edition NBR 6023:2025 review rather than being copied mechanically from the older reviewed template.
-
-Code/algorithm typography already had strong implementation evidence. The audit also found project-owned Portuguese diagnostics that the language gate did not detect; this class of false negative remains relevant to Core Corrections evidence hardening.
-
 ## Initial 34-item baseline
 
 - `PASS`: 19
@@ -28,7 +20,7 @@ Code/algorithm typography already had strong implementation evidence. The audit 
 - `FAIL`: 1
 - `NORMATIVE-REVIEW`: 3
 
-These are audit baseline counts and remain historical closeout facts.
+These are historical audit closeout facts.
 
 ## Post-audit disposition in Core Corrections
 
@@ -36,6 +28,8 @@ The object-title authority conflict is resolved and accepted. Checkpoint `3f4708
 
 Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c` passed Static `33969505681` and full Linux `33969505614`, closing review items 11, 16 and 28. Current librarian-review state is therefore **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 
-The engineering-language false-negative finding is now being exercised fail-closed. Static `33970711005` exposed `algorithm-numbering.sh`; Static `33970988780` separately exposed temporary documentation-governance drift; after governance restoration, Static `33971156481` exposed four additional old project-owned Portuguese diagnostic surfaces. Current implementation `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those surfaces and expands detector self-tests to 18 cases. This hardening is not accepted until a synchronized Static/full Linux checkpoint is green.
+The engineering-language false-negative finding is being exercised fail-closed. Successive Static runs exposed `algorithm-numbering.sh`, a temporary documentation-governance drift, catalog-card/duplex/vector diagnostic surfaces, and most recently five technical diagnostics in `tests/integration/backmatter.sh` at synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` / Static `33971849196`.
+
+Current implementation `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete back-matter engineering diagnostic surface and normalizes its technical job identifier while preserving academic Portuguese literals. This hardening is not accepted until a synchronized Static/full Linux checkpoint is green.
 
 Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence. Scientific Article remains deferred until Core Corrections and Reference PDF Validation close.

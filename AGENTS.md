@@ -24,8 +24,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Object/Core checkpoint `3f47081cbbd00a44b9ee86a6b406580e79b593c0`: Static `33965794475` and Linux `33965794519` success, `PASS=31 FAIL=0 SKIP=0`.
 - Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f18021c`: Static `33969505681` and Linux `33969505614` success, `PASS=31 FAIL=0 SKIP=0`; items 11, 16 and 28 closed.
 - Current 34-item state: **28 PASS / 5 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
-- Engineering-language hardening is active. Static `33970711005` exposed `algorithm-numbering.sh`; Static `33970988780` then exposed documentation-governance drift; Static `33971156481` confirmed governance recovery and exposed four further project-owned Portuguese diagnostics in catalog-card/duplex/vector integration gates.
-- Current implementation checkpoint `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those newly exposed diagnostic surfaces and expands the language detector self-test to 18 cases. It is not accepted until a synchronized Static/full Linux checkpoint passes.
+- Engineering-language hardening is active. Static `33970711005` exposed `algorithm-numbering.sh`; Static `33970988780` exposed documentation-governance drift; Static `33971156481` exposed catalog-card/duplex/vector diagnostics; Static `33971849196` then exposed the remaining back-matter diagnostic surface.
+- Current implementation checkpoint `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates the complete `backmatter.sh` engineering diagnostic surface and normalizes its technical job identifier. It is not accepted until a synchronized Static/full Linux checkpoint passes.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article runtime remains deferred until Core Corrections and Reference PDF Validation are complete.
 

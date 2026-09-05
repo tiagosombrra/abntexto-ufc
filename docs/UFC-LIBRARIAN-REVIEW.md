@@ -19,7 +19,7 @@ Canonical-reference generated-PDF checkpoint `c4c59f83b67cb152ed9a88345541457b8f
 
 Current review state: **28 PASS, 5 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 items**.
 
-The active engineering-language hardening does not change these 34 review classifications. Static `33970711005` exposed `algorithm-numbering.sh`; Static `33970988780` separately exposed temporary documentation-governance drift; Static `33971156481` then confirmed governance recovery and exposed four additional project-owned Portuguese diagnostic surfaces. Current implementation `1129935fe5e4f97d6fe3798fd5e4777760f0d61b` translates those surfaces and expands language self-tests to 18 cases; acceptance is pending synchronized Static/full Linux evidence.
+The active engineering-language hardening does not change these 34 review classifications. Static `33971849196` on synchronized checkpoint `0818bc2c5f50f6f1c60d4cef98d1c85031cb2fcd` passed repository/phase governance and exposed five remaining technical diagnostics in `tests/integration/backmatter.sh`. Current implementation `a1c139a6efa8bacefcd3294f01b1f7ed3447a8dd` translates that complete engineering surface; acceptance is pending synchronized Static/full Linux evidence.
 
 ## Consolidated review contract
 
