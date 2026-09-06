@@ -1,9 +1,9 @@
 {
-  "schema_version": 10,
+  "schema_version": 11,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
-  "updated_at": "2026-09-05",
+  "updated_at": "2026-09-06",
   "status": "ACTIVE",
   "phase": "scientific-article",
   "stage": "scientific-article",
@@ -24,6 +24,7 @@
     "scientific_article_plan": "docs/V3-SCIENTIFIC-ARTICLE.md",
     "scientific_article_contract": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
     "article_coverage_contract": "standards/coverage-rules-article.json",
+    "linux_integration_scopes": "docs/LINUX-INTEGRATION-SCOPES.md",
     "release_readiness": "docs/V3-RELEASE-READINESS.md",
     "engineering_language": "docs/ENGINEERING-LANGUAGE.md",
     "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
@@ -47,6 +48,10 @@
     "phase_end_regression_required": true,
     "phase_transition_requires_recorded_regression_checkpoint": true,
     "targeted_checks_replace_phase_end_regression": false,
+    "scoped_linux_integration_allowed_for_intermediate_work": true,
+    "complete_linux_required_for_phase_end_regression": true,
+    "auto_scope_unknown_paths_fail_to_complete": true,
+    "article_scope_must_include_article_executable_gate": true,
     "synthetic_pdf_can_satisfy_reference_validation": false,
     "reference_pdf_requires_git_provenance": true,
     "reference_pdf_requires_complete_page_review": true,
@@ -64,6 +69,7 @@
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
+      "complete Linux integration scope",
       "phase-specific acceptance checks"
     ],
     "presentation_scope_requires_canonical_pdf_inspection": true,
@@ -115,7 +121,7 @@
       "name": "Scientific Article",
       "status": "ACTIVE",
       "purpose": "Implement one canonical scientific-article profile on the corrected shared foundation using the retained 18-rule source contract.",
-      "exit_gate": "Article runtime, article-specific positive/negative evidence, canonical article rendering and phase-end regression pass on one immutable SHA.",
+      "exit_gate": "Article runtime, article-specific positive/negative evidence, canonical article rendering and complete-scope phase-end regression pass on one immutable SHA.",
       "phase_end_regression_required": true
     },
     {
@@ -164,7 +170,7 @@
     "core_corrections_closed": true,
     "reference_pdf_validation_state": "closed",
     "current_correction_batch": [
-      "Scientific Article — Step 1 accepted; repository integration boundary"
+      "Scientific Article — scoped Linux integration orchestration before PR #285 merge"
     ],
     "known_runtime_failures": [],
     "known_entry_gaps": [],
@@ -173,13 +179,14 @@
       "Step 1 synchronized Static/full Linux acceptance completed on 08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1"
     ],
     "pending_acceptance_gates": [
-      "Merge PR #285 so accepted foundation and Step 1 land on canonical main",
+      "Scoped Linux integration orchestration must pass Static and bounded PR Linux selection/evidence",
+      "Merge PR #285 so accepted foundation, Step 1 and accepted orchestration land on canonical main",
       "Create fresh feat/v3-scientific-article branch from updated main",
       "Implement required article front block with article-specific evidence",
       "Add article-specific positive evidence before proof-state promotion",
       "Implement required/optional/recommended/conditional article semantics",
       "Produce and visually inspect provenance-bound canonical article PDF",
-      "Pass Scientific Article phase-end regression on one immutable SHA"
+      "Pass Scientific Article phase-end regression with complete Linux scope on one immutable SHA"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 edge cases"
@@ -193,10 +200,42 @@
       "state": "none-active"
     }
   },
+  "linux_integration": {
+    "policy_document": "docs/LINUX-INTEGRATION-SCOPES.md",
+    "state": "implementation-pending-ci",
+    "automatic_pr_scope": "auto",
+    "synchronize_diff_window": "incremental-push",
+    "initial_pr_diff_window": "full-pr",
+    "manual_auto_scope": "complete",
+    "phase_end_required_scope": "complete",
+    "unknown_technical_path_scope": "complete",
+    "documentation_only": "skip-heavy-integration",
+    "manual_scopes": [
+      "auto",
+      "complete",
+      "article",
+      "reference-document",
+      "reference-pdf",
+      "frontmatter",
+      "layout",
+      "objects",
+      "bibliography",
+      "backmatter",
+      "research-project",
+      "profiles",
+      "smoke"
+    ],
+    "article_scope_checks": [
+      "validator-source",
+      "scientific-article-profile"
+    ],
+    "multiple_domain_policy": "union-deduplicated",
+    "complete_contribution_gate": true
+  },
   "branch_plan": {
     "current_work_branch": "plan/v3-regression-reset",
     "integration_pr": 285,
-    "integration_state": "ready-after-step1-acceptance-sync",
+    "integration_state": "scoped-linux-orchestration-validation-before-merge",
     "post_merge_branch": "feat/v3-scientific-article",
     "policy": "main-plus-one-short-lived-active-task-branch",
     "historical_remote_branches_are_authority": false
@@ -279,6 +318,7 @@
     "scientific_article_step1_linux_conclusion": "success",
     "scientific_article_step1_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "scientific_article_profile_acceptance": "accepted",
+    "scoped_linux_integration_state": "implementation-pending-ci",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

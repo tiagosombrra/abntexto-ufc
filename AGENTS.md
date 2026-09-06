@@ -10,9 +10,9 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+5. During **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`.
 6. Compare Git facts, machine state, handoff, roadmap and the active phase documents.
-7. If phase, checkpoint, acceptance state, article authority, proof state, artifact provenance, release-blocker state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
+7. If phase, checkpoint, acceptance state, article authority, proof state, artifact provenance, release-blocker state, integration-scope state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
 Memory, prior chats, historical branch names, old pull requests, and workflow names never override current repository state.
 
@@ -31,8 +31,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
 - Step 1 synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS; full Linux `34001350953` SUCCESS, `PASS=31 FAIL=0 SKIP=0`.
 - Step 1 state: **ACCEPTED**. Next implementation work is **Required article front block** after the foundation merge/branch transition.
-- Release blocker #18 is explicit and owned by Final Certification/Release: the release reference PDF must become bit-reproducible using a pinned release epoch/`SOURCE_DATE_EPOCH` and hash comparison.
-- Historical orchestration issue #217 is closed as superseded by the readable permanent workflow model.
+- Current infrastructure batch: **Scoped Linux integration orchestration** before the PR #285 integration boundary.
+- Release blocker #18 remains owned by Final Certification/Release.
 
 ## Readable phase model
 
@@ -40,10 +40,23 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
 4. **Scientific Article** — active; Step 1 accepted
-5. **Final Certification** — queued; owns release reproducibility proof together with Release
+5. **Final Certification** — queued
 6. **Release** — queued
 
 Do not create new opaque work identifiers such as nested letter/number codes. Historical labels may appear only when identifying old evidence. Current work names must be descriptive.
+
+## Linux integration scopes
+
+`docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract.
+
+- PR `auto` uses the incremental push diff on `synchronize`; initial/reopened/ready events use the full PR diff.
+- Known bounded domains may run `article`, `reference-document`, `reference-pdf`, `frontmatter`, `layout`, `objects`, `bibliography`, `backmatter`, `research-project`, `profiles`, or `smoke`.
+- Multiple known domains run the union of their checks without duplicates.
+- Shared/core, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
+- Documentation-only changes skip heavy Linux integration.
+- Manual `workflow_dispatch` exposes the same named scopes; manual `auto` fails closed to `complete`.
+- While Scientific Article is active, `article` must include the executable `scientific-article-profile` gate plus `validator-source`.
+- Scoped suites are intermediate evidence only. Every phase-end regression still requires the `complete` Linux integration scope on the immutable candidate.
 
 ## Scientific Article boundaries
 
@@ -76,9 +89,9 @@ Do not create new opaque work identifiers such as nested letter/number codes. Hi
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, article proof state, phase status, acceptance status, artifact provenance, release-blocker state, temporary-executor lifecycle, or release/certification state.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, article proof state, integration-scope behavior, phase status, acceptance status, artifact provenance, release-blocker state, temporary-executor lifecycle, or release/certification state.
 
-For every material advance, update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, article-rule, artifact, blocker, or temporary-executor facts change.
+For every material advance, update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, article-rule, integration-scope, artifact, blocker, or temporary-executor facts change.
 
 ## Mandatory phase-end regression
 
@@ -86,12 +99,10 @@ No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`
 
 The machine contract intentionally represents this invariant with `phase_end_regression.candidate = one-immutable-sha`. Do not replace that sentinel with prose or an actual self-referential SHA.
 
-Scientific Article must end with its own immutable candidate containing article runtime, rule-specific evidence, canonical article rendering and synchronized documentation. Targeted article checks do not replace that phase-end regression.
+Scientific Article must end with its own immutable candidate containing article runtime, rule-specific evidence, canonical article rendering and synchronized documentation. Targeted article/scoped checks do not replace the `complete` Linux phase-end regression.
 
 ## Branch governance and fail-closed rule
 
-The steady state is `main` plus one short-lived active task branch. PR #285 is the integration boundary for the accepted shared foundation plus Scientific Article Step 1. After it lands, continue Scientific Article on a fresh `feat/v3-scientific-article` branch from the updated `main`; the old `plan/v3-regression-reset` branch becomes historical and must not receive new work.
-
-Historical remote branches and opaque R2/R3 evidence files are provenance only, not active control authority. Their presence does not authorize work from them.
+The steady state is `main` plus one short-lived active task branch. PR #285 is the integration boundary for the accepted shared foundation plus Scientific Article Step 1 and the scoped Linux orchestration update. After it lands, continue Scientific Article on a fresh `feat/v3-scientific-article` branch from updated `main`; the old `plan/v3-regression-reset` branch becomes historical and must not receive new feature work.
 
 If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement to the next phase.
