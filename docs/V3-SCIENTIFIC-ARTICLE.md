@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-05  
-Status: ACTIVE — STEP 1 IMPLEMENTED / ACCEPTANCE PENDING
+Status: ACTIVE — STEP 1 ACCEPTED / REPOSITORY INTEGRATION NEXT
 
 ## Purpose
 
@@ -21,9 +21,17 @@ Authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage
 | Shared librarian review state | 33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW | PASS / EXPLICIT AUTHORITY GAP |
 | Temporary executors | none active | PASS |
 
-## Step 1 — Profile and metadata surface
+## Step 1 — Profile and metadata surface — ACCEPTED
 
 Technical implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
+Synchronized acceptance checkpoint: `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
+
+Acceptance evidence:
+
+- Static contract `34001350884`: SUCCESS;
+- full Linux integration `34001350953`: SUCCESS, `PASS=31 FAIL=0 SKIP=0`;
+- article profile evidence: `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article metadata=submission-date,approval-date,article-author-note presentation_rules_promoted=0`;
+- all six accepted non-article profiles remained green in the full profile matrix.
 
 Implemented changes:
 
@@ -31,14 +39,16 @@ Implemented changes:
 - no article compatibility alias was added;
 - reused existing generic metadata `author`, `title` and `approval-date`;
 - added only the new required article metadata surfaces `submission-date` and `article-author-note`;
-- left foreign-title semantics for Step 3 instead of silently repurposing `title-variant`;
+- left foreign-title semantics for the optional-foreign-elements step instead of silently repurposing `title-variant`;
 - added `tests/checks/scientific_article_profile_contract.py` to protect canonical naming and metadata ownership;
 - added a dedicated two-engine compile fixture/gate for profile selection and metadata round-trip;
 - chained that bounded article gate from the existing profile-matrix integration so the six accepted non-article profiles remain exercised unchanged.
 
-No article presentation rule or proof state is promoted by this step. `standards/coverage-rules-article.json` remains source-reviewed/manual or conditional-manual until rule-specific article evidence is implemented.
+No article presentation rule or proof state is promoted by Step 1. `standards/coverage-rules-article.json` remains source-reviewed/manual or conditional-manual until rule-specific article evidence is implemented.
 
-Acceptance for Step 1 requires the synchronized checkpoint containing `b46ba205...` plus this documentation to pass Static contract and full Linux integration. Until then, Step 2 does not start.
+## Repository integration boundary
+
+PR #285 carries the accepted shared foundation and Step 1 while `main` is still stale. The next operation is to merge that integration boundary, then create a fresh `feat/v3-scientific-article` branch from updated `main`. Step 2 runtime work must start on that fresh branch, not on historical `plan/v3-regression-reset` and not from stale `main`.
 
 ## Metadata decision
 
@@ -49,8 +59,8 @@ Acceptance for Step 1 requires the synchronized checkpoint containing `b46ba205.
 | Approval date | `approval-date` | reuse |
 | Submission date | `submission-date` | new article-required core metadata |
 | Complementary author footnote content | `article-author-note` | new article-required core metadata |
-| Foreign title | not yet bound | defer to Step 3; do not infer from `title-variant` |
-| Primary/foreign summary content | document content route | defer to Steps 2–3 |
+| Foreign title | not yet bound | defer to optional foreign elements; do not infer from `title-variant` |
+| Primary/foreign summary content | document content route | implement in required front block / optional foreign elements |
 
 ## Non-negotiable boundaries
 
@@ -62,6 +72,7 @@ Acceptance for Step 1 requires the synchronized checkpoint containing `b46ba205.
 - Recommendations never become hard compilation/validation failures.
 - Journal-specific instructions remain a conditional applicability boundary.
 - Item 33 of the librarian review remains fail-closed.
+- Issue #18 is a v3 release blocker owned by Final Certification/Release, not a reason to alter article normative semantics.
 - Every **material advance** updates handoff, roadmap, machine state and this plan in the same work cycle.
 - The phase ends only after a complete **phase-end regression** on one immutable candidate.
 
@@ -69,8 +80,8 @@ Acceptance for Step 1 requires the synchronized checkpoint containing `b46ba205.
 
 | Step | Work | Current state | Acceptance |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | IMPLEMENTED — CI PENDING | Canonical route compiles on both engines; metadata round-trip passes; aliases absent; six non-article profiles remain green |
-| 2 | Required article front block | QUEUED | Required title/authorship/date/summary elements have article-specific rendered evidence |
+| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
+| 2 | Required article front block | NEXT AFTER PR #285 MERGE | Required title/authorship/date/summary elements have article-specific rendered evidence |
 | 3 | Optional foreign elements | QUEUED | Foreign title/summary may be absent or present without becoming mandatory |
 | 4 | Textual structure and body typography | QUEUED | Required article structure and 12 pt/justified/2 cm/single-spaced body are validated |
 | 5 | Recommendations and conditional applicability | QUEUED | Advisory semantics stay advisory; journal boundary stays conditional |
@@ -78,6 +89,9 @@ Acceptance for Step 1 requires the synchronized checkpoint containing `b46ba205.
 | 7 | Canonical article PDF | QUEUED | Provenance-bound real PDF with complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + full Linux + article-specific acceptance on one immutable SHA |
 
-## Next action after Step 1 acceptance
+## Next action
 
-Implement **Required article front block** only after the synchronized Step 1 checkpoint is green. That work must introduce article-specific rendering/evidence for primary title, authorship metadata footnote, submission/approval dates and primary summary without contaminating the accepted academic-work front matter.
+1. merge PR #285 after the Step 1 acceptance synchronization passes its Static gate;
+2. create `feat/v3-scientific-article` from updated `main`;
+3. synchronize branch/control facts on that new branch;
+4. implement **Required article front block** with article-specific rendering/evidence for primary title, authorship metadata footnote, submission/approval dates and primary summary without contaminating accepted academic-work front matter.

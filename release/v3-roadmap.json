@@ -1,5 +1,5 @@
 {
-  "schema_version": 9,
+  "schema_version": 10,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -24,6 +24,7 @@
     "scientific_article_plan": "docs/V3-SCIENTIFIC-ARTICLE.md",
     "scientific_article_contract": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
     "article_coverage_contract": "standards/coverage-rules-article.json",
+    "release_readiness": "docs/V3-RELEASE-READINESS.md",
     "engineering_language": "docs/ENGINEERING-LANGUAGE.md",
     "object_typography_decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
     "fail_closed_on_disagreement": true,
@@ -51,7 +52,8 @@
     "reference_pdf_requires_complete_page_review": true,
     "article_shared_mechanism_is_proof": false,
     "article_recommendations_are_hard_requirements": false,
-    "article_runtime_aliases_allowed": false
+    "article_runtime_aliases_allowed": false,
+    "deterministic_release_reference_pdf_required": true
   },
   "phase_end_regression": {
     "required": true,
@@ -120,16 +122,16 @@
       "id": "final-certification",
       "name": "Final Certification",
       "status": "QUEUED",
-      "purpose": "Run complete profile, engine, literal-font, Unicode, embedding, PDF-A and distribution certification.",
-      "exit_gate": "Complete certification and phase-end regression green on one immutable SHA.",
+      "purpose": "Run complete profile, engine, literal-font, Unicode, embedding, PDF-A, distribution and release-reference-PDF reproducibility certification.",
+      "exit_gate": "Complete certification and deterministic release-reference-PDF evidence green on one immutable SHA.",
       "phase_end_regression_required": true
     },
     {
       "id": "release",
       "name": "Release",
       "status": "QUEUED",
-      "purpose": "Finalize documentation, bundles and publication actions.",
-      "exit_gate": "Release checklist and final regression complete.",
+      "purpose": "Finalize documentation, bundles, reproducible reference PDF, checksums and publication actions.",
+      "exit_gate": "Issue #18 resolved, release checklist complete and final regression recorded.",
       "phase_end_regression_required": true
     }
   ],
@@ -154,22 +156,26 @@
       "submission-date",
       "article-author-note"
     ],
+    "scientific_article_active_step": 1,
+    "scientific_article_step1_state": "accepted",
     "latest_implementation_checkpoint_sha": "b46ba2051f8c9c712a7b5d25748b81baa52b920a",
-    "latest_fully_validated_checkpoint_sha": "b64074c64941895f97fbe0f795ce826c798d17ce",
-    "latest_fully_validated_checkpoint_state": "reference-pdf-validation-phase-end-static-green-linux-green-visual-pass",
+    "latest_fully_validated_checkpoint_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
+    "latest_fully_validated_checkpoint_state": "scientific-article-step1-static-green-linux-green",
     "core_corrections_closed": true,
     "reference_pdf_validation_state": "closed",
     "current_correction_batch": [
-      "Scientific Article — profile and metadata surface acceptance"
+      "Scientific Article — Step 1 accepted; repository integration boundary"
     ],
     "known_runtime_failures": [],
     "known_entry_gaps": [],
     "resolved_entry_gaps": [
-      "canonical scientific-article profile registered at b46ba2051f8c9c712a7b5d25748b81baa52b920a"
+      "canonical scientific-article profile registered at b46ba2051f8c9c712a7b5d25748b81baa52b920a",
+      "Step 1 synchronized Static/full Linux acceptance completed on 08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1"
     ],
     "pending_acceptance_gates": [
-      "Synchronized Step 1 checkpoint containing b46ba2051f8c9c712a7b5d25748b81baa52b920a must pass Static contract and full Linux integration",
-      "Implement required article front block only after Step 1 acceptance",
+      "Merge PR #285 so accepted foundation and Step 1 land on canonical main",
+      "Create fresh feat/v3-scientific-article branch from updated main",
+      "Implement required article front block with article-specific evidence",
       "Add article-specific positive evidence before proof-state promotion",
       "Implement required/optional/recommended/conditional article semantics",
       "Produce and visually inspect provenance-bound canonical article PDF",
@@ -178,8 +184,35 @@
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
+    "release_blockers": [
+      "issue #18: make release reference PDF bit-reproducible with pinned epoch/SOURCE_DATE_EPOCH and hash evidence",
+      "Scientific Article phase must close before Final Certification",
+      "Final Certification must pass before Release"
+    ],
     "temporary_executor": {
       "state": "none-active"
+    }
+  },
+  "branch_plan": {
+    "current_work_branch": "plan/v3-regression-reset",
+    "integration_pr": 285,
+    "integration_state": "ready-after-step1-acceptance-sync",
+    "post_merge_branch": "feat/v3-scientific-article",
+    "policy": "main-plus-one-short-lived-active-task-branch",
+    "historical_remote_branches_are_authority": false
+  },
+  "issue_state": {
+    "scientific_article": {
+      "issue": 280,
+      "state": "open-active"
+    },
+    "release_reference_pdf_reproducibility": {
+      "issue": 18,
+      "state": "open-release-blocker"
+    },
+    "historical_linux_orchestration": {
+      "issue": 217,
+      "state": "closed-superseded-not-planned"
     }
   },
   "authority_decisions": {
@@ -193,7 +226,7 @@
       "current_state": "PASS"
     },
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-profile-started",
+      "status": "source-contract-accepted-runtime-profile-step1-accepted",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
@@ -239,13 +272,21 @@
     "article_rule_count": 18,
     "article_entry_proof_state": "manual-and-conditional-manual",
     "scientific_article_profile_implementation_sha": "b46ba2051f8c9c712a7b5d25748b81baa52b920a",
-    "scientific_article_profile_acceptance": "pending-static-and-linux-on-synchronized-checkpoint",
+    "scientific_article_step1_synchronized_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
+    "scientific_article_step1_static_run": 34001350884,
+    "scientific_article_step1_static_conclusion": "success",
+    "scientific_article_step1_linux_run": 34001350953,
+    "scientific_article_step1_linux_conclusion": "success",
+    "scientific_article_step1_linux_summary": "PASS=31 FAIL=0 SKIP=0",
+    "scientific_article_profile_acceptance": "accepted",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },
   "release_policy": {
     "ctan_submission": "blocked-until-release-phase",
     "proprietary_fonts_redistributed": false,
+    "deterministic_reference_pdf_issue": 18,
+    "deterministic_reference_pdf_required_before_release": true,
     "history_storage": "git-tags-releases-issues-pull-requests-certified-shas"
   }
 }
