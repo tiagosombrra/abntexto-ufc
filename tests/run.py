@@ -11,6 +11,8 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from integration_suites import SUITES
+
 
 @dataclass(frozen=True)
 class Check:
@@ -85,6 +87,23 @@ CHECKS = (
         depends=("bibliography",),
     ),
     Check("research-project", "Research project", ("sh", "tests/integration/research-project.sh")),
+    Check(
+        "scientific-article-profile",
+        "Scientific article profile",
+        ("sh", "tests/integration/scientific-article-profile.sh"),
+    ),
+    Check(
+        "scientific-article-front-block",
+        "Scientific article front block",
+        ("sh", "tests/integration/scientific-article-front-block.sh"),
+        depends=("scientific-article-profile",),
+    ),
+    Check(
+        "scientific-article-foreign-elements",
+        "Scientific article foreign elements",
+        ("sh", "tests/integration/scientific-article-foreign-elements.sh"),
+        depends=("scientific-article-profile",),
+    ),
     Check("profiles", "Document profiles", ("sh", "tests/integration/profile-matrix.sh")),
     Check(
         "profile-pdfa",
@@ -106,18 +125,50 @@ EVIDENCE_PATTERN = re.compile(r"^[A-Z0-9_-]+-EVIDENCE ")
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run abntexto-ufc validation as one coordinated gate.")
     parser.add_argument("--mode", choices=("pr", "release"), default="pr")
-    parser.add_argument("--only", help="Comma-separated check names.")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--only", help="Comma-separated check names.")
+    selection.add_argument("--suite", help="Comma-separated named integration suites.")
     parser.add_argument("--report-dir", default="artifacts/validation")
-    parser.add_argument("--list", action="store_true", help="List checks and exit.")
+    parser.add_argument("--list", action="store_true", help="List selected checks and exit.")
+    parser.add_argument("--list-suites", action="store_true", help="List named suites and exit.")
     return parser.parse_args()
 
 
-def selected_checks(mode: str, only: str | None) -> list[Check]:
+def suite_names(spec: str | None) -> tuple[str, ...]:
+    if not spec:
+        return ()
+    names = tuple(dict.fromkeys(item.strip() for item in spec.split(",") if item.strip()))
+    unknown = sorted(set(names) - set(SUITES))
+    if unknown:
+        raise SystemExit("Unknown suites: " + ", ".join(unknown))
+    return names
+
+
+def suite_requested_checks(spec: str) -> tuple[set[str], bool]:
+    names = suite_names(spec)
+    if "complete" in names:
+        return set(), True
+    requested: set[str] = set()
+    for name in names:
+        checks = SUITES[name]
+        if checks == ("*",):
+            return set(), True
+        requested.update(checks)
+    return requested, False
+
+
+def selected_checks(mode: str, only: str | None, suite: str | None) -> list[Check]:
     available = [check for check in CHECKS if mode in check.modes]
-    if not only:
+    if not only and not suite:
         return available
 
-    requested = {item.strip() for item in only.split(",") if item.strip()}
+    if suite:
+        requested, complete = suite_requested_checks(suite)
+        if complete:
+            return available
+    else:
+        requested = {item.strip() for item in (only or "").split(",") if item.strip()}
+
     known = {check.name for check in available}
     unknown = sorted(requested - known)
     if unknown:
@@ -137,6 +188,22 @@ def selected_checks(mode: str, only: str | None) -> list[Check]:
     for name in requested:
         add_with_dependencies(name, expanded)
     return [check for check in available if check.name in expanded]
+
+
+def is_complete_selection(only: str | None, suite: str | None) -> bool:
+    if only:
+        return False
+    if not suite:
+        return True
+    return "complete" in suite_names(suite)
+
+
+def scope_label(only: str | None, suite: str | None) -> str:
+    if only:
+        return "custom-only"
+    if suite:
+        return suite
+    return "complete"
 
 
 def run_check(check: Check, report_dir: Path, results: dict[str, Result]) -> Result:
@@ -193,13 +260,20 @@ def run_check(check: Check, report_dir: Path, results: dict[str, Result]) -> Res
     )
 
 
-def write_reports(report_dir: Path, mode: str, results: list[Result], complete: bool) -> None:
+def write_reports(
+    report_dir: Path,
+    mode: str,
+    scope: str,
+    results: list[Result],
+    complete: bool,
+) -> None:
     report_dir.mkdir(parents=True, exist_ok=True)
     failed = any(item.status == "FAIL" for item in results)
     skipped = any(item.status == "SKIP" for item in results)
     state = "FAIL" if complete and (failed or skipped) else "PASS" if complete else "RUNNING"
     payload = {
         "mode": mode,
+        "scope": scope,
         "complete": complete,
         "result": state,
         "checks": [asdict(item) for item in results],
@@ -213,6 +287,7 @@ def write_reports(report_dir: Path, mode: str, results: list[Result], complete: 
         "# abntexto-ufc validation",
         "",
         f"- Mode: `{mode}`",
+        f"- Scope: `{scope}`",
         f"- Complete: `{str(complete).lower()}`",
         f"- Result: **{state}**",
         "",
@@ -260,11 +335,19 @@ def print_structured_evidence(result: Result) -> None:
 
 def main() -> int:
     args = parse_args()
-    checks = selected_checks(args.mode, args.only)
+
+    if args.list_suites:
+        for name, checks in SUITES.items():
+            rendered = "all PR checks" if checks == ("*",) else ",".join(checks)
+            print(f"{name:20} {rendered}")
+        return 0
+
+    checks = selected_checks(args.mode, args.only, args.suite)
+    scope = scope_label(args.only, args.suite)
 
     if args.list:
         for check in checks:
-            print(f"{check.name:24} {check.label}")
+            print(f"{check.name:36} {check.label}")
         return 0
 
     report_dir = Path(args.report_dir)
@@ -272,17 +355,17 @@ def main() -> int:
 
     results_by_name: dict[str, Result] = {}
     ordered_results: list[Result] = []
-    write_reports(report_dir, args.mode, ordered_results, complete=False)
+    write_reports(report_dir, args.mode, scope, ordered_results, complete=False)
 
-    contribution_enabled = args.only is None
+    contribution_enabled = is_complete_selection(args.only, args.suite)
     total_checks = len(checks) + (1 if contribution_enabled else 0)
-    print(f"abntexto-ufc validation: mode={args.mode}, checks={total_checks}")
+    print(f"abntexto-ufc validation: mode={args.mode}, scope={scope}, checks={total_checks}")
     for index, check in enumerate(checks, 1):
         print(f"[{index:02}/{total_checks:02}] {check.label} ...", flush=True)
         result = run_check(check, report_dir, results_by_name)
         results_by_name[result.name] = result
         ordered_results.append(result)
-        write_reports(report_dir, args.mode, ordered_results, complete=False)
+        write_reports(report_dir, args.mode, scope, ordered_results, complete=False)
         suffix = f" ({result.duration_seconds:.1f}s)" if result.duration_seconds else ""
         print(f"         {result.status}{suffix}")
         if result.status == "PASS":
@@ -320,13 +403,13 @@ def main() -> int:
         if result.status == "FAIL":
             print_failure_tail(result)
 
-    write_reports(report_dir, args.mode, ordered_results, complete=True)
+    write_reports(report_dir, args.mode, scope, ordered_results, complete=True)
 
     passed = sum(item.status == "PASS" for item in ordered_results)
     failed = sum(item.status == "FAIL" for item in ordered_results)
     skipped = sum(item.status == "SKIP" for item in ordered_results)
     print("\nValidation summary")
-    print(f"PASS={passed} FAIL={failed} SKIP={skipped}")
+    print(f"SCOPE={scope} PASS={passed} FAIL={failed} SKIP={skipped}")
     print(f"Report: {report_dir / 'validation-report.md'}")
     return 1 if failed or skipped else 0
 

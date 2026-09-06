@@ -10,11 +10,11 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, and `docs/V3-RELEASE-READINESS.md`.
-6. Compare Git facts, machine state, handoff, and roadmap.
-7. If phase, checkpoint, acceptance state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
+5. During **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+6. Compare Git facts, machine state, handoff, roadmap and active phase documents.
+7. If phase, checkpoint, acceptance state, article authority, proof state, integration-scope state, release-blocker state or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
-Memory, prior chats, historical branch names, old pull requests, and workflow names never override current repository state.
+Memory, prior chats, historical branch names, old pull requests and workflow names never override current repository state.
 
 ## Current state
 
@@ -24,9 +24,10 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Active task branch: `feat/v3-scientific-article`, PR #286.
 - Step 1: ACCEPTED at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
 - Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`, `PASS=31 FAIL=0 SKIP=0`.
-- Step 3 implementation checkpoint: `81e08321222efb03626ac421fc645bd66edd5ae8`; synchronized Static/full Linux acceptance is pending.
-- Step 3 adds one explicit article-only `\ufcPrintArticleForeignElements` route and four independent optionality scenarios; no article proof-state promotion is made by implementation alone.
-- Current batch: **Scientific Article — Optional foreign elements evidence validation**.
+- Step 3 implementation checkpoint: `81e08321222efb03626ac421fc645bd66edd5ae8`.
+- Synchronized Step 3 head `567a5b2d21a16b653d7704639bdd5012d7c2f99b`: Static `34028373064` SUCCESS; full Linux `34028373060` failed only in the article foreign-elements evidence path after all preceding shared checks and all six non-article profile builds had passed.
+- Failure classification: `scientific-article-foreign-elements.sh` inspected expected first-pass cross-reference/Biber rerun warnings after only one LaTeX pass. This is an evidence-orchestration defect, not an article runtime, authority or modality failure.
+- Current batch: **Scientific Article — Step 3 evidence correction + scoped Linux integration orchestration**.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 
@@ -41,6 +42,20 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
 
+## Linux integration scopes
+
+`docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract.
+
+- PR `auto` uses the incremental pushed range on `synchronize` and the full PR diff on opened/reopened/ready events.
+- Available bounded scopes include `article`, `profiles`, `reference-document`, `reference-pdf`, `frontmatter`, `layout`, `objects`, `bibliography`, `backmatter`, `research-project` and `smoke`.
+- Multiple known domains run the union of their checks without duplicates.
+- Documentation-only changes skip heavy Linux integration.
+- Shared/core, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
+- Manual `workflow_dispatch` exposes the same named scopes; manual `auto` fails closed to `complete`.
+- Article gates are first-class coordinated checks, not recursively hidden inside `profiles` or another article gate.
+- During Scientific Article, the `article` scope must include `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`; later article-specific executable gates must join the suite in the same material advance.
+- Scoped runs are intermediate evidence only. Every phase-end regression still requires `complete` Linux integration on the immutable candidate.
+
 ## Scientific Article rules
 
 - Implement only one canonical type: `scientific-article`; no runtime aliases.
@@ -50,7 +65,7 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Shared mechanisms, source implementation, profile registration and green non-article tests do not by themselves prove article rules.
 - Step 3 foreign title and foreign summary remain independently optional; absence must compile cleanly and must not become a validation failure.
 - Do not infer foreign-title semantics from shared `title-variant`; the Step 3 route is explicit and article-only.
-- Step 3 presentation is deliberately minimally asserted: optionality/routing evidence must not invent unsupported typography requirements.
+- Step 3 presentation is deliberately minimally asserted; optionality/routing evidence must not invent unsupported typography requirements.
 - Article body typography remains owned by Step 4.
 - Recommendations remain advisory and never become hard compilation/validation failures.
 - Journal instructions remain a conditional applicability boundary.
@@ -70,15 +85,15 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical content, phase status, acceptance status, or release/certification state.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, integration-scope behavior, canonical content, phase status, acceptance status, or release/certification state.
 
-For every material advance, update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap and machine state whenever phase, acceptance, evidence, batch, or branch facts change.
+For every material advance, update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap and machine state whenever phase, acceptance, evidence, integration scope, batch, or branch facts change.
 
 ## Mandatory phase-end regression
 
 No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
 
-The machine contract intentionally keeps `phase_end_regression.candidate = one-immutable-sha`. Targeted Step checks never replace the Scientific Article phase-end regression.
+The machine contract intentionally keeps `phase_end_regression.candidate = one-immutable-sha`. Targeted/scoped Step checks never replace the Scientific Article phase-end regression. The Linux scope for phase-end regression is `complete`.
 
 ## Fail-closed rule
 

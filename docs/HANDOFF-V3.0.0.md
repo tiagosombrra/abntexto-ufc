@@ -12,64 +12,82 @@ Updated: 2026-09-06
 | Active PR | #286 |
 | Active phase | **Scientific Article** |
 | Step 1 | ACCEPTED — `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1` |
-| Step 2 | ACCEPTED — `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`; Linux `34026680882`, `PASS=31 FAIL=0 SKIP=0` |
-| Step 3 implementation | `81e08321222efb03626ac421fc645bd66edd5ae8` — CI pending |
-| Step 3 evidence surface | `tests/integration/scientific-article-foreign-elements.sh`; four present/absent scenarios under both engines |
-| Current batch | **Scientific Article — Optional foreign elements evidence validation** |
+| Step 2 | ACCEPTED — `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`; Linux `34026680882` |
+| Step 3 implementation | `81e08321222efb03626ac421fc645bd66edd5ae8` |
+| Step 3 synchronized head | `567a5b2d21a16b653d7704639bdd5012d7c2f99b`; Static `34028373064` SUCCESS; Linux `34028373060` classified failure |
+| Current batch | **Step 3 evidence correction + scoped Linux integration orchestration** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-The Step 3 implementation is not accepted merely because it exists. The synchronized branch head must pass Static and full Linux, and the new gate must emit the expected optionality evidence without disturbing accepted non-article profiles.
+## Linux 34028373060 classification
 
-## Step 3 implementation record
+The former full Linux run reached `profiles` only after all preceding shared checks had passed. All six accepted non-article profiles also compiled successfully under both engines. The failure occurred when `profile-matrix.sh` recursively entered the article profile gate and then `scientific-article-foreign-elements.sh`.
 
-`81e08321222efb03626ac421fc645bd66edd5ae8` adds:
+The foreign-elements fixture used only one LaTeX pass before warning inspection, so expected first-pass Biber/cross-reference rerun warnings were treated as a failure. This is an **evidence orchestration defect**. It does not establish an article runtime, authority, modality, proof-state, or non-article compatibility failure.
 
-- explicit article-only `\ufcPrintArticleForeignElements{foreign-title}{foreign-summary}`;
-- independent blank-safe title and summary rendering;
-- four controlled scenarios: neither, title only, summary only, both;
-- pdfLaTeX/LuaLaTeX evidence through the permanent scientific-article profile gate;
-- source guards that reject `title-variant` repurposing and premature `\AtBeginDocument` body-typography activation;
-- no change to the 18-rule article proof state.
+The bounded correction:
 
-Expected structured evidence:
+- gives each foreign-elements scenario two LaTeX passes before warning inspection;
+- makes article profile, required-front-block, and foreign-elements gates first-class checks in `tests/run.py`;
+- removes recursive article execution from the non-article profile matrix;
+- removes recursive Step 2/3 execution from the profile gate;
+- adds named Linux integration scopes and incremental PR scope inference.
 
-`ARTICLE-FOREIGN-ELEMENTS-EVIDENCE status=PASS engines=2 scenarios=4 title_optional=true summary_optional=true independent=true title_variant_reused=false presentation_rules_promoted=0 recommendations_promoted=0`
+No article runtime or normative contract changes in this correction.
 
-## Active authority surfaces
+## Scoped Linux integration model
 
-- `release/v3-roadmap.json` — machine state;
-- `docs/ROADMAP-V3.0.0.md` — readable roadmap;
-- this handoff — current execution checkpoint;
-- `docs/V3-SCIENTIFIC-ARTICLE.md` — implementation sequence;
-- `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage-rules-article.json` — article authority/modality contract;
-- `docs/V3-RELEASE-READINESS.md` — release blockers/readiness;
-- `docs/UFC-LIBRARIAN-REVIEW.md` — shared 34-point contract.
+| Scope | Purpose |
+|---|---|
+| `article` | article authority/profile/front-block/foreign-element evidence |
+| `profiles` | six accepted non-article profiles plus build-path/multivolume/catalog-card |
+| `reference-document`, `reference-pdf` | canonical reference document/presentation |
+| `frontmatter`, `layout`, `objects`, `bibliography`, `backmatter` | bounded shared domains |
+| `research-project` | research-project-specific integration |
+| `smoke` | orchestration-only changes |
+| `complete` | shared/unknown technical changes and mandatory phase-end regression |
+| `auto` | infer safe scope from changed paths |
 
-Git facts, machine state, roadmap and this handoff must describe the same active phase and acceptance state. Disagreement fails closed.
+On PR `synchronize`, `auto` compares the previous head with the new head. This prevents the complete historical PR diff from forcing a giant run after every small article commit. Opened/reopened/ready events still use the full PR diff. Unknown technical paths fail closed to `complete`.
+
+The implementation contract is `docs/LINUX-INTEGRATION-SCOPES.md`.
+
+## Step 3 acceptance rule
+
+Step 3 remains **IMPLEMENTED / ACCEPTANCE PENDING** until one synchronized checkpoint proves:
+
+1. Static contract PASS, including the Linux-scope static contract;
+2. bounded Linux scope containing `profiles,article` PASS for this orchestration migration;
+3. `ARTICLE-PROFILE-EVIDENCE`, `ARTICLE-FRONT-BLOCK-EVIDENCE`, and `ARTICLE-FOREIGN-ELEMENTS-EVIDENCE` PASS;
+4. non-article profiles remain green;
+5. no article rule modality or proof-state drift.
+
+After this one migration checkpoint, ordinary article-only changes should normally select `article` rather than the complete repository matrix.
 
 ## Immediate action
 
 | Order | Action |
 |---:|---|
-| 1 | Publish the synchronized Step 3 implementation checkpoint. |
-| 2 | Run Static and full Linux on the same branch head. |
-| 3 | Require `ARTICLE-FOREIGN-ELEMENTS-EVIDENCE` PASS on both engines and keep the non-article profile matrix green. |
-| 4 | Classify any failure before changing runtime or validators. |
-| 5 | If green, record Step 3 acceptance and activate Step 4 — textual structure/body typography. |
+| 1 | Publish the synchronized scoped-integration + Step 3 evidence-fix checkpoint. |
+| 2 | Require Static PASS and verify the PR Linux run selects `profiles,article`, not `complete`. |
+| 3 | Classify any bounded-run failure before modifying runtime or tests. |
+| 4 | If green, update docs/machine state with exact checkpoint and run IDs; Step 3 may become ACCEPTED. |
+| 5 | Activate Step 4 — textual structure/body typography. |
+| 6 | Continue using `article` for article-only intermediate work. |
+| 7 | Preserve `complete` for the immutable Scientific Article phase-end regression. |
 
 ## Mandatory operating discipline
 
-Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Phase/acceptance/evidence state and branch/checkpoint facts must remain synchronized with the roadmap and machine state.
+Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Phase/acceptance/evidence/integration-scope state and branch/checkpoint facts must remain synchronized with roadmap and machine state.
 
-Every phase requires a complete **phase-end regression** on one immutable candidate before closure. Targeted Step checks never authorize a phase transition by themselves.
+Every phase requires a complete **phase-end regression** on one immutable candidate before closure. Scoped Step checks never authorize a phase transition by themselves.
 
 ## Hard boundaries
 
 - Preserve all accepted non-article profiles and the shared academic-work PDF baseline.
-- Do not change article authority, modality, rule IDs or proof state from Step 3 implementation alone.
+- Do not change article authority, modality, rule IDs or proof state from this orchestration correction.
 - Foreign title/summary remain independently optional.
-- Do not repurpose `title-variant` for article foreign-title semantics.
+- Do not repurpose `title-variant`.
 - Article body typography remains Step 4 work.
 - Recommendations remain advisory.
 - Item 33 remains fail-closed.

@@ -43,15 +43,19 @@ run_case() {
 
   cleanup_job "$job"
 
-  "$engine" \
-    -jobname="$job" \
-    -interaction=nonstopmode \
-    -halt-on-error \
-    -file-line-error \
-    "$fixture" > "/tmp/$job.out" 2>&1 || {
-      cat "/tmp/$job.out"
-      exit 1
-    }
+  # Two passes are required before warning inspection because the shared class
+  # uses cross-reference infrastructure even in this minimal article fixture.
+  for pass in 1 2; do
+    "$engine" \
+      -jobname="$job" \
+      -interaction=nonstopmode \
+      -halt-on-error \
+      -file-line-error \
+      "$fixture" > "/tmp/$job.out" 2>&1 || {
+        cat "/tmp/$job.out"
+        exit 1
+      }
+  done
 
   warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$job.log" | \
     grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)

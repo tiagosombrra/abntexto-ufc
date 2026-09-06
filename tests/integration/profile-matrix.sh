@@ -196,8 +196,4 @@ PY
   done
 done
 
-# Scientific Article is an active-phase extension with a dedicated bounded
-# profile gate until the article presentation/runtime contract is complete.
-sh tests/integration/scientific-article-profile.sh
-
-echo 'Complete profile matrix gate completed.'
+echo 'Complete non-article profile matrix gate completed.'

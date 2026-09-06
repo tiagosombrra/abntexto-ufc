@@ -65,9 +65,4 @@ cleanup_job scientific-article-profile-pdflatex
 cleanup_job scientific-article-profile-lualatex
 
 echo 'ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article metadata=submission-date,approval-date,article-author-note presentation_rules_promoted=0'
-
-# Article-specific evidence layers remain bounded and do not promote proof state.
-sh tests/integration/scientific-article-front-block.sh
-sh tests/integration/scientific-article-foreign-elements.sh
-
 echo 'Scientific article profile gate completed.'
