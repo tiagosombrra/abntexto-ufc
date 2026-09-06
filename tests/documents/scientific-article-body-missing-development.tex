@@ -1,0 +1,40 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = scientific-article,
+  cover = false,
+  catalog-card = false,
+  coat-of-arms = false,
+  glossary = none,
+  index = none,
+  author = {Article Negative Test Author},
+  title = {Article Negative Structure Test},
+  submission-date = {1 de setembro de 2026},
+  approval-date = {5 de setembro de 2026},
+  article-author-note = {Universidade Federal do Ceará. article@example.org}
+}
+
+\ufcAddBibliographyResource{tests/fixtures/references.bib}
+
+\begin{document}
+
+\ufcPrintArticleFrontMatter{Resumo controlado do cenário negativo de estrutura textual.}
+
+\section{Introdução}
+
+Este cenário omite deliberadamente a seção de desenvolvimento para comprovar que o validador de estrutura do artigo falha de forma determinística.
+
+\section{Considerações finais}
+
+As considerações finais permanecem presentes para isolar a ausência do desenvolvimento como única falha estrutural pretendida.
+
+\nocite{silva2020}
+\ufcPrintReferences
+
+\end{document}

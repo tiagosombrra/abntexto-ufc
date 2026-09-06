@@ -1,0 +1,54 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = scientific-article,
+  cover = false,
+  catalog-card = false,
+  coat-of-arms = false,
+  glossary = none,
+  index = none,
+  author = {Article Body Test Author},
+  title = {Article Body Test},
+  submission-date = {1 de setembro de 2026},
+  approval-date = {5 de setembro de 2026},
+  article-author-note = {Universidade Federal do Ceará. article@example.org}
+}
+
+\ufcAddBibliographyResource{tests/fixtures/references.bib}
+
+\begin{document}
+
+\ufcPrintArticleFrontMatter{Resumo controlado para o cenário de estrutura e tipografia do corpo do artigo.}
+
+\section{Introdução}
+
+\noindent ARTICLEMARGINCONTROL
+
+ARTICLEBODYSTART Este parágrafo controlado foi escrito com extensão suficiente para ocupar várias linhas naturais no arquivo PDF e permitir a medição física da tipografia do corpo do artigo científico. O texto verifica que o perfil específico mantém corpo nominal de doze pontos, alinhamento justificado e recuo de primeira linha de dois centímetros, ao mesmo tempo em que substitui o espaçamento de uma linha e meia dos trabalhos acadêmicos pelo espaçamento simples exigido para artigos. A continuidade do parágrafo também fornece linhas intermediárias para observar as margens esquerda e direita sem congelar conteúdo editorial como parte do contrato. O cenário permanece deliberadamente simples, reutiliza a infraestrutura compartilhada da classe e termina com um marcador único para delimitar a região medida ARTICLEBODYEND
+
+\par\medskip
+\begingroup
+\singlesp
+\noindent ARTICLECALONE\\
+ARTICLECALTWO\\
+ARTICLECALTHREE\par
+\endgroup
+
+\section{Desenvolvimento}
+
+O desenvolvimento reutiliza a hierarquia de seções compartilhada e contém conteúdo controlado suficiente para comprovar a presença da parte textual obrigatória sem criar uma implementação paralela para artigos.
+
+\section{Considerações finais}
+
+As considerações finais encerram a estrutura textual obrigatória do cenário controlado e preservam a infraestrutura comum de seções e referências.
+
+\nocite{silva2020}
+\ufcPrintReferences
+
+\end{document}

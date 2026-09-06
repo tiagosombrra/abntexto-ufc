@@ -71,6 +71,10 @@ def main() -> None:
         ["tests/run.py", "tests/integration/scientific-article-foreign-elements.sh"]
     ) != ("article",):
         fail("orchestration plus article changes must select article, not complete")
+    if infer_suites(
+        ["tests/run.py", "tests/integration/scientific-article-body.sh"]
+    ) != ("article",):
+        fail("orchestration plus Step 4 article changes must select article, not complete")
     if infer_suites(["abntexto-ufc/objects.def"]) != ("objects",):
         fail("object runtime changes must select the objects suite")
     if infer_suites(["unknown/technical.file"]) != ("complete",):
@@ -83,6 +87,7 @@ def main() -> None:
             "scientific-article-profile",
             "scientific-article-front-block",
             "scientific-article-foreign-elements",
+            "scientific-article-body",
         }
         article_checks = set(SUITES.get("article", ()))
         missing_article = sorted(required_article_checks - article_checks)
@@ -95,13 +100,15 @@ def main() -> None:
         fail("article profile gate must not chain the front-block gate")
     if "scientific-article-foreign-elements.sh" in article_profile:
         fail("article profile gate must not chain the foreign-elements gate")
+    if "scientific-article-body.sh" in article_profile:
+        fail("article profile gate must not chain the Step 4 body gate")
 
     print(
         "LINUX-SUITE-EVIDENCE status=PASS "
         f"suites={len(SUITES)} checks={len(known_checks)} "
         f"manual_choices={len(required_manual_choices)} phase={phase} "
         "incremental_sync=true missing_before_fallback=full-pr "
-        "unknown_path_fallback=complete article_first_class=true"
+        "unknown_path_fallback=complete article_first_class=true step4_registered=true"
     )
 
 

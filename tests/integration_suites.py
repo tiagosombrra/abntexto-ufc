@@ -53,6 +53,7 @@ SUITES: dict[str, tuple[str, ...]] = {
         "scientific-article-profile",
         "scientific-article-front-block",
         "scientific-article-foreign-elements",
+        "scientific-article-body",
     ),
 }
 
@@ -237,6 +238,7 @@ def self_test() -> None:
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),
         ("tests/run.py",): ("smoke",),
         ("tests/run.py", "tests/integration/scientific-article-foreign-elements.sh"): ("article",),
+        ("tests/run.py", "tests/integration/scientific-article-body.sh"): ("article",),
         ("tests/integration/profile-matrix.sh", "tests/integration/scientific-article-profile.sh"): ("profiles", "article"),
         ("abntexto-ufc/objects.def", "abntexto-ufc/bibliography.def"): ("objects", "bibliography"),
         ("abntexto-ufc/core.def",): ("complete",),

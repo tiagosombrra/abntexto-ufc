@@ -108,6 +108,12 @@ CHECKS = (
         ("sh", "tests/integration/scientific-article-foreign-elements.sh"),
         depends=("scientific-article-profile",),
     ),
+    Check(
+        "scientific-article-body",
+        "Scientific article textual structure and body",
+        ("sh", "tests/integration/scientific-article-body.sh"),
+        depends=("scientific-article-profile",),
+    ),
     Check("profiles", "Document profiles", ("sh", "tests/integration/profile-matrix.sh")),
     Check(
         "profile-pdfa",

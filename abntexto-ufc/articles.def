@@ -2,8 +2,8 @@
 
 % Scientific-article presentation is implemented incrementally from the
 % retained authority contract in docs/ARTICLE-NORMATIVE-CONTRACT.md.
-% Required front-block elements and optional foreign elements are available;
-% article body typography remains owned by the later body-structure step.
+% Required front-block elements, optional foreign elements and the article-only
+% body typography route are available without changing non-article profiles.
 
 \ExplSyntaxOn
 
@@ -75,8 +75,8 @@
   }
 
 % Foreign title and summary are independently optional. Their rendering here
-% is intentionally minimal: Step 3 proves optionality and routing only and does
-% not invent typography requirements that are absent from the retained rules.
+% is intentionally minimal: optionality and routing are proven without
+% inventing typography requirements absent from the retained rules.
 \cs_new_protected:Npn \ufc_article_foreign_title:n #1
   {
     \tl_if_blank:nF {#1}
@@ -100,6 +100,24 @@
         \endgroup
       }
   }
+
+% The shared academic-work layout starts at 12 pt, 2 cm first-line indentation
+% and 1.5 spacing. The UFC article guide instead requires single-spaced textual
+% elements. Apply only that profile-specific body contract after the shared
+% begin-document hook, leaving every non-article profile untouched.
+\cs_new_protected:Npn \ufc_article_apply_body_typography:
+  {
+    \str_if_eq:VnT \g_ufc_document_type_tl {scientific-article}
+      {
+        \normalsize
+        \singlesp
+        \setlength{\parindent}{2cm}
+        \setlength{\parskip}{0pt}
+        \justifying
+      }
+  }
+
+\AtBeginDocument{\ufc_article_apply_body_typography:}
 
 \NewDocumentCommand \ufcPrintArticleFrontMatter { +m }
   {
