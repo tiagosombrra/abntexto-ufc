@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, or release met
 2. Read `release/v3-roadmap.json`.
 3. Read `docs/HANDOFF-V3.0.0.md`.
 4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+5. During **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `docs/NORMATIVE-CURRENCY.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`.
 6. Compare Git facts, machine state, handoff, roadmap and the active phase documents.
 7. If phase, checkpoint, acceptance state, article authority, proof state, artifact provenance, release-blocker state, or temporary-artifact state disagrees, reconcile the control plane before feature work.
 
@@ -22,6 +22,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Active phase: **Scientific Article**.
 - Canonical `main` contains the validated shared foundation and accepted Scientific Article Step 1 at squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` (PR #285).
 - Active task branch: `feat/v3-scientific-article`, created from that updated `main`.
+- Active pull request: #286.
 - Core Corrections phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
 - Reference PDF Validation phase-end candidate `b64074c64941895f97fbe0f795ce826c798d17ce`: Static `33985595790` and Linux `33985595798` success.
 - Canonical reference artifact: 55 A4 pages, TeX Live 2026/pdfLaTeX, complete visual review PASS 55/55.
@@ -33,9 +34,13 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Step 1 synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS; full Linux `34001350953` SUCCESS, `PASS=31 FAIL=0 SKIP=0`.
 - Step 1 state: **ACCEPTED**.
 - Step 2 implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.
-- Current implementation step: **Required article front block — IMPLEMENTED / CI PENDING**.
+- First Step 2 synchronized checkpoint `768d355eda11f47b4cebbb6864247e9fc2aa728f`: Static `34003576066` FAILED because the normative-currency checker still enforced the pre-activation `articles.def`-absent invariant.
+- Normative-currency correction checkpoint: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.
+- Current implementation step: **Required article front block — IMPLEMENTED / CI PENDING AFTER CURRENCY RECONCILIATION**.
 - Step 2 adds `abntexto-ufc/articles.def`, `\ufcPrintArticleFrontMatter{...}`, and article-specific final-PDF/source evidence for required title/authorship/dates/primary-summary surfaces.
 - Optional foreign elements remain deferred to Step 3; article body typography remains deferred to Step 4; recommendations remain advisory.
+- `standards/version-policy.json` and `tests/checks/normative_currency.py` now require scientific-article runtime to remain absent before article activation and to be present after the readable Scientific Article/Final Certification/Release phases activate with recorded source-contract/foundation evidence.
+- This currency reconciliation does not change the article authority source set, the 18 article rule predicates, or the manual/conditional-manual article proof state.
 - Release blocker #18 is explicit and owned by Final Certification/Release: the release reference PDF must become bit-reproducible using a pinned release epoch/`SOURCE_DATE_EPOCH` and hash comparison.
 - Historical orchestration issue #217 is closed as superseded by the readable permanent workflow model.
 
@@ -44,7 +49,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active; Step 1 accepted; Step 2 implemented/CI pending
+4. **Scientific Article** — active; Step 1 accepted; Step 2 implemented/CI pending after currency reconciliation
 5. **Final Certification** — queued; owns release reproducibility proof together with Release
 6. **Release** — queued
 
@@ -61,10 +66,21 @@ Do not create new opaque work identifiers such as nested letter/number codes. Hi
 - Reuse current citation, bibliography, section, summary and object infrastructure rather than fork it.
 - Preserve the 18-rule source contract unless new current authority requires a separately documented source correction.
 - Keep required, optional, recommended and conditional semantics distinct.
-- Do not promote an article rule to executable/proven merely because shared non-article machinery, profile selection, or a source-level implementation is green.
+- Do not promote an article rule to executable/proven merely because shared non-article machinery, profile selection, source-level implementation, or runtime activation is green.
 - Add rule-specific positive evidence before proof-state promotion; add controlled negative evidence where a safe rejectable case exists.
 - Journal-specific instructions remain an applicability boundary.
 - Preserve the validated non-article foundation and accepted reference PDF presentation.
+
+## Normative-currency transition rule
+
+Scientific-article runtime activation is allowed only after source-contract revalidation and readable phase activation. The current activation evidence is bound to:
+
+- article source contract `4d018a92697e8f39e3a53b034c451e55996c84fb`;
+- accepted shared foundation on `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`;
+- accepted Step 1 checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`;
+- active phase `scientific-article`.
+
+Static `34003576066` correctly exposed that the old currency checker had not been migrated from the pre-activation state. The correction updates the phase-aware invariant rather than disabling the check: runtime remains forbidden before article activation and required once article-or-later phases are active. Source precedence and proof-state semantics remain unchanged.
 
 ## Engineering rules
 
@@ -98,7 +114,7 @@ Scientific Article must end with its own immutable candidate containing article 
 
 ## Branch governance and fail-closed rule
 
-The steady state is `main` plus one short-lived active task branch. PR #285 is merged. New article work belongs only on `feat/v3-scientific-article`, based on updated `main`. The old `plan/v3-regression-reset` and other historical remote branches are provenance only and must not receive new work.
+The steady state is `main` plus one short-lived active task branch. PR #285 is merged. New article work belongs only on `feat/v3-scientific-article`, based on updated `main`, and is tracked in PR #286. The old `plan/v3-regression-reset` and other historical remote branches are provenance only and must not receive new work.
 
 Historical opaque R2/R3 evidence files are provenance only, not active control authority. Their presence does not authorize work from them.
 
