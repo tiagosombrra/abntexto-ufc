@@ -36,32 +36,17 @@ Linux orchestration contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 
 ## Step 3 acceptance — optional foreign elements
 
-Step 3 owns:
+Step 3 owns `article.title.foreign.optional` and `article.summary.foreign.optional`. The synchronized acceptance checkpoint `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba` passed Static `34031144114` and Linux `34031144269`. All four title/summary optionality scenarios are accepted under both engines, the six non-article profiles remain separate, and missing synchronize endpoints fall back fail-closed to the full PR diff.
 
-- `article.title.foreign.optional`;
-- `article.summary.foreign.optional`.
+No article authority, modality or proof state was changed merely to obtain Step 3 acceptance.
 
-Runtime checkpoint `81e08321222efb03626ac421fc645bd66edd5ae8` provides the explicit article-only route:
+## README user-guide correction
 
-`\ufcPrintArticleForeignElements{foreign-title}{foreign-summary}`
+The README correction is accepted at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`, with Static `34054110778` and Linux `34054110738` both successful.
 
-The arguments are independently blank-safe and do not reuse shared `title-variant` semantics.
+The first rewrite `3e3ece5...` was rejected because it reintroduced three unclassified references to the retired class identity while explaining the stable release. The accepted correction keeps the v2.1.0 download and usage path without weakening `canonical_identity.py`.
 
-The synchronized acceptance checkpoint is `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`:
-
-| Gate | Result |
-|---|---|
-| Static | `34031144114` — SUCCESS |
-| Linux | `34031144269` — SUCCESS |
-| Foreign title absent / summary absent | PASS |
-| Foreign title present / summary absent | PASS |
-| Foreign title absent / summary present | PASS |
-| Foreign title present / summary present | PASS |
-| Engines | pdfLaTeX and LuaLaTeX evidence accepted |
-| Non-article profile boundary | exactly six non-article profiles retained; article excluded from compatibility matrix |
-| Scope robustness | missing synchronize endpoint falls back fail-closed to full PR diff |
-
-Earlier Step 3 failures are retained as history in Git/Actions but no longer represent the current execution state. No article rule authority, modality or proof state was changed merely to obtain Step 3 acceptance.
+README remains end-user documentation. Scientific Article execution details remain in this plan, handoff, roadmap, machine state, PR and Actions.
 
 ## Step 4 contract — textual structure and body typography
 
@@ -82,41 +67,27 @@ Accepted presentation values for the article body are:
 | First-line indent | 2 cm |
 | Line spacing | single |
 
-Step 4 must not infer compliance from the existing academic-work body. Reuse of shared section, bibliography and paragraph mechanisms is preferred, but the article profile needs article-specific executable evidence proving the required structure and typography.
+The shared academic-work layout currently activates 12 pt, 2 cm indentation and 1.5 spacing globally. Therefore the article requires an explicit profile-specific override to single spacing (while preserving the other accepted properties) and article-specific physical evidence. Reuse of shared layout, section and bibliography mechanisms is preferred but is not itself proof.
 
 ### Step 4 implementation sequence
 
 | Order | Work | Acceptance intent |
 |---:|---|---|
-| 1 | Inspect `articles.def`, shared layout/section hooks and current article fixtures before changing runtime. | Avoid duplicate/forked infrastructure. |
-| 2 | Define the smallest article-only activation needed for body presentation. | No cross-profile drift. |
+| 1 | Inspect `articles.def`, shared layout/section hooks and PDF checker patterns. | Avoid duplicate/forked infrastructure. |
+| 2 | Define the smallest `scientific-article`-only body activation. | No cross-profile drift. |
 | 3 | Add a controlled article fixture containing introduction, development, final considerations and references. | Positive structural evidence. |
 | 4 | Measure 12 pt, justification, 2 cm indent and single spacing from the rendered article PDF. | Physical presentation evidence. |
-| 5 | Add a safe negative structural/typographic case where the validator can deterministically reject a violation. | Fail-closed evidence. |
-| 6 | Register the new Step 4 executable gate in the `article` Linux scope in the same material advance. | Scoped CI cannot omit Step 4. |
-| 7 | Synchronize this plan, handoff, roadmap and machine state. | Documentation matches code/evidence. |
-| 8 | Require Static and bounded article/profile Linux PASS on one synchronized Step 4 checkpoint. | Step 4 acceptance. |
+| 5 | Add a safe negative structural case that the checker deterministically rejects. | Fail-closed evidence. |
+| 6 | Register the new Step 4 executable gate in `tests/run.py` and in the `article` Linux suite in the same material advance. | Scoped CI cannot omit Step 4. |
+| 7 | Replace the obsolete pre-Step4 front-block guard with the new accepted Step4 boundary rather than simply deleting coverage. | Semantic transition without test weakening. |
+| 8 | Synchronize this plan, handoff, roadmap and machine state. | Documentation matches code/evidence. |
+| 9 | Require Static and bounded article/profile Linux PASS on one synchronized Step 4 checkpoint. | Step 4 acceptance. |
 
 ## Scoped Linux integration
 
-Intermediate article work uses bounded scope where safe. `article` currently includes:
-
-- `validator-source`;
-- `scientific-article-profile`;
-- `scientific-article-front-block`;
-- `scientific-article-foreign-elements`.
-
-The Step 4 implementation must add its new executable gate to this list in the same material advance. `profiles` remains a separate six-profile compatibility suite. Multiple applicable domains run as a deduplicated union.
+Intermediate article work uses bounded scope where safe. `article` currently includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`. The Step 4 implementation must add its new executable gate to this list in the same material advance. `profiles` remains a separate six-profile compatibility suite.
 
 A complete repository run is not required for intermediate Step acceptance. The **Scientific Article phase-end regression** remains stricter: `complete` Linux on one immutable candidate, plus Static and all article-specific acceptance evidence.
-
-## README boundary and current correction
-
-The root `README.md` is end-user documentation. It should teach users how to obtain and use the stable release, while detailed Scientific Article execution state remains in this file, the handoff, roadmap, machine state, PR and Actions. Until v3.0.0 is released, the README must not present this in-progress article profile as stable functionality.
-
-README checkpoint `3e3ece5a3607303dd31aee35c67ce4140fb90d94` was rejected by Static `34053874788` because stable-release explanation reintroduced three unclassified references to the retired class identity. Linux `34053874750` succeeded for that documentation-only checkpoint. The correction removes the retired identity from active README text while preserving the stable v2.1.0 download and usage path. `canonical_identity.py` remains unchanged.
-
-This README correction does not alter Step 4 runtime, authority, modality or proof state.
 
 ## Non-negotiable boundaries
 
@@ -139,4 +110,4 @@ This README correction does not alter Step 4 runtime, authority, modality or pro
 - Active branch: `feat/v3-scientific-article`.
 - Active PR: #286.
 
-Next: validate the corrected user-facing README under Static, then inspect the current article/shared layout implementation, design the bounded Step 4 fixture/checker/runtime activation, synchronize its new executable gate with `article` scope, and require Static plus bounded Linux acceptance before advancing to Step 5.
+Next: implement and validate the bounded Step 4 article body/structure evidence, then only after Static plus bounded Linux acceptance advance to Step 5.

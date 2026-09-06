@@ -25,10 +25,9 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 - Step 1: ACCEPTED at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
 - Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`.
 - Step 3: ACCEPTED at `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`, Linux `34031144269`.
-- Step 3 acceptance confirms the missing-incremental-SHA fallback, article/profile scoped execution, optional foreign-element scenarios under both engines, and the six-profile non-article compatibility boundary.
+- README user-guide correction: ACCEPTED at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`; Static `34054110778`, Linux `34054110738`.
 - Current batch: **Step 4 — textual structure and body typography**.
 - Step 4 owns required article structure plus the accepted 12 pt, justified, 2 cm first-line indent, single-spaced body contract. It has not been implemented or accepted yet.
-- README usability rewrite checkpoint `3e3ece5a3607303dd31aee35c67ce4140fb90d94` was rejected by Static `34053874788` because the user guide reintroduced unclassified legacy class identity while explaining the stable release. The correction keeps stable-release onboarding but removes the retired identity from the active tree; the canonical-identity gate is not weakened.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 

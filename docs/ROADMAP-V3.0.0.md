@@ -11,7 +11,7 @@ Updated: 2026-09-06
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 4** | Steps 1–3 accepted; Step 4 now owns required textual structure/body typography |
+| Scientific Article | **ACTIVE — STEP 4** | Steps 1–3 accepted; README user guide accepted; Step 4 owns required textual structure/body typography |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -28,21 +28,20 @@ Updated: 2026-09-06
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + **complete Linux scope** + article-specific evidence on one immutable SHA |
 
-## Step 3 accepted evidence
+## README usability state
 
-Step 3 was accepted at synchronized checkpoint `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`. Static `34031144114` and Linux `34031144269` both completed successfully. This closes the earlier evidence-convergence, runner-import and unavailable-`before` scope-orchestration defects without changing article authority, modality or proof state.
+The root README is now intentionally user-facing. It prioritizes stable-release selection, Overleaf/local setup, document configuration, compilation, content organization and common problems. Detailed implementation history remains in engineering documents and GitHub.
 
-The accepted workflow behavior is fail-closed: when incremental synchronize endpoints are unavailable, `auto` falls back to the authoritative full PR range rather than terminating. The article/profile acceptance also preserves exactly six non-article profiles as the compatibility matrix and keeps `scientific-article` separate.
+| Checkpoint | Static | Linux | State |
+|---|---|---|---|
+| `3e3ece5...` first rewrite | `34053874788` FAIL — unclassified retired class identity | `34053874750` SUCCESS | rejected |
+| `a99f1e19...` corrected README | `34054110778` SUCCESS | `34054110738` SUCCESS | **ACCEPTED** |
 
-## README correction state
-
-The README is being restored to its proper role as an end-user guide. The first synchronized rewrite checkpoint `3e3ece5a3607303dd31aee35c67ce4140fb90d94` had Linux `34053874750 = SUCCESS` but Static `34053874788 = FAILURE` because three user-facing references to the retired stable class identity violated `canonical_identity.py`.
-
-This is classified as a **documentation/canonical-identity conflict**. The canonical identity gate is not weakened. The corrected README continues to direct users to stable v2.1.0 and its official release bundles, but avoids embedding the retired class identity in the active V3 tree. Development history remains in engineering documents rather than user onboarding.
+The canonical-identity checker was not weakened. Until v3.0.0 is released, the README directs normal users to stable v2.1.0 and does not present the article profile as released functionality.
 
 ## Step 4 scope
 
-Step 4 owns these retained article rules:
+The shared academic-work layout uses 12 pt, 2 cm first-line indentation and 1.5 line spacing. The article contract instead requires single line spacing. Therefore Step 4 requires a profile-specific body activation rather than assuming the shared layout satisfies the article.
 
 | Rule | Requirement |
 |---|---|
@@ -52,13 +51,7 @@ Step 4 owns these retained article rules:
 | `article.references.required` | references present |
 | `article.body.typography` | 12 pt, justified, 2 cm first-line indent, single spacing |
 
-Step 4 must reuse shared section/reference mechanisms where compatible, add article-specific executable evidence, include a controlled negative path where safely machine-detectable, and register its executable gate in the `article` Linux scope in the same material advance. Shared mechanisms alone do not prove article conformance.
-
-## README ownership
-
-The repository README is a user guide, not a roadmap transcript. It must prioritize stable-release selection, Overleaf/local installation, document configuration, compilation, content layout and common usage problems. Detailed SHAs, CI runs, issue history, regression failures and normative/control-plane state remain in this roadmap, handoff, phase documents and GitHub.
-
-Until v3.0.0 is released, normal users are directed to stable v2.1.0; unreleased v3 capabilities are identified only as development state. The active README must also comply with the canonical-identity contract.
+Step 4 must add article-specific physical PDF evidence and a bounded executable gate. Shared mechanisms alone do not prove article conformance. The new executable gate must be registered in the `article` Linux suite in the same material advance.
 
 ## Linux integration scopes
 
@@ -72,8 +65,6 @@ Until v3.0.0 is released, normal users are directed to stable v2.1.0; unreleased
 | `research-project` | research-project-specific work | No |
 | `smoke` | integration-orchestration-only changes | No |
 | `complete` | shared/core/unknown changes and phase-end regression | **Required at phase end** |
-
-As Step 4 introduces a new executable article gate, that gate must be added to `article` in the same synchronized checkpoint. Multiple known domains run a deduplicated union. Unknown technical paths remain `complete`.
 
 Detailed contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 
