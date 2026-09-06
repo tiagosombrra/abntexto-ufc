@@ -177,7 +177,8 @@
     "shared_foundation_merged_to_main": true,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "current_correction_batch": [
-      "Scientific Article — Step 4 textual structure and body typography"
+      "Scientific Article — Step 4 textual structure and body typography",
+      "README — user-facing stable-release onboarding with canonical identity preserved"
     ],
     "known_runtime_failures": [],
     "known_gate_failures": [
@@ -186,9 +187,11 @@
       "Linux 34028373060 on 567a5b2: foreign-elements evidence inspected expected first-pass rerun warnings after one LaTeX pass",
       "Static 34030098936 on 336bc982: validator-source dynamic traceability load of tests/run.py could not resolve sibling integration_suites.py",
       "Linux 34030098924 on 336bc982: intended profiles,article scope selected; seven checks passed and validator-source failed on the same runner sibling-import defect",
-      "Linux 34030827664 on 4f1c9a1: scope determination failed before integration because synchronize BEFORE_SHA was unavailable in checkout; fatal bad object; Static 34030827665 succeeded"
+      "Linux 34030827664 on 4f1c9a1: scope determination failed before integration because synchronize BEFORE_SHA was unavailable in checkout; fatal bad object; Static 34030827665 succeeded",
+      "Static 34053874788 on 3e3ece5: user-facing README accurately referenced the stable v2 class identity, but active-tree canonical identity requires retired identity to remain classified/absent; correction preserves stable-release onboarding without weakening canonical_identity.py"
     ],
     "pending_acceptance_gates": [
+      "Corrected user-facing README checkpoint must pass Static canonical identity unchanged",
       "Step 4 must add article-specific executable evidence for required textual structure and body typography",
       "Step 4 executable gate must be registered in the article Linux scope in the same material advance",
       "Step 4 synchronized checkpoint must pass Static contract",
@@ -339,6 +342,11 @@
     "scientific_article_step3_acceptance_static_conclusion": "success",
     "scientific_article_step3_acceptance_linux_run": 34031144269,
     "scientific_article_step3_acceptance_linux_conclusion": "success",
+    "readme_user_guide_rejected_checkpoint_sha": "3e3ece5a3607303dd31aee35c67ce4140fb90d94",
+    "readme_user_guide_rejected_static_run": 34053874788,
+    "readme_user_guide_rejected_static_classification": "active-tree-unclassified-legacy-class-identity",
+    "readme_user_guide_rejected_linux_run": 34053874750,
+    "readme_user_guide_rejected_linux_conclusion": "success",
     "scoped_linux_integration_state": "step3-accepted",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true

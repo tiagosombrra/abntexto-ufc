@@ -28,6 +28,7 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 - Step 3 acceptance confirms the missing-incremental-SHA fallback, article/profile scoped execution, optional foreign-element scenarios under both engines, and the six-profile non-article compatibility boundary.
 - Current batch: **Step 4 — textual structure and body typography**.
 - Step 4 owns required article structure plus the accepted 12 pt, justified, 2 cm first-line indent, single-spaced body contract. It has not been implemented or accepted yet.
+- README usability rewrite checkpoint `3e3ece5a3607303dd31aee35c67ce4140fb90d94` was rejected by Static `34053874788` because the user guide reintroduced unclassified legacy class identity while explaining the stable release. The correction keeps stable-release onboarding but removes the retired identity from the active tree; the canonical-identity gate is not weakened.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 
@@ -47,6 +48,8 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 `README.md` is the user-facing entry point for people who want to use the template. Keep it focused on choosing a released version, downloading it, configuring a document, compiling it, understanding the template layout, and solving common user problems.
 
 Do not turn `README.md` into execution history. Detailed phase status, workflow run IDs, implementation SHAs, issue chronology, regression failures, normative disputes and control-plane mechanics belong in `docs/`, GitHub issues/pull requests, Actions and `release/v3-roadmap.json`. A short unreleased-version notice and links to developer documents are allowed when they help users avoid an unstable branch.
+
+The active README must also respect the canonical-identity contract. Stable-release instructions may identify the supported release, bundle names and historical file layout, but must not casually reintroduce a retired class identity into the active V3 tree. If an exact legacy identity becomes indispensable to user documentation, classify it narrowly in the identity contract rather than globally exempting the README.
 
 ## Linux integration scopes
 

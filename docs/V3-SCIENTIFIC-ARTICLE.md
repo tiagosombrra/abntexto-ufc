@@ -110,9 +110,13 @@ The Step 4 implementation must add its new executable gate to this list in the s
 
 A complete repository run is not required for intermediate Step acceptance. The **Scientific Article phase-end regression** remains stricter: `complete` Linux on one immutable candidate, plus Static and all article-specific acceptance evidence.
 
-## README boundary
+## README boundary and current correction
 
 The root `README.md` is end-user documentation. It should teach users how to obtain and use the stable release, while detailed Scientific Article execution state remains in this file, the handoff, roadmap, machine state, PR and Actions. Until v3.0.0 is released, the README must not present this in-progress article profile as stable functionality.
+
+README checkpoint `3e3ece5a3607303dd31aee35c67ce4140fb90d94` was rejected by Static `34053874788` because stable-release explanation reintroduced three unclassified references to the retired class identity. Linux `34053874750` succeeded for that documentation-only checkpoint. The correction removes the retired identity from active README text while preserving the stable v2.1.0 download and usage path. `canonical_identity.py` remains unchanged.
+
+This README correction does not alter Step 4 runtime, authority, modality or proof state.
 
 ## Non-negotiable boundaries
 
@@ -123,7 +127,7 @@ The root `README.md` is end-user documentation. It should teach users how to obt
 - Recommendations never become hard compilation/validation failures.
 - Journal-specific instructions remain conditional.
 - Shared implementation is not article proof.
-- Do not weaken normative traceability or scope fail-closed behavior.
+- Do not weaken normative traceability, canonical identity or scope fail-closed behavior.
 - Item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 - Every **material advance** updates handoff, roadmap, machine state and this plan in the same work cycle.
@@ -135,4 +139,4 @@ The root `README.md` is end-user documentation. It should teach users how to obt
 - Active branch: `feat/v3-scientific-article`.
 - Active PR: #286.
 
-Next: inspect the current article/shared layout implementation, design the bounded Step 4 fixture/checker/runtime activation, synchronize its new executable gate with `article` scope, then require Static and bounded Linux acceptance before advancing to Step 5.
+Next: validate the corrected user-facing README under Static, then inspect the current article/shared layout implementation, design the bounded Step 4 fixture/checker/runtime activation, synchronize its new executable gate with `article` scope, and require Static plus bounded Linux acceptance before advancing to Step 5.

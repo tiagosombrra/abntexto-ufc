@@ -34,6 +34,12 @@ Step 3 was accepted at synchronized checkpoint `82d20fa63950bb2acd0576f8ea6ad27b
 
 The accepted workflow behavior is fail-closed: when incremental synchronize endpoints are unavailable, `auto` falls back to the authoritative full PR range rather than terminating. The article/profile acceptance also preserves exactly six non-article profiles as the compatibility matrix and keeps `scientific-article` separate.
 
+## README correction state
+
+The README is being restored to its proper role as an end-user guide. The first synchronized rewrite checkpoint `3e3ece5a3607303dd31aee35c67ce4140fb90d94` had Linux `34053874750 = SUCCESS` but Static `34053874788 = FAILURE` because three user-facing references to the retired stable class identity violated `canonical_identity.py`.
+
+This is classified as a **documentation/canonical-identity conflict**. The canonical identity gate is not weakened. The corrected README continues to direct users to stable v2.1.0 and its official release bundles, but avoids embedding the retired class identity in the active V3 tree. Development history remains in engineering documents rather than user onboarding.
+
 ## Step 4 scope
 
 Step 4 owns these retained article rules:
@@ -52,7 +58,7 @@ Step 4 must reuse shared section/reference mechanisms where compatible, add arti
 
 The repository README is a user guide, not a roadmap transcript. It must prioritize stable-release selection, Overleaf/local installation, document configuration, compilation, content layout and common usage problems. Detailed SHAs, CI runs, issue history, regression failures and normative/control-plane state remain in this roadmap, handoff, phase documents and GitHub.
 
-Until v3.0.0 is released, normal users are directed to stable v2.1.0; unreleased v3 capabilities are identified only as development state.
+Until v3.0.0 is released, normal users are directed to stable v2.1.0; unreleased v3 capabilities are identified only as development state. The active README must also comply with the canonical-identity contract.
 
 ## Linux integration scopes
 

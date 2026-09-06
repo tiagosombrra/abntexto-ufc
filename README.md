@@ -10,10 +10,11 @@ A versão estável publicada atualmente é a **v2.1.0**. Se você está escreven
 
 A v3.0.0 está em desenvolvimento e ainda não foi publicada. Ela introduz a nova classe `abntexto-ufc` e outros recursos, mas não deve ser usada como versão estável até a publicação da release.
 
-- Release estável: <https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v2.1.0>
+- Release estável e arquivos para download: <https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v2.1.0>
 - Template para Overleaf: <https://github.com/tiagosombrra/abntexto-ufc/releases/download/v2.1.0/modelo-latex-ufc-overleaf-2.1.0.zip>
 - Template para uso local: <https://github.com/tiagosombrra/abntexto-ufc/releases/download/v2.1.0/modelo-latex-ufc-2.1.0.zip>
-- PDF de referência da v2.1.0: <https://github.com/tiagosombrra/abntexto-ufc/releases/download/v2.1.0/ufctex-2.1.0-reference.pdf>
+
+O PDF de referência e os checksums também estão disponíveis na página da release.
 
 ## Usando no Overleaf
 
@@ -73,11 +74,9 @@ Evite concentrar todo o conteúdo em `documento.tex`. Manter capítulos e elemen
 
 ## Configuração básica
 
-Na versão estável v2.1.0, a classe é `ufctex`. Um exemplo reduzido para uma tese é:
+Na versão estável v2.1.0, edite o bloco `\ufcsetup` já fornecido em `documento.tex`. Um exemplo reduzido para uma tese é:
 
 ```tex
-\documentclass{ufctex}
-
 \ufcsetup{
   tipo = tese,
   impressao = anverso,
@@ -102,7 +101,7 @@ Na versão estável v2.1.0, a classe é `ufctex`. Um exemplo reduzido para uma t
 }
 ```
 
-Edite apenas os valores correspondentes ao seu trabalho. O template distribuído contém um exemplo mais completo, com os demais campos e elementos opcionais.
+Edite apenas os valores correspondentes ao seu trabalho. O template distribuído contém o preâmbulo e um exemplo mais completo, com os demais campos e elementos opcionais. Não copie configurações entre versões diferentes do projeto: parta sempre dos arquivos da release que você escolheu.
 
 ## Tipos de trabalho disponíveis na v2.1.0
 
@@ -162,7 +161,7 @@ Use apêndice para material elaborado pelo próprio autor e anexo para material 
 | Imagem não encontrada | confira o caminho e se o arquivo foi incluído na pasta do projeto |
 | Fonte literal indisponível | desative o modo estrito ou instale legalmente a fonte requerida no sistema |
 | Overleaf não compila após upload | confirme que `documento.tex` é o arquivo principal e use o bundle específico para Overleaf |
-| Mudança de versão quebra comandos | confira se o projeto está usando a mesma release do template; não misture APIs da v2 e da v3 |
+| Mudança de versão quebra comandos | confira se o projeto está usando a mesma release do template; não misture APIs de versões diferentes |
 
 ## Desenvolvimento da v3
 
