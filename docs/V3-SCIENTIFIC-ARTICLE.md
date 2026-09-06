@@ -1,11 +1,11 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-06  
-Status: ACTIVE — STEP 2 EVIDENCE CORRECTION / CI PENDING
+Status: ACTIVE — STEP 3 OPTIONAL FOREIGN ELEMENTS
 
 ## Purpose
 
-Implement and validate one canonical `scientific-article` profile on top of the corrected, visually accepted shared V3 foundation. This phase realizes the retained 18-rule source-backed article contract without forking cross-cutting infrastructure or weakening accepted non-article behavior.
+Implement and validate one canonical `scientific-article` profile on top of the corrected, visually accepted shared V3 foundation. The phase realizes the retained 18-rule source-backed article contract without forking cross-cutting infrastructure or weakening accepted non-article behavior.
 
 Authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage-rules-article.json`.
 
@@ -18,139 +18,128 @@ Authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage
 | Reference PDF Validation closed | `b64074c64941895f97fbe0f795ce826c798d17ce`; Static `33985595790`; Linux `33985595798` | PASS |
 | Canonical shared PDF visually accepted | 55/55 pages, 0 unexplained visual FAIL | PASS |
 | Article authority contract retained | 18 source-backed `article.*` rules | PASS |
-| Shared librarian review state | 33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW | PASS / EXPLICIT AUTHORITY GAP |
-| Temporary executors | none active | PASS |
-| Shared foundation integrated into canonical main | PR #285 squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` | PASS |
+| Shared librarian review | 33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW | PASS / EXPLICIT AUTHORITY GAP |
+| Shared foundation integrated into `main` | PR #285 merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` | PASS |
 
 ## Step 1 — Profile and metadata surface — ACCEPTED
 
-Technical implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.  
-Synchronized acceptance checkpoint: `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
+| Evidence | Result |
+|---|---|
+| Technical implementation | `b46ba2051f8c9c712a7b5d25748b81baa52b920a` |
+| Synchronized acceptance | `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1` |
+| Static | `34001350884` — SUCCESS |
+| Linux | `34001350953` — SUCCESS, `PASS=31 FAIL=0 SKIP=0` |
+| Article profile | `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 ... presentation_rules_promoted=0` |
 
-Acceptance evidence:
+Step 1 added one canonical `scientific-article` profile and the article-specific metadata keys `submission-date` and `article-author-note`. No article presentation rule or proof state was promoted.
 
-- Static contract `34001350884`: SUCCESS;
-- full Linux integration `34001350953`: SUCCESS, `PASS=31 FAIL=0 SKIP=0`;
-- article profile evidence: `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article metadata=submission-date,approval-date,article-author-note presentation_rules_promoted=0`;
-- all six accepted non-article profiles remained green in the full profile matrix.
+## Step 2 — Required article front block — ACCEPTED
 
-No article presentation rule or proof state was promoted by Step 1.
+The bounded runtime adds `abntexto-ufc/articles.def`, loaded through `abntexto-ufc.cls`, and exposes `\ufcPrintArticleFrontMatter{...}` only for `type=scientific-article`.
 
-## Step 2 — Required article front block — EVIDENCE CORRECTION / CI PENDING
+| Surface | Accepted behavior |
+|---|---|
+| Primary title | required; reuses `title`; centered, uppercase, bold, 12 pt, single-spaced |
+| Primary authorship | required; reuses `author` |
+| Authorship metadata | required; `article-author-note` routed through genuine LaTeX `\footnote`; rendered 10 pt |
+| Submission date | required; `submission-date` |
+| Approval date | required; reuses `approval-date` |
+| Primary summary | required argument to `\ufcPrintArticleFrontMatter` |
+| Foreign title/summary | not implemented in Step 2; owned by Step 3 |
+| Article body typography | not activated; owned by Step 4 |
+| Recommendations | not converted into hard failures |
 
-Implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.  
-Normative-currency reconciliation checkpoint: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.  
-Post-reconciliation synchronized checkpoint: `6587636f8550dcd68b3feec5bbd145551775eb4b`.
-
-The bounded implementation adds `abntexto-ufc/articles.def` and loads it through `abntexto-ufc.cls`. The public route is `\ufcPrintArticleFrontMatter{...}` and is valid only for `type=scientific-article`.
-
-| Surface | Implemented behavior | Evidence boundary |
-|---|---|---|
-| Primary title | reuses `title`; 12 pt, centered, bold, uppercase and single-spaced | same-document PDF typography/centering calibration plus source guard |
-| Primary authorship | reuses `author` | rendered article-specific marker |
-| Authorship metadata note | uses `article-author-note` | semantic LaTeX `\footnote` route plus rendered reduced footnote typography |
-| Submission date | uses `submission-date` | rendered in article front block |
-| Approval date | reuses `approval-date` | rendered in article front block |
-| Primary summary | required argument to `\ufcPrintArticleFrontMatter` | rendered `Resumo:` surface with controlled marker |
-| Foreign title/summary | deliberately absent | Step 3 remains the only place to implement optional foreign elements |
-| Article body typography | deliberately not activated | Step 4 remains authoritative |
-| Recommendations | not converted into hard failures | no summary word-count/keyword-count/paragraph-count enforcement |
-
-Article-specific evidence:
-
-- `tests/documents/scientific-article-front-block.tex`;
-- `tests/checks/scientific_article_front_block.py`;
-- `tests/integration/scientific-article-front-block.sh`;
-- the existing `scientific-article-profile.sh` invokes the front-block gate, so the permanent profile matrix exercises the article front block under pdfLaTeX and LuaLaTeX.
-
-Expected structured evidence remains:
-
-`ARTICLE-FRONT-BLOCK-EVIDENCE status=PASS engines=2 rules=title-required,authorship-required,summary-required,dates-required,title-typography,authorship-footnote presentation_rules_promoted=0 optional_foreign_elements_promoted=0 recommendations_promoted=0`
-
-## Step 2 gate history and classification
+### Step 2 failure history and final acceptance
 
 | Checkpoint | Gate | Result | Classification |
 |---|---|---|---|
-| `768d355eda11f47b4cebbb6864247e9fc2aa728f` | Static `34003576066` | FAIL | stale pre-activation normative-currency coupling; corrected without authority/proof-state change |
-| `6587636f8550dcd68b3feec5bbd145551775eb4b` | Static `34003838489` | PASS | currency reconciliation accepted by Static |
-| `6587636f8550dcd68b3feec5bbd145551775eb4b` | Linux `34003838521` | FAIL, `PASS=29 FAIL=1 SKIP=1` | article front-block evidence checker imposed an unsupported page-bottom percentage on a genuine `\footnote` route |
+| `768d355eda11f47b4cebbb6864247e9fc2aa728f` | Static `34003576066` | FAIL | stale pre-activation normative-currency coupling |
+| `6587636f8550dcd68b3feec5bbd145551775eb4b` | Static `34003838489` | PASS | currency reconciliation accepted |
+| `6587636f8550dcd68b3feec5bbd145551775eb4b` | Linux `34003838521` | FAIL, `PASS=29 FAIL=1 SKIP=1` | validator imposed unsupported `note_y >= 65%` physical-page predicate |
+| `0947669c2c096dca93991e042d8ae245754688ba` | Static `34026680871` | **PASS** | synchronized corrected validator |
+| `0947669c2c096dca93991e042d8ae245754688ba` | Linux `34026680882` | **PASS, `31/31`** | required front block accepted on both engines |
 
-The Linux failure was isolated to `[25/31] Document profiles`. All shared checks before and after that point remained green. The profile gate emitted `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 ...` before the article front-block checker failed with:
+Final Step 2 evidence includes:
 
-`scientific article front-block validation failed: article author metadata note was not rendered in the footnote region`
+- `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2`;
+- `ARTICLE-FRONT-BLOCK-EVIDENCE status=PASS` on pdfLaTeX and LuaLaTeX;
+- title 12 pt/centered/bold calibration;
+- genuine footnote route and rendered 10 pt author note;
+- no optional foreign-element promotion;
+- no recommendation promotion;
+- no article proof-state promotion.
 
-### Footnote evidence correction
+Step 2 is therefore **ACCEPTED**. Its validator correction removed an unsupported geometric strengthening; it did not weaken the source-backed footnote requirement.
 
-The article authority contract requires complementary author information **in a footnote**. It does not specify that the footnote marker must fall below a fixed percentage of physical page height. The previous PDF predicate `note_y >= 65% of page height` therefore strengthened the source contract with an invented geometric requirement and was not a valid acceptance condition.
+## Step 3 — Optional foreign elements — ACTIVE
 
-The correction at `bb52697a0e71b2d6a8bc135196f40dba9497b38f` does not weaken the authorship-footnote requirement. It replaces the unsupported page-percentage test with a hybrid semantic/rendered proof:
+Rules owned by this Step:
 
-- source gate still requires `article-author-note` to be routed through a real LaTeX `\footnote`;
-- final-PDF gate still requires the note to render on the article front-block page after the summary;
-- final-PDF gate now requires the note marker to use the shared 10 pt footnote typography;
-- the required title/authorship/dates/summary checks remain unchanged;
-- optional/recommended/conditional modalities remain unchanged;
-- no article proof-state promotion is made by this correction.
+- `article.title.foreign.optional`;
+- `article.summary.foreign.optional`.
 
-This is a **validator-predicate correction**, not a runtime workaround. `abntexto-ufc/articles.def` remains unchanged by the correction.
+### Runtime contract
 
-## Step 2 acceptance gate
+Step 3 must provide one explicit article-only surface for foreign elements while preserving independent optionality.
 
-Step 2 remains **EVIDENCE CORRECTION / CI PENDING** until a synchronized checkpoint containing the corrected validator passes:
+| Scenario | Foreign title | Foreign summary | Required result |
+|---|---|---|---|
+| neither | absent | absent | compile cleanly; render neither |
+| title only | present | absent | render title only |
+| summary only | absent | present | render summary only |
+| both | present | present | render both |
 
-1. Static contract;
-2. full Linux integration;
-3. canonical article profile routing on both engines;
-4. rendered article front-block evidence on both engines;
-5. unchanged six-profile non-article matrix;
-6. no optional/recommended/conditional modality drift.
+Implementation constraints:
 
-No article rule in `standards/coverage-rules-article.json` is promoted merely because this implementation or its targeted evidence exists. Proof-state promotion remains a later explicit evidence-hardening decision.
+- keep `\ufcPrintArticleFrontMatter{primary summary}` unchanged;
+- add an explicit article foreign-elements route rather than infer semantics from shared `title-variant`;
+- each foreign element must be independently blank-safe;
+- absence must never be a compilation or validation failure;
+- do not promote optional rules to required;
+- do not freeze unsupported typography as new normative values;
+- do not activate Step 4 body typography;
+- do not modify the 18-rule proof state during ordinary Step 3 implementation.
 
-## Metadata decision
+### Step 3 evidence contract
 
-| Contract need | Current surface | Decision |
-|---|---|---|
-| Primary authorship | `author` | reuse |
-| Primary title | `title` | reuse |
-| Approval date | `approval-date` | reuse |
-| Submission date | `submission-date` | article-specific core metadata |
-| Complementary author note | `article-author-note` | article-specific core metadata |
-| Foreign title | not yet bound | defer to optional foreign elements; do not infer from `title-variant` |
-| Primary/foreign summary | document content/shared summary primitives where semantically valid | primary in Step 2; foreign optional in Step 3 |
+The bounded gate must exercise all four scenarios under pdfLaTeX and LuaLaTeX and emit structured article-specific evidence. The source/evidence layer must also prove that `title-variant` was not repurposed and that body-typography activation remains absent.
 
-## Non-negotiable boundaries
+Expected evidence shape:
 
-- One canonical `scientific-article` profile; no compatibility aliases or retired Portuguese machine identifiers.
-- Preserve all accepted non-article profiles and shared academic-work reference-PDF baseline.
-- Reuse bibliography, citation, section, summary and object machinery rather than fork it.
-- Do not change article rule IDs, authority, modality, expected values, locators or applicability without new current source evidence and a separately documented source correction.
-- Required, optional, recommended and conditional rules remain distinguishable in runtime and evidence.
-- Recommendations never become hard compilation/validation failures.
-- Journal-specific instructions remain a conditional applicability boundary.
-- Item 33 of the librarian review remains fail-closed.
-- Issue #18 is a v3 release blocker owned by Final Certification/Release, not a reason to alter article normative semantics.
-- Every **material advance** updates handoff, roadmap, machine state and this plan in the same work cycle.
-- The phase ends only after a complete **phase-end regression** on one immutable candidate.
+`ARTICLE-FOREIGN-ELEMENTS-EVIDENCE status=PASS engines=2 scenarios=4 title_optional=true summary_optional=true independent=true title_variant_reused=false presentation_rules_promoted=0`
 
-## Implementation sequence
+Step 3 becomes **ACCEPTED** only after a synchronized checkpoint passes Static and full Linux with this evidence and the six accepted non-article profiles remain green.
+
+## Remaining sequence
 
 | Step | Work | Current state | Acceptance |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2 | Required article front block | **EVIDENCE CORRECTION — CI PENDING** | runtime `90293af...`; currency fix `e29501b...`; Linux `34003838521` classified; validator correction `bb52697...`; synchronized Static/full Linux required |
-| 3 | Optional foreign elements | QUEUED | Foreign title/summary may be absent or present without becoming mandatory |
-| 4 | Textual structure and body typography | QUEUED | Required article structure and 12 pt/justified/2 cm/single-spaced body are validated |
-| 5 | Recommendations and conditional applicability | QUEUED | Advisory semantics stay advisory; journal boundary stays conditional |
-| 6 | Evidence hardening | QUEUED | Rule-specific positive/negative evidence and truthful proof-state promotion |
-| 7 | Canonical article PDF | QUEUED | Provenance-bound real PDF with complete visual inspection |
+| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static/Linux green |
+| 2 | Required article front block | **ACCEPTED** | `0947669...`; Static `34026680871`; Linux `34026680882`, 31/31 PASS |
+| 3 | Optional foreign elements | **ACTIVE** | four independent optionality scenarios, both engines, synchronized Static/full Linux |
+| 4 | Textual structure and body typography | QUEUED | required article structure + 12 pt/justified/2 cm/single-spaced body |
+| 5 | Recommendations and conditional applicability | QUEUED | advisory semantics remain advisory; journal boundary remains conditional |
+| 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
+| 7 | Canonical article PDF | QUEUED | provenance-bound real PDF with complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + full Linux + article-specific acceptance on one immutable SHA |
+
+## Non-negotiable boundaries
+
+- One canonical `scientific-article` profile; no compatibility aliases.
+- Preserve all accepted non-article profiles and the shared academic-work reference-PDF baseline.
+- Reuse cross-cutting bibliography, citation, section, object and summary machinery.
+- Required, optional, recommended and conditional semantics remain distinguishable in runtime and evidence.
+- Recommendations never become hard compilation/validation failures.
+- Journal-specific instructions remain a conditional applicability boundary.
+- Item 33 remains fail-closed.
+- Issue #18 remains a Final Certification/Release blocker, not an article-semantics reason.
+- Every **material advance** updates handoff, roadmap, machine state, release readiness and this plan in the same work cycle.
+- The phase ends only after a complete **phase-end regression** on one immutable candidate.
 
 ## Current branch and next action
 
-- Canonical base: `main` with merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
+- Canonical base: `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
 - Active branch: `feat/v3-scientific-article`.
 - Active PR: #286.
-- Historical integration branch `plan/v3-regression-reset`: no new work.
 
-Next: synchronize the validator correction with handoff/roadmap/machine state, run Static and full Linux on the resulting branch head, classify any new failure without weakening the article contract, and only after both are green mark Step 2 accepted and activate Step 3.
+Next: implement Step 3 optional foreign elements and four-case evidence, synchronize all operational documentation in the same material advance, run Static and full Linux, classify any failure without weakening the article contract, and only after both are green activate Step 4.
