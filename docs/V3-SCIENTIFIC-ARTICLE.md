@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
-Updated: 2026-09-05  
-Status: ACTIVE — STEP 2 IMPLEMENTED / CI PENDING AFTER CURRENCY RECONCILIATION
+Updated: 2026-09-06  
+Status: ACTIVE — STEP 2 EVIDENCE CORRECTION / CI PENDING
 
 ## Purpose
 
@@ -36,17 +36,19 @@ Acceptance evidence:
 
 No article presentation rule or proof state was promoted by Step 1.
 
-## Step 2 — Required article front block — IMPLEMENTED / CI PENDING
+## Step 2 — Required article front block — EVIDENCE CORRECTION / CI PENDING
 
-Implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.
+Implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.  
+Normative-currency reconciliation checkpoint: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.  
+Post-reconciliation synchronized checkpoint: `6587636f8550dcd68b3feec5bbd145551775eb4b`.
 
-The bounded implementation adds `abntexto-ufc/articles.def` and loads it through `abntexto-ufc.cls`. The new public route is `\ufcPrintArticleFrontMatter{...}` and is valid only for `type=scientific-article`.
+The bounded implementation adds `abntexto-ufc/articles.def` and loads it through `abntexto-ufc.cls`. The public route is `\ufcPrintArticleFrontMatter{...}` and is valid only for `type=scientific-article`.
 
 | Surface | Implemented behavior | Evidence boundary |
 |---|---|---|
 | Primary title | reuses `title`; 12 pt, centered, bold, uppercase and single-spaced | same-document PDF typography/centering calibration plus source guard |
 | Primary authorship | reuses `author` | rendered article-specific marker |
-| Authorship metadata note | uses `article-author-note` | rendered through an actual footnote; PDF bottom-region evidence |
+| Authorship metadata note | uses `article-author-note` | semantic LaTeX `\footnote` route plus rendered reduced footnote typography |
 | Submission date | uses `submission-date` | rendered in article front block |
 | Approval date | reuses `approval-date` | rendered in article front block |
 | Primary summary | required argument to `\ufcPrintArticleFrontMatter` | rendered `Resumo:` surface with controlled marker |
@@ -54,40 +56,47 @@ The bounded implementation adds `abntexto-ufc/articles.def` and loads it through
 | Article body typography | deliberately not activated | Step 4 remains authoritative |
 | Recommendations | not converted into hard failures | no summary word-count/keyword-count/paragraph-count enforcement |
 
-Article-specific evidence added:
+Article-specific evidence:
 
 - `tests/documents/scientific-article-front-block.tex`;
 - `tests/checks/scientific_article_front_block.py`;
 - `tests/integration/scientific-article-front-block.sh`;
-- the existing `scientific-article-profile.sh` now invokes the front-block gate, so the permanent profile matrix exercises the article front block under pdfLaTeX and LuaLaTeX.
+- the existing `scientific-article-profile.sh` invokes the front-block gate, so the permanent profile matrix exercises the article front block under pdfLaTeX and LuaLaTeX.
 
-Expected structured evidence:
+Expected structured evidence remains:
 
 `ARTICLE-FRONT-BLOCK-EVIDENCE status=PASS engines=2 rules=title-required,authorship-required,summary-required,dates-required,title-typography,authorship-footnote presentation_rules_promoted=0 optional_foreign_elements_promoted=0 recommendations_promoted=0`
 
-## Step 2 first gate classification
+## Step 2 gate history and classification
 
-The first synchronized Step 2 checkpoint `768d355eda11f47b4cebbb6864247e9fc2aa728f` was rejected by Static `34003576066`. The failure was:
+| Checkpoint | Gate | Result | Classification |
+|---|---|---|---|
+| `768d355eda11f47b4cebbb6864247e9fc2aa728f` | Static `34003576066` | FAIL | stale pre-activation normative-currency coupling; corrected without authority/proof-state change |
+| `6587636f8550dcd68b3feec5bbd145551775eb4b` | Static `34003838489` | PASS | currency reconciliation accepted by Static |
+| `6587636f8550dcd68b3feec5bbd145551775eb4b` | Linux `34003838521` | FAIL, `PASS=29 FAIL=1 SKIP=1` | article front-block evidence checker imposed an unsupported page-bottom percentage on a genuine `\footnote` route |
 
-`Normative currency failed: scientific-article runtime appeared before foundation activation`.
+The Linux failure was isolated to `[25/31] Document profiles`. All shared checks before and after that point remained green. The profile gate emitted `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 ...` before the article front-block checker failed with:
 
-Classification: **stale control-policy coupling**, not article runtime, source-authority or presentation failure. `tests/checks/normative_currency.py` still encoded the pre-activation invariant that `abntexto-ufc/articles.def` must never exist, even though Regression Audit, Core Corrections, Reference PDF Validation and Scientific Article Step 1 had already authorized the active Scientific Article phase.
+`scientific article front-block validation failed: article author metadata note was not rendered in the footnote region`
 
-Correction checkpoint: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.
+### Footnote evidence correction
 
-The correction:
+The article authority contract requires complementary author information **in a footnote**. It does not specify that the footnote marker must fall below a fixed percentage of physical page height. The previous PDF predicate `note_y >= 65% of page height` therefore strengthened the source contract with an invented geometric requirement and was not a valid acceptance condition.
 
-- keeps the same current article authority sources (`abnt-nbr-6022-2018`, `ufc-guia-artigos-2022`);
-- records article runtime as active only in `scientific-article`, `final-certification` or `release` phases;
-- binds activation to the retained source-contract SHA, accepted shared-foundation `main` SHA and Step 1 acceptance SHA;
-- preserves article proof state as manual/conditional-manual;
-- does not weaken technical-edition precedence or alter any article rule predicate.
+The correction at `bb52697a0e71b2d6a8bc135196f40dba9497b38f` does not weaken the authorship-footnote requirement. It replaces the unsupported page-percentage test with a hybrid semantic/rendered proof:
 
-`docs/NORMATIVE-CURRENCY.md` and `standards/version-policy.json` were updated in the same correction cycle.
+- source gate still requires `article-author-note` to be routed through a real LaTeX `\footnote`;
+- final-PDF gate still requires the note to render on the article front-block page after the summary;
+- final-PDF gate now requires the note marker to use the shared 10 pt footnote typography;
+- the required title/authorship/dates/summary checks remain unchanged;
+- optional/recommended/conditional modalities remain unchanged;
+- no article proof-state promotion is made by this correction.
 
-### Step 2 acceptance gate
+This is a **validator-predicate correction**, not a runtime workaround. `abntexto-ufc/articles.def` remains unchanged by the correction.
 
-Step 2 remains **IMPLEMENTED / CI PENDING** until a post-reconciliation synchronized checkpoint passes:
+## Step 2 acceptance gate
+
+Step 2 remains **EVIDENCE CORRECTION / CI PENDING** until a synchronized checkpoint containing the corrected validator passes:
 
 1. Static contract;
 2. full Linux integration;
@@ -129,7 +138,7 @@ No article rule in `standards/coverage-rules-article.json` is promoted merely be
 | Step | Work | Current state | Acceptance |
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2 | Required article front block | **IMPLEMENTED — CI PENDING AFTER CURRENCY RECONCILIATION** | implementation `90293af...`; currency fix `e29501b...`; post-fix synchronized Static/full Linux required |
+| 2 | Required article front block | **EVIDENCE CORRECTION — CI PENDING** | runtime `90293af...`; currency fix `e29501b...`; Linux `34003838521` classified; validator correction `bb52697...`; synchronized Static/full Linux required |
 | 3 | Optional foreign elements | QUEUED | Foreign title/summary may be absent or present without becoming mandatory |
 | 4 | Textual structure and body typography | QUEUED | Required article structure and 12 pt/justified/2 cm/single-spaced body are validated |
 | 5 | Recommendations and conditional applicability | QUEUED | Advisory semantics stay advisory; journal boundary stays conditional |
@@ -144,4 +153,4 @@ No article rule in `standards/coverage-rules-article.json` is promoted merely be
 - Active PR: #286.
 - Historical integration branch `plan/v3-regression-reset`: no new work.
 
-Next: run the post-reconciliation Static and full Linux gates, classify any new failure without weakening tests, and only after both are green mark Step 2 accepted and activate Step 3.
+Next: synchronize the validator correction with handoff/roadmap/machine state, run Static and full Linux on the resulting branch head, classify any new failure without weakening the article contract, and only after both are green mark Step 2 accepted and activate Step 3.
