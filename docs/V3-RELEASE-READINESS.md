@@ -1,6 +1,6 @@
 # V3.0.0 Release Readiness
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 Status: ACTIVE — SCIENTIFIC ARTICLE IN PROGRESS
 
 ## Purpose
@@ -14,13 +14,28 @@ Keep repository structure, active plans, issues, branches and release blockers e
 | Regression Audit | CLOSED | green phase-end regression; 34-point librarian contract established |
 | Core Corrections | CLOSED | candidate `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | candidate `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | ACTIVE | Step 1 accepted on `08b878a...`; Required article front block active; Steps 3–8 remain |
+| Scientific Article | ACTIVE | Step 1 accepted on `08b878a...`; Step 2 evidence correction after classified Linux `34003838521`; Steps 3–8 remain |
 | Final Certification | QUEUED | literal-font/Unicode/embedding/PDF-A/distribution matrix plus release-PDF reproducibility proof |
 | Release | QUEUED | release assets, checksums, tag/release publication and final verification |
 
+## Scientific Article current checkpoint
+
+| Surface | State |
+|---|---|
+| Step 1 | ACCEPTED — Static `34001350884`, Linux `34001350953` |
+| Step 2 runtime | IMPLEMENTED at `90293af760c4063b02a16831196ec3d932f1471d` |
+| Normative-currency transition | RECONCILED at `e29501bd8cae98d6442f08e17bc3a54892fc7e0d` |
+| Post-currency Static | `34003838489` SUCCESS |
+| Post-currency Linux | `34003838521` FAILURE, `PASS=29 FAIL=1 SKIP=1` |
+| Failure classification | validator-predicate defect: unsupported fixed page-bottom percentage for a genuine author `\footnote` route |
+| Validator correction | `bb52697a0e71b2d6a8bc135196f40dba9497b38f`; runtime unchanged |
+| Step 2 acceptance | PENDING synchronized Static + full Linux |
+
+The Step 2 Linux failure does not introduce a new release blocker independent of Scientific Article completion. It is a bounded evidence-correction task inside the already active Scientific Article blocker.
+
 ## Integration state
 
-PR #285 is merged into canonical `main` as `e6833ed5cf07aaf1021c690260cecfacec1a119a`. The fresh active branch is `feat/v3-scientific-article`, created from that SHA. This resolves the prior condition in which all new work depended on a large unmerged regression branch.
+PR #285 is merged into canonical `main` as `e6833ed5cf07aaf1021c690260cecfacec1a119a`. The active branch is `feat/v3-scientific-article`, created from that SHA and tracked by PR #286.
 
 ## Open issue inventory
 
@@ -78,4 +93,4 @@ Historical opaque files such as `docs/R2-API-OWNERSHIP.md`, `docs/R3-*` and `rel
 
 ## Mandatory closeout rule
 
-Every phase ends with a complete regression on one immutable SHA. Final Certification and Release additionally must account for issue #18 so that the published V3 reference artifact is reproducible, not merely visually/normatively correct.
+Every **material advance** updates the relevant operational documents in the same work cycle. Every phase ends with a complete **phase-end regression** on one immutable SHA. Final Certification and Release additionally must account for issue #18 so that the published V3 reference artifact is reproducible, not merely visually/normatively correct.
