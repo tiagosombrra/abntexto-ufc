@@ -146,22 +146,30 @@
     "scientific_article_contract": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
     "scientific_article_rules": 18,
     "scientific_article_runtime_deferred": false,
-    "scientific_article_runtime_started": false,
+    "scientific_article_runtime_started": true,
     "scientific_article_profile_present_at_entry": false,
-    "latest_implementation_checkpoint_sha": "da02f17df4d2d0a1568edbbe8bfbbfffb7208966",
+    "scientific_article_profile_present_now": true,
+    "scientific_article_profile_canonical_type": "scientific-article",
+    "scientific_article_new_metadata_keys": [
+      "submission-date",
+      "article-author-note"
+    ],
+    "latest_implementation_checkpoint_sha": "b46ba2051f8c9c712a7b5d25748b81baa52b920a",
     "latest_fully_validated_checkpoint_sha": "b64074c64941895f97fbe0f795ce826c798d17ce",
     "latest_fully_validated_checkpoint_state": "reference-pdf-validation-phase-end-static-green-linux-green-visual-pass",
     "core_corrections_closed": true,
     "reference_pdf_validation_state": "closed",
     "current_correction_batch": [
-      "Scientific Article — profile and metadata surface"
+      "Scientific Article — profile and metadata surface acceptance"
     ],
     "known_runtime_failures": [],
-    "known_entry_gaps": [
-      "abntexto-ufc/core.def has no canonical scientific-article type at phase entry"
+    "known_entry_gaps": [],
+    "resolved_entry_gaps": [
+      "canonical scientific-article profile registered at b46ba2051f8c9c712a7b5d25748b81baa52b920a"
     ],
     "pending_acceptance_gates": [
-      "Implement canonical scientific-article profile without aliases",
+      "Synchronized Step 1 checkpoint containing b46ba2051f8c9c712a7b5d25748b81baa52b920a must pass Static contract and full Linux integration",
+      "Implement required article front block only after Step 1 acceptance",
       "Add article-specific positive evidence before proof-state promotion",
       "Implement required/optional/recommended/conditional article semantics",
       "Produce and visually inspect provenance-bound canonical article PDF",
@@ -185,12 +193,13 @@
       "current_state": "PASS"
     },
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-active",
+      "status": "source-contract-accepted-runtime-profile-started",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
       "required_optional_recommended_conditional_distinct": true,
-      "shared_mechanism_counts_as_proof": false
+      "shared_mechanism_counts_as_proof": false,
+      "profile_registration_counts_as_presentation_proof": false
     }
   },
   "evidence": {
@@ -229,6 +238,8 @@
     "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
     "article_rule_count": 18,
     "article_entry_proof_state": "manual-and-conditional-manual",
+    "scientific_article_profile_implementation_sha": "b46ba2051f8c9c712a7b5d25748b81baa52b920a",
+    "scientific_article_profile_acceptance": "pending-static-and-linux-on-synchronized-checkpoint",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

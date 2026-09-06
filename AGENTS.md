@@ -20,15 +20,16 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Scientific Article**.
+- Active task branch: `plan/v3-regression-reset` while PR #285 still carries the unmerged corrected foundation.
 - Core Corrections phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
 - Reference PDF Validation phase-end candidate `b64074c64941895f97fbe0f795ce826c798d17ce`: Static `33985595790` and Linux `33985595798` success.
-- Canonical reference artifact: build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, run `33983729996`, artifact `9974546873`, 55 A4 pages, PDF 1.7, TeX Live 2026/pdfLaTeX.
-- Complete reference-PDF visual review: **PASS, 55/55 pages, 0 unexplained visual FAIL**.
+- Canonical reference artifact: 55 A4 pages, TeX Live 2026/pdfLaTeX, complete visual review PASS 55/55.
 - Current 34-item librarian-review state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Article authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` / `standards/coverage-rules-article.json`.
-- Article rules: 18 source-backed rules; pre-implementation validation remains manual/conditional-manual until article-specific executable evidence exists.
-- Current runtime inspection: `abntexto-ufc/core.def` does not yet expose `type = scientific-article`; implementation starts in this phase.
+- Article rules: 18 source-backed rules; profile registration does not promote presentation/proof state.
+- Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
+- Step 1 state: canonical profile + metadata surface implemented; synchronized Static/full Linux acceptance pending.
 
 ## Readable phase model
 
@@ -39,24 +40,25 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 5. **Final Certification** — queued
 6. **Release** — queued
 
-Do not create new opaque work identifiers such as nested letter/number codes. Historical labels such as `V3-A1` or `V3-A2` may appear only when identifying old evidence, issues or SHAs. Current work names must be descriptive.
+Do not create new opaque work identifiers such as nested letter/number codes. Historical labels may appear only when identifying old evidence. Current work names must be descriptive.
 
 ## Scientific Article boundaries
 
 - Implement one canonical `scientific-article` profile; do not add compatibility aliases.
+- Step 1 reuses `author`, `title`, `approval-date`; adds only `submission-date` and `article-author-note`.
+- Do not infer foreign-title semantics from `title-variant`; bind that behavior explicitly in Step 3.
 - Reuse current citation, bibliography, section, summary and object infrastructure rather than fork it.
 - Preserve the 18-rule source contract unless new current authority requires a separately documented source correction.
 - Keep required, optional, recommended and conditional semantics distinct.
-- Do not promote an article rule to executable/proven merely because shared non-article machinery is green.
+- Do not promote an article rule to executable/proven merely because shared non-article machinery or the profile-selection gate is green.
 - Add rule-specific positive evidence before proof-state promotion; add controlled negative evidence where a safe rejectable case exists.
-- Journal-specific instructions remain an applicability boundary; the generic UFC article profile does not supersede a target journal.
-- Preserve the validated non-article foundation and the accepted reference PDF presentation.
+- Journal-specific instructions remain an applicability boundary.
+- Preserve the validated non-article foundation and accepted reference PDF presentation.
 
 ## Engineering rules
 
 - Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
-- Treat an engineering-language gate that misses known project-owned Portuguese diagnostics as a false-negative defect. Fix the detector and diagnostics; do not weaken the policy or flag legitimate academic Portuguese.
-- Preserve the closed v3 public API except for the bounded new public article profile/API explicitly required by the Scientific Article contract.
+- Preserve the closed v3 public API except for the bounded new article profile/API explicitly required by the Scientific Article contract.
 - Do not silently change normative rule IDs, expected values, tolerances, locators, applicability, source precedence, or proof-state semantics.
 - A green test proves only the contract encoded by that test. Current authority and presentation acceptance remain separate obligations.
 - Reviewer comments are evidence, not automatic normative authority.
@@ -72,20 +74,18 @@ Do not create new opaque work identifiers such as nested letter/number codes. Hi
 
 A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical reference content, article proof state, phase status, acceptance status, artifact provenance, temporary-executor lifecycle, or release/certification state.
 
-For every material advance, update the relevant execution document/review matrix and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, article-rule, artifact, or temporary-executor facts change.
+For every material advance, update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap/machine state whenever phase, acceptance, evidence, batch, branch, article-rule, artifact, or temporary-executor facts change.
 
 ## Mandatory phase-end regression
 
 No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
 
-The machine contract intentionally represents this invariant with `phase_end_regression.candidate = one-immutable-sha`. Do not replace that sentinel with prose or an actual self-referential SHA. Exact Git candidate SHAs are recorded in evidence after immutable commits exist.
-
-Reference PDF Validation satisfied this rule with candidate `b64074c64941895f97fbe0f795ce826c798d17ce`, Static `33985595790`, full Linux `33985595798`, accepted canonical provenance and complete visual PASS.
+The machine contract intentionally represents this invariant with `phase_end_regression.candidate = one-immutable-sha`. Do not replace that sentinel with prose or an actual self-referential SHA.
 
 Scientific Article must end with its own immutable candidate containing article runtime, rule-specific evidence, canonical article rendering and synchronized documentation. Targeted article checks do not replace that phase-end regression.
 
 ## Branch governance and fail-closed rule
 
-The steady state is `main` plus short-lived task branches. Releases are preserved by immutable tags and GitHub Releases, not permanent audit branches.
+The steady state is `main` plus short-lived task branches. Because PR #285 still carries the unmerged corrected foundation, continue on `plan/v3-regression-reset` until that foundation is merged; do not fork article work from stale `main`.
 
-If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement to the next phase. Do not infer closure from naming, memory, historical intent, old PDFs, or partial certification evidence.
+If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement to the next phase.

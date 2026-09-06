@@ -6,56 +6,55 @@ Updated: 2026-09-05
 
 - Repository: `tiagosombrra/abntexto-ufc`.
 - Canonical branch: `main`.
-- Active task branch: `plan/v3-regression-reset` until this closeout PR is merged; Scientific Article should continue on a fresh short-lived branch from the updated `main`.
+- Active task branch: `plan/v3-regression-reset`.
 - Active phase: **Scientific Article**.
 - Regression Audit: CLOSED.
 - Core Corrections candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
 - Reference PDF Validation candidate `b64074c64941895f97fbe0f795ce826c798d17ce`: Static `33985595790`, Linux `33985595798`, both SUCCESS.
-- Canonical reference build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, run `33983729996`, artifact `9974546873`.
-- Canonical PDF SHA-256 `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`; 55 A4 pages; PDF 1.7; TeX Live 2026/pdfLaTeX; unencrypted; fonts embedded.
-- Complete 200 DPI visual review: **PASS — 55/55 pages, 0 unexplained visual FAIL**.
+- Canonical reference PDF: build SHA `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`, artifact `9974546873`, SHA-256 `bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c`, 55/55 visual PASS.
 - Librarian-review state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
-- Scientific Article authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage-rules-article.json`.
-- Current runtime inspection: no `scientific-article` type is present in `abntexto-ufc/core.def`; article implementation starts from this corrected shared foundation.
+- Scientific Article source contract: 18 rules in `docs/ARTICLE-NORMATIVE-CONTRACT.md` / `standards/coverage-rules-article.json`.
+- Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
+- Step 1 state: **Profile and metadata surface implemented; synchronized Static/full Linux acceptance pending**.
+- No temporary executor is active.
 
-Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REGRESSION-AUDIT.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+The task branch remains `plan/v3-regression-reset` because PR #285 still carries the unmerged corrected foundation. Do not split Scientific Article work onto `main` before that foundation is merged; machine state and Git facts must remain aligned.
 
-Git facts, machine state, roadmap, active phase documents and this handoff must describe the same phase and acceptance state. Disagreement fails closed.
+Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and `docs/ENGINEERING-LANGUAGE.md`.
 
-## Reference PDF Validation closeout
+## Scientific Article progress
 
-The phase-end candidate `b64074c64941895f97fbe0f795ce826c798d17ce` passed the required same-SHA gate:
+| Step | State | Evidence / boundary |
+|---:|---|---|
+| 1. Profile and metadata surface | IMPLEMENTED — CI PENDING | `b46ba205...`; canonical `scientific-article`; `submission-date`; `article-author-note`; dedicated two-engine gate |
+| 2. Required article front block | QUEUED | start only after Step 1 Static/full Linux acceptance |
+| 3. Optional foreign elements | QUEUED | foreign title/summary optionality must remain non-mandatory |
+| 4. Textual structure/body typography | QUEUED | reuse shared citation/reference/section/object machinery |
+| 5. Recommendations/conditional boundary | QUEUED | recommendations advisory; journal instructions conditional |
+| 6. Evidence hardening | QUEUED | rule-specific positive/negative proof only |
+| 7. Canonical article PDF | QUEUED | real Git-bound TeX Live 2026 artifact + complete visual review |
+| 8. Phase-end regression | QUEUED | one immutable SHA; Static + full Linux + article acceptance |
 
-| Evidence | Result |
-|---|---|
-| Static contract | `33985595790` — SUCCESS |
-| Full Linux integration | `33985595798` — SUCCESS |
-| Canonical PDF provenance | PASS |
-| Complete page review | 55/55 PASS |
-| Unexplained visual failures | 0 |
-| Temporary build executor | absent |
+## Step 1 implementation details
 
-Later reruns `33987639785` and `33987639788` also completed successfully and are corroborating evidence, not the primary phase-end binding.
+The current article profile work adds only the bounded routing/metadata surface:
 
-Reference PDF Validation is therefore CLOSED. No visual correction queue remains open.
+- `type = scientific-article` is the sole canonical article type;
+- no `article`, `artigo`, `artigo-cientifico`, `artigo-científico` or `scientific_article` runtime alias is accepted;
+- existing `author`, `title` and `approval-date` are reused;
+- `submission-date` and `article-author-note` are the only new article-required metadata keys introduced at this step;
+- foreign-title semantics are deliberately deferred rather than inferred from `title-variant`;
+- no article presentation rule has been promoted from manual/conditional-manual based solely on profile registration.
 
-## Scientific Article entry
+## Immediate action
 
-The article phase starts only after the corrected shared foundation and accepted canonical academic-work PDF. The retained source-backed contract contains 18 `article.*` rules: required, optional, recommended and conditional-manual semantics must remain distinct.
-
-The first implementation gap is explicit: `abntexto-ufc/core.def` currently has no canonical `type / scientific-article` route. Do not restore historical article code blindly. Implement against the current contract and current architecture.
-
-Immediate implementation order:
-
-1. establish the canonical `scientific-article` profile and minimal metadata/public API required by the 18-rule contract;
-2. add article-specific positive compile/evidence fixtures before claiming proof;
-3. implement the required title/authorship/date/summary presentation and optional foreign-title/foreign-summary routes;
-4. implement/reuse textual structure and single-spaced article body presentation without forking shared citation/reference/section/object machinery;
-5. preserve recommendation semantics as advisory evidence rather than hard failure;
-6. add controlled negative evidence where safe and couple rejection to positive PASS for the same rule;
-7. build and visually inspect a canonical scientific-article PDF;
-8. synchronize all documentation and run a Scientific Article phase-end regression on one immutable SHA.
+1. publish the synchronized Step 1 checkpoint containing `b46ba205...` and these control documents;
+2. require Static contract and full Linux integration on that synchronized SHA;
+3. classify any failure before changing runtime/tests;
+4. only after green acceptance, mark Step 1 PASS and begin **Required article front block**;
+5. update this handoff, the active plan, roadmap and machine state at every material advance;
+6. finish Scientific Article with its own phase-end regression before activating Final Certification.
 
 ## Mandatory operating discipline
 
@@ -67,9 +66,8 @@ Every phase requires a **phase-end regression** on one immutable candidate befor
 
 - Preserve the accepted non-article foundation and reference PDF presentation.
 - Do not change the 18-rule article authority/modality contract without new current source evidence and a separately documented source correction.
-- Do not translate reviewer comments or historical article code directly into normative runtime behavior.
 - Do not promote recommendations into required failures.
-- Do not fork shared citation, reference, section, summary or object infrastructure for the article profile.
+- Do not fork shared citation, reference, section, summary or object infrastructure.
 - Do not weaken tests merely to recover green CI.
 - Do not redistribute proprietary fonts.
 - CTAN submission remains blocked until **Release**.
