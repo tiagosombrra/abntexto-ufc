@@ -20,37 +20,33 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Scientific Article**.
-- Canonical `main` contains the validated shared foundation and accepted Scientific Article Step 1 at squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` (PR #285).
-- Active task branch: `feat/v3-scientific-article`, created from that updated `main`.
+- Canonical `main`: `e6833ed5cf07aaf1021c690260cecfacec1a119a`, PR #285 merged.
+- Active task branch: `feat/v3-scientific-article`.
 - Active pull request: #286.
-- Core Corrections phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
-- Reference PDF Validation phase-end candidate `b64074c64941895f97fbe0f795ce826c798d17ce`: Static `33985595790` and Linux `33985595798` success.
-- Canonical reference artifact: 55 A4 pages, TeX Live 2026/pdfLaTeX, complete visual review PASS 55/55.
+- Regression Audit, Core Corrections and Reference PDF Validation are closed with their recorded phase-end regressions.
 - Current 34-item librarian-review state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
-- Article authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` / `standards/coverage-rules-article.json`.
-- Article rules: 18 source-backed rules; Step 2 implementation still does not promote article proof state.
-- Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
-- Step 1 synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS; full Linux `34001350953` SUCCESS, `PASS=31 FAIL=0 SKIP=0`.
-- Step 1 state: **ACCEPTED**.
-- Step 2 implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.
-- First Step 2 synchronized checkpoint `768d355eda11f47b4cebbb6864247e9fc2aa728f`: Static `34003576066` FAILED because the normative-currency checker still enforced the pre-activation `articles.def`-absent invariant.
-- Normative-currency correction checkpoint: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.
-- Current implementation step: **Required article front block — IMPLEMENTED / CI PENDING AFTER CURRENCY RECONCILIATION**.
-- Step 2 adds `abntexto-ufc/articles.def`, `\ufcPrintArticleFrontMatter{...}`, and article-specific final-PDF/source evidence for required title/authorship/dates/primary-summary surfaces.
+- Article authority contract: 18 source-backed rules in `docs/ARTICLE-NORMATIVE-CONTRACT.md` / `standards/coverage-rules-article.json`.
+- Scientific Article Step 1: **ACCEPTED** at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`; Static `34001350884`; Linux `34001350953`, `PASS=31 FAIL=0 SKIP=0`.
+- Step 2 runtime implementation: `90293af760c4063b02a16831196ec3d932f1471d`.
+- Normative-currency correction: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.
+- Post-currency synchronized checkpoint `6587636f8550dcd68b3feec5bbd145551775eb4b`: Static `34003838489` SUCCESS; Linux `34003838521` FAILURE, `PASS=29 FAIL=1 SKIP=1`.
+- Linux `34003838521` failed only the article front-block evidence because the checker imposed an unsupported fixed physical-page bottom percentage on author-note placement.
+- Validator correction: `bb52697a0e71b2d6a8bc135196f40dba9497b38f`.
+- Current implementation step: **Required article front block — EVIDENCE CORRECTION / CI PENDING**.
+- Runtime `abntexto-ufc/articles.def` is unchanged by the current validator correction.
+- Corrected authorship-footnote evidence combines a source-enforced genuine LaTeX `\footnote` route with rendered post-front-block 10 pt footnote typography.
 - Optional foreign elements remain deferred to Step 3; article body typography remains deferred to Step 4; recommendations remain advisory.
-- `standards/version-policy.json` and `tests/checks/normative_currency.py` now require scientific-article runtime to remain absent before article activation and to be present after the readable Scientific Article/Final Certification/Release phases activate with recorded source-contract/foundation evidence.
-- This currency reconciliation does not change the article authority source set, the 18 article rule predicates, or the manual/conditional-manual article proof state.
-- Release blocker #18 is explicit and owned by Final Certification/Release: the release reference PDF must become bit-reproducible using a pinned release epoch/`SOURCE_DATE_EPOCH` and hash comparison.
-- Historical orchestration issue #217 is closed as superseded by the readable permanent workflow model.
+- Article proof state remains manual/conditional-manual; no article rule is promoted merely by source implementation, runtime activation, shared green checks or this validator correction.
+- Release blocker #18 remains owned by Final Certification/Release: deterministic reference PDF via pinned release epoch/`SOURCE_DATE_EPOCH` and rebuilt hash evidence.
 
 ## Readable phase model
 
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active; Step 1 accepted; Step 2 implemented/CI pending after currency reconciliation
-5. **Final Certification** — queued; owns release reproducibility proof together with Release
+4. **Scientific Article** — active; Step 1 accepted; Step 2 evidence correction/CI pending
+5. **Final Certification** — queued
 6. **Release** — queued
 
 Do not create new opaque work identifiers such as nested letter/number codes. Historical labels may appear only when identifying old evidence. Current work names must be descriptive.
@@ -61,26 +57,29 @@ Do not create new opaque work identifiers such as nested letter/number codes. Hi
 - Step 1 reuses `author`, `title`, `approval-date`; adds only `submission-date` and `article-author-note`.
 - Step 2 required front block is implemented through `abntexto-ufc/articles.def` and must be accepted by article-specific rendered evidence on pdfLaTeX and LuaLaTeX before Step 3 activates.
 - `\ufcPrintArticleFrontMatter{...}` must remain article-profile-only and require title, author, author note, submission date, approval date and primary summary.
+- The authorship-footnote contract requires a genuine footnote. Do not invent a physical-page percentage unless current authority explicitly requires it.
+- The source gate must continue to prove `article-author-note` is routed through `\footnote`; the PDF gate must prove the note renders after the front block with shared footnote typography.
 - Do not infer foreign-title semantics from `title-variant`; bind that behavior explicitly in the optional-foreign-elements step.
 - Do not activate article body typography in the required-front-block step; body behavior belongs to Step 4.
 - Reuse current citation, bibliography, section, summary and object infrastructure rather than fork it.
 - Preserve the 18-rule source contract unless new current authority requires a separately documented source correction.
 - Keep required, optional, recommended and conditional semantics distinct.
-- Do not promote an article rule to executable/proven merely because shared non-article machinery, profile selection, source-level implementation, or runtime activation is green.
+- Do not promote an article rule to executable/proven merely because shared non-article machinery, profile selection, source-level implementation, runtime activation or a validator fix is green.
 - Add rule-specific positive evidence before proof-state promotion; add controlled negative evidence where a safe rejectable case exists.
 - Journal-specific instructions remain an applicability boundary.
 - Preserve the validated non-article foundation and accepted reference PDF presentation.
 
-## Normative-currency transition rule
+## Failure-classification rule
 
-Scientific-article runtime activation is allowed only after source-contract revalidation and readable phase activation. The current activation evidence is bound to:
+Before changing runtime or tests after a failed gate, classify whether the failure is:
 
-- article source contract `4d018a92697e8f39e3a53b034c451e55996c84fb`;
-- accepted shared foundation on `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`;
-- accepted Step 1 checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`;
-- active phase `scientific-article`.
+- runtime behavior;
+- source/normative authority;
+- evidence predicate;
+- control-plane state; or
+- infrastructure/transient execution.
 
-Static `34003576066` correctly exposed that the old currency checker had not been migrated from the pre-activation state. The correction updates the phase-aware invariant rather than disabling the check: runtime remains forbidden before article activation and required once article-or-later phases are active. Source precedence and proof-state semantics remain unchanged.
+A test predicate that exceeds the source-backed requirement is a validator defect. Correct that predicate without weakening the actual requirement. Linux `34003838521` is the current example: the real `\footnote` route remained intact, while the unsupported `65% of physical page height` acceptance predicate was removed and replaced by semantic route + rendered 10 pt footnote evidence.
 
 ## Engineering rules
 
