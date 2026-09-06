@@ -1,0 +1,32 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = scientific-article,
+  cover = false,
+  catalog-card = false,
+  coat-of-arms = false,
+  glossary = none,
+  index = none,
+  author = {Article Profile Test Author},
+  title = {Scientific Article Profile Routing Test},
+  submission-date = {2026-09-01},
+  approval-date = {2026-09-05},
+  article-author-note = {ArticleAuthorNoteMarker}
+}
+
+\begin{document}
+
+\typeout{ARTICLE-PROFILE-TYPE=\ufcDocumentType}
+\typeout{ARTICLE-PROFILE-SUBMISSION=\ufcMeta{submission-date}}
+\typeout{ARTICLE-PROFILE-APPROVAL=\ufcMeta{approval-date}}
+\typeout{ARTICLE-PROFILE-AUTHOR-NOTE=\ufcMeta{article-author-note}}
+
+ARTICLEPROFILEBODY
+
+\end{document}
