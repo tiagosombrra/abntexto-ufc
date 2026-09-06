@@ -159,8 +159,8 @@
     ],
     "scientific_article_active_step": 2,
     "scientific_article_step1_state": "accepted",
-    "scientific_article_step2_state": "implemented-ci-pending",
-    "latest_implementation_checkpoint_sha": "90293af760c4063b02a16831196ec3d932f1471d",
+    "scientific_article_step2_state": "implemented-ci-pending-after-currency-reconciliation",
+    "latest_implementation_checkpoint_sha": "e29501bd8cae98d6442f08e17bc3a54892fc7e0d",
     "latest_fully_validated_checkpoint_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
     "latest_fully_validated_checkpoint_state": "scientific-article-step1-static-green-linux-green",
     "core_corrections_closed": true,
@@ -168,19 +168,23 @@
     "shared_foundation_merged_to_main": true,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "current_correction_batch": [
-      "Scientific Article — Required article front block acceptance"
+      "Scientific Article — Required article front block acceptance after normative-currency reconciliation"
     ],
     "known_runtime_failures": [],
     "known_entry_gaps": [],
+    "known_gate_failures": [
+      "Static 34003576066 on 768d355: normative_currency.py still enforced the pre-activation articles.def-absent invariant after Scientific Article became the active readable phase; classified as stale control-policy coupling, not article runtime or authority failure"
+    ],
     "resolved_entry_gaps": [
       "canonical scientific-article profile registered at b46ba2051f8c9c712a7b5d25748b81baa52b920a",
       "Step 1 synchronized Static/full Linux acceptance completed on 08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
       "PR #285 merged accepted foundation and Step 1 to main at e6833ed5cf07aaf1021c690260cecfacec1a119a",
       "fresh feat/v3-scientific-article branch created from updated main",
-      "Step 2 required article front block implemented at 90293af760c4063b02a16831196ec3d932f1471d with rendered evidence gate added"
+      "Step 2 required article front block implemented at 90293af760c4063b02a16831196ec3d932f1471d with rendered evidence gate added",
+      "stale pre-activation normative-currency runtime-absence invariant reconciled at e29501bd8cae98d6442f08e17bc3a54892fc7e0d without changing the article authority source set or proof state"
     ],
     "pending_acceptance_gates": [
-      "Step 2 synchronized checkpoint must pass Static contract and full Linux integration with ARTICLE-FRONT-BLOCK-EVIDENCE on both engines",
+      "Re-run synchronized Step 2 after normative-currency reconciliation; Static contract and full Linux must pass with ARTICLE-FRONT-BLOCK-EVIDENCE on both engines",
       "Add article-specific positive evidence before any proof-state promotion",
       "Implement optional/recommended/conditional article semantics without modality drift",
       "Produce and visually inspect provenance-bound canonical article PDF",
@@ -200,8 +204,8 @@
   },
   "branch_plan": {
     "current_work_branch": "feat/v3-scientific-article",
-    "integration_pr": 285,
-    "integration_state": "merged",
+    "integration_pr": 286,
+    "integration_state": "open",
     "integration_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "previous_integration_branch": "plan/v3-regression-reset",
     "previous_branch_state": "historical-no-new-work",
@@ -233,7 +237,7 @@
       "current_state": "PASS"
     },
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-step1-accepted-step2-implemented-ci-pending",
+      "status": "source-contract-accepted-runtime-step1-accepted-step2-implemented-currency-reconciled-ci-pending",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
@@ -287,7 +291,11 @@
     "scientific_article_profile_acceptance": "accepted",
     "scientific_article_step2_implementation_sha": "90293af760c4063b02a16831196ec3d932f1471d",
     "scientific_article_step2_evidence_gate": "tests/integration/scientific-article-front-block.sh",
-    "scientific_article_step2_evidence_state": "ci-pending",
+    "scientific_article_step2_first_static_run": 34003576066,
+    "scientific_article_step2_first_static_conclusion": "failure",
+    "scientific_article_step2_first_static_classification": "stale-pre-activation-normative-currency-invariant",
+    "normative_currency_article_activation_fix_sha": "e29501bd8cae98d6442f08e17bc3a54892fc7e0d",
+    "scientific_article_step2_evidence_state": "ci-pending-after-currency-reconciliation",
     "scientific_article_step2_presentation_rules_promoted": 0,
     "shared_foundation_pr": 285,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
