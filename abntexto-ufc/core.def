@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/core.def}[2026/09/02 UFC core configuration]
+\ProvidesFile{abntexto-ufc/core.def}[2026/09/05 UFC core configuration]
 
 % Normative mapping: docs/NORMATIVE-BASE.md.
 
@@ -44,7 +44,9 @@
     volume = {},
     year = {},
     location = {Fortaleza},
+    submission-date = {},
     approval-date = {},
+    article-author-note = {},
     advisor = {},
     advisor-institution = {},
     advisor-unit = {},
@@ -117,6 +119,11 @@
         \tl_gset:Nn \g_ufc_document_type_tl { anonymized-research-project }
         \bool_gset_false:N \g_ufc_coat_of_arms_bool
       },
+    type / scientific-article .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_type_tl { scientific-article }
+        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+      },
 
     print-mode .choice:,
     print-mode / single-sided .code:n =
@@ -171,7 +178,9 @@
     volume .code:n = { \ufc_meta_set:nn {volume} {#1} },
     year .code:n = { \ufc_meta_set:nn {year} {#1} },
     location .code:n = { \ufc_meta_set:nn {location} {#1} },
+    submission-date .code:n = { \ufc_meta_set:nn {submission-date} {#1} },
     approval-date .code:n = { \ufc_meta_set:nn {approval-date} {#1} },
+    article-author-note .code:n = { \ufc_meta_set:nn {article-author-note} {#1} },
     advisor .code:n = { \ufc_meta_set:nn {advisor} {#1} },
     advisor-institution .code:n = { \ufc_meta_set:nn {advisor-institution} {#1} },
     advisor-unit .code:n = { \ufc_meta_set:nn {advisor-unit} {#1} },
