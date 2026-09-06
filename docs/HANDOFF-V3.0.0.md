@@ -1,6 +1,6 @@
 # abntexto-ufc v3.0.0 — Canonical Handoff
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 
 ## Current checkpoint
 
@@ -22,9 +22,13 @@ Updated: 2026-09-05
 - Step 2 implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.
 - Step 2 first synchronized checkpoint `768d355eda11f47b4cebbb6864247e9fc2aa728f`: Static `34003576066` FAILED on a stale pre-activation normative-currency invariant.
 - Normative-currency correction checkpoint: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.
-- Step 2 state: **IMPLEMENTED — CI PENDING AFTER CURRENCY RECONCILIATION**.
-- Step 2 runtime: new `abntexto-ufc/articles.def` and public `\ufcPrintArticleFrontMatter{...}` route.
-- Step 2 rendered evidence: title, authorship, author footnote, submission/approval dates and primary summary under pdfLaTeX/LuaLaTeX; no proof-state promotion yet.
+- Post-currency synchronized checkpoint `6587636f8550dcd68b3feec5bbd145551775eb4b`: Static `34003838489` SUCCESS; Linux `34003838521` FAILURE with `PASS=29 FAIL=1 SKIP=1`.
+- Linux `34003838521` isolated the failure to article author-footnote evidence: the checker imposed an unsupported fixed page-bottom percentage even though runtime used a real `\footnote` route.
+- Validator correction checkpoint: `bb52697a0e71b2d6a8bc135196f40dba9497b38f`.
+- Step 2 state: **EVIDENCE CORRECTION — CI PENDING**.
+- Runtime `abntexto-ufc/articles.def` is unchanged by the validator correction.
+- Optional foreign elements remain deferred to Step 3; article body typography remains deferred to Step 4; recommendations remain advisory.
+- Article proof state remains manual/conditional-manual; no rule is promoted by source presence, runtime activation, or this validator correction.
 - Issue #217: CLOSED / superseded by current permanent workflow orchestration.
 - Issue #18: OPEN and explicit **v3 release blocker** owned by Final Certification/Release.
 - No temporary executor is active.
@@ -36,7 +40,7 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 | Step | State | Evidence / boundary |
 |---:|---|---|
 | 1. Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2. Required article front block | **IMPLEMENTED — CI PENDING AFTER CURRENCY RECONCILIATION** | implementation `90293af...`; first Static `34003576066` classified; currency correction `e29501b...`; post-fix regression required |
+| 2. Required article front block | **EVIDENCE CORRECTION — CI PENDING** | runtime `90293af...`; currency fix `e29501b...`; Static `34003838489` PASS; Linux `34003838521` classified; validator fix `bb52697...` |
 | 3. Optional foreign elements | QUEUED | foreign title/summary optionality must remain non-mandatory |
 | 4. Textual structure/body typography | QUEUED | reuse shared citation/reference/section/object machinery |
 | 5. Recommendations/conditional boundary | QUEUED | recommendations advisory; journal instructions conditional |
@@ -44,20 +48,31 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 | 7. Canonical article PDF | QUEUED | real Git-bound TeX Live 2026 artifact + complete visual review |
 | 8. Phase-end regression | QUEUED | one immutable SHA; Static + full Linux + article acceptance |
 
-## Step 2 gate classification
+## Step 2 failure classification
 
-Static `34003576066` did not report an article rendering or source-authority defect. It stopped because `tests/checks/normative_currency.py` still required `abntexto-ufc/articles.def` to be absent, a rule that was correct only before Scientific Article activation.
+| Gate | Observation | Classification | Response |
+|---|---|---|---|
+| Static `34003838489` | complete Static contract green after normative-currency reconciliation | PASS | no action |
+| Linux `34003838521` | `Document profiles` failed only after `ARTICLE-PROFILE-EVIDENCE status=PASS`; front-block checker reported author note not in fixed page-bottom region | invalid evidence predicate | correct validator; do not change runtime |
+| Shared non-article checks | all completed shared/profile-independent checks remained green | preserved foundation | no regression indicated |
 
-The correction updates `standards/version-policy.json`, `tests/checks/normative_currency.py`, and `docs/NORMATIVE-CURRENCY.md` so runtime presence is bound to the readable machine phase and recorded activation evidence. The current article source set, 18-rule authority contract and manual/conditional-manual proof state are unchanged. The checker was reconciled to the new phase semantics rather than disabled or weakened.
+The article contract requires complementary author metadata **in a footnote**. It does not define a physical-page percentage for footnote placement. The failed validator strengthened the source contract with `note_y >= 65% of page height`, which is not an authorized normative predicate.
+
+The correction keeps the requirement fail-closed through two independent surfaces:
+
+- `tests/integration/scientific-article-front-block.sh` requires the runtime route `\footnote{\ufc_meta_use:n {article-author-note}}`;
+- `tests/checks/scientific_article_front_block.py` requires the note to render after the front block on page 1 and at the shared reduced 10 pt footnote typography.
+
+Title, authorship, dates, primary summary, no-leakage checks and modality boundaries are unchanged. This is a validator-predicate correction, not a runtime workaround.
 
 ## Step 2 implementation boundary
 
 | Surface | State | Constraint |
 |---|---|---|
-| `abntexto-ufc/articles.def` | ADDED | only required front-block behavior; no foreign elements/body hook |
+| `abntexto-ufc/articles.def` | ADDED / UNCHANGED BY CURRENT FIX | only required front-block behavior; no foreign elements/body hook |
 | `\ufcPrintArticleFrontMatter{...}` | ADDED | requires `type=scientific-article` and required metadata/primary summary |
 | primary title | IMPLEMENTED | 12 pt, centered, bold, uppercase, single-spaced |
-| author note | IMPLEMENTED | uses `article-author-note` through a real footnote |
+| author note | IMPLEMENTED | `article-author-note` routed through a real `\footnote`; rendered 10 pt evidence required |
 | dates | IMPLEMENTED | `submission-date` + reused `approval-date` |
 | primary summary | IMPLEMENTED | required vernacular `Resumo:` surface |
 | foreign title/summary | DEFERRED | Step 3 only; remains optional |
@@ -70,7 +85,7 @@ The correction updates `standards/version-policy.json`, `tests/checks/normative_
 | Surface | State | Action |
 |---|---|---|
 | `main` | UPDATED | contains PR #285 merge `e6833ed5...`; canonical foundation |
-| `feat/v3-scientific-article` | ACTIVE | validate post-reconciliation Step 2 checkpoint here |
+| `feat/v3-scientific-article` | ACTIVE | validate corrected Step 2 evidence here |
 | PR #286 | OPEN | current Scientific Article integration surface |
 | `plan/v3-regression-reset` | HISTORICAL | no new work; branch deletion is hygiene only |
 | historical remote branches | provenance only | not active authority; do not branch new work from them |
@@ -86,11 +101,11 @@ The correction updates `standards/version-policy.json`, `tests/checks/normative_
 
 ## Immediate action
 
-1. complete the post-currency-reconciliation synchronized checkpoint;
-2. run Static and full Linux on that exact branch head;
+1. synchronize `bb52697...` validator correction with roadmap and machine state;
+2. run Static and full Linux on the synchronized branch head;
 3. classify any failure before modifying runtime/tests;
-4. if both gates pass with `ARTICLE-FRONT-BLOCK-EVIDENCE`, mark Step 2 accepted and activate **Optional foreign elements**;
-5. do not promote article rule proof state solely from source presence or shared green checks;
+4. if both pass with `ARTICLE-FRONT-BLOCK-EVIDENCE` on pdfLaTeX and LuaLaTeX, mark Step 2 accepted and activate **Optional foreign elements**;
+5. do not promote article rule proof state solely from source presence, shared green checks or runtime activation;
 6. keep issue #18 visible as a release blocker without mixing it into article normative behavior;
 7. finish Scientific Article with its own immutable phase-end regression before activating Final Certification.
 
@@ -106,7 +121,7 @@ Every phase requires a **phase-end regression** on one immutable candidate befor
 - Do not change the 18-rule article authority/modality contract without new current source evidence and a separately documented source correction.
 - Do not promote recommendations into required failures.
 - Do not fork shared citation, reference, section, summary or object infrastructure.
-- Do not weaken tests merely to recover green CI.
+- Do not weaken tests merely to recover green CI; correct invalid predicates when they exceed the source contract.
 - Do not redistribute proprietary fonts.
 - Resolve issue #18 before v3.0.0 release publication.
 - CTAN submission remains blocked until **Release**.
