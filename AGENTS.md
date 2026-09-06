@@ -20,7 +20,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Scientific Article**.
-- Canonical `main` now contains the validated shared foundation and accepted Scientific Article Step 1 at squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` (PR #285).
+- Canonical `main` contains the validated shared foundation and accepted Scientific Article Step 1 at squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` (PR #285).
 - Active task branch: `feat/v3-scientific-article`, created from that updated `main`.
 - Core Corrections phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
 - Reference PDF Validation phase-end candidate `b64074c64941895f97fbe0f795ce826c798d17ce`: Static `33985595790` and Linux `33985595798` success.
@@ -28,11 +28,14 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Current 34-item librarian-review state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Article authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` / `standards/coverage-rules-article.json`.
-- Article rules: 18 source-backed rules; profile registration does not promote presentation/proof state.
+- Article rules: 18 source-backed rules; Step 2 implementation still does not promote article proof state.
 - Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
 - Step 1 synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS; full Linux `34001350953` SUCCESS, `PASS=31 FAIL=0 SKIP=0`.
 - Step 1 state: **ACCEPTED**.
-- Current implementation step: **Required article front block**.
+- Step 2 implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.
+- Current implementation step: **Required article front block — IMPLEMENTED / CI PENDING**.
+- Step 2 adds `abntexto-ufc/articles.def`, `\ufcPrintArticleFrontMatter{...}`, and article-specific final-PDF/source evidence for required title/authorship/dates/primary-summary surfaces.
+- Optional foreign elements remain deferred to Step 3; article body typography remains deferred to Step 4; recommendations remain advisory.
 - Release blocker #18 is explicit and owned by Final Certification/Release: the release reference PDF must become bit-reproducible using a pinned release epoch/`SOURCE_DATE_EPOCH` and hash comparison.
 - Historical orchestration issue #217 is closed as superseded by the readable permanent workflow model.
 
@@ -41,7 +44,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active; Step 1 accepted; Required article front block active
+4. **Scientific Article** — active; Step 1 accepted; Step 2 implemented/CI pending
 5. **Final Certification** — queued; owns release reproducibility proof together with Release
 6. **Release** — queued
 
@@ -51,12 +54,14 @@ Do not create new opaque work identifiers such as nested letter/number codes. Hi
 
 - Implement one canonical `scientific-article` profile; do not add compatibility aliases.
 - Step 1 reuses `author`, `title`, `approval-date`; adds only `submission-date` and `article-author-note`.
-- Required article front block must add article-specific rendering/evidence for primary title, authorship metadata note, submission/approval dates and primary summary without contaminating accepted academic-work front matter.
+- Step 2 required front block is implemented through `abntexto-ufc/articles.def` and must be accepted by article-specific rendered evidence on pdfLaTeX and LuaLaTeX before Step 3 activates.
+- `\ufcPrintArticleFrontMatter{...}` must remain article-profile-only and require title, author, author note, submission date, approval date and primary summary.
 - Do not infer foreign-title semantics from `title-variant`; bind that behavior explicitly in the optional-foreign-elements step.
+- Do not activate article body typography in the required-front-block step; body behavior belongs to Step 4.
 - Reuse current citation, bibliography, section, summary and object infrastructure rather than fork it.
 - Preserve the 18-rule source contract unless new current authority requires a separately documented source correction.
 - Keep required, optional, recommended and conditional semantics distinct.
-- Do not promote an article rule to executable/proven merely because shared non-article machinery or the profile-selection gate is green.
+- Do not promote an article rule to executable/proven merely because shared non-article machinery, profile selection, or a source-level implementation is green.
 - Add rule-specific positive evidence before proof-state promotion; add controlled negative evidence where a safe rejectable case exists.
 - Journal-specific instructions remain an applicability boundary.
 - Preserve the validated non-article foundation and accepted reference PDF presentation.
