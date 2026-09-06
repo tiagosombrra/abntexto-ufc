@@ -25,10 +25,10 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 - Step 1: ACCEPTED at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
 - Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`.
 - Step 3 runtime checkpoint: `81e08321222efb03626ac421fc645bd66edd5ae8`.
-- Scoped orchestration checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3` selected the intended `profiles,article` Linux scope. Article profile, required front block, all four foreign-element scenarios under both engines, and all six non-article profiles passed. The only Linux failure was `validator-source` because dynamically loading `tests/run.py` could not resolve its sibling `integration_suites.py`; Static `34030098936` failed for the same import-path defect. Linux `34030098924` ended `PASS=7 FAIL=1 SKIP=0`.
-- The import defect is test-runner infrastructure only. It does not establish article runtime, authority, modality, proof-state, or non-article compatibility failure.
-- Technical correction checkpoint: `4068414a2c2e1f919246438b516a6092f677925f`. It makes the runner sibling import robust, adds explicit non-article/article matrix separation evidence, and records two-pass foreign-element convergence evidence. No article runtime or normative rule changes.
-- Step 3 remains **IMPLEMENTED / ACCEPTANCE PENDING** until the synchronized checkpoint passes Static and `profiles,article` Linux on the same SHA.
+- Scoped migration checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3`: article/profile evidence passed, but Static `34030098936` and Linux `34030098924` exposed the runner sibling-import defect.
+- Synchronized runner-import checkpoint `4f1c9a1b5c1e9d3b7a88c0271b198ef6f335422b`: Static `34030827665` SUCCESS. Linux `34030827664` stopped before integration because the PR event supplied a `before` SHA no longer available in the checkout (`fatal: bad object`).
+- Current technical correction `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9` makes incremental scope selection fail closed to the full PR diff when `before`/`after` commits are unavailable; it also strengthens profile separation and two-pass foreign-element evidence.
+- Step 3 remains **IMPLEMENTED / ACCEPTANCE PENDING** until one synchronized checkpoint passes Static and Linux `profiles,article` on the same SHA.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 
@@ -47,14 +47,15 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 
 `docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract.
 
-- PR `auto` uses the incremental pushed range on `synchronize` and the full PR diff on opened/reopened/ready events.
+- PR `auto` normally uses the incremental pushed range on `synchronize` and the full PR diff on opened/reopened/ready events.
+- If the synchronize `before` or `after` commit is unavailable locally, scope selection must not crash; it falls back to the full PR diff and therefore remains fail-closed.
 - Documentation-only changes skip heavy Linux integration.
 - Multiple known domains run a deduplicated union.
 - Workflow/runner orchestration accompanying known domain changes does not force `complete`.
 - Unknown technical paths and shared/core/standards surfaces fail closed to `complete`.
-- Article gates are first-class checks; `profiles` excludes `scientific-article`.
+- Article gates are first-class checks; `profiles` contains exactly six non-article profiles and excludes `scientific-article`.
 - The `article` scope includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`.
-- Runner modules must remain importable both by direct execution and by repository traceability loaders.
+- Runner modules must remain importable by direct execution and repository traceability loaders.
 - Scoped runs are intermediate evidence only. Phase-end regression always uses `complete`.
 
 ## Scientific Article rules

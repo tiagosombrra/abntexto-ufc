@@ -14,49 +14,55 @@ Updated: 2026-09-06
 | Step 1 | ACCEPTED — `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1` |
 | Step 2 | ACCEPTED — `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`; Linux `34026680882` |
 | Step 3 runtime | `81e08321222efb03626ac421fc645bd66edd5ae8` |
-| Scoped migration checkpoint | `336bc982d8442d572b52c4b9b78028e197c178b3` |
-| Static on migration | `34030098936` — FAIL, runner sibling-import defect |
-| Linux on migration | `34030098924` — `profiles,article`, PASS=7 FAIL=1 SKIP=0 |
-| Technical correction | `4068414a2c2e1f919246438b516a6092f677925f` |
-| Current batch | **Step 3 runner-import correction + synchronized scoped acceptance** |
+| Scoped migration | `336bc982d8442d572b52c4b9b78028e197c178b3`; article/profile evidence green, runner import failed |
+| Runner-import synchronized checkpoint | `4f1c9a1b5c1e9d3b7a88c0271b198ef6f335422b` |
+| Static on `4f1c9...` | `34030827665` — **SUCCESS** |
+| Linux on `4f1c9...` | `34030827664` — failed in scope determination before integration (`fatal: bad object` for unavailable synchronize `before` SHA) |
+| Current technical correction | `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9` |
+| Current batch | **Step 3 missing-before fail-closed scope fallback + synchronized acceptance** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-## Migration-run classification
+## Latest failure classification
 
-The scoped orchestration worked as designed on `336bc982...`: PR `synchronize` selected `profiles,article`, not `complete`. The executable evidence was strong:
+The runner-import correction is confirmed by Static `34030827665 = SUCCESS`. Linux `34030827664` did not reach TeX or the coordinated runner. The workflow attempted an incremental diff using a PR-event `before` SHA that was not present in the checkout and terminated with `fatal: bad object`.
 
-- `ARTICLE-PROFILE-EVIDENCE`: PASS under both engines;
-- `ARTICLE-FRONT-BLOCK-EVIDENCE`: PASS under both engines;
-- `ARTICLE-FOREIGN-ELEMENTS-EVIDENCE`: PASS for four optionality scenarios under both engines;
-- six accepted non-article profiles: PASS under both engines;
-- build-path, multivolume and catalog-card checks: PASS.
+Classification: **Linux scope-determination robustness defect**. It is not an article runtime, authority, modality, proof-state, profile-compatibility, or runner-import failure.
 
-The sole failure in Linux `34030098924` was `validator-source`. Static `34030098936` stopped at the same point. `tests/checks/normative_traceability.py` dynamically loads `tests/run.py`; after the scoped-runner refactor, `tests/run.py` imported sibling `integration_suites.py` without first making its own directory importable. The result was `ModuleNotFoundError: No module named 'integration_suites'`.
+The workflow must fail closed without crashing when incremental provenance is unavailable. Technical checkpoint `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9` therefore:
 
-Classification: **runner import-path defect**. This is not an article runtime, authority, modality, proof-state or compatibility failure. Normative traceability is not weakened.
+1. verifies both synchronize endpoints with `git cat-file -e` before using the incremental range;
+2. falls back to the authoritative full PR base/head range if either endpoint is unavailable;
+3. extends the static Linux-suite contract to require this fallback;
+4. keeps the six-profile non-article matrix explicitly separate from `scientific-article`;
+5. records two-pass/final-pass warning evidence for optional foreign elements;
+6. changes no article runtime or normative rule.
 
-## Current correction
+## Step 3 acceptance rule
 
-Technical checkpoint `4068414a2c2e1f919246438b516a6092f677925f`:
+The synchronized checkpoint containing `0a48d72...` plus this documentation must pass on the same SHA:
 
-1. makes `tests/run.py` add its own `tests/` directory to `sys.path` before importing `integration_suites`;
-2. adds an explicit guard/evidence that the six-profile compatibility matrix excludes `scientific-article`;
-3. records `convergence_passes=2` in foreign-element evidence, matching the corrected two-pass warning-inspection contract;
-4. changes no article runtime, article authority, rule modality or proof state.
+| Gate | Required result |
+|---|---|
+| Static contract | PASS, including dynamic runner loading and missing-before fallback contract |
+| Linux integration | `profiles,article` PASS on a normal reachable incremental range; fallback remains available fail-closed when provenance is missing |
+| Article profile | PASS under pdfLaTeX and LuaLaTeX |
+| Required front block | PASS |
+| Optional foreign elements | PASS for 4 scenarios × 2 engines; warnings inspected only after two-pass convergence |
+| Non-article profiles | exactly 6 profiles × 2 engines PASS; `scientific-article` excluded |
+| Normative state | no modality/proof-state drift |
 
-The synchronized branch checkpoint containing this technical commit plus current documentation must pass Static and bounded Linux `profiles,article` on the same SHA before Step 3 is accepted.
+Only after these gates are green may Step 3 become ACCEPTED and Step 4 start.
 
 ## Immediate action
 
 | Order | Action |
 |---:|---|
-| 1 | Publish the synchronized correction checkpoint on `feat/v3-scientific-article`. |
-| 2 | Require Static PASS; `validator-source` must prove the dynamic-import path is repaired. |
-| 3 | Require PR Linux `profiles,article` PASS on that same SHA. |
-| 4 | If green, record exact checkpoint/run IDs and mark Step 3 ACCEPTED. |
-| 5 | Activate Step 4 — textual structure and body typography. |
-| 6 | Preserve `complete` for the immutable Scientific Article phase-end regression. |
+| 1 | Publish the synchronized missing-before fallback checkpoint. |
+| 2 | Require Static PASS. |
+| 3 | Require PR Linux bounded scope `profiles,article` PASS on the same SHA. |
+| 4 | Classify any failure before changing code or tests. |
+| 5 | If green, update all control documents, mark Step 3 ACCEPTED, then activate Step 4. |
 
 ## Mandatory operating discipline
 
@@ -67,10 +73,9 @@ Every phase requires a complete **phase-end regression** on one immutable candid
 ## Hard boundaries
 
 - Preserve all accepted non-article profiles and the shared academic-work PDF baseline.
-- Do not weaken normative traceability to solve the import failure.
+- Do not weaken normative traceability or scope fail-closed behavior.
 - Do not change article authority, modality, rule IDs or proof state in this correction.
 - Foreign title/summary remain independently optional.
-- Do not repurpose `title-variant`.
 - Article body typography remains Step 4 work.
 - Recommendations remain advisory.
 - Item 33 remains fail-closed.

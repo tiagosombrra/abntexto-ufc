@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-06  
-Status: ACTIVE — STEP 3 RUNNER-IMPORT CORRECTION / SCOPED CI PENDING
+Status: ACTIVE — STEP 3 SCOPE-FALLBACK CORRECTION / SCOPED CI PENDING
 
 ## Purpose
 
@@ -27,7 +27,7 @@ Linux orchestration contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
 | 2 | Required article front block | **ACCEPTED** | `0947669...`; Static `34026680871`; Linux `34026680882` |
-| 3 | Optional foreign elements | **IMPLEMENTED — RUNNER IMPORT FIX / CI PENDING** | runtime `81e0832...`; migration `336bc982...`; technical fix `4068414...` |
+| 3 | Optional foreign elements | **IMPLEMENTED — SCOPE FALLBACK FIX / CI PENDING** | runtime `81e0832...`; scoped migration `336bc982...`; runner fix `4068414...`; scope fallback `0a48d72...` |
 | 4 | Textual structure and body typography | QUEUED | required structure + 12 pt/justified/2 cm/single-spaced body |
 | 5 | Recommendations and conditional applicability | QUEUED | advisory semantics stay advisory; journal boundary stays conditional |
 | 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
@@ -56,31 +56,31 @@ The arguments are independently blank-safe. The route does not reuse shared `tit
 
 ## Evidence history and current classification
 
-Linux `34028373060` on `567a5b2d21a16b653d7704639bdd5012d7c2f99b` exposed a one-pass warning-inspection defect in the foreign-elements gate. The correction gave each scenario two LaTeX passes and separated article gates from the non-article profile matrix.
+| Checkpoint / run | Result | Classification |
+|---|---|---|
+| `567a5b2...` / Linux `34028373060` | foreign-elements scenario inspected expected rerun warnings after one pass | evidence-convergence defect |
+| `336bc982...` / Static `34030098936` | dynamic `tests/run.py` load could not import sibling `integration_suites.py` | runner import-path defect |
+| `336bc982...` / Linux `34030098924` | intended `profiles,article`; 7/8 checks PASS; only validator-source failed on same import | runner import-path defect |
+| `4f1c9a1...` / Static `34030827665` | **SUCCESS** | runner import correction confirmed |
+| `4f1c9a1...` / Linux `34030827664` | scope determination stopped at `fatal: bad object` for unavailable synchronize `before` SHA; no integration check ran | workflow scope-fallback defect |
 
-Migration checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3` then proved the new orchestration selected `profiles,article`. Linux `34030098924` produced:
+The latest Linux failure is not an article result because TeX integration never started. The workflow assumed the synchronize event's `before` commit remained reachable after history changes. The correct fail-closed behavior is to validate incremental endpoints before use and otherwise use the full PR base/head diff.
 
-| Check | Result |
-|---|---|
-| `scientific-article-profile` | PASS |
-| `scientific-article-front-block` | PASS |
-| `scientific-article-foreign-elements` | PASS — 4 scenarios × 2 engines |
-| non-article `profiles` | PASS — 6 profiles × 2 engines |
-| build path / multivolume / catalog card | PASS |
-| `validator-source` | FAIL — runner sibling import path |
+Technical correction `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9`:
 
-Static `34030098936` failed at the same `validator-source` path. `normative_traceability.py` dynamically loads `tests/run.py`; `tests/run.py` imported sibling `integration_suites.py` without first putting `tests/` on `sys.path`. Classification: **runner infrastructure defect**, not article runtime, source authority, modality, proof-state or compatibility failure.
-
-Technical correction `4068414a2c2e1f919246438b516a6092f677925f`:
-
-1. makes the runner import its sibling suite module robustly under direct and dynamic loading;
-2. explicitly rejects `scientific-article` from the non-article profile matrix and emits `PROFILE-MATRIX-EVIDENCE`;
-3. records `convergence_passes=2` in `ARTICLE-FOREIGN-ELEMENTS-EVIDENCE`;
-4. changes no article runtime or normative rule.
+1. uses `git cat-file -e` to validate synchronize `before` and `after` commits;
+2. falls back to full PR scope when either is unavailable, instead of crashing;
+3. extends `linux_integration_suites.py` so Static protects the fallback contract;
+4. asserts exactly six non-article profiles and excludes `scientific-article` from `profile-matrix.sh`;
+5. emits explicit `PROFILE-MATRIX-EVIDENCE`;
+6. records `convergence_passes=2` and `warnings_checked_after_final_pass=true` for foreign-element evidence;
+7. changes no article runtime, authority, modality or proof state.
 
 ## Scoped Linux integration
 
-Intermediate article work uses bounded scope where safe. The current synchronized correction intentionally changes runner orchestration plus `profiles` and `article` evidence surfaces, so PR `auto` must select the union `profiles,article`.
+Intermediate article work uses bounded scope where safe. On a normal reachable synchronize range, the current correction touches profile and article evidence surfaces and must select the union `profiles,article`.
+
+If a synchronize endpoint is unavailable, `auto` falls back to the full PR diff. That may select `complete`; this is deliberate fail-closed behavior, not a weakening of the optimization contract.
 
 `article` currently includes:
 
@@ -95,12 +95,12 @@ As Steps 4–7 add article-specific executable gates, add them to `article` in t
 
 Step 3 remains open until one synchronized checkpoint proves:
 
-1. Static contract PASS, including `LINUX-SUITE-EVIDENCE` and dynamic runner import through normative traceability;
-2. Linux bounded scope `profiles,article` PASS on the same SHA;
+1. Static contract PASS, including `LINUX-SUITE-EVIDENCE`, dynamic runner import, and missing-before fallback contract;
+2. Linux bounded scope `profiles,article` PASS on the same SHA under a normal reachable incremental range;
 3. `ARTICLE-PROFILE-EVIDENCE` PASS;
 4. `ARTICLE-FRONT-BLOCK-EVIDENCE` PASS;
-5. `ARTICLE-FOREIGN-ELEMENTS-EVIDENCE` PASS for all four scenarios under both engines with two-pass convergence;
-6. `PROFILE-MATRIX-EVIDENCE` PASS and six non-article profiles green;
+5. `ARTICLE-FOREIGN-ELEMENTS-EVIDENCE` PASS for all four scenarios under both engines with two-pass convergence and final-pass warning inspection;
+6. `PROFILE-MATRIX-EVIDENCE` PASS, exactly six non-article profiles, both engines green;
 7. no article rule-modality or proof-state drift.
 
 A complete repository run is not required for this intermediate Step. The **phase-end regression** remains stricter: `complete` Linux on one immutable Scientific Article candidate, plus Static and phase-specific acceptance.
@@ -114,7 +114,7 @@ A complete repository run is not required for this intermediate Step. The **phas
 - Recommendations never become hard compilation/validation failures.
 - Journal-specific instructions remain conditional.
 - Step 3 does not promote article proof state merely because runtime exists.
-- Do not weaken normative traceability to repair runner imports.
+- Do not weaken normative traceability or scope fail-closed behavior.
 - Item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 - Every **material advance** updates handoff, roadmap, machine state and this plan in the same work cycle.
@@ -126,4 +126,4 @@ A complete repository run is not required for this intermediate Step. The **phas
 - Active branch: `feat/v3-scientific-article`.
 - Active PR: #286.
 
-Next: publish the synchronized correction containing technical checkpoint `4068414...`, require Static and `profiles,article` Linux on that same branch checkpoint, classify any failure, and only after both are green mark Step 3 accepted and activate Step 4.
+Next: publish the synchronized checkpoint containing technical correction `0a48d72...`, require Static and Linux on the same SHA, classify any failure, and only after both required bounded gates are green mark Step 3 accepted and activate Step 4.

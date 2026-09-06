@@ -4,14 +4,14 @@ Updated: 2026-09-06
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 3 — optional foreign elements; runner-import correction and synchronized scoped acceptance are the current batch.**
+**Scientific Article is ACTIVE at Step 3 — optional foreign elements; missing-before fail-closed scope fallback and synchronized acceptance are the current batch.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
-| Core Corrections | CLOSED | `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`; Static `33982156041`; Linux `33982156042` |
-| Reference PDF Validation | CLOSED | `b64074c64941895f97fbe0f795ce826c798d17ce`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 3 ACCEPTANCE PENDING** | Steps 1–2 accepted; Step 3 runtime/evidence passes bounded executable checks, but synchronized Static/Linux acceptance is pending after runner import repair |
+| Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
+| Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
+| Scientific Article | **ACTIVE — STEP 3 ACCEPTANCE PENDING** | Steps 1–2 accepted; Step 3 executable evidence is green, but synchronized scoped acceptance remains open after orchestration robustness fixes |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -21,44 +21,39 @@ Updated: 2026-09-06
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
 | 2 | Required article front block | **ACCEPTED** | `0947669...`; Static `34026680871`; Linux `34026680882` |
-| 3 | Optional foreign title and summary | **IMPLEMENTED — RUNNER IMPORT FIX / CI PENDING** | runtime `81e0832...`; migration `336bc982...`; technical fix `4068414...` |
+| 3 | Optional foreign title and summary | **IMPLEMENTED — SCOPE FALLBACK FIX / CI PENDING** | runtime `81e0832...`; migration `336bc982...`; runner fix `4068414...`; scope fallback `0a48d72...` |
 | 4 | Textual structure and body typography | QUEUED | required article structure plus 12 pt/justified/2 cm/single-spaced body evidence |
 | 5 | Recommendations and conditional applicability | QUEUED | recommendations stay advisory; journal instructions stay conditional |
 | 6 | Evidence hardening | QUEUED | article-specific positive/negative evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + **complete Linux scope** + article-specific evidence on one immutable SHA |
 
-## Step 3 migration evidence
+## Step 3 evidence history
 
-Checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3` proved the new PR scope inference selected `profiles,article`. Linux `34030098924` executed eight checks:
+| Checkpoint / run | Result | Classification |
+|---|---|---|
+| `567a5b2...` / Linux `34028373060` | foreign-elements gate failed on first-pass rerun warnings | evidence convergence defect; runtime unaffected |
+| `336bc982...` / Static `34030098936` | `validator-source` failed loading `tests/run.py` | runner sibling-import defect |
+| `336bc982...` / Linux `34030098924` | scope `profiles,article`, PASS=7 FAIL=1; all article/profile checks green except `validator-source` | same runner sibling-import defect |
+| `4f1c9a1...` / Static `34030827665` | **SUCCESS** | runner import fix confirmed |
+| `4f1c9a1...` / Linux `34030827664` | failed in scope determination before integration: unavailable event `before` commit | scope-orchestration robustness defect |
 
-- article profile: PASS;
-- article front block: PASS;
-- article foreign elements: PASS for four scenarios under both engines;
-- six non-article profiles: PASS under both engines;
-- build path: PASS;
-- multivolume: PASS;
-- catalog card: PASS;
-- validator-source: FAIL because dynamic loading of `tests/run.py` could not resolve sibling `integration_suites.py`.
-
-Static `34030098936` failed at the same import path. The failure is therefore classified as **test-runner import infrastructure**, not article behavior or normative evidence failure.
-
-Technical checkpoint `4068414a2c2e1f919246438b516a6092f677925f` makes the sibling import robust and strengthens migration evidence without changing article runtime or normative rules. The synchronized checkpoint must now rerun Static and `profiles,article` on the same SHA.
+Technical checkpoint `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9` adds a fail-closed fallback: use incremental `before -> after` only when both commits exist locally; otherwise retain the full PR `base -> head` range. The static suite contract now protects this behavior. The same checkpoint strengthens profile-count/article-exclusion evidence and foreign-element final-pass warning evidence without changing runtime or normative rules.
 
 ## Linux integration scopes
 
 | Scope | Intended surface | Phase-transition authority |
 |---|---|---|
-| `auto` | infer safe bounded scope from changed paths | No |
+| `auto` | infer safe bounded scope; missing incremental provenance falls back to full PR diff | No |
 | `article` | article source/profile/front-block/foreign-elements | No |
-| `profiles` | six non-article profiles + profile compatibility | No |
+| `profiles` | exactly six non-article profiles + compatibility | No |
 | `reference-document`, `reference-pdf` | canonical document/PDF | No |
 | `frontmatter`, `layout`, `objects`, `bibliography`, `backmatter` | bounded shared domains | No |
 | `research-project` | research-project-specific work | No |
 | `smoke` | integration-orchestration-only changes | No |
 | `complete` | shared/core/unknown changes and phase-end regression | **Required at phase end** |
 
-PR `synchronize` uses the incremental pushed range. Multiple known domains run a deduplicated union. Runner/orchestration changes accompanying article/profile evidence remain bounded; unknown technical paths fail closed to `complete`. Direct runner execution and dynamic traceability loading must both resolve runner-owned sibling modules.
+For a normal PR `synchronize`, `auto` uses the reachable incremental pushed range. If either endpoint is unavailable, it falls back to the full PR range rather than terminating. Multiple known domains run a deduplicated union. Unknown technical paths remain `complete`.
 
 Detailed contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 

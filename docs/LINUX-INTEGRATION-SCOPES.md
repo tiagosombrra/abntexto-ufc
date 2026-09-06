@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-06  
-Status: IMPLEMENTED — RUNNER IMPORT CORRECTION / CI ACCEPTANCE PENDING
+Status: IMPLEMENTED — MISSING-BEFORE FALLBACK / CI ACCEPTANCE PENDING
 
 ## Purpose
 
@@ -11,8 +11,8 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 
 | Scope | Intended use | Main checks | Can close a phase? |
 |---|---|---|---|
-| `auto` | Pull requests; infer the narrowest safe suite from changed paths | one or more inferred suites | No |
-| `complete` | Shared/core changes, unknown technical paths and phase-end regression | all PR integration checks + normative contribution | **Yes, with all other phase-end gates** |
+| `auto` | infer the narrowest safe suite from changed paths | one or more inferred suites | No |
+| `complete` | shared/core changes, unknown technical paths and phase-end regression | all PR integration checks + normative contribution | **Yes, with all other phase-end gates** |
 | `article` | Scientific Article implementation/evidence | validator-source + article profile/front-block/foreign-elements | No |
 | `reference-document` | canonical reference source/corpus changes | reference build, corpus and PDF validator | No |
 | `reference-pdf` | presentation-sensitive reference-PDF work | reference, layout, typography, front/back matter, objects, bibliography | No |
@@ -22,21 +22,25 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 | `bibliography` | references/citation evidence | bibliography, reference spacing, normative complement | No |
 | `backmatter` | appendices/annexes/index/glossary | back matter + duplex back matter | No |
 | `research-project` | research-project profile changes | research-project integration | No |
-| `profiles` | accepted non-article profile compatibility | six-profile matrix, build path, multivolume, catalog card | No |
+| `profiles` | accepted non-article profile compatibility | exactly six profiles, build path, multivolume, catalog card | No |
 | `smoke` | orchestration-only changes | repository/source/reference/PDF-validator smoke | No |
 
-## Automatic selection
+## Automatic selection and provenance fallback
 
 For pull requests, `auto` evaluates the relevant changed-path window after checkout.
 
-- On `synchronize`, compare the previous PR head (`before`) with the new PR head (`after`).
-- On opened/reopened/ready-for-review events, use the full PR diff.
+- On `synchronize`, it prefers the previous PR head (`before`) -> new PR head (`after`) incremental range.
+- Before using that range, both endpoint commits must be present in the checkout (`git cat-file -e ...^{commit}`).
+- If either synchronize endpoint is unavailable, the workflow keeps the full PR `base -> head` range and records `missing-before-full-pr`. It must not terminate with a Git object error.
+- On opened/reopened/ready-for-review events, it uses the full PR diff.
 - Documentation-only changes skip heavy Linux integration.
 - Known domain paths select their bounded suite.
 - Multiple known domains run a deduplicated union.
 - Workflow/runner orchestration files do not force `complete` when they accompany a known bounded-domain change; orchestration-only changes select `smoke`.
 - Shared/core surfaces, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
 - Manual `workflow_dispatch` with `auto` fails closed to `complete`.
+
+The fallback is intentionally conservative. A full PR diff may select `complete`; correctness and provenance take precedence over scoped-runtime savings.
 
 ## First-class article and profile gates
 
@@ -49,31 +53,26 @@ The `article` suite contains:
 3. `scientific-article-front-block`;
 4. `scientific-article-foreign-elements`.
 
-The `profiles` suite contains only the six accepted non-article profiles and compatibility checks. `profile-matrix.sh` must reject accidental inclusion of `scientific-article` and emit `PROFILE-MATRIX-EVIDENCE`.
+The `profiles` suite contains exactly six accepted non-article profiles and compatibility checks. `profile-matrix.sh` rejects accidental inclusion of `scientific-article` and emits `PROFILE-MATRIX-EVIDENCE` with the measured profile count.
 
 As Scientific Article Steps 4–7 add executable gates, each new article gate joins `article` in the same **material advance**.
 
 ## Runner importability invariant
 
-The coordinated runner is consumed in two ways:
+The coordinated runner is consumed through direct execution and dynamic loading by normative traceability/false-coverage checks. Runner-owned sibling modules such as `tests/integration_suites.py` must resolve in both contexts.
 
-- direct execution: `python3 tests/run.py ...`;
-- dynamic loading by normative traceability/false-coverage checks.
+Checkpoint `336bc982...` exposed the dynamic-import gap. Technical fix `4068414...` repaired it, and Static `34030827665` on synchronized checkpoint `4f1c9a1...` confirmed the import path is now green.
 
-Runner-owned sibling modules such as `tests/integration_suites.py` must resolve in both contexts. A direct-execution-only import path is a static-contract defect, not a reason to weaken traceability.
+Linux `34030827664` on that same checkpoint exposed a second orchestration boundary before any integration check ran: the synchronize `before` SHA was unavailable, and scope calculation terminated with `fatal: bad object`. Technical correction `0a48d72...` adds the endpoint-existence check and full-PR fallback. This fallback is now part of the static suite contract.
 
-Migration checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3` demonstrated this boundary: scope inference correctly selected `profiles,article`, and seven of eight bounded checks passed, but both Static `34030098936` and Linux `34030098924` failed `validator-source` because dynamically loaded `tests/run.py` could not resolve `integration_suites.py`.
+## Step 3 evidence contract
 
-Technical correction `4068414a2c2e1f919246438b516a6092f677925f` makes `tests/run.py` add its own directory to the module search path before importing its sibling suite definition. It also strengthens profile-separation and two-pass foreign-element evidence. No article runtime or normative rule changes.
+Foreign-element scenarios use two LaTeX passes before warning inspection. Evidence records both `convergence_passes=2` and `warnings_checked_after_final_pass=true` so the convergence fix remains visible and testable.
 
 ## Manual use
 
-GitHub Actions -> `Linux integration` -> `Run workflow` exposes the `scope` choice. The same suites are available locally:
-
 ```sh
 python3 tests/run.py --mode pr --suite article
-python3 tests/run.py --mode pr --suite objects
-python3 tests/run.py --mode pr --suite bibliography
 python3 tests/run.py --mode pr --suite profiles,article
 python3 tests/run.py --mode pr --suite complete
 ```
@@ -84,10 +83,10 @@ Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
 The synchronized correction checkpoint must pass:
 
-- Static contract, including dynamic runner loading and `LINUX-SUITE-EVIDENCE`;
-- Linux `profiles,article` on the same SHA;
+- Static contract, including dynamic runner loading, `LINUX-SUITE-EVIDENCE`, and missing-before fallback tokens;
+- Linux `profiles,article` on the same SHA under a normal reachable incremental range;
 - article profile/front-block/foreign-elements evidence;
-- non-article `PROFILE-MATRIX-EVIDENCE` and six-profile compatibility.
+- `PROFILE-MATRIX-EVIDENCE`, exactly six non-article profiles, and six-profile compatibility.
 
 ## Phase-end rule
 
