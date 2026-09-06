@@ -1,9 +1,9 @@
-\ProvidesFile{abntexto-ufc/articles.def}[2026/09/05 UFC scientific article front block]
+\ProvidesFile{abntexto-ufc/articles.def}[2026/09/06 UFC scientific article presentation]
 
 % Scientific-article presentation is implemented incrementally from the
-% retained article authority contract in docs/ARTICLE-NORMATIVE-CONTRACT.md.
-% This file currently owns only the required article front block. Optional
-% foreign elements and article body typography remain deferred to later steps.
+% retained authority contract in docs/ARTICLE-NORMATIVE-CONTRACT.md.
+% Required front-block elements and optional foreign elements are available;
+% article body typography remains owned by the later body-structure step.
 
 \ExplSyntaxOn
 
@@ -74,6 +74,33 @@
     \endgroup
   }
 
+% Foreign title and summary are independently optional. Their rendering here
+% is intentionally minimal: Step 3 proves optionality and routing only and does
+% not invent typography requirements that are absent from the retained rules.
+\cs_new_protected:Npn \ufc_article_foreign_title:n #1
+  {
+    \tl_if_blank:nF {#1}
+      {
+        \par\vspace{\baselineskip}
+        \begingroup
+          \noindent #1\par
+        \endgroup
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_foreign_summary:n #1
+  {
+    \tl_if_blank:nF {#1}
+      {
+        \par\vspace{\baselineskip}
+        \begingroup
+          \setlength{\parindent}{0pt}
+          \justifying
+          \noindent #1\par
+        \endgroup
+      }
+  }
+
 \NewDocumentCommand \ufcPrintArticleFrontMatter { +m }
   {
     \ufc_article_require_profile:
@@ -87,6 +114,13 @@
     \ufc_article_author:
     \ufc_article_dates:
     \ufc_article_primary_summary:n {#1}
+  }
+
+\NewDocumentCommand \ufcPrintArticleForeignElements { +m +m }
+  {
+    \ufc_article_require_profile:
+    \ufc_article_foreign_title:n {#1}
+    \ufc_article_foreign_summary:n {#2}
   }
 
 \ExplSyntaxOff

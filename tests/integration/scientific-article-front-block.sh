@@ -17,10 +17,6 @@ grep -Fq '\footnote{\ufc_meta_use:n {article-author-note}}' "$module" || {
   echo 'Scientific article front-block gate failed: article-author-note is not routed through a footnote.'
   exit 1
 }
-if grep -Fq 'foreign-title' "$module" || grep -Fq 'foreign-summary' "$module"; then
-  echo 'Scientific article front-block gate failed: optional foreign elements were implemented before their dedicated step.'
-  exit 1
-fi
 if grep -Fq '\AtBeginDocument' "$module"; then
   echo 'Scientific article front-block gate failed: article body typography was activated before its dedicated step.'
   exit 1
@@ -61,5 +57,5 @@ done
 cleanup_job scientific-article-front-block-pdflatex
 cleanup_job scientific-article-front-block-lualatex
 
-echo 'ARTICLE-FRONT-BLOCK-EVIDENCE status=PASS engines=2 rules=title-required,authorship-required,summary-required,dates-required,title-typography,authorship-footnote presentation_rules_promoted=0 optional_foreign_elements_promoted=0 recommendations_promoted=0'
+echo 'ARTICLE-FRONT-BLOCK-EVIDENCE status=PASS engines=2 rules=title-required,authorship-required,summary-required,dates-required,title-typography,authorship-footnote presentation_rules_promoted=0 recommendations_promoted=0'
 echo 'Scientific article front-block gate completed.'
