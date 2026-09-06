@@ -5,6 +5,13 @@ fixture="tests/smoke/base-profile.tex"
 template_dir="template"
 profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
 
+case " $profiles " in
+  *" scientific-article "*)
+    echo 'Profile matrix contract failed: scientific-article must remain outside the non-article compatibility matrix.'
+    exit 1
+    ;;
+esac
+
 placeholder_count=$(awk '{ count += gsub(/@UFC_TYPE@/, "&") } END { print count + 0 }' "$fixture")
 if [ "$placeholder_count" -ne 1 ]; then
   echo "Profile matrix generation failed: expected exactly one @UFC_TYPE@ placeholder, found $placeholder_count."
@@ -196,4 +203,5 @@ PY
   done
 done
 
+echo 'PROFILE-MATRIX-EVIDENCE status=PASS profiles=6 engines=2 article_excluded=true'
 echo 'Complete non-article profile matrix gate completed.'
