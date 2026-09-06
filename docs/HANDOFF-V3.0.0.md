@@ -13,56 +13,59 @@ Updated: 2026-09-06
 | Active phase | **Scientific Article** |
 | Step 1 | ACCEPTED — `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1` |
 | Step 2 | ACCEPTED — `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`; Linux `34026680882` |
-| Step 3 runtime | `81e08321222efb03626ac421fc645bd66edd5ae8` |
-| Scoped migration | `336bc982d8442d572b52c4b9b78028e197c178b3`; article/profile evidence green, runner import failed |
-| Runner-import synchronized checkpoint | `4f1c9a1b5c1e9d3b7a88c0271b198ef6f335422b` |
-| Static on `4f1c9...` | `34030827665` — **SUCCESS** |
-| Linux on `4f1c9...` | `34030827664` — failed in scope determination before integration (`fatal: bad object` for unavailable synchronize `before` SHA) |
-| Current technical correction | `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9` |
-| Current batch | **Step 3 missing-before fail-closed scope fallback + synchronized acceptance** |
+| Step 3 | **ACCEPTED** — `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`; Linux `34031144269` |
+| Active work | **Step 4 — textual structure and body typography** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-## Latest failure classification
+## Step 3 acceptance
 
-The runner-import correction is confirmed by Static `34030827665 = SUCCESS`. Linux `34030827664` did not reach TeX or the coordinated runner. The workflow attempted an incremental diff using a PR-event `before` SHA that was not present in the checkout and terminated with `fatal: bad object`.
+The synchronized Step 3 checkpoint `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba` passed both required bounded gates:
 
-Classification: **Linux scope-determination robustness defect**. It is not an article runtime, authority, modality, proof-state, profile-compatibility, or runner-import failure.
-
-The workflow must fail closed without crashing when incremental provenance is unavailable. Technical checkpoint `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9` therefore:
-
-1. verifies both synchronize endpoints with `git cat-file -e` before using the incremental range;
-2. falls back to the authoritative full PR base/head range if either endpoint is unavailable;
-3. extends the static Linux-suite contract to require this fallback;
-4. keeps the six-profile non-article matrix explicitly separate from `scientific-article`;
-5. records two-pass/final-pass warning evidence for optional foreign elements;
-6. changes no article runtime or normative rule.
-
-## Step 3 acceptance rule
-
-The synchronized checkpoint containing `0a48d72...` plus this documentation must pass on the same SHA:
-
-| Gate | Required result |
+| Gate | Result |
 |---|---|
-| Static contract | PASS, including dynamic runner loading and missing-before fallback contract |
-| Linux integration | `profiles,article` PASS on a normal reachable incremental range; fallback remains available fail-closed when provenance is missing |
-| Article profile | PASS under pdfLaTeX and LuaLaTeX |
-| Required front block | PASS |
-| Optional foreign elements | PASS for 4 scenarios × 2 engines; warnings inspected only after two-pass convergence |
-| Non-article profiles | exactly 6 profiles × 2 engines PASS; `scientific-article` excluded |
-| Normative state | no modality/proof-state drift |
+| Static contract | `34031144114` — SUCCESS |
+| Linux integration | `34031144269` — SUCCESS |
+| Scope-fallback contract | accepted; unavailable incremental endpoints fall back fail-closed instead of crashing |
+| Article profile | accepted under the Step 3 executable suite |
+| Required front block | remained green |
+| Optional foreign elements | accepted for independently optional title/summary scenarios under both engines |
+| Non-article compatibility | exactly six non-article profiles remain the compatibility matrix; `scientific-article` remains separate |
+| Normative/proof-state boundary | no authority, modality or proof-state promotion was introduced by the orchestration fixes |
 
-Only after these gates are green may Step 3 become ACCEPTED and Step 4 start.
+Earlier Step 3 failures remain historical evidence of defects that were corrected before acceptance. They no longer represent the active state.
+
+## Active Step 4 contract
+
+Step 4 implements and validates the required article textual structure and body typography. The retained article authority contract requires executable article-specific evidence for:
+
+- `article.introduction.required`;
+- `article.development.required`;
+- `article.final-considerations.required`;
+- `article.references.required`;
+- `article.body.typography`.
+
+The frozen body presentation values are 12 pt text, justified alignment, 2 cm first-line indentation and single line spacing.
+
+Runtime or shared-mechanism reuse alone is not proof. Step 4 must introduce a bounded article fixture/checker/gate, add that executable gate to the `article` Linux scope in the same material advance, preserve all six non-article profiles, and avoid proof-state promotion until the article-specific evidence is accepted.
+
+## README correction
+
+`README.md` is now treated as the end-user entry point rather than a development diary. It should explain how to select the stable release, use the Overleaf/local bundles, configure the document, compile it and solve common usage problems. Workflow IDs, implementation SHAs, issue chronology, regression history and detailed control-plane state remain in engineering documents and GitHub.
+
+Until v3.0.0 is released, the README must clearly direct normal users to stable v2.1.0 and must not present `main` or `scientific-article` as released functionality.
 
 ## Immediate action
 
 | Order | Action |
 |---:|---|
-| 1 | Publish the synchronized missing-before fallback checkpoint. |
-| 2 | Require Static PASS. |
-| 3 | Require PR Linux bounded scope `profiles,article` PASS on the same SHA. |
-| 4 | Classify any failure before changing code or tests. |
-| 5 | If green, update all control documents, mark Step 3 ACCEPTED, then activate Step 4. |
+| 1 | Keep this Step 3 acceptance and README usability correction synchronized with roadmap and machine state. |
+| 2 | Inspect the current article runtime/section infrastructure before designing Step 4 implementation. |
+| 3 | Implement one bounded Step 4 article structure/body-typography route without forking shared infrastructure. |
+| 4 | Add article-specific positive evidence and a controlled negative path where safe. |
+| 5 | Add the Step 4 executable gate to the `article` Linux scope in the same material advance. |
+| 6 | Run Static and bounded article/profile Linux acceptance on the synchronized Step 4 checkpoint. |
+| 7 | Classify any failure before changing runtime, authority or tests. |
 
 ## Mandatory operating discipline
 
@@ -73,12 +76,10 @@ Every phase requires a complete **phase-end regression** on one immutable candid
 ## Hard boundaries
 
 - Preserve all accepted non-article profiles and the shared academic-work PDF baseline.
+- Preserve the 18-rule article source contract and required/optional/recommended/conditional distinctions.
+- Do not treat shared implementation as article proof.
 - Do not weaken normative traceability or scope fail-closed behavior.
-- Do not change article authority, modality, rule IDs or proof state in this correction.
-- Foreign title/summary remain independently optional.
-- Article body typography remains Step 4 work.
-- Recommendations remain advisory.
-- Item 33 remains fail-closed.
+- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Issue #18 remains owned by Final Certification/Release.
 - Do not redistribute proprietary fonts.
 - CTAN submission remains blocked until **Release**.

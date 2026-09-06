@@ -24,11 +24,10 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 - Active task branch: `feat/v3-scientific-article`, PR #286.
 - Step 1: ACCEPTED at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
 - Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`.
-- Step 3 runtime checkpoint: `81e08321222efb03626ac421fc645bd66edd5ae8`.
-- Scoped migration checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3`: article/profile evidence passed, but Static `34030098936` and Linux `34030098924` exposed the runner sibling-import defect.
-- Synchronized runner-import checkpoint `4f1c9a1b5c1e9d3b7a88c0271b198ef6f335422b`: Static `34030827665` SUCCESS. Linux `34030827664` stopped before integration because the PR event supplied a `before` SHA no longer available in the checkout (`fatal: bad object`).
-- Current technical correction `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9` makes incremental scope selection fail closed to the full PR diff when `before`/`after` commits are unavailable; it also strengthens profile separation and two-pass foreign-element evidence.
-- Step 3 remains **IMPLEMENTED / ACCEPTANCE PENDING** until one synchronized checkpoint passes Static and Linux `profiles,article` on the same SHA.
+- Step 3: ACCEPTED at `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`, Linux `34031144269`.
+- Step 3 acceptance confirms the missing-incremental-SHA fallback, article/profile scoped execution, optional foreign-element scenarios under both engines, and the six-profile non-article compatibility boundary.
+- Current batch: **Step 4 — textual structure and body typography**.
+- Step 4 owns required article structure plus the accepted 12 pt, justified, 2 cm first-line indent, single-spaced body contract. It has not been implemented or accepted yet.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 
@@ -37,11 +36,17 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active
+4. **Scientific Article** — active, Step 4
 5. **Final Certification** — queued
 6. **Release** — queued
 
 Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
+
+## README ownership
+
+`README.md` is the user-facing entry point for people who want to use the template. Keep it focused on choosing a released version, downloading it, configuring a document, compiling it, understanding the template layout, and solving common user problems.
+
+Do not turn `README.md` into execution history. Detailed phase status, workflow run IDs, implementation SHAs, issue chronology, regression failures, normative disputes and control-plane mechanics belong in `docs/`, GitHub issues/pull requests, Actions and `release/v3-roadmap.json`. A short unreleased-version notice and links to developer documents are allowed when they help users avoid an unstable branch.
 
 ## Linux integration scopes
 
@@ -54,7 +59,8 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Workflow/runner orchestration accompanying known domain changes does not force `complete`.
 - Unknown technical paths and shared/core/standards surfaces fail closed to `complete`.
 - Article gates are first-class checks; `profiles` contains exactly six non-article profiles and excludes `scientific-article`.
-- The `article` scope includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`.
+- The `article` scope currently includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`.
+- Step 4 must add its article-specific executable gate to `article` in the same material advance that introduces the gate.
 - Runner modules must remain importable by direct execution and repository traceability loaders.
 - Scoped runs are intermediate evidence only. Phase-end regression always uses `complete`.
 
@@ -65,10 +71,9 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Keep required, optional, recommended and required-when-applicable semantics distinct.
 - Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
 - Shared implementation is not article proof.
-- Foreign title and foreign summary are independently optional; absence must compile cleanly.
+- Foreign title and foreign summary are independently optional; Step 3 is accepted and regression-protected.
 - Do not repurpose `title-variant` for article foreign-title semantics.
-- Step 3 does not invent unsupported presentation requirements.
-- Article body typography belongs to Step 4.
+- Step 4 must prove article textual structure and body typography with article-specific executable evidence.
 - Recommendations remain advisory; journal instructions remain conditional.
 
 ## Engineering rules

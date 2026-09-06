@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-06  
-Status: ACTIVE — STEP 3 SCOPE-FALLBACK CORRECTION / SCOPED CI PENDING
+Status: ACTIVE — STEP 4 TEXTUAL STRUCTURE AND BODY TYPOGRAPHY
 
 ## Purpose
 
@@ -27,83 +27,92 @@ Linux orchestration contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
 | 2 | Required article front block | **ACCEPTED** | `0947669...`; Static `34026680871`; Linux `34026680882` |
-| 3 | Optional foreign elements | **IMPLEMENTED — SCOPE FALLBACK FIX / CI PENDING** | runtime `81e0832...`; scoped migration `336bc982...`; runner fix `4068414...`; scope fallback `0a48d72...` |
-| 4 | Textual structure and body typography | QUEUED | required structure + 12 pt/justified/2 cm/single-spaced body |
+| 3 | Optional foreign elements | **ACCEPTED** | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
+| 4 | Textual structure and body typography | **ACTIVE** | required structure + 12 pt/justified/2 cm/single-spaced body evidence |
 | 5 | Recommendations and conditional applicability | QUEUED | advisory semantics stay advisory; journal boundary stays conditional |
 | 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF with complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific acceptance on one immutable SHA |
 
-## Step 3 implementation — optional foreign elements
+## Step 3 acceptance — optional foreign elements
 
-Rules owned by this Step:
+Step 3 owns:
 
 - `article.title.foreign.optional`;
 - `article.summary.foreign.optional`.
 
-Runtime checkpoint `81e08321222efb03626ac421fc645bd66edd5ae8` adds the explicit article-only route:
+Runtime checkpoint `81e08321222efb03626ac421fc645bd66edd5ae8` provides the explicit article-only route:
 
 `\ufcPrintArticleForeignElements{foreign-title}{foreign-summary}`
 
-The arguments are independently blank-safe. The route does not reuse shared `title-variant`, add metadata keys, or activate Step 4 body typography.
+The arguments are independently blank-safe and do not reuse shared `title-variant` semantics.
 
-| Scenario | Foreign title | Foreign summary |
-|---|---|---|
-| neither | absent | absent |
-| title only | present | absent |
-| summary only | absent | present |
-| both | present | present |
+The synchronized acceptance checkpoint is `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`:
 
-## Evidence history and current classification
+| Gate | Result |
+|---|---|
+| Static | `34031144114` — SUCCESS |
+| Linux | `34031144269` — SUCCESS |
+| Foreign title absent / summary absent | PASS |
+| Foreign title present / summary absent | PASS |
+| Foreign title absent / summary present | PASS |
+| Foreign title present / summary present | PASS |
+| Engines | pdfLaTeX and LuaLaTeX evidence accepted |
+| Non-article profile boundary | exactly six non-article profiles retained; article excluded from compatibility matrix |
+| Scope robustness | missing synchronize endpoint falls back fail-closed to full PR diff |
 
-| Checkpoint / run | Result | Classification |
-|---|---|---|
-| `567a5b2...` / Linux `34028373060` | foreign-elements scenario inspected expected rerun warnings after one pass | evidence-convergence defect |
-| `336bc982...` / Static `34030098936` | dynamic `tests/run.py` load could not import sibling `integration_suites.py` | runner import-path defect |
-| `336bc982...` / Linux `34030098924` | intended `profiles,article`; 7/8 checks PASS; only validator-source failed on same import | runner import-path defect |
-| `4f1c9a1...` / Static `34030827665` | **SUCCESS** | runner import correction confirmed |
-| `4f1c9a1...` / Linux `34030827664` | scope determination stopped at `fatal: bad object` for unavailable synchronize `before` SHA; no integration check ran | workflow scope-fallback defect |
+Earlier Step 3 failures are retained as history in Git/Actions but no longer represent the current execution state. No article rule authority, modality or proof state was changed merely to obtain Step 3 acceptance.
 
-The latest Linux failure is not an article result because TeX integration never started. The workflow assumed the synchronize event's `before` commit remained reachable after history changes. The correct fail-closed behavior is to validate incremental endpoints before use and otherwise use the full PR base/head diff.
+## Step 4 contract — textual structure and body typography
 
-Technical correction `0a48d72c83b601c3ca8e0942f4c9b735ac5f0eb9`:
+Rules owned by this Step:
 
-1. uses `git cat-file -e` to validate synchronize `before` and `after` commits;
-2. falls back to full PR scope when either is unavailable, instead of crashing;
-3. extends `linux_integration_suites.py` so Static protects the fallback contract;
-4. asserts exactly six non-article profiles and excludes `scientific-article` from `profile-matrix.sh`;
-5. emits explicit `PROFILE-MATRIX-EVIDENCE`;
-6. records `convergence_passes=2` and `warnings_checked_after_final_pass=true` for foreign-element evidence;
-7. changes no article runtime, authority, modality or proof state.
+- `article.introduction.required`;
+- `article.development.required`;
+- `article.final-considerations.required`;
+- `article.references.required`;
+- `article.body.typography`.
+
+Accepted presentation values for the article body are:
+
+| Property | Required value |
+|---|---|
+| Font size | 12 pt |
+| Alignment | justified |
+| First-line indent | 2 cm |
+| Line spacing | single |
+
+Step 4 must not infer compliance from the existing academic-work body. Reuse of shared section, bibliography and paragraph mechanisms is preferred, but the article profile needs article-specific executable evidence proving the required structure and typography.
+
+### Step 4 implementation sequence
+
+| Order | Work | Acceptance intent |
+|---:|---|---|
+| 1 | Inspect `articles.def`, shared layout/section hooks and current article fixtures before changing runtime. | Avoid duplicate/forked infrastructure. |
+| 2 | Define the smallest article-only activation needed for body presentation. | No cross-profile drift. |
+| 3 | Add a controlled article fixture containing introduction, development, final considerations and references. | Positive structural evidence. |
+| 4 | Measure 12 pt, justification, 2 cm indent and single spacing from the rendered article PDF. | Physical presentation evidence. |
+| 5 | Add a safe negative structural/typographic case where the validator can deterministically reject a violation. | Fail-closed evidence. |
+| 6 | Register the new Step 4 executable gate in the `article` Linux scope in the same material advance. | Scoped CI cannot omit Step 4. |
+| 7 | Synchronize this plan, handoff, roadmap and machine state. | Documentation matches code/evidence. |
+| 8 | Require Static and bounded article/profile Linux PASS on one synchronized Step 4 checkpoint. | Step 4 acceptance. |
 
 ## Scoped Linux integration
 
-Intermediate article work uses bounded scope where safe. On a normal reachable synchronize range, the current correction touches profile and article evidence surfaces and must select the union `profiles,article`.
-
-If a synchronize endpoint is unavailable, `auto` falls back to the full PR diff. That may select `complete`; this is deliberate fail-closed behavior, not a weakening of the optimization contract.
-
-`article` currently includes:
+Intermediate article work uses bounded scope where safe. `article` currently includes:
 
 - `validator-source`;
 - `scientific-article-profile`;
 - `scientific-article-front-block`;
 - `scientific-article-foreign-elements`.
 
-As Steps 4–7 add article-specific executable gates, add them to `article` in the same **material advance**. `profiles` remains a separate six-profile compatibility suite.
+The Step 4 implementation must add its new executable gate to this list in the same material advance. `profiles` remains a separate six-profile compatibility suite. Multiple applicable domains run as a deduplicated union.
 
-## Step 3 acceptance gate
+A complete repository run is not required for intermediate Step acceptance. The **Scientific Article phase-end regression** remains stricter: `complete` Linux on one immutable candidate, plus Static and all article-specific acceptance evidence.
 
-Step 3 remains open until one synchronized checkpoint proves:
+## README boundary
 
-1. Static contract PASS, including `LINUX-SUITE-EVIDENCE`, dynamic runner import, and missing-before fallback contract;
-2. Linux bounded scope `profiles,article` PASS on the same SHA under a normal reachable incremental range;
-3. `ARTICLE-PROFILE-EVIDENCE` PASS;
-4. `ARTICLE-FRONT-BLOCK-EVIDENCE` PASS;
-5. `ARTICLE-FOREIGN-ELEMENTS-EVIDENCE` PASS for all four scenarios under both engines with two-pass convergence and final-pass warning inspection;
-6. `PROFILE-MATRIX-EVIDENCE` PASS, exactly six non-article profiles, both engines green;
-7. no article rule-modality or proof-state drift.
-
-A complete repository run is not required for this intermediate Step. The **phase-end regression** remains stricter: `complete` Linux on one immutable Scientific Article candidate, plus Static and phase-specific acceptance.
+The root `README.md` is end-user documentation. It should teach users how to obtain and use the stable release, while detailed Scientific Article execution state remains in this file, the handoff, roadmap, machine state, PR and Actions. Until v3.0.0 is released, the README must not present this in-progress article profile as stable functionality.
 
 ## Non-negotiable boundaries
 
@@ -113,7 +122,7 @@ A complete repository run is not required for this intermediate Step. The **phas
 - Required, optional, recommended and conditional semantics remain distinguishable.
 - Recommendations never become hard compilation/validation failures.
 - Journal-specific instructions remain conditional.
-- Step 3 does not promote article proof state merely because runtime exists.
+- Shared implementation is not article proof.
 - Do not weaken normative traceability or scope fail-closed behavior.
 - Item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
@@ -126,4 +135,4 @@ A complete repository run is not required for this intermediate Step. The **phas
 - Active branch: `feat/v3-scientific-article`.
 - Active PR: #286.
 
-Next: publish the synchronized checkpoint containing technical correction `0a48d72...`, require Static and Linux on the same SHA, classify any failure, and only after both required bounded gates are green mark Step 3 accepted and activate Step 4.
+Next: inspect the current article/shared layout implementation, design the bounded Step 4 fixture/checker/runtime activation, synchronize its new executable gate with `article` scope, then require Static and bounded Linux acceptance before advancing to Step 5.
