@@ -110,5 +110,5 @@ for engine in pdflatex lualatex; do
     tests/documents/scientific-article-foreign-absent.tex absent absent
 done
 
-echo 'ARTICLE-FOREIGN-ELEMENTS-EVIDENCE status=PASS engines=2 scenarios=4 convergence_passes=2 title_optional=true summary_optional=true independent=true title_variant_reused=false presentation_rules_promoted=0 recommendations_promoted=0'
+echo 'ARTICLE-FOREIGN-ELEMENTS-EVIDENCE status=PASS engines=2 scenarios=4 convergence_passes=2 warnings_checked_after_final_pass=true title_optional=true summary_optional=true independent=true title_variant_reused=false presentation_rules_promoted=0 recommendations_promoted=0'
 echo 'Scientific article foreign-elements gate completed.'

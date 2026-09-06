@@ -4,6 +4,12 @@ set -eu
 fixture="tests/smoke/base-profile.tex"
 template_dir="template"
 profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
+profile_count=$(printf '%s\n' "$profiles" | awk '{ print NF }')
+
+[ "$profile_count" -eq 6 ] || {
+  echo "Profile matrix contract failed: expected 6 non-article profiles, found $profile_count."
+  exit 1
+}
 
 case " $profiles " in
   *" scientific-article "*)
@@ -203,5 +209,5 @@ PY
   done
 done
 
-echo 'PROFILE-MATRIX-EVIDENCE status=PASS profiles=6 engines=2 article_excluded=true'
+echo "PROFILE-MATRIX-EVIDENCE status=PASS profiles=$profile_count engines=2 article_excluded=true"
 echo 'Complete non-article profile matrix gate completed.'

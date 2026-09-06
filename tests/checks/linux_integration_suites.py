@@ -53,6 +53,8 @@ def main() -> None:
         "github.event.before",
         "github.event.after",
         "incremental-push",
+        "git cat-file -e",
+        "missing-before-full-pr",
         "tests/integration_suites.py --base",
         "tests/run.py --mode pr --suite",
         "manual-auto-fail-closed",
@@ -98,7 +100,8 @@ def main() -> None:
         "LINUX-SUITE-EVIDENCE status=PASS "
         f"suites={len(SUITES)} checks={len(known_checks)} "
         f"manual_choices={len(required_manual_choices)} phase={phase} "
-        "incremental_sync=true unknown_path_fallback=complete article_first_class=true"
+        "incremental_sync=true missing_before_fallback=full-pr "
+        "unknown_path_fallback=complete article_first_class=true"
     )
 
 
