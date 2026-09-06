@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-06  
-Status: ACTIVE — STEP 4 TEXTUAL STRUCTURE AND BODY TYPOGRAPHY
+Status: ACTIVE — STEP 4 IMPLEMENTED / ACCEPTANCE PENDING
 
 ## Purpose
 
@@ -28,7 +28,7 @@ Linux orchestration contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
 | 2 | Required article front block | **ACCEPTED** | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign elements | **ACCEPTED** | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | **ACTIVE** | required structure + 12 pt/justified/2 cm/single-spaced body evidence |
+| 4 | Textual structure and body typography | **IMPLEMENTED — CI PENDING** | implementation `e5291137d4753b7d776916ca0f08c67929dbb76b`; synchronized acceptance checkpoint must pass Static + bounded Linux |
 | 5 | Recommendations and conditional applicability | QUEUED | advisory semantics stay advisory; journal boundary stays conditional |
 | 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF with complete visual inspection |
@@ -42,23 +42,17 @@ No article authority, modality or proof state was changed merely to obtain Step 
 
 ## README user-guide correction
 
-The README correction is accepted at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`, with Static `34054110778` and Linux `34054110738` both successful.
-
-The first rewrite `3e3ece5...` was rejected because it reintroduced three unclassified references to the retired class identity while explaining the stable release. The accepted correction keeps the v2.1.0 download and usage path without weakening `canonical_identity.py`.
-
-README remains end-user documentation. Scientific Article execution details remain in this plan, handoff, roadmap, machine state, PR and Actions.
+The README correction is accepted at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`, with Static `34054110778` and Linux `34054110738` both successful. README remains end-user documentation; Scientific Article execution details remain in engineering documents, PR and Actions.
 
 ## Step 4 contract — textual structure and body typography
 
-Rules owned by this Step:
+Step 4 owns:
 
 - `article.introduction.required`;
 - `article.development.required`;
 - `article.final-considerations.required`;
 - `article.references.required`;
 - `article.body.typography`.
-
-Accepted presentation values for the article body are:
 
 | Property | Required value |
 |---|---|
@@ -67,27 +61,44 @@ Accepted presentation values for the article body are:
 | First-line indent | 2 cm |
 | Line spacing | single |
 
-The shared academic-work layout currently activates 12 pt, 2 cm indentation and 1.5 spacing globally. Therefore the article requires an explicit profile-specific override to single spacing (while preserving the other accepted properties) and article-specific physical evidence. Reuse of shared layout, section and bibliography mechanisms is preferred but is not itself proof.
+The shared academic-work layout activates 12 pt, 2 cm indentation and 1.5 spacing. Step 4 therefore adds only a `scientific-article`-scoped begin-document override to single spacing while reaffirming 12 pt, 2 cm, zero extra paragraph spacing and justified alignment. No non-article route is modified.
 
-### Step 4 implementation sequence
+## Step 4 implementation checkpoint
 
-| Order | Work | Acceptance intent |
-|---:|---|---|
-| 1 | Inspect `articles.def`, shared layout/section hooks and PDF checker patterns. | Avoid duplicate/forked infrastructure. |
-| 2 | Define the smallest `scientific-article`-only body activation. | No cross-profile drift. |
-| 3 | Add a controlled article fixture containing introduction, development, final considerations and references. | Positive structural evidence. |
-| 4 | Measure 12 pt, justification, 2 cm indent and single spacing from the rendered article PDF. | Physical presentation evidence. |
-| 5 | Add a safe negative structural case that the checker deterministically rejects. | Fail-closed evidence. |
-| 6 | Register the new Step 4 executable gate in `tests/run.py` and in the `article` Linux suite in the same material advance. | Scoped CI cannot omit Step 4. |
-| 7 | Replace the obsolete pre-Step4 front-block guard with the new accepted Step4 boundary rather than simply deleting coverage. | Semantic transition without test weakening. |
-| 8 | Synchronize this plan, handoff, roadmap and machine state. | Documentation matches code/evidence. |
-| 9 | Require Static and bounded article/profile Linux PASS on one synchronized Step 4 checkpoint. | Step 4 acceptance. |
+Implementation commit `e5291137d4753b7d776916ca0f08c67929dbb76b` completes the bounded implementation before documentation synchronization.
+
+| Requirement | Implementation/evidence surface | State before CI |
+|---|---|---|
+| Article-only body activation | `abntexto-ufc/articles.def` checks canonical `scientific-article` before applying body typography | IMPLEMENTED |
+| Required structure | positive fixture contains Introdução, Desenvolvimento, Considerações finais and Referências | IMPLEMENTED |
+| 12 pt body | final-PDF checker measures controlled body typography runs | IMPLEMENTED |
+| 2 cm first-line indent | checker compares paragraph start against same-page text-margin control | IMPLEMENTED |
+| Justification | checker measures left continuation alignment and right extent of non-final natural lines | IMPLEMENTED |
+| Single spacing | checker compares natural body-line gaps to same-document explicit `\singlesp` calibration | IMPLEMENTED |
+| Negative structure | separate fixture omits Desenvolvimento; checker must reject for that reason | IMPLEMENTED |
+| Step 2/3 regression boundary | obsolete “no AtBeginDocument before Step 4” guards replaced by positive profile-scoped Step 4 route checks | IMPLEMENTED |
+| Coordinated runner | new `scientific-article-body` check registered in `tests/run.py` | IMPLEMENTED |
+| Linux article suite | `scientific-article-body` added to `article`; static suite contract requires it | IMPLEMENTED |
+| Proof-state promotion | none; retained article rules remain source-reviewed until later evidence-hardening Step 6 | PRESERVED |
+
+## Acceptance gate for Step 4
+
+The synchronized checkpoint containing `e5291137...` plus this documentation must pass:
+
+1. Static contract, including Linux-suite registration and existing normative/identity/language guards;
+2. bounded Linux `article` acceptance, exercising profile, front block, foreign elements and the new body gate;
+3. two-engine positive final-PDF body evidence;
+4. deterministic negative rejection for missing Desenvolvimento;
+5. no regression in the six-profile non-article compatibility boundary when selected by scope;
+6. no article authority/modality/proof-state promotion merely to obtain green CI.
+
+Any failure is classified before changing runtime or tests. Step 5 does not begin until this gate is green and the result is recorded in a later documentation checkpoint.
 
 ## Scoped Linux integration
 
-Intermediate article work uses bounded scope where safe. `article` currently includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`. The Step 4 implementation must add its new executable gate to this list in the same material advance. `profiles` remains a separate six-profile compatibility suite.
+`article` now includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block`, `scientific-article-foreign-elements` and `scientific-article-body`. `profiles` remains a separate six-profile compatibility suite.
 
-A complete repository run is not required for intermediate Step acceptance. The **Scientific Article phase-end regression** remains stricter: `complete` Linux on one immutable candidate, plus Static and all article-specific acceptance evidence.
+A scoped green run never closes the Scientific Article phase. Step 8 still requires Static plus `complete` Linux on one immutable phase-end candidate.
 
 ## Non-negotiable boundaries
 
@@ -109,5 +120,6 @@ A complete repository run is not required for intermediate Step acceptance. The 
 - Canonical base: `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
 - Active branch: `feat/v3-scientific-article`.
 - Active PR: #286.
+- Step 4 implementation: `e5291137d4753b7d776916ca0f08c67929dbb76b`.
 
-Next: implement and validate the bounded Step 4 article body/structure evidence, then only after Static plus bounded Linux acceptance advance to Step 5.
+Next: publish the synchronized Step 4 checkpoint, run Static plus bounded Linux, classify any failure fail-closed, and only after green acceptance advance documentation to Step 5.
