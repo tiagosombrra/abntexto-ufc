@@ -3,7 +3,7 @@
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
-  "updated_at": "2026-09-05",
+  "updated_at": "2026-09-06",
   "status": "ACTIVE",
   "phase": "scientific-article",
   "stage": "scientific-article",
@@ -159,8 +159,8 @@
     ],
     "scientific_article_active_step": 2,
     "scientific_article_step1_state": "accepted",
-    "scientific_article_step2_state": "implemented-ci-pending-after-currency-reconciliation",
-    "latest_implementation_checkpoint_sha": "e29501bd8cae98d6442f08e17bc3a54892fc7e0d",
+    "scientific_article_step2_state": "evidence-correction-ci-pending",
+    "latest_implementation_checkpoint_sha": "bb52697a0e71b2d6a8bc135196f40dba9497b38f",
     "latest_fully_validated_checkpoint_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
     "latest_fully_validated_checkpoint_state": "scientific-article-step1-static-green-linux-green",
     "core_corrections_closed": true,
@@ -168,12 +168,13 @@
     "shared_foundation_merged_to_main": true,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "current_correction_batch": [
-      "Scientific Article — Required article front block acceptance after normative-currency reconciliation"
+      "Scientific Article — Required article front block evidence predicate correction"
     ],
     "known_runtime_failures": [],
     "known_entry_gaps": [],
     "known_gate_failures": [
-      "Static 34003576066 on 768d355: normative_currency.py still enforced the pre-activation articles.def-absent invariant after Scientific Article became the active readable phase; classified as stale control-policy coupling, not article runtime or authority failure"
+      "Static 34003576066 on 768d355: normative_currency.py still enforced the pre-activation articles.def-absent invariant after Scientific Article became the active readable phase; classified as stale control-policy coupling, not article runtime or authority failure",
+      "Linux 34003838521 on 6587636: Document profiles emitted ARTICLE-PROFILE-EVIDENCE PASS but the article front-block checker rejected the author note using an unsupported note_y >= 65% physical-page-height predicate; classified as validator-predicate defect, not runtime or authority failure"
     ],
     "resolved_entry_gaps": [
       "canonical scientific-article profile registered at b46ba2051f8c9c712a7b5d25748b81baa52b920a",
@@ -181,10 +182,13 @@
       "PR #285 merged accepted foundation and Step 1 to main at e6833ed5cf07aaf1021c690260cecfacec1a119a",
       "fresh feat/v3-scientific-article branch created from updated main",
       "Step 2 required article front block implemented at 90293af760c4063b02a16831196ec3d932f1471d with rendered evidence gate added",
-      "stale pre-activation normative-currency runtime-absence invariant reconciled at e29501bd8cae98d6442f08e17bc3a54892fc7e0d without changing the article authority source set or proof state"
+      "stale pre-activation normative-currency runtime-absence invariant reconciled at e29501bd8cae98d6442f08e17bc3a54892fc7e0d without changing the article authority source set or proof state",
+      "post-currency Static 34003838489 passed on 6587636f8550dcd68b3feec5bbd145551775eb4b",
+      "Linux 34003838521 article footnote-region failure classified as unsupported evidence strengthening; runtime footnote route remained intact",
+      "article author-note validator corrected at bb52697a0e71b2d6a8bc135196f40dba9497b38f to require semantic footnote routing plus rendered 10 pt footnote typography instead of an unsupported page-height percentage"
     ],
     "pending_acceptance_gates": [
-      "Re-run synchronized Step 2 after normative-currency reconciliation; Static contract and full Linux must pass with ARTICLE-FRONT-BLOCK-EVIDENCE on both engines",
+      "Run synchronized Step 2 after validator-predicate correction; Static contract and full Linux must pass with ARTICLE-FRONT-BLOCK-EVIDENCE on both engines",
       "Add article-specific positive evidence before any proof-state promotion",
       "Implement optional/recommended/conditional article semantics without modality drift",
       "Produce and visually inspect provenance-bound canonical article PDF",
@@ -237,14 +241,15 @@
       "current_state": "PASS"
     },
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-step1-accepted-step2-implemented-currency-reconciled-ci-pending",
+      "status": "source-contract-accepted-runtime-step1-accepted-step2-evidence-correction-ci-pending",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
       "required_optional_recommended_conditional_distinct": true,
       "shared_mechanism_counts_as_proof": false,
       "profile_registration_counts_as_presentation_proof": false,
-      "step2_source_implementation_counts_as_proof": false
+      "step2_source_implementation_counts_as_proof": false,
+      "validator_correction_counts_as_proof": false
     }
   },
   "evidence": {
@@ -295,7 +300,15 @@
     "scientific_article_step2_first_static_conclusion": "failure",
     "scientific_article_step2_first_static_classification": "stale-pre-activation-normative-currency-invariant",
     "normative_currency_article_activation_fix_sha": "e29501bd8cae98d6442f08e17bc3a54892fc7e0d",
-    "scientific_article_step2_evidence_state": "ci-pending-after-currency-reconciliation",
+    "scientific_article_step2_post_currency_sha": "6587636f8550dcd68b3feec5bbd145551775eb4b",
+    "scientific_article_step2_post_currency_static_run": 34003838489,
+    "scientific_article_step2_post_currency_static_conclusion": "success",
+    "scientific_article_step2_post_currency_linux_run": 34003838521,
+    "scientific_article_step2_post_currency_linux_conclusion": "failure",
+    "scientific_article_step2_post_currency_linux_summary": "PASS=29 FAIL=1 SKIP=1",
+    "scientific_article_step2_post_currency_linux_classification": "unsupported-author-note-page-bottom-percentage-evidence-predicate",
+    "scientific_article_step2_validator_fix_sha": "bb52697a0e71b2d6a8bc135196f40dba9497b38f",
+    "scientific_article_step2_evidence_state": "validator-corrected-ci-pending",
     "scientific_article_step2_presentation_rules_promoted": 0,
     "shared_foundation_pr": 285,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
