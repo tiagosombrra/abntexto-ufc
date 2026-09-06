@@ -4,14 +4,14 @@ Updated: 2026-09-06
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 3 — optional foreign elements; evidence correction and scoped Linux integration are the current acceptance batch.**
+**Scientific Article is ACTIVE at Step 3 — optional foreign elements; runner-import correction and synchronized scoped acceptance are the current batch.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c64941895f97fbe0f795ce826c798d17ce`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 3 ACCEPTANCE PENDING** | Steps 1–2 accepted; Step 3 runtime implemented; bounded evidence correction + scoped Linux migration under validation |
+| Scientific Article | **ACTIVE — STEP 3 ACCEPTANCE PENDING** | Steps 1–2 accepted; Step 3 runtime/evidence passes bounded executable checks, but synchronized Static/Linux acceptance is pending after runner import repair |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -21,18 +21,29 @@ Updated: 2026-09-06
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
 | 2 | Required article front block | **ACCEPTED** | `0947669...`; Static `34026680871`; Linux `34026680882` |
-| 3 | Optional foreign title and summary | **IMPLEMENTED — EVIDENCE FIX / CI PENDING** | `81e0832...`; synchronized run `34028373060` classified as one-pass evidence-orchestration failure |
+| 3 | Optional foreign title and summary | **IMPLEMENTED — RUNNER IMPORT FIX / CI PENDING** | runtime `81e0832...`; migration `336bc982...`; technical fix `4068414...` |
 | 4 | Textual structure and body typography | QUEUED | required article structure plus 12 pt/justified/2 cm/single-spaced body evidence |
 | 5 | Recommendations and conditional applicability | QUEUED | recommendations stay advisory; journal instructions stay conditional |
 | 6 | Evidence hardening | QUEUED | article-specific positive/negative evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + **complete Linux scope** + article-specific evidence on one immutable SHA |
 
-## Step 3 failure classification
+## Step 3 migration evidence
 
-Linux `34028373060` on synchronized head `567a5b2d21a16b653d7704639bdd5012d7c2f99b` ran the former complete integration path. All preceding shared checks passed; the six accepted non-article profiles also completed under both engines. The failure appeared only when the profile matrix recursively entered the article gate and the first foreign-elements scenario inspected expected first-pass Biber/cross-reference rerun warnings after one LaTeX pass.
+Checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3` proved the new PR scope inference selected `profiles,article`. Linux `34030098924` executed eight checks:
 
-The correction is limited to test/orchestration behavior: use two LaTeX passes before warning inspection, expose article gates directly in the coordinated runner, and separate article validation from the non-article profile matrix. No article runtime or normative rule changes.
+- article profile: PASS;
+- article front block: PASS;
+- article foreign elements: PASS for four scenarios under both engines;
+- six non-article profiles: PASS under both engines;
+- build path: PASS;
+- multivolume: PASS;
+- catalog card: PASS;
+- validator-source: FAIL because dynamic loading of `tests/run.py` could not resolve sibling `integration_suites.py`.
+
+Static `34030098936` failed at the same import path. The failure is therefore classified as **test-runner import infrastructure**, not article behavior or normative evidence failure.
+
+Technical checkpoint `4068414a2c2e1f919246438b516a6092f677925f` makes the sibling import robust and strengthens migration evidence without changing article runtime or normative rules. The synchronized checkpoint must now rerun Static and `profiles,article` on the same SHA.
 
 ## Linux integration scopes
 
@@ -47,9 +58,7 @@ The correction is limited to test/orchestration behavior: use two LaTeX passes b
 | `smoke` | integration-orchestration-only changes | No |
 | `complete` | shared/core/unknown changes and phase-end regression | **Required at phase end** |
 
-For PR `synchronize`, `auto` uses the incremental push diff (`before` → `after`) rather than the entire accumulated PR diff. Opened/reopened/ready events use the full PR diff. Documentation-only changes skip heavy Linux. Unknown technical paths and shared/core/standards/integration infrastructure fail closed to `complete`.
-
-Multiple known domains run a deduplicated union. The current migration modifies both non-article profile orchestration and article evidence, so the expected first bounded run is `profiles,article`.
+PR `synchronize` uses the incremental pushed range. Multiple known domains run a deduplicated union. Runner/orchestration changes accompanying article/profile evidence remain bounded; unknown technical paths fail closed to `complete`. Direct runner execution and dynamic traceability loading must both resolve runner-owned sibling modules.
 
 Detailed contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 

@@ -23,11 +23,12 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 - Canonical base: `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
 - Active task branch: `feat/v3-scientific-article`, PR #286.
 - Step 1: ACCEPTED at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
-- Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`, `PASS=31 FAIL=0 SKIP=0`.
-- Step 3 implementation checkpoint: `81e08321222efb03626ac421fc645bd66edd5ae8`.
-- Synchronized Step 3 head `567a5b2d21a16b653d7704639bdd5012d7c2f99b`: Static `34028373064` SUCCESS; full Linux `34028373060` failed only in the article foreign-elements evidence path after all preceding shared checks and all six non-article profile builds had passed.
-- Failure classification: `scientific-article-foreign-elements.sh` inspected expected first-pass cross-reference/Biber rerun warnings after only one LaTeX pass. This is an evidence-orchestration defect, not an article runtime, authority or modality failure.
-- Current batch: **Scientific Article — Step 3 evidence correction + scoped Linux integration orchestration**.
+- Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`.
+- Step 3 runtime checkpoint: `81e08321222efb03626ac421fc645bd66edd5ae8`.
+- Scoped orchestration checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3` selected the intended `profiles,article` Linux scope. Article profile, required front block, all four foreign-element scenarios under both engines, and all six non-article profiles passed. The only Linux failure was `validator-source` because dynamically loading `tests/run.py` could not resolve its sibling `integration_suites.py`; Static `34030098936` failed for the same import-path defect. Linux `34030098924` ended `PASS=7 FAIL=1 SKIP=0`.
+- The import defect is test-runner infrastructure only. It does not establish article runtime, authority, modality, proof-state, or non-article compatibility failure.
+- Technical correction checkpoint: `4068414a2c2e1f919246438b516a6092f677925f`. It makes the runner sibling import robust, adds explicit non-article/article matrix separation evidence, and records two-pass foreign-element convergence evidence. No article runtime or normative rule changes.
+- Step 3 remains **IMPLEMENTED / ACCEPTANCE PENDING** until the synchronized checkpoint passes Static and `profiles,article` Linux on the same SHA.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 
@@ -47,38 +48,37 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 `docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract.
 
 - PR `auto` uses the incremental pushed range on `synchronize` and the full PR diff on opened/reopened/ready events.
-- Available bounded scopes include `article`, `profiles`, `reference-document`, `reference-pdf`, `frontmatter`, `layout`, `objects`, `bibliography`, `backmatter`, `research-project` and `smoke`.
-- Multiple known domains run the union of their checks without duplicates.
 - Documentation-only changes skip heavy Linux integration.
-- Shared/core, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
-- Manual `workflow_dispatch` exposes the same named scopes; manual `auto` fails closed to `complete`.
-- Article gates are first-class coordinated checks, not recursively hidden inside `profiles` or another article gate.
-- During Scientific Article, the `article` scope must include `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`; later article-specific executable gates must join the suite in the same material advance.
-- Scoped runs are intermediate evidence only. Every phase-end regression still requires `complete` Linux integration on the immutable candidate.
+- Multiple known domains run a deduplicated union.
+- Workflow/runner orchestration accompanying known domain changes does not force `complete`.
+- Unknown technical paths and shared/core/standards surfaces fail closed to `complete`.
+- Article gates are first-class checks; `profiles` excludes `scientific-article`.
+- The `article` scope includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block` and `scientific-article-foreign-elements`.
+- Runner modules must remain importable both by direct execution and by repository traceability loaders.
+- Scoped runs are intermediate evidence only. Phase-end regression always uses `complete`.
 
 ## Scientific Article rules
 
-- Implement only one canonical type: `scientific-article`; no runtime aliases.
+- One canonical type: `scientific-article`; no aliases.
 - Preserve the retained 18-rule article source contract.
-- Required, optional, recommended and required-when-applicable semantics remain distinct.
-- Reuse shared citation, reference, section, object and summary machinery rather than fork it.
-- Shared mechanisms, source implementation, profile registration and green non-article tests do not by themselves prove article rules.
-- Step 3 foreign title and foreign summary remain independently optional; absence must compile cleanly and must not become a validation failure.
-- Do not infer foreign-title semantics from shared `title-variant`; the Step 3 route is explicit and article-only.
-- Step 3 presentation is deliberately minimally asserted; optionality/routing evidence must not invent unsupported typography requirements.
-- Article body typography remains owned by Step 4.
-- Recommendations remain advisory and never become hard compilation/validation failures.
-- Journal instructions remain a conditional applicability boundary.
+- Keep required, optional, recommended and required-when-applicable semantics distinct.
+- Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
+- Shared implementation is not article proof.
+- Foreign title and foreign summary are independently optional; absence must compile cleanly.
+- Do not repurpose `title-variant` for article foreign-title semantics.
+- Step 3 does not invent unsupported presentation requirements.
+- Article body typography belongs to Step 4.
+- Recommendations remain advisory; journal instructions remain conditional.
 
 ## Engineering rules
 
-- Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
-- Preserve the closed shared V3 public API unless a current requirement explicitly authorizes a change.
-- Do not silently change normative rule IDs, expected values, tolerances, locators, applicability, source precedence, modality, or proof-state semantics.
-- A green test proves only the contract encoded by that test. Current authority and presentation acceptance remain separate obligations.
+- Project-owned technical surfaces are English.
+- Preserve the accepted shared V3 public API unless current authority explicitly authorizes change.
+- Do not silently change normative IDs, expected values, tolerances, locators, applicability, source precedence, modality or proof state.
+- A green test proves only the contract encoded by that test.
 - Reviewer comments are evidence, not automatic normative authority.
-- Do not weaken tests merely to recover green CI.
-- Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before checkpoint closeout.
+- Do not weaken tests to recover green CI.
+- Temporary executors must be removed before checkpoint acceptance.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
 - Do not redistribute proprietary Microsoft fonts.
 - Do not perform actual CTAN submission before **Release**.
@@ -93,7 +93,7 @@ For every material advance, update the relevant execution document and canonical
 
 No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
 
-The machine contract intentionally keeps `phase_end_regression.candidate = one-immutable-sha`. Targeted/scoped Step checks never replace the Scientific Article phase-end regression. The Linux scope for phase-end regression is `complete`.
+The machine contract keeps `phase_end_regression.candidate = one-immutable-sha`. Scoped Step checks never replace the Scientific Article phase-end regression; the phase-end Linux scope is `complete`.
 
 ## Fail-closed rule
 

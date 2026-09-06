@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-06  
-Status: IMPLEMENTED — CI ACCEPTANCE PENDING
+Status: IMPLEMENTED — RUNNER IMPORT CORRECTION / CI ACCEPTANCE PENDING
 
 ## Purpose
 
@@ -12,41 +12,59 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 | Scope | Intended use | Main checks | Can close a phase? |
 |---|---|---|---|
 | `auto` | Pull requests; infer the narrowest safe suite from changed paths | one or more inferred suites | No |
-| `complete` | Shared/core changes, unknown technical paths and phase-end regression | all PR integration checks + normative contribution | **Yes, when combined with all other phase-end gates** |
-| `article` | Scientific Article implementation/evidence | authority/source contract + article profile + required front block + optional foreign elements | No |
+| `complete` | Shared/core changes, unknown technical paths and phase-end regression | all PR integration checks + normative contribution | **Yes, with all other phase-end gates** |
+| `article` | Scientific Article implementation/evidence | validator-source + article profile/front-block/foreign-elements | No |
 | `reference-document` | canonical reference source/corpus changes | reference build, corpus and PDF validator | No |
-| `reference-pdf` | presentation-sensitive reference-PDF work | reference, layout, typography, front/back matter, objects and bibliography surfaces | No |
+| `reference-pdf` | presentation-sensitive reference-PDF work | reference, layout, typography, front/back matter, objects, bibliography | No |
 | `frontmatter` | cover/title/approval/pre-textual changes | front matter + duplex front matter | No |
-| `layout` | page/body/geometry/math/quotation changes | layout, fonts, PDF core/geometry, math and normative complement | No |
+| `layout` | page/body/geometry/math/quotation changes | layout, fonts, PDF core/geometry, math, normative complement | No |
 | `objects` | figures/tables/code/algorithms/documentary sources | object geometry, code typography, IBGE tables, objects, minted, algorithms, documentary sources | No |
 | `bibliography` | references/citation evidence | bibliography, reference spacing, normative complement | No |
 | `backmatter` | appendices/annexes/index/glossary | back matter + duplex back matter | No |
 | `research-project` | research-project profile changes | research-project integration | No |
-| `profiles` | accepted non-article profile compatibility | six-profile matrix, build path, multivolume and catalog card | No |
-| `smoke` | orchestration-only changes | repository/source/reference/PDF-validator smoke surface | No |
+| `profiles` | accepted non-article profile compatibility | six-profile matrix, build path, multivolume, catalog card | No |
+| `smoke` | orchestration-only changes | repository/source/reference/PDF-validator smoke | No |
 
 ## Automatic selection
 
 For pull requests, `auto` evaluates the relevant changed-path window after checkout.
 
-- On `synchronize`, it compares the previous PR head (`before`) with the new PR head (`after`). This prevents an old long-lived PR diff from forcing a complete run after every new commit.
-- On opened, reopened and ready-for-review events, it uses the full PR diff.
+- On `synchronize`, compare the previous PR head (`before`) with the new PR head (`after`).
+- On opened/reopened/ready-for-review events, use the full PR diff.
 - Documentation-only changes skip heavy Linux integration.
 - Known domain paths select their bounded suite.
-- Multiple known domains run the union of their checks without duplicates.
+- Multiple known domains run a deduplicated union.
 - Workflow/runner orchestration files do not force `complete` when they accompany a known bounded-domain change; orchestration-only changes select `smoke`.
 - Shared/core surfaces, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
-- Manual `workflow_dispatch` with `auto` also fails closed to `complete`, because no PR-diff scope is authoritative.
+- Manual `workflow_dispatch` with `auto` fails closed to `complete`.
 
-## First-class article gates
+## First-class article and profile gates
 
-Article checks are no longer hidden inside the non-article profile matrix or chained recursively from the article profile gate. The coordinated runner owns them independently:
+Article checks are not hidden inside the non-article profile matrix or recursively chained from the profile gate. The coordinated runner owns them independently.
 
-1. `scientific-article-profile`;
-2. `scientific-article-front-block`;
-3. `scientific-article-foreign-elements`.
+The `article` suite contains:
 
-The `article` suite also includes `validator-source`. As Steps 4–7 add article-specific executable checks, each new gate must be added to `article` in the same **material advance**.
+1. `validator-source`;
+2. `scientific-article-profile`;
+3. `scientific-article-front-block`;
+4. `scientific-article-foreign-elements`.
+
+The `profiles` suite contains only the six accepted non-article profiles and compatibility checks. `profile-matrix.sh` must reject accidental inclusion of `scientific-article` and emit `PROFILE-MATRIX-EVIDENCE`.
+
+As Scientific Article Steps 4–7 add executable gates, each new article gate joins `article` in the same **material advance**.
+
+## Runner importability invariant
+
+The coordinated runner is consumed in two ways:
+
+- direct execution: `python3 tests/run.py ...`;
+- dynamic loading by normative traceability/false-coverage checks.
+
+Runner-owned sibling modules such as `tests/integration_suites.py` must resolve in both contexts. A direct-execution-only import path is a static-contract defect, not a reason to weaken traceability.
+
+Migration checkpoint `336bc982d8442d572b52c4b9b78028e197c178b3` demonstrated this boundary: scope inference correctly selected `profiles,article`, and seven of eight bounded checks passed, but both Static `34030098936` and Linux `34030098924` failed `validator-source` because dynamically loaded `tests/run.py` could not resolve `integration_suites.py`.
+
+Technical correction `4068414a2c2e1f919246438b516a6092f677925f` makes `tests/run.py` add its own directory to the module search path before importing its sibling suite definition. It also strengthens profile-separation and two-pass foreign-element evidence. No article runtime or normative rule changes.
 
 ## Manual use
 
@@ -62,18 +80,14 @@ python3 tests/run.py --mode pr --suite complete
 
 Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
-## Current Step 3 failure classification
+## Current acceptance requirement
 
-Linux `34028373060` on synchronized Step 3 head `567a5b2d21a16b653d7704639bdd5012d7c2f99b` ran the former complete 31-check integration path. All checks before `profiles` passed, including the six accepted non-article profile builds. The failure occurred only when the profile matrix recursively entered the article gates: the first foreign-elements scenario inspected warnings after a single LaTeX pass and encountered expected unresolved cross-reference/Biber rerun warnings.
+The synchronized correction checkpoint must pass:
 
-The correction is bounded to evidence orchestration:
-
-- foreign-element fixtures now receive two LaTeX passes before warning inspection, matching the accepted front-block pattern;
-- the non-article profile matrix no longer invokes article validation;
-- the article profile gate no longer recursively invokes Step 2/3 gates;
-- the coordinated runner exposes all three article gates directly.
-
-No article runtime, article authority, rule modality or proof state changes in this correction.
+- Static contract, including dynamic runner loading and `LINUX-SUITE-EVIDENCE`;
+- Linux `profiles,article` on the same SHA;
+- article profile/front-block/foreign-elements evidence;
+- non-article `PROFILE-MATRIX-EVIDENCE` and six-profile compatibility.
 
 ## Phase-end rule
 

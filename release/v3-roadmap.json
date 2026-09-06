@@ -166,8 +166,8 @@
     "scientific_article_active_step": 3,
     "scientific_article_step1_state": "accepted",
     "scientific_article_step2_state": "accepted",
-    "scientific_article_step3_state": "implementation-evidence-fix-ci-pending",
-    "latest_implementation_checkpoint_sha": "81e08321222efb03626ac421fc645bd66edd5ae8",
+    "scientific_article_step3_state": "runner-import-fix-ci-pending",
+    "latest_implementation_checkpoint_sha": "4068414a2c2e1f919246438b516a6092f677925f",
     "latest_fully_validated_checkpoint_sha": "0947669c2c096dca93991e042d8ae245754688ba",
     "latest_fully_validated_checkpoint_state": "scientific-article-step2-static-green-linux-green",
     "core_corrections_closed": true,
@@ -175,21 +175,23 @@
     "shared_foundation_merged_to_main": true,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "current_correction_batch": [
-      "Scientific Article — Step 3 evidence correction and scoped Linux integration orchestration"
+      "Scientific Article — Step 3 runner-import correction and synchronized scoped acceptance"
     ],
     "known_runtime_failures": [],
     "known_gate_failures": [
       "Static 34003576066 on 768d355: stale pre-activation normative-currency coupling after Scientific Article activation",
       "Linux 34003838521 on 6587636: unsupported author-note physical-page percentage evidence predicate",
-      "Linux 34028373060 on 567a5b2: all preceding shared checks and six non-article profiles passed; foreign-elements evidence inspected expected first-pass Biber/cross-reference warnings after one LaTeX pass"
+      "Linux 34028373060 on 567a5b2: all preceding shared checks and six non-article profiles passed; foreign-elements evidence inspected expected first-pass Biber/cross-reference warnings after one LaTeX pass",
+      "Static 34030098936 on 336bc982: validator-source dynamic traceability load of tests/run.py could not resolve sibling integration_suites.py",
+      "Linux 34030098924 on 336bc982: intended profiles,article scope selected; seven checks passed and validator-source failed only on the same runner sibling-import defect"
     ],
     "pending_acceptance_gates": [
-      "Scoped integration checkpoint must pass Static contract including Linux suite contract",
-      "PR Linux run for the migration checkpoint must select profiles,article rather than complete",
+      "Synchronized runner-import correction checkpoint must pass Static contract including Linux suite contract and dynamic traceability loading",
+      "PR Linux run on the same checkpoint must select profiles,article",
       "ARTICLE-PROFILE-EVIDENCE must pass under both engines",
       "ARTICLE-FRONT-BLOCK-EVIDENCE must remain green",
-      "ARTICLE-FOREIGN-ELEMENTS-EVIDENCE must pass all four optionality scenarios under both engines",
-      "Six accepted non-article profiles must remain green",
+      "ARTICLE-FOREIGN-ELEMENTS-EVIDENCE must pass all four optionality scenarios under both engines with two-pass convergence",
+      "PROFILE-MATRIX-EVIDENCE and six accepted non-article profiles must remain green",
       "Article proof-state must remain unchanged until dedicated evidence hardening",
       "Step 4 begins only after Step 3 acceptance",
       "Produce and visually inspect provenance-bound canonical article PDF",
@@ -209,7 +211,7 @@
   },
   "linux_integration": {
     "policy_document": "docs/LINUX-INTEGRATION-SCOPES.md",
-    "state": "implementation-ci-pending",
+    "state": "runner-import-fix-ci-pending",
     "automatic_pr_scope": "auto",
     "synchronize_diff_window": "incremental-push",
     "initial_pr_diff_window": "full-pr",
@@ -240,13 +242,14 @@
     ],
     "article_gates_first_class": true,
     "profiles_scope_excludes_article": true,
+    "runner_sibling_import_must_support_dynamic_loading": true,
     "multiple_domain_policy": "union-deduplicated",
     "complete_contribution_gate": true
   },
   "branch_plan": {
     "current_work_branch": "feat/v3-scientific-article",
     "integration_pr": 286,
-    "integration_state": "open-step3-scoped-ci-validation",
+    "integration_state": "open-step3-runner-import-fix-validation",
     "integration_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "previous_integration_branch": "plan/v3-regression-reset",
     "previous_branch_state": "historical-no-new-work",
@@ -274,7 +277,7 @@
       "current_state": "PASS"
     },
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-steps1-2-accepted-step3-evidence-fix-ci-pending",
+      "status": "source-contract-accepted-runtime-steps1-2-accepted-step3-runner-import-fix-ci-pending",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
@@ -309,7 +312,16 @@
     "scientific_article_step3_linux_run": 34028373060,
     "scientific_article_step3_linux_conclusion": "failure",
     "scientific_article_step3_linux_classification": "foreign-elements-one-pass-evidence-orchestration-defect",
-    "scoped_linux_integration_state": "implementation-ci-pending",
+    "scoped_linux_migration_sha": "336bc982d8442d572b52c4b9b78028e197c178b3",
+    "scoped_linux_migration_static_run": 34030098936,
+    "scoped_linux_migration_static_conclusion": "failure",
+    "scoped_linux_migration_linux_run": 34030098924,
+    "scoped_linux_migration_linux_conclusion": "failure",
+    "scoped_linux_migration_linux_scope": "profiles,article",
+    "scoped_linux_migration_linux_summary": "PASS=7 FAIL=1 SKIP=0",
+    "scoped_linux_migration_failure_classification": "validator-source-runner-sibling-import-path-defect",
+    "runner_import_fix_technical_sha": "4068414a2c2e1f919246438b516a6092f677925f",
+    "scoped_linux_integration_state": "runner-import-fix-ci-pending",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },
