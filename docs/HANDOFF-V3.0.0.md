@@ -8,6 +8,7 @@ Updated: 2026-09-05
 - Canonical branch: `main`.
 - PR #285 merged as `e6833ed5cf07aaf1021c690260cecfacec1a119a`, landing the validated shared foundation and accepted Scientific Article Step 1.
 - Active task branch: `feat/v3-scientific-article`.
+- Active PR: #286.
 - Active phase: **Scientific Article**.
 - Regression Audit: CLOSED.
 - Core Corrections candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
@@ -16,31 +17,38 @@ Updated: 2026-09-05
 - Librarian-review state: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Scientific Article source contract: 18 rules in `docs/ARTICLE-NORMATIVE-CONTRACT.md` / `standards/coverage-rules-article.json`.
-- Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
 - Step 1 synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS; Linux `34001350953` SUCCESS; `PASS=31 FAIL=0 SKIP=0`.
 - Step 1 state: **ACCEPTED**.
 - Step 2 implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.
-- Step 2 state: **IMPLEMENTED — CI PENDING**.
+- Step 2 first synchronized checkpoint `768d355eda11f47b4cebbb6864247e9fc2aa728f`: Static `34003576066` FAILED on a stale pre-activation normative-currency invariant.
+- Normative-currency correction checkpoint: `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`.
+- Step 2 state: **IMPLEMENTED — CI PENDING AFTER CURRENCY RECONCILIATION**.
 - Step 2 runtime: new `abntexto-ufc/articles.def` and public `\ufcPrintArticleFrontMatter{...}` route.
 - Step 2 rendered evidence: title, authorship, author footnote, submission/approval dates and primary summary under pdfLaTeX/LuaLaTeX; no proof-state promotion yet.
 - Issue #217: CLOSED / superseded by current permanent workflow orchestration.
-- Issue #18: OPEN and explicit **v3 release blocker** owned by Final Certification/Release; deterministic reference-PDF bytes/hash must be proven before publication.
+- Issue #18: OPEN and explicit **v3 release blocker** owned by Final Certification/Release.
 - No temporary executor is active.
 
-Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/V3-RELEASE-READINESS.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/V3-RELEASE-READINESS.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `docs/NORMATIVE-CURRENCY.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and `docs/ENGINEERING-LANGUAGE.md`.
 
 ## Scientific Article progress
 
 | Step | State | Evidence / boundary |
 |---:|---|---|
-| 1. Profile and metadata surface | **ACCEPTED** | `b46ba205...`; synchronized `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2. Required article front block | **IMPLEMENTED — CI PENDING** | implementation `90293af...`; article-specific final-PDF/source gate added for title/authorship/dates/summary |
+| 1. Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
+| 2. Required article front block | **IMPLEMENTED — CI PENDING AFTER CURRENCY RECONCILIATION** | implementation `90293af...`; first Static `34003576066` classified; currency correction `e29501b...`; post-fix regression required |
 | 3. Optional foreign elements | QUEUED | foreign title/summary optionality must remain non-mandatory |
 | 4. Textual structure/body typography | QUEUED | reuse shared citation/reference/section/object machinery |
 | 5. Recommendations/conditional boundary | QUEUED | recommendations advisory; journal instructions conditional |
 | 6. Evidence hardening | QUEUED | rule-specific positive/negative proof only |
 | 7. Canonical article PDF | QUEUED | real Git-bound TeX Live 2026 artifact + complete visual review |
 | 8. Phase-end regression | QUEUED | one immutable SHA; Static + full Linux + article acceptance |
+
+## Step 2 gate classification
+
+Static `34003576066` did not report an article rendering or source-authority defect. It stopped because `tests/checks/normative_currency.py` still required `abntexto-ufc/articles.def` to be absent, a rule that was correct only before Scientific Article activation.
+
+The correction updates `standards/version-policy.json`, `tests/checks/normative_currency.py`, and `docs/NORMATIVE-CURRENCY.md` so runtime presence is bound to the readable machine phase and recorded activation evidence. The current article source set, 18-rule authority contract and manual/conditional-manual proof state are unchanged. The checker was reconciled to the new phase semantics rather than disabled or weakened.
 
 ## Step 2 implementation boundary
 
@@ -61,11 +69,11 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 | Surface | State | Action |
 |---|---|---|
-| `main` | UPDATED | contains PR #285 merge `e6833ed5...`; canonical foundation for all future work |
-| `feat/v3-scientific-article` | ACTIVE | validate Step 2 synchronized checkpoint here |
+| `main` | UPDATED | contains PR #285 merge `e6833ed5...`; canonical foundation |
+| `feat/v3-scientific-article` | ACTIVE | validate post-reconciliation Step 2 checkpoint here |
+| PR #286 | OPEN | current Scientific Article integration surface |
 | `plan/v3-regression-reset` | HISTORICAL | no new work; branch deletion is hygiene only |
 | historical remote branches | provenance only | not active authority; do not branch new work from them |
-| historical opaque R2/R3 docs | provenance only | excluded from active authority set |
 
 ## Release-readiness blockers
 
@@ -73,13 +81,13 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 |---|---|---|---|
 | Scientific Article | Scientific Article phase / issue #280 | ACTIVE | complete article runtime/evidence/canonical PDF + phase-end regression |
 | Deterministic release reference PDF | Final Certification / Release / issue #18 | OPEN | pin release epoch/`SOURCE_DATE_EPOCH` and prove rebuilt reference-PDF hash stability |
-| Literal-font/PDF-A/distribution matrix | Final Certification | QUEUED | one immutable candidate passes the heavy certification matrix |
+| Literal-font/PDF-A/distribution matrix | Final Certification | QUEUED | one immutable candidate passes heavy certification matrix |
 | Release assets/checksums/publication | Release | QUEUED | final release regression and checklist complete |
 
 ## Immediate action
 
-1. complete synchronization of Step 2 implementation facts in roadmap, machine state and bootstrap;
-2. run Static and full Linux on the synchronized Step 2 checkpoint;
+1. complete the post-currency-reconciliation synchronized checkpoint;
+2. run Static and full Linux on that exact branch head;
 3. classify any failure before modifying runtime/tests;
 4. if both gates pass with `ARTICLE-FRONT-BLOCK-EVIDENCE`, mark Step 2 accepted and activate **Optional foreign elements**;
 5. do not promote article rule proof state solely from source presence or shared green checks;
