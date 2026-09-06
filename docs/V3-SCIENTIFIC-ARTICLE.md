@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-05  
-Status: ACTIVE — STEP 1 ACCEPTED / REPOSITORY INTEGRATION NEXT
+Status: ACTIVE — STEP 1 ACCEPTED / REQUIRED ARTICLE FRONT BLOCK ACTIVE
 
 ## Purpose
 
@@ -20,6 +20,7 @@ Authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage
 | Article authority contract retained | 18 source-backed `article.*` rules | PASS |
 | Shared librarian review state | 33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW | PASS / EXPLICIT AUTHORITY GAP |
 | Temporary executors | none active | PASS |
+| Shared foundation integrated into canonical main | PR #285 squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` | PASS |
 
 ## Step 1 — Profile and metadata surface — ACCEPTED
 
@@ -35,20 +36,38 @@ Acceptance evidence:
 
 Implemented changes:
 
-- added the single canonical runtime choice `type = scientific-article` in `abntexto-ufc/core.def`;
-- no article compatibility alias was added;
-- reused existing generic metadata `author`, `title` and `approval-date`;
-- added only the new required article metadata surfaces `submission-date` and `article-author-note`;
-- left foreign-title semantics for the optional-foreign-elements step instead of silently repurposing `title-variant`;
-- added `tests/checks/scientific_article_profile_contract.py` to protect canonical naming and metadata ownership;
-- added a dedicated two-engine compile fixture/gate for profile selection and metadata round-trip;
-- chained that bounded article gate from the existing profile-matrix integration so the six accepted non-article profiles remain exercised unchanged.
+- single canonical runtime choice `type = scientific-article`;
+- no article compatibility aliases;
+- existing generic metadata `author`, `title` and `approval-date` reused;
+- only new article metadata surfaces `submission-date` and `article-author-note` added;
+- foreign-title semantics deliberately deferred rather than silently repurposing `title-variant`;
+- static canonical-name/metadata-ownership contract added;
+- dedicated pdfLaTeX + LuaLaTeX profile/metadata compile evidence added;
+- non-article profile matrix preserved.
 
 No article presentation rule or proof state is promoted by Step 1. `standards/coverage-rules-article.json` remains source-reviewed/manual or conditional-manual until rule-specific article evidence is implemented.
 
-## Repository integration boundary
+## Step 2 — Required article front block — ACTIVE
 
-PR #285 carries the accepted shared foundation and Step 1 while `main` is still stale. The next operation is to merge that integration boundary, then create a fresh `feat/v3-scientific-article` branch from updated `main`. Step 2 runtime work must start on that fresh branch, not on historical `plan/v3-regression-reset` and not from stale `main`.
+Work now occurs on `feat/v3-scientific-article`, created from canonical `main` after PR #285.
+
+Required implementation scope is bounded to source-backed article presentation:
+
+| Surface | Requirement for this step | Evidence requirement |
+|---|---|---|
+| Primary title | render through the scientific-article route with the contract-prescribed presentation | article-specific final-PDF/source evidence |
+| Authorship metadata note | render `article-author-note` as the article authorship/complementary-information note required by the retained contract | positive rendered evidence; no leakage into non-article profiles |
+| Submission date | render `submission-date` in the required article front block | positive rendered evidence |
+| Approval date | reuse `approval-date` and render it in the article front block | positive rendered evidence |
+| Primary summary | provide the required vernacular summary surface through article-specific presentation while reusing shared summary machinery where semantically valid | positive rendered evidence; recommended length/keyword properties remain advisory unless contract modality says otherwise |
+
+This step must not:
+
+- alter accepted academic-work cover/title/approval pages;
+- make a foreign title or foreign summary mandatory;
+- promote recommended summary length, keyword count, authorship alignment, or paragraph-count guidance into hard compilation failures unless the retained rule modality explicitly requires it;
+- fork citation, bibliography, section, summary or object engines solely for the article profile;
+- promote proof state before article-specific evidence exists.
 
 ## Metadata decision
 
@@ -57,15 +76,15 @@ PR #285 carries the accepted shared foundation and Step 1 while `main` is still 
 | Primary authorship | `author` | reuse |
 | Primary title | `title` | reuse |
 | Approval date | `approval-date` | reuse |
-| Submission date | `submission-date` | new article-required core metadata |
-| Complementary author footnote content | `article-author-note` | new article-required core metadata |
+| Submission date | `submission-date` | article-specific core metadata |
+| Complementary author note | `article-author-note` | article-specific core metadata |
 | Foreign title | not yet bound | defer to optional foreign elements; do not infer from `title-variant` |
-| Primary/foreign summary content | document content route | implement in required front block / optional foreign elements |
+| Primary/foreign summary | document content/shared summary primitives where semantically valid | primary in Step 2; foreign optional in Step 3 |
 
 ## Non-negotiable boundaries
 
 - One canonical `scientific-article` profile; no compatibility aliases or retired Portuguese machine identifiers.
-- Preserve all accepted non-article profiles and the shared academic-work reference-PDF baseline.
+- Preserve all accepted non-article profiles and shared academic-work reference-PDF baseline.
 - Reuse bibliography, citation, section, summary and object machinery rather than fork it.
 - Do not change article rule IDs, authority, modality, expected values, locators or applicability without new current source evidence and a separately documented source correction.
 - Required, optional, recommended and conditional rules remain distinguishable in runtime and evidence.
@@ -81,7 +100,7 @@ PR #285 carries the accepted shared foundation and Step 1 while `main` is still 
 | Step | Work | Current state | Acceptance |
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2 | Required article front block | NEXT AFTER PR #285 MERGE | Required title/authorship/date/summary elements have article-specific rendered evidence |
+| 2 | Required article front block | **ACTIVE** | Required title/authorship/date/primary-summary elements have article-specific rendered evidence and non-article regressions remain green |
 | 3 | Optional foreign elements | QUEUED | Foreign title/summary may be absent or present without becoming mandatory |
 | 4 | Textual structure and body typography | QUEUED | Required article structure and 12 pt/justified/2 cm/single-spaced body are validated |
 | 5 | Recommendations and conditional applicability | QUEUED | Advisory semantics stay advisory; journal boundary stays conditional |
@@ -89,9 +108,10 @@ PR #285 carries the accepted shared foundation and Step 1 while `main` is still 
 | 7 | Canonical article PDF | QUEUED | Provenance-bound real PDF with complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + full Linux + article-specific acceptance on one immutable SHA |
 
-## Next action
+## Current branch and next action
 
-1. merge PR #285 after the Step 1 acceptance synchronization passes its Static gate;
-2. create `feat/v3-scientific-article` from updated `main`;
-3. synchronize branch/control facts on that new branch;
-4. implement **Required article front block** with article-specific rendering/evidence for primary title, authorship metadata footnote, submission/approval dates and primary summary without contaminating accepted academic-work front matter.
+- Canonical base: `main` with merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
+- Active branch: `feat/v3-scientific-article`.
+- Historical integration branch `plan/v3-regression-reset`: no new work.
+
+Next: inspect the retained article rule contract for the exact Step 2 presentation predicates, implement only those predicates, add rule-specific positive evidence, synchronize all control documents, then run Static and full Linux before marking Step 2 accepted.

@@ -6,7 +6,8 @@ Updated: 2026-09-05
 
 - Repository: `tiagosombrra/abntexto-ufc`.
 - Canonical branch: `main`.
-- Active task branch: `plan/v3-regression-reset` until PR #285 merges the accepted foundation and Scientific Article Step 1.
+- PR #285 merged as `e6833ed5cf07aaf1021c690260cecfacec1a119a`, landing the validated shared foundation and accepted Scientific Article Step 1.
+- Active task branch: `feat/v3-scientific-article`, created from updated `main`.
 - Active phase: **Scientific Article**.
 - Regression Audit: CLOSED.
 - Core Corrections candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
@@ -18,8 +19,9 @@ Updated: 2026-09-05
 - Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
 - Step 1 synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS; Linux `34001350953` SUCCESS; `PASS=31 FAIL=0 SKIP=0`.
 - Step 1 state: **ACCEPTED**.
+- Current work: **Required article front block**.
 - Issue #217: CLOSED / superseded by current permanent workflow orchestration.
-- Issue #18: OPEN and now an explicit **v3 release blocker** owned by Final Certification/Release; deterministic reference-PDF bytes/hash must be proven before publication.
+- Issue #18: OPEN and explicit **v3 release blocker** owned by Final Certification/Release; deterministic reference-PDF bytes/hash must be proven before publication.
 - No temporary executor is active.
 
 Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/V3-RELEASE-READINESS.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and `docs/ENGINEERING-LANGUAGE.md`.
@@ -28,8 +30,8 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 | Step | State | Evidence / boundary |
 |---:|---|---|
-| 1. Profile and metadata surface | **ACCEPTED** | `b46ba205...` implementation; synchronized `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2. Required article front block | NEXT | start on fresh article branch after PR #285 lands on `main` |
+| 1. Profile and metadata surface | **ACCEPTED** | `b46ba205...`; synchronized `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
+| 2. Required article front block | **ACTIVE** | title, authorship metadata note, submission/approval dates and primary summary require article-specific rendered evidence |
 | 3. Optional foreign elements | QUEUED | foreign title/summary optionality must remain non-mandatory |
 | 4. Textual structure/body typography | QUEUED | reuse shared citation/reference/section/object machinery |
 | 5. Recommendations/conditional boundary | QUEUED | recommendations advisory; journal instructions conditional |
@@ -41,12 +43,11 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 | Surface | State | Action |
 |---|---|---|
-| PR #285 | READY TO INTEGRATE after this acceptance synchronization passes Static | merge accepted shared foundation + Step 1 into `main` |
-| `main` | stale until PR #285 lands | do not start new article feature work from current `main` |
-| current branch | transition branch | no new Step 2 runtime after PR #285 integration boundary |
-| post-merge branch | planned `feat/v3-scientific-article` | create from updated `main` and continue Step 2 there |
-| historical remote branches | provenance only | not active authority; cleanup is repository hygiene, not a runtime/release acceptance source |
-| historical opaque R2/R3 docs | provenance only | keep outside active authority set unless a current test explicitly consumes them |
+| `main` | UPDATED | contains PR #285 merge `e6833ed5...`; canonical foundation for all future work |
+| `feat/v3-scientific-article` | ACTIVE | continue Scientific Article Step 2 here |
+| `plan/v3-regression-reset` | HISTORICAL | no new work; branch deletion is hygiene only |
+| historical remote branches | provenance only | not active authority; do not branch new work from them |
+| historical opaque R2/R3 docs | provenance only | excluded from active authority set |
 
 ## Release-readiness blockers
 
@@ -59,13 +60,12 @@ Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`
 
 ## Immediate action
 
-1. publish this synchronized Step 1 acceptance checkpoint;
-2. require Static contract on it; documentation-only Linux may be scoped out by workflow policy;
-3. merge PR #285 once the synchronized checkpoint is green and still mergeable;
-4. create `feat/v3-scientific-article` from updated `main`;
-5. synchronize branch facts and activate **Required article front block** on that new branch;
-6. keep issue #18 visible as a release blocker without derailing the active article implementation;
-7. finish every phase with its own immutable phase-end regression.
+1. validate this branch-transition documentation checkpoint with Static contract;
+2. implement **Required article front block** on `feat/v3-scientific-article`;
+3. add article-specific positive evidence before promoting any article rule;
+4. update this handoff, the active plan, roadmap and machine state at every material advance;
+5. keep issue #18 visible as a release blocker without mixing it into article normative behavior;
+6. finish Scientific Article with its own immutable phase-end regression before activating Final Certification.
 
 ## Mandatory operating discipline
 

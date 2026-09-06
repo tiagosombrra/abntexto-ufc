@@ -20,7 +20,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Scientific Article**.
-- Active task branch: `plan/v3-regression-reset` until PR #285 lands the accepted shared foundation and Scientific Article Step 1 on `main`.
+- Canonical `main` now contains the validated shared foundation and accepted Scientific Article Step 1 at squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a` (PR #285).
+- Active task branch: `feat/v3-scientific-article`, created from that updated `main`.
 - Core Corrections phase-end candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
 - Reference PDF Validation phase-end candidate `b64074c64941895f97fbe0f795ce826c798d17ce`: Static `33985595790` and Linux `33985595798` success.
 - Canonical reference artifact: 55 A4 pages, TeX Live 2026/pdfLaTeX, complete visual review PASS 55/55.
@@ -30,7 +31,8 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Article rules: 18 source-backed rules; profile registration does not promote presentation/proof state.
 - Step 1 implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
 - Step 1 synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS; full Linux `34001350953` SUCCESS, `PASS=31 FAIL=0 SKIP=0`.
-- Step 1 state: **ACCEPTED**. Next implementation work is **Required article front block** after the foundation merge/branch transition.
+- Step 1 state: **ACCEPTED**.
+- Current implementation step: **Required article front block**.
 - Release blocker #18 is explicit and owned by Final Certification/Release: the release reference PDF must become bit-reproducible using a pinned release epoch/`SOURCE_DATE_EPOCH` and hash comparison.
 - Historical orchestration issue #217 is closed as superseded by the readable permanent workflow model.
 
@@ -39,7 +41,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active; Step 1 accepted
+4. **Scientific Article** — active; Step 1 accepted; Required article front block active
 5. **Final Certification** — queued; owns release reproducibility proof together with Release
 6. **Release** — queued
 
@@ -49,6 +51,7 @@ Do not create new opaque work identifiers such as nested letter/number codes. Hi
 
 - Implement one canonical `scientific-article` profile; do not add compatibility aliases.
 - Step 1 reuses `author`, `title`, `approval-date`; adds only `submission-date` and `article-author-note`.
+- Required article front block must add article-specific rendering/evidence for primary title, authorship metadata note, submission/approval dates and primary summary without contaminating accepted academic-work front matter.
 - Do not infer foreign-title semantics from `title-variant`; bind that behavior explicitly in the optional-foreign-elements step.
 - Reuse current citation, bibliography, section, summary and object infrastructure rather than fork it.
 - Preserve the 18-rule source contract unless new current authority requires a separately documented source correction.
@@ -90,8 +93,8 @@ Scientific Article must end with its own immutable candidate containing article 
 
 ## Branch governance and fail-closed rule
 
-The steady state is `main` plus one short-lived active task branch. PR #285 is the integration boundary for the accepted shared foundation plus Scientific Article Step 1. After it lands, continue Scientific Article on a fresh `feat/v3-scientific-article` branch from the updated `main`; the old `plan/v3-regression-reset` branch becomes historical and must not receive new work.
+The steady state is `main` plus one short-lived active task branch. PR #285 is merged. New article work belongs only on `feat/v3-scientific-article`, based on updated `main`. The old `plan/v3-regression-reset` and other historical remote branches are provenance only and must not receive new work.
 
-Historical remote branches and opaque R2/R3 evidence files are provenance only, not active control authority. Their presence does not authorize work from them.
+Historical opaque R2/R3 evidence files are provenance only, not active control authority. Their presence does not authorize work from them.
 
 If a required fact cannot be established from the current Git repository, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement to the next phase.

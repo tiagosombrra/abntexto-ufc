@@ -4,15 +4,16 @@ Updated: 2026-09-05
 
 ## Current status
 
-**Scientific Article is ACTIVE — Step 1 ACCEPTED; repository integration boundary is next.**
+**Scientific Article is ACTIVE — Step 1 ACCEPTED; Required article front block is ACTIVE.**
 
-The shared academic-work foundation is closed and accepted:
+The validated shared foundation now lives on canonical `main` through PR #285, squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`. Remaining article work continues on `feat/v3-scientific-article`, created from that updated `main`.
+
+Accepted foundation:
 
 - Regression Audit — CLOSED;
 - Core Corrections — CLOSED on `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, Static `33982156041`, Linux `33982156042`;
-- Reference PDF Validation — CLOSED on `b64074c64941895f97fbe0f795ce826c798d17ce`, Static `33985595790`, Linux `33985595798`, with complete 55/55 visual PASS.
-
-Scientific Article Step 1 is accepted on synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`: Static `34001350884` SUCCESS and full Linux `34001350953` SUCCESS with `PASS=31 FAIL=0 SKIP=0`. The Linux evidence includes `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article` and confirms no article presentation rule was promoted by profile registration alone.
+- Reference PDF Validation — CLOSED on `b64074c64941895f97fbe0f795ce826c798d17ce`, Static `33985595790`, Linux `33985595798`, complete 55/55 visual PASS;
+- Scientific Article Step 1 — ACCEPTED on synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`, Static `34001350884`, Linux `34001350953`, `PASS=31 FAIL=0 SKIP=0`.
 
 The librarian-review matrix remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
@@ -35,16 +36,16 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 | **Regression Audit** | CLOSED | Revalidate the shared V3 foundation and classify recovered review requirements and newly discovered defects. | Green phase-end regression and stable 34-item contract. |
 | **Core Corrections** | CLOSED | Correct shared runtime, template, normative mapping, documentation and tests identified by the audit. | `5f67560a...` passed Static/full Linux. |
 | **Reference PDF Validation** | CLOSED | Validate the corrected canonical academic-work PDF page by page. | `b64074c...` passed Static/full Linux after provenance + 55/55 visual PASS. |
-| **Scientific Article** | **ACTIVE — STEP 1 ACCEPTED** | Implement one canonical article profile using the retained 18-rule contract. | Article runtime, article-specific evidence, canonical article rendering and phase-end regression pass on one immutable SHA. |
-| **Final Certification** | QUEUED | Complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution certification and release reproducibility proof. | Heavy certification matrix plus deterministic release-reference-PDF evidence green on one SHA. |
+| **Scientific Article** | **ACTIVE — REQUIRED ARTICLE FRONT BLOCK** | Complete the canonical article profile using the retained 18-rule contract. | Article runtime, article-specific evidence, canonical article rendering and phase-end regression pass on one immutable SHA. |
+| **Final Certification** | QUEUED | Complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution certification and release-reference-PDF reproducibility proof. | Heavy certification matrix plus deterministic release-reference-PDF evidence green on one SHA. |
 | **Release** | QUEUED | Finalize documentation, bundles, release assets, checksums and publication actions. | Issue #18 resolved; release checklist complete; final regression recorded. |
 
 ## Scientific Article execution state
 
 | Step | Work | State | Acceptance gate |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | **ACCEPTED** | `b46ba205...` implemented; synchronized `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2 | Required article front block | NEXT AFTER BRANCH TRANSITION | Primary title, authorship metadata footnote, submission/approval dates and primary summary have article-specific rendered evidence |
+| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
+| 2 | Required article front block | **ACTIVE** | Primary title, authorship metadata note, submission/approval dates and primary summary have article-specific rendered evidence |
 | 3 | Optional foreign elements | QUEUED | Foreign title/summary can be absent or present without becoming mandatory |
 | 4 | Textual structure and body typography | QUEUED | Introduction/development/final considerations/references and article body typography validated with shared infrastructure |
 | 5 | Recommendations and conditional boundary | QUEUED | Recommendations remain advisory; journal instructions remain conditional |
@@ -54,16 +55,21 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 
 ## Repository integration and branch plan
 
-PR #285 is now the accepted integration boundary for the corrected shared foundation plus Scientific Article Step 1. `main` is stale until that PR lands. After merge, create `feat/v3-scientific-article` from the updated `main` and continue Step 2 there. The old `plan/v3-regression-reset` branch becomes historical and must not receive new implementation work.
+| Surface | State | Policy |
+|---|---|---|
+| `main` | current at/after `e6833ed5...` | canonical integration base |
+| `feat/v3-scientific-article` | ACTIVE | only branch for new Scientific Article implementation |
+| `plan/v3-regression-reset` | HISTORICAL | no new work; removal is repository hygiene only |
+| historical `audit/`, `docs/`, `r3-*`, old `feat/`, `fix/`, `refactor/` branches | PROVENANCE ONLY | not active authority and never a base for new work |
 
-Historical remote branches and opaque R2/R3 evidence documents remain provenance only; they are not active roadmap authorities. The active authority set is explicitly listed in machine state.
+Historical opaque R2/R3 evidence documents remain provenance only; the active authority set is explicitly listed by machine state. They are not roadmap inputs unless a current active test explicitly consumes one.
 
 ## Known v3.0.0 blockers and tracked debt
 
 | Item | State | Owner / treatment |
 |---|---|---|
 | Scientific Article phase / #280 | ACTIVE | finish Steps 2–8 and phase-end regression |
-| Release reference PDF bit reproducibility / #18 | OPEN — RELEASE BLOCKER | Final Certification/Release must pin a release epoch/`SOURCE_DATE_EPOCH` and compare rebuilt hashes |
+| Release reference PDF bit reproducibility / #18 | OPEN — **RELEASE BLOCKER** | Final Certification/Release must pin a release epoch/`SOURCE_DATE_EPOCH` and compare rebuilt hashes |
 | Historical workflow issue #217 | CLOSED — SUPERSEDED | current permanent workflow/readable phase model is authoritative |
 | Librarian-review item 33 | NORMATIVE-REVIEW | explicit authority gap; no speculative runtime change; not silently converted to PASS |
 | Historical branch clutter | NON-BLOCKING HYGIENE | provenance only; active work follows `main` + one current task branch |
