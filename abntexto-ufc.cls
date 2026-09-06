@@ -25,6 +25,7 @@
 \input{abntexto-ufc/frontmatter.def}
 \input{abntexto-ufc/institutional.def}
 \input{abntexto-ufc/academic-works.def}
+\input{abntexto-ufc/articles.def}
 \input{abntexto-ufc/research-projects.def}
 \input{abntexto-ufc/objects.def}
 \input{abntexto-ufc/integrations/abntexto.def}
