@@ -4,14 +4,14 @@ Updated: 2026-09-06
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 3 — Optional foreign elements.**
+**Scientific Article is ACTIVE at Step 3 — Optional foreign elements, implementation published for synchronized CI.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
-| Core Corrections | CLOSED | `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`; Static `33982156041`; Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0` |
-| Reference PDF Validation | CLOSED | `b64074c64941895f97fbe0f795ce826c798d17ce`; Static `33985595790`; Linux `33985595798`; canonical academic-work PDF 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 3** | Steps 1–2 accepted; Steps 3–8 remain; phase closes only after canonical article PDF and one-SHA phase-end regression |
+| Core Corrections | CLOSED | `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`; Static `33982156041`; Linux `33982156042` |
+| Reference PDF Validation | CLOSED | `b64074c64941895f97fbe0f795ce826c798d17ce`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
+| Scientific Article | **ACTIVE — STEP 3 CI PENDING** | Steps 1–2 accepted; Step 3 implementation `81e08321222efb03626ac421fc645bd66edd5ae8`; synchronized Static/full Linux required |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -19,20 +19,32 @@ Updated: 2026-09-06
 
 | Step | Work | State | Evidence / gate |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`; Static `34001350884`; Linux `34001350953` |
-| 2 | Required article front block | **ACCEPTED** | `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`; Linux `34026680882`, `PASS=31 FAIL=0 SKIP=0`; profile/front-block evidence PASS on both engines |
-| 3 | Optional foreign title and summary | **ACTIVE** | independent present/absent behavior under pdfLaTeX and LuaLaTeX; no modality drift; no `title-variant` repurposing |
-| 4 | Textual structure and body typography | QUEUED | required structure plus 12 pt/justified/2 cm/single-spaced body evidence |
-| 5 | Recommendations and conditional applicability | QUEUED | recommendations remain advisory; journal instructions remain conditional |
+| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
+| 2 | Required article front block | **ACCEPTED** | `0947669...`; Static `34026680871`; Linux `34026680882`, `PASS=31 FAIL=0 SKIP=0` |
+| 3 | Optional foreign title and summary | **IMPLEMENTED — CI PENDING** | `81e0832...`; four independent optionality scenarios; both engines; no `title-variant` reuse |
+| 4 | Textual structure and body typography | QUEUED | required article structure plus 12 pt/justified/2 cm/single-spaced body evidence |
+| 5 | Recommendations and conditional applicability | QUEUED | recommendations stay advisory; journal instructions stay conditional |
 | 6 | Evidence hardening | QUEUED | article-specific positive/negative evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + full Linux + article-specific evidence on one immutable SHA |
 
-Step 2 acceptance does **not** alter the 18-rule proof state: the article rule contract remains manual/conditional-manual until Step 6 explicitly promotes evidence.
+Step 3 implementation does **not** promote the optional article rules. `standards/coverage-rules-article.json` remains manual/conditional-manual until the dedicated evidence-hardening step.
 
-## Step 3 acceptance boundary
+## Step 3 gate
 
-The Step 3 implementation must keep `article.title.foreign.optional` and `article.summary.foreign.optional` independently optional. Both may be absent, either may appear alone, or both may appear. Absence is never a failure. The article surface must be explicit and must not infer foreign-title semantics from shared `title-variant` metadata. Presentation defaults used for rendering must not be misrepresented as new normative typography requirements.
+The synchronized checkpoint must prove:
+
+- foreign title and foreign summary are independently optional;
+- neither/title-only/summary-only/both scenarios compile and render as expected;
+- pdfLaTeX and LuaLaTeX agree on optionality behavior;
+- shared `title-variant` metadata is not repurposed;
+- Step 4 body typography is not activated early;
+- accepted non-article profiles remain green;
+- no recommendation or proof-state promotion occurs.
+
+Expected evidence:
+
+`ARTICLE-FOREIGN-ELEMENTS-EVIDENCE status=PASS engines=2 scenarios=4 title_optional=true summary_optional=true independent=true title_variant_reused=false presentation_rules_promoted=0 recommendations_promoted=0`
 
 ## Shared state
 

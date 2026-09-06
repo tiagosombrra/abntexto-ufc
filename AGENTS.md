@@ -20,14 +20,15 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 
 - Target version: `3.0.0`.
 - Active phase: **Scientific Article**.
-- Canonical base: `main` at shared-foundation merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
-- Active task branch: `feat/v3-scientific-article` through PR #286.
-- Scientific Article Step 1 is accepted at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
-- Scientific Article Step 2 is accepted at `0947669c2c096dca93991e042d8ae245754688ba`: Static `34026680871` SUCCESS; Linux `34026680882` SUCCESS with `PASS=31 FAIL=0 SKIP=0`.
-- Step 2 Linux emitted `ARTICLE-PROFILE-EVIDENCE` and `ARTICLE-FRONT-BLOCK-EVIDENCE` PASS on both engines; no article proof-state promotion occurred.
-- Current batch: **Scientific Article — Optional foreign elements (Step 3)**.
-- Current librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
-- Issue #18 remains a v3 release blocker owned by Final Certification/Release.
+- Canonical base: `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
+- Active task branch: `feat/v3-scientific-article`, PR #286.
+- Step 1: ACCEPTED at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
+- Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`, `PASS=31 FAIL=0 SKIP=0`.
+- Step 3 implementation checkpoint: `81e08321222efb03626ac421fc645bd66edd5ae8`; synchronized Static/full Linux acceptance is pending.
+- Step 3 adds one explicit article-only `\ufcPrintArticleForeignElements` route and four independent optionality scenarios; no article proof-state promotion is made by implementation alone.
+- Current batch: **Scientific Article — Optional foreign elements evidence validation**.
+- Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
+- Issue #18 remains a Final Certification/Release blocker.
 
 ## Readable phase model
 
@@ -38,7 +39,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 5. **Final Certification** — queued
 6. **Release** — queued
 
-Do not create new opaque work identifiers such as nested letter/number codes. GitHub issue/PR numbers and immutable SHAs provide traceability.
+Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
 
 ## Scientific Article rules
 
@@ -47,11 +48,11 @@ Do not create new opaque work identifiers such as nested letter/number codes. Gi
 - Required, optional, recommended and required-when-applicable semantics remain distinct.
 - Reuse shared citation, reference, section, object and summary machinery rather than fork it.
 - Shared mechanisms, source implementation, profile registration and green non-article tests do not by themselves prove article rules.
-- Step 3 must keep foreign title and foreign summary independently optional. Their absence must compile cleanly and must not become a validation failure.
-- Do not infer article foreign-title semantics from the shared `title-variant` metadata key; bind the article surface explicitly.
-- Do not freeze unsupported foreign-element typography merely because an implementation needs a default rendering.
+- Step 3 foreign title and foreign summary remain independently optional; absence must compile cleanly and must not become a validation failure.
+- Do not infer foreign-title semantics from shared `title-variant`; the Step 3 route is explicit and article-only.
+- Step 3 presentation is deliberately minimally asserted: optionality/routing evidence must not invent unsupported typography requirements.
 - Article body typography remains owned by Step 4.
-- Recommendations remain advisory and must never become hard compilation or validation failures.
+- Recommendations remain advisory and never become hard compilation/validation failures.
 - Journal instructions remain a conditional applicability boundary.
 
 ## Engineering rules
@@ -77,7 +78,7 @@ For every material advance, update the relevant execution document and canonical
 
 No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
 
-The machine contract intentionally keeps `phase_end_regression.candidate = one-immutable-sha`. Targeted checks never replace the Scientific Article phase-end regression.
+The machine contract intentionally keeps `phase_end_regression.candidate = one-immutable-sha`. Targeted Step checks never replace the Scientific Article phase-end regression.
 
 ## Fail-closed rule
 
