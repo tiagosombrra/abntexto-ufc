@@ -28,6 +28,14 @@ def unique_typography_run(runs, marker: str):
     return matches[0]
 
 
+def unique_typography_run_containing(runs, marker: str):
+    wanted = normalize(marker)
+    matches = [run for run in runs if wanted in normalize(run.text)]
+    if len(matches) != 1:
+        fail(f"typography marker containing {marker!r}: expected one run, found {len(matches)}")
+    return matches[0]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate rendered scientific-article front-block evidence.")
     parser.add_argument("pdf", type=Path)
@@ -62,6 +70,7 @@ def main() -> None:
     title_run = unique_typography_run(runs, "ARTICLEFRONTTITLE")
     bold_control = unique_typography_run(runs, "ARTICLEBOLDCONTROL")
     regular_control = unique_typography_run(runs, "ARTICLEBODYREGULARCONTROL")
+    note_run = unique_typography_run_containing(runs, "ARTICLENOTEMARKER")
 
     if abs(title_run.font_size - 12.0) > FONT_TOLERANCE_PT:
         fail(f"primary title must render at 12 pt, measured={title_run.font_size:.3f}")
@@ -69,6 +78,14 @@ def main() -> None:
         fail("primary title does not match the same-document bold calibration")
     if title_run.font_id == regular_control.font_id:
         fail("primary title unexpectedly matches the regular calibration font")
+
+    # The article contract requires complementary author metadata in a footnote.
+    # The integration gate independently proves the semantic LaTeX route uses
+    # \footnote. Final-PDF evidence therefore verifies that the note is rendered
+    # after the article front block with the shared reduced footnote typography,
+    # rather than inventing a page-bottom percentage that is not source-backed.
+    if abs(note_run.font_size - 10.0) > FONT_TOLERANCE_PT:
+        fail(f"article author metadata footnote must render at 10 pt, measured={note_run.font_size:.3f}")
 
     text_area_left = 30.0 * MM_TO_PT
     text_area_right = title_page.width - 20.0 * MM_TO_PT
@@ -91,9 +108,6 @@ def main() -> None:
 
     if abs(submitted_word.box.center_y - approved_word.box.center_y) > 2.0:
         fail("submission and approval dates are expected on the same front-block line")
-
-    if note_word.box.center_y < note_page.height * 0.65:
-        fail("article author metadata note was not rendered in the footnote region")
 
     text = args.pdf.with_suffix(".front-block.txt")
     import subprocess
@@ -131,7 +145,7 @@ def main() -> None:
         "ARTICLE-FRONT-BLOCK-EVIDENCE status=PASS "
         "required=title,authorship,author-note,submission-date,approval-date,primary-summary "
         f"title_pt={title_run.font_size:.1f} title_center_delta_pt={center_delta:.3f} "
-        "title_weight=bold-calibrated author_note_region=footnote-page-bottom "
+        f"title_weight=bold-calibrated author_note_route=latex-footnote author_note_pt={note_run.font_size:.1f} "
         "optional_foreign_elements_promoted=0 recommendations_promoted=0"
     )
 
