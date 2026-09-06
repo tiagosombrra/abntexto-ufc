@@ -1,6 +1,6 @@
 # Scientific Article Normative Contract
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 Status: SOURCE CONTRACT ACCEPTED — RUNTIME IMPLEMENTATION ACTIVE
 
 Historical labels `V3-A1` / `V3-A2` are retained below only when identifying earlier source-contract evidence. Active execution uses the readable phase name **Scientific Article**.
@@ -11,16 +11,17 @@ This document is the human-readable view of `standards/coverage-rules-article.js
 
 The article source contract was reconstructed before the deep shared-foundation regression and remains valid as retained authority evidence. Runtime implementation was deliberately deferred until the shared foundation was corrected and its canonical reference PDF accepted.
 
-Current entry prerequisites are now satisfied:
+Current entry prerequisites are satisfied:
 
 - Core Corrections candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`: Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`;
 - Reference PDF Validation candidate `b64074c64941895f97fbe0f795ce826c798d17ce`: Static `33985595790`, Linux `33985595798`;
 - canonical academic-work PDF: 55/55 visual PASS, 0 unexplained visual failures;
 - article source-contract product: `4d018a92697e8f39e3a53b034c451e55996c84fb`;
 - historical pre-runtime checkpoint: `7a7562d23e8bf6c92abb635718639d617a2ed6ff`;
-- certified non-article foundation evidence: `c79f3c73f1d51a30175e8259269504d029442a1c` plus the later regression/correction acceptance above.
+- accepted Scientific Article Step 1 checkpoint: `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`;
+- shared foundation integrated to canonical `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
 
-Current runtime inspection confirms that `abntexto-ufc/core.def` does not yet expose a `scientific-article` type. No article proof state may be inferred merely from shared non-article gates.
+Current runtime now exposes one canonical `scientific-article` profile and the bounded Step 2 required-front-block implementation. That runtime presence is **not** proof of any article rule by itself. Article proof state remains manual/conditional-manual until article-specific executable evidence is explicitly accepted and promoted.
 
 ## Reconfirmed authority set
 
@@ -80,13 +81,15 @@ In particular, the 150-250-word summary interval, a minimum of three keywords, a
 - first-line indent: 2 cm;
 - line spacing: single.
 
-`article.authorship.metadata.footnote` requires complementary author identification in a footnote, including affiliation/biographical information and support for contact information.
+`article.authorship.metadata.footnote` requires complementary author identification in a footnote, including affiliation/biographical information and support for contact information. The contract does not freeze a physical-page percentage for the note position; evidence must prove footnote semantics without inventing unsupported geometry.
 
 ## Locator and proof policy
 
 Public UFC guide locators are verified directly. Where a rule also depends on proprietary ABNT clause text that is not directly available to the current evidence corpus, `standards/locator-audit-article.json` records the bounded reason rather than inventing clause wording or a locator.
 
-At Scientific Article entry, all article rules remain `manual` or `conditional-manual`. Proof may advance only from new article-specific executable evidence. Mechanism reuse, shared green tests or profile registration alone are not proof.
+At Scientific Article entry, all article rules remain `manual` or `conditional-manual`. Proof may advance only from new article-specific executable evidence. Mechanism reuse, shared green tests, profile registration, runtime presence or source-only implementation alone are not proof.
+
+The current Step 2 author-note evidence correction does not alter rule authority, modality or proof state. It removes an unsupported page-height percentage from the validator while preserving a source-enforced genuine `\footnote` route and rendered 10 pt footnote evidence.
 
 ## Scientific Article implementation contract
 
@@ -108,4 +111,4 @@ The execution plan is `docs/V3-SCIENTIFIC-ARTICLE.md`.
 
 The original source-contract work was merged at `4d018a92697e8f39e3a53b034c451e55996c84fb` and later closed at `7a7562d23e8bf6c92abb635718639d617a2ed6ff`. Those historical labels and SHAs establish provenance only. They do not override the post-regression readable roadmap or authorize blind restoration of earlier article implementation attempts.
 
-Every **material advance** in the active Scientific Article phase must synchronize this contract only when authority, modality, evidence ownership or proof state actually changes; ordinary runtime progress belongs in `docs/V3-SCIENTIFIC-ARTICLE.md`, handoff, roadmap and machine state.
+Every **material advance** in the active Scientific Article phase must synchronize this contract only when authority, modality, evidence ownership, proof state or a factual runtime observation represented here actually changes; ordinary runtime progress belongs in `docs/V3-SCIENTIFIC-ARTICLE.md`, handoff, roadmap and machine state.
