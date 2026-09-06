@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-05  
-Status: ACTIVE — STEP 1 ACCEPTED / REQUIRED ARTICLE FRONT BLOCK ACTIVE
+Status: ACTIVE — STEP 2 IMPLEMENTED / CI PENDING
 
 ## Purpose
 
@@ -24,7 +24,7 @@ Authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage
 
 ## Step 1 — Profile and metadata surface — ACCEPTED
 
-Technical implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.
+Technical implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.  
 Synchronized acceptance checkpoint: `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
 
 Acceptance evidence:
@@ -34,40 +34,49 @@ Acceptance evidence:
 - article profile evidence: `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article metadata=submission-date,approval-date,article-author-note presentation_rules_promoted=0`;
 - all six accepted non-article profiles remained green in the full profile matrix.
 
-Implemented changes:
+No article presentation rule or proof state was promoted by Step 1.
 
-- single canonical runtime choice `type = scientific-article`;
-- no article compatibility aliases;
-- existing generic metadata `author`, `title` and `approval-date` reused;
-- only new article metadata surfaces `submission-date` and `article-author-note` added;
-- foreign-title semantics deliberately deferred rather than silently repurposing `title-variant`;
-- static canonical-name/metadata-ownership contract added;
-- dedicated pdfLaTeX + LuaLaTeX profile/metadata compile evidence added;
-- non-article profile matrix preserved.
+## Step 2 — Required article front block — IMPLEMENTED / CI PENDING
 
-No article presentation rule or proof state is promoted by Step 1. `standards/coverage-rules-article.json` remains source-reviewed/manual or conditional-manual until rule-specific article evidence is implemented.
+Implementation checkpoint: `90293af760c4063b02a16831196ec3d932f1471d`.
 
-## Step 2 — Required article front block — ACTIVE
+The bounded implementation adds `abntexto-ufc/articles.def` and loads it through `abntexto-ufc.cls`. The new public route is `\ufcPrintArticleFrontMatter{...}` and is valid only for `type=scientific-article`.
 
-Work now occurs on `feat/v3-scientific-article`, created from canonical `main` after PR #285.
-
-Required implementation scope is bounded to source-backed article presentation:
-
-| Surface | Requirement for this step | Evidence requirement |
+| Surface | Implemented behavior | Evidence boundary |
 |---|---|---|
-| Primary title | render through the scientific-article route with the contract-prescribed presentation | article-specific final-PDF/source evidence |
-| Authorship metadata note | render `article-author-note` as the article authorship/complementary-information note required by the retained contract | positive rendered evidence; no leakage into non-article profiles |
-| Submission date | render `submission-date` in the required article front block | positive rendered evidence |
-| Approval date | reuse `approval-date` and render it in the article front block | positive rendered evidence |
-| Primary summary | provide the required vernacular summary surface through article-specific presentation while reusing shared summary machinery where semantically valid | positive rendered evidence; recommended length/keyword properties remain advisory unless contract modality says otherwise |
+| Primary title | reuses `title`; 12 pt, centered, bold, uppercase and single-spaced | same-document PDF typography/centering calibration plus source guard |
+| Primary authorship | reuses `author` | rendered article-specific marker |
+| Authorship metadata note | uses `article-author-note` | rendered through an actual footnote; PDF bottom-region evidence |
+| Submission date | uses `submission-date` | rendered in article front block |
+| Approval date | reuses `approval-date` | rendered in article front block |
+| Primary summary | required argument to `\ufcPrintArticleFrontMatter` | rendered `Resumo:` surface with controlled marker |
+| Foreign title/summary | deliberately absent | Step 3 remains the only place to implement optional foreign elements |
+| Article body typography | deliberately not activated | Step 4 remains authoritative |
+| Recommendations | not converted into hard failures | no summary word-count/keyword-count/paragraph-count enforcement |
 
-This step must not:
+Article-specific evidence added:
 
-- alter accepted academic-work cover/title/approval pages;
-- make a foreign title or foreign summary mandatory;
-- promote recommended summary length, keyword count, authorship alignment, or paragraph-count guidance into hard compilation failures unless the retained rule modality explicitly requires it;
-- fork citation, bibliography, section, summary or object engines solely for the article profile;
-- promote proof state before article-specific evidence exists.
+- `tests/documents/scientific-article-front-block.tex`;
+- `tests/checks/scientific_article_front_block.py`;
+- `tests/integration/scientific-article-front-block.sh`;
+- the existing `scientific-article-profile.sh` now invokes the front-block gate, so the permanent profile matrix exercises the article front block under pdfLaTeX and LuaLaTeX.
+
+Expected structured evidence:
+
+`ARTICLE-FRONT-BLOCK-EVIDENCE status=PASS engines=2 rules=title-required,authorship-required,summary-required,dates-required,title-typography,authorship-footnote presentation_rules_promoted=0 optional_foreign_elements_promoted=0 recommendations_promoted=0`
+
+### Step 2 acceptance gate
+
+Step 2 remains **IMPLEMENTED / CI PENDING** until one synchronized checkpoint passes:
+
+1. Static contract;
+2. full Linux integration;
+3. canonical article profile routing on both engines;
+4. rendered article front-block evidence on both engines;
+5. unchanged six-profile non-article matrix;
+6. no optional/recommended/conditional modality drift.
+
+No article rule in `standards/coverage-rules-article.json` is promoted merely because this implementation or its targeted evidence exists. Proof-state promotion remains a later explicit evidence-hardening decision.
 
 ## Metadata decision
 
@@ -100,7 +109,7 @@ This step must not:
 | Step | Work | Current state | Acceptance |
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2 | Required article front block | **ACTIVE** | Required title/authorship/date/primary-summary elements have article-specific rendered evidence and non-article regressions remain green |
+| 2 | Required article front block | **IMPLEMENTED — CI PENDING** | implementation `90293af...`; synchronized Static/full Linux must prove article-specific rendered evidence |
 | 3 | Optional foreign elements | QUEUED | Foreign title/summary may be absent or present without becoming mandatory |
 | 4 | Textual structure and body typography | QUEUED | Required article structure and 12 pt/justified/2 cm/single-spaced body are validated |
 | 5 | Recommendations and conditional applicability | QUEUED | Advisory semantics stay advisory; journal boundary stays conditional |
@@ -114,4 +123,4 @@ This step must not:
 - Active branch: `feat/v3-scientific-article`.
 - Historical integration branch `plan/v3-regression-reset`: no new work.
 
-Next: inspect the retained article rule contract for the exact Step 2 presentation predicates, implement only those predicates, add rule-specific positive evidence, synchronize all control documents, then run Static and full Linux before marking Step 2 accepted.
+Next: synchronize the control plane to this Step 2 implementation, run Static and full Linux on that synchronized checkpoint, classify any failure without weakening tests, and only after green acceptance activate Step 3.
