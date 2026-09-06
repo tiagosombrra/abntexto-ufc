@@ -4,9 +4,9 @@ Updated: 2026-09-05
 
 ## Current status
 
-**Scientific Article is ACTIVE — Step 1 ACCEPTED; Step 2 Required article front block is IMPLEMENTED / CI PENDING.**
+**Scientific Article is ACTIVE — Step 1 ACCEPTED; Step 2 Required article front block is IMPLEMENTED / CI PENDING AFTER NORMATIVE-CURRENCY RECONCILIATION.**
 
-The validated shared foundation lives on canonical `main` through PR #285, squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`. Remaining article work continues on `feat/v3-scientific-article`, created from that updated `main`.
+The validated shared foundation lives on canonical `main` through PR #285, squash merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`. Remaining article work continues on `feat/v3-scientific-article` through PR #286.
 
 Accepted foundation:
 
@@ -21,6 +21,8 @@ Current implementation:
 - new `abntexto-ufc/articles.def` required-front-block module;
 - `\ufcPrintArticleFrontMatter{...}` route for primary title, author/author note, submission/approval dates and primary summary;
 - article-specific rendered evidence added for pdfLaTeX and LuaLaTeX;
+- first synchronized checkpoint `768d355eda11f47b4cebbb6864247e9fc2aa728f` failed Static `34003576066` only because `normative_currency.py` still enforced the pre-activation `articles.def`-absent invariant;
+- normative-currency policy/check reconciliation implemented at `e29501bd8cae98d6442f08e17bc3a54892fc7e0d`;
 - optional foreign elements, body typography and recommendation enforcement remain deliberately deferred;
 - article coverage proof state remains manual/conditional-manual pending later truthful promotion.
 
@@ -29,6 +31,7 @@ The librarian-review matrix remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE
 Machine authority: `release/v3-roadmap.json`.  
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.  
 Active phase plan: `docs/V3-SCIENTIFIC-ARTICLE.md`.  
+Normative currency: `docs/NORMATIVE-CURRENCY.md`.  
 Release readiness: `docs/V3-RELEASE-READINESS.md`.  
 Article authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
 
@@ -54,7 +57,7 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 | Step | Work | State | Acceptance gate |
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953`, 31/31 PASS |
-| 2 | Required article front block | **IMPLEMENTED — CI PENDING** | implementation `90293af...`; synchronized Static/full Linux must prove rendered title/authorship/dates/summary evidence on both engines |
+| 2 | Required article front block | **IMPLEMENTED — CI PENDING AFTER CURRENCY RECONCILIATION** | implementation `90293af...`; first Static `34003576066` classified; currency fix `e29501b...`; post-fix Static/full Linux required |
 | 3 | Optional foreign elements | QUEUED | Foreign title/summary can be absent or present without becoming mandatory |
 | 4 | Textual structure and body typography | QUEUED | Introduction/development/final considerations/references and article body typography validated with shared infrastructure |
 | 5 | Recommendations and conditional boundary | QUEUED | Recommendations remain advisory; journal instructions remain conditional |
@@ -62,10 +65,17 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 | 7 | Canonical article PDF | QUEUED | Real Git-bound TeX Live 2026 artifact with complete visual review |
 | 8 | Phase-end regression | QUEUED | Static + full Linux + article-specific acceptance on one immutable SHA |
 
+## Step 2 gate classification
+
+Static `34003576066` is a **control-policy failure**, not an article runtime failure. The stale checker assumed scientific-article runtime must remain absent forever because that was the correct condition during the shared-foundation phases. The readable machine phase is now `scientific-article`, so runtime presence is expected after recorded source-contract and foundation activation evidence.
+
+The correction does not alter the current article source set, the 18 rule IDs, modalities, locators or proof state. It updates `standards/version-policy.json`, `tests/checks/normative_currency.py` and `docs/NORMATIVE-CURRENCY.md` to make the transition explicit and fail closed in both directions: runtime must be absent before article activation and present once the article/final-certification/release phases are active.
+
 ## Step 2 acceptance boundary
 
-Step 2 does not close from source presence alone. The synchronized checkpoint must prove:
+The post-reconciliation synchronized checkpoint must prove:
 
+- normative currency and technical precedence remain green;
 - article profile route on pdfLaTeX and LuaLaTeX;
 - primary title rendered at 12 pt, centered and bold, with single-spacing composition guarded in source;
 - author note rendered as a footnote;
@@ -82,10 +92,9 @@ Step 2 does not close from source presence alone. The synchronized checkpoint mu
 |---|---|---|
 | `main` | current at/after `e6833ed5...` | canonical integration base |
 | `feat/v3-scientific-article` | ACTIVE | only branch for new Scientific Article implementation |
+| PR #286 | OPEN | active integration/review surface for Scientific Article work |
 | `plan/v3-regression-reset` | HISTORICAL | no new work; removal is repository hygiene only |
 | historical `audit/`, `docs/`, `r3-*`, old `feat/`, `fix/`, `refactor/` branches | PROVENANCE ONLY | not active authority and never a base for new work |
-
-Historical opaque R2/R3 evidence documents remain provenance only; the active authority set is explicitly listed by machine state. They are not roadmap inputs unless a current active test explicitly consumes one.
 
 ## Known v3.0.0 blockers and tracked debt
 
