@@ -92,34 +92,36 @@
     "scientific_article_step6_state": "accepted",
     "scientific_article_step6_rule_map_count": 18,
     "scientific_article_step6_validation_promotions": 0,
-    "scientific_article_step7_state": "provenance-build-active",
+    "scientific_article_step7_state": "visual-pass-cleanup-ci-pending",
     "scientific_article_step7_source": "template/scientific-article.tex",
     "scientific_article_step7_validation_record": "docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md",
+    "scientific_article_step7_build_sha": "f62ac703d8992af96b79cf83e125350ee561bd92",
+    "scientific_article_step7_build_run": 34153348385,
+    "scientific_article_step7_artifact_id": 10030160290,
+    "scientific_article_step7_pdf_sha256": "0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db",
+    "scientific_article_step7_pages": 5,
+    "scientific_article_step7_visual_review_state": "pass-5-of-5",
+    "scientific_article_step7_visual_failures": 0,
     "scientific_article_step7_temporary_executor": ".github/workflows/tmp-scientific-article-pdf.yml",
-    "scientific_article_step7_temporary_executor_state": "active-until-artifact-recovery",
-    "scientific_article_step7_artifact_state": "pending-workflow-build",
-    "scientific_article_step7_visual_review_state": "pending-artifact-recovery",
+    "scientific_article_step7_temporary_executor_state": "removed-in-cleanup-checkpoint",
+    "scientific_article_step7_section_page_start_observation": "non-blocking-no-retained-rule-prohibits-new-page-primary-sections",
     "scientific_article_step8_state": "queued-phase-end-regression",
     "latest_fully_validated_checkpoint_sha": "e941a7f9b4685a9bcf687135e8d5168af2d69ec7",
     "latest_fully_validated_checkpoint_state": "step6-accepted",
     "main_reconciliation_merge_sha": "85cf22b6fe5d117bb2611a2865911e0d20a19363",
     "main_reconciliation_parent_sha": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac",
     "current_correction_batch": [
-      "Scientific Article — Step 7 provenance-bound canonical article PDF build"
+      "Scientific Article — Step 7 temporary executor cleanup and visual acceptance checkpoint"
     ],
     "pending_acceptance_gates": [
-      "Step 7 temporary workflow must build and upload a real TeX Live 2026 canonical article PDF with provenance",
-      "Step 7 artifact must pass preflight and complete page-level visual review",
-      "Step 7 temporary executor must be removed before acceptance",
+      "Step 7 synchronized cleanup checkpoint must pass Static contract and selected Linux scope",
       "Step 8 must pass Static plus complete Linux integration on one immutable SHA",
       "Final Certification must run after Scientific Article closes",
       "Issue #18 deterministic release-reference-PDF reproducibility must close before Release"
     ],
-    "deferred_authority_conflicts": [
-      "review item 33: selected NBR 6023:2025 edge cases"
-    ],
+    "deferred_authority_conflicts": ["review item 33: selected NBR 6023:2025 edge cases"],
     "release_blockers": [
-      "Scientific Article Steps 7-8 are incomplete",
+      "Scientific Article Step 7 cleanup acceptance and Step 8 are incomplete",
       "Final Certification has not run on the final candidate",
       "issue #18 deterministic release reference PDF remains open",
       "Release phase has not executed"
@@ -144,7 +146,7 @@
   "branch_plan": {
     "current_work_branch": "feat/v3-scientific-article",
     "integration_pr": 286,
-    "integration_state": "open-step7-provenance-build-active",
+    "integration_state": "open-step7-visual-pass-cleanup-ci-pending",
     "integration_main_sha": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac",
     "main_reconciliation_merge_sha": "85cf22b6fe5d117bb2611a2865911e0d20a19363",
     "policy": "main-plus-one-short-lived-active-task-branch"
@@ -155,14 +157,15 @@
   },
   "authority_decisions": {
     "scientific_article": {
-      "status": "source-contract-accepted-steps1-6-accepted-step7-provenance-build-active",
+      "status": "source-contract-accepted-steps1-6-accepted-step7-visual-pass-cleanup-ci-pending",
       "rule_count": 18,
       "evidence_map": "standards/article-evidence-map.json",
       "shared_mechanism_counts_as_proof": false,
       "executable_support_counts_as_proven": false,
       "recommendations_must_remain_non_enforcing": true,
       "journal_precedence_remains_conditional": true,
-      "step6_validation_promotions": 0
+      "step6_validation_promotions": 0,
+      "primary_section_new_page_is_normative_defect": false
     }
   },
   "evidence": {
@@ -174,14 +177,21 @@
     "reference_pdf_phase_end_linux_run": 33985595798,
     "reference_pdf_pages": 55,
     "reference_pdf_visual_review_status": "pass",
-    "scientific_article_step5_acceptance_sha": "55fa1c8dc1b503c119d564950d04141cf45ad345",
-    "scientific_article_step5_acceptance_static_run": 34132291198,
-    "scientific_article_step5_acceptance_linux_run": 34132291304,
     "scientific_article_step6_acceptance_sha": "e941a7f9b4685a9bcf687135e8d5168af2d69ec7",
     "scientific_article_step6_acceptance_static_run": 34146793998,
     "scientific_article_step6_acceptance_linux_run": 34146794016,
     "scientific_article_step6_acceptance": "accepted",
-    "scientific_article_step7_build": "pending",
+    "scientific_article_step7_build_sha": "f62ac703d8992af96b79cf83e125350ee561bd92",
+    "scientific_article_step7_build_run": 34153348385,
+    "scientific_article_step7_artifact_id": 10030160290,
+    "scientific_article_step7_artifact_zip_digest": "sha256:8b9823271995b2a760f671bcdc636381e8134419382c9d898642310eaeb60052",
+    "scientific_article_step7_pdf_sha256": "0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db",
+    "scientific_article_step7_pdf_size": 129791,
+    "scientific_article_step7_pdf_pages": 5,
+    "scientific_article_step7_pdf_geometry": "A4-595.276x841.89pt",
+    "scientific_article_step7_pdf_version": "1.7",
+    "scientific_article_step7_fonts_embedded": true,
+    "scientific_article_step7_visual_review": "pass-5-of-5",
     "scientific_article_current_main_sha": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac",
     "scientific_article_current_main_reconciliation_merge_sha": "85cf22b6fe5d117bb2611a2865911e0d20a19363",
     "librarian_review_contract_items": 34

@@ -4,14 +4,14 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE. Steps 1–6 are ACCEPTED and Step 7 canonical article PDF provenance build is ACTIVE.**
+**Scientific Article is ACTIVE. Steps 1–6 are ACCEPTED. Step 7 has a provenance-bound 5-page visual PASS and is at the cleanup-checkpoint CI gate.**
 
 | Phase | Status | Current exit requirement |
 |---|---|---|
 | Regression Audit | CLOSED | completed regression contract and phase-end regression |
 | Core Corrections | CLOSED | candidate `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | candidate `b64074c...`; complete 55-page visual PASS + Static/Linux |
-| Scientific Article | **ACTIVE — STEP 7 PROVENANCE BUILD** | canonical article PDF acceptance + Step 8 complete phase-end regression |
+| Scientific Article | **ACTIVE — STEP 7 CLEANUP CI** | Step 7 cleanup acceptance + Step 8 complete phase-end regression |
 | Final Certification | QUEUED | complete platform/font/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | packaging, checksums, tag/release and publication verification |
 
@@ -26,31 +26,36 @@ Canonical `main` is `fbf7cc4839ce318024a7d1ed517dd50fab5773ac`. Active article w
 | 3 | Optional foreign title/summary | ACCEPTED | completed |
 | 4 | Body structure and typography | ACCEPTED | completed |
 | 5 | Recommendations and journal applicability | ACCEPTED | completed |
-| 6 | Exact 18-rule evidence ownership map | **ACCEPTED** | `e941a7f9...`; Static `34146793998`; Linux `34146794016`; zero validation-mode promotions |
-| 7 | Canonical article PDF | **ACTIVE — BUILD** | `template/scientific-article.tex`; real TeX Live 2026 PDF; Git provenance; every page visually inspected; temporary executor removed before acceptance |
+| 6 | Exact 18-rule evidence ownership map | ACCEPTED | `e941a7f9...`; Static `34146793998`; Linux `34146794016`; zero validation-mode promotions |
+| 7 | Canonical article PDF | **VISUAL-PASS — CLEANUP CI PENDING** | artifact `f62ac703...`; run `34153348385`; 5/5 visual PASS; temporary executor removed; cleanup checkpoint CI must pass |
 | 8 | Scientific Article phase-end regression | QUEUED | Static + `complete` Linux + article gates on one immutable SHA |
 
-## Step 7 executor lifecycle
+## Step 7 artifact
 
-| Surface | State |
+| Evidence | Result |
 |---|---|
-| Canonical source | `template/scientific-article.tex` |
-| Validation record | `docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md` |
-| Temporary workflow | `.github/workflows/tmp-scientific-article-pdf.yml` — ACTIVE |
-| Artifact provenance | PENDING build |
-| Visual review | PENDING artifact recovery |
+| Source | `template/scientific-article.tex` |
+| Build SHA | `f62ac703d8992af96b79cf83e125350ee561bd92` |
+| Workflow | `34153348385` — SUCCESS |
+| PDF SHA-256 | `0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db` |
+| Pages | 5 |
+| Geometry | A4 |
+| Embedded fonts | PASS |
+| Complete visual review | PASS — 5/5 |
+| Unexplained visual FAIL | 0 |
+| Temporary executor | removed by cleanup checkpoint |
 
-The temporary workflow is not part of the permanent CI architecture. It exists only to generate the bounded Step 7 artifact and must be removed immediately after artifact recovery.
+Primary-section new-page behavior is recorded as a **non-blocking observation**. The retained article contract defines section presence and body typography but does not define a no-page-break predicate; no new requirement is invented from presentation preference.
 
-## Step 7 presentation gate
+## Next gate
 
-The article PDF is a new canonical artifact, separate from the accepted 55-page academic-work reference PDF. Step 7 requires a dedicated canonical article source, real TeX Live 2026 compilation, provenance bound to a concrete Git SHA/workflow run, PDF hash/metadata preflight, complete page-by-page visual inspection, explicit leakage checks, and temporary-executor removal before acceptance. Synthetic PDFs are inadmissible.
+After the cleanup checkpoint is green, Step 7 becomes ACCEPTED and Step 8 becomes ACTIVE. Step 8 must use one immutable candidate and `complete` Linux scope; scoped intermediate runs cannot close Scientific Article.
 
 ## After Scientific Article
 
-Final Certification must run on the accepted final candidate and cover at least all document profiles, pdfLaTeX/LuaLaTeX, literal Times New Roman and Arial identity where required, Unicode extraction, font embedding, PDF/A-2b, distribution/public bundle checks, and release-reference-PDF reproducibility evidence required by issue #18.
+Final Certification must run on the accepted final candidate and cover all profiles, pdfLaTeX/LuaLaTeX, literal Times New Roman and Arial identity where required, Unicode extraction, font embedding, PDF/A-2b, distribution/public bundle checks, and issue #18 reproducibility evidence.
 
-Release follows only after Final Certification and includes final documentation, bundles, checksums/assets, immutable `v3.0.0` tag/GitHub Release and any external publication/CTAN action.
+Release follows only after Final Certification and includes final documentation, bundles, checksums/assets, immutable `v3.0.0` tag/GitHub Release and external publication actions.
 
 ## Persistent authority gap
 

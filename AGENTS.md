@@ -25,10 +25,11 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Current-main reconciliation merge | `85cf22b6fe5d117bb2611a2865911e0d20a19363` |
 | Steps 1–6 | **ACCEPTED** |
 | Step 6 checkpoint | `e941a7f9b4685a9bcf687135e8d5168af2d69ec7`; Static `34146793998`; Linux `34146794016` |
-| Step 7 | **ACTIVE — PROVENANCE BUILD** |
-| Canonical article source | `template/scientific-article.tex` |
-| Temporary executor | `.github/workflows/tmp-scientific-article-pdf.yml` — ACTIVE until artifact recovery |
-| Step 7 record | `docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md` |
+| Step 7 artifact source SHA | `f62ac703d8992af96b79cf83e125350ee561bd92` |
+| Step 7 artifact workflow | `34153348385` — SUCCESS |
+| Step 7 visual review | **PASS — 5/5 pages** |
+| Step 7 state | **VISUAL-PASS — CLEANUP CHECKPOINT CI PENDING** |
+| Temporary executor | removed by current cleanup checkpoint |
 | Step 8 | QUEUED — complete phase-end regression |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
@@ -38,22 +39,21 @@ Memory, prior chats, historical branches and old workflow names never override c
 1. Regression Audit — closed
 2. Core Corrections — closed
 3. Reference PDF Validation — closed
-4. Scientific Article — active, Step 7 canonical PDF
+4. Scientific Article — active, Step 7 cleanup acceptance gate
 5. Final Certification — queued
 6. Release — queued
 
-## Scientific Article evidence rules
+## Scientific Article rules
 
 - Preserve exactly the retained 18-rule source contract.
-- `standards/article-evidence-map.json` records current article-specific evidence ownership without rewriting source requirement text, normativity, locators or applicability.
-- Executable support is not equivalent to a normative rule becoming `PROVEN`.
-- Step 6 promoted **zero** validation modes and is accepted at `e941a7f9...`.
-- Optional foreign title/summary remain optional and use present/absent matrix evidence.
-- The four recommendation rules remain manual, advisory and non-enforcing.
-- Journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`, with no generic executable owner.
+- Step 6 promoted **zero** validation modes and remains accepted.
+- Optional foreign title/summary remain optional.
+- Recommendation rules remain manual/advisory/non-enforcing.
+- Journal precedence remains `required-when-applicable`, `conditional-manual`.
 - Shared implementation reuse never counts as article-specific proof by itself.
-- Step 7 must use a real TeX Live 2026 article PDF bound to concrete Git provenance; synthetic PDFs are inadmissible.
-- The temporary PDF-build executor must be removed immediately after artifact recovery and before Step 7 acceptance.
+- Step 7 uses a real TeX Live 2026 artifact bound to Git SHA `f62ac703...`; synthetic PDFs are inadmissible.
+- The temporary Step 7 executor must be absent before Step 7 acceptance.
+- Primary-section new-page behavior is recorded as a non-blocking observation because the retained article contract does not define a no-page-break requirement.
 
 ## Linux scope rule
 
@@ -80,7 +80,7 @@ A **material advance** is any change that alters runtime behavior, normative cla
 
 ## Mandatory phase-end regression
 
-No phase closes until one immutable candidate SHA passes the complete phase-end regression and the result is recorded. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`. Scientific Article Step 8 requires complete Linux.
+No phase closes until one immutable candidate SHA passes the complete **phase-end regression** and the result is recorded. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`. Scientific Article Step 8 requires complete Linux.
 
 ## Fail-closed rule
 
