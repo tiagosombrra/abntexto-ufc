@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-07
-Status: ACTIVE — FINAL CERTIFICATION BASELINE ENTRY
+Status: ACTIVE — FINAL CERTIFICATION LINUX RELEASE BASELINE
 
 ## Phase readiness
 
@@ -11,17 +11,18 @@ Status: ACTIVE — FINAL CERTIFICATION BASELINE ENTRY
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
 | Scientific Article | CLOSED | `923d11ef...`; Static `34154045481`; complete Linux `34154045509`; article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — BASELINE ENTRY** | branch `cert/v3-final-certification` from main `22e3c192...`; certification matrix remains |
+| Final Certification | **ACTIVE — LINUX RELEASE BASELINE** | entry accepted; current permanent release contract must be established before machinery changes |
 | Release | QUEUED | bundles, checksums, tag/GitHub Release and publication verification |
 
-## Current certification entry
+## Current certification state
 
 | Surface | State |
 |---|---|
 | Scientific Article PR #286 | MERGED |
 | Canonical main | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
-| Active branch | `cert/v3-final-certification` |
-| Linux release baseline | queued |
+| Active branch / PR | `cert/v3-final-certification` / #289 |
+| Entry synchronization | **ACCEPTED** — `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS, docs-only heavy skip |
+| Linux release baseline | **ACTIVE** |
 | Profile/engine matrix | queued |
 | Literal fonts / Unicode / embedding | queued |
 | PDF/A-2b | queued |
@@ -29,11 +30,15 @@ Status: ACTIVE — FINAL CERTIFICATION BASELINE ENTRY
 | Issue #18 deterministic reference PDF | OPEN — P0 release blocker |
 | Final Certification phase-end regression | not started |
 
+## Baseline transport boundary
+
+The baseline must execute the existing permanent `make release-check` contract. Direct workflow dispatch is preferred. If unavailable through the current automation surface, a temporary PR executor may transport the exact permanent command/environment only. It must be recorded while active and removed before baseline acceptance.
+
 ## What still blocks v3.0.0
 
 | Blocker | Severity | Exit condition |
 |---|---|---|
-| Final Certification baseline | P0 | current main-derived branch passes/establishes existing release baseline |
+| Linux release baseline | P0 | current main-derived certification branch passes the existing release contract |
 | Complete certification matrix | P0 | all applicable profile/engine/font/Unicode/embedding/PDF-A/distribution gates green |
 | Issue #18 reproducibility | P0 | deterministic epoch + two controlled clean rebuilds + identical reference-PDF SHA-256 while existing validation remains green |
 | Final Certification phase-end regression | P0 | one immutable candidate passes complete phase-end gate |

@@ -21,14 +21,16 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Target | `3.0.0` |
 | Active phase | **Final Certification** |
 | Canonical `main` | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
-| Active branch | `cert/v3-final-certification` |
-| Scientific Article PR | #286 — MERGED |
+| Active branch / PR | `cert/v3-final-certification` / #289 |
+| Entry synchronization checkpoint | `aa6cc4a1754bae4ee1b9b89b58441e6cf44d7951` |
+| Entry Static | `34161228915` — SUCCESS |
+| Entry Linux | `34161228823` — SUCCESS; documentation-only heavy integration skipped |
 | Scientific Article phase-end candidate | `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` |
 | Article phase-end Static | `34154045481` — SUCCESS |
 | Article phase-end Linux | `34154045509` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | Canonical article visual evidence | PASS — 5/5 pages |
 | Scientific Article | **CLOSED** |
-| Final Certification | **ACTIVE — BASELINE ENTRY** |
+| Final Certification | **ACTIVE — LINUX RELEASE BASELINE** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
@@ -44,8 +46,9 @@ Memory, prior chats, historical branches and old workflow names never override c
 ## Final Certification rules
 
 - `cert/v3-final-certification` is the only active certification task branch and starts from canonical main `22e3c192...`.
+- Entry synchronization is accepted at `aa6cc4a...`; establish the current Linux release baseline before modifying certification machinery.
+- The release baseline must execute the permanent release contract (`make release-check`). If workflow dispatch is unavailable from the active automation surface, a temporary PR executor may transport that exact command/environment only; it must be removed before bounded checkpoint acceptance and must not alter certification semantics.
 - Preserve accepted shared and Scientific Article semantics; certification is proof/packaging work unless a genuine regression is found.
-- Establish the Linux release baseline before modifying certification machinery.
 - Literal Times New Roman/Arial evidence must not redistribute proprietary fonts.
 - Issue #18 reproducibility work adds deterministic build evidence and must not modify normative article/shared behavior merely to stabilize bytes.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.

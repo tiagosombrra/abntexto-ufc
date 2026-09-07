@@ -1,20 +1,22 @@
 # V3 Final Certification — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — BASELINE ENTRY
+Status: ACTIVE — LINUX RELEASE BASELINE
 
 ## Entry facts
 
 Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5ac1f527eaf`: Static `34154045481` SUCCESS; Linux `34154045509` SUCCESS with `SCOPE=complete PASS=36 FAIL=0 SKIP=0`; canonical article PDF visual review PASS 5/5.
 
-PR #286 was squash-merged into canonical `main` as `22e3c19235fa5245505b92d919a09d31eb2bfecb`. Active branch `cert/v3-final-certification` was created from exactly that SHA.
+PR #286 was squash-merged into canonical `main` as `22e3c19235fa5245505b92d919a09d31eb2bfecb`. Active branch `cert/v3-final-certification` / PR #289 was created from exactly that SHA.
+
+Entry synchronization checkpoint `aa6cc4a1754bae4ee1b9b89b58441e6cf44d7951` passed Static `34161228915`. Linux `34161228823` also succeeded and correctly skipped heavy integration because the entry checkpoint changed documentation/control state only. Step 1 is accepted.
 
 ## Certification sequence
 
 | Step | Work | State | Acceptance |
 |---:|---|---|---|
-| 1 | Entry synchronization and branch handoff | ACTIVE | branch/main facts synchronized and checkpoint Static green |
-| 2 | Linux release baseline | QUEUED | permanent `Linux release check` / `make release-check` green before certification machinery changes |
+| 1 | Entry synchronization and branch handoff | **ACCEPTED** | `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS, docs-only heavy skip |
+| 2 | Linux release baseline | **ACTIVE** | permanent release contract `make release-check` green before certification machinery changes |
 | 3 | Profile and engine matrix | QUEUED | all supported document profiles and required pdfLaTeX/LuaLaTeX surfaces remain green |
 | 4 | Literal fonts, Unicode and embedding | QUEUED | required Times New Roman/Arial identity evidence, Unicode extraction and embedding pass without proprietary-font redistribution |
 | 5 | PDF/A certification | QUEUED | PDF/A-2b evidence passes on final candidate using established certification route |
@@ -22,9 +24,23 @@ PR #286 was squash-merged into canonical `main` as `22e3c19235fa5245505b92d919a0
 | 7 | Deterministic release reference PDF — issue #18 | QUEUED | pinned deterministic epoch, two clean builds and identical SHA-256 while existing visual/text/font/PDF-A evidence stays intact |
 | 8 | Final Certification phase-end regression | QUEUED | one immutable SHA passes Static, complete Linux, release/certification matrix and phase-specific evidence |
 
+## Linux release baseline rule
+
+The baseline is an observation of the current accepted main-derived implementation. Do not change release/certification machinery before the baseline is classified.
+
+Primary route is the permanent `Linux release check`, which executes `make release-check` under TeX Live 2026 with the repository release contract. If direct workflow dispatch is unavailable through the active automation surface, a temporary PR executor may invoke the exact same command and environment only. Such an executor:
+
+- is transport only and introduces no new certification predicate;
+- must be recorded in machine state while active;
+- must upload the generated validation evidence when available;
+- must be removed before the baseline checkpoint is accepted;
+- cannot replace later literal-font/platform/PDF-A or phase-end evidence.
+
+Any failure is classified before changing code/tests.
+
 ## Baseline-first rule
 
-Do not modify release/certification machinery until the current accepted main-derived branch has been inspected against existing permanent release and certification routes. Reuse prior proof only where its provenance/applicability remains valid; do not rerun expensive certification merely because historical evidence exists, but do rerun when final-candidate identity is required by the phase exit.
+Reuse prior proof only where provenance/applicability remains valid; do not rerun expensive certification merely because historical evidence exists, but do rerun when final-candidate identity is required by the phase exit.
 
 ## Issue #18 boundary
 

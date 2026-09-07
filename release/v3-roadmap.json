@@ -98,15 +98,19 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "923d11ef668b02ec4de3cad4906ad5ac1f527eaf",
     "latest_fully_validated_checkpoint_state": "scientific-article-phase-end-accepted",
-    "final_certification_state": "active-baseline-entry",
+    "final_certification_state": "active-linux-release-baseline",
     "final_certification_technical_work_started": false,
     "final_certification_branch": "cert/v3-final-certification",
+    "final_certification_pr": 289,
     "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
+    "final_certification_entry_checkpoint_sha": "aa6cc4a1754bae4ee1b9b89b58441e6cf44d7951",
+    "final_certification_entry_static_run": 34161228915,
+    "final_certification_entry_linux_run": 34161228823,
+    "final_certification_entry_linux_state": "success-documentation-only-heavy-skip",
     "current_correction_batch": [
-      "Final Certification — baseline entry and existing proof inventory"
+      "Final Certification — Linux release baseline"
     ],
     "pending_acceptance_gates": [
-      "Certification branch synchronization checkpoint must pass Static contract",
       "Establish current Linux release baseline before certification machinery changes",
       "Inventory and validate profile/engine/literal-font/Unicode/embedding/PDF-A/distribution proof routes",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
@@ -117,10 +121,14 @@
     ],
     "release_blockers": [
       "Final Certification has not completed",
+      "Linux release baseline has not been accepted",
       "issue #18 deterministic release reference PDF remains open",
       "Release phase has not executed"
     ],
-    "temporary_executor": {"state": "none-active"}
+    "temporary_executor": {
+      "state": "none-active",
+      "allowed_purpose": "transport exact permanent make release-check contract when direct workflow dispatch is unavailable"
+    }
   },
   "linux_integration": {
     "policy_document": "docs/LINUX-INTEGRATION-SCOPES.md",
@@ -132,6 +140,7 @@
   },
   "branch_plan": {
     "current_work_branch": "cert/v3-final-certification",
+    "final_certification_pr": 289,
     "scientific_article_pr": 286,
     "scientific_article_pr_state": "merged",
     "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
@@ -178,6 +187,12 @@
     "scientific_article_phase_end_linux_summary": "PASS=36 FAIL=0 SKIP=0",
     "scientific_article_phase_end_acceptance": "accepted",
     "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
+    "final_certification_entry_checkpoint_sha": "aa6cc4a1754bae4ee1b9b89b58441e6cf44d7951",
+    "final_certification_entry_static_run": 34161228915,
+    "final_certification_entry_static_conclusion": "success",
+    "final_certification_entry_linux_run": 34161228823,
+    "final_certification_entry_linux_conclusion": "success",
+    "final_certification_entry_linux_scope": "none-documentation-only",
     "librarian_review_contract_items": 34
   },
   "release_policy": {
