@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-07  
-Status: ACTIVE — STEP 5 ARTICLE GATE REGISTERED / ACCEPTANCE CI PENDING
+Status: ACTIVE — MIXED ORCHESTRATION/DOMAIN INFERENCE CORRECTION PENDING CI
 
 ## Purpose
 
@@ -13,7 +13,7 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 |---|---|---|---|
 | `auto` | infer the narrowest safe suite from changed paths | one or more inferred suites | No |
 | `complete` | shared/core changes, unknown technical paths and phase-end regression | all PR integration checks + normative contribution | **Yes, with all other phase-end gates** |
-| `article` | Scientific Article implementation/evidence | validator-source + article profile/front-block/foreign-elements/body/**recommendations** | No |
+| `article` | Scientific Article implementation/evidence | validator-source + article profile/front-block/foreign-elements/body/recommendations | No |
 | `reference-document` | canonical reference source/corpus changes | reference build, corpus and PDF validator | No |
 | `reference-pdf` | presentation-sensitive reference-PDF work | reference, layout, typography, front/back matter, objects, bibliography | No |
 | `frontmatter` | cover/title/approval/pre-textual changes | front matter + duplex front matter | No |
@@ -25,28 +25,32 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 | `profiles` | accepted non-article profile compatibility | exactly six profiles, build path, multivolume, catalog card | No |
 | `smoke` | orchestration-only changes | repository/source/reference/PDF-validator smoke | No |
 
-## Automatic selection and provenance fallback
+## Automatic selection
 
-For pull requests, `auto` evaluates the relevant changed-path window after checkout.
+For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer the previous-head to new-head range when both commits are available and otherwise fail closed to the full PR range. Documentation-only changes skip heavy integration.
 
-- On `synchronize`, it prefers the previous PR head (`before`) -> new PR head (`after`) incremental range.
-- Before using that range, both endpoint commits must be present in the checkout (`git cat-file -e ...^{commit}`).
-- If either synchronize endpoint is unavailable, the workflow keeps the full PR `base -> head` range and records `missing-before-full-pr`; it must not terminate with a Git object error.
-- On opened/reopened/ready-for-review events, it uses the full PR diff.
-- Documentation-only changes skip heavy Linux integration.
-- Known domain paths select their bounded suite.
-- Multiple known domains run a deduplicated union.
-- Workflow/runner orchestration files do not force `complete` when they accompany a known bounded-domain change; orchestration-only changes select `smoke`.
-- Shared/core surfaces, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
-- Manual `workflow_dispatch` with `auto` fails closed to `complete`.
+The corrected domain-selection rule is:
 
-Correctness and provenance take precedence over scoped-runtime savings.
+| Changed-path class | Scope behavior |
+|---|---|
+| orchestration only | `smoke` |
+| orchestration + one recognized domain | ignore orchestration paths for domain selection; run that bounded domain |
+| orchestration + multiple recognized domains | run the deduplicated bounded union |
+| orchestration + unknown non-orchestration technical path | `complete` |
+| force-complete shared/core/standards path | `complete` |
+| unknown technical path without orchestration | `complete` |
+
+This preserves the intended policy that orchestration changes do not accidentally broaden a known bounded domain, while fail-closed handling remains intact for unknown or shared technical surfaces.
+
+## Step 5 failure classification
+
+At `6507da00275d8a69093541d6e6cb119a1b6f6cb3`, complete Linux `34126602083` passed all 36 checks, including all six article gates. Static `34126602062` correctly failed because `tests/run.py` combined with an article path was still processed as an unmatched technical path and therefore returned `complete`.
+
+`tests/checks/linux_integration_suites.py` is the correct guard and is not weakened. The fix is confined to inference semantics plus extra self-test cases for mixed orchestration/domain and orchestration/unknown-path behavior.
 
 ## First-class article gates
 
-Article checks are independently owned by the coordinated runner. They are not hidden inside the six-profile non-article matrix and are not recursively chained from the article profile gate.
-
-The `article` suite now contains:
+The `article` suite contains:
 
 1. `validator-source`;
 2. `scientific-article-profile`;
@@ -55,24 +59,13 @@ The `article` suite now contains:
 5. `scientific-article-body`;
 6. `scientific-article-recommendations`.
 
-`tests/checks/linux_integration_suites.py` requires all six checks whenever the phase is Scientific Article or later, verifies Step 5 paths infer `article`, and prevents the article profile gate from hiding later Step gates.
+The `profiles` suite remains exactly the six accepted non-article profiles plus compatibility checks.
 
-The `profiles` suite remains exactly the six accepted non-article profiles plus compatibility checks. `profile-matrix.sh` rejects accidental inclusion of `scientific-article`.
+## Step 5 evidence hardening
 
-As later Scientific Article Steps add executable gates, each new gate joins `article` in the same **material advance**.
+`scientific-article-recommendations` compiles a recommendation-following scenario and an outside-recommendation scenario with pdfLaTeX and LuaLaTeX. The current correction adds unique rendered keyword sentinels to both scenarios. Successful extraction must demonstrate not only compilation and paragraph rendering but also keyword rendering while the outside scenario remains valid despite being below the advisory keyword count.
 
-## Step 5 evidence contract
-
-`scientific-article-recommendations` has two controlled article scenarios and compiles both under pdfLaTeX and LuaLaTeX:
-
-- a recommendation-following scenario inside the 150–250-word guidance, one paragraph and at least three keywords;
-- an outside-recommendation scenario with a short summary, two paragraphs and fewer than three keywords.
-
-Successful compilation of the second scenario proves those recommendations are not hard class/validator rejection boundaries. A companion static checker preserves the four recommendation rules as `recommended` + `manual`, preserves the generic right-aligned author default, and preserves `article.journal-guidelines.precedence` as `required-when-applicable`, `conditional-manual`, applicability context `target-journal-submission`.
-
-Step 5 does not promote proof state and does not change runtime normative semantics.
-
-The earlier fixture-only checkpoint `f445333...` passed Static and Linux, but its `article` run still contained only five checks; therefore it cannot accept Step 5.
+Recommendations remain `recommended` + `manual`; journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`; no proof-state promotion occurs.
 
 ## Runner importability invariant
 
@@ -90,19 +83,8 @@ Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
 ## Current acceptance requirement
 
-The synchronized Step 5 implementation candidate must pass:
-
-- Static contract, including recommendation modality checker and six-check suite registration;
-- bounded Linux `article` on the same SHA;
-- all accepted Step 1–4 gates;
-- both two-engine Step 5 scenarios;
-- no recommendation hard rejection;
-- unchanged journal conditional applicability and proof-state semantics.
-
-A scoped green run accepts only Step 5 after its result is documented. It never closes the Scientific Article phase.
+The synchronized Step 5 correction candidate must pass Static and automatically select bounded Linux `article`, with all six checks green and both two-engine recommendation scenarios producing their controlled rendered markers. Only after those results are recorded may Step 5 close and Step 6 activate.
 
 ## Phase-end rule
 
-Every phase transition still requires `complete` Linux integration on the same immutable phase-end candidate SHA together with Static and phase-specific acceptance evidence.
-
-Final Certification may additionally require the heavier literal-font/PDF-A/distribution matrix; scoped PR suites do not replace that certification.
+Every phase transition still requires `complete` Linux integration on the same immutable phase-end candidate SHA together with Static and phase-specific acceptance evidence. Final Certification may additionally require the heavier literal-font/PDF-A/distribution matrix.

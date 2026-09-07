@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — STEP 5 IMPLEMENTED / SYNCHRONIZED CI PENDING
+Status: ACTIVE — STEP 5 EVIDENCE GREEN / ORCHESTRATION CORRECTION PENDING CI
 
 ## Purpose
 
@@ -17,8 +17,8 @@ Linux orchestration contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 | 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
 | 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign elements | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | ACCEPTED | `005956bd...`; Static `34119007413`; Linux `34119007425`; `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
-| 5 | Recommendations and conditional applicability | **IMPLEMENTED — CI PENDING** | dedicated first-class recommendation/conditional gate added to `article`; synchronized Static + article Linux required |
+| 4 | Textual structure and body typography | ACCEPTED | `005956bd...`; Static `34119007413`; Linux `34119007425` |
+| 5 | Recommendations and conditional applicability | **EVIDENCE GREEN / CHECKPOINT NOT YET ACCEPTED** | `6507da...`; Linux `34126602083` complete 36/36 PASS; Static `34126602062` failed only mixed orchestration+article scope inference |
 | 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF with complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific acceptance on one immutable SHA |
@@ -31,35 +31,39 @@ Linux orchestration contract: `docs/LINUX-INTEGRATION-SCOPES.md`.
 | `article.summary.word-count.recommended` | recommended | 150–250 words is advisory, not a rejection interval |
 | `article.summary.keywords.minimum.recommended` | recommended | at least three keywords is advisory |
 | `article.summary.single-paragraph.recommended` | recommended | one-paragraph summary is advisory |
-| `article.journal-guidelines.precedence` | required-when-applicable | journal instructions are checked only for target-journal submission; generic UFC profile remains fallback |
+| `article.journal-guidelines.precedence` | required-when-applicable | journal instructions apply only in target-journal submission context; generic UFC profile remains fallback |
 
-No Step 5 change modifies these rule IDs, locators, normativity, applicability or proof state.
+No Step 5 change modifies rule IDs, locators, normativity, applicability or proof state.
 
-## Step 5 implementation
+## Step 5 evidence result at `6507da...`
 
-The Step 5 evidence surface now consists of:
+Linux `34126602083` ran `SCOPE=complete PASS=36 FAIL=0 SKIP=0`. All six Scientific Article gates passed. The recommendation evidence reported two engines, two scenarios, outside-recommendation compilation success, short summary acceptance, multiple-paragraph acceptance, fewer-than-three-keywords acceptance, right-aligned generic author default, zero hard recommendation failures, conditional-manual journal precedence and zero proof-state promotion.
 
-1. `tests/checks/scientific_article_recommendations_contract.py`, which freezes recommendation modality as `recommended` + `manual`, freezes journal precedence as `required-when-applicable` + `conditional-manual`, preserves `target-journal-submission` applicability, confirms the generic right-aligned author default, and verifies controlled fixture semantics;
-2. `tests/documents/scientific-article-recommendations-recommended.tex`, whose summary remains inside the 150–250-word guidance, one paragraph and at least three keywords;
-3. `tests/documents/scientific-article-recommendations-outside.tex`, which deliberately uses a short summary, two paragraphs and fewer than three keywords while retaining all required article metadata;
-4. `tests/integration/scientific-article-recommendations.sh`, which compiles both scenarios with pdfLaTeX and LuaLaTeX and proves that recommendation nonconformance alone does not create a class/validator rejection;
-5. first-class registration of `scientific-article-recommendations` in `tests/run.py` and the `article` Linux suite.
+Static `34126602062` failed after the article recommendation contract itself passed. The only failing predicate was the Linux integration suite contract: orchestration + article paths incorrectly selected `complete` rather than `article`.
 
-The earlier fixture-only checkpoint `f4453337d2de94260d7ebda4cead9803a6a9cb64` passed Static `34124565217` and Linux `34124565158`, but that Linux run still contained only the five Step 1–4 article checks. It is therefore useful preflight evidence, not Step 5 acceptance.
+## Current correction and hardening
+
+The synchronized correction does two bounded things:
+
+1. fix `tests/integration_suites.py` so orchestration paths are neutral when a recognized technical domain is present, while orchestration-only remains `smoke` and unknown/force-complete technical paths still select `complete`;
+2. harden `scientific-article-recommendations.sh` and its controlled fixtures with unique rendered keyword markers, proving the PDF contains the expected keyword output in both the recommendation-following and outside-recommendation scenarios.
+
+Neither change modifies the retained article rule registry or runtime normative behavior.
 
 ## Step 5 acceptance gate
 
 | Gate | Required result |
 |---|---|
-| Static contract | recommendation contract + suite registration PASS |
-| Linux `article` | six first-class checks PASS, including Step 5 |
-| Recommended scenario | compiles on both engines |
-| Outside-recommendation scenario | compiles on both engines despite short/multi-paragraph/fewer-keyword recommendation deviations |
+| Static contract | suite inference + recommendation contract PASS |
+| Automatic inference | orchestration + Step 5 path selects `article` |
+| Linux `article` | six first-class checks PASS |
+| Recommended scenario | both engines compile and render controlled summary/keyword markers |
+| Outside-recommendation scenario | both engines compile and render both paragraphs + controlled keyword marker |
 | Journal precedence | remains conditional-manual and context-bound |
 | Steps 1–4 | remain green |
 | Proof state | no promotion merely from recommendation/default reuse |
 
-The commit containing this synchronized implementation is the Step 5 acceptance candidate. Its exact SHA and workflow run IDs are recorded only after CI completes; the candidate itself is not amended while CI is running.
+Step 6 is not activated until this corrected checkpoint is accepted and documented.
 
 ## Non-negotiable boundaries
 
@@ -83,7 +87,8 @@ The commit containing this synchronized implementation is the Step 5 acceptance 
 | Canonical base | `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
 | Active branch | `feat/v3-scientific-article` |
 | Active PR | #286 |
-| Step 4 accepted checkpoint | `005956bd615042a12fb0393fddd4941b635f6ce3` |
-| Step 5 fixture preflight | `f445333...`; Static `34124565217` PASS; Linux `34124565158` PASS but Step 5 gate not yet registered there |
+| Step 5 implementation checkpoint | `6507da00275d8a69093541d6e6cb119a1b6f6cb3` |
+| Step 5 Linux | `34126602083` complete 36/36 PASS |
+| Step 5 Static | `34126602062` orchestration inference failure |
 
-Next: publish this synchronized Step 5 gate checkpoint, wait for Static and bounded Linux `article`, record the exact candidate SHA/results, and only then activate Step 6.
+Next: publish the synchronized inference correction + rendered keyword hardening checkpoint, require Static + bounded Linux `article`, record the exact candidate results, then activate Step 6.

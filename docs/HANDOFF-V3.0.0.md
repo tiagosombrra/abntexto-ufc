@@ -12,46 +12,43 @@ Updated: 2026-09-07
 | Active PR | #286 |
 | Active phase | **Scientific Article** |
 | Steps 1–4 | **ACCEPTED** |
-| Step 4 acceptance checkpoint | `005956bd615042a12fb0393fddd4941b635f6ce3` |
-| Step 4 Static / Linux | `34119007413` PASS / `34119007425` PASS, `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
-| Step 5 fixture preflight | `f4453337d2de94260d7ebda4cead9803a6a9cb64`; Static `34124565217` PASS; Linux `34124565158` PASS, but only the five Step 1–4 article checks ran |
-| Current work | **Step 5 — first-class recommendations/conditional gate implemented; synchronized CI pending** |
+| Step 5 implementation checkpoint | `6507da00275d8a69093541d6e6cb119a1b6f6cb3` |
+| Step 5 Linux | `34126602083` PASS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0`; all six article checks passed |
+| Step 5 Static | `34126602062` FAIL only on Linux suite inference for mixed orchestration + article paths |
+| Current work | **Step 5 — orchestration inference correction + rendered recommendation-keyword hardening** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-## Step 5 implementation state
+## Failure classification
 
-| Surface | State |
+The Step 5 implementation itself is green under the complete Linux regression. The Static failure is independent of article runtime and recommendation semantics. `tests/integration_suites.py` treated orchestration files as unknown technical paths after determining that the change was not orchestration-only, causing `tests/run.py` + article files to select `complete`. `tests/checks/linux_integration_suites.py` correctly rejected this behavior.
+
+The correction must preserve these invariants:
+
+| Case | Required scope |
 |---|---|
-| Recommendation contract checker | added; freezes four rules as `recommended` + `manual` |
-| Journal precedence contract | checked as `required-when-applicable`, `conditional-manual`, `target-journal-submission` |
-| Positive recommended fixture | present; controlled 150–250-word / one-paragraph / three-keyword scenario |
-| Outside-recommendation fixture | added; short summary + two paragraphs + fewer than three keywords |
-| Two-engine integration gate | added; outside-recommendation scenario must compile successfully |
-| Linux suite registration | `scientific-article-recommendations` added as a first-class `article` check |
-| Proof-state promotion | none |
-| Runtime normative change | none |
+| orchestration only | `smoke` |
+| orchestration + recognized article path | `article` |
+| orchestration + another recognized domain | that bounded domain/union |
+| orchestration + unknown technical path | `complete` |
+| force-complete shared/core/standards path | `complete` |
 
-The fixture-only checkpoint `f445333...` is not Step 5 acceptance because its Linux run had no dedicated Step 5 gate. The synchronized commit containing the checker, outside fixture, integration gate, suite registration and this documentation is the actual Step 5 candidate. Record its SHA and workflow runs only after CI finishes.
+The Step 5 recommendation gate is also hardened so the generated PDF must contain controlled keyword markers in both the recommendation-following and outside-recommendation scenarios. This is evidence hardening only; modality and runtime law do not change.
 
-## Acceptance gate before Step 6
+## Step 5 acceptance gate before Step 6
 
-1. Static contract passes on the synchronized Step 5 candidate;
-2. Linux `article` passes all six first-class checks;
-3. both recommendation scenarios compile with pdfLaTeX and LuaLaTeX;
-4. recommendation nonconformance alone produces no hard rejection;
-5. journal precedence remains conditional/manual and context-bound;
-6. Steps 1–4 remain green;
-7. no proof-state, authority, shared non-article runtime or librarian-review classification changes.
+1. corrected synchronized checkpoint passes Static;
+2. automatic Linux selection resolves to `article` for the mixed orchestration + Step 5 change;
+3. Linux `article` passes all six first-class checks;
+4. both recommendation scenarios compile with pdfLaTeX and LuaLaTeX and render controlled keyword markers;
+5. recommendations remain non-enforcing;
+6. journal precedence remains conditional/manual and context-bound;
+7. Steps 1–4 remain green;
+8. no proof-state, authority, non-article runtime or librarian-review classification changes.
 
 ## Immediate action
 
-1. publish the synchronized Step 5 candidate;
-2. wait for Static and Linux `article` on that exact SHA;
-3. classify any failure before changing runtime/tests;
-4. if both pass, record the SHA/run IDs and mark Step 5 ACCEPTED;
-5. activate Step 6 evidence hardening in the same documentation cycle;
-6. later close Scientific Article only after canonical article PDF visual review and complete phase-end regression.
+Publish the synchronized correction checkpoint, wait for Static and Linux, classify any failure before changing code/tests, and only after both gates pass record Step 5 as **ACCEPTED** and activate Step 6 in the same documentation cycle.
 
 ## Mandatory operating discipline
 
