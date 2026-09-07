@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — ORCHESTRATION STABILIZATION / FEATURE PR PRESERVED
+Status: ACTIVE — ORCHESTRATION ACCEPTED / FEATURE PR PRESERVED
 
 ## Purpose
 
@@ -34,23 +34,22 @@ Acceptance evidence:
 - `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article metadata=submission-date,approval-date,article-author-note presentation_rules_promoted=0`;
 - six accepted non-article profiles remained green.
 
-## Infrastructure checkpoint — PR #287
+## Infrastructure checkpoint — ACCEPTED
 
-Bounded Linux orchestration is being stabilized on `ci/scoped-linux-integration`. This is infrastructure work, not a new article normative step.
+PR #287 / `ci/scoped-linux-integration` has accepted technical checkpoint `47ac2e27c5c2f6797269ccc4e1c07caafea1c643`:
 
-The first technical synchronize checkpoint `d089215e540b1e63bc8921cd5b4ab69497e8bc42` proved the changed-path logic selected `smoke`, but both Static `34137588226` and Linux `34137588237` failed the same Python import boundary. `tests/run.py` imports sibling `integration_suites`; normative traceability loads the runner by file spec, where the sibling directory was not guaranteed on `sys.path`.
+- Static `34139608322`: SUCCESS;
+- Linux `34139608364`: SUCCESS, `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`;
+- Static `LINUX-SUITE-EVIDENCE` includes `runner_file_spec_import=true`;
+- automatic synchronize inference selected `smoke` rather than replaying the full historical PR diff.
 
-The fix is deliberately bounded:
+The preceding `d089215e...` checkpoint is retained as rejected evidence: both Static `34137588226` and Linux `34137588237` found the same location-dependent file-spec import defect. The fix changes no article rule, runtime behavior, normative predicate or suite membership.
 
-- make `tests/run.py` add its own directory before importing `integration_suites`;
-- add an isolated file-spec import probe to the Static suite contract;
-- preserve all suite mappings, article evidence, normative checks and runtime behavior.
-
-No article proof state is promoted by this infrastructure correction.
+PR #287 should merge before article feature work resumes.
 
 ## Existing PR #286 — preserved article work
 
-PR #286 / `feat/v3-scientific-article` already contains later Scientific Article work beyond the Step 1 foundation. That history is **not discarded**. During PR #287 stabilization it is paused for control-plane advancement so the repository does not pretend two independent branches are simultaneously canonical.
+PR #286 / `feat/v3-scientific-article` contains later Scientific Article work beyond the Step 1 foundation. That history is **not discarded**. It remains paused for control-plane advancement until PR #287 merges.
 
 After PR #287 merges:
 
@@ -70,9 +69,9 @@ A documentation-only green workflow on PR #286 does not substitute for executabl
 | Approval date | `approval-date` | reuse |
 | Submission date | `submission-date` | article metadata added in Step 1 |
 | Complementary author footnote | `article-author-note` | article metadata added in Step 1 |
-| Foreign title | article branch implementation | retain optional semantics; confirm after reconciliation |
-| Primary summary | article branch implementation | retain required semantics; confirm after reconciliation |
-| Foreign summary | article branch implementation | retain independent optionality; confirm after reconciliation |
+| Foreign title | preserved article branch implementation | retain optional semantics; confirm after reconciliation |
+| Primary summary | preserved article branch implementation | retain required semantics; confirm after reconciliation |
+| Foreign summary | preserved article branch implementation | retain independent optionality; confirm after reconciliation |
 
 ## Non-negotiable boundaries
 
@@ -94,7 +93,7 @@ A documentation-only green workflow on PR #286 does not substitute for executabl
 | Step | Work | Current state | Acceptance |
 |---:|---|---|---|
 | 1 | Profile and metadata surface | **ACCEPTED ON MAIN** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
-| Infrastructure | Scoped Linux orchestration | **IMPORT FIX PENDING CI** | PR #287 correction must pass Static + bounded `smoke`, then merge |
+| Infrastructure | Scoped Linux orchestration | **ACCEPTED — PR #287 MERGE NEXT** | `47ac2e27...`; Static `34139608322`; Linux `34139608364` |
 | 2 | Required article front block | **PRESERVED IN PR #286** | revalidate after branch reconciliation |
 | 3 | Optional foreign elements | **PRESERVED IN PR #286** | revalidate independent optionality after reconciliation |
 | 4 | Textual structure and body typography | **PRESERVED / EXECUTABLE NEGATIVE CHECK PENDING ACCEPTANCE** | article-scope run after reconciliation must exercise structural checker and physical body evidence |
@@ -105,10 +104,8 @@ A documentation-only green workflow on PR #286 does not substitute for executabl
 
 ## Next action
 
-1. publish the PR #287 runner import-boundary correction with synchronized documentation;
-2. verify Static and `smoke` Linux on the same technical checkpoint;
-3. if green, record checkpoint/run IDs and merge PR #287;
-4. reconcile existing PR #286 with updated `main`;
-5. run executable `article`-scope validation for the pending Step 4 state;
-6. synchronize accepted step/proof state;
-7. continue Step 5 without replaying or discarding already-preserved work.
+1. merge PR #287 after the acceptance-document synchronization remains Static-clean;
+2. reconcile existing PR #286 with updated `main`;
+3. run executable `article`-scope validation for the pending Step 4 state;
+4. synchronize accepted step/proof state;
+5. continue Step 5 without replaying or discarding already-preserved work.

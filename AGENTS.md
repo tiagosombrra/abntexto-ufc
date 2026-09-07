@@ -21,15 +21,15 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 - Target version: `3.0.0`.
 - Active phase: **Scientific Article**.
 - `main` is current at merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`; PR #285 is merged.
-- Active infrastructure branch: `ci/scoped-linux-integration`; PR #287 is open against `main`.
-- Existing article branch/PR #286 remains open but is paused for control-plane purposes until PR #287 lands and the article branch is reconciled with updated `main`.
+- Active infrastructure branch: `ci/scoped-linux-integration`; PR #287 is **ACCEPTED / READY TO MERGE**.
+- Scoped Linux accepted technical checkpoint: `47ac2e27c5c2f6797269ccc4e1c07caafea1c643`; Static `34139608322` SUCCESS; Linux `34139608364` SUCCESS, `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`.
+- The prior `d089215e...` failure is classified as a runner file-spec import-boundary defect and is permanently guarded by Static (`runner_file_spec_import=true`).
+- Existing Scientific Article branch/PR #286 is preserved but paused for control-plane advancement until PR #287 lands and is reconciled with updated `main`.
 - Core Corrections: CLOSED — candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
 - Reference PDF Validation: CLOSED — candidate `b64074c64941895f97fbe0f795ce826c798d17ce`, Static `33985595790`, Linux `33985595798`, canonical 55/55 visual PASS.
 - Librarian review: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Scientific Article Step 1 on merged foundation: ACCEPTED — implementation `b46ba2051f8c9c712a7b5d25748b81baa52b920a`, synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`, Static `34001350884`, Linux `34001350953`.
-- Current material advance: **Scoped Linux integration orchestration import-boundary correction**.
-- First technical orchestration checkpoint `d089215e540b1e63bc8921cd5b4ab69497e8bc42` correctly selected `smoke`, but Linux `34137588237` failed only because file-spec loading of `tests/run.py` could not resolve sibling `integration_suites`.
-- The correction makes `tests/run.py` self-contained for file-spec imports and adds an isolated Static regression probe. No suite or normative predicate is weakened.
+- Current material advance: **record scoped Linux orchestration acceptance and merge PR #287**.
 - Issue #18 remains a v3.0.0 release blocker owned by Final Certification/Release.
 
 ## Readable phase model
@@ -37,7 +37,7 @@ Memory, prior chats, historical branch names, old pull requests, and workflow na
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active; article work paused while PR #287 stabilizes bounded Linux orchestration
+4. **Scientific Article** — active; orchestration accepted, merge/reconciliation next
 5. **Final Certification** — queued
 6. **Release** — queued
 
@@ -56,6 +56,8 @@ Do not create new opaque work identifiers. GitHub issues/PRs and immutable SHAs 
 - `article` must include executable article evidence plus the article/source contract.
 - Scoped runs are intermediate evidence only. Every phase-end regression requires `complete` Linux on one immutable candidate.
 - `tests/run.py` must remain importable both as the CLI runner and through file-spec loading used by normative traceability.
+
+Accepted orchestration evidence is `47ac2e27...`, Static `34139608322`, Linux `34139608364`. No suite or normative predicate was weakened to obtain green status.
 
 ## Scientific Article boundaries
 
@@ -95,6 +97,6 @@ No phase transitions to `CLOSED`, and no subsequent phase becomes `ACTIVE`, unti
 
 ## Branch governance and fail-closed rule
 
-The intended steady state is `main` plus one short-lived active task branch. PR #287 is the active infrastructure integration boundary. PR #286 is not discarded; it is paused and must be reconciled with updated `main` after PR #287 merges before further article runtime advancement.
+The intended steady state is `main` plus one short-lived active task branch. PR #287 is the active integration boundary until merged. PR #286 is not discarded; immediately after #287 merges it must be reconciled with updated `main`, then article-specific executable acceptance resumes on that branch.
 
 If a required fact cannot be established from Git, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement.
