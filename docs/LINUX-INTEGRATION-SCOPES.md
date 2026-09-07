@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-07  
-Status: ACTIVE — MIXED ORCHESTRATION/DOMAIN INFERENCE CORRECTION PENDING CI
+Status: ACTIVE — MIXED ORCHESTRATION/DOMAIN INFERENCE ACCEPTED; STEP 5 DOWNSTREAM SENTINEL FIX PENDING
 
 ## Purpose
 
@@ -29,7 +29,7 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 
 For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer the previous-head to new-head range when both commits are available and otherwise fail closed to the full PR range. Documentation-only changes skip heavy integration.
 
-The corrected domain-selection rule is:
+The accepted domain-selection rule is:
 
 | Changed-path class | Scope behavior |
 |---|---|
@@ -40,13 +40,11 @@ The corrected domain-selection rule is:
 | force-complete shared/core/standards path | `complete` |
 | unknown technical path without orchestration | `complete` |
 
-This preserves the intended policy that orchestration changes do not accidentally broaden a known bounded domain, while fail-closed handling remains intact for unknown or shared technical surfaces.
+## Mixed orchestration/domain acceptance evidence
 
-## Step 5 failure classification
+At `02e1ea6e25c008c93f8ec3ba26af7f3cea03cf14`, Static `34129625390` passed the suite-inference contract. Linux `34129625475` evaluated the incremental `6507da... -> 02e1ea...` synchronize range and selected `article`, exactly as required. This closes the prior orchestration-inference defect found by Static `34126602062`.
 
-At `6507da00275d8a69093541d6e6cb119a1b6f6cb3`, complete Linux `34126602083` passed all 36 checks, including all six article gates. Static `34126602062` correctly failed because `tests/run.py` combined with an article path was still processed as an unmatched technical path and therefore returned `complete`.
-
-`tests/checks/linux_integration_suites.py` is the correct guard and is not weakened. The fix is confined to inference semantics plus extra self-test cases for mixed orchestration/domain and orchestration/unknown-path behavior.
+The Linux run later failed inside `scientific-article-recommendations` because a long synthetic keyword sentinel was not extracted contiguously from the recommended pdfLaTeX PDF. That downstream evidence failure does not reopen scope inference.
 
 ## First-class article gates
 
@@ -63,7 +61,7 @@ The `profiles` suite remains exactly the six accepted non-article profiles plus 
 
 ## Step 5 evidence hardening
 
-`scientific-article-recommendations` compiles a recommendation-following scenario and an outside-recommendation scenario with pdfLaTeX and LuaLaTeX. The current correction adds unique rendered keyword sentinels to both scenarios. Successful extraction must demonstrate not only compilation and paragraph rendering but also keyword rendering while the outside scenario remains valid despite being below the advisory keyword count.
+`scientific-article-recommendations` compiles a recommendation-following scenario and an outside-recommendation scenario with pdfLaTeX and LuaLaTeX. The current evidence-harness correction replaces long artificial keyword tokens with short sentinels and requires all three recommended markers plus the single outside-recommendation marker to be present in extracted PDF text.
 
 Recommendations remain `recommended` + `manual`; journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`; no proof-state promotion occurs.
 
@@ -83,7 +81,7 @@ Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
 ## Current acceptance requirement
 
-The synchronized Step 5 correction candidate must pass Static and automatically select bounded Linux `article`, with all six checks green and both two-engine recommendation scenarios producing their controlled rendered markers. Only after those results are recorded may Step 5 close and Step 6 activate.
+The synchronized Step 5 short-sentinel correction must pass Static and automatically select bounded Linux `article`, with all six checks green and both two-engine recommendation scenarios producing their controlled rendered markers. Only after those results are recorded may Step 5 close and Step 6 activate.
 
 ## Phase-end rule
 

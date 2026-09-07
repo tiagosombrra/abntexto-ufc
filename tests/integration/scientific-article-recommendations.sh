@@ -17,12 +17,12 @@ for engine in pdflatex lualatex; do
       recommended)
         fixture="$recommended_fixture"
         marker="ARTICLEADVISORYSUMMARYOK"
-        keyword_marker="ARTICLEADVISORYKEYTHREE"
+        keyword_markers="ARTKEYONE ARTKEYTWO ARTKEYTHREE"
         ;;
       outside)
         fixture="$outside_fixture"
         marker="ARTICLEADVISORYOUTSIDEPARAONE"
-        keyword_marker="ARTICLEADVISORYOUTSIDEKEY"
+        keyword_markers="ARTOUTKEY"
         ;;
       *)
         echo "Scientific article recommendation gate failed: unknown scenario $scenario."
@@ -63,10 +63,12 @@ for engine in pdflatex lualatex; do
       echo "Scientific article recommendation gate failed: rendered marker $marker is missing for $scenario with $engine."
       exit 1
     }
-    grep -Fq "$keyword_marker" "$job.txt" || {
-      echo "Scientific article recommendation gate failed: rendered keyword marker $keyword_marker is missing for $scenario with $engine."
-      exit 1
-    }
+    for keyword_marker in $keyword_markers; do
+      grep -Fq "$keyword_marker" "$job.txt" || {
+        echo "Scientific article recommendation gate failed: rendered keyword marker $keyword_marker is missing for $scenario with $engine."
+        exit 1
+      }
+    done
     if [ "$scenario" = "outside" ]; then
       grep -Fq 'ARTICLEADVISORYOUTSIDEPARATWO' "$job.txt" || {
         echo "Scientific article recommendation gate failed: second outside-recommendation paragraph was not rendered with $engine."
@@ -81,5 +83,5 @@ for engine in pdflatex lualatex; do
   cleanup_job "scientific-article-recommendations-outside-$engine"
 done
 
-echo 'ARTICLE-RECOMMENDATION-EVIDENCE status=PASS engines=2 scenarios=2 recommended_scenario_compiled=true outside_recommendation_compiled=true recommended_keywords_rendered=true outside_keyword_rendered=true short_summary_accepted=true multi_paragraph_summary_accepted=true fewer_than_three_keywords_accepted=true author_alignment_default=right recommendation_hard_failures=0 journal_precedence=conditional-manual proof_state_promoted=0'
+echo 'ARTICLE-RECOMMENDATION-EVIDENCE status=PASS engines=2 scenarios=2 recommended_scenario_compiled=true outside_recommendation_compiled=true recommended_keywords_rendered=3/3 outside_keyword_rendered=true short_summary_accepted=true multi_paragraph_summary_accepted=true fewer_than_three_keywords_accepted=true author_alignment_default=right recommendation_hard_failures=0 journal_precedence=conditional-manual proof_state_promoted=0'
 echo 'Scientific article recommendation and conditional-applicability gate completed.'

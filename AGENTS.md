@@ -24,20 +24,20 @@ Memory, prior chats, historical branches and old workflow names never override t
 | Active branch / PR | `feat/v3-scientific-article` / #286 |
 | Steps 1–4 | **ACCEPTED** |
 | Step 5 implementation | `6507da00275d8a69093541d6e6cb119a1b6f6cb3` |
-| Step 5 Linux | `34126602083` **PASS**, `SCOPE=complete PASS=36 FAIL=0 SKIP=0`; all six article gates and both recommendation scenarios passed |
-| Step 5 Static | `34126602062` **FAIL** only on mixed orchestration + article scope inference |
-| Current batch | **Step 5 — correct scoped orchestration inference and harden rendered keyword evidence** |
+| Step 5 orchestration correction | `02e1ea6e25c008c93f8ec3ba26af7f3cea03cf14`; Static `34129625390` **PASS**; Linux auto correctly selected `article` |
+| Step 5 latest Linux | `34129625475` **FAIL**, `SCOPE=article PASS=5 FAIL=1 SKIP=0`; only rendered synthetic keyword sentinel `ARTICLEADVISORYKEYTHREE` was not extracted in the recommended pdfLaTeX scenario |
+| Current batch | **Step 5 — shorten synthetic keyword sentinels and verify all controlled keyword outputs without runtime changes** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-The Step 5 runtime/evidence surface is green under the complete Linux regression. The checkpoint is not accepted yet because the Static contract correctly found an independent orchestration defect: `tests/run.py` plus an article path incorrectly forced `complete` instead of selecting `article`. Fix the inference algorithm; do not weaken `tests/checks/linux_integration_suites.py`.
+The mixed orchestration/domain inference defect is now resolved: the incremental Step 5 correction selected the bounded `article` suite as required. The remaining Step 5 blocker is evidence-harness robustness. The article contract checker passed, Steps 1–4 remained green, and the failure occurred only when `pdftotext -layout` did not expose the long third synthetic keyword marker as an exact contiguous token. Fix the controlled sentinel design first; do not change article runtime or normative semantics without evidence of a runtime defect.
 
 ## Readable phase model
 
 1. Regression Audit — closed
 2. Core Corrections — closed
 3. Reference PDF Validation — closed
-4. Scientific Article — active, Step 5 correction/acceptance gate
+4. Scientific Article — active, Step 5 evidence-harness correction/acceptance gate
 5. Final Certification — queued
 6. Release — queued
 
@@ -58,7 +58,9 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 
 ## Linux scope rule
 
-Orchestration-only changes select `smoke`. When orchestration files accompany recognized domain-specific technical files, orchestration paths are neutral for domain selection and the known domain suite must win. Unknown non-orchestration technical paths and force-complete surfaces still fail closed to `complete`.
+Orchestration-only changes select `smoke`. When orchestration files accompany recognized domain-specific technical files, orchestration paths are neutral for domain selection and the known domain suite wins. Unknown non-orchestration technical paths and force-complete surfaces still fail closed to `complete`.
+
+This behavior is accepted by Static `34129625390` and observed in Linux `34129625475`, which selected `article` for the incremental `6507da... -> 02e1ea...` change.
 
 ## Engineering rules
 
@@ -70,6 +72,7 @@ Orchestration-only changes select `smoke`. When orchestration files accompany re
 - Do not weaken tests merely to recover green CI.
 - Negative evidence must fail for the intended predicate.
 - Recommended rules may influence defaults/documentation but must not become mandatory rejection predicates.
+- Evidence sentinels should be short enough to survive deterministic PDF text extraction; a sentinel/extractor failure is not by itself evidence of a runtime normative defect.
 - Temporary executors must be removed before checkpoint acceptance.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
 - Do not redistribute proprietary Microsoft fonts.
