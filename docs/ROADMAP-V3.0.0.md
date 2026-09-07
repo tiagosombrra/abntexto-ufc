@@ -4,14 +4,14 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 4 — persistent article body spacing correction implemented; acceptance rerun pending.**
+**Scientific Article is ACTIVE at Step 4 — supported single-spacing route implemented after deprecated-API rejection; acceptance rerun pending.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 4 PERSISTENT-SPACING CORRECTION PENDING ACCEPTANCE** | latest physical run proves the first `\section`/`\textual` transition restores shared 1.5 spacing; persistent profile-scoped correction implemented |
+| Scientific Article | **ACTIVE — STEP 4 SUPPORTED SINGLE-SPACING CORRECTION PENDING ACCEPTANCE** | latest synchronized Linux rejected deprecated `\\spacing{1}` before physical body validation; correction now uses `\\singlesp` plus `cmd/textual/after` |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -22,7 +22,7 @@ Updated: 2026-09-07
 | 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
 | 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | **PERSISTENT-SPACING CORRECTION IMPLEMENTED — CI PENDING** | `09b870d...` passed four article checks but body remained 1.5-spaced; implementation `15ed414...` persists single spacing across `\textual` |
+| 4 | Textual structure and body typography | **SUPPORTED SINGLE-SPACING CORRECTION IMPLEMENTED — CI PENDING** | `49e7b17...`: Static PASS, complete Linux PASS=32 FAIL=2 SKIP=1 due deprecated `\\spacing` warning; implementation `6a7ef821...` uses supported `\\singlesp` and retains `\\textual` rebound |
 | 5 | Recommendations and conditional applicability | BLOCKED | starts only after Step 4 acceptance is recorded |
 | 6 | Evidence hardening | QUEUED | rule-specific evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
@@ -35,18 +35,20 @@ Updated: 2026-09-07
 | `8b52ee4...` | `34058435312` PASS | `34058435311` FAIL, article PASS=4 FAIL=1 | body spacing stayed at 1.5: `20.700 pt` vs `13.800 pt` single calibration |
 | `177a621...` | `34070809181` PASS | `34070809177` FAIL, article PASS=2 FAIL=3 | stale source guards stopped before physical body validation |
 | `bf6c48e...` | `34071163701` PASS | `34071163702` FAIL, article PASS=4 FAIL=1 | begin-document route ineffective; body remained `20.700 pt` |
-| `09b870d...` | `34072362333` PASS | `34072362335` FAIL, article PASS=4 FAIL=1 | front-block-only route also transient; first numbered section invokes `\textual` and restores shared 1.5 spacing |
+| `09b870d...` | `34072362333` PASS | `34072362335` FAIL, article PASS=4 FAIL=1 | front-block-only route transient; first numbered section invokes `\\textual` and restores shared state |
+| `49e7b17...` | `34111737479` PASS | `34111737488` FAIL, `SCOPE=complete PASS=32 FAIL=2 SKIP=1` | deprecated `\\spacing{1}` warning stopped front-block/body gates before physical Step 4 validation |
 
-The current implementation `15ed414d3f1474157fe2e34de2d97ae6e76dd5ff` updates the persistent spacing state with `\spacing{1}` and re-applies the profile-scoped article body contract through `cmd/textual/after`. It also retains activation after the required primary summary for body content that precedes the first numbered section. The physical validator is unchanged.
+The current implementation `6a7ef821875c40b6fe0bbc3cca25e3c0ff4cb307` replaces the obsolete spacing call with supported `\\singlesp` and retains the profile-scoped `cmd/textual/after` reapplication. It also retains activation after the required primary summary for body content before the first numbered section. The physical validator is unchanged, and the source gate now rejects any return to deprecated `\\spacing{1}`.
 
 ## Current Step 4 acceptance gate
 
 | Gate | Required before Step 5 |
 |---|---|
 | Static contract | synchronized correction checkpoint PASS |
-| Bounded Linux | `article` PASS=5 FAIL=0 |
+| Linux | all five article checks PASS; orchestration may run complete scope |
 | Body typography | 12 pt / justified / 2 cm / true single spacing under both engines |
-| Transition persistence | single spacing and 2 cm indent survive the automatic `\textual` route |
+| Transition persistence | single spacing and 2 cm indent survive the automatic `\\textual` route |
+| API compatibility | no deprecated spacing warning; supported `\\singlesp` route |
 | Required structure | positive structure present and missing-development negative rejected |
 | Front block/foreign elements | continue passing under both engines independently of Step 4 source spelling |
 | Proof-state boundary | no article rule promoted merely because shared mechanisms are reused |
