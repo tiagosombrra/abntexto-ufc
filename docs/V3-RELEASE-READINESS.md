@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-07
-Status: ACTIVE — FINAL CERTIFICATION RELEASE BASELINE EXECUTOR
+Status: ACTIVE — FINAL CERTIFICATION RELEASE BASELINE CLEANUP
 
 ## Phase readiness
 
@@ -11,7 +11,7 @@ Status: ACTIVE — FINAL CERTIFICATION RELEASE BASELINE EXECUTOR
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
 | Scientific Article | CLOSED | `923d11ef...`; Static `34154045481`; complete Linux `34154045509`; article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — RELEASE BASELINE EXECUTOR** | entry accepted; exact permanent release contract currently being exercised |
+| Final Certification | **ACTIVE — RELEASE BASELINE CLEANUP** | release contract passed; cleanup candidate must validate executor removal before baseline acceptance |
 | Release | QUEUED | bundles, checksums, tag/GitHub Release and publication verification |
 
 ## Current certification state
@@ -21,25 +21,27 @@ Status: ACTIVE — FINAL CERTIFICATION RELEASE BASELINE EXECUTOR
 | Scientific Article PR #286 | MERGED |
 | Canonical main | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
 | Active branch / PR | `cert/v3-final-certification` / #289 |
-| Entry synchronization | **ACCEPTED** — `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS, docs-only heavy skip |
-| Linux release baseline | **ACTIVE — temporary transport executor** |
-| Temporary executor | `.github/workflows/final-cert-release-baseline.yml`; must be removed before baseline acceptance |
-| Profile/engine matrix | queued |
+| Entry synchronization | **ACCEPTED** — `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS |
+| Linux release execution | **PASS** at `f8be323...`: release run `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Parallel transport checks | Static `34168471299` SUCCESS; Linux `34168471312` SUCCESS |
+| Release evidence artifact | `10035242168`; `sha256:d5f3f75c29e294728dbc59fe569b2aba8cfc7f7ba23d05eb80bc7abfdf302604` |
+| Temporary executor | removed in cleanup candidate; cleanup Static/Linux still required |
+| Profile/engine matrix | queued until Step 2 accepted |
 | Literal fonts / Unicode / embedding | queued |
 | PDF/A-2b | queued |
 | Distribution bundles | queued |
 | Issue #18 deterministic reference PDF | OPEN — P0 release blocker |
 | Final Certification phase-end regression | not started |
 
-## Baseline transport boundary
+## Baseline acceptance boundary
 
-The temporary executor runs the existing permanent `make release-check` contract under the same TeX Live 2026 environment and dependency set because direct workflow dispatch is unavailable through the current automation surface. It is not a new release rule and must be removed before baseline acceptance.
+The exact permanent `make release-check` contract is already green. The remaining Step 2 obligation is repository hygiene: prove the tree remains green after deleting the temporary transport workflow. Therefore Step 2 remains pending until the cleanup candidate passes Static and Linux; the successful transport run is not rerun merely to prove file deletion.
 
 ## What still blocks v3.0.0
 
 | Blocker | Severity | Exit condition |
 |---|---|---|
-| Linux release baseline | P0 | current main-derived certification branch passes the existing release contract and temporary executor is removed |
+| Release-baseline cleanup | P0 | cleanup candidate after executor removal passes Static + Linux; Step 2 recorded ACCEPTED |
 | Complete certification matrix | P0 | all applicable profile/engine/font/Unicode/embedding/PDF-A/distribution gates green |
 | Issue #18 reproducibility | P0 | deterministic epoch + two controlled clean rebuilds + identical reference-PDF SHA-256 while existing validation remains green |
 | Final Certification phase-end regression | P0 | one immutable candidate passes complete phase-end gate |

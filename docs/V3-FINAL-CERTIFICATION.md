@@ -1,7 +1,7 @@
 # V3 Final Certification — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — RELEASE BASELINE EXECUTOR
+Status: ACTIVE — RELEASE BASELINE CLEANUP CANDIDATE
 
 ## Entry facts
 
@@ -15,8 +15,8 @@ Entry synchronization checkpoint `aa6cc4a1754bae4ee1b9b89b58441e6cf44d7951` pass
 
 | Step | Work | State | Acceptance |
 |---:|---|---|---|
-| 1 | Entry synchronization and branch handoff | **ACCEPTED** | `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS, docs-only heavy skip |
-| 2 | Linux release baseline | **ACTIVE — TEMPORARY EXECUTOR** | exact permanent `make release-check` green; validation evidence recorded; executor removed before acceptance |
+| 1 | Entry synchronization and branch handoff | **ACCEPTED** | `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS |
+| 2 | Linux release baseline | **PASS EXECUTION — CLEANUP CI PENDING** | transport `f8be323...`; Static `34168471299`; Linux `34168471312`; release run `34168471371`; `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; artifact `10035242168`; executor removed in cleanup candidate |
 | 3 | Profile and engine matrix | QUEUED | all supported document profiles and required pdfLaTeX/LuaLaTeX surfaces remain green |
 | 4 | Literal fonts, Unicode and embedding | QUEUED | required Times New Roman/Arial identity evidence, Unicode extraction and embedding pass without proprietary-font redistribution |
 | 5 | PDF/A certification | QUEUED | PDF/A-2b evidence passes on final candidate using established certification route |
@@ -24,21 +24,17 @@ Entry synchronization checkpoint `aa6cc4a1754bae4ee1b9b89b58441e6cf44d7951` pass
 | 7 | Deterministic release reference PDF — issue #18 | QUEUED | pinned deterministic epoch, two clean builds and identical SHA-256 while existing visual/text/font/PDF-A evidence stays intact |
 | 8 | Final Certification phase-end regression | QUEUED | one immutable SHA passes Static, complete Linux, release/certification matrix and phase-specific evidence |
 
-## Linux release baseline executor
+## Linux release baseline result
 
-Direct `workflow_dispatch` is not available through the active automation interface, so `.github/workflows/final-cert-release-baseline.yml` is temporarily present on PR #289. It invokes the same TeX Live 2026 environment, dependencies and `make release-check` command as the permanent `.github/workflows/linux-release-check.yml`.
+The temporary PR executor ran the exact permanent repository command `make release-check` in TeX Live 2026. Run `34168471371` completed successfully with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
 
-This executor is transport only:
+The transport SHA `f8be323027b42eefcdbe3d13b2f269abdd6ec17f` also passed Static `34168471299` and normal Linux integration `34168471312`. The release-baseline validation artifact is `10035242168`, digest `sha256:d5f3f75c29e294728dbc59fe569b2aba8cfc7f7ba23d05eb80bc7abfdf302604`.
 
-- it introduces no new certification predicate;
-- failures are classified before any code/test change;
-- generated validation evidence is uploaded when available;
-- it must be removed before Step 2 is accepted;
-- later literal-font/platform/PDF-A and phase-end evidence remain mandatory.
+The temporary executor has now been removed in the current cleanup candidate. This material advance is not yet Step 2 acceptance: the cleanup candidate must itself pass Static and Linux first. If either fails, classify the failure before any code/test change.
 
 ## Baseline-first rule
 
-Do not modify release/certification machinery until this baseline is classified. Reuse prior proof only where provenance/applicability remains valid; rerun when final-candidate identity is required by the phase exit.
+Do not modify release/certification machinery until the cleanup candidate is classified. After Step 2 acceptance, proceed to the profile/engine evidence inventory. Reuse prior proof only where provenance/applicability remains valid; rerun when final-candidate identity is required by the phase exit.
 
 ## Issue #18 boundary
 

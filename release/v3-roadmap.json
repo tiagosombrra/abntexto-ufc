@@ -98,7 +98,7 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "923d11ef668b02ec4de3cad4906ad5ac1f527eaf",
     "latest_fully_validated_checkpoint_state": "scientific-article-phase-end-accepted",
-    "final_certification_state": "active-release-baseline-executor",
+    "final_certification_state": "active-release-baseline-cleanup-candidate",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -107,11 +107,19 @@
     "final_certification_entry_static_run": 34161228915,
     "final_certification_entry_linux_run": 34161228823,
     "final_certification_entry_linux_state": "success-documentation-only-heavy-skip",
+    "release_baseline_transport_sha": "f8be323027b42eefcdbe3d13b2f269abdd6ec17f",
+    "release_baseline_static_run": 34168471299,
+    "release_baseline_linux_run": 34168471312,
+    "release_baseline_release_run": 34168471371,
+    "release_baseline_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "release_baseline_artifact_id": 10035242168,
+    "release_baseline_artifact_sha256": "d5f3f75c29e294728dbc59fe569b2aba8cfc7f7ba23d05eb80bc7abfdf302604",
+    "release_baseline_execution_state": "pass-cleanup-ci-pending",
     "current_correction_batch": [
-      "Final Certification — temporary transport of permanent Linux release baseline"
+      "Final Certification — release baseline cleanup candidate"
     ],
     "pending_acceptance_gates": [
-      "Temporary release-baseline executor must run exact permanent make release-check contract and be removed before baseline acceptance",
+      "Release-baseline cleanup candidate after temporary executor removal must pass Static contract and Linux integration",
       "Inventory and validate profile/engine/literal-font/Unicode/embedding/PDF-A/distribution proof routes",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
@@ -121,15 +129,17 @@
     ],
     "release_blockers": [
       "Final Certification has not completed",
-      "Linux release baseline has not been accepted",
+      "Linux release baseline cleanup has not been accepted",
       "issue #18 deterministic release reference PDF remains open",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "active",
-      "path": ".github/workflows/final-cert-release-baseline.yml",
-      "purpose": "transport exact permanent make release-check contract because direct workflow dispatch is unavailable",
-      "must_remove_before_checkpoint_acceptance": true
+      "state": "removed-cleanup-ci-pending",
+      "previous_path": ".github/workflows/final-cert-release-baseline.yml",
+      "transport_sha": "f8be323027b42eefcdbe3d13b2f269abdd6ec17f",
+      "release_run": 34168471371,
+      "must_remove_before_checkpoint_acceptance": true,
+      "removed_in_current_cleanup_candidate": true
     }
   },
   "linux_integration": {
@@ -199,6 +209,18 @@
     "entry_acceptance_sync_static_run": 34168332866,
     "entry_acceptance_sync_linux_run": 34168332862,
     "entry_acceptance_sync_conclusion": "success",
+    "release_baseline_transport_sha": "f8be323027b42eefcdbe3d13b2f269abdd6ec17f",
+    "release_baseline_static_run": 34168471299,
+    "release_baseline_static_conclusion": "success",
+    "release_baseline_linux_run": 34168471312,
+    "release_baseline_linux_conclusion": "success",
+    "release_baseline_release_run": 34168471371,
+    "release_baseline_release_conclusion": "success",
+    "release_baseline_release_scope": "complete",
+    "release_baseline_release_summary": "PASS=38 FAIL=0 SKIP=0",
+    "release_baseline_artifact_id": 10035242168,
+    "release_baseline_artifact_sha256": "d5f3f75c29e294728dbc59fe569b2aba8cfc7f7ba23d05eb80bc7abfdf302604",
+    "release_baseline_cleanup_acceptance": "pending-cleanup-candidate-static-and-linux",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

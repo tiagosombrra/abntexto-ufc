@@ -22,13 +22,12 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Active phase | **Final Certification** |
 | Canonical `main` | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
 | Active branch / PR | `cert/v3-final-certification` / #289 |
-| Entry synchronization checkpoint | `aa6cc4a1754bae4ee1b9b89b58441e6cf44d7951` |
-| Entry Static | `34161228915` — SUCCESS |
-| Entry Linux | `34161228823` — SUCCESS; documentation-only heavy integration skipped |
-| Scientific Article phase-end candidate | `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` |
-| Scientific Article | **CLOSED** |
-| Final Certification | **ACTIVE — RELEASE BASELINE EXECUTOR ACTIVE** |
-| Temporary executor | `.github/workflows/final-cert-release-baseline.yml` — transport for exact `make release-check` contract; removal required before baseline acceptance |
+| Entry synchronization | **ACCEPTED** — `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS |
+| Scientific Article phase-end | **CLOSED** — `923d11ef...`; Static `34154045481`; complete Linux `34154045509`; PDF 5/5 visual PASS |
+| Linux release baseline execution | **PASS** at `f8be323027b42eefcdbe3d13b2f269abdd6ec17f`: Static `34168471299`, Linux `34168471312`, release baseline `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Release-baseline artifact | `10035242168`; digest `sha256:d5f3f75c29e294728dbc59fe569b2aba8cfc7f7ba23d05eb80bc7abfdf302604` |
+| Current batch | **Final Certification — Release Baseline Cleanup Candidate** |
+| Temporary executor | removed in the cleanup candidate; Step 2 acceptance waits for cleanup-candidate Static/Linux |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
@@ -44,8 +43,8 @@ Memory, prior chats, historical branches and old workflow names never override c
 ## Final Certification rules
 
 - `cert/v3-final-certification` is the only active certification task branch and starts from canonical main `22e3c192...`.
-- Entry synchronization is accepted at `aa6cc4a...`.
-- The current temporary executor exists only because direct workflow dispatch is unavailable through the active automation surface. It must run the exact permanent `make release-check` command/environment and must be removed before baseline acceptance.
+- The permanent `make release-check` contract passed through the temporary executor at `f8be323...`; the executor is now removed in the cleanup candidate.
+- Do not mark the release baseline ACCEPTED until the cleanup candidate itself passes Static and Linux, proving repository hygiene after executor removal.
 - Preserve accepted shared and Scientific Article semantics; certification is proof/packaging work unless a genuine regression is found.
 - Literal Times New Roman/Arial evidence must not redistribute proprietary fonts.
 - Issue #18 reproducibility work adds deterministic build evidence and must not modify normative article/shared behavior merely to stabilize bytes.

@@ -25,9 +25,11 @@ Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5
 
 Active branch `cert/v3-final-certification` was created from exact canonical main `22e3c192...`.
 
-Execution sequence:
+Current bounded advance: the permanent Linux release contract passed on transport SHA `f8be323027b42eefcdbe3d13b2f269abdd6ec17f`. Static `34168471299`, Linux `34168471312` and release run `34168471371` are green; the release run reports `SCOPE=complete PASS=38 FAIL=0 SKIP=0` and artifact `10035242168`. The temporary transport workflow is removed in the current cleanup candidate; Step 2 acceptance waits for cleanup-candidate Static/Linux.
 
-1. validate branch/main entry synchronization and establish the existing Linux release baseline;
+Remaining sequence:
+
+1. accept release-baseline cleanup after executor removal is green;
 2. certify supported profiles and required engines;
 3. certify literal Times New Roman/Arial identities, Unicode extraction and embedding where applicable;
 4. certify PDF/A-2b;
