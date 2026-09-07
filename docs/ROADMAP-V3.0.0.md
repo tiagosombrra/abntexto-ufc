@@ -4,14 +4,14 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 4 — physical body typography is green; negative structural evidence classification is being corrected.**
+**Scientific Article is ACTIVE at Step 5 — recommendations and conditional applicability.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 4 NEGATIVE STRUCTURE CHECKER CORRECTION** | synchronized `05194675...`: Static PASS; article Linux PASS=4 FAIL=1; positive body physical evidence PASS under both engines; negative fixture misclassified by substring-based structure detection |
+| Scientific Article | **ACTIVE — STEP 5** | Steps 1–4 accepted; Step 4 checkpoint `005956bd...` passed Static `34119007413` and Linux `34119007425`, `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -22,38 +22,36 @@ Updated: 2026-09-07
 | 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
 | 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | **PHYSICAL BODY PASS; NEGATIVE STRUCTURE EVIDENCE FIX PENDING CI** | `05194675...`: Static `34115345674` PASS; Linux `34115345586` article PASS=4 FAIL=1; body 12 pt / justified / 2 cm / 13.800 pt under both engines; checker fix `4039fa011...` requires rendered headings |
-| 5 | Recommendations and conditional applicability | BLOCKED | starts only after Step 4 acceptance is recorded |
+| 4 | Textual structure and body typography | **ACCEPTED** | `005956bd...`; Static `34119007413`; Linux `34119007425`; article PASS=5 FAIL=0; both engines 12 pt / justified / 2 cm / 13.800 pt; negative missing-Development predicate PASS |
+| 5 | Recommendations and conditional applicability | **ACTIVE** | prove recommended values remain advisory and journal precedence remains conditional/manual |
 | 6 | Evidence hardening | QUEUED | rule-specific evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
-| 8 | Phase-end regression | QUEUED | Static + complete Linux + article-specific evidence on one immutable SHA |
+| 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific evidence on one immutable SHA |
 
-## Step 4 regression trail
+## Step 4 accepted result
 
-| Checkpoint | Static | Linux | Meaning |
-|---|---|---|---|
-| `8b52ee4...` | `34058435312` PASS | `34058435311` FAIL, article PASS=4 FAIL=1 | body spacing stayed at 1.5: `20.700 pt` vs `13.800 pt` single calibration |
-| `177a621...` | `34070809181` PASS | `34070809177` FAIL, article PASS=2 FAIL=3 | stale source guards stopped before physical body validation |
-| `bf6c48e...` | `34071163701` PASS | `34071163702` FAIL, article PASS=4 FAIL=1 | begin-document route ineffective; body remained `20.700 pt` |
-| `09b870d...` | `34072362333` PASS | `34072362335` FAIL, article PASS=4 FAIL=1 | front-block-only route transient; first numbered section invokes `\\textual` and restores shared state |
-| `49e7b17...` | `34111737479` PASS | `34111737488` FAIL, `SCOPE=complete PASS=32 FAIL=2 SKIP=1` | deprecated `\\spacing{1}` warning stopped front-block/body gates before physical Step 4 validation |
-| `05194675...` | `34115345674` PASS | `34115345586` FAIL, `SCOPE=article PASS=4 FAIL=1` | supported runtime physically passes both engines; negative fixture was rejected for the wrong reason because prose token `desenvolvimento` falsely satisfied the required-heading search |
+The accepted Step 4 runtime uses supported `\singlesp` and an article-only `cmd/textual/after` reapplication route. Linux `34119007425` emitted two physical `ARTICLE-BODY-EVIDENCE` PASS records with 12 pt body type, 2 cm first-line indent (`57.125 pt`, delta `0.432 pt`), justified non-final lines, and `13.800 pt` body spacing equal to same-document single-spacing calibration. The negative missing-Development fixture was rejected by the intended rendered-heading predicate. Proof state remained unpromoted.
 
-The current technical correction `4039fa011b7f54f4f0be6d004131fc0e06567e2e` changes only structural evidence detection. `validate_structure()` now scans normalized extracted lines and requires each required element to appear as one rendered heading, optionally preceded by progressive numbering. The intentionally adversarial negative prose remains unchanged. Runtime, physical typography tolerances, 18-rule authority contract and proof state are unchanged.
+## Step 5 contract
 
-## Current Step 4 acceptance gate
-
-| Gate | Required before Step 5 | Current evidence |
+| Retained rule | Modality | Step 5 acceptance meaning |
 |---|---|---|
-| Static contract | synchronized correction checkpoint PASS | pending new checkpoint |
-| Linux | all five article checks PASS | latest 4/5; new rerun pending |
-| Body typography | 12 pt / justified / 2 cm / true single spacing under both engines | **physically PASS at `05194675...`** |
-| Transition persistence | single spacing and 2 cm survive automatic `\\textual` route | **physically PASS at `05194675...`** |
-| API compatibility | no deprecated spacing warning | PASS at latest run |
-| Required positive structure | headings present and ordered | PASS at latest run |
-| Negative structure | missing Development rejected for intended heading absence | checker correction implemented; CI pending |
-| Front block/foreign elements | remain green independently | PASS at latest run |
-| Proof-state boundary | no article rule promoted merely because shared mechanisms are reused | preserved |
+| `article.authorship.alignment.recommended` | recommended | right alignment may be the generic default but must not be a hard validity condition |
+| `article.summary.word-count.recommended` | recommended | 150–250 words must not become a compile/validation rejection boundary |
+| `article.summary.keywords.minimum.recommended` | recommended | fewer than three keywords must not become a hard rejection boundary |
+| `article.summary.single-paragraph.recommended` | recommended | multi-paragraph summary input must not be rejected solely for violating the recommendation |
+| `article.journal-guidelines.precedence` | required-when-applicable | a target journal requires checking its instructions; generic UFC profile remains fallback and cannot assert journal compliance |
+
+Step 5 should favor evidence and documentation over new runtime constraints. If user-facing keyword support is added, it must remain optional in the generic profile unless the retained authority contract is formally expanded with source-backed required-element evidence.
+
+## Current Step 5 acceptance gate
+
+1. executable evidence demonstrates recommendations are advisory, not hard failures;
+2. journal precedence remains conditional/manual and applicability-bound;
+3. Steps 1–4 stay green in article scope;
+4. no shared non-article behavior changes;
+5. 18-rule source contract IDs, normativity, locators and proof-state semantics remain stable;
+6. synchronized Static and article Linux pass before Step 6 activates.
 
 ## Shared state
 
@@ -74,7 +72,7 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 
 ## Gate before Final Certification
 
-Scientific Article must complete Steps 4–7 and pass Step 8 on one immutable SHA. The canonical article PDF must be provenance-bound and visually inspected. No unresolved article runtime/evidence failure may remain.
+Scientific Article must complete Steps 5–7 and pass Step 8 on one immutable SHA. The canonical article PDF must be provenance-bound and visually inspected. No unresolved article runtime/evidence failure may remain.
 
 ## Gate before Release
 

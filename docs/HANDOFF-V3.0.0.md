@@ -11,68 +11,76 @@ Updated: 2026-09-07
 | Active task branch | `feat/v3-scientific-article` |
 | Active PR | #286 |
 | Active phase | **Scientific Article** |
-| Steps 1–3 | ACCEPTED |
-| Latest fully validated checkpoint | `a99f1e19eac1294eac35fb1da85196a1b8295d1a` |
-| Latest synchronized Step 4 checkpoint | `05194675f7d41d8c4f35227e67e8ee303d1ea79a` |
-| Static | `34115345674` — PASS |
-| Linux | `34115345586` — FAIL, `SCOPE=article PASS=4 FAIL=1 SKIP=0` |
-| Physical body evidence | **PASS under pdfLaTeX and LuaLaTeX**: 12 pt, justified, 2 cm first-line indent, single spacing `13.800 pt` |
-| Remaining Step 4 defect | negative structure checker matched `desenvolvimento` in prose instead of requiring a rendered heading |
-| Checker correction | `4039fa011b7f54f4f0be6d004131fc0e06567e2e` |
-| Current work | **Require structural headings and rerun synchronized Step 4 acceptance** |
+| Steps 1–4 | **ACCEPTED** |
+| Step 4 acceptance checkpoint | `005956bd615042a12fb0393fddd4941b635f6ce3` |
+| Static | `34119007413` — PASS |
+| Linux | `34119007425` — PASS, `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
+| Physical body evidence | pdfLaTeX/LuaLaTeX: 12 pt, justified, 2 cm indent, `13.800 pt` single spacing |
+| Negative structure evidence | missing Development rejected by rendered-heading predicate despite prose mentioning `desenvolvimento` |
+| Current work | **Step 5 — recommendations and conditional applicability** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-## Step 4 current classification
+## Step 4 accepted evidence
 
-| Surface | Result | Classification |
+| Surface | Evidence | State |
 |---|---|---|
-| Supported single-spacing API | `\\singlesp`; no deprecated-spacing warning | PASS |
-| Textual-transition persistence | `cmd/textual/after` route reached physical body evidence | PASS |
-| pdfLaTeX body | 12 pt; indent `57.125 pt`, delta `0.432 pt`; spacing `13.800 pt` | PASS |
-| LuaLaTeX body | 12 pt; indent `57.125 pt`, delta `0.432 pt`; spacing `13.800 pt` | PASS |
-| Required positive structure | Introduction, Development, Final Considerations, References found | PASS |
-| Missing-Development negative | rejected, but for absent `ARTICLEBODYSTART` instead of missing Development | **FAIL — evidence classification defect** |
+| Supported spacing API | `\singlesp`; no deprecated-spacing warning | PASS |
+| Textual-transition persistence | article-only `cmd/textual/after` route | PASS |
+| pdfLaTeX body | 12 pt; indent `57.125 pt`, delta `0.432 pt`; gap `13.800 pt` | PASS |
+| LuaLaTeX body | 12 pt; indent `57.125 pt`, delta `0.432 pt`; gap `13.800 pt` | PASS |
+| Required structure | Introduction → Development → Final Considerations → References | PASS |
+| Negative structure | missing Development rejected as missing required heading | PASS |
+| Earlier Step isolation | profile/front-block/foreign-element checks remain green | PASS |
+| Proof state | `proof_state_promoted=0` | preserved |
 
-The runtime spacing defect is therefore physically corrected. Step 4 is not yet accepted because the negative contract requires the fixture to fail for the intended structural reason.
+Step 4 is formally accepted. The checker correction did not change runtime, physical tolerances, authority or proof state; it only prevented incidental prose from satisfying a required structural-heading predicate.
 
-The root cause is in `tests/checks/scientific_article_body.py`: the old structure detector folded the entire extracted PDF and searched for substrings. The negative fixture intentionally says the word `desenvolvimento` in explanatory prose, so that prose incorrectly satisfied the structural predicate.
+## Step 5 scope
 
-Correction `4039fa011b7f54f4f0be6d004131fc0e06567e2e` strengthens the detector to match one rendered heading line for each required element, with optional progressive numbering. The negative fixture remains unchanged, so incidental prose can no longer masquerade as a heading. Physical PDF predicates, tolerances, runtime and authority/proof state are unchanged.
+Step 5 preserves the modalities already frozen in the 18-rule authority contract:
 
-## Acceptance gate before Step 5
-
-| Gate | Required |
+| Rule family | Contract meaning |
 |---|---|
-| Static | PASS on the synchronized checker-correction checkpoint |
-| Linux | all five article checks PASS |
-| Body PDF | retain 12 pt, justified, 2 cm and 13.800 pt single spacing under both engines |
-| Transition persistence | retain physical PASS after automatic `\\textual` transition |
-| API compatibility | no deprecated spacing warning |
-| Negative structure | missing Development rejected specifically as a missing required heading |
-| Step 2/3 isolation | earlier accepted gates remain independent from Step 4 implementation syntax |
-| Authority/proof state | unchanged; no proof-state promotion in Step 4 |
+| Author alignment | right alignment is recommended, not mandatory |
+| Summary length | 150–250 words is recommended, not a rejection boundary |
+| Keyword count | at least three keywords is recommended, not a rejection boundary |
+| Summary paragraphs | one paragraph is recommended, not a rejection boundary |
+| Journal precedence | required only when a target-journal submission context exists; generic UFC profile remains fallback |
+
+Step 5 must produce executable evidence that recommendations do not become hard failures and that the journal boundary remains conditional rather than silently hard-coded into the generic profile. No authority/proof-state promotion occurs merely by documenting or testing modality.
+
+## Acceptance gate before Step 6
+
+1. Static contract passes on the synchronized Step 5 implementation checkpoint;
+2. Linux article scope remains green;
+3. recommendation-specific scenarios prove non-enforcement of recommended thresholds;
+4. journal precedence remains conditional/manual and context-bound;
+5. Steps 1–4 remain green;
+6. no shared non-article runtime behavior changes;
+7. authority IDs, locators, normativity and proof-state semantics remain unchanged.
 
 ## Immediate action
 
-1. publish the synchronized checkpoint containing checker correction `4039fa011...` plus this control-plane update;
-2. run Static and Linux on that exact checkpoint;
-3. classify any failure before changing runtime/tests;
-4. if all five article checks pass and the negative fixture is rejected for the intended reason, record Step 4 acceptance and activate Step 5;
-5. later, close Scientific Article only after canonical article PDF visual review and a complete phase-end regression on one immutable SHA.
+1. implement Step 5 evidence and user-facing guidance without converting recommendations into mandatory validation;
+2. synchronize AGENTS, handoff, roadmap, Scientific Article plan and machine state in the same material-advance cycle;
+3. run Static and article Linux on the synchronized checkpoint;
+4. classify any failure before changing runtime/tests;
+5. after Step 5 acceptance, activate Step 6 evidence hardening;
+6. later close Scientific Article only after canonical article PDF visual review and complete phase-end regression on one immutable SHA.
 
 ## Mandatory operating discipline
 
 Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Phase, acceptance, evidence, integration-scope and branch/checkpoint facts remain synchronized with roadmap and machine state.
 
-Every phase requires a complete **phase-end regression** on one immutable candidate before closure. Scoped Step checks never authorize a phase transition by themselves.
+Every phase requires a complete **phase-end regression** on one immutable candidate before closure. Scoped Step checks never authorize phase closure by themselves.
 
 ## Hard boundaries
 
-- Preserve all accepted non-article profiles and the shared academic-work PDF baseline.
+- Preserve all accepted non-article profiles and shared academic-work PDF baseline.
 - Preserve the retained 18-rule article source contract and modality distinctions.
-- Do not weaken warning or physical PDF predicates to compensate for runtime defects.
-- Negative fixtures must be rejected for the intended predicate, not an unrelated later error.
+- Recommendations must not become hard compile/validation failures.
+- Target-journal instructions remain conditional applicability, not generic UFC runtime law.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Issue #18 remains owned by Final Certification/Release.
 - Do not redistribute proprietary fonts.
