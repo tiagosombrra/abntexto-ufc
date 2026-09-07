@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/articles.def}[2026/09/06 UFC scientific article presentation]
+\ProvidesFile{abntexto-ufc/articles.def}[2026/09/07 UFC scientific article presentation]
 
 % Scientific-article presentation is implemented incrementally from the
 % retained authority contract in docs/ARTICLE-NORMATIVE-CONTRACT.md.
@@ -101,22 +101,23 @@
       }
   }
 
-% The shared academic-work layout selects 1.5 spacing during document startup.
-% Activate the article-only body contract at the end of the required article
-% front block, after document initialization has completed and immediately
-% before the article body begins. This avoids relying on begin-document hook
-% ordering while preserving the shared layout for every non-article profile.
+% abntexto's first numbered section enters \textual, which restores the shared
+% academic-work 1.5-spacing and 1.5 cm indent. The article contract therefore
+% updates the persistent spacing state with \spacing{1} and is re-applied after
+% every textual transition. The profile guard keeps non-article behavior intact.
 \cs_new_protected:Npn \ufc_article_apply_body_typography:
   {
     \str_if_eq:VnT \g_ufc_document_type_tl {scientific-article}
       {
         \normalsize
-        \singlesp
+        \spacing{1}
         \setlength{\parindent}{2cm}
         \setlength{\parskip}{0pt}
         \justifying
       }
   }
+
+\AddToHook{cmd/textual/after}{\ufc_article_apply_body_typography:}
 
 \NewDocumentCommand \ufcPrintArticleFrontMatter { +m }
   {

@@ -25,18 +25,17 @@ do
   }
 done
 
-# The body function must contain an explicit single-spacing route. Restrict the
-# check to the function's source range rather than accepting singlesp used by
-# the title or summary blocks.
+# abntexto keeps its active spacing factor in \currspacing. The article body
+# route must update that persistent state rather than only changing the current
+# baseline, otherwise the automatic \textual transition can restore 1.5 spacing.
 body_source=$(sed -n '/\\cs_new_protected:Npn \\ufc_article_apply_body_typography:/,/^  }$/p' "$module")
-printf '%s\n' "$body_source" | grep -Fq '\singlesp' || {
-  echo 'Scientific article body gate failed: article-only body activation does not select single spacing.'
+printf '%s\n' "$body_source" | grep -Fq '\spacing{1}' || {
+  echo 'Scientific article body gate failed: article-only body activation does not persist single spacing through the spacing state.'
   exit 1
 }
 
-# Body activation belongs to the required article front-block completion
-# boundary. This runs inside the document after shared startup initialization,
-# without freezing an ineffective begin-document hook spelling.
+# Body activation starts at required front-block completion so unsectioned body
+# content is correct immediately after the summary.
 front_source=$(sed -n '/\\NewDocumentCommand \\ufcPrintArticleFrontMatter/,/^  }$/p' "$module")
 summary_line=$(printf '%s\n' "$front_source" | grep -nF '\ufc_article_primary_summary:n {#1}' | head -n 1 | cut -d: -f1 || true)
 body_line=$(printf '%s\n' "$front_source" | grep -nF '\ufc_article_apply_body_typography:' | head -n 1 | cut -d: -f1 || true)
@@ -44,6 +43,14 @@ if [ -z "$summary_line" ] || [ -z "$body_line" ] || [ "$body_line" -le "$summary
   echo 'Scientific article body gate failed: body typography is not activated after the required primary summary in the article front block.'
   exit 1
 fi
+
+# The first numbered section invokes abntexto's \textual transition, which
+# resets shared academic-work spacing and indentation. Reapply the article-only
+# contract after that transition; the function itself is profile-scoped.
+grep -Fq '\AddToHook{cmd/textual/after}{\ufc_article_apply_body_typography:}' "$module" || {
+  echo 'Scientific article body gate failed: article body typography is not rebound after the textual transition.'
+  exit 1
+}
 
 if grep -Fq '\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}' "$module"; then
   echo 'Scientific article body gate failed: obsolete begin-document body activation route is still present.'
@@ -128,5 +135,5 @@ cleanup_job scientific-article-body-pdflatex
 cleanup_job scientific-article-body-lualatex
 cleanup_job "$negative_job"
 
-echo 'ARTICLE-BODY-GATE-EVIDENCE status=PASS engines=2 required_structure=introduction,development,final-considerations,references body_typography=12pt,justified,2cm,single activation=required-front-block-completion negative_structure_rejected=true non_article_runtime_changed=false proof_state_promoted=0'
+echo 'ARTICLE-BODY-GATE-EVIDENCE status=PASS engines=2 required_structure=introduction,development,final-considerations,references body_typography=12pt,justified,2cm,single activation=front-block-plus-textual-transition negative_structure_rejected=true non_article_runtime_changed=false proof_state_promoted=0'
 echo 'Scientific article body gate completed.'
