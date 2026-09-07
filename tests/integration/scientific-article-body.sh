@@ -25,14 +25,18 @@ do
   }
 done
 
-# abntexto keeps its active spacing factor in \currspacing. The article body
-# route must update that persistent state rather than only changing the current
-# baseline, otherwise the automatic \textual transition can restore 1.5 spacing.
+# The article route uses the supported single-spacing API. Because \textual can
+# restore shared academic-work spacing, the same profile-scoped function is
+# rebound after that transition; source shape and physical PDF are both checked.
 body_source=$(sed -n '/\\cs_new_protected:Npn \\ufc_article_apply_body_typography:/,/^  }$/p' "$module")
-printf '%s\n' "$body_source" | grep -Fq '\spacing{1}' || {
-  echo 'Scientific article body gate failed: article-only body activation does not persist single spacing through the spacing state.'
+printf '%s\n' "$body_source" | grep -Fq '\singlesp' || {
+  echo 'Scientific article body gate failed: article-only body activation does not select the supported single-spacing route.'
   exit 1
 }
+if printf '%s\n' "$body_source" | grep -Fq '\spacing{1}'; then
+  echo 'Scientific article body gate failed: deprecated spacing API is still used by the article body route.'
+  exit 1
+fi
 
 # Body activation starts at required front-block completion so unsectioned body
 # content is correct immediately after the summary.
