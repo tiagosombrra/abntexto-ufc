@@ -4,14 +4,14 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 5 — scoped orchestration inference is corrected; rendered keyword-sentinel hardening is the remaining acceptance blocker.**
+**Scientific Article is ACTIVE at Step 6 — evidence hardening. Step 5 is accepted.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 5** | Steps 1–4 accepted; Step 5 article evidence green in complete regression; orchestration correction now selects `article`; short-sentinel evidence correction pending |
+| Scientific Article | **ACTIVE — STEP 6** | Steps 1–5 accepted; Step 6 must map the retained 18 rules to truthful article-specific evidence before canonical article PDF work |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -22,38 +22,30 @@ Updated: 2026-09-07
 | 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
 | 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | ACCEPTED | `005956bd...`; Static `34119007413`; Linux `34119007425`; `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
-| 5 | Recommendations and conditional applicability | **EVIDENCE HARNESS CORRECTION ACTIVE** | `6507da...` complete 36/36 article evidence green; `02e1ea...` Static `34129625390` PASS and auto scope=`article`; Linux `34129625475` PASS=5/6 with only long keyword sentinel extraction failure |
-| 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
+| 4 | Textual structure and body typography | ACCEPTED | `005956bd...`; Static `34119007413`; Linux `34119007425` |
+| 5 | Recommendations and conditional applicability | **ACCEPTED** | `55fa1c8...`; Static `34132291198`; Linux `34132291304`; bounded `article` scope; six first-class checks PASS |
+| 6 | Evidence hardening | **ACTIVE** | article-specific rule/evidence map; honest proof-state promotion only where directly supported |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific evidence on one immutable SHA |
 
-## Step 5 evidence and failure classification
+## Step 5 accepted evidence
 
-The complete Linux run `34126602083` on `6507da00275d8a69093541d6e6cb119a1b6f6cb3` passed all 36 repository checks, including all six article gates. The later correction `02e1ea6e25c008c93f8ec3ba26af7f3cea03cf14` fixed the independent suite-inference defect: Static `34129625390` passed and Linux `34129625475` automatically selected bounded scope `article`.
+The Step 5 acceptance checkpoint `55fa1c8dc1b503c119d564950d04141cf45ad345` passed Static `34132291198` and Linux `34132291304`. Automatic scope remained `article`, and all six first-class article checks passed.
 
-In that bounded run, validator source, article profile, front block, foreign elements and body all passed. The recommendation contract checker also passed and preserved `recommended`/`conditional-manual` modality with zero proof-state promotion. The only failure was exact `pdftotext -layout` extraction of the long third synthetic keyword token in the recommended pdfLaTeX scenario.
+The recommendation evidence covered pdfLaTeX and LuaLaTeX, the recommended and outside-recommendation scenarios, all three short recommended keyword sentinels and the outside keyword sentinel. Recommended rules remained non-enforcing, journal precedence remained `conditional-manual`, and Step 5 reported `proof_state_promoted=0`. No runtime or normative semantics were changed by the sentinel correction.
 
-The failure is classified as an evidence-sentinel robustness defect unless a shorter controlled sentinel also fails. No article runtime or normative rule is changed at this stage.
+## Step 6 evidence-hardening objective
 
-## Current correction
+Step 6 must distinguish executable article-specific proof from shared implementation reuse. The retained 18-rule source contract is not rewritten merely because an implementation or generic shared test exists.
 
-Use short synthetic keyword sentinels in the two Step 5 fixtures and require extraction of all three recommended markers plus the single outside-recommendation marker. This maintains stronger rendered-output evidence while reducing brittleness caused by long artificial tokens at PDF line boundaries.
-
-## Current Step 5 acceptance gate
-
-| Gate | Required result |
+| Rule group | Required Step 6 treatment |
 |---|---|
-| Static | PASS |
-| Automatic inference | bounded `article` |
-| Linux `article` | `PASS=6 FAIL=0 SKIP=0` |
-| Recommended PDF evidence | both engines render summary marker + 3/3 controlled keyword markers |
-| Outside-recommendation evidence | both engines render both paragraphs + controlled keyword marker |
-| Semantics | recommendations remain advisory; journal precedence remains conditional |
-| Steps 1–4 | remain green |
-| Proof state | no promotion from shared/default behavior |
+| Required front block, textual structure and body typography | map each rule to direct article-specific executable evidence before any proof-state promotion |
+| Optional foreign title/summary | preserve optionality while recording both present and absent article scenarios |
+| Recommended author alignment, summary word count, keyword minimum and single paragraph | keep advisory/non-enforcing semantics; positive scenarios do not become rejection predicates |
+| Journal-guideline precedence | keep `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission` |
 
-Only after those results are recorded does Step 6 activate.
+The preferred implementation is a machine-readable article evidence map plus a static contract checker that detects missing, duplicated, stale, over-promoted or cross-surface-only proof claims.
 
 ## Shared state
 
@@ -73,9 +65,13 @@ Every **material advance** updates the relevant execution documentation and cano
 
 Every phase ends with a mandatory **phase-end regression** on one immutable candidate SHA. Scoped Step checks do not replace this gate; Scientific Article Step 8 requires `complete` Linux.
 
+## Gate before Step 7
+
+Step 6 must have a machine-protected 18-rule evidence classification, no unauthorized normative/modality change, recommendations still non-enforcing, journal precedence still conditional-manual, and its required Static/Linux acceptance gates green.
+
 ## Gate before Final Certification
 
-Scientific Article must complete Steps 5–7 and pass Step 8 on one immutable SHA. The canonical article PDF must be provenance-bound and visually inspected. No unresolved article runtime/evidence failure may remain.
+Scientific Article must complete Steps 6–7 and pass Step 8 on one immutable SHA. The canonical article PDF must be provenance-bound and visually inspected. No unresolved article runtime/evidence failure may remain.
 
 ## Gate before Release
 

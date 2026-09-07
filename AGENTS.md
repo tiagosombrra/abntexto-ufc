@@ -22,22 +22,23 @@ Memory, prior chats, historical branches and old workflow names never override t
 | Active phase | **Scientific Article** |
 | Canonical base | `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
 | Active branch / PR | `feat/v3-scientific-article` / #286 |
-| Steps 1–4 | **ACCEPTED** |
-| Step 5 implementation | `6507da00275d8a69093541d6e6cb119a1b6f6cb3` |
-| Step 5 orchestration correction | `02e1ea6e25c008c93f8ec3ba26af7f3cea03cf14`; Static `34129625390` **PASS**; Linux auto correctly selected `article` |
-| Step 5 latest Linux | `34129625475` **FAIL**, `SCOPE=article PASS=5 FAIL=1 SKIP=0`; only rendered synthetic keyword sentinel `ARTICLEADVISORYKEYTHREE` was not extracted in the recommended pdfLaTeX scenario |
-| Current batch | **Step 5 — shorten synthetic keyword sentinels and verify all controlled keyword outputs without runtime changes** |
+| Steps 1–5 | **ACCEPTED** |
+| Step 5 acceptance checkpoint | `55fa1c8dc1b503c119d564950d04141cf45ad345` |
+| Step 5 acceptance Static | `34132291198` **PASS** |
+| Step 5 acceptance Linux | `34132291304` **PASS**, bounded `article` scope with all six first-class article checks green |
+| Step 5 recommendation evidence | both engines and both controlled scenarios passed; 3/3 recommended keyword sentinels and outside-recommendation sentinel rendered; recommendations remained non-enforcing; journal precedence remained conditional-manual; `proof_state_promoted=0` |
+| Current batch | **Step 6 — evidence hardening and truthful article-specific proof-state mapping** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-The mixed orchestration/domain inference defect is now resolved: the incremental Step 5 correction selected the bounded `article` suite as required. The remaining Step 5 blocker is evidence-harness robustness. The article contract checker passed, Steps 1–4 remained green, and the failure occurred only when `pdftotext -layout` did not expose the long third synthetic keyword marker as an exact contiguous token. Fix the controlled sentinel design first; do not change article runtime or normative semantics without evidence of a runtime defect.
+Step 5 is closed. The shortened controlled sentinels passed under pdfLaTeX and LuaLaTeX without article runtime or normative changes. Step 6 must now classify article-specific evidence rule by rule and may promote proof state only where an article-specific executable predicate actually supports the rule.
 
 ## Readable phase model
 
 1. Regression Audit — closed
 2. Core Corrections — closed
 3. Reference PDF Validation — closed
-4. Scientific Article — active, Step 5 evidence-harness correction/acceptance gate
+4. Scientific Article — active, Step 6 evidence hardening
 5. Final Certification — queued
 6. Release — queued
 
@@ -50,17 +51,18 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Keep required, optional, recommended and required-when-applicable semantics distinct.
 - Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
 - Shared implementation is not article proof.
-- Step 4 physical predicates remain accepted and must not be weakened.
-- Step 5 recommendations remain advisory; short summaries, multiple summary paragraphs and fewer than three keywords must not become hard failures.
+- Steps 1–5 are accepted and their executable predicates must not be weakened.
+- Recommended rules remain advisory; positive recommendation scenarios are evidence of supported defaults, not rejection predicates.
 - Journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`.
 - Step 5 proof state remains unpromoted.
-- Step 6 begins only after Step 5 acceptance is recorded.
+- Step 6 may promote only rules with direct article-specific evidence and must leave unsupported or conditional rules manual/conditional-manual.
+- Step 7 begins only after Step 6 evidence-state changes are accepted and documented.
 
 ## Linux scope rule
 
 Orchestration-only changes select `smoke`. When orchestration files accompany recognized domain-specific technical files, orchestration paths are neutral for domain selection and the known domain suite wins. Unknown non-orchestration technical paths and force-complete surfaces still fail closed to `complete`.
 
-This behavior is accepted by Static `34129625390` and observed in Linux `34129625475`, which selected `article` for the incremental `6507da... -> 02e1ea...` change.
+This behavior is accepted by Static `34129625390` and was reconfirmed by Step 5 acceptance Linux `34132291304`, which selected the bounded `article` suite and passed all six article checks.
 
 ## Engineering rules
 
