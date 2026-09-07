@@ -1,6 +1,6 @@
 # abntexto-ufc v3.0.0 — Canonical Handoff
 
-Updated: 2026-09-06
+Updated: 2026-09-07
 
 ## Current checkpoint
 
@@ -13,9 +13,9 @@ Updated: 2026-09-06
 | Active phase | **Scientific Article** |
 | Steps 1–3 | ACCEPTED |
 | Latest fully validated checkpoint | `a99f1e19eac1294eac35fb1da85196a1b8295d1a` |
-| Step 4 gate-correction checkpoint | `bf6c48e0cc1e5d19751ad2ff112db77fce799706`; Static `34071163701` PASS; Linux `34071163702` FAIL |
-| Current Step 4 runtime implementation | `3796a3c206adb7605160828dcda91f5851a16903` |
-| Current work | **Activate article body typography at required front-block completion; acceptance rerun pending** |
+| Latest rejected Step 4 checkpoint | `09b870d0f7f3771884d55e2e922921051df2dfe0`; Static `34072362333` PASS; Linux `34072362335` FAIL |
+| Current Step 4 implementation | `15ed414d3f1474157fe2e34de2d97ae6e76dd5ff` |
+| Current work | **Persist article single spacing across the upstream `textual` transition; acceptance rerun pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
@@ -25,9 +25,12 @@ Updated: 2026-09-06
 |---|---|---|
 | `8b52ee4...` | body PDF measured `20.700 pt` vs single calibration `13.800 pt` | real runtime spacing defect |
 | `177a621...` | three article gates stopped on retired `AtBeginDocument` token before body PDF check | stale test-token coupling |
-| `bf6c48e...` | Static PASS; Linux article scope PASS=4 FAIL=1; body again measured `20.700 pt` vs `13.800 pt` | **real runtime defect remains; `begindocument/end` route is physically ineffective for the required article body** |
+| `bf6c48e...` | Static PASS; Linux article PASS=4 FAIL=1; body again `20.700 pt` vs `13.800 pt` | begin-document route physically ineffective |
+| `09b870d...` | Static `34072362333` PASS; Linux `34072362335` PASS=4 FAIL=1; body still `20.700 pt` vs `13.800 pt` | front-block-only activation also transient; first section resets shared spacing through `\textual` |
 
-The current fix does not relax the checker. `\ufc_article_apply_body_typography:` is now invoked after `\ufc_article_primary_summary:n {#1}` inside the required `\ufcPrintArticleFrontMatter` command. This executes after document startup and before body content. The front-block and foreign-element gates no longer own Step 4 implementation-token assertions; Step 4 remains protected by its dedicated source boundary, two-engine physical measurement and missing-development negative fixture.
+The latest failure isolates the upstream state transition. `abntexto`'s first numbered section invokes `\textual`, which sets `\spacing{1.5}` and a 1.5 cm paragraph indent. `\singlesp` changes the current baseline only and does not replace that persistent spacing state.
+
+Implementation `15ed414d3f1474157fe2e34de2d97ae6e76dd5ff` therefore uses `\spacing{1}` inside the article-only body function and re-applies it through `cmd/textual/after`. The same function still runs after the required primary summary so body content before the first section is also correct. The article type guard remains the isolation boundary for non-article profiles.
 
 ## Acceptance gate before Step 5
 
@@ -36,17 +39,17 @@ The current fix does not relax the checker. `\ufc_article_apply_body_typography:
 | Static | PASS on the synchronized correction checkpoint |
 | Linux `article` | PASS=5 FAIL=0 |
 | Body PDF | 12 pt, justified, 2 cm indent, single spacing under pdfLaTeX and LuaLaTeX |
+| Persistent state | body spacing survives the automatic `\textual` transition |
 | Negative structure | missing Desenvolvimento rejected for the intended reason |
-| Source boundary | body activation follows required primary summary in the article front block |
-| Step 2/3 isolation | front-block and foreign-element gates remain independent of Step 4 implementation syntax |
+| Step 2/3 isolation | earlier accepted gates remain independent of Step 4 implementation syntax |
 | Authority/proof state | unchanged |
 
 ## Immediate action
 
-1. publish the synchronized checkpoint that contains implementation `3796a3c...` plus this control-plane update;
+1. publish the synchronized checkpoint containing implementation `15ed414d...` plus this control-plane update;
 2. run Static and bounded Linux `article`;
 3. classify any failure before changing runtime/tests;
-4. if all five article checks pass, record Step 4 acceptance and only then activate Step 5;
+4. if all five article checks pass, record Step 4 acceptance and activate Step 5;
 5. later, close Scientific Article only after canonical article PDF visual review and a complete phase-end regression on one immutable SHA.
 
 ## Mandatory operating discipline
