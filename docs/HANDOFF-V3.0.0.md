@@ -16,43 +16,45 @@ Updated: 2026-09-06
 | Step 3 | ACCEPTED — `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`; Linux `34031144269` |
 | README user guide | ACCEPTED — `a99f1e19eac1294eac35fb1da85196a1b8295d1a`; Static `34054110778`; Linux `34054110738` |
 | Step 4 implementation | `e5291137d4753b7d776916ca0f08c67929dbb76b` |
-| Active work | **Step 4 implemented — Static/Linux acceptance pending** |
+| Rejected Step 4 checkpoint | `8b52ee4b36b23868fecce9bbe9b843f689ccc01e`; Static `34058435312` PASS; Linux `34058435311` FAIL |
+| Failure | article body gap `20.700 pt` vs single-spacing calibration `13.800 pt` |
+| Active work | **Step 4 body-spacing initialization-order correction implemented; acceptance rerun pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-## Step 4 material advance
+## Step 4 failure classification
 
-The Step 4 implementation is intentionally bounded to the article profile.
+Linux `34058435311` executed the bounded `article` scope. `validator-source`, profile, front block and foreign-elements gates passed; `scientific-article-body` failed. The checker measured the article body at the shared academic-work 1.5-spacing gap (`20.700 pt`) while the same-document `\singlesp` calibration was `13.800 pt`.
 
-| Surface | Change | Acceptance meaning |
-|---|---|---|
-| `articles.def` | article-only begin-document body activation: 12 pt, justified, 2 cm first-line indent, zero extra paragraph spacing, single spacing | runtime requirement implemented without changing non-article profiles |
-| Positive fixture | Introdução, Desenvolvimento, Considerações finais and Referências | required textual structure can be proved on an article-specific PDF |
-| PDF checker | physical 12 pt, 2 cm indent, justification and single-spacing measurements | shared implementation is not used as proof |
-| Negative fixture | omits Desenvolvimento | validator must reject deterministically |
-| Step 2/3 guards | pre-Step4 ban on `\AtBeginDocument` replaced by positive profile-scoped Step4 boundary | old protection is transitioned rather than deleted |
-| Coordinated runner | new `scientific-article-body` check | Step 4 is independently executable |
-| `article` Linux suite | new body check added and statically required | scoped CI cannot omit Step 4 |
-| Proof state | unchanged | Step 6 still owns proof-state hardening/promotion |
+This is a runtime initialization-order defect, not a checker defect and not a normative-authority dispute. The existing Step 4 body checker remains unchanged.
 
-Implementation commit: `e5291137d4753b7d776916ca0f08c67929dbb76b`. The branch is published only after the documentation/machine-state commit on top of that implementation, so CI evaluates the synchronized state.
+## Correction applied in the current synchronized checkpoint
+
+`abntexto-ufc/articles.def` retains the `scientific-article` predicate but moves the body typography activation from a generic `\AtBeginDocument` registration to `\AddToHook{begindocument/end}{...}`. This makes the article-only single-spacing override execute after shared begin-document layout initialization.
+
+| Surface | Correction / invariant |
+|---|---|
+| Runtime | article-only body override runs at `begindocument/end` |
+| Typography target | 12 pt, justified, 2 cm first-line indent, zero extra paragraph spacing, single spacing |
+| Checker | unchanged; must still distinguish `13.800 pt` single spacing from `20.700 pt` 1.5 spacing |
+| Structural negative case | unchanged; missing Desenvolvimento must still be rejected |
+| Non-article profiles | no intended runtime change |
+| Proof state | unchanged; Step 6 still owns promotion/hardening |
+
+The exact correction SHA is recorded only after this synchronized commit exists. Step 4 remains unaccepted until Static and bounded Linux are green on that checkpoint.
 
 ## Current acceptance gate
 
 | Gate | Required result |
 |---|---|
-| Static | PASS on the synchronized Step 4 checkpoint |
-| Linux | bounded `article` scope PASS with profile/front-block/foreign/body checks |
-| Positive body evidence | both pdfLaTeX and LuaLaTeX physical measurements PASS |
+| Static | PASS on corrected synchronized Step 4 checkpoint |
+| Linux | `article` scope PASS with all five checks |
+| Body typography | 12 pt / justified / 2 cm / single under pdfLaTeX and LuaLaTeX |
 | Negative structure | missing Desenvolvimento rejected for the intended reason |
-| Compatibility | no change to six accepted non-article profiles/shared foundation |
-| Authority | no article modality or proof-state strengthening solely to get green CI |
+| Compatibility | article correction remains profile-scoped |
+| Authority | no modality/proof-state strengthening to obtain green CI |
 
-Any failure is classified before runtime/test changes. Step 4 remains unaccepted until both required CI gates are recorded green.
-
-## Next step after acceptance
-
-Step 5 — **Recommendations and conditional applicability** — may start only after a later documentation checkpoint records the Step 4 Static/Linux results. Recommendations remain advisory and journal-specific instructions remain required only when applicable.
+Step 5 — **Recommendations and conditional applicability** — remains blocked until a later documentation checkpoint records Step 4 acceptance.
 
 ## Mandatory operating discipline
 
@@ -65,7 +67,7 @@ Every phase requires a complete **phase-end regression** on one immutable candid
 - Preserve all accepted non-article profiles and the shared academic-work PDF baseline.
 - Preserve the retained 18-rule article source contract and required/optional/recommended/conditional distinctions.
 - Do not treat shared implementation as article proof.
-- Do not weaken normative traceability, canonical identity or scope fail-closed behavior.
+- Do not weaken the Step 4 spacing checker after the real runtime failure.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Issue #18 remains owned by Final Certification/Release.
 - Do not redistribute proprietary fonts.

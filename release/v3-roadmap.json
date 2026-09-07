@@ -168,8 +168,9 @@
     "scientific_article_step1_state": "accepted",
     "scientific_article_step2_state": "accepted",
     "scientific_article_step3_state": "accepted",
-    "scientific_article_step4_state": "implemented-pending-acceptance",
+    "scientific_article_step4_state": "correction-implemented-pending-acceptance",
     "latest_implementation_checkpoint_sha": "e5291137d4753b7d776916ca0f08c67929dbb76b",
+    "latest_implementation_checkpoint_state": "step4-body-spacing-correction-in-current-synchronized-checkpoint",
     "latest_fully_validated_checkpoint_sha": "a99f1e19eac1294eac35fb1da85196a1b8295d1a",
     "latest_fully_validated_checkpoint_state": "readme-user-guide-static-green-linux-green-step3-remains-accepted",
     "core_corrections_closed": true,
@@ -177,9 +178,11 @@
     "shared_foundation_merged_to_main": true,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "current_correction_batch": [
-      "Scientific Article — Step 4 implementation complete, acceptance pending"
+      "Scientific Article — Step 4 body-spacing initialization-order correction implemented, acceptance rerun pending"
     ],
-    "known_runtime_failures": [],
+    "known_runtime_failures": [
+      "Linux 34058435311 on 8b52ee4: scientific-article-body rendered shared 1.5 spacing (20.700 pt) instead of same-document single-spacing calibration (13.800 pt); validator-source/profile/front-block/foreign-elements passed"
+    ],
     "known_gate_failures": [
       "Static 34003576066 on 768d355: stale pre-activation normative-currency coupling after Scientific Article activation",
       "Linux 34003838521 on 6587636: unsupported author-note physical-page percentage evidence predicate",
@@ -190,12 +193,13 @@
       "Static 34053874788 on 3e3ece5: user-facing README reintroduced unclassified retired class identity while explaining stable v2.1.0; corrected without weakening canonical_identity.py"
     ],
     "pending_acceptance_gates": [
-      "Step 4 synchronized checkpoint must pass Static contract",
-      "Step 4 bounded article Linux scope must pass profile, front-block, foreign-elements and body gates",
-      "Article body evidence must measure 12 pt, justified alignment, 2 cm first-line indent and single spacing under pdfLaTeX and LuaLaTeX",
+      "Corrected Step 4 synchronized checkpoint must pass Static contract",
+      "Corrected Step 4 bounded article Linux scope must pass all five article checks",
+      "Article body evidence must measure 12 pt, justified alignment, 2 cm first-line indent and 13.800 pt-equivalent single spacing under pdfLaTeX and LuaLaTeX",
       "Missing-development negative fixture must be rejected for the intended structural reason",
+      "Article body correction must remain scoped to scientific-article",
       "Article proof-state must not advance merely because shared mechanisms are reused",
-      "Step 5 begins only after Step 4 acceptance is recorded",
+      "Step 5 begins only after corrected Step 4 acceptance is recorded",
       "Produce and visually inspect provenance-bound canonical article PDF",
       "Pass Scientific Article phase-end regression with complete Linux scope on one immutable SHA"
     ],
@@ -213,7 +217,7 @@
   },
   "linux_integration": {
     "policy_document": "docs/LINUX-INTEGRATION-SCOPES.md",
-    "state": "step4-gate-registered-acceptance-pending",
+    "state": "step4-body-spacing-correction-acceptance-pending",
     "automatic_pr_scope": "auto",
     "synchronize_diff_window": "incremental-push-when-endpoints-reachable",
     "missing_incremental_endpoint_fallback": "full-pr-fail-closed",
@@ -254,7 +258,7 @@
   "branch_plan": {
     "current_work_branch": "feat/v3-scientific-article",
     "integration_pr": 286,
-    "integration_state": "open-step4-implementation-acceptance-pending",
+    "integration_state": "open-step4-body-spacing-correction-acceptance-pending",
     "integration_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "previous_integration_branch": "plan/v3-regression-reset",
     "previous_branch_state": "historical-no-new-work",
@@ -282,7 +286,7 @@
       "current_state": "PASS"
     },
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-steps1-3-accepted-step4-implemented-pending-acceptance",
+      "status": "source-contract-accepted-runtime-steps1-3-accepted-step4-correction-implemented-pending-acceptance",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
@@ -319,18 +323,23 @@
     "scientific_article_step3_acceptance_linux_run": 34031144269,
     "scientific_article_step3_acceptance_linux_conclusion": "success",
     "scientific_article_step4_implementation_sha": "e5291137d4753b7d776916ca0f08c67929dbb76b",
-    "scientific_article_step4_acceptance_state": "pending-static-and-linux",
-    "readme_user_guide_rejected_checkpoint_sha": "3e3ece5a3607303dd31aee35c67ce4140fb90d94",
-    "readme_user_guide_rejected_static_run": 34053874788,
-    "readme_user_guide_rejected_static_classification": "active-tree-unclassified-legacy-class-identity",
-    "readme_user_guide_rejected_linux_run": 34053874750,
-    "readme_user_guide_rejected_linux_conclusion": "success",
+    "scientific_article_step4_rejected_checkpoint_sha": "8b52ee4b36b23868fecce9bbe9b843f689ccc01e",
+    "scientific_article_step4_rejected_static_run": 34058435312,
+    "scientific_article_step4_rejected_static_conclusion": "success",
+    "scientific_article_step4_rejected_linux_run": 34058435311,
+    "scientific_article_step4_rejected_linux_conclusion": "failure",
+    "scientific_article_step4_rejected_linux_summary": "SCOPE=article PASS=4 FAIL=1 SKIP=0",
+    "scientific_article_step4_rejected_classification": "article-body-line-spacing-runtime-initialization-order",
+    "scientific_article_step4_rejected_body_gap_pt": 20.7,
+    "scientific_article_step4_single_spacing_calibration_gap_pt": 13.8,
+    "scientific_article_step4_correction_state": "current-synchronized-checkpoint-awaiting-ci",
+    "scientific_article_step4_acceptance_state": "correction-rerun-pending-static-and-linux",
     "readme_user_guide_acceptance_sha": "a99f1e19eac1294eac35fb1da85196a1b8295d1a",
     "readme_user_guide_acceptance_static_run": 34054110778,
     "readme_user_guide_acceptance_static_conclusion": "success",
     "readme_user_guide_acceptance_linux_run": 34054110738,
     "readme_user_guide_acceptance_linux_conclusion": "success",
-    "scoped_linux_integration_state": "step4-acceptance-pending",
+    "scoped_linux_integration_state": "step4-body-spacing-correction-acceptance-pending",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

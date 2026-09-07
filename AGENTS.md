@@ -27,8 +27,11 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 - Step 3: ACCEPTED at `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`, Linux `34031144269`.
 - README user-guide correction: ACCEPTED at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`; Static `34054110778`, Linux `34054110738`.
 - Step 4 implementation commit: `e5291137d4753b7d776916ca0f08c67929dbb76b`.
-- Current batch: **Step 4 — implementation complete, Static/Linux acceptance pending**.
-- Step 4 implements required article structure plus 12 pt, justified, 2 cm first-line indent and single-spaced body evidence. It is not accepted until the synchronized checkpoint is green.
+- Rejected Step 4 synchronized checkpoint: `8b52ee4b36b23868fecce9bbe9b843f689ccc01e`; Static `34058435312` PASS, Linux `34058435311` FAIL (`article`: PASS=4 FAIL=1).
+- Step 4 failure classification: real runtime initialization-order defect. The article body rendered at the shared 1.5-spacing gap (`20.700 pt`) instead of the same-document single-spacing calibration (`13.800 pt`).
+- Current batch: **Step 4 — body-spacing initialization-order correction implemented, acceptance rerun pending**.
+- Correction strategy: keep the article-only runtime predicate and apply it through `begindocument/end`, after shared begin-document layout initialization. The body checker is unchanged.
+- Step 5 remains blocked until the corrected synchronized checkpoint is green and acceptance is documented.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 
@@ -37,35 +40,15 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active, Step 4 acceptance gate
+4. **Scientific Article** — active, Step 4 correction acceptance gate
 5. **Final Certification** — queued
 6. **Release** — queued
 
 Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
 
-## README ownership
-
-`README.md` is the user-facing entry point for people who want to use the template. Keep it focused on choosing a released version, downloading it, configuring a document, compiling it, understanding the template layout, and solving common user problems.
-
-Do not turn `README.md` into execution history. Detailed phase status, workflow run IDs, implementation SHAs, issue chronology, regression failures, normative disputes and control-plane mechanics belong in `docs/`, GitHub issues/pull requests, Actions and `release/v3-roadmap.json`.
-
-The active README must also respect the canonical-identity contract. Stable-release instructions may identify the supported release and bundle names, but must not casually reintroduce a retired class identity into the active V3 tree.
-
 ## Linux integration scopes
 
-`docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract.
-
-- PR `auto` normally uses the incremental pushed range on `synchronize` and the full PR diff on opened/reopened/ready events.
-- If the synchronize endpoints are unavailable locally, scope selection falls back to the full PR diff and remains fail-closed.
-- Documentation-only changes skip heavy Linux integration.
-- Multiple known domains run a deduplicated union.
-- Workflow/runner orchestration accompanying known domain changes does not force `complete`.
-- Unknown technical paths and shared/core/standards surfaces fail closed to `complete`.
-- Article gates are first-class checks; `profiles` contains exactly six non-article profiles and excludes `scientific-article`.
-- The `article` scope now includes `validator-source`, `scientific-article-profile`, `scientific-article-front-block`, `scientific-article-foreign-elements`, and `scientific-article-body`.
-- The Step 4 body gate must remain registered while Scientific Article, Final Certification or Release is active.
-- Runner modules must remain importable by direct execution and repository traceability loaders.
-- Scoped runs are intermediate evidence only. Phase-end regression always uses `complete`.
+`docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract. The `article` scope contains `validator-source`, `scientific-article-profile`, `scientific-article-front-block`, `scientific-article-foreign-elements`, and `scientific-article-body`. `profiles` remains the six non-article profiles. Scoped runs are intermediate evidence only; phase-end regression always uses `complete`.
 
 ## Scientific Article rules
 
@@ -74,10 +57,9 @@ The active README must also respect the canonical-identity contract. Stable-rele
 - Keep required, optional, recommended and required-when-applicable semantics distinct.
 - Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
 - Shared implementation is not article proof.
-- Foreign title and foreign summary are independently optional; Step 3 is accepted and regression-protected.
-- Do not repurpose `title-variant` for article foreign-title semantics.
 - Step 4 runtime body activation must remain profile-scoped and must not change the six non-article profiles.
 - Step 4 requires article-specific physical PDF evidence for 12 pt, justification, 2 cm first-line indent and single spacing, plus a negative structural case.
+- The failed `34058435311` body measurement is a runtime defect; do not weaken or recalibrate the checker to accept 1.5 spacing.
 - Recommendations remain advisory; journal instructions remain conditional.
 - Step 6, not Step 4, owns later proof-state hardening/promotion.
 

@@ -101,10 +101,9 @@
       }
   }
 
-% The shared academic-work layout starts at 12 pt, 2 cm first-line indentation
-% and 1.5 spacing. The UFC article guide instead requires single-spaced textual
-% elements. Apply only that profile-specific body contract after the shared
-% begin-document hook, leaving every non-article profile untouched.
+% Shared layout installs the academic-work body contract at begin-document
+% time. Apply the article-specific override only after those initializers have
+% finished so scientific articles reliably use the required single spacing.
 \cs_new_protected:Npn \ufc_article_apply_body_typography:
   {
     \str_if_eq:VnT \g_ufc_document_type_tl {scientific-article}
@@ -117,7 +116,7 @@
       }
   }
 
-\AtBeginDocument{\ufc_article_apply_body_typography:}
+\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}
 
 \NewDocumentCommand \ufcPrintArticleFrontMatter { +m }
   {
