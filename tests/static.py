@@ -22,6 +22,7 @@ SOURCE_CHECKS = (
     "tests/checks/profile_matrix_contract.py",
     "tests/checks/scientific_article_profile_contract.py",
     "tests/checks/scientific_article_recommendations_contract.py",
+    "tests/checks/scientific_article_evidence_map.py",
     "tests/checks/linux_integration_suites.py",
     "tests/checks/test_surface_integrity.py",
     "tests/checks/v3_api_residual.py",

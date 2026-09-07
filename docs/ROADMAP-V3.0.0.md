@@ -4,77 +4,64 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 6 — evidence hardening. Steps 1–5 are accepted, and PR #286 is reconciled with current `main`.**
+**Scientific Article is ACTIVE. Step 6 evidence hardening is implemented and awaiting synchronized CI acceptance.**
 
-| Phase | Status | Accepted evidence / exit gate |
+| Phase | Status | Current exit requirement |
 |---|---|---|
-| Regression Audit | CLOSED | green regression and stable 34-item review contract |
-| Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
-| Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 6** | Steps 1–5 accepted; current-main reconciliation recorded; Step 6 must map all 18 retained rules to truthful article-specific evidence before canonical article PDF work |
-| Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
-| Release | QUEUED | release assets/checksums/tag/publication and final regression |
+| Regression Audit | CLOSED | Completed regression contract and phase-end regression |
+| Core Corrections | CLOSED | Candidate `5f67560a...`; Static `33982156041`; Linux `33982156042` |
+| Reference PDF Validation | CLOSED | Candidate `b64074c...`; complete 55-page visual PASS + Static/Linux |
+| Scientific Article | **ACTIVE — STEP 6 CI PENDING** | Steps 6–8 below |
+| Final Certification | QUEUED | Complete platform/font/PDF-A/distribution/reproducibility certification |
+| Release | QUEUED | Packaging, checksums, tag/release and publication verification |
 
-## Scientific Article progress
+Canonical `main` is `fbf7cc4839ce318024a7d1ed517dd50fab5773ac`. PR #288 fixed the stale README/control-plane state on main. Active article work is PR #286 on `feat/v3-scientific-article`, reconciled with current main through `85cf22b6fe5d117bb2611a2865911e0d20a19363`.
 
-| Step | Work | State | Evidence / gate |
+## Scientific Article remaining roadmap
+
+| Step | Work | State | Gate |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
-| 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
-| 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | ACCEPTED | `005956bd...`; Static `34119007413`; Linux `34119007425` |
-| 5 | Recommendations and conditional applicability | ACCEPTED | `55fa1c8...`; Static `34132291198`; Linux `34132291304`; bounded `article` scope; six first-class checks PASS |
-| 6 | Evidence hardening | **ACTIVE** | exact 18-rule machine map; article-specific ownership; truthful validation/evidence promotion only where directly supported |
-| 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
-| 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific evidence on one immutable SHA |
+| 1 | Profile and metadata | ACCEPTED | completed |
+| 2 | Required front block | ACCEPTED | completed |
+| 3 | Optional foreign title/summary | ACCEPTED | completed |
+| 4 | Body structure and typography | ACCEPTED | completed |
+| 5 | Recommendations and journal applicability | ACCEPTED | completed |
+| 6 | Exact 18-rule evidence ownership map | **IMPLEMENTED — CI PENDING** | Static + selected Linux scope green on synchronized checkpoint |
+| 7 | Canonical article PDF | QUEUED | real TeX Live 2026 PDF, Git provenance, every page visually inspected |
+| 8 | Scientific Article phase-end regression | QUEUED | Static + `complete` Linux + article gates on one immutable SHA |
 
-## Current-main reconciliation
+Step 6 is deliberately conservative: `standards/article-evidence-map.json` maps all 18 retained rules but changes **zero** validation modes. Required rules may have direct article-specific executable support without being promoted to full normative proof. Optional elements remain optional, recommendation rules remain manual/non-enforcing, and target-journal precedence remains conditional-manual.
 
-Canonical `main` advanced to `789c6f3f4669ae36c3d4fe831ae939a340592568` with accepted scoped Linux orchestration. PR #286 had been based on `e6833ed...` and became dirty. Merge `ae7e2cf2484e0b4329cc30ea80a95d0788e0e9f4` reconciles the article branch with current `main` while preserving the branch's newer fail-closed synchronize fallback.
+## After Scientific Article
 
-This reconciliation does not change article authority, runtime predicates, 18-rule modality, or proof state. It restores current-main ancestry before Step 6 evidence work continues.
+### Final Certification
 
-## Step 6 evidence-hardening objective
+Must run on the accepted final candidate and cover at least:
 
-Step 6 must distinguish executable article-specific proof ownership from shared implementation reuse. The retained 18-rule source contract is not rewritten merely because an implementation or generic shared test exists.
+- all document profiles, including Scientific Article;
+- pdfLaTeX and LuaLaTeX;
+- literal Times New Roman and Arial identity where certification requires it;
+- Unicode extraction;
+- font embedding;
+- PDF/A-2b;
+- distribution/public bundle checks;
+- release-reference-PDF reproducibility evidence required by issue #18.
 
-| Rule group | Required Step 6 treatment |
-|---|---|
-| Required front block, textual structure and body typography | map each rule to direct article-specific executable evidence before executable proof ownership is declared |
-| Optional foreign title/summary | preserve optionality while recording both present and absent article scenarios |
-| Recommended author alignment, summary word count, keyword minimum and single paragraph | keep advisory/non-enforcing semantics; positive scenarios do not become rejection predicates |
-| Journal-guideline precedence | keep `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission` |
+### Release
 
-The implementation is a machine-readable article evidence map plus a static contract checker that rejects missing, duplicated, stale, over-promoted, shared-only, or modality-breaking claims.
+Only after Final Certification:
 
-## Shared state
+- finalize user/developer documentation;
+- build public/distribution bundles;
+- generate and verify checksums/assets;
+- resolve release-readiness blockers;
+- create immutable `v3.0.0` tag and GitHub Release;
+- perform any external publication/CTAN action only in this phase.
 
-| Fact | State |
-|---|---|
-| Canonical `main` | `789c6f3f4669ae36c3d4fe831ae939a340592568` |
-| Shared-foundation integration checkpoint | `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
-| Active branch / PR | `feat/v3-scientific-article` / #286 |
-| Reconciliation merge | `ae7e2cf2484e0b4329cc30ea80a95d0788e0e9f4` |
-| Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Item 33 | fail-closed pending authoritative current NBR 6023:2025 evidence |
-| Release blocker | issue #18 |
+## Persistent authority gap
 
-Machine authority: `release/v3-roadmap.json`. Canonical handoff: `docs/HANDOFF-V3.0.0.md`. Scientific Article plan: `docs/V3-SCIENTIFIC-ARTICLE.md`.
+Librarian review remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 is not converted into speculative NBR 6023:2025 runtime behavior. It remains explicit/fail-closed unless authoritative current-edition evidence is obtained.
 
 ## Operating discipline
 
-Every **material advance** updates the relevant execution documentation and canonical handoff in the same work cycle. Changes to phase, acceptance, evidence, Linux-scope policy, current batch, branch/base reconciliation or checkpoint facts update this roadmap and machine state.
-
-Every phase ends with a mandatory **phase-end regression** on one immutable candidate SHA. Scoped Step checks do not replace this gate; Scientific Article Step 8 requires `complete` Linux.
-
-## Gate before Step 7
-
-Step 6 must have a machine-protected 18-rule evidence classification, no unauthorized authority/modality change, recommendations still non-enforcing, journal precedence still conditional-manual, and its required Static/Linux acceptance gates green.
-
-## Gate before Final Certification
-
-Scientific Article must complete Steps 6–7 and pass Step 8 on one immutable SHA. The canonical article PDF must be provenance-bound and visually inspected. No unresolved article runtime/evidence failure may remain.
-
-## Gate before Release
-
-Final Certification must pass and issue #18 must be resolved with deterministic release-reference-PDF hash evidence. CTAN/publication actions remain blocked until **Release**.
+Every **material advance** updates roadmap, handoff and machine state in the same cycle. Every phase ends with a mandatory complete **phase-end regression** on one immutable SHA; scoped intermediate checks never close a phase.
