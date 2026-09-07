@@ -1,111 +1,106 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — ORCHESTRATION ACCEPTED / FEATURE PR PRESERVED
+Status: ACTIVE — STEP 6 EVIDENCE HARDENING / CURRENT MAIN RECONCILED
 
-## Purpose
+## Entry state
 
-Implement and validate one canonical `scientific-article` profile on top of the corrected, visually accepted shared V3 foundation. This phase realizes the retained 18-rule source-backed article contract without forking cross-cutting infrastructure or weakening accepted non-article behavior.
+Core Corrections and Reference PDF Validation are closed. The shared foundation was integrated at `e6833ed5cf07aaf1021c690260cecfacec1a119a`; canonical `main` has since advanced to `789c6f3f4669ae36c3d4fe831ae939a340592568` with accepted scoped Linux orchestration.
 
-Authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage-rules-article.json`.
+The active branch is `feat/v3-scientific-article`, PR #286. It was reconciled with current `main` through merge `ae7e2cf2484e0b4329cc30ea80a95d0788e0e9f4` before Step 6 evidence work continues.
 
-## Accepted entry evidence
+The retained article authority product is `4d018a92697e8f39e3a53b034c451e55996c84fb`, represented by `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage-rules-article.json`. There are exactly 18 article rules. Their source-backed requirement text, modality, locators and applicability are not rewritten merely because runtime evidence now exists.
 
-| Entry requirement | Evidence | State |
-|---|---|---|
-| Regression Audit closed | green audit regression | PASS |
-| Core Corrections closed | `5f67560a...`; Static `33982156041`; Linux `33982156042` | PASS |
-| Reference PDF Validation closed | `b64074c...`; Static `33985595790`; Linux `33985595798` | PASS |
-| Canonical shared PDF visually accepted | 55/55 pages, 0 unexplained visual FAIL | PASS |
-| Article authority contract retained | 18 source-backed `article.*` rules | PASS |
-| Shared librarian review state | 33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW | PASS / EXPLICIT AUTHORITY GAP |
-| PR #285 integration | merged to `main` as `e6833ed5cf07aaf1021c690260cecfacec1a119a` | PASS |
-| Temporary executors | none active | PASS |
+## Progress
 
-## Step 1 — Profile and metadata surface — ACCEPTED ON MAIN
-
-Technical implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.  
-Synchronized acceptance checkpoint: `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
-
-Acceptance evidence:
-
-- Static `34001350884`: SUCCESS;
-- full Linux `34001350953`: SUCCESS, `PASS=31 FAIL=0 SKIP=0`;
-- `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article metadata=submission-date,approval-date,article-author-note presentation_rules_promoted=0`;
-- six accepted non-article profiles remained green.
-
-## Infrastructure checkpoint — ACCEPTED
-
-PR #287 / `ci/scoped-linux-integration` has accepted technical checkpoint `47ac2e27c5c2f6797269ccc4e1c07caafea1c643`:
-
-- Static `34139608322`: SUCCESS;
-- Linux `34139608364`: SUCCESS, `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`;
-- Static `LINUX-SUITE-EVIDENCE` includes `runner_file_spec_import=true`;
-- automatic synchronize inference selected `smoke` rather than replaying the full historical PR diff.
-
-The preceding `d089215e...` checkpoint is retained as rejected evidence: both Static `34137588226` and Linux `34137588237` found the same location-dependent file-spec import defect. The fix changes no article rule, runtime behavior, normative predicate or suite membership.
-
-PR #287 should merge before article feature work resumes.
-
-## Existing PR #286 — preserved article work
-
-PR #286 / `feat/v3-scientific-article` contains later Scientific Article work beyond the Step 1 foundation. That history is **not discarded**. It remains paused for control-plane advancement until PR #287 merges.
-
-After PR #287 merges:
-
-1. reconcile the existing PR #286 branch with updated `main`;
-2. preserve its Step 2–4 implementation/history;
-3. obtain executable `article`-scope evidence for the pending Step 4 structural-checker state after reconciliation;
-4. only then advance the accepted article step and continue Step 5.
-
-A documentation-only green workflow on PR #286 does not substitute for executable article evidence.
-
-## Metadata decision
-
-| Contract need | Current surface | Decision |
-|---|---|---|
-| Primary authorship | `author` | reuse |
-| Primary title | `title` | reuse |
-| Approval date | `approval-date` | reuse |
-| Submission date | `submission-date` | article metadata added in Step 1 |
-| Complementary author footnote | `article-author-note` | article metadata added in Step 1 |
-| Foreign title | preserved article branch implementation | retain optional semantics; confirm after reconciliation |
-| Primary summary | preserved article branch implementation | retain required semantics; confirm after reconciliation |
-| Foreign summary | preserved article branch implementation | retain independent optionality; confirm after reconciliation |
-
-## Non-negotiable boundaries
-
-- One canonical `scientific-article` profile; no compatibility aliases.
-- Preserve accepted non-article profiles and canonical academic-work PDF baseline.
-- Reuse bibliography, citation, section, summary and object machinery rather than fork it.
-- Do not change article rule IDs, authority, modality, expected values, locators or applicability without new current source evidence.
-- Required, optional, recommended and conditional rules remain distinguishable.
-- Recommendations never become hard compilation/validation failures.
-- Journal-specific instructions remain a conditional applicability boundary.
-- Shared mechanism reuse does not count as article proof.
-- Item 33 remains fail-closed.
-- Issue #18 remains a release blocker owned by Final Certification/Release.
-- Every **material advance** updates handoff, roadmap, machine state and this plan in the same work cycle.
-- The phase ends only after a complete **phase-end regression** on one immutable candidate using Linux scope `complete`.
-
-## Implementation sequence
-
-| Step | Work | Current state | Acceptance |
+| Step | Work | State | Accepted evidence / next gate |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | **ACCEPTED ON MAIN** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
-| Infrastructure | Scoped Linux orchestration | **ACCEPTED — PR #287 MERGE NEXT** | `47ac2e27...`; Static `34139608322`; Linux `34139608364` |
-| 2 | Required article front block | **PRESERVED IN PR #286** | revalidate after branch reconciliation |
-| 3 | Optional foreign elements | **PRESERVED IN PR #286** | revalidate independent optionality after reconciliation |
-| 4 | Textual structure and body typography | **PRESERVED / EXECUTABLE NEGATIVE CHECK PENDING ACCEPTANCE** | article-scope run after reconciliation must exercise structural checker and physical body evidence |
-| 5 | Recommendations and conditional applicability | BLOCKED | start only after Step 4 is accepted on reconciled branch |
-| 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
-| 7 | Canonical article PDF | QUEUED | provenance-bound real PDF with complete visual inspection |
-| 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific acceptance on one immutable SHA |
+| 1 | Profile and metadata surface | ACCEPTED | `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`; Static `34001350884`; Linux `34001350953` |
+| 2 | Required article front block | ACCEPTED | `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`; Linux `34026680882` |
+| 3 | Optional foreign title and summary | ACCEPTED | `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`; Linux `34031144269` |
+| 4 | Textual structure and body typography | ACCEPTED | `005956bd615042a12fb0393fddd4941b635f6ce3`; Static `34119007413`; Linux `34119007425`; body 12 pt, justified, 2 cm, single spacing; negative missing-development case rejected correctly |
+| 5 | Recommendations and conditional applicability | ACCEPTED | `55fa1c8dc1b503c119d564950d04141cf45ad345`; Static `34132291198`; Linux `34132291304`; `SCOPE=article PASS=6 FAIL=0 SKIP=0` |
+| 6 | Evidence hardening | **ACTIVE** | exact 18-rule article-specific evidence map + static checker + truthful validation/evidence ownership |
+| 7 | Canonical article PDF | QUEUED | provenance-bound real PDF and complete page-level visual inspection |
+| 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific evidence on one immutable SHA |
 
-## Next action
+## Repository reconciliation before Step 6
 
-1. merge PR #287 after the acceptance-document synchronization remains Static-clean;
-2. reconcile existing PR #286 with updated `main`;
-3. run executable `article`-scope validation for the pending Step 4 state;
-4. synchronize accepted step/proof state;
-5. continue Step 5 without replaying or discarding already-preserved work.
+`main` moved after Step 5 activation. PR #286 became dirty because the active branch and `main` independently contained scoped-Linux orchestration work. The branch version is a stricter superset of the merged `main` behavior: it keeps the accepted domain-selection model and additionally falls back to the full PR range when incremental synchronize endpoints are unavailable.
+
+Merge `ae7e2cf...` records `789c6f3...` as current-main ancestry without discarding Steps 1–5 or weakening orchestration. This is control-plane reconciliation, not article proof-state promotion.
+
+## Step 6 objective
+
+Create a machine-readable article-specific evidence map covering **exactly all 18 retained article rule IDs**. Every entry must state what current executable article evidence actually proves and what remains manual, conditional, advisory or unproven.
+
+Shared implementation reuse is never sufficient proof. A rule may move from source-review-only validation only when a direct article-specific executable observer or rejection predicate owns that claim.
+
+## Step 6 implementation contract
+
+1. add `standards/article-evidence-map.json` with exactly the 18 rule IDs from `standards/coverage-rules-article.json`;
+2. classify each rule by normativity, current validation mode, article-specific owner/support gate, positive/negative/final-PDF evidence and proof disposition;
+3. reject missing, duplicate or unknown article rule IDs;
+4. reject executable/proof ownership when the only basis is a shared mechanism or a recommendation-following default;
+5. keep `article.authorship.alignment.recommended`, `article.summary.word-count.recommended`, `article.summary.keywords.minimum.recommended` and `article.summary.single-paragraph.recommended` non-enforcing;
+6. keep `article.journal-guidelines.precedence` as `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`;
+7. preserve independent present/absent evidence for `article.title.foreign.optional` and `article.summary.foreign.optional`;
+8. wire a dedicated Step 6 static checker into `tests/static.py`;
+9. when a required rule is promoted to executable validation, its declared evidence must be an article-specific runner gate that emits rule-specific `rule=<id> status=PASS` evidence;
+10. if validation/evidence metadata in `standards/coverage-rules-article.json` changes, update the evidence-contribution policy atomically; source requirement text, modality, locators and applicability remain unchanged without new authority;
+11. synchronize this plan, handoff, roadmap, normative contract when evidence ownership changes, release-readiness inventory and `release/v3-roadmap.json` in the same material-advance cycle;
+12. accept Step 6 only after Static and the Linux scope selected by changed-path policy are green.
+
+## Truthful evidence disposition
+
+The current executable surfaces support the following bounded design:
+
+| Rule family | Direct current evidence | Step 6 boundary |
+|---|---|---|
+| primary title, authorship, primary summary, dates, title typography, author metadata footnote | `scientific-article-front-block` under pdfLaTeX + LuaLaTeX with final-PDF measurements | may own executable validation without claiming full `PROVEN` status |
+| introduction, development, final considerations, references, body typography | `scientific-article-body` with two-engine physical evidence; controlled negative path exists for missing development | may own executable validation without claiming full `PROVEN` status |
+| foreign title / foreign summary | `scientific-article-foreign-elements`, four present/absent combinations × two engines | preserve optionality; conditional evidence, not mandatory presence |
+| recommended author alignment / summary recommendations | `scientific-article-recommendations` recommended + outside-recommendation scenarios | support/default evidence only; remain manual/advisory and non-enforcing |
+| target-journal precedence | source/applicability boundary only | remains conditional-manual; generic runtime must not automate it |
+
+`standards/proof-policy.json` remains conservative: executable validation is not equivalent to a normative rule becoming `PROVEN`. Step 6 hardens ownership and evidence truthfulness; it does not manufacture full proof.
+
+## Step 7 gate
+
+Step 7 starts only when Step 6 is accepted with:
+
+- exact 18-rule map protected by Static;
+- no unauthorized authority/modality/locator/applicability change;
+- direct article-specific ownership for any executable promotion;
+- optional rules still optional;
+- recommendations still non-enforcing;
+- journal precedence still conditional-manual;
+- Step 6 Static/Linux acceptance recorded.
+
+## Step 7 canonical article PDF
+
+Produce a real article PDF from the accepted branch using the project build/runtime, bind it to Git provenance, and inspect every page. Synthetic PDFs do not satisfy this step. Visual review must explicitly cover article-specific presentation, required/optional blocks, typography, structure, citations/references and absence of academic-work front-matter leakage.
+
+## Step 8 phase-end regression
+
+Scientific Article closes only when one immutable candidate passes:
+
+1. Static contract;
+2. Linux integration with **`complete`** scope;
+3. all article-specific executable gates;
+4. accepted canonical article PDF provenance and complete visual inspection;
+5. no unresolved article runtime/evidence failure.
+
+Scoped `article` checks are valid intermediate evidence but never replace the complete phase-end regression.
+
+## Cross-phase boundaries
+
+- Librarian review remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**.
+- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+- Issue #18 remains a Final Certification/Release blocker and does not justify changing article runtime.
+- Final Certification begins only after Scientific Article closes.
+- CTAN/publication actions remain blocked until Release.
+
+## Documentation discipline
+
+Every **material advance** updates the relevant execution documentation in the same work cycle. Every phase ends with a complete **phase-end regression** on one immutable SHA. Branch/base reconciliation is itself a material control-plane advance and must be recorded before further feature/evidence work.

@@ -6,97 +6,90 @@ This repository uses fail-closed state reconciliation for v3 development.
 
 Before changing code, tests, standards, workflows, documentation, or release metadata:
 
-1. Identify the actual Git branch and HEAD.
-2. Read `release/v3-roadmap.json`.
-3. Read `docs/HANDOFF-V3.0.0.md`.
-4. Read `docs/ROADMAP-V3.0.0.md`.
-5. During **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`.
-6. Compare Git facts, machine state, handoff, roadmap and active phase documents.
-7. If phase, checkpoint, acceptance state, article authority, proof state, artifact provenance, integration-scope state, release-blocker state, branch facts, or temporary-artifact state disagrees, reconcile the control plane before feature work.
+1. identify the actual Git branch and HEAD;
+2. read `release/v3-roadmap.json`;
+3. read `docs/HANDOFF-V3.0.0.md` and `docs/ROADMAP-V3.0.0.md`;
+4. during **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`;
+5. reconcile Git facts, machine state, handoff, roadmap, article authority, proof state, Linux-scope state and release blockers before feature work.
 
-Memory, prior chats, historical branch names, old pull requests, and workflow names never override current repository state.
+Memory, prior chats, historical branches and old workflow names never override the current repository state.
 
 ## Current state
 
-- Target version: `3.0.0`.
-- Active phase: **Scientific Article**.
-- `main` is current at merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`; PR #285 is merged.
-- Active infrastructure branch: `ci/scoped-linux-integration`; PR #287 is **ACCEPTED / READY TO MERGE**.
-- Scoped Linux accepted technical checkpoint: `47ac2e27c5c2f6797269ccc4e1c07caafea1c643`; Static `34139608322` SUCCESS; Linux `34139608364` SUCCESS, `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`.
-- The prior `d089215e...` failure is classified as a runner file-spec import-boundary defect and is permanently guarded by Static (`runner_file_spec_import=true`).
-- Existing Scientific Article branch/PR #286 is preserved but paused for control-plane advancement until PR #287 lands and is reconciled with updated `main`.
-- Core Corrections: CLOSED — candidate `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, Static `33982156041`, Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0`.
-- Reference PDF Validation: CLOSED — candidate `b64074c64941895f97fbe0f795ce826c798d17ce`, Static `33985595790`, Linux `33985595798`, canonical 55/55 visual PASS.
-- Librarian review: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
-- Scientific Article Step 1 on merged foundation: ACCEPTED — implementation `b46ba2051f8c9c712a7b5d25748b81baa52b920a`, synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`, Static `34001350884`, Linux `34001350953`.
-- Current material advance: **record scoped Linux orchestration acceptance and merge PR #287**.
-- Issue #18 remains a v3.0.0 release blocker owned by Final Certification/Release.
+| Fact | Current state |
+|---|---|
+| Target | `3.0.0` |
+| Active phase | **Scientific Article** |
+| Canonical `main` | `789c6f3f4669ae36c3d4fe831ae939a340592568` |
+| Shared-foundation integration checkpoint | `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
+| Active branch / PR | `feat/v3-scientific-article` / #286 |
+| Main reconciliation merge | `ae7e2cf2484e0b4329cc30ea80a95d0788e0e9f4` |
+| Steps 1–5 | **ACCEPTED** |
+| Step 5 acceptance checkpoint | `55fa1c8dc1b503c119d564950d04141cf45ad345` |
+| Step 5 acceptance Static | `34132291198` **PASS** |
+| Step 5 acceptance Linux | `34132291304` **PASS**, bounded `article` scope with all six first-class article checks green |
+| Step 6 activation Static | `34134609837` **PASS** on `947f740f35c581ea101242b75181978f8f3a7f1b` |
+| Current batch | **Step 6 — evidence hardening and truthful article-specific proof-state mapping** |
+| Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
+| Release blocker | issue #18 — deterministic release reference PDF |
+
+The article branch has been reconciled with the current `main` through merge `ae7e2cf...`. The branch keeps the newer fail-closed Linux orchestration behavior already present in the article work while recording `789c6f3...` in ancestry. Step 6 continues from this reconciled state; the reconciliation itself does not count as Step 6 evidence acceptance.
 
 ## Readable phase model
 
-1. **Regression Audit** — closed
-2. **Core Corrections** — closed
-3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active; orchestration accepted, merge/reconciliation next
-5. **Final Certification** — queued
-6. **Release** — queued
+1. Regression Audit — closed
+2. Core Corrections — closed
+3. Reference PDF Validation — closed
+4. Scientific Article — active, Step 6 evidence hardening
+5. Final Certification — queued
+6. Release — queued
 
-Do not create new opaque work identifiers. GitHub issues/PRs and immutable SHAs provide traceability.
+Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
 
-## Linux integration scopes
+## Scientific Article rules
 
-`docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract.
+- One canonical type: `scientific-article`; no aliases.
+- Preserve the retained 18-rule article source contract.
+- Keep required, optional, recommended and required-when-applicable semantics distinct.
+- Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
+- Shared implementation is not article proof.
+- Steps 1–5 are accepted and their executable predicates must not be weakened.
+- Recommended rules remain advisory; positive recommendation scenarios are evidence of supported defaults, not rejection predicates.
+- Journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`.
+- Step 5 proof state remains unpromoted.
+- Step 6 may promote only rules with direct article-specific evidence and must leave unsupported or conditional rules manual/conditional.
+- Step 7 begins only after Step 6 evidence-state changes are accepted and documented.
 
-- `auto` infers the narrowest safe suite from changed paths.
-- Documentation-only changes skip heavy Linux integration.
-- Known bounded domains may use named suites.
-- Multiple known domains run the union of their checks without duplicates.
-- Shared/core, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
-- Manual `auto` fails closed to `complete`.
-- `article` must include executable article evidence plus the article/source contract.
-- Scoped runs are intermediate evidence only. Every phase-end regression requires `complete` Linux on one immutable candidate.
-- `tests/run.py` must remain importable both as the CLI runner and through file-spec loading used by normative traceability.
+## Linux scope rule
 
-Accepted orchestration evidence is `47ac2e27...`, Static `34139608322`, Linux `34139608364`. No suite or normative predicate was weakened to obtain green status.
+Orchestration-only changes select `smoke`. When orchestration files accompany recognized domain-specific technical files, orchestration paths are neutral for domain selection and the known domain suite wins. Unknown non-orchestration technical paths and force-complete surfaces fail closed to `complete`. Synchronize events use the incremental range only when both endpoints are locally available; otherwise they fall back to the full PR range.
 
-## Scientific Article boundaries
-
-- One canonical `scientific-article` profile; no compatibility aliases.
-- Reuse shared citation, bibliography, section, summary and object infrastructure rather than fork it.
-- Preserve all 18 article rule IDs, authority and modality unless new current source evidence explicitly changes the source contract.
-- Keep required, optional, recommended and conditional semantics distinct.
-- Shared mechanism reuse and profile selection do not count as rule proof.
-- Add article-specific positive evidence before proof promotion and controlled negative evidence where safe.
-- Journal-specific instructions remain a conditional applicability boundary.
-- Preserve the validated non-article foundation and canonical academic-work PDF presentation.
+Scoped runs never close a phase. Scientific Article Step 8 requires `complete` Linux on one immutable candidate.
 
 ## Engineering rules
 
-- Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
-- Preserve the closed V3 public API except for bounded new article API explicitly required by the Scientific Article contract.
-- Do not silently change normative rule IDs, expected values, tolerances, locators, applicability, source precedence, or proof-state semantics.
-- A green test proves only the contract encoded by that test.
+- Project-owned technical surfaces are English.
+- Preserve the accepted shared V3 public API unless current authority explicitly authorizes a change.
+- Do not silently change normative IDs, expected values, tolerances, locators, applicability, source precedence, modality or proof state.
+- A green test proves only the encoded contract.
 - Reviewer comments are evidence, not automatic normative authority.
-- Presentation requirements require canonical PDF evidence in addition to source-level checks.
 - Do not weaken tests merely to recover green CI.
-- Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before checkpoint closeout.
+- Negative evidence must fail for the intended predicate.
+- Recommended rules may influence defaults/documentation but must not become mandatory rejection predicates.
+- Evidence sentinels should be short enough to survive deterministic PDF text extraction; a sentinel/extractor failure is not by itself evidence of a runtime normative defect.
+- Temporary executors must be removed before checkpoint acceptance.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
-- Heavy literal-font/PDF-A/distribution checks belong to Final Certification unless a bounded change directly requires them.
 - Do not redistribute proprietary Microsoft fonts.
-- CTAN submission remains blocked until **Release**.
+- Do not perform actual CTAN submission before **Release**.
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, canonical content, article proof state, integration-scope policy, phase/acceptance status, artifact provenance, release-blocker state, branch/checkpoint facts, or certification state.
-
-For every material advance, update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, integration-scope behavior, canonical content, phase status, acceptance status, branch/base reconciliation, or release/certification state. Update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
 
 ## Mandatory phase-end regression
 
-No phase transitions to `CLOSED`, and no subsequent phase becomes `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the results are recorded. `phase_end_regression.candidate = one-immutable-sha` remains the machine sentinel; the concrete SHA belongs in evidence fields after the candidate exists.
+No phase transitions to `CLOSED`, and no later phase becomes `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`. Scientific Article Step 8 requires `complete` Linux.
 
-## Branch governance and fail-closed rule
+## Fail-closed rule
 
-The intended steady state is `main` plus one short-lived active task branch. PR #287 is the active integration boundary until merged. PR #286 is not discarded; immediately after #287 merges it must be reconciled with updated `main`, then article-specific executable acceptance resumes on that branch.
-
-If a required fact cannot be established from Git, canonical state files, current normative evidence, reviewed source material, or a provenance-bound canonical artifact, record the ambiguity and stop advancement.
+If a required fact cannot be established from current Git state, canonical state files, current normative evidence, or reviewed source material, record the ambiguity and stop advancement. Do not infer closure from naming, memory, historical intent, or partial evidence.

@@ -4,72 +4,69 @@ Updated: 2026-09-07
 
 ## Current checkpoint
 
-- Repository: `tiagosombrra/abntexto-ufc`.
-- Canonical branch: `main` at merge `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
-- PR #285 is MERGED; shared foundation and Scientific Article Step 1 are on `main`.
-- Active integration branch: `ci/scoped-linux-integration`; PR #287 is **accepted and ready to merge**.
-- Accepted PR #287 technical checkpoint: `47ac2e27c5c2f6797269ccc4e1c07caafea1c643`; Static `34139608322` SUCCESS; Linux `34139608364` SUCCESS, `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`.
-- The preceding checkpoint `d089215e...` is rejected/classified: Static `34137588226` and Linux `34137588237` failed the same runner file-spec import-boundary defect. The correction is now protected by Static `runner_file_spec_import=true`.
-- Existing Scientific Article branch/PR #286 is preserved but paused for control-plane advancement until PR #287 merges and the branch is reconciled with updated `main`.
-- Active phase: **Scientific Article**.
-- Core Corrections: CLOSED — `5f67560a...`; Static `33982156041`; Linux `33982156042`.
-- Reference PDF Validation: CLOSED — `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS.
-- Librarian review: **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed.
-- Scientific Article Step 1 on merged foundation: ACCEPTED — `08b878a...`; Static `34001350884`; Linux `34001350953`.
-- Issue #18 remains an explicit v3.0.0 release blocker.
-- No temporary executor is active.
+| Fact | Current state |
+|---|---|
+| Repository | `tiagosombrra/abntexto-ufc` |
+| Canonical branch | `main` at `789c6f3f4669ae36c3d4fe831ae939a340592568` |
+| Shared-foundation integration checkpoint | `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
+| Active task branch | `feat/v3-scientific-article` |
+| Active PR | #286 |
+| Main reconciliation merge | `ae7e2cf2484e0b4329cc30ea80a95d0788e0e9f4` |
+| Active phase | **Scientific Article** |
+| Steps 1–5 | **ACCEPTED** |
+| Step 5 acceptance checkpoint | `55fa1c8dc1b503c119d564950d04141cf45ad345` |
+| Step 5 Static | `34132291198` PASS |
+| Step 5 Linux | `34132291304` PASS, bounded `article` scope, all six first-class checks green |
+| Step 6 activation checkpoint | `947f740f35c581ea101242b75181978f8f3a7f1b`; Static `34134609837` PASS |
+| Current work | **Step 6 — evidence hardening and truthful article-specific proof-state mapping** |
+| Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
+| Release blocker | issue #18 — deterministic release reference PDF |
 
-Canonical control documents: `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/V3-RELEASE-READINESS.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `docs/V3-REFERENCE-PDF-VALIDATION.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and `docs/ENGINEERING-LANGUAGE.md`.
+## Repository reconciliation
 
-## Scoped Linux orchestration acceptance
+`main` advanced from the shared-foundation integration checkpoint `e6833ed...` to `789c6f3...` with the accepted scoped Linux orchestration. PR #286 then became dirty against its updated base. The active article branch was reconciled by merge commit `ae7e2cf...`, with `789c6f3...` as the second parent.
 
-| Requirement | Evidence | State |
-|---|---|---|
-| Incremental synchronize path | `d089...` and `47ac...` both selected `smoke` | PASS |
-| Runner file-spec import | Static `34139608322` emitted `runner_file_spec_import=true` | PASS |
-| Repository contract | Linux `34139608364` | PASS |
-| Validator/source contract | Linux `34139608364` | PASS |
-| Canonical reference build | Linux `34139608364` | PASS |
-| PDF validator | Linux `34139608364` | PASS |
-| Smoke summary | `SCOPE=smoke PASS=4 FAIL=0 SKIP=0` | PASS |
-| Phase transition authority | scoped run is intermediate only; `complete` remains mandatory | PRESERVED |
+The article branch already contained a stricter superset of the orchestration logic, including fail-closed fallback to the full PR range when an incremental synchronize endpoint is unavailable. The reconciliation therefore keeps the newer branch behavior while restoring current-main ancestry. This reconciliation is a control-plane advance only; it does not promote article proof state or accept Step 6.
 
-No suite membership, normative predicate, article rule, authority source, LaTeX runtime or reference-PDF presentation was weakened.
+## Step 5 acceptance
 
-## Scientific Article progress
+The Step 5 evidence-harness correction is accepted. Static `34132291198` and Linux `34132291304` passed. Recommended defaults remained advisory, outside-recommendation scenarios remained valid, journal precedence remained target-journal-bound and conditional-manual, and Step 5 did not promote normative proof state.
 
-| Step | State | Evidence / boundary |
-|---:|---|---|
-| 1. Profile and metadata surface | **ACCEPTED ON MAIN** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
-| CI orchestration stabilization | **ACCEPTED — MERGE NEXT** | `47ac2e27...`; Static `34139608322`; Linux `34139608364` |
-| 2–4 on PR #286 | **PRESERVED / PAUSED FOR RECONCILIATION** | branch history retained; reconcile after #287 merge |
-| 5. Recommendations/conditional boundary | BLOCKED | resume after reconciled Step 4 executable acceptance |
-| 6. Evidence hardening | QUEUED | rule-specific proof only |
-| 7. Canonical article PDF | QUEUED | provenance-bound real PDF + complete visual review |
-| 8. Phase-end regression | QUEUED | one immutable SHA; Static + `complete` Linux + article acceptance |
+## Step 6 objective
+
+Step 6 creates an explicit article-specific evidence map for the retained 18 rules. Evidence state may be promoted only when a rule has a direct article-specific executable observer or rejection predicate. Shared mechanisms, profile registration, or positive compilation alone are not proof.
+
+| Rule family | Step 6 treatment |
+|---|---|
+| required front block / required textual structure / article body typography | direct article-specific executable evidence is required before executable proof ownership is declared |
+| optional foreign elements | preserve optionality and map present/absent article scenarios |
+| recommended author alignment / summary limits / keyword count / single paragraph | remain non-enforcing; positive evidence is advisory/default evidence |
+| journal precedence | remains `required-when-applicable`, `conditional-manual`, `target-journal-submission` |
 
 ## Immediate action
 
-1. merge PR #287 after this documentation synchronization remains Static-clean;
-2. reconcile existing PR #286 / `feat/v3-scientific-article` with updated `main`;
-3. obtain executable `article`-scope evidence for the pending Step 4 structural-checker state;
-4. synchronize accepted article step/proof state;
-5. continue Scientific Article from the reconciled accepted state;
-6. retain `complete` Linux for phase-end regression.
+1. validate the reconciled branch/control-plane checkpoint;
+2. inventory all 18 article rules against current Step 1–5 executable evidence;
+3. add a machine-readable article-specific evidence map and static contract checker;
+4. promote only truthfully supported validation/evidence ownership and retain manual/conditional states elsewhere;
+5. synchronize plan, roadmap, handoff, normative contract when applicable and machine state in the same material-advance cycle;
+6. run Static and the Linux scope selected by the changed surfaces;
+7. record Step 6 acceptance before activating Step 7 canonical article PDF work.
 
 ## Mandatory operating discipline
 
-Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Phase, acceptance, article-rule evidence, integration-scope policy, proof state, branch/checkpoint facts, release blockers and temporary-executor lifecycle must remain synchronized with roadmap and machine state.
+Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Phase, acceptance, evidence, integration-scope, branch/base reconciliation and checkpoint facts remain synchronized with roadmap and machine state.
 
-Every phase requires a **phase-end regression** on one immutable candidate before closure. Scoped/targeted checks never authorize a phase transition by themselves.
+Every phase requires a complete **phase-end regression** on one immutable candidate before closure. Scoped Step checks never authorize phase closure by themselves. Scientific Article Step 8 requires `complete` Linux.
 
 ## Hard boundaries
 
-- Preserve the accepted non-article foundation and reference PDF presentation.
-- Do not change the 18-rule article authority/modality contract without new current source evidence.
-- Do not promote recommendations into required failures.
-- Do not fork shared citation, reference, section, summary or object infrastructure.
-- Do not weaken tests merely to recover green CI.
-- Item 33 remains fail-closed.
-- Resolve issue #18 before v3.0.0 publication.
-- CTAN submission remains blocked until Release.
+- Preserve all accepted non-article profiles and the shared academic-work PDF baseline.
+- Preserve the retained 18-rule article source contract and modality distinctions.
+- Recommendations must not become hard compile/validation failures.
+- Target-journal instructions remain conditional applicability, not generic UFC runtime law.
+- Shared implementation is not article proof.
+- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+- Issue #18 remains owned by Final Certification/Release.
+- Do not redistribute proprietary fonts.
+- CTAN submission remains blocked until **Release**.
