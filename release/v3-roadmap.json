@@ -8,7 +8,7 @@
   "phase": "final-certification",
   "stage": "final-certification",
   "stage_name": "Final Certification",
-  "active_branch": "feat/v3-scientific-article",
+  "active_branch": "cert/v3-final-certification",
   "authorities": {
     "git_facts_must_match_machine_state": true,
     "machine_state": "release/v3-roadmap.json",
@@ -73,7 +73,8 @@
     "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
     "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
     "shared_foundation_integration_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
-    "canonical_main_sha_before_article_pr_merge": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac"
+    "canonical_main_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
+    "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb"
   },
   "phases": [
     {"id": "regression-audit", "name": "Regression Audit", "status": "CLOSED", "phase_end_regression_required": true},
@@ -97,17 +98,17 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "923d11ef668b02ec4de3cad4906ad5ac1f527eaf",
     "latest_fully_validated_checkpoint_state": "scientific-article-phase-end-accepted",
-    "final_certification_state": "active-entry-synchronization",
+    "final_certification_state": "active-baseline-entry",
     "final_certification_technical_work_started": false,
-    "final_certification_planned_branch": "cert/v3-final-certification",
+    "final_certification_branch": "cert/v3-final-certification",
+    "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
     "current_correction_batch": [
-      "Final Certification — entry synchronization and branch handoff"
+      "Final Certification — baseline entry and existing proof inventory"
     ],
     "pending_acceptance_gates": [
-      "Transition documentation checkpoint must pass Static contract",
-      "Merge PR #286 so accepted Scientific Article candidate lands on canonical main",
-      "Create cert/v3-final-certification from updated main and synchronize branch facts",
-      "Run Linux release baseline and complete certification matrix",
+      "Certification branch synchronization checkpoint must pass Static contract",
+      "Establish current Linux release baseline before certification machinery changes",
+      "Inventory and validate profile/engine/literal-font/Unicode/embedding/PDF-A/distribution proof routes",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
     ],
@@ -130,15 +131,15 @@
     "unknown_technical_path_scope": "complete"
   },
   "branch_plan": {
-    "current_work_branch": "feat/v3-scientific-article",
-    "integration_pr": 286,
-    "integration_state": "scientific-article-closed-transition-sync-before-merge",
-    "integration_main_sha": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac",
-    "post_merge_branch": "cert/v3-final-certification",
+    "current_work_branch": "cert/v3-final-certification",
+    "scientific_article_pr": 286,
+    "scientific_article_pr_state": "merged",
+    "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
+    "integration_main_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
     "policy": "main-plus-one-short-lived-active-task-branch"
   },
   "issue_state": {
-    "scientific_article": {"issue": 280, "state": "phase-closed-pr-merge-pending"},
+    "scientific_article": {"issue": 280, "state": "phase-closed"},
     "release_reference_pdf_reproducibility": {"issue": 18, "state": "open-release-blocker"}
   },
   "authority_decisions": {
@@ -162,7 +163,6 @@
     "reference_pdf_phase_end_linux_run": 33985595798,
     "reference_pdf_pages": 55,
     "reference_pdf_visual_review_status": "pass",
-    "scientific_article_step6_acceptance_sha": "e941a7f9b4685a9bcf687135e8d5168af2d69ec7",
     "scientific_article_step7_build_sha": "f62ac703d8992af96b79cf83e125350ee561bd92",
     "scientific_article_step7_build_run": 34153348385,
     "scientific_article_step7_artifact_id": 10030160290,
@@ -177,6 +177,7 @@
     "scientific_article_phase_end_linux_scope": "complete",
     "scientific_article_phase_end_linux_summary": "PASS=36 FAIL=0 SKIP=0",
     "scientific_article_phase_end_acceptance": "accepted",
+    "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

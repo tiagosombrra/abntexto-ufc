@@ -4,30 +4,24 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is CLOSED. Final Certification is ACTIVE at entry synchronization.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`, created from canonical main `22e3c19235fa5245505b92d919a09d31eb2bfecb`.**
 
 | Phase | Status | Accepted evidence / exit requirement |
 |---|---|---|
 | Regression Audit | CLOSED | completed regression contract and phase-end regression |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
-| Scientific Article | **CLOSED** | candidate `923d11ef...`; Static `34154045481`; complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`; canonical article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — ENTRY SYNCHRONIZATION** | merge accepted article PR, branch from updated main, then complete certification matrix and immutable phase-end regression |
-| Release | QUEUED | final bundles/checksums/tag/release/publication after certification and issue #18 closure |
+| Scientific Article | CLOSED | `923d11ef...`; Static `34154045481`; complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`; article PDF 5/5 visual PASS |
+| Final Certification | **ACTIVE — BASELINE ENTRY** | release baseline, complete certification matrix, issue #18, immutable phase-end regression |
+| Release | QUEUED | final bundles/checksums/tag/release/publication after certification |
 
-The current transition branch is `feat/v3-scientific-article` / PR #286. Final Certification implementation must move to fresh `cert/v3-final-certification` after PR #286 is merged into `main`.
-
-## Scientific Article closeout
-
-The Step 7 cleanup checkpoint was itself strong enough to be the Step 8 phase-end candidate: `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` passed Static `34154045481` and Linux `34154045509` with automatically selected `complete` scope and `36/36` checks green. All article gates and shared repository/profile checks passed. The provenance-bound canonical PDF from `f62ac703...` remains visually accepted 5/5.
-
-Phase-end record: `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md`.
+PR #286 is merged. Active certification branch is `cert/v3-final-certification` from exact merged main SHA `22e3c192...`.
 
 ## Final Certification roadmap
 
 | Step | Work | State |
 |---:|---|---|
-| 1 | Entry synchronization: merge PR #286, fresh certification branch, reconcile branch/main facts | ACTIVE |
+| 1 | Entry synchronization and certification branch handoff | ACTIVE — checkpoint pending CI |
 | 2 | Linux release baseline | QUEUED |
 | 3 | Full profile and engine certification | QUEUED |
 | 4 | Literal Times New Roman/Arial, Unicode and embedding evidence | QUEUED |
