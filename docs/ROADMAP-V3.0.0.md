@@ -4,14 +4,14 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 4 — supported single-spacing route implemented after deprecated-API rejection; acceptance rerun pending.**
+**Scientific Article is ACTIVE at Step 4 — physical body typography is green; negative structural evidence classification is being corrected.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 4 SUPPORTED SINGLE-SPACING CORRECTION PENDING ACCEPTANCE** | latest synchronized Linux rejected deprecated `\\spacing{1}` before physical body validation; correction now uses `\\singlesp` plus `cmd/textual/after` |
+| Scientific Article | **ACTIVE — STEP 4 NEGATIVE STRUCTURE CHECKER CORRECTION** | synchronized `05194675...`: Static PASS; article Linux PASS=4 FAIL=1; positive body physical evidence PASS under both engines; negative fixture misclassified by substring-based structure detection |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -22,7 +22,7 @@ Updated: 2026-09-07
 | 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
 | 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | **SUPPORTED SINGLE-SPACING CORRECTION IMPLEMENTED — CI PENDING** | `49e7b17...`: Static PASS, complete Linux PASS=32 FAIL=2 SKIP=1 due deprecated `\\spacing` warning; implementation `6a7ef821...` uses supported `\\singlesp` and retains `\\textual` rebound |
+| 4 | Textual structure and body typography | **PHYSICAL BODY PASS; NEGATIVE STRUCTURE EVIDENCE FIX PENDING CI** | `05194675...`: Static `34115345674` PASS; Linux `34115345586` article PASS=4 FAIL=1; body 12 pt / justified / 2 cm / 13.800 pt under both engines; checker fix `4039fa011...` requires rendered headings |
 | 5 | Recommendations and conditional applicability | BLOCKED | starts only after Step 4 acceptance is recorded |
 | 6 | Evidence hardening | QUEUED | rule-specific evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
@@ -37,21 +37,23 @@ Updated: 2026-09-07
 | `bf6c48e...` | `34071163701` PASS | `34071163702` FAIL, article PASS=4 FAIL=1 | begin-document route ineffective; body remained `20.700 pt` |
 | `09b870d...` | `34072362333` PASS | `34072362335` FAIL, article PASS=4 FAIL=1 | front-block-only route transient; first numbered section invokes `\\textual` and restores shared state |
 | `49e7b17...` | `34111737479` PASS | `34111737488` FAIL, `SCOPE=complete PASS=32 FAIL=2 SKIP=1` | deprecated `\\spacing{1}` warning stopped front-block/body gates before physical Step 4 validation |
+| `05194675...` | `34115345674` PASS | `34115345586` FAIL, `SCOPE=article PASS=4 FAIL=1` | supported runtime physically passes both engines; negative fixture was rejected for the wrong reason because prose token `desenvolvimento` falsely satisfied the required-heading search |
 
-The current implementation `6a7ef821875c40b6fe0bbc3cca25e3c0ff4cb307` replaces the obsolete spacing call with supported `\\singlesp` and retains the profile-scoped `cmd/textual/after` reapplication. It also retains activation after the required primary summary for body content before the first numbered section. The physical validator is unchanged, and the source gate now rejects any return to deprecated `\\spacing{1}`.
+The current technical correction `4039fa011b7f54f4f0be6d004131fc0e06567e2e` changes only structural evidence detection. `validate_structure()` now scans normalized extracted lines and requires each required element to appear as one rendered heading, optionally preceded by progressive numbering. The intentionally adversarial negative prose remains unchanged. Runtime, physical typography tolerances, 18-rule authority contract and proof state are unchanged.
 
 ## Current Step 4 acceptance gate
 
-| Gate | Required before Step 5 |
-|---|---|
-| Static contract | synchronized correction checkpoint PASS |
-| Linux | all five article checks PASS; orchestration may run complete scope |
-| Body typography | 12 pt / justified / 2 cm / true single spacing under both engines |
-| Transition persistence | single spacing and 2 cm indent survive the automatic `\\textual` route |
-| API compatibility | no deprecated spacing warning; supported `\\singlesp` route |
-| Required structure | positive structure present and missing-development negative rejected |
-| Front block/foreign elements | continue passing under both engines independently of Step 4 source spelling |
-| Proof-state boundary | no article rule promoted merely because shared mechanisms are reused |
+| Gate | Required before Step 5 | Current evidence |
+|---|---|---|
+| Static contract | synchronized correction checkpoint PASS | pending new checkpoint |
+| Linux | all five article checks PASS | latest 4/5; new rerun pending |
+| Body typography | 12 pt / justified / 2 cm / true single spacing under both engines | **physically PASS at `05194675...`** |
+| Transition persistence | single spacing and 2 cm survive automatic `\\textual` route | **physically PASS at `05194675...`** |
+| API compatibility | no deprecated spacing warning | PASS at latest run |
+| Required positive structure | headings present and ordered | PASS at latest run |
+| Negative structure | missing Development rejected for intended heading absence | checker correction implemented; CI pending |
+| Front block/foreign elements | remain green independently | PASS at latest run |
+| Proof-state boundary | no article rule promoted merely because shared mechanisms are reused | preserved |
 
 ## Shared state
 
