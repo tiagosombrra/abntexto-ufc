@@ -4,14 +4,14 @@ Updated: 2026-09-06
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 4 — runtime corrected; stale gate coupling corrected; acceptance rerun pending.**
+**Scientific Article is ACTIVE at Step 4 — body activation rebound to required front-block completion; acceptance rerun pending.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 4 ACCEPTANCE RERUN PENDING** | runtime defect and stale source-gate coupling both classified; current synchronized gate correction awaits CI |
+| Scientific Article | **ACTIVE — STEP 4 RUNTIME CORRECTION PENDING ACCEPTANCE** | latest physical run proves begin-document hook route still leaves 1.5 spacing; front-block-boundary correction implemented |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -22,7 +22,7 @@ Updated: 2026-09-06
 | 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
 | 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | **GATE CORRECTION IMPLEMENTED — CI PENDING** | `8b52ee4...` found runtime spacing defect; `177a621...` fixed runtime ordering but exposed stale test-token coupling; current checkpoint updates those guards without weakening PDF evidence |
+| 4 | Textual structure and body typography | **RUNTIME CORRECTION IMPLEMENTED — CI PENDING** | `bf6c48e...` passed four article checks but physical body remained 1.5-spaced; implementation `3796a3c...` activates body contract at front-block completion |
 | 5 | Recommendations and conditional applicability | BLOCKED | starts only after Step 4 acceptance is recorded |
 | 6 | Evidence hardening | QUEUED | rule-specific evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
@@ -33,20 +33,21 @@ Updated: 2026-09-06
 | Checkpoint | Static | Linux | Meaning |
 |---|---|---|---|
 | `8b52ee4...` | `34058435312` PASS | `34058435311` FAIL, article PASS=4 FAIL=1 | physical body spacing stayed at 1.5: `20.700 pt` vs `13.800 pt` single calibration |
-| `177a621...` | `34070809181` PASS | `34070809177` FAIL, article PASS=2 FAIL=3 | source guards still required literal `\AtBeginDocument{...}` and stopped before normal PDF checks |
+| `177a621...` | `34070809181` PASS | `34070809177` FAIL, article PASS=2 FAIL=3 | stale source guards stopped before physical body validation |
+| `bf6c48e...` | `34071163701` PASS | `34071163702` FAIL, article PASS=4 FAIL=1 | source guards fixed; physical body checker executed and again proved `20.700 pt` vs `13.800 pt`, so `begindocument/end` did not solve runtime spacing |
 
-The second failure is not evidence against the `begindocument/end` runtime correction. It is an implementation-token coupling in three integration shell guards. Those guards are now updated to require the profile-scoped post-shared-initialization route while retaining all physical and structural validation.
+The new implementation `3796a3c206adb7605160828dcda91f5851a16903` removes the ineffective begin-document registration and applies the profile-scoped body contract at the end of `\ufcPrintArticleFrontMatter`, immediately after the required primary summary. Step 2 and Step 3 gates are decoupled from Step 4 implementation syntax; Step 4's dedicated gate still owns the source boundary, physical measurements and structural negative case.
 
 ## Current Step 4 acceptance gate
 
 | Gate | Required before Step 5 |
 |---|---|
-| Static contract | current synchronized checkpoint PASS |
+| Static contract | synchronized correction checkpoint PASS |
 | Bounded Linux | `article` PASS=5 FAIL=0 |
 | Body typography | 12 pt / justified / 2 cm / true single spacing under both engines |
 | Required structure | positive structure present and missing-development negative rejected |
-| Front block/foreign elements | continue passing under both engines |
-| Source boundary | profile-scoped `begindocument/end` route present |
+| Front block/foreign elements | continue passing under both engines independently of Step 4 source spelling |
+| Source boundary | profile-scoped body activation follows the required primary summary |
 | Proof-state boundary | no article rule promoted merely because shared mechanisms are reused |
 
 ## Shared state

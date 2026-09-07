@@ -18,20 +18,25 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 
 ## Current state
 
-- Target version: `3.0.0`.
-- Active phase: **Scientific Article**.
-- Canonical base: `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
-- Active task branch: `feat/v3-scientific-article`, PR #286.
-- Steps 1–3: ACCEPTED. Step 3 acceptance: `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`; Linux `34031144269`.
-- README user guide: ACCEPTED at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`; Static `34054110778`; Linux `34054110738`.
-- Step 4 implementation: `e5291137d4753b7d776916ca0f08c67929dbb76b`.
-- Rejected Step 4 checkpoint `8b52ee4b36b23868fecce9bbe9b843f689ccc01e`: Static `34058435312` PASS; Linux `34058435311` FAIL because body spacing remained 1.5 (`20.700 pt`) instead of single (`13.800 pt`).
-- Runtime correction checkpoint `177a62115e1dc28b24394ed4061600c3a7386fca`: Static `34070809181` PASS; Linux `34070809177` FAIL before physical body execution because three Step 4 gates still required the retired literal `\AtBeginDocument{...}` registration.
-- Current batch: **Step 4 — remove stale implementation-token coupling from article gates and rerun acceptance**.
-- The runtime correction remains `\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}`. The physical body checker is unchanged.
-- Step 5 remains blocked until the corrected Step 4 runtime and updated semantic gates pass together.
-- Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
-- Issue #18 remains a Final Certification/Release blocker.
+| Fact | Current state |
+|---|---|
+| Target version | `3.0.0` |
+| Active phase | **Scientific Article** |
+| Canonical base | `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
+| Active task branch | `feat/v3-scientific-article`, PR #286 |
+| Steps 1–3 | ACCEPTED |
+| Latest fully validated checkpoint | `a99f1e19eac1294eac35fb1da85196a1b8295d1a` |
+| Step 4 source-gate correction | `bf6c48e0cc1e5d19751ad2ff112db77fce799706`; Static `34071163701` PASS; Linux `34071163702` FAIL |
+| Step 4 runtime correction implementation | `3796a3c206adb7605160828dcda91f5851a16903` |
+| Current batch | **Step 4 — activate body typography at required article front-block completion and rerun physical evidence** |
+| Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
+| Release blocker | issue #18 — deterministic release reference PDF |
+
+Linux `34071163702` is classified as a **real runtime failure**, not a source-gate failure. All four preceding article checks passed, then the physical body checker measured `20.700 pt` against the same-document `13.800 pt` single-spacing calibration. Therefore `begindocument/end` did not establish the required body spacing in the rendered article.
+
+The new implementation activates `\ufc_article_apply_body_typography:` at the end of the required `\ufcPrintArticleFrontMatter` route, after the primary summary. This boundary is inside the document after shared startup initialization. Step 2 and Step 3 gates no longer inspect Step 4 implementation tokens; the Step 4 body gate alone owns both the activation-boundary source check and the unchanged physical/negative evidence.
+
+Step 5 remains blocked until the synchronized Step 4 correction passes Static and bounded `article` Linux with all five checks green.
 
 ## Readable phase model
 
@@ -51,9 +56,9 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Keep required, optional, recommended and required-when-applicable semantics distinct.
 - Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
 - Shared implementation is not article proof.
-- Step 4 body activation must remain profile-scoped and execute after shared begin-document layout initialization.
+- Step 4 body activation is profile-scoped and occurs at required article front-block completion, after shared document startup.
 - Step 4 must prove 12 pt, justification, 2 cm first-line indent and true single spacing under both engines, plus the missing-Development negative case.
-- Tests may protect semantic/runtime boundaries but must not freeze an implementation token when a different hook preserves the required behavior. The `34070809177` failure is classified as stale gate coupling; updating those source guards must not weaken physical PDF evidence.
+- Step 2 and Step 3 gates must not be coupled to Step 4 implementation syntax. Step 4 owns its own source and physical evidence.
 - Recommendations remain advisory; journal instructions remain conditional.
 - Step 6 owns later proof-state hardening/promotion.
 
@@ -64,7 +69,7 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Do not silently change normative IDs, expected values, tolerances, locators, applicability, source precedence, modality or proof state.
 - A green test proves only the contract encoded by that test.
 - Reviewer comments are evidence, not automatic normative authority.
-- Do not weaken tests to recover green CI. Correct stale implementation coupling only when the semantic/physical predicate remains equally or more strict.
+- Do not weaken tests to recover green CI. Physical PDF predicates remain authoritative for the Step 4 spacing correction.
 - Temporary executors must be removed before checkpoint acceptance.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
 - Do not redistribute proprietary Microsoft fonts.
