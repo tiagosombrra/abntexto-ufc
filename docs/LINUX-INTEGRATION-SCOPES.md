@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
-Updated: 2026-09-06  
-Status: ACTIVE — STEP 4 ARTICLE GATE REGISTERED / ACCEPTANCE PENDING
+Updated: 2026-09-07  
+Status: ACTIVE — STEP 5 ARTICLE GATE REGISTERED / ACCEPTANCE CI PENDING
 
 ## Purpose
 
@@ -13,7 +13,7 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 |---|---|---|---|
 | `auto` | infer the narrowest safe suite from changed paths | one or more inferred suites | No |
 | `complete` | shared/core changes, unknown technical paths and phase-end regression | all PR integration checks + normative contribution | **Yes, with all other phase-end gates** |
-| `article` | Scientific Article implementation/evidence | validator-source + article profile/front-block/foreign-elements/**body** | No |
+| `article` | Scientific Article implementation/evidence | validator-source + article profile/front-block/foreign-elements/body/**recommendations** | No |
 | `reference-document` | canonical reference source/corpus changes | reference build, corpus and PDF validator | No |
 | `reference-pdf` | presentation-sensitive reference-PDF work | reference, layout, typography, front/back matter, objects, bibliography | No |
 | `frontmatter` | cover/title/approval/pre-textual changes | front matter + duplex front matter | No |
@@ -40,11 +40,11 @@ For pull requests, `auto` evaluates the relevant changed-path window after check
 - Shared/core surfaces, standards/integration infrastructure and unknown technical paths fail closed to `complete`.
 - Manual `workflow_dispatch` with `auto` fails closed to `complete`.
 
-The fallback is intentionally conservative. Correctness and provenance take precedence over scoped-runtime savings.
+Correctness and provenance take precedence over scoped-runtime savings.
 
-## First-class article and profile gates
+## First-class article gates
 
-Article checks are not hidden inside the non-article profile matrix or recursively chained from the profile gate. The coordinated runner owns them independently.
+Article checks are independently owned by the coordinated runner. They are not hidden inside the six-profile non-article matrix and are not recursively chained from the article profile gate.
 
 The `article` suite now contains:
 
@@ -52,33 +52,31 @@ The `article` suite now contains:
 2. `scientific-article-profile`;
 3. `scientific-article-front-block`;
 4. `scientific-article-foreign-elements`;
-5. `scientific-article-body`.
+5. `scientific-article-body`;
+6. `scientific-article-recommendations`.
 
-The Step 4 body gate was added in the same implementation advance that created it. `tests/checks/linux_integration_suites.py` requires this check whenever the active phase is Scientific Article, Final Certification or Release. It also verifies that orchestration plus Step 4 paths infer `article`, not `complete`.
+`tests/checks/linux_integration_suites.py` requires all six checks whenever the phase is Scientific Article or later, verifies Step 5 paths infer `article`, and prevents the article profile gate from hiding later Step gates.
 
-The `profiles` suite contains exactly six accepted non-article profiles and compatibility checks. `profile-matrix.sh` rejects accidental inclusion of `scientific-article`.
+The `profiles` suite remains exactly the six accepted non-article profiles plus compatibility checks. `profile-matrix.sh` rejects accidental inclusion of `scientific-article`.
 
 As later Scientific Article Steps add executable gates, each new gate joins `article` in the same **material advance**.
 
-## Step 4 evidence contract
+## Step 5 evidence contract
 
-`scientific-article-body` compiles the positive article fixture with pdfLaTeX and LuaLaTeX and measures physical final-PDF evidence for:
+`scientific-article-recommendations` has two controlled article scenarios and compiles both under pdfLaTeX and LuaLaTeX:
 
-- required Introduction, Development, Final Considerations and References;
-- 12 pt body typography;
-- 2 cm first-line indentation against a same-page margin control;
-- justified natural paragraph lines;
-- single spacing against a same-document explicit `\singlesp` calibration.
+- a recommendation-following scenario inside the 150–250-word guidance, one paragraph and at least three keywords;
+- an outside-recommendation scenario with a short summary, two paragraphs and fewer than three keywords.
 
-A separate negative fixture intentionally omits Development. The checker must reject it specifically for that missing required structure. Step 4 does not promote the retained source contract proof state; that remains owned by later evidence hardening.
+Successful compilation of the second scenario proves those recommendations are not hard class/validator rejection boundaries. A companion static checker preserves the four recommendation rules as `recommended` + `manual`, preserves the generic right-aligned author default, and preserves `article.journal-guidelines.precedence` as `required-when-applicable`, `conditional-manual`, applicability context `target-journal-submission`.
 
-The Step 2/3 gates now assert the accepted profile-scoped Step 4 begin-document route instead of forbidding any article begin-document hook. This preserves isolation coverage after the semantic transition.
+Step 5 does not promote proof state and does not change runtime normative semantics.
+
+The earlier fixture-only checkpoint `f445333...` passed Static and Linux, but its `article` run still contained only five checks; therefore it cannot accept Step 5.
 
 ## Runner importability invariant
 
 The coordinated runner is consumed through direct execution and dynamic loading by normative traceability/false-coverage checks. Runner-owned sibling modules such as `tests/integration_suites.py` must resolve in both contexts.
-
-Earlier Step 3 defects exposed dynamic-import and unavailable-`before` boundaries; both remain regression-protected by the static suite contract and fail-closed full-PR fallback.
 
 ## Manual use
 
@@ -92,15 +90,16 @@ Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
 ## Current acceptance requirement
 
-The synchronized Step 4 checkpoint must pass:
+The synchronized Step 5 implementation candidate must pass:
 
-- Static contract, including dynamic runner loading and Step 4 suite registration;
+- Static contract, including recommendation modality checker and six-check suite registration;
 - bounded Linux `article` on the same SHA;
-- article profile/front-block/foreign/body evidence;
-- positive two-engine physical body measurements;
-- deterministic negative structure rejection.
+- all accepted Step 1–4 gates;
+- both two-engine Step 5 scenarios;
+- no recommendation hard rejection;
+- unchanged journal conditional applicability and proof-state semantics.
 
-A Step 4 scoped green run accepts only Step 4 after its result is documented. It never closes the Scientific Article phase.
+A scoped green run accepts only Step 5 after its result is documented. It never closes the Scientific Article phase.
 
 ## Phase-end rule
 

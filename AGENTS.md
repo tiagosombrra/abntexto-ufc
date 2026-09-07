@@ -25,16 +25,13 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 | Canonical base | `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
 | Active task branch | `feat/v3-scientific-article`, PR #286 |
 | Steps 1–4 | **ACCEPTED** |
-| Step 4 accepted checkpoint | `005956bd615042a12fb0393fddd4941b635f6ce3`; Static `34119007413` PASS; Linux `34119007425` PASS, `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
-| Step 4 body evidence | pdfLaTeX and LuaLaTeX: 12 pt, justified, 2 cm first-line indent, `13.800 pt` single-spacing calibration |
-| Step 4 negative evidence | missing Development rejected by heading-based structural predicate; adversarial prose token no longer satisfies the requirement |
-| Current batch | **Step 5 — recommendations and conditional applicability** |
+| Step 4 accepted checkpoint | `005956bd615042a12fb0393fddd4941b635f6ce3`; Static `34119007413` PASS; Linux `34119007425` PASS |
+| Step 5 fixture preflight | `f4453337d2de94260d7ebda4cead9803a6a9cb64`; Static `34124565217` PASS; Linux `34124565158` PASS, but without a dedicated Step 5 gate |
+| Current batch | **Step 5 — first-class recommendation/conditional gate implemented; synchronized CI pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-Step 4 is closed. The accepted runtime uses supported `\singlesp` plus the article-only `cmd/textual/after` route; physical evidence proves the body contract under both engines. The structure checker requires rendered headings rather than arbitrary prose tokens, and the negative fixture is rejected for the intended missing-Development condition.
-
-Step 5 owns modality preservation for the retained recommendation and conditional rules. It must prove that recommended values remain advisory rather than compilation/validation requirements and that journal-specific precedence remains conditional/manual when a target journal applies.
+The synchronized Step 5 implementation adds a dedicated recommendation/conditional checker, controlled recommended and outside-recommendation fixtures, a two-engine integration gate, and first-class registration in the `article` Linux suite. It changes evidence coverage only; the retained 18-rule contract and runtime normative behavior are not changed.
 
 ## Readable phase model
 
@@ -55,8 +52,9 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
 - Shared implementation is not article proof.
 - Step 4 body contract is accepted at `005956bd...`; do not weaken its physical predicates.
-- Step 5 recommendations must remain advisory: author alignment, 150–250-word summary interval, minimum three keywords and single-paragraph summary must not become hard compile/validation failures.
-- Journal instructions remain `required-when-applicable` and conditional-manual; the generic UFC profile is a fallback, not proof of compliance with a specific journal.
+- Step 5 recommendations remain advisory: author alignment, 150–250-word summary interval, minimum three keywords and single-paragraph summary must not become hard compile/validation failures.
+- Step 5 journal precedence remains `required-when-applicable`, `conditional-manual` and applicability-bound to `target-journal-submission`.
+- The `scientific-article-recommendations` gate must remain first-class in the `article` Linux suite once introduced.
 - Step 6 owns later proof-state hardening/promotion.
 
 ## Engineering rules
@@ -70,7 +68,6 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Negative evidence must fail for the intended predicate.
 - Recommended rules may influence defaults/documentation but must not be converted into mandatory rejection predicates.
 - Conditional journal rules require applicability context; do not hard-code one journal into the generic UFC profile.
-- Deprecated upstream APIs must not be allowlisted merely to bypass warnings when a supported route exists.
 - Temporary executors must be removed before checkpoint acceptance.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
 - Do not redistribute proprietary Microsoft fonts.

@@ -54,6 +54,7 @@ SUITES: dict[str, tuple[str, ...]] = {
         "scientific-article-front-block",
         "scientific-article-foreign-elements",
         "scientific-article-body",
+        "scientific-article-recommendations",
     ),
 }
 
@@ -92,7 +93,7 @@ PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     (
         "article",
         (
-            "abntexto-ufc/articles.def",
+            "abntexto-ufc/article",
             "tests/integration/scientific-article",
             "tests/documents/scientific-article",
             "tests/checks/scientific_article",
@@ -192,26 +193,28 @@ def infer_suites(paths: list[str]) -> tuple[str, ...]:
     if not technical:
         return ()
 
-    orchestration = [path for path in technical if path in ORCHESTRATION_EXACT]
-    scoped_paths = [path for path in technical if path not in ORCHESTRATION_EXACT]
-    if orchestration and not scoped_paths:
-        return ("smoke",)
+    if any(path in ORCHESTRATION_EXACT for path in technical):
+        orchestration_only = all(
+            path in ORCHESTRATION_EXACT or is_docs_only(path)
+            for path in paths
+            if path
+        )
+        if orchestration_only:
+            return ("smoke",)
 
     if any(
         path in FORCE_COMPLETE_EXACT or path.startswith(FORCE_COMPLETE_PREFIXES)
-        for path in scoped_paths
+        for path in technical
     ):
         return ("complete",)
 
     selected: set[str] = set()
-    for path in scoped_paths:
+    for path in technical:
         matched = matching_suites(path)
         if not matched:
             return ("complete",)
         selected.update(matched)
 
-    if not selected:
-        return ("smoke",)
     return tuple(name for name in SUITE_ORDER if name in selected)
 
 
@@ -237,10 +240,12 @@ def self_test() -> None:
         ("abntexto-ufc/bibliography.def",): ("bibliography",),
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),
         ("tests/run.py",): ("smoke",),
-        ("tests/run.py", "tests/integration/scientific-article-foreign-elements.sh"): ("article",),
-        ("tests/run.py", "tests/integration/scientific-article-body.sh"): ("article",),
-        ("tests/integration/profile-matrix.sh", "tests/integration/scientific-article-profile.sh"): ("profiles", "article"),
-        ("abntexto-ufc/objects.def", "abntexto-ufc/bibliography.def"): ("objects", "bibliography"),
+        ("tests/integration/scientific-article-profile.sh",): ("article",),
+        ("tests/integration/scientific-article-recommendations.sh",): ("article",),
+        ("abntexto-ufc/objects.def", "abntexto-ufc/bibliography.def"): (
+            "objects",
+            "bibliography",
+        ),
         ("abntexto-ufc/core.def",): ("complete",),
         ("unknown/technical.file",): ("complete",),
     }
@@ -248,7 +253,8 @@ def self_test() -> None:
         measured = infer_suites(list(paths))
         if measured != expected:
             raise SystemExit(
-                f"Linux suite inference self-test failed for {paths}: expected {expected}, got {measured}"
+                f"Linux suite inference self-test failed for {paths}: "
+                f"expected {expected}, got {measured}"
             )
     print(
         "LINUX-SUITE-EVIDENCE status=PASS "

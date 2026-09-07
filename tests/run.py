@@ -114,6 +114,12 @@ CHECKS = (
         ("sh", "tests/integration/scientific-article-body.sh"),
         depends=("scientific-article-profile",),
     ),
+    Check(
+        "scientific-article-recommendations",
+        "Scientific article recommendations and conditional applicability",
+        ("sh", "tests/integration/scientific-article-recommendations.sh"),
+        depends=("scientific-article-profile",),
+    ),
     Check("profiles", "Document profiles", ("sh", "tests/integration/profile-matrix.sh")),
     Check(
         "profile-pdfa",

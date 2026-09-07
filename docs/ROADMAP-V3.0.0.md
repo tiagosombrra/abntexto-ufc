@@ -4,14 +4,14 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE at Step 5 — recommendations and conditional applicability.**
+**Scientific Article is ACTIVE at Step 5 — first-class recommendation/conditional evidence implemented, synchronized CI pending.**
 
 | Phase | Status | Accepted evidence / exit gate |
 |---|---|---|
 | Regression Audit | CLOSED | green regression and stable 34-item review contract |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **ACTIVE — STEP 5** | Steps 1–4 accepted; Step 4 checkpoint `005956bd...` passed Static `34119007413` and Linux `34119007425`, `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
+| Scientific Article | **ACTIVE — STEP 5** | Steps 1–4 accepted; Step 5 synchronized implementation candidate now requires Static + six-check Linux `article` |
 | Final Certification | QUEUED | full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution/reproducibility certification |
 | Release | QUEUED | release assets/checksums/tag/publication and final regression |
 
@@ -22,36 +22,34 @@ Updated: 2026-09-07
 | 1 | Profile and metadata surface | ACCEPTED | `08b878a...` |
 | 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
 | 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | **ACCEPTED** | `005956bd...`; Static `34119007413`; Linux `34119007425`; article PASS=5 FAIL=0; both engines 12 pt / justified / 2 cm / 13.800 pt; negative missing-Development predicate PASS |
-| 5 | Recommendations and conditional applicability | **ACTIVE** | prove recommended values remain advisory and journal precedence remains conditional/manual |
+| 4 | Textual structure and body typography | ACCEPTED | `005956bd...`; Static `34119007413`; Linux `34119007425`; `SCOPE=article PASS=5 FAIL=0 SKIP=0` |
+| 5 | Recommendations and conditional applicability | **IMPLEMENTED — CI PENDING** | dedicated checker + recommended/outside fixtures + two-engine gate + first-class article registration |
 | 6 | Evidence hardening | QUEUED | rule-specific evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF plus complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific evidence on one immutable SHA |
 
-## Step 4 accepted result
+## Step 5 evidence contract
 
-The accepted Step 4 runtime uses supported `\singlesp` and an article-only `cmd/textual/after` reapplication route. Linux `34119007425` emitted two physical `ARTICLE-BODY-EVIDENCE` PASS records with 12 pt body type, 2 cm first-line indent (`57.125 pt`, delta `0.432 pt`), justified non-final lines, and `13.800 pt` body spacing equal to same-document single-spacing calibration. The negative missing-Development fixture was rejected by the intended rendered-heading predicate. Proof state remained unpromoted.
-
-## Step 5 contract
-
-| Retained rule | Modality | Step 5 acceptance meaning |
+| Retained rule | Modality | Executable preservation |
 |---|---|---|
-| `article.authorship.alignment.recommended` | recommended | right alignment may be the generic default but must not be a hard validity condition |
-| `article.summary.word-count.recommended` | recommended | 150–250 words must not become a compile/validation rejection boundary |
-| `article.summary.keywords.minimum.recommended` | recommended | fewer than three keywords must not become a hard rejection boundary |
-| `article.summary.single-paragraph.recommended` | recommended | multi-paragraph summary input must not be rejected solely for violating the recommendation |
-| `article.journal-guidelines.precedence` | required-when-applicable | a target journal requires checking its instructions; generic UFC profile remains fallback and cannot assert journal compliance |
+| `article.authorship.alignment.recommended` | recommended | right alignment remains generic default; no validity rejection predicate |
+| `article.summary.word-count.recommended` | recommended | controlled short summary must compile |
+| `article.summary.keywords.minimum.recommended` | recommended | controlled fewer-than-three-keyword case must compile |
+| `article.summary.single-paragraph.recommended` | recommended | controlled two-paragraph summary must compile |
+| `article.journal-guidelines.precedence` | required-when-applicable | static contract preserves `conditional-manual` and `target-journal-submission` applicability |
 
-Step 5 should favor evidence and documentation over new runtime constraints. If user-facing keyword support is added, it must remain optional in the generic profile unless the retained authority contract is formally expanded with source-backed required-element evidence.
+The Step 5 implementation intentionally adds evidence, not new normative runtime validation. The retained rule registry remains unchanged and proof state remains unpromoted.
+
+The fixture-only checkpoint `f4453337d2de94260d7ebda4cead9803a6a9cb64` passed Static `34124565217` and Linux `34124565158`, but that Linux run contained only the five Step 1–4 checks. It is preflight evidence, not Step 5 acceptance.
 
 ## Current Step 5 acceptance gate
 
-1. executable evidence demonstrates recommendations are advisory, not hard failures;
-2. journal precedence remains conditional/manual and applicability-bound;
-3. Steps 1–4 stay green in article scope;
-4. no shared non-article behavior changes;
-5. 18-rule source contract IDs, normativity, locators and proof-state semantics remain stable;
-6. synchronized Static and article Linux pass before Step 6 activates.
+1. the synchronized implementation commit passes Static;
+2. Linux `article` runs **six** first-class checks and passes all of them;
+3. recommendation-outside-range scenarios compile under pdfLaTeX and LuaLaTeX;
+4. Steps 1–4 remain green;
+5. no shared non-article behavior, rule IDs, modality, locators, applicability or proof state changes;
+6. only after results are recorded does Step 6 activate.
 
 ## Shared state
 
