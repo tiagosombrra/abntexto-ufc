@@ -4,25 +4,25 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Final Certification is ACTIVE on `cert/v3-final-certification`. Entry synchronization is accepted; Linux release baseline is the active step.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`. Entry synchronization is accepted and the temporary Linux release baseline executor is active.**
 
 | Phase | Status | Accepted evidence / exit requirement |
 |---|---|---|
 | Regression Audit | CLOSED | completed regression contract and phase-end regression |
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
-| Scientific Article | CLOSED | `923d11ef...`; Static `34154045481`; complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`; article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — LINUX RELEASE BASELINE** | release baseline, complete certification matrix, issue #18, immutable phase-end regression |
+| Scientific Article | CLOSED | `923d11ef...`; complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`; article PDF 5/5 visual PASS |
+| Final Certification | **ACTIVE — RELEASE BASELINE EXECUTOR** | baseline, complete certification matrix, issue #18, immutable phase-end regression |
 | Release | QUEUED | final bundles/checksums/tag/release/publication after certification |
 
-PR #286 is merged as main `22e3c19235fa5245505b92d919a09d31eb2bfecb`. PR #289 carries Final Certification on `cert/v3-final-certification`.
+PR #289 carries Final Certification from canonical main `22e3c192...`.
 
 ## Final Certification roadmap
 
 | Step | Work | State | Evidence / acceptance |
 |---:|---|---|---|
-| 1 | Entry synchronization and certification branch handoff | **ACCEPTED** | `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS with docs-only heavy skip |
-| 2 | Linux release baseline | **ACTIVE** | permanent release contract `make release-check` green before certification machinery changes |
+| 1 | Entry synchronization and certification branch handoff | **ACCEPTED** | `aa6cc4a...`; Static `34161228915`; Linux `34161228823` SUCCESS, docs-only heavy skip |
+| 2 | Linux release baseline | **ACTIVE — TEMPORARY EXECUTOR** | `.github/workflows/final-cert-release-baseline.yml` transports exact permanent `make release-check`; executor must be removed before acceptance |
 | 3 | Full profile and engine certification | QUEUED | all supported profiles and required engines green on final-candidate evidence |
 | 4 | Literal Times New Roman/Arial, Unicode and embedding evidence | QUEUED | literal identity, extraction and embedding evidence valid without font redistribution |
 | 5 | PDF/A-2b certification | QUEUED | established certification route green on final candidate |
@@ -30,11 +30,9 @@ PR #286 is merged as main `22e3c19235fa5245505b92d919a09d31eb2bfecb`. PR #289 ca
 | 7 | Issue #18 deterministic release-reference-PDF reproducibility | QUEUED | pinned epoch + two clean builds + identical SHA-256 with existing validation preserved |
 | 8 | Final Certification phase-end regression | QUEUED | one immutable SHA passes Static, complete Linux and complete certification matrix |
 
-Execution details: `docs/V3-FINAL-CERTIFICATION.md`.
+## Temporary executor rule
 
-## Baseline execution rule
-
-The baseline must exercise the existing permanent release contract. If direct `workflow_dispatch` is unavailable through the current automation interface, a temporary PR workflow may invoke the exact permanent release command/environment only. The executor is transport, not a new certification rule, and must be removed before the baseline checkpoint is accepted.
+The temporary workflow adds no new certification predicate. It uses the permanent release environment and `make release-check` command solely because direct workflow dispatch is unavailable through the active automation interface. It must be removed and its run recorded before Step 2 can become ACCEPTED.
 
 ## Persistent authority gap
 

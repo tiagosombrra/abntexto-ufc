@@ -26,11 +26,9 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Entry Static | `34161228915` — SUCCESS |
 | Entry Linux | `34161228823` — SUCCESS; documentation-only heavy integration skipped |
 | Scientific Article phase-end candidate | `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` |
-| Article phase-end Static | `34154045481` — SUCCESS |
-| Article phase-end Linux | `34154045509` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Canonical article visual evidence | PASS — 5/5 pages |
 | Scientific Article | **CLOSED** |
-| Final Certification | **ACTIVE — LINUX RELEASE BASELINE** |
+| Final Certification | **ACTIVE — RELEASE BASELINE EXECUTOR ACTIVE** |
+| Temporary executor | `.github/workflows/final-cert-release-baseline.yml` — transport for exact `make release-check` contract; removal required before baseline acceptance |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
@@ -46,8 +44,8 @@ Memory, prior chats, historical branches and old workflow names never override c
 ## Final Certification rules
 
 - `cert/v3-final-certification` is the only active certification task branch and starts from canonical main `22e3c192...`.
-- Entry synchronization is accepted at `aa6cc4a...`; establish the current Linux release baseline before modifying certification machinery.
-- The release baseline must execute the permanent release contract (`make release-check`). If workflow dispatch is unavailable from the active automation surface, a temporary PR executor may transport that exact command/environment only; it must be removed before bounded checkpoint acceptance and must not alter certification semantics.
+- Entry synchronization is accepted at `aa6cc4a...`.
+- The current temporary executor exists only because direct workflow dispatch is unavailable through the active automation surface. It must run the exact permanent `make release-check` command/environment and must be removed before baseline acceptance.
 - Preserve accepted shared and Scientific Article semantics; certification is proof/packaging work unless a genuine regression is found.
 - Literal Times New Roman/Arial evidence must not redistribute proprietary fonts.
 - Issue #18 reproducibility work adds deterministic build evidence and must not modify normative article/shared behavior merely to stabilize bytes.
@@ -63,6 +61,7 @@ Memory, prior chats, historical branches and old workflow names never override c
 - Do not weaken tests merely to recover green CI.
 - Negative evidence must fail for the intended predicate.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
+- Temporary workflow/executor lifecycle must be atomic: create -> execute -> validate -> remove before bounded checkpoint acceptance.
 - Do not redistribute proprietary Microsoft fonts.
 - Do not perform actual CTAN submission before **Release**.
 

@@ -98,8 +98,8 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "923d11ef668b02ec4de3cad4906ad5ac1f527eaf",
     "latest_fully_validated_checkpoint_state": "scientific-article-phase-end-accepted",
-    "final_certification_state": "active-linux-release-baseline",
-    "final_certification_technical_work_started": false,
+    "final_certification_state": "active-release-baseline-executor",
+    "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
     "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
@@ -108,10 +108,10 @@
     "final_certification_entry_linux_run": 34161228823,
     "final_certification_entry_linux_state": "success-documentation-only-heavy-skip",
     "current_correction_batch": [
-      "Final Certification — Linux release baseline"
+      "Final Certification — temporary transport of permanent Linux release baseline"
     ],
     "pending_acceptance_gates": [
-      "Establish current Linux release baseline before certification machinery changes",
+      "Temporary release-baseline executor must run exact permanent make release-check contract and be removed before baseline acceptance",
       "Inventory and validate profile/engine/literal-font/Unicode/embedding/PDF-A/distribution proof routes",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
@@ -126,8 +126,10 @@
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "none-active",
-      "allowed_purpose": "transport exact permanent make release-check contract when direct workflow dispatch is unavailable"
+      "state": "active",
+      "path": ".github/workflows/final-cert-release-baseline.yml",
+      "purpose": "transport exact permanent make release-check contract because direct workflow dispatch is unavailable",
+      "must_remove_before_checkpoint_acceptance": true
     }
   },
   "linux_integration": {
@@ -193,6 +195,10 @@
     "final_certification_entry_linux_run": 34161228823,
     "final_certification_entry_linux_conclusion": "success",
     "final_certification_entry_linux_scope": "none-documentation-only",
+    "entry_acceptance_sync_checkpoint_sha": "cea89296523440f0f6a0c2fc12d441c57ab30cd2",
+    "entry_acceptance_sync_static_run": 34168332866,
+    "entry_acceptance_sync_linux_run": 34168332862,
+    "entry_acceptance_sync_conclusion": "success",
     "librarian_review_contract_items": 34
   },
   "release_policy": {
