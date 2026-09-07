@@ -161,24 +161,28 @@
       "article-author-note"
     ],
     "scientific_article_active_step": 1,
-    "scientific_article_step1_state": "accepted",
+    "scientific_article_step1_state": "accepted-on-main",
+    "scientific_article_parallel_pr": 286,
+    "scientific_article_parallel_branch_state": "preserved-paused-until-orchestration-merge-and-reconciliation",
     "latest_implementation_checkpoint_sha": "b46ba2051f8c9c712a7b5d25748b81baa52b920a",
     "latest_fully_validated_checkpoint_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
     "latest_fully_validated_checkpoint_state": "scientific-article-step1-static-green-linux-green",
     "core_corrections_closed": true,
     "reference_pdf_validation_state": "closed",
     "current_correction_batch": [
-      "Scientific Article — scoped Linux integration orchestration"
+      "Scoped Linux integration — runner file-spec import correction"
     ],
     "known_runtime_failures": [],
+    "known_gate_failures": [
+      "PR #287 checkpoint d089215e: Static 34137588226 and Linux 34137588237 failed because tests/run.py could not import sibling integration_suites when loaded by normative traceability through file spec"
+    ],
     "pending_acceptance_gates": [
-      "Open focused orchestration PR from ci/scoped-linux-integration to main",
-      "Land scoped Linux integration implementation and require Static plus bounded smoke selection/evidence",
+      "PR #287 import correction must pass Static contract and bounded smoke Linux on the same technical checkpoint",
       "Record accepted orchestration checkpoint and workflow run IDs",
-      "Merge orchestration PR",
-      "Create fresh feat/v3-scientific-article branch from updated main",
-      "Implement required article front block with article-specific evidence",
-      "Complete required/optional/recommended/conditional article semantics",
+      "Merge PR #287",
+      "Reconcile existing feat/v3-scientific-article PR #286 with updated main",
+      "Obtain executable article-scope acceptance for the pending Step 4 structural checker state",
+      "Continue required/optional/recommended/conditional article semantics from the reconciled branch",
       "Produce and visually inspect provenance-bound canonical article PDF",
       "Pass Scientific Article phase-end regression with complete Linux scope on one immutable SHA"
     ],
@@ -196,7 +200,7 @@
   },
   "linux_integration": {
     "policy_document": "docs/LINUX-INTEGRATION-SCOPES.md",
-    "state": "documented-implementation-next",
+    "state": "implemented-import-fix-pending-ci",
     "automatic_pr_scope": "auto",
     "synchronize_diff_window": "incremental-push",
     "initial_pr_diff_window": "full-pr",
@@ -224,16 +228,27 @@
       "scientific-article-profile"
     ],
     "multiple_domain_policy": "union-deduplicated",
-    "complete_contribution_gate": true
+    "complete_contribution_gate": true,
+    "runner_file_spec_import_required": true,
+    "first_technical_checkpoint_sha": "d089215e540b1e63bc8921cd5b4ab69497e8bc42",
+    "first_technical_selected_scope": "smoke",
+    "first_technical_static_run": 34137588226,
+    "first_technical_static_conclusion": "failure",
+    "first_technical_linux_run": 34137588237,
+    "first_technical_linux_conclusion": "failure",
+    "first_technical_failure_classification": "runner-file-spec-import-boundary"
   },
   "branch_plan": {
     "current_work_branch": "ci/scoped-linux-integration",
     "foundation_integration_pr": 285,
     "foundation_integration_state": "merged",
-    "orchestration_pr": null,
-    "orchestration_state": "documentation-synchronized-pr-not-opened",
-    "post_merge_branch": "feat/v3-scientific-article",
-    "policy": "main-plus-one-short-lived-active-task-branch",
+    "orchestration_pr": 287,
+    "orchestration_state": "import-fix-pending-ci",
+    "scientific_article_pr": 286,
+    "scientific_article_branch": "feat/v3-scientific-article",
+    "scientific_article_branch_state": "preserved-paused-until-orchestration-merge",
+    "post_orchestration_action": "reconcile-existing-scientific-article-branch-with-updated-main",
+    "policy": "main-plus-one-short-lived-active-task-branch-with-existing-pr-paused-during-infrastructure-stabilization",
     "historical_remote_branches_are_authority": false
   },
   "issue_state": {
@@ -252,7 +267,7 @@
   },
   "authority_decisions": {
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-profile-step1-accepted",
+      "status": "source-contract-accepted-runtime-profile-step1-accepted-on-main",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
@@ -280,7 +295,13 @@
     "scientific_article_step1_linux_summary": "PASS=31 FAIL=0 SKIP=0",
     "foundation_merge_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "foundation_integration_pr": 285,
-    "scoped_linux_integration_state": "documented-implementation-next",
+    "scoped_linux_initial_technical_sha": "d089215e540b1e63bc8921cd5b4ab69497e8bc42",
+    "scoped_linux_initial_static_run": 34137588226,
+    "scoped_linux_initial_static_conclusion": "failure",
+    "scoped_linux_initial_linux_run": 34137588237,
+    "scoped_linux_initial_linux_conclusion": "failure",
+    "scoped_linux_initial_linux_summary": "SCOPE=smoke PASS=3 FAIL=1 SKIP=0",
+    "scoped_linux_initial_failure_classification": "runner-file-spec-import-boundary",
     "librarian_review_contract_items": 34,
     "librarian_review_contract_machine_protected": true
   },

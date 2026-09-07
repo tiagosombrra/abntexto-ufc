@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -15,16 +16,50 @@ import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
 ROADMAP = ROOT / "release" / "v3-roadmap.json"
+RUNNER = TESTS / "run.py"
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"Linux integration suite contract failed: {message}")
 
 
+def assert_runner_file_spec_importable() -> None:
+    probe_source = """
+import importlib.util
+import sys
+from pathlib import Path
+
+runner = Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location('abntexto_ufc_runner_probe', runner)
+if spec is None or spec.loader is None:
+    raise SystemExit('cannot create runner import spec')
+module = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = module
+spec.loader.exec_module(module)
+if not getattr(module, 'CHECKS', None):
+    raise SystemExit('runner import did not expose CHECKS')
+"""
+    completed = subprocess.run(
+        [sys.executable, "-I", "-c", probe_source, str(RUNNER)],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    if completed.returncode != 0:
+        detail = completed.stdout.strip() or f"exit {completed.returncode}"
+        fail("tests/run.py must load by file spec from an isolated interpreter: " + detail)
+
+
 def main() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     roadmap = json.loads(ROADMAP.read_text(encoding="utf-8"))
     known_checks = {check.name for check in validation_run.CHECKS}
+
+    assert_runner_file_spec_importable()
 
     if SUITES.get("complete") != ("*",):
         fail("complete suite must remain the wildcard full PR integration contract")
@@ -75,7 +110,8 @@ def main() -> None:
         "LINUX-SUITE-EVIDENCE status=PASS "
         f"suites={len(SUITES)} checks={len(known_checks)} "
         f"manual_choices={len(required_manual_choices)} phase={phase} "
-        "unknown_path_fallback=complete article_executable=true"
+        "unknown_path_fallback=complete article_executable=true "
+        "runner_file_spec_import=true"
     )
 
 

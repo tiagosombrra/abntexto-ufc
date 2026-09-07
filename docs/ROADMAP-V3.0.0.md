@@ -4,19 +4,19 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE — Step 1 ACCEPTED; bounded Linux orchestration is the current infrastructure checkpoint before Step 2.**
+**Scientific Article is ACTIVE; PR #287 scoped-Linux orchestration stabilization is the current integration checkpoint.**
 
 Accepted foundation:
 
 - Regression Audit — CLOSED;
 - Core Corrections — CLOSED on `5f67560aeded1e6b4f77f4a31e14a91f3181a4da`, Static `33982156041`, Linux `33982156042`;
-- Reference PDF Validation — CLOSED on `b64074c64941895f97fbe0f795ce826c798d17ce`, Static `33985595790`, Linux `33985595798`, with complete 55/55 visual PASS;
-- Scientific Article Step 1 — ACCEPTED on synchronized checkpoint `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`, Static `34001350884`, Linux `34001350953`, `PASS=31 FAIL=0 SKIP=0`;
+- Reference PDF Validation — CLOSED on `b64074c64941895f97fbe0f795ce826c798d17ce`, Static `33985595790`, Linux `33985595798`, complete 55/55 visual PASS;
+- Scientific Article Step 1 — ACCEPTED on merged foundation at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`, Static `34001350884`, Linux `34001350953`;
 - PR #285 — MERGED into `main` as `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
 
 The librarian-review matrix remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed.
 
-Current task branch: `ci/scoped-linux-integration`, created from the merged `main`. This branch is infrastructure-only; Step 2 article runtime begins later on `feat/v3-scientific-article` from the then-current `main`.
+Current integration branch: `ci/scoped-linux-integration`, PR #287. Existing Scientific Article PR #286 is preserved but paused for advancement until orchestration is merged and the branch is reconciled with updated `main`.
 
 Machine authority: `release/v3-roadmap.json`.  
 Canonical handoff: `docs/HANDOFF-V3.0.0.md`.  
@@ -37,46 +37,64 @@ Every phase ends with a mandatory **phase-end regression** on one immutable cand
 | **Regression Audit** | CLOSED | Revalidate the shared V3 foundation and findings. | Green phase-end regression and stable 34-item contract. |
 | **Core Corrections** | CLOSED | Correct shared runtime, template, normative mapping, documentation and tests. | `5f67560a...` passed Static/full Linux. |
 | **Reference PDF Validation** | CLOSED | Validate corrected canonical academic-work PDF page by page. | `b64074c...` passed Static/full Linux after provenance + 55/55 visual PASS. |
-| **Scientific Article** | **ACTIVE — STEP 1 ACCEPTED / ORCHESTRATION STABILIZATION** | Implement one canonical article profile using the retained 18-rule contract. | Article runtime, article-specific evidence, canonical article rendering and phase-end regression pass on one immutable SHA. |
+| **Scientific Article** | **ACTIVE — ORCHESTRATION STABILIZATION** | Implement one canonical article profile using the retained 18-rule contract. | Article runtime, article-specific evidence, canonical article rendering and phase-end regression pass on one immutable SHA. |
 | **Final Certification** | QUEUED | Complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution certification and release reproducibility proof. | Heavy certification matrix plus deterministic reference-PDF evidence green on one SHA. |
 | **Release** | QUEUED | Finalize documentation, bundles, release assets, checksums and publication actions. | Issue #18 resolved; release checklist complete; final regression recorded. |
+
+## Current infrastructure checkpoint
+
+PR #287 technical checkpoint `d089215e540b1e63bc8921cd5b4ab69497e8bc42` correctly selected bounded `smoke` for the orchestration-only synchronize range. It was rejected because both Static `34137588226` and Linux `34137588237` exposed the same location-dependent Python import defect: `tests/run.py`, when loaded by normative traceability through `importlib.util.spec_from_file_location`, could not import sibling `integration_suites`.
+
+This is not a normative or LaTeX failure. The correction makes runner sibling imports location-independent and adds an isolated Static regression probe. No suite membership, validation predicate, authority source, article rule, tolerance or runtime behavior is weakened.
 
 ## Scientific Article execution state
 
 | Step | Work | State | Acceptance gate |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
-| Infrastructure | Scoped Linux orchestration | **CURRENT** | documentation-only PR entry, then technical synchronize must select bounded `smoke`; Static and bounded Linux green |
-| 2 | Required article front block | NEXT AFTER ORCHESTRATION MERGE | primary title, authorship metadata footnote, submission/approval dates and primary summary have article-specific rendered evidence |
-| 3 | Optional foreign elements | QUEUED | foreign title/summary can be absent or present without becoming mandatory |
-| 4 | Textual structure and body typography | QUEUED | required article sections and article body typography validated |
-| 5 | Recommendations and conditional boundary | QUEUED | recommendations advisory; journal instructions conditional |
+| 1 | Profile and metadata surface | **ACCEPTED ON MAIN** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
+| Infrastructure | Scoped Linux orchestration | **IMPORT FIX PENDING CI** | PR #287; corrected synchronize must pass Static + bounded `smoke` |
+| 2–4 | Existing PR #286 feature work | **PRESERVED / PAUSED FOR RECONCILIATION** | reconcile with updated `main`; then obtain executable article-scope evidence for pending structural-checker state |
+| 5 | Recommendations and conditional boundary | BLOCKED | resume only after reconciled Step 4 acceptance |
 | 6 | Evidence hardening | QUEUED | positive/negative evidence rule-specific and proof state truthful |
 | 7 | Canonical article PDF | QUEUED | real provenance-bound TeX Live 2026 artifact + complete visual review |
 | 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific acceptance on one immutable SHA |
 
 ## Linux integration policy
 
-Named bounded suites are permitted only for intermediate work. `auto` chooses the narrowest safe suite from changed paths; documentation-only changes skip heavy Linux; unknown/shared/core/standards paths fail closed to `complete`; manual `auto` also resolves to `complete`. The `article` suite must always contain executable article evidence plus the source/validator contract. Multiple known domains run the union of their checks without duplicates.
+Named bounded suites are permitted only for intermediate work. `auto` chooses the narrowest safe suite from changed paths; documentation-only changes skip heavy Linux; unknown/shared/core/standards paths fail closed to `complete`; manual `auto` also resolves to `complete`. The `article` suite must contain executable article evidence plus the source/validator contract. Multiple known domains run the union of their checks without duplicates.
+
+`tests/run.py` must remain executable as the CLI runner and importable by file spec because normative traceability consumes its `CHECKS` registry. The Static orchestration contract now explicitly protects that boundary.
 
 The phase-end regression scope is always `complete`.
 
 ## Branch plan
 
-| Branch | State | Purpose |
+| Branch / PR | State | Purpose |
 |---|---|---|
 | `main` | current at `e6833ed...` | canonical merged foundation + article Step 1 |
-| `ci/scoped-linux-integration` | ACTIVE | land bounded Linux orchestration only |
+| `ci/scoped-linux-integration` / #287 | **ACTIVE** | stabilize and merge bounded Linux orchestration |
+| `feat/v3-scientific-article` / #286 | **PAUSED / PRESERVED** | existing article work; reconcile with new `main` after #287, do not discard |
 | `plan/v3-regression-reset` | HISTORICAL | provenance only; no new work |
-| `feat/v3-scientific-article` | NEXT | create from updated `main` after orchestration merge; continue Step 2 |
 
 ## Known v3.0.0 blockers
 
 | Item | State | Owner / treatment |
 |---|---|---|
-| Scientific Article / #280 | ACTIVE | complete Steps 2–8 and phase-end regression |
+| PR #287 orchestration | ACTIVE | fix/import regression -> Static + smoke Linux -> merge |
+| Scientific Article / #280 and PR #286 | ACTIVE / PAUSED DURING INFRASTRUCTURE | reconcile after #287, complete remaining article steps and phase-end regression |
 | Reference PDF bit reproducibility / #18 | OPEN — RELEASE BLOCKER | Final Certification/Release must pin release epoch/`SOURCE_DATE_EPOCH` and prove stable digest |
 | Librarian item 33 | NORMATIVE-REVIEW | explicit authority gap; no speculative runtime change |
+
+## Next sequence
+
+1. publish the synchronized runner import fix on PR #287;
+2. require Static + `smoke` Linux on the correction checkpoint;
+3. if green, record acceptance in all control documents and PR #287;
+4. merge PR #287;
+5. reconcile existing PR #286 with updated `main`;
+6. validate the pending Step 4 structure-checker state with executable `article` scope;
+7. continue Step 5 onward;
+8. end Scientific Article only after canonical article visual review and `complete` phase-end regression.
 
 ## Gate before Final Certification
 

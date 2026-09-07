@@ -1,11 +1,11 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-07  
-Status: PLANNED — IMPLEMENTATION NEXT
+Status: IMPLEMENTED — IMPORT-BOUNDARY FIX PENDING CI
 
 ## Purpose
 
-The permanent `Linux integration` workflow may use bounded suites for intermediate work so known local changes do not wait for the complete repository regression. Scoped suites are optimization/evidence tools only; they do not weaken phase acceptance.
+The permanent `Linux integration` workflow uses bounded suites for intermediate work so known local changes do not wait for the complete repository regression. Scoped suites are optimization/evidence tools only; they do not weaken phase acceptance.
 
 ## Available scopes
 
@@ -38,9 +38,17 @@ For pull requests, `auto` evaluates changed paths after checkout.
 - Shared/core, standards/integration infrastructure, or unknown technical paths fail closed to `complete`.
 - Manual `workflow_dispatch` with `auto` fails closed to `complete` because no authoritative PR diff exists.
 
+## First technical synchronize result
+
+PR #287 technical checkpoint `d089215e540b1e63bc8921cd5b4ab69497e8bc42` correctly selected `smoke`, proving the incremental orchestration path was active. Static remained green, but Linux run `34137588237` failed with `SCOPE=smoke PASS=3 FAIL=1 SKIP=0`.
+
+The sole failure was `validator-source`. `tests/checks/normative_traceability.py` loads `tests/run.py` through `importlib.util.spec_from_file_location`; after `run.py` gained the sibling import `from integration_suites import SUITES`, that file-spec import no longer had the `tests/` directory on `sys.path`, producing `ModuleNotFoundError: No module named 'integration_suites'`.
+
+This is an orchestration/import-boundary defect, not a normative, LaTeX, article-runtime, reference-PDF, or validator-predicate failure. The correction makes `tests/run.py` self-contained when loaded by file spec and adds a Static regression probe that loads the runner from an isolated Python interpreter. No suite, evidence predicate, authority rule or runtime requirement is weakened.
+
 ## Manual use
 
-After implementation, GitHub Actions -> `Linux integration` -> `Run workflow` exposes the `scope` choice. The same suites are available locally through:
+GitHub Actions -> `Linux integration` -> `Run workflow` exposes the `scope` choice. The same suites are available locally through:
 
 ```sh
 python3 tests/run.py --mode pr --suite article
@@ -54,19 +62,19 @@ python3 tests/run.py --mode pr --suite objects,bibliography
 
 ## Scientific Article rule
 
-While Scientific Article is active, `article` must contain executable article evidence, not only source review. At implementation entry the bounded suite must include `scientific-article-profile` and `validator-source`. As Steps 2–7 add article-specific executable gates, those gates must join the `article` suite in the same material-advance cycle.
+While Scientific Article is active, `article` must contain executable article evidence, not only source review. The bounded suite includes `scientific-article-profile` and `validator-source`. As later article steps add executable gates, those gates join the `article` suite in the same material-advance cycle.
 
 The accepted non-article profile matrix remains separate compatibility evidence. Complete regression exercises both.
 
 ## Acceptance plan for this infrastructure batch
 
-1. open a documentation-only PR from `ci/scoped-linux-integration` so the current workflow records documentation-only behavior;
-2. push the technical orchestration as a `synchronize` event;
-3. require Static to validate suite mappings and workflow contract;
-4. require the technical synchronize run to choose bounded `smoke` for orchestration-only changes;
-5. record the technical checkpoint and workflow run IDs;
-6. merge the infrastructure PR;
-7. create `feat/v3-scientific-article` from updated `main` and continue Step 2.
+1. PR #287 is open from `ci/scoped-linux-integration` to `main`;
+2. the first technical synchronize selected `smoke` but exposed the runner file-spec import defect in Linux `34137588237`;
+3. publish the bounded import fix together with this failure classification;
+4. require Static and the next synchronize Linux run to pass with `smoke`;
+5. record the accepted checkpoint and run IDs in all control documents;
+6. merge PR #287;
+7. reconcile the existing `feat/v3-scientific-article` PR branch with updated `main` before continuing article runtime work.
 
 ## Phase-end rule
 

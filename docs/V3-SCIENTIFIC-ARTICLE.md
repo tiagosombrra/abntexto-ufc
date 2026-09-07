@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — STEP 1 ACCEPTED / SCOPED LINUX ORCHESTRATION CURRENT
+Status: ACTIVE — ORCHESTRATION STABILIZATION / FEATURE PR PRESERVED
 
 ## Purpose
 
@@ -22,7 +22,7 @@ Authority contract: `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage
 | PR #285 integration | merged to `main` as `e6833ed5cf07aaf1021c690260cecfacec1a119a` | PASS |
 | Temporary executors | none active | PASS |
 
-## Step 1 — Profile and metadata surface — ACCEPTED
+## Step 1 — Profile and metadata surface — ACCEPTED ON MAIN
 
 Technical implementation checkpoint: `b46ba2051f8c9c712a7b5d25748b81baa52b920a`.  
 Synchronized acceptance checkpoint: `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
@@ -34,31 +34,32 @@ Acceptance evidence:
 - `ARTICLE-PROFILE-EVIDENCE status=PASS engines=2 canonical_type=scientific-article metadata=submission-date,approval-date,article-author-note presentation_rules_promoted=0`;
 - six accepted non-article profiles remained green.
 
-Implemented Step 1 surface:
+## Infrastructure checkpoint — PR #287
 
-- one canonical runtime choice `type = scientific-article`;
-- no compatibility alias;
-- reuse `author`, `title` and `approval-date`;
-- new article metadata only for `submission-date` and `article-author-note`;
-- foreign-title semantics deliberately deferred to Step 3;
-- dedicated profile/metadata compile evidence on pdfLaTeX + LuaLaTeX;
-- no article presentation rule promoted merely by profile registration.
+Bounded Linux orchestration is being stabilized on `ci/scoped-linux-integration`. This is infrastructure work, not a new article normative step.
 
-## Infrastructure checkpoint before Step 2
+The first technical synchronize checkpoint `d089215e540b1e63bc8921cd5b4ab69497e8bc42` proved the changed-path logic selected `smoke`, but both Static `34137588226` and Linux `34137588237` failed the same Python import boundary. `tests/run.py` imports sibling `integration_suites`; normative traceability loads the runner by file spec, where the sibling directory was not guaranteed on `sys.path`.
 
-PR #285 is already merged. Before opening Step 2 runtime work, the repository is stabilizing bounded Linux orchestration on `ci/scoped-linux-integration` created from current `main`.
+The fix is deliberately bounded:
 
-This is an infrastructure checkpoint, not an article normative step. It must:
+- make `tests/run.py` add its own directory before importing `integration_suites`;
+- add an isolated file-spec import probe to the Static suite contract;
+- preserve all suite mappings, article evidence, normative checks and runtime behavior.
 
-- add named intermediate Linux suites and automatic changed-path inference;
-- make documentation-only changes skip heavy Linux;
-- fail unknown/shared/core/standards technical surfaces closed to `complete`;
-- include executable `scientific-article-profile` plus `validator-source` in `article`;
-- preserve `complete` as the only Linux scope accepted for phase-end regression;
-- keep Static as the permanent contract guard;
-- update `docs/LINUX-INTEGRATION-SCOPES.md`, roadmap, handoff and machine state in the same cycle.
+No article proof state is promoted by this infrastructure correction.
 
-Step 2 runtime must not be implemented on this infrastructure branch. After the orchestration PR merges, create `feat/v3-scientific-article` from updated `main`.
+## Existing PR #286 — preserved article work
+
+PR #286 / `feat/v3-scientific-article` already contains later Scientific Article work beyond the Step 1 foundation. That history is **not discarded**. During PR #287 stabilization it is paused for control-plane advancement so the repository does not pretend two independent branches are simultaneously canonical.
+
+After PR #287 merges:
+
+1. reconcile the existing PR #286 branch with updated `main`;
+2. preserve its Step 2–4 implementation/history;
+3. obtain executable `article`-scope evidence for the pending Step 4 structural-checker state after reconciliation;
+4. only then advance the accepted article step and continue Step 5.
+
+A documentation-only green workflow on PR #286 does not substitute for executable article evidence.
 
 ## Metadata decision
 
@@ -67,11 +68,11 @@ Step 2 runtime must not be implemented on this infrastructure branch. After the 
 | Primary authorship | `author` | reuse |
 | Primary title | `title` | reuse |
 | Approval date | `approval-date` | reuse |
-| Submission date | `submission-date` | article-required metadata added in Step 1 |
-| Complementary author footnote | `article-author-note` | article-required metadata added in Step 1 |
-| Foreign title | not yet bound | Step 3; do not infer from `title-variant` |
-| Primary summary | document content route | Step 2 |
-| Foreign summary | document content route | Step 3 optionality |
+| Submission date | `submission-date` | article metadata added in Step 1 |
+| Complementary author footnote | `article-author-note` | article metadata added in Step 1 |
+| Foreign title | article branch implementation | retain optional semantics; confirm after reconciliation |
+| Primary summary | article branch implementation | retain required semantics; confirm after reconciliation |
+| Foreign summary | article branch implementation | retain independent optionality; confirm after reconciliation |
 
 ## Non-negotiable boundaries
 
@@ -92,22 +93,22 @@ Step 2 runtime must not be implemented on this infrastructure branch. After the 
 
 | Step | Work | Current state | Acceptance |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | **ACCEPTED** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
-| Infrastructure | Scoped Linux orchestration | **CURRENT** | dedicated PR from current `main`; Static + bounded `smoke` evidence; merge before Step 2 |
-| 2 | Required article front block | NEXT | required title/authorship/date/summary elements have article-specific rendered evidence |
-| 3 | Optional foreign elements | QUEUED | foreign title/summary may be absent or present without becoming mandatory |
-| 4 | Textual structure and body typography | QUEUED | required article structure and 12 pt/justified/2 cm/single-spaced body validated |
-| 5 | Recommendations and conditional applicability | QUEUED | advisory semantics stay advisory; journal boundary stays conditional |
+| 1 | Profile and metadata surface | **ACCEPTED ON MAIN** | `08b878a...`; Static `34001350884`; Linux `34001350953` |
+| Infrastructure | Scoped Linux orchestration | **IMPORT FIX PENDING CI** | PR #287 correction must pass Static + bounded `smoke`, then merge |
+| 2 | Required article front block | **PRESERVED IN PR #286** | revalidate after branch reconciliation |
+| 3 | Optional foreign elements | **PRESERVED IN PR #286** | revalidate independent optionality after reconciliation |
+| 4 | Textual structure and body typography | **PRESERVED / EXECUTABLE NEGATIVE CHECK PENDING ACCEPTANCE** | article-scope run after reconciliation must exercise structural checker and physical body evidence |
+| 5 | Recommendations and conditional applicability | BLOCKED | start only after Step 4 is accepted on reconciled branch |
 | 6 | Evidence hardening | QUEUED | rule-specific positive/negative evidence and truthful proof-state promotion |
 | 7 | Canonical article PDF | QUEUED | provenance-bound real PDF with complete visual inspection |
 | 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific acceptance on one immutable SHA |
 
 ## Next action
 
-1. open the orchestration PR with this documentation/control synchronization;
-2. push the technical scoped-Linux implementation as the next material advance;
-3. verify Static and that the synchronize event selects bounded `smoke` rather than complete historical diff;
-4. record accepted orchestration SHA/run IDs and merge it;
-5. create `feat/v3-scientific-article` from updated `main`;
-6. synchronize branch facts;
-7. implement **Required article front block** with article-specific rendering/evidence for primary title, authorship metadata footnote, submission/approval dates and primary summary.
+1. publish the PR #287 runner import-boundary correction with synchronized documentation;
+2. verify Static and `smoke` Linux on the same technical checkpoint;
+3. if green, record checkpoint/run IDs and merge PR #287;
+4. reconcile existing PR #286 with updated `main`;
+5. run executable `article`-scope validation for the pending Step 4 state;
+6. synchronize accepted step/proof state;
+7. continue Step 5 without replaying or discarding already-preserved work.
