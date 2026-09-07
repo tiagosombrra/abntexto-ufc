@@ -101,9 +101,11 @@
       }
   }
 
-% Shared layout installs the academic-work body contract at begin-document
-% time. Apply the article-specific override only after those initializers have
-% finished so scientific articles reliably use the required single spacing.
+% The shared academic-work layout selects 1.5 spacing during document startup.
+% Activate the article-only body contract at the end of the required article
+% front block, after document initialization has completed and immediately
+% before the article body begins. This avoids relying on begin-document hook
+% ordering while preserving the shared layout for every non-article profile.
 \cs_new_protected:Npn \ufc_article_apply_body_typography:
   {
     \str_if_eq:VnT \g_ufc_document_type_tl {scientific-article}
@@ -115,8 +117,6 @@
         \justifying
       }
   }
-
-\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}
 
 \NewDocumentCommand \ufcPrintArticleFrontMatter { +m }
   {
@@ -131,6 +131,7 @@
     \ufc_article_author:
     \ufc_article_dates:
     \ufc_article_primary_summary:n {#1}
+    \ufc_article_apply_body_typography:
   }
 
 \NewDocumentCommand \ufcPrintArticleForeignElements { +m +m }

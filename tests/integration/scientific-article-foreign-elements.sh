@@ -28,19 +28,6 @@ if grep -Fq 'title-variant' "$module"; then
   exit 1
 fi
 
-grep -Fq '\cs_new_protected:Npn \ufc_article_apply_body_typography:' "$module" || {
-  echo 'Scientific article foreign-elements gate failed: accepted Step 4 body activation is missing.'
-  exit 1
-}
-grep -Fq '\str_if_eq:VnT \g_ufc_document_type_tl {scientific-article}' "$module" || {
-  echo 'Scientific article foreign-elements gate failed: Step 4 body activation is not profile-scoped.'
-  exit 1
-}
-grep -Fq '\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}' "$module" || {
-  echo 'Scientific article foreign-elements gate failed: Step 4 body activation is not registered after shared begin-document initialization.'
-  exit 1
-}
-
 run_case() {
   engine="$1"
   scenario="$2"
@@ -118,5 +105,5 @@ for engine in pdflatex lualatex; do
     tests/documents/scientific-article-foreign-absent.tex absent absent
 done
 
-echo 'ARTICLE-FOREIGN-ELEMENTS-EVIDENCE status=PASS engines=2 scenarios=4 convergence_passes=2 warnings_checked_after_final_pass=true title_optional=true summary_optional=true independent=true title_variant_reused=false step4_body_route=profile-scoped-post-shared-initialization presentation_rules_promoted=0 recommendations_promoted=0'
+echo 'ARTICLE-FOREIGN-ELEMENTS-EVIDENCE status=PASS engines=2 scenarios=4 convergence_passes=2 warnings_checked_after_final_pass=true title_optional=true summary_optional=true independent=true title_variant_reused=false presentation_rules_promoted=0 recommendations_promoted=0'
 echo 'Scientific article foreign-elements gate completed.'

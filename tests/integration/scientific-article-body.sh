@@ -17,8 +17,7 @@ for token in \
   '\str_if_eq:VnT \g_ufc_document_type_tl {scientific-article}' \
   '\setlength{\parindent}{2cm}' \
   '\setlength{\parskip}{0pt}' \
-  '\justifying' \
-  '\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}'
+  '\justifying'
 do
   grep -Fq "$token" "$module" || {
     echo "Scientific article body gate failed: required profile-specific body token is missing: $token"
@@ -34,6 +33,22 @@ printf '%s\n' "$body_source" | grep -Fq '\singlesp' || {
   echo 'Scientific article body gate failed: article-only body activation does not select single spacing.'
   exit 1
 }
+
+# Body activation belongs to the required article front-block completion
+# boundary. This runs inside the document after shared startup initialization,
+# without freezing an ineffective begin-document hook spelling.
+front_source=$(sed -n '/\\NewDocumentCommand \\ufcPrintArticleFrontMatter/,/^  }$/p' "$module")
+summary_line=$(printf '%s\n' "$front_source" | grep -nF '\ufc_article_primary_summary:n {#1}' | head -n 1 | cut -d: -f1 || true)
+body_line=$(printf '%s\n' "$front_source" | grep -nF '\ufc_article_apply_body_typography:' | head -n 1 | cut -d: -f1 || true)
+if [ -z "$summary_line" ] || [ -z "$body_line" ] || [ "$body_line" -le "$summary_line" ]; then
+  echo 'Scientific article body gate failed: body typography is not activated after the required primary summary in the article front block.'
+  exit 1
+fi
+
+if grep -Fq '\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}' "$module"; then
+  echo 'Scientific article body gate failed: obsolete begin-document body activation route is still present.'
+  exit 1
+fi
 
 compile_positive() {
   engine="$1"
@@ -113,5 +128,5 @@ cleanup_job scientific-article-body-pdflatex
 cleanup_job scientific-article-body-lualatex
 cleanup_job "$negative_job"
 
-echo 'ARTICLE-BODY-GATE-EVIDENCE status=PASS engines=2 required_structure=introduction,development,final-considerations,references body_typography=12pt,justified,2cm,single activation=profile-scoped-post-shared-initialization negative_structure_rejected=true non_article_runtime_changed=false proof_state_promoted=0'
+echo 'ARTICLE-BODY-GATE-EVIDENCE status=PASS engines=2 required_structure=introduction,development,final-considerations,references body_typography=12pt,justified,2cm,single activation=required-front-block-completion negative_structure_rejected=true non_article_runtime_changed=false proof_state_promoted=0'
 echo 'Scientific article body gate completed.'
