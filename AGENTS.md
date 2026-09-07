@@ -23,21 +23,19 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Canonical `main` | `fbf7cc4839ce318024a7d1ed517dd50fab5773ac` |
 | Active branch / PR | `feat/v3-scientific-article` / #286 |
 | Current-main reconciliation merge | `85cf22b6fe5d117bb2611a2865911e0d20a19363` |
-| Steps 1–5 | **ACCEPTED** |
-| Step 5 checkpoint | `55fa1c8dc1b503c119d564950d04141cf45ad345`; Static `34132291198`; Linux `34132291304` |
-| Step 6 | **IMPLEMENTED — ACCEPTANCE CI PENDING** |
-| Step 6 contract | exact 18-rule `standards/article-evidence-map.json` + `tests/checks/scientific_article_evidence_map.py` |
+| Steps 1–6 | **ACCEPTED** |
+| Step 6 checkpoint | `e941a7f9b4685a9bcf687135e8d5168af2d69ec7`; Static `34146793998`; Linux `34146794016` |
+| Step 7 | **ACTIVE — CANONICAL ARTICLE PDF** |
+| Step 8 | QUEUED — complete phase-end regression |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
-
-The root README and canonical control documents on `main` were reconciled through PR #288, merged as `fbf7cc4...`. The article branch then recorded that current-main ancestry in `85cf22b...` before Step 6 implementation.
 
 ## Readable phase model
 
 1. Regression Audit — closed
 2. Core Corrections — closed
 3. Reference PDF Validation — closed
-4. Scientific Article — active, Step 6 acceptance pending
+4. Scientific Article — active, Step 7 canonical PDF
 5. Final Certification — queued
 6. Release — queued
 
@@ -46,12 +44,13 @@ The root README and canonical control documents on `main` were reconciled throug
 - Preserve exactly the retained 18-rule source contract.
 - `standards/article-evidence-map.json` records current article-specific evidence ownership without rewriting source requirement text, normativity, locators or applicability.
 - Executable support is not equivalent to a normative rule becoming `PROVEN`.
-- Step 6 currently promotes **zero** validation modes; the map is deliberately conservative.
+- Step 6 promoted **zero** validation modes and is accepted at `e941a7f9...`.
 - Optional foreign title/summary remain optional and use present/absent matrix evidence.
 - The four recommendation rules remain manual, advisory and non-enforcing.
 - Journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`, with no generic executable owner.
 - Shared implementation reuse never counts as article-specific proof by itself.
-- Step 7 starts only after Step 6 Static and required Linux scope pass on the synchronized technical checkpoint.
+- Step 7 must use a real TeX Live 2026 article PDF bound to concrete Git provenance; synthetic PDFs are inadmissible.
+- Any temporary PDF-build executor must be removed before Step 7 acceptance.
 
 ## Linux scope rule
 
@@ -74,7 +73,7 @@ Scoped runs are valid intermediate evidence only. Scientific Article Step 8 requ
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, integration-scope behavior, canonical content, phase status, acceptance status, branch/base reconciliation, or release/certification state. Update the relevant execution documents and handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, integration-scope behavior, canonical content, phase status, acceptance status, branch/base reconciliation, artifact provenance, temporary-executor lifecycle, visual-validation state, or release/certification state. Update the relevant execution documents and handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
 
 ## Mandatory phase-end regression
 
