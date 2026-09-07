@@ -47,19 +47,24 @@ def extract_text(pdf: Path) -> str:
 
 
 def validate_structure(raw: str) -> None:
-    text = folded(raw)
     required = (
         ("introducao", "introdução"),
         ("desenvolvimento", "desenvolvimento"),
         ("consideracoes finais", "considerações finais"),
         ("referencias", "referências"),
     )
+    lines = [folded(line) for line in raw.splitlines()]
     positions: list[int] = []
     for token, label in required:
-        position = text.find(token)
-        if position < 0:
+        # Required structure is proven by rendered headings, not by incidental
+        # occurrences of the same words inside body prose.
+        heading = re.compile(rf"^(?:\d+(?:\.\d+)*\s+)?{re.escape(token)}$")
+        matches = [index for index, line in enumerate(lines) if heading.fullmatch(line)]
+        if not matches:
             fail(f"required article structure element is missing: {label}")
-        positions.append(position)
+        if len(matches) != 1:
+            fail(f"required article structure heading is not unique: {label} occurrences={len(matches)}")
+        positions.append(matches[0])
     if positions != sorted(positions) or len(set(positions)) != len(positions):
         fail(f"required article structure is not ordered as introduction/development/final considerations/references: {positions}")
 
