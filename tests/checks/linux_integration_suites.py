@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 from pathlib import Path
 
@@ -16,50 +15,20 @@ import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
 ROADMAP = ROOT / "release" / "v3-roadmap.json"
-RUNNER = TESTS / "run.py"
+PROFILE_MATRIX = ROOT / "tests" / "integration" / "profile-matrix.sh"
+ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.sh"
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"Linux integration suite contract failed: {message}")
 
 
-def assert_runner_file_spec_importable() -> None:
-    probe_source = """
-import importlib.util
-import sys
-from pathlib import Path
-
-runner = Path(sys.argv[1])
-spec = importlib.util.spec_from_file_location('abntexto_ufc_runner_probe', runner)
-if spec is None or spec.loader is None:
-    raise SystemExit('cannot create runner import spec')
-module = importlib.util.module_from_spec(spec)
-sys.modules[spec.name] = module
-spec.loader.exec_module(module)
-if not getattr(module, 'CHECKS', None):
-    raise SystemExit('runner import did not expose CHECKS')
-"""
-    completed = subprocess.run(
-        [sys.executable, "-I", "-c", probe_source, str(RUNNER)],
-        cwd=ROOT,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
-    )
-    if completed.returncode != 0:
-        detail = completed.stdout.strip() or f"exit {completed.returncode}"
-        fail("tests/run.py must load by file spec from an isolated interpreter: " + detail)
-
-
 def main() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     roadmap = json.loads(ROADMAP.read_text(encoding="utf-8"))
+    profile_matrix = PROFILE_MATRIX.read_text(encoding="utf-8")
+    article_profile = ARTICLE_PROFILE.read_text(encoding="utf-8")
     known_checks = {check.name for check in validation_run.CHECKS}
-
-    assert_runner_file_spec_importable()
 
     if SUITES.get("complete") != ("*",):
         fail("complete suite must remain the wildcard full PR integration contract")
@@ -81,6 +50,11 @@ def main() -> None:
         fail("workflow_dispatch scope choices are missing: " + ", ".join(missing_choices))
 
     for token in (
+        "github.event.before",
+        "github.event.after",
+        "incremental-push",
+        "git cat-file -e",
+        "missing-before-full-pr",
         "tests/integration_suites.py --base",
         "tests/run.py --mode pr --suite",
         "manual-auto-fail-closed",
@@ -91,8 +65,20 @@ def main() -> None:
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
-    if infer_suites(["tests/integration/scientific-article-profile.sh"]) != ("article",):
-        fail("article-specific integration changes must select the article suite")
+    if infer_suites(["tests/run.py"]) != ("smoke",):
+        fail("orchestration-only changes must select smoke")
+    if infer_suites(
+        ["tests/run.py", "tests/integration/scientific-article-foreign-elements.sh"]
+    ) != ("article",):
+        fail("orchestration plus article changes must select article, not complete")
+    if infer_suites(
+        ["tests/run.py", "tests/integration/scientific-article-body.sh"]
+    ) != ("article",):
+        fail("orchestration plus Step 4 article changes must select article, not complete")
+    if infer_suites(
+        ["tests/run.py", "tests/integration/scientific-article-recommendations.sh"]
+    ) != ("article",):
+        fail("orchestration plus Step 5 article changes must select article, not complete")
     if infer_suites(["abntexto-ufc/objects.def"]) != ("objects",):
         fail("object runtime changes must select the objects suite")
     if infer_suites(["unknown/technical.file"]) != ("complete",):
@@ -100,18 +86,37 @@ def main() -> None:
 
     phase = roadmap.get("phase")
     if phase in {"scientific-article", "final-certification", "release"}:
+        required_article_checks = {
+            "validator-source",
+            "scientific-article-profile",
+            "scientific-article-front-block",
+            "scientific-article-foreign-elements",
+            "scientific-article-body",
+            "scientific-article-recommendations",
+        }
         article_checks = set(SUITES.get("article", ()))
-        if "scientific-article-profile" not in article_checks:
-            fail("article suite must include the executable scientific-article-profile gate")
-        if "validator-source" not in article_checks:
-            fail("article suite must retain the source/authority contract gate")
+        missing_article = sorted(required_article_checks - article_checks)
+        if missing_article:
+            fail("article suite is missing executable checks: " + ", ".join(missing_article))
+
+    if "scientific-article-profile.sh" in profile_matrix:
+        fail("non-article profile matrix must not hide the article gate")
+    for chained in (
+        "scientific-article-front-block.sh",
+        "scientific-article-foreign-elements.sh",
+        "scientific-article-body.sh",
+        "scientific-article-recommendations.sh",
+    ):
+        if chained in article_profile:
+            fail(f"article profile gate must not chain {chained}")
 
     print(
         "LINUX-SUITE-EVIDENCE status=PASS "
         f"suites={len(SUITES)} checks={len(known_checks)} "
         f"manual_choices={len(required_manual_choices)} phase={phase} "
-        "unknown_path_fallback=complete article_executable=true "
-        "runner_file_spec_import=true"
+        "incremental_sync=true missing_before_fallback=full-pr "
+        "unknown_path_fallback=complete article_first_class=true "
+        "step4_registered=true step5_registered=true"
     )
 
 

@@ -1,0 +1,35 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = scientific-article,
+  cover = false,
+  catalog-card = false,
+  coat-of-arms = false,
+  glossary = none,
+  index = none,
+  author = {ARTICLEFRONTAUTHOR},
+  title = {ArticleFrontTitle},
+  submission-date = {1 de setembro de 2026},
+  approval-date = {5 de setembro de 2026},
+  article-author-note = {ARTICLENOTEMARKER Universidade Federal do Ceará. article@example.org}
+}
+
+\begin{document}
+
+\ufcPrintArticleFrontMatter{%
+  ARTICLESUMMARYMARKER apresenta conteúdo controlado para validar a presença do resumo principal sem transformar recomendações de extensão, quantidade de palavras-chave ou número de parágrafos em falhas obrigatórias.
+  \ufcSummaryKeywords{artigo; normalização; evidência.}%
+}
+
+\clearpage
+ARTICLEBODYREGULARCONTROL
+
+{\bfseries ARTICLEBOLDCONTROL}
+
+\end{document}

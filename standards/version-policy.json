@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "reviewed_at": "2026-08-30",
+  "reviewed_at": "2026-09-05",
   "mode": "latest-current-applicable-technical-standard-mandatory",
   "decision": "mandatory",
-  "purpose": "Define the current technical-edition rule when UFC guides cite superseded ABNT editions, while keeping deferred document profiles outside the active foundation until their sources and predicates are revalidated.",
+  "purpose": "Define the current technical-edition rule when UFC guides cite superseded ABNT editions, and allow a document profile to enter runtime only after its current sources, explicit predicates and activation evidence have been reconciled.",
   "institutional_basis": [
     {
       "id": "ufc-res-17-cepe-2017",
@@ -39,7 +39,7 @@
     "current_ufc_act_governs_institutional_scope": true,
     "conflict_behavior": "review-required",
     "course_specific_exception": "A Resolução nº 17/CEPE de 2017 admite modelo específico formalmente aprovado no rito previsto no art. 1º, §§ 2º-3º. Para pós-graduação stricto sensu, a Resolução nº 17/CEPE de 2015, Normas Gerais art. 10, X, também atribui ao colegiado do programa competência para definir diretrizes de apresentação. Nenhuma dessas competências altera silenciosamente o template: a diretriz específica deve ser identificada, cadastrada como fonte institucional vigente, ter escopo explícito e ser reconciliada antes de alterar comportamento.",
-    "profile_promotion_stages": "A reconciled source enters the active catalog only with predicates that consume it. A normative contract does not imply that runtime implementation or final profile evidence already exists."
+    "profile_promotion_stages": "A reconciled source enters the active catalog only with predicates that consume it. A normative contract does not imply that runtime implementation or final profile evidence already exists. Runtime activation is allowed only after source-contract revalidation and recorded phase activation; proof-state promotion remains separately evidence-bound."
   },
   "current_technical_sources": [
     "abnt-nbr-14724-2024",
@@ -55,14 +55,20 @@
   ],
   "profile_candidates": {
     "scientific_article": {
-      "status": "deferred-outside-active-foundation",
+      "status": "active-after-source-contract-revalidation",
       "candidate_sources": [
         "abnt-nbr-6022-2018",
         "ufc-guia-artigos-2022"
       ],
-      "runtime_present": false,
-      "activation_condition": "Revalidate current technical and UFC institutional sources and define explicit article predicates before introducing article runtime behavior.",
-      "rule": "Scientific-article support is not part of the active foundation contract. Historical research remains available through Git history and must be revalidated before the profile is introduced."
+      "runtime_present": true,
+      "activation_condition": "Current technical and UFC institutional sources are reconciled, an explicit 18-rule article contract exists, the corrected shared foundation is accepted, and Scientific Article is the active readable phase.",
+      "activation_evidence": {
+        "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
+        "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
+        "scientific_article_step1_acceptance_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
+        "active_phase": "scientific-article"
+      },
+      "rule": "Scientific-article runtime is active only after the retained source contract and shared foundation entry gates are satisfied. Runtime activation does not by itself promote article presentation predicates to proven status; article-specific evidence remains required."
     }
   },
   "supersessions": [

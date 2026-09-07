@@ -48,7 +48,14 @@ SUITES: dict[str, tuple[str, ...]] = {
     "backmatter": ("backmatter", "duplex-backmatter"),
     "research-project": ("research-project",),
     "profiles": ("profiles", "build-path", "multivolume", "catalog-card"),
-    "article": ("validator-source", "scientific-article-profile"),
+    "article": (
+        "validator-source",
+        "scientific-article-profile",
+        "scientific-article-front-block",
+        "scientific-article-foreign-elements",
+        "scientific-article-body",
+        "scientific-article-recommendations",
+    ),
 }
 
 SUITE_ORDER = tuple(SUITES)
@@ -186,14 +193,12 @@ def infer_suites(paths: list[str]) -> tuple[str, ...]:
     if not technical:
         return ()
 
-    if any(path in ORCHESTRATION_EXACT for path in technical):
-        orchestration_only = all(
-            path in ORCHESTRATION_EXACT or is_docs_only(path)
-            for path in paths
-            if path
-        )
-        if orchestration_only:
-            return ("smoke",)
+    orchestration = [path for path in technical if path in ORCHESTRATION_EXACT]
+    domain_technical = [path for path in technical if path not in ORCHESTRATION_EXACT]
+    if orchestration and not domain_technical:
+        return ("smoke",)
+    if orchestration:
+        technical = domain_technical
 
     if any(
         path in FORCE_COMPLETE_EXACT or path.startswith(FORCE_COMPLETE_PREFIXES)
@@ -234,6 +239,10 @@ def self_test() -> None:
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),
         ("tests/run.py",): ("smoke",),
         ("tests/integration/scientific-article-profile.sh",): ("article",),
+        ("tests/integration/scientific-article-recommendations.sh",): ("article",),
+        ("tests/run.py", "tests/integration/scientific-article-recommendations.sh"): ("article",),
+        ("tests/integration_suites.py", "abntexto-ufc/objects.def"): ("objects",),
+        ("tests/run.py", "unknown/technical.file"): ("complete",),
         ("abntexto-ufc/objects.def", "abntexto-ufc/bibliography.def"): (
             "objects",
             "bibliography",

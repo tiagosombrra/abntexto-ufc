@@ -59,7 +59,6 @@ for engine in pdflatex lualatex; do
     echo "Scientific article profile preflight failed: controlled body marker is missing with $engine."
     exit 1
   }
-
 done
 
 cleanup_job scientific-article-profile-pdflatex

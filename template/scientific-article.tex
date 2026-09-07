@@ -1,0 +1,69 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = scientific-article,
+  print-mode = single-sided,
+  cover = false,
+  catalog-card = false,
+  coat-of-arms = false,
+  font = times,
+  strict-font = false,
+  glossary = none,
+  index = none,
+  institution = {Universidade Federal do Ceará},
+  author = {Nome Completo do Autor},
+  title = {Normalização reprodutível de artigos científicos com uma classe institucional LaTeX},
+  submission-date = {1 de setembro de 2026},
+  approval-date = {5 de setembro de 2026},
+  article-author-note = {Universidade Federal do Ceará (UFC). autor@example.org}
+}
+
+\ufcAddBibliographyResource{backmatter/references.bib}
+
+\begin{document}
+
+\ufcPrintArticleFrontMatter{%
+  Este artigo apresenta um exemplo canônico do perfil de artigo científico do abntexto-ufc. O documento demonstra a composição do bloco inicial, a estrutura textual, o uso de citações, notas de rodapé e referências em uma fonte única, permitindo validar de forma reprodutível a apresentação final produzida pela classe.
+  \ufcSummaryKeywords{artigo científico; LaTeX; normalização; reprodutibilidade.}%
+}
+
+\ufcPrintArticleForeignElements
+  {Reproducible normalization of scientific articles with an institutional LaTeX class}
+  {This canonical example demonstrates the scientific-article profile of abntexto-ufc, including its article front block, textual organization, citations, footnotes and reference list in a reproducible document intended for rendered-output validation.}
+
+\section{Introdução}
+
+A produção de documentos acadêmicos reprodutíveis depende de uma separação clara entre conteúdo, regras de apresentação e mecanismos de compilação. Em LaTeX, essa separação permite centralizar decisões tipográficas e reduzir inconsistências entre documentos derivados de um mesmo padrão institucional. A abordagem apresentada por \textcite{lamport1994} permanece uma referência para a organização declarativa de documentos técnicos.
+
+O perfil de artigo científico utilizado neste exemplo reutiliza a infraestrutura compartilhada da classe, mas aplica sua própria estrutura documental e suas regras de apresentação. Esta página também contém uma nota de rodapé controlada\footnote{Esta nota existe no exemplo canônico para permitir a inspeção visual da composição de notas no perfil de artigo científico.} para que a validação do PDF inclua uma superfície textual adicional.
+
+\section{Desenvolvimento}
+
+\subsection{Estrutura do perfil}
+
+O artigo é composto por um bloco inicial específico, seguido pelas seções textuais necessárias e pela lista de referências. Elementos próprios de trabalhos acadêmicos extensos, como capa institucional, folha de rosto, folha de aprovação, ficha catalográfica, dedicatória e sumário, não fazem parte deste fluxo canônico. Essa distinção evita que a implementação de um novo perfil seja apenas uma variação superficial do modelo de monografia.
+
+\subsection{Reuso da infraestrutura compartilhada}
+
+A classe mantém mecanismos comuns para tipografia, citações, referências, equações, objetos e validação de PDF. O reuso dessas superfícies reduz duplicação, mas não transforma automaticamente uma evidência compartilhada em prova específica do perfil de artigo. O contrato de validação mantém essa separação explicitamente.
+
+Como exemplo de referência eletrônica, arquiteturas baseadas em atenção são discutidas por \textcite{vaswani2017attention}. A citação é incluída apenas para exercitar a integração bibliográfica do documento canônico e não constitui uma recomendação temática do modelo.
+
+\subsection{Validação do resultado renderizado}
+
+A aceitação do perfil exige observar o PDF efetivamente produzido, e não apenas o código-fonte. A inspeção deve verificar ordem e legibilidade do bloco inicial, títulos, autoria, resumos, palavras-chave, seções, notas, citações, referências, paginação e ausência de elementos estranhos ao perfil. Também devem ser classificados eventuais problemas de quebra de página, sobreposição, recorte ou substituição incorreta de glifos.
+
+\section{Considerações finais}
+
+O exemplo consolida uma superfície pequena, porém suficiente para validar o perfil de artigo científico como documento final. A etapa de aceitação associa o PDF a um commit concreto, registra o ambiente de compilação e realiza inspeção visual de todas as páginas antes da regressão completa de encerramento da fase.
+
+\nocite{knuth}
+\ufcPrintReferences
+
+\end{document}

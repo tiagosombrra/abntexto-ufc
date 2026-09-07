@@ -4,6 +4,19 @@ set -eu
 fixture="tests/smoke/base-profile.tex"
 template_dir="template"
 profiles="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
+profile_count=$(printf '%s\n' "$profiles" | awk '{ print NF }')
+
+[ "$profile_count" -eq 6 ] || {
+  echo "Profile matrix contract failed: expected 6 non-article profiles, found $profile_count."
+  exit 1
+}
+
+case " $profiles " in
+  *" scientific-article "*)
+    echo 'Profile matrix contract failed: scientific-article must remain outside the non-article compatibility matrix.'
+    exit 1
+    ;;
+esac
 
 placeholder_count=$(awk '{ count += gsub(/@UFC_TYPE@/, "&") } END { print count + 0 }' "$fixture")
 if [ "$placeholder_count" -ne 1 ]; then
@@ -196,8 +209,5 @@ PY
   done
 done
 
-# Scientific Article is an active-phase extension with a dedicated bounded
-# profile gate until the article presentation/runtime contract is complete.
-sh tests/integration/scientific-article-profile.sh
-
-echo 'Complete profile matrix gate completed.'
+echo "PROFILE-MATRIX-EVIDENCE status=PASS profiles=$profile_count engines=2 article_excluded=true"
+echo 'Complete non-article profile matrix gate completed.'

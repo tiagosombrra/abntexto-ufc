@@ -1,0 +1,147 @@
+\ProvidesFile{abntexto-ufc/articles.def}[2026/09/07 UFC scientific article presentation]
+
+% Scientific-article presentation is implemented incrementally from the
+% retained authority contract in docs/ARTICLE-NORMATIVE-CONTRACT.md.
+% Required front-block elements, optional foreign elements and the article-only
+% body typography route are available without changing non-article profiles.
+
+\ExplSyntaxOn
+
+\cs_new_protected:Npn \ufc_article_require_profile:
+  {
+    \str_if_eq:VnF \g_ufc_document_type_tl {scientific-article}
+      {
+        \ClassError{abntexto-ufc}
+          {Scientific-article~command~used~outside~the~scientific-article~profile}
+          {Set~type=scientific-article~before~using~article-specific~commands.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_require_meta:n #1
+  {
+    \ufc_meta_if_blank:nT {#1}
+      {
+        \ClassError{abntexto-ufc}
+          {Required~scientific-article~metadata~'#1'~is~missing}
+          {Provide~the~required~value~through~\string\ufcsetup.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_require_summary:n #1
+  {
+    \tl_if_blank:nT {#1}
+      {
+        \ClassError{abntexto-ufc}
+          {Required~scientific-article~primary~summary~is~missing}
+          {Provide~the~primary-language~summary~to~\string\ufcPrintArticleFrontMatter.}
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_primary_title:
+  {
+    \begin{center}
+      \begingroup
+        \normalsize\singlesp\bfseries
+        \ufc_title_text:\par
+      \endgroup
+    \end{center}
+  }
+
+\cs_new_protected:Npn \ufc_article_author:
+  {
+    \begingroup
+      \raggedleft
+      \ufc_meta_use:n {author}%
+      \footnote{\ufc_meta_use:n {article-author-note}}\par
+    \endgroup
+  }
+
+\cs_new_protected:Npn \ufc_article_dates:
+  {
+    \par\noindent
+    Submetido~em:~\ufc_meta_use:n {submission-date}.\space
+    Aprovado~em:~\ufc_meta_use:n {approval-date}.\par
+  }
+
+\cs_new_protected:Npn \ufc_article_primary_summary:n #1
+  {
+    \par\vspace{\baselineskip}
+    \begingroup
+      \singlesp
+      \setlength{\parindent}{0pt}
+      \justifying
+      \noindent\textbf{Resumo:}\space #1\par
+    \endgroup
+  }
+
+% Foreign title and summary are independently optional. Their rendering here
+% is intentionally minimal: optionality and routing are proven without
+% inventing typography requirements absent from the retained rules.
+\cs_new_protected:Npn \ufc_article_foreign_title:n #1
+  {
+    \tl_if_blank:nF {#1}
+      {
+        \par\vspace{\baselineskip}
+        \begingroup
+          \noindent #1\par
+        \endgroup
+      }
+  }
+
+\cs_new_protected:Npn \ufc_article_foreign_summary:n #1
+  {
+    \tl_if_blank:nF {#1}
+      {
+        \par\vspace{\baselineskip}
+        \begingroup
+          \setlength{\parindent}{0pt}
+          \justifying
+          \noindent #1\par
+        \endgroup
+      }
+  }
+
+% The first numbered section enters \textual and restores the shared
+% academic-work spacing and indentation. Use the supported \singlesp route
+% after the required front block and after every textual transition. The
+% profile guard keeps non-article behavior unchanged.
+\cs_new_protected:Npn \ufc_article_apply_body_typography:
+  {
+    \str_if_eq:VnT \g_ufc_document_type_tl {scientific-article}
+      {
+        \normalsize
+        \singlesp
+        \setlength{\parindent}{2cm}
+        \setlength{\parskip}{0pt}
+        \justifying
+      }
+  }
+
+\AddToHook{cmd/textual/after}{\ufc_article_apply_body_typography:}
+
+\NewDocumentCommand \ufcPrintArticleFrontMatter { +m }
+  {
+    \ufc_article_require_profile:
+    \ufc_article_require_meta:n {title}
+    \ufc_article_require_meta:n {author}
+    \ufc_article_require_meta:n {article-author-note}
+    \ufc_article_require_meta:n {submission-date}
+    \ufc_article_require_meta:n {approval-date}
+    \ufc_article_require_summary:n {#1}
+    \ufc_article_primary_title:
+    \ufc_article_author:
+    \ufc_article_dates:
+    \ufc_article_primary_summary:n {#1}
+    \ufc_article_apply_body_typography:
+  }
+
+\NewDocumentCommand \ufcPrintArticleForeignElements { +m +m }
+  {
+    \ufc_article_require_profile:
+    \ufc_article_foreign_title:n {#1}
+    \ufc_article_foreign_summary:n {#2}
+  }
+
+\ExplSyntaxOff
+
+\endinput

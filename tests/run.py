@@ -96,6 +96,30 @@ CHECKS = (
         "Scientific article profile",
         ("sh", "tests/integration/scientific-article-profile.sh"),
     ),
+    Check(
+        "scientific-article-front-block",
+        "Scientific article front block",
+        ("sh", "tests/integration/scientific-article-front-block.sh"),
+        depends=("scientific-article-profile",),
+    ),
+    Check(
+        "scientific-article-foreign-elements",
+        "Scientific article foreign elements",
+        ("sh", "tests/integration/scientific-article-foreign-elements.sh"),
+        depends=("scientific-article-profile",),
+    ),
+    Check(
+        "scientific-article-body",
+        "Scientific article textual structure and body",
+        ("sh", "tests/integration/scientific-article-body.sh"),
+        depends=("scientific-article-profile",),
+    ),
+    Check(
+        "scientific-article-recommendations",
+        "Scientific article recommendations and conditional applicability",
+        ("sh", "tests/integration/scientific-article-recommendations.sh"),
+        depends=("scientific-article-profile",),
+    ),
     Check("profiles", "Document profiles", ("sh", "tests/integration/profile-matrix.sh")),
     Check(
         "profile-pdfa",
@@ -339,7 +363,7 @@ def main() -> int:
 
     if args.list:
         for check in checks:
-            print(f"{check.name:28} {check.label}")
+            print(f"{check.name:36} {check.label}")
         return 0
 
     report_dir = Path(args.report_dir)
@@ -351,10 +375,7 @@ def main() -> int:
 
     contribution_enabled = is_complete_selection(args.only, args.suite)
     total_checks = len(checks) + (1 if contribution_enabled else 0)
-    print(
-        f"abntexto-ufc validation: mode={args.mode}, scope={scope}, "
-        f"checks={total_checks}"
-    )
+    print(f"abntexto-ufc validation: mode={args.mode}, scope={scope}, checks={total_checks}")
     for index, check in enumerate(checks, 1):
         print(f"[{index:02}/{total_checks:02}] {check.label} ...", flush=True)
         result = run_check(check, report_dir, results_by_name)

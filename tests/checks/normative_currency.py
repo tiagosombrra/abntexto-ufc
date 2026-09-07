@@ -12,12 +12,14 @@ from normative_catalog import ACTIVE_STATUSES, load_catalog, source_map
 
 POLICY = ROOT / "standards" / "version-policy.json"
 SOURCE_AUDIT = ROOT / "standards" / "source-audit.json"
+MACHINE_STATE = ROOT / "release" / "v3-roadmap.json"
 STATIC_ACTIVE_MACHINE_FILES = (
     ROOT / "standards" / "catalog.json",
     ROOT / "standards" / "precedence.json",
     ROOT / "standards" / "atomic-rules.json",
     ROOT / "standards" / "atomicity-plan.json",
 )
+ARTICLE_RUNTIME_PHASES = {"scientific-article", "final-certification", "release"}
 
 
 def active_machine_files() -> list[Path]:
@@ -43,6 +45,7 @@ def load_json(path: Path) -> dict:
 def main() -> None:
     policy = load_json(POLICY)
     source_audit = load_json(SOURCE_AUDIT)
+    machine = load_json(MACHINE_STATE)
     catalog = load_catalog()
     sources = source_map(catalog)
 
@@ -106,12 +109,9 @@ def main() -> None:
     article = profile_candidates.get("scientific_article") if isinstance(profile_candidates, dict) else None
     if not isinstance(article, dict):
         fail("scientific-article profile policy is missing")
-    if article.get("status") != "deferred-outside-active-foundation":
-        fail("scientific-article profile must remain outside the active foundation")
-    if article.get("runtime_present") is not False:
-        fail("scientific-article runtime must remain absent from the active foundation")
     if not article.get("activation_condition"):
         fail("scientific-article activation condition is required")
+
     candidate_ids = article.get("candidate_sources")
     expected_article_sources = {"abnt-nbr-6022-2018", "ufc-guia-artigos-2022"}
     if set(candidate_ids or []) != expected_article_sources:
@@ -126,8 +126,35 @@ def main() -> None:
         if not runtime or runtime.get("status") not in ACTIVE_STATUSES:
             fail(f"article candidate source is not active in the runtime catalog: {source_id}")
 
-    if (ROOT / "abntexto-ufc" / "articles.def").exists():
-        fail("scientific-article runtime appeared before foundation activation")
+    active_phase = machine.get("phase")
+    runtime_file = ROOT / "abntexto-ufc" / "articles.def"
+    runtime_expected = active_phase in ARTICLE_RUNTIME_PHASES
+    if runtime_expected:
+        if article.get("status") != "active-after-source-contract-revalidation":
+            fail("scientific-article profile policy must record active source-contract revalidation")
+        if article.get("runtime_present") is not True:
+            fail("scientific-article runtime must be recorded as present in the active article phase")
+        if not runtime_file.is_file():
+            fail("scientific-article runtime is missing after article-phase activation")
+        activation = article.get("activation_evidence")
+        if not isinstance(activation, dict):
+            fail("scientific-article runtime activation evidence is required")
+        expected_activation = {
+            "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
+            "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
+            "scientific_article_step1_acceptance_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
+            "active_phase": "scientific-article",
+        }
+        for key, expected in expected_activation.items():
+            if activation.get(key) != expected:
+                fail(f"scientific-article activation evidence drifted for {key}")
+    else:
+        if article.get("status") != "deferred-outside-active-foundation":
+            fail("scientific-article profile must remain deferred before article-phase activation")
+        if article.get("runtime_present") is not False:
+            fail("scientific-article runtime must remain absent before article-phase activation")
+        if runtime_file.exists():
+            fail("scientific-article runtime appeared before article-phase activation")
 
     documentation = policy.get("documentation")
     if not isinstance(documentation, dict):
@@ -181,10 +208,12 @@ def main() -> None:
             if old in text:
                 fail(f"superseded technical edition leaked into active machine source {path}: {old}")
 
+    runtime_state = "active" if runtime_expected else "deferred"
     print(
         "Normative currency passed: "
         f"{len(current_ids)} active technical standards, "
-        f"{len(candidate_ids)} deferred article candidate sources, "
+        f"{len(candidate_ids)} article authority sources, "
+        f"article_runtime={runtime_state}, "
         f"{len(supersessions)} documented supersession mappings, "
         f"{len(machine_files)} active machine files scanned."
     )

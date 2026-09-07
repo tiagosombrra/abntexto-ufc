@@ -79,9 +79,13 @@ jobs:
               scope_window=full-pr
 
               if [[ "$PR_ACTION" == "synchronize" && -n "$BEFORE_SHA" && -n "$AFTER_SHA" ]]; then
-                scope_base="$BEFORE_SHA"
-                scope_head="$AFTER_SHA"
-                scope_window=incremental-push
+                if git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null && git cat-file -e "${AFTER_SHA}^{commit}" 2>/dev/null; then
+                  scope_base="$BEFORE_SHA"
+                  scope_head="$AFTER_SHA"
+                  scope_window=incremental-push
+                else
+                  scope_window=missing-before-full-pr
+                fi
               fi
 
               selected_scope=$(python3 tests/integration_suites.py --base "$scope_base" --head "$scope_head")
