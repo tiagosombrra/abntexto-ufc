@@ -18,6 +18,7 @@
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
     "reference_pdf_validation": "docs/V3-REFERENCE-PDF-VALIDATION.md",
     "scientific_article_plan": "docs/V3-SCIENTIFIC-ARTICLE.md",
+    "scientific_article_pdf_validation": "docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md",
     "scientific_article_contract": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
     "article_coverage_contract": "standards/coverage-rules-article.json",
     "article_evidence_map": "standards/article-evidence-map.json",
@@ -43,8 +44,8 @@
     "article_recommendations_are_hard_requirements": false,
     "article_runtime_aliases_allowed": false,
     "synthetic_pdf_can_satisfy_reference_validation": false,
-    "deterministic_release_reference_pdf_required": true,
     "temporary_executor_must_be_removed_before_checkpoint": true,
+    "deterministic_release_reference_pdf_required": true,
     "actual_ctan_submission_before_release_phase": false
   },
   "phase_end_regression": {
@@ -91,17 +92,25 @@
     "scientific_article_step6_state": "accepted",
     "scientific_article_step6_rule_map_count": 18,
     "scientific_article_step6_validation_promotions": 0,
-    "scientific_article_step7_state": "active-canonical-pdf",
+    "scientific_article_step7_state": "provenance-build-active",
+    "scientific_article_step7_source": "template/scientific-article.tex",
+    "scientific_article_step7_validation_record": "docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md",
+    "scientific_article_step7_temporary_executor": ".github/workflows/tmp-scientific-article-pdf.yml",
+    "scientific_article_step7_temporary_executor_state": "active-until-artifact-recovery",
+    "scientific_article_step7_artifact_state": "pending-workflow-build",
+    "scientific_article_step7_visual_review_state": "pending-artifact-recovery",
     "scientific_article_step8_state": "queued-phase-end-regression",
     "latest_fully_validated_checkpoint_sha": "e941a7f9b4685a9bcf687135e8d5168af2d69ec7",
     "latest_fully_validated_checkpoint_state": "step6-accepted",
     "main_reconciliation_merge_sha": "85cf22b6fe5d117bb2611a2865911e0d20a19363",
     "main_reconciliation_parent_sha": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac",
     "current_correction_batch": [
-      "Scientific Article — Step 7 provenance-bound canonical article PDF and complete visual review"
+      "Scientific Article — Step 7 provenance-bound canonical article PDF build"
     ],
     "pending_acceptance_gates": [
-      "Step 7 must produce a provenance-bound real canonical article PDF, complete page-level visual review, and no retained temporary executor",
+      "Step 7 temporary workflow must build and upload a real TeX Live 2026 canonical article PDF with provenance",
+      "Step 7 artifact must pass preflight and complete page-level visual review",
+      "Step 7 temporary executor must be removed before acceptance",
       "Step 8 must pass Static plus complete Linux integration on one immutable SHA",
       "Final Certification must run after Scientific Article closes",
       "Issue #18 deterministic release-reference-PDF reproducibility must close before Release"
@@ -135,7 +144,7 @@
   "branch_plan": {
     "current_work_branch": "feat/v3-scientific-article",
     "integration_pr": 286,
-    "integration_state": "open-step7-canonical-pdf-active",
+    "integration_state": "open-step7-provenance-build-active",
     "integration_main_sha": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac",
     "main_reconciliation_merge_sha": "85cf22b6fe5d117bb2611a2865911e0d20a19363",
     "policy": "main-plus-one-short-lived-active-task-branch"
@@ -146,7 +155,7 @@
   },
   "authority_decisions": {
     "scientific_article": {
-      "status": "source-contract-accepted-steps1-6-accepted-step7-active",
+      "status": "source-contract-accepted-steps1-6-accepted-step7-provenance-build-active",
       "rule_count": 18,
       "evidence_map": "standards/article-evidence-map.json",
       "shared_mechanism_counts_as_proof": false,
@@ -172,6 +181,7 @@
     "scientific_article_step6_acceptance_static_run": 34146793998,
     "scientific_article_step6_acceptance_linux_run": 34146794016,
     "scientific_article_step6_acceptance": "accepted",
+    "scientific_article_step7_build": "pending",
     "scientific_article_current_main_sha": "fbf7cc4839ce318024a7d1ed517dd50fab5773ac",
     "scientific_article_current_main_reconciliation_merge_sha": "85cf22b6fe5d117bb2611a2865911e0d20a19363",
     "librarian_review_contract_items": 34

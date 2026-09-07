@@ -13,44 +13,40 @@ Updated: 2026-09-07
 | Active phase | **Scientific Article** |
 | Steps 1–6 | **ACCEPTED** |
 | Step 6 acceptance | `e941a7f9b4685a9bcf687135e8d5168af2d69ec7`; Static `34146793998`; Linux `34146794016` |
-| Step 7 | **ACTIVE — CANONICAL ARTICLE PDF** |
+| Step 7 | **ACTIVE — PROVENANCE BUILD** |
+| Canonical article source | `template/scientific-article.tex` |
+| Temporary executor | `.github/workflows/tmp-scientific-article-pdf.yml` — ACTIVE |
+| Step 7 record | `docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md` |
 | Step 8 | QUEUED — immutable complete phase-end regression |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Final Certification | QUEUED |
 | Release | QUEUED |
 
-Step 6 is accepted. Its exact 18-rule evidence map remained conservative, promoted zero validation modes, preserved recommendation rules as manual/non-enforcing, and preserved journal precedence as conditional-manual. No source-contract, locator, applicability or modality change was authorized by Step 6.
+Step 6 is accepted. Its exact 18-rule evidence map remained conservative, promoted zero validation modes, preserved recommendation rules as manual/non-enforcing, and preserved journal precedence as conditional-manual.
 
-## Active work — Step 7
+## Active work — Step 7 provenance build
 
-Step 7 must produce and accept a real canonical Scientific Article PDF from the current accepted branch state using TeX Live 2026. The artifact must be bound to Git provenance and inspected page by page.
+A dedicated canonical article source and temporary GitHub Actions executor are active solely to produce the provenance-bound PDF. The executor must be removed immediately after the artifact is recovered.
 
-Required Step 7 evidence:
+Required Step 7 sequence:
 
-1. dedicated canonical article source using the public V3 Scientific Article runtime;
-2. real LaTeX build with recorded source SHA, workflow run, TeX Live version, engine, PDF metadata and SHA-256;
-3. complete page-level visual review covering article front block, optional foreign elements, typography, textual structure, citations/references, footnotes and absence of academic-work front-matter leakage;
-4. classification of any defect before runtime/test changes;
-5. temporary build executor removed before acceptance;
-6. synchronized documentation after artifact/visual acceptance.
+1. publish the synchronized canonical source + temporary executor;
+2. recover the real TeX Live 2026 artifact and record source SHA/run/artifact metadata;
+3. remove the temporary executor in the next synchronized checkpoint;
+4. preflight the PDF, render every page at 200 DPI and inspect the complete page sequence;
+5. classify any defect before code/test changes;
+6. update `docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md` and all control documents with the result;
+7. accept Step 7 only when the visual checklist is clean and the temporary executor is absent;
+8. create one immutable Step 8 candidate for Static + **complete** Linux plus article gates.
 
 Synthetic or stale PDFs do not satisfy Step 7.
-
-## Immediate action
-
-1. establish the Step 7 canonical article source and provenance-build path;
-2. generate the real TeX Live 2026 artifact and recover it;
-3. remove any temporary executor immediately after artifact recovery;
-4. preflight, render and inspect every page;
-5. record the visual/provenance result and accept Step 7 only if clean;
-6. create one immutable Step 8 candidate for Static + **complete** Linux plus article-specific gates;
-7. close Scientific Article and activate Final Certification only after Step 8 succeeds.
 
 ## What still blocks V3 completion
 
 | Blocker | State |
 |---|---|
 | Scientific Article Step 7 canonical PDF | ACTIVE |
+| Temporary Step 7 executor | ACTIVE — must be removed after artifact recovery |
 | Scientific Article Step 8 phase-end regression | QUEUED |
 | PR #286 / issue #280 | remain open until Scientific Article acceptance |
 | Final Certification | not executed on final candidate |

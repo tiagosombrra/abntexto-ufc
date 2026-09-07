@@ -1,7 +1,7 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — STEP 6 ACCEPTED / STEP 7 CANONICAL PDF ACTIVE
+Status: ACTIVE — STEP 7 PROVENANCE BUILD
 
 ## Entry and current state
 
@@ -13,49 +13,38 @@ The retained article authority product remains `4d018a92697e8f39e3a53b034c451e55
 
 | Step | Work | State | Evidence / next gate |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | ACCEPTED | `08b878a...`; Static `34001350884`; Linux `34001350953` |
-| 2 | Required article front block | ACCEPTED | `0947669...`; Static `34026680871`; Linux `34026680882` |
-| 3 | Optional foreign title and summary | ACCEPTED | `82d20fa...`; Static `34031144114`; Linux `34031144269` |
-| 4 | Textual structure and body typography | ACCEPTED | `005956bd...`; Static `34119007413`; Linux `34119007425` |
-| 5 | Recommendations and conditional applicability | ACCEPTED | `55fa1c8...`; Static `34132291198`; Linux `34132291304`; article scope `PASS=6 FAIL=0 SKIP=0` |
+| 1 | Profile and metadata surface | ACCEPTED | completed |
+| 2 | Required article front block | ACCEPTED | completed |
+| 3 | Optional foreign title and summary | ACCEPTED | completed |
+| 4 | Textual structure and body typography | ACCEPTED | completed |
+| 5 | Recommendations and conditional applicability | ACCEPTED | `55fa1c8...`; Static `34132291198`; Linux `34132291304` |
 | 6 | Evidence hardening | **ACCEPTED** | `e941a7f9...`; Static `34146793998`; Linux `34146794016`; exact 18-rule map; zero validation-mode promotions |
-| 7 | Canonical article PDF | **ACTIVE** | real TeX Live 2026 PDF + provenance + complete page-level visual inspection |
+| 7 | Canonical article PDF | **ACTIVE — PROVENANCE BUILD** | `template/scientific-article.tex` + temporary artifact workflow |
 | 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific evidence on one immutable SHA |
 
 ## Step 6 acceptance
 
-Step 6 added `standards/article-evidence-map.json` and `tests/checks/scientific_article_evidence_map.py`, wired into `tests/static.py`. The synchronized technical checkpoint `e941a7f9b4685a9bcf687135e8d5168af2d69ec7` passed Static `34146793998` and Linux `34146794016`.
-
-The accepted map covers exactly all 18 retained IDs and records source-contract normativity, current validation mode, article-specific owner where present, evidence kind, conservative proof disposition and promotion state. It promotes zero validation modes. Optionality, recommendations and journal-precedence applicability remain unchanged.
+The accepted evidence map covers exactly all 18 retained IDs and records source-contract normativity, current validation mode, article-specific owner where present, evidence kind, conservative proof disposition and promotion state. It promotes zero validation modes. Optionality, recommendations and journal-precedence applicability remain unchanged.
 
 ## Step 7 canonical article PDF
 
-Step 7 now becomes the active work. Produce a real article PDF from the accepted branch using the project runtime and TeX Live 2026. Bind the artifact to Git provenance and inspect every page.
+Canonical source: `template/scientific-article.tex`.
 
-Required review scope:
+Validation record: `docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md`.
 
-| Review surface | Required observation |
-|---|---|
-| Primary title and authorship | correct article front block, no academic-work cover/title-page semantics |
-| Optional foreign title/summary | rendered only when configured; no forced optional content |
-| Primary summary / keywords | correct ordering and legible presentation |
-| Dates and author metadata footnote | present where configured and visually coherent |
-| Body structure | introduction, development, final considerations and references |
-| Body typography | no unexpected family/size/spacing drift |
-| Citations/references | readable and consistent with shared accepted bibliography runtime |
-| Footnotes | no overlap, clipping or typography anomaly |
-| Leakage | no cover, approval page, catalog card, dedication, academic abstract/list/TOC leakage unless article contract explicitly requires it |
-| Global visual quality | no clipping, overlap, broken glyph, unexplained blank page or page-boundary anomaly |
+Temporary executor: `.github/workflows/tmp-scientific-article-pdf.yml` — **ACTIVE only until artifact recovery**.
 
-Step 7 acceptance requires a provenance record containing source SHA, workflow run, TeX Live 2026, engine, source path, PDF SHA-256, size, page count, geometry/PDF version and font-embedding preflight where measurable. Synthetic or stale PDFs are inadmissible.
+The canonical source exercises the accepted article front block, optional foreign title/summary, primary summary/keywords, author metadata, required textual structure, subsection hierarchy, a footnote, citations and references while excluding academic-work-only front matter.
 
-Any temporary artifact-build workflow is permitted only as an executor for this bounded step and must be removed before Step 7 acceptance.
+The temporary workflow builds that source using TeX Live 2026/pdfLaTeX and uploads the PDF together with `pdfinfo`, `pdffonts`, extracted text, SHA-256, file size and Git/workflow provenance. It is not a permanent workflow and must be removed before Step 7 acceptance.
+
+Required visual review scope remains: article front block, optional foreign elements, typography, body structure, citations/references, footnotes, leakage absence and global visual quality. Every page must be rendered at 200 DPI and inspected.
+
+Synthetic or stale PDFs are inadmissible. Any defect must be classified before runtime/test changes and the artifact rebuilt/re-rendered after correction.
 
 ## Step 8 phase-end regression
 
-Scientific Article closes only when one immutable candidate passes Static contract, Linux integration with **complete** scope, all article-specific executable gates and accepted canonical article PDF visual/provenance evidence.
-
-Scoped article checks are intermediate evidence only and never replace Step 8.
+Scientific Article closes only when one immutable candidate passes Static contract, Linux integration with **complete** scope, all article-specific executable gates and accepted canonical article PDF visual/provenance evidence. Scoped article checks are intermediate evidence only and never replace Step 8.
 
 ## What remains after Scientific Article
 
