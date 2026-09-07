@@ -1,210 +1,180 @@
 # abntexto-ufc
 
-Community LaTeX class and reference template for academic works at the Federal University of Ceará (UFC), built on top of `abntexto`.
+Template LaTeX comunitário para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), construído sobre o `abntexto`.
 
-> **Development status:** v3.0.0 is not released yet. The last public release is **v2.1.0**. The v3 shared academic-work foundation has completed Regression Audit, Core Corrections and Reference PDF Validation. **Scientific Article** is the active development phase and is not yet a released profile.
+> **Importante:** este é um projeto comunitário. Ele não deve ser apresentado como template oficial ou homologado pela UFC sem manifestação institucional explícita.
 
-This project is community maintained. It must not be described as an official or UFC-homologated template unless the University explicitly grants that status.
+## Qual versão devo usar?
 
-## Current v3 roadmap
+A versão estável publicada atualmente é a **v2.1.0**. Se você está escrevendo um TCC, trabalho de especialização, dissertação, tese ou projeto de pesquisa agora, use essa release em vez de clonar a branch `main`.
 
-| Phase | Status | Evidence |
-|---|---|---|
-| Regression Audit | CLOSED | 34-point librarian-review contract reconstructed and regression baseline accepted |
-| Core Corrections | CLOSED | Candidate `5f67560a...`; Static `33982156041`; Linux `33982156042`, `PASS=31 FAIL=0 SKIP=0` |
-| Reference PDF Validation | CLOSED | Candidate `b64074c...`; 55/55-page visual PASS; Static `33985595790`; Linux `33985595798` |
-| Scientific Article | **ACTIVE** | Source-backed 18-rule article contract; runtime/evidence implementation starts from the corrected shared foundation |
-| Final Certification | QUEUED | Full profile/engine/literal-font/Unicode/embedding/PDF-A/distribution matrix |
-| Release | QUEUED | Release assets, checksums and publication actions |
+A v3.0.0 está em desenvolvimento e ainda não foi publicada. Ela introduz a nova classe `abntexto-ufc` e outros recursos, mas não deve ser usada como versão estável até a publicação da release.
 
-The consolidated librarian-review state is **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains intentionally fail-closed pending authoritative current NBR 6023:2025 evidence for disputed edge cases.
+- Release estável e arquivos para download: <https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v2.1.0>
+- Template para Overleaf: <https://github.com/tiagosombrra/abntexto-ufc/releases/download/v2.1.0/modelo-latex-ufc-overleaf-2.1.0.zip>
+- Template para uso local: <https://github.com/tiagosombrra/abntexto-ufc/releases/download/v2.1.0/modelo-latex-ufc-2.1.0.zip>
 
-See `docs/ROADMAP-V3.0.0.md`, `docs/HANDOFF-V3.0.0.md` and `release/v3-roadmap.json` for the current execution state.
+O PDF de referência e os checksums também estão disponíveis na página da release.
 
-## Current profiles
+## Usando no Overleaf
 
-The v3 runtime currently supports:
+Esta é a forma mais simples de começar.
 
-- `undergraduate-capstone`
-- `specialization-capstone`
-- `masters-thesis`
-- `doctoral-thesis`
-- `research-project`
-- `anonymized-research-project`
+1. Baixe `modelo-latex-ufc-overleaf-2.1.0.zip` pelo link acima.
+2. No Overleaf, escolha **New Project > Upload Project**.
+3. Envie o arquivo ZIP sem descompactá-lo.
+4. Confirme `documento.tex` como arquivo principal do projeto, caso o Overleaf não o selecione automaticamente.
+5. Compile o projeto.
+6. Substitua os dados de exemplo pelos dados do seu trabalho e edite os arquivos das pastas de conteúdo.
 
-The canonical `scientific-article` profile is the active implementation target and must not be treated as available until its phase closes.
+O bundle do Overleaf inclui a dependência `abntexto.cls` necessária para a versão estável, evitando depender da versão instalada globalmente no serviço.
 
-## Repository layout
+## Usando localmente
 
-```text
-abntexto-ufc.cls
-abntexto-ufc/
-  core.def
-  fonts.def
-  layout.def
-  modules.def
-  frontmatter.def
-  institutional.def
-  academic-works.def
-  research-projects.def
-  objects.def
-  bibliography.def
-  backmatter.def
-  integrations/abntexto.def
-  standards/nbr6023-2025.def
-template/
-  main.tex
-  frontmatter/
-  chapters/
-  backmatter/
-  figures/
-assets/institutional/
-standards/
-tests/
-tools/
-validator/
-docs/
-release/
-  ctan/
-```
+Recomenda-se uma instalação atual do **TeX Live 2026**.
 
-The editable development example lives under `template/`. Public template and Overleaf bundles flatten that directory so users receive `main.tex` at the archive root.
-
-## Requirements
-
-Development targets TeX Live 2026 and `abntexto` 1.1 or newer. The class also uses `biblatex`/`biber`; optional modules load their own dependencies only when enabled.
-
-Literal Times New Roman and Arial certification is performed on Windows. Portable environments may use approved fallback families when strict literal-font mode is not requested. Proprietary Microsoft font files are never distributed by this repository.
-
-## Build the reference document
+1. Baixe `modelo-latex-ufc-2.1.0.zip`.
+2. Descompacte o arquivo em uma pasta de trabalho.
+3. Abra um terminal nessa pasta.
+4. Compile com:
 
 ```bash
 make compile
 ```
 
-The development document is `template/main.tex`.
+O documento principal é `documento.tex`. O PDF gerado é `documento.pdf`.
 
-Optional reference photographs used by the documentation can be fetched separately:
-
-```bash
-make reference-assets
-```
-
-When those optional licensed assets are absent, the canonical reference document intentionally renders labeled fallback boxes instead of failing the build.
-
-## Validation
-
-Routine source-only validation:
+Para remover arquivos auxiliares de compilação:
 
 ```bash
-make static-check
+make clean
 ```
 
-Full PR-oriented integration validation:
+A bibliografia usa `biblatex` e `biber`; o `Makefile` executa o fluxo necessário durante a compilação.
 
-```bash
-make check
+## Estrutura do template estável
+
+```text
+documento.tex
+1-pre-textuais/
+2-textuais/
+3-pos-textuais/
+figuras/
 ```
 
-Release-oriented integration validation:
+Use essa organização como ponto de partida:
 
-```bash
-make release-check
+- `documento.tex`: configuração geral e montagem do documento;
+- `1-pre-textuais/`: errata, dedicatória, agradecimentos, epígrafe, resumo, abstract e listas;
+- `2-textuais/`: introdução, fundamentação, metodologia, resultados, conclusão e demais seções do texto;
+- `3-pos-textuais/`: referências, apêndices e anexos;
+- `figuras/`: imagens usadas no trabalho.
+
+Evite concentrar todo o conteúdo em `documento.tex`. Manter capítulos e elementos em arquivos separados facilita revisão, colaboração e controle de versão.
+
+## Configuração básica
+
+Na versão estável v2.1.0, edite o bloco `\ufcsetup` já fornecido em `documento.tex`. Um exemplo reduzido para uma tese é:
+
+```tex
+\ufcsetup{
+  tipo = tese,
+  impressao = anverso,
+  capa = auto,
+  ficha-catalografica = nao,
+  brasao = sim,
+  fonte = times,
+  fonte-estrita = nao,
+  programa-doutorado = {Programa de Pós-Graduação em Ciência da Computação},
+  titulo-doutor = {Ciência da Computação},
+  area-doutorado = {Computação Gráfica},
+  autor = {Nome Completo do Autor},
+  titulo = {Título do Trabalho},
+  local = {Fortaleza},
+  ano = {2026},
+  orientador = {Prof. Dr. Nome do Orientador},
+  tabelas = nativo,
+  codigo = nenhum,
+  algoritmos = nenhum,
+  glossario = nenhum,
+  indice = nenhum
+}
 ```
 
-The permanent GitHub Actions workflows are:
+Edite apenas os valores correspondentes ao seu trabalho. O template distribuído contém o preâmbulo e um exemplo mais completo, com os demais campos e elementos opcionais. Não copie configurações entre versões diferentes do projeto: parta sempre dos arquivos da release que você escolheu.
 
-- `Static contract`
-- `Linux integration`
-- `Linux release check`
+## Tipos de trabalho disponíveis na v2.1.0
 
-Every material development advance must keep the execution documentation synchronized. Every roadmap phase ends with a mandatory **phase-end regression** on one immutable candidate SHA; targeted checks never replace that gate.
+| Valor de `tipo` | Uso |
+|---|---|
+| `tccgraduacao` | trabalho de graduação |
+| `tccespecializacao` | trabalho de especialização |
+| `dissertacao` | dissertação de mestrado |
+| `tese` | tese de doutorado |
+| `projeto` | projeto de pesquisa identificado |
+| `projetoanonimizado` | projeto de pesquisa com dados pessoais suprimidos |
 
-## Canonical V3 reference PDF
+A impressão pode ser configurada como `anverso` ou `frente-verso`.
 
-The corrected academic-work reference PDF was rebuilt with TeX Live 2026 from Git-bound source and inspected page by page.
+## Referências bibliográficas
 
-- build source SHA: `da02f17df4d2d0a1568edbbe8bfbbfffb7208966`
-- build run: `33983729996`
-- pages: 55, A4
-- PDF version: 1.7
-- visual review: **55/55 PASS, 0 unexplained visual failures**
-- phase-end candidate: `b64074c64941895f97fbe0f795ce826c798d17ce`
-- phase-end Static: `33985595790` — SUCCESS
-- phase-end Linux: `33985595798` — SUCCESS
+As referências ficam em:
 
-Detailed evidence is in `docs/V3-REFERENCE-PDF-VALIDATION.md` and `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`.
-
-## Scientific Article development
-
-The active phase is **Scientific Article**. Its source-backed contract contains 18 rules derived from the current article-specific authority set and preserves the distinction between required, optional, recommended and conditional requirements.
-
-Implementation must:
-
-- add one canonical `scientific-article` profile without compatibility aliases;
-- reuse shared citation, bibliography, section, summary and object infrastructure rather than fork it;
-- add article-specific positive and negative evidence before proof-state promotion;
-- preserve recommendations as recommendations rather than converting them into hard failures;
-- keep journal-specific submission instructions as an applicability boundary;
-- preserve the already validated non-article foundation.
-
-See `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `docs/V3-SCIENTIFIC-ARTICLE.md`.
-
-## Public bundles
-
-Editable template and Overleaf bundles:
-
-```bash
-make reference-assets
-make public-bundles
+```text
+3-pos-textuais/referencias.bib
 ```
 
-Complete distribution candidate:
+No arquivo `.bib`, cada obra recebe uma chave que pode ser usada nas citações do texto. A versão estável usa `biblatex-abnt` e `biber`.
 
-```bash
-make distribution-bundles
-```
+Ao adicionar ou alterar referências, faça uma compilação completa pelo `make compile` para que o Biber seja executado quando necessário.
 
-The current v3 distribution layout produces:
+## Figuras, tabelas, código e algoritmos
 
-- `dist/abntexto-ufc-3.0.0.zip`
-- `dist/abntexto-ufc-ctan-3.0.0.zip`
-- `dist/abntexto-ufc-template-3.0.0.zip`
-- `dist/abntexto-ufc-overleaf-3.0.0.zip`
-- `dist/SHA256SUMS`
+O template de exemplo já contém casos de uso desses elementos. Em geral:
 
-These are development/release-candidate outputs until the **Release** phase closes. Actual CTAN submission is blocked until that phase.
+- coloque as imagens em `figuras/`;
+- mantenha título, fonte e nota associados ao objeto correspondente;
+- habilite módulos de código, algoritmos, glossário ou índice somente quando forem necessários;
+- para tabelas, escolha o backend previsto pela configuração do template em vez de misturar implementações sem necessidade.
 
-## Standards and evidence
+O PDF de referência da release é a melhor forma de visualizar os elementos disponíveis antes de adaptá-los ao seu trabalho.
 
-The repository maintains a machine-readable standards/evidence model under `standards/`. Current cross-cutting work includes, among others, UFC institutional guidance and the applicable ABNT standards tracked by the project, including NBR 14724:2024, NBR 10520:2023, NBR 6023:2025, NBR 6024:2012 and NBR 6028:2021. The scientific-article profile additionally uses NBR 6022:2018 with the UFC article guide and current cross-cutting citation/reference rules.
+## Fontes
 
-PDF/A-2b is a project certification target for generated candidates; this does not mean UFC specifically mandates that conformance level.
+A configuração suporta Times New Roman e Arial conforme a política do template. Em ambientes portáteis, a classe pode usar famílias de fallback compatíveis quando o modo de fonte estrita estiver desativado.
 
-Reviewer comments are treated as evidence, not automatic normative authority. When current authority is insufficient, the project records the gap and fails closed instead of guessing runtime behavior.
+As fontes proprietárias da Microsoft **não são distribuídas** pelo projeto. Se você precisar exigir a família literal instalada no computador, use a configuração de fonte estrita prevista pela versão do template e garanta que a fonte esteja disponível no sistema.
 
-## Migration and project documentation
+## Ficha catalográfica
 
-Useful documents:
+Na versão estável, a ficha catalográfica é opcional e pode ser inserida como PDF externo quando aplicável. Gere a ficha pelo serviço institucional adequado e siga o exemplo incluído no template.
 
-- `docs/MIGRATING-TO-V3.md`
-- `docs/ARCHITECTURE.md`
-- `docs/ROADMAP-V3.0.0.md`
-- `docs/HANDOFF-V3.0.0.md`
-- `docs/UFC-LIBRARIAN-REVIEW.md`
-- `docs/V3-REFERENCE-PDF-VALIDATION.md`
-- `docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md`
-- `docs/ARTICLE-NORMATIVE-CONTRACT.md`
-- `docs/V3-SCIENTIFIC-ARTICLE.md`
-- `docs/ENGINEERING-LANGUAGE.md`
-- `docs/CTAN-RELEASE.md`
+## Apêndices e anexos
 
-Historical implementation evidence is retained through Git history, immutable tags, GitHub Releases, issues, pull requests and certified SHAs rather than archive directories inside the active tree.
+Use apêndice para material elaborado pelo próprio autor e anexo para material externo incorporado ao trabalho. Os exemplos distribuídos mostram como inserir ambos e como manter a identificação e a fonte do material externo.
 
-## Institutional assets
+## Problemas comuns
 
-The source repository may contain UFC institutional assets for local development and validation. Public bundles must not redistribute institutional marks unless their distribution status has been explicitly cleared. Builds must remain usable when users provide an approved institutional asset locally.
+| Problema | O que verificar |
+|---|---|
+| Referências não aparecem | compile pelo `make compile` ou confirme se o Biber foi executado |
+| Imagem não encontrada | confira o caminho e se o arquivo foi incluído na pasta do projeto |
+| Fonte literal indisponível | desative o modo estrito ou instale legalmente a fonte requerida no sistema |
+| Overleaf não compila após upload | confirme que `documento.tex` é o arquivo principal e use o bundle específico para Overleaf |
+| Mudança de versão quebra comandos | confira se o projeto está usando a mesma release do template; não misture APIs de versões diferentes |
 
-## License
+## Desenvolvimento da v3
 
-Project code and documentation are distributed under the terms stated in `LICENSE` (LPPL 1.3c or later). Third-party and institutional assets have separate provenance and licensing rules.
+A v3.0.0 ainda está em desenvolvimento. Ela usa a classe `abntexto-ufc` e uma API diferente da v2.1.0. O perfil de artigo científico também está sendo desenvolvido nessa linha e ainda não faz parte de uma release estável.
+
+Se você está contribuindo com a v3, consulte:
+
+- `docs/ROADMAP-V3.0.0.md`;
+- `docs/HANDOFF-V3.0.0.md`;
+- `docs/MIGRATING-TO-V3.md`.
+
+O histórico de implementação, resultados de CI, decisões normativas, issues e evidências de regressão ficam nesses documentos e no GitHub, não neste guia de uso.
+
+## Licença
+
+O código e a documentação do projeto são distribuídos conforme `LICENSE` (LPPL 1.3c ou posterior). Ativos institucionais e arquivos de terceiros podem possuir condições próprias de uso e distribuição.
