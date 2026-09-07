@@ -18,7 +18,7 @@ for token in \
   '\setlength{\parindent}{2cm}' \
   '\setlength{\parskip}{0pt}' \
   '\justifying' \
-  '\AtBeginDocument{\ufc_article_apply_body_typography:}'
+  '\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}'
 do
   grep -Fq "$token" "$module" || {
     echo "Scientific article body gate failed: required profile-specific body token is missing: $token"
@@ -113,5 +113,5 @@ cleanup_job scientific-article-body-pdflatex
 cleanup_job scientific-article-body-lualatex
 cleanup_job "$negative_job"
 
-echo 'ARTICLE-BODY-GATE-EVIDENCE status=PASS engines=2 required_structure=introduction,development,final-considerations,references body_typography=12pt,justified,2cm,single negative_structure_rejected=true non_article_runtime_changed=false proof_state_promoted=0'
+echo 'ARTICLE-BODY-GATE-EVIDENCE status=PASS engines=2 required_structure=introduction,development,final-considerations,references body_typography=12pt,justified,2cm,single activation=profile-scoped-post-shared-initialization negative_structure_rejected=true non_article_runtime_changed=false proof_state_promoted=0'
 echo 'Scientific article body gate completed.'

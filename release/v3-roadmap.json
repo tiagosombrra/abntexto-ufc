@@ -94,63 +94,16 @@
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a"
   },
   "phases": [
-    {
-      "id": "regression-audit",
-      "name": "Regression Audit",
-      "status": "CLOSED",
-      "purpose": "Revalidate shared V3 foundation and findings.",
-      "exit_gate": "Green phase-end regression and stable 34-item contract.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "core-corrections",
-      "name": "Core Corrections",
-      "status": "CLOSED",
-      "purpose": "Correct shared runtime, template, normative mapping, documentation and tests.",
-      "exit_gate": "Candidate 5f67560aeded1e6b4f77f4a31e14a91f3181a4da passed Static 33982156041 and Linux 33982156042.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "reference-pdf-validation",
-      "name": "Reference PDF Validation",
-      "status": "CLOSED",
-      "purpose": "Validate corrected canonical V3 academic-work PDF page by page.",
-      "exit_gate": "Candidate b64074c64941895f97fbe0f795ce826c798d17ce passed Static 33985595790 and Linux 33985595798 after accepted provenance and complete 55-page visual PASS.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "scientific-article",
-      "name": "Scientific Article",
-      "status": "ACTIVE",
-      "purpose": "Implement one canonical scientific-article profile on the corrected shared foundation using the retained 18-rule source contract.",
-      "exit_gate": "Article runtime, article-specific positive/negative evidence, canonical article rendering and complete-scope phase-end regression pass on one immutable SHA.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "final-certification",
-      "name": "Final Certification",
-      "status": "QUEUED",
-      "purpose": "Run complete profile, engine, literal-font, Unicode, embedding, PDF-A, distribution and release-reference-PDF reproducibility certification.",
-      "exit_gate": "Complete certification and deterministic release-reference-PDF evidence green on one immutable SHA.",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "release",
-      "name": "Release",
-      "status": "QUEUED",
-      "purpose": "Finalize documentation, bundles, reproducible reference PDF, checksums and publication actions.",
-      "exit_gate": "Issue #18 resolved, release checklist complete and final regression recorded.",
-      "phase_end_regression_required": true
-    }
+    {"id":"regression-audit","name":"Regression Audit","status":"CLOSED","purpose":"Revalidate shared V3 foundation and findings.","exit_gate":"Green phase-end regression and stable 34-item contract.","phase_end_regression_required":true},
+    {"id":"core-corrections","name":"Core Corrections","status":"CLOSED","purpose":"Correct shared runtime, template, normative mapping, documentation and tests.","exit_gate":"Candidate 5f67560aeded1e6b4f77f4a31e14a91f3181a4da passed Static 33982156041 and Linux 33982156042.","phase_end_regression_required":true},
+    {"id":"reference-pdf-validation","name":"Reference PDF Validation","status":"CLOSED","purpose":"Validate corrected canonical V3 academic-work PDF page by page.","exit_gate":"Candidate b64074c64941895f97fbe0f795ce826c798d17ce passed Static 33985595790 and Linux 33985595798 after accepted provenance and complete 55-page visual PASS.","phase_end_regression_required":true},
+    {"id":"scientific-article","name":"Scientific Article","status":"ACTIVE","purpose":"Implement one canonical scientific-article profile on the corrected shared foundation using the retained 18-rule source contract.","exit_gate":"Article runtime, article-specific positive/negative evidence, canonical article rendering and complete-scope phase-end regression pass on one immutable SHA.","phase_end_regression_required":true},
+    {"id":"final-certification","name":"Final Certification","status":"QUEUED","purpose":"Run complete profile, engine, literal-font, Unicode, embedding, PDF-A, distribution and release-reference-PDF reproducibility certification.","exit_gate":"Complete certification and deterministic release-reference-PDF evidence green on one immutable SHA.","phase_end_regression_required":true},
+    {"id":"release","name":"Release","status":"QUEUED","purpose":"Finalize documentation, bundles, reproducible reference PDF, checksums and publication actions.","exit_gate":"Issue #18 resolved, release checklist complete and final regression recorded.","phase_end_regression_required":true}
   ],
   "active_work": {
     "review_items": 34,
-    "review_status": {
-      "pass": 33,
-      "partial": 0,
-      "fail": 0,
-      "normative_review": 1
-    },
+    "review_status": {"pass":33,"partial":0,"fail":0,"normative_review":1},
     "review_contract": "docs/UFC-LIBRARIAN-REVIEW.md",
     "scientific_article_plan": "docs/V3-SCIENTIFIC-ARTICLE.md",
     "scientific_article_contract": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
@@ -160,29 +113,22 @@
     "scientific_article_profile_present_at_entry": false,
     "scientific_article_profile_present_now": true,
     "scientific_article_profile_canonical_type": "scientific-article",
-    "scientific_article_new_metadata_keys": [
-      "submission-date",
-      "article-author-note"
-    ],
+    "scientific_article_new_metadata_keys": ["submission-date","article-author-note"],
     "scientific_article_active_step": 4,
     "scientific_article_step1_state": "accepted",
     "scientific_article_step2_state": "accepted",
     "scientific_article_step3_state": "accepted",
-    "scientific_article_step4_state": "correction-implemented-pending-acceptance",
-    "latest_implementation_checkpoint_sha": "e5291137d4753b7d776916ca0f08c67929dbb76b",
-    "latest_implementation_checkpoint_state": "step4-body-spacing-correction-in-current-synchronized-checkpoint",
+    "scientific_article_step4_state": "gate-coupling-corrected-pending-acceptance",
+    "latest_implementation_checkpoint_sha": "177a62115e1dc28b24394ed4061600c3a7386fca",
+    "latest_implementation_checkpoint_state": "step4-runtime-order-corrected-static-green-linux-stale-source-gate-coupling",
     "latest_fully_validated_checkpoint_sha": "a99f1e19eac1294eac35fb1da85196a1b8295d1a",
     "latest_fully_validated_checkpoint_state": "readme-user-guide-static-green-linux-green-step3-remains-accepted",
     "core_corrections_closed": true,
     "reference_pdf_validation_state": "closed",
     "shared_foundation_merged_to_main": true,
     "shared_foundation_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
-    "current_correction_batch": [
-      "Scientific Article — Step 4 body-spacing initialization-order correction implemented, acceptance rerun pending"
-    ],
-    "known_runtime_failures": [
-      "Linux 34058435311 on 8b52ee4: scientific-article-body rendered shared 1.5 spacing (20.700 pt) instead of same-document single-spacing calibration (13.800 pt); validator-source/profile/front-block/foreign-elements passed"
-    ],
+    "current_correction_batch": ["Scientific Article — Step 4 stale implementation-token gate coupling corrected, acceptance rerun pending"],
+    "known_runtime_failures": ["Linux 34058435311 on 8b52ee4: article body rendered shared 1.5 spacing (20.700 pt) instead of same-document single-spacing calibration (13.800 pt); runtime correction remains pending physical revalidation"],
     "known_gate_failures": [
       "Static 34003576066 on 768d355: stale pre-activation normative-currency coupling after Scientific Article activation",
       "Linux 34003838521 on 6587636: unsupported author-note physical-page percentage evidence predicate",
@@ -190,34 +136,27 @@
       "Static 34030098936 on 336bc982: validator-source dynamic traceability load of tests/run.py could not resolve sibling integration_suites.py",
       "Linux 34030098924 on 336bc982: intended profiles,article scope selected; seven checks passed and validator-source failed on the same runner sibling-import defect",
       "Linux 34030827664 on 4f1c9a1: scope determination failed before integration because synchronize BEFORE_SHA was unavailable in checkout; fatal bad object; Static 34030827665 succeeded",
-      "Static 34053874788 on 3e3ece5: user-facing README reintroduced unclassified retired class identity while explaining stable v2.1.0; corrected without weakening canonical_identity.py"
+      "Static 34053874788 on 3e3ece5: README reintroduced unclassified retired class identity; corrected without weakening canonical_identity.py",
+      "Linux 34070809177 on 177a621: front-block, foreign-elements and body shell guards required retired literal AtBeginDocument registration after runtime moved to begindocument/end; physical body checker did not execute"
     ],
     "pending_acceptance_gates": [
-      "Corrected Step 4 synchronized checkpoint must pass Static contract",
-      "Corrected Step 4 bounded article Linux scope must pass all five article checks",
-      "Article body evidence must measure 12 pt, justified alignment, 2 cm first-line indent and 13.800 pt-equivalent single spacing under pdfLaTeX and LuaLaTeX",
+      "Current synchronized Step 4 gate-correction checkpoint must pass Static contract",
+      "Current bounded article Linux scope must pass all five article checks",
+      "Article body evidence must physically prove 12 pt, justified alignment, 2 cm first-line indent and single spacing under pdfLaTeX and LuaLaTeX",
       "Missing-development negative fixture must be rejected for the intended structural reason",
-      "Article body correction must remain scoped to scientific-article",
+      "Source guards must enforce profile-scoped post-shared-initialization activation without freezing obsolete hook syntax",
       "Article proof-state must not advance merely because shared mechanisms are reused",
-      "Step 5 begins only after corrected Step 4 acceptance is recorded",
+      "Step 5 begins only after Step 4 acceptance is recorded",
       "Produce and visually inspect provenance-bound canonical article PDF",
       "Pass Scientific Article phase-end regression with complete Linux scope on one immutable SHA"
     ],
-    "deferred_authority_conflicts": [
-      "review item 33: selected NBR 6023:2025 edge cases"
-    ],
-    "release_blockers": [
-      "issue #18: make release reference PDF bit-reproducible with pinned epoch/SOURCE_DATE_EPOCH and hash evidence",
-      "Scientific Article phase must close before Final Certification",
-      "Final Certification must pass before Release"
-    ],
-    "temporary_executor": {
-      "state": "none-active"
-    }
+    "deferred_authority_conflicts": ["review item 33: selected NBR 6023:2025 edge cases"],
+    "release_blockers": ["issue #18: make release reference PDF bit-reproducible with pinned epoch/SOURCE_DATE_EPOCH and hash evidence","Scientific Article phase must close before Final Certification","Final Certification must pass before Release"],
+    "temporary_executor": {"state":"none-active"}
   },
   "linux_integration": {
     "policy_document": "docs/LINUX-INTEGRATION-SCOPES.md",
-    "state": "step4-body-spacing-correction-acceptance-pending",
+    "state": "step4-gate-coupling-correction-acceptance-pending",
     "automatic_pr_scope": "auto",
     "synchronize_diff_window": "incremental-push-when-endpoints-reachable",
     "missing_incremental_endpoint_fallback": "full-pr-fail-closed",
@@ -226,28 +165,8 @@
     "phase_end_required_scope": "complete",
     "unknown_technical_path_scope": "complete",
     "documentation_only": "skip-heavy-integration",
-    "manual_scopes": [
-      "auto",
-      "complete",
-      "article",
-      "reference-document",
-      "reference-pdf",
-      "frontmatter",
-      "layout",
-      "objects",
-      "bibliography",
-      "backmatter",
-      "research-project",
-      "profiles",
-      "smoke"
-    ],
-    "article_scope_checks": [
-      "validator-source",
-      "scientific-article-profile",
-      "scientific-article-front-block",
-      "scientific-article-foreign-elements",
-      "scientific-article-body"
-    ],
+    "manual_scopes": ["auto","complete","article","reference-document","reference-pdf","frontmatter","layout","objects","bibliography","backmatter","research-project","profiles","smoke"],
+    "article_scope_checks": ["validator-source","scientific-article-profile","scientific-article-front-block","scientific-article-foreign-elements","scientific-article-body"],
     "article_gates_first_class": true,
     "profiles_scope_excludes_article": true,
     "profiles_scope_profile_count": 6,
@@ -258,7 +177,7 @@
   "branch_plan": {
     "current_work_branch": "feat/v3-scientific-article",
     "integration_pr": 286,
-    "integration_state": "open-step4-body-spacing-correction-acceptance-pending",
+    "integration_state": "open-step4-gate-coupling-correction-acceptance-pending",
     "integration_main_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
     "previous_integration_branch": "plan/v3-regression-reset",
     "previous_branch_state": "historical-no-new-work",
@@ -266,27 +185,13 @@
     "historical_remote_branches_are_authority": false
   },
   "issue_state": {
-    "scientific_article": {
-      "issue": 280,
-      "state": "open-active"
-    },
-    "release_reference_pdf_reproducibility": {
-      "issue": 18,
-      "state": "open-release-blocker"
-    }
+    "scientific_article": {"issue":280,"state":"open-active"},
+    "release_reference_pdf_reproducibility": {"issue":18,"state":"open-release-blocker"}
   },
   "authority_decisions": {
-    "object_typography": {
-      "status": "accepted",
-      "decision_document": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
-      "upper_identification_title_pt": 12,
-      "lower_source_legend_note_pt": 10,
-      "line_spacing": "single",
-      "review_item": 21,
-      "current_state": "PASS"
-    },
+    "object_typography": {"status":"accepted","decision_document":"docs/V3-OBJECT-TYPOGRAPHY-DECISION.md","upper_identification_title_pt":12,"lower_source_legend_note_pt":10,"line_spacing":"single","review_item":21,"current_state":"PASS"},
     "scientific_article": {
-      "status": "source-contract-accepted-runtime-steps1-3-accepted-step4-correction-implemented-pending-acceptance",
+      "status": "source-contract-accepted-runtime-steps1-3-accepted-step4-runtime-and-gate-corrections-pending-acceptance",
       "rule_count": 18,
       "contract_document": "docs/ARTICLE-NORMATIVE-CONTRACT.md",
       "execution_document": "docs/V3-SCIENTIFIC-ARTICLE.md",
@@ -299,55 +204,52 @@
     }
   },
   "evidence": {
-    "core_corrections_phase_end_candidate_sha": "5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
-    "core_corrections_phase_end_static_run": 33982156041,
-    "core_corrections_phase_end_linux_run": 33982156042,
-    "core_corrections_phase_end_linux_summary": "PASS=31 FAIL=0 SKIP=0",
-    "reference_pdf_phase_end_candidate_sha": "b64074c64941895f97fbe0f795ce826c798d17ce",
-    "reference_pdf_phase_end_static_run": 33985595790,
-    "reference_pdf_phase_end_linux_run": 33985595798,
-    "reference_pdf_sha256": "bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c",
-    "reference_pdf_pages": 55,
-    "reference_pdf_visual_review_status": "pass",
-    "reference_pdf_visual_review_pages": "55/55",
-    "scientific_article_step1_acceptance_sha": "08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
-    "scientific_article_step1_static_run": 34001350884,
-    "scientific_article_step1_linux_run": 34001350953,
-    "scientific_article_step2_acceptance_sha": "0947669c2c096dca93991e042d8ae245754688ba",
-    "scientific_article_step2_static_run": 34026680871,
-    "scientific_article_step2_linux_run": 34026680882,
-    "scientific_article_step3_implementation_sha": "81e08321222efb03626ac421fc645bd66edd5ae8",
-    "scientific_article_step3_acceptance_sha": "82d20fa63950bb2acd0576f8ea6ad27bef8f49ba",
-    "scientific_article_step3_acceptance_static_run": 34031144114,
-    "scientific_article_step3_acceptance_static_conclusion": "success",
-    "scientific_article_step3_acceptance_linux_run": 34031144269,
-    "scientific_article_step3_acceptance_linux_conclusion": "success",
-    "scientific_article_step4_implementation_sha": "e5291137d4753b7d776916ca0f08c67929dbb76b",
-    "scientific_article_step4_rejected_checkpoint_sha": "8b52ee4b36b23868fecce9bbe9b843f689ccc01e",
-    "scientific_article_step4_rejected_static_run": 34058435312,
-    "scientific_article_step4_rejected_static_conclusion": "success",
-    "scientific_article_step4_rejected_linux_run": 34058435311,
-    "scientific_article_step4_rejected_linux_conclusion": "failure",
-    "scientific_article_step4_rejected_linux_summary": "SCOPE=article PASS=4 FAIL=1 SKIP=0",
-    "scientific_article_step4_rejected_classification": "article-body-line-spacing-runtime-initialization-order",
-    "scientific_article_step4_rejected_body_gap_pt": 20.7,
-    "scientific_article_step4_single_spacing_calibration_gap_pt": 13.8,
-    "scientific_article_step4_correction_state": "current-synchronized-checkpoint-awaiting-ci",
-    "scientific_article_step4_acceptance_state": "correction-rerun-pending-static-and-linux",
-    "readme_user_guide_acceptance_sha": "a99f1e19eac1294eac35fb1da85196a1b8295d1a",
-    "readme_user_guide_acceptance_static_run": 34054110778,
-    "readme_user_guide_acceptance_static_conclusion": "success",
-    "readme_user_guide_acceptance_linux_run": 34054110738,
-    "readme_user_guide_acceptance_linux_conclusion": "success",
-    "scoped_linux_integration_state": "step4-body-spacing-correction-acceptance-pending",
-    "librarian_review_contract_items": 34,
-    "librarian_review_contract_machine_protected": true
+    "core_corrections_phase_end_candidate_sha":"5f67560aeded1e6b4f77f4a31e14a91f3181a4da",
+    "core_corrections_phase_end_static_run":33982156041,
+    "core_corrections_phase_end_linux_run":33982156042,
+    "core_corrections_phase_end_linux_summary":"PASS=31 FAIL=0 SKIP=0",
+    "reference_pdf_phase_end_candidate_sha":"b64074c64941895f97fbe0f795ce826c798d17ce",
+    "reference_pdf_phase_end_static_run":33985595790,
+    "reference_pdf_phase_end_linux_run":33985595798,
+    "reference_pdf_sha256":"bb96593849f4c76d32f43248ab9d5e23afa303a168fd76b2b6166431353ec04c",
+    "reference_pdf_pages":55,
+    "reference_pdf_visual_review_status":"pass",
+    "reference_pdf_visual_review_pages":"55/55",
+    "scientific_article_step1_acceptance_sha":"08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1",
+    "scientific_article_step1_static_run":34001350884,
+    "scientific_article_step1_linux_run":34001350953,
+    "scientific_article_step2_acceptance_sha":"0947669c2c096dca93991e042d8ae245754688ba",
+    "scientific_article_step2_static_run":34026680871,
+    "scientific_article_step2_linux_run":34026680882,
+    "scientific_article_step3_acceptance_sha":"82d20fa63950bb2acd0576f8ea6ad27bef8f49ba",
+    "scientific_article_step3_acceptance_static_run":34031144114,
+    "scientific_article_step3_acceptance_linux_run":34031144269,
+    "scientific_article_step4_implementation_sha":"e5291137d4753b7d776916ca0f08c67929dbb76b",
+    "scientific_article_step4_rejected_checkpoint_sha":"8b52ee4b36b23868fecce9bbe9b843f689ccc01e",
+    "scientific_article_step4_rejected_static_run":34058435312,
+    "scientific_article_step4_rejected_linux_run":34058435311,
+    "scientific_article_step4_rejected_classification":"article-body-line-spacing-runtime-initialization-order",
+    "scientific_article_step4_runtime_correction_checkpoint_sha":"177a62115e1dc28b24394ed4061600c3a7386fca",
+    "scientific_article_step4_runtime_correction_static_run":34070809181,
+    "scientific_article_step4_runtime_correction_static_conclusion":"success",
+    "scientific_article_step4_runtime_correction_linux_run":34070809177,
+    "scientific_article_step4_runtime_correction_linux_conclusion":"failure",
+    "scientific_article_step4_runtime_correction_linux_summary":"SCOPE=article PASS=2 FAIL=3 SKIP=0",
+    "scientific_article_step4_runtime_correction_linux_classification":"stale-implementation-token-gate-coupling",
+    "scientific_article_step4_gate_correction_state":"current-synchronized-checkpoint-awaiting-ci",
+    "scientific_article_step4_acceptance_state":"gate-correction-rerun-pending-static-and-linux",
+    "readme_user_guide_acceptance_sha":"a99f1e19eac1294eac35fb1da85196a1b8295d1a",
+    "readme_user_guide_acceptance_static_run":34054110778,
+    "readme_user_guide_acceptance_linux_run":34054110738,
+    "scoped_linux_integration_state":"step4-gate-coupling-correction-acceptance-pending",
+    "librarian_review_contract_items":34,
+    "librarian_review_contract_machine_protected":true
   },
   "release_policy": {
-    "ctan_submission": "blocked-until-release-phase",
-    "proprietary_fonts_redistributed": false,
-    "deterministic_reference_pdf_issue": 18,
-    "deterministic_reference_pdf_required_before_release": true,
-    "history_storage": "git-tags-releases-issues-pull-requests-certified-shas"
+    "ctan_submission":"blocked-until-release-phase",
+    "proprietary_fonts_redistributed":false,
+    "deterministic_reference_pdf_issue":18,
+    "deterministic_reference_pdf_required_before_release":true,
+    "history_storage":"git-tags-releases-issues-pull-requests-certified-shas"
   }
 }

@@ -22,16 +22,14 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 - Active phase: **Scientific Article**.
 - Canonical base: `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a`.
 - Active task branch: `feat/v3-scientific-article`, PR #286.
-- Step 1: ACCEPTED at `08b878a21c5b901e47dbf80f5c4dd2fb9043c1a1`.
-- Step 2: ACCEPTED at `0947669c2c096dca93991e042d8ae245754688ba`; Static `34026680871`, Linux `34026680882`.
-- Step 3: ACCEPTED at `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`, Linux `34031144269`.
-- README user-guide correction: ACCEPTED at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`; Static `34054110778`, Linux `34054110738`.
-- Step 4 implementation commit: `e5291137d4753b7d776916ca0f08c67929dbb76b`.
-- Rejected Step 4 synchronized checkpoint: `8b52ee4b36b23868fecce9bbe9b843f689ccc01e`; Static `34058435312` PASS, Linux `34058435311` FAIL (`article`: PASS=4 FAIL=1).
-- Step 4 failure classification: real runtime initialization-order defect. The article body rendered at the shared 1.5-spacing gap (`20.700 pt`) instead of the same-document single-spacing calibration (`13.800 pt`).
-- Current batch: **Step 4 — body-spacing initialization-order correction implemented, acceptance rerun pending**.
-- Correction strategy: keep the article-only runtime predicate and apply it through `begindocument/end`, after shared begin-document layout initialization. The body checker is unchanged.
-- Step 5 remains blocked until the corrected synchronized checkpoint is green and acceptance is documented.
+- Steps 1–3: ACCEPTED. Step 3 acceptance: `82d20fa63950bb2acd0576f8ea6ad27bef8f49ba`; Static `34031144114`; Linux `34031144269`.
+- README user guide: ACCEPTED at `a99f1e19eac1294eac35fb1da85196a1b8295d1a`; Static `34054110778`; Linux `34054110738`.
+- Step 4 implementation: `e5291137d4753b7d776916ca0f08c67929dbb76b`.
+- Rejected Step 4 checkpoint `8b52ee4b36b23868fecce9bbe9b843f689ccc01e`: Static `34058435312` PASS; Linux `34058435311` FAIL because body spacing remained 1.5 (`20.700 pt`) instead of single (`13.800 pt`).
+- Runtime correction checkpoint `177a62115e1dc28b24394ed4061600c3a7386fca`: Static `34070809181` PASS; Linux `34070809177` FAIL before physical body execution because three Step 4 gates still required the retired literal `\AtBeginDocument{...}` registration.
+- Current batch: **Step 4 — remove stale implementation-token coupling from article gates and rerun acceptance**.
+- The runtime correction remains `\AddToHook{begindocument/end}{\ufc_article_apply_body_typography:}`. The physical body checker is unchanged.
+- Step 5 remains blocked until the corrected Step 4 runtime and updated semantic gates pass together.
 - Shared librarian-review state remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**; item 33 remains fail-closed.
 - Issue #18 remains a Final Certification/Release blocker.
 
@@ -40,15 +38,11 @@ Memory, prior chats, historical branch names, old pull requests and workflow nam
 1. **Regression Audit** — closed
 2. **Core Corrections** — closed
 3. **Reference PDF Validation** — closed
-4. **Scientific Article** — active, Step 4 correction acceptance gate
+4. **Scientific Article** — active, Step 4 acceptance gate
 5. **Final Certification** — queued
 6. **Release** — queued
 
 Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable SHAs provide traceability.
-
-## Linux integration scopes
-
-`docs/LINUX-INTEGRATION-SCOPES.md` is the orchestration contract. The `article` scope contains `validator-source`, `scientific-article-profile`, `scientific-article-front-block`, `scientific-article-foreign-elements`, and `scientific-article-body`. `profiles` remains the six non-article profiles. Scoped runs are intermediate evidence only; phase-end regression always uses `complete`.
 
 ## Scientific Article rules
 
@@ -57,11 +51,11 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Keep required, optional, recommended and required-when-applicable semantics distinct.
 - Reuse shared bibliography, citation, section, object and summary mechanisms rather than fork them.
 - Shared implementation is not article proof.
-- Step 4 runtime body activation must remain profile-scoped and must not change the six non-article profiles.
-- Step 4 requires article-specific physical PDF evidence for 12 pt, justification, 2 cm first-line indent and single spacing, plus a negative structural case.
-- The failed `34058435311` body measurement is a runtime defect; do not weaken or recalibrate the checker to accept 1.5 spacing.
+- Step 4 body activation must remain profile-scoped and execute after shared begin-document layout initialization.
+- Step 4 must prove 12 pt, justification, 2 cm first-line indent and true single spacing under both engines, plus the missing-Development negative case.
+- Tests may protect semantic/runtime boundaries but must not freeze an implementation token when a different hook preserves the required behavior. The `34070809177` failure is classified as stale gate coupling; updating those source guards must not weaken physical PDF evidence.
 - Recommendations remain advisory; journal instructions remain conditional.
-- Step 6, not Step 4, owns later proof-state hardening/promotion.
+- Step 6 owns later proof-state hardening/promotion.
 
 ## Engineering rules
 
@@ -70,7 +64,7 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Do not silently change normative IDs, expected values, tolerances, locators, applicability, source precedence, modality or proof state.
 - A green test proves only the contract encoded by that test.
 - Reviewer comments are evidence, not automatic normative authority.
-- Do not weaken tests to recover green CI.
+- Do not weaken tests to recover green CI. Correct stale implementation coupling only when the semantic/physical predicate remains equally or more strict.
 - Temporary executors must be removed before checkpoint acceptance.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
 - Do not redistribute proprietary Microsoft fonts.
@@ -86,7 +80,7 @@ For every material advance, update the relevant execution document and canonical
 
 No phase may transition to `CLOSED`, and no subsequent phase may become `ACTIVE`, until one immutable candidate SHA passes the complete relevant **phase-end regression** and the result is recorded.
 
-The machine contract keeps `phase_end_regression.candidate = one-immutable-sha`. Scoped Step checks never replace the Scientific Article phase-end regression; the phase-end Linux scope is `complete`.
+The machine contract keeps `phase_end_regression.candidate = one-immutable-sha`. Scoped Step checks never replace the Scientific Article phase-end regression; phase-end Linux uses `complete`.
 
 ## Fail-closed rule
 
