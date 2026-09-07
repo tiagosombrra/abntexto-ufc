@@ -13,45 +13,52 @@ Updated: 2026-09-07
 | Active phase | **Scientific Article** |
 | Steps 1–3 | ACCEPTED |
 | Latest fully validated checkpoint | `a99f1e19eac1294eac35fb1da85196a1b8295d1a` |
-| Latest rejected synchronized Step 4 checkpoint | `49e7b179f7de9274f1cbf01fefed20ce04eae8e0`; Static `34111737479` PASS; Linux `34111737488` FAIL, `SCOPE=complete PASS=32 FAIL=2 SKIP=1` |
-| Current Step 4 implementation | `6a7ef821875c40b6fe0bbc3cca25e3c0ff4cb307` |
-| Current work | **Use supported `\\singlesp` and reapply article typography after `\\textual`; acceptance rerun pending** |
+| Latest synchronized Step 4 checkpoint | `05194675f7d41d8c4f35227e67e8ee303d1ea79a` |
+| Static | `34115345674` — PASS |
+| Linux | `34115345586` — FAIL, `SCOPE=article PASS=4 FAIL=1 SKIP=0` |
+| Physical body evidence | **PASS under pdfLaTeX and LuaLaTeX**: 12 pt, justified, 2 cm first-line indent, single spacing `13.800 pt` |
+| Remaining Step 4 defect | negative structure checker matched `desenvolvimento` in prose instead of requiring a rendered heading |
+| Checker correction | `4039fa011b7f54f4f0be6d004131fc0e06567e2e` |
+| Current work | **Require structural headings and rerun synchronized Step 4 acceptance** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-## Step 4 failure classification
+## Step 4 current classification
 
-| Checkpoint | Result | Classification |
+| Surface | Result | Classification |
 |---|---|---|
-| `8b52ee4...` | body PDF measured `20.700 pt` vs single calibration `13.800 pt` | real runtime spacing defect |
-| `177a621...` | three article gates stopped on retired `AtBeginDocument` token before body PDF check | stale test-token coupling |
-| `bf6c48e...` | Static PASS; Linux article PASS=4 FAIL=1; body again `20.700 pt` vs `13.800 pt` | begin-document route physically ineffective |
-| `09b870d...` | Static `34072362333` PASS; Linux `34072362335` PASS=4 FAIL=1; body still `20.700 pt` vs `13.800 pt` | front-block-only activation transient; first section resets shared spacing through `\\textual` |
-| `49e7b17...` | Static `34111737479` PASS; Linux `34111737488` `SCOPE=complete PASS=32 FAIL=2 SKIP=1` | deprecated `\\spacing{1}` warning stopped article front-block/body checks before physical body validation |
+| Supported single-spacing API | `\\singlesp`; no deprecated-spacing warning | PASS |
+| Textual-transition persistence | `cmd/textual/after` route reached physical body evidence | PASS |
+| pdfLaTeX body | 12 pt; indent `57.125 pt`, delta `0.432 pt`; spacing `13.800 pt` | PASS |
+| LuaLaTeX body | 12 pt; indent `57.125 pt`, delta `0.432 pt`; spacing `13.800 pt` | PASS |
+| Required positive structure | Introduction, Development, Final Considerations, References found | PASS |
+| Missing-Development negative | rejected, but for absent `ARTICLEBODYSTART` instead of missing Development | **FAIL — evidence classification defect** |
 
-The `49e7...` result narrows the defect again. Reapplying article typography after `\\textual` remains necessary, but `\\spacing{1}` is an obsolete upstream API and cannot be accepted by the repository warning policy. The physical body checker was not reached in that run, so no physical Step 4 acceptance is inferred from it.
+The runtime spacing defect is therefore physically corrected. Step 4 is not yet accepted because the negative contract requires the fixture to fail for the intended structural reason.
 
-Implementation `6a7ef821875c40b6fe0bbc3cca25e3c0ff4cb307` replaces `\\spacing{1}` with supported `\\singlesp`, retains `cmd/textual/after`, and keeps activation after the required summary. The dedicated body source gate now requires the supported route and explicitly rejects a regression to deprecated `\\spacing{1}`. Physical predicates remain unchanged.
+The root cause is in `tests/checks/scientific_article_body.py`: the old structure detector folded the entire extracted PDF and searched for substrings. The negative fixture intentionally says the word `desenvolvimento` in explanatory prose, so that prose incorrectly satisfied the structural predicate.
+
+Correction `4039fa011b7f54f4f0be6d004131fc0e06567e2e` strengthens the detector to match one rendered heading line for each required element, with optional progressive numbering. The negative fixture remains unchanged, so incidental prose can no longer masquerade as a heading. Physical PDF predicates, tolerances, runtime and authority/proof state are unchanged.
 
 ## Acceptance gate before Step 5
 
 | Gate | Required |
 |---|---|
-| Static | PASS on the synchronized correction checkpoint |
-| Linux | all five article checks PASS; complete scope may run when selected by orchestration |
-| Body PDF | 12 pt, justified, 2 cm indent, single spacing under pdfLaTeX and LuaLaTeX |
-| Transition persistence | body spacing and 2 cm indent survive the automatic `\\textual` transition |
-| API compatibility | no deprecated `\\spacing` warning; supported `\\singlesp` route |
-| Negative structure | missing Desenvolvimento rejected for the intended reason |
-| Step 2/3 isolation | earlier accepted gates remain independent of Step 4 implementation syntax |
-| Authority/proof state | unchanged |
+| Static | PASS on the synchronized checker-correction checkpoint |
+| Linux | all five article checks PASS |
+| Body PDF | retain 12 pt, justified, 2 cm and 13.800 pt single spacing under both engines |
+| Transition persistence | retain physical PASS after automatic `\\textual` transition |
+| API compatibility | no deprecated spacing warning |
+| Negative structure | missing Development rejected specifically as a missing required heading |
+| Step 2/3 isolation | earlier accepted gates remain independent from Step 4 implementation syntax |
+| Authority/proof state | unchanged; no proof-state promotion in Step 4 |
 
 ## Immediate action
 
-1. publish the synchronized checkpoint containing implementation `6a7ef821...` plus this control-plane update;
-2. run Static and Linux on that exact synchronized checkpoint;
+1. publish the synchronized checkpoint containing checker correction `4039fa011...` plus this control-plane update;
+2. run Static and Linux on that exact checkpoint;
 3. classify any failure before changing runtime/tests;
-4. if all five article checks pass with physical body evidence, record Step 4 acceptance and activate Step 5;
+4. if all five article checks pass and the negative fixture is rejected for the intended reason, record Step 4 acceptance and activate Step 5;
 5. later, close Scientific Article only after canonical article PDF visual review and a complete phase-end regression on one immutable SHA.
 
 ## Mandatory operating discipline
@@ -65,6 +72,7 @@ Every phase requires a complete **phase-end regression** on one immutable candid
 - Preserve all accepted non-article profiles and the shared academic-work PDF baseline.
 - Preserve the retained 18-rule article source contract and modality distinctions.
 - Do not weaken warning or physical PDF predicates to compensate for runtime defects.
+- Negative fixtures must be rejected for the intended predicate, not an unrelated later error.
 - Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 - Issue #18 remains owned by Final Certification/Release.
 - Do not redistribute proprietary fonts.
