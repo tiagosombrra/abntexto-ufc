@@ -7,60 +7,48 @@ Updated: 2026-09-07
 | Fact | State |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical `main` | `fbf7cc4839ce318024a7d1ed517dd50fab5773ac` |
-| Active branch / PR | `feat/v3-scientific-article` / #286 |
-| Current-main reconciliation merge | `85cf22b6fe5d117bb2611a2865911e0d20a19363` |
-| Active phase | **Scientific Article** |
-| Steps 1–6 | **ACCEPTED** |
-| Step 6 acceptance | `e941a7f9b4685a9bcf687135e8d5168af2d69ec7`; Static `34146793998`; Linux `34146794016` |
-| Step 7 artifact source | `f62ac703d8992af96b79cf83e125350ee561bd92` |
-| Step 7 artifact run | `34153348385` — SUCCESS; artifact `10030160290` |
-| Step 7 visual review | **PASS — 5/5 pages, unexplained visual FAIL 0** |
-| Step 7 state | **VISUAL-PASS — CLEANUP CHECKPOINT CI PENDING** |
-| Temporary executor | removed in current synchronized cleanup checkpoint |
-| Step 8 | QUEUED — immutable complete phase-end regression |
+| Canonical `main` before current PR merge | `fbf7cc4839ce318024a7d1ed517dd50fab5773ac` |
+| Transition branch / PR | `feat/v3-scientific-article` / #286 |
+| Active phase | **Final Certification** |
+| Scientific Article phase-end candidate | `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` |
+| Phase-end Static | `34154045481` — SUCCESS |
+| Phase-end Linux | `34154045509` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Article PDF | build `f62ac703d...`; PDF SHA-256 `0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db`; 5/5 visual PASS |
+| Scientific Article | **CLOSED** |
+| Final Certification | **ACTIVE — ENTRY SYNCHRONIZATION** |
+| Planned certification branch | `cert/v3-final-certification` after PR #286 merge |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Final Certification | QUEUED |
-| Release | QUEUED |
+| Release blocker | issue #18 — deterministic release reference PDF |
 
-## Step 7 artifact result
+Canonical control documents now include `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md` and `docs/V3-FINAL-CERTIFICATION.md` in addition to the roadmap, machine state, Scientific Article evidence, librarian review and release-readiness records.
 
-The canonical Scientific Article PDF is a real TeX Live 2026/pdfLaTeX build of `template/scientific-article.tex` from SHA `f62ac703...`.
+## Scientific Article closure
 
-| Artifact fact | Value |
-|---|---|
-| PDF SHA-256 | `0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db` |
-| Size | 129791 bytes |
-| Pages | 5 |
-| Geometry | A4 (`595.276 x 841.89 pt`) |
-| PDF version | 1.7 |
-| Embedded fonts | PASS |
-| Complete visual review | PASS — 5/5 |
+The cleanup checkpoint `923d11ef...` passed its Static gate and, critically, the Linux orchestration selected `complete` scope. That complete run executed 36 checks and included every executable Scientific Article gate plus the shared profile/repository matrix. Combined with the already accepted provenance-bound 5-page article PDF and complete visual review, the same immutable SHA satisfies both Step 7 cleanup acceptance and Step 8 phase-end regression.
 
-No clipping, overlap, broken glyph or unexplained blank page was observed. Article front block, optional foreign elements, body hierarchy, footnotes, citations and references rendered coherently. No academic-work-only front-matter element leaked into the article output.
-
-Primary sections start on new pages, leaving substantial whitespace on pages 2 and 4. The retained 18-rule contract does not define continuity/no-page-break behavior for primary article sections, so this is classified **OBSERVATION — NON-BLOCKING UNDER CURRENT AUTHORITY** rather than silently promoted to a new requirement.
+No second complete regression is required merely to repeat the same accepted candidate. The concrete candidate and run IDs are recorded in `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md`; the machine sentinel remains `one-immutable-sha`.
 
 ## Immediate action
 
-1. let the synchronized cleanup checkpoint run Static contract and its selected Linux scope;
-2. classify any failure before changing predicates/runtime;
-3. if green, mark Step 7 ACCEPTED and activate Step 8;
-4. create one immutable Step 8 candidate for Static + **complete** Linux plus article-specific gates;
-5. close Scientific Article and activate Final Certification only after Step 8 succeeds.
+| Order | Action | Boundary |
+|---:|---|---|
+| 1 | Validate this synchronized transition documentation | Static must remain green; docs-only Linux may skip heavy execution |
+| 2 | Merge PR #286 | only after transition checkpoint remains green/mergeable |
+| 3 | Read updated `main` SHA | this becomes the Final Certification baseline |
+| 4 | Create `cert/v3-final-certification` from updated `main` | do not reuse the article branch for certification implementation |
+| 5 | Synchronize branch/main facts on the new branch | documentation-only entry checkpoint first |
+| 6 | Execute Final Certification plan | Linux release baseline, profiles/engines/fonts/Unicode/embedding/PDF-A/distribution and issue #18 reproducibility |
+| 7 | Run Final Certification phase-end regression | one immutable SHA before Release may activate |
 
-## What still blocks V3 completion
+## Hard boundaries
 
-| Blocker | State |
-|---|---|
-| Scientific Article Step 7 cleanup acceptance | CI PENDING |
-| Scientific Article Step 8 phase-end regression | QUEUED |
-| PR #286 / issue #280 | remain open until Scientific Article acceptance |
-| Final Certification | not executed on final candidate |
-| Issue #18 deterministic release-reference-PDF reproducibility | open release blocker |
-| Release packaging/tag/assets/publication | not executed |
-| Librarian item 33 | explicit `NORMATIVE-REVIEW`, fail-closed |
+- Preserve accepted non-article and Scientific Article behavior unless certification discovers a real regression.
+- Do not use issue #18 to change normative semantics.
+- Item 33 remains fail-closed.
+- Linux release evidence does not replace literal-font/platform/PDF-A certification.
+- Do not redistribute proprietary fonts.
+- CTAN/external publication remains blocked until **Release**.
 
 ## Mandatory operating discipline
 
-Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Every phase requires a complete **phase-end regression** on one immutable SHA. Scoped intermediate checks never authorize a phase transition.
+Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Every phase requires a complete **phase-end regression** on one immutable SHA; targeted or scoped checks never authorize a phase transition by themselves.

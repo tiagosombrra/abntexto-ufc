@@ -1,60 +1,57 @@
 # V3 Scientific Article — Execution Plan
 
 Updated: 2026-09-07  
-Status: ACTIVE — STEP 7 VISUAL PASS / CLEANUP CI PENDING
+Status: CLOSED — PHASE-END REGRESSION ACCEPTED
 
-## Current state
+## Accepted phase result
 
-Core Corrections and Reference PDF Validation are closed. Canonical `main` is `fbf7cc4839ce318024a7d1ed517dd50fab5773ac`. Active article work remains PR #286 on `feat/v3-scientific-article`, reconciled with current main through `85cf22b6fe5d117bb2611a2865911e0d20a19363`.
+The Scientific Article phase is complete. The retained authority product remains exactly 18 source-backed article rules from `docs/ARTICLE-NORMATIVE-CONTRACT.md` / `standards/coverage-rules-article.json`.
 
-The retained article authority product remains `4d018a92697e8f39e3a53b034c451e55996c84fb`, represented by `docs/ARTICLE-NORMATIVE-CONTRACT.md` and `standards/coverage-rules-article.json`. There are exactly 18 source-backed article rules.
-
-## Progress
-
-| Step | Work | State | Evidence / next gate |
+| Step | Work | Final state | Evidence |
 |---:|---|---|---|
-| 1 | Profile and metadata surface | ACCEPTED | completed |
-| 2 | Required article front block | ACCEPTED | completed |
-| 3 | Optional foreign title and summary | ACCEPTED | completed |
-| 4 | Textual structure and body typography | ACCEPTED | completed |
-| 5 | Recommendations and conditional applicability | ACCEPTED | `55fa1c8...`; Static `34132291198`; Linux `34132291304` |
-| 6 | Evidence hardening | ACCEPTED | `e941a7f9...`; Static `34146793998`; Linux `34146794016`; exact 18-rule map; zero validation-mode promotions |
-| 7 | Canonical article PDF | **VISUAL-PASS — CLEANUP CI PENDING** | artifact from `f62ac703...`; run `34153348385`; 5/5 visual PASS; executor removed in cleanup checkpoint |
-| 8 | Phase-end regression | QUEUED | Static + `complete` Linux + article-specific evidence on one immutable SHA |
+| 1 | Profile and metadata surface | ACCEPTED | completed two-engine profile gate |
+| 2 | Required article front block | ACCEPTED | article-specific rendered evidence |
+| 3 | Optional foreign title and summary | ACCEPTED | independent present/absent matrix |
+| 4 | Textual structure and body typography | ACCEPTED | required structure/body gate |
+| 5 | Recommendations and conditional applicability | ACCEPTED | recommendations remained non-enforcing; journal boundary conditional |
+| 6 | Evidence hardening | ACCEPTED | `e941a7f9...`; exact 18-rule map; zero validation-mode promotions |
+| 7 | Canonical article PDF | ACCEPTED | build `f62ac703...`; run `34153348385`; PDF SHA-256 `0152134e...`; 5/5 visual PASS; executor removed |
+| 8 | Phase-end regression | **ACCEPTED** | candidate `923d11ef...`; Static `34154045481`; complete Linux `34154045509`; `PASS=36 FAIL=0 SKIP=0` |
 
-## Step 7 result
+## Phase-end candidate
+
+`923d11ef668b02ec4de3cad4906ad5ac1f527eaf` is the accepted immutable Scientific Article candidate. Its Linux run selected `complete` scope and executed every article-specific executable gate plus the shared repository/profile matrix. The same checkpoint also proved the Step 7 cleanup state after removal of the temporary artifact workflow.
+
+Full record: `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md`.
+
+## Canonical article PDF
 
 Canonical source: `template/scientific-article.tex`.
 
-Artifact build:
+| Artifact fact | Value |
+|---|---|
+| Build SHA | `f62ac703d8992af96b79cf83e125350ee561bd92` |
+| Workflow | `34153348385` — SUCCESS |
+| Artifact ID | `10030160290` |
+| PDF SHA-256 | `0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db` |
+| Pages | 5 A4 |
+| PDF version | 1.7 |
+| Fonts embedded | PASS |
+| Complete visual review | PASS — 5/5, unexplained FAIL 0 |
 
-- source SHA `f62ac703d8992af96b79cf83e125350ee561bd92`;
-- temporary workflow run `34153348385` — SUCCESS;
-- artifact ID `10030160290`;
-- PDF SHA-256 `0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db`;
-- 129791 bytes;
-- 5 A4 pages;
-- PDF 1.7;
-- all listed fonts embedded.
+Primary-section new-page whitespace remains an **observation, not a defect**, because the retained article contract contains no no-page-break rule.
 
-Complete 200-DPI inspection reviewed 5/5 pages. Article front block, optional foreign elements, body hierarchy, footnotes, citations and references are visually coherent. No clipping, overlap, broken glyph, unexplained blank page or academic-work-only front-matter leakage was observed.
+## Preserved boundaries
 
-The shared section mechanism starts primary sections on new pages and therefore creates visible whitespace on pages 2 and 4. `standards/coverage-rules-article.json` does not define a continuity/no-page-break requirement. This is recorded as **OBSERVATION — NON-BLOCKING UNDER CURRENT AUTHORITY** and is not converted into a new runtime predicate.
+- One canonical `scientific-article` profile; no compatibility alias.
+- Required, optional, recommended and conditional semantics remain distinct.
+- Shared implementation reuse is not counted as proof by itself.
+- Recommendations remain advisory/non-enforcing.
+- Journal precedence remains conditional-manual.
+- Librarian item 33 remains fail-closed.
 
-`docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md` is the complete Step 7 provenance/visual record.
+## Handoff
 
-The temporary workflow used only for artifact generation is removed by the synchronized cleanup checkpoint. Step 7 final acceptance waits for that cleanup checkpoint's Static contract and selected Linux scope.
+Scientific Article is CLOSED and **Final Certification** is ACTIVE. Certification implementation starts only after PR #286 is merged and a fresh `cert/v3-final-certification` branch is created from updated main.
 
-## Step 8 phase-end regression
-
-After Step 7 acceptance, Scientific Article closes only when one immutable candidate passes Static contract, Linux integration with **complete** scope, all article-specific executable gates and accepted canonical article PDF evidence. Scoped article checks are intermediate evidence only and never replace Step 8.
-
-## Remaining V3 work
-
-Final Certification must still cover the complete profile/engine/literal-font/Unicode/embedding/PDF-A/distribution matrix. Issue #18 must establish deterministic release-reference-PDF reproducibility with pinned epoch/SOURCE_DATE_EPOCH and stable hash evidence. Release then finalizes bundles, checksums, tag/GitHub Release and external publication actions.
-
-Librarian review remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
-
-## Documentation discipline
-
-Every **material advance** updates the relevant execution documentation in the same work cycle. Every phase ends with a complete **phase-end regression** on one immutable SHA.
+Every subsequent **material advance** updates the active certification documentation. Final Certification still requires its own complete **phase-end regression** on one immutable SHA.

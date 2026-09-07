@@ -9,8 +9,8 @@ Before changing code, tests, standards, workflows, documentation, or release met
 1. identify the actual Git branch and HEAD;
 2. read `release/v3-roadmap.json`;
 3. read `docs/HANDOFF-V3.0.0.md` and `docs/ROADMAP-V3.0.0.md`;
-4. during **Scientific Article**, also read `docs/V3-SCIENTIFIC-ARTICLE.md`, `docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md`, `docs/ARTICLE-NORMATIVE-CONTRACT.md`, `standards/coverage-rules-article.json`, `standards/article-evidence-map.json`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/ENGINEERING-LANGUAGE.md`;
-5. reconcile Git facts, machine state, handoff, roadmap, article authority, evidence map, Linux-scope state, temporary-executor lifecycle and release blockers before feature work.
+4. during **Final Certification**, also read `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and the permanent release/certification workflow definitions;
+5. reconcile Git facts, machine state, handoff, roadmap, accepted article evidence, branch/main relationship, release blockers and temporary-executor lifecycle before certification work.
 
 Memory, prior chats, historical branches and old workflow names never override current repository state.
 
@@ -19,18 +19,16 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Fact | Current state |
 |---|---|
 | Target | `3.0.0` |
-| Active phase | **Scientific Article** |
-| Canonical `main` | `fbf7cc4839ce318024a7d1ed517dd50fab5773ac` |
-| Active branch / PR | `feat/v3-scientific-article` / #286 |
-| Current-main reconciliation merge | `85cf22b6fe5d117bb2611a2865911e0d20a19363` |
-| Steps 1–6 | **ACCEPTED** |
-| Step 6 checkpoint | `e941a7f9b4685a9bcf687135e8d5168af2d69ec7`; Static `34146793998`; Linux `34146794016` |
-| Step 7 artifact source SHA | `f62ac703d8992af96b79cf83e125350ee561bd92` |
-| Step 7 artifact workflow | `34153348385` — SUCCESS |
-| Step 7 visual review | **PASS — 5/5 pages** |
-| Step 7 state | **VISUAL-PASS — CLEANUP CHECKPOINT CI PENDING** |
-| Temporary executor | removed by current cleanup checkpoint |
-| Step 8 | QUEUED — complete phase-end regression |
+| Active phase | **Final Certification** |
+| Canonical `main` before PR #286 merge | `fbf7cc4839ce318024a7d1ed517dd50fab5773ac` |
+| Transition branch / PR | `feat/v3-scientific-article` / #286 |
+| Scientific Article phase-end candidate | `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` |
+| Article phase-end Static | `34154045481` — SUCCESS |
+| Article phase-end Linux | `34154045509` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Canonical article visual evidence | PASS — 5/5 pages |
+| Scientific Article | **CLOSED** |
+| Final Certification | **ACTIVE — ENTRY SYNCHRONIZATION** |
+| Planned certification branch | `cert/v3-final-certification` after PR #286 merge |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
@@ -39,48 +37,39 @@ Memory, prior chats, historical branches and old workflow names never override c
 1. Regression Audit — closed
 2. Core Corrections — closed
 3. Reference PDF Validation — closed
-4. Scientific Article — active, Step 7 cleanup acceptance gate
-5. Final Certification — queued
+4. Scientific Article — closed
+5. Final Certification — active
 6. Release — queued
 
-## Scientific Article rules
+## Final Certification rules
 
-- Preserve exactly the retained 18-rule source contract.
-- Step 6 promoted **zero** validation modes and remains accepted.
-- Optional foreign title/summary remain optional.
-- Recommendation rules remain manual/advisory/non-enforcing.
-- Journal precedence remains `required-when-applicable`, `conditional-manual`.
-- Shared implementation reuse never counts as article-specific proof by itself.
-- Step 7 uses a real TeX Live 2026 artifact bound to Git SHA `f62ac703...`; synthetic PDFs are inadmissible.
-- The temporary Step 7 executor must be absent before Step 7 acceptance.
-- Primary-section new-page behavior is recorded as a non-blocking observation because the retained article contract does not define a no-page-break requirement.
-
-## Linux scope rule
-
-Scoped runs are valid intermediate evidence only. Scientific Article Step 8 requires `complete` Linux on one immutable candidate, plus accepted canonical article PDF evidence.
+- Do not start certification runtime work on the article transition branch. Merge PR #286 first, then create `cert/v3-final-certification` from updated `main`.
+- Preserve accepted shared and Scientific Article semantics; certification is proof/packaging work unless a genuine regression is found.
+- Use the permanent Linux release and certification routes; temporary executors must be removed before checkpoint acceptance.
+- Literal Times New Roman/Arial evidence must not redistribute proprietary fonts.
+- Issue #18 reproducibility work adds deterministic build evidence and must not modify normative article/shared behavior merely to stabilize bytes.
+- Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
 
 ## Engineering rules
 
 - Project-owned technical surfaces are English.
-- Preserve the accepted shared V3 public API unless current authority explicitly authorizes a change.
+- Preserve the accepted v3 public API unless current authority explicitly authorizes a change.
 - Do not silently change normative IDs, values, tolerances, locators, applicability, source precedence, modality or proof state.
 - A green test proves only the encoded contract.
 - Reviewer comments are evidence, not automatic normative authority.
 - Do not weaken tests merely to recover green CI.
 - Negative evidence must fail for the intended predicate.
-- Recommended rules must not become rejection predicates.
-- Temporary executors must be removed before checkpoint acceptance.
 - Permanent workflows remain `Static contract`, `Linux integration`, and `Linux release check`.
 - Do not redistribute proprietary Microsoft fonts.
 - Do not perform actual CTAN submission before **Release**.
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, integration-scope behavior, canonical content, phase status, acceptance status, branch/base reconciliation, artifact provenance, temporary-executor lifecycle, visual-validation state, or release/certification state. Update the relevant execution documents and handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, certification scope/result, canonical content, phase status, acceptance status, branch/base facts, artifact provenance, reproducibility state or release readiness. Update the relevant execution documents and handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
 
 ## Mandatory phase-end regression
 
-No phase closes until one immutable candidate SHA passes the complete **phase-end regression** and the result is recorded. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`. Scientific Article Step 8 requires complete Linux.
+No phase closes until one immutable candidate SHA passes the complete **phase-end regression** and the result is recorded. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`. Final Certification requires complete Linux plus the full applicable certification/release evidence matrix.
 
 ## Fail-closed rule
 

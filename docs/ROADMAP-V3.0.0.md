@@ -4,63 +4,48 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Scientific Article is ACTIVE. Steps 1–6 are ACCEPTED. Step 7 has a provenance-bound 5-page visual PASS and is at the cleanup-checkpoint CI gate.**
+**Scientific Article is CLOSED. Final Certification is ACTIVE at entry synchronization.**
 
-| Phase | Status | Current exit requirement |
+| Phase | Status | Accepted evidence / exit requirement |
 |---|---|---|
 | Regression Audit | CLOSED | completed regression contract and phase-end regression |
-| Core Corrections | CLOSED | candidate `5f67560a...`; Static `33982156041`; Linux `33982156042` |
-| Reference PDF Validation | CLOSED | candidate `b64074c...`; complete 55-page visual PASS + Static/Linux |
-| Scientific Article | **ACTIVE — STEP 7 CLEANUP CI** | Step 7 cleanup acceptance + Step 8 complete phase-end regression |
-| Final Certification | QUEUED | complete platform/font/PDF-A/distribution/reproducibility certification |
-| Release | QUEUED | packaging, checksums, tag/release and publication verification |
+| Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
+| Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
+| Scientific Article | **CLOSED** | candidate `923d11ef...`; Static `34154045481`; complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`; canonical article PDF 5/5 visual PASS |
+| Final Certification | **ACTIVE — ENTRY SYNCHRONIZATION** | merge accepted article PR, branch from updated main, then complete certification matrix and immutable phase-end regression |
+| Release | QUEUED | final bundles/checksums/tag/release/publication after certification and issue #18 closure |
 
-Canonical `main` is `fbf7cc4839ce318024a7d1ed517dd50fab5773ac`. Active article work is PR #286 on `feat/v3-scientific-article`, reconciled with current main through `85cf22b6fe5d117bb2611a2865911e0d20a19363`.
+The current transition branch is `feat/v3-scientific-article` / PR #286. Final Certification implementation must move to fresh `cert/v3-final-certification` after PR #286 is merged into `main`.
 
-## Scientific Article roadmap
+## Scientific Article closeout
 
-| Step | Work | State | Gate |
-|---:|---|---|---|
-| 1 | Profile and metadata | ACCEPTED | completed |
-| 2 | Required front block | ACCEPTED | completed |
-| 3 | Optional foreign title/summary | ACCEPTED | completed |
-| 4 | Body structure and typography | ACCEPTED | completed |
-| 5 | Recommendations and journal applicability | ACCEPTED | completed |
-| 6 | Exact 18-rule evidence ownership map | ACCEPTED | `e941a7f9...`; Static `34146793998`; Linux `34146794016`; zero validation-mode promotions |
-| 7 | Canonical article PDF | **VISUAL-PASS — CLEANUP CI PENDING** | artifact `f62ac703...`; run `34153348385`; 5/5 visual PASS; temporary executor removed; cleanup checkpoint CI must pass |
-| 8 | Scientific Article phase-end regression | QUEUED | Static + `complete` Linux + article gates on one immutable SHA |
+The Step 7 cleanup checkpoint was itself strong enough to be the Step 8 phase-end candidate: `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` passed Static `34154045481` and Linux `34154045509` with automatically selected `complete` scope and `36/36` checks green. All article gates and shared repository/profile checks passed. The provenance-bound canonical PDF from `f62ac703...` remains visually accepted 5/5.
 
-## Step 7 artifact
+Phase-end record: `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md`.
 
-| Evidence | Result |
-|---|---|
-| Source | `template/scientific-article.tex` |
-| Build SHA | `f62ac703d8992af96b79cf83e125350ee561bd92` |
-| Workflow | `34153348385` — SUCCESS |
-| PDF SHA-256 | `0152134e22b673318201d345ae1ee42b2f76f29e370dda03923e3dbe8658c9db` |
-| Pages | 5 |
-| Geometry | A4 |
-| Embedded fonts | PASS |
-| Complete visual review | PASS — 5/5 |
-| Unexplained visual FAIL | 0 |
-| Temporary executor | removed by cleanup checkpoint |
+## Final Certification roadmap
 
-Primary-section new-page behavior is recorded as a **non-blocking observation**. The retained article contract defines section presence and body typography but does not define a no-page-break predicate; no new requirement is invented from presentation preference.
+| Step | Work | State |
+|---:|---|---|
+| 1 | Entry synchronization: merge PR #286, fresh certification branch, reconcile branch/main facts | ACTIVE |
+| 2 | Linux release baseline | QUEUED |
+| 3 | Full profile and engine certification | QUEUED |
+| 4 | Literal Times New Roman/Arial, Unicode and embedding evidence | QUEUED |
+| 5 | PDF/A-2b certification | QUEUED |
+| 6 | Public/distribution bundle integrity | QUEUED |
+| 7 | Issue #18 deterministic release-reference-PDF reproducibility | QUEUED |
+| 8 | Final Certification phase-end regression | QUEUED |
 
-## Next gate
-
-After the cleanup checkpoint is green, Step 7 becomes ACCEPTED and Step 8 becomes ACTIVE. Step 8 must use one immutable candidate and `complete` Linux scope; scoped intermediate runs cannot close Scientific Article.
-
-## After Scientific Article
-
-Final Certification must run on the accepted final candidate and cover all profiles, pdfLaTeX/LuaLaTeX, literal Times New Roman and Arial identity where required, Unicode extraction, font embedding, PDF/A-2b, distribution/public bundle checks, and issue #18 reproducibility evidence.
-
-Release follows only after Final Certification and includes final documentation, bundles, checksums/assets, immutable `v3.0.0` tag/GitHub Release and external publication actions.
+Execution details: `docs/V3-FINAL-CERTIFICATION.md`.
 
 ## Persistent authority gap
 
 Librarian review remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains explicit/fail-closed unless authoritative current-edition NBR 6023:2025 evidence is obtained.
 
+## Gate before Release
+
+Release cannot activate until Final Certification passes on one immutable candidate, issue #18 is resolved with deterministic digest evidence, no certification blocker remains, and all acceptance documentation is synchronized.
+
 ## Operating discipline
 
-Every **material advance** updates roadmap, handoff and machine state in the same cycle. Every phase ends with a mandatory complete **phase-end regression** on one immutable SHA; scoped intermediate checks never close a phase.
+Every **material advance** updates roadmap, handoff and machine state in the same cycle. Every phase ends with a mandatory complete **phase-end regression** on one immutable SHA; targeted/scoped intermediate checks never close a phase.
