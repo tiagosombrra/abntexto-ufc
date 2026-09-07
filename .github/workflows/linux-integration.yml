@@ -10,6 +10,26 @@ on:
       - reopened
       - ready_for_review
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Linux integration scope
+        required: true
+        default: auto
+        type: choice
+        options:
+          - auto
+          - complete
+          - article
+          - reference-document
+          - reference-pdf
+          - frontmatter
+          - layout
+          - objects
+          - bibliography
+          - backmatter
+          - research-project
+          - profiles
+          - smoke
 
 permissions:
   contents: read
@@ -35,49 +55,56 @@ jobs:
         shell: bash
         env:
           PR_DRAFT: ${{ github.event.pull_request.draft || false }}
+          PR_ACTION: ${{ github.event.action || '' }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
+          BEFORE_SHA: ${{ github.event.before || '' }}
+          AFTER_SHA: ${{ github.event.after || github.event.pull_request.head.sha || '' }}
+          INPUT_SCOPE: ${{ inputs.scope || 'auto' }}
         run: |
           set -euo pipefail
 
           run_integration=true
-          reason=manual-dispatch
+          selected_scope=complete
+          reason=manual-auto-fail-closed
 
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
             if [[ "$PR_DRAFT" == "true" ]]; then
               run_integration=false
+              selected_scope=none
               reason=draft-pr
             else
-              mapfile -t changed_paths < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+              scope_base="$BASE_SHA"
+              scope_head="$HEAD_SHA"
+              scope_window=full-pr
 
-              if (( ${#changed_paths[@]} == 0 )); then
-                run_integration=true
-                reason=empty-diff-fail-closed
-              else
+              if [[ "$PR_ACTION" == "synchronize" && -n "$BEFORE_SHA" && -n "$AFTER_SHA" ]]; then
+                scope_base="$BEFORE_SHA"
+                scope_head="$AFTER_SHA"
+                scope_window=incremental-push
+              fi
+
+              selected_scope=$(python3 tests/integration_suites.py --base "$scope_base" --head "$scope_head")
+              if [[ "$selected_scope" == "none" ]]; then
                 run_integration=false
                 reason=documentation-only
-
-                for path in "${changed_paths[@]}"; do
-                  case "$path" in
-                    README.md|AGENTS.md|LICENSE|.gitignore|docs/*|release/v3-roadmap.json)
-                      ;;
-                    *)
-                      run_integration=true
-                      reason="technical-path:$path"
-                      break
-                      ;;
-                  esac
-                done
+              else
+                reason="auto-$scope_window:$selected_scope"
               fi
             fi
+          elif [[ "$INPUT_SCOPE" != "auto" ]]; then
+            selected_scope="$INPUT_SCOPE"
+            reason="manual:$selected_scope"
           fi
 
           echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"
+          echo "scope=$selected_scope" >> "$GITHUB_OUTPUT"
           echo "reason=$reason" >> "$GITHUB_OUTPUT"
           {
             echo "### Linux integration scope"
             echo
             echo "- run integration: \`$run_integration\`"
+            echo "- scope: \`$selected_scope\`"
             echo "- reason: \`$reason\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -85,7 +112,7 @@ jobs:
         if: steps.scope.outputs.run_integration != 'true'
         env:
           SKIP_REASON: ${{ steps.scope.outputs.reason }}
-        run: echo "Heavy integration skipped by B7-C2 orchestration policy ($SKIP_REASON)."
+        run: echo "Heavy Linux integration skipped ($SKIP_REASON)."
 
       - name: Run repository integration contract
         if: steps.scope.outputs.run_integration == 'true'
@@ -98,4 +125,6 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils nodejs
             node --version
-            make check
+            scope="${{ steps.scope.outputs.scope }}"
+            echo "Running Linux integration scope: $scope"
+            python3 tests/run.py --mode pr --suite "$scope"
