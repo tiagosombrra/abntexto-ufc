@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-07  
-Status: ACTIVE — MIXED ORCHESTRATION/DOMAIN INFERENCE ACCEPTED; STEP 5 DOWNSTREAM SENTINEL FIX PENDING
+Status: ACCEPTED — STEP 5 GREEN / STEP 6 ACTIVE / CURRENT MAIN RECONCILED
 
 ## Purpose
 
@@ -27,9 +27,7 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 
 ## Automatic selection
 
-For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer the previous-head to new-head range when both commits are available and otherwise fail closed to the full PR range. Documentation-only changes skip heavy integration.
-
-The accepted domain-selection rule is:
+For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer the previous-head to new-head range when both commits are locally available. If either endpoint is unavailable, the workflow fails closed to the full PR range. Documentation-only changes skip heavy integration.
 
 | Changed-path class | Scope behavior |
 |---|---|
@@ -40,11 +38,11 @@ The accepted domain-selection rule is:
 | force-complete shared/core/standards path | `complete` |
 | unknown technical path without orchestration | `complete` |
 
-## Mixed orchestration/domain acceptance evidence
+## Acceptance history
 
-At `02e1ea6e25c008c93f8ec3ba26af7f3cea03cf14`, Static `34129625390` passed the suite-inference contract. Linux `34129625475` evaluated the incremental `6507da... -> 02e1ea...` synchronize range and selected `article`, exactly as required. This closes the prior orchestration-inference defect found by Static `34126602062`.
+At `02e1ea6e25c008c93f8ec3ba26af7f3cea03cf14`, Static `34129625390` passed mixed orchestration/domain suite inference. Step 5 acceptance `55fa1c8dc1b503c119d564950d04141cf45ad345` then passed Static `34132291198` and Linux `34132291304`, automatically selecting `article` with `SCOPE=article PASS=6 FAIL=0 SKIP=0`.
 
-The Linux run later failed inside `scientific-article-recommendations` because a long synthetic keyword sentinel was not extracted contiguously from the recommended pdfLaTeX PDF. That downstream evidence failure does not reopen scope inference.
+Canonical `main` later accepted the scoped orchestration at `789c6f3f4669ae36c3d4fe831ae939a340592568`. The article branch already contained the same domain-selection model plus a stricter missing-endpoint fallback; merge `ae7e2cf2484e0b4329cc30ea80a95d0788e0e9f4` reconciles PR #286 with that current `main` ancestry.
 
 ## First-class article gates
 
@@ -59,11 +57,11 @@ The `article` suite contains:
 
 The `profiles` suite remains exactly the six accepted non-article profiles plus compatibility checks.
 
-## Step 5 evidence hardening
+## Step 6 evidence-hardening boundary
 
-`scientific-article-recommendations` compiles a recommendation-following scenario and an outside-recommendation scenario with pdfLaTeX and LuaLaTeX. The current evidence-harness correction replaces long artificial keyword tokens with short sentinels and requires all three recommended markers plus the single outside-recommendation marker to be present in extracted PDF text.
+Step 6 may add a static article-evidence-map checker and rule-specific evidence markers to existing article gates. Changes under `standards/` fail closed to `complete` by current path policy. If only article test/check surfaces change without a standards path, `article` is the bounded expected domain. In either case the selected scope is execution evidence only; Step 6 acceptance still requires the synchronized Static/Linux checkpoint defined by the article plan.
 
-Recommendations remain `recommended` + `manual`; journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`; no proof-state promotion occurs.
+Recommendations remain `recommended` + non-enforcing; journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`. A rule-specific PASS marker must not be emitted for a recommendation as if it were mandatory proof ownership.
 
 ## Runner importability invariant
 
@@ -81,8 +79,8 @@ Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
 ## Current acceptance requirement
 
-The synchronized Step 5 short-sentinel correction must pass Static and automatically select bounded Linux `article`, with all six checks green and both two-engine recommendation scenarios producing their controlled rendered markers. Only after those results are recorded may Step 5 close and Step 6 activate.
+Step 6 must preserve all six article gates, add truthful machine protection for the exact 18-rule evidence classification, and pass Static plus the Linux scope selected by changed-path policy. Only after those results are recorded may Step 6 close and Step 7 canonical article PDF work activate.
 
 ## Phase-end rule
 
-Every phase transition still requires `complete` Linux integration on the same immutable phase-end candidate SHA together with Static and phase-specific acceptance evidence. Final Certification may additionally require the heavier literal-font/PDF-A/distribution matrix.
+Every phase transition requires `complete` Linux integration on the same immutable phase-end candidate SHA together with Static and phase-specific acceptance evidence. Final Certification may additionally require the heavier literal-font/PDF-A/distribution matrix.

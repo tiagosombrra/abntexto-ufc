@@ -20,18 +20,20 @@ Memory, prior chats, historical branches and old workflow names never override t
 |---|---|
 | Target | `3.0.0` |
 | Active phase | **Scientific Article** |
-| Canonical base | `main` at `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
+| Canonical `main` | `789c6f3f4669ae36c3d4fe831ae939a340592568` |
+| Shared-foundation integration checkpoint | `e6833ed5cf07aaf1021c690260cecfacec1a119a` |
 | Active branch / PR | `feat/v3-scientific-article` / #286 |
+| Main reconciliation merge | `ae7e2cf2484e0b4329cc30ea80a95d0788e0e9f4` |
 | Steps 1–5 | **ACCEPTED** |
 | Step 5 acceptance checkpoint | `55fa1c8dc1b503c119d564950d04141cf45ad345` |
 | Step 5 acceptance Static | `34132291198` **PASS** |
 | Step 5 acceptance Linux | `34132291304` **PASS**, bounded `article` scope with all six first-class article checks green |
-| Step 5 recommendation evidence | both engines and both controlled scenarios passed; 3/3 recommended keyword sentinels and outside-recommendation sentinel rendered; recommendations remained non-enforcing; journal precedence remained conditional-manual; `proof_state_promoted=0` |
+| Step 6 activation Static | `34134609837` **PASS** on `947f740f35c581ea101242b75181978f8f3a7f1b` |
 | Current batch | **Step 6 — evidence hardening and truthful article-specific proof-state mapping** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
-Step 5 is closed. The shortened controlled sentinels passed under pdfLaTeX and LuaLaTeX without article runtime or normative changes. Step 6 must now classify article-specific evidence rule by rule and may promote proof state only where an article-specific executable predicate actually supports the rule.
+The article branch has been reconciled with the current `main` through merge `ae7e2cf...`. The branch keeps the newer fail-closed Linux orchestration behavior already present in the article work while recording `789c6f3...` in ancestry. Step 6 continues from this reconciled state; the reconciliation itself does not count as Step 6 evidence acceptance.
 
 ## Readable phase model
 
@@ -55,14 +57,14 @@ Do not create new opaque work identifiers. GitHub issue/PR numbers and immutable
 - Recommended rules remain advisory; positive recommendation scenarios are evidence of supported defaults, not rejection predicates.
 - Journal precedence remains `required-when-applicable`, `conditional-manual`, applicability `target-journal-submission`.
 - Step 5 proof state remains unpromoted.
-- Step 6 may promote only rules with direct article-specific evidence and must leave unsupported or conditional rules manual/conditional-manual.
+- Step 6 may promote only rules with direct article-specific evidence and must leave unsupported or conditional rules manual/conditional.
 - Step 7 begins only after Step 6 evidence-state changes are accepted and documented.
 
 ## Linux scope rule
 
-Orchestration-only changes select `smoke`. When orchestration files accompany recognized domain-specific technical files, orchestration paths are neutral for domain selection and the known domain suite wins. Unknown non-orchestration technical paths and force-complete surfaces still fail closed to `complete`.
+Orchestration-only changes select `smoke`. When orchestration files accompany recognized domain-specific technical files, orchestration paths are neutral for domain selection and the known domain suite wins. Unknown non-orchestration technical paths and force-complete surfaces fail closed to `complete`. Synchronize events use the incremental range only when both endpoints are locally available; otherwise they fall back to the full PR range.
 
-This behavior is accepted by Static `34129625390` and was reconfirmed by Step 5 acceptance Linux `34132291304`, which selected the bounded `article` suite and passed all six article checks.
+Scoped runs never close a phase. Scientific Article Step 8 requires `complete` Linux on one immutable candidate.
 
 ## Engineering rules
 
@@ -82,7 +84,7 @@ This behavior is accepted by Static `34129625390` and was reconfirmed by Step 5 
 
 ## Progress documentation discipline
 
-A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, integration-scope behavior, canonical content, phase status, acceptance status, or release/certification state. Update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
+A **material advance** is any change that alters runtime behavior, normative classification, test/evidence coverage, integration-scope behavior, canonical content, phase status, acceptance status, branch/base reconciliation, or release/certification state. Update the relevant execution document and canonical handoff in the same work cycle; synchronize roadmap and machine state whenever those facts change.
 
 ## Mandatory phase-end regression
 
