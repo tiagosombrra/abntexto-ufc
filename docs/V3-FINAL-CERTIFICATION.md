@@ -1,7 +1,7 @@
 # V3 Final Certification
 
 Updated: 2026-09-08
-Status: ACTIVE — STEP 4 BOUNDED LITERAL-FONT PROOF
+Status: ACTIVE — STEP 4 CLEANUP VALIDATION
 
 ## Purpose
 
@@ -14,7 +14,7 @@ Final Certification proves the accepted V3 product across the remaining bounded 
 | 1 | Entry synchronization | ACCEPTED | branch/PR and control plane reconciled |
 | 2 | Linux release baseline | ACCEPTED | release `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; cleanup Static/Linux green |
 | 3 | Profile/engine matrix | ACCEPTED | current complete release evidence |
-| 4 | Literal Times New Roman/Arial + Unicode + embedding | **ACTIVE — BOUNDED PROOF** | temporary Windows/Linux executor active |
+| 4 | Literal Times New Roman/Arial + Unicode + embedding | **PROOF PASS — CLEANUP VALIDATION PENDING** | bounded run `34219229025`; temporary executor removed; cleanup Static/Linux required |
 | 5 | Scientific Article PDF/A-2b | ACCEPTED | bounded `34175388675` PASS; cleanup `7307164...`, Static `34208318971`, Linux `34208318754` PASS |
 | 6 | Distribution/public bundle integrity | ACCEPTED | 4 bundles, checksums and archive integrity PASS; cleanup accepted |
 | 7 | Deterministic release reference PDF / issue #18 | QUEUED | two clean builds, identical SHA-256, preserved validation |
@@ -22,24 +22,24 @@ Final Certification proves the accepted V3 product across the remaining bounded 
 
 Steps 5-6 acceptance was synchronized at `237cb53b65c91052a469ab67991ea78e71ade283`; Static `34218086750` and Linux `34218086734` passed.
 
-## Step 4 acceptance contract
+## Step 4 proof result
 
-Temporary executor: `.github/workflows/final-cert-literal-fonts.yml`.
+Bounded run `34219229025` executed on source checkpoint `fae338e16304ad45c353067a0b7982f73a8363c5` and completed successfully.
 
-Fresh current-candidate evidence must cover all four combinations:
+| Family | Engine | Literal build | Unicode | Embedding | PDF/A-2b |
+|---|---|---|---|---|---|
+| Times New Roman | pdfLaTeX | PASS | PASS | PASS | PASS |
+| Arial | pdfLaTeX | PASS | PASS | PASS | PASS |
+| Times New Roman | LuaLaTeX | PASS | PASS | PASS | PASS |
+| Arial | LuaLaTeX | PASS | PASS | PASS | PASS |
 
-| Family | Engine | Required proof |
-|---|---|---|
-| Times New Roman | pdfLaTeX | literal family identity, Unicode extraction, embedding, PDF/A-2b |
-| Arial | pdfLaTeX | literal family identity, Unicode extraction, embedding, PDF/A-2b |
-| Times New Roman | LuaLaTeX | literal family identity, Unicode extraction, embedding, PDF/A-2b |
-| Arial | LuaLaTeX | literal family identity, Unicode extraction, embedding, PDF/A-2b |
+The Windows job generated four strict PDFs from fonts already installed on the hosted Windows runner. Artifact `10053151610` contained only those four generated PDFs, with one-day retention; artifact ZIP digest was `sha256:6b0cd0a6ac2543017a8496a1af7feeca70640f2b73862311a4325a981dc5fb60`. No raw proprietary font files were uploaded or committed.
 
-The Windows job prepares local TeX support from fonts already installed on the Windows runner and compiles four strict PDFs. The artifact contains only those bounded generated PDFs with one-day retention. Raw proprietary font files are not uploaded, committed or included in public/distribution bundles. A Linux job runs the current `tests/integration/windows-font-pdfa.sh` contract.
+The Linux certification job emitted:
 
-The existing `font-poc.sh` diagnostics are normalized to project-owned English in the same advance; test literals in Portuguese remain unchanged because they are intentional Unicode extraction content.
+`FINAL-CERTIFICATION-EVIDENCE surface=literal-font-unicode-embedding status=PASS families=Times-New-Roman,Arial engines=pdflatex,lualatex unicode=PASS embedding=PASS pdfa=PASS`
 
-Step 4 does not become ACCEPTED from a successful bounded run alone. The workflow must then be removed and the cleanup checkpoint must pass Static and Linux.
+The temporary executor `.github/workflows/final-cert-literal-fonts.yml` has now been removed. Per the acceptance contract, Step 4 remains open until this cleanup checkpoint passes Static contract and Linux integration.
 
 ## Step 7 boundary
 
