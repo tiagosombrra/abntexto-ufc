@@ -1,53 +1,55 @@
 # abntexto-ufc v3.0.0 — Canonical Handoff
 
-Updated: 2026-09-07
+Updated: 2026-09-08
 
 ## Current checkpoint
 
-| Fact | State |
+| Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical `main` | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Active phase | **Final Certification** |
-| Entry synchronization | ACCEPTED |
-| Linux release baseline | ACCEPTED — release `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; cleanup `0609f929...`; Static `34170123785`; Linux `34170123765` |
-| Profile/engine matrix | ACCEPTED |
-| Current batch | **Step 6 canonical-checkout runner correction** |
-| First bounded transport | `21455c3344...` / `34172047786`: release 38/38 + Step 5 PASS, then Git dubious-ownership failure during epoch read |
-| Second bounded transport | `247e31398...` / `34173496336`: release 38/38 + Step 5 PASS, then `Distribution bundle generation requires a canonical Git checkout.` during tracked-file discovery |
-| Current checkpoint validation | `247e31398...`: Static `34173496318` PASS; Linux `34173496285` PASS |
-| Second failure artifact | ID `10036808737`, SHA-256 `c56e1c651ce990ddd5a301c5cf60691b1081a06b7eebe66b27503e256e28e273` |
-| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` remains active only for corrected rerun; removal required before Steps 5-6 acceptance |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Release blocker | issue #18 — deterministic release reference PDF |
+| Steps 1-3 | ACCEPTED |
+| Steps 5-6 bounded candidate | `13e491d18d46a86835b4ab1d7f331f6f09f38849` |
+| Static / Linux on bounded candidate | `34175388673` PASS / `34175388665` PASS |
+| Bounded release transport | `34175388675` **SUCCESS**, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Step 5 | article PDF/A-2b + embedding PASS; cleanup acceptance pending |
+| Step 6 | 4 bundles + checksums + archive integrity PASS; cleanup acceptance pending |
+| Bounded artifact | `10037419414`, SHA-256 `e0420e72c4f9afc0d58792ddb1c83df6b3bcdbc8d2db493b53d1b22e0c589da6` |
+| Current batch | **Steps 5-6 temporary executor cleanup** |
+| Temporary executor | removed in current cleanup checkpoint; Static/Linux cleanup acceptance pending |
+| Next after cleanup | Step 4 current-candidate literal Times New Roman/Arial + Unicode + embedding proof |
+| Release blocker | issue #18 deterministic reference PDF |
+| Item 33 | remains fail-closed; not a release implementation task |
 
-## Current material advance
+Canonical control documents are `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-The second transport proved that the per-command epoch correction worked: the run progressed through the complete permanent 38-check release matrix and Scientific Article PDF/A/embedding before failing later in Step 6. The remaining failure comes from `git ls-files` invoked by distribution/public-bundle tooling inside the TeX Live container, where the mounted runner checkout is not trusted by that container-local Git configuration.
+## Successful bounded transport
 
-The current correction is runner-scoped rather than product-scoped: both the temporary bounded transport and permanent Linux release workflow register only the current mounted checkout as a Git `safe.directory` before invoking `make release-check`. Bundle content predicates, checksums, archive safety, proprietary-font exclusion and institutional-asset exclusion remain unchanged.
+Run `34175388675` on `13e491d18...` passed the unchanged permanent `make release-check` contract at `PASS=38/38`, then passed the explicit Scientific Article PDF/A-2b/font-embedding gate and distribution bundle integrity.
 
-## Frozen remaining path
+Step 6 produced four v3.0.0 ZIP candidates plus `SHA256SUMS`; all checksums and archive-integrity checks passed and `proprietary_fonts_redistributed=false`.
 
-| Order | Work | Acceptance |
-|---:|---|---|
-| 1 | Rerun corrected Step 6 distribution validation | same permanent `make release-check` contract PASS including distribution evidence |
-| 2 | Remove temporary bounded workflow and validate cleanup | cleanup Static + Linux PASS; then Steps 5-6 accepted |
-| 3 | Literal Times New Roman/Arial + Unicode + embedding | current final-candidate identity/extraction/embedding proof |
-| 4 | Issue #18 deterministic reference PDF | two controlled clean builds with identical SHA-256 and preserved validation |
-| 5 | Final Certification phase-end regression | one immutable candidate with complete matrix |
-| 6 | Release | final docs/checksums/tag/GitHub Release/publication verification |
+## Immediate action
 
-A failure remains inside the row whose predicate it violates. It does not create a new roadmap workstream.
-
-## Hard boundaries
-
-- Preserve accepted shared and Scientific Article behavior unless a concrete regression is discovered.
-- Item 33 remains fail-closed and is not a hidden release task.
-- Do not redistribute proprietary fonts.
-- CTAN/external publication remains blocked until Release.
+1. validate the cleanup checkpoint after removal of `.github/workflows/final-cert-bounded-matrix.yml`;
+2. require Static and Linux green on that cleanup SHA;
+3. mark Steps 5-6 ACCEPTED only after those results are recorded;
+4. execute fresh current-candidate literal Times New Roman/Arial, Unicode extraction and embedding proof;
+5. resolve issue #18 deterministic reference-PDF reproducibility;
+6. execute Final Certification **phase-end regression** on one immutable SHA;
+7. only then activate Release.
 
 ## Mandatory operating discipline
 
-Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Every phase requires a complete **phase-end regression** on one immutable SHA; targeted checks never authorize a phase transition or create a new workstream by themselves.
+Every **material advance** updates relevant execution documentation, this handoff, roadmap and machine state in the same work cycle. Targeted checks never replace the **phase-end regression**.
+
+## Hard boundaries
+
+- Preserve accepted shared and Scientific Article semantics absent a concrete regression.
+- Do not weaken tests to obtain green CI.
+- Do not redistribute proprietary Microsoft fonts.
+- Librarian item 33 remains fail-closed.
+- Do not perform CTAN or other external publication before **Release**.

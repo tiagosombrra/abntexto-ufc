@@ -3,7 +3,7 @@
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
-  "updated_at": "2026-09-07",
+  "updated_at": "2026-09-08",
   "status": "ACTIVE",
   "phase": "final-certification",
   "stage": "final-certification",
@@ -98,7 +98,7 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "b25c5a90dc68d87ccd8cdaf5e7000899fe521715",
     "latest_fully_validated_checkpoint_state": "final-certification-scope-freeze-accepted-static-linux",
-    "final_certification_state": "active-step6-canonical-checkout-runner-correction",
+    "final_certification_state": "active-steps5-6-cleanup-after-bounded-pass",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -118,16 +118,15 @@
     "release_baseline_cleanup_linux_run": 34170123765,
     "release_baseline_execution_state": "accepted",
     "profile_engine_matrix_state": "accepted",
-    "literal_font_unicode_embedding_state": "pending-bounded-gap",
-    "pdfa_state": "article-explicit-gate-pass-observed-bounded-acceptance-pending",
-    "distribution_bundle_state": "step6-container-git-trust-correction-active",
+    "literal_font_unicode_embedding_state": "pending-current-candidate-proof",
+    "pdfa_state": "article-explicit-gate-pass-bounded-cleanup-pending",
+    "distribution_bundle_state": "pass-observed-cleanup-pending",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — Step 6 canonical-checkout trust correction inside TeX Live container"
+      "Final Certification — Steps 5-6 temporary executor cleanup after successful bounded transport"
     ],
     "pending_acceptance_gates": [
-      "Corrected temporary release transport must pass permanent make release-check with container-local canonical checkout trust",
-      "Temporary bounded-matrix executor must be removed and cleanup Static/Linux must pass before Steps 5-6 acceptance",
+      "Cleanup checkpoint after temporary bounded-matrix executor removal must pass Static contract and Linux integration before Steps 5-6 acceptance",
       "Final-candidate literal Times New Roman/Arial identity, Unicode extraction and embedding evidence",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
@@ -140,16 +139,16 @@
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
     "release_blockers": [
-      "Final Certification bounded Steps 5-6 have not completed cleanup acceptance",
+      "Final Certification Steps 5-6 require cleanup acceptance after temporary executor removal",
       "Final-candidate literal-font/Unicode/embedding proof remains pending",
       "issue #18 deterministic release reference PDF remains open",
       "Final Certification phase-end regression has not completed",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "active-corrected-validation-transport",
+      "state": "removed-pending-cleanup-validation",
       "path": ".github/workflows/final-cert-bounded-matrix.yml",
-      "purpose": "rerun permanent make release-check with container-local trust for the mounted canonical checkout",
+      "purpose": "historical bounded transport for Steps 5-6; removed after successful run 34175388675",
       "must_remove_before_checkpoint_acceptance": true
     }
   },
@@ -246,6 +245,24 @@
     "bounded_matrix_second_step6_failure_classification": "container-git-tracked-file-discovery-not-canonical",
     "bounded_matrix_second_failure_artifact_id": 10036808737,
     "bounded_matrix_second_failure_artifact_sha256": "c56e1c651ce990ddd5a301c5cf60691b1081a06b7eebe66b27503e256e28e273",
+    "bounded_matrix_success_checkpoint_sha": "13e491d18d46a86835b4ab1d7f331f6f09f38849",
+    "bounded_matrix_success_static_run": 34175388673,
+    "bounded_matrix_success_static_conclusion": "success",
+    "bounded_matrix_success_linux_run": 34175388665,
+    "bounded_matrix_success_linux_conclusion": "success",
+    "bounded_matrix_success_release_run": 34175388675,
+    "bounded_matrix_success_release_conclusion": "success",
+    "bounded_matrix_success_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "bounded_matrix_success_step5_scientific_article_pdfa": "PASS",
+    "bounded_matrix_success_step5_font_embedding": "PASS",
+    "bounded_matrix_success_step6_distribution_bundles": "PASS",
+    "bounded_matrix_success_step6_artifacts": 4,
+    "bounded_matrix_success_step6_checksums": "PASS",
+    "bounded_matrix_success_step6_archive_integrity": "PASS",
+    "bounded_matrix_success_step6_source_date_epoch": 1788829436,
+    "bounded_matrix_success_step6_proprietary_fonts_redistributed": false,
+    "bounded_matrix_success_artifact_id": 10037419414,
+    "bounded_matrix_success_artifact_sha256": "e0420e72c4f9afc0d58792ddb1c83df6b3bcdbc8d2db493b53d1b22e0c589da6",
     "librarian_review_contract_items": 34
   },
   "release_policy": {
