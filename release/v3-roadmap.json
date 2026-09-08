@@ -96,9 +96,9 @@
     "scientific_article_phase_end_linux_scope": "complete",
     "scientific_article_phase_end_linux_summary": "PASS=36 FAIL=0 SKIP=0",
     "scientific_article_pdf_visual_review": "pass-5-of-5",
-    "latest_fully_validated_checkpoint_sha": "0609f9296ab48799e1b5f6b5cd32141c26ab10c0",
-    "latest_fully_validated_checkpoint_state": "final-certification-release-baseline-cleanup-accepted",
-    "final_certification_state": "active-bounded-certification-matrix",
+    "latest_fully_validated_checkpoint_sha": "b25c5a90dc68d87ccd8cdaf5e7000899fe521715",
+    "latest_fully_validated_checkpoint_state": "final-certification-scope-freeze-accepted-static-linux",
+    "final_certification_state": "active-bounded-matrix-validation-transport",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -119,16 +119,16 @@
     "release_baseline_execution_state": "accepted",
     "profile_engine_matrix_state": "accepted",
     "literal_font_unicode_embedding_state": "pending-bounded-gap",
-    "pdfa_state": "partial-reference-and-non-article-green-article-explicit-proof-pending",
-    "distribution_bundle_state": "pending-bounded-gap",
+    "pdfa_state": "article-explicit-gate-implemented-release-validation-pending",
+    "distribution_bundle_state": "persistent-gate-implemented-release-validation-pending",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — bounded certification matrix Steps 4-6"
+      "Final Certification — bounded matrix validation transport for article PDF/A and distribution integrity"
     ],
     "pending_acceptance_gates": [
+      "Current temporary release transport must pass permanent make release-check with article-PDF/A and distribution-integrity gates",
+      "Temporary bounded-matrix executor must be removed and cleanup Static/Linux must pass before Steps 5-6 acceptance",
       "Final-candidate literal Times New Roman/Arial identity, Unicode extraction and embedding evidence",
-      "Explicit Scientific Article PDF/A-2b proof on certification candidate",
-      "Distribution/public bundle integrity from certification candidate",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
     ],
@@ -142,12 +142,10 @@
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "none-active",
-      "previous_path": ".github/workflows/final-cert-release-baseline.yml",
-      "transport_sha": "f8be323027b42eefcdbe3d13b2f269abdd6ec17f",
-      "release_run": 34168471371,
-      "removed_in_checkpoint": "0609f9296ab48799e1b5f6b5cd32141c26ab10c0",
-      "cleanup_accepted": true
+      "state": "active-validation-transport",
+      "path": ".github/workflows/final-cert-bounded-matrix.yml",
+      "purpose": "run permanent make release-check with newly added bounded Step 5/6 gates on PR branch",
+      "must_remove_before_checkpoint_acceptance": true
     }
   },
   "linux_integration": {
@@ -215,6 +213,9 @@
     "release_baseline_cleanup_linux_run": 34170123765,
     "release_baseline_cleanup_linux_conclusion": "success",
     "release_baseline_cleanup_acceptance": "accepted",
+    "scope_freeze_checkpoint_sha": "b25c5a90dc68d87ccd8cdaf5e7000899fe521715",
+    "scope_freeze_static_run": 34171618792,
+    "scope_freeze_linux_run": 34171618854,
     "profile_engine_matrix_acceptance": "accepted-from-current-complete-release-evidence",
     "librarian_review_contract_items": 34
   },

@@ -72,6 +72,8 @@ check:
 
 release-check:
 	@python3 tests/run.py --mode release
+	@sh tests/integration/scientific-article-pdfa.sh
+	@sh tests/integration/distribution-bundles.sh
 
 preflight: check
 	@echo "Development preflight completed."
