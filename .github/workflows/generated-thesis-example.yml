@@ -1,0 +1,36 @@
+name: Generate doctoral thesis example
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Compile doctoral thesis example
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -eu
+            export TEXINPUTS=".//:"
+            pdflatex -jobname=doctoral-thesis -interaction=nonstopmode -halt-on-error -file-line-error tests/smoke/generated-doctoral-thesis.tex
+            pdflatex -jobname=doctoral-thesis -interaction=nonstopmode -halt-on-error -file-line-error tests/smoke/generated-doctoral-thesis.tex
+            pdflatex -jobname=doctoral-thesis -interaction=nonstopmode -halt-on-error -file-line-error tests/smoke/generated-doctoral-thesis.tex
+            test -s doctoral-thesis.pdf
+
+      - name: Upload generated PDF
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doctoral-thesis-example
+          path: doctoral-thesis.pdf
+          if-no-files-found: error
