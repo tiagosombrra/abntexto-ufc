@@ -1,58 +1,55 @@
 # V3.0.0 Release Readiness
 
-Updated: 2026-09-07
-Status: ACTIVE — FINAL CERTIFICATION ENTRY
+Updated: 2026-09-08
+Status: ACTIVE — RELEASE ENTRY
 
 ## Phase readiness
 
 | Phase | State | Accepted evidence / pending work |
 |---|---|---|
 | Regression Audit | CLOSED | phase-end regression accepted |
-| Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
-| Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
-| Scientific Article | **CLOSED** | `923d11ef...`; Static `34154045481`; complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`; article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — ENTRY SYNCHRONIZATION** | merge PR #286, fresh certification branch, then full certification matrix |
-| Release | QUEUED | bundles, checksums, tag/GitHub Release and publication verification |
+| Core Corrections | CLOSED | accepted |
+| Reference PDF Validation | CLOSED | 55/55 visual PASS |
+| Scientific Article | CLOSED | complete Linux + article PDF 5/5 visual PASS |
+| Final Certification | **CLOSED** | candidate `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
+| Release | **ACTIVE** | merge certified PR, synchronize a short-lived release branch, execute release checklist, then phase-end regression |
 
-## Current Final Certification entry
+## Final Certification handoff to Release
 
-| Surface | State |
+| Surface | Accepted state |
 |---|---|
-| Article transition PR | #286 — open until synchronized transition checkpoint is green |
-| Transition branch | `feat/v3-scientific-article` |
-| Planned certification branch | `cert/v3-final-certification` from updated main |
-| Linux release baseline | not yet executed for final certification candidate |
-| Profile/engine matrix | queued |
-| Literal fonts / Unicode / embedding | queued |
-| PDF/A-2b | queued |
-| Distribution bundles | queued |
-| Issue #18 deterministic reference PDF | OPEN — P0 release blocker |
-| Final Certification phase-end regression | not started |
+| Final Certification candidate | `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
+| Linux integration | `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Release matrix | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Literal fonts / Unicode / embedding / PDF/A | ACCEPTED |
+| Scientific Article PDF/A-2b | PASS |
+| Distribution bundles | 4 artifacts; checksums and archive integrity PASS |
+| Deterministic release reference PDF | PASS; permanent gate retained |
+| Issue #18 | CLOSED |
+| Temporary certification executor | absent |
+| One-shot Final Certification marker | removed by phase-transition commit |
+| Librarian item 33 | explicit authority gap; not a speculative release task |
 
-## What still blocks v3.0.0
+## Release execution order
 
-| Blocker | Severity | Exit condition |
-|---|---|---|
-| Final Certification branch entry | P0 | PR #286 merged and fresh certification branch synchronized from updated main |
-| Linux release/certification matrix | P0 | all applicable profile/engine/certification gates green |
-| Literal font and PDF/A evidence | P0 | accepted certification evidence without proprietary-font redistribution |
-| Issue #18 reproducibility | P0 | deterministic epoch + two controlled clean rebuilds + identical reference-PDF SHA-256 while existing validation remains green |
-| Final Certification phase-end regression | P0 | one immutable candidate passes complete phase-end gate |
-| Release | P0 | final documentation, bundles/checksums, `v3.0.0` tag/GitHub Release and publication verification |
-| Librarian item 33 | explicit authority gap | remain fail-closed unless authoritative current NBR 6023:2025 evidence is obtained |
+| Order | Action | Gate |
+|---:|---|---|
+| 1 | Validate this Final Certification → Release transition checkpoint | Static and triggered Linux remain green |
+| 2 | Merge PR #289 into `main` | PR mergeable and transition checks green |
+| 3 | Read new `main` SHA and create one short-lived Release branch | machine/handoff/roadmap synchronized to branch facts |
+| 4 | Re-read `docs/CTAN-RELEASE.md` and repository release tooling | no invented publication step |
+| 5 | Build final public/distribution artifacts and checksums from the Release candidate | reproducible/integrity gates green |
+| 6 | Run complete release verification on one immutable Release candidate | mandatory Release **phase-end regression** |
+| 7 | Only after acceptance, create `v3.0.0` tag/GitHub Release and perform publication actions explicitly required by the release checklist | verify published assets/checksums afterwards |
+| 8 | Record final publication/verification evidence and close Release | no unresolved release blocker |
 
-## Active documentation authority
+## Current blockers
 
-| Surface | Role |
+| Blocker | Exit condition |
 |---|---|
-| `release/v3-roadmap.json` | machine state |
-| `docs/HANDOFF-V3.0.0.md` | canonical execution handoff |
-| `docs/ROADMAP-V3.0.0.md` | readable phase roadmap |
-| `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md` | accepted article phase-end evidence |
-| `docs/V3-FINAL-CERTIFICATION.md` | active certification execution plan |
-| `docs/V3-RELEASE-READINESS.md` | release blocker/readiness inventory |
-| `docs/UFC-LIBRARIAN-REVIEW.md` | protected 34-point shared review contract |
+| PR #289 transition not yet merged | transition checkpoint green and PR merged |
+| Release task branch not yet synchronized from new `main` | create branch after merge and update control plane |
+| Release phase-end regression not yet executed | one immutable Release candidate passes all required release checks |
+| Publication not yet verified | tag/Release/publication assets verified against accepted checksums |
 
-## Mandatory closeout rule
-
-Every **material advance** updates the relevant operational documents in the same work cycle. Every phase ends with a complete **phase-end regression** on one immutable SHA. Intermediate/scoped checks never close Final Certification. Temporary executors must be removed before bounded checkpoint acceptance.
+Every **material advance** updates operational documentation in the same work cycle. Release cannot close without its own complete **phase-end regression**.

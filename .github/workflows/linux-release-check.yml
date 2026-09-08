@@ -11,13 +11,23 @@ on:
       - .gitignore
       - 'docs/**'
       - release/v3-roadmap.json
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - release/final-certification-candidate.json
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: linux-release-check-${{ github.ref }}
+  group: linux-release-check-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -42,6 +52,9 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli
             node --version
             docker --version
+            # The TeX Live action executes inside a container over the runner checkout.
+            # Trust only this mounted canonical checkout for Git provenance/tracked-file reads.
+            git config --global --add safe.directory "$PWD"
             make release-check
 
       - name: Publish validation summary
@@ -51,7 +64,7 @@ jobs:
           {
             echo '## Linux release validation'
             echo
-            echo '> This Linux gate is engineering evidence only. Final Windows/literal-font/PDF-A certification remains B8-owned.'
+            echo '> This Linux gate is engineering evidence only. Final Windows/literal-font/PDF-A certification remains Final Certification-owned.'
             echo
             if [[ -f artifacts/validation/validation-report.md ]]; then
               cat artifacts/validation/validation-report.md

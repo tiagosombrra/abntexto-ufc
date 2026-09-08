@@ -1,51 +1,51 @@
 # abntexto-ufc v3.0.0 — Engineering Roadmap
 
-Updated: 2026-09-07
+Updated: 2026-09-08
 
 ## Current status
 
-**Scientific Article is CLOSED. Final Certification is ACTIVE at entry synchronization.**
+**Release is ACTIVE. Final Certification is CLOSED.**
 
-| Phase | Status | Accepted evidence / exit requirement |
+| Phase | Status | Exit requirement |
 |---|---|---|
-| Regression Audit | CLOSED | completed regression contract and phase-end regression |
-| Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
-| Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
-| Scientific Article | **CLOSED** | candidate `923d11ef...`; Static `34154045481`; complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`; canonical article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — ENTRY SYNCHRONIZATION** | merge accepted article PR, branch from updated main, then complete certification matrix and immutable phase-end regression |
-| Release | QUEUED | final bundles/checksums/tag/release/publication after certification and issue #18 closure |
+| Regression Audit | CLOSED | accepted |
+| Core Corrections | CLOSED | accepted phase-end regression |
+| Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
+| Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
+| Final Certification | **CLOSED** | candidate `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
+| Release | **ACTIVE — ENTRY TRANSITION** | release checklist complete, publication verified, and Release phase-end regression green on one immutable candidate |
 
-The current transition branch is `feat/v3-scientific-article` / PR #286. Final Certification implementation must move to fresh `cert/v3-final-certification` after PR #286 is merged into `main`.
+## Final Certification closure
 
-## Scientific Article closeout
+| Predicate | Accepted result |
+|---|---|
+| Candidate | `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
+| Static | `34239890649` SUCCESS |
+| Linux integration | `34239890614` SUCCESS; `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Linux release check | `34239890548` SUCCESS; `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Distribution / PDF-A / deterministic reference | PASS |
+| Temporary executor | absent |
+| Item 33 | explicit `NORMATIVE-REVIEW`, fail-closed |
 
-The Step 7 cleanup checkpoint was itself strong enough to be the Step 8 phase-end candidate: `923d11ef668b02ec4de3cad4906ad5ac1f527eaf` passed Static `34154045481` and Linux `34154045509` with automatically selected `complete` scope and `36/36` checks green. All article gates and shared repository/profile checks passed. The provenance-bound canonical PDF from `f62ac703...` remains visually accepted 5/5.
+The prior candidate `fc907856...` remains rejected because heavy Linux integration was skipped. The accepted retry corrected orchestration scope only and changed no product/normative semantics.
 
-Phase-end record: `docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md`.
+## Release plan
 
-## Final Certification roadmap
-
-| Step | Work | State |
+| Step | State | Gate |
 |---:|---|---|
-| 1 | Entry synchronization: merge PR #286, fresh certification branch, reconcile branch/main facts | ACTIVE |
-| 2 | Linux release baseline | QUEUED |
-| 3 | Full profile and engine certification | QUEUED |
-| 4 | Literal Times New Roman/Arial, Unicode and embedding evidence | QUEUED |
-| 5 | PDF/A-2b certification | QUEUED |
-| 6 | Public/distribution bundle integrity | QUEUED |
-| 7 | Issue #18 deterministic release-reference-PDF reproducibility | QUEUED |
-| 8 | Final Certification phase-end regression | QUEUED |
+| Transition from Final Certification | IN PROGRESS | synchronized transition commit green |
+| Merge PR #289 | QUEUED | transition checks green |
+| Create short-lived Release branch from updated `main` | QUEUED | machine/handoff branch facts synchronized |
+| Read/execute repository release checklist | QUEUED | `docs/CTAN-RELEASE.md` and release tooling are authority |
+| Build final artifacts/checksums | QUEUED | integrity/reproducibility PASS |
+| Immutable Release phase-end candidate | QUEUED | Static + complete applicable Linux/release verification |
+| Tag/GitHub Release/publication | QUEUED | accepted Release candidate; verify published artifacts afterwards |
+| Release closeout | QUEUED | no blocker + final verification recorded |
 
-Execution details: `docs/V3-FINAL-CERTIFICATION.md`.
+## Frozen remaining scope
 
-## Persistent authority gap
-
-Librarian review remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. Item 33 remains explicit/fail-closed unless authoritative current-edition NBR 6023:2025 evidence is obtained.
-
-## Gate before Release
-
-Release cannot activate until Final Certification passes on one immutable candidate, issue #18 is resolved with deterministic digest evidence, no certification blocker remains, and all acceptance documentation is synchronized.
+Only **Release** remains. Do not create another roadmap phase. Librarian item 33 remains an explicit authority gap, not an untracked release implementation task.
 
 ## Operating discipline
 
-Every **material advance** updates roadmap, handoff and machine state in the same cycle. Every phase ends with a mandatory complete **phase-end regression** on one immutable SHA; targeted/scoped intermediate checks never close a phase.
+Every **material advance** must update roadmap, handoff and machine state in the same work cycle. Release ends with a complete **phase-end regression** on one immutable SHA; intermediate green checks do not substitute for it.

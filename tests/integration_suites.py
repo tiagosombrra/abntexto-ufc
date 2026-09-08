@@ -9,51 +9,27 @@ SUITES: dict[str, tuple[str, ...]] = {
     "smoke": ("repository", "validator-source", "reference", "pdf-validator"),
     "reference-document": ("reference", "reference-corpus", "pdf-validator"),
     "reference-pdf": (
-        "reference",
-        "reference-corpus",
-        "pdf-validator",
-        "layout",
-        "font-config",
-        "pdf-validation-core",
-        "pdf-geometry",
-        "frontmatter",
-        "duplex-frontmatter",
-        "object-geometry",
-        "table-ibge",
-        "documentary-source",
-        "bibliography",
-        "reference-spacing",
-        "backmatter",
-        "duplex-backmatter",
+        "reference", "reference-corpus", "pdf-validator", "layout", "font-config",
+        "pdf-validation-core", "pdf-geometry", "frontmatter", "duplex-frontmatter",
+        "object-geometry", "table-ibge", "documentary-source", "bibliography",
+        "reference-spacing", "backmatter", "duplex-backmatter",
     ),
     "frontmatter": ("frontmatter", "duplex-frontmatter"),
     "layout": (
-        "layout",
-        "font-config",
-        "pdf-validation-core",
-        "pdf-geometry",
-        "math",
+        "layout", "font-config", "pdf-validation-core", "pdf-geometry", "math",
         "normative-complement",
     ),
     "objects": (
-        "object-geometry",
-        "code-typography",
-        "table-ibge",
-        "objects",
-        "minted",
-        "algorithm-numbering",
-        "documentary-source",
+        "object-geometry", "code-typography", "table-ibge", "objects", "minted",
+        "algorithm-numbering", "documentary-source",
     ),
     "bibliography": ("bibliography", "reference-spacing", "normative-complement"),
     "backmatter": ("backmatter", "duplex-backmatter"),
     "research-project": ("research-project",),
     "profiles": ("profiles", "build-path", "multivolume", "catalog-card"),
     "article": (
-        "validator-source",
-        "scientific-article-profile",
-        "scientific-article-front-block",
-        "scientific-article-foreign-elements",
-        "scientific-article-body",
+        "validator-source", "scientific-article-profile", "scientific-article-front-block",
+        "scientific-article-foreign-elements", "scientific-article-body",
         "scientific-article-recommendations",
     ),
 }
@@ -61,11 +37,7 @@ SUITES: dict[str, tuple[str, ...]] = {
 SUITE_ORDER = tuple(SUITES)
 
 DOC_ONLY_EXACT = {
-    "README.md",
-    "AGENTS.md",
-    "LICENSE",
-    ".gitignore",
-    "release/v3-roadmap.json",
+    "README.md", "AGENTS.md", "LICENSE", ".gitignore", "release/v3-roadmap.json",
 }
 DOC_ONLY_PREFIXES = ("docs/",)
 
@@ -83,6 +55,7 @@ FORCE_COMPLETE_EXACT = {
     "abntexto-ufc/core.def",
     "abntexto-ufc/fonts.def",
     "abntexto-ufc/modules.def",
+    "release/final-certification-candidate.json",
 }
 FORCE_COMPLETE_PREFIXES = (
     "abntexto-ufc/integrations/",
@@ -90,89 +63,15 @@ FORCE_COMPLETE_PREFIXES = (
 )
 
 PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
-    (
-        "article",
-        (
-            "abntexto-ufc/article",
-            "tests/integration/scientific-article",
-            "tests/documents/scientific-article",
-            "tests/checks/scientific_article",
-        ),
-    ),
-    (
-        "frontmatter",
-        (
-            "abntexto-ufc/frontmatter.def",
-            "abntexto-ufc/academic-works.def",
-            "template/frontmatter/",
-            "tests/integration/frontmatter",
-            "tests/integration/duplex-frontmatter",
-        ),
-    ),
-    (
-        "layout",
-        (
-            "abntexto-ufc/layout.def",
-            "tests/integration/layout",
-            "tests/integration/pdf-geometry",
-            "tests/integration/pdf-validation-core",
-            "tests/integration/math",
-            "tests/integration/normative-complement",
-        ),
-    ),
-    (
-        "objects",
-        (
-            "abntexto-ufc/objects.def",
-            "tests/integration/object",
-            "tests/integration/table-ibge",
-            "tests/integration/minted",
-            "tests/integration/algorithm-numbering",
-            "tests/integration/documentary-source",
-        ),
-    ),
-    (
-        "bibliography",
-        (
-            "abntexto-ufc/bibliography.def",
-            "abntexto-ufc/standards/nbr6023-2025.def",
-            "template/backmatter/references.bib",
-            "tests/integration/bibliography",
-            "tests/integration/reference-spacing",
-        ),
-    ),
-    (
-        "backmatter",
-        (
-            "abntexto-ufc/backmatter.def",
-            "tests/integration/backmatter",
-            "tests/integration/duplex-backmatter",
-        ),
-    ),
-    (
-        "research-project",
-        ("abntexto-ufc/research-projects.def", "tests/integration/research-project"),
-    ),
-    (
-        "profiles",
-        (
-            "tests/integration/profile-matrix",
-            "tests/integration/build-path",
-            "tests/integration/multivolume",
-            "tests/integration/catalog-card",
-            "tests/smoke/base-profile.tex",
-        ),
-    ),
-    (
-        "reference-document",
-        (
-            "template/main.tex",
-            "template/chapters/",
-            "tests/integration/reference-document",
-            "tests/integration/reference-corpus",
-            "tests/integration/pdf-validator",
-        ),
-    ),
+    ("article", ("abntexto-ufc/article", "tests/integration/scientific-article", "tests/documents/scientific-article", "tests/checks/scientific_article")),
+    ("frontmatter", ("abntexto-ufc/frontmatter.def", "abntexto-ufc/academic-works.def", "template/frontmatter/", "tests/integration/frontmatter", "tests/integration/duplex-frontmatter")),
+    ("layout", ("abntexto-ufc/layout.def", "tests/integration/layout", "tests/integration/pdf-geometry", "tests/integration/pdf-validation-core", "tests/integration/math", "tests/integration/normative-complement")),
+    ("objects", ("abntexto-ufc/objects.def", "tests/integration/object", "tests/integration/table-ibge", "tests/integration/minted", "tests/integration/algorithm-numbering", "tests/integration/documentary-source")),
+    ("bibliography", ("abntexto-ufc/bibliography.def", "abntexto-ufc/standards/nbr6023-2025.def", "template/backmatter/references.bib", "tests/integration/bibliography", "tests/integration/reference-spacing")),
+    ("backmatter", ("abntexto-ufc/backmatter.def", "tests/integration/backmatter", "tests/integration/duplex-backmatter")),
+    ("research-project", ("abntexto-ufc/research-projects.def", "tests/integration/research-project")),
+    ("profiles", ("tests/integration/profile-matrix", "tests/integration/build-path", "tests/integration/multivolume", "tests/integration/catalog-card", "tests/smoke/base-profile.tex")),
+    ("reference-document", ("template/main.tex", "template/chapters/", "tests/integration/reference-document", "tests/integration/reference-corpus", "tests/integration/pdf-validator")),
 )
 
 
@@ -200,10 +99,7 @@ def infer_suites(paths: list[str]) -> tuple[str, ...]:
     if orchestration:
         technical = domain_technical
 
-    if any(
-        path in FORCE_COMPLETE_EXACT or path.startswith(FORCE_COMPLETE_PREFIXES)
-        for path in technical
-    ):
+    if any(path in FORCE_COMPLETE_EXACT or path.startswith(FORCE_COMPLETE_PREFIXES) for path in technical):
         return ("complete",)
 
     selected: set[str] = set()
@@ -219,12 +115,8 @@ def infer_suites(paths: list[str]) -> tuple[str, ...]:
 def git_changed_paths(base: str, head: str) -> list[str]:
     completed = subprocess.run(
         ["git", "diff", "--name-only", base, head],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        encoding="utf-8", errors="replace", check=False,
     )
     if completed.returncode != 0:
         raise SystemExit(completed.stderr.strip() or "git diff failed")
@@ -243,24 +135,19 @@ def self_test() -> None:
         ("tests/run.py", "tests/integration/scientific-article-recommendations.sh"): ("article",),
         ("tests/integration_suites.py", "abntexto-ufc/objects.def"): ("objects",),
         ("tests/run.py", "unknown/technical.file"): ("complete",),
-        ("abntexto-ufc/objects.def", "abntexto-ufc/bibliography.def"): (
-            "objects",
-            "bibliography",
-        ),
+        ("abntexto-ufc/objects.def", "abntexto-ufc/bibliography.def"): ("objects", "bibliography"),
         ("abntexto-ufc/core.def",): ("complete",),
+        ("release/final-certification-candidate.json",): ("complete",),
+        ("tests/integration_suites.py", "release/final-certification-candidate.json"): ("complete",),
         ("unknown/technical.file",): ("complete",),
     }
     for paths, expected in cases.items():
         measured = infer_suites(list(paths))
         if measured != expected:
             raise SystemExit(
-                f"Linux suite inference self-test failed for {paths}: "
-                f"expected {expected}, got {measured}"
+                f"Linux suite inference self-test failed for {paths}: expected {expected}, got {measured}"
             )
-    print(
-        "LINUX-SUITE-EVIDENCE status=PASS "
-        f"inference_cases={len(cases)} suites={len(SUITES)}"
-    )
+    print("LINUX-SUITE-EVIDENCE status=PASS " f"inference_cases={len(cases)} suites={len(SUITES)}")
 
 
 def main() -> None:

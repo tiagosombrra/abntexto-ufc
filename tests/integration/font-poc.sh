@@ -32,7 +32,7 @@ find_tex_bin() {
   if [ -n "$found" ]; then
     PATH="$found:$PATH"
     export PATH
-    echo "POC fontes: toolchain TeX localizada em $found"
+    echo "Font POC: TeX toolchain located at $found"
   fi
 }
 
@@ -74,7 +74,7 @@ find_poppler_bin() {
   if [ -n "$found" ]; then
     PATH="$(dirname "$found"):$PATH"
     export PATH
-    echo "POC fontes: Poppler localizado em $(dirname "$found")"
+    echo "Font POC: Poppler located at $(dirname "$found")"
   fi
 }
 
@@ -96,22 +96,22 @@ for cmd in $required; do
 done
 
 if [ -n "$missing" ]; then
-  echo "POC sources: commands missing:$missing"
-  echo 'POC fontes: verifique a instalação/PATH do TeX Live ou MiKTeX.'
+  echo "Font POC: required commands missing:$missing"
+  echo 'Font POC: check the TeX Live or MiKTeX installation and PATH.'
   exit 2
 fi
 
-printf 'POC fontes: kpsewhich = %s\n' "$(command -v kpsewhich)"
-printf 'POC fontes: pdflatex = %s\n' "$(command -v pdflatex)"
-printf 'POC fontes: lualatex  = %s\n' "$(command -v lualatex)"
+printf 'Font POC: kpsewhich = %s\n' "$(command -v kpsewhich)"
+printf 'Font POC: pdflatex = %s\n' "$(command -v pdflatex)"
+printf 'Font POC: lualatex  = %s\n' "$(command -v lualatex)"
 if [ -n "${TEXMFHOME:-}" ]; then
-  printf 'POC fontes: TEXMFHOME  = %s\n' "$TEXMFHOME"
+  printf 'Font POC: TEXMFHOME  = %s\n' "$TEXMFHOME"
 fi
 if [ "$compile_only" != 1 ]; then
-  printf 'POC fontes: pdffonts  = %s\n' "$(command -v pdffonts)"
-  printf 'POC fontes: pdftotext = %s\n' "$(command -v pdftotext)"
+  printf 'Font POC: pdffonts  = %s\n' "$(command -v pdffonts)"
+  printf 'Font POC: pdftotext = %s\n' "$(command -v pdftotext)"
 else
-  echo 'POC fontes: modo compile-only; certificação do PDF será executada no gate Linux.'
+  echo 'Font POC: compile-only mode; PDF certification is delegated to the Linux gate.'
 fi
 
 font_dir=${UFC_WINDOWS_FONTS_DIR:-}
@@ -124,7 +124,7 @@ if [ -z "$font_dir" ]; then
 fi
 
 if [ -n "$font_dir" ]; then
-  echo "POC fontes: diretório Windows Fonts = $font_dir"
+  echo "Font POC: Windows Fonts directory = $font_dir"
   case "$(uname -s 2>/dev/null || echo unknown)" in
     MINGW*|MSYS*|CYGWIN*) TTFONTS="${font_dir}//;${TTFONTS:-}" ;;
     *) TTFONTS="${font_dir}//:${TTFONTS:-}" ;;
@@ -159,7 +159,7 @@ assert_names() {
 
   for pattern in $patterns; do
     printf '%s\n' "$names" | grep -Fq "$pattern" || {
-      echo "POC fontes: $pdf não contém $pattern"
+      echo "Font POC: $pdf does not contain $pattern"
       pdffonts "$pdf"
       return 1
     }
@@ -184,7 +184,7 @@ assert_text_extraction() {
 
   for marker in 'Texto normal para prova literal da classe.' 'ação' 'ciência' 'computação' 'orientação' 'avaliação' 'João' 'Ceará' 'São Luís'; do
     grep -Fq "$marker" "$txt" || {
-      echo "POC sources: extraction of text missing or incorrect in $pdf: $marker"
+      echo "Font POC: text extraction missing or incorrect in $pdf: $marker"
       cat "$txt"
       return 1
     }
@@ -198,7 +198,7 @@ compile_case() {
   job="${family}-font-${engine}-poc"
 
   cleanup "$job"
-  echo "POC fontes: infraestrutura $family com $engine"
+  echo "Font POC: infrastructure $family with $engine"
   "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
     -jobname="$job" "$fixture" >"${TMPDIR:-/tmp}/$job.log" 2>&1 || {
       cat "${TMPDIR:-/tmp}/$job.log"
@@ -207,7 +207,7 @@ compile_case() {
 
   if [ "$compile_only" != 1 ]; then
     assert_names "$job.pdf" "$family" || return 1
-    echo "POC fontes: identidade de infraestrutura confirmada em $job.pdf"
+    echo "Font POC: infrastructure identity confirmed in $job.pdf"
   fi
 }
 
@@ -218,7 +218,7 @@ compile_class_case() {
 
   cleanup "$job"
   sed "s/@UFC_FONT@/$family/g" "$class_fixture" > "$class_tmp"
-  echo "POC fontes: abntexto-ufc estrito $family com $engine"
+  echo "Font POC: strict abntexto-ufc $family with $engine"
   "$engine" -interaction=nonstopmode -halt-on-error -file-line-error \
     -jobname="$job" "$class_tmp" >"${TMPDIR:-/tmp}/$job.log" 2>&1 || {
       cat "${TMPDIR:-/tmp}/$job.log"
@@ -230,9 +230,9 @@ compile_class_case() {
     assert_no_text_fallback "$job.pdf" || return 1
     assert_text_extraction "$job.pdf" || return 1
     sh tests/integration/font-embedding.sh "$job.pdf" || return 1
-    echo "POC fontes: abntexto-ufc estrito confirmado em $job.pdf"
+    echo "Font POC: strict abntexto-ufc confirmed in $job.pdf"
   else
-    echo "POC fontes: artefato Windows gerado em $job.pdf"
+    echo "Font POC: Windows artifact generated at $job.pdf"
   fi
 }
 
@@ -249,12 +249,12 @@ failed=0
 if ! kpsewhich t1times-ttf.fd >/dev/null 2>&1 || \
    ! kpsewhich t1arial.fd >/dev/null 2>&1 || \
    ! kpsewhich abntexto-ufc-windows.map >/dev/null 2>&1; then
-  echo 'POC fontes: suporte abntexto-ufc Windows não localizado para pdfLaTeX.'
+  echo 'Font POC: abntexto-ufc Windows support was not found for pdfLaTeX.'
   blocked=1
 else
   for ttf in times.ttf timesbd.ttf timesi.ttf timesbi.ttf arial.ttf arialbd.ttf ariali.ttf arialbi.ttf; do
     kpsewhich --format=truetype "$ttf" >/dev/null 2>&1 || {
-      echo "POC fontes: TrueType não localizado pelo Kpathsea: $ttf"
+      echo "Font POC: TrueType file was not found by Kpathsea: $ttf"
       blocked=1
     }
   done
@@ -287,17 +287,17 @@ else
 fi
 
 if [ "$failed" -ne 0 ]; then
-  echo 'POC fontes: houve falha na geração/certificação tipográfica.'
+  echo 'Font POC: font generation or certification failed.'
   exit 1
 fi
 
 if [ "$blocked" -ne 0 ]; then
-  echo 'POC fontes: LuaLaTeX validado; pdfLaTeX bloqueado por infraestrutura local.'
+  echo 'Font POC: LuaLaTeX validated; pdfLaTeX is blocked by local infrastructure.'
   exit 2
 fi
 
 if [ "$compile_only" = 1 ]; then
-  echo 'POC fontes: quatro PDFs estritos gerados no Windows; certificação delegada ao gate Linux.'
+  echo 'Font POC: four strict PDFs generated on Windows; certification is delegated to the Linux gate.'
 else
-  echo 'POC fontes: Times New Roman e Arial literais validadas na infraestrutura e no abntexto-ufc estrito.'
+  echo 'Font POC: literal Times New Roman and Arial validated in infrastructure and strict abntexto-ufc modes.'
 fi

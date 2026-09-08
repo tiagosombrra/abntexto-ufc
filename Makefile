@@ -10,7 +10,7 @@ LATEXFLAGS := -interaction=nonstopmode -halt-on-error -file-line-error
 TEX_ENV := TEXINPUTS=..//:
 
 .PHONY: all pdf compile lua version clean reference-assets public-bundles distribution-bundles \
-	static-check check release-check preflight release-preflight
+	static-check check release-check release-reference-reproducibility preflight release-preflight
 
 all: compile
 pdf: compile
@@ -70,8 +70,14 @@ static-check:
 check:
 	@python3 tests/run.py --mode pr
 
+release-reference-reproducibility:
+	@sh tests/integration/release-reference-reproducibility.sh
+
 release-check:
 	@python3 tests/run.py --mode release
+	@sh tests/integration/scientific-article-pdfa.sh
+	@sh tests/integration/distribution-bundles.sh
+	@$(MAKE) release-reference-reproducibility
 
 preflight: check
 	@echo "Development preflight completed."

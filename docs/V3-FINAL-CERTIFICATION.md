@@ -1,50 +1,42 @@
-# V3 Final Certification — Execution Plan
+# V3 Final Certification
 
-Updated: 2026-09-07  
-Status: ACTIVE — ENTRY SYNCHRONIZATION
+Updated: 2026-09-08
+Status: CLOSED — ACCEPTED
 
 ## Purpose
 
-Certify one final v3.0.0 candidate across the complete runtime, platform/font, PDF/A and distribution surfaces without reopening accepted Scientific Article or shared-foundation semantics.
+Final Certification proved the accepted V3 product without reopening closed shared or Scientific Article semantics. Every **material advance** was synchronized with roadmap, handoff, readiness and machine state. Closure required one immutable **phase-end regression** candidate to pass the complete applicable matrix.
 
-Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5ac1f527eaf`: Static `34154045481` SUCCESS; Linux `34154045509` SUCCESS with `SCOPE=complete PASS=36 FAIL=0 SKIP=0`; canonical article PDF visual review PASS 5/5.
+## Final step status
 
-## Entry boundary
-
-The phase is active for transition/entry synchronization only while PR #286 remains open on `feat/v3-scientific-article`. No Final Certification runtime change should be made on that transition branch. After synchronized transition checks are green:
-
-1. merge PR #286 into `main`;
-2. read the resulting canonical `main` SHA;
-3. create fresh branch `cert/v3-final-certification` from that exact main;
-4. synchronize branch/main facts before technical certification work.
-
-## Certification sequence
-
-| Step | Work | State | Acceptance |
+| Step | Certification surface | State | Accepted evidence |
 |---:|---|---|---|
-| 1 | Entry synchronization and branch handoff | ACTIVE | article phase closed, PR #286 merged, fresh certification branch from updated main |
-| 2 | Linux release baseline | QUEUED | permanent `Linux release check` / `make release-check` green on certification candidate |
-| 3 | Profile and engine matrix | QUEUED | all supported document profiles and required pdfLaTeX/LuaLaTeX surfaces remain green |
-| 4 | Literal fonts, Unicode and embedding | QUEUED | required Times New Roman/Arial identity evidence, Unicode extraction and embedding pass without proprietary-font redistribution |
-| 5 | PDF/A certification | QUEUED | PDF/A-2b evidence passes on the final candidate using the established certification route |
-| 6 | Distribution/public bundles | QUEUED | bundle/package integrity and distribution checks pass from the same candidate |
-| 7 | Deterministic release reference PDF — issue #18 | QUEUED | pinned deterministic epoch, two clean builds and identical SHA-256 evidence while existing visual/text/font/PDF-A evidence remains intact |
-| 8 | Final Certification phase-end regression | QUEUED | one immutable SHA passes Static, complete Linux, release/certification matrix and phase-specific evidence |
+| 1 | Entry synchronization | ACCEPTED | control plane reconciled |
+| 2 | Linux release baseline | ACCEPTED | complete release matrix green |
+| 3 | Profile/engine matrix | ACCEPTED | current matrix accepted |
+| 4 | Literal Times New Roman/Arial + Unicode + embedding | ACCEPTED | proof `34219229025`; cleanup green |
+| 5 | Scientific Article PDF/A-2b | ACCEPTED | bounded + cleanup accepted |
+| 6 | Distribution/public bundle integrity | ACCEPTED | bundle integrity accepted |
+| 7 | Deterministic release reference PDF / issue #18 | ACCEPTED | `34231038578`; cleanup `34e6bf8...`; issue closed |
+| 8 preparation | Release-matrix PR transport | ACCEPTED | `4d94e9c...`; Static `34235990523`; complete Linux `34235990383` |
+| 8 candidate `fc907856...` | Phase-end regression | REJECTED | mandatory complete Linux did not execute |
+| 8 candidate `22f7ba845...` | Phase-end regression | **ACCEPTED** | Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
 
-## Issue #18 boundary
+## Phase-end acceptance
 
-Issue #18 is a P0 v3.0.0 release blocker. The solution must add reproducibility evidence, not alter article or shared normative semantics. Acceptance requires a deterministic release epoch (`SOURCE_DATE_EPOCH` or equivalently documented mechanism), stable PDF metadata/document ID, at least two controlled clean builds of the same reference PDF and identical SHA-256 digests.
+Candidate `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` is immutable and accepted:
 
-## Non-negotiable boundaries
+- Static contract: `34239890649` SUCCESS;
+- Linux integration: `34239890614` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0`;
+- Linux release check: `34239890548` SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`;
+- Scientific Article PDF/A-2b PASS;
+- distribution/public bundles: 4 artifacts, checksum/archive integrity PASS, proprietary fonts not redistributed;
+- release-reference reproducibility: two builds, identical SHA-256 `ae4d7755d18e05abd572a0ad95e5696e54302f9ac236b1efc004d46f57216479`, embedding/PDF validator/PDF-A-2b/Unicode PASS;
+- temporary certification executor absent;
+- librarian item 33 remains explicit and fail-closed.
 
-- Do not reopen accepted shared or Scientific Article runtime solely to satisfy packaging/reproducibility concerns.
-- Preserve the 34-point librarian-review state: 33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW.
-- Item 33 remains fail-closed absent authoritative current NBR 6023:2025 evidence.
-- Do not redistribute proprietary Microsoft fonts.
-- Linux release evidence does not by itself substitute for literal-font/platform/PDF-A certification.
-- CTAN/external publication remains blocked until Release.
-- Tests and validators are not weakened to obtain green status.
+`docs/V3-FINAL-CERTIFICATION-PHASE-END.md` is the closure authority for this phase.
 
-## Phase exit
+## Transition
 
-Final Certification closes only after its complete **phase-end regression** passes on one immutable candidate and all certification evidence is recorded. A **material advance** must update this plan, handoff, roadmap and machine state in the same work cycle.
+Final Certification is closed. The synchronized transition removes the one-shot candidate marker and activates **Release**. Release must preserve all accepted certification evidence and conclude with its own complete **phase-end regression** before the phase can be marked closed.
