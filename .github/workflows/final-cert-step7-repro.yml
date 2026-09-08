@@ -48,19 +48,9 @@ jobs:
             echo '## Final Certification Step 7 reproducibility proof'
             echo
             if [[ -f artifacts/validation-step7/release-reference-reproducibility.json ]]; then
-              python3 - <<'PY'
-            import json
-            from pathlib import Path
-            data = json.loads(Path('artifacts/validation-step7/release-reference-reproducibility.json').read_text(encoding='utf-8'))
-            print(f"- status: `{data.get('status')}`")
-            print(f"- source SHA: `{data.get('source_sha')}`")
-            print(f"- SOURCE_DATE_EPOCH: `{data.get('source_date_epoch')}`")
-            print(f"- independent clean builds: `{data.get('independent_clean_builds')}`")
-            print(f"- identical SHA-256: `{data.get('identical_sha256')}`")
-            builds = data.get('builds') or []
-            if builds:
-                print(f"- PDF SHA-256: `{builds[0].get('sha256')}`")
-            PY
+              echo '```json'
+              cat artifacts/validation-step7/release-reference-reproducibility.json
+              echo '```'
             else
               echo '- no structured reproducibility evidence was produced.'
             fi

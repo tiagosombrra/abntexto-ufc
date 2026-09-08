@@ -1,7 +1,7 @@
 # V3 Final Certification
 
 Updated: 2026-09-08
-Status: ACTIVE — STEP 7 BOUNDED DETERMINISTIC PROOF
+Status: ACTIVE — STEP 7 PROOF PASS / EXECUTOR REPORTING RERUN
 
 ## Purpose
 
@@ -17,8 +17,8 @@ Final Certification proves the accepted V3 product across the remaining bounded 
 | 4 | Literal Times New Roman/Arial + Unicode + embedding | ACCEPTED | proof `34219229025`; cleanup `35671aef...`, Static `34224224990`, Linux `34224225080` PASS |
 | 5 | Scientific Article PDF/A-2b | ACCEPTED | bounded `34175388675` PASS; cleanup accepted |
 | 6 | Distribution/public bundle integrity | ACCEPTED | 4 bundles, checksums and archive integrity PASS; cleanup accepted |
-| 7 | Deterministic release reference PDF / issue #18 | **ACTIVE — BOUNDED PROOF** | permanent gate implemented at parent `775dfdd6...`; bounded executor active |
-| 8 | Final Certification phase-end regression | QUEUED | one immutable candidate with complete matrix after Step 7 cleanup |
+| 7 | Deterministic release reference PDF / issue #18 | **ACTIVE — CORE PROOF PASS, CLEAN EXECUTOR RERUN REQUIRED** | run `34229431523`: proof step PASS; reporting-only step failed; artifact uploaded |
+| 8 | Final Certification phase-end regression | QUEUED | one immutable candidate after Step 7 cleanup |
 
 ## Step 7 permanent gate
 
@@ -28,39 +28,43 @@ The permanent implementation is repository-owned and part of normal release veri
 - `make release-reference-reproducibility` exposes the bounded entry point;
 - `make release-check` invokes the reproducibility gate after the established release checks.
 
-For each proof the script:
+The proof performs two independent clean builds from one immutable Git archive, pins deterministic provenance using `SOURCE_DATE_EPOCH`, `FORCE_SOURCE_DATE=1` and `TZ=UTC`, requires exact SHA-256 equality, then validates the accepted output for font embedding, portable UFC PDF structure, Unicode extraction and PDF/A-2b. No post-build PDF normalization or output reuse is permitted.
 
-1. identifies the immutable Git source SHA;
-2. obtains deterministic provenance time from explicit `SOURCE_DATE_EPOCH` or the source commit time;
-3. exports `SOURCE_DATE_EPOCH`, `FORCE_SOURCE_DATE=1` and `TZ=UTC`;
-4. creates one Git archive of that immutable source and extracts it independently into two clean build directories;
-5. runs `make clean` + `make compile` separately in both directories;
-6. computes and requires exact SHA-256 equality of the two independently generated `template/main.pdf` files;
-7. validates the deterministic output for embedded fonts, the existing portable UFC PDF contract, Unicode text extraction and PDF/A-2b;
-8. records structured evidence under `artifacts/validation/release-reference-reproducibility.json` during normal release verification.
+## Bounded proof classification — run 34229431523
 
-No post-build PDF normalization, rewriting or output reuse is permitted.
+The temporary executor ran on source `0040ed413df7bd9126ff1dcb34c23582bfd68403`. The product/evidence step **passed** and emitted:
 
-## Step 7 bounded proof executor
+| Predicate | Measured result | State |
+|---|---|---|
+| Source SHA | `0040ed413df7bd9126ff1dcb34c23582bfd68403` | PASS |
+| Deterministic epoch | `1788872450` (`git-commit-time`) | PASS |
+| Independent clean builds | `2` | PASS |
+| Exact PDF SHA-256 | `cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f` | PASS |
+| PDF bytes | `450652` | recorded |
+| Font embedding | PASS | PASS |
+| Portable UFC PDF validator | PASS | PASS |
+| Unicode extraction | PASS | PASS |
+| PDF/A-2b | PASS | PASS |
+| Post-build normalization | false by gate contract | PASS |
+| Evidence artifact | ID `10057223731`, 6 files, one-day retention | uploaded |
 
-`.github/workflows/final-cert-step7-repro.yml` is temporarily active on `cert/v3-final-certification`. It exists only to execute the bounded proof before merge and uploads one-day evidence including both independently generated PDFs/logs when available. The temporary executor must be removed after the run is classified; Step 7 cannot be accepted while it remains active.
+The workflow conclusion was `failure` only because the **Publish proof summary** shell here-document was malformed after the proof had completed. `Run bounded reproducibility proof` succeeded, and `Upload bounded evidence` also succeeded. This is classified as a temporary-executor reporting defect, not a reproducibility, PDF, runtime, normative or product failure.
 
-The bounded proof must establish all of the following on one source checkpoint:
+Because the Step 7 acceptance contract also requires a clean bounded executor result, the temporary workflow summary is simplified to direct JSON output and must rerun green. The permanent gate and its predicates are unchanged.
 
-| Predicate | Required result |
-|---|---|
-| Independent clean builds | 2 |
-| Deterministic epoch | explicit and recorded |
-| PDF SHA-256 equality | exact PASS |
-| Font embedding | PASS |
-| Portable UFC PDF validator | PASS |
-| Unicode extraction | PASS |
-| PDF/A-2b | PASS |
-| Post-build normalization | false |
+## Step 7 cleanup boundary
+
+After the corrected temporary executor completes green:
+
+1. record the clean run and confirm the same proof predicates;
+2. remove `.github/workflows/final-cert-step7-repro.yml`;
+3. synchronize roadmap, handoff, readiness and machine state;
+4. require cleanup Static and Linux to pass;
+5. only then accept Step 7 / issue #18 and prepare Step 8.
 
 ## Issue #18 boundary
 
-Issue #18 remains a P0 v3.0.0 release blocker until the bounded proof passes, the temporary executor is removed, cleanup validation is green and the accepted digest/provenance are recorded. This reproducibility work must not change accepted shared or Scientific Article normative semantics.
+Issue #18 remains a P0 v3.0.0 release blocker until the clean bounded executor result is recorded, the temporary executor is removed and cleanup validation is green. The successful core proof from `34229431523` is retained as evidence but does not by itself close the issue.
 
 ## Phase-end rule
 

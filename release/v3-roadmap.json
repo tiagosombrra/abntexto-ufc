@@ -98,9 +98,9 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817",
     "latest_fully_validated_checkpoint_state": "final-certification-step4-cleanup-static-linux-green",
-    "latest_implementation_checkpoint_sha": "775dfdd6f6fa18475344409ac0bdc491c4435754",
-    "latest_implementation_checkpoint_state": "step7-permanent-reproducibility-gate-implemented-proof-pending",
-    "final_certification_state": "active-step7-deterministic-reference-pdf-bounded-proof",
+    "latest_implementation_checkpoint_sha": "0040ed413df7bd9126ff1dcb34c23582bfd68403",
+    "latest_implementation_checkpoint_state": "step7-core-proof-pass-wrapper-reporting-failure-classified-clean-rerun-required",
+    "final_certification_state": "active-step7-clean-executor-rerun",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -120,32 +120,37 @@
     "distribution_bundle_state": "accepted",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — Step 7 deterministic release reference PDF bounded proof"
+      "Final Certification — Step 7 temporary executor reporting fix and clean rerun"
     ],
     "pending_acceptance_gates": [
-      "Bounded Step 7 executor must prove two independent clean builds with exact reference-PDF SHA-256 equality and embedding/validator/Unicode/PDF-A PASS",
+      "Corrected temporary Step 7 executor must rerun green without changing the permanent proof predicates",
       "Temporary Step 7 executor must be removed and cleanup Static/Linux must pass before issue #18 acceptance",
       "Pass Final Certification phase-end regression on one immutable SHA"
     ],
     "known_gate_failures": [
       "Historical bounded transport 34172047786 on 21455c3344: Docker-mounted checkout triggered Git dubious-ownership protection while deriving SOURCE_DATE_EPOCH",
-      "Historical bounded transport 34173496336 on 247e31398: bundle tooling Git tracked-file discovery remained non-canonical inside the mounted checkout"
+      "Historical bounded transport 34173496336 on 247e31398: bundle tooling Git tracked-file discovery remained non-canonical inside the mounted checkout",
+      "Step 7 run 34229431523 on 0040ed413: core reproducibility proof PASS and evidence upload PASS, but Publish proof summary failed from malformed shell here-document; classified as temporary-executor reporting defect"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
     "release_blockers": [
-      "issue #18 deterministic release reference PDF remains open pending bounded proof and cleanup",
+      "issue #18 deterministic release reference PDF remains open pending clean executor rerun and cleanup",
       "Final Certification phase-end regression has not completed",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "active-step7-bounded-reproducibility-proof",
+      "state": "active-step7-reporting-fix-clean-rerun",
       "path": ".github/workflows/final-cert-step7-repro.yml",
       "purpose": "bounded proof of deterministic canonical release reference PDF using two independent clean builds",
       "raw_proprietary_font_artifacts_allowed": false,
       "generated_pdf_artifact_retention_days": 1,
       "must_remove_before_checkpoint_acceptance": true,
+      "last_run": 34229431523,
+      "last_run_core_proof": "PASS",
+      "last_run_wrapper": "FAIL-reporting-only",
+      "last_artifact_id": 10057223731,
       "previous_removed_path": ".github/workflows/final-cert-literal-fonts.yml",
       "previous_cleanup_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817"
     }
@@ -169,7 +174,7 @@
   },
   "issue_state": {
     "scientific_article": {"issue": 280, "state": "phase-closed"},
-    "release_reference_pdf_reproducibility": {"issue": 18, "state": "active-final-certification-step7-bounded-proof"}
+    "release_reference_pdf_reproducibility": {"issue": 18, "state": "active-final-certification-step7-clean-executor-rerun"}
   },
   "authority_decisions": {
     "scientific_article": {
@@ -222,7 +227,20 @@
     "literal_font_cleanup_linux_run": 34224225080,
     "step7_implementation_parent_sha": "775dfdd6f6fa18475344409ac0bdc491c4435754",
     "step7_permanent_gate": "make release-reference-reproducibility",
-    "step7_bounded_proof_state": "pending-workflow-result",
+    "step7_bounded_proof_state": "core-proof-pass-wrapper-reporting-failure-clean-rerun-required",
+    "step7_bounded_run": 34229431523,
+    "step7_bounded_source_sha": "0040ed413df7bd9126ff1dcb34c23582bfd68403",
+    "step7_source_date_epoch": 1788872450,
+    "step7_epoch_source": "git-commit-time",
+    "step7_independent_clean_builds": 2,
+    "step7_pdf_sha256": "cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f",
+    "step7_pdf_bytes": 450652,
+    "step7_font_embedding": "PASS",
+    "step7_pdf_validator": "PASS",
+    "step7_unicode": "PASS",
+    "step7_pdfa_2b": "PASS",
+    "step7_artifact_id": 10057223731,
+    "step7_artifact_files": 6,
     "librarian_review_contract_items": 34
   },
   "release_policy": {

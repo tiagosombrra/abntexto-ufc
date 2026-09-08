@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-6 are accepted. Step 7 has entered bounded proof after permanent deterministic reference-PDF gate implementation.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-6 are accepted. Step 7 core deterministic proof passed; the temporary executor has a reporting-only defect and must rerun clean before cleanup.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -12,7 +12,7 @@ Updated: 2026-09-08
 | Core Corrections | CLOSED | `5f67560a...`; Static/Linux green |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 7 BOUNDED PROOF** | deterministic reference PDF accepted + temporary executor removed + immutable phase-end regression |
+| Final Certification | **ACTIVE — STEP 7 EXECUTOR CLEAN RERUN** | deterministic reference PDF accepted + temporary executor removed + immutable phase-end regression |
 | Release | QUEUED | final release actions after certification |
 
 ## Final Certification roadmap
@@ -25,18 +25,29 @@ Updated: 2026-09-08
 | 4 | Literal Times New Roman/Arial, Unicode and embedding | ACCEPTED | proof `34219229025`; cleanup `35671aef...` green |
 | 5 | Scientific Article PDF/A-2b | ACCEPTED | bounded + cleanup accepted |
 | 6 | Distribution/public bundle integrity | ACCEPTED | bundles/checksums/archive integrity accepted |
-| 7 | Issue #18 deterministic reference PDF | **ACTIVE — BOUNDED PROOF** | permanent gate parent `775dfdd6...`; temporary proof executor active |
+| 7 | Issue #18 deterministic reference PDF | **ACTIVE — PROOF PASS / WRAPPER RERUN** | run `34229431523` proof PASS; summary wrapper failed after proof; artifact `10057223731` uploaded |
 | 8 | Final Certification phase-end regression | QUEUED | one immutable candidate after Step 7 cleanup |
 
-## Step 7 implementation and acceptance requirement
+## Step 7 measured proof
 
-The normal release entry point now includes `make release-reference-reproducibility`. The gate performs two independent clean builds of `template/main.pdf` from one immutable Git source state, pins deterministic build time with `SOURCE_DATE_EPOCH`/`FORCE_SOURCE_DATE`, requires exact PDF SHA-256 equality, and validates the deterministic output for font embedding, portable UFC PDF structure, Unicode extraction and PDF/A-2b.
+Run `34229431523` on source `0040ed413df7bd9126ff1dcb34c23582bfd68403` produced two independent clean builds with deterministic epoch `1788872450` (`git-commit-time`) and identical PDF SHA-256 `cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f`. The resulting 450652-byte PDF passed font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b.
 
-The bounded executor `.github/workflows/final-cert-step7-repro.yml` is temporary proof transport only. It retains the two generated PDFs and build logs for one day and must be removed after the proof is classified. Step 7 is not accepted merely because the implementation exists.
+The workflow was marked failure only after that proof, when the optional summary step used a malformed shell here-document. The artifact upload still succeeded. The summary is therefore corrected as an executor-only defect and the bounded workflow must rerun green. No permanent gate or acceptance predicate is weakened.
+
+## Step 7 cleanup requirement
+
+After the clean rerun:
+
+1. record the clean workflow result and structured proof;
+2. remove `.github/workflows/final-cert-step7-repro.yml`;
+3. synchronize all operational docs/machine state;
+4. pass cleanup Static and Linux;
+5. accept Step 7 / close issue #18;
+6. create the immutable Step 8 candidate.
 
 ## Frozen remaining scope
 
-**Step 7 bounded proof → Step 7 executor cleanup/issue #18 closure → Final Certification phase-end regression → Release.**
+**Step 7 clean rerun → Step 7 executor cleanup/issue #18 closure → Final Certification phase-end regression → Release.**
 
 No new phase or certification step is created merely because a validator finds a defect. New findings are classified inside Steps 7-8.
 
