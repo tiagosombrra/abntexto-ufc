@@ -24,12 +24,12 @@ Memory, prior chats and historical branches never override current repository st
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
 | Steps 1-3 | ACCEPTED |
-| Steps 5-6 | ACCEPTED — cleanup `7307164...`; Static `34208318971`; Linux `34208318754` |
-| Steps 5-6 acceptance sync | `237cb53b65c91052a469ab67991ea78e71ade283`; Static `34218086750`; Linux `34218086734` |
-| Current batch | **Step 4 — fresh current-candidate literal-font/Unicode/embedding proof** |
-| Temporary executor | `.github/workflows/final-cert-literal-fonts.yml` active only for bounded Step 4 evidence |
+| Steps 5-6 | ACCEPTED |
+| Step 4 bounded proof | PASS — run `34219229025`, source `fae338e16304ad45c353067a0b7982f73a8363c5` |
+| Step 4 temporary executor | REMOVED after successful proof; cleanup Static/Linux pending |
+| Step 7 | QUEUED — issue #18 deterministic reference PDF |
+| Current batch | **Step 4 — cleanup validation** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Release blocker | issue #18 deterministic reference PDF |
 
 ## Readable phase model
 
@@ -42,13 +42,15 @@ Memory, prior chats and historical branches never override current repository st
 
 ## Closure-scope freeze
 
-Remaining certification scope is fixed to: fresh current-candidate literal Times New Roman/Arial identity, Unicode extraction and embedding proof; issue #18 deterministic reference-PDF proof; one immutable Final Certification **phase-end regression**; then Release.
+Remaining certification scope is fixed to: Step 4 cleanup validation; issue #18 deterministic reference-PDF proof; one immutable Final Certification **phase-end regression**; then Release.
 
 Do not create a new roadmap workstream merely because a validator exposes a defect. Classify it inside the existing acceptance predicate.
 
-## Temporary workflow lifecycle
+## Step 4 accepted proof boundary
 
-Steps 5-6 proof transport is closed. Step 4 uses `.github/workflows/final-cert-literal-fonts.yml` as a bounded proof-only executor. It must be removed after evidence capture, and the cleanup checkpoint must pass Static and Linux before Step 4 becomes ACCEPTED. No bounded-only orchestration is promoted into permanent product runtime.
+Run `34219229025` proved the four strict combinations Times New Roman/Arial × pdfLaTeX/LuaLaTeX. The Linux job certified literal identity, Unicode extraction, embedding and PDF/A-2b for all four PDFs. Only generated PDFs were transported, artifact `10053151610`, one-day retention; no raw proprietary font files were uploaded.
+
+The bounded workflow has been removed. Step 4 becomes ACCEPTED only after the cleanup checkpoint passes Static and Linux.
 
 ## Engineering rules
 
