@@ -1,60 +1,45 @@
 # V3 Final Certification — Phase-end Regression
 
 Updated: 2026-09-08
-Status: CANDIDATE RETRY — RUNNING
+Status: ACCEPTED — PHASE CLOSED
 
 ## Purpose
 
-This document binds Final Certification Step 8 to one immutable candidate at a time. Every **material advance** remains synchronized with handoff, roadmap, readiness and `release/v3-roadmap.json`. Targeted checks do not replace the mandatory **phase-end regression**.
+This document records the immutable Final Certification phase-end regression. Every **material advance** remains synchronized with handoff, roadmap, readiness and `release/v3-roadmap.json`. Targeted checks never replace the mandatory **phase-end regression**.
 
-## Accepted prerequisites
+## Accepted candidate
 
-| Surface | Accepted evidence |
+| Predicate | Accepted evidence |
 |---|---|
-| Steps 1-6 | ACCEPTED |
-| Step 7 deterministic proof | `34231038578` — SUCCESS |
-| Step 7 cleanup | `34e6bf8299e582803d1726e8dd699271c356fda5`; Static `34232017286`; complete Linux `34232017359` |
-| Deterministic PDF | 2 clean builds; SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf` |
-| Temporary executor | absent |
-| Permanent reproducibility gate | `make release-reference-reproducibility` inside `make release-check` |
+| Immutable candidate | `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
+| Static contract | `34239890649` — SUCCESS |
+| Linux integration | `34239890614` — SUCCESS; heavy integration executed |
+| Linux scope | `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Linux release check | `34239890548` — SUCCESS |
+| Release validation matrix | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Scientific Article PDF/A-2b | PASS |
+| Distribution bundles | 4 artifacts; checksums/archive integrity PASS; proprietary fonts redistributed=false |
+| Release reference reproducibility | PASS; 2 builds; SHA-256 `ae4d7755d18e05abd572a0ad95e5696e54302f9ac236b1efc004d46f57216479` |
+| Release-check PR merge ref | `66c3e9766cf55ffc001f388ef250d8082d988435` |
+| Temporary certification executor | absent |
 | Issue #18 | CLOSED — completed |
-| Step 8 transport preparation | `4d94e9cd7a565eac2e226360bd2b4a92fee52586`; Static `34235990523` SUCCESS; complete Linux `34235990383` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Librarian item 33 | remains explicit `NORMATIVE-REVIEW`, fail-closed |
+
+The release-check workflow is associated with the immutable candidate PR and, by GitHub PR semantics, executed against the candidate merged with current `main`; that checkout was `66c3e976...`. This does not modify the accepted candidate and all required candidate-associated workflows concluded successfully.
 
 ## Candidate history
 
-| Candidate | Static | Linux integration | Release matrix | Decision |
-|---|---|---|---|---|
-| `fc907856ac4ba0febf4d44fb408407a0fc2e94d4` | `34239113996` SUCCESS | `34239114066` workflow SUCCESS, but heavy integration **SKIPPED** as documentation-only | not relevant to acceptance after Linux predicate failed | **REJECTED** |
-| current retry | pending | must execute `complete`, not scoped skip | permanent Linux release check / `make release-check` | RUNNING |
+| Candidate | Result | Decision |
+|---|---|---|
+| `fc907856ac4ba0febf4d44fb408407a0fc2e94d4` | Static green; Linux workflow green but heavy integration skipped as documentation-only | REJECTED |
+| `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` | Static green; complete Linux 36/36; release matrix 38/38 | **ACCEPTED** |
 
-Workflow conclusion `success` is insufficient when a mandatory phase predicate was not executed. The rejected candidate did not satisfy `complete Linux integration` and cannot close Final Certification.
+## Closure decision
 
-## Retry scope correction
+Final Certification is **CLOSED**. The one-shot `release/final-certification-candidate.json` marker is removed in the separate synchronized phase-transition commit. `Release` becomes the sole active phase.
 
-The permanent `.github/workflows/linux-release-check.yml` remains the accepted release-matrix transport. The retry changes Linux integration scope orchestration only:
+No runtime, normative predicate, tolerance, shared/article semantics or librarian classification is changed by the transition.
 
-1. `release/final-certification-candidate.json` is explicitly listed as force-complete in `tests/integration_suites.py`;
-2. self-tests assert marker-only and marker+orchestration paths infer `complete`;
-3. the retry changes the marker itself, ensuring the incremental synchronize window contains the force-complete path.
+## Release boundary
 
-No runtime, normative predicate, tolerance, accepted article/shared behavior or release-check predicate changes.
-
-## Immutable retry gate
-
-The current retry candidate contains the updated marker, scope guard and synchronized retry-running state. It is not amended after CI begins. The exact Git retry SHA is recorded after commit creation; the machine sentinel remains `phase_end_regression.candidate = one-immutable-sha`.
-
-That exact retry must pass:
-
-1. Static contract;
-2. **complete** Linux integration, with heavy integration actually executed;
-3. Linux release check running the permanent `make release-check` contract;
-4. all accepted literal-font/Unicode/embedding/PDF-A/distribution predicates remain intact;
-5. deterministic release-reference-PDF gate remains green;
-6. no temporary certification executor is present;
-7. librarian item 33 remains explicitly fail-closed.
-
-Any failure is classified before code or test changes. A rejected candidate is never amended; a corrected state creates a new candidate commit.
-
-## Exit rule
-
-After one candidate passes the complete matrix, record its SHA/run IDs/conclusions, mark Final Certification `CLOSED`, activate `Release`, remove the one-shot candidate marker, and execute the phase-transition documentation cycle.
+Release execution must follow the repository release-readiness/CTAN documentation and must itself end with a complete **phase-end regression** on one immutable Release candidate before the Release phase is closed.

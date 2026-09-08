@@ -1,15 +1,15 @@
 # abntexto-ufc v3 — Correction Plan
 
 Updated: 2026-09-08  
-Status: SHARED CORRECTIONS AND SCIENTIFIC ARTICLE CLOSED — FINAL CERTIFICATION STEP 8 RETRY ACTIVE
+Status: SHARED CORRECTIONS, SCIENTIFIC ARTICLE AND FINAL CERTIFICATION CLOSED — RELEASE ACTIVE
 
 ## Purpose
 
-This document preserves the correction history produced by Regression Audit and the phase boundaries built on that corrected foundation. Active certification execution is defined in `docs/V3-FINAL-CERTIFICATION.md`.
+This document preserves the correction history produced by Regression Audit and the phase boundaries built on that corrected foundation. Active release execution is defined by `docs/V3-RELEASE-READINESS.md`, `docs/CTAN-RELEASE.md`, the roadmap, handoff and machine state.
 
 ## Execution discipline
 
-Every **material advance** updates the relevant implementation/review/certification state and canonical handoff in the same work cycle. Every phase has a mandatory **phase-end regression** on one immutable candidate SHA. Targeted green checks and visual review never replace that gate.
+Every **material advance** updates the relevant implementation/review/certification/release state and canonical handoff in the same work cycle. Every phase has a mandatory **phase-end regression** on one immutable candidate SHA. Targeted green checks and visual review never replace that gate.
 
 ## Accepted shared foundation
 
@@ -21,47 +21,32 @@ Librarian review remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. 
 
 Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5ac1f527eaf`: Static `34154045481`, complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`, and canonical article PDF 5/5 visual PASS. PR #286 merged into main as `22e3c19235fa5245505b92d919a09d31eb2bfecb`.
 
-## Final Certification accepted work
+## Final Certification closeout
 
-| Step | State | Evidence |
-|---:|---|---|
-| 1-3 | ACCEPTED | entry, Linux release baseline and profile/engine matrix accepted |
-| 4 | ACCEPTED | literal Times New Roman/Arial, Unicode, embedding and PDF/A proof `34219229025`; cleanup accepted |
-| 5 | ACCEPTED | Scientific Article PDF/A-2b evidence accepted |
-| 6 | ACCEPTED | distribution/public bundle integrity accepted |
-| 7 | ACCEPTED | deterministic reference PDF proof `34231038578`; two clean builds hash `1c92535f...`; cleanup `34e6bf8...`; issue #18 closed |
-| 8 preparation | ACCEPTED | `4d94e9c...`; Static `34235990523`; complete Linux `34235990383`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| 8 candidate `fc907856...` | REJECTED | Static green; Linux workflow green but heavy integration skipped, so mandatory complete-scope predicate failed |
-| 8 retry | **RUNNING** | candidate marker now explicit complete-scope path + self-test; await Static + complete Linux + Linux release check |
+| Surface | Accepted evidence |
+|---|---|
+| Immutable candidate | `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
+| Static | `34239890649` SUCCESS |
+| Complete Linux | `34239890614` SUCCESS; `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Linux release matrix | `34239890548` SUCCESS; `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Literal fonts / Unicode / embedding / PDF/A | ACCEPTED |
+| Scientific Article PDF/A-2b | PASS |
+| Distribution bundles | integrity/checksums PASS; proprietary fonts not redistributed |
+| Release reference reproducibility | PASS |
+| Issue #18 | CLOSED |
 
-## Current correction — Step 8 orchestration scope
+Candidate `fc907856...` remains historically rejected because mandatory complete Linux did not execute. The accepted candidate corrected only orchestration scope and preserved product/runtime/normative predicates.
 
-The first synchronized candidate `fc907856ac4ba0febf4d44fb408407a0fc2e94d4` revealed that incremental synchronize scope inference can classify the candidate-state commit as documentation-only when the marker was introduced in an earlier commit. Linux run `34239114066` therefore skipped heavy integration. This is a phase-gate failure even though the workflow conclusion was `success`.
+## Current batch — Release entry
 
-The correction is deliberately bounded to orchestration:
+The synchronized transition removes `release/final-certification-candidate.json`, marks Final Certification `CLOSED`, and activates **Release**. The transition itself must remain green before PR #289 is merged.
 
-1. add `release/final-certification-candidate.json` to explicit force-complete paths;
-2. add scope-inference self-tests for marker-only and marker+orchestration cases;
-3. update the marker in the retry candidate itself so the incremental diff sees it;
-4. preserve all product/runtime/normative and release-check predicates.
-
-## Current batch — Final Certification Step 8 immutable candidate retry
-
-The permanent PR transport still runs the existing `make release-check` contract. The retry candidate contains the updated marker, scope correction and synchronized retry state and is not amended after CI begins.
-
-Required acceptance:
-
-1. Static contract success;
-2. complete Linux integration **actually executed**, not a scoped skip;
-3. Linux release check success using permanent `make release-check`;
-4. deterministic reference PDF, literal-font, Unicode, embedding, PDF/A and bundle predicates remain accepted;
-5. no temporary executor;
-6. item 33 remains fail-closed.
+After merge, create one short-lived Release branch from the resulting `main`, synchronize branch facts, re-read `docs/CTAN-RELEASE.md`, build/verify final artifacts and establish an immutable Release candidate.
 
 ## Remaining authority boundary
 
-Review item 33 remains fail-closed pending authoritative current NBR 6023:2025 text for disputed edge cases.
+Review item 33 remains fail-closed pending authoritative current NBR 6023:2025 text for disputed edge cases. It is not converted into release work merely to obtain 34 PASS results.
 
-## Phase transition gate
+## Final phase gate
 
-Final Certification -> Release requires the complete certification matrix and one immutable Final Certification candidate passing the phase-end regression. Only after that evidence is recorded may the marker be removed and Release become active in a synchronized phase-transition commit.
+Release closes only after its checklist, publication verification and complete **phase-end regression** are recorded on one immutable Release candidate. No extra roadmap phase may be introduced.
