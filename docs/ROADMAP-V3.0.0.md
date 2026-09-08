@@ -15,7 +15,7 @@ Updated: 2026-09-08
 | Final Certification | CLOSED | `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
 | Release | **ACTIVE — EXECUTION** | release checklist complete, immutable Release candidate accepted, publication verified, and Release phase-end regression green |
 
-## Release entry accepted
+## Release entry and branch synchronization accepted
 
 | Predicate | Accepted result |
 |---|---|
@@ -24,24 +24,34 @@ Updated: 2026-09-08
 | Transition Linux | `34249182417` SUCCESS; `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | PR #289 | merged |
 | New `main` / Release base | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Active Release branch | `release/v3.0.0` |
+| Active Release branch / PR | `release/v3.0.0` / #292 |
+| Synchronization checkpoint | `3fad68d953b1264148431d7d1046666674b1a240` |
+| Synchronization Static | `34252314666` SUCCESS |
+| Synchronization Linux | `34252314932` SUCCESS; heavy integration skipped because the checkpoint was documentation-only |
 | Librarian review | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` |
 
-The transition changed control-plane phase state only. Accepted runtime, normative predicates, validation tolerances and librarian classifications remain frozen unless a concrete Release regression proves a defect.
+The transition and synchronization changed control-plane state only. Accepted runtime, normative predicates, validation tolerances and librarian classifications remain frozen unless a concrete Release regression proves a defect.
 
 ## Release plan
 
 | Step | State | Gate |
 |---:|---|---|
-| Synchronize Release branch/control plane | **ACTIVE** | Static contract green on synchronized checkpoint |
-| Reconcile current release checklist/tooling | QUEUED | `docs/CTAN-RELEASE.md` and repository tooling agree; stale history removed |
+| Synchronize Release branch/control plane | **PASS** | Static `34252314666` |
+| Reconcile current release checklist/tooling and final candidate transport | **ACTIVE** | current CTAN/repository procedure represented without stale phase assumptions; exact candidate can run complete Linux and Linux release check |
 | Build final public/distribution artifacts and checksums | QUEUED | archive/integrity/reproducibility PASS |
 | Validate extracted CTAN candidate and shipped example | QUEUED | external dependency/package checks PASS |
-| Run current CTAN `pkgcheck` when executable | QUEUED | no blocking diagnostics |
+| Run current CTAN `pkgcheck` when executable | QUEUED | no blocking diagnostics; actual version recorded |
 | Freeze immutable Release candidate | QUEUED | no candidate mutation after final gates begin |
 | Release phase-end regression | QUEUED | Static + complete Linux + Linux release check + release-specific acceptance PASS |
 | Tag / GitHub Release / documented publication | QUEUED | only after accepted candidate; published artifacts match checksums |
 | Release closeout | QUEUED | final verification recorded; no unresolved release blocker |
+
+## Current tooling findings
+
+- `make release-check` already includes release-mode validation, Scientific Article PDF/A, distribution-bundle verification and deterministic release-reference reproducibility.
+- Distribution validation already verifies four archives and SHA-256 integrity with institutional/proprietary asset exclusions.
+- CTAN currently reports `pkgcheck` 4.0.3 (2026-05-28); final execution must record the version actually used.
+- The remaining orchestration gap is Release-specific PR transport: the permanent `Linux release check` still triggers on the old Final Certification candidate path, so Release needs an explicit, readable non-temporary candidate surface.
 
 ## Frozen remaining scope
 
