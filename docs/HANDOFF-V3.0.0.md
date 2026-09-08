@@ -13,31 +13,26 @@ Updated: 2026-09-07
 | Entry synchronization | ACCEPTED |
 | Linux release baseline | ACCEPTED — release `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; cleanup `0609f929...`; Static `34170123785`; Linux `34170123765` |
 | Profile/engine matrix | ACCEPTED |
-| Current batch | **Bounded Matrix Validation — Step 6 runner ownership correction** |
-| Bounded transport result | `21455c3344...`: Static `34172047639` PASS, Linux `34172047586` PASS, release transport `34172047786` FAIL after the permanent 38/38 release suite and Step 5 passed |
-| Failure classification | Step 6 infrastructure: Docker-mounted checkout was rejected by Git safe-directory protection while deriving `SOURCE_DATE_EPOCH`; no product/runtime/normative predicate failed |
-| Evidence artifact from failed transport | ID `10036350950`, SHA-256 `5dd4d212bafa16702947065ef0848c9387e63e16d7d7523fee14d1d529a96432` |
-| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` remains active only for corrected rerun; remove before Steps 5-6 acceptance |
+| Current batch | **Step 6 canonical-checkout runner correction** |
+| First bounded transport | `21455c3344...` / `34172047786`: release 38/38 + Step 5 PASS, then Git dubious-ownership failure during epoch read |
+| Second bounded transport | `247e31398...` / `34173496336`: release 38/38 + Step 5 PASS, then `Distribution bundle generation requires a canonical Git checkout.` during tracked-file discovery |
+| Current checkpoint validation | `247e31398...`: Static `34173496318` PASS; Linux `34173496285` PASS |
+| Second failure artifact | ID `10036808737`, SHA-256 `c56e1c651ce990ddd5a301c5cf60691b1081a06b7eebe66b27503e256e28e273` |
+| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` remains active only for corrected rerun; removal required before Steps 5-6 acceptance |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
 ## Current material advance
 
-The first bounded transport established three useful facts before failing:
+The second transport proved that the per-command epoch correction worked: the run progressed through the complete permanent 38-check release matrix and Scientific Article PDF/A/embedding before failing later in Step 6. The remaining failure comes from `git ls-files` invoked by distribution/public-bundle tooling inside the TeX Live container, where the mounted runner checkout is not trusted by that container-local Git configuration.
 
-| Surface | Result |
-|---|---|
-| Existing permanent release matrix | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Scientific Article PDF/A + embedding | **PASS** — explicit `FINAL-CERTIFICATION-EVIDENCE surface=scientific-article-pdfa` |
-| Distribution/public bundles | **NOT EXECUTED TO COMPLETION** — failed while reading Git timestamp because container ownership triggered Git safe-directory protection |
-
-The Step 6 correction does not weaken bundle validation. The distribution gate now performs Git provenance reads with `git -c safe.directory="$PWD"`, and the temporary workflow checks out full history so the exact `SOURCE_COMMIT_SHA` timestamp is available. The corrected transport must rerun the same permanent `make release-check` contract.
+The current correction is runner-scoped rather than product-scoped: both the temporary bounded transport and permanent Linux release workflow register only the current mounted checkout as a Git `safe.directory` before invoking `make release-check`. Bundle content predicates, checksums, archive safety, proprietary-font exclusion and institutional-asset exclusion remain unchanged.
 
 ## Frozen remaining path
 
 | Order | Work | Acceptance |
 |---:|---|---|
-| 1 | Correct and rerun Step 6 distribution validation | corrected release transport PASS |
+| 1 | Rerun corrected Step 6 distribution validation | same permanent `make release-check` contract PASS including distribution evidence |
 | 2 | Remove temporary bounded workflow and validate cleanup | cleanup Static + Linux PASS; then Steps 5-6 accepted |
 | 3 | Literal Times New Roman/Arial + Unicode + embedding | current final-candidate identity/extraction/embedding proof |
 | 4 | Issue #18 deterministic reference PDF | two controlled clean builds with identical SHA-256 and preserved validation |
