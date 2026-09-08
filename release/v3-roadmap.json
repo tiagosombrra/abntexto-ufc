@@ -96,9 +96,9 @@
     "scientific_article_phase_end_linux_scope": "complete",
     "scientific_article_phase_end_linux_summary": "PASS=36 FAIL=0 SKIP=0",
     "scientific_article_pdf_visual_review": "pass-5-of-5",
-    "latest_fully_validated_checkpoint_sha": "7307164ba4cf924beecb6678c7af5b79d551d513",
-    "latest_fully_validated_checkpoint_state": "final-certification-steps5-6-cleanup-accepted-static-linux",
-    "final_certification_state": "active-step4-literal-font-unicode-embedding",
+    "latest_fully_validated_checkpoint_sha": "237cb53b65c91052a469ab67991ea78e71ade283",
+    "latest_fully_validated_checkpoint_state": "final-certification-steps5-6-acceptance-sync-static-linux-green",
+    "final_certification_state": "active-step4-bounded-literal-font-proof",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -118,16 +118,16 @@
     "release_baseline_cleanup_linux_run": 34170123765,
     "release_baseline_execution_state": "accepted",
     "profile_engine_matrix_state": "accepted",
-    "literal_font_unicode_embedding_state": "active-current-candidate-proof",
+    "literal_font_unicode_embedding_state": "bounded-proof-in-progress",
     "pdfa_state": "accepted",
     "distribution_bundle_state": "accepted",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — Step 4 literal Times New Roman/Arial, Unicode and embedding proof"
+      "Final Certification — Step 4 bounded literal Times New Roman/Arial, Unicode and embedding proof"
     ],
     "pending_acceptance_gates": [
-      "Final-candidate literal Times New Roman/Arial identity, Unicode extraction and embedding evidence",
-      "Temporary Step 4 executor cleanup Static/Linux if a bounded Windows workflow is used",
+      "Step 4 bounded workflow must prove literal Times New Roman/Arial identity, Unicode extraction, embedding and PDF/A-2b for pdfLaTeX and LuaLaTeX",
+      "Temporary Step 4 executor must be removed after evidence capture and cleanup Static/Linux must pass",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
     ],
@@ -139,13 +139,18 @@
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
     "release_blockers": [
-      "Final-candidate literal-font/Unicode/embedding proof remains pending",
+      "Final-candidate literal-font/Unicode/embedding proof and cleanup remain pending",
       "issue #18 deterministic release reference PDF remains open",
       "Final Certification phase-end regression has not completed",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "none-active",
+      "state": "active-step4-bounded-proof",
+      "path": ".github/workflows/final-cert-literal-fonts.yml",
+      "purpose": "fresh current-candidate Windows literal-font proof with Linux identity/Unicode/embedding/PDF-A validation",
+      "raw_proprietary_font_artifacts_allowed": false,
+      "generated_pdf_artifact_retention_days": 1,
+      "must_remove_before_checkpoint_acceptance": true,
       "last_removed_path": ".github/workflows/final-cert-bounded-matrix.yml",
       "last_removed_checkpoint_sha": "7307164ba4cf924beecb6678c7af5b79d551d513",
       "last_cleanup_static_run": 34208318971,
@@ -269,6 +274,11 @@
     "steps5_6_cleanup_linux_run": 34208318754,
     "steps5_6_cleanup_linux_conclusion": "success",
     "steps5_6_cleanup_acceptance": "accepted",
+    "steps5_6_acceptance_sync_checkpoint_sha": "237cb53b65c91052a469ab67991ea78e71ade283",
+    "steps5_6_acceptance_sync_static_run": 34218086750,
+    "steps5_6_acceptance_sync_static_conclusion": "success",
+    "steps5_6_acceptance_sync_linux_run": 34218086734,
+    "steps5_6_acceptance_sync_linux_conclusion": "success",
     "librarian_review_contract_items": 34
   },
   "release_policy": {
