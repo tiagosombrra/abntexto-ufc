@@ -1,0 +1,76 @@
+name: Temporary Final Certification Step 7 reproducibility proof
+
+on:
+  push:
+    branches:
+      - cert/v3-final-certification
+
+permissions:
+  contents: read
+
+concurrency:
+  group: final-cert-step7-repro-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reproducibility-proof:
+    name: Deterministic release reference PDF proof
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run bounded reproducibility proof
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils docker-cli
+            docker --version
+            git config --global --add safe.directory "$PWD"
+            export UFC_REPRO_EVIDENCE=artifacts/validation-step7/release-reference-reproducibility.json
+            export UFC_REPRO_PDF=artifacts/validation-step7/release-reference-pdf.pdf
+            export UFC_REPRO_KEEP_PDFS=1
+            make release-reference-reproducibility
+
+      - name: Publish proof summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '## Final Certification Step 7 reproducibility proof'
+            echo
+            if [[ -f artifacts/validation-step7/release-reference-reproducibility.json ]]; then
+              python3 - <<'PY'
+            import json
+            from pathlib import Path
+            data = json.loads(Path('artifacts/validation-step7/release-reference-reproducibility.json').read_text(encoding='utf-8'))
+            print(f"- status: `{data.get('status')}`")
+            print(f"- source SHA: `{data.get('source_sha')}`")
+            print(f"- SOURCE_DATE_EPOCH: `{data.get('source_date_epoch')}`")
+            print(f"- independent clean builds: `{data.get('independent_clean_builds')}`")
+            print(f"- identical SHA-256: `{data.get('identical_sha256')}`")
+            builds = data.get('builds') or []
+            if builds:
+                print(f"- PDF SHA-256: `{builds[0].get('sha256')}`")
+            PY
+            else
+              echo '- no structured reproducibility evidence was produced.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload bounded evidence
+        if: always() && hashFiles('artifacts/validation-step7/**') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: final-cert-step7-repro-${{ github.sha }}
+          path: artifacts/validation-step7/**
+          retention-days: 1
+          if-no-files-found: error
