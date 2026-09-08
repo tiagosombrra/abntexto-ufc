@@ -1,5 +1,5 @@
 {
-  "schema_version": 15,
+  "schema_version": 16,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -96,9 +96,9 @@
     "scientific_article_phase_end_linux_scope": "complete",
     "scientific_article_phase_end_linux_summary": "PASS=36 FAIL=0 SKIP=0",
     "scientific_article_pdf_visual_review": "pass-5-of-5",
-    "latest_fully_validated_checkpoint_sha": "237cb53b65c91052a469ab67991ea78e71ade283",
-    "latest_fully_validated_checkpoint_state": "final-certification-steps5-6-acceptance-sync-static-linux-green",
-    "final_certification_state": "active-step4-cleanup-validation",
+    "latest_fully_validated_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817",
+    "latest_fully_validated_checkpoint_state": "final-certification-step4-cleanup-static-linux-green",
+    "final_certification_state": "active-step7-deterministic-reference-pdf",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -118,16 +118,15 @@
     "release_baseline_cleanup_linux_run": 34170123765,
     "release_baseline_execution_state": "accepted",
     "profile_engine_matrix_state": "accepted",
-    "literal_font_unicode_embedding_state": "bounded-proof-passed-cleanup-pending",
+    "literal_font_unicode_embedding_state": "accepted-current-candidate-proof-cleanup-green",
     "pdfa_state": "accepted",
     "distribution_bundle_state": "accepted",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — Step 4 cleanup validation after successful literal-font proof"
+      "Final Certification — Step 7 deterministic release reference PDF"
     ],
     "pending_acceptance_gates": [
-      "Step 4 cleanup checkpoint after temporary executor removal must pass Static contract and Linux integration",
-      "Resolve issue #18 deterministic release-reference-PDF reproducibility",
+      "Resolve issue #18 deterministic release-reference-PDF reproducibility with two independent clean builds and exact SHA-256 equality while preserving existing validation",
       "Pass Final Certification phase-end regression on one immutable SHA"
     ],
     "known_gate_failures": [
@@ -138,13 +137,12 @@
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
     "release_blockers": [
-      "Step 4 cleanup Static/Linux acceptance remains pending",
       "issue #18 deterministic release reference PDF remains open",
       "Final Certification phase-end regression has not completed",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "removed-after-successful-step4-proof-cleanup-pending",
+      "state": "closed-step4-proof-cleanup-green",
       "path": null,
       "purpose": "fresh current-candidate Windows literal-font proof with Linux identity/Unicode/embedding/PDF-A validation",
       "raw_proprietary_font_artifacts_allowed": false,
@@ -152,9 +150,10 @@
       "must_remove_before_checkpoint_acceptance": true,
       "last_removed_path": ".github/workflows/final-cert-literal-fonts.yml",
       "last_removed_checkpoint_sha": "d5f365f9839d1e694676b184677182cc54de69d1",
-      "cleanup_validation_state": "pending-static-and-linux",
-      "last_cleanup_static_run": 34208318971,
-      "last_cleanup_linux_run": 34208318754
+      "cleanup_validation_state": "accepted",
+      "last_cleanup_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817",
+      "last_cleanup_static_run": 34224224990,
+      "last_cleanup_linux_run": 34224225080
     }
   },
   "linux_integration": {
@@ -176,7 +175,7 @@
   },
   "issue_state": {
     "scientific_article": {"issue": 280, "state": "phase-closed"},
-    "release_reference_pdf_reproducibility": {"issue": 18, "state": "open-release-blocker"}
+    "release_reference_pdf_reproducibility": {"issue": 18, "state": "active-final-certification-step7"}
   },
   "authority_decisions": {
     "scientific_article": {
@@ -293,7 +292,12 @@
     "literal_font_proof_artifact_sha256": "6b0cd0a6ac2543017a8496a1af7feeca70640f2b73862311a4325a981dc5fb60",
     "literal_font_proof_raw_proprietary_fonts_uploaded": false,
     "literal_font_workflow_removed_commit_sha": "d5f365f9839d1e694676b184677182cc54de69d1",
-    "literal_font_cleanup_validation": "pending-static-and-linux",
+    "literal_font_cleanup_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817",
+    "literal_font_cleanup_static_run": 34224224990,
+    "literal_font_cleanup_static_conclusion": "success",
+    "literal_font_cleanup_linux_run": 34224225080,
+    "literal_font_cleanup_linux_conclusion": "success",
+    "literal_font_cleanup_validation": "accepted",
     "librarian_review_contract_items": 34
   },
   "release_policy": {
