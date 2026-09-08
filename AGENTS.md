@@ -25,9 +25,11 @@ Memory, prior chats and historical branches never override current repository st
 | Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
 | Steps 1-6 | ACCEPTED |
 | Step 4 proof | `34219229025` PASS; cleanup `35671aef...`, Static `34224224990`, Linux `34224225080` PASS |
-| Step 7 | **ACTIVE — issue #18 deterministic reference PDF** |
-| Temporary executor | none active |
-| Current batch | **Step 7 — deterministic release reference-PDF proof** |
+| Step 7 implementation parent | `775dfdd6f6fa18475344409ac0bdc491c4435754` |
+| Step 7 | **ACTIVE — bounded deterministic proof pending** |
+| Permanent gate | `make release-reference-reproducibility` is now part of `make release-check` |
+| Temporary executor | `.github/workflows/final-cert-step7-repro.yml` — ACTIVE, proof-only, remove after evidence recovery |
+| Current batch | **Step 7 — deterministic release reference-PDF bounded proof** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -47,9 +49,9 @@ Do not create a new roadmap workstream merely because a validator exposes a defe
 
 ## Step 7 deterministic-build boundary
 
-The permanent release-reference reproducibility proof must pin deterministic provenance time, perform at least two clean builds from the same controlled source/input state, require byte-identical PDF SHA-256 output and preserve existing PDF validation/font/Unicode/embedding/PDF-A expectations. Hash equality never substitutes for normative or visual acceptance.
+The permanent release-reference reproducibility gate pins deterministic provenance time, performs two independent clean builds from one immutable tracked source state, requires exact PDF SHA-256 equality, and validates the deterministic artifact for font embedding, portable PDF structure, Unicode extraction and PDF/A-2b. It does not post-normalize PDF bytes or reuse one output twice.
 
-Do not solve reproducibility by suppressing metadata validation, weakening the canonical build, reusing the same generated PDF twice, or comparing normalized/rewritten outputs after the fact. The two artifacts must come from independent clean build executions under the same explicit deterministic inputs.
+The temporary workflow exists only to transport a bounded proof on the active PR branch. It must be removed after the proof is classified; the permanent `Makefile`/integration-script gate remains part of normal release verification.
 
 ## Engineering rules
 

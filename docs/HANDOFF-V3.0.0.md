@@ -12,34 +12,35 @@ Updated: 2026-09-08
 | Active phase | **Final Certification** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Steps 1-6 | ACCEPTED |
-| Step 4 proof | run `34219229025` PASS on `fae338e...` |
-| Step 4 cleanup | checkpoint `35671aefd932375cad14c9121a833d7daf267817`; Static `34224224990`; Linux `34224225080` PASS |
-| Temporary executors | none active |
-| Current batch | **Step 7 — deterministic release reference PDF / issue #18** |
-| Final phase gate | Step 8 phase-end regression after Step 7 acceptance |
+| Latest fully validated cleanup | `35671aefd932375cad14c9121a833d7daf267817`; Static `34224224990`; Linux `34224225080` PASS |
+| Step 7 technical parent | `775dfdd6f6fa18475344409ac0bdc491c4435754` |
+| Step 7 state | **ACTIVE — permanent gate implemented; bounded proof pending** |
+| Permanent release gate | `make release-reference-reproducibility`, invoked by `make release-check` |
+| Temporary proof executor | `.github/workflows/final-cert-step7-repro.yml` — ACTIVE; one-day evidence retention; remove after classification |
+| Final phase gate | Step 8 phase-end regression after Step 7 acceptance and executor cleanup |
 | Item 33 | remains fail-closed; not a release implementation task |
 
 Canonical control documents are `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Step 4 accepted closeout
+## Step 7 implementation
 
-The current-candidate literal-font proof completed on run `34219229025`, and the bounded executor was subsequently removed. The cleanup checkpoint `35671aef...` passed Static and Linux, so Step 4 is accepted. The proof covered Times New Roman and Arial under pdfLaTeX and LuaLaTeX with literal identity, Unicode extraction, embedding and PDF/A-2b all PASS. No raw proprietary fonts were transported.
+The permanent gate now builds the canonical `template/main.pdf` twice from two independently extracted clean Git archives of the same source SHA. It derives `SOURCE_DATE_EPOCH` from an explicit environment value when provided, otherwise from the immutable source commit time; it also sets `FORCE_SOURCE_DATE=1` and `TZ=UTC`. The two outputs are compared by exact SHA-256 before acceptance.
 
-## Step 7 execution boundary
+When hashes match, the accepted deterministic PDF is revalidated for font embedding, the existing UFC portable PDF contract, Unicode text extraction and PDF/A-2b. The gate writes structured JSON evidence under `artifacts/validation/` during normal release verification. It does not normalize or rewrite the PDF after build.
 
-Issue #18 is now the active blocker. The deterministic release-reference proof must produce at least two independently rebuilt canonical PDFs from clean build states under the same explicit deterministic provenance inputs and require identical SHA-256 values. Existing PDF validity, font/Unicode/embedding and applicable PDF/A checks remain in force.
-
-Reproducibility must be established at build time. Do not make two copies of one output, rewrite PDFs after build merely to obtain equality, or hide nondeterministic metadata by weakening validation.
+A temporary branch-triggered workflow is active only to execute the bounded proof before merge. Its artifact retains the two independently generated PDFs/logs for one day so a mismatch can be diagnosed. This temporary executor is not part of the permanent product and must be removed after the proof is classified.
 
 ## Immediate action
 
-1. inspect issue #18 and the current reference/release build path;
-2. identify every current nondeterministic input before changing build behavior;
-3. implement the smallest permanent deterministic-build gate appropriate to normal release verification;
-4. validate it with two independent clean builds and exact SHA-256 equality while preserving existing PDF checks;
-5. synchronize documentation/machine evidence and accept Step 7 only after its gate is green;
-6. execute Final Certification **phase-end regression** on one immutable SHA;
-7. only then activate Release.
+| Order | Action | Acceptance boundary |
+|---:|---|---|
+| 1 | Run Static and PR Linux for the synchronized Step 7 checkpoint | both must remain green or failures must be classified |
+| 2 | Run the temporary bounded Step 7 proof | two clean builds; exact SHA-256 equality; embedding/validator/Unicode/PDF-A all PASS |
+| 3 | Recover and inspect structured evidence/artifact | record source SHA, deterministic epoch, digest and build count |
+| 4 | Remove the temporary workflow and synchronize docs | cleanup checkpoint must pass Static/Linux |
+| 5 | Close issue #18 only after the accepted cleanup state is recorded | permanent gate remains; temporary executor absent |
+| 6 | Execute Final Certification **phase-end regression** | one immutable SHA, complete Linux + full release/certification matrix |
+| 7 | Activate Release only after Final Certification closes | no earlier publication action |
 
 ## Mandatory operating discipline
 
