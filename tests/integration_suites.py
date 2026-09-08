@@ -2,7 +2,13 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+RELEASE_CANDIDATE_MARKER = ROOT / "release" / "v3-release-candidate.json"
+ACTIVE_RELEASE_CANDIDATE_STATES = {"transport-probe", "candidate-active", "candidate-frozen"}
 
 SUITES: dict[str, tuple[str, ...]] = {
     "complete": ("*",),
@@ -43,6 +49,7 @@ DOC_ONLY_PREFIXES = ("docs/",)
 
 ORCHESTRATION_EXACT = {
     ".github/workflows/linux-integration.yml",
+    ".github/workflows/linux-release-check.yml",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
@@ -114,6 +121,32 @@ def infer_suites(paths: list[str]) -> tuple[str, ...]:
     return tuple(name for name in SUITE_ORDER if name in selected)
 
 
+def release_candidate_requires_complete(marker_path: Path = RELEASE_CANDIDATE_MARKER) -> bool:
+    if not marker_path.is_file():
+        return False
+    try:
+        marker = json.loads(marker_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"invalid Release candidate marker: {exc}") from exc
+
+    state = marker.get("state")
+    if state not in ACTIVE_RELEASE_CANDIDATE_STATES:
+        return False
+    if marker.get("phase") != "Release":
+        raise SystemExit("active Release candidate marker must declare phase=Release")
+    if marker.get("temporary") is not False:
+        raise SystemExit("active Release candidate marker must be non-temporary")
+    if marker.get("candidate_sha_is_self_referential") is not False:
+        raise SystemExit("Release candidate marker must not embed a self-referential candidate SHA")
+    return True
+
+
+def select_suites(paths: list[str], *, release_candidate_active: bool = False) -> tuple[str, ...]:
+    if release_candidate_active:
+        return ("complete",)
+    return infer_suites(paths)
+
+
 def git_changed_paths(base: str, head: str) -> list[str]:
     completed = subprocess.run(
         ["git", "diff", "--name-only", base, head],
@@ -151,7 +184,17 @@ def self_test() -> None:
             raise SystemExit(
                 f"Linux suite inference self-test failed for {paths}: expected {expected}, got {measured}"
             )
-    print("LINUX-SUITE-EVIDENCE status=PASS " f"inference_cases={len(cases)} suites={len(SUITES)}")
+
+    if select_suites(["tests/integration_suites.py"], release_candidate_active=True) != ("complete",):
+        raise SystemExit("active Release candidate must override an orchestration-only diff to complete")
+    if select_suites(["docs/ROADMAP-V3.0.0.md"], release_candidate_active=True) != ("complete",):
+        raise SystemExit("active Release candidate must override a documentation-only diff to complete")
+
+    print(
+        "LINUX-SUITE-EVIDENCE status=PASS "
+        f"inference_cases={len(cases)} suites={len(SUITES)} "
+        "release_candidate_persistent_override=true"
+    )
 
 
 def main() -> None:
@@ -173,7 +216,11 @@ def main() -> None:
     if not args.base or not args.head:
         raise SystemExit("--base and --head are required for automatic scope selection")
 
-    suites = infer_suites(git_changed_paths(args.base, args.head))
+    changed_paths = git_changed_paths(args.base, args.head)
+    suites = select_suites(
+        changed_paths,
+        release_candidate_active=release_candidate_requires_complete(),
+    )
     print(",".join(suites) if suites else "none")
 
 

@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-08  
-Status: ACCEPTED — FINAL CERTIFICATION STEP 8 SCOPE GUARD ACTIVE
+Status: ACTIVE — RELEASE PERSISTENT-CANDIDATE GUARD
 
 ## Purpose
 
@@ -12,7 +12,7 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 | Scope | Intended use | Can close a phase? |
 |---|---|---|
 | `auto` | infer narrowest safe suite from changed paths | No |
-| `complete` | shared/core/standards, unknown technical paths, certification marker and phase-end regression | **Yes, with all other phase-end gates** |
+| `complete` | shared/core/standards, unknown technical paths, active certification/release candidate and phase-end regression | **Yes, with all other phase-end gates** |
 | `article` | Scientific Article implementation/evidence | No |
 | `reference-document` | canonical reference source/corpus | No |
 | `reference-pdf` | presentation-sensitive reference PDF | No |
@@ -23,34 +23,41 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 | `backmatter` | appendices/annexes/index/glossary | No |
 | `research-project` | research-project profile | No |
 | `profiles` | non-article profile compatibility | No |
-| `smoke` | orchestration-only changes | No |
+| `smoke` | orchestration-only changes when no active candidate override applies | No |
 
 ## Automatic selection
 
-For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer previous-head to new-head when both commits are available; otherwise selection fails closed to the full PR range. Documentation-only changes skip heavy integration.
+For ordinary pull-request work, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer previous-head to new-head when both commits are available; otherwise selection fails closed to the full PR range. Documentation-only changes normally skip heavy integration.
 
-| Changed-path class | Scope behavior |
+| Context | Scope behavior |
 |---|---|
-| orchestration only | `smoke` |
+| documentation only, no active candidate | skip heavy integration |
+| orchestration only, no active candidate | `smoke` |
 | orchestration + recognized domain | bounded domain/union |
 | orchestration + unknown technical path | `complete` |
 | force-complete shared/core/standards path | `complete` |
-| `release/final-certification-candidate.json` | **`complete`** |
+| changed `release/final-certification-candidate.json` | `complete` |
+| changed `release/v3-release-candidate.json` | `complete` |
+| **active non-temporary V3 Release candidate marker present at HEAD** | **`complete` regardless of incremental changed paths** |
 | unknown technical path | `complete` |
 
-## Final Certification Step 8 scope defect and correction
+## Why Release requires a persistent HEAD-state override
 
-Candidate `fc907856ac4ba0febf4d44fb408407a0fc2e94d4` exposed an orchestration gap. Static `34239113996` passed, and Linux workflow `34239114066` concluded `success`, but the synchronize diff from the immediately previous head to `fc907856...` contained only documentation/control-plane changes because the candidate marker had been introduced in an earlier intermediate commit. Automatic inference returned `none`, so heavy integration was skipped as `documentation-only`.
+Release transport probe `d1f86db10f1458ed75078239916f0de857671348` exposed a defect that a changed-path rule cannot solve by itself. Static `34253455083` passed, and Linux workflow `34253455068` concluded `success`, but the synchronize window contained only orchestration changes because `release/v3-release-candidate.json` had been introduced on an earlier push. Path inference therefore selected `smoke`, producing `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`.
 
-That workflow result does **not** satisfy the Final Certification phase-end predicate, which requires `complete` Linux. The candidate is rejected fail-closed.
+That result does **not** satisfy the Release phase-end predicate. The machine policy requires `complete` and explicitly rejects workflow success with insufficient scope.
 
-The retry makes the intent machine-explicit:
+The Release correction changes the selection model from “marker must be in the current diff” to “active marker in the checked-out HEAD is candidate state.” While the marker state is `transport-probe`, `candidate-active` or `candidate-frozen`, it overrides incremental path inference to `complete`. This protects documentation-only and orchestration-only synchronize pushes after candidate activation without changing ordinary scoped behavior outside an active Release candidate.
 
-1. `release/final-certification-candidate.json` is in `FORCE_COMPLETE_EXACT`;
-2. `tests/integration_suites.py --self-test` contains marker-only and marker+orchestration cases expecting `complete`;
-3. each retry candidate changes the marker itself, so the incremental synchronize window contains the force-complete path.
+## Exact-head Release provenance
 
-This is an orchestration-scope correction only; no product runtime, normative predicate or accepted validation tolerance changes.
+The permanent `Linux release check` is release-artifact evidence, not merely mergeability evidence. During Release pull requests it therefore checks out the exact PR head candidate (`github.event.pull_request.head.sha`) with full Git history. This prevents deterministic-build/source-date evidence from being attributed to the synthetic PR merge commit.
+
+The ordinary Linux integration workflow may continue testing the pull-request merge checkout; its required Release predicate is the `complete` execution scope associated with the candidate. Exact-head release artifact provenance is supplied by the permanent release-check workflow.
+
+## Static protection
+
+`tests/checks/release_candidate_contract.py` validates the non-temporary marker, Release base, complete-scope policy and exact-head release-check route. `tests/checks/linux_integration_suites.py` additionally proves that active Release candidate state overrides documentation-only and orchestration-only incremental path classes to `complete`.
 
 ## Runner importability invariant
 
@@ -68,4 +75,4 @@ Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
 ## Phase-end rule
 
-Every phase transition requires `complete` Linux integration on the same immutable **phase-end regression** candidate SHA together with Static and phase-specific acceptance evidence. Final Certification additionally requires the permanent Linux release check / release matrix. Workflow `success` with heavy integration skipped never satisfies a `complete`-scope phase predicate.
+Every phase transition requires `complete` Linux integration on the same immutable **phase-end regression** candidate SHA together with Static and phase-specific acceptance evidence. Release additionally requires the permanent exact-head Linux release check. Workflow `success` with a bounded scope or skipped heavy integration never satisfies a `complete`-scope phase predicate.

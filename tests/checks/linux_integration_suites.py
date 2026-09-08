@@ -10,7 +10,12 @@ TESTS = ROOT / "tests"
 if str(TESTS) not in sys.path:
     sys.path.insert(0, str(TESTS))
 
-from integration_suites import SUITES, infer_suites  # noqa: E402
+from integration_suites import (  # noqa: E402
+    SUITES,
+    infer_suites,
+    release_candidate_requires_complete,
+    select_suites,
+)
 import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
@@ -64,7 +69,7 @@ def main() -> None:
             fail(f"workflow is missing scoped orchestration token: {token}")
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
-        fail("documentation-only changes must not trigger heavy Linux integration")
+        fail("documentation-only changes must remain a pure auto-scope skip when no candidate override applies")
     if infer_suites(["tests/run.py"]) != ("smoke",):
         fail("orchestration-only changes must select smoke")
     if infer_suites(
@@ -85,6 +90,19 @@ def main() -> None:
         fail("unknown technical paths must fail closed to complete")
 
     phase = roadmap.get("phase")
+    release_candidate_override = False
+    if phase == "release":
+        release_candidate_override = release_candidate_requires_complete()
+        if not release_candidate_override:
+            fail("active Release phase must expose an active non-temporary candidate marker")
+        for paths in (
+            ["docs/ROADMAP-V3.0.0.md"],
+            ["tests/integration_suites.py"],
+            ["tests/integration_suites.py", "docs/V3-RELEASE-PHASE.md"],
+        ):
+            if select_suites(paths, release_candidate_active=True) != ("complete",):
+                fail("active Release candidate must override incremental path scope to complete")
+
     if phase in {"scientific-article", "final-certification", "release"}:
         required_article_checks = {
             "validator-source",
@@ -116,7 +134,8 @@ def main() -> None:
         f"manual_choices={len(required_manual_choices)} phase={phase} "
         "incremental_sync=true missing_before_fallback=full-pr "
         "unknown_path_fallback=complete article_first_class=true "
-        "step4_registered=true step5_registered=true"
+        "step4_registered=true step5_registered=true "
+        f"release_candidate_override={str(release_candidate_override).lower()}"
     )
 
 

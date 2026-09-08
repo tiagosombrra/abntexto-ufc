@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Release is ACTIVE in execution. All previous phases are CLOSED.**
+**Release is ACTIVE. All previous phases are CLOSED.**
 
 | Phase | Status | Accepted / exit requirement |
 |---|---|---|
@@ -13,32 +13,43 @@ Updated: 2026-09-08
 | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
 | Final Certification | CLOSED | `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
-| Release | **ACTIVE — EXECUTION** | release checklist complete, immutable Release candidate accepted, publication verified, and Release phase-end regression green |
+| Release | **ACTIVE — CANDIDATE TRANSPORT REPAIR** | release checklist complete, immutable Release candidate accepted, publication verified, and Release phase-end regression green |
 
-## Release entry and branch synchronization accepted
+## Release transport probe result
 
-| Predicate | Accepted result |
-|---|---|
-| Final Certification → Release transition | `d3679f2caa35403887d2dc75f9b2486e5a3b7ba6` |
-| Transition Static | `34249182526` SUCCESS |
-| Transition Linux | `34249182417` SUCCESS; `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| PR #289 | merged |
-| New `main` / Release base | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Active Release branch / PR | `release/v3.0.0` / #292 |
-| Synchronization checkpoint | `3fad68d953b1264148431d7d1046666674b1a240` |
-| Synchronization Static | `34252314666` SUCCESS |
-| Synchronization Linux | `34252314932` SUCCESS; heavy integration skipped because the checkpoint was documentation-only |
-| Librarian review | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` |
+| Predicate | Result | Gate status |
+|---|---|---|
+| Probe SHA | `d1f86db10f1458ed75078239916f0de857671348` | classified |
+| Static | `34253455083` SUCCESS | PASS |
+| Linux integration | `34253455068` SUCCESS, but `SCOPE=smoke PASS=4 FAIL=0 SKIP=0` | **NOT ACCEPTABLE for phase-end** |
+| Linux release check | `34253454993` SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` | bounded PASS |
+| Release-check artifact | ID `10067709957`, digest `2fc9a5f1dcadf330e2fb832c47e88fe00a6b0ffa2f7f5963291984f0de1f8c6e` | bounded PASS |
+| Deterministic reference PDF | 2 builds; SHA-256 `1acd4c47a1485d16c1b0cf92d074c6dc194dc8952c8f2c61709acbc6a9a503a7` | bounded PASS |
+| Release-check checkout provenance | PR merge ref, not exact PR head | repair required |
+| Librarian review | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` | unchanged |
 
-The transition and synchronization changed control-plane state only. Accepted runtime, normative predicates, validation tolerances and librarian classifications remain frozen unless a concrete Release regression proves a defect.
+A workflow conclusion of `success` is insufficient when the required scope was not executed. Therefore `d1f86db...` is **rejected as a Release phase-end candidate**. It remains useful as a transport-probe checkpoint.
+
+## Root cause
+
+The Release marker had already been introduced before `d1f86db...`. On a `synchronize` event, automatic Linux selection examined only the incremental `before → after` changed paths, which contained orchestration code but not the persistent marker. That produced `smoke`. A force-complete path rule alone cannot protect a persistent candidate marker that is absent from the incremental diff.
+
+The permanent Linux release workflow also used the default pull-request merge checkout. Final Release artifact provenance must instead be bound to the exact PR head candidate.
+
+## Current repair
+
+The next synchronized checkpoint must make candidate state at HEAD part of scope selection: an active non-temporary `release/v3-release-candidate.json` overrides incremental path inference to `complete`, including documentation-only and orchestration-only pushes. Normal scoped behavior remains unchanged when no active Release candidate is present.
+
+The same checkpoint must make `Linux release check` checkout the exact PR head with `fetch-depth: 0` and add static contract coverage for both transport properties.
 
 ## Release plan
 
 | Step | State | Gate |
 |---:|---|---|
-| Synchronize Release branch/control plane | **PASS** | Static `34252314666` |
-| Reconcile current release checklist/tooling and final candidate transport | **ACTIVE** | current CTAN/repository procedure represented without stale phase assumptions; exact candidate can run complete Linux and Linux release check |
-| Build final public/distribution artifacts and checksums | QUEUED | archive/integrity/reproducibility PASS |
+| Synchronize Release branch/control plane | PASS | Static `34252314666` |
+| Establish readable non-temporary candidate marker and release-check PR trigger | PASS — transport probe | marker and permanent workflow route exist |
+| Repair persistent-marker complete scope + exact-head release checkout | **ACTIVE** | Static + `SCOPE=complete` Linux + exact-head Linux release check |
+| Build final public/distribution artifacts and checksums from accepted exact-head route | QUEUED | archive/integrity/reproducibility PASS |
 | Validate extracted CTAN candidate and shipped example | QUEUED | external dependency/package checks PASS |
 | Run current CTAN `pkgcheck` when executable | QUEUED | no blocking diagnostics; actual version recorded |
 | Freeze immutable Release candidate | QUEUED | no candidate mutation after final gates begin |
@@ -46,17 +57,10 @@ The transition and synchronization changed control-plane state only. Accepted ru
 | Tag / GitHub Release / documented publication | QUEUED | only after accepted candidate; published artifacts match checksums |
 | Release closeout | QUEUED | final verification recorded; no unresolved release blocker |
 
-## Current tooling findings
-
-- `make release-check` already includes release-mode validation, Scientific Article PDF/A, distribution-bundle verification and deterministic release-reference reproducibility.
-- Distribution validation already verifies four archives and SHA-256 integrity with institutional/proprietary asset exclusions.
-- CTAN currently reports `pkgcheck` 4.0.3 (2026-05-28); final execution must record the version actually used.
-- The remaining orchestration gap is Release-specific PR transport: the permanent `Linux release check` still triggers on the old Final Certification candidate path, so Release needs an explicit, readable non-temporary candidate surface.
-
 ## Frozen remaining scope
 
 Only **Release** remains. Do not create another roadmap phase. Librarian item 33 remains an explicit authority gap, not an untracked release implementation task.
 
 ## Operating discipline
 
-Every **material advance** must update roadmap, handoff, Release execution record and machine state in the same work cycle. Release ends with a complete **phase-end regression** on one immutable SHA; intermediate green checks do not substitute for it.
+Every **material advance** must update roadmap, handoff, Release execution record, Release readiness and machine state in the same work cycle. Release ends with a complete **phase-end regression** on one immutable SHA; intermediate green checks do not substitute for it.
