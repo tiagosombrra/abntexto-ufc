@@ -8,7 +8,7 @@ Before changing code, tests, standards, workflows, documentation, or release met
 
 1. identify actual Git branch and HEAD;
 2. read `release/v3-roadmap.json`;
-3. read `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md` and `docs/V3-RELEASE-READINESS.md`;
+3. read `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, and `docs/V3-RELEASE-PHASE.md`;
 4. during **Release**, also read `docs/CTAN-RELEASE.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, and `docs/UFC-LIBRARIAN-REVIEW.md`;
 5. reconcile Git facts, machine state, handoff, roadmap, release blockers and temporary-marker/executor lifecycle before work.
 
@@ -20,14 +20,16 @@ Memory, prior chats and historical branches never override current repository st
 |---|---|
 | Target | `3.0.0` |
 | Active phase | **Release** |
-| Canonical `main` before transition merge | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
-| Active branch / PR | `cert/v3-final-certification` / #289 |
+| Canonical `main` / Release base | `e34037f3241aab013b80645b338f38954e02bcda` |
+| Active branch | `release/v3.0.0` |
+| Final Certification transition PR | #289 — merged into `main` |
+| Transition Static | `34249182526` SUCCESS |
+| Transition complete Linux | `34249182417` SUCCESS — `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | Final Certification | **CLOSED** on `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
 | Final Static | `34239890649` SUCCESS |
 | Final complete Linux | `34239890614` SUCCESS — `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | Final Linux release check | `34239890548` SUCCESS — `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| One-shot Final Certification marker | removed in phase-transition commit |
-| Current batch | **Release entry — transition validation and PR #289 merge** |
+| Current batch | **Release execution — branch synchronization and release candidate preparation** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -50,7 +52,7 @@ Release is the final roadmap phase. Do not create another workstream merely beca
 - Do not silently change normative IDs, values, tolerances, locators, applicability, source precedence, modality or proof state.
 - A green workflow conclusion proves only that workflow's execution contract; required scope/predicates must also be verified.
 - Do not weaken tests merely to recover green CI.
-- Do not redistribute proprietary Microsoft fonts.
+- Do not redistribute proprietary Microsoft fonts or UFC institutional mark assets.
 - Item 33 remains fail-closed and is not a hidden release implementation task.
 - External publication is permitted only as an explicit Release checklist step after the accepted Release candidate is established.
 
@@ -66,13 +68,14 @@ The machine invariant remains `phase_end_regression.candidate = one-immutable-sh
 
 ## Immediate Release discipline
 
-1. validate the synchronized Final Certification → Release transition;
-2. merge PR #289 only after transition checks are green;
-3. create one short-lived Release branch from the resulting `main`;
-4. synchronize branch facts before release work;
-5. follow `docs/CTAN-RELEASE.md` and repository tooling rather than inventing publication steps;
-6. run Release phase-end regression before tag/GitHub Release/publication finalization;
-7. verify published assets/checksums before closing Release.
+1. keep `release/v3.0.0` synchronized with the merged Release base and control documents;
+2. revalidate `docs/CTAN-RELEASE.md` and repository release tooling before changing release mechanics;
+3. build and verify final public/distribution artifacts and checksums;
+4. validate the extracted CTAN candidate and shipped example with the external `abntexto` dependency;
+5. run the current CTAN `pkgcheck` when executable in the release environment;
+6. freeze one immutable Release candidate and run Static, complete Linux, Linux release check and release-specific acceptance on it;
+7. only after acceptance create/verify `v3.0.0` tag and GitHub Release, and perform any explicitly documented external publication action;
+8. verify published assets/checksums before closing Release.
 
 ## Fail-closed rule
 
