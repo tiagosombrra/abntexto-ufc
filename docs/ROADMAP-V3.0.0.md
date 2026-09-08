@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-3 and 5-6 are accepted. Step 4 is executing a fresh current-candidate literal Times New Roman/Arial, Unicode, embedding and PDF/A proof through a temporary bounded workflow.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`. Step 4 bounded literal-font proof passed and its temporary executor was removed. Cleanup Static/Linux is now the active gate.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -12,7 +12,7 @@ Updated: 2026-09-08
 | Core Corrections | CLOSED | `5f67560a...`; Static/Linux green |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 4 EXECUTION** | Steps 4 and 7 accepted + immutable phase-end regression |
+| Final Certification | **ACTIVE — STEP 4 CLEANUP** | Step 4 cleanup + Step 7 accepted + immutable phase-end regression |
 | Release | QUEUED | final release actions after certification |
 
 ## Final Certification roadmap
@@ -22,30 +22,35 @@ Updated: 2026-09-08
 | 1 | Entry synchronization | ACCEPTED |
 | 2 | Linux release baseline | ACCEPTED |
 | 3 | Profile and engine certification | ACCEPTED |
-| 4 | Literal Times New Roman/Arial, Unicode and embedding | **ACTIVE — BOUNDED PROOF** |
+| 4 | Literal Times New Roman/Arial, Unicode and embedding | **PROOF PASS — CLEANUP PENDING** |
 | 5 | Scientific Article PDF/A-2b | ACCEPTED |
 | 6 | Distribution/public bundle integrity | ACCEPTED |
 | 7 | Issue #18 deterministic reference PDF | QUEUED |
 | 8 | Final Certification phase-end regression | QUEUED |
 
-## Accepted Steps 5-6 evidence
+## Step 4 accepted bounded proof
 
-| Surface | Evidence |
+| Evidence | Result |
 |---|---|
-| Bounded release transport | `34175388675`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Cleanup checkpoint | `7307164ba4cf924beecb6678c7af5b79d551d513` |
-| Cleanup Static / Linux | `34208318971` PASS / `34208318754` PASS |
-| Acceptance sync | `237cb53b65c91052a469ab67991ea78e71ade283`; Static `34218086750`; Linux `34218086734` |
+| Source checkpoint | `fae338e16304ad45c353067a0b7982f73a8363c5` |
+| Bounded workflow run | `34219229025` — success |
+| Times New Roman / pdfLaTeX | PASS |
+| Arial / pdfLaTeX | PASS |
+| Times New Roman / LuaLaTeX | PASS |
+| Arial / LuaLaTeX | PASS |
+| Unicode extraction | PASS |
+| Font embedding | PASS |
+| PDF/A-2b | PASS |
+| Generated-PDF artifact | `10053151610`, one-day retention |
+| Artifact digest | `sha256:6b0cd0a6ac2543017a8496a1af7feeca70640f2b73862311a4325a981dc5fb60` |
+| Raw proprietary fonts transported | no |
+| Temporary workflow | removed after evidence capture |
 
-## Step 4 bounded proof
-
-Temporary executor: `.github/workflows/final-cert-literal-fonts.yml`.
-
-It is restricted to current-candidate proof and must cover Times New Roman and Arial with both pdfLaTeX and LuaLaTeX. Linux post-validation must verify literal identity, Unicode extraction, embedding and PDF/A-2b. The executor must not transport raw proprietary font files and must be removed after evidence capture. Cleanup Static/Linux is required before Step 4 acceptance.
+Step 4 is not marked ACCEPTED until the cleanup checkpoint after workflow removal passes Static and Linux.
 
 ## Frozen remaining scope
 
-**Step 4 proof + cleanup → issue #18 deterministic reference PDF → Final Certification phase-end regression → Release.**
+**Step 4 cleanup validation → issue #18 deterministic reference PDF → Final Certification phase-end regression → Release.**
 
 No new phase or certification step is created merely because a validator finds a defect. New findings are classified inside Steps 4-8.
 
