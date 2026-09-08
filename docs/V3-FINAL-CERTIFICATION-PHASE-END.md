@@ -1,11 +1,11 @@
 # V3 Final Certification — Phase-end Regression
 
 Updated: 2026-09-08
-Status: CANDIDATE — RUNNING
+Status: CANDIDATE RETRY — RUNNING
 
 ## Purpose
 
-This document binds Final Certification Step 8 to one immutable candidate. Every **material advance** remains synchronized with handoff, roadmap, readiness and `release/v3-roadmap.json`. Targeted checks do not replace the mandatory **phase-end regression**.
+This document binds Final Certification Step 8 to one immutable candidate at a time. Every **material advance** remains synchronized with handoff, roadmap, readiness and `release/v3-roadmap.json`. Targeted checks do not replace the mandatory **phase-end regression**.
 
 ## Accepted prerequisites
 
@@ -20,24 +20,33 @@ This document binds Final Certification Step 8 to one immutable candidate. Every
 | Issue #18 | CLOSED — completed |
 | Step 8 transport preparation | `4d94e9cd7a565eac2e226360bd2b4a92fee52586`; Static `34235990523` SUCCESS; complete Linux `34235990383` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 
-## Candidate transport
-
-The permanent `.github/workflows/linux-release-check.yml` supports normal `push` to `main`, `workflow_dispatch`, and a tightly scoped `pull_request` route only when `release/final-certification-candidate.json` is present in the PR diff. The marker is a one-shot transport trigger, not a second validator. The workflow executes the existing permanent repository contract `make release-check`.
-
-The preparation transport is accepted. The marker is now present on the synchronized candidate and is removed only after candidate acceptance during the Final Certification -> Release transition.
-
 ## Candidate history
 
-Marker-only/intermediate commits created before the synchronized control plane are **REJECTED AS CANDIDATES**. They did not satisfy the same-cycle documentation rule and therefore cannot close the phase, regardless of workflow outcome.
+| Candidate | Static | Linux integration | Release matrix | Decision |
+|---|---|---|---|---|
+| `fc907856ac4ba0febf4d44fb408407a0fc2e94d4` | `34239113996` SUCCESS | `34239114066` workflow SUCCESS, but heavy integration **SKIPPED** as documentation-only | not relevant to acceptance after Linux predicate failed | **REJECTED** |
+| current retry | pending | must execute `complete`, not scoped skip | permanent Linux release check / `make release-check` | RUNNING |
 
-The synchronized candidate is the first commit containing both the marker and this candidate-running control state. Its exact SHA is obtained only after commit creation and then recorded externally in PR/evidence metadata. The machine sentinel remains `phase_end_regression.candidate = one-immutable-sha`.
+Workflow conclusion `success` is insufficient when a mandatory phase predicate was not executed. The rejected candidate did not satisfy `complete Linux integration` and cannot close Final Certification.
 
-## Immutable candidate gate
+## Retry scope correction
 
-The synchronized candidate is not amended after CI begins. That exact candidate must pass:
+The permanent `.github/workflows/linux-release-check.yml` remains the accepted release-matrix transport. The retry changes Linux integration scope orchestration only:
+
+1. `release/final-certification-candidate.json` is explicitly listed as force-complete in `tests/integration_suites.py`;
+2. self-tests assert marker-only and marker+orchestration paths infer `complete`;
+3. the retry changes the marker itself, ensuring the incremental synchronize window contains the force-complete path.
+
+No runtime, normative predicate, tolerance, accepted article/shared behavior or release-check predicate changes.
+
+## Immutable retry gate
+
+The current retry candidate contains the updated marker, scope guard and synchronized retry-running state. It is not amended after CI begins. The exact Git retry SHA is recorded after commit creation; the machine sentinel remains `phase_end_regression.candidate = one-immutable-sha`.
+
+That exact retry must pass:
 
 1. Static contract;
-2. complete Linux integration;
+2. **complete** Linux integration, with heavy integration actually executed;
 3. Linux release check running the permanent `make release-check` contract;
 4. all accepted literal-font/Unicode/embedding/PDF-A/distribution predicates remain intact;
 5. deterministic release-reference-PDF gate remains green;
@@ -48,4 +57,4 @@ Any failure is classified before code or test changes. A rejected candidate is n
 
 ## Exit rule
 
-After the synchronized candidate passes the complete matrix, record its SHA and run IDs/conclusions, mark Final Certification `CLOSED`, activate `Release`, remove the one-shot candidate marker, and execute the phase-transition documentation cycle.
+After one candidate passes the complete matrix, record its SHA/run IDs/conclusions, mark Final Certification `CLOSED`, activate `Release`, remove the one-shot candidate marker, and execute the phase-transition documentation cycle.

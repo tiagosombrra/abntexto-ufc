@@ -1,7 +1,7 @@
 # V3 Final Certification
 
 Updated: 2026-09-08
-Status: ACTIVE — STEP 8 IMMUTABLE CANDIDATE RUNNING
+Status: ACTIVE — STEP 8 IMMUTABLE CANDIDATE RETRY
 
 ## Purpose
 
@@ -19,7 +19,8 @@ Final Certification proves the accepted V3 product without reopening closed shar
 | 6 | Distribution/public bundle integrity | ACCEPTED | bundle integrity accepted |
 | 7 | Deterministic release reference PDF / issue #18 | ACCEPTED | `34231038578`; cleanup `34e6bf8...`; issue closed |
 | 8 preparation | Release-matrix PR transport | ACCEPTED | `4d94e9c...`; Static `34235990523`; complete Linux `34235990383`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| 8 candidate | Final Certification phase-end regression | **RUNNING** | marker present; await Static + complete Linux + Linux release check on same immutable candidate |
+| 8 candidate `fc907856...` | Final Certification phase-end regression | **REJECTED** | Linux `34239114066` skipped heavy integration; complete-scope predicate not met |
+| 8 retry | Final Certification phase-end regression | **RUNNING** | updated marker + complete-scope guard; await Static + complete Linux + Linux release check |
 
 ## Step 7 accepted evidence
 
@@ -27,15 +28,21 @@ Cleanup checkpoint `34e6bf8299e582803d1726e8dd699271c356fda5` passed Static `342
 
 ## Step 8 preparation accepted
 
-Preparation checkpoint `4d94e9cd7a565eac2e226360bd2b4a92fee52586` added only the permanent PR transport. Static `34235990523` passed and complete Linux `34235990383` passed with `SCOPE=complete PASS=36 FAIL=0 SKIP=0`. No validation predicate was weakened or duplicated.
+Preparation checkpoint `4d94e9cd7a565eac2e226360bd2b4a92fee52586` added only the permanent PR transport. Static `34235990523` passed and complete Linux `34235990383` passed with `SCOPE=complete PASS=36 FAIL=0 SKIP=0`.
 
-## Step 8 immutable candidate
+## Candidate `fc907856...` rejection
 
-The one-shot `release/final-certification-candidate.json` marker is present. The synchronized candidate commit contains the marker and candidate-running documentation/machine state. Earlier marker-only/intermediate commits are rejected as candidates because they did not satisfy the same-cycle documentation discipline.
+Static `34239113996` passed. Linux workflow `34239114066` also reported overall `success`, but its heavy integration step was skipped because automatic scope inference saw an incremental documentation-only window. Final Certification requires complete Linux; therefore the candidate is rejected despite the workflow conclusion.
 
-The candidate is not amended after CI begins. The exact synchronized candidate SHA is recorded after creation in PR/evidence metadata; `phase_end_regression.candidate = one-immutable-sha` remains the machine invariant.
+This is an orchestration-scope failure, not a product/runtime/normative failure.
 
-The exact candidate must pass Static, complete Linux and the permanent Linux release check executing `make release-check`. Any failure is classified first; a correction creates a new candidate rather than amending this one.
+## Retry correction
+
+The retry makes `release/final-certification-candidate.json` an explicit force-complete path in `tests/integration_suites.py`, adds self-tests for marker-only and marker+orchestration inference, and updates the marker in the same retry commit so the synchronize diff includes it.
+
+The retry candidate is not amended after CI begins. Its exact SHA is recorded after creation in PR/evidence metadata while `phase_end_regression.candidate = one-immutable-sha` remains the machine invariant.
+
+The exact retry must pass Static, **complete** Linux and the permanent Linux release check executing `make release-check`. Any failure is classified first; a correction creates a new candidate rather than amending this one.
 
 ## Phase-end rule
 

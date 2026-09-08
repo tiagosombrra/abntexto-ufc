@@ -24,12 +24,12 @@ Memory, prior chats and historical branches never override current repository st
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Steps 1-7 | ACCEPTED |
 | Step 8 preparation | `4d94e9cd7a565eac2e226360bd2b4a92fee52586`; Static `34235990523` SUCCESS; complete Linux `34235990383` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Current batch | **Step 8 — immutable Final Certification phase-end candidate** |
-| Candidate marker | `release/final-certification-candidate.json` present |
+| Rejected candidate | `fc907856ac4ba0febf4d44fb408407a0fc2e94d4`: Static `34239113996` SUCCESS, but Linux `34239114066` performed only documentation-only scoped skip; therefore phase-end complete-Linux predicate FAILED |
+| Current batch | **Step 8 — immutable Final Certification candidate retry** |
+| Candidate marker | `release/final-certification-candidate.json` present and changed in the retry commit |
+| Scope guard | candidate marker is explicitly `complete` in `tests/integration_suites.py` |
 | Candidate gate | Static + complete Linux + permanent Linux release check on one immutable candidate |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-
-The marker-only/intermediate commits created before the synchronized candidate are not accepted candidates. The accepted candidate is the first commit that contains the marker **and** the synchronized control-plane state. Its exact SHA is recorded after the immutable commit exists and CI starts.
 
 ## Readable phase model
 
@@ -37,7 +37,7 @@ The marker-only/intermediate commits created before the synchronized candidate a
 2. Core Corrections — closed
 3. Reference PDF Validation — closed
 4. Scientific Article — closed
-5. Final Certification — active, immutable candidate gate
+5. Final Certification — active, immutable candidate retry gate
 6. Release — queued
 
 ## Closure-scope freeze
@@ -46,16 +46,20 @@ Remaining scope is fixed to Final Certification Step 8 **phase-end regression**,
 
 ## Step 8 candidate rule
 
-The permanent `.github/workflows/linux-release-check.yml` may run on a PR only when the one-shot `release/final-certification-candidate.json` marker is present in the PR diff. That route executes the same repository-owned `make release-check` contract used for release validation. It is orchestration, not a second validator.
+The permanent `.github/workflows/linux-release-check.yml` PR route runs only when the one-shot `release/final-certification-candidate.json` marker is present and executes the same repository-owned `make release-check` contract used by release validation.
 
-The synchronized candidate is not amended after CI begins. A failed candidate is rejected; corrections produce a new candidate commit rather than rewriting history.
+The first synchronized candidate `fc907856...` is rejected even though the Linux workflow conclusion was `success`: the heavy integration step was skipped as `documentation-only`, while Final Certification explicitly requires `complete` Linux. Workflow success is not equivalent to predicate success.
+
+The retry fixes the orchestration scope classifier, not product runtime: the marker is now an explicit complete-scope path and has self-test coverage. The retry candidate changes the marker in the same commit, guaranteeing the incremental-scope window sees the certification trigger.
+
+A candidate is not amended after CI begins. A failed candidate is rejected; corrections produce a new candidate commit rather than rewriting history.
 
 ## Engineering rules
 
 - Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal output under test, or explicit upstream/current-runtime boundaries.
 - Preserve accepted v3 public API and shared/article semantics unless a concrete regression or current authority requires change.
 - Do not silently change normative IDs, values, tolerances, locators, applicability, source precedence, modality or proof state.
-- A green test proves only its encoded contract.
+- A green workflow conclusion proves only that workflow's own execution contract; phase predicates such as `complete` scope must also be verified.
 - Do not weaken tests merely to recover green CI.
 - Do not redistribute proprietary Microsoft fonts.
 - Item 33 remains fail-closed and is not a hidden implementation task.

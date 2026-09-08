@@ -1,5 +1,5 @@
 {
-  "schema_version": 21,
+  "schema_version": 22,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -41,8 +41,10 @@
     "review_comments_are_automatic_normative_authority": false,
     "green_tests_alone_close_visual_or_normative_findings": false,
     "complete_linux_required_for_phase_end_regression": true,
+    "workflow_success_without_required_scope_satisfies_phase_gate": false,
     "scoped_linux_integration_allowed_for_intermediate_work": true,
     "auto_scope_unknown_paths_fail_to_complete": true,
+    "final_certification_candidate_marker_forces_complete_linux": true,
     "article_shared_mechanism_is_proof": false,
     "article_executable_support_implies_proven": false,
     "article_recommendations_are_hard_requirements": false,
@@ -59,7 +61,7 @@
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "final-certification-step8-candidate-running",
+    "candidate_state": "final-certification-step8-candidate-retry-running",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -101,17 +103,17 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "4d94e9cd7a565eac2e226360bd2b4a92fee52586",
     "latest_fully_validated_checkpoint_state": "final-certification-step8-transport-preparation-static-complete-linux-green",
-    "latest_implementation_checkpoint_sha": "4d94e9cd7a565eac2e226360bd2b4a92fee52586",
-    "latest_implementation_checkpoint_state": "step8-transport-preparation-accepted-candidate-created-by-marker-semantics",
-    "final_certification_state": "active-step8-immutable-phase-end-candidate",
+    "latest_implementation_checkpoint_sha": "fc907856ac4ba0febf4d44fb408407a0fc2e94d4",
+    "latest_implementation_checkpoint_state": "rejected-step8-candidate-linux-workflow-success-but-complete-scope-not-executed",
+    "final_certification_state": "active-step8-immutable-phase-end-candidate-retry",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
     "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
     "closure_scope_frozen": true,
-    "current_correction_batch": ["Final Certification Step 8 immutable phase-end candidate"],
+    "current_correction_batch": ["Final Certification Step 8 immutable phase-end candidate retry — complete-scope guard"],
     "pending_acceptance_gates": [
-      "Immutable Final Certification candidate must pass Static contract, complete Linux integration, and Linux release check on the same candidate"
+      "Immutable Final Certification retry candidate must pass Static contract, execute complete Linux integration, and pass Linux release check on the same candidate"
     ],
     "release_blockers": [
       "Final Certification Step 8 phase-end regression has not completed",
@@ -126,7 +128,7 @@
       "must_remain_absent_for_acceptance": true
     },
     "step8_release_matrix_transport": {
-      "state": "candidate-running",
+      "state": "candidate-retry-running",
       "permanent_workflow": ".github/workflows/linux-release-check.yml",
       "permanent_contract": "make release-check",
       "pr_trigger_marker": "release/final-certification-candidate.json",
@@ -134,8 +136,9 @@
       "normal_main_push_route_retained": true,
       "workflow_dispatch_route_retained": true,
       "temporary_executor": false,
-      "candidate_semantics": "first-synchronized-commit-containing-marker",
-      "marker_only_intermediate_commits_accepted": false
+      "candidate_marker_forces_complete_linux": true,
+      "candidate_marker_scope_self_test": true,
+      "retry_candidate_must_modify_marker": true
     }
   },
   "linux_integration": {
@@ -144,7 +147,8 @@
     "phase_end_required_scope": "complete",
     "documentation_only": "skip-heavy-integration",
     "article_gates_first_class": true,
-    "unknown_technical_path_scope": "complete"
+    "unknown_technical_path_scope": "complete",
+    "final_certification_candidate_marker_scope": "complete"
   },
   "branch_plan": {
     "current_work_branch": "cert/v3-final-certification",
@@ -212,13 +216,14 @@
     "step8_transport_preparation_linux_conclusion": "success",
     "step8_transport_preparation_linux_scope": "complete",
     "step8_transport_preparation_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
-    "step8_rejected_marker_only_candidate_sha": "08df449fddf7212f0a2dc95aefb2f6e465d8186d",
-    "step8_rejected_intermediate_control_commits": [
-      "0d387dbeed661dca5c3b0aaa71e09fe687ee1e10",
-      "f8584682b191bdabd98987ae6c957e0c8585d866",
-      "6494e73be16db02d8214ee2372ccda09c271d7c1",
-      "36289334791ceca50d69b6356824f1a4b33bd39d"
-    ],
+    "step8_rejected_candidate_sha": "fc907856ac4ba0febf4d44fb408407a0fc2e94d4",
+    "step8_rejected_candidate_static_run": 34239113996,
+    "step8_rejected_candidate_static_conclusion": "success",
+    "step8_rejected_candidate_linux_run": 34239114066,
+    "step8_rejected_candidate_linux_workflow_conclusion": "success",
+    "step8_rejected_candidate_linux_scope": "none-documentation-only-heavy-skipped",
+    "step8_rejected_candidate_reason": "complete Linux integration was mandatory but not executed",
+    "step8_scope_guard": "release/final-certification-candidate.json explicitly forces complete and is self-tested",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

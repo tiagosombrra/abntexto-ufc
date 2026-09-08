@@ -1,7 +1,7 @@
 # abntexto-ufc v3 — Correction Plan
 
 Updated: 2026-09-08  
-Status: SHARED CORRECTIONS AND SCIENTIFIC ARTICLE CLOSED — FINAL CERTIFICATION STEP 8 CANDIDATE ACTIVE
+Status: SHARED CORRECTIONS AND SCIENTIFIC ARTICLE CLOSED — FINAL CERTIFICATION STEP 8 RETRY ACTIVE
 
 ## Purpose
 
@@ -28,23 +28,31 @@ Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5
 | 1-3 | ACCEPTED | entry, Linux release baseline and profile/engine matrix accepted |
 | 4 | ACCEPTED | literal Times New Roman/Arial, Unicode, embedding and PDF/A proof `34219229025`; cleanup accepted |
 | 5 | ACCEPTED | Scientific Article PDF/A-2b evidence accepted |
-| 6 | ACCEPTED | distribution/public bundle integrity and deterministic transport accepted |
+| 6 | ACCEPTED | distribution/public bundle integrity accepted |
 | 7 | ACCEPTED | deterministic reference PDF proof `34231038578`; two clean builds hash `1c92535f...`; cleanup `34e6bf8...`; issue #18 closed |
 | 8 preparation | ACCEPTED | `4d94e9c...`; Static `34235990523`; complete Linux `34235990383`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| 8 candidate | **RUNNING** | synchronized immutable candidate must pass Static + complete Linux + Linux release check |
+| 8 candidate `fc907856...` | REJECTED | Static green; Linux workflow green but heavy integration skipped, so mandatory complete-scope predicate failed |
+| 8 retry | **RUNNING** | candidate marker now explicit complete-scope path + self-test; await Static + complete Linux + Linux release check |
 
-Earlier Step 5/6 runner-transport failures are historical and resolved; they are not current correction work and do not reopen accepted runtime or normative predicates.
+## Current correction — Step 8 orchestration scope
 
-## Current batch — Final Certification Step 8 immutable candidate
+The first synchronized candidate `fc907856ac4ba0febf4d44fb408407a0fc2e94d4` revealed that incremental synchronize scope inference can classify the candidate-state commit as documentation-only when the marker was introduced in an earlier commit. Linux run `34239114066` therefore skipped heavy integration. This is a phase-gate failure even though the workflow conclusion was `success`.
 
-The accepted permanent PR transport uses the one-shot `release/final-certification-candidate.json` marker to run the existing `make release-check` contract before merge. The synchronized candidate contains the marker and candidate-running control state and is not amended after CI begins.
+The correction is deliberately bounded to orchestration:
 
-Marker-only/intermediate commits that did not synchronize documentation are rejected as candidates. The exact synchronized candidate SHA is recorded after creation in PR/evidence metadata while the machine invariant remains `phase_end_regression.candidate = one-immutable-sha`.
+1. add `release/final-certification-candidate.json` to explicit force-complete paths;
+2. add scope-inference self-tests for marker-only and marker+orchestration cases;
+3. update the marker in the retry candidate itself so the incremental diff sees it;
+4. preserve all product/runtime/normative and release-check predicates.
+
+## Current batch — Final Certification Step 8 immutable candidate retry
+
+The permanent PR transport still runs the existing `make release-check` contract. The retry candidate contains the updated marker, scope correction and synchronized retry state and is not amended after CI begins.
 
 Required acceptance:
 
 1. Static contract success;
-2. complete Linux integration success;
+2. complete Linux integration **actually executed**, not a scoped skip;
 3. Linux release check success using permanent `make release-check`;
 4. deterministic reference PDF, literal-font, Unicode, embedding, PDF/A and bundle predicates remain accepted;
 5. no temporary executor;
