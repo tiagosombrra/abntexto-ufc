@@ -5,7 +5,7 @@ Status: SHARED CORRECTIONS, SCIENTIFIC ARTICLE AND FINAL CERTIFICATION CLOSED �
 
 ## Purpose
 
-This document preserves the correction history produced by Regression Audit and the phase boundaries built on that corrected foundation. Active release execution is defined by `docs/V3-RELEASE-READINESS.md`, `docs/CTAN-RELEASE.md`, the roadmap, handoff and machine state.
+This document preserves the correction history produced by Regression Audit and the phase boundaries built on that corrected foundation. Active release execution is defined by `docs/V3-RELEASE-PHASE.md`, `docs/V3-RELEASE-READINESS.md`, `docs/CTAN-RELEASE.md`, the roadmap, handoff and machine state.
 
 ## Execution discipline
 
@@ -35,13 +35,24 @@ Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5
 | Release reference reproducibility | PASS |
 | Issue #18 | CLOSED |
 
-Candidate `fc907856...` remains historically rejected because mandatory complete Linux did not execute. The accepted candidate corrected only orchestration scope and preserved product/runtime/normative predicates.
+## Release entry accepted
 
-## Current batch — Release entry
+| Surface | Accepted evidence |
+|---|---|
+| Transition commit | `d3679f2caa35403887d2dc75f9b2486e5a3b7ba6` |
+| Transition Static | `34249182526` SUCCESS |
+| Transition complete Linux | `34249182417` SUCCESS; `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| PR #289 | merged |
+| Release base on `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
+| Active Release branch | `release/v3.0.0` |
 
-The synchronized transition removes `release/final-certification-candidate.json`, marks Final Certification `CLOSED`, and activates **Release**. The transition itself must remain green before PR #289 is merged.
+The transition changed control-plane phase state only and did not reopen accepted runtime, normative or librarian-review semantics.
 
-After merge, create one short-lived Release branch from the resulting `main`, synchronize branch facts, re-read `docs/CTAN-RELEASE.md`, build/verify final artifacts and establish an immutable Release candidate.
+## Current batch — Release execution
+
+Synchronize the Release branch/control plane, revalidate the current release checklist and tooling, build/verify final public/distribution artifacts, validate the extracted CTAN candidate and shipped example, and then establish one immutable Release candidate.
+
+No tag, GitHub Release or external publication action is allowed before that candidate passes the complete Release phase-end gate.
 
 ## Remaining authority boundary
 
