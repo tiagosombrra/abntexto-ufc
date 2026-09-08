@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "purpose": "V3 Final Certification immutable phase-end regression transport marker",
+  "phase": "final-certification",
+  "candidate_semantics": "git-commit-containing-this-marker",
+  "parent_preparation_sha": "4d94e9cd7a565eac2e226360bd2b4a92fee52586",
+  "preparation_static_run": 34235990523,
+  "preparation_static_conclusion": "success",
+  "preparation_linux_run": 34235990383,
+  "preparation_linux_conclusion": "success",
+  "preparation_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
+  "release_contract": "make release-check",
+  "remove_after_acceptance": true
+}
