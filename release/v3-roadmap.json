@@ -1,5 +1,5 @@
 {
-  "schema_version": 23,
+  "schema_version": 24,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -8,7 +8,7 @@
   "phase": "release",
   "stage": "release",
   "stage_name": "Release",
-  "active_branch": "cert/v3-final-certification",
+  "active_branch": "release/v3.0.0",
   "authorities": {
     "git_facts_must_match_machine_state": true,
     "machine_state": "release/v3-roadmap.json",
@@ -27,6 +27,7 @@
     "final_certification_plan": "docs/V3-FINAL-CERTIFICATION.md",
     "final_certification_phase_end": "docs/V3-FINAL-CERTIFICATION-PHASE-END.md",
     "linux_integration_scopes": "docs/LINUX-INTEGRATION-SCOPES.md",
+    "release_phase": "docs/V3-RELEASE-PHASE.md",
     "release_readiness": "docs/V3-RELEASE-READINESS.md",
     "ctan_release": "docs/CTAN-RELEASE.md",
     "fail_closed_on_disagreement": true,
@@ -62,7 +63,7 @@
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "release-active-entry-transition",
+    "candidate_state": "release-active-execution",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -79,8 +80,11 @@
     "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
     "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
     "shared_foundation_integration_sha": "e6833ed5cf07aaf1021c690260cecfacec1a119a",
-    "canonical_main_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
-    "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb"
+    "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
+    "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
+    "release_transition_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "canonical_main_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda"
   },
   "phases": [
     {"id": "regression-audit", "name": "Regression Audit", "status": "CLOSED", "phase_end_regression_required": true},
@@ -104,25 +108,31 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9",
     "latest_fully_validated_checkpoint_state": "final-certification-phase-end-accepted-static-complete-linux-release-matrix-green",
-    "latest_implementation_checkpoint_sha": "22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9",
-    "latest_implementation_checkpoint_state": "accepted-final-certification-phase-end-candidate",
+    "latest_implementation_checkpoint_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "latest_implementation_checkpoint_state": "release-entry-transition-merged-to-main",
     "final_certification_state": "closed-accepted",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
+    "final_certification_pr_state": "merged",
+    "final_certification_transition_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
     "final_certification_phase_end_candidate_sha": "22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9",
-    "release_state": "active-entry-transition",
+    "release_state": "active-execution",
+    "release_branch": "release/v3.0.0",
+    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "closure_scope_frozen": true,
-    "current_correction_batch": ["Release entry synchronization — validate transition, merge PR #289, then create short-lived Release branch"],
+    "current_correction_batch": ["Release execution — synchronize branch facts, revalidate release tooling, build final candidate artifacts"],
     "pending_acceptance_gates": [
-      "Final Certification to Release transition checkpoint must remain green before PR #289 is merged",
-      "After merge, Release branch facts must be synchronized before release execution",
+      "Release branch synchronization checkpoint must pass Static contract",
+      "Release checklist and tooling must be reconciled before candidate preparation",
+      "Final public/distribution artifacts and checksums must be verified from the Release candidate",
       "Release must end with its own immutable phase-end regression"
     ],
     "release_blockers": [
-      "PR #289 transition checkpoint has not yet been merged into main",
-      "Release execution and Release phase-end regression have not completed"
+      "Release branch synchronization has not yet been accepted by CI",
+      "Final Release artifacts and Release phase-end regression have not completed",
+      "Tag/GitHub Release/publication verification has not completed"
     ],
     "deferred_authority_conflicts": ["review item 33: selected NBR 6023:2025 edge cases"],
     "temporary_executor": {
@@ -159,14 +169,16 @@
     "final_certification_candidate_marker_scope": "complete"
   },
   "branch_plan": {
-    "current_work_branch": "cert/v3-final-certification",
+    "current_work_branch": "release/v3.0.0",
     "final_certification_pr": 289,
-    "final_certification_pr_state": "open-transition-to-release",
-    "release_branch_state": "create-after-pr-289-merge",
+    "final_certification_pr_state": "merged",
+    "final_certification_transition_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "release_branch_state": "active-from-merged-main",
+    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "scientific_article_pr": 286,
     "scientific_article_pr_state": "merged",
     "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
-    "integration_main_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
+    "integration_main_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "policy": "main-plus-one-short-lived-active-task-branch"
   },
   "issue_state": {
@@ -242,6 +254,15 @@
     "final_certification_distribution_checksums": "PASS",
     "final_certification_distribution_archive_integrity": "PASS",
     "step8_scope_guard": "release/final-certification-candidate.json explicitly forces complete and is self-tested",
+    "final_certification_to_release_transition_sha": "d3679f2caa35403887d2dc75f9b2486e5a3b7ba6",
+    "final_certification_to_release_transition_static_run": 34249182526,
+    "final_certification_to_release_transition_static_conclusion": "success",
+    "final_certification_to_release_transition_linux_run": 34249182417,
+    "final_certification_to_release_transition_linux_conclusion": "success",
+    "final_certification_to_release_transition_linux_scope": "complete",
+    "final_certification_to_release_transition_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
+    "final_certification_transition_pr": 289,
+    "final_certification_transition_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "librarian_review_contract_items": 34
   },
   "release_policy": {
