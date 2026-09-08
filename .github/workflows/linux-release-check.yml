@@ -42,6 +42,9 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli
             node --version
             docker --version
+            # The TeX Live action executes inside a container over the runner checkout.
+            # Trust only this mounted canonical checkout for Git provenance/tracked-file reads.
+            git config --global --add safe.directory "$PWD"
             make release-check
 
       - name: Publish validation summary
@@ -51,7 +54,7 @@ jobs:
           {
             echo '## Linux release validation'
             echo
-            echo '> This Linux gate is engineering evidence only. Final Windows/literal-font/PDF-A certification remains B8-owned.'
+            echo '> This Linux gate is engineering evidence only. Final Windows/literal-font/PDF-A certification remains Final Certification-owned.'
             echo
             if [[ -f artifacts/validation/validation-report.md ]]; then
               cat artifacts/validation/validation-report.md
