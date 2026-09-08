@@ -14,9 +14,11 @@ from integration_suites import SUITES, infer_suites  # noqa: E402
 import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
+RELEASE_WORKFLOW = ROOT / ".github" / "workflows" / "linux-release-check.yml"
 ROADMAP = ROOT / "release" / "v3-roadmap.json"
 PROFILE_MATRIX = ROOT / "tests" / "integration" / "profile-matrix.sh"
 ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.sh"
+RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
 
 
 def fail(message: str) -> None:
@@ -25,6 +27,7 @@ def fail(message: str) -> None:
 
 def main() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
+    release_workflow = RELEASE_WORKFLOW.read_text(encoding="utf-8")
     roadmap = json.loads(ROADMAP.read_text(encoding="utf-8"))
     profile_matrix = PROFILE_MATRIX.read_text(encoding="utf-8")
     article_profile = ARTICLE_PROFILE.read_text(encoding="utf-8")
@@ -63,6 +66,9 @@ def main() -> None:
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
 
+    if RELEASE_CANDIDATE_MARKER not in release_workflow:
+        fail("Linux release check must trigger on the Release phase-end candidate marker")
+
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
     if infer_suites(["tests/run.py"]) != ("smoke",):
@@ -83,6 +89,10 @@ def main() -> None:
         fail("object runtime changes must select the objects suite")
     if infer_suites(["unknown/technical.file"]) != ("complete",):
         fail("unknown technical paths must fail closed to complete")
+    if infer_suites([RELEASE_CANDIDATE_MARKER]) != ("complete",):
+        fail("Release phase-end candidate marker must force complete Linux integration")
+    if infer_suites(["tests/integration_suites.py", RELEASE_CANDIDATE_MARKER]) != ("complete",):
+        fail("Release marker plus orchestration changes must force complete Linux integration")
 
     phase = roadmap.get("phase")
     if phase in {"scientific-article", "final-certification", "release"}:
@@ -116,7 +126,8 @@ def main() -> None:
         f"manual_choices={len(required_manual_choices)} phase={phase} "
         "incremental_sync=true missing_before_fallback=full-pr "
         "unknown_path_fallback=complete article_first_class=true "
-        "step4_registered=true step5_registered=true"
+        "step4_registered=true step5_registered=true "
+        "release_candidate_forces_complete=true release_check_pr_trigger=true"
     )
 
 

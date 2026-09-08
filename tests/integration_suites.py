@@ -56,6 +56,7 @@ FORCE_COMPLETE_EXACT = {
     "abntexto-ufc/fonts.def",
     "abntexto-ufc/modules.def",
     "release/final-certification-candidate.json",
+    "release/v3-release-candidate.json",
 }
 FORCE_COMPLETE_PREFIXES = (
     "abntexto-ufc/integrations/",
@@ -139,6 +140,8 @@ def self_test() -> None:
         ("abntexto-ufc/core.def",): ("complete",),
         ("release/final-certification-candidate.json",): ("complete",),
         ("tests/integration_suites.py", "release/final-certification-candidate.json"): ("complete",),
+        ("release/v3-release-candidate.json",): ("complete",),
+        ("tests/integration_suites.py", "release/v3-release-candidate.json"): ("complete",),
         ("unknown/technical.file",): ("complete",),
     }
     for paths, expected in cases.items():

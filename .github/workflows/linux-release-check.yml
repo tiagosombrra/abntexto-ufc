@@ -21,6 +21,7 @@ on:
       - ready_for_review
     paths:
       - release/final-certification-candidate.json
+      - release/v3-release-candidate.json
   workflow_dispatch:
 
 permissions:
