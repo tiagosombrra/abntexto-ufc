@@ -12,37 +12,33 @@ Updated: 2026-09-08
 | Active phase | **Final Certification** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Steps 1-6 | ACCEPTED |
-| Latest fully validated cleanup | `35671aefd932375cad14c9121a833d7daf267817`; Static `34224224990`; Linux `34224225080` PASS |
-| Step 7 permanent gate | `make release-reference-reproducibility`, invoked by `make release-check` |
-| Step 7 bounded run | `34229431523` on `0040ed413df7bd9126ff1dcb34c23582bfd68403` |
-| Step 7 proof predicates | **PASS** — 2 clean builds, exact SHA-256 equality, embedding/validator/Unicode/PDF-A PASS |
-| Accepted proof digest | `cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f` |
-| Executor result | reporting-only failure after proof; clean rerun required |
-| Temporary executor | `.github/workflows/final-cert-step7-repro.yml` — ACTIVE until clean rerun + classification |
-| Final phase gate | Step 8 phase-end regression after Step 7 cleanup |
+| Step 7 clean bounded proof | **PASS** — run `34231038578` on `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` |
+| Deterministic proof | epoch `1788873426`; 2 clean builds; SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf` |
+| PDF acceptance | embedding/portable validator/Unicode/PDF-A all PASS |
+| Proof artifact | `10057880627`, 6 files, one-day retention |
+| Temporary executor | removed in current cleanup candidate |
+| Current batch | **Step 7 — cleanup validation** |
+| Final phase gate | Step 8 phase-end regression after Step 7 acceptance |
 | Item 33 | remains fail-closed; not a release implementation task |
 
 Canonical control documents are `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Step 7 proof classification
+## Step 7 clean proof
 
-The core reproducibility gate in run `34229431523` completed successfully before the workflow wrapper failed. Structured evidence recorded source SHA `0040ed413df7bd9126ff1dcb34c23582bfd68403`, deterministic epoch `1788872450` from Git commit time, two independent clean builds, identical PDF SHA-256 `cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f`, 450652 bytes, and PASS for font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b. Artifact `10057223731` uploaded six bounded evidence files.
+Run `34231038578` is fully green: proof, summary and evidence upload all passed. Structured evidence records source `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522`, deterministic epoch `1788873426` from Git commit time, two independent clean builds, identical PDF SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf`, 450652 bytes, and PASS for font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b. Artifact `10057880627` uploaded six bounded evidence files.
 
-The overall run failed only in `Publish proof summary`: the shell here-document was syntactically malformed. The proof step and artifact upload both succeeded. This is a temporary-executor reporting defect; it does not invalidate the structured proof, but the executor must rerun clean before Step 7 acceptance.
-
-The summary step is corrected without changing the permanent reproducibility gate or any acceptance predicate.
+The prior run `34229431523` remains classified as a historical reporting-only wrapper failure after a successful proof. The corrected executor run removes that acceptance ambiguity without changing the permanent gate.
 
 ## Immediate action
 
 | Order | Action | Acceptance boundary |
 |---:|---|---|
-| 1 | Publish the reporting-only workflow correction with synchronized docs | no proof predicate changes |
-| 2 | Require the temporary Step 7 executor to rerun green | core proof + wrapper + artifact upload all green |
-| 3 | Remove the temporary workflow and synchronize docs | temporary executor absent |
-| 4 | Require cleanup Static/Linux | both green |
-| 5 | Close issue #18 / accept Step 7 | proof + cleanup recorded; permanent gate retained |
-| 6 | Execute Final Certification **phase-end regression** | one immutable SHA, complete Linux + full release/certification matrix |
-| 7 | Activate Release only after Final Certification closes | no earlier publication action |
+| 1 | Remove the temporary Step 7 workflow and synchronize docs | done in current cleanup candidate |
+| 2 | Require cleanup Static and Linux | both must be green |
+| 3 | Accept Step 7 and close issue #18 | clean proof + executor absent + cleanup green |
+| 4 | Create Final Certification **phase-end regression** candidate | one immutable SHA |
+| 5 | Run Static + complete Linux + full release/certification matrix | all green on same candidate |
+| 6 | Activate Release only after Final Certification closes | no earlier publication action |
 
 ## Mandatory operating discipline
 

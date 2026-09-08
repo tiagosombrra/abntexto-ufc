@@ -1,5 +1,5 @@
 {
-  "schema_version": 17,
+  "schema_version": 18,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -98,9 +98,9 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817",
     "latest_fully_validated_checkpoint_state": "final-certification-step4-cleanup-static-linux-green",
-    "latest_implementation_checkpoint_sha": "0040ed413df7bd9126ff1dcb34c23582bfd68403",
-    "latest_implementation_checkpoint_state": "step7-core-proof-pass-wrapper-reporting-failure-classified-clean-rerun-required",
-    "final_certification_state": "active-step7-clean-executor-rerun",
+    "latest_implementation_checkpoint_sha": "9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522",
+    "latest_implementation_checkpoint_state": "step7-clean-proof-accepted-cleanup-validation-pending",
+    "final_certification_state": "active-step7-cleanup-validation",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -120,39 +120,34 @@
     "distribution_bundle_state": "accepted",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — Step 7 temporary executor reporting fix and clean rerun"
+      "Final Certification — Step 7 temporary-executor cleanup validation"
     ],
     "pending_acceptance_gates": [
-      "Corrected temporary Step 7 executor must rerun green without changing the permanent proof predicates",
-      "Temporary Step 7 executor must be removed and cleanup Static/Linux must pass before issue #18 acceptance",
+      "Step 7 cleanup checkpoint must pass Static and Linux with temporary executor absent and permanent gate retained",
+      "Close issue #18 only after cleanup acceptance",
       "Pass Final Certification phase-end regression on one immutable SHA"
     ],
     "known_gate_failures": [
       "Historical bounded transport 34172047786 on 21455c3344: Docker-mounted checkout triggered Git dubious-ownership protection while deriving SOURCE_DATE_EPOCH",
       "Historical bounded transport 34173496336 on 247e31398: bundle tooling Git tracked-file discovery remained non-canonical inside the mounted checkout",
-      "Step 7 run 34229431523 on 0040ed413: core reproducibility proof PASS and evidence upload PASS, but Publish proof summary failed from malformed shell here-document; classified as temporary-executor reporting defect"
+      "Historical Step 7 run 34229431523 on 0040ed413: core reproducibility proof PASS and evidence upload PASS, but Publish proof summary failed from malformed shell here-document; corrected without predicate changes"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
     "release_blockers": [
-      "issue #18 deterministic release reference PDF remains open pending clean executor rerun and cleanup",
+      "issue #18 remains open pending Step 7 cleanup Static/Linux",
       "Final Certification phase-end regression has not completed",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "active-step7-reporting-fix-clean-rerun",
+      "state": "removed-in-step7-cleanup-candidate",
       "path": ".github/workflows/final-cert-step7-repro.yml",
-      "purpose": "bounded proof of deterministic canonical release reference PDF using two independent clean builds",
-      "raw_proprietary_font_artifacts_allowed": false,
-      "generated_pdf_artifact_retention_days": 1,
-      "must_remove_before_checkpoint_acceptance": true,
-      "last_run": 34229431523,
-      "last_run_core_proof": "PASS",
-      "last_run_wrapper": "FAIL-reporting-only",
-      "last_artifact_id": 10057223731,
-      "previous_removed_path": ".github/workflows/final-cert-literal-fonts.yml",
-      "previous_cleanup_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817"
+      "present_in_current_cleanup_tree": false,
+      "last_clean_run": 34231038578,
+      "last_clean_source_sha": "9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522",
+      "last_artifact_id": 10057880627,
+      "must_remain_absent_for_acceptance": true
     }
   },
   "linux_integration": {
@@ -174,7 +169,7 @@
   },
   "issue_state": {
     "scientific_article": {"issue": 280, "state": "phase-closed"},
-    "release_reference_pdf_reproducibility": {"issue": 18, "state": "active-final-certification-step7-clean-executor-rerun"}
+    "release_reference_pdf_reproducibility": {"issue": 18, "state": "step7-proof-accepted-cleanup-validation-pending"}
   },
   "authority_decisions": {
     "scientific_article": {
@@ -227,20 +222,21 @@
     "literal_font_cleanup_linux_run": 34224225080,
     "step7_implementation_parent_sha": "775dfdd6f6fa18475344409ac0bdc491c4435754",
     "step7_permanent_gate": "make release-reference-reproducibility",
-    "step7_bounded_proof_state": "core-proof-pass-wrapper-reporting-failure-clean-rerun-required",
-    "step7_bounded_run": 34229431523,
-    "step7_bounded_source_sha": "0040ed413df7bd9126ff1dcb34c23582bfd68403",
-    "step7_source_date_epoch": 1788872450,
+    "step7_bounded_proof_state": "accepted-clean-run-cleanup-validation-pending",
+    "step7_clean_run": 34231038578,
+    "step7_clean_source_sha": "9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522",
+    "step7_source_date_epoch": 1788873426,
     "step7_epoch_source": "git-commit-time",
     "step7_independent_clean_builds": 2,
-    "step7_pdf_sha256": "cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f",
+    "step7_pdf_sha256": "1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf",
     "step7_pdf_bytes": 450652,
     "step7_font_embedding": "PASS",
     "step7_pdf_validator": "PASS",
     "step7_unicode": "PASS",
     "step7_pdfa_2b": "PASS",
-    "step7_artifact_id": 10057223731,
+    "step7_artifact_id": 10057880627,
     "step7_artifact_files": 6,
+    "step7_artifact_archive_sha256": "8f2fdceae9351eaa9181501ec1fd23f240ab66a26e5814d329240ea4b11b820a",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

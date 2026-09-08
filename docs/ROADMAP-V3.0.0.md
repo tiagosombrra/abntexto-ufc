@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-6 are accepted. Step 7 core deterministic proof passed; the temporary executor has a reporting-only defect and must rerun clean before cleanup.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-6 are accepted. Step 7 deterministic proof is accepted at the bounded-proof level; temporary-executor cleanup validation is now active.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -12,7 +12,7 @@ Updated: 2026-09-08
 | Core Corrections | CLOSED | `5f67560a...`; Static/Linux green |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 7 EXECUTOR CLEAN RERUN** | deterministic reference PDF accepted + temporary executor removed + immutable phase-end regression |
+| Final Certification | **ACTIVE — STEP 7 CLEANUP VALIDATION** | cleanup accepted + immutable phase-end regression |
 | Release | QUEUED | final release actions after certification |
 
 ## Final Certification roadmap
@@ -25,29 +25,22 @@ Updated: 2026-09-08
 | 4 | Literal Times New Roman/Arial, Unicode and embedding | ACCEPTED | proof `34219229025`; cleanup `35671aef...` green |
 | 5 | Scientific Article PDF/A-2b | ACCEPTED | bounded + cleanup accepted |
 | 6 | Distribution/public bundle integrity | ACCEPTED | bundles/checksums/archive integrity accepted |
-| 7 | Issue #18 deterministic reference PDF | **ACTIVE — PROOF PASS / WRAPPER RERUN** | run `34229431523` proof PASS; summary wrapper failed after proof; artifact `10057223731` uploaded |
-| 8 | Final Certification phase-end regression | QUEUED | one immutable candidate after Step 7 cleanup |
+| 7 | Issue #18 deterministic reference PDF | **PROOF ACCEPTED — CLEANUP ACTIVE** | clean proof run `34231038578`; executor removed in cleanup candidate |
+| 8 | Final Certification phase-end regression | QUEUED | one immutable candidate after Step 7 acceptance |
 
-## Step 7 measured proof
+## Step 7 accepted bounded proof
 
-Run `34229431523` on source `0040ed413df7bd9126ff1dcb34c23582bfd68403` produced two independent clean builds with deterministic epoch `1788872450` (`git-commit-time`) and identical PDF SHA-256 `cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f`. The resulting 450652-byte PDF passed font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b.
+Run `34231038578` on source `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` completed successfully. It used deterministic epoch `1788873426` (`git-commit-time`), performed two independent clean builds and produced identical PDF SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf`. The 450652-byte output passed font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b. Artifact `10057880627` contains six bounded evidence files.
 
-The workflow was marked failure only after that proof, when the optional summary step used a malformed shell here-document. The artifact upload still succeeded. The summary is therefore corrected as an executor-only defect and the bounded workflow must rerun green. No permanent gate or acceptance predicate is weakened.
+The temporary executor is no longer needed and is removed in the current cleanup candidate. The permanent gate remains in `make release-check`.
 
 ## Step 7 cleanup requirement
 
-After the clean rerun:
-
-1. record the clean workflow result and structured proof;
-2. remove `.github/workflows/final-cert-step7-repro.yml`;
-3. synchronize all operational docs/machine state;
-4. pass cleanup Static and Linux;
-5. accept Step 7 / close issue #18;
-6. create the immutable Step 8 candidate.
+The cleanup candidate must pass Static and Linux with `.github/workflows/final-cert-step7-repro.yml` absent and the permanent reproducibility gate retained. Only then may Step 7 be marked ACCEPTED and issue #18 closed.
 
 ## Frozen remaining scope
 
-**Step 7 clean rerun → Step 7 executor cleanup/issue #18 closure → Final Certification phase-end regression → Release.**
+**Step 7 cleanup validation / issue #18 closure → Final Certification phase-end regression → Release.**
 
 No new phase or certification step is created merely because a validator finds a defect. New findings are classified inside Steps 7-8.
 

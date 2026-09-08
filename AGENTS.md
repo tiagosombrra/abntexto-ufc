@@ -24,13 +24,12 @@ Memory, prior chats and historical branches never override current repository st
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
 | Steps 1-6 | ACCEPTED |
-| Step 7 core proof | **PASS** in run `34229431523` on `0040ed413df7bd9126ff1dcb34c23582bfd68403` |
-| Step 7 digest | `cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f` from 2 clean builds |
+| Step 7 clean proof | **PASS** — run `34231038578` on `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` |
+| Step 7 digest | `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf` from 2 clean builds |
 | Step 7 validation | embedding/portable PDF/Unicode/PDF-A all PASS |
-| Step 7 workflow result | reporting-only failure after proof; clean executor rerun required |
-| Permanent gate | `make release-reference-reproducibility` is part of `make release-check` |
-| Temporary executor | `.github/workflows/final-cert-step7-repro.yml` remains active only for the clean rerun; remove immediately after classification |
-| Current batch | **Step 7 — repair executor summary, rerun, then cleanup** |
+| Permanent gate | `make release-reference-reproducibility` remains part of `make release-check` |
+| Temporary executor | removed in current cleanup candidate; do not recreate unless a new bounded proof is explicitly required |
+| Current batch | **Step 7 — cleanup validation** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -44,15 +43,15 @@ Memory, prior chats and historical branches never override current repository st
 
 ## Closure-scope freeze
 
-Remaining certification scope is fixed to: Step 7 clean executor rerun and cleanup; issue #18 acceptance; one immutable Final Certification **phase-end regression**; then Release.
+Remaining certification scope is fixed to: Step 7 cleanup validation and issue #18 acceptance; one immutable Final Certification **phase-end regression**; then Release.
 
-Do not create a new roadmap workstream merely because a validator or executor exposes a defect. Classify it inside the existing acceptance predicate.
+Do not create a new roadmap workstream merely because a validator exposes a defect. Classify it inside the existing acceptance predicate.
 
 ## Step 7 deterministic-build boundary
 
 The permanent release-reference reproducibility gate pins deterministic provenance time, performs two independent clean builds from one immutable tracked source state, requires exact PDF SHA-256 equality, and validates the deterministic artifact for font embedding, portable PDF structure, Unicode extraction and PDF/A-2b. It does not post-normalize PDF bytes or reuse one output twice.
 
-Run `34229431523` proved these product predicates. The overall workflow failed only in a later reporting shell here-document while the proof and artifact upload were green. This is a temporary executor defect. Correct only the reporting surface, rerun it clean, then remove the workflow. Do not change the permanent gate predicates to address a reporting failure.
+Run `34231038578` cleanly proved these predicates. The temporary proof workflow has served its bounded purpose and is removed. Step 7 remains open only until the cleanup candidate passes Static/Linux.
 
 ## Engineering rules
 
@@ -61,7 +60,7 @@ Run `34229431523` proved these product predicates. The overall workflow failed o
 - Do not silently change normative IDs, values, tolerances, locators, applicability, source precedence, modality or proof state.
 - A green test proves only its encoded contract.
 - Do not weaken tests merely to recover green CI.
-- Temporary workflow lifecycle is atomic: create -> execute -> classify -> correct executor-only defects if needed -> rerun -> remove -> cleanup validation.
+- Temporary workflow lifecycle is atomic: create -> execute -> classify -> remove -> cleanup validation.
 - Do not redistribute proprietary Microsoft fonts.
 - Item 33 remains fail-closed and is not a hidden implementation task.
 - Do not perform CTAN/external publication before **Release**.

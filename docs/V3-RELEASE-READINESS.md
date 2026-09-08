@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-08
-Status: ACTIVE — FINAL CERTIFICATION STEP 7 CLEAN EXECUTOR RERUN
+Status: ACTIVE — FINAL CERTIFICATION STEP 7 CLEANUP VALIDATION
 
 ## Phase readiness
 
@@ -11,7 +11,7 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 7 CLEAN EXECUTOR RERUN
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux `34154045509`; article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 7 CLEAN EXECUTOR RERUN** | Steps 1-6 accepted; core deterministic proof PASS; executor cleanup and phase-end remain |
+| Final Certification | **ACTIVE — STEP 7 CLEANUP VALIDATION** | Steps 1-6 accepted; deterministic proof green; cleanup and phase-end remain |
 | Release | QUEUED | tag/GitHub Release/publication verification after certification |
 
 ## Current certification state
@@ -19,32 +19,27 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 7 CLEAN EXECUTOR RERUN
 | Surface | State |
 |---|---|
 | Active branch / PR | `cert/v3-final-certification` / #289 |
-| Entry synchronization | ACCEPTED |
-| Linux release baseline | ACCEPTED |
-| Profile/engine matrix | ACCEPTED |
-| Literal Times New Roman/Arial × pdfLaTeX/LuaLaTeX | ACCEPTED — proof `34219229025`; cleanup `35671aef...` green |
-| Scientific Article PDF/A-2b | ACCEPTED |
-| Distribution/public bundle integrity | ACCEPTED |
+| Steps 1-6 | ACCEPTED |
 | Step 7 permanent gate | IMPLEMENTED — `make release-reference-reproducibility` in `make release-check` |
-| Step 7 core proof | **PASS** — run `34229431523`, source `0040ed413...`, digest `cf00b4ba...c5ac7f` |
-| Step 7 wrapper | reporting-only failure after proof; clean rerun required |
-| Step 7 temporary executor | ACTIVE until clean rerun; then remove |
-| Issue #18 deterministic reference PDF | **ACTIVE — P0 release blocker** |
-| Final Certification phase-end regression | queued after Step 7 proof + cleanup |
+| Step 7 clean proof | **PASS** — run `34231038578` on `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` |
+| Deterministic digest | `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf` |
+| Proof predicates | 2 clean builds; embedding/validator/Unicode/PDF-A all PASS |
+| Proof artifact | `10057880627`, 6 files, one-day retention |
+| Temporary executor | removed in current cleanup candidate |
+| Issue #18 deterministic reference PDF | **ACTIVE — cleanup validation only** |
+| Final Certification phase-end regression | queued after Step 7 acceptance |
 
-## Step 7 measured acceptance evidence
+## Step 7 acceptance evidence
 
-The core proof in run `34229431523` established two independent clean builds, deterministic epoch `1788872450` from Git commit time and exact SHA-256 equality at `cf00b4ba784d0e0cd774b080d9cb88cc23b19c4ecc17ace6dc6aa7fc17c5ac7f`. The 450652-byte output passed font embedding, the portable UFC PDF validator, Unicode extraction and PDF/A-2b. Artifact `10057223731` preserved six evidence files for one day.
+The corrected bounded executor run `34231038578` is fully green. It established source SHA `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522`, deterministic epoch `1788873426` from Git commit time, two independent clean builds and exact SHA-256 equality at `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf`. The 450652-byte output passed font embedding, the portable UFC PDF validator, Unicode extraction and PDF/A-2b.
 
-The run conclusion was `failure` only because the later `Publish proof summary` shell here-document was malformed. The proof step and evidence upload were both successful. This is classified as an executor-reporting defect and does not change any product or proof predicate.
-
-Step 7 is accepted only after the corrected temporary workflow reruns green, the temporary executor is removed, and the cleanup checkpoint passes Static/Linux. This preserves the original fail-closed acceptance boundary.
+The temporary proof transport has completed its purpose and is removed in the current cleanup candidate. Step 7 is accepted only after this cleanup candidate passes Static and Linux. This retains the permanent release gate and the original fail-closed boundary.
 
 ## What still blocks v3.0.0
 
 | Blocker | Exit condition |
 |---|---|
-| Issue #18 | clean bounded executor result + temporary-executor cleanup PASS + permanent gate retained |
+| Issue #18 | cleanup candidate Static/Linux PASS with temporary executor absent and permanent gate retained |
 | Final Certification phase-end | one immutable candidate passes Static, complete Linux and full release/certification matrix |
 | Release | final documentation/checksums, `v3.0.0` tag/GitHub Release and publication verification |
 
