@@ -43,6 +43,9 @@ jobs:
             apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli unzip
             node --version
             docker --version
+            # The TeX Live action executes inside a container over the runner checkout.
+            # Trust only this mounted canonical checkout for Git provenance/tracked-file reads.
+            git config --global --add safe.directory "$PWD"
             make release-check
 
       - name: Publish validation summary
