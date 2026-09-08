@@ -23,12 +23,11 @@ Memory, prior chats and historical branches never override current repository st
 | Canonical `main` | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Steps 1-3 | ACCEPTED |
-| Steps 5-6 | ACCEPTED |
-| Step 4 bounded proof | PASS — run `34219229025`, source `fae338e16304ad45c353067a0b7982f73a8363c5` |
-| Step 4 temporary executor | REMOVED after successful proof; cleanup Static/Linux pending |
-| Step 7 | QUEUED — issue #18 deterministic reference PDF |
-| Current batch | **Step 4 — cleanup validation** |
+| Steps 1-6 | ACCEPTED |
+| Step 4 proof | `34219229025` PASS; cleanup `35671aef...`, Static `34224224990`, Linux `34224225080` PASS |
+| Step 7 | **ACTIVE — issue #18 deterministic reference PDF** |
+| Temporary executor | none active |
+| Current batch | **Step 7 — deterministic release reference-PDF proof** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -42,15 +41,15 @@ Memory, prior chats and historical branches never override current repository st
 
 ## Closure-scope freeze
 
-Remaining certification scope is fixed to: Step 4 cleanup validation; issue #18 deterministic reference-PDF proof; one immutable Final Certification **phase-end regression**; then Release.
+Remaining certification scope is fixed to: issue #18 deterministic reference-PDF proof; one immutable Final Certification **phase-end regression**; then Release.
 
 Do not create a new roadmap workstream merely because a validator exposes a defect. Classify it inside the existing acceptance predicate.
 
-## Step 4 accepted proof boundary
+## Step 7 deterministic-build boundary
 
-Run `34219229025` proved the four strict combinations Times New Roman/Arial × pdfLaTeX/LuaLaTeX. The Linux job certified literal identity, Unicode extraction, embedding and PDF/A-2b for all four PDFs. Only generated PDFs were transported, artifact `10053151610`, one-day retention; no raw proprietary font files were uploaded.
+The permanent release-reference reproducibility proof must pin deterministic provenance time, perform at least two clean builds from the same controlled source/input state, require byte-identical PDF SHA-256 output and preserve existing PDF validation/font/Unicode/embedding/PDF-A expectations. Hash equality never substitutes for normative or visual acceptance.
 
-The bounded workflow has been removed. Step 4 becomes ACCEPTED only after the cleanup checkpoint passes Static and Linux.
+Do not solve reproducibility by suppressing metadata validation, weakening the canonical build, reusing the same generated PDF twice, or comparing normalized/rewritten outputs after the fact. The two artifacts must come from independent clean build executions under the same explicit deterministic inputs.
 
 ## Engineering rules
 
