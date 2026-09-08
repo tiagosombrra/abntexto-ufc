@@ -1,5 +1,5 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -47,6 +47,7 @@
     "scoped_linux_integration_allowed_for_intermediate_work": true,
     "auto_scope_unknown_paths_fail_to_complete": true,
     "final_certification_candidate_marker_forces_complete_linux": true,
+    "release_candidate_transport_must_be_non_temporary": true,
     "article_shared_mechanism_is_proof": false,
     "article_executable_support_implies_proven": false,
     "article_recommendations_are_hard_requirements": false,
@@ -63,7 +64,7 @@
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "release-active-execution",
+    "candidate_state": "release-tooling-reconciliation",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -108,8 +109,8 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9",
     "latest_fully_validated_checkpoint_state": "final-certification-phase-end-accepted-static-complete-linux-release-matrix-green",
-    "latest_implementation_checkpoint_sha": "e34037f3241aab013b80645b338f38954e02bcda",
-    "latest_implementation_checkpoint_state": "release-entry-transition-merged-to-main",
+    "latest_implementation_checkpoint_sha": "3fad68d953b1264148431d7d1046666674b1a240",
+    "latest_implementation_checkpoint_state": "release-branch-synchronization-static-green-docs-only-linux-skip-accepted",
     "final_certification_state": "closed-accepted",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
@@ -118,19 +119,25 @@
     "final_certification_transition_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "final_certification_branch_base_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
     "final_certification_phase_end_candidate_sha": "22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9",
-    "release_state": "active-execution",
+    "release_state": "active-tooling-reconciliation",
     "release_branch": "release/v3.0.0",
+    "release_pr": 292,
     "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "release_sync_checkpoint_sha": "3fad68d953b1264148431d7d1046666674b1a240",
+    "release_sync_static_run": 34252314666,
+    "release_sync_static_conclusion": "success",
+    "release_sync_linux_run": 34252314932,
+    "release_sync_linux_conclusion": "success-docs-only-heavy-skip",
     "closure_scope_frozen": true,
-    "current_correction_batch": ["Release execution — synchronize branch facts, revalidate release tooling, build final candidate artifacts"],
+    "current_correction_batch": ["Release tooling reconciliation and final candidate transport"],
     "pending_acceptance_gates": [
-      "Release branch synchronization checkpoint must pass Static contract",
-      "Release checklist and tooling must be reconciled before candidate preparation",
+      "Release candidate transport must run complete Linux and Linux release check on the exact candidate SHA",
       "Final public/distribution artifacts and checksums must be verified from the Release candidate",
+      "Extracted CTAN example and current pkgcheck result must be recorded when executable",
       "Release must end with its own immutable phase-end regression"
     ],
     "release_blockers": [
-      "Release branch synchronization has not yet been accepted by CI",
+      "Release candidate transport is still Final-Certification-specific",
       "Final Release artifacts and Release phase-end regression have not completed",
       "Tag/GitHub Release/publication verification has not completed"
     ],
@@ -143,7 +150,7 @@
       "must_remain_absent_for_acceptance": true
     },
     "step8_release_matrix_transport": {
-      "state": "accepted-complete",
+      "state": "accepted-complete-final-certification-history",
       "permanent_workflow": ".github/workflows/linux-release-check.yml",
       "permanent_contract": "make release-check",
       "pr_trigger_marker": "release/final-certification-candidate.json",
@@ -157,6 +164,15 @@
       "accepted_static_run": 34239890649,
       "accepted_linux_run": 34239890614,
       "accepted_release_run": 34239890548
+    },
+    "release_candidate_transport": {
+      "state": "design-active",
+      "required_properties": [
+        "readable non-temporary release metadata surface",
+        "forces complete Linux integration",
+        "triggers permanent Linux release check on pull request",
+        "requires no candidate mutation after acceptance"
+      ]
     }
   },
   "linux_integration": {
@@ -166,10 +182,13 @@
     "documentation_only": "skip-heavy-integration",
     "article_gates_first_class": true,
     "unknown_technical_path_scope": "complete",
-    "final_certification_candidate_marker_scope": "complete"
+    "final_certification_candidate_marker_scope": "complete",
+    "release_candidate_scope_required": "complete"
   },
   "branch_plan": {
     "current_work_branch": "release/v3.0.0",
+    "release_pr": 292,
+    "release_pr_state": "open",
     "final_certification_pr": 289,
     "final_certification_pr_state": "merged",
     "final_certification_transition_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
@@ -263,6 +282,11 @@
     "final_certification_to_release_transition_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
     "final_certification_transition_pr": 289,
     "final_certification_transition_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "release_sync_checkpoint_sha": "3fad68d953b1264148431d7d1046666674b1a240",
+    "release_sync_static_run": 34252314666,
+    "release_sync_static_conclusion": "success",
+    "release_sync_linux_run": 34252314932,
+    "release_sync_linux_conclusion": "success-docs-only-heavy-skip",
     "librarian_review_contract_items": 34
   },
   "release_policy": {
