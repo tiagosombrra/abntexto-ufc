@@ -22,14 +22,11 @@ Memory, prior chats and historical branches never override current repository st
 | Active phase | **Final Certification** |
 | Canonical `main` | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
 | Active branch / PR | `cert/v3-final-certification` / #289 |
-| Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Steps 1-6 | ACCEPTED |
-| Step 7 deterministic proof | ACCEPTED — run `34231038578` |
-| Step 7 cleanup | ACCEPTED — `34e6bf8299e582803d1726e8dd699271c356fda5`; Static `34232017286`; complete Linux `34232017359`, `PASS=36 FAIL=0 SKIP=0` |
-| Issue #18 | CLOSED — deterministic release reference PDF accepted |
-| Permanent gate | `make release-reference-reproducibility` remains inside `make release-check` |
-| Temporary executor | absent; must remain absent |
-| Current batch | **Step 8 — Final Certification phase-end regression preparation** |
+| Steps 1-7 | ACCEPTED |
+| Step 7 cleanup | `34e6bf8299e582803d1726e8dd699271c356fda5`; Static `34232017286`; complete Linux `34232017359` |
+| Issue #18 | CLOSED — completed |
+| Current batch | **Step 8 — release-matrix PR transport preparation** |
+| Candidate transport | permanent `Linux release check` PR route restricted to `release/final-certification-candidate.json` |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -43,15 +40,17 @@ Memory, prior chats and historical branches never override current repository st
 
 ## Closure-scope freeze
 
-Remaining certification scope is fixed to one immutable Final Certification **phase-end regression**, followed by Release. Do not create a new roadmap workstream merely because a validator exposes a defect; classify it inside the existing acceptance predicate.
+Remaining scope is fixed to Step 8 Final Certification **phase-end regression**, then Release. Do not create a new roadmap workstream merely because a validator exposes a defect; classify it inside the existing acceptance predicate.
 
-## Step 7 accepted boundary
+## Step 8 transport rule
 
-The permanent release-reference reproducibility gate pins deterministic provenance time, performs two independent clean builds from one immutable tracked source state, requires exact PDF SHA-256 equality, and validates the deterministic artifact for font embedding, portable PDF structure, Unicode extraction and PDF/A-2b. Run `34231038578` proved the product predicate. Cleanup checkpoint `34e6bf8...` removed the temporary executor and passed Static plus complete Linux, so Step 7 and issue #18 are closed.
+The permanent `.github/workflows/linux-release-check.yml` may run on a PR only when the one-shot `release/final-certification-candidate.json` marker is present in the PR diff. That route must execute the same repository-owned `make release-check` contract used for release validation. It is orchestration, not a second validator. Normal `main` push and `workflow_dispatch` routes remain intact. The marker is removed only after the immutable candidate is accepted and Final Certification transitions to Release.
+
+The orchestration preparation checkpoint must pass Static and complete Linux before candidate creation.
 
 ## Engineering rules
 
-- Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal Portuguese output under test, or explicit upstream/current-runtime boundaries.
+- Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal output under test, or explicit upstream/current-runtime boundaries.
 - Preserve accepted v3 public API and shared/article semantics unless a concrete regression or current authority requires change.
 - Do not silently change normative IDs, values, tolerances, locators, applicability, source precedence, modality or proof state.
 - A green test proves only its encoded contract.

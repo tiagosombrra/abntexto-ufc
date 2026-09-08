@@ -10,36 +10,29 @@ Updated: 2026-09-08
 | Canonical `main` | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Active phase | **Final Certification** |
+| Steps 1-7 | ACCEPTED |
+| Step 7 cleanup | `34e6bf8299e582803d1726e8dd699271c356fda5`; Static `34232017286`; complete Linux `34232017359`, `PASS=36 FAIL=0 SKIP=0` |
+| Issue #18 | CLOSED — completed |
+| Current batch | **Step 8 — release-matrix PR transport preparation** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Steps 1-6 | ACCEPTED |
-| Step 7 clean bounded proof | **PASS** — run `34231038578` on `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` |
-| Deterministic proof | epoch `1788873426`; 2 clean builds; SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf` |
-| Step 7 cleanup checkpoint | `34e6bf8299e582803d1726e8dd699271c356fda5` |
-| Cleanup Static | `34232017286` — SUCCESS |
-| Cleanup Linux | `34232017359` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Temporary executor | absent |
-| Issue #18 | **CLOSED — completed** |
-| Current batch | **Step 8 — Final Certification phase-end regression preparation** |
-| Final phase gate | one immutable candidate, complete matrix |
-| Item 33 | remains fail-closed; not a release implementation task |
 
-Canonical control documents are `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
+Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Step 7 acceptance
+## Step 8 preparation
 
-Run `34231038578` proved deterministic release-reference-PDF generation from source `9ba5905...`: deterministic epoch `1788873426`, two independent clean builds, identical PDF SHA-256 `1c92535f...`, and PASS for font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b. Cleanup checkpoint `34e6bf8...` then removed `.github/workflows/final-cert-step7-repro.yml` and passed Static `34232017286` plus complete Linux `34232017359`. The permanent gate remains `make release-reference-reproducibility` inside `make release-check`.
+The permanent `Linux release check` workflow is being given a narrowly scoped `pull_request` trigger only for `release/final-certification-candidate.json`. It still executes the existing permanent `make release-check` contract. This enables the final immutable PR candidate to receive the required release/certification matrix without merging first or creating another temporary executor.
 
-Issue #18 now has this evidence recorded and is closed as completed.
+This orchestration checkpoint must pass Static and complete Linux. Only then is the candidate marker added in the immutable Step 8 candidate commit.
 
 ## Immediate action
 
-| Order | Action | Acceptance boundary |
+| Order | Action | Gate |
 |---:|---|---|
-| 1 | Synchronize Step 7 acceptance and issue #18 closure | current documentation cycle |
-| 2 | Prepare one immutable Step 8 candidate | do not amend after CI starts |
-| 3 | Run Static + complete Linux + full release/certification matrix | all green on same accepted candidate |
-| 4 | Record candidate SHA/run IDs and close Final Certification | only after complete matrix |
-| 5 | Activate Release | no earlier publication action |
+| 1 | Validate Step 8 orchestration checkpoint | Static + complete Linux |
+| 2 | Create immutable candidate with candidate marker | no amendment after CI begins |
+| 3 | Run Static + complete Linux + Linux release check | same candidate |
+| 4 | Record candidate evidence and close Final Certification | complete matrix green |
+| 5 | Remove candidate marker and activate Release | phase-transition cycle |
 
 ## Mandatory operating discipline
 

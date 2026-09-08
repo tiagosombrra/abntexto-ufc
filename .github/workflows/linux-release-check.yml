@@ -11,13 +11,23 @@ on:
       - .gitignore
       - 'docs/**'
       - release/v3-roadmap.json
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - release/final-certification-candidate.json
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: linux-release-check-${{ github.ref }}
+  group: linux-release-check-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
