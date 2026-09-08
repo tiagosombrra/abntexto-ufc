@@ -4,7 +4,7 @@ Updated: 2026-09-07
 
 ## Current status
 
-**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-3 are accepted. Step 5 passed its explicit gate in the first bounded transport, while Step 6 exposed a runner-ownership integration defect before bundle validation could complete. The correction is bounded to Step 6 and is being rerun through the same temporary release transport. Remaining scope stays frozen.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-3 are accepted. Step 5 has passed its explicit PDF/A/embedding gate in both bounded transports. Step 6 remains active: the first run exposed Git ownership during epoch derivation; the second progressed further and exposed container-local Git trust during tracked-file discovery. The correction remains bounded to Step 6 and the remaining scope stays frozen.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -12,7 +12,7 @@ Updated: 2026-09-07
 | Core Corrections | CLOSED | `5f67560a...`; Static/Linux green |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Final Certification | **ACTIVE — BOUNDED MATRIX VALIDATION** | Steps 4-7 accepted + immutable phase-end regression |
+| Final Certification | **ACTIVE — STEP 6 RUNNER CORRECTION** | Steps 4-7 accepted + immutable phase-end regression |
 | Release | QUEUED | final release actions after certification |
 
 ## Final Certification roadmap
@@ -22,27 +22,22 @@ Updated: 2026-09-07
 | 1 | Entry synchronization | ACCEPTED |
 | 2 | Linux release baseline | ACCEPTED — release `34168471371`; cleanup `0609f929...` Static/Linux green |
 | 3 | Profile and engine certification | ACCEPTED |
-| 4 | Literal Times New Roman/Arial, Unicode and embedding | ACTIVE / queued immediately after current bounded cleanup |
-| 5 | Scientific Article PDF/A-2b | **GATE PASS OBSERVED — bounded acceptance waits for corrected full transport + temporary executor cleanup** |
-| 6 | Distribution/public bundle integrity | **CORRECTION ACTIVE — Git safe-directory runner integration** |
+| 4 | Literal Times New Roman/Arial, Unicode and embedding | ACTIVE / next after bounded cleanup |
+| 5 | Scientific Article PDF/A-2b | **GATE PASS OBSERVED — bounded acceptance waits for Step 6 green + temporary executor cleanup** |
+| 6 | Distribution/public bundle integrity | **CORRECTION ACTIVE — canonical-checkout trust inside TeX Live container** |
 | 7 | Issue #18 deterministic reference PDF | QUEUED |
 | 8 | Final Certification phase-end regression | QUEUED |
 
-## First bounded transport classification
+## Bounded transport classification
 
-Checkpoint `21455c3344bfe0413dbe44f29b9cfae5bee58521` produced:
+| Checkpoint / run | Result before Step 6 | Step 6 result | Classification |
+|---|---|---|---|
+| `21455c3344...` / `34172047786` | release `PASS=38/38`; article PDF/A PASS | Git dubious ownership while deriving deterministic epoch | runner ownership / provenance read |
+| `247e31398...` / `34173496336` | release `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; article PDF/A + embedding PASS | `Distribution bundle generation requires a canonical Git checkout.` | `git ls-files` tracked-file discovery still lacks container-local trust |
 
-| Gate | Result |
-|---|---|
-| Static `34172047639` | PASS |
-| Linux `34172047586` | PASS |
-| Temporary release transport `34172047786` | FAIL |
-| Existing release suite inside transport | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Step 5 Scientific Article PDF/A/embedding | PASS |
-| Step 6 distribution bundles | stopped before construction because Git rejected the Docker-mounted checkout as a dubious-ownership directory while deriving the deterministic epoch |
-| Uploaded diagnostic artifact | ID `10036350950`, SHA-256 `5dd4d212bafa16702947065ef0848c9387e63e16d7d7523fee14d1d529a96432` |
+`247e31398...` also passed Static `34173496318` and Linux `34173496285`. Its failed bounded transport artifact is `10036808737`, SHA-256 `c56e1c651ce990ddd5a301c5cf60691b1081a06b7eebe66b27503e256e28e273`.
 
-This failure belongs to Step 6. It does not create a new roadmap item and does not authorize a runtime/normative change. The corrected gate uses an explicit safe-directory setting for the provenance Git query and the temporary workflow uses full history to resolve the exact `SOURCE_COMMIT_SHA`.
+The current correction configures `safe.directory` inside the TeX Live container before the permanent `make release-check`, both in temporary bounded transport and the permanent Linux release workflow. It does not change LaTeX runtime, public API, normative rules or distribution integrity predicates.
 
 `make release-check` remains the permanent Step 5/6 contract. `.github/workflows/final-cert-bounded-matrix.yml` remains temporary transport only and must be removed after a successful corrected run before Steps 5-6 can be accepted.
 
