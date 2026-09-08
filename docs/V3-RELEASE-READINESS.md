@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-08
-Status: ACTIVE — FINAL CERTIFICATION STEP 8 TRANSPORT PREPARATION
+Status: ACTIVE — FINAL CERTIFICATION STEP 8 IMMUTABLE CANDIDATE
 
 ## Phase readiness
 
@@ -11,8 +11,8 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 8 TRANSPORT PREPARATION
 | Core Corrections | CLOSED | accepted |
 | Reference PDF Validation | CLOSED | 55/55 visual PASS |
 | Scientific Article | CLOSED | complete Linux + article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 8 PREPARATION** | Steps 1-7 accepted; final candidate matrix remains |
-| Release | QUEUED | tag/GitHub Release/publication after certification |
+| Final Certification | **ACTIVE — STEP 8 CANDIDATE** | Steps 1-7 accepted; Step 8 transport preparation accepted; immutable final matrix running |
+| Release | QUEUED | tag/GitHub Release/publication only after certification |
 
 ## Current certification state
 
@@ -24,16 +24,17 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 8 TRANSPORT PREPARATION
 | Issue #18 | CLOSED — completed |
 | Temporary Step 7 executor | absent |
 | Permanent deterministic gate | retained in `make release-check` |
-| Step 8 PR transport | preparation — candidate-marker scoped `Linux release check` trigger |
-| Final Certification phase-end regression | pending immutable candidate |
+| Step 8 PR transport preparation | ACCEPTED — `4d94e9c...`; Static `34235990523`; complete Linux `34235990383`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Candidate marker | `release/final-certification-candidate.json` present |
+| Final Certification phase-end regression | RUNNING — Static + complete Linux + Linux release check required on same synchronized candidate |
 
 ## Remaining blockers
 
 | Blocker | Exit condition |
 |---|---|
-| Step 8 orchestration preparation | Static + complete Linux on transport change |
-| Final Certification phase-end | immutable candidate passes Static + complete Linux + full release/certification matrix |
-| Release | final documentation/checksums, `v3.0.0` tag/GitHub Release and publication verification |
+| Final Certification phase-end | synchronized immutable candidate passes Static + complete Linux + full release/certification matrix |
+| Release activation | accepted candidate evidence recorded; marker removed in synchronized transition commit |
+| Release execution | final documentation/checksums, `v3.0.0` tag/GitHub Release and publication verification |
 
 Librarian item 33 remains an explicit authority gap, not a release implementation task.
 

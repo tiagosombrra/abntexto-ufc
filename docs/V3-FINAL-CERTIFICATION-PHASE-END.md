@@ -1,7 +1,7 @@
 # V3 Final Certification — Phase-end Regression
 
 Updated: 2026-09-08
-Status: PREPARATION — RELEASE-MATRIX PR TRANSPORT
+Status: CANDIDATE — RUNNING
 
 ## Purpose
 
@@ -18,22 +18,23 @@ This document binds Final Certification Step 8 to one immutable candidate. Every
 | Temporary executor | absent |
 | Permanent reproducibility gate | `make release-reference-reproducibility` inside `make release-check` |
 | Issue #18 | CLOSED — completed |
+| Step 8 transport preparation | `4d94e9cd7a565eac2e226360bd2b4a92fee52586`; Static `34235990523` SUCCESS; complete Linux `34235990383` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 
-## Step 8 release-matrix transport
+## Candidate transport
 
-The permanent `.github/workflows/linux-release-check.yml` supports two production paths and one tightly scoped certification path:
+The permanent `.github/workflows/linux-release-check.yml` supports normal `push` to `main`, `workflow_dispatch`, and a tightly scoped `pull_request` route only when `release/final-certification-candidate.json` is present in the PR diff. The marker is a one-shot transport trigger, not a second validator. The workflow executes the existing permanent repository contract `make release-check`.
 
-- `push` to `main`, unchanged for normal release validation;
-- `workflow_dispatch`, unchanged for manual execution;
-- `pull_request` only when `release/final-certification-candidate.json` is present in the PR diff.
+The preparation transport is accepted. The marker is now present on the synchronized candidate and is removed only after candidate acceptance during the Final Certification -> Release transition.
 
-The candidate marker is a one-shot Final Certification transport trigger, not a second validator and not a replacement for `make release-check`. The workflow executes the same permanent repository release contract. The marker is removed in the phase-transition cleanup after the immutable candidate is accepted.
+## Candidate history
 
-This orchestration change must pass Static and complete Linux before the immutable candidate is created.
+Marker-only/intermediate commits created before the synchronized control plane are **REJECTED AS CANDIDATES**. They did not satisfy the same-cycle documentation rule and therefore cannot close the phase, regardless of workflow outcome.
+
+The synchronized candidate is the first commit containing both the marker and this candidate-running control state. Its exact SHA is obtained only after commit creation and then recorded externally in PR/evidence metadata. The machine sentinel remains `phase_end_regression.candidate = one-immutable-sha`.
 
 ## Immutable candidate gate
 
-The candidate commit will add `release/final-certification-candidate.json` and synchronously mark Step 8 as running. It is not amended after CI begins. That exact candidate must pass:
+The synchronized candidate is not amended after CI begins. That exact candidate must pass:
 
 1. Static contract;
 2. complete Linux integration;
@@ -43,8 +44,8 @@ The candidate commit will add `release/final-certification-candidate.json` and s
 6. no temporary certification executor is present;
 7. librarian item 33 remains explicitly fail-closed.
 
-The machine sentinel remains `phase_end_regression.candidate = one-immutable-sha`; the exact Git candidate SHA is recorded only after the immutable commit exists.
+Any failure is classified before code or test changes. A rejected candidate is never amended; a corrected state creates a new candidate commit.
 
 ## Exit rule
 
-After the candidate passes the complete matrix, record its SHA/run IDs, mark Final Certification `CLOSED`, activate `Release`, remove the one-shot candidate marker, and execute the phase-transition documentation cycle. Any failure is classified before code or test changes.
+After the synchronized candidate passes the complete matrix, record its SHA and run IDs/conclusions, mark Final Certification `CLOSED`, activate `Release`, remove the one-shot candidate marker, and execute the phase-transition documentation cycle.

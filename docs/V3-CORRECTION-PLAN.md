@@ -1,7 +1,7 @@
 # abntexto-ufc v3 — Correction Plan
 
-Updated: 2026-09-07  
-Status: SHARED CORRECTIONS AND SCIENTIFIC ARTICLE CLOSED — FINAL CERTIFICATION ACTIVE
+Updated: 2026-09-08  
+Status: SHARED CORRECTIONS AND SCIENTIFIC ARTICLE CLOSED — FINAL CERTIFICATION STEP 8 CANDIDATE ACTIVE
 
 ## Purpose
 
@@ -19,25 +19,36 @@ Librarian review remains **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW**. 
 
 ## Scientific Article closeout
 
-Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5ac1f527eaf`: Static `34154045481`, complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`, and canonical article PDF 5/5 visual PASS. PR #286 is merged into main as `22e3c19235fa5245505b92d919a09d31eb2bfecb`.
+Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5ac1f527eaf`: Static `34154045481`, complete Linux `34154045509`, `PASS=36 FAIL=0 SKIP=0`, and canonical article PDF 5/5 visual PASS. PR #286 merged into main as `22e3c19235fa5245505b92d919a09d31eb2bfecb`.
 
-## Active work — Final Certification
+## Final Certification accepted work
 
-Entry synchronization, Linux release baseline and the profile/engine matrix are accepted. The first bounded Step 5/6 transport on `21455c3344bfe0413dbe44f29b9cfae5bee58521` produced Static `34172047639` PASS and Linux `34172047586` PASS. Release transport `34172047786` ran the existing permanent matrix to `SCOPE=complete PASS=38 FAIL=0 SKIP=0` and then passed the explicit Scientific Article PDF/A/embedding gate.
+| Step | State | Evidence |
+|---:|---|---|
+| 1-3 | ACCEPTED | entry, Linux release baseline and profile/engine matrix accepted |
+| 4 | ACCEPTED | literal Times New Roman/Arial, Unicode, embedding and PDF/A proof `34219229025`; cleanup accepted |
+| 5 | ACCEPTED | Scientific Article PDF/A-2b evidence accepted |
+| 6 | ACCEPTED | distribution/public bundle integrity and deterministic transport accepted |
+| 7 | ACCEPTED | deterministic reference PDF proof `34231038578`; two clean builds hash `1c92535f...`; cleanup `34e6bf8...`; issue #18 closed |
+| 8 preparation | ACCEPTED | `4d94e9c...`; Static `34235990523`; complete Linux `34235990383`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| 8 candidate | **RUNNING** | synchronized immutable candidate must pass Static + complete Linux + Linux release check |
 
-The run failed only when Step 6 attempted to derive the deterministic bundle epoch with Git inside the TeX Live Docker container. Git rejected the mounted checkout because of ownership mismatch (`dubious ownership`). The failure is therefore classified inside Step 6 runner integration; no accepted runtime, normative or evidence predicate is reopened.
+Earlier Step 5/6 runner-transport failures are historical and resolved; they are not current correction work and do not reopen accepted runtime or normative predicates.
 
-Current correction:
+## Current batch — Final Certification Step 8 immutable candidate
 
-1. keep the distribution bundle checks unchanged;
-2. perform the provenance timestamp read with `git -c safe.directory="$PWD"`;
-3. use full Git history in the temporary transport so the exact `SOURCE_COMMIT_SHA` can be resolved;
-4. rerun the same permanent `make release-check` contract;
-5. after PASS, remove the temporary workflow and require cleanup Static/Linux before Steps 5-6 acceptance.
+The accepted permanent PR transport uses the one-shot `release/final-certification-candidate.json` marker to run the existing `make release-check` contract before merge. The synchronized candidate contains the marker and candidate-running control state and is not amended after CI begins.
 
-Remaining sequence after that cleanup: current-candidate literal-font/Unicode/embedding Step 4; issue #18 deterministic reference PDF; Final Certification immutable phase-end regression; Release.
+Marker-only/intermediate commits that did not synchronize documentation are rejected as candidates. The exact synchronized candidate SHA is recorded after creation in PR/evidence metadata while the machine invariant remains `phase_end_regression.candidate = one-immutable-sha`.
 
-Certification and reproducibility work do not authorize speculative normative changes.
+Required acceptance:
+
+1. Static contract success;
+2. complete Linux integration success;
+3. Linux release check success using permanent `make release-check`;
+4. deterministic reference PDF, literal-font, Unicode, embedding, PDF/A and bundle predicates remain accepted;
+5. no temporary executor;
+6. item 33 remains fail-closed.
 
 ## Remaining authority boundary
 
@@ -45,4 +56,4 @@ Review item 33 remains fail-closed pending authoritative current NBR 6023:2025 t
 
 ## Phase transition gate
 
-Final Certification -> Release requires the complete certification matrix, issue #18 acceptance, synchronized documentation and one immutable Final Certification candidate passing Static, complete Linux, release/certification evidence and all applicable phase-specific checks.
+Final Certification -> Release requires the complete certification matrix and one immutable Final Certification candidate passing the phase-end regression. Only after that evidence is recorded may the marker be removed and Release become active in a synchronized phase-transition commit.

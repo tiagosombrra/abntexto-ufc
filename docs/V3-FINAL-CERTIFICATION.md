@@ -1,7 +1,7 @@
 # V3 Final Certification
 
 Updated: 2026-09-08
-Status: ACTIVE — STEP 8 RELEASE-MATRIX TRANSPORT PREPARATION
+Status: ACTIVE — STEP 8 IMMUTABLE CANDIDATE RUNNING
 
 ## Purpose
 
@@ -18,18 +18,25 @@ Final Certification proves the accepted V3 product without reopening closed shar
 | 5 | Scientific Article PDF/A-2b | ACCEPTED | bounded + cleanup accepted |
 | 6 | Distribution/public bundle integrity | ACCEPTED | bundle integrity accepted |
 | 7 | Deterministic release reference PDF / issue #18 | ACCEPTED | `34231038578`; cleanup `34e6bf8...`; issue closed |
-| 8 | Final Certification phase-end regression | **PREPARATION** | validate PR transport, then create immutable candidate |
+| 8 preparation | Release-matrix PR transport | ACCEPTED | `4d94e9c...`; Static `34235990523`; complete Linux `34235990383`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| 8 candidate | Final Certification phase-end regression | **RUNNING** | marker present; await Static + complete Linux + Linux release check on same immutable candidate |
 
 ## Step 7 accepted evidence
 
 Cleanup checkpoint `34e6bf8299e582803d1726e8dd699271c356fda5` passed Static `34232017286` and complete Linux `34232017359`, `PASS=36 FAIL=0 SKIP=0`, with the temporary executor absent and permanent `make release-reference-reproducibility` retained. Issue #18 is closed.
 
-## Step 8 orchestration
+## Step 8 preparation accepted
 
-The permanent `linux-release-check.yml` is being extended with a narrowly scoped PR trigger on `release/final-certification-candidate.json`. This does not introduce a new validator: it transports the existing permanent `make release-check` contract onto the immutable PR candidate. Normal `main` push and manual-dispatch behavior remain intact.
+Preparation checkpoint `4d94e9cd7a565eac2e226360bd2b4a92fee52586` added only the permanent PR transport. Static `34235990523` passed and complete Linux `34235990383` passed with `SCOPE=complete PASS=36 FAIL=0 SKIP=0`. No validation predicate was weakened or duplicated.
 
-The orchestration preparation checkpoint must pass Static and complete Linux before candidate creation. The candidate marker is then added in one immutable candidate commit, causing Static, complete Linux and Linux release check to execute against that candidate. After acceptance, the marker is removed during phase transition.
+## Step 8 immutable candidate
+
+The one-shot `release/final-certification-candidate.json` marker is present. The synchronized candidate commit contains the marker and candidate-running documentation/machine state. Earlier marker-only/intermediate commits are rejected as candidates because they did not satisfy the same-cycle documentation discipline.
+
+The candidate is not amended after CI begins. The exact synchronized candidate SHA is recorded after creation in PR/evidence metadata; `phase_end_regression.candidate = one-immutable-sha` remains the machine invariant.
+
+The exact candidate must pass Static, complete Linux and the permanent Linux release check executing `make release-check`. Any failure is classified first; a correction creates a new candidate rather than amending this one.
 
 ## Phase-end rule
 
-`docs/V3-FINAL-CERTIFICATION-PHASE-END.md` is authoritative for Step 8. Do not amend the immutable candidate after CI begins, weaken tests, redistribute proprietary fonts, or convert librarian item 33 into speculative runtime behavior.
+`docs/V3-FINAL-CERTIFICATION-PHASE-END.md` is authoritative for Step 8. Do not weaken tests, redistribute proprietary fonts, or convert librarian item 33 into speculative runtime behavior.

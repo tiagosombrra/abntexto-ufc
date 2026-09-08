@@ -11,28 +11,42 @@ Updated: 2026-09-08
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Active phase | **Final Certification** |
 | Steps 1-7 | ACCEPTED |
-| Step 7 cleanup | `34e6bf8299e582803d1726e8dd699271c356fda5`; Static `34232017286`; complete Linux `34232017359`, `PASS=36 FAIL=0 SKIP=0` |
+| Step 8 transport preparation | `4d94e9cd7a565eac2e226360bd2b4a92fee52586`; Static `34235990523` SUCCESS; complete Linux `34235990383` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Current batch | **Step 8 — immutable Final Certification phase-end candidate** |
+| Candidate marker | `release/final-certification-candidate.json` present |
 | Issue #18 | CLOSED — completed |
-| Current batch | **Step 8 — release-matrix PR transport preparation** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
-Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
+Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/V3-RELEASE-READINESS.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Step 8 preparation
+## Step 8 preparation acceptance
 
-The permanent `Linux release check` workflow is being given a narrowly scoped `pull_request` trigger only for `release/final-certification-candidate.json`. It still executes the existing permanent `make release-check` contract. This enables the final immutable PR candidate to receive the required release/certification matrix without merging first or creating another temporary executor.
+The permanent `Linux release check` PR transport is accepted. The preparation checkpoint changed only orchestration and retained the existing permanent `make release-check` contract. Static `34235990523` and complete Linux `34235990383` are green; Linux reported `SCOPE=complete PASS=36 FAIL=0 SKIP=0`.
 
-This orchestration checkpoint must pass Static and complete Linux. Only then is the candidate marker added in the immutable Step 8 candidate commit.
+## Immutable candidate state
+
+The synchronized candidate contains the one-shot marker `release/final-certification-candidate.json` and this candidate-running control state. Intermediate marker-only/control-plane-incomplete commits are rejected as candidates and do not authorize closure.
+
+The exact synchronized candidate SHA is obtained from Git after this immutable commit exists and is recorded in the PR/evidence after CI begins. The machine sentinel intentionally remains `phase_end_regression.candidate = one-immutable-sha`.
+
+Required gates on that same candidate:
+
+1. Static contract;
+2. complete Linux integration;
+3. permanent Linux release check executing `make release-check`;
+4. accepted literal-font/Unicode/embedding/PDF-A/distribution and deterministic-reference-PDF predicates remain green;
+5. no temporary certification executor;
+6. item 33 remains explicit/fail-closed.
 
 ## Immediate action
 
 | Order | Action | Gate |
 |---:|---|---|
-| 1 | Validate Step 8 orchestration checkpoint | Static + complete Linux |
-| 2 | Create immutable candidate with candidate marker | no amendment after CI begins |
-| 3 | Run Static + complete Linux + Linux release check | same candidate |
-| 4 | Record candidate evidence and close Final Certification | complete matrix green |
-| 5 | Remove candidate marker and activate Release | phase-transition cycle |
+| 1 | Record the synchronized candidate SHA and workflow IDs in PR metadata after creation | no branch amendment |
+| 2 | Wait for Static + complete Linux + Linux release check | all on same candidate |
+| 3 | Classify any failure before changing code/tests | failed candidate is rejected |
+| 4 | If all pass, record candidate evidence and close Final Certification | complete matrix green |
+| 5 | Remove candidate marker and activate Release in a later phase-transition commit | synchronized documentation cycle |
 
 ## Mandatory operating discipline
 
