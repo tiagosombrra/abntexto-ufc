@@ -22,14 +22,17 @@ Every **material advance** in Release updates this record, the canonical handoff
 | Transition Linux | `34249182417` — SUCCESS; `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | PR #289 merge / Release base | `e34037f3241aab013b80645b338f38954e02bcda` |
 | Active Release branch | `release/v3.0.0` |
+| Release synchronization checkpoint | `3fad68d953b1264148431d7d1046666674b1a240` |
+| Synchronization Static | `34252314666` — SUCCESS |
+| Synchronization Linux | `34252314932` — SUCCESS; documentation-only heavy integration skipped as intended |
 | Librarian review | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` |
 
 ## Release execution queue
 
 | Order | Work | Acceptance gate | State |
 |---:|---|---|---|
-| 1 | Synchronize Release branch facts and current documentation | Static contract green on synchronized checkpoint | ACTIVE |
-| 2 | Revalidate repository release checklist and current tooling | no stale/invented release procedure | QUEUED |
+| 1 | Synchronize Release branch facts and current documentation | Static contract green on synchronized checkpoint | **PASS** |
+| 2 | Revalidate repository release checklist and current tooling | no stale/invented release procedure; current CTAN `pkgcheck` identified | **ACTIVE** |
 | 3 | Build public/distribution release artifacts and SHA-256 metadata | archive/integrity/reproducibility checks PASS | QUEUED |
 | 4 | Validate extracted CTAN candidate and shipped example | external `abntexto` semantics and package checks PASS | QUEUED |
 | 5 | Run current CTAN `pkgcheck` when executable in the release environment | no unresolved error/warning that blocks submission | QUEUED |
@@ -38,6 +41,13 @@ Every **material advance** in Release updates this record, the canonical handoff
 | 8 | Create/verify `v3.0.0` tag and GitHub Release only after candidate acceptance | published assets match accepted checksums | QUEUED |
 | 9 | Perform any external CTAN submission only as an explicit final release action | submission/acceptance receipt preserved | QUEUED |
 | 10 | Record final verification and close Release | no unresolved release blocker | QUEUED |
+
+## Current release-tooling review
+
+- `make release-check` already runs the complete release validation matrix, Scientific Article PDF/A, distribution bundle verification and deterministic reference-PDF reproducibility.
+- `tests/integration/distribution-bundles.sh` verifies four archives, SHA-256 metadata, safe paths, archive integrity and exclusion of proprietary/institutional assets.
+- The current CTAN package page reports `pkgcheck` **4.0.3 (2026-05-28)**; the final candidate must record the actual version used rather than rely on the historical 4.1.0 note that existed in older project documentation.
+- The current permanent `Linux release check` PR trigger is still Final-Certification-specific. Release needs a non-temporary Release-candidate transport that runs the final release matrix on the exact candidate SHA without weakening normal scoped integration.
 
 ## Hard boundaries
 
