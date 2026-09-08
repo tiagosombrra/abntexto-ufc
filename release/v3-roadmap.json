@@ -1,5 +1,5 @@
 {
-  "schema_version": 18,
+  "schema_version": 19,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -25,6 +25,7 @@
     "article_coverage_contract": "standards/coverage-rules-article.json",
     "article_evidence_map": "standards/article-evidence-map.json",
     "final_certification_plan": "docs/V3-FINAL-CERTIFICATION.md",
+    "final_certification_phase_end": "docs/V3-FINAL-CERTIFICATION-PHASE-END.md",
     "linux_integration_scopes": "docs/LINUX-INTEGRATION-SCOPES.md",
     "release_readiness": "docs/V3-RELEASE-READINESS.md",
     "fail_closed_on_disagreement": true,
@@ -57,7 +58,7 @@
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "not-started-for-final-certification",
+    "candidate_state": "candidate-preparation",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -96,11 +97,11 @@
     "scientific_article_phase_end_linux_scope": "complete",
     "scientific_article_phase_end_linux_summary": "PASS=36 FAIL=0 SKIP=0",
     "scientific_article_pdf_visual_review": "pass-5-of-5",
-    "latest_fully_validated_checkpoint_sha": "35671aefd932375cad14c9121a833d7daf267817",
-    "latest_fully_validated_checkpoint_state": "final-certification-step4-cleanup-static-linux-green",
-    "latest_implementation_checkpoint_sha": "9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522",
-    "latest_implementation_checkpoint_state": "step7-clean-proof-accepted-cleanup-validation-pending",
-    "final_certification_state": "active-step7-cleanup-validation",
+    "latest_fully_validated_checkpoint_sha": "34e6bf8299e582803d1726e8dd699271c356fda5",
+    "latest_fully_validated_checkpoint_state": "final-certification-step7-cleanup-static-complete-linux-green",
+    "latest_implementation_checkpoint_sha": "34e6bf8299e582803d1726e8dd699271c356fda5",
+    "latest_implementation_checkpoint_state": "step7-clean-proof-and-cleanup-accepted",
+    "final_certification_state": "active-step8-phase-end-candidate-preparation",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -120,12 +121,10 @@
     "distribution_bundle_state": "accepted",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — Step 7 temporary-executor cleanup validation"
+      "Final Certification — Step 8 phase-end regression candidate preparation"
     ],
     "pending_acceptance_gates": [
-      "Step 7 cleanup checkpoint must pass Static and Linux with temporary executor absent and permanent gate retained",
-      "Close issue #18 only after cleanup acceptance",
-      "Pass Final Certification phase-end regression on one immutable SHA"
+      "Pass Final Certification phase-end regression on one immutable SHA with Static, complete Linux and full release/certification matrix"
     ],
     "known_gate_failures": [
       "Historical bounded transport 34172047786 on 21455c3344: Docker-mounted checkout triggered Git dubious-ownership protection while deriving SOURCE_DATE_EPOCH",
@@ -136,12 +135,11 @@
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
     "release_blockers": [
-      "issue #18 remains open pending Step 7 cleanup Static/Linux",
       "Final Certification phase-end regression has not completed",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "removed-in-step7-cleanup-candidate",
+      "state": "none-active-step7-cleanup-accepted",
       "path": ".github/workflows/final-cert-step7-repro.yml",
       "present_in_current_cleanup_tree": false,
       "last_clean_run": 34231038578,
@@ -169,7 +167,7 @@
   },
   "issue_state": {
     "scientific_article": {"issue": 280, "state": "phase-closed"},
-    "release_reference_pdf_reproducibility": {"issue": 18, "state": "step7-proof-accepted-cleanup-validation-pending"}
+    "release_reference_pdf_reproducibility": {"issue": 18, "state": "closed-accepted"}
   },
   "authority_decisions": {
     "scientific_article": {
@@ -222,7 +220,7 @@
     "literal_font_cleanup_linux_run": 34224225080,
     "step7_implementation_parent_sha": "775dfdd6f6fa18475344409ac0bdc491c4435754",
     "step7_permanent_gate": "make release-reference-reproducibility",
-    "step7_bounded_proof_state": "accepted-clean-run-cleanup-validation-pending",
+    "step7_bounded_proof_state": "accepted-clean-run-cleanup-green",
     "step7_clean_run": 34231038578,
     "step7_clean_source_sha": "9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522",
     "step7_source_date_epoch": 1788873426,
@@ -237,6 +235,14 @@
     "step7_artifact_id": 10057880627,
     "step7_artifact_files": 6,
     "step7_artifact_archive_sha256": "8f2fdceae9351eaa9181501ec1fd23f240ab66a26e5814d329240ea4b11b820a",
+    "step7_cleanup_checkpoint_sha": "34e6bf8299e582803d1726e8dd699271c356fda5",
+    "step7_cleanup_static_run": 34232017286,
+    "step7_cleanup_static_conclusion": "success",
+    "step7_cleanup_linux_run": 34232017359,
+    "step7_cleanup_linux_conclusion": "success",
+    "step7_cleanup_linux_scope": "complete",
+    "step7_cleanup_linux_summary": "PASS=36 FAIL=0 SKIP=0",
+    "step7_issue_18_state": "closed-completed",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

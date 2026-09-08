@@ -14,31 +14,32 @@ Updated: 2026-09-08
 | Steps 1-6 | ACCEPTED |
 | Step 7 clean bounded proof | **PASS** — run `34231038578` on `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` |
 | Deterministic proof | epoch `1788873426`; 2 clean builds; SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf` |
-| PDF acceptance | embedding/portable validator/Unicode/PDF-A all PASS |
-| Proof artifact | `10057880627`, 6 files, one-day retention |
-| Temporary executor | removed in current cleanup candidate |
-| Current batch | **Step 7 — cleanup validation** |
-| Final phase gate | Step 8 phase-end regression after Step 7 acceptance |
+| Step 7 cleanup checkpoint | `34e6bf8299e582803d1726e8dd699271c356fda5` |
+| Cleanup Static | `34232017286` — SUCCESS |
+| Cleanup Linux | `34232017359` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Temporary executor | absent |
+| Issue #18 | **CLOSED — completed** |
+| Current batch | **Step 8 — Final Certification phase-end regression preparation** |
+| Final phase gate | one immutable candidate, complete matrix |
 | Item 33 | remains fail-closed; not a release implementation task |
 
-Canonical control documents are `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
+Canonical control documents are `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Step 7 clean proof
+## Step 7 acceptance
 
-Run `34231038578` is fully green: proof, summary and evidence upload all passed. Structured evidence records source `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522`, deterministic epoch `1788873426` from Git commit time, two independent clean builds, identical PDF SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf`, 450652 bytes, and PASS for font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b. Artifact `10057880627` uploaded six bounded evidence files.
+Run `34231038578` proved deterministic release-reference-PDF generation from source `9ba5905...`: deterministic epoch `1788873426`, two independent clean builds, identical PDF SHA-256 `1c92535f...`, and PASS for font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b. Cleanup checkpoint `34e6bf8...` then removed `.github/workflows/final-cert-step7-repro.yml` and passed Static `34232017286` plus complete Linux `34232017359`. The permanent gate remains `make release-reference-reproducibility` inside `make release-check`.
 
-The prior run `34229431523` remains classified as a historical reporting-only wrapper failure after a successful proof. The corrected executor run removes that acceptance ambiguity without changing the permanent gate.
+Issue #18 now has this evidence recorded and is closed as completed.
 
 ## Immediate action
 
 | Order | Action | Acceptance boundary |
 |---:|---|---|
-| 1 | Remove the temporary Step 7 workflow and synchronize docs | done in current cleanup candidate |
-| 2 | Require cleanup Static and Linux | both must be green |
-| 3 | Accept Step 7 and close issue #18 | clean proof + executor absent + cleanup green |
-| 4 | Create Final Certification **phase-end regression** candidate | one immutable SHA |
-| 5 | Run Static + complete Linux + full release/certification matrix | all green on same candidate |
-| 6 | Activate Release only after Final Certification closes | no earlier publication action |
+| 1 | Synchronize Step 7 acceptance and issue #18 closure | current documentation cycle |
+| 2 | Prepare one immutable Step 8 candidate | do not amend after CI starts |
+| 3 | Run Static + complete Linux + full release/certification matrix | all green on same accepted candidate |
+| 4 | Record candidate SHA/run IDs and close Final Certification | only after complete matrix |
+| 5 | Activate Release | no earlier publication action |
 
 ## Mandatory operating discipline
 

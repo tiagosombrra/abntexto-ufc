@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-6 are accepted. Step 7 deterministic proof is accepted at the bounded-proof level; temporary-executor cleanup validation is now active.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-7 are accepted. Step 8 phase-end regression preparation is active.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -12,7 +12,7 @@ Updated: 2026-09-08
 | Core Corrections | CLOSED | `5f67560a...`; Static/Linux green |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 7 CLEANUP VALIDATION** | cleanup accepted + immutable phase-end regression |
+| Final Certification | **ACTIVE — STEP 8 PHASE-END PREPARATION** | immutable candidate passes complete certification matrix |
 | Release | QUEUED | final release actions after certification |
 
 ## Final Certification roadmap
@@ -25,24 +25,22 @@ Updated: 2026-09-08
 | 4 | Literal Times New Roman/Arial, Unicode and embedding | ACCEPTED | proof `34219229025`; cleanup `35671aef...` green |
 | 5 | Scientific Article PDF/A-2b | ACCEPTED | bounded + cleanup accepted |
 | 6 | Distribution/public bundle integrity | ACCEPTED | bundles/checksums/archive integrity accepted |
-| 7 | Issue #18 deterministic reference PDF | **PROOF ACCEPTED — CLEANUP ACTIVE** | clean proof run `34231038578`; executor removed in cleanup candidate |
-| 8 | Final Certification phase-end regression | QUEUED | one immutable candidate after Step 7 acceptance |
+| 7 | Issue #18 deterministic reference PDF | **ACCEPTED** | proof `34231038578`; cleanup `34e6bf8...`; Static `34232017286`; complete Linux `34232017359`; issue closed |
+| 8 | Final Certification phase-end regression | **PREPARATION** | one immutable candidate must pass Static + complete Linux + full release/certification matrix |
 
-## Step 7 accepted bounded proof
+## Step 7 accepted evidence
 
-Run `34231038578` on source `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` completed successfully. It used deterministic epoch `1788873426` (`git-commit-time`), performed two independent clean builds and produced identical PDF SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf`. The 450652-byte output passed font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b. Artifact `10057880627` contains six bounded evidence files.
-
-The temporary executor is no longer needed and is removed in the current cleanup candidate. The permanent gate remains in `make release-check`.
-
-## Step 7 cleanup requirement
-
-The cleanup candidate must pass Static and Linux with `.github/workflows/final-cert-step7-repro.yml` absent and the permanent reproducibility gate retained. Only then may Step 7 be marked ACCEPTED and issue #18 closed.
+Run `34231038578` on source `9ba5905d2325b3cc0cd0b9cd3bef9a2fecb7b522` used deterministic epoch `1788873426`, performed two independent clean builds and produced identical PDF SHA-256 `1c92535fcab2d209396279c0b200d5f21fa989b9a2c2adf8a77f389ffe432dbf`. Font embedding, portable UFC PDF validation, Unicode extraction and PDF/A-2b all passed. Cleanup checkpoint `34e6bf8299e582803d1726e8dd699271c356fda5` removed the temporary executor and passed Static `34232017286` plus complete Linux `34232017359`, `PASS=36 FAIL=0 SKIP=0`. Issue #18 is closed.
 
 ## Frozen remaining scope
 
-**Step 7 cleanup validation / issue #18 closure → Final Certification phase-end regression → Release.**
+**Final Certification phase-end regression → Release.**
 
-No new phase or certification step is created merely because a validator finds a defect. New findings are classified inside Steps 7-8.
+No new phase or certification step is created merely because a validator finds a defect. New findings are classified inside Step 8.
+
+## Step 8 gate
+
+`docs/V3-FINAL-CERTIFICATION-PHASE-END.md` defines the candidate contract. One immutable candidate must pass Static, complete Linux and the complete applicable release/certification matrix. The candidate is not amended after CI begins. A failure is classified before any code or test change.
 
 ## Persistent authority gap
 
