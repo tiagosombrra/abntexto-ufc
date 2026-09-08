@@ -1,54 +1,40 @@
 # CTAN Release Candidate Guide
 
-This document describes how `abntexto-ufc` prepares and validates a CTAN submission candidate. It is a maintainer/release guide, not a claim that a given version has already been accepted by CTAN.
+This document defines the repository-controlled CTAN/GitHub release procedure for `abntexto-ufc` 3.0.0. It is a maintainer/release guide, not a claim of CTAN acceptance.
 
 ## Package identity
 
 - CTAN package name: `abntexto-ufc`.
 - Project repository: `https://github.com/tiagosombrra/abntexto-ufc`.
-- Current development target: `3.0.0`.
+- Release target: `3.0.0`.
 - License: LaTeX Project Public License 1.3c or later.
-- Upstream dependency: `abntexto` 1.1 or newer (`https://ctan.org/pkg/abntexto`).
-- Status: unofficial, community-maintained UFC-oriented class. Do not describe it as official or UFC-homologated unless the University explicitly grants that status.
-- Development gate: V3-R1 through V3-R4 are complete. V3-R4/#267 certified exact product `c79f3c73f1d51a30175e8259269504d029442a1c` in run `33855800767` and closed through PR #273 at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`. V3-R5/#272 has completed technical freeze/release validation: the 33-check release gate passed in run `33866258865`, and package run `33869888601` passed reproducible public/distribution bundles, SHA-256 checksums, external-upstream semantics and institutional/proprietary asset exclusions. R5 closed through PR #276 at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`. V3-A1/#275 closed through PR #281 at `7a7562d23e8bf6c92abb635718639d617a2ed6ff` after source-contract PR #279 at `4d018a92697e8f39e3a53b034c451e55996c84fb`. V3-A2/#280 is ACTIVE from that exact entry. Actual CTAN upload remains a separate explicit release action and has not occurred; A2 scientific-article implementation is not CTAN submission.
-
-## Acceptance benchmark
-
-`abntexto-uece` is used as a practical Brazilian institutional-class benchmark because it was accepted by CTAN in August 2025 and is distributed through TeX Live. Its repository uses a small browsing-friendly package layout with a top-level README, class source, example source/PDF, and package manual source/PDF while keeping `abntexto` as an external dependency.
-
-This benchmark is evidence of a workable packaging pattern, not an acceptance guarantee for `abntexto-ufc`. Current CTAN upload guidance and the current CTAN `pkgcheck` utility remain the authoritative technical references for the submission candidate.
-
-References:
-
-- `https://ctan.org/pkg/abntexto-uece`
-- `https://github.com/ElaysonAbreu/abntexto-uece`
-- `https://ctan.org/help/upload-pkg?lang=en`
-- `https://ctan.org/help/submit`
-- `https://ctan.org/pkg/pkgcheck`
+- Upstream dependency: `abntexto` 1.1 or newer.
+- Status: unofficial, community-maintained UFC-oriented class.
+- Current roadmap phase: **Release**.
+- Final Certification is closed on candidate `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9`; PR #289 merged to `main` as `e34037f3241aab013b80645b338f38954e02bcda`.
+- Actual CTAN upload remains a separate explicit Release action and must never be reported as acceptance before a receipt/acceptance exists.
 
 ## Build the candidate
 
-From a canonical Git checkout:
+From the intended Release candidate checkout:
 
 ```bash
 make distribution-bundles
 ```
 
-This generates:
+Expected outputs:
 
-- `dist/abntexto-ufc-3.0.0.zip` — class/runtime archive;
-- `dist/abntexto-ufc-ctan-3.0.0.zip` — CTAN submission candidate;
-- `dist/abntexto-ufc-template-3.0.0.zip` — editable flattened template;
-- `dist/abntexto-ufc-overleaf-3.0.0.zip` — flattened self-contained Overleaf import bundle;
-- `dist/SHA256SUMS` — SHA-256 digests for all four ZIP archives.
+- `dist/abntexto-ufc-3.0.0.zip`
+- `dist/abntexto-ufc-ctan-3.0.0.zip`
+- `dist/abntexto-ufc-template-3.0.0.zip`
+- `dist/abntexto-ufc-overleaf-3.0.0.zip`
+- `dist/SHA256SUMS`
 
-`make public-bundles` remains the narrower B5-B interface and generates only the template and Overleaf archives.
+`make public-bundles` remains the narrower template/Overleaf interface.
 
 ## CTAN candidate layout
 
-The CTAN ZIP contains one top-level directory named exactly `abntexto-ufc/`. The candidate deliberately uses the browsing-friendly layout recommended for modest packages instead of an internal TDS `tex/`/`doc/` hierarchy.
-
-Required top-level package files include:
+The CTAN ZIP contains one top-level directory `abntexto-ufc/` with at least:
 
 ```text
 abntexto-ufc/
@@ -62,41 +48,30 @@ abntexto-ufc/
     ... runtime modules ...
 ```
 
-The candidate must not contain:
+The CTAN candidate must not contain:
 
-- `abntexto.cls`; it is an external CTAN/TeX dependency;
+- `abntexto.cls` (external CTAN dependency);
 - UFC institutional mark assets;
-- Times New Roman or Arial font files from Microsoft;
-- repository development surfaces such as workflows, tests, validators or reconstruction documentation;
-- generated LaTeX auxiliary files.
+- Microsoft Times New Roman or Arial font files;
+- workflows, tests, validators or reconstruction documentation;
+- LaTeX auxiliary files;
+- validation evidence or temporary executors.
 
-Only the separate Overleaf bundle vendors the pinned upstream `abntexto.cls` for self-contained import.
+Only the separate Overleaf bundle may vendor the pinned upstream `abntexto.cls`.
 
-## Package README and manual
+## Release validation
 
-`release/ctan/README.md` is the CTAN-facing README. It is intentionally separate from the repository README and includes the package purpose, maintainer/contact channel, version, license, external dependency, platform/font constraints, installation information, and unofficial-project status.
-
-`release/ctan/abntexto-ufc.tex` is the source for the package manual. `tools/build-distribution-bundles.py` builds `abntexto-ufc.pdf` deterministically and inserts the tracked source plus generated PDF into the CTAN candidate.
-
-`docs/ctan-example.tex` is the live source used to stage `abntexto-ufc-example.tex` in the CTAN candidate. It must use the canonical v3 setup surface; it is not historical documentation. The public-bundle producer must likewise stage `coat-of-arms = false` from canonical `coat-of-arms = true` when constructing redistributable template/Overleaf archives and must not depend on removed v2 `brasao = sim/nao` setup vocabulary.
-
-A version mismatch among `Makefile`, `abntexto-ufc.cls`, the CTAN README, and the manual fails closed.
-
-## Linux release validation
-
-Before building or submitting a release candidate, run the coordinated repository release gate:
+Before publication, the immutable Release candidate must pass:
 
 ```bash
 make release-check
 ```
 
-B7-C3 established and certified the permanent `.github/workflows/linux-release-check.yml` workflow, named `Linux release check`. It runs the repository-owned `make release-check` entry point after technical changes land on `main` and on manual dispatch, publishes `artifacts/validation/validation-report.md` in the Actions job summary, and retains `artifacts/validation/**` as short-lived engineering evidence for 14 days. PR #225 merged at `d7327db7efd5cc1e0ff9255195bcb9767d853d3e`; the first permanent merged-main release run `33566835570` passed all 32 checks (`PASS=32 FAIL=0 SKIP=0`), including release-only `pdfa` and `profile-pdfa`. This Linux evidence is not final B8 Windows/literal-font/PDF-A certification and is not CTAN acceptance.
+The permanent GitHub workflow is `Linux release check`. Release phase-end acceptance also requires Static contract and **complete** Linux integration on the same immutable candidate SHA.
 
-R1-BLOCK-7 and R1-BLOCK-8 are complete. B7-D confirmed the permanent workflow inventory and recorded `Static contract` plus `Linux integration` as the recommended required PR checks; `Linux release check` remains post-merge/manual. B8 certified complete candidate `9b1752565ac217c04ffa22a9ef272cdf078af380`: Windows run `33649620219` passed Times New Roman/Arial × pdfLaTeX/LuaLaTeX, and final Linux inspection run `33655108349` passed literal text-family identity, expected math-font policy, Unicode extraction, embedding and PDF/A-2b. This engineering certification is not CTAN acceptance. CTAN packaging and current `pkgcheck` validation remain separate release procedures below. Validation/B8 evidence is not a distribution artifact and must not be inserted into public bundles.
+The deterministic release-reference-PDF gate is permanent and must remain green.
 
-After R2-B2 merged at `8e3e0f2a165e488a00f08a0031ba6fb4a01f9949`, merged-main `Linux release check` run `33687588772` passed `PASS=32 FAIL=0 SKIP=0`. During the subsequent B2→B3 closeout, targeted release-source audit run `33696155771`, job `100465339990`, compiled the live CTAN example and manual, validated deterministic public and complete distribution bundles, verified safe paths and institutional/proprietary asset exclusions, scanned for stale v2 setup tokens, removed downloaded reference photographs and the temporary workflow, and passed `git diff --check` plus `make static-check`. This additional audit is engineering evidence for the active release path; it is not CTAN submission or acceptance.
-
-## Automated validation
+## Distribution verification
 
 The repository checker is:
 
@@ -104,50 +79,45 @@ The repository checker is:
 python3 tests/checks/distribution_bundles.py --abntexto /path/to/pinned/abntexto.cls
 ```
 
-It validates the complete five-artifact set, SHA-256 metadata, reproducibility, safe paths, expected class and CTAN layouts, CTAN README metadata, documentation PDF presence, external `abntexto` semantics, and asset exclusions.
+It validates artifact names, SHA-256 metadata, reproducibility, safe paths, package/CTAN layouts, documentation PDF presence, external-upstream semantics and asset exclusions.
 
-The public-bundle checker additionally verifies that redistributed `main.tex` uses the canonical v3 setup and disables the institutional mark via `coat-of-arms = false`; removed v2 `brasao = sim/nao` forms are rejected.
+The CTAN candidate must additionally be checked with the **current** CTAN `pkgcheck`; do not freeze an old version into permanent policy.
 
-The CTAN candidate must also be checked with the current CTAN `pkgcheck` release. B5-C certification used `pkgcheck 4.1.0` against the extracted candidate and received no error or warning diagnostics.
+Current references:
 
-For a release candidate, use the current package from:
-
-`https://ctan.org/pkg/pkgcheck`
-
-Do not freeze an old `pkgcheck` version into permanent release policy without a reason; CTAN may update its automated checks.
+- `https://ctan.org/help/upload-pkg?lang=en`
+- `https://ctan.org/help/submit`
+- `https://ctan.org/pkg/pkgcheck`
 
 ## Submission-form metadata
 
-The archive alone does not replace the CTAN upload form. Before an actual submission, confirm at least:
+Before an actual CTAN submission confirm:
 
-- package name: `abntexto-ufc`;
-- version matches the release being submitted;
-- author/maintainer information;
-- uploader name and current email;
+- package name `abntexto-ufc`;
+- version `3.0.0`;
+- author/maintainer and uploader contact;
 - concise English summary/description;
-- LPPL 1.3c-or-later license selection;
-- project repository and issue tracker;
+- LPPL 1.3c-or-later license;
+- repository and issue tracker;
 - dependency on `abntexto`;
 - appropriate CTAN topics/categories;
-- archive file is the certified `abntexto-ufc-ctan-<version>.zip` candidate.
+- exact certified `abntexto-ufc-ctan-3.0.0.zip`.
 
-The actual CTAN submission is an explicit release action. Building or certifying the candidate must never be recorded as CTAN acceptance.
+## Final Release checklist
 
-## Final pre-upload checklist
-
-1. Build from the intended release commit/tag, not from an unrecorded local modification.
-2. Run or confirm a successful `make release-check` / `Linux release check` for that candidate commit and preserve its validation evidence.
-3. Confirm that the intended release commit is still covered by, or has proportionally re-established, the completed Windows/literal-font/PDF-A certification baseline from R1-BLOCK-8.
+1. Work from the intended immutable Release candidate, not unrecorded local modifications.
+2. Confirm successful Static contract, **complete** Linux integration and `Linux release check` on that exact candidate.
+3. Confirm the candidate remains covered by accepted Final Certification evidence or proportionally re-establish any affected proof.
 4. Run `make distribution-bundles`.
-5. Verify `SHA256SUMS` and the exact artifact names.
+5. Verify `dist/SHA256SUMS` and the four exact ZIP names.
 6. Run the repository distribution checker.
-7. Extract the CTAN candidate and compile the shipped example with the external `abntexto` dependency.
-8. Run the current CTAN `pkgcheck` on the extracted `abntexto-ufc/` directory.
-9. Confirm the README/manual/example use the intended canonical release API and version metadata.
-10. Confirm that no institutional/proprietary assets, validation evidence, temporary workflows, downloaded reference photographs, or generated auxiliary files are present in public bundles or the release commit.
-11. Confirm the GitHub release/tag and user-facing release notes are final when that release stage is reached.
-12. Only then perform the explicit CTAN upload and preserve the submission/acceptance receipt in the release record.
+7. Extract the CTAN candidate and compile the shipped example with external `abntexto`.
+8. Run the current CTAN `pkgcheck`.
+9. Confirm README/manual/example version and canonical v3 API.
+10. Confirm no institutional/proprietary assets, validation evidence, temporary workflows, downloaded reference photographs or auxiliary files are distributed.
+11. Only after Release phase-end acceptance create `v3.0.0` tag and GitHub Release with the certified assets/checksums.
+12. Verify the published GitHub assets/checksums.
+13. Perform an actual CTAN upload only as an explicit action when the required uploader metadata/channel is available; preserve submission/acceptance evidence.
+14. Update roadmap, handoff, release readiness and machine state after every **material advance** and run a final Release **phase-end regression** before closing the phase.
 
-## V3-A1 release boundary
-
-A1 changes the normative source/rule contract but does not authorize CTAN submission. V3-A2 article runtime/test implementation must close and the roadmap must explicitly reach a release action before any upload. The certified non-article foundation remains unchanged during A1.
+Building or validating a candidate is not CTAN acceptance.

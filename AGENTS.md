@@ -20,14 +20,15 @@ Memory, prior chats and historical branches never override current repository st
 |---|---|
 | Target | `3.0.0` |
 | Active phase | **Release** |
-| Canonical `main` before transition merge | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
-| Active branch / PR | `cert/v3-final-certification` / #289 |
+| Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
+| Active task branch | `release/v3-release` |
+| Release PR | pending creation after branch-synchronization commit |
 | Final Certification | **CLOSED** on `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
 | Final Static | `34239890649` SUCCESS |
 | Final complete Linux | `34239890614` SUCCESS — `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | Final Linux release check | `34239890548` SUCCESS — `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| One-shot Final Certification marker | removed in phase-transition commit |
-| Current batch | **Release entry — transition validation and PR #289 merge** |
+| Final Certification merge | PR #289 → `e34037f3241aab013b80645b338f38954e02bcda` |
+| Current batch | **Release branch synchronization and release-checklist execution** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -66,12 +67,12 @@ The machine invariant remains `phase_end_regression.candidate = one-immutable-sh
 
 ## Immediate Release discipline
 
-1. validate the synchronized Final Certification → Release transition;
-2. merge PR #289 only after transition checks are green;
-3. create one short-lived Release branch from the resulting `main`;
-4. synchronize branch facts before release work;
-5. follow `docs/CTAN-RELEASE.md` and repository tooling rather than inventing publication steps;
-6. run Release phase-end regression before tag/GitHub Release/publication finalization;
+1. synchronize the short-lived Release branch from merged `main`;
+2. create/update one Release PR and keep branch/PR facts synchronized;
+3. follow `docs/CTAN-RELEASE.md` and repository tooling rather than inventing publication steps;
+4. build and verify final public/distribution artifacts and checksums;
+5. run Release phase-end regression on one immutable candidate: Static, complete Linux and Linux release check;
+6. only after acceptance, create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
 7. verify published assets/checksums before closing Release.
 
 ## Fail-closed rule

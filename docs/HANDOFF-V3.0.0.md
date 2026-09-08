@@ -7,35 +7,40 @@ Updated: 2026-09-08
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical `main` before transition merge | `22e3c19235fa5245505b92d919a09d31eb2bfecb` |
-| Active branch / PR | `cert/v3-final-certification` / #289 |
+| Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
+| Active branch | `release/v3-release` |
+| Release PR | pending creation after this synchronization checkpoint |
 | Active phase | **Release** |
 | Final Certification | **CLOSED** on candidate `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
 | Final Static | `34239890649` SUCCESS |
 | Final complete Linux | `34239890614` SUCCESS — `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | Final Linux release check | `34239890548` SUCCESS — `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Release-reference reproducibility | PASS; SHA-256 `ae4d7755d18e05abd572a0ad95e5696e54302f9ac236b1efc004d46f57216479` for two builds in the accepted release-check run |
-| One-shot Final Certification marker | removed in synchronized transition |
+| Final Certification merge | PR #289 merged to `main` as `e34037f3241aab013b80645b338f38954e02bcda` |
+| Release-reference reproducibility | PASS; accepted certification SHA-256 `ae4d7755d18e05abd572a0ad95e5696e54302f9ac236b1efc004d46f57216479` |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Current batch | **Release entry — transition validation, merge #289, then release-branch synchronization** |
+| Current batch | **Release branch synchronization and repository release-checklist execution** |
 
-Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/V3-RELEASE-READINESS.md`, `docs/CTAN-RELEASE.md`, `docs/V3-CORRECTION-PLAN.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
+Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, `docs/CTAN-RELEASE.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Final Certification acceptance
+## Release entry acceptance
 
-Candidate `22f7ba845...` satisfies the complete phase-end matrix. The Linux integration heavy suite actually executed at `complete` scope. The permanent Linux release check executed `make release-check`, retained all shared/article certification predicates, produced `PASS=38 FAIL=0 SKIP=0`, verified distribution integrity and passed the permanent deterministic release-reference-PDF gate. Item 33 remains fail-closed and was not converted into speculative runtime behavior.
+PR #289 is merged. The Release branch is based exactly on merged `main` `e34037f...`. Final Certification remains accepted and immutable; Release does not reopen it absent a concrete regression.
+
+Item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence and is not converted into speculative runtime work.
 
 ## Immediate Release action
 
 | Order | Action | Gate |
 |---:|---|---|
-| 1 | Validate the synchronized transition commit on PR #289 | required CI green |
-| 2 | Merge PR #289 | no unresolved transition regression |
-| 3 | Read new `main` SHA and create the single short-lived Release task branch | branch facts synchronized |
-| 4 | Update this handoff, roadmap, readiness and machine state to the Release branch | same work cycle |
-| 5 | Execute the documented release checklist/tooling | preserve accepted certification evidence |
-| 6 | Run the Release **phase-end regression** on one immutable candidate | required before Release closure |
-| 7 | Create/verify tag, GitHub Release and any documented publication only after accepted Release candidate | verify assets/checksums |
+| 1 | Synchronize branch/handoff/roadmap/readiness/machine facts | same work cycle |
+| 2 | Create the Release PR | branch and PR facts recorded |
+| 3 | Execute `docs/CTAN-RELEASE.md` and repository release tooling | no invented publication step |
+| 4 | Build final distribution artifacts and checksums | integrity/reproducibility PASS |
+| 5 | Establish one immutable Release candidate | candidate is not amended after CI starts |
+| 6 | Run Release **phase-end regression** | Static + complete Linux + Linux release check green |
+| 7 | Create/verify `v3.0.0` tag and GitHub Release only after accepted candidate | published assets/checksums verified |
+| 8 | Perform any external publication only when explicitly supported by the checklist and available tooling | preserve receipt/evidence |
+| 9 | Record final verification and close Release | no unresolved release blocker |
 
 ## Mandatory operating discipline
 

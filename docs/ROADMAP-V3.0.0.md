@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Release is ACTIVE. Final Certification is CLOSED.**
+**Release is ACTIVE on `release/v3-release`. Final Certification is CLOSED.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -12,33 +12,32 @@ Updated: 2026-09-08
 | Core Corrections | CLOSED | accepted phase-end regression |
 | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
-| Final Certification | **CLOSED** | candidate `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
-| Release | **ACTIVE — ENTRY TRANSITION** | release checklist complete, publication verified, and Release phase-end regression green on one immutable candidate |
+| Final Certification | CLOSED | candidate `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
+| Release | **ACTIVE — RELEASE BRANCH** | release checklist complete, publication verified, and Release phase-end regression green on one immutable candidate |
 
-## Final Certification closure
+## Release entry facts
 
-| Predicate | Accepted result |
+| Predicate | Current result |
 |---|---|
-| Candidate | `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
-| Static | `34239890649` SUCCESS |
-| Linux integration | `34239890614` SUCCESS; `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Linux release check | `34239890548` SUCCESS; `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Distribution / PDF-A / deterministic reference | PASS |
-| Temporary executor | absent |
-| Item 33 | explicit `NORMATIVE-REVIEW`, fail-closed |
-
-The prior candidate `fc907856...` remains rejected because heavy Linux integration was skipped. The accepted retry corrected orchestration scope only and changed no product/normative semantics.
+| Merged `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
+| Final Certification PR | #289 — MERGED |
+| Release branch | `release/v3-release`, based on `e34037f...` |
+| Release PR | pending creation after synchronization commit |
+| Librarian matrix | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` |
+| Item 33 | explicit authority gap; fail-closed |
+| Temporary certification executor | absent |
 
 ## Release plan
 
 | Step | State | Gate |
 |---:|---|---|
-| Transition from Final Certification | IN PROGRESS | synchronized transition commit green |
-| Merge PR #289 | QUEUED | transition checks green |
-| Create short-lived Release branch from updated `main` | QUEUED | machine/handoff branch facts synchronized |
+| Final Certification → Release transition | DONE | PR #289 merged |
+| Create short-lived Release branch from updated `main` | DONE | branch created from `e34037f...` |
+| Synchronize branch facts | IN PROGRESS | control plane consistent |
+| Create Release PR | QUEUED | synchronized branch contains first commit |
 | Read/execute repository release checklist | QUEUED | `docs/CTAN-RELEASE.md` and release tooling are authority |
 | Build final artifacts/checksums | QUEUED | integrity/reproducibility PASS |
-| Immutable Release phase-end candidate | QUEUED | Static + complete applicable Linux/release verification |
+| Immutable Release phase-end candidate | QUEUED | Static + complete Linux + Linux release check |
 | Tag/GitHub Release/publication | QUEUED | accepted Release candidate; verify published artifacts afterwards |
 | Release closeout | QUEUED | no blocker + final verification recorded |
 
