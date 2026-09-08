@@ -21,6 +21,7 @@ on:
       - ready_for_review
     paths:
       - release/final-certification-candidate.json
+      - release/v3-release-candidate.json
   workflow_dispatch:
 
 permissions:
@@ -64,7 +65,7 @@ jobs:
           {
             echo '## Linux release validation'
             echo
-            echo '> This Linux gate is engineering evidence only. Final Windows/literal-font/PDF-A certification remains Final Certification-owned.'
+            echo '> This Linux gate is engineering evidence only. Literal-font/PDF-A evidence remains bounded by the accepted certification unless relevant technical surfaces change.'
             echo
             if [[ -f artifacts/validation/validation-report.md ]]; then
               cat artifacts/validation/validation-report.md
