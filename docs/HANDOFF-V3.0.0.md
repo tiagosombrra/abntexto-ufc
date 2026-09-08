@@ -12,38 +12,31 @@ Updated: 2026-09-08
 | Active phase | **Final Certification** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Steps 1-3 | ACCEPTED |
-| Steps 5-6 | ACCEPTED — bounded `34175388675`; cleanup `7307164...`; Static `34208318971`; Linux `34208318754` |
-| Steps 5-6 acceptance sync | `237cb53b65c91052a469ab67991ea78e71ade283`; Static `34218086750`; Linux `34218086734` |
-| Current batch | **Step 4 — literal Times New Roman/Arial + Unicode + embedding** |
-| Step 4 executor | `.github/workflows/final-cert-literal-fonts.yml` — temporary, proof-only |
-| Release blocker | issue #18 deterministic reference PDF |
+| Steps 5-6 | ACCEPTED |
+| Step 4 proof | PASS — bounded run `34219229025`, source `fae338e16304ad45c353067a0b7982f73a8363c5` |
+| Step 4 evidence | Times New Roman/Arial × pdfLaTeX/LuaLaTeX; literal identity, Unicode, embedding and PDF/A-2b PASS |
+| Step 4 artifact | generated PDFs only, artifact `10053151610`, digest `sha256:6b0cd0a6ac2543017a8496a1af7feeca70640f2b73862311a4325a981dc5fb60`, one-day retention |
+| Temporary executor | `.github/workflows/final-cert-literal-fonts.yml` REMOVED after successful evidence capture |
+| Current batch | **Step 4 — cleanup Static/Linux validation** |
+| Next blocker | issue #18 deterministic reference PDF |
 | Item 33 | remains fail-closed; not a release implementation task |
 
 Canonical control documents are `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-RELEASE-READINESS.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Step 4 execution boundary
+## Step 4 result and cleanup boundary
 
-The current material advance starts fresh literal-font proof on the actual Final Certification branch. The bounded workflow must compile and validate all four combinations:
+Run `34219229025` completed successfully on `fae338e...`. The Windows job generated four strict PDFs using fonts already present on the Windows runner. The downstream Linux job certified all four combinations and emitted the structured PASS record for literal family identity, Unicode extraction, embedding and PDF/A-2b. No raw proprietary font files were transported.
 
-| Family | pdfLaTeX | LuaLaTeX |
-|---|---|---|
-| Times New Roman | required | required |
-| Arial | required | required |
-
-The downstream gate must prove literal family identity, Unicode extraction, embedding and PDF/A-2b. Proprietary raw font files must not be committed or uploaded. Only bounded generated PDF evidence may be transported, with short artifact retention.
-
-The temporary workflow is not permanent product infrastructure. Step 4 remains ACTIVE until the proof succeeds, the workflow is removed and the cleanup checkpoint passes Static and Linux.
+The proof-only workflow has been removed. Step 4 remains open until the resulting cleanup checkpoint passes both Static contract and Linux integration. A cleanup failure must be classified before any correction; the accepted proof predicates are not weakened.
 
 ## Immediate action
 
-1. let the bounded Step 4 workflow execute on the current checkpoint;
-2. classify any failure before changing code/tests;
-3. if proof is green, record workflow/artifact evidence;
-4. remove `.github/workflows/final-cert-literal-fonts.yml`;
-5. require cleanup Static/Linux and then mark Step 4 ACCEPTED;
-6. resolve issue #18 deterministic reference-PDF reproducibility;
-7. execute Final Certification **phase-end regression** on one immutable SHA;
-8. only then activate Release.
+1. finish the current documentation/machine-state synchronization after removal of the temporary workflow;
+2. wait for Static and Linux on the cleanup checkpoint;
+3. if both pass, mark Step 4 ACCEPTED and record the cleanup SHA/run IDs;
+4. resolve issue #18 deterministic reference-PDF reproducibility;
+5. execute Final Certification **phase-end regression** on one immutable SHA;
+6. only then activate Release.
 
 ## Mandatory operating discipline
 
