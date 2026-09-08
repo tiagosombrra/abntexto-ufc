@@ -13,31 +13,36 @@ Updated: 2026-09-07
 | Entry synchronization | ACCEPTED |
 | Linux release baseline | ACCEPTED — release `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; cleanup `0609f929...`; Static `34170123785`; Linux `34170123765` |
 | Profile/engine matrix | ACCEPTED |
-| Current batch | **Bounded Matrix Validation — Scientific Article PDF/A + Distribution Integrity** |
-| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` active only for current release validation; remove before acceptance |
+| Current batch | **Bounded Matrix Validation — Step 6 runner ownership correction** |
+| Bounded transport result | `21455c3344...`: Static `34172047639` PASS, Linux `34172047586` PASS, release transport `34172047786` FAIL after the permanent 38/38 release suite and Step 5 passed |
+| Failure classification | Step 6 infrastructure: Docker-mounted checkout was rejected by Git safe-directory protection while deriving `SOURCE_DATE_EPOCH`; no product/runtime/normative predicate failed |
+| Evidence artifact from failed transport | ID `10036350950`, SHA-256 `5dd4d212bafa16702947065ef0848c9387e63e16d7d7523fee14d1d529a96432` |
+| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` remains active only for corrected rerun; remove before Steps 5-6 acceptance |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 — deterministic release reference PDF |
 
 ## Current material advance
 
-Two persistent release gates were added to `make release-check`:
+The first bounded transport established three useful facts before failing:
 
-| Gate | Predicate |
+| Surface | Result |
 |---|---|
-| Scientific Article PDF/A | build canonical article with pdfLaTeX, require embedded fonts and veraPDF PDF/A-2b compliance |
-| Distribution/public bundles | build all four v3.0.0 distribution candidates, verify SHA256SUMS, ZIP integrity/safe paths and absence of proprietary fonts/institutional assets |
+| Existing permanent release matrix | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Scientific Article PDF/A + embedding | **PASS** — explicit `FINAL-CERTIFICATION-EVIDENCE surface=scientific-article-pdfa` |
+| Distribution/public bundles | **NOT EXECUTED TO COMPLETION** — failed while reading Git timestamp because container ownership triggered Git safe-directory protection |
 
-They are implementation-complete but **not accepted until the temporary release transport passes**. After classification, remove the temporary workflow and require cleanup Static/Linux before marking Steps 5-6 accepted.
+The Step 6 correction does not weaken bundle validation. The distribution gate now performs Git provenance reads with `git -c safe.directory="$PWD"`, and the temporary workflow checks out full history so the exact `SOURCE_COMMIT_SHA` timestamp is available. The corrected transport must rerun the same permanent `make release-check` contract.
 
 ## Frozen remaining path
 
 | Order | Work | Acceptance |
 |---:|---|---|
-| 1 | Literal Times New Roman/Arial + Unicode + embedding | final-candidate identity/extraction/embedding proof |
-| 2 | Accept article PDF/A + distribution gates | release transport PASS + temporary executor removal + cleanup CI PASS |
-| 3 | Issue #18 deterministic reference PDF | two controlled clean builds with identical SHA-256 and preserved validation |
-| 4 | Final Certification phase-end regression | one immutable candidate with complete matrix |
-| 5 | Release | final docs/checksums/tag/GitHub Release/publication verification |
+| 1 | Correct and rerun Step 6 distribution validation | corrected release transport PASS |
+| 2 | Remove temporary bounded workflow and validate cleanup | cleanup Static + Linux PASS; then Steps 5-6 accepted |
+| 3 | Literal Times New Roman/Arial + Unicode + embedding | current final-candidate identity/extraction/embedding proof |
+| 4 | Issue #18 deterministic reference PDF | two controlled clean builds with identical SHA-256 and preserved validation |
+| 5 | Final Certification phase-end regression | one immutable candidate with complete matrix |
+| 6 | Release | final docs/checksums/tag/GitHub Release/publication verification |
 
 A failure remains inside the row whose predicate it violates. It does not create a new roadmap workstream.
 

@@ -98,7 +98,7 @@
     "scientific_article_pdf_visual_review": "pass-5-of-5",
     "latest_fully_validated_checkpoint_sha": "b25c5a90dc68d87ccd8cdaf5e7000899fe521715",
     "latest_fully_validated_checkpoint_state": "final-certification-scope-freeze-accepted-static-linux",
-    "final_certification_state": "active-bounded-matrix-validation-transport",
+    "final_certification_state": "active-step6-runner-integration-correction",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -119,18 +119,21 @@
     "release_baseline_execution_state": "accepted",
     "profile_engine_matrix_state": "accepted",
     "literal_font_unicode_embedding_state": "pending-bounded-gap",
-    "pdfa_state": "article-explicit-gate-implemented-release-validation-pending",
-    "distribution_bundle_state": "persistent-gate-implemented-release-validation-pending",
+    "pdfa_state": "article-explicit-gate-pass-observed-bounded-acceptance-pending",
+    "distribution_bundle_state": "step6-runner-safe-directory-correction-active",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — bounded matrix validation transport for article PDF/A and distribution integrity"
+      "Final Certification — Step 6 runner ownership correction for distribution integrity gate"
     ],
     "pending_acceptance_gates": [
-      "Current temporary release transport must pass permanent make release-check with article-PDF/A and distribution-integrity gates",
+      "Corrected temporary release transport must pass permanent make release-check after Step 6 safe-directory fix",
       "Temporary bounded-matrix executor must be removed and cleanup Static/Linux must pass before Steps 5-6 acceptance",
       "Final-candidate literal Times New Roman/Arial identity, Unicode extraction and embedding evidence",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
+    ],
+    "known_gate_failures": [
+      "Bounded transport 34172047786 on 21455c3344: release matrix PASS=38/38 and Step 5 PDF/A PASS, then Step 6 failed because Docker-mounted checkout triggered Git dubious-ownership protection while deriving SOURCE_DATE_EPOCH"
     ],
     "deferred_authority_conflicts": [
       "review item 33: selected NBR 6023:2025 edge cases"
@@ -142,9 +145,9 @@
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "active-validation-transport",
+      "state": "active-corrected-validation-transport",
       "path": ".github/workflows/final-cert-bounded-matrix.yml",
-      "purpose": "run permanent make release-check with newly added bounded Step 5/6 gates on PR branch",
+      "purpose": "rerun permanent make release-check after bounded Step 6 runner-ownership correction",
       "must_remove_before_checkpoint_acceptance": true
     }
   },
@@ -217,6 +220,18 @@
     "scope_freeze_static_run": 34171618792,
     "scope_freeze_linux_run": 34171618854,
     "profile_engine_matrix_acceptance": "accepted-from-current-complete-release-evidence",
+    "bounded_matrix_failed_checkpoint_sha": "21455c3344bfe0413dbe44f29b9cfae5bee58521",
+    "bounded_matrix_static_run": 34172047639,
+    "bounded_matrix_static_conclusion": "success",
+    "bounded_matrix_linux_run": 34172047586,
+    "bounded_matrix_linux_conclusion": "success",
+    "bounded_matrix_release_run": 34172047786,
+    "bounded_matrix_release_conclusion": "failure",
+    "bounded_matrix_release_base_summary": "PASS=38 FAIL=0 SKIP=0",
+    "bounded_matrix_step5_scientific_article_pdfa": "PASS",
+    "bounded_matrix_step6_failure_classification": "git-safe-directory-runner-ownership-before-bundle-build",
+    "bounded_matrix_failure_artifact_id": 10036350950,
+    "bounded_matrix_failure_artifact_sha256": "5dd4d212bafa16702947065ef0848c9387e63e16d7d7523fee14d1d529a96432",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

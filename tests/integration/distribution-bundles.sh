@@ -21,7 +21,14 @@ trap cleanup EXIT INT TERM
 python3 tools/fetch-reference-images.py
 python3 tools/fetch-abntexto.py --output "$work/abntexto.cls"
 
-epoch="${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct)}"
+if [ -n "${SOURCE_DATE_EPOCH:-}" ]; then
+  epoch="$SOURCE_DATE_EPOCH"
+elif [ "$source_sha" != "local" ]; then
+  epoch="$(git -c safe.directory="$PWD" show -s --format=%ct "$source_sha")"
+else
+  epoch="$(git -c safe.directory="$PWD" log -1 --format=%ct)"
+fi
+
 SOURCE_DATE_EPOCH="$epoch" python3 tools/build-distribution-bundles.py \
   --output "$work/dist" \
   --abntexto "$work/abntexto.cls"

@@ -23,19 +23,19 @@ Scientific Article closed on immutable candidate `923d11ef668b02ec4de3cad4906ad5
 
 ## Active work — Final Certification
 
-Active branch `cert/v3-final-certification` was created from exact canonical main `22e3c192...`.
+Entry synchronization, Linux release baseline and the profile/engine matrix are accepted. The first bounded Step 5/6 transport on `21455c3344bfe0413dbe44f29b9cfae5bee58521` produced Static `34172047639` PASS and Linux `34172047586` PASS. Release transport `34172047786` ran the existing permanent matrix to `SCOPE=complete PASS=38 FAIL=0 SKIP=0` and then passed the explicit Scientific Article PDF/A/embedding gate.
 
-Current bounded advance: the permanent Linux release contract passed on transport SHA `f8be323027b42eefcdbe3d13b2f269abdd6ec17f`. Static `34168471299`, Linux `34168471312` and release run `34168471371` are green; the release run reports `SCOPE=complete PASS=38 FAIL=0 SKIP=0` and artifact `10035242168`. The temporary transport workflow is removed in the current cleanup candidate; Step 2 acceptance waits for cleanup-candidate Static/Linux.
+The run failed only when Step 6 attempted to derive the deterministic bundle epoch with Git inside the TeX Live Docker container. Git rejected the mounted checkout because of ownership mismatch (`dubious ownership`). The failure is therefore classified inside Step 6 runner integration; no accepted runtime, normative or evidence predicate is reopened.
 
-Remaining sequence:
+Current correction:
 
-1. accept release-baseline cleanup after executor removal is green;
-2. certify supported profiles and required engines;
-3. certify literal Times New Roman/Arial identities, Unicode extraction and embedding where applicable;
-4. certify PDF/A-2b;
-5. certify public/distribution bundles;
-6. resolve issue #18 with deterministic release-reference-PDF rebuild/hash evidence;
-7. close Final Certification only after one immutable candidate passes its complete phase-end regression.
+1. keep the distribution bundle checks unchanged;
+2. perform the provenance timestamp read with `git -c safe.directory="$PWD"`;
+3. use full Git history in the temporary transport so the exact `SOURCE_COMMIT_SHA` can be resolved;
+4. rerun the same permanent `make release-check` contract;
+5. after PASS, remove the temporary workflow and require cleanup Static/Linux before Steps 5-6 acceptance.
+
+Remaining sequence after that cleanup: current-candidate literal-font/Unicode/embedding Step 4; issue #18 deterministic reference PDF; Final Certification immutable phase-end regression; Release.
 
 Certification and reproducibility work do not authorize speculative normative changes.
 

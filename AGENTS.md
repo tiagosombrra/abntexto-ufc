@@ -25,8 +25,9 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
 | Linux release baseline | ACCEPTED — `34168471371`; cleanup `0609f929...` Static/Linux green |
 | Profile/engine matrix | ACCEPTED |
-| Current batch | **Bounded Matrix Validation — Article PDF/A + Distribution Integrity** |
-| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` — transport only, removal required before bounded acceptance |
+| Current batch | **Bounded Matrix Validation — Step 6 runner ownership correction** |
+| Failed bounded transport | `21455c3344...`; Static `34172047639` PASS; Linux `34172047586` PASS; release transport `34172047786` FAIL after 38/38 release checks and Step 5 PASS because Step 6 could not read Git metadata under container ownership |
+| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` — transport only, still active for corrected rerun; removal required before bounded acceptance |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 |
 
@@ -47,7 +48,9 @@ Do not create a new roadmap workstream merely because a validator exposes a defe
 
 ## Current transport rule
 
-`make release-check` contains persistent article-PDF/A and distribution-integrity gates. `.github/workflows/final-cert-bounded-matrix.yml` exists only to run that permanent contract on PR #289. Do not mark Steps 5-6 accepted until the release run is green, the temporary workflow is removed, and cleanup Static/Linux pass.
+`make release-check` contains persistent article-PDF/A and distribution-integrity gates. Run `34172047786` proved the existing release suite at `SCOPE=complete PASS=38 FAIL=0 SKIP=0` and proved Scientific Article PDF/A/embedding PASS, then failed inside Step 6 before bundle construction because Docker-mounted repository ownership caused Git safe-directory rejection while deriving the deterministic epoch. This is a Step 6 runner-integration defect, not a runtime/normative defect.
+
+The correction keeps the predicate intact: the distribution gate now performs provenance Git reads with an explicit per-command safe-directory setting, and the temporary transport uses full Git history so `SOURCE_COMMIT_SHA` can be resolved exactly. Do not mark Steps 5-6 accepted until the corrected release transport is green, the temporary workflow is removed, and cleanup Static/Linux pass.
 
 ## Engineering rules
 
