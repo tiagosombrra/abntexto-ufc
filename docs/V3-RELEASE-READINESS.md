@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-07
-Status: ACTIVE — FINAL CERTIFICATION STEP 6 CORRECTION
+Status: ACTIVE — FINAL CERTIFICATION STEP 6 CANONICAL-CHECKOUT CORRECTION
 
 ## Phase readiness
 
@@ -11,7 +11,7 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 6 CORRECTION
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux `34154045509`; article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 6 CORRECTION** | Steps 1-3 accepted; Step 5 PASS observed; Step 6 runner integration correction active; Steps 4, 7 and phase-end remain |
+| Final Certification | **ACTIVE — STEP 6 CORRECTION** | Steps 1-3 accepted; Step 5 PASS observed twice; Step 6 runner correction active; Steps 4, 7 and phase-end remain |
 | Release | QUEUED | checksums/tag/GitHub Release/publication verification after certification |
 
 ## Current certification state
@@ -22,19 +22,22 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 6 CORRECTION
 | Entry synchronization | ACCEPTED |
 | Linux release baseline | ACCEPTED — `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; cleanup `0609f929...` green |
 | Profile/engine matrix | ACCEPTED |
-| Current bounded transport | `21455c3344...`: Static/Linux PASS; release `34172047786` FAIL only in Step 6 runner integration |
-| Existing 38-check release suite inside failed transport | PASS=38 FAIL=0 SKIP=0 |
-| Scientific Article PDF/A-2b | **PASS observed** — embedding + veraPDF completed before Step 6 failure; bounded acceptance pending corrected full run + cleanup |
-| Distribution/public bundles | **CORRECTION ACTIVE** — Git safe-directory failure occurred before bundle construction |
-| Diagnostic artifact | ID `10036350950`, SHA-256 `5dd4d212bafa16702947065ef0848c9387e63e16d7d7523fee14d1d529a96432` |
+| First bounded transport | `21455c3344...` / `34172047786`: release 38/38, Step 5 PASS, Step 6 Git ownership failure during epoch read |
+| Second bounded transport | `247e31398...` / `34173496336`: release 38/38, Step 5 PASS, Step 6 canonical-checkout detection failure during tracked-file discovery |
+| Second checkpoint Static/Linux | `34173496318` / `34173496285`: PASS / PASS |
+| Second diagnostic artifact | ID `10036808737`, SHA-256 `c56e1c651ce990ddd5a301c5cf60691b1081a06b7eebe66b27503e256e28e273` |
+| Scientific Article PDF/A-2b | **PASS observed twice** — bounded acceptance pending Step 6 green + cleanup |
+| Distribution/public bundles | **CORRECTION ACTIVE** — configure container-local Git trust before persistent release contract |
 | Literal Times New Roman/Arial + Unicode + embedding | PENDING current-candidate Step 4 proof |
-| Temporary validation transport | `.github/workflows/final-cert-bounded-matrix.yml` remains active for corrected rerun; must be removed before Steps 5-6 acceptance |
+| Temporary validation transport | `.github/workflows/final-cert-bounded-matrix.yml` active for corrected rerun; must be removed before Steps 5-6 acceptance |
 | Issue #18 deterministic reference PDF | OPEN — P0 release blocker |
 | Final Certification phase-end regression | not started |
 
 ## Step 6 correction
 
-The failure is infrastructure-only: the TeX Live Docker container saw the mounted checkout as different ownership, so `git log` used to derive `SOURCE_DATE_EPOCH` failed safe-directory validation. The corrected gate keeps all distribution predicates unchanged, performs the provenance read with an explicit per-command safe-directory configuration, and gives the temporary transport full history to resolve the exact `SOURCE_COMMIT_SHA`.
+The first correction fixed exact-source epoch derivation but the second run proved a later Git consumer still failed. `build-distribution-bundles.py` and `build-public-bundles.py` call `git ls-files` to define the canonical tracked-file set. Inside the TeX Live action container, that Git process did not inherit the host runner's safe-directory configuration.
+
+The current runner correction configures only the mounted checkout as a container-local safe directory immediately before `make release-check`. The same configuration is added to the permanent Linux release workflow. No archive-content predicate is removed or weakened.
 
 ## Frozen remaining scope
 
