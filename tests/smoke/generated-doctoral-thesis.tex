@@ -1,0 +1,101 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+
+\documentclass{abntexto-ufc}
+
+\ufcsetup{
+  type = doctoral-thesis,
+  print-mode = single-sided,
+  cover = auto,
+  catalog-card = false,
+  coat-of-arms = true,
+  institution = {Universidade Federal do Ceará},
+  center = {Centro de Ciências},
+  department = {Departamento de Computação},
+  doctoral-graduate-program = {Programa de Pós-Graduação em Ciência da Computação},
+  doctoral-degree-field = {Ciência da Computação},
+  doctoral-concentration = {Computação Gráfica},
+  author = {Nome Completo do Autor},
+  title = {Exemplo de tese de doutorado com o abntexto-ufc V3},
+  subtitle = {Demonstração da estrutura acadêmica e editorial},
+  location = {Fortaleza},
+  year = {2026},
+  approval-date = {7 de setembro de 2026},
+  advisor = {Prof. Dr. Nome do Orientador},
+  advisor-institution = {Universidade Federal do Ceará (UFC)},
+  advisor-unit = {Departamento de Computação},
+  examiner-2 = {Profa. Dra. Nome do Segundo Membro},
+  examiner-2-unit = {Departamento de Computação},
+  examiner-2-institution = {Universidade Federal do Ceará (UFC)},
+  examiner-3 = {Prof. Dr. Nome do Terceiro Membro},
+  examiner-3-unit = {Programa de Pós-Graduação em Ciência da Computação},
+  examiner-3-institution = {Universidade Federal do Ceará (UFC)},
+  examiner-4 = {Profa. Dra. Nome do Quarto Membro},
+  examiner-4-unit = {Departamento de Informática},
+  examiner-4-institution = {Instituição Externa de Teste (IET)}
+}
+
+\begin{filecontents*}{generated-thesis-summary.tex}
+Este exemplo demonstra a apresentação de uma tese de doutorado no perfil V3 da classe
+\texttt{abntexto-ufc}. O conteúdo é deliberadamente sintético: seu objetivo é permitir a
+inspeção visual da capa, folha de rosto, folha de aprovação, resumo, sumário, estrutura
+textual, paginação e elementos pós-textuais sem representar uma tese científica real.
+\ufcSummaryKeywords{tese; LaTeX; UFC; normalização acadêmica}
+\end{filecontents*}
+
+\begin{filecontents*}{generated-thesis-abstract.tex}
+This example demonstrates the doctoral-thesis presentation provided by the V3 profile of
+\texttt{abntexto-ufc}. The content is intentionally synthetic and is intended for visual
+inspection of the academic structure rather than as a scientific thesis.
+\keywords{doctoral thesis; LaTeX; UFC; academic standards}
+\end{filecontents*}
+
+\begin{document}
+
+\pretextual
+\ufcPrintCover
+\ufcPrintTitlePage
+\ufcPrintApprovalPage
+\ufcPrintSummary{generated-thesis-summary}
+\ufcPrintAbstract{generated-thesis-abstract}
+\ufcPrintTableOfContents
+
+\textual
+
+\section{Introdução}
+Uma tese de doutorado apresenta uma contribuição científica original e deve comunicar de
+forma clara o problema investigado, a fundamentação, a metodologia, os resultados e as
+conclusões. Neste arquivo, o texto é apenas demonstrativo e serve para visualizar o perfil
+de tese da classe.
+
+\section{Fundamentação teórica}
+Esta seção ilustra a hierarquia textual adotada pelo modelo. O conteúdo real de uma tese
+deverá ser substituído pela revisão crítica da literatura pertinente ao tema da pesquisa.
+
+\subsection{Conceitos fundamentais}
+Subseções podem ser utilizadas para organizar conceitos, métodos e trabalhos relacionados,
+preservando a hierarquia de seções definida pelo perfil institucional.
+
+\section{Metodologia}
+A metodologia deve descrever materiais, procedimentos, critérios de avaliação, dados,
+experimentos e demais elementos necessários à reprodutibilidade do estudo.
+
+\section{Resultados e discussão}
+Os resultados devem ser apresentados e discutidos em relação aos objetivos e à literatura.
+Este parágrafo existe somente para produzir uma página textual representativa no exemplo.
+
+\section{Conclusão}
+A conclusão sintetiza as contribuições, limitações e perspectivas de continuidade da pesquisa.
+
+\postextual
+\appendix{Exemplo de material elaborado pelo autor}
+Este apêndice demonstra um elemento pós-textual produzido pelo próprio autor do trabalho.
+
+\annex{Exemplo de material externo}
+Este anexo demonstra a posição de material externo na estrutura do documento.\\
+\textbf{Fonte:} Instituição Externa de Teste (2026).
+
+\end{document}
