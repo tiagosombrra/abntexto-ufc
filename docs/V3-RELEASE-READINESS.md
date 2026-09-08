@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-08
-Status: ACTIVE — FINAL CERTIFICATION STEP 4 CLEANUP
+Status: ACTIVE — FINAL CERTIFICATION STEP 7
 
 ## Phase readiness
 
@@ -11,7 +11,7 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 4 CLEANUP
 | Core Corrections | CLOSED | `5f67560a...`; Static `33982156041`; Linux `33982156042` |
 | Reference PDF Validation | CLOSED | `b64074c...`; Static `33985595790`; Linux `33985595798`; 55/55 visual PASS |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux `34154045509`; article PDF 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEP 4 CLEANUP** | Steps 1-3 and 5-6 accepted; Step 4 proof PASS, cleanup Static/Linux pending; issue #18 and phase-end remain |
+| Final Certification | **ACTIVE — STEP 7** | Steps 1-6 accepted; deterministic reference PDF and phase-end remain |
 | Release | QUEUED | tag/GitHub Release/publication verification after certification |
 
 ## Current certification state
@@ -22,26 +22,22 @@ Status: ACTIVE — FINAL CERTIFICATION STEP 4 CLEANUP
 | Entry synchronization | ACCEPTED |
 | Linux release baseline | ACCEPTED |
 | Profile/engine matrix | ACCEPTED |
-| Steps 5-6 | ACCEPTED |
-| Step 4 bounded proof | PASS — `34219229025` on `fae338e16304ad45c353067a0b7982f73a8363c5` |
-| Literal Times New Roman/Arial × pdfLaTeX/LuaLaTeX | PASS |
-| Unicode extraction / embedding / PDF/A-2b | PASS |
-| Proof artifact | generated PDFs only, `10053151610`, one-day retention, digest `sha256:6b0cd0a6ac2543017a8496a1af7feeca70640f2b73862311a4325a981dc5fb60` |
-| Temporary Step 4 executor | REMOVED after evidence capture |
-| Step 4 acceptance | cleanup Static/Linux pending |
-| Issue #18 deterministic reference PDF | OPEN — P0 release blocker |
-| Final Certification phase-end regression | not started |
+| Literal Times New Roman/Arial × pdfLaTeX/LuaLaTeX | ACCEPTED — proof `34219229025`; cleanup `35671aef...`, Static `34224224990`, Linux `34224225080` |
+| Scientific Article PDF/A-2b | ACCEPTED |
+| Distribution/public bundle integrity | ACCEPTED |
+| Temporary executors | none active |
+| Issue #18 deterministic reference PDF | **ACTIVE — P0 release blocker** |
+| Final Certification phase-end regression | queued after Step 7 |
 
-## Step 4 acceptance boundary
+## Step 7 acceptance boundary
 
-The bounded proof satisfied all four family/engine combinations and downstream literal identity, Unicode extraction, embedding and PDF/A-2b checks. No raw proprietary font file was committed or uploaded. The proof-only workflow has been removed. Step 4 becomes ACCEPTED only after the cleanup checkpoint passes Static and Linux.
+A permanent release-verification gate must pin deterministic provenance time, execute at least two independent clean builds of the canonical reference PDF from the same controlled inputs, require identical SHA-256 values and preserve existing PDF validity/font/Unicode/embedding/applicable PDF/A validation. Hash equality alone is not sufficient if other acceptance checks regress.
 
 ## What still blocks v3.0.0
 
 | Blocker | Exit condition |
 |---|---|
-| Step 4 cleanup | Static + Linux green after removal of the temporary workflow |
-| Issue #18 | deterministic epoch + two controlled clean rebuilds + identical reference-PDF SHA-256 with existing validation preserved |
+| Issue #18 | deterministic provenance + two controlled clean rebuilds + identical reference-PDF SHA-256 + existing validation preserved |
 | Final Certification phase-end | one immutable candidate passes complete gate |
 | Release | final documentation/checksums, `v3.0.0` tag/GitHub Release and publication verification |
 
