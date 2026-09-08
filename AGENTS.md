@@ -25,9 +25,11 @@ Memory, prior chats, historical branches and old workflow names never override c
 | Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
 | Linux release baseline | ACCEPTED — `34168471371`; cleanup `0609f929...` Static/Linux green |
 | Profile/engine matrix | ACCEPTED |
-| Current batch | **Bounded Matrix Validation — Step 6 runner ownership correction** |
-| Failed bounded transport | `21455c3344...`; Static `34172047639` PASS; Linux `34172047586` PASS; release transport `34172047786` FAIL after 38/38 release checks and Step 5 PASS because Step 6 could not read Git metadata under container ownership |
-| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` — transport only, still active for corrected rerun; removal required before bounded acceptance |
+| Current batch | **Step 6 canonical-checkout runner correction** |
+| First bounded failure | `21455c3344...` / `34172047786`: release 38/38 + Step 5 PASS, then Git ownership failure during epoch read |
+| Second bounded failure | `247e31398...` / `34173496336`: release 38/38 + Step 5 PASS, then canonical-checkout failure during `git ls-files`; Static `34173496318` and Linux `34173496285` remained green |
+| Second failure artifact | `10036808737`, SHA-256 `c56e1c651ce990ddd5a301c5cf60691b1081a06b7eebe66b27503e256e28e273` |
+| Temporary executor | `.github/workflows/final-cert-bounded-matrix.yml` — transport only, active for corrected rerun; removal required before bounded acceptance |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 | Release blocker | issue #18 |
 
@@ -48,9 +50,9 @@ Do not create a new roadmap workstream merely because a validator exposes a defe
 
 ## Current transport rule
 
-`make release-check` contains persistent article-PDF/A and distribution-integrity gates. Run `34172047786` proved the existing release suite at `SCOPE=complete PASS=38 FAIL=0 SKIP=0` and proved Scientific Article PDF/A/embedding PASS, then failed inside Step 6 before bundle construction because Docker-mounted repository ownership caused Git safe-directory rejection while deriving the deterministic epoch. This is a Step 6 runner-integration defect, not a runtime/normative defect.
+Both bounded transports proved the permanent release suite at 38/38 and the Scientific Article PDF/A/embedding gate PASS. The first failed during Step 6 epoch derivation because Git rejected container ownership. The second progressed past that read and then failed when distribution tooling used `git ls-files` to establish the canonical tracked-file set.
 
-The correction keeps the predicate intact: the distribution gate now performs provenance Git reads with an explicit per-command safe-directory setting, and the temporary transport uses full Git history so `SOURCE_COMMIT_SHA` can be resolved exactly. Do not mark Steps 5-6 accepted until the corrected release transport is green, the temporary workflow is removed, and cleanup Static/Linux pass.
+The current correction is runner-scoped: temporary and permanent Linux release workflows register only the current mounted checkout as a container-local Git `safe.directory` before `make release-check`. This preserves the distribution predicate and avoids embedding runner ownership assumptions into the product runtime. Do not mark Steps 5-6 accepted until the corrected release transport is green, the temporary workflow is removed, and cleanup Static/Linux pass.
 
 ## Engineering rules
 
