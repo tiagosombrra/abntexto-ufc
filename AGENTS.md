@@ -21,14 +21,13 @@ Memory, prior chats and historical branches never override current repository st
 | Target | `3.0.0` |
 | Active phase | **Release** |
 | Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Active task branch | `release/v3-release` |
-| Release PR | pending creation after branch-synchronization commit |
+| Active branch / PR | `release/v3-release` / #293 |
 | Final Certification | **CLOSED** on `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
 | Final Static | `34239890649` SUCCESS |
 | Final complete Linux | `34239890614` SUCCESS — `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | Final Linux release check | `34239890548` SUCCESS — `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
 | Final Certification merge | PR #289 → `e34037f3241aab013b80645b338f38954e02bcda` |
-| Current batch | **Release branch synchronization and release-checklist execution** |
+| Current batch | **Release PR #293 — repository release-checklist execution** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -67,13 +66,12 @@ The machine invariant remains `phase_end_regression.candidate = one-immutable-sh
 
 ## Immediate Release discipline
 
-1. synchronize the short-lived Release branch from merged `main`;
-2. create/update one Release PR and keep branch/PR facts synchronized;
-3. follow `docs/CTAN-RELEASE.md` and repository tooling rather than inventing publication steps;
-4. build and verify final public/distribution artifacts and checksums;
-5. run Release phase-end regression on one immutable candidate: Static, complete Linux and Linux release check;
-6. only after acceptance, create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
-7. verify published assets/checksums before closing Release.
+1. keep Release branch/PR facts synchronized;
+2. follow `docs/CTAN-RELEASE.md` and repository tooling rather than inventing publication steps;
+3. build and verify final public/distribution artifacts and checksums;
+4. run Release phase-end regression on one immutable candidate: Static, complete Linux and Linux release check;
+5. only after acceptance, create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
+6. verify published assets/checksums before closing Release.
 
 ## Fail-closed rule
 

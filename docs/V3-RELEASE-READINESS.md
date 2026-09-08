@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-08
-Status: ACTIVE — RELEASE BRANCH
+Status: ACTIVE — RELEASE PR #293
 
 ## Phase readiness
 
@@ -12,7 +12,7 @@ Status: ACTIVE — RELEASE BRANCH
 | Reference PDF Validation | CLOSED | 55/55 visual PASS |
 | Scientific Article | CLOSED | complete Linux + article PDF 5/5 visual PASS |
 | Final Certification | CLOSED | candidate `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
-| Release | **ACTIVE** | branch synchronized from merged `main`; execute checklist, phase-end regression, tag/Release/publication verification |
+| Release | **ACTIVE** | PR #293 open; execute checklist, phase-end regression, tag/Release/publication verification |
 
 ## Release branch facts
 
@@ -22,7 +22,7 @@ Status: ACTIVE — RELEASE BRANCH
 | Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
 | Release branch | `release/v3-release` |
 | Release branch base | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Release PR | pending creation after synchronization commit |
+| Release PR | #293 — OPEN |
 | Librarian review | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` |
 
 ## Final Certification handoff to Release
@@ -44,19 +44,17 @@ Status: ACTIVE — RELEASE BRANCH
 
 | Order | Action | Gate |
 |---:|---|---|
-| 1 | Synchronize branch facts from merged `main` | DONE by first Release checkpoint |
-| 2 | Create Release PR | record PR number in control plane |
-| 3 | Re-read `docs/CTAN-RELEASE.md` and repository release tooling | no invented publication step |
-| 4 | Build final public/distribution artifacts and checksums | reproducible/integrity gates green |
-| 5 | Run complete release verification on one immutable Release candidate | mandatory Release **phase-end regression** |
-| 6 | Only after acceptance, create `v3.0.0` tag/GitHub Release and perform explicit documented publication | verify published assets/checksums afterwards |
-| 7 | Record final publication/verification evidence and close Release | no unresolved release blocker |
+| 1 | Branch and PR synchronization | DONE |
+| 2 | Re-read `docs/CTAN-RELEASE.md` and repository release tooling | DONE; checklist is current authority |
+| 3 | Build final public/distribution artifacts and checksums | reproducible/integrity gates green |
+| 4 | Run complete release verification on one immutable Release candidate | mandatory Release **phase-end regression** |
+| 5 | Only after acceptance, create `v3.0.0` tag/GitHub Release and perform explicit documented publication | verify published assets/checksums afterwards |
+| 6 | Record final publication/verification evidence and close Release | no unresolved release blocker |
 
 ## Current blockers
 
 | Blocker | Exit condition |
 |---|---|
-| Release PR not yet created | create PR after branch synchronization commit |
 | Release execution and phase-end regression not yet completed | one immutable Release candidate passes all required release checks |
 | Publication not yet verified | tag/Release/publication assets verified against accepted checksums |
 
