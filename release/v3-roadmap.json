@@ -96,9 +96,9 @@
     "scientific_article_phase_end_linux_scope": "complete",
     "scientific_article_phase_end_linux_summary": "PASS=36 FAIL=0 SKIP=0",
     "scientific_article_pdf_visual_review": "pass-5-of-5",
-    "latest_fully_validated_checkpoint_sha": "b25c5a90dc68d87ccd8cdaf5e7000899fe521715",
-    "latest_fully_validated_checkpoint_state": "final-certification-scope-freeze-accepted-static-linux",
-    "final_certification_state": "active-steps5-6-cleanup-after-bounded-pass",
+    "latest_fully_validated_checkpoint_sha": "7307164ba4cf924beecb6678c7af5b79d551d513",
+    "latest_fully_validated_checkpoint_state": "final-certification-steps5-6-cleanup-accepted-static-linux",
+    "final_certification_state": "active-step4-literal-font-unicode-embedding",
     "final_certification_technical_work_started": true,
     "final_certification_branch": "cert/v3-final-certification",
     "final_certification_pr": 289,
@@ -118,16 +118,16 @@
     "release_baseline_cleanup_linux_run": 34170123765,
     "release_baseline_execution_state": "accepted",
     "profile_engine_matrix_state": "accepted",
-    "literal_font_unicode_embedding_state": "pending-current-candidate-proof",
-    "pdfa_state": "article-explicit-gate-pass-bounded-cleanup-pending",
-    "distribution_bundle_state": "pass-observed-cleanup-pending",
+    "literal_font_unicode_embedding_state": "active-current-candidate-proof",
+    "pdfa_state": "accepted",
+    "distribution_bundle_state": "accepted",
     "closure_scope_frozen": true,
     "current_correction_batch": [
-      "Final Certification — Steps 5-6 temporary executor cleanup after successful bounded transport"
+      "Final Certification — Step 4 literal Times New Roman/Arial, Unicode and embedding proof"
     ],
     "pending_acceptance_gates": [
-      "Cleanup checkpoint after temporary bounded-matrix executor removal must pass Static contract and Linux integration before Steps 5-6 acceptance",
       "Final-candidate literal Times New Roman/Arial identity, Unicode extraction and embedding evidence",
+      "Temporary Step 4 executor cleanup Static/Linux if a bounded Windows workflow is used",
       "Resolve issue #18 deterministic release-reference-PDF reproducibility",
       "Pass Final Certification phase-end regression on one immutable SHA"
     ],
@@ -139,17 +139,17 @@
       "review item 33: selected NBR 6023:2025 edge cases"
     ],
     "release_blockers": [
-      "Final Certification Steps 5-6 require cleanup acceptance after temporary executor removal",
       "Final-candidate literal-font/Unicode/embedding proof remains pending",
       "issue #18 deterministic release reference PDF remains open",
       "Final Certification phase-end regression has not completed",
       "Release phase has not executed"
     ],
     "temporary_executor": {
-      "state": "removed-pending-cleanup-validation",
-      "path": ".github/workflows/final-cert-bounded-matrix.yml",
-      "purpose": "historical bounded transport for Steps 5-6; removed after successful run 34175388675",
-      "must_remove_before_checkpoint_acceptance": true
+      "state": "none-active",
+      "last_removed_path": ".github/workflows/final-cert-bounded-matrix.yml",
+      "last_removed_checkpoint_sha": "7307164ba4cf924beecb6678c7af5b79d551d513",
+      "last_cleanup_static_run": 34208318971,
+      "last_cleanup_linux_run": 34208318754
     }
   },
   "linux_integration": {
@@ -263,6 +263,12 @@
     "bounded_matrix_success_step6_proprietary_fonts_redistributed": false,
     "bounded_matrix_success_artifact_id": 10037419414,
     "bounded_matrix_success_artifact_sha256": "e0420e72c4f9afc0d58792ddb1c83df6b3bcdbc8d2db493b53d1b22e0c589da6",
+    "steps5_6_cleanup_checkpoint_sha": "7307164ba4cf924beecb6678c7af5b79d551d513",
+    "steps5_6_cleanup_static_run": 34208318971,
+    "steps5_6_cleanup_static_conclusion": "success",
+    "steps5_6_cleanup_linux_run": 34208318754,
+    "steps5_6_cleanup_linux_conclusion": "success",
+    "steps5_6_cleanup_acceptance": "accepted",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

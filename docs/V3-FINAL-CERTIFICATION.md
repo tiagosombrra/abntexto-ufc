@@ -1,7 +1,7 @@
 # V3 Final Certification
 
 Updated: 2026-09-08
-Status: ACTIVE — STEPS 5-6 CLEANUP AFTER BOUNDED PASS
+Status: ACTIVE — STEP 4 LITERAL-FONT / UNICODE / EMBEDDING
 
 ## Purpose
 
@@ -14,55 +14,40 @@ Final Certification proves the accepted V3 product across the remaining bounded 
 | 1 | Entry synchronization | ACCEPTED | branch/PR and control plane reconciled |
 | 2 | Linux release baseline | ACCEPTED | release `34168471371`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; cleanup Static/Linux green |
 | 3 | Profile/engine matrix | ACCEPTED | current complete release evidence |
-| 4 | Literal Times New Roman/Arial + Unicode + embedding | NEXT AFTER CLEANUP | fresh current-candidate proof required; historical V2 evidence is precedent only |
-| 5 | Scientific Article PDF/A-2b | **PASS OBSERVED — CLEANUP ACCEPTANCE PENDING** | `13e491d18...`; bounded `34175388675`; PDF/A-2b PASS and font embedding PASS |
-| 6 | Distribution/public bundle integrity | **PASS OBSERVED — CLEANUP ACCEPTANCE PENDING** | four distribution artifacts, SHA256SUMS verification and ZIP integrity PASS in `34175388675` |
+| 4 | Literal Times New Roman/Arial + Unicode + embedding | **ACTIVE** | fresh current-candidate Windows proof required |
+| 5 | Scientific Article PDF/A-2b | **ACCEPTED** | bounded `34175388675` PASS; cleanup `7307164...`, Static `34208318971`, Linux `34208318754` PASS |
+| 6 | Distribution/public bundle integrity | **ACCEPTED** | 4 bundles, checksums and archive integrity PASS; cleanup accepted |
 | 7 | Deterministic release reference PDF / issue #18 | QUEUED | two clean builds, identical SHA-256, preserved validation |
 | 8 | Final Certification phase-end regression | QUEUED | one immutable candidate with complete matrix |
 
-## Bounded transport history
+## Steps 5-6 lifecycle closure
 
-| Checkpoint / run | Permanent release matrix | Step 5 | Step 6 | Classification |
-|---|---|---|---|---|
-| `21455c3344...` / `34172047786` | `PASS=38/38` | PASS | Git ownership failure while deriving epoch | runner safe-directory provenance read |
-| `247e31398...` / `34173496336` | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` | PASS | canonical-checkout failure in tracked-file discovery | container-local Git trust |
-| `13e491d18...` / `34175388675` | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` | **PASS** | **PASS** | corrected runner trust accepted technically; cleanup lifecycle now required |
+The successful bounded checkpoint `13e491d18d46a86835b4ab1d7f331f6f09f38849` passed Static `34175388673`, Linux `34175388665` and bounded release `34175388675`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
 
-The successful bounded checkpoint `13e491d18d46a86835b4ab1d7f331f6f09f38849` also passed Static `34175388673` and Linux `34175388665`.
-
-## Successful Step 5 evidence
-
-`34175388675` emitted:
+Step 5 evidence:
 
 `FINAL-CERTIFICATION-EVIDENCE surface=scientific-article-pdfa status=PASS profile=scientific-article engine=pdflatex pdfa=2b font_embedding=PASS`
 
-The canonical Scientific Article build remained on the accepted runtime and passed the complete permanent release suite before this explicit certification gate.
-
-## Successful Step 6 evidence
-
-The same run generated and verified:
-
-- `abntexto-ufc-3.0.0.zip`;
-- `abntexto-ufc-ctan-3.0.0.zip`;
-- `abntexto-ufc-overleaf-3.0.0.zip`;
-- `abntexto-ufc-template-3.0.0.zip`;
-- `SHA256SUMS`.
-
-Evidence:
+Step 6 evidence:
 
 `FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=3.0.0 artifacts=4 checksums=PASS archive_integrity=PASS source_date_epoch=1788829436 proprietary_fonts_redistributed=false`
 
-Bounded artifact: ID `10037419414`, upload SHA-256 `e0420e72c4f9afc0d58792ddb1c83df6b3bcdbc8d2db493b53d1b22e0c589da6`.
+The proof-only `.github/workflows/final-cert-bounded-matrix.yml` was removed at `7307164ba4cf924beecb6678c7af5b79d551d513`. Cleanup Static `34208318971` and Linux `34208318754` both succeeded. Steps 5-6 are therefore ACCEPTED and no temporary executor remains active.
 
-## Cleanup gate
+## Step 4 acceptance contract
 
-The temporary `.github/workflows/final-cert-bounded-matrix.yml` has served its bounded transport purpose and is removed in the synchronization/cleanup checkpoint that follows `13e491d18...`.
+Fresh current-candidate evidence must cover all four combinations:
 
-Steps 5-6 become **ACCEPTED** only after that cleanup checkpoint passes Static and Linux. The permanent contract remains `make release-check`; no release, runtime, normative or archive-integrity predicate is weakened.
+| Family | Engine | Required proof |
+|---|---|---|
+| Times New Roman | pdfLaTeX | literal family identity, Unicode extraction, embedding |
+| Arial | pdfLaTeX | literal family identity, Unicode extraction, embedding |
+| Times New Roman | LuaLaTeX | literal family identity, Unicode extraction, embedding |
+| Arial | LuaLaTeX | literal family identity, Unicode extraction, embedding |
 
-## Step 4 design boundary
+Windows runner fonts may be used for proof, but proprietary font files must never be committed, uploaded as standalone artifacts or redistributed in bundles. PDF artifacts may be used only as bounded certification evidence. Reuse existing `tools/prepare-windows-fonts.ps1`, `tests/integration/font-poc.sh` and `tests/integration/windows-font-pdfa.sh` where they still represent the current product contract; historical V2 certification is precedent, not acceptance evidence for the current candidate.
 
-After cleanup acceptance, execute fresh current-candidate literal-font evidence covering Times New Roman and Arial, pdfLaTeX/LuaLaTeX, Unicode extraction and embedding, retaining PDF/A where applicable. Proprietary fonts must not be redistributed.
+If a temporary Step 4 workflow is required, its lifecycle is create -> execute -> validate -> remove -> cleanup Static/Linux. Step 4 becomes ACCEPTED only after both proof and cleanup are recorded.
 
 ## Step 7 boundary
 

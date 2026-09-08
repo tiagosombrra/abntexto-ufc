@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-3 are accepted. The corrected bounded candidate `13e491d18...` passed Static, Linux, complete `make release-check`, Scientific Article PDF/A-2b/font embedding, and distribution bundle integrity. The temporary bounded transport is now being removed; Steps 5-6 require cleanup Static/Linux before acceptance.**
+**Final Certification is ACTIVE on `cert/v3-final-certification`. Steps 1-3 and 5-6 are accepted. The temporary Steps 5-6 transport was removed and its cleanup checkpoint `7307164...` passed Static `34208318971` and Linux `34208318754`. The active certification batch is Step 4: fresh current-candidate literal-font/Unicode/embedding proof.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -12,7 +12,7 @@ Updated: 2026-09-08
 | Core Corrections | CLOSED | `5f67560a...`; Static/Linux green |
 | Reference PDF Validation | CLOSED | `b64074c...`; 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | `923d11ef...`; complete Linux + 5/5 visual PASS |
-| Final Certification | **ACTIVE — STEPS 5-6 CLEANUP** | Steps 4-7 accepted + immutable phase-end regression |
+| Final Certification | **ACTIVE — STEP 4** | Steps 4 and 7 accepted + immutable phase-end regression |
 | Release | QUEUED | final release actions after certification |
 
 ## Final Certification roadmap
@@ -22,27 +22,33 @@ Updated: 2026-09-08
 | 1 | Entry synchronization | ACCEPTED |
 | 2 | Linux release baseline | ACCEPTED |
 | 3 | Profile and engine certification | ACCEPTED |
-| 4 | Literal Times New Roman/Arial, Unicode and embedding | NEXT AFTER CLEANUP |
-| 5 | Scientific Article PDF/A-2b | **PASS OBSERVED — cleanup acceptance pending** |
-| 6 | Distribution/public bundle integrity | **PASS OBSERVED — cleanup acceptance pending** |
+| 4 | Literal Times New Roman/Arial, Unicode and embedding | **ACTIVE** |
+| 5 | Scientific Article PDF/A-2b | **ACCEPTED** |
+| 6 | Distribution/public bundle integrity | **ACCEPTED** |
 | 7 | Issue #18 deterministic reference PDF | QUEUED |
 | 8 | Final Certification phase-end regression | QUEUED |
 
-## Bounded transport result
+## Steps 5-6 accepted evidence
 
-| Checkpoint / run | Release contract | Step 5 | Step 6 | Artifact |
-|---|---|---|---|---|
-| `13e491d18...` / `34175388675` | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` | PDF/A-2b + embedding PASS | 4 bundles + checksums + archive integrity PASS | `10037419414`, SHA-256 `e0420e72...` |
+| Surface | Evidence |
+|---|---|
+| Bounded candidate | `13e491d18d46a86835b4ab1d7f331f6f09f38849` |
+| Static / Linux | `34175388673` PASS / `34175388665` PASS |
+| Release transport | `34175388675`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Step 5 | PDF/A-2b + embedding PASS |
+| Step 6 | 4 bundles + SHA256SUMS + archive integrity PASS |
+| Cleanup checkpoint | `7307164ba4cf924beecb6678c7af5b79d551d513` |
+| Cleanup Static / Linux | `34208318971` PASS / `34208318754` PASS |
 
-Static `34175388673` and Linux `34175388665` also passed on the same bounded candidate.
-
-The temporary `.github/workflows/final-cert-bounded-matrix.yml` is removed in the current cleanup advance. Permanent Step 5/6 behavior remains in `make release-check` and the permanent Linux release workflow.
+The proof-only workflow is absent after the accepted cleanup. Permanent certification behavior remains in the permanent release/integration contracts.
 
 ## Frozen remaining scope
 
 The finite path is:
 
-**cleanup Static/Linux → Step 4 current-candidate literal-font/Unicode/embedding proof → issue #18 deterministic reference PDF → Final Certification phase-end regression → Release.**
+**Step 4 literal-font/Unicode/embedding proof → issue #18 deterministic reference PDF → Final Certification phase-end regression → Release.**
+
+A temporary Step 4 executor, if required for the Windows runner, must be removed after evidence capture and followed by cleanup Static/Linux before Step 4 acceptance.
 
 No new phase or certification step is created merely because a validator finds a defect. New findings are classified inside Steps 4-8.
 

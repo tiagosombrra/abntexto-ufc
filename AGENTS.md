@@ -24,15 +24,14 @@ Memory, prior chats and historical branches never override current repository st
 | Active branch / PR | `cert/v3-final-certification` / #289 |
 | Scientific Article | CLOSED — `923d11ef...`; complete Linux + 5/5 visual PASS |
 | Steps 1-3 | ACCEPTED |
-| Successful bounded candidate | `13e491d18...` |
-| Static / Linux / bounded release | `34175388673` PASS / `34175388665` PASS / `34175388675` PASS |
-| Step 5 | Scientific Article PDF/A-2b + embedding PASS observed |
-| Step 6 | 4 bundles + checksums + archive integrity PASS observed |
-| Current batch | **Steps 5-6 temporary executor cleanup** |
-| Temporary executor | removed in current cleanup checkpoint; cleanup Static/Linux required before acceptance |
-| Next | Step 4 fresh current-candidate literal-font/Unicode/embedding proof |
+| Steps 5-6 | **ACCEPTED** — bounded `13e491d18...`; cleanup `7307164ba4cf924beecb6678c7af5b79d551d513` |
+| Cleanup Static / Linux | `34208318971` PASS / `34208318754` PASS |
+| Step 5 | Scientific Article PDF/A-2b + embedding PASS |
+| Step 6 | 4 bundles + checksums + archive integrity PASS |
+| Current batch | **Step 4 — fresh current-candidate literal-font/Unicode/embedding proof** |
+| Temporary executor | none active after accepted Steps 5-6 cleanup |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Release blocker | issue #18 |
+| Release blocker | issue #18 deterministic reference PDF |
 
 ## Readable phase model
 
@@ -45,13 +44,13 @@ Memory, prior chats and historical branches never override current repository st
 
 ## Closure-scope freeze
 
-Remaining certification scope is fixed to: Steps 5-6 cleanup acceptance; fresh literal-font/Unicode/embedding proof; issue #18 deterministic reference-PDF proof; one immutable Final Certification **phase-end regression**; then Release.
+Remaining certification scope is fixed to: fresh current-candidate literal Times New Roman/Arial identity, Unicode extraction and embedding proof; issue #18 deterministic reference-PDF proof; one immutable Final Certification **phase-end regression**; then Release.
 
 Do not create a new roadmap workstream merely because a validator exposes a defect. Classify it inside the existing acceptance predicate.
 
 ## Temporary workflow lifecycle
 
-The bounded transport `34175388675` succeeded on `13e491d18...`. The temporary `.github/workflows/final-cert-bounded-matrix.yml` must therefore be removed before Steps 5-6 acceptance. The cleanup checkpoint itself must pass Static and Linux. Permanent certification behavior remains `make release-check`; do not move bounded-only orchestration into the product runtime.
+Steps 5-6 used bounded transport `34175388675` on `13e491d18...`. The temporary workflow was removed at `7307164...`; cleanup Static `34208318971` and Linux `34208318754` are green, so Steps 5-6 are accepted. Any temporary Step 4 executor must follow the same atomic lifecycle: create -> execute -> validate -> remove -> cleanup validation.
 
 ## Engineering rules
 
@@ -60,7 +59,6 @@ The bounded transport `34175388675` succeeded on `13e491d18...`. The temporary `
 - Do not silently change normative IDs, values, tolerances, locators, applicability, source precedence, modality or proof state.
 - A green test proves only its encoded contract.
 - Do not weaken tests merely to recover green CI.
-- Temporary workflow lifecycle is atomic: create -> execute -> validate -> remove -> cleanup validation.
 - Do not redistribute proprietary Microsoft fonts.
 - Item 33 remains fail-closed and is not a hidden implementation task.
 - Do not perform CTAN/external publication before **Release**.
