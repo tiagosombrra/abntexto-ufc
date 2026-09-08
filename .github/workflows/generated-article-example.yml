@@ -1,0 +1,38 @@
+name: Generate scientific article example
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Compile scientific article preview
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -eu
+            export TEXINPUTS=".//:"
+            sed 's/@UFC_TYPE@/scientific-article/g' tests/smoke/scientific-article-profile.tex > generated-scientific-article.tex
+            pdflatex -jobname=scientific-article -interaction=nonstopmode -halt-on-error -file-line-error generated-scientific-article.tex
+            biber scientific-article
+            pdflatex -jobname=scientific-article -interaction=nonstopmode -halt-on-error -file-line-error generated-scientific-article.tex
+            pdflatex -jobname=scientific-article -interaction=nonstopmode -halt-on-error -file-line-error generated-scientific-article.tex
+            test -s scientific-article.pdf
+
+      - name: Upload generated PDF
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: scientific-article-example
+          path: scientific-article.pdf
+          if-no-files-found: error
