@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "release": "3.0.0",
+  "phase": "Release",
+  "branch": "release/v3.0.0",
+  "base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+  "state": "transport-probe",
+  "purpose": "Permanent Release metadata surface that forces complete Linux integration and triggers the Linux release check on the exact pull-request candidate SHA.",
+  "temporary": false,
+  "distribution_artifact": false,
+  "candidate_sha_is_self_referential": false
+}
