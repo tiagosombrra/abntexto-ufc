@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## Current status
 
-**Release is ACTIVE — final human / pkgcheck gates.** Publication hardening (PR #297) and post-hardening control synchronization (PR #298) are merged. The only taggable candidate will be the exact canonical `main` commit produced after the final executable `pkgcheck` and seven-profile human-acceptance controls are merged and then recertified.
+**Release is ACTIVE — final exact-main recertification / human approval.** Publication hardening (PR #297) and post-hardening control synchronization (PR #298) are merged. The only taggable candidate is the exact canonical `main` SHA containing the executable current-CTAN `pkgcheck` and seven-profile human-acceptance controls and then passing the final gates.
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -22,7 +22,7 @@ Updated: 2026-09-09
 | Canonical branch | `main`; resolve HEAD dynamically from Git |
 | Publication-hardening PR | #297 — **MERGED** |
 | Post-hardening control PR | #298 — **MERGED**, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
-| Active final-gate work | `release/v3-final-human-gate-v2` until merged |
+| Final candidate policy | exact canonical `main` containing current `pkgcheck` + seven-profile human-acceptance gates |
 | Post-hardening exact-main evidence | run `34355988612`: `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
 | Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
 | Librarian matrix | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
@@ -48,7 +48,7 @@ Updated: 2026-09-09
 
 ## R3 — Final exact-main recertification
 
-**PENDING final-gate merge.** Resolve exact resulting `main` SHA and run Static, automatic `scope=complete` Linux integration and Linux release check on that same SHA. No later pre-tag repository commit is allowed without reopening the cycle.
+**PENDING exact candidate resolution.** Resolve the exact canonical `main` SHA containing the final release gates and run Static, automatic `scope=complete` Linux integration and Linux release check on that same SHA. No later pre-tag repository commit is allowed without reopening the cycle.
 
 Required invariant:
 
@@ -80,4 +80,4 @@ A preliminary 7/7 set from `25c6ab09...` passed automated preflight and page-by-
 
 ## Operating discipline
 
-Every **material advance** or repository modification updates affected documentation and machine state in the same work cycle. `README.md` tracks user-facing facts, not transient CI state. Targeted checks never replace the final phase-end regression, and automated green tests never replace explicit maintainer visual approval.
+Every **material advance** or repository modification updates affected documentation and machine state in the same work cycle. `README.md` tracks user-facing facts, not transient CI state. Targeted checks never replace the final **phase-end regression**, and automated green tests never replace explicit maintainer visual approval.
