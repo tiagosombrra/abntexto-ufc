@@ -22,10 +22,13 @@ Memory, prior chats and historical branches never override current repository st
 | Active phase | **Release** |
 | Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
 | Active branch / PR | `release/v3-release` / #293 |
-| Artifact-delivery implementation | **ACCEPTED** on `b55210acdb614fc3178e3ebf5b3a595bed8508c1` |
-| Artifact-delivery Static / Linux | `34300561597` SUCCESS / `34300561605` SUCCESS, complete scope |
-| Acceptance sync | `6ab4768662aa51842cf745afbf846e89b6bd466a`; Static `34303128975` SUCCESS |
-| Current batch | **Release immutable phase-end candidate — marker published, regression pending** |
+| Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **PHASE-END REGRESSION ACCEPTED** |
+| Candidate Static | `34303586782` — SUCCESS |
+| Candidate Linux | `34303586778` — SUCCESS, complete scope |
+| Candidate Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Retained distribution artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
+| Independent retained-artifact verification | exact five-file set, `SHA256SUMS` PASS and all four ZIP integrity checks PASS |
+| Current batch | **Release publication — merge/tag/GitHub Release verification pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -58,22 +61,39 @@ A **material advance** changes runtime, evidence, certification/release result, 
 
 ## Mandatory phase-end regression
 
-Release now has one immutable candidate commit containing `release/v3-release-candidate.json` and synchronized candidate-pending state. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`; the actual Git candidate SHA is recorded only after the commit exists and CI is classified.
+Release phase-end regression is accepted on immutable candidate `75ead435eabe5157ed17c295ac26fce76438b0ca`. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`; the actual Git candidate SHA is recorded in evidence rather than self-recorded inside the candidate.
 
-Do not amend the candidate after CI starts. Require Static contract, complete Linux integration and `Linux release check` on that same candidate.
+Accepted gates on the same candidate:
+
+- Static contract `34303586782` — SUCCESS;
+- Linux integration `34303586778` — SUCCESS with required complete scope;
+- Linux release check `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`;
+- deterministic reference-PDF reproducibility — PASS, SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65`, 450652 bytes;
+- candidate-retained distribution bytes — independently downloaded and verified without rebuilding.
+
+The phase itself remains ACTIVE until publication/verification closeout is complete.
 
 ## Artifact provenance rule
 
-The permanent `Linux release check` hardening was accepted on `b55210ac...`. The candidate workflow must retain the exact four distribution ZIPs and `SHA256SUMS`. Those retained bytes, not rebuilt archives, are the only allowed source for the GitHub Release after candidate acceptance.
+Only the retained candidate artifact from Linux release check `34303586773` may supply publication bytes. Artifact ID `10086299397` is bound to candidate `75ead435...` and has upload digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222`.
+
+Verified inner checksums:
+
+- `abntexto-ufc-3.0.0.zip`: `c38fe32bc6b51ff3b7723b4ef118574d130cea97f29d443c1fc4d08b24e0b207`
+- `abntexto-ufc-ctan-3.0.0.zip`: `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60`
+- `abntexto-ufc-overleaf-3.0.0.zip`: `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b`
+- `abntexto-ufc-template-3.0.0.zip`: `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791`
+
+Do not rebuild these archives for publication.
 
 ## Immediate Release discipline
 
-1. wait for Static + complete Linux + Linux release check on the immutable candidate;
-2. classify any failure before changing code/tests;
-3. verify the retained candidate artifact and checksums;
-4. record candidate SHA, run IDs and artifact identity in a later documentation-only synchronization commit;
-5. only after acceptance create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
-6. verify published hashes before closing Release.
+1. synchronize this accepted candidate evidence in repository documentation and PR #293;
+2. merge PR #293 only after the synchronization Static contract is green;
+3. create `v3.0.0` tag and GitHub Release using the exact retained candidate-produced bytes;
+4. verify published asset hashes against the accepted checksums;
+5. perform CTAN `pkgcheck` and any actual CTAN upload only as an explicit action with receipt/evidence;
+6. update documentation after every material advance and run final Release verification before marking Release CLOSED.
 
 ## Fail-closed rule
 

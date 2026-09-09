@@ -1,5 +1,7 @@
 # CTAN Release Candidate Guide
 
+Updated: 2026-09-09
+
 This document defines the repository-controlled CTAN/GitHub release procedure for `abntexto-ufc` 3.0.0. It is a maintainer/release guide, not a claim of CTAN acceptance.
 
 ## Package identity
@@ -12,11 +14,27 @@ This document defines the repository-controlled CTAN/GitHub release procedure fo
 - Status: unofficial, community-maintained UFC-oriented class.
 - Current roadmap phase: **Release**.
 - Final Certification is closed on candidate `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9`; PR #289 merged to `main` as `e34037f3241aab013b80645b338f38954e02bcda`.
+- Release phase-end candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is **accepted**: Static `34303586782`, complete Linux `34303586778`, Linux release check `34303586773` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
 - Actual CTAN upload remains a separate explicit Release action and must never be reported as acceptance before a receipt/acceptance exists.
+
+## Certified retained candidate assets
+
+Publication archives must come from retained Actions artifact ID `10086299397` (`abntexto-ufc-v3.0.0-distribution-34303586773`), produced from candidate `75ead435...`. Its GitHub artifact digest is `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222`.
+
+The artifact was independently downloaded without rebuilding. Its archive digest matched GitHub metadata, `SHA256SUMS` passed for all four contained ZIPs, and ZIP integrity checks passed.
+
+| Asset | Accepted SHA-256 |
+|---|---|
+| `abntexto-ufc-3.0.0.zip` | `c38fe32bc6b51ff3b7723b4ef118574d130cea97f29d443c1fc4d08b24e0b207` |
+| `abntexto-ufc-ctan-3.0.0.zip` | `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60` |
+| `abntexto-ufc-template-3.0.0.zip` | `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791` |
+| `abntexto-ufc-overleaf-3.0.0.zip` | `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b` |
+
+Do not rerun `make distribution-bundles` to manufacture publication bytes after this acceptance point. The build command remains documented below for development/reconstruction only; publication uses the retained artifact above.
 
 ## Build the candidate
 
-From the intended Release candidate checkout:
+For development or a future candidate replacement before acceptance:
 
 ```bash
 make distribution-bundles
@@ -61,15 +79,13 @@ Only the separate Overleaf bundle may vendor the pinned upstream `abntexto.cls`.
 
 ## Release validation
 
-Before publication, the immutable Release candidate must pass:
+The immutable Release candidate has passed:
 
-```bash
-make release-check
-```
+- Static contract `34303586782`;
+- complete Linux integration `34303586778`;
+- `Linux release check` `34303586773`, including `make release-check`, deterministic reference-PDF reproducibility, PDF/A/embedding/Unicode checks and distribution integrity.
 
-The permanent GitHub workflow is `Linux release check`. Release phase-end acceptance also requires Static contract and **complete** Linux integration on the same immutable candidate SHA.
-
-The deterministic release-reference-PDF gate is permanent and must remain green.
+The deterministic release-reference-PDF gate is permanent and must remain green for any later candidate replacement.
 
 ## Distribution verification
 
@@ -81,7 +97,7 @@ python3 tests/checks/distribution_bundles.py --abntexto /path/to/pinned/abntexto
 
 It validates artifact names, SHA-256 metadata, reproducibility, safe paths, package/CTAN layouts, documentation PDF presence, external-upstream semantics and asset exclusions.
 
-The CTAN candidate must additionally be checked with the **current** CTAN `pkgcheck`; do not freeze an old version into permanent policy.
+Before actual CTAN upload, the certified `abntexto-ufc-ctan-3.0.0.zip` must additionally be checked with the **current** CTAN `pkgcheck`; do not freeze an old version into permanent policy.
 
 Current references:
 
@@ -101,23 +117,18 @@ Before an actual CTAN submission confirm:
 - repository and issue tracker;
 - dependency on `abntexto`;
 - appropriate CTAN topics/categories;
-- exact certified `abntexto-ufc-ctan-3.0.0.zip`.
+- exact certified `abntexto-ufc-ctan-3.0.0.zip` with SHA-256 `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60`.
 
 ## Final Release checklist
 
-1. Work from the intended immutable Release candidate, not unrecorded local modifications.
-2. Confirm successful Static contract, **complete** Linux integration and `Linux release check` on that exact candidate.
-3. Confirm the candidate remains covered by accepted Final Certification evidence or proportionally re-establish any affected proof.
-4. Run `make distribution-bundles`.
-5. Verify `dist/SHA256SUMS` and the four exact ZIP names.
-6. Run the repository distribution checker.
-7. Extract the CTAN candidate and compile the shipped example with external `abntexto`.
-8. Run the current CTAN `pkgcheck`.
-9. Confirm README/manual/example version and canonical v3 API.
-10. Confirm no institutional/proprietary assets, validation evidence, temporary workflows, downloaded reference photographs or auxiliary files are distributed.
-11. Only after Release phase-end acceptance create `v3.0.0` tag and GitHub Release with the certified assets/checksums.
-12. Verify the published GitHub assets/checksums.
-13. Perform an actual CTAN upload only as an explicit action when the required uploader metadata/channel is available; preserve submission/acceptance evidence.
-14. Update roadmap, handoff, release readiness and machine state after every **material advance** and run a final Release **phase-end regression** before closing the phase.
+1. Preserve immutable Release candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` and its accepted phase-end evidence.
+2. Land the documentation synchronization and merge PR #293 to canonical `main`.
+3. Create `v3.0.0` tag and GitHub Release using the exact retained candidate-produced files; do not rebuild them.
+4. Verify every published GitHub asset hash against the accepted checksums in this document.
+5. Extract the retained CTAN candidate and run the current CTAN `pkgcheck`.
+6. Confirm README/manual/example version, canonical v3 API, dependency metadata and distribution exclusions.
+7. Perform an actual CTAN upload only as an explicit action when required uploader metadata/channel is available; preserve submission and later acceptance evidence.
+8. Update roadmap, handoff, release readiness and machine state after every **material advance**.
+9. Perform final Release verification before marking the Release phase CLOSED. The accepted immutable **phase-end regression** remains the evidence anchor; publication verification is an additional closeout obligation.
 
 Building or validating a candidate is not CTAN acceptance.
