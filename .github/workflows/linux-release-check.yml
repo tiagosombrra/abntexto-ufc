@@ -22,6 +22,7 @@ on:
     paths:
       - release/final-certification-candidate.json
       - release/v3-release-candidate.json
+      - .github/workflows/linux-release-check.yml
   workflow_dispatch:
 
 permissions:
@@ -44,15 +45,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Run repository release contract and build certified assets
+      - name: Run repository release contract, build assets and execute CTAN pkgcheck
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
           texlive_version: 2026
           os: debian
           run: |
+            set -eu
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
-            apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli
+            apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli curl ca-certificates unzip
             node --version
             docker --version
             # The TeX Live action executes inside a container over the runner checkout.
@@ -85,6 +87,31 @@ jobs:
                 )
             PY
 
+            # Fetch pkgcheck at execution time so this gate follows the version
+            # currently published by CTAN instead of permanently pinning one release.
+            mkdir -p artifacts/validation /tmp/ctan-pkgcheck /tmp/ctan-candidate
+            curl --fail --location --retry 3 --retry-delay 2 \
+              https://mirrors.ctan.org/support/pkgcheck.zip \
+              --output /tmp/pkgcheck.zip
+            unzip -q /tmp/pkgcheck.zip -d /tmp/ctan-pkgcheck
+            PKGCHECK="$(find /tmp/ctan-pkgcheck -type f -path '*/bin/pkgcheck' -print -quit)"
+            test -n "$PKGCHECK"
+            chmod +x "$PKGCHECK"
+            "$PKGCHECK" --version > artifacts/validation/pkgcheck-version.txt 2>&1
+            cat artifacts/validation/pkgcheck-version.txt
+            sha256sum dist/abntexto-ufc-3.0.0.zip > artifacts/validation/pkgcheck-archive.sha256
+            unzip -q dist/abntexto-ufc-3.0.0.zip -d /tmp/ctan-candidate
+            if ! "$PKGCHECK" --no-colors -d /tmp/ctan-candidate/abntexto-ufc \
+              > artifacts/validation/pkgcheck.log 2>&1; then
+              cat artifacts/validation/pkgcheck.log
+              echo 'CTAN pkgcheck failed.'
+              exit 1
+            fi
+            cat artifacts/validation/pkgcheck.log
+            printf '%s\n' \
+              "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS source_sha=$SOURCE_COMMIT_SHA archive=abntexto-ufc-3.0.0.zip" \
+              | tee artifacts/validation/pkgcheck-evidence.txt
+
       - name: Publish validation summary
         if: always()
         shell: bash
@@ -92,12 +119,28 @@ jobs:
           {
             echo '## Linux release validation'
             echo
-            echo '> This Linux gate is engineering evidence only. Final Windows/literal-font/PDF-A certification remains Final Certification-owned.'
+            echo '> This Linux gate is engineering evidence. The retained Windows/literal-font proof remains separately scope-controlled.'
             echo
             if [[ -f artifacts/validation/validation-report.md ]]; then
               cat artifacts/validation/validation-report.md
             else
               echo 'No repository validation report was produced.'
+            fi
+            echo
+            echo '### CTAN pkgcheck'
+            if [[ -f artifacts/validation/pkgcheck-version.txt ]]; then
+              echo '```text'
+              cat artifacts/validation/pkgcheck-version.txt
+              echo '```'
+            else
+              echo 'pkgcheck version evidence was not produced.'
+            fi
+            if [[ -f artifacts/validation/pkgcheck.log ]]; then
+              echo '```text'
+              cat artifacts/validation/pkgcheck.log
+              echo '```'
+            else
+              echo 'pkgcheck output was not produced.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
