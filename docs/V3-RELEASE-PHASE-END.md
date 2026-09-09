@@ -13,7 +13,7 @@ Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` remains historical technica
 
 PR #297 subsequently repaired the publication boundary. Its final head passed Static, complete Linux integration and Linux release check with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; the generated CTAN archive was manually audited as one project-owned class file and zero `.def` files. The protected squash merge produced integration anchor `25c6ab09dc38be9257d2912652074a48886d28f9`.
 
-That integration anchor is not the final taggable candidate because this control-plane synchronization intentionally follows it.
+That integration anchor was not the final taggable candidate because the later control-plane synchronization produced the certified source SHA recorded below.
 
 ## Final candidate definition
 
