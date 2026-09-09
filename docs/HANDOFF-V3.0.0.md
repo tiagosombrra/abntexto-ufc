@@ -8,10 +8,10 @@ Updated: 2026-09-09
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; always resolve exact candidate SHA dynamically from Git |
-| Active phase | **Release — final human / pkgcheck gates** |
+| Active phase | **Release — final exact-main recertification / human approval** |
 | Publication hardening | **MERGED** through PR #297 |
 | Post-hardening control synchronization | **MERGED** through PR #298, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
-| Active final-gate branch | `release/v3-final-human-gate-v2` until merged |
+| Final release gates | current CTAN `pkgcheck` + explicit seven-profile PDF/`.tex` maintainer approval |
 | Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
 | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
 | CTAN archive | one canonical upload file: `abntexto-ufc-3.0.0.zip` |
@@ -29,7 +29,7 @@ PR #297 closed the publication defects and CTAN-shape issues. Its protected merg
 
 The baseline canonical CTAN ZIP was physically audited as exactly eight files under one package root, one `abntexto-ufc.cls`, zero `.def`, no vendored `abntexto.cls`, no institutional marks and no proprietary Microsoft fonts. The generated class contained all 14 tracked runtime modules exactly once.
 
-PR #298 then synchronized the post-hardening machine/control state and configured complete Linux integration on exact-main release-marker pushes.
+PR #298 then synchronized the post-hardening machine/control state and configured complete Linux integration on exact-main release-marker pushes. The final candidate definition additionally requires executable current-CTAN `pkgcheck` evidence and explicit maintainer review of all seven supported document profiles.
 
 ## Mandatory final seven-profile review
 
@@ -71,17 +71,16 @@ The final Linux release run must preserve current `pkgcheck` version, complete o
 
 ## Remaining Release work
 
-1. merge the final pkgcheck/human-gate control branch through protected `main`;
-2. resolve the exact resulting SHA;
-3. require Static, automatic complete Linux integration and Linux release check — including current CTAN `pkgcheck` — on that SHA;
-4. retain and physically re-audit deterministic distribution bytes;
-5. regenerate all seven exact-candidate PDF/`.tex` review pairs and obtain explicit maintainer approval;
-6. freeze hashes/evidence;
-7. create immutable `v3.0.0` on the same certified and visually approved SHA;
-8. create GitHub Release and verify re-downloaded hashes;
-9. submit only canonical ZIP to CTAN;
-10. retain receipt/acceptance/install evidence;
-11. synchronize final publication facts and close Release.
+1. resolve the exact canonical `main` SHA containing the final release gates;
+2. require Static, automatic complete Linux integration and Linux release check — including current CTAN `pkgcheck` — on that SHA;
+3. retain and physically re-audit deterministic distribution bytes;
+4. regenerate all seven exact-candidate PDF/`.tex` review pairs and obtain explicit maintainer approval;
+5. freeze hashes/evidence;
+6. create immutable `v3.0.0` on the same certified and visually approved SHA;
+7. create GitHub Release and verify re-downloaded hashes;
+8. submit only canonical ZIP to CTAN;
+9. retain receipt/acceptance/install evidence;
+10. synchronize final publication facts and close Release.
 
 Invariant:
 
@@ -91,6 +90,6 @@ certified source SHA == visually approved source SHA == tagged v3.0.0 SHA == sou
 
 ## Windows/literal-font evidence
 
-Retained Windows literal-font certification remains scope-valid because the current final-control changes do not alter font runtime or engine behavior. Any font/engine/certification-relevant implementation change before freeze forces a fresh Windows run.
+Retained Windows literal-font certification remains scope-valid because the final Release-control changes do not alter font runtime or engine behavior. Any font/engine/certification-relevant implementation change before freeze forces a fresh Windows run.
 
 Every **material advance** updates affected documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. No build, tag or submission is treated as CTAN acceptance without explicit external evidence.
