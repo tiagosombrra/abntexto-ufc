@@ -1,0 +1,149 @@
+name: V3 final pkgcheck evidence
+
+on:
+  push:
+    branches:
+      - ci/v3-final-pkgcheck-evidence
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: v3-final-pkgcheck-evidence
+  cancel-in-progress: false
+
+jobs:
+  pkgcheck:
+    name: pkgcheck 4.1.0 on frozen CTAN ZIP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CERTIFIED_SOURCE_SHA: 05399473827da7cf6b6c8bac36edc7115481773f
+      DISTRIBUTION_ARTIFACT_ID: '10117679639'
+      DISTRIBUTION_ARTIFACT_SHA256: 7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df
+      CTAN_ZIP_SHA256: d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71
+      CTAN_ZIP_NAME: abntexto-ufc-3.0.0.zip
+      REQUIRED_PKGCHECK_VERSION: 4.1.0
+    steps:
+      - name: Install runtime prerequisites
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends curl file poppler-utils unzip
+
+      - name: Assert certified main has not moved
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current_main="$(gh api "/repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')"
+          printf 'certified_source_sha=%s\ncurrent_main_sha=%s\n' "$CERTIFIED_SOURCE_SHA" "$current_main" | tee main-sha.txt
+          test "$current_main" = "$CERTIFIED_SOURCE_SHA"
+
+      - name: Download exact certified distribution artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/${DISTRIBUTION_ARTIFACT_ID}/zip" > final-distribution-artifact.zip
+          printf '%s  %s\n' "$DISTRIBUTION_ARTIFACT_SHA256" final-distribution-artifact.zip | sha256sum -c -
+          unzip -q final-distribution-artifact.zip -d final-distribution
+          test -f "final-distribution/${CTAN_ZIP_NAME}"
+          printf '%s  %s\n' "$CTAN_ZIP_SHA256" "final-distribution/${CTAN_ZIP_NAME}" | sha256sum -c -
+          sha256sum final-distribution-artifact.zip "final-distribution/${CTAN_ZIP_NAME}" | tee frozen-hashes.txt
+
+      - name: Assert frozen CTAN package shape
+        run: |
+          set -euo pipefail
+          mkdir package
+          unzip -q "final-distribution/${CTAN_ZIP_NAME}" -d package
+          test -d package/abntexto-ufc
+          test "$(find package -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 1
+          test "$(find package/abntexto-ufc -type f | wc -l)" -eq 8
+          test "$(find package/abntexto-ufc -type f -name '*.cls' | wc -l)" -eq 1
+          test "$(find package/abntexto-ufc -type f -name '*.def' | wc -l)" -eq 0
+          find package/abntexto-ufc -printf '%M %P\n' | sort | tee package-tree.txt
+
+      - name: Download current CTAN pkgcheck distribution
+        run: |
+          set -euo pipefail
+          curl -fL --retry 5 --retry-all-errors https://mirrors.ctan.org/support/pkgcheck.zip -o pkgcheck-distribution.zip
+          unzip -q pkgcheck-distribution.zip -d pkgcheck-distribution
+          pkgcheck_bin=''
+          while IFS= read -r candidate; do
+            if file "$candidate" | grep -q 'ELF 64-bit'; then
+              pkgcheck_bin="$candidate"
+              break
+            fi
+          done < <(find pkgcheck-distribution -type f -name 'pkgcheck-x86_64-unknown-linux-musl*' | sort)
+          test -n "$pkgcheck_bin"
+          chmod +x "$pkgcheck_bin"
+          cp "$pkgcheck_bin" ./pkgcheck
+          ./pkgcheck --version | tee pkgcheck-version.txt
+          grep -Eq "(^|[^0-9])${REQUIRED_PKGCHECK_VERSION}([^0-9]|$)" pkgcheck-version.txt
+          sha256sum pkgcheck-distribution.zip pkgcheck | tee pkgcheck-tool-hashes.txt
+
+      - name: Run pkgcheck against exact frozen package
+        id: pkgcheck
+        run: |
+          set -euo pipefail
+          set +e
+          ./pkgcheck --no-colors --verbose -d package/abntexto-ufc > pkgcheck-output.txt 2>&1
+          rc=$?
+          set -e
+          cat pkgcheck-output.txt
+          printf '%s\n' "$rc" | tee pkgcheck-exit-code.txt
+          grep -E 'W[0-9]{4}' pkgcheck-output.txt > pkgcheck-warnings.txt || true
+          grep -E '(^|[^A-Z])(F|E)[0-9]{4}' pkgcheck-output.txt > pkgcheck-errors.txt || true
+          printf 'exit_code=%s\n' "$rc" >> "$GITHUB_OUTPUT"
+
+      - name: Publish evidence summary
+        if: always()
+        run: |
+          {
+            echo '## Final CTAN pkgcheck evidence'
+            echo
+            echo "- Certified source SHA: \`${CERTIFIED_SOURCE_SHA}\`"
+            echo "- Distribution artifact ID: \`${DISTRIBUTION_ARTIFACT_ID}\`"
+            echo "- CTAN ZIP SHA-256: \`${CTAN_ZIP_SHA256}\`"
+            echo "- Required pkgcheck: \`${REQUIRED_PKGCHECK_VERSION}\`"
+            if [[ -f pkgcheck-version.txt ]]; then
+              echo "- Observed pkgcheck: \`$(tr '\n' ' ' < pkgcheck-version.txt)\`"
+            fi
+            if [[ -f pkgcheck-exit-code.txt ]]; then
+              echo "- pkgcheck exit code: \`$(cat pkgcheck-exit-code.txt)\`"
+            fi
+            if [[ -f pkgcheck-warnings.txt ]]; then
+              echo "- Warning lines: \`$(wc -l < pkgcheck-warnings.txt)\`"
+            fi
+            if [[ -f pkgcheck-errors.txt ]]; then
+              echo "- Fatal/error lines: \`$(wc -l < pkgcheck-errors.txt)\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable pkgcheck evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: abntexto-ufc-v3.0.0-pkgcheck-evidence-${{ github.run_id }}
+          path: |
+            main-sha.txt
+            frozen-hashes.txt
+            package-tree.txt
+            pkgcheck-version.txt
+            pkgcheck-tool-hashes.txt
+            pkgcheck-output.txt
+            pkgcheck-exit-code.txt
+            pkgcheck-warnings.txt
+            pkgcheck-errors.txt
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce pkgcheck result
+        if: always()
+        run: |
+          set -euo pipefail
+          test -f pkgcheck-exit-code.txt
+          test "$(cat pkgcheck-exit-code.txt)" = '0'
+          test ! -s pkgcheck-errors.txt
