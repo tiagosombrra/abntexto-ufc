@@ -1,7 +1,7 @@
 # V3.0.0 Continuation Handoff
 
 Updated: 2026-09-09
-Status: RELEASE — FINAL HUMAN / PKGCHECK GATES
+Status: RELEASE — FINAL EXACT-MAIN RECERTIFICATION / HUMAN APPROVAL
 
 This file is the shortest safe entry point for continuing v3 work from a new ChatGPT conversation, Codex session or local clone.
 
@@ -14,7 +14,7 @@ This file is the shortest safe entry point for continuing v3 work from a new Cha
 | Active roadmap phase | **Release** |
 | Publication hardening | **MERGED** via PR #297 |
 | Post-hardening control synchronization | **MERGED** via PR #298, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
-| Active final-gate branch | `release/v3-final-human-gate-v2` until merged |
+| Final candidate semantics | exact canonical `main` SHA containing current `pkgcheck` and seven-profile human-acceptance gates |
 | Previous Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
 | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
 | CTAN upload contract | exactly one archive: `abntexto-ufc-3.0.0.zip` |
@@ -32,7 +32,8 @@ This file is the shortest safe entry point for continuing v3 work from a new Cha
 - isolated CTAN example compile and deterministic distribution established;
 - NBR 6023:2025 librarian item 33 closed with primary authority and executable regression;
 - post-hardening exact-main baseline `25c6ab09...` passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` in run `34355988612`;
-- PR #298 aligned the exact-main recertification control plane.
+- PR #298 aligned the exact-main recertification control plane;
+- final candidate policy requires current-CTAN `pkgcheck` evidence and explicit review of all seven supported profiles.
 
 ## Preliminary visual review
 
@@ -52,17 +53,16 @@ Required profiles:
 
 ## Remaining work
 
-1. merge `release/v3-final-human-gate-v2` through protected `main`;
-2. resolve the exact resulting `origin/main` SHA;
-3. require Static + automatic complete Linux integration + Linux release check on that SHA;
-4. require current CTAN `pkgcheck` output/version/archive-hash evidence from that same release run and classify warnings;
-5. retain and physically audit the resulting deterministic distribution;
-6. regenerate the seven final PDF/`.tex` pairs from that exact candidate and obtain explicit maintainer approval;
-7. freeze hashes/evidence;
-8. create immutable `v3.0.0` on the same certified and visually approved SHA;
-9. create GitHub Release with exact frozen assets and verify re-downloaded hashes;
-10. submit only `abntexto-ufc-3.0.0.zip` to CTAN;
-11. preserve submission/acceptance/install evidence and close Release only after external verification.
+1. resolve the exact canonical `origin/main` SHA containing the final release gates;
+2. require Static + automatic complete Linux integration + Linux release check on that SHA;
+3. require current CTAN `pkgcheck` output/version/archive-hash evidence from that same release run and classify warnings;
+4. retain and physically audit the resulting deterministic distribution;
+5. regenerate the seven final PDF/`.tex` pairs from that exact candidate and obtain explicit maintainer approval;
+6. freeze hashes/evidence;
+7. create immutable `v3.0.0` on the same certified and visually approved SHA;
+8. create GitHub Release with exact frozen assets and verify re-downloaded hashes;
+9. submit only `abntexto-ufc-3.0.0.zip` to CTAN;
+10. preserve submission/acceptance/install evidence and close Release only after external verification.
 
 Invariant:
 
@@ -96,4 +96,4 @@ Then read:
 8. `docs/CTAN-RELEASE.md`
 9. `docs/UFC-LIBRARIAN-REVIEW.md`
 
-Every material repository modification updates affected control documents and machine state in the same work cycle. The public README is updated only when user-facing facts change; it does not track transient branch/CI state.
+Every **material advance** updates affected control documents and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. The public README is updated only when user-facing facts change; it does not track transient branch/CI state.
