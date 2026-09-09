@@ -1,5 +1,5 @@
 {
-  "schema_version": 35,
+  "schema_version": 36,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -8,7 +8,7 @@
   "phase": "release",
   "stage": "release",
   "stage_name": "Release",
-  "active_branch": "release/v3-publication-hardening",
+  "active_branch": "main",
   "authorities": {
     "git_facts_must_match_machine_state": true,
     "current_main_sha_is_resolved_from_git": true,
@@ -26,6 +26,8 @@
   },
   "policies": {
     "documentation_updated_on_every_material_advance": true,
+    "affected_docs_updated_with_every_material_repository_change": true,
+    "root_readme_tracks_user_facing_facts_not_transient_ci_state": true,
     "phase_end_regression_required": true,
     "phase_transition_requires_recorded_regression_checkpoint": true,
     "targeted_checks_replace_phase_end_regression": false,
@@ -41,6 +43,7 @@
     "proprietary_fonts_may_be_redistributed": false,
     "institutional_marks_may_be_redistributed": false,
     "publication_assets_may_be_rebuilt_after_candidate_acceptance": false,
+    "repository_commits_allowed_after_candidate_acceptance_before_tag": false,
     "hardcoded_current_main_sha_is_authority": false,
     "pkgcheck_must_pass_before_version_tag": true,
     "tagged_commit_must_equal_certified_commit": true,
@@ -54,7 +57,7 @@
     "must_complete_before_next_phase_activation": true,
     "documentation_must_be_updated_after_result": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "required-after-publication-hardening-merge",
+    "candidate_state": "pending-control-plane-sync-merge-and-exact-main-recertification",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -114,25 +117,31 @@
       "fail": 0,
       "normative_review": 0
     },
-    "release_state": "active-publication-hardening",
-    "release_branch": "release/v3-publication-hardening",
+    "release_state": "final-exact-main-recertification",
+    "release_branch": "main",
+    "publication_hardening": {
+      "pr": 297,
+      "state": "merged",
+      "integration_anchor_sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
+      "final_head_sha": "b72304254edcdbfdc7343ce9b4e32bc3eb1d07e5",
+      "final_head_linux_release_run": 34353576646,
+      "final_head_distribution_artifact_id": 10105557500,
+      "final_head_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+      "final_head_ctan_shape": "one-generated-cls-zero-project-def-files",
+      "evidence_role": "integration-evidence-not-final-publication-bytes"
+    },
     "current_correction_batch": [
-      "Close NBR 6023:2025 librarian item 33 with primary authority and executable regression",
-      "Replace stale v3 distribution documentation with final-publication metadata",
-      "Make abntexto-ufc-3.0.0.zip the single CTAN-grade upload archive",
-      "Generate one monolithic abntexto-ufc.cls for CTAN by inlining every project-owned runtime def module",
-      "Require zero project-owned def files and no nested runtime module directory in the CTAN archive",
-      "Compile the CTAN example in isolation against only the generated class and external abntexto dependency",
-      "Exclude UFC institutional marks and proprietary Microsoft fonts fail-closed",
-      "Move current CTAN pkgcheck before immutable v3.0.0 tag creation",
-      "Require exact post-merge main SHA for final Release candidate and tag"
+      "Synchronize post-merge control-plane documentation and machine state",
+      "Resolve exact main SHA after that synchronization is merged",
+      "Run final exact-main phase-end recertification",
+      "Run current CTAN pkgcheck before immutable tag creation",
+      "Freeze publication bytes and create v3.0.0 on the exact certified SHA"
     ],
     "pending_acceptance_gates": [
-      "Pass publication-hardening PR Static and complete Linux/release CI with the monolithic CTAN package gate",
-      "Merge publication hardening to protected main",
-      "Resolve exact post-merge main SHA and run final phase-end regression",
+      "Merge post-merge control-plane synchronization through protected main",
+      "Resolve exact resulting main SHA and run final phase-end regression",
       "Build deterministic three-ZIP distribution plus SHA256SUMS from exact certified SHA",
-      "Verify CTAN archive contains one generated abntexto-ufc.cls and zero project-owned def files",
+      "Re-audit CTAN archive: one generated abntexto-ufc.cls and zero project-owned def files",
       "Run current CTAN pkgcheck against abntexto-ufc-3.0.0.zip before tag",
       "Freeze publication hashes and evidence",
       "Create immutable v3.0.0 tag on exact certified SHA",
@@ -141,8 +150,8 @@
       "Record final publication verification before Release closure"
     ],
     "release_blockers": [
-      "Publication-hardening integration is not yet merged and certified",
-      "No final exact-main Release candidate exists yet",
+      "Post-merge control-plane synchronization is not yet merged",
+      "Final exact-main Release candidate has not yet completed phase-end recertification",
       "Current CTAN pkgcheck has not passed on final package bytes",
       "v3.0.0 tag/GitHub Release has not been published and verified",
       "CTAN publication has not been accepted/verified"
@@ -180,7 +189,7 @@
       ]
     },
     "distribution_contract": {
-      "state": "publication-hardening-implemented-ci-pending",
+      "state": "publication-hardening-integrated-final-candidate-reproof-pending",
       "required_files": [
         "abntexto-ufc-3.0.0.zip",
         "abntexto-ufc-template-3.0.0.zip",
@@ -209,11 +218,13 @@
       "pkgcheck_before_tag": true
     },
     "final_candidate_contract": {
-      "state": "pending-post-merge-main",
+      "state": "pending-control-plane-sync-merge-and-exact-main-recertification",
       "tag": "v3.0.0",
+      "resolve_candidate_sha_from_git": true,
       "certified_sha_equals_tagged_sha": true,
       "certified_sha_equals_publication_source_sha": true,
-      "publication_rebuild_allowed_after_acceptance": false
+      "publication_rebuild_allowed_after_acceptance": false,
+      "repository_commits_allowed_after_acceptance_before_tag": false
     }
   },
   "linux_integration": {
@@ -225,10 +236,10 @@
     "release_candidate_marker_scope": "complete"
   },
   "branch_plan": {
-    "current_work_branch": "release/v3-publication-hardening",
-    "current_work_state": "publication-hardening-in-progress",
+    "current_work_branch": "main",
+    "current_work_state": "final-candidate-recertification-after-control-plane-sync",
     "canonical_main_resolution": "git-fetch-origin-main-at-session-start",
     "merge_policy": "protected-main-squash-only",
-    "final_candidate_created_after_merge": true
+    "final_candidate_created_after_control_plane_sync_merge": true
   }
 }

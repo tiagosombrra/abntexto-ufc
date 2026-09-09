@@ -1,67 +1,48 @@
 # V3.0.0 Release — Phase-end Regression
 
 Updated: 2026-09-09
-Status: REOPENED — NEW FINAL PHASE-END REGRESSION REQUIRED
+Status: FINAL EXACT-MAIN RECERTIFICATION REQUIRED
 
 ## Purpose
 
-This document records the Release regression boundary after the publication audit discovered defects in the previously accepted distribution bytes and after the CTAN-facing runtime was deliberately reduced to one generated class file.
+This document records the final Release regression boundary after publication hardening was integrated and before the immutable v3.0.0 tag is created.
 
-## Previous candidate status
+## Historical candidates
 
-Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` remains immutable historical evidence and previously passed:
+Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` remains historical technical evidence but is **SUPERSEDED FOR PUBLICATION** because its retained distribution bytes contained stale release documentation.
 
-| Gate | Historical result |
-|---|---|
-| Static contract | `34303586782` — SUCCESS |
-| Linux integration | `34303586778` — SUCCESS, complete scope |
-| Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Deterministic reference PDF | PASS; SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65` |
-| Retained artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
+PR #297 subsequently repaired the publication boundary. Its final head passed Static, complete Linux integration and Linux release check with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; the generated CTAN archive was manually audited as one project-owned class file and zero `.def` files. The protected squash merge produced integration anchor `25c6ab09dc38be9257d2912652074a48886d28f9`.
 
-However, its distribution bytes are **SUPERSEDED FOR PUBLICATION**. The audit found stale v2/pre-publication README content and a CTAN README that labeled 3.0.0 a development candidate. Those files must not be published or submitted to CTAN.
+That integration anchor is not the final taggable candidate because this control-plane synchronization intentionally follows it.
 
-This does not invalidate the earlier runtime/reference evidence; it invalidates that candidate as the final Release publication anchor.
+## Final candidate definition
 
-## New Release phase-end contract
+After this synchronization is merged through protected `main`, resolve the exact resulting `main` SHA. That commit is the only candidate eligible for final Release certification and, if accepted, for immutable tag `v3.0.0`.
 
-A new final candidate is required after publication hardening is merged to canonical `main`.
-
-The final candidate must be one immutable SHA and satisfy:
+Required invariant:
 
 ```text
 certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
 ```
 
-A pull-request head is not sufficient if the repository later squash-merges it. Final certification therefore runs on the exact post-merge canonical `main` SHA.
+No repository commit may be added between final candidate acceptance and tag creation without reopening the candidate cycle.
 
-Minimum final evidence:
+## Minimum final evidence
 
-1. Static contract on exact candidate SHA;
-2. complete Linux integration on exact candidate SHA;
-3. `make release-check` on exact candidate SHA;
-4. applicable Windows/literal-font/PDF-A recertification if affected by this batch;
+1. Static contract on the exact candidate SHA;
+2. complete Linux integration on the exact candidate SHA;
+3. `make release-check` on the exact candidate SHA, with `SCOPE=complete PASS=38 FAIL=0 SKIP=0` or an explicitly reviewed successor contract;
+4. applicable heavy platform/font/PDF-A checks according to change-impact policy;
 5. deterministic build of exactly three ZIPs plus `SHA256SUMS`;
 6. canonical CTAN-grade `abntexto-ufc-3.0.0.zip` structural/semantic gate PASS;
-7. CTAN package contains exactly one project-owned runtime implementation file, generated `abntexto-ufc.cls`;
-8. CTAN package contains **zero project-owned `.def` files** and no nested runtime module directory;
-9. every tracked project-owned runtime module is inlined exactly once into the generated class;
-10. minimal CTAN example compiles using only the generated class plus external `abntexto.cls`, without the modular runtime tree;
-11. current CTAN `pkgcheck` PASS/reviewed-warning result against that exact ZIP;
+7. exactly one project-owned runtime implementation file, generated `abntexto-ufc.cls`;
+8. **zero project-owned `.def` files** and no nested runtime module directory;
+9. every tracked project-owned runtime module inlined exactly once;
+10. minimal CTAN example compiles using only the generated class plus external `abntexto.cls`;
+11. current CTAN `pkgcheck` PASS or reviewed-warning result against that exact ZIP;
 12. frozen asset hashes and retained evidence before tag creation.
 
-## Publication-hardening package boundary
-
-The final public archives are:
-
-- `abntexto-ufc-3.0.0.zip` — canonical package and the **only CTAN upload archive**;
-- `abntexto-ufc-template-3.0.0.zip` — editable local template;
-- `abntexto-ufc-overleaf-3.0.0.zip` — self-contained Overleaf convenience bundle;
-- `SHA256SUMS` — GitHub Release integrity manifest.
-
-The repository remains modular. The monolithization is a deterministic CTAN packaging transformation only; template and Overleaf artifacts may preserve modular project sources.
-
-The canonical CTAN package has one `abntexto-ufc/` root:
+## Canonical CTAN package
 
 ```text
 abntexto-ufc/
@@ -75,26 +56,23 @@ abntexto-ufc/
 └── abntexto-ufc-example.pdf
 ```
 
-It excludes project-owned `.def` files, the nested modular runtime directory, institutional marks, proprietary Microsoft fonts, vendored `abntexto.cls`, CI/tests/tools/validators/evidence and repository control-plane files.
+The CTAN package excludes project-owned `.def` files, nested modular runtime tree, institutional marks, proprietary Microsoft fonts, vendored `abntexto.cls`, CI/tests/tools/validators/evidence and repository control-plane files.
 
 ## Normative state
 
-The librarian review is now **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**. Former item 33 has primary NBR 6023:2025 authority and executable regression evidence for DOI/online availability, repeated authorship and legal-person/jurisdiction cases.
+The librarian review is **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**. Former item 33 has primary ABNT NBR 6023:2025 authority and executable regression evidence for DOI/online availability, repeated authorship, legal-person authorship and jurisdiction disambiguation.
 
-## Current phase boundary
+## Required order
 
-Release remains ACTIVE. No `v3.0.0` tag, GitHub Release or CTAN publication is authorized until the new final phase-end regression completes.
+1. merge this control-plane synchronization;
+2. resolve exact canonical `main` SHA;
+3. run final phase-end regression on that SHA;
+4. retain and manually audit the resulting final CTAN ZIP;
+5. run current `pkgcheck` on the exact canonical bytes;
+6. freeze hashes/evidence;
+7. create immutable tag;
+8. publish GitHub Release and verify re-downloaded hashes;
+9. submit one canonical ZIP to CTAN and retain external evidence;
+10. update post-publication state and close Release.
 
-Required order:
-
-1. integrate publication hardening and one-class CTAN packaging;
-2. certify exact post-merge `main` SHA;
-3. verify the final CTAN ZIP has one generated class, zero `.def`, and isolated compile PASS;
-4. run current `pkgcheck` on exact canonical package bytes;
-5. freeze hashes/evidence;
-6. create immutable tag;
-7. publish GitHub Release and verify downloaded hashes;
-8. submit one canonical ZIP to CTAN and retain external evidence;
-9. synchronize final state and close Release.
-
-Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Targeted checks never replace the final **phase-end regression**.
+Every material repository modification updates affected documentation and machine state in the same work cycle. The public README does not carry transient branch or CI state.
