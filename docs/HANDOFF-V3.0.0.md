@@ -18,6 +18,7 @@ Updated: 2026-09-09
 | CTAN runtime | **one generated `abntexto-ufc.cls`; zero project-owned `.def` files** |
 | Repository runtime | modular source tree retained for engineering/testing |
 | Final candidate | exact canonical `main` SHA that contains this post-merge control-plane synchronization and then passes final certification |
+| Exact-main Linux gate | a push to `main` that changes `release/v3-release-candidate.json` automatically runs Linux integration with `scope=complete` |
 | Final tag rule | certified source SHA must equal `v3.0.0` target SHA |
 | pkgcheck rule | current CTAN `pkgcheck` must pass before tag creation |
 
@@ -66,7 +67,7 @@ Former librarian item 33 is **PASS** using primary ABNT NBR 6023:2025 authority 
 
 1. merge this control-plane synchronization through protected `main`;
 2. resolve that exact resulting `main` SHA and treat it as the only final-candidate source;
-3. run the final phase-end regression on that exact SHA, including Static and complete Linux/release checks;
+3. require Static, automatic `scope=complete` Linux integration and Linux release check on that exact SHA;
 4. build and retain the deterministic three-ZIP distribution plus `SHA256SUMS` from that exact SHA;
 5. manually re-audit the canonical CTAN ZIP and confirm one generated `abntexto-ufc.cls`, zero `.def`, and isolated compile PASS;
 6. run the current CTAN `pkgcheck` on that exact ZIP and preserve tool version, full output, checked hash and disposition of warnings;

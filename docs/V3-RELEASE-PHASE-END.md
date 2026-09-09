@@ -19,6 +19,8 @@ That integration anchor is not the final taggable candidate because this control
 
 After this synchronization is merged through protected `main`, resolve the exact resulting `main` SHA. That commit is the only candidate eligible for final Release certification and, if accepted, for immutable tag `v3.0.0`.
 
+`Linux integration` is configured to run automatically with `scope=complete` on a `main` push that changes `release/v3-release-candidate.json`. This makes complete Linux evidence available on the exact post-squash candidate SHA rather than only on a PR head.
+
 Required invariant:
 
 ```text
@@ -30,7 +32,7 @@ No repository commit may be added between final candidate acceptance and tag cre
 ## Minimum final evidence
 
 1. Static contract on the exact candidate SHA;
-2. complete Linux integration on the exact candidate SHA;
+2. automatic complete Linux integration on the exact candidate SHA;
 3. `make release-check` on the exact candidate SHA, with `SCOPE=complete PASS=38 FAIL=0 SKIP=0` or an explicitly reviewed successor contract;
 4. applicable heavy platform/font/PDF-A checks according to change-impact policy;
 5. deterministic build of exactly three ZIPs plus `SHA256SUMS`;
@@ -66,7 +68,7 @@ The librarian review is **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**. F
 
 1. merge this control-plane synchronization;
 2. resolve exact canonical `main` SHA;
-3. run final phase-end regression on that SHA;
+3. require Static, automatic `scope=complete` Linux integration and Linux release check on that SHA;
 4. retain and manually audit the resulting final CTAN ZIP;
 5. run current `pkgcheck` on the exact canonical bytes;
 6. freeze hashes/evidence;

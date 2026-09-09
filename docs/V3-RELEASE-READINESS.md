@@ -42,7 +42,7 @@ The next accepted candidate is the exact canonical `main` commit containing this
 certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
 ```
 
-No further pre-tag repository commit is allowed after candidate acceptance without starting a new candidate cycle.
+The `Linux integration` workflow now runs automatically on `main` pushes that change `release/v3-release-candidate.json` and forces `scope=complete`, so the post-squash candidate receives complete Linux evidence on its exact SHA. No further pre-tag repository commit is allowed after candidate acceptance without starting a new candidate cycle.
 
 ## CTAN final package contract
 
@@ -66,9 +66,9 @@ Hard requirements include one project-owned runtime `.cls`, zero project-owned `
 | Order | Gate | State |
 |---:|---|---|
 | 1 | Publication-hardening integration | **PASS / MERGED** |
-| 2 | Post-merge control-plane synchronization | **IN PROGRESS** |
+| 2 | Post-merge control-plane synchronization + exact-main Linux trigger | **IN PROGRESS** |
 | 3 | Resolve exact resulting `main` SHA | BLOCKED BY 2 |
-| 4 | Final phase-end regression on that exact SHA | BLOCKED BY 3 |
+| 4 | Static + automatic `scope=complete` Linux integration + Linux release check on exact SHA | BLOCKED BY 3 |
 | 5 | Build/retain deterministic three-ZIP distribution + `SHA256SUMS` | BLOCKED BY 4 |
 | 6 | Re-audit final CTAN ZIP: one generated class, zero `.def`, isolated compile PASS | BLOCKED BY 5 |
 | 7 | Run current CTAN `pkgcheck`; classify every warning | BLOCKED BY 5–6 |

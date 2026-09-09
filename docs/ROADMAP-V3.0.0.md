@@ -23,6 +23,7 @@ Updated: 2026-09-09
 | Publication-hardening PR | #297 — **MERGED** |
 | Integration anchor | `25c6ab09dc38be9257d2912652074a48886d28f9` |
 | Final candidate | exact `main` containing this synchronization after final recertification |
+| Exact-main Linux trigger | push to `main` changing `release/v3-release-candidate.json` runs `Linux integration` with `scope=complete` |
 | Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
 | Prior retained artifact | ID `10086299397` — historical evidence only; never publish |
 | Librarian matrix | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
@@ -66,7 +67,7 @@ Integration evidence already demonstrated: all 14 tracked runtime modules inline
 
 ## R3 — Final exact-main recertification
 
-**PENDING after this synchronization is merged.** Resolve the exact resulting canonical `main` SHA and run the Release phase-end regression on that SHA. No subsequent pre-tag repository commit is allowed without starting a new candidate cycle.
+**PENDING after this synchronization is merged.** Resolve the exact resulting canonical `main` SHA and run the Release phase-end regression on that SHA. The release marker push must automatically produce `scope=complete` Linux integration on that same SHA. No subsequent pre-tag repository commit is allowed without starting a new candidate cycle.
 
 Required invariant:
 

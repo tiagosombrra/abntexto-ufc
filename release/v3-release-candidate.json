@@ -32,6 +32,8 @@
     "status": "pending-control-plane-sync-merge-and-exact-main-recertification",
     "source_branch": "main",
     "resolve_sha_from_git_after_sync_merge": true,
+    "complete_linux_on_exact_main_release_marker_push": true,
+    "linux_release_check_on_exact_main_release_marker_push": true,
     "no_pre_tag_commits_after_acceptance": true
   },
   "release_contract": "make release-check",
