@@ -1,18 +1,18 @@
 # Linux Integration Scopes
 
 Updated: 2026-09-08  
-Status: ACCEPTED — FINAL CERTIFICATION STEP 8 SCOPE GUARD ACTIVE
+Status: ACCEPTED — RELEASE PHASE-END SCOPE GUARD PREPARED
 
 ## Purpose
 
-The permanent `Linux integration` workflow supports bounded suites for intermediate work so small changes receive faster feedback. Scoped suites optimize feedback time; they do not weaken phase acceptance. Every phase transition requires `complete` Linux on the same immutable phase-end candidate.
+The permanent `Linux integration` workflow supports bounded suites for intermediate work so small changes receive faster feedback. Scoped suites optimize feedback time; they do not weaken phase acceptance. Every phase transition/closeout requires `complete` Linux on the same immutable phase-end candidate.
 
 ## Available scopes
 
 | Scope | Intended use | Can close a phase? |
 |---|---|---|
 | `auto` | infer narrowest safe suite from changed paths | No |
-| `complete` | shared/core/standards, unknown technical paths, certification marker and phase-end regression | **Yes, with all other phase-end gates** |
+| `complete` | shared/core/standards, unknown technical paths, certification/release markers and phase-end regression | **Yes, with all other phase-end gates** |
 | `article` | Scientific Article implementation/evidence | No |
 | `reference-document` | canonical reference source/corpus | No |
 | `reference-pdf` | presentation-sensitive reference PDF | No |
@@ -35,22 +35,23 @@ For pull requests, `auto` evaluates the relevant changed-path window after check
 | orchestration + recognized domain | bounded domain/union |
 | orchestration + unknown technical path | `complete` |
 | force-complete shared/core/standards path | `complete` |
-| `release/final-certification-candidate.json` | **`complete`** |
+| `release/final-certification-candidate.json` | `complete` — historical Final Certification candidate transport |
+| `release/v3-release-candidate.json` | **`complete` — Release phase-end candidate transport** |
 | unknown technical path | `complete` |
 
-## Final Certification Step 8 scope defect and correction
+## Candidate-marker provenance
 
-Candidate `fc907856ac4ba0febf4d44fb408407a0fc2e94d4` exposed an orchestration gap. Static `34239113996` passed, and Linux workflow `34239114066` concluded `success`, but the synchronize diff from the immediately previous head to `fc907856...` contained only documentation/control-plane changes because the candidate marker had been introduced in an earlier intermediate commit. Automatic inference returned `none`, so heavy integration was skipped as `documentation-only`.
+Final Certification exposed an orchestration defect when a phase-end candidate workflow concluded `success` while heavy Linux was skipped. The accepted correction established a tracked force-complete marker and self-tests.
 
-That workflow result does **not** satisfy the Final Certification phase-end predicate, which requires `complete` Linux. The candidate is rejected fail-closed.
+Release preserves that lesson without reusing Final Certification identity:
 
-The retry makes the intent machine-explicit:
+1. `release/final-certification-candidate.json` remains historical Final Certification transport;
+2. `release/v3-release-candidate.json` is the Release-specific transport;
+3. both marker-only and marker-plus-orchestration cases must infer `complete`;
+4. the permanent `Linux release check` PR path filter includes the Release marker;
+5. the marker is provenance/orchestration only and does not alter product or normative behavior.
 
-1. `release/final-certification-candidate.json` is in `FORCE_COMPLETE_EXACT`;
-2. `tests/integration_suites.py --self-test` contains marker-only and marker+orchestration cases expecting `complete`;
-3. each retry candidate changes the marker itself, so the incremental synchronize window contains the force-complete path.
-
-This is an orchestration-scope correction only; no product runtime, normative predicate or accepted validation tolerance changes.
+`docs/V3-RELEASE-PHASE-END.md` defines the Release candidate and acceptance semantics.
 
 ## Runner importability invariant
 
@@ -68,4 +69,4 @@ Use `python3 tests/run.py --list-suites` to inspect the current mapping.
 
 ## Phase-end rule
 
-Every phase transition requires `complete` Linux integration on the same immutable **phase-end regression** candidate SHA together with Static and phase-specific acceptance evidence. Final Certification additionally requires the permanent Linux release check / release matrix. Workflow `success` with heavy integration skipped never satisfies a `complete`-scope phase predicate.
+Every phase closeout requires `complete` Linux integration on the same immutable **phase-end regression** candidate SHA together with Static and phase-specific acceptance evidence. Release additionally requires the permanent `Linux release check`. Workflow `success` with heavy integration skipped never satisfies a `complete`-scope phase predicate.

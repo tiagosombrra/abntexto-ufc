@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "purpose": "V3 Release immutable phase-end regression transport marker",
+  "phase": "release",
+  "candidate_semantics": "git-commit-containing-this-marker-and-synchronized-control-plane",
+  "parent_preparation_sha": "6ab4768662aa51842cf745afbf846e89b6bd466a",
+  "artifact_delivery_checkpoint_sha": "b55210acdb614fc3178e3ebf5b3a595bed8508c1",
+  "artifact_delivery_static_run": 34300561597,
+  "artifact_delivery_static_conclusion": "success",
+  "artifact_delivery_linux_run": 34300561605,
+  "artifact_delivery_linux_conclusion": "success",
+  "artifact_delivery_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
+  "release_contract": "make release-check",
+  "distribution_contract": "make distribution-bundles",
+  "required_artifact_set": [
+    "abntexto-ufc-3.0.0.zip",
+    "abntexto-ufc-ctan-3.0.0.zip",
+    "abntexto-ufc-template-3.0.0.zip",
+    "abntexto-ufc-overleaf-3.0.0.zip",
+    "SHA256SUMS"
+  ],
+  "publication_rebuild_allowed": false,
+  "remove_after_acceptance": false
+}
