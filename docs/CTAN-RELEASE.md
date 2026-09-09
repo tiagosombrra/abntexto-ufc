@@ -8,7 +8,7 @@ This document defines the repository-controlled publication procedure and eviden
 
 | Fact | State |
 |---|---|
-| Roadmap phase | **Release — GitHub published; CTAN submission pending** |
+| Roadmap phase | **Release — GitHub published; maintainer visual validation active; CTAN blocked** |
 | Certified source SHA | `05399473827da7cf6b6c8bac36edc7115481773f` |
 | Immutable tag | `v3.0.0` → annotated tag object `7354cf912ffa5abb171128554cabce61392ecd84` → certified source SHA |
 | GitHub Release | **PUBLISHED** — [abntexto-ufc 3.0.0](https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0) |
@@ -18,10 +18,11 @@ This document defines the repository-controlled publication procedure and eviden
 | CTAN runtime shape | **one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files** |
 | `pkgcheck` | **PASS** — 4.1.0, exit 0, 0 warnings, 0 errors/fatals; run `34386932488`, artifact `10118176687` |
 | GitHub publication verification | **PASS** — recovery run `34387825056`, evidence artifact `10118391678` |
-| CTAN submission | **PENDING — not yet claimed** |
+| Seven-profile visual review | **ACTIVE — source/PDF generation and maintainer acceptance required** |
+| CTAN submission | **BLOCKED — do not submit before visual acceptance** |
 | CTAN acceptance/install | **PENDING — explicit external evidence required** |
 
-The immutable release bytes are frozen. Post-tag documentation commits may move `main`, but they do not change the source or assets identified by `v3.0.0`.
+The immutable release bytes are frozen. Post-tag documentation or validation commits may move `main`, but they do not change the source or assets identified by `v3.0.0`.
 
 The old Actions artifact `10086299397` remains historical regression evidence only and must never be published as v3.0.0.
 
@@ -42,7 +43,7 @@ Release 3.0.0 produces exactly these public archives:
 
 | Asset | Purpose | CTAN upload? |
 |---|---|---|
-| `abntexto-ufc-3.0.0.zip` | canonical CTAN-grade package with one generated runtime class + concise documentation + minimal example | **YES — only CTAN upload archive** |
+| `abntexto-ufc-3.0.0.zip` | canonical CTAN-grade package with one generated runtime class + concise documentation + minimal example | **YES — only CTAN upload archive, after visual acceptance** |
 | `abntexto-ufc-template-3.0.0.zip` | editable local project; may preserve modular sources | no |
 | `abntexto-ufc-overleaf-3.0.0.zip` | self-contained Overleaf project with pinned `abntexto.cls`; may preserve modular sources | no |
 | `SHA256SUMS` | integrity manifest | GitHub Release only |
@@ -89,6 +90,24 @@ Evidence: workflow run `34386932488`, artifact `10118176687` (`sha256:e6a4d926d6
 
 Any future package-content change requires a new candidate/version cycle; the v3.0.0 bytes are frozen.
 
+## Maintainer visual validation before CTAN
+
+CTAN submission is intentionally blocked until the maintainer has inspected the exact source and rendered PDF for all canonical document profiles produced from the frozen `v3.0.0` implementation:
+
+1. `undergraduate-capstone`;
+2. `specialization-capstone`;
+3. `masters-thesis`;
+4. `doctoral-thesis`;
+5. `research-project`;
+6. `anonymized-research-project`;
+7. `scientific-article`.
+
+For each profile retain the `.tex` source, final PDF, build metadata/log and SHA-256 values. A manifest must bind the review bundle to `v3.0.0` / `05399473827da7cf6b6c8bac36edc7115481773f`.
+
+This is a human acceptance gate: successful compilation alone does not authorize CTAN submission. Detailed criteria and profile-by-profile evidence are recorded in `docs/V3-VISUAL-VALIDATION.md`.
+
+If the visual review exposes a material class/runtime or publication defect, do not alter, rebuild or retarget the existing v3.0.0 tag/Release. Open a correction/new-version cycle and repeat the affected certification and visual validation before CTAN.
+
 ## Final certification and publication sequence
 
 Completed and evidenced:
@@ -104,12 +123,19 @@ Completed and evidenced:
 9. draft and published Release assets were re-downloaded and proved byte-identical;
 10. GitHub Release published at `2026-09-09T18:14:57Z`.
 
-Pending external CTAN work:
+Active pre-CTAN work:
 
-11. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
-12. preserve the CTAN submission receipt and submitted-file identity;
-13. preserve CTAN acceptance/catalog/install evidence;
-14. synchronize final post-CTAN state and close Release.
+11. generate seven canonical source/PDF review pairs from the frozen v3.0.0 implementation;
+12. retain manifest, logs/build metadata and hashes;
+13. present all seven outputs and sources to the maintainer;
+14. record explicit maintainer acceptance or reopen a correction/new-version cycle if a material defect is found.
+
+Pending external CTAN work after maintainer acceptance:
+
+15. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
+16. preserve the CTAN submission receipt and submitted-file identity;
+17. preserve CTAN acceptance/catalog/install evidence;
+18. synchronize final post-CTAN state and close Release.
 
 Invariant already satisfied for GitHub publication:
 
@@ -135,4 +161,4 @@ Suggested administrative note:
 
 ## Evidence discipline
 
-Building or validating a candidate is not CTAN acceptance. A successful GitHub Release is not CTAN acceptance. CTAN status is recorded as published only after explicit acceptance/install evidence exists. Any package-content change after final `pkgcheck` requires a new candidate cycle before tagging.
+Building or validating a candidate is not CTAN acceptance. A successful GitHub Release is not CTAN acceptance. Automated rendering is not maintainer visual acceptance. CTAN status is recorded as published only after explicit acceptance/install evidence exists. Any package-content change after final `pkgcheck` requires a new candidate/version cycle before CTAN submission.
