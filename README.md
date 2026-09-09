@@ -79,11 +79,13 @@ Quando autorizado a utilizar uma marca institucional, o usuário deve fornecer o
 
 A publicação da versão 3 produz três artefatos com finalidades distintas:
 
-- `abntexto-ufc-3.0.0.zip`: pacote canônico, enxuto e adequado à submissão CTAN;
-- `abntexto-ufc-template-3.0.0.zip`: projeto editável para uso local;
-- `abntexto-ufc-overleaf-3.0.0.zip`: projeto autocontido para upload no Overleaf, incluindo a revisão fixada de `abntexto.cls`.
+- `abntexto-ufc-3.0.0.zip`: pacote canônico e enxuto para CTAN. O runtime distribuído é **somente `abntexto-ufc.cls`**; todos os módulos `.def` do repositório são incorporados deterministicamente dentro da classe e nenhum `.def` é enviado;
+- `abntexto-ufc-template-3.0.0.zip`: projeto editável para uso local, que pode preservar a organização modular do repositório;
+- `abntexto-ufc-overleaf-3.0.0.zip`: projeto autocontido para upload no Overleaf, incluindo a revisão fixada de `abntexto.cls` e podendo preservar a organização modular do repositório.
 
 Somente o primeiro arquivo é destinado à CTAN. Os bundles de template e Overleaf são conveniências de distribuição do GitHub e não fazem parte do upload CTAN.
+
+Essa separação é deliberada: a arquitetura de desenvolvimento continua modular e testável, enquanto o artefato CTAN oferece uma classe única, sem dependência em arquivos `.def` próprios do projeto.
 
 ## Desenvolvimento e validação
 
