@@ -15,6 +15,8 @@ Updated: 2026-09-09
 | Current batch | **CTAN/publication hardening + final recertification preparation** |
 | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
 | CTAN archive | one canonical upload file: `abntexto-ufc-3.0.0.zip` |
+| CTAN runtime | **one generated `abntexto-ufc.cls`; zero project-owned `.def` files** |
+| Repository runtime | modular source tree retained for engineering/testing |
 | Final tag rule | certified source SHA must equal `v3.0.0` target SHA |
 | pkgcheck rule | current CTAN `pkgcheck` is a pre-tag gate |
 
@@ -46,7 +48,9 @@ The release audit found that the old canonical ZIP still told users to use v2.1.
 
 ## CTAN package contract
 
-The previous `ufctex` identity is replaced by `abntexto-ufc`. The canonical archive is intentionally small and modeled after the accepted `abntexto-uece` publication shape where appropriate:
+The previous `ufctex` identity is replaced by `abntexto-ufc`. The CTAN-facing package is intentionally small and follows the single-class publication shape used by `abntexto-uece` where appropriate.
+
+The repository remains modular, but the CTAN builder deterministically incorporates every tracked project-owned runtime `.def` module into one generated `abntexto-ufc.cls`. The generated class is tested without the modular runtime directory present.
 
 ```text
 abntexto-ufc/
@@ -54,16 +58,22 @@ abntexto-ufc/
 ├── CHANGELOG
 ├── LICENSE
 ├── abntexto-ufc.cls
-├── abntexto-ufc/...
 ├── abntexto-ufc.tex
 ├── abntexto-ufc.pdf
 ├── abntexto-ufc-example.tex
 └── abntexto-ufc-example.pdf
 ```
 
-Only `abntexto-ufc-3.0.0.zip` is intended for CTAN. The editable-template and Overleaf ZIPs are GitHub Release conveniences.
+Hard invariants for the CTAN ZIP:
 
-The CTAN package excludes UFC logos/marks, proprietary Microsoft fonts, vendored `abntexto.cls`, tests, workflows, validators, release state, roadmaps and engineering evidence.
+- exactly one project-owned runtime implementation file: `abntexto-ufc.cls`;
+- **zero `.def` files**;
+- no nested `abntexto-ufc/abntexto-ufc/` runtime directory;
+- every tracked runtime module is inlined exactly once;
+- the minimal example compiles with only the generated class plus external `abntexto.cls` available;
+- no UFC logos/marks, proprietary Microsoft fonts, vendored `abntexto.cls`, tests, workflows, validators, release state, roadmaps or engineering evidence.
+
+Only `abntexto-ufc-3.0.0.zip` is intended for CTAN. The editable-template and Overleaf ZIPs are GitHub Release conveniences and may preserve the modular source layout.
 
 ## Normative closure
 
@@ -76,7 +86,7 @@ Former librarian item 33 is now PASS using primary ABNT NBR 6023:2025 authority 
 
 ## Remaining Release work
 
-1. pass CI for `release/v3-publication-hardening`;
+1. pass CI for `release/v3-publication-hardening`, including the monolithic-class/zero-`.def` distribution gate;
 2. merge through protected `main`;
 3. resolve the exact post-merge SHA;
 4. execute the final **phase-end regression** on that SHA;
