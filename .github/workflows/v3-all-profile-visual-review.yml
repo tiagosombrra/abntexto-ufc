@@ -60,6 +60,45 @@ jobs:
             root="$PWD"
             review="$root/artifacts/v3-profile-review"
             released="$root/released"
+            export TEXINPUTS="$released:$released//:"
+
+            class_path="$(kpsewhich abntexto-ufc.cls)"
+            fonts_path="$(kpsewhich abntexto-ufc/fonts.def)"
+            upstream_path="$(kpsewhich abntexto.cls)"
+            echo "Resolved abntexto-ufc.cls: $class_path"
+            echo "Resolved abntexto-ufc/fonts.def: $fonts_path"
+            echo "Resolved abntexto.cls: $upstream_path"
+            test "$(readlink -f "$class_path")" = "$(readlink -f "$released/abntexto-ufc.cls")"
+            test "$(readlink -f "$fonts_path")" = "$(readlink -f "$released/abntexto-ufc/fonts.def")"
+            test "$(readlink -f "$upstream_path")" = "$(readlink -f "$released/abntexto.cls")"
+            grep -Fq '\\ProvidesClass{abntexto-ufc}[2026/09/09 v3.0.0' "$class_path"
+            grep -Fq 'font / times .code:n' "$fonts_path"
+
+            cat > /tmp/abntexto-ufc-v3-api-probe.tex <<'TEX'
+            \DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}
+            \documentclass{abntexto-ufc}
+            \ufcsetup{
+              type = undergraduate-capstone,
+              print-mode = single-sided,
+              cover = auto,
+              catalog-card = false,
+              coat-of-arms = false,
+              font = times,
+              strict-font = false,
+              glossary = none,
+              index = none,
+              author = {API Probe},
+              title = {Frozen v3.0.0 API Probe},
+              location = {Fortaleza},
+              year = {2026}
+            }
+            \begin{document}
+            Frozen v3.0.0 API probe.
+            \end{document}
+            TEX
+            pdflatex -output-directory=/tmp -interaction=nonstopmode -halt-on-error -file-line-error /tmp/abntexto-ufc-v3-api-probe.tex
+            test -s /tmp/abntexto-ufc-v3-api-probe.pdf
+
             profiles=(
               undergraduate-capstone
               specialization-capstone
@@ -75,7 +114,6 @@ jobs:
               tex="$profile.tex"
               echo "Building $profile from immutable v3.0.0 source..."
               cd "$dir"
-              export TEXINPUTS="$released//:"
               pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$tex"
               if [[ -s "$profile.bcf" ]] && grep -q '<bcf:datasource' "$profile.bcf"; then
                 biber "$profile"
