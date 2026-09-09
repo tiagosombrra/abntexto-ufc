@@ -8,6 +8,7 @@ reitoria="template/figures/ufc-reitoria.jpg"
 campus_preexisting=false
 reitoria_preexisting=false
 source_sha="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-local}}"
+module_count="$(find abntexto-ufc -type f -name '*.def' | wc -l | tr -d ' ')"
 [ -f "$campus" ] && campus_preexisting=true
 [ -f "$reitoria" ] && reitoria_preexisting=true
 
@@ -48,6 +49,7 @@ from collections import Counter
 from pathlib import Path, PurePosixPath
 
 root = Path(sys.argv[1])
+project_root = Path.cwd()
 version = "3.0.0"
 package_name = f"abntexto-ufc-{version}.zip"
 expected = {
@@ -112,8 +114,12 @@ with zipfile.ZipFile(package_path) as archive:
     if missing:
         raise SystemExit("CTAN package is missing required files: " + ", ".join(sorted(missing)))
 
-    # Only reject repository-level development directories. The nested
-    # abntexto-ufc/standards runtime directory is an intentional class module.
+    def_files = [name for name in files if PurePosixPath(name).suffix.casefold() == ".def"]
+    if def_files:
+        raise SystemExit("CTAN package must not contain external .def modules: " + ", ".join(def_files))
+    if any(name.startswith("abntexto-ufc/abntexto-ufc/") for name in files):
+        raise SystemExit("CTAN package must not contain the modular runtime directory.")
+
     forbidden_root_children = {".github", "tests", "artifacts", "tools", "release", "standards", "dist"}
     for name in files:
         pure = PurePosixPath(name)
@@ -159,7 +165,27 @@ with zipfile.ZipFile(package_path) as archive:
         if forbidden.casefold() in readme_fold:
             raise SystemExit(f"CTAN README contains stale/deprecated publication text: {forbidden}")
 
-    text_suffixes = {".md", ".tex", ".cls", ".def", ".bib", ".txt"}
+    class_text = archive.read("abntexto-ufc/abntexto-ufc.cls").decode("utf-8")
+    if re.search(r"\\input\{abntexto-ufc/[^}]+\.def\}", class_text):
+        raise SystemExit("CTAN class still loads an external project .def module.")
+    if re.search(r"\\ProvidesFile\{abntexto-ufc/", class_text):
+        raise SystemExit("CTAN class still contains project module ProvidesFile wrappers.")
+    if "no external .def files are required" not in class_text:
+        raise SystemExit("CTAN class is missing the monolithic-distribution marker.")
+
+    source_modules = sorted(
+        path.relative_to(project_root).as_posix()
+        for path in (project_root / "abntexto-ufc").rglob("*.def")
+        if path.is_file()
+    )
+    for relative in source_modules:
+        label = PurePosixPath(relative).with_suffix("").as_posix()
+        begin = f"% --- BEGIN inlined module: {label} ---"
+        end = f"% --- END inlined module: {label} ---"
+        if class_text.count(begin) != 1 or class_text.count(end) != 1:
+            raise SystemExit(f"CTAN class did not inline source module exactly once: {relative}")
+
+    text_suffixes = {".md", ".tex", ".cls", ".bib", ".txt"}
     for name in files:
         suffix = PurePosixPath(name).suffix.casefold()
         if suffix in text_suffixes or PurePosixPath(name).name == "CHANGELOG":
@@ -201,6 +227,9 @@ cat > "$evidence_dir/distribution-bundles.json" <<EOF
   "checksums": "PASS",
   "archive_integrity": "PASS",
   "ctan_single_top_level_directory": true,
+  "ctan_monolithic_class": true,
+  "ctan_def_files": 0,
+  "ctan_inlined_modules": $module_count,
   "ctan_external_abntexto_dependency": true,
   "institutional_marks_redistributed": false,
   "proprietary_fonts_redistributed": false,
@@ -209,5 +238,5 @@ cat > "$evidence_dir/distribution-bundles.json" <<EOF
 }
 EOF
 
-echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=3.0.0 artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-3.0.0.zip checksums=PASS archive_integrity=PASS institutional_marks_redistributed=false proprietary_fonts_redistributed=false source_date_epoch=$epoch"
+echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=3.0.0 artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-3.0.0.zip monolithic_class=PASS def_files=0 inlined_modules=$module_count checksums=PASS archive_integrity=PASS institutional_marks_redistributed=false proprietary_fonts_redistributed=false source_date_epoch=$epoch"
 echo 'Distribution/public bundle integrity gate completed.'
