@@ -1,5 +1,5 @@
 {
-  "schema_version": 31,
+  "schema_version": 32,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -26,6 +26,7 @@
     "release_readiness": "docs/V3-RELEASE-READINESS.md",
     "release_phase_end": "docs/V3-RELEASE-PHASE-END.md",
     "ctan_release": "docs/CTAN-RELEASE.md",
+    "continuation_handoff": "docs/V3-CONTINUATION.md",
     "fail_closed_on_disagreement": true,
     "memory_is_not_an_authority": true
   },
@@ -73,39 +74,84 @@
   "baseline": {
     "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
     "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
-    "canonical_main_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
-    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda"
+    "release_code_integration_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
+    "publication_closeout_sync_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "canonical_main_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec"
   },
   "phases": [
-    {"id": "regression-audit", "name": "Regression Audit", "status": "CLOSED", "phase_end_regression_required": true},
-    {"id": "core-corrections", "name": "Core Corrections", "status": "CLOSED", "phase_end_regression_required": true},
-    {"id": "reference-pdf-validation", "name": "Reference PDF Validation", "status": "CLOSED", "phase_end_regression_required": true},
-    {"id": "scientific-article", "name": "Scientific Article", "status": "CLOSED", "phase_end_regression_required": true},
-    {"id": "final-certification", "name": "Final Certification", "status": "CLOSED", "phase_end_regression_required": true},
-    {"id": "release", "name": "Release", "status": "ACTIVE", "phase_end_regression_required": true}
+    {
+      "id": "regression-audit",
+      "name": "Regression Audit",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "core-corrections",
+      "name": "Core Corrections",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "reference-pdf-validation",
+      "name": "Reference PDF Validation",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "scientific-article",
+      "name": "Scientific Article",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "final-certification",
+      "name": "Final Certification",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "release",
+      "name": "Release",
+      "status": "ACTIVE",
+      "phase_end_regression_required": true
+    }
   ],
   "active_work": {
     "review_items": 34,
-    "review_status": {"pass": 33, "partial": 0, "fail": 0, "normative_review": 1},
+    "review_status": {
+      "pass": 33,
+      "partial": 0,
+      "fail": 0,
+      "normative_review": 1
+    },
     "scientific_article_state": "closed",
     "final_certification_state": "closed-accepted",
     "release_state": "active-publication-closeout",
     "release_branch": "release/v3-release",
-    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "release_branch_state": "synchronized-to-canonical-main",
     "release_pr": 293,
     "release_pr_state": "merged",
     "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
     "release_pr_merge_method": "squash",
+    "publication_closeout_pr": 294,
+    "publication_closeout_pr_state": "merged",
+    "publication_closeout_merge_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "superseded_release_pr": 292,
+    "superseded_release_pr_state": "closed",
     "closure_scope_frozen": true,
     "latest_fully_validated_checkpoint_sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
     "latest_fully_validated_checkpoint_state": "release-phase-end-regression-accepted-static-complete-linux-release-check-green-artifact-verified",
-    "latest_control_sync_checkpoint_sha": "28b6f512f7bb3acadb3eb5f8eb17335979725e2d",
-    "latest_control_sync_static_run": 34332462687,
-    "latest_control_sync_linux_run": 34332462700,
+    "latest_control_sync_checkpoint_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "latest_control_sync_static_run": 34333350711,
+    "latest_control_sync_static_conclusion": "success",
+    "latest_control_sync_pr_static_run": 34333292942,
+    "latest_control_sync_linux_run": 34333292948,
     "latest_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
-    "current_correction_batch": ["Release publication closeout — PR #293 merged; v3.0.0 tag, GitHub Release and publication verification pending"],
+    "current_correction_batch": [
+      "Release publication closeout — canonical main synchronized; v3.0.0 tag/GitHub Release and publication verification pending"
+    ],
     "pending_acceptance_gates": [
-      "Post-merge documentation synchronization must pass Static contract",
       "Create and verify v3.0.0 tag and GitHub Release from exact retained candidate bytes",
       "Verify published GitHub asset hashes against accepted candidate checksums",
       "Run current CTAN pkgcheck and record any actual CTAN submission/acceptance evidence",
@@ -115,7 +161,9 @@
       "v3.0.0 tag/GitHub Release assets have not yet been published and hash-verified",
       "Final publication verification has not yet been recorded"
     ],
-    "deferred_authority_conflicts": ["review item 33: selected NBR 6023:2025 edge cases"],
+    "deferred_authority_conflicts": [
+      "review item 33: selected NBR 6023:2025 edge cases"
+    ],
     "release_candidate_transport": {
       "state": "accepted",
       "marker": "release/v3-release-candidate.json",
@@ -189,7 +237,12 @@
         "abntexto-ufc-template-3.0.0.zip": "4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791"
       }
     },
-    "temporary_executor": {"state": "none-active", "present_in_current_tree": false, "must_remain_absent_for_acceptance": true}
+    "temporary_executor": {
+      "state": "none-active",
+      "present_in_current_tree": false,
+      "must_remain_absent_for_acceptance": true
+    },
+    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda"
   },
   "linux_integration": {
     "policy_document": "docs/LINUX-INTEGRATION-SCOPES.md",
@@ -202,19 +255,24 @@
   },
   "branch_plan": {
     "current_work_branch": "release/v3-release",
-    "release_branch_state": "active-publication-closeout",
+    "release_branch_state": "synchronized-to-canonical-main",
     "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "release_pr": 293,
     "release_pr_state": "merged",
     "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
     "release_pr_merge_method": "squash",
+    "publication_closeout_pr": 294,
+    "publication_closeout_pr_state": "merged",
+    "publication_closeout_merge_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "superseded_release_pr": 292,
+    "superseded_release_pr_state": "closed",
     "final_certification_pr": 289,
     "final_certification_pr_state": "merged",
     "final_certification_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "scientific_article_pr": 286,
     "scientific_article_pr_state": "merged",
     "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
-    "integration_main_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
+    "integration_main_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
     "policy": "main-plus-one-short-lived-active-task-branch"
   },
   "evidence": {
@@ -246,9 +304,9 @@
     "release_transport_preparation_linux_run": 34265429551,
     "release_transport_preparation_linux_scope": "complete",
     "release_transport_preparation_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
-    "release_control_sync_checkpoint_sha": "28b6f512f7bb3acadb3eb5f8eb17335979725e2d",
-    "release_control_sync_static_run": 34332462687,
-    "release_control_sync_linux_run": 34332462700,
+    "release_control_sync_checkpoint_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "release_control_sync_static_run": 34333350711,
+    "release_control_sync_linux_run": 34333292948,
     "release_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
     "release_artifact_delivery_checkpoint_sha": "b55210acdb614fc3178e3ebf5b3a595bed8508c1",
     "release_artifact_delivery_static_run": 34300561597,
@@ -270,6 +328,10 @@
     "release_distribution_artifact_independent_verification": "PASS",
     "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
     "release_pr_merge_method": "squash",
+    "publication_closeout_sync_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "publication_closeout_sync_static_run": 34333350711,
+    "publication_closeout_pr": 294,
+    "superseded_release_pr": 292,
     "librarian_review_contract_items": 34
   },
   "release_policy": {

@@ -7,9 +7,12 @@ Updated: 2026-09-09
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical `main` | `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
-| Active work branch | `release/v3-release` reset to merged `main` for publication closeout documentation |
+| Canonical branch | `main` |
+| Last merged publication-closeout synchronization checkpoint | `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
+| Active work branch | `release/v3-release`, synchronized to the canonical `main` checkpoint |
 | Release PR #293 | **MERGED** as squash commit `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
+| Publication-closeout PR #294 | **MERGED** as `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
+| Superseded PR #292 | **CLOSED**; historical evidence only |
 | Active phase | **Release** |
 | Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **ACCEPTED** |
 | Candidate Static | `34303586782` — SUCCESS |
@@ -17,15 +20,18 @@ Updated: 2026-09-09
 | Candidate Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
 | Retained distribution artifact | ID `10086299397`, `abntexto-ufc-v3.0.0-distribution-34303586773` |
 | Artifact upload digest | `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
-| Independent artifact verification | download digest matches GitHub artifact digest; exact five-file set; inner checksums and all ZIP integrity checks PASS |
+| Independent artifact verification | exact five-file set; `SHA256SUMS` PASS; all four ZIP integrity checks PASS |
+| Post-merge canonical control sync | Static `34333350711` — SUCCESS |
 | Current batch | **Release publication — tag/GitHub Release verification pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
-Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
+`docs/V3-CONTINUATION.md` is the concise continuation entry point for a new conversation or local session.
+
+Canonical control documents include `release/v3-roadmap.json`, `docs/V3-CONTINUATION.md`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
 ## Accepted Release phase-end regression
 
-Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is immutable and accepted. It was not amended after CI started.
+Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is immutable and accepted.
 
 | Gate | Accepted evidence |
 |---|---|
@@ -33,11 +39,11 @@ Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is immutable and accepted. 
 | Linux integration | `34303586778` — SUCCESS, complete scope |
 | Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
 | Reference PDF reproducibility | PASS; 2 builds; SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65`; 450652 bytes |
-| Distribution bundle contract | PASS; four ZIPs + `SHA256SUMS`; archive integrity PASS; proprietary fonts redistributed = false |
+| Distribution bundle contract | PASS; four ZIPs + `SHA256SUMS`; archive integrity PASS |
 | Validation artifact | ID `10086298601`, digest `sha256:124f692d571dde12754a6b084075b4acff29d47ffcfb4fb9d321cc8f1934d18c` |
 | Distribution artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
 
-The retained distribution artifact was independently downloaded after workflow completion. Its downloaded archive digest matched GitHub metadata. `SHA256SUMS` verified all four publication ZIPs, and `unzip -tq` passed for each ZIP. No publication bundle was rebuilt for this verification.
+The retained distribution artifact was independently downloaded and verified without rebuilding.
 
 ## Accepted publication checksums
 
@@ -48,24 +54,29 @@ The retained distribution artifact was independently downloaded after workflow c
 | `abntexto-ufc-overleaf-3.0.0.zip` | `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b` |
 | `abntexto-ufc-template-3.0.0.zip` | `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791` |
 
-## Merge result
-
-PR #293 was merged through the repository's only allowed merge method, squash, because merge commits are disabled. The first attempted merge-commit method was rejected by repository settings and made no repository change. The successful squash merge created canonical `main` commit `add52f2183f18d6cea3e9477f2a45416a13cfc36`.
-
-The release work branch was then reset to that merged `main` commit solely to carry the next synchronized publication-closeout documentation cycle.
-
-## Next actions
+## Remaining work
 
 | Order | Action | State |
 |---:|---|---|
-| 1 | Commit synchronized PR #293 merge facts and require Static contract on the documentation change. | ACTIVE |
-| 2 | Create `v3.0.0` tag and GitHub Release from canonical merged state, attaching the exact retained candidate-produced bytes. | QUEUED |
-| 3 | Verify published GitHub asset hashes against the accepted checksums. | QUEUED |
-| 4 | Run current CTAN `pkgcheck`; perform actual CTAN upload only as an explicit publication action and retain receipt/evidence. | QUEUED / EXTERNAL |
-| 5 | Synchronize final publication state and perform Release closeout verification before marking Release CLOSED. | QUEUED |
+| 1 | Create `v3.0.0` tag and GitHub Release from canonical `main`, using exact retained candidate-produced bytes. | PENDING |
+| 2 | Verify published GitHub asset hashes against the accepted checksums. | PENDING |
+| 3 | Run current CTAN `pkgcheck` on the retained CTAN candidate. | PENDING |
+| 4 | Perform actual CTAN upload only as an explicit action and preserve receipt/acceptance evidence if performed. | EXTERNAL / EXPLICIT |
+| 5 | Synchronize final publication state and perform final Release verification before setting Release `CLOSED`. | PENDING |
+
+Librarian item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+
+## Local continuation
+
+```bash
+git fetch --all --prune
+git switch main
+git pull --ff-only origin main
+git status
+```
+
+Then read `AGENTS.md` and `docs/V3-CONTINUATION.md` before making changes.
 
 ## Mandatory operating discipline
 
-Every **material advance** updates relevant execution documentation, this handoff, roadmap and machine state in the same work cycle. Targeted checks never replace the **phase-end regression**.
-
-The Release phase-end regression is accepted, but the Release phase remains ACTIVE until publication and post-publication verification are recorded. Do not rebuild publication ZIPs, do not weaken tests, do not redistribute proprietary fonts, and do not claim CTAN acceptance without explicit submission/acceptance evidence.
+Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Targeted checks never replace the accepted **phase-end regression**. The Release candidate remains the evidence anchor; publication verification is an additional closeout obligation.
