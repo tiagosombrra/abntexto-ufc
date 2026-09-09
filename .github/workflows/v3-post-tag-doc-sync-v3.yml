@@ -1,0 +1,58 @@
+name: V3 post-tag documentation sync v3
+
+on:
+  push:
+    branches:
+      - ci/v3-final-pkgcheck-evidence
+    paths:
+      - .github/workflows/v3-post-tag-doc-sync-v3.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Finalize post-tag publication state
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout documentation branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: docs/v3.0.0-github-publication-state
+          fetch-depth: 0
+
+      - name: Assert documentation branch is still based on certified source
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '05399473827da7cf6b6c8bac36edc7115481773f'
+
+      - name: Fetch isolated synchronization script
+        run: |
+          set -euo pipefail
+          git show origin/ci/v3-final-pkgcheck-evidence:tools/post-tag-v3-doc-sync.py > /tmp/post-tag-v3-doc-sync.py
+          python3 -m py_compile /tmp/post-tag-v3-doc-sync.py
+
+      - name: Synchronize and validate documentation state
+        run: |
+          set -euo pipefail
+          python3 /tmp/post-tag-v3-doc-sync.py .
+          git diff --check
+          python3 -m json.tool release/v3-release-candidate.json >/dev/null
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+          grep -F '| CTAN submission | **PENDING — not yet claimed** |' docs/CTAN-RELEASE.md
+          grep -F 'CTAN `pkgcheck 4.1.0` was run against the exact canonical ZIP' docs/CTAN-RELEASE.md
+          grep -F 'A versão **3.0.0 está publicada no GitHub**' README.md
+          grep -F 'Status: PASS — GITHUB PUBLICATION VERIFIED / CTAN EXTERNAL CLOSEOUT PENDING' docs/V3-RELEASE-PHASE-END.md
+          grep -F '"submission_status": "pending-not-submitted"' release/v3-release-candidate.json
+          git diff --stat
+
+      - name: Commit synchronized post-tag state
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/CTAN-RELEASE.md docs/HANDOFF-V3.0.0.md docs/V3-CONTINUATION.md docs/ROADMAP-V3.0.0.md docs/V3-RELEASE-READINESS.md docs/V3-RELEASE-PHASE-END.md release/v3-release-candidate.json release/v3-roadmap.json
+          git diff --cached --check
+          git commit -m 'docs: record v3.0.0 GitHub publication state'
+          git push origin HEAD:docs/v3.0.0-github-publication-state
