@@ -1,7 +1,7 @@
 # Linux Integration Scopes
 
-Updated: 2026-09-08  
-Status: ACCEPTED — RELEASE PHASE-END SCOPE GUARD PREPARED
+Updated: 2026-09-09  
+Status: ACCEPTED — RELEASE EXACT-MAIN COMPLETE-LINUX GUARD ACTIVE
 
 ## Purpose
 
@@ -27,29 +27,31 @@ The permanent `Linux integration` workflow supports bounded suites for intermedi
 
 ## Automatic selection
 
-For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer previous-head to new-head when both commits are available; otherwise selection fails closed to the full PR range. Documentation-only changes skip heavy integration.
+For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer previous-head to new-head when both commits are available; otherwise selection fails closed to the full PR range. Documentation-only incremental changes may skip heavy integration.
 
-| Changed-path class | Scope behavior |
+For canonical `main`, a push that changes `release/v3-release-candidate.json` always runs `scope=complete`. This guarantees that the exact post-squash Release candidate SHA receives complete Linux evidence instead of relying on a PR-head result or an incremental documentation-only scope decision.
+
+| Changed-path/event class | Scope behavior |
 |---|---|
 | orchestration only | `smoke` |
 | orchestration + recognized domain | bounded domain/union |
 | orchestration + unknown technical path | `complete` |
 | force-complete shared/core/standards path | `complete` |
-| `release/final-certification-candidate.json` | `complete` — historical Final Certification candidate transport |
-| `release/v3-release-candidate.json` | **`complete` — Release phase-end candidate transport** |
+| `release/final-certification-candidate.json` in PR | `complete` — historical Final Certification candidate transport |
+| `release/v3-release-candidate.json` in PR | **`complete` — Release phase-end candidate transport** |
+| `release/v3-release-candidate.json` pushed to `main` | **`complete` — exact-main Release certification** |
 | unknown technical path | `complete` |
 
 ## Candidate-marker provenance
 
-Final Certification exposed an orchestration defect when a phase-end candidate workflow concluded `success` while heavy Linux was skipped. The accepted correction established a tracked force-complete marker and self-tests.
-
-Release preserves that lesson without reusing Final Certification identity:
+Final Certification exposed an orchestration defect when a phase-end candidate workflow concluded `success` while heavy Linux was skipped. Release preserves the fail-closed correction:
 
 1. `release/final-certification-candidate.json` remains historical Final Certification transport;
 2. `release/v3-release-candidate.json` is the Release-specific transport;
-3. both marker-only and marker-plus-orchestration cases must infer `complete`;
-4. the permanent `Linux release check` PR path filter includes the Release marker;
-5. the marker is provenance/orchestration only and does not alter product or normative behavior.
+3. marker-only and marker-plus-orchestration PR cases infer `complete`;
+4. the permanent `Linux release check` includes the Release marker;
+5. the permanent `Linux integration` workflow also runs on `main` pushes that change the Release marker and forces `complete`;
+6. the marker is provenance/orchestration only and does not alter product or normative behavior.
 
 `docs/V3-RELEASE-PHASE-END.md` defines the Release candidate and acceptance semantics.
 

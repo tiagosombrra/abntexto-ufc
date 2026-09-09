@@ -1,6 +1,11 @@
 name: Linux integration
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - release/v3-release-candidate.json
   pull_request:
     branches:
       - main
@@ -99,6 +104,9 @@ jobs:
           elif [[ "$INPUT_SCOPE" != "auto" ]]; then
             selected_scope="$INPUT_SCOPE"
             reason="manual:$selected_scope"
+          elif [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            selected_scope=complete
+            reason=release-marker-main-push
           fi
 
           echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"

@@ -1,14 +1,40 @@
 {
-  "schema_version": 3,
-  "purpose": "V3 Release publication-hardening and final recertification marker",
+  "schema_version": 4,
+  "purpose": "V3 Release final exact-main recertification marker after publication hardening integration",
   "phase": "release",
-  "candidate_semantics": "exact canonical main commit certified after this publication-hardening batch is merged",
+  "candidate_semantics": "the exact canonical main commit containing the post-merge control-plane synchronization, after that commit passes final release certification",
+  "integration_anchor": {
+    "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
+    "source": "PR #297 squash merge",
+    "status": "publication-hardening-integrated",
+    "taggable": false,
+    "reason": "A post-merge control-plane synchronization intentionally follows this integration commit before final candidate freeze."
+  },
   "superseded_candidate": {
     "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
     "linux_release_run": 34303586773,
     "distribution_artifact_id": 10086299397,
     "status": "superseded-for-publication",
     "reason": "Certified archives were technically reproducible but contained stale v2/pre-publication README text; the CTAN README identified 3.0.0 as a development candidate. Those bytes must never be published as v3.0.0 final."
+  },
+  "publication_hardening_evidence": {
+    "pr": 297,
+    "final_head_sha": "b72304254edcdbfdc7343ce9b4e32bc3eb1d07e5",
+    "linux_release_run": 34353576646,
+    "distribution_artifact_id": 10105557500,
+    "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "ctan_runtime_files": 1,
+    "ctan_project_def_files": 0,
+    "tracked_runtime_modules_inlined": 14,
+    "status": "integration-evidence-only-not-final-publication-bytes"
+  },
+  "final_candidate": {
+    "status": "pending-control-plane-sync-merge-and-exact-main-recertification",
+    "source_branch": "main",
+    "resolve_sha_from_git_after_sync_merge": true,
+    "complete_linux_on_exact_main_release_marker_push": true,
+    "linux_release_check_on_exact_main_release_marker_push": true,
+    "no_pre_tag_commits_after_acceptance": true
   },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
@@ -38,7 +64,13 @@
   "final_tag_contract": {
     "tag": "v3.0.0",
     "tagged_commit_must_equal_certified_commit": true,
+    "certified_commit_must_equal_publication_source_commit": true,
     "create_only_after_pkgcheck_pass": true
+  },
+  "documentation_policy": {
+    "affected_docs_updated_with_every_material_repository_change": true,
+    "root_readme_tracks_user_facing_facts_not_transient_ci_state": true,
+    "post_acceptance_pre_tag_repository_changes_forbidden": true
   },
   "publication_rebuild_allowed": false,
   "remove_after_acceptance": false
