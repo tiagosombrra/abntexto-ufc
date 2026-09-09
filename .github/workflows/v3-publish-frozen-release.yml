@@ -1,0 +1,191 @@
+name: V3 publish frozen release
+
+on:
+  push:
+    branches:
+      - ci/v3-final-pkgcheck-evidence
+    paths:
+      - .github/workflows/v3-publish-frozen-release.yml
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: v3-publish-frozen-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Tag and publish frozen v3.0.0 assets
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      TAG_NAME: v3.0.0
+      CERTIFIED_SOURCE_SHA: 05399473827da7cf6b6c8bac36edc7115481773f
+      DISTRIBUTION_ARTIFACT_ID: '10117679639'
+      DISTRIBUTION_ARTIFACT_SHA256: 7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df
+      CTAN_ZIP_SHA256: d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71
+      PKGCHECK_RUN_ID: '34386932488'
+      PKGCHECK_ARTIFACT_ID: '10118176687'
+      PKGCHECK_ARTIFACT_SHA256: e6a4d926d68f68657caca2bab4c1f2ea46cad81bd523c6c55e7f0fa73ea4c4e3
+    steps:
+      - name: Assert immutable publication preconditions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current_main="$(gh api "/repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')"
+          test "$current_main" = "$CERTIFIED_SOURCE_SHA"
+          if gh api "/repos/${GITHUB_REPOSITORY}/git/ref/tags/${TAG_NAME}" >/dev/null 2>&1; then
+            echo "Tag ${TAG_NAME} already exists; refusing to mutate an immutable version tag." >&2
+            exit 1
+          fi
+          if gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release ${TAG_NAME} already exists; refusing duplicate publication." >&2
+            exit 1
+          fi
+          test "$(gh api "/repos/${GITHUB_REPOSITORY}/actions/runs/${PKGCHECK_RUN_ID}" --jq '.conclusion')" = success
+          test "$(gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/${PKGCHECK_ARTIFACT_ID}" --jq '.digest')" = "sha256:${PKGCHECK_ARTIFACT_SHA256}"
+          printf 'certified_source_sha=%s\ncurrent_main_sha=%s\npkgcheck_run_id=%s\npkgcheck_artifact_id=%s\n' \
+            "$CERTIFIED_SOURCE_SHA" "$current_main" "$PKGCHECK_RUN_ID" "$PKGCHECK_ARTIFACT_ID" | tee publication-preconditions.txt
+
+      - name: Re-verify pkgcheck evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/${PKGCHECK_ARTIFACT_ID}/zip" > pkgcheck-evidence-wrapper.zip
+          printf '%s  %s\n' "$PKGCHECK_ARTIFACT_SHA256" pkgcheck-evidence-wrapper.zip | sha256sum -c -
+          unzip -q pkgcheck-evidence-wrapper.zip -d pkgcheck-evidence
+          grep -Fx 'pkgcheck 4.1.0' pkgcheck-evidence/pkgcheck-version.txt
+          test "$(cat pkgcheck-evidence/pkgcheck-exit-code.txt)" = '0'
+          test ! -s pkgcheck-evidence/pkgcheck-warnings.txt
+          test ! -s pkgcheck-evidence/pkgcheck-errors.txt
+          cat pkgcheck-evidence/pkgcheck-version.txt pkgcheck-evidence/pkgcheck-exit-code.txt | tee pkgcheck-publication-proof.txt
+
+      - name: Download and freeze exact release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/${GITHUB_REPOSITORY}/actions/artifacts/${DISTRIBUTION_ARTIFACT_ID}/zip" > distribution-wrapper.zip
+          printf '%s  %s\n' "$DISTRIBUTION_ARTIFACT_SHA256" distribution-wrapper.zip | sha256sum -c -
+          mkdir release-assets
+          unzip -q distribution-wrapper.zip -d release-assets
+          expected="$(printf '%s\n' SHA256SUMS abntexto-ufc-3.0.0.zip abntexto-ufc-overleaf-3.0.0.zip abntexto-ufc-template-3.0.0.zip | sort)"
+          actual="$(find release-assets -maxdepth 1 -type f -printf '%f\n' | sort)"
+          test "$actual" = "$expected"
+          printf '%s  %s\n' "$CTAN_ZIP_SHA256" release-assets/abntexto-ufc-3.0.0.zip | sha256sum -c -
+          (cd release-assets && sha256sum -c SHA256SUMS)
+          sha256sum release-assets/* | sort | tee frozen-release-assets.sha256
+
+      - name: Create immutable annotated tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag_object_sha="$(gh api -X POST "/repos/${GITHUB_REPOSITORY}/git/tags" \
+            -f tag="$TAG_NAME" \
+            -f message='abntexto-ufc 3.0.0 — certified release' \
+            -f object="$CERTIFIED_SOURCE_SHA" \
+            -f type='commit' \
+            --jq '.sha')"
+          gh api -X POST "/repos/${GITHUB_REPOSITORY}/git/refs" \
+            -f ref="refs/tags/${TAG_NAME}" \
+            -f sha="$tag_object_sha" > tag-ref-created.json
+          observed_tag_object="$(gh api "/repos/${GITHUB_REPOSITORY}/git/ref/tags/${TAG_NAME}" --jq '.object.sha')"
+          test "$observed_tag_object" = "$tag_object_sha"
+          observed_commit="$(gh api "/repos/${GITHUB_REPOSITORY}/git/tags/${tag_object_sha}" --jq '.object.sha')"
+          test "$observed_commit" = "$CERTIFIED_SOURCE_SHA"
+          printf 'tag=%s\ntag_object_sha=%s\ncertified_commit_sha=%s\n' "$TAG_NAME" "$tag_object_sha" "$observed_commit" | tee tag-evidence.txt
+
+      - name: Prepare release notes
+        run: |
+          cat > release-notes.md <<'EOF'
+          ## abntexto-ufc 3.0.0
+
+          This release is the certified v3.0.0 publication candidate for the community-maintained UFC academic LaTeX class.
+
+          Publication evidence:
+          - certified source commit: `05399473827da7cf6b6c8bac36edc7115481773f`;
+          - full Linux release contract: `PASS=38 FAIL=0 SKIP=0`;
+          - complete Linux integration: `PASS=36 FAIL=0 SKIP=0`;
+          - PDF/A-2b and deterministic release-reference reproducibility: PASS;
+          - NBR 6023:2025 controlled bibliography profile, including item 33: PASS;
+          - CTAN-facing runtime: one generated `abntexto-ufc.cls`, 14 project modules inlined, zero project-owned `.def` files;
+          - CTAN `pkgcheck 4.1.0`: exit code 0, zero warnings, zero errors/fatals;
+          - canonical CTAN ZIP SHA-256: `d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`.
+
+          Release assets are the frozen files produced by the certified source commit. No asset is rebuilt during publication.
+
+          `abntexto-ufc-3.0.0.zip` is the only archive intended for CTAN submission. The template and Overleaf archives are user-facing convenience distributions and are not CTAN upload archives.
+
+          CTAN submission/acceptance is not claimed by this GitHub Release; that status is recorded only after explicit CTAN evidence exists.
+          EOF
+
+      - name: Create draft GitHub Release with frozen assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "$TAG_NAME" \
+            release-assets/abntexto-ufc-3.0.0.zip \
+            release-assets/abntexto-ufc-template-3.0.0.zip \
+            release-assets/abntexto-ufc-overleaf-3.0.0.zip \
+            release-assets/SHA256SUMS \
+            --repo "$GITHUB_REPOSITORY" \
+            --title 'abntexto-ufc 3.0.0' \
+            --notes-file release-notes.md \
+            --draft \
+            --verify-tag
+          gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isPrerelease,url,assets > release-draft.json
+          test "$(jq -r '.isDraft' release-draft.json)" = true
+          test "$(jq '.assets | length' release-draft.json)" -eq 4
+
+      - name: Re-download draft assets and verify frozen bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir release-redownload
+          gh release download "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --dir release-redownload
+          expected="$(printf '%s\n' SHA256SUMS abntexto-ufc-3.0.0.zip abntexto-ufc-overleaf-3.0.0.zip abntexto-ufc-template-3.0.0.zip | sort)"
+          actual="$(find release-redownload -maxdepth 1 -type f -printf '%f\n' | sort)"
+          test "$actual" = "$expected"
+          for name in SHA256SUMS abntexto-ufc-3.0.0.zip abntexto-ufc-template-3.0.0.zip abntexto-ufc-overleaf-3.0.0.zip; do
+            cmp "release-assets/${name}" "release-redownload/${name}"
+          done
+          (cd release-redownload && sha256sum -c SHA256SUMS)
+          printf '%s  %s\n' "$CTAN_ZIP_SHA256" release-redownload/abntexto-ufc-3.0.0.zip | sha256sum -c -
+          sha256sum release-redownload/* | sort | tee redownloaded-release-assets.sha256
+          diff -u frozen-release-assets.sha256 redownloaded-release-assets.sha256
+
+      - name: Publish verified GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release edit "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --draft=false
+          gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isPrerelease,publishedAt,url,assets > release-final.json
+          test "$(jq -r '.isDraft' release-final.json)" = false
+          test "$(jq -r '.isPrerelease' release-final.json)" = false
+          test "$(jq '.assets | length' release-final.json)" -eq 4
+          cat release-final.json
+
+      - name: Upload publication evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
+        with:
+          name: abntexto-ufc-v3.0.0-publication-evidence-${{ github.run_id }}
+          path: |
+            publication-preconditions.txt
+            pkgcheck-publication-proof.txt
+            frozen-release-assets.sha256
+            tag-evidence.txt
+            release-notes.md
+            release-draft.json
+            redownloaded-release-assets.sha256
+            release-final.json
+          if-no-files-found: warn
+          retention-days: 90
