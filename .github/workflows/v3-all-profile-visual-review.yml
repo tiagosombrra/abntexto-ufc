@@ -71,7 +71,7 @@ jobs:
             test "$(readlink -f "$class_path")" = "$(readlink -f "$released/abntexto-ufc.cls")"
             test "$(readlink -f "$fonts_path")" = "$(readlink -f "$released/abntexto-ufc/fonts.def")"
             test "$(readlink -f "$upstream_path")" = "$(readlink -f "$released/abntexto.cls")"
-            grep -Fq '\\ProvidesClass{abntexto-ufc}[2026/09/09 v3.0.0' "$class_path"
+            grep -Fq '\ProvidesClass{abntexto-ufc}[2026/09/09 v3.0.0' "$class_path"
             grep -Fq 'font / times .code:n' "$fonts_path"
 
             cat > /tmp/abntexto-ufc-v3-api-probe.tex <<'TEX'
