@@ -7,7 +7,7 @@ Updated: 2026-09-09
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Active phase | **Release — CTAN submission pending** |
+| Active phase | **Release — maintainer all-profile visual validation pending; CTAN blocked** |
 | Certified/tagged source | `05399473827da7cf6b6c8bac36edc7115481773f` |
 | Immutable tag | `v3.0.0`; tag object `7354cf912ffa5abb171128554cabce61392ecd84` resolves to the certified source |
 | GitHub Release | **PUBLISHED** — https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0 |
@@ -17,9 +17,11 @@ Updated: 2026-09-09
 | CTAN runtime | **one generated `abntexto-ufc.cls`; zero project-owned `.def` files** |
 | `pkgcheck` | **PASS** — 4.1.0, exit 0, 0 warnings/errors; run `34386932488` |
 | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| CTAN submission/acceptance | **PENDING; no claim without external evidence** |
+| Seven-profile source/PDF generation | **ACTIVE** |
+| Maintainer visual acceptance | **PENDING** |
+| CTAN submission/acceptance | **BLOCKED until visual acceptance; no CTAN claim without external evidence** |
 
-`main` may advance after the immutable tag for documentation/state updates. Git authority for the released source is the `v3.0.0` tag resolving to `05399473827da7cf6b6c8bac36edc7115481773f`.
+`main` may advance after the immutable tag for documentation/state/validation infrastructure. Git authority for the released implementation remains `v3.0.0` resolving to `05399473827da7cf6b6c8bac36edc7115481773f`.
 
 ## Completed publication-hardening evidence
 
@@ -27,7 +29,7 @@ PR #297 closed the publication defects and CTAN-shape issues. Its final head pas
 
 The retained PR artifact was manually audited before merge. The CTAN ZIP had exactly eight files below the package root, one `abntexto-ufc.cls`, zero `.def`, no vendored `abntexto.cls`, no institutional marks and no proprietary Microsoft fonts. The generated class contained all 14 tracked runtime modules exactly once and no residual project-owned `.def` input.
 
-Those results certify the publication-hardening integration, not the final release bytes, because the protected repository uses squash merge and this control-plane synchronization intentionally follows the integration merge.
+Final exact-main certification, `pkgcheck`, immutable tag creation and GitHub Release publication were subsequently completed on source `05399473827da7cf6b6c8bac36edc7115481773f`. Published Release assets were re-downloaded and proved byte-identical.
 
 ## CTAN package contract
 
@@ -60,17 +62,35 @@ Only `abntexto-ufc-3.0.0.zip` is intended for CTAN. The editable-template and Ov
 
 Former librarian item 33 is **PASS** using primary ABNT NBR 6023:2025 authority and executable regression cases. The project verifies DOI plus applicable online availability/access elements, explicit repeated authorship, legal-person authorship, and jurisdiction disambiguation such as `SÃO PAULO (Estado)`.
 
+## Mandatory maintainer visual gate
+
+Before CTAN submission, produce and present source + rendered PDF from the frozen `v3.0.0` implementation for:
+
+1. `undergraduate-capstone`;
+2. `specialization-capstone`;
+3. `masters-thesis`;
+4. `doctoral-thesis`;
+5. `research-project`;
+6. `anonymized-research-project`;
+7. `scientific-article`.
+
+Each pair must be traceable through a manifest containing source/PDF hashes and build metadata. Automated compile success does not close this gate; explicit maintainer acceptance is required. Detailed checklist and evidence state are in `docs/V3-VISUAL-VALIDATION.md`.
+
+If a material runtime/presentation defect is found, `v3.0.0` must not be rebuilt, modified or retargeted. Open a correction/new-version cycle and repeat affected certification/visual gates before CTAN submission.
+
 ## Remaining Release work
 
-1. submit only `abntexto-ufc-3.0.0.zip` to CTAN using the frozen GitHub Release asset;
-2. preserve the CTAN submission receipt and submitted-file identity/hash;
-3. wait for explicit CTAN acceptance/catalog evidence; do not infer acceptance from submission;
-4. verify the accepted package identity/version and, when available, installation/catalog propagation;
-5. synchronize post-CTAN documentation and machine state;
-6. mark Release `CLOSED` only after external publication verification.
+1. generate the seven frozen-v3.0.0 source/PDF review pairs;
+2. present them to the maintainer and record explicit visual acceptance for every profile;
+3. only after acceptance, submit `abntexto-ufc-3.0.0.zip` to CTAN using the frozen GitHub Release asset;
+4. preserve CTAN submission receipt and submitted-file identity/hash;
+5. wait for explicit CTAN acceptance/catalog evidence; do not infer acceptance from submission;
+6. verify accepted package identity/version and, when available, installation/catalog propagation;
+7. synchronize post-CTAN documentation and machine state;
+8. mark Release `CLOSED` only after external publication verification.
 
 The GitHub tag and Release must not be rebuilt, replaced or retargeted.
 
 ## Mandatory operating discipline
 
-Every **material advance** or material repository modification must update the affected documentation and machine state in the same work cycle. The public README is changed only when its user-facing facts change; it must not carry transient branch or CI state. Targeted checks never replace the final phase-end regression. No publication state is inferred from a build, tag or submission without the corresponding evidence.
+Every **material advance** or material repository modification must update the affected documentation and machine state in the same work cycle. The public README is changed only when its user-facing facts change; it must not carry transient branch or CI state. Targeted checks never replace phase-end regression, and automated output never replaces the explicit maintainer visual gate.
