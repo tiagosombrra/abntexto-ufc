@@ -1,6 +1,6 @@
 # UFC Librarian Review — Consolidated 34-Point Contract
 
-Updated: 2026-09-05
+Updated: 2026-09-09
 
 ## Purpose
 
@@ -15,13 +15,11 @@ This document converts the union of the two annotated v1.1.1 review PDFs supplie
 
 ## Current summary
 
-The consolidated review state is **33 PASS, 0 PARTIAL, 0 FAIL, 1 NORMATIVE-REVIEW = 34 items**.
+The consolidated review state is **34 PASS, 0 PARTIAL, 0 FAIL, 0 NORMATIVE-REVIEW = 34 items**.
 
-All resolvable review items were carried through Core Corrections and the corrected canonical academic-work PDF. Reference PDF Validation closed on candidate `b64074c64941895f97fbe0f795ce826c798d17ce` after Static `33985595790`, full Linux `33985595798`, accepted Git-bound PDF provenance and a complete **55/55-page visual PASS with 0 unexplained visual failures**.
+All review items have now been reconciled against the applicable current technical/institutional authority and converted into executable or presentation evidence where appropriate. Reference PDF Validation previously closed with a complete **55/55-page visual PASS with 0 unexplained visual failures**; the later Scientific Article and Final Certification phases preserved the shared foundation.
 
-This final presentation review reconfirmed the visual requirements for the cover/title/approval surfaces, RESUMO placement, object typography, appendix/annex TOC presentation and annex source attribution without reopening any resolved item.
-
-Item 33 remains deliberately fail-closed pending authoritative current NBR 6023:2025 text for the disputed DOI/availability/repeated-author/corporate-author cases. This unresolved authority item does not authorize speculative runtime changes and is not a visual/runtime failure of the accepted shared foundation.
+Item 33 was closed on 2026-09-09 after direct review of the primary ABNT NBR 6023:2025 text. The authoritative locators used for closure are sections **6.6**, **8.1.2**, **8.1.2.2–8.1.2.3**, **8.13**, and **9.1**, together with the standard's examples for online references, legal-person authorship/jurisdiction and repeated authorship. The resulting behavior is regression-tested in `tests/integration/references-6023.sh` with controlled fixtures.
 
 ## Consolidated review contract
 
@@ -59,14 +57,21 @@ Item 33 remains deliberately fail-closed pending authoritative current NBR 6023:
 | 30 | Unknown place/publisher data must not emit obsolete/inappropriate patterns for online resources; electronic examples must follow current NBR 6023 handling. | PASS — controlled reviewer case accepted. | `nbr6023-2025.def`, bibliography fixtures |
 | 31 | Thesis/dissertation references must use the correct work-type structure and must not duplicate or contradict the year. | PASS — controlled single-year evidence accepted. | bibliography fixtures |
 | 32 | Standard and multivolume examples must use the accepted publisher/year and physical-description conventions when applicable. | PASS — standard and bibliography-specific `2 v.` evidence accepted. | bibliography fixtures/reference guide |
-| 33 | DOI/availability, repeated-author treatment, `São Paulo (Estado)` and related edge cases must be reconciled against current NBR 6023:2025 before runtime changes. | NORMATIVE-REVIEW | bibliography runtime/fixtures/locator audit |
+| 33 | DOI/availability, repeated-author treatment, `São Paulo (Estado)` and related legal-person edge cases must follow current NBR 6023:2025. | **PASS** — primary NBR 6023:2025 reviewed directly: online references preserve `Disponível em:`/`Acesso em:` even when DOI is present; repeated authorship is rendered explicitly; legal-person authorship uses the known/highlighted institutional form; homonymous jurisdiction is disambiguated, including `SÃO PAULO (Estado)`. | `abntexto-ufc.cls`, `bibliography.def`, `tests/fixtures/references-6023-2025.bib`, `tests/integration/references-6023.sh`; NBR 6023:2025 §§ 6.6, 8.1.2, 8.1.2.2–8.1.2.3, 8.13, 9.1 |
 | 34 | Appendix/annex headings must use the required bold presentation, and annexed external material must explicitly identify its source. | PASS — final-PDF heading evidence plus canonical pages 53-54 visual source/heading reconfirmation. | appendix/annex integration, canonical annex/reference gate |
 
-## Remaining normative conflict
+## Item 33 closure decision
 
-Review item 33 remains fail-closed. Current NBR 6023:2025 is the governing technical edition, but exact authoritative text for the disputed edge cases is not available in the current evidence corpus. Do not convert older reviewer wording into current runtime law without that authority.
+The earlier fail-closed boundary is removed because primary current-edition authority is now available and has been reviewed directly.
 
-Scientific Article work reuses the shared bibliography contract and must preserve this boundary unless new authoritative current-edition evidence is added and reviewed separately.
+The accepted interpretation is:
+
+1. an online reference carries the prescribed availability and access-date elements; a DOI may additionally be present but does not erase those online-access elements when applicable;
+2. consecutive references by the same author repeat the authorship instead of replacing it with an underline/dash convention;
+3. a legal-person author is entered by the form by which it is known or highlighted in the document, consistently across references;
+4. governmental authorship preserves the superior body/jurisdiction needed for identification, and homonymous state/municipality names are disambiguated with the corresponding parenthetical qualifier, such as `SÃO PAULO (Estado)`.
+
+The runtime makes repeated-author rendering explicit through the `biblatex-abnt` `repeatfields=true` policy. Controlled render fixtures verify all four item-33 surfaces with both pdfLaTeX and LuaLaTeX through the existing NBR 6023 regression gate.
 
 ## Acceptance rule
 
