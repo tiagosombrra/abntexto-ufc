@@ -66,8 +66,27 @@ def main() -> None:
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
 
-    if RELEASE_CANDIDATE_MARKER not in release_workflow:
-        fail("Linux release check must trigger on the Release phase-end candidate marker")
+    release_required_tokens = (
+        RELEASE_CANDIDATE_MARKER,
+        "github.event.pull_request.head.sha",
+        "SOURCE_COMMIT_SHA",
+        "SOURCE_DATE_EPOCH",
+        "git rev-parse HEAD",
+        "make release-check",
+        "make distribution-bundles",
+        "Upload certified distribution assets",
+        "dist/abntexto-ufc-3.0.0.zip",
+        "dist/abntexto-ufc-ctan-3.0.0.zip",
+        "dist/abntexto-ufc-template-3.0.0.zip",
+        "dist/abntexto-ufc-overleaf-3.0.0.zip",
+        "dist/SHA256SUMS",
+    )
+    missing_release_tokens = [token for token in release_required_tokens if token not in release_workflow]
+    if missing_release_tokens:
+        fail(
+            "Linux release check is missing candidate provenance/artifact tokens: "
+            + ", ".join(missing_release_tokens)
+        )
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
@@ -127,7 +146,8 @@ def main() -> None:
         "incremental_sync=true missing_before_fallback=full-pr "
         "unknown_path_fallback=complete article_first_class=true "
         "step4_registered=true step5_registered=true "
-        "release_candidate_forces_complete=true release_check_pr_trigger=true"
+        "release_candidate_forces_complete=true release_check_pr_trigger=true "
+        "release_candidate_head_checkout=true release_assets_retained=true"
     )
 
 

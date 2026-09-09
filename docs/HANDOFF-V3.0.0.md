@@ -10,49 +10,42 @@ Updated: 2026-09-08
 | Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
 | Active branch / PR | `release/v3-release` / #293 |
 | Active phase | **Release** |
-| Release branch base | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Release entry sync | `4fbd56930e4025da1a5463150c3cfd23005f6df4` |
 | Release transport preparation | **ACCEPTED** on `6a257f35b65266a1120826b816404116082b1e5c` |
-| Transport Static | `34265429699` — SUCCESS |
-| Transport complete Linux | `34265429551` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Final Certification | **CLOSED** on candidate `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
-| Final release check | `34239890548` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Transport Static / Linux | `34265429699` SUCCESS / `34265429551` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Control-plane reconciliation | `eededce34d81df6b50206cdf11dc8707dde20152`; Static `34300202909` SUCCESS; Linux docs-only heavy skip |
+| Current batch | **Release artifact delivery implementation — CI pending** |
+| Final Certification | **CLOSED** on `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
-| Current batch | **Release artifact delivery and immutable candidate preparation** |
 
 Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Accepted Release transport
+## Current material advance
 
-The Release-specific CI transport is now accepted. On `6a257f35...`, Static `34265429699` passed and Linux `34265429551` actually ran the complete suite, finishing `SCOPE=complete PASS=36 FAIL=0 SKIP=0`.
+The permanent `Linux release check` is being changed so the final publication bytes have exact candidate provenance:
 
-| Predicate | Accepted result |
-|---|---|
-| Release marker recognized by Linux scope selector | PASS — forces `complete` |
-| Release marker recognized by `Linux release check` PR trigger | PASS |
-| Static orchestration self-test | PASS |
-| Complete Linux integration | PASS |
-| Product/normative semantics changed | No |
-| Temporary executor introduced | No |
+| Surface | Implemented behavior | Acceptance state |
+|---|---|---|
+| Checkout | explicit PR head / candidate SHA | CI pending |
+| Provenance | `SOURCE_COMMIT_SHA` bound to checkout SHA | CI pending |
+| Determinism | `SOURCE_DATE_EPOCH` from candidate commit time | CI pending |
+| Release contract | `make release-check` remains mandatory | CI pending |
+| Final package build | `make distribution-bundles` after release contract | CI pending |
+| Integrity | `sha256sum -c SHA256SUMS` + exact file-set check | CI pending |
+| Artifact retention | four ZIPs + `SHA256SUMS` uploaded by permanent workflow | CI pending |
 
-## Artifact provenance decision
+No LaTeX runtime or normative rule is changed by this Release transport work.
 
-The release checklist is tightened so publication bytes originate from the immutable Release candidate itself. The permanent `Linux release check` already executes `make release-check`, which builds and validates the distribution set. It must also retain `dist/` as a downloadable workflow artifact. Therefore:
+## Acceptance rule for this advance
 
-- pre-candidate bundle builds are diagnostic only;
-- the certified four ZIPs and `SHA256SUMS` are generated on the immutable candidate;
-- those exact bytes are later attached to the GitHub Release;
-- no separately rebuilt local ZIP is accepted as publication evidence.
-
-This is a Release transport/provenance refinement only; it does not alter LaTeX runtime, normative rules or accepted review evidence.
+The implementation commit must pass Static contract and **complete** Linux integration. A green workflow with heavy integration skipped is insufficient. The exact implementation SHA and run IDs are recorded in a later documentation-only acceptance synchronization after CI finishes.
 
 ## Immediate Release action
 
 | Order | Action | Gate |
 |---:|---|---|
-| 1 | Add durable upload of the generated `dist/` set to permanent `Linux release check` | workflow/static review + complete Linux on the technical change |
-| 2 | Synchronize acceptance of that workflow change in roadmap/handoff/readiness/machine state | same work cycle |
-| 3 | Publish one immutable Release candidate containing `release/v3-release-candidate.json` | no candidate amendment after CI starts |
+| 1 | Validate artifact-delivery implementation | Static + complete Linux green |
+| 2 | Record implementation SHA/run IDs | documentation + machine-state synchronization |
+| 3 | Publish one immutable Release candidate containing `release/v3-release-candidate.json` | candidate not amended after CI starts |
 | 4 | Run Release **phase-end regression** | Static + `SCOPE=complete` Linux + `Linux release check` |
 | 5 | Verify/download the candidate's four ZIPs and `SHA256SUMS` | exact candidate provenance + checksum/integrity PASS |
 | 6 | Only after candidate acceptance, create/verify `v3.0.0` tag and GitHub Release with those exact assets | published hashes match candidate |
@@ -61,7 +54,7 @@ This is a Release transport/provenance refinement only; it does not alter LaTeX 
 
 ## Mandatory operating discipline
 
-Every **material advance** updates relevant execution documentation, this handoff, roadmap and machine state in the same work cycle. A workflow conclusion of `success` never substitutes for required scope.
+Every **material advance** updates relevant execution documentation, this handoff, roadmap and machine state in the same work cycle. Release ends with its own complete **phase-end regression** on one immutable SHA.
 
 ## Hard boundaries
 
@@ -71,4 +64,4 @@ Every **material advance** updates relevant execution documentation, this handof
 - Librarian item 33 remains fail-closed.
 - Do not reuse the Final Certification marker as Release identity.
 - Do not claim CTAN acceptance without submission/acceptance evidence.
-- Do not rebuild publication ZIPs after the accepted Release candidate; use the workflow-retained certified bytes.
+- Do not rebuild publication ZIPs after the accepted candidate; publish the workflow-retained candidate bytes.
