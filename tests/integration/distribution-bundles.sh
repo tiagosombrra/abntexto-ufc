@@ -44,6 +44,7 @@ from __future__ import annotations
 import re
 import sys
 import zipfile
+from collections import Counter
 from pathlib import Path, PurePosixPath
 
 root = Path(sys.argv[1])
@@ -62,6 +63,7 @@ forbidden_fonts = {
     "times.ttf", "timesbd.ttf", "timesi.ttf", "timesbi.ttf",
     "arial.ttf", "arialbd.ttf", "ariali.ttf", "arialbi.ttf",
 }
+safe_component = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]*$")
 
 for archive_path in sorted(root.glob("*.zip")):
     with zipfile.ZipFile(archive_path) as archive:
@@ -76,10 +78,11 @@ for archive_path in sorted(root.glob("*.zip")):
                 name.encode("ascii")
             except UnicodeEncodeError:
                 raise SystemExit(f"Distribution integrity failed: non-ASCII path in {archive_path.name}: {name}")
-            if any(part.startswith(".") for part in pure.parts):
-                raise SystemExit(f"Distribution integrity failed: hidden path in {archive_path.name}: {name}")
-            if any(re.search(r"\s", part) for part in pure.parts):
-                raise SystemExit(f"Distribution integrity failed: whitespace in path in {archive_path.name}: {name}")
+            for part in pure.parts:
+                if part.startswith("."):
+                    raise SystemExit(f"Distribution integrity failed: hidden path in {archive_path.name}: {name}")
+                if not safe_component.fullmatch(part):
+                    raise SystemExit(f"Distribution integrity failed: unsafe filename component in {archive_path.name}: {part}")
             if pure.name.lower() in forbidden_fonts:
                 raise SystemExit(f"Distribution integrity failed: proprietary font in {archive_path.name}: {name}")
             if "assets" in pure.parts and "institutional" in pure.parts:
@@ -109,16 +112,30 @@ with zipfile.ZipFile(package_path) as archive:
     if missing:
         raise SystemExit("CTAN package is missing required files: " + ", ".join(sorted(missing)))
 
-    forbidden_components = {".github", "tests", "artifacts", "tools", "release", "standards", "dist"}
+    # Only reject repository-level development directories. The nested
+    # abntexto-ufc/standards runtime directory is an intentional class module.
+    forbidden_root_children = {".github", "tests", "artifacts", "tools", "release", "standards", "dist"}
     for name in files:
         pure = PurePosixPath(name)
-        if forbidden_components.intersection(pure.parts):
+        if len(pure.parts) > 1 and pure.parts[1] in forbidden_root_children:
             raise SystemExit(f"CTAN package leaked development infrastructure: {name}")
         if pure.name == "abntexto.cls":
             raise SystemExit("CTAN package must keep abntexto as an external dependency.")
         lowered = pure.name.casefold()
         if any(marker in lowered for marker in ("brasao", "coat-of-arms", "logo-ufc", "ufc-logo")):
             raise SystemExit(f"CTAN package leaked an institutional mark asset: {name}")
+
+        info = archive.getinfo(name)
+        if info.file_size == 0:
+            raise SystemExit(f"CTAN package contains an empty file: {name}")
+        unix_mode = (info.external_attr >> 16) & 0o7777
+        if unix_mode not in (0, 0o644):
+            raise SystemExit(f"CTAN package file permissions must be 0644: {name} mode={oct(unix_mode)}")
+
+    basenames = [PurePosixPath(name).name.casefold() for name in files]
+    duplicates = sorted(name for name, count in Counter(basenames).items() if count > 1)
+    if duplicates:
+        raise SystemExit("CTAN package contains case-insensitive duplicate basenames: " + ", ".join(duplicates))
 
     readme = archive.read("abntexto-ufc/README.md").decode("utf-8")
     readme_fold = readme.casefold()
