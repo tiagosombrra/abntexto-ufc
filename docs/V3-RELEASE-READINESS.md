@@ -31,8 +31,13 @@ Because publication bytes are immutable after acceptance, the retained artifact 
 | Package id | `abntexto-ufc` — replaces historical/deprecated `ufctex` identity |
 | Root user documentation | v3 publication-ready; stale v2 instructions removed |
 | CTAN README | final 3.0.0 metadata; LPPL, maintainer, repo, dependency and no-logo statement explicit |
-| CTAN package scope | reduced to runtime + concise documentation + minimal example |
+| CTAN package scope | reduced to one project runtime class + concise documentation + minimal example |
 | CTAN archive count | **one upload archive**: `abntexto-ufc-3.0.0.zip` |
+| CTAN project runtime | **one generated `abntexto-ufc.cls`** |
+| CTAN project `.def` files | **0 — any `.def` in the ZIP is a hard failure** |
+| Repository architecture | modular `.def` sources retained for development/testing only |
+| CTAN equivalence | every tracked runtime module must be inlined exactly once into generated class |
+| Isolated CTAN compile | example must compile without the modular runtime directory present |
 | Redundant CTAN archive | removed; no `abntexto-ufc-ctan-3.0.0.zip` |
 | Institutional marks | explicitly excluded from package and regression-tested |
 | Proprietary Microsoft fonts | explicitly excluded from package and regression-tested |
@@ -68,20 +73,21 @@ A PR head that is later squash-merged cannot be the final taggable candidate. Th
 
 | Order | Gate | State |
 |---:|---|---|
-| 1 | Publication-hardening PR: Static + complete Linux/release checks | PENDING |
+| 1 | Publication-hardening PR: Static + complete Linux/release checks, including one-class/zero-`.def` CTAN gate | PENDING FINAL HEAD |
 | 2 | Merge to protected `main`; resolve exact post-merge SHA | PENDING |
 | 3 | Final phase-end regression on that exact `main` SHA | PENDING |
 | 4 | Build deterministic three-ZIP distribution + `SHA256SUMS` from that exact SHA | PENDING |
-| 5 | Run current CTAN `pkgcheck` against `abntexto-ufc-3.0.0.zip`; classify any warning | PENDING |
-| 6 | Freeze hashes/evidence; no rebuild after acceptance | PENDING |
-| 7 | Create immutable `v3.0.0` tag pointing to the certified SHA | BLOCKED BY 1–6 |
-| 8 | Create GitHub Release; upload exact frozen bytes; re-download and hash-verify | BLOCKED BY 7 |
-| 9 | Submit only `abntexto-ufc-3.0.0.zip` to CTAN and preserve receipt/acceptance evidence | BLOCKED BY 5–8 |
-| 10 | Synchronize publication facts and perform final Release verification | BLOCKED BY 1–9 |
+| 5 | Confirm CTAN ZIP contains one generated `abntexto-ufc.cls`, zero `.def`, and passes isolated example compile | PENDING FINAL CANDIDATE |
+| 6 | Run current CTAN `pkgcheck` against `abntexto-ufc-3.0.0.zip`; classify any warning | PENDING |
+| 7 | Freeze hashes/evidence; no rebuild after acceptance | PENDING |
+| 8 | Create immutable `v3.0.0` tag pointing to the certified SHA | BLOCKED BY 1–7 |
+| 9 | Create GitHub Release; upload exact frozen bytes; re-download and hash-verify | BLOCKED BY 8 |
+| 10 | Submit only `abntexto-ufc-3.0.0.zip` to CTAN and preserve receipt/acceptance evidence | BLOCKED BY 6–9 |
+| 11 | Synchronize publication facts and perform final Release verification | BLOCKED BY 1–10 |
 
 ## Current blockers
 
-- publication-hardening integration has not yet passed CI and merged;
+- publication-hardening integration has not yet been merged and finally certified;
 - no final post-merge exact-main Release candidate exists yet;
 - current CTAN `pkgcheck` has not yet passed on the final archive;
 - `v3.0.0` tag/GitHub Release and CTAN publication do not yet exist.
