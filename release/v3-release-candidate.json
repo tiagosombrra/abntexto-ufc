@@ -1,8 +1,8 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "purpose": "V3 Release final exact-main recertification marker with mandatory CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
-  "candidate_semantics": "the exact canonical main commit containing the final release-control synchronization, after that commit passes exact-SHA certification, CTAN pkgcheck and maintainer visual acceptance",
+  "candidate_semantics": "the exact canonical main commit containing the final release gates, after that commit passes exact-SHA certification, CTAN pkgcheck and maintainer visual acceptance",
   "integration_anchor": {
     "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
     "source": "PR #297 squash merge",
@@ -14,7 +14,7 @@
     "source": "PR #298 squash merge",
     "status": "post-hardening-control-plane-integrated",
     "taggable": false,
-    "reason": "The maintainer-requested seven-profile visual gate and executable CTAN pkgcheck gate intentionally follow this commit."
+    "reason": "The final seven-profile visual gate and executable CTAN pkgcheck gate intentionally follow this commit."
   },
   "superseded_candidate": {
     "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
@@ -45,9 +45,9 @@
     "status": "accepted-baseline-evidence-not-final-after-later-control-commits"
   },
   "final_candidate": {
-    "status": "pending-final-control-gate-merge-and-exact-main-recertification",
+    "status": "pending-exact-main-recertification-and-human-approval",
     "source_branch": "main",
-    "resolve_sha_from_git_after_final_gate_merge": true,
+    "resolve_sha_from_git_on_canonical_main": true,
     "complete_linux_on_exact_main_release_marker_push": true,
     "linux_release_check_on_exact_main_release_marker_push": true,
     "no_pre_tag_commits_after_acceptance": true
