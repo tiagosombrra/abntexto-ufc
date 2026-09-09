@@ -8,7 +8,9 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 
 A série 3 introduz a classe `abntexto-ufc`, uma API pública única em inglês e suporte a perfis de trabalhos acadêmicos, projetos de pesquisa e artigos científicos. A versão 3 é incompatível em nível de API com a série 2: projetos antigos devem ser migrados em vez de misturar comandos das duas linhas.
 
-O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).A versão **3.0.0 está publicada no GitHub** em [`v3.0.0`](https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0). O pacote destinado à CTAN já foi certificado, mas a submissão/aceitação pela CTAN ainda não é reivindicada neste repositório; esse estado só será atualizado após evidência externa.
+O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).
+
+A versão **3.0.0 está publicada no GitHub** em [`v3.0.0`](https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0). O pacote destinado à CTAN já foi certificado, mas a submissão/aceitação pela CTAN ainda não é reivindicada neste repositório; esse estado só será atualizado após evidência externa.
 
 ## Requisitos
 
