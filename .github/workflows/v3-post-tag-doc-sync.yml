@@ -1,0 +1,468 @@
+name: V3 post-tag documentation sync
+
+on:
+  push:
+    branches:
+      - ci/v3-final-pkgcheck-evidence
+    paths:
+      - .github/workflows/v3-post-tag-doc-sync.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Synchronize GitHub publication evidence into control docs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      DOCS_BRANCH: docs/v3.0.0-github-publication-state
+      EXPECTED_DOCS_BASE: 05399473827da7cf6b6c8bac36edc7115481773f
+    steps:
+      - name: Checkout post-tag documentation branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: docs/v3.0.0-github-publication-state
+          fetch-depth: 0
+
+      - name: Assert documentation branch base
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_DOCS_BASE"
+
+      - name: Synchronize publication state
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          CERTIFIED = "05399473827da7cf6b6c8bac36edc7115481773f"
+          TAG_OBJECT = "7354cf912ffa5abb171128554cabce61392ecd84"
+          RELEASE_ID = 385743477
+          RELEASE_URL = "https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0"
+          RELEASE_PUBLISHED_AT = "2026-09-09T18:14:57Z"
+          DIST_ARTIFACT = 10117679639
+          DIST_DIGEST = "7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df"
+          CTAN_SHA = "d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71"
+          TEMPLATE_SHA = "456df0fb9b82896741fd2a716abe94da6ea34630e6ed1aadb1333e6c9f1d6230"
+          OVERLEAF_SHA = "b4a3619d2f000e452efdaf8d3465cfafd274dd5a6b2c5c5a42dbc448363001f6"
+          SUMS_SHA = "bfcf882f2d6764d392bac885e4b2307ce439f78c6349a4bbc41758b5fe532b13"
+          PKGCHECK_RUN = 34386932488
+          PKGCHECK_ARTIFACT = 10118176687
+          PKGCHECK_DIGEST = "e6a4d926d68f68657caca2bab4c1f2ea46cad81bd523c6c55e7f0fa73ea4c4e3"
+          RELEASE_RUN = 34387825056
+          RELEASE_EVIDENCE_ARTIFACT = 10118391678
+          RELEASE_EVIDENCE_DIGEST = "c8ac53d61e6fd1789748163cba6f22d334f4224c1966651baa7a11a334116abc"
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              if text.count(old) != 1:
+                  raise SystemExit(f"Expected exactly one match in {path}: {old!r}")
+              p.write_text(text.replace(old, new, 1), encoding="utf-8", newline="\n")
+
+          def replace_section(path, start_heading, end_heading, body):
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              pattern = re.compile(
+                  rf"(?ms)^{re.escape(start_heading)}\n.*?(?=^{re.escape(end_heading)}\n)"
+              )
+              replacement = start_heading + "\n\n" + body.rstrip() + "\n\n"
+              new_text, count = pattern.subn(replacement, text, count=1)
+              if count != 1:
+                  raise SystemExit(f"Could not replace section {start_heading!r} in {path}")
+              p.write_text(new_text, encoding="utf-8", newline="\n")
+
+          # README: publish only stable user-facing facts; CTAN remains explicitly pending.
+          replace_once(
+              "README.md",
+              "O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).",
+              "O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).\n\n"
+              "A versão **3.0.0 está publicada no GitHub** em "
+              "[`v3.0.0`](https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0). "
+              "A submissão à CTAN é tratada separadamente e só será anunciada aqui após evidência externa de publicação."
+          )
+
+          ctan_current = f"""| Fact | State |
+          |---|---|
+          | Roadmap phase | **Release — GitHub published; CTAN submission pending** |
+          | Certified source SHA | `{CERTIFIED}` |
+          | Immutable tag | `v3.0.0` → annotated tag object `{TAG_OBJECT}` → certified source SHA |
+          | GitHub Release | **PUBLISHED** — [abntexto-ufc 3.0.0]({RELEASE_URL}) |
+          | Release publication time | `{RELEASE_PUBLISHED_AT}` |
+          | Distribution artifact | Actions artifact `{DIST_ARTIFACT}` — `sha256:{DIST_DIGEST}` |
+          | Canonical CTAN ZIP | `abntexto-ufc-3.0.0.zip` — `sha256:{CTAN_SHA}` |
+          | CTAN runtime shape | **one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files** |
+          | `pkgcheck` | **PASS** — 4.1.0, exit 0, 0 warnings, 0 errors/fatals; run `{PKGCHECK_RUN}`, artifact `{PKGCHECK_ARTIFACT}` |
+          | GitHub publication verification | **PASS** — recovery run `{RELEASE_RUN}`, evidence artifact `{RELEASE_EVIDENCE_ARTIFACT}` |
+          | CTAN submission | **PENDING — not yet claimed** |
+          | CTAN acceptance/install | **PENDING — explicit external evidence required** |
+
+          The immutable release bytes are frozen. Post-tag documentation commits may move `main`, but they do not change the source or assets identified by `v3.0.0`.
+
+          The old Actions artifact `10086299397` remains historical regression evidence only and must never be published as v3.0.0."""
+          replace_section("docs/CTAN-RELEASE.md", "## Current Release state", "## Prior CTAN feedback and v3 resolution", ctan_current)
+
+          replace_section(
+              "docs/CTAN-RELEASE.md",
+              "## Monolithic-class equivalence gate",
+              "## pkgcheck is a pre-tag gate",
+              f"""**PASS on the final publication bytes.** Final certification on `{CERTIFIED}` proved:
+
+          - all 14 tracked project-owned runtime modules incorporated exactly once;
+          - no project-owned module remains referenced through `\\input`;
+          - no module-level `\\ProvidesFile{{abntexto-ufc/...}}` remains in the generated class;
+          - zero `.def` files in the CTAN ZIP;
+          - isolated example compilation with only the generated class plus external `abntexto.cls`;
+          - deterministic distribution rebuild and checksum verification;
+          - no UFC institutional marks or proprietary Microsoft fonts redistributed.
+
+          The final distribution artifact is `{DIST_ARTIFACT}` (`sha256:{DIST_DIGEST}`)."""
+          )
+
+          replace_section(
+              "docs/CTAN-RELEASE.md",
+              "## pkgcheck is a pre-tag gate",
+              "## Final certification and publication sequence",
+              f"""**PASS before tag creation.** CTAN `pkgcheck 4.1.0` was run against the exact canonical ZIP with SHA-256 `{CTAN_SHA}`.
+
+          Evidence: workflow run `{PKGCHECK_RUN}`, artifact `{PKGCHECK_ARTIFACT}` (`sha256:{PKGCHECK_DIGEST}`). Result: exit code 0, zero warnings, zero errors/fatals. The only reported line was informational (`I0002`).
+
+          Any future package-content change requires a new candidate/version cycle; the v3.0.0 bytes are frozen."""
+          )
+
+          replace_section(
+              "docs/CTAN-RELEASE.md",
+              "## Final certification and publication sequence",
+              "## Proposed CTAN metadata",
+              f"""Completed and evidenced:
+
+          1. exact canonical source frozen at `{CERTIFIED}`;
+          2. Static, complete Linux integration and Linux release check passed on that SHA;
+          3. deterministic three-ZIP distribution + `SHA256SUMS` built and retained as artifact `{DIST_ARTIFACT}`;
+          4. canonical CTAN ZIP manually audited: one generated class, zero `.def`, isolated compile PASS;
+          5. CTAN `pkgcheck 4.1.0` passed with zero warnings/errors before tag creation;
+          6. publication hashes frozen; no rebuild occurred;
+          7. immutable annotated `v3.0.0` created and verified against the certified SHA;
+          8. GitHub Release `{RELEASE_ID}` created with exactly the frozen assets;
+          9. draft and published Release assets were re-downloaded and proved byte-identical;
+          10. GitHub Release published at `{RELEASE_PUBLISHED_AT}`.
+
+          Pending external CTAN work:
+
+          11. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
+          12. preserve CTAN submission receipt;
+          13. preserve CTAN acceptance/catalog/install evidence;
+          14. synchronize final post-CTAN state and close Release.
+
+          Invariant already satisfied for GitHub publication:
+
+          ```text
+          certified source SHA == tagged v3.0.0 SHA == source SHA of published GitHub Release bytes
+          ```"""
+          )
+
+          handoff_current = f"""| Fact | Current state |
+          |---|---|
+          | Repository | `tiagosombrra/abntexto-ufc` |
+          | Active phase | **Release — CTAN submission pending** |
+          | Certified/tagged source | `{CERTIFIED}` |
+          | Immutable tag | `v3.0.0`; tag object `{TAG_OBJECT}` resolves to the certified source |
+          | GitHub Release | **PUBLISHED** — {RELEASE_URL} |
+          | GitHub publication evidence | run `{RELEASE_RUN}`; artifact `{RELEASE_EVIDENCE_ARTIFACT}` (`sha256:{RELEASE_EVIDENCE_DIGEST}`) |
+          | Final distribution artifact | `{DIST_ARTIFACT}` (`sha256:{DIST_DIGEST}`) |
+          | Canonical CTAN ZIP | `abntexto-ufc-3.0.0.zip` (`sha256:{CTAN_SHA}`) |
+          | CTAN runtime | **one generated `abntexto-ufc.cls`; zero project-owned `.def` files** |
+          | `pkgcheck` | **PASS** — 4.1.0, exit 0, 0 warnings/errors; run `{PKGCHECK_RUN}` |
+          | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
+          | CTAN submission/acceptance | **PENDING; no claim without external evidence** |
+
+          `main` may advance after the immutable tag for documentation/state updates. Git authority for the released source is the `v3.0.0` tag resolving to `{CERTIFIED}`."""
+          replace_section("docs/HANDOFF-V3.0.0.md", "## Current checkpoint", "## Completed publication-hardening evidence", handoff_current)
+
+          replace_section(
+              "docs/HANDOFF-V3.0.0.md",
+              "## Remaining Release work",
+              "## Mandatory operating discipline",
+              """1. submit only `abntexto-ufc-3.0.0.zip` to CTAN using the frozen GitHub Release asset;
+          2. preserve the CTAN submission receipt and submitted-file identity/hash;
+          3. wait for explicit CTAN acceptance/catalog evidence; do not infer acceptance from submission;
+          4. verify the accepted package identity/version and, when available, installation/catalog propagation;
+          5. synchronize post-CTAN documentation and machine state;
+          6. mark Release `CLOSED` only after external publication verification.
+
+          The GitHub tag and Release must not be rebuilt, replaced or retargeted."""
+          )
+
+          cont = Path("docs/V3-CONTINUATION.md")
+          text = cont.read_text(encoding="utf-8")
+          text = text.replace("Status: RELEASE — FINAL EXACT-MAIN RECERTIFICATION", "Status: RELEASE — GITHUB PUBLISHED / CTAN PENDING", 1)
+          cont.write_text(text, encoding="utf-8", newline="\n")
+          cont_current = f"""| Fact | Current state |
+          |---|---|
+          | Repository | `tiagosombrra/abntexto-ufc` |
+          | Released source | `{CERTIFIED}` |
+          | Immutable tag | `v3.0.0` → `{CERTIFIED}` |
+          | GitHub Release | **PUBLISHED** — {RELEASE_URL} |
+          | Final distribution artifact | `{DIST_ARTIFACT}` (`sha256:{DIST_DIGEST}`) |
+          | Canonical CTAN upload | `abntexto-ufc-3.0.0.zip` (`sha256:{CTAN_SHA}`) |
+          | CTAN runtime contract | one generated `abntexto-ufc.cls`; **zero project-owned `.def` files** |
+          | `pkgcheck` | **PASS** — 4.1.0, exit 0, zero warnings/errors; run `{PKGCHECK_RUN}` |
+          | GitHub publication verification | **PASS** — run `{RELEASE_RUN}`; evidence artifact `{RELEASE_EVIDENCE_ARTIFACT}` |
+          | CTAN status | **NOT YET CLAIMED — submission/acceptance pending** |
+
+          For released-source authority, resolve `v3.0.0`; do not treat a later post-tag `main` commit as the v3.0.0 source."""
+          replace_section("docs/V3-CONTINUATION.md", "## Canonical starting point", "## What publication hardening already closed", cont_current)
+          replace_section(
+              "docs/V3-CONTINUATION.md",
+              "## Remaining work",
+              "## Local continuation",
+              """1. obtain the exact `abntexto-ufc-3.0.0.zip` asset from the published GitHub Release;
+          2. verify SHA-256 `d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`;
+          3. submit only that archive to CTAN;
+          4. preserve submission receipt and package metadata;
+          5. after CTAN acceptance, verify catalog/install evidence;
+          6. update control docs/machine state and close the Release phase.
+
+          No v3.0.0 source or asset rebuild is permitted."""
+          )
+
+          road = Path("docs/ROADMAP-V3.0.0.md")
+          text = road.read_text(encoding="utf-8")
+          text = re.sub(
+              r"(?ms)^## Current status\n.*?(?=^## R0 —)",
+              f"""## Current status
+
+          **Release is ACTIVE — GitHub publication is complete; CTAN submission/acceptance remains.** The immutable `v3.0.0` tag resolves to `{CERTIFIED}`, and GitHub Release `{RELEASE_ID}` is published with byte-verified frozen assets.
+
+          | Phase | Status | Exit requirement |
+          |---|---|---|
+          | Regression Audit | CLOSED | accepted |
+          | Core Corrections | CLOSED | accepted phase-end regression |
+          | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
+          | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
+          | Final Certification | CLOSED | heavy technical matrix accepted |
+          | Release | **ACTIVE — CTAN PENDING** | GitHub publication PASS; submit canonical ZIP to CTAN, preserve receipt/acceptance evidence, then close |
+
+          ## Current Release facts
+
+          | Predicate | Current result |
+          |---|---|
+          | Certified source SHA | `{CERTIFIED}` |
+          | Immutable tag | `v3.0.0` → `{CERTIFIED}` |
+          | GitHub Release | **PUBLISHED** — {RELEASE_URL} |
+          | Distribution artifact | `{DIST_ARTIFACT}` (`sha256:{DIST_DIGEST}`) |
+          | CTAN upload archive | `abntexto-ufc-3.0.0.zip` only (`sha256:{CTAN_SHA}`) |
+          | CTAN project runtime | **`abntexto-ufc.cls` only; 0 `.def`** |
+          | `pkgcheck` | **PASS** — 4.1.0, zero warnings/errors |
+          | GitHub asset re-download | **PASS / byte-identical** |
+          | CTAN submission | **PENDING** |
+          | CTAN acceptance/install | **PENDING** |
+
+          """,
+              text,
+              count=1,
+          )
+          text = re.sub(r"(?ms)^## R3 — Final exact-main recertification\n.*?(?=^## R4 —)", f"## R3 — Final exact-main recertification\n\n**CLOSED / PASS.** Exact source `{CERTIFIED}` passed Static, complete Linux integration, Linux release check (`PASS=38 FAIL=0 SKIP=0`), deterministic distribution and final package audit.\n\n", text, count=1)
+          text = re.sub(r"(?ms)^## R4 — CTAN `pkgcheck`\n.*?(?=^## R5 —)", f"## R4 — CTAN `pkgcheck`\n\n**CLOSED / PASS.** `pkgcheck 4.1.0` passed on `{CTAN_SHA}` with exit 0, zero warnings and zero errors/fatals. Evidence run `{PKGCHECK_RUN}` / artifact `{PKGCHECK_ARTIFACT}`.\n\n", text, count=1)
+          text = re.sub(r"(?ms)^## R5 — Freeze, tag and GitHub Release\n.*?(?=^## R6 —)", f"## R5 — Freeze, tag and GitHub Release\n\n**CLOSED / PASS.** Frozen bytes were tagged as immutable `v3.0.0`, published in GitHub Release `{RELEASE_ID}`, re-downloaded before and after publication and proved byte-identical. Recovery verification run `{RELEASE_RUN}` retained evidence artifact `{RELEASE_EVIDENCE_ARTIFACT}`.\n\n", text, count=1)
+          text = re.sub(r"(?ms)^## R6 — CTAN submission\n.*?(?=^## R7 —)", "## R6 — CTAN submission\n\n**ACTIVE / PENDING EXTERNAL ACTION.** Submit exactly one file: `abntexto-ufc-3.0.0.zip`. Preserve receipt, submitted hash and later acceptance/catalog/install evidence.\n\n", text, count=1)
+          text = re.sub(r"(?ms)^## R7 — Release closeout\n.*?(?=^## Operating discipline)", "## R7 — Release closeout\n\n**BLOCKED ONLY BY R6 EXTERNAL VERIFICATION.** After CTAN acceptance/catalog evidence, synchronize final state and mark Release `CLOSED`.\n\n", text, count=1)
+          road.write_text(text, encoding="utf-8", newline="\n")
+
+          ready = Path("docs/V3-RELEASE-READINESS.md")
+          text = ready.read_text(encoding="utf-8")
+          text = text.replace("Status: ACTIVE — FINAL EXACT-MAIN RECERTIFICATION", "Status: ACTIVE — GITHUB PUBLISHED / CTAN PENDING", 1)
+          text = re.sub(
+              r"(?ms)^## Remaining gates\n.*?(?=^## Current blockers)",
+              f"""## Remaining gates
+
+          | Order | Gate | State |
+          |---:|---|---|
+          | 1 | Publication-hardening integration | **PASS / MERGED** |
+          | 2 | Post-merge control-plane synchronization | **PASS / MERGED** |
+          | 3 | Exact resulting source SHA resolved | **PASS — `{CERTIFIED}`** |
+          | 4 | Static + complete Linux + Linux release check on exact SHA | **PASS** |
+          | 5 | Deterministic three-ZIP distribution + `SHA256SUMS` | **PASS — artifact `{DIST_ARTIFACT}`** |
+          | 6 | Final CTAN ZIP audit: one class, zero `.def`, isolated compile | **PASS** |
+          | 7 | Current CTAN `pkgcheck` | **PASS — 4.1.0, zero warnings/errors** |
+          | 8 | Freeze hashes/evidence; prohibit rebuild | **PASS** |
+          | 9 | Immutable `v3.0.0` on certified SHA | **PASS** |
+          | 10 | GitHub Release + re-download/hash verification | **PASS — Release `{RELEASE_ID}`** |
+          | 11 | Submit canonical ZIP to CTAN; preserve receipt/acceptance evidence | **PENDING EXTERNAL ACTION** |
+          | 12 | Synchronize final CTAN facts and close Release | **BLOCKED BY 11** |
+
+          """,
+              text,
+              count=1,
+          )
+          text = re.sub(
+              r"(?ms)^## Current blockers\n.*?\Z",
+              """## Current blockers
+
+          - the canonical ZIP has not yet been submitted to CTAN with retained receipt evidence;
+          - CTAN acceptance/catalog/install evidence does not yet exist.
+
+          GitHub publication is complete and verified. No v3.0.0 source or asset rebuild is permitted. Every subsequent material advance updates affected documentation and machine state in the same work cycle.
+          """,
+              text,
+              count=1,
+          )
+          ready.write_text(text, encoding="utf-8", newline="\n")
+
+          candidate_path = Path("release/v3-release-candidate.json")
+          candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+          candidate["schema_version"] = max(int(candidate.get("schema_version", 0)) + 1, 5)
+          candidate["purpose"] = "Immutable v3.0.0 GitHub publication record; CTAN submission and acceptance remain pending external evidence"
+          candidate["candidate_semantics"] = f"certified source {CERTIFIED}, tagged immutably as v3.0.0 and published with frozen GitHub Release assets"
+          candidate["final_candidate"] = {
+              "status": "certified-tagged-github-release-published-ctan-pending",
+              "source_branch_at_certification": "main",
+              "certified_source_sha": CERTIFIED,
+              "static_status": "PASS",
+              "complete_linux_status": "PASS",
+              "linux_release_run": 34383793519,
+              "linux_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+              "distribution_artifact_id": DIST_ARTIFACT,
+              "distribution_artifact_sha256": DIST_DIGEST,
+              "ctan_zip_sha256": CTAN_SHA,
+              "pkgcheck": {
+                  "version": "4.1.0",
+                  "run_id": PKGCHECK_RUN,
+                  "artifact_id": PKGCHECK_ARTIFACT,
+                  "artifact_sha256": PKGCHECK_DIGEST,
+                  "exit_code": 0,
+                  "warnings": 0,
+                  "errors_or_fatals": 0,
+                  "status": "PASS"
+              },
+              "tag": "v3.0.0",
+              "tag_object_sha": TAG_OBJECT,
+              "tag_resolves_to_certified_source": True,
+              "github_release": {
+                  "id": RELEASE_ID,
+                  "url": RELEASE_URL,
+                  "published_at": RELEASE_PUBLISHED_AT,
+                  "draft": False,
+                  "prerelease": False,
+                  "asset_count": 4,
+                  "recovery_verification_run": RELEASE_RUN,
+                  "evidence_artifact_id": RELEASE_EVIDENCE_ARTIFACT,
+                  "evidence_artifact_sha256": RELEASE_EVIDENCE_DIGEST,
+                  "assets_byte_identical_after_redownload": True
+              },
+              "no_pre_tag_commits_after_acceptance": True,
+              "publication_rebuild_allowed": False
+          }
+          candidate["ctan_upload"].update({
+              "archive_sha256": CTAN_SHA,
+              "submission_status": "pending-not-submitted",
+              "acceptance_status": "pending-no-external-evidence"
+          })
+          candidate["final_tag_contract"].update({
+              "status": "satisfied",
+              "tag_object_sha": TAG_OBJECT,
+              "certified_source_sha": CERTIFIED
+          })
+          candidate["github_publication"] = {
+              "status": "published-and-byte-verified",
+              "release_id": RELEASE_ID,
+              "release_url": RELEASE_URL,
+              "published_at": RELEASE_PUBLISHED_AT,
+              "asset_sha256": {
+                  "abntexto-ufc-3.0.0.zip": CTAN_SHA,
+                  "abntexto-ufc-template-3.0.0.zip": TEMPLATE_SHA,
+                  "abntexto-ufc-overleaf-3.0.0.zip": OVERLEAF_SHA,
+                  "SHA256SUMS": SUMS_SHA
+              }
+          }
+          candidate_path.write_text(json.dumps(candidate, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+
+          roadmap_path = Path("release/v3-roadmap.json")
+          roadmap = json.loads(roadmap_path.read_text(encoding="utf-8"))
+          roadmap["schema_version"] = int(roadmap.get("schema_version", 0)) + 1
+          roadmap["status"] = "ACTIVE"
+          roadmap["phase_end_regression"]["candidate_state"] = "certified-tagged-github-release-published"
+          active = roadmap["active_work"]
+          active["release_state"] = "github-release-published-ctan-submission-pending"
+          active["current_correction_batch"] = [
+              "Submit the frozen canonical abntexto-ufc-3.0.0.zip to CTAN",
+              "Preserve CTAN submission receipt and submitted-file identity",
+              "Verify CTAN acceptance/catalog/install evidence",
+              "Synchronize final publication state and close Release"
+          ]
+          active["pending_acceptance_gates"] = [
+              "Submit exactly one frozen canonical ZIP to CTAN and preserve receipt evidence",
+              "Verify CTAN acceptance/catalog/install evidence",
+              "Record final external publication verification before Release closure"
+          ]
+          active["release_blockers"] = [
+              "CTAN submission receipt has not yet been recorded",
+              "CTAN acceptance/catalog/install evidence has not yet been recorded"
+          ]
+          active["distribution_contract"].update({
+              "state": "final-publication-bytes-frozen-and-github-published",
+              "final_distribution_artifact_id": DIST_ARTIFACT,
+              "final_distribution_artifact_sha256": DIST_DIGEST,
+              "ctan_archive_sha256": CTAN_SHA,
+              "pkgcheck_version": "4.1.0",
+              "pkgcheck_status": "PASS",
+              "pkgcheck_run_id": PKGCHECK_RUN,
+              "pkgcheck_artifact_id": PKGCHECK_ARTIFACT,
+              "github_release_id": RELEASE_ID,
+              "github_release_url": RELEASE_URL,
+              "github_assets_byte_verified": True,
+              "ctan_submission_status": "pending-not-submitted",
+              "ctan_acceptance_status": "pending-no-external-evidence"
+          })
+          active["final_candidate_contract"].update({
+              "state": "certified-tagged-and-github-published",
+              "certified_source_sha": CERTIFIED,
+              "tag_object_sha": TAG_OBJECT,
+              "tag_resolves_to_certified_source": True,
+              "github_release_published": True,
+              "github_release_id": RELEASE_ID,
+              "github_assets_byte_verified": True
+          })
+          active["github_publication"] = {
+              "status": "PASS",
+              "certified_source_sha": CERTIFIED,
+              "tag": "v3.0.0",
+              "tag_object_sha": TAG_OBJECT,
+              "release_id": RELEASE_ID,
+              "release_url": RELEASE_URL,
+              "published_at": RELEASE_PUBLISHED_AT,
+              "distribution_artifact_id": DIST_ARTIFACT,
+              "canonical_ctan_zip_sha256": CTAN_SHA,
+              "pkgcheck_run_id": PKGCHECK_RUN,
+              "pkgcheck_version": "4.1.0",
+              "pkgcheck_warnings": 0,
+              "pkgcheck_errors_or_fatals": 0,
+              "release_verification_run_id": RELEASE_RUN,
+              "release_verification_artifact_id": RELEASE_EVIDENCE_ARTIFACT,
+              "release_verification_artifact_sha256": RELEASE_EVIDENCE_DIGEST
+          }
+          roadmap["branch_plan"].update({
+              "current_work_branch": "main",
+              "current_work_state": "post-github-publication-ctan-pending",
+              "released_source_is_tag_authoritative": True,
+              "released_source_sha": CERTIFIED,
+              "post_tag_main_commits_do_not_change_v3_release_source": True
+          })
+          roadmap_path.write_text(json.dumps(roadmap, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+          PY
+
+          git diff --check
+          python3 -m json.tool release/v3-release-candidate.json >/dev/null
+          python3 -m json.tool release/v3-roadmap.json >/dev/null
+
+      - name: Commit synchronized post-tag state
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/CTAN-RELEASE.md docs/HANDOFF-V3.0.0.md docs/V3-CONTINUATION.md docs/ROADMAP-V3.0.0.md docs/V3-RELEASE-READINESS.md release/v3-release-candidate.json release/v3-roadmap.json
+          git diff --cached --stat
+          git commit -m 'docs: record v3.0.0 GitHub publication state'
+          git push origin HEAD:docs/v3.0.0-github-publication-state
