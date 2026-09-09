@@ -195,13 +195,14 @@ def bytes_entry(content: bytes, arcname: str, mode: int = 0o644) -> tuple[str, b
 
 def run_pdflatex(source: Path, work: Path, env: dict[str, str]) -> bytes:
     target = work / source.name
-    shutil.copy2(source, target)
+    if source.resolve() != target.resolve():
+        shutil.copy2(source, target)
     command = [
         "pdflatex",
         "-interaction=nonstopmode",
         "-halt-on-error",
         "-file-line-error",
-        source.name,
+        target.name,
     ]
     for _ in range(2):
         result = subprocess.run(
@@ -215,13 +216,13 @@ def run_pdflatex(source: Path, work: Path, env: dict[str, str]) -> bytes:
             errors="replace",
         )
         if result.returncode != 0:
-            fail(f"CTAN document build failed for {source.name}:\n" + result.stdout[-6000:])
-    pdf = work / f"{source.stem}.pdf"
+            fail(f"CTAN document build failed for {target.name}:\n" + result.stdout[-6000:])
+    pdf = work / f"{target.stem}.pdf"
     if not pdf.is_file() or pdf.stat().st_size == 0:
-        fail(f"CTAN document PDF was not generated: {source.name}")
+        fail(f"CTAN document PDF was not generated: {target.name}")
     pdf_bytes = pdf.read_bytes()
     if not pdf_bytes.startswith(b"%PDF-"):
-        fail(f"CTAN document output is not a PDF: {source.name}")
+        fail(f"CTAN document output is not a PDF: {target.name}")
     return pdf_bytes
 
 
