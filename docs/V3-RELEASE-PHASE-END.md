@@ -13,11 +13,11 @@ Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` remains historical technica
 
 PR #297 repaired the publication boundary. Its protected squash merge produced `25c6ab09dc38be9257d2912652074a48886d28f9`; exact-main run `34355988612` later demonstrated `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, PDF/A and deterministic distribution gates, one generated CTAN class and zero `.def` files.
 
-PR #298 then produced control-plane anchor `05399473827da7cf6b6c8bac36edc7115481773f`, aligning exact-main recertification triggers. This final control batch intentionally follows it to make `pkgcheck` executable in the release workflow and to encode the maintainer-requested seven-profile visual gate.
+PR #298 then produced control-plane anchor `05399473827da7cf6b6c8bac36edc7115481773f`, aligning exact-main recertification triggers. The final candidate definition adds executable current-CTAN `pkgcheck` evidence and the maintainer-requested seven-profile visual gate.
 
 ## Final candidate definition
 
-After the final gate synchronization is merged through protected `main`, resolve the exact resulting SHA. That commit is the only candidate eligible for final Release certification, human approval and immutable tag `v3.0.0`.
+The only candidate eligible for final Release certification, human approval and immutable tag `v3.0.0` is the exact canonical `main` SHA containing the final release gates and passing all evidence below.
 
 Required invariant:
 
@@ -55,7 +55,7 @@ No repository commit may be added between final acceptance and tag creation with
 - `anonymized-research-project`;
 - `scientific-article`.
 
-A preliminary 7/7 set generated from `25c6ab09...` passed automated preflight and page-by-page assistant inspection. It is evidence of review readiness, not final approval, because the exact final candidate will be a later SHA.
+A preliminary 7/7 set generated from `25c6ab09...` passed automated preflight and page-by-page assistant inspection. It is evidence of review readiness, not final approval, because the final exact candidate is a later tracked state.
 
 ## Canonical CTAN package
 
@@ -79,15 +79,14 @@ The librarian review is **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**. F
 
 ## Required order
 
-1. merge final pkgcheck/human-gate control synchronization;
-2. resolve exact canonical `main` SHA;
-3. require Static, automatic `scope=complete` Linux integration and Linux release check, including current `pkgcheck`, on that SHA;
-4. retain and physically audit the resulting final CTAN ZIP;
-5. regenerate seven final PDF/`.tex` pairs and obtain explicit maintainer approval;
-6. freeze hashes/evidence;
-7. create immutable tag;
-8. publish GitHub Release and verify re-downloaded hashes;
-9. submit one canonical ZIP to CTAN and retain external evidence;
-10. update post-publication state and close Release.
+1. resolve the exact canonical `main` SHA containing the final release gates;
+2. require Static, automatic `scope=complete` Linux integration and Linux release check, including current `pkgcheck`, on that SHA;
+3. retain and physically audit the resulting final CTAN ZIP;
+4. regenerate seven final PDF/`.tex` pairs and obtain explicit maintainer approval;
+5. freeze hashes/evidence;
+6. create immutable tag;
+7. publish GitHub Release and verify re-downloaded hashes;
+8. submit one canonical ZIP to CTAN and retain external evidence;
+9. update post-publication state and close Release.
 
-Every material repository modification updates affected documentation and machine state in the same work cycle. Automated success does not close the human visual gate.
+Every **material advance** updates affected documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. Automated success does not close the human visual gate.
