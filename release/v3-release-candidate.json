@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "purpose": "V3 Release publication-hardening and final recertification marker",
   "phase": "release",
   "candidate_semantics": "exact canonical main commit certified after this publication-hardening batch is merged",
@@ -22,6 +22,13 @@
     "archive": "abntexto-ufc-3.0.0.zip",
     "archive_count": 1,
     "top_level_directory": "abntexto-ufc",
+    "runtime_implementation_files": [
+      "abntexto-ufc.cls"
+    ],
+    "project_def_files": 0,
+    "monolithic_class_generated_from_modular_sources": true,
+    "all_tracked_runtime_modules_inlined_exactly_once": true,
+    "isolated_example_compile_without_runtime_module_directory": true,
     "external_abntexto_dependency": true,
     "institutional_marks_redistributed": false,
     "proprietary_microsoft_fonts_redistributed": false,
