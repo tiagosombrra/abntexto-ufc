@@ -1,5 +1,5 @@
 {
-  "schema_version": 38,
+  "schema_version": 39,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -8,7 +8,7 @@
   "phase": "release",
   "stage": "release",
   "stage_name": "Release",
-  "active_branch": "release/v3-final-human-gate-v2",
+  "active_branch": "main",
   "authorities": {
     "git_facts_must_match_machine_state": true,
     "current_main_sha_is_resolved_from_git": true,
@@ -62,7 +62,7 @@
     "must_complete_before_next_phase_activation": true,
     "documentation_must_be_updated_after_result": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "pending-final-gate-merge-and-exact-main-recertification",
+    "candidate_state": "pending-exact-main-recertification-and-human-approval",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -88,8 +88,8 @@
   "active_work": {
     "review_items": 34,
     "review_status": {"pass":34,"partial":0,"fail":0,"normative_review":0},
-    "release_state": "final-human-pkgcheck-gates",
-    "release_branch": "release/v3-final-human-gate-v2",
+    "release_state": "final-exact-main-recertification-and-human-approval",
+    "release_branch": "main",
     "publication_hardening": {
       "pr": 297,
       "state": "merged",
@@ -115,16 +115,15 @@
       "reason": "final exact-candidate regeneration and explicit maintainer approval still required"
     },
     "current_correction_batch": [
-      "Make CTAN pkgcheck an executable fail-closed Linux release gate using the current CTAN package at run time",
-      "Record the maintainer-requested seven-profile PDF and TeX visual acceptance gate",
-      "Merge final gate synchronization through protected main",
-      "Resolve exact final main SHA and rerun complete certification",
+      "Enforce CTAN pkgcheck as a fail-closed Linux release gate using the current CTAN package at run time",
+      "Enforce explicit maintainer review of seven final PDF and TeX profile pairs",
+      "Resolve the exact canonical main SHA containing the final release gates",
+      "Run exact-main complete certification and current CTAN pkgcheck",
       "Regenerate final review pairs and obtain explicit maintainer approval",
-      "Freeze publication bytes only after pkgcheck and visual approval"
+      "Freeze publication bytes only after technical, pkgcheck and visual acceptance"
     ],
     "pending_acceptance_gates": [
-      "Merge final pkgcheck/human-acceptance gate synchronization through protected main",
-      "Resolve exact resulting main SHA and require Static, automatic complete Linux integration and Linux release check on that SHA",
+      "Resolve exact canonical main SHA containing the final release gates and require Static, automatic complete Linux integration and Linux release check on that SHA",
       "Require current CTAN pkgcheck evidence for the exact canonical ZIP and review every warning",
       "Build and physically re-audit deterministic distribution from exact certified SHA",
       "Regenerate all seven supported PDF and TeX review pairs from exact candidate and obtain explicit maintainer approval",
@@ -135,7 +134,6 @@
       "Record final publication verification before Release closure"
     ],
     "release_blockers": [
-      "Final pkgcheck/human-acceptance control changes are not yet merged",
       "Final exact-main Release candidate has not yet completed phase-end recertification",
       "Current CTAN pkgcheck has not yet passed on final package bytes",
       "Maintainer has not yet explicitly approved the seven final PDF and TeX profile pairs",
@@ -179,7 +177,7 @@
       "pkgcheck_before_tag": true
     },
     "final_candidate_contract": {
-      "state": "pending-final-gate-merge-and-exact-main-recertification",
+      "state": "pending-exact-main-recertification-and-human-approval",
       "tag": "v3.0.0",
       "resolve_candidate_sha_from_git": true,
       "automatic_complete_linux_on_exact_main_release_marker_push": true,
@@ -202,11 +200,10 @@
     "exact_main_candidate_complete_linux_automatic": true
   },
   "branch_plan": {
-    "current_work_branch": "release/v3-final-human-gate-v2",
-    "base_main_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
-    "current_work_state": "add-final-pkgcheck-and-human-acceptance-gates",
+    "current_work_branch": "main",
+    "current_work_state": "final-candidate-recertification-and-human-approval",
     "canonical_main_resolution": "git-fetch-origin-main-at-session-start",
     "merge_policy": "protected-main-squash-only",
-    "final_candidate_created_after_final_gate_merge": true
+    "final_candidate_defined_as_exact_main_containing_final_gates": true
   }
 }
