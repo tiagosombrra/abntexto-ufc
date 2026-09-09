@@ -13,8 +13,9 @@ This document defines the repository-controlled CTAN/GitHub release procedure fo
 - Upstream dependency: `abntexto` 1.1 or newer.
 - Status: unofficial, community-maintained UFC-oriented class.
 - Current roadmap phase: **Release**.
-- Final Certification is closed on candidate `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9`; PR #289 merged to `main` as `e34037f3241aab013b80645b338f38954e02bcda`.
-- Release phase-end candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is **accepted**: Static `34303586782`, complete Linux `34303586778`, Linux release check `34303586773` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+- Final Certification is closed on candidate `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9`.
+- Release PR #293 is merged to canonical `main` as `add52f2183f18d6cea3e9477f2a45416a13cfc36`.
+- Release phase-end candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is accepted: Static `34303586782`, complete Linux `34303586778`, Linux release check `34303586773` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
 - Actual CTAN upload remains a separate explicit Release action and must never be reported as acceptance before a receipt/acceptance exists.
 
 ## Certified retained candidate assets
@@ -30,25 +31,7 @@ The artifact was independently downloaded without rebuilding. Its archive digest
 | `abntexto-ufc-template-3.0.0.zip` | `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791` |
 | `abntexto-ufc-overleaf-3.0.0.zip` | `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b` |
 
-Do not rerun `make distribution-bundles` to manufacture publication bytes after this acceptance point. The build command remains documented below for development/reconstruction only; publication uses the retained artifact above.
-
-## Build the candidate
-
-For development or a future candidate replacement before acceptance:
-
-```bash
-make distribution-bundles
-```
-
-Expected outputs:
-
-- `dist/abntexto-ufc-3.0.0.zip`
-- `dist/abntexto-ufc-ctan-3.0.0.zip`
-- `dist/abntexto-ufc-template-3.0.0.zip`
-- `dist/abntexto-ufc-overleaf-3.0.0.zip`
-- `dist/SHA256SUMS`
-
-`make public-bundles` remains the narrower template/Overleaf interface.
+Do not rerun `make distribution-bundles` to manufacture publication bytes after this acceptance point. Publication uses the retained artifact above.
 
 ## CTAN candidate layout
 
@@ -85,8 +68,6 @@ The immutable Release candidate has passed:
 - complete Linux integration `34303586778`;
 - `Linux release check` `34303586773`, including `make release-check`, deterministic reference-PDF reproducibility, PDF/A/embedding/Unicode checks and distribution integrity.
 
-The deterministic release-reference-PDF gate is permanent and must remain green for any later candidate replacement.
-
 ## Distribution verification
 
 The repository checker is:
@@ -97,7 +78,7 @@ python3 tests/checks/distribution_bundles.py --abntexto /path/to/pinned/abntexto
 
 It validates artifact names, SHA-256 metadata, reproducibility, safe paths, package/CTAN layouts, documentation PDF presence, external-upstream semantics and asset exclusions.
 
-Before actual CTAN upload, the certified `abntexto-ufc-ctan-3.0.0.zip` must additionally be checked with the **current** CTAN `pkgcheck`; do not freeze an old version into permanent policy.
+Before actual CTAN upload, the retained `abntexto-ufc-ctan-3.0.0.zip` must additionally be checked with the **current** CTAN `pkgcheck`; do not freeze an old version into permanent policy.
 
 Current references:
 
@@ -117,13 +98,13 @@ Before an actual CTAN submission confirm:
 - repository and issue tracker;
 - dependency on `abntexto`;
 - appropriate CTAN topics/categories;
-- exact certified `abntexto-ufc-ctan-3.0.0.zip` with SHA-256 `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60`.
+- exact retained `abntexto-ufc-ctan-3.0.0.zip` with SHA-256 `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60`.
 
 ## Final Release checklist
 
 1. Preserve immutable Release candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` and its accepted phase-end evidence.
-2. Land the documentation synchronization and merge PR #293 to canonical `main`.
-3. Create `v3.0.0` tag and GitHub Release using the exact retained candidate-produced files; do not rebuild them.
+2. Preserve PR #293 merge `add52f2183f18d6cea3e9477f2a45416a13cfc36` as the canonical Release code/documentation integration point.
+3. Create `v3.0.0` tag and GitHub Release from canonical merged state, using the exact retained candidate-produced files; do not rebuild them.
 4. Verify every published GitHub asset hash against the accepted checksums in this document.
 5. Extract the retained CTAN candidate and run the current CTAN `pkgcheck`.
 6. Confirm README/manual/example version, canonical v3 API, dependency metadata and distribution exclusions.

@@ -20,15 +20,16 @@ Memory, prior chats and historical branches never override current repository st
 |---|---|
 | Target | `3.0.0` |
 | Active phase | **Release** |
-| Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Active branch / PR | `release/v3-release` / #293 |
+| Canonical `main` | `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
+| Active work branch | `release/v3-release` reset to merged `main` for publication closeout documentation |
+| Release PR #293 | **MERGED** by repository-allowed squash merge as `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
 | Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **PHASE-END REGRESSION ACCEPTED** |
 | Candidate Static | `34303586782` — SUCCESS |
 | Candidate Linux | `34303586778` — SUCCESS, complete scope |
 | Candidate Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
 | Retained distribution artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
 | Independent retained-artifact verification | exact five-file set, `SHA256SUMS` PASS and all four ZIP integrity checks PASS |
-| Current batch | **Release publication — merge/tag/GitHub Release verification pending** |
+| Current batch | **Release publication — tag/GitHub Release and post-publication verification pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -40,20 +41,14 @@ Memory, prior chats and historical branches never override current repository st
 5. Final Certification — closed
 6. Release — active
 
-## Release scope freeze
+## Engineering and Release rules
 
-Release is the final roadmap phase. Do not create another roadmap phase merely because a validator exposes a defect; classify it inside Release and fail closed when needed.
-
-## Engineering rules
-
-- Project-owned technical surfaces are English. Portuguese is allowed only in academic/rendered content, bibliography data, official wording, literal output under test, or explicit upstream/current-runtime boundaries.
-- Preserve accepted v3 public API and shared/article semantics unless a concrete regression or current authority requires change.
-- Do not silently change normative IDs, values, tolerances, locators, applicability, source precedence, modality or proof state.
-- A green workflow conclusion proves only that workflow's execution contract; required scope/predicates must also be verified.
+- Release is the final roadmap phase; do not invent a new phase for publication closeout.
+- Project-owned technical surfaces are English; preserve accepted v3 public API and normative/proof semantics.
 - Do not weaken tests merely to recover green CI.
 - Do not redistribute proprietary Microsoft fonts.
 - Librarian item 33 remains fail-closed and is not a hidden Release implementation task.
-- External publication is permitted only as an explicit Release checklist step after the accepted Release candidate is established.
+- External publication is an explicit Release action and is never inferred from a build or candidate validation.
 
 ## Progress documentation discipline
 
@@ -71,13 +66,13 @@ Accepted gates on the same candidate:
 - deterministic reference-PDF reproducibility — PASS, SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65`, 450652 bytes;
 - candidate-retained distribution bytes — independently downloaded and verified without rebuilding.
 
-The phase itself remains ACTIVE until publication/verification closeout is complete.
+Release remains ACTIVE until publication and post-publication verification are recorded.
 
 ## Artifact provenance rule
 
 Only the retained candidate artifact from Linux release check `34303586773` may supply publication bytes. Artifact ID `10086299397` is bound to candidate `75ead435...` and has upload digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222`.
 
-Verified inner checksums:
+Accepted inner checksums:
 
 - `abntexto-ufc-3.0.0.zip`: `c38fe32bc6b51ff3b7723b4ef118574d130cea97f29d443c1fc4d08b24e0b207`
 - `abntexto-ufc-ctan-3.0.0.zip`: `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60`
@@ -88,12 +83,11 @@ Do not rebuild these archives for publication.
 
 ## Immediate Release discipline
 
-1. synchronize this accepted candidate evidence in repository documentation and PR #293;
-2. merge PR #293 only after the synchronization Static contract is green;
-3. create `v3.0.0` tag and GitHub Release using the exact retained candidate-produced bytes;
-4. verify published asset hashes against the accepted checksums;
-5. perform CTAN `pkgcheck` and any actual CTAN upload only as an explicit action with receipt/evidence;
-6. update documentation after every material advance and run final Release verification before marking Release CLOSED.
+1. synchronize the PR #293 merge fact in repository documentation and require Static contract on that documentation change;
+2. create `v3.0.0` tag and GitHub Release from canonical merged state while uploading the exact retained candidate-produced bytes;
+3. verify published asset hashes against the accepted checksums;
+4. run current CTAN `pkgcheck`; perform actual CTAN upload only as an explicit action with receipt/evidence;
+5. update documentation after every material advance and perform final Release verification before marking Release CLOSED.
 
 ## Fail-closed rule
 

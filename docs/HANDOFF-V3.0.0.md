@@ -7,8 +7,9 @@ Updated: 2026-09-09
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Active branch / PR | `release/v3-release` / #293 |
+| Canonical `main` | `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
+| Active work branch | `release/v3-release` reset to merged `main` for publication closeout documentation |
+| Release PR #293 | **MERGED** as squash commit `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
 | Active phase | **Release** |
 | Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **ACCEPTED** |
 | Candidate Static | `34303586782` — SUCCESS |
@@ -17,7 +18,7 @@ Updated: 2026-09-09
 | Retained distribution artifact | ID `10086299397`, `abntexto-ufc-v3.0.0-distribution-34303586773` |
 | Artifact upload digest | `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
 | Independent artifact verification | download digest matches GitHub artifact digest; exact five-file set; inner checksums and all ZIP integrity checks PASS |
-| Current batch | **Release publication — PR merge/tag/GitHub Release verification pending** |
+| Current batch | **Release publication — tag/GitHub Release verification pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
@@ -36,7 +37,7 @@ Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is immutable and accepted. 
 | Validation artifact | ID `10086298601`, digest `sha256:124f692d571dde12754a6b084075b4acff29d47ffcfb4fb9d321cc8f1934d18c` |
 | Distribution artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
 
-The retained distribution artifact was downloaded after workflow completion. Its downloaded archive digest matched GitHub metadata. `SHA256SUMS` verified all four publication ZIPs, and `unzip -tq` passed for each ZIP. No publication bundle was rebuilt for this verification.
+The retained distribution artifact was independently downloaded after workflow completion. Its downloaded archive digest matched GitHub metadata. `SHA256SUMS` verified all four publication ZIPs, and `unzip -tq` passed for each ZIP. No publication bundle was rebuilt for this verification.
 
 ## Accepted publication checksums
 
@@ -47,16 +48,21 @@ The retained distribution artifact was downloaded after workflow completion. Its
 | `abntexto-ufc-overleaf-3.0.0.zip` | `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b` |
 | `abntexto-ufc-template-3.0.0.zip` | `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791` |
 
+## Merge result
+
+PR #293 was merged through the repository's only allowed merge method, squash, because merge commits are disabled. The first attempted merge-commit method was rejected by repository settings and made no repository change. The successful squash merge created canonical `main` commit `add52f2183f18d6cea3e9477f2a45416a13cfc36`.
+
+The release work branch was then reset to that merged `main` commit solely to carry the next synchronized publication-closeout documentation cycle.
+
 ## Next actions
 
 | Order | Action | State |
 |---:|---|---|
-| 1 | Commit synchronized candidate-acceptance documentation and require its Static contract to remain green. | ACTIVE |
-| 2 | Merge PR #293 to `main`. | QUEUED |
-| 3 | Create `v3.0.0` tag and GitHub Release using the exact retained candidate-produced bytes. | QUEUED |
-| 4 | Verify published GitHub asset hashes against the accepted checksums above. | QUEUED |
-| 5 | Run current CTAN `pkgcheck`; perform actual CTAN upload only as an explicit publication action and retain receipt/evidence. | QUEUED / EXTERNAL |
-| 6 | Synchronize final publication state and perform Release closeout verification before marking Release CLOSED. | QUEUED |
+| 1 | Commit synchronized PR #293 merge facts and require Static contract on the documentation change. | ACTIVE |
+| 2 | Create `v3.0.0` tag and GitHub Release from canonical merged state, attaching the exact retained candidate-produced bytes. | QUEUED |
+| 3 | Verify published GitHub asset hashes against the accepted checksums. | QUEUED |
+| 4 | Run current CTAN `pkgcheck`; perform actual CTAN upload only as an explicit publication action and retain receipt/evidence. | QUEUED / EXTERNAL |
+| 5 | Synchronize final publication state and perform Release closeout verification before marking Release CLOSED. | QUEUED |
 
 ## Mandatory operating discipline
 
