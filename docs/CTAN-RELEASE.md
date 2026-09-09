@@ -2,7 +2,7 @@
 
 Updated: 2026-09-09
 
-This document defines the repository-controlled publication procedure for `abntexto-ufc` 3.0.0. It is a maintainer/release guide, not a claim of GitHub or CTAN publication.
+This document defines the repository-controlled publication procedure and evidence record for `abntexto-ufc` 3.0.0. GitHub publication is claimed only where explicit repository evidence is recorded below; CTAN publication is not claimed until external submission and acceptance/install evidence exists.
 
 ## Current Release state
 
