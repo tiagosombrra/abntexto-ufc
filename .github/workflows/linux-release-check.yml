@@ -73,7 +73,6 @@ jobs:
             root = Path("dist")
             expected = {
                 "abntexto-ufc-3.0.0.zip",
-                "abntexto-ufc-ctan-3.0.0.zip",
                 "abntexto-ufc-template-3.0.0.zip",
                 "abntexto-ufc-overleaf-3.0.0.zip",
                 "SHA256SUMS",
@@ -118,7 +117,6 @@ jobs:
           name: abntexto-ufc-v3.0.0-distribution-${{ github.run_id }}
           path: |
             dist/abntexto-ufc-3.0.0.zip
-            dist/abntexto-ufc-ctan-3.0.0.zip
             dist/abntexto-ufc-template-3.0.0.zip
             dist/abntexto-ufc-overleaf-3.0.0.zip
             dist/SHA256SUMS
