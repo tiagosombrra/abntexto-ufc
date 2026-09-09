@@ -1,0 +1,186 @@
+name: V3 all-profile visual review
+
+on:
+  push:
+    branches:
+      - validation/v3.0.0-all-profile-review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v3-all-profile-visual-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-review-bundle:
+    name: Build seven source/PDF review pairs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout validation infrastructure
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: validation/v3.0.0-all-profile-review
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout immutable released implementation
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: v3.0.0
+          path: released
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Assert frozen implementation identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='05399473827da7cf6b6c8bac36edc7115481773f'
+          test "$(git -C released rev-parse HEAD)" = "$expected"
+          test "$(git -C released rev-parse v3.0.0^{})" = "$expected"
+          git diff --exit-code v3.0.0 -- abntexto-ufc.cls abntexto-ufc/
+
+      - name: Generate and compile all canonical profiles
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -euo pipefail
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils python3
+
+            python3 tools/generate-v3-profile-review.py --output artifacts/v3-profile-review
+            python3 released/tools/fetch-abntexto.py --output released/abntexto.cls
+
+            root="$PWD"
+            review="$root/artifacts/v3-profile-review"
+            released="$root/released"
+            profiles=(
+              undergraduate-capstone
+              specialization-capstone
+              masters-thesis
+              doctoral-thesis
+              research-project
+              anonymized-research-project
+              scientific-article
+            )
+
+            for profile in "${profiles[@]}"; do
+              dir="$review/$profile"
+              tex="$profile.tex"
+              echo "Building $profile from immutable v3.0.0 source..."
+              cd "$dir"
+              export TEXINPUTS="$released//:"
+              pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$tex"
+              if [[ -s "$profile.bcf" ]] && grep -q '<bcf:datasource' "$profile.bcf"; then
+                biber "$profile"
+              fi
+              pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$tex"
+              pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$tex"
+              test -s "$profile.pdf"
+              pdfinfo "$profile.pdf" > "$profile.pdfinfo.txt"
+              pdftotext -layout "$profile.pdf" "$profile.txt"
+              pdftoppm -png -f 1 -singlefile -r 110 "$profile.pdf" "$profile-preview"
+              cd "$root"
+            done
+
+            python3 - <<'PY'
+            import hashlib
+            import json
+            import re
+            from pathlib import Path
+
+            root = Path('artifacts/v3-profile-review')
+            released_sha = '05399473827da7cf6b6c8bac36edc7115481773f'
+            profiles = [
+                'undergraduate-capstone',
+                'specialization-capstone',
+                'masters-thesis',
+                'doctoral-thesis',
+                'research-project',
+                'anonymized-research-project',
+                'scientific-article',
+            ]
+
+            def sha256(path: Path) -> str:
+                h = hashlib.sha256()
+                with path.open('rb') as fh:
+                    for chunk in iter(lambda: fh.read(1024 * 1024), b''):
+                        h.update(chunk)
+                return h.hexdigest()
+
+            manifest = {
+                'release_tag': 'v3.0.0',
+                'released_source_sha': released_sha,
+                'engine': 'pdfLaTeX / TeX Live 2026',
+                'profile_count': 7,
+                'profiles': [],
+            }
+            checksum_lines = []
+
+            for profile in profiles:
+                directory = root / profile
+                source = directory / f'{profile}.tex'
+                pdf = directory / f'{profile}.pdf'
+                info = (directory / f'{profile}.pdfinfo.txt').read_text(encoding='utf-8', errors='replace')
+                match = re.search(r'^Pages:\s+(\d+)\s*$', info, flags=re.MULTILINE)
+                if not match:
+                    raise SystemExit(f'Could not determine page count for {profile}')
+                entry = {
+                    'profile': profile,
+                    'source': source.relative_to(root).as_posix(),
+                    'source_sha256': sha256(source),
+                    'pdf': pdf.relative_to(root).as_posix(),
+                    'pdf_sha256': sha256(pdf),
+                    'pages': int(match.group(1)),
+                    'preview': (directory / f'{profile}-preview.png').relative_to(root).as_posix(),
+                    'build_log': (directory / f'{profile}.log').relative_to(root).as_posix(),
+                }
+                manifest['profiles'].append(entry)
+
+                for path in sorted(directory.iterdir()):
+                    if path.is_file() and path.suffix in {'.tex', '.bib', '.pdf', '.png', '.txt'}:
+                        checksum_lines.append(f'{sha256(path)}  {path.relative_to(root).as_posix()}')
+
+            if len(manifest['profiles']) != 7:
+                raise SystemExit('Expected exactly seven profile entries')
+
+            (root / 'MANIFEST.json').write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + '\n',
+                encoding='utf-8',
+                newline='\n',
+            )
+            (root / 'SHA256SUMS').write_text(
+                '\n'.join(checksum_lines) + '\n',
+                encoding='utf-8',
+                newline='\n',
+            )
+            PY
+
+            test "$(find artifacts/v3-profile-review -mindepth 2 -maxdepth 2 -name '*.pdf' | wc -l)" -eq 7
+            test "$(find artifacts/v3-profile-review -mindepth 2 -maxdepth 2 -name '*.tex' | grep -E '/(undergraduate-capstone|specialization-capstone|masters-thesis|doctoral-thesis|research-project|anonymized-research-project|scientific-article)\.tex$' | wc -l)" -eq 7
+
+      - name: Publish review summary
+        shell: bash
+        run: |
+          {
+            echo '## v3.0.0 all-profile visual review bundle'
+            echo
+            echo '- Frozen source: `v3.0.0` → `05399473827da7cf6b6c8bac36edc7115481773f`'
+            echo '- Canonical profiles built: **7/7**'
+            echo '- Bundle contains each exact `.tex`, final PDF, build log, extracted text, first-page PNG preview and SHA-256 manifest.'
+            echo '- This is review evidence only; it does not authorize CTAN submission without explicit maintainer acceptance.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload all-profile review bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: abntexto-ufc-v3.0.0-all-profile-visual-review-${{ github.run_id }}
+          path: artifacts/v3-profile-review/**
+          retention-days: 30
+          if-no-files-found: error
