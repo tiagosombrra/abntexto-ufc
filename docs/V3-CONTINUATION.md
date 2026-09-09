@@ -1,7 +1,7 @@
 # V3.0.0 Continuation Handoff
 
 Updated: 2026-09-09
-Status: RELEASE — GITHUB PUBLISHED / CTAN PENDING
+Status: RELEASE — GITHUB PUBLISHED / ALL-PROFILE VISUAL VALIDATION ACTIVE / CTAN BLOCKED
 
 This file is the shortest safe entry point for continuing v3 work from a new ChatGPT conversation, Codex session or local clone.
 
@@ -18,9 +18,11 @@ This file is the shortest safe entry point for continuing v3 work from a new Cha
 | CTAN runtime contract | one generated `abntexto-ufc.cls`; **zero project-owned `.def` files** |
 | `pkgcheck` | **PASS** — 4.1.0, exit 0, zero warnings/errors; run `34386932488` |
 | GitHub publication verification | **PASS** — run `34387825056`; evidence artifact `10118391678` |
-| CTAN status | **NOT YET CLAIMED — submission/acceptance pending** |
+| All-profile visual validation | **ACTIVE — seven source/PDF pairs required** |
+| Maintainer acceptance | **PENDING** |
+| CTAN status | **BLOCKED — do not submit before maintainer visual acceptance** |
 
-For released-source authority, resolve `v3.0.0`; do not treat a later post-tag `main` commit as the v3.0.0 source.
+For released-source authority, resolve `v3.0.0`; do not treat a later post-tag `main` commit as the v3.0.0 implementation.
 
 ## What publication hardening already closed
 
@@ -33,18 +35,33 @@ For released-source authority, resolve `v3.0.0`; do not treat a later post-tag `
 - any `.def` inside the CTAN ZIP is a hard failure;
 - example compiles without the modular runtime directory;
 - former NBR 6023:2025 librarian item 33 closed with primary authority and executable regression;
-- `pkgcheck` moved before immutable tag creation.
+- `pkgcheck` passed before immutable tag creation;
+- immutable `v3.0.0` and GitHub Release publication completed with byte-identical re-download verification.
 
-PR #297 final-head evidence was green: Static PASS, Linux integration PASS, Linux release check PASS with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. The generated CTAN artifact was manually audited and confirmed `1 cls / 0 def`.
+## Active visual-validation scope
+
+Generate from the frozen `v3.0.0` implementation and present both source and PDF for:
+
+1. `undergraduate-capstone`;
+2. `specialization-capstone`;
+3. `masters-thesis`;
+4. `doctoral-thesis`;
+5. `research-project`;
+6. `anonymized-research-project`;
+7. `scientific-article`.
+
+The review artifact must include a manifest/hashes and build metadata. Automated compile success is insufficient: explicit maintainer review of the rendered pages and sources is mandatory. See `docs/V3-VISUAL-VALIDATION.md`.
 
 ## Remaining work
 
-1. obtain the exact `abntexto-ufc-3.0.0.zip` asset from the published GitHub Release;
-2. verify SHA-256 `d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`;
-3. submit only that archive to CTAN;
-4. preserve submission receipt and package metadata;
-5. after CTAN acceptance, verify catalog/install evidence;
-6. update control docs/machine state and close the Release phase.
+1. generate the seven source/PDF review pairs from the immutable v3.0.0 implementation;
+2. provide them to the maintainer for visual/source inspection;
+3. record explicit acceptance or findings profile by profile;
+4. if a material defect is found, do not modify v3.0.0; open a correction/new-version cycle and repeat affected gates;
+5. only after visual acceptance, verify the frozen CTAN ZIP SHA-256 `d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71` and submit that one archive to CTAN;
+6. preserve CTAN submission receipt and package metadata;
+7. after CTAN acceptance, verify catalog/install evidence;
+8. update control docs/machine state and close the Release phase.
 
 No v3.0.0 source or asset rebuild is permitted.
 
@@ -56,6 +73,7 @@ git switch main
 git pull --ff-only origin main
 git status
 git rev-parse HEAD
+git rev-parse v3.0.0^{}
 ```
 
 Then read:
@@ -66,8 +84,9 @@ Then read:
 4. `docs/HANDOFF-V3.0.0.md`
 5. `docs/ROADMAP-V3.0.0.md`
 6. `docs/V3-RELEASE-READINESS.md`
-7. `docs/V3-RELEASE-PHASE-END.md`
-8. `docs/CTAN-RELEASE.md`
-9. `docs/UFC-LIBRARIAN-REVIEW.md`
+7. `docs/V3-VISUAL-VALIDATION.md`
+8. `docs/V3-RELEASE-PHASE-END.md`
+9. `docs/CTAN-RELEASE.md`
+10. `docs/UFC-LIBRARIAN-REVIEW.md`
 
 Every material repository modification updates the affected control documents and machine state in the same work cycle. The public README is updated only when user-facing facts change; it does not track transient branch/CI state.
