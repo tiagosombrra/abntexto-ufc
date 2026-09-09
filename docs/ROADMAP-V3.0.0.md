@@ -4,7 +4,7 @@ Updated: 2026-09-08
 
 ## Current status
 
-**Release is ACTIVE on PR #293. Candidate transport is accepted; candidate artifact-delivery implementation is CI-pending.**
+**Release is ACTIVE on PR #293. Artifact delivery is accepted; the next material advance is the immutable Release candidate marker.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -13,7 +13,7 @@ Updated: 2026-09-08
 | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
 | Final Certification | CLOSED | candidate `22f7ba845...`; Static `34239890649`; complete Linux `34239890614`; release check `34239890548` |
-| Release | **ACTIVE — ARTIFACT DELIVERY IMPLEMENTATION** | immutable candidate passes Static + complete Linux + release check; exact certified assets published and verified |
+| Release | **ACTIVE — CANDIDATE PREPARATION** | immutable candidate passes Static + complete Linux + release check; exact certified assets published and verified |
 
 ## Release facts
 
@@ -22,9 +22,10 @@ Updated: 2026-09-08
 | Merged `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
 | Release branch / PR | `release/v3-release` / #293 |
 | Transport preparation | `6a257f35...` — **ACCEPTED** |
-| Transport Static | `34265429699` — SUCCESS |
-| Transport Linux | `34265429551` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Control reconciliation | `eededce34...`; Static `34300202909` SUCCESS; Linux docs-only skip |
+| Transport Static / Linux | `34265429699` SUCCESS / `34265429551` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Artifact-delivery implementation | `b55210ac...` — **ACCEPTED** |
+| Artifact-delivery Static | `34300561597` — SUCCESS |
+| Artifact-delivery Linux | `34300561605` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
 | Librarian matrix | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` |
 
 ## Release plan
@@ -34,17 +35,17 @@ Updated: 2026-09-08
 | Final Certification → Release transition | DONE | PR #289 merged |
 | Release branch + PR synchronization | DONE | PR #293 open |
 | Prepare Release-specific phase-end marker transport | DONE | `6a257f35...`; Static + complete Linux PASS |
-| Implement exact-candidate distribution artifact retention | **IMPLEMENTED — CI PENDING** | workflow + static orchestration contract must pass Static + complete Linux |
-| Record artifact-delivery acceptance | QUEUED | implementation SHA/run IDs synchronized |
-| Publish immutable Release phase-end candidate marker | QUEUED | `release/v3-release-candidate.json` on candidate SHA |
+| Implement exact-candidate distribution artifact retention | **DONE** | `b55210ac...`; Static + complete Linux PASS |
+| Record artifact-delivery acceptance | **DONE IN CURRENT CONTROL SYNC** | implementation SHA/run IDs synchronized |
+| Publish immutable Release phase-end candidate marker | **NEXT** | `release/v3-release-candidate.json` on candidate SHA |
 | Release phase-end regression | QUEUED | Static + `SCOPE=complete` Linux + Linux release check |
 | Verify candidate artifacts/checksums | QUEUED | four ZIPs + `SHA256SUMS`, exact candidate provenance |
 | Tag/GitHub Release/publication | QUEUED | accepted candidate; published assets match certified hashes |
 | Release closeout | QUEUED | no blocker + final verification recorded |
 
-## Artifact provenance implementation
+## Accepted artifact provenance implementation
 
-The permanent `Linux release check` now has an implementation pending CI that:
+The permanent `Linux release check` at `b55210ac...` now:
 
 - checks out `${{ github.event.pull_request.head.sha || github.sha }}` explicitly;
 - binds `SOURCE_COMMIT_SHA` to that same SHA;
@@ -53,7 +54,7 @@ The permanent `Linux release check` now has an implementation pending CI that:
 - verifies `SHA256SUMS` and the exact five-file distribution set;
 - retains the four ZIPs plus `SHA256SUMS` through the pinned upload-artifact action.
 
-The implementation is not accepted until Static and complete Linux pass. No product or normative semantics are changed.
+Static `34300561597` and complete Linux `34300561605` accepted this bounded implementation. No product or normative semantics changed.
 
 ## Candidate policy
 

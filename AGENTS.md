@@ -23,10 +23,10 @@ Memory, prior chats and historical branches never override current repository st
 | Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
 | Active branch / PR | `release/v3-release` / #293 |
 | Release transport preparation | **ACCEPTED** on `6a257f35b65266a1120826b816404116082b1e5c` |
-| Transport Static | `34265429699` — SUCCESS |
-| Transport Linux | `34265429551` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Control-plane reconciliation | `eededce34d81df6b50206cdf11dc8707dde20152`; Static `34300202909` SUCCESS; Linux `34300202899` docs-only heavy skip |
-| Current batch | **Release artifact delivery implementation — CI pending** |
+| Artifact-delivery implementation | **ACCEPTED** on `b55210acdb614fc3178e3ebf5b3a595bed8508c1` |
+| Artifact-delivery Static | `34300561597` — SUCCESS |
+| Artifact-delivery Linux | `34300561605` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Current batch | **Release immutable candidate preparation — marker publication next** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -65,19 +65,18 @@ The Release-specific tracked marker is `release/v3-release-candidate.json`. It f
 
 ## Artifact provenance rule
 
-The permanent `Linux release check` is being hardened to check out the PR head/candidate SHA explicitly, bind `SOURCE_COMMIT_SHA` and `SOURCE_DATE_EPOCH` to that SHA, execute `make release-check`, build the final distribution set, verify `SHA256SUMS`, and retain the exact five-file `dist/` set as an Actions artifact.
+The permanent `Linux release check` hardening is accepted on `b55210ac...`, with Static `34300561597` and complete Linux `34300561605`. It checks out the PR head/candidate SHA explicitly, binds `SOURCE_COMMIT_SHA` and `SOURCE_DATE_EPOCH` to that SHA, executes `make release-check`, builds the final distribution set, verifies `SHA256SUMS`, and retains the exact five-file `dist/` set as an Actions artifact.
 
-This implementation is not accepted merely because it exists in the branch. It must pass Static and complete Linux before the immutable Release candidate marker is published.
+This bounded tooling acceptance authorizes publication of the immutable Release candidate; it does not satisfy the Release phase-end regression.
 
 ## Immediate Release discipline
 
-1. validate the artifact-delivery workflow implementation with Static + complete Linux;
-2. record that result in roadmap/handoff/readiness/machine state;
-3. publish one immutable Release candidate marker commit;
-4. require Static + complete Linux + Linux release check on that exact candidate;
-5. verify the candidate's four ZIPs and `SHA256SUMS` from the retained workflow artifact;
-6. only after acceptance, create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
-7. verify published assets/checksums before closing Release.
+1. publish one immutable Release candidate marker commit;
+2. require Static + complete Linux + Linux release check on that exact candidate;
+3. verify the candidate's four ZIPs and `SHA256SUMS` from the retained workflow artifact;
+4. record candidate SHA, run IDs and artifact identity in roadmap/handoff/readiness/machine state;
+5. only after acceptance, create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
+6. verify published assets/checksums before closing Release.
 
 ## Fail-closed rule
 

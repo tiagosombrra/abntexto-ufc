@@ -11,50 +11,48 @@ Updated: 2026-09-08
 | Active branch / PR | `release/v3-release` / #293 |
 | Active phase | **Release** |
 | Release transport preparation | **ACCEPTED** on `6a257f35b65266a1120826b816404116082b1e5c` |
-| Transport Static / Linux | `34265429699` SUCCESS / `34265429551` SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Control-plane reconciliation | `eededce34d81df6b50206cdf11dc8707dde20152`; Static `34300202909` SUCCESS; Linux docs-only heavy skip |
-| Current batch | **Release artifact delivery implementation — CI pending** |
+| Artifact-delivery implementation | **ACCEPTED** on `b55210acdb614fc3178e3ebf5b3a595bed8508c1` |
+| Artifact-delivery Static | `34300561597` — SUCCESS |
+| Artifact-delivery Linux | `34300561605` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Current batch | **Release immutable candidate preparation — publish Release marker next** |
 | Final Certification | **CLOSED** on `22f7ba845a8f5ab9c08d4a72ba05a9ff8ebbc1f9` |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 Canonical control documents include `release/v3-roadmap.json`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
 
-## Current material advance
+## Artifact-delivery acceptance
 
-The permanent `Linux release check` is being changed so the final publication bytes have exact candidate provenance:
+The permanent `Linux release check` hardening at `b55210ac...` is accepted as bounded Release tooling work. It changes no LaTeX runtime or normative semantics.
 
-| Surface | Implemented behavior | Acceptance state |
-|---|---|---|
-| Checkout | explicit PR head / candidate SHA | CI pending |
-| Provenance | `SOURCE_COMMIT_SHA` bound to checkout SHA | CI pending |
-| Determinism | `SOURCE_DATE_EPOCH` from candidate commit time | CI pending |
-| Release contract | `make release-check` remains mandatory | CI pending |
-| Final package build | `make distribution-bundles` after release contract | CI pending |
-| Integrity | `sha256sum -c SHA256SUMS` + exact file-set check | CI pending |
-| Artifact retention | four ZIPs + `SHA256SUMS` uploaded by permanent workflow | CI pending |
+| Predicate | Accepted result |
+|---|---|
+| Candidate checkout | explicit PR head / candidate SHA |
+| Provenance | `SOURCE_COMMIT_SHA` bound to checkout SHA |
+| Determinism | `SOURCE_DATE_EPOCH` derived from candidate commit |
+| Release contract | `make release-check` retained |
+| Final package build | `make distribution-bundles` after release contract |
+| Integrity | `sha256sum -c SHA256SUMS` + exact five-file set |
+| Artifact retention | four ZIPs + `SHA256SUMS` via pinned upload-artifact |
+| Static acceptance | `34300561597` SUCCESS |
+| Linux acceptance | `34300561605` SUCCESS, complete scope, 36/36 checks |
 
-No LaTeX runtime or normative rule is changed by this Release transport work.
-
-## Acceptance rule for this advance
-
-The implementation commit must pass Static contract and **complete** Linux integration. A green workflow with heavy integration skipped is insufficient. The exact implementation SHA and run IDs are recorded in a later documentation-only acceptance synchronization after CI finishes.
+This acceptance authorizes candidate publication; it is not itself the Release phase-end regression.
 
 ## Immediate Release action
 
 | Order | Action | Gate |
 |---:|---|---|
-| 1 | Validate artifact-delivery implementation | Static + complete Linux green |
-| 2 | Record implementation SHA/run IDs | documentation + machine-state synchronization |
-| 3 | Publish one immutable Release candidate containing `release/v3-release-candidate.json` | candidate not amended after CI starts |
-| 4 | Run Release **phase-end regression** | Static + `SCOPE=complete` Linux + `Linux release check` |
-| 5 | Verify/download the candidate's four ZIPs and `SHA256SUMS` | exact candidate provenance + checksum/integrity PASS |
-| 6 | Only after candidate acceptance, create/verify `v3.0.0` tag and GitHub Release with those exact assets | published hashes match candidate |
-| 7 | Perform external publication only when explicit checklist/tooling and required metadata are available | preserve submission/acceptance evidence |
-| 8 | Record final verification and close Release | no unresolved release blocker |
+| 1 | Publish one immutable Release candidate containing `release/v3-release-candidate.json` | candidate commit is not amended after CI starts |
+| 2 | Run Release **phase-end regression** on that exact SHA | Static + `SCOPE=complete` Linux + `Linux release check` |
+| 3 | Verify/download the candidate's four ZIPs and `SHA256SUMS` | exact candidate provenance + checksum/integrity PASS |
+| 4 | Record candidate SHA, run IDs and retained artifact identity | documentation + machine-state synchronization after CI |
+| 5 | Only after candidate acceptance, create/verify `v3.0.0` tag and GitHub Release using the exact retained files | published hashes match candidate |
+| 6 | Perform external publication only when explicit checklist/tooling and required metadata are available | preserve submission/acceptance evidence |
+| 7 | Record final verification and close Release | no unresolved release blocker |
 
 ## Mandatory operating discipline
 
-Every **material advance** updates relevant execution documentation, this handoff, roadmap and machine state in the same work cycle. Release ends with its own complete **phase-end regression** on one immutable SHA.
+Every **material advance** updates relevant execution documentation, this handoff, roadmap and machine state in the same work cycle. Targeted checks never replace the **phase-end regression**.
 
 ## Hard boundaries
 

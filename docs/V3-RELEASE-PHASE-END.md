@@ -1,7 +1,7 @@
 # V3.0.0 Release — Phase-end Regression
 
 Updated: 2026-09-08
-Status: ACTIVE — ARTIFACT DELIVERY / CANDIDATE PREPARATION
+Status: ACTIVE — IMMUTABLE CANDIDATE PREPARATION
 
 ## Purpose
 
@@ -24,11 +24,28 @@ Transport preparation was accepted on `6a257f35b65266a1120826b816404116082b1e5c`
 
 The historical `release/final-certification-candidate.json` remains a Final Certification provenance mechanism and must not be reused as the Release marker.
 
+## Accepted artifact delivery
+
+The permanent Release workflow hardening was accepted on `b55210acdb614fc3178e3ebf5b3a595bed8508c1` before candidate publication.
+
+| Gate / predicate | Result |
+|---|---|
+| Static contract | `34300561597` — SUCCESS |
+| Linux integration | `34300561605` — SUCCESS |
+| Linux scope | `complete` |
+| Linux summary | `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Explicit candidate checkout | implemented |
+| Candidate provenance environment | implemented |
+| Distribution build/checksum verification | implemented |
+| Certified distribution artifact retention | implemented with pinned upload-artifact |
+
+This bounded acceptance authorizes publication of the immutable Release candidate. It does not substitute for the Release phase-end regression.
+
 ## Immutable candidate and artifact rule
 
-The Release candidate is the first commit that contains the completed release tooling/checklist state plus the Release candidate marker. After CI starts, that commit is immutable. CI-result documentation is recorded in a later commit and never rewrites the accepted candidate.
+The Release candidate is the first commit after this accepted tooling state that contains the Release candidate marker. After CI starts, that commit is immutable. CI-result documentation is recorded in a later commit and never rewrites the accepted candidate.
 
-The permanent `Linux release check` must generate and retain the final publication bytes from that exact candidate. It already executes `make release-check`; its release-candidate run must also expose `dist/` as a downloadable Actions artifact containing exactly:
+The permanent `Linux release check` must generate and retain the final publication bytes from that exact candidate. Its release-candidate run must expose `dist/` as a downloadable Actions artifact containing exactly:
 
 - `abntexto-ufc-3.0.0.zip`
 - `abntexto-ufc-ctan-3.0.0.zip`
@@ -61,4 +78,4 @@ Actual CTAN submission remains an explicit action and must not be reported as ac
 
 ## Regression discipline
 
-Every **material Release advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Targeted checks are useful intermediate evidence but never replace this **phase-end regression**.
+Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Targeted checks are useful intermediate evidence but never replace this **phase-end regression**.
