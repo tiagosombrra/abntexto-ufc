@@ -33,17 +33,17 @@ The artifact was independently downloaded and verified. Extraction yielded exact
 |---|---|
 | Release integration PR #293 | merged by squash as `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
 | Publication-closeout synchronization PR #294 | merged as `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
-| Canonical post-merge Static | `34333350711` — SUCCESS |
-| Release work branch | `release/v3-release`, synchronized to the canonical `main` checkpoint |
+| Continuation synchronization PR #295 | merged; canonical post-merge Static `34335044265` SUCCESS |
+| Release work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
 | Superseded PR #292 | closed; historical evidence only |
 
-These later control-plane commits do not replace candidate `75ead435...` as the phase-end evidence anchor and do not authorize rebuilding publication archives.
+Current canonical `main` SHA is a Git fact and must be resolved dynamically; it is not a self-referential machine-state invariant. These control-plane commits do not replace candidate `75ead435...` as the phase-end evidence anchor and do not authorize rebuilding publication archives.
 
 ## Publication boundary
 
 The **phase-end regression** is accepted, but Release remains ACTIVE. Remaining actions are:
 
-1. create `v3.0.0` tag and GitHub Release from canonical `main` while attaching the exact retained candidate bytes;
+1. create `v3.0.0` tag and GitHub Release from the latest canonical `main` while attaching the exact retained candidate bytes;
 2. verify published hashes against accepted checksums;
 3. run current CTAN `pkgcheck`; perform/record actual CTAN submission only as an explicit action with evidence;
 4. synchronize final publication facts and perform final Release verification before setting Release to `CLOSED`.

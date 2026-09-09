@@ -9,10 +9,11 @@ This document defines the repository-controlled CTAN/GitHub release procedure fo
 | Fact | State |
 |---|---|
 | Roadmap phase | **Release** |
-| Canonical branch | `main` |
-| Last merged publication-closeout synchronization checkpoint | `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
+| Canonical branch | `main`; current SHA is resolved dynamically from Git |
 | Release PR #293 | merged |
 | Publication-closeout PR #294 | merged |
+| Continuation synchronization PR #295 | merged; canonical post-merge Static `34335044265` SUCCESS |
+| Release work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
 | Superseded PR #292 | closed; historical evidence only |
 | Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — accepted |
 | Linux release check | `34303586773` — `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
@@ -42,19 +43,20 @@ Only the separate Overleaf bundle may vendor the pinned upstream dependency as a
 
 ## Before actual CTAN upload
 
-1. extract the retained `abntexto-ufc-ctan-3.0.0.zip`;
-2. run the **current** CTAN `pkgcheck`;
-3. confirm package name/version, maintainer metadata, LPPL license, repository/issue tracker and external dependency declaration;
-4. preserve the pkgcheck output;
-5. perform an upload only as an explicit publication action;
-6. preserve submission receipt and later acceptance evidence before claiming CTAN publication.
+1. start from the latest `origin/main` and read `docs/V3-CONTINUATION.md`;
+2. extract the retained `abntexto-ufc-ctan-3.0.0.zip`;
+3. run the **current** CTAN `pkgcheck`;
+4. confirm package name/version, maintainer metadata, LPPL license, repository/issue tracker and external dependency declaration;
+5. preserve the pkgcheck output;
+6. perform an upload only as an explicit publication action;
+7. preserve submission receipt and later acceptance evidence before claiming CTAN publication.
 
 Current CTAN references remain `https://ctan.org/help/upload-pkg?lang=en`, `https://ctan.org/help/submit`, and `https://ctan.org/pkg/pkgcheck`.
 
 ## Final Release checklist
 
 1. Preserve immutable Release candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` and its accepted **phase-end regression** evidence.
-2. Start publication work from the latest `origin/main`; read `docs/V3-CONTINUATION.md`.
+2. Start publication work from the latest `origin/main`; do not resume superseded PR #292.
 3. Create `v3.0.0` tag and GitHub Release, attaching the exact retained candidate-produced files.
 4. Verify every published GitHub asset hash against the accepted checksums.
 5. Run current CTAN `pkgcheck` on the retained CTAN candidate.

@@ -1,5 +1,5 @@
 {
-  "schema_version": 32,
+  "schema_version": 33,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -11,10 +11,12 @@
   "active_branch": "release/v3-release",
   "authorities": {
     "git_facts_must_match_machine_state": true,
+    "current_main_sha_is_resolved_from_git": true,
     "machine_state": "release/v3-roadmap.json",
     "handoff": "docs/HANDOFF-V3.0.0.md",
     "roadmap": "docs/ROADMAP-V3.0.0.md",
     "bootstrap": "AGENTS.md",
+    "continuation_handoff": "docs/V3-CONTINUATION.md",
     "correction_plan": "docs/V3-CORRECTION-PLAN.md",
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
     "reference_pdf_validation": "docs/V3-REFERENCE-PDF-VALIDATION.md",
@@ -26,7 +28,6 @@
     "release_readiness": "docs/V3-RELEASE-READINESS.md",
     "release_phase_end": "docs/V3-RELEASE-PHASE-END.md",
     "ctan_release": "docs/CTAN-RELEASE.md",
-    "continuation_handoff": "docs/V3-CONTINUATION.md",
     "fail_closed_on_disagreement": true,
     "memory_is_not_an_authority": true
   },
@@ -51,7 +52,8 @@
     "actual_ctan_submission_before_release_phase": false,
     "proprietary_fonts_may_be_redistributed": false,
     "publication_assets_must_come_from_accepted_release_candidate": true,
-    "publication_assets_may_be_rebuilt_after_candidate_acceptance": false
+    "publication_assets_may_be_rebuilt_after_candidate_acceptance": false,
+    "hardcoded_current_main_sha_is_authority": false
   },
   "phase_end_regression": {
     "required": true,
@@ -74,62 +76,28 @@
   "baseline": {
     "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
     "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
+    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "release_code_integration_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
     "publication_closeout_sync_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
-    "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
-    "canonical_main_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec"
+    "continuation_sync_merge_sha": "a555d1edb38dfcf0e786da0ce202a5b75971a5a2",
+    "canonical_main_resolution": "git-fetch-origin-main-at-session-start"
   },
   "phases": [
-    {
-      "id": "regression-audit",
-      "name": "Regression Audit",
-      "status": "CLOSED",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "core-corrections",
-      "name": "Core Corrections",
-      "status": "CLOSED",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "reference-pdf-validation",
-      "name": "Reference PDF Validation",
-      "status": "CLOSED",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "scientific-article",
-      "name": "Scientific Article",
-      "status": "CLOSED",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "final-certification",
-      "name": "Final Certification",
-      "status": "CLOSED",
-      "phase_end_regression_required": true
-    },
-    {
-      "id": "release",
-      "name": "Release",
-      "status": "ACTIVE",
-      "phase_end_regression_required": true
-    }
+    {"id": "regression-audit", "name": "Regression Audit", "status": "CLOSED", "phase_end_regression_required": true},
+    {"id": "core-corrections", "name": "Core Corrections", "status": "CLOSED", "phase_end_regression_required": true},
+    {"id": "reference-pdf-validation", "name": "Reference PDF Validation", "status": "CLOSED", "phase_end_regression_required": true},
+    {"id": "scientific-article", "name": "Scientific Article", "status": "CLOSED", "phase_end_regression_required": true},
+    {"id": "final-certification", "name": "Final Certification", "status": "CLOSED", "phase_end_regression_required": true},
+    {"id": "release", "name": "Release", "status": "ACTIVE", "phase_end_regression_required": true}
   ],
   "active_work": {
     "review_items": 34,
-    "review_status": {
-      "pass": 33,
-      "partial": 0,
-      "fail": 0,
-      "normative_review": 1
-    },
+    "review_status": {"pass": 33, "partial": 0, "fail": 0, "normative_review": 1},
     "scientific_article_state": "closed",
     "final_certification_state": "closed-accepted",
     "release_state": "active-publication-closeout",
     "release_branch": "release/v3-release",
-    "release_branch_state": "synchronized-to-canonical-main",
+    "release_branch_state": "aligned-to-canonical-main-after-pr-295",
     "release_pr": 293,
     "release_pr_state": "merged",
     "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
@@ -137,19 +105,19 @@
     "publication_closeout_pr": 294,
     "publication_closeout_pr_state": "merged",
     "publication_closeout_merge_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "continuation_sync_pr": 295,
+    "continuation_sync_pr_state": "merged",
+    "continuation_sync_merge_sha": "a555d1edb38dfcf0e786da0ce202a5b75971a5a2",
+    "continuation_sync_pr_static_run": 34334979370,
+    "continuation_sync_pr_linux_run": 34334979445,
+    "continuation_sync_main_static_run": 34335044265,
     "superseded_release_pr": 292,
     "superseded_release_pr_state": "closed",
     "closure_scope_frozen": true,
     "latest_fully_validated_checkpoint_sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
     "latest_fully_validated_checkpoint_state": "release-phase-end-regression-accepted-static-complete-linux-release-check-green-artifact-verified",
-    "latest_control_sync_checkpoint_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
-    "latest_control_sync_static_run": 34333350711,
-    "latest_control_sync_static_conclusion": "success",
-    "latest_control_sync_pr_static_run": 34333292942,
-    "latest_control_sync_linux_run": 34333292948,
-    "latest_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
     "current_correction_batch": [
-      "Release publication closeout — canonical main synchronized; v3.0.0 tag/GitHub Release and publication verification pending"
+      "Release publication closeout — continuation handoff synchronized; v3.0.0 tag/GitHub Release and publication verification pending"
     ],
     "pending_acceptance_gates": [
       "Create and verify v3.0.0 tag and GitHub Release from exact retained candidate bytes",
@@ -255,7 +223,7 @@
   },
   "branch_plan": {
     "current_work_branch": "release/v3-release",
-    "release_branch_state": "synchronized-to-canonical-main",
+    "release_branch_state": "aligned-to-canonical-main-after-pr-295",
     "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "release_pr": 293,
     "release_pr_state": "merged",
@@ -264,6 +232,9 @@
     "publication_closeout_pr": 294,
     "publication_closeout_pr_state": "merged",
     "publication_closeout_merge_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "continuation_sync_pr": 295,
+    "continuation_sync_pr_state": "merged",
+    "continuation_sync_merge_sha": "a555d1edb38dfcf0e786da0ce202a5b75971a5a2",
     "superseded_release_pr": 292,
     "superseded_release_pr_state": "closed",
     "final_certification_pr": 289,
@@ -272,7 +243,7 @@
     "scientific_article_pr": 286,
     "scientific_article_pr_state": "merged",
     "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
-    "integration_main_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
+    "canonical_main_resolution": "git-fetch-origin-main-at-session-start",
     "policy": "main-plus-one-short-lived-active-task-branch"
   },
   "evidence": {
@@ -294,25 +265,6 @@
     "final_certification_phase_end_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
     "final_certification_phase_end_release_run": 34239890548,
     "final_certification_phase_end_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
-    "final_certification_release_reference_sha256": "ae4d7755d18e05abd572a0ad95e5696e54302f9ac236b1efc004d46f57216479",
-    "final_certification_distribution_bundles": 4,
-    "final_certification_distribution_checksums": "PASS",
-    "final_certification_distribution_archive_integrity": "PASS",
-    "final_certification_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
-    "release_transport_preparation_checkpoint_sha": "6a257f35b65266a1120826b816404116082b1e5c",
-    "release_transport_preparation_static_run": 34265429699,
-    "release_transport_preparation_linux_run": 34265429551,
-    "release_transport_preparation_linux_scope": "complete",
-    "release_transport_preparation_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
-    "release_control_sync_checkpoint_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
-    "release_control_sync_static_run": 34333350711,
-    "release_control_sync_linux_run": 34333292948,
-    "release_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
-    "release_artifact_delivery_checkpoint_sha": "b55210acdb614fc3178e3ebf5b3a595bed8508c1",
-    "release_artifact_delivery_static_run": 34300561597,
-    "release_artifact_delivery_linux_run": 34300561605,
-    "release_artifact_delivery_linux_scope": "complete",
-    "release_artifact_delivery_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
     "release_phase_end_candidate_sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
     "release_phase_end_static_run": 34303586782,
     "release_phase_end_static_conclusion": "success",
@@ -329,8 +281,12 @@
     "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
     "release_pr_merge_method": "squash",
     "publication_closeout_sync_sha": "c39af06e236b6b61fcf6d11bc383ac5752093cec",
-    "publication_closeout_sync_static_run": 34333350711,
     "publication_closeout_pr": 294,
+    "continuation_sync_merge_sha": "a555d1edb38dfcf0e786da0ce202a5b75971a5a2",
+    "continuation_sync_pr": 295,
+    "continuation_sync_pr_static_run": 34334979370,
+    "continuation_sync_pr_linux_run": 34334979445,
+    "continuation_sync_main_static_run": 34335044265,
     "superseded_release_pr": 292,
     "librarian_review_contract_items": 34
   },

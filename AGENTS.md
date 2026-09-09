@@ -7,10 +7,11 @@ This repository uses fail-closed state reconciliation for v3 development.
 Before changing code, tests, standards, workflows, documentation, release metadata, or publication state:
 
 1. identify the actual Git branch and HEAD;
-2. read `release/v3-roadmap.json`;
-3. read `docs/V3-CONTINUATION.md`, `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md`, and `docs/V3-RELEASE-READINESS.md`;
-4. during **Release**, also read `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, and `docs/UFC-LIBRARIAN-REVIEW.md`;
-5. reconcile Git facts, machine state, handoff, roadmap, release blockers, retained-artifact provenance, and publication state before work.
+2. fetch current Git facts from `origin/main` rather than trusting a hardcoded current-main SHA in documentation;
+3. read `release/v3-roadmap.json`;
+4. read `docs/V3-CONTINUATION.md`, `docs/HANDOFF-V3.0.0.md`, `docs/ROADMAP-V3.0.0.md`, and `docs/V3-RELEASE-READINESS.md`;
+5. during **Release**, also read `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/V3-FINAL-CERTIFICATION.md`, `docs/V3-FINAL-CERTIFICATION-PHASE-END.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, and `docs/UFC-LIBRARIAN-REVIEW.md`;
+6. reconcile Git facts, machine state, handoff, roadmap, release blockers, retained-artifact provenance, and publication state before work.
 
 Memory, prior chats and historical branches never override current repository state.
 
@@ -20,22 +21,21 @@ Memory, prior chats and historical branches never override current repository st
 |---|---|
 | Target | `3.0.0` |
 | Active phase | **Release** |
-| Canonical branch | `main` |
-| Last merged publication-closeout synchronization checkpoint | `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
-| Active Release work branch | `release/v3-release`, synchronized to that canonical `main` checkpoint |
-| Release PR #293 | **MERGED** by squash as `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
+| Canonical branch | `main`; resolve its current SHA dynamically from Git |
+| Release integration PR #293 | **MERGED** by squash as `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
 | Publication-closeout PR #294 | **MERGED** as `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
+| Continuation synchronization PR #295 | **MERGED**; canonical post-merge Static `34335044265` — SUCCESS |
+| Active Release work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
 | Superseded PR #292 | **CLOSED**; historical evidence only |
 | Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **PHASE-END REGRESSION ACCEPTED** |
 | Candidate Static | `34303586782` — SUCCESS |
 | Candidate Linux | `34303586778` — SUCCESS, complete scope |
 | Candidate Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
 | Retained distribution artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
-| Post-merge control sync on canonical `main` | Static `34333350711` — SUCCESS |
 | Current batch | **Release publication — tag/GitHub Release and post-publication verification pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
-Always start a new local/session continuation from the latest `origin/main`. `docs/V3-CONTINUATION.md` is the concise operational handoff.
+`docs/V3-CONTINUATION.md` is the concise operational handoff for a new conversation or local session.
 
 ## Readable phase model
 
@@ -56,6 +56,7 @@ Always start a new local/session continuation from the latest `origin/main`. `do
 - External publication is an explicit Release action and is never inferred from a build or candidate validation.
 - Accepted publication ZIPs must come from the retained candidate artifact; do not rebuild them after candidate acceptance.
 - Superseded PR #292 and old task branches are historical evidence only; do not resume them as active work.
+- Do not encode a self-referential current `main` SHA as a machine invariant; current HEAD is a Git fact resolved at session start.
 
 ## Progress documentation discipline
 
@@ -77,7 +78,7 @@ Release remains ACTIVE until publication and post-publication verification are r
 
 ## Immediate Release discipline
 
-1. fetch the latest `main` and create a new short-lived branch for any new publication work;
+1. fetch the latest `origin/main` and create a new short-lived branch for any publication work;
 2. create `v3.0.0` tag and GitHub Release from canonical `main` while uploading the exact retained candidate-produced bytes;
 3. verify published asset hashes against the accepted checksums;
 4. run current CTAN `pkgcheck`; perform actual CTAN upload only as an explicit action with receipt/evidence;
