@@ -14,7 +14,6 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ID = "abntexto-ufc"
 CTAN_DIR = ROOT / "release" / "ctan"
-REMOVED_FORWARDING_LAYER = "abntexto-ufc/public-api.def"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -26,6 +25,7 @@ MICROSOFT_FONTS = {
     "arialbi.ttf",
 }
 SAFE_COMPONENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]*$")
+PROJECT_MODULE_INPUT_RE = re.compile(r"\\input\{abntexto-ufc/[^}]+\.def\}")
 
 
 def fail(message: str) -> None:
@@ -38,6 +38,14 @@ def version() -> str:
     if not match:
         fail("Makefile VERSION not found.")
     return match.group(1)
+
+
+def source_modules() -> list[str]:
+    return sorted(
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / PACKAGE_ID).rglob("*.def")
+        if path.is_file()
+    )
 
 
 def sha256(path: Path) -> str:
@@ -75,7 +83,31 @@ def require(archive_entries: dict[str, zipfile.ZipInfo], expected: set[str], arc
         fail(f"{archive_name} missing required entries: {', '.join(missing)}")
 
 
-def validate_package(path: Path, v: str) -> None:
+def validate_monolithic_class(class_bytes: bytes, archive_name: str) -> int:
+    try:
+        class_text = class_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        fail(f"{archive_name}: generated CTAN class is not UTF-8: {exc}")
+
+    if PROJECT_MODULE_INPUT_RE.search(class_text):
+        fail(f"{archive_name}: generated CTAN class still loads an external project .def module.")
+    if re.search(r"\\ProvidesFile\{abntexto-ufc/", class_text):
+        fail(f"{archive_name}: generated CTAN class still contains module ProvidesFile wrappers.")
+    if "no external .def files are required" not in class_text:
+        fail(f"{archive_name}: generated CTAN class is missing the monolithic-distribution marker.")
+
+    modules = source_modules()
+    for relative in modules:
+        label = PurePosixPath(relative).with_suffix("").as_posix()
+        begin = f"% --- BEGIN inlined module: {label} ---"
+        end = f"% --- END inlined module: {label} ---"
+        if class_text.count(begin) != 1 or class_text.count(end) != 1:
+            fail(f"{archive_name}: source module was not inlined exactly once: {relative}")
+
+    return len(modules)
+
+
+def validate_package(path: Path, v: str) -> int:
     archive_entries = entries(path)
     prefix = f"{PACKAGE_ID}/"
     if any(not name.startswith(prefix) for name in archive_entries):
@@ -90,18 +122,16 @@ def validate_package(path: Path, v: str) -> None:
         f"{prefix}{PACKAGE_ID}.pdf",
         f"{prefix}{PACKAGE_ID}-example.tex",
         f"{prefix}{PACKAGE_ID}-example.pdf",
-        f"{prefix}abntexto-ufc/core.def",
-        f"{prefix}abntexto-ufc/integrations/abntexto.def",
-        f"{prefix}abntexto-ufc/standards/nbr6023-2025.def",
     }
     require(archive_entries, required, path.name)
 
-    removed = f"{prefix}{REMOVED_FORWARDING_LAYER}"
-    if removed in archive_entries:
-        fail(f"{path.name}: removed forwarding layer must not be distributed.")
+    files = [name for name in archive_entries if not name.endswith("/")]
+    def_files = [name for name in files if PurePosixPath(name).suffix.casefold() == ".def"]
+    if def_files:
+        fail(f"{path.name}: CTAN package must not contain external .def modules: {', '.join(def_files)}")
+    if any(name.startswith(f"{prefix}{PACKAGE_ID}/") for name in files):
+        fail(f"{path.name}: CTAN package must not contain a nested runtime module directory.")
 
-    # Reject only repository-level engineering directories. Runtime modules
-    # legitimately live below abntexto-ufc/, including its standards/ module.
     forbidden_root_children = {".github", "tests", "artifacts", "tools", "release", "standards", "dist"}
     for name, info in archive_entries.items():
         pure = PurePosixPath(name)
@@ -118,7 +148,6 @@ def validate_package(path: Path, v: str) -> None:
             if mode not in (0, 0o644):
                 fail(f"{path.name}: package file permissions must be 0644: {name} mode={oct(mode)}")
 
-    files = [name for name in archive_entries if not name.endswith("/")]
     basenames = [PurePosixPath(name).name.casefold() for name in files]
     duplicates = sorted(name for name, count in Counter(basenames).items() if count > 1)
     if duplicates:
@@ -127,6 +156,7 @@ def validate_package(path: Path, v: str) -> None:
     with zipfile.ZipFile(path) as archive:
         bundled_readme = archive.read(f"{prefix}README.md")
         bundled_changelog = archive.read(f"{prefix}CHANGELOG")
+        bundled_class = archive.read(f"{prefix}{PACKAGE_ID}.cls")
         bundled_manual = archive.read(f"{prefix}{PACKAGE_ID}.tex")
         bundled_pdf = archive.read(f"{prefix}{PACKAGE_ID}.pdf")
         bundled_example = archive.read(f"{prefix}{PACKAGE_ID}-example.tex")
@@ -149,9 +179,11 @@ def validate_package(path: Path, v: str) -> None:
         if not bundled_example_pdf.startswith(b"%PDF-") or len(bundled_example_pdf) < 5000:
             fail(f"{path.name}: example PDF is missing or invalid.")
 
+        inlined_modules = validate_monolithic_class(bundled_class, path.name)
+
         for name in files:
             pure = PurePosixPath(name)
-            if pure.suffix.casefold() in {".md", ".tex", ".cls", ".def", ".bib", ".txt"} or pure.name == "CHANGELOG":
+            if pure.suffix.casefold() in {".md", ".tex", ".cls", ".bib", ".txt"} or pure.name == "CHANGELOG":
                 data = archive.read(name)
                 if data.startswith(b"\xef\xbb\xbf"):
                     fail(f"{path.name}: UTF-8 BOM is not allowed: {name}")
@@ -180,6 +212,8 @@ def validate_package(path: Path, v: str) -> None:
     ):
         if forbidden.casefold() in readme_text.casefold():
             fail(f"{path.name}: stale/deprecated publication text leaked into README: {forbidden}")
+
+    return inlined_modules
 
 
 def validate_template(path: Path, v: str, *, overleaf: bool) -> None:
@@ -260,14 +294,15 @@ def main() -> None:
                 fail(f"Distribution artifact is not reproducible: {name}")
 
         validate_checksums(first, expected_zips)
-        validate_package(first / f"{PACKAGE_ID}-{v}.zip", v)
+        inlined_modules = validate_package(first / f"{PACKAGE_ID}-{v}.zip", v)
         validate_template(first / f"{PACKAGE_ID}-template-{v}.zip", v, overleaf=False)
         validate_template(first / f"{PACKAGE_ID}-overleaf-{v}.zip", v, overleaf=True)
 
     print(
         "DISTRIBUTION-BUNDLE-EVIDENCE status=PASS artifacts=4 reproducible=4 checksums=PASS "
-        "canonical_ctan_package=PASS ctan_upload_archives=1 ctan_readme=PASS documentation_pdf=PASS "
-        "example_pdf=PASS external_abntexto=PASS institutional_assets=excluded forwarding_layer=absent"
+        f"canonical_ctan_package=PASS ctan_upload_archives=1 monolithic_class=PASS def_files=0 "
+        f"inlined_modules={inlined_modules} ctan_readme=PASS documentation_pdf=PASS "
+        "example_pdf=PASS external_abntexto=PASS institutional_assets=excluded"
     )
 
 
