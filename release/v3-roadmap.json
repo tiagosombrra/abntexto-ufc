@@ -1,5 +1,5 @@
 {
-  "schema_version": 37,
+  "schema_version": 39,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -47,7 +47,11 @@
     "repository_commits_allowed_after_candidate_acceptance_before_tag": false,
     "hardcoded_current_main_sha_is_authority": false,
     "pkgcheck_must_pass_before_version_tag": true,
+    "pkgcheck_current_version_resolved_at_execution": true,
+    "human_visual_acceptance_required_before_version_tag": true,
+    "human_visual_acceptance_requires_pdf_and_tex_for_every_supported_profile": true,
     "tagged_commit_must_equal_certified_commit": true,
+    "tagged_commit_must_equal_visually_approved_commit": true,
     "ctan_upload_archive_count": 1,
     "ctan_project_def_files": 0,
     "ctan_runtime_must_be_monolithic_class": true
@@ -58,7 +62,7 @@
     "must_complete_before_next_phase_activation": true,
     "documentation_must_be_updated_after_result": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "pending-control-plane-sync-merge-and-exact-main-recertification",
+    "candidate_state": "pending-exact-main-recertification-and-human-approval",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -66,7 +70,8 @@
       "phase-specific acceptance checks",
       "Linux release check",
       "monolithic CTAN class with zero project-owned def files",
-      "current CTAN pkgcheck on final canonical archive"
+      "current CTAN pkgcheck on final canonical archive",
+      "explicit maintainer visual approval of all seven PDF and TeX profile pairs"
     ],
     "presentation_scope_requires_canonical_pdf_inspection": true,
     "final_certification_requires_heavy_platform_font_pdfa_distribution_matrix": true,
@@ -83,7 +88,7 @@
   "active_work": {
     "review_items": 34,
     "review_status": {"pass":34,"partial":0,"fail":0,"normative_review":0},
-    "release_state": "final-exact-main-recertification",
+    "release_state": "final-exact-main-recertification-and-human-approval",
     "release_branch": "main",
     "publication_hardening": {
       "pr": 297,
@@ -93,33 +98,45 @@
       "final_head_linux_release_run": 34353576646,
       "final_head_distribution_artifact_id": 10105557500,
       "final_head_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
-      "final_head_ctan_shape": "one-generated-cls-zero-project-def-files",
-      "evidence_role": "integration-evidence-not-final-publication-bytes"
+      "final_head_ctan_shape": "one-generated-cls-zero-project-def-files"
+    },
+    "post_hardening_control_plane": {
+      "pr": 298,
+      "state": "merged",
+      "anchor_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
+      "purpose": "synchronize final candidate state and force complete Linux integration on exact-main release-marker pushes"
+    },
+    "preliminary_visual_review": {
+      "source_sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
+      "profiles": 7,
+      "preflight": "pass",
+      "page_by_page_visual_inspection": "pass",
+      "final_acceptance": false,
+      "reason": "final exact-candidate regeneration and explicit maintainer approval still required"
     },
     "current_correction_batch": [
-      "Synchronize post-merge control-plane documentation and machine state",
-      "Guarantee automatic complete Linux integration on the exact post-sync main SHA via the Release marker push",
-      "Resolve exact main SHA after that synchronization is merged",
-      "Run final exact-main phase-end recertification",
-      "Run current CTAN pkgcheck before immutable tag creation",
-      "Freeze publication bytes and create v3.0.0 on the exact certified SHA"
+      "Enforce CTAN pkgcheck as a fail-closed Linux release gate using the current CTAN package at run time",
+      "Enforce explicit maintainer review of seven final PDF and TeX profile pairs",
+      "Resolve the exact canonical main SHA containing the final release gates",
+      "Run exact-main complete certification and current CTAN pkgcheck",
+      "Regenerate final review pairs and obtain explicit maintainer approval",
+      "Freeze publication bytes only after technical, pkgcheck and visual acceptance"
     ],
     "pending_acceptance_gates": [
-      "Merge post-merge control-plane synchronization through protected main",
-      "Resolve exact resulting main SHA and require Static, automatic complete Linux integration and Linux release check on that SHA",
-      "Build deterministic three-ZIP distribution plus SHA256SUMS from exact certified SHA",
-      "Re-audit CTAN archive: one generated abntexto-ufc.cls and zero project-owned def files",
-      "Run current CTAN pkgcheck against abntexto-ufc-3.0.0.zip before tag",
+      "Resolve exact canonical main SHA containing the final release gates and require Static, automatic complete Linux integration and Linux release check on that SHA",
+      "Require current CTAN pkgcheck evidence for the exact canonical ZIP and review every warning",
+      "Build and physically re-audit deterministic distribution from exact certified SHA",
+      "Regenerate all seven supported PDF and TeX review pairs from exact candidate and obtain explicit maintainer approval",
       "Freeze publication hashes and evidence",
-      "Create immutable v3.0.0 tag on exact certified SHA",
+      "Create immutable v3.0.0 tag on exact certified and visually approved SHA",
       "Publish GitHub Release and verify re-downloaded asset hashes",
       "Submit exactly one canonical ZIP to CTAN and preserve receipt/acceptance evidence",
       "Record final publication verification before Release closure"
     ],
     "release_blockers": [
-      "Post-merge control-plane synchronization is not yet merged",
       "Final exact-main Release candidate has not yet completed phase-end recertification",
-      "Current CTAN pkgcheck has not passed on final package bytes",
+      "Current CTAN pkgcheck has not yet passed on final package bytes",
+      "Maintainer has not yet explicitly approved the seven final PDF and TeX profile pairs",
       "v3.0.0 tag/GitHub Release has not been published and verified",
       "CTAN publication has not been accepted/verified"
     ],
@@ -127,21 +144,14 @@
     "superseded_release_candidate": {
       "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
       "state": "superseded-for-publication",
-      "historical_static_run": 34303586782,
-      "historical_linux_run": 34303586778,
-      "historical_linux_release_run": 34303586773,
-      "historical_linux_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "retained_distribution_artifact_id": 10086299397,
-      "retained_distribution_artifact_sha256": "c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222",
-      "reason": "Packaged README remained v2/pre-publication oriented and CTAN README identified v3.0.0 as a development candidate. Historical technical evidence is retained; bytes are forbidden for final publication."
+      "reason": "Packaged README remained v2/pre-publication oriented. Historical technical evidence is retained; bytes are forbidden for final publication."
     },
     "normative_item_33": {
       "state": "closed-pass-primary-authority",
       "authority": "ABNT NBR 6023:2025",
-      "locators": ["6.6","8.1.2","8.1.2.2","8.1.2.3","8.13","9.1"],
       "regression": "tests/integration/references-6023.sh",
-      "runtime_policy": "biblatex repeatfields=true",
-      "covered_cases": ["DOI plus online availability/access elements","explicit repeated authorship","legal-person authorship","São Paulo (Estado) jurisdiction disambiguation"]
+      "runtime_policy": "biblatex repeatfields=true"
     },
     "distribution_contract": {
       "state": "publication-hardening-integrated-final-candidate-reproof-pending",
@@ -163,15 +173,18 @@
       "proprietary_microsoft_fonts_redistributed": false,
       "redundant_ctan_archive": false,
       "pkgcheck_version_policy": "current-at-final-certification",
+      "pkgcheck_execution": "linux-release-check-runtime-download",
       "pkgcheck_before_tag": true
     },
     "final_candidate_contract": {
-      "state": "pending-control-plane-sync-merge-and-exact-main-recertification",
+      "state": "pending-exact-main-recertification-and-human-approval",
       "tag": "v3.0.0",
       "resolve_candidate_sha_from_git": true,
       "automatic_complete_linux_on_exact_main_release_marker_push": true,
       "certified_sha_equals_tagged_sha": true,
+      "certified_sha_equals_visually_approved_sha": true,
       "certified_sha_equals_publication_source_sha": true,
+      "human_visual_profiles": 7,
       "publication_rebuild_allowed_after_acceptance": false,
       "repository_commits_allowed_after_acceptance_before_tag": false
     }
@@ -188,9 +201,9 @@
   },
   "branch_plan": {
     "current_work_branch": "main",
-    "current_work_state": "final-candidate-recertification-after-control-plane-sync",
+    "current_work_state": "final-candidate-recertification-and-human-approval",
     "canonical_main_resolution": "git-fetch-origin-main-at-session-start",
     "merge_policy": "protected-main-squash-only",
-    "final_candidate_created_after_control_plane_sync_merge": true
+    "final_candidate_defined_as_exact_main_containing_final_gates": true
   }
 }

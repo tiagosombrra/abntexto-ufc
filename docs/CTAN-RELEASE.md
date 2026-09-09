@@ -8,13 +8,14 @@ This document defines the repository-controlled publication procedure for `abnte
 
 | Fact | State |
 |---|---|
-| Roadmap phase | **Release — final exact-main recertification** |
-| Canonical branch | `main`; resolve candidate SHA dynamically from Git after this control-plane synchronization is merged |
+| Roadmap phase | **Release — final exact-main recertification / human approval** |
+| Canonical branch | `main`; resolve the exact candidate SHA dynamically from Git |
 | Publication hardening | **MERGED** via PR #297 |
-| Integration anchor | `25c6ab09dc38be9257d2912652074a48886d28f9` |
-| Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
+| Post-hardening control synchronization | **MERGED** via PR #298, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
+| Final release gates | executable current-CTAN `pkgcheck` + seven PDF/`.tex` pairs with explicit maintainer approval |
 | Package id | `abntexto-ufc` |
 | CTAN runtime shape | **one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files** |
+| Human visual gate | **seven PDF/`.tex` pairs; explicit maintainer approval required before tag** |
 | GitHub `v3.0.0` tag/Release | not yet published |
 | CTAN upload/acceptance | not yet claimed; explicit evidence required |
 
@@ -33,7 +34,7 @@ This intentionally follows the publication shape of `abntexto-uece` where approp
 
 ## Canonical distribution contract
 
-Release 3.0.0 produces exactly these public archives:
+Release 3.0.0 produces exactly these public assets:
 
 | Asset | Purpose | CTAN upload? |
 |---|---|---|
@@ -74,35 +75,51 @@ The release gate requires:
 - modular runtime directory absent during isolated compilation;
 - two independent distribution builds produce byte-identical archives.
 
-PR #297 final-head evidence already demonstrated this shape, including manual inspection of the real retained artifact. Final certification must reproduce the same contract on the exact post-sync canonical `main` SHA.
+The post-hardening baseline has already demonstrated `1 cls / 0 def` with all 14 tracked runtime modules inlined. Final certification must reproduce the contract on the exact final candidate SHA.
 
-## pkgcheck is a pre-tag gate
+## pkgcheck is an executable pre-tag gate
 
-Never create `v3.0.0` before the current CTAN `pkgcheck` has accepted or produced explicitly reviewed warnings for the exact package archive intended for publication.
+Never create `v3.0.0` before the current CTAN `pkgcheck` has processed the exact canonical archive intended for publication and all warnings have been explicitly classified.
 
-As of 2026-09-09, the currently announced `pkgcheck` version is **4.1.0 (2026-08-05)**. Final certification must confirm the current version rather than treating this number as permanent.
+As of 2026-09-09, the currently announced `pkgcheck` version is **4.1.0 (2026-08-05)**. The release workflow does not permanently pin that number: it downloads the current CTAN `pkgcheck` package at execution time.
 
-Preserve:
+The Linux release gate preserves:
 
 - `pkgcheck --version` output;
 - complete `pkgcheck` output;
-- SHA-256 of the checked ZIP;
-- disposition of every warning.
+- SHA-256 of the checked `abntexto-ufc-3.0.0.zip`;
+- an explicit evidence marker tied to the exact source SHA.
 
-Fatal/error output blocks the release.
+A nonzero `pkgcheck` result blocks the release. A zero exit status does not silently waive warnings; any warning visible in the retained output must receive an explicit disposition before the freeze.
+
+## Mandatory seven-profile human visual gate
+
+Before hashes are frozen and before `v3.0.0` is created, the maintainer must receive the rendered PDF and corresponding `.tex` source for every supported document profile:
+
+1. `undergraduate-capstone`;
+2. `specialization-capstone`;
+3. `masters-thesis`;
+4. `doctoral-thesis`;
+5. `research-project`;
+6. `anonymized-research-project`;
+7. `scientific-article`.
+
+The six non-article examples derive from the profile-matrix contract. The article uses the canonical scientific-article source. Every final pair must be generated from the same exact candidate SHA, use the pinned release dependency set, and pass A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight.
+
+The gate closes only after **explicit maintainer approval**. Automated regression and assistant visual inspection are supporting evidence, not a substitute for that approval.
 
 ## Final certification and publication sequence
 
-1. merge this control-plane synchronization through protected `main`;
-2. resolve the resulting exact canonical `main` SHA;
-3. run Static and complete Linux/release contract on **that exact SHA**;
-4. run any change-impact-required heavy Windows/font/PDF-A checks;
-5. build the three deterministic public archives + `SHA256SUMS` from that exact SHA;
-6. validate checksums, ZIP integrity, monolithic-class equivalence and CTAN structural/semantic gate;
-7. manually audit the retained canonical CTAN ZIP;
-8. run current CTAN `pkgcheck` against that exact `abntexto-ufc-3.0.0.zip`;
+1. resolve the exact canonical `main` SHA containing the final release gates;
+2. run Static, automatic complete Linux integration and Linux release check on **that exact SHA**;
+3. run any change-impact-required heavy Windows/font/PDF-A checks;
+4. build the three deterministic public archives + `SHA256SUMS` from that exact SHA;
+5. validate checksums, ZIP integrity, monolithic-class equivalence and CTAN structural/semantic gates;
+6. physically audit the retained canonical CTAN ZIP;
+7. require the current CTAN `pkgcheck` evidence for those exact bytes and classify every warning;
+8. regenerate all seven exact-candidate PDF/`.tex` review pairs and obtain explicit maintainer approval;
 9. freeze hashes/evidence; rebuilding publication bytes is then forbidden;
-10. create immutable `v3.0.0` pointing to the same certified SHA;
+10. create immutable `v3.0.0` pointing to the same certified and visually approved SHA;
 11. create GitHub Release and attach exactly the frozen three ZIPs + `SHA256SUMS`;
 12. re-download GitHub Release assets and verify hashes;
 13. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
@@ -112,7 +129,7 @@ Fatal/error output blocks the release.
 Invariant:
 
 ```text
-certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+certified source SHA == visually approved source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
 ```
 
 ## Proposed CTAN metadata
@@ -133,4 +150,4 @@ Suggested administrative note:
 
 ## Evidence discipline
 
-Building or validating a candidate is not CTAN acceptance. A successful GitHub Release is not CTAN acceptance. CTAN status is recorded as published only after explicit acceptance/install evidence exists. Any package-content change after final `pkgcheck` requires a new candidate cycle before tagging.
+Building or validating a candidate is not CTAN acceptance. A successful GitHub Release is not CTAN acceptance. CTAN status is recorded as published only after explicit acceptance/install evidence exists. Any tracked change after final acceptance requires a new exact-candidate cycle before tagging.

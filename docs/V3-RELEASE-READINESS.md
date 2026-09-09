@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-09
-Status: ACTIVE — FINAL EXACT-MAIN RECERTIFICATION
+Status: ACTIVE — FINAL EXACT-MAIN RECERTIFICATION / HUMAN APPROVAL
 
 ## Phase readiness
 
@@ -10,79 +10,66 @@ Status: ACTIVE — FINAL EXACT-MAIN RECERTIFICATION
 | Regression Audit | CLOSED | phase-end regression accepted |
 | Core Corrections | CLOSED | accepted |
 | Reference PDF Validation | CLOSED | 55/55 visual PASS |
-| Scientific Article | CLOSED | complete Linux + article PDF 5/5 visual PASS |
+| Scientific Article | CLOSED | complete Linux + article PDF visual/PDF-A PASS |
 | Final Certification | CLOSED | technical/runtime certification accepted |
-| Release | **ACTIVE** | publication hardening merged; final exact-main recertification + pkgcheck/tag/publication pending |
+| Release | **ACTIVE** | final exact-main pkgcheck + seven-profile approval + publication pending |
 
 ## Completed Release hardening
 
-PR #297 was merged through protected `main`. Its final head passed Static, Linux integration and Linux release check with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+PR #297 was squash-merged and its post-merge baseline `25c6ab09dc38be9257d2912652074a48886d28f9` passed the complete release contract. Exact-main run `34355988612` reported `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, scientific-article PDF/A-2b PASS, deterministic distribution PASS, one generated CTAN class, zero project-owned `.def` files and 14 tracked runtime modules inlined.
 
-The merged work:
+PR #298 was then squash-merged as `05399473827da7cf6b6c8bac36edc7115481773f`, synchronizing the final-candidate control plane and ensuring exact-main release-marker pushes force complete Linux integration.
 
-- replaced stale v2/pre-publication distribution documentation;
-- finalized CTAN metadata for v3.0.0;
-- closed former librarian item 33 against primary ABNT NBR 6023:2025 authority;
-- made `abntexto-ufc-3.0.0.zip` the only CTAN upload archive;
-- generated one monolithic `abntexto-ufc.cls` from modular project sources;
-- made any project-owned `.def` in the CTAN ZIP a hard failure;
-- proved isolated compilation without the modular runtime directory;
-- excluded UFC marks and proprietary Microsoft fonts fail-closed;
-- moved current CTAN `pkgcheck` before immutable tag creation.
+The retained baseline CTAN artifact was physically audited as exactly eight files, `1 cls / 0 def`, no nested runtime tree, no vendored `abntexto.cls`, no institutional marks and no proprietary Microsoft fonts.
 
-The retained pre-merge CTAN artifact was manually inspected and confirmed `1 cls / 0 def`, 14/14 runtime modules inlined exactly once, no residual project-owned `.def` input, no vendored `abntexto.cls`, and no prohibited assets.
+## Final controls encoded in the candidate definition
+
+Before the immutable tag, two requirements are explicit and executable:
+
+1. **CTAN pkgcheck:** `Linux release check` downloads the current CTAN `pkgcheck` at execution time, records `--version`, complete output and the SHA-256 of the checked canonical ZIP, and fails on tool errors. Any warnings still require explicit classification before freeze.
+2. **Maintainer visual acceptance:** the final candidate must provide PDF + corresponding `.tex` for all seven supported profiles and obtain explicit maintainer approval.
+
+Required profile set:
+
+1. `undergraduate-capstone`;
+2. `specialization-capstone`;
+3. `masters-thesis`;
+4. `doctoral-thesis`;
+5. `research-project`;
+6. `anonymized-research-project`;
+7. `scientific-article`.
+
+A preliminary set generated from baseline `25c6ab09...` already passed A4, PDF/A-2b, embedded-font, recognized-warning/overflow and page-by-page visual checks for all seven profiles. It does **not** close the final human gate because later tracked Release-control commits require regeneration from the exact tag candidate.
 
 ## Final-candidate contract
 
-The integration merge commit `25c6ab09dc38be9257d2912652074a48886d28f9` is an integration anchor, not the final taggable SHA, because this control-plane synchronization intentionally follows it.
-
-The next accepted candidate is the exact canonical `main` commit containing this synchronization after it is merged and passes final certification:
+The only eligible candidate is the exact canonical `main` SHA containing the final release gates and subsequently passing certification, current CTAN `pkgcheck` and explicit maintainer visual approval.
 
 ```text
-certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+certified source SHA == visually approved source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
 ```
 
-The `Linux integration` workflow now runs automatically on `main` pushes that change `release/v3-release-candidate.json` and forces `scope=complete`, so the post-squash candidate receives complete Linux evidence on its exact SHA. No further pre-tag repository commit is allowed after candidate acceptance without starting a new candidate cycle.
-
-## CTAN final package contract
-
-`abntexto-ufc-3.0.0.zip` must contain exactly one top-level `abntexto-ufc/` directory and these eight files:
-
-```text
-README.md
-CHANGELOG
-LICENSE
-abntexto-ufc.cls
-abntexto-ufc.tex
-abntexto-ufc.pdf
-abntexto-ufc-example.tex
-abntexto-ufc-example.pdf
-```
-
-Hard requirements include one project-owned runtime `.cls`, zero project-owned `.def`, no nested runtime tree, no vendored `abntexto.cls`, no UFC marks, no proprietary Microsoft fonts, no development infrastructure, and successful isolated example compilation.
+No tracked commit is allowed between final acceptance and tag creation without reopening the candidate cycle.
 
 ## Remaining gates
 
 | Order | Gate | State |
 |---:|---|---|
-| 1 | Publication-hardening integration | **PASS / MERGED** |
-| 2 | Post-merge control-plane synchronization + exact-main Linux trigger | **IN PROGRESS** |
-| 3 | Resolve exact resulting `main` SHA | BLOCKED BY 2 |
-| 4 | Static + automatic `scope=complete` Linux integration + Linux release check on exact SHA | BLOCKED BY 3 |
-| 5 | Build/retain deterministic three-ZIP distribution + `SHA256SUMS` | BLOCKED BY 4 |
-| 6 | Re-audit final CTAN ZIP: one generated class, zero `.def`, isolated compile PASS | BLOCKED BY 5 |
-| 7 | Run current CTAN `pkgcheck`; classify every warning | BLOCKED BY 5–6 |
-| 8 | Freeze hashes/evidence; prohibit rebuild | BLOCKED BY 7 |
-| 9 | Create immutable `v3.0.0` on the certified SHA | BLOCKED BY 8 |
+| 1 | Publication hardening PR #297 | **PASS / MERGED** |
+| 2 | Post-hardening control-plane PR #298 | **PASS / MERGED** |
+| 3 | Executable current-CTAN `pkgcheck` + seven-profile human-acceptance policy | **ENCODED IN FINAL CANDIDATE CONTRACT** |
+| 4 | Resolve exact canonical `main` SHA containing final gates | PENDING |
+| 5 | Static + automatic `scope=complete` Linux integration + Linux release check (including current `pkgcheck`) on exact SHA | BLOCKED BY 4 |
+| 6 | Retain and physically re-audit deterministic three-ZIP distribution + `SHA256SUMS` | BLOCKED BY 5 |
+| 7 | Regenerate seven final PDF/`.tex` pairs from exact candidate and obtain explicit maintainer approval | BLOCKED BY 4–6 |
+| 8 | Freeze hashes/evidence; prohibit rebuild | BLOCKED BY 5–7 |
+| 9 | Create immutable `v3.0.0` on certified + visually approved SHA | BLOCKED BY 8 |
 | 10 | Create GitHub Release and re-download/hash-verify assets | BLOCKED BY 9 |
-| 11 | Submit only canonical ZIP to CTAN; preserve receipt/acceptance evidence | BLOCKED BY 7–10 |
+| 11 | Submit only canonical ZIP to CTAN; preserve receipt/acceptance evidence | BLOCKED BY 5–10 |
 | 12 | Synchronize post-publication facts and close Release | BLOCKED BY 1–11 |
 
-## Current blockers
+## Windows literal-font scope
 
-- this control-plane synchronization has not yet been merged to `main`;
-- the final exact-main Release candidate has not yet completed phase-end recertification;
-- current CTAN `pkgcheck` has not yet passed on final package bytes;
-- `v3.0.0` tag/GitHub Release and CTAN publication do not yet exist.
+The retained Windows literal-font certification remains scope-valid because these final changes affect Release control/workflows/documentation, not font runtime or engine selection. A fresh Windows run becomes mandatory if font setup, engine behavior or the Windows certification contract changes before freeze.
 
-Every material repository advance updates affected documentation and machine state in the same work cycle. `README.md` changes only when user-facing facts change; it does not track transient CI/branch state.
+Every **material advance** updates affected documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. Automated green tests never substitute for the explicit seven-profile maintainer approval.
