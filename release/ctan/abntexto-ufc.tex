@@ -43,7 +43,9 @@ When installed through a TeX distribution, start a document with:
 \documentclass{abntexto-ufc}
 \end{Verbatim}
 
-For manual installation, keep \texttt{abntexto-ufc.cls} together with the accompanying \texttt{abntexto-ufc/} module directory in a location visible to TeX. Install the external \upstream{} dependency separately.
+The CTAN distribution has one runtime file, \texttt{abntexto-ufc.cls}. All project-owned runtime modules used in the development repository are incorporated into that class during the deterministic CTAN build. No external \texttt{abntexto-ufc/*.def} files are required or distributed.
+
+For manual installation, place \texttt{abntexto-ufc.cls} in a location visible to TeX and install the external \upstream{} dependency separately.
 
 The canonical upstream package page is \url{https://ctan.org/pkg/abntexto}.
 
@@ -99,7 +101,9 @@ The complete editable template and the v2-to-v3 migration mapping are maintained
 
 \section{Architecture and dependencies}
 
-The public class file \texttt{abntexto-ufc.cls} loads the external \upstream{} class and then project-owned responsibility modules under \texttt{abntexto-ufc/}. These modules separate core behavior, fonts, layout, front matter, academic-work profiles, articles, research projects, objects, bibliography, upstream integrations, standards adaptations and back matter.
+The development repository remains modular: the canonical source class loads responsibility-specific \texttt{.def} files for core behavior, fonts, layout, front matter, academic-work profiles, articles, research projects, objects, bibliography, upstream integrations, standards adaptations and back matter. This modular source layout is an engineering concern only.
+
+For CTAN, the release builder deterministically expands those project-owned modules into a single generated \texttt{abntexto-ufc.cls}. The generated class is then compiled in isolation with only the external \upstream{} dependency available. The CTAN ZIP contains no project-owned \texttt{.def} file and no nested runtime module directory.
 
 The CTAN package does not vendor \texttt{abntexto.cls}; \upstream{} remains a normal external TeX dependency. The separate Overleaf convenience bundle published on GitHub may include the project's pinned upstream revision so that an uploaded project is self-contained.
 
@@ -111,11 +115,11 @@ The v3.0.0 bibliography regression explicitly covers current online availability
 
 \section{Distribution}
 
-The canonical package archive is \texttt{abntexto-ufc-3.0.0.zip}. It is the single archive intended for CTAN submission and contains one top-level \texttt{abntexto-ufc/} directory with the class runtime, this manual, the minimal example, README, CHANGELOG and license.
+The canonical package archive is \texttt{abntexto-ufc-3.0.0.zip}. It is the single archive intended for CTAN submission and contains one top-level \texttt{abntexto-ufc/} directory. Its only runtime implementation file is the generated monolithic \texttt{abntexto-ufc.cls}; the remaining files are README, CHANGELOG, license, this manual and the minimal example in source/PDF form.
 
-Repository engineering infrastructure, tests, CI workflows, evidence files, roadmaps, proprietary fonts and institutional mark assets are deliberately excluded from the CTAN archive.
+Repository engineering infrastructure, source \texttt{.def} modules, tests, CI workflows, evidence files, roadmaps, proprietary fonts and institutional mark assets are deliberately excluded from the CTAN archive.
 
-Separate editable-template and Overleaf archives may be attached to the GitHub Release for user convenience; they are not CTAN upload files.
+Separate editable-template and Overleaf archives may be attached to the GitHub Release for user convenience; they preserve the repository-oriented modular layout and are not CTAN upload files.
 
 \section{License and support}
 
