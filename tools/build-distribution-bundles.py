@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 CTAN_DIR = ROOT / "release" / "ctan"
 CTAN_EXAMPLE = ROOT / "docs" / "ctan-example.tex"
+PROJECT_MODULE_INPUT_RE = re.compile(
+    r"(?m)^[ \t]*\\input\{(?P<path>abntexto-ufc/[^}\r\n]+\.def)\}[ \t]*(?:%[^\r\n]*)?$"
+)
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -99,19 +102,95 @@ def tracked_files() -> set[str]:
     return {item.decode("utf-8") for item in output.split(b"\0") if item}
 
 
-def runtime_paths(tracked: set[str]) -> list[str]:
-    paths = ["abntexto-ufc.cls"]
-    paths.extend(
-        sorted(
-            path
-            for path in tracked
-            if path.startswith("abntexto-ufc/") and (ROOT / path).is_file()
-        )
+def runtime_module_paths(tracked: set[str]) -> list[str]:
+    paths = sorted(
+        path
+        for path in tracked
+        if path.startswith(f"{PACKAGE_ID}/") and (ROOT / path).is_file()
     )
-    missing = [path for path in paths if path not in tracked or not (ROOT / path).is_file()]
-    if missing:
-        fail("Required runtime source is not tracked: " + ", ".join(missing))
+    unexpected = [path for path in paths if not path.endswith(".def")]
+    if unexpected:
+        fail("Unexpected non-module file in project runtime directory: " + ", ".join(unexpected))
     return paths
+
+
+def strip_module_wrapper(relative: str, text: str) -> str:
+    expected = f"\\ProvidesFile{{{relative}}}"
+    if text.count(expected) != 1:
+        fail(f"Project module must provide itself exactly once before CTAN inlining: {relative}")
+
+    provides_re = re.compile(
+        rf"(?m)^[ \t]*{re.escape(expected)}(?:\[[^\r\n]*\])?[ \t]*(?:%[^\r\n]*)?\r?\n?"
+    )
+    text, count = provides_re.subn("", text, count=1)
+    if count != 1:
+        fail(f"Cannot strip module ProvidesFile wrapper: {relative}")
+
+    endinput_re = re.compile(r"(?m)^[ \t]*\\endinput[ \t]*(?:%[^\r\n]*)?(?:\r?\n)?\Z")
+    match = endinput_re.search(text)
+    if match is None:
+        fail(f"Project module must end with \\endinput before CTAN inlining: {relative}")
+    return text[: match.start()].rstrip() + "\n"
+
+
+def build_monolithic_ctan_class(tracked: set[str]) -> tuple[bytes, list[str]]:
+    source = ROOT / f"{PACKAGE_ID}.cls"
+    if f"{PACKAGE_ID}.cls" not in tracked or not source.is_file():
+        fail(f"Canonical class source is not tracked: {PACKAGE_ID}.cls")
+
+    expected_modules = runtime_module_paths(tracked)
+    expected_set = set(expected_modules)
+    inlined: list[str] = []
+    active: set[str] = set()
+
+    def expand(text: str, owner: str) -> str:
+        def replace(match: re.Match[str]) -> str:
+            relative = match.group("path")
+            if relative not in expected_set or not (ROOT / relative).is_file():
+                fail(f"CTAN class references an untracked project module from {owner}: {relative}")
+            if relative in active:
+                fail(f"Cyclic project module input while building CTAN class: {relative}")
+            if relative in inlined:
+                fail(f"Project module is loaded more than once in canonical class: {relative}")
+
+            active.add(relative)
+            inlined.append(relative)
+            module_text = (ROOT / relative).read_text(encoding="utf-8")
+            module_text = strip_module_wrapper(relative, module_text)
+            module_text = expand(module_text, relative)
+            active.remove(relative)
+
+            label = PurePosixPath(relative).with_suffix("").as_posix()
+            return (
+                f"% --- BEGIN inlined module: {label} ---\n"
+                f"{module_text.rstrip()}\n"
+                f"% --- END inlined module: {label} ---"
+            )
+
+        return PROJECT_MODULE_INPUT_RE.sub(replace, text)
+
+    class_text = source.read_text(encoding="utf-8")
+    generated = expand(class_text, f"{PACKAGE_ID}.cls")
+
+    if PROJECT_MODULE_INPUT_RE.search(generated):
+        fail("Generated CTAN class still contains a project-owned module input.")
+    if re.search(rf"\\ProvidesFile\{{{re.escape(PACKAGE_ID)}/", generated):
+        fail("Generated CTAN class still contains project module ProvidesFile wrappers.")
+
+    missing = sorted(expected_set - set(inlined))
+    unexpected = sorted(set(inlined) - expected_set)
+    if missing or unexpected:
+        fail(
+            "CTAN monolithic class module coverage mismatch: "
+            f"missing={missing} unexpected={unexpected}"
+        )
+
+    banner = (
+        "% CTAN distribution file generated from the modular repository sources.\n"
+        "% All project-owned runtime modules are inlined below; no external .def files are required.\n"
+    )
+    generated = banner + generated
+    return generated.encode("utf-8"), inlined
 
 
 def source_date_epoch() -> int:
@@ -226,7 +305,11 @@ def run_pdflatex(source: Path, work: Path, env: dict[str, str]) -> bytes:
     return pdf_bytes
 
 
-def build_ctan_documents(epoch: int, upstream: Path) -> tuple[bytes, bytes, bytes, bytes]:
+def build_ctan_documents(
+    epoch: int,
+    upstream: Path,
+    ctan_class: bytes,
+) -> tuple[bytes, bytes, bytes, bytes]:
     env = os.environ.copy()
     env["SOURCE_DATE_EPOCH"] = str(epoch)
     env["FORCE_SOURCE_DATE"] = "1"
@@ -241,36 +324,35 @@ def build_ctan_documents(epoch: int, upstream: Path) -> tuple[bytes, bytes, byte
     example_bytes = example_source.read_bytes()
     with tempfile.TemporaryDirectory(prefix=f"{PACKAGE_ID}-ctan-example-") as temp:
         work = Path(temp)
-        shutil.copy2(ROOT / "abntexto-ufc.cls", work / "abntexto-ufc.cls")
-        shutil.copytree(ROOT / "abntexto-ufc", work / "abntexto-ufc")
+        (work / f"{PACKAGE_ID}.cls").write_bytes(ctan_class)
         shutil.copy2(upstream, work / "abntexto.cls")
         example_target = work / f"{PACKAGE_ID}-example.tex"
         example_target.write_bytes(example_bytes)
         example_pdf = run_pdflatex(example_target, work, env)
+        if (work / PACKAGE_ID).exists():
+            fail("CTAN example unexpectedly required the modular project runtime directory.")
 
     return manual_bytes, manual_pdf, example_bytes, example_pdf
 
 
 def ctan_entries(
-    runtime: list[str],
+    ctan_class: bytes,
     manual_source: bytes,
     manual_pdf: bytes,
     example_source: bytes,
     example_pdf: bytes,
 ) -> list[tuple[str, bytes, int]]:
     prefix = f"{PACKAGE_ID}/"
-    entries = [
+    return [
         file_entry(CTAN_DIR / "README.md", f"{prefix}README.md"),
         file_entry(CTAN_DIR / "CHANGELOG", f"{prefix}CHANGELOG"),
         file_entry(ROOT / "LICENSE", f"{prefix}LICENSE"),
+        bytes_entry(ctan_class, f"{prefix}{PACKAGE_ID}.cls"),
         bytes_entry(manual_source, f"{prefix}{PACKAGE_ID}.tex"),
         bytes_entry(manual_pdf, f"{prefix}{PACKAGE_ID}.pdf"),
         bytes_entry(example_source, f"{prefix}{PACKAGE_ID}-example.tex"),
         bytes_entry(example_pdf, f"{prefix}{PACKAGE_ID}-example.pdf"),
     ]
-    for relative in runtime:
-        entries.append(file_entry(ROOT / relative, f"{prefix}{relative}"))
-    return entries
 
 
 def sha256(path: Path) -> str:
@@ -298,7 +380,7 @@ def main() -> None:
 
     version = read_version()
     tracked = tracked_files()
-    runtime = runtime_paths(tracked)
+    ctan_class, inlined_modules = build_monolithic_ctan_class(tracked)
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
 
@@ -316,12 +398,16 @@ def main() -> None:
 
     epoch = source_date_epoch()
     date_time = zip_datetime(epoch)
-    manual_source, manual_pdf, example_source, example_pdf = build_ctan_documents(epoch, upstream)
+    manual_source, manual_pdf, example_source, example_pdf = build_ctan_documents(
+        epoch,
+        upstream,
+        ctan_class,
+    )
 
     package_zip = output / f"{PACKAGE_ID}-{version}.zip"
     write_zip(
         package_zip,
-        ctan_entries(runtime, manual_source, manual_pdf, example_source, example_pdf),
+        ctan_entries(ctan_class, manual_source, manual_pdf, example_source, example_pdf),
         date_time,
     )
 
@@ -336,6 +422,10 @@ def main() -> None:
         fail(f"Unexpected distribution artifact set: {sorted(actual ^ expected)}")
 
     checksum = write_checksums(output, artifacts)
+    print(
+        f"CTAN monolithic class generated with {len(inlined_modules)} inlined project modules; "
+        "no project .def files are distributed."
+    )
     print(f"Distribution candidates generated in {output}")
     for path in artifacts + [checksum]:
         print(path.name)
