@@ -94,8 +94,30 @@ jobs:
               https://mirrors.ctan.org/support/pkgcheck.zip \
               --output /tmp/pkgcheck.zip
             unzip -q /tmp/pkgcheck.zip -d /tmp/ctan-pkgcheck
-            PKGCHECK="$(find /tmp/ctan-pkgcheck -type f -path '*/bin/pkgcheck' -print -quit)"
-            test -n "$PKGCHECK"
+
+            # CTAN publishes target-named standalone binaries rather than a stable
+            # bin/pkgcheck path. Prefer the documented Linux target name and retain
+            # a conservative fallback for older archive layouts.
+            PKGCHECK="$(find /tmp/ctan-pkgcheck -type f \
+              \( -name 'pkgcheck-x86_64-unknown-linux-musl' -o -name 'pkgcheck' \) \
+              -print -quit)"
+            if [ -z "$PKGCHECK" ]; then
+              for candidate in $(find /tmp/ctan-pkgcheck -type f -name 'pkgcheck-x86_64-unknown-linux-musl*' -print | sort); do
+                case "$(basename "$candidate")" in
+                  *.asc|*.sha*|*.sig|*.txt)
+                    continue
+                    ;;
+                esac
+                PKGCHECK="$candidate"
+                break
+              done
+            fi
+            if [ -z "$PKGCHECK" ]; then
+              echo 'Current CTAN pkgcheck archive did not contain a supported Linux binary.'
+              find /tmp/ctan-pkgcheck -maxdepth 4 -type f -printf '%P\n' | sort
+              exit 1
+            fi
+
             chmod +x "$PKGCHECK"
             "$PKGCHECK" --version > artifacts/validation/pkgcheck-version.txt 2>&1
             cat artifacts/validation/pkgcheck-version.txt
