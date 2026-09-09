@@ -92,4 +92,4 @@ certified source SHA == tagged v3.0.0 SHA == source SHA of published release byt
 
 ## Operating discipline
 
-Every material repository modification updates affected documentation and machine state in the same work cycle. `README.md` is updated when user-facing facts change, not for transient branch/CI progress. Targeted checks never replace the final phase-end regression.
+Every **material advance** or material repository modification must update affected documentation and machine state in the same work cycle. `README.md` is updated when user-facing facts change, not for transient branch/CI progress. Targeted checks never replace the final phase-end regression.

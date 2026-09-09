@@ -84,4 +84,4 @@ certified source SHA == tagged v3.0.0 SHA == source SHA of published release byt
 
 ## Mandatory operating discipline
 
-Every material repository modification must update the affected documentation and machine state in the same work cycle. The public README is changed only when its user-facing facts change; it must not carry transient branch or CI state. Targeted checks never replace the final phase-end regression. No publication state is inferred from a build, tag or submission without the corresponding evidence.
+Every **material advance** or material repository modification must update the affected documentation and machine state in the same work cycle. The public README is changed only when its user-facing facts change; it must not carry transient branch or CI state. Targeted checks never replace the final phase-end regression. No publication state is inferred from a build, tag or submission without the corresponding evidence.
