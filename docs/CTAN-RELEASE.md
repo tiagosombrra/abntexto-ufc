@@ -1,67 +1,181 @@
-# CTAN Release Candidate Guide
+# CTAN / GitHub Release Guide — abntexto-ufc 3.0.0
 
 Updated: 2026-09-09
 
-This document defines the repository-controlled CTAN/GitHub release procedure for `abntexto-ufc` 3.0.0. It is a maintainer/release guide, not a claim of CTAN acceptance.
+This document defines the repository-controlled publication procedure for `abntexto-ufc` 3.0.0. It is a maintainer/release guide, not a claim of GitHub or CTAN publication.
 
 ## Current Release state
 
 | Fact | State |
 |---|---|
-| Roadmap phase | **Release** |
-| Canonical branch | `main`; current SHA is resolved dynamically from Git |
-| Release PR #293 | merged |
-| Publication-closeout PR #294 | merged |
-| Continuation synchronization PR #295 | merged; canonical post-merge Static `34335044265` SUCCESS |
-| Release work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
-| Superseded PR #292 | closed; historical evidence only |
-| Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — accepted |
-| Linux release check | `34303586773` — `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| GitHub `v3.0.0` Release | not yet published |
+| Roadmap phase | **Release — publication hardening** |
+| Canonical branch | `main`; resolve current SHA dynamically from Git |
+| Previous Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — technically certified, **SUPERSEDED FOR PUBLICATION** |
+| Supersession reason | certified package archives contained stale v2/pre-publication README text; CTAN README identified 3.0.0 as a development candidate |
+| Current work branch | `release/v3-publication-hardening` |
+| Package id | `abntexto-ufc` |
+| CTAN runtime shape | **one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files** |
+| GitHub `v3.0.0` tag/Release | not yet published |
 | CTAN upload/acceptance | not yet claimed; explicit evidence required |
 
-## Certified retained candidate assets
+The bytes from retained Actions artifact `10086299397` must not be published as v3.0.0 final. They remain historical regression evidence only.
 
-Publication archives must come from retained Actions artifact ID `10086299397` (`abntexto-ufc-v3.0.0-distribution-34303586773`), produced from candidate `75ead435...`. Its artifact digest is `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222`.
+## Prior CTAN feedback and v3 resolution
 
-The artifact was independently downloaded without rebuilding; inner checksums and ZIP integrity passed.
+The earlier `ufctex` submission exposed major publication problems that are explicitly addressed by v3:
 
-| Asset | Accepted SHA-256 |
-|---|---|
-| `abntexto-ufc-3.0.0.zip` | `c38fe32bc6b51ff3b7723b4ef118574d130cea97f29d443c1fc4d08b24e0b207` |
-| `abntexto-ufc-ctan-3.0.0.zip` | `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60` |
-| `abntexto-ufc-template-3.0.0.zip` | `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791` |
-| `abntexto-ufc-overleaf-3.0.0.zip` | `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b` |
+1. **Deprecated `tex` suffix:** the package id is now `abntexto-ufc`, a purpose-oriented lowercase/hyphenated id aligned with CTAN naming guidance and with the accepted `abntexto-uece` package family.
+2. **UFC logo licensing:** no UFC logo, coat of arms, institutional mark asset, or proprietary Microsoft font file is redistributed. Authorized users may provide an institutional asset locally.
+3. **Excess package scope:** the CTAN upload is intentionally small. Repository-only engineering infrastructure — workflows, tests, validators, standards evidence, roadmaps, release state and build tooling — is not included in the CTAN archive.
+4. **Runtime fragmentation:** the repository may remain modular for maintenance, but the CTAN package exposes one generated class file. All project-owned `.def` modules are incorporated into `abntexto-ufc.cls` during the deterministic release build.
 
-Do not rerun the distribution builder to manufacture publication bytes after this acceptance point.
+The fourth point intentionally follows the publication shape of `abntexto-uece`: the CTAN-facing implementation is a single class file rather than a class plus a project-owned runtime tree.
 
-## CTAN candidate requirements
+## Canonical distribution contract
 
-The CTAN ZIP contains one top-level directory `abntexto-ufc/` with the package documentation, class, runtime modules and example. It must not contain proprietary fonts, institutional mark assets, workflows/tests/validators, auxiliary build files, validation evidence, temporary executors, or a vendored external upstream class.
+Release 3.0.0 produces exactly these public archives:
 
-Only the separate Overleaf bundle may vendor the pinned upstream dependency as already covered by the accepted distribution contract.
+| Asset | Purpose | CTAN upload? |
+|---|---|---|
+| `abntexto-ufc-3.0.0.zip` | canonical CTAN-grade package with one generated runtime class + concise documentation + minimal example | **YES — the only CTAN upload archive** |
+| `abntexto-ufc-template-3.0.0.zip` | editable local project; may preserve repository-oriented modular sources | no |
+| `abntexto-ufc-overleaf-3.0.0.zip` | self-contained Overleaf project with pinned `abntexto.cls`; may preserve repository-oriented modular sources | no |
+| `SHA256SUMS` | release integrity manifest | GitHub Release only |
 
-## Before actual CTAN upload
+There is no separate `abntexto-ufc-ctan-3.0.0.zip`: the canonical package archive itself is CTAN-grade. This removes redundant representations of the same package.
 
-1. start from the latest `origin/main` and read `docs/V3-CONTINUATION.md`;
-2. extract the retained `abntexto-ufc-ctan-3.0.0.zip`;
-3. run the **current** CTAN `pkgcheck`;
-4. confirm package name/version, maintainer metadata, LPPL license, repository/issue tracker and external dependency declaration;
-5. preserve the pkgcheck output;
-6. perform an upload only as an explicit publication action;
-7. preserve submission receipt and later acceptance evidence before claiming CTAN publication.
+## CTAN archive shape
 
-Current CTAN references remain `https://ctan.org/help/upload-pkg?lang=en`, `https://ctan.org/help/submit`, and `https://ctan.org/pkg/pkgcheck`.
+`abntexto-ufc-3.0.0.zip` contains exactly one top-level directory, `abntexto-ufc/`:
 
-## Final Release checklist
+```text
+abntexto-ufc/
+├── README.md
+├── CHANGELOG
+├── LICENSE
+├── abntexto-ufc.cls
+├── abntexto-ufc.tex
+├── abntexto-ufc.pdf
+├── abntexto-ufc-example.tex
+└── abntexto-ufc-example.pdf
+```
 
-1. Preserve immutable Release candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` and its accepted **phase-end regression** evidence.
-2. Start publication work from the latest `origin/main`; do not resume superseded PR #292.
-3. Create `v3.0.0` tag and GitHub Release, attaching the exact retained candidate-produced files.
-4. Verify every published GitHub asset hash against the accepted checksums.
-5. Run current CTAN `pkgcheck` on the retained CTAN candidate.
-6. Perform actual CTAN upload only as an explicit action and preserve evidence.
-7. Update roadmap, handoff, readiness, continuation handoff and machine state after every **material advance**.
-8. Perform final Release verification before marking Release `CLOSED`.
+`abntexto-ufc.cls` is generated from the tracked modular source tree. The builder recursively replaces project-owned `\input{abntexto-ufc/...def}` statements with the corresponding module contents, removes module-level `\ProvidesFile` and terminal `\endinput` wrappers, and preserves the canonical load order. The generated class is then used to compile the CTAN example in isolation.
 
-Building or validating a candidate is not CTAN acceptance.
+The CTAN archive must contain **zero `.def` files** and must not contain a nested `abntexto-ufc/abntexto-ufc/` runtime directory.
+
+The CTAN archive must also not contain:
+
+- `abntexto.cls` — `abntexto >= 1.1` remains an external CTAN/TeX Live dependency;
+- UFC logos, coats of arms or other institutional mark assets;
+- proprietary Arial/Times New Roman files;
+- `.github/`, `tests/`, `tools/`, `artifacts/`, repository `release/` state, roadmap documents or CI evidence;
+- generated TeX auxiliary files;
+- hidden files, empty placeholders, unsafe filenames or CRLF/BOM text files.
+
+The distribution regression fails closed on these conditions.
+
+## Monolithic-class equivalence gate
+
+The CTAN build does not manually maintain a second implementation of the class. It generates the CTAN class from the same modular sources used by development and validation.
+
+The release gate requires all of the following:
+
+- every tracked project-owned runtime `.def` module is incorporated exactly once;
+- no project-owned module remains referenced through `\input` in the generated class;
+- no module-level `\ProvidesFile{abntexto-ufc/...}` wrapper remains;
+- no `.def` file is present in the CTAN ZIP;
+- the generated class compiles the CTAN example with only `abntexto.cls` available externally;
+- the modular runtime directory is absent during that compilation;
+- two independent distribution builds produce byte-identical archives.
+
+This gives the CTAN artifact a single-file runtime without replacing the maintainable modular architecture in the repository.
+
+## CTAN rules encoded by the release gate
+
+The package builder/test enforces the applicable current CTAN upload rules that are machine-checkable:
+
+- ASCII filenames without whitespace or hidden path components;
+- one top-level directory named after the package id;
+- one project-owned runtime implementation file: `abntexto-ufc.cls`;
+- zero project-owned `.def` files;
+- top-level English UTF-8 README without BOM;
+- explicit package version, maintainer, license, repository/bug tracker and dependency metadata;
+- PDF documentation included;
+- LF-only line endings for text files in the CTAN package;
+- no auxiliary/development infrastructure;
+- no vendored upstream class in CTAN;
+- no institutional marks or proprietary Microsoft fonts;
+- no stale `development candidate`, v2-publication or deprecated `ufctex` wording.
+
+The project-local gate complements but does not replace CTAN's own `pkgcheck`.
+
+## pkgcheck is a pre-tag gate
+
+The immutable `v*` tag ruleset makes this ordering mandatory. Never create `v3.0.0` before the current CTAN `pkgcheck` has accepted the exact package archive intended for publication.
+
+As of 2026-09-09, the current announced `pkgcheck` version is **4.1.0 (2026-08-05)**. Do not hard-code that version as a permanent rule: final certification must first confirm the current version published by CTAN and run that version.
+
+Preserve:
+
+- `pkgcheck --version` output;
+- complete `pkgcheck` output;
+- SHA-256 of the checked ZIP;
+- final decision for every warning, if any.
+
+Fatal/error output blocks the release. Warnings must be explicitly reviewed; they are not silently waived.
+
+## Final certification and publication sequence
+
+The required order is:
+
+1. merge publication-hardening changes through the protected `main` branch;
+2. resolve the resulting exact canonical `main` SHA;
+3. run Static and the complete Linux release contract on **that exact SHA**;
+4. run any required Windows/literal-font/PDF-A recertification if runtime or certification-relevant behavior changed;
+5. generate the monolithic CTAN class and build the three deterministic public archives from that exact SHA;
+6. validate `SHA256SUMS`, ZIP integrity, monolithic-class equivalence and the CTAN structural/semantic gate;
+7. run the **current CTAN `pkgcheck`** against `abntexto-ufc-3.0.0.zip`;
+8. freeze the package hashes and retained evidence; from this point, rebuilding publication bytes is forbidden;
+9. create immutable tag `v3.0.0` pointing to **the same SHA that produced and passed the certified artifacts**;
+10. create the GitHub Release and attach exactly the frozen three ZIPs plus `SHA256SUMS`;
+11. download the GitHub Release assets and verify their hashes against the frozen manifest;
+12. submit **only `abntexto-ufc-3.0.0.zip`** through CTAN's upload mechanism;
+13. preserve the CTAN submission receipt and later acceptance/install evidence;
+14. only then mark CTAN publication and the Release phase as closed.
+
+Invariant:
+
+```text
+certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+```
+
+A pull-request head that is later squash-merged is not the final certified/taggable SHA. Final certification therefore runs again on canonical `main` after merge.
+
+## Proposed CTAN form metadata
+
+Use current form fields, with the final contact email already known to CTAN for the maintainer account:
+
+```text
+Package id: abntexto-ufc
+Version: 3.0.0
+Author/Maintainer: Tiago Guimarães Sombra
+License: LPPL 1.3c or later
+Repository: https://github.com/tiagosombrra/abntexto-ufc
+Bug tracker: https://github.com/tiagosombrra/abntexto-ufc/issues
+Dependency: abntexto >= 1.1
+```
+
+Suggested summary:
+
+> Unofficial, community-maintained LaTeX class built on abntexto for academic works at the Federal University of Ceará (UFC), including academic-work, research-project and scientific-article profiles. The package distributes one generated class file for its runtime and does not redistribute UFC institutional marks or proprietary Microsoft fonts.
+
+Suggested administrative note:
+
+> This submission replaces the previously attempted `ufctex` package name. The package has been renamed to `abntexto-ufc` to follow current CTAN package-id guidance. No UFC logo or other institutional mark is distributed. `abntexto` is an external dependency and is not vendored in the CTAN archive. The upload contains one top-level `abntexto-ufc/` directory, and all project-owned runtime modules are incorporated into the single `abntexto-ufc.cls`; no project-owned `.def` files are distributed.
+
+## Evidence discipline
+
+Building or validating a candidate is not CTAN acceptance. A successful GitHub Release is not CTAN acceptance. CTAN status may be recorded as published only after explicit CTAN installation/acceptance evidence exists.
+
+If any package-content file changes after final `pkgcheck`, a new candidate and new hashes are required before tagging. Because CTAN treats documentation as part of the package version, post-freeze edits to shipped documentation are not allowed under the same frozen v3.0.0 bytes.

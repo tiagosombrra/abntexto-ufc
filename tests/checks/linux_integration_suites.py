@@ -76,7 +76,6 @@ def main() -> None:
         "make distribution-bundles",
         "Upload certified distribution assets",
         "dist/abntexto-ufc-3.0.0.zip",
-        "dist/abntexto-ufc-ctan-3.0.0.zip",
         "dist/abntexto-ufc-template-3.0.0.zip",
         "dist/abntexto-ufc-overleaf-3.0.0.zip",
         "dist/SHA256SUMS",
@@ -87,6 +86,8 @@ def main() -> None:
             "Linux release check is missing candidate provenance/artifact tokens: "
             + ", ".join(missing_release_tokens)
         )
+    if "dist/abntexto-ufc-ctan-3.0.0.zip" in release_workflow:
+        fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
@@ -147,7 +148,7 @@ def main() -> None:
         "unknown_path_fallback=complete article_first_class=true "
         "step4_registered=true step5_registered=true "
         "release_candidate_forces_complete=true release_check_pr_trigger=true "
-        "release_candidate_head_checkout=true release_assets_retained=true"
+        "release_candidate_head_checkout=true canonical_ctan_archive=true release_assets_retained=true"
     )
 
 

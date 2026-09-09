@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{abntexto-ufc}[2026/09/01 v3.0.0 UFC academic document class]
+\ProvidesClass{abntexto-ufc}[2026/09/09 v3.0.0 UFC academic document class]
 
 % Historical UFC template: Ednardo Moreira Rodrigues and Alan Batista de Oliveira.
 % Historical v2 redesign and maintenance: Tiago Guimarães Sombra.
@@ -17,6 +17,9 @@
     {Update the TeX distribution before compiling abntexto-ufc.}%
 }
 \makeatother
+
+% NBR 6023:2025 requires repeated authorship to be rendered explicitly.
+\PassOptionsToPackage{repeatfields=true}{biblatex}
 
 \input{abntexto-ufc/core.def}
 \input{abntexto-ufc/fonts.def}

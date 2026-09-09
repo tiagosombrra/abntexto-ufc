@@ -1,0 +1,18 @@
+abntexto-ufc changelog
+======================
+
+3.0.0 — 2026-09-09
+------------------
+
+- Introduces the `abntexto-ufc` class as the canonical class entry point.
+- Migrates the project-owned public API to a single English API.
+- Adds academic-work profiles for undergraduate capstones, specialization capstones, master's theses and doctoral theses.
+- Adds research-project and anonymized research-project profiles.
+- Adds the UFC scientific-article profile.
+- Updates the active technical baseline to current applicable ABNT editions, including NBR 14724:2024, NBR 10520:2023, NBR 6023:2025, NBR 15287:2025 and NBR 12225:2023.
+- Provides deterministic release packaging and PDF/A-oriented certification gates.
+- Keeps the development sources modular while distributing a single generated `abntexto-ufc.cls` through CTAN; no project-owned `.def` files are included in the CTAN package.
+- Keeps `abntexto` as an external CTAN dependency; it is not vendored in the CTAN package.
+- Does not redistribute UFC institutional marks or proprietary Microsoft font files.
+
+The v3 API is intentionally incompatible with the historical v2 Portuguese project API. See the repository migration guide for the complete mapping.

@@ -1,65 +1,95 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-09
-Status: ACTIVE — PUBLICATION CLOSEOUT
+Status: ACTIVE — PUBLICATION HARDENING / FINAL RECERTIFICATION REQUIRED
 
 ## Phase readiness
 
-| Phase | State | Accepted evidence / pending work |
+| Phase | State | Evidence / pending work |
 |---|---|---|
 | Regression Audit | CLOSED | phase-end regression accepted |
 | Core Corrections | CLOSED | accepted |
 | Reference PDF Validation | CLOSED | 55/55 visual PASS |
 | Scientific Article | CLOSED | complete Linux + article PDF 5/5 visual PASS |
-| Final Certification | CLOSED | immutable certification candidate and heavy matrix accepted |
-| Release | **ACTIVE** | candidate accepted; PRs #293, #294 and #295 merged; tag/GitHub Release and post-publication verification remain |
+| Final Certification | CLOSED | technical/runtime certification accepted |
+| Release | **ACTIVE / REOPENED FOR PUBLICATION HARDENING** | prior candidate superseded for publication; new exact-main candidate required |
 
-## Canonical Release facts
+## Why Release was reopened
 
-| Fact | Value |
+Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` remains valid historical technical regression evidence, but its retained distribution bytes are **not publishable as v3.0.0 final**. The audit found two release-content defects:
+
+1. `abntexto-ufc-3.0.0.zip` shipped a README that still instructed users to use v2.1.0 and described v3.0.0 as unpublished;
+2. the CTAN README identified `3.0.0` as a `development candidate`.
+
+Because publication bytes are immutable after acceptance, the retained artifact `10086299397` is **SUPERSEDED FOR PUBLICATION** and must never be attached to the final v3.0.0 Release or submitted to CTAN.
+
+## Publication-hardening changes
+
+| Surface | Current state |
 |---|---|
-| Canonical branch | `main`; resolve current SHA dynamically from Git |
-| Release PR #293 | **MERGED** as squash commit `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
-| Publication-closeout PR #294 | **MERGED** as `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
-| Continuation synchronization PR #295 | **MERGED**; canonical post-merge Static `34335044265` SUCCESS |
-| Release work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
-| Superseded PR #292 | **CLOSED** |
-| Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` |
-| Candidate Static | `34303586782` — SUCCESS |
-| Candidate Linux | `34303586778` — SUCCESS, complete scope |
-| Candidate Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Distribution artifact | ID `10086299397`, `abntexto-ufc-v3.0.0-distribution-34303586773` |
-| Distribution artifact digest | `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
-| Librarian review | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW` |
+| Active branch | `release/v3-publication-hardening` |
+| Package id | `abntexto-ufc` — replaces historical/deprecated `ufctex` identity |
+| Root user documentation | v3 publication-ready; stale v2 instructions removed |
+| CTAN README | final 3.0.0 metadata; LPPL, maintainer, repo, dependency and no-logo statement explicit |
+| CTAN package scope | reduced to one project runtime class + concise documentation + minimal example |
+| CTAN archive count | **one upload archive**: `abntexto-ufc-3.0.0.zip` |
+| CTAN project runtime | **one generated `abntexto-ufc.cls`** |
+| CTAN project `.def` files | **0 — any `.def` in the ZIP is a hard failure** |
+| Repository architecture | modular `.def` sources retained for development/testing only |
+| CTAN equivalence | every tracked runtime module must be inlined exactly once into generated class |
+| Isolated CTAN compile | example must compile without the modular runtime directory present |
+| Redundant CTAN archive | removed; no `abntexto-ufc-ctan-3.0.0.zip` |
+| Institutional marks | explicitly excluded from package and regression-tested |
+| Proprietary Microsoft fonts | explicitly excluded from package and regression-tested |
+| CTAN example | compiled without an institutional mark; source + PDF included |
+| CHANGELOG | included in CTAN package |
+| CTAN hygiene | ASCII/safe names, one root directory, LF-only text, no BOM, no empty files, 0644 files, no development infrastructure |
+| pkgcheck | mandatory **before** immutable tag creation; use current CTAN version at final certification |
 
-## Candidate acceptance evidence
+## Normative closure
 
-| Gate | Result |
-|---|---|
-| Static contract | PASS |
-| Complete Linux integration | PASS |
-| Linux release check | PASS, 38/38 required checks |
-| Reference PDF reproducibility | PASS; SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65`; 450652 bytes |
-| Distribution checksums / archive integrity | PASS |
-| Independent retained-artifact verification | PASS; no rebuild |
+The librarian review is now **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**.
 
-## Remaining publication sequence
+Former item 33 was closed against primary ABNT NBR 6023:2025 authority. The accepted behavior is now executable regression evidence:
 
-| Order | Action | Gate |
+- online references preserve `Disponível em:` and `Acesso em:` when applicable even when a DOI is present;
+- consecutive repeated authorship is rendered explicitly rather than replaced by a dash/underline convention;
+- legal-person authorship uses the form by which the entity is known/highlighted;
+- governmental jurisdiction is retained when needed for identification, including `SÃO PAULO (Estado)` disambiguation.
+
+The class explicitly passes `repeatfields=true` to `biblatex`, and the NBR 6023 regression exercises the closure cases under both pdfLaTeX and LuaLaTeX.
+
+## New final-candidate contract
+
+The next accepted Release candidate must satisfy:
+
+```text
+certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+```
+
+A PR head that is later squash-merged cannot be the final taggable candidate. The publication-hardening PR is therefore an integration step; after it is merged, final certification must run again on the resulting exact canonical `main` SHA.
+
+## Remaining gates
+
+| Order | Gate | State |
 |---:|---|---|
-| 1 | Create `v3.0.0` tag and GitHub Release | latest canonical `main` + exact retained candidate-produced bytes only |
-| 2 | Verify published GitHub assets | published SHA-256 values match accepted checksums |
-| 3 | Run current CTAN `pkgcheck` | retained CTAN ZIP only |
-| 4 | If actual CTAN submission is performed, preserve submission/acceptance evidence | no claim without explicit evidence |
-| 5 | Record final publication verification and close Release | no unresolved release blocker |
+| 1 | Publication-hardening PR: Static + complete Linux/release checks, including one-class/zero-`.def` CTAN gate | PENDING FINAL HEAD |
+| 2 | Merge to protected `main`; resolve exact post-merge SHA | PENDING |
+| 3 | Final phase-end regression on that exact `main` SHA | PENDING |
+| 4 | Build deterministic three-ZIP distribution + `SHA256SUMS` from that exact SHA | PENDING |
+| 5 | Confirm CTAN ZIP contains one generated `abntexto-ufc.cls`, zero `.def`, and passes isolated example compile | PENDING FINAL CANDIDATE |
+| 6 | Run current CTAN `pkgcheck` against `abntexto-ufc-3.0.0.zip`; classify any warning | PENDING |
+| 7 | Freeze hashes/evidence; no rebuild after acceptance | PENDING |
+| 8 | Create immutable `v3.0.0` tag pointing to the certified SHA | BLOCKED BY 1–7 |
+| 9 | Create GitHub Release; upload exact frozen bytes; re-download and hash-verify | BLOCKED BY 8 |
+| 10 | Submit only `abntexto-ufc-3.0.0.zip` to CTAN and preserve receipt/acceptance evidence | BLOCKED BY 6–9 |
+| 11 | Synchronize publication facts and perform final Release verification | BLOCKED BY 1–10 |
 
 ## Current blockers
 
-| Blocker | Exit condition |
-|---|---|
-| `v3.0.0` tag/GitHub Release not yet published and hash-verified | tag/release exists and exact asset hashes match accepted candidate |
-| Final publication verification not yet synchronized | canonical state records the publication result |
+- publication-hardening integration has not yet been merged and finally certified;
+- no final post-merge exact-main Release candidate exists yet;
+- current CTAN `pkgcheck` has not yet passed on the final archive;
+- `v3.0.0` tag/GitHub Release and CTAN publication do not yet exist.
 
-Release candidate regression, retained-artifact verification, PR #293 integration, PR #294 publication-closeout sync, and PR #295 continuation synchronization are no longer blockers. PR #292 is closed and must not be resumed.
-
-Every **material advance** updates operational documentation in the same work cycle. Release cannot close without final publication verification even though the immutable **phase-end regression** is accepted.
+Every **material advance** must update the control plane in the same work cycle. Targeted checks do not replace the final **phase-end regression**.

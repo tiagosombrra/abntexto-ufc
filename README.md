@@ -1,180 +1,112 @@
 # abntexto-ufc
 
-Template LaTeX comunitário para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), construído sobre o `abntexto`.
+Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do Ceará (UFC), construída sobre a classe [`abntexto`](https://ctan.org/pkg/abntexto).
 
-> **Importante:** este é um projeto comunitário. Ele não deve ser apresentado como template oficial ou homologado pela UFC sem manifestação institucional explícita.
+> **Status institucional:** este projeto é comunitário e não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.
 
-## Qual versão devo usar?
+## Versão 3.0.0
 
-A versão estável publicada atualmente é a **v2.1.0**. Se você está escrevendo um TCC, trabalho de especialização, dissertação, tese ou projeto de pesquisa agora, use essa release em vez de clonar a branch `main`.
+A série 3 introduz a classe `abntexto-ufc`, uma API pública única em inglês e suporte a perfis de trabalhos acadêmicos, projetos de pesquisa e artigos científicos. A versão 3 é incompatível em nível de API com a série 2: projetos antigos devem ser migrados em vez de misturar comandos das duas linhas.
 
-A v3.0.0 está em desenvolvimento e ainda não foi publicada. Ela introduz a nova classe `abntexto-ufc` e outros recursos, mas não deve ser usada como versão estável até a publicação da release.
+O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).
 
-- Release estável e arquivos para download: <https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v2.1.0>
-- Template para Overleaf: <https://github.com/tiagosombrra/abntexto-ufc/releases/download/v2.1.0/modelo-latex-ufc-overleaf-2.1.0.zip>
-- Template para uso local: <https://github.com/tiagosombrra/abntexto-ufc/releases/download/v2.1.0/modelo-latex-ufc-2.1.0.zip>
+## Requisitos
 
-O PDF de referência e os checksums também estão disponíveis na página da release.
+- LaTeX2e;
+- `abntexto` 1.1 ou posterior;
+- `biblatex` e `biber` para fluxos bibliográficos;
+- TeX Live 2026 é o ambiente principal de certificação da versão 3.0.0.
 
-## Usando no Overleaf
+A classe é testada com pdfLaTeX e LuaLaTeX. Recursos opcionais podem exigir pacotes adicionais, conforme o perfil e os módulos habilitados.
 
-Esta é a forma mais simples de começar.
-
-1. Baixe `modelo-latex-ufc-overleaf-2.1.0.zip` pelo link acima.
-2. No Overleaf, escolha **New Project > Upload Project**.
-3. Envie o arquivo ZIP sem descompactá-lo.
-4. Confirme `documento.tex` como arquivo principal do projeto, caso o Overleaf não o selecione automaticamente.
-5. Compile o projeto.
-6. Substitua os dados de exemplo pelos dados do seu trabalho e edite os arquivos das pastas de conteúdo.
-
-O bundle do Overleaf inclui a dependência `abntexto.cls` necessária para a versão estável, evitando depender da versão instalada globalmente no serviço.
-
-## Usando localmente
-
-Recomenda-se uma instalação atual do **TeX Live 2026**.
-
-1. Baixe `modelo-latex-ufc-2.1.0.zip`.
-2. Descompacte o arquivo em uma pasta de trabalho.
-3. Abra um terminal nessa pasta.
-4. Compile com:
-
-```bash
-make compile
-```
-
-O documento principal é `documento.tex`. O PDF gerado é `documento.pdf`.
-
-Para remover arquivos auxiliares de compilação:
-
-```bash
-make clean
-```
-
-A bibliografia usa `biblatex` e `biber`; o `Makefile` executa o fluxo necessário durante a compilação.
-
-## Estrutura do template estável
-
-```text
-documento.tex
-1-pre-textuais/
-2-textuais/
-3-pos-textuais/
-figuras/
-```
-
-Use essa organização como ponto de partida:
-
-- `documento.tex`: configuração geral e montagem do documento;
-- `1-pre-textuais/`: errata, dedicatória, agradecimentos, epígrafe, resumo, abstract e listas;
-- `2-textuais/`: introdução, fundamentação, metodologia, resultados, conclusão e demais seções do texto;
-- `3-pos-textuais/`: referências, apêndices e anexos;
-- `figuras/`: imagens usadas no trabalho.
-
-Evite concentrar todo o conteúdo em `documento.tex`. Manter capítulos e elementos em arquivos separados facilita revisão, colaboração e controle de versão.
-
-## Configuração básica
-
-Na versão estável v2.1.0, edite o bloco `\ufcsetup` já fornecido em `documento.tex`. Um exemplo reduzido para uma tese é:
+## Uso mínimo
 
 ```tex
+\documentclass{abntexto-ufc}
+
 \ufcsetup{
-  tipo = tese,
-  impressao = anverso,
-  capa = auto,
-  ficha-catalografica = nao,
-  brasao = sim,
-  fonte = times,
-  fonte-estrita = nao,
-  programa-doutorado = {Programa de Pós-Graduação em Ciência da Computação},
-  titulo-doutor = {Ciência da Computação},
-  area-doutorado = {Computação Gráfica},
-  autor = {Nome Completo do Autor},
-  titulo = {Título do Trabalho},
-  local = {Fortaleza},
-  ano = {2026},
-  orientador = {Prof. Dr. Nome do Orientador},
-  tabelas = nativo,
-  codigo = nenhum,
-  algoritmos = nenhum,
-  glossario = nenhum,
-  indice = nenhum
+  type = doctoral-thesis,
+  print-mode = single-sided,
+  coat-of-arms = false,
+  author = {Nome Sobrenome},
+  title = {Título do trabalho},
+  location = {Fortaleza},
+  year = {2026},
+  advisor = {Prof. Dr. Nome do Orientador}
 }
+
+\begin{document}
+\ufcPrintCover
+\ufcPrintTitlePage
+
+\section{Introdução}
+Texto do trabalho.
+\end{document}
 ```
 
-Edite apenas os valores correspondentes ao seu trabalho. O template distribuído contém o preâmbulo e um exemplo mais completo, com os demais campos e elementos opcionais. Não copie configurações entre versões diferentes do projeto: parta sempre dos arquivos da release que você escolheu.
+Consulte `template/main.tex` para um exemplo editável mais completo e `docs/ctan-example.tex` para o exemplo mínimo distribuído com o pacote CTAN.
 
-## Tipos de trabalho disponíveis na v2.1.0
+## Perfis de documento
 
-| Valor de `tipo` | Uso |
-|---|---|
-| `tccgraduacao` | trabalho de graduação |
-| `tccespecializacao` | trabalho de especialização |
-| `dissertacao` | dissertação de mestrado |
-| `tese` | tese de doutorado |
-| `projeto` | projeto de pesquisa identificado |
-| `projetoanonimizado` | projeto de pesquisa com dados pessoais suprimidos |
+Os valores canônicos de `type` incluem:
 
-A impressão pode ser configurada como `anverso` ou `frente-verso`.
+- `undergraduate-capstone`;
+- `specialization-capstone`;
+- `masters-thesis`;
+- `doctoral-thesis`;
+- `research-project`;
+- `anonymized-research-project`;
+- `scientific-article`.
 
-## Referências bibliográficas
+A API pública completa e o mapeamento da série 2 estão documentados em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).
 
-As referências ficam em:
+## Bibliografia e normalização
 
-```text
-3-pos-textuais/referencias.bib
+O projeto usa `biblatex-abnt` e mantém uma camada de compatibilidade delimitada para requisitos da ABNT NBR 6023:2025 que ainda não estejam cobertos pela dependência publicada. A política normativa do projeto é usar a edição técnica vigente aplicável e reconciliar requisitos institucionais atuais da UFC sem reativar edições ABNT substituídas.
+
+A base normativa e a política de vigência estão registradas em:
+
+- [`docs/NORMATIVE-BASE.md`](docs/NORMATIVE-BASE.md);
+- [`docs/NORMATIVE-CURRENCY.md`](docs/NORMATIVE-CURRENCY.md).
+
+## Brasão e outros ativos institucionais
+
+**O projeto não redistribui o brasão da UFC nem qualquer outra marca institucional da Universidade.** Também não redistribui arquivos proprietários das fontes Microsoft Arial ou Times New Roman.
+
+Quando autorizado a utilizar uma marca institucional, o usuário deve fornecer o arquivo localmente por meio da configuração prevista pela classe. O bundle enviado à CTAN é validado para rejeitar ativos institucionais e fontes proprietárias.
+
+## Distribuições
+
+A publicação da versão 3 produz três artefatos com finalidades distintas:
+
+- `abntexto-ufc-3.0.0.zip`: pacote canônico e enxuto para CTAN. O runtime distribuído é **somente `abntexto-ufc.cls`**; todos os módulos `.def` do repositório são incorporados deterministicamente dentro da classe e nenhum `.def` é enviado;
+- `abntexto-ufc-template-3.0.0.zip`: projeto editável para uso local, que pode preservar a organização modular do repositório;
+- `abntexto-ufc-overleaf-3.0.0.zip`: projeto autocontido para upload no Overleaf, incluindo a revisão fixada de `abntexto.cls` e podendo preservar a organização modular do repositório.
+
+Somente o primeiro arquivo é destinado à CTAN. Os bundles de template e Overleaf são conveniências de distribuição do GitHub e não fazem parte do upload CTAN.
+
+Essa separação é deliberada: a arquitetura de desenvolvimento continua modular e testável, enquanto o artefato CTAN oferece uma classe única, sem dependência em arquivos `.def` próprios do projeto.
+
+## Desenvolvimento e validação
+
+Entradas principais:
+
+```bash
+make static-check
+make check
+make release-check
+make distribution-bundles
 ```
 
-No arquivo `.bib`, cada obra recebe uma chave que pode ser usada nas citações do texto. A versão estável usa `biblatex-abnt` e `biber`.
+`make release-check` executa a regressão de release; `make distribution-bundles` produz os arquivos públicos de forma determinística e seus hashes SHA-256.
 
-Ao adicionar ou alterar referências, faça uma compilação completa pelo `make compile` para que o Biber seja executado quando necessário.
+## Suporte
 
-## Figuras, tabelas, código e algoritmos
-
-O template de exemplo já contém casos de uso desses elementos. Em geral:
-
-- coloque as imagens em `figuras/`;
-- mantenha título, fonte e nota associados ao objeto correspondente;
-- habilite módulos de código, algoritmos, glossário ou índice somente quando forem necessários;
-- para tabelas, escolha o backend previsto pela configuração do template em vez de misturar implementações sem necessidade.
-
-O PDF de referência da release é a melhor forma de visualizar os elementos disponíveis antes de adaptá-los ao seu trabalho.
-
-## Fontes
-
-A configuração suporta Times New Roman e Arial conforme a política do template. Em ambientes portáteis, a classe pode usar famílias de fallback compatíveis quando o modo de fonte estrita estiver desativado.
-
-As fontes proprietárias da Microsoft **não são distribuídas** pelo projeto. Se você precisar exigir a família literal instalada no computador, use a configuração de fonte estrita prevista pela versão do template e garanta que a fonte esteja disponível no sistema.
-
-## Ficha catalográfica
-
-Na versão estável, a ficha catalográfica é opcional e pode ser inserida como PDF externo quando aplicável. Gere a ficha pelo serviço institucional adequado e siga o exemplo incluído no template.
-
-## Apêndices e anexos
-
-Use apêndice para material elaborado pelo próprio autor e anexo para material externo incorporado ao trabalho. Os exemplos distribuídos mostram como inserir ambos e como manter a identificação e a fonte do material externo.
-
-## Problemas comuns
-
-| Problema | O que verificar |
-|---|---|
-| Referências não aparecem | compile pelo `make compile` ou confirme se o Biber foi executado |
-| Imagem não encontrada | confira o caminho e se o arquivo foi incluído na pasta do projeto |
-| Fonte literal indisponível | desative o modo estrito ou instale legalmente a fonte requerida no sistema |
-| Overleaf não compila após upload | confirme que `documento.tex` é o arquivo principal e use o bundle específico para Overleaf |
-| Mudança de versão quebra comandos | confira se o projeto está usando a mesma release do template; não misture APIs de versões diferentes |
-
-## Desenvolvimento da v3
-
-A v3.0.0 ainda está em desenvolvimento. Ela usa a classe `abntexto-ufc` e uma API diferente da v2.1.0. O perfil de artigo científico também está sendo desenvolvido nessa linha e ainda não faz parte de uma release estável.
-
-Se você está contribuindo com a v3, consulte:
-
-- `docs/ROADMAP-V3.0.0.md`;
-- `docs/HANDOFF-V3.0.0.md`;
-- `docs/MIGRATING-TO-V3.md`.
-
-O histórico de implementação, resultados de CI, decisões normativas, issues e evidências de regressão ficam nesses documentos e no GitHub, não neste guia de uso.
+- Repositório: <https://github.com/tiagosombrra/abntexto-ufc>
+- Issues: <https://github.com/tiagosombrra/abntexto-ufc/issues>
 
 ## Licença
 
-O código e a documentação do projeto são distribuídos conforme `LICENSE` (LPPL 1.3c ou posterior). Ativos institucionais e arquivos de terceiros podem possuir condições próprias de uso e distribuição.
+O código e a documentação próprios do projeto são distribuídos sob a **LaTeX Project Public License (LPPL), versão 1.3c ou posterior**. Consulte [`LICENSE`](LICENSE).
+
+Ativos de terceiros e marcas institucionais não são cobertos por essa licença e não são redistribuídos pelo pacote CTAN.

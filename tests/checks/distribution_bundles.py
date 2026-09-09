@@ -8,12 +8,12 @@ import subprocess
 import sys
 import tempfile
 import zipfile
+from collections import Counter
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ID = "abntexto-ufc"
 CTAN_DIR = ROOT / "release" / "ctan"
-REMOVED_FORWARDING_LAYER = "abntexto-ufc/public-api.def"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -24,6 +24,8 @@ MICROSOFT_FONTS = {
     "ariali.ttf",
     "arialbi.ttf",
 }
+SAFE_COMPONENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]*$")
+PROJECT_MODULE_INPUT_RE = re.compile(r"\\input\{abntexto-ufc/[^}]+\.def\}")
 
 
 def fail(message: str) -> None:
@@ -38,6 +40,14 @@ def version() -> str:
     return match.group(1)
 
 
+def source_modules() -> list[str]:
+    return sorted(
+        path.relative_to(ROOT).as_posix()
+        for path in (ROOT / PACKAGE_ID).rglob("*.def")
+        if path.is_file()
+    )
+
+
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -48,10 +58,18 @@ def entries(path: Path) -> dict[str, zipfile.ZipInfo]:
     names = [info.filename for info in infos]
     if len(names) != len(set(names)):
         fail(f"Duplicate archive entries in {path.name}.")
-    for name in names:
+    for info in infos:
+        name = info.filename
         pure = PurePosixPath(name)
         if not name or pure.is_absolute() or ".." in pure.parts:
             fail(f"Unsafe archive path in {path.name}: {name}")
+        try:
+            name.encode("ascii")
+        except UnicodeEncodeError:
+            fail(f"Non-ASCII archive path in {path.name}: {name}")
+        for part in pure.parts:
+            if part.startswith(".") or not SAFE_COMPONENT.fullmatch(part):
+                fail(f"CTAN-unsafe filename component in {path.name}: {part}")
         if any(part.lower() in MICROSOFT_FONTS for part in pure.parts):
             fail(f"Proprietary Microsoft font in {path.name}: {name}")
         if "assets" in pure.parts and "institutional" in pure.parts:
@@ -65,103 +83,146 @@ def require(archive_entries: dict[str, zipfile.ZipInfo], expected: set[str], arc
         fail(f"{archive_name} missing required entries: {', '.join(missing)}")
 
 
-def reject_runtime_archive_drift(archive_entries: dict[str, zipfile.ZipInfo], prefix: str, archive_name: str) -> None:
-    forbidden = (
-        f"{prefix}.github/",
-        f"{prefix}assets/",
-        f"{prefix}docs/",
-        f"{prefix}release/",
-        f"{prefix}standards/",
-        f"{prefix}template/",
-        f"{prefix}tests/",
-        f"{prefix}tools/",
-        f"{prefix}validator/",
-    )
-    removed = f"{prefix}{REMOVED_FORWARDING_LAYER}"
-    for name in archive_entries:
-        if name == removed:
-            fail(f"{archive_name} contains removed forwarding layer: {name}")
-        if name.startswith(forbidden):
-            fail(f"{archive_name} contains non-runtime development content: {name}")
+def validate_monolithic_class(class_bytes: bytes, archive_name: str) -> int:
+    try:
+        class_text = class_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        fail(f"{archive_name}: generated CTAN class is not UTF-8: {exc}")
+
+    if PROJECT_MODULE_INPUT_RE.search(class_text):
+        fail(f"{archive_name}: generated CTAN class still loads an external project .def module.")
+    if re.search(r"\\ProvidesFile\{abntexto-ufc/", class_text):
+        fail(f"{archive_name}: generated CTAN class still contains module ProvidesFile wrappers.")
+    if "no external .def files are required" not in class_text:
+        fail(f"{archive_name}: generated CTAN class is missing the monolithic-distribution marker.")
+
+    modules = source_modules()
+    for relative in modules:
+        label = PurePosixPath(relative).with_suffix("").as_posix()
+        begin = f"% --- BEGIN inlined module: {label} ---"
+        end = f"% --- END inlined module: {label} ---"
+        if class_text.count(begin) != 1 or class_text.count(end) != 1:
+            fail(f"{archive_name}: source module was not inlined exactly once: {relative}")
+
+    return len(modules)
 
 
-def validate_class(path: Path, v: str) -> None:
-    archive_entries = entries(path)
-    prefix = f"{PACKAGE_ID}-{v}/"
-    if any(not name.startswith(prefix) for name in archive_entries):
-        fail(f"{path.name}: every entry must be rooted at {prefix}")
-    require(
-        archive_entries,
-        {
-            f"{prefix}README.md",
-            f"{prefix}LICENSE",
-            f"{prefix}abntexto-ufc.cls",
-            f"{prefix}abntexto-ufc/core.def",
-            f"{prefix}abntexto-ufc/integrations/abntexto.def",
-            f"{prefix}abntexto-ufc/standards/nbr6023-2025.def",
-        },
-        path.name,
-    )
-    reject_runtime_archive_drift(archive_entries, prefix, path.name)
-    if f"{prefix}abntexto.cls" in archive_entries:
-        fail(f"{path.name}: class archive must keep abntexto as an external dependency.")
-
-
-def validate_ctan(path: Path, v: str) -> None:
+def validate_package(path: Path, v: str) -> int:
     archive_entries = entries(path)
     prefix = f"{PACKAGE_ID}/"
     if any(not name.startswith(prefix) for name in archive_entries):
         fail(f"{path.name}: every entry must be rooted at {prefix}")
+
     required = {
         f"{prefix}README.md",
+        f"{prefix}CHANGELOG",
         f"{prefix}LICENSE",
+        f"{prefix}{PACKAGE_ID}.cls",
         f"{prefix}{PACKAGE_ID}.tex",
         f"{prefix}{PACKAGE_ID}.pdf",
         f"{prefix}{PACKAGE_ID}-example.tex",
-        f"{prefix}abntexto-ufc.cls",
-        f"{prefix}abntexto-ufc/core.def",
-        f"{prefix}abntexto-ufc/integrations/abntexto.def",
-        f"{prefix}abntexto-ufc/standards/nbr6023-2025.def",
+        f"{prefix}{PACKAGE_ID}-example.pdf",
     }
     require(archive_entries, required, path.name)
-    if f"{prefix}{REMOVED_FORWARDING_LAYER}" in archive_entries:
-        fail(f"{path.name}: removed forwarding layer must not be distributed.")
 
-    for directory in ("doc/", "tex/", "source/"):
-        if any(name.startswith(f"{prefix}{directory}") for name in archive_entries):
-            fail(f"{path.name}: modest CTAN candidate must use browsing-friendly package layout, not {directory}")
-    if f"{prefix}abntexto.cls" in archive_entries:
-        fail(f"{path.name}: CTAN candidate must keep abntexto as an external dependency.")
+    files = [name for name in archive_entries if not name.endswith("/")]
+    def_files = [name for name in files if PurePosixPath(name).suffix.casefold() == ".def"]
+    if def_files:
+        fail(f"{path.name}: CTAN package must not contain external .def modules: {', '.join(def_files)}")
+    if any(name.startswith(f"{prefix}{PACKAGE_ID}/") for name in files):
+        fail(f"{path.name}: CTAN package must not contain a nested runtime module directory.")
+
+    forbidden_root_children = {".github", "tests", "artifacts", "tools", "release", "standards", "dist"}
+    for name, info in archive_entries.items():
+        pure = PurePosixPath(name)
+        if len(pure.parts) > 1 and pure.parts[1] in forbidden_root_children:
+            fail(f"{path.name}: development infrastructure leaked into CTAN package: {name}")
+        if pure.name == "abntexto.cls":
+            fail(f"{path.name}: package must keep abntexto as an external dependency.")
+        if any(marker in pure.name.casefold() for marker in ("brasao", "coat-of-arms", "logo-ufc", "ufc-logo")):
+            fail(f"{path.name}: institutional mark asset leaked into package: {name}")
+        if not name.endswith("/"):
+            if info.file_size == 0:
+                fail(f"{path.name}: empty file is not allowed: {name}")
+            mode = (info.external_attr >> 16) & 0o7777
+            if mode not in (0, 0o644):
+                fail(f"{path.name}: package file permissions must be 0644: {name} mode={oct(mode)}")
+
+    basenames = [PurePosixPath(name).name.casefold() for name in files]
+    duplicates = sorted(name for name, count in Counter(basenames).items() if count > 1)
+    if duplicates:
+        fail(f"{path.name}: duplicate case-insensitive basenames: {', '.join(duplicates)}")
 
     with zipfile.ZipFile(path) as archive:
         bundled_readme = archive.read(f"{prefix}README.md")
+        bundled_changelog = archive.read(f"{prefix}CHANGELOG")
+        bundled_class = archive.read(f"{prefix}{PACKAGE_ID}.cls")
         bundled_manual = archive.read(f"{prefix}{PACKAGE_ID}.tex")
         bundled_pdf = archive.read(f"{prefix}{PACKAGE_ID}.pdf")
         bundled_example = archive.read(f"{prefix}{PACKAGE_ID}-example.tex")
+        bundled_example_pdf = archive.read(f"{prefix}{PACKAGE_ID}-example.pdf")
 
-    expected_readme = (CTAN_DIR / "README.md").read_bytes()
-    expected_manual = (CTAN_DIR / f"{PACKAGE_ID}.tex").read_bytes()
-    expected_example = (ROOT / "docs" / "ctan-example.tex").read_bytes()
-    if bundled_readme != expected_readme:
-        fail(f"{path.name}: CTAN README differs from the current tracked package source.")
-    if bundled_manual != expected_manual:
-        fail(f"{path.name}: CTAN manual source differs from the current tracked package source.")
-    if bundled_example != expected_example:
-        fail(f"{path.name}: CTAN example differs from the current tracked source.")
-    if not bundled_pdf.startswith(b"%PDF-") or len(bundled_pdf) < 5000:
-        fail(f"{path.name}: CTAN documentation PDF is missing or invalid.")
+        expected_readme = (CTAN_DIR / "README.md").read_bytes()
+        expected_changelog = (CTAN_DIR / "CHANGELOG").read_bytes()
+        expected_manual = (CTAN_DIR / f"{PACKAGE_ID}.tex").read_bytes()
+        expected_example = (ROOT / "docs" / "ctan-example.tex").read_bytes()
+        if bundled_readme != expected_readme:
+            fail(f"{path.name}: README differs from the tracked CTAN package source.")
+        if bundled_changelog != expected_changelog:
+            fail(f"{path.name}: CHANGELOG differs from the tracked CTAN package source.")
+        if bundled_manual != expected_manual:
+            fail(f"{path.name}: manual source differs from the tracked CTAN package source.")
+        if bundled_example != expected_example:
+            fail(f"{path.name}: example source differs from the tracked source.")
+        if not bundled_pdf.startswith(b"%PDF-") or len(bundled_pdf) < 5000:
+            fail(f"{path.name}: documentation PDF is missing or invalid.")
+        if not bundled_example_pdf.startswith(b"%PDF-") or len(bundled_example_pdf) < 5000:
+            fail(f"{path.name}: example PDF is missing or invalid.")
+
+        inlined_modules = validate_monolithic_class(bundled_class, path.name)
+
+        for name in files:
+            pure = PurePosixPath(name)
+            if pure.suffix.casefold() in {".md", ".tex", ".cls", ".bib", ".txt"} or pure.name == "CHANGELOG":
+                data = archive.read(name)
+                if data.startswith(b"\xef\xbb\xbf"):
+                    fail(f"{path.name}: UTF-8 BOM is not allowed: {name}")
+                if b"\r" in data:
+                    fail(f"{path.name}: CTAN text files must use LF line endings: {name}")
 
     readme_text = bundled_readme.decode("utf-8")
     required_readme_literals = (
         f"Version: {v}",
-        "LaTeX Project Public License",
+        "License: LaTeX Project Public License 1.3c or later",
         "https://github.com/tiagosombrra/abntexto-ufc",
         "https://ctan.org/pkg/abntexto",
+        "No UFC logo",
         "unofficial",
     )
-    missing_literals = [item for item in required_readme_literals if item not in readme_text]
+    missing_literals = [item for item in required_readme_literals if item.casefold() not in readme_text.casefold()]
     if missing_literals:
-        fail(f"{path.name}: CTAN README missing package metadata: {', '.join(missing_literals)}")
+        fail(f"{path.name}: README missing package metadata: {', '.join(missing_literals)}")
+
+    for forbidden in (
+        "development candidate",
+        "v3.0.0 está em desenvolvimento",
+        "v3.0.0 ainda não foi publicada",
+        "ufctex",
+        "modelo-latex-ufc",
+    ):
+        if forbidden.casefold() in readme_text.casefold():
+            fail(f"{path.name}: stale/deprecated publication text leaked into README: {forbidden}")
+
+    return inlined_modules
+
+
+def validate_template(path: Path, v: str, *, overleaf: bool) -> None:
+    archive_entries = entries(path)
+    has_upstream = any(PurePosixPath(name).name == "abntexto.cls" for name in archive_entries)
+    if overleaf and not has_upstream:
+        fail(f"{path.name}: Overleaf bundle must include pinned abntexto.cls.")
+    if not overleaf and has_upstream:
+        fail(f"{path.name}: editable template must keep abntexto as an external dependency.")
 
 
 def validate_checksums(output: Path, expected_zips: set[str]) -> None:
@@ -199,7 +260,7 @@ def build(output: Path, upstream: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate deterministic current-v3 distribution candidates.")
+    parser = argparse.ArgumentParser(description="Validate deterministic current-v3 CTAN-grade/public distribution archives.")
     parser.add_argument("--abntexto", type=Path, required=True)
     args = parser.parse_args()
 
@@ -210,7 +271,6 @@ def main() -> None:
     v = version()
     expected_zips = {
         f"{PACKAGE_ID}-{v}.zip",
-        f"{PACKAGE_ID}-ctan-{v}.zip",
         f"{PACKAGE_ID}-template-{v}.zip",
         f"{PACKAGE_ID}-overleaf-{v}.zip",
     }
@@ -234,13 +294,15 @@ def main() -> None:
                 fail(f"Distribution artifact is not reproducible: {name}")
 
         validate_checksums(first, expected_zips)
-        validate_class(first / f"{PACKAGE_ID}-{v}.zip", v)
-        validate_ctan(first / f"{PACKAGE_ID}-ctan-{v}.zip", v)
+        inlined_modules = validate_package(first / f"{PACKAGE_ID}-{v}.zip", v)
+        validate_template(first / f"{PACKAGE_ID}-template-{v}.zip", v, overleaf=False)
+        validate_template(first / f"{PACKAGE_ID}-overleaf-{v}.zip", v, overleaf=True)
 
     print(
-        "DISTRIBUTION-BUNDLE-EVIDENCE status=PASS artifacts=5 reproducible=5 checksums=PASS "
-        "class_layout=PASS ctan_layout=PASS ctan_readme=PASS documentation_pdf=PASS "
-        "external_abntexto=PASS institutional_assets=excluded forwarding_layer=absent"
+        "DISTRIBUTION-BUNDLE-EVIDENCE status=PASS artifacts=4 reproducible=4 checksums=PASS "
+        f"canonical_ctan_package=PASS ctan_upload_archives=1 monolithic_class=PASS def_files=0 "
+        f"inlined_modules={inlined_modules} ctan_readme=PASS documentation_pdf=PASS "
+        "example_pdf=PASS external_abntexto=PASS institutional_assets=excluded"
     )
 
 

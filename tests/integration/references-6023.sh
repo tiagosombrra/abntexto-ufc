@@ -39,7 +39,6 @@ for engine in pdflatex lualatex; do
     echo "Preflight failed: NBR 6023:2025 regression contains an unrecognized warning or overflow."
     exit 1
   fi
-
 done
 
 if command -v pdftotext >/dev/null 2>&1; then
@@ -96,6 +95,29 @@ identifiers = entry('Identificadores persistentes em referências')
 if '10.1234/exemplo.2025.1' not in identifiers or '0000-0002-1825-0097' not in identifiers:
     raise SystemExit('NBR 6023:2025: DOI or ORCID supplemental missing.')
 
+# NBR 6023:2025 item 33 closure: DOI does not suppress online availability/access data.
+doi_online = entry('DOI e disponibilidade em referência eletrônica')
+doi_online_fold = doi_online.casefold()
+for marker in ('10.1234/item33.2025.1', 'disponível em:', 'acesso em:'):
+    if marker.casefold() not in doi_online_fold:
+        raise SystemExit(f'NBR 6023:2025 item 33: online DOI reference is missing {marker}: {doi_online}')
+
+# NBR 6023:2025 item 33 closure: consecutive repeated authorship is rendered explicitly.
+repeated_a = entry('Política nacional de referência de teste')
+repeated_b = entry('Diretriz nacional de referência de teste')
+for rendered in (repeated_a, repeated_b):
+    if 'brasil' not in rendered.casefold():
+        raise SystemExit(f'NBR 6023:2025 item 33: repeated corporate author was suppressed: {rendered}')
+    if re.search(r'_{3,}|—{2,}', rendered):
+        raise SystemExit(f'NBR 6023:2025 item 33: repeated author was replaced by a dash/underline: {rendered}')
+
+# NBR 6023:2025 item 33 closure: government legal-person authorship keeps jurisdiction disambiguation.
+state = entry('Diretriz ambiental de referência de teste')
+state_fold = state.casefold()
+for marker in ('são paulo (estado)', 'secretaria do meio ambiente'):
+    if marker not in state_fold:
+        raise SystemExit(f'NBR 6023:2025 item 33: legal-person jurisdiction is missing {marker}: {state}')
+
 thesis = entry('Malhas adaptativas em documentos acadêmicos')
 thesis_fold = thesis.casefold()
 if 'dissertação' not in thesis_fold or 'mestrado em ciência da computação' not in thesis_fold:
@@ -130,10 +152,11 @@ PY
     set -- "$@" --commit-sha "$GITHUB_SHA"
   fi
   "$@"
-  echo 'VALIDATION-EVIDENCE rule=references.nbr6023-2025.test-profile status=PASS expected=twelve-profile-cases measured=twelve-cases-validated'
+  echo 'VALIDATION-EVIDENCE rule=references.nbr6023-2025.test-profile status=PASS expected=baseline-plus-item33 measured=baseline-plus-four-item33-cases-validated'
   echo 'LIBRARIAN-REVIEW-EVIDENCE item=30 status=PASS context=electronic-unknown-publication-markers measured=omitted-for-controlled-online-entry'
   echo 'LIBRARIAN-REVIEW-EVIDENCE item=31 status=PASS context=thesis-dissertation measured=work-type-and-single-consistent-year'
   echo 'LIBRARIAN-REVIEW-EVIDENCE item=32 status=PASS context=standard-and-multivolume measured=publisher-year-and-2-v-physical-description'
+  echo 'LIBRARIAN-REVIEW-EVIDENCE item=33 status=PASS context=nbr6023-2025-primary-authority measured=doi-plus-availability-access,repeated-author-explicit,corporate-author-jurisdiction'
 fi
 
 echo 'NBR 6023:2025 gate completed.'

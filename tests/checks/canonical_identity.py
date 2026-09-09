@@ -38,6 +38,9 @@ LEGACY_FULL_FILE_EXEMPT = {
     # Negative assertions must name the legacy entrypoint to reject it.
     "tests/checks/canonical_identity.py",
     "tests/checks/repository_contract.py",
+    "tests/checks/distribution_bundles.py",
+    "tests/integration/distribution-bundles.sh",
+    "tools/build-distribution-bundles.py",
 }
 LEGACY_FULL_DIRECTORY_EXEMPT = ()
 LEGACY_DOCUMENTATION_EXEMPT = {
@@ -46,6 +49,25 @@ LEGACY_DOCUMENTATION_EXEMPT = {
             r"does not ship `ufctex\.cls`",
             re.IGNORECASE,
         ),
+    ),
+    # Release-control documentation may identify the rejected historical
+    # package id only when recording the migration/publication response.
+    "docs/CTAN-RELEASE.md": (
+        re.compile(r"earlier `ufctex` submission", re.IGNORECASE),
+        re.compile(r"deprecated `ufctex` wording", re.IGNORECASE),
+        re.compile(r"previously attempted `ufctex` package name", re.IGNORECASE),
+    ),
+    "docs/HANDOFF-V3.0.0.md": (
+        re.compile(r"previous `ufctex` identity is replaced", re.IGNORECASE),
+    ),
+    "docs/ROADMAP-V3.0.0.md": (
+        re.compile(r"deprecated `ufctex` identity", re.IGNORECASE),
+    ),
+    "docs/V3-CONTINUATION.md": (
+        re.compile(r"stale `ufctex`", re.IGNORECASE),
+    ),
+    "docs/V3-RELEASE-READINESS.md": (
+        re.compile(r"replaces historical/deprecated `ufctex` identity", re.IGNORECASE),
     ),
 }
 

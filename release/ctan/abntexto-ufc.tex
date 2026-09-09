@@ -18,22 +18,22 @@
 
 \title{\pkg\\Package manual}
 \author{Tiago Guimarães Sombra}
-\date{Version \version}
+\date{Version \version\ --- 2026-09-09}
 
 \begin{document}
 \maketitle
 
 \section{Purpose and status}
 
-\pkg{} is an unofficial, community-maintained LaTeX class for academic works at the Federal University of Ceará (UFC), Brazil. It is built on top of the \upstream{} class and provides UFC-oriented front matter, academic-work profiles, bibliography integration, objects, and related formatting support.
+\pkg{} is an unofficial, community-maintained LaTeX class for academic works at the Federal University of Ceará (UFC), Brazil. It is built on top of the \upstream{} class and provides UFC-oriented front matter, academic-work profiles, research-project and scientific-article profiles, bibliography integration, academic objects and related formatting support.
 
-The project must not be described as an official or UFC-homologated template unless the University explicitly grants that status.
+The project is not an official or UFC-homologated template unless the University explicitly grants that status.
 
 \section{Requirements}
 
-The class requires LaTeX2e and \upstream{} 1.1 or newer. TeX Live 2026 is the current development target. Bibliography workflows use \texttt{biblatex}/\texttt{biber}; optional class features may load additional packages when enabled.
+The class requires LaTeX2e and \upstream{} 1.1 or newer. Version \version{} is certified primarily against TeX Live 2026. Bibliography workflows use \texttt{biblatex} and \texttt{biber}; optional class features may load additional packages when enabled.
 
-The package does not redistribute proprietary Microsoft font files or UFC institutional marks. An authorized institutional asset may be supplied locally by the user.
+The package does not redistribute the UFC logo, coat of arms or any other institutional mark. It also does not redistribute proprietary Microsoft Arial or Times New Roman font files. An institutional mark may be supplied locally only by users who are authorized to use it.
 
 \section{Installation}
 
@@ -43,13 +43,15 @@ When installed through a TeX distribution, start a document with:
 \documentclass{abntexto-ufc}
 \end{Verbatim}
 
-For manual installation, place \texttt{abntexto-ufc.cls} and the accompanying \texttt{abntexto-ufc/} module directory in a location visible to TeX. Install the external \upstream{} dependency separately.
+The CTAN distribution has one runtime file, \texttt{abntexto-ufc.cls}. All project-owned runtime modules used in the development repository are incorporated into that class during the deterministic CTAN build. No external \texttt{abntexto-ufc/*.def} files are required or distributed.
+
+For manual installation, place \texttt{abntexto-ufc.cls} in a location visible to TeX and install the external \upstream{} dependency separately.
 
 The canonical upstream package page is \url{https://ctan.org/pkg/abntexto}.
 
-\section{Minimal configuration pattern}
+\section{Minimal configuration}
 
-Version 3 uses one canonical English project API. Setup keys and project-owned public commands are English; Portuguese remains appropriate for rendered Brazilian academic content. Removed v2 Portuguese project API is not kept through runtime aliases. The full editable template distributed by the project contains the complete set of fields and examples.
+Version 3 uses one canonical English project API. Setup keys and project-owned public commands are English; Portuguese remains appropriate for rendered Brazilian academic content. The historical v2 Portuguese project API is not retained through runtime aliases.
 
 \begin{Verbatim}[frame=single]
 \documentclass{abntexto-ufc}
@@ -57,6 +59,7 @@ Version 3 uses one canonical English project API. Setup keys and project-owned p
 \ufcsetup{
   type = undergraduate-capstone,
   print-mode = single-sided,
+  coat-of-arms = false,
   author = {Nome Sobrenome},
   title = {Titulo do trabalho},
   location = {Fortaleza},
@@ -78,34 +81,51 @@ Texto do trabalho.
 \end{document}
 \end{Verbatim}
 
-The distribution also contains \texttt{abntexto-ufc-example.tex}, the minimal package example used as a release-source fixture.
+The package also contains \texttt{abntexto-ufc-example.tex} and its compiled PDF as a minimal portable example.
 
-\section{Architecture}
+\section{Document profiles}
 
-The public class file \texttt{abntexto-ufc.cls} loads the external \upstream{} class and then project-owned responsibility modules under \texttt{abntexto-ufc/}. Those modules separate core behavior, fonts, layout, front matter, academic-work profiles, research projects, objects, bibliography, current upstream integrations, standards adaptations, and back matter.
-
-During the v3 runtime/API migration, \texttt{public-api.def} is transitional forwarding debt only; it is not a behavior owner and is removed before the release-ready v3 foundation is frozen. Public behavior is implemented directly by the module that owns it.
-
-This modular layout is intentional: the CTAN candidate keeps the class and module directory together and does not vendor \texttt{abntexto.cls}.
-
-\section{Public distribution variants}
-
-The project produces distinct release artifacts for different consumers:
+The canonical \texttt{type} values provided by version \version{} are:
 
 \begin{itemize}
-  \item a class/runtime archive;
-  \item a CTAN submission candidate;
-  \item a flattened editable template archive;
-  \item a self-contained flattened Overleaf archive.
+  \item \texttt{undergraduate-capstone};
+  \item \texttt{specialization-capstone};
+  \item \texttt{masters-thesis};
+  \item \texttt{doctoral-thesis};
+  \item \texttt{research-project};
+  \item \texttt{anonymized-research-project};
+  \item \texttt{scientific-article}.
 \end{itemize}
 
-Only the Overleaf bundle vendors the pinned upstream \texttt{abntexto.cls}. The CTAN candidate keeps \upstream{} as a normal external TeX dependency.
+The complete editable template and the v2-to-v3 migration mapping are maintained in the project repository rather than duplicated into the CTAN package.
+
+\section{Architecture and dependencies}
+
+The development repository remains modular: the canonical source class loads responsibility-specific \texttt{.def} files for core behavior, fonts, layout, front matter, academic-work profiles, articles, research projects, objects, bibliography, upstream integrations, standards adaptations and back matter. This modular source layout is an engineering concern only.
+
+For CTAN, the release builder deterministically expands those project-owned modules into a single generated \texttt{abntexto-ufc.cls}. The generated class is then compiled in isolation with only the external \upstream{} dependency available. The CTAN ZIP contains no project-owned \texttt{.def} file and no nested runtime module directory.
+
+The CTAN package does not vendor \texttt{abntexto.cls}; \upstream{} remains a normal external TeX dependency. The separate Overleaf convenience bundle published on GitHub may include the project's pinned upstream revision so that an uploaded project is self-contained.
+
+\section{Bibliography and current standards}
+
+The project uses \texttt{biblatex-abnt} and a narrowly scoped compatibility layer for current ABNT NBR 6023:2025 requirements that are not yet represented by the released dependency behavior. Version \version{} follows the project's current-edition policy: applicable current ABNT editions take precedence over superseded technical references embedded in older institutional guides.
+
+The v3.0.0 bibliography regression explicitly covers current online availability/access elements, DOI coexistence, repeated authorship and legal-person/jurisdiction identification under NBR 6023:2025.
+
+\section{Distribution}
+
+The canonical package archive is \texttt{abntexto-ufc-3.0.0.zip}. It is the single archive intended for CTAN submission and contains one top-level \texttt{abntexto-ufc/} directory. Its only runtime implementation file is the generated monolithic \texttt{abntexto-ufc.cls}; the remaining files are README, CHANGELOG, license, this manual and the minimal example in source/PDF form.
+
+Repository engineering infrastructure, source \texttt{.def} modules, tests, CI workflows, evidence files, roadmaps, proprietary fonts and institutional mark assets are deliberately excluded from the CTAN archive.
+
+Separate editable-template and Overleaf archives may be attached to the GitHub Release for user convenience; they preserve the repository-oriented modular layout and are not CTAN upload files.
 
 \section{License and support}
 
-\pkg{} is distributed under the LaTeX Project Public License, version 1.3c or later. The full license text is included in \texttt{LICENSE}.
+\pkg{} is distributed under the LaTeX Project Public License, version 1.3c or later. The complete license text is included in \texttt{LICENSE}.
 
-Repository, source code, issues, and maintenance information are available at:
+Repository and issue tracker:
 
 \begin{center}
 \url{https://github.com/tiagosombrra/abntexto-ufc}

@@ -7,74 +7,103 @@ Updated: 2026-09-09
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical branch | `main`; current SHA must be resolved dynamically from Git |
-| Release PR #293 | **MERGED** as squash commit `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
-| Publication-closeout PR #294 | **MERGED** as `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
-| Continuation synchronization PR #295 | **MERGED**; Static `34335044265` on canonical `main` SUCCESS |
-| Active work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
-| Superseded PR #292 | **CLOSED**; historical evidence only |
+| Canonical branch | `main`; resolve current SHA dynamically from Git |
 | Active phase | **Release** |
-| Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **ACCEPTED** |
-| Candidate Static | `34303586782` — SUCCESS |
-| Candidate Linux | `34303586778` — SUCCESS with required complete scope |
-| Candidate Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Retained distribution artifact | ID `10086299397`, `abntexto-ufc-v3.0.0-distribution-34303586773` |
-| Artifact upload digest | `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
-| Independent artifact verification | exact five-file set; `SHA256SUMS` PASS; all four ZIP integrity checks PASS |
-| Current batch | **Release publication — tag/GitHub Release verification pending** |
-| Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
+| Active work branch | `release/v3-publication-hardening` |
+| Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — technical evidence retained, **SUPERSEDED FOR PUBLICATION** |
+| Prior artifact | `10086299397` — reproducible historical evidence; do not publish |
+| Current batch | **CTAN/publication hardening + final recertification preparation** |
+| Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
+| CTAN archive | one canonical upload file: `abntexto-ufc-3.0.0.zip` |
+| CTAN runtime | **one generated `abntexto-ufc.cls`; zero project-owned `.def` files** |
+| Repository runtime | modular source tree retained for engineering/testing |
+| Final tag rule | certified source SHA must equal `v3.0.0` target SHA |
+| pkgcheck rule | current CTAN `pkgcheck` is a pre-tag gate |
 
-`docs/V3-CONTINUATION.md` is the shortest safe entry point for resuming from a new conversation or local clone. Current `main` HEAD is intentionally not hardcoded as a continuing invariant; fetch Git at session start.
+`docs/V3-CONTINUATION.md` is the shortest continuation entry point. Never use memory or a hardcoded “current main” SHA as Git authority.
 
-## Accepted Release phase-end regression
+## Historical accepted technical evidence
 
-Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` is immutable and accepted.
+Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` previously passed:
 
-| Gate | Accepted evidence |
+| Gate | Historical result |
 |---|---|
 | Static contract | `34303586782` — SUCCESS |
-| Linux integration | `34303586778` — SUCCESS, complete scope |
-| Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Reference PDF reproducibility | PASS; 2 builds; SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65`; 450652 bytes |
-| Distribution bundle contract | PASS; four ZIPs + `SHA256SUMS`; archive integrity PASS |
-| Validation artifact | ID `10086298601`, digest `sha256:124f692d571dde12754a6b084075b4acff29d47ffcfb4fb9d321cc8f1934d18c` |
-| Distribution artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
+| Complete Linux integration | `34303586778` — SUCCESS |
+| Linux release check | `34303586773` — `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| Reference PDF reproducibility | PASS; SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65` |
+| Retained artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
 
-The retained distribution artifact was independently downloaded and verified without rebuilding.
+Those results prove the prior technical candidate; they **do not certify the final publication bytes** because the package documentation was stale.
 
-## Accepted publication checksums
+## Publication defect and response
 
-| Asset | SHA-256 |
-|---|---|
-| `abntexto-ufc-3.0.0.zip` | `c38fe32bc6b51ff3b7723b4ef118574d130cea97f29d443c1fc4d08b24e0b207` |
-| `abntexto-ufc-ctan-3.0.0.zip` | `45a8c74f1c36970b8c2f18663e76920d4c53aa9c165922b4151cd13f75b75b60` |
-| `abntexto-ufc-overleaf-3.0.0.zip` | `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b` |
-| `abntexto-ufc-template-3.0.0.zip` | `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791` |
+The release audit found that the old canonical ZIP still told users to use v2.1.0 and that the CTAN README labeled 3.0.0 a development candidate. The response is intentionally fail-closed:
 
-## Remaining work
+- no old artifact may be relabeled or silently rebuilt;
+- `release/v3-release-candidate.json` records the old candidate as superseded for publication;
+- a new candidate must be produced only after this hardening work is merged;
+- the final candidate is the exact post-merge canonical `main` SHA;
+- final package hashes are frozen only after full regression and current `pkgcheck`.
 
-| Order | Action | State |
-|---:|---|---|
-| 1 | Create `v3.0.0` tag and GitHub Release from latest canonical `main`, using exact retained candidate-produced bytes. | PENDING |
-| 2 | Verify published GitHub asset hashes against the accepted checksums. | PENDING |
-| 3 | Run current CTAN `pkgcheck` on the retained CTAN candidate. | PENDING |
-| 4 | Perform actual CTAN upload only as an explicit action and preserve receipt/acceptance evidence if performed. | EXTERNAL / EXPLICIT |
-| 5 | Synchronize final publication state and perform final Release verification before setting Release `CLOSED`. | PENDING |
+## CTAN package contract
 
-Librarian item 33 remains fail-closed pending authoritative current NBR 6023:2025 evidence.
+The previous `ufctex` identity is replaced by `abntexto-ufc`. The CTAN-facing package is intentionally small and follows the single-class publication shape used by `abntexto-uece` where appropriate.
 
-## Local continuation
+The repository remains modular, but the CTAN builder deterministically incorporates every tracked project-owned runtime `.def` module into one generated `abntexto-ufc.cls`. The generated class is tested without the modular runtime directory present.
 
-```bash
-git fetch --all --prune
-git switch main
-git pull --ff-only origin main
-git status
-git rev-parse HEAD
+```text
+abntexto-ufc/
+├── README.md
+├── CHANGELOG
+├── LICENSE
+├── abntexto-ufc.cls
+├── abntexto-ufc.tex
+├── abntexto-ufc.pdf
+├── abntexto-ufc-example.tex
+└── abntexto-ufc-example.pdf
 ```
 
-Then read `AGENTS.md`, `release/v3-roadmap.json`, and `docs/V3-CONTINUATION.md` before making changes.
+Hard invariants for the CTAN ZIP:
+
+- exactly one project-owned runtime implementation file: `abntexto-ufc.cls`;
+- **zero `.def` files**;
+- no nested `abntexto-ufc/abntexto-ufc/` runtime directory;
+- every tracked runtime module is inlined exactly once;
+- the minimal example compiles with only the generated class plus external `abntexto.cls` available;
+- no UFC logos/marks, proprietary Microsoft fonts, vendored `abntexto.cls`, tests, workflows, validators, release state, roadmaps or engineering evidence.
+
+Only `abntexto-ufc-3.0.0.zip` is intended for CTAN. The editable-template and Overleaf ZIPs are GitHub Release conveniences and may preserve the modular source layout.
+
+## Normative closure
+
+Former librarian item 33 is now PASS using primary ABNT NBR 6023:2025 authority and executable regression cases. The project now explicitly verifies:
+
+- DOI alongside required online availability/access elements;
+- explicit repetition of consecutive authorship;
+- legal-person authorship by known/highlighted entity form;
+- governmental jurisdiction disambiguation such as `SÃO PAULO (Estado)`.
+
+## Remaining Release work
+
+1. pass CI for `release/v3-publication-hardening`, including the monolithic-class/zero-`.def` distribution gate;
+2. merge through protected `main`;
+3. resolve the exact post-merge SHA;
+4. execute the final **phase-end regression** on that SHA;
+5. build and validate the deterministic final archive set;
+6. execute current CTAN `pkgcheck` before tag creation;
+7. freeze hashes and evidence;
+8. create immutable `v3.0.0` on the certified SHA;
+9. publish GitHub Release with exact frozen bytes and verify downloaded hashes;
+10. submit only the canonical package ZIP to CTAN and retain receipt/acceptance evidence;
+11. synchronize final state and close Release.
+
+Invariant:
+
+```text
+certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+```
 
 ## Mandatory operating discipline
 
-Every **material advance** updates the relevant execution documentation and this handoff in the same work cycle. Targeted checks never replace the accepted **phase-end regression**. The Release candidate remains the evidence anchor; publication verification is an additional closeout obligation.
+Every **material advance** updates the relevant documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. No publication state is inferred from a build, tag or submission without the corresponding external evidence.
