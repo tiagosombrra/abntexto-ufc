@@ -1,5 +1,5 @@
 {
-  "schema_version": 30,
+  "schema_version": 31,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -73,7 +73,7 @@
   "baseline": {
     "pre_regression_main_sha": "c4bf51b574647226ee488440579ec2a204c16c79",
     "article_source_contract_sha": "4d018a92697e8f39e3a53b034c451e55996c84fb",
-    "canonical_main_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "canonical_main_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
     "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda"
   },
   "phases": [
@@ -89,28 +89,29 @@
     "review_status": {"pass": 33, "partial": 0, "fail": 0, "normative_review": 1},
     "scientific_article_state": "closed",
     "final_certification_state": "closed-accepted",
-    "release_state": "active-phase-end-accepted-publication-pending",
+    "release_state": "active-publication-closeout",
     "release_branch": "release/v3-release",
     "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "release_pr": 293,
+    "release_pr_state": "merged",
+    "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
+    "release_pr_merge_method": "squash",
     "closure_scope_frozen": true,
     "latest_fully_validated_checkpoint_sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
     "latest_fully_validated_checkpoint_state": "release-phase-end-regression-accepted-static-complete-linux-release-check-green-artifact-verified",
-    "latest_control_sync_checkpoint_sha": "6ab4768662aa51842cf745afbf846e89b6bd466a",
-    "latest_control_sync_static_run": 34303128975,
-    "latest_control_sync_linux_run": 34303128994,
+    "latest_control_sync_checkpoint_sha": "28b6f512f7bb3acadb3eb5f8eb17335979725e2d",
+    "latest_control_sync_static_run": 34332462687,
+    "latest_control_sync_linux_run": 34332462700,
     "latest_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
-    "current_correction_batch": ["Release publication closeout — accepted candidate; PR merge, tag, GitHub Release and publication verification pending"],
+    "current_correction_batch": ["Release publication closeout — PR #293 merged; v3.0.0 tag, GitHub Release and publication verification pending"],
     "pending_acceptance_gates": [
-      "Post-CI acceptance synchronization must pass Static contract",
-      "Merge PR #293 to canonical main",
+      "Post-merge documentation synchronization must pass Static contract",
       "Create and verify v3.0.0 tag and GitHub Release from exact retained candidate bytes",
       "Verify published GitHub asset hashes against accepted candidate checksums",
       "Run current CTAN pkgcheck and record any actual CTAN submission/acceptance evidence",
       "Record final publication verification before Release closure"
     ],
     "release_blockers": [
-      "Release work has not yet been merged to canonical main",
       "v3.0.0 tag/GitHub Release assets have not yet been published and hash-verified",
       "Final publication verification has not yet been recorded"
     ],
@@ -201,16 +202,19 @@
   },
   "branch_plan": {
     "current_work_branch": "release/v3-release",
-    "release_branch_state": "active",
+    "release_branch_state": "active-publication-closeout",
     "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "release_pr": 293,
+    "release_pr_state": "merged",
+    "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
+    "release_pr_merge_method": "squash",
     "final_certification_pr": 289,
     "final_certification_pr_state": "merged",
     "final_certification_merge_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "scientific_article_pr": 286,
     "scientific_article_pr_state": "merged",
     "scientific_article_merge_sha": "22e3c19235fa5245505b92d919a09d31eb2bfecb",
-    "integration_main_sha": "e34037f3241aab013b80645b338f38954e02bcda",
+    "integration_main_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
     "policy": "main-plus-one-short-lived-active-task-branch"
   },
   "evidence": {
@@ -242,9 +246,9 @@
     "release_transport_preparation_linux_run": 34265429551,
     "release_transport_preparation_linux_scope": "complete",
     "release_transport_preparation_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
-    "release_control_sync_checkpoint_sha": "6ab4768662aa51842cf745afbf846e89b6bd466a",
-    "release_control_sync_static_run": 34303128975,
-    "release_control_sync_linux_run": 34303128994,
+    "release_control_sync_checkpoint_sha": "28b6f512f7bb3acadb3eb5f8eb17335979725e2d",
+    "release_control_sync_static_run": 34332462687,
+    "release_control_sync_linux_run": 34332462700,
     "release_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
     "release_artifact_delivery_checkpoint_sha": "b55210acdb614fc3178e3ebf5b3a595bed8508c1",
     "release_artifact_delivery_static_run": 34300561597,
@@ -264,6 +268,8 @@
     "release_distribution_artifact_id": 10086299397,
     "release_distribution_artifact_sha256": "c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222",
     "release_distribution_artifact_independent_verification": "PASS",
+    "release_pr_merge_sha": "add52f2183f18d6cea3e9477f2a45416a13cfc36",
+    "release_pr_merge_method": "squash",
     "librarian_review_contract_items": 34
   },
   "release_policy": {

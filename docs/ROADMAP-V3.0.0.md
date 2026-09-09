@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## Current status
 
-**Release is ACTIVE on PR #293. The immutable Release phase-end regression is accepted; publication and post-publication verification remain.**
+**Release is ACTIVE. PR #293 is merged to canonical `main`; the immutable Release phase-end regression is accepted; tag/GitHub Release and post-publication verification remain.**
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -13,14 +13,15 @@ Updated: 2026-09-09
 | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
 | Final Certification | CLOSED | immutable certification candidate and heavy matrix accepted |
-| Release | **ACTIVE — PUBLICATION CLOSEOUT** | merge accepted Release work; publish exact retained assets; verify tag/GitHub Release and any explicit external publication; final closeout verification |
+| Release | **ACTIVE — PUBLICATION CLOSEOUT** | publish exact retained assets; verify tag/GitHub Release and any explicit external publication; final closeout verification |
 
 ## Release facts
 
 | Predicate | Current result |
 |---|---|
-| Canonical `main` before Release merge | `e34037f3241aab013b80645b338f38954e02bcda` |
-| Release branch / PR | `release/v3-release` / #293 |
+| Canonical `main` | `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
+| PR #293 | **MERGED** by squash as `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
+| Publication-closeout work branch | `release/v3-release`, reset to merged `main` |
 | Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **ACCEPTED** |
 | Candidate Static | `34303586782` — SUCCESS |
 | Candidate Linux | `34303586778` — SUCCESS, complete scope |
@@ -35,14 +36,14 @@ Updated: 2026-09-09
 | Step | State | Gate |
 |---:|---|---|
 | Final Certification → Release transition | DONE | PR #289 merged |
-| Release branch + PR synchronization | DONE | PR #293 open |
+| Release branch + PR #293 | **DONE** | squash merge to `add52f218...` |
 | Candidate transport + artifact retention tooling | DONE | bounded Static + complete Linux PASS |
 | Publish immutable Release phase-end candidate marker | DONE | `release/v3-release-candidate.json` present in `75ead435...` |
-| Release phase-end regression | **DONE / ACCEPTED** | Static `34303586782`; complete Linux `34303586778`; release check `34303586773` |
-| Verify candidate artifacts/checksums | **DONE / ACCEPTED** | artifact `10086299397`; exact candidate provenance; SHA256SUMS and archive integrity PASS |
-| Record candidate acceptance | **ACTIVE — THIS DOCUMENTATION CYCLE** | candidate SHA + runs + artifact identity/checksums synchronized |
-| Merge PR #293 | QUEUED | post-acceptance documentation Static remains green |
-| Tag/GitHub Release | QUEUED | use exact retained candidate-produced bytes; no rebuild |
+| Release phase-end regression | DONE / ACCEPTED | Static `34303586782`; complete Linux `34303586778`; release check `34303586773` |
+| Verify candidate artifacts/checksums | DONE / ACCEPTED | artifact `10086299397`; exact candidate provenance; SHA256SUMS and archive integrity PASS |
+| Record candidate acceptance | DONE | synchronized in PR #293 and merged to `main` |
+| Record merge state in control plane | **ACTIVE — THIS DOCUMENTATION CYCLE** | Static contract on post-merge docs |
+| Tag/GitHub Release | QUEUED | exact retained candidate-produced bytes; no rebuild |
 | Verify published assets | QUEUED | hashes match accepted candidate checksums |
 | CTAN publication step | QUEUED / EXTERNAL | current `pkgcheck`; explicit upload only with receipt/evidence |
 | Release closeout | QUEUED | no unresolved publication blocker + final verification recorded |
@@ -56,9 +57,9 @@ Updated: 2026-09-09
 | `abntexto-ufc-overleaf-3.0.0.zip` | `6c099a8510a3deb267da1b383df88a8fce310ba41ae5d58a2a4b80c26100d41b` |
 | `abntexto-ufc-template-3.0.0.zip` | `4d8ebea5e97317823d05202dfa52c8f40b2b09dd993e8379c220eedf64aef791` |
 
-## Candidate policy
+## Candidate and publication policy
 
-The accepted candidate `75ead435...` remains immutable. The post-CI documentation commit does not replace the candidate and does not authorize rebuilding release archives. The GitHub Release must use the exact retained bytes from Linux release check `34303586773`.
+The accepted candidate `75ead435...` remains immutable. The squash merge and later documentation commits do not replace the candidate and do not authorize rebuilding release archives. The GitHub Release must use the exact retained bytes from Linux release check `34303586773`.
 
 ## Frozen remaining scope
 
@@ -66,4 +67,4 @@ Only **Release** remains. Do not create another roadmap phase. Librarian item 33
 
 ## Operating discipline
 
-Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Release still requires final publication verification before closure even though its immutable **phase-end regression** candidate is now accepted.
+Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Release still requires final publication verification before closure even though its immutable **phase-end regression** candidate is accepted.
