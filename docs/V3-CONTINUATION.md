@@ -18,6 +18,8 @@ This file is the shortest safe entry point for continuing v3 work from a new Cha
 | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
 | Package id | `abntexto-ufc` |
 | CTAN upload contract | exactly one archive: `abntexto-ufc-3.0.0.zip` |
+| CTAN runtime contract | exactly one generated `abntexto-ufc.cls`; **zero project-owned `.def` files** |
+| Development runtime | modular repository source retained; monolithization is CTAN-only |
 | Tag contract | `v3.0.0` must point to the exact final certified `main` SHA |
 | pkgcheck contract | current CTAN `pkgcheck` must pass before tag creation |
 
@@ -34,8 +36,12 @@ Release was therefore reopened only for publication hardening and the bibliograp
 - no UFC logo, coat of arms or other institutional mark is redistributed;
 - no proprietary Microsoft font file is redistributed;
 - canonical `abntexto-ufc-3.0.0.zip` is itself CTAN-grade;
-- separate template and Overleaf ZIPs are GitHub conveniences only;
-- CTAN package contains runtime, README, CHANGELOG, LICENSE, manual source/PDF and minimal example source/PDF;
+- separate template and Overleaf ZIPs are GitHub conveniences only and may preserve modular repository sources;
+- CTAN package contains README, CHANGELOG, LICENSE, one generated monolithic `abntexto-ufc.cls`, manual source/PDF and minimal example source/PDF;
+- every tracked project-owned runtime `.def` module is inlined exactly once into the generated class;
+- **any `.def` file in the CTAN ZIP is a hard failure**;
+- a nested CTAN runtime module directory is a hard failure;
+- the CTAN example is compiled in isolation without the modular runtime directory;
 - repository tests/workflows/validators/evidence/roadmaps/tools are excluded from CTAN;
 - stale `ufctex`, v2-publication and `development candidate` wording fails the distribution gate;
 - filenames, line endings, permissions, empty files and archive layout are checked fail-closed.
@@ -46,17 +52,18 @@ The earlier NBR 6023:2025 authority gap is closed using primary current-edition 
 
 ## Remaining work
 
-1. finish publication-hardening integration and pass PR Static + complete Linux/release CI;
+1. finish publication-hardening integration and pass PR Static + complete Linux/release CI, including the CTAN monolithic-class gate;
 2. merge by the repository's protected squash workflow;
 3. resolve the exact resulting `origin/main` SHA;
 4. run the final **phase-end regression** on that exact SHA;
 5. build the three deterministic ZIPs + `SHA256SUMS` from that exact SHA;
-6. run the current CTAN `pkgcheck` against `abntexto-ufc-3.0.0.zip` and preserve version/output/hash evidence;
-7. freeze bytes and hashes;
-8. create immutable `v3.0.0` on that same certified SHA;
-9. create GitHub Release, attach exact frozen assets, re-download and verify hashes;
-10. submit only `abntexto-ufc-3.0.0.zip` to CTAN and preserve receipt/acceptance evidence;
-11. synchronize final publication state and close Release only after verification.
+6. verify `abntexto-ufc-3.0.0.zip` has one generated runtime class and zero project-owned `.def` files;
+7. run the current CTAN `pkgcheck` against `abntexto-ufc-3.0.0.zip` and preserve version/output/hash evidence;
+8. freeze bytes and hashes;
+9. create immutable `v3.0.0` on that same certified SHA;
+10. create GitHub Release, attach exact frozen assets, re-download and verify hashes;
+11. submit only `abntexto-ufc-3.0.0.zip` to CTAN and preserve receipt/acceptance evidence;
+12. synchronize final publication state and close Release only after verification.
 
 Invariant:
 
