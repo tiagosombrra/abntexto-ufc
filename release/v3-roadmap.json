@@ -1,5 +1,5 @@
 {
-  "schema_version": 34,
+  "schema_version": 35,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -44,7 +44,9 @@
     "hardcoded_current_main_sha_is_authority": false,
     "pkgcheck_must_pass_before_version_tag": true,
     "tagged_commit_must_equal_certified_commit": true,
-    "ctan_upload_archive_count": 1
+    "ctan_upload_archive_count": 1,
+    "ctan_project_def_files": 0,
+    "ctan_runtime_must_be_monolithic_class": true
   },
   "phase_end_regression": {
     "required": true,
@@ -59,6 +61,7 @@
       "complete Linux integration scope",
       "phase-specific acceptance checks",
       "Linux release check",
+      "monolithic CTAN class with zero project-owned def files",
       "current CTAN pkgcheck on final canonical archive"
     ],
     "presentation_scope_requires_canonical_pdf_inspection": true,
@@ -117,15 +120,19 @@
       "Close NBR 6023:2025 librarian item 33 with primary authority and executable regression",
       "Replace stale v3 distribution documentation with final-publication metadata",
       "Make abntexto-ufc-3.0.0.zip the single CTAN-grade upload archive",
+      "Generate one monolithic abntexto-ufc.cls for CTAN by inlining every project-owned runtime def module",
+      "Require zero project-owned def files and no nested runtime module directory in the CTAN archive",
+      "Compile the CTAN example in isolation against only the generated class and external abntexto dependency",
       "Exclude UFC institutional marks and proprietary Microsoft fonts fail-closed",
       "Move current CTAN pkgcheck before immutable v3.0.0 tag creation",
       "Require exact post-merge main SHA for final Release candidate and tag"
     ],
     "pending_acceptance_gates": [
-      "Pass publication-hardening PR Static and complete Linux/release CI",
+      "Pass publication-hardening PR Static and complete Linux/release CI with the monolithic CTAN package gate",
       "Merge publication hardening to protected main",
       "Resolve exact post-merge main SHA and run final phase-end regression",
       "Build deterministic three-ZIP distribution plus SHA256SUMS from exact certified SHA",
+      "Verify CTAN archive contains one generated abntexto-ufc.cls and zero project-owned def files",
       "Run current CTAN pkgcheck against abntexto-ufc-3.0.0.zip before tag",
       "Freeze publication hashes and evidence",
       "Create immutable v3.0.0 tag on exact certified SHA",
@@ -183,6 +190,17 @@
       "ctan_upload_archive": "abntexto-ufc-3.0.0.zip",
       "ctan_upload_archive_count": 1,
       "ctan_top_level_directory": "abntexto-ufc",
+      "ctan_runtime_implementation_files": [
+        "abntexto-ufc.cls"
+      ],
+      "ctan_project_def_files": 0,
+      "ctan_nested_runtime_module_directory": false,
+      "ctan_monolithic_class": true,
+      "ctan_monolithic_class_generation": "deterministic-inline-of-tracked-project-runtime-modules",
+      "ctan_all_tracked_runtime_modules_inlined_exactly_once": true,
+      "ctan_example_isolated_compile_without_module_directory": true,
+      "development_repository_remains_modular": true,
+      "template_and_overleaf_may_remain_modular": true,
       "abntexto_external_dependency": true,
       "institutional_marks_redistributed": false,
       "proprietary_microsoft_fonts_redistributed": false,
