@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-09
-Status: ACTIVE — FINAL HUMAN / PKGCHECK GATES
+Status: ACTIVE — FINAL EXACT-MAIN RECERTIFICATION / HUMAN APPROVAL
 
 ## Phase readiness
 
@@ -12,7 +12,7 @@ Status: ACTIVE — FINAL HUMAN / PKGCHECK GATES
 | Reference PDF Validation | CLOSED | 55/55 visual PASS |
 | Scientific Article | CLOSED | complete Linux + article PDF visual/PDF-A PASS |
 | Final Certification | CLOSED | technical/runtime certification accepted |
-| Release | **ACTIVE** | publication hardening and post-merge control sync merged; final exact-main pkgcheck + seven-profile approval + publication pending |
+| Release | **ACTIVE** | final exact-main pkgcheck + seven-profile approval + publication pending |
 
 ## Completed Release hardening
 
@@ -22,9 +22,9 @@ PR #298 was then squash-merged as `05399473827da7cf6b6c8bac36edc7115481773f`, sy
 
 The retained baseline CTAN artifact was physically audited as exactly eight files, `1 cls / 0 def`, no nested runtime tree, no vendored `abntexto.cls`, no institutional marks and no proprietary Microsoft fonts.
 
-## Final control gate now being added
+## Final controls encoded in the candidate definition
 
-Before the immutable tag, two requirements are being made explicit and executable:
+Before the immutable tag, two requirements are explicit and executable:
 
 1. **CTAN pkgcheck:** `Linux release check` downloads the current CTAN `pkgcheck` at execution time, records `--version`, complete output and the SHA-256 of the checked canonical ZIP, and fails on tool errors. Any warnings still require explicit classification before freeze.
 2. **Maintainer visual acceptance:** the final candidate must provide PDF + corresponding `.tex` for all seven supported profiles and obtain explicit maintainer approval.
@@ -39,11 +39,11 @@ Required profile set:
 6. `anonymized-research-project`;
 7. `scientific-article`.
 
-A preliminary set generated from baseline `25c6ab09...` already passed A4, PDF/A-2b, embedded-font, recognized-warning/overflow and page-by-page visual checks for all seven profiles. It does **not** close the final human gate because later tracked Release-control commits require regeneration from the eventual exact candidate.
+A preliminary set generated from baseline `25c6ab09...` already passed A4, PDF/A-2b, embedded-font, recognized-warning/overflow and page-by-page visual checks for all seven profiles. It does **not** close the final human gate because later tracked Release-control commits require regeneration from the exact tag candidate.
 
 ## Final-candidate contract
 
-After this final gate synchronization is merged, resolve the resulting exact `main` SHA. That commit is the only candidate eligible for certification, maintainer approval and tag creation.
+The only eligible candidate is the exact canonical `main` SHA containing the final release gates and subsequently passing certification, current CTAN `pkgcheck` and explicit maintainer visual approval.
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
@@ -57,8 +57,8 @@ No tracked commit is allowed between final acceptance and tag creation without r
 |---:|---|---|
 | 1 | Publication hardening PR #297 | **PASS / MERGED** |
 | 2 | Post-hardening control-plane PR #298 | **PASS / MERGED** |
-| 3 | Merge final executable `pkgcheck` + seven-profile human-acceptance gate | IN PROGRESS |
-| 4 | Resolve exact resulting `main` SHA | BLOCKED BY 3 |
+| 3 | Executable current-CTAN `pkgcheck` + seven-profile human-acceptance policy | **ENCODED IN FINAL CANDIDATE CONTRACT** |
+| 4 | Resolve exact canonical `main` SHA containing final gates | PENDING |
 | 5 | Static + automatic `scope=complete` Linux integration + Linux release check (including current `pkgcheck`) on exact SHA | BLOCKED BY 4 |
 | 6 | Retain and physically re-audit deterministic three-ZIP distribution + `SHA256SUMS` | BLOCKED BY 5 |
 | 7 | Regenerate seven final PDF/`.tex` pairs from exact candidate and obtain explicit maintainer approval | BLOCKED BY 4–6 |
@@ -72,4 +72,4 @@ No tracked commit is allowed between final acceptance and tag creation without r
 
 The retained Windows literal-font certification remains scope-valid because these final changes affect Release control/workflows/documentation, not font runtime or engine selection. A fresh Windows run becomes mandatory if font setup, engine behavior or the Windows certification contract changes before freeze.
 
-Every material repository advance updates affected documentation and machine state in the same work cycle. Automated green tests never substitute for the explicit seven-profile maintainer approval.
+Every **material advance** updates affected documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. Automated green tests never substitute for the explicit seven-profile maintainer approval.
