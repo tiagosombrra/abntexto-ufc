@@ -93,4 +93,4 @@ certified source SHA == visually approved source SHA == tagged v3.0.0 SHA == sou
 
 Retained Windows literal-font certification remains scope-valid because the current final-control changes do not alter font runtime or engine behavior. Any font/engine/certification-relevant implementation change before freeze forces a fresh Windows run.
 
-Every **material advance** updates affected documentation and machine state in the same work cycle. No build, tag or submission is treated as CTAN acceptance without explicit external evidence.
+Every **material advance** updates affected documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. No build, tag or submission is treated as CTAN acceptance without explicit external evidence.
