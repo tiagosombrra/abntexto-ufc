@@ -1,6 +1,6 @@
 {
-  "schema_version": 5,
-  "purpose": "Immutable v3.0.0 GitHub publication record; CTAN submission and acceptance remain pending external evidence",
+  "schema_version": 6,
+  "purpose": "Immutable v3.0.0 GitHub publication record; maintainer all-profile visual validation is required before CTAN submission and acceptance",
   "phase": "release",
   "candidate_semantics": "certified source 05399473827da7cf6b6c8bac36edc7115481773f, tagged immutably as v3.0.0 and published with frozen GitHub Release assets",
   "integration_anchor": {
@@ -8,7 +8,7 @@
     "source": "PR #297 squash merge",
     "status": "publication-hardening-integrated",
     "taggable": false,
-    "reason": "A post-merge control-plane synchronization intentionally follows this integration commit before final candidate freeze."
+    "reason": "A post-merge control-plane synchronization intentionally followed this integration commit before final candidate freeze."
   },
   "superseded_candidate": {
     "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
@@ -29,7 +29,7 @@
     "status": "integration-evidence-only-not-final-publication-bytes"
   },
   "final_candidate": {
-    "status": "certified-tagged-github-release-published-ctan-pending",
+    "status": "certified-tagged-github-release-published-visual-review-pending-ctan-blocked",
     "source_branch_at_certification": "main",
     "certified_source_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
     "static_status": "PASS",
@@ -67,6 +67,35 @@
     "no_pre_tag_commits_after_acceptance": true,
     "publication_rebuild_allowed": false
   },
+  "maintainer_visual_validation": {
+    "required_before_ctan_submission": true,
+    "source_authority": {
+      "tag": "v3.0.0",
+      "sha": "05399473827da7cf6b6c8bac36edc7115481773f"
+    },
+    "profile_count": 7,
+    "profiles": [
+      "undergraduate-capstone",
+      "specialization-capstone",
+      "masters-thesis",
+      "doctoral-thesis",
+      "research-project",
+      "anonymized-research-project",
+      "scientific-article"
+    ],
+    "required_evidence_per_profile": [
+      "exact-tex-source",
+      "rendered-pdf",
+      "build-log-or-metadata",
+      "source-sha256",
+      "pdf-sha256"
+    ],
+    "automated_generation_status": "ACTIVE",
+    "maintainer_acceptance_status": "PENDING",
+    "ctan_submission_allowed": false,
+    "failure_policy": "material defect opens correction/new-version cycle; immutable v3.0.0 tag and Release must not be modified or retargeted",
+    "evidence_document": "docs/V3-VISUAL-VALIDATION.md"
+  },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
   "required_artifact_set": [
@@ -92,7 +121,9 @@
     "pkgcheck_required_before_tag": true,
     "pkgcheck_version_policy": "current-at-final-certification",
     "archive_sha256": "d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71",
-    "submission_status": "pending-not-submitted",
+    "maintainer_visual_acceptance_required_before_submission": true,
+    "submission_allowed": false,
+    "submission_status": "blocked-by-maintainer-visual-validation",
     "acceptance_status": "pending-no-external-evidence"
   },
   "final_tag_contract": {
@@ -107,7 +138,8 @@
   "documentation_policy": {
     "affected_docs_updated_with_every_material_repository_change": true,
     "root_readme_tracks_user_facing_facts_not_transient_ci_state": true,
-    "post_acceptance_pre_tag_repository_changes_forbidden": true
+    "post_acceptance_pre_tag_repository_changes_forbidden": true,
+    "maintainer_visual_gate_must_be_recorded_before_ctan": true
   },
   "publication_rebuild_allowed": false,
   "remove_after_acceptance": false,
