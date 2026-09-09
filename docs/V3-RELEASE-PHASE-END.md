@@ -1,53 +1,79 @@
 # V3.0.0 Release — Phase-end Regression
 
 Updated: 2026-09-09
-Status: ACCEPTED — PUBLICATION CLOSEOUT PENDING
+Status: REOPENED — NEW FINAL PHASE-END REGRESSION REQUIRED
 
 ## Purpose
 
-This document records the immutable Release phase-end candidate and the evidence boundary used through final publication closeout.
+This document records the Release regression boundary after the publication audit discovered defects in the previously accepted distribution bytes.
 
-## Accepted immutable candidate
+## Previous candidate status
 
-Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` contains the tracked Release marker `release/v3-release-candidate.json`. It was not amended after CI started and remains the immutable Release phase-end evidence anchor.
+Candidate `75ead435eabe5157ed17c295ac26fce76438b0ca` remains immutable historical evidence and previously passed:
 
-| Gate | Result |
+| Gate | Historical result |
 |---|---|
 | Static contract | `34303586782` — SUCCESS |
-| Linux integration | `34303586778` — SUCCESS, required complete scope |
+| Linux integration | `34303586778` — SUCCESS, complete scope |
 | Linux release check | `34303586773` — SUCCESS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| Deterministic reference PDF | PASS; SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65`; 450652 bytes |
-| PDF/A / Unicode / embedding | PASS in complete release contract |
-| Distribution artifacts/checksums | PASS; exact four ZIPs + `SHA256SUMS`; archive integrity PASS |
-| Librarian review | `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`; item 33 remains fail-closed |
+| Deterministic reference PDF | PASS; SHA-256 `2223030afafdd165b1b7747ea69a95b7e37a58ba4c2122bc2408d97c43547f65` |
+| Retained artifact | ID `10086299397`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
 
-## Retained artifact provenance
+However, its distribution bytes are **SUPERSEDED FOR PUBLICATION**. The audit found stale v2/pre-publication README content and a CTAN README that labeled 3.0.0 a development candidate. Those files must not be published or submitted to CTAN.
 
-The candidate's Linux release check retained distribution artifact ID `10086299397`, name `abntexto-ufc-v3.0.0-distribution-34303586773`, digest `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222`.
+This does not invalidate the earlier runtime/reference evidence; it invalidates that candidate as the final Release publication anchor.
 
-The artifact was independently downloaded and verified. Extraction yielded exactly the four expected ZIPs plus `SHA256SUMS`; checksum and ZIP-integrity checks passed. No archive was rebuilt.
+## New Release phase-end contract
 
-## Merge and synchronization result
+A new final candidate is required after publication hardening is merged to canonical `main`.
 
-| Event | Result |
-|---|---|
-| Release integration PR #293 | merged by squash as `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
-| Publication-closeout synchronization PR #294 | merged as `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
-| Continuation synchronization PR #295 | merged; canonical post-merge Static `34335044265` SUCCESS |
-| Release work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
-| Superseded PR #292 | closed; historical evidence only |
+The final candidate must be one immutable SHA and satisfy:
 
-Current canonical `main` SHA is a Git fact and must be resolved dynamically; it is not a self-referential machine-state invariant. These control-plane commits do not replace candidate `75ead435...` as the phase-end evidence anchor and do not authorize rebuilding publication archives.
+```text
+certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+```
 
-## Publication boundary
+A pull-request head is not sufficient if the repository later squash-merges it. Final certification therefore runs on the exact post-merge canonical `main` SHA.
 
-The **phase-end regression** is accepted, but Release remains ACTIVE. Remaining actions are:
+Minimum final evidence:
 
-1. create `v3.0.0` tag and GitHub Release from the latest canonical `main` while attaching the exact retained candidate bytes;
-2. verify published hashes against accepted checksums;
-3. run current CTAN `pkgcheck`; perform/record actual CTAN submission only as an explicit action with evidence;
-4. synchronize final publication facts and perform final Release verification before setting Release to `CLOSED`.
+1. Static contract on exact candidate SHA;
+2. complete Linux integration on exact candidate SHA;
+3. `make release-check` on exact candidate SHA;
+4. applicable Windows/literal-font/PDF-A recertification if affected by this batch;
+5. deterministic build of exactly three ZIPs plus `SHA256SUMS`;
+6. canonical CTAN-grade `abntexto-ufc-3.0.0.zip` structural/semantic gate PASS;
+7. current CTAN `pkgcheck` PASS/reviewed-warning result against that exact ZIP;
+8. frozen asset hashes and retained evidence before tag creation.
 
-## Regression discipline
+## Publication-hardening package boundary
 
-Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Targeted checks never replace the accepted **phase-end regression**. The immutable candidate remains the Release evidence anchor through publication closeout.
+The final public archives are:
+
+- `abntexto-ufc-3.0.0.zip` — canonical package and the **only CTAN upload archive**;
+- `abntexto-ufc-template-3.0.0.zip` — editable local template;
+- `abntexto-ufc-overleaf-3.0.0.zip` — self-contained Overleaf convenience bundle;
+- `SHA256SUMS` — GitHub Release integrity manifest.
+
+The canonical package has one `abntexto-ufc/` root and includes only runtime, concise documentation, CHANGELOG, LICENSE and minimal example source/PDF. It excludes institutional marks, proprietary Microsoft fonts, vendored `abntexto.cls`, CI/tests/tools/validators/evidence and repository control-plane files.
+
+## Normative state
+
+The librarian review is now **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**. Former item 33 has primary NBR 6023:2025 authority and executable regression evidence for DOI/online availability, repeated authorship and legal-person/jurisdiction cases.
+
+## Current phase boundary
+
+Release remains ACTIVE. No `v3.0.0` tag, GitHub Release or CTAN publication is authorized until the new final phase-end regression completes.
+
+Required order:
+
+1. integrate publication hardening;
+2. certify exact post-merge `main` SHA;
+3. run current `pkgcheck` on exact canonical package bytes;
+4. freeze hashes/evidence;
+5. create immutable tag;
+6. publish GitHub Release and verify downloaded hashes;
+7. submit one canonical ZIP to CTAN and retain external evidence;
+8. synchronize final state and close Release.
+
+Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Targeted checks never replace the final **phase-end regression**.
