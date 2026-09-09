@@ -1,5 +1,5 @@
 {
-  "schema_version": 28,
+  "schema_version": 29,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -57,7 +57,7 @@
     "must_complete_before_phase_closure": true,
     "must_complete_before_next_phase_activation": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "release-artifact-delivery-accepted-candidate-preparation",
+    "candidate_state": "release-candidate-published-pending-regression",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -89,32 +89,33 @@
     "review_status": {"pass": 33, "partial": 0, "fail": 0, "normative_review": 1},
     "scientific_article_state": "closed",
     "final_certification_state": "closed-accepted",
-    "release_state": "active-artifact-delivery-accepted-candidate-preparation",
+    "release_state": "active-phase-end-candidate-pending-regression",
     "release_branch": "release/v3-release",
     "release_branch_base_sha": "e34037f3241aab013b80645b338f38954e02bcda",
     "release_pr": 293,
     "closure_scope_frozen": true,
     "latest_fully_validated_checkpoint_sha": "b55210acdb614fc3178e3ebf5b3a595bed8508c1",
     "latest_fully_validated_checkpoint_state": "release-artifact-delivery-accepted-static-complete-linux-green",
-    "latest_control_sync_checkpoint_sha": "eededce34d81df6b50206cdf11dc8707dde20152",
-    "latest_control_sync_static_run": 34300202909,
-    "latest_control_sync_linux_run": 34300202899,
+    "latest_control_sync_checkpoint_sha": "6ab4768662aa51842cf745afbf846e89b6bd466a",
+    "latest_control_sync_static_run": 34303128975,
+    "latest_control_sync_linux_run": 34303128994,
     "latest_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
-    "current_correction_batch": ["Release immutable candidate preparation — artifact delivery accepted; publish Release marker next"],
+    "current_correction_batch": ["Release immutable phase-end candidate — marker published; Static, complete Linux, Linux release check pending"],
     "pending_acceptance_gates": [
-      "Publish one immutable Release candidate marker commit and require Static, complete Linux, and Linux release check on that SHA",
+      "Release candidate marker commit must pass Static contract, complete Linux integration, and Linux release check",
       "Verify the candidate-retained four ZIPs and SHA256SUMS",
       "Only after phase-end acceptance, create and verify v3.0.0 tag/GitHub Release/publication assets"
     ],
     "release_blockers": [
-      "Release phase-end candidate and regression have not completed",
+      "Release phase-end candidate regression has not completed",
+      "Candidate-retained publication assets have not yet been verified",
       "Tag/GitHub Release/publication assets have not yet been verified"
     ],
     "deferred_authority_conflicts": ["review item 33: selected NBR 6023:2025 edge cases"],
     "release_candidate_transport": {
-      "state": "accepted",
+      "state": "candidate-published-pending-regression",
       "marker": "release/v3-release-candidate.json",
-      "marker_present": false,
+      "marker_present": true,
       "linux_scope": "complete",
       "linux_release_check_pr_trigger": true,
       "permanent_workflow": ".github/workflows/linux-release-check.yml",
@@ -123,7 +124,8 @@
       "accepted_checkpoint_sha": "6a257f35b65266a1120826b816404116082b1e5c",
       "accepted_static_run": 34265429699,
       "accepted_linux_run": 34265429551,
-      "accepted_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0"
+      "accepted_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
+      "candidate_parent_control_sync_sha": "6ab4768662aa51842cf745afbf846e89b6bd466a"
     },
     "release_artifact_delivery": {
       "state": "accepted",
@@ -205,9 +207,9 @@
     "release_transport_preparation_linux_run": 34265429551,
     "release_transport_preparation_linux_scope": "complete",
     "release_transport_preparation_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
-    "release_control_sync_checkpoint_sha": "eededce34d81df6b50206cdf11dc8707dde20152",
-    "release_control_sync_static_run": 34300202909,
-    "release_control_sync_linux_run": 34300202899,
+    "release_control_sync_checkpoint_sha": "6ab4768662aa51842cf745afbf846e89b6bd466a",
+    "release_control_sync_static_run": 34303128975,
+    "release_control_sync_linux_run": 34303128994,
     "release_control_sync_linux_scope": "documentation-only-skip-not-phase-end",
     "release_artifact_delivery_checkpoint_sha": "b55210acdb614fc3178e3ebf5b3a595bed8508c1",
     "release_artifact_delivery_static_run": 34300561597,
@@ -222,7 +224,7 @@
     "deterministic_reference_pdf_required_before_release": true,
     "deterministic_reference_pdf_permanent_gate": "make release-reference-reproducibility",
     "release_candidate_marker": "release/v3-release-candidate.json",
-    "release_candidate_marker_state": "artifact-delivery-accepted-marker-next",
+    "release_candidate_marker_state": "candidate-published-pending-regression",
     "release_assets_source": "accepted-candidate-linux-release-check-artifact",
     "release_assets_rebuild_after_candidate_acceptance": false
   }

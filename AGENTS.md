@@ -22,11 +22,10 @@ Memory, prior chats and historical branches never override current repository st
 | Active phase | **Release** |
 | Canonical `main` | `e34037f3241aab013b80645b338f38954e02bcda` |
 | Active branch / PR | `release/v3-release` / #293 |
-| Release transport preparation | **ACCEPTED** on `6a257f35b65266a1120826b816404116082b1e5c` |
 | Artifact-delivery implementation | **ACCEPTED** on `b55210acdb614fc3178e3ebf5b3a595bed8508c1` |
-| Artifact-delivery Static | `34300561597` — SUCCESS |
-| Artifact-delivery Linux | `34300561605` — SUCCESS, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Current batch | **Release immutable candidate preparation — marker publication next** |
+| Artifact-delivery Static / Linux | `34300561597` SUCCESS / `34300561605` SUCCESS, complete scope |
+| Acceptance sync | `6ab4768662aa51842cf745afbf846e89b6bd466a`; Static `34303128975` SUCCESS |
+| Current batch | **Release immutable phase-end candidate — marker published, regression pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
 ## Readable phase model
@@ -59,24 +58,22 @@ A **material advance** changes runtime, evidence, certification/release result, 
 
 ## Mandatory phase-end regression
 
-Release must independently establish one immutable candidate SHA and pass the complete **phase-end regression** before closure or final publication. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`; the actual candidate SHA is recorded in evidence only after the commit exists.
+Release now has one immutable candidate commit containing `release/v3-release-candidate.json` and synchronized candidate-pending state. The machine invariant remains `phase_end_regression.candidate = one-immutable-sha`; the actual Git candidate SHA is recorded only after the commit exists and CI is classified.
 
-The Release-specific tracked marker is `release/v3-release-candidate.json`. It forces `complete` Linux and triggers the permanent `Linux release check` on PR #293. It is orchestration/provenance only and must not reuse the historical Final Certification marker identity.
+Do not amend the candidate after CI starts. Require Static contract, complete Linux integration and `Linux release check` on that same candidate.
 
 ## Artifact provenance rule
 
-The permanent `Linux release check` hardening is accepted on `b55210ac...`, with Static `34300561597` and complete Linux `34300561605`. It checks out the PR head/candidate SHA explicitly, binds `SOURCE_COMMIT_SHA` and `SOURCE_DATE_EPOCH` to that SHA, executes `make release-check`, builds the final distribution set, verifies `SHA256SUMS`, and retains the exact five-file `dist/` set as an Actions artifact.
-
-This bounded tooling acceptance authorizes publication of the immutable Release candidate; it does not satisfy the Release phase-end regression.
+The permanent `Linux release check` hardening was accepted on `b55210ac...`. The candidate workflow must retain the exact four distribution ZIPs and `SHA256SUMS`. Those retained bytes, not rebuilt archives, are the only allowed source for the GitHub Release after candidate acceptance.
 
 ## Immediate Release discipline
 
-1. publish one immutable Release candidate marker commit;
-2. require Static + complete Linux + Linux release check on that exact candidate;
-3. verify the candidate's four ZIPs and `SHA256SUMS` from the retained workflow artifact;
-4. record candidate SHA, run IDs and artifact identity in roadmap/handoff/readiness/machine state;
-5. only after acceptance, create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
-6. verify published assets/checksums before closing Release.
+1. wait for Static + complete Linux + Linux release check on the immutable candidate;
+2. classify any failure before changing code/tests;
+3. verify the retained candidate artifact and checksums;
+4. record candidate SHA, run IDs and artifact identity in a later documentation-only synchronization commit;
+5. only after acceptance create/verify `v3.0.0` tag, GitHub Release and any explicit documented publication;
+6. verify published hashes before closing Release.
 
 ## Fail-closed rule
 

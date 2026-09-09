@@ -1,59 +1,27 @@
 # V3.0.0 Release — Phase-end Regression
 
 Updated: 2026-09-08
-Status: ACTIVE — IMMUTABLE CANDIDATE PREPARATION
+Status: ACTIVE — IMMUTABLE CANDIDATE PUBLISHED / REGRESSION PENDING
 
 ## Purpose
 
 This document defines the immutable Release phase-end candidate and the exact evidence required before `v3.0.0` tag/GitHub Release/publication actions can be finalized.
 
-## Accepted candidate transport
+## Accepted preparation
 
-Release uses the tracked marker `release/v3-release-candidate.json` only to make candidate intent explicit to permanent CI orchestration. The marker does not change product runtime or normative semantics.
+| Preparation | Checkpoint | Evidence |
+|---|---|---|
+| Release candidate transport | `6a257f35b65266a1120826b816404116082b1e5c` | Static `34265429699`; Linux `34265429551`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Artifact-delivery tooling | `b55210acdb614fc3178e3ebf5b3a595bed8508c1` | Static `34300561597`; Linux `34300561605`, `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
+| Acceptance control sync | `6ab4768662aa51842cf745afbf846e89b6bd466a` | Static `34303128975`; Linux documentation-only skip |
 
-Transport preparation was accepted on `6a257f35b65266a1120826b816404116082b1e5c`:
+## Immutable candidate
 
-| Gate | Result |
-|---|---|
-| Static contract | `34265429699` — SUCCESS |
-| Linux integration | `34265429551` — SUCCESS |
-| Linux scope | `complete` |
-| Linux summary | `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Release marker scope selector | PASS |
-| Release-check PR trigger contract | PASS |
+The current commit contains the tracked Release marker `release/v3-release-candidate.json` and the synchronized control-plane state. This commit is the immutable Release phase-end candidate. Its exact Git SHA is obtained after commit creation and is not self-recorded by amending the candidate.
 
-The historical `release/final-certification-candidate.json` remains a Final Certification provenance mechanism and must not be reused as the Release marker.
+After CI starts, the candidate is immutable. CI-result documentation is recorded only in a later commit.
 
-## Accepted artifact delivery
-
-The permanent Release workflow hardening was accepted on `b55210acdb614fc3178e3ebf5b3a595bed8508c1` before candidate publication.
-
-| Gate / predicate | Result |
-|---|---|
-| Static contract | `34300561597` — SUCCESS |
-| Linux integration | `34300561605` — SUCCESS |
-| Linux scope | `complete` |
-| Linux summary | `SCOPE=complete PASS=36 FAIL=0 SKIP=0` |
-| Explicit candidate checkout | implemented |
-| Candidate provenance environment | implemented |
-| Distribution build/checksum verification | implemented |
-| Certified distribution artifact retention | implemented with pinned upload-artifact |
-
-This bounded acceptance authorizes publication of the immutable Release candidate. It does not substitute for the Release phase-end regression.
-
-## Immutable candidate and artifact rule
-
-The Release candidate is the first commit after this accepted tooling state that contains the Release candidate marker. After CI starts, that commit is immutable. CI-result documentation is recorded in a later commit and never rewrites the accepted candidate.
-
-The permanent `Linux release check` must generate and retain the final publication bytes from that exact candidate. Its release-candidate run must expose `dist/` as a downloadable Actions artifact containing exactly:
-
-- `abntexto-ufc-3.0.0.zip`
-- `abntexto-ufc-ctan-3.0.0.zip`
-- `abntexto-ufc-template-3.0.0.zip`
-- `abntexto-ufc-overleaf-3.0.0.zip`
-- `SHA256SUMS`
-
-Pre-candidate builds are diagnostic only. The GitHub Release must use the exact candidate-produced bytes; rebuilding archives after acceptance is not permitted release evidence.
+The historical `release/final-certification-candidate.json` remains a Final Certification provenance mechanism and is not reused.
 
 ## Required phase-end gates
 
@@ -68,7 +36,19 @@ Pre-candidate builds are diagnostic only. The GitHub Release must use the exact 
 | Librarian review | remains `33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW`; item 33 stays fail-closed |
 | Temporary executors/assets | absent from candidate/public bundles |
 
+The permanent `Linux release check` must retain exactly:
+
+- `abntexto-ufc-3.0.0.zip`
+- `abntexto-ufc-ctan-3.0.0.zip`
+- `abntexto-ufc-template-3.0.0.zip`
+- `abntexto-ufc-overleaf-3.0.0.zip`
+- `SHA256SUMS`
+
 A workflow conclusion of `success` does not satisfy the gate if required heavy scope was skipped.
+
+## Artifact provenance rule
+
+The GitHub Release must use the exact candidate-produced bytes retained by the candidate's `Linux release check`. Rebuilding archives after candidate acceptance is not permitted release evidence.
 
 ## Publication boundary
 
@@ -78,4 +58,4 @@ Actual CTAN submission remains an explicit action and must not be reported as ac
 
 ## Regression discipline
 
-Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Targeted checks are useful intermediate evidence but never replace this **phase-end regression**.
+Every **material advance** updates roadmap, handoff, readiness and machine state in the same work cycle. Targeted checks never replace this **phase-end regression**.
