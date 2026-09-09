@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## Current status
 
-**Release is ACTIVE and has been reopened for publication hardening.** The implementation foundation remains mature, but the prior publication candidate was superseded because its packaged documentation was not final-publication quality.
+**Release is ACTIVE and has been reopened for publication hardening.** The implementation foundation remains mature, but the prior publication candidate was superseded because its packaged documentation was not final-publication quality. The CTAN-facing runtime has additionally been simplified to a single generated class file.
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -13,7 +13,7 @@ Updated: 2026-09-09
 | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
 | Final Certification | CLOSED | heavy technical matrix accepted |
-| Release | **ACTIVE — PUBLICATION HARDENING** | integrate hardening, certify exact post-merge `main`, pass current `pkgcheck`, freeze bytes, tag/release, verify and submit one CTAN archive |
+| Release | **ACTIVE — PUBLICATION HARDENING** | integrate hardening, certify exact post-merge `main`, prove one-class/zero-`.def` CTAN runtime, pass current `pkgcheck`, freeze bytes, tag/release, verify and submit one CTAN archive |
 
 ## Current Release facts
 
@@ -26,6 +26,9 @@ Updated: 2026-09-09
 | Librarian matrix | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
 | Package id | `abntexto-ufc` |
 | CTAN upload archive | `abntexto-ufc-3.0.0.zip` only |
+| CTAN project runtime files | **`abntexto-ufc.cls` only** |
+| CTAN project `.def` files | **0** |
+| Development source | modular `.def` architecture retained |
 | Redundant `-ctan-` ZIP | removed from final contract |
 | Institutional marks | excluded from CTAN/archive contract |
 | Microsoft proprietary fonts | excluded from CTAN/archive contract |
@@ -57,9 +60,9 @@ The files were reproducible and hash-correct, but reproducibly wrong as final pu
 
 ### R1 — Normative item 33
 
-**Implemented; CI evidence pending.**
+**Implemented; final Release evidence pending.**
 
-Primary ABNT NBR 6023:2025 authority closes the former deliberate gap. The executable regression now covers:
+Primary ABNT NBR 6023:2025 authority closes the former deliberate gap. The executable regression covers:
 
 - DOI together with applicable `Disponível em:` and `Acesso em:` elements;
 - explicit repeated authorship;
@@ -68,9 +71,9 @@ Primary ABNT NBR 6023:2025 authority closes the former deliberate gap. The execu
 
 The class explicitly requests `repeatfields=true` from `biblatex`.
 
-### R2 — Canonical CTAN-grade archive
+### R2 — Canonical CTAN-grade archive and monolithic runtime
 
-**Implemented; CI evidence pending.**
+**Implemented; final release-check evidence pending.**
 
 Final public archive set:
 
@@ -81,9 +84,32 @@ abntexto-ufc-overleaf-3.0.0.zip
 SHA256SUMS
 ```
 
-Only `abntexto-ufc-3.0.0.zip` is submitted to CTAN. It contains one `abntexto-ufc/` root with runtime, README, CHANGELOG, LICENSE, manual source/PDF and minimal example source/PDF.
+Only `abntexto-ufc-3.0.0.zip` is submitted to CTAN. Its expected content is flat below the package root:
 
-The package gate rejects stale publication text, deprecated `ufctex` identity, unsafe/non-ASCII filenames, hidden paths, CRLF/BOM, empty files, inappropriate modes, development infrastructure, vendored upstream class, institutional mark assets and proprietary Microsoft fonts.
+```text
+abntexto-ufc/
+├── README.md
+├── CHANGELOG
+├── LICENSE
+├── abntexto-ufc.cls
+├── abntexto-ufc.tex
+├── abntexto-ufc.pdf
+├── abntexto-ufc-example.tex
+└── abntexto-ufc-example.pdf
+```
+
+The repository remains modular. For CTAN only, the builder recursively expands the canonical project-owned module inputs into one generated `abntexto-ufc.cls`, strips module wrappers and preserves canonical load order.
+
+Acceptance requires:
+
+- every tracked project-owned runtime `.def` module inlined exactly once;
+- no project-owned `.def` file in the CTAN ZIP;
+- no nested runtime module directory;
+- no residual `\input{abntexto-ufc/...def}` in the generated class;
+- isolated example compilation using the generated class plus external `abntexto.cls`, without the modular runtime tree;
+- deterministic byte-identical distribution rebuilds.
+
+The package gate also rejects stale publication text, deprecated `ufctex` identity, unsafe/non-ASCII filenames, hidden paths, CRLF/BOM, empty files, inappropriate modes, development infrastructure, vendored upstream class, institutional mark assets and proprietary Microsoft fonts.
 
 ### R3 — Final exact-main recertification
 
