@@ -7,11 +7,11 @@ Updated: 2026-09-09
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical branch | `main` |
-| Last merged publication-closeout synchronization checkpoint | `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
-| Active work branch | `release/v3-release`, synchronized to the canonical `main` checkpoint |
+| Canonical branch | `main`; current SHA must be resolved dynamically from Git |
 | Release PR #293 | **MERGED** as squash commit `add52f2183f18d6cea3e9477f2a45416a13cfc36` |
 | Publication-closeout PR #294 | **MERGED** as `c39af06e236b6b61fcf6d11bc383ac5752093cec` |
+| Continuation synchronization PR #295 | **MERGED**; Static `34335044265` on canonical `main` SUCCESS |
+| Active work branch | `release/v3-release`, aligned to canonical `main` after PR #295 |
 | Superseded PR #292 | **CLOSED**; historical evidence only |
 | Active phase | **Release** |
 | Immutable Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **ACCEPTED** |
@@ -21,13 +21,10 @@ Updated: 2026-09-09
 | Retained distribution artifact | ID `10086299397`, `abntexto-ufc-v3.0.0-distribution-34303586773` |
 | Artifact upload digest | `sha256:c7c6a29bcd34d828883d762d728c4a3a2394f9dc6e796efd4cb50fb3bdc28222` |
 | Independent artifact verification | exact five-file set; `SHA256SUMS` PASS; all four ZIP integrity checks PASS |
-| Post-merge canonical control sync | Static `34333350711` — SUCCESS |
 | Current batch | **Release publication — tag/GitHub Release verification pending** |
 | Librarian review | **33 PASS / 0 PARTIAL / 0 FAIL / 1 NORMATIVE-REVIEW** |
 
-`docs/V3-CONTINUATION.md` is the concise continuation entry point for a new conversation or local session.
-
-Canonical control documents include `release/v3-roadmap.json`, `docs/V3-CONTINUATION.md`, `docs/ROADMAP-V3.0.0.md`, `docs/V3-RELEASE-READINESS.md`, `docs/V3-RELEASE-PHASE-END.md`, `docs/CTAN-RELEASE.md`, `docs/LINUX-INTEGRATION-SCOPES.md`, `docs/UFC-LIBRARIAN-REVIEW.md`, and this handoff.
+`docs/V3-CONTINUATION.md` is the shortest safe entry point for resuming from a new conversation or local clone. Current `main` HEAD is intentionally not hardcoded as a continuing invariant; fetch Git at session start.
 
 ## Accepted Release phase-end regression
 
@@ -58,7 +55,7 @@ The retained distribution artifact was independently downloaded and verified wit
 
 | Order | Action | State |
 |---:|---|---|
-| 1 | Create `v3.0.0` tag and GitHub Release from canonical `main`, using exact retained candidate-produced bytes. | PENDING |
+| 1 | Create `v3.0.0` tag and GitHub Release from latest canonical `main`, using exact retained candidate-produced bytes. | PENDING |
 | 2 | Verify published GitHub asset hashes against the accepted checksums. | PENDING |
 | 3 | Run current CTAN `pkgcheck` on the retained CTAN candidate. | PENDING |
 | 4 | Perform actual CTAN upload only as an explicit action and preserve receipt/acceptance evidence if performed. | EXTERNAL / EXPLICIT |
@@ -73,9 +70,10 @@ git fetch --all --prune
 git switch main
 git pull --ff-only origin main
 git status
+git rev-parse HEAD
 ```
 
-Then read `AGENTS.md` and `docs/V3-CONTINUATION.md` before making changes.
+Then read `AGENTS.md`, `release/v3-roadmap.json`, and `docs/V3-CONTINUATION.md` before making changes.
 
 ## Mandatory operating discipline
 
