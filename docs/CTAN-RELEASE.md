@@ -14,6 +14,7 @@ This document defines the repository-controlled publication procedure for `abnte
 | Supersession reason | certified package archives contained stale v2/pre-publication README text; CTAN README identified 3.0.0 as a development candidate |
 | Current work branch | `release/v3-publication-hardening` |
 | Package id | `abntexto-ufc` |
+| CTAN runtime shape | **one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files** |
 | GitHub `v3.0.0` tag/Release | not yet published |
 | CTAN upload/acceptance | not yet claimed; explicit evidence required |
 
@@ -21,11 +22,14 @@ The bytes from retained Actions artifact `10086299397` must not be published as 
 
 ## Prior CTAN feedback and v3 resolution
 
-The earlier `ufctex` submission exposed three major publication problems that are explicitly addressed by v3:
+The earlier `ufctex` submission exposed major publication problems that are explicitly addressed by v3:
 
 1. **Deprecated `tex` suffix:** the package id is now `abntexto-ufc`, a purpose-oriented lowercase/hyphenated id aligned with CTAN naming guidance and with the accepted `abntexto-uece` package family.
 2. **UFC logo licensing:** no UFC logo, coat of arms, institutional mark asset, or proprietary Microsoft font file is redistributed. Authorized users may provide an institutional asset locally.
 3. **Excess package scope:** the CTAN upload is intentionally small. Repository-only engineering infrastructure — workflows, tests, validators, standards evidence, roadmaps, release state and build tooling — is not included in the CTAN archive.
+4. **Runtime fragmentation:** the repository may remain modular for maintenance, but the CTAN package exposes one generated class file. All project-owned `.def` modules are incorporated into `abntexto-ufc.cls` during the deterministic release build.
+
+The fourth point intentionally follows the publication shape of `abntexto-uece`: the CTAN-facing implementation is a single class file rather than a class plus a project-owned runtime tree.
 
 ## Canonical distribution contract
 
@@ -33,16 +37,16 @@ Release 3.0.0 produces exactly these public archives:
 
 | Asset | Purpose | CTAN upload? |
 |---|---|---|
-| `abntexto-ufc-3.0.0.zip` | canonical package: runtime + concise documentation + minimal example | **YES — the only CTAN upload archive** |
-| `abntexto-ufc-template-3.0.0.zip` | editable local project | no |
-| `abntexto-ufc-overleaf-3.0.0.zip` | self-contained Overleaf project with pinned `abntexto.cls` | no |
+| `abntexto-ufc-3.0.0.zip` | canonical CTAN-grade package with one generated runtime class + concise documentation + minimal example | **YES — the only CTAN upload archive** |
+| `abntexto-ufc-template-3.0.0.zip` | editable local project; may preserve repository-oriented modular sources | no |
+| `abntexto-ufc-overleaf-3.0.0.zip` | self-contained Overleaf project with pinned `abntexto.cls`; may preserve repository-oriented modular sources | no |
 | `SHA256SUMS` | release integrity manifest | GitHub Release only |
 
 There is no separate `abntexto-ufc-ctan-3.0.0.zip`: the canonical package archive itself is CTAN-grade. This removes redundant representations of the same package.
 
 ## CTAN archive shape
 
-`abntexto-ufc-3.0.0.zip` contains exactly one top-level directory, `abntexto-ufc/`. Its intended surfaces are:
+`abntexto-ufc-3.0.0.zip` contains exactly one top-level directory, `abntexto-ufc/`:
 
 ```text
 abntexto-ufc/
@@ -50,17 +54,17 @@ abntexto-ufc/
 ├── CHANGELOG
 ├── LICENSE
 ├── abntexto-ufc.cls
-├── abntexto-ufc/
-│   └── *.def
 ├── abntexto-ufc.tex
 ├── abntexto-ufc.pdf
 ├── abntexto-ufc-example.tex
 └── abntexto-ufc-example.pdf
 ```
 
-The exact module list below `abntexto-ufc/` is derived from the tracked runtime and may include responsibility subdirectories such as `integrations/` and `standards/`.
+`abntexto-ufc.cls` is generated from the tracked modular source tree. The builder recursively replaces project-owned `\input{abntexto-ufc/...def}` statements with the corresponding module contents, removes module-level `\ProvidesFile` and terminal `\endinput` wrappers, and preserves the canonical load order. The generated class is then used to compile the CTAN example in isolation.
 
-The CTAN archive must not contain:
+The CTAN archive must contain **zero `.def` files** and must not contain a nested `abntexto-ufc/abntexto-ufc/` runtime directory.
+
+The CTAN archive must also not contain:
 
 - `abntexto.cls` — `abntexto >= 1.1` remains an external CTAN/TeX Live dependency;
 - UFC logos, coats of arms or other institutional mark assets;
@@ -71,12 +75,30 @@ The CTAN archive must not contain:
 
 The distribution regression fails closed on these conditions.
 
+## Monolithic-class equivalence gate
+
+The CTAN build does not manually maintain a second implementation of the class. It generates the CTAN class from the same modular sources used by development and validation.
+
+The release gate requires all of the following:
+
+- every tracked project-owned runtime `.def` module is incorporated exactly once;
+- no project-owned module remains referenced through `\input` in the generated class;
+- no module-level `\ProvidesFile{abntexto-ufc/...}` wrapper remains;
+- no `.def` file is present in the CTAN ZIP;
+- the generated class compiles the CTAN example with only `abntexto.cls` available externally;
+- the modular runtime directory is absent during that compilation;
+- two independent distribution builds produce byte-identical archives.
+
+This gives the CTAN artifact a single-file runtime without replacing the maintainable modular architecture in the repository.
+
 ## CTAN rules encoded by the release gate
 
 The package builder/test enforces the applicable current CTAN upload rules that are machine-checkable:
 
 - ASCII filenames without whitespace or hidden path components;
 - one top-level directory named after the package id;
+- one project-owned runtime implementation file: `abntexto-ufc.cls`;
+- zero project-owned `.def` files;
 - top-level English UTF-8 README without BOM;
 - explicit package version, maintainer, license, repository/bug tracker and dependency metadata;
 - PDF documentation included;
@@ -111,8 +133,8 @@ The required order is:
 2. resolve the resulting exact canonical `main` SHA;
 3. run Static and the complete Linux release contract on **that exact SHA**;
 4. run any required Windows/literal-font/PDF-A recertification if runtime or certification-relevant behavior changed;
-5. build the three deterministic public archives from that exact SHA;
-6. validate `SHA256SUMS`, ZIP integrity and the CTAN structural/semantic gate;
+5. generate the monolithic CTAN class and build the three deterministic public archives from that exact SHA;
+6. validate `SHA256SUMS`, ZIP integrity, monolithic-class equivalence and the CTAN structural/semantic gate;
 7. run the **current CTAN `pkgcheck`** against `abntexto-ufc-3.0.0.zip`;
 8. freeze the package hashes and retained evidence; from this point, rebuilding publication bytes is forbidden;
 9. create immutable tag `v3.0.0` pointing to **the same SHA that produced and passed the certified artifacts**;
@@ -146,11 +168,11 @@ Dependency: abntexto >= 1.1
 
 Suggested summary:
 
-> Unofficial, community-maintained LaTeX class built on abntexto for academic works at the Federal University of Ceará (UFC), including academic-work, research-project and scientific-article profiles. The package does not redistribute UFC institutional marks or proprietary Microsoft fonts.
+> Unofficial, community-maintained LaTeX class built on abntexto for academic works at the Federal University of Ceará (UFC), including academic-work, research-project and scientific-article profiles. The package distributes one generated class file for its runtime and does not redistribute UFC institutional marks or proprietary Microsoft fonts.
 
 Suggested administrative note:
 
-> This submission replaces the previously attempted `ufctex` package name. The package has been renamed to `abntexto-ufc` to follow current CTAN package-id guidance. No UFC logo or other institutional mark is distributed. `abntexto` is an external dependency and is not vendored in the CTAN archive. The upload contains one top-level `abntexto-ufc/` directory with only runtime files, documentation and a minimal example.
+> This submission replaces the previously attempted `ufctex` package name. The package has been renamed to `abntexto-ufc` to follow current CTAN package-id guidance. No UFC logo or other institutional mark is distributed. `abntexto` is an external dependency and is not vendored in the CTAN archive. The upload contains one top-level `abntexto-ufc/` directory, and all project-owned runtime modules are incorporated into the single `abntexto-ufc.cls`; no project-owned `.def` files are distributed.
 
 ## Evidence discipline
 
