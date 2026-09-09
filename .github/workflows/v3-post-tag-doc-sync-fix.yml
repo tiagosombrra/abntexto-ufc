@@ -1,0 +1,45 @@
+name: V3 fix post-tag documentation synchronizer
+
+on:
+  push:
+    branches:
+      - ci/v3-final-pkgcheck-evidence
+    paths:
+      - .github/workflows/v3-post-tag-doc-sync-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    name: Fix literal regex replacement handling
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout temporary evidence branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ci/v3-final-pkgcheck-evidence
+          fetch-depth: 0
+
+      - name: Patch synchronizer and push
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('.github/workflows/v3-post-tag-doc-sync.yml')
+          text = path.read_text(encoding='utf-8')
+          old = '              new_text, count = pattern.subn(replacement, text, count=1)'
+          new = '              new_text, count = pattern.subn(lambda _: replacement, text, count=1)'
+          if text.count(old) != 1:
+              raise SystemExit('Expected exactly one replace_section substitution call to patch.')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8', newline='\n')
+          PY
+          git diff --check
+          git diff -- .github/workflows/v3-post-tag-doc-sync.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/v3-post-tag-doc-sync.yml
+          git commit -m 'ci: treat documentation replacement text literally'
+          git push origin HEAD:ci/v3-final-pkgcheck-evidence
