@@ -27,7 +27,9 @@ When installed through a TeX distribution, use:
 \documentclass{abntexto-ufc}
 ```
 
-For manual installation, keep `abntexto-ufc.cls` together with the accompanying `abntexto-ufc/` module directory in a location visible to TeX. Install the external `abntexto` dependency separately.
+The CTAN distribution has a single runtime file: `abntexto-ufc.cls`. All project-owned runtime modules used in the development repository are incorporated into that class during the deterministic CTAN build. No external `abntexto-ufc/*.def` files are required or distributed.
+
+For manual installation, place `abntexto-ufc.cls` in a location visible to TeX and install the external `abntexto` dependency separately.
 
 See `abntexto-ufc.pdf` for the package manual and `abntexto-ufc-example.tex` / `abntexto-ufc-example.pdf` for a minimal example.
 
