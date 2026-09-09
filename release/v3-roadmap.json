@@ -59,6 +59,7 @@
   "phase_end_regression": {
     "required": true,
     "must_complete_before_phase_closure": true,
+    "must_complete_before_next_phase_activation": true,
     "documentation_must_be_updated_after_result": true,
     "candidate": "one-immutable-sha",
     "candidate_state": "pending-final-gate-merge-and-exact-main-recertification",
