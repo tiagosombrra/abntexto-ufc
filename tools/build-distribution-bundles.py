@@ -128,9 +128,11 @@ def strip_module_wrapper(relative: str, text: str) -> str:
 
     endinput_re = re.compile(r"(?m)^[ \t]*\\endinput[ \t]*(?:%[^\r\n]*)?(?:\r?\n)?\Z")
     match = endinput_re.search(text)
-    if match is None:
-        fail(f"Project module must end with \\endinput before CTAN inlining: {relative}")
-    return text[: match.start()].rstrip() + "\n"
+    if match is not None:
+        text = text[: match.start()]
+    elif re.search(r"(?m)^[ \t]*\\endinput\b", text):
+        fail(f"Project module contains non-terminal \\endinput and cannot be safely inlined: {relative}")
+    return text.rstrip() + "\n"
 
 
 def build_monolithic_ctan_class(tracked: set[str]) -> tuple[bytes, list[str]]:
