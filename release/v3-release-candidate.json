@@ -1,14 +1,23 @@
 {
-  "schema_version": 3,
-  "purpose": "V3 Release publication-hardening and final recertification marker",
+  "schema_version": 4,
+  "purpose": "V3 final publication candidate control marker",
   "phase": "release",
-  "candidate_semantics": "exact canonical main commit certified after this publication-hardening batch is merged",
+  "candidate_semantics": "exact canonical main commit after final release-control synchronization is merged and exact-SHA gates are rerun",
+  "post_hardening_baseline": {
+    "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
+    "linux_release_run": 34355988612,
+    "validation_artifact_id": 10106604822,
+    "distribution_artifact_id": 10106606462,
+    "distribution_artifact_digest": "sha256:4eed74eaec5d076cea6fb140b533403ce065b8008a21dc80186763acad7b8340",
+    "release_contract": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "status": "accepted-baseline-evidence-not-final-after-control-sync"
+  },
   "superseded_candidate": {
     "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
     "linux_release_run": 34303586773,
     "distribution_artifact_id": 10086299397,
     "status": "superseded-for-publication",
-    "reason": "Certified archives were technically reproducible but contained stale v2/pre-publication README text; the CTAN README identified 3.0.0 as a development candidate. Those bytes must never be published as v3.0.0 final."
+    "reason": "Certified archives were technically reproducible but contained stale v2/pre-publication README text; those bytes must never be published as v3.0.0 final."
   },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
@@ -22,24 +31,53 @@
     "archive": "abntexto-ufc-3.0.0.zip",
     "archive_count": 1,
     "top_level_directory": "abntexto-ufc",
-    "runtime_implementation_files": [
-      "abntexto-ufc.cls"
-    ],
+    "runtime_implementation_files": ["abntexto-ufc.cls"],
     "project_def_files": 0,
     "monolithic_class_generated_from_modular_sources": true,
     "all_tracked_runtime_modules_inlined_exactly_once": true,
+    "expected_inlined_module_count": 14,
     "isolated_example_compile_without_runtime_module_directory": true,
     "external_abntexto_dependency": true,
     "institutional_marks_redistributed": false,
     "proprietary_microsoft_fonts_redistributed": false,
     "pkgcheck_required_before_tag": true,
-    "pkgcheck_version_policy": "current-at-final-certification"
+    "pkgcheck_version_policy": "current-announced-at-final-certification",
+    "pkgcheck_state": "pending-final-exact-candidate"
+  },
+  "human_visual_acceptance": {
+    "required_before_tag": true,
+    "state": "pending-explicit-maintainer-approval-on-final-exact-candidate",
+    "profiles": [
+      "undergraduate-capstone",
+      "specialization-capstone",
+      "masters-thesis",
+      "doctoral-thesis",
+      "research-project",
+      "anonymized-research-project",
+      "scientific-article"
+    ],
+    "required_pair": "pdf-and-corresponding-tex-source",
+    "required_preflight": ["a4", "pdfa-2b", "font-embedding", "recognized-warning-overflow-free"],
+    "preliminary_baseline_review": {
+      "source_sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
+      "profiles": 7,
+      "preflight": "pass",
+      "visual_inspection": "pass",
+      "final_gate_closed": false,
+      "reason": "tracked final control documentation still has to merge, so final exact-candidate pairs must be regenerated"
+    }
   },
   "final_tag_contract": {
     "tag": "v3.0.0",
     "tagged_commit_must_equal_certified_commit": true,
-    "create_only_after_pkgcheck_pass": true
+    "tagged_commit_must_equal_visually_approved_commit": true,
+    "create_only_after_pkgcheck_pass": true,
+    "create_only_after_human_visual_approval": true
   },
-  "publication_rebuild_allowed": false,
+  "windows_literal_font_evidence": {
+    "status": "retained-scope-valid",
+    "recheck_if": "font runtime, font setup, engine behavior or Windows certification contract changes"
+  },
+  "publication_rebuild_allowed_after_freeze": false,
   "remove_after_acceptance": false
 }
