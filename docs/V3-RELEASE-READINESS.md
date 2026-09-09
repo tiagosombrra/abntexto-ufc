@@ -1,7 +1,7 @@
 # V3.0.0 Release Readiness
 
 Updated: 2026-09-09
-Status: ACTIVE — GITHUB PUBLISHED / CTAN PENDING
+Status: ACTIVE — GITHUB PUBLISHED / MAINTAINER VISUAL VALIDATION PENDING / CTAN BLOCKED
 
 ## Phase readiness
 
@@ -12,9 +12,9 @@ Status: ACTIVE — GITHUB PUBLISHED / CTAN PENDING
 | Reference PDF Validation | CLOSED | 55/55 visual PASS |
 | Scientific Article | CLOSED | complete Linux + article PDF 5/5 visual PASS |
 | Final Certification | CLOSED | technical/runtime certification accepted |
-| Release | **ACTIVE — CTAN PENDING** | exact source certified; pkgcheck/tag/GitHub publication PASS; only CTAN external submission/acceptance remains |
+| Release | **ACTIVE — VISUAL VALIDATION PENDING** | exact source certified; pkgcheck/tag/GitHub publication PASS; seven-profile maintainer review must pass before CTAN submission |
 
-GitHub v3.0.0 publication is complete and byte-verified. The Release phase remains active only because CTAN submission and acceptance are external gates.
+GitHub v3.0.0 publication is complete and byte-verified. CTAN submission is intentionally blocked until the maintainer inspects generated source + PDF pairs for every canonical document profile and explicitly accepts them.
 
 ## Completed Release hardening
 
@@ -34,21 +34,44 @@ The merged work:
 
 The retained pre-merge CTAN artifact was manually inspected and confirmed `1 cls / 0 def`, 14/14 runtime modules inlined exactly once, no residual project-owned `.def` input, no vendored `abntexto.cls`, and no prohibited assets.
 
-## Final-candidate contract
+## Released-source contract
 
-The integration merge commit `25c6ab09dc38be9257d2912652074a48886d28f9` is an integration anchor, not the final taggable SHA, because this control-plane synchronization intentionally follows it.
+The accepted released source is exactly:
 
-The next accepted candidate is the exact canonical `main` commit containing this synchronization after it is merged and passes final certification:
+`05399473827da7cf6b6c8bac36edc7115481773f`
+
+Immutable annotated tag `v3.0.0` resolves to that source, and GitHub Release `385743477` contains only the frozen publication assets produced from it. The invariant is satisfied:
 
 ```text
 certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
 ```
 
-The `Linux integration` workflow now runs automatically on `main` pushes that change `release/v3-release-candidate.json` and forces `scope=complete`, so the post-squash candidate receives complete Linux evidence on its exact SHA. No further pre-tag repository commit is allowed after candidate acceptance without starting a new candidate cycle.
+Post-tag documentation or validation infrastructure may advance `main`; such commits do not change the v3.0.0 source. Any material defect found during the remaining human review must not mutate or retarget `v3.0.0`; it requires a correction/new-version cycle before CTAN submission.
+
+## Maintainer all-profile visual validation gate
+
+Before any CTAN submission, generate from the frozen v3.0.0 implementation and present the source plus rendered PDF for all seven canonical `type` values defined by the class:
+
+1. `undergraduate-capstone` — undergraduate capstone / TCC;
+2. `specialization-capstone` — specialization capstone;
+3. `masters-thesis` — master's thesis/dissertation profile;
+4. `doctoral-thesis` — doctoral thesis;
+5. `research-project` — identified research project;
+6. `anonymized-research-project` — anonymized research project;
+7. `scientific-article` — scientific article.
+
+The review artifact must preserve, for each profile, at minimum:
+
+- the exact `.tex` source used to compile it;
+- the corresponding final PDF;
+- build/log metadata sufficient to identify the source/tag and engine;
+- a manifest mapping profile → source → PDF → SHA-256.
+
+Acceptance is explicitly human/maintainer-facing. Automated compilation success does not replace visual inspection. Record the outcome in `docs/V3-VISUAL-VALIDATION.md`.
 
 ## CTAN final package contract
 
-`abntexto-ufc-3.0.0.zip` must contain exactly one top-level `abntexto-ufc/` directory and these eight files:
+`abntexto-ufc-3.0.0.zip` contains exactly one top-level `abntexto-ufc/` directory and these eight files:
 
 ```text
 README.md
@@ -77,12 +100,15 @@ Hard requirements include one project-owned runtime `.cls`, zero project-owned `
 | 8 | Freeze hashes/evidence; prohibit rebuild | **PASS** |
 | 9 | Immutable `v3.0.0` on certified SHA | **PASS** |
 | 10 | GitHub Release + re-download/hash verification | **PASS — Release `385743477`** |
-| 11 | Submit canonical ZIP to CTAN; preserve receipt/acceptance evidence | **PENDING EXTERNAL ACTION** |
-| 12 | Synchronize final CTAN facts and close Release | **BLOCKED BY 11** |
+| 11 | Generate seven canonical source + PDF review pairs from frozen v3.0.0 | **ACTIVE** |
+| 12 | Maintainer visually validates all seven PDFs and sources | **PENDING USER ACCEPTANCE** |
+| 13 | Submit canonical ZIP to CTAN; preserve receipt/acceptance evidence | **BLOCKED BY 12** |
+| 14 | Synchronize final CTAN facts and close Release | **BLOCKED BY 13** |
 
 ## Current blockers
 
-- the canonical ZIP has not yet been submitted to CTAN with retained receipt evidence;
-- CTAN acceptance/catalog/install evidence does not yet exist.
+- all seven canonical rendered examples have not yet been presented and accepted by the maintainer;
+- CTAN submission is blocked until that acceptance is recorded;
+- consequently, CTAN acceptance/catalog/install evidence does not yet exist.
 
 GitHub publication is complete and verified. No v3.0.0 source or asset rebuild is permitted. Every subsequent material advance updates affected documentation and machine state in the same work cycle.
