@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## Current status
 
-**Release is ACTIVE — GitHub publication is complete; CTAN submission/acceptance remains.** The immutable `v3.0.0` tag resolves to `05399473827da7cf6b6c8bac36edc7115481773f`, and GitHub Release `385743477` is published with byte-verified frozen assets.
+**Release is ACTIVE — GitHub publication is complete; maintainer all-profile visual validation is now the active pre-CTAN gate.** The immutable `v3.0.0` tag resolves to `05399473827da7cf6b6c8bac36edc7115481773f`, and GitHub Release `385743477` is published with byte-verified frozen assets.
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -13,7 +13,7 @@ Updated: 2026-09-09
 | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
 | Final Certification | CLOSED | heavy technical matrix accepted |
-| Release | **ACTIVE — CTAN PENDING** | GitHub publication PASS; submit canonical ZIP to CTAN, preserve receipt/acceptance evidence, then close |
+| Release | **ACTIVE — VISUAL VALIDATION PENDING** | generate and visually accept all seven canonical profile PDFs + sources; only then submit the frozen canonical ZIP to CTAN and preserve external evidence |
 
 ## Current Release facts
 
@@ -27,7 +27,9 @@ Updated: 2026-09-09
 | CTAN project runtime | **`abntexto-ufc.cls` only; 0 `.def`** |
 | `pkgcheck` | **PASS** — 4.1.0, zero warnings/errors |
 | GitHub asset re-download | **PASS / byte-identical** |
-| CTAN submission | **PENDING** |
+| All-profile source/PDF generation | **ACTIVE** |
+| Maintainer visual acceptance | **PENDING** |
+| CTAN submission | **BLOCKED BY VISUAL ACCEPTANCE** |
 | CTAN acceptance/install | **PENDING** |
 
 ## R0 — Publication documentation and package identity
@@ -70,14 +72,30 @@ Final evidence confirms all 14 tracked runtime modules inlined exactly once, no 
 
 **CLOSED / PASS.** Frozen bytes were tagged as immutable `v3.0.0`, published in GitHub Release `385743477`, re-downloaded before and after publication and proved byte-identical. Recovery verification run `34387825056` retained evidence artifact `10118391678`.
 
-## R6 — CTAN submission
+## R6 — All-profile maintainer visual validation
 
-**ACTIVE / PENDING EXTERNAL ACTION.** Submit exactly one file: `abntexto-ufc-3.0.0.zip`. Preserve receipt, submitted hash and later acceptance/catalog/install evidence.
+**ACTIVE.** Generate and present source + final PDF for every canonical class profile from the frozen `v3.0.0` implementation:
 
-## R7 — Release closeout
+1. `undergraduate-capstone`;
+2. `specialization-capstone`;
+3. `masters-thesis`;
+4. `doctoral-thesis`;
+5. `research-project`;
+6. `anonymized-research-project`;
+7. `scientific-article`.
 
-**BLOCKED ONLY BY R6 EXTERNAL VERIFICATION.** After CTAN acceptance/catalog evidence, synchronize final state and mark Release `CLOSED`.
+The review bundle must include profile-specific `.tex`, PDF, build metadata/log and SHA-256 manifest. Automated compilation is necessary but not sufficient. This stage closes only after explicit maintainer acceptance of all seven rendered outputs. Detailed state lives in `docs/V3-VISUAL-VALIDATION.md`.
+
+A material defect discovered here must not alter or retarget `v3.0.0`; it opens a correction/new-version cycle before CTAN submission.
+
+## R7 — CTAN submission
+
+**BLOCKED BY R6.** After maintainer visual acceptance, submit exactly one frozen file: `abntexto-ufc-3.0.0.zip`. Preserve the submission receipt, submitted hash and later acceptance/catalog/install evidence.
+
+## R8 — Release closeout
+
+**BLOCKED BY R7 EXTERNAL VERIFICATION.** After CTAN acceptance/catalog evidence, synchronize final state and mark Release `CLOSED`.
 
 ## Operating discipline
 
-Every **material advance** or material repository modification must update affected documentation and machine state in the same work cycle. `README.md` is updated when user-facing facts change, not for transient branch/CI progress. Targeted checks never replace the final phase-end regression.
+Every **material advance** or material repository modification must update affected documentation and machine state in the same work cycle. `README.md` is updated when user-facing facts change, not for transient branch/CI progress. Targeted checks never replace the final phase-end regression, and automated success never replaces the explicit maintainer visual-acceptance gate introduced for the seven canonical profiles.
