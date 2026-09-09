@@ -40,7 +40,7 @@ Updated: 2026-09-09
 
 ## R2 — Monolithic CTAN runtime
 
-**CLOSED AT INTEGRATION; FINAL CANDIDATE REPROOF REQUIRED.** The repository stays modular. The CTAN builder recursively inlines all tracked project-owned `.def` modules into one generated `abntexto-ufc.cls`.
+**CLOSED / PASS ON FINAL PUBLICATION BYTES.** The repository stays modular. The CTAN builder recursively inlines all 14 tracked project-owned `.def` modules into one generated `abntexto-ufc.cls`; the final certified ZIP contains zero `.def` files and passed isolated compilation, deterministic rebuild and prohibited-asset checks.
 
 Canonical CTAN content:
 
@@ -56,7 +56,7 @@ abntexto-ufc/
 └── abntexto-ufc-example.pdf
 ```
 
-Integration evidence already demonstrated: all 14 tracked runtime modules inlined exactly once, no residual project-owned `.def` input, zero `.def` files in the ZIP, isolated example compilation, deterministic rebuild and no prohibited assets.
+Final evidence confirms all 14 tracked runtime modules inlined exactly once, no residual project-owned `.def` input, zero `.def` files in the ZIP, isolated example compilation, deterministic rebuild and no prohibited assets.
 
 ## R3 — Final exact-main recertification
 
