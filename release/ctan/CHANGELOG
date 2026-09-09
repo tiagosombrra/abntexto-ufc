@@ -11,6 +11,7 @@ abntexto-ufc changelog
 - Adds the UFC scientific-article profile.
 - Updates the active technical baseline to current applicable ABNT editions, including NBR 14724:2024, NBR 10520:2023, NBR 6023:2025, NBR 15287:2025 and NBR 12225:2023.
 - Provides deterministic release packaging and PDF/A-oriented certification gates.
+- Keeps the development sources modular while distributing a single generated `abntexto-ufc.cls` through CTAN; no project-owned `.def` files are included in the CTAN package.
 - Keeps `abntexto` as an external CTAN dependency; it is not vendored in the CTAN package.
 - Does not redistribute UFC institutional marks or proprietary Microsoft font files.
 
