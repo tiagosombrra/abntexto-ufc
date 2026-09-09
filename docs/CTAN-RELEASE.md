@@ -8,10 +8,11 @@ This document defines the repository-controlled publication procedure for `abnte
 
 | Fact | State |
 |---|---|
-| Roadmap phase | **Release — final human / pkgcheck gates** |
-| Canonical branch | `main`; resolve final candidate SHA dynamically after the last control-gate merge |
+| Roadmap phase | **Release — final exact-main recertification / human approval** |
+| Canonical branch | `main`; resolve the exact candidate SHA dynamically from Git |
 | Publication hardening | **MERGED** via PR #297 |
 | Post-hardening control synchronization | **MERGED** via PR #298, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
+| Final release gates | executable current-CTAN `pkgcheck` + seven PDF/`.tex` pairs with explicit maintainer approval |
 | Package id | `abntexto-ufc` |
 | CTAN runtime shape | **one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files** |
 | Human visual gate | **seven PDF/`.tex` pairs; explicit maintainer approval required before tag** |
@@ -109,22 +110,21 @@ The gate closes only after **explicit maintainer approval**. Automated regressio
 
 ## Final certification and publication sequence
 
-1. merge all remaining release-control changes through protected `main`;
-2. resolve the resulting exact canonical `main` SHA;
-3. run Static, automatic complete Linux integration and Linux release check on **that exact SHA**;
-4. run any change-impact-required heavy Windows/font/PDF-A checks;
-5. build the three deterministic public archives + `SHA256SUMS` from that exact SHA;
-6. validate checksums, ZIP integrity, monolithic-class equivalence and CTAN structural/semantic gates;
-7. physically audit the retained canonical CTAN ZIP;
-8. require the current CTAN `pkgcheck` evidence for those exact bytes and classify every warning;
-9. regenerate all seven exact-candidate PDF/`.tex` review pairs and obtain explicit maintainer approval;
-10. freeze hashes/evidence; rebuilding publication bytes is then forbidden;
-11. create immutable `v3.0.0` pointing to the same certified and visually approved SHA;
-12. create GitHub Release and attach exactly the frozen three ZIPs + `SHA256SUMS`;
-13. re-download GitHub Release assets and verify hashes;
-14. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
-15. preserve submission receipt and later acceptance/install evidence;
-16. update post-publication documentation/state and close Release only after verification.
+1. resolve the exact canonical `main` SHA containing the final release gates;
+2. run Static, automatic complete Linux integration and Linux release check on **that exact SHA**;
+3. run any change-impact-required heavy Windows/font/PDF-A checks;
+4. build the three deterministic public archives + `SHA256SUMS` from that exact SHA;
+5. validate checksums, ZIP integrity, monolithic-class equivalence and CTAN structural/semantic gates;
+6. physically audit the retained canonical CTAN ZIP;
+7. require the current CTAN `pkgcheck` evidence for those exact bytes and classify every warning;
+8. regenerate all seven exact-candidate PDF/`.tex` review pairs and obtain explicit maintainer approval;
+9. freeze hashes/evidence; rebuilding publication bytes is then forbidden;
+10. create immutable `v3.0.0` pointing to the same certified and visually approved SHA;
+11. create GitHub Release and attach exactly the frozen three ZIPs + `SHA256SUMS`;
+12. re-download GitHub Release assets and verify hashes;
+13. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
+14. preserve submission receipt and later acceptance/install evidence;
+15. update post-publication documentation/state and close Release only after verification.
 
 Invariant:
 
