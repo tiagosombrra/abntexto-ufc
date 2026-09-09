@@ -1,24 +1,38 @@
 {
-  "schema_version": 1,
-  "purpose": "V3 Release immutable phase-end regression transport marker",
+  "schema_version": 2,
+  "purpose": "V3 Release publication-hardening and final recertification marker",
   "phase": "release",
-  "candidate_semantics": "git-commit-containing-this-marker-and-synchronized-control-plane",
-  "parent_preparation_sha": "6ab4768662aa51842cf745afbf846e89b6bd466a",
-  "artifact_delivery_checkpoint_sha": "b55210acdb614fc3178e3ebf5b3a595bed8508c1",
-  "artifact_delivery_static_run": 34300561597,
-  "artifact_delivery_static_conclusion": "success",
-  "artifact_delivery_linux_run": 34300561605,
-  "artifact_delivery_linux_conclusion": "success",
-  "artifact_delivery_linux_summary": "SCOPE=complete PASS=36 FAIL=0 SKIP=0",
+  "candidate_semantics": "exact canonical main commit certified after this publication-hardening batch is merged",
+  "superseded_candidate": {
+    "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
+    "linux_release_run": 34303586773,
+    "distribution_artifact_id": 10086299397,
+    "status": "superseded-for-publication",
+    "reason": "Certified archives were technically reproducible but contained stale v2/pre-publication README text; the CTAN README identified 3.0.0 as a development candidate. Those bytes must never be published as v3.0.0 final."
+  },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
   "required_artifact_set": [
     "abntexto-ufc-3.0.0.zip",
-    "abntexto-ufc-ctan-3.0.0.zip",
     "abntexto-ufc-template-3.0.0.zip",
     "abntexto-ufc-overleaf-3.0.0.zip",
     "SHA256SUMS"
   ],
+  "ctan_upload": {
+    "archive": "abntexto-ufc-3.0.0.zip",
+    "archive_count": 1,
+    "top_level_directory": "abntexto-ufc",
+    "external_abntexto_dependency": true,
+    "institutional_marks_redistributed": false,
+    "proprietary_microsoft_fonts_redistributed": false,
+    "pkgcheck_required_before_tag": true,
+    "pkgcheck_version_policy": "current-at-final-certification"
+  },
+  "final_tag_contract": {
+    "tag": "v3.0.0",
+    "tagged_commit_must_equal_certified_commit": true,
+    "create_only_after_pkgcheck_pass": true
+  },
   "publication_rebuild_allowed": false,
   "remove_after_acceptance": false
 }
