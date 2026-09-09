@@ -1,5 +1,5 @@
 {
-  "schema_version": 37,
+  "schema_version": 38,
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.0",
@@ -58,7 +58,7 @@
     "must_complete_before_next_phase_activation": true,
     "documentation_must_be_updated_after_result": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "pending-control-plane-sync-merge-and-exact-main-recertification",
+    "candidate_state": "certified-tagged-github-release-published",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
@@ -73,17 +73,52 @@
     "failure_policy": "fail-closed-and-reopen-phase-work"
   },
   "phases": [
-    {"id":"regression-audit","name":"Regression Audit","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"core-corrections","name":"Core Corrections","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"reference-pdf-validation","name":"Reference PDF Validation","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"scientific-article","name":"Scientific Article","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"final-certification","name":"Final Certification","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"release","name":"Release","status":"ACTIVE","phase_end_regression_required":true}
+    {
+      "id": "regression-audit",
+      "name": "Regression Audit",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "core-corrections",
+      "name": "Core Corrections",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "reference-pdf-validation",
+      "name": "Reference PDF Validation",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "scientific-article",
+      "name": "Scientific Article",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "final-certification",
+      "name": "Final Certification",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "release",
+      "name": "Release",
+      "status": "ACTIVE",
+      "phase_end_regression_required": true
+    }
   ],
   "active_work": {
     "review_items": 34,
-    "review_status": {"pass":34,"partial":0,"fail":0,"normative_review":0},
-    "release_state": "final-exact-main-recertification",
+    "review_status": {
+      "pass": 34,
+      "partial": 0,
+      "fail": 0,
+      "normative_review": 0
+    },
+    "release_state": "github-release-published-ctan-submission-pending",
     "release_branch": "main",
     "publication_hardening": {
       "pr": 297,
@@ -97,31 +132,19 @@
       "evidence_role": "integration-evidence-not-final-publication-bytes"
     },
     "current_correction_batch": [
-      "Synchronize post-merge control-plane documentation and machine state",
-      "Guarantee automatic complete Linux integration on the exact post-sync main SHA via the Release marker push",
-      "Resolve exact main SHA after that synchronization is merged",
-      "Run final exact-main phase-end recertification",
-      "Run current CTAN pkgcheck before immutable tag creation",
-      "Freeze publication bytes and create v3.0.0 on the exact certified SHA"
+      "Submit the frozen canonical abntexto-ufc-3.0.0.zip to CTAN",
+      "Preserve CTAN submission receipt and submitted-file identity",
+      "Verify CTAN acceptance/catalog/install evidence",
+      "Synchronize final publication state and close Release"
     ],
     "pending_acceptance_gates": [
-      "Merge post-merge control-plane synchronization through protected main",
-      "Resolve exact resulting main SHA and require Static, automatic complete Linux integration and Linux release check on that SHA",
-      "Build deterministic three-ZIP distribution plus SHA256SUMS from exact certified SHA",
-      "Re-audit CTAN archive: one generated abntexto-ufc.cls and zero project-owned def files",
-      "Run current CTAN pkgcheck against abntexto-ufc-3.0.0.zip before tag",
-      "Freeze publication hashes and evidence",
-      "Create immutable v3.0.0 tag on exact certified SHA",
-      "Publish GitHub Release and verify re-downloaded asset hashes",
-      "Submit exactly one canonical ZIP to CTAN and preserve receipt/acceptance evidence",
-      "Record final publication verification before Release closure"
+      "Submit exactly one frozen canonical ZIP to CTAN and preserve receipt evidence",
+      "Verify CTAN acceptance/catalog/install evidence",
+      "Record final external publication verification before Release closure"
     ],
     "release_blockers": [
-      "Post-merge control-plane synchronization is not yet merged",
-      "Final exact-main Release candidate has not yet completed phase-end recertification",
-      "Current CTAN pkgcheck has not passed on final package bytes",
-      "v3.0.0 tag/GitHub Release has not been published and verified",
-      "CTAN publication has not been accepted/verified"
+      "CTAN submission receipt has not yet been recorded",
+      "CTAN acceptance/catalog/install evidence has not yet been recorded"
     ],
     "deferred_authority_conflicts": [],
     "superseded_release_candidate": {
@@ -138,18 +161,37 @@
     "normative_item_33": {
       "state": "closed-pass-primary-authority",
       "authority": "ABNT NBR 6023:2025",
-      "locators": ["6.6","8.1.2","8.1.2.2","8.1.2.3","8.13","9.1"],
+      "locators": [
+        "6.6",
+        "8.1.2",
+        "8.1.2.2",
+        "8.1.2.3",
+        "8.13",
+        "9.1"
+      ],
       "regression": "tests/integration/references-6023.sh",
       "runtime_policy": "biblatex repeatfields=true",
-      "covered_cases": ["DOI plus online availability/access elements","explicit repeated authorship","legal-person authorship","São Paulo (Estado) jurisdiction disambiguation"]
+      "covered_cases": [
+        "DOI plus online availability/access elements",
+        "explicit repeated authorship",
+        "legal-person authorship",
+        "São Paulo (Estado) jurisdiction disambiguation"
+      ]
     },
     "distribution_contract": {
-      "state": "publication-hardening-integrated-final-candidate-reproof-pending",
-      "required_files": ["abntexto-ufc-3.0.0.zip","abntexto-ufc-template-3.0.0.zip","abntexto-ufc-overleaf-3.0.0.zip","SHA256SUMS"],
+      "state": "final-publication-bytes-frozen-and-github-published",
+      "required_files": [
+        "abntexto-ufc-3.0.0.zip",
+        "abntexto-ufc-template-3.0.0.zip",
+        "abntexto-ufc-overleaf-3.0.0.zip",
+        "SHA256SUMS"
+      ],
       "ctan_upload_archive": "abntexto-ufc-3.0.0.zip",
       "ctan_upload_archive_count": 1,
       "ctan_top_level_directory": "abntexto-ufc",
-      "ctan_runtime_implementation_files": ["abntexto-ufc.cls"],
+      "ctan_runtime_implementation_files": [
+        "abntexto-ufc.cls"
+      ],
       "ctan_project_def_files": 0,
       "ctan_nested_runtime_module_directory": false,
       "ctan_monolithic_class": true,
@@ -163,17 +205,53 @@
       "proprietary_microsoft_fonts_redistributed": false,
       "redundant_ctan_archive": false,
       "pkgcheck_version_policy": "current-at-final-certification",
-      "pkgcheck_before_tag": true
+      "pkgcheck_before_tag": true,
+      "final_distribution_artifact_id": 10117679639,
+      "final_distribution_artifact_sha256": "7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df",
+      "ctan_archive_sha256": "d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71",
+      "pkgcheck_version": "4.1.0",
+      "pkgcheck_status": "PASS",
+      "pkgcheck_run_id": 34386932488,
+      "pkgcheck_artifact_id": 10118176687,
+      "github_release_id": 385743477,
+      "github_release_url": "https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0",
+      "github_assets_byte_verified": true,
+      "ctan_submission_status": "pending-not-submitted",
+      "ctan_acceptance_status": "pending-no-external-evidence"
     },
     "final_candidate_contract": {
-      "state": "pending-control-plane-sync-merge-and-exact-main-recertification",
+      "state": "certified-tagged-and-github-published",
       "tag": "v3.0.0",
       "resolve_candidate_sha_from_git": true,
       "automatic_complete_linux_on_exact_main_release_marker_push": true,
       "certified_sha_equals_tagged_sha": true,
       "certified_sha_equals_publication_source_sha": true,
       "publication_rebuild_allowed_after_acceptance": false,
-      "repository_commits_allowed_after_acceptance_before_tag": false
+      "repository_commits_allowed_after_acceptance_before_tag": false,
+      "certified_source_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
+      "tag_object_sha": "7354cf912ffa5abb171128554cabce61392ecd84",
+      "tag_resolves_to_certified_source": true,
+      "github_release_published": true,
+      "github_release_id": 385743477,
+      "github_assets_byte_verified": true
+    },
+    "github_publication": {
+      "status": "PASS",
+      "certified_source_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
+      "tag": "v3.0.0",
+      "tag_object_sha": "7354cf912ffa5abb171128554cabce61392ecd84",
+      "release_id": 385743477,
+      "release_url": "https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0",
+      "published_at": "2026-09-09T18:14:57Z",
+      "distribution_artifact_id": 10117679639,
+      "canonical_ctan_zip_sha256": "d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71",
+      "pkgcheck_run_id": 34386932488,
+      "pkgcheck_version": "4.1.0",
+      "pkgcheck_warnings": 0,
+      "pkgcheck_errors_or_fatals": 0,
+      "release_verification_run_id": 34387825056,
+      "release_verification_artifact_id": 10118391678,
+      "release_verification_artifact_sha256": "c8ac53d61e6fd1789748163cba6f22d334f4224c1966651baa7a11a334116abc"
     }
   },
   "linux_integration": {
@@ -188,9 +266,12 @@
   },
   "branch_plan": {
     "current_work_branch": "main",
-    "current_work_state": "final-candidate-recertification-after-control-plane-sync",
+    "current_work_state": "post-github-publication-ctan-pending",
     "canonical_main_resolution": "git-fetch-origin-main-at-session-start",
     "merge_policy": "protected-main-squash-only",
-    "final_candidate_created_after_control_plane_sync_merge": true
+    "final_candidate_created_after_control_plane_sync_merge": true,
+    "released_source_is_tag_authoritative": true,
+    "released_source_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
+    "post_tag_main_commits_do_not_change_v3_release_source": true
   }
 }

@@ -4,7 +4,7 @@ Updated: 2026-09-09
 
 ## Current status
 
-**Release is ACTIVE — final exact-main recertification.** Publication hardening was integrated by PR #297. The prior publication candidate remains superseded; the next and only taggable candidate is the exact canonical `main` commit that contains this post-merge control-plane synchronization and then passes the final release gates.
+**Release is ACTIVE — GitHub publication is complete; CTAN submission/acceptance remains.** The immutable `v3.0.0` tag resolves to `05399473827da7cf6b6c8bac36edc7115481773f`, and GitHub Release `385743477` is published with byte-verified frozen assets.
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -13,29 +13,22 @@ Updated: 2026-09-09
 | Reference PDF Validation | CLOSED | 55/55 visual PASS + Static/Linux |
 | Scientific Article | CLOSED | complete Linux + 5/5 visual PASS |
 | Final Certification | CLOSED | heavy technical matrix accepted |
-| Release | **ACTIVE — FINAL RECERTIFICATION** | certify exact post-sync `main`, prove one-class/zero-`.def` CTAN runtime, pass current `pkgcheck`, freeze bytes, tag/release, verify and submit one CTAN archive |
+| Release | **ACTIVE — CTAN PENDING** | GitHub publication PASS; submit canonical ZIP to CTAN, preserve receipt/acceptance evidence, then close |
 
 ## Current Release facts
 
 | Predicate | Current result |
 |---|---|
-| Canonical branch | `main`; resolve current HEAD dynamically from Git |
-| Publication-hardening PR | #297 — **MERGED** |
-| Integration anchor | `25c6ab09dc38be9257d2912652074a48886d28f9` |
-| Final candidate | exact `main` containing this synchronization after final recertification |
-| Exact-main Linux trigger | push to `main` changing `release/v3-release-candidate.json` runs `Linux integration` with `scope=complete` |
-| Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
-| Prior retained artifact | ID `10086299397` — historical evidence only; never publish |
-| Librarian matrix | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| CTAN upload archive | `abntexto-ufc-3.0.0.zip` only |
-| CTAN project runtime | **`abntexto-ufc.cls` only** |
-| CTAN project `.def` files | **0** |
-| Development source | modular `.def` architecture retained |
-| Institutional marks | excluded from CTAN/archive contract |
-| Microsoft proprietary fonts | excluded from CTAN/archive contract |
-| Final tag | not created |
-| GitHub Release | not created |
-| CTAN publication | not claimed |
+| Certified source SHA | `05399473827da7cf6b6c8bac36edc7115481773f` |
+| Immutable tag | `v3.0.0` → `05399473827da7cf6b6c8bac36edc7115481773f` |
+| GitHub Release | **PUBLISHED** — https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0 |
+| Distribution artifact | `10117679639` (`sha256:7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df`) |
+| CTAN upload archive | `abntexto-ufc-3.0.0.zip` only (`sha256:d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`) |
+| CTAN project runtime | **`abntexto-ufc.cls` only; 0 `.def`** |
+| `pkgcheck` | **PASS** — 4.1.0, zero warnings/errors |
+| GitHub asset re-download | **PASS / byte-identical** |
+| CTAN submission | **PENDING** |
+| CTAN acceptance/install | **PENDING** |
 
 ## R0 — Publication documentation and package identity
 
@@ -67,29 +60,23 @@ Integration evidence already demonstrated: all 14 tracked runtime modules inline
 
 ## R3 — Final exact-main recertification
 
-**PENDING after this synchronization is merged.** Resolve the exact resulting canonical `main` SHA and run the Release phase-end regression on that SHA. The release marker push must automatically produce `scope=complete` Linux integration on that same SHA. No subsequent pre-tag repository commit is allowed without starting a new candidate cycle.
-
-Required invariant:
-
-```text
-certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
-```
+**CLOSED / PASS.** Exact source `05399473827da7cf6b6c8bac36edc7115481773f` passed Static, complete Linux integration, Linux release check (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`), deterministic distribution and final package audit.
 
 ## R4 — CTAN `pkgcheck`
 
-**PENDING final archive.** Run the current CTAN `pkgcheck` version on the canonical ZIP before creating the immutable tag. Preserve version, full output, ZIP SHA-256 and disposition of every warning.
+**CLOSED / PASS.** `pkgcheck 4.1.0` passed on `d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71` with exit 0, zero warnings and zero errors/fatals. Evidence run `34386932488` / artifact `10118176687`.
 
 ## R5 — Freeze, tag and GitHub Release
 
-**BLOCKED by R3–R4.** After acceptance, freeze publication bytes/hashes, create immutable `v3.0.0` on the certified SHA, attach exactly the frozen three ZIPs + `SHA256SUMS`, then re-download and verify hashes.
+**CLOSED / PASS.** Frozen bytes were tagged as immutable `v3.0.0`, published in GitHub Release `385743477`, re-downloaded before and after publication and proved byte-identical. Recovery verification run `34387825056` retained evidence artifact `10118391678`.
 
 ## R6 — CTAN submission
 
-**BLOCKED by R4–R5.** Submit exactly one file: `abntexto-ufc-3.0.0.zip`. Preserve receipt and later acceptance/install evidence.
+**ACTIVE / PENDING EXTERNAL ACTION.** Submit exactly one file: `abntexto-ufc-3.0.0.zip`. Preserve receipt, submitted hash and later acceptance/catalog/install evidence.
 
 ## R7 — Release closeout
 
-**BLOCKED by R3–R6.** After publication verification, synchronize roadmap/handoff/readiness/publication facts and mark Release `CLOSED`.
+**BLOCKED ONLY BY R6 EXTERNAL VERIFICATION.** After CTAN acceptance/catalog evidence, synchronize final state and mark Release `CLOSED`.
 
 ## Operating discipline
 

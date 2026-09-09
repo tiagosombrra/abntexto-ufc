@@ -8,17 +8,22 @@ This document defines the repository-controlled publication procedure for `abnte
 
 | Fact | State |
 |---|---|
-| Roadmap phase | **Release — final exact-main recertification** |
-| Canonical branch | `main`; resolve candidate SHA dynamically from Git after this control-plane synchronization is merged |
-| Publication hardening | **MERGED** via PR #297 |
-| Integration anchor | `25c6ab09dc38be9257d2912652074a48886d28f9` |
-| Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
-| Package id | `abntexto-ufc` |
+| Roadmap phase | **Release — GitHub published; CTAN submission pending** |
+| Certified source SHA | `05399473827da7cf6b6c8bac36edc7115481773f` |
+| Immutable tag | `v3.0.0` → annotated tag object `7354cf912ffa5abb171128554cabce61392ecd84` → certified source SHA |
+| GitHub Release | **PUBLISHED** — [abntexto-ufc 3.0.0](https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0) |
+| Release publication time | `2026-09-09T18:14:57Z` |
+| Distribution artifact | Actions artifact `10117679639` — `sha256:7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df` |
+| Canonical CTAN ZIP | `abntexto-ufc-3.0.0.zip` — `sha256:d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71` |
 | CTAN runtime shape | **one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files** |
-| GitHub `v3.0.0` tag/Release | not yet published |
-| CTAN upload/acceptance | not yet claimed; explicit evidence required |
+| `pkgcheck` | **PASS** — 4.1.0, exit 0, 0 warnings, 0 errors/fatals; run `34386932488`, artifact `10118176687` |
+| GitHub publication verification | **PASS** — recovery run `34387825056`, evidence artifact `10118391678` |
+| CTAN submission | **PENDING — not yet claimed** |
+| CTAN acceptance/install | **PENDING — explicit external evidence required** |
 
-The old Actions artifact `10086299397` must never be published as v3.0.0 final. It remains historical regression evidence only.
+The immutable release bytes are frozen. Post-tag documentation commits may move `main`, but they do not change the source or assets identified by `v3.0.0`.
+
+The old Actions artifact `10086299397` remains historical regression evidence only and must never be published as v3.0.0.
 
 ## Prior CTAN feedback and v3 resolution
 
@@ -64,55 +69,52 @@ The CTAN archive must contain **zero `.def` files**, no nested project runtime d
 
 ## Monolithic-class equivalence gate
 
-The release gate requires:
+**PASS on the final publication bytes.** Final certification on `05399473827da7cf6b6c8bac36edc7115481773f` proved:
 
-- every tracked project-owned runtime module incorporated exactly once;
+- all 14 tracked project-owned runtime modules incorporated exactly once;
 - no project-owned module remains referenced through `\input`;
 - no module-level `\ProvidesFile{abntexto-ufc/...}` remains in the generated class;
-- no `.def` file is present in the CTAN ZIP;
-- generated class compiles the CTAN example with only external `abntexto.cls` available;
-- modular runtime directory absent during isolated compilation;
-- two independent distribution builds produce byte-identical archives.
+- zero `.def` files in the CTAN ZIP;
+- isolated example compilation with only the generated class plus external `abntexto.cls`;
+- deterministic distribution rebuild and checksum verification;
+- no UFC institutional marks or proprietary Microsoft fonts redistributed.
 
-PR #297 final-head evidence already demonstrated this shape, including manual inspection of the real retained artifact. Final certification must reproduce the same contract on the exact post-sync canonical `main` SHA.
+The final distribution artifact is `10117679639` (`sha256:7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df`).
 
 ## pkgcheck is a pre-tag gate
 
-Never create `v3.0.0` before the current CTAN `pkgcheck` has accepted or produced explicitly reviewed warnings for the exact package archive intended for publication.
+**PASS before tag creation.** CTAN `pkgcheck 4.1.0` was run against the exact canonical ZIP with SHA-256 `d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`.
 
-As of 2026-09-09, the currently announced `pkgcheck` version is **4.1.0 (2026-08-05)**. Final certification must confirm the current version rather than treating this number as permanent.
+Evidence: workflow run `34386932488`, artifact `10118176687` (`sha256:e6a4d926d68f68657caca2bab4c1f2ea46cad81bd523c6c55e7f0fa73ea4c4e3`). Result: exit code 0, zero warnings, zero errors/fatals. The only reported diagnostic was informational (`I0002`).
 
-Preserve:
-
-- `pkgcheck --version` output;
-- complete `pkgcheck` output;
-- SHA-256 of the checked ZIP;
-- disposition of every warning.
-
-Fatal/error output blocks the release.
+Any future package-content change requires a new candidate/version cycle; the v3.0.0 bytes are frozen.
 
 ## Final certification and publication sequence
 
-1. merge this control-plane synchronization through protected `main`;
-2. resolve the resulting exact canonical `main` SHA;
-3. run Static and complete Linux/release contract on **that exact SHA**;
-4. run any change-impact-required heavy Windows/font/PDF-A checks;
-5. build the three deterministic public archives + `SHA256SUMS` from that exact SHA;
-6. validate checksums, ZIP integrity, monolithic-class equivalence and CTAN structural/semantic gate;
-7. manually audit the retained canonical CTAN ZIP;
-8. run current CTAN `pkgcheck` against that exact `abntexto-ufc-3.0.0.zip`;
-9. freeze hashes/evidence; rebuilding publication bytes is then forbidden;
-10. create immutable `v3.0.0` pointing to the same certified SHA;
-11. create GitHub Release and attach exactly the frozen three ZIPs + `SHA256SUMS`;
-12. re-download GitHub Release assets and verify hashes;
-13. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
-14. preserve submission receipt and later acceptance/install evidence;
-15. update post-publication documentation/state and close Release only after verification.
+Completed and evidenced:
 
-Invariant:
+1. exact canonical source frozen at `05399473827da7cf6b6c8bac36edc7115481773f`;
+2. Static, complete Linux integration and Linux release check passed on that SHA;
+3. deterministic three-ZIP distribution + `SHA256SUMS` built and retained as artifact `10117679639`;
+4. canonical CTAN ZIP manually audited: one generated class, zero `.def`, isolated compile PASS;
+5. CTAN `pkgcheck 4.1.0` passed with zero warnings/errors before tag creation;
+6. publication hashes frozen; no rebuild occurred;
+7. immutable annotated `v3.0.0` created and verified against the certified SHA;
+8. GitHub Release `385743477` created with exactly the frozen assets;
+9. draft and published Release assets were re-downloaded and proved byte-identical;
+10. GitHub Release published at `2026-09-09T18:14:57Z`.
+
+Pending external CTAN work:
+
+11. submit **only `abntexto-ufc-3.0.0.zip`** to CTAN;
+12. preserve the CTAN submission receipt and submitted-file identity;
+13. preserve CTAN acceptance/catalog/install evidence;
+14. synchronize final post-CTAN state and close Release.
+
+Invariant already satisfied for GitHub publication:
 
 ```text
-certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+certified source SHA == tagged v3.0.0 SHA == source SHA of published GitHub Release bytes
 ```
 
 ## Proposed CTAN metadata

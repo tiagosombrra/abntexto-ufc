@@ -7,22 +7,19 @@ Updated: 2026-09-09
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical branch | `main`; resolve the exact candidate SHA dynamically from Git after this control-plane synchronization is merged |
-| Active phase | **Release** |
-| Publication hardening | **MERGED** through PR #297 |
-| Integration anchor | `25c6ab09dc38be9257d2912652074a48886d28f9` — merge result of PR #297; not the final taggable candidate because this control-plane synchronization follows it |
-| Prior Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — technical evidence retained, **SUPERSEDED FOR PUBLICATION** |
-| Prior artifact | `10086299397` — historical evidence only; never publish as v3.0.0 final |
-| Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| CTAN archive | one canonical upload file: `abntexto-ufc-3.0.0.zip` |
+| Active phase | **Release — CTAN submission pending** |
+| Certified/tagged source | `05399473827da7cf6b6c8bac36edc7115481773f` |
+| Immutable tag | `v3.0.0`; tag object `7354cf912ffa5abb171128554cabce61392ecd84` resolves to the certified source |
+| GitHub Release | **PUBLISHED** — https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0 |
+| GitHub publication evidence | run `34387825056`; artifact `10118391678` (`sha256:c8ac53d61e6fd1789748163cba6f22d334f4224c1966651baa7a11a334116abc`) |
+| Final distribution artifact | `10117679639` (`sha256:7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df`) |
+| Canonical CTAN ZIP | `abntexto-ufc-3.0.0.zip` (`sha256:d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`) |
 | CTAN runtime | **one generated `abntexto-ufc.cls`; zero project-owned `.def` files** |
-| Repository runtime | modular source tree retained for engineering/testing |
-| Final candidate | exact canonical `main` SHA that contains this post-merge control-plane synchronization and then passes final certification |
-| Exact-main Linux gate | a push to `main` that changes `release/v3-release-candidate.json` automatically runs Linux integration with `scope=complete` |
-| Final tag rule | certified source SHA must equal `v3.0.0` target SHA |
-| pkgcheck rule | current CTAN `pkgcheck` must pass before tag creation |
+| `pkgcheck` | **PASS** — 4.1.0, exit 0, 0 warnings/errors; run `34386932488` |
+| Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
+| CTAN submission/acceptance | **PENDING; no claim without external evidence** |
 
-`docs/V3-CONTINUATION.md` is the shortest continuation entry point. Never use memory or a hardcoded “current main” SHA as Git authority.
+`main` may advance after the immutable tag for documentation/state updates. Git authority for the released source is the `v3.0.0` tag resolving to `05399473827da7cf6b6c8bac36edc7115481773f`.
 
 ## Completed publication-hardening evidence
 
@@ -65,23 +62,14 @@ Former librarian item 33 is **PASS** using primary ABNT NBR 6023:2025 authority 
 
 ## Remaining Release work
 
-1. merge this control-plane synchronization through protected `main`;
-2. resolve that exact resulting `main` SHA and treat it as the only final-candidate source;
-3. require Static, automatic `scope=complete` Linux integration and Linux release check on that exact SHA;
-4. build and retain the deterministic three-ZIP distribution plus `SHA256SUMS` from that exact SHA;
-5. manually re-audit the canonical CTAN ZIP and confirm one generated `abntexto-ufc.cls`, zero `.def`, and isolated compile PASS;
-6. run the current CTAN `pkgcheck` on that exact ZIP and preserve tool version, full output, checked hash and disposition of warnings;
-7. freeze hashes and evidence; no rebuild after acceptance;
-8. create immutable `v3.0.0` on the certified SHA;
-9. create GitHub Release with the exact frozen bytes and verify re-downloaded hashes;
-10. submit only `abntexto-ufc-3.0.0.zip` to CTAN and preserve receipt/acceptance evidence;
-11. update post-publication documentation/state and close Release only after verification.
+1. submit only `abntexto-ufc-3.0.0.zip` to CTAN using the frozen GitHub Release asset;
+2. preserve the CTAN submission receipt and submitted-file identity/hash;
+3. wait for explicit CTAN acceptance/catalog evidence; do not infer acceptance from submission;
+4. verify the accepted package identity/version and, when available, installation/catalog propagation;
+5. synchronize post-CTAN documentation and machine state;
+6. mark Release `CLOSED` only after external publication verification.
 
-Invariant:
-
-```text
-certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
-```
+The GitHub tag and Release must not be rebuilt, replaced or retargeted.
 
 ## Mandatory operating discipline
 

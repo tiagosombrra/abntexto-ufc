@@ -1,7 +1,7 @@
 # V3.0.0 Continuation Handoff
 
 Updated: 2026-09-09
-Status: RELEASE — FINAL EXACT-MAIN RECERTIFICATION
+Status: RELEASE — GITHUB PUBLISHED / CTAN PENDING
 
 This file is the shortest safe entry point for continuing v3 work from a new ChatGPT conversation, Codex session or local clone.
 
@@ -10,19 +10,17 @@ This file is the shortest safe entry point for continuing v3 work from a new Cha
 | Fact | Current state |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical branch | `main` — resolve current SHA dynamically from `origin/main` |
-| Active roadmap phase | **Release** |
-| Publication hardening | **MERGED** via PR #297 |
-| Integration anchor | `25c6ab09dc38be9257d2912652074a48886d28f9` |
-| Final candidate semantics | the exact `main` commit containing this post-merge control-plane synchronization, after it passes final recertification |
-| Previous Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
-| Previous retained artifact | ID `10086299397` — historical evidence only; never publish |
-| Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| Package id | `abntexto-ufc` |
-| CTAN upload contract | exactly one archive: `abntexto-ufc-3.0.0.zip` |
-| CTAN runtime contract | exactly one generated `abntexto-ufc.cls`; **zero project-owned `.def` files** |
-| Tag contract | `v3.0.0` must point to the exact final certified `main` SHA |
-| pkgcheck contract | current CTAN `pkgcheck` must pass before tag creation |
+| Released source | `05399473827da7cf6b6c8bac36edc7115481773f` |
+| Immutable tag | `v3.0.0` → `05399473827da7cf6b6c8bac36edc7115481773f` |
+| GitHub Release | **PUBLISHED** — https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0 |
+| Final distribution artifact | `10117679639` (`sha256:7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df`) |
+| Canonical CTAN upload | `abntexto-ufc-3.0.0.zip` (`sha256:d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`) |
+| CTAN runtime contract | one generated `abntexto-ufc.cls`; **zero project-owned `.def` files** |
+| `pkgcheck` | **PASS** — 4.1.0, exit 0, zero warnings/errors; run `34386932488` |
+| GitHub publication verification | **PASS** — run `34387825056`; evidence artifact `10118391678` |
+| CTAN status | **NOT YET CLAIMED — submission/acceptance pending** |
+
+For released-source authority, resolve `v3.0.0`; do not treat a later post-tag `main` commit as the v3.0.0 source.
 
 ## What publication hardening already closed
 
@@ -41,22 +39,14 @@ PR #297 final-head evidence was green: Static PASS, Linux integration PASS, Linu
 
 ## Remaining work
 
-1. merge this post-merge documentation/machine-state synchronization;
-2. resolve the exact resulting `origin/main` SHA;
-3. run final phase-end regression on exactly that SHA;
-4. retain and audit the resulting deterministic distribution;
-5. run the current CTAN `pkgcheck` on the exact canonical ZIP;
-6. freeze hashes/evidence;
-7. create immutable `v3.0.0` on the same certified SHA;
-8. create GitHub Release with exact frozen assets and verify re-downloaded hashes;
-9. submit only `abntexto-ufc-3.0.0.zip` to CTAN;
-10. preserve submission/acceptance evidence and close Release only after external verification.
+1. obtain the exact `abntexto-ufc-3.0.0.zip` asset from the published GitHub Release;
+2. verify SHA-256 `d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71`;
+3. submit only that archive to CTAN;
+4. preserve submission receipt and package metadata;
+5. after CTAN acceptance, verify catalog/install evidence;
+6. update control docs/machine state and close the Release phase.
 
-Invariant:
-
-```text
-certified source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
-```
+No v3.0.0 source or asset rebuild is permitted.
 
 ## Local continuation
 

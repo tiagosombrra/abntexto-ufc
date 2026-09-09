@@ -1,8 +1,8 @@
 {
-  "schema_version": 4,
-  "purpose": "V3 Release final exact-main recertification marker after publication hardening integration",
+  "schema_version": 5,
+  "purpose": "Immutable v3.0.0 GitHub publication record; CTAN submission and acceptance remain pending external evidence",
   "phase": "release",
-  "candidate_semantics": "the exact canonical main commit containing the post-merge control-plane synchronization, after that commit passes final release certification",
+  "candidate_semantics": "certified source 05399473827da7cf6b6c8bac36edc7115481773f, tagged immutably as v3.0.0 and published with frozen GitHub Release assets",
   "integration_anchor": {
     "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
     "source": "PR #297 squash merge",
@@ -29,12 +29,43 @@
     "status": "integration-evidence-only-not-final-publication-bytes"
   },
   "final_candidate": {
-    "status": "pending-control-plane-sync-merge-and-exact-main-recertification",
-    "source_branch": "main",
-    "resolve_sha_from_git_after_sync_merge": true,
-    "complete_linux_on_exact_main_release_marker_push": true,
-    "linux_release_check_on_exact_main_release_marker_push": true,
-    "no_pre_tag_commits_after_acceptance": true
+    "status": "certified-tagged-github-release-published-ctan-pending",
+    "source_branch_at_certification": "main",
+    "certified_source_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
+    "static_status": "PASS",
+    "complete_linux_status": "PASS",
+    "linux_release_run": 34383793519,
+    "linux_release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "distribution_artifact_id": 10117679639,
+    "distribution_artifact_sha256": "7ee1b6bf4b1d54ac041db1e624d8bfcf52a1dc43897c1542b9fd969b971f40df",
+    "ctan_zip_sha256": "d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71",
+    "pkgcheck": {
+      "version": "4.1.0",
+      "run_id": 34386932488,
+      "artifact_id": 10118176687,
+      "artifact_sha256": "e6a4d926d68f68657caca2bab4c1f2ea46cad81bd523c6c55e7f0fa73ea4c4e3",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors_or_fatals": 0,
+      "status": "PASS"
+    },
+    "tag": "v3.0.0",
+    "tag_object_sha": "7354cf912ffa5abb171128554cabce61392ecd84",
+    "tag_resolves_to_certified_source": true,
+    "github_release": {
+      "id": 385743477,
+      "url": "https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0",
+      "published_at": "2026-09-09T18:14:57Z",
+      "draft": false,
+      "prerelease": false,
+      "asset_count": 4,
+      "recovery_verification_run": 34387825056,
+      "evidence_artifact_id": 10118391678,
+      "evidence_artifact_sha256": "c8ac53d61e6fd1789748163cba6f22d334f4224c1966651baa7a11a334116abc",
+      "assets_byte_identical_after_redownload": true
+    },
+    "no_pre_tag_commits_after_acceptance": true,
+    "publication_rebuild_allowed": false
   },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
@@ -59,13 +90,19 @@
     "institutional_marks_redistributed": false,
     "proprietary_microsoft_fonts_redistributed": false,
     "pkgcheck_required_before_tag": true,
-    "pkgcheck_version_policy": "current-at-final-certification"
+    "pkgcheck_version_policy": "current-at-final-certification",
+    "archive_sha256": "d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71",
+    "submission_status": "pending-not-submitted",
+    "acceptance_status": "pending-no-external-evidence"
   },
   "final_tag_contract": {
     "tag": "v3.0.0",
     "tagged_commit_must_equal_certified_commit": true,
     "certified_commit_must_equal_publication_source_commit": true,
-    "create_only_after_pkgcheck_pass": true
+    "create_only_after_pkgcheck_pass": true,
+    "status": "satisfied",
+    "tag_object_sha": "7354cf912ffa5abb171128554cabce61392ecd84",
+    "certified_source_sha": "05399473827da7cf6b6c8bac36edc7115481773f"
   },
   "documentation_policy": {
     "affected_docs_updated_with_every_material_repository_change": true,
@@ -73,5 +110,17 @@
     "post_acceptance_pre_tag_repository_changes_forbidden": true
   },
   "publication_rebuild_allowed": false,
-  "remove_after_acceptance": false
+  "remove_after_acceptance": false,
+  "github_publication": {
+    "status": "published-and-byte-verified",
+    "release_id": 385743477,
+    "release_url": "https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.0",
+    "published_at": "2026-09-09T18:14:57Z",
+    "asset_sha256": {
+      "abntexto-ufc-3.0.0.zip": "d04efb618abb3dd4d99f0b3a5f3ddef3f845381e117aadfec0de087354854f71",
+      "abntexto-ufc-template-3.0.0.zip": "456df0fb9b82896741fd2a716abe94da6ea34630e6ed1aadb1333e6c9f1d6230",
+      "abntexto-ufc-overleaf-3.0.0.zip": "b4a3619d2f000e452efdaf8d3465cfafd274dd5a6b2c5c5a42dbc448363001f6",
+      "SHA256SUMS": "bfcf882f2d6764d392bac885e4b2307ce439f78c6349a4bbc41758b5fe532b13"
+    }
+  }
 }
