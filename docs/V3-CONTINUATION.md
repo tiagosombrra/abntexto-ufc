@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2 DONE; R3 CORRECTIVE_COMMIT_IN_CI; publication blocked
+Status: RELEASE — R0/R1/R2/R3 DONE; R4 IN_PROGRESS; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -12,7 +12,7 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 3. Read this file.
 4. Read `release/v3.0.1-final-corrections.json`.
 5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
-6. For the active lot R3, read `docs/V3.0.1-R3-EVIDENCE.md`.
+6. For the active lot R4, read `docs/V3.0.1-R4-EVIDENCE.md`.
 7. Continue from `current_next_action` in the machine state.
 
 Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
@@ -59,7 +59,7 @@ R2 makes the complete PDF rooted at `template/main.tex` a first-class exact-SHA 
 
 The R2 visual inspection is development evidence only; it does not replace R6 explicit maintainer acceptance on the final immutable R5 candidate. Full evidence: `docs/V3.0.1-R2-EVIDENCE.md`.
 
-## R3 — IMPLEMENTED, EVIDENCE PENDING
+## R3 — DONE
 
 R3 repairs public distribution so users receive the complete editable source and a compiled full pedagogical reference while CTAN remains lean.
 
@@ -75,13 +75,20 @@ The implementation commit containing this handoff must be resolved dynamically f
 
 `tools/build-distribution-bundles.py` is intentionally unchanged because it already delegates usage-bundle generation to `tools/build-public-bundles.py`.
 
-R3 is not DONE until Static, Linux Integration and Linux Release Check pass on the exact corrective HEAD and the generated distribution artifact is downloaded/independently inspected. Full contract: `docs/V3.0.1-R3-EVIDENCE.md`.
+Accepted corrective source: `2556489da23e16495fc51ebf093f9f4704c6d52f`.
 
-The first implementation HEAD `e37516470f7374b74f85f4d84d22598830b8b92f` produced Static #488 PASS but two retained development failures: Linux Integration #409 failed because the TeX container did not trust the mounted checkout for the builder's intentional `git ls-files` provenance read; Linux Release Check #123 completed all 38 repository checks and the distribution gate, then failed before a pkgcheck verdict because the container's CA store could not validate a CTAN mirror redirect. The corrective commit trusts only `$PWD` in Linux Integration and fetches current `pkgcheck.zip` on the GitHub host runner over verified HTTPS, validates it, records its SHA-256 and passes the exact archive into the TeX container. TLS bypass is forbidden.
+- Static #489: PASS.
+- Linux #410: PASS, `SCOPE=distribution PASS=1 FAIL=0 SKIP=0`.
+- Linux Release Check #124: PASS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+- CTAN `pkgcheck 4.1.0`: PASS.
+- Exact distribution artifact id `10169809155`, digest `sha256:6445ce5e3b870fc6c418fa23c4dc318576f58d00bfe48525ed100e86feaca761`.
+- Release public-reference SHA-256 `e92378a0ef01310c656599d1f1765db6d0040467367313e74776c8ebd75b766c`, identical in Template/Overleaf, 63 A4 pages.
+- Independent archive/hash/content and page-by-page visual inspection: PASS.
+- CTAN excludes the full reference; distributed source uses `coat-of-arms=false`; no prohibited mark/font files were found.
 
-Operational rule: do not move the branch while a Linux Release Check for its current HEAD is running. Failed development runs remain evidence even after a successful rerun.
+The first implementation failures #409/#123 and their causes remain retained in `docs/V3.0.1-R3-EVIDENCE.md`.
 
-## R4 — PENDING
+## R4 — IN PROGRESS
 
 Known blocker: `validator/app.js` imports `./normative-catalog.js`, but that file is absent from the tracked static validator tree. R4 must generate/track it deterministically, prove clean relative-module closure and run a real positive canonical/public PDF plus a negative PDF through the actual Web/Lite `analyze(file, profile)` path. Deep-only checks remain REVIEW rather than false PASS. Do not claim public deployment without repository evidence.
 
@@ -101,7 +108,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the active branch HEAD and inspect the workflows triggered by the R3 corrective commit. Require Static PASS, Linux Integration `distribution` PASS and Linux Release Check complete PASS with a real current CTAN `pkgcheck` verdict. If green, download and independently inspect the exact-SHA distribution artifact and record hashes/inventories in `docs/V3.0.1-R3-EVIDENCE.md`, this handoff and the machine state. Only after that evidence closes R3 may R4 be promoted. If any gate fails, diagnose it from the retained run/log, document the failure before rerun, and keep publication blocked.
+Implement R4 from `docs/V3.0.1-R4-EVIDENCE.md`: materialize a deterministic tracked `validator/normative-catalog.js`, make the source gate regenerate and compare it exactly, prove all local relative imports close, expose/use the same productive Web/Lite analysis path for automation, and run the real canonical/public PDF plus a deliberately negative PDF through the actual browser UI in Chrome. Keep Deep-only `font.embedded` and `pdfa.deep` as `MANUAL REVIEW`; do not claim public Pages deployment without repository evidence. Update the machine state, R4 evidence and this handoff on every material result.
 
 ## Documentation discipline
 

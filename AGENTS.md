@@ -30,8 +30,8 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | R0 | DONE — auditable control plane |
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
-| R3 | IN_PROGRESS — public distribution repair |
-| R4 | PENDING — Web/Lite static package + real-PDF E2E |
+| R3 | DONE — sanitized public reference embedded and independently inspected |
+| R4 | IN_PROGRESS — Web/Lite static package + real-PDF E2E |
 | R5 | PENDING — immutable exact-SHA phase-end regression |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
@@ -66,9 +66,13 @@ Public source must have `coat-of-arms=false`, no UFC mark asset, and no propriet
 
 The CTAN archive stays lean by default and retains `docs/ctan-example.tex` as its minimal example; adding the full TCC to CTAN requires concrete packaging evidence, not convenience.
 
+## R3 accepted public distribution
+
+R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static #489 PASS, Linux Integration #410 `distribution` PASS, and Linux Release Check #124 complete PASS on that SHA. The exact distribution artifact `10169809155` has archive digest `sha256:6445ce5e3b870fc6c418fa23c4dc318576f58d00bfe48525ed100e86feaca761`; its three inner ZIPs validate against `SHA256SUMS`. Template and Overleaf embed byte-identical 63-page public references with SHA-256 `e92378a0ef01310c656599d1f1765db6d0040467367313e74776c8ebd75b766c`, while CTAN excludes the full reference. Independent inspection confirmed `coat-of-arms=false`, no prohibited institutional-mark asset, no proprietary Microsoft font, A4 output and visually intact pages. See `docs/V3.0.1-R3-EVIDENCE.md`.
+
 ## Validator boundary
 
-CLI/Deep and Web/Lite are distinct capability surfaces. Web/Lite must never claim Deep-only proof as PASS. The known pre-R4 defect is that `validator/app.js` imports `./normative-catalog.js` while that module is absent from the tracked static validator tree; synthetic cross-surface vectors do not prove the actual canonical PDF through the browser analysis path. R4 must close both issues before release.
+CLI/Deep and Web/Lite are distinct capability surfaces. Web/Lite must never claim Deep-only proof as PASS. R4 is active. The known defect is that `validator/app.js` imports `./normative-catalog.js` while that module is absent from the tracked static validator tree; synthetic cross-surface vectors do not prove the actual canonical PDF through the browser analysis path. R4 must close both issues before release. Its evidence authority is `docs/V3.0.1-R4-EVIDENCE.md`.
 
 ## Mandatory phase-end regression and release invariant
 

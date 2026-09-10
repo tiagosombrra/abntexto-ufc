@@ -1,5 +1,5 @@
 {
-  "schema_version": 16,
+  "schema_version": 17,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -40,13 +40,13 @@
   },
   "scope": {
     "release_blocking": [
-      "distribution_of_full_sanitized_reference_pdf",
       "web_lite_complete_deployment_and_real_pdf_e2e",
       "exact_sha_release_recertification_and_human_acceptance"
     ],
     "closed_release_blockers": [
       "canonical_tcc_source_identity_and_pedagogical_content",
-      "full_reference_pdf_generation_validation_and_exact_sha_provenance"
+      "full_reference_pdf_generation_validation_and_exact_sha_provenance",
+      "distribution_of_full_sanitized_reference_pdf"
     ],
     "deferred": [
       "whole_repository_lifecycle_audit",
@@ -84,7 +84,7 @@
       "fail_closed_exception": "release/final-certification-candidate.json and release/v3-release-candidate.json force complete"
     },
     "distribution_integration_classification": {
-      "status": "CORRECTIVE_COMMIT_IN_CI",
+      "status": "DONE",
       "suite": "distribution",
       "pr_check": "distribution-bundles",
       "release_execution_owner": "make release-check",
@@ -94,7 +94,30 @@
         "tests/integration/distribution-bundles.sh"
       ],
       "orchestration_plus_distribution": "distribution",
-      "release_candidate_marker_dominates": "complete"
+      "release_candidate_marker_dominates": "complete",
+      "acceptance": {
+        "source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
+        "static": {
+          "run_number": 489,
+          "run_id": 34519195385,
+          "status": "PASS"
+        },
+        "linux": {
+          "run_number": 410,
+          "run_id": 34519195427,
+          "status": "PASS",
+          "scope": "distribution",
+          "summary": "PASS=1 FAIL=0 SKIP=0"
+        },
+        "release": {
+          "run_number": 124,
+          "run_id": 34519195535,
+          "status": "PASS",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "ctan_pkgcheck": "4.1.0 PASS"
+        }
+      }
     }
   },
   "work_packages": {
@@ -183,7 +206,7 @@
       }
     },
     "R3": {
-      "status": "CORRECTIVE_COMMIT_IN_CI",
+      "status": "DONE",
       "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
       "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
       "public_reference_pdf": "abntexto-ufc-reference.pdf",
@@ -225,17 +248,7 @@
         "docs/V3-CONTINUATION.md",
         "release/v3.0.1-final-corrections.json"
       ],
-      "pending_acceptance": [
-        "Static Contract PASS on exact corrective HEAD",
-        "Linux Integration distribution scope PASS on exact corrective HEAD",
-        "Linux Release Check complete PASS on exact corrective HEAD",
-        "current CTAN pkgcheck PASS using host-fetched verified archive",
-        "exact distribution artifact downloaded and independently inspected",
-        "template embedded reference hash matches extracted rebuild",
-        "Overleaf embedded reference hash matches extracted rebuild",
-        "CTAN archive remains lean and excludes full reference",
-        "public coat-of-arms disabled and no institutional mark/proprietary font redistributed"
-      ],
+      "pending_acceptance": [],
       "first_implementation_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
       "failed_development_runs": [
         {
@@ -273,13 +286,68 @@
         ".github/workflows/linux-release-check.yml: host-runner verified HTTPS pkgcheck acquisition and download hash",
         "tools/build-public-bundles.py: preserve git ls-files stderr on provenance failure",
         "tests/checks/linux_integration_suites.py: enforce orchestration/TLS acquisition contract"
-      ]
+      ],
+      "acceptance_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
+      "acceptance": {
+        "static": {
+          "run_number": 489,
+          "run_id": 34519195385,
+          "status": "PASS"
+        },
+        "linux": {
+          "run_number": 410,
+          "run_id": 34519195427,
+          "status": "PASS",
+          "scope": "distribution",
+          "summary": "PASS=1 FAIL=0 SKIP=0"
+        },
+        "release": {
+          "run_number": 124,
+          "run_id": 34519195535,
+          "status": "PASS",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "ctan_pkgcheck": "4.1.0 PASS"
+        },
+        "pkgcheck_download_sha256": "0d4d324a2529bf8f39e6d88531423601058e25098c24111552e1d39b496d82aa",
+        "distribution_artifact": {
+          "name": "abntexto-ufc-v3.0.1-distribution-34519195535",
+          "id": 10169809155,
+          "archive_digest": "sha256:6445ce5e3b870fc6c418fa23c4dc318576f58d00bfe48525ed100e86feaca761"
+        },
+        "outer_assets": {
+          "abntexto-ufc-3.0.1.zip": "19f1d23bb8776c25e03a7a0065e586f02ff4ab0253c10b21c07d32c0d7e651eb",
+          "abntexto-ufc-overleaf-3.0.1.zip": "22c8987bbbf0111d2aa9c06943774e3a09a533b86cdae80af597293d02be5201",
+          "abntexto-ufc-template-3.0.1.zip": "0271f9fba0849c8b051c001b1f7b8dedd4110cbc794ee5a7deb9045ec96c5e07"
+        },
+        "public_reference": {
+          "sha256": "e92378a0ef01310c656599d1f1765db6d0040467367313e74776c8ebd75b766c",
+          "bytes": 5733321,
+          "pages": 63,
+          "page_size": "A4",
+          "template_overleaf_identical": true,
+          "coat_of_arms": false,
+          "independent_visual_review": "PASS_ALL_63_PAGES"
+        }
+      }
     },
     "R4": {
-      "status": "PENDING",
+      "status": "IN_PROGRESS",
+      "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
+      "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
         "validator/app.js imports missing ./normative-catalog.js in tracked static tree",
         "synthetic cross-surface vectors do not prove actual canonical PDF through browser analyze path"
+      ],
+      "fixed_decisions": [
+        "track deterministic generated validator/normative-catalog.js",
+        "static gate must regenerate and byte-compare catalog",
+        "static gate must prove local relative-import closure",
+        "real Chrome E2E must use productive UI/analyze path",
+        "positive real reference PDF and valid non-A4 negative PDF required",
+        "font.embedded and pdfa.deep remain MANUAL REVIEW in Web/Lite",
+        "no fourth workflow",
+        "no public deployment claim without repository evidence"
       ]
     },
     "R5": {
@@ -289,5 +357,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Resolve current release/v3.0.1-final-corrections HEAD and inspect the three workflows triggered by the R3 corrective commit. Require Static PASS, Linux Integration scope=distribution PASS, Linux Release Check SCOPE=complete PASS=38 FAIL=0 SKIP=0 plus current CTAN pkgcheck PASS. If green, independently inspect the exact-SHA distribution artifact, record hashes/inventories, then mark R3 DONE and promote R4. Preserve #409/#123 as failed development evidence."
+  "current_next_action": "Implement R4 from docs/V3.0.1-R4-EVIDENCE.md: deterministic tracked normative-catalog.js + byte-identity/import-closure static checks + actual Chrome Web/Lite UI E2E using a real canonical/public PDF and a valid negative PDF. Preserve deep-only MANUAL REVIEW boundaries. Record every failed run before rerun; R5 remains blocked."
 }
