@@ -1,5 +1,5 @@
 {
-  "schema_version": 10,
+  "schema_version": 11,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -60,8 +60,7 @@
         "static_run": 482,
         "linux_run": 403,
         "linux_selected_scope": "reference-document"
-      },
-      "reason": "Required machine-state bookkeeping does not by itself force heavy Linux integration; technical unknown paths and release candidate markers remain fail-closed."
+      }
     }
   },
   "work_packages": {
@@ -91,27 +90,30 @@
         }
       },
       "R1.3": {
-        "status": "TYPOGRAPHY_CORRECTION_PENDING_TARGETED_RERUN",
+        "status": "GEOMETRY_CORRECTION_PENDING_TARGETED_RERUN",
         "implementation_sha": "f8452bc3507a5206fc4e5a4c837feef872f23f3c",
         "governance_correction_sha": "e2f1998ac9e565767d85aedbcd65f2fa48e38d0d",
         "heading_fix_verified_static_sha": "ba8aeb1cce86288652acac40899ae721445bc880",
         "ci_scope_correction_sha": "1438a7cad27116170440535b9f62e2c084c0c8b8",
+        "typography_correction_sha": "e7f6fc88618329505e7f0de4449aec7c54fe45b0",
         "checks": [
           {"workflow": "Static Contract", "run_number": 478, "run_id": 34481185238, "status": "FAIL", "classification": "CONTROL_DOCUMENTATION_CONTRACT_DRIFT"},
           {"workflow": "Static Contract", "run_number": 479, "run_id": 34481697858, "status": "PASS"},
           {"workflow": "Linux Integration", "run_number": 399, "run_id": 34481697908, "status": "WORKFLOW_PASS_HEAVY_INTEGRATION_SKIPPED_DRAFT", "acceptance_evidence": false},
           {"workflow": "Linux Integration", "run_number": 400, "run_id": 34481808802, "status": "FAIL", "scope": "complete", "summary": "PASS=32 FAIL=1 SKIP=3", "failed_check": "reference", "classification": "R1_3_MOVING_ARGUMENT_TOC_DEFECT"},
           {"workflow": "Static Contract", "run_number": 481, "run_id": 34484253436, "status": "PASS", "head_sha": "ba8aeb1cce86288652acac40899ae721445bc880"},
-          {"workflow": "Linux Integration", "run_number": 402, "run_id": 34484253425, "status": "CANCELLED_SUPERSEDED_BY_SUCCESSOR", "reason": "control-state path caused unnecessarily broad integration selection; successor commit added tested documentation/control-state classification"},
+          {"workflow": "Linux Integration", "run_number": 402, "run_id": 34484253425, "status": "CANCELLED_SUPERSEDED_BY_SUCCESSOR"},
           {"workflow": "Static Contract", "run_number": 482, "run_id": 34485632344, "status": "PASS", "head_sha": "1438a7cad27116170440535b9f62e2c084c0c8b8"},
-          {"workflow": "Linux Integration", "run_number": 403, "run_id": 34485632570, "status": "FAIL", "scope": "reference-document", "summary": "PASS=0 FAIL=1 SKIP=2", "failed_check": "reference", "classification": "R1_3_TYPOGRAPHIC_WARNING_DEFECT", "details": ["Underfull hbox at source line 39", "Overfull hbox 29.22328pt at source line 57", "template/main.pdf built successfully with 63 pages"]}
+          {"workflow": "Linux Integration", "run_number": 403, "run_id": 34485632570, "status": "FAIL", "scope": "reference-document", "summary": "PASS=0 FAIL=1 SKIP=2", "failed_check": "reference", "classification": "R1_3_TYPOGRAPHIC_WARNING_DEFECT"},
+          {"workflow": "Static Contract", "run_number": 483, "run_id": 34487258470, "status": "PASS", "head_sha": "e7f6fc88618329505e7f0de4449aec7c54fe45b0"},
+          {"workflow": "Linux Integration", "run_number": 404, "run_id": 34487258455, "status": "FAIL", "scope": "reference-document", "summary": "PASS=2 FAIL=1 SKIP=0", "checks": {"reference": "PASS", "reference-corpus": "PASS", "pdf-validator": "FAIL"}, "classification": "R1_3_EDITORIAL_PUNCTUATION_MARGIN_PROTRUSION", "details": ["page=23", "glyph=em-dash", "x0_pt=82.6", "x1_pt=94.9", "left_margin_boundary_with_tolerance_exceeded_by_approximately_pt=0.6"]}
         ],
-        "correction": "Keep executable ufcsetup out of moving headings; preserve command explanation in body text; treat active correction-state JSON as documentation/control state for suite selection; split oversized monospaced apud and bibliography-resource invocations into command-name, argument and path units without changing bibliography semantics or warning thresholds.",
+        "correction": "Keep executable ufcsetup out of moving headings; split oversized monospaced command invocations; preserve active-state docs-only suite classification; replace the page-23 editorial em dash around the section/subsection example with commas so the rendered glyph remains inside the strict geometric margin without changing validator tolerance or normative margin values.",
         "unresolved": [
-          "fresh_static_on_typography_successor_head",
-          "reference_pass_on_typography_successor_head",
-          "reference_corpus_pass_on_typography_successor_head",
-          "pdf_validator_pass_on_typography_successor_head"
+          "fresh_static_on_geometry_successor_head",
+          "reference_pass_on_geometry_successor_head",
+          "reference_corpus_pass_on_geometry_successor_head",
+          "pdf_validator_pass_on_geometry_successor_head"
         ]
       }
     },
@@ -127,5 +129,5 @@
     "R5": {"status": "PENDING"},
     "R6": {"status": "PENDING"}
   },
-  "current_next_action": "Validate the typography-correction successor head with fresh Static and a real reference-document Linux run. Require reference, reference-corpus and pdf-validator PASS with no skips. If successful, record the exact passing SHA, mark R1.3 DONE, and begin R2 using the existing release-reference-reproducibility implementation as the canonical PDF evidence path."
+  "current_next_action": "Validate the page-23 punctuation correction successor head with fresh Static and reference-document Linux integration. Require reference, reference-corpus and pdf-validator PASS with no skips. If successful, record that exact passing SHA, mark R1.3 DONE, and begin R2 by making the existing reproducible canonical PDF output a first-class named release artifact."
 }

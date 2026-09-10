@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R1.3 typography correction committed for targeted validation; publication blocked
+Status: RELEASE — R1.3 page-23 geometry correction committed for targeted validation; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -40,35 +40,34 @@ R1.3 remains open. The bounded teaching rewrite at `f8452bc...` preserves the re
 
 Preserve this audit trail:
 
-- Static #478 (`34481185238`) failed because `AGENTS.md` lost the required governance phrase `material advance`; `e2f1998...` restored `material advance` and `phase-end regression` without weakening the checker.
-- Static #479 passed.
-- Linux #399 was green but heavy integration was skipped because the PR was draft; it is not acceptance evidence.
-- PR #305 was moved to ready-for-review only so repository-owned integration could execute. This does not authorize merge.
-- Linux #400 (`34481808802`) ran `complete` and failed `PASS=32 FAIL=1 SKIP=3`; the sole failure was `reference`.
-- Root cause of #400: an R1.3 subsection heading contained the executable `\ufcsetup` command. `main.toc` replay executed it and produced unknown key `ufc/\check@icr`.
-- The heading is plain `Configuração central do documento`; `\ufcsetup` remains only in body text. A source comment records that executable commands must stay out of this moving heading.
+- Static #478 (`34481185238`) failed because `AGENTS.md` lost the required governance phrase `material advance`; `e2f1998...` restored `material advance` and `phase-end regression` without weakening the checker. Static #479 passed.
+- Linux #399 was green but heavy integration was skipped because the PR was draft; it is not acceptance evidence. PR #305 was moved to ready-for-review only so repository-owned integration could execute; this does not authorize merge.
+- Linux #400 (`34481808802`) ran `complete` and failed only `reference`; root cause was executable `\ufcsetup` in a `.toc`-replayed moving heading. The heading is now plain `Configuração central do documento`.
 - Static #481 (`34484253436`) passed on the corrected-heading head `ba8aeb1...`.
-- Linux #402 (`34484253425`) was superseded and cancelled by workflow concurrency after it selected an unnecessarily broad scope because the active state JSON had been treated as an unknown technical path.
-- Commit `1438a7cad27116170440535b9f62e2c084c0c8b8` corrected that selector classification without weakening fail-closed technical behavior.
-- Static #482 (`34485632344`) passed on `1438a7c...`.
-- Linux #403 (`34485632570`) correctly selected `reference-document`, but failed `PASS=0 FAIL=1 SKIP=2`. `make compile` completed and generated a 63-page `template/main.pdf`; the strict warning gate then found one `Underfull \hbox` at source line 39 and one `Overfull \hbox` of 29.22328 pt at source line 57.
-- Both warning lines were traced to `template/chapters/5-citations-notes-references.tex`: oversized monospaced command invocations for `\apud` and `\ufcAddBibliographyResource`. The current correction retains the semantics but splits command names, arguments and paths into smaller breakable units. The warning gate is unchanged.
+- Linux #402 (`34484253425`) was superseded/cancelled after an unnecessarily broad selection caused by treating the active state JSON as an unknown technical path.
+- Commit `1438a7cad27116170440535b9f62e2c084c0c8b8` corrected that selector classification without weakening fail-closed technical behavior. Static #482 (`34485632344`) passed.
+- Linux #403 (`34485632570`) correctly selected `reference-document`, but failed the strict warning gate on two long monospaced invocations in chapter 5. Those invocations were split without semantic change in `e7f6fc88618329505e7f0de4449aec7c54fe45b0`.
+- Static #483 (`34487258470`) passed on `e7f6fc8...`.
+- Linux #404 (`34487258455`) on `e7f6fc8...` proved `reference=PASS` and `reference-corpus=PASS`; only `pdf-validator` failed. PDF.js measured one em dash on page 23 at `(82.6, 94.9)` pt, approximately 0.6 pt beyond the left-margin threshold including tolerance.
+- The page-23 glyph correlates with editorial em-dash punctuation around `como \section e \subsection` in chapter 2. The current correction replaces those dashes with commas. Meaning, margin values, tolerance and validator logic are unchanged.
 
 ## Bounded CI-scope correction
 
-`release/v3.0.1-final-corrections.json` is required machine-readable documentation/control state. Updating that file alone must not launch heavy integration. The selector treats it as docs-only, matching `release/v3-roadmap.json` and `docs/**`.
-
-Fail-closed behavior remains: unknown technical files still select `complete`; runtime/core/standards changes retain required scopes; final/release candidate markers force `complete`; orchestration-only changes select `smoke`; canonical TCC changes select `reference-document`. The selector self-test and `tests/checks/linux_integration_suites.py` protect this rule.
+`release/v3.0.1-final-corrections.json` is required machine-readable documentation/control state. Updating it alone does not launch heavy integration. Unknown technical files still select `complete`; runtime/core/standards changes retain required scopes; final/release candidate markers force `complete`; orchestration-only changes select `smoke`; canonical TCC changes select `reference-document`. The selector self-test and `tests/checks/linux_integration_suites.py` protect this rule.
 
 Current next action: resolve the current branch HEAD dynamically. Require fresh Static PASS and a real `reference-document` Linux run with `reference`, `reference-corpus` and `pdf-validator` all PASS and no skips. If that succeeds, mark R1.3 DONE and begin R2.
 
-## R2–R4 prepared decisions
+## R2 prepared decision
 
-R2: promote the full PDF from `template/main.tex` to a first-class canonical reference. Reuse `tests/integration/release-reference-reproducibility.sh`, which already performs two independent clean builds, byte-identical SHA-256 comparison, font embedding, CLI/Deep, PDF/A-2b and Unicode extraction. Expose the generated PDF/evidence through the existing Linux workflow rather than creating a fourth workflow, then perform page-by-page visual review.
+Do not create another PDF generator. `make release-check` already invokes `tests/integration/release-reference-reproducibility.sh`, which performs two independent clean builds, byte-identical SHA-256 comparison, font embedding, CLI/Deep, PDF/A-2b and Unicode extraction and writes `artifacts/validation/release-reference-pdf.pdf` plus provenance JSON. R2 must make this output a first-class named release artifact and statically protect that wiring. The existing Linux Release Check should remain the authoritative heavy execution path; avoid a redundant full Linux integration solely because an upload step changes.
 
-R3: keep the minimal CTAN example separate from the full canonical TCC. `tools/build-public-bundles.py` sanitizes distributed `main.tex` from `coat-of-arms = true` to `false`; therefore the public full PDF must be compiled from that same sanitized source variant. Never copy the source-tree marked PDF into public bundles. Do not redistribute Microsoft fonts or UFC mark assets.
+## R3 prepared decision
 
-R4: repair Web/Lite. `validator/app.js` imports missing `./normative-catalog.js`; `tools/normative_catalog.py --emit-web` already generates it deterministically but only to temporary locations in current tests. Build a clean static site with that generated module and test the existing real `analyze(file, profile)` path in a browser using a canonical PDF and a negative PDF. Deep-only checks must remain REVIEW rather than false PASS. No indexed public Pages deployment was established during the current audit, and the connector does not expose repository Pages configuration; do not assume deployment state without Git/repository evidence.
+Keep the minimal CTAN example separate from the full canonical TCC. `tools/build-public-bundles.py` sanitizes distributed `main.tex` from `coat-of-arms = true` to `false`; the public full PDF must therefore be compiled from that same sanitized source variant, not copied from the source-tree PDF. The strongest distribution regression is to recompile the extracted sanitized Overleaf source and compare its PDF hash with the full reference PDF embedded in the public bundles. The CTAN archive remains minimal unless an explicit later decision changes that role. Never redistribute Microsoft fonts or UFC mark assets.
+
+## R4 prepared decision
+
+`validator/app.js` imports missing `./normative-catalog.js`. Prefer a deterministic generated-and-tracked `validator/normative-catalog.js` with a static byte-for-byte equality check against `tools/normative_catalog.py --emit-web`; this keeps a plain static checkout deployable and prevents generator drift. Then add clean relative-module closure plus a real-PDF browser E2E through the existing `analyze(file, profile)` implementation, using a canonical positive PDF and a negative PDF. Deep-only checks remain REVIEW rather than false PASS. No public Pages state is assumed without repository evidence.
 
 ## Remaining work
 
