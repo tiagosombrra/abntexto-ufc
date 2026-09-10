@@ -66,6 +66,8 @@ def main() -> None:
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
 
+    # Release artifact identity must be derived from the canonical Makefile
+    # version rather than duplicated as a literal release number in CI.
     release_required_tokens = (
         RELEASE_CANDIDATE_MARKER,
         "github.event.pull_request.head.sha",
@@ -74,19 +76,25 @@ def main() -> None:
         "git rev-parse HEAD",
         "make release-check",
         "make distribution-bundles",
+        "Read release version",
+        "id: release-version",
+        'version=$(make version)',
+        "steps.release-version.outputs.version",
+        "RELEASE_VERSION",
+        'dist/abntexto-ufc-$RELEASE_VERSION.zip',
+        "dist/abntexto-ufc-${{ steps.release-version.outputs.version }}.zip",
+        "dist/abntexto-ufc-template-${{ steps.release-version.outputs.version }}.zip",
+        "dist/abntexto-ufc-overleaf-${{ steps.release-version.outputs.version }}.zip",
         "Upload certified distribution assets",
-        "dist/abntexto-ufc-3.0.0.zip",
-        "dist/abntexto-ufc-template-3.0.0.zip",
-        "dist/abntexto-ufc-overleaf-3.0.0.zip",
         "dist/SHA256SUMS",
     )
     missing_release_tokens = [token for token in release_required_tokens if token not in release_workflow]
     if missing_release_tokens:
         fail(
-            "Linux release check is missing candidate provenance/artifact tokens: "
+            "Linux release check is missing candidate provenance/dynamic-artifact tokens: "
             + ", ".join(missing_release_tokens)
         )
-    if "dist/abntexto-ufc-ctan-3.0.0.zip" in release_workflow:
+    if "dist/abntexto-ufc-ctan-" in release_workflow:
         fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
@@ -148,7 +156,8 @@ def main() -> None:
         "unknown_path_fallback=complete article_first_class=true "
         "step4_registered=true step5_registered=true "
         "release_candidate_forces_complete=true release_check_pr_trigger=true "
-        "release_candidate_head_checkout=true canonical_ctan_archive=true release_assets_retained=true"
+        "release_candidate_head_checkout=true canonical_ctan_archive=true "
+        "release_version_source=makefile release_assets_retained=true"
     )
 
 
