@@ -1,7 +1,7 @@
 # abntexto-ufc
 
-Version: 3.0.0
-Release date: 2026-09-09
+Version: 3.0.1
+Release date: 2026-09-10
 Maintainer: Tiago Guimarães Sombra
 License: LaTeX Project Public License 1.3c or later
 Repository: https://github.com/tiagosombrra/abntexto-ufc
@@ -17,7 +17,7 @@ Upstream dependency: https://ctan.org/pkg/abntexto (version 1.1 or newer)
 - `biblatex` and `biber` for bibliography workflows;
 - additional LaTeX packages required by optional features selected by the document.
 
-Version 3.0.0 is certified primarily against TeX Live 2026.
+Version 3.0.1 is certified primarily against TeX Live 2026.
 
 ## Installation
 

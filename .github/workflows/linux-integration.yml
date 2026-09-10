@@ -72,12 +72,19 @@ jobs:
           run_integration=true
           selected_scope=complete
           reason=manual-auto-fail-closed
+          release_candidate_marker=release/v3-release-candidate.json
 
           if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
             if [[ "$PR_DRAFT" == "true" ]]; then
               run_integration=false
               selected_scope=none
               reason=draft-pr
+            elif git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -Fxq "$release_candidate_marker"; then
+              # A release-candidate marker anywhere in the full PR must dominate
+              # incremental synchronize windows so a later docs-only commit cannot
+              # cancel a complete run and replace it with a superficial green skip.
+              selected_scope=complete
+              reason=release-candidate-full-pr
             else
               scope_base="$BASE_SHA"
               scope_head="$HEAD_SHA"

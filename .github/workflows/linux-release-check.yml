@@ -45,6 +45,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Read release version
+        id: release-version
+        shell: bash
+        run: echo "version=$(make --no-print-directory version)" >> "$GITHUB_OUTPUT"
+
       - name: Run repository release contract, build assets and execute CTAN pkgcheck
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
@@ -62,7 +67,9 @@ jobs:
             git config --global --add safe.directory "$PWD"
             export SOURCE_COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
             export SOURCE_DATE_EPOCH="$(git show -s --format=%ct "$SOURCE_COMMIT_SHA")"
+            export RELEASE_VERSION="${{ steps.release-version.outputs.version }}"
             test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
+            test "$(make --no-print-directory version)" = "$RELEASE_VERSION"
             make release-check
             make distribution-bundles
             (
@@ -70,13 +77,15 @@ jobs:
               sha256sum -c SHA256SUMS
             )
             python3 - <<'PY'
+            import os
             from pathlib import Path
 
             root = Path("dist")
+            version = os.environ["RELEASE_VERSION"]
             expected = {
-                "abntexto-ufc-3.0.0.zip",
-                "abntexto-ufc-template-3.0.0.zip",
-                "abntexto-ufc-overleaf-3.0.0.zip",
+                f"abntexto-ufc-{version}.zip",
+                f"abntexto-ufc-template-{version}.zip",
+                f"abntexto-ufc-overleaf-{version}.zip",
                 "SHA256SUMS",
             }
             actual = {path.name for path in root.iterdir() if path.is_file()}
@@ -121,8 +130,8 @@ jobs:
             chmod +x "$PKGCHECK"
             "$PKGCHECK" --version > artifacts/validation/pkgcheck-version.txt 2>&1
             cat artifacts/validation/pkgcheck-version.txt
-            sha256sum dist/abntexto-ufc-3.0.0.zip > artifacts/validation/pkgcheck-archive.sha256
-            unzip -q dist/abntexto-ufc-3.0.0.zip -d /tmp/ctan-candidate
+            sha256sum "dist/abntexto-ufc-$RELEASE_VERSION.zip" > artifacts/validation/pkgcheck-archive.sha256
+            unzip -q "dist/abntexto-ufc-$RELEASE_VERSION.zip" -d /tmp/ctan-candidate
             if ! "$PKGCHECK" --no-colors -d /tmp/ctan-candidate/abntexto-ufc \
               > artifacts/validation/pkgcheck.log 2>&1; then
               cat artifacts/validation/pkgcheck.log
@@ -131,8 +140,12 @@ jobs:
             fi
             cat artifacts/validation/pkgcheck.log
             printf '%s\n' \
-              "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS source_sha=$SOURCE_COMMIT_SHA archive=abntexto-ufc-3.0.0.zip" \
+              "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS source_sha=$SOURCE_COMMIT_SHA archive=abntexto-ufc-$RELEASE_VERSION.zip" \
               | tee artifacts/validation/pkgcheck-evidence.txt
+
+            # Produce the exact-SHA material for the mandatory human gate only
+            # after the technical release and current CTAN pkgcheck gates pass.
+            sh tests/integration/release-review-pairs.sh
 
       - name: Publish validation summary
         if: always()
@@ -164,6 +177,13 @@ jobs:
             else
               echo 'pkgcheck output was not produced.'
             fi
+            echo
+            echo '### Maintainer visual review'
+            if [[ -f artifacts/release-review-pairs/manifest.json ]]; then
+              echo 'Seven PDF/TeX profile pairs were generated from this exact candidate and passed automated preflight. Explicit maintainer visual approval remains pending.'
+            else
+              echo 'The seven-profile review-pair artifact was not produced.'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload validation evidence
@@ -175,15 +195,24 @@ jobs:
           retention-days: 14
           if-no-files-found: error
 
+      - name: Upload seven-profile review pairs
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: abntexto-ufc-v${{ steps.release-version.outputs.version }}-review-pairs-${{ github.run_id }}
+          path: artifacts/release-review-pairs/**
+          retention-days: 30
+          if-no-files-found: error
+
       - name: Upload certified distribution assets
         if: success()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: abntexto-ufc-v3.0.0-distribution-${{ github.run_id }}
+          name: abntexto-ufc-v${{ steps.release-version.outputs.version }}-distribution-${{ github.run_id }}
           path: |
-            dist/abntexto-ufc-3.0.0.zip
-            dist/abntexto-ufc-template-3.0.0.zip
-            dist/abntexto-ufc-overleaf-3.0.0.zip
+            dist/abntexto-ufc-${{ steps.release-version.outputs.version }}.zip
+            dist/abntexto-ufc-template-${{ steps.release-version.outputs.version }}.zip
+            dist/abntexto-ufc-overleaf-${{ steps.release-version.outputs.version }}.zip
             dist/SHA256SUMS
           retention-days: 30
           if-no-files-found: error
