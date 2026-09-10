@@ -143,6 +143,10 @@ jobs:
               "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS source_sha=$SOURCE_COMMIT_SHA archive=abntexto-ufc-$RELEASE_VERSION.zip" \
               | tee artifacts/validation/pkgcheck-evidence.txt
 
+            # Produce the exact-SHA material for the mandatory human gate only
+            # after the technical release and current CTAN pkgcheck gates pass.
+            sh tests/integration/release-review-pairs.sh
+
       - name: Publish validation summary
         if: always()
         shell: bash
@@ -173,6 +177,13 @@ jobs:
             else
               echo 'pkgcheck output was not produced.'
             fi
+            echo
+            echo '### Maintainer visual review'
+            if [[ -f artifacts/release-review-pairs/manifest.json ]]; then
+              echo 'Seven PDF/TeX profile pairs were generated from this exact candidate and passed automated preflight. Explicit maintainer visual approval remains pending.'
+            else
+              echo 'The seven-profile review-pair artifact was not produced.'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload validation evidence
@@ -182,6 +193,15 @@ jobs:
           name: linux-release-validation-${{ github.run_id }}
           path: artifacts/validation/**
           retention-days: 14
+          if-no-files-found: error
+
+      - name: Upload seven-profile review pairs
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: abntexto-ufc-v${{ steps.release-version.outputs.version }}-review-pairs-${{ github.run_id }}
+          path: artifacts/release-review-pairs/**
+          retention-days: 30
           if-no-files-found: error
 
       - name: Upload certified distribution assets
