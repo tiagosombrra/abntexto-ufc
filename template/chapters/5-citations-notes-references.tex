@@ -36,7 +36,7 @@ O recurso conhecido como citação de citação deve ser usado com parcimônia, 
 
 \guiapolitica{O repositório possui cenários específicos para verificar a apresentação de \textit{apud}. O fato de o template suportar o recurso não elimina a responsabilidade acadêmica de consultar a fonte original quando ela estiver disponível.}
 
-\guiamecanismo{A API bibliográfica exercitada pelo projeto oferece \texttt{\string\apud[localizador-original]\{fonte-original\}[localizador-consultado]\{fonte-consultada\}} e \texttt{\string\textapud\{fonte-original\}\{fonte-consultada\}}. As duas chaves precisam existir na base bibliográfica para que o sistema tenha os metadados necessários, mas a lista final deve refletir corretamente a fonte efetivamente consultada.}
+\guiamecanismo{A API bibliográfica exercitada pelo projeto oferece \texttt{\string\apud} para a forma parentética e \texttt{\string\textapud} para a forma narrativa. Em \texttt{\string\apud}, informe as duas chaves bibliográficas --- fonte original e fonte consultada --- e, quando existirem, os localizadores opcionais correspondentes. As duas chaves precisam existir na base bibliográfica, mas a lista final deve refletir corretamente a fonte efetivamente consultada.}
 
 \guiavalidacao{O gate \texttt{bibliography} chama o cenário dedicado de \textit{apud} e verifica, entre outros pontos, forma parentética/narrativa, itálico de \textit{apud} e a presença da fonte consultada sem inserir indevidamente a fonte original na lista final.}
 
@@ -54,7 +54,7 @@ O arquivo \texttt{backmatter/references.bib} demonstra tipos bibliográficos dif
 
 \guiaexemplo{Uma referência com DOI só apresenta DOI quando esse identificador pertence ao documento referenciado. De modo semelhante, URL e data de acesso são usados quando pertinentes ao tipo de fonte e à regra bibliográfica aplicável.}
 
-\guiamecanismo{Declare o banco com \texttt{\string\ufcAddBibliographyResource\{backmatter/references.bib\}} e gere a lista final com \texttt{\string\ufcPrintReferences}. O fluxo de compilação do projeto executa Biber automaticamente quando o arquivo de controle indicar fontes bibliográficas.}
+\guiamecanismo{Declare o banco com \texttt{\string\ufcAddBibliographyResource} e informe, como argumento, o caminho \texttt{backmatter/references.bib}. Gere a lista final com \texttt{\string\ufcPrintReferences}. O fluxo de compilação do projeto executa Biber automaticamente quando o arquivo de controle indicar fontes bibliográficas.}
 
 \guiavalidacao{Os gates \texttt{bibliography} e \texttt{reference-spacing}, juntamente com os cenários da NBR 6023:2025, verificam semântica de referências e sua apresentação no PDF.}
 
