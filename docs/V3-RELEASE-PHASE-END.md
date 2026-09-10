@@ -1,13 +1,13 @@
 # V3 Release — Phase-end Regression for Recovery 3.0.1
 
-Updated: 2026-09-09
+Updated: 2026-09-10
 Status: RECOVERY MERGE + FINAL EXACT-MAIN RECERTIFICATION + HUMAN APPROVAL REQUIRED
 
 ## Purpose
 
 This document records the Release phase-end regression boundary after the `v3.0.0` publication mismatch was classified and the recovery target was moved to `3.0.1`.
 
-The recovery does not reopen accepted runtime, API, normative, librarian-review or profile semantics. It reopens only the Release publication boundary and requires fresh exact-SHA certification because version metadata and archive bytes change.
+The recovery includes the scoped PR #302 runtime correction for populated unified illustration-list rendering. Accepted API, normative, librarian-review, profile and typography semantics remain closed outside that correction. Fresh exact-SHA certification is required because both runtime and publication bytes changed.
 
 ## Historical and integration anchors
 
@@ -17,7 +17,7 @@ PR #297 repaired the publication shape. Its protected merge produced `25c6ab09dc
 
 PR #298 synchronized the control plane. PR #301 then integrated current CTAN `pkgcheck` and seven-profile human acceptance; exact-main run `34419086322` on `395899e1b2336ed268335d68e59e03452880c15e` passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` and current CTAN `pkgcheck`.
 
-That evidence is pre-recovery baseline evidence only. The 3.0.1 bump changes class identity metadata and publication bytes and therefore requires a fresh exact-main cycle.
+PR #302 subsequently corrected the populated unified illustration-list renderer and was squash-merged to `main` as `6d06d4ed42b2187b1483ea219ee055cfe975ece2`. Therefore all pre-#302 evidence is baseline evidence only for 3.0.1.
 
 ## Public v3.0.0 disposition
 
@@ -34,7 +34,7 @@ The recovery decision is fail-closed:
 
 ## Final candidate definition
 
-The only candidate eligible for final Release certification, human approval and immutable tag `v3.0.1` is the exact canonical `main` SHA produced after the recovery changes are merged and then passing all evidence below.
+The only candidate eligible for final Release certification, human approval and immutable tag `v3.0.1` is the exact canonical `main` SHA produced after the combined PR #302 + recovery changes are merged and then passing all evidence below.
 
 Required invariant:
 
@@ -92,19 +92,20 @@ The CTAN package excludes project-owned `.def` files, nested modular runtime tre
 
 ## Normative state
 
-The librarian review remains **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**. The recovery does not alter accepted normative behavior.
+The librarian review remains **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW**. PR #302 does not alter accepted normative behavior.
 
 ## Required order
 
-1. merge the 3.0.1 recovery changes to canonical `main`;
-2. resolve the resulting exact canonical `main` SHA;
-3. require Static, automatic `scope=complete` Linux integration and Linux release check, including current `pkgcheck`, on that SHA;
-4. retain and physically audit the resulting final 3.0.1 CTAN ZIP;
-5. regenerate seven final PDF/`.tex` pairs and obtain explicit maintainer approval;
-6. freeze hashes/evidence;
-7. create immutable `v3.0.1`;
-8. publish GitHub 3.0.1 Release and verify re-downloaded hashes;
-9. submit one canonical 3.0.1 ZIP to CTAN and retain external evidence;
-10. update post-publication state and close Release.
+1. complete deterministic metadata/orchestration preflight before another expensive CI cycle;
+2. merge the combined 3.0.1 recovery changes to canonical `main` only after PR gates pass;
+3. resolve the resulting exact canonical `main` SHA;
+4. require Static, automatic `scope=complete` Linux integration and Linux release check, including current `pkgcheck`, on that SHA;
+5. retain and physically audit the resulting final 3.0.1 CTAN ZIP;
+6. regenerate seven final PDF/`.tex` pairs and obtain explicit maintainer approval;
+7. freeze hashes/evidence;
+8. create immutable `v3.0.1`;
+9. publish GitHub 3.0.1 Release and verify re-downloaded hashes;
+10. submit one canonical 3.0.1 ZIP to CTAN and retain external evidence;
+11. update post-publication state and close Release.
 
-Every **material advance** updates affected documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. Automated success does not close the human visual gate.
+Every **material advance** updates affected documentation and machine state in the same work cycle. Deterministic errors must be caught before expensive CI where practical. Targeted checks never replace the required **phase-end regression**. Automated success does not close the human visual gate.
