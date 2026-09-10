@@ -17,7 +17,7 @@ jobs:
   build-review-bundle:
     name: Build seven source/PDF review pairs
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - name: Checkout validation infrastructure
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -26,24 +26,24 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Checkout immutable released implementation
+      - name: Checkout exact final candidate implementation
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: v3.0.0
+          ref: 395899e1b2336ed268335d68e59e03452880c15e
           path: released
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Assert frozen implementation identity
+      - name: Assert exact candidate identity
         shell: bash
         run: |
           set -euo pipefail
-          expected='05399473827da7cf6b6c8bac36edc7115481773f'
-          test "$(git -C released rev-parse HEAD)" = "$expected"
-          test "$(git -C released rev-parse v3.0.0^{})" = "$expected"
-          git diff --exit-code v3.0.0 -- abntexto-ufc.cls abntexto-ufc/
+          expected='395899e1b2336ed268335d68e59e03452880c15e'
+          actual="$(git -C released rev-parse HEAD)"
+          test "$actual" = "$expected"
+          echo "FINAL-CANDIDATE-EVIDENCE source_sha=$actual"
 
-      - name: Generate and compile all canonical profiles
+      - name: Generate, compile and preflight all canonical profiles
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
           texlive_version: 2026
@@ -52,9 +52,43 @@ jobs:
             set -euo pipefail
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
-            apt-get install -y --no-install-recommends poppler-utils python3
+            apt-get install -y --no-install-recommends poppler-utils python3 docker-cli
 
+            candidate_sha='395899e1b2336ed268335d68e59e03452880c15e'
+            old_sha='05399473827da7cf6b6c8bac36edc7115481773f'
             python3 tools/generate-v3-profile-review.py --output artifacts/v3-profile-review
+
+            # The generator lives on the isolated validation branch. Rewrite its
+            # provenance-only labels so every delivered source names the exact
+            # candidate under review rather than the superseded premature tag.
+            python3 - <<'PY'
+            import json
+            from pathlib import Path
+
+            root = Path('artifacts/v3-profile-review')
+            old_sha = '05399473827da7cf6b6c8bac36edc7115481773f'
+            candidate_sha = '395899e1b2336ed268335d68e59e03452880c15e'
+            for path in list(root.rglob('*.tex')) + [root / 'README.txt']:
+                text = path.read_text(encoding='utf-8')
+                text = text.replace(f'v3.0.0 / {old_sha}', f'candidate / {candidate_sha}')
+                text = text.replace(old_sha, candidate_sha)
+                text = text.replace('v3.0.0 congelada', 'candidato v3.0.0')
+                text = text.replace('Released source:', 'Candidate source:')
+                path.write_text(text, encoding='utf-8', newline='\n')
+
+            index_path = root / 'profiles.json'
+            index = json.loads(index_path.read_text(encoding='utf-8'))
+            index.pop('release_tag', None)
+            index.pop('released_source_sha', None)
+            index['candidate_source_sha'] = candidate_sha
+            index['tag_state'] = 'pending-explicit-maintainer-approval'
+            index_path.write_text(
+                json.dumps(index, ensure_ascii=False, indent=2) + '\n',
+                encoding='utf-8',
+                newline='\n',
+            )
+            PY
+
             python3 released/tools/fetch-abntexto.py --output released/abntexto.cls
 
             root="$PWD"
@@ -88,12 +122,12 @@ jobs:
               glossary = none,
               index = none,
               author = {API Probe},
-              title = {Frozen v3.0.0 API Probe},
+              title = {Final candidate v3.0.0 API Probe},
               location = {Fortaleza},
               year = {2026}
             }
             \begin{document}
-            Frozen v3.0.0 API probe.
+            Final candidate v3.0.0 API probe.
             \end{document}
             TEX
             pdflatex -output-directory=/tmp -interaction=nonstopmode -halt-on-error -file-line-error /tmp/abntexto-ufc-v3-api-probe.tex
@@ -112,7 +146,7 @@ jobs:
             for profile in "${profiles[@]}"; do
               dir="$review/$profile"
               tex="$profile.tex"
-              echo "Building $profile from immutable v3.0.0 source..."
+              echo "Building $profile from exact candidate $candidate_sha..."
               cd "$dir"
               pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$tex"
               if [[ -s "$profile.bcf" ]] && grep -q '<bcf:datasource' "$profile.bcf"; then
@@ -122,9 +156,47 @@ jobs:
               pdflatex -interaction=nonstopmode -halt-on-error -file-line-error "$tex"
               test -s "$profile.pdf"
               pdfinfo "$profile.pdf" > "$profile.pdfinfo.txt"
+              pdffonts "$profile.pdf" > "$profile.pdffonts.txt"
               pdftotext -layout "$profile.pdf" "$profile.txt"
               pdftoppm -png -f 1 -singlefile -r 110 "$profile.pdf" "$profile-preview"
+
+              if grep -Eq 'Overfull \\[hv]box|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber' "$profile.log"; then
+                echo "Recognized warning/overflow gate failed for $profile"
+                grep -En 'Overfull \\[hv]box|There were undefined references|Rerun to get cross-references right|Please \(re\)run Biber' "$profile.log" || true
+                exit 1
+              fi
               cd "$root"
+
+              pdf_path="artifacts/v3-profile-review/$profile/$profile.pdf"
+              sh released/tests/integration/font-embedding.sh "$pdf_path"
+              UFC_PDFA_NEGATIVE_VALIDATION=0 sh released/tests/integration/pdfa.sh "$pdf_path"
+
+              # Validate every page independently instead of trusting a single
+              # document-level Page size field from pdfinfo.
+              pages_dir="$(mktemp -d)"
+              pdfseparate "$pdf_path" "$pages_dir/page-%d.pdf"
+              for page in "$pages_dir"/page-*.pdf; do
+                size_line="$(pdfinfo "$page" | grep '^Page size:')"
+                python3 - "$size_line" "$profile" <<'PY'
+            import re
+            import sys
+
+            line, profile = sys.argv[1], sys.argv[2]
+            match = re.search(r'([0-9.]+) x ([0-9.]+) pts', line)
+            if not match:
+                raise SystemExit(f'A4 gate could not parse page size for {profile}: {line}')
+            width, height = map(float, match.groups())
+            expected = (595.276, 841.89)
+            tolerance = 1.8
+            if abs(width - expected[0]) > tolerance or abs(height - expected[1]) > tolerance:
+                raise SystemExit(
+                    f'A4 gate failed for {profile}: {width} x {height} pts'
+                )
+            PY
+              done
+              rm -rf "$pages_dir"
+              printf '%s\n' \
+                "FINAL-PROFILE-PREFLIGHT profile=$profile source_sha=$candidate_sha a4=PASS pdfa_2b=PASS font_embedding=PASS recognized_warning_overflow=PASS"
             done
 
             python3 - <<'PY'
@@ -134,7 +206,7 @@ jobs:
             from pathlib import Path
 
             root = Path('artifacts/v3-profile-review')
-            released_sha = '05399473827da7cf6b6c8bac36edc7115481773f'
+            candidate_sha = '395899e1b2336ed268335d68e59e03452880c15e'
             profiles = [
                 'undergraduate-capstone',
                 'specialization-capstone',
@@ -153,10 +225,16 @@ jobs:
                 return h.hexdigest()
 
             manifest = {
-                'release_tag': 'v3.0.0',
-                'released_source_sha': released_sha,
+                'candidate_source_sha': candidate_sha,
+                'tag_state': 'pending-explicit-maintainer-approval',
                 'engine': 'pdfLaTeX / TeX Live 2026',
                 'profile_count': 7,
+                'preflight': {
+                    'a4': 'PASS',
+                    'pdfa_2b': 'PASS',
+                    'font_embedding': 'PASS',
+                    'recognized_warning_overflow': 'PASS',
+                },
                 'profiles': [],
             }
             checksum_lines = []
@@ -178,6 +256,12 @@ jobs:
                     'pages': int(match.group(1)),
                     'preview': (directory / f'{profile}-preview.png').relative_to(root).as_posix(),
                     'build_log': (directory / f'{profile}.log').relative_to(root).as_posix(),
+                    'preflight': {
+                        'a4': 'PASS',
+                        'pdfa_2b': 'PASS',
+                        'font_embedding': 'PASS',
+                        'recognized_warning_overflow': 'PASS',
+                    },
                 }
                 manifest['profiles'].append(entry)
 
@@ -207,12 +291,14 @@ jobs:
         shell: bash
         run: |
           {
-            echo '## v3.0.0 all-profile visual review bundle'
+            echo '## v3.0.0 exact-candidate all-profile visual review bundle'
             echo
-            echo '- Frozen source: `v3.0.0` → `05399473827da7cf6b6c8bac36edc7115481773f`'
+            echo '- Candidate source: `395899e1b2336ed268335d68e59e03452880c15e`'
+            echo '- Tag state: **pending explicit maintainer approval**'
             echo '- Canonical profiles built: **7/7**'
+            echo '- Automated preflight: A4 + PDF/A-2b + embedded fonts + recognized warning/overflow checks.'
             echo '- Bundle contains each exact `.tex`, final PDF, build log, extracted text, first-page PNG preview and SHA-256 manifest.'
-            echo '- This is review evidence only; it does not authorize CTAN submission without explicit maintainer acceptance.'
+            echo '- This is review evidence only; it does not authorize tag replacement or CTAN submission without explicit maintainer acceptance.'
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload all-profile review bundle
