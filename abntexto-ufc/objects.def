@@ -39,6 +39,15 @@
   }
 \AtEndPreamble{\ufc_objects_setup_quadro:}
 
+% The unified illustration list follows the same two-argument contract as every
+% abntexto l@<extension> renderer: entry payload followed by page.
+\cs_new_protected:Npn \ufc_objects_set_illustration_renderer:
+  {
+    \cs_gset_protected:cpn { l@loii } ##1##2
+      { \extline{0pt}\loilabelwidth\loiifont{##1}{##2} }
+  }
+\ufc_objects_set_illustration_renderer:
+
 % UFC lists use uppercase headings, but their entries preserve the title casing.
 \cs_new_protected:Npn \ufc_objects_setup_list_fonts:
   {
@@ -58,21 +67,25 @@
     \cs_if_exist:NT \locifont  { \cs_gset:Npn \locifont  { \normalfont } }
     \cs_if_exist:NT \loaifont  { \cs_gset:Npn \loaifont  { \normalfont } }
 
-    % Some packages finalize list-entry handlers during the regular begin-document
-    % hook. Reassert the UFC unified-list renderer at begindocument/end so its
-    % two-argument contract survives that initialization.
-    \cs_gset_protected:cpn { l@loii } ##1##2
-      { \extline{0pt}\loilabelwidth\loiifont{##1}{##2} }
+    \ufc_objects_set_illustration_renderer:
   }
 \AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
 
-% The unified illustration list must implement the same two-argument contract
-% as every abntexto l@<extension> renderer: entry payload followed by page.
-\cs_gset_protected:cpn { l@loii } #1#2
-  { \extline{0pt}\loilabelwidth\loiifont{#1}{#2} }
+% Late package initialization can still replace custom list-entry handlers after
+% begin-document hooks. Reassert the renderer at the last possible point: just
+% before LaTeX reads the populated .loi file.
+\cs_new_protected:Npn \ufc_objects_start_illustration_toc:
+  {
+    \ufc_objects_set_illustration_renderer:
+    \ufcstarttoc{loi}
+  }
 
 \cs_new_protected:Npn \ufc_objects_print_illustration_list:
-  { \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}} }
+  {
+    \ufc_pretextual_list:nn
+      {Lista~de~Ilustrações}
+      {\ufc_objects_start_illustration_toc:}
+  }
 
 \RenewDocumentCommand \ufcPrintListOfIllustrations { }
   { \ufc_objects_print_illustration_list: }
