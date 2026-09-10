@@ -25,7 +25,7 @@ jobs:
       - name: Checkout exact fix head
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: 8af852d16ac003a9a2f091044d41be627c4f7213
+          ref: 97c58d3f29a191b604c8a01cc4b9180afb4076a2
           path: released
           persist-credentials: false
 
@@ -87,7 +87,11 @@ jobs:
             grep -n -B3 -A6 -E 'Overfull \\[hv]box' diagnostic.log || true
             test -s diagnostic.loi
             grep -F 'Esquema controlado' diagnostic.loi >/dev/null
+            grep -E 'LOI-READ-l@loii=.*#1#2' diagnostic.log >/dev/null || {
+              echo 'Unified illustration-list renderer is not two-argument at read time.'
+              exit 1
+            }
             if grep -qE 'Overfull \\[hv]box' diagnostic.log; then
               exit 1
             fi
-            echo 'LOI-DIAGNOSTIC status=PASS populated_entry=true overfull=false'
+            echo 'LOI-DIAGNOSTIC status=PASS populated_entry=true two_arg_renderer=true overfull=false'
