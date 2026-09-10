@@ -3,7 +3,7 @@
   "project": "abntexto-ufc",
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.1",
-  "updated_at": "2026-09-09",
+  "updated_at": "2026-09-10",
   "status": "ACTIVE",
   "phase": "release",
   "stage": "release",
@@ -40,6 +40,7 @@
     "scoped_linux_integration_allowed_for_intermediate_work": true,
     "auto_scope_unknown_paths_fail_to_complete": true,
     "release_candidate_marker_forces_complete_linux": true,
+    "release_candidate_marker_full_pr_dominates_incremental_scope": true,
     "exact_main_release_marker_push_forces_complete_linux": true,
     "deterministic_release_reference_pdf_required": true,
     "proprietary_fonts_may_be_redistributed": false,
@@ -65,12 +66,13 @@
     "must_complete_before_next_phase_activation": true,
     "documentation_must_be_updated_after_result": true,
     "candidate": "one-immutable-sha",
-    "candidate_state": "pending-3.0.1-recovery-merge-exact-main-recertification-and-human-approval",
+    "candidate_state": "pending-combined-pr302-recovery-pr-gates-merge-exact-main-recertification-and-human-approval",
     "minimum_checks": [
       "Static contract",
       "full relevant Linux integration",
-      "complete Linux integration scope",
+      "complete Linux integration scope with heavy step executed",
       "phase-specific acceptance checks",
+      "populated unified illustration-list regression",
       "Linux release check",
       "monolithic CTAN class with zero project-owned def files",
       "current CTAN pkgcheck on final canonical archive",
@@ -91,14 +93,14 @@
   "active_work": {
     "review_items": 34,
     "review_status": {"pass":34,"partial":0,"fail":0,"normative_review":0},
-    "release_state": "v3.0.1-release-recovery-candidate-preparation",
+    "release_state": "v3.0.1-combined-runtime-fix-and-release-recovery-candidate-preparation",
     "release_branch": "main",
     "recovery_work_branch": "release/v3.0.1-recovery",
     "release_recovery": {
       "state": "active",
       "target_version": "3.0.1",
       "record": "docs/V3-RELEASE-RECOVERY.md",
-      "reason": "Public v3.0.0 tag/Release exists on a SHA that predates the final exact-SHA release-gate state.",
+      "reason": "Public v3.0.0 tag/Release exists on a SHA that predates the final exact-SHA release-gate state; PR #302 also corrected a concrete post-v3.0.0 runtime defect before the recovered candidate was frozen.",
       "premature_tag": "v3.0.0",
       "premature_tagged_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
       "pre_recovery_gate_sha": "395899e1b2336ed268335d68e59e03452880c15e",
@@ -107,7 +109,18 @@
       "pre_recovery_pkgcheck": "PASS",
       "historical_v3_0_0_ctan_eligible": false,
       "silent_retarget_allowed": false,
-      "runtime_semantics_reopened": false
+      "runtime_semantics_reopened": true,
+      "runtime_reopen_scope": "PR #302 populated unified illustration-list renderer only"
+    },
+    "post_v3_0_0_runtime_correction": {
+      "pr": 302,
+      "state": "merged-and-reconciled-into-recovery",
+      "merge_sha": "6d06d4ed42b2187b1483ea219ee055cfe975ece2",
+      "runtime_file": "abntexto-ufc/objects.def",
+      "regression_fixture": "tests/documents/frontmatter-list-illustrations-present-test.tex",
+      "regression_gate": "tests/integration/frontmatter-lists-evidence.sh",
+      "scope": "populated unified illustration-list renderer",
+      "fresh_complete_recertification_required": true
     },
     "publication_hardening": {
       "pr": 297,
@@ -133,7 +146,7 @@
       "distribution_artifact_id": 10130580899,
       "validation_artifact_id": 10130580177,
       "pkgcheck": "PASS",
-      "status": "pre-recovery-baseline-only"
+      "status": "pre-recovery-pre-pr302-baseline-only"
     },
     "preliminary_visual_review": {
       "source_sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
@@ -141,23 +154,25 @@
       "preflight": "pass",
       "page_by_page_visual_inspection": "pass",
       "final_acceptance": false,
-      "reason": "final 3.0.1 exact-candidate regeneration and explicit maintainer approval still required"
+      "reason": "final 3.0.1 exact-candidate regeneration containing PR #302 and explicit maintainer approval still required"
     },
     "current_correction_batch": [
-      "Bump publication target to 3.0.1 without changing accepted runtime semantics",
-      "Record the premature public v3.0.0 release as superseded for final publication",
+      "Include the merged PR #302 populated unified illustration-list runtime correction and regression in the final 3.0.1 candidate",
+      "Bump publication target to 3.0.1 and record the premature public v3.0.0 release as superseded for final publication",
       "Remove hard-coded release artifact version coupling from final workflow and distribution regression",
-      "Merge recovery state to canonical main",
-      "Run exact-main complete certification and current CTAN pkgcheck for 3.0.1",
-      "Regenerate final review pairs and obtain explicit maintainer approval",
-      "Freeze 3.0.1 publication bytes only after technical, pkgcheck and visual acceptance"
+      "Retain seven exact-candidate PDF/TeX review pairs with hashes and manifest",
+      "Prevent incremental documentation-only synchronization from suppressing complete Linux integration when the full PR contains the release candidate marker",
+      "Run combined-state PR gates before merging recovery to canonical main",
+      "Run exact-main complete certification and current CTAN pkgcheck for 3.0.1 after merge",
+      "Obtain explicit maintainer visual approval and freeze 3.0.1 publication bytes"
     ],
     "pending_acceptance_gates": [
-      "Merge the 3.0.1 recovery/version/control changes to canonical main",
+      "Require Static, actual complete Linux integration and Linux release/pkgcheck on the recovery branch reconciled with PR #302",
+      "Merge the combined 3.0.1 recovery to canonical main only after those PR gates pass",
       "Resolve the resulting exact canonical main SHA and require Static, automatic complete Linux integration and Linux release check on that SHA",
       "Require current CTAN pkgcheck evidence for the exact abntexto-ufc-3.0.1.zip and review every warning",
       "Build and physically re-audit deterministic 3.0.1 distribution from exact certified SHA",
-      "Regenerate all seven supported PDF and TeX review pairs from exact 3.0.1 candidate and obtain explicit maintainer approval",
+      "Regenerate all seven supported PDF and TeX review pairs from exact 3.0.1 candidate containing PR #302 and obtain explicit maintainer approval",
       "Freeze publication hashes and evidence",
       "Create immutable v3.0.1 tag on exact certified and visually approved SHA",
       "Publish GitHub 3.0.1 Release and verify re-downloaded asset hashes",
@@ -165,6 +180,7 @@
       "Record final publication verification before Release closure"
     ],
     "release_blockers": [
+      "Combined PR #302 + 3.0.1 recovery head has not yet completed all required PR gates",
       "3.0.1 recovery changes have not yet been merged to canonical main",
       "Final exact-main 3.0.1 Release candidate has not yet completed phase-end recertification",
       "Current CTAN pkgcheck has not yet passed on final 3.0.1 package bytes",
@@ -186,7 +202,7 @@
       "runtime_policy": "biblatex repeatfields=true"
     },
     "distribution_contract": {
-      "state": "3.0.1-recovery-final-candidate-reproof-pending",
+      "state": "3.0.1-combined-runtime-fix-recovery-final-candidate-reproof-pending",
       "required_files": ["abntexto-ufc-3.0.1.zip","abntexto-ufc-template-3.0.1.zip","abntexto-ufc-overleaf-3.0.1.zip","SHA256SUMS"],
       "ctan_upload_archive": "abntexto-ufc-3.0.1.zip",
       "ctan_upload_archive_count": 1,
@@ -209,8 +225,9 @@
       "pkgcheck_before_tag": true
     },
     "final_candidate_contract": {
-      "state": "pending-3.0.1-recovery-merge-exact-main-recertification-and-human-approval",
+      "state": "pending-combined-pr302-recovery-pr-gates-merge-exact-main-recertification-and-human-approval",
       "tag": "v3.0.1",
+      "must_include_pr302_merge_sha": "6d06d4ed42b2187b1483ea219ee055cfe975ece2",
       "resolve_candidate_sha_from_git": true,
       "automatic_complete_linux_on_exact_main_release_marker_push": true,
       "certified_sha_equals_tagged_sha": true,
@@ -228,15 +245,16 @@
     "documentation_only": "skip-heavy-integration",
     "unknown_technical_path_scope": "complete",
     "release_candidate_marker_scope": "complete",
+    "release_candidate_marker_full_pr_dominates_incremental_scope": true,
     "main_release_candidate_marker_push_scope": "complete",
     "exact_main_candidate_complete_linux_automatic": true
   },
   "branch_plan": {
     "current_work_branch": "main",
     "recovery_work_branch": "release/v3.0.1-recovery",
-    "current_work_state": "3.0.1-release-recovery",
+    "current_work_state": "3.0.1-combined-pr302-release-recovery",
     "canonical_main_resolution": "git-fetch-origin-main-at-session-start",
     "merge_policy": "protected-main-squash-only",
-    "final_candidate_defined_as_exact_main_containing-recovery-and-final-gates": true
+    "final_candidate_defined_as_exact_main_containing_pr302_recovery_and_final_gates": true
   }
 }
