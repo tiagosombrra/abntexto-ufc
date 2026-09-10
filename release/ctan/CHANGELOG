@@ -1,6 +1,15 @@
 abntexto-ufc changelog
 ======================
 
+3.0.1 — 2026-09-09
+------------------
+
+- Recovers the v3 publication process after the premature public GitHub v3.0.0 release was found to point to a source SHA that did not satisfy the repository's final exact-SHA release invariant.
+- Preserves the accepted v3 runtime, public API, normative behavior, document profiles and typography without functional changes to project-owned `.def` modules.
+- Rebinds release packaging, CTAN metadata and final certification artifacts to version 3.0.1.
+- Requires a fresh exact-SHA Static/Linux/pkgcheck/visual-acceptance cycle before the 3.0.1 tag and CTAN submission.
+- The earlier GitHub v3.0.0 assets are historical/superseded publication artifacts and must not be submitted to CTAN as the final package.
+
 3.0.0 — 2026-09-09
 ------------------
 
