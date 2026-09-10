@@ -8,12 +8,11 @@ OUTPUT_DIR="${UFC_REVIEW_PAIRS_DIR:-artifacts/release-review-pairs}"
 SOURCE_SHA="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-$(git -c "safe.directory=$ROOT" rev-parse HEAD)}}"
 VERSION="$(make version)"
 PINNED_UPSTREAM_COMMIT="4c03fd7b5a7af089627dedb547c53cad4eed2a2a"
-UPSTREAM_FILE="abntexto.cls"
-UPSTREAM_PREEXISTING=false
 PROFILES="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
 FIXTURE="tests/smoke/base-profile.tex"
-
-[ -f "$UPSTREAM_FILE" ] && UPSTREAM_PREEXISTING=true
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/abntexto-ufc-review-pairs.XXXXXX")"
+PINNED_UPSTREAM="$WORK/abntexto.cls"
+TEX_ENV_VALUE="TEXINPUTS=$WORK:..//:"
 
 cleanup_job() {
   job="$1"
@@ -32,16 +31,14 @@ cleanup() {
     cleanup_job "release-review-$profile"
   done
   make DOCUMENT=scientific-article clean >/dev/null 2>&1 || true
-  if [ "$UPSTREAM_PREEXISTING" = false ]; then
-    rm -f "$UPSTREAM_FILE"
-  fi
+  rm -rf "$WORK"
 }
 trap cleanup EXIT INT TERM
 
 rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-python3 tools/fetch-abntexto.py --output "$UPSTREAM_FILE"
+python3 tools/fetch-abntexto.py --output "$PINNED_UPSTREAM"
 
 check_log() {
   log="$1"
@@ -98,7 +95,7 @@ for profile in $PROFILES; do
     exit 1
   fi
 
-  make DOCUMENT="$job" ENGINE=pdflatex compile > "/tmp/$job.log" 2>&1 || {
+  make DOCUMENT="$job" ENGINE=pdflatex TEX_ENV="$TEX_ENV_VALUE" compile > "/tmp/$job.log" 2>&1 || {
     cat "/tmp/$job.log"
     exit 1
   }
@@ -112,7 +109,7 @@ for profile in $PROFILES; do
   index=$((index + 1))
 done
 
-make DOCUMENT=scientific-article ENGINE=pdflatex compile > /tmp/release-review-scientific-article.log 2>&1 || {
+make DOCUMENT=scientific-article ENGINE=pdflatex TEX_ENV="$TEX_ENV_VALUE" compile > /tmp/release-review-scientific-article.log 2>&1 || {
   cat /tmp/release-review-scientific-article.log
   exit 1
 }
