@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "project": "abntexto-ufc",
+  "tracking_issue": 304,
+  "working_branch": "release/v3.0.1-final-corrections",
+  "target_version": "3.0.1",
+  "publication_status": "BLOCKED",
+  "historical_certified_baseline": {
+    "sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
+    "status": "SUPERSEDED_AS_FINAL_CANDIDATE_RETAINED_AS_EVIDENCE",
+    "reason": "Release-blocking canonical reference/distribution/Web-Lite defects were identified after exact-main certification."
+  },
+  "authority": {
+    "human_readable_plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
+    "machine_state": "release/v3.0.1-final-corrections.json",
+    "issue": 304,
+    "fail_closed_on_disagreement": true
+  },
+  "audit_protocol": {
+    "each_lot_requires": [
+      "machine_state_update",
+      "human_readable_evidence",
+      "exact_changed_files",
+      "executed_checks",
+      "explicit_unresolved_findings"
+    ],
+    "green_ci_alone_closes_lot": false,
+    "post_acceptance_source_commits_allowed": false
+  },
+  "scope": {
+    "release_blocking": [
+      "canonical_tcc_source_identity_and_pedagogical_content",
+      "full_reference_pdf_generation_and_validation",
+      "distribution_of_full_reference_pdf",
+      "web_lite_complete_deployment_and_real_pdf_e2e",
+      "exact_sha_release_recertification_and_human_acceptance"
+    ],
+    "deferred": [
+      "whole_repository_472_file_lifecycle_audit",
+      "broad_branch_pruning",
+      "broad_historical_documentation_cleanup",
+      "unrelated_runtime_api_refactors",
+      "tool_deletion_without_direct_release_defect"
+    ]
+  },
+  "work_packages": [
+    {
+      "id": "R0",
+      "name": "auditable-control-plane-reset",
+      "status": "DONE",
+      "entry_sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
+      "acceptance": [
+        "tracking_issue_exists",
+        "working_branch_isolated_from_main",
+        "human_readable_plan_exists",
+        "machine_readable_state_exists",
+        "publication_blocked"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "R1",
+      "name": "canonical-tcc-source-reconstruction",
+      "status": "IN_PROGRESS",
+      "sub_lots": [
+        {"id": "R1.1", "name": "source-identity-normalization", "status": "IN_PROGRESS"},
+        {"id": "R1.2", "name": "pedagogical-coverage-inventory", "status": "PENDING"},
+        {"id": "R1.3", "name": "coherent-tcc-rewrite", "status": "PENDING"}
+      ],
+      "baseline": {
+        "main": "template/main.tex",
+        "chapter_count": 7,
+        "frontmatter_file_count": 8,
+        "backmatter_content_file_count": 7,
+        "figure_auxiliary_file_count": 3
+      },
+      "chapter_identity_map": [
+        {"current": "template/chapters/1-introduction.tex", "target": "template/chapters/1-introduction.tex", "section": "Introdução e uso deste modelo", "action": "KEEP"},
+        {"current": "template/chapters/2-theoretical-framework.tex", "target": "template/chapters/2-academic-work-structure.tex", "section": "Estrutura do trabalho acadêmico", "action": "RENAME_PRESERVE_CONTENT"},
+        {"current": "template/chapters/related-work.tex", "target": "template/chapters/3-front-matter.tex", "section": "Elementos pré-textuais em detalhe", "action": "RENAME_PRESERVE_CONTENT"},
+        {"current": "template/chapters/3-methodology.tex", "target": "template/chapters/4-general-formatting.tex", "section": "Formatação geral e organização da parte textual", "action": "RENAME_PRESERVE_CONTENT"},
+        {"current": "template/chapters/4-results.tex", "target": "template/chapters/5-citations-notes-references.tex", "section": "Citações, notas e referências", "action": "RENAME_PRESERVE_CONTENT"},
+        {"current": "template/chapters/formatting-examples.tex", "target": "template/chapters/6-academic-objects.tex", "section": "Ilustrações, tabelas e outros objetos acadêmicos", "action": "RENAME_PRESERVE_CONTENT"},
+        {"current": "template/chapters/5-conclusion.tex", "target": "template/chapters/7-abntexto-ufc-resources-and-final-review.tex", "section": "Recursos do abntexto-ufc, elementos pós-textuais e revisão final", "action": "RENAME_PRESERVE_CONTENT"}
+      ],
+      "unresolved": [
+        "full_rule_to_section_coverage_matrix_not_yet_completed",
+        "reviewer_corrected_content_retention_not_yet_proven_against_history",
+        "final_reference_pdf_not_yet_generated"
+      ]
+    },
+    {"id": "R2", "name": "full-canonical-reference-pdf", "status": "PENDING", "unresolved": []},
+    {"id": "R3", "name": "distribution-repair", "status": "PENDING", "unresolved": []},
+    {"id": "R4", "name": "web-lite-validator-closure", "status": "PENDING", "confirmed_blockers": ["validator/app.js imports ./normative-catalog.js but certified validator tree does not contain that module", "current cross-surface test does not run the canonical PDF through the real Web/Lite analyze path"], "unresolved": []},
+    {"id": "R5", "name": "release-scoped-regression", "status": "PENDING", "unresolved": []},
+    {"id": "R6", "name": "exact-sha-human-acceptance-and-publication", "status": "PENDING", "unresolved": []}
+  ],
+  "current_next_action": "Complete R1.1 atomically, then update this state with changed files and checks before starting R1.2."
+}
