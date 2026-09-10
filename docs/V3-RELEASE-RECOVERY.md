@@ -32,6 +32,7 @@ The recovery intentionally changes only release/version/control surfaces:
 - canonical version metadata;
 - package/manual/README/CHANGELOG release metadata;
 - release workflows and distribution tests where the version was hard-coded;
+- exact-candidate generation and retention of the seven PDF/TeX review pairs required by the existing human gate;
 - machine roadmap, release-candidate marker and operational handoffs.
 
 Project-owned runtime `.def` modules, accepted public API semantics, normative rules, layout rules and document-profile behavior are out of scope unless a fresh regression demonstrates an actual defect.
@@ -50,6 +51,21 @@ Policy:
 
 Any later decision to delete, edit or visibly mark the historical GitHub Release is an explicit publication-state action and must not be confused with source-tree recovery.
 
+## Exact-candidate human-review artifact
+
+The Linux release workflow must retain the material needed for the mandatory human gate instead of leaving it only in temporary build paths.
+
+`tests/integration/release-review-pairs.sh` generates the six non-article profile sources from the canonical profile fixture and uses `template/scientific-article.tex` for the article profile. It compiles the seven pairs with the pinned `abntexto` revision `4c03fd7b5a7af089627dedb547c53cad4eed2a2a`, injected through an isolated temporary `TEXINPUTS` path so the working tree is not modified.
+
+Before retention, every PDF must pass A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight. The resulting CI artifact contains:
+
+- seven `.tex` sources;
+- seven corresponding PDFs;
+- `SHA256SUMS` for all 14 pair files;
+- `manifest.json` with source SHA, release version, pinned upstream commit, pair hashes and `maintainer_visual_approval = PENDING`.
+
+The artifact name is derived from the canonical release version and workflow run. CI generation proves provenance and preflight only; it never records maintainer approval automatically.
+
 ## Recovery acceptance sequence
 
 1. merge the recovery control/version changes to canonical `main`;
@@ -57,7 +73,7 @@ Any later decision to delete, edit or visibly mark the historical GitHub Release
 3. require Static, complete Linux integration and Linux release check on that exact SHA;
 4. require current CTAN `pkgcheck` against `abntexto-ufc-3.0.1.zip` and classify all output;
 5. retain and physically audit the deterministic three-ZIP distribution plus `SHA256SUMS`;
-6. regenerate PDF + corresponding `.tex` for all seven supported profiles from the exact candidate;
+6. require the same Linux release run to generate and retain the seven exact-candidate PDF/`.tex` review pairs plus hashes/manifest;
 7. require A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight for every profile PDF;
 8. obtain explicit maintainer visual approval for all seven pairs;
 9. freeze exact publication hashes/evidence and prohibit rebuilds;
