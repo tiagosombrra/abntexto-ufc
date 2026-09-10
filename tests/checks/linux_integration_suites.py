@@ -85,6 +85,9 @@ def main() -> None:
         "dist/abntexto-ufc-${{ steps.release-version.outputs.version }}.zip",
         "dist/abntexto-ufc-template-${{ steps.release-version.outputs.version }}.zip",
         "dist/abntexto-ufc-overleaf-${{ steps.release-version.outputs.version }}.zip",
+        "tests/integration/release-review-pairs.sh",
+        "Upload seven-profile review pairs",
+        "artifacts/release-review-pairs/**",
         "Upload certified distribution assets",
         "dist/SHA256SUMS",
     )
@@ -157,7 +160,8 @@ def main() -> None:
         "step4_registered=true step5_registered=true "
         "release_candidate_forces_complete=true release_check_pr_trigger=true "
         "release_candidate_head_checkout=true canonical_ctan_archive=true "
-        "release_version_source=makefile release_assets_retained=true"
+        "release_version_source=makefile human_review_pairs_retained=true "
+        "release_assets_retained=true"
     )
 
 
