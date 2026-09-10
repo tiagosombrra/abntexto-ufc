@@ -58,9 +58,9 @@ jobs:
             old_sha='05399473827da7cf6b6c8bac36edc7115481773f'
             python3 tools/generate-v3-profile-review.py --output artifacts/v3-profile-review
 
-            # The generator lives on the isolated validation branch. Rewrite its
-            # provenance-only labels so every delivered source names the exact
-            # candidate under review rather than the superseded premature tag.
+            # Normalize validation-only provenance and keep academic fixtures
+            # on the normative section hierarchy. The upstream abntexto manual
+            # explicitly marks chapter mode as non-conforming to NBR 14724:2024.
             python3 - <<'PY'
             import json
             from pathlib import Path
@@ -74,6 +74,18 @@ jobs:
                 text = text.replace(old_sha, candidate_sha)
                 text = text.replace('v3.0.0 congelada', 'candidato v3.0.0')
                 text = text.replace('Released source:', 'Candidate source:')
+                if path.suffix == '.tex' and path.name != 'scientific-article.tex':
+                    text = text.replace(r'\chapter{Introdução}', r'\section{Introdução}')
+                    text = text.replace(r'\section{Objetivo da inspeção}', r'\subsection{Objetivo da inspeção}')
+                    text = text.replace(r'\chapter{Superfícies de apresentação}', r'\section{Superfícies de apresentação}')
+                    text = text.replace(r'\section{Figura controlada}', r'\subsection{Figura controlada}')
+                    text = text.replace(r'\section{Tabela controlada}', r'\subsection{Tabela controlada}')
+                    text = text.replace(r'\section{Equação controlada}', r'\subsection{Equação controlada}')
+                    text = text.replace(r'\chapter{Considerações finais}', r'\section{Considerações finais}')
+                    text = text.replace(
+                        r'\caption{Área gráfica controlada para inspeção de legenda e numeração}',
+                        r'\caption[Esquema controlado]{Área gráfica controlada para inspeção de legenda e numeração}',
+                    )
                 path.write_text(text, encoding='utf-8', newline='\n')
 
             index_path = root / 'profiles.json'
@@ -171,8 +183,6 @@ jobs:
               sh released/tests/integration/font-embedding.sh "$pdf_path"
               UFC_PDFA_NEGATIVE_VALIDATION=0 sh released/tests/integration/pdfa.sh "$pdf_path"
 
-              # Validate every page independently instead of trusting a single
-              # document-level Page size field from pdfinfo.
               pages_dir="$(mktemp -d)"
               pdfseparate "$pdf_path" "$pages_dir/page-%d.pdf"
               for page in "$pages_dir"/page-*.pdf; do
@@ -189,9 +199,7 @@ jobs:
             expected = (595.276, 841.89)
             tolerance = 1.8
             if abs(width - expected[0]) > tolerance or abs(height - expected[1]) > tolerance:
-                raise SystemExit(
-                    f'A4 gate failed for {profile}: {width} x {height} pts'
-                )
+                raise SystemExit(f'A4 gate failed for {profile}: {width} x {height} pts')
             PY
               done
               rm -rf "$pages_dir"
