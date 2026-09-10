@@ -82,16 +82,21 @@ def zip_datetime(epoch: int) -> tuple[int, int, int, int, int, int]:
 
 
 def tracked_files(pathspec: str) -> list[Path]:
-    try:
-        output = subprocess.check_output(
-            ["git", "-C", str(ROOT), "ls-files", "-z", "--", pathspec],
-            stderr=subprocess.DEVNULL,
-        )
-    except Exception as exc:
-        raise SystemExit("Public bundle generation requires a canonical Git checkout.") from exc
+    completed = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "-z", "--", pathspec],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if completed.returncode != 0:
+        detail = completed.stderr.decode("utf-8", errors="replace").strip()
+        message = "Public bundle generation requires a Git checkout able to enumerate tracked files."
+        if detail:
+            message += f" Git reported: {detail}"
+        raise SystemExit(message)
 
     result = []
-    for raw in output.split(b"\0"):
+    for raw in completed.stdout.split(b"\0"):
         if not raw:
             continue
         path = ROOT / raw.decode("utf-8")
