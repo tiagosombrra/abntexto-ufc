@@ -1,7 +1,7 @@
 # abntexto-ufc
 
 Version: 3.0.1
-Release date: 2026-09-09
+Release date: 2026-09-10
 Maintainer: Tiago Guimarães Sombra
 License: LaTeX Project Public License 1.3c or later
 Repository: https://github.com/tiagosombrra/abntexto-ufc
