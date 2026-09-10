@@ -1,0 +1,88 @@
+name: V3 unified illustration list diagnostic
+
+on:
+  push:
+    branches:
+      - validation/v3.0.0-all-profile-review
+    paths:
+      - .github/workflows/v3-loi-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose-loi:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout validation branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: validation/v3.0.0-all-profile-review
+          persist-credentials: false
+
+      - name: Checkout exact candidate
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: 395899e1b2336ed268335d68e59e03452880c15e
+          path: released
+          persist-credentials: false
+
+      - name: Reproduce and inspect unified illustration list
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            set -euo pipefail
+            python3 released/tools/fetch-abntexto.py --output released/abntexto.cls
+            export TEXINPUTS="$PWD/released:$PWD/released//:"
+            mkdir -p /tmp/loi-diagnostic
+            cd /tmp/loi-diagnostic
+            cat > diagnostic.tex <<'TEX'
+            \documentclass{abntexto-ufc}
+            \ufcsetup{
+              type = doctoral-thesis,
+              author = {Diagnostic Author},
+              title = {Unified Illustration List Diagnostic},
+              location = {Fortaleza},
+              year = {2026},
+              coat-of-arms = false
+            }
+            \begin{document}
+            \pretextual
+            \ufcPrintListOfIllustrations
+            \textual
+            \section{Sentinel}
+            \begin{figure}[htbp]
+              \centering
+              \fbox{\rule{0pt}{2cm}\rule{0.5\textwidth}{0pt}}
+              \caption[Esquema controlado]{Área gráfica controlada para inspeção de legenda e numeração}
+            \end{figure}
+            \end{document}
+            TEX
+            for pass in 1 2 3; do
+              pdflatex -interaction=nonstopmode -halt-on-error -file-line-error diagnostic.tex > "pass-${pass}.out" 2>&1
+            done
+            printf '%s\n' '--- diagnostic.lof ---'
+            cat diagnostic.lof
+            printf '%s\n' '--- diagnostic.loi ---'
+            cat diagnostic.loi
+            printf '%s\n' '--- overfull diagnostics ---'
+            grep -nE 'Overfull \\[hv]box' diagnostic.log || true
+            printf '%s\n' '--- relevant macro meanings ---'
+            cat > meanings.tex <<'TEX'
+            \documentclass{abntexto-ufc}
+            \begin{document}
+            \makeatletter
+            \typeout{MEANING-l@lof=\meaning\l@lof}
+            \typeout{MEANING-l@loii=\meaning\l@loii}
+            \typeout{MEANING-loflabelwidth=\meaning\loflabelwidth}
+            \typeout{MEANING-loflabelbox=\meaning\loflabelbox}
+            \typeout{MEANING-loilabelwidth=\meaning\loilabelwidth}
+            \makeatother
+            \end{document}
+            TEX
+            pdflatex -interaction=nonstopmode -halt-on-error meanings.tex > meanings.out 2>&1
+            grep 'MEANING-' meanings.out || true
