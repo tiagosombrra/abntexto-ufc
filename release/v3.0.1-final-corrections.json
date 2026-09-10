@@ -1,7 +1,8 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
+  "pull_request": 305,
   "working_branch": "release/v3.0.1-final-corrections",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
@@ -14,6 +15,7 @@
     "human_readable_plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
     "machine_state": "release/v3.0.1-final-corrections.json",
     "r1_audit": "docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md",
+    "r1_1_evidence": "docs/V3.0.1-R1.1-EVIDENCE.md",
     "issue": 304,
     "fail_closed_on_disagreement": true
   },
@@ -51,13 +53,6 @@
       "status": "DONE",
       "entry_sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
       "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536",
-      "acceptance": [
-        "tracking_issue_exists",
-        "working_branch_isolated_from_main",
-        "human_readable_plan_exists",
-        "machine_readable_state_exists",
-        "publication_blocked"
-      ],
       "unresolved": []
     },
     {
@@ -68,8 +63,11 @@
         {
           "id": "R1.1",
           "name": "source-identity-normalization",
-          "status": "IMPLEMENTED_PENDING_STATIC",
-          "changed_files_expected": [
+          "status": "FIXED_PENDING_STATIC_RERUN",
+          "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
+          "chapter_content_rewritten": false,
+          "chapter_blobs_reused": true,
+          "changed_files": [
             "template/main.tex",
             "template/chapters/2-academic-work-structure.tex",
             "template/chapters/3-front-matter.tex",
@@ -77,10 +75,13 @@
             "template/chapters/5-citations-notes-references.tex",
             "template/chapters/6-academic-objects.tex",
             "template/chapters/7-abntexto-ufc-resources-and-final-review.tex",
+            "standards/reference-guide-map.json",
+            "tests/checks/reference_guide_contract.py",
             "docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md",
+            "docs/V3.0.1-R1.1-EVIDENCE.md",
             "release/v3.0.1-final-corrections.json"
           ],
-          "removed_legacy_paths_expected": [
+          "removed_legacy_paths": [
             "template/chapters/2-theoretical-framework.tex",
             "template/chapters/related-work.tex",
             "template/chapters/3-methodology.tex",
@@ -88,9 +89,27 @@
             "template/chapters/formatting-examples.tex",
             "template/chapters/5-conclusion.tex"
           ],
-          "content_policy": "reuse_existing_chapter_blobs_without_rewrite",
-          "required_checks": ["static-contract"],
-          "observed_checks": []
+          "observed_checks": [
+            {
+              "workflow": "Static contract",
+              "run_number": 474,
+              "run_id": 34476591229,
+              "head_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
+              "status": "FAIL",
+              "classification": "EXPECTED_DEPENDENCY_PATH_DRIFT",
+              "cause": "reference-guide map and librarian checker still encoded renamed chapter paths",
+              "preserved_in_audit_trail": true
+            },
+            {
+              "workflow": "Linux integration",
+              "run_number": 394,
+              "run_id": 34476591239,
+              "head_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
+              "status": "SUCCESS_DRAFT_SCOPE",
+              "release_evidence": false
+            }
+          ],
+          "required_next_check": "fresh Static contract after path-consumer correction"
         },
         {"id": "R1.2", "name": "pedagogical-coverage-inventory", "status": "PENDING"},
         {"id": "R1.3", "name": "coherent-tcc-rewrite", "status": "PENDING"}
@@ -102,15 +121,6 @@
         "backmatter_content_file_count": 7,
         "figure_auxiliary_file_count": 3
       },
-      "chapter_identity_map": [
-        {"current": "template/chapters/1-introduction.tex", "target": "template/chapters/1-introduction.tex", "section": "Introdução e uso deste modelo", "action": "KEEP"},
-        {"current": "template/chapters/2-theoretical-framework.tex", "target": "template/chapters/2-academic-work-structure.tex", "section": "Estrutura do trabalho acadêmico", "action": "RENAME_PRESERVE_CONTENT"},
-        {"current": "template/chapters/related-work.tex", "target": "template/chapters/3-front-matter.tex", "section": "Elementos pré-textuais em detalhe", "action": "RENAME_PRESERVE_CONTENT"},
-        {"current": "template/chapters/3-methodology.tex", "target": "template/chapters/4-general-formatting.tex", "section": "Formatação geral e organização da parte textual", "action": "RENAME_PRESERVE_CONTENT"},
-        {"current": "template/chapters/4-results.tex", "target": "template/chapters/5-citations-notes-references.tex", "section": "Citações, notas e referências", "action": "RENAME_PRESERVE_CONTENT"},
-        {"current": "template/chapters/formatting-examples.tex", "target": "template/chapters/6-academic-objects.tex", "section": "Ilustrações, tabelas e outros objetos acadêmicos", "action": "RENAME_PRESERVE_CONTENT"},
-        {"current": "template/chapters/5-conclusion.tex", "target": "template/chapters/7-abntexto-ufc-resources-and-final-review.tex", "section": "Recursos do abntexto-ufc, elementos pós-textuais e revisão final", "action": "RENAME_PRESERVE_CONTENT"}
-      ],
       "unresolved": [
         "full_rule_to_section_coverage_matrix_not_yet_completed",
         "reviewer_corrected_content_retention_not_yet_proven_against_history",
@@ -119,9 +129,18 @@
     },
     {"id": "R2", "name": "full-canonical-reference-pdf", "status": "PENDING", "unresolved": []},
     {"id": "R3", "name": "distribution-repair", "status": "PENDING", "unresolved": []},
-    {"id": "R4", "name": "web-lite-validator-closure", "status": "PENDING", "confirmed_blockers": ["validator/app.js imports ./normative-catalog.js but certified validator tree does not contain that module", "current cross-surface test does not run the canonical PDF through the real Web/Lite analyze path"], "unresolved": []},
+    {
+      "id": "R4",
+      "name": "web-lite-validator-closure",
+      "status": "PENDING",
+      "confirmed_blockers": [
+        "validator/app.js imports ./normative-catalog.js but certified validator tree does not contain that module",
+        "current cross-surface test does not run the canonical PDF through the real Web/Lite analyze path"
+      ],
+      "unresolved": []
+    },
     {"id": "R5", "name": "release-scoped-regression", "status": "PENDING", "unresolved": []},
     {"id": "R6", "name": "exact-sha-human-acceptance-and-publication", "status": "PENDING", "unresolved": []}
   ],
-  "current_next_action": "Open draft PR to execute Static contract for R1.1, then complete R1.2 coverage inventory before any pedagogical rewrite."
+  "current_next_action": "Commit R1.1 path-consumer correction, wait for fresh Static result, then start R1.2 coverage inventory."
 }
