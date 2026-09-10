@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import socket
@@ -225,6 +226,10 @@ def write_negative_pdf(path: Path) -> None:
     path.write_bytes(data)
 
 
+def file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def by_id(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     checks = report.get("checks")
     if not isinstance(checks, list) or not checks:
@@ -345,6 +350,9 @@ def main() -> None:
             negative = Path(temp) / "web-lite-negative-letter.pdf"
             write_negative_pdf(negative)
 
+            positive_sha256 = file_sha256(positive)
+            negative_sha256 = file_sha256(negative)
+
             positive_report = analyze_through_ui(browser, positive, args.profile)
             validate_schema(positive_report, args.profile, contract, catalog)
             positive_checks = by_id(positive_report)
@@ -391,6 +399,8 @@ def main() -> None:
                 "driver_log": str(driver_log),
                 "positive": {
                     "file": positive_report["file"],
+                    "sha256": positive_sha256,
+                    "bytes": positive.stat().st_size,
                     "pages": positive_report["pages"],
                     "verdict": positive_report["verdict"],
                     "pdf_open": positive_checks["pdf.open"]["status"],
@@ -401,6 +411,8 @@ def main() -> None:
                 },
                 "negative": {
                     "file": negative_report["file"],
+                    "sha256": negative_sha256,
+                    "bytes": negative.stat().st_size,
                     "pages": negative_report["pages"],
                     "verdict": negative_report["verdict"],
                     "pdf_open": negative_checks["pdf.open"]["status"],
@@ -416,6 +428,7 @@ def main() -> None:
             print(
                 "WEB-LITE-E2E-EVIDENCE status=PASS "
                 f"profile={args.profile} positive_pages={positive_report['pages']} "
+                f"positive_sha256={positive_sha256} negative_sha256={negative_sha256} "
                 f"positive_verdict={positive_report['verdict'].replace(' ', '_')} "
                 "positive_pdf_open=PASS positive_a4=PASS positive_margins=PASS "
                 "negative_pdf_open=PASS negative_a4=FAIL negative_verdict=FAIL "

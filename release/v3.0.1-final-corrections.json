@@ -1,5 +1,5 @@
 {
-  "schema_version": 19,
+  "schema_version": 20,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -420,7 +420,7 @@
         "generated normative catalog byte identity PASS",
         "relative browser import closure PASS",
         "font.embedded and pdfa.deep remain MANUAL REVIEW in Web/Lite",
-        "uploaded web-lite-e2e JSON and ChromeDriver log independently inspected"
+        "uploaded web-lite-e2e JSON and ChromeDriver log independently inspected, including positive/negative input SHA-256"
       ],
       "first_implementation_sha": "57043432a5e1f94780bfbac3af0b9b199dd12d27",
       "failed_development_runs": [
@@ -452,7 +452,9 @@
       "corrective_changes": [
         "tests/integration/web-lite-e2e.py: 90-second session creation budget and persisted verbose ChromeDriver log",
         ".github/workflows/linux-integration.yml: upload web-lite JSON/log diagnostics even on browser failure",
-        "tests/checks/linux_integration_suites.py: enforce ChromeDriver-log artifact wiring"
+        "tests/checks/linux_integration_suites.py: enforce ChromeDriver-log artifact wiring",
+        "tests/integration/web-lite-e2e.py: bind positive/negative browser verdicts to exact input SHA-256 and byte size",
+        ".github/workflows/linux-integration.yml: evidence upload condition depends only on JSON/ChromeDriver diagnostics, not the positive PDF snapshot"
       ]
     },
     "R5": {
@@ -462,5 +464,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Inspect exact corrective R4 HEAD workflows. Require scope=web-lite container PASS and host Chrome E2E PASS; inspect web-lite-e2e.json and web-lite-chromedriver.log. If browser startup still fails, classify using retained driver log before changing configuration. Do not weaken PDF assertions. Only exact-HEAD browser evidence may close R4 and open R5."
+  "current_next_action": "Inspect exact corrective R4 HEAD workflows. Require scope=web-lite container PASS and host Chrome E2E PASS; independently inspect web-lite-e2e.json and web-lite-chromedriver.log, including exact positive/negative input SHA-256 and bytes. If browser startup still fails, classify using retained driver log before changing configuration. Do not weaken PDF assertions. Only exact-HEAD browser evidence may close R4 and open R5."
 }
