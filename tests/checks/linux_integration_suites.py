@@ -46,6 +46,8 @@ def main() -> None:
         fail("complete suite must remain the wildcard full PR integration contract")
     if SUITES.get("distribution") != ("distribution-bundles",):
         fail("distribution suite must remain a first-class PR-only public bundle gate")
+    if SUITES.get("web-lite") != ("validator-source", "web-lite-positive"):
+        fail("web-lite suite must prepare validator sources and a stable positive reference snapshot")
 
     for suite, checks in SUITES.items():
         if checks == ("*",):
@@ -59,6 +61,9 @@ def main() -> None:
         fail("validation runner must register exactly one distribution-bundles check")
     if distribution_checks[0].modes != ("pr",):
         fail("distribution-bundles runner check must remain PR-only; make release-check owns the release execution")
+    web_positive = [check for check in validation_run.CHECKS if check.name == "web-lite-positive"]
+    if len(web_positive) != 1 or web_positive[0].modes != ("pr",) or web_positive[0].depends != ("reference",):
+        fail("web-lite-positive must remain one PR-only snapshot directly dependent on reference")
 
     required_manual_choices = ("auto", *SUITES.keys())
     missing_choices = [
@@ -84,6 +89,12 @@ def main() -> None:
         "release-candidate-full-pr",
         "unzip",
         'git config --global --add safe.directory "$PWD"',
+        "Run Web/Lite browser E2E",
+        "tests/integration/web-lite-e2e.py",
+        "artifacts/validation/web-lite-positive.pdf",
+        "artifacts/validation/web-lite-e2e.json",
+        "Upload Web/Lite browser evidence",
+        "web-lite-e2e-${{ github.run_id }}",
     ):
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
@@ -164,6 +175,14 @@ def main() -> None:
         fail("distribution wrapper changes must select the distribution suite")
     if infer_suites([DISTRIBUTION_GATE]) != ("distribution",):
         fail("distribution gate changes must select the distribution suite")
+    if infer_suites(["validator/app.js"]) != ("web-lite",):
+        fail("Web/Lite application changes must select the web-lite suite")
+    if infer_suites(["validator/normative-catalog.js"]) != ("web-lite",):
+        fail("generated Web/Lite catalog changes must select the web-lite suite")
+    if infer_suites(["tests/integration/web-lite-e2e.py"]) != ("web-lite",):
+        fail("browser E2E changes must select the web-lite suite")
+    if infer_suites(["tests/run.py", "validator/app.js"]) != ("web-lite",):
+        fail("orchestration plus Web/Lite changes must retain web-lite scope")
     if infer_suites(["tests/run.py", DISTRIBUTION_BUILDER]) != ("distribution",):
         fail("orchestration plus distribution changes must select distribution, not complete")
     if infer_suites(
@@ -227,7 +246,8 @@ def main() -> None:
         "release_version_source=makefile recursion_safe_version_capture=true "
         "human_review_pairs_retained=true release_marker_full_pr_dominates_incremental=true "
         "release_assets_retained=true correction_state_docs_only=true "
-        "canonical_reference_artifact=true release_workflow_orchestration_smoke=true"
+        "canonical_reference_artifact=true release_workflow_orchestration_smoke=true "
+        "web_lite_first_class=true browser_e2e_host=true"
     )
 
 

@@ -28,6 +28,7 @@ SUITES: dict[str, tuple[str, ...]] = {
     "research-project": ("research-project",),
     "profiles": ("profiles", "build-path", "multivolume", "catalog-card"),
     "distribution": ("distribution-bundles",),
+    "web-lite": ("validator-source", "web-lite-positive"),
     "article": (
         "validator-source", "scientific-article-profile", "scientific-article-front-block",
         "scientific-article-foreign-elements", "scientific-article-body",
@@ -81,6 +82,7 @@ PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("profiles", ("tests/integration/profile-matrix", "tests/integration/build-path", "tests/integration/multivolume", "tests/integration/catalog-card", "tests/smoke/base-profile.tex")),
     ("reference-document", ("template/main.tex", "template/chapters/", "tests/integration/reference-document", "tests/integration/reference-corpus", "tests/integration/pdf-validator")),
     ("distribution", ("tools/build-public-bundles.py", "tools/build-distribution-bundles.py", "tests/integration/distribution-bundles.sh")),
+    ("web-lite", ("validator/", "tests/checks/validator_source.py", "tests/integration/web-lite-e2e.py")),
 )
 
 
@@ -145,6 +147,11 @@ def self_test() -> None:
         ("tools/build-distribution-bundles.py",): ("distribution",),
         ("tests/integration/distribution-bundles.sh",): ("distribution",),
         ("tests/run.py", "tools/build-public-bundles.py"): ("distribution",),
+        ("validator/app.js",): ("web-lite",),
+        ("validator/normative-catalog.js",): ("web-lite",),
+        ("tests/checks/validator_source.py",): ("web-lite",),
+        ("tests/integration/web-lite-e2e.py",): ("web-lite",),
+        ("tests/run.py", "validator/app.js"): ("web-lite",),
         ("tests/integration/scientific-article-profile.sh",): ("article",),
         ("tests/integration/scientific-article-recommendations.sh",): ("article",),
         ("tests/run.py", "tests/integration/scientific-article-recommendations.sh"): ("article",),

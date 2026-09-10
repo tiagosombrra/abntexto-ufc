@@ -35,6 +35,7 @@ on:
           - research-project
           - profiles
           - distribution
+          - web-lite
           - smoke
 
 permissions:
@@ -151,3 +152,35 @@ jobs:
             scope="${{ steps.scope.outputs.scope }}"
             echo "Running Linux integration scope: $scope"
             python3 tests/run.py --mode pr --suite "$scope"
+
+      - name: Run Web/Lite browser E2E
+        if: steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s artifacts/validation/web-lite-positive.pdf
+          command -v chromedriver
+          if command -v google-chrome >/dev/null 2>&1; then
+            google-chrome --version
+          elif command -v chromium >/dev/null 2>&1; then
+            chromium --version
+          elif command -v chromium-browser >/dev/null 2>&1; then
+            chromium-browser --version
+          else
+            echo 'Web/Lite E2E failed: Chrome/Chromium is not installed on the GitHub runner.'
+            exit 1
+          fi
+          chromedriver --version
+          python3 tests/integration/web-lite-e2e.py \
+            --pdf artifacts/validation/web-lite-positive.pdf \
+            --profile portable \
+            --evidence artifacts/validation/web-lite-e2e.json
+
+      - name: Upload Web/Lite browser evidence
+        if: always() && steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite')) && hashFiles('artifacts/validation/web-lite-e2e.json') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: web-lite-e2e-${{ github.run_id }}
+          path: artifacts/validation/web-lite-e2e.json
+          retention-days: 14
+          if-no-files-found: error

@@ -44,6 +44,13 @@ CHECKS = (
     Check("validator-source", "PDF validator sources", ("python3", "tests/checks/validator_source.py")),
     Check("reference", "Reference document", ("sh", "tests/integration/reference-document.sh")),
     Check(
+        "web-lite-positive",
+        "Web/Lite positive reference snapshot",
+        ("cp", "template/main.pdf", "artifacts/validation/web-lite-positive.pdf"),
+        modes=("pr",),
+        depends=("reference",),
+    ),
+    Check(
         "reference-corpus",
         "Reference corpus",
         ("sh", "tests/integration/reference-corpus.sh"),

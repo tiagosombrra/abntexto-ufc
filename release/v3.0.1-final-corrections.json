@@ -1,5 +1,5 @@
 {
-  "schema_version": 17,
+  "schema_version": 18,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -28,7 +28,8 @@
       "active_lot_evidence",
       "older_docs",
       "conversation_memory"
-    ]
+    ],
+    "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -118,6 +119,20 @@
           "ctan_pkgcheck": "4.1.0 PASS"
         }
       }
+    },
+    "web_lite_integration_classification": {
+      "status": "IMPLEMENTED_PENDING_CI",
+      "suite": "web-lite",
+      "container_checks": [
+        "validator-source",
+        "reference",
+        "web-lite-positive"
+      ],
+      "host_check": "tests/integration/web-lite-e2e.py",
+      "host_browser": "Chrome/Chromium via chromedriver",
+      "evidence": "artifacts/validation/web-lite-e2e.json",
+      "complete_scope_also_runs_browser_e2e": true,
+      "fourth_workflow_added": false
     }
   },
   "work_packages": {
@@ -332,7 +347,7 @@
       }
     },
     "R4": {
-      "status": "IN_PROGRESS",
+      "status": "IMPLEMENTED_PENDING_CI",
       "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
       "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
@@ -348,6 +363,63 @@
         "font.embedded and pdfa.deep remain MANUAL REVIEW in Web/Lite",
         "no fourth workflow",
         "no public deployment claim without repository evidence"
+      ],
+      "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
+      "implementation": {
+        "generated_catalog": "validator/normative-catalog.js",
+        "generator": "tools/normative_catalog.py --emit-web",
+        "generated_catalog_byte_identity_required": true,
+        "relative_import_closure_required": true,
+        "productive_analysis_export": "analyze",
+        "productive_report_accessor": "getLastReport",
+        "positive_snapshot_check": "web-lite-positive",
+        "positive_source": "template/main.pdf produced by existing reference check",
+        "browser_e2e": "tests/integration/web-lite-e2e.py",
+        "browser_interaction": "productive index.html file/profile/analyze controls",
+        "positive_profile": "portable",
+        "negative_fixture": "generated valid Letter-size PDF",
+        "positive_required": [
+          "pdf.open=PASS",
+          "layout.a4=PASS",
+          "layout.margins=PASS",
+          "verdict!=FAIL"
+        ],
+        "negative_required": [
+          "pdf.open=PASS",
+          "layout.a4=FAIL",
+          "verdict=FAIL"
+        ],
+        "deep_boundaries": [
+          "font.embedded=MANUAL REVIEW",
+          "pdfa.deep=MANUAL REVIEW"
+        ],
+        "no_upload_api": true,
+        "public_deployment_claim": false
+      },
+      "changed_surfaces": [
+        "validator/normative-catalog.js",
+        "validator/app.js",
+        "validator/README.md",
+        "tests/checks/validator_source.py",
+        "tests/integration/web-lite-e2e.py",
+        "tests/run.py",
+        "tests/integration_suites.py",
+        "tests/checks/linux_integration_suites.py",
+        ".github/workflows/linux-integration.yml",
+        "AGENTS.md",
+        "docs/V3.0.1-R4-EVIDENCE.md",
+        "docs/V3-CONTINUATION.md",
+        "release/v3.0.1-final-corrections.json"
+      ],
+      "pending_acceptance": [
+        "Static Contract PASS on exact R4 implementation HEAD",
+        "Linux Integration web-lite scope PASS on exact R4 implementation HEAD",
+        "real Chrome productive UI positive PDF evidence PASS",
+        "real Chrome productive UI negative non-A4 evidence PASS",
+        "generated normative catalog byte identity PASS",
+        "relative browser import closure PASS",
+        "font.embedded and pdfa.deep remain MANUAL REVIEW in Web/Lite",
+        "uploaded web-lite-e2e JSON independently inspected"
       ]
     },
     "R5": {
@@ -357,5 +429,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Implement R4 from docs/V3.0.1-R4-EVIDENCE.md: deterministic tracked normative-catalog.js + byte-identity/import-closure static checks + actual Chrome Web/Lite UI E2E using a real canonical/public PDF and a valid negative PDF. Preserve deep-only MANUAL REVIEW boundaries. Record every failed run before rerun; R5 remains blocked."
+  "current_next_action": "After the R4 implementation commit is promoted, inspect exact-HEAD Static and Linux Integration. Require scope=web-lite and WEB-LITE-E2E-EVIDENCE status=PASS using productive UI with the stable real reference snapshot and valid non-A4 negative PDF; inspect the uploaded JSON. Preserve failed runs before rerun. Only then mark R4 DONE and open R5."
 }

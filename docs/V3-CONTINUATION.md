@@ -88,9 +88,9 @@ Accepted corrective source: `2556489da23e16495fc51ebf093f9f4704c6d52f`.
 
 The first implementation failures #409/#123 and their causes remain retained in `docs/V3.0.1-R3-EVIDENCE.md`.
 
-## R4 — IN PROGRESS
+## R4 — IMPLEMENTED, CI PENDING
 
-Known blocker: `validator/app.js` imports `./normative-catalog.js`, but that file is absent from the tracked static validator tree. R4 must generate/track it deterministically, prove clean relative-module closure and run a real positive canonical/public PDF plus a negative PDF through the actual Web/Lite `analyze(file, profile)` path. Deep-only checks remain REVIEW rather than false PASS. Do not claim public deployment without repository evidence.
+The R4 implementation closes both entry defects in source: `validator/normative-catalog.js` is generated/tracked and byte-compared against the authoritative generator; the source gate proves relative-module closure; and the Linux `web-lite` scope snapshots the real canonical/reference PDF and drives the productive UI in Chrome with positive and non-A4 negative PDFs. Deep-only checks remain `MANUAL REVIEW`. No fourth workflow or public-deployment claim is introduced. Evidence contract: `docs/V3.0.1-R4-EVIDENCE.md`.
 
 ## R5/R6 — PENDING
 
@@ -108,7 +108,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Implement R4 from `docs/V3.0.1-R4-EVIDENCE.md`: materialize a deterministic tracked `validator/normative-catalog.js`, make the source gate regenerate and compare it exactly, prove all local relative imports close, expose/use the same productive Web/Lite analysis path for automation, and run the real canonical/public PDF plus a deliberately negative PDF through the actual browser UI in Chrome. Keep Deep-only `font.embedded` and `pdfa.deep` as `MANUAL REVIEW`; do not claim public Pages deployment without repository evidence. Update the machine state, R4 evidence and this handoff on every material result.
+Resolve the active branch HEAD. If the R4 implementation is active, inspect Static and Linux Integration on that exact SHA. Linux must select `web-lite`, run the host Chrome E2E and emit/upload `web-lite-e2e.json`. Require the real positive PDF to pass `pdf.open`, A4 and margin checks without top-level FAIL; require the valid non-A4 PDF to produce `layout.a4=FAIL` and verdict `FAIL`; require `font.embedded` and `pdfa.deep` to remain `MANUAL REVIEW`. Preserve any failed run before rerun. Close R4 only after exact-HEAD browser evidence is independently inspected; then open R5.
 
 ## Documentation discipline
 
