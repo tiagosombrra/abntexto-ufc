@@ -1,8 +1,9 @@
 {
-  "schema_version": 6,
-  "purpose": "V3 Release final exact-main recertification marker with mandatory CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 7,
+  "purpose": "V3 Release recovery marker for 3.0.1 with exact-SHA certification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
-  "candidate_semantics": "the exact canonical main commit containing the final release gates, after that commit passes exact-SHA certification, CTAN pkgcheck and maintainer visual acceptance",
+  "target_version": "3.0.1",
+  "candidate_semantics": "the exact canonical main commit containing the 3.0.1 recovery/version/control changes, after that commit passes exact-SHA certification, current CTAN pkgcheck and maintainer visual acceptance",
   "integration_anchor": {
     "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
     "source": "PR #297 squash merge",
@@ -13,15 +14,31 @@
     "sha": "05399473827da7cf6b6c8bac36edc7115481773f",
     "source": "PR #298 squash merge",
     "status": "post-hardening-control-plane-integrated",
+    "taggable": false
+  },
+  "final_gate_anchor": {
+    "sha": "395899e1b2336ed268335d68e59e03452880c15e",
+    "source": "PR #301 merge",
+    "status": "final-pkgcheck-and-human-gate-controls-integrated",
     "taggable": false,
-    "reason": "The final seven-profile visual gate and executable CTAN pkgcheck gate intentionally follow this commit."
+    "reason": "A later 3.0.1 recovery commit changes version metadata and publication bytes, so this exact SHA remains baseline evidence only."
+  },
+  "premature_v3_0_0_publication": {
+    "tag": "v3.0.0",
+    "tagged_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
+    "github_release_public": true,
+    "classification": "premature-publication-superseded-for-final-publication",
+    "eligible_for_ctan_submission": false,
+    "silent_tag_retarget_allowed": false,
+    "recovery_version": "3.0.1",
+    "recovery_record": "docs/V3-RELEASE-RECOVERY.md"
   },
   "superseded_candidate": {
     "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
     "linux_release_run": 34303586773,
     "distribution_artifact_id": 10086299397,
     "status": "superseded-for-publication",
-    "reason": "Certified archives were technically reproducible but contained stale v2/pre-publication README text. Those bytes must never be published as v3.0.0 final."
+    "reason": "Certified archives were technically reproducible but contained stale v2/pre-publication README text. Those bytes must never be published as final v3 bytes."
   },
   "publication_hardening_evidence": {
     "pr": 297,
@@ -44,8 +61,19 @@
     "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
     "status": "accepted-baseline-evidence-not-final-after-later-control-commits"
   },
+  "pre_recovery_exact_main_evidence": {
+    "sha": "395899e1b2336ed268335d68e59e03452880c15e",
+    "linux_release_run": 34419086322,
+    "validation_artifact_id": 10130580177,
+    "distribution_artifact_id": 10130580899,
+    "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "pkgcheck": "PASS",
+    "status": "accepted-pre-recovery-baseline-only",
+    "reason": "The 3.0.1 recovery bump changes class identity metadata and archive bytes and therefore requires a fresh exact-SHA cycle."
+  },
   "final_candidate": {
-    "status": "pending-exact-main-recertification-and-human-approval",
+    "status": "pending-recovery-merge-exact-main-recertification-and-human-approval",
+    "version": "3.0.1",
     "source_branch": "main",
     "resolve_sha_from_git_on_canonical_main": true,
     "complete_linux_on_exact_main_release_marker_push": true,
@@ -55,13 +83,13 @@
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
   "required_artifact_set": [
-    "abntexto-ufc-3.0.0.zip",
-    "abntexto-ufc-template-3.0.0.zip",
-    "abntexto-ufc-overleaf-3.0.0.zip",
+    "abntexto-ufc-3.0.1.zip",
+    "abntexto-ufc-template-3.0.1.zip",
+    "abntexto-ufc-overleaf-3.0.1.zip",
     "SHA256SUMS"
   ],
   "ctan_upload": {
-    "archive": "abntexto-ufc-3.0.0.zip",
+    "archive": "abntexto-ufc-3.0.1.zip",
     "archive_count": 1,
     "top_level_directory": "abntexto-ufc",
     "runtime_implementation_files": ["abntexto-ufc.cls"],
@@ -80,7 +108,7 @@
   },
   "human_visual_acceptance": {
     "required_before_tag": true,
-    "state": "pending-explicit-maintainer-approval-on-final-exact-candidate",
+    "state": "pending-explicit-maintainer-approval-on-final-3.0.1-exact-candidate",
     "profiles": [
       "undergraduate-capstone",
       "specialization-capstone",
@@ -98,16 +126,17 @@
       "preflight": "pass",
       "page_by_page_visual_inspection": "pass",
       "final_gate_closed": false,
-      "reason": "Later tracked release-control commits require regeneration from the final exact candidate before approval."
+      "reason": "The final 3.0.1 pairs must be regenerated from the exact recovery candidate before approval."
     }
   },
   "final_tag_contract": {
-    "tag": "v3.0.0",
+    "tag": "v3.0.1",
     "tagged_commit_must_equal_certified_commit": true,
     "certified_commit_must_equal_visually_approved_commit": true,
     "certified_commit_must_equal_publication_source_commit": true,
     "create_only_after_pkgcheck_pass": true,
-    "create_only_after_human_visual_approval": true
+    "create_only_after_human_visual_approval": true,
+    "existing_v3_0_0_tag_must_not_be_silently_retargeted": true
   },
   "windows_literal_font_evidence": {
     "status": "retained-scope-valid",
