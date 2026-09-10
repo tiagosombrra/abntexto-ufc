@@ -4,9 +4,11 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 
 > **Status institucional:** este projeto é comunitário e não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.
 
-## Versão 3.0.0
+## Versão 3.0.1
 
 A série 3 introduz a classe `abntexto-ufc`, uma API pública única em inglês e suporte a perfis de trabalhos acadêmicos, projetos de pesquisa e artigos científicos. A versão 3 é incompatível em nível de API com a série 2: projetos antigos devem ser migrados em vez de misturar comandos das duas linhas.
+
+A versão 3.0.1 é a linha de recuperação de publicação da série 3. Ela preserva o runtime e a API aceitos na 3.0.0, mas exige uma nova certificação exata dos artefatos antes da publicação final e da submissão ao CTAN.
 
 O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).
 
@@ -15,7 +17,7 @@ O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.m
 - LaTeX2e;
 - `abntexto` 1.1 ou posterior;
 - `biblatex` e `biber` para fluxos bibliográficos;
-- TeX Live 2026 é o ambiente principal de certificação da versão 3.0.0.
+- TeX Live 2026 é o ambiente principal de certificação da versão 3.0.1.
 
 A classe é testada com pdfLaTeX e LuaLaTeX. Recursos opcionais podem exigir pacotes adicionais, conforme o perfil e os módulos habilitados.
 
@@ -77,11 +79,11 @@ Quando autorizado a utilizar uma marca institucional, o usuário deve fornecer o
 
 ## Distribuições
 
-A publicação da versão 3 produz três artefatos com finalidades distintas:
+A publicação da versão 3.0.1 produz três artefatos com finalidades distintas:
 
-- `abntexto-ufc-3.0.0.zip`: pacote canônico e enxuto para CTAN. O runtime distribuído é **somente `abntexto-ufc.cls`**; todos os módulos `.def` do repositório são incorporados deterministicamente dentro da classe e nenhum `.def` é enviado;
-- `abntexto-ufc-template-3.0.0.zip`: projeto editável para uso local, que pode preservar a organização modular do repositório;
-- `abntexto-ufc-overleaf-3.0.0.zip`: projeto autocontido para upload no Overleaf, incluindo a revisão fixada de `abntexto.cls` e podendo preservar a organização modular do repositório.
+- `abntexto-ufc-3.0.1.zip`: pacote canônico e enxuto para CTAN. O runtime distribuído é **somente `abntexto-ufc.cls`**; todos os módulos `.def` do repositório são incorporados deterministicamente dentro da classe e nenhum `.def` é enviado;
+- `abntexto-ufc-template-3.0.1.zip`: projeto editável para uso local, que pode preservar a organização modular do repositório;
+- `abntexto-ufc-overleaf-3.0.1.zip`: projeto autocontido para upload no Overleaf, incluindo a revisão fixada de `abntexto.cls` e podendo preservar a organização modular do repositório.
 
 Somente o primeiro arquivo é destinado à CTAN. Os bundles de template e Overleaf são conveniências de distribuição do GitHub e não fazem parte do upload CTAN.
 
