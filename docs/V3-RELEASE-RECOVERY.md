@@ -1,13 +1,15 @@
 # V3 Release Recovery — 3.0.1
 
-Updated: 2026-09-09
-Status: ACTIVE — RECOVERY CANDIDATE PREPARATION
+Updated: 2026-09-10
+Status: ACTIVE — COMBINED RUNTIME-FIX + RECOVERY CANDIDATE PREPARATION
 
 ## Purpose
 
 This document records the fail-closed recovery after a public GitHub `v3.0.0` tag and Release were found to exist before the repository's final exact-SHA release sequence had been completed.
 
-The recovery does not reopen accepted v3 runtime, public API, normative, librarian-review, document-profile or typography decisions. It reopens only the Release publication boundary.
+The recovery originally reopened only the Release publication boundary. During recovery, PR #302 exposed and corrected a concrete runtime defect in the populated unified illustration list. That fix was independently reviewed, covered by a populated regression case, and squash-merged to canonical `main` as `6d06d4ed42b2187b1483ea219ee055cfe975ece2` before the final 3.0.1 candidate was frozen. Consequently, the final 3.0.1 candidate must certify the combined #302 runtime correction and the release-recovery/control changes as one exact source state.
+
+Accepted v3 public API semantics, normative rules, librarian-review conclusions, document profiles and typography remain closed except where the #302 illustration-list defect directly required a runtime correction.
 
 ## Observed publication mismatch
 
@@ -23,19 +25,32 @@ A public GitHub Release named `abntexto-ufc 3.0.0` also exists for the earlier t
 
 No public CTAN acceptance/install evidence for `abntexto-ufc` was established when this recovery was opened.
 
+## Post-v3.0.0 runtime correction included in 3.0.1
+
+PR #302, `fix: render populated unified illustration lists safely`, corrected the project-owned `l@loii` renderer so populated unified illustration-list entries follow the two-argument `abntexto` list-entry contract. The regression fixture now writes and renders a real illustration-list entry and fails on warnings/overflows.
+
+PR #302 was squash-merged to `main` as:
+
+```text
+6d06d4ed42b2187b1483ea219ee055cfe975ece2
+```
+
+The recovery branch was then reconciled with that exact `main` state using a merge commit with both histories as parents. Therefore, all subsequent 3.0.1 certification evidence must be generated from a candidate containing this runtime fix. Pre-#302 certification evidence is historical baseline evidence only.
+
 ## Recovery decision
 
 The first publication candidate allowed to satisfy the current release contract is `3.0.1`.
 
-The recovery intentionally changes only release/version/control surfaces:
+The 3.0.1 scope now contains two deliberate classes of change:
 
+- the scoped #302 runtime correction for populated unified illustration-list rendering and its regression fixture;
 - canonical version metadata;
 - package/manual/README/CHANGELOG release metadata;
 - release workflows and distribution tests where the version was hard-coded;
 - exact-candidate generation and retention of the seven PDF/TeX review pairs required by the existing human gate;
 - machine roadmap, release-candidate marker and operational handoffs.
 
-Project-owned runtime `.def` modules, accepted public API semantics, normative rules, layout rules and document-profile behavior are out of scope unless a fresh regression demonstrates an actual defect.
+No other project-owned runtime module, public API semantic, normative rule, document-profile behavior or typographic rule is reopened unless the fresh combined regression demonstrates an actual defect.
 
 ## Historical v3.0.0 disposition
 
@@ -68,22 +83,26 @@ The artifact name is derived from the canonical release version and workflow run
 
 ## Recovery acceptance sequence
 
-1. merge the recovery control/version changes to canonical `main`;
-2. resolve the resulting exact `main` SHA dynamically from Git;
-3. require Static, complete Linux integration and Linux release check on that exact SHA;
-4. require current CTAN `pkgcheck` against `abntexto-ufc-3.0.1.zip` and classify all output;
-5. retain and physically audit the deterministic three-ZIP distribution plus `SHA256SUMS`;
-6. require the same Linux release run to generate and retain the seven exact-candidate PDF/`.tex` review pairs plus hashes/manifest;
-7. require A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight for every profile PDF;
-8. obtain explicit maintainer visual approval for all seven pairs;
-9. freeze exact publication hashes/evidence and prohibit rebuilds;
-10. create immutable `v3.0.1` on the certified and visually approved SHA;
-11. create the GitHub Release from the frozen assets and verify re-downloaded hashes;
-12. submit exactly `abntexto-ufc-3.0.1.zip` to CTAN;
-13. retain CTAN submission, acceptance and install evidence before Release closure.
+1. reconcile the recovery branch with canonical `main` containing PR #302;
+2. require Static, **complete** Linux integration and Linux release check on the combined recovery head before merge;
+3. merge the combined recovery to canonical `main` only after those PR gates pass;
+4. resolve the resulting exact canonical `main` SHA dynamically from Git;
+5. require Static, complete Linux integration and Linux release check again on that exact post-merge SHA;
+6. require current CTAN `pkgcheck` against `abntexto-ufc-3.0.1.zip` and classify all output;
+7. retain and physically audit the deterministic three-ZIP distribution plus `SHA256SUMS`;
+8. require the same Linux release run to generate and retain the seven exact-candidate PDF/`.tex` review pairs plus hashes/manifest;
+9. require A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight for every profile PDF;
+10. obtain explicit maintainer visual approval for all seven pairs;
+11. freeze exact publication hashes/evidence and prohibit rebuilds;
+12. create immutable `v3.0.1` on the certified and visually approved SHA;
+13. create the GitHub Release from the frozen assets and verify re-downloaded hashes;
+14. submit exactly `abntexto-ufc-3.0.1.zip` to CTAN;
+15. retain CTAN submission, acceptance and install evidence before Release closure.
 
 ## Scope impact
 
-The version bump changes `abntexto-ufc.cls` identity metadata and archive bytes, so the final 3.0.1 candidate requires fresh exact-SHA release certification. Retained Windows/literal-font evidence remains scope-valid unless font runtime, engine behavior or the Windows certification contract changes.
+Both the #302 runtime correction and the 3.0.1 version/release changes affect publication bytes, so the final 3.0.1 candidate requires a fresh exact-SHA release certification. The existing pre-#302 and pre-recovery release runs remain useful only as historical baselines.
 
-Every material advance must update the affected control documents and machine state. Targeted checks do not replace the mandatory Release phase-end regression, and automated success does not replace explicit maintainer visual approval.
+Retained Windows/literal-font evidence remains scope-valid because #302 does not alter font runtime, font setup, engine behavior or the Windows certification contract. Any later change to those surfaces forces fresh Windows recertification.
+
+Every material advance must update the affected control documents and machine state. Targeted checks do not replace the mandatory Release phase-end regression, a green workflow whose heavy integration step was skipped does not satisfy the gate, and automated success does not replace explicit maintainer visual approval.
