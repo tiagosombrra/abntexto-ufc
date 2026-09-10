@@ -1,10 +1,10 @@
 # abntexto-ufc v3 — Engineering Roadmap for Release Recovery 3.0.1
 
-Updated: 2026-09-09
+Updated: 2026-09-10
 
 ## Current status
 
-**Release is ACTIVE — 3.0.1 recovery / final exact-main recertification pending.** Publication hardening (PR #297), control synchronization (PR #298) and final pkgcheck/human-gate controls (PR #301) are merged. A public `v3.0.0` tag/Release was later found to exist on an earlier SHA, so the final publication boundary is being recovered under `3.0.1` rather than silently retargeting the already-public tag.
+**Release is ACTIVE — 3.0.1 recovery / final exact-main recertification pending.** Publication hardening (PR #297), control synchronization (PR #298), final pkgcheck/human-gate controls (PR #301) and the scoped runtime correction (PR #302) are merged or incorporated into the recovery candidate. A public `v3.0.0` tag/Release was found to exist on an earlier SHA, so the final publication boundary is being recovered under `3.0.1` rather than silently retargeting the already-public tag.
 
 | Phase | Status | Exit requirement |
 |---|---|---|
@@ -25,6 +25,7 @@ Updated: 2026-09-09
 | Publication-hardening PR | #297 — MERGED |
 | Post-hardening control PR | #298 — MERGED, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
 | Final release-gate PR | #301 — MERGED as `395899e1b2336ed268335d68e59e03452880c15e` |
+| Post-v3.0.0 runtime correction | #302 — MERGED as `6d06d4ed42b2187b1483ea219ee055cfe975ece2`; populated unified illustration-list renderer fixed |
 | Pre-recovery release evidence | run `34419086322`: `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS |
 | Public `v3.0.0` | exists on `05399473827da7cf6b6c8bac36edc7115481773f`; premature/superseded for final publication |
 | Librarian matrix | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
@@ -56,11 +57,11 @@ Updated: 2026-09-09
 
 ## R4 — 3.0.1 recovery merge
 
-**IN PROGRESS.** Update canonical version metadata, CTAN/public documentation, machine state and final release orchestration without changing accepted runtime `.def` modules or normative semantics. The workflow and distribution regression must derive the release version from the canonical `Makefile` version instead of duplicating literal archive versions.
+**IN PROGRESS.** Combine the scoped PR #302 runtime correction with canonical 3.0.1 version metadata, CTAN/public documentation, machine state and final release orchestration while preserving accepted API, normative, profile and typography semantics outside that correction. Release-version capture must derive from the canonical `Makefile` version using recursion-safe output so GNU Make directory diagnostics cannot contaminate artifact names.
 
 ## R5 — Final exact-main 3.0.1 recertification
 
-**BLOCKED BY R4.** Resolve the exact canonical `main` SHA after recovery merge and run Static, automatic `scope=complete` Linux integration and Linux release check on that same SHA. The earlier `395899e1...` PASS remains baseline evidence only because 3.0.1 changes class identity metadata and publication bytes.
+**BLOCKED BY R4.** Resolve the exact canonical `main` SHA after recovery merge and run Static, automatic `scope=complete` Linux integration and Linux release check on that same SHA. The earlier `395899e1...` PASS remains baseline evidence only because PR #302 changes runtime and 3.0.1 changes class identity metadata and publication bytes.
 
 Required invariant:
 
@@ -92,4 +93,4 @@ A preliminary 7/7 set from `25c6ab09...` passed automated preflight and page-by-
 
 ## Operating discipline
 
-Every **material advance** or repository modification updates affected documentation and machine state in the same work cycle. `README.md` tracks user-facing facts, not transient CI state. Targeted checks never replace the final **phase-end regression**, automated green tests never replace explicit maintainer visual approval, and already-public tags are never silently retargeted to repair release history.
+Every **material advance** or repository modification updates affected documentation and machine state in the same work cycle. `README.md` tracks user-facing facts, not transient CI state. Deterministic release metadata and orchestration checks must be exhausted before expensive CI. Targeted checks never replace the final **phase-end regression**, automated green tests never replace explicit maintainer visual approval, and already-public tags are never silently retargeted to repair release history.

@@ -18,6 +18,8 @@ RELEASE_WORKFLOW = ROOT / ".github" / "workflows" / "linux-release-check.yml"
 ROADMAP = ROOT / "release" / "v3-roadmap.json"
 PROFILE_MATRIX = ROOT / "tests" / "integration" / "profile-matrix.sh"
 ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.sh"
+DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh"
+RELEASE_REVIEW_PAIRS = ROOT / "tests" / "integration" / "release-review-pairs.sh"
 RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
 
 
@@ -31,6 +33,8 @@ def main() -> None:
     roadmap = json.loads(ROADMAP.read_text(encoding="utf-8"))
     profile_matrix = PROFILE_MATRIX.read_text(encoding="utf-8")
     article_profile = ARTICLE_PROFILE.read_text(encoding="utf-8")
+    distribution_bundles = DISTRIBUTION_BUNDLES.read_text(encoding="utf-8")
+    release_review_pairs = RELEASE_REVIEW_PAIRS.read_text(encoding="utf-8")
     known_checks = {check.name for check in validation_run.CHECKS}
 
     if SUITES.get("complete") != ("*",):
@@ -81,7 +85,7 @@ def main() -> None:
         "make distribution-bundles",
         "Read release version",
         "id: release-version",
-        'version=$(make version)',
+        'version=$(make --no-print-directory version)',
         "steps.release-version.outputs.version",
         "RELEASE_VERSION",
         'dist/abntexto-ufc-$RELEASE_VERSION.zip',
@@ -102,6 +106,20 @@ def main() -> None:
         )
     if "dist/abntexto-ufc-ctan-" in release_workflow:
         fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
+
+    # Capturing `make version` from a recursive make leaks GNU Make's
+    # Entering/Leaving-directory diagnostics into the command substitution.
+    # Require the quiet form everywhere release identity is captured.
+    version_capture_surfaces = {
+        "release workflow": release_workflow,
+        "distribution bundle gate": distribution_bundles,
+        "review-pair generator": release_review_pairs,
+    }
+    for surface, text in version_capture_surfaces.items():
+        if "$(make version)" in text:
+            fail(f"{surface} contains recursion-unsafe make version capture")
+        if "make --no-print-directory version" not in text:
+            fail(f"{surface} must capture the canonical version without GNU Make directory chatter")
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
@@ -163,8 +181,9 @@ def main() -> None:
         "step4_registered=true step5_registered=true "
         "release_candidate_forces_complete=true release_check_pr_trigger=true "
         "release_candidate_head_checkout=true canonical_ctan_archive=true "
-        "release_version_source=makefile human_review_pairs_retained=true "
-        "release_marker_full_pr_dominates_incremental=true release_assets_retained=true"
+        "release_version_source=makefile recursion_safe_version_capture=true "
+        "human_review_pairs_retained=true release_marker_full_pr_dominates_incremental=true "
+        "release_assets_retained=true"
     )
 
 

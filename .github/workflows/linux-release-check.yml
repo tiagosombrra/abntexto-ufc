@@ -48,7 +48,7 @@ jobs:
       - name: Read release version
         id: release-version
         shell: bash
-        run: echo "version=$(make version)" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(make --no-print-directory version)" >> "$GITHUB_OUTPUT"
 
       - name: Run repository release contract, build assets and execute CTAN pkgcheck
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
@@ -69,7 +69,7 @@ jobs:
             export SOURCE_DATE_EPOCH="$(git show -s --format=%ct "$SOURCE_COMMIT_SHA")"
             export RELEASE_VERSION="${{ steps.release-version.outputs.version }}"
             test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
-            test "$(make version)" = "$RELEASE_VERSION"
+            test "$(make --no-print-directory version)" = "$RELEASE_VERSION"
             make release-check
             make distribution-bundles
             (

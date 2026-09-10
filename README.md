@@ -8,7 +8,7 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 
 A série 3 introduz a classe `abntexto-ufc`, uma API pública única em inglês e suporte a perfis de trabalhos acadêmicos, projetos de pesquisa e artigos científicos. A versão 3 é incompatível em nível de API com a série 2: projetos antigos devem ser migrados em vez de misturar comandos das duas linhas.
 
-A versão 3.0.1 é a linha de recuperação de publicação da série 3. Ela preserva o runtime e a API aceitos na 3.0.0, mas exige uma nova certificação exata dos artefatos antes da publicação final e da submissão ao CTAN.
+A versão 3.0.1 é a linha de recuperação de publicação da série 3. Ela preserva a API pública e as semânticas normativa, de perfis e tipográfica já aceitas, e inclui a correção de runtime da lista unificada de ilustrações da PR #302. Os artefatos finais são recertificados a partir do mesmo SHA antes da publicação e da submissão ao CTAN.
 
 O guia de migração está em [`docs/MIGRATING-TO-V3.md`](docs/MIGRATING-TO-V3.md).
 

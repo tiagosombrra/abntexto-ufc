@@ -1,6 +1,6 @@
 # CTAN / GitHub Release Guide — abntexto-ufc 3.0.1 Recovery
 
-Updated: 2026-09-09
+Updated: 2026-09-10
 
 This document defines the repository-controlled publication procedure for the recovered `abntexto-ufc` 3.0.1 release. It is a maintainer/release guide, not a claim of CTAN publication.
 
@@ -14,6 +14,7 @@ This document defines the repository-controlled publication procedure for the re
 | Publication hardening | merged via PR #297 |
 | Post-hardening control synchronization | merged via PR #298 |
 | Final pkgcheck/human-gate controls | merged via PR #301 as `395899e1b2336ed268335d68e59e03452880c15e` |
+| Post-v3.0.0 runtime correction | PR #302 merged as `6d06d4ed42b2187b1483ea219ee055cfe975ece2` and included in the 3.0.1 candidate |
 | Pre-recovery Linux release evidence | run `34419086322`: `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS |
 | Public `v3.0.0` | exists on `05399473827da7cf6b6c8bac36edc7115481773f`; premature/superseded for final publication |
 | Recovery target | `3.0.1`; existing `v3.0.0` must not be silently retargeted |
@@ -49,7 +50,7 @@ Release 3.0.1 produces exactly these public assets:
 
 There is no separate CTAN archive variant.
 
-The workflow and distribution regression must derive the release number from the canonical `Makefile` version rather than duplicating literal archive versions where practical.
+The workflow and distribution regression must derive the release number from the canonical `Makefile` version using recursion-safe output rather than duplicating literal archive versions where practical.
 
 ## CTAN archive shape
 
@@ -81,7 +82,7 @@ The release gate requires:
 - modular runtime directory absent during isolated compilation;
 - two independent distribution builds produce byte-identical archives.
 
-Historical evidence already demonstrated `1 cls / 0 def` with all 14 tracked runtime modules inlined. Final 3.0.1 certification must reproduce the contract on the exact recovered candidate SHA.
+Historical evidence already demonstrated `1 cls / 0 def` with all 14 tracked runtime modules inlined. Final 3.0.1 certification must reproduce the contract on the exact recovered candidate SHA containing PR #302.
 
 ## pkgcheck is an executable pre-tag gate
 
@@ -96,7 +97,7 @@ The Linux release gate downloads the current CTAN `pkgcheck` package at executio
 
 A nonzero `pkgcheck` result blocks Release. A zero exit status does not silently waive warnings; any warning visible in the retained output must receive an explicit disposition before freeze.
 
-The PASS on pre-recovery SHA `395899e1...` is baseline evidence only because the 3.0.1 bump changes package bytes.
+The PASS on pre-recovery SHA `395899e1...` is baseline evidence only because PR #302 and the 3.0.1 recovery change package bytes.
 
 ## Mandatory seven-profile human visual gate
 
@@ -126,26 +127,27 @@ Recovery policy:
 - preserve auditability of that public state;
 - publish recovered final bytes under `v3.0.1` only after the complete release sequence passes.
 
-Editing, deleting or visibly marking the historical GitHub Release is a separate explicit external publication-state action and does not replace source-tree recovery.
+Editing, deleting or visibly marking the historical GitHub Release is a separate explicit publication-state action and does not replace source-tree recovery.
 
 ## Final certification and publication sequence
 
-1. merge the 3.0.1 recovery/version/control changes to canonical `main`;
-2. resolve the resulting exact canonical `main` SHA;
-3. run Static, automatic complete Linux integration and Linux release check on that exact SHA;
-4. run any change-impact-required heavy Windows/font/PDF-A checks;
-5. build the three deterministic 3.0.1 public archives + `SHA256SUMS` from that exact SHA;
-6. validate checksums, ZIP integrity, monolithic-class equivalence and CTAN structural/semantic gates;
-7. physically audit the retained canonical CTAN ZIP;
-8. require current CTAN `pkgcheck` evidence for those exact bytes and classify every warning;
-9. regenerate all seven exact-candidate PDF/`.tex` review pairs and obtain explicit maintainer approval;
-10. freeze hashes/evidence; rebuilding publication bytes is then forbidden;
-11. create immutable `v3.0.1` pointing to the same certified and visually approved SHA;
-12. create GitHub 3.0.1 Release and attach exactly the frozen three ZIPs + `SHA256SUMS`;
-13. re-download GitHub Release assets and verify hashes;
-14. submit only `abntexto-ufc-3.0.1.zip` to CTAN;
-15. preserve submission receipt and later acceptance/install evidence;
-16. update post-publication documentation/state and close Release only after verification.
+1. complete deterministic metadata/orchestration preflight before another expensive CI cycle;
+2. merge the 3.0.1 recovery/version/control changes to canonical `main` only after the combined PR gates pass;
+3. resolve the resulting exact canonical `main` SHA;
+4. run Static, automatic complete Linux integration and Linux release check on that exact SHA;
+5. run any change-impact-required heavy Windows/font/PDF-A checks;
+6. build the three deterministic 3.0.1 public archives + `SHA256SUMS` from that exact SHA;
+7. validate checksums, ZIP integrity, monolithic-class equivalence and CTAN structural/semantic gates;
+8. physically audit the retained canonical CTAN ZIP;
+9. require current CTAN `pkgcheck` evidence for those exact bytes and classify every warning;
+10. regenerate all seven exact-candidate PDF/`.tex` review pairs and obtain explicit maintainer approval;
+11. freeze hashes/evidence; rebuilding publication bytes is then forbidden;
+12. create immutable `v3.0.1` pointing to the same certified and visually approved SHA;
+13. create GitHub 3.0.1 Release and attach exactly the frozen three ZIPs + `SHA256SUMS`;
+14. re-download GitHub Release assets and verify hashes;
+15. submit only `abntexto-ufc-3.0.1.zip` to CTAN;
+16. preserve submission receipt and later acceptance/install evidence;
+17. update post-publication documentation/state and close Release only after verification.
 
 Invariant:
 
@@ -173,4 +175,4 @@ Suggested administrative note:
 
 Building or validating a candidate is not CTAN acceptance. A successful GitHub Release is not CTAN acceptance. CTAN status is recorded as published only after explicit acceptance/install evidence exists. Any tracked change after final acceptance requires a new exact-candidate cycle before tagging.
 
-Every **material advance** updates affected control documents and machine state. Targeted checks never replace the mandatory **phase-end regression**.
+Every **material advance** updates affected control documents and machine state. Deterministic release errors must be caught before expensive CI where practical. Targeted checks never replace the mandatory **phase-end regression**.

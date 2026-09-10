@@ -1,6 +1,6 @@
 # V3 Release Readiness — Recovery 3.0.1
 
-Updated: 2026-09-09
+Updated: 2026-09-10
 Status: ACTIVE — RECOVERY MERGE / FINAL EXACT-MAIN RECERTIFICATION PENDING
 
 ## Phase readiness
@@ -20,19 +20,19 @@ A public GitHub `v3.0.0` tag and Release exist on `05399473827da7cf6b6c8bac36edc
 
 Because the repository requires the certified SHA, visually approved SHA, tagged SHA and publication-source SHA to be identical, the existing public `v3.0.0` cannot be treated as the recovered final release. The repository will not silently retarget that tag. Recovery target is `3.0.1`; the detailed decision is in `docs/V3-RELEASE-RECOVERY.md`.
 
-The recovery does not reopen accepted runtime `.def` modules, API semantics, normative rules, document profiles or the 34-point librarian review.
+The recovery reopens exactly one accepted runtime surface: the populated unified illustration-list renderer corrected by PR #302. API semantics, normative rules, document profiles, typography, the remaining runtime modules and the 34-point librarian review remain closed.
 
 ## Accepted pre-recovery evidence
 
-PR #297 closed publication-shape defects; PR #298 synchronized exact-main candidate controls; PR #301 integrated current CTAN `pkgcheck` and the mandatory seven-profile human visual gate.
+PR #297 closed publication-shape defects; PR #298 synchronized exact-main candidate controls; PR #301 integrated current CTAN `pkgcheck` and the mandatory seven-profile human visual gate. PR #302 then corrected the populated unified illustration-list renderer and was merged as `6d06d4ed42b2187b1483ea219ee055cfe975ece2`.
 
-Exact-main run `34419086322` on `395899e1b2336ed268335d68e59e03452880c15e` reported `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS and retained validation/distribution artifacts. This is strong baseline evidence, but not final 3.0.1 evidence because the recovery bump changes class identity metadata and archive bytes.
+Exact-main run `34419086322` on `395899e1b2336ed268335d68e59e03452880c15e` reported `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS and retained validation/distribution artifacts. This is strong baseline evidence, but not final 3.0.1 evidence because it predates PR #302 and the recovery changes.
 
 ## Final 3.0.1 controls
 
 Before the immutable `v3.0.1` tag:
 
-1. the recovery changes must be merged to canonical `main`;
+1. the recovery changes including PR #302 must be merged to canonical `main`;
 2. the resulting exact `main` SHA must pass Static, complete Linux integration and Linux release check;
 3. current CTAN `pkgcheck` must process the exact `abntexto-ufc-3.0.1.zip` bytes and retain version/full-output/archive-hash evidence;
 4. the deterministic three-ZIP distribution plus `SHA256SUMS` must be retained and physically audited;
@@ -51,7 +51,7 @@ Required profile set:
 6. `anonymized-research-project`;
 7. `scientific-article`.
 
-A preliminary set generated from the earlier baseline already passed 7/7 automated preflight and page-by-page assistant inspection. It does not close the final human gate because the final 3.0.1 pairs must come from the exact recovered candidate.
+A preliminary set generated from the earlier baseline already passed 7/7 automated preflight and page-by-page assistant inspection. It does not close the final human gate because the final 3.0.1 pairs must come from the exact recovered candidate containing PR #302.
 
 ## Final-candidate contract
 
@@ -67,7 +67,7 @@ No tracked commit is allowed between final acceptance and tag creation without r
 |---:|---|---|
 | 1 | Historical v3 technical/normative phases | **PASS / CLOSED** |
 | 2 | Classify public `v3.0.0` mismatch and select recovery version | **PASS — 3.0.1** |
-| 3 | Prepare 3.0.1 version/control/pipeline recovery | **IN PROGRESS** |
+| 3 | Integrate PR #302 and prepare 3.0.1 version/control/pipeline recovery | **IN PROGRESS** |
 | 4 | Merge recovery to canonical `main` | BLOCKED BY 3 |
 | 5 | Static + automatic `scope=complete` Linux integration + Linux release check on exact post-merge SHA | BLOCKED BY 4 |
 | 6 | Current CTAN `pkgcheck` on exact `abntexto-ufc-3.0.1.zip` and warning disposition | BLOCKED BY 5 |
@@ -81,6 +81,6 @@ No tracked commit is allowed between final acceptance and tag creation without r
 
 ## Windows literal-font scope
 
-Retained Windows literal-font certification remains scope-valid because the recovery does not alter font runtime or engine selection. A fresh Windows run becomes mandatory if font setup, engine behavior or the Windows certification contract changes before freeze.
+Retained Windows literal-font certification remains scope-valid because PR #302 and the recovery changes do not alter font runtime or engine selection. A fresh Windows run becomes mandatory if font setup, engine behavior or the Windows certification contract changes before freeze.
 
-Every **material advance** updates affected documentation and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. Automated green tests never substitute for explicit maintainer visual approval.
+Every **material advance** updates affected documentation and machine state in the same work cycle. Deterministic metadata/orchestration checks are performed before expensive CI. Targeted checks never replace the required **phase-end regression**. Automated green tests never substitute for explicit maintainer visual approval.
