@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/objects.def}[2026/08/21 UFC figures, tables, code and algorithms]
+\ProvidesFile{abntexto-ufc/objects.def}[2026/09/10 UFC figures, tables, code and algorithms]
 
 % Keep upper object identification/title within the real object width at body size.
 \makeatletter
@@ -39,6 +39,23 @@
   }
 \AtEndPreamble{\ufc_objects_setup_quadro:}
 
+% The unified illustration list follows the same two-argument contract as every
+% abntexto l@<extension> renderer: entry payload followed by page.
+% Standard LaTeX captions may contribute \numberline entries instead of
+% abntexto label-box entries. Initialize LaTeX's number-line width locally so
+% both payload forms are rendered within the UFC illustration-label column.
+\cs_new_protected:Npn \ufc_objects_set_illustration_renderer:
+  {
+    \cs_gset_protected:cpn { l@loii } ##1##2
+      {
+        \group_begin:
+          \exp_args:Nc \dim_set:Nn { @tempdima } { \loilabelwidth }
+          \extline{0pt}\loilabelwidth\loiifont{##1}{##2}
+        \group_end:
+      }
+  }
+\ufc_objects_set_illustration_renderer:
+
 % UFC lists use uppercase headings, but their entries preserve the title casing.
 \cs_new_protected:Npn \ufc_objects_setup_list_fonts:
   {
@@ -57,18 +74,25 @@
     \cs_if_exist:NT \lotifont  { \cs_gset:Npn \lotifont  { \normalfont } }
     \cs_if_exist:NT \locifont  { \cs_gset:Npn \locifont  { \normalfont } }
     \cs_if_exist:NT \loaifont  { \cs_gset:Npn \loaifont  { \normalfont } }
+
+    \ufc_objects_set_illustration_renderer:
   }
 \AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
 
-\cs_new_protected:Npn \ufc_objects_loii_entry:nn #1#2
-  { \extline{0pt}\loilabelwidth\normalfont{#1}{#2} }
+% Late package initialization can still replace custom list-entry handlers after
+% begin-document hooks. Reassert the renderer at the last possible point: just
+% before LaTeX reads the populated .loi file.
+\cs_new_protected:Npn \ufc_objects_start_illustration_toc:
+  {
+    \ufc_objects_set_illustration_renderer:
+    \ufcstarttoc{loi}
+  }
 
 \cs_new_protected:Npn \ufc_objects_print_illustration_list:
   {
-    \group_begin:
-      \cs_set_eq:cN { l@loii } \ufc_objects_loii_entry:nn
-      \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}}
-    \group_end:
+    \ufc_pretextual_list:nn
+      {Lista~de~Ilustrações}
+      {\ufc_objects_start_illustration_toc:}
   }
 
 \RenewDocumentCommand \ufcPrintListOfIllustrations { }
