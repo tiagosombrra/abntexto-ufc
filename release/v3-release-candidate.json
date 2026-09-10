@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "purpose": "V3 Release recovery marker for 3.0.1 with exact-SHA certification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
   "target_version": "3.0.1",
@@ -120,6 +120,18 @@
     ],
     "required_pair": "pdf-and-corresponding-tex-source",
     "required_preflight": ["a4", "pdfa-2b", "font-embedding", "recognized-warning-overflow-free"],
+    "generator": "tests/integration/release-review-pairs.sh",
+    "generator_dependency": {
+      "abntexto_commit": "4c03fd7b5a7af089627dedb547c53cad4eed2a2a",
+      "isolated_via_texinputs": true
+    },
+    "ci_artifact": {
+      "producer": "Linux release check",
+      "name_pattern": "abntexto-ufc-v3.0.1-review-pairs-<run_id>",
+      "contents": "seven PDF/TeX pairs plus SHA256SUMS and manifest.json",
+      "manifest_status_before_human_review": "READY_FOR_MAINTAINER_REVIEW",
+      "maintainer_approval_recorded_by_ci": false
+    },
     "preliminary_baseline_review": {
       "source_sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
       "profiles": 7,
