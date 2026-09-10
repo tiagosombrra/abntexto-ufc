@@ -65,10 +65,17 @@ jobs:
             for pass in 1 2 3; do
               pdflatex -interaction=nonstopmode -halt-on-error -file-line-error diagnostic.tex > "pass-${pass}.out" 2>&1
             done
-            printf '%s\n' '--- diagnostic.lof ---'
-            cat diagnostic.lof
-            printf '%s\n' '--- diagnostic.loi ---'
-            cat diagnostic.loi
+            printf '%s\n' '--- generated files ---'
+            find . -maxdepth 1 -type f -printf '%f\n' | sort
+            printf '%s\n' '--- auxiliary list-like files ---'
+            for file in diagnostic.lo* diagnostic.*toc*; do
+              if [[ -f "$file" ]]; then
+                echo "--- $file ---"
+                cat "$file"
+              fi
+            done
+            printf '%s\n' '--- aux writes ---'
+            grep -nE 'contentsline|addtoext|loii|lof|loi' diagnostic.aux || true
             printf '%s\n' '--- overfull diagnostics ---'
             grep -nE 'Overfull \\[hv]box' diagnostic.log || true
             printf '%s\n' '--- relevant macro meanings ---'
@@ -81,6 +88,7 @@ jobs:
             \typeout{MEANING-loflabelwidth=\meaning\loflabelwidth}
             \typeout{MEANING-loflabelbox=\meaning\loflabelbox}
             \typeout{MEANING-loilabelwidth=\meaning\loilabelwidth}
+            \typeout{MEANING-addtoext=\meaning\addtoext}
             \makeatother
             \end{document}
             TEX
