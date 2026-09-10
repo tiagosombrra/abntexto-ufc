@@ -41,10 +41,18 @@
 
 % The unified illustration list follows the same two-argument contract as every
 % abntexto l@<extension> renderer: entry payload followed by page.
+% Standard LaTeX captions may contribute \numberline entries instead of
+% abntexto label-box entries. Initialize LaTeX's number-line width locally so
+% both payload forms are rendered within the UFC illustration-label column.
 \cs_new_protected:Npn \ufc_objects_set_illustration_renderer:
   {
     \cs_gset_protected:cpn { l@loii } ##1##2
-      { \extline{0pt}\loilabelwidth\loiifont{##1}{##2} }
+      {
+        \group_begin:
+          \exp_args:Nc \dim_set:Nn { @tempdima } { \loilabelwidth }
+          \extline{0pt}\loilabelwidth\loiifont{##1}{##2}
+        \group_end:
+      }
   }
 \ufc_objects_set_illustration_renderer:
 
