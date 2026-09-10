@@ -8,6 +8,7 @@ reitoria="template/figures/ufc-reitoria.jpg"
 campus_preexisting=false
 reitoria_preexisting=false
 source_sha="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-local}}"
+version="$(make version)"
 module_count="$(find abntexto-ufc -type f -name '*.def' | wc -l | tr -d ' ')"
 [ -f "$campus" ] && campus_preexisting=true
 [ -f "$reitoria" ] && reitoria_preexisting=true
@@ -39,7 +40,7 @@ SOURCE_DATE_EPOCH="$epoch" python3 tools/build-distribution-bundles.py \
   sha256sum -c SHA256SUMS
 )
 
-python3 - "$work/dist" <<'PY'
+python3 - "$work/dist" "$version" <<'PY'
 from __future__ import annotations
 
 import re
@@ -50,7 +51,7 @@ from pathlib import Path, PurePosixPath
 
 root = Path(sys.argv[1])
 project_root = Path.cwd()
-version = "3.0.0"
+version = sys.argv[2]
 package_name = f"abntexto-ufc-{version}.zip"
 expected = {
     package_name,
@@ -146,7 +147,7 @@ with zipfile.ZipFile(package_path) as archive:
     readme = archive.read("abntexto-ufc/README.md").decode("utf-8")
     readme_fold = readme.casefold()
     required_readme = (
-        "Version: 3.0.0",
+        f"Version: {version}",
         "License: LaTeX Project Public License 1.3c or later",
         "No UFC logo",
         "Upstream dependency: https://ctan.org/pkg/abntexto",
@@ -220,10 +221,10 @@ mkdir -p "$evidence_dir"
 cat > "$evidence_dir/distribution-bundles.json" <<EOF
 {
   "status": "PASS",
-  "version": "3.0.0",
+  "version": "$version",
   "artifact_count": 3,
   "ctan_upload_archives": 1,
-  "ctan_archive": "abntexto-ufc-3.0.0.zip",
+  "ctan_archive": "abntexto-ufc-$version.zip",
   "checksums": "PASS",
   "archive_integrity": "PASS",
   "ctan_single_top_level_directory": true,
@@ -238,5 +239,5 @@ cat > "$evidence_dir/distribution-bundles.json" <<EOF
 }
 EOF
 
-echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=3.0.0 artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-3.0.0.zip monolithic_class=PASS def_files=0 inlined_modules=$module_count checksums=PASS archive_integrity=PASS institutional_marks_redistributed=false proprietary_fonts_redistributed=false source_date_epoch=$epoch"
+echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=$version artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-$version.zip monolithic_class=PASS def_files=0 inlined_modules=$module_count checksums=PASS archive_integrity=PASS institutional_marks_redistributed=false proprietary_fonts_redistributed=false source_date_epoch=$epoch"
 echo 'Distribution/public bundle integrity gate completed.'
