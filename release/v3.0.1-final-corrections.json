@@ -1,5 +1,5 @@
 {
-  "schema_version": 15,
+  "schema_version": 16,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -84,7 +84,7 @@
       "fail_closed_exception": "release/final-certification-candidate.json and release/v3-release-candidate.json force complete"
     },
     "distribution_integration_classification": {
-      "status": "IMPLEMENTED_PENDING_CI",
+      "status": "CORRECTIVE_COMMIT_IN_CI",
       "suite": "distribution",
       "pr_check": "distribution-bundles",
       "release_execution_owner": "make release-check",
@@ -183,7 +183,7 @@
       }
     },
     "R3": {
-      "status": "IMPLEMENTED_PENDING_CI",
+      "status": "CORRECTIVE_COMMIT_IN_CI",
       "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
       "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
       "public_reference_pdf": "abntexto-ufc-reference.pdf",
@@ -226,15 +226,53 @@
         "release/v3.0.1-final-corrections.json"
       ],
       "pending_acceptance": [
-        "Static Contract PASS on exact implementation HEAD",
-        "Linux Integration distribution scope PASS on exact implementation HEAD",
-        "Linux Release Check complete PASS on exact implementation HEAD",
-        "current CTAN pkgcheck PASS",
+        "Static Contract PASS on exact corrective HEAD",
+        "Linux Integration distribution scope PASS on exact corrective HEAD",
+        "Linux Release Check complete PASS on exact corrective HEAD",
+        "current CTAN pkgcheck PASS using host-fetched verified archive",
         "exact distribution artifact downloaded and independently inspected",
         "template embedded reference hash matches extracted rebuild",
         "Overleaf embedded reference hash matches extracted rebuild",
         "CTAN archive remains lean and excludes full reference",
         "public coat-of-arms disabled and no institutional mark/proprietary font redistributed"
+      ],
+      "first_implementation_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
+      "failed_development_runs": [
+        {
+          "workflow": "Static Contract",
+          "run_number": 488,
+          "run_id": 34503194586,
+          "status": "PASS",
+          "source_sha": "e37516470f7374b74f85f4d84d22598830b8b92f"
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 409,
+          "run_id": 34503194566,
+          "status": "FAIL",
+          "source_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
+          "scope": "distribution",
+          "cause": "TeX Live container did not mark mounted checkout as Git safe.directory; intentional git ls-files provenance read failed.",
+          "corrective_action": "Trust only $PWD inside the integration container and retain the tracked-file provenance check."
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 123,
+          "run_id": 34503194470,
+          "status": "FAIL",
+          "source_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
+          "repository_contract": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+          "distribution_gate": "PASS",
+          "pkgcheck_verdict": "NOT_REACHED",
+          "cause": "curl error 60 while validating the CA chain of a CTAN mirror redirect inside the TeX container.",
+          "corrective_action": "Fetch current pkgcheck.zip once on the GitHub host runner over verified HTTPS, validate ZIP, record download SHA-256, and consume the exact bytes inside the TeX container; TLS bypass forbidden."
+        }
+      ],
+      "corrective_changes": [
+        ".github/workflows/linux-integration.yml: add scoped safe.directory for mounted checkout",
+        ".github/workflows/linux-release-check.yml: host-runner verified HTTPS pkgcheck acquisition and download hash",
+        "tools/build-public-bundles.py: preserve git ls-files stderr on provenance failure",
+        "tests/checks/linux_integration_suites.py: enforce orchestration/TLS acquisition contract"
       ]
     },
     "R4": {
@@ -251,5 +289,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Resolve current release/v3.0.1-final-corrections HEAD and workflow state. Do not move the branch while Linux Release Check for the predecessor/current HEAD is running. After the atomic R3 implementation commit is published, inspect Static, Linux Integration (expected scope=distribution) and Linux Release Check on that exact SHA; preserve failures; if green download and independently inspect the exact distribution artifact. Then the next technical work cycle may mark R3 DONE while opening/implementing R4."
+  "current_next_action": "Resolve current release/v3.0.1-final-corrections HEAD and inspect the three workflows triggered by the R3 corrective commit. Require Static PASS, Linux Integration scope=distribution PASS, Linux Release Check SCOPE=complete PASS=38 FAIL=0 SKIP=0 plus current CTAN pkgcheck PASS. If green, independently inspect the exact-SHA distribution artifact, record hashes/inventories, then mark R3 DONE and promote R4. Preserve #409/#123 as failed development evidence."
 }

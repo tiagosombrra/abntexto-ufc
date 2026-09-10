@@ -83,6 +83,7 @@ def main() -> None:
         "release_candidate_marker=release/v3-release-candidate.json",
         "release-candidate-full-pr",
         "unzip",
+        'git config --global --add safe.directory "$PWD"',
     ):
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
@@ -104,6 +105,12 @@ def main() -> None:
         "Upload canonical reference PDF",
         "canonical-reference-${{ github.run_id }}",
         "make distribution-bundles",
+        "Fetch current CTAN pkgcheck archive",
+        ".ci-downloads/pkgcheck.zip",
+        "pkgcheck-download.sha256",
+        "--retry-all-errors",
+        "--proto '=https'",
+        "cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip",
         "Read release version",
         "id: release-version",
         'version=$(make --no-print-directory version)',
@@ -127,6 +134,10 @@ def main() -> None:
         )
     if "dist/abntexto-ufc-ctan-" in release_workflow:
         fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
+    if "--insecure" in release_workflow or "curl -k " in release_workflow:
+        fail("Release workflow must never bypass TLS verification for CTAN pkgcheck acquisition.")
+    if release_workflow.count("https://mirrors.ctan.org/support/pkgcheck.zip") != 1:
+        fail("Current CTAN pkgcheck must be fetched exactly once, on the host runner.")
 
     version_capture_surfaces = {
         "release workflow": release_workflow,

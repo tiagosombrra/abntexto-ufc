@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2 DONE; R3 IMPLEMENTED_PENDING_CI; publication blocked
+Status: RELEASE — R0/R1/R2 DONE; R3 CORRECTIVE_COMMIT_IN_CI; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -75,9 +75,11 @@ The implementation commit containing this handoff must be resolved dynamically f
 
 `tools/build-distribution-bundles.py` is intentionally unchanged because it already delegates usage-bundle generation to `tools/build-public-bundles.py`.
 
-R3 is not DONE until Static, Linux Integration and Linux Release Check pass on the exact implementation HEAD and the generated distribution artifact is downloaded/independently inspected. Full contract: `docs/V3.0.1-R3-EVIDENCE.md`.
+R3 is not DONE until Static, Linux Integration and Linux Release Check pass on the exact corrective HEAD and the generated distribution artifact is downloaded/independently inspected. Full contract: `docs/V3.0.1-R3-EVIDENCE.md`.
 
-Operational rule: do not move the branch while a Linux Release Check for its current HEAD is running. Failed development runs must be recorded before a rerun is accepted.
+The first implementation HEAD `e37516470f7374b74f85f4d84d22598830b8b92f` produced Static #488 PASS but two retained development failures: Linux Integration #409 failed because the TeX container did not trust the mounted checkout for the builder's intentional `git ls-files` provenance read; Linux Release Check #123 completed all 38 repository checks and the distribution gate, then failed before a pkgcheck verdict because the container's CA store could not validate a CTAN mirror redirect. The corrective commit trusts only `$PWD` in Linux Integration and fetches current `pkgcheck.zip` on the GitHub host runner over verified HTTPS, validates it, records its SHA-256 and passes the exact archive into the TeX container. TLS bypass is forbidden.
+
+Operational rule: do not move the branch while a Linux Release Check for its current HEAD is running. Failed development runs remain evidence even after a successful rerun.
 
 ## R4 — PENDING
 
@@ -99,7 +101,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the active branch HEAD and its workflow state. If the R3 implementation is already committed, wait for/inspect Static, Linux Integration and Linux Release Check on that exact SHA, then download and independently inspect the distribution artifact. If the implementation has not yet been committed, verify the predecessor Release Check is no longer running, then publish the prepared atomic R3 commit. Only after exact-SHA R3 evidence is accepted should the next technical commit close R3 and open/implement R4.
+Resolve the active branch HEAD and inspect the workflows triggered by the R3 corrective commit. Require Static PASS, Linux Integration `distribution` PASS and Linux Release Check complete PASS with a real current CTAN `pkgcheck` verdict. If green, download and independently inspect the exact-SHA distribution artifact and record hashes/inventories in `docs/V3.0.1-R3-EVIDENCE.md`, this handoff and the machine state. Only after that evidence closes R3 may R4 be promoted. If any gate fails, diagnose it from the retained run/log, document the failure before rerun, and keep publication blocked.
 
 ## Documentation discipline
 

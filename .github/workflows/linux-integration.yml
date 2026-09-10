@@ -145,6 +145,9 @@ jobs:
             apt-get update -y
             apt-get install -y --no-install-recommends make poppler-utils nodejs unzip
             node --version
+            # The TeX Live action runs in a container over the runner checkout.
+            # Git-backed distribution builders may inspect only this mounted checkout.
+            git config --global --add safe.directory "$PWD"
             scope="${{ steps.scope.outputs.scope }}"
             echo "Running Linux integration scope: $scope"
             python3 tests/run.py --mode pr --suite "$scope"

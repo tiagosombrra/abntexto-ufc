@@ -50,6 +50,29 @@ jobs:
         shell: bash
         run: echo "version=$(make --no-print-directory version)" >> "$GITHUB_OUTPUT"
 
+      - name: Fetch current CTAN pkgcheck archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .ci-downloads artifacts/validation
+          curl --fail --location --retry 3 --retry-delay 2 --retry-all-errors \
+            --proto '=https' --tlsv1.2 \
+            https://mirrors.ctan.org/support/pkgcheck.zip \
+            --output .ci-downloads/pkgcheck.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+
+          archive = Path(".ci-downloads/pkgcheck.zip")
+          if not archive.is_file() or archive.stat().st_size == 0:
+              raise SystemExit("Current CTAN pkgcheck download is missing or empty.")
+          with zipfile.ZipFile(archive) as handle:
+              bad = handle.testzip()
+              if bad is not None:
+                  raise SystemExit(f"Current CTAN pkgcheck archive is corrupt at {bad}.")
+          PY
+          sha256sum .ci-downloads/pkgcheck.zip | tee artifacts/validation/pkgcheck-download.sha256
+
       - name: Run repository release contract, build assets and execute CTAN pkgcheck
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
@@ -153,12 +176,12 @@ jobs:
                 )
             PY
 
-            # Fetch pkgcheck at execution time so this gate follows the version
-            # currently published by CTAN instead of permanently pinning one release.
+            # The host runner fetched the current CTAN pkgcheck archive over verified
+            # HTTPS before entering this container. Consume those exact bytes here so
+            # container CA-store drift cannot turn a package certification into a TLS failure.
             mkdir -p artifacts/validation /tmp/ctan-pkgcheck /tmp/ctan-candidate
-            curl --fail --location --retry 3 --retry-delay 2 \
-              https://mirrors.ctan.org/support/pkgcheck.zip \
-              --output /tmp/pkgcheck.zip
+            test -s .ci-downloads/pkgcheck.zip
+            cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip
             unzip -q /tmp/pkgcheck.zip -d /tmp/ctan-pkgcheck
 
             # CTAN publishes target-named standalone binaries rather than a stable
