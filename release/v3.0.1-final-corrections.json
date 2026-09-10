@@ -1,5 +1,5 @@
 {
-  "schema_version": 15,
+  "schema_version": 16,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -94,7 +94,9 @@
         "tests/integration/distribution-bundles.sh"
       ],
       "orchestration_plus_distribution": "distribution",
-      "release_candidate_marker_dominates": "complete"
+      "release_candidate_marker_dominates": "complete",
+      "mounted_checkout_requires_safe_directory": true,
+      "safe_directory_contract_test": "tests/checks/linux_integration_suites.py"
     }
   },
   "work_packages": {
@@ -185,6 +187,7 @@
     "R3": {
       "status": "IMPLEMENTED_PENDING_CI",
       "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
+      "initial_implementation_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
       "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
       "public_reference_pdf": "abntexto-ufc-reference.pdf",
       "implementation": {
@@ -212,6 +215,32 @@
         "institutional_marks_redistributed": false,
         "proprietary_fonts_redistributed": false
       },
+      "development_evidence": [
+        {
+          "workflow": "Static Contract",
+          "run_number": 488,
+          "run_id": 34503194586,
+          "source_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
+          "status": "PASS"
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 409,
+          "run_id": 34503194566,
+          "source_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
+          "scope": "distribution",
+          "status": "FAIL",
+          "failure": "mounted TeX Live container checkout was not configured as Git safe.directory before git ls-files",
+          "correction": "configure safe.directory in Linux Integration container and enforce it in orchestration contract"
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 123,
+          "run_id": 34503194470,
+          "source_sha": "e37516470f7374b74f85f4d84d22598830b8b92f",
+          "status": "IN_PROGRESS_AT_CORRECTION_PREPARATION"
+        }
+      ],
       "changed_surfaces": [
         "tools/build-public-bundles.py",
         "tests/integration/distribution-bundles.sh",
@@ -226,9 +255,9 @@
         "release/v3.0.1-final-corrections.json"
       ],
       "pending_acceptance": [
-        "Static Contract PASS on exact implementation HEAD",
-        "Linux Integration distribution scope PASS on exact implementation HEAD",
-        "Linux Release Check complete PASS on exact implementation HEAD",
+        "Static Contract PASS on corrected exact implementation HEAD",
+        "Linux Integration distribution scope PASS on corrected exact implementation HEAD",
+        "Linux Release Check complete PASS on corrected exact implementation HEAD",
         "current CTAN pkgcheck PASS",
         "exact distribution artifact downloaded and independently inspected",
         "template embedded reference hash matches extracted rebuild",
@@ -251,5 +280,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Resolve current release/v3.0.1-final-corrections HEAD and workflow state. Do not move the branch while Linux Release Check for the predecessor/current HEAD is running. After the atomic R3 implementation commit is published, inspect Static, Linux Integration (expected scope=distribution) and Linux Release Check on that exact SHA; preserve failures; if green download and independently inspect the exact distribution artifact. Then the next technical work cycle may mark R3 DONE while opening/implementing R4."
+  "current_next_action": "Do not move release/v3.0.1-final-corrections while Linux Release Check #123 (run 34503194470) on e37516470f7374b74f85f4d84d22598830b8b92f is active. When it completes, record its conclusion, reconfirm the official branch HEAD, promote the prepared Linux safe-directory correction, then inspect Static, Linux Integration scope=distribution and Linux Release Check on the corrected exact HEAD. Preserve every failed run. If all corrected gates pass, download and independently inspect the exact distribution artifact before marking R3 DONE and opening R4."
 }
