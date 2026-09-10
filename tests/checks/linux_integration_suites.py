@@ -83,6 +83,7 @@ def main() -> None:
         "release_candidate_marker=release/v3-release-candidate.json",
         "release-candidate-full-pr",
         "unzip",
+        "git config --global --add safe.directory \"$PWD\"",
     ):
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
@@ -216,7 +217,8 @@ def main() -> None:
         "release_version_source=makefile recursion_safe_version_capture=true "
         "human_review_pairs_retained=true release_marker_full_pr_dominates_incremental=true "
         "release_assets_retained=true correction_state_docs_only=true "
-        "canonical_reference_artifact=true release_workflow_orchestration_smoke=true"
+        "canonical_reference_artifact=true release_workflow_orchestration_smoke=true "
+        "mounted_checkout_safe_directory=true"
     )
 
 
