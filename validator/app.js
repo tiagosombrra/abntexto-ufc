@@ -48,6 +48,7 @@ async function analyze(file,profile){
  const reportChecks=cs.map(reportCheck);return {file:file.name,pages:pdf.numPages,profile,verdict:verdict(cs),normative_catalog:{schema_version:normativeCatalog.schema_version,reviewed_at:normativeCatalog.reviewed_at},checks:reportChecks,mode:"web-lite-local",generated_at:new Date().toISOString()};
 }
 
+globalThis.__ABNTEXTO_UFC_WEB_LITE__=Object.freeze({analyze});
 renderNormativeBase();
 $("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert("Select a PDF.");const b=$("#analyze");b.disabled=true;b.textContent="Validating...";try{report=await analyze(f,$("#profile").value);render(report)}catch(e){console.error(e);alert(`Validation failed: ${e.message||e}`)}finally{b.disabled=false;b.textContent="Validate PDF"}});
 $("#export-json").addEventListener("click",()=>report&&save("ufc-validation-report.json",JSON.stringify(report,null,2),"application/json;charset=utf-8"));
