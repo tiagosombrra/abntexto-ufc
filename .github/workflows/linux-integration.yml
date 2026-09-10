@@ -35,6 +35,7 @@ on:
           - research-project
           - profiles
           - distribution
+          - web-lite
           - smoke
 
 permissions:
@@ -149,3 +150,11 @@ jobs:
             scope="${{ steps.scope.outputs.scope }}"
             echo "Running Linux integration scope: $scope"
             python3 tests/run.py --mode pr --suite "$scope"
+
+      - name: Run real Web Lite browser E2E
+        if: steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s template/main.pdf
+          python3 tests/integration/web-lite-browser-e2e.py --positive template/main.pdf
