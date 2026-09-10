@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R1 canonical TCC reconstruction in progress; publication blocked
+Status: RELEASE — R1.3 implemented, checks pending; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct the current plan from chat history.
 
@@ -13,7 +13,7 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 4. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
 5. Continue from `current_next_action` in the machine state.
 
-`AGENTS.md` defines the fail-closed precedence and audit rules. Older v3 phase-end/recovery documents remain evidence, but they do not override this handoff or the active correction state.
+`AGENTS.md` defines fail-closed precedence and audit rules. Older v3 phase-end/recovery documents remain evidence but do not override this handoff or the active correction state.
 
 ## Canonical state
 
@@ -22,78 +22,76 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; resolve current SHA dynamically |
 | Historical certified main baseline | `111680cd934a4ea55b02f6ffe730ff5260077565` |
-| Baseline status | technically certified historical evidence, superseded as the final publication candidate |
+| Baseline status | certified historical evidence, superseded as final publication candidate |
 | Active branch | `release/v3.0.1-final-corrections` |
 | Tracking issue | #304 |
 | Draft PR | #305 |
 | Target | `v3.0.1` |
 | Publication | BLOCKED |
-| Public `v3.0.0` | exists on old SHA and must not be retargeted |
+| Public `v3.0.0` | historical/superseded and must not be retargeted |
 
-Why the previously certified SHA is no longer the final candidate: after exact-main certification, the maintainer identified user-facing release defects in canonical-reference packaging/identity and the Web/Lite validator deployment/E2E path. Those defects must be corrected before a new exact candidate is certified.
+The old exact-main certification is no longer the final candidate because release-blocking canonical-reference/distribution and Web/Lite defects were found afterward.
 
-## R0–R6 execution state
+## Current execution
 
-### R0 — DONE: auditable control plane
+### R0 — DONE
 
-Issue #304, PR #305, the execution plan and machine state define the correction cycle. Broad repository cleanup remains deferred.
+Auditable control plane is established in issue #304, PR #305, `docs/V3.0.1-FINAL-CORRECTION-PLAN.md` and `release/v3.0.1-final-corrections.json`.
 
-### R1.1 — DONE: source identity normalization
+### R1.1 — DONE
 
-The TCC source now uses seven sequential semantic chapter paths:
+Seven canonical TCC chapter paths are sequential and semantic. Static #474 failed closed on stale path consumers; those consumers were corrected and Static #475 passed. Evidence: `docs/V3.0.1-R1.1-EVIDENCE.md`.
 
-1. `1-introduction.tex`
-2. `2-academic-work-structure.tex`
-3. `3-front-matter.tex`
-4. `4-general-formatting.tex`
-5. `5-citations-notes-references.tex`
-6. `6-academic-objects.tex`
-7. `7-abntexto-ufc-resources-and-final-review.tex`
+### R1.2 — DONE
 
-The first Static run #474 failed closed because the guide trace/checker still encoded old paths. Those consumers were corrected without weakening their semantics. Static #475 then passed on `5394d2caa3c12ec69c87c38c01302df73c9e59c9`. The failure and rerun remain documented in `docs/V3.0.1-R1.1-EVIDENCE.md`.
+Coverage baseline: `docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md`. Closure evidence: `docs/V3.0.1-R1.2-EVIDENCE.md`.
 
-### R1.2 — DONE: pedagogical coverage and retention inventory
+Historical comparison anchored at `2cbd6d00318ba906e225fa37a4efb724300c3b4e` proves that all seven commented-guide chapter bodies survived to the R1.3 boundary as renames with zero additions/deletions. The user-facing loss was principally artifact role/distribution, not deletion of those chapter bodies. Static #476 passed on the initial matrix commit `1fcc023c50955f6cd62d84a8f03bd7d91ff58932`.
 
-The baseline coverage matrix is `docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md` and the closure evidence is `docs/V3.0.1-R1.2-EVIDENCE.md`.
+### R1.3 — IMPLEMENTED_PENDING_CHECKS
 
-Important historical result: commit `2cbd6d00318ba906e225fa37a4efb724300c3b4e` introduced the commented UFC reference guide. Comparing that commit with the pre-R1.3 branch state shows the seven current chapter files as renames with **zero additions and zero deletions**. The previously reviewed pedagogical chapter bodies were therefore not deleted; they survived path migrations. R1.3 must preserve and extend them rather than replace them wholesale.
+Evidence: `docs/V3.0.1-R1.3-EVIDENCE.md`.
 
-The matrix also found release-reference gaps that R1.3 must close: font embedding, bounded accessibility guidance, CLI/Deep user workflow, Web/Lite user workflow (final wording waits for R4), coherent `\ufcsetup` explanation, list/profile behavior, citation examples/evidence, code/algorithm authority separation, and consolidated pagination/duplex guidance.
+The bounded rewrite preserves the reviewed corpus and adds missing user-facing guidance. Main changes:
 
-Static #476 passed on the initial R1.2 inventory commit `1fcc023c50955f6cd62d84a8f03bd7d91ff58932`.
+- two local guide callouts: `Como usar no projeto` and `Validação e evidência`;
+- coherent `\ufcsetup` explanation;
+- explicit pre-textual command/evidence mapping;
+- consolidated pagination/duplex explanation;
+- dedicated font-embedding guidance distinct from literal-font identity;
+- a physical footnote example and footnote evidence route;
+- stronger citation command/localizer/`apud` guidance without fictitious locators;
+- all seven profiles now named in prose, including `scientific-article`;
+- code/algorithm/equation capability versus normative-authority boundary;
+- build flow using `make compile`/conditional Biber, glossaries and index;
+- CLI/Deep user workflow;
+- bounded Web/Lite workflow and explicit Deep-only/E2E boundaries;
+- accessibility/manual-review limits without a false PDF/UA claim;
+- expanded final delivery checklist.
 
-### R1.3 — NEXT: coherent TCC rewrite
+`template/chapters/6-academic-objects.tex` remains unchanged in this lot to protect its reviewed visual corpus.
 
-R1.3 may now edit the canonical guide. It must:
+Next action: obtain fresh Static and canonical reference/integration evidence on the R1.3 implementation. Any failure must be fixed without weakening existing contracts. Only then mark R1.3 DONE and start R2.
 
-- retain the reviewer-corrected material proven above;
-- close the missing/partial topics in the R1.2 matrix;
-- add explicit project/API and validation-route guidance instead of only prose about rules;
-- preserve normative/institutional/project/example separation;
-- keep the undergraduate TCC as the canonical full pedagogical reference and treat scientific article/research-project variations as profiles, not duplicate full guides;
-- avoid claiming Web/Lite capabilities that R4 has not yet proved.
+### R2 — PENDING
 
-After R1.3, a fresh Static + reference/integration run must prove that the source compiles and the guide contracts still hold before R2 starts.
+Treat the full PDF generated from `template/main.tex` as a first-class canonical release reference. Require deterministic build, warning/overflow preflight, A4/geometry, embedded fonts, PDF/A-2b where claimed, CLI/Deep, hash/provenance and page-by-page visual review.
 
-### R2 — PENDING: full canonical PDF
+### R3 — PENDING
 
-Generate `template/main.pdf` deterministically from the exact candidate source; validate convergence, warnings/overflow, A4/geometry, embedded fonts, PDF/A-2b where claimed, CLI/Deep, provenance/hash and page-by-page visual quality.
+Repair distribution so the full canonical TCC PDF/source has an explicit public role while the CTAN minimal example retains its independent small-example role.
 
-### R3 — PENDING: distribution repair
+### R4 — PENDING
 
-Keep the minimal CTAN example separate from the full canonical TCC. Make the full reference PDF/source a first-class user-facing release artifact in the appropriate GitHub/template distribution. Do not redistribute Microsoft fonts or UFC marks where policy forbids them.
+Known defect: `validator/app.js` imports `./normative-catalog.js`, but the tracked static validator tree lacks the module. Existing synthetic cross-surface vectors do not prove the actual canonical PDF through the browser analysis path. Fix deterministic catalog generation/deployment, clean module closure and real-PDF positive/negative E2E.
 
-### R4 — PENDING: Web/Lite closure
+### R5 — PENDING
 
-Confirmed defect: `validator/app.js` imports `./normative-catalog.js`, but the tracked static validator tree lacks that module. Existing cross-surface synthetic vectors also do not run the actual canonical PDF through the browser analysis path. R4 must fix deterministic catalog generation/deployment, verify module closure and add real-PDF E2E with a negative case while preserving Deep-only REVIEW boundaries.
+Certify one final exact SHA with Static, complete Linux Integration, complete Linux Release Check, current CTAN `pkgcheck`, full canonical reference, seven profiles, CLI/Deep, Web/Lite E2E and frozen distribution hashes.
 
-### R5 — PENDING: final exact-SHA regression
+### R6 — PENDING
 
-One final SHA must pass Static, complete Linux Integration, complete Linux Release Check, current CTAN `pkgcheck`, canonical full-reference gates, seven profile fixtures, CLI/Deep, Web/Lite E2E and deterministic distribution hash checks.
-
-### R6 — PENDING: human acceptance/publication
-
-Maintainer visually reviews the full canonical TCC plus seven profile pairs generated from the exact R5 SHA. After explicit acceptance, no source change or rebuild is allowed. Tag `v3.0.1`, GitHub Release bytes and CTAN source must remain bound to that same SHA/artifact set.
+Maintainer visually approves the full canonical TCC plus seven profile pairs generated from the R5 SHA. No tracked commit or rebuild after acceptance. Tag, GitHub Release bytes and CTAN archive must remain bound to the same candidate.
 
 Invariant:
 
@@ -103,8 +101,8 @@ certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == sou
 
 ## Deferred after v3.0.1
 
-Do not allow the current release correction to expand into general cleanup. The >100 branch cleanup, lifecycle classification of the full repository, consolidation of historical/transient docs, and review/removal of uncertain utility scripts belong to the separate post-v3.0.1 regression plan unless a direct release blocker is demonstrated.
+Whole-repository lifecycle cleanup, >100 branch pruning, broad historical-document consolidation and unrelated utility/runtime cleanup remain outside this release correction unless a direct blocker is demonstrated.
 
-## Documentation rule
+## Documentation discipline
 
-Every material advance must update `release/v3.0.1-final-corrections.json` and this handoff in the same work cycle. Lot-specific evidence must remain in `docs/`. Issue #304 may mirror completed CI receipts without forcing a source commit solely to record the result of the immediately preceding commit.
+Every material advance updates this handoff and `release/v3.0.1-final-corrections.json` in the same work cycle. Lot-specific evidence remains under `docs/`. Issue #304 may record CI receipts after a commit without creating another source commit solely to echo an external workflow result.

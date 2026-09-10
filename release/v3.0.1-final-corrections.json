@@ -1,5 +1,5 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -8,18 +8,17 @@
   "publication_status": "BLOCKED",
   "historical_certified_baseline": {
     "sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
-    "status": "SUPERSEDED_AS_FINAL_CANDIDATE_RETAINED_AS_EVIDENCE",
-    "reason": "Release-blocking canonical reference/distribution/Web-Lite defects were identified after exact-main certification."
+    "status": "SUPERSEDED_AS_FINAL_CANDIDATE_RETAINED_AS_EVIDENCE"
   },
   "authority": {
     "bootstrap": "AGENTS.md",
     "continuation": "docs/V3-CONTINUATION.md",
     "human_readable_plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
     "machine_state": "release/v3.0.1-final-corrections.json",
-    "r1_audit": "docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md",
     "r1_1_evidence": "docs/V3.0.1-R1.1-EVIDENCE.md",
     "r1_2_matrix": "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
     "r1_2_evidence": "docs/V3.0.1-R1.2-EVIDENCE.md",
+    "r1_3_evidence": "docs/V3.0.1-R1.3-EVIDENCE.md",
     "fail_closed_on_disagreement": true,
     "precedence": [
       "current_git_facts",
@@ -31,17 +30,10 @@
     ]
   },
   "audit_protocol": {
-    "each_material_lot_requires": [
-      "machine_state_update",
-      "continuation_handoff_update_when_next_action_changes",
-      "human_readable_evidence",
-      "exact_changed_files_or_unambiguous_commit_diff",
-      "executed_checks_and_classification",
-      "explicit_unresolved_findings"
-    ],
     "green_ci_alone_closes_lot": false,
     "failed_checks_remain_in_history": true,
-    "post_acceptance_source_commits_allowed": false
+    "post_acceptance_source_commits_allowed": false,
+    "material_advance_requires_state_and_handoff_sync": true
   },
   "scope": {
     "release_blocking": [
@@ -64,7 +56,6 @@
       "id": "R0",
       "name": "auditable-control-plane-reset",
       "status": "DONE",
-      "entry_sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
       "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536",
       "unresolved": []
     },
@@ -79,24 +70,10 @@
           "status": "DONE",
           "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
           "consumer_reconciliation_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
-          "chapter_content_rewritten": false,
-          "chapter_blobs_reused": true,
-          "checks": [
-            {
-              "workflow": "Static contract",
-              "run_number": 474,
-              "run_id": 34476591229,
-              "status": "FAIL",
-              "classification": "EXPECTED_DEPENDENCY_PATH_DRIFT",
-              "preserved_in_audit_trail": true
-            },
-            {
-              "workflow": "Static contract",
-              "run_number": 475,
-              "run_id": 34476976677,
-              "status": "PASS"
-            }
-          ],
+          "static_fail_then_pass": {
+            "failed_run": 474,
+            "passed_run": 475
+          },
           "unresolved": []
         },
         {
@@ -104,54 +81,52 @@
           "name": "pedagogical-coverage-and-retention-inventory",
           "status": "DONE",
           "initial_matrix_sha": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
-          "initial_matrix_static": {
-            "run_number": 476,
-            "run_id": 34477377477,
-            "status": "PASS"
-          },
+          "initial_matrix_static_run": 476,
+          "closure_control_sha": "3ad68d22eb7e2842679437dde3b0b25755179f7e",
           "historical_retention": {
             "guide_origin_commit": "2cbd6d00318ba906e225fa37a4efb724300c3b4e",
             "comparison_head_before_r1_3": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
-            "comparison_ahead_by": 228,
             "chapter_count": 7,
-            "result": "ALL_SEVEN_GUIDE_CHAPTERS_SURVIVE_AS_RENAMES_WITH_ZERO_ADDITIONS_AND_ZERO_DELETIONS",
-            "interpretation": "Reviewed pedagogical chapter bodies were not deleted; R1.3 must preserve and extend them."
+            "result": "ALL_SEVEN_GUIDE_CHAPTERS_SURVIVE_AS_RENAMES_WITH_ZERO_ADDITIONS_AND_ZERO_DELETIONS"
           },
-          "release_reference_gaps_to_close_in_r1_3": [
-            "font-embedding-user-guidance",
-            "accessibility-capabilities-and-manual-boundaries",
-            "cli-deep-user-workflow",
-            "web-lite-user-workflow-bounded-until-r4",
-            "ufcsetup-configuration-guide",
-            "optional-lists-and-populated-unified-illustrations",
-            "citation-variants-physical-examples-and-evidence",
-            "code-algorithm-project-policy-versus-normative-separation",
-            "pagination-and-duplex-explanation-consolidation"
-          ],
-          "intentionally_separate_or_conditional": [
-            "scientific-article-full-example",
-            "research-project-full-example",
-            "anonymized-research-project-full-example",
-            "literal-microsoft-font-certification-on-windows",
-            "physical-spine-output"
-          ],
           "unresolved": []
         },
         {
           "id": "R1.3",
           "name": "coherent-tcc-rewrite",
-          "status": "READY",
-          "entry_condition": "R1.2 completed",
-          "must_preserve": "reviewed chapter material proven by R1.2 historical comparison",
+          "status": "IMPLEMENTED_PENDING_CHECKS",
+          "implementation_scope": [
+            "add mechanism and validation teaching callouts",
+            "explain ufcsetup configuration groups",
+            "consolidate pagination and duplex guidance",
+            "add font embedding guidance",
+            "add physical footnote example and evidence",
+            "strengthen citation and apud user guidance",
+            "explicitly list all seven profiles including scientific-article",
+            "clarify code algorithm equation policy boundaries",
+            "document build workflow",
+            "document CLI/Deep workflow",
+            "document bounded Web/Lite workflow",
+            "document accessibility and manual-review limits",
+            "expand final delivery checklist"
+          ],
+          "preserved_unchanged": [
+            "template/chapters/6-academic-objects.tex"
+          ],
+          "required_checks": [
+            "static-contract",
+            "canonical-reference-build-or-integration",
+            "recognized-warning-overflow-preflight",
+            "reference-guide-contract"
+          ],
           "unresolved": [
-            "implement-matrix-gap-closures",
-            "run-static-and-reference-compilation-evidence"
+            "fresh-ci-results-not-yet-recorded"
           ]
         }
       ],
       "unresolved": [
-        "r1.3-coherent-rewrite",
-        "final-reference-pdf-not-yet-generated"
+        "r1.3-check-closure",
+        "final-reference-pdf-not-yet-certified"
       ]
     },
     {
@@ -189,5 +164,5 @@
       "unresolved": []
     }
   ],
-  "current_next_action": "Execute R1.3 as a bounded coherent rewrite: preserve the seven historically reviewed chapter bodies, add the missing/partial pedagogical guidance identified by R1.2, update guide trace/check contracts where guarantees are added, then require fresh Static and reference/integration evidence before R2."
+  "current_next_action": "Run fresh Static and canonical reference/integration checks on the R1.3 implementation. Diagnose any failure without weakening the existing contracts. If the reference path passes, close R1.3 in a documentation/state commit and start R2 full-reference PDF certification."
 }

@@ -1,14 +1,18 @@
 \section{Recursos do abntexto-ufc, elementos pós-textuais e revisão final}\label{sec:recursos-finais}
 
-A classe reúne opções de perfil e módulos editoriais para que o mesmo projeto possa atender diferentes tipos de trabalho sem duplicar a lógica de formatação. Esta seção encerra o guia explicando os principais recursos e os elementos que aparecem depois do texto principal.
+A classe reúne opções de perfil e módulos editoriais para que o mesmo projeto possa atender diferentes tipos de trabalho sem duplicar a lógica de formatação. Esta seção encerra o guia explicando os principais recursos, o fluxo de compilação/validação e os elementos que aparecem depois do texto principal.
 
 \subsection{Perfis de documento}
 
-A opção \texttt{type} seleciona o perfil acadêmico. A matriz de certificação atual exercita \texttt{undergraduate-capstone}, \texttt{specialization-capstone}, \texttt{masters-thesis}, \texttt{doctoral-thesis}, \texttt{research-project} e \texttt{anonymized-research-project}.
+A opção \texttt{type} seleciona o perfil acadêmico. A matriz de certificação atual exercita sete perfis: \texttt{undergraduate-capstone}, \texttt{specialization-capstone}, \texttt{masters-thesis}, \texttt{doctoral-thesis}, \texttt{research-project}, \texttt{anonymized-research-project} e \texttt{scientific-article}.
 
-\guiapolitica{Perfis controlam a aplicabilidade de elementos e metadados. O objetivo é evitar que o usuário tenha de remover manualmente partes da classe para adaptar um TCC a uma dissertação, tese ou projeto.}
+\guiapolitica{Perfis controlam a aplicabilidade de elementos e metadados. O objetivo é evitar que o usuário tenha de remover manualmente partes da classe para adaptar um TCC a uma dissertação, tese, projeto ou artigo.}
 
 \guianormativa{ABNT NBR 15287:2025}{Os perfis \texttt{research-project} e \texttt{anonymized-research-project} usam a estrutura de projeto de pesquisa adotada pelo projeto. O perfil anonimizado adiciona uma política técnica de ocultação de dados pessoais para processos que exijam avaliação sem identificação; essa anonimização não é apresentada como regra geral da NBR 15287 \parencite{abnt15287}.}
+
+\guiamecanismo{Selecione o perfil em \texttt{type}. Este TCC é o exemplo pedagógico completo do perfil \texttt{undergraduate-capstone}; o artigo possui fonte própria em \texttt{template/scientific-article.tex}. Projetos, dissertações, teses e especialização são exercitados pela matriz de perfis sem duplicar sete cópias deste guia.}
+
+\guiavalidacao{Os gates \texttt{profiles}, \texttt{research-project} e as suítes específicas de artigo verificam a aplicabilidade e a composição dos perfis. A release também retém pares PDF/TeX dos sete perfis para inspeção visual.}
 
 \subsection{Fontes e motores de compilação}
 
@@ -16,7 +20,19 @@ A opção \texttt{font=times|arial} seleciona a família textual desejada. A op�
 
 \guiainstitucional{A política tipográfica UFC adotada pelo projeto trabalha com Arial ou Times New Roman. A certificação literal é executada em Windows com pdfLaTeX e LuaLaTeX; as fontes Microsoft não são redistribuídas pelo repositório.}
 
-\guiapolitica{O documento de referência usa modo portátil para compilar em ambientes públicos. Uma compilação com fallback não deve ser confundida com evidência de identidade literal da família solicitada.}
+\guiapolitica{O documento de referência usa modo portátil para compilar em ambientes públicos. Uma compilação com fallback não deve ser confundida com evidência de identidade literal da família solicitada. A incorporação das fontes usadas no PDF é uma verificação separada, descrita na Seção~\ref{sec:formatacao-geral}.}
+
+\guiamecanismo{A compilação padrão usa o motor configurado pelo fluxo do projeto. Para exercitar LuaLaTeX no repositório, a entrada de desenvolvimento é \texttt{make lua}; para a compilação padrão do documento canônico, use \texttt{make compile}.}
+
+\subsection{Tabelas, códigos, algoritmos e equações}
+
+O documento de referência exercita os módulos de objetos na Seção~\ref{sec:catalogo-exemplos}. Nem toda capacidade oferecida pela classe corresponde a uma exigência normativa específica.
+
+\guiapolitica{Tabelas numéricas seguem a apresentação tabular exercitada pelo projeto e pelo gate IBGE. Já a escolha entre \texttt{listings} e \texttt{minted}, a apresentação de códigos e a numeração de linhas em código ou pseudocódigo são capacidades editoriais do projeto; não são declaradas como mandatos gerais da ABNT.}
+
+\guiamecanismo{As chaves \texttt{tables}, \texttt{code} e \texttt{algorithms} selecionam módulos. O exemplo usa \texttt{tables=tabularray}, \texttt{code=listings} e \texttt{algorithms=algpseudocodex}. Códigos podem usar \texttt{ufclisting} ou \texttt{\string\ufcInputListing}; algoritmos usam \texttt{ufcalgorithm}; equações continuam usando os ambientes matemáticos do \LaTeX{}.}
+
+\guiavalidacao{Os gates \texttt{table-ibge}, \texttt{code-typography}, \texttt{minted}, \texttt{algorithm-numbering}, \texttt{objects} e \texttt{math} protegem esses caminhos sem promover decisões editoriais de código/algoritmo a regras ABNT inexistentes.}
 
 \subsection{PDF/A}
 
@@ -25,6 +41,44 @@ O cabeçalho de \texttt{main.tex} declara \texttt{pdfstandard=A-2b}. A suíte ve
 \guiainstitucional{O fluxo de depósito acompanhado pelo projeto exige PDF/A nos casos institucionais aplicáveis. As páginas atuais do Sistema de Bibliotecas devem ser verificadas conforme o tipo de trabalho \parencite{ufcdepositotcc2026,ufcdepositopos2026}.}
 
 \guiapolitica{A escolha do perfil específico PDF/A-2b para o documento de referência e para a certificação é uma política técnica do projeto; ela não é apresentada como uma afirmação de que toda norma ABNT exige especificamente PDF/A-2b.}
+
+\guiamecanismo{A declaração é feita por \texttt{\string\DocumentMetadata} antes de \texttt{\string\documentclass}. O usuário deve validar o PDF efetivamente gerado; a simples presença da declaração no fonte não prova conformidade do arquivo final.}
+
+\guiavalidacao{A rota de release executa o gate PDF/A com veraPDF, além de validações de fontes e do validador do projeto.}
+
+\subsection{Acessibilidade e limites de conformidade}
+
+Acessibilidade em PDF envolve mais do que aparência visual. Metadados, estrutura, marcação, ordem de leitura e descrições alternativas podem exigir verificações automáticas e revisão humana dependendo do conteúdo e do nível de conformidade pretendido.
+
+\guiapolitica{O \texttt{abntexto-ufc} valida somente as capacidades explicitamente cobertas por seus contratos. O projeto não declara conformidade PDF/UA completa apenas porque um PDF/A compila ou porque verificações estruturais selecionadas passam. Conteúdo alternativo adequado, leitura semântica de objetos e outros aspectos que não tenham prova automática permanecem sujeitos a revisão.}
+
+\guiamecanismo{Mantenha metadados do documento coerentes e trate imagens/objetos com informação textual adequada à finalidade acadêmica. Não use um resultado verde do validador como substituto de revisão manual de conteúdo, ordem de leitura ou significado de descrições.}
+
+\guiavalidacao{Os validadores classificam apenas checks que podem sustentar. Quando uma capacidade exige inspeção mais profunda ou humana, o resultado deve permanecer REVIEW/fora do PASS automático em vez de produzir uma falsa garantia.}
+
+\subsection{Compilação reprodutível do projeto}
+
+O \texttt{Makefile} é a entrada recomendada para evitar que o usuário precise memorizar a sequência de processadores auxiliares.
+
+\guiamecanismo{Use \texttt{make compile} para o documento canônico. O alvo executa o motor LaTeX, chama Biber quando existe fonte bibliográfica ativa, chama \texttt{makeglossaries} quando há glossário, chama \texttt{makeindex} quando há índice e recompila o documento para estabilizar referências. \texttt{make check} executa o gate integrado de desenvolvimento; \texttt{make release-check} é reservado à matriz de release.}
+
+\guiapolitica{Biber, glossário e índice são condicionais ao documento. Executar manualmente apenas uma passada de LaTeX e aceitar o primeiro PDF pode deixar referências, listas ou índice incompletos mesmo quando não há erro fatal.}
+
+\subsection{Validador CLI/Deep}
+
+O repositório fornece um validador local mais profundo em \texttt{tools/validate-ufc-pdf.py}. Ele trabalha sobre o PDF gerado e complementa a compilação com checks documentais disponíveis no ambiente CLI.
+
+\guiamecanismo{Depois de compilar o trabalho, execute o validador sobre o PDF final. No repositório, o gate integrado usa essa ferramenta sobre \texttt{template/main.pdf}; para um documento do usuário, informe o caminho do PDF correspondente.}
+
+\guiavalidacao{A suíte \texttt{pdf-validator} protege o fluxo CLI/Deep. Alguns checks dependem de ferramentas externas como Poppler e veraPDF; por isso a capacidade real do ambiente deve ser considerada ao interpretar o resultado.}
+
+\subsection{Validador Web/Lite}
+
+O diretório \texttt{validator/} contém a interface Web/Lite. Seu contrato é deliberadamente mais restrito que o CLI/Deep: o processamento do PDF ocorre localmente no navegador e checks que dependem de capacidades profundas não devem ser convertidos em PASS apenas porque a interface web não consegue executá-los.
+
+\guiamecanismo{A interface Web/Lite é destinada à inspeção local de um PDF pelo navegador. Checks compartilhados usam os mesmos identificadores e semântica do contrato canônico quando a medição é equivalente; capacidades profundas permanecem identificadas como dependentes da rota CLI/Deep.}
+
+\guiavalidacao{A release só considera essa superfície certificada quando um pacote estático limpo contém todas as dependências locais, o carregamento dos módulos passa e um PDF canônico real, além de um caso negativo, atravessa o caminho efetivo de análise do navegador. Testes sintéticos de schema/veredito, isoladamente, não substituem esse E2E.}
 
 \subsection{Referências}
 
@@ -38,6 +92,8 @@ O glossário é um elemento opcional para definir termos especializados, siglas 
 
 \guiapolitica{Não use o glossário como duplicação automática de toda palavra técnica. Registre apenas termos cuja definição agregue valor ao trabalho e cuja repetição no corpo prejudicaria a leitura.}
 
+\guiamecanismo{Selecione \texttt{glossary=glossaries}, declare as entradas no arquivo de glossário e produza o elemento com \texttt{\string\ufcPrintGlossary}. O alvo \texttt{make compile} chama o processador auxiliar quando necessário.}
+
 \subsection{Apêndices}
 
 Apêndices contêm material complementar elaborado pelo próprio autor e são identificados em sequência própria.
@@ -45,6 +101,8 @@ Apêndices contêm material complementar elaborado pelo próprio autor e são id
 \guianormativa{estrutura pós-textual adotada pelo projeto}{Cada apêndice inicia em página própria. No escopo auditado, seu cabeçalho é centralizado, em letras maiúsculas, negrito e tamanho 12.}
 
 \guiaexemplo{Este documento possui apêndices com material textual, questionário, código-fonte e orientação para documento externo autoral. Eles existem para exercitar diferentes comprimentos e conteúdos.}
+
+\guiamecanismo{Declare cada apêndice com \texttt{\string\appendix\{Título\}} e mantenha o conteúdo em arquivo separado quando isso melhorar a organização do projeto.}
 
 \subsection{Anexos}
 
@@ -54,35 +112,43 @@ Anexos são usados para material complementar de autoria externa ou não produzi
 
 \guiaexemplo{Se um documento externo em PDF precisar ser anexado, verifique legibilidade, direitos de uso, orientação de página e compatibilidade com o arquivo final. O exemplo deste projeto documenta a rota sem redistribuir material externo desnecessário.}
 
+\guiamecanismo{Declare cada anexo com \texttt{\string\annex\{Título\}}. Arquivos externos continuam sujeitos a direitos de uso e às propriedades do PDF final; anexar um arquivo não transfere automaticamente sua licença para o projeto.}
+
 \subsection{Índice}
 
 O índice remissivo é diferente do sumário: ele organiza termos e assuntos para facilitar a localização de ocorrências no documento.
 
 \guianormativa{ABNT NBR 6034:2004}{O índice é elemento opcional e possui norma específica de apresentação. A classe demonstra o recurso com \texttt{imakeidx} e verifica o título e sua composição no PDF final \parencite{abnt6034}.}
 
+\guiamecanismo{Selecione \texttt{index=imakeidx}, marque termos com \texttt{\string\index} e produza o elemento com \texttt{\string\ufcPrintIndex}. O fluxo de compilação executa \texttt{makeindex} quando necessário.}
+
 \subsection{Lombada}
 
 \guianormativa{ABNT NBR 12225:2023}{A lombada possui aplicação condicional, normalmente relacionada à produção física do trabalho. O documento eletrônico de referência não a força em perfis nos quais não seja aplicável \parencite{abnt12225}.}
+
+\guiapolitica{A ausência de uma lombada renderizada neste PDF eletrônico é deliberada. Quando houver produção física que exija lombada, a regra correspondente deve ser tratada no fluxo aplicável, sem transformar o arquivo eletrônico de referência em prova de uma característica física que ele não contém.}
 
 \subsection{Checklist antes da entrega}
 
 Antes de entregar um trabalho real produzido a partir deste modelo:
 
 \begin{enumerate}
-  \item revise todos os campos de \texttt{\string\ufcsetup};
-  \item mantenha apenas os pré-textuais aplicáveis ao seu perfil;
-  \item substitua todos os exemplos e conteúdos de demonstração pelo texto acadêmico real;
-  \item confirme citações e referências contra as fontes consultadas;
+  \item revise todos os campos de \texttt{\string\ufcsetup} e confirme o perfil correto;
+  \item mantenha apenas os pré-textuais aplicáveis e substitua conteúdos demonstrativos pelos dados reais;
+  \item confirme citações e referências contra as fontes efetivamente consultadas;
   \item revise figuras, tabelas, quadros, códigos, algoritmos, equações, fontes e notas;
   \item verifique glossário, apêndices, anexos e índice somente quando pertinentes;
-  \item compile o documento completo com todos os processadores auxiliares necessários;
-  \item examine visualmente o PDF final, inclusive quebras de página e elementos externos;
-  \item execute os gates de validação disponíveis no projeto;
-  \item confira as regras atuais do curso, programa e fluxo de depósito da UFC.
+  \item compile pelo fluxo completo, incluindo processadores auxiliares condicionais;
+  \item confirme tamanho A4, margens, paginação, tipografia e incorporação de fontes no PDF final;
+  \item execute o validador local disponível e interprete corretamente checks automáticos, REVIEW e capacidades profundas;
+  \item examine visualmente o PDF completo, inclusive quebras de página, listas, objetos e elementos externos;
+  \item quando acessibilidade for requisito, revise também os aspectos semânticos/manuais que não possuem prova automática;
+  \item confira as regras atuais do curso, programa e fluxo de depósito da UFC;
+  \item para uma publicação do próprio template, aceite somente artefatos produzidos e certificados a partir do mesmo SHA de fonte.
 \end{enumerate}
 
-\guiapolitica{Um CI verde demonstra que o corpus testado respeitou os contratos executáveis do projeto. Ele não transforma automaticamente toda regra externa em prova formal de conformidade e não substitui a revisão acadêmica e institucional do conteúdo.}
+\guiapolitica{Um CI verde demonstra que o corpus testado respeitou os contratos executáveis do projeto. Ele não transforma automaticamente toda regra externa em prova formal de conformidade e não substitui a revisão acadêmica, institucional, visual ou de acessibilidade que permanecer manual.}
 
 Este modelo comentado deve ser entendido como ponto de partida auditável: o usuário escreve o conteúdo acadêmico, enquanto a classe concentra a maior parte das decisões editoriais e o repositório registra a evidência usada para mantê-las.
 
-\index{PDF/A}\index{glossário}\index{apêndice}\index{anexo}\index{índice}\index{projeto de pesquisa}
+\index{PDF/A}\index{acessibilidade}\index{validador}\index{glossário}\index{apêndice}\index{anexo}\index{índice}\index{projeto de pesquisa}\index{artigo científico}

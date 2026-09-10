@@ -1,6 +1,6 @@
 \section{Elementos pré-textuais em detalhe}\label{sec:pretextuais-detalhe}
 
-Esta seção explica os principais elementos que aparecem antes do texto acadêmico. O próprio PDF já apresentou cada um deles nas páginas anteriores; aqui o objetivo é tornar explícita a finalidade, a aplicabilidade e a regra de apresentação exercitada pelo template.
+Esta seção explica os principais elementos que aparecem antes do texto acadêmico. O próprio PDF já apresentou cada um deles nas páginas anteriores; aqui o objetivo é tornar explícita a finalidade, a aplicabilidade, a regra de apresentação e o mecanismo exercitado pelo template.
 
 \subsection{Capa e folha de rosto}
 
@@ -10,11 +10,17 @@ A capa identifica externamente o trabalho. A folha de rosto repete os dados esse
 
 \guiapolitica{Os dados pessoais e institucionais são declarados em \texttt{\string\ufcsetup}. Isso evita editar manualmente a diagramação da capa ou da folha de rosto e permite que os perfis reutilizem os mesmos metadados.}
 
+\guiamecanismo{Use \texttt{\string\ufcPrintCover} e \texttt{\string\ufcPrintTitlePage}. Os dados exibidos vêm das chaves de \texttt{\string\ufcsetup}; a natureza do trabalho e os campos aplicáveis dependem de \texttt{type}.}
+
+\guiavalidacao{Os gates de \texttt{frontmatter} e de perfis verificam a presença, a composição e as variações aplicáveis desses elementos; cenários normativos específicos medem capa e folha de rosto no PDF final.}
+
 \subsection{Ficha catalográfica}
 
 A representação visual da ficha catalográfica é controlada pela opção \texttt{catalog-card}. No documento de referência ela permanece desativada para demonstrar o comportamento padrão adotado pelo perfil atual.
 
 \guiainstitucional{A política de depósito da UFC vigente em 2026 tornou facultativa a representação visual da ficha catalográfica no arquivo depositado para os tipos documentais abrangidos pela Instrução Normativa Conjunta nº 2/2026/SIBI/PROGRAD/PRPPG \parencite{ufcinstrucao2_2026}. O autor deve conferir o procedimento institucional vigente no momento da entrega.}
+
+\guiamecanismo{Quando a representação for necessária ao fluxo adotado, configure \texttt{catalog-card} e habilite \texttt{\string\ufcPrintCatalogCard} com o conteúdo correspondente. Não confunda a possibilidade de representar a ficha no PDF com o procedimento administrativo de geração ou depósito da ficha.}
 
 \subsection{Errata}
 
@@ -22,11 +28,15 @@ A errata é usada quando, depois da produção do trabalho, é necessário regis
 
 \guiaexemplo{Se não houver correções a registrar, remova a chamada \texttt{\string\ufcPrintErrata} do documento. O arquivo de exemplo existe para demonstrar a composição quando o elemento é necessário.}
 
+\guiamecanismo{O exemplo usa \texttt{\string\ufcPrintErrata\{frontmatter/errata\}}. O conteúdo fica em arquivo separado; a classe controla a página e a apresentação do elemento.}
+
 \subsection{Folha de aprovação}
 
 Nos perfis acadêmicos aos quais se aplica, a folha de aprovação registra autoria, título, natureza do trabalho, data de aprovação, orientação e banca examinadora. O exemplo usa uma banca extensa para exercitar a quebra e o posicionamento de múltiplos membros.
 
 \guiainstitucional{No fluxo de depósito considerado pelo projeto, a folha de aprovação é apresentada sem reproduzir assinaturas digitalizadas. A conferência final deve considerar a orientação vigente do Sistema de Bibliotecas para TCC, dissertação ou tese \parencite{ufcdepositotcc2026,ufcdepositopos2026}.}
+
+\guiamecanismo{Declare orientador, coorientador, unidades, instituições e examinadores em \texttt{\string\ufcsetup}; gere a página com \texttt{\string\ufcPrintApprovalPage}. A banca extensa deste exemplo é intencional para exercitar o limite de composição, mas um trabalho real deve declarar somente os membros efetivos.}
 
 \subsection{Dedicatória}
 
@@ -36,6 +46,8 @@ A dedicatória é um elemento de natureza pessoal e não recebe título no exemp
 
 \guiaexemplo{O arquivo \texttt{frontmatter/dedication.tex} contém apenas uma frase curta para mostrar a posição do bloco. Em um trabalho real, substitua-a pela dedicatória desejada ou remova o elemento.}
 
+\guiamecanismo{Inclua o elemento com \texttt{\string\ufcPrintDedication\{frontmatter/dedication\}}. Não aplique recuo, fonte ou posicionamento manual dentro do arquivo de conteúdo.}
+
 \subsection{Agradecimentos}
 
 Os agradecimentos registram pessoas e instituições que contribuíram para o trabalho. O título é apresentado em página própria, e o corpo mantém a tipografia do texto acadêmico exercitada pelo perfil.
@@ -44,11 +56,15 @@ Os agradecimentos registram pessoas e instituições que contribuíram para o tr
 
 \guiainstitucional{Quando o trabalho tiver financiamento ao qual se aplique obrigação específica de agradecimento, como a Portaria CAPES nº 206/2018, o autor deve inserir o texto institucional exigido pela fonte correspondente \parencite{capes2062018}. O template não presume automaticamente a existência de financiamento.}
 
+\guiamecanismo{O conteúdo fica em \texttt{frontmatter/acknowledgments.tex} e é incluído por \texttt{\string\ufcPrintAcknowledgments}. Condições de financiamento pertencem ao conteúdo e às regras do órgão financiador, não devem ser inventadas automaticamente pela classe.}
+
 \subsection{Epígrafe}
 
 A epígrafe apresenta uma citação relacionada ao trabalho. O template diferencia a apresentação de epígrafes curtas e longas no escopo institucional auditado.
 
 \guiainstitucional{Epígrafes de até três linhas iniciam abaixo do meio da folha, usam recuo esquerdo de 8 cm, fonte de 12 pt, espaçamento 1,5 e aspas. Epígrafes com mais de três linhas usam recuo esquerdo de 4 cm, fonte de 10 pt, espaçamento simples e são apresentadas sem aspas.}
+
+\guiamecanismo{O texto é mantido em \texttt{frontmatter/epigraph.tex}, a autoria é declarada em \texttt{epigraph-author} e o elemento é incluído com \texttt{\string\ufcPrintEpigraph}. A classe decide a apresentação correspondente ao comprimento exercitado.}
 
 \subsection{Resumo, abstract e palavras-chave}
 
@@ -58,11 +74,17 @@ O resumo apresenta de forma concisa objetivo, método, resultados e conclusões 
 
 \guiaexemplo{O resumo deste próprio PDF descreve o objetivo do modelo comentado. Assim, o pré-textual funciona como um exemplo semanticamente coerente, não como texto de preenchimento.}
 
+\guiamecanismo{Mantenha os textos nos arquivos \texttt{frontmatter/summary.tex} e \texttt{frontmatter/abstract.tex} e inclua-os com \texttt{\string\ufcPrintSummary} e \texttt{\string\ufcPrintAbstract}. Palavras-chave e keywords devem ser informadas no conteúdo previsto pelo exemplo, não simuladas com listas visuais manuais.}
+
 \subsection{Listas}
 
 O documento de referência habilita listas de ilustrações, tabelas, códigos, algoritmos, abreviaturas e siglas e símbolos para demonstrar todas as rotas suportadas. Em trabalhos reais, devem ser mantidas apenas as listas pertinentes ao conteúdo e às regras aplicáveis.
 
 \guiapolitica{Figuras, gráficos e quadros são agregados na Lista de Ilustrações. Tabelas, códigos e algoritmos possuem listas próprias no modelo de referência. A existência dessas listas no PDF de demonstração não significa que todo trabalho precise conter todos esses tipos de objeto.}
+
+\guiamecanismo{Use \texttt{\string\ufcPrintListOfIllustrations}, \texttt{\string\ufcPrintListOfTables}, \texttt{\string\ufcPrintListOfCodeListings} e \texttt{\string\ufcPrintListOfAlgorithms}. As listas de abreviaturas/siglas e símbolos recebem, respectivamente, os arquivos \texttt{frontmatter/abbreviations-and-acronyms.tex} e \texttt{frontmatter/symbols.tex}.}
+
+\guiavalidacao{A suíte de \texttt{frontmatter} e os gates de objetos verificam as listas. A regressão da Lista de Ilustrações deve permanecer com conteúdo real: uma lista vazia não prova a escrita e a renderização de entradas de figuras, gráficos ou quadros.}
 
 \subsection{Sumário}
 
@@ -70,4 +92,8 @@ O sumário apresenta a estrutura de seções do documento e os respectivos núme
 
 \guianormativa{ABNT NBR 6027:2012}{O template mantém o título SUMÁRIO centralizado e em letras maiúsculas, posiciona os números de página à direita e reproduz a hierarquia tipográfica das seções. Elementos pré-textuais não são incluídos no sumário \parencite{abnt6027}.}
 
-\index{capa}\index{folha de rosto}\index{errata}\index{dedicatória}\index{agradecimentos}\index{epígrafe}\index{resumo}\index{sumário}
+\guiamecanismo{Gere o sumário com \texttt{\string\ufcPrintTableOfContents}. Não escreva entradas manualmente: a estrutura vem dos comandos de seção usados no corpo e dos elementos pós-textuais que participam do sumário conforme a classe.}
+
+\guiavalidacao{O gate de \texttt{frontmatter} e o cenário específico de sumário verificam exclusão de pré-textuais, título, posição dos números de página e espelhamento da hierarquia das seções.}
+
+\index{capa}\index{folha de rosto}\index{errata}\index{dedicatória}\index{agradecimentos}\index{epígrafe}\index{resumo}\index{sumário}\index{lista de ilustrações}
