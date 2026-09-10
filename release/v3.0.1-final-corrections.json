@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "working_branch": "release/v3.0.1-final-corrections",
@@ -13,6 +13,7 @@
   "authority": {
     "human_readable_plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
     "machine_state": "release/v3.0.1-final-corrections.json",
+    "r1_audit": "docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md",
     "issue": 304,
     "fail_closed_on_disagreement": true
   },
@@ -49,6 +50,7 @@
       "name": "auditable-control-plane-reset",
       "status": "DONE",
       "entry_sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
+      "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536",
       "acceptance": [
         "tracking_issue_exists",
         "working_branch_isolated_from_main",
@@ -63,7 +65,33 @@
       "name": "canonical-tcc-source-reconstruction",
       "status": "IN_PROGRESS",
       "sub_lots": [
-        {"id": "R1.1", "name": "source-identity-normalization", "status": "IN_PROGRESS"},
+        {
+          "id": "R1.1",
+          "name": "source-identity-normalization",
+          "status": "IMPLEMENTED_PENDING_STATIC",
+          "changed_files_expected": [
+            "template/main.tex",
+            "template/chapters/2-academic-work-structure.tex",
+            "template/chapters/3-front-matter.tex",
+            "template/chapters/4-general-formatting.tex",
+            "template/chapters/5-citations-notes-references.tex",
+            "template/chapters/6-academic-objects.tex",
+            "template/chapters/7-abntexto-ufc-resources-and-final-review.tex",
+            "docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md",
+            "release/v3.0.1-final-corrections.json"
+          ],
+          "removed_legacy_paths_expected": [
+            "template/chapters/2-theoretical-framework.tex",
+            "template/chapters/related-work.tex",
+            "template/chapters/3-methodology.tex",
+            "template/chapters/4-results.tex",
+            "template/chapters/formatting-examples.tex",
+            "template/chapters/5-conclusion.tex"
+          ],
+          "content_policy": "reuse_existing_chapter_blobs_without_rewrite",
+          "required_checks": ["static-contract"],
+          "observed_checks": []
+        },
         {"id": "R1.2", "name": "pedagogical-coverage-inventory", "status": "PENDING"},
         {"id": "R1.3", "name": "coherent-tcc-rewrite", "status": "PENDING"}
       ],
@@ -95,5 +123,5 @@
     {"id": "R5", "name": "release-scoped-regression", "status": "PENDING", "unresolved": []},
     {"id": "R6", "name": "exact-sha-human-acceptance-and-publication", "status": "PENDING", "unresolved": []}
   ],
-  "current_next_action": "Complete R1.1 atomically, then update this state with changed files and checks before starting R1.2."
+  "current_next_action": "Open draft PR to execute Static contract for R1.1, then complete R1.2 coverage inventory before any pedagogical rewrite."
 }
