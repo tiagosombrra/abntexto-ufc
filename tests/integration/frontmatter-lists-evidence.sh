@@ -55,6 +55,22 @@ compile_fixture() {
 }
 
 compile_fixture "$illustrations_fixture" "$illustrations_job"
+
+test -s "$illustrations_job.loi" || {
+  echo 'Optional lists audit failed: populated illustration-list fixture produced no .loi file.'
+  exit 1
+}
+
+grep -F 'FRONTMATTER illustration entry' "$illustrations_job.loi" >/dev/null || {
+  echo 'Optional lists audit failed: populated illustration-list entry was not written to .loi.'
+  exit 1
+}
+
+pdftotext "$illustrations_job.pdf" - | grep -F 'FRONTMATTER illustration entry' >/dev/null || {
+  echo 'Optional lists audit failed: populated illustration-list entry was not rendered in the PDF.'
+  exit 1
+}
+
 compile_fixture "$tables_fixture" "$tables_job"
 compile_fixture "$abbreviations_fixture" "$abbreviations_job"
 compile_fixture "$symbols_fixture" "$symbols_job"
