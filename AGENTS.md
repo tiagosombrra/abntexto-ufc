@@ -26,15 +26,16 @@ Memory, prior chats and historical branches never override current repository st
 | Publication hardening | PR #297 merged |
 | Post-hardening control synchronization | PR #298 merged, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
 | Final release-gate integration | PR #301 merged as `395899e1b2336ed268335d68e59e03452880c15e` |
-| Pre-recovery exact-main evidence | Linux release run `34419086322`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS |
+| Post-v3.0.0 runtime correction | PR #302 squash-merged to `main` as `6d06d4ed42b2187b1483ea219ee055cfe975ece2`; populated unified illustration-list renderer fixed and regression-covered |
+| Pre-recovery exact-main evidence | Linux release run `34419086322`, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS; baseline only because it predates PR #302 and the 3.0.1 recovery bytes |
 | Public `v3.0.0` | exists on `05399473827da7cf6b6c8bac36edc7115481773f`; classified as premature/superseded for final publication |
 | Recovery decision | do not silently retarget `v3.0.0`; recover as `v3.0.1` |
 | CTAN final archive | `abntexto-ufc-3.0.1.zip` only |
 | CTAN runtime | one generated `abntexto-ufc.cls`; zero project-owned `.def` files |
 | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| Current batch | merge recovery, recertify exact main, regenerate seven review pairs, obtain maintainer approval, freeze and publish `v3.0.1` |
+| Current batch | certify the combined PR #302 + 3.0.1 recovery state, merge recovery, recertify exact main, review seven pairs, freeze and publish `v3.0.1` |
 
-`docs/V3-CONTINUATION.md` is the concise operational handoff. `docs/V3-RELEASE-RECOVERY.md` is the authority for the 3.0.1 recovery decision.
+`docs/V3-CONTINUATION.md` is the concise operational handoff. `docs/V3-RELEASE-RECOVERY.md` is the authority for the 3.0.1 recovery decision and the inclusion of PR #302 in the final candidate.
 
 ## Readable phase model
 
@@ -45,13 +46,17 @@ Memory, prior chats and historical branches never override current repository st
 5. Final Certification — closed
 6. Release — active
 
-The recovery does not invent a new phase. It reopens only the publication boundary inside Release.
+The recovery does not invent a new phase. It reopens the publication boundary inside Release and includes the scoped post-v3.0.0 runtime correction from PR #302 before the final candidate is frozen.
 
 ## Engineering and Release rules
 
 - Release is the final roadmap phase; do not invent a new phase for recovery or publication closeout.
 - Project-owned technical surfaces are English; preserve the accepted v3 public API and normative/proof semantics.
+- PR #302 is the only intentionally reopened runtime surface in the 3.0.1 recovery: populated unified illustration-list rendering in `abntexto-ufc/objects.def` plus its regression fixture/gate.
+- Do not broaden PR #302 into unrelated runtime, API, normative or typography changes without a demonstrated regression.
 - Do not weaken tests merely to recover green CI.
+- A green Linux Integration workflow whose heavy integration step is skipped does not satisfy a complete release gate.
+- If `release/v3-release-candidate.json` is present anywhere in the full PR diff, the automatic Linux Integration scope must be `complete`, even after an incremental documentation-only synchronization.
 - Do not redistribute proprietary Microsoft fonts or UFC institutional marks in CTAN artifacts.
 - The 34-point librarian review remains closed unless new primary authority or a demonstrated regression requires reopening an item.
 - External publication is an explicit Release action and is never inferred from a build or candidate validation.
@@ -67,16 +72,17 @@ A **material advance** changes runtime, evidence, certification/release result, 
 
 ## Mandatory phase-end regression
 
-The final `3.0.1` Release candidate is one immutable exact `main` SHA produced after the recovery changes are merged. The candidate must pass the complete applicable matrix before tag creation.
+The final `3.0.1` Release candidate is one immutable exact `main` SHA containing PR #302 and the recovery changes. The candidate must pass the complete applicable matrix before tag creation.
 
 Minimum gates on the same exact candidate:
 
 - Static contract;
-- complete Linux integration;
+- complete Linux integration, with the heavy integration step actually executed;
 - Linux release check with the complete release matrix;
 - deterministic three-ZIP distribution plus `SHA256SUMS`;
 - generated CTAN runtime shape `1 cls / 0 def` with all tracked runtime modules inlined exactly once;
 - current CTAN `pkgcheck` on the exact `abntexto-ufc-3.0.1.zip` bytes;
+- populated unified illustration-list regression from PR #302;
 - final PDF + `.tex` pairs for all seven supported profiles;
 - A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight;
 - explicit maintainer visual approval of all seven pairs.
@@ -89,15 +95,16 @@ certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == sou
 
 ## Immediate Release discipline
 
-1. complete and merge the short-lived `release/v3.0.1-recovery` branch into canonical `main`;
-2. resolve the resulting exact `main` SHA and require Static + complete Linux integration + Linux release check on that SHA;
-3. retain and physically audit the resulting deterministic `3.0.1` distribution and current CTAN `pkgcheck` evidence;
-4. regenerate the seven final PDF/`.tex` pairs from the exact candidate and obtain explicit maintainer approval;
-5. freeze hashes/evidence and forbid rebuilds or tracked commits before tagging;
-6. create immutable `v3.0.1` on the exact accepted SHA;
-7. create the GitHub Release using the frozen assets and verify re-downloaded hashes;
-8. submit only `abntexto-ufc-3.0.1.zip` to CTAN and retain receipt/acceptance/install evidence;
-9. update final publication state and close Release only after external verification.
+1. require Static + **complete** Linux Integration + Linux release/pkgcheck on the recovery branch after reconciliation with `main@6d06d4ed...`;
+2. merge `release/v3.0.1-recovery` into canonical `main` only if those combined-state PR gates pass;
+3. resolve the resulting exact `main` SHA and require Static + complete Linux integration + Linux release check again on that SHA;
+4. retain and physically audit the deterministic `3.0.1` distribution and current CTAN `pkgcheck` evidence;
+5. use the retained seven-profile PDF/`.tex` artifact from that same candidate and obtain explicit maintainer approval;
+6. freeze hashes/evidence and forbid rebuilds or tracked commits before tagging;
+7. create immutable `v3.0.1` on the exact accepted SHA;
+8. create the GitHub Release using the frozen assets and verify re-downloaded hashes;
+9. submit only `abntexto-ufc-3.0.1.zip` to CTAN and retain receipt/acceptance/install evidence;
+10. update final publication state and close Release only after external verification.
 
 ## Fail-closed rule
 
