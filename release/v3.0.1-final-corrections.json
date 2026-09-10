@@ -1,5 +1,5 @@
 {
-  "schema_version": 12,
+  "schema_version": 13,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -19,6 +19,7 @@
     "r1_2_matrix": "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
     "r1_2_evidence": "docs/V3.0.1-R1.2-EVIDENCE.md",
     "r1_3_evidence": "docs/V3.0.1-R1.3-EVIDENCE.md",
+    "r2_evidence": "docs/V3.0.1-R2-EVIDENCE.md",
     "precedence": [
       "current_git_facts",
       "active_machine_state",
@@ -63,6 +64,14 @@
         "linux_run": 403,
         "linux_selected_scope": "reference-document"
       }
+    },
+    "release_workflow_integration_classification": {
+      "status": "IMPLEMENTED_PENDING_EVIDENCE",
+      "path": ".github/workflows/linux-release-check.yml",
+      "classification": "orchestration",
+      "expected_pr_integration_scope": "smoke",
+      "heavy_execution_owner": "Linux Release Check",
+      "fail_closed_exception": "release/final-certification-candidate.json and release/v3-release-candidate.json continue to force complete"
     }
   },
   "work_packages": {
@@ -116,19 +125,45 @@
       }
     },
     "R2": {
-      "status": "READY",
+      "status": "IMPLEMENTED_PENDING_EVIDENCE",
       "entry_condition": "R1.3 DONE",
       "reuse": "tests/integration/release-reference-reproducibility.sh",
       "required_outputs": [
         "artifacts/validation/release-reference-pdf.pdf",
         "artifacts/validation/release-reference-reproducibility.json"
       ],
+      "implementation": {
+        "workflow": ".github/workflows/linux-release-check.yml",
+        "dedicated_artifact_pattern": "abntexto-ufc-v<version>-canonical-reference-<run_id>",
+        "provenance_contract": [
+          "status PASS",
+          "source_sha equals SOURCE_COMMIT_SHA",
+          "canonical_source equals template/main.tex",
+          "canonical_output equals artifacts/validation/release-reference-pdf.pdf",
+          "two independent clean builds",
+          "identical_sha256 true",
+          "actual PDF SHA-256 equals both build records",
+          "font_embedding PASS",
+          "portable_pdf_validator PASS",
+          "pdfa_2b PASS",
+          "unicode_extraction PASS"
+        ],
+        "ordinary_pr_integration_scope_for_release_workflow_only_change": "smoke"
+      },
       "acceptance": [
         "dedicated first-class release artifact",
         "static contract for artifact wiring",
         "release-reference reproducibility PASS on implementation SHA",
         "artifact PDF/provenance available",
         "page-by-page development visual inspection"
+      ],
+      "checks": [],
+      "unresolved": [
+        "fresh_static_on_r2_implementation_sha",
+        "fresh_bounded_linux_integration_on_r2_implementation_sha",
+        "linux_release_check_pass_on_r2_implementation_sha",
+        "dedicated_artifact_presence_and_provenance_verification",
+        "page_by_page_development_visual_inspection"
       ]
     },
     "R3": {"status": "PENDING"},
@@ -142,5 +177,5 @@
     "R5": {"status": "PENDING"},
     "R6": {"status": "PENDING"}
   },
-  "current_next_action": "Begin R2 only after this R1 closure state is committed. Reuse the existing release-reference-reproducibility path, expose its PDF plus provenance JSON as a dedicated named artifact in Linux Release Check, statically protect that wiring, avoid a redundant complete PR integration for release-workflow-only orchestration changes, and validate the R2 implementation SHA before visual inspection."
+  "current_next_action": "Resolve the current R2 implementation HEAD dynamically. Require fresh Static Contract and bounded Linux Integration plus Linux Release Check on that same SHA. Then verify the dedicated canonical-reference artifact contains exactly the canonical PDF and reproducibility JSON, verify JSON source_sha and SHA-256 against artifact bytes, inspect the full PDF page by page, record all evidence in docs/V3.0.1-R2-EVIDENCE.md and this machine state, and only then mark R2 DONE and open R3."
 }

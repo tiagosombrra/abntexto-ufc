@@ -22,6 +22,7 @@ DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh
 RELEASE_REVIEW_PAIRS = ROOT / "tests" / "integration" / "release-review-pairs.sh"
 RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
 CORRECTION_STATE = "release/v3.0.1-final-corrections.json"
+RELEASE_WORKFLOW_PATH = ".github/workflows/linux-release-check.yml"
 
 
 def fail(message: str) -> None:
@@ -81,6 +82,15 @@ def main() -> None:
         "SOURCE_DATE_EPOCH",
         "git rev-parse HEAD",
         "make release-check",
+        "Validate canonical release reference provenance",
+        "artifacts/validation/release-reference-pdf.pdf",
+        "artifacts/validation/release-reference-reproducibility.json",
+        "CANONICAL-REFERENCE-EVIDENCE status=PASS",
+        "template/main.tex",
+        "independent_clean_builds",
+        "identical_sha256",
+        "Upload canonical reference PDF",
+        "canonical-reference-${{ github.run_id }}",
         "make distribution-bundles",
         "Read release version",
         "id: release-version",
@@ -123,6 +133,8 @@ def main() -> None:
         fail("active correction machine-state updates must not trigger heavy Linux integration by themselves")
     if infer_suites(["tests/run.py"]) != ("smoke",):
         fail("orchestration-only changes must select smoke")
+    if infer_suites([RELEASE_WORKFLOW_PATH]) != ("smoke",):
+        fail("release-workflow-only changes must select smoke; Linux Release Check supplies the heavy R2 execution path")
     if infer_suites(
         ["tests/run.py", "tests/integration/scientific-article-foreign-elements.sh"]
     ) != ("article",):
@@ -141,6 +153,8 @@ def main() -> None:
         fail("unknown technical paths must fail closed to complete")
     if infer_suites([RELEASE_CANDIDATE_MARKER]) != ("complete",):
         fail("Release phase-end candidate marker must force complete Linux integration")
+    if infer_suites([RELEASE_WORKFLOW_PATH, RELEASE_CANDIDATE_MARKER]) != ("complete",):
+        fail("Release marker must dominate release-workflow orchestration and force complete Linux integration")
     if infer_suites(["tests/integration_suites.py", RELEASE_CANDIDATE_MARKER]) != ("complete",):
         fail("Release marker plus orchestration changes must force complete Linux integration")
 
@@ -181,7 +195,8 @@ def main() -> None:
         "release_candidate_head_checkout=true canonical_ctan_archive=true "
         "release_version_source=makefile recursion_safe_version_capture=true "
         "human_review_pairs_retained=true release_marker_full_pr_dominates_incremental=true "
-        "release_assets_retained=true correction_state_docs_only=true"
+        "release_assets_retained=true correction_state_docs_only=true "
+        "canonical_reference_artifact=true release_workflow_orchestration_smoke=true"
     )
 
 

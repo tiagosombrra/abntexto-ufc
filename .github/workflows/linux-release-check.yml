@@ -71,6 +71,63 @@ jobs:
             test "$(git rev-parse HEAD)" = "$SOURCE_COMMIT_SHA"
             test "$(make --no-print-directory version)" = "$RELEASE_VERSION"
             make release-check
+
+            # R2 canonical-reference contract: the dedicated PDF must be the exact
+            # reproducible output certified by release-reference-reproducibility.sh
+            # for this candidate SHA, not an unrelated or manually copied PDF.
+            echo 'Validate canonical release reference provenance'
+            python3 - <<'PY'
+            import hashlib
+            import json
+            import os
+            from pathlib import Path
+
+            pdf_path = Path("artifacts/validation/release-reference-pdf.pdf")
+            evidence_path = Path("artifacts/validation/release-reference-reproducibility.json")
+            if not pdf_path.is_file() or pdf_path.stat().st_size == 0:
+                raise SystemExit("Canonical release reference PDF is missing or empty.")
+            if not evidence_path.is_file():
+                raise SystemExit("Canonical release reference reproducibility evidence is missing.")
+
+            evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+            source_sha = os.environ["SOURCE_COMMIT_SHA"]
+            if evidence.get("status") != "PASS":
+                raise SystemExit("Canonical release reference evidence is not PASS.")
+            if evidence.get("source_sha") != source_sha:
+                raise SystemExit(
+                    "Canonical release reference source SHA mismatch: "
+                    f"expected {source_sha}, got {evidence.get('source_sha')}"
+                )
+            if evidence.get("canonical_source") != "template/main.tex":
+                raise SystemExit("Canonical release reference source identity is not template/main.tex.")
+            if evidence.get("canonical_output") != pdf_path.as_posix():
+                raise SystemExit("Canonical release reference output identity is inconsistent.")
+            if evidence.get("independent_clean_builds") != 2 or evidence.get("identical_sha256") is not True:
+                raise SystemExit("Canonical release reference is not backed by two byte-identical clean builds.")
+
+            digest = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
+            builds = evidence.get("builds") or []
+            if len(builds) != 2 or any(build.get("sha256") != digest for build in builds):
+                raise SystemExit("Canonical release reference PDF SHA-256 does not match both clean-build records.")
+
+            expected_validation = {
+                "font_embedding": "PASS",
+                "portable_pdf_validator": "PASS",
+                "pdfa_2b": "PASS",
+                "unicode_extraction": "PASS",
+            }
+            measured_validation = evidence.get("validation") or {}
+            for key, expected in expected_validation.items():
+                if measured_validation.get(key) != expected:
+                    raise SystemExit(f"Canonical release reference validation {key} is not {expected}.")
+
+            print(
+                "CANONICAL-REFERENCE-EVIDENCE status=PASS "
+                f"source_sha={source_sha} sha256={digest} builds=2 "
+                "font_embedding=PASS pdf_validator=PASS pdfa_2b=PASS unicode=PASS"
+            )
+            PY
+
             make distribution-bundles
             (
               cd dist
@@ -162,6 +219,13 @@ jobs:
               echo 'No repository validation report was produced.'
             fi
             echo
+            echo '### Canonical reference PDF'
+            if [[ -f artifacts/validation/release-reference-reproducibility.json ]]; then
+              echo 'The full template/main.tex reference was built twice from this exact candidate, validated and retained as a dedicated artifact with source/hash provenance.'
+            else
+              echo 'Canonical reference PDF provenance was not produced.'
+            fi
+            echo
             echo '### CTAN pkgcheck'
             if [[ -f artifacts/validation/pkgcheck-version.txt ]]; then
               echo '```text'
@@ -193,6 +257,17 @@ jobs:
           name: linux-release-validation-${{ github.run_id }}
           path: artifacts/validation/**
           retention-days: 14
+          if-no-files-found: error
+
+      - name: Upload canonical reference PDF
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: abntexto-ufc-v${{ steps.release-version.outputs.version }}-canonical-reference-${{ github.run_id }}
+          path: |
+            artifacts/validation/release-reference-pdf.pdf
+            artifacts/validation/release-reference-reproducibility.json
+          retention-days: 30
           if-no-files-found: error
 
       - name: Upload seven-profile review pairs

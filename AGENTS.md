@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, release metada
 2. read `docs/V3-CONTINUATION.md` first — it is the concise current operational handoff;
 3. read `release/v3.0.1-final-corrections.json` — it is the machine-readable execution state for the active correction cycle;
 4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md` — it defines R0–R6, acceptance criteria and non-goals;
-5. when working in R1, also read `docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md`, `docs/V3.0.1-R1.1-EVIDENCE.md`, `docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md`, `docs/V3.0.1-R1.2-EVIDENCE.md` and `docs/V3.0.1-R1.3-EVIDENCE.md`; when working in later lots, read their evidence document when present;
+5. read the evidence document for the active lot: R1 evidence is under `docs/V3.0.1-R1*.md`; R2 uses `docs/V3.0.1-R2-EVIDENCE.md`; later lots must add and reference their own evidence document before closure;
 6. inspect issue #304 and PR #305 when remote GitHub state is available;
 7. consult older v3 roadmap, phase-end, recovery and certification documents only as historical/background evidence when the current handoff or machine state points to them.
 
@@ -32,7 +32,7 @@ Priority on disagreement is: **current Git facts > active machine state > curren
 | R1.1 | DONE — seven canonical chapter paths normalized and Static #475 PASS |
 | R1.2 | DONE — pedagogical coverage inventory and historical-retention audit completed |
 | R1.3 | DONE — bounded TCC rewrite; Static #484 + Linux #405 `PASS=3 FAIL=0 SKIP=0` on `704cedaa...` |
-| R2 | READY — promote full canonical reference PDF to first-class release artifact |
+| R2 | IMPLEMENTED_PENDING_EVIDENCE — canonical PDF/provenance artifact wiring under CI validation |
 | R3 | PENDING — distribution repair |
 | R4 | PENDING — Web/Lite deploy + real-PDF E2E repair |
 | R5 | PENDING — exact-SHA release regression |
@@ -45,7 +45,7 @@ The exact working-branch HEAD changes as audited lots are committed. Never copy 
 
 The correction cycle is intentionally bounded to user-facing release defects:
 
-- the full canonical `template/main.tex` PDF must become a first-class certified release reference;
+- R2 must prove that the full canonical `template/main.tex` PDF is a first-class exact-SHA release reference;
 - public distribution must retain the full reference PDF/source in the appropriate bundle while the CTAN minimal example keeps its separate role;
 - Web/Lite must have a complete static-deployment module graph and must run a real canonical PDF through its actual analysis path;
 - final certification, human review, tag and publication must all bind to one exact source SHA and one frozen set of bytes.
@@ -74,7 +74,13 @@ R1.3 closed on source SHA `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa` with Static
 
 ## Canonical reference artifact rule
 
-R2 must reuse the existing deterministic release-reference build rather than create a competing generator. The canonical technical source is `tests/integration/release-reference-reproducibility.sh`, reached through `make release-check`. R2 must expose its PDF and provenance JSON as an explicit first-class release artifact and protect that wiring in the repository contract. Development visual inspection in R2 does not substitute for R6 maintainer acceptance.
+R2 reuses the existing deterministic release-reference build rather than create a competing generator. `make release-check` invokes `tests/integration/release-reference-reproducibility.sh`, which produces `artifacts/validation/release-reference-pdf.pdf` and `artifacts/validation/release-reference-reproducibility.json` from two independent clean builds.
+
+The Linux Release Check must fail closed unless that evidence reports `PASS`, identifies the current `SOURCE_COMMIT_SHA`, identifies `template/main.tex` as the canonical source, records two byte-identical clean builds, matches the actual retained PDF SHA-256, and records PASS for font embedding, portable CLI/Deep PDF validation, PDF/A-2b and Unicode extraction. On success, the workflow publishes the PDF and provenance JSON together as a dedicated `canonical-reference` artifact. The generic validation artifact may coexist but is not the first-class identity surface.
+
+A release-workflow-only change is CI orchestration and selects the PR `smoke` integration scope because the same change directly triggers Linux Release Check, which is the authoritative heavy R2 path. This exception must never override release-candidate markers: candidate markers still force `complete`.
+
+R2 remains open until the implementation SHA has fresh Static, scoped Linux and Linux Release Check evidence, the dedicated artifact is verified, and the full PDF receives page-by-page development visual inspection. That visual inspection is engineering evidence only and does not substitute for R6 maintainer acceptance.
 
 ## Validator boundary
 

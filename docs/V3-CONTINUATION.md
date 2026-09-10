@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R1 closed; R2 ready to make canonical PDF first-class; publication blocked
+Status: RELEASE — R1 closed; R2 implementation committed/pending CI and artifact inspection; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -12,7 +12,7 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 3. Read this file.
 4. Read `release/v3.0.1-final-corrections.json`.
 5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
-6. Read the evidence document for the active lot.
+6. For the active lot R2, read `docs/V3.0.1-R2-EVIDENCE.md`.
 7. Continue from `current_next_action` in the machine state.
 
 Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
@@ -43,22 +43,41 @@ R1.3 acceptance source is exactly `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa`:
 - summary: `PASS=3 FAIL=0 SKIP=0`;
 - individual checks: `reference=PASS`, `reference-corpus=PASS`, `pdf-validator=PASS`.
 
-The earlier #478, #400, #403 and #404 failures remain recorded in `docs/V3.0.1-R1.3-EVIDENCE.md`; they document governance drift, a moving-heading command execution bug, monospaced overflow and an editorial punctuation margin protrusion that were corrected without weakening gates.
+The earlier #478, #400, #403 and #404 failures remain recorded in `docs/V3.0.1-R1.3-EVIDENCE.md`.
 
-## R2 — READY
+## R2 — IMPLEMENTED, EVIDENCE PENDING
 
 Goal: make the full PDF generated from `template/main.tex` a first-class canonical release reference.
 
-Do not create another PDF generator. `make release-check` already invokes `tests/integration/release-reference-reproducibility.sh`, which performs two independent clean builds, byte-identical SHA-256 comparison, font embedding, CLI/Deep, PDF/A-2b and Unicode extraction and writes:
+R2 does not create another generator. The existing `tests/integration/release-reference-reproducibility.sh`, reached through `make release-check`, remains authoritative and produces:
 
 - `artifacts/validation/release-reference-pdf.pdf`;
 - `artifacts/validation/release-reference-reproducibility.json`.
 
-R2 implementation should expose these two files as a dedicated named artifact in the existing Linux Release Check and add a static contract that prevents that wiring from disappearing. The generic validation artifact may remain; the dedicated artifact establishes explicit identity and review ergonomics.
+The R2 implementation changes the existing Linux Release Check so it fails closed unless the provenance JSON:
 
-To avoid duplicate heavy CI, classify `.github/workflows/linux-release-check.yml` as orchestration for PR integration selection and protect that classification with the existing suite-contract checker. A change to the release workflow itself already triggers Linux Release Check, which is the authoritative heavy execution path for R2. Release-candidate markers must still force `complete`.
+- reports `PASS` for the current `SOURCE_COMMIT_SHA`;
+- identifies `template/main.tex` and the canonical PDF output path;
+- records exactly two clean builds with identical SHA-256;
+- matches the SHA-256 of the retained PDF;
+- records PASS for font embedding, portable PDF validator/CLI-Deep path, PDF/A-2b and Unicode extraction.
 
-R2 closure requires successful release-reference generation on the R2 implementation SHA, verified PDF/provenance artifact availability and page-by-page development visual inspection. That inspection is R2 evidence only; it does not replace R6 maintainer visual acceptance.
+On successful release validation, the workflow publishes those two files together in a dedicated artifact named with the release version and `canonical-reference`. The existing generic validation artifact remains for broader diagnostic evidence.
+
+`tests/integration_suites.py` now classifies `.github/workflows/linux-release-check.yml` as orchestration. Therefore a release-workflow-only synchronization selects `smoke` in the ordinary Linux Integration instead of redundantly running `complete`; the same synchronization directly triggers Linux Release Check, which remains the heavy authoritative R2 path. `tests/checks/linux_integration_suites.py` protects both this classification and the rule that release-candidate markers continue to force `complete`.
+
+The implementation commit is the commit containing this handoff and `docs/V3.0.1-R2-EVIDENCE.md`; resolve its SHA dynamically from Git. Do not mark R2 DONE until fresh CI proves the wiring and the dedicated artifact is inspected.
+
+R2 closure requires:
+
+- Static Contract PASS on the implementation SHA;
+- Linux Integration PASS with the expected bounded scope;
+- Linux Release Check PASS on the same implementation SHA;
+- dedicated canonical-reference artifact present with the PDF and provenance JSON;
+- JSON source SHA and PDF SHA-256 verified against the artifact bytes;
+- full PDF inspected page by page for development visual evidence.
+
+The R2 visual inspection is engineering evidence only; it does not replace R6 explicit maintainer visual acceptance on the final immutable R5 candidate.
 
 ## R3 prepared decision
 
@@ -70,7 +89,7 @@ Keep the minimal CTAN example separate from the full canonical TCC. `tools/build
 
 ## Remaining work
 
-R2 full canonical reference PDF artifact + visual evidence; R3 public distribution repair; R4 Web/Lite static package + real-PDF E2E; R5 exact immutable phase-end release regression; R6 maintainer visual acceptance and publication.
+Close R2 from CI/artifact/visual evidence; R3 public distribution repair; R4 Web/Lite static package + real-PDF E2E; R5 exact immutable phase-end release regression; R6 maintainer visual acceptance and publication.
 
 Invariant:
 

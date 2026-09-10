@@ -48,6 +48,7 @@ DOC_ONLY_PREFIXES = ("docs/",)
 
 ORCHESTRATION_EXACT = {
     ".github/workflows/linux-integration.yml",
+    ".github/workflows/linux-release-check.yml",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
@@ -137,6 +138,7 @@ def self_test() -> None:
         ("abntexto-ufc/bibliography.def",): ("bibliography",),
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),
         ("tests/run.py",): ("smoke",),
+        (".github/workflows/linux-release-check.yml",): ("smoke",),
         ("tests/integration/scientific-article-profile.sh",): ("article",),
         ("tests/integration/scientific-article-recommendations.sh",): ("article",),
         ("tests/run.py", "tests/integration/scientific-article-recommendations.sh"): ("article",),
