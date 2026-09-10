@@ -1,7 +1,7 @@
-# V3.0.0 Continuation Handoff
+# V3 Continuation Handoff — Release Recovery 3.0.1
 
 Updated: 2026-09-09
-Status: RELEASE — FINAL EXACT-MAIN RECERTIFICATION / HUMAN APPROVAL
+Status: RELEASE — 3.0.1 RECOVERY / FINAL EXACT-MAIN RECERTIFICATION PENDING
 
 This file is the shortest safe entry point for continuing v3 work from a new ChatGPT conversation, Codex session or local clone.
 
@@ -12,36 +12,43 @@ This file is the shortest safe entry point for continuing v3 work from a new Cha
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main` — always resolve current SHA dynamically from Git |
 | Active roadmap phase | **Release** |
-| Publication hardening | **MERGED** via PR #297 |
-| Post-hardening control synchronization | **MERGED** via PR #298, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
-| Final candidate semantics | exact canonical `main` SHA containing current `pkgcheck` and seven-profile human-acceptance gates |
-| Previous Release candidate | `75ead435eabe5157ed17c295ac26fce76438b0ca` — **SUPERSEDED FOR PUBLICATION** |
+| Recovery target | `3.0.1` |
+| Recovery work branch | `release/v3.0.1-recovery` — short-lived; canonical state remains `main` |
+| Publication hardening | PR #297 merged |
+| Post-hardening control synchronization | PR #298 merged, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
+| Final release-gate integration | PR #301 merged as `395899e1b2336ed268335d68e59e03452880c15e` |
+| Pre-recovery technical evidence | run `34419086322`: `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS |
+| Public `v3.0.0` | exists on `05399473827da7cf6b6c8bac36edc7115481773f`; premature/superseded for final publication |
+| Final candidate semantics | exact canonical `main` SHA after the 3.0.1 recovery merge and fresh certification |
 | Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| CTAN upload contract | exactly one archive: `abntexto-ufc-3.0.0.zip` |
-| CTAN runtime contract | exactly one generated `abntexto-ufc.cls`; **zero project-owned `.def` files** |
-| pkgcheck contract | current CTAN `pkgcheck` runs inside final Linux release gate before tag |
+| CTAN upload contract | exactly one archive: `abntexto-ufc-3.0.1.zip` |
+| CTAN runtime contract | exactly one generated `abntexto-ufc.cls`; zero project-owned `.def` files |
 | Human gate | final PDF + `.tex` for seven supported profiles; explicit maintainer approval required |
-| Tag contract | final certified SHA = visually approved SHA = `v3.0.0` SHA = publication source SHA |
+| Tag contract | certified SHA = visually approved SHA = `v3.0.1` SHA = publication source SHA |
 
-## What is already closed
+`docs/V3-RELEASE-RECOVERY.md` records why the recovery uses `3.0.1` rather than silently moving the already-public `v3.0.0` tag.
 
-- stale v2/pre-publication release text fixed;
-- package id `abntexto-ufc` finalized;
-- UFC marks and proprietary Microsoft font files excluded from CTAN;
-- CTAN runtime reduced to one generated class with all 14 project modules inline and zero `.def` files;
-- isolated CTAN example compile and deterministic distribution established;
-- NBR 6023:2025 librarian item 33 closed with primary authority and executable regression;
-- post-hardening exact-main baseline `25c6ab09...` passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` in run `34355988612`;
-- PR #298 aligned the exact-main recertification control plane;
-- final candidate policy requires current-CTAN `pkgcheck` evidence and explicit review of all seven supported profiles.
+## What remains closed
 
-## Preliminary visual review
+- Regression Audit;
+- Core Corrections;
+- Reference PDF Validation;
+- Scientific Article;
+- Final Certification;
+- consolidated librarian review: 34/34 PASS;
+- accepted v3 public API and runtime semantics;
+- CTAN monolithic-runtime design: one generated class, 14 tracked modules inlined, zero project-owned `.def` files;
+- exclusion of UFC institutional marks and proprietary Microsoft fonts from CTAN.
 
-A preliminary seven-profile set was generated from the certified post-hardening baseline using the pinned Overleaf/release dependency set. All seven PDFs passed A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight and page-by-page assistant inspection.
+The recovery reopens only the Release publication boundary.
 
-This does **not** close the final human gate: the final pairs must be regenerated from the exact SHA that will be tagged and explicitly approved by the maintainer.
+## Recovery state
 
-Required profiles:
+The previously public `v3.0.0` GitHub Release was created before the final exact-SHA release invariant had been satisfied. Because public assets existed under that tag, the repository does not silently retarget it. Those assets are historical/superseded and are not eligible for final CTAN submission.
+
+The pre-recovery exact-main SHA `395899e1...` passed the automated release matrix and current CTAN `pkgcheck`, but the 3.0.1 version bump changes class identity metadata and archive bytes. Therefore, that evidence is baseline evidence only; the recovered release requires a new exact-SHA cycle.
+
+## Required seven-profile review
 
 1. `undergraduate-capstone`;
 2. `specialization-capstone`;
@@ -51,28 +58,31 @@ Required profiles:
 6. `anonymized-research-project`;
 7. `scientific-article`.
 
+A preliminary seven-profile set from the earlier baseline passed A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight plus assistant page-by-page inspection. It does not close the final human gate: the final pairs must be regenerated from the exact 3.0.1 candidate and explicitly approved by the maintainer.
+
 ## Remaining work
 
-1. resolve the exact canonical `origin/main` SHA containing the final release gates;
-2. require Static + automatic complete Linux integration + Linux release check on that SHA;
-3. require current CTAN `pkgcheck` output/version/archive-hash evidence from that same release run and classify warnings;
-4. retain and physically audit the resulting deterministic distribution;
-5. regenerate the seven final PDF/`.tex` pairs from that exact candidate and obtain explicit maintainer approval;
-6. freeze hashes/evidence;
-7. create immutable `v3.0.0` on the same certified and visually approved SHA;
-8. create GitHub Release with exact frozen assets and verify re-downloaded hashes;
-9. submit only `abntexto-ufc-3.0.0.zip` to CTAN;
-10. preserve submission/acceptance/install evidence and close Release only after external verification.
+1. merge the 3.0.1 recovery/version/control changes to `main`;
+2. resolve the resulting exact canonical `main` SHA;
+3. require Static + automatic complete Linux integration + Linux release check on that exact SHA;
+4. require current CTAN `pkgcheck` output/version/archive-hash evidence for `abntexto-ufc-3.0.1.zip` and classify all warnings;
+5. retain and physically audit the deterministic 3.0.1 distribution;
+6. regenerate the seven final PDF/`.tex` pairs from that exact candidate and obtain explicit maintainer approval;
+7. freeze hashes/evidence;
+8. create immutable `v3.0.1` on the same certified and visually approved SHA;
+9. create GitHub Release with exact frozen assets and verify re-downloaded hashes;
+10. submit only `abntexto-ufc-3.0.1.zip` to CTAN;
+11. preserve submission/acceptance/install evidence and close Release only after external verification.
 
 Invariant:
 
 ```text
-certified source SHA == visually approved source SHA == tagged v3.0.0 SHA == source SHA of published release bytes
+certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
 ```
 
 ## Windows literal-font scope
 
-Retained Windows/literal-font evidence remains scope-valid while final changes do not alter font runtime, font setup, engine behavior or the Windows certification contract. Any such change forces a fresh Windows recertification.
+Retained Windows/literal-font evidence remains scope-valid while recovery changes do not alter font runtime, font setup, engine behavior or the Windows certification contract. Any such change forces a fresh Windows recertification.
 
 ## Local continuation
 
@@ -90,10 +100,11 @@ Then read:
 2. `release/v3-roadmap.json`
 3. `release/v3-release-candidate.json`
 4. `docs/V3-CONTINUATION.md`
-5. `docs/HANDOFF-V3.0.0.md`
-6. `docs/V3-RELEASE-READINESS.md`
-7. `docs/V3-RELEASE-PHASE-END.md`
-8. `docs/CTAN-RELEASE.md`
-9. `docs/UFC-LIBRARIAN-REVIEW.md`
+5. `docs/V3-RELEASE-RECOVERY.md`
+6. `docs/HANDOFF-V3.0.0.md`
+7. `docs/V3-RELEASE-READINESS.md`
+8. `docs/V3-RELEASE-PHASE-END.md`
+9. `docs/CTAN-RELEASE.md`
+10. `docs/UFC-LIBRARIAN-REVIEW.md`
 
-Every **material advance** updates affected control documents and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. The public README is updated only when user-facing facts change; it does not track transient branch/CI state.
+Every **material advance** updates affected control documents and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. The public README tracks user-facing facts rather than transient CI state.
