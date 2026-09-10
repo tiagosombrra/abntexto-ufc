@@ -1,5 +1,5 @@
 {
-  "schema_version": 6,
+  "schema_version": 7,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -13,27 +13,20 @@
   "authority": {
     "bootstrap": "AGENTS.md",
     "continuation": "docs/V3-CONTINUATION.md",
-    "human_readable_plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
+    "plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
     "machine_state": "release/v3.0.1-final-corrections.json",
     "r1_1_evidence": "docs/V3.0.1-R1.1-EVIDENCE.md",
     "r1_2_matrix": "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
     "r1_2_evidence": "docs/V3.0.1-R1.2-EVIDENCE.md",
     "r1_3_evidence": "docs/V3.0.1-R1.3-EVIDENCE.md",
-    "fail_closed_on_disagreement": true,
-    "precedence": [
-      "current_git_facts",
-      "active_machine_state",
-      "current_continuation_handoff",
-      "lot_evidence",
-      "older_roadmap_or_handoff_documents",
-      "conversation_memory"
-    ]
+    "precedence": ["current_git_facts", "active_machine_state", "current_continuation_handoff", "lot_evidence", "older_docs", "conversation_memory"]
   },
   "audit_protocol": {
-    "green_ci_alone_closes_lot": false,
+    "documentation_updated_on_every_material_advance": true,
+    "phase_end_regression_required": true,
     "failed_checks_remain_in_history": true,
-    "post_acceptance_source_commits_allowed": false,
-    "material_advance_requires_state_and_handoff_sync": true
+    "green_ci_alone_closes_lot": false,
+    "post_acceptance_source_commits_allowed": false
   },
   "scope": {
     "release_blocking": [
@@ -43,126 +36,47 @@
       "web_lite_complete_deployment_and_real_pdf_e2e",
       "exact_sha_release_recertification_and_human_acceptance"
     ],
-    "deferred": [
-      "whole_repository_lifecycle_audit",
-      "broad_branch_pruning",
-      "broad_historical_documentation_cleanup",
-      "unrelated_runtime_api_refactors",
-      "tool_deletion_without_direct_release_defect"
-    ]
+    "deferred": ["whole_repository_lifecycle_audit", "broad_branch_pruning", "broad_historical_documentation_cleanup", "unrelated_runtime_api_refactors", "tool_deletion_without_direct_release_defect"]
   },
-  "work_packages": [
-    {
-      "id": "R0",
-      "name": "auditable-control-plane-reset",
-      "status": "DONE",
-      "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536",
-      "unresolved": []
-    },
-    {
-      "id": "R1",
-      "name": "canonical-tcc-source-reconstruction",
+  "work_packages": {
+    "R0": {"status": "DONE", "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536"},
+    "R1": {
       "status": "IN_PROGRESS",
-      "sub_lots": [
-        {
-          "id": "R1.1",
-          "name": "source-identity-normalization",
-          "status": "DONE",
-          "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
-          "consumer_reconciliation_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
-          "static_fail_then_pass": {
-            "failed_run": 474,
-            "passed_run": 475
-          },
-          "unresolved": []
-        },
-        {
-          "id": "R1.2",
-          "name": "pedagogical-coverage-and-retention-inventory",
-          "status": "DONE",
-          "initial_matrix_sha": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
-          "initial_matrix_static_run": 476,
-          "closure_control_sha": "3ad68d22eb7e2842679437dde3b0b25755179f7e",
-          "historical_retention": {
-            "guide_origin_commit": "2cbd6d00318ba906e225fa37a4efb724300c3b4e",
-            "comparison_head_before_r1_3": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
-            "chapter_count": 7,
-            "result": "ALL_SEVEN_GUIDE_CHAPTERS_SURVIVE_AS_RENAMES_WITH_ZERO_ADDITIONS_AND_ZERO_DELETIONS"
-          },
-          "unresolved": []
-        },
-        {
-          "id": "R1.3",
-          "name": "coherent-tcc-rewrite",
-          "status": "IMPLEMENTED_PENDING_CHECKS",
-          "implementation_scope": [
-            "add mechanism and validation teaching callouts",
-            "explain ufcsetup configuration groups",
-            "consolidate pagination and duplex guidance",
-            "add font embedding guidance",
-            "add physical footnote example and evidence",
-            "strengthen citation and apud user guidance",
-            "explicitly list all seven profiles including scientific-article",
-            "clarify code algorithm equation policy boundaries",
-            "document build workflow",
-            "document CLI/Deep workflow",
-            "document bounded Web/Lite workflow",
-            "document accessibility and manual-review limits",
-            "expand final delivery checklist"
-          ],
-          "preserved_unchanged": [
-            "template/chapters/6-academic-objects.tex"
-          ],
-          "required_checks": [
-            "static-contract",
-            "canonical-reference-build-or-integration",
-            "recognized-warning-overflow-preflight",
-            "reference-guide-contract"
-          ],
-          "unresolved": [
-            "fresh-ci-results-not-yet-recorded"
-          ]
+      "R1.1": {
+        "status": "DONE",
+        "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
+        "consumer_reconciliation_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
+        "checks": {"static_474": "FAIL_EXPECTED_PATH_DRIFT", "static_475": "PASS"}
+      },
+      "R1.2": {
+        "status": "DONE",
+        "matrix_sha": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
+        "closure_control_sha": "3ad68d22eb7e2842679437dde3b0b25755179f7e",
+        "static_476": "PASS",
+        "historical_retention": {
+          "guide_origin": "2cbd6d00318ba906e225fa37a4efb724300c3b4e",
+          "result": "ALL_SEVEN_GUIDE_CHAPTERS_SURVIVE_AS_RENAMES_WITH_ZERO_ADDITIONS_AND_ZERO_DELETIONS"
         }
-      ],
-      "unresolved": [
-        "r1.3-check-closure",
-        "final-reference-pdf-not-yet-certified"
-      ]
+      },
+      "R1.3": {
+        "status": "IMPLEMENTED_PENDING_STATIC_RERUN",
+        "implementation_sha": "f8452bc3507a5206fc4e5a4c837feef872f23f3c",
+        "checks": [
+          {"workflow": "Linux Integration", "run_number": 398, "run_id": 34481185134, "status": "PASS_DRAFT_DEVELOPMENT_SCOPE", "release_evidence": false},
+          {"workflow": "Static Contract", "run_number": 478, "run_id": 34481185238, "status": "FAIL", "classification": "CONTROL_DOCUMENTATION_CONTRACT_DRIFT", "cause": "AGENTS.md omitted exact required concept 'material advance' after bootstrap rewrite"}
+        ],
+        "correction": "Restore explicit material advance and phase-end regression concepts in AGENTS.md without weakening phase_governance.py.",
+        "unresolved": ["fresh_static_rerun", "canonical_reference_integration_confirmation"]
+      }
     },
-    {
-      "id": "R2",
-      "name": "full-canonical-reference-pdf",
+    "R2": {"status": "PENDING"},
+    "R3": {"status": "PENDING"},
+    "R4": {
       "status": "PENDING",
-      "unresolved": []
+      "confirmed_blockers": ["validator/app.js imports missing ./normative-catalog.js in tracked static tree", "synthetic cross-surface vectors do not prove actual canonical PDF through browser analyze path"]
     },
-    {
-      "id": "R3",
-      "name": "distribution-repair",
-      "status": "PENDING",
-      "unresolved": []
-    },
-    {
-      "id": "R4",
-      "name": "web-lite-validator-closure",
-      "status": "PENDING",
-      "confirmed_blockers": [
-        "validator/app.js imports ./normative-catalog.js but the tracked static validator tree does not contain that module",
-        "current cross-surface synthetic vectors do not run the canonical PDF through the real Web/Lite analyze path"
-      ],
-      "unresolved": []
-    },
-    {
-      "id": "R5",
-      "name": "release-scoped-regression",
-      "status": "PENDING",
-      "unresolved": []
-    },
-    {
-      "id": "R6",
-      "name": "exact-sha-human-acceptance-and-publication",
-      "status": "PENDING",
-      "unresolved": []
-    }
-  ],
-  "current_next_action": "Run fresh Static and canonical reference/integration checks on the R1.3 implementation. Diagnose any failure without weakening the existing contracts. If the reference path passes, close R1.3 in a documentation/state commit and start R2 full-reference PDF certification."
+    "R5": {"status": "PENDING"},
+    "R6": {"status": "PENDING"}
+  },
+  "current_next_action": "Commit the R1.3 control-documentation correction, require fresh Static PASS and canonical reference/integration evidence, then close R1.3 and start R2."
 }

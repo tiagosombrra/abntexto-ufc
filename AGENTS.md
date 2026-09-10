@@ -31,7 +31,7 @@ Priority on disagreement is: **current Git facts > active machine state > curren
 | R0 | DONE — auditable control plane |
 | R1.1 | DONE — seven canonical chapter paths normalized and Static #475 PASS |
 | R1.2 | DONE — pedagogical coverage inventory and historical-retention audit completed |
-| R1.3 | IMPLEMENTED_PENDING_CHECKS — canonical TCC bounded rewrite committed for validation |
+| R1.3 | IMPLEMENTED_PENDING_CHECKS — canonical TCC bounded rewrite under validation |
 | R2 | PENDING — full canonical reference PDF |
 | R3 | PENDING — distribution repair |
 | R4 | PENDING — Web/Lite deploy + real-PDF E2E repair |
@@ -53,31 +53,21 @@ The correction cycle is intentionally bounded to user-facing release defects:
 
 Broad repository lifecycle cleanup, branch pruning and unrelated runtime/API refactoring remain deferred until after v3.0.1 unless a direct release blocker is proven.
 
-## Audit discipline for every material lot
+## Progress documentation discipline
 
-A material lot must leave, in the same work cycle:
+A **material advance** changes runtime, evidence, certification/release result, active-lot acceptance state, artifact provenance, reproducibility state, candidate transport, tag/release state or publication readiness. Every material advance must update the affected machine state, lot evidence and `docs/V3-CONTINUATION.md` in the same work cycle.
 
-- machine-state update;
-- human-readable evidence/decision record;
-- exact changed-file list or an unambiguous commit/PR diff that provides it;
-- checks executed and their result/classification;
-- unresolved findings carried forward explicitly;
-- `docs/V3-CONTINUATION.md` synchronized whenever the next action or release status materially changes.
+A material lot must leave an exact changed-file record or unambiguous commit/PR diff, executed checks with classification, and unresolved findings carried forward explicitly. A failed check remains part of the audit trail after a successful rerun; do not rewrite history to make the sequence look green.
 
-A failed check remains part of the audit trail after a successful rerun. Do not rewrite history to make the sequence look green.
+## Mandatory phase-end regression
+
+Targeted checks are development evidence only. The final candidate must undergo the **phase-end regression** defined by the repository release contract before the Release phase can close. The phase-end regression binds the complete applicable matrix to one immutable exact SHA; targeted CI or a draft/scoped Linux success never substitutes for it.
 
 ## Canonical TCC/reference rules
 
 The canonical undergraduate reference is rooted at `template/main.tex`. It is both a user-facing commented guide and a regression/reference corpus. The seven chapter files must remain sequential and semantically named.
 
-The guide must distinguish:
-
-- ABNT normative requirement;
-- UFC institutional requirement;
-- project/editorial policy;
-- example or recommendation.
-
-For each major user-visible formatting or document-structure topic, the final guide must explain the authority/classification, expected rendered behavior, the public `abntexto-ufc` mechanism and the test/validation evidence route. The full machine normative contract remains authoritative for atomic proof semantics; the pedagogical TCC is not a substitute for that machine contract.
+The guide must distinguish ABNT normative requirements, UFC institutional requirements, project/editorial policy, and examples/recommendations. For each major user-visible formatting or document-structure topic, the final guide must explain the authority/classification, expected rendered behavior, the public `abntexto-ufc` mechanism and the test/validation evidence route. The full machine normative contract remains authoritative for atomic proof semantics; the pedagogical TCC is not a substitute for that machine contract.
 
 Historical-retention evidence for R1.2 shows that the seven guide chapter bodies from commit `2cbd6d00318ba906e225fa37a4efb724300c3b4e` survived to the pre-R1.3 branch state as renames with zero additions/deletions. R1.3 is therefore constrained to preserve and extend that reviewed material rather than replace it wholesale.
 
@@ -91,8 +81,6 @@ CLI/Deep and Web/Lite are distinct capability surfaces. Web/Lite must never clai
 
 The previous exact-main certification is historical evidence only after R0 was opened. The final release candidate must be a new immutable exact SHA after R1–R4 are complete.
 
-Required invariant:
-
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
 ```
@@ -101,4 +89,4 @@ No tracked commit or artifact rebuild is allowed after human acceptance and befo
 
 ## Fail-closed rule
 
-If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Targeted CI never substitutes for R5 complete regression, and automated success never substitutes for R6 explicit maintainer visual approval.
+If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Automated success never substitutes for R6 explicit maintainer visual approval.
