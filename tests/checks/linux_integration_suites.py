@@ -21,6 +21,7 @@ ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.s
 DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh"
 RELEASE_REVIEW_PAIRS = ROOT / "tests" / "integration" / "release-review-pairs.sh"
 RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
+CORRECTION_STATE = "release/v3.0.1-final-corrections.json"
 
 
 def fail(message: str) -> None:
@@ -73,8 +74,6 @@ def main() -> None:
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
 
-    # Release artifact identity must be derived from the canonical Makefile
-    # version rather than duplicated as a literal release number in CI.
     release_required_tokens = (
         RELEASE_CANDIDATE_MARKER,
         "github.event.pull_request.head.sha",
@@ -107,9 +106,6 @@ def main() -> None:
     if "dist/abntexto-ufc-ctan-" in release_workflow:
         fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
 
-    # Capturing `make version` from a recursive make leaks GNU Make's
-    # Entering/Leaving-directory diagnostics into the command substitution.
-    # Require the quiet form everywhere release identity is captured.
     version_capture_surfaces = {
         "release workflow": release_workflow,
         "distribution bundle gate": distribution_bundles,
@@ -123,6 +119,8 @@ def main() -> None:
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
+    if infer_suites([CORRECTION_STATE]) != ():
+        fail("active correction machine-state updates must not trigger heavy Linux integration by themselves")
     if infer_suites(["tests/run.py"]) != ("smoke",):
         fail("orchestration-only changes must select smoke")
     if infer_suites(
@@ -183,7 +181,7 @@ def main() -> None:
         "release_candidate_head_checkout=true canonical_ctan_archive=true "
         "release_version_source=makefile recursion_safe_version_capture=true "
         "human_review_pairs_retained=true release_marker_full_pr_dominates_incremental=true "
-        "release_assets_retained=true"
+        "release_assets_retained=true correction_state_docs_only=true"
     )
 
 

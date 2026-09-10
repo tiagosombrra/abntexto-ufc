@@ -37,7 +37,12 @@ SUITES: dict[str, tuple[str, ...]] = {
 SUITE_ORDER = tuple(SUITES)
 
 DOC_ONLY_EXACT = {
-    "README.md", "AGENTS.md", "LICENSE", ".gitignore", "release/v3-roadmap.json",
+    "README.md",
+    "AGENTS.md",
+    "LICENSE",
+    ".gitignore",
+    "release/v3-roadmap.json",
+    "release/v3.0.1-final-corrections.json",
 }
 DOC_ONLY_PREFIXES = ("docs/",)
 
@@ -127,6 +132,7 @@ def git_changed_paths(base: str, head: str) -> list[str]:
 def self_test() -> None:
     cases = {
         ("docs/ROADMAP-V3.0.0.md",): (),
+        ("release/v3.0.1-final-corrections.json",): (),
         ("abntexto-ufc/objects.def",): ("objects",),
         ("abntexto-ufc/bibliography.def",): ("bibliography",),
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),

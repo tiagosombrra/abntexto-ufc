@@ -1,5 +1,5 @@
 {
-  "schema_version": 8,
+  "schema_version": 9,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -51,6 +51,14 @@
       "tool_deletion_without_direct_release_defect"
     ]
   },
+  "control_plane": {
+    "active_correction_state_integration_classification": {
+      "status": "IMPLEMENTED_PENDING_STATIC_AND_INTEGRATION_EVIDENCE",
+      "path": "release/v3.0.1-final-corrections.json",
+      "classification": "documentation_control_state",
+      "reason": "Required machine-state bookkeeping must not by itself force heavy Linux integration; technical unknown paths and release candidate markers remain fail-closed."
+    }
+  },
   "work_packages": {
     "R0": {
       "status": "DONE",
@@ -78,57 +86,27 @@
         }
       },
       "R1.3": {
-        "status": "CORRECTION_PENDING_RERUN",
+        "status": "CORRECTION_PENDING_TARGETED_RERUN",
         "implementation_sha": "f8452bc3507a5206fc4e5a4c837feef872f23f3c",
-        "control_correction_sha": "e2f1998ac9e565767d85aedbcd65f2fa48e38d0d",
+        "governance_correction_sha": "e2f1998ac9e565767d85aedbcd65f2fa48e38d0d",
+        "heading_fix_verified_static_sha": "ba8aeb1cce86288652acac40899ae721445bc880",
         "checks": [
-          {
-            "workflow": "Static Contract",
-            "run_number": 478,
-            "run_id": 34481185238,
-            "status": "FAIL",
-            "classification": "CONTROL_DOCUMENTATION_CONTRACT_DRIFT",
-            "cause": "AGENTS.md omitted exact required concept 'material advance' after bootstrap rewrite"
-          },
-          {
-            "workflow": "Static Contract",
-            "run_number": 479,
-            "run_id": 34481697858,
-            "status": "PASS"
-          },
-          {
-            "workflow": "Linux Integration",
-            "run_number": 399,
-            "run_id": 34481697908,
-            "status": "WORKFLOW_PASS_HEAVY_INTEGRATION_SKIPPED_DRAFT",
-            "acceptance_evidence": false
-          },
-          {
-            "workflow": "Linux Integration",
-            "run_number": 400,
-            "run_id": 34481808802,
-            "status": "FAIL",
-            "scope": "complete",
-            "summary": "PASS=32 FAIL=1 SKIP=3",
-            "failed_check": "reference",
-            "classification": "R1_3_MOVING_ARGUMENT_TOC_DEFECT",
-            "cause": "Subsection heading containing the ufcsetup command was re-read from main.toc and executed as configuration, producing unknown key ufc/check@icr."
-          }
+          {"workflow": "Static Contract", "run_number": 478, "run_id": 34481185238, "status": "FAIL", "classification": "CONTROL_DOCUMENTATION_CONTRACT_DRIFT"},
+          {"workflow": "Static Contract", "run_number": 479, "run_id": 34481697858, "status": "PASS"},
+          {"workflow": "Linux Integration", "run_number": 399, "run_id": 34481697908, "status": "WORKFLOW_PASS_HEAVY_INTEGRATION_SKIPPED_DRAFT", "acceptance_evidence": false},
+          {"workflow": "Linux Integration", "run_number": 400, "run_id": 34481808802, "status": "FAIL", "scope": "complete", "summary": "PASS=32 FAIL=1 SKIP=3", "failed_check": "reference", "classification": "R1_3_MOVING_ARGUMENT_TOC_DEFECT"},
+          {"workflow": "Static Contract", "run_number": 481, "run_id": 34484253436, "status": "PASS", "head_sha": "ba8aeb1cce86288652acac40899ae721445bc880"},
+          {"workflow": "Linux Integration", "run_number": 402, "run_id": 34484253425, "status": "SUPERSEDED_IN_PROGRESS", "reason": "control-state path caused unnecessarily broad integration selection; successor commit adds tested docs-only classification and keeps the chapter as the reference-document trigger"}
         ],
-        "correction": "Replace the moving subsection title with plain semantic text while keeping the ufcsetup API explanation in the body.",
+        "correction": "Use plain semantic subsection heading, retain ufcsetup explanation only in body text, document moving-heading constraint in source, and classify active correction state as documentation-only for integration selection.",
         "unresolved": [
-          "fresh_static_after_heading_fix",
-          "real_linux_reference_pass_after_heading_fix"
+          "fresh_static_on_successor_head",
+          "real_linux_reference_pass_on_successor_head"
         ]
       }
     },
-    "R2": {
-      "status": "PENDING",
-      "entry_condition": "R1.3 DONE"
-    },
-    "R3": {
-      "status": "PENDING"
-    },
+    "R2": {"status": "PENDING", "entry_condition": "R1.3 DONE"},
+    "R3": {"status": "PENDING"},
     "R4": {
       "status": "PENDING",
       "confirmed_blockers": [
@@ -136,12 +114,8 @@
         "synthetic cross-surface vectors do not prove actual canonical PDF through browser analyze path"
       ]
     },
-    "R5": {
-      "status": "PENDING"
-    },
-    "R6": {
-      "status": "PENDING"
-    }
+    "R5": {"status": "PENDING"},
+    "R6": {"status": "PENDING"}
   },
-  "current_next_action": "Commit the R1.3 heading robustness correction with this state/evidence/handoff update, require fresh Static PASS and real Linux integration PASS for the canonical reference, then mark R1.3 DONE and start R2."
+  "current_next_action": "Validate the successor head with Static and a real reference-document Linux run. If reference passes, mark R1.3 DONE and begin R2 using the existing release-reference-reproducibility implementation as the canonical PDF evidence path."
 }
