@@ -25,7 +25,7 @@ jobs:
       - name: Checkout exact fix head
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: 97c58d3f29a191b604c8a01cc4b9180afb4076a2
+          ref: 1f2708ab8ab608aff3aa0915d15dd263721faef8
           path: released
           persist-credentials: false
 
