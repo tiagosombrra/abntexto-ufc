@@ -62,6 +62,9 @@ def main() -> None:
         "tests/run.py --mode pr --suite",
         "manual-auto-fail-closed",
         "documentation-only",
+        "git diff --name-only \"$BASE_SHA\" \"$HEAD_SHA\"",
+        "release_candidate_marker=release/v3-release-candidate.json",
+        "release-candidate-full-pr",
     ):
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
@@ -161,7 +164,7 @@ def main() -> None:
         "release_candidate_forces_complete=true release_check_pr_trigger=true "
         "release_candidate_head_checkout=true canonical_ctan_archive=true "
         "release_version_source=makefile human_review_pairs_retained=true "
-        "release_assets_retained=true"
+        "release_marker_full_pr_dominates_incremental=true release_assets_retained=true"
     )
 
 
