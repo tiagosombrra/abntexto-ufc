@@ -57,6 +57,12 @@
     \cs_if_exist:NT \lotifont  { \cs_gset:Npn \lotifont  { \normalfont } }
     \cs_if_exist:NT \locifont  { \cs_gset:Npn \locifont  { \normalfont } }
     \cs_if_exist:NT \loaifont  { \cs_gset:Npn \loaifont  { \normalfont } }
+
+    % Some packages finalize list-entry handlers during the regular begin-document
+    % hook. Reassert the UFC unified-list renderer at begindocument/end so its
+    % two-argument contract survives that initialization.
+    \cs_gset_protected:cpn { l@loii } ##1##2
+      { \extline{0pt}\loilabelwidth\loiifont{##1}{##2} }
   }
 \AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
 
