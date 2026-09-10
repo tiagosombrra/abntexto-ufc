@@ -6,7 +6,7 @@ cd "$ROOT"
 
 OUTPUT_DIR="${UFC_REVIEW_PAIRS_DIR:-artifacts/release-review-pairs}"
 SOURCE_SHA="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-$(git -c "safe.directory=$ROOT" rev-parse HEAD)}}"
-VERSION="$(make version)"
+VERSION="$(make --no-print-directory version)"
 PINNED_UPSTREAM_COMMIT="4c03fd7b5a7af089627dedb547c53cad4eed2a2a"
 PROFILES="undergraduate-capstone specialization-capstone masters-thesis doctoral-thesis research-project anonymized-research-project"
 FIXTURE="tests/smoke/base-profile.tex"
