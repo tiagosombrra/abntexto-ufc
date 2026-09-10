@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2 DONE; R3 IMPLEMENTED_PENDING_CI; publication blocked
+Status: RELEASE — R0/R1/R2 DONE; R3 IMPLEMENTED_PENDING_CI with one retained development failure; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -59,11 +59,11 @@ R2 makes the complete PDF rooted at `template/main.tex` a first-class exact-SHA 
 
 The R2 visual inspection is development evidence only; it does not replace R6 explicit maintainer acceptance on the final immutable R5 candidate. Full evidence: `docs/V3.0.1-R2-EVIDENCE.md`.
 
-## R3 — IMPLEMENTED, EVIDENCE PENDING
+## R3 — IMPLEMENTED, EVIDENCE/CORRECTION PENDING
 
-R3 repairs public distribution so users receive the complete editable source and a compiled full pedagogical reference while CTAN remains lean.
+Initial R3 implementation SHA: `e37516470f7374b74f85f4d84d22598830b8b92f`.
 
-The implementation commit containing this handoff must be resolved dynamically from the active branch. It introduces:
+R3 repairs public distribution so users receive the complete editable source and a compiled full pedagogical reference while CTAN remains lean. It introduces:
 
 - generated public filename `abntexto-ufc-reference.pdf`;
 - deterministic compilation by `tools/build-public-bundles.py` from the exact public `main.tex` sanitized to `coat-of-arms = false`;
@@ -75,13 +75,25 @@ The implementation commit containing this handoff must be resolved dynamically f
 
 `tools/build-distribution-bundles.py` is intentionally unchanged because it already delegates usage-bundle generation to `tools/build-public-bundles.py`.
 
-R3 is not DONE until Static, Linux Integration and Linux Release Check pass on the exact implementation HEAD and the generated distribution artifact is downloaded/independently inspected. Full contract: `docs/V3.0.1-R3-EVIDENCE.md`.
+Observed development evidence on initial R3 SHA:
+
+- Static Contract #488, run `34503194586`: PASS.
+- Linux Integration #409, run `34503194566`, scope `distribution`: FAIL before bundle content validation.
+- Root cause: the repository is mounted into the TeX Live container, but Linux Integration had not registered `$PWD` as a Git `safe.directory`. The public-bundle builder deliberately uses `git ls-files` to restrict archive content to tracked source, so Git rejected the mounted checkout.
+- Prepared correction: add `git config --global --add safe.directory "$PWD"` inside the TeX Live integration container and enforce this precondition in `tests/checks/linux_integration_suites.py`.
+- Linux Release Check #123, run `34503194470`, on the same initial SHA was still active when the correction was prepared. Do not move the official branch until that run completes.
+
+The failed #409 remains permanent R3 development evidence. A later green run does not erase it.
+
+R3 is not DONE until Static, corrected Linux Integration and Linux Release Check pass on the exact corrected HEAD and the generated distribution artifact is downloaded/independently inspected. Full contract and failure history: `docs/V3.0.1-R3-EVIDENCE.md`.
 
 Operational rule: do not move the branch while a Linux Release Check for its current HEAD is running. Failed development runs must be recorded before a rerun is accepted.
 
 ## R4 — PENDING
 
 Known blocker: `validator/app.js` imports `./normative-catalog.js`, but that file is absent from the tracked static validator tree. R4 must generate/track it deterministically, prove clean relative-module closure and run a real positive canonical/public PDF plus a negative PDF through the actual Web/Lite `analyze(file, profile)` path. Deep-only checks remain REVIEW rather than false PASS. Do not claim public deployment without repository evidence.
+
+The existing `tests/checks/normative_cross_surface.py` is useful but insufficient for R4 closure because it executes synthetic verdict/schema vectors extracted from the source rather than invoking the real PDF analysis path.
 
 ## R5/R6 — PENDING
 
@@ -99,7 +111,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the active branch HEAD and its workflow state. If the R3 implementation is already committed, wait for/inspect Static, Linux Integration and Linux Release Check on that exact SHA, then download and independently inspect the distribution artifact. If the implementation has not yet been committed, verify the predecessor Release Check is no longer running, then publish the prepared atomic R3 commit. Only after exact-SHA R3 evidence is accepted should the next technical commit close R3 and open/implement R4.
+Check Linux Release Check #123 (`34503194470`) on `e37516470f7374b74f85f4d84d22598830b8b92f`. While it is active, do not advance `release/v3.0.1-final-corrections`. After it completes, preserve its conclusion, reconfirm the official HEAD, promote the prepared safe-directory correction, and inspect the new exact-HEAD Static/Linux/Release runs. If corrected R3 is green, download and independently inspect the exact distribution artifact before closing R3 and opening R4.
 
 ## Documentation discipline
 
