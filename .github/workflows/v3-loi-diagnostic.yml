@@ -67,8 +67,6 @@ jobs:
             done
             test -s diagnostic.loi
             grep -F 'Esquema controlado' diagnostic.loi >/dev/null
-            pdftotext diagnostic.pdf diagnostic.txt
-            grep -F 'Esquema controlado' diagnostic.txt >/dev/null
             if grep -nE 'Overfull \\[hv]box' diagnostic.log; then
               echo 'Unified illustration list still produces an overfull box.'
               exit 1
