@@ -29,7 +29,7 @@ jobs:
           path: released
           persist-credentials: false
 
-      - name: Verify populated unified illustration list
+      - name: Inspect active renderer and populated list
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80
         with:
           texlive_version: 2026
@@ -50,6 +50,20 @@ jobs:
               year = {2026},
               coat-of-arms = false
             }
+            \makeatletter
+            \AtBeginDocument{%
+              \typeout{LOI-BEGINDOC-l@loii=\meaning\l@loii}%
+              \typeout{LOI-BEGINDOC-loilabelwidth=\meaning\loilabelwidth}%
+              \typeout{LOI-BEGINDOC-loiifont=\meaning\loiifont}%
+            }
+            \let\ufcDiagnosticStartToc\ufcstarttoc
+            \renewcommand{\ufcstarttoc}[1]{%
+              \typeout{LOI-READ-l@loii=\meaning\l@loii}%
+              \typeout{LOI-READ-loilabelwidth=\meaning\loilabelwidth}%
+              \typeout{LOI-READ-loiifont=\meaning\loiifont}%
+              \ufcDiagnosticStartToc{#1}%
+            }
+            \makeatother
             \begin{document}
             \pretextual
             \ufcPrintListOfIllustrations
@@ -65,20 +79,15 @@ jobs:
             for pass in 1 2 3; do
               pdflatex -interaction=nonstopmode -halt-on-error -file-line-error diagnostic.tex > "pass-${pass}.out" 2>&1
             done
+            echo '--- ACTIVE RENDERER ---'
+            grep -E 'LOI-(BEGINDOC|READ)-' diagnostic.log || true
+            echo '--- LOI FILE ---'
+            cat diagnostic.loi
+            echo '--- OVERFULL CONTEXT ---'
+            grep -n -B3 -A6 -E 'Overfull \\[hv]box' diagnostic.log || true
             test -s diagnostic.loi
             grep -F 'Esquema controlado' diagnostic.loi >/dev/null
-            if grep -nE 'Overfull \\[hv]box' diagnostic.log; then
-              echo 'Unified illustration list still produces an overfull box.'
+            if grep -qE 'Overfull \\[hv]box' diagnostic.log; then
               exit 1
             fi
-            cat > meanings.tex <<'TEX'
-            \documentclass{abntexto-ufc}
-            \begin{document}
-            \makeatletter
-            \typeout{MEANING-l@loii=\meaning\l@loii}
-            \makeatother
-            \end{document}
-            TEX
-            pdflatex -interaction=nonstopmode -halt-on-error meanings.tex > meanings.out 2>&1
-            grep 'MEANING-l@loii=' meanings.out
             echo 'LOI-DIAGNOSTIC status=PASS populated_entry=true overfull=false'
