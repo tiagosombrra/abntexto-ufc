@@ -65,21 +65,28 @@ class QuietHandler(SimpleHTTPRequestHandler):
 
 
 class Browser:
-    def __init__(self, chrome: str, chromedriver: str) -> None:
+    def __init__(self, chrome: str, chromedriver: str, driver_log: Path) -> None:
         self.chrome = chrome
         self.chromedriver = chromedriver
+        self.driver_log = driver_log
         self.port = free_port()
         self.base = f"http://127.0.0.1:{self.port}"
         self.process: subprocess.Popen[bytes] | None = None
         self.session = ""
 
     def start(self) -> None:
+        self.driver_log.parent.mkdir(parents=True, exist_ok=True)
         self.process = subprocess.Popen(
-            [self.chromedriver, f"--port={self.port}"],
+            [
+                self.chromedriver,
+                f"--port={self.port}",
+                "--verbose",
+                f"--log-path={self.driver_log}",
+            ],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        deadline = time.monotonic() + 20
+        deadline = time.monotonic() + 30
         while time.monotonic() < deadline:
             try:
                 http_json("GET", self.base + "/status", timeout=1)
@@ -108,7 +115,7 @@ class Browser:
                     }
                 }
             },
-            timeout=20,
+            timeout=90,
         )
         if not isinstance(created, dict) or not created.get("sessionId"):
             fail(f"ChromeDriver session response is invalid: {created!r}")
@@ -318,7 +325,13 @@ def main() -> None:
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
 
-    browser = Browser(chrome, driver)
+    evidence_path = args.evidence.resolve() if args.evidence else None
+    driver_log = (
+        evidence_path.with_name("web-lite-chromedriver.log")
+        if evidence_path
+        else Path(tempfile.gettempdir()) / "abntexto-ufc-web-lite-chromedriver.log"
+    )
+    browser = Browser(chrome, driver, driver_log)
     try:
         browser.start()
         browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
@@ -375,6 +388,7 @@ def main() -> None:
                 "normative_catalog": positive_report["normative_catalog"],
                 "browser": chrome_version,
                 "driver": driver_version,
+                "driver_log": str(driver_log),
                 "positive": {
                     "file": positive_report["file"],
                     "pages": positive_report["pages"],

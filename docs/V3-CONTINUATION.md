@@ -88,9 +88,9 @@ Accepted corrective source: `2556489da23e16495fc51ebf093f9f4704c6d52f`.
 
 The first implementation failures #409/#123 and their causes remain retained in `docs/V3.0.1-R3-EVIDENCE.md`.
 
-## R4 — IMPLEMENTED, CI PENDING
+## R4 — CORRECTIVE COMMIT IN CI
 
-The R4 implementation closes both entry defects in source: `validator/normative-catalog.js` is generated/tracked and byte-compared against the authoritative generator; the source gate proves relative-module closure; and the Linux `web-lite` scope snapshots the real canonical/reference PDF and drives the productive UI in Chrome with positive and non-A4 negative PDFs. Deep-only checks remain `MANUAL REVIEW`. No fourth workflow or public-deployment claim is introduced. Evidence contract: `docs/V3.0.1-R4-EVIDENCE.md`.
+The R4 source closes both entry defects: `validator/normative-catalog.js` is generated/tracked and byte-compared against the authoritative generator; the source gate proves relative-module closure; and Linux `web-lite` snapshots the real canonical/reference PDF and drives the productive UI in Chrome with positive and non-A4 negative PDFs. Static #491 passed. Linux #412 passed the three container checks but failed before PDF analysis because local ChromeDriver session creation exceeded an overly strict 20-second client timeout despite matched Chrome/ChromeDriver 152.0.7977.82. The corrective commit raises only the session-start budget to 90 seconds and persists verbose ChromeDriver logs for fail-closed diagnosis. PDF assertions, normative predicates and Deep-only `MANUAL REVIEW` boundaries are unchanged. Evidence contract: `docs/V3.0.1-R4-EVIDENCE.md`.
 
 ## R5/R6 — PENDING
 
@@ -108,7 +108,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the active branch HEAD. If the R4 implementation is active, inspect Static and Linux Integration on that exact SHA. Linux must select `web-lite`, run the host Chrome E2E and emit/upload `web-lite-e2e.json`. Require the real positive PDF to pass `pdf.open`, A4 and margin checks without top-level FAIL; require the valid non-A4 PDF to produce `layout.a4=FAIL` and verdict `FAIL`; require `font.embedded` and `pdfa.deep` to remain `MANUAL REVIEW`. Preserve any failed run before rerun. Close R4 only after exact-HEAD browser evidence is independently inspected; then open R5.
+Resolve the corrective R4 HEAD and inspect Static/Linux. Require `web-lite` container PASS and the real host Chrome E2E PASS. Inspect `web-lite-e2e.json` plus `web-lite-chromedriver.log`. The positive reference must pass readable/A4/margins without top-level FAIL; the valid non-A4 fixture must fail A4 with verdict FAIL; `font.embedded` and `pdfa.deep` must remain `MANUAL REVIEW`. If the browser step fails again, classify it from the retained ChromeDriver log before changing anything. Preserve every failed run. Close R4 only after exact-HEAD browser evidence is independently inspected; then open R5.
 
 ## Documentation discipline
 

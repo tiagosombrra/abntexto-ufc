@@ -177,10 +177,12 @@ jobs:
             --evidence artifacts/validation/web-lite-e2e.json
 
       - name: Upload Web/Lite browser evidence
-        if: always() && steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite')) && hashFiles('artifacts/validation/web-lite-e2e.json') != ''
+        if: always() && steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite')) && hashFiles('artifacts/validation/web-lite-*') != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: web-lite-e2e-${{ github.run_id }}
-          path: artifacts/validation/web-lite-e2e.json
+          path: |
+            artifacts/validation/web-lite-e2e.json
+            artifacts/validation/web-lite-chromedriver.log
           retention-days: 14
           if-no-files-found: error

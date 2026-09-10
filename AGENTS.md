@@ -31,7 +31,7 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
-| R4 | IMPLEMENTED_PENDING_CI — generated static package + real-PDF browser E2E |
+| R4 | CORRECTIVE_COMMIT_IN_CI — static package PASS; browser session-start correction under validation |
 | R5 | PENDING — immutable exact-SHA phase-end regression |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |

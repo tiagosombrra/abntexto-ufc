@@ -93,6 +93,7 @@ def main() -> None:
         "tests/integration/web-lite-e2e.py",
         "artifacts/validation/web-lite-positive.pdf",
         "artifacts/validation/web-lite-e2e.json",
+        "artifacts/validation/web-lite-chromedriver.log",
         "Upload Web/Lite browser evidence",
         "web-lite-e2e-${{ github.run_id }}",
     ):

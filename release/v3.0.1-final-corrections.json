@@ -1,5 +1,5 @@
 {
-  "schema_version": 18,
+  "schema_version": 19,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -121,7 +121,7 @@
       }
     },
     "web_lite_integration_classification": {
-      "status": "IMPLEMENTED_PENDING_CI",
+      "status": "CORRECTIVE_COMMIT_IN_CI",
       "suite": "web-lite",
       "container_checks": [
         "validator-source",
@@ -347,7 +347,7 @@
       }
     },
     "R4": {
-      "status": "IMPLEMENTED_PENDING_CI",
+      "status": "CORRECTIVE_COMMIT_IN_CI",
       "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
       "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
@@ -412,14 +412,47 @@
         "release/v3.0.1-final-corrections.json"
       ],
       "pending_acceptance": [
-        "Static Contract PASS on exact R4 implementation HEAD",
-        "Linux Integration web-lite scope PASS on exact R4 implementation HEAD",
+        "Static Contract PASS on exact corrective R4 HEAD",
+        "Linux Integration web-lite container suite PASS on exact corrective R4 HEAD",
+        "ChromeDriver session starts and productive UI is reached",
         "real Chrome productive UI positive PDF evidence PASS",
         "real Chrome productive UI negative non-A4 evidence PASS",
         "generated normative catalog byte identity PASS",
         "relative browser import closure PASS",
         "font.embedded and pdfa.deep remain MANUAL REVIEW in Web/Lite",
-        "uploaded web-lite-e2e JSON independently inspected"
+        "uploaded web-lite-e2e JSON and ChromeDriver log independently inspected"
+      ],
+      "first_implementation_sha": "57043432a5e1f94780bfbac3af0b9b199dd12d27",
+      "failed_development_runs": [
+        {
+          "workflow": "Static Contract",
+          "run_number": 491,
+          "run_id": 34532743661,
+          "status": "PASS",
+          "source_sha": "57043432a5e1f94780bfbac3af0b9b199dd12d27",
+          "web_static_package": "PASS",
+          "relative_imports": 1,
+          "generated_catalog_identical": true
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 412,
+          "run_id": 34532743657,
+          "status": "FAIL",
+          "source_sha": "57043432a5e1f94780bfbac3af0b9b199dd12d27",
+          "scope": "web-lite",
+          "container_summary": "PASS=3 FAIL=0 SKIP=0",
+          "browser": "Google Chrome 152.0.7977.82",
+          "driver": "ChromeDriver 152.0.7977.82",
+          "browser_pdf_analysis_reached": false,
+          "cause": "Local ChromeDriver POST /session exceeded the E2E harness 20-second HTTP timeout before PDF analysis.",
+          "corrective_action": "Increase only session-creation timeout to 90 seconds, retain verbose ChromeDriver log, and upload diagnostics on failure; PDF assertions unchanged."
+        }
+      ],
+      "corrective_changes": [
+        "tests/integration/web-lite-e2e.py: 90-second session creation budget and persisted verbose ChromeDriver log",
+        ".github/workflows/linux-integration.yml: upload web-lite JSON/log diagnostics even on browser failure",
+        "tests/checks/linux_integration_suites.py: enforce ChromeDriver-log artifact wiring"
       ]
     },
     "R5": {
@@ -429,5 +462,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "After the R4 implementation commit is promoted, inspect exact-HEAD Static and Linux Integration. Require scope=web-lite and WEB-LITE-E2E-EVIDENCE status=PASS using productive UI with the stable real reference snapshot and valid non-A4 negative PDF; inspect the uploaded JSON. Preserve failed runs before rerun. Only then mark R4 DONE and open R5."
+  "current_next_action": "Inspect exact corrective R4 HEAD workflows. Require scope=web-lite container PASS and host Chrome E2E PASS; inspect web-lite-e2e.json and web-lite-chromedriver.log. If browser startup still fails, classify using retained driver log before changing configuration. Do not weaken PDF assertions. Only exact-HEAD browser evidence may close R4 and open R5."
 }
