@@ -1,84 +1,99 @@
-# V3 Continuation Handoff — Release Recovery 3.0.1
+# V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — COMBINED PR #302 + 3.0.1 RECOVERY / FINAL EXACT-MAIN RECERTIFICATION PENDING
+Status: RELEASE — R1 canonical TCC reconstruction in progress; publication blocked
 
-This file is the shortest safe entry point for continuing v3 work from a new ChatGPT conversation, Codex session or local clone.
+This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct the current plan from chat history.
 
-## Canonical starting point
+## Start here
 
-| Fact | Current state |
+1. Resolve branch, HEAD and `origin/main` from Git.
+2. Read this file.
+3. Read `release/v3.0.1-final-corrections.json`.
+4. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
+5. Continue from `current_next_action` in the machine state.
+
+`AGENTS.md` defines the fail-closed precedence and audit rules. Older v3 phase-end/recovery documents remain evidence, but they do not override this handoff or the active correction state.
+
+## Canonical state
+
+| Fact | State |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical branch | `main` — always resolve current SHA dynamically from Git |
-| Active roadmap phase | **Release** |
-| Recovery target | `3.0.1` |
-| Recovery work branch | `release/v3.0.1-recovery` — short-lived; canonical state remains `main` |
-| Publication hardening | PR #297 merged |
-| Post-hardening control synchronization | PR #298 merged, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
-| Final release-gate integration | PR #301 merged as `395899e1b2336ed268335d68e59e03452880c15e` |
-| Post-v3.0.0 runtime fix | PR #302 squash-merged as `6d06d4ed42b2187b1483ea219ee055cfe975ece2`; populated unified illustration-list renderer corrected and regression-covered |
-| Pre-recovery technical evidence | run `34419086322`: `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS; historical baseline only because it predates #302 and recovery bytes |
-| Public `v3.0.0` | exists on `05399473827da7cf6b6c8bac36edc7115481773f`; premature/superseded for final publication |
-| Final candidate semantics | exact canonical `main` SHA containing PR #302 plus the 3.0.1 recovery and fresh certification |
-| Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| CTAN upload contract | exactly one archive: `abntexto-ufc-3.0.1.zip` |
-| CTAN runtime contract | exactly one generated `abntexto-ufc.cls`; zero project-owned `.def` files |
-| Human gate | final PDF + `.tex` for seven supported profiles; explicit maintainer approval required |
-| Tag contract | certified SHA = visually approved SHA = `v3.0.1` SHA = publication source SHA |
+| Canonical branch | `main`; resolve current SHA dynamically |
+| Historical certified main baseline | `111680cd934a4ea55b02f6ffe730ff5260077565` |
+| Baseline status | technically certified historical evidence, superseded as the final publication candidate |
+| Active branch | `release/v3.0.1-final-corrections` |
+| Tracking issue | #304 |
+| Draft PR | #305 |
+| Target | `v3.0.1` |
+| Publication | BLOCKED |
+| Public `v3.0.0` | exists on old SHA and must not be retargeted |
 
-`docs/V3-RELEASE-RECOVERY.md` records why the recovery uses `3.0.1`, why `v3.0.0` is not silently retargeted, and why PR #302 must be included in the final candidate.
+Why the previously certified SHA is no longer the final candidate: after exact-main certification, the maintainer identified user-facing release defects in canonical-reference packaging/identity and the Web/Lite validator deployment/E2E path. Those defects must be corrected before a new exact candidate is certified.
 
-## What remains closed
+## R0–R6 execution state
 
-- Regression Audit;
-- Core Corrections;
-- Reference PDF Validation;
-- Scientific Article;
-- Final Certification;
-- consolidated librarian review: 34/34 PASS;
-- accepted v3 public API and normative semantics;
-- all runtime surfaces except the scoped populated unified illustration-list correction already merged through PR #302;
-- CTAN monolithic-runtime design: one generated class, 14 tracked modules inlined, zero project-owned `.def` files;
-- exclusion of UFC institutional marks and proprietary Microsoft fonts from CTAN.
+### R0 — DONE: auditable control plane
 
-The recovery remains inside Release. PR #302 does not reopen prior phases; it is a scoped post-v3.0.0 defect correction that must be included in the final 3.0.1 regression.
+Issue #304, PR #305, the execution plan and machine state define the correction cycle. Broad repository cleanup remains deferred.
 
-## Recovery state
+### R1.1 — DONE: source identity normalization
 
-The previously public `v3.0.0` GitHub Release was created before the final exact-SHA release invariant had been satisfied. Because public assets existed under that tag, the repository does not silently retarget it. Those assets are historical/superseded and are not eligible for final CTAN submission.
+The TCC source now uses seven sequential semantic chapter paths:
 
-The pre-recovery exact-main SHA `395899e1...` passed the automated release matrix and current CTAN `pkgcheck`, but it predates both PR #302 and the 3.0.1 recovery changes. Therefore, that evidence is baseline evidence only; the recovered release requires a new exact-SHA cycle over the combined state.
+1. `1-introduction.tex`
+2. `2-academic-work-structure.tex`
+3. `3-front-matter.tex`
+4. `4-general-formatting.tex`
+5. `5-citations-notes-references.tex`
+6. `6-academic-objects.tex`
+7. `7-abntexto-ufc-resources-and-final-review.tex`
 
-PR #302 corrected populated unified illustration-list rendering in `abntexto-ufc/objects.def`. Its regression fixture now creates a real illustration entry and the gate verifies that the `.loi` entry is written and rendered without unrecognized warnings or overflows. It was squash-merged to canonical `main` as `6d06d4ed42b2187b1483ea219ee055cfe975ece2` and reconciled into the recovery branch before candidate certification.
+The first Static run #474 failed closed because the guide trace/checker still encoded old paths. Those consumers were corrected without weakening their semantics. Static #475 then passed on `5394d2caa3c12ec69c87c38c01302df73c9e59c9`. The failure and rerun remain documented in `docs/V3.0.1-R1.1-EVIDENCE.md`.
 
-## Required seven-profile review
+### R1.2 — DONE: pedagogical coverage and retention inventory
 
-1. `undergraduate-capstone`;
-2. `specialization-capstone`;
-3. `masters-thesis`;
-4. `doctoral-thesis`;
-5. `research-project`;
-6. `anonymized-research-project`;
-7. `scientific-article`.
+The baseline coverage matrix is `docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md` and the closure evidence is `docs/V3.0.1-R1.2-EVIDENCE.md`.
 
-A preliminary seven-profile set from the earlier baseline passed A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight plus assistant page-by-page inspection. It does not close the final human gate: the final pairs must be regenerated from the exact 3.0.1 candidate containing PR #302 and explicitly approved by the maintainer.
+Important historical result: commit `2cbd6d00318ba906e225fa37a4efb724300c3b4e` introduced the commented UFC reference guide. Comparing that commit with the pre-R1.3 branch state shows the seven current chapter files as renames with **zero additions and zero deletions**. The previously reviewed pedagogical chapter bodies were therefore not deleted; they survived path migrations. R1.3 must preserve and extend them rather than replace them wholesale.
 
-## Remaining work
+The matrix also found release-reference gaps that R1.3 must close: font embedding, bounded accessibility guidance, CLI/Deep user workflow, Web/Lite user workflow (final wording waits for R4), coherent `\ufcsetup` explanation, list/profile behavior, citation examples/evidence, code/algorithm authority separation, and consolidated pagination/duplex guidance.
 
-1. require Static + **complete** Linux integration + Linux release/pkgcheck on the reconciled recovery branch;
-2. verify that the heavy Linux integration step actually ran rather than returning a scoped skip;
-3. merge the recovery branch to `main` only after the combined PR gates pass;
-4. resolve the resulting exact canonical `main` SHA;
-5. require Static + automatic complete Linux integration + Linux release check on that exact SHA;
-6. require current CTAN `pkgcheck` output/version/archive-hash evidence for `abntexto-ufc-3.0.1.zip` and classify all warnings;
-7. retain and physically audit the deterministic 3.0.1 distribution;
-8. retain the seven final PDF/`.tex` pairs from that exact candidate and obtain explicit maintainer approval;
-9. freeze hashes/evidence;
-10. create immutable `v3.0.1` on the same certified and visually approved SHA;
-11. create GitHub Release with exact frozen assets and verify re-downloaded hashes;
-12. submit only `abntexto-ufc-3.0.1.zip` to CTAN;
-13. preserve submission/acceptance/install evidence and close Release only after external verification.
+Static #476 passed on the initial R1.2 inventory commit `1fcc023c50955f6cd62d84a8f03bd7d91ff58932`.
+
+### R1.3 — NEXT: coherent TCC rewrite
+
+R1.3 may now edit the canonical guide. It must:
+
+- retain the reviewer-corrected material proven above;
+- close the missing/partial topics in the R1.2 matrix;
+- add explicit project/API and validation-route guidance instead of only prose about rules;
+- preserve normative/institutional/project/example separation;
+- keep the undergraduate TCC as the canonical full pedagogical reference and treat scientific article/research-project variations as profiles, not duplicate full guides;
+- avoid claiming Web/Lite capabilities that R4 has not yet proved.
+
+After R1.3, a fresh Static + reference/integration run must prove that the source compiles and the guide contracts still hold before R2 starts.
+
+### R2 — PENDING: full canonical PDF
+
+Generate `template/main.pdf` deterministically from the exact candidate source; validate convergence, warnings/overflow, A4/geometry, embedded fonts, PDF/A-2b where claimed, CLI/Deep, provenance/hash and page-by-page visual quality.
+
+### R3 — PENDING: distribution repair
+
+Keep the minimal CTAN example separate from the full canonical TCC. Make the full reference PDF/source a first-class user-facing release artifact in the appropriate GitHub/template distribution. Do not redistribute Microsoft fonts or UFC marks where policy forbids them.
+
+### R4 — PENDING: Web/Lite closure
+
+Confirmed defect: `validator/app.js` imports `./normative-catalog.js`, but the tracked static validator tree lacks that module. Existing cross-surface synthetic vectors also do not run the actual canonical PDF through the browser analysis path. R4 must fix deterministic catalog generation/deployment, verify module closure and add real-PDF E2E with a negative case while preserving Deep-only REVIEW boundaries.
+
+### R5 — PENDING: final exact-SHA regression
+
+One final SHA must pass Static, complete Linux Integration, complete Linux Release Check, current CTAN `pkgcheck`, canonical full-reference gates, seven profile fixtures, CLI/Deep, Web/Lite E2E and deterministic distribution hash checks.
+
+### R6 — PENDING: human acceptance/publication
+
+Maintainer visually reviews the full canonical TCC plus seven profile pairs generated from the exact R5 SHA. After explicit acceptance, no source change or rebuild is allowed. Tag `v3.0.1`, GitHub Release bytes and CTAN source must remain bound to that same SHA/artifact set.
 
 Invariant:
 
@@ -86,31 +101,10 @@ Invariant:
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
 ```
 
-## Windows literal-font scope
+## Deferred after v3.0.1
 
-Retained Windows/literal-font evidence remains scope-valid because PR #302 and the recovery changes do not alter font runtime, font setup, engine behavior or the Windows certification contract. Any such later change forces a fresh Windows recertification.
+Do not allow the current release correction to expand into general cleanup. The >100 branch cleanup, lifecycle classification of the full repository, consolidation of historical/transient docs, and review/removal of uncertain utility scripts belong to the separate post-v3.0.1 regression plan unless a direct release blocker is demonstrated.
 
-## Local continuation
+## Documentation rule
 
-```bash
-git fetch --all --prune
-git switch main
-git pull --ff-only origin main
-git status
-git rev-parse HEAD
-```
-
-Then read:
-
-1. `AGENTS.md`
-2. `release/v3-roadmap.json`
-3. `release/v3-release-candidate.json`
-4. `docs/V3-CONTINUATION.md`
-5. `docs/V3-RELEASE-RECOVERY.md`
-6. `docs/HANDOFF-V3.0.0.md`
-7. `docs/V3-RELEASE-READINESS.md`
-8. `docs/V3-RELEASE-PHASE-END.md`
-9. `docs/CTAN-RELEASE.md`
-10. `docs/UFC-LIBRARIAN-REVIEW.md`
-
-Every **material advance** updates affected control documents and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. A successful workflow does not satisfy a complete gate when its heavy integration step was skipped. The public README tracks user-facing facts rather than transient CI state.
+Every material advance must update `release/v3.0.1-final-corrections.json` and this handoff in the same work cycle. Lot-specific evidence must remain in `docs/`. Issue #304 may mirror completed CI receipts without forcing a source commit solely to record the result of the immediately preceding commit.

@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -12,23 +12,35 @@
     "reason": "Release-blocking canonical reference/distribution/Web-Lite defects were identified after exact-main certification."
   },
   "authority": {
+    "bootstrap": "AGENTS.md",
+    "continuation": "docs/V3-CONTINUATION.md",
     "human_readable_plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
     "machine_state": "release/v3.0.1-final-corrections.json",
     "r1_audit": "docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md",
     "r1_1_evidence": "docs/V3.0.1-R1.1-EVIDENCE.md",
     "r1_2_matrix": "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
-    "issue": 304,
-    "fail_closed_on_disagreement": true
+    "r1_2_evidence": "docs/V3.0.1-R1.2-EVIDENCE.md",
+    "fail_closed_on_disagreement": true,
+    "precedence": [
+      "current_git_facts",
+      "active_machine_state",
+      "current_continuation_handoff",
+      "lot_evidence",
+      "older_roadmap_or_handoff_documents",
+      "conversation_memory"
+    ]
   },
   "audit_protocol": {
-    "each_lot_requires": [
+    "each_material_lot_requires": [
       "machine_state_update",
+      "continuation_handoff_update_when_next_action_changes",
       "human_readable_evidence",
-      "exact_changed_files",
-      "executed_checks",
+      "exact_changed_files_or_unambiguous_commit_diff",
+      "executed_checks_and_classification",
       "explicit_unresolved_findings"
     ],
     "green_ci_alone_closes_lot": false,
+    "failed_checks_remain_in_history": true,
     "post_acceptance_source_commits_allowed": false
   },
   "scope": {
@@ -40,7 +52,7 @@
       "exact_sha_release_recertification_and_human_acceptance"
     ],
     "deferred": [
-      "whole_repository_472_file_lifecycle_audit",
+      "whole_repository_lifecycle_audit",
       "broad_branch_pruning",
       "broad_historical_documentation_cleanup",
       "unrelated_runtime_api_refactors",
@@ -69,114 +81,113 @@
           "consumer_reconciliation_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
           "chapter_content_rewritten": false,
           "chapter_blobs_reused": true,
-          "removed_legacy_paths": [
-            "template/chapters/2-theoretical-framework.tex",
-            "template/chapters/related-work.tex",
-            "template/chapters/3-methodology.tex",
-            "template/chapters/4-results.tex",
-            "template/chapters/formatting-examples.tex",
-            "template/chapters/5-conclusion.tex"
-          ],
-          "observed_checks": [
+          "checks": [
             {
               "workflow": "Static contract",
               "run_number": 474,
               "run_id": 34476591229,
-              "head_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
               "status": "FAIL",
               "classification": "EXPECTED_DEPENDENCY_PATH_DRIFT",
-              "cause": "reference-guide map and librarian checker still encoded renamed chapter paths",
               "preserved_in_audit_trail": true
             },
             {
               "workflow": "Static contract",
               "run_number": 475,
               "run_id": 34476976677,
-              "head_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
               "status": "PASS"
-            },
-            {
-              "workflow": "Linux integration",
-              "run_number": 395,
-              "run_id": 34476976597,
-              "head_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
-              "status": "SUCCESS_DRAFT_SCOPE",
-              "release_evidence": false
             }
           ],
           "unresolved": []
         },
         {
           "id": "R1.2",
-          "name": "pedagogical-coverage-inventory",
-          "status": "IN_PROGRESS",
-          "matrix": "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
-          "missing": [
+          "name": "pedagogical-coverage-and-retention-inventory",
+          "status": "DONE",
+          "initial_matrix_sha": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
+          "initial_matrix_static": {
+            "run_number": 476,
+            "run_id": 34477377477,
+            "status": "PASS"
+          },
+          "historical_retention": {
+            "guide_origin_commit": "2cbd6d00318ba906e225fa37a4efb724300c3b4e",
+            "comparison_head_before_r1_3": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
+            "comparison_ahead_by": 228,
+            "chapter_count": 7,
+            "result": "ALL_SEVEN_GUIDE_CHAPTERS_SURVIVE_AS_RENAMES_WITH_ZERO_ADDITIONS_AND_ZERO_DELETIONS",
+            "interpretation": "Reviewed pedagogical chapter bodies were not deleted; R1.3 must preserve and extend them."
+          },
+          "release_reference_gaps_to_close_in_r1_3": [
             "font-embedding-user-guidance",
             "accessibility-capabilities-and-manual-boundaries",
             "cli-deep-user-workflow",
-            "web-lite-user-workflow"
-          ],
-          "high_priority_partial": [
+            "web-lite-user-workflow-bounded-until-r4",
             "ufcsetup-configuration-guide",
             "optional-lists-and-populated-unified-illustrations",
             "citation-variants-physical-examples-and-evidence",
             "code-algorithm-project-policy-versus-normative-separation",
             "pagination-and-duplex-explanation-consolidation"
           ],
-          "protected_existing_strengths": [
-            "normative-institutional-project-example-callout-separation",
-            "current-abnt-version-citations",
-            "detailed-front-matter-guidance",
-            "a4-margins-body-typography",
-            "long-quotation-geometry",
-            "nbr6023-2025-reference-list-guidance",
-            "object-width-source-note-examples",
-            "ibge-numeric-tables",
-            "appendices-annexes-index",
-            "pdfa-policy-distinction",
-            "profile-and-strict-font-portability-distinctions"
+          "intentionally_separate_or_conditional": [
+            "scientific-article-full-example",
+            "research-project-full-example",
+            "anonymized-research-project-full-example",
+            "literal-microsoft-font-certification-on-windows",
+            "physical-spine-output"
           ],
-          "unresolved": [
-            "trace-map-not-yet-expanded-for-all-release-required-teaching-topics",
-            "reviewer-corrected-content-retention-not-yet-proven-against-history",
-            "web-lite-user-guidance-blocked-until-r4-deployment-e2e-fix"
-          ]
+          "unresolved": []
         },
         {
           "id": "R1.3",
           "name": "coherent-tcc-rewrite",
-          "status": "PENDING",
-          "entry_condition": "R1.2 coverage/trace matrix completed"
+          "status": "READY",
+          "entry_condition": "R1.2 completed",
+          "must_preserve": "reviewed chapter material proven by R1.2 historical comparison",
+          "unresolved": [
+            "implement-matrix-gap-closures",
+            "run-static-and-reference-compilation-evidence"
+          ]
         }
       ],
-      "baseline": {
-        "main": "template/main.tex",
-        "chapter_count": 7,
-        "frontmatter_file_count": 8,
-        "backmatter_content_file_count": 7,
-        "figure_auxiliary_file_count": 3
-      },
       "unresolved": [
-        "r1.2-trace-reconciliation",
         "r1.3-coherent-rewrite",
         "final-reference-pdf-not-yet-generated"
       ]
     },
-    {"id": "R2", "name": "full-canonical-reference-pdf", "status": "PENDING", "unresolved": []},
-    {"id": "R3", "name": "distribution-repair", "status": "PENDING", "unresolved": []},
+    {
+      "id": "R2",
+      "name": "full-canonical-reference-pdf",
+      "status": "PENDING",
+      "unresolved": []
+    },
+    {
+      "id": "R3",
+      "name": "distribution-repair",
+      "status": "PENDING",
+      "unresolved": []
+    },
     {
       "id": "R4",
       "name": "web-lite-validator-closure",
       "status": "PENDING",
       "confirmed_blockers": [
-        "validator/app.js imports ./normative-catalog.js but certified validator tree does not contain that module",
-        "current cross-surface test does not run the canonical PDF through the real Web/Lite analyze path"
+        "validator/app.js imports ./normative-catalog.js but the tracked static validator tree does not contain that module",
+        "current cross-surface synthetic vectors do not run the canonical PDF through the real Web/Lite analyze path"
       ],
       "unresolved": []
     },
-    {"id": "R5", "name": "release-scoped-regression", "status": "PENDING", "unresolved": []},
-    {"id": "R6", "name": "exact-sha-human-acceptance-and-publication", "status": "PENDING", "unresolved": []}
+    {
+      "id": "R5",
+      "name": "release-scoped-regression",
+      "status": "PENDING",
+      "unresolved": []
+    },
+    {
+      "id": "R6",
+      "name": "exact-sha-human-acceptance-and-publication",
+      "status": "PENDING",
+      "unresolved": []
+    }
   ],
-  "current_next_action": "Complete R1.2 trace reconciliation and historical content-retention audit before any R1.3 rewrite."
+  "current_next_action": "Execute R1.3 as a bounded coherent rewrite: preserve the seven historically reviewed chapter bodies, add the missing/partial pedagogical guidance identified by R1.2, update guide trace/check contracts where guarantees are added, then require fresh Static and reference/integration evidence before R2."
 }
