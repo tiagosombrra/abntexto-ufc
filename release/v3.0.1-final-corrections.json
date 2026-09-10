@@ -1,5 +1,5 @@
 {
-  "schema_version": 20,
+  "schema_version": 21,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -447,6 +447,34 @@
           "browser_pdf_analysis_reached": false,
           "cause": "Local ChromeDriver POST /session exceeded the E2E harness 20-second HTTP timeout before PDF analysis.",
           "corrective_action": "Increase only session-creation timeout to 90 seconds, retain verbose ChromeDriver log, and upload diagnostics on failure; PDF assertions unchanged."
+        },
+        {
+          "workflow": "Static Contract",
+          "run_number": 492,
+          "run_id": 34536446822,
+          "status": "PASS",
+          "source_sha": "532a7996613fea0039025d073d00d53e63df707e"
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 413,
+          "run_id": 34536446821,
+          "status": "FAIL",
+          "source_sha": "532a7996613fea0039025d073d00d53e63df707e",
+          "scope": "web-lite",
+          "container_summary": "PASS=3 FAIL=0 SKIP=0",
+          "browser": "Google Chrome 152.0.7977.82",
+          "driver": "ChromeDriver 152.0.7977.82",
+          "browser_pdf_analysis_reached": false,
+          "cause": "ChromeDriver did not become ready on the local /status endpoint within 30 seconds; intended verbose log file was not produced.",
+          "corrective_action": "Pre-create driver log in Python, redirect ChromeDriver stdout/stderr directly into it, retain --verbose, and surface log tail on early exit/readiness timeout; PDF assertions unchanged."
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 127,
+          "run_id": 34536446905,
+          "status": "PASS",
+          "source_sha": "532a7996613fea0039025d073d00d53e63df707e"
         }
       ],
       "corrective_changes": [
@@ -454,7 +482,8 @@
         ".github/workflows/linux-integration.yml: upload web-lite JSON/log diagnostics even on browser failure",
         "tests/checks/linux_integration_suites.py: enforce ChromeDriver-log artifact wiring",
         "tests/integration/web-lite-e2e.py: bind positive/negative browser verdicts to exact input SHA-256 and byte size",
-        ".github/workflows/linux-integration.yml: evidence upload condition depends only on JSON/ChromeDriver diagnostics, not the positive PDF snapshot"
+        ".github/workflows/linux-integration.yml: evidence upload condition depends only on JSON/ChromeDriver diagnostics, not the positive PDF snapshot",
+        "tests/integration/web-lite-e2e.py: fail-safe ChromeDriver stdout/stderr capture plus early-exit/log-tail diagnostics"
       ]
     },
     "R5": {
@@ -464,5 +493,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Inspect exact corrective R4 HEAD workflows. Require scope=web-lite container PASS and host Chrome E2E PASS; independently inspect web-lite-e2e.json and web-lite-chromedriver.log, including exact positive/negative input SHA-256 and bytes. If browser startup still fails, classify using retained driver log before changing configuration. Do not weaken PDF assertions. Only exact-HEAD browser evidence may close R4 and open R5."
+  "current_next_action": "Inspect exact corrective R4 HEAD after #413. Require Static PASS and Linux scope=web-lite container PASS. Then require host Chrome E2E PASS; if startup still fails, a non-empty web-lite-chromedriver.log must be retained and used to diagnose before changing configuration. If PDF analysis runs, inspect exact input hashes and positive/negative assertions; Deep-only checks remain MANUAL REVIEW. Preserve failures; only exact-HEAD browser PASS closes R4 and opens R5."
 }

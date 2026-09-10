@@ -77,25 +77,46 @@ class Browser:
 
     def start(self) -> None:
         self.driver_log.parent.mkdir(parents=True, exist_ok=True)
-        self.process = subprocess.Popen(
-            [
-                self.chromedriver,
-                f"--port={self.port}",
-                "--verbose",
-                f"--log-path={self.driver_log}",
-            ],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
+        driver_stream = self.driver_log.open("wb")
+        try:
+            self.process = subprocess.Popen(
+                [
+                    self.chromedriver,
+                    f"--port={self.port}",
+                    "--verbose",
+                ],
+                stdout=driver_stream,
+                stderr=subprocess.STDOUT,
+            )
+        finally:
+            driver_stream.close()
+
         deadline = time.monotonic() + 30
         while time.monotonic() < deadline:
+            if self.process.poll() is not None:
+                detail = ""
+                if self.driver_log.is_file():
+                    detail = self.driver_log.read_text(
+                        encoding="utf-8", errors="replace"
+                    )[-4000:].strip()
+                suffix = f" Log tail: {detail}" if detail else ""
+                fail(
+                    f"ChromeDriver exited before readiness with code "
+                    f"{self.process.returncode}.{suffix}"
+                )
             try:
                 http_json("GET", self.base + "/status", timeout=1)
                 break
             except RuntimeError:
                 time.sleep(0.2)
         else:
-            fail("ChromeDriver did not become ready")
+            detail = ""
+            if self.driver_log.is_file():
+                detail = self.driver_log.read_text(
+                    encoding="utf-8", errors="replace"
+                )[-4000:].strip()
+            suffix = f" Log tail: {detail}" if detail else ""
+            fail(f"ChromeDriver did not become ready within 30 seconds.{suffix}")
 
         created = http_json(
             "POST",
