@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "project": "abntexto-ufc",
+  "baseline": {
+    "version": "3.0.1",
+    "certified_main_sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
+    "frozen": true,
+    "policy": "Do not modify, rebuild, or retarget the certified v3.0.1 candidate while the post-release audit is planned."
+  },
+  "purpose": "Systematic post-v3.0.1 repository regression, simplification, canonical reference-TCC rebuild, distribution documentation repair, and Web/Lite validator end-to-end certification.",
+  "target_version": "TBD_AFTER_SCOPE_CLASSIFICATION",
+  "status": "PLANNED",
+  "audit_method": {
+    "tracked_file_baseline": 472,
+    "file_classifications": ["KEEP", "CONSOLIDATE", "REVIEW", "REMOVE_CANDIDATE"],
+    "required_file_fields": [
+      "path",
+      "category",
+      "purpose",
+      "owner_or_entrypoint",
+      "consumers",
+      "publication_surface",
+      "test_or_evidence",
+      "classification",
+      "decision_rationale"
+    ],
+    "deletion_policy": "No file or branch is deleted solely because static reference search finds no consumer. Dynamic fixtures, generated-input contracts, release evidence and GitHub configuration require semantic review first."
+  },
+  "confirmed_findings": [
+    {
+      "id": "F001",
+      "severity": "medium",
+      "area": "template",
+      "status": "CONFIRMED",
+      "finding": "template/main.tex mixes numbered and unnumbered chapter filenames, and several numbered filenames no longer describe their current content.",
+      "evidence": {
+        "inputs": [
+          "chapters/1-introduction",
+          "chapters/2-theoretical-framework",
+          "chapters/related-work",
+          "chapters/3-methodology",
+          "chapters/4-results",
+          "chapters/formatting-examples",
+          "chapters/5-conclusion"
+        ],
+        "semantic_drift": {
+          "2-theoretical-framework.tex": "Estrutura do trabalho acadêmico",
+          "related-work.tex": "Elementos pré-textuais em detalhe",
+          "3-methodology.tex": "Formatação geral e organização da parte textual",
+          "4-results.tex": "Citações, notas e referências",
+          "formatting-examples.tex": "Ilustrações, tabelas e outros objetos acadêmicos",
+          "5-conclusion.tex": "Recursos do abntexto-ufc, elementos pós-textuais e revisão final"
+        }
+      },
+      "resolution_direction": "Rebuild the canonical TCC/reference document with sequential filenames whose names match their didactic content."
+    },
+    {
+      "id": "F002",
+      "severity": "high",
+      "area": "reference-document",
+      "status": "CONFIRMED",
+      "finding": "The seven release-review PDFs are smoke/profile validation fixtures rather than the full reviewer-corrected canonical TCC/reference document.",
+      "evidence": "tests/integration/release-review-pairs.sh generates six profiles from tests/smoke/base-profile.tex and the seventh from template/scientific-article.tex.",
+      "resolution_direction": "Keep smoke fixtures for profile gates, but restore a separate canonical pedagogical TCC reference PDF as a first-class release artifact and review surface."
+    },
+    {
+      "id": "F003",
+      "severity": "high",
+      "area": "distribution",
+      "status": "CONFIRMED",
+      "finding": "The template and Overleaf bundles contain editable TeX sources but no compiled full canonical TCC/reference PDF. The CTAN archive includes only a deliberately minimal example PDF generated from docs/ctan-example.tex.",
+      "evidence": {
+        "ctan_example": "abntexto-ufc-example.pdf",
+        "ctan_source": "docs/ctan-example.tex",
+        "template_bundle_full_reference_pdf": false,
+        "overleaf_bundle_full_reference_pdf": false
+      },
+      "resolution_direction": "Generate the canonical TCC/reference PDF deterministically and include it in the appropriate GitHub distribution surface; separately decide whether a portable/no-institutional-mark form also belongs in the CTAN package."
+    },
+    {
+      "id": "F004",
+      "severity": "medium",
+      "area": "repository-hygiene",
+      "status": "CONFIRMED",
+      "finding": "The active tree has only three GitHub Actions workflows; the apparent workflow clutter is primarily historical branch clutter, with more than 100 branches still present.",
+      "evidence": {
+        "workflows": ["static-contract.yml", "linux-integration.yml", "linux-release-check.yml"],
+        "branch_pages": "branches?per_page=100 has a non-empty second page"
+      },
+      "resolution_direction": "Retain the three distinct CI roles unless the audit proves safe consolidation; separately inventory and prune merged/scratch/noop/historical branches after explicit destructive-action approval."
+    },
+    {
+      "id": "F005",
+      "severity": "medium",
+      "area": "documentation-control-plane",
+      "status": "CONFIRMED",
+      "finding": "The certified v3-roadmap.json is intentionally frozen at pre-publication state and therefore still describes PR merge, exact-main recertification and pkgcheck as pending even though those technical steps have completed.",
+      "resolution_direction": "Redesign post-release state recording so immutable certification does not require changing the certified source SHA; separate candidate policy/state from publication receipts."
+    },
+    {
+      "id": "F006",
+      "severity": "critical",
+      "area": "validator-web-lite",
+      "status": "CONFIRMED",
+      "finding": "validator/app.js imports ./normative-catalog.js, but the certified validator/ tree contains only app.js, index.html, validation-contract.json and validation-vectors.json. A directly served validator directory therefore lacks a required module.",
+      "resolution_direction": "Create a deterministic normative-catalog.js generation/publication contract and a deploy/package test that fails if any browser import is missing."
+    },
+    {
+      "id": "F007",
+      "severity": "high",
+      "area": "validator-cross-surface",
+      "status": "CONFIRMED",
+      "finding": "Current cross-surface validation executes synthetic verdict/schema vectors extracted from Web/Lite source; it does not feed the canonical generated reference PDF through the actual browser/PDF.js analyze(file, profile) path.",
+      "evidence": "tests/checks/normative_cross_surface.py executes selected source expressions with Node and synthetic JSON vectors.",
+      "resolution_direction": "Add an end-to-end Web/Lite fixture test over the exact canonical PDF and compare canonical check identities/verdict semantics with CLI/Deep while preserving declared capability differences."
+    },
+    {
+      "id": "F008",
+      "severity": "medium",
+      "area": "documentation",
+      "status": "CONFIRMED",
+      "finding": "docs/ contains 31 active files, many of which are phase-end, continuation, certification, hardening or recovery records rather than durable user/developer documentation.",
+      "resolution_direction": "Classify every document as durable contract, current operator guide, release receipt, or removable historical process note; rely on Git history instead of keeping redundant process snapshots in the active tree where possible."
+    },
+    {
+      "id": "F009",
+      "severity": "medium",
+      "area": "tools",
+      "status": "CONFIRMED",
+      "finding": "tools/ contains 13 utilities, including two encoding-conversion PowerShell scripts whose current production/test consumers are not established by the primary Makefile entrypoints.",
+      "resolution_direction": "Build a consumer graph for all tools before retaining, consolidating or removing them; Windows font preparation remains separately certification-sensitive."
+    }
+  ],
+  "work_packages": [
+    {
+      "id": "P0",
+      "name": "Freeze and close v3.0.1",
+      "exit": "Keep SHA 111680cd934a4ea55b02f6ffe730ff5260077565 immutable; obtain explicit maintainer visual approval; tag and publish only the certified bytes."
+    },
+    {
+      "id": "P1",
+      "name": "Whole-repository file and branch census",
+      "exit": "Every one of the 472 tracked files has an explicit lifecycle classification and every live branch has a keep/delete rationale."
+    },
+    {
+      "id": "P2",
+      "name": "Canonical TCC/reference reconstruction",
+      "exit": "One complete TCC-style reference document teaches each supported ABNT/UFC rule and shows the corresponding abntexto-ufc LaTeX mechanism, with sequential semantically correct source filenames."
+    },
+    {
+      "id": "P3",
+      "name": "Distribution redesign",
+      "exit": "The full canonical reference PDF is deterministically generated, validated, hashed and present in the intended public bundle(s), while the minimal CTAN example retains its distinct purpose."
+    },
+    {
+      "id": "P4",
+      "name": "Runtime/API and normative regression",
+      "exit": "All runtime modules, public APIs, normative rules, bibliography behavior, profiles, objects, front/back matter, PDF/A, fonts and negative paths are re-audited with no unexplained residuals."
+    },
+    {
+      "id": "P5",
+      "name": "Validator Web/Lite repair and E2E certification",
+      "exit": "All browser dependencies are shipped; the public site loads from a clean deployment; the canonical PDF is actually analyzed through Web/Lite; declared shared checks agree with CLI/Deep and deep-only checks remain explicit."
+    },
+    {
+      "id": "P6",
+      "name": "CI/test/tool simplification",
+      "exit": "Every workflow, runner, fixture, checker and utility has a live consumer and unique responsibility, or is consolidated/removed with equivalent regression coverage."
+    },
+    {
+      "id": "P7",
+      "name": "Documentation/control-plane simplification",
+      "exit": "Durable docs are minimal and authoritative; historical release process state no longer competes with current facts; certification/publication receipts do not mutate certified source."
+    },
+    {
+      "id": "P8",
+      "name": "Final clean-room regression",
+      "exit": "Fresh clone/build on supported engines/platform scopes, all distribution bundles, canonical TCC PDF, seven profiles, CLI validator, Web/Lite E2E, pkgcheck and visual review pass from one candidate."
+    }
+  ],
+  "non_goals_until_p0_closed": [
+    "No runtime change on main",
+    "No v3.0.1 rebuild",
+    "No retargeting of v3.0.0 or v3.0.1 tags",
+    "No branch deletion without a separately reviewed branch-pruning manifest",
+    "No deletion based only on grep/reference absence"
+  ]
+}
