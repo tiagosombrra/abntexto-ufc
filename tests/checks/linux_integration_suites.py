@@ -23,6 +23,9 @@ RELEASE_REVIEW_PAIRS = ROOT / "tests" / "integration" / "release-review-pairs.sh
 RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
 CORRECTION_STATE = "release/v3.0.1-final-corrections.json"
 RELEASE_WORKFLOW_PATH = ".github/workflows/linux-release-check.yml"
+DISTRIBUTION_BUILDER = "tools/build-public-bundles.py"
+DISTRIBUTION_WRAPPER = "tools/build-distribution-bundles.py"
+DISTRIBUTION_GATE = "tests/integration/distribution-bundles.sh"
 
 
 def fail(message: str) -> None:
@@ -41,6 +44,8 @@ def main() -> None:
 
     if SUITES.get("complete") != ("*",):
         fail("complete suite must remain the wildcard full PR integration contract")
+    if SUITES.get("distribution") != ("distribution-bundles",):
+        fail("distribution suite must remain a first-class PR-only public bundle gate")
 
     for suite, checks in SUITES.items():
         if checks == ("*",):
@@ -48,6 +53,12 @@ def main() -> None:
         unknown = sorted(set(checks) - known_checks)
         if unknown:
             fail(f"suite {suite!r} references unknown checks: {', '.join(unknown)}")
+
+    distribution_checks = [check for check in validation_run.CHECKS if check.name == "distribution-bundles"]
+    if len(distribution_checks) != 1:
+        fail("validation runner must register exactly one distribution-bundles check")
+    if distribution_checks[0].modes != ("pr",):
+        fail("distribution-bundles runner check must remain PR-only; make release-check owns the release execution")
 
     required_manual_choices = ("auto", *SUITES.keys())
     missing_choices = [
@@ -71,6 +82,7 @@ def main() -> None:
         "git diff --name-only \"$BASE_SHA\" \"$HEAD_SHA\"",
         "release_candidate_marker=release/v3-release-candidate.json",
         "release-candidate-full-pr",
+        "unzip",
     ):
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
@@ -135,6 +147,14 @@ def main() -> None:
         fail("orchestration-only changes must select smoke")
     if infer_suites([RELEASE_WORKFLOW_PATH]) != ("smoke",):
         fail("release-workflow-only changes must select smoke; Linux Release Check supplies the heavy R2 execution path")
+    if infer_suites([DISTRIBUTION_BUILDER]) != ("distribution",):
+        fail("public bundle builder changes must select the distribution suite")
+    if infer_suites([DISTRIBUTION_WRAPPER]) != ("distribution",):
+        fail("distribution wrapper changes must select the distribution suite")
+    if infer_suites([DISTRIBUTION_GATE]) != ("distribution",):
+        fail("distribution gate changes must select the distribution suite")
+    if infer_suites(["tests/run.py", DISTRIBUTION_BUILDER]) != ("distribution",):
+        fail("orchestration plus distribution changes must select distribution, not complete")
     if infer_suites(
         ["tests/run.py", "tests/integration/scientific-article-foreign-elements.sh"]
     ) != ("article",):
@@ -189,8 +209,8 @@ def main() -> None:
         f"suites={len(SUITES)} checks={len(known_checks)} "
         f"manual_choices={len(required_manual_choices)} phase={phase} "
         "incremental_sync=true missing_before_fallback=full-pr "
-        "unknown_path_fallback=complete article_first_class=true "
-        "step4_registered=true step5_registered=true "
+        "unknown_path_fallback=complete article_first_class=true distribution_first_class=true "
+        "distribution_release_owner=make-release-check step4_registered=true step5_registered=true "
         "release_candidate_forces_complete=true release_check_pr_trigger=true "
         "release_candidate_head_checkout=true canonical_ctan_archive=true "
         "release_version_source=makefile recursion_safe_version_capture=true "

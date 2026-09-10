@@ -133,6 +133,12 @@ CHECKS = (
     Check("build-path", "Build path", ("sh", "tests/integration/build-path.sh")),
     Check("multivolume", "Multi-volume documents", ("sh", "tests/integration/multivolume.sh")),
     Check("catalog-card", "Catalog card", ("sh", "tests/integration/catalog-card.sh")),
+    Check(
+        "distribution-bundles",
+        "Public distribution bundles",
+        ("sh", "tests/integration/distribution-bundles.sh"),
+        modes=("pr",),
+    ),
 )
 
 EVIDENCE_PATTERN = re.compile(r"^[A-Z0-9_-]+-EVIDENCE ")

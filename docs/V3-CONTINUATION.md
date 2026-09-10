@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2 DONE; R3 IN_PROGRESS; publication blocked
+Status: RELEASE — R0/R1/R2 DONE; R3 IMPLEMENTED_PENDING_CI; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -59,41 +59,48 @@ R2 makes the complete PDF rooted at `template/main.tex` a first-class exact-SHA 
 
 The R2 visual inspection is development evidence only; it does not replace R6 explicit maintainer acceptance on the final immutable R5 candidate. Full evidence: `docs/V3.0.1-R2-EVIDENCE.md`.
 
-## R3 — IN PROGRESS
+## R3 — IMPLEMENTED, EVIDENCE PENDING
 
-Goal: repair public distribution so template/Overleaf users receive both the complete editable source and a compiled full reference PDF.
+R3 repairs public distribution so users receive the complete editable source and a compiled full pedagogical reference while CTAN remains lean.
 
-Critical boundary: the R2 source-tree PDF contains the configured UFC mark because `template/main.tex` uses `coat-of-arms=true`. It must not be copied into public bundles. `tools/build-public-bundles.py` already sanitizes distributed `main.tex` to `coat-of-arms=false`; R3 must compile the public reference PDF from that exact sanitized public source/runtime and prove source-to-PDF identity by SHA-256.
+The implementation commit containing this handoff must be resolved dynamically from the active branch. It introduces:
 
-Fixed R3 decisions:
+- generated public filename `abntexto-ufc-reference.pdf`;
+- deterministic compilation by `tools/build-public-bundles.py` from the exact public `main.tex` sanitized to `coat-of-arms = false`;
+- the same generated reference PDF embedded in template and Overleaf bundles;
+- no full reference PDF in the CTAN archive, whose minimal example remains separate;
+- an extracted-bundle gate that independently rebuilds template and Overleaf projects and requires rebuilt SHA-256 == embedded PDF SHA-256;
+- fail-closed checks for no institutional mark assets, no proprietary Microsoft fonts and correct public mark disablement;
+- first-class PR integration suite `distribution`, with release-mode distribution execution still owned by `make release-check` to avoid duplicate execution.
 
-- keep `docs/ctan-example.tex` as the small CTAN example;
-- put the complete public reference PDF in template/Overleaf GitHub bundles, generated rather than stored manually;
-- keep the CTAN archive lean unless a concrete packaging requirement proves otherwise;
-- never redistribute UFC mark assets or proprietary Microsoft font files;
-- extend the existing bundle/distribution pipeline rather than creating a parallel generator;
-- extract public bundles in regression, rebuild their exact source and require the rebuilt PDF hash to match the embedded reference PDF.
+`tools/build-distribution-bundles.py` is intentionally unchanged because it already delegates usage-bundle generation to `tools/build-public-bundles.py`.
 
-Active contract and evidence ledger: `docs/V3.0.1-R3-EVIDENCE.md`.
+R3 is not DONE until Static, Linux Integration and Linux Release Check pass on the exact implementation HEAD and the generated distribution artifact is downloaded/independently inspected. Full contract: `docs/V3.0.1-R3-EVIDENCE.md`.
+
+Operational rule: do not move the branch while a Linux Release Check for its current HEAD is running. Failed development runs must be recorded before a rerun is accepted.
 
 ## R4 — PENDING
 
-Known blocker: `validator/app.js` imports `./normative-catalog.js`, but that file is absent from the tracked static validator tree. R4 must generate/track it deterministically, prove clean relative-module closure and run a real positive canonical PDF plus a negative PDF through the actual Web/Lite `analyze(file, profile)` path. Deep-only checks remain REVIEW rather than false PASS. Do not claim public deployment without repository evidence.
+Known blocker: `validator/app.js` imports `./normative-catalog.js`, but that file is absent from the tracked static validator tree. R4 must generate/track it deterministically, prove clean relative-module closure and run a real positive canonical/public PDF plus a negative PDF through the actual Web/Lite `analyze(file, profile)` path. Deep-only checks remain REVIEW rather than false PASS. Do not claim public deployment without repository evidence.
 
 ## R5/R6 — PENDING
 
-R5 is the mandatory complete exact-SHA phase-end release regression. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
+R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
 ```
 
-No tracked commit or artifact rebuild is allowed after R6 visual acceptance and before publication.
+No tracked commit or artifact rebuild is allowed after R6 visual acceptance and before publication. Post-publication documentation may advance only after the tag/release bytes are frozen and verified.
 
 ## Deferred after v3.0.1
 
 Whole-repository lifecycle classification, >100 branch pruning, broad historical-document consolidation and unrelated utility/runtime cleanup remain deferred unless a direct release blocker is proven.
 
+## Current next action
+
+Resolve the active branch HEAD and its workflow state. If the R3 implementation is already committed, wait for/inspect Static, Linux Integration and Linux Release Check on that exact SHA, then download and independently inspect the distribution artifact. If the implementation has not yet been committed, verify the predecessor Release Check is no longer running, then publish the prepared atomic R3 commit. Only after exact-SHA R3 evidence is accepted should the next technical commit close R3 and open/implement R4.
+
 ## Documentation discipline
 
-Every material advance updates the machine state, affected lot evidence and this handoff in the same work cycle. Failed checks remain recorded in the corresponding evidence documents after successful reruns. Current Git facts always take precedence.
+Every material advance updates the machine state, affected lot evidence and this handoff in the same work cycle. Current Git facts always take precedence.

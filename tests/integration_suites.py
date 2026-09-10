@@ -27,6 +27,7 @@ SUITES: dict[str, tuple[str, ...]] = {
     "backmatter": ("backmatter", "duplex-backmatter"),
     "research-project": ("research-project",),
     "profiles": ("profiles", "build-path", "multivolume", "catalog-card"),
+    "distribution": ("distribution-bundles",),
     "article": (
         "validator-source", "scientific-article-profile", "scientific-article-front-block",
         "scientific-article-foreign-elements", "scientific-article-body",
@@ -79,6 +80,7 @@ PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("research-project", ("abntexto-ufc/research-projects.def", "tests/integration/research-project")),
     ("profiles", ("tests/integration/profile-matrix", "tests/integration/build-path", "tests/integration/multivolume", "tests/integration/catalog-card", "tests/smoke/base-profile.tex")),
     ("reference-document", ("template/main.tex", "template/chapters/", "tests/integration/reference-document", "tests/integration/reference-corpus", "tests/integration/pdf-validator")),
+    ("distribution", ("tools/build-public-bundles.py", "tools/build-distribution-bundles.py", "tests/integration/distribution-bundles.sh")),
 )
 
 
@@ -139,6 +141,10 @@ def self_test() -> None:
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),
         ("tests/run.py",): ("smoke",),
         (".github/workflows/linux-release-check.yml",): ("smoke",),
+        ("tools/build-public-bundles.py",): ("distribution",),
+        ("tools/build-distribution-bundles.py",): ("distribution",),
+        ("tests/integration/distribution-bundles.sh",): ("distribution",),
+        ("tests/run.py", "tools/build-public-bundles.py"): ("distribution",),
         ("tests/integration/scientific-article-profile.sh",): ("article",),
         ("tests/integration/scientific-article-recommendations.sh",): ("article",),
         ("tests/run.py", "tests/integration/scientific-article-recommendations.sh"): ("article",),

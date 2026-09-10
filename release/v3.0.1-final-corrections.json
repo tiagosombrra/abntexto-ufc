@@ -1,5 +1,5 @@
 {
-  "schema_version": 14,
+  "schema_version": 15,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -35,7 +35,8 @@
     "phase_end_regression_required": true,
     "failed_checks_remain_in_lot_evidence_history": true,
     "green_ci_alone_closes_lot": false,
-    "post_acceptance_source_commits_allowed": false
+    "post_acceptance_source_commits_allowed": false,
+    "do_not_move_branch_during_active_release_check": true
   },
   "scope": {
     "release_blocking": [
@@ -81,6 +82,19 @@
         "release_summary": "PASS=38 FAIL=0 SKIP=0"
       },
       "fail_closed_exception": "release/final-certification-candidate.json and release/v3-release-candidate.json force complete"
+    },
+    "distribution_integration_classification": {
+      "status": "IMPLEMENTED_PENDING_CI",
+      "suite": "distribution",
+      "pr_check": "distribution-bundles",
+      "release_execution_owner": "make release-check",
+      "paths": [
+        "tools/build-public-bundles.py",
+        "tools/build-distribution-bundles.py",
+        "tests/integration/distribution-bundles.sh"
+      ],
+      "orchestration_plus_distribution": "distribution",
+      "release_candidate_marker_dominates": "complete"
     }
   },
   "work_packages": {
@@ -122,22 +136,12 @@
       "status": "DONE",
       "implementation_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55",
       "reuse": "tests/integration/release-reference-reproducibility.sh",
-      "changed_surfaces": [
-        ".github/workflows/linux-release-check.yml",
-        "tests/integration_suites.py",
-        "tests/checks/linux_integration_suites.py",
-        "AGENTS.md",
-        "docs/V3-CONTINUATION.md",
-        "docs/V3.0.1-R2-EVIDENCE.md",
-        "release/v3.0.1-final-corrections.json"
-      ],
       "checks": [
         {
           "workflow": "Static Contract",
           "run_number": 486,
           "run_id": 34491624099,
-          "status": "PASS",
-          "head_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55"
+          "status": "PASS"
         },
         {
           "workflow": "Linux Integration",
@@ -145,8 +149,7 @@
           "run_id": 34491624073,
           "status": "PASS",
           "scope": "smoke",
-          "summary": "PASS=4 FAIL=0 SKIP=0",
-          "head_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55"
+          "summary": "PASS=4 FAIL=0 SKIP=0"
         },
         {
           "workflow": "Linux Release Check",
@@ -155,8 +158,7 @@
           "status": "PASS",
           "scope": "complete",
           "summary": "PASS=38 FAIL=0 SKIP=0",
-          "ctan_pkgcheck": "4.1.0 PASS",
-          "head_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55"
+          "ctan_pkgcheck": "4.1.0 PASS"
         }
       ],
       "canonical_reference": {
@@ -177,34 +179,62 @@
       "artifact": {
         "name": "abntexto-ufc-v3.0.1-canonical-reference-34491624158",
         "id": 10158771936,
-        "archive_digest": "sha256:0677b776c3eb3a358f91a06119973a00b8f3aa8ade841d54565f85fe5db53bc7",
-        "files": [
-          "release-reference-pdf.pdf",
-          "release-reference-reproducibility.json"
-        ]
-      },
-      "distribution_boundary": "source-tree reference may contain configured UFC mark; R3 must compile public PDF from sanitized coat-of-arms=false source"
+        "archive_digest": "sha256:0677b776c3eb3a358f91a06119973a00b8f3aa8ade841d54565f85fe5db53bc7"
+      }
     },
     "R3": {
-      "status": "IN_PROGRESS",
+      "status": "IMPLEMENTED_PENDING_CI",
       "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
-      "fixed_decisions": [
-        "minimal CTAN example remains separate",
-        "full reference PDF belongs to template/Overleaf GitHub bundles",
-        "public PDF generated from exact sanitized distributed source/runtime",
-        "coat-of-arms=false in public source",
-        "no UFC mark assets redistributed",
-        "no proprietary Microsoft fonts redistributed",
-        "extend existing bundle pipeline rather than add parallel generator",
-        "extracted-bundle rebuild hash must match embedded reference PDF"
+      "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
+      "public_reference_pdf": "abntexto-ufc-reference.pdf",
+      "implementation": {
+        "builder": "tools/build-public-bundles.py",
+        "distribution_wrapper": "tools/build-distribution-bundles.py",
+        "distribution_wrapper_changed": false,
+        "gate": "tests/integration/distribution-bundles.sh",
+        "pr_suite": "distribution",
+        "build_source": "sanitized public main.tex with coat-of-arms=false",
+        "build_environment": [
+          "SOURCE_DATE_EPOCH",
+          "FORCE_SOURCE_DATE=1",
+          "TZ=UTC",
+          "pinned abntexto.cls"
+        ],
+        "embedded_in": [
+          "abntexto-ufc-template-3.0.1.zip",
+          "abntexto-ufc-overleaf-3.0.1.zip"
+        ],
+        "excluded_from": [
+          "abntexto-ufc-3.0.1.zip"
+        ],
+        "extracted_bundle_rebuild_hash_required": true,
+        "cross_bundle_reference_pdf_identity_required": true,
+        "institutional_marks_redistributed": false,
+        "proprietary_fonts_redistributed": false
+      },
+      "changed_surfaces": [
+        "tools/build-public-bundles.py",
+        "tests/integration/distribution-bundles.sh",
+        "tests/run.py",
+        "tests/integration_suites.py",
+        "tests/checks/linux_integration_suites.py",
+        ".github/workflows/linux-integration.yml",
+        "README.md",
+        "docs/CTAN-RELEASE.md",
+        "docs/V3.0.1-R3-EVIDENCE.md",
+        "docs/V3-CONTINUATION.md",
+        "release/v3.0.1-final-corrections.json"
       ],
-      "unresolved": [
-        "inspect exact distribution regression entry point",
-        "confirm final public reference PDF filename from bundle conventions",
-        "implement deterministic sanitized-source PDF build",
-        "add extracted-bundle source-to-PDF hash proof",
-        "measure whether template and Overleaf PDFs are byte-identical",
-        "update README and CTAN release documentation"
+      "pending_acceptance": [
+        "Static Contract PASS on exact implementation HEAD",
+        "Linux Integration distribution scope PASS on exact implementation HEAD",
+        "Linux Release Check complete PASS on exact implementation HEAD",
+        "current CTAN pkgcheck PASS",
+        "exact distribution artifact downloaded and independently inspected",
+        "template embedded reference hash matches extracted rebuild",
+        "Overleaf embedded reference hash matches extracted rebuild",
+        "CTAN archive remains lean and excludes full reference",
+        "public coat-of-arms disabled and no institutional mark/proprietary font redistributed"
       ]
     },
     "R4": {
@@ -221,5 +251,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "R3: inspect tools/build-public-bundles.py, tools/build-distribution-bundles.py, Makefile and the existing distribution/public-bundle tests; implement a deterministic full public reference PDF built from the exact sanitized coat-of-arms=false source/runtime inside template and Overleaf bundles; add fail-closed extracted-bundle rebuild/hash proof; update README, CTAN release documentation, R3 evidence, machine state and continuation handoff; run targeted and CI validation before marking R3 DONE."
+  "current_next_action": "Resolve current release/v3.0.1-final-corrections HEAD and workflow state. Do not move the branch while Linux Release Check for the predecessor/current HEAD is running. After the atomic R3 implementation commit is published, inspect Static, Linux Integration (expected scope=distribution) and Linux Release Check on that exact SHA; preserve failures; if green download and independently inspect the exact distribution artifact. Then the next technical work cycle may mark R3 DONE while opening/implementing R4."
 }

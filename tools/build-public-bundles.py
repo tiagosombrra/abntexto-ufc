@@ -6,6 +6,7 @@ import io
 import os
 import re
 import subprocess
+import tempfile
 import time
 import zipfile
 from pathlib import Path, PurePosixPath
@@ -14,6 +15,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 TEMPLATE_DIR = ROOT / "template"
+PUBLIC_REFERENCE_PDF = f"{PACKAGE_ID}-reference.pdf"
 UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
 REFERENCE_IMAGES = (
     Path("template/figures/ufc-campus-pici.jpg"),
@@ -172,6 +174,101 @@ def bundle_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
     return entries
 
 
+def materialize_entries(entries: dict[str, tuple[bytes, int]], work: Path) -> None:
+    for name, (content, mode) in entries.items():
+        validate_archive_name(name)
+        target = work / PurePosixPath(name)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+        target.chmod(mode)
+
+
+def run_build_command(command: list[str], work: Path, env: dict[str, str]) -> None:
+    completed = subprocess.run(
+        command,
+        cwd=work,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise SystemExit(
+            "Public reference PDF build failed while running "
+            + " ".join(command)
+            + ":\n"
+            + completed.stdout[-6000:]
+        )
+
+
+def build_public_reference_pdf(
+    entries: dict[str, tuple[bytes, int]],
+    abntexto: Path,
+    epoch: int,
+) -> bytes:
+    if not abntexto.is_file():
+        raise SystemExit(f"Pinned abntexto.cls not found: {abntexto}")
+    upstream = abntexto.read_bytes()
+    if UPSTREAM_MARKER not in upstream:
+        raise SystemExit("Pinned abntexto.cls identity marker missing.")
+
+    main = entries.get("main.tex")
+    if main is None:
+        raise SystemExit("Sanitized public template is missing main.tex.")
+    main_text = main[0].decode("utf-8")
+    if main_text.count("  coat-of-arms = false,") != 1 or "  coat-of-arms = true," in main_text:
+        raise SystemExit("Public reference PDF must be built from the sanitized coat-of-arms=false main.tex.")
+
+    env = os.environ.copy()
+    env["SOURCE_DATE_EPOCH"] = str(epoch)
+    env["FORCE_SOURCE_DATE"] = "1"
+    env["TZ"] = "UTC"
+
+    with tempfile.TemporaryDirectory(prefix=f"{PACKAGE_ID}-public-reference-") as temp:
+        work = Path(temp)
+        materialize_entries(entries, work)
+        (work / "abntexto.cls").write_bytes(upstream)
+        latex = ["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", "main.tex"]
+        run_build_command(latex, work, env)
+
+        bcf = work / "main.bcf"
+        if bcf.is_file() and b"<bcf:datasource" in bcf.read_bytes():
+            run_build_command(["biber", "main"], work, env)
+        glo = work / "main.glo"
+        if glo.is_file() and glo.stat().st_size:
+            run_build_command(["makeglossaries", "main"], work, env)
+        idx = work / "main.idx"
+        if idx.is_file() and idx.stat().st_size:
+            run_build_command(["makeindex", "main"], work, env)
+
+        run_build_command(latex, work, env)
+        run_build_command(latex, work, env)
+
+        pdf = work / "main.pdf"
+        if not pdf.is_file() or pdf.stat().st_size == 0:
+            raise SystemExit("Public reference PDF build did not produce main.pdf.")
+        data = pdf.read_bytes()
+        if not data.startswith(b"%PDF-"):
+            raise SystemExit("Public reference output is not a PDF.")
+
+        final_log = (work / "main.log").read_text(encoding="utf-8", errors="replace")
+        forbidden = (
+            "Overfull \\hbox",
+            "Overfull \\vbox",
+            "There were undefined references",
+            "undefined on input line",
+            "Citation '",
+            "Please (re)run Biber",
+        )
+        hit = next((marker for marker in forbidden if marker in final_log), None)
+        if hit is not None:
+            raise SystemExit(f"Public reference final build contains a forbidden warning: {hit}")
+        return data
+
+
 def zip_bytes(
     entries: dict[str, tuple[bytes, int]],
     date_time: tuple[int, int, int, int, int, int],
@@ -209,9 +306,11 @@ def build_template_bundle(
     output: Path,
     version: str,
     date_time: tuple[int, int, int, int, int, int],
+    reference_pdf: bytes,
 ) -> Path:
     archive_root = f"{PACKAGE_ID}-template-{version}/"
     entries = bundle_entries(archive_root)
+    add_entry(entries, f"{archive_root}{PUBLIC_REFERENCE_PDF}", reference_pdf)
     return write_bundle(
         output,
         f"{PACKAGE_ID}-template-{version}.zip",
@@ -225,6 +324,7 @@ def build_overleaf_bundle(
     version: str,
     date_time: tuple[int, int, int, int, int, int],
     abntexto: Path,
+    reference_pdf: bytes,
 ) -> Path:
     if not abntexto.is_file():
         raise SystemExit(f"Pinned abntexto.cls not found: {abntexto}")
@@ -234,6 +334,7 @@ def build_overleaf_bundle(
 
     entries = bundle_entries()
     add_entry(entries, "abntexto.cls", upstream)
+    add_entry(entries, PUBLIC_REFERENCE_PDF, reference_pdf)
     return write_bundle(
         output,
         f"{PACKAGE_ID}-overleaf-{version}.zip",
@@ -260,7 +361,9 @@ def main() -> None:
 
     version = read_version()
     output = args.output.resolve()
-    date_time = zip_datetime(source_date_epoch())
+    epoch = source_date_epoch()
+    date_time = zip_datetime(epoch)
+    upstream = args.abntexto.resolve()
 
     filenames = [
         f"{PACKAGE_ID}-template-{version}.zip",
@@ -268,8 +371,10 @@ def main() -> None:
     ]
     remove_previous(output, filenames)
 
-    build_template_bundle(output, version, date_time)
-    build_overleaf_bundle(output, version, date_time, args.abntexto.resolve())
+    sanitized_entries = bundle_entries()
+    reference_pdf = build_public_reference_pdf(sanitized_entries, upstream, epoch)
+    build_template_bundle(output, version, date_time, reference_pdf)
+    build_overleaf_bundle(output, version, date_time, upstream, reference_pdf)
 
     for filename in filenames:
         print(output / filename)
