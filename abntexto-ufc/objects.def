@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/objects.def}[2026/08/21 UFC figures, tables, code and algorithms]
+\ProvidesFile{abntexto-ufc/objects.def}[2026/09/10 UFC figures, tables, code and algorithms]
 
 % Keep upper object identification/title within the real object width at body size.
 \makeatletter
@@ -60,16 +60,13 @@
   }
 \AddToHook{begindocument/end}{\ufc_objects_setup_list_fonts:}
 
-\cs_new_protected:Npn \ufc_objects_loii_entry:nn #1#2
-  { \extline{0pt}\loilabelwidth\normalfont{#1}{#2} }
+% The unified illustration list must implement the same two-argument contract
+% as every abntexto l@<extension> renderer: entry payload followed by page.
+\cs_gset_protected:cpn { l@loii } #1#2
+  { \extline{0pt}\loilabelwidth\loiifont{#1}{#2} }
 
 \cs_new_protected:Npn \ufc_objects_print_illustration_list:
-  {
-    \group_begin:
-      \cs_set_eq:cN { l@loii } \ufc_objects_loii_entry:nn
-      \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}}
-    \group_end:
-  }
+  { \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}} }
 
 \RenewDocumentCommand \ufcPrintListOfIllustrations { }
   { \ufc_objects_print_illustration_list: }
