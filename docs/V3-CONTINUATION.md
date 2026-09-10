@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R1 closed; R2 implementation committed/pending CI and artifact inspection; publication blocked
+Status: RELEASE — R0/R1/R2 DONE; R3 IN_PROGRESS; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -12,7 +12,7 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 3. Read this file.
 4. Read `release/v3.0.1-final-corrections.json`.
 5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
-6. For the active lot R2, read `docs/V3.0.1-R2-EVIDENCE.md`.
+6. For the active lot R3, read `docs/V3.0.1-R3-EVIDENCE.md`.
 7. Continue from `current_next_action` in the machine state.
 
 Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
@@ -26,72 +26,63 @@ Current Git facts override the machine state; the machine state overrides this h
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
 | Active branch | `release/v3.0.1-final-corrections` |
 | Tracking issue / PR | #304 / #305 |
-| PR state | ready-for-review only so CI can execute; merge remains blocked |
+| PR state | CI vehicle only; merge remains blocked |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
 | Public `v3.0.0` | historical/superseded; never retarget |
 
-## R1 — DONE
+## R0/R1 — DONE
 
-R1.1 normalized the seven canonical chapter paths and reconciled consumers. R1.2 established pedagogical coverage and historical retention. R1.3 completed the bounded teaching rewrite without changing class runtime or normative values.
+R0 established the auditable correction control plane. R1 normalized the seven canonical chapter paths, established pedagogical/normative coverage and completed the coherent teaching rewrite.
 
-R1.3 acceptance source is exactly `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa`:
+R1.3 acceptance source: `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa`.
 
-- Static #484 (`34488189988`): PASS;
-- Linux #405 (`34488190044`): PASS;
-- Linux scope: `reference-document`;
-- summary: `PASS=3 FAIL=0 SKIP=0`;
-- individual checks: `reference=PASS`, `reference-corpus=PASS`, `pdf-validator=PASS`.
+- Static #484 (`34488189988`): PASS.
+- Linux #405 (`34488190044`): PASS.
+- Linux scope: `reference-document`.
+- Summary: `PASS=3 FAIL=0 SKIP=0`.
 
-The earlier #478, #400, #403 and #404 failures remain recorded in `docs/V3.0.1-R1.3-EVIDENCE.md`.
+Detailed earlier failures and corrections remain in `docs/V3.0.1-R1.3-EVIDENCE.md`.
 
-## R2 — IMPLEMENTED, EVIDENCE PENDING
+## R2 — DONE
 
-Goal: make the full PDF generated from `template/main.tex` a first-class canonical release reference.
+R2 makes the complete PDF rooted at `template/main.tex` a first-class exact-SHA engineering release reference. Acceptance source: `514c128f542b00d4a10a9ad05ce7fc94f770ef55`.
 
-R2 does not create another generator. The existing `tests/integration/release-reference-reproducibility.sh`, reached through `make release-check`, remains authoritative and produces:
+- Static #486 (`34491624099`): PASS.
+- Linux #407 (`34491624073`): PASS, `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`.
+- Linux Release Check #121 (`34491624158`): PASS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+- CTAN `pkgcheck 4.1.0`: PASS in the same release run.
+- Canonical PDF SHA-256: `bd8964c8a37940924758d44eef61bc079f5101cf25cd180b42c3df22e00d1d3a`.
+- Two independent clean builds are byte-identical; font embedding, portable CLI/Deep validation, PDF/A-2b and Unicode extraction are PASS.
+- Dedicated artifact: `abntexto-ufc-v3.0.1-canonical-reference-34491624158`, id `10158771936`, archive digest `sha256:0677b776c3eb3a358f91a06119973a00b8f3aa8ade841d54565f85fe5db53bc7`.
+- The exact 63-page A4 PDF was rendered and inspected page by page; no clipping, overlap, broken glyphs, black boxes or missing structural blocks were observed.
 
-- `artifacts/validation/release-reference-pdf.pdf`;
-- `artifacts/validation/release-reference-reproducibility.json`.
+The R2 visual inspection is development evidence only; it does not replace R6 explicit maintainer acceptance on the final immutable R5 candidate. Full evidence: `docs/V3.0.1-R2-EVIDENCE.md`.
 
-The R2 implementation changes the existing Linux Release Check so it fails closed unless the provenance JSON:
+## R3 — IN PROGRESS
 
-- reports `PASS` for the current `SOURCE_COMMIT_SHA`;
-- identifies `template/main.tex` and the canonical PDF output path;
-- records exactly two clean builds with identical SHA-256;
-- matches the SHA-256 of the retained PDF;
-- records PASS for font embedding, portable PDF validator/CLI-Deep path, PDF/A-2b and Unicode extraction.
+Goal: repair public distribution so template/Overleaf users receive both the complete editable source and a compiled full reference PDF.
 
-On successful release validation, the workflow publishes those two files together in a dedicated artifact named with the release version and `canonical-reference`. The existing generic validation artifact remains for broader diagnostic evidence.
+Critical boundary: the R2 source-tree PDF contains the configured UFC mark because `template/main.tex` uses `coat-of-arms=true`. It must not be copied into public bundles. `tools/build-public-bundles.py` already sanitizes distributed `main.tex` to `coat-of-arms=false`; R3 must compile the public reference PDF from that exact sanitized public source/runtime and prove source-to-PDF identity by SHA-256.
 
-`tests/integration_suites.py` now classifies `.github/workflows/linux-release-check.yml` as orchestration. Therefore a release-workflow-only synchronization selects `smoke` in the ordinary Linux Integration instead of redundantly running `complete`; the same synchronization directly triggers Linux Release Check, which remains the heavy authoritative R2 path. `tests/checks/linux_integration_suites.py` protects both this classification and the rule that release-candidate markers continue to force `complete`.
+Fixed R3 decisions:
 
-The implementation commit is the commit containing this handoff and `docs/V3.0.1-R2-EVIDENCE.md`; resolve its SHA dynamically from Git. Do not mark R2 DONE until fresh CI proves the wiring and the dedicated artifact is inspected.
+- keep `docs/ctan-example.tex` as the small CTAN example;
+- put the complete public reference PDF in template/Overleaf GitHub bundles, generated rather than stored manually;
+- keep the CTAN archive lean unless a concrete packaging requirement proves otherwise;
+- never redistribute UFC mark assets or proprietary Microsoft font files;
+- extend the existing bundle/distribution pipeline rather than creating a parallel generator;
+- extract public bundles in regression, rebuild their exact source and require the rebuilt PDF hash to match the embedded reference PDF.
 
-R2 closure requires:
+Active contract and evidence ledger: `docs/V3.0.1-R3-EVIDENCE.md`.
 
-- Static Contract PASS on the implementation SHA;
-- Linux Integration PASS with the expected bounded scope;
-- Linux Release Check PASS on the same implementation SHA;
-- dedicated canonical-reference artifact present with the PDF and provenance JSON;
-- JSON source SHA and PDF SHA-256 verified against the artifact bytes;
-- full PDF inspected page by page for development visual evidence.
+## R4 — PENDING
 
-The R2 visual inspection is engineering evidence only; it does not replace R6 explicit maintainer visual acceptance on the final immutable R5 candidate.
+Known blocker: `validator/app.js` imports `./normative-catalog.js`, but that file is absent from the tracked static validator tree. R4 must generate/track it deterministically, prove clean relative-module closure and run a real positive canonical PDF plus a negative PDF through the actual Web/Lite `analyze(file, profile)` path. Deep-only checks remain REVIEW rather than false PASS. Do not claim public deployment without repository evidence.
 
-## R3 prepared decision
+## R5/R6 — PENDING
 
-Keep the minimal CTAN example separate from the full canonical TCC. `tools/build-public-bundles.py` sanitizes distributed `main.tex` from `coat-of-arms = true` to `false`; the public full PDF must be compiled from that same sanitized source variant, not copied from the source-tree PDF. The strongest distribution regression is to recompile extracted sanitized public source and compare its PDF hash with the reference PDF embedded in template/Overleaf bundles. Do not redistribute Microsoft fonts or UFC mark assets.
-
-## R4 prepared decision
-
-`validator/app.js` imports missing `./normative-catalog.js`. Prefer a deterministic generated-and-tracked `validator/normative-catalog.js` with static byte-for-byte equality against `tools/normative_catalog.py --emit-web`, so a plain static checkout is complete. Then add relative-module closure and a real-PDF browser E2E through the existing `analyze(file, profile)` path with positive and negative PDFs. Deep-only checks remain REVIEW rather than false PASS. Do not assume a GitHub Pages deployment without repository evidence.
-
-## Remaining work
-
-Close R2 from CI/artifact/visual evidence; R3 public distribution repair; R4 Web/Lite static package + real-PDF E2E; R5 exact immutable phase-end release regression; R6 maintainer visual acceptance and publication.
-
-Invariant:
+R5 is the mandatory complete exact-SHA phase-end release regression. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
@@ -105,4 +96,4 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Documentation discipline
 
-Every material advance updates the machine state, affected lot evidence and this handoff in the same work cycle. Failed checks remain recorded after successful reruns. The mandatory R5 phase-end regression on one immutable candidate remains distinct from targeted development checks.
+Every material advance updates the machine state, affected lot evidence and this handoff in the same work cycle. Failed checks remain recorded in the corresponding evidence documents after successful reruns. Current Git facts always take precedence.

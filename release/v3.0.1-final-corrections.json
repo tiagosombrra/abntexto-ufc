@@ -1,5 +1,5 @@
 {
-  "schema_version": 13,
+  "schema_version": 14,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -20,11 +20,12 @@
     "r1_2_evidence": "docs/V3.0.1-R1.2-EVIDENCE.md",
     "r1_3_evidence": "docs/V3.0.1-R1.3-EVIDENCE.md",
     "r2_evidence": "docs/V3.0.1-R2-EVIDENCE.md",
+    "r3_evidence": "docs/V3.0.1-R3-EVIDENCE.md",
     "precedence": [
       "current_git_facts",
       "active_machine_state",
       "current_continuation_handoff",
-      "lot_evidence",
+      "active_lot_evidence",
       "older_docs",
       "conversation_memory"
     ]
@@ -32,19 +33,19 @@
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
     "phase_end_regression_required": true,
-    "failed_checks_remain_in_history": true,
+    "failed_checks_remain_in_lot_evidence_history": true,
     "green_ci_alone_closes_lot": false,
     "post_acceptance_source_commits_allowed": false
   },
   "scope": {
     "release_blocking": [
-      "full_reference_pdf_generation_and_validation",
-      "distribution_of_full_reference_pdf",
+      "distribution_of_full_sanitized_reference_pdf",
       "web_lite_complete_deployment_and_real_pdf_e2e",
       "exact_sha_release_recertification_and_human_acceptance"
     ],
     "closed_release_blockers": [
-      "canonical_tcc_source_identity_and_pedagogical_content"
+      "canonical_tcc_source_identity_and_pedagogical_content",
+      "full_reference_pdf_generation_validation_and_exact_sha_provenance"
     ],
     "deferred": [
       "whole_repository_lifecycle_audit",
@@ -58,20 +59,28 @@
     "active_correction_state_integration_classification": {
       "status": "DONE",
       "path": "release/v3.0.1-final-corrections.json",
-      "classification": "documentation_control_state",
-      "proof": {
-        "static_run": 482,
-        "linux_run": 403,
-        "linux_selected_scope": "reference-document"
-      }
+      "classification": "documentation_control_state"
     },
     "release_workflow_integration_classification": {
-      "status": "IMPLEMENTED_PENDING_EVIDENCE",
+      "status": "DONE",
       "path": ".github/workflows/linux-release-check.yml",
       "classification": "orchestration",
-      "expected_pr_integration_scope": "smoke",
+      "ordinary_pr_scope": "smoke",
       "heavy_execution_owner": "Linux Release Check",
-      "fail_closed_exception": "release/final-certification-candidate.json and release/v3-release-candidate.json continue to force complete"
+      "proof": {
+        "implementation_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55",
+        "static_run_number": 486,
+        "static_run_id": 34491624099,
+        "linux_run_number": 407,
+        "linux_run_id": 34491624073,
+        "linux_scope": "smoke",
+        "linux_summary": "PASS=4 FAIL=0 SKIP=0",
+        "release_check_run_number": 121,
+        "release_check_run_id": 34491624158,
+        "release_scope": "complete",
+        "release_summary": "PASS=38 FAIL=0 SKIP=0"
+      },
+      "fail_closed_exception": "release/final-certification-candidate.json and release/v3-release-candidate.json force complete"
     }
   },
   "work_packages": {
@@ -85,88 +94,119 @@
         "status": "DONE",
         "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
         "consumer_reconciliation_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
-        "checks": {
-          "static_474": "FAIL_EXPECTED_PATH_DRIFT",
-          "static_475": "PASS"
-        }
+        "evidence": "docs/V3.0.1-R1.1-EVIDENCE.md"
       },
       "R1.2": {
         "status": "DONE",
         "matrix_sha": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
         "closure_control_sha": "3ad68d22eb7e2842679437dde3b0b25755179f7e",
-        "static_476": "PASS",
-        "historical_retention": {
-          "guide_origin": "2cbd6d00318ba906e225fa37a4efb724300c3b4e",
-          "result": "ALL_SEVEN_GUIDE_CHAPTERS_SURVIVE_AS_RENAMES_WITH_ZERO_ADDITIONS_AND_ZERO_DELETIONS"
-        }
+        "historical_guide_origin": "2cbd6d00318ba906e225fa37a4efb724300c3b4e",
+        "evidence": "docs/V3.0.1-R1.2-EVIDENCE.md"
       },
       "R1.3": {
         "status": "DONE",
         "implementation_sha": "f8452bc3507a5206fc4e5a4c837feef872f23f3c",
         "acceptance_source_sha": "704cedaa9960b87ae6035ac08fa4cc4c286ea9aa",
-        "governance_correction_sha": "e2f1998ac9e565767d85aedbcd65f2fa48e38d0d",
-        "ci_scope_correction_sha": "1438a7cad27116170440535b9f62e2c084c0c8b8",
-        "typography_correction_sha": "e7f6fc88618329505e7f0de4449aec7c54fe45b0",
-        "geometry_correction_sha": "704cedaa9960b87ae6035ac08fa4cc4c286ea9aa",
-        "checks": [
-          {"workflow": "Static Contract", "run_number": 478, "run_id": 34481185238, "status": "FAIL", "classification": "CONTROL_DOCUMENTATION_CONTRACT_DRIFT"},
-          {"workflow": "Static Contract", "run_number": 479, "run_id": 34481697858, "status": "PASS"},
-          {"workflow": "Linux Integration", "run_number": 399, "run_id": 34481697908, "status": "WORKFLOW_PASS_HEAVY_INTEGRATION_SKIPPED_DRAFT", "acceptance_evidence": false},
-          {"workflow": "Linux Integration", "run_number": 400, "run_id": 34481808802, "status": "FAIL", "scope": "complete", "summary": "PASS=32 FAIL=1 SKIP=3", "failed_check": "reference", "classification": "R1_3_MOVING_ARGUMENT_TOC_DEFECT"},
-          {"workflow": "Static Contract", "run_number": 481, "run_id": 34484253436, "status": "PASS"},
-          {"workflow": "Linux Integration", "run_number": 402, "run_id": 34484253425, "status": "CANCELLED_SUPERSEDED_BY_SUCCESSOR"},
-          {"workflow": "Static Contract", "run_number": 482, "run_id": 34485632344, "status": "PASS"},
-          {"workflow": "Linux Integration", "run_number": 403, "run_id": 34485632570, "status": "FAIL", "scope": "reference-document", "summary": "PASS=0 FAIL=1 SKIP=2", "failed_check": "reference", "classification": "R1_3_TYPOGRAPHIC_WARNING_DEFECT"},
-          {"workflow": "Static Contract", "run_number": 483, "run_id": 34487258470, "status": "PASS"},
-          {"workflow": "Linux Integration", "run_number": 404, "run_id": 34487258455, "status": "FAIL", "scope": "reference-document", "summary": "PASS=2 FAIL=1 SKIP=0", "checks": {"reference": "PASS", "reference-corpus": "PASS", "pdf-validator": "FAIL"}, "classification": "R1_3_EDITORIAL_PUNCTUATION_MARGIN_PROTRUSION"},
-          {"workflow": "Static Contract", "run_number": 484, "run_id": 34488189988, "status": "PASS", "head_sha": "704cedaa9960b87ae6035ac08fa4cc4c286ea9aa"},
-          {"workflow": "Linux Integration", "run_number": 405, "run_id": 34488190044, "status": "PASS", "scope": "reference-document", "summary": "PASS=3 FAIL=0 SKIP=0", "checks": {"reference": "PASS", "reference-corpus": "PASS", "pdf-validator": "PASS"}, "head_sha": "704cedaa9960b87ae6035ac08fa4cc4c286ea9aa"}
-        ]
+        "acceptance": {
+          "static_run_number": 484,
+          "static_run_id": 34488189988,
+          "linux_run_number": 405,
+          "linux_run_id": 34488190044,
+          "linux_scope": "reference-document",
+          "linux_summary": "PASS=3 FAIL=0 SKIP=0"
+        },
+        "failed_development_runs_preserved_in": "docs/V3.0.1-R1.3-EVIDENCE.md"
       }
     },
     "R2": {
-      "status": "IMPLEMENTED_PENDING_EVIDENCE",
-      "entry_condition": "R1.3 DONE",
+      "status": "DONE",
+      "implementation_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55",
       "reuse": "tests/integration/release-reference-reproducibility.sh",
-      "required_outputs": [
-        "artifacts/validation/release-reference-pdf.pdf",
-        "artifacts/validation/release-reference-reproducibility.json"
+      "changed_surfaces": [
+        ".github/workflows/linux-release-check.yml",
+        "tests/integration_suites.py",
+        "tests/checks/linux_integration_suites.py",
+        "AGENTS.md",
+        "docs/V3-CONTINUATION.md",
+        "docs/V3.0.1-R2-EVIDENCE.md",
+        "release/v3.0.1-final-corrections.json"
       ],
-      "implementation": {
-        "workflow": ".github/workflows/linux-release-check.yml",
-        "dedicated_artifact_pattern": "abntexto-ufc-v<version>-canonical-reference-<run_id>",
-        "provenance_contract": [
-          "status PASS",
-          "source_sha equals SOURCE_COMMIT_SHA",
-          "canonical_source equals template/main.tex",
-          "canonical_output equals artifacts/validation/release-reference-pdf.pdf",
-          "two independent clean builds",
-          "identical_sha256 true",
-          "actual PDF SHA-256 equals both build records",
-          "font_embedding PASS",
-          "portable_pdf_validator PASS",
-          "pdfa_2b PASS",
-          "unicode_extraction PASS"
-        ],
-        "ordinary_pr_integration_scope_for_release_workflow_only_change": "smoke"
+      "checks": [
+        {
+          "workflow": "Static Contract",
+          "run_number": 486,
+          "run_id": 34491624099,
+          "status": "PASS",
+          "head_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55"
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 407,
+          "run_id": 34491624073,
+          "status": "PASS",
+          "scope": "smoke",
+          "summary": "PASS=4 FAIL=0 SKIP=0",
+          "head_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55"
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 121,
+          "run_id": 34491624158,
+          "status": "PASS",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "ctan_pkgcheck": "4.1.0 PASS",
+          "head_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55"
+        }
+      ],
+      "canonical_reference": {
+        "source": "template/main.tex",
+        "output": "artifacts/validation/release-reference-pdf.pdf",
+        "sha256": "bd8964c8a37940924758d44eef61bc079f5101cf25cd180b42c3df22e00d1d3a",
+        "bytes": 471705,
+        "pages": 63,
+        "independent_clean_builds": 2,
+        "identical_sha256": true,
+        "font_embedding": "PASS",
+        "portable_pdf_validator": "PASS",
+        "pdfa_2b": "PASS",
+        "unicode_extraction": "PASS",
+        "development_visual_review": "PASS_ALL_63_PAGES",
+        "r6_maintainer_acceptance": "NOT_SATISFIED_BY_R2"
       },
-      "acceptance": [
-        "dedicated first-class release artifact",
-        "static contract for artifact wiring",
-        "release-reference reproducibility PASS on implementation SHA",
-        "artifact PDF/provenance available",
-        "page-by-page development visual inspection"
+      "artifact": {
+        "name": "abntexto-ufc-v3.0.1-canonical-reference-34491624158",
+        "id": 10158771936,
+        "archive_digest": "sha256:0677b776c3eb3a358f91a06119973a00b8f3aa8ade841d54565f85fe5db53bc7",
+        "files": [
+          "release-reference-pdf.pdf",
+          "release-reference-reproducibility.json"
+        ]
+      },
+      "distribution_boundary": "source-tree reference may contain configured UFC mark; R3 must compile public PDF from sanitized coat-of-arms=false source"
+    },
+    "R3": {
+      "status": "IN_PROGRESS",
+      "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
+      "fixed_decisions": [
+        "minimal CTAN example remains separate",
+        "full reference PDF belongs to template/Overleaf GitHub bundles",
+        "public PDF generated from exact sanitized distributed source/runtime",
+        "coat-of-arms=false in public source",
+        "no UFC mark assets redistributed",
+        "no proprietary Microsoft fonts redistributed",
+        "extend existing bundle pipeline rather than add parallel generator",
+        "extracted-bundle rebuild hash must match embedded reference PDF"
       ],
-      "checks": [],
       "unresolved": [
-        "fresh_static_on_r2_implementation_sha",
-        "fresh_bounded_linux_integration_on_r2_implementation_sha",
-        "linux_release_check_pass_on_r2_implementation_sha",
-        "dedicated_artifact_presence_and_provenance_verification",
-        "page_by_page_development_visual_inspection"
+        "inspect exact distribution regression entry point",
+        "confirm final public reference PDF filename from bundle conventions",
+        "implement deterministic sanitized-source PDF build",
+        "add extracted-bundle source-to-PDF hash proof",
+        "measure whether template and Overleaf PDFs are byte-identical",
+        "update README and CTAN release documentation"
       ]
     },
-    "R3": {"status": "PENDING"},
     "R4": {
       "status": "PENDING",
       "confirmed_blockers": [
@@ -174,8 +214,12 @@
         "synthetic cross-surface vectors do not prove actual canonical PDF through browser analyze path"
       ]
     },
-    "R5": {"status": "PENDING"},
-    "R6": {"status": "PENDING"}
+    "R5": {
+      "status": "PENDING"
+    },
+    "R6": {
+      "status": "PENDING"
+    }
   },
-  "current_next_action": "Resolve the current R2 implementation HEAD dynamically. Require fresh Static Contract and bounded Linux Integration plus Linux Release Check on that same SHA. Then verify the dedicated canonical-reference artifact contains exactly the canonical PDF and reproducibility JSON, verify JSON source_sha and SHA-256 against artifact bytes, inspect the full PDF page by page, record all evidence in docs/V3.0.1-R2-EVIDENCE.md and this machine state, and only then mark R2 DONE and open R3."
+  "current_next_action": "R3: inspect tools/build-public-bundles.py, tools/build-distribution-bundles.py, Makefile and the existing distribution/public-bundle tests; implement a deterministic full public reference PDF built from the exact sanitized coat-of-arms=false source/runtime inside template and Overleaf bundles; add fail-closed extracted-bundle rebuild/hash proof; update README, CTAN release documentation, R3 evidence, machine state and continuation handoff; run targeted and CI validation before marking R3 DONE."
 }
