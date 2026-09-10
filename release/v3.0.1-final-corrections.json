@@ -1,5 +1,5 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -19,7 +19,14 @@
     "r1_2_matrix": "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
     "r1_2_evidence": "docs/V3.0.1-R1.2-EVIDENCE.md",
     "r1_3_evidence": "docs/V3.0.1-R1.3-EVIDENCE.md",
-    "precedence": ["current_git_facts", "active_machine_state", "current_continuation_handoff", "lot_evidence", "older_docs", "conversation_memory"]
+    "precedence": [
+      "current_git_facts",
+      "active_machine_state",
+      "current_continuation_handoff",
+      "lot_evidence",
+      "older_docs",
+      "conversation_memory"
+    ]
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -36,17 +43,29 @@
       "web_lite_complete_deployment_and_real_pdf_e2e",
       "exact_sha_release_recertification_and_human_acceptance"
     ],
-    "deferred": ["whole_repository_lifecycle_audit", "broad_branch_pruning", "broad_historical_documentation_cleanup", "unrelated_runtime_api_refactors", "tool_deletion_without_direct_release_defect"]
+    "deferred": [
+      "whole_repository_lifecycle_audit",
+      "broad_branch_pruning",
+      "broad_historical_documentation_cleanup",
+      "unrelated_runtime_api_refactors",
+      "tool_deletion_without_direct_release_defect"
+    ]
   },
   "work_packages": {
-    "R0": {"status": "DONE", "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536"},
+    "R0": {
+      "status": "DONE",
+      "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536"
+    },
     "R1": {
       "status": "IN_PROGRESS",
       "R1.1": {
         "status": "DONE",
         "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
         "consumer_reconciliation_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
-        "checks": {"static_474": "FAIL_EXPECTED_PATH_DRIFT", "static_475": "PASS"}
+        "checks": {
+          "static_474": "FAIL_EXPECTED_PATH_DRIFT",
+          "static_475": "PASS"
+        }
       },
       "R1.2": {
         "status": "DONE",
@@ -59,24 +78,70 @@
         }
       },
       "R1.3": {
-        "status": "IMPLEMENTED_PENDING_STATIC_RERUN",
+        "status": "CORRECTION_PENDING_RERUN",
         "implementation_sha": "f8452bc3507a5206fc4e5a4c837feef872f23f3c",
+        "control_correction_sha": "e2f1998ac9e565767d85aedbcd65f2fa48e38d0d",
         "checks": [
-          {"workflow": "Linux Integration", "run_number": 398, "run_id": 34481185134, "status": "PASS_DRAFT_DEVELOPMENT_SCOPE", "release_evidence": false},
-          {"workflow": "Static Contract", "run_number": 478, "run_id": 34481185238, "status": "FAIL", "classification": "CONTROL_DOCUMENTATION_CONTRACT_DRIFT", "cause": "AGENTS.md omitted exact required concept 'material advance' after bootstrap rewrite"}
+          {
+            "workflow": "Static Contract",
+            "run_number": 478,
+            "run_id": 34481185238,
+            "status": "FAIL",
+            "classification": "CONTROL_DOCUMENTATION_CONTRACT_DRIFT",
+            "cause": "AGENTS.md omitted exact required concept 'material advance' after bootstrap rewrite"
+          },
+          {
+            "workflow": "Static Contract",
+            "run_number": 479,
+            "run_id": 34481697858,
+            "status": "PASS"
+          },
+          {
+            "workflow": "Linux Integration",
+            "run_number": 399,
+            "run_id": 34481697908,
+            "status": "WORKFLOW_PASS_HEAVY_INTEGRATION_SKIPPED_DRAFT",
+            "acceptance_evidence": false
+          },
+          {
+            "workflow": "Linux Integration",
+            "run_number": 400,
+            "run_id": 34481808802,
+            "status": "FAIL",
+            "scope": "complete",
+            "summary": "PASS=32 FAIL=1 SKIP=3",
+            "failed_check": "reference",
+            "classification": "R1_3_MOVING_ARGUMENT_TOC_DEFECT",
+            "cause": "Subsection heading containing the ufcsetup command was re-read from main.toc and executed as configuration, producing unknown key ufc/check@icr."
+          }
         ],
-        "correction": "Restore explicit material advance and phase-end regression concepts in AGENTS.md without weakening phase_governance.py.",
-        "unresolved": ["fresh_static_rerun", "canonical_reference_integration_confirmation"]
+        "correction": "Replace the moving subsection title with plain semantic text while keeping the ufcsetup API explanation in the body.",
+        "unresolved": [
+          "fresh_static_after_heading_fix",
+          "real_linux_reference_pass_after_heading_fix"
+        ]
       }
     },
-    "R2": {"status": "PENDING"},
-    "R3": {"status": "PENDING"},
+    "R2": {
+      "status": "PENDING",
+      "entry_condition": "R1.3 DONE"
+    },
+    "R3": {
+      "status": "PENDING"
+    },
     "R4": {
       "status": "PENDING",
-      "confirmed_blockers": ["validator/app.js imports missing ./normative-catalog.js in tracked static tree", "synthetic cross-surface vectors do not prove actual canonical PDF through browser analyze path"]
+      "confirmed_blockers": [
+        "validator/app.js imports missing ./normative-catalog.js in tracked static tree",
+        "synthetic cross-surface vectors do not prove actual canonical PDF through browser analyze path"
+      ]
     },
-    "R5": {"status": "PENDING"},
-    "R6": {"status": "PENDING"}
+    "R5": {
+      "status": "PENDING"
+    },
+    "R6": {
+      "status": "PENDING"
+    }
   },
-  "current_next_action": "Commit the R1.3 control-documentation correction, require fresh Static PASS and canonical reference/integration evidence, then close R1.3 and start R2."
+  "current_next_action": "Commit the R1.3 heading robustness correction with this state/evidence/handoff update, require fresh Static PASS and real Linux integration PASS for the canonical reference, then mark R1.3 DONE and start R2."
 }

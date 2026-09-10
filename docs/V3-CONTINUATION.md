@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R1.3 correction committed at `64192a35bde415bfca5abdb86fbfea85766e601c`; fresh Static/Linux evidence pending; publication blocked
+Status: RELEASE — R1.3 heading correction committed on active branch; fresh Static/Linux evidence pending; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -45,9 +45,9 @@ The audit trail that must be preserved:
 - PR #305 was moved to ready-for-review solely to let the repository-owned integration run. Ready-for-review does not mean ready to merge.
 - Linux #400 (`34481808802`) ran scope `complete` and failed with `PASS=32 FAIL=1 SKIP=3`. The sole failing check was `reference`.
 - Root cause of #400: the R1.3 subsection heading contained the `\ufcsetup` configuration command in a moving argument. When `main.toc` was re-read, LaTeX executed the command and reported unknown key `ufc/\check@icr`.
-- Commit `64192a35bde415bfca5abdb86fbfea85766e601c` changes that heading to `Configuração central do documento`, retaining the API command only in body text, and synchronizes R1.3 evidence/state/handoff.
+- The active branch now changes that heading to the plain semantic title `Configuração central do documento`, retaining the API command only in body text. Resolve the exact current HEAD dynamically rather than copying a SHA from this handoff.
 
-Current next action is to validate `64192a35bde415bfca5abdb86fbfea85766e601c` with a fresh Static run and a real Linux integration run. R1.3 becomes DONE only when the canonical reference check passes. R2 must not begin before that.
+Current next action is to validate the current active-branch HEAD with a fresh Static run and a real Linux integration run. R1.3 becomes DONE only when the canonical reference check passes. R2 must not begin before that.
 
 ## R2–R4 prepared decisions
 
