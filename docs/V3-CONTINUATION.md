@@ -88,9 +88,9 @@ Accepted corrective source: `2556489da23e16495fc51ebf093f9f4704c6d52f`.
 
 The first implementation failures #409/#123 and their causes remain retained in `docs/V3.0.1-R3-EVIDENCE.md`.
 
-## R4 — CORRECTIVE COMMIT IN CI
+## R4 — VERIFICATION COMMIT IN CI
 
-The R4 source closes both entry defects: `validator/normative-catalog.js` is generated/tracked and byte-compared against the authoritative generator; the source gate proves relative-module closure; and Linux `web-lite` snapshots the real canonical/reference PDF and drives the productive UI in Chrome with positive and non-A4 negative PDFs. Static #491/#492/#493 passed across successive corrections. Linux #412 timed out creating the local ChromeDriver session; Linux #413 still failed before readiness and exposed a non-fail-safe log path; source `6560a0369e20b953c8ae8321a9e5a21317451735` then captured process output but Linux #414 failed before ChromeDriver launch with `PermissionError` because the host tried to write into container-owned `artifacts/validation`. Release Check #128 passed on that source. The current correction writes only browser JSON/log under host-owned `${RUNNER_TEMP}/abntexto-ufc-web-lite`; the positive PDF remains the existing read-only workspace snapshot. No PDF assertion, normative predicate or Deep-only `MANUAL REVIEW` boundary changes. Evidence contract: `docs/V3.0.1-R4-EVIDENCE.md`.
+The R4 source closes both entry defects: `validator/normative-catalog.js` is generated/tracked and byte-compared against the authoritative generator; the source gate proves relative-module closure; and Linux `web-lite` snapshots the real canonical/reference PDF and drives the productive UI in Chrome with positive and non-A4 negative PDFs. Static #491/#492/#493 passed across successive corrections. Linux #412/#413/#414 are retained browser-harness failures before PDF analysis and drove timeout/log/ownership corrections. Source `12e451452749304cd3cc2c35ee73ebba23924001` then produced Static #494 PASS, Linux #415 PASS and Release #129 PASS, but Linux #415 selected only `smoke` (`PASS=4 FAIL=0 SKIP=0`), so it is explicitly non-closing: the host Chrome E2E did not run and no browser artifact exists. The verification commit documents the reproducible E2E command in `validator/README.md`, a legitimate `validator/` surface change that forces the next incremental PR scope to `web-lite`. No PDF assertion, normative predicate or Deep-only `MANUAL REVIEW` boundary changes. Evidence contract: `docs/V3.0.1-R4-EVIDENCE.md`.
 
 ## R5/R6 — PENDING
 
@@ -108,7 +108,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the #414 corrective successor and inspect Static/Linux on that exact SHA. Require `web-lite` container PASS, host-side browser evidence under `${RUNNER_TEMP}/abntexto-ufc-web-lite`, and real Chrome E2E PASS. Inspect uploaded JSON and ChromeDriver log. The positive reference must pass readable/A4/margins without top-level FAIL; the valid non-A4 fixture must fail A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remain `MANUAL REVIEW`; record exact input hashes. Preserve #412/#413/#414. Close R4 only after exact-HEAD browser evidence is independently inspected; then open R5.
+Resolve the R4 verification HEAD and inspect Static/Linux. The Linux scope must be `web-lite`, not `smoke`; require container `PASS=3 FAIL=0 SKIP=0` and host Chrome E2E PASS with evidence under `${RUNNER_TEMP}/abntexto-ufc-web-lite`. Inspect uploaded JSON/log and exact PDF hashes. Positive reference: readable/A4/margins PASS and no top-level FAIL. Negative valid Letter PDF: readable PASS, A4 FAIL, top-level FAIL. `font.embedded` and `pdfa.deep` remain `MANUAL REVIEW`. Preserve #412/#413/#414 and the non-closing #415. Only exact-HEAD browser proof closes R4; then open R5.
 
 ## Documentation discipline
 

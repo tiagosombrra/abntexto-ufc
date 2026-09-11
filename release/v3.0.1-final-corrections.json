@@ -1,5 +1,5 @@
 {
-  "schema_version": 22,
+  "schema_version": 23,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -121,7 +121,7 @@
       }
     },
     "web_lite_integration_classification": {
-      "status": "CORRECTIVE_COMMIT_IN_CI",
+      "status": "VERIFICATION_COMMIT_IN_CI",
       "suite": "web-lite",
       "container_checks": [
         "validator-source",
@@ -348,7 +348,7 @@
       }
     },
     "R4": {
-      "status": "CORRECTIVE_COMMIT_IN_CI",
+      "status": "VERIFICATION_COMMIT_IN_CI",
       "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
       "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
@@ -414,8 +414,9 @@
         "release/v3.0.1-final-corrections.json"
       ],
       "pending_acceptance": [
-        "Static Contract PASS on exact #414 corrective successor",
-        "Linux Integration web-lite container suite PASS on exact #414 corrective successor",
+        "Static Contract PASS on exact R4 verification HEAD",
+        "Linux Integration automatic scope=web-lite on exact R4 verification HEAD",
+        "Linux Integration web-lite container summary PASS=3 FAIL=0 SKIP=0",
         "host RUNNER_TEMP browser evidence directory writable",
         "ChromeDriver session starts and productive UI is reached",
         "real Chrome productive UI positive PDF evidence PASS",
@@ -516,7 +517,35 @@
         ".github/workflows/linux-integration.yml: move host browser evidence from container-owned artifacts/validation to runner-owned RUNNER_TEMP",
         "tests/checks/linux_integration_suites.py: enforce runner.temp Web/Lite evidence wiring",
         "AGENTS.md: synchronize active-lot bootstrap and validator-state text to R4 reality"
-      ]
+      ],
+      "non_closing_successor": {
+        "source_sha": "12e451452749304cd3cc2c35ee73ebba23924001",
+        "static": {
+          "run_number": 494,
+          "run_id": 34552365712,
+          "status": "PASS"
+        },
+        "linux": {
+          "run_number": 415,
+          "run_id": 34552366118,
+          "status": "PASS_NON_CLOSING",
+          "scope": "smoke",
+          "summary": "PASS=4 FAIL=0 SKIP=0",
+          "browser_e2e_executed": false
+        },
+        "release": {
+          "run_number": 129,
+          "run_id": 34552365724,
+          "status": "PASS"
+        },
+        "reason": "Incremental synchronization changed only orchestration/control surfaces, so Linux auto-scope selected smoke and did not execute the host Web/Lite browser E2E."
+      },
+      "verification_trigger": {
+        "path": "validator/README.md",
+        "purpose": "Document exact manual browser E2E reproduction and legitimately force first-class validator/ path classification to web-lite on next incremental PR run.",
+        "runtime_semantics_changed": false,
+        "pdf_assertions_changed": false
+      }
     },
     "R5": {
       "status": "PENDING"
@@ -525,5 +554,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Inspect exact #414 corrective successor. Require Static PASS, Linux scope=web-lite container PASS, writable RUNNER_TEMP browser evidence, Chrome startup, and productive UI E2E PASS. Inspect uploaded JSON/log and exact input hashes. Preserve #412/#413/#414. Do not weaken PDF assertions. Only exact-HEAD browser PASS closes R4 and opens R5."
+  "current_next_action": "Inspect exact R4 verification HEAD. Require Static PASS and Linux automatic scope=web-lite (not smoke), container PASS=3 FAIL=0 SKIP=0, then host Chrome E2E PASS. Independently inspect web-lite-e2e JSON/log and exact positive/negative hashes/verdicts. Preserve #412/#413/#414 and non-closing #415. Only exact-HEAD browser proof closes R4 and opens R5."
 }

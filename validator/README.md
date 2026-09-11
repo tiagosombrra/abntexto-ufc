@@ -28,4 +28,15 @@ The Linux Integration `web-lite` scope compiles a real reference PDF, preserves 
 
 The E2E requires Web/Lite to keep Deep-only `font.embedded` and `pdfa.deep` in `MANUAL REVIEW`; only CLI/Deep may certify those checks automatically.
 
+For local reproduction after a canonical/reference PDF exists, run the same browser harness explicitly:
+
+```bash
+python3 tests/integration/web-lite-e2e.py \
+  --pdf artifacts/validation/web-lite-positive.pdf \
+  --profile portable \
+  --evidence /tmp/abntexto-ufc-web-lite/web-lite-e2e.json
+```
+
+The harness requires Chrome/Chromium plus a compatible `chromedriver`. It writes the JSON evidence next to a verbose `web-lite-chromedriver.log`; both should be retained when diagnosing a browser-startup failure. In CI, the `web-lite` Linux Integration scope owns this execution and stores host-side evidence under `runner.temp`.
+
 This repository does not currently contain evidence that a public GitHub Pages deployment is configured. A static-tree/browser PASS is not a claim of public hosting.
