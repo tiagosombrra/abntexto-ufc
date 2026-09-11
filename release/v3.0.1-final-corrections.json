@@ -1,5 +1,5 @@
 {
-  "schema_version": 23,
+  "schema_version": 24,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -29,7 +29,8 @@
       "older_docs",
       "conversation_memory"
     ],
-    "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md"
+    "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -41,13 +42,13 @@
   },
   "scope": {
     "release_blocking": [
-      "web_lite_complete_deployment_and_real_pdf_e2e",
       "exact_sha_release_recertification_and_human_acceptance"
     ],
     "closed_release_blockers": [
       "canonical_tcc_source_identity_and_pedagogical_content",
       "full_reference_pdf_generation_validation_and_exact_sha_provenance",
-      "distribution_of_full_sanitized_reference_pdf"
+      "distribution_of_full_sanitized_reference_pdf",
+      "web_lite_complete_static_package_and_real_pdf_e2e"
     ],
     "deferred": [
       "whole_repository_lifecycle_audit",
@@ -121,7 +122,7 @@
       }
     },
     "web_lite_integration_classification": {
-      "status": "VERIFICATION_COMMIT_IN_CI",
+      "status": "DONE",
       "suite": "web-lite",
       "container_checks": [
         "validator-source",
@@ -133,7 +134,34 @@
       "evidence": "${RUNNER_TEMP}/abntexto-ufc-web-lite/web-lite-e2e.json",
       "complete_scope_also_runs_browser_e2e": true,
       "fourth_workflow_added": false,
-      "driver_log": "${RUNNER_TEMP}/abntexto-ufc-web-lite/web-lite-chromedriver.log"
+      "driver_log": "${RUNNER_TEMP}/abntexto-ufc-web-lite/web-lite-chromedriver.log",
+      "acceptance": {
+        "source_sha": "170fec009cc89ec0ca98d8d627cd4c8fb3e8447b",
+        "static": {
+          "run_number": 495,
+          "run_id": 34555410344,
+          "status": "PASS"
+        },
+        "linux": {
+          "run_number": 416,
+          "run_id": 34555410491,
+          "status": "PASS",
+          "scope": "web-lite",
+          "summary": "PASS=3 FAIL=0 SKIP=0"
+        },
+        "browser_artifact": {
+          "id": 10182427862,
+          "digest": "sha256:62d558b681d7181b1726604cdebb25f8f1d7db627e473a16ac986951037c02c9"
+        },
+        "release": {
+          "run_number": 130,
+          "run_id": 34555410406,
+          "status": "PASS",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "pkgcheck": "4.1.0 PASS"
+        }
+      }
     }
   },
   "work_packages": {
@@ -348,7 +376,7 @@
       }
     },
     "R4": {
-      "status": "VERIFICATION_COMMIT_IN_CI",
+      "status": "DONE",
       "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
       "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
@@ -413,19 +441,7 @@
         "docs/V3-CONTINUATION.md",
         "release/v3.0.1-final-corrections.json"
       ],
-      "pending_acceptance": [
-        "Static Contract PASS on exact R4 verification HEAD",
-        "Linux Integration automatic scope=web-lite on exact R4 verification HEAD",
-        "Linux Integration web-lite container summary PASS=3 FAIL=0 SKIP=0",
-        "host RUNNER_TEMP browser evidence directory writable",
-        "ChromeDriver session starts and productive UI is reached",
-        "real Chrome productive UI positive PDF evidence PASS",
-        "real Chrome productive UI negative non-A4 evidence PASS",
-        "generated normative catalog byte identity PASS",
-        "relative browser import closure PASS",
-        "font.embedded and pdfa.deep remain MANUAL REVIEW in Web/Lite",
-        "uploaded web-lite-e2e JSON and ChromeDriver log independently inspected, including positive/negative input SHA-256"
-      ],
+      "pending_acceptance": [],
       "first_implementation_sha": "57043432a5e1f94780bfbac3af0b9b199dd12d27",
       "failed_development_runs": [
         {
@@ -545,14 +561,106 @@
         "purpose": "Document exact manual browser E2E reproduction and legitimately force first-class validator/ path classification to web-lite on next incremental PR run.",
         "runtime_semantics_changed": false,
         "pdf_assertions_changed": false
+      },
+      "acceptance_source_sha": "170fec009cc89ec0ca98d8d627cd4c8fb3e8447b",
+      "acceptance": {
+        "static": {
+          "run_number": 495,
+          "run_id": 34555410344,
+          "status": "PASS"
+        },
+        "linux": {
+          "run_number": 416,
+          "run_id": 34555410491,
+          "status": "PASS",
+          "scope": "web-lite",
+          "summary": "PASS=3 FAIL=0 SKIP=0"
+        },
+        "web_lite_e2e": {
+          "status": "PASS",
+          "browser": "Google Chrome 152.0.7977.82",
+          "driver": "ChromeDriver 152.0.7977.82",
+          "artifact_id": 10182427862,
+          "artifact_digest": "sha256:62d558b681d7181b1726604cdebb25f8f1d7db627e473a16ac986951037c02c9",
+          "independent_artifact_sha256_match": true,
+          "positive": {
+            "sha256": "416bd08e184d5510d2dc1c7ab6ebd872c4175dfc20373f040c6c950d09d5a4fb",
+            "bytes": 471705,
+            "pages": 63,
+            "pdf_open": "PASS",
+            "layout_a4": "PASS",
+            "layout_margins": "PASS",
+            "verdict": "AUTOMATED CHECKS PASSED WITH WARNINGS",
+            "font_embedded": "MANUAL REVIEW",
+            "pdfa_deep": "MANUAL REVIEW"
+          },
+          "negative": {
+            "sha256": "83943b2406b0b9f6d0ec00f997606b6c7d73903bbad3b7b8d8e0ce891e9dafdf",
+            "bytes": 613,
+            "pages": 1,
+            "pdf_open": "PASS",
+            "layout_a4": "FAIL",
+            "verdict": "FAIL",
+            "font_embedded": "MANUAL REVIEW",
+            "pdfa_deep": "MANUAL REVIEW"
+          }
+        },
+        "release": {
+          "run_number": 130,
+          "run_id": 34555410406,
+          "status": "PASS",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "pkgcheck": "4.1.0 PASS",
+          "canonical_reference_sha256": "68307950e73f97c378927686e419a706cad4c81ea08bc9a127bf63ee47d8191b",
+          "public_reference_sha256": "ce51dd225dedeb0bfb949e0fb1c3eee4629beece02cf34976ce26764f72fcd0d"
+        }
       }
     },
     "R5": {
-      "status": "PENDING"
+      "status": "ACTIVE_DYNAMIC",
+      "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+      "marker": "release/v3-release-candidate.json",
+      "marker_policy": "single_canonical_marker",
+      "merge_method": "squash",
+      "stages": {
+        "A": {
+          "name": "pre-merge PR phase-end certification",
+          "status": "PENDING_MARKER_HEAD_GATES",
+          "required": [
+            "Static PASS",
+            "Linux complete PASS with Web/Lite E2E",
+            "Linux Release Check complete PASS",
+            "current CTAN pkgcheck PASS",
+            "distribution/reference/review-pair gates PASS"
+          ]
+        },
+        "B": {
+          "name": "squash transport to main",
+          "status": "BLOCKED_BY_STAGE_A"
+        },
+        "C": {
+          "name": "exact-main recertification",
+          "status": "BLOCKED_BY_STAGE_B",
+          "required": [
+            "Static PASS on exact main",
+            "automatic Linux complete PASS including Web/Lite E2E",
+            "Linux Release Check complete PASS",
+            "current CTAN pkgcheck PASS",
+            "exact-main artifacts independently inspected"
+          ]
+        }
+      },
+      "post_merge_source_receipt_commit_allowed": false,
+      "live_receipts_before_publication": [
+        "GitHub Actions runs/artifacts",
+        "issue #304"
+      ]
     },
     "R6": {
-      "status": "PENDING"
+      "status": "PENDING",
+      "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Inspect exact R4 verification HEAD. Require Static PASS and Linux automatic scope=web-lite (not smoke), container PASS=3 FAIL=0 SKIP=0, then host Chrome E2E PASS. Independently inspect web-lite-e2e JSON/log and exact positive/negative hashes/verdicts. Preserve #412/#413/#414 and non-closing #415. Only exact-HEAD browser proof closes R4 and opens R5."
+  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
 }

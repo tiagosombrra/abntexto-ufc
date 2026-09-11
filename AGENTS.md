@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, release metada
 2. read `docs/V3-CONTINUATION.md` first;
 3. read `release/v3.0.1-final-corrections.json`;
 4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`;
-5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, and the current active lot R4 uses `docs/V3.0.1-R4-EVIDENCE.md`;
+5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, R4 uses `docs/V3.0.1-R4-EVIDENCE.md`, and the current active lot R5 uses `docs/V3.0.1-R5-EVIDENCE.md`;
 6. inspect issue #304 and PR #305 when remote GitHub state is available;
 7. use older v3 roadmap, recovery and certification documents only as historical/background evidence when the current handoff or machine state points to them.
 
@@ -31,8 +31,8 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
-| R4 | VERIFICATION_COMMIT_IN_CI — static package PASS; real browser rerun explicitly forced |
-| R5 | PENDING — immutable exact-SHA phase-end regression |
+| R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
+| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
@@ -70,9 +70,15 @@ The CTAN archive stays lean by default and retains `docs/ctan-example.tex` as it
 
 R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static #489 PASS, Linux Integration #410 `distribution` PASS, and Linux Release Check #124 complete PASS on that SHA. The exact distribution artifact `10169809155` has archive digest `sha256:6445ce5e3b870fc6c418fa23c4dc318576f58d00bfe48525ed100e86feaca761`; its three inner ZIPs validate against `SHA256SUMS`. Template and Overleaf embed byte-identical 63-page public references with SHA-256 `e92378a0ef01310c656599d1f1765db6d0040467367313e74776c8ebd75b766c`, while CTAN excludes the full reference. Independent inspection confirmed `coat-of-arms=false`, no prohibited institutional-mark asset, no proprietary Microsoft font, A4 output and visually intact pages. See `docs/V3.0.1-R3-EVIDENCE.md`.
 
-## Validator boundary
+## R4 accepted Web/Lite boundary
 
-CLI/Deep and Web/Lite are distinct capability surfaces. Web/Lite must never claim Deep-only proof as PASS. R4 is active. The missing-module entry defect is already closed in source: tracked `validator/normative-catalog.js` is regenerated and byte-compared by the static contract, and relative-module closure passes. The remaining R4 gate is dynamic: a real canonical/reference PDF and a valid non-A4 negative PDF must traverse the productive browser UI/analyze path in Chrome. Current failures are host-harness startup/evidence-path failures before PDF analysis, not accepted validator verdicts. R4 evidence authority is `docs/V3.0.1-R4-EVIDENCE.md`.
+R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
+
+## R5 dynamic candidate transport
+
+R5 uses exactly one release marker: `release/v3-release-candidate.json`. A marker change must force complete Linux Integration on PR #305; after those pre-merge gates pass, PR #305 is squash-merged to `main`. The squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+
+The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
 
 ## Mandatory phase-end regression and release invariant
 

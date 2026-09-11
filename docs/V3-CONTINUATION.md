@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2/R3 DONE; R4 IN_PROGRESS; publication blocked
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -12,7 +12,7 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 3. Read this file.
 4. Read `release/v3.0.1-final-corrections.json`.
 5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
-6. For the active lot R4, read `docs/V3.0.1-R4-EVIDENCE.md`.
+6. For the active lot R5, read `docs/V3.0.1-R5-EVIDENCE.md`.
 7. Continue from `current_next_action` in the machine state.
 
 Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
@@ -88,11 +88,28 @@ Accepted corrective source: `2556489da23e16495fc51ebf093f9f4704c6d52f`.
 
 The first implementation failures #409/#123 and their causes remain retained in `docs/V3.0.1-R3-EVIDENCE.md`.
 
-## R4 — VERIFICATION COMMIT IN CI
+## R4 — DONE
 
-The R4 source closes both entry defects: `validator/normative-catalog.js` is generated/tracked and byte-compared against the authoritative generator; the source gate proves relative-module closure; and Linux `web-lite` snapshots the real canonical/reference PDF and drives the productive UI in Chrome with positive and non-A4 negative PDFs. Static #491/#492/#493 passed across successive corrections. Linux #412/#413/#414 are retained browser-harness failures before PDF analysis and drove timeout/log/ownership corrections. Source `12e451452749304cd3cc2c35ee73ebba23924001` then produced Static #494 PASS, Linux #415 PASS and Release #129 PASS, but Linux #415 selected only `smoke` (`PASS=4 FAIL=0 SKIP=0`), so it is explicitly non-closing: the host Chrome E2E did not run and no browser artifact exists. The verification commit documents the reproducible E2E command in `validator/README.md`, a legitimate `validator/` surface change that forces the next incremental PR scope to `web-lite`. No PDF assertion, normative predicate or Deep-only `MANUAL REVIEW` boundary changes. Evidence contract: `docs/V3.0.1-R4-EVIDENCE.md`.
+Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
-## R5/R6 — PENDING
+- Static #495: PASS.
+- Linux #416: PASS, `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`.
+- Real Chrome productive-UI E2E: PASS on 63-page positive reference and valid Letter negative.
+- Positive SHA-256: `416bd08e184d5510d2dc1c7ab6ebd872c4175dfc20373f040c6c950d09d5a4fb`; readable/A4/margins PASS; no top-level FAIL.
+- Negative SHA-256: `83943b2406b0b9f6d0ec00f997606b6c7d73903bbad3b7b8d8e0ce891e9dafdf`; readable PASS, A4 FAIL, verdict FAIL.
+- Deep-only `font.embedded` and `pdfa.deep`: `MANUAL REVIEW` on both inputs.
+- Browser artifact id `10182427862`, digest `sha256:62d558b681d7181b1726604cdebb25f8f1d7db627e473a16ac986951037c02c9`; independently downloaded/inspected.
+- Release #130: PASS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck 4.1.0` PASS.
+
+Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
+
+## R5 — ACTIVE_DYNAMIC
+
+R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+
+Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
+
+## R6 — PENDING
 
 R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
 
@@ -108,7 +125,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the R4 verification HEAD and inspect Static/Linux. The Linux scope must be `web-lite`, not `smoke`; require container `PASS=3 FAIL=0 SKIP=0` and host Chrome E2E PASS with evidence under `${RUNNER_TEMP}/abntexto-ufc-web-lite`. Inspect uploaded JSON/log and exact PDF hashes. Positive reference: readable/A4/margins PASS and no top-level FAIL. Negative valid Letter PDF: readable PASS, A4 FAIL, top-level FAIL. `font.embedded` and `pdfa.deep` remain `MANUAL REVIEW`. Preserve #412/#413/#414 and the non-closing #415. Only exact-HEAD browser proof closes R4; then open R5.
+Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
 
 ## Documentation discipline
 

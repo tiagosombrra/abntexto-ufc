@@ -1,9 +1,9 @@
 {
-  "schema_version": 9,
-  "purpose": "V3 Release recovery marker for 3.0.1 with PR #302 runtime correction, exact-SHA certification, current CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 10,
+  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure; forces pre-merge complete regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
   "target_version": "3.0.1",
-  "candidate_semantics": "the exact canonical main commit containing the merged PR #302 runtime correction plus the 3.0.1 recovery/version/control changes, after that same commit passes exact-SHA certification, current CTAN pkgcheck and maintainer visual acceptance",
+  "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #305 after its marker head passes complete phase-end gates; that resulting main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
   "integration_anchor": {
     "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
     "source": "PR #297 squash merge",
@@ -82,13 +82,21 @@
     "reason": "PR #302 and the 3.0.1 recovery change runtime/publication bytes and therefore require a fresh exact-SHA cycle."
   },
   "final_candidate": {
-    "status": "pending-combined-pr302-recovery-pr-gates-merge-exact-main-recertification-and-human-approval",
+    "status": "r5-dynamic-transport-active",
     "version": "3.0.1",
-    "source_branch": "main",
-    "must_include_pr302_merge_sha": "6d06d4ed42b2187b1483ea219ee055cfe975ece2",
+    "premerge_pull_request": 305,
+    "source_branch": "release/v3.0.1-final-corrections",
+    "canonical_branch": "main",
+    "merge_method": "squash",
+    "resolve_pr_head_from_git": true,
+    "premerge_complete_linux_required": true,
+    "premerge_linux_release_check_required": true,
     "resolve_sha_from_git_on_canonical_main": true,
     "complete_linux_on_exact_main_release_marker_push": true,
-    "linux_release_check_on_exact_main_release_marker_push": true,
+    "linux_release_check_on_exact_main_push": true,
+    "web_lite_real_pdf_e2e_required": true,
+    "current_ctan_pkgcheck_required": true,
+    "exact_main_artifact_inspection_required": true,
     "no_pre_tag_commits_after_acceptance": true
   },
   "release_contract": "make release-check",
@@ -103,7 +111,9 @@
     "archive": "abntexto-ufc-3.0.1.zip",
     "archive_count": 1,
     "top_level_directory": "abntexto-ufc",
-    "runtime_implementation_files": ["abntexto-ufc.cls"],
+    "runtime_implementation_files": [
+      "abntexto-ufc.cls"
+    ],
     "project_def_files": 0,
     "monolithic_class_generated_from_modular_sources": true,
     "all_tracked_runtime_modules_inlined_exactly_once": true,
@@ -115,11 +125,16 @@
     "pkgcheck_required_before_tag": true,
     "pkgcheck_version_policy": "current-at-final-certification",
     "pkgcheck_execution": "linux-release-check-download-current-ctan-package-at-runtime",
-    "pkgcheck_evidence_required": ["version", "full-output", "checked-archive-sha256", "warning-disposition"]
+    "pkgcheck_evidence_required": [
+      "version",
+      "full-output",
+      "checked-archive-sha256",
+      "warning-disposition"
+    ]
   },
   "human_visual_acceptance": {
     "required_before_tag": true,
-    "state": "pending-explicit-maintainer-approval-on-final-3.0.1-exact-candidate-containing-pr302",
+    "state": "pending-explicit-maintainer-approval-on-exact-post-merge-r5-main-artifacts",
     "profiles": [
       "undergraduate-capstone",
       "specialization-capstone",
@@ -130,7 +145,12 @@
       "scientific-article"
     ],
     "required_pair": "pdf-and-corresponding-tex-source",
-    "required_preflight": ["a4", "pdfa-2b", "font-embedding", "recognized-warning-overflow-free"],
+    "required_preflight": [
+      "a4",
+      "pdfa-2b",
+      "font-embedding",
+      "recognized-warning-overflow-free"
+    ],
     "generator": "tests/integration/release-review-pairs.sh",
     "generator_dependency": {
       "abntexto_commit": "4c03fd7b5a7af089627dedb547c53cad4eed2a2a",
@@ -144,12 +164,8 @@
       "maintainer_approval_recorded_by_ci": false
     },
     "preliminary_baseline_review": {
-      "source_sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
-      "profiles": 7,
-      "preflight": "pass",
-      "page_by_page_visual_inspection": "pass",
-      "final_gate_closed": false,
-      "reason": "The final 3.0.1 pairs must be regenerated from the exact candidate containing PR #302 before approval."
+      "status": "historical-development-evidence-only",
+      "reason": "R6 requires newly generated review pairs and full canonical reference from the exact post-merge R5 main SHA."
     }
   },
   "final_tag_contract": {
@@ -169,8 +185,35 @@
   "documentation_policy": {
     "affected_docs_updated_with_every_material_repository_change": true,
     "root_readme_tracks_user_facing_facts_not_transient_ci_state": true,
-    "post_acceptance_pre_tag_repository_changes_forbidden": true
+    "post_acceptance_pre_tag_repository_changes_forbidden": true,
+    "r5_dynamic_handoff": "docs/V3.0.1-R5-EVIDENCE.md",
+    "post_merge_pre_tag_source_receipt_commit_allowed": false,
+    "live_post_merge_receipts": "GitHub Actions runs/artifacts and issue #304 until publication"
   },
   "publication_rebuild_allowed": false,
-  "remove_after_acceptance": false
+  "remove_after_acceptance": false,
+  "final_correction_program": {
+    "tracking_issue": 304,
+    "pull_request": 305,
+    "working_branch": "release/v3.0.1-final-corrections",
+    "authority": "release/v3.0.1-final-corrections.json",
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r0_r3_status": "DONE",
+    "r4": {
+      "status": "DONE",
+      "acceptance_source_sha": "170fec009cc89ec0ca98d8d627cd4c8fb3e8447b",
+      "static_run": 34555410344,
+      "linux_run": 34555410491,
+      "linux_scope": "web-lite",
+      "linux_summary": "PASS=3 FAIL=0 SKIP=0",
+      "browser_e2e": "PASS",
+      "browser_artifact_id": 10182427862,
+      "release_run": 34555410406,
+      "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+      "pkgcheck": "4.1.0 PASS"
+    },
+    "r5_state": "ACTIVE_DYNAMIC",
+    "merge_method": "squash",
+    "post_merge_receipt_commit_forbidden": true
+  }
 }
