@@ -120,7 +120,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Stop R5/R6 progression. Execute R1.4-A/R1.4-B from `docs/V3.0.1-R1.4-CANONICAL-TCC-RECONSTRUCTION.md`: recover historical full-reference material, compare it to merged-main source and define the intended visible textual hierarchy. Then reconcile the coverage matrix and deeply rewrite the canonical TCC. Generate a new interim PDF for maintainer inspection before re-certifying R2/R3 and rerunning R4 against the rebuilt final reference.
+R1.4-A historical recovery is complete and documented in `docs/V3.0.1-R1.4-HISTORICAL-SOURCE-AUDIT.md`. It confirms that the richer v1.1.2 teaching corpus was heavily reduced/consolidated in v2.1.0 and that v3 inherited that reduced lineage. Execute R1.4-B next: verify the correct current `abntexto` primary textual hierarchy and decide the visible structure/TOC. Then reconcile the coverage matrix and deeply rewrite the canonical TCC before any R2/R3/R4/R5 recertification.
 
 ## Documentation discipline
 

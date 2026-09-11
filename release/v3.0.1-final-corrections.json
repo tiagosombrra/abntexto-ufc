@@ -1,5 +1,5 @@
 {
-  "schema_version": 25,
+  "schema_version": 26,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -31,7 +31,8 @@
     ],
     "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
     "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
-    "r1_4_evidence": "docs/V3.0.1-R1.4-CANONICAL-TCC-RECONSTRUCTION.md"
+    "r1_4_evidence": "docs/V3.0.1-R1.4-CANONICAL-TCC-RECONSTRUCTION.md",
+    "r1_4_historical_audit": "docs/V3.0.1-R1.4-HISTORICAL-SOURCE-AUDIT.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -227,7 +228,35 @@
           "new exact-source canonical PDF generated and reference gates pass",
           "requested changes visibly present",
           "maintainer explicit canonical-content acceptance"
-        ]
+        ],
+        "sub_lots": {
+          "A": {
+            "status": "DONE",
+            "evidence": "docs/V3.0.1-R1.4-HISTORICAL-SOURCE-AUDIT.md",
+            "key_findings": [
+              "v1.1.2 had substantially richer textual teaching corpus",
+              "v2.1.0 reduced/consolidated large source files during modern-stack migration",
+              "v1.1.2 primary textual units used chapter; v2.1.0 switched those roles to section",
+              "R1.3 rebuilt on reduced lineage instead of recovering richer historical corpus"
+            ]
+          },
+          "B": {
+            "status": "IN_PROGRESS",
+            "goal": "verify current abntexto primary textual hierarchy and final rendered structure/TOC"
+          },
+          "C": {
+            "status": "PENDING",
+            "goal": "resolve coverage matrix to zero unresolved release-required rows"
+          },
+          "D": {
+            "status": "PENDING",
+            "goal": "deep source rewrite/recovery across all seven textual units"
+          },
+          "E": {
+            "status": "PENDING",
+            "goal": "iterative canonical PDF visual proof"
+          }
+        }
       }
     },
     "R2": {
@@ -696,5 +725,5 @@
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Execute R1.4-A/R1.4-B: recover and compare historical full-reference material against current main; verify intended visible textual hierarchy. Then reconcile coverage matrix to zero unresolved release-required rows and deeply rewrite canonical TCC before any R2/R3/R4/R5 recertification."
+  "current_next_action": "R1.4-A DONE. Execute R1.4-B: verify current abntexto primary textual hierarchy and decide final visible structure/TOC. Then map historical RESTORE_ADAPTED/REWRITE/KEEP_CURRENT/DROP_WITH_REASON decisions into the coverage matrix before deep source rewrite."
 }
