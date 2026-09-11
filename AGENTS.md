@@ -10,8 +10,8 @@ Before changing code, tests, standards, workflows, documentation, release metada
 2. read `docs/V3-CONTINUATION.md` first;
 3. read `release/v3.0.1-final-corrections.json`;
 4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`;
-5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, R4 uses `docs/V3.0.1-R4-EVIDENCE.md`, and the current active lot R5 uses `docs/V3.0.1-R5-EVIDENCE.md`;
-6. inspect issue #304 and PR #305 when remote GitHub state is available;
+5. read the evidence document for the active lot. The current active correction is `docs/V3.0.1-R1.4-EVIDENCE.md`; after R1.4 closes, fresh release recertification follows `docs/V3.0.1-R5-EVIDENCE.md`;
+6. inspect issue #304 and active correction PR #309; PR #305 is the merged transport of the superseded candidate;
 7. use older v3 roadmap, recovery and certification documents only as historical/background evidence when the current handoff or machine state points to them.
 
 Priority on disagreement: **current Git facts > active machine state > current continuation handoff > active-lot evidence > older documents > prior chat or memory**.
@@ -24,16 +24,16 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Active phase | Release |
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active correction branch | `fix/v3.0.1-canonical-tcc-review-findings` |
+| Tracking issue / PR | #304 / #309; merged #305 is historical |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
-| R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
-| R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
-| R3 | DONE — sanitized public reference embedded and independently inspected |
-| R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
-| R6 | PENDING — maintainer acceptance and publication |
+| R1 | REOPENED — R1.4 maintainer canonical-TCC visual findings |
+| R2 | REVALIDATION REQUIRED — canonical PDF bytes change after R1.4 |
+| R3 | REVALIDATION REQUIRED — public reference/distribution bytes change after R1.4 |
+| R4 | IMPLEMENTATION DONE — real-PDF E2E must rerun on corrected final candidate |
+| R5 | REOPENED — prior exact-main candidate superseded by maintainer visual findings |
+| R6 | BLOCKED — maintainer rejected the prior candidate pending R1.4 corrections |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
 Never treat a SHA copied from this document as current Git state; resolve the branch dynamically first.
@@ -51,6 +51,16 @@ The canonical undergraduate reference is rooted at `template/main.tex`. It is bo
 The guide distinguishes ABNT normative requirements, UFC institutional requirements, project/editorial policy, and examples/recommendations. For each major user-visible formatting or document-structure topic, it explains authority/classification, expected rendered behavior, the public `abntexto-ufc` mechanism and the validation/evidence route. The machine normative contract remains authoritative for atomic proof semantics.
 
 R1.3 closed on source SHA `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa` with Static #484 PASS and Linux #405 `reference-document` PASS (`PASS=3 FAIL=0 SKIP=0`). Detailed failed development runs remain in `docs/V3.0.1-R1.3-EVIDENCE.md`.
+
+## R1.4 maintainer visual-review reopening
+
+The prior exact-main candidate `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` passed automated R5 certification but failed explicit maintainer visual acceptance. It is historical evidence only and must not be tagged or published.
+
+R1.4 is release-blocking and authoritative for four canonical-TCC findings: render a complete approval date; use exactly three committee members with no department/center/unit lines in the canonical approval block; remove the artificial standalone period forced before table-of-contents leaders; and remove the index module/printed index from the canonical TCC. The class may continue to support optional indexes through independent fixtures.
+
+Active implementation is PR #309 on `fix/v3.0.1-canonical-tcc-review-findings`. Evidence: `docs/V3.0.1-R1.4-EVIDENCE.md`.
+
+R2/R3 acceptance artifacts generated before R1.4 are historical for final-publication purposes because the canonical/public PDF bytes change. R4 implementation remains accepted as a capability, but its real-PDF E2E must run again during the new R5 candidate cycle. R6 stays blocked until the corrected exact-main candidate is recertified and explicitly approved by the maintainer.
 
 ## Canonical reference artifact rule
 
@@ -74,9 +84,9 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 
 R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 dynamic candidate transport
+## R5 recertification after R1.4
 
-R5 uses exactly one release marker: `release/v3-release-candidate.json`. A marker change must force complete Linux Integration on PR #305; after those pre-merge gates pass, PR #305 is squash-merged to `main`. The squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+R5 still uses exactly one release marker: `release/v3-release-candidate.json`. The previous Stage C candidate on `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` is superseded by the R1.4 maintainer findings. After R1.4 is visually accepted on PR #309, the marker must force complete Linux Integration for the new correction state; PR #309 is then squash-merged to `main`, and the resulting exact `main` SHA must repeat Static, complete Linux Integration (including Web/Lite host E2E), Linux Release Check/current CTAN `pkgcheck`, canonical reference, distribution and review-pair certification.
 
 The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
 

@@ -1,11 +1,11 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": 305,
-  "working_branch": "release/v3.0.1-final-corrections",
+  "pull_request": 309,
+  "working_branch": "fix/v3.0.1-canonical-tcc-review-findings",
   "target_version": "3.0.1",
-  "publication_status": "BLOCKED",
+  "publication_status": "BLOCKED_MAINTAINER_FINDINGS",
   "historical_certified_baseline": {
     "sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
     "status": "SUPERSEDED_AS_FINAL_CANDIDATE_RETAINED_AS_EVIDENCE"
@@ -30,7 +30,8 @@
       "conversation_memory"
     ],
     "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md"
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r1_4_evidence": "docs/V3.0.1-R1.4-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -42,7 +43,10 @@
   },
   "scope": {
     "release_blocking": [
-      "exact_sha_release_recertification_and_human_acceptance"
+      "R1.4 canonical TCC maintainer visual findings",
+      "fresh canonical reference/distribution bytes after R1.4",
+      "fresh exact-main R5 recertification after PR #309",
+      "R6 explicit maintainer visual acceptance of corrected candidate"
     ],
     "closed_release_blockers": [
       "canonical_tcc_source_identity_and_pedagogical_content",
@@ -170,7 +174,7 @@
       "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536"
     },
     "R1": {
-      "status": "DONE",
+      "status": "REOPENED_R1_4",
       "R1.1": {
         "status": "DONE",
         "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
@@ -197,10 +201,25 @@
           "linux_summary": "PASS=3 FAIL=0 SKIP=0"
         },
         "failed_development_runs_preserved_in": "docs/V3.0.1-R1.3-EVIDENCE.md"
+      },
+      "R1.4": {
+        "status": "IMPLEMENTED_PENDING_CI_AND_VISUAL_REVIEW",
+        "evidence": "docs/V3.0.1-R1.4-EVIDENCE.md",
+        "entry_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "correction_pr": 309,
+        "working_branch": "fix/v3.0.1-canonical-tcc-review-findings",
+        "initial_technical_sha": "2219a8d058c4d60750bf9e6e5c8e6f5691481eb8",
+        "index_removal_followup_sha": "3db456c9f734484575c7678ac14853f3f9122522",
+        "findings": [
+          "complete approval date with day and month",
+          "exactly three canonical committee members and no department/center/unit lines",
+          "remove forced standalone terminal period before ToC dotted leaders",
+          "remove index module/markers/printed index from canonical TCC"
+        ]
       }
     },
     "R2": {
-      "status": "DONE",
+      "status": "REVALIDATION_REQUIRED_AFTER_R1_4",
       "implementation_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55",
       "reuse": "tests/integration/release-reference-reproducibility.sh",
       "checks": [
@@ -247,10 +266,11 @@
         "name": "abntexto-ufc-v3.0.1-canonical-reference-34491624158",
         "id": 10158771936,
         "archive_digest": "sha256:0677b776c3eb3a358f91a06119973a00b8f3aa8ade841d54565f85fe5db53bc7"
-      }
+      },
+      "final_publication_evidence": "HISTORICAL_SUPERSEDED_BY_R1_4"
     },
     "R3": {
-      "status": "DONE",
+      "status": "REVALIDATION_REQUIRED_AFTER_R1_4",
       "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
       "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
       "public_reference_pdf": "abntexto-ufc-reference.pdf",
@@ -373,10 +393,11 @@
           "coat_of_arms": false,
           "independent_visual_review": "PASS_ALL_63_PAGES"
         }
-      }
+      },
+      "final_publication_evidence": "HISTORICAL_SUPERSEDED_BY_R1_4"
     },
     "R4": {
-      "status": "DONE",
+      "status": "IMPLEMENTATION_DONE_FINAL_CANDIDATE_E2E_RERUN_REQUIRED",
       "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
       "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
@@ -615,10 +636,11 @@
           "canonical_reference_sha256": "68307950e73f97c378927686e419a706cad4c81ea08bc9a127bf63ee47d8191b",
           "public_reference_sha256": "ce51dd225dedeb0bfb949e0fb1c3eee4629beece02cf34976ce26764f72fcd0d"
         }
-      }
+      },
+      "final_publication_evidence": "RERUN_ON_NEW_R5_CANDIDATE"
     },
     "R5": {
-      "status": "ACTIVE_DYNAMIC",
+      "status": "REOPENED_BY_MAINTAINER_VISUAL_FINDINGS",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -626,7 +648,7 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "PENDING_MARKER_HEAD_GATES",
+          "status": "BLOCKED_BY_R1_4",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
@@ -637,11 +659,11 @@
         },
         "B": {
           "name": "squash transport to main",
-          "status": "BLOCKED_BY_STAGE_A"
+          "status": "BLOCKED_BY_R1_4_AND_STAGE_A"
         },
         "C": {
           "name": "exact-main recertification",
-          "status": "BLOCKED_BY_STAGE_B",
+          "status": "PRIOR_CYCLE_SUPERSEDED__NEW_CYCLE_PENDING",
           "required": [
             "Static PASS on exact main",
             "automatic Linux complete PASS including Web/Lite E2E",
@@ -655,12 +677,24 @@
       "live_receipts_before_publication": [
         "GitHub Actions runs/artifacts",
         "issue #304"
-      ]
+      ],
+      "previous_exact_main_candidate": {
+        "sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "disposition": "SUPERSEDED_FOR_FINAL_PUBLICATION_BY_R1_4_FINDINGS",
+        "automated_certification": "PASS_BUT_NOT_HUMAN_ACCEPTED"
+      },
+      "correction_pr": 309
     },
     "R6": {
-      "status": "PENDING",
-      "blocked_by": "R5 exact-main certification and artifact inspection"
+      "status": "BLOCKED_PRIOR_CANDIDATE_REJECTED_BY_MAINTAINER",
+      "blocked_by": "R1.4 correction + fresh R5 exact-main recertification",
+      "maintainer_review": {
+        "candidate_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "decision": "REJECTED_WITH_CORRECTION_FINDINGS",
+        "findings_reference": "docs/V3.0.1-R1.4-EVIDENCE.md"
+      }
     }
   },
-  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
+  "current_next_action": "Resolve PR #309 exact head. Finish R1.4 CI, then download/render and visually inspect the corrected canonical PDF for the four maintainer findings. Record artifact/hash and visual result in R1.4 evidence. Only after R1.4 closes, run a fresh complete R5 cycle and exact-main recertification. Never reuse ab641d49 artifacts for v3.0.1 publication.",
+  "superseded_pull_request": 305
 }

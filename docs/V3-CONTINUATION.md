@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
-Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
+Updated: 2026-09-11
+Status: RELEASE — R1.4 ACTIVE after maintainer rejection; R2/R3/R5 recertification required; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -12,7 +12,7 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 3. Read this file.
 4. Read `release/v3.0.1-final-corrections.json`.
 5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
-6. For the active lot R5, read `docs/V3.0.1-R5-EVIDENCE.md`.
+6. Read active `docs/V3.0.1-R1.4-EVIDENCE.md`; after R1.4 closes, use `docs/V3.0.1-R5-EVIDENCE.md` for fresh recertification.
 7. Continue from `current_next_action` in the machine state.
 
 Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
@@ -24,14 +24,14 @@ Current Git facts override the machine state; the machine state overrides this h
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
-| Active branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
-| PR state | CI vehicle only; merge remains blocked |
+| Active branch | `fix/v3.0.1-canonical-tcc-review-findings` |
+| Tracking issue / active PR | #304 / #309; #305 is merged historical transport |
+| PR state | #309 open; merge blocked until R1.4 visual/CI acceptance |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
 | Public `v3.0.0` | historical/superseded; never retarget |
 
-## R0/R1 — DONE
+## R0 — DONE / R1 — REOPENED AS R1.4
 
 R0 established the auditable correction control plane. R1 normalized the seven canonical chapter paths, established pedagogical/normative coverage and completed the coherent teaching rewrite.
 
@@ -42,9 +42,9 @@ R1.3 acceptance source: `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa`.
 - Linux scope: `reference-document`.
 - Summary: `PASS=3 FAIL=0 SKIP=0`.
 
-Detailed earlier failures and corrections remain in `docs/V3.0.1-R1.3-EVIDENCE.md`.
+Detailed earlier R1.1–R1.3 evidence remains historical. R1.4 was reopened by explicit maintainer visual review of the exact-main candidate; see `docs/V3.0.1-R1.4-EVIDENCE.md`. The prior automated R5 candidate `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` is superseded for publication.
 
-## R2 — DONE
+## R2 — HISTORICAL PASS; REVALIDATION REQUIRED
 
 R2 makes the complete PDF rooted at `template/main.tex` a first-class exact-SHA engineering release reference. Acceptance source: `514c128f542b00d4a10a9ad05ce7fc94f770ef55`.
 
@@ -59,7 +59,7 @@ R2 makes the complete PDF rooted at `template/main.tex` a first-class exact-SHA 
 
 The R2 visual inspection is development evidence only; it does not replace R6 explicit maintainer acceptance on the final immutable R5 candidate. Full evidence: `docs/V3.0.1-R2-EVIDENCE.md`.
 
-## R3 — DONE
+## R3 — HISTORICAL PASS; REVALIDATION REQUIRED
 
 R3 repairs public distribution so users receive the complete editable source and a compiled full pedagogical reference while CTAN remains lean.
 
@@ -88,7 +88,7 @@ Accepted corrective source: `2556489da23e16495fc51ebf093f9f4704c6d52f`.
 
 The first implementation failures #409/#123 and their causes remain retained in `docs/V3.0.1-R3-EVIDENCE.md`.
 
-## R4 — DONE
+## R4 — IMPLEMENTATION ACCEPTED; FINAL-PDF E2E RERUN REQUIRED
 
 Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
@@ -103,13 +103,13 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — ACTIVE_DYNAMIC
+## R5 — REOPENED BY MAINTAINER VISUAL FINDINGS
 
-R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+R5 still uses only `release/v3-release-candidate.json` as its phase-end marker, but the earlier #305/`ab641d49...` cycle is superseded. After PR #309 closes R1.4, run a fresh complete candidate cycle, squash-merge #309 only after all pre-merge gates pass, resolve the new `main` SHA dynamically, and repeat exact-main Static + complete Linux + Web/Lite E2E + Release Check/current `pkgcheck` + artifact inspection.
 
 Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
 
-## R6 — PENDING
+## R6 — BLOCKED / PRIOR CANDIDATE REJECTED
 
 R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
 
@@ -125,7 +125,9 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
+Resolve PR #309 and its exact head. Validate R1.4 first: Static plus the relevant Linux reference/layout gates, then download/render the corrected canonical PDF and visually verify the complete approval date, exactly three committee members without unit/department lines, absence of the artificial standalone ToC period, and absence of the canonical index. Record the exact artifact/hash and inspection result in `docs/V3.0.1-R1.4-EVIDENCE.md`.
+
+Only after R1.4 is green and visually accepted should the release marker be reconciled for a fresh R5 complete regression. Do not resume R6 from `ab641d49...`; it is superseded.
 
 ## Documentation discipline
 

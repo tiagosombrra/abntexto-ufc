@@ -89,6 +89,22 @@ def require_dotted_entry(source, start, end, marker):
 
 text = Path('/tmp/abntexto-ufc-reference-corpus.txt').read_text(encoding='utf-8', errors='replace')
 flat = normalize_pdf_text(text)
+
+main_source = Path('main.tex').read_text(encoding='utf-8')
+if 'approval-date = {11 de setembro de 2026}' not in main_source:
+    raise SystemExit('Corpus failed: canonical approval date is not the complete reviewed date.')
+if 'index = none' not in main_source or r'\ufcPrintIndex' in main_source:
+    raise SystemExit('Corpus failed: canonical TCC still enables or prints the index module.')
+for forbidden_key in ('examiner-4 =', 'examiner-5 =', 'examiner-6 ='):
+    if forbidden_key in main_source:
+        raise SystemExit('Corpus failed: canonical TCC still declares an extra committee member: ' + forbidden_key)
+for required_blank in ('advisor-unit = {},', 'examiner-2-unit = {},', 'examiner-3-unit = {},'):
+    if required_blank not in main_source:
+        raise SystemExit('Corpus failed: canonical committee unit field is not blank: ' + required_blank)
+for chapter in sorted(Path('chapters').glob('*.tex')):
+    if r'\index{' in chapter.read_text(encoding='utf-8'):
+        raise SystemExit('Corpus failed: canonical chapter still contains index markers: ' + str(chapter))
+
 required = (
     'MODELO COMENTADO DE TRABALHO ACADÊMICO DA UFC',
     'INTRODUÇÃO E USO DESTE MODELO',
@@ -285,7 +301,6 @@ for marker in (
     'RECURSOS DO ABNTEXTO-UFC',
     'REFERÊNCIAS',
     'GLOSSÁRIO',
-    'ÍNDICE REMISSIVO',
 ):
     actual_x = toc_title_x(marker)
     if abs(actual_x - reference_x) > 1.5:
