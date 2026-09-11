@@ -1,10 +1,10 @@
-\section{Estrutura do trabalho acadêmico}\label{sec:estrutura-trabalho}
+\chapter{Estrutura do trabalho acadêmico}\label{sec:estrutura-trabalho}
 
 A organização de um trabalho acadêmico é normalmente compreendida em três grandes grupos: elementos pré-textuais, elementos textuais e elementos pós-textuais. O template separa essas etapas com os comandos \texttt{\string\pretextual} e \texttt{\string\textual}; referências, glossário, apêndices, anexos e índice são produzidos depois do corpo principal.
 
 \guianormativa{ABNT NBR 14724:2024}{A norma de apresentação de trabalhos acadêmicos fornece a estrutura geral do documento e as regras de apresentação que orientam a composição dos elementos. A obrigatoriedade de um elemento pode variar conforme sua natureza e o perfil do trabalho \parencite{abnt14724}.}
 
-\subsection{Visão geral dos componentes}
+\section{Visão geral dos componentes}
 
 \begin{table}[htbp]
 \centering
@@ -30,7 +30,7 @@ Pós-textuais & referências, glossário, apêndices, anexos e índice & complem
 
 A Tabela~\ref{tab:estrutura-documento} é deliberadamente descritiva. Ela não pretende substituir a consulta à norma ou às regras do curso; sua função é orientar a leitura deste PDF e mostrar onde cada recurso aparece.
 
-\subsection{Elementos pré-textuais}
+\section{Elementos pré-textuais}
 
 Os elementos pré-textuais identificam o trabalho, registram informações acadêmicas e auxiliam a navegação antes do início do texto principal. Neste documento são exercitados capa, folha de rosto, errata, folha de aprovação, dedicatória, agradecimentos, epígrafe, resumo, abstract, listas de ilustrações, tabelas, códigos, algoritmos, abreviaturas e símbolos, além do sumário.
 
@@ -38,7 +38,7 @@ Os elementos pré-textuais identificam o trabalho, registram informações acad�
 
 \guiamecanismo{A sequência concreta dos pré-textuais fica no próprio \texttt{main.tex}. Os comandos \texttt{\string\ufcPrintCover}, \texttt{\string\ufcPrintTitlePage}, \texttt{\string\ufcPrintApprovalPage} e os demais comandos \texttt{\string\ufcPrint...} mantêm a ordem visível explícita sem duplicar a diagramação de cada elemento.}
 
-\subsection{Elementos textuais}
+\section{Elementos textuais}
 
 A parte textual é o núcleo acadêmico do trabalho. O template não impõe que todos os documentos usem os mesmos títulos de capítulo: a organização deve ser adequada ao gênero acadêmico, ao método, à área do conhecimento e às exigências do curso ou programa.
 
@@ -48,7 +48,7 @@ Neste modelo comentado, as seções textuais foram escolhidas para ensinar a pr�
 
 \guiamecanismo{Use os comandos estruturais do \LaTeX{}, como \texttt{\string\section} e \texttt{\string\subsection}, em vez de digitar manualmente números ou aplicar formatação visual aos títulos. A classe produz a apresentação e o sumário a partir dessa estrutura.}
 
-\subsection{Elementos pós-textuais}
+\section{Elementos pós-textuais}
 
 Depois do corpo textual, o documento pode apresentar referências, glossário, apêndices, anexos e índice. As referências reúnem as fontes efetivamente utilizadas conforme a política bibliográfica; apêndices contêm material complementar elaborado pelo autor; anexos recebem material complementar de autoria externa; glossário e índice são recursos opcionais quando úteis ao trabalho.
 
@@ -56,7 +56,7 @@ Depois do corpo textual, o documento pode apresentar referências, glossário, a
 
 \guianormativa{ABNT NBR 6034:2004}{O índice remissivo é um elemento pós-textual opcional. No documento de referência ele permanece habilitado para demonstrar o recurso e validar sua apresentação \parencite{abnt6034}.}
 
-\subsection{Paginação: visão estrutural}
+\section{Paginação: visão estrutural}
 
 Os pré-textuais fazem parte da progressão física do documento, enquanto a apresentação do número de página segue as regras aplicáveis à parte textual e ao modo de impressão. Em documentos frente e verso, a classe também precisa considerar o lado físico da folha e a abertura de elementos em página apropriada.
 

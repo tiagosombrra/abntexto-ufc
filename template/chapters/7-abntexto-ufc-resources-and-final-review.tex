@@ -1,8 +1,8 @@
-\section{Recursos do abntexto-ufc, elementos pós-textuais e revisão final}\label{sec:recursos-finais}
+\chapter{Recursos do abntexto-ufc, elementos pós-textuais e revisão final}\label{sec:recursos-finais}
 
 A classe reúne opções de perfil e módulos editoriais para que o mesmo projeto possa atender diferentes tipos de trabalho sem duplicar a lógica de formatação. Esta seção encerra o guia explicando os principais recursos, o fluxo de compilação/validação e os elementos que aparecem depois do texto principal.
 
-\subsection{Perfis de documento}
+\section{Perfis de documento}
 
 A opção \texttt{type} seleciona o perfil acadêmico. A matriz de certificação atual exercita sete perfis: \texttt{undergraduate-capstone}, \texttt{specialization-capstone}, \texttt{masters-thesis}, \texttt{doctoral-thesis}, \texttt{research-project}, \texttt{anonymized-research-project} e \texttt{scientific-article}.
 
@@ -14,7 +14,7 @@ A opção \texttt{type} seleciona o perfil acadêmico. A matriz de certificaçã
 
 \guiavalidacao{Os gates \texttt{profiles}, \texttt{research-project} e as suítes específicas de artigo verificam a aplicabilidade e a composição dos perfis. A release também retém pares PDF/TeX dos sete perfis para inspeção visual.}
 
-\subsection{Fontes e motores de compilação}
+\section{Fontes e motores de compilação}
 
 A opção \texttt{font=times|arial} seleciona a família textual desejada. A opção \texttt{strict-font} determina se a identidade literal é obrigatória ou se o ambiente pode usar fallback portátil.
 
@@ -24,7 +24,7 @@ A opção \texttt{font=times|arial} seleciona a família textual desejada. A op�
 
 \guiamecanismo{A compilação padrão usa o motor configurado pelo fluxo do projeto. Para exercitar LuaLaTeX no repositório, a entrada de desenvolvimento é \texttt{make lua}; para a compilação padrão do documento canônico, use \texttt{make compile}.}
 
-\subsection{Tabelas, códigos, algoritmos e equações}
+\section{Tabelas, códigos, algoritmos e equações}
 
 O documento de referência exercita os módulos de objetos na Seção~\ref{sec:catalogo-exemplos}. Nem toda capacidade oferecida pela classe corresponde a uma exigência normativa específica.
 
@@ -34,7 +34,7 @@ O documento de referência exercita os módulos de objetos na Seção~\ref{sec:c
 
 \guiavalidacao{Os gates \texttt{table-ibge}, \texttt{code-typography}, \texttt{minted}, \texttt{algorithm-numbering}, \texttt{objects} e \texttt{math} protegem esses caminhos sem promover decisões editoriais de código/algoritmo a regras ABNT inexistentes.}
 
-\subsection{PDF/A}
+\section{PDF/A}
 
 O cabeçalho de \texttt{main.tex} declara \texttt{pdfstandard=A-2b}. A suíte verifica o PDF gerado com veraPDF e também confere incorporação de fontes.
 
@@ -46,7 +46,7 @@ O cabeçalho de \texttt{main.tex} declara \texttt{pdfstandard=A-2b}. A suíte ve
 
 \guiavalidacao{A rota de release executa o gate PDF/A com veraPDF, além de validações de fontes e do validador do projeto.}
 
-\subsection{Acessibilidade e limites de conformidade}
+\section{Acessibilidade e limites de conformidade}
 
 Acessibilidade em PDF envolve mais do que aparência visual. Metadados, estrutura, marcação, ordem de leitura e descrições alternativas podem exigir verificações automáticas e revisão humana dependendo do conteúdo e do nível de conformidade pretendido.
 
@@ -56,7 +56,7 @@ Acessibilidade em PDF envolve mais do que aparência visual. Metadados, estrutur
 
 \guiavalidacao{Os validadores classificam apenas checks que podem sustentar. Quando uma capacidade exige inspeção mais profunda ou humana, o resultado deve permanecer REVIEW/fora do PASS automático em vez de produzir uma falsa garantia.}
 
-\subsection{Compilação reprodutível do projeto}
+\section{Compilação reprodutível do projeto}
 
 O \texttt{Makefile} é a entrada recomendada para evitar que o usuário precise memorizar a sequência de processadores auxiliares.
 
@@ -64,7 +64,7 @@ O \texttt{Makefile} é a entrada recomendada para evitar que o usuário precise 
 
 \guiapolitica{Biber, glossário e índice são condicionais ao documento. Executar manualmente apenas uma passada de LaTeX e aceitar o primeiro PDF pode deixar referências, listas ou índice incompletos mesmo quando não há erro fatal.}
 
-\subsection{Validador CLI/Deep}
+\section{Validador CLI/Deep}
 
 O repositório fornece um validador local mais profundo em \texttt{tools/validate-ufc-pdf.py}. Ele trabalha sobre o PDF gerado e complementa a compilação com checks documentais disponíveis no ambiente CLI.
 
@@ -72,7 +72,7 @@ O repositório fornece um validador local mais profundo em \texttt{tools/validat
 
 \guiavalidacao{A suíte \texttt{pdf-validator} protege o fluxo CLI/Deep. Alguns checks dependem de ferramentas externas como Poppler e veraPDF; por isso a capacidade real do ambiente deve ser considerada ao interpretar o resultado.}
 
-\subsection{Validador Web/Lite}
+\section{Validador Web/Lite}
 
 O diretório \texttt{validator/} contém a interface Web/Lite. Seu contrato é deliberadamente mais restrito que o CLI/Deep: o processamento do PDF ocorre localmente no navegador e checks que dependem de capacidades profundas não devem ser convertidos em PASS apenas porque a interface web não consegue executá-los.
 
@@ -80,13 +80,13 @@ O diretório \texttt{validator/} contém a interface Web/Lite. Seu contrato é d
 
 \guiavalidacao{A release só considera essa superfície certificada quando um pacote estático limpo contém todas as dependências locais, o carregamento dos módulos passa e um PDF canônico real, além de um caso negativo, atravessa o caminho efetivo de análise do navegador. Testes sintéticos de schema/veredito, isoladamente, não substituem esse E2E.}
 
-\subsection{Referências}
+\section{Referências}
 
 As referências aparecem imediatamente após o texto quando produzidas por \texttt{\string\ufcPrintReferences}. O banco bibliográfico é declarado com \texttt{\string\ufcAddBibliographyResource} e processado por Biber no fluxo recomendado.
 
 \guianormativa{ABNT NBR 6023:2025}{Inclua na lista final as fontes de acordo com a política bibliográfica do trabalho e mantenha os dados necessários à identificação de cada documento \parencite{abnt6023}.}
 
-\subsection{Glossário}
+\section{Glossário}
 
 O glossário é um elemento opcional para definir termos especializados, siglas ou conceitos quando essa lista realmente auxiliar o leitor. O documento de referência o mantém habilitado para demonstrar a integração com o pacote \texttt{glossaries}.
 
@@ -94,7 +94,7 @@ O glossário é um elemento opcional para definir termos especializados, siglas 
 
 \guiamecanismo{Selecione \texttt{glossary=glossaries}, declare as entradas no arquivo de glossário e produza o elemento com \texttt{\string\ufcPrintGlossary}. O alvo \texttt{make compile} chama o processador auxiliar quando necessário.}
 
-\subsection{Apêndices}
+\section{Apêndices}
 
 Apêndices contêm material complementar elaborado pelo próprio autor e são identificados em sequência própria.
 
@@ -104,7 +104,7 @@ Apêndices contêm material complementar elaborado pelo próprio autor e são id
 
 \guiamecanismo{Declare cada apêndice com \texttt{\string\appendix\{Título\}} e mantenha o conteúdo em arquivo separado quando isso melhorar a organização do projeto.}
 
-\subsection{Anexos}
+\section{Anexos}
 
 Anexos são usados para material complementar de autoria externa ou não produzido pelo autor do trabalho.
 
@@ -114,7 +114,7 @@ Anexos são usados para material complementar de autoria externa ou não produzi
 
 \guiamecanismo{Declare cada anexo com \texttt{\string\annex\{Título\}}. Arquivos externos continuam sujeitos a direitos de uso e às propriedades do PDF final; anexar um arquivo não transfere automaticamente sua licença para o projeto.}
 
-\subsection{Índice}
+\section{Índice}
 
 O índice remissivo é diferente do sumário: ele organiza termos e assuntos para facilitar a localização de ocorrências no documento.
 
@@ -122,13 +122,13 @@ O índice remissivo é diferente do sumário: ele organiza termos e assuntos par
 
 \guiamecanismo{Selecione \texttt{index=imakeidx}, marque termos com \texttt{\string\index} e produza o elemento com \texttt{\string\ufcPrintIndex}. O fluxo de compilação executa \texttt{makeindex} quando necessário.}
 
-\subsection{Lombada}
+\section{Lombada}
 
 \guianormativa{ABNT NBR 12225:2023}{A lombada possui aplicação condicional, normalmente relacionada à produção física do trabalho. O documento eletrônico de referência não a força em perfis nos quais não seja aplicável \parencite{abnt12225}.}
 
 \guiapolitica{A ausência de uma lombada renderizada neste PDF eletrônico é deliberada. Quando houver produção física que exija lombada, a regra correspondente deve ser tratada no fluxo aplicável, sem transformar o arquivo eletrônico de referência em prova de uma característica física que ele não contém.}
 
-\subsection{Checklist antes da entrega}
+\section{Checklist antes da entrega}
 
 Antes de entregar um trabalho real produzido a partir deste modelo:
 

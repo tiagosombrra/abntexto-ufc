@@ -1,8 +1,8 @@
-\section{Citações, notas e referências}\label{sec:citacoes-referencias}
+\chapter{Citações, notas e referências}\label{sec:citacoes-referencias}
 
 Citações conectam o argumento do autor às fontes utilizadas; referências identificam os documentos citados ou utilizados de acordo com a política bibliográfica adotada. O template separa a apresentação das citações no texto da composição final da lista de referências.
 
-\subsection{Citação indireta}
+\section{Citação indireta}
 
 Na citação indireta, a ideia da fonte é apresentada com redação própria. Por exemplo, a separação entre conteúdo e apresentação é uma característica central do fluxo de preparação de documentos em \LaTeX{} \parencite{lamport1994}.
 
@@ -12,7 +12,7 @@ Na citação indireta, a ideia da fonte é apresentada com redação própria. P
 
 \guiavalidacao{A suíte de bibliografia verifica formas parentéticas e narrativas, número de autores, autoria institucional, títulos sem autoria, desambiguação, múltiplas datas e ordenação, em ambos os motores Linux suportados pelo gate.}
 
-\subsection{Citação direta curta}
+\section{Citação direta curta}
 
 Citações diretas curtas permanecem integradas ao parágrafo e usam sinais de citação apropriados. Para evitar reproduzir conteúdo protegido de uma norma técnica, o exemplo abaixo é deliberadamente sintético.
 
@@ -22,7 +22,7 @@ Citações diretas curtas permanecem integradas ao parágrafo e usam sinais de c
 
 \guiavalidacao{O gate de citação direta curta verifica apresentação e evidência de fonte/localizador em cenário próprio. O texto sintético deste guia testa apenas a forma visual e não recebe um localizador fictício.}
 
-\subsection{Citação direta longa}
+\section{Citação direta longa}
 
 \guianormativa{ABNT NBR 10520:2023 e escopo UFC auditado}{Citação direta com mais de três linhas é apresentada em bloco distinto, sem aspas, com recuo esquerdo de 4 cm, fonte reduzida de 10 pt e espaçamento simples \parencite{abnt10520}.}
 
@@ -30,7 +30,7 @@ O documento de referência exercita fisicamente esse comportamento com um texto 
 
 \guiamecanismo{Use o mecanismo de citação longa fornecido pela classe para o bloco e mantenha a referência bibliográfica associada à fonte real. Não simule o recuo com espaços, listas ou margens locais.}
 
-\subsection{Citação de citação}
+\section{Citação de citação}
 
 O recurso conhecido como citação de citação deve ser usado com parcimônia, preferindo-se a consulta à fonte original sempre que possível. Quando necessário, a apresentação de \textit{apud} segue a política bibliográfica e a NBR 10520 vigente.
 
@@ -40,13 +40,13 @@ O recurso conhecido como citação de citação deve ser usado com parcimônia, 
 
 \guiavalidacao{O gate \texttt{bibliography} chama o cenário dedicado de \textit{apud} e verifica, entre outros pontos, forma parentética/narrativa, itálico de \textit{apud} e a presença da fonte consultada sem inserir indevidamente a fonte original na lista final.}
 
-\subsection{Notas de rodapé}
+\section{Notas de rodapé}
 
 Notas podem complementar uma informação sem interromper excessivamente o fluxo do parágrafo. Sua tipografia e um exemplo físico foram apresentados na Seção~\ref{sec:formatacao-geral}.
 
 \guiaexemplo{Use notas para informação realmente complementar. Referências bibliográficas não devem ser transferidas arbitrariamente para notas apenas para contornar o sistema de citações configurado no trabalho.}
 
-\subsection{Lista de referências}
+\section{Lista de referências}
 
 \guianormativa{ABNT NBR 6023:2025}{A elaboração das referências segue a edição vigente adotada pelo projeto. No escopo de apresentação atualmente exercitado, as entradas são alinhadas à margem esquerda, usam fonte 12 pt e espaçamento simples internamente, com separação entre referências correspondente a uma linha em branco de espaço simples \parencite{abnt6023}.}
 
@@ -58,7 +58,7 @@ O arquivo \texttt{backmatter/references.bib} demonstra tipos bibliográficos dif
 
 \guiavalidacao{Os gates \texttt{bibliography} e \texttt{reference-spacing}, juntamente com os cenários da NBR 6023:2025, verificam semântica de referências e sua apresentação no PDF.}
 
-\subsection{Normas técnicas como referências}
+\section{Normas técnicas como referências}
 
 As normas citadas neste guia aparecem também nas referências para que o leitor saiba qual edição orienta cada seção. O projeto não redistribui o texto integral das normas ABNT; a comunidade UFC pode utilizar os meios institucionais autorizados para consulta das normas técnicas.
 

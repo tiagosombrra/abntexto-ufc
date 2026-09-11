@@ -1,5 +1,5 @@
 {
-  "schema_version": 26,
+  "schema_version": 27,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -241,12 +241,14 @@
             ]
           },
           "B": {
-            "status": "IN_PROGRESS",
-            "goal": "verify current abntexto primary textual hierarchy and final rendered structure/TOC"
+            "status": "DONE",
+            "upstream_commit": "4c03fd7b5a7af089627dedb547c53cad4eed2a2a",
+            "finding": "abntexto supports chapter when usechapters is enabled; v2 switch to section was not technically required",
+            "decision": "enable usechapters in canonical main; promote seven primary sections to chapters and former subsections to sections"
           },
           "C": {
-            "status": "PENDING",
-            "goal": "resolve coverage matrix to zero unresolved release-required rows"
+            "status": "IN_PROGRESS",
+            "goal": "resolve coverage matrix to zero unresolved release-required rows and classify historical recovery actions"
           },
           "D": {
             "status": "PENDING",
@@ -725,5 +727,5 @@
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "R1.4-A DONE. Execute R1.4-B: verify current abntexto primary textual hierarchy and decide final visible structure/TOC. Then map historical RESTORE_ADAPTED/REWRITE/KEEP_CURRENT/DROP_WITH_REASON decisions into the coverage matrix before deep source rewrite."
+  "current_next_action": "R1.4-A/B DONE. Execute R1.4-C: reconcile each release-required coverage row to COMPLETE_MAPPED or EXPLICIT_OUT_OF_SCOPE and assign RESTORE_ADAPTED/REWRITE/KEEP_CURRENT/DROP_WITH_REASON. Then proceed to deep source rewrite and compile/visual proof."
 }

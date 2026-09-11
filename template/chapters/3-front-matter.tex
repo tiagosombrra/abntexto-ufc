@@ -1,8 +1,8 @@
-\section{Elementos pré-textuais em detalhe}\label{sec:pretextuais-detalhe}
+\chapter{Elementos pré-textuais em detalhe}\label{sec:pretextuais-detalhe}
 
 Esta seção explica os principais elementos que aparecem antes do texto acadêmico. O próprio PDF já apresentou cada um deles nas páginas anteriores; aqui o objetivo é tornar explícita a finalidade, a aplicabilidade, a regra de apresentação e o mecanismo exercitado pelo template.
 
-\subsection{Capa e folha de rosto}
+\section{Capa e folha de rosto}
 
 A capa identifica externamente o trabalho. A folha de rosto repete os dados essenciais e acrescenta informações acadêmicas como natureza do trabalho, curso ou programa, orientação e demais campos aplicáveis ao perfil.
 
@@ -14,7 +14,7 @@ A capa identifica externamente o trabalho. A folha de rosto repete os dados esse
 
 \guiavalidacao{Os gates de \texttt{frontmatter} e de perfis verificam a presença, a composição e as variações aplicáveis desses elementos; cenários normativos específicos medem capa e folha de rosto no PDF final.}
 
-\subsection{Ficha catalográfica}
+\section{Ficha catalográfica}
 
 A representação visual da ficha catalográfica é controlada pela opção \texttt{catalog-card}. No documento de referência ela permanece desativada para demonstrar o comportamento padrão adotado pelo perfil atual.
 
@@ -22,7 +22,7 @@ A representação visual da ficha catalográfica é controlada pela opção \tex
 
 \guiamecanismo{Quando a representação for necessária ao fluxo adotado, configure \texttt{catalog-card} e habilite \texttt{\string\ufcPrintCatalogCard} com o conteúdo correspondente. Não confunda a possibilidade de representar a ficha no PDF com o procedimento administrativo de geração ou depósito da ficha.}
 
-\subsection{Errata}
+\section{Errata}
 
 A errata é usada quando, depois da produção do trabalho, é necessário registrar correções. O exemplo deste PDF apresenta a referência do trabalho seguida por uma tabela com folha, linha, texto incorreto e forma corrigida.
 
@@ -30,7 +30,7 @@ A errata é usada quando, depois da produção do trabalho, é necessário regis
 
 \guiamecanismo{O exemplo usa \texttt{\string\ufcPrintErrata\{frontmatter/errata\}}. O conteúdo fica em arquivo separado; a classe controla a página e a apresentação do elemento.}
 
-\subsection{Folha de aprovação}
+\section{Folha de aprovação}
 
 Nos perfis acadêmicos aos quais se aplica, a folha de aprovação registra autoria, título, natureza do trabalho, data de aprovação, orientação e banca examinadora. O exemplo usa uma banca extensa para exercitar a quebra e o posicionamento de múltiplos membros.
 
@@ -38,7 +38,7 @@ Nos perfis acadêmicos aos quais se aplica, a folha de aprovação registra auto
 
 \guiamecanismo{Declare orientador, coorientador, unidades, instituições e examinadores em \texttt{\string\ufcsetup}; gere a página com \texttt{\string\ufcPrintApprovalPage}. A banca extensa deste exemplo é intencional para exercitar o limite de composição, mas um trabalho real deve declarar somente os membros efetivos.}
 
-\subsection{Dedicatória}
+\section{Dedicatória}
 
 A dedicatória é um elemento de natureza pessoal e não recebe título no exemplo UFC adotado pela classe.
 
@@ -48,7 +48,7 @@ A dedicatória é um elemento de natureza pessoal e não recebe título no exemp
 
 \guiamecanismo{Inclua o elemento com \texttt{\string\ufcPrintDedication\{frontmatter/dedication\}}. Não aplique recuo, fonte ou posicionamento manual dentro do arquivo de conteúdo.}
 
-\subsection{Agradecimentos}
+\section{Agradecimentos}
 
 Os agradecimentos registram pessoas e instituições que contribuíram para o trabalho. O título é apresentado em página própria, e o corpo mantém a tipografia do texto acadêmico exercitada pelo perfil.
 
@@ -58,7 +58,7 @@ Os agradecimentos registram pessoas e instituições que contribuíram para o tr
 
 \guiamecanismo{O conteúdo fica em \texttt{frontmatter/acknowledgments.tex} e é incluído por \texttt{\string\ufcPrintAcknowledgments}. Condições de financiamento pertencem ao conteúdo e às regras do órgão financiador, não devem ser inventadas automaticamente pela classe.}
 
-\subsection{Epígrafe}
+\section{Epígrafe}
 
 A epígrafe apresenta uma citação relacionada ao trabalho. O template diferencia a apresentação de epígrafes curtas e longas no escopo institucional auditado.
 
@@ -66,7 +66,7 @@ A epígrafe apresenta uma citação relacionada ao trabalho. O template diferenc
 
 \guiamecanismo{O texto é mantido em \texttt{frontmatter/epigraph.tex}, a autoria é declarada em \texttt{epigraph-author} e o elemento é incluído com \texttt{\string\ufcPrintEpigraph}. A classe decide a apresentação correspondente ao comprimento exercitado.}
 
-\subsection{Resumo, abstract e palavras-chave}
+\section{Resumo, abstract e palavras-chave}
 
 O resumo apresenta de forma concisa objetivo, método, resultados e conclusões relevantes do trabalho. O abstract oferece a versão em língua estrangeira prevista pelo perfil.
 
@@ -76,7 +76,7 @@ O resumo apresenta de forma concisa objetivo, método, resultados e conclusões 
 
 \guiamecanismo{Mantenha os textos nos arquivos \texttt{frontmatter/summary.tex} e \texttt{frontmatter/abstract.tex} e inclua-os com \texttt{\string\ufcPrintSummary} e \texttt{\string\ufcPrintAbstract}. Palavras-chave e keywords devem ser informadas no conteúdo previsto pelo exemplo, não simuladas com listas visuais manuais.}
 
-\subsection{Listas}
+\section{Listas}
 
 O documento de referência habilita listas de ilustrações, tabelas, códigos, algoritmos, abreviaturas e siglas e símbolos para demonstrar todas as rotas suportadas. Em trabalhos reais, devem ser mantidas apenas as listas pertinentes ao conteúdo e às regras aplicáveis.
 
@@ -86,7 +86,7 @@ O documento de referência habilita listas de ilustrações, tabelas, códigos, 
 
 \guiavalidacao{A suíte de \texttt{frontmatter} e os gates de objetos verificam as listas. A regressão da Lista de Ilustrações deve permanecer com conteúdo real: uma lista vazia não prova a escrita e a renderização de entradas de figuras, gráficos ou quadros.}
 
-\subsection{Sumário}
+\section{Sumário}
 
 O sumário apresenta a estrutura de seções do documento e os respectivos números de página.
 

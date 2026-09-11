@@ -1,10 +1,10 @@
-\section{Introdução e uso deste modelo}\label{sec:introducao}
+\chapter{Introdução e uso deste modelo}\label{sec:introducao}
 
 Este documento de referência da Universidade Federal do Ceará (UFC) é, ao mesmo tempo, um exemplo compilável e um guia visual do \gls{template} \texttt{abntexto-ufc}. Em vez de simular uma pesquisa acadêmica fictícia, as próximas seções explicam a estrutura de um trabalho acadêmico, as principais regras de apresentação e de \gls{normalizacao} exercitadas pelo template e os recursos disponíveis para produção de TCCs, monografias de especialização, dissertações, teses e projetos de pesquisa.
 
 O arquivo principal \texttt{main.tex} concentra os metadados institucionais em \texttt{\string\ufcsetup}. As pastas \texttt{frontmatter}, \texttt{chapters} e \texttt{backmatter} separam o conteúdo por etapa documental. A classe \texttt{abntexto-ufc} centraliza a apresentação e usa \texttt{abntexto} como base editorial, preservando a separação entre conteúdo e formatação característica do \LaTeX{} \parencite{knuth,lamport1994}.
 
-\subsection{Como interpretar as orientações deste PDF}
+\section{Como interpretar as orientações deste PDF}
 
 Ao longo do documento são usados seis tipos de indicação explícita. Quatro classificam a origem da orientação; duas mostram como ela chega ao projeto e como é verificada.
 
@@ -22,7 +22,7 @@ Ao longo do documento são usados seis tipos de indicação explícita. Quatro c
 
 Essa separação é importante. Por exemplo, o documento de referência declara PDF/A-2b e a suíte de release o valida com veraPDF; entretanto, o perfil PDF/A-2b específico é uma política técnica do projeto, enquanto a necessidade de PDF/A no fluxo institucional de depósito é tratada separadamente pela documentação da UFC.
 
-\subsection{Base normativa adotada}
+\section{Base normativa adotada}
 
 A apresentação geral dos trabalhos acadêmicos é organizada a partir da ABNT NBR 14724:2024, considerando a versão corrigida em 1º de abril de 2025. Citações seguem a ABNT NBR 10520:2023 e referências seguem a ABNT NBR 6023:2025 \parencite{abnt14724,abnt10520,abnt6023}.
 
@@ -33,7 +33,7 @@ Outras referências atuam em escopos específicos: ABNT NBR 6028:2021 para resum
 \guiavalidacao{A base normativa executável fica em \texttt{standards/}. O catálogo, a precedência, a vigência, os identificadores atômicos e os mapas de evidência são validados pelo contrato estático do repositório. Este PDF resume os requisitos relevantes ao usuário; ele não substitui o contrato de máquina nem o texto oficial das normas.}
 
 % Keep executable configuration commands out of this moving heading: it is replayed from main.toc.
-\subsection{Configuração central do documento}
+\section{Configuração central do documento}
 
 O bloco \texttt{\string\ufcsetup} deve ser tratado como a configuração central do trabalho. As chaves do exemplo podem ser lidas em quatro grupos: perfil e saída do documento; dados institucionais e acadêmicos; autoria, título, local e data; e orientação/banca.
 
@@ -43,7 +43,7 @@ O bloco \texttt{\string\ufcsetup} deve ser tratado como a configuração central
 
 \guiapolitica{Evite copiar blocos formatados de capa, folha de rosto ou banca para dentro do conteúdo. Quando o dado possuir uma chave pública, corrija o metadado em \texttt{\string\ufcsetup}; quando o comportamento estiver errado, a correção pertence à classe ou ao perfil.}
 
-\subsection{O que este documento demonstra}
+\section{O que este documento demonstra}
 
 O PDF foi configurado no perfil \texttt{undergraduate-capstone}, em impressão apenas no anverso, com fonte Times em modo portátil, listas, glossário, índice, códigos, algoritmos e tabelas \texttt{tabularray}. Essa configuração serve como corpus visual completo; outros perfis alteram automaticamente os elementos que lhes são aplicáveis.
 

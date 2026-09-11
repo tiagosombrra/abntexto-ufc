@@ -1,8 +1,8 @@
-\section{Formatação geral e organização da parte textual}\label{sec:formatacao-geral}
+\chapter{Formatação geral e organização da parte textual}\label{sec:formatacao-geral}
 
 A apresentação do texto deve ser controlada pela classe, e não por ajustes manuais espalhados pelo conteúdo. Esta seção resume as regras gerais que o documento de referência exercita, mostra onde o usuário as configura e indica quais gates medem o PDF produzido.
 
-\subsection{Papel e margens}
+\section{Papel e margens}
 
 \guianormativa{ABNT NBR 14724:2024}{O documento é produzido em papel A4. No anverso, a configuração adotada utiliza margens esquerda e superior de 3 cm e margens direita e inferior de 2 cm. Em impressão frente e verso, as margens laterais são espelhadas para preservar a margem interna maior \parencite{abnt14724}.}
 
@@ -12,7 +12,7 @@ A apresentação do texto deve ser controlada pela classe, e não por ajustes ma
 
 \guiavalidacao{Os gates de \texttt{layout}, \texttt{pdf-geometry} e os cenários normativos de página/margens medem o PDF final, em vez de inferir a geometria apenas a partir do fonte.}
 
-\subsection{Fonte, tamanho e cor}
+\section{Fonte, tamanho e cor}
 
 O corpo textual do documento usa tamanho 12. A API pública oferece as famílias \texttt{times} e \texttt{arial}; o modo \texttt{strict-font} diferencia a exigência de identidade literal da fonte e o uso de fallback portátil para desenvolvimento.
 
@@ -24,7 +24,7 @@ O corpo textual do documento usa tamanho 12. A API pública oferece as famílias
 
 \guiavalidacao{O gate \texttt{font-config} verifica a política de configuração. A certificação de identidade literal é separada da compilação portátil e não deve ser inferida apenas pela aparência semelhante do PDF.}
 
-\subsection{Incorporação de fontes no PDF}
+\section{Incorporação de fontes no PDF}
 
 Escolher uma família tipográfica e incorporar a fonte ao PDF são propriedades diferentes. Um documento pode ter aparência correta no computador do autor e ainda depender de uma fonte externa que não foi incorporada ao arquivo final.
 
@@ -34,7 +34,7 @@ Escolher uma família tipográfica e incorporar a fonte ao PDF são propriedades
 
 \guiavalidacao{A release inspeciona as fontes do PDF e rejeita dependências não incorporadas nos perfis aos quais o gate se aplica. Essa evidência complementa, mas não substitui, a certificação Windows de identidade literal de Times New Roman/Arial.}
 
-\subsection{Espaçamento e parágrafos}
+\section{Espaçamento e parágrafos}
 
 \guianormativa{ABNT NBR 14724:2024 e escopo UFC auditado}{O corpo usa espaçamento 1,5. Os parágrafos do corpo adotam recuo de primeira linha de 2 cm e não recebem espaço vertical adicional entre si. Contextos específicos podem usar espaço simples e tamanho reduzido.}
 
@@ -42,7 +42,7 @@ O recuo de primeira linha é uma propriedade do parágrafo; não deve ser simula
 
 \guiamecanismo{Escreva parágrafos normalmente no fonte e deixe a classe aplicar recuo e espaçamento. Ambientes especiais, como citações longas, notas e referências, possuem políticas próprias e não devem herdar uma correção manual criada para o corpo.}
 
-\subsection{Paginação e frente/verso}
+\section{Paginação e frente/verso}
 
 A contagem das folhas e a exibição dos números são controladas pela classe. No fluxo exercitado pelo template, os números tornam-se visíveis a partir da primeira página textual e usam tamanho reduzido.
 
@@ -52,7 +52,7 @@ A contagem das folhas e a exibição dos números são controladas pela classe. 
 
 \guiavalidacao{Os gates de layout, paginação, \texttt{duplex-frontmatter} e \texttt{duplex-backmatter} exercitam contagem, número visível, margens espelhadas e abertura de elementos em páginas apropriadas.}
 
-\subsection{Seções e subseções}
+\section{Seções e subseções}
 
 \guianormativa{ABNT NBR 6024:2012}{A numeração é progressiva e a hierarquia deve ser refletida de forma consistente no corpo e no sumário \parencite{abnt6024}.}
 
@@ -62,7 +62,7 @@ Evite aplicar negrito, tamanho, alinhamento ou espaçamento manualmente aos tít
 
 \guiamecanismo{Use \texttt{\string\section}, \texttt{\string\subsection} e os níveis estruturais suportados. A numeração é gerada pelo \LaTeX{} e pela classe; não inclua o número como parte do texto do título.}
 
-\subsection{Notas de rodapé}
+\section{Notas de rodapé}
 
 Notas de rodapé são apresentadas com tamanho reduzido e espaço simples. A composição deve permanecer legível e claramente separada do corpo. Este parágrafo contém uma nota física de demonstração.\footnote{Nota de exemplo usada para conferir a apresentação do rodapé; o conteúdo é apenas demonstrativo.}
 
@@ -72,7 +72,7 @@ Notas de rodapé são apresentadas com tamanho reduzido e espaço simples. A com
 
 \guiavalidacao{Cenários específicos verificam texto e separador de rodapé no PDF final, incluindo tamanho, espaçamento, alinhamento e extensão do separador.}
 
-\subsection{Alíneas e subalíneas}
+\section{Alíneas e subalíneas}
 
 Quando uma enumeração fizer parte da estrutura discursiva do texto, o template fornece ambientes para alíneas e subalíneas que preservam a apresentação adotada pela classe. Enumerações comuns do \LaTeX{} continuam disponíveis quando não representam a estrutura normativa de alíneas.
 

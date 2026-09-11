@@ -120,7 +120,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-R1.4-A historical recovery is complete and documented in `docs/V3.0.1-R1.4-HISTORICAL-SOURCE-AUDIT.md`. It confirms that the richer v1.1.2 teaching corpus was heavily reduced/consolidated in v2.1.0 and that v3 inherited that reduced lineage. Execute R1.4-B next: verify the correct current `abntexto` primary textual hierarchy and decide the visible structure/TOC. Then reconcile the coverage matrix and deeply rewrite the canonical TCC before any R2/R3/R4/R5 recertification.
+R1.4-A and R1.4-B are complete. Historical recovery confirmed the reduced v2 lineage, and the pinned `abntexto` 1.1 source confirmed that `\usechapters` + `\chapter` are supported. The canonical TCC source now uses chapter-level primary units. Execute R1.4-C next: reconcile the coverage matrix using RESTORE_ADAPTED / REWRITE / KEEP_CURRENT / DROP_WITH_REASON decisions and reduce release-required MISSING/PARTIAL/DOCUMENTED_NEEDS_TRACE to zero before the deep content rewrite.
 
 ## Documentation discipline
 
