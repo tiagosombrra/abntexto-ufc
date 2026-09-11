@@ -1,0 +1,126 @@
+{
+  "format_revision": "2026-09-11-a",
+  "target_package": "abntexto-ufc",
+  "target_release": "3.0.1",
+  "mode": "GLOBAL_PREPUBLICATION_REGRESSION",
+  "publication": "FROZEN",
+  "audit_branch": "audit/v3.0.1-prepublication-regression",
+  "baseline_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+  "baseline_disposition": "TECHNICALLY_GREEN_BUT_REOPENED_BY_GLOBAL_AUDIT",
+  "version_identity": {
+    "package_version": "3.0.1",
+    "upstream_dependency": "abntexto 1.1",
+    "internal_schema_versions_are_not_package_versions": true,
+    "v3_0_1_tag_exists": false,
+    "v3_0_1_github_release_exists": false,
+    "ctan_abntexto_ufc_entry_found": false,
+    "historical_v3_0_0_release_must_remain_untouched": true
+  },
+  "baseline_evidence": {
+    "static": {
+      "run_number": 497,
+      "run_id": 34580317473,
+      "status": "PASS"
+    },
+    "linux": {
+      "run_number": 418,
+      "run_id": 34580317462,
+      "status": "PASS",
+      "scope": "complete",
+      "summary": "PASS=38 FAIL=0 SKIP=0",
+      "web_lite_e2e": "PASS"
+    },
+    "release": {
+      "run_number": 132,
+      "run_id": 34580317509,
+      "status": "PASS",
+      "scope": "complete",
+      "summary": "PASS=38 FAIL=0 SKIP=0",
+      "pkgcheck": "4.1.0 PASS"
+    },
+    "canonical_reference_sha256": "02639b802badb00d0dd3ecfc62e0fdd25a5612a6e5e82e9503ddd1c058b0e431",
+    "public_reference_sha256": "a2d0a89d635b31523461520cb0420e44d8fa0ca5793699a4ff4be4c41785dfba",
+    "review_manifest_maintainer_visual_approval": "PENDING"
+  },
+  "inventory": {
+    "tracked_files": 486,
+    "branches": 177,
+    "permanent_workflows": 3,
+    "linux_runner_gates": 39,
+    "static_checks": 16,
+    "retained_test_scripts": 168,
+    "orphan_test_scripts": 0,
+    "normative_rules": 199,
+    "librarian_review": {
+      "pass": 34,
+      "partial": 0,
+      "fail": 0,
+      "normative_review": 0
+    },
+    "runtime_modules": 14,
+    "tools": 13,
+    "documentation_files": 41
+  },
+  "blockers": [
+    {
+      "id": "G1",
+      "class": "GOVERNANCE",
+      "severity": "BLOCKER_BEFORE_R6",
+      "finding": "Current-looking tracked documents disagree with actual 3.0.1 main/release state and one current policy document points to stale files as authority."
+    },
+    {
+      "id": "G2",
+      "class": "STATIC_CONTROL",
+      "severity": "BLOCKER_BEFORE_R6",
+      "finding": "repository_contract.py requires old ROADMAP/HANDOFF/v3-roadmap control files and exempts them from stale-content scanning."
+    },
+    {
+      "id": "G3",
+      "class": "VERSION_IDENTITY",
+      "severity": "PREPUBLICATION_FIX",
+      "finding": "tools/fetch-reference-images.py contains active User-Agent abntexto-ufc/3.0.0 reference-assets."
+    },
+    {
+      "id": "G4",
+      "class": "DOCUMENT_LIFECYCLE",
+      "severity": "PREPUBLICATION_GOVERNANCE_FIX",
+      "finding": "Historical phase/evidence documents are not consistently labeled historical/superseded, so old phase facts can be mistaken for current state."
+    }
+  ],
+  "non_blocking_debt": [
+    {
+      "id": "N1",
+      "finding": "177 branches; cleanup requires separate keep/delete manifest and explicit approval.",
+      "when": "POST_3_0_1"
+    },
+    {
+      "id": "N2",
+      "finding": "Three PowerShell tools have no tracked current consumer in reviewed build/workflow/control surfaces.",
+      "when": "POST_3_0_1_OR_DOCUMENT_MANUAL_OWNER"
+    },
+    {
+      "id": "N3",
+      "finding": "Three permanent workflows have distinct current responsibilities.",
+      "decision": "KEEP"
+    },
+    {
+      "id": "N4",
+      "finding": "168 retained test/check scripts are reachable; zero orphaned.",
+      "decision": "KEEP"
+    },
+    {
+      "id": "N5",
+      "finding": "R1.2 MISSING/PARTIAL values are an intentional historical baseline snapshot.",
+      "decision": "HISTORICAL_NOT_CURRENT_TODO"
+    }
+  ],
+  "release_effect": "Any G1-G4 correction merged after baseline exact-main certification invalidates that candidate for final publication and requires a fresh full R5 cycle.",
+  "next_actions": [
+    "Complete lifecycle classification of all 41 documentation files.",
+    "Complete owner/consumer classification of all 13 tools.",
+    "Reconcile legacy roadmap/handoff dependencies in permanent static contracts.",
+    "Scan active engineering surfaces for additional old-version hardcodes.",
+    "Prepare an exact changed-file correction plan; do not change runtime/API/normative behavior without new defect evidence.",
+    "After corrections, repeat R5 Stage A/B/C before R6."
+  ]
+}
