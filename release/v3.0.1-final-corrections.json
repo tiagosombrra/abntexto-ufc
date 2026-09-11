@@ -1,5 +1,5 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -618,7 +618,7 @@
       }
     },
     "R5": {
-      "status": "ACTIVE_DYNAMIC",
+      "status": "REOPENED_CANONICAL_REVIEW",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -626,7 +626,7 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "PENDING_MARKER_HEAD_GATES",
+          "status": "REOPENED_BY_MAINTAINER_CANONICAL_REVIEW",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
@@ -655,6 +655,36 @@
       "live_receipts_before_publication": [
         "GitHub Actions runs/artifacts",
         "issue #304"
+      ],
+      "reopened_on": "2026-09-11",
+      "superseded_pre_correction_head": {
+        "source_sha": "c21ffe45f8c8ce5025ff636e0d10a0e67c72964f",
+        "reason": "Maintainer visual review found canonical approval-page, post-textual TOC punctuation, and default index presentation defects after green Stage A checks.",
+        "workflows": {
+          "static": {
+            "run_number": 496,
+            "run_id": 34556961532,
+            "status": "PASS"
+          },
+          "linux": {
+            "run_number": 417,
+            "run_id": 34556961521,
+            "status": "PASS"
+          },
+          "release": {
+            "run_number": 131,
+            "run_id": 34556961550,
+            "status": "PASS"
+          }
+        },
+        "eligible_for_merge": false
+      },
+      "maintainer_canonical_review_corrections": [
+        "template/main.tex: concrete approval date 11 de setembro de 2026",
+        "template/main.tex: canonical committee reduced to advisor + two examiners, name/institution only",
+        "abntexto-ufc/bibliography.def and backmatter.def: remove empty toclabelbox from unnumbered post-textual TOC entries",
+        "canonical chapters/main: do not enable, populate or print remissive index; preserve optional user instructions",
+        "reference-document/reference-corpus gates updated to enforce corrected canonical presentation"
       ]
     },
     "R6": {
@@ -662,5 +692,5 @@
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
+  "current_next_action": "Resolve the canonical-review correction HEAD on PR #305. Require Static + Linux complete/Web-Lite E2E + Linux Release Check/current pkgcheck on that exact SHA. Download and inspect corrected canonical/reference and distribution artifacts, verify approval page/TOC/no rendered index, and make the new CTAN ZIP available to the maintainer. Previous c21ffe45... green Stage A evidence is historical only."
 }

@@ -1,6 +1,6 @@
 {
-  "schema_version": 10,
-  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure; forces pre-merge complete regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 11,
+  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure and 2026-09-11 maintainer canonical-review corrections; forces fresh pre-merge complete regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
   "target_version": "3.0.1",
   "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #305 after its marker head passes complete phase-end gates; that resulting main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
@@ -82,7 +82,7 @@
     "reason": "PR #302 and the 3.0.1 recovery change runtime/publication bytes and therefore require a fresh exact-SHA cycle."
   },
   "final_candidate": {
-    "status": "r5-dynamic-transport-active",
+    "status": "r5-reopened-canonical-review-pending-fresh-stage-a",
     "version": "3.0.1",
     "premerge_pull_request": 305,
     "source_branch": "release/v3.0.1-final-corrections",
@@ -134,7 +134,7 @@
   },
   "human_visual_acceptance": {
     "required_before_tag": true,
-    "state": "pending-explicit-maintainer-approval-on-exact-post-merge-r5-main-artifacts",
+    "state": "pending-fresh-maintainer-approval-after-canonical-review-correction",
     "profiles": [
       "undergraduate-capstone",
       "specialization-capstone",
@@ -212,8 +212,19 @@
       "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "pkgcheck": "4.1.0 PASS"
     },
-    "r5_state": "ACTIVE_DYNAMIC",
+    "r5_state": "REOPENED_CANONICAL_REVIEW",
     "merge_method": "squash",
-    "post_merge_receipt_commit_forbidden": true
+    "post_merge_receipt_commit_forbidden": true,
+    "canonical_review_correction": {
+      "date": "2026-09-11",
+      "superseded_marker_head": "c21ffe45f8c8ce5025ff636e0d10a0e67c72964f",
+      "changes": [
+        "concrete approval date",
+        "three-member committee with name/institution only",
+        "remove empty-label punctuation from unnumbered post-textual TOC entries",
+        "remove remissive index from canonical output while retaining optional API/documentation"
+      ],
+      "fresh_stage_a_required": true
+    }
   }
 }
