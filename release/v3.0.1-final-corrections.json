@@ -1,8 +1,8 @@
 {
-  "schema_version": 25,
+  "schema_version": 26,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": null,
+  "pull_request": 307,
   "working_branch": "release/v3.0.1-post-merge-canonical-review",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
@@ -676,7 +676,7 @@
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Create/resolve a new post-merge correction PR from release/v3.0.1-post-merge-canonical-review. Require Static + Linux complete/Web-Lite E2E + Linux Release Check/current pkgcheck on its exact head; inspect regenerated canonical/reference and distribution artifacts, verify approval page/TOC/no rendered index, and expose the regenerated CTAN ZIP. Then squash-merge and repeat exact-main Stage C.",
+  "current_next_action": "Resolve post-merge correction PR #307 on branch release/v3.0.1-post-merge-canonical-review. Require Static + Linux complete/Web-Lite E2E + Linux Release Check/current pkgcheck on its exact head; inspect regenerated canonical/reference and distribution artifacts, verify approval page/TOC/no rendered index, and expose the regenerated CTAN ZIP. Then squash-merge and repeat exact-main Stage C.",
   "previous_pull_request": {
     "number": 305,
     "status": "MERGED",

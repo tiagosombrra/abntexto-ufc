@@ -25,7 +25,7 @@ Current Git facts override the machine state; the machine state overrides this h
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
 | Active branch | `release/v3.0.1-post-merge-canonical-review` |
-| Tracking issue / PR | #304 / new post-merge correction PR pending creation; #305 merged to main as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` |
+| Tracking issue / PR | #304 / #307 active post-merge correction; #305 merged to main as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` |
 | PR state | CI vehicle only; merge remains blocked |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
@@ -127,7 +127,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Create/resolve the post-merge correction PR from `release/v3.0.1-post-merge-canonical-review`. Require Static PASS, Linux Integration `complete` PASS including Web/Lite E2E, Linux Release Check/current CTAN `pkgcheck` PASS, and canonical/distribution/review-pair gates on the exact correction head. Download the regenerated canonical reference and distribution artifacts, visually inspect the corrected approval page and TOC, verify the remissive index is absent from canonical output, and expose the regenerated CTAN ZIP for maintainer analysis. Only then may the correction be squash-merged and exact-main Stage C be repeated.
+Resolve post-merge correction PR #307 from `release/v3.0.1-post-merge-canonical-review`. Require Static PASS, Linux Integration `complete` PASS including Web/Lite E2E, Linux Release Check/current CTAN `pkgcheck` PASS, and canonical/distribution/review-pair gates on the exact correction head. Download the regenerated canonical reference and distribution artifacts, visually inspect the corrected approval page and TOC, verify the remissive index is absent from canonical output, and expose the regenerated CTAN ZIP for maintainer analysis. Only then may the correction be squash-merged and exact-main Stage C be repeated.
 
 ## Documentation discipline
 

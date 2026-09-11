@@ -1,5 +1,5 @@
 {
-  "schema_version": 11,
+  "schema_version": 12,
   "purpose": "v3.0.1 phase-end marker reopened after post-merge 2026-09-11 maintainer canonical review; forces a fresh correction-PR complete regression, new exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
   "target_version": "3.0.1",
@@ -84,7 +84,7 @@
   "final_candidate": {
     "status": "post-merge-canonical-review-correction-required",
     "version": "3.0.1",
-    "premerge_pull_request": null,
+    "premerge_pull_request": 307,
     "source_branch": "release/v3.0.1-post-merge-canonical-review",
     "canonical_branch": "main",
     "merge_method": "squash",
@@ -230,7 +230,8 @@
         "remove remissive index from canonical output while retaining optional API/documentation"
       ],
       "fresh_correction_pr_complete_regression_required": true,
-      "fresh_exact_main_stage_c_required": true
+      "fresh_exact_main_stage_c_required": true,
+      "pull_request": 307
     }
   }
 }
