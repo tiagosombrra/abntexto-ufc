@@ -260,8 +260,16 @@ if undotted_numbered:
 
 layout_source = Path('../abntexto-ufc/layout.def').read_text(encoding='utf-8')
 forced_dot = r'\hbox to 1.1em{\leaders\ufctocdot\hfil}'
-if forced_dot in layout_source:
+if forced_dot not in layout_source:
+    raise SystemExit('Corpus failed: object-list compact leader fallback was removed.')
+toc_start_source = layout_source.find(r'\def\ufctocleaders')
+toc_hook_source = layout_source.find(r'\appto\hooktocsection', toc_start_source)
+if toc_start_source < 0 or toc_hook_source < 0:
+    raise SystemExit('Corpus failed: dedicated table-of-contents leader route is missing.')
+if forced_dot in layout_source[toc_start_source:toc_hook_source]:
     raise SystemExit('Corpus failed: table of contents still forces a standalone terminal dot before leaders.')
+if r'\appto\hooktocsection{\let\extleaders=\ufctocleaders}' not in layout_source:
+    raise SystemExit('Corpus failed: table of contents is not bound to the dedicated no-forced-dot leader route.')
 
 root = ET.parse('/tmp/abntexto-ufc-reference-corpus-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]

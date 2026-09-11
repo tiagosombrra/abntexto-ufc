@@ -60,15 +60,22 @@
 \def\tocparagraphfont     {\itshape}
 \def\tocsubparagraphfont  {}
 
-% UFC examples use spaced dotted leaders only in the space actually available
-% before the right-aligned page number. Do not force a standalone dot immediately
-% after a title when a primary or post-textual entry nearly fills the line.
+% Object lists keep one compact visible dot when a long caption nearly fills the
+% line; this preserves the reviewed list-of-figures/tables/code behavior.
 \def\ufctocdot{\hbox{$\mathsurround=0pt\mkern4.5mu\hbox{.}\mkern4.5mu$}}
 \def\extdotleaders{%
   \nobreak
+  \hbox to 1.1em{\leaders\ufctocdot\hfil}%
   \leaders\ufctocdot\hfil
 }
-\appto\hooktocsection{\let\extleaders=\extdotleaders}
+% The table of contents is different: an unnumbered/post-textual title must not
+% receive an artificial standalone terminal dot merely to guarantee one visible
+% leader. Use only the space naturally available before the page number.
+\def\ufctocleaders{%
+  \nobreak
+  \leaders\ufctocdot\hfil
+}
+\appto\hooktocsection{\let\extleaders=\ufctocleaders}
 
 \setcounter{secnumdepth}{5}
 \setcounter{tocdepth}{5}

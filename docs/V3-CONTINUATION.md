@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-11
-Status: RELEASE — R1.4 ACTIVE after maintainer rejection; R2/R3/R5 recertification required; publication blocked
+Status: RELEASE — R1.4 CORRECTIVE CI after #428 leader-scope regression; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -127,7 +127,9 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 Resolve PR #309 and its exact head. Validate R1.4 first: Static plus the relevant Linux reference/layout gates, then download/render the corrected canonical PDF and visually verify the complete approval date, exactly three committee members without unit/department lines, absence of the artificial standalone ToC period, and absence of the canonical index. Record the exact artifact/hash and inspection result in `docs/V3.0.1-R1.4-EVIDENCE.md`.
 
-Only after R1.4 is green and visually accepted should the release marker be reconciled for a fresh R5 complete regression. Do not resume R6 from `ab641d49...`; it is superseded.
+R1.4 targeted evidence now includes Static #507 PASS and Linux #428 FAIL. #428 exposed an over-broad first implementation: removing the compact dot from global `\extdotleaders` broke a long LISTA DE TABELAS entry. The corrective route restores object-list leaders and applies the no-forced-dot behavior only to the table of contents via `\ufctocleaders`.
+
+Only after the corrective R1.4 head is green and visually accepted should the release marker be reconciled for a fresh R5 complete regression. Do not resume R6 from `ab641d49...`; it is superseded.
 
 ## Documentation discipline
 

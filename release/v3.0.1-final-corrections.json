@@ -1,5 +1,5 @@
 {
-  "schema_version": 25,
+  "schema_version": 26,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 309,
@@ -203,7 +203,7 @@
         "failed_development_runs_preserved_in": "docs/V3.0.1-R1.3-EVIDENCE.md"
       },
       "R1.4": {
-        "status": "IMPLEMENTED_PENDING_CI_AND_VISUAL_REVIEW",
+        "status": "CORRECTIVE_COMMIT_IN_CI_AFTER_TARGETED_FAILURE",
         "evidence": "docs/V3.0.1-R1.4-EVIDENCE.md",
         "entry_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
         "correction_pr": 309,
@@ -215,7 +215,32 @@
           "exactly three canonical committee members and no department/center/unit lines",
           "remove forced standalone terminal period before ToC dotted leaders",
           "remove index module/markers/printed index from canonical TCC"
-        ]
+        ],
+        "failed_development_runs": [
+          {
+            "workflow": "Static Contract",
+            "run_number": 507,
+            "run_id": 34622381669,
+            "source_sha": "0520f26054a79cf6099aaec7242cb3238844a123",
+            "status": "PASS"
+          },
+          {
+            "workflow": "Linux Integration",
+            "run_number": 428,
+            "run_id": 34622381659,
+            "source_sha": "0520f26054a79cf6099aaec7242cb3238844a123",
+            "status": "FAIL",
+            "scope": "reference-document",
+            "summary": "PASS=2 FAIL=1 SKIP=0",
+            "cause": "Removing the compact first-dot fallback from global extdotleaders also removed the required visible dotted leader from a long LISTA DE TABELAS entry.",
+            "corrective_action": "Restore global/object-list extdotleaders and route only hooktocsection through dedicated ufctocleaders without the forced terminal dot."
+          }
+        ],
+        "leader_correction": {
+          "object_lists": "retain compact forced-first-dot fallback in extdotleaders",
+          "table_of_contents": "dedicated ufctocleaders has no forced first dot",
+          "binding": "hooktocsection -> ufctocleaders"
+        }
       }
     },
     "R2": {
@@ -695,6 +720,6 @@
       }
     }
   },
-  "current_next_action": "Resolve PR #309 exact head. Finish R1.4 CI, then download/render and visually inspect the corrected canonical PDF for the four maintainer findings. Record artifact/hash and visual result in R1.4 evidence. Only after R1.4 closes, run a fresh complete R5 cycle and exact-main recertification. Never reuse ab641d49 artifacts for v3.0.1 publication.",
+  "current_next_action": "Inspect workflows on the corrective R1.4 head. Require Static PASS and Linux reference-document PASS after the leader split. If green, update the single R5 marker to force a complete Stage A run, then inspect the exact generated canonical PDF for all four maintainer findings before merge. Preserve #428 as failed development evidence.",
   "superseded_pull_request": 305
 }
