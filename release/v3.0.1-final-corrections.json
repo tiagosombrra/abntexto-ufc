@@ -1,9 +1,9 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": 305,
-  "working_branch": "release/v3.0.1-final-corrections",
+  "pull_request": null,
+  "working_branch": "release/v3.0.1-post-merge-canonical-review",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
   "historical_certified_baseline": {
@@ -618,7 +618,7 @@
       }
     },
     "R5": {
-      "status": "ACTIVE_DYNAMIC",
+      "status": "REOPENED_POST_MERGE_CANONICAL_REVIEW",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -626,7 +626,7 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "PENDING_MARKER_HEAD_GATES",
+          "status": "PENDING_NEW_POST_MERGE_CORRECTION_PR",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
@@ -637,11 +637,11 @@
         },
         "B": {
           "name": "squash transport to main",
-          "status": "BLOCKED_BY_STAGE_A"
+          "status": "BLOCKED_BY_NEW_CORRECTION_PR"
         },
         "C": {
           "name": "exact-main recertification",
-          "status": "BLOCKED_BY_STAGE_B",
+          "status": "INVALIDATED_REQUIRES_NEW_MAIN_AFTER_CORRECTION",
           "required": [
             "Static PASS on exact main",
             "automatic Linux complete PASS including Web/Lite E2E",
@@ -655,6 +655,20 @@
       "live_receipts_before_publication": [
         "GitHub Actions runs/artifacts",
         "issue #304"
+      ],
+      "reopened_on": "2026-09-11",
+      "invalidated_exact_main": {
+        "sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "tree_matches_premerge_head": "c21ffe45f8c8ce5025ff636e0d10a0e67c72964f",
+        "reason": "Maintainer visual review found canonical approval-page, unnumbered TOC punctuation and unnecessary rendered index defects before R6/tag/publication.",
+        "eligible_for_r6": false
+      },
+      "maintainer_canonical_review_corrections": [
+        "template/main.tex: approval-date = 11 de setembro de 2026",
+        "template/main.tex: canonical committee reduced to advisor + two examiners with institution only",
+        "abntexto-ufc/bibliography.def and backmatter.def: remove empty toclabelbox from unnumbered post-textual TOC entries",
+        "template/main.tex and chapters: do not enable/populate/print remissive index by default; preserve optional user instructions",
+        "reference-document/reference-corpus gates updated to enforce corrected presentation"
       ]
     },
     "R6": {
@@ -662,5 +676,10 @@
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
+  "current_next_action": "Create/resolve a new post-merge correction PR from release/v3.0.1-post-merge-canonical-review. Require Static + Linux complete/Web-Lite E2E + Linux Release Check/current pkgcheck on its exact head; inspect regenerated canonical/reference and distribution artifacts, verify approval page/TOC/no rendered index, and expose the regenerated CTAN ZIP. Then squash-merge and repeat exact-main Stage C.",
+  "previous_pull_request": {
+    "number": 305,
+    "status": "MERGED",
+    "merge_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d"
+  }
 }

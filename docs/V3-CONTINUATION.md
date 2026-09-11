@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
-Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
+Updated: 2026-09-11
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 REOPENED_POST_MERGE_CANONICAL_REVIEW; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -24,8 +24,8 @@ Current Git facts override the machine state; the machine state overrides this h
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
-| Active branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active branch | `release/v3.0.1-post-merge-canonical-review` |
+| Tracking issue / PR | #304 / new post-merge correction PR pending creation; #305 merged to main as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` |
 | PR state | CI vehicle only; merge remains blocked |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
@@ -103,11 +103,13 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — ACTIVE_DYNAMIC
+## R5 — REOPENED POST-MERGE BY MAINTAINER CANONICAL REVIEW
 
-R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+PR #305 completed the first R5 transport and was squash-merged as exact `main` SHA `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`. Before R6/tag/publication, maintainer review found four user-facing canonical issues, so that SHA is not eligible for final acceptance despite its earlier green gates.
 
-Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
+The active post-merge correction branch is `release/v3.0.1-post-merge-canonical-review`. Its correction batch uses a concrete approval date (`11 de setembro de 2026`), reduces the canonical approval committee to advisor + two examiners with name/institution only, removes the empty `\toclabelbox{}` causing an isolated punctuation mark before TOC dotted leaders for unnumbered post-textual entries, and removes the printed remissive index from the canonical example while retaining the optional class/API guidance. Runtime, reference regressions and release marker are updated together.
+
+The new correction PR must pass a complete Stage A equivalent, be squash-merged, and then the resulting exact `main` SHA must pass Stage C again. #305 and `ab641d49...` remain historical evidence only.
 
 ## R6 — PENDING
 
@@ -125,7 +127,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
+Create/resolve the post-merge correction PR from `release/v3.0.1-post-merge-canonical-review`. Require Static PASS, Linux Integration `complete` PASS including Web/Lite E2E, Linux Release Check/current CTAN `pkgcheck` PASS, and canonical/distribution/review-pair gates on the exact correction head. Download the regenerated canonical reference and distribution artifacts, visually inspect the corrected approval page and TOC, verify the remissive index is absent from canonical output, and expose the regenerated CTAN ZIP for maintainer analysis. Only then may the correction be squash-merged and exact-main Stage C be repeated.
 
 ## Documentation discipline
 

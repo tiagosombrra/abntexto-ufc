@@ -119,8 +119,7 @@ required = (
     'Método Java com numeração a cada duas linhas',
     'Máximo divisor comum com números de linha',
     'Seleção do maior valor sem números de linha',
-    'Nome do Quinto Membro',
-    'Nome do Sexto Membro',
+    'Aprovada em: 11 de setembro de 2026',
     'ABNT NBR 14724:2024',
     'ABNT NBR 6023:2025',
     'ABNT NBR 10520:2023',
@@ -150,13 +149,21 @@ committee_members = (
     'Nome do Orientador',
     'Nome do Segundo Membro',
     'Nome do Terceiro Membro',
-    'Nome do Quarto Membro',
-    'Nome do Quinto Membro',
-    'Nome do Sexto Membro',
 )
 missing_committee = [name for name in committee_members if name not in committee]
 if missing_committee:
-    raise SystemExit('Corpus failed: committee does not fit entirely on the approval page: ' + ', '.join(missing_committee))
+    raise SystemExit('Corpus failed: canonical three-member committee is incomplete: ' + ', '.join(missing_committee))
+for forbidden in (
+    'Nome do Quarto Membro',
+    'Nome do Quinto Membro',
+    'Nome do Sexto Membro',
+    'Nome do Centro ou Unidade',
+    'Departamento ou Unidade Acadêmica',
+):
+    if forbidden in committee:
+        raise SystemExit(f'Corpus failed: retired canonical committee content remains: {forbidden}')
+if 'Aprovada em: 11 de setembro de 2026' not in committee:
+    raise SystemExit('Corpus failed: concrete canonical approval date is missing.')
 
 list_blocks = (
     ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Figura estreita com legenda curta'),
@@ -195,6 +202,8 @@ if toc_end is None:
 
 toc = '\n'.join(raw_pages[toc_start:toc_end])
 toc_flat = normalize_pdf_text(toc)
+if 'ÍNDICE REMISSIVO' in toc_flat:
+    raise SystemExit('Corpus failed: canonical table of contents still contains the optional remissive index.')
 for marker in (
     'INTRODUÇÃO E USO DESTE MODELO',
     'Base normativa adotada',
@@ -210,7 +219,6 @@ for marker in (
     'APÊNDICE D',
     'ANEXO A',
     'ANEXO B',
-    'ÍNDICE REMISSIVO',
 ):
     if marker not in toc_flat:
         raise SystemExit(f'Corpus failed: required entry is missing from the table of contents: {marker}.')

@@ -24,15 +24,15 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Active phase | Release |
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active correction branch | `release/v3.0.1-post-merge-canonical-review` |
+| Tracking issue / PR | #304 / post-merge correction PR pending creation; #305 is merged historical transport |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
 | R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
+| R5 | REOPENED_POST_MERGE_CANONICAL_REVIEW — exact-main certification invalidated by maintainer canonical review |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
@@ -76,7 +76,11 @@ R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS.
 
 ## R5 dynamic candidate transport
 
-R5 uses exactly one release marker: `release/v3-release-candidate.json`. A marker change must force complete Linux Integration on PR #305; after those pre-merge gates pass, PR #305 is squash-merged to `main`. The squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+PR #305 was squash-merged to canonical `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`. Maintainer review performed after that transport found release-blocking canonical presentation defects before R6/tag/publication. Stage C is therefore invalidated and R5 is reopened on a new post-merge correction branch.
+
+R5 still uses exactly one release marker: `release/v3-release-candidate.json`. The post-merge correction branch must change that marker so its PR executes a fresh complete regression. After the correction PR is green, squash-merge it to `main`, resolve the new exact `main` SHA dynamically and repeat Static, automatic complete Linux Integration (including Web/Lite host E2E), Linux Release Check/current CTAN `pkgcheck`, artifact inspection and maintainer visual acceptance.
+
+The 2026-09-11 canonical corrections are: concrete approval date; three-member committee with name/institution only; removal of empty-label punctuation in unnumbered post-textual TOC entries; and removal of the printed remissive index from the canonical example while retaining the optional user capability/documentation.
 
 The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
 

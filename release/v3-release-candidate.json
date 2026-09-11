@@ -1,6 +1,6 @@
 {
-  "schema_version": 10,
-  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure; forces pre-merge complete regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 11,
+  "purpose": "v3.0.1 phase-end marker reopened after post-merge 2026-09-11 maintainer canonical review; forces a fresh correction-PR complete regression, new exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
   "target_version": "3.0.1",
   "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #305 after its marker head passes complete phase-end gates; that resulting main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
@@ -82,10 +82,10 @@
     "reason": "PR #302 and the 3.0.1 recovery change runtime/publication bytes and therefore require a fresh exact-SHA cycle."
   },
   "final_candidate": {
-    "status": "r5-dynamic-transport-active",
+    "status": "post-merge-canonical-review-correction-required",
     "version": "3.0.1",
-    "premerge_pull_request": 305,
-    "source_branch": "release/v3.0.1-final-corrections",
+    "premerge_pull_request": null,
+    "source_branch": "release/v3.0.1-post-merge-canonical-review",
     "canonical_branch": "main",
     "merge_method": "squash",
     "resolve_pr_head_from_git": true,
@@ -134,7 +134,7 @@
   },
   "human_visual_acceptance": {
     "required_before_tag": true,
-    "state": "pending-explicit-maintainer-approval-on-exact-post-merge-r5-main-artifacts",
+    "state": "pending-fresh-approval-after-post-merge-canonical-review-correction",
     "profiles": [
       "undergraduate-capstone",
       "specialization-capstone",
@@ -212,8 +212,25 @@
       "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "pkgcheck": "4.1.0 PASS"
     },
-    "r5_state": "ACTIVE_DYNAMIC",
+    "r5_state": "REOPENED_POST_MERGE_CANONICAL_REVIEW",
     "merge_method": "squash",
-    "post_merge_receipt_commit_forbidden": true
+    "post_merge_receipt_commit_forbidden": true,
+    "previous_transport": {
+      "pr": 305,
+      "merge_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+      "status": "SUPERSEDED_AS_FINAL_CANDIDATE_BY_MAINTAINER_REVIEW"
+    },
+    "canonical_review_correction": {
+      "date": "2026-09-11",
+      "branch": "release/v3.0.1-post-merge-canonical-review",
+      "changes": [
+        "concrete approval date",
+        "three-member committee with name/institution only",
+        "remove empty-label punctuation from unnumbered post-textual TOC entries",
+        "remove remissive index from canonical output while retaining optional API/documentation"
+      ],
+      "fresh_correction_pr_complete_regression_required": true,
+      "fresh_exact_main_stage_c_required": true
+    }
   }
 }

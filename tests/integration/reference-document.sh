@@ -52,7 +52,7 @@ PY
 if command -v pdftotext >/dev/null 2>&1; then
   text="/tmp/abntexto-ufc-reference.txt"
   pdftotext "$pdf" "$text"
-  for marker in 'RESUMO' 'ABSTRACT' 'LISTA DE ILUSTRAÇÕES' 'SUMÁRIO' 'INTRODUÇÃO' 'REFERÊNCIAS' 'GLOSSÁRIO' 'ÍNDICE'; do
+  for marker in 'RESUMO' 'ABSTRACT' 'LISTA DE ILUSTRAÇÕES' 'SUMÁRIO' 'INTRODUÇÃO' 'REFERÊNCIAS' 'GLOSSÁRIO'; do
     grep -Fq "$marker" "$text" || {
       echo "Reference document failed: rendered marker is missing: $marker"
       exit 1
@@ -68,6 +68,26 @@ from pathlib import Path
 path = Path(sys.argv[1])
 raw = unicodedata.normalize('NFC', path.read_text(encoding='utf-8', errors='replace'))
 flat = re.sub(r'\s+', ' ', raw)
+
+approval_date = 'Aprovada em: 11 de setembro de 2026'
+if approval_date not in flat:
+    raise SystemExit(
+        'Reference document failed: canonical approval date is missing or still a placeholder.'
+    )
+for forbidden in (
+    'dia de mês de 2026',
+    'Nome do Quarto Membro',
+    'Nome do Quinto Membro',
+    'Nome do Sexto Membro',
+    'Nome do Centro ou Unidade',
+    'Departamento ou Unidade Acadêmica',
+    'ÍNDICE REMISSIVO',
+):
+    if forbidden in flat:
+        raise SystemExit(f'Reference document failed: retired canonical approval/index marker remains: {forbidden}')
+for member in ('Nome do Orientador', 'Nome do Segundo Membro', 'Nome do Terceiro Membro'):
+    if member not in flat:
+        raise SystemExit(f'Reference document failed: canonical three-member committee is missing: {member}')
 
 complete_author = 'NOME COMPLETO DO AUTOR'
 if complete_author not in flat:
@@ -171,6 +191,11 @@ for title in ('RESUMO', 'ABSTRACT', 'LISTA DE ILUSTRAÇÕES'):
         raise SystemExit(f'Reference document failed: front-matter element entered the table of contents: {title}')
 
 normalized_toc = unicodedata.normalize('NFC', toc).casefold()
+if '\\toclabelbox{}Referências' in toc or '\\toclabelbox{}\\MakeUppercase{Glossário}' in toc:
+    raise SystemExit('Reference document failed: empty TOC label box reintroduced for unnumbered post-textual entries.')
+if 'índice remissivo' in normalized_toc:
+    raise SystemExit('Reference document failed: canonical TOC still contains a rendered remissive index.')
+
 for marker in ('anexo', 'documento complementar externo'):
     if marker.casefold() not in normalized_toc:
         raise SystemExit(f'Reference document failed: canonical annex TOC marker is missing: {marker}')
