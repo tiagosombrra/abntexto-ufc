@@ -1,9 +1,9 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": 305,
-  "working_branch": "release/v3.0.1-final-corrections",
+  "pull_request": "RESOLVE_FOLLOWUP_PR_FROM_GIT",
+  "working_branch": "release/v3.0.1-readme-site-finalization",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
   "historical_certified_baseline": {
@@ -30,7 +30,8 @@
       "conversation_memory"
     ],
     "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md"
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -42,6 +43,7 @@
   },
   "scope": {
     "release_blocking": [
+      "final_readme_site_pages_delivery_and_live_validator_link",
       "exact_sha_release_recertification_and_human_acceptance"
     ],
     "closed_release_blockers": [
@@ -162,6 +164,18 @@
           "pkgcheck": "4.1.0 PASS"
         }
       }
+    },
+    "final_delivery_surface": {
+      "status": "IN_PROGRESS",
+      "branch": "release/v3.0.1-readme-site-finalization",
+      "readme": "README.md",
+      "site": "site/index.html",
+      "pages_workflow": ".github/workflows/pages.yml",
+      "validator_source": "validator/",
+      "expected_site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
+      "expected_validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+      "pages_must_be_live_before_r6": true,
+      "r6_source_edits_allowed": false
     }
   },
   "work_packages": {
@@ -618,7 +632,7 @@
       }
     },
     "R5": {
-      "status": "ACTIVE_DYNAMIC",
+      "status": "REOPENED_FINAL_DELIVERY",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -626,7 +640,7 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "PENDING_MARKER_HEAD_GATES",
+          "status": "REOPENED_FINAL_DELIVERY_BRANCH",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
@@ -637,11 +651,11 @@
         },
         "B": {
           "name": "squash transport to main",
-          "status": "BLOCKED_BY_STAGE_A"
+          "status": "BLOCKED_BY_REOPENED_STAGE_A"
         },
         "C": {
           "name": "exact-main recertification",
-          "status": "BLOCKED_BY_STAGE_B",
+          "status": "SUPERSEDED_BASELINE_REQUIRES_REPEAT",
           "required": [
             "Static PASS on exact main",
             "automatic Linux complete PASS including Web/Lite E2E",
@@ -655,12 +669,78 @@
       "live_receipts_before_publication": [
         "GitHub Actions runs/artifacts",
         "issue #304"
-      ]
+      ],
+      "first_post_merge_candidate": {
+        "sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "status": "TECHNICALLY_CERTIFIED_SUPERSEDED_BY_FINAL_DELIVERY_REQUIREMENT",
+        "static": {
+          "run_number": 497,
+          "run_id": 34580317473,
+          "status": "PASS"
+        },
+        "linux": {
+          "run_number": 418,
+          "run_id": 34580317462,
+          "status": "PASS",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "web_lite_e2e": "PASS"
+        },
+        "release": {
+          "run_number": 132,
+          "run_id": 34580317509,
+          "status": "PASS",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "pkgcheck": "4.1.0 PASS"
+        },
+        "reason": "Maintainer added a final release-blocking README/site/validator delivery requirement after technical Stage C; tracked/publication bytes must change and be recertified."
+      },
+      "active_cycle": {
+        "branch": "release/v3.0.1-readme-site-finalization",
+        "marker": "release/v3-release-candidate.json",
+        "stage": "A_REOPENED",
+        "required_premerge": [
+          "Static PASS including README/site/Pages contract",
+          "Linux complete PASS including Web/Lite real-PDF E2E",
+          "Linux Release Check complete PASS",
+          "current CTAN pkgcheck PASS",
+          "distribution/reference/review-pair gates PASS"
+        ],
+        "required_postmerge": [
+          "Static PASS on exact new main",
+          "automatic Linux complete PASS including Web/Lite E2E",
+          "Linux Release Check complete PASS and current pkgcheck",
+          "GitHub Pages workflow PASS on exact main",
+          "live project site and /validator/ URLs verified",
+          "exact-main artifacts independently inspected"
+        ]
+      }
     },
     "R6": {
       "status": "PENDING",
-      "blocked_by": "R5 exact-main certification and artifact inspection"
+      "evidence": "docs/V3.0.1-R6-EVIDENCE.md",
+      "blocked_by": "reopened R5 exact-main certification, Pages deployment, live README/site/validator verification and artifact inspection",
+      "readme_site_gate": {
+        "source_must_already_be_frozen_in_r5": true,
+        "readme_edit_during_r6_forbidden": true,
+        "required_urls": [
+          "https://tiagosombrra.github.io/abntexto-ufc/",
+          "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+          "https://github.com/tiagosombrra/abntexto-ufc/releases",
+          "https://github.com/tiagosombrra/abntexto-ufc",
+          "https://github.com/tiagosombrra/abntexto-ufc/issues"
+        ],
+        "audiences": [
+          "student",
+          "advisor_or_library",
+          "latex_user",
+          "maintainer"
+        ],
+        "release_bundle_instructions_required": true,
+        "repository_structure_required": true
+      }
     }
   },
-  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
+  "current_next_action": "Create/open the follow-up PR from release/v3.0.1-readme-site-finalization. Require fresh R5 Stage A on the exact head because release/v3-release-candidate.json changes: Static + Linux complete/Web-Lite E2E + Linux Release Check/current pkgcheck. After Stage A PASS, squash-merge, resolve new main SHA and repeat Stage C plus GitHub Pages deployment/live checks for the project site and /validator/. If Pages is not enabled for GitHub Actions, enable that external repository setting and rerun on the same SHA. R6 must not begin until exact-main artifacts and README/site/validator delivery are independently accepted."
 }

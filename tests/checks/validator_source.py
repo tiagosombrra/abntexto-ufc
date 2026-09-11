@@ -18,6 +18,9 @@ VALIDATOR_ROOT = ROOT / "validator"
 APP = VALIDATOR_ROOT / "app.js"
 INDEX = VALIDATOR_ROOT / "index.html"
 WEB_CATALOG = VALIDATOR_ROOT / "normative-catalog.js"
+ROOT_README = ROOT / "README.md"
+SITE_INDEX = ROOT / "site" / "index.html"
+PAGES_WORKFLOW = ROOT / ".github" / "workflows" / "pages.yml"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
 NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
 NORMATIVE_FULL_TOOL = ROOT / "tools" / "normative_full.py"
@@ -132,6 +135,9 @@ def main() -> None:
     app = APP.read_text(encoding="utf-8")
     cli = CLI.read_text(encoding="utf-8")
     html = INDEX.read_text(encoding="utf-8")
+    readme = ROOT_README.read_text(encoding="utf-8")
+    site = SITE_INDEX.read_text(encoding="utf-8")
+    pages_workflow = PAGES_WORKFLOW.read_text(encoding="utf-8")
 
     if "pdfjs-dist@6.2.108" not in app:
         fail("PDF.js version is not pinned to 6.2.108")
@@ -151,6 +157,43 @@ def main() -> None:
     for marker in ('id="normative-base"', 'id="norm-reviewed"', 'id="norm-sources"'):
         if marker not in html:
             fail(f"normative-base UI marker is missing: {marker}")
+
+    readme_markers = (
+        "https://tiagosombrra.github.io/abntexto-ufc/",
+        "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+        "https://github.com/tiagosombrra/abntexto-ufc/releases",
+        "abntexto-ufc-template-<versão>.zip",
+        "abntexto-ufc-overleaf-<versão>.zip",
+        "abntexto-ufc-<versão>.zip",
+        "## Estrutura do repositório",
+        "## Validação",
+    )
+    for marker in readme_markers:
+        if marker not in readme:
+            fail(f"final README delivery marker is missing: {marker}")
+
+    for marker in (
+        'href="./validator/"',
+        "https://github.com/tiagosombrra/abntexto-ufc/releases",
+        "https://github.com/tiagosombrra/abntexto-ufc",
+    ):
+        if marker not in site:
+            fail(f"project landing page marker is missing: {marker}")
+
+    pages_markers = (
+        "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+        "actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d",
+        "actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b",
+        "actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e",
+        "cp -a validator/. _site/validator/",
+        "name: github-pages",
+        "steps.deployment.outputs.page_url",
+    )
+    for marker in pages_markers:
+        if marker not in pages_workflow:
+            fail(f"GitHub Pages publication contract marker is missing: {marker}")
+    if "enablement: true" in pages_workflow:
+        fail("Pages workflow must not pretend GITHUB_TOKEN can enable repository Pages settings")
 
     node = shutil.which("node")
     if not node:
@@ -186,7 +229,7 @@ def main() -> None:
     print(
         "VALIDATION-EVIDENCE web-static-package status=PASS "
         f"relative_imports={relative_imports} generated_catalog_identical=true "
-        "entry=index.html local_processing=true"
+        "entry=index.html local_processing=true readme_delivery=true pages_contract=true"
     )
     print("Validator sources and normative contracts validated.")
 

@@ -24,16 +24,16 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Active phase | Release |
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active correction branch | `release/v3.0.1-readme-site-finalization` |
+| Tracking issue / PR | #304; #305 is merged historical transport; resolve the follow-up PR for `release/v3.0.1-readme-site-finalization` dynamically |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
 | R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
-| R6 | PENDING — maintainer acceptance and publication |
+| R5 | REOPENED_FINAL_DELIVERY — README/site/Pages delivery surface must be certified through a fresh A → B → C cycle |
+| R6 | PENDING — maintainer acceptance of PDFs + final README/site, then immutable publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
 Never treat a SHA copied from this document as current Git state; resolve the branch dynamically first.
@@ -74,15 +74,23 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 
 R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
+## Final README and site delivery rule
+
+The root `README.md` is a release artifact, not a post-release note. Before R5 can freeze the final candidate it must clearly explain, for students, advisors/librarians, LaTeX users and maintainers: what the project is; its community/non-official status; which Release ZIP to use; how to start on Overleaf and locally; supported profiles; validator capabilities and boundaries; repository structure; release/certification model; support and license.
+
+The final README must link to the project site, GitHub Releases, repository, issues and the Web/Lite validator. The intended canonical Pages URLs are `https://tiagosombrra.github.io/abntexto-ufc/` and `https://tiagosombrra.github.io/abntexto-ufc/validator/`. A tracked Pages workflow assembles `site/` plus the tracked `validator/` tree. R5 Stage C must prove the Pages deployment and live validator URL; if repository Pages is not enabled for GitHub Actions, that external setting must be enabled and the same source rerun before R5 can close.
+
+R6 does **not** edit the README. It verifies the already-certified README/site links and presentation together with the exact PDFs. Any README/site source change after R5 certification invalidates the candidate and requires recertification.
+
 ## R5 dynamic candidate transport
 
-R5 uses exactly one release marker: `release/v3-release-candidate.json`. A marker change must force complete Linux Integration on PR #305; after those pre-merge gates pass, PR #305 is squash-merged to `main`. The squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+R5 uses exactly one release marker: `release/v3-release-candidate.json`. PR #305 completed the first R5 transport and produced exact-main SHA `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`, whose Stage C technical gates passed; that candidate is now superseded because the maintainer added a final user-facing README/site requirement that changes publication bytes. The follow-up branch `release/v3.0.1-readme-site-finalization` updates the same marker and must repeat Stage A → squash transport → Stage C. The final Stage C additionally requires the Pages deployment and live validator URL.
 
 The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
 
 ## Mandatory phase-end regression and release invariant
 
-Targeted R1–R4 checks are development evidence only. R5 must bind the complete applicable release matrix to one immutable exact SHA. R6 then requires explicit maintainer visual approval of artifacts from that same SHA.
+Targeted R1–R4 checks are development evidence only. R5 must bind the complete applicable release matrix to one immutable exact SHA. R6 then requires explicit maintainer visual approval of artifacts from that same SHA and verification that the certified README/site presents the project, downloads and validator correctly.
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes

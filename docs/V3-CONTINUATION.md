@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
-Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
+Updated: 2026-09-11
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 REOPENED_FINAL_DELIVERY; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -24,9 +24,9 @@ Current Git facts override the machine state; the machine state overrides this h
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
-| Active branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
-| PR state | CI vehicle only; merge remains blocked |
+| Active branch | `release/v3.0.1-readme-site-finalization` |
+| Tracking issue / PR | #304; #305 merged; resolve follow-up PR from the active branch dynamically |
+| PR state | #305 merged historical transport; follow-up README/site PR must pass fresh R5 Stage A before squash merge |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
 | Public `v3.0.0` | historical/superseded; never retarget |
@@ -103,15 +103,19 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — ACTIVE_DYNAMIC
+## R5 — REOPENED_FINAL_DELIVERY
 
-R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+R5 still uses only `release/v3-release-candidate.json` as its phase-end marker. The first transport through PR #305 produced exact-main `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`. Its Stage C technical cycle passed: Static #497 PASS, Linux #418 `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with productive Web/Lite E2E PASS, and Release #132 `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0` PASS.
 
-Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
+That technically certified candidate is **superseded, not failed**, because the maintainer subsequently required a complete final README plus project site/validator access. Those files change publication bytes and therefore must be incorporated before freeze. The active branch `release/v3.0.1-readme-site-finalization` updates README/site/Pages and the same release marker, then repeats Stage A → squash transport → Stage C.
+
+The repeated Stage C must additionally require the GitHub Pages deployment to succeed and the project/validator URLs advertised in README to be live and consistent with the deployed site. If Pages is not enabled for GitHub Actions in repository settings, enable that external setting and rerun deployment on the same source; do not weaken the gate.
+
+Do not commit merely to record the final post-merge SHA or green results before tag/publication; that would invalidate the candidate. Immutable workflow/artifact facts and issue #304 remain live receipts until publication.
 
 ## R6 — PENDING
 
-R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
+R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after the README/site follow-up merge. R6 is explicit maintainer visual acceptance and publication. The already-certified root README and site are part of the R6 acceptance surface: verify that the project description, audience guidance, Release ZIP instructions, repository structure, site link and Web/Lite validator link are clear and functional. R6 must not edit them. The invariant remains:
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
@@ -125,7 +129,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
+Work from `release/v3.0.1-readme-site-finalization`. Review the root README, `site/index.html`, Pages workflow and validator static contract. Because `release/v3-release-candidate.json` changes in this branch, the follow-up PR must run Stage A with Static + Linux `complete` + Linux Release Check/current `pkgcheck`. Do not merge until all are green. Then squash-merge, resolve the new `main` SHA dynamically and require Stage C again, including Pages deployment and live checks for `https://tiagosombrra.github.io/abntexto-ufc/` and `https://tiagosombrra.github.io/abntexto-ufc/validator/`. Only after those exact-main artifacts and site are inspected may R6 begin.
 
 ## Documentation discipline
 
