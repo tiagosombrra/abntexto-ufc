@@ -52,12 +52,16 @@ PY
 if command -v pdftotext >/dev/null 2>&1; then
   text="/tmp/abntexto-ufc-reference.txt"
   pdftotext "$pdf" "$text"
-  for marker in 'RESUMO' 'ABSTRACT' 'LISTA DE ILUSTRAÇÕES' 'SUMÁRIO' 'INTRODUÇÃO' 'REFERÊNCIAS' 'GLOSSÁRIO' 'ÍNDICE'; do
+  for marker in 'RESUMO' 'ABSTRACT' 'LISTA DE ILUSTRAÇÕES' 'SUMÁRIO' 'INTRODUÇÃO' 'REFERÊNCIAS' 'GLOSSÁRIO'; do
     grep -Fq "$marker" "$text" || {
       echo "Reference document failed: rendered marker is missing: $marker"
       exit 1
     }
   done
+  if grep -Fq 'ÍNDICE REMISSIVO' "$text"; then
+    echo 'Reference document failed: canonical TCC must not render an index.'
+    exit 1
+  fi
 
   python3 - "$text" <<'PY'
 import re

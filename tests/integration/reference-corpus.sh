@@ -119,8 +119,7 @@ required = (
     'Método Java com numeração a cada duas linhas',
     'Máximo divisor comum com números de linha',
     'Seleção do maior valor sem números de linha',
-    'Nome do Quinto Membro',
-    'Nome do Sexto Membro',
+    'Aprovada em: 11 de setembro de 2026',
     'ABNT NBR 14724:2024',
     'ABNT NBR 6023:2025',
     'ABNT NBR 10520:2023',
@@ -150,13 +149,24 @@ committee_members = (
     'Nome do Orientador',
     'Nome do Segundo Membro',
     'Nome do Terceiro Membro',
-    'Nome do Quarto Membro',
-    'Nome do Quinto Membro',
-    'Nome do Sexto Membro',
 )
 missing_committee = [name for name in committee_members if name not in committee]
 if missing_committee:
-    raise SystemExit('Corpus failed: committee does not fit entirely on the approval page: ' + ', '.join(missing_committee))
+    raise SystemExit('Corpus failed: expected three-person committee is incomplete: ' + ', '.join(missing_committee))
+for forbidden in (
+    'Nome do Quarto Membro',
+    'Nome do Quinto Membro',
+    'Nome do Sexto Membro',
+    'Nome do Centro ou Unidade',
+    'Departamento ou Unidade Acadêmica',
+    'Centro, Faculdade, Instituto ou Campus',
+    'Programa de Pós-Graduação ou Unidade Acadêmica',
+):
+    if forbidden in committee:
+        raise SystemExit('Corpus failed: canonical committee contains forbidden extra member/unit text: ' + forbidden)
+
+if 'ÍNDICE REMISSIVO' in flat:
+    raise SystemExit('Corpus failed: canonical TCC must not render an index.')
 
 list_blocks = (
     ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Figura estreita com legenda curta'),
@@ -210,23 +220,32 @@ for marker in (
     'APÊNDICE D',
     'ANEXO A',
     'ANEXO B',
-    'ÍNDICE REMISSIVO',
 ):
     if marker not in toc_flat:
         raise SystemExit(f'Corpus failed: required entry is missing from the table of contents: {marker}.')
 
 entry_lines = [line for line in toc.splitlines() if re.search(r'\d+\s*$', line)]
-if len(entry_lines) < 30:
+if len(entry_lines) < 29:
     raise SystemExit(f'Corpus failed: too few paginated entries in the annotated table of contents: {len(entry_lines)}.')
-undotted = [
-    line.strip() for line in entry_lines
+
+numbered_entry_lines = [
+    line for line in entry_lines
+    if re.match(r'^\s*\d+(?:\.\d+)*\s+', line)
+]
+undotted_numbered = [
+    line.strip() for line in numbered_entry_lines
     if not re.search(spaced_leader_pattern(), line)
 ]
-if undotted:
-    sample = ' | '.join(undotted[:8])
+if undotted_numbered:
+    sample = ' | '.join(undotted_numbered[:8])
     raise SystemExit(
-        f'Corpus failed: {len(undotted)} table-of-contents entries lack spaced dotted leaders: {sample}'
+        f'Corpus failed: {len(undotted_numbered)} numbered table-of-contents entries lack dotted leaders: {sample}'
     )
+
+layout_source = Path('../abntexto-ufc/layout.def').read_text(encoding='utf-8')
+forced_dot = r'\hbox to 1.1em{\leaders\ufctocdot\hfil}'
+if forced_dot in layout_source:
+    raise SystemExit('Corpus failed: table of contents still forces a standalone terminal dot before leaders.')
 
 root = ET.parse('/tmp/abntexto-ufc-reference-corpus-bbox.html').getroot()
 local = lambda tag: tag.rsplit('}', 1)[-1]
