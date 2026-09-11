@@ -1,9 +1,9 @@
 {
-  "schema_version": 10,
-  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure; forces pre-merge complete regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 11,
+  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure and post-merge maintainer canonical-review correction; forces fresh complete regression on the clean correction PR, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
   "target_version": "3.0.1",
-  "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #305 after its marker head passes complete phase-end gates; that resulting main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
+  "candidate_semantics": "the exact canonical main SHA produced by squash-merging the current open PR whose head is release/v3.0.1-canonical-review-corrections after that PR head passes complete phase-end gates; PR #305 is historical and already merged as ab641d49c5f6a79ff54a16a78d1946a6e008fe6d; the resulting new main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
   "integration_anchor": {
     "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
     "source": "PR #297 squash merge",
@@ -82,10 +82,10 @@
     "reason": "PR #302 and the 3.0.1 recovery change runtime/publication bytes and therefore require a fresh exact-SHA cycle."
   },
   "final_candidate": {
-    "status": "r5-dynamic-transport-active",
+    "status": "r5-reopened-canonical-review-pending-fresh-stage-a",
     "version": "3.0.1",
-    "premerge_pull_request": 305,
-    "source_branch": "release/v3.0.1-final-corrections",
+    "premerge_pull_request": null,
+    "source_branch": "release/v3.0.1-canonical-review-corrections",
     "canonical_branch": "main",
     "merge_method": "squash",
     "resolve_pr_head_from_git": true,
@@ -97,7 +97,10 @@
     "web_lite_real_pdf_e2e_required": true,
     "current_ctan_pkgcheck_required": true,
     "exact_main_artifact_inspection_required": true,
-    "no_pre_tag_commits_after_acceptance": true
+    "no_pre_tag_commits_after_acceptance": true,
+    "premerge_pull_request_resolution": "resolve current open PR whose head is source_branch",
+    "previous_merged_pull_request": 305,
+    "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d"
   },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
@@ -134,7 +137,7 @@
   },
   "human_visual_acceptance": {
     "required_before_tag": true,
-    "state": "pending-explicit-maintainer-approval-on-exact-post-merge-r5-main-artifacts",
+    "state": "pending-fresh-maintainer-approval-after-canonical-review-correction",
     "profiles": [
       "undergraduate-capstone",
       "specialization-capstone",
@@ -194,8 +197,8 @@
   "remove_after_acceptance": false,
   "final_correction_program": {
     "tracking_issue": 304,
-    "pull_request": 305,
-    "working_branch": "release/v3.0.1-final-corrections",
+    "pull_request": null,
+    "working_branch": "release/v3.0.1-canonical-review-corrections",
     "authority": "release/v3.0.1-final-corrections.json",
     "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
     "r0_r3_status": "DONE",
@@ -212,8 +215,24 @@
       "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "pkgcheck": "4.1.0 PASS"
     },
-    "r5_state": "ACTIVE_DYNAMIC",
+    "r5_state": "REOPENED_CANONICAL_REVIEW",
     "merge_method": "squash",
-    "post_merge_receipt_commit_forbidden": true
+    "post_merge_receipt_commit_forbidden": true,
+    "canonical_review_correction": {
+      "date": "2026-09-11",
+      "superseded_marker_head": "c21ffe45f8c8ce5025ff636e0d10a0e67c72964f",
+      "changes": [
+        "concrete approval date",
+        "three-member committee with name/institution only",
+        "remove empty-label punctuation from unnumbered post-textual TOC entries",
+        "remove remissive index from canonical output while retaining optional API/documentation"
+      ],
+      "fresh_stage_a_required": true,
+      "transport_source_sha": "ca3e16d415a838ef9cd1eb29f2ca3884d1737d7b",
+      "transport_policy": "copy corrected file state onto clean branch from current main; old divergent branch is evidence only"
+    },
+    "pull_request_resolution": "resolve current open PR whose head is working_branch",
+    "previous_merged_pull_request": 305,
+    "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d"
   }
 }

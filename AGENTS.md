@@ -11,7 +11,7 @@ Before changing code, tests, standards, workflows, documentation, release metada
 3. read `release/v3.0.1-final-corrections.json`;
 4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`;
 5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, R4 uses `docs/V3.0.1-R4-EVIDENCE.md`, and the current active lot R5 uses `docs/V3.0.1-R5-EVIDENCE.md`;
-6. inspect issue #304 and PR #305 when remote GitHub state is available;
+6. inspect issue #304 and resolve the current open PR whose head is the active correction branch; PR #305 is historical and already squash-merged to `main`;
 7. use older v3 roadmap, recovery and certification documents only as historical/background evidence when the current handoff or machine state points to them.
 
 Priority on disagreement: **current Git facts > active machine state > current continuation handoff > active-lot evidence > older documents > prior chat or memory**.
@@ -24,15 +24,15 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Active phase | Release |
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active correction branch | `release/v3.0.1-canonical-review-corrections` |
+| Tracking issue / PR | #304 / resolve current open PR from active branch (`#305` is merged history) |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
 | R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
+| R5 | REOPENED_CANONICAL_REVIEW — maintainer review found canonical presentation defects; previous green marker head is superseded as final candidate |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
@@ -76,7 +76,9 @@ R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS.
 
 ## R5 dynamic candidate transport
 
-R5 uses exactly one release marker: `release/v3-release-candidate.json`. A marker change must force complete Linux Integration on PR #305; after those pre-merge gates pass, PR #305 is squash-merged to `main`. The squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+R5 uses exactly one release marker: `release/v3-release-candidate.json`. The previous PR #305 has already been squash-merged to `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`; maintainer review then reopened R5. The active canonical-review correction must travel through the current open PR whose head is `release/v3.0.1-canonical-review-corrections`. A marker change on that PR must force complete Linux Integration; after Stage A passes, that current PR is squash-merged to `main`. The resulting squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+
+Maintainer review on 2026-09-11 reopened Stage A after the previously green marker head because the canonical TCC still showed a placeholder approval date, six committee members with department/center lines, a visible empty-label punctuation artifact before dotted leaders on unnumbered post-textual TOC entries, and a printed remissive index that is not needed in the canonical example. Those findings are release-blocking presentation corrections. The canonical example now uses a concrete approval date, a three-member committee with name/institution only, fixes the unnumbered post-textual TOC source, and leaves the index documented as an optional capability rather than printing it by default. Any pre-correction R5 green run is historical evidence only.
 
 The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
 

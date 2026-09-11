@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
-Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
+Updated: 2026-09-11
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 REOPENED_CANONICAL_REVIEW; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -24,9 +24,9 @@ Current Git facts override the machine state; the machine state overrides this h
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
-| Active branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
-| PR state | CI vehicle only; merge remains blocked |
+| Active branch | `release/v3.0.1-canonical-review-corrections` |
+| Tracking issue / PR | #304 / resolve current open PR from active branch (`#305` is historical merged transport) |
+| PR state | current canonical-review correction PR must remain unmerged until fresh Stage A passes |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
 | Public `v3.0.0` | historical/superseded; never retarget |
@@ -103,9 +103,11 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — ACTIVE_DYNAMIC
+## R5 — REOPENED BY MAINTAINER CANONICAL REVIEW
 
-R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The previous marker head `c21ffe45f8c8ce5025ff636e0d10a0e67c72964f` had Static #496, Linux #417 and Release Check #131 green, but maintainer inspection on 2026-09-11 found four user-facing canonical defects. That head is therefore superseded as the final candidate.
+
+The corrective batch changes `template/main.tex` and canonical chapters, removes the empty `\toclabelbox{}` from unnumbered References/Glossary/Index TOC entries in project runtime, updates reference regressions, and requires a fresh complete R5 Stage A. The canonical index remains documented and supported by the class but is not printed or populated in the canonical TCC. Once the new exact PR head passes Stage A, squash-merge the current canonical-review correction PR, resolve the resulting `main` SHA dynamically and require the automatic exact-main cycle.
 
 Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
 
@@ -125,7 +127,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
+Resolve the current open PR whose head is `release/v3.0.1-canonical-review-corrections`. Require Static PASS, Linux Integration `complete` PASS (including Web/Lite E2E), Linux Release Check/current `pkgcheck` PASS, canonical reference generation and distribution/review-pair gates on that same SHA. Download the new canonical-reference and distribution artifacts generated from `template/main.tex`; visually inspect the corrected approval page and TOC, verify no rendered remissive index, and provide the resulting CTAN ZIP for maintainer inspection. Only after those checks may Stage A be considered green and the squash transport resume.
 
 ## Documentation discipline
 

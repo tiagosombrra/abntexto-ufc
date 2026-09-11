@@ -37,7 +37,7 @@ Outras referências atuam em escopos específicos: ABNT NBR 6028:2021 para resum
 
 O bloco \texttt{\string\ufcsetup} deve ser tratado como a configuração central do trabalho. As chaves do exemplo podem ser lidas em quatro grupos: perfil e saída do documento; dados institucionais e acadêmicos; autoria, título, local e data; e orientação/banca.
 
-\guiamecanismo{No primeiro grupo, \texttt{type} seleciona o perfil, \texttt{print-mode} controla impressão em anverso ou frente e verso, e opções como \texttt{cover}, \texttt{catalog-card}, \texttt{font}, \texttt{strict-font}, \texttt{tables}, \texttt{code}, \texttt{algorithms}, \texttt{glossary} e \texttt{index} selecionam comportamentos ou módulos.}
+\guiamecanismo{No primeiro grupo, \texttt{type} seleciona o perfil, \texttt{print-mode} controla impressão em anverso ou frente e verso, e opções como \texttt{cover}, \texttt{catalog-card}, \texttt{font}, \texttt{strict-font}, \texttt{tables}, \texttt{code}, \texttt{algorithms} e \texttt{glossary} selecionam comportamentos ou módulos. O índice remissivo é opcional e pode ser habilitado posteriormente com \texttt{index=imakeidx} quando for pertinente ao trabalho.}
 
 \guiamecanismo{No segundo e no terceiro grupos, campos como \texttt{institution}, \texttt{center}, \texttt{department}, curso/programa, grau, \texttt{author}, \texttt{title}, \texttt{subtitle}, \texttt{location}, \texttt{year} e \texttt{approval-date} alimentam os elementos documentais aplicáveis ao perfil. Campos de orientador, coorientador e examinadores são declarados uma única vez e reutilizados pela folha de aprovação e demais elementos correspondentes.}
 
@@ -53,4 +53,3 @@ A suíte de validação do repositório cobre, entre outros pontos, tamanho A4, 
 
 \guiapolitica{O template reduz o trabalho manual de formatação, mas não substitui a verificação final das exigências específicas do curso, programa, edital, repositório institucional ou procedimento administrativo aplicável ao trabalho.}
 
-\index{normalização}\index{LaTeX}\index{ABNT}\index{UFC}\index{ufcsetup}
