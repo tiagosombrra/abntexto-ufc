@@ -25,8 +25,8 @@ Current Git facts override the machine state; the machine state overrides this h
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
 | Active branch | `release/v3.0.1-post-merge-canonical-review` |
-| Tracking issue / PR | #304 / #307 active post-merge correction; #305 merged to main as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` |
-| PR state | CI vehicle only; merge remains blocked |
+| Tracking issue / PR | #304 / #307 integrated final candidate; #305 merged historical transport; #306 delivery-only work absorbed/superseded |
+| PR state | #307 open; merge blocked until integrated Stage A PASS |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
 | Public `v3.0.0` | historical/superseded; never retarget |
@@ -103,13 +103,31 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — REOPENED POST-MERGE BY MAINTAINER CANONICAL REVIEW
+## R5 — REOPENED INTEGRATED FINAL CANDIDATE
 
-PR #305 completed the first R5 transport and was squash-merged as exact `main` SHA `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`. Before R6/tag/publication, maintainer review found four user-facing canonical issues, so that SHA is not eligible for final acceptance despite its earlier green gates.
+The first post-merge candidate `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` is retained as technically certified historical evidence only. Before publication, maintainer review opened both a canonical-presentation correction and a final README/site/Pages delivery requirement.
 
-The active post-merge correction branch is `release/v3.0.1-post-merge-canonical-review`. Its correction batch uses a concrete approval date (`11 de setembro de 2026`), reduces the canonical approval committee to advisor + two examiners with name/institution only, removes the empty `\toclabelbox{}` causing an isolated punctuation mark before TOC dotted leaders for unnumbered post-textual entries, and removes the printed remissive index from the canonical example while retaining the optional class/API guidance. Runtime, reference regressions and release marker are updated together.
+Active branch/PR:
 
-The new correction PR must pass a complete Stage A equivalent, be squash-merged, and then the resulting exact `main` SHA must pass Stage C again. #305 and `ab641d49...` remain historical evidence only.
+- `release/v3.0.1-post-merge-canonical-review`
+- PR #307
+
+PR #306 (`release/v3.0.1-readme-site-finalization`) is delivery-only work that is now absorbed into #307 and must not be merged separately.
+
+The integrated candidate contains:
+
+- approval date `11 de setembro de 2026`;
+- three-member canonical approval committee (advisor + two examiners, name/institution);
+- no empty-label punctuation before unnumbered post-textual TOC dotted leaders;
+- no printed/populated remissive index in the canonical TCC, while optional class/API support remains documented;
+- final root README;
+- `site/index.html`;
+- pinned `.github/workflows/pages.yml`;
+- static delivery checks binding README/site/validator/Pages behavior.
+
+The initial #307 head `cb9c7098...` had Static #500 PASS but Linux #421 and Release #135 failed at `reference-corpus`: the test still required `REFERÊNCIAS` to share the x-origin of numbered chapter titles. The corrected gate preserves numbered-title alignment separately and validates `REFERÊNCIAS`/ `GLOSSÁRIO` as unnumbered post-textual entries without reintroducing the empty label box.
+
+The next integrated #307 HEAD must repeat Stage A completely. After PASS, squash-merge once, resolve the new exact `main` SHA, then repeat Stage C and require Pages deployment/live URL checks. No receipt-only commit is allowed after final Stage C.
 
 ## R6 — PENDING
 
@@ -127,7 +145,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve post-merge correction PR #307 from `release/v3.0.1-post-merge-canonical-review`. Require Static PASS, Linux Integration `complete` PASS including Web/Lite E2E, Linux Release Check/current CTAN `pkgcheck` PASS, and canonical/distribution/review-pair gates on the exact correction head. Download the regenerated canonical reference and distribution artifacts, visually inspect the corrected approval page and TOC, verify the remissive index is absent from canonical output, and expose the regenerated CTAN ZIP for maintainer analysis. Only then may the correction be squash-merged and exact-main Stage C be repeated.
+Resolve PR #307 and its exact integrated head. Require Static PASS, Linux Integration `complete` PASS with Web/Lite E2E, Linux Release Check/current CTAN `pkgcheck` PASS, canonical reference/distribution/review-pair gates PASS, and verify the corrected approval page/TOC/index behavior plus final README/site/Pages files. Once the exact PR head passes, close #306 as superseded if not already closed, squash-merge #307, resolve the new exact `main` SHA and repeat Stage C. Stage C must additionally deploy Pages and verify the project and `/validator/` URLs. Do not enter R6 or create a tag until those exact-main checks and independent artifact/site inspection pass.
 
 ## Documentation discipline
 

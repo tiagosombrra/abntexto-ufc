@@ -1,9 +1,9 @@
 {
-  "schema_version": 12,
-  "purpose": "v3.0.1 phase-end marker reopened after post-merge 2026-09-11 maintainer canonical review; forces a fresh correction-PR complete regression, new exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 13,
+  "purpose": "v3.0.1 final integrated candidate marker after R0-R4 closure; combines post-merge canonical corrections with README/site/Pages delivery and forces fresh Stage A, exact-main Stage C, live Pages checks and maintainer acceptance",
   "phase": "release",
   "target_version": "3.0.1",
-  "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #305 after its marker head passes complete phase-end gates; that resulting main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
+  "candidate_semantics": "the exact canonical main SHA produced by squash-merging integrated PR #307 after one head containing canonical/runtime corrections plus the absorbed #306 README/site/Pages delivery surface passes complete Stage A gates; that resulting main SHA must independently pass Static, complete Linux including real Web/Lite E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection, Pages deployment/live URL verification and maintainer visual acceptance",
   "integration_anchor": {
     "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
     "source": "PR #297 squash merge",
@@ -82,7 +82,7 @@
     "reason": "PR #302 and the 3.0.1 recovery change runtime/publication bytes and therefore require a fresh exact-SHA cycle."
   },
   "final_candidate": {
-    "status": "post-merge-canonical-review-correction-required",
+    "status": "r5-integrated-final-candidate-required",
     "version": "3.0.1",
     "premerge_pull_request": 307,
     "source_branch": "release/v3.0.1-post-merge-canonical-review",
@@ -97,7 +97,18 @@
     "web_lite_real_pdf_e2e_required": true,
     "current_ctan_pkgcheck_required": true,
     "exact_main_artifact_inspection_required": true,
-    "no_pre_tag_commits_after_acceptance": true
+    "no_pre_tag_commits_after_acceptance": true,
+    "readme_final_delivery_required": true,
+    "github_pages_deployment_required": true,
+    "expected_site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
+    "expected_validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+    "canonical_review_required": true,
+    "canonical_review_checks": [
+      "concrete approval date",
+      "three-member approval committee",
+      "unnumbered post-textual TOC has no empty-label punctuation",
+      "canonical remissive index absent while optional API remains"
+    ]
   },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
@@ -166,7 +177,9 @@
     "preliminary_baseline_review": {
       "status": "historical-development-evidence-only",
       "reason": "R6 requires newly generated review pairs and full canonical reference from the exact post-merge R5 main SHA."
-    }
+    },
+    "readme_site_validator_acceptance_required": true,
+    "canonical_review_acceptance_required": true
   },
   "final_tag_contract": {
     "tag": "v3.0.1",
@@ -188,7 +201,9 @@
     "post_acceptance_pre_tag_repository_changes_forbidden": true,
     "r5_dynamic_handoff": "docs/V3.0.1-R5-EVIDENCE.md",
     "post_merge_pre_tag_source_receipt_commit_allowed": false,
-    "live_post_merge_receipts": "GitHub Actions runs/artifacts and issue #304 until publication"
+    "live_post_merge_receipts": "GitHub Actions runs/artifacts and issue #304 until publication",
+    "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md",
+    "integrated_followup_policy": "PR #306 delivery surface is absorbed into PR #307 and must not be merged independently"
   },
   "publication_rebuild_allowed": false,
   "remove_after_acceptance": false,
@@ -212,7 +227,7 @@
       "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "pkgcheck": "4.1.0 PASS"
     },
-    "r5_state": "REOPENED_POST_MERGE_CANONICAL_REVIEW",
+    "r5_state": "REOPENED_INTEGRATED_FINAL_CANDIDATE",
     "merge_method": "squash",
     "post_merge_receipt_commit_forbidden": true,
     "previous_transport": {
@@ -232,6 +247,51 @@
       "fresh_correction_pr_complete_regression_required": true,
       "fresh_exact_main_stage_c_required": true,
       "pull_request": 307
+    },
+    "active_pull_request": 307,
+    "active_branch": "release/v3.0.1-post-merge-canonical-review",
+    "absorbed_followup_pr": {
+      "pr": 306,
+      "branch": "release/v3.0.1-readme-site-finalization",
+      "status": "SUPERSEDED_BY_INTEGRATED_PR307",
+      "files": [
+        "README.md",
+        "site/index.html",
+        ".github/workflows/pages.yml",
+        "tests/checks/validator_source.py",
+        "docs/V3.0.1-R6-EVIDENCE.md"
+      ]
+    },
+    "final_delivery_surface": {
+      "workflow": ".github/workflows/pages.yml",
+      "source_landing": "site/index.html",
+      "source_validator": "validator/",
+      "site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
+      "validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+      "pages_workflow_pass_required_on_final_main": true,
+      "live_url_verification_required": true,
+      "pages_setting_policy": "If Pages is not enabled for GitHub Actions, enable the external repository setting and rerun deployment on the same source SHA; do not bypass or change certified source merely to hide the failure."
     }
+  },
+  "site_delivery": {
+    "workflow": ".github/workflows/pages.yml",
+    "source_landing": "site/index.html",
+    "source_validator": "validator/",
+    "site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
+    "validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+    "pages_workflow_pass_required_on_final_main": true,
+    "live_url_verification_required": true,
+    "pages_setting_policy": "If Pages is not enabled for GitHub Actions, enable the external repository setting and rerun deployment on the same source SHA; do not bypass or change certified source merely to hide the failure."
+  },
+  "superseded_final_delivery_baseline": {
+    "sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+    "static_run": 34580317473,
+    "linux_run": 34580317462,
+    "linux_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "release_run": 34580317509,
+    "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "pkgcheck": "4.1.0 PASS",
+    "status": "technically-certified-superseded-by-readme-site-delivery-requirement",
+    "reason": "Maintainer required final README, project site and direct validator access after this Stage C completed; publication bytes must change and be recertified."
   }
 }

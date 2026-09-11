@@ -1,5 +1,5 @@
 {
-  "schema_version": 26,
+  "schema_version": 27,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 307,
@@ -30,7 +30,8 @@
       "conversation_memory"
     ],
     "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md"
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -42,6 +43,8 @@
   },
   "scope": {
     "release_blocking": [
+      "integrated_post_merge_canonical_review_corrections",
+      "final_readme_site_pages_delivery_and_live_validator_link",
       "exact_sha_release_recertification_and_human_acceptance"
     ],
     "closed_release_blockers": [
@@ -162,6 +165,20 @@
           "pkgcheck": "4.1.0 PASS"
         }
       }
+    },
+    "final_delivery_surface": {
+      "status": "INTEGRATED_IN_PR307",
+      "branch": "release/v3.0.1-post-merge-canonical-review",
+      "readme": "README.md",
+      "site": "site/index.html",
+      "pages_workflow": ".github/workflows/pages.yml",
+      "validator_source": "validator/",
+      "expected_site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
+      "expected_validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+      "pages_must_be_live_before_r6": true,
+      "r6_source_edits_allowed": false,
+      "absorbed_from_pr": 306,
+      "active_pr": 307
     }
   },
   "work_packages": {
@@ -618,7 +635,7 @@
       }
     },
     "R5": {
-      "status": "REOPENED_POST_MERGE_CANONICAL_REVIEW",
+      "status": "REOPENED_INTEGRATED_FINAL_CANDIDATE",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -669,14 +686,72 @@
         "abntexto-ufc/bibliography.def and backmatter.def: remove empty toclabelbox from unnumbered post-textual TOC entries",
         "template/main.tex and chapters: do not enable/populate/print remissive index by default; preserve optional user instructions",
         "reference-document/reference-corpus gates updated to enforce corrected presentation"
+      ],
+      "active_branch": "release/v3.0.1-post-merge-canonical-review",
+      "active_pr": 307,
+      "absorbed_followup_pr": {
+        "pr": 306,
+        "branch": "release/v3.0.1-readme-site-finalization",
+        "status": "SUPERSEDED_BY_PR307",
+        "stage_a_prior_evidence": {
+          "source_sha": "5a86f2ec35537bef465557a7cea242a4b64be08e",
+          "static": "#498 PASS",
+          "linux": "#419 PASS",
+          "release": "#133 PASS"
+        }
+      },
+      "integrated_scope": [
+        "canonical approval date and three-member committee",
+        "post-textual TOC empty-label removal with corrected regression semantics",
+        "canonical remissive index absent, optional API retained",
+        "final README",
+        "site/index.html",
+        "GitHub Pages workflow",
+        "direct Web/Lite validator delivery"
+      ],
+      "failed_development_runs": [
+        {
+          "source_sha": "cb9c7098958a602dcbb39a11b8e22ef22303a996",
+          "workflow": "Linux Integration",
+          "run_number": 421,
+          "run_id": 34595136854,
+          "status": "FAIL",
+          "scope": "complete",
+          "cause": "reference-corpus compared unnumbered post-textual TOC title x-origin against numbered section-title x-origin after intentional empty-label removal",
+          "corrective_action": "separate numbered and unnumbered TOC alignment invariants; do not restore empty toclabelbox"
+        },
+        {
+          "source_sha": "cb9c7098958a602dcbb39a11b8e22ef22303a996",
+          "workflow": "Linux Release Check",
+          "run_number": 135,
+          "run_id": 34595136941,
+          "status": "FAIL",
+          "repository_summary": "SCOPE=complete PASS=36 FAIL=1 SKIP=1",
+          "cause": "same reference-corpus TOC alignment regression as Linux #421",
+          "corrective_action": "same test-contract correction; runtime semantics unchanged"
+        }
+      ],
+      "stage_a_required": [
+        "Static PASS including README/site/Pages contract",
+        "Linux Integration complete PASS including Web/Lite E2E",
+        "Linux Release Check complete PASS and current pkgcheck",
+        "canonical reference and reference-corpus PASS",
+        "distribution and seven review-pair gates PASS"
+      ],
+      "stage_c_additional": [
+        "GitHub Pages deployment PASS on exact main",
+        "live project site reachable",
+        "live /validator/ reachable and serves tracked Web/Lite app",
+        "README delivery links verified"
       ]
     },
     "R6": {
       "status": "PENDING",
-      "blocked_by": "R5 exact-main certification and artifact inspection"
+      "blocked_by": "integrated R5 Stage A -> squash -> exact-main Stage C + Pages/live checks",
+      "evidence": "docs/V3.0.1-R6-EVIDENCE.md"
     }
   },
-  "current_next_action": "Resolve post-merge correction PR #307 on branch release/v3.0.1-post-merge-canonical-review. Require Static + Linux complete/Web-Lite E2E + Linux Release Check/current pkgcheck on its exact head; inspect regenerated canonical/reference and distribution artifacts, verify approval page/TOC/no rendered index, and expose the regenerated CTAN ZIP. Then squash-merge and repeat exact-main Stage C.",
+  "current_next_action": "Use integrated PR #307 only. Require its exact head to contain canonical/runtime corrections plus absorbed PR #306 README/site/Pages delivery. Run Static + Linux complete/Web-Lite + Linux Release Check/current pkgcheck; inspect corrected canonical approval/TOC/index behavior and delivery files. Close #306 as superseded, then squash-merge #307 only after Stage A PASS. Resolve new exact main SHA, repeat Stage C, require Pages deployment/live project and /validator/ URLs, inspect exact-main artifacts, then enter R6.",
   "previous_pull_request": {
     "number": 305,
     "status": "MERGED",

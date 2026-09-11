@@ -32,8 +32,8 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
 | R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | REOPENED_POST_MERGE_CANONICAL_REVIEW — exact-main certification invalidated by maintainer canonical review |
-| R6 | PENDING — maintainer acceptance and publication |
+| R5 | REOPENED_INTEGRATED_FINAL_CANDIDATE — canonical review + README/site/Pages must certify together in #307 |
+| R6 | PENDING — maintainer acceptance of PDFs + README/site/validator delivery, then publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
 Never treat a SHA copied from this document as current Git state; resolve the branch dynamically first.
@@ -74,15 +74,23 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 
 R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 dynamic candidate transport
+## R5 integrated final candidate transport
 
-PR #305 was squash-merged to canonical `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`. Maintainer review performed after that transport found release-blocking canonical presentation defects before R6/tag/publication. Stage C is therefore invalidated and R5 is reopened on a new post-merge correction branch.
+PR #305 was squash-merged to canonical `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`. Its first exact-main Stage C technically passed, but it is not the final candidate because two release-blocking review batches were opened before R6/tag/publication:
 
-R5 still uses exactly one release marker: `release/v3-release-candidate.json`. The post-merge correction branch must change that marker so its PR executes a fresh complete regression. After the correction PR is green, squash-merge it to `main`, resolve the new exact `main` SHA dynamically and repeat Static, automatic complete Linux Integration (including Web/Lite host E2E), Linux Release Check/current CTAN `pkgcheck`, artifact inspection and maintainer visual acceptance.
+1. canonical presentation review: concrete approval date; advisor + two examiners only; removal of empty-label punctuation from unnumbered post-textual TOC entries; canonical remissive index no longer printed while the optional API remains available;
+2. final delivery surface: comprehensive root README, project landing page, pinned GitHub Pages workflow and direct Web/Lite validator delivery.
 
-The 2026-09-11 canonical corrections are: concrete approval date; three-member committee with name/institution only; removal of empty-label punctuation in unnumbered post-textual TOC entries; and removal of the printed remissive index from the canonical example while retaining the optional user capability/documentation.
+PR #306 carried the delivery-only batch and passed its own Stage A, but it must **not** be merged independently. Its delivery files are absorbed into active PR #307 so runtime/TCC and README/site/Pages bytes are certified as one final source state. After absorption, #306 is superseded by #307.
 
-The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
+R5 continues to use exactly one marker: `release/v3-release-candidate.json`. The integrated #307 head must pass Static, Linux Integration `complete` including productive Web/Lite Chrome E2E, Linux Release Check/current CTAN `pkgcheck`, canonical reference, distribution and seven review-pair gates. The first #307 head `cb9c7098958a602dcbb39a11b8e22ef22303a996` failed Linux #421 / Release #135 because `reference-corpus` still compared unnumbered post-textual TOC titles against the x-origin of numbered titles. The runtime output itself reflected the intended removal of the empty label box. The gate is corrected to compare numbered entries with numbered entries and unnumbered post-textual entries with each other, while still requiring the title itself to begin the TOC line.
+
+After the integrated PR is green, squash-merge it to `main`, resolve the new exact `main` SHA dynamically and repeat Stage C. Stage C additionally requires the GitHub Pages deployment and live checks for:
+
+- `https://tiagosombrra.github.io/abntexto-ufc/`
+- `https://tiagosombrra.github.io/abntexto-ufc/validator/`
+
+The R5 source documents remain a dynamic state machine so no receipt-only commit is needed after the final squash merge. Once exact-main Stage C is accepted, use immutable Actions/artifacts and issue #304 as live receipts until R6/tag/publication.
 
 ## Mandatory phase-end regression and release invariant
 
