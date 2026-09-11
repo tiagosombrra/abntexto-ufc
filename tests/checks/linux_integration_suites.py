@@ -92,8 +92,10 @@ def main() -> None:
         "Run Web/Lite browser E2E",
         "tests/integration/web-lite-e2e.py",
         "artifacts/validation/web-lite-positive.pdf",
-        "artifacts/validation/web-lite-e2e.json",
-        "artifacts/validation/web-lite-chromedriver.log",
+        "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json",
+        "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log",
+        "WEB_LITE_EVIDENCE_DIR",
+        'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
         "Upload Web/Lite browser evidence",
         "web-lite-e2e-${{ github.run_id }}",
     ):

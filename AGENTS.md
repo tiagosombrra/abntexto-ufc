@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, release metada
 2. read `docs/V3-CONTINUATION.md` first;
 3. read `release/v3.0.1-final-corrections.json`;
 4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`;
-5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, and the current active lot R3 uses `docs/V3.0.1-R3-EVIDENCE.md`;
+5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, and the current active lot R4 uses `docs/V3.0.1-R4-EVIDENCE.md`;
 6. inspect issue #304 and PR #305 when remote GitHub state is available;
 7. use older v3 roadmap, recovery and certification documents only as historical/background evidence when the current handoff or machine state points to them.
 
@@ -31,7 +31,7 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
-| R4 | CORRECTIVE_COMMIT_IN_CI — static package PASS; fail-safe browser startup diagnostics under validation |
+| R4 | CORRECTIVE_COMMIT_IN_CI — static package PASS; host evidence-path correction under validation |
 | R5 | PENDING — immutable exact-SHA phase-end regression |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
@@ -72,7 +72,7 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 
 ## Validator boundary
 
-CLI/Deep and Web/Lite are distinct capability surfaces. Web/Lite must never claim Deep-only proof as PASS. R4 is active. The known defect is that `validator/app.js` imports `./normative-catalog.js` while that module is absent from the tracked static validator tree; synthetic cross-surface vectors do not prove the actual canonical PDF through the browser analysis path. R4 must close both issues before release. Its evidence authority is `docs/V3.0.1-R4-EVIDENCE.md`.
+CLI/Deep and Web/Lite are distinct capability surfaces. Web/Lite must never claim Deep-only proof as PASS. R4 is active. The missing-module entry defect is already closed in source: tracked `validator/normative-catalog.js` is regenerated and byte-compared by the static contract, and relative-module closure passes. The remaining R4 gate is dynamic: a real canonical/reference PDF and a valid non-A4 negative PDF must traverse the productive browser UI/analyze path in Chrome. Current failures are host-harness startup/evidence-path failures before PDF analysis, not accepted validator verdicts. R4 evidence authority is `docs/V3.0.1-R4-EVIDENCE.md`.
 
 ## Mandatory phase-end regression and release invariant
 

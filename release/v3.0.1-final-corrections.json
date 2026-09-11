@@ -1,5 +1,5 @@
 {
-  "schema_version": 21,
+  "schema_version": 22,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
@@ -130,9 +130,10 @@
       ],
       "host_check": "tests/integration/web-lite-e2e.py",
       "host_browser": "Chrome/Chromium via chromedriver",
-      "evidence": "artifacts/validation/web-lite-e2e.json",
+      "evidence": "${RUNNER_TEMP}/abntexto-ufc-web-lite/web-lite-e2e.json",
       "complete_scope_also_runs_browser_e2e": true,
-      "fourth_workflow_added": false
+      "fourth_workflow_added": false,
+      "driver_log": "${RUNNER_TEMP}/abntexto-ufc-web-lite/web-lite-chromedriver.log"
     }
   },
   "work_packages": {
@@ -394,7 +395,8 @@
           "pdfa.deep=MANUAL REVIEW"
         ],
         "no_upload_api": true,
-        "public_deployment_claim": false
+        "public_deployment_claim": false,
+        "evidence_dir": "${RUNNER_TEMP}/abntexto-ufc-web-lite"
       },
       "changed_surfaces": [
         "validator/normative-catalog.js",
@@ -412,8 +414,9 @@
         "release/v3.0.1-final-corrections.json"
       ],
       "pending_acceptance": [
-        "Static Contract PASS on exact corrective R4 HEAD",
-        "Linux Integration web-lite container suite PASS on exact corrective R4 HEAD",
+        "Static Contract PASS on exact #414 corrective successor",
+        "Linux Integration web-lite container suite PASS on exact #414 corrective successor",
+        "host RUNNER_TEMP browser evidence directory writable",
         "ChromeDriver session starts and productive UI is reached",
         "real Chrome productive UI positive PDF evidence PASS",
         "real Chrome productive UI negative non-A4 evidence PASS",
@@ -475,6 +478,32 @@
           "run_id": 34536446905,
           "status": "PASS",
           "source_sha": "532a7996613fea0039025d073d00d53e63df707e"
+        },
+        {
+          "workflow": "Static Contract",
+          "run_number": 493,
+          "run_id": 34539569313,
+          "status": "PASS",
+          "source_sha": "6560a0369e20b953c8ae8321a9e5a21317451735"
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 414,
+          "run_id": 34539569312,
+          "status": "FAIL",
+          "source_sha": "6560a0369e20b953c8ae8321a9e5a21317451735",
+          "scope": "web-lite",
+          "container_summary": "PASS=3 FAIL=0 SKIP=0",
+          "browser_pdf_analysis_reached": false,
+          "cause": "Host E2E could not open artifacts/validation/web-lite-chromedriver.log because the directory was created by the TeX container and was not host-writable.",
+          "corrective_action": "Keep the positive PDF as read-only workspace input; write browser JSON/log only under host-owned RUNNER_TEMP and upload from there. No sudo/ownership mutation or PDF assertion change."
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 128,
+          "run_id": 34539569326,
+          "status": "PASS",
+          "source_sha": "6560a0369e20b953c8ae8321a9e5a21317451735"
         }
       ],
       "corrective_changes": [
@@ -483,7 +512,10 @@
         "tests/checks/linux_integration_suites.py: enforce ChromeDriver-log artifact wiring",
         "tests/integration/web-lite-e2e.py: bind positive/negative browser verdicts to exact input SHA-256 and byte size",
         ".github/workflows/linux-integration.yml: evidence upload condition depends only on JSON/ChromeDriver diagnostics, not the positive PDF snapshot",
-        "tests/integration/web-lite-e2e.py: fail-safe ChromeDriver stdout/stderr capture plus early-exit/log-tail diagnostics"
+        "tests/integration/web-lite-e2e.py: fail-safe ChromeDriver stdout/stderr capture plus early-exit/log-tail diagnostics",
+        ".github/workflows/linux-integration.yml: move host browser evidence from container-owned artifacts/validation to runner-owned RUNNER_TEMP",
+        "tests/checks/linux_integration_suites.py: enforce runner.temp Web/Lite evidence wiring",
+        "AGENTS.md: synchronize active-lot bootstrap and validator-state text to R4 reality"
       ]
     },
     "R5": {
@@ -493,5 +525,5 @@
       "status": "PENDING"
     }
   },
-  "current_next_action": "Inspect exact corrective R4 HEAD after #413. Require Static PASS and Linux scope=web-lite container PASS. Then require host Chrome E2E PASS; if startup still fails, a non-empty web-lite-chromedriver.log must be retained and used to diagnose before changing configuration. If PDF analysis runs, inspect exact input hashes and positive/negative assertions; Deep-only checks remain MANUAL REVIEW. Preserve failures; only exact-HEAD browser PASS closes R4 and opens R5."
+  "current_next_action": "Inspect exact #414 corrective successor. Require Static PASS, Linux scope=web-lite container PASS, writable RUNNER_TEMP browser evidence, Chrome startup, and productive UI E2E PASS. Inspect uploaded JSON/log and exact input hashes. Preserve #412/#413/#414. Do not weaken PDF assertions. Only exact-HEAD browser PASS closes R4 and opens R5."
 }
