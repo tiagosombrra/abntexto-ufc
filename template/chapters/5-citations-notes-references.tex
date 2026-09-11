@@ -8,11 +8,19 @@ Na citação indireta, a ideia da fonte é apresentada com redação própria. P
 
 \guianormativa{ABNT NBR 10520:2023}{A indicação de autoria e data deve seguir o sistema de citação adotado no documento. O projeto usa \texttt{biblatex-abnt} como infraestrutura e mantém regressões específicas para a apresentação prevista no escopo testado \parencite{abnt10520}.}
 
+\guiamecanismo{Use comandos do sistema bibliográfico configurado, como \texttt{\string\cite\{chave\}} para a forma parentética adotada pelo projeto e \texttt{\string\textcite\{chave\}} quando a autoria fizer parte da frase. A chave deve existir no arquivo \texttt{.bib}; não digite autor e ano manualmente para imitar uma citação.}
+
+\guiavalidacao{A suíte de bibliografia verifica formas parentéticas e narrativas, número de autores, autoria institucional, títulos sem autoria, desambiguação, múltiplas datas e ordenação, em ambos os motores Linux suportados pelo gate.}
+
 \subsection{Citação direta curta}
 
 Citações diretas curtas permanecem integradas ao parágrafo e usam sinais de citação apropriados. Para evitar reproduzir conteúdo protegido de uma norma técnica, o exemplo abaixo é deliberadamente sintético.
 
 \guiaexemplo{Uma citação curta pode ser demonstrada como \enquote{texto citado com poucas linhas}, seguida da indicação bibliográfica correspondente. Em um trabalho real, o conteúdo entre aspas deve reproduzir fielmente a fonte consultada e trazer os dados exigidos para localização.}
+
+\guiamecanismo{A fonte bibliográfica continua no arquivo \texttt{.bib}; o localizador é informado no comando de citação, por exemplo \texttt{\string\cite[p.~23]\{chave\}} quando a fonte real possuir essa página. Não invente página ou posição apenas para completar um exemplo.}
+
+\guiavalidacao{O gate de citação direta curta verifica apresentação e evidência de fonte/localizador em cenário próprio. O texto sintético deste guia testa apenas a forma visual e não recebe um localizador fictício.}
 
 \subsection{Citação direta longa}
 
@@ -20,15 +28,21 @@ Citações diretas curtas permanecem integradas ao parágrafo e usam sinais de c
 
 O documento de referência exercita fisicamente esse comportamento com um texto sintético na Seção~\ref{sec:catalogo-exemplos}. A suíte mede recuo, tamanho de fonte, espaçamento, ausência de aspas e separação do bloco em relação ao corpo. Em uma citação direta real, a indicação bibliográfica deve incluir a página ou outro localizador aplicável quando a fonte o fornecer; o texto sintético do corpus geométrico não recebe um localizador fictício.
 
+\guiamecanismo{Use o mecanismo de citação longa fornecido pela classe para o bloco e mantenha a referência bibliográfica associada à fonte real. Não simule o recuo com espaços, listas ou margens locais.}
+
 \subsection{Citação de citação}
 
 O recurso conhecido como citação de citação deve ser usado com parcimônia, preferindo-se a consulta à fonte original sempre que possível. Quando necessário, a apresentação de \textit{apud} segue a política bibliográfica e a NBR 10520 vigente.
 
 \guiapolitica{O repositório possui cenários específicos para verificar a apresentação de \textit{apud}. O fato de o template suportar o recurso não elimina a responsabilidade acadêmica de consultar a fonte original quando ela estiver disponível.}
 
+\guiamecanismo{A API bibliográfica exercitada pelo projeto oferece \texttt{\string\apud} para a forma parentética e \texttt{\string\textapud} para a forma narrativa. Em \texttt{\string\apud}, informe as duas chaves bibliográficas --- fonte original e fonte consultada --- e, quando existirem, os localizadores opcionais correspondentes. As duas chaves precisam existir na base bibliográfica, mas a lista final deve refletir corretamente a fonte efetivamente consultada.}
+
+\guiavalidacao{O gate \texttt{bibliography} chama o cenário dedicado de \textit{apud} e verifica, entre outros pontos, forma parentética/narrativa, itálico de \textit{apud} e a presença da fonte consultada sem inserir indevidamente a fonte original na lista final.}
+
 \subsection{Notas de rodapé}
 
-Notas podem complementar uma informação sem interromper excessivamente o fluxo do parágrafo. Sua tipografia reduzida foi descrita na Seção~\ref{sec:formatacao-geral}.
+Notas podem complementar uma informação sem interromper excessivamente o fluxo do parágrafo. Sua tipografia e um exemplo físico foram apresentados na Seção~\ref{sec:formatacao-geral}.
 
 \guiaexemplo{Use notas para informação realmente complementar. Referências bibliográficas não devem ser transferidas arbitrariamente para notas apenas para contornar o sistema de citações configurado no trabalho.}
 
@@ -40,10 +54,16 @@ O arquivo \texttt{backmatter/references.bib} demonstra tipos bibliográficos dif
 
 \guiaexemplo{Uma referência com DOI só apresenta DOI quando esse identificador pertence ao documento referenciado. De modo semelhante, URL e data de acesso são usados quando pertinentes ao tipo de fonte e à regra bibliográfica aplicável.}
 
+\guiamecanismo{Declare o banco com \texttt{\string\ufcAddBibliographyResource} e informe, como argumento, o caminho \texttt{backmatter/references.bib}. Gere a lista final com \texttt{\string\ufcPrintReferences}. O fluxo de compilação do projeto executa Biber automaticamente quando o arquivo de controle indicar fontes bibliográficas.}
+
+\guiavalidacao{Os gates \texttt{bibliography} e \texttt{reference-spacing}, juntamente com os cenários da NBR 6023:2025, verificam semântica de referências e sua apresentação no PDF.}
+
 \subsection{Normas técnicas como referências}
 
 As normas citadas neste guia aparecem também nas referências para que o leitor saiba qual edição orienta cada seção. O projeto não redistribui o texto integral das normas ABNT; a comunidade UFC pode utilizar os meios institucionais autorizados para consulta das normas técnicas.
 
 \guiainstitucional{O Sistema de Bibliotecas da UFC disponibiliza orientação sobre acesso à coleção de normas técnicas. Este PDF identifica a norma e a edição adotadas, mas não substitui a consulta à publicação oficial \parencite{ufcnormastecnicas}.}
 
-\index{citação direta}\index{citação indireta}\index{referências}\index{apud}\index{DOI}
+\guiavalidacao{O contrato estático verifica integridade entre fontes normativas registradas, regras e referências usadas pela documentação. A existência de uma chave bibliográfica no exemplo não promove, por si só, uma fonte histórica a autoridade vigente.}
+
+\index{citação direta}\index{citação indireta}\index{referências}\index{apud}\index{DOI}\index{biblatex}

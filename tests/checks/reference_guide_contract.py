@@ -124,7 +124,7 @@ def audit_librarian_reference_content() -> tuple[list[str], dict[int, dict[str, 
     }
     corpus = "\n".join(chapters.values())
     intro_path = "template/chapters/1-introduction.tex"
-    examples_path = "template/chapters/formatting-examples.tex"
+    examples_path = "template/chapters/6-academic-objects.tex"
     intro = chapters.get(intro_path, "")
     examples = chapters.get(examples_path, "")
 

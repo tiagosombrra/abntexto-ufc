@@ -46,7 +46,7 @@ Texto do trabalho.
 \end{document}
 ```
 
-Consulte `template/main.tex` para um exemplo editável mais completo e `docs/ctan-example.tex` para o exemplo mínimo distribuído com o pacote CTAN.
+Consulte `template/main.tex` para o TCC canônico comentado e `docs/ctan-example.tex` para o exemplo mínimo do pacote CTAN. Nos bundles públicos de template e Overleaf, o TCC completo também é fornecido compilado como `abntexto-ufc-reference.pdf` a partir da mesma fonte pública sanitizada.
 
 ## Perfis de documento
 
@@ -75,19 +75,21 @@ A base normativa e a política de vigência estão registradas em:
 
 **O projeto não redistribui o brasão da UFC nem qualquer outra marca institucional da Universidade.** Também não redistribui arquivos proprietários das fontes Microsoft Arial ou Times New Roman.
 
-Quando autorizado a utilizar uma marca institucional, o usuário deve fornecer o arquivo localmente por meio da configuração prevista pela classe. O bundle enviado à CTAN é validado para rejeitar ativos institucionais e fontes proprietárias.
+Quando autorizado a utilizar uma marca institucional, o usuário deve fornecer o arquivo localmente por meio da configuração prevista pela classe. O bundle enviado à CTAN é validado para rejeitar ativos institucionais e fontes proprietárias. Os bundles públicos de template/Overleaf também sanitizam `main.tex` para `coat-of-arms = false`; o PDF de referência distribuído é compilado dessa fonte sanitizada e não do PDF de desenvolvimento que possa usar uma marca fornecida localmente.
 
 ## Distribuições
 
 A publicação da versão 3.0.1 produz três artefatos com finalidades distintas:
 
-- `abntexto-ufc-3.0.1.zip`: pacote canônico e enxuto para CTAN. O runtime distribuído é **somente `abntexto-ufc.cls`**; todos os módulos `.def` do repositório são incorporados deterministicamente dentro da classe e nenhum `.def` é enviado;
-- `abntexto-ufc-template-3.0.1.zip`: projeto editável para uso local, que pode preservar a organização modular do repositório;
-- `abntexto-ufc-overleaf-3.0.1.zip`: projeto autocontido para upload no Overleaf, incluindo a revisão fixada de `abntexto.cls` e podendo preservar a organização modular do repositório.
+- `abntexto-ufc-3.0.1.zip`: pacote canônico e enxuto para CTAN. O runtime distribuído é **somente `abntexto-ufc.cls`**; todos os módulos `.def` do repositório são incorporados deterministicamente dentro da classe e nenhum `.def` é enviado. Esse pacote mantém um exemplo mínimo próprio e não carrega o TCC pedagógico completo;
+- `abntexto-ufc-template-3.0.1.zip`: projeto editável para uso local, com a fonte pública completa do TCC e o PDF gerado `abntexto-ufc-reference.pdf`; `abntexto` permanece dependência externa;
+- `abntexto-ufc-overleaf-3.0.1.zip`: projeto autocontido para upload no Overleaf, incluindo a revisão fixada de `abntexto.cls`, a mesma fonte pública completa e `abntexto-ufc-reference.pdf`.
 
 Somente o primeiro arquivo é destinado à CTAN. Os bundles de template e Overleaf são conveniências de distribuição do GitHub e não fazem parte do upload CTAN.
 
-Essa separação é deliberada: a arquitetura de desenvolvimento continua modular e testável, enquanto o artefato CTAN oferece uma classe única, sem dependência em arquivos `.def` próprios do projeto.
+Há, portanto, dois papéis intencionalmente distintos. O exemplo CTAN é pequeno e serve para documentação/compilação isolada do pacote; `abntexto-ufc-reference.pdf` é o guia pedagógico completo para o usuário. O gate de distribuição extrai os bundles de template e Overleaf, recompila o `main.tex` sanitizado sob o mesmo contrato determinístico e exige que o SHA-256 do PDF recompilado seja idêntico ao PDF embutido.
+
+Essa separação preserva a arquitetura de desenvolvimento modular e testável, mantém o artefato CTAN enxuto e oferece nos bundles de uso um documento completo que demonstra a estrutura e os recursos do projeto.
 
 ## Desenvolvimento e validação
 
@@ -100,7 +102,7 @@ make release-check
 make distribution-bundles
 ```
 
-`make release-check` executa a regressão de release; `make distribution-bundles` produz os arquivos públicos de forma determinística e seus hashes SHA-256.
+`make release-check` executa a regressão de release; `make distribution-bundles` produz os arquivos públicos de forma determinística, incluindo o PDF completo de referência nos bundles de uso, e seus hashes SHA-256.
 
 ## Suporte
 

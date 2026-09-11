@@ -36,6 +36,8 @@ Os elementos pré-textuais identificam o trabalho, registram informações acad�
 
 \guiaexemplo{A ficha catalográfica está desativada no documento principal para demonstrar a política padrão do perfil. O comando correspondente permanece comentado em \texttt{main.tex} e pode ser habilitado quando o fluxo institucional exigir sua representação.}
 
+\guiamecanismo{A sequência concreta dos pré-textuais fica no próprio \texttt{main.tex}. Os comandos \texttt{\string\ufcPrintCover}, \texttt{\string\ufcPrintTitlePage}, \texttt{\string\ufcPrintApprovalPage} e os demais comandos \texttt{\string\ufcPrint...} mantêm a ordem visível explícita sem duplicar a diagramação de cada elemento.}
+
 \subsection{Elementos textuais}
 
 A parte textual é o núcleo acadêmico do trabalho. O template não impõe que todos os documentos usem os mesmos títulos de capítulo: a organização deve ser adequada ao gênero acadêmico, ao método, à área do conhecimento e às exigências do curso ou programa.
@@ -43,6 +45,8 @@ A parte textual é o núcleo acadêmico do trabalho. O template não impõe que 
 Neste modelo comentado, as seções textuais foram escolhidas para ensinar a própria estrutura do documento. Em um trabalho real, elas devem ser substituídas pelos capítulos efetivamente necessários à pesquisa.
 
 \guianormativa{ABNT NBR 6024:2012}{A numeração das seções é progressiva. O template suporta uma hierarquia controlada de seções e preserva a apresentação correspondente no sumário \parencite{abnt6024}.}
+
+\guiamecanismo{Use os comandos estruturais do \LaTeX{}, como \texttt{\string\section} e \texttt{\string\subsection}, em vez de digitar manualmente números ou aplicar formatação visual aos títulos. A classe produz a apresentação e o sumário a partir dessa estrutura.}
 
 \subsection{Elementos pós-textuais}
 
@@ -52,10 +56,12 @@ Depois do corpo textual, o documento pode apresentar referências, glossário, a
 
 \guianormativa{ABNT NBR 6034:2004}{O índice remissivo é um elemento pós-textual opcional. No documento de referência ele permanece habilitado para demonstrar o recurso e validar sua apresentação \parencite{abnt6034}.}
 
-\subsection{Contagem e exibição da paginação}
+\subsection{Paginação: visão estrutural}
 
-As folhas pré-textuais participam da progressão do documento, mas a apresentação do número de página segue a política aplicável ao início da parte textual. Em documentos frente e verso, a classe também controla o lado de início dos elementos que exigem abertura em página ímpar, respeitando as exceções documentais implementadas.
+Os pré-textuais fazem parte da progressão física do documento, enquanto a apresentação do número de página segue as regras aplicáveis à parte textual e ao modo de impressão. Em documentos frente e verso, a classe também precisa considerar o lado físico da folha e a abertura de elementos em página apropriada.
 
-\guiaexemplo{Este PDF está configurado em \texttt{print-mode=single-sided}. A matriz de testes do projeto também compila cenários frente e verso para verificar margens espelhadas, paginação e início em página apropriada.}
+\guiamecanismo{A opção \texttt{print-mode} define a política de anverso único ou frente e verso. A posição, a exibição dos números e o espelhamento de margens são controlados pela classe; não devem ser simulados com quebras, cabeçalhos ou deslocamentos manuais.}
+
+\guiavalidacao{Esta seção apresenta apenas a visão estrutural. As regras de geometria, número visível e comportamento frente e verso são consolidadas na Seção~\ref{sec:formatacao-geral} e protegidas pelos gates de layout, geometria de PDF e cenários duplex.}
 
 \index{elementos pré-textuais}\index{elementos textuais}\index{elementos pós-textuais}\index{paginação}

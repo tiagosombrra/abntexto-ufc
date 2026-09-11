@@ -31,7 +31,7 @@ function render(r){
  $("#counts").textContent=[PASS,FAIL,WARN,REVIEW,NA].map(s=>`${s}: ${r.checks.filter(c=>c.status===s).length}`).join(" · ");["#export-json","#export-csv","#print-report"].forEach(s=>$(s).disabled=false)
 }
 
-async function analyze(file,profile){
+export async function analyze(file,profile){
  const data=new Uint8Array(await file.arrayBuffer()),pdf=await pdfjsLib.getDocument({data}).promise,meta=await pdf.getMetadata(),outline=await pdf.getOutline(),js=await pdf.getJSActions().catch(()=>null);
  const pages=[],families=new Set();let tagged=false;
  for(let n=1;n<=pdf.numPages;n++){const p=await pdf.getPage(n),vp=p.getViewport({scale:1}),tc=await p.getTextContent(),st=await p.getStructTree().catch(()=>null);if(st)tagged=true;for(const it of tc.items){const f=tc.styles?.[it.fontName]?.fontFamily;if(f)families.add(f)}pages.push({n,w:vp.width,h:vp.height,items:tc.items,text:tc.items.map(i=>i.str).join(" ").replace(/\s+/g," ")})}
@@ -47,6 +47,8 @@ async function analyze(file,profile){
  if(acc){cs.push(ck("access.alt","Accessibility","Adequate alternative text","PDF/UA / WCAG",REVIEW,"Quality requires human review.","Review /Alt and decorative artifacts.",true,"manual"));cs.push(ck("access.order","Accessibility","Logical reading order","PDF/UA / WCAG",REVIEW,"Requires testing with assistive technology.","Review the reading order.",true,"manual"))}
  const reportChecks=cs.map(reportCheck);return {file:file.name,pages:pdf.numPages,profile,verdict:verdict(cs),normative_catalog:{schema_version:normativeCatalog.schema_version,reviewed_at:normativeCatalog.reviewed_at},checks:reportChecks,mode:"web-lite-local",generated_at:new Date().toISOString()};
 }
+
+export function getLastReport(){return report}
 
 renderNormativeBase();
 $("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert("Select a PDF.");const b=$("#analyze");b.disabled=true;b.textContent="Validating...";try{report=await analyze(f,$("#profile").value);render(report)}catch(e){console.error(e);alert(`Validation failed: ${e.message||e}`)}finally{b.disabled=false;b.textContent="Validate PDF"}});

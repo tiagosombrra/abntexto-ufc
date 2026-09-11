@@ -10,7 +10,7 @@
     {
       "id": "page-and-margins",
       "classification": "normative",
-      "source_file": "template/chapters/3-methodology.tex",
+      "source_file": "template/chapters/4-general-formatting.tex",
       "marker": "Papel e margens",
       "source_ids": [
         "abnt-nbr-14724-2024",
@@ -31,7 +31,7 @@
     {
       "id": "body-typography",
       "classification": "institutional",
-      "source_file": "template/chapters/3-methodology.tex",
+      "source_file": "template/chapters/4-general-formatting.tex",
       "marker": "Fonte, tamanho e cor",
       "source_ids": [
         "ufc-guia-trabalhos-2022"
@@ -47,7 +47,7 @@
     {
       "id": "section-numbering",
       "classification": "normative",
-      "source_file": "template/chapters/3-methodology.tex",
+      "source_file": "template/chapters/4-general-formatting.tex",
       "marker": "Seções e subseções",
       "source_ids": [
         "abnt-nbr-6024-2012"
@@ -61,7 +61,7 @@
     {
       "id": "dedication-layout",
       "classification": "institutional",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Dedicatória",
       "source_ids": [
         "ufc-guia-trabalhos-2022"
@@ -78,7 +78,7 @@
     {
       "id": "acknowledgements-layout",
       "classification": "institutional",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Agradecimentos",
       "source_ids": [
         "ufc-guia-trabalhos-2022"
@@ -97,7 +97,7 @@
     {
       "id": "epigraph-layout",
       "classification": "institutional",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Epígrafe",
       "source_ids": [
         "ufc-guia-trabalhos-2022"
@@ -120,7 +120,7 @@
     {
       "id": "summary-and-keywords",
       "classification": "normative",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Resumo, abstract e palavras-chave",
       "source_ids": [
         "abnt-nbr-6028-2021"
@@ -137,7 +137,7 @@
     {
       "id": "table-of-contents",
       "classification": "normative",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Sumário",
       "source_ids": [
         "abnt-nbr-6027-2012"
@@ -153,7 +153,7 @@
     {
       "id": "long-direct-quotation",
       "classification": "normative",
-      "source_file": "template/chapters/4-results.tex",
+      "source_file": "template/chapters/5-citations-notes-references.tex",
       "marker": "Citação direta longa",
       "source_ids": [
         "abnt-nbr-10520-2023"
@@ -169,7 +169,7 @@
     {
       "id": "reference-list-layout",
       "classification": "normative",
-      "source_file": "template/chapters/4-results.tex",
+      "source_file": "template/chapters/5-citations-notes-references.tex",
       "marker": "Lista de referências",
       "source_ids": [
         "abnt-nbr-6023-2025"
@@ -184,7 +184,7 @@
     {
       "id": "illustration-source-and-bounds",
       "classification": "normative",
-      "source_file": "template/chapters/formatting-examples.tex",
+      "source_file": "template/chapters/6-academic-objects.tex",
       "marker": "Regra geral para ilustrações",
       "source_ids": [
         "abnt-nbr-14724-2024",
@@ -201,7 +201,7 @@
     {
       "id": "numeric-tables",
       "classification": "normative",
-      "source_file": "template/chapters/formatting-examples.tex",
+      "source_file": "template/chapters/6-academic-objects.tex",
       "marker": "Tabelas numéricas",
       "source_ids": [
         "ibge-tabular-1993"
@@ -217,7 +217,7 @@
     {
       "id": "catalog-card-deposit",
       "classification": "institutional",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Ficha catalográfica",
       "source_ids": [
         "ufc-in-2-2026"
@@ -229,7 +229,7 @@
     {
       "id": "approval-signatures-deposit",
       "classification": "institutional",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Folha de aprovação",
       "source_ids": [
         "ufc-deposito-tcc-2026",
@@ -242,7 +242,7 @@
     {
       "id": "capes-acknowledgement",
       "classification": "institutional",
-      "source_file": "template/chapters/related-work.tex",
+      "source_file": "template/chapters/3-front-matter.tex",
       "marker": "Portaria CAPES nº 206/2018",
       "source_ids": [
         "capes-portaria-206-2018"
@@ -254,7 +254,7 @@
     {
       "id": "pdfa-deposit",
       "classification": "institutional",
-      "source_file": "template/chapters/5-conclusion.tex",
+      "source_file": "template/chapters/7-abntexto-ufc-resources-and-final-review.tex",
       "marker": "PDF/A",
       "source_ids": [
         "ufc-deposito-tcc-2026",
@@ -267,7 +267,7 @@
     {
       "id": "research-project-profile",
       "classification": "normative",
-      "source_file": "template/chapters/5-conclusion.tex",
+      "source_file": "template/chapters/7-abntexto-ufc-resources-and-final-review.tex",
       "marker": "Perfis de documento",
       "source_ids": [
         "abnt-nbr-15287-2025"
@@ -281,7 +281,7 @@
     {
       "id": "appendix-layout",
       "classification": "institutional",
-      "source_file": "template/chapters/5-conclusion.tex",
+      "source_file": "template/chapters/7-abntexto-ufc-resources-and-final-review.tex",
       "marker": "Apêndices",
       "source_ids": [
         "ufc-guia-trabalhos-2022"
@@ -297,7 +297,7 @@
     {
       "id": "annex-layout",
       "classification": "institutional",
-      "source_file": "template/chapters/5-conclusion.tex",
+      "source_file": "template/chapters/7-abntexto-ufc-resources-and-final-review.tex",
       "marker": "Anexos",
       "source_ids": [
         "ufc-guia-trabalhos-2022"
@@ -313,7 +313,7 @@
     {
       "id": "index-presentation",
       "classification": "normative",
-      "source_file": "template/chapters/5-conclusion.tex",
+      "source_file": "template/chapters/7-abntexto-ufc-resources-and-final-review.tex",
       "marker": "Índice",
       "source_ids": [
         "abnt-nbr-6034-2004"

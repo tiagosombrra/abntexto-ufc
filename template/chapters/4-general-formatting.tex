@@ -1,0 +1,83 @@
+\section{Formatação geral e organização da parte textual}\label{sec:formatacao-geral}
+
+A apresentação do texto deve ser controlada pela classe, e não por ajustes manuais espalhados pelo conteúdo. Esta seção resume as regras gerais que o documento de referência exercita, mostra onde o usuário as configura e indica quais gates medem o PDF produzido.
+
+\subsection{Papel e margens}
+
+\guianormativa{ABNT NBR 14724:2024}{O documento é produzido em papel A4. No anverso, a configuração adotada utiliza margens esquerda e superior de 3 cm e margens direita e inferior de 2 cm. Em impressão frente e verso, as margens laterais são espelhadas para preservar a margem interna maior \parencite{abnt14724}.}
+
+\guiaexemplo{Este PDF usa \texttt{print-mode=single-sided}. Os testes do repositório também geram páginas de verso e medem a geometria final para verificar o espelhamento das margens.}
+
+\guiamecanismo{Selecione o modo de impressão com \texttt{print-mode}. Papel e margens pertencem à classe e ao perfil; não use \texttt{geometry}, deslocamentos ou ajustes locais para compensar uma página específica sem antes demonstrar um defeito na implementação.}
+
+\guiavalidacao{Os gates de \texttt{layout}, \texttt{pdf-geometry} e os cenários normativos de página/margens medem o PDF final, em vez de inferir a geometria apenas a partir do fonte.}
+
+\subsection{Fonte, tamanho e cor}
+
+O corpo textual do documento usa tamanho 12. A API pública oferece as famílias \texttt{times} e \texttt{arial}; o modo \texttt{strict-font} diferencia a exigência de identidade literal da fonte e o uso de fallback portátil para desenvolvimento.
+
+\guianormativa{ABNT NBR 14724:2024 e política tipográfica UFC adotada}{O corpo textual é apresentado em tamanho 12 e em cor preta; tamanhos reduzidos são usados em contextos específicos, como citações longas, notas, paginação e partes de objetos.}
+
+\guiapolitica{Quando \texttt{strict-font=true}, a compilação deve falhar se a família literal solicitada não estiver disponível. Quando \texttt{strict-font=false}, o template pode usar uma família substituta explicitamente identificada para portabilidade. A certificação de Times New Roman e Arial literais é feita em uma rota Windows separada.}
+
+\guiamecanismo{Escolha a família por \texttt{font=times} ou \texttt{font=arial}. Use \texttt{strict-font=true} somente quando o ambiente tiver a fonte literal exigida. Bundles públicos não redistribuem fontes proprietárias da Microsoft.}
+
+\guiavalidacao{O gate \texttt{font-config} verifica a política de configuração. A certificação de identidade literal é separada da compilação portátil e não deve ser inferida apenas pela aparência semelhante do PDF.}
+
+\subsection{Incorporação de fontes no PDF}
+
+Escolher uma família tipográfica e incorporar a fonte ao PDF são propriedades diferentes. Um documento pode ter aparência correta no computador do autor e ainda depender de uma fonte externa que não foi incorporada ao arquivo final.
+
+\guiapolitica{O projeto trata a incorporação como propriedade de preservação e portabilidade do PDF gerado. O modo portátil pode usar uma família substituta permitida, mas as fontes efetivamente usadas no arquivo final devem satisfazer os gates de incorporação aplicáveis à release.}
+
+\guiamecanismo{O usuário normalmente não precisa inserir comandos de incorporação no texto. A seleção de motor/fonte e a geração do PDF ficam no fluxo da classe; a conferência é feita sobre o PDF final. Não confunda ``fonte incorporada'' com ``Times New Roman literal'': são verificações diferentes.}
+
+\guiavalidacao{A release inspeciona as fontes do PDF e rejeita dependências não incorporadas nos perfis aos quais o gate se aplica. Essa evidência complementa, mas não substitui, a certificação Windows de identidade literal de Times New Roman/Arial.}
+
+\subsection{Espaçamento e parágrafos}
+
+\guianormativa{ABNT NBR 14724:2024 e escopo UFC auditado}{O corpo usa espaçamento 1,5. Os parágrafos do corpo adotam recuo de primeira linha de 2 cm e não recebem espaço vertical adicional entre si. Contextos específicos podem usar espaço simples e tamanho reduzido.}
+
+O recuo de primeira linha é uma propriedade do parágrafo; não deve ser simulado com espaços, tabulações ou comandos manuais no início de cada parágrafo. Da mesma forma, a separação entre parágrafos não deve ser criada com linhas em branco adicionais destinadas apenas a alterar a aparência.
+
+\guiamecanismo{Escreva parágrafos normalmente no fonte e deixe a classe aplicar recuo e espaçamento. Ambientes especiais, como citações longas, notas e referências, possuem políticas próprias e não devem herdar uma correção manual criada para o corpo.}
+
+\subsection{Paginação e frente/verso}
+
+A contagem das folhas e a exibição dos números são controladas pela classe. No fluxo exercitado pelo template, os números tornam-se visíveis a partir da primeira página textual e usam tamanho reduzido.
+
+\guianormativa{ABNT NBR 14724:2024}{A apresentação da paginação acompanha a progressão física do documento e respeita a distinção entre anverso e verso. O template posiciona o número no canto superior externo da página conforme o modo de impressão.}
+
+\guiamecanismo{A opção \texttt{print-mode=single-sided} mantém a política de anverso único; o modo frente e verso ativa a política duplex e o espelhamento correspondente. Não force números, cabeçalhos ou páginas em branco manualmente para obter uma aparência local.}
+
+\guiavalidacao{Os gates de layout, paginação, \texttt{duplex-frontmatter} e \texttt{duplex-backmatter} exercitam contagem, número visível, margens espelhadas e abertura de elementos em páginas apropriadas.}
+
+\subsection{Seções e subseções}
+
+\guianormativa{ABNT NBR 6024:2012}{A numeração é progressiva e a hierarquia deve ser refletida de forma consistente no corpo e no sumário \parencite{abnt6024}.}
+
+\guiapolitica{A classe limita sua hierarquia pública exercitada a cinco níveis. Cada seção primária inicia em nova página, e a classe controla o espaçamento e a apresentação do indicador numérico.}
+
+Evite aplicar negrito, tamanho, alinhamento ou espaçamento manualmente aos títulos para “corrigir” uma página isolada. Se um título estiver incorreto, a correção deve ocorrer na configuração ou na implementação do nível correspondente.
+
+\guiamecanismo{Use \texttt{\string\section}, \texttt{\string\subsection} e os níveis estruturais suportados. A numeração é gerada pelo \LaTeX{} e pela classe; não inclua o número como parte do texto do título.}
+
+\subsection{Notas de rodapé}
+
+Notas de rodapé são apresentadas com tamanho reduzido e espaço simples. A composição deve permanecer legível e claramente separada do corpo. Este parágrafo contém uma nota física de demonstração.\footnote{Nota de exemplo usada para conferir a apresentação do rodapé; o conteúdo é apenas demonstrativo.}
+
+\guiainstitucional{No escopo auditado atual, o texto da nota usa 10 pt, espaçamento simples e alinhamento suspenso nas linhas de continuação. O separador é exercitado com 5 cm a partir da margem esquerda.}
+
+\guiamecanismo{Use \texttt{\string\footnote} no ponto discursivo correspondente. Não aplique tamanho, espaçamento ou recuo manual dentro da nota; a classe centraliza essa apresentação.}
+
+\guiavalidacao{Cenários específicos verificam texto e separador de rodapé no PDF final, incluindo tamanho, espaçamento, alinhamento e extensão do separador.}
+
+\subsection{Alíneas e subalíneas}
+
+Quando uma enumeração fizer parte da estrutura discursiva do texto, o template fornece ambientes para alíneas e subalíneas que preservam a apresentação adotada pela classe. Enumerações comuns do \LaTeX{} continuam disponíveis quando não representam a estrutura normativa de alíneas.
+
+\guiaexemplo{A Seção~\ref{sec:catalogo-exemplos} apresenta alíneas, subalíneas e uma enumeração comum para comparação visual.}
+
+\guiamecanismo{Use \texttt{ufclettereditems} e \texttt{ufcdashedsubitems} quando a estrutura precisar da apresentação de alíneas/subalíneas fornecida pelo projeto. Para uma lista meramente enumerativa, use os ambientes comuns do \LaTeX{} conforme a finalidade do texto.}
+
+\index{margens}\index{fonte}\index{incorporação de fontes}\index{espaçamento}\index{parágrafo}\index{paginação}\index{seções}\index{notas de rodapé}

@@ -1,116 +1,132 @@
-# V3 Continuation Handoff — Release Recovery 3.0.1
+# V3 Continuation Handoff — v3.0.1 final corrections
 
 Updated: 2026-09-10
-Status: RELEASE — COMBINED PR #302 + 3.0.1 RECOVERY / FINAL EXACT-MAIN RECERTIFICATION PENDING
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
 
-This file is the shortest safe entry point for continuing v3 work from a new ChatGPT conversation, Codex session or local clone.
+This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
-## Canonical starting point
+## Start here
 
-| Fact | Current state |
+1. Resolve the actual branch, HEAD and `origin/main` from Git.
+2. Read `AGENTS.md`.
+3. Read this file.
+4. Read `release/v3.0.1-final-corrections.json`.
+5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
+6. For the active lot R5, read `docs/V3.0.1-R5-EVIDENCE.md`.
+7. Continue from `current_next_action` in the machine state.
+
+Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
+
+## Canonical state
+
+| Fact | State |
 |---|---|
 | Repository | `tiagosombrra/abntexto-ufc` |
-| Canonical branch | `main` — always resolve current SHA dynamically from Git |
-| Active roadmap phase | **Release** |
-| Recovery target | `3.0.1` |
-| Recovery work branch | `release/v3.0.1-recovery` — short-lived; canonical state remains `main` |
-| Publication hardening | PR #297 merged |
-| Post-hardening control synchronization | PR #298 merged, anchor `05399473827da7cf6b6c8bac36edc7115481773f` |
-| Final release-gate integration | PR #301 merged as `395899e1b2336ed268335d68e59e03452880c15e` |
-| Post-v3.0.0 runtime fix | PR #302 squash-merged as `6d06d4ed42b2187b1483ea219ee055cfe975ece2`; populated unified illustration-list renderer corrected and regression-covered |
-| Pre-recovery technical evidence | run `34419086322`: `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck` PASS; historical baseline only because it predates #302 and recovery bytes |
-| Public `v3.0.0` | exists on `05399473827da7cf6b6c8bac36edc7115481773f`; premature/superseded for final publication |
-| Final candidate semantics | exact canonical `main` SHA containing PR #302 plus the 3.0.1 recovery and fresh certification |
-| Librarian review | **34 PASS / 0 PARTIAL / 0 FAIL / 0 NORMATIVE-REVIEW** |
-| CTAN upload contract | exactly one archive: `abntexto-ufc-3.0.1.zip` |
-| CTAN runtime contract | exactly one generated `abntexto-ufc.cls`; zero project-owned `.def` files |
-| Human gate | final PDF + `.tex` for seven supported profiles; explicit maintainer approval required |
-| Tag contract | certified SHA = visually approved SHA = `v3.0.1` SHA = publication source SHA |
+| Canonical branch | `main`; resolve SHA dynamically |
+| Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
+| Active branch | `release/v3.0.1-final-corrections` |
+| Tracking issue / PR | #304 / #305 |
+| PR state | CI vehicle only; merge remains blocked |
+| Target | `v3.0.1` |
+| Publication | BLOCKED until R6 |
+| Public `v3.0.0` | historical/superseded; never retarget |
 
-`docs/V3-RELEASE-RECOVERY.md` records why the recovery uses `3.0.1`, why `v3.0.0` is not silently retargeted, and why PR #302 must be included in the final candidate.
+## R0/R1 — DONE
 
-## What remains closed
+R0 established the auditable correction control plane. R1 normalized the seven canonical chapter paths, established pedagogical/normative coverage and completed the coherent teaching rewrite.
 
-- Regression Audit;
-- Core Corrections;
-- Reference PDF Validation;
-- Scientific Article;
-- Final Certification;
-- consolidated librarian review: 34/34 PASS;
-- accepted v3 public API and normative semantics;
-- all runtime surfaces except the scoped populated unified illustration-list correction already merged through PR #302;
-- CTAN monolithic-runtime design: one generated class, 14 tracked modules inlined, zero project-owned `.def` files;
-- exclusion of UFC institutional marks and proprietary Microsoft fonts from CTAN.
+R1.3 acceptance source: `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa`.
 
-The recovery remains inside Release. PR #302 does not reopen prior phases; it is a scoped post-v3.0.0 defect correction that must be included in the final 3.0.1 regression.
+- Static #484 (`34488189988`): PASS.
+- Linux #405 (`34488190044`): PASS.
+- Linux scope: `reference-document`.
+- Summary: `PASS=3 FAIL=0 SKIP=0`.
 
-## Recovery state
+Detailed earlier failures and corrections remain in `docs/V3.0.1-R1.3-EVIDENCE.md`.
 
-The previously public `v3.0.0` GitHub Release was created before the final exact-SHA release invariant had been satisfied. Because public assets existed under that tag, the repository does not silently retarget it. Those assets are historical/superseded and are not eligible for final CTAN submission.
+## R2 — DONE
 
-The pre-recovery exact-main SHA `395899e1...` passed the automated release matrix and current CTAN `pkgcheck`, but it predates both PR #302 and the 3.0.1 recovery changes. Therefore, that evidence is baseline evidence only; the recovered release requires a new exact-SHA cycle over the combined state.
+R2 makes the complete PDF rooted at `template/main.tex` a first-class exact-SHA engineering release reference. Acceptance source: `514c128f542b00d4a10a9ad05ce7fc94f770ef55`.
 
-PR #302 corrected populated unified illustration-list rendering in `abntexto-ufc/objects.def`. Its regression fixture now creates a real illustration entry and the gate verifies that the `.loi` entry is written and rendered without unrecognized warnings or overflows. It was squash-merged to canonical `main` as `6d06d4ed42b2187b1483ea219ee055cfe975ece2` and reconciled into the recovery branch before candidate certification.
+- Static #486 (`34491624099`): PASS.
+- Linux #407 (`34491624073`): PASS, `SCOPE=smoke PASS=4 FAIL=0 SKIP=0`.
+- Linux Release Check #121 (`34491624158`): PASS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+- CTAN `pkgcheck 4.1.0`: PASS in the same release run.
+- Canonical PDF SHA-256: `bd8964c8a37940924758d44eef61bc079f5101cf25cd180b42c3df22e00d1d3a`.
+- Two independent clean builds are byte-identical; font embedding, portable CLI/Deep validation, PDF/A-2b and Unicode extraction are PASS.
+- Dedicated artifact: `abntexto-ufc-v3.0.1-canonical-reference-34491624158`, id `10158771936`, archive digest `sha256:0677b776c3eb3a358f91a06119973a00b8f3aa8ade841d54565f85fe5db53bc7`.
+- The exact 63-page A4 PDF was rendered and inspected page by page; no clipping, overlap, broken glyphs, black boxes or missing structural blocks were observed.
 
-## Required seven-profile review
+The R2 visual inspection is development evidence only; it does not replace R6 explicit maintainer acceptance on the final immutable R5 candidate. Full evidence: `docs/V3.0.1-R2-EVIDENCE.md`.
 
-1. `undergraduate-capstone`;
-2. `specialization-capstone`;
-3. `masters-thesis`;
-4. `doctoral-thesis`;
-5. `research-project`;
-6. `anonymized-research-project`;
-7. `scientific-article`.
+## R3 — DONE
 
-A preliminary seven-profile set from the earlier baseline passed A4, PDF/A-2b, embedded-font and recognized-warning/overflow preflight plus assistant page-by-page inspection. It does not close the final human gate: the final pairs must be regenerated from the exact 3.0.1 candidate containing PR #302 and explicitly approved by the maintainer.
+R3 repairs public distribution so users receive the complete editable source and a compiled full pedagogical reference while CTAN remains lean.
 
-## Remaining work
+The implementation commit containing this handoff must be resolved dynamically from the active branch. It introduces:
 
-1. require Static + **complete** Linux integration + Linux release/pkgcheck on the reconciled recovery branch;
-2. verify that the heavy Linux integration step actually ran rather than returning a scoped skip;
-3. merge the recovery branch to `main` only after the combined PR gates pass;
-4. resolve the resulting exact canonical `main` SHA;
-5. require Static + automatic complete Linux integration + Linux release check on that exact SHA;
-6. require current CTAN `pkgcheck` output/version/archive-hash evidence for `abntexto-ufc-3.0.1.zip` and classify all warnings;
-7. retain and physically audit the deterministic 3.0.1 distribution;
-8. retain the seven final PDF/`.tex` pairs from that exact candidate and obtain explicit maintainer approval;
-9. freeze hashes/evidence;
-10. create immutable `v3.0.1` on the same certified and visually approved SHA;
-11. create GitHub Release with exact frozen assets and verify re-downloaded hashes;
-12. submit only `abntexto-ufc-3.0.1.zip` to CTAN;
-13. preserve submission/acceptance/install evidence and close Release only after external verification.
+- generated public filename `abntexto-ufc-reference.pdf`;
+- deterministic compilation by `tools/build-public-bundles.py` from the exact public `main.tex` sanitized to `coat-of-arms = false`;
+- the same generated reference PDF embedded in template and Overleaf bundles;
+- no full reference PDF in the CTAN archive, whose minimal example remains separate;
+- an extracted-bundle gate that independently rebuilds template and Overleaf projects and requires rebuilt SHA-256 == embedded PDF SHA-256;
+- fail-closed checks for no institutional mark assets, no proprietary Microsoft fonts and correct public mark disablement;
+- first-class PR integration suite `distribution`, with release-mode distribution execution still owned by `make release-check` to avoid duplicate execution.
 
-Invariant:
+`tools/build-distribution-bundles.py` is intentionally unchanged because it already delegates usage-bundle generation to `tools/build-public-bundles.py`.
+
+Accepted corrective source: `2556489da23e16495fc51ebf093f9f4704c6d52f`.
+
+- Static #489: PASS.
+- Linux #410: PASS, `SCOPE=distribution PASS=1 FAIL=0 SKIP=0`.
+- Linux Release Check #124: PASS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+- CTAN `pkgcheck 4.1.0`: PASS.
+- Exact distribution artifact id `10169809155`, digest `sha256:6445ce5e3b870fc6c418fa23c4dc318576f58d00bfe48525ed100e86feaca761`.
+- Release public-reference SHA-256 `e92378a0ef01310c656599d1f1765db6d0040467367313e74776c8ebd75b766c`, identical in Template/Overleaf, 63 A4 pages.
+- Independent archive/hash/content and page-by-page visual inspection: PASS.
+- CTAN excludes the full reference; distributed source uses `coat-of-arms=false`; no prohibited mark/font files were found.
+
+The first implementation failures #409/#123 and their causes remain retained in `docs/V3.0.1-R3-EVIDENCE.md`.
+
+## R4 — DONE
+
+Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
+
+- Static #495: PASS.
+- Linux #416: PASS, `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`.
+- Real Chrome productive-UI E2E: PASS on 63-page positive reference and valid Letter negative.
+- Positive SHA-256: `416bd08e184d5510d2dc1c7ab6ebd872c4175dfc20373f040c6c950d09d5a4fb`; readable/A4/margins PASS; no top-level FAIL.
+- Negative SHA-256: `83943b2406b0b9f6d0ec00f997606b6c7d73903bbad3b7b8d8e0ce891e9dafdf`; readable PASS, A4 FAIL, verdict FAIL.
+- Deep-only `font.embedded` and `pdfa.deep`: `MANUAL REVIEW` on both inputs.
+- Browser artifact id `10182427862`, digest `sha256:62d558b681d7181b1726604cdebb25f8f1d7db627e473a16ac986951037c02c9`; independently downloaded/inspected.
+- Release #130: PASS, `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck 4.1.0` PASS.
+
+Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
+
+## R5 — ACTIVE_DYNAMIC
+
+R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+
+Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
+
+## R6 — PENDING
+
+R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
 ```
 
-## Windows literal-font scope
+No tracked commit or artifact rebuild is allowed after R6 visual acceptance and before publication. Post-publication documentation may advance only after the tag/release bytes are frozen and verified.
 
-Retained Windows/literal-font evidence remains scope-valid because PR #302 and the recovery changes do not alter font runtime, font setup, engine behavior or the Windows certification contract. Any such later change forces a fresh Windows recertification.
+## Deferred after v3.0.1
 
-## Local continuation
+Whole-repository lifecycle classification, >100 branch pruning, broad historical-document consolidation and unrelated utility/runtime cleanup remain deferred unless a direct release blocker is proven.
 
-```bash
-git fetch --all --prune
-git switch main
-git pull --ff-only origin main
-git status
-git rev-parse HEAD
-```
+## Current next action
 
-Then read:
+Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
 
-1. `AGENTS.md`
-2. `release/v3-roadmap.json`
-3. `release/v3-release-candidate.json`
-4. `docs/V3-CONTINUATION.md`
-5. `docs/V3-RELEASE-RECOVERY.md`
-6. `docs/HANDOFF-V3.0.0.md`
-7. `docs/V3-RELEASE-READINESS.md`
-8. `docs/V3-RELEASE-PHASE-END.md`
-9. `docs/CTAN-RELEASE.md`
-10. `docs/UFC-LIBRARIAN-REVIEW.md`
+## Documentation discipline
 
-Every **material advance** updates affected control documents and machine state in the same work cycle. Targeted checks never replace the required **phase-end regression**. A successful workflow does not satisfy a complete gate when its heavy integration step was skipped. The public README tracks user-facing facts rather than transient CI state.
+Every material advance updates the machine state, affected lot evidence and this handoff in the same work cycle. Current Git facts always take precedence.

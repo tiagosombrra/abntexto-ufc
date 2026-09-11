@@ -14,8 +14,10 @@ CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 PDF_MEASUREMENT = ROOT / "tools" / "pdf_measurement.py"
 PDF_VALIDATION_CORE = ROOT / "tests" / "checks" / "pdf_validation_core.py"
 FRONTMATTER_EVIDENCE = ROOT / "tests" / "checks" / "frontmatter_evidence.py"
-APP = ROOT / "validator" / "app.js"
-INDEX = ROOT / "validator" / "index.html"
+VALIDATOR_ROOT = ROOT / "validator"
+APP = VALIDATOR_ROOT / "app.js"
+INDEX = VALIDATOR_ROOT / "index.html"
+WEB_CATALOG = VALIDATOR_ROOT / "normative-catalog.js"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
 NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
 NORMATIVE_FULL_TOOL = ROOT / "tools" / "normative_full.py"
@@ -51,6 +53,27 @@ def run_source_check(path: Path, label: str, *args: str) -> None:
         fail(f"{label}: {completed.stdout}{completed.stderr}")
     if completed.stdout:
         print(completed.stdout.strip())
+
+
+def validate_relative_module_closure() -> int:
+    pattern = re.compile(r'(?:\bfrom\s*|\bimport\s*\()\s*["\'](\.[^"\']+)["\']')
+    root = VALIDATOR_ROOT.resolve()
+    imports = 0
+    for source in sorted(VALIDATOR_ROOT.glob("*.js")):
+        text = source.read_text(encoding="utf-8")
+        for specifier in pattern.findall(text):
+            clean = specifier.split("?", 1)[0].split("#", 1)[0]
+            target = (source.parent / clean).resolve()
+            if target != root and root not in target.parents:
+                fail(f"relative browser import escapes validator tree: {source.name}: {specifier}")
+            if not target.is_file():
+                fail(f"relative browser import is missing: {source.name}: {specifier}")
+            imports += 1
+    if imports == 0:
+        fail("Web/Lite static tree exposes no local relative module import to validate")
+    if '<script type="module" src="app.js"></script>' not in INDEX.read_text(encoding="utf-8"):
+        fail("Web/Lite entry HTML does not load the tracked app.js module")
+    return imports
 
 
 def main() -> None:
@@ -133,12 +156,15 @@ def main() -> None:
     if not node:
         fail("Node.js is required for JavaScript syntax validation")
 
-    completed = subprocess.run([node, "--check", str(APP)], check=False)
-    if completed.returncode != 0:
-        fail("validator/app.js has invalid JavaScript syntax")
+    for source in (APP, WEB_CATALOG):
+        completed = subprocess.run([node, "--check", str(source)], check=False)
+        if completed.returncode != 0:
+            fail(f"{source.relative_to(ROOT)} has invalid JavaScript syntax")
+
+    relative_imports = validate_relative_module_closure()
 
     with tempfile.TemporaryDirectory() as temp_dir:
-        module = Path(temp_dir) / "normative-catalog.mjs"
+        module = Path(temp_dir) / "normative-catalog.js"
         completed = subprocess.run(
             [sys.executable, str(NORMATIVE_TOOL), "--emit-web", str(module)],
             cwd=ROOT,
@@ -151,7 +177,17 @@ def main() -> None:
         completed = subprocess.run([node, "--check", str(module)], check=False)
         if completed.returncode != 0:
             fail("generated normative web catalog has invalid JavaScript syntax")
+        if module.read_bytes() != WEB_CATALOG.read_bytes():
+            fail(
+                "tracked validator/normative-catalog.js is stale; regenerate it with "
+                "python3 tools/normative_catalog.py --emit-web validator/normative-catalog.js"
+            )
 
+    print(
+        "VALIDATION-EVIDENCE web-static-package status=PASS "
+        f"relative_imports={relative_imports} generated_catalog_identical=true "
+        "entry=index.html local_processing=true"
+    )
     print("Validator sources and normative contracts validated.")
 
 

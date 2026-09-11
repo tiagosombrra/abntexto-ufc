@@ -44,6 +44,13 @@ CHECKS = (
     Check("validator-source", "PDF validator sources", ("python3", "tests/checks/validator_source.py")),
     Check("reference", "Reference document", ("sh", "tests/integration/reference-document.sh")),
     Check(
+        "web-lite-positive",
+        "Web/Lite positive reference snapshot",
+        ("cp", "template/main.pdf", "artifacts/validation/web-lite-positive.pdf"),
+        modes=("pr",),
+        depends=("reference",),
+    ),
+    Check(
         "reference-corpus",
         "Reference corpus",
         ("sh", "tests/integration/reference-corpus.sh"),
@@ -133,6 +140,12 @@ CHECKS = (
     Check("build-path", "Build path", ("sh", "tests/integration/build-path.sh")),
     Check("multivolume", "Multi-volume documents", ("sh", "tests/integration/multivolume.sh")),
     Check("catalog-card", "Catalog card", ("sh", "tests/integration/catalog-card.sh")),
+    Check(
+        "distribution-bundles",
+        "Public distribution bundles",
+        ("sh", "tests/integration/distribution-bundles.sh"),
+        modes=("pr",),
+    ),
 )
 
 EVIDENCE_PATTERN = re.compile(r"^[A-Z0-9_-]+-EVIDENCE ")

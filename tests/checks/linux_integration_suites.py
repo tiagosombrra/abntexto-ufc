@@ -21,6 +21,11 @@ ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.s
 DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh"
 RELEASE_REVIEW_PAIRS = ROOT / "tests" / "integration" / "release-review-pairs.sh"
 RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
+CORRECTION_STATE = "release/v3.0.1-final-corrections.json"
+RELEASE_WORKFLOW_PATH = ".github/workflows/linux-release-check.yml"
+DISTRIBUTION_BUILDER = "tools/build-public-bundles.py"
+DISTRIBUTION_WRAPPER = "tools/build-distribution-bundles.py"
+DISTRIBUTION_GATE = "tests/integration/distribution-bundles.sh"
 
 
 def fail(message: str) -> None:
@@ -39,6 +44,10 @@ def main() -> None:
 
     if SUITES.get("complete") != ("*",):
         fail("complete suite must remain the wildcard full PR integration contract")
+    if SUITES.get("distribution") != ("distribution-bundles",):
+        fail("distribution suite must remain a first-class PR-only public bundle gate")
+    if SUITES.get("web-lite") != ("validator-source", "web-lite-positive"):
+        fail("web-lite suite must prepare validator sources and a stable positive reference snapshot")
 
     for suite, checks in SUITES.items():
         if checks == ("*",):
@@ -46,6 +55,15 @@ def main() -> None:
         unknown = sorted(set(checks) - known_checks)
         if unknown:
             fail(f"suite {suite!r} references unknown checks: {', '.join(unknown)}")
+
+    distribution_checks = [check for check in validation_run.CHECKS if check.name == "distribution-bundles"]
+    if len(distribution_checks) != 1:
+        fail("validation runner must register exactly one distribution-bundles check")
+    if distribution_checks[0].modes != ("pr",):
+        fail("distribution-bundles runner check must remain PR-only; make release-check owns the release execution")
+    web_positive = [check for check in validation_run.CHECKS if check.name == "web-lite-positive"]
+    if len(web_positive) != 1 or web_positive[0].modes != ("pr",) or web_positive[0].depends != ("reference",):
+        fail("web-lite-positive must remain one PR-only snapshot directly dependent on reference")
 
     required_manual_choices = ("auto", *SUITES.keys())
     missing_choices = [
@@ -69,12 +87,21 @@ def main() -> None:
         "git diff --name-only \"$BASE_SHA\" \"$HEAD_SHA\"",
         "release_candidate_marker=release/v3-release-candidate.json",
         "release-candidate-full-pr",
+        "unzip",
+        'git config --global --add safe.directory "$PWD"',
+        "Run Web/Lite browser E2E",
+        "tests/integration/web-lite-e2e.py",
+        "artifacts/validation/web-lite-positive.pdf",
+        "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json",
+        "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log",
+        "WEB_LITE_EVIDENCE_DIR",
+        'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
+        "Upload Web/Lite browser evidence",
+        "web-lite-e2e-${{ github.run_id }}",
     ):
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
 
-    # Release artifact identity must be derived from the canonical Makefile
-    # version rather than duplicated as a literal release number in CI.
     release_required_tokens = (
         RELEASE_CANDIDATE_MARKER,
         "github.event.pull_request.head.sha",
@@ -82,7 +109,22 @@ def main() -> None:
         "SOURCE_DATE_EPOCH",
         "git rev-parse HEAD",
         "make release-check",
+        "Validate canonical release reference provenance",
+        "artifacts/validation/release-reference-pdf.pdf",
+        "artifacts/validation/release-reference-reproducibility.json",
+        "CANONICAL-REFERENCE-EVIDENCE status=PASS",
+        "template/main.tex",
+        "independent_clean_builds",
+        "identical_sha256",
+        "Upload canonical reference PDF",
+        "canonical-reference-${{ github.run_id }}",
         "make distribution-bundles",
+        "Fetch current CTAN pkgcheck archive",
+        ".ci-downloads/pkgcheck.zip",
+        "pkgcheck-download.sha256",
+        "--retry-all-errors",
+        "--proto '=https'",
+        "cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip",
         "Read release version",
         "id: release-version",
         'version=$(make --no-print-directory version)',
@@ -106,10 +148,11 @@ def main() -> None:
         )
     if "dist/abntexto-ufc-ctan-" in release_workflow:
         fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
+    if "--insecure" in release_workflow or "curl -k " in release_workflow:
+        fail("Release workflow must never bypass TLS verification for CTAN pkgcheck acquisition.")
+    if release_workflow.count("https://mirrors.ctan.org/support/pkgcheck.zip") != 1:
+        fail("Current CTAN pkgcheck must be fetched exactly once, on the host runner.")
 
-    # Capturing `make version` from a recursive make leaks GNU Make's
-    # Entering/Leaving-directory diagnostics into the command substitution.
-    # Require the quiet form everywhere release identity is captured.
     version_capture_surfaces = {
         "release workflow": release_workflow,
         "distribution bundle gate": distribution_bundles,
@@ -123,8 +166,28 @@ def main() -> None:
 
     if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
+    if infer_suites([CORRECTION_STATE]) != ():
+        fail("active correction machine-state updates must not trigger heavy Linux integration by themselves")
     if infer_suites(["tests/run.py"]) != ("smoke",):
         fail("orchestration-only changes must select smoke")
+    if infer_suites([RELEASE_WORKFLOW_PATH]) != ("smoke",):
+        fail("release-workflow-only changes must select smoke; Linux Release Check supplies the heavy R2 execution path")
+    if infer_suites([DISTRIBUTION_BUILDER]) != ("distribution",):
+        fail("public bundle builder changes must select the distribution suite")
+    if infer_suites([DISTRIBUTION_WRAPPER]) != ("distribution",):
+        fail("distribution wrapper changes must select the distribution suite")
+    if infer_suites([DISTRIBUTION_GATE]) != ("distribution",):
+        fail("distribution gate changes must select the distribution suite")
+    if infer_suites(["validator/app.js"]) != ("web-lite",):
+        fail("Web/Lite application changes must select the web-lite suite")
+    if infer_suites(["validator/normative-catalog.js"]) != ("web-lite",):
+        fail("generated Web/Lite catalog changes must select the web-lite suite")
+    if infer_suites(["tests/integration/web-lite-e2e.py"]) != ("web-lite",):
+        fail("browser E2E changes must select the web-lite suite")
+    if infer_suites(["tests/run.py", "validator/app.js"]) != ("web-lite",):
+        fail("orchestration plus Web/Lite changes must retain web-lite scope")
+    if infer_suites(["tests/run.py", DISTRIBUTION_BUILDER]) != ("distribution",):
+        fail("orchestration plus distribution changes must select distribution, not complete")
     if infer_suites(
         ["tests/run.py", "tests/integration/scientific-article-foreign-elements.sh"]
     ) != ("article",):
@@ -143,6 +206,8 @@ def main() -> None:
         fail("unknown technical paths must fail closed to complete")
     if infer_suites([RELEASE_CANDIDATE_MARKER]) != ("complete",):
         fail("Release phase-end candidate marker must force complete Linux integration")
+    if infer_suites([RELEASE_WORKFLOW_PATH, RELEASE_CANDIDATE_MARKER]) != ("complete",):
+        fail("Release marker must dominate release-workflow orchestration and force complete Linux integration")
     if infer_suites(["tests/integration_suites.py", RELEASE_CANDIDATE_MARKER]) != ("complete",):
         fail("Release marker plus orchestration changes must force complete Linux integration")
 
@@ -177,13 +242,15 @@ def main() -> None:
         f"suites={len(SUITES)} checks={len(known_checks)} "
         f"manual_choices={len(required_manual_choices)} phase={phase} "
         "incremental_sync=true missing_before_fallback=full-pr "
-        "unknown_path_fallback=complete article_first_class=true "
-        "step4_registered=true step5_registered=true "
+        "unknown_path_fallback=complete article_first_class=true distribution_first_class=true "
+        "distribution_release_owner=make-release-check step4_registered=true step5_registered=true "
         "release_candidate_forces_complete=true release_check_pr_trigger=true "
         "release_candidate_head_checkout=true canonical_ctan_archive=true "
         "release_version_source=makefile recursion_safe_version_capture=true "
         "human_review_pairs_retained=true release_marker_full_pr_dominates_incremental=true "
-        "release_assets_retained=true"
+        "release_assets_retained=true correction_state_docs_only=true "
+        "canonical_reference_artifact=true release_workflow_orchestration_smoke=true "
+        "web_lite_first_class=true browser_e2e_host=true"
     )
 
 

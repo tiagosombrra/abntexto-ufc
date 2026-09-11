@@ -6,7 +6,7 @@ O arquivo principal \texttt{main.tex} concentra os metadados institucionais em \
 
 \subsection{Como interpretar as orientações deste PDF}
 
-Ao longo do documento são usados quatro tipos de indicação explícita.
+Ao longo do documento são usados seis tipos de indicação explícita. Quatro classificam a origem da orientação; duas mostram como ela chega ao projeto e como é verificada.
 
 \guianormativa{normas ABNT ou referência técnica aplicável}{Identifica uma regra de apresentação cuja fonte pertence à base normativa auditada do projeto. A redação deste guia é uma paráfrase técnica; o texto integral da norma deve ser consultado na fonte autorizada.}
 
@@ -15,6 +15,10 @@ Ao longo do documento são usados quatro tipos de indicação explícita.
 \guiapolitica{Identifica uma decisão técnica ou editorial do \texttt{abntexto-ufc}. Uma política do modelo não deve ser interpretada automaticamente como exigência universal da ABNT ou da UFC.}
 
 \guiaexemplo{Identifica conteúdo incluído apenas para demonstrar visualmente uma possibilidade do template. Exemplos podem ser removidos ou substituídos no trabalho real.}
+
+\guiamecanismo{Indica a chave de \texttt{\string\ufcsetup}, comando, ambiente ou arquivo que o usuário manipula. A apresentação normativa deve ser produzida pela classe sempre que houver API própria; não por correções manuais espalhadas pelo texto.}
+
+\guiavalidacao{Indica a rota de teste ou validação que protege o comportamento. Ela informa o que é realmente verificável pelo projeto e ajuda a distinguir uma regra documentada de uma garantia executável.}
 
 Essa separação é importante. Por exemplo, o documento de referência declara PDF/A-2b e a suíte de release o valida com veraPDF; entretanto, o perfil PDF/A-2b específico é uma política técnica do projeto, enquanto a necessidade de PDF/A no fluxo institucional de depósito é tratada separadamente pela documentação da UFC.
 
@@ -26,12 +30,27 @@ Outras referências atuam em escopos específicos: ABNT NBR 6028:2021 para resum
 
 \guiainstitucional{O Sistema de Bibliotecas da UFC mantém orientações de normalização e informa que os trabalhos acadêmicos devem observar as normas vigentes aplicáveis. Guias institucionais históricos continuam úteis para requisitos próprios da UFC, mas uma referência antiga a uma edição substituída da ABNT não prevalece sobre a edição vigente adotada pelo projeto \parencite{ufc2026normalizacao,ufcguia2022}.}
 
+\guiavalidacao{A base normativa executável fica em \texttt{standards/}. O catálogo, a precedência, a vigência, os identificadores atômicos e os mapas de evidência são validados pelo contrato estático do repositório. Este PDF resume os requisitos relevantes ao usuário; ele não substitui o contrato de máquina nem o texto oficial das normas.}
+
+% Keep executable configuration commands out of this moving heading: it is replayed from main.toc.
+\subsection{Configuração central do documento}
+
+O bloco \texttt{\string\ufcsetup} deve ser tratado como a configuração central do trabalho. As chaves do exemplo podem ser lidas em quatro grupos: perfil e saída do documento; dados institucionais e acadêmicos; autoria, título, local e data; e orientação/banca.
+
+\guiamecanismo{No primeiro grupo, \texttt{type} seleciona o perfil, \texttt{print-mode} controla impressão em anverso ou frente e verso, e opções como \texttt{cover}, \texttt{catalog-card}, \texttt{font}, \texttt{strict-font}, \texttt{tables}, \texttt{code}, \texttt{algorithms}, \texttt{glossary} e \texttt{index} selecionam comportamentos ou módulos.}
+
+\guiamecanismo{No segundo e no terceiro grupos, campos como \texttt{institution}, \texttt{center}, \texttt{department}, curso/programa, grau, \texttt{author}, \texttt{title}, \texttt{subtitle}, \texttt{location}, \texttt{year} e \texttt{approval-date} alimentam os elementos documentais aplicáveis ao perfil. Campos de orientador, coorientador e examinadores são declarados uma única vez e reutilizados pela folha de aprovação e demais elementos correspondentes.}
+
+\guiapolitica{Evite copiar blocos formatados de capa, folha de rosto ou banca para dentro do conteúdo. Quando o dado possuir uma chave pública, corrija o metadado em \texttt{\string\ufcsetup}; quando o comportamento estiver errado, a correção pertence à classe ou ao perfil.}
+
 \subsection{O que este documento demonstra}
 
 O PDF foi configurado no perfil \texttt{undergraduate-capstone}, em impressão apenas no anverso, com fonte Times em modo portátil, listas, glossário, índice, códigos, algoritmos e tabelas \texttt{tabularray}. Essa configuração serve como corpus visual completo; outros perfis alteram automaticamente os elementos que lhes são aplicáveis.
 
 A suíte de validação do repositório cobre, entre outros pontos, tamanho A4, margens, paginação, tipografia, pré-textuais, citações, referências, objetos, tabelas, equações, códigos, algoritmos, projetos, elementos pós-textuais, matriz de perfis, motores de compilação, compatibilidade com ambiente semelhante ao Overleaf e certificação de Times New Roman e Arial literais em Windows.
 
+\guiavalidacao{Para desenvolvimento, \texttt{make compile} constrói o documento completo e executa Biber, glossário e índice quando necessários. \texttt{make check} executa o gate integrado de desenvolvimento; a certificação de release usa uma matriz mais forte descrita na Seção~\ref{sec:recursos-finais}.}
+
 \guiapolitica{O template reduz o trabalho manual de formatação, mas não substitui a verificação final das exigências específicas do curso, programa, edital, repositório institucional ou procedimento administrativo aplicável ao trabalho.}
 
-\index{normalização}\index{LaTeX}\index{ABNT}\index{UFC}
+\index{normalização}\index{LaTeX}\index{ABNT}\index{UFC}\index{ufcsetup}

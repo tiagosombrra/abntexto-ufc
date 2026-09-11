@@ -27,6 +27,8 @@ SUITES: dict[str, tuple[str, ...]] = {
     "backmatter": ("backmatter", "duplex-backmatter"),
     "research-project": ("research-project",),
     "profiles": ("profiles", "build-path", "multivolume", "catalog-card"),
+    "distribution": ("distribution-bundles",),
+    "web-lite": ("validator-source", "web-lite-positive"),
     "article": (
         "validator-source", "scientific-article-profile", "scientific-article-front-block",
         "scientific-article-foreign-elements", "scientific-article-body",
@@ -37,12 +39,18 @@ SUITES: dict[str, tuple[str, ...]] = {
 SUITE_ORDER = tuple(SUITES)
 
 DOC_ONLY_EXACT = {
-    "README.md", "AGENTS.md", "LICENSE", ".gitignore", "release/v3-roadmap.json",
+    "README.md",
+    "AGENTS.md",
+    "LICENSE",
+    ".gitignore",
+    "release/v3-roadmap.json",
+    "release/v3.0.1-final-corrections.json",
 }
 DOC_ONLY_PREFIXES = ("docs/",)
 
 ORCHESTRATION_EXACT = {
     ".github/workflows/linux-integration.yml",
+    ".github/workflows/linux-release-check.yml",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
@@ -73,6 +81,8 @@ PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("research-project", ("abntexto-ufc/research-projects.def", "tests/integration/research-project")),
     ("profiles", ("tests/integration/profile-matrix", "tests/integration/build-path", "tests/integration/multivolume", "tests/integration/catalog-card", "tests/smoke/base-profile.tex")),
     ("reference-document", ("template/main.tex", "template/chapters/", "tests/integration/reference-document", "tests/integration/reference-corpus", "tests/integration/pdf-validator")),
+    ("distribution", ("tools/build-public-bundles.py", "tools/build-distribution-bundles.py", "tests/integration/distribution-bundles.sh")),
+    ("web-lite", ("validator/", "tests/checks/validator_source.py", "tests/integration/web-lite-e2e.py")),
 )
 
 
@@ -127,10 +137,21 @@ def git_changed_paths(base: str, head: str) -> list[str]:
 def self_test() -> None:
     cases = {
         ("docs/ROADMAP-V3.0.0.md",): (),
+        ("release/v3.0.1-final-corrections.json",): (),
         ("abntexto-ufc/objects.def",): ("objects",),
         ("abntexto-ufc/bibliography.def",): ("bibliography",),
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),
         ("tests/run.py",): ("smoke",),
+        (".github/workflows/linux-release-check.yml",): ("smoke",),
+        ("tools/build-public-bundles.py",): ("distribution",),
+        ("tools/build-distribution-bundles.py",): ("distribution",),
+        ("tests/integration/distribution-bundles.sh",): ("distribution",),
+        ("tests/run.py", "tools/build-public-bundles.py"): ("distribution",),
+        ("validator/app.js",): ("web-lite",),
+        ("validator/normative-catalog.js",): ("web-lite",),
+        ("tests/checks/validator_source.py",): ("web-lite",),
+        ("tests/integration/web-lite-e2e.py",): ("web-lite",),
+        ("tests/run.py", "validator/app.js"): ("web-lite",),
         ("tests/integration/scientific-article-profile.sh",): ("article",),
         ("tests/integration/scientific-article-recommendations.sh",): ("article",),
         ("tests/run.py", "tests/integration/scientific-article-recommendations.sh"): ("article",),
