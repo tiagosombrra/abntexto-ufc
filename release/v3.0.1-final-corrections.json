@@ -1,11 +1,11 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 305,
-  "working_branch": "release/v3.0.1-final-corrections",
+  "working_branch": "release/v3.0.1-canonical-tcc-reopen",
   "target_version": "3.0.1",
-  "publication_status": "BLOCKED",
+  "publication_status": "BLOCKED_CANONICAL_CONTENT_REOPEN",
   "historical_certified_baseline": {
     "sha": "111680cd934a4ea55b02f6ffe730ff5260077565",
     "status": "SUPERSEDED_AS_FINAL_CANDIDATE_RETAINED_AS_EVIDENCE"
@@ -30,7 +30,8 @@
       "conversation_memory"
     ],
     "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md"
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r1_4_evidence": "docs/V3.0.1-R1.4-CANONICAL-TCC-RECONSTRUCTION.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -42,7 +43,10 @@
   },
   "scope": {
     "release_blocking": [
-      "exact_sha_release_recertification_and_human_acceptance"
+      "deep_canonical_tcc_reconstruction_and_maintainer_content_acceptance",
+      "fresh_canonical_pdf_and_distribution_recertification",
+      "web_lite_final_positive_pdf_rerun_on_rebuilt_reference",
+      "new_exact_sha_r5_recertification_and_human_acceptance"
     ],
     "closed_release_blockers": [
       "canonical_tcc_source_identity_and_pedagogical_content",
@@ -170,7 +174,7 @@
       "implementation_sha": "7ef9726d67c98f9de41634be219ead599fc73536"
     },
     "R1": {
-      "status": "DONE",
+      "status": "REOPENED",
       "R1.1": {
         "status": "DONE",
         "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
@@ -185,7 +189,7 @@
         "evidence": "docs/V3.0.1-R1.2-EVIDENCE.md"
       },
       "R1.3": {
-        "status": "DONE",
+        "status": "HISTORICAL_PASS_SUPERSEDED_AS_FINAL_CONTENT_ACCEPTANCE",
         "implementation_sha": "f8452bc3507a5206fc4e5a4c837feef872f23f3c",
         "acceptance_source_sha": "704cedaa9960b87ae6035ac08fa4cc4c286ea9aa",
         "acceptance": {
@@ -197,10 +201,37 @@
           "linux_summary": "PASS=3 FAIL=0 SKIP=0"
         },
         "failed_development_runs_preserved_in": "docs/V3.0.1-R1.3-EVIDENCE.md"
+      },
+      "R1.4": {
+        "status": "IN_PROGRESS",
+        "evidence": "docs/V3.0.1-R1.4-CANONICAL-TCC-RECONSTRUCTION.md",
+        "trigger": "maintainer canonical-PDF review rejected depth/visibility of requested reconstruction",
+        "base_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "matrix_counts": {
+          "MISSING": 4,
+          "PARTIAL": 18,
+          "DOCUMENTED_NEEDS_TRACE": 11,
+          "COMPLETE_MAPPED": 18,
+          "SEPARATE_PROFILE": 2
+        },
+        "prior_canonical_source_delta": {
+          "additions": 202,
+          "deletions": 27,
+          "chapter_6_changed": false
+        },
+        "acceptance": [
+          "historical full-reference recovery/diff documented",
+          "visible primary hierarchy verified",
+          "zero unresolved release-required coverage rows",
+          "all seven textual units reviewed/reworked as needed",
+          "new exact-source canonical PDF generated and reference gates pass",
+          "requested changes visibly present",
+          "maintainer explicit canonical-content acceptance"
+        ]
       }
     },
     "R2": {
-      "status": "DONE",
+      "status": "REQUIRES_RECERTIFICATION_AFTER_R1.4",
       "implementation_sha": "514c128f542b00d4a10a9ad05ce7fc94f770ef55",
       "reuse": "tests/integration/release-reference-reproducibility.sh",
       "checks": [
@@ -250,7 +281,7 @@
       }
     },
     "R3": {
-      "status": "DONE",
+      "status": "REQUIRES_RECERTIFICATION_AFTER_R1.4_R2",
       "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
       "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
       "public_reference_pdf": "abntexto-ufc-reference.pdf",
@@ -376,7 +407,7 @@
       }
     },
     "R4": {
-      "status": "DONE",
+      "status": "TECHNICALLY_DONE_REQUIRES_FINAL_PDF_RERUN",
       "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
       "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
@@ -615,10 +646,11 @@
           "canonical_reference_sha256": "68307950e73f97c378927686e419a706cad4c81ea08bc9a127bf63ee47d8191b",
           "public_reference_sha256": "ce51dd225dedeb0bfb949e0fb1c3eee4629beece02cf34976ce26764f72fcd0d"
         }
-      }
+      },
+      "reopen_reason": "Accepted browser positive PDF was generated from canonical source superseded by R1.4 maintainer review."
     },
     "R5": {
-      "status": "ACTIVE_DYNAMIC",
+      "status": "PAUSED_INVALIDATED_BY_CANONICAL_REOPEN",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -655,12 +687,14 @@
       "live_receipts_before_publication": [
         "GitHub Actions runs/artifacts",
         "issue #304"
-      ]
+      ],
+      "pr305_merge_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+      "disposition": "engineering_history_only_until_new_post_R1.4_candidate"
     },
     "R6": {
       "status": "PENDING",
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
+  "current_next_action": "Execute R1.4-A/R1.4-B: recover and compare historical full-reference material against current main; verify intended visible textual hierarchy. Then reconcile coverage matrix to zero unresolved release-required rows and deeply rewrite canonical TCC before any R2/R3/R4/R5 recertification."
 }

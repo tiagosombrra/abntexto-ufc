@@ -10,7 +10,7 @@ Before changing code, tests, standards, workflows, documentation, release metada
 2. read `docs/V3-CONTINUATION.md` first;
 3. read `release/v3.0.1-final-corrections.json`;
 4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`;
-5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, R4 uses `docs/V3.0.1-R4-EVIDENCE.md`, and the current active lot R5 uses `docs/V3.0.1-R5-EVIDENCE.md`;
+5. read the active reopen contract `docs/V3.0.1-R1.4-CANONICAL-TCC-RECONSTRUCTION.md`; older R1-R5 documents are historical/dependency evidence until R1.4 is accepted;
 6. inspect issue #304 and PR #305 when remote GitHub state is available;
 7. use older v3 roadmap, recovery and certification documents only as historical/background evidence when the current handoff or machine state points to them.
 
@@ -24,15 +24,15 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Active phase | Release |
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
+| Active correction branch | `release/v3.0.1-canonical-tcc-reopen` |
 | Tracking issue / PR | #304 / #305 |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
-| R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
-| R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
-| R3 | DONE — sanitized public reference embedded and independently inspected |
-| R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
+| R1 | REOPENED — R1.4 deep canonical TCC reconstruction after maintainer PDF review |
+| R2 | REQUIRES_RECERTIFICATION_AFTER_R1.4 — historical evidence retained |
+| R3 | REQUIRES_RECERTIFICATION_AFTER_R1.4/R2 — historical evidence retained |
+| R4 | TECHNICALLY_DONE_REQUIRES_FINAL_PDF_RERUN — old positive PDF is superseded by R1.4 reopen |
+| R5 | PAUSED_INVALIDATED_BY_CANONICAL_REOPEN — merged PR #305 is not the final candidate |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
@@ -50,7 +50,7 @@ The canonical undergraduate reference is rooted at `template/main.tex`. It is bo
 
 The guide distinguishes ABNT normative requirements, UFC institutional requirements, project/editorial policy, and examples/recommendations. For each major user-visible formatting or document-structure topic, it explains authority/classification, expected rendered behavior, the public `abntexto-ufc` mechanism and the validation/evidence route. The machine normative contract remains authoritative for atomic proof semantics.
 
-R1.3 closed on source SHA `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa` with Static #484 PASS and Linux #405 `reference-document` PASS (`PASS=3 FAIL=0 SKIP=0`). Detailed failed development runs remain in `docs/V3.0.1-R1.3-EVIDENCE.md`.
+R1.3 historically passed Static #484 and Linux #405, but maintainer inspection after PR #305 merge determined that the additive/bounded rewrite did not satisfy the requested deep canonical reconstruction. The merged R1.2 matrix still has 4 MISSING, 18 PARTIAL and 11 DOCUMENTED_NEEDS_TRACE rows. R1.3 acceptance is therefore superseded as final content acceptance. Active authority: `docs/V3.0.1-R1.4-CANONICAL-TCC-RECONSTRUCTION.md`.
 
 ## Canonical reference artifact rule
 
@@ -73,6 +73,10 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 ## R4 accepted Web/Lite boundary
 
 R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
+
+## Post-merge canonical reopen
+
+PR #305 was squash-merged to `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` before the maintainer identified the canonical-content acceptance defect. No `v3.0.1` release exists. That main SHA and its R5 evidence are retained as historical engineering evidence only; they are not eligible for R6/tag/publication after the R1.4 reopen.
 
 ## R5 dynamic candidate transport
 

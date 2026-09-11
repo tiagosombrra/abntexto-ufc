@@ -1,9 +1,9 @@
 {
-  "schema_version": 10,
-  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure; forces pre-merge complete regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 11,
+  "purpose": "v3.0.1 candidate marker invalidated by maintainer canonical-PDF review; source reconstruction must reopen before a new final candidate is formed",
   "phase": "release",
   "target_version": "3.0.1",
-  "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #305 after its marker head passes complete phase-end gates; that resulting main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
+  "candidate_semantics": "no current final candidate: PR #305/main SHA ab641d49... is historical engineering evidence only after maintainer rejected canonical content depth; R1.4 must complete before new exact-SHA candidate formation",
   "integration_anchor": {
     "sha": "25c6ab09dc38be9257d2912652074a48886d28f9",
     "source": "PR #297 squash merge",
@@ -82,16 +82,16 @@
     "reason": "PR #302 and the 3.0.1 recovery change runtime/publication bytes and therefore require a fresh exact-SHA cycle."
   },
   "final_candidate": {
-    "status": "r5-dynamic-transport-active",
+    "status": "blocked-by-r1.4-canonical-content-reopen",
     "version": "3.0.1",
     "premerge_pull_request": 305,
-    "source_branch": "release/v3.0.1-final-corrections",
+    "source_branch": "release/v3.0.1-canonical-tcc-reopen",
     "canonical_branch": "main",
     "merge_method": "squash",
     "resolve_pr_head_from_git": true,
     "premerge_complete_linux_required": true,
     "premerge_linux_release_check_required": true,
-    "resolve_sha_from_git_on_canonical_main": true,
+    "resolve_sha_from_git_on_canonical_main": false,
     "complete_linux_on_exact_main_release_marker_push": true,
     "linux_release_check_on_exact_main_push": true,
     "web_lite_real_pdf_e2e_required": true,
@@ -134,7 +134,7 @@
   },
   "human_visual_acceptance": {
     "required_before_tag": true,
-    "state": "pending-explicit-maintainer-approval-on-exact-post-merge-r5-main-artifacts",
+    "state": "blocked-until-r1.4-canonical-content-and-new-r5-candidate",
     "profiles": [
       "undergraduate-capstone",
       "specialization-capstone",
@@ -198,9 +198,9 @@
     "working_branch": "release/v3.0.1-final-corrections",
     "authority": "release/v3.0.1-final-corrections.json",
     "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
-    "r0_r3_status": "DONE",
+    "r0_r3_status": "R0_DONE_R1_REOPENED_R2_R3_RECERTIFICATION_REQUIRED",
     "r4": {
-      "status": "DONE",
+      "status": "TECHNICALLY_DONE_REQUIRES_FINAL_PDF_RERUN",
       "acceptance_source_sha": "170fec009cc89ec0ca98d8d627cd4c8fb3e8447b",
       "static_run": 34555410344,
       "linux_run": 34555410491,
@@ -212,8 +212,15 @@
       "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "pkgcheck": "4.1.0 PASS"
     },
-    "r5_state": "ACTIVE_DYNAMIC",
+    "r5_state": "PAUSED_INVALIDATED_BY_CANONICAL_REOPEN",
     "merge_method": "squash",
-    "post_merge_receipt_commit_forbidden": true
+    "post_merge_receipt_commit_forbidden": true,
+    "reopen": {
+      "date": "2026-09-11",
+      "reason": "maintainer inspection found canonical PDF did not visibly contain requested deep reconstruction",
+      "merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+      "v3_0_1_release_exists": false,
+      "next": "complete R1.4, then recertify R2/R3, rerun R4 positive PDF, form new R5 candidate"
+    }
   }
 }
