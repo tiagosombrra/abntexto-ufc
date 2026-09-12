@@ -25,7 +25,7 @@ Current Git facts override the machine state; the machine state overrides this h
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
 | Active branch | `fix/v3.0.1-approval-page` |
-| Tracking issue / PR | #304 / #305 merged historical; resolve current PR by head `fix/v3.0.1-approval-page` |
+| Tracking issue / PR | #304 / #305 merged historical; active correction PR #311 |
 | PR state | CI vehicle only; merge remains blocked |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
