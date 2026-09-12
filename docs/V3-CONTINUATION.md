@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
-Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
+Updated: 2026-09-12
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 POST-MERGE APPROVAL-PAGE CORRECTION ACTIVE; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -24,8 +24,8 @@ Current Git facts override the machine state; the machine state overrides this h
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
-| Active branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active branch | `fix/v3.0.1-approval-page` |
+| Tracking issue / PR | #304 / #305 merged historical; resolve current PR by head `fix/v3.0.1-approval-page` |
 | PR state | CI vehicle only; merge remains blocked |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
@@ -103,11 +103,13 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — ACTIVE_DYNAMIC
+## R5 — POST-MERGE APPROVAL-PAGE CORRECTION ACTIVE
 
-R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+PR #305 was squash-merged as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`, but maintainer visual review on 2026-09-12 invalidated that candidate before R6: the approval date was still a placeholder, six committee people were configured, and member blocks rendered unit/program/role details.
 
-Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
+Active correction branch: `fix/v3.0.1-approval-page`, forked from that exact main SHA. Technical correction commit: `3044259c68ce4788b270c0c5721ac65f0cb74b10`. Required presentation is now: date `12 de setembro de 2026`; exactly three people (advisor + examiners 2/3); each committee block contains only name + institution. The class still accepts legacy unit metadata, but the approval page does not render it.
+
+The same single marker `release/v3-release-candidate.json` is advanced on the correction branch, forcing fresh complete PR certification. After the correction PR passes and is squash-merged, resolve the new `main` SHA and repeat Stage C exact-main certification. `ab641d49...` must never be tagged/published as v3.0.1.
 
 ## R6 — PENDING
 
@@ -125,7 +127,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
+Resolve the open PR for head `fix/v3.0.1-approval-page`. Require fresh Static + Linux `complete` + Linux Release Check/current `pkgcheck` on its exact marker head. Confirm `REFERENCE-APPROVAL-EVIDENCE status=PASS date=2026-09-12 committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0`; download/render the approval page and visually recheck it. Only then squash-merge the correction PR and repeat exact-main Stage C. Do not use prior #305/main candidate `ab641d49...` for R6.
 
 ## Documentation discipline
 

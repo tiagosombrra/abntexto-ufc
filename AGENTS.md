@@ -24,15 +24,15 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Active phase | Release |
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active correction branch | `fix/v3.0.1-approval-page` |
+| Tracking issue / PR | #304 / #305 merged historical; resolve active correction PR by branch |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
 | R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
+| R5 | ACTIVE_POST_MERGE_CORRECTION — approval-page fix requires fresh complete PR + exact-main recertification |
 | R6 | PENDING — maintainer acceptance and publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
@@ -73,6 +73,12 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 ## R4 accepted Web/Lite boundary
 
 R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
+
+## Canonical approval-page release rule
+
+The canonical reference approval page uses `12 de setembro de 2026` and exactly three committee people: advisor, examiner 2 and examiner 3. Every committee signature block renders only member name and institution. Department, center, program or other unit metadata must not render in the committee block, and advisor/coadvisor role suffixes must not be appended there. Legacy unit metadata keys remain accepted for compatibility.
+
+PR #305's squash result `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d` violated this rule and is invalidated as a final v3.0.1 candidate. Active correction branch is `fix/v3.0.1-approval-page`. Never tag/publish `ab641d49...`.
 
 ## R5 dynamic candidate transport
 

@@ -1,6 +1,6 @@
 {
-  "schema_version": 10,
-  "purpose": "v3.0.1 final correction phase-end marker after R0-R4 closure; forces pre-merge complete regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
+  "schema_version": 11,
+  "purpose": "v3.0.1 post-merge approval-page correction marker; invalidates the prior R5 main candidate and forces a fresh complete correction-PR regression, exact-main recertification, current CTAN pkgcheck and maintainer visual acceptance",
   "phase": "release",
   "target_version": "3.0.1",
   "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #305 after its marker head passes complete phase-end gates; that resulting main SHA must independently pass Static, complete Linux Integration including Web/Lite real-PDF E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection and maintainer visual acceptance before v3.0.1 publication",
@@ -82,10 +82,10 @@
     "reason": "PR #302 and the 3.0.1 recovery change runtime/publication bytes and therefore require a fresh exact-SHA cycle."
   },
   "final_candidate": {
-    "status": "r5-dynamic-transport-active",
+    "status": "r5-post-merge-approval-page-correction-active",
     "version": "3.0.1",
-    "premerge_pull_request": 305,
-    "source_branch": "release/v3.0.1-final-corrections",
+    "premerge_pull_request": "resolve-open-pr-for-fix/v3.0.1-approval-page",
+    "source_branch": "fix/v3.0.1-approval-page",
     "canonical_branch": "main",
     "merge_method": "squash",
     "resolve_pr_head_from_git": true,
@@ -97,7 +97,32 @@
     "web_lite_real_pdf_e2e_required": true,
     "current_ctan_pkgcheck_required": true,
     "exact_main_artifact_inspection_required": true,
-    "no_pre_tag_commits_after_acceptance": true
+    "no_pre_tag_commits_after_acceptance": true,
+    "prior_merged_candidate": {
+      "pull_request": 305,
+      "main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+      "status": "INVALIDATED_BY_MAINTAINER_VISUAL_REVIEW",
+      "reason": "Canonical approval page rendered placeholder date, six members and extra unit/program/role lines."
+    },
+    "canonical_reference_correction": {
+      "discovered_on": "2026-09-12",
+      "approval_date": "12 de setembro de 2026",
+      "committee_members": 3,
+      "committee_source_keys": [
+        "advisor",
+        "examiner-2",
+        "examiner-3"
+      ],
+      "rendered_fields_per_member": [
+        "name",
+        "institution"
+      ],
+      "unit_program_lines": false,
+      "advisor_role_suffix": false,
+      "technical_commit": "3044259c68ce4788b270c0c5721ac65f0cb74b10",
+      "requires_fresh_complete_pr_certification": true,
+      "requires_fresh_exact_main_certification": true
+    }
   },
   "release_contract": "make release-check",
   "distribution_contract": "make distribution-bundles",
@@ -195,7 +220,7 @@
   "final_correction_program": {
     "tracking_issue": 304,
     "pull_request": 305,
-    "working_branch": "release/v3.0.1-final-corrections",
+    "working_branch": "fix/v3.0.1-approval-page",
     "authority": "release/v3.0.1-final-corrections.json",
     "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
     "r0_r3_status": "DONE",
@@ -212,8 +237,10 @@
       "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "pkgcheck": "4.1.0 PASS"
     },
-    "r5_state": "ACTIVE_DYNAMIC",
+    "r5_state": "ACTIVE_POST_MERGE_APPROVAL_PAGE_CORRECTION",
     "merge_method": "squash",
-    "post_merge_receipt_commit_forbidden": true
+    "post_merge_receipt_commit_forbidden": true,
+    "prior_pull_request": 305,
+    "prior_pull_request_status": "MERGED_BUT_FINAL_CANDIDATE_INVALIDATED"
   }
 }

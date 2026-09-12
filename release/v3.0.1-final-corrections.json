@@ -1,9 +1,9 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": 305,
-  "working_branch": "release/v3.0.1-final-corrections",
+  "pull_request": "resolve-open-pr-for-fix/v3.0.1-approval-page",
+  "working_branch": "fix/v3.0.1-approval-page",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
   "historical_certified_baseline": {
@@ -618,7 +618,7 @@
       }
     },
     "R5": {
-      "status": "ACTIVE_DYNAMIC",
+      "status": "ACTIVE_POST_MERGE_APPROVAL_PAGE_CORRECTION",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -626,7 +626,7 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "PENDING_MARKER_HEAD_GATES",
+          "status": "PENDING_POST_MERGE_CORRECTION_PR_GATES",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
@@ -637,11 +637,11 @@
         },
         "B": {
           "name": "squash transport to main",
-          "status": "BLOCKED_BY_STAGE_A"
+          "status": "BLOCKED_BY_CORRECTION_STAGE_A"
         },
         "C": {
           "name": "exact-main recertification",
-          "status": "BLOCKED_BY_STAGE_B",
+          "status": "BLOCKED_BY_CORRECTION_MERGE",
           "required": [
             "Static PASS on exact main",
             "automatic Linux complete PASS including Web/Lite E2E",
@@ -655,12 +655,52 @@
       "live_receipts_before_publication": [
         "GitHub Actions runs/artifacts",
         "issue #304"
-      ]
+      ],
+      "invalidated_main_candidate": {
+        "sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "source_pr": 305,
+        "discovered_on": "2026-09-12",
+        "reason": "Canonical approval page used placeholder date, six members and extra unit/program/role lines.",
+        "eligible_for_r6": false,
+        "eligible_for_tag": false
+      },
+      "approval_page_correction": {
+        "status": "IMPLEMENTED_PENDING_FRESH_COMPLETE_PR_CERTIFICATION",
+        "technical_commit": "3044259c68ce4788b270c0c5721ac65f0cb74b10",
+        "approval_date": "12 de setembro de 2026",
+        "committee_members": 3,
+        "committee_source_keys": [
+          "advisor",
+          "examiner-2",
+          "examiner-3"
+        ],
+        "rendered_fields_per_member": [
+          "name",
+          "institution"
+        ],
+        "unit_program_lines": false,
+        "advisor_role_suffix": false,
+        "regressions": [
+          "tests/integration/frontmatter-approval-evidence.sh",
+          "tests/integration/reference-document.sh"
+        ]
+      }
     },
     "R6": {
       "status": "PENDING",
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
+  "current_next_action": "Resolve the open PR whose head is fix/v3.0.1-approval-page. Require fresh Static PASS, Linux complete PASS, Linux Release Check/current pkgcheck PASS and REFERENCE-APPROVAL-EVIDENCE status=PASS date=2026-09-12 committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0. Independently render/inspect the corrected approval page. Only then squash-merge the correction PR and repeat exact-main Stage C. Never tag/publish main SHA ab641d49c5f6a79ff54a16a78d1946a6e008fe6d.",
+  "original_pull_request": 305,
+  "post_merge_correction": {
+    "status": "ACTIVE",
+    "branch": "fix/v3.0.1-approval-page",
+    "base_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+    "technical_commit": "3044259c68ce4788b270c0c5721ac65f0cb74b10",
+    "tracking_issue": 304,
+    "prior_pull_request": 305,
+    "prior_pull_request_status": "MERGED",
+    "prior_main_candidate_status": "INVALIDATED_BY_MAINTAINER_VISUAL_REVIEW"
+  }
 }
