@@ -1,5 +1,5 @@
 {
-  "schema_version": 26,
+  "schema_version": 27,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": null,
@@ -626,7 +626,7 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "REOPENED_ON_CLEAN_POST_MERGE_CORRECTION_BRANCH",
+          "status": "CORRECTIVE_OBSERVER_COMMIT_IN_CI",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
@@ -694,6 +694,43 @@
         "policy": "clean branch from current main carrying only canonical-review correction plus its tests/controls",
         "previous_pr": 305,
         "previous_pr_state": "squash-merged-historical"
+      },
+      "stage_a_development_runs": [
+        {
+          "workflow": "Static Contract",
+          "run_number": 509,
+          "run_id": 34646050307,
+          "status": "PASS",
+          "source_sha": "b39f48dbc5fef877945e0df7b830f403ddde2c7b"
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 430,
+          "run_id": 34646050352,
+          "status": "FAIL",
+          "source_sha": "b39f48dbc5fef877945e0df7b830f403ddde2c7b",
+          "failing_check": "reference-corpus",
+          "cause": "Observer compared unnumbered post-textual REFERENCES/GLOSSARY x-position against numbered chapter-title x-position after intentional removal of the empty TOC label box.",
+          "runtime_defect": false
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 140,
+          "run_id": 34646050326,
+          "status": "FAIL",
+          "source_sha": "b39f48dbc5fef877945e0df7b830f403ddde2c7b",
+          "failing_check": "reference-corpus",
+          "repository_summary": "SCOPE=complete PASS=36 FAIL=1 SKIP=1",
+          "pkgcheck_verdict": "NOT_CLOSING",
+          "cause": "Same reference-corpus observer mismatch as Linux #430."
+        }
+      ],
+      "stage_a_corrective_action": {
+        "path": "tests/integration/reference-corpus.sh",
+        "change": "Compare numbered TOC titles within the numbered class; compare unnumbered REFERENCES/GLOSSARY within the post-textual class; retain explicit absence check for canonical remissive index.",
+        "runtime_changed": false,
+        "empty_toclabelbox_restored": false,
+        "canonical_index_restored": false
       }
     },
     "R6": {
@@ -701,7 +738,7 @@
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Resolve the current open PR whose head is release/v3.0.1-canonical-review-corrections. Require Static + Linux complete/Web-Lite E2E + Linux Release Check/current pkgcheck on that exact SHA. Download the canonical-reference generated from corrected template/main.tex plus distribution/review-pair artifacts; inspect approval date, three-member committee without unit lines, clean Referencias/Glossario TOC leaders, and absence of rendered remissive index. Previous PR #305/main ab641d49 and c21ffe45 green evidence are historical only.",
+  "current_next_action": "Resolve PR #310 successor head after the reference-corpus observer correction. The full-PR R5 marker must force Linux complete. Require Static PASS, Linux complete/Web-Lite E2E PASS, Linux Release Check/current pkgcheck PASS, then independently inspect fresh canonical/distribution/review-pair artifacts for approval date, exactly three committee members without unit lines, clean REFERENCES/GLOSSARY TOC entries, no rendered remissive index, and CTAN package shape. Preserve #509/#430/#140 history.",
   "pull_request_resolution": "resolve current open PR whose head is working_branch",
   "previous_merged_pull_request": 305,
   "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d"

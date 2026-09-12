@@ -127,7 +127,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the current open PR whose head is `release/v3.0.1-canonical-review-corrections`. Require Static PASS, Linux Integration `complete` PASS (including Web/Lite E2E), Linux Release Check/current `pkgcheck` PASS, canonical reference generation and distribution/review-pair gates on that same SHA. Download the new canonical-reference and distribution artifacts generated from `template/main.tex`; visually inspect the corrected approval page and TOC, verify no rendered remissive index, and provide the resulting CTAN ZIP for maintainer inspection. Only after those checks may Stage A be considered green and the squash transport resume.
+PR #310 first Stage A attempt retained Static #509 PASS but Linux #430 and Release #140 failed only because `reference-corpus.sh` compared unnumbered post-textual TOC entries against numbered chapter-title x-position. The runtime already removed the empty label box. Inspect the successor head after the observer correction: the R5 marker must force Linux `complete`; require Static + complete Linux/Web-Lite + Release/current `pkgcheck` PASS and fresh artifacts. Then inspect the canonical approval date, three-member committee without unit lines, clean Referências/Glossário TOC entries, absence of rendered remissive index, and the generated CTAN ZIP before Stage A can close.
 
 ## Documentation discipline
 

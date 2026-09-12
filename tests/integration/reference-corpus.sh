@@ -264,7 +264,7 @@ def toc_title_x(marker):
         )
     return matches[0][1]
 
-reference_x = toc_title_x('INTRODUÇÃO E USO DESTE MODELO')
+numbered_reference_x = toc_title_x('INTRODUÇÃO E USO DESTE MODELO')
 for marker in (
     'ESTRUTURA DO TRABALHO ACADÊMICO',
     'ELEMENTOS PRÉ-TEXTUAIS EM DETALHE',
@@ -272,15 +272,24 @@ for marker in (
     'CITAÇÕES, NOTAS E REFERÊNCIAS',
     'ILUSTRAÇÕES, TABELAS E OUTROS OBJETOS ACADÊMICOS',
     'RECURSOS DO ABNTEXTO-UFC',
-    'REFERÊNCIAS',
-    'GLOSSÁRIO',
-    'ÍNDICE REMISSIVO',
 ):
     actual_x = toc_title_x(marker)
-    if abs(actual_x - reference_x) > 1.5:
+    if abs(actual_x - numbered_reference_x) > 1.5:
         raise SystemExit(
-            f'Corpus failed: {marker} is misaligned in the table of contents: '
-            f'x={actual_x:.2f}, reference={reference_x:.2f}'
+            f'Corpus failed: numbered entry {marker} is misaligned in the table of contents: '
+            f'x={actual_x:.2f}, reference={numbered_reference_x:.2f}'
+        )
+
+# Unnumbered post-textual entries intentionally do not reserve the numbered-label box.
+# Their titles must begin the line directly (toc_title_x already rejects a leading
+# punctuation/text fragment) and must align consistently with each other.
+posttextual_reference_x = toc_title_x('REFERÊNCIAS')
+for marker in ('GLOSSÁRIO',):
+    actual_x = toc_title_x(marker)
+    if abs(actual_x - posttextual_reference_x) > 1.5:
+        raise SystemExit(
+            f'Corpus failed: unnumbered post-textual entry {marker} is misaligned: '
+            f'x={actual_x:.2f}, reference={posttextual_reference_x:.2f}'
         )
 PY
 
