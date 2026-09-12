@@ -2,7 +2,7 @@
   "schema_version": 25,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": "resolve-open-pr-for-fix/v3.0.1-approval-page",
+  "pull_request": 311,
   "working_branch": "fix/v3.0.1-approval-page",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
@@ -691,7 +691,7 @@
       "blocked_by": "R5 exact-main certification and artifact inspection"
     }
   },
-  "current_next_action": "Resolve the open PR whose head is fix/v3.0.1-approval-page. Require fresh Static PASS, Linux complete PASS, Linux Release Check/current pkgcheck PASS and REFERENCE-APPROVAL-EVIDENCE status=PASS date=2026-09-12 committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0. Independently render/inspect the corrected approval page. Only then squash-merge the correction PR and repeat exact-main Stage C. Never tag/publish main SHA ab641d49c5f6a79ff54a16a78d1946a6e008fe6d.",
+  "current_next_action": "Resolve active correction PR #311 whose head is fix/v3.0.1-approval-page. Require fresh Static PASS, Linux complete PASS, Linux Release Check/current pkgcheck PASS and REFERENCE-APPROVAL-EVIDENCE status=PASS date=2026-09-12 committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0. Independently render/inspect the corrected approval page. Only then squash-merge the correction PR and repeat exact-main Stage C. Never tag/publish main SHA ab641d49c5f6a79ff54a16a78d1946a6e008fe6d.",
   "original_pull_request": 305,
   "post_merge_correction": {
     "status": "ACTIVE",
@@ -701,6 +701,7 @@
     "tracking_issue": 304,
     "prior_pull_request": 305,
     "prior_pull_request_status": "MERGED",
-    "prior_main_candidate_status": "INVALIDATED_BY_MAINTAINER_VISUAL_REVIEW"
+    "prior_main_candidate_status": "INVALIDATED_BY_MAINTAINER_VISUAL_REVIEW",
+    "pull_request": 311
   }
 }
