@@ -1,5 +1,5 @@
 {
-  "schema_version": 27,
+  "schema_version": 28,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": null,
@@ -30,7 +30,8 @@
       "conversation_memory"
     ],
     "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md"
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -618,7 +619,7 @@
       }
     },
     "R5": {
-      "status": "REOPENED_CANONICAL_REVIEW_TRANSPORT",
+      "status": "REOPENED_INTEGRATED_FINAL_CANDIDATE",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -626,13 +627,14 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "CORRECTIVE_OBSERVER_COMMIT_IN_CI",
+          "status": "FINAL_DELIVERY_INTEGRATION_PREPARED_PENDING_CURRENT_RUNS",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
             "Linux Release Check complete PASS",
             "current CTAN pkgcheck PASS",
-            "distribution/reference/review-pair gates PASS"
+            "distribution/reference/review-pair gates PASS",
+            "Static README/site/Pages delivery contract PASS"
           ]
         },
         "B": {
@@ -647,7 +649,8 @@
             "automatic Linux complete PASS including Web/Lite E2E",
             "Linux Release Check complete PASS",
             "current CTAN pkgcheck PASS",
-            "exact-main artifacts independently inspected"
+            "exact-main artifacts independently inspected",
+            "GitHub Pages deployment PASS on exact main and live site/validator URLs verified"
           ]
         }
       },
@@ -731,14 +734,43 @@
         "runtime_changed": false,
         "empty_toclabelbox_restored": false,
         "canonical_index_restored": false
+      },
+      "final_delivery_continuity": {
+        "requirement_status": "ACTIVE_RELEASE_BLOCKER",
+        "accidental_omission_from_clean_pr310_detected": true,
+        "historical_source_pr": 307,
+        "active_transport_pr": 310,
+        "import_policy": "delivery files/contracts only; no canonical/runtime source imported from PR307",
+        "files": [
+          "README.md",
+          "site/index.html",
+          ".github/workflows/pages.yml",
+          "tests/checks/validator_source.py",
+          "docs/V3.0.1-R6-EVIDENCE.md"
+        ],
+        "readme_hardcoded_final_page_count": false,
+        "expected_site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
+        "expected_validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+        "stage_a_static_markers": [
+          "readme_delivery=true",
+          "pages_contract=true"
+        ],
+        "stage_c_pages_required": true,
+        "live_url_verification_required": true,
+        "superseded_competing_prs": [
+          307,
+          308,
+          309
+        ]
       }
     },
     "R6": {
       "status": "PENDING",
-      "blocked_by": "R5 exact-main certification and artifact inspection"
+      "blocked_by": "R5 integrated exact-main certification, Pages/live delivery verification and artifact inspection",
+      "evidence": "docs/V3.0.1-R6-EVIDENCE.md"
     }
   },
-  "current_next_action": "Resolve PR #310 successor head after the reference-corpus observer correction. The full-PR R5 marker must force Linux complete. Require Static PASS, Linux complete/Web-Lite E2E PASS, Linux Release Check/current pkgcheck PASS, then independently inspect fresh canonical/distribution/review-pair artifacts for approval date, exactly three committee members without unit lines, clean REFERENCES/GLOSSARY TOC entries, no rendered remissive index, and CTAN package shape. Preserve #509/#430/#140 history.",
+  "current_next_action": "Let active runs on 0eff9245... finish and retain them as non-closing technical evidence because that head lacks final README/site/Pages delivery. Then fast-forward PR #310 to the prepared integrated-delivery successor. Require Static PASS with readme_delivery=true pages_contract=true, Linux complete/Web-Lite E2E PASS, Release/current pkgcheck PASS, fresh artifact inspection, then squash-merge once. Exact-main Stage C additionally requires Pages deployment and live project/validator URL verification.",
   "pull_request_resolution": "resolve current open PR whose head is working_branch",
   "previous_merged_pull_request": 305,
   "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d"

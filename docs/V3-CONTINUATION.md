@@ -103,17 +103,21 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — REOPENED BY MAINTAINER CANONICAL REVIEW
+## R5 — REOPENED INTEGRATED FINAL CANDIDATE
 
 R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The previous marker head `c21ffe45f8c8ce5025ff636e0d10a0e67c72964f` had Static #496, Linux #417 and Release Check #131 green, but maintainer inspection on 2026-09-11 found four user-facing canonical defects. That head is therefore superseded as the final candidate.
 
-The corrective batch changes `template/main.tex` and canonical chapters, removes the empty `\toclabelbox{}` from unnumbered References/Glossary/Index TOC entries in project runtime, updates reference regressions, and requires a fresh complete R5 Stage A. The canonical index remains documented and supported by the class but is not printed or populated in the canonical TCC. Once the new exact PR head passes Stage A, squash-merge the current canonical-review correction PR, resolve the resulting `main` SHA dynamically and require the automatic exact-main cycle.
+The corrective batch changes `template/main.tex` and canonical chapters, removes the empty `\toclabelbox{}` from unnumbered References/Glossary/Index TOC entries in project runtime, updates reference regressions, and requires a fresh complete R5 Stage A. The canonical index remains documented and supported by the class but is not printed or populated in the canonical TCC.
+
+Final-delivery continuity is also release-blocking. The reviewed README/site/Pages surface from historical PR #307 was accidentally omitted by the clean PR #310 transport. PR #310 now absorbs only `README.md`, `site/index.html`, `.github/workflows/pages.yml`, the static delivery assertions and `docs/V3.0.1-R6-EVIDENCE.md`. The README avoids a hard-coded final page count before the corrected TCC is rebuilt. Stage A requires Static evidence `readme_delivery=true pages_contract=true`; Stage C additionally requires exact-main Pages deployment and live site/validator checks.
+
+Once the integrated exact PR head passes Stage A, squash-merge PR #310 once, resolve the resulting `main` SHA dynamically and require the automatic exact-main cycle.
 
 Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
 
 ## R6 — PENDING
 
-R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
+R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer acceptance of the canonical/reference PDFs, seven profile pairs, root README, deployed project site and live Web/Lite validator, followed by publication. Its tracked authority is `docs/V3.0.1-R6-EVIDENCE.md`. The invariant remains:
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
@@ -127,7 +131,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-PR #310 first Stage A attempt retained Static #509 PASS but Linux #430 and Release #140 failed only because `reference-corpus.sh` compared unnumbered post-textual TOC entries against numbered chapter-title x-position. The runtime already removed the empty label box. Inspect the successor head after the observer correction: the R5 marker must force Linux `complete`; require Static + complete Linux/Web-Lite + Release/current `pkgcheck` PASS and fresh artifacts. Then inspect the canonical approval date, three-member committee without unit lines, clean Referências/Glossário TOC entries, absence of rendered remissive index, and the generated CTAN ZIP before Stage A can close.
+The observer-correction head `0eff9245...` is non-closing even if its technical runs pass because it lacks the active final-delivery requirement. After its Release Check finishes, advance PR #310 to the integrated delivery successor. Require Static PASS with `readme_delivery=true pages_contract=true`, Linux `complete` + productive Web/Lite E2E PASS, Release/current `pkgcheck` PASS and fresh artifacts. Inspect approval date, exactly three committee members without unit lines, clean Referências/Glossário TOC entries, no rendered remissive index, comprehensive README, landing page and CTAN ZIP. Only the integrated head may close Stage A and be squash-merged.
 
 ## Documentation discipline
 

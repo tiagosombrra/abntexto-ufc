@@ -32,8 +32,8 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
 | R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | REOPENED_CANONICAL_REVIEW — maintainer review found canonical presentation defects; previous green marker head is superseded as final candidate |
-| R6 | PENDING — maintainer acceptance and publication |
+| R5 | REOPENED_INTEGRATED_FINAL_CANDIDATE — PR #310 certifies canonical review + README/site/Pages together |
+| R6 | PENDING — maintainer acceptance of PDFs + README/site/validator delivery, then publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
 Never treat a SHA copied from this document as current Git state; resolve the branch dynamically first.
@@ -79,6 +79,8 @@ R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS.
 R5 uses exactly one release marker: `release/v3-release-candidate.json`. The previous PR #305 has already been squash-merged to `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`; maintainer review then reopened R5. The active canonical-review correction must travel through the current open PR whose head is `release/v3.0.1-canonical-review-corrections`. A marker change on that PR must force complete Linux Integration; after Stage A passes, that current PR is squash-merged to `main`. The resulting squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
 
 Maintainer review on 2026-09-11 reopened Stage A after the previously green marker head because the canonical TCC still showed a placeholder approval date, six committee members with department/center lines, a visible empty-label punctuation artifact before dotted leaders on unnumbered post-textual TOC entries, and a printed remissive index that is not needed in the canonical example. Those findings are release-blocking presentation corrections. The canonical example now uses a concrete approval date, a three-member committee with name/institution only, fixes the unnumbered post-textual TOC source, and leaves the index documented as an optional capability rather than printing it by default. Any pre-correction R5 green run is historical evidence only.
+
+A separate maintainer delivery requirement remains release-blocking: the same final candidate must contain a comprehensive root README, `site/index.html`, a pinned GitHub Pages workflow and direct Web/Lite delivery at `/validator/`. That surface existed in historical integrated PR #307 but was accidentally omitted when the clean transport moved to PR #310. PR #310 is the sole active transport and absorbs only those delivery files/contracts, never stale canonical/runtime source from #307. Static must enforce `readme_delivery=true pages_contract=true`. After squash merge, exact-main Stage C additionally requires Pages deployment and live verification of `https://tiagosombrra.github.io/abntexto-ufc/` and `https://tiagosombrra.github.io/abntexto-ufc/validator/`. PRs #307/#308/#309 are historical/source material and must not be merged as competing candidates.
 
 The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
 
