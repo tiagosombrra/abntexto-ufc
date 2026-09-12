@@ -25,7 +25,7 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
 | Active correction branch | `fix/v3.0.1-approval-page` |
-| Tracking issue / PR | #304 / #305 merged historical; resolve active correction PR by branch |
+| Tracking issue / PR | #304 / #305 merged historical; active correction PR #311 |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
