@@ -1,5 +1,5 @@
 {
-  "format_revision": "2026-09-12-c",
+  "format_revision": "2026-09-12-d",
   "target_package": "abntexto-ufc",
   "target_release": "3.0.1",
   "mode": "CONSOLIDATED_PREPUBLICATION_REGRESSION",
@@ -147,6 +147,20 @@
       "status": "RESOLVED_IN_SUCCESSOR_PENDING_CI",
       "finding": "Active machine state retained stale 11 September approval text, misspelled recertification key and lifecycle omitted the global regression file.",
       "resolution": "Correct machine state and classify every current release file."
+    },
+    {
+      "id": "D6",
+      "status": "RESOLVED_IN_SUCCESSOR_PENDING_CI",
+      "finding": "First README link-closure implementation used an over-escaped raw regex and falsely reported zero local links.",
+      "resolution": "Use r\"\\[[^]]+\\]\\(([^)]+)\\)\"; repository audit independently confirmed seven valid README relative links and no broken local links across current documentation surfaces."
     }
-  ]
+  ],
+  "hygiene_successor_run": {
+    "source_sha": "8317be2ebe8d738e8cd66dad5fb55e7211e4da35",
+    "static": "#516 FAIL",
+    "linux": "#437 FAIL scope=complete PASS=36 FAIL=1 SKIP=1",
+    "release": "#147 FAIL scope=complete PASS=36 FAIL=1 SKIP=1",
+    "root_cause": "README relative-link observer regex over-escaped; runtime regression not observed; coadvisor approval regression passed.",
+    "corrective_action": "Correct regex and rerun full Stage A on one successor SHA."
+  }
 }

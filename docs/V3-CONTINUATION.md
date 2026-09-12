@@ -136,7 +136,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Resolve the current PR #310 head after the hygiene successor. Require fresh Static + Linux `complete` + Linux Release Check/current `pkgcheck` on that exact head; the prior green `21e371d3...` matrix is non-closing development evidence. Verify the new README link-closure assertion, coadvisor approval negative regression, canonical approval/date/TOC/index presentation, README/site/Pages sources and fresh artifacts. Only then perform the single squash merge and exact-main Stage C.
+The hygiene head `8317be2...` produced Static #516, Linux #437 and Release #147 failures from one observer bug: an over-escaped README Markdown-link regex. The README links are valid and the strengthened coadvisor approval regression passed. Advance PR #310 with the bounded observer fix only, then require fresh Static + Linux `complete` + Release/current `pkgcheck` on that exact successor SHA. Only a fully green successor may close Stage A.
 
 ## Documentation discipline
 

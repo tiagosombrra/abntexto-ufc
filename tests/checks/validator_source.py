@@ -59,7 +59,7 @@ def run_source_check(path: Path, label: str, *args: str) -> None:
 
 
 def validate_readme_relative_links(readme: str) -> int:
-    pattern = re.compile(r"\\[[^\\]]+\\]\\(([^)]+)\\)")
+    pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)")
     links = 0
     root = ROOT.resolve()
     for raw_target in pattern.findall(readme):

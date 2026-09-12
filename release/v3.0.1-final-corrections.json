@@ -1,5 +1,5 @@
 {
-  "schema_version": 31,
+  "schema_version": 32,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 310,
@@ -619,7 +619,7 @@
       }
     },
     "R5": {
-      "status": "ACTIVE_HYGIENE_SUCCESSOR_PENDING_CI",
+      "status": "ACTIVE_OBSERVER_FIX_PENDING_FRESH_STAGE_A",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -810,7 +810,7 @@
       "evidence": "docs/V3.0.1-R6-EVIDENCE.md"
     }
   },
-  "current_next_action": "Require fresh Static Contract, complete Linux Integration and Linux Release Check on the hygiene-successor head of PR #310. The fully green 21e371d3... runs #515/#436/#146 are retained as non-closing development evidence because documentation/machine-state/test-coverage defects were discovered afterward. Only the successor may close Stage A; then inspect its fresh artifacts before the one squash merge.",
+  "current_next_action": "Run fresh Static Contract, complete Linux Integration and Linux Release Check on the observer-fix successor of PR #310. Runs #516/#437/#147 on 8317be2... are non-closing development evidence; all failed on the same over-escaped README-link observer, while the strengthened coadvisor approval regression passed. Only a single exact successor SHA with all three gates green may close Stage A.",
   "pull_request_resolution": "resolve current open PR whose head is working_branch",
   "previous_merged_pull_request": 305,
   "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
@@ -887,7 +887,7 @@
     ]
   },
   "documentation_hygiene_successor": {
-    "status": "IMPLEMENTED_PENDING_FRESH_STAGE_A",
+    "status": "OBSERVER_FIX_IMPLEMENTED_PENDING_FRESH_STAGE_A",
     "fixes": [
       "README relative validation link points to tracked validator/README.md",
       "validator source gate validates every repository-relative README Markdown link",
@@ -897,5 +897,33 @@
       "approval fixture/regression exercises coadvisor name/institution and rejects coadvisor unit/role suffix",
       "machine-state approval date and recertification key corrected"
     ]
+  },
+  "hygiene_successor_failed_run": {
+    "source_sha": "8317be2ebe8d738e8cd66dad5fb55e7211e4da35",
+    "disposition": "NON_CLOSING_DEVELOPMENT_EVIDENCE",
+    "static": {
+      "run_number": 516,
+      "run_id": 34704275571,
+      "status": "FAIL"
+    },
+    "linux": {
+      "run_number": 437,
+      "run_id": 34704275576,
+      "status": "FAIL",
+      "scope": "complete",
+      "summary": "PASS=36 FAIL=1 SKIP=1",
+      "approval_coadvisor_evidence": "PASS unit_lines=0 advisor_role_suffix=0 coadvisor_role_suffix=0"
+    },
+    "release": {
+      "run_number": 147,
+      "run_id": 34704275569,
+      "status": "FAIL",
+      "scope": "complete",
+      "summary": "PASS=36 FAIL=1 SKIP=1",
+      "pkgcheck": "NOT_REACHED"
+    },
+    "root_cause": "The newly added README relative-link regex was over-escaped and searched for literal backslashes before Markdown brackets, causing validator_source.py to report zero relative links even though the README had seven valid repository-relative links.",
+    "runtime_defect_observed": false,
+    "corrective_action": "Use raw regex r\"\\[[^]]+\\]\\(([^)]+)\\)\" and rerun the full Stage A matrix on the successor SHA."
   }
 }
