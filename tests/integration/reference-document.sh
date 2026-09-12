@@ -69,6 +69,54 @@ path = Path(sys.argv[1])
 raw = unicodedata.normalize('NFC', path.read_text(encoding='utf-8', errors='replace'))
 flat = re.sub(r'\s+', ' ', raw)
 
+pages = [re.sub(r'\s+', ' ', page) for page in raw.split('\f')]
+approval_pages = [page for page in pages if 'BANCA EXAMINADORA' in page]
+if len(approval_pages) != 1:
+    raise SystemExit(
+        f'Reference document failed: expected exactly one approval page, found {len(approval_pages)}.'
+    )
+approval = approval_pages[0]
+
+expected_approval_date = '12 de setembro de 2026'
+if expected_approval_date not in approval:
+    raise SystemExit(
+        f'Reference document failed: approval date is not the expected concrete date: {expected_approval_date}'
+    )
+
+expected_committee = (
+    'Prof. Dr. Nome do Orientador',
+    'Profa. Dra. Nome do Segundo Membro',
+    'Prof. Dr. Nome do Terceiro Membro',
+)
+for member in expected_committee:
+    if member not in approval:
+        raise SystemExit(f'Reference document failed: expected committee member is missing: {member}')
+
+for forbidden_member in (
+    'Nome do Quarto Membro',
+    'Nome do Quinto Membro',
+    'Nome do Sexto Membro',
+):
+    if forbidden_member in approval:
+        raise SystemExit(f'Reference document failed: extra committee member rendered: {forbidden_member}')
+
+for forbidden_detail in (
+    'Nome do Centro ou Unidade',
+    'Departamento ou Unidade Acadêmica',
+    'Programa de Pós-Graduação ou Unidade Acadêmica',
+    '(Orientador)',
+    '(Orientadora)',
+):
+    if forbidden_detail in approval:
+        raise SystemExit(
+            f'Reference document failed: committee must render only name and institution; found: {forbidden_detail}'
+        )
+
+print(
+    'REFERENCE-APPROVAL-EVIDENCE status=PASS date=2026-09-12 '
+    'committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0'
+)
+
 complete_author = 'NOME COMPLETO DO AUTOR'
 if complete_author not in flat:
     raise SystemExit(
