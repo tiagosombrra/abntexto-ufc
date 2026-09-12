@@ -10,9 +10,10 @@ Before changing code, tests, standards, workflows, documentation, release metada
 2. read `docs/V3-CONTINUATION.md` first;
 3. read `release/v3.0.1-final-corrections.json`;
 4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`;
-5. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, R4 uses `docs/V3.0.1-R4-EVIDENCE.md`, and the current active lot R5 uses `docs/V3.0.1-R5-EVIDENCE.md`;
-6. inspect issue #304 and PR #305 when remote GitHub state is available;
-7. use older v3 roadmap, recovery and certification documents only as historical/background evidence when the current handoff or machine state points to them.
+5. read `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`;
+6. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, R4 uses `docs/V3.0.1-R4-EVIDENCE.md`, and the current active lot R5 uses `docs/V3.0.1-R5-EVIDENCE.md`;
+7. inspect issue #304 and PR #310; #299/#305/#307/#308/#309/#311 are historical or superseded transports and must not be merged as the final candidate;
+8. use older v3 roadmap, recovery and certification documents only as historical/background evidence; `docs/V3.0.1-DOCUMENT-LIFECYCLE.md` classifies their lifecycle.
 
 Priority on disagreement: **current Git facts > active machine state > current continuation handoff > active-lot evidence > older documents > prior chat or memory**.
 
@@ -24,16 +25,16 @@ Priority on disagreement: **current Git facts > active machine state > current c
 | Active phase | Release |
 | Canonical branch | `main`; always resolve current SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
+| Active correction branch | `release/v3.0.1-canonical-review-corrections` |
+| Tracking issue / PR | #304 / #310 — sole active release transport |
 | Publication | BLOCKED until R6 |
 | R0 | DONE — auditable control plane |
 | R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
 | R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
 | R3 | DONE — sanitized public reference embedded and independently inspected |
 | R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_DYNAMIC — pre-merge complete regression, squash transport, exact-main recertification |
-| R6 | PENDING — maintainer acceptance and publication |
+| R5 | ACTIVE_CONSOLIDATED_FINALIZATION — #310 absorbs bounded #311 approval fix + governance regression + delivery |
+| R6 | PENDING — maintainer acceptance of PDFs + README/site/validator delivery, then publication |
 | Public `v3.0.0` | historical/superseded; never silently retarget |
 
 Never treat a SHA copied from this document as current Git state; resolve the branch dynamically first.
@@ -74,9 +75,17 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 
 R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
+## 2026-09-12 pre-publication regression
+
+The broad regression is recorded in `release/v3.0.1-global-regression.json` and the lifecycle contract in `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`. It found four governance/version-identity defects (G1-G4) in addition to the canonical approval-page correction. These corrections are part of PR #310 so they are certified once with the final runtime and delivery bytes. PR #311 is a partial divergent transport: its unique `frontmatter.def` and approval-test improvements are absorbed into #310, while its stale corpus expectation caused Linux/Release failure and is not carried forward.
+
 ## R5 dynamic candidate transport
 
-R5 uses exactly one release marker: `release/v3-release-candidate.json`. A marker change must force complete Linux Integration on PR #305; after those pre-merge gates pass, PR #305 is squash-merged to `main`. The squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+R5 uses exactly one release marker: `release/v3-release-candidate.json`. The previous PR #305 has already been squash-merged to `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`; maintainer review then reopened R5. The active canonical-review correction must travel through the current open PR whose head is `release/v3.0.1-canonical-review-corrections`. A marker change on that PR must force complete Linux Integration; after Stage A passes, that current PR is squash-merged to `main`. The resulting squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+
+Maintainer review across 2026-09-11/12 reopened Stage A after the previously green marker head because the canonical TCC still showed a placeholder approval date, six committee members with department/center lines, a visible empty-label punctuation artifact before dotted leaders on unnumbered post-textual TOC entries, and a printed remissive index that is not needed in the canonical example. Those findings are release-blocking presentation corrections. The canonical example now uses a concrete approval date, a three-member committee with name/institution only, fixes the unnumbered post-textual TOC source, and leaves the index documented as an optional capability rather than printing it by default. Any pre-correction R5 green run is historical evidence only.
+
+A separate maintainer delivery requirement remains release-blocking: the same final candidate must contain a comprehensive root README, `site/index.html`, a pinned GitHub Pages workflow and direct Web/Lite delivery at `/validator/`. That surface existed in historical integrated PR #307 but was accidentally omitted when the clean transport moved to PR #310. PR #310 is the sole active transport and absorbs only those delivery files/contracts, never stale canonical/runtime source from #307. Static must enforce `readme_delivery=true pages_contract=true`. After squash merge, exact-main Stage C additionally requires Pages deployment and live verification of `https://tiagosombrra.github.io/abntexto-ufc/` and `https://tiagosombrra.github.io/abntexto-ufc/validator/`. PRs #307/#308/#309 are historical/source material and must not be merged as competing candidates.
 
 The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
 
@@ -92,7 +101,7 @@ No tracked commit or artifact rebuild is allowed after R6 human acceptance and b
 
 ## Deferred post-v3.0.1 work
 
-Whole-repository lifecycle classification, broad branch pruning, broad historical-document consolidation, unrelated runtime/API refactors and deletion of utilities without direct release-defect evidence remain deferred until after v3.0.1.
+Document/tool lifecycle classification is now explicit for 3.0.1. Broad branch pruning, physical historical-document reorganization, unrelated runtime/API refactors and deletion of manual-support utilities without direct release-defect evidence remain deferred until after v3.0.1.
 
 ## Fail-closed rule
 

@@ -1,5 +1,8 @@
 # abntexto-ufc v3 — Canonical Handoff for Release Recovery 3.0.1
 
+> **Historical evidence — not current release authority.** This file is retained for auditability and technical history. Current v3.0.1 state is controlled by `release/v3.0.1-final-corrections.json`, `docs/V3-CONTINUATION.md`, and `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`; lifecycle classification is in `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`. ACTIVE/PENDING wording below describes the historical moment in which this evidence was written.
+
+
 Updated: 2026-09-10
 
 ## Current checkpoint

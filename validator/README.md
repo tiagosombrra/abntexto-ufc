@@ -39,4 +39,4 @@ python3 tests/integration/web-lite-e2e.py \
 
 The harness requires Chrome/Chromium plus a compatible `chromedriver`. It writes the JSON evidence next to a verbose `web-lite-chromedriver.log`; both should be retained when diagnosing a browser-startup failure. In CI, the `web-lite` Linux Integration scope owns this execution and stores host-side evidence under `runner.temp`.
 
-This repository does not currently contain evidence that a public GitHub Pages deployment is configured. A static-tree/browser PASS is not a claim of public hosting.
+The repository tracks `.github/workflows/pages.yml` to publish `site/` together with this `validator/` tree from canonical `main`. The presence of that workflow is source evidence only: v3.0.1 R5 Stage C must still prove a successful deployment from the exact certified `main` SHA and verify the live project and `/validator/` URLs before R6.

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="abntexto-ufc — classe LaTeX comunitária para trabalhos acadêmicos da UFC.">
+  <title>abntexto-ufc</title>
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f6f8fb}
+    body{margin:0}.wrap{max-width:980px;margin:auto;padding:48px 24px 72px}
+    header{background:#fff;border:1px solid #e3e8ef;border-radius:18px;padding:36px;box-shadow:0 8px 30px #1720330d}
+    h1{margin:0 0 12px;font-size:clamp(2rem,6vw,3.6rem)}h2{margin-top:42px}
+    p{line-height:1.65}.lead{font-size:1.15rem;color:#44506a;max-width:760px}
+    .notice{margin:20px 0;padding:14px 16px;background:#fff7df;border-left:4px solid #9a6a00;border-radius:8px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .button{display:inline-block;padding:11px 16px;border-radius:10px;background:#173f8a;color:#fff;text-decoration:none;font-weight:650}
+    .button.secondary{background:#eef3fb;color:#173f8a}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+    .card{background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:20px}
+    .card h3{margin-top:0}.card a{color:#173f8a}
+    code{background:#eef1f5;padding:2px 5px;border-radius:5px}
+    footer{margin-top:52px;color:#67738a;font-size:.92rem}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>abntexto-ufc</h1>
+    <p class="lead">Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do Ceará, construída sobre <code>abntexto</code>, com templates, referência completa e validação Web/Lite e CLI/Deep.</p>
+    <div class="notice"><strong>Projeto comunitário:</strong> não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.</div>
+    <div class="actions">
+      <a class="button" href="./validator/">Abrir validador Web/Lite</a>
+      <a class="button secondary" href="https://github.com/tiagosombrra/abntexto-ufc/releases">Baixar uma Release</a>
+      <a class="button secondary" href="https://github.com/tiagosombrra/abntexto-ufc">Ver repositório</a>
+    </div>
+  </header>
+
+  <h2>Por onde começar</h2>
+  <section class="grid">
+    <article class="card">
+      <h3>Overleaf</h3>
+      <p>Baixe <code>abntexto-ufc-overleaf-&lt;versão&gt;.zip</code> na Release e envie em <strong>New Project → Upload Project</strong>.</p>
+    </article>
+    <article class="card">
+      <h3>LaTeX local</h3>
+      <p>Use <code>abntexto-ufc-template-&lt;versão&gt;.zip</code>. Ele contém a fonte completa e o PDF pedagógico de referência.</p>
+    </article>
+    <article class="card">
+      <h3>Validação</h3>
+      <p>O <a href="./validator/">Web/Lite</a> roda no navegador. Para PDF/A e incorporação de fontes, use também o CLI/Deep do repositório.</p>
+    </article>
+  </section>
+
+  <h2>O que a distribuição oferece</h2>
+  <section class="grid">
+    <article class="card"><h3>TCC, dissertação e tese</h3><p>Perfis de trabalhos acadêmicos com frontmatter, capítulos, referências e elementos pós-textuais.</p></article>
+    <article class="card"><h3>Projeto e artigo</h3><p>Perfis específicos para projeto de pesquisa, projeto anonimizado e artigo científico.</p></article>
+    <article class="card"><h3>Referência comentada</h3><p>O bundle de uso inclui <code>abntexto-ufc-reference.pdf</code>, gerado da mesma fonte pública do template.</p></article>
+  </section>
+
+  <h2>Links</h2>
+  <section class="grid">
+    <article class="card"><h3>Downloads</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/releases">GitHub Releases</a></p></article>
+    <article class="card"><h3>Documentação</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc#readme">README completo</a></p></article>
+    <article class="card"><h3>Suporte</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/issues">Issues</a></p></article>
+  </section>
+
+  <footer>abntexto-ufc · LPPL 1.3c ou posterior · site publicado a partir do repositório canônico.</footer>
+</main>
+</body>
+</html>

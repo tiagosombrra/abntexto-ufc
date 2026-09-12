@@ -1,5 +1,8 @@
 # R3-B2 Non-Automatic Rule Classification
 
+> **Historical evidence — not current release authority.** This file is retained for auditability and technical history. Current v3.0.1 state is controlled by `release/v3.0.1-final-corrections.json`, `docs/V3-CONTINUATION.md`, and `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`; lifecycle classification is in `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`. ACTIVE/PENDING wording below describes the historical moment in which this evidence was written.
+
+
 Updated: 2026-09-03
 
 R3-B2 reviewed every full-contract rule whose validation mode is not automatic. The authoritative machine-readable classification is `standards/evidence-contribution-policy.json`; this document provides the review rationale in compact form.

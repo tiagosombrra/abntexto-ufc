@@ -1,6 +1,6 @@
 # CTAN / GitHub Release Guide — abntexto-ufc 3.0.1
 
-Updated: 2026-09-10
+Updated: 2026-09-12
 
 This document defines the repository-controlled publication procedure for the recovered `abntexto-ufc` 3.0.1 release. It is a maintainer/release guide, not a claim that 3.0.1 has already been published on GitHub or CTAN.
 
@@ -11,17 +11,19 @@ This document defines the repository-controlled publication procedure for the re
 | Active phase | **Release — v3.0.1 final corrections** |
 | Canonical branch | `main`; resolve the current SHA dynamically from Git |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
-| R0 / R1 / R2 | DONE |
-| R3 | IN_PROGRESS — public distribution repair |
-| R4 / R5 / R6 | PENDING |
+| Active correction branch | `release/v3.0.1-canonical-review-corrections` |
+| Tracking issue / PR | #304 / #310 — sole active release transport |
+| R0 / R1 / R2 / R3 / R4 | DONE — historical accepted implementation/evidence |
+| R5 | ACTIVE_CONSOLIDATED_FINALIZATION — fresh complete certification required on PR #310 |
+| R6 | PENDING — maintainer acceptance and immutable publication |
 | Public `v3.0.0` | historical/superseded; never retarget silently |
 | Recovery target | `3.0.1` |
 | CTAN runtime shape | one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files |
 | Human visual gate | final full canonical TCC plus seven profile pairs; explicit maintainer approval required |
 | Final GitHub `v3.0.1` tag/Release | not yet published |
 | CTAN upload/acceptance | not yet claimed; explicit evidence required |
+
+The 2026-09-12 pre-publication regression is recorded in `release/v3.0.1-global-regression.json`; document/tool lifecycle is classified in `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`. PR #310 absorbs the bounded approval-page runtime/test correction from superseded PR #311 and must be fully recertified before R6.
 
 Current continuation state is controlled by `AGENTS.md`, `docs/V3-CONTINUATION.md`, `release/v3.0.1-final-corrections.json` and the active lot evidence document. Older recovery documents are historical evidence when those current files do not point to them.
 

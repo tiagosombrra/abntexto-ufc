@@ -136,10 +136,17 @@ for marker in (
     "RESUMO",
     "INTRODUÇÃO",
     "REFERÊNCIAS",
-    "ÍNDICE",
 ):
     if marker not in text:
         raise SystemExit(f"Release reference reproducibility failed: Unicode extraction marker is missing: {marker}")
+
+# The canonical TCC documents index support but intentionally does not render
+# a remissive index. Keep the release-level Unicode observer aligned with that
+# public presentation contract rather than requiring the removed output.
+if "ÍNDICE REMISSIVO" in text:
+    raise SystemExit(
+        "Release reference reproducibility failed: canonical PDF unexpectedly renders ÍNDICE REMISSIVO"
+    )
 PY
 
 python3 - "$EVIDENCE" "$SOURCE_SHA" "$EPOCH" "$EPOCH_SOURCE" "$HASH1" "$BYTES1" "$OUTPUT_PDF" <<'PY'

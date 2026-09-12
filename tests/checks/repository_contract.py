@@ -15,9 +15,11 @@ REQUIRED_PATHS = {
     "tests/run.py",
     "docs/ARCHITECTURE.md",
     "docs/ENGINEERING-LANGUAGE.md",
-    "docs/ROADMAP-V3.0.0.md",
-    "docs/HANDOFF-V3.0.0.md",
-    "release/v3-roadmap.json",
+    "docs/V3-CONTINUATION.md",
+    "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
+    "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "release/v3.0.1-final-corrections.json",
+    "release/v3-release-candidate.json",
 }
 
 FORBIDDEN_EXACT_PATHS = {
@@ -114,11 +116,8 @@ STALE_CONTENT_FRAGMENTS = (
 )
 
 CONTENT_SCAN_EXEMPT = {
-    # Canonical control-plane files may document a stale path while tracking
-    # its removal; they remain subject to path/existence and state checks.
-    "docs/ROADMAP-V3.0.0.md",
-    "docs/HANDOFF-V3.0.0.md",
-    "release/v3-roadmap.json",
+    # The API migration mapping intentionally names retired paths and API
+    # identifiers as migration evidence; current release authorities are scanned normally.
     "release/v3-api-migration.json",
     # This checker defines the forbidden literals above; scanning its own
     # source would report those policy definitions as active stale references.
