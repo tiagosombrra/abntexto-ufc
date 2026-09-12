@@ -119,7 +119,7 @@ required = (
     'Método Java com numeração a cada duas linhas',
     'Máximo divisor comum com números de linha',
     'Seleção do maior valor sem números de linha',
-    'Aprovada em: 11 de setembro de 2026',
+    'Aprovada em: 12 de setembro de 2026',
     'ABNT NBR 14724:2024',
     'ABNT NBR 6023:2025',
     'ABNT NBR 10520:2023',
@@ -159,10 +159,13 @@ for forbidden in (
     'Nome do Sexto Membro',
     'Nome do Centro ou Unidade',
     'Departamento ou Unidade Acadêmica',
+    'Programa de Pós-Graduação ou Unidade Acadêmica',
+    '(Orientador)',
+    '(Orientadora)',
 ):
     if forbidden in committee:
         raise SystemExit(f'Corpus failed: retired canonical committee content remains: {forbidden}')
-if 'Aprovada em: 11 de setembro de 2026' not in committee:
+if 'Aprovada em: 12 de setembro de 2026' not in committee:
     raise SystemExit('Corpus failed: concrete canonical approval date is missing.')
 
 list_blocks = (

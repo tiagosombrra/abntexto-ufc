@@ -1,5 +1,8 @@
 # Core Corrections — Phase-end Regression
 
+> **Historical evidence — not current release authority.** Retained unchanged in substance for auditability. Use the current v3.0.1 continuation, finalization plan and machine state for live phase/status. See `docs/V3.0.1-DOCUMENT-LIFECYCLE.md` for classification.
+
+
 Updated: 2026-09-05
 Status: CLOSED
 

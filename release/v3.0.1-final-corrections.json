@@ -1,8 +1,8 @@
 {
-  "schema_version": 29,
+  "schema_version": 30,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": null,
+  "pull_request": 310,
   "working_branch": "release/v3.0.1-canonical-review-corrections",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
@@ -619,7 +619,7 @@
       }
     },
     "R5": {
-      "status": "REOPENED_INTEGRATED_FINAL_CANDIDATE",
+      "status": "ACTIVE_CONSOLIDATED_FINALIZATION",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -810,8 +810,37 @@
       "evidence": "docs/V3.0.1-R6-EVIDENCE.md"
     }
   },
-  "current_next_action": "Fast-forward PR #310 to the prepared integrated successor that combines final README/site/Pages delivery with the corrected release-reference Unicode observer. Require Static PASS with readme_delivery=true pages_contract=true, Linux complete/Web-Lite E2E PASS, Linux Release Check/current pkgcheck PASS, fresh canonical/distribution/review artifacts and independent visual/source inspection. Preserve #510/#431/#141 as non-closing development evidence.",
+  "current_next_action": "Run fresh Static Contract, complete Linux Integration and Linux Release Check on the consolidated PR #310 head after approval-page runtime/test absorption and governance/document lifecycle repair. Treat all earlier #310/#311 CI as development evidence only. If the exact consolidated head is green, inspect fresh canonical/distribution/review artifacts, then squash-merge #310 once and repeat exact-main Stage C before R6.",
   "pull_request_resolution": "resolve current open PR whose head is working_branch",
   "previous_merged_pull_request": 305,
-  "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d"
+  "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+  "global_regression": {
+    "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+    "evidence": "release/v3.0.1-global-regression.json",
+    "lifecycle": "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "findings": [
+      "C1 approval-page convergence",
+      "C2 canonical TOC/index/delivery continuity",
+      "G1 current authority contradiction",
+      "G2 stale permanent repository-contract dependencies",
+      "G3 active v3.0.0 User-Agent residue",
+      "G4 historical-document lifecycle ambiguity"
+    ],
+    "active_transport_pr": 310,
+    "superseded_open_prs": [
+      299,
+      307,
+      308,
+      309,
+      311
+    ],
+    "pr311_absorption": [
+      "abntexto-ufc/frontmatter.def",
+      "tests/documents/frontmatter-approval-test.tex",
+      "tests/integration/frontmatter-approval-evidence.sh",
+      "approval-page assertions in tests/integration/reference-document.sh"
+    ],
+    "canonical_approval_date": "2026-09-12",
+    "stage_a_recerrtification_required": true
+  }
 }

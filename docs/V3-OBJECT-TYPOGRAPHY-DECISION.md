@@ -1,5 +1,8 @@
 # V3 Object Typography Decision
 
+> **Historical evidence — not current release authority.** This record may remain technically informative, but its phase/status statements are historical. Current release state is defined by the v3.0.1 continuation/finalization control plane. See `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`.
+
+
 Updated: 2026-09-05
 Status: ACCEPTED — AUTOMATED REGRESSION GREEN
 

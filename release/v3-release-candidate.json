@@ -1,6 +1,6 @@
 {
-  "schema_version": 12,
-  "purpose": "v3.0.1 final integrated candidate marker after R0-R4 closure; combines post-merge canonical corrections with README/site/Pages delivery and forces fresh Stage A, exact-main Stage C, live Pages checks and maintainer acceptance",
+  "schema_version": 13,
+  "purpose": "v3.0.1 single integrated final candidate marker: canonical/runtime corrections, approval-page convergence, README/site/Pages delivery and pre-publication governance regression are certified together",
   "phase": "release",
   "target_version": "3.0.1",
   "candidate_semantics": "the exact canonical main SHA produced by squash-merging PR #310 after one head containing canonical/runtime corrections plus restored README/site/Pages delivery passes complete Stage A; the resulting main SHA must independently pass Static, complete Linux including real Web/Lite E2E, Linux Release Check/current CTAN pkgcheck, artifact inspection, Pages deployment/live URL verification and maintainer visual acceptance",
@@ -107,10 +107,14 @@
     "expected_validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
     "canonical_review_required": true,
     "canonical_review_checks": [
-      "concrete approval date",
-      "three-member approval committee",
+      "approval date 12 de setembro de 2026",
+      "exactly three canonical committee members",
+      "committee signature blocks render name and institution only",
+      "committee unit/program metadata does not render",
+      "advisor/coadvisor role suffix does not render in committee block",
       "unnumbered post-textual TOC has no empty-label punctuation",
-      "canonical remissive index absent while optional API remains"
+      "canonical remissive index absent while optional API remains",
+      "current 3.0.1 control-plane authority and document lifecycle are internally consistent"
     ]
   },
   "release_contract": "make release-check",
@@ -148,7 +152,7 @@
   },
   "human_visual_acceptance": {
     "required_before_tag": true,
-    "state": "pending-fresh-maintainer-approval-after-canonical-review-correction",
+    "state": "pending-fresh-maintainer-approval-after-consolidated-r5-stage-c",
     "profiles": [
       "undergraduate-capstone",
       "specialization-capstone",
@@ -204,7 +208,9 @@
     "post_merge_pre_tag_source_receipt_commit_allowed": false,
     "live_post_merge_receipts": "GitHub Actions runs/artifacts and issue #304 until publication",
     "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md",
-    "integrated_followup_policy": "Final delivery source from historical PR #307 is absorbed into PR #310; PRs #307/#308/#309 must not be merged as competing candidates"
+    "integrated_followup_policy": "Final delivery source from historical PR #307 is absorbed into PR #310; PRs #307/#308/#309 must not be merged as competing candidates",
+    "document_lifecycle": "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "global_regression": "release/v3.0.1-global-regression.json"
   },
   "publication_rebuild_allowed": false,
   "remove_after_acceptance": false,
@@ -228,7 +234,7 @@
       "release_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
       "pkgcheck": "4.1.0 PASS"
     },
-    "r5_state": "REOPENED_INTEGRATED_FINAL_CANDIDATE",
+    "r5_state": "ACTIVE_CONSOLIDATED_FINALIZATION",
     "merge_method": "squash",
     "post_merge_receipt_commit_forbidden": true,
     "canonical_review_correction": {
@@ -242,7 +248,8 @@
         "remove remissive index from canonical output while retaining optional API/documentation"
       ],
       "fresh_correction_pr_complete_regression_required": true,
-      "fresh_exact_main_stage_c_required": true
+      "fresh_exact_main_stage_c_required": true,
+      "canonical_approval_date": "2026-09-12"
     },
     "pull_request_resolution": "resolve current open PR whose head is working_branch",
     "previous_merged_pull_request": 305,
@@ -274,6 +281,13 @@
       "pages_workflow_pass_required_on_final_main": true,
       "live_url_verification_required": true,
       "pages_setting_policy": "If Pages is not enabled for GitHub Actions, enable the external repository setting and rerun deployment on the same source SHA; do not bypass or change certified source merely to hide the failure."
+    },
+    "consolidated_regression": {
+      "pr311_partial_transport": "superseded-after-bounded-runtime-test-absorption",
+      "governance_findings": "G1-G4 resolved in candidate pending CI",
+      "repository_contract_authority": "current v3.0.1 control files",
+      "active_version_residue": "removed from fetch-reference-images User-Agent",
+      "historical_document_lifecycle": "classified and bannered"
     }
   },
   "site_delivery": {

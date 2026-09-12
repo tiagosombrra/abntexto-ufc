@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
-Updated: 2026-09-11
-Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 REOPENED_CANONICAL_REVIEW; publication blocked
+Updated: 2026-09-12
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_CONSOLIDATED_FINALIZATION; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -12,8 +12,9 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 3. Read this file.
 4. Read `release/v3.0.1-final-corrections.json`.
 5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
-6. For the active lot R5, read `docs/V3.0.1-R5-EVIDENCE.md`.
-7. Continue from `current_next_action` in the machine state.
+6. Read `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`.
+7. For the active lot R5, read `docs/V3.0.1-R5-EVIDENCE.md`.
+8. Continue from `current_next_action` in the machine state.
 
 Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
 
@@ -25,7 +26,7 @@ Current Git facts override the machine state; the machine state overrides this h
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
 | Active branch | `release/v3.0.1-canonical-review-corrections` |
-| Tracking issue / PR | #304 / resolve current open PR from active branch (`#305` is historical merged transport) |
+| Tracking issue / PR | #304 / #310 — sole active release transport |
 | PR state | current canonical-review correction PR must remain unmerged until fresh Stage A passes |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
@@ -103,13 +104,15 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — REOPENED INTEGRATED FINAL CANDIDATE
+## R5 — ACTIVE CONSOLIDATED FINALIZATION
 
 R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The previous marker head `c21ffe45f8c8ce5025ff636e0d10a0e67c72964f` had Static #496, Linux #417 and Release Check #131 green, but maintainer inspection on 2026-09-11 found four user-facing canonical defects. That head is therefore superseded as the final candidate.
 
 The corrective batch changes `template/main.tex` and canonical chapters, removes the empty `\toclabelbox{}` from unnumbered References/Glossary/Index TOC entries in project runtime, updates reference regressions, and requires a fresh complete R5 Stage A. The canonical index remains documented and supported by the class but is not printed or populated in the canonical TCC.
 
 Final-delivery continuity is also release-blocking. The reviewed README/site/Pages surface from historical PR #307 was accidentally omitted by the clean PR #310 transport. PR #310 now absorbs only `README.md`, `site/index.html`, `.github/workflows/pages.yml`, the static delivery assertions and `docs/V3.0.1-R6-EVIDENCE.md`. The README avoids a hard-coded final page count before the corrected TCC is rebuilt. Stage A requires Static evidence `readme_delivery=true pages_contract=true`; Stage C additionally requires exact-main Pages deployment and live site/validator checks.
+
+The 2026-09-12 regression also found stale control-plane authority, an obsolete 3.0.0 User-Agent and a partial divergent PR #311. PR #310 now absorbs the bounded #311 approval-runtime/test improvements, current 3.0.1 authority repair, document lifecycle classification and version-neutral asset-fetch identity. The previously green #310 head is therefore development evidence only and a fresh complete Stage A is mandatory.
 
 Once the integrated exact PR head passes Stage A, squash-merge PR #310 once, resolve the resulting `main` SHA dynamically and require the automatic exact-main cycle.
 

@@ -72,9 +72,25 @@ if marker not in flat:
     raise SystemExit(
         'Approval page audit failed: committee institution/acronym marker is missing.'
     )
+
+for forbidden in (
+    'UFCFRONTMATTERAPADVISORUNITSHOULDNOTRENDER',
+    'UFCFRONTMATTERAPEXAMINERUNITSHOULDNOTRENDER',
+):
+    if forbidden in flat:
+        raise SystemExit(
+            f'Approval page audit failed: committee unit/program marker leaked into output: {forbidden}'
+        )
+
+if '(Orientador)' in flat or '(Orientadora)' in flat:
+    raise SystemExit(
+        'Approval page audit failed: committee member line must contain name only, without advisor role suffix.'
+    )
+
 print(
     'LIBRARIAN-REVIEW-EVIDENCE item=7 status=PASS '
-    'context=approval-page institution-acronym-rendered=true'
+    'context=approval-page institution-acronym-rendered=true '
+    'member-lines=name-plus-institution-only unit-lines=0 advisor-role-suffix=0'
 )
 PY
 

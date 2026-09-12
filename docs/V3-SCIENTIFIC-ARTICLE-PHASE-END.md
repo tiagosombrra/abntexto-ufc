@@ -1,5 +1,8 @@
 # Scientific Article — Phase-end Regression
 
+> **Historical evidence — not current release authority.** ACTIVE/PENDING statements below belong to the phase in which this file was produced. Current v3.0.1 state is defined by `release/v3.0.1-final-corrections.json`, `docs/V3-CONTINUATION.md`, and the finalization plan. See `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`.
+
+
 Updated: 2026-09-07  
 Status: ACCEPTED
 

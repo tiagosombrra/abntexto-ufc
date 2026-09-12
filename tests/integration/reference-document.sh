@@ -69,25 +69,58 @@ path = Path(sys.argv[1])
 raw = unicodedata.normalize('NFC', path.read_text(encoding='utf-8', errors='replace'))
 flat = re.sub(r'\s+', ' ', raw)
 
-approval_date = 'Aprovada em: 11 de setembro de 2026'
-if approval_date not in flat:
+pages = [re.sub(r'\\s+', ' ', page) for page in raw.split('\\f')]
+approval_pages = [page for page in pages if 'BANCA EXAMINADORA' in page]
+if len(approval_pages) != 1:
     raise SystemExit(
-        'Reference document failed: canonical approval date is missing or still a placeholder.'
+        f'Reference document failed: expected exactly one approval page, found {len(approval_pages)}.'
     )
-for forbidden in (
-    'dia de mês de 2026',
+approval = approval_pages[0]
+
+expected_approval_date = '12 de setembro de 2026'
+if expected_approval_date not in approval:
+    raise SystemExit(
+        f'Reference document failed: approval date is not the expected concrete date: {expected_approval_date}'
+    )
+
+expected_committee = (
+    'Prof. Dr. Nome do Orientador',
+    'Profa. Dra. Nome do Segundo Membro',
+    'Prof. Dr. Nome do Terceiro Membro',
+)
+for member in expected_committee:
+    if member not in approval:
+        raise SystemExit(f'Reference document failed: expected committee member is missing: {member}')
+
+for forbidden_member in (
     'Nome do Quarto Membro',
     'Nome do Quinto Membro',
     'Nome do Sexto Membro',
+):
+    if forbidden_member in approval:
+        raise SystemExit(f'Reference document failed: extra committee member rendered: {forbidden_member}')
+
+for forbidden_detail in (
     'Nome do Centro ou Unidade',
     'Departamento ou Unidade Acadêmica',
-    'ÍNDICE REMISSIVO',
+    'Programa de Pós-Graduação ou Unidade Acadêmica',
+    '(Orientador)',
+    '(Orientadora)',
 ):
-    if forbidden in flat:
-        raise SystemExit(f'Reference document failed: retired canonical approval/index marker remains: {forbidden}')
-for member in ('Nome do Orientador', 'Nome do Segundo Membro', 'Nome do Terceiro Membro'):
-    if member not in flat:
-        raise SystemExit(f'Reference document failed: canonical three-member committee is missing: {member}')
+    if forbidden_detail in approval:
+        raise SystemExit(
+            f'Reference document failed: committee must render only name and institution; found: {forbidden_detail}'
+        )
+
+if 'dia de mês de 2026' in flat:
+    raise SystemExit('Reference document failed: placeholder approval date remains in canonical output.')
+if 'ÍNDICE REMISSIVO' in flat:
+    raise SystemExit('Reference document failed: canonical remissive index remains rendered.')
+
+print(
+    'REFERENCE-APPROVAL-EVIDENCE status=PASS date=2026-09-12 '
+    'committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0'
+)
 
 complete_author = 'NOME COMPLETO DO AUTOR'
 if complete_author not in flat:

@@ -1,0 +1,113 @@
+{
+  "format_revision": "2026-09-12-b",
+  "target_package": "abntexto-ufc",
+  "target_release": "3.0.1",
+  "mode": "CONSOLIDATED_PREPUBLICATION_REGRESSION",
+  "publication": "FROZEN",
+  "canonical_main_baseline": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+  "active_transport": {
+    "pull_request": 310,
+    "branch": "release/v3.0.1-canonical-review-corrections",
+    "policy": "single active release transport"
+  },
+  "baseline_pr310": {
+    "head": "a0e58bac2820817391a94f76c81bcc56e93178d0",
+    "static": "#511 PASS",
+    "linux": "#432 PASS",
+    "release": "#142 PASS",
+    "disposition": "green historical precursor; superseded by consolidation changes"
+  },
+  "partial_pr311": {
+    "head": "a3b558f9c668c6cf588d38be41e9aff25e185b00",
+    "static": "#514 PASS",
+    "linux": "#435 FAIL",
+    "release": "#145 FAIL",
+    "root_cause": "partial transport changed canonical committee while retaining stale reference-corpus expectations for fifth/sixth members",
+    "disposition": "unique frontmatter/runtime-test improvements absorbed into PR310; PR311 superseded"
+  },
+  "blockers": [
+    {
+      "id": "C1",
+      "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+      "finding": "Approval page runtime must render name + institution only, with concrete 2026-09-12 date and exactly three canonical committee members.",
+      "paths": [
+        "abntexto-ufc/frontmatter.def",
+        "template/main.tex",
+        "tests/documents/frontmatter-approval-test.tex",
+        "tests/integration/frontmatter-approval-evidence.sh",
+        "tests/integration/reference-document.sh",
+        "tests/integration/reference-corpus.sh"
+      ]
+    },
+    {
+      "id": "C2",
+      "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+      "finding": "TOC/index corrections and final README/site/Pages delivery must stay in the same candidate.",
+      "source": "PR310"
+    },
+    {
+      "id": "G1",
+      "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+      "finding": "Current-looking control documents disagreed about active release state.",
+      "resolution": "Single 3.0.1 authority chain plus lifecycle classification."
+    },
+    {
+      "id": "G2",
+      "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+      "finding": "repository_contract.py required stale v3.0.0 roadmap/handoff and exempted them from scanning.",
+      "resolution": "Require current 3.0.1 authorities instead."
+    },
+    {
+      "id": "G3",
+      "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+      "finding": "fetch-reference-images.py used active abntexto-ufc/3.0.0 User-Agent.",
+      "resolution": "Use version-neutral project User-Agent."
+    },
+    {
+      "id": "G4",
+      "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+      "finding": "Historical phase documents could be mistaken for current state.",
+      "resolution": "Lifecycle registry plus explicit historical banners on current-looking historical files."
+    }
+  ],
+  "non_blocking_debt": [
+    {
+      "id": "N1",
+      "finding": "Large branch population.",
+      "when": "POST_3_0_1",
+      "action": "keep/delete manifest before pruning"
+    },
+    {
+      "id": "N2",
+      "finding": "Three PowerShell manual-support tools lack permanent tracked consumers.",
+      "when": "POST_3_0_1",
+      "action": "document owner or remove in separate lifecycle change"
+    },
+    {
+      "id": "N3",
+      "finding": "Three permanent certification workflows have distinct responsibilities.",
+      "decision": "KEEP"
+    },
+    {
+      "id": "N4",
+      "finding": "Retained test/check surface was fully reachable in prior static census.",
+      "decision": "KEEP"
+    },
+    {
+      "id": "N5",
+      "finding": "R1.2 MISSING/PARTIAL matrix is historical baseline.",
+      "decision": "HISTORICAL_NOT_CURRENT_TODO"
+    }
+  ],
+  "required_next_gates": [
+    "Static Contract PASS on consolidated PR310 head",
+    "Linux Integration scope=complete PASS including productive Web/Lite E2E",
+    "Linux Release Check PASS including current CTAN pkgcheck",
+    "fresh canonical/distribution/review artifacts inspected",
+    "squash PR310 once",
+    "exact-main Static + complete Linux + Release Check PASS",
+    "GitHub Pages deployment and live site/validator verification",
+    "maintainer R6 visual acceptance on exact-main bytes",
+    "immutable v3.0.1 tag/GitHub Release and CTAN submission from frozen bytes"
+  ]
+}
