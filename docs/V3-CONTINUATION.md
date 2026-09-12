@@ -131,7 +131,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-The observer-correction head `0eff9245...` is non-closing even if its technical runs pass because it lacks the active final-delivery requirement. After its Release Check finishes, advance PR #310 to the integrated delivery successor. Require Static PASS with `readme_delivery=true pages_contract=true`, Linux `complete` + productive Web/Lite E2E PASS, Release/current `pkgcheck` PASS and fresh artifacts. Inspect approval date, exactly three committee members without unit lines, clean Referências/Glossário TOC entries, no rendered remissive index, comprehensive README, landing page and CTAN ZIP. Only the integrated head may close Stage A and be squash-merged.
+The non-closing head `0eff9245...` produced Static #510 PASS and Linux #431 complete PASS, but Release #141 failed after the complete repository/distribution gates because the release reproducibility observer still required the removed canonical `ÍNDICE` marker. The integrated successor corrects that observer and restores the missing final README/site/Pages delivery in one candidate. Advance PR #310 to that successor and require Static PASS with `readme_delivery=true pages_contract=true`, Linux `complete` + productive Web/Lite E2E PASS, Release/current `pkgcheck` PASS and fresh artifacts. Inspect approval date, exactly three committee members without unit lines, clean Referências/Glossário TOC entries, no rendered remissive index, comprehensive README, landing page and CTAN ZIP. Only that integrated head may close Stage A and be squash-merged.
 
 ## Documentation discipline
 
