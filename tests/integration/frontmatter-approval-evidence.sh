@@ -67,14 +67,39 @@ text = Path('/tmp/abntexto-ufc-approval-doctoral.txt').read_text(
     encoding='utf-8', errors='replace'
 )
 flat = re.sub(r'\s+', ' ', unicodedata.normalize('NFC', text))
-marker = 'Instituição Externa de Teste (IET)'
-if marker not in flat:
-    raise SystemExit(
-        'Approval page audit failed: committee institution/acronym marker is missing.'
-    )
+for marker in (
+    'UFCFRONTMATTERAPADVISOR',
+    'UFCFRONTMATTERAPCOADVISOR',
+    'UFCFRONTMATTERAPMEMBER',
+    'Universidade Federal do Ceará',
+    'Instituição de Coadvisão de Teste (ICT)',
+    'Instituição Externa de Teste (IET)',
+):
+    if marker not in flat:
+        raise SystemExit(
+            f'Approval page audit failed: expected committee name/institution marker is missing: {marker}'
+        )
+
+for forbidden in (
+    'UFCFRONTMATTERAPADVISORUNITSHOULDNOTRENDER',
+    'UFCFRONTMATTERAPCOADVISORUNITSHOULDNOTRENDER',
+    'UFCFRONTMATTERAPEXAMINERUNITSHOULDNOTRENDER',
+):
+    if forbidden in flat:
+        raise SystemExit(
+            f'Approval page audit failed: committee unit/program marker leaked into output: {forbidden}'
+        )
+
+for suffix in ('(Orientador)', '(Orientadora)', '(Coorientador)', '(Coorientadora)'):
+    if suffix in flat:
+        raise SystemExit(
+            f'Approval page audit failed: committee member line must contain name only, without role suffix: {suffix}'
+        )
+
 print(
     'LIBRARIAN-REVIEW-EVIDENCE item=7 status=PASS '
-    'context=approval-page institution-acronym-rendered=true'
+    'context=approval-page institution-acronym-rendered=true '
+    'member-lines=name-plus-institution-only unit-lines=0 advisor-role-suffix=0 coadvisor-role-suffix=0'
 )
 PY
 

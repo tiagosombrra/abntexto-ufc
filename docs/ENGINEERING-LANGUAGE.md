@@ -1,6 +1,6 @@
 # Engineering Language Policy
 
-Updated: 2026-09-05
+Updated: 2026-09-12
 
 `abntexto-ufc` v3 uses English for every project-owned engineering surface: repository paths and filenames, the LaTeX project API and internal identifiers, source comments, technical diagnostics, scripts, tests, workflows, validator controls/UI, JSON/schema terminology, and active engineering documentation.
 
@@ -38,7 +38,7 @@ Project-owned comments, diagnostics, CLI/UI messages, test failure messages, mac
 
 The canonical article profile identifier is `scientific-article`; `article.*` is the project-owned rule namespace. Historical Portuguese profile identifiers are not restored.
 
-Current phase/status authority comes from `release/v3-roadmap.json`, `docs/HANDOFF-V3.0.0.md`, and `docs/ROADMAP-V3.0.0.md`. Historical opaque stage names may appear only as Git/issue/PR evidence and do not define current work.
+Current phase/status authority comes from `release/v3.0.1-final-corrections.json`, `docs/V3-CONTINUATION.md`, and `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`. Document lifecycle is classified in `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`. Historical roadmap/handoff files may preserve old phase names only as evidence and never define current work.
 
 ## Ongoing guard
 

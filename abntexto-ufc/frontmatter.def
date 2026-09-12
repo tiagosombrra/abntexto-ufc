@@ -1,4 +1,4 @@
-\ProvidesFile{abntexto-ufc/frontmatter.def}[2026/08/23 UFC pre-textual elements]
+\ProvidesFile{abntexto-ufc/frontmatter.def}[2026/09/12 UFC pre-textual elements]
 
 \RequirePackage{pdfpages}
 \RequirePackage{ragged2e}
@@ -186,7 +186,7 @@
       { \dim_set:Nn \l_ufc_signature_gap_dim { .2\baselineskip } }
   }
 
-\cs_new_protected:Npn \ufc_signature_from_keys:nnn #1#2#3
+\cs_new_protected:Npn \ufc_signature_from_keys:nn #1#2
   {
     \ufc_meta_if_blank:nF {#1}
       {
@@ -196,50 +196,28 @@
           \rule{8cm}{0.4pt}\par
           \ufc_meta_use:n {#1}\par
           \ufc_meta_if_blank:nF {#2} { \ufc_meta_use:n {#2}\par }
-          \ufc_meta_if_blank:nF {#3} { \ufc_meta_use:n {#3}\par }
         \endgroup
       }
   }
 
 \cs_new_protected:Npn \ufc_advisor_signature:
   {
-    \ufc_meta_if_blank:nF {advisor}
-      {
-        \par\vspace{\l_ufc_signature_gap_dim}
-        \begingroup
-          \centering\singlesp
-          \rule{8cm}{0.4pt}\par
-          \ufc_meta_use:n {advisor}~(\ufc_orientation_label:)\par
-          \ufc_meta_if_blank:nF {advisor-unit}
-            { \ufc_meta_use:n {advisor-unit}\par }
-          \ufc_meta_if_blank:nF {advisor-institution}
-            { \ufc_meta_use:n {advisor-institution}\par }
-        \endgroup
-      }
+    \ufc_signature_from_keys:nn
+      {advisor}
+      {advisor-institution}
   }
 
 \cs_new_protected:Npn \ufc_coadvisor_signature:
   {
-    \ufc_meta_if_blank:nF {coadvisor}
-      {
-        \par\vspace{\l_ufc_signature_gap_dim}
-        \begingroup
-          \centering\singlesp
-          \rule{8cm}{0.4pt}\par
-          \ufc_meta_use:n {coadvisor}~(\ufc_coorientation_label:)\par
-          \ufc_meta_if_blank:nF {coadvisor-unit}
-            { \ufc_meta_use:n {coadvisor-unit}\par }
-          \ufc_meta_if_blank:nF {coadvisor-institution}
-            { \ufc_meta_use:n {coadvisor-institution}\par }
-        \endgroup
-      }
+    \ufc_signature_from_keys:nn
+      {coadvisor}
+      {coadvisor-institution}
   }
 
 \cs_new_protected:Npn \ufc_examiner_signature:n #1
   {
-    \ufc_signature_from_keys:nnn
+    \ufc_signature_from_keys:nn
       {examiner-#1}
-      {examiner-#1-unit}
       {examiner-#1-institution}
   }
 

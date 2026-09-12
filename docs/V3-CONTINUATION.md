@@ -1,7 +1,7 @@
 # V3 Continuation Handoff — v3.0.1 final corrections
 
-Updated: 2026-09-10
-Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_DYNAMIC; publication blocked
+Updated: 2026-09-12
+Status: RELEASE — R0/R1/R2/R3/R4 DONE; R5 ACTIVE_CONSOLIDATED_FINALIZATION; publication blocked
 
 This is the shortest safe entry point for a new ChatGPT/Codex conversation or a maintainer returning to the repository. Do not reconstruct current state from chat history.
 
@@ -12,8 +12,9 @@ This is the shortest safe entry point for a new ChatGPT/Codex conversation or a 
 3. Read this file.
 4. Read `release/v3.0.1-final-corrections.json`.
 5. Read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`.
-6. For the active lot R5, read `docs/V3.0.1-R5-EVIDENCE.md`.
-7. Continue from `current_next_action` in the machine state.
+6. Read `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`.
+7. For the active lot R5, read `docs/V3.0.1-R5-EVIDENCE.md`.
+8. Continue from `current_next_action` in the machine state.
 
 Current Git facts override the machine state; the machine state overrides this handoff; lot evidence overrides older phase/recovery documents. Prior conversation memory is lowest priority.
 
@@ -24,9 +25,9 @@ Current Git facts override the machine state; the machine state overrides this h
 | Repository | `tiagosombrra/abntexto-ufc` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; retained as evidence, superseded as final candidate |
-| Active branch | `release/v3.0.1-final-corrections` |
-| Tracking issue / PR | #304 / #305 |
-| PR state | CI vehicle only; merge remains blocked |
+| Active branch | `release/v3.0.1-canonical-review-corrections` |
+| Tracking issue / PR | #304 / #310 — sole active release transport |
+| PR state | current canonical-review correction PR must remain unmerged until fresh Stage A passes |
 | Target | `v3.0.1` |
 | Publication | BLOCKED until R6 |
 | Public `v3.0.0` | historical/superseded; never retarget |
@@ -103,15 +104,25 @@ Accepted source: `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`.
 
 Failures #412/#413/#414 and non-closing green #415 remain in `docs/V3.0.1-R4-EVIDENCE.md`.
 
-## R5 — ACTIVE_DYNAMIC
+## R5 — ACTIVE CONSOLIDATED FINALIZATION
 
-R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The marker commit forces a complete PR regression. When the exact PR head passes Stage A, squash-merge #305, resolve the resulting `main` SHA dynamically and require the automatically triggered exact-main Static + complete Linux + Release Check/current `pkgcheck` cycle.
+R5 uses only `release/v3-release-candidate.json` as its phase-end marker. The previous marker head `c21ffe45f8c8ce5025ff636e0d10a0e67c72964f` had Static #496, Linux #417 and Release Check #131 green, but maintainer inspection on 2026-09-11 found four user-facing canonical defects. That head is therefore superseded as the final candidate.
+
+The corrective batch changes `template/main.tex` and canonical chapters, removes the empty `\toclabelbox{}` from unnumbered References/Glossary/Index TOC entries in project runtime, updates reference regressions, and requires a fresh complete R5 Stage A. The canonical index remains documented and supported by the class but is not printed or populated in the canonical TCC.
+
+Final-delivery continuity is also release-blocking. The reviewed README/site/Pages surface from historical PR #307 was accidentally omitted by the clean PR #310 transport. PR #310 now absorbs only `README.md`, `site/index.html`, `.github/workflows/pages.yml`, the static delivery assertions and `docs/V3.0.1-R6-EVIDENCE.md`. The README avoids a hard-coded final page count before the corrected TCC is rebuilt. Stage A requires Static evidence `readme_delivery=true pages_contract=true`; Stage C additionally requires exact-main Pages deployment and live site/validator checks.
+
+A later read-only hygiene pass ran after consolidated head `21e371d3cf71f2443409606a09eb7d1f15636c11` completed Static #515, Linux #436 complete PASS and Release #146 complete/pkgcheck PASS. Those runs are retained as non-closing evidence because the audit found a broken README relative link, stale Pages wording in the validator README, an architecture/lifecycle inconsistency, stale machine-state date/key text and missing coadvisor negative approval coverage. One hygiene successor corrects all of these without changing intended runtime semantics.
+
+The 2026-09-12 regression also found stale control-plane authority, an obsolete 3.0.0 User-Agent and a partial divergent PR #311. PR #310 now absorbs the bounded #311 approval-runtime/test improvements, current 3.0.1 authority repair, document lifecycle classification and version-neutral asset-fetch identity. The previously green #310 head is therefore development evidence only and a fresh complete Stage A is mandatory.
+
+Once the integrated exact PR head passes Stage A, squash-merge PR #310 once, resolve the resulting `main` SHA dynamically and require the automatic exact-main cycle.
 
 Do not commit merely to record the post-merge SHA or green results before tag/publication; that would invalidate the candidate. The tracked dynamic procedure in `docs/V3.0.1-R5-EVIDENCE.md` remains the bootstrap authority, while immutable GitHub runs/artifacts and issue #304 carry live receipts until publication.
 
 ## R6 — PENDING
 
-R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer visual acceptance and publication. The invariant remains:
+R5 is the mandatory complete exact-SHA phase-end release regression on the final canonical `main` candidate after R3/R4 closure and correction-PR merge. R6 is explicit maintainer acceptance of the canonical/reference PDFs, seven profile pairs, root README, deployed project site and live Web/Lite validator, followed by publication. Its tracked authority is `docs/V3.0.1-R6-EVIDENCE.md`. The invariant remains:
 
 ```text
 certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
@@ -125,7 +136,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-Follow the dynamic state machine in `docs/V3.0.1-R5-EVIDENCE.md`. Resolve PR #305 and `main` from Git. If #305 is open, require Static + Linux `complete` + Linux Release Check/current `pkgcheck` on the exact marker head, then squash-merge only if all Stage A gates pass. If #305 is already merged, resolve the exact `main` SHA and verify Stage C automatic runs/artifacts. Do not create a documentation-only commit after merge to record the candidate SHA.
+Resolve the current PR #310 head after the hygiene successor. Require fresh Static + Linux `complete` + Linux Release Check/current `pkgcheck` on that exact head; the prior green `21e371d3...` matrix is non-closing development evidence. Verify the new README link-closure assertion, coadvisor approval negative regression, canonical approval/date/TOC/index presentation, README/site/Pages sources and fresh artifacts. Only then perform the single squash merge and exact-main Stage C.
 
 ## Documentation discipline
 

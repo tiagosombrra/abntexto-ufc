@@ -119,8 +119,7 @@ required = (
     'Método Java com numeração a cada duas linhas',
     'Máximo divisor comum com números de linha',
     'Seleção do maior valor sem números de linha',
-    'Nome do Quinto Membro',
-    'Nome do Sexto Membro',
+    'Aprovada em: 12 de setembro de 2026',
     'ABNT NBR 14724:2024',
     'ABNT NBR 6023:2025',
     'ABNT NBR 10520:2023',
@@ -150,13 +149,24 @@ committee_members = (
     'Nome do Orientador',
     'Nome do Segundo Membro',
     'Nome do Terceiro Membro',
-    'Nome do Quarto Membro',
-    'Nome do Quinto Membro',
-    'Nome do Sexto Membro',
 )
 missing_committee = [name for name in committee_members if name not in committee]
 if missing_committee:
-    raise SystemExit('Corpus failed: committee does not fit entirely on the approval page: ' + ', '.join(missing_committee))
+    raise SystemExit('Corpus failed: canonical three-member committee is incomplete: ' + ', '.join(missing_committee))
+for forbidden in (
+    'Nome do Quarto Membro',
+    'Nome do Quinto Membro',
+    'Nome do Sexto Membro',
+    'Nome do Centro ou Unidade',
+    'Departamento ou Unidade Acadêmica',
+    'Programa de Pós-Graduação ou Unidade Acadêmica',
+    '(Orientador)',
+    '(Orientadora)',
+):
+    if forbidden in committee:
+        raise SystemExit(f'Corpus failed: retired canonical committee content remains: {forbidden}')
+if 'Aprovada em: 12 de setembro de 2026' not in committee:
+    raise SystemExit('Corpus failed: concrete canonical approval date is missing.')
 
 list_blocks = (
     ('LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS', 'Figura 1 — Figura estreita com legenda curta'),
@@ -195,6 +205,8 @@ if toc_end is None:
 
 toc = '\n'.join(raw_pages[toc_start:toc_end])
 toc_flat = normalize_pdf_text(toc)
+if 'ÍNDICE REMISSIVO' in toc_flat:
+    raise SystemExit('Corpus failed: canonical table of contents still contains the optional remissive index.')
 for marker in (
     'INTRODUÇÃO E USO DESTE MODELO',
     'Base normativa adotada',
@@ -210,7 +222,6 @@ for marker in (
     'APÊNDICE D',
     'ANEXO A',
     'ANEXO B',
-    'ÍNDICE REMISSIVO',
 ):
     if marker not in toc_flat:
         raise SystemExit(f'Corpus failed: required entry is missing from the table of contents: {marker}.')
@@ -256,7 +267,7 @@ def toc_title_x(marker):
         )
     return matches[0][1]
 
-reference_x = toc_title_x('INTRODUÇÃO E USO DESTE MODELO')
+numbered_reference_x = toc_title_x('INTRODUÇÃO E USO DESTE MODELO')
 for marker in (
     'ESTRUTURA DO TRABALHO ACADÊMICO',
     'ELEMENTOS PRÉ-TEXTUAIS EM DETALHE',
@@ -264,15 +275,24 @@ for marker in (
     'CITAÇÕES, NOTAS E REFERÊNCIAS',
     'ILUSTRAÇÕES, TABELAS E OUTROS OBJETOS ACADÊMICOS',
     'RECURSOS DO ABNTEXTO-UFC',
-    'REFERÊNCIAS',
-    'GLOSSÁRIO',
-    'ÍNDICE REMISSIVO',
 ):
     actual_x = toc_title_x(marker)
-    if abs(actual_x - reference_x) > 1.5:
+    if abs(actual_x - numbered_reference_x) > 1.5:
         raise SystemExit(
-            f'Corpus failed: {marker} is misaligned in the table of contents: '
-            f'x={actual_x:.2f}, reference={reference_x:.2f}'
+            f'Corpus failed: numbered entry {marker} is misaligned in the table of contents: '
+            f'x={actual_x:.2f}, reference={numbered_reference_x:.2f}'
+        )
+
+# Unnumbered post-textual entries intentionally do not reserve the numbered-label box.
+# Their titles must begin the line directly (toc_title_x already rejects a leading
+# punctuation/text fragment) and must align consistently with each other.
+posttextual_reference_x = toc_title_x('REFERÊNCIAS')
+for marker in ('GLOSSÁRIO',):
+    actual_x = toc_title_x(marker)
+    if abs(actual_x - posttextual_reference_x) > 1.5:
+        raise SystemExit(
+            f'Corpus failed: unnumbered post-textual entry {marker} is misaligned: '
+            f'x={actual_x:.2f}, reference={posttextual_reference_x:.2f}'
         )
 PY
 

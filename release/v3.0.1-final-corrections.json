@@ -1,9 +1,9 @@
 {
-  "schema_version": 24,
+  "schema_version": 31,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
-  "pull_request": 305,
-  "working_branch": "release/v3.0.1-final-corrections",
+  "pull_request": 310,
+  "working_branch": "release/v3.0.1-canonical-review-corrections",
   "target_version": "3.0.1",
   "publication_status": "BLOCKED",
   "historical_certified_baseline": {
@@ -30,7 +30,8 @@
       "conversation_memory"
     ],
     "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md"
+    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -618,7 +619,7 @@
       }
     },
     "R5": {
-      "status": "ACTIVE_DYNAMIC",
+      "status": "ACTIVE_HYGIENE_SUCCESSOR_PENDING_CI",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -626,13 +627,14 @@
       "stages": {
         "A": {
           "name": "pre-merge PR phase-end certification",
-          "status": "PENDING_MARKER_HEAD_GATES",
+          "status": "INTEGRATED_DELIVERY_AND_RELEASE_OBSERVER_CORRECTION_PREPARED",
           "required": [
             "Static PASS",
             "Linux complete PASS with Web/Lite E2E",
             "Linux Release Check complete PASS",
             "current CTAN pkgcheck PASS",
-            "distribution/reference/review-pair gates PASS"
+            "distribution/reference/review-pair gates PASS",
+            "Static README/site/Pages delivery contract PASS"
           ]
         },
         "B": {
@@ -647,7 +649,8 @@
             "automatic Linux complete PASS including Web/Lite E2E",
             "Linux Release Check complete PASS",
             "current CTAN pkgcheck PASS",
-            "exact-main artifacts independently inspected"
+            "exact-main artifacts independently inspected",
+            "GitHub Pages deployment PASS on exact main and live site/validator URLs verified"
           ]
         }
       },
@@ -655,12 +658,244 @@
       "live_receipts_before_publication": [
         "GitHub Actions runs/artifacts",
         "issue #304"
-      ]
+      ],
+      "reopened_on": "2026-09-11",
+      "superseded_pre_correction_head": {
+        "source_sha": "c21ffe45f8c8ce5025ff636e0d10a0e67c72964f",
+        "reason": "Maintainer visual review found canonical approval-page, post-textual TOC punctuation, and default index presentation defects after green Stage A checks.",
+        "workflows": {
+          "static": {
+            "run_number": 496,
+            "run_id": 34556961532,
+            "status": "PASS"
+          },
+          "linux": {
+            "run_number": 417,
+            "run_id": 34556961521,
+            "status": "PASS"
+          },
+          "release": {
+            "run_number": 131,
+            "run_id": 34556961550,
+            "status": "PASS"
+          }
+        },
+        "eligible_for_merge": false
+      },
+      "maintainer_canonical_review_corrections": [
+        "template/main.tex: concrete approval date 12 de setembro de 2026",
+        "template/main.tex: canonical committee reduced to advisor + two examiners, name/institution only",
+        "abntexto-ufc/bibliography.def and backmatter.def: remove empty toclabelbox from unnumbered post-textual TOC entries",
+        "canonical chapters/main: do not enable, populate or print remissive index; preserve optional user instructions",
+        "reference-document/reference-corpus gates updated to enforce corrected canonical presentation"
+      ],
+      "transport": {
+        "baseline_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+        "source_evidence_sha": "ca3e16d415a838ef9cd1eb29f2ca3884d1737d7b",
+        "source_evidence_branch": "release/v3.0.1-final-corrections",
+        "active_branch": "release/v3.0.1-canonical-review-corrections",
+        "policy": "clean branch from current main carrying only canonical-review correction plus its tests/controls",
+        "previous_pr": 305,
+        "previous_pr_state": "squash-merged-historical"
+      },
+      "stage_a_development_runs": [
+        {
+          "workflow": "Static Contract",
+          "run_number": 509,
+          "run_id": 34646050307,
+          "status": "PASS",
+          "source_sha": "b39f48dbc5fef877945e0df7b830f403ddde2c7b"
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 430,
+          "run_id": 34646050352,
+          "status": "FAIL",
+          "source_sha": "b39f48dbc5fef877945e0df7b830f403ddde2c7b",
+          "failing_check": "reference-corpus",
+          "cause": "Observer compared unnumbered post-textual REFERENCES/GLOSSARY x-position against numbered chapter-title x-position after intentional removal of the empty TOC label box.",
+          "runtime_defect": false
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 140,
+          "run_id": 34646050326,
+          "status": "FAIL",
+          "source_sha": "b39f48dbc5fef877945e0df7b830f403ddde2c7b",
+          "failing_check": "reference-corpus",
+          "repository_summary": "SCOPE=complete PASS=36 FAIL=1 SKIP=1",
+          "pkgcheck_verdict": "NOT_CLOSING",
+          "cause": "Same reference-corpus observer mismatch as Linux #430."
+        },
+        {
+          "workflow": "Static Contract",
+          "run_number": 510,
+          "run_id": 34665570308,
+          "status": "PASS",
+          "source_sha": "0eff9245c52723a771779244546084c9a84548cf",
+          "closing": false,
+          "reason": "Head lacks final README/site/Pages delivery surface."
+        },
+        {
+          "workflow": "Linux Integration",
+          "run_number": 431,
+          "run_id": 34665570300,
+          "status": "PASS_NON_CLOSING",
+          "source_sha": "0eff9245c52723a771779244546084c9a84548cf",
+          "scope": "complete",
+          "summary": "PASS=38 FAIL=0 SKIP=0",
+          "web_lite_e2e": "PASS",
+          "canonical_positive_pages": 62,
+          "closing": false,
+          "reason": "Head lacks final README/site/Pages delivery surface."
+        },
+        {
+          "workflow": "Linux Release Check",
+          "run_number": 141,
+          "run_id": 34665570287,
+          "status": "FAIL",
+          "source_sha": "0eff9245c52723a771779244546084c9a84548cf",
+          "repository_summary": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+          "distribution_gate": "PASS",
+          "failing_check": "release-reference-reproducibility Unicode observer",
+          "cause": "Release observer still required Unicode marker ÍNDICE after canonical remissive index was intentionally removed.",
+          "corrective_action": "Remove obsolete positive ÍNDICE requirement and reject exact rendered ÍNDICE REMISSIVO instead; do not restore canonical index."
+        }
+      ],
+      "stage_a_corrective_action": {
+        "path": "tests/integration/reference-corpus.sh",
+        "change": "Compare numbered TOC titles within the numbered class; compare unnumbered REFERENCES/GLOSSARY within the post-textual class; retain explicit absence check for canonical remissive index.",
+        "runtime_changed": false,
+        "empty_toclabelbox_restored": false,
+        "canonical_index_restored": false,
+        "release_reference_observer": {
+          "path": "tests/integration/release-reference-reproducibility.sh",
+          "change": "Keep required Unicode markers for institution/resumo/introduction/references and require exact canonical ÍNDICE REMISSIVO to be absent.",
+          "canonical_index_restored": false,
+          "optional_index_regressions_changed": false
+        }
+      },
+      "final_delivery_continuity": {
+        "requirement_status": "ACTIVE_RELEASE_BLOCKER",
+        "accidental_omission_from_clean_pr310_detected": true,
+        "historical_source_pr": 307,
+        "active_transport_pr": 310,
+        "import_policy": "delivery files/contracts only; no canonical/runtime source imported from PR307",
+        "files": [
+          "README.md",
+          "site/index.html",
+          ".github/workflows/pages.yml",
+          "tests/checks/validator_source.py",
+          "docs/V3.0.1-R6-EVIDENCE.md"
+        ],
+        "readme_hardcoded_final_page_count": false,
+        "expected_site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
+        "expected_validator_url": "https://tiagosombrra.github.io/abntexto-ufc/validator/",
+        "stage_a_static_markers": [
+          "readme_delivery=true",
+          "pages_contract=true"
+        ],
+        "stage_c_pages_required": true,
+        "live_url_verification_required": true,
+        "superseded_competing_prs": [
+          307,
+          308,
+          309
+        ]
+      }
     },
     "R6": {
       "status": "PENDING",
-      "blocked_by": "R5 exact-main certification and artifact inspection"
+      "blocked_by": "R5 integrated exact-main certification, Pages/live delivery verification and artifact inspection",
+      "evidence": "docs/V3.0.1-R6-EVIDENCE.md"
     }
   },
-  "current_next_action": "Resolve current Git facts and follow docs/V3.0.1-R5-EVIDENCE.md. If PR #305 is open, require Static + Linux complete + Linux Release Check/current pkgcheck on the exact marker head, then squash-merge only if Stage A is green. If PR #305 is merged, resolve exact main SHA and verify Stage C automatic runs/artifacts. Do not commit a post-merge receipt merely to record the candidate SHA."
+  "current_next_action": "Require fresh Static Contract, complete Linux Integration and Linux Release Check on the hygiene-successor head of PR #310. The fully green 21e371d3... runs #515/#436/#146 are retained as non-closing development evidence because documentation/machine-state/test-coverage defects were discovered afterward. Only the successor may close Stage A; then inspect its fresh artifacts before the one squash merge.",
+  "pull_request_resolution": "resolve current open PR whose head is working_branch",
+  "previous_merged_pull_request": 305,
+  "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
+  "global_regression": {
+    "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
+    "evidence": "release/v3.0.1-global-regression.json",
+    "lifecycle": "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "findings": [
+      "C1 approval-page convergence",
+      "C2 canonical TOC/index/delivery continuity",
+      "G1 current authority contradiction",
+      "G2 stale permanent repository-contract dependencies",
+      "G3 active v3.0.0 User-Agent residue",
+      "G4 historical-document lifecycle ambiguity"
+    ],
+    "active_transport_pr": 310,
+    "superseded_open_prs": [
+      299,
+      307,
+      308,
+      309,
+      311
+    ],
+    "pr311_absorption": [
+      "abntexto-ufc/frontmatter.def",
+      "tests/documents/frontmatter-approval-test.tex",
+      "tests/integration/frontmatter-approval-evidence.sh",
+      "approval-page assertions in tests/integration/reference-document.sh"
+    ],
+    "canonical_approval_date": "2026-09-12",
+    "stage_a_recertification_required": true
+  },
+  "pre_hygiene_consolidated_run": {
+    "source_sha": "21e371d3cf71f2443409606a09eb7d1f15636c11",
+    "disposition": "NON_CLOSING_DEVELOPMENT_EVIDENCE_SUPERSEDED_BY_HYGIENE_SUCCESSOR",
+    "static": {
+      "run_number": 515,
+      "run_id": 34702981408,
+      "status": "PASS",
+      "readme_delivery": true,
+      "pages_contract": true
+    },
+    "linux": {
+      "run_number": 436,
+      "run_id": 34702981409,
+      "status": "PASS",
+      "scope": "complete",
+      "summary": "PASS=38 FAIL=0 SKIP=0",
+      "approval_evidence": "PASS date=2026-09-12 committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0",
+      "web_lite_e2e": "PASS",
+      "web_artifact_id": 10300652377,
+      "web_artifact_digest": "sha256:894dded0dcb6ca88d46f16cd3f5e8804efd52ab0db43549ce5758f396350bd5b"
+    },
+    "release": {
+      "run_number": 146,
+      "run_id": 34702981403,
+      "status": "PASS",
+      "scope": "complete",
+      "summary": "PASS=38 FAIL=0 SKIP=0",
+      "pkgcheck": "4.1.0 PASS",
+      "canonical_reference_sha256": "c96697ba07742e6ecbcb040af40bfac6c6c54e42de6c812d806f442300d8565d",
+      "public_reference_sha256": "957fdee5999723c6ea93059c5a26a607e14163a9a1495ad75514217e709c8f9c",
+      "canonical_artifact_id": 10300642531,
+      "review_pairs_artifact_id": 10300941902,
+      "distribution_artifact_id": 10300867002,
+      "validation_artifact_id": 10300871988
+    },
+    "non_closing_reasons": [
+      "active machine state still contained stale 11 September approval-date text and a misspelled recertification field",
+      "root README contained a broken relative validation-guide link",
+      "validator README still denied tracked Pages delivery",
+      "architecture and document lifecycle needed final reconciliation",
+      "approval regression did not exercise coadvisor role/unit suppression"
+    ]
+  },
+  "documentation_hygiene_successor": {
+    "status": "IMPLEMENTED_PENDING_FRESH_STAGE_A",
+    "fixes": [
+      "README relative validation link points to tracked validator/README.md",
+      "validator source gate validates every repository-relative README Markdown link",
+      "validator README documents tracked Pages workflow while preserving exact-main live-deployment proof requirement",
+      "architecture reconciles explicitly classified historical evidence with active-product-tree policy",
+      "document lifecycle classifies release/v3.0.1-global-regression.json",
+      "approval fixture/regression exercises coadvisor name/institution and rejects coadvisor unit/role suffix",
+      "machine-state approval date and recertification key corrected"
+    ]
+  }
 }

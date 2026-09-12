@@ -1,14 +1,16 @@
 # abntexto-ufc v3 Architecture
 
-Updated: 2026-09-04
+Updated: 2026-09-12
 
-This document defines the target engineering architecture for `abntexto-ufc` v3.0.0. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
+This document defines the engineering architecture for the `abntexto-ufc` v3 series; the current release target is 3.0.1. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
+
+> **Lifecycle note:** architecture rules are current unless explicitly described as historical chronology. Old phase/PR status statements retained later in this file are implementation history, not current release-state authority. Current state is controlled by `release/v3.0.1-final-corrections.json`, `docs/V3-CONTINUATION.md`, and the v3.0.1 finalization plan.
 
 ## Design principles
 
 The v3 tree must be explicit, English-first for engineering surfaces, easy to navigate, free of duplicate ownership, testable, distribution-safe, and free of runtime compatibility layers whose only purpose is preserving removed v2 project API.
 
-The repository is an active product tree, not an archive. Historical evidence belongs to Git commits, tags, releases, issues, pull requests, and certified SHAs. No `history/` museum directories or dormant future-phase ledgers are part of the active architecture.
+The repository is an active product tree, not an archive. Primary immutable history belongs to Git commits, tags, releases, issues, pull requests, and certified SHAs. A bounded tracked evidence document may remain when it materially supports the current audit trail, but it must be explicitly labeled historical/superseded and must not compete with current control-plane authority. No `history/` museum directories or dormant future-phase ledgers are part of the active architecture.
 
 ## Top-level layout
 
@@ -155,7 +157,7 @@ The frozen foundation product is `c79f3c73f1d51a30175e8259269504d029442a1c`, cer
 
 ## Documentation and release state
 
-`docs/` contains current engineering and maintainer documentation. `release/` contains current machine-readable migration/release state plus source material required to construct current release candidates, such as `release/ctan/`. A closed migration mapping may remain only when a permanent gate or the active reconstruction control plane still consumes it; otherwise it is removed or consolidated rather than kept as a historical ledger.
+`docs/` contains current engineering/maintainer documentation plus explicitly classified historical evidence required by the audit trail; `docs/V3.0.1-DOCUMENT-LIFECYCLE.md` distinguishes those roles. `release/` contains current machine-readable migration/release state plus source material required to construct current release candidates, such as `release/ctan/`, and explicitly classified historical machine state. A closed migration mapping or evidence ledger may remain only when a permanent gate, current audit trail or active reconstruction control plane still consumes it; otherwise it is removed or consolidated.
 
 ## Breaking v3 API policy
 
