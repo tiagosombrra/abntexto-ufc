@@ -58,6 +58,28 @@ def run_source_check(path: Path, label: str, *args: str) -> None:
         print(completed.stdout.strip())
 
 
+def validate_readme_relative_links(readme: str) -> int:
+    pattern = re.compile(r"\\[[^\\]]+\\]\\(([^)]+)\\)")
+    links = 0
+    root = ROOT.resolve()
+    for raw_target in pattern.findall(readme):
+        target = raw_target.strip().split()[0]
+        if target.startswith(("http://", "https://", "mailto:", "#")):
+            continue
+        clean = target.split("#", 1)[0]
+        if not clean:
+            continue
+        resolved = (ROOT / clean).resolve()
+        if resolved != root and root not in resolved.parents:
+            fail(f"README relative link escapes repository root: {target}")
+        if not resolved.exists():
+            fail(f"README relative link target is missing: {target}")
+        links += 1
+    if links == 0:
+        fail("final README exposes no repository-relative documentation links to validate")
+    return links
+
+
 def validate_relative_module_closure() -> int:
     pattern = re.compile(r'(?:\bfrom\s*|\bimport\s*\()\s*["\'](\.[^"\']+)["\']')
     root = VALIDATOR_ROOT.resolve()
@@ -204,6 +226,7 @@ def main() -> None:
         if completed.returncode != 0:
             fail(f"{source.relative_to(ROOT)} has invalid JavaScript syntax")
 
+    readme_relative_links = validate_readme_relative_links(readme)
     relative_imports = validate_relative_module_closure()
 
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -228,8 +251,9 @@ def main() -> None:
 
     print(
         "VALIDATION-EVIDENCE web-static-package status=PASS "
-        f"relative_imports={relative_imports} generated_catalog_identical=true "
-        "entry=index.html local_processing=true readme_delivery=true pages_contract=true"
+        f"relative_imports={relative_imports} readme_relative_links={readme_relative_links} "
+        "generated_catalog_identical=true entry=index.html local_processing=true "
+        "readme_delivery=true pages_contract=true"
     )
     print("Validator sources and normative contracts validated.")
 

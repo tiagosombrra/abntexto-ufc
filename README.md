@@ -168,7 +168,7 @@ Documentos principais:
 
 - [Base normativa](docs/NORMATIVE-BASE.md)
 - [Vigência normativa](docs/NORMATIVE-CURRENCY.md)
-- [Guia de validação](docs/VALIDATION-GUIDE.md)
+- [Guia do validador Web/Lite](validator/README.md)
 
 A camada bibliográfica usa `biblatex-abnt` e mantém compatibilidade delimitada para requisitos da ABNT NBR 6023:2025 ainda não cobertos pela dependência publicada.
 

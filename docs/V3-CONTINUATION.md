@@ -112,6 +112,8 @@ The corrective batch changes `template/main.tex` and canonical chapters, removes
 
 Final-delivery continuity is also release-blocking. The reviewed README/site/Pages surface from historical PR #307 was accidentally omitted by the clean PR #310 transport. PR #310 now absorbs only `README.md`, `site/index.html`, `.github/workflows/pages.yml`, the static delivery assertions and `docs/V3.0.1-R6-EVIDENCE.md`. The README avoids a hard-coded final page count before the corrected TCC is rebuilt. Stage A requires Static evidence `readme_delivery=true pages_contract=true`; Stage C additionally requires exact-main Pages deployment and live site/validator checks.
 
+A later read-only hygiene pass ran after consolidated head `21e371d3cf71f2443409606a09eb7d1f15636c11` completed Static #515, Linux #436 complete PASS and Release #146 complete/pkgcheck PASS. Those runs are retained as non-closing evidence because the audit found a broken README relative link, stale Pages wording in the validator README, an architecture/lifecycle inconsistency, stale machine-state date/key text and missing coadvisor negative approval coverage. One hygiene successor corrects all of these without changing intended runtime semantics.
+
 The 2026-09-12 regression also found stale control-plane authority, an obsolete 3.0.0 User-Agent and a partial divergent PR #311. PR #310 now absorbs the bounded #311 approval-runtime/test improvements, current 3.0.1 authority repair, document lifecycle classification and version-neutral asset-fetch identity. The previously green #310 head is therefore development evidence only and a fresh complete Stage A is mandatory.
 
 Once the integrated exact PR head passes Stage A, squash-merge PR #310 once, resolve the resulting `main` SHA dynamically and require the automatic exact-main cycle.
@@ -134,7 +136,7 @@ Whole-repository lifecycle classification, >100 branch pruning, broad historical
 
 ## Current next action
 
-The non-closing head `0eff9245...` produced Static #510 PASS and Linux #431 complete PASS, but Release #141 failed after the complete repository/distribution gates because the release reproducibility observer still required the removed canonical `ÍNDICE` marker. The integrated successor corrects that observer and restores the missing final README/site/Pages delivery in one candidate. Advance PR #310 to that successor and require Static PASS with `readme_delivery=true pages_contract=true`, Linux `complete` + productive Web/Lite E2E PASS, Release/current `pkgcheck` PASS and fresh artifacts. Inspect approval date, exactly three committee members without unit lines, clean Referências/Glossário TOC entries, no rendered remissive index, comprehensive README, landing page and CTAN ZIP. Only that integrated head may close Stage A and be squash-merged.
+Resolve the current PR #310 head after the hygiene successor. Require fresh Static + Linux `complete` + Linux Release Check/current `pkgcheck` on that exact head; the prior green `21e371d3...` matrix is non-closing development evidence. Verify the new README link-closure assertion, coadvisor approval negative regression, canonical approval/date/TOC/index presentation, README/site/Pages sources and fresh artifacts. Only then perform the single squash merge and exact-main Stage C.
 
 ## Documentation discipline
 

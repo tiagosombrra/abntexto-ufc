@@ -1,5 +1,5 @@
 {
-  "schema_version": 30,
+  "schema_version": 31,
   "project": "abntexto-ufc",
   "tracking_issue": 304,
   "pull_request": 310,
@@ -619,7 +619,7 @@
       }
     },
     "R5": {
-      "status": "ACTIVE_CONSOLIDATED_FINALIZATION",
+      "status": "ACTIVE_HYGIENE_SUCCESSOR_PENDING_CI",
       "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
@@ -683,7 +683,7 @@
         "eligible_for_merge": false
       },
       "maintainer_canonical_review_corrections": [
-        "template/main.tex: concrete approval date 11 de setembro de 2026",
+        "template/main.tex: concrete approval date 12 de setembro de 2026",
         "template/main.tex: canonical committee reduced to advisor + two examiners, name/institution only",
         "abntexto-ufc/bibliography.def and backmatter.def: remove empty toclabelbox from unnumbered post-textual TOC entries",
         "canonical chapters/main: do not enable, populate or print remissive index; preserve optional user instructions",
@@ -810,7 +810,7 @@
       "evidence": "docs/V3.0.1-R6-EVIDENCE.md"
     }
   },
-  "current_next_action": "Run fresh Static Contract, complete Linux Integration and Linux Release Check on the consolidated PR #310 head after approval-page runtime/test absorption and governance/document lifecycle repair. Treat all earlier #310/#311 CI as development evidence only. If the exact consolidated head is green, inspect fresh canonical/distribution/review artifacts, then squash-merge #310 once and repeat exact-main Stage C before R6.",
+  "current_next_action": "Require fresh Static Contract, complete Linux Integration and Linux Release Check on the hygiene-successor head of PR #310. The fully green 21e371d3... runs #515/#436/#146 are retained as non-closing development evidence because documentation/machine-state/test-coverage defects were discovered afterward. Only the successor may close Stage A; then inspect its fresh artifacts before the one squash merge.",
   "pull_request_resolution": "resolve current open PR whose head is working_branch",
   "previous_merged_pull_request": 305,
   "previous_merged_main_sha": "ab641d49c5f6a79ff54a16a78d1946a6e008fe6d",
@@ -841,6 +841,61 @@
       "approval-page assertions in tests/integration/reference-document.sh"
     ],
     "canonical_approval_date": "2026-09-12",
-    "stage_a_recerrtification_required": true
+    "stage_a_recertification_required": true
+  },
+  "pre_hygiene_consolidated_run": {
+    "source_sha": "21e371d3cf71f2443409606a09eb7d1f15636c11",
+    "disposition": "NON_CLOSING_DEVELOPMENT_EVIDENCE_SUPERSEDED_BY_HYGIENE_SUCCESSOR",
+    "static": {
+      "run_number": 515,
+      "run_id": 34702981408,
+      "status": "PASS",
+      "readme_delivery": true,
+      "pages_contract": true
+    },
+    "linux": {
+      "run_number": 436,
+      "run_id": 34702981409,
+      "status": "PASS",
+      "scope": "complete",
+      "summary": "PASS=38 FAIL=0 SKIP=0",
+      "approval_evidence": "PASS date=2026-09-12 committee_members=3 member_fields=name,institution unit_fields=0 advisor_role_suffix=0",
+      "web_lite_e2e": "PASS",
+      "web_artifact_id": 10300652377,
+      "web_artifact_digest": "sha256:894dded0dcb6ca88d46f16cd3f5e8804efd52ab0db43549ce5758f396350bd5b"
+    },
+    "release": {
+      "run_number": 146,
+      "run_id": 34702981403,
+      "status": "PASS",
+      "scope": "complete",
+      "summary": "PASS=38 FAIL=0 SKIP=0",
+      "pkgcheck": "4.1.0 PASS",
+      "canonical_reference_sha256": "c96697ba07742e6ecbcb040af40bfac6c6c54e42de6c812d806f442300d8565d",
+      "public_reference_sha256": "957fdee5999723c6ea93059c5a26a607e14163a9a1495ad75514217e709c8f9c",
+      "canonical_artifact_id": 10300642531,
+      "review_pairs_artifact_id": 10300941902,
+      "distribution_artifact_id": 10300867002,
+      "validation_artifact_id": 10300871988
+    },
+    "non_closing_reasons": [
+      "active machine state still contained stale 11 September approval-date text and a misspelled recertification field",
+      "root README contained a broken relative validation-guide link",
+      "validator README still denied tracked Pages delivery",
+      "architecture and document lifecycle needed final reconciliation",
+      "approval regression did not exercise coadvisor role/unit suppression"
+    ]
+  },
+  "documentation_hygiene_successor": {
+    "status": "IMPLEMENTED_PENDING_FRESH_STAGE_A",
+    "fixes": [
+      "README relative validation link points to tracked validator/README.md",
+      "validator source gate validates every repository-relative README Markdown link",
+      "validator README documents tracked Pages workflow while preserving exact-main live-deployment proof requirement",
+      "architecture reconciles explicitly classified historical evidence with active-product-tree policy",
+      "document lifecycle classifies release/v3.0.1-global-regression.json",
+      "approval fixture/regression exercises coadvisor name/institution and rejects coadvisor unit/role suffix",
+      "machine-state approval date and recertification key corrected"
+    ]
   }
 }

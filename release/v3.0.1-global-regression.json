@@ -1,5 +1,5 @@
 {
-  "format_revision": "2026-09-12-b",
+  "format_revision": "2026-09-12-c",
   "target_package": "abntexto-ufc",
   "target_release": "3.0.1",
   "mode": "CONSOLIDATED_PREPUBLICATION_REGRESSION",
@@ -100,8 +100,8 @@
     }
   ],
   "required_next_gates": [
-    "Static Contract PASS on consolidated PR310 head",
-    "Linux Integration scope=complete PASS including productive Web/Lite E2E",
+    "Static Contract PASS on hygiene-successor PR310 head, including README relative-link closure",
+    "Linux Integration scope=complete PASS including approval coadvisor regression and productive Web/Lite E2E",
     "Linux Release Check PASS including current CTAN pkgcheck",
     "fresh canonical/distribution/review artifacts inspected",
     "squash PR310 once",
@@ -109,5 +109,44 @@
     "GitHub Pages deployment and live site/validator verification",
     "maintainer R6 visual acceptance on exact-main bytes",
     "immutable v3.0.1 tag/GitHub Release and CTAN submission from frozen bytes"
+  ],
+  "pre_hygiene_consolidated_run": {
+    "source_sha": "21e371d3cf71f2443409606a09eb7d1f15636c11",
+    "static": "#515 PASS",
+    "linux": "#436 PASS scope=complete PASS=38 FAIL=0 SKIP=0 Web/Lite PASS",
+    "release": "#146 PASS scope=complete PASS=38 FAIL=0 SKIP=0 pkgcheck 4.1.0 PASS",
+    "disposition": "NON_CLOSING_AFTER_READ_ONLY_HYGIENE_AUDIT"
+  },
+  "documentation_hygiene": [
+    {
+      "id": "D1",
+      "status": "RESOLVED_IN_SUCCESSOR_PENDING_CI",
+      "finding": "Root README linked to missing docs/VALIDATION-GUIDE.md.",
+      "resolution": "Point to tracked validator/README.md and statically validate all repository-relative README Markdown links."
+    },
+    {
+      "id": "D2",
+      "status": "RESOLVED_IN_SUCCESSOR_PENDING_CI",
+      "finding": "validator/README.md still stated that no public Pages deployment evidence was configured.",
+      "resolution": "Document tracked Pages workflow while keeping exact-main deployment/live URL proof in Stage C."
+    },
+    {
+      "id": "D3",
+      "status": "RESOLVED_IN_SUCCESSOR_PENDING_CI",
+      "finding": "ARCHITECTURE.md active-product history policy conflicted with the newly explicit retained historical-document lifecycle.",
+      "resolution": "Allow bounded, explicitly labeled tracked evidence without making it current authority."
+    },
+    {
+      "id": "D4",
+      "status": "RESOLVED_IN_SUCCESSOR_PENDING_CI",
+      "finding": "Approval runtime removed coadvisor unit/role lines but the negative regression only exercised advisor suffix/unit behavior.",
+      "resolution": "Add coadvisor fixture and negative unit/role assertions."
+    },
+    {
+      "id": "D5",
+      "status": "RESOLVED_IN_SUCCESSOR_PENDING_CI",
+      "finding": "Active machine state retained stale 11 September approval text, misspelled recertification key and lifecycle omitted the global regression file.",
+      "resolution": "Correct machine state and classify every current release file."
+    }
   ]
 }
