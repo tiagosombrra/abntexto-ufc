@@ -258,7 +258,8 @@ def main() -> None:
     failures: list[str] = audit_reference_hygiene()
     tutorial_failures, tutorial_evidence = audit_tutorial_content()
     failures.extend(tutorial_failures)
-    failures.extend(audit_command_reference())
+    api_failures = audit_command_reference()
+    failures.extend(api_failures)
 
     seen_topics: set[str] = set()
     passes = 0
@@ -325,7 +326,7 @@ def main() -> None:
 
     print(
         "GUIDE-EVIDENCE api_reference_status="
-        + ("FAIL" if audit_command_reference() else "PASS")
+        + ("FAIL" if api_failures else "PASS")
     )
     print(f"GUIDE-EVIDENCE summary PASS={passes} FAIL={len(failures)} total={len(guide.get('topics', []))}")
     print("GUIDE-EVIDENCE normative_contract_changed=false")
