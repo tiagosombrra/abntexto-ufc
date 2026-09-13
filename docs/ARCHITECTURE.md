@@ -1,8 +1,8 @@
 # abntexto-ufc v3 Architecture
 
-Updated: 2026-09-12
+Updated: 2026-09-13
 
-This document defines the engineering architecture for the `abntexto-ufc` v3 series; the current release target is 3.0.1. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
+This document defines the engineering architecture for the `abntexto-ufc` v3 series; the current development/release target is 3.0.2. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
 
 > **Lifecycle note:** architecture rules are current unless explicitly described as historical chronology. Old phase/PR status statements retained later in this file are implementation history, not current release-state authority. Current development state is controlled by `AGENTS.md`, `docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md`, and issue #313; v3.0.1 control files are retained only as historical evidence.
 
@@ -52,6 +52,8 @@ tests/
 tools/
 validator/
 docs/
+  USER-GUIDE.md
+  COMMAND-REFERENCE.md
 release/
   ctan/
 ```
@@ -90,11 +92,21 @@ The target architecture above was implemented through bounded owner-based lots d
 
 ## Editable template and distribution bundles
 
-The source repository keeps the editable example under `template/`:
+The source repository keeps a compact editable TCC tutorial under `template/`. The tutorial has five normal academic chapters and demonstrates the common workflow by use rather than embedding exhaustive maintainer/normative prose. `docs/USER-GUIDE.md` owns the user workflow and normative/institutional explanations, while `docs/COMMAND-REFERENCE.md` owns exhaustive public API lookup. Exhaustive behavioral coverage remains in `tests/` and machine normative traceability remains in `standards/`.
+
+The canonical tutorial source is:
 
 ```text
 template/main.tex
+template/chapters/
+  1-introduction.tex
+  2-theoretical-background.tex
+  3-methodology.tex
+  4-results.tex
+  5-conclusion.tex
 ```
+
+The canonical PDF integration gate enforces a 15–35 page tutorial budget so regression/catalog material cannot silently turn the user artifact back into a manual.
 
 Template and Overleaf bundles flatten `template/` so the user receives:
 
@@ -106,7 +118,7 @@ backmatter/
 figures/
 ```
 
-Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Public staging excludes the UFC institutional asset and proprietary Microsoft fonts, and `tests/checks/public_bundles.py` proves archive structure, safe paths and reproducibility.
+Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Public staging excludes the UFC institutional asset and proprietary Microsoft fonts, packages only tracked tutorial assets, and `tests/checks/public_bundles.py` proves archive structure, safe paths and reproducibility. No external reference-photo download is part of normal bundle generation.
 
 `tools/build-distribution-bundles.py`, exposed through `make distribution-bundles`, composes that public delivery with a class/runtime archive, a CTAN submission candidate, and `SHA256SUMS`. The class/runtime archive contains only the current class, runtime modules, project README and license under a versioned root. It keeps `abntexto` external.
 
