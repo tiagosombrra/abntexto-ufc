@@ -22,15 +22,15 @@ Priority on disagreement: **current Git facts > current v3.0.2 status/issue #313
 | Published/frozen baseline | `v3.0.1`; immutable historical release bytes |
 | Current development line | `v3.0.2` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Current lifecycle branch | `chore/v3.0.2-release-state-lifecycle` while its PR is open |
+| Repository lifecycle | Post-cleanup steady state; `main` is canonical and transient PR branches must be removed after merge |
 | Tracking issue | #313 |
 | TOC References/Glossary correction | DONE; merged through PR #314 |
-| Branch classification | DONE; manifest classifies all non-current refs before physical pruning |
+| Branch hygiene | DONE; 185 non-`main` refs physically pruned on 2026-09-13; manifest retains the forensic pre-pruning snapshot |
 | Workflow lifecycle | four permanent workflows KEEP |
 | Tool lifecycle | automated/release tools KEEP; three PowerShell scripts KEEP as documented manual Windows support |
-| Documentation cleanup | ACTIVE |
-| Full post-cleanup regression | PENDING |
-| v3.0.2 publication | NOT AUTHORIZED until regression + maintainer review |
+| Documentation cleanup | DONE; active docs/release state consolidated and post-cleanup status reconciled |
+| Full post-cleanup regression | DONE technically on `main@5c8919498e01ccbfee1d3891a254d03527dcceea`; maintainer visual acceptance remains a separate release gate |
+| v3.0.2 publication | NOT AUTHORIZED; release marker remains `NOT_FROZEN` until explicit maintainer visual acceptance and P8 preparation |
 
 The `v3.0.1` tag/release/CTAN-submission bytes must never be rewritten. Any post-release correction belongs to a later version.
 
