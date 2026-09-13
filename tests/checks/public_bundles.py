@@ -112,6 +112,8 @@ def validate_template(path: Path, v: str) -> None:
         fail(f"{path.name}: every template entry must be rooted at {prefix}")
     required = {
         f"{prefix}main.tex",
+        f"{prefix}USER-GUIDE.md",
+        f"{prefix}COMMAND-REFERENCE.md",
         f"{prefix}abntexto-ufc.cls",
         f"{prefix}abntexto-ufc/core.def",
         f"{prefix}frontmatter/abstract.tex",
@@ -139,6 +141,8 @@ def validate_overleaf(path: Path) -> None:
     entries = archive_entries(path)
     required = {
         "main.tex",
+        "USER-GUIDE.md",
+        "COMMAND-REFERENCE.md",
         "abntexto.cls",
         "abntexto-ufc.cls",
         "abntexto-ufc/core.def",
