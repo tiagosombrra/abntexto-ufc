@@ -1,6 +1,6 @@
-def media(valores):
-    return sum(valores) / len(valores)
+def mean_score(values):
+    return sum(values) / len(values)
 
 
 if __name__ == "__main__":
-    print(media([8, 9, 10]))
+    print(mean_score([100, 100, 100, 100]))
