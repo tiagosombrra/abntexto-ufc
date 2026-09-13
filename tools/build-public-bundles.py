@@ -16,6 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 TEMPLATE_DIR = ROOT / "template"
 PUBLIC_REFERENCE_PDF = f"{PACKAGE_ID}-reference.pdf"
+PUBLIC_USER_DOCS = (
+    Path("docs/USER-GUIDE.md"),
+    Path("docs/COMMAND-REFERENCE.md"),
+)
 UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
 MICROSOFT_FONTS = {
     "times.ttf",
@@ -154,6 +158,12 @@ def current_template_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
         relative = path.relative_to(TEMPLATE_DIR).as_posix()
         content = public_main(path.read_bytes()) if relative == "main.tex" else path.read_bytes()
         add_entry(entries, f"{prefix}{relative}", content, file_mode(path))
+
+    for relative in PUBLIC_USER_DOCS:
+        path = ROOT / relative
+        if not path.is_file():
+            raise SystemExit(f"Required public user documentation is missing: {relative.as_posix()}")
+        add_entry(entries, f"{prefix}{path.name}", path.read_bytes(), file_mode(path))
     return entries
 
 
