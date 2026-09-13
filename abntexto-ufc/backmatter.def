@@ -6,15 +6,25 @@
 
 \ExplSyntaxOn
 
-\cs_new_protected:Npn \ufc_posttextual_heading:n #1
+\cs_new_protected:Npn \ufc_posttextual_heading:nn #1#2
   {
     \ufc_primary_section_break:
     \cs_if_exist:NT \phantomsection { \phantomsection }
-    \addcontentsline{toc}{section}{\MakeUppercase{#1}}
+    \addcontentsline{toc}{section}{#1}
     \begin{center}
-      \bfseries\MakeUppercase{#1}\par
+      \bfseries\MakeUppercase{#2}\par
     \end{center}
     \vspace{\baselineskip}
+  }
+
+\cs_new_protected:Npn \ufc_posttextual_heading:n #1
+  { \ufc_posttextual_heading:nn { \MakeUppercase{#1} } {#1} }
+
+\cs_new_protected:Npn \ufc_aligned_posttextual_heading:n #1
+  {
+    \ufc_posttextual_heading:nn
+      { \ufcTocPosttextualTitle{\MakeUppercase{#1}} }
+      {#1}
   }
 
 \cs_new_protected:Npn \ufc_setup_glossary_module:
@@ -41,7 +51,7 @@
   {
     \cs_if_exist:NTF \printglossary
       {
-        \ufc_posttextual_heading:n {Glossário}
+        \ufc_aligned_posttextual_heading:n {Glossário}
         \begingroup
           \setglossarysection{none}
           \glstocfalse

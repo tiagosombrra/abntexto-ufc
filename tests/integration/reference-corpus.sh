@@ -283,16 +283,15 @@ for marker in (
             f'x={actual_x:.2f}, reference={numbered_reference_x:.2f}'
         )
 
-# Unnumbered post-textual entries intentionally do not reserve the numbered-label box.
-# Their titles must begin the line directly (toc_title_x already rejects a leading
-# punctuation/text fragment) and must align consistently with each other.
-posttextual_reference_x = toc_title_x('REFERÊNCIAS')
-for marker in ('GLOSSÁRIO',):
+# References and Glossary are unnumbered, but their titles must align with the
+# same title column used by numbered primary entries. toc_title_x also rejects
+# any visible punctuation/text fragment before the title.
+for marker in ('REFERÊNCIAS', 'GLOSSÁRIO'):
     actual_x = toc_title_x(marker)
-    if abs(actual_x - posttextual_reference_x) > 1.5:
+    if abs(actual_x - numbered_reference_x) > 1.5:
         raise SystemExit(
-            f'Corpus failed: unnumbered post-textual entry {marker} is misaligned: '
-            f'x={actual_x:.2f}, reference={posttextual_reference_x:.2f}'
+            f'Corpus failed: post-textual entry {marker} is misaligned in the table of contents: '
+            f'x={actual_x:.2f}, numbered-reference={numbered_reference_x:.2f}'
         )
 PY
 
