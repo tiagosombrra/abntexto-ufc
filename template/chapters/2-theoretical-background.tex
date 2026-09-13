@@ -1,0 +1,23 @@
+\section{Fundamentação teórica}\label{sec:background}
+
+\subsection{Preparação de documentos em LaTeX}
+
+O \LaTeX{} trabalha com arquivos fonte que descrevem a estrutura e o conteúdo do documento. A apresentação é obtida durante a compilação, o que favorece o reaproveitamento de estilos e a separação entre a escrita acadêmica e decisões tipográficas repetitivas \parencite{lamport1994}. Essa característica é especialmente útil em trabalhos longos, nos quais referências cruzadas, sumário e bibliografia precisam permanecer coerentes após sucessivas alterações.
+
+Neste tutorial, cada capítulo é mantido em um arquivo próprio. O arquivo \texttt{main.tex} concentra apenas configuração, ordem dos elementos e chamadas principais. Essa divisão torna mais simples localizar o conteúdo que o estudante realmente precisa editar.
+
+\subsection{Normalização acadêmica}
+
+A apresentação de trabalhos acadêmicos é orientada por normas técnicas e, no contexto institucional, por regras complementares. A NBR 14724 estabelece a estrutura geral dos trabalhos acadêmicos \parencite{abnt14724}; citações são tratadas pela NBR 10520 \parencite{abnt10520}; e a elaboração das referências segue a NBR 6023 vigente \parencite{abnt6023}.
+
+A \gls{normalizacao} não deve ser entendida como substituta da qualidade científica. Seu papel é tornar a apresentação previsível, legível e verificável. Por isso, este exemplo usa a classe para concentrar a formatação e reserva ao autor a responsabilidade sobre argumentos, fontes e resultados.
+
+\subsection{Citações e referências}
+
+As referências bibliográficas são armazenadas em \texttt{backmatter/references.bib}. Quando a autoria participa da frase, pode-se escrever, por exemplo, que \textcite{lamport1994} apresenta o sistema \LaTeX{} como uma ferramenta de preparação documental. Quando a fonte aparece apenas como apoio à afirmação, usa-se a forma parentética \parencite{abnt6023}.
+
+O uso de comandos bibliográficos evita digitar manualmente autor e ano e facilita a manutenção da lista final. Citações diretas, quando necessárias em um trabalho real, devem reproduzir fielmente a fonte consultada e incluir o localizador aplicável.
+
+\subsection{Validação reprodutível}
+
+Neste estudo, \gls{validacao} significa observar propriedades mensuráveis do arquivo produzido e registrar o resultado de forma repetível. Nem todo requisito acadêmico pode ser reduzido a um teste automático. Clareza do texto, adequação metodológica, pertinência das conclusões e qualidade das fontes continuam dependendo de avaliação intelectual e revisão humana.
