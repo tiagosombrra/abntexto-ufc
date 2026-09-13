@@ -1,6 +1,6 @@
 # Normative Base
 
-Updated: 2026-08-30
+Updated: 2026-09-13
 
 This document is the human-readable normative baseline for the active `abntexto-ufc` v3 scope. Machine-readable evidence lives under `standards/`. This document does not create requirements by itself.
 
@@ -39,6 +39,8 @@ The project must distinguish mandatory requirements, recommendations, conditiona
 ## Current runtime scope
 
 The certified v3 foundation covers academic works and research projects. V3-A1 has now reintroduced a source-backed scientific-article normative contract without adding article runtime behavior. Article rules are manual/conditional during A1 and become implementation candidates only in V3-A2. See `docs/ARTICLE-NORMATIVE-CONTRACT.md`.
+
+For research-project covers, the current UFC normalization page continues to publish the institutional project-research guide, whose cover example displays the UFC coat of arms. The textual cover-content list does not independently make the mark an ABNT requirement. Accordingly, `abntexto-ufc` treats the mark as a configurable UFC institutional presentation default for `research-project` and for the current person-anonymized project profile. Explicit `coat-of-arms = false` remains the supported opt-out for external or blind submissions.
 
 ## Fonts and PDF/A
 
