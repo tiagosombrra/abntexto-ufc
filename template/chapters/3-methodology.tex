@@ -62,12 +62,16 @@ A métrica não representa qualidade acadêmica. Ela apenas resume o subconjunto
 
 O Código~\ref{code:mean-score} mostra como incluir um arquivo externo no documento. O conteúdo é propositalmente pequeno para que o foco permaneça na estrutura do TCC.
 
-% Code example: configure the language, identify the object and include the file.
+% Code example: identify the object and use the listings environment.
+\lstset{language=Python,numbers=none}
 \legend{code}{Função auxiliar para cálculo da média}
 \ufcSource{Elaboração própria.}
 \label{code:mean-score}
-\begin{ufcobject}[here]
-  \ufcInputListing[language=Python]{figures/example.py}
-\end{ufcobject}
+\begin{ufclisting}[here]
+def average(values):
+    return sum(values) / len(values)
 
-O mesmo mecanismo pode ser usado para trechos maiores, desde que o código seja relevante para o trabalho e permaneça legível no PDF.
+print(average([100, 100, 100, 100]))
+\end{ufclisting}
+
+Para código mantido em arquivo externo, a classe também oferece \verb|\ufcInputListing|. A referência de comandos documenta essa alternativa sem tornar o tutorial dependente de um exemplo adicional.
