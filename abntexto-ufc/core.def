@@ -112,12 +112,12 @@
     type / research-project .code:n =
       {
         \tl_gset:Nn \g_ufc_document_type_tl { research-project }
-        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+        \bool_gset_true:N \g_ufc_coat_of_arms_bool
       },
     type / anonymized-research-project .code:n =
       {
         \tl_gset:Nn \g_ufc_document_type_tl { anonymized-research-project }
-        \bool_gset_false:N \g_ufc_coat_of_arms_bool
+        \bool_gset_true:N \g_ufc_coat_of_arms_bool
       },
     type / scientific-article .code:n =
       {
