@@ -112,6 +112,14 @@ for engine in pdflatex lualatex; do
 
     sh tests/integration/font-embedding.sh "$output.pdf"
 
+    if [ "$profile" = "research-project" ] || [ "$profile" = "anonymized-research-project" ]; then
+      first_page_images=$(pdfimages -f 1 -l 1 -list "$output.pdf" 2>/dev/null | awk 'NR > 2 && $1 ~ /^[0-9]+$/ { count++ } END { print count + 0 }')
+      [ "$first_page_images" -ge 1 ] || {
+        echo "Profile $profile/$engine: UFC institutional cover mark is missing from the first page."
+        exit 1
+      }
+    fi
+
     pdftotext -layout "$output.pdf" "/tmp/$job.txt"
     python3 - "$profile" "$job" <<'PY'
 import re
