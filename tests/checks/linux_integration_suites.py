@@ -164,7 +164,7 @@ def main() -> None:
         if "make --no-print-directory version" not in text:
             fail(f"{surface} must capture the canonical version without GNU Make directory chatter")
 
-    if infer_suites(["docs/ROADMAP-V3.0.0.md"]) != ():
+    if infer_suites(["docs/ARCHITECTURE.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
     if infer_suites([CORRECTION_STATE]) != ():
         fail("active correction machine-state updates must not trigger heavy Linux integration by themselves")

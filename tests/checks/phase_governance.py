@@ -6,24 +6,13 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-STATE = ROOT / "release" / "v3-roadmap.json"
+HISTORICAL_STATE = ROOT / "release" / "v3-roadmap.json"
 AGENTS = ROOT / "AGENTS.md"
-HANDOFF = ROOT / "docs" / "HANDOFF-V3.0.0.md"
-ROADMAP = ROOT / "docs" / "ROADMAP-V3.0.0.md"
-CORRECTION_PLAN = ROOT / "docs" / "V3-CORRECTION-PLAN.md"
-
-EXPECTED_PHASES = [
-    "regression-audit",
-    "core-corrections",
-    "reference-pdf-validation",
-    "scientific-article",
-    "final-certification",
-    "release",
-]
+STATUS = ROOT / "docs" / "V3.0.2-REPOSITORY-HYGIENE-STATUS.md"
 
 
 def fail(message: str) -> int:
-    print(f"Phase governance contract failed: {message}")
+    print(f"Development governance contract failed: {message}")
     return 1
 
 
@@ -31,114 +20,70 @@ def load_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise SystemExit(f"Phase governance contract failed: cannot read {path}: {exc}")
+        raise SystemExit(f"Development governance contract failed: cannot read {path}: {exc}")
     if not isinstance(value, dict):
-        raise SystemExit(f"Phase governance contract failed: {path} must contain an object")
+        raise SystemExit(f"Development governance contract failed: {path} must contain an object")
     return value
 
 
-def require_document_contract(path: Path) -> str:
+def require_tokens(path: Path, tokens: tuple[str, ...]) -> str:
     if not path.is_file():
-        raise SystemExit(f"Phase governance contract failed: missing {path.relative_to(ROOT)}")
+        raise SystemExit(f"Development governance contract failed: missing {path.relative_to(ROOT)}")
     text = path.read_text(encoding="utf-8")
-    folded = text.casefold()
-    for concept in ("material advance", "phase-end regression"):
-        if concept not in folded:
+    for token in tokens:
+        if token not in text:
             raise SystemExit(
-                f"Phase governance contract failed: {path.relative_to(ROOT)} "
-                f"does not encode required concept {concept!r}"
+                f"Development governance contract failed: {path.relative_to(ROOT)} "
+                f"is missing required token {token!r}"
             )
     return text
 
 
 def main() -> int:
-    state = load_json(STATE)
-    if state.get("schema_version", 0) < 8:
-        return fail("v3-roadmap schema must protect progress/regression governance")
+    historical = load_json(HISTORICAL_STATE)
+    if historical.get("status") != "HISTORICAL":
+        return fail("release/v3-roadmap.json must no longer advertise an active v3.0.1 phase")
+    if historical.get("target_version") != "3.0.1":
+        return fail("historical roadmap must preserve its v3.0.1 target identity")
+    if historical.get("historical") is not True:
+        return fail("historical roadmap must be explicitly classified")
+    if historical.get("superseded_by") != "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md":
+        return fail("historical roadmap must point to current v3.0.2 authority")
+    if historical.get("current_development_line") != "3.0.2":
+        return fail("historical roadmap must identify the current development line")
+    if historical.get("current_tracking_issue") != 313:
+        return fail("historical roadmap must point to issue #313")
 
-    policies = state.get("policies")
-    if not isinstance(policies, dict):
-        return fail("policies object is missing")
+    agents = require_tokens(
+        AGENTS,
+        (
+            "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
+            "issue #313",
+            "| Current development line | `v3.0.2` |",
+            "v3.0.1",
+            "must never be rewritten",
+        ),
+    )
+    status = require_tokens(
+        STATUS,
+        (
+            "Tracking issue: #313",
+            "P5 — Documentation/release-state cleanup",
+            "P7 — Full post-cleanup regression",
+            "Keep v3.0.1 tag/release/submitted CTAN bytes immutable.",
+            "v3.0.2 release preparation",
+        ),
+    )
 
-    required_true = {
-        "documentation_updated_on_every_material_advance",
-        "phase_end_regression_required",
-        "phase_transition_requires_recorded_regression_checkpoint",
-    }
-    for key in sorted(required_true):
-        if policies.get(key) is not True:
-            return fail(f"policy {key} must be true")
-    if policies.get("targeted_checks_replace_phase_end_regression") is not False:
-        return fail("targeted checks must not replace the phase-end regression")
-
-    regression = state.get("phase_end_regression")
-    if not isinstance(regression, dict):
-        return fail("phase_end_regression object is missing")
-    for key in (
-        "required",
-        "must_complete_before_phase_closure",
-        "must_complete_before_next_phase_activation",
-        "documentation_must_be_updated_after_result",
-    ):
-        if regression.get(key) is not True:
-            return fail(f"phase_end_regression.{key} must be true")
-    if regression.get("candidate") != "one-immutable-sha":
-        return fail("phase-end regression must bind to one immutable SHA")
-    minimum_checks = regression.get("minimum_checks")
-    if not isinstance(minimum_checks, list):
-        return fail("phase-end regression minimum_checks must be a list")
-    for required in (
-        "Static contract",
-        "full relevant Linux integration",
-        "phase-specific acceptance checks",
-    ):
-        if required not in minimum_checks:
-            return fail(f"phase-end regression is missing minimum check: {required}")
-
-    phases = state.get("phases")
-    if not isinstance(phases, list):
-        return fail("phases must be a list")
-    phase_ids = [item.get("id") for item in phases if isinstance(item, dict)]
-    if phase_ids != EXPECTED_PHASES:
-        return fail(f"unexpected phase order/content: {phase_ids}")
-    for phase in phases:
-        if not isinstance(phase, dict):
-            return fail("phase entry must be an object")
-        if phase.get("phase_end_regression_required") is not True:
-            return fail(f"phase {phase.get('id')} does not require an end regression")
-
-    active = [phase for phase in phases if phase.get("status") == "ACTIVE"]
-    if len(active) != 1:
-        return fail(f"expected exactly one active phase, found {len(active)}")
-    active_phase = active[0]
-    if active_phase.get("id") != state.get("phase") or state.get("stage") != state.get("phase"):
-        return fail("machine phase/stage does not match the active phase entry")
-    active_name = active_phase.get("name")
-    if not isinstance(active_name, str) or not active_name.strip():
-        return fail("active phase must expose a readable name")
-
-    branch = state.get("active_branch")
-    if not isinstance(branch, str) or not branch.strip():
-        return fail("active_branch must identify the current working branch")
-
-    documents = {
-        "AGENTS.md": require_document_contract(AGENTS),
-        "docs/HANDOFF-V3.0.0.md": require_document_contract(HANDOFF),
-        "docs/ROADMAP-V3.0.0.md": require_document_contract(ROADMAP),
-        "docs/V3-CORRECTION-PLAN.md": require_document_contract(CORRECTION_PLAN),
-    }
-
-    if branch not in documents["docs/HANDOFF-V3.0.0.md"]:
-        return fail("handoff does not record the machine-state active branch")
-    for path in ("AGENTS.md", "docs/HANDOFF-V3.0.0.md", "docs/ROADMAP-V3.0.0.md"):
-        if active_name not in documents[path]:
-            return fail(f"{path} does not record the active readable phase {active_name!r}")
+    if "release/v3-roadmap.json" in agents and "historical" not in agents.casefold():
+        return fail("AGENTS must not restore the historical roadmap as current authority")
+    if "P5 — Documentation/release-state cleanup | DONE" not in status:
+        return fail("current status must record completion of the historical relocation lot")
 
     print(
-        "PHASE-GOVERNANCE-EVIDENCE status=PASS "
-        f"schema={state['schema_version']} phases={len(phases)} "
-        f"active={state['phase']} active_name={active_name!r} branch={branch} "
-        "material_advance_docs=required phase_end_regression=required"
+        "DEVELOPMENT-GOVERNANCE-EVIDENCE status=PASS "
+        "current_line=3.0.2 issue=313 "
+        "v3_0_1_roadmap=historical current_authority=v3.0.2-status"
     )
     return 0
 

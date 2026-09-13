@@ -57,16 +57,16 @@ LEGACY_DOCUMENTATION_EXEMPT = {
         re.compile(r"deprecated `ufctex` wording", re.IGNORECASE),
         re.compile(r"previously attempted `ufctex` package name", re.IGNORECASE),
     ),
-    "docs/HANDOFF-V3.0.0.md": (
+    "docs/history/v3/control/HANDOFF-V3.0.0.md": (
         re.compile(r"previous `ufctex` identity is replaced", re.IGNORECASE),
     ),
-    "docs/ROADMAP-V3.0.0.md": (
+    "docs/history/v3/control/ROADMAP-V3.0.0.md": (
         re.compile(r"deprecated `ufctex` identity", re.IGNORECASE),
     ),
-    "docs/V3-CONTINUATION.md": (
+    "docs/history/v3/control/V3-CONTINUATION.md": (
         re.compile(r"stale `ufctex`", re.IGNORECASE),
     ),
-    "docs/V3-RELEASE-READINESS.md": (
+    "docs/history/v3/release/V3-RELEASE-READINESS.md": (
         re.compile(r"replaces historical/deprecated `ufctex` identity", re.IGNORECASE),
     ),
 }

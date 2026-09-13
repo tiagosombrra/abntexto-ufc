@@ -23,9 +23,9 @@ This document defines the repository-controlled publication procedure for the re
 | Final GitHub `v3.0.1` tag/Release | not yet published |
 | CTAN upload/acceptance | not yet claimed; explicit evidence required |
 
-The 2026-09-12 pre-publication regression is recorded in `release/v3.0.1-global-regression.json`; document/tool lifecycle is classified in `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`. PR #310 absorbs the bounded approval-page runtime/test correction from superseded PR #311 and must be fully recertified before R6.
+The 2026-09-12 v3.0.1 pre-publication regression remains recorded in `release/v3.0.1-global-regression.json`; its document/tool lifecycle snapshot is retained at `docs/history/v3/control/V3.0.1-DOCUMENT-LIFECYCLE.md`. That release cycle is historical and must not be reused as the current development control plane.
 
-Current continuation state is controlled by `AGENTS.md`, `docs/V3-CONTINUATION.md`, `release/v3.0.1-final-corrections.json` and the active lot evidence document. Older recovery documents are historical evidence when those current files do not point to them.
+Current post-v3.0.1 development state is controlled by `AGENTS.md`, `docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md`, and issue #313. Older recovery documents are historical evidence when those current files do not point to them.
 
 ## Publication problems resolved by the v3 contract
 

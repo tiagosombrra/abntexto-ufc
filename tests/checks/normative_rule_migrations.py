@@ -47,7 +47,7 @@ def main() -> None:
             fail(f"active replacement value drifted: {replacement}")
         if row.get("status") != "semantic-correction":
             fail(f"migration status drifted: {retired}")
-        if row.get("decision") != "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md":
+        if row.get("decision") != "docs/history/v3/evidence/V3-OBJECT-TYPOGRAPHY-DECISION.md":
             fail(f"migration decision provenance drifted: {retired}")
 
     print("RULE-MIGRATION-EVIDENCE status=PASS retired=2 replacements=2 semantic_corrections=2")
