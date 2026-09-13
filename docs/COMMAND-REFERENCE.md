@@ -94,9 +94,21 @@ Forma geral:
 | `coadvisor-institution` | instituição do coorientador |
 | `coadvisor-unit` | unidade do coorientador |
 | `coadvisor-feminine-label` | `true` ou `false` |
-| `examiner-2` ... `examiner-6` | membros adicionais da banca |
-| `examiner-2-institution` ... `examiner-6-institution` | instituições |
-| `examiner-2-unit` ... `examiner-6-unit` | unidades acadêmicas |
+| `examiner-2` | segundo membro da banca |
+| `examiner-2-institution` | instituição do segundo membro |
+| `examiner-2-unit` | unidade do segundo membro |
+| `examiner-3` | terceiro membro da banca |
+| `examiner-3-institution` | instituição do terceiro membro |
+| `examiner-3-unit` | unidade do terceiro membro |
+| `examiner-4` | quarto membro da banca |
+| `examiner-4-institution` | instituição do quarto membro |
+| `examiner-4-unit` | unidade do quarto membro |
+| `examiner-5` | quinto membro da banca |
+| `examiner-5-institution` | instituição do quinto membro |
+| `examiner-5-unit` | unidade do quinto membro |
+| `examiner-6` | sexto membro da banca |
+| `examiner-6-institution` | instituição do sexto membro |
+| `examiner-6-unit` | unidade do sexto membro |
 | `epigraph-author` | autoria exibida na epígrafe |
 
 ### Fonte e módulos opcionais
