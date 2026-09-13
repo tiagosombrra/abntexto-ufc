@@ -2,7 +2,7 @@
 
 abntexto-ufc v3 is a breaking API release. The v2 Portuguese project API is not retained as a runtime compatibility layer. Existing documents must be migrated to the canonical v3 English project API before they are compiled with v3.
 
-This guide is derived from `release/v3-api-migration.json`, which remains the machine-readable authority for the migration contract. Portuguese academic content rendered in the document is not being anglicized. Genuine dependency-owned APIs are also not renamed merely for consistency.
+This guide is derived from `release/history/v3/v3-api-migration.json`, which remains the machine-readable authority for the migration contract. Portuguese academic content rendered in the document is not being anglicized. Genuine dependency-owned APIs are also not renamed merely for consistency.
 
 ## Migration rules
 

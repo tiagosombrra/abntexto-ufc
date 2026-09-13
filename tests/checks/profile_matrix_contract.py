@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CONTRACT = ROOT / "release/v3-api-migration.json"
+CONTRACT = ROOT / "release/history/v3/v3-api-migration.json"
 RUNNER = ROOT / "tests/integration/profile-matrix.sh"
 FIXTURE = ROOT / "tests/smoke/base-profile.tex"
 PLACEHOLDER = "@UFC_TYPE@"
@@ -22,7 +22,7 @@ def main() -> None:
     if not isinstance(canonical, list) or not canonical or not all(
         isinstance(item, str) and item for item in canonical
     ):
-        fail("release/v3-api-migration.json has no canonical type list")
+        fail("release/history/v3/v3-api-migration.json has no canonical type list")
     if len(canonical) != len(set(canonical)):
         fail("canonical type list contains duplicates")
 

@@ -10,7 +10,7 @@ on:
       - LICENSE
       - .gitignore
       - 'docs/**'
-      - 'release/history/**'
+      - 'release/history/v3/**'
   pull_request:
     branches:
       - main

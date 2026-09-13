@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CONTRACT = ROOT / "release/v3-api-migration.json"
+CONTRACT = ROOT / "release/history/v3/v3-api-migration.json"
 CLASS = ROOT / "abntexto-ufc.cls"
 REMOVED_LAYER = ROOT / "abntexto-ufc/public-api.def"
 LATEX_ROOTS = (
