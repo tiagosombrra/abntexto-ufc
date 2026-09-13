@@ -10,7 +10,7 @@ on:
       - LICENSE
       - .gitignore
       - 'docs/**'
-      - release/v3-roadmap.json
+      - 'release/history/**'
   pull_request:
     branches:
       - main
@@ -20,7 +20,6 @@ on:
       - reopened
       - ready_for_review
     paths:
-      - release/final-certification-candidate.json
       - release/v3-release-candidate.json
       - .github/workflows/linux-release-check.yml
   workflow_dispatch:

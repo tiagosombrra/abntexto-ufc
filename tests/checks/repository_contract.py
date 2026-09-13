@@ -19,6 +19,7 @@ REQUIRED_PATHS = {
     "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
     "docs/WINDOWS-FONT-SUPPORT.md",
     "release/v3-release-candidate.json",
+    "release/history/v3/README.md",
 }
 
 FORBIDDEN_EXACT_PATHS = {
@@ -41,7 +42,17 @@ FORBIDDEN_EXACT_PATHS = {
 }
 
 APPROVED_HISTORY_PREFIX = "docs/history/v3/"
+APPROVED_RELEASE_HISTORY_PREFIX = "release/history/v3/"
 HISTORICAL_SNAPSHOT_BANNER = "> **Historical snapshot.**"
+
+RELOCATED_RELEASE_PATHS = (
+    "release/v3-api-migration.json",
+    "release/v3-r3-b2-proof-semantics.json",
+    "release/v3-r3-inventory.json",
+    "release/v3-roadmap.json",
+    "release/v3.0.1-final-corrections.json",
+    "release/v3.0.1-global-regression.json",
+)
 
 RELOCATED_HISTORY_PATHS = (
     "docs/HANDOFF-V3.0.0.md",
@@ -80,7 +91,6 @@ RELOCATED_HISTORY_PATHS = (
 )
 
 FORBIDDEN_PREFIXES = (
-    "release/history/",
     "standards/history/",
     "normativa/",
     "tests/normativa/",
@@ -146,7 +156,6 @@ STALE_CONTENT_FRAGMENTS = (
     "normativa/",
     "tests/normativa/",
     "tests/fixtures/pretextuais/",
-    "release/history/",
     "standards/history/",
     "ufctex.cls",
 )
@@ -154,7 +163,7 @@ STALE_CONTENT_FRAGMENTS = (
 CONTENT_SCAN_EXEMPT = {
     # The API migration mapping intentionally names retired paths and API
     # identifiers as migration evidence; current release authorities are scanned normally.
-    "release/v3-api-migration.json",
+    "release/history/v3/v3-api-migration.json",
     # This checker defines the forbidden literals above; scanning its own
     # source would report those policy definitions as active stale references.
     "tests/checks/repository_contract.py",
@@ -194,6 +203,7 @@ def main() -> int:
     paths = tracked_paths()
     path_set = set(paths)
     approved_history_files: list[str] = []
+    approved_release_history_files: list[str] = []
 
     for required in sorted(REQUIRED_PATHS - path_set):
         errors.append(f"missing required path: {required}")
@@ -217,6 +227,14 @@ def main() -> int:
                         if history_text is None or not history_text.startswith(HISTORICAL_SNAPSHOT_BANNER):
                             errors.append(f"historical snapshot banner missing: {path}")
 
+        if path.startswith("release/history/"):
+            if not path.startswith(APPROVED_RELEASE_HISTORY_PREFIX):
+                errors.append(f"unapproved release history prefix: {path}")
+            else:
+                approved_release_history_files.append(path)
+                if path != f"{APPROVED_RELEASE_HISTORY_PREFIX}README.md" and not path.endswith(".json"):
+                    errors.append(f"non-JSON file in approved release history: {path}")
+
         if any(path.startswith(prefix) for prefix in FORBIDDEN_PREFIXES):
             errors.append(f"forbidden archive/legacy prefix: {path}")
         if FORBIDDEN_PATH_SEGMENT.search(path):
@@ -238,15 +256,20 @@ def main() -> int:
         # Approved historical snapshots intentionally preserve obsolete paths and
         # phase-time wording as evidence. Their explicit banner prevents them from
         # being confused with current repository authority.
-        if path.startswith(APPROVED_HISTORY_PREFIX):
+        if path.startswith(APPROVED_HISTORY_PREFIX) or path.startswith(APPROVED_RELEASE_HISTORY_PREFIX):
             continue
 
         if re.search(r"docs/history/(?!v3/)", text):
             errors.append(f"{path}: reference to unapproved documentation history root")
+        if re.search(r"release/history/(?!v3/)", text):
+            errors.append(f"{path}: reference to unapproved release history root")
 
         for relocated_path in RELOCATED_HISTORY_PATHS:
             if relocated_path in text:
                 errors.append(f"{path}: stale reference to relocated historical path: {relocated_path}")
+        for relocated_path in RELOCATED_RELEASE_PATHS:
+            if relocated_path in text:
+                errors.append(f"{path}: stale reference to relocated release-state path: {relocated_path}")
 
         allowed_fragments = NEGATIVE_FRAGMENT_EXEMPT.get(path, set())
         for fragment in STALE_CONTENT_FRAGMENTS:
@@ -273,8 +296,9 @@ def main() -> int:
 
     print(
         "REPOSITORY-EVIDENCE status=PASS "
-        f"tracked_files={len(paths)} history_directories=1 "
-        f"history_files={len(approved_history_files)} legacy_class=0"
+        f"tracked_files={len(paths)} history_directories=2 "
+        f"doc_history_files={len(approved_history_files)} "
+        f"release_history_files={len(approved_release_history_files)} legacy_class=0"
     )
     return 0
 

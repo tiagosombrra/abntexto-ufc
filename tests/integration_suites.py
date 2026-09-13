@@ -43,10 +43,8 @@ DOC_ONLY_EXACT = {
     "AGENTS.md",
     "LICENSE",
     ".gitignore",
-    "release/v3-roadmap.json",
-    "release/v3.0.1-final-corrections.json",
 }
-DOC_ONLY_PREFIXES = ("docs/",)
+DOC_ONLY_PREFIXES = ("docs/", "release/history/v3/")
 
 ORCHESTRATION_EXACT = {
     ".github/workflows/linux-integration.yml",
@@ -63,7 +61,6 @@ FORCE_COMPLETE_EXACT = {
     "abntexto-ufc/core.def",
     "abntexto-ufc/fonts.def",
     "abntexto-ufc/modules.def",
-    "release/final-certification-candidate.json",
     "release/v3-release-candidate.json",
 }
 FORCE_COMPLETE_PREFIXES = (
@@ -137,7 +134,7 @@ def git_changed_paths(base: str, head: str) -> list[str]:
 def self_test() -> None:
     cases = {
         ("docs/ARCHITECTURE.md",): (),
-        ("release/v3.0.1-final-corrections.json",): (),
+        ("release/history/v3/v3.0.1-final-corrections.json",): (),
         ("abntexto-ufc/objects.def",): ("objects",),
         ("abntexto-ufc/bibliography.def",): ("bibliography",),
         ("abntexto-ufc/frontmatter.def",): ("frontmatter",),
@@ -159,8 +156,6 @@ def self_test() -> None:
         ("tests/run.py", "unknown/technical.file"): ("complete",),
         ("abntexto-ufc/objects.def", "abntexto-ufc/bibliography.def"): ("objects", "bibliography"),
         ("abntexto-ufc/core.def",): ("complete",),
-        ("release/final-certification-candidate.json",): ("complete",),
-        ("tests/integration_suites.py", "release/final-certification-candidate.json"): ("complete",),
         ("release/v3-release-candidate.json",): ("complete",),
         ("tests/integration_suites.py", "release/v3-release-candidate.json"): ("complete",),
         ("unknown/technical.file",): ("complete",),

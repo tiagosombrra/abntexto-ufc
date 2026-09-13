@@ -6,7 +6,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-HISTORICAL_STATE = ROOT / "release" / "v3-roadmap.json"
+HISTORICAL_STATE = ROOT / "release" / "history" / "v3" / "v3-roadmap.json"
+ACTIVE_MARKER = ROOT / "release" / "v3-release-candidate.json"
 AGENTS = ROOT / "AGENTS.md"
 STATUS = ROOT / "docs" / "V3.0.2-REPOSITORY-HYGIENE-STATUS.md"
 
@@ -42,7 +43,7 @@ def require_tokens(path: Path, tokens: tuple[str, ...]) -> str:
 def main() -> int:
     historical = load_json(HISTORICAL_STATE)
     if historical.get("status") != "HISTORICAL":
-        return fail("release/v3-roadmap.json must no longer advertise an active v3.0.1 phase")
+        return fail("historical v3 roadmap must not advertise an active v3.0.1 phase")
     if historical.get("target_version") != "3.0.1":
         return fail("historical roadmap must preserve its v3.0.1 target identity")
     if historical.get("historical") is not True:
@@ -53,6 +54,23 @@ def main() -> int:
         return fail("historical roadmap must identify the current development line")
     if historical.get("current_tracking_issue") != 313:
         return fail("historical roadmap must point to issue #313")
+
+    marker = load_json(ACTIVE_MARKER)
+    if marker.get("lifecycle") != "active-release-marker":
+        return fail("active release marker lifecycle is invalid")
+    if marker.get("development_line") != "3.0.2" or marker.get("target_version") != "3.0.2":
+        return fail("active release marker must target the v3.0.2 development line")
+    if marker.get("candidate_state") != "NOT_FROZEN":
+        return fail("v3.0.2 candidate must remain NOT_FROZEN during cleanup")
+    if marker.get("candidate_sha") is not None:
+        return fail("NOT_FROZEN candidate must not expose a candidate SHA")
+    if marker.get("publication_authorized") is not False:
+        return fail("publication must remain unauthorized during cleanup")
+    if marker.get("tracking_issue") != 313:
+        return fail("active release marker must point to issue #313")
+    baseline = marker.get("published_baseline")
+    if not isinstance(baseline, dict) or baseline.get("version") != "3.0.1" or baseline.get("immutable") is not True:
+        return fail("active marker must preserve immutable v3.0.1 published baseline")
 
     agents = require_tokens(
         AGENTS,
@@ -75,15 +93,15 @@ def main() -> int:
         ),
     )
 
-    if "release/v3-roadmap.json" in agents and "historical" not in agents.casefold():
-        return fail("AGENTS must not restore the historical roadmap as current authority")
+    if "release/history/v3/" not in agents:
+        return fail("AGENTS must identify the controlled historical release-state namespace")
     if "P5 — Documentation/release-state cleanup | DONE" not in status:
         return fail("current status must record completion of the historical relocation lot")
 
     print(
         "DEVELOPMENT-GOVERNANCE-EVIDENCE status=PASS "
         "current_line=3.0.2 issue=313 "
-        "v3_0_1_roadmap=historical current_authority=v3.0.2-status"
+        "v3_0_1_roadmap=historical active_marker=not_frozen current_authority=v3.0.2-status"
     )
     return 0
 
