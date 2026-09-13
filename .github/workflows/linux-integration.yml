@@ -65,8 +65,6 @@ jobs:
           PR_ACTION: ${{ github.event.action || '' }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
-          BEFORE_SHA: ${{ github.event.before || '' }}
-          AFTER_SHA: ${{ github.event.after || github.event.pull_request.head.sha || '' }}
           INPUT_SCOPE: ${{ inputs.scope || 'auto' }}
         run: |
           set -euo pipefail
@@ -88,26 +86,15 @@ jobs:
               selected_scope=complete
               reason=release-candidate-full-pr
             else
-              scope_base="$BASE_SHA"
-              scope_head="$HEAD_SHA"
-              scope_window=full-pr
-
-              if [[ "$PR_ACTION" == "synchronize" && -n "$BEFORE_SHA" && -n "$AFTER_SHA" ]]; then
-                if git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null && git cat-file -e "${AFTER_SHA}^{commit}" 2>/dev/null; then
-                  scope_base="$BEFORE_SHA"
-                  scope_head="$AFTER_SHA"
-                  scope_window=incremental-push
-                else
-                  scope_window=missing-before-full-pr
-                fi
-              fi
-
-              selected_scope=$(python3 tests/integration_suites.py --base "$scope_base" --head "$scope_head")
+              # Always classify the complete PR diff. A later documentation-only
+              # synchronize event must never replace a failing technical run with
+              # a superficial green skip.
+              selected_scope=$(python3 tests/integration_suites.py --base "$BASE_SHA" --head "$HEAD_SHA")
               if [[ "$selected_scope" == "none" ]]; then
                 run_integration=false
-                reason=documentation-only
+                reason=documentation-only-full-pr
               else
-                reason="auto-$scope_window:$selected_scope"
+                reason="auto-full-pr:$selected_scope"
               fi
             fi
           elif [[ "$INPUT_SCOPE" != "auto" ]]; then
