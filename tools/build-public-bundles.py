@@ -19,6 +19,9 @@ PUBLIC_REFERENCE_PDF = f"{PACKAGE_ID}-reference.pdf"
 PUBLIC_USER_DOCS = (
     Path("docs/USER-GUIDE.md"),
     Path("docs/COMMAND-REFERENCE.md"),
+    Path("docs/NORMATIVE-BASE.md"),
+    Path("docs/NORMATIVE-CURRENCY.md"),
+    Path("docs/MIGRATING-TO-V3.md"),
 )
 UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
 MICROSOFT_FONTS = {
