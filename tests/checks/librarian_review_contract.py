@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 REVIEW = ROOT / "docs" / "UFC-LIBRARIAN-REVIEW.md"
-AUDIT = ROOT / "docs" / "V3-REGRESSION-AUDIT.md"
+AUDIT = ROOT / "docs" / "history" / "v3" / "evidence" / "V3-REGRESSION-AUDIT.md"
 
 ROW_RE = re.compile(
     r"^\|\s*(?P<number>\d+)\s*\|(?P<requirement>.*?)\|(?P<status>.*?)\|(?P<surfaces>.*?)\|\s*$"
@@ -23,7 +23,7 @@ def main() -> int:
     if not REVIEW.is_file():
         return fail("missing docs/UFC-LIBRARIAN-REVIEW.md")
     if not AUDIT.is_file():
-        return fail("missing docs/V3-REGRESSION-AUDIT.md")
+        return fail("missing historical regression-audit evidence")
 
     review_text = REVIEW.read_text(encoding="utf-8")
     audit_text = AUDIT.read_text(encoding="utf-8")

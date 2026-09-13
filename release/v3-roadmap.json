@@ -4,7 +4,7 @@
   "canonical_repository": "tiagosombrra/abntexto-ufc",
   "target_version": "3.0.1",
   "updated_at": "2026-09-10",
-  "status": "ACTIVE",
+  "status": "HISTORICAL",
   "phase": "release",
   "stage": "release",
   "stage_name": "Release",
@@ -13,14 +13,14 @@
     "git_facts_must_match_machine_state": true,
     "current_main_sha_is_resolved_from_git": true,
     "machine_state": "release/v3-roadmap.json",
-    "handoff": "docs/HANDOFF-V3.0.0.md",
-    "roadmap": "docs/ROADMAP-V3.0.0.md",
+    "handoff": "docs/history/v3/control/HANDOFF-V3.0.0.md",
+    "roadmap": "docs/history/v3/control/ROADMAP-V3.0.0.md",
     "bootstrap": "AGENTS.md",
-    "continuation_handoff": "docs/V3-CONTINUATION.md",
-    "release_recovery": "docs/V3-RELEASE-RECOVERY.md",
+    "continuation_handoff": "docs/history/v3/control/V3-CONTINUATION.md",
+    "release_recovery": "docs/history/v3/release/V3-RELEASE-RECOVERY.md",
     "librarian_review": "docs/UFC-LIBRARIAN-REVIEW.md",
-    "release_readiness": "docs/V3-RELEASE-READINESS.md",
-    "release_phase_end": "docs/V3-RELEASE-PHASE-END.md",
+    "release_readiness": "docs/history/v3/release/V3-RELEASE-READINESS.md",
+    "release_phase_end": "docs/history/v3/release/V3-RELEASE-PHASE-END.md",
     "ctan_release": "docs/CTAN-RELEASE.md",
     "fail_closed_on_disagreement": true,
     "memory_is_not_an_authority": true
@@ -83,23 +83,58 @@
     "failure_policy": "fail-closed-and-reopen-phase-work"
   },
   "phases": [
-    {"id":"regression-audit","name":"Regression Audit","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"core-corrections","name":"Core Corrections","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"reference-pdf-validation","name":"Reference PDF Validation","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"scientific-article","name":"Scientific Article","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"final-certification","name":"Final Certification","status":"CLOSED","phase_end_regression_required":true},
-    {"id":"release","name":"Release","status":"ACTIVE","phase_end_regression_required":true}
+    {
+      "id": "regression-audit",
+      "name": "Regression Audit",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "core-corrections",
+      "name": "Core Corrections",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "reference-pdf-validation",
+      "name": "Reference PDF Validation",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "scientific-article",
+      "name": "Scientific Article",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "final-certification",
+      "name": "Final Certification",
+      "status": "CLOSED",
+      "phase_end_regression_required": true
+    },
+    {
+      "id": "release",
+      "name": "Release",
+      "status": "ACTIVE",
+      "phase_end_regression_required": true
+    }
   ],
   "active_work": {
     "review_items": 34,
-    "review_status": {"pass":34,"partial":0,"fail":0,"normative_review":0},
+    "review_status": {
+      "pass": 34,
+      "partial": 0,
+      "fail": 0,
+      "normative_review": 0
+    },
     "release_state": "v3.0.1-combined-runtime-fix-and-release-recovery-candidate-preparation",
     "release_branch": "main",
     "recovery_work_branch": "release/v3.0.1-recovery",
     "release_recovery": {
       "state": "active",
       "target_version": "3.0.1",
-      "record": "docs/V3-RELEASE-RECOVERY.md",
+      "record": "docs/history/v3/release/V3-RELEASE-RECOVERY.md",
       "reason": "Public v3.0.0 tag/Release exists on a SHA that predates the final exact-SHA release-gate state; PR #302 also corrected a concrete post-v3.0.0 runtime defect before the recovered candidate was frozen.",
       "premature_tag": "v3.0.0",
       "premature_tagged_sha": "05399473827da7cf6b6c8bac36edc7115481773f",
@@ -203,11 +238,18 @@
     },
     "distribution_contract": {
       "state": "3.0.1-combined-runtime-fix-recovery-final-candidate-reproof-pending",
-      "required_files": ["abntexto-ufc-3.0.1.zip","abntexto-ufc-template-3.0.1.zip","abntexto-ufc-overleaf-3.0.1.zip","SHA256SUMS"],
+      "required_files": [
+        "abntexto-ufc-3.0.1.zip",
+        "abntexto-ufc-template-3.0.1.zip",
+        "abntexto-ufc-overleaf-3.0.1.zip",
+        "SHA256SUMS"
+      ],
       "ctan_upload_archive": "abntexto-ufc-3.0.1.zip",
       "ctan_upload_archive_count": 1,
       "ctan_top_level_directory": "abntexto-ufc",
-      "ctan_runtime_implementation_files": ["abntexto-ufc.cls"],
+      "ctan_runtime_implementation_files": [
+        "abntexto-ufc.cls"
+      ],
       "ctan_project_def_files": 0,
       "ctan_nested_runtime_module_directory": false,
       "ctan_monolithic_class": true,
@@ -256,5 +298,9 @@
     "canonical_main_resolution": "git-fetch-origin-main-at-session-start",
     "merge_policy": "protected-main-squash-only",
     "final_candidate_defined_as_exact_main_containing_pr302_recovery_and_final_gates": true
-  }
+  },
+  "historical": true,
+  "superseded_by": "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
+  "current_development_line": "3.0.2",
+  "current_tracking_issue": 313
 }

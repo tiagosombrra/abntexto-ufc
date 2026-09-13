@@ -14,7 +14,7 @@
         "pt": 12
       },
       "reason": "The retired reduced-font child conflated the upper identification/title with the lower legend/source reduced-font exception in UFC guidance.",
-      "decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md"
+      "decision": "docs/history/v3/evidence/V3-OBJECT-TYPOGRAPHY-DECISION.md"
     },
     {
       "retired_id": "font.size.reduced.table-caption",
@@ -27,7 +27,7 @@
         "pt": 12
       },
       "reason": "The retired reduced-font child conflated the upper identification/title with the lower legend/source reduced-font exception in UFC guidance.",
-      "decision": "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md"
+      "decision": "docs/history/v3/evidence/V3-OBJECT-TYPOGRAPHY-DECISION.md"
     }
   ]
 }
