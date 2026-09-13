@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "reviewed_at": "2026-09-13",
-  "purpose": "Classify retained executable test surfaces and dynamic test assets that sit outside literal permanent-runner references while preserving a current bounded validation purpose.",
+  "purpose": "Classify retained executable test surfaces, dynamic test assets, and intentionally manual technical control roots while enforcing reachability from permanent repository workflows and runners.",
   "allowed_classes": [
     "release-candidate",
     "platform-staging"
@@ -41,6 +41,14 @@
       "owner": "tests/integration/font-poc.sh",
       "purpose": "Exercise the Times New Roman branch of the Windows font proof-of-concept matrix.",
       "reason": "The owner selects this document through the shell family loop and the parameterized path tests/documents/${family}-font-poc.tex rather than a literal full-path reference."
+    }
+  ],
+  "manual_control_roots": [
+    {
+      "path": "tools/prepare-windows-fonts.ps1",
+      "owner_doc": "docs/WINDOWS-FONT-SUPPORT.md",
+      "purpose": "Provide the documented Windows preparation entrypoint for local Times New Roman and Arial TeX metrics, maps and font definition files.",
+      "reason": "This pipeline is intentionally manual because it depends on locally installed proprietary Microsoft fonts; the entrypoint owns the two encoding-conversion PowerShell helpers transitively."
     }
   ]
 }

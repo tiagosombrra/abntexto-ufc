@@ -22,13 +22,15 @@ CONTROL_ROOTS = (
     ROOT / "tests/integration",
     ROOT / "tools",
     ROOT / "validator",
+    ROOT / "site",
     ROOT / ".github/workflows",
 )
-CONTROL_SUFFIXES = {".py", ".sh", ".ps1", ".js", ".json", ".yml", ".yaml"}
+CONTROL_SUFFIXES = {".py", ".sh", ".ps1", ".js", ".json", ".html", ".yml", ".yaml"}
 PERMANENT_WORKFLOWS = (
     ROOT / ".github/workflows/static-contract.yml",
     ROOT / ".github/workflows/linux-integration.yml",
     ROOT / ".github/workflows/linux-release-check.yml",
+    ROOT / ".github/workflows/pages.yml",
 )
 
 
@@ -226,6 +228,41 @@ def collect_dynamic_asset_edges(assets: set[Path]) -> dict[Path, set[Path]]:
         edges.setdefault(owner, set()).add(target)
     return edges
 
+
+def collect_manual_control_roots(control_nodes: set[Path]) -> set[Path]:
+    policy = json.loads(TEST_SURFACE_POLICY.read_text(encoding="utf-8"))
+    entries = policy.get("manual_control_roots", [])
+    if not isinstance(entries, list):
+        fail("test-surface policy has an invalid manual_control_roots list")
+
+    roots: list[Path] = []
+    for item in entries:
+        if not isinstance(item, dict):
+            fail("test-surface policy contains a non-object manual control root")
+        value = item.get("path")
+        owner_doc_value = item.get("owner_doc")
+        purpose = item.get("purpose")
+        reason = item.get("reason")
+        if not all(
+            isinstance(field, str) and field
+            for field in (value, owner_doc_value, purpose, reason)
+        ):
+            fail("manual control roots require path/owner_doc/purpose/reason")
+
+        path = ROOT / value
+        owner_doc = ROOT / owner_doc_value
+        if path not in control_nodes:
+            fail(f"manual control root is missing/outside control graph: {value}")
+        if not owner_doc.is_file():
+            fail(f"manual control root {value} has missing owner documentation: {owner_doc_value}")
+        if value not in owner_doc.read_text(encoding="utf-8"):
+            fail(f"manual control root {value} is not named by owner documentation {owner_doc_value}")
+        roots.append(path)
+
+    if len(roots) != len(set(roots)):
+        fail("test-surface policy contains duplicate manual control roots")
+    return set(roots)
+
 def main() -> None:
     runner_ns = runpy.run_path(str(RUNNER))
     static_ns = runpy.run_path(str(STATIC_RUNNER))
@@ -341,15 +378,21 @@ def main() -> None:
     assets = asset_files()
     standalone = collect_standalone_surfaces(candidates)
     dynamic_asset_edges = collect_dynamic_asset_edges(assets)
-    roots.update(standalone)
-
     control_nodes = control_files(candidates)
+    manual_control_roots = collect_manual_control_roots(control_nodes)
+    roots.update(standalone)
+    roots.update(manual_control_roots)
+
     nodes = control_nodes | assets
     by_stem = unique_index(
         {path for path in control_nodes if path.suffix == ".py"},
         lambda path: path.stem,
     )
-    by_name = unique_index(nodes, lambda path: path.name)
+    # Filename-only references are accepted only between executable/control
+    # surfaces. Test assets require an exact repository path or an explicit
+    # dynamic edge from policy, preventing accidental basename matches from
+    # keeping dead fixtures alive.
+    by_name = unique_index(control_nodes, lambda path: path.name)
     graph = {
         node: direct_references(node, nodes, by_stem, by_name)
         for node in nodes
@@ -380,6 +423,20 @@ def main() -> None:
         rendered = ", ".join(path.relative_to(ROOT).as_posix() for path in orphaned_assets)
         fail(f"unreachable retained test assets: {rendered}")
 
+    technical_control_roots = (ROOT / "tools", ROOT / "validator", ROOT / "site")
+    technical_controls = {
+        path
+        for path in control_nodes
+        if any(root in path.parents for root in technical_control_roots)
+    }
+    reachable_technical_controls = technical_controls & reachable_nodes
+    orphaned_technical_controls = sorted(technical_controls - reachable_technical_controls)
+    if orphaned_technical_controls:
+        rendered = ", ".join(
+            path.relative_to(ROOT).as_posix() for path in orphaned_technical_controls
+        )
+        fail(f"unreachable retained technical control surfaces: {rendered}")
+
     dynamic_asset_count = sum(len(targets) for targets in dynamic_asset_edges.values())
     print(
         "TEST-SURFACE-INTEGRITY-EVIDENCE status=PASS "
@@ -388,7 +445,10 @@ def main() -> None:
         f"standalone={len(standalone)} control_nodes={len(control_nodes)} "
         f"test_scripts={len(candidates)} reachable={len(reachable_candidates)} orphaned=0 "
         f"test_assets={len(assets)} asset_reachable={len(reachable_assets)} asset_orphaned=0 "
-        f"dynamic_assets={dynamic_asset_count}"
+        f"dynamic_assets={dynamic_asset_count} "
+        f"technical_controls={len(technical_controls)} "
+        f"technical_reachable={len(reachable_technical_controls)} technical_orphaned=0 "
+        f"manual_control_roots={len(manual_control_roots)}"
     )
 
 
