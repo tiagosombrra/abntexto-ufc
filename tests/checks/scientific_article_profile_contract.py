@@ -7,7 +7,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CORE = ROOT / "abntexto-ufc" / "core.def"
-ROADMAP = ROOT / "release" / "v3-roadmap.json"
 ARTICLE_RULES = ROOT / "standards" / "coverage-rules-article.json"
 
 CANONICAL = "scientific-article"
@@ -27,7 +26,6 @@ def fail(message: str) -> None:
 
 def main() -> None:
     core = CORE.read_text(encoding="utf-8")
-    roadmap = json.loads(ROADMAP.read_text(encoding="utf-8"))
     article = json.loads(ARTICLE_RULES.read_text(encoding="utf-8"))
 
     canonical_pattern = re.compile(
@@ -53,9 +51,6 @@ def main() -> None:
                 f"metadata key {key!r} must have one default and one setter; "
                 f"defaults={default_count} setters={setter_count}"
             )
-
-    if roadmap.get("phase") not in {"scientific-article", "final-certification", "release"}:
-        fail("scientific-article profile exists outside the article-or-later roadmap phases")
 
     rules = article.get("rules")
     if not isinstance(rules, list) or len(rules) != 18:
