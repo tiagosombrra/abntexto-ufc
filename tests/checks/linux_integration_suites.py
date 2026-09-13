@@ -235,7 +235,7 @@ def main() -> None:
     print(
         "LINUX-SUITE-EVIDENCE status=PASS "
         f"suites={len(SUITES)} checks={len(known_checks)} "
-        f"manual_choices={len(required_manual_choices)} phase={phase} "
+        f"manual_choices={len(required_manual_choices)} article_runtime=active "
         "incremental_sync=true missing_before_fallback=full-pr "
         "unknown_path_fallback=complete article_first_class=true distribution_first_class=true "
         "distribution_release_owner=make-release-check step4_registered=true step5_registered=true "
