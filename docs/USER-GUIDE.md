@@ -261,7 +261,7 @@ algorithms = algpseudocodex
 Código externo pode ser incluído com:
 
 ```tex
-\ufcInputListing[language=Python]{figures/example.py}
+\ufcInputListing[language=Python]{code/analysis.py}
 ```
 
 A referência completa também documenta `ufclisting`, `\ufcInputMinted` e `ufcalgorithm`. A escolha do módulo de código ou da numeração de linhas é política editorial, não uma exigência geral da ABNT.
