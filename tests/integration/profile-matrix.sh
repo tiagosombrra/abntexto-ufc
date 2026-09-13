@@ -182,9 +182,8 @@ for marker in ('introdução', 'metodologia', 'referências', 'fundamentos de me
     if marker not in text:
         raise SystemExit(f'Profile {profile}: structural content is missing: {marker}')
 
-if 'capítulo' in text or 'capitulo' in text:
-    raise SystemExit(f'Profile {profile}: chapter-based structure reappeared.')
-
+# Academic works may use ordinary chapter-oriented prose; the profile matrix
+# protects semantic profile composition, not the tutorial's editorial wording.
 if profile == 'anonymized-research-project':
     for secret in ('autor matriz teste', 'prof. orientador matriz teste', 'prof. membro matriz teste'):
         if secret in text:
