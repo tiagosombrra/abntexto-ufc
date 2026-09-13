@@ -60,6 +60,17 @@
 \def\tocparagraphfont     {\itshape}
 \def\tocsubparagraphfont  {}
 
+% Post-textual entries such as References and Glossary are unnumbered, but their
+% titles must start at the same horizontal position as numbered section titles.
+% Reserve the shared TOC label width without creating an empty eqbox label,
+% which previously produced a visible punctuation artifact.
+\DeclareRobustCommand{\ufcTocPosttextualTitle}[1]{%
+  \makebox[\toclabelwidth][l]{}#1%
+}
+\appto\pdfstringdefPreHook{%
+  \def\ufcTocPosttextualTitle#1{#1}%
+}
+
 % UFC examples use spaced dotted leaders up to the right-aligned page number.
 % Preserve a compact visible leader when a primary entry nearly fills the line.
 \def\ufctocdot{\hbox{$\mathsurround=0pt\mkern4.5mu\hbox{.}\mkern4.5mu$}}
