@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -15,13 +14,12 @@ import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
 RELEASE_WORKFLOW = ROOT / ".github" / "workflows" / "linux-release-check.yml"
-ROADMAP = ROOT / "release" / "v3-roadmap.json"
 PROFILE_MATRIX = ROOT / "tests" / "integration" / "profile-matrix.sh"
 ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.sh"
 DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh"
 RELEASE_REVIEW_PAIRS = ROOT / "tests" / "integration" / "release-review-pairs.sh"
 RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
-CORRECTION_STATE = "release/v3.0.1-final-corrections.json"
+CORRECTION_STATE = "release/history/v3/v3.0.1-final-corrections.json"
 RELEASE_WORKFLOW_PATH = ".github/workflows/linux-release-check.yml"
 DISTRIBUTION_BUILDER = "tools/build-public-bundles.py"
 DISTRIBUTION_WRAPPER = "tools/build-distribution-bundles.py"
@@ -35,7 +33,6 @@ def fail(message: str) -> None:
 def main() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     release_workflow = RELEASE_WORKFLOW.read_text(encoding="utf-8")
-    roadmap = json.loads(ROADMAP.read_text(encoding="utf-8"))
     profile_matrix = PROFILE_MATRIX.read_text(encoding="utf-8")
     article_profile = ARTICLE_PROFILE.read_text(encoding="utf-8")
     distribution_bundles = DISTRIBUTION_BUNDLES.read_text(encoding="utf-8")
@@ -167,7 +164,7 @@ def main() -> None:
     if infer_suites(["docs/ARCHITECTURE.md"]) != ():
         fail("documentation-only changes must not trigger heavy Linux integration")
     if infer_suites([CORRECTION_STATE]) != ():
-        fail("active correction machine-state updates must not trigger heavy Linux integration by themselves")
+        fail("historical release-state maintenance must not trigger heavy Linux integration by itself")
     if infer_suites(["tests/run.py"]) != ("smoke",):
         fail("orchestration-only changes must select smoke")
     if infer_suites([RELEASE_WORKFLOW_PATH]) != ("smoke",):
@@ -211,20 +208,18 @@ def main() -> None:
     if infer_suites(["tests/integration_suites.py", RELEASE_CANDIDATE_MARKER]) != ("complete",):
         fail("Release marker plus orchestration changes must force complete Linux integration")
 
-    phase = roadmap.get("phase")
-    if phase in {"scientific-article", "final-certification", "release"}:
-        required_article_checks = {
-            "validator-source",
-            "scientific-article-profile",
-            "scientific-article-front-block",
-            "scientific-article-foreign-elements",
-            "scientific-article-body",
-            "scientific-article-recommendations",
-        }
-        article_checks = set(SUITES.get("article", ()))
-        missing_article = sorted(required_article_checks - article_checks)
-        if missing_article:
-            fail("article suite is missing executable checks: " + ", ".join(missing_article))
+    required_article_checks = {
+        "validator-source",
+        "scientific-article-profile",
+        "scientific-article-front-block",
+        "scientific-article-foreign-elements",
+        "scientific-article-body",
+        "scientific-article-recommendations",
+    }
+    article_checks = set(SUITES.get("article", ()))
+    missing_article = sorted(required_article_checks - article_checks)
+    if missing_article:
+        fail("article suite is missing executable checks: " + ", ".join(missing_article))
 
     if "scientific-article-profile.sh" in profile_matrix:
         fail("non-article profile matrix must not hide the article gate")
@@ -240,7 +235,7 @@ def main() -> None:
     print(
         "LINUX-SUITE-EVIDENCE status=PASS "
         f"suites={len(SUITES)} checks={len(known_checks)} "
-        f"manual_choices={len(required_manual_choices)} phase={phase} "
+        f"manual_choices={len(required_manual_choices)} article_runtime=active "
         "incremental_sync=true missing_before_fallback=full-pr "
         "unknown_path_fallback=complete article_first_class=true distribution_first_class=true "
         "distribution_release_owner=make-release-check step4_registered=true step5_registered=true "

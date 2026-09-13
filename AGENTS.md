@@ -22,7 +22,7 @@ Priority on disagreement: **current Git facts > current v3.0.2 status/issue #313
 | Published/frozen baseline | `v3.0.1`; immutable historical release bytes |
 | Current development line | `v3.0.2` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Current lifecycle branch | `chore/v3.0.2-document-lifecycle` while its PR is open |
+| Current lifecycle branch | `chore/v3.0.2-release-state-lifecycle` while its PR is open |
 | Tracking issue | #313 |
 | TOC References/Glossary correction | DONE; merged through PR #314 |
 | Branch classification | DONE; manifest classifies all non-current refs before physical pruning |
@@ -70,33 +70,34 @@ R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static
 
 R4 accepted source `170fec009cc89ec0ca98d8d627cd4c8fb3e8447b`. Static #495 PASS. Linux #416 selected `web-lite`, passed `SCOPE=web-lite PASS=3 FAIL=0 SKIP=0`, then drove the productive `validator/index.html` UI in Chrome 152 with the real 63-page reference PDF and a valid non-A4 negative PDF. The positive input passed readable/A4/margins without top-level FAIL; the negative input failed A4 with verdict FAIL; `font.embedded` and `pdfa.deep` remained `MANUAL REVIEW`. Artifact `10182427862` was independently downloaded and its JSON/log inspected. Release #130 also passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0` with current `pkgcheck 4.1.0`. Detailed failed harness iterations #412/#413/#414 and non-closing #415 remain in `docs/history/v3/evidence/v3.0.1/V3.0.1-R4-EVIDENCE.md`.
 
-## 2026-09-12 pre-publication regression
+## Historical v3.0.1 release evidence
 
-The broad regression is recorded in `release/v3.0.1-global-regression.json` and the lifecycle contract in `docs/history/v3/control/V3.0.1-DOCUMENT-LIFECYCLE.md`. It found four governance/version-identity defects (G1-G4) in addition to the canonical approval-page correction. These corrections are part of PR #310 so they are certified once with the final runtime and delivery bytes. PR #311 is a partial divergent transport: its unique `frontmatter.def` and approval-test improvements are absorbed into #310, while its stale corpus expectation caused Linux/Release failure and is not carried forward.
+The v3.0.1 publication cycle is closed historical evidence. Its machine state is retained under `release/history/v3/`, its publication guide under `docs/history/v3/release/CTAN-RELEASE-v3.0.1.md`, and its document lifecycle under `docs/history/v3/control/V3.0.1-DOCUMENT-LIFECYCLE.md`.
 
-## R5 dynamic candidate transport
+Do not reactivate v3.0.1 branches, roadmaps, recovery plans or candidate semantics as current authority.
 
-R5 uses exactly one release marker: `release/v3-release-candidate.json`. The previous PR #305 has already been squash-merged to `main` as `ab641d49c5f6a79ff54a16a78d1946a6e008fe6d`; maintainer review then reopened R5. The active canonical-review correction must travel through the current open PR whose head is `release/v3.0.1-canonical-review-corrections`. A marker change on that PR must force complete Linux Integration; after Stage A passes, that current PR is squash-merged to `main`. The resulting squash SHA is resolved dynamically from Git and must pass Static, automatic complete Linux Integration (including the Web/Lite host E2E) and Linux Release Check/current CTAN `pkgcheck` again.
+## Active release-marker policy
 
-Maintainer review across 2026-09-11/12 reopened Stage A after the previously green marker head because the canonical TCC still showed a placeholder approval date, six committee members with department/center lines, a visible empty-label punctuation artifact before dotted leaders on unnumbered post-textual TOC entries, and a printed remissive index that is not needed in the canonical example. Those findings are release-blocking presentation corrections. The canonical example now uses a concrete approval date, a three-member committee with name/institution only, fixes the unnumbered post-textual TOC source, and leaves the index documented as an optional capability rather than printing it by default. Any pre-correction R5 green run is historical evidence only.
+There is exactly one active release marker path: `release/v3-release-candidate.json`.
 
-A separate maintainer delivery requirement remains release-blocking: the same final candidate must contain a comprehensive root README, `site/index.html`, a pinned GitHub Pages workflow and direct Web/Lite delivery at `/validator/`. That surface existed in historical integrated PR #307 but was accidentally omitted when the clean transport moved to PR #310. PR #310 is the sole active transport and absorbs only those delivery files/contracts, never stale canonical/runtime source from #307. Static must enforce `readme_delivery=true pages_contract=true`. After squash merge, exact-main Stage C additionally requires Pages deployment and live verification of `https://tiagosombrra.github.io/abntexto-ufc/` and `https://tiagosombrra.github.io/abntexto-ufc/validator/`. PRs #307/#308/#309 are historical/source material and must not be merged as competing candidates.
+During ordinary v3.0.2 development it must remain:
 
-The R5 source documents are deliberately written as a dynamic state machine so they remain valid across the squash merge without a documentation commit that would change the candidate SHA. After the exact `main` candidate is certified, do not commit merely to record its SHA before R6/tag/publication; use immutable GitHub run/artifact facts and issue #304 as the live receipt, then write final repository receipts only after publication bytes are frozen.
+- `candidate_state = NOT_FROZEN`;
+- `candidate_sha = null`;
+- `publication_authorized = false`;
+- bound to issue #313 and the current v3.0.2 status document.
 
-## Mandatory phase-end regression and release invariant
+Changing the active marker is a deliberate release-control event and must force complete Linux Integration. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 
-Targeted R1–R4 checks are development evidence only. R5 must bind the complete applicable release matrix to one immutable exact SHA. R6 then requires explicit maintainer visual approval of artifacts from that same SHA.
+## Future release invariant
+
+A future release candidate must bind technical certification, generated artifacts, maintainer visual acceptance, tag and publication bytes to one immutable source SHA:
 
 ```text
-certified source SHA == visually approved source SHA == tagged v3.0.1 SHA == source SHA of published release bytes
+certified source SHA == visually approved source SHA == tagged source SHA == source SHA of published release bytes
 ```
 
-No tracked commit or artifact rebuild is allowed after R6 human acceptance and before tagging/publication. Existing `v3.0.0` bytes remain untouched. CTAN receives only the canonical `abntexto-ufc-3.0.1.zip` frozen by R5.
-
-## Deferred post-v3.0.1 work
-
-Document/tool lifecycle classification is now explicit for 3.0.1. Broad branch pruning, physical historical-document reorganization, unrelated runtime/API refactors and deletion of manual-support utilities without direct release-defect evidence remain deferred until after v3.0.1.
+No tracked commit or asset rebuild is permitted between final human acceptance and tagging/publication. Published v3.0.0 and v3.0.1 tags/assets remain immutable historical facts.
 
 ## Fail-closed rule
 

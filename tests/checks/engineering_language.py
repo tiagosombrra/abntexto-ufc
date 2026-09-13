@@ -212,9 +212,9 @@ def audit() -> list[str]:
                     f"{rel}:{number}: retired Portuguese technical profile identifier: {line.strip()}"
                 )
 
-    api = ROOT / "release/v3-api-migration.json"
+    api = ROOT / "release/history/v3/v3-api-migration.json"
     if not api.is_file():
-        errors.append("release/v3-api-migration.json: live migration contract is missing")
+        errors.append("release/history/v3/v3-api-migration.json: live migration contract is missing")
     for removed in (
         ROOT / "release/v3-test-migration.json",
         ROOT / "release/v3-path-migration.json",
@@ -227,7 +227,7 @@ def audit() -> list[str]:
         "tests/checks/v3_api_residual.py",
         "tests/checks/profile_matrix_contract.py",
     ):
-        if "release/v3-api-migration.json" not in (ROOT / consumer).read_text(
+        if "release/history/v3/v3-api-migration.json" not in (ROOT / consumer).read_text(
             encoding="utf-8"
         ):
             errors.append(

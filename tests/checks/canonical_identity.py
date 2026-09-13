@@ -32,7 +32,7 @@ TEXT_SUFFIXES = {
 LEGACY_FULL_FILE_EXEMPT = {
     # Current migration/control records legitimately identify the removed
     # legacy entrypoint while documenting its retirement.
-    "release/v3-api-migration.json",
+    "release/history/v3/v3-api-migration.json",
     "docs/MIGRATING-TO-V3.md",
 
     # Negative assertions must name the legacy entrypoint to reject it.
@@ -42,7 +42,7 @@ LEGACY_FULL_FILE_EXEMPT = {
     "tests/integration/distribution-bundles.sh",
     "tools/build-distribution-bundles.py",
 }
-LEGACY_FULL_DIRECTORY_EXEMPT = ()
+LEGACY_FULL_DIRECTORY_EXEMPT = ("release/history/v3/",)
 LEGACY_DOCUMENTATION_EXEMPT = {
     "docs/ARCHITECTURE.md": (
         re.compile(
