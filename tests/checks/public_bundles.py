@@ -127,7 +127,6 @@ def validate_template(path: Path, v: str) -> None:
         f"{prefix}chapters/5-conclusion.tex",
         f"{prefix}backmatter/references.bib",
         f"{prefix}figures/example-flow.png",
-        f"{prefix}figures/example.py",
         f"{prefix}LICENSE",
     }
     require(entries, required, path.name)
@@ -160,7 +159,6 @@ def validate_overleaf(path: Path) -> None:
         "chapters/5-conclusion.tex",
         "backmatter/references.bib",
         "figures/example-flow.png",
-        "figures/example.py",
         "LICENSE",
     }
     require(entries, required, path.name)
