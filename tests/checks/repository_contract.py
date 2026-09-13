@@ -15,12 +15,9 @@ REQUIRED_PATHS = {
     "tests/run.py",
     "docs/ARCHITECTURE.md",
     "docs/ENGINEERING-LANGUAGE.md",
-    "docs/V3-CONTINUATION.md",
-    "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
-    "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
     "docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md",
     "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
-    "release/v3.0.1-final-corrections.json",
+    "docs/WINDOWS-FONT-SUPPORT.md",
     "release/v3-release-candidate.json",
 }
 
@@ -45,6 +42,42 @@ FORBIDDEN_EXACT_PATHS = {
 
 APPROVED_HISTORY_PREFIX = "docs/history/v3/"
 HISTORICAL_SNAPSHOT_BANNER = "> **Historical snapshot.**"
+
+RELOCATED_HISTORY_PATHS = (
+    "docs/HANDOFF-V3.0.0.md",
+    "docs/ROADMAP-V3.0.0.md",
+    "docs/R2-API-OWNERSHIP.md",
+    "docs/R3-B2-EVIDENCE-CONTRIBUTION.md",
+    "docs/R3-B2-NONAUTOMATIC-CLASSIFICATION.md",
+    "docs/R3-HARDENING-INVENTORY.md",
+    "docs/V3-CORE-CORRECTIONS-PHASE-END.md",
+    "docs/V3-CORRECTION-PLAN.md",
+    "docs/V3-FINAL-CERTIFICATION-PHASE-END.md",
+    "docs/V3-FINAL-CERTIFICATION.md",
+    "docs/V3-OBJECT-TYPOGRAPHY-DECISION.md",
+    "docs/V3-REFERENCE-PDF-VALIDATION.md",
+    "docs/V3-REFERENCE-PDF-VISUAL-REVIEW.md",
+    "docs/V3-REGRESSION-AUDIT.md",
+    "docs/V3-RELEASE-PHASE-END.md",
+    "docs/V3-RELEASE-READINESS.md",
+    "docs/V3-RELEASE-RECOVERY.md",
+    "docs/V3-SCIENTIFIC-ARTICLE-PDF-VALIDATION.md",
+    "docs/V3-SCIENTIFIC-ARTICLE-PHASE-END.md",
+    "docs/V3-SCIENTIFIC-ARTICLE.md",
+    "docs/V3.0.1-R1-TCC-SOURCE-AUDIT.md",
+    "docs/V3.0.1-R1.1-EVIDENCE.md",
+    "docs/V3.0.1-R1.2-EVIDENCE.md",
+    "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
+    "docs/V3.0.1-R1.3-EVIDENCE.md",
+    "docs/V3.0.1-R2-EVIDENCE.md",
+    "docs/V3.0.1-R3-EVIDENCE.md",
+    "docs/V3.0.1-R4-EVIDENCE.md",
+    "docs/V3-CONTINUATION.md",
+    "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
+    "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "docs/V3.0.1-R5-EVIDENCE.md",
+    "docs/V3.0.1-R6-EVIDENCE.md",
+)
 
 FORBIDDEN_PREFIXES = (
     "release/history/",
@@ -210,6 +243,10 @@ def main() -> int:
 
         if re.search(r"docs/history/(?!v3/)", text):
             errors.append(f"{path}: reference to unapproved documentation history root")
+
+        for relocated_path in RELOCATED_HISTORY_PATHS:
+            if relocated_path in text:
+                errors.append(f"{path}: stale reference to relocated historical path: {relocated_path}")
 
         allowed_fragments = NEGATIVE_FRAGMENT_EXEMPT.get(path, set())
         for fragment in STALE_CONTENT_FRAGMENTS:

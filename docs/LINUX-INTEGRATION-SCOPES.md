@@ -53,7 +53,7 @@ Final Certification exposed an orchestration defect when a phase-end candidate w
 5. the permanent `Linux integration` workflow also runs on `main` pushes that change the Release marker and forces `complete`;
 6. the marker is provenance/orchestration only and does not alter product or normative behavior.
 
-`docs/V3-RELEASE-PHASE-END.md` defines the Release candidate and acceptance semantics.
+`docs/history/v3/release/V3-RELEASE-PHASE-END.md` preserves the historical v3 release semantics. Current execution semantics are owned by the permanent workflows, `tests/integration_suites.py`, and the active release marker contract.
 
 ## Runner importability invariant
 

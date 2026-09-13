@@ -12,15 +12,15 @@
   },
   "authority": {
     "bootstrap": "AGENTS.md",
-    "continuation": "docs/V3-CONTINUATION.md",
-    "plan": "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
+    "continuation": "docs/history/v3/control/V3-CONTINUATION.md",
+    "plan": "docs/history/v3/control/V3.0.1-FINAL-CORRECTION-PLAN.md",
     "machine_state": "release/v3.0.1-final-corrections.json",
-    "r1_1_evidence": "docs/V3.0.1-R1.1-EVIDENCE.md",
-    "r1_2_matrix": "docs/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
-    "r1_2_evidence": "docs/V3.0.1-R1.2-EVIDENCE.md",
-    "r1_3_evidence": "docs/V3.0.1-R1.3-EVIDENCE.md",
-    "r2_evidence": "docs/V3.0.1-R2-EVIDENCE.md",
-    "r3_evidence": "docs/V3.0.1-R3-EVIDENCE.md",
+    "r1_1_evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R1.1-EVIDENCE.md",
+    "r1_2_matrix": "docs/history/v3/evidence/v3.0.1/V3.0.1-R1.2-TCC-COVERAGE-MATRIX.md",
+    "r1_2_evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R1.2-EVIDENCE.md",
+    "r1_3_evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R1.3-EVIDENCE.md",
+    "r2_evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R2-EVIDENCE.md",
+    "r3_evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R3-EVIDENCE.md",
     "precedence": [
       "current_git_facts",
       "active_machine_state",
@@ -29,9 +29,9 @@
       "older_docs",
       "conversation_memory"
     ],
-    "r4_evidence": "docs/V3.0.1-R4-EVIDENCE.md",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
-    "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md"
+    "r4_evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R4-EVIDENCE.md",
+    "r5_evidence": "docs/history/v3/release/V3.0.1-R5-EVIDENCE.md",
+    "r6_evidence": "docs/history/v3/release/V3.0.1-R6-EVIDENCE.md"
   },
   "audit_protocol": {
     "documentation_updated_on_every_material_advance": true,
@@ -176,14 +176,14 @@
         "status": "DONE",
         "implementation_sha": "54cde73b1c0c9c54cc752e6e3f95a752a0107a32",
         "consumer_reconciliation_sha": "5394d2caa3c12ec69c87c38c01302df73c9e59c9",
-        "evidence": "docs/V3.0.1-R1.1-EVIDENCE.md"
+        "evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R1.1-EVIDENCE.md"
       },
       "R1.2": {
         "status": "DONE",
         "matrix_sha": "1fcc023c50955f6cd62d84a8f03bd7d91ff58932",
         "closure_control_sha": "3ad68d22eb7e2842679437dde3b0b25755179f7e",
         "historical_guide_origin": "2cbd6d00318ba906e225fa37a4efb724300c3b4e",
-        "evidence": "docs/V3.0.1-R1.2-EVIDENCE.md"
+        "evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R1.2-EVIDENCE.md"
       },
       "R1.3": {
         "status": "DONE",
@@ -197,7 +197,7 @@
           "linux_scope": "reference-document",
           "linux_summary": "PASS=3 FAIL=0 SKIP=0"
         },
-        "failed_development_runs_preserved_in": "docs/V3.0.1-R1.3-EVIDENCE.md"
+        "failed_development_runs_preserved_in": "docs/history/v3/evidence/v3.0.1/V3.0.1-R1.3-EVIDENCE.md"
       }
     },
     "R2": {
@@ -252,7 +252,7 @@
     },
     "R3": {
       "status": "DONE",
-      "evidence": "docs/V3.0.1-R3-EVIDENCE.md",
+      "evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R3-EVIDENCE.md",
       "implementation_source": "CURRENT_HEAD_CONTAINING_THIS_STATE",
       "public_reference_pdf": "abntexto-ufc-reference.pdf",
       "implementation": {
@@ -289,8 +289,8 @@
         ".github/workflows/linux-integration.yml",
         "README.md",
         "docs/CTAN-RELEASE.md",
-        "docs/V3.0.1-R3-EVIDENCE.md",
-        "docs/V3-CONTINUATION.md",
+        "docs/history/v3/evidence/v3.0.1/V3.0.1-R3-EVIDENCE.md",
+        "docs/history/v3/control/V3-CONTINUATION.md",
         "release/v3.0.1-final-corrections.json"
       ],
       "pending_acceptance": [],
@@ -378,7 +378,7 @@
     },
     "R4": {
       "status": "DONE",
-      "evidence": "docs/V3.0.1-R4-EVIDENCE.md",
+      "evidence": "docs/history/v3/evidence/v3.0.1/V3.0.1-R4-EVIDENCE.md",
       "entry_source_sha": "2556489da23e16495fc51ebf093f9f4704c6d52f",
       "confirmed_blockers": [
         "validator/app.js imports missing ./normative-catalog.js in tracked static tree",
@@ -438,8 +438,8 @@
         "tests/checks/linux_integration_suites.py",
         ".github/workflows/linux-integration.yml",
         "AGENTS.md",
-        "docs/V3.0.1-R4-EVIDENCE.md",
-        "docs/V3-CONTINUATION.md",
+        "docs/history/v3/evidence/v3.0.1/V3.0.1-R4-EVIDENCE.md",
+        "docs/history/v3/control/V3-CONTINUATION.md",
         "release/v3.0.1-final-corrections.json"
       ],
       "pending_acceptance": [],
@@ -620,7 +620,7 @@
     },
     "R5": {
       "status": "ACTIVE_OBSERVER_FIX_PENDING_FRESH_STAGE_A",
-      "evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+      "evidence": "docs/history/v3/release/V3.0.1-R5-EVIDENCE.md",
       "marker": "release/v3-release-candidate.json",
       "marker_policy": "single_canonical_marker",
       "merge_method": "squash",
@@ -786,7 +786,7 @@
           "site/index.html",
           ".github/workflows/pages.yml",
           "tests/checks/validator_source.py",
-          "docs/V3.0.1-R6-EVIDENCE.md"
+          "docs/history/v3/release/V3.0.1-R6-EVIDENCE.md"
         ],
         "readme_hardcoded_final_page_count": false,
         "expected_site_url": "https://tiagosombrra.github.io/abntexto-ufc/",
@@ -807,7 +807,7 @@
     "R6": {
       "status": "PENDING",
       "blocked_by": "R5 integrated exact-main certification, Pages/live delivery verification and artifact inspection",
-      "evidence": "docs/V3.0.1-R6-EVIDENCE.md"
+      "evidence": "docs/history/v3/release/V3.0.1-R6-EVIDENCE.md"
     }
   },
   "current_next_action": "Run fresh Static Contract, complete Linux Integration and Linux Release Check on the observer-fix successor of PR #310. Runs #516/#437/#147 on 8317be2... are non-closing development evidence; all failed on the same over-escaped README-link observer, while the strengthened coadvisor approval regression passed. Only a single exact successor SHA with all three gates green may close Stage A.",
@@ -817,7 +817,7 @@
   "global_regression": {
     "status": "RESOLVED_IN_CANDIDATE_PENDING_CI",
     "evidence": "release/v3.0.1-global-regression.json",
-    "lifecycle": "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "lifecycle": "docs/history/v3/control/V3.0.1-DOCUMENT-LIFECYCLE.md",
     "findings": [
       "C1 approval-page convergence",
       "C2 canonical TOC/index/delivery continuity",

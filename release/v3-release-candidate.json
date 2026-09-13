@@ -41,7 +41,7 @@
     "eligible_for_ctan_submission": false,
     "silent_tag_retarget_allowed": false,
     "recovery_version": "3.0.1",
-    "recovery_record": "docs/V3-RELEASE-RECOVERY.md"
+    "recovery_record": "docs/history/v3/release/V3-RELEASE-RECOVERY.md"
   },
   "superseded_candidate": {
     "sha": "75ead435eabe5157ed17c295ac26fce76438b0ca",
@@ -204,12 +204,12 @@
     "affected_docs_updated_with_every_material_repository_change": true,
     "root_readme_tracks_user_facing_facts_not_transient_ci_state": true,
     "post_acceptance_pre_tag_repository_changes_forbidden": true,
-    "r5_dynamic_handoff": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r5_dynamic_handoff": "docs/history/v3/release/V3.0.1-R5-EVIDENCE.md",
     "post_merge_pre_tag_source_receipt_commit_allowed": false,
     "live_post_merge_receipts": "GitHub Actions runs/artifacts and issue #304 until publication",
-    "r6_evidence": "docs/V3.0.1-R6-EVIDENCE.md",
+    "r6_evidence": "docs/history/v3/release/V3.0.1-R6-EVIDENCE.md",
     "integrated_followup_policy": "Final delivery source from historical PR #307 is absorbed into PR #310; PRs #307/#308/#309 must not be merged as competing candidates",
-    "document_lifecycle": "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "document_lifecycle": "docs/history/v3/control/V3.0.1-DOCUMENT-LIFECYCLE.md",
     "global_regression": "release/v3.0.1-global-regression.json"
   },
   "publication_rebuild_allowed": false,
@@ -219,7 +219,7 @@
     "pull_request": null,
     "working_branch": "release/v3.0.1-canonical-review-corrections",
     "authority": "release/v3.0.1-final-corrections.json",
-    "r5_evidence": "docs/V3.0.1-R5-EVIDENCE.md",
+    "r5_evidence": "docs/history/v3/release/V3.0.1-R5-EVIDENCE.md",
     "r0_r3_status": "DONE",
     "r4": {
       "status": "DONE",
@@ -269,7 +269,7 @@
         "site/index.html",
         ".github/workflows/pages.yml",
         "tests/checks/validator_source.py",
-        "docs/V3.0.1-R6-EVIDENCE.md"
+        "docs/history/v3/release/V3.0.1-R6-EVIDENCE.md"
       ]
     },
     "final_delivery_surface": {
