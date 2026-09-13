@@ -16,6 +16,7 @@ NEGATIVE_PATHS = ROOT / "standards/negative-paths.json"
 TEST_SURFACE_POLICY = ROOT / "standards/test-surface-policy.json"
 CANDIDATE_ROOTS = (ROOT / "tests/checks", ROOT / "tests/integration")
 CANDIDATE_SUFFIXES = {".py", ".sh"}
+ASSET_ROOTS = (ROOT / "tests/documents", ROOT / "tests/fixtures")
 CONTROL_ROOTS = (
     ROOT / "tests/checks",
     ROOT / "tests/integration",
@@ -56,6 +57,15 @@ def collect_files(roots: tuple[Path, ...], suffixes: set[str]) -> set[Path]:
 
 def candidate_files() -> set[Path]:
     return collect_files(CANDIDATE_ROOTS, CANDIDATE_SUFFIXES)
+
+
+def asset_files() -> set[Path]:
+    assets: set[Path] = set()
+    for root in ASSET_ROOTS:
+        if not root.exists():
+            continue
+        assets.update(path for path in root.rglob("*") if path.is_file())
+    return assets
 
 
 def control_files(candidates: set[Path]) -> set[Path]:
@@ -185,6 +195,37 @@ def collect_standalone_surfaces(candidates: set[Path]) -> set[Path]:
     return set(paths)
 
 
+
+def collect_dynamic_asset_edges(assets: set[Path]) -> dict[Path, set[Path]]:
+    policy = json.loads(TEST_SURFACE_POLICY.read_text(encoding="utf-8"))
+    entries = policy.get("dynamic_assets", [])
+    if not isinstance(entries, list):
+        fail("test-surface policy has an invalid dynamic_assets list")
+
+    edges: dict[Path, set[Path]] = {}
+    seen_targets: set[Path] = set()
+    for item in entries:
+        if not isinstance(item, dict):
+            fail("test-surface policy contains a non-object dynamic asset entry")
+        value = item.get("path")
+        owner_value = item.get("owner")
+        purpose = item.get("purpose")
+        reason = item.get("reason")
+        if not all(isinstance(field, str) and field for field in (value, owner_value, purpose, reason)):
+            fail("dynamic asset entries require path/owner/purpose/reason")
+
+        target = ROOT / value
+        owner = ROOT / owner_value
+        if target not in assets:
+            fail(f"dynamic asset policy points to missing/non-asset path: {value}")
+        if not owner.is_file():
+            fail(f"dynamic asset {value} has missing owner: {owner_value}")
+        if target in seen_targets:
+            fail(f"dynamic asset policy contains duplicate target: {value}")
+        seen_targets.add(target)
+        edges.setdefault(owner, set()).add(target)
+    return edges
+
 def main() -> None:
     runner_ns = runpy.run_path(str(RUNNER))
     static_ns = runpy.run_path(str(STATIC_RUNNER))
@@ -297,16 +338,26 @@ def main() -> None:
         fail("negative-path manifest contains duplicate case ids")
 
     candidates = candidate_files()
+    assets = asset_files()
     standalone = collect_standalone_surfaces(candidates)
+    dynamic_asset_edges = collect_dynamic_asset_edges(assets)
     roots.update(standalone)
 
-    nodes = control_files(candidates)
-    by_stem = unique_index({path for path in nodes if path.suffix == ".py"}, lambda path: path.stem)
+    control_nodes = control_files(candidates)
+    nodes = control_nodes | assets
+    by_stem = unique_index(
+        {path for path in control_nodes if path.suffix == ".py"},
+        lambda path: path.stem,
+    )
     by_name = unique_index(nodes, lambda path: path.name)
     graph = {
         node: direct_references(node, nodes, by_stem, by_name)
         for node in nodes
     }
+    for owner, targets in dynamic_asset_edges.items():
+        if owner not in nodes:
+            fail(f"dynamic asset owner is outside the control graph: {owner.relative_to(ROOT)}")
+        graph[owner].update(targets)
 
     reachable_nodes: set[Path] = set()
     queue = deque(path for path in roots if path in nodes)
@@ -323,12 +374,21 @@ def main() -> None:
         rendered = ", ".join(path.relative_to(ROOT).as_posix() for path in orphaned)
         fail(f"unreachable retained test/check scripts: {rendered}")
 
+    reachable_assets = assets & reachable_nodes
+    orphaned_assets = sorted(assets - reachable_assets)
+    if orphaned_assets:
+        rendered = ", ".join(path.relative_to(ROOT).as_posix() for path in orphaned_assets)
+        fail(f"unreachable retained test assets: {rendered}")
+
+    dynamic_asset_count = sum(len(targets) for targets in dynamic_asset_edges.values())
     print(
         "TEST-SURFACE-INTEGRITY-EVIDENCE status=PASS "
         f"runner_gates={len(checks)} static_checks={len(static_checks)} "
         f"evidence_ids={len(evidence_ids)} negative_cases={len(case_ids)} "
-        f"standalone={len(standalone)} control_nodes={len(nodes)} "
-        f"test_scripts={len(candidates)} reachable={len(reachable_candidates)} orphaned=0"
+        f"standalone={len(standalone)} control_nodes={len(control_nodes)} "
+        f"test_scripts={len(candidates)} reachable={len(reachable_candidates)} orphaned=0 "
+        f"test_assets={len(assets)} asset_reachable={len(reachable_assets)} asset_orphaned=0 "
+        f"dynamic_assets={dynamic_asset_count}"
     )
 
 
