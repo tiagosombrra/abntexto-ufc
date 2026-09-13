@@ -178,6 +178,8 @@ O projeto **não redistribui o brasão da UFC nem outras marcas institucionais**
 
 Quando houver autorização para uso de uma marca institucional, o usuário fornece o ativo localmente pela configuração da classe. Os bundles públicos são gerados com `coat-of-arms = false`, e o PDF público de referência é compilado dessa mesma fonte sanitizada.
 
+Nos perfis `research-project` e `anonymized-research-project`, uma capa institucional UFC usa o brasão por padrão, em consonância com a apresentação mostrada no Guia de Normalização de Projetos de Pesquisa da UFC. Essa é uma política de apresentação institucional do projeto, não uma promoção do brasão a requisito da ABNT. O usuário pode definir `coat-of-arms = false` quando o edital, a submissão externa ou uma política de revisão cega exigir ausência de marca institucional. O perfil anonimizado atual oculta autor e orientador, mas não oculta a instituição por si só.
+
 ## Estrutura do repositório
 
 | Caminho | Papel |
