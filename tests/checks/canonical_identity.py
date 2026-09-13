@@ -42,7 +42,7 @@ LEGACY_FULL_FILE_EXEMPT = {
     "tests/integration/distribution-bundles.sh",
     "tools/build-distribution-bundles.py",
 }
-LEGACY_FULL_DIRECTORY_EXEMPT = ()
+LEGACY_FULL_DIRECTORY_EXEMPT = ("release/history/v3/",)
 LEGACY_DOCUMENTATION_EXEMPT = {
     "docs/ARCHITECTURE.md": (
         re.compile(
