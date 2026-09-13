@@ -6,38 +6,33 @@ This repository uses fail-closed state reconciliation. Repository state, not con
 
 Before changing code, tests, standards, workflows, documentation, release metadata or publication state:
 
-1. resolve the actual branch and HEAD from Git and resolve `origin/main` dynamically;
-2. read `docs/V3-CONTINUATION.md` first;
-3. read `release/v3.0.1-final-corrections.json`;
-4. read `docs/V3.0.1-FINAL-CORRECTION-PLAN.md`;
-5. read `docs/V3.0.1-DOCUMENT-LIFECYCLE.md`;
-6. read the evidence document for the active lot. R1 evidence is under `docs/V3.0.1-R1*.md`, R2 uses `docs/V3.0.1-R2-EVIDENCE.md`, R3 uses `docs/V3.0.1-R3-EVIDENCE.md`, R4 uses `docs/V3.0.1-R4-EVIDENCE.md`, and the current active lot R5 uses `docs/V3.0.1-R5-EVIDENCE.md`;
-7. inspect issue #304 and PR #310; #299/#305/#307/#308/#309/#311 are historical or superseded transports and must not be merged as the final candidate;
-8. use older v3 roadmap, recovery and certification documents only as historical/background evidence; `docs/V3.0.1-DOCUMENT-LIFECYCLE.md` classifies their lifecycle.
+1. resolve the actual branch, HEAD and `origin/main` dynamically;
+2. read `docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md`;
+3. read `docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md` when branch/repository cleanup is involved;
+4. inspect issue #313 for the live post-v3.0.1 regression/hygiene program;
+5. read `docs/V3.0.1-DOCUMENT-LIFECYCLE.md` only for historical lifecycle classification and retained v3.0.1 evidence;
+6. use older v3/v3.0.1 roadmap, recovery, certification and release documents as historical evidence unless the v3.0.2 status explicitly promotes one to current policy.
 
-Priority on disagreement: **current Git facts > active machine state > current continuation handoff > active-lot evidence > older documents > prior chat or memory**.
+Priority on disagreement: **current Git facts > current v3.0.2 status/issue #313 > current technical policy > retained v3.0.1 evidence > older v3 documents > prior chat or memory**.
 
-## Current release-correction state
+## Current development state
 
 | Fact | Current state |
 |---|---|
-| Target | `3.0.1` |
-| Active phase | Release |
-| Canonical branch | `main`; always resolve current SHA dynamically |
-| Historical certified baseline | `111680cd934a4ea55b02f6ffe730ff5260077565`; evidence only, superseded as final candidate |
-| Active correction branch | `release/v3.0.1-canonical-review-corrections` |
-| Tracking issue / PR | #304 / #310 — sole active release transport |
-| Publication | BLOCKED until R6 |
-| R0 | DONE — auditable control plane |
-| R1 | DONE — canonical source identity, coverage and coherent pedagogical TCC |
-| R2 | DONE — exact-SHA full canonical engineering PDF artifact and provenance |
-| R3 | DONE — sanitized public reference embedded and independently inspected |
-| R4 | DONE — static package and productive real-PDF Chrome E2E accepted |
-| R5 | ACTIVE_CONSOLIDATED_FINALIZATION — #310 absorbs bounded #311 approval fix + governance regression + delivery |
-| R6 | PENDING — maintainer acceptance of PDFs + README/site/validator delivery, then publication |
-| Public `v3.0.0` | historical/superseded; never silently retarget |
+| Published/frozen baseline | `v3.0.1`; immutable historical release bytes |
+| Current development line | `v3.0.2` |
+| Canonical branch | `main`; resolve SHA dynamically |
+| Current hygiene branch | `chore/v3.0.2-repository-hygiene` while its PR is open |
+| Tracking issue | #313 |
+| TOC References/Glossary correction | DONE; merged through PR #314 |
+| Branch classification | DONE; manifest classifies all non-current refs before physical pruning |
+| Workflow lifecycle | four permanent workflows KEEP |
+| Tool lifecycle | automated/release tools KEEP; three PowerShell scripts KEEP as documented manual Windows support |
+| Documentation cleanup | ACTIVE |
+| Full post-cleanup regression | PENDING |
+| v3.0.2 publication | NOT AUTHORIZED until regression + maintainer review |
 
-Never treat a SHA copied from this document as current Git state; resolve the branch dynamically first.
+The `v3.0.1` tag/release/CTAN-submission bytes must never be rewritten. Any post-release correction belongs to a later version.
 
 ## Progress documentation discipline
 

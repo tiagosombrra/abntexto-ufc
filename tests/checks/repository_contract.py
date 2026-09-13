@@ -18,6 +18,8 @@ REQUIRED_PATHS = {
     "docs/V3-CONTINUATION.md",
     "docs/V3.0.1-FINAL-CORRECTION-PLAN.md",
     "docs/V3.0.1-DOCUMENT-LIFECYCLE.md",
+    "docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md",
+    "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
     "release/v3.0.1-final-corrections.json",
     "release/v3-release-candidate.json",
 }
@@ -41,8 +43,10 @@ FORBIDDEN_EXACT_PATHS = {
     "tests/checks/normative_source_authority.py",
 }
 
+APPROVED_HISTORY_PREFIX = "docs/history/v3/"
+HISTORICAL_SNAPSHOT_BANNER = "> **Historical snapshot.**"
+
 FORBIDDEN_PREFIXES = (
-    "docs/history/",
     "release/history/",
     "standards/history/",
     "normativa/",
@@ -109,7 +113,6 @@ STALE_CONTENT_FRAGMENTS = (
     "normativa/",
     "tests/normativa/",
     "tests/fixtures/pretextuais/",
-    "docs/history/",
     "release/history/",
     "standards/history/",
     "ufctex.cls",
@@ -157,6 +160,7 @@ def main() -> int:
     errors: list[str] = []
     paths = tracked_paths()
     path_set = set(paths)
+    approved_history_files: list[str] = []
 
     for required in sorted(REQUIRED_PATHS - path_set):
         errors.append(f"missing required path: {required}")
@@ -166,6 +170,20 @@ def main() -> int:
 
         if path in FORBIDDEN_EXACT_PATHS:
             errors.append(f"obsolete active path: {path}")
+
+        if path.startswith("docs/history/"):
+            if not path.startswith(APPROVED_HISTORY_PREFIX):
+                errors.append(f"unapproved documentation history prefix: {path}")
+            else:
+                approved_history_files.append(path)
+                if path != f"{APPROVED_HISTORY_PREFIX}README.md":
+                    if not path.endswith(".md"):
+                        errors.append(f"non-Markdown file in approved documentation history: {path}")
+                    else:
+                        history_text = read_text(path)
+                        if history_text is None or not history_text.startswith(HISTORICAL_SNAPSHOT_BANNER):
+                            errors.append(f"historical snapshot banner missing: {path}")
+
         if any(path.startswith(prefix) for prefix in FORBIDDEN_PREFIXES):
             errors.append(f"forbidden archive/legacy prefix: {path}")
         if FORBIDDEN_PATH_SEGMENT.search(path):
@@ -184,6 +202,15 @@ def main() -> int:
         text = read_text(path)
         if text is None:
             continue
+        # Approved historical snapshots intentionally preserve obsolete paths and
+        # phase-time wording as evidence. Their explicit banner prevents them from
+        # being confused with current repository authority.
+        if path.startswith(APPROVED_HISTORY_PREFIX):
+            continue
+
+        if re.search(r"docs/history/(?!v3/)", text):
+            errors.append(f"{path}: reference to unapproved documentation history root")
+
         allowed_fragments = NEGATIVE_FRAGMENT_EXEMPT.get(path, set())
         for fragment in STALE_CONTENT_FRAGMENTS:
             if fragment in allowed_fragments:
@@ -209,7 +236,8 @@ def main() -> int:
 
     print(
         "REPOSITORY-EVIDENCE status=PASS "
-        f"tracked_files={len(paths)} history_directories=0 legacy_class=0"
+        f"tracked_files={len(paths)} history_directories=1 "
+        f"history_files={len(approved_history_files)} legacy_class=0"
     )
     return 0
 
