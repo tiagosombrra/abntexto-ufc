@@ -54,7 +54,9 @@ cases = (
 
 for path, marker, label in cases:
     source = Path(path).read_text(encoding='utf-8')
-    body = re.split(marker, source, maxsplit=1)[0]
+    if marker not in source:
+        raise SystemExit(f'{label} tutorial keyword marker is missing: {marker}')
+    body = source.split(marker, 1)[0]
     words = re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ0-9]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*", body)
     if not 150 <= len(words) <= 500:
         raise SystemExit(f'{label} tutorial text outside the 150–500 word range: {len(words)}')
