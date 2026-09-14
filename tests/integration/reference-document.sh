@@ -202,14 +202,14 @@ toc = Path('template/main.toc').read_text(encoding='utf-8', errors='replace')
 
 for title in ('RESUMO', 'ABSTRACT', 'LISTA DE ILUSTRAÇÕES', 'LISTA DE TABELAS'):
     pattern = re.compile(
-        r'\contentsline\s*\{[^}]+\}\s*\{' + re.escape(title) + r'\}\s*\{',
+        r'\\contentsline\s*\{[^}]+\}\s*\{' + re.escape(title) + r'\}\s*\{',
         re.IGNORECASE,
     )
     if pattern.search(toc):
         raise SystemExit(f'Reference document failed: front-matter element entered the table of contents: {title}')
 
 normalized_toc = unicodedata.normalize('NFC', toc).casefold()
-if '\toclabelbox{}Referências' in toc or '\toclabelbox{}\MakeUppercase{Glossário}' in toc:
+if r'\toclabelbox{}Referências' in toc or r'\toclabelbox{}\MakeUppercase{Glossário}' in toc:
     raise SystemExit(
         'Reference document failed: empty TOC label box reintroduced for unnumbered post-textual entries.'
     )
