@@ -2,7 +2,7 @@
 
 Updated: 2026-09-14
 
-This document defines the current release discipline for v3.0.2 preparation and later post-v3.0.1 development. It remains candidate-SHA-neutral until a candidate is frozen.
+This document defines the current release discipline for the frozen v3.0.2 candidate and later post-v3.0.1 development. The v3.0.2 publication source is already bound to one immutable candidate SHA.
 
 ## Current state
 
@@ -11,23 +11,23 @@ This document defines the current release discipline for v3.0.2 preparation and 
 | Published baseline | `v3.0.1` — immutable historical release |
 | Current development line | `v3.0.2` |
 | Active release marker | `release/v3-release-candidate.json` |
-| Candidate state | `NOT_FROZEN` |
-| Candidate SHA | none |
-| Publication authorization | false |
-| Preparation state | P8 active — source/release metadata bump to 3.0.2; candidate not frozen |
+| Candidate state | `FROZEN` |
+| Candidate SHA | `3a0904324e23bfc65852d730f2647ce47dc65105` |
+| Publication authorization | true — exact certified bytes only |
+| Preparation state | P8 frozen / ready to publish; tag must point to the frozen candidate SHA, not to the later freeze-control commit |
 | Tracking issue | #313 |
 | Historical v3/v3.0.1 release state | `release/history/v3/` |
 | CTAN runtime shape | one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files |
 | P7 visual entry gate | accepted on 2026-09-14 for `94a0538806561a89d9871ff88624dd7673a5f7e3` |
-| Final candidate visual gate | still required on the exact certified 3.0.2 candidate SHA before tag/publication |
+| Final candidate visual gate | PASS on 2026-09-14 for `3a0904324e23bfc65852d730f2647ce47dc65105` |
 
 The v3.0.1-specific publication procedure is retained at `docs/history/v3/release/CTAN-RELEASE-v3.0.1.md`.
 
 ## Release-candidate lifecycle
 
-Normal development keeps the active marker in `NOT_FROZEN` state with no candidate SHA and no publication authorization.
+Normal development keeps the active marker in `NOT_FROZEN` state with no candidate SHA and no publication authorization. For v3.0.2, that transition is complete: the marker is `FROZEN`, publication is authorized for the exact certified bytes, and the frozen candidate SHA is `3a0904324e23bfc65852d730f2647ce47dc65105`.
 
-A future release-preparation lot must deliberately update the marker and the release contract together. Because the marker path is a GitHub Actions trigger, changing it forces complete Linux Integration and the release-grade validation path.
+Changing the marker is a release-control event and forces complete Linux Integration plus the release-grade validation path. The freeze-control commit is not the publication source; the eventual `v3.0.2` tag must point exactly to the frozen candidate SHA.
 
 No candidate may be treated as frozen until all of the following are true on one immutable source SHA:
 
@@ -46,6 +46,20 @@ certified source SHA == visually approved source SHA == tagged source SHA == sou
 ```
 
 Published tags and release assets are immutable historical facts. They must never be silently retargeted or rebuilt to represent later source.
+
+## Frozen v3.0.2 publication receipt
+
+Certified publication source: `3a0904324e23bfc65852d730f2647ce47dc65105`.
+
+Linux Release Check run: `34876949362`.
+
+Certified archive checksums:
+
+- CTAN: `f309ee3ddc8b748dbb1b1c81b542d3c0f24fc7a26a407887ad674d8f71c3c9dd`;
+- Template: `e88d93d54099482564d2194c2e0d925640312d321897f8b553f623c451615552`;
+- Overleaf: `5fb44b7600e5020784b0de1050ad1d3e5e2b529c43b3bcff6d4aa9082880a763`.
+
+Do not rebuild, amend or substitute these archives after freeze. The tag, GitHub Release assets and CTAN submission must refer to the source/bytes above.
 
 ## Distribution contract
 
