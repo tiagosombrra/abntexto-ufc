@@ -141,7 +141,8 @@ jobs:
             python3 tests/run.py --mode pr --suite "$scope"
 
       - name: Run Web/Lite browser E2E
-        if: steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
+        id: web_lite_e2e
+        if: steps.scope.outputs.run_integration == 'true' && success() && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
         shell: bash
         env:
           WEB_LITE_EVIDENCE_DIR: ${{ runner.temp }}/abntexto-ufc-web-lite
@@ -167,7 +168,7 @@ jobs:
             --evidence "$WEB_LITE_EVIDENCE_DIR/web-lite-e2e.json"
 
       - name: Upload Web/Lite browser evidence
-        if: always() && steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
+        if: always() && steps.web_lite_e2e.outcome != 'skipped' && steps.web_lite_e2e.outcome != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: web-lite-e2e-${{ github.run_id }}
@@ -175,4 +176,4 @@ jobs:
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log
           retention-days: 14
-          if-no-files-found: error
+          if-no-files-found: warn
