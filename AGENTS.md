@@ -30,7 +30,7 @@ Priority on disagreement: **current Git facts > current v3.0.2 status/issue #313
 | Tool lifecycle | automated/release tools KEEP; three PowerShell scripts KEEP as documented manual Windows support |
 | Documentation cleanup | DONE; active docs/release state consolidated and post-cleanup status reconciled |
 | Full post-cleanup regression | DONE for P8 entry on `main@94a0538806561a89d9871ff88624dd7673a5f7e3`; exact-main release certification PASS and maintainer visual acceptance recorded on 2026-09-14 |
-| v3.0.2 publication | P8 PREPARATION ACTIVE; source/release metadata is 3.0.2, but marker remains `NOT_FROZEN`, candidate SHA is unset and publication is unauthorized until candidate-bound certification plus final same-SHA visual acceptance |
+| v3.0.2 publication | FROZEN / AUTHORIZED for exact candidate `3a0904324e23bfc65852d730f2647ce47dc65105`; tag and publication bytes must come from that SHA and Linux Release Check run `34876949362`; the freeze-control commit is not taggable publication source |
 
 The `v3.0.1` tag/release/CTAN-submission bytes must never be rewritten. Any post-release correction belongs to a later version.
 
@@ -81,14 +81,14 @@ Do not reactivate v3.0.1 branches, roadmaps, recovery plans or candidate semanti
 
 There is exactly one active release marker path: `release/v3-release-candidate.json`.
 
-During ordinary v3.0.2 development it must remain:
+Before release freeze, the marker remains NOT_FROZEN with no candidate SHA and publication unauthorized. The current v3.0.2 release state is now:
 
-- `candidate_state = NOT_FROZEN`;
-- `candidate_sha = null`;
-- `publication_authorized = false`;
+- `candidate_state = FROZEN`;
+- `candidate_sha = 3a0904324e23bfc65852d730f2647ce47dc65105`;
+- `publication_authorized = true`;
 - bound to issue #313 and the current v3.0.2 status document.
 
-Changing the active marker is a deliberate release-control event and must force complete Linux Integration. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
+Changing the active marker is a deliberate release-control event and must force complete Linux Integration. The freeze-control commit may land after final acceptance solely to record control state; it must not alter candidate/runtime/template/CTAN/publication bytes, and it is not the tag target. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 
 ## Future release invariant
 
@@ -98,7 +98,7 @@ A future release candidate must bind technical certification, generated artifact
 certified source SHA == visually approved source SHA == tagged source SHA == source SHA of published release bytes
 ```
 
-No tracked commit or asset rebuild is permitted between final human acceptance and tagging/publication. Published v3.0.0 and v3.0.1 tags/assets remain immutable historical facts.
+No candidate-source or publication-byte change, amendment or rebuild is permitted between final human acceptance and tagging/publication. A marker-only/control-policy freeze commit is allowed by the active v3.0.2 status, but the tag must still point to the certified and visually approved candidate SHA. Published v3.0.0 and v3.0.1 tags/assets remain immutable historical facts.
 
 ## Fail-closed rule
 

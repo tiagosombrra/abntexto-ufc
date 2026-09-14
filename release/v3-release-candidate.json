@@ -4,9 +4,9 @@
   "lifecycle": "active-release-marker",
   "development_line": "3.0.2",
   "target_version": "3.0.2",
-  "candidate_state": "NOT_FROZEN",
-  "candidate_sha": null,
-  "publication_authorized": false,
+  "candidate_state": "FROZEN",
+  "candidate_sha": "3a0904324e23bfc65852d730f2647ce47dc65105",
+  "publication_authorized": true,
   "tracking_issue": 313,
   "authority": "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
   "published_baseline": {
@@ -22,5 +22,5 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "P8 preparation started after maintainer acceptance of the pre-bump certified baseline 94a0538806561a89d9871ff88624dd7673a5f7e3. Source/release metadata is advanced atomically to 3.0.2, but the candidate remains NOT_FROZEN with no candidate SHA and publication unauthorized until candidate-bound certification and final same-SHA visual acceptance pass."
+  "note": "Final v3.0.2 candidate frozen after exact-main certification and explicit maintainer acceptance on 2026-09-14. Candidate source SHA 3a0904324e23bfc65852d730f2647ce47dc65105 passed Static Contract, Linux Integration and Linux Release Check run 34876949362 with SCOPE=complete PASS=38 FAIL=0 SKIP=0, current CTAN pkgcheck 4.1.0 PASS and seven-profile preflight PASS. Publication is authorized only for the certified bytes generated from this candidate SHA; the freeze-control commit itself is not a publication source and the v3.0.2 tag must point to candidate_sha."
 }
