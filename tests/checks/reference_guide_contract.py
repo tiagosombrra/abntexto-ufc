@@ -14,6 +14,7 @@ ATOMIC_PATH = STANDARDS_DIR / "atomic-rules.json"
 API_CONTRACT_PATH = ROOT / "release" / "history" / "v3" / "v3-api-migration.json"
 COMMAND_REFERENCE_PATH = ROOT / "docs" / "COMMAND-REFERENCE.md"
 REFERENCE_ROOT = ROOT / "template"
+BIBLIOGRAPHY_PATH = REFERENCE_ROOT / "backmatter" / "references.bib"
 
 ALLOWED_CLASSIFICATIONS = {"normative", "institutional", "model-policy", "example"}
 EXPECTED_CHAPTERS = [
@@ -205,6 +206,43 @@ def audit_tutorial_content() -> tuple[list[str], dict[int, dict[str, Any]]]:
     return failures, evidence
 
 
+def audit_citation_closure() -> tuple[list[str], dict[str, int]]:
+    failures: list[str] = []
+    bibliography = BIBLIOGRAPHY_PATH.read_text(encoding="utf-8")
+    declared = {
+        match.group(1).strip()
+        for match in re.finditer(
+            r"(?m)^\s*@[A-Za-z]+\s*\{\s*([^,\s]+)\s*,",
+            bibliography,
+        )
+    }
+
+    citation_re = re.compile(
+        r"\\(?:textcite|parencite|cite|nocite|apud|textapud)\*?"
+        r"(?:\[[^\]]*\])*\{([^{}]+)\}"
+    )
+    used: set[str] = set()
+
+    for path in sorted(REFERENCE_ROOT.rglob("*.tex")):
+        source = path.read_text(encoding="utf-8")
+        # Strip TeX comments before reading citation commands.
+        source = "\n".join(line.split("%", 1)[0] for line in source.splitlines())
+        for match in citation_re.finditer(source):
+            for key in match.group(1).split(","):
+                normalized = key.strip()
+                if normalized and normalized != "*":
+                    used.add(normalized)
+
+    missing = sorted(used - declared)
+    if missing:
+        failures.append(
+            "template/backmatter/references.bib: citation keys missing: "
+            + ", ".join(missing)
+        )
+
+    return failures, {"declared": len(declared), "used": len(used), "missing": len(missing)}
+
+
 def audit_command_reference() -> list[str]:
     failures: list[str] = []
     api = load_json(API_CONTRACT_PATH)
@@ -260,6 +298,8 @@ def main() -> None:
     failures.extend(tutorial_failures)
     api_failures = audit_command_reference()
     failures.extend(api_failures)
+    citation_failures, citation_evidence = audit_citation_closure()
+    failures.extend(citation_failures)
 
     seen_topics: set[str] = set()
     passes = 0
@@ -327,6 +367,13 @@ def main() -> None:
     print(
         "GUIDE-EVIDENCE api_reference_status="
         + ("FAIL" if api_failures else "PASS")
+    )
+    print(
+        "CANONICAL-CITATION-CLOSURE-EVIDENCE status="
+        + ("FAIL" if citation_failures else "PASS")
+        + f" declared={citation_evidence['declared']}"
+        + f" used={citation_evidence['used']}"
+        + f" missing={citation_evidence['missing']}"
     )
     print(f"GUIDE-EVIDENCE summary PASS={passes} FAIL={len(failures)} total={len(guide.get('topics', []))}")
     print("GUIDE-EVIDENCE normative_contract_changed=false")
