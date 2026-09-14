@@ -1,6 +1,16 @@
 abntexto-ufc changelog
 ======================
 
+3.0.2 — 2026-09-14
+------------------
+
+- Corrects the References/Glossary table-of-contents alignment while preserving the established five-level section hierarchy and TOC design.
+- Restores the UFC institutional coat of arms as the default on research-project and anonymized-research-project covers, while preserving `coat-of-arms=false` as an explicit opt-out.
+- Replaces the oversized manual-style canonical reference with a compact five-chapter TCC tutorial and separates workflow guidance and exhaustive API lookup into dedicated user documentation.
+- Keeps Template and Overleaf bundles self-contained with the public user guides while continuing to exclude UFC institutional assets and proprietary Microsoft fonts from public archives.
+- Closes canonical bibliography references used by the scientific-article review profile and strengthens release/test orchestration so technical PR changes cannot be hidden by later documentation-only commits.
+- Preserves the accepted v3 public API, current normative baseline, typography hierarchy and published v3.0.1 historical artifacts.
+
 3.0.1 — 2026-09-10
 ------------------
 
