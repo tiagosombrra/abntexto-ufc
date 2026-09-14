@@ -1,8 +1,8 @@
 # CTAN / GitHub Release Guide — abntexto-ufc
 
-Updated: 2026-09-13
+Updated: 2026-09-14
 
-This document defines the current release discipline for post-v3.0.1 development. It is intentionally version-neutral until a new candidate is frozen.
+This document defines the current release discipline for v3.0.2 preparation and later post-v3.0.1 development. It remains candidate-SHA-neutral until a candidate is frozen.
 
 ## Current state
 
@@ -14,10 +14,12 @@ This document defines the current release discipline for post-v3.0.1 development
 | Candidate state | `NOT_FROZEN` |
 | Candidate SHA | none |
 | Publication authorization | false |
+| Preparation state | P8 active — source/release metadata bump to 3.0.2; candidate not frozen |
 | Tracking issue | #313 |
 | Historical v3/v3.0.1 release state | `release/history/v3/` |
 | CTAN runtime shape | one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files |
-| Human visual gate | required before any future tag/publication |
+| P7 visual entry gate | accepted on 2026-09-14 for `94a0538806561a89d9871ff88624dd7673a5f7e3` |
+| Final candidate visual gate | still required on the exact certified 3.0.2 candidate SHA before tag/publication |
 
 The v3.0.1-specific publication procedure is retained at `docs/history/v3/release/CTAN-RELEASE-v3.0.1.md`.
 

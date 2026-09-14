@@ -22,5 +22,5 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "No v3.0.2 release candidate is frozen. This file is the active CI marker path; historical release state lives under release/history/v3/."
+  "note": "P8 preparation started after maintainer acceptance of the pre-bump certified baseline 94a0538806561a89d9871ff88624dd7673a5f7e3. Source/release metadata is advanced atomically to 3.0.2, but the candidate remains NOT_FROZEN with no candidate SHA and publication unauthorized until candidate-bound certification and final same-SHA visual acceptance pass."
 }

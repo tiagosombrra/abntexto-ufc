@@ -29,8 +29,8 @@ Priority on disagreement: **current Git facts > current v3.0.2 status/issue #313
 | Workflow lifecycle | four permanent workflows KEEP |
 | Tool lifecycle | automated/release tools KEEP; three PowerShell scripts KEEP as documented manual Windows support |
 | Documentation cleanup | DONE; active docs/release state consolidated and post-cleanup status reconciled |
-| Full post-cleanup regression | TECHNICALLY DONE on `main@94a0538806561a89d9871ff88624dd7673a5f7e3`; exact-main release certification and all seven review-pair preflights PASS; explicit maintainer visual acceptance remains pending |
-| v3.0.2 publication | NOT AUTHORIZED; release marker remains `NOT_FROZEN` until explicit maintainer visual acceptance and P8 preparation |
+| Full post-cleanup regression | DONE for P8 entry on `main@94a0538806561a89d9871ff88624dd7673a5f7e3`; exact-main release certification PASS and maintainer visual acceptance recorded on 2026-09-14 |
+| v3.0.2 publication | P8 PREPARATION ACTIVE; source/release metadata is 3.0.2, but marker remains `NOT_FROZEN`, candidate SHA is unset and publication is unauthorized until candidate-bound certification plus final same-SHA visual acceptance |
 
 The `v3.0.1` tag/release/CTAN-submission bytes must never be rewritten. Any post-release correction belongs to a later version.
 
