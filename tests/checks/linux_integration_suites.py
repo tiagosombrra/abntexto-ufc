@@ -82,6 +82,8 @@ def main() -> None:
         "unzip",
         'git config --global --add safe.directory "$PWD"',
         "Run Web/Lite browser E2E",
+        "id: web_lite_e2e",
+        "success()",
         "tests/integration/web-lite-e2e.py",
         "artifacts/validation/web-lite-positive.pdf",
         "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json",
@@ -89,6 +91,8 @@ def main() -> None:
         "WEB_LITE_EVIDENCE_DIR",
         'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
         "Upload Web/Lite browser evidence",
+        "steps.web_lite_e2e.outcome != 'skipped'",
+        "if-no-files-found: warn",
         "web-lite-e2e-${{ github.run_id }}",
     ):
         if token not in workflow:
@@ -240,7 +244,7 @@ def main() -> None:
         "human_review_pairs_retained=true release_marker_full_pr_dominates=true "
         "release_assets_retained=true correction_state_docs_only=true "
         "canonical_reference_artifact=true release_workflow_orchestration_smoke=true "
-        "web_lite_first_class=true browser_e2e_host=true"
+        "web_lite_first_class=true browser_e2e_host=true web_lite_upload_non_masking=true"
     )
 
 
