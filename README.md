@@ -11,6 +11,8 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 - **Releases e downloads:** https://github.com/tiagosombrra/abntexto-ufc/releases
 - **Repositório:** https://github.com/tiagosombrra/abntexto-ufc
 - **Issues / suporte técnico:** https://github.com/tiagosombrra/abntexto-ufc/issues
+- **Tutorial e fluxo de uso:** [docs/USER-GUIDE.md](docs/USER-GUIDE.md)
+- **Referência completa de comandos:** [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md)
 - **Migração da série 2 para a série 3:** [docs/MIGRATING-TO-V3.md](docs/MIGRATING-TO-V3.md)
 - **Base normativa:** [docs/NORMATIVE-BASE.md](docs/NORMATIVE-BASE.md)
 
@@ -24,7 +26,7 @@ O `abntexto-ufc` organiza em uma única classe LaTeX:
 - elementos pré-textuais, textuais e pós-textuais usados nos trabalhos acadêmicos;
 - regras de layout, objetos acadêmicos, citações e bibliografia;
 - uma camada de requisitos institucionais da UFC sobre a base ABNT aplicável;
-- um TCC canônico comentado que funciona simultaneamente como guia de uso e corpus de regressão;
+- um TCC tutorial curto, compilável e realista, separado da referência exaustiva de comandos e da cobertura de regressão;
 - validadores Web/Lite e CLI/Deep;
 - distribuição separada para CTAN, uso local e Overleaf.
 
@@ -66,7 +68,7 @@ O bundle Overleaf é autocontido justamente para reduzir diferenças de versão 
 
 1. Baixe `abntexto-ufc-template-<versão>.zip`.
 2. Extraia o arquivo preservando a estrutura de diretórios.
-3. Use TeX Live 2026, ambiente principal de certificação da versão 3.0.1.
+3. Use TeX Live 2026, ambiente principal de certificação da série 3.
 4. Garanta `abntexto` 1.1 ou posterior e `biblatex`/`biber`.
 5. Abra e compile `main.tex` no seu editor LaTeX.
 
@@ -103,7 +105,9 @@ Texto do trabalho.
 \end{document}
 ```
 
-Para um exemplo completo, use `template/main.tex`. Nos bundles de Template e Overleaf, a mesma fonte pública vem acompanhada de `abntexto-ufc-reference.pdf`, um guia pedagógico completo gerado da mesma fonte certificada.
+Para aprender pelo exemplo completo, use `template/main.tex`. Ele é um TCC tutorial: mostra o fluxo real de edição e usa os recursos principais no contexto em que aparecem. Nos bundles de Template e Overleaf, a mesma fonte pública vem acompanhada de `abntexto-ufc-reference.pdf`, o PDF tutorial gerado dessa fonte certificada.
+
+Para consulta sem inflar o TCC, use [docs/USER-GUIDE.md](docs/USER-GUIDE.md) e [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md). Casos extremos e cobertura normativa permanecem em `tests/` e `standards/`, não no texto acadêmico do tutorial.
 
 ## Perfis de documento
 
@@ -117,7 +121,7 @@ Os valores canônicos de `type` incluem:
 - `anonymized-research-project`;
 - `scientific-article`.
 
-O TCC canônico explica a configuração e mostra os principais elementos, objetos e regras em contexto.
+O TCC tutorial mostra o fluxo normal de um trabalho; a documentação separada explica a configuração completa, e os testes exercitam os casos especializados.
 
 ## Validação
 
@@ -166,6 +170,8 @@ A política é usar a edição técnica vigente aplicável e não reativar norma
 
 Documentos principais:
 
+- [Guia de uso](docs/USER-GUIDE.md)
+- [Referência de comandos](docs/COMMAND-REFERENCE.md)
 - [Base normativa](docs/NORMATIVE-BASE.md)
 - [Vigência normativa](docs/NORMATIVE-CURRENCY.md)
 - [Guia do validador Web/Lite](validator/README.md)
@@ -186,7 +192,7 @@ Nos perfis `research-project` e `anonymized-research-project`, uma capa instituc
 |---|---|
 | `abntexto-ufc/` | implementação modular de desenvolvimento da classe |
 | `abntexto-ufc.cls` | entrada compatível do repositório; o pacote CTAN recebe a classe monolítica gerada |
-| `template/` | TCC canônico comentado e exemplos de frontmatter/chapters/backmatter |
+| `template/` | TCC tutorial curto e editável, com frontmatter/chapters/backmatter de exemplo |
 | `validator/` | aplicação estática Web/Lite e contrato do validador |
 | `standards/` | catálogo normativo, precedência e rastreabilidade |
 | `tests/` | contratos estáticos, integração, regressão e fixtures |
@@ -196,9 +202,9 @@ Nos perfis `research-project` e `anonymized-research-project`, uma capa instituc
 | `site/` | landing page publicada pelo GitHub Pages |
 | `.github/workflows/` | CI, certificação, release e publicação do site |
 
-## Como a versão é certificada
+## Como uma versão é certificada
 
-A versão 3.0.1 usa um processo fail-closed. O mesmo candidato precisa passar:
+As releases da série 3 usam um processo fail-closed. O mesmo candidato precisa passar:
 
 - contrato estático;
 - regressão Linux completa;
@@ -213,7 +219,7 @@ A versão 3.0.1 usa um processo fail-closed. O mesmo candidato precisa passar:
 O contrato de publicação é:
 
 ```text
-SHA certificado == SHA aprovado visualmente == SHA da tag v3.0.1 == SHA que gerou os arquivos publicados
+SHA certificado == SHA aprovado visualmente == SHA da tag da versão == SHA que gerou os arquivos publicados
 ```
 
 Depois da aprovação humana final, os artefatos não podem ser reconstruídos.

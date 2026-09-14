@@ -65,8 +65,6 @@ jobs:
           PR_ACTION: ${{ github.event.action || '' }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
-          BEFORE_SHA: ${{ github.event.before || '' }}
-          AFTER_SHA: ${{ github.event.after || github.event.pull_request.head.sha || '' }}
           INPUT_SCOPE: ${{ inputs.scope || 'auto' }}
         run: |
           set -euo pipefail
@@ -88,26 +86,15 @@ jobs:
               selected_scope=complete
               reason=release-candidate-full-pr
             else
-              scope_base="$BASE_SHA"
-              scope_head="$HEAD_SHA"
-              scope_window=full-pr
-
-              if [[ "$PR_ACTION" == "synchronize" && -n "$BEFORE_SHA" && -n "$AFTER_SHA" ]]; then
-                if git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null && git cat-file -e "${AFTER_SHA}^{commit}" 2>/dev/null; then
-                  scope_base="$BEFORE_SHA"
-                  scope_head="$AFTER_SHA"
-                  scope_window=incremental-push
-                else
-                  scope_window=missing-before-full-pr
-                fi
-              fi
-
-              selected_scope=$(python3 tests/integration_suites.py --base "$scope_base" --head "$scope_head")
+              # Always classify the complete PR diff. A later documentation-only
+              # synchronize event must never replace a failing technical run with
+              # a superficial green skip.
+              selected_scope=$(python3 tests/integration_suites.py --base "$BASE_SHA" --head "$HEAD_SHA")
               if [[ "$selected_scope" == "none" ]]; then
                 run_integration=false
-                reason=documentation-only
+                reason=documentation-only-full-pr
               else
-                reason="auto-$scope_window:$selected_scope"
+                reason="auto-full-pr:$selected_scope"
               fi
             fi
           elif [[ "$INPUT_SCOPE" != "auto" ]]; then
@@ -154,7 +141,8 @@ jobs:
             python3 tests/run.py --mode pr --suite "$scope"
 
       - name: Run Web/Lite browser E2E
-        if: steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
+        id: web_lite_e2e
+        if: steps.scope.outputs.run_integration == 'true' && success() && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
         shell: bash
         env:
           WEB_LITE_EVIDENCE_DIR: ${{ runner.temp }}/abntexto-ufc-web-lite
@@ -180,7 +168,7 @@ jobs:
             --evidence "$WEB_LITE_EVIDENCE_DIR/web-lite-e2e.json"
 
       - name: Upload Web/Lite browser evidence
-        if: always() && steps.scope.outputs.run_integration == 'true' && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'web-lite'))
+        if: always() && steps.web_lite_e2e.outcome != 'skipped' && steps.web_lite_e2e.outcome != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: web-lite-e2e-${{ github.run_id }}
@@ -188,4 +176,4 @@ jobs:
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log
           retention-days: 14
-          if-no-files-found: error
+          if-no-files-found: warn

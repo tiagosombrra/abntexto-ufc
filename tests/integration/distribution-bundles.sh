@@ -3,25 +3,15 @@ set -eu
 
 work="$(mktemp -d)"
 evidence_dir="artifacts/final-certification"
-campus="template/figures/ufc-campus-pici.jpg"
-reitoria="template/figures/ufc-reitoria.jpg"
-campus_preexisting=false
-reitoria_preexisting=false
 source_sha="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-local}}"
 version="$(make --no-print-directory version)"
 public_reference="abntexto-ufc-reference.pdf"
 module_count="$(find abntexto-ufc -type f -name '*.def' | wc -l | tr -d ' ')"
-[ -f "$campus" ] && campus_preexisting=true
-[ -f "$reitoria" ] && reitoria_preexisting=true
-
 cleanup() {
   rm -rf "$work"
-  [ "$campus_preexisting" = true ] || rm -f "$campus"
-  [ "$reitoria_preexisting" = true ] || rm -f "$reitoria"
 }
 trap cleanup EXIT INT TERM
 
-python3 tools/fetch-reference-images.py
 python3 tools/fetch-abntexto.py --output "$work/abntexto.cls"
 
 if [ -n "${SOURCE_DATE_EPOCH:-}" ]; then

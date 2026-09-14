@@ -16,11 +16,14 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 TEMPLATE_DIR = ROOT / "template"
 PUBLIC_REFERENCE_PDF = f"{PACKAGE_ID}-reference.pdf"
-UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
-REFERENCE_IMAGES = (
-    Path("template/figures/ufc-campus-pici.jpg"),
-    Path("template/figures/ufc-reitoria.jpg"),
+PUBLIC_USER_DOCS = (
+    Path("docs/USER-GUIDE.md"),
+    Path("docs/COMMAND-REFERENCE.md"),
+    Path("docs/NORMATIVE-BASE.md"),
+    Path("docs/NORMATIVE-CURRENCY.md"),
+    Path("docs/MIGRATING-TO-V3.md"),
 )
+UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -159,15 +162,11 @@ def current_template_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
         content = public_main(path.read_bytes()) if relative == "main.tex" else path.read_bytes()
         add_entry(entries, f"{prefix}{relative}", content, file_mode(path))
 
-    for relative in REFERENCE_IMAGES:
+    for relative in PUBLIC_USER_DOCS:
         path = ROOT / relative
         if not path.is_file():
-            raise SystemExit(
-                f"Required licensed reference image missing: {relative.as_posix()}; "
-                "run `make reference-assets` before building public bundles."
-            )
-        archive_name = path.relative_to(TEMPLATE_DIR).as_posix()
-        add_entry(entries, f"{prefix}{archive_name}", path.read_bytes(), file_mode(path))
+            raise SystemExit(f"Required public user documentation is missing: {relative.as_posix()}")
+        add_entry(entries, f"{prefix}{path.name}", path.read_bytes(), file_mode(path))
     return entries
 
 

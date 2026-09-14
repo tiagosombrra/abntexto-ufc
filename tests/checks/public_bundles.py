@@ -112,14 +112,21 @@ def validate_template(path: Path, v: str) -> None:
         fail(f"{path.name}: every template entry must be rooted at {prefix}")
     required = {
         f"{prefix}main.tex",
+        f"{prefix}USER-GUIDE.md",
+        f"{prefix}COMMAND-REFERENCE.md",
+        f"{prefix}NORMATIVE-BASE.md",
+        f"{prefix}NORMATIVE-CURRENCY.md",
+        f"{prefix}MIGRATING-TO-V3.md",
         f"{prefix}abntexto-ufc.cls",
         f"{prefix}abntexto-ufc/core.def",
         f"{prefix}frontmatter/abstract.tex",
         f"{prefix}chapters/1-introduction.tex",
+        f"{prefix}chapters/2-theoretical-background.tex",
+        f"{prefix}chapters/3-methodology.tex",
+        f"{prefix}chapters/4-results.tex",
+        f"{prefix}chapters/5-conclusion.tex",
         f"{prefix}backmatter/references.bib",
-        f"{prefix}figures/LICENSES.md",
-        f"{prefix}figures/ufc-campus-pici.jpg",
-        f"{prefix}figures/ufc-reitoria.jpg",
+        f"{prefix}figures/example-flow.png",
         f"{prefix}LICENSE",
     }
     require(entries, required, path.name)
@@ -136,15 +143,22 @@ def validate_overleaf(path: Path) -> None:
     entries = archive_entries(path)
     required = {
         "main.tex",
+        "USER-GUIDE.md",
+        "COMMAND-REFERENCE.md",
+        "NORMATIVE-BASE.md",
+        "NORMATIVE-CURRENCY.md",
+        "MIGRATING-TO-V3.md",
         "abntexto.cls",
         "abntexto-ufc.cls",
         "abntexto-ufc/core.def",
         "frontmatter/abstract.tex",
         "chapters/1-introduction.tex",
+        "chapters/2-theoretical-background.tex",
+        "chapters/3-methodology.tex",
+        "chapters/4-results.tex",
+        "chapters/5-conclusion.tex",
         "backmatter/references.bib",
-        "figures/LICENSES.md",
-        "figures/ufc-campus-pici.jpg",
-        "figures/ufc-reitoria.jpg",
+        "figures/example-flow.png",
         "LICENSE",
     }
     require(entries, required, path.name)

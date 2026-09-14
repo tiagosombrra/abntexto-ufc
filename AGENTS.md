@@ -29,7 +29,7 @@ Priority on disagreement: **current Git facts > current v3.0.2 status/issue #313
 | Workflow lifecycle | four permanent workflows KEEP |
 | Tool lifecycle | automated/release tools KEEP; three PowerShell scripts KEEP as documented manual Windows support |
 | Documentation cleanup | DONE; active docs/release state consolidated and post-cleanup status reconciled |
-| Full post-cleanup regression | DONE technically on `main@5c8919498e01ccbfee1d3891a254d03527dcceea`; maintainer visual acceptance remains a separate release gate |
+| Full post-cleanup regression | REOPENED after the project-cover correction and canonical tutorial redesign; a new exact-main certification and visual review are required |
 | v3.0.2 publication | NOT AUTHORIZED; release marker remains `NOT_FROZEN` until explicit maintainer visual acceptance and P8 preparation |
 
 The `v3.0.1` tag/release/CTAN-submission bytes must never be rewritten. Any post-release correction belongs to a later version.
@@ -42,9 +42,10 @@ A material lot must leave an exact changed-file record or unambiguous commit/PR 
 
 ## Canonical TCC/reference rules
 
-The canonical undergraduate reference is rooted at `template/main.tex`. It is both a user-facing commented guide and a regression/reference corpus. The seven chapter files remain sequential and semantically named.
+The canonical undergraduate artifact is rooted at `template/main.tex` and is a compact TCC tutorial, not the exhaustive API/normative manual. Its five sequential chapter files are:
+`1-introduction.tex`, `2-theoretical-background.tex`, `3-methodology.tex`, `4-results.tex`, and `5-conclusion.tex`.
 
-The guide distinguishes ABNT normative requirements, UFC institutional requirements, project/editorial policy, and examples/recommendations. For each major user-visible formatting or document-structure topic, it explains authority/classification, expected rendered behavior, the public `abntexto-ufc` mechanism and the validation/evidence route. The machine normative contract remains authoritative for atomic proof semantics.
+Learning responsibilities are separated fail-closed: `template/` teaches by realistic use; `docs/USER-GUIDE.md` explains the workflow and normative/institutional context; `docs/COMMAND-REFERENCE.md` exhaustively documents the public configuration/command/environment surface; `standards/` owns machine normative traceability; and `tests/` owns exhaustive regression cases. Do not re-expand the TCC merely to carry test coverage or maintainer documentation. The canonical tutorial PDF is budgeted at 15–35 pages by the integration gate.
 
 R1.3 closed on source SHA `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa` with Static #484 PASS and Linux #405 `reference-document` PASS (`PASS=3 FAIL=0 SKIP=0`). Detailed failed development runs remain in `docs/history/v3/evidence/v3.0.1/V3.0.1-R1.3-EVIDENCE.md`.
 
@@ -56,7 +57,7 @@ That source-tree PDF is not automatically a distributable public PDF because the
 
 ## R3 public distribution rule
 
-Keep the small CTAN example and the complete pedagogical reference as different artifact roles. The full public reference PDF must be generated from the exact sanitized `main.tex` and runtime distributed in the template/Overleaf bundle; never copy the R2 source-tree PDF into public bundles.
+Keep the small CTAN example and the compact TCC tutorial as different artifact roles. The public tutorial PDF must be generated from the exact sanitized `main.tex` and runtime distributed in the template/Overleaf bundle; never copy a historical source-tree PDF into public bundles.
 
 Public source must have `coat-of-arms=false`, no UFC mark asset, and no proprietary Microsoft font files. Extend the existing `tools/build-public-bundles.py` / `tools/build-distribution-bundles.py` pipeline rather than adding a parallel release generator. Distribution regression must extract each public bundle, rebuild its exact source deterministically and compare the rebuilt PDF SHA-256 with the embedded full-reference PDF. Cross-bundle byte identity may only be asserted after measured proof.
 
