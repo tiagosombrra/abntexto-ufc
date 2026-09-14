@@ -60,12 +60,23 @@ def main() -> int:
         return fail("active release marker lifecycle is invalid")
     if marker.get("development_line") != "3.0.2" or marker.get("target_version") != "3.0.2":
         return fail("active release marker must target the v3.0.2 development line")
-    if marker.get("candidate_state") != "NOT_FROZEN":
-        return fail("v3.0.2 candidate must remain NOT_FROZEN during cleanup")
-    if marker.get("candidate_sha") is not None:
-        return fail("NOT_FROZEN candidate must not expose a candidate SHA")
-    if marker.get("publication_authorized") is not False:
-        return fail("publication must remain unauthorized during cleanup")
+    candidate_state = marker.get("candidate_state")
+    candidate_sha = marker.get("candidate_sha")
+    publication_authorized = marker.get("publication_authorized")
+    if candidate_state == "NOT_FROZEN":
+        if candidate_sha is not None:
+            return fail("NOT_FROZEN candidate must not expose a candidate SHA")
+        if publication_authorized is not False:
+            return fail("publication must remain unauthorized before freeze")
+    elif candidate_state == "FROZEN":
+        if not isinstance(candidate_sha, str) or len(candidate_sha) != 40 or any(
+            char not in "0123456789abcdef" for char in candidate_sha
+        ):
+            return fail("FROZEN candidate must bind one lowercase 40-hex source SHA")
+        if publication_authorized is not True:
+            return fail("FROZEN candidate requires explicit publication authorization")
+    else:
+        return fail(f"unsupported v3.0.2 candidate state: {candidate_state!r}")
     if marker.get("tracking_issue") != 313:
         return fail("active release marker must point to issue #313")
     baseline = marker.get("published_baseline")
@@ -98,10 +109,13 @@ def main() -> int:
     if "P5 — Documentation/release-state cleanup | DONE" not in status:
         return fail("current status must record completion of the historical relocation lot")
 
+    marker_state = str(candidate_state).lower()
     print(
         "DEVELOPMENT-GOVERNANCE-EVIDENCE status=PASS "
         "current_line=3.0.2 issue=313 "
-        "v3_0_1_roadmap=historical active_marker=not_frozen current_authority=v3.0.2-status"
+        f"v3_0_1_roadmap=historical active_marker={marker_state} "
+        f"candidate_sha={candidate_sha or 'none'} "
+        "current_authority=v3.0.2-status"
     )
     return 0
 
