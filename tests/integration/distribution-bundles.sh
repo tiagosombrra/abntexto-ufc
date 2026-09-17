@@ -6,6 +6,7 @@ evidence_dir="artifacts/final-certification"
 source_sha="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-local}}"
 version="$(make --no-print-directory version)"
 public_reference="abntexto-ufc-reference.pdf"
+institutional_asset="assets/institutional/ufc-coat-of-arms.png"
 module_count="$(find abntexto-ufc -type f -name '*.def' | wc -l | tr -d ' ')"
 cleanup() {
   rm -rf "$work"
@@ -31,7 +32,7 @@ SOURCE_DATE_EPOCH="$epoch" python3 tools/build-distribution-bundles.py \
   sha256sum -c SHA256SUMS
 )
 
-python3 - "$work/dist" "$version" "$public_reference" <<'PY'
+python3 - "$work/dist" "$version" "$public_reference" "$institutional_asset" <<'PY'
 from __future__ import annotations
 
 import re
@@ -44,6 +45,7 @@ root = Path(sys.argv[1])
 project_root = Path.cwd()
 version = sys.argv[2]
 public_reference = sys.argv[3]
+institutional_asset = sys.argv[4]
 package_name = f"abntexto-ufc-{version}.zip"
 expected = {
     package_name,
@@ -81,11 +83,6 @@ for archive_path in sorted(root.glob("*.zip")):
                     raise SystemExit(f"Distribution integrity failed: unsafe filename component in {archive_path.name}: {part}")
             if pure.name.lower() in forbidden_fonts:
                 raise SystemExit(f"Distribution integrity failed: proprietary font in {archive_path.name}: {name}")
-            if "assets" in pure.parts and "institutional" in pure.parts:
-                raise SystemExit(f"Distribution integrity failed: institutional asset in {archive_path.name}: {name}")
-            lowered = name.casefold()
-            if any(token in lowered for token in mark_tokens):
-                raise SystemExit(f"Distribution integrity failed: institutional mark asset in {archive_path.name}: {name}")
         bad = archive.testzip()
         if bad is not None:
             raise SystemExit(f"Distribution integrity failed: corrupt entry in {archive_path.name}: {bad}")
@@ -118,6 +115,14 @@ with zipfile.ZipFile(package_path) as archive:
         raise SystemExit("CTAN package must not contain external .def modules: " + ", ".join(def_files))
     if any(name.startswith("abntexto-ufc/abntexto-ufc/") for name in files):
         raise SystemExit("CTAN package must not contain the modular runtime directory.")
+
+    for name in files:
+        pure = PurePosixPath(name)
+        lowered = name.casefold()
+        if "assets" in pure.parts and "institutional" in pure.parts:
+            raise SystemExit(f"CTAN package must not redistribute an institutional asset: {name}")
+        if any(token in lowered for token in mark_tokens):
+            raise SystemExit(f"CTAN package must not redistribute an institutional mark asset: {name}")
 
     forbidden_root_children = {".github", "tests", "artifacts", "tools", "release", "standards", "dist"}
     for name in files:
@@ -200,30 +205,48 @@ with zipfile.ZipFile(package_path) as archive:
             raise SystemExit(f"CTAN documentation output is not a PDF: {pdf_name}")
 
 
-def validate_public_bundle(archive_path: Path, expect_upstream: bool) -> None:
+def validate_user_bundle(archive_path: Path, expect_upstream: bool) -> None:
     with zipfile.ZipFile(archive_path) as archive:
         names = [name for name in archive.namelist() if not name.endswith("/")]
         main_names = [name for name in names if PurePosixPath(name).name == "main.tex"]
         reference_names = [name for name in names if PurePosixPath(name).name == public_reference]
         upstream_names = [name for name in names if PurePosixPath(name).name == "abntexto.cls"]
+        asset_names = [name for name in names if name.endswith(institutional_asset)]
+        institutional_names = [
+            name for name in names
+            if "assets" in PurePosixPath(name).parts and "institutional" in PurePosixPath(name).parts
+        ]
+
         if len(main_names) != 1:
-            raise SystemExit(f"{archive_path.name} must contain exactly one public main.tex.")
+            raise SystemExit(f"{archive_path.name} must contain exactly one main.tex.")
         if len(reference_names) != 1:
             raise SystemExit(f"{archive_path.name} must contain exactly one {public_reference}.")
         if bool(upstream_names) != expect_upstream:
             expectation = "include" if expect_upstream else "exclude"
             raise SystemExit(f"{archive_path.name} must {expectation} the pinned abntexto.cls dependency.")
+        if len(asset_names) != 1:
+            raise SystemExit(f"{archive_path.name} must contain exactly one {institutional_asset}.")
+        if institutional_names != asset_names:
+            raise SystemExit(
+                f"{archive_path.name} contains unexpected institutional assets: "
+                + ", ".join(sorted(set(institutional_names) - set(asset_names)))
+            )
 
         main_text = archive.read(main_names[0]).decode("utf-8")
-        if main_text.count("  coat-of-arms = false,") != 1 or "  coat-of-arms = true," in main_text:
-            raise SystemExit(f"{archive_path.name} public main.tex is not the sanitized coat-of-arms=false source.")
+        if main_text.count("  coat-of-arms = true,") != 1 or "  coat-of-arms = false," in main_text:
+            raise SystemExit(f"{archive_path.name} main.tex must keep coat-of-arms=true.")
+
+        asset = archive.read(asset_names[0])
+        if not asset.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise SystemExit(f"{archive_path.name} institutional asset is not a valid PNG.")
+
         reference = archive.read(reference_names[0])
         if not reference.startswith(b"%PDF-") or len(reference) == 0:
             raise SystemExit(f"{archive_path.name} embedded full reference is not a valid non-empty PDF.")
 
 
-validate_public_bundle(root / f"abntexto-ufc-template-{version}.zip", expect_upstream=False)
-validate_public_bundle(root / f"abntexto-ufc-overleaf-{version}.zip", expect_upstream=True)
+validate_user_bundle(root / f"abntexto-ufc-template-{version}.zip", expect_upstream=False)
+validate_user_bundle(root / f"abntexto-ufc-overleaf-{version}.zip", expect_upstream=True)
 
 checksums = root / "SHA256SUMS"
 if not checksums.is_file() or checksums.stat().st_size == 0:
@@ -255,7 +278,7 @@ compile_public_project() {
     pdflatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
   ) > "$log" 2>&1 || {
     cat "$log" >&2
-    echo "Distribution integrity failed: $label public reference rebuild failed." >&2
+    echo "Distribution integrity failed: $label reference rebuild failed." >&2
     return 1
   }
 
@@ -267,6 +290,10 @@ compile_public_project() {
     echo "Distribution integrity failed: $label bundle does not contain $public_reference." >&2
     return 1
   }
+  [ -s "$project/$institutional_asset" ] || {
+    echo "Distribution integrity failed: $label bundle does not contain $institutional_asset." >&2
+    return 1
+  }
 
   for warning in \
     'Overfull \hbox' \
@@ -274,7 +301,8 @@ compile_public_project() {
     'There were undefined references' \
     'undefined on input line' \
     "Citation '" \
-    'Please (re)run Biber'; do
+    'Please (re)run Biber' \
+    'UFC coat of arms asset not found'; do
     if grep -F "$warning" "$project/main.log" >/dev/null 2>&1; then
       cat "$project/main.log" >&2
       echo "Distribution integrity failed: $label final public build contains warning: $warning" >&2
@@ -333,19 +361,20 @@ cat > "$evidence_dir/distribution-bundles.json" <<EOF
   "ctan_inlined_modules": $module_count,
   "ctan_external_abntexto_dependency": true,
   "ctan_full_reference_embedded": false,
+  "ctan_institutional_marks_redistributed": false,
   "public_reference_pdf": "$public_reference",
   "template_reference_pdf_sha256": "$template_reference_hash",
   "overleaf_reference_pdf_sha256": "$overleaf_reference_hash",
   "cross_bundle_reference_pdf_identical": true,
   "template_rebuild_identity": "PASS",
   "overleaf_rebuild_identity": "PASS",
-  "public_coat_of_arms": false,
-  "institutional_marks_redistributed": false,
+  "template_overleaf_coat_of_arms": true,
+  "template_overleaf_institutional_asset": "$institutional_asset",
   "proprietary_fonts_redistributed": false,
   "source_date_epoch": "$epoch",
   "source_sha": "$source_sha"
 }
 EOF
 
-echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=$version artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-$version.zip monolithic_class=PASS def_files=0 inlined_modules=$module_count checksums=PASS archive_integrity=PASS public_reference_pdf=$public_reference public_reference_sha256=$template_reference_hash source_rebuild_identity=PASS cross_bundle_identical=true public_coat_of_arms=false institutional_marks_redistributed=false proprietary_fonts_redistributed=false source_date_epoch=$epoch"
+echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=$version artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-$version.zip monolithic_class=PASS def_files=0 inlined_modules=$module_count checksums=PASS archive_integrity=PASS public_reference_pdf=$public_reference public_reference_sha256=$template_reference_hash source_rebuild_identity=PASS cross_bundle_identical=true ctan_institutional_marks_redistributed=false template_overleaf_coat_of_arms=true proprietary_fonts_redistributed=false source_date_epoch=$epoch"
 echo 'Distribution/public bundle integrity gate completed.'
