@@ -37,10 +37,6 @@ _minted-*
 # Generated main PDF
 main.pdf
 
-# Fetched reference photographs
-figures/ufc-campus-pici.jpg
-figures/ufc-reitoria.jpg
-
 # Release artifacts
 dist/
 .abntexto-ufc-upstream.cls
