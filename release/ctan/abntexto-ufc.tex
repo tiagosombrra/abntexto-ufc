@@ -14,11 +14,11 @@
 \setlist{nosep}
 \newcommand{\pkg}{\texttt{abntexto-ufc}}
 \newcommand{\upstream}{\texttt{abntexto}}
-\newcommand{\version}{3.0.2}
+\newcommand{\version}{3.0.3}
 
 \title{\pkg\\Package manual}
 \author{Tiago Guimarães Sombra}
-\date{Version \version\ --- 2026-09-14}
+\date{Version \version\ --- 2026-09-17}
 
 \begin{document}
 \maketitle
@@ -33,7 +33,7 @@ The project is not an official or UFC-homologated template unless the University
 
 The class requires LaTeX2e and \upstream{} 1.1 or newer. Version \version{} is certified primarily against TeX Live 2026. Bibliography workflows use \texttt{biblatex} and \texttt{biber}; optional class features may load additional packages when enabled.
 
-The package does not redistribute the UFC logo, coat of arms or any other institutional mark. It also does not redistribute proprietary Microsoft Arial or Times New Roman font files. An institutional mark may be supplied locally only by users who are authorized to use it.
+The CTAN package does not redistribute the UFC logo, coat of arms or any other institutional mark. It also does not redistribute proprietary Microsoft Arial or Times New Roman font files. An institutional mark may be supplied locally only by users who are authorized to use it. Separate user-facing Template and Overleaf bundles published on GitHub may include the project-provided institutional asset so the canonical UFC-oriented example renders as intended; those bundles are not CTAN upload artifacts.
 
 \section{Installation}
 
@@ -115,11 +115,11 @@ The version 3 bibliography regression explicitly covers current online availabil
 
 \section{Distribution}
 
-The canonical package archive is \texttt{abntexto-ufc-3.0.2.zip}. It is the single archive intended for CTAN submission and contains one top-level \texttt{abntexto-ufc/} directory. Its only runtime implementation file is the generated monolithic \texttt{abntexto-ufc.cls}; the remaining files are README, CHANGELOG, license, this manual and the minimal example in source/PDF form.
+The canonical package archive is \texttt{abntexto-ufc-3.0.3.zip}. It is the single archive intended for CTAN submission and contains one top-level \texttt{abntexto-ufc/} directory. Its only runtime implementation file is the generated monolithic \texttt{abntexto-ufc.cls}; the remaining files are README, CHANGELOG, license, this manual and the minimal example in source/PDF form.
 
 Repository engineering infrastructure, source \texttt{.def} modules, tests, CI workflows, evidence files, roadmaps, proprietary fonts and institutional mark assets are deliberately excluded from the CTAN archive.
 
-Separate editable-template and Overleaf archives may be attached to the GitHub Release for user convenience; they preserve the repository-oriented modular layout and are not CTAN upload files.
+Separate editable-template and Overleaf archives may be attached to the GitHub Release for user convenience. Those user bundles preserve the repository-oriented modular layout and include the project-provided UFC coat-of-arms asset used by the canonical example; they are not CTAN upload files.
 
 \section{License and support}
 
