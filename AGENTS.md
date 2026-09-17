@@ -9,34 +9,35 @@ Before changing code, tests, standards, workflows, documentation, release metada
 1. resolve the actual branch, HEAD and `origin/main` dynamically;
 2. read `docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md`;
 3. read `docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md` when branch/repository cleanup is involved;
-4. inspect issue #313 for the live post-v3.0.1 regression/hygiene program;
+4. inspect issue #313 for the live v3.0.2 publication closeout and issue #328 for the v3.0.3 distribution correction;
 5. read `docs/history/v3/control/V3.0.1-DOCUMENT-LIFECYCLE.md` only for historical lifecycle classification and retained v3.0.1 evidence;
-6. use older v3/v3.0.1 roadmap, recovery, certification and release documents as historical evidence unless the v3.0.2 status explicitly promotes one to current policy.
+6. use older v3/v3.0.1 roadmap, recovery, certification and release documents as historical evidence unless the current status explicitly promotes one to current policy.
 
-Priority on disagreement: **current Git facts > current v3.0.2 status/issue #313 > current technical policy > retained v3.0.1 evidence > older v3 documents > prior chat or memory**.
+Priority on disagreement: **current Git facts > active status/issues > current technical policy > retained historical evidence > older v3 documents > prior chat or memory**.
 
 ## Current development state
 
 | Fact | Current state |
 |---|---|
-| Published/frozen baseline | `v3.0.1`; immutable historical release bytes |
-| Current development line | `v3.0.2` |
+| Published/frozen baseline | `v3.0.2`; GitHub Release published from immutable certified bytes; CTAN submission in processing |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Repository lifecycle | Post-cleanup steady state; `main` is canonical and transient PR branches must be removed after merge |
-| Tracking issue | #313 |
+| v3.0.2 tracking issue | #313 |
+| v3.0.3 corrective tracking issue | #328 |
 | TOC References/Glossary correction | DONE; merged through PR #314 |
-| Branch hygiene | DONE; 185 non-`main` refs physically pruned on 2026-09-13; manifest retains the forensic pre-pruning snapshot |
+| Branch hygiene | DONE; historical branch inventory was pruned and automatic merged-branch deletion is enabled |
 | Workflow lifecycle | four permanent workflows KEEP |
 | Tool lifecycle | automated/release tools KEEP; three PowerShell scripts KEEP as documented manual Windows support |
-| Documentation cleanup | DONE; active docs/release state consolidated and post-cleanup status reconciled |
-| Full post-cleanup regression | DONE for P8 entry on `main@94a0538806561a89d9871ff88624dd7673a5f7e3`; exact-main release certification PASS and maintainer visual acceptance recorded on 2026-09-14 |
-| v3.0.2 publication | FROZEN / AUTHORIZED for exact candidate `3a0904324e23bfc65852d730f2647ce47dc65105`; tag and publication bytes must come from that SHA and Linux Release Check run `34876949362`; the freeze-control commit is not taggable publication source |
+| Documentation cleanup | DONE for the v3.0.2 publication line |
+| Full v3.0.2 regression | DONE for exact frozen candidate `3a0904324e23bfc65852d730f2647ce47dc65105` |
+| v3.0.2 publication | GitHub Release COMPLETE; CTAN 3.0.2 submitted from the exact certified CTAN archive; do not rebuild or replace published/submitted bytes |
+| v3.0.3 distribution correction | ACTIVE on issue #328 / PR #329; fixes Template/Overleaf coat-of-arms packaging only and must not mutate v3.0.2 history |
 
-The `v3.0.1` tag/release/CTAN-submission bytes must never be rewritten. Any post-release correction belongs to a later version.
+The `v3.0.1` and `v3.0.2` tags/releases/publication bytes must never be rewritten. Any post-release correction belongs to a later version.
 
 ## Progress documentation discipline
 
-A material advance changes runtime, evidence, repository lifecycle, validation state or release readiness. Every material advance must update `docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md` and the applicable durable policy/evidence in the same work cycle; issue #313 carries live operational receipts when a source commit would be inappropriate.
+A material advance changes runtime, evidence, repository lifecycle, validation state or release readiness. Every material advance must update the applicable durable policy/evidence in the same work cycle; issue #313 carries v3.0.2 publication receipts and issue #328 carries the v3.0.3 distribution correction.
 
 A material lot must leave an exact changed-file record or unambiguous commit/PR diff, executed checks with classification, and unresolved findings carried forward explicitly. Failed checks remain part of the audit trail after successful reruns; do not rewrite history to make the sequence look green.
 
@@ -51,21 +52,30 @@ R1.3 closed on source SHA `704cedaa9960b87ae6035ac08fa4cc4c286ea9aa` with Static
 
 ## Canonical reference artifact rule
 
-R2 reuses `tests/integration/release-reference-reproducibility.sh`; do not create a competing source-tree reference generator. R2 accepted implementation SHA `514c128f542b00d4a10a9ad05ce7fc94f770ef55`: Static #486 PASS, Linux #407 `smoke` PASS, Linux Release Check #121 `complete` PASS, and dedicated artifact/provenance verification PASS. The canonical engineering PDF SHA-256 is `bd8964c8a37940924758d44eef61bc079f5101cf25cd180b42c3df22e00d1d3a`; all 63 pages were inspected as development evidence. See `docs/history/v3/evidence/v3.0.1/V3.0.1-R2-EVIDENCE.md`.
+R2 reuses `tests/integration/release-reference-reproducibility.sh`; do not create a competing source-tree reference generator. R2 accepted implementation SHA `514c128f542b00d4a10a9ad05ce7fc94f770ef55`: Static #486 PASS, Linux #407 `smoke` PASS, Linux Release Check #121 `complete` PASS, and dedicated artifact/provenance verification PASS. The historical canonical engineering PDF SHA-256 is `bd8964c8a37940924758d44eef61bc079f5101cf25cd180b42c3df22e00d1d3a`; see `docs/history/v3/evidence/v3.0.1/V3.0.1-R2-EVIDENCE.md`.
 
-That source-tree PDF is not automatically a distributable public PDF because the canonical source may use a locally configured UFC mark. R3 owns the public sanitized PDF route.
+The current canonical source intentionally uses the UFC coat of arms. Template and Overleaf bundles must preserve that source-level behavior and include the exact institutional asset required by the tutorial. CTAN is the intentionally sanitized distribution surface and must remain free of institutional mark assets.
 
-## R3 public distribution rule
+## User-bundle / CTAN distribution rule
 
-Keep the small CTAN example and the compact TCC tutorial as different artifact roles. The public tutorial PDF must be generated from the exact sanitized `main.tex` and runtime distributed in the template/Overleaf bundle; never copy a historical source-tree PDF into public bundles.
+Keep the small CTAN example and the compact TCC tutorial as different artifact roles.
 
-Public source must have `coat-of-arms=false`, no UFC mark asset, and no proprietary Microsoft font files. Extend the existing `tools/build-public-bundles.py` / `tools/build-distribution-bundles.py` pipeline rather than adding a parallel release generator. Distribution regression must extract each public bundle, rebuild its exact source deterministically and compare the rebuilt PDF SHA-256 with the embedded full-reference PDF. Cross-bundle byte identity may only be asserted after measured proof.
+The distribution contract is fail-closed and surface-specific:
 
-The CTAN archive stays lean by default and retains `docs/ctan-example.tex` as its minimal example; adding the full TCC to CTAN requires concrete packaging evidence, not convenience.
+- **CTAN:** no UFC coat-of-arms asset, no proprietary Microsoft font files, and the minimal CTAN example uses `coat-of-arms=false`;
+- **Template:** include exactly `assets/institutional/ufc-coat-of-arms.png`, preserve canonical `coat-of-arms=true`, and embed a reference PDF generated from that exact source;
+- **Overleaf:** include the same institutional PNG, preserve canonical `coat-of-arms=true`, include the pinned `abntexto.cls`, and embed the same reference PDF;
+- no distribution surface may contain proprietary Microsoft font files.
 
-## R3 accepted public distribution
+Extend the existing `tools/build-public-bundles.py` / `tools/build-distribution-bundles.py` pipeline rather than adding a competing release generator. Distribution regression must extract each user bundle, rebuild its exact source deterministically and compare the rebuilt PDF SHA-256 with the embedded full-reference PDF. Cross-bundle byte identity may only be asserted after measured proof.
 
-R3 accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`. Static #489 PASS, Linux Integration #410 `distribution` PASS, and Linux Release Check #124 complete PASS on that SHA. The exact distribution artifact `10169809155` has archive digest `sha256:6445ce5e3b870fc6c418fa23c4dc318576f58d00bfe48525ed100e86feaca761`; its three inner ZIPs validate against `SHA256SUMS`. Template and Overleaf embed byte-identical 63-page public references with SHA-256 `e92378a0ef01310c656599d1f1765db6d0040467367313e74776c8ebd75b766c`, while CTAN excludes the full reference. Independent inspection confirmed `coat-of-arms=false`, no prohibited institutional-mark asset, no proprietary Microsoft font, A4 output and visually intact pages. See `docs/history/v3/evidence/v3.0.1/V3.0.1-R3-EVIDENCE.md`.
+The CTAN archive stays lean by default and retains `docs/ctan-example.tex` as its minimal example; adding the full TCC or an institutional mark to CTAN requires an explicit future policy decision and concrete packaging evidence.
+
+## Historical R3 v3.0.1 distribution evidence
+
+The v3.0.1 R3 evidence remains historical fact: accepted corrective source `2556489da23e16495fc51ebf093f9f4704c6d52f`, Static #489 PASS, Linux Integration #410 `distribution` PASS, and Linux Release Check #124 complete PASS. That release deliberately used sanitized Template/Overleaf sources with `coat-of-arms=false` and no mark asset. See `docs/history/v3/evidence/v3.0.1/V3.0.1-R3-EVIDENCE.md`.
+
+Do not reinterpret that historical v3.0.1 evidence as the current user-bundle policy. Issue #328 records the later decision that Template/Overleaf must carry the institutional asset while CTAN alone remains sanitized.
 
 ## R4 accepted Web/Lite boundary
 
@@ -81,14 +91,16 @@ Do not reactivate v3.0.1 branches, roadmaps, recovery plans or candidate semanti
 
 There is exactly one active release marker path: `release/v3-release-candidate.json`.
 
-Before release freeze, the marker remains NOT_FROZEN with no candidate SHA and publication unauthorized. The current v3.0.2 release state is now:
+The current marker still records the frozen v3.0.2 candidate until the v3.0.2 CTAN publication state is reconciled:
 
 - `candidate_state = FROZEN`;
 - `candidate_sha = 3a0904324e23bfc65852d730f2647ce47dc65105`;
 - `publication_authorized = true`;
-- bound to issue #313 and the current v3.0.2 status document.
+- bound to issue #313 and the v3.0.2 status document.
 
-Changing the active marker is a deliberate release-control event and must force complete Linux Integration. The freeze-control commit may land after final acceptance solely to record control state; it must not alter candidate/runtime/template/CTAN/publication bytes, and it is not the tag target. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
+The v3.0.3 implementation may be developed and validated on its corrective branch while that publication receipt remains active, but the version/release-marker transition to v3.0.3 is a separate control event. Do not change the active marker merely to make an implementation PR green.
+
+Changing the active marker is a deliberate release-control event and must force complete Linux Integration. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 
 ## Future release invariant
 
@@ -98,8 +110,8 @@ A future release candidate must bind technical certification, generated artifact
 certified source SHA == visually approved source SHA == tagged source SHA == source SHA of published release bytes
 ```
 
-No candidate-source or publication-byte change, amendment or rebuild is permitted between final human acceptance and tagging/publication. A marker-only/control-policy freeze commit is allowed by the active v3.0.2 status, but the tag must still point to the certified and visually approved candidate SHA. Published v3.0.0 and v3.0.1 tags/assets remain immutable historical facts.
+No candidate-source or publication-byte change, amendment or rebuild is permitted between final human acceptance and tagging/publication. Published v3.0.0, v3.0.1 and v3.0.2 tags/assets remain immutable historical facts.
 
 ## Fail-closed rule
 
-If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Automated success never substitutes for R6 explicit maintainer visual approval.
+If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Automated success never substitutes for explicit maintainer visual approval.
