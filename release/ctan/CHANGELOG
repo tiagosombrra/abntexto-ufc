@@ -1,6 +1,15 @@
 abntexto-ufc changelog
 ======================
 
+3.0.3 — 2026-09-17
+------------------
+
+- Corrects the distribution contract so the GitHub Template and Overleaf bundles include `assets/institutional/ufc-coat-of-arms.png` and preserve `coat-of-arms=true` in the canonical example.
+- Keeps the CTAN package intentionally sanitized: no UFC institutional mark asset is redistributed and the minimal CTAN example continues to use `coat-of-arms=false`.
+- Adds regression coverage that fails when Template/Overleaf omit the expected institutional asset or when CTAN accidentally includes an institutional mark.
+- Keeps the v3.0.2 tag, GitHub Release assets, certified checksums and submitted CTAN bytes immutable historical artifacts.
+- Preserves the v3 public API, runtime behavior and normative baseline outside this packaging correction.
+
 3.0.2 — 2026-09-14
 ------------------
 

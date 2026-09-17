@@ -1,19 +1,20 @@
 {
-  "schema_version": 14,
+  "schema_version": 15,
   "project": "abntexto-ufc",
   "lifecycle": "active-release-marker",
-  "development_line": "3.0.2",
-  "target_version": "3.0.2",
-  "candidate_state": "FROZEN",
-  "candidate_sha": "3a0904324e23bfc65852d730f2647ce47dc65105",
-  "publication_authorized": true,
-  "tracking_issue": 313,
-  "authority": "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
+  "development_line": "3.0.3",
+  "target_version": "3.0.3",
+  "candidate_state": "NOT_FROZEN",
+  "candidate_sha": null,
+  "publication_authorized": false,
+  "tracking_issue": 328,
+  "authority": "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
   "published_baseline": {
-    "version": "3.0.1",
+    "version": "3.0.2",
     "immutable": true,
-    "tag": "v3.0.1",
-    "historical_state": "release/history/v3/v3.0.1-release-candidate.json"
+    "tag": "v3.0.2",
+    "historical_state": "release/history/v3/v3.0.2-release-candidate.json",
+    "ctan_state": "processing"
   },
   "policy": {
     "marker_change_forces_complete_linux_integration": true,
@@ -22,5 +23,5 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "Final v3.0.2 candidate frozen after exact-main certification and explicit maintainer acceptance on 2026-09-14. Candidate source SHA 3a0904324e23bfc65852d730f2647ce47dc65105 passed Static Contract, Linux Integration and Linux Release Check run 34876949362 with SCOPE=complete PASS=38 FAIL=0 SKIP=0, current CTAN pkgcheck 4.1.0 PASS and seven-profile preflight PASS. Publication is authorized only for the certified bytes generated from this candidate SHA; the freeze-control commit itself is not a publication source and the v3.0.2 tag must point to candidate_sha."
+  "note": "v3.0.3 is the active corrective development line. It restores the UFC coat of arms to Template and Overleaf bundles while keeping the CTAN archive free of institutional mark assets. No v3.0.3 candidate is frozen or authorized for publication yet. v3.0.2 remains immutable historical release evidence; its exact CTAN archive was submitted on 2026-09-17 and is still processing."
 }

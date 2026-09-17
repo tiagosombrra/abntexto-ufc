@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import re
 import subprocess
 import sys
 import tempfile
@@ -14,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ID = "abntexto-ufc"
 UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
 REMOVED_FORWARDING_LAYER = "abntexto-ufc/public-api.def"
+INSTITUTIONAL_ASSET = "assets/institutional/ufc-coat-of-arms.png"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -32,6 +32,8 @@ def fail(message: str) -> None:
 
 def version() -> str:
     text = (ROOT / "Makefile").read_text(encoding="utf-8")
+    import re
+
     match = re.search(r"^VERSION\s*:?=\s*([0-9]+\.[0-9]+\.[0-9]+)\s*$", text, re.MULTILINE)
     if not match:
         fail("Makefile VERSION not found.")
@@ -64,7 +66,6 @@ def require(entries: dict[str, zipfile.ZipInfo], required: set[str], archive_nam
 def reject_forbidden(entries: dict[str, zipfile.ZipInfo], archive_name: str) -> None:
     forbidden_prefixes = (
         ".github/",
-        "assets/institutional/",
         "docs/",
         "release/",
         "standards/",
@@ -80,8 +81,8 @@ def reject_forbidden(entries: dict[str, zipfile.ZipInfo], archive_name: str) -> 
             fail(f"{archive_name} contains a proprietary Microsoft font: {name}")
         if normalized in forbidden_names or normalized.startswith(forbidden_prefixes):
             fail(f"{archive_name} contains a development-only or removed path: {name}")
-        if "assets/institutional/" in normalized:
-            fail(f"{archive_name} redistributes an institutional asset path: {name}")
+        if normalized.startswith("assets/institutional/") and normalized != INSTITUTIONAL_ASSET:
+            fail(f"{archive_name} contains an unexpected institutional asset: {name}")
 
 
 def assert_public_main(archive_path: Path, entry: str) -> None:
@@ -89,13 +90,22 @@ def assert_public_main(archive_path: Path, entry: str) -> None:
         text = archive.read(entry).decode("utf-8")
     enabled = "  coat-of-arms = true,"
     disabled = "  coat-of-arms = false,"
-    if text.count(disabled) != 1:
-        fail(f"{archive_path.name}: distributed main.tex must disable the institutional mark exactly once using the canonical v3 setup key.")
-    if enabled in text:
-        fail(f"{archive_path.name}: distributed main.tex still enables the institutional mark.")
+    if text.count(enabled) != 1:
+        fail(
+            f"{archive_path.name}: distributed main.tex must enable the UFC coat of arms exactly once."
+        )
+    if disabled in text:
+        fail(f"{archive_path.name}: distributed main.tex unexpectedly disables the UFC coat of arms.")
     legacy_tokens = ("  brasao = sim,", "  brasao = nao,")  # v3-api-residual: negative-test-literal
     if any(token in text for token in legacy_tokens):
         fail(f"{archive_path.name}: distributed main.tex contains a removed v2 coat-of-arms setup key.")
+
+
+def assert_institutional_asset(archive_path: Path, entry: str) -> None:
+    with zipfile.ZipFile(archive_path) as archive:
+        data = archive.read(entry)
+    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+        fail(f"{archive_path.name}: UFC coat-of-arms asset is missing or is not a PNG.")
 
 
 def assert_upstream(archive_path: Path) -> None:
@@ -127,6 +137,7 @@ def validate_template(path: Path, v: str) -> None:
         f"{prefix}chapters/5-conclusion.tex",
         f"{prefix}backmatter/references.bib",
         f"{prefix}figures/example-flow.png",
+        f"{prefix}{INSTITUTIONAL_ASSET}",
         f"{prefix}LICENSE",
     }
     require(entries, required, path.name)
@@ -137,6 +148,7 @@ def validate_template(path: Path, v: str) -> None:
     stripped = {name[len(prefix):]: info for name, info in entries.items()}
     reject_forbidden(stripped, path.name)
     assert_public_main(path, f"{prefix}main.tex")
+    assert_institutional_asset(path, f"{prefix}{INSTITUTIONAL_ASSET}")
 
 
 def validate_overleaf(path: Path) -> None:
@@ -159,6 +171,7 @@ def validate_overleaf(path: Path) -> None:
         "chapters/5-conclusion.tex",
         "backmatter/references.bib",
         "figures/example-flow.png",
+        INSTITUTIONAL_ASSET,
         "LICENSE",
     }
     require(entries, required, path.name)
@@ -168,6 +181,7 @@ def validate_overleaf(path: Path) -> None:
         fail(f"{path.name}: Overleaf import must place main.tex at archive root.")
     reject_forbidden(entries, path.name)
     assert_public_main(path, "main.tex")
+    assert_institutional_asset(path, INSTITUTIONAL_ASSET)
     assert_upstream(path)
 
 
@@ -186,7 +200,9 @@ def build(output: Path, upstream: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate deterministic v3 public bundle structure and reproducibility.")
+    parser = argparse.ArgumentParser(
+        description="Validate deterministic Template/Overleaf bundle structure, institutional asset and reproducibility."
+    )
     parser.add_argument("--abntexto", type=Path, required=True)
     args = parser.parse_args()
 
@@ -218,7 +234,10 @@ def main() -> None:
         validate_template(first / template_name, v)
         validate_overleaf(first / overleaf_name)
 
-    print("PUBLIC-BUNDLE-EVIDENCE status=PASS artifacts=2 reproducible=2 safe_paths=PASS institutional_assets=excluded canonical_setup=PASS forwarding_layer=absent")
+    print(
+        "PUBLIC-BUNDLE-EVIDENCE status=PASS artifacts=2 reproducible=2 safe_paths=PASS "
+        "institutional_asset=included canonical_setup=coat-of-arms:true forwarding_layer=absent"
+    )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,39 @@
+{
+  "schema_version": 14,
+  "project": "abntexto-ufc",
+  "lifecycle": "historical-release-marker",
+  "development_line": "3.0.2",
+  "target_version": "3.0.2",
+  "candidate_state": "FROZEN",
+  "candidate_sha": "3a0904324e23bfc65852d730f2647ce47dc65105",
+  "publication_authorized": true,
+  "tracking_issue": 313,
+  "authority": "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
+  "published_baseline": {
+    "version": "3.0.1",
+    "immutable": true,
+    "tag": "v3.0.1",
+    "historical_state": "release/history/v3/v3.0.1-release-candidate.json"
+  },
+  "publication_receipt": {
+    "tag": "v3.0.2",
+    "github_release": "published",
+    "github_release_published_at": "2026-09-15T09:12:27Z",
+    "ctan_submission": "submitted",
+    "ctan_submitted_at": "2026-09-17T15:21:00+02:00",
+    "ctan_publication": "processing"
+  },
+  "certification": {
+    "linux_release_check_run": 34876949362,
+    "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "ctan_sha256": "f309ee3ddc8b748dbb1b1c81b542d3c0f24fc7a26a407887ad674d8f71c3c9dd",
+    "template_sha256": "e88d93d54099482564d2194c2e0d925640312d321897f8b553f623c451615552",
+    "overleaf_sha256": "5fb44b7600e5020784b0de1050ad1d3e5e2b529c43b3bcff6d4aa9082880a763"
+  },
+  "policy": {
+    "candidate_must_bind_one_immutable_sha": true,
+    "technical_certification_and_visual_acceptance_must_match": true,
+    "published_tags_must_not_be_retargeted": true
+  },
+  "note": "Historical snapshot of the frozen v3.0.2 release state at the moment the active development line advanced to v3.0.3. GitHub v3.0.2 publication bytes remain immutable. The exact CTAN v3.0.2 archive was submitted on 2026-09-17 and was still processing when this snapshot was archived."
+}
