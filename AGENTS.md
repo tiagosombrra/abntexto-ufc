@@ -20,6 +20,7 @@ Priority on disagreement: **current Git facts > active status/issues > current t
 | Fact | Current state |
 |---|---|
 | Published/frozen baseline | `v3.0.2`; GitHub Release published from immutable certified bytes; CTAN submission in processing |
+| Current development line | `v3.0.2` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Repository lifecycle | Post-cleanup steady state; `main` is canonical and transient PR branches must be removed after merge |
 | v3.0.2 tracking issue | #313 |
