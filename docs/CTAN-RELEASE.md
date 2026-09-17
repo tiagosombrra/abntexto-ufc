@@ -2,63 +2,72 @@
 
 Updated: 2026-09-17
 
-This document preserves the frozen v3.0.2 publication receipt and defines the distribution discipline used by later corrective development. The v3.0.2 publication source is bound to one immutable candidate SHA and must not be rebuilt.
+This document defines the publication discipline for `abntexto-ufc`, preserves the immutable v3.0.2 publication receipt, and records the current v3.0.3 corrective line.
 
 ## Current state
 
 | Fact | State |
 |---|---|
-| CTAN published baseline | `v3.0.1` — immutable historical release |
+| CTAN public baseline | `v3.0.1` |
+| CTAN v3.0.2 | exact certified archive submitted on 2026-09-17; processing/acceptance pending |
 | GitHub published release | `v3.0.2` — immutable certified assets |
-| Current release marker | `release/v3-release-candidate.json` still records the v3.0.2 frozen receipt pending CTAN publication reconciliation |
-| v3.0.2 candidate state | `FROZEN` |
-| v3.0.2 candidate SHA | `3a0904324e23bfc65852d730f2647ce47dc65105` |
-| v3.0.2 publication authorization | true — exact certified bytes only |
-| v3.0.2 tracking issue | #313 |
-| v3.0.3 distribution correction | issue #328 / PR #329 |
-| Historical v3/v3.0.1 release state | `release/history/v3/` |
+| Active development line | `v3.0.3` |
+| Active release marker | `release/v3-release-candidate.json` |
+| v3.0.3 candidate state | `NOT_FROZEN` |
+| v3.0.3 candidate SHA | `null` |
+| v3.0.3 publication authorization | `false` |
+| v3.0.3 tracking issue | #328 |
+| v3.0.3 implementation PR | #329 — merged |
+| v3.0.3 implementation baseline | `0de4501ed11beccfc2fefff371ecb8fb21e97d07` |
+| Historical v3.0.2 marker | `release/history/v3/v3.0.2-release-candidate.json` |
 | CTAN runtime shape | one generated monolithic `abntexto-ufc.cls`; zero project-owned `.def` files |
-| P7 visual entry gate | accepted on 2026-09-14 for `94a0538806561a89d9871ff88624dd7673a5f7e3` |
-| Final v3.0.2 candidate visual gate | PASS on 2026-09-14 for `3a0904324e23bfc65852d730f2647ce47dc65105` |
-| Tag | `v3.0.2` resolves exactly to `3a0904324e23bfc65852d730f2647ce47dc65105` |
-| GitHub Release | PUBLISHED on 2026-09-15 |
-| CTAN v3.0.2 | SUBMITTED on 2026-09-17; processing/acceptance pending |
 
 The v3.0.1-specific publication procedure is retained at `docs/history/v3/release/CTAN-RELEASE-v3.0.1.md`.
 
+The v3.0.2 tag, GitHub Release and CTAN submission are historical publication facts. The active release-control authority has already advanced to v3.0.3; v3.0.2 CTAN processing is not a development blocker, but it remains a publication-order gate for the later v3.0.3 CTAN update.
+
 ## Release-candidate lifecycle
 
-Normal development keeps the active marker in `NOT_FROZEN` state with no candidate SHA and no publication authorization. For v3.0.2, the marker remains frozen as a publication receipt until CTAN publication is reconciled:
+Normal development keeps the active marker in `NOT_FROZEN` state with no candidate SHA and no publication authorization:
 
-- `candidate_state = FROZEN`;
-- `candidate_sha = 3a0904324e23bfc65852d730f2647ce47dc65105`;
-- `publication_authorized = true`.
+- `candidate_state = NOT_FROZEN`;
+- `candidate_sha = null`;
+- `publication_authorized = false`.
 
-Changing the active marker is a release-control event and forces complete Linux Integration plus the release-grade validation path. The freeze-control commit is not the publication source. The annotated `v3.0.2` tag resolves exactly to the frozen candidate SHA and must not be moved or recreated.
+A versioned archive produced while the marker is `NOT_FROZEN` is engineering evidence only. It is not a publication artifact.
 
 No candidate may be treated as frozen until all of the following are true on one immutable source SHA:
 
 1. Static Contract passes;
 2. complete applicable Linux Integration passes;
 3. Linux Release Check passes;
-4. current CTAN `pkgcheck` passes on the exact generated archive;
-5. canonical reference and supported profile artifacts are generated from that same SHA;
-6. PDF/A, embedded-font, geometry and distribution checks pass;
-7. the maintainer explicitly accepts the visual artifacts.
+4. current CTAN `pkgcheck` passes on the exact generated CTAN archive;
+5. canonical reference and all supported profile artifacts are generated from that same SHA;
+6. PDF/A, embedded-font, geometry, reproducibility and distribution checks pass;
+7. the maintainer explicitly accepts the visual artifacts generated from that same SHA;
+8. the release-control marker is advanced through the repository's governed freeze procedure without changing the publication source identity.
 
-Invariant for any future release:
+Invariant for every release:
 
 ```text
 certified source SHA == visually approved source SHA == tagged source SHA == source SHA of published bytes
 ```
 
-Published tags and release assets are immutable historical facts. They must never be silently retargeted or rebuilt to represent later source.
+Published tags and release assets are immutable historical facts. They must never be silently retargeted, rebuilt or replaced to represent later source.
 
 ## Frozen v3.0.2 publication receipt
 
-Certified publication source: `3a0904324e23bfc65852d730f2647ce47dc65105`.
+Certified publication source:
 
-Linux Release Check run: `34876949362`.
+```text
+3a0904324e23bfc65852d730f2647ce47dc65105
+```
+
+Linux Release Check run:
+
+```text
+34876949362
+```
 
 Certified archive checksums:
 
@@ -66,9 +75,51 @@ Certified archive checksums:
 - Template: `e88d93d54099482564d2194c2e0d925640312d321897f8b553f623c451615552`;
 - Overleaf: `5fb44b7600e5020784b0de1050ad1d3e5e2b529c43b3bcff6d4aa9082880a763`.
 
-Do not rebuild, amend or substitute these archives after freeze. The v3.0.2 tag, GitHub Release assets and CTAN submission refer to the exact bytes above.
+The GitHub Release was published on 2026-09-15. The exact certified CTAN archive was submitted on 2026-09-17 and remains under CTAN processing at the time of this update.
 
-The Template/Overleaf omission of the institutional PNG in v3.0.2 was discovered only after publication. It is corrected in the v3.0.3 line rather than by replacing historical v3.0.2 assets.
+Do not rebuild, amend or substitute any v3.0.2 publication archive. The Template/Overleaf omission of the institutional PNG in v3.0.2 was discovered only after GitHub publication and is corrected by v3.0.3 rather than by rewriting historical v3.0.2 bytes.
+
+## v3.0.3 corrective implementation evidence
+
+PR #329 was squash-merged into `main` as:
+
+```text
+0de4501ed11beccfc2fefff371ecb8fb21e97d07
+```
+
+The exact post-merge SHA passed:
+
+- Static Contract #598;
+- Linux Integration #511;
+- Linux Release Check #184, run `35253966868`;
+- complete validation: `SCOPE=complete PASS=38 FAIL=0 SKIP=0`;
+- CTAN `pkgcheck 4.1.0`;
+- canonical reference reproducibility with two byte-identical clean builds;
+- embedded-font validation;
+- repository PDF validation;
+- PDF/A-2b validation;
+- Unicode extraction validation;
+- scientific-article PDF/A certification;
+- distribution-bundle integrity and checksum verification;
+- seven-profile automated release-review preflight.
+
+Canonical reference evidence on that implementation baseline:
+
+```text
+SHA-256 c6dbcbc8cee6e77f8629b10b2178ced6acb2e296566c6016c362140692605877
+```
+
+The same run records:
+
+```text
+ctan_institutional_marks_redistributed=false
+template_overleaf_coat_of_arms=true
+proprietary_fonts_redistributed=false
+```
+
+The seven-profile review artifact is technically valid but still records `maintainer_approval=PENDING`.
+
+This SHA is **not** frozen. Documentation reconciliation after PR #329 changes repository history, so the eventual v3.0.3 freeze must bind the exact final post-documentation SHA and its matching technical and visual evidence. The run above proves the merged implementation baseline; it does not authorize publication by itself.
 
 ## Distribution contract
 
@@ -87,7 +138,7 @@ The CTAN archive must remain small and self-contained from the project's perspec
 
 - one generated project-owned runtime class;
 - zero project-owned `.def` files;
-- no institutional mark asset;
+- no UFC institutional mark asset;
 - no proprietary Microsoft font;
 - no repository engineering/control-plane infrastructure;
 - no complete pedagogical reference PDF unless a concrete CTAN requirement later justifies it;
@@ -95,7 +146,7 @@ The CTAN archive must remain small and self-contained from the project's perspec
 
 ### Template and Overleaf bundles
 
-From the v3.0.3 corrective line onward, both user-facing bundles must:
+From v3.0.3 onward, both user-facing bundles must:
 
 - include exactly `assets/institutional/ufc-coat-of-arms.png`;
 - preserve the canonical tutorial setting `coat-of-arms=true`;
@@ -113,11 +164,11 @@ Building a candidate is not publication. A green workflow is not maintainer visu
 
 Release claims must be backed by immutable GitHub run/artifact facts and, where applicable, explicit CTAN submission/acceptance evidence.
 
-Historical v3/v3.0.1 machine state is preserved under `release/history/v3/` and must not be promoted back into active authority.
+Historical machine state is preserved under `release/history/v3/` and must not be promoted back into active authority.
 
-## Local publication handoff for v3.0.2 — historical operator receipt
+## Historical v3.0.2 local publication receipt
 
-The following commands document how the already-published v3.0.2 GitHub Release was created from the frozen artifact. They are retained as historical evidence and must not be rerun to replace assets.
+The following commands document how the already-published v3.0.2 GitHub Release material was recovered from the certified workflow. They are historical evidence and must not be rerun to replace assets.
 
 ```bash
 set -euo pipefail
@@ -157,13 +208,33 @@ printf '%s  %s\n' \
   abntexto-ufc-overleaf-3.0.2.zip | sha256sum -c -
 ```
 
-The v3.0.2 GitHub Release was then created from the existing immutable tag with those exact files. The CTAN submission uses only `abntexto-ufc-3.0.2.zip`.
+The CTAN submission for v3.0.2 uses only `abntexto-ufc-3.0.2.zip`.
 
-After CTAN confirms/publicly exposes v3.0.2:
+## Remaining ordered work
 
-1. record the CTAN acceptance/publication evidence in #313;
-2. archive/reconcile the active v3.0.2 release marker/status;
-3. close #313 after the final post-publication consistency check;
-4. only then perform the explicit version/release-marker transition for the v3.0.3 corrective line.
+### v3.0.2 external closeout
 
-Do not run `make distribution-bundles` to reconstruct v3.0.2 publication assets. The certified workflow artifact remains the immutable v3.0.2 publication source.
+When CTAN publicly exposes v3.0.2:
+
+1. record acceptance/publication evidence and date in #313 and the historical v3.0.2 release receipt;
+2. perform a final publication consistency check against the immutable submitted SHA-256;
+3. close #313 once the historical receipt is complete.
+
+No v3.0.2 artifact rebuild is part of this closeout.
+
+### v3.0.3 release preparation
+
+After the documentation reconciliation PR is merged:
+
+1. identify the exact final `main` SHA;
+2. run/confirm Static Contract and Linux Integration on that SHA;
+3. run Linux Release Check on that exact SHA and retain its canonical PDF, seven review pairs and distribution artifacts;
+4. verify `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, current CTAN `pkgcheck`, reproducibility and bundle-policy evidence;
+5. perform explicit maintainer visual review of the canonical PDF and all seven profile pairs from that same SHA;
+6. freeze exactly that candidate through the release-control procedure and authorize publication;
+7. create annotated tag `v3.0.3` from the frozen candidate only;
+8. publish the GitHub Release using only the exact certified distribution artifact and its `SHA256SUMS`;
+9. submit the v3.0.3 CTAN archive only after CTAN has accepted/published v3.0.2;
+10. record GitHub/CTAN receipts and close #328 only after publication closeout.
+
+Do not reconstruct release assets locally after the candidate is frozen. The exact certified workflow artifact is the publication source.
