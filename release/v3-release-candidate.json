@@ -1,5 +1,5 @@
 {
-  "schema_version": 15,
+  "schema_version": 16,
   "project": "abntexto-ufc",
   "lifecycle": "active-release-marker",
   "development_line": "3.0.3",
@@ -23,5 +23,5 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.3 is the active corrective development line. It restores the UFC coat of arms to Template and Overleaf bundles while keeping the CTAN archive free of institutional mark assets. No v3.0.3 candidate is frozen or authorized for publication yet. v3.0.2 remains immutable historical release evidence; its exact CTAN archive was submitted on 2026-09-17 and is still processing."
+  "note": "v3.0.3 remains NOT_FROZEN while the final repository audit removes stale control-plane residue and forces a complete regression. Runtime, template and distribution semantics remain the corrected v3.0.3 contract: Template and Overleaf include the UFC coat of arms, CTAN excludes institutional mark assets. v3.0.2 remains immutable historical release evidence; external CTAN closeout is tracked separately."
 }
