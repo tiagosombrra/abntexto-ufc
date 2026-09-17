@@ -49,9 +49,9 @@ Cada Release produz artefatos com funções diferentes.
 
 | Arquivo | Finalidade | O que contém | Uso recomendado |
 |---|---|---|---|
-| `abntexto-ufc-<versão>.zip` | pacote canônico para CTAN | classe monolítica gerada, documentação mínima e exemplo CTAN | publicação/instalação de pacote; não é o melhor ponto de partida para um TCC |
-| `abntexto-ufc-template-<versão>.zip` | projeto local editável | fonte completa do TCC, runtime do projeto e `abntexto-ufc-reference.pdf` | usuários locais com TeX Live e dependência `abntexto` instalada |
-| `abntexto-ufc-overleaf-<versão>.zip` | projeto autocontido para Overleaf | fonte completa, revisão fixada de `abntexto.cls` e o mesmo PDF de referência | caminho mais simples para começar no Overleaf |
+| `abntexto-ufc-<versão>.zip` | pacote canônico para CTAN | classe monolítica gerada, documentação mínima e exemplo CTAN; sem ativo institucional da UFC | publicação/instalação de pacote; não é o melhor ponto de partida para um TCC |
+| `abntexto-ufc-template-<versão>.zip` | projeto local editável | fonte completa do TCC, runtime do projeto, brasão institucional usado pelo exemplo e `abntexto-ufc-reference.pdf` | usuários locais com TeX Live e dependência `abntexto` instalada |
+| `abntexto-ufc-overleaf-<versão>.zip` | projeto autocontido para Overleaf | fonte completa, brasão institucional usado pelo exemplo, revisão fixada de `abntexto.cls` e o mesmo PDF de referência | caminho mais simples para começar no Overleaf |
 | `SHA256SUMS` | integridade | hashes dos artefatos da distribuição | conferência de downloads e auditoria |
 
 ### Overleaf
@@ -78,6 +78,8 @@ O documento canônico usa bibliografia e outros recursos que podem exigir mais d
 
 `abntexto-ufc-<versão>.zip` é o arquivo canônico submetido ao CTAN. O runtime público desse pacote é `abntexto-ufc.cls`; os módulos internos de desenvolvimento são incorporados deterministicamente à classe.
 
+O pacote CTAN não redistribui o brasão da UFC. O exemplo CTAN usa `coat-of-arms=false`; usuários que desejarem o brasão ao instalar somente pelo CTAN devem fornecer o ativo localmente ou usar um dos bundles de usuário da Release.
+
 Depois que a versão estiver disponível no CTAN/TeX Live, a instalação normal pela distribuição TeX é preferível a extrair manualmente esse ZIP.
 
 ## Uso mínimo
@@ -88,7 +90,7 @@ Depois que a versão estiver disponível no CTAN/TeX Live, a instalação normal
 \ufcsetup{
   type = undergraduate-capstone,
   print-mode = single-sided,
-  coat-of-arms = false,
+  coat-of-arms = true,
   author = {Nome Sobrenome},
   title = {Título do trabalho},
   location = {Fortaleza},
@@ -105,7 +107,7 @@ Texto do trabalho.
 \end{document}
 ```
 
-Para aprender pelo exemplo completo, use `template/main.tex`. Ele é um TCC tutorial: mostra o fluxo real de edição e usa os recursos principais no contexto em que aparecem. Nos bundles de Template e Overleaf, a mesma fonte pública vem acompanhada de `abntexto-ufc-reference.pdf`, o PDF tutorial gerado dessa fonte certificada.
+Para aprender pelo exemplo completo, use `template/main.tex`. Ele é um TCC tutorial: mostra o fluxo real de edição e usa os recursos principais no contexto em que aparecem. Nos bundles de Template e Overleaf, essa fonte mantém `coat-of-arms=true`, inclui `assets/institutional/ufc-coat-of-arms.png` e vem acompanhada de `abntexto-ufc-reference.pdf`, gerado a partir da mesma fonte distribuída.
 
 Para consulta sem inflar o TCC, use [docs/USER-GUIDE.md](docs/USER-GUIDE.md) e [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md). Casos extremos e cobertura normativa permanecem em `tests/` e `standards/`, não no texto acadêmico do tutorial.
 
@@ -180,11 +182,15 @@ A camada bibliográfica usa `biblatex-abnt` e mantém compatibilidade delimitada
 
 ## Brasão, marcas e fontes proprietárias
 
-O projeto **não redistribui o brasão da UFC nem outras marcas institucionais**. Também não redistribui arquivos proprietários das fontes Microsoft Arial ou Times New Roman.
+A política de distribuição distingue o pacote CTAN dos bundles voltados ao usuário final:
 
-Quando houver autorização para uso de uma marca institucional, o usuário fornece o ativo localmente pela configuração da classe. Os bundles públicos são gerados com `coat-of-arms = false`, e o PDF público de referência é compilado dessa mesma fonte sanitizada.
+- o pacote canônico submetido ao **CTAN não redistribui o brasão da UFC nem outras marcas institucionais** e não redistribui arquivos proprietários das fontes Microsoft Arial ou Times New Roman;
+- os bundles **Template** e **Overleaf** incluem `assets/institutional/ufc-coat-of-arms.png`, mantêm `coat-of-arms=true` no TCC tutorial e incorporam um `abntexto-ufc-reference.pdf` gerado com esse mesmo ativo;
+- `coat-of-arms=false` continua disponível para submissões externas, processos cegos ou qualquer situação em que a marca institucional não deva aparecer.
 
-Nos perfis `research-project` e `anonymized-research-project`, uma capa institucional UFC usa o brasão por padrão, em consonância com a apresentação mostrada no Guia de Normalização de Projetos de Pesquisa da UFC. Essa é uma política de apresentação institucional do projeto, não uma promoção do brasão a requisito da ABNT. O usuário pode definir `coat-of-arms = false` quando o edital, a submissão externa ou uma política de revisão cega exigir ausência de marca institucional. O perfil anonimizado atual oculta autor e orientador, mas não oculta a instituição por si só.
+Nos perfis `research-project` e `anonymized-research-project`, uma capa institucional UFC usa o brasão por padrão, em consonância com a apresentação mostrada no Guia de Normalização de Projetos de Pesquisa da UFC. Essa é uma política de apresentação institucional do projeto, não uma promoção do brasão a requisito da ABNT. O perfil anonimizado atual oculta autor e orientador, mas não oculta a instituição por si só.
+
+As marcas institucionais não são cobertas pela LPPL do projeto. A inclusão do ativo nos bundles Template/Overleaf não altera a identidade comunitária e não oficial do projeto.
 
 ## Estrutura do repositório
 
@@ -252,4 +258,4 @@ Ao relatar um problema, informe o perfil de documento, engine LaTeX, versão da 
 
 O código e a documentação próprios do projeto são distribuídos sob a **LaTeX Project Public License (LPPL), versão 1.3c ou posterior**. Consulte [`LICENSE`](LICENSE).
 
-Ativos de terceiros e marcas institucionais não são cobertos por essa licença e não são redistribuídos pelo pacote CTAN.
+Ativos de terceiros e marcas institucionais não são cobertos por essa licença. O pacote CTAN não os redistribui; os bundles Template/Overleaf podem incluir o ativo institucional mantido pelo projeto conforme a política de distribuição acima.
