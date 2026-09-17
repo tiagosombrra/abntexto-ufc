@@ -96,7 +96,7 @@ def assert_public_main(archive_path: Path, entry: str) -> None:
         )
     if disabled in text:
         fail(f"{archive_path.name}: distributed main.tex unexpectedly disables the UFC coat of arms.")
-    legacy_tokens = ("  brasao = sim,", "  brasao = nao,")
+    legacy_tokens = ("  brasao = sim,", "  brasao = nao,")  # v3-api-residual: negative-test-literal
     if any(token in text for token in legacy_tokens):
         fail(f"{archive_path.name}: distributed main.tex contains a removed v2 coat-of-arms setup key.")
 
