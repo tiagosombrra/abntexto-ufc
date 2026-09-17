@@ -15,6 +15,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 TEMPLATE_DIR = ROOT / "template"
+INSTITUTIONAL_ASSET = Path("assets/institutional/ufc-coat-of-arms.png")
 PUBLIC_REFERENCE_PDF = f"{PACKAGE_ID}-reference.pdf"
 PUBLIC_USER_DOCS = (
     Path("docs/USER-GUIDE.md"),
@@ -69,9 +70,7 @@ def source_date_epoch() -> int:
 
 
 def zip_datetime(epoch: int) -> tuple[int, int, int, int, int, int]:
-    minimum = 315532800
-    maximum = 4354819198
-    epoch = min(max(epoch, minimum), maximum)
+    epoch = min(max(epoch, 315532800), 4354819198)
     stamp = time.gmtime(epoch)
     second = stamp.tm_sec - (stamp.tm_sec % 2)
     return (
@@ -98,9 +97,8 @@ def tracked_files(pathspec: str) -> list[Path]:
             "Public bundle generation requires a readable canonical Git checkout." + suffix
         )
 
-    output = completed.stdout
-    result = []
-    for raw in output.split(b"\0"):
+    result: list[Path] = []
+    for raw in completed.stdout.split(b"\0"):
         if not raw:
             continue
         path = ROOT / raw.decode("utf-8")
@@ -119,15 +117,19 @@ def file_mode(path: Path) -> int:
     return 0o755 if path.suffix in {".sh", ".py"} else 0o644
 
 
-def public_main(content: bytes) -> bytes:
+def assert_canonical_main(content: bytes) -> bytes:
     text = content.decode("utf-8")
     enabled = "  coat-of-arms = true,"
     disabled = "  coat-of-arms = false,"
     if text.count(enabled) != 1:
-        raise SystemExit("template/main.tex must enable the institutional mark exactly once using the canonical v3 setup key.")
+        raise SystemExit(
+            "template/main.tex must enable the institutional mark exactly once using the canonical v3 setup key."
+        )
     if disabled in text:
-        raise SystemExit("template/main.tex must not contain a second disabled coat-of-arms setup entry.")
-    return text.replace(enabled, disabled, 1).encode("utf-8")
+        raise SystemExit(
+            "template/main.tex must not contain a second disabled coat-of-arms setup entry."
+        )
+    return content
 
 
 def add_entry(
@@ -159,7 +161,7 @@ def current_template_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
     entries: dict[str, tuple[bytes, int]] = {}
     for path in tracked_files("template"):
         relative = path.relative_to(TEMPLATE_DIR).as_posix()
-        content = public_main(path.read_bytes()) if relative == "main.tex" else path.read_bytes()
+        content = assert_canonical_main(path.read_bytes()) if relative == "main.tex" else path.read_bytes()
         add_entry(entries, f"{prefix}{relative}", content, file_mode(path))
 
     for relative in PUBLIC_USER_DOCS:
@@ -170,12 +172,25 @@ def current_template_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
     return entries
 
 
+def institutional_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
+    source = ROOT / INSTITUTIONAL_ASSET
+    if not source.is_file():
+        raise SystemExit(f"Required Template/Overleaf institutional asset is missing: {INSTITUTIONAL_ASSET}")
+    data = source.read_bytes()
+    if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+        raise SystemExit(f"Institutional coat-of-arms asset is not a PNG: {INSTITUTIONAL_ASSET}")
+    entries: dict[str, tuple[bytes, int]] = {}
+    add_entry(entries, f"{prefix}{INSTITUTIONAL_ASSET.as_posix()}", data, file_mode(source))
+    return entries
+
+
 def bundle_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
     entries = current_template_entries(prefix)
-    for name, value in current_runtime_entries(prefix).items():
-        if name in entries:
-            raise SystemExit(f"Template/runtime collision in public bundle: {name}")
-        entries[name] = value
+    for group in (current_runtime_entries(prefix), institutional_entries(prefix)):
+        for name, value in group.items():
+            if name in entries:
+                raise SystemExit(f"Template/runtime collision in public bundle: {name}")
+            entries[name] = value
     return entries
 
 
@@ -202,7 +217,7 @@ def run_build_command(command: list[str], work: Path, env: dict[str, str]) -> No
     )
     if completed.returncode != 0:
         raise SystemExit(
-            "Public reference PDF build failed while running "
+            "Reference PDF build failed while running "
             + " ".join(command)
             + ":\n"
             + completed.stdout[-6000:]
@@ -222,17 +237,21 @@ def build_public_reference_pdf(
 
     main = entries.get("main.tex")
     if main is None:
-        raise SystemExit("Sanitized public template is missing main.tex.")
+        raise SystemExit("Template bundle is missing main.tex.")
     main_text = main[0].decode("utf-8")
-    if main_text.count("  coat-of-arms = false,") != 1 or "  coat-of-arms = true," in main_text:
-        raise SystemExit("Public reference PDF must be built from the sanitized coat-of-arms=false main.tex.")
+    if main_text.count("  coat-of-arms = true,") != 1 or "  coat-of-arms = false," in main_text:
+        raise SystemExit("Template/Overleaf reference PDF must be built with coat-of-arms=true.")
+
+    asset = entries.get(INSTITUTIONAL_ASSET.as_posix())
+    if asset is None or not asset[0].startswith(b"\x89PNG\r\n\x1a\n"):
+        raise SystemExit("Template/Overleaf reference PDF requires the bundled UFC coat-of-arms PNG.")
 
     env = os.environ.copy()
     env["SOURCE_DATE_EPOCH"] = str(epoch)
     env["FORCE_SOURCE_DATE"] = "1"
     env["TZ"] = "UTC"
 
-    with tempfile.TemporaryDirectory(prefix=f"{PACKAGE_ID}-public-reference-") as temp:
+    with tempfile.TemporaryDirectory(prefix=f"{PACKAGE_ID}-reference-") as temp:
         work = Path(temp)
         materialize_entries(entries, work)
         (work / "abntexto.cls").write_bytes(upstream)
@@ -254,10 +273,10 @@ def build_public_reference_pdf(
 
         pdf = work / "main.pdf"
         if not pdf.is_file() or pdf.stat().st_size == 0:
-            raise SystemExit("Public reference PDF build did not produce main.pdf.")
+            raise SystemExit("Reference PDF build did not produce main.pdf.")
         data = pdf.read_bytes()
         if not data.startswith(b"%PDF-"):
-            raise SystemExit("Public reference output is not a PDF.")
+            raise SystemExit("Reference output is not a PDF.")
 
         final_log = (work / "main.log").read_text(encoding="utf-8", errors="replace")
         forbidden = (
@@ -267,10 +286,11 @@ def build_public_reference_pdf(
             "undefined on input line",
             "Citation '",
             "Please (re)run Biber",
+            "UFC coat of arms asset not found",
         )
         hit = next((marker for marker in forbidden if marker in final_log), None)
         if hit is not None:
-            raise SystemExit(f"Public reference final build contains a forbidden warning: {hit}")
+            raise SystemExit(f"Reference final build contains a forbidden warning: {hit}")
         return data
 
 
@@ -316,12 +336,7 @@ def build_template_bundle(
     archive_root = f"{PACKAGE_ID}-template-{version}/"
     entries = bundle_entries(archive_root)
     add_entry(entries, f"{archive_root}{PUBLIC_REFERENCE_PDF}", reference_pdf)
-    return write_bundle(
-        output,
-        f"{PACKAGE_ID}-template-{version}.zip",
-        entries,
-        date_time,
-    )
+    return write_bundle(output, f"{PACKAGE_ID}-template-{version}.zip", entries, date_time)
 
 
 def build_overleaf_bundle(
@@ -335,17 +350,12 @@ def build_overleaf_bundle(
         raise SystemExit(f"Pinned abntexto.cls not found: {abntexto}")
     upstream = abntexto.read_bytes()
     if UPSTREAM_MARKER not in upstream:
-        raise SystemExit("Pinned abntexto.cls identity marker missing.")
+        raise SystemExit("Pinned upstream abntexto identity marker missing.")
 
     entries = bundle_entries()
     add_entry(entries, "abntexto.cls", upstream)
     add_entry(entries, PUBLIC_REFERENCE_PDF, reference_pdf)
-    return write_bundle(
-        output,
-        f"{PACKAGE_ID}-overleaf-{version}.zip",
-        entries,
-        date_time,
-    )
+    return write_bundle(output, f"{PACKAGE_ID}-overleaf-{version}.zip", entries, date_time)
 
 
 def remove_previous(output: Path, filenames: Iterable[str]) -> None:
@@ -358,7 +368,7 @@ def remove_previous(output: Path, filenames: Iterable[str]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Build deterministic current-v3 public template and Overleaf bundles."
+        description="Build deterministic Template and Overleaf bundles with the repository UFC coat of arms."
     )
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     parser.add_argument("--abntexto", type=Path, required=True)
@@ -376,8 +386,8 @@ def main() -> None:
     ]
     remove_previous(output, filenames)
 
-    sanitized_entries = bundle_entries()
-    reference_pdf = build_public_reference_pdf(sanitized_entries, upstream, epoch)
+    reference_entries = bundle_entries()
+    reference_pdf = build_public_reference_pdf(reference_entries, upstream, epoch)
     build_template_bundle(output, version, date_time, reference_pdf)
     build_overleaf_bundle(output, version, date_time, upstream, reference_pdf)
 
