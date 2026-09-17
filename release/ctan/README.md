@@ -1,7 +1,7 @@
 # abntexto-ufc
 
-Version: 3.0.2
-Release date: 2026-09-14
+Version: 3.0.3
+Release date: 2026-09-17
 Maintainer: Tiago Guimarães Sombra
 License: LaTeX Project Public License 1.3c or later
 Repository: https://github.com/tiagosombrra/abntexto-ufc
@@ -17,7 +17,7 @@ Upstream dependency: https://ctan.org/pkg/abntexto (version 1.1 or newer)
 - `biblatex` and `biber` for bibliography workflows;
 - additional LaTeX packages required by optional features selected by the document.
 
-Version 3.0.2 is certified primarily against TeX Live 2026.
+Version 3.0.3 is certified primarily against TeX Live 2026.
 
 ## Installation
 
@@ -35,9 +35,11 @@ See `abntexto-ufc.pdf` for the package manual and `abntexto-ufc-example.tex` / `
 
 ## Institutional marks and fonts
 
-No UFC logo, coat of arms, trademark asset, or other institutional mark is distributed with this package. Users who are authorized to use such an asset must provide it locally.
+No UFC logo, coat of arms, trademark asset, or other institutional mark is distributed with the CTAN package. Users who are authorized to use such an asset must provide it locally when using the CTAN installation.
 
-The package also does not redistribute proprietary Microsoft Arial or Times New Roman font files.
+The separate Template and Overleaf convenience bundles published on GitHub include the project-provided UFC coat-of-arms asset used by the canonical UFC-oriented example. Those bundles are not CTAN upload artifacts.
+
+The project does not redistribute proprietary Microsoft Arial or Times New Roman font files in any distribution surface.
 
 ## Status
 
