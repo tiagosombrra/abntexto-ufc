@@ -2,7 +2,7 @@
 ## abntexto-ufc development and validation entry points               ##
 ########################################################################
 
-VERSION := 3.0.2
+VERSION := 3.0.3
 TEMPLATE_DIR := template
 DOCUMENT ?= main
 ENGINE ?= pdflatex
