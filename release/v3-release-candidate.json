@@ -1,5 +1,5 @@
 {
-  "schema_version": 17,
+  "schema_version": 18,
   "project": "abntexto-ufc",
   "lifecycle": "active-release-marker",
   "development_line": "3.0.3",
@@ -23,18 +23,19 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.3 is frozen and publication-authorized on exact source SHA b98270f23b1b384773c409869dfb05d71acd8638. Static Contract #602, Linux Integration #514 and Linux Release Check run 35279315637 passed with SCOPE=complete PASS=38 FAIL=0 SKIP=0. The maintainer explicitly approved the exact canonical PDF generated from this SHA on 2026-09-17. Tagging and GitHub Release publication must use this source SHA and the exact certified workflow artifacts; CTAN remains a separate later follow-up.",
+  "note": "v3.0.3 is frozen and publication-authorized on exact source SHA b98270f23b1b384773c409869dfb05d71acd8638. Static Contract #602, Linux Integration #514 and Linux Release Check run 35279315637 passed with SCOPE=complete PASS=38 FAIL=0 SKIP=0. The maintainer explicitly approved the exact canonical PDF generated from this SHA on 2026-09-17. Certified distribution digests are recorded from the exact run #186 SHA256SUMS; tagging and GitHub Release publication must use this source SHA and those exact artifacts. CTAN remains a separate later follow-up.",
   "certification": {
     "static_contract_run": 602,
     "linux_integration_run": 514,
     "linux_release_check_run": 35279315637,
     "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
     "canonical_reference_sha256": "c70370f8f7c2fd21671737dcdbe3d662c6b1b0d68b10e259cfbdf1217bd983b5",
-    "ctan_sha256": "315b39208c52ce2d3f18f9f8c6b3be3b4f7d574d03bf2ebb405fb3a9cb0a091",
+    "ctan_sha256": "315b39208c52ce2d3f18f9f8c6b3be3b4f7d574d03bf2ebb405fb3a9cb0a091a",
     "template_sha256": "89e90a49f50f28653bdce1643ffd305b345c9a61ef53804edb5f7a48828ea164",
     "overleaf_sha256": "32c32bf3e84e8d77db47fa6c433bb5f458ebc789980ae8eb554814af3cbdbb81",
     "ctan_pkgcheck": "4.1.0 PASS",
     "maintainer_visual_acceptance": "PASS",
-    "maintainer_visual_acceptance_date": "2026-09-17"
+    "maintainer_visual_acceptance_date": "2026-09-17",
+    "sha256sums_sha256": "c526a8f6cc8a51ca3cdd289e3078f23d2c747c3af1b4a55d2b5dd04c67cde95d"
   }
 }
