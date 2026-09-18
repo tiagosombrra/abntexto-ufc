@@ -123,12 +123,26 @@ def main() -> int:
         (
             "Tracking issue: #328",
             "Implementation PR: #329",
-            "candidate state = `NOT_FROZEN`",
             "template_overleaf_coat_of_arms=true",
             "ctan_institutional_marks_redistributed=false",
             "v3.0.2-release-candidate.json",
         ),
     )
+
+    expected_status_state = f"candidate state = `{candidate_state}`"
+    if expected_status_state not in status:
+        return fail(f"v3.0.3 authority must document active marker state {candidate_state}")
+
+    if candidate_state == "FROZEN":
+        certification = marker.get("certification")
+        if not isinstance(certification, dict):
+            return fail("FROZEN candidate must preserve certification evidence")
+        if certification.get("linux_release_check_run") != 35279315637:
+            return fail("FROZEN v3.0.3 candidate must bind Linux Release Check run 35279315637")
+        if certification.get("validation") != "SCOPE=complete PASS=38 FAIL=0 SKIP=0":
+            return fail("FROZEN v3.0.3 candidate must preserve complete validation evidence")
+        if certification.get("maintainer_visual_acceptance") != "PASS":
+            return fail("FROZEN v3.0.3 candidate requires maintainer visual acceptance")
 
     if "release/history/v3/" not in agents:
         return fail("AGENTS must identify the controlled historical release-state namespace")

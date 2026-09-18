@@ -21,14 +21,14 @@ Priority on disagreement: **current Git facts > active release marker > current 
 | Published/frozen baseline | `v3.0.2`; immutable GitHub Release; CTAN submission tracked externally in #313 |
 | Current development line | `v3.0.3` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | Final v3.0.3 audit/cleanup and candidate preparation |
+| Repository lifecycle | v3.0.3 frozen candidate / GitHub publication closeout |
 | v3.0.2 external publication tracking | #313 — CTAN receipt only |
 | v3.0.3 release tracking | #328 |
 | Implementation transport | PR #329 — merged historical receipt |
 | Release-state documentation reconciliation | PR #330 — merged historical receipt |
 | Branch hygiene | steady state: `main` plus only active short-lived PR branches; merged heads auto-delete |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
-| Active candidate state | `NOT_FROZEN`; no candidate SHA; publication not authorized until explicit freeze |
+| Active candidate state | `FROZEN`; candidate `b98270f23b1b384773c409869dfb05d71acd8638`; GitHub publication authorized |
 
 The `v3.0.0`, `v3.0.1` and `v3.0.2` tags/releases/publication bytes must never be rewritten. Any correction belongs to a later version.
 
@@ -83,15 +83,17 @@ Distribution regression must extract Template and Overleaf, rebuild their exact 
 
 There is exactly one active release marker path: `release/v3-release-candidate.json`.
 
-Before freeze, v3.0.3 must remain:
+The v3.0.3 release is currently frozen as:
 
 - `development_line = 3.0.3`;
 - `target_version = 3.0.3`;
-- `candidate_state = NOT_FROZEN`;
-- `candidate_sha = null`;
-- `publication_authorized = false`;
+- `candidate_state = FROZEN`;
+- `candidate_sha = b98270f23b1b384773c409869dfb05d71acd8638`;
+- `publication_authorized = true`;
 - tracking issue #328;
 - authority `docs/V3.0.3-DISTRIBUTION-CORRECTION.md`.
+
+This candidate passed Static Contract #602, Linux Integration #514 and Linux Release Check run `35279315637` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, and received explicit maintainer visual acceptance on 2026-09-17.
 
 Changing the active marker is a deliberate release-control event and forces complete Linux integration/release validation. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 
