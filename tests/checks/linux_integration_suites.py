@@ -85,32 +85,50 @@ def main() -> None:
     if missing_choices:
         fail("workflow_dispatch scope choices are missing: " + ", ".join(missing_choices))
 
-    for token in (
-        "tests/integration_suites.py --base \"$BASE_SHA\" --head \"$HEAD_SHA\"",
+    workflow_tokens = (
+        "python3 tools/ci/select-integration-scope.py",
         "tests/run.py --mode pr --suite",
-        "manual-auto-fail-closed",
-        "documentation-only-full-pr",
-        "git diff --name-only \"$BASE_SHA\" \"$HEAD_SHA\"",
-        "release_candidate_marker=release/v3-release-candidate.json",
-        "release-candidate-full-pr",
         "unzip",
         'git config --global --add safe.directory "$PWD"',
         "Run Web/Lite browser E2E",
         "id: web_lite_e2e",
         "success()",
-        "tests/integration/web-lite-e2e.py",
-        "artifacts/validation/web-lite-positive.pdf",
+        "sh tools/ci/run-web-lite-e2e.sh",
         "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json",
         "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log",
         "WEB_LITE_EVIDENCE_DIR",
-        'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
         "Upload Web/Lite browser evidence",
         "steps.web_lite_e2e.outcome != 'skipped'",
         "if-no-files-found: warn",
         "web-lite-e2e-${{ github.run_id }}",
-    ):
+    )
+    for token in workflow_tokens:
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
+
+    scope_helper_tokens = (
+        'DEFAULT_MARKER = "release/v3-release-candidate.json"',
+        "git_changed_paths",
+        "classify_suite",
+        "manual-auto-fail-closed",
+        "documentation-only-full-pr",
+        "release-candidate-full-pr",
+        '["git", "diff", "--name-only", base, head]',
+        '"tests/integration_suites.py"',
+    )
+    for token in scope_helper_tokens:
+        if token not in integration_scope_helper:
+            fail(f"integration scope helper is missing contract token: {token}")
+
+    web_helper_tokens = (
+        "artifacts/validation/web-lite-positive.pdf",
+        "WEB_LITE_EVIDENCE_DIR",
+        'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
+        "tests/integration/web-lite-e2e.py",
+    )
+    for token in web_helper_tokens:
+        if token not in web_lite_helper:
+            fail(f"Web/Lite helper is missing contract token: {token}")
 
     release_required_tokens = (
         RELEASE_CANDIDATE_MARKER,
