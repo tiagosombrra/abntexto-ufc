@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-module="abntexto-ufc/articles.def"
+module="abntexto-ufc.cls"
 
 title_marker="ARTICLEFOREIGNTITLEMARKER"
 summary_marker="ARTICLEFOREIGNSUMMARYMARKER"
