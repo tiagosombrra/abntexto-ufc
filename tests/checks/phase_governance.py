@@ -71,41 +71,60 @@ def main() -> int:
         return fail("historical v3.0.2 snapshot must preserve publication authorization")
 
     marker = load_json(ACTIVE_MARKER)
-    if marker.get("lifecycle") != "published-release-marker":
-        return fail("root release marker must represent the published steady state")
-    if marker.get("development_line") != "3.0.3" or marker.get("target_version") != "3.0.3":
-        return fail("published release marker must identify v3.0.3")
-    if marker.get("candidate_state") != "FROZEN":
-        return fail("published release marker must preserve FROZEN candidate state")
-    candidate_sha = marker.get("candidate_sha")
-    if not valid_sha(candidate_sha):
-        return fail("published release marker must preserve a valid frozen source SHA")
-    if marker.get("publication_authorized") is not True:
-        return fail("published release marker must preserve publication authorization")
-    if marker.get("publication_state") != "PUBLISHED":
-        return fail("published release marker must record PUBLISHED state")
-    if marker.get("tracking_issue") is not None:
-        return fail("steady-state publication receipt must not expose an active tracking issue")
+    if marker.get("lifecycle") != "active-development-marker":
+        return fail("root release marker must represent active v3.0.4 development")
+    if marker.get("development_line") != "3.0.4" or marker.get("target_version") != "3.0.4":
+        return fail("active development marker must identify v3.0.4")
+    if marker.get("candidate_state") != "NOT_FROZEN":
+        return fail("active v3.0.4 development must remain NOT_FROZEN before certification")
+    if marker.get("candidate_sha") is not None:
+        return fail("NOT_FROZEN v3.0.4 development must not expose a candidate SHA")
+    if marker.get("publication_authorized") is not False:
+        return fail("v3.0.4 publication must remain unauthorized before freeze")
+    if marker.get("publication_state") != "UNPUBLISHED":
+        return fail("active v3.0.4 development must remain UNPUBLISHED")
+    if marker.get("tracking_issue") != 335:
+        return fail("active v3.0.4 development must track issue #335")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
-        return fail("published release marker must point to docs/RELEASE-STATE.md")
-    if marker.get("active_development_candidate") is not None:
-        return fail("no runtime development candidate may be active in post-v3.0.3 steady state")
+        return fail("active development marker must point to docs/RELEASE-STATE.md")
+
+    active = marker.get("active_development_candidate")
+    if not isinstance(active, dict):
+        return fail("active v3.0.4 marker must define development entry metadata")
+    if active.get("version") != "3.0.4":
+        return fail("active development metadata must identify v3.0.4")
+    if active.get("entry_sha") != "51bb54a013dc2fd4917880960928ad9792a2a1be":
+        return fail("v3.0.4 entry must preserve the certified post-v3.0.3 steady-state SHA")
+    if active.get("tracking_issue") != 335:
+        return fail("active development metadata must point to issue #335")
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
-        return fail("published marker must define the GitHub publication receipt")
+        return fail("active development marker must preserve the published v3.0.3 receipt")
     if published.get("version") != "3.0.3" or published.get("tag") != "v3.0.3":
-        return fail("published marker must preserve v3.0.3 release identity")
-    if published.get("source_sha") != candidate_sha:
-        return fail("published release source SHA must equal the frozen candidate SHA")
+        return fail("published baseline must remain v3.0.3")
+    if published.get("source_sha") != "b98270f23b1b384773c409869dfb05d71acd8638":
+        return fail("published v3.0.3 source SHA changed unexpectedly")
     if published.get("release_id") != 391878053:
-        return fail("published marker must preserve GitHub Release ID 391878053")
+        return fail("published v3.0.3 release ID changed unexpectedly")
+
+    certification = published.get("certification")
+    if not isinstance(certification, dict):
+        return fail("published v3.0.3 receipt must preserve certification evidence")
+    if certification.get("linux_release_check_run") != 35279315637:
+        return fail("published v3.0.3 receipt must bind Linux Release Check run 35279315637")
+    if certification.get("validation") != "SCOPE=complete PASS=38 FAIL=0 SKIP=0":
+        return fail("published v3.0.3 receipt must preserve complete validation evidence")
+    if certification.get("maintainer_visual_acceptance") != "PASS":
+        return fail("published v3.0.3 receipt must preserve maintainer visual acceptance")
 
     agents = require_tokens(
         AGENTS,
         (
             "docs/RELEASE-STATE.md",
-            "v3.0.3",
+            "v3.0.4",
+            "issue #335",
+            "NOT_FROZEN",
             "must never be rewritten",
             "release/history/v3/",
         ),
@@ -116,30 +135,21 @@ def main() -> int:
             "Latest GitHub release",
             "`v3.0.3`",
             "`PUBLISHED`",
-            candidate_sha,
             "Active development candidate",
-            "none",
+            "`v3.0.4`",
+            "UNRELEASED",
+            "NOT_FROZEN",
         ),
     )
-
-    certification = marker.get("certification")
-    if not isinstance(certification, dict):
-        return fail("published v3.0.3 receipt must preserve certification evidence")
-    if certification.get("linux_release_check_run") != 35279315637:
-        return fail("published v3.0.3 receipt must bind Linux Release Check run 35279315637")
-    if certification.get("validation") != "SCOPE=complete PASS=38 FAIL=0 SKIP=0":
-        return fail("published v3.0.3 receipt must preserve complete validation evidence")
-    if certification.get("maintainer_visual_acceptance") != "PASS":
-        return fail("published v3.0.3 receipt must preserve maintainer visual acceptance")
 
     if "release/history/v3/" not in agents:
         return fail("AGENTS must identify the controlled historical release-state namespace")
 
     print(
         "DEVELOPMENT-GOVERNANCE-EVIDENCE status=PASS "
-        "published_release=3.0.3 active_candidate=none "
-        "v3_0_1_roadmap=historical v3_0_2_release=historical "
-        f"publication_state=published candidate_sha={candidate_sha} "
+        "published_release=3.0.3 active_candidate=3.0.4 "
+        "candidate_state=not_frozen publication_state=unpublished "
+        "tracking_issue=335 entry_sha=51bb54a013dc2fd4917880960928ad9792a2a1be "
         "current_authority=docs/RELEASE-STATE.md"
     )
     return 0

@@ -21,9 +21,9 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Published release | `v3.0.3` |
 | Frozen publication source | `b98270f23b1b384773c409869dfb05d71acd8638` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | post-v3.0.3 steady state |
-| Active runtime development candidate | none |
-| Active release issue | none |
+| Repository lifecycle | v3.0.4 unreleased development |
+| Active runtime development candidate | `v3.0.4` / issue #335 / NOT_FROZEN |
+| Active release issue | #335 (development tracking; not publication authorization) |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | steady state: `main` plus only active short-lived PR branches; merged heads auto-delete |
 
@@ -79,15 +79,17 @@ Distribution regression must extract Template and Overleaf, rebuild their exact 
 
 There is exactly one root machine receipt path: `release/v3-release-candidate.json`.
 
-In post-v3.0.3 steady state it records:
+During the active v3.0.4 development line it records:
 
-- `lifecycle = published-release-marker`;
-- `candidate_state = FROZEN`;
-- `candidate_sha = b98270f23b1b384773c409869dfb05d71acd8638`;
-- `publication_state = PUBLISHED`;
-- `publication_authorized = true`;
-- `tracking_issue = null`;
-- `active_development_candidate = null`;
+- `lifecycle = active-development-marker`;
+- `development_line = 3.0.4`;
+- `target_version = 3.0.4`;
+- `candidate_state = NOT_FROZEN`;
+- `candidate_sha = null`;
+- `publication_state = UNPUBLISHED`;
+- `publication_authorized = false`;
+- `tracking_issue = 335`;
+- published v3.0.3 receipt preserved separately in the marker;
 - authority `docs/RELEASE-STATE.md`.
 
 Changing the root marker is a deliberate release-control event and forces complete validation. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
@@ -117,7 +119,7 @@ Short-lived PR branches must disappear after merge. TODO/FIXME markers and stale
 
 ## Runtime-source architecture changes
 
-The published v3.0.3 release uses modular development sources under `abntexto-ufc/` and a monolithic generated CTAN class. Any consolidation of those modules into a single canonical `abntexto-ufc.cls` is a future runtime-source refactor and must:
+The published v3.0.3 release uses modular development sources under `abntexto-ufc/` and a monolithic generated CTAN class. The active v3.0.4 line is authorized to consolidate those modules into a single canonical `abntexto-ufc.cls` and must:
 
 1. open a new unreleased development line;
 2. preserve the public API and rendered behavior unless a versioned change explicitly says otherwise;

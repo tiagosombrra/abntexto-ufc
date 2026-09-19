@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{abntexto-ufc}[2026/09/17 v3.0.3 UFC academic document class]
+\ProvidesClass{abntexto-ufc}[2026/09/19 v3.0.4 UFC academic document class]
 
 % Historical UFC template: Ednardo Moreira Rodrigues and Alan Batista de Oliveira.
 % Historical v2 redesign and maintenance: Tiago Guimarães Sombra.
