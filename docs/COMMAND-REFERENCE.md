@@ -1,6 +1,6 @@
 # Referência de comandos do abntexto-ufc
 
-Esta é a referência de consulta da API pública da série 3. Para aprender pelo fluxo de um TCC completo, comece por `template/main.tex` e pelo [USER-GUIDE.md](USER-GUIDE.md).
+Esta é a referência de consulta da API pública atual. Para aprender pelo fluxo de um TCC completo, comece por `template/main.tex` e pelo [USER-GUIDE.md](USER-GUIDE.md).
 
 A API pública própria do projeto usa os identificadores canônicos documentados nesta referência. O runtime não mantém aliases paralelos para APIs retiradas; esta referência descreve apenas a superfície atualmente suportada.
 
