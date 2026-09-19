@@ -23,14 +23,14 @@ fi
 echo
 echo '### CTAN pkgcheck'
 if [ -f artifacts/validation/pkgcheck-version.txt ]; then
-  echo "```text"
+  printf '%s\n' '```text'
   cat artifacts/validation/pkgcheck-version.txt
-  echo "```"
+  printf '%s\n' '```'
 else
   echo 'pkgcheck version evidence was not produced.'
 fi
 if [ -f artifacts/validation/pkgcheck.log ]; then
-  echo '\`\`\`text'
+  printf '%s\n' '```text'
   cat artifacts/validation/pkgcheck.log
   echo "```"
 else
