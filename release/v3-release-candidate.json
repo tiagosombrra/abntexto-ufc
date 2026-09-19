@@ -1,5 +1,5 @@
 {
-  "schema_version": 22,
+  "schema_version": 23,
   "project": "abntexto-ufc",
   "lifecycle": "active-development-marker",
   "development_line": "3.0.4",
@@ -39,7 +39,7 @@
     "purpose": "repository modernization and canonical class consolidation",
     "current_change": "current-documentation-and-community-hygiene",
     "runtime_source_model": "single-canonical-class",
-    "tracking_pr": null
+    "tracking_pr": 338
   },
   "policy": {
     "marker_change_forces_complete_linux_integration": true,
@@ -48,5 +48,5 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.4 remains an unreleased, NOT_FROZEN development line. Canonical-class consolidation is complete on main. Current work reconciles active documentation, repository navigation and community-maintenance surfaces around the current single-class architecture. This control update does not freeze a candidate or authorize publication. Published v3.0.3 remains immutable."
+  "note": "v3.0.4 remains an unreleased, NOT_FROZEN development line. Canonical-class consolidation is complete on main. PR #338 reconciles active documentation, repository navigation and community-maintenance surfaces around the current single-class architecture. This control update does not freeze a candidate or authorize publication. Published v3.0.3 remains immutable."
 }
