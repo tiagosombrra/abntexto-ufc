@@ -18,9 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 CTAN_DIR = ROOT / "release" / "ctan"
 CTAN_EXAMPLE = ROOT / "docs" / "ctan-example.tex"
-PROJECT_MODULE_INPUT_RE = re.compile(
-    r"(?m)^[ \t]*\\input\{(?P<path>abntexto-ufc/[^}\r\n]+\.def)\}[ \t]*(?:%[^\r\n]*)?$"
-)
+CANONICAL_CLASS = ROOT / f"{PACKAGE_ID}.cls"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -102,97 +100,29 @@ def tracked_files() -> set[str]:
     return {item.decode("utf-8") for item in output.split(b"\0") if item}
 
 
-def runtime_module_paths(tracked: set[str]) -> list[str]:
-    paths = sorted(
-        path
-        for path in tracked
-        if path.startswith(f"{PACKAGE_ID}/") and (ROOT / path).is_file()
+def canonical_class_bytes(tracked: set[str]) -> bytes:
+    relative = f"{PACKAGE_ID}.cls"
+    if relative not in tracked or not CANONICAL_CLASS.is_file():
+        fail(f"Canonical class source is not tracked: {relative}")
+
+    legacy_runtime = sorted(
+        path for path in tracked if path.startswith(f"{PACKAGE_ID}/")
     )
-    unexpected = [path for path in paths if not path.endswith(".def")]
-    if unexpected:
-        fail("Unexpected non-module file in project runtime directory: " + ", ".join(unexpected))
-    return paths
-
-
-def strip_module_wrapper(relative: str, text: str) -> str:
-    expected = f"\\ProvidesFile{{{relative}}}"
-    if text.count(expected) != 1:
-        fail(f"Project module must provide itself exactly once before CTAN inlining: {relative}")
-
-    provides_re = re.compile(
-        rf"(?m)^[ \t]*{re.escape(expected)}(?:\[[^\r\n]*\])?[ \t]*(?:%[^\r\n]*)?\r?\n?"
-    )
-    text, count = provides_re.subn("", text, count=1)
-    if count != 1:
-        fail(f"Cannot strip module ProvidesFile wrapper: {relative}")
-
-    endinput_re = re.compile(r"(?m)^[ \t]*\\endinput[ \t]*(?:%[^\r\n]*)?(?:\r?\n)?\Z")
-    match = endinput_re.search(text)
-    if match is not None:
-        text = text[: match.start()]
-    elif re.search(r"(?m)^[ \t]*\\endinput\b", text):
-        fail(f"Project module contains non-terminal \\endinput and cannot be safely inlined: {relative}")
-    return text.rstrip() + "\n"
-
-
-def build_monolithic_ctan_class(tracked: set[str]) -> tuple[bytes, list[str]]:
-    source = ROOT / f"{PACKAGE_ID}.cls"
-    if f"{PACKAGE_ID}.cls" not in tracked or not source.is_file():
-        fail(f"Canonical class source is not tracked: {PACKAGE_ID}.cls")
-
-    expected_modules = runtime_module_paths(tracked)
-    expected_set = set(expected_modules)
-    inlined: list[str] = []
-    active: set[str] = set()
-
-    def expand(text: str, owner: str) -> str:
-        def replace(match: re.Match[str]) -> str:
-            relative = match.group("path")
-            if relative not in expected_set or not (ROOT / relative).is_file():
-                fail(f"CTAN class references an untracked project module from {owner}: {relative}")
-            if relative in active:
-                fail(f"Cyclic project module input while building CTAN class: {relative}")
-            if relative in inlined:
-                fail(f"Project module is loaded more than once in canonical class: {relative}")
-
-            active.add(relative)
-            inlined.append(relative)
-            module_text = (ROOT / relative).read_text(encoding="utf-8")
-            module_text = strip_module_wrapper(relative, module_text)
-            module_text = expand(module_text, relative)
-            active.remove(relative)
-
-            label = PurePosixPath(relative).with_suffix("").as_posix()
-            return (
-                f"% --- BEGIN inlined module: {label} ---\n"
-                f"{module_text.rstrip()}\n"
-                f"% --- END inlined module: {label} ---"
-            )
-
-        return PROJECT_MODULE_INPUT_RE.sub(replace, text)
-
-    class_text = source.read_text(encoding="utf-8")
-    generated = expand(class_text, f"{PACKAGE_ID}.cls")
-
-    if PROJECT_MODULE_INPUT_RE.search(generated):
-        fail("Generated CTAN class still contains a project-owned module input.")
-    if re.search(rf"\\ProvidesFile\{{{re.escape(PACKAGE_ID)}/", generated):
-        fail("Generated CTAN class still contains project module ProvidesFile wrappers.")
-
-    missing = sorted(expected_set - set(inlined))
-    unexpected = sorted(set(inlined) - expected_set)
-    if missing or unexpected:
+    if legacy_runtime:
         fail(
-            "CTAN monolithic class module coverage mismatch: "
-            f"missing={missing} unexpected={unexpected}"
+            "Legacy modular runtime paths remain tracked after canonical-class consolidation: "
+            + ", ".join(legacy_runtime)
         )
 
-    banner = (
-        "% CTAN distribution file generated from the modular repository sources.\n"
-        "% All project-owned runtime modules are inlined below; no external .def files are required.\n"
-    )
-    generated = banner + generated
-    return generated.encode("utf-8"), inlined
+    data = CANONICAL_CLASS.read_bytes()
+    text = data.decode("utf-8")
+    if re.search(r"\\input\{abntexto-ufc/[^}]+\.def\}", text):
+        fail("Canonical class must not load external project-owned .def modules.")
+    if re.search(r"\\ProvidesFile\{abntexto-ufc/", text):
+        fail("Canonical class must not contain project-module ProvidesFile wrappers.")
+    if not text.rstrip().endswith(r"\endinput"):
+        fail("Canonical class must terminate with \\endinput.")
+    return data
 
 
 def source_date_epoch() -> int:
@@ -382,7 +312,7 @@ def main() -> None:
 
     version = read_version()
     tracked = tracked_files()
-    ctan_class, inlined_modules = build_monolithic_ctan_class(tracked)
+    ctan_class = canonical_class_bytes(tracked)
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
 
@@ -425,8 +355,8 @@ def main() -> None:
 
     checksum = write_checksums(output, artifacts)
     print(
-        f"CTAN monolithic class generated with {len(inlined_modules)} inlined project modules; "
-        "no project .def files are distributed."
+        "Canonical abntexto-ufc.cls copied byte-for-byte into the CTAN package; "
+        "no project-owned .def runtime exists."
     )
     print(f"Distribution candidates generated in {output}")
     for path in artifacts + [checksum]:

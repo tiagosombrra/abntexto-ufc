@@ -9,8 +9,6 @@ ROOT = Path(__file__).resolve().parents[2]
 
 REQUIRED_PATHS = {
     "abntexto-ufc.cls",
-    "abntexto-ufc/integrations/abntexto.def",
-    "abntexto-ufc/standards/nbr6023-2025.def",
     "template/main.tex",
     "tests/run.py",
     "docs/ARCHITECTURE.md",
@@ -96,6 +94,7 @@ RELOCATED_HISTORY_PATHS = (
 )
 
 FORBIDDEN_PREFIXES = (
+    "abntexto-ufc/",
     ".release/",
     "artifacts/",
     ".ci-downloads/",
@@ -187,8 +186,6 @@ NEGATIVE_FRAGMENT_EXEMPT = {
     "tests/checks/canonical_identity.py": {"ufctex.cls"},
     "tests/checks/repository_contract.py": {"ufctex.cls"},
 }
-
-MODULE_PATTERN = re.compile(r"\\input\{((?:abntexto-ufc)/[^}]+\.def)\}")
 
 
 def tracked_paths() -> list[str]:
@@ -290,12 +287,10 @@ def main() -> int:
                 errors.append(f"{path}: stale active path reference: {fragment}")
 
     class_text = (ROOT / "abntexto-ufc.cls").read_text(encoding="utf-8")
-    modules = MODULE_PATTERN.findall(class_text)
-    if not modules:
-        errors.append("abntexto-ufc.cls: no canonical modules are loaded")
-    for module in modules:
-        if module not in path_set:
-            errors.append(f"abntexto-ufc.cls: missing loaded module: {module}")
+    if re.search(r"\\input\{abntexto-ufc/[^}]+\.def\}", class_text):
+        errors.append("abntexto-ufc.cls: external project-owned .def module load remains")
+    if re.search(r"\\ProvidesFile\{abntexto-ufc/", class_text):
+        errors.append("abntexto-ufc.cls: project-module ProvidesFile wrapper remains")
     if "ufctex" in class_text.lower():
         errors.append("abntexto-ufc.cls: deprecated ufctex identity remains")
 

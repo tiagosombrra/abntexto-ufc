@@ -25,7 +25,7 @@ MICROSOFT_FONTS = {
     "arialbi.ttf",
 }
 SAFE_COMPONENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]*$")
-PROJECT_MODULE_INPUT_RE = re.compile(r"\\input\{abntexto-ufc/[^}]+\.def\}")
+CANONICAL_CLASS = ROOT / f"{PACKAGE_ID}.cls"
 
 
 def fail(message: str) -> None:
@@ -38,14 +38,6 @@ def version() -> str:
     if not match:
         fail("Makefile VERSION not found.")
     return match.group(1)
-
-
-def source_modules() -> list[str]:
-    return sorted(
-        path.relative_to(ROOT).as_posix()
-        for path in (ROOT / PACKAGE_ID).rglob("*.def")
-        if path.is_file()
-    )
 
 
 def sha256(path: Path) -> str:
@@ -83,31 +75,21 @@ def require(archive_entries: dict[str, zipfile.ZipInfo], expected: set[str], arc
         fail(f"{archive_name} missing required entries: {', '.join(missing)}")
 
 
-def validate_monolithic_class(class_bytes: bytes, archive_name: str) -> int:
+def validate_canonical_class(class_bytes: bytes, archive_name: str) -> None:
     try:
         class_text = class_bytes.decode("utf-8")
     except UnicodeDecodeError as exc:
-        fail(f"{archive_name}: generated CTAN class is not UTF-8: {exc}")
+        fail(f"{archive_name}: canonical CTAN class is not UTF-8: {exc}")
 
-    if PROJECT_MODULE_INPUT_RE.search(class_text):
-        fail(f"{archive_name}: generated CTAN class still loads an external project .def module.")
+    if re.search(r"\\input\{abntexto-ufc/[^}]+\.def\}", class_text):
+        fail(f"{archive_name}: canonical class still loads an external project .def module.")
     if re.search(r"\\ProvidesFile\{abntexto-ufc/", class_text):
-        fail(f"{archive_name}: generated CTAN class still contains module ProvidesFile wrappers.")
-    if "no external .def files are required" not in class_text:
-        fail(f"{archive_name}: generated CTAN class is missing the monolithic-distribution marker.")
-
-    modules = source_modules()
-    for relative in modules:
-        label = PurePosixPath(relative).with_suffix("").as_posix()
-        begin = f"% --- BEGIN inlined module: {label} ---"
-        end = f"% --- END inlined module: {label} ---"
-        if class_text.count(begin) != 1 or class_text.count(end) != 1:
-            fail(f"{archive_name}: source module was not inlined exactly once: {relative}")
-
-    return len(modules)
+        fail(f"{archive_name}: canonical class still contains module ProvidesFile wrappers.")
+    if class_bytes != CANONICAL_CLASS.read_bytes():
+        fail(f"{archive_name}: CTAN runtime differs from tracked canonical abntexto-ufc.cls.")
 
 
-def validate_package(path: Path, v: str) -> int:
+def validate_package(path: Path, v: str) -> None:
     archive_entries = entries(path)
     prefix = f"{PACKAGE_ID}/"
     if any(not name.startswith(prefix) for name in archive_entries):
@@ -179,7 +161,7 @@ def validate_package(path: Path, v: str) -> int:
         if not bundled_example_pdf.startswith(b"%PDF-") or len(bundled_example_pdf) < 5000:
             fail(f"{path.name}: example PDF is missing or invalid.")
 
-        inlined_modules = validate_monolithic_class(bundled_class, path.name)
+        validate_canonical_class(bundled_class, path.name)
 
         for name in files:
             pure = PurePosixPath(name)
@@ -213,7 +195,6 @@ def validate_package(path: Path, v: str) -> int:
         if forbidden.casefold() in readme_text.casefold():
             fail(f"{path.name}: stale/deprecated publication text leaked into README: {forbidden}")
 
-    return inlined_modules
 
 
 def validate_template(path: Path, v: str, *, overleaf: bool) -> None:
@@ -294,14 +275,14 @@ def main() -> None:
                 fail(f"Distribution artifact is not reproducible: {name}")
 
         validate_checksums(first, expected_zips)
-        inlined_modules = validate_package(first / f"{PACKAGE_ID}-{v}.zip", v)
+        validate_package(first / f"{PACKAGE_ID}-{v}.zip", v)
         validate_template(first / f"{PACKAGE_ID}-template-{v}.zip", v, overleaf=False)
         validate_template(first / f"{PACKAGE_ID}-overleaf-{v}.zip", v, overleaf=True)
 
     print(
         "DISTRIBUTION-BUNDLE-EVIDENCE status=PASS artifacts=4 reproducible=4 checksums=PASS "
-        f"canonical_ctan_package=PASS ctan_upload_archives=1 monolithic_class=PASS def_files=0 "
-        f"inlined_modules={inlined_modules} ctan_readme=PASS documentation_pdf=PASS "
+        "canonical_ctan_package=PASS ctan_upload_archives=1 canonical_class_identity=PASS "
+        "def_files=0 ctan_readme=PASS documentation_pdf=PASS "
         "example_pdf=PASS external_abntexto=PASS institutional_assets=excluded"
     )
 

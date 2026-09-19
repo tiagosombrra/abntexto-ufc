@@ -5,7 +5,7 @@ abntexto-ufc changelog
 ------------------
 
 - Opens the post-v3.0.3 modernization line.
-- Plans consolidation of the project-owned modular runtime into one canonical `abntexto-ufc.cls` while preserving the public API and rendered behavior.
+- Consolidates the project-owned runtime into one canonical `abntexto-ufc.cls` while preserving the public API and rendered behavior.
 - Keeps the published v3.0.3 source, tag, release assets and checksums immutable.
 
 3.0.3 — 2026-09-17

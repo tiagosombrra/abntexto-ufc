@@ -2,7 +2,7 @@
 set -eu
 
 fixture="tests/documents/scientific-article-front-block.tex"
-module="abntexto-ufc/articles.def"
+module="abntexto-ufc.cls"
 
 cleanup_job() {
   job="$1"

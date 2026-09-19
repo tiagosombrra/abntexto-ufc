@@ -49,7 +49,7 @@ Cada Release produz artefatos com funções diferentes.
 
 | Arquivo | Finalidade | O que contém | Uso recomendado |
 |---|---|---|---|
-| `abntexto-ufc-<versão>.zip` | pacote canônico para CTAN | classe monolítica gerada, documentação mínima e exemplo CTAN; sem ativo institucional da UFC | publicação/instalação de pacote; não é o melhor ponto de partida para um TCC |
+| `abntexto-ufc-<versão>.zip` | pacote canônico para CTAN | classe canônica única, documentação mínima e exemplo CTAN; sem ativo institucional da UFC | publicação/instalação de pacote; não é o melhor ponto de partida para um TCC |
 | `abntexto-ufc-template-<versão>.zip` | projeto local editável | fonte completa do TCC, runtime do projeto, brasão institucional usado pelo exemplo e `abntexto-ufc-reference.pdf` | usuários locais com TeX Live e dependência `abntexto` instalada |
 | `abntexto-ufc-overleaf-<versão>.zip` | projeto autocontido para Overleaf | fonte completa, brasão institucional usado pelo exemplo, revisão fixada de `abntexto.cls` e o mesmo PDF de referência | caminho mais simples para começar no Overleaf |
 | `SHA256SUMS` | integridade | hashes dos artefatos da distribuição | conferência de downloads e auditoria |
@@ -76,7 +76,7 @@ O documento canônico usa bibliografia e outros recursos que podem exigir mais d
 
 ### Pacote CTAN
 
-`abntexto-ufc-<versão>.zip` é o arquivo canônico submetido ao CTAN. O runtime público desse pacote é `abntexto-ufc.cls`; os módulos internos de desenvolvimento são incorporados deterministicamente à classe.
+`abntexto-ufc-<versão>.zip` é o arquivo canônico submetido ao CTAN. O runtime público desse pacote é o mesmo `abntexto-ufc.cls` canônico rastreado e testado no repositório; não existe uma etapa separada de inlining de módulos.
 
 O pacote CTAN não redistribui o brasão da UFC. O exemplo CTAN usa `coat-of-arms=false`; usuários que desejarem o brasão ao instalar somente pelo CTAN devem fornecer o ativo localmente ou usar um dos bundles de usuário da Release.
 
@@ -196,8 +196,7 @@ As marcas institucionais não são cobertas pela LPPL do projeto. A inclusão do
 
 | Caminho | Papel |
 |---|---|
-| `abntexto-ufc/` | implementação modular de desenvolvimento da classe |
-| `abntexto-ufc.cls` | entrada compatível do repositório; o pacote CTAN recebe a classe monolítica gerada |
+| `abntexto-ufc.cls` | fonte canônica única do runtime; usada diretamente por testes, Template, Overleaf e CTAN |
 | `template/` | TCC tutorial curto e editável, com frontmatter/chapters/backmatter de exemplo |
 | `validator/` | aplicação estática Web/Lite e contrato do validador |
 | `standards/` | catálogo normativo, precedência e rastreabilidade |

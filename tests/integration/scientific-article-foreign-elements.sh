@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-module="abntexto-ufc/articles.def"
+module="abntexto-ufc.cls"
 
 title_marker="ARTICLEFOREIGNTITLEMARKER"
 summary_marker="ARTICLEFOREIGNSUMMARYMARKER"
@@ -10,6 +10,17 @@ control_marker="ARTICLEFOREIGNCONTROL"
 cleanup_job() {
   job="$1"
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc" "/tmp/$job.txt"
+}
+
+article_source=$(awk '
+  /^% Scientific article presentation$/ { capture=1 }
+  /^% Research project profile$/ { capture=0 }
+  capture { print }
+' "$module")
+
+[ -n "$article_source" ] || {
+  echo 'Scientific article foreign-elements gate failed: canonical article source section is missing.'
+  exit 1
 }
 
 grep -Fq '\NewDocumentCommand \ufcPrintArticleForeignElements { +m +m }' "$module" || {
@@ -23,7 +34,7 @@ blank_guard_count=$(grep -Fc '\tl_if_blank:nF {#1}' "$module" || true)
   exit 1
 }
 
-if grep -Fq 'title-variant' "$module"; then
+if printf '%s\n' "$article_source" | grep -Fq 'title-variant'; then
   echo 'Scientific article foreign-elements gate failed: shared title-variant metadata was repurposed for article foreign-title semantics.'
   exit 1
 fi
