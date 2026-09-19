@@ -13,7 +13,7 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 - **Issues / suporte técnico:** https://github.com/tiagosombrra/abntexto-ufc/issues
 - **Tutorial e fluxo de uso:** [docs/USER-GUIDE.md](docs/USER-GUIDE.md)
 - **Referência completa de comandos:** [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md)
-- **Migração da série 2 para a série 3:** [docs/MIGRATING-TO-V3.md](docs/MIGRATING-TO-V3.md)
+- **Documentação técnica e manutenção:** [docs/README.md](docs/README.md)
 - **Base normativa:** [docs/NORMATIVE-BASE.md](docs/NORMATIVE-BASE.md)
 
 O site e o validador são publicados a partir do mesmo repositório. Se o site estiver temporariamente indisponível, a aplicação Web/Lite também pode ser servida localmente a partir da pasta `validator/`.
@@ -41,7 +41,7 @@ A série 3 usa uma API pública única em inglês. Ela é incompatível em níve
 | Usuário local de LaTeX | baixe `abntexto-ufc-template-<versão>.zip` e edite `main.tex` |
 | Orientador / biblioteca | use `abntexto-ufc-reference.pdf` como referência visual e o validador como apoio |
 | Usuário avançado / mantenedor | use o repositório, os testes e o pacote CTAN canônico |
-| Quem já usa a série 2 | comece pelo [guia de migração](docs/MIGRATING-TO-V3.md) |
+| Quem mantém ou contribui com o projeto | comece pelo [índice técnico](docs/README.md) e por [CONTRIBUTING.md](CONTRIBUTING.md) |
 
 ## Qual arquivo da Release devo baixar?
 
@@ -202,7 +202,7 @@ As marcas institucionais não são cobertas pela LPPL do projeto. A inclusão do
 | `standards/` | catálogo normativo, precedência e rastreabilidade |
 | `tests/` | contratos estáticos, integração, regressão e fixtures |
 | `tools/` | geração de bundles, validação e utilitários de engenharia |
-| `docs/` | documentação de uso, normas, migração, certificação e release |
+| `docs/` | documentação de uso, arquitetura, normas, validação, certificação e release |
 | `release/` | estado de máquina e marcadores auditáveis de release |
 | `site/` | landing page publicada pelo GitHub Pages |
 | `.github/workflows/` | CI, certificação, release e publicação do site |
