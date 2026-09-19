@@ -1,54 +1,50 @@
 # AGENTS.md — Repository Bootstrap and Control Rules
 
-This repository uses fail-closed state reconciliation. Current repository state is authoritative; conversation memory and historical documents are not.
+This repository uses fail-closed state reconciliation. Current Git facts and current machine-readable state are authoritative; historical documents and prior conversation context are not.
 
 ## Mandatory session bootstrap
 
 Before changing code, tests, standards, workflows, documentation, release metadata or publication state:
 
 1. resolve the actual branch, HEAD and `origin/main` dynamically;
-2. read `release/v3-release-candidate.json` and `docs/V3.0.3-DISTRIBUTION-CORRECTION.md`;
-3. inspect issue #328 for live v3.0.3 release-control receipts;
-4. consult `docs/history/v3/` and `release/history/v3/` only when historical evidence is relevant;
-5. use issue #313 only for the external v3.0.2 CTAN publication receipt while that submission remains open.
+2. read `docs/RELEASE-STATE.md` and `release/v3-release-candidate.json`;
+3. inspect current GitHub tags/releases only when publication facts are relevant;
+4. consult `docs/history/v3/` and `release/history/v3/` only for historical evidence;
+5. never treat a closed Issue or historical release document as current authority.
 
-Priority on disagreement: **current Git facts > active release marker > current v3.0.3 authority/issue #328 > current technical policy > controlled historical evidence > prior chat or memory**.
+Priority on disagreement: **current Git/GitHub facts > machine release receipt > `docs/RELEASE-STATE.md` > current technical policy > controlled historical evidence > prior chat or memory**.
 
-## Current development state
+## Current repository state
 
 | Fact | Current state |
 |---|---|
-| Published/frozen baseline | `v3.0.2`; immutable GitHub Release; CTAN submission tracked externally in #313 |
-| Current development line | `v3.0.3` |
+| Published release | `v3.0.3` |
+| Frozen publication source | `b98270f23b1b384773c409869dfb05d71acd8638` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | v3.0.3 frozen candidate / GitHub publication closeout |
-| v3.0.2 external publication tracking | #313 — CTAN receipt only |
-| v3.0.3 release tracking | #328 |
-| Implementation transport | PR #329 — merged historical receipt |
-| Release-state documentation reconciliation | PR #330 — merged historical receipt |
-| Branch hygiene | steady state: `main` plus only active short-lived PR branches; merged heads auto-delete |
+| Repository lifecycle | post-v3.0.3 steady state |
+| Active runtime development candidate | none |
+| Active release issue | none |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
-| Active candidate state | `FROZEN`; candidate `b98270f23b1b384773c409869dfb05d71acd8638`; GitHub publication authorized |
+| Branch hygiene | steady state: `main` plus only active short-lived PR branches; merged heads auto-delete |
 
-The `v3.0.0`, `v3.0.1` and `v3.0.2` tags/releases/publication bytes must never be rewritten. Any correction belongs to a later version.
+Published version tags/releases and their assets must never be rewritten, retargeted or rebuilt. Any future runtime/public-API change belongs to a new unreleased development line.
 
 ## Active and historical authority
 
-Active v3.0.3 release authority consists of:
+Current steady-state authority consists of:
 
+- `docs/RELEASE-STATE.md`;
 - `release/v3-release-candidate.json`;
-- `docs/V3.0.3-DISTRIBUTION-CORRECTION.md`;
-- issue #328.
+- current durable technical documentation;
+- current GitHub tag/release state when publication facts are being verified.
 
-Historical v3 engineering evidence belongs under `docs/history/v3/`. Historical machine state belongs under `release/history/v3/`. The frozen v3.0.2 release snapshot is `release/history/v3/v3.0.2-release-candidate.json`.
-
-The compact v3.0.2 repository-hygiene receipt is retained at `docs/history/v3/audits/V3.0.2-REPOSITORY-HYGIENE-RECEIPT.md`. Detailed superseded snapshots remain recoverable from Git history and are not active control-plane documents.
+Historical v3 engineering evidence belongs under `docs/history/v3/`. Historical machine state belongs under `release/history/v3/`. Historical receipts may preserve obsolete paths, issue numbers, phase names and release states as evidence, but they do not override current facts.
 
 ## Progress documentation discipline
 
 A material advance changes runtime, evidence, repository lifecycle, validation state or release readiness. Every material advance must leave an exact commit/PR receipt, executed checks with classification, and unresolved findings carried forward explicitly.
 
-Failed checks remain part of the audit trail after successful reruns. Do not rewrite history to make the sequence appear uniformly green.
+Failed checks remain part of the audit trail after successful reruns. Do not rewrite history to make a sequence appear uniformly green.
 
 ## Canonical TCC/reference rules
 
@@ -75,27 +71,26 @@ The distribution contract is surface-specific and fail-closed:
 - **Overleaf:** include the same institutional PNG, preserve canonical `coat-of-arms=true`, include the pinned `abntexto.cls`, and embed the same reference PDF;
 - no distribution surface may contain proprietary Microsoft font files.
 
-Use the existing `tools/build-public-bundles.py` / `tools/build-distribution-bundles.py` pipeline. Do not create a competing release generator.
+Use the existing `tools/build-public-bundles.py` / `tools/build-distribution-bundles.py` pipeline until a separately reviewed runtime/package architecture change explicitly replaces it.
 
 Distribution regression must extract Template and Overleaf, rebuild their exact source deterministically, and compare the rebuilt PDF with the embedded `abntexto-ufc-reference.pdf`. The CTAN archive remains the intentionally sanitized surface.
 
-## Active release-marker policy
+## Release-state policy
 
-There is exactly one active release marker path: `release/v3-release-candidate.json`.
+There is exactly one root machine receipt path: `release/v3-release-candidate.json`.
 
-The v3.0.3 release is currently frozen as:
+In post-v3.0.3 steady state it records:
 
-- `development_line = 3.0.3`;
-- `target_version = 3.0.3`;
+- `lifecycle = published-release-marker`;
 - `candidate_state = FROZEN`;
 - `candidate_sha = b98270f23b1b384773c409869dfb05d71acd8638`;
+- `publication_state = PUBLISHED`;
 - `publication_authorized = true`;
-- tracking issue #328;
-- authority `docs/V3.0.3-DISTRIBUTION-CORRECTION.md`.
+- `tracking_issue = null`;
+- `active_development_candidate = null`;
+- authority `docs/RELEASE-STATE.md`.
 
-This candidate passed Static Contract #602, Linux Integration #514 and Linux Release Check run `35279315637` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, and received explicit maintainer visual acceptance on 2026-09-17.
-
-Changing the active marker is a deliberate release-control event and forces complete Linux integration/release validation. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
+Changing the root marker is a deliberate release-control event and forces complete validation. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 
 ## Release invariant
 
@@ -105,21 +100,31 @@ A release candidate must bind technical certification, generated artifacts, main
 certified source SHA == visually approved source SHA == tagged source SHA == source SHA of published release bytes
 ```
 
-A candidate may be frozen only after the exact source SHA has passed the complete technical release path and its canonical/reference profile PDFs have received explicit maintainer visual acceptance.
+A subsequent control or documentation commit does not become the publication source unless it independently undergoes the full release process.
 
-The subsequent control commit that records `FROZEN` state does not become the publication source. The version tag must resolve to the already-certified candidate SHA.
-
-GitHub publication of v3.0.3 may be completed independently of the later CTAN update. The v3.0.3 CTAN archive is retained for future submission, but CTAN timing is an external follow-up and does not justify modifying certified GitHub release bytes.
+GitHub publication and CTAN submission are separate operations. A delayed CTAN submission must use the already-certified canonical archive from the corresponding published release and must not justify rebuilding release bytes.
 
 ## Repository hygiene rule
 
 Active paths must describe current supported state. Closed phase/version control documents must either:
 
-- move into the controlled `docs/history/v3/` or `release/history/v3/` namespaces with explicit historical classification; or
+- move into controlled `docs/history/v3/` or `release/history/v3/` namespaces with explicit historical classification; or
 - be removed from the active tree while remaining recoverable through Git history.
 
-Generated PDFs/ZIPs, build products, editor state and temporary downloaded assets must never be tracked. Short-lived PR branches must disappear after merge. TODO/FIXME markers and stale paths are release blockers unless explicitly documented as intentional test fixtures.
+Generated PDFs/ZIPs, build products, editor state, CI downloads, publication kits and temporary assets must never be tracked. Local release/audit material belongs under ignored `.release/`.
+
+Short-lived PR branches must disappear after merge. TODO/FIXME markers and stale active-path references are blockers unless explicitly documented as intentional test fixtures.
+
+## Runtime-source architecture changes
+
+The published v3.0.3 release uses modular development sources under `abntexto-ufc/` and a monolithic generated CTAN class. Any consolidation of those modules into a single canonical `abntexto-ufc.cls` is a future runtime-source refactor and must:
+
+1. open a new unreleased development line;
+2. preserve the public API and rendered behavior unless a versioned change explicitly says otherwise;
+3. prove source/package equivalence through full Static, Linux Integration and Linux Release checks;
+4. simplify, not duplicate, the source of truth;
+5. never modify the already-published v3.0.3 tag or assets.
 
 ## Fail-closed rule
 
-If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Automated success never substitutes for explicit maintainer visual approval.
+If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Automated success never substitutes for explicit maintainer visual approval when a release gate requires it.
