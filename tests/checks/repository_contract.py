@@ -41,6 +41,7 @@ FORBIDDEN_EXACT_PATHS = {
     "docs/NAMING.md",
     "docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md",
     "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
+    "docs/MIGRATING-TO-V3.md",
     "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
     "docs/MIGRATING-TO-V3.md",
     "release/final-audit.json",
@@ -290,6 +291,22 @@ def main() -> int:
         for relocated_path in RELOCATED_RELEASE_PATHS:
             if relocated_path in text:
                 errors.append(f"{path}: stale reference to relocated release-state path: {relocated_path}")
+
+        active_user_doc = (
+            path == "README.md"
+            or path in {"CONTRIBUTING.md", "SECURITY.md"}
+            or (path.startswith("docs/") and not path.startswith(APPROVED_HISTORY_PREFIX))
+        )
+        if active_user_doc:
+            migration_pattern = re.compile(
+                r"(?:migrat(?:e|ing|ion)|migra(?:r|ção|ndo)).{0,80}"
+                r"(?:\bv2\b|\b2\.x\b|série\s+2|serie\s+2|versão\s+2|versao\s+2)"
+                r"|(?:\bv2\b|\b2\.x\b|série\s+2|serie\s+2|versão\s+2|versao\s+2).{0,80}"
+                r"(?:migrat(?:e|ing|ion)|migra(?:r|ção|ndo))",
+                re.IGNORECASE,
+            )
+            if migration_pattern.search(text):
+                errors.append(f"{path}: obsolete v2-to-current migration guidance remains in active documentation")
 
         allowed_fragments = NEGATIVE_FRAGMENT_EXEMPT.get(path, set())
         for fragment in STALE_CONTENT_FRAGMENTS:
