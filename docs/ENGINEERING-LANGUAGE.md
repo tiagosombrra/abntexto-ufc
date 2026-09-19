@@ -1,45 +1,48 @@
 # Engineering Language Policy
 
-Updated: 2026-09-12
+Updated: 2026-09-19
 
-`abntexto-ufc` v3 uses English for every project-owned engineering surface: repository paths and filenames, the LaTeX project API and internal identifiers, source comments, technical diagnostics, scripts, tests, workflows, validator controls/UI, JSON/schema terminology, and active engineering documentation.
+`abntexto-ufc` uses English for project-owned engineering surfaces: repository paths and filenames, the LaTeX project API and internal identifiers, source comments, technical diagnostics, scripts, tests, workflows, validator controls/UI, JSON/schema terminology and active engineering documentation.
 
-Portuguese remains valid when it is academic or authoritative content rather than project engineering nomenclature: rendered academic prose and headings, sample metadata values, bibliography data, official UFC/ABNT/CAPES names or wording, literal Portuguese output under test, and identifiers owned by an upstream dependency at an explicit integration boundary.
+Portuguese remains appropriate when it is academic or authoritative content rather than project engineering nomenclature: rendered academic prose/headings, sample metadata values, bibliography data, official UFC/ABNT/CAPES names or wording, literal Portuguese output under test and identifiers genuinely owned by an upstream dependency at an explicit integration boundary.
 
 ## Permanent enforcement
 
-`tests/checks/engineering_language.py` is the permanent static enforcement surface. It also protects canonical English v3 profile/API identifiers and rejects retired Portuguese technical identifiers in active machine/runtime contracts.
+`tests/checks/engineering_language.py` is the permanent static enforcement surface.
 
-A gate that reports zero violations while known project-owned Portuguese technical diagnostics remain is itself defective. The correct response is to strengthen the detector and translate the diagnostics, not weaken the policy or reclassify project-owned technical messages as academic content.
+It protects canonical project-owned technical identifiers and rejects retired/noncanonical project engineering terminology in active machine/runtime contracts.
 
-## Core Corrections hardening — accepted
-
-The hardening cycle intentionally ran fail-closed. Successive stronger scans exposed previously missed project-owned Portuguese/mixed diagnostics in bibliography/multivolume, algorithm numbering, catalog-card, duplex/vector and back-matter integration surfaces. The project corrected the complete related diagnostic surfaces rather than suppressing individual matches.
-
-Accepted checkpoint: `edeb14b7a96d1cab3ad9551701087ddf4dff059a`.
-
-Acceptance evidence:
-
-- Static contract `33972111694`: SUCCESS;
-- full Linux integration `33972111696`: SUCCESS;
-- permanent audit: `ENGINEERING-LANGUAGE-EVIDENCE status=PASS portuguese_technical_diagnostics=0`;
-- phase governance remained PASS;
-- academic/rendered Portuguese literals remained intentionally preserved.
-
-Historical failed Static runs are retained as evidence that the stronger detector and phase-governance contract stopped hidden debt rather than masking it.
+A gate that reports zero violations while known project-owned Portuguese technical diagnostics remain is defective. The correct response is to strengthen the detector and correct the diagnostics, not to weaken the policy.
 
 ## Scope boundary
 
-Allowed Portuguese includes rendered academic prose/headings, bibliography and metadata data values, official wording/names, literal Portuguese output intentionally exercised by a test, and genuine upstream identifiers at a documented integration boundary.
+Allowed Portuguese includes:
 
-Project-owned comments, diagnostics, CLI/UI messages, test failure messages, machine-state nomenclature and current technical documentation remain English. Broad stopword-style matching is not an acceptable substitute for diagnostic/context-aware detection.
+- rendered academic prose and headings;
+- bibliography and metadata values;
+- official institutional/normative names and wording;
+- literal Portuguese output intentionally exercised by a test;
+- genuine dependency-owned identifiers at a documented integration boundary.
 
-## Canonical identifiers and phase authority
+Project-owned comments, diagnostics, CLI/UI messages, test failure messages, machine-state nomenclature and active technical documentation remain English.
 
-The canonical article profile identifier is `scientific-article`; `article.*` is the project-owned rule namespace. Historical Portuguese profile identifiers are not restored.
+Broad stopword matching is not a substitute for diagnostic/context-aware enforcement.
 
-Current repository/status authority comes from `AGENTS.md`, `docs/RELEASE-STATE.md`, `release/v3-release-candidate.json`, and current Git facts. Historical v3 control and lifecycle documents live under `docs/history/v3/`. Historical roadmap/handoff files may preserve old phase names only as evidence and never define current work.
+## Canonical identifiers and authority
+
+The canonical scientific-article profile identifier is `scientific-article`; `article.*` is the project-owned article rule namespace.
+
+Current repository/status authority comes from:
+
+- current Git/GitHub facts;
+- `release/v3-release-candidate.json`;
+- `docs/RELEASE-STATE.md`;
+- current durable technical documentation.
+
+Historical control/lifecycle documents may preserve earlier terminology as audit evidence under controlled history, but they do not define current engineering language.
 
 ## Ongoing guard
 
-Engineering-language hardening is closed as a correction batch, but the detector remains a permanent regression guard. Any new material advance that reintroduces a project-owned Portuguese technical diagnostic fails closed and must be corrected before acceptance.
+The policy is permanent. Any material change that introduces noncanonical project-owned engineering terminology must be corrected before acceptance.
+
+Academic/rendered Portuguese content must not be anglicized merely to satisfy an engineering-language check.
