@@ -123,13 +123,23 @@ def main() -> None:
         if not runtime or runtime.get("status") not in ACTIVE_STATUSES:
             fail(f"article candidate source is not active in the runtime catalog: {source_id}")
 
-    runtime_file = ROOT / "abntexto-ufc" / "articles.def"
+    runtime_file = ROOT / "abntexto-ufc.cls"
     if article.get("status") != "active-after-source-contract-revalidation":
         fail("scientific-article profile policy must record active source-contract revalidation")
     if article.get("runtime_present") is not True:
         fail("scientific-article runtime must be recorded as present")
     if not runtime_file.is_file():
-        fail("scientific-article runtime is missing")
+        fail("canonical scientific-article runtime is missing")
+    runtime_text = runtime_file.read_text(encoding="utf-8")
+    required_runtime_markers = (
+        "% Scientific article presentation",
+        "type / scientific-article .code:n =",
+        r"\NewDocumentCommand \ufcPrintArticleFrontMatter",
+        r"\NewDocumentCommand \ufcPrintArticleForeignElements",
+    )
+    for marker in required_runtime_markers:
+        if marker not in runtime_text:
+            fail(f"scientific-article runtime marker is missing from canonical class: {marker}")
 
     activation = article.get("activation_evidence")
     if not isinstance(activation, dict):
