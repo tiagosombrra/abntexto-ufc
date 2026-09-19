@@ -14,6 +14,13 @@ import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
 RELEASE_WORKFLOW = ROOT / ".github" / "workflows" / "linux-release-check.yml"
+INTEGRATION_SCOPE_HELPER = ROOT / "tools" / "ci" / "select-integration-scope.py"
+WEB_LITE_HELPER = ROOT / "tools" / "ci" / "run-web-lite-e2e.sh"
+RELEASE_REFERENCE_HELPER = ROOT / "tools" / "ci" / "validate-release-reference.py"
+RELEASE_ASSET_HELPER = ROOT / "tools" / "ci" / "validate-release-assets.py"
+PKGCHECK_DOWNLOAD_HELPER = ROOT / "tools" / "ci" / "validate-pkgcheck-download.py"
+CTAN_CERT_HELPER = ROOT / "tools" / "ci" / "certify-ctan-package.sh"
+RELEASE_SUMMARY_HELPER = ROOT / "tools" / "ci" / "render-release-summary.sh"
 PROFILE_MATRIX = ROOT / "tests" / "integration" / "profile-matrix.sh"
 ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.sh"
 DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh"
@@ -33,6 +40,13 @@ def fail(message: str) -> None:
 def main() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     release_workflow = RELEASE_WORKFLOW.read_text(encoding="utf-8")
+    integration_scope_helper = INTEGRATION_SCOPE_HELPER.read_text(encoding="utf-8")
+    web_lite_helper = WEB_LITE_HELPER.read_text(encoding="utf-8")
+    release_reference_helper = RELEASE_REFERENCE_HELPER.read_text(encoding="utf-8")
+    release_asset_helper = RELEASE_ASSET_HELPER.read_text(encoding="utf-8")
+    pkgcheck_download_helper = PKGCHECK_DOWNLOAD_HELPER.read_text(encoding="utf-8")
+    ctan_cert_helper = CTAN_CERT_HELPER.read_text(encoding="utf-8")
+    release_summary_helper = RELEASE_SUMMARY_HELPER.read_text(encoding="utf-8")
     profile_matrix = PROFILE_MATRIX.read_text(encoding="utf-8")
     article_profile = ARTICLE_PROFILE.read_text(encoding="utf-8")
     distribution_bundles = DISTRIBUTION_BUNDLES.read_text(encoding="utf-8")
@@ -71,32 +85,50 @@ def main() -> None:
     if missing_choices:
         fail("workflow_dispatch scope choices are missing: " + ", ".join(missing_choices))
 
-    for token in (
-        "tests/integration_suites.py --base \"$BASE_SHA\" --head \"$HEAD_SHA\"",
+    workflow_tokens = (
+        "python3 tools/ci/select-integration-scope.py",
         "tests/run.py --mode pr --suite",
-        "manual-auto-fail-closed",
-        "documentation-only-full-pr",
-        "git diff --name-only \"$BASE_SHA\" \"$HEAD_SHA\"",
-        "release_candidate_marker=release/v3-release-candidate.json",
-        "release-candidate-full-pr",
         "unzip",
         'git config --global --add safe.directory "$PWD"',
         "Run Web/Lite browser E2E",
         "id: web_lite_e2e",
         "success()",
-        "tests/integration/web-lite-e2e.py",
-        "artifacts/validation/web-lite-positive.pdf",
+        "sh tools/ci/run-web-lite-e2e.sh",
         "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json",
         "${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log",
         "WEB_LITE_EVIDENCE_DIR",
-        'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
         "Upload Web/Lite browser evidence",
         "steps.web_lite_e2e.outcome != 'skipped'",
         "if-no-files-found: warn",
         "web-lite-e2e-${{ github.run_id }}",
-    ):
+    )
+    for token in workflow_tokens:
         if token not in workflow:
             fail(f"workflow is missing scoped orchestration token: {token}")
+
+    scope_helper_tokens = (
+        'DEFAULT_MARKER = "release/v3-release-candidate.json"',
+        "git_changed_paths",
+        "classify_suite",
+        "manual-auto-fail-closed",
+        "documentation-only-full-pr",
+        "release-candidate-full-pr",
+        '["git", "diff", "--name-only", base, head]',
+        '"tests/integration_suites.py"',
+    )
+    for token in scope_helper_tokens:
+        if token not in integration_scope_helper:
+            fail(f"integration scope helper is missing contract token: {token}")
+
+    web_helper_tokens = (
+        "artifacts/validation/web-lite-positive.pdf",
+        "WEB_LITE_EVIDENCE_DIR",
+        'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
+        "tests/integration/web-lite-e2e.py",
+    )
+    for token in web_helper_tokens:
+        if token not in web_lite_helper:
+            fail(f"Web/Lite helper is missing contract token: {token}")
 
     release_required_tokens = (
         RELEASE_CANDIDATE_MARKER,
@@ -106,31 +138,29 @@ def main() -> None:
         "git rev-parse HEAD",
         "make release-check",
         "Validate canonical release reference provenance",
+        "python3 tools/ci/validate-release-reference.py",
         "artifacts/validation/release-reference-pdf.pdf",
         "artifacts/validation/release-reference-reproducibility.json",
-        "CANONICAL-REFERENCE-EVIDENCE status=PASS",
-        "template/main.tex",
-        "independent_clean_builds",
-        "identical_sha256",
         "Upload canonical reference PDF",
         "canonical-reference-${{ github.run_id }}",
         "make distribution-bundles",
         "Fetch current CTAN pkgcheck archive",
         ".ci-downloads/pkgcheck.zip",
+        "python3 tools/ci/validate-pkgcheck-download.py",
         "pkgcheck-download.sha256",
         "--retry-all-errors",
         "--proto '=https'",
-        "cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip",
         "Read release version",
         "id: release-version",
         'version=$(make --no-print-directory version)',
         "steps.release-version.outputs.version",
         "RELEASE_VERSION",
-        'dist/abntexto-ufc-$RELEASE_VERSION.zip',
+        "python3 tools/ci/validate-release-assets.py",
+        "sh tools/ci/certify-ctan-package.sh",
+        "sh tools/ci/render-release-summary.sh",
         "dist/abntexto-ufc-${{ steps.release-version.outputs.version }}.zip",
         "dist/abntexto-ufc-template-${{ steps.release-version.outputs.version }}.zip",
         "dist/abntexto-ufc-overleaf-${{ steps.release-version.outputs.version }}.zip",
-        "tests/integration/release-review-pairs.sh",
         "Upload seven-profile review pairs",
         "artifacts/release-review-pairs/**",
         "Upload certified distribution assets",
@@ -142,6 +172,50 @@ def main() -> None:
             "Linux release check is missing candidate provenance/dynamic-artifact tokens: "
             + ", ".join(missing_release_tokens)
         )
+    release_reference_tokens = (
+        "CANONICAL-REFERENCE-EVIDENCE status=PASS",
+        "template/main.tex",
+        "independent_clean_builds",
+        "identical_sha256",
+    )
+    for token in release_reference_tokens:
+        if token not in release_reference_helper:
+            fail(f"release reference helper is missing contract token: {token}")
+
+    release_asset_tokens = (
+        'PACKAGE_ID = "abntexto-ufc"',
+        'f"{PACKAGE_ID}-{version}.zip"',
+        'f"{PACKAGE_ID}-template-{version}.zip"',
+        'f"{PACKAGE_ID}-overleaf-{version}.zip"',
+        '"SHA256SUMS"',
+    )
+    for token in release_asset_tokens:
+        if token not in release_asset_helper:
+            fail(f"release asset helper is missing contract token: {token}")
+
+    pkgcheck_download_tokens = (
+        "zipfile.ZipFile",
+        "Current CTAN pkgcheck archive is corrupt",
+        "PKGCHECK-DOWNLOAD-EVIDENCE status=PASS",
+    )
+    for token in pkgcheck_download_tokens:
+        if token not in pkgcheck_download_helper:
+            fail(f"pkgcheck download helper is missing contract token: {token}")
+
+    ctan_cert_tokens = (
+        "cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip",
+        'dist/abntexto-ufc-$RELEASE_VERSION.zip',
+        "tests/integration/release-review-pairs.sh",
+        "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS",
+    )
+    for token in ctan_cert_tokens:
+        if token not in ctan_cert_helper:
+            fail(f"CTAN certification helper is missing contract token: {token}")
+
+    for token in ("## Linux release validation", "### CTAN pkgcheck", "### Maintainer visual review"):
+        if token not in release_summary_helper:
+            fail(f"release summary helper is missing contract token: {token}")
+
     if "dist/abntexto-ufc-ctan-" in release_workflow:
         fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
     if "--insecure" in release_workflow or "curl -k " in release_workflow:
@@ -196,8 +270,14 @@ def main() -> None:
         ["tests/run.py", "tests/integration/scientific-article-recommendations.sh"]
     ) != ("article",):
         fail("orchestration plus Step 5 article changes must select article, not complete")
-    if infer_suites(["abntexto-ufc/objects.def"]) != ("objects",):
-        fail("object runtime changes must select the objects suite")
+    if infer_suites(["abntexto-ufc.cls"]) != ("complete",):
+        fail("canonical runtime changes must force complete integration")
+    if infer_suites(["tools/ci/select-integration-scope.py"]) != ("smoke",):
+        fail("integration scope helper changes must select smoke")
+    if infer_suites(["tools/ci/validate-release-reference.py"]) != ("smoke",):
+        fail("release helper changes must select smoke; Linux Release Check owns heavy certification")
+    if infer_suites(["tools/ci/run-web-lite-e2e.sh"]) != ("web-lite",):
+        fail("Web/Lite helper changes must select the web-lite suite")
     if infer_suites(["unknown/technical.file"]) != ("complete",):
         fail("unknown technical paths must fail closed to complete")
     if infer_suites([RELEASE_CANDIDATE_MARKER]) != ("complete",):
