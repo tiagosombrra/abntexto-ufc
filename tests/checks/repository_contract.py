@@ -15,7 +15,9 @@ REQUIRED_PATHS = {
     "tests/run.py",
     "docs/ARCHITECTURE.md",
     "docs/ENGINEERING-LANGUAGE.md",
-    "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
+    "docs/RELEASE-STATE.md",
+    ".gitattributes",
+    ".editorconfig",
     "docs/history/v3/audits/V3.0.2-REPOSITORY-HYGIENE-RECEIPT.md",
     "docs/WINDOWS-FONT-SUPPORT.md",
     "release/v3-release-candidate.json",
@@ -29,6 +31,7 @@ FORBIDDEN_EXACT_PATHS = {
     "docs/NAMING.md",
     "docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md",
     "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
+    "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
     "release/final-audit.json",
     "release/n15-b1-source-authority.json",
     "release/n15-b2a-article-contract.json",
@@ -93,6 +96,10 @@ RELOCATED_HISTORY_PATHS = (
 )
 
 FORBIDDEN_PREFIXES = (
+    ".release/",
+    "artifacts/",
+    ".ci-downloads/",
+    "_site/",
     "standards/history/",
     "normativa/",
     "tests/normativa/",
@@ -155,6 +162,8 @@ TEXT_SUFFIXES = {
 }
 
 STALE_CONTENT_FRAGMENTS = (
+    "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
+    "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
     "normativa/",
     "tests/normativa/",
     "tests/fixtures/pretextuais/",

@@ -1,50 +1,10 @@
 # GitHub / CTAN Release Guide — abntexto-ufc
 
-Updated: 2026-09-17
+This document defines the reusable publication discipline for `abntexto-ufc`. Current publication facts belong in `docs/RELEASE-STATE.md`; completed release-specific evidence belongs under `docs/history/v3/` and `release/history/v3/`.
 
-This document defines the publication discipline for `abntexto-ufc`. GitHub/repository finalization and CTAN publication are separate operations: CTAN may be completed later without rebuilding or mutating certified GitHub release bytes.
+GitHub publication and CTAN submission are separate operations. CTAN may be completed later without rebuilding or mutating certified GitHub release bytes.
 
-## Current state
-
-| Fact | State |
-|---|---|
-| GitHub published baseline | `v3.0.2` — immutable certified assets |
-| v3.0.2 CTAN | exact certified archive submitted on 2026-09-17; external processing/closeout tracked in #313 |
-| Active development line | `v3.0.3` |
-| Active marker | `release/v3-release-candidate.json` |
-| v3.0.3 candidate state | `NOT_FROZEN` |
-| v3.0.3 candidate SHA | `null` |
-| v3.0.3 publication authorization | `false` |
-| v3.0.3 tracking | issue #328 |
-| v3.0.3 implementation | PR #329 — merged |
-| release-state reconciliation | PR #330 — merged |
-
-The active release authority is `docs/V3.0.3-DISTRIBUTION-CORRECTION.md` plus the machine marker. Historical v3.0.2 release state is preserved under `release/history/v3/`.
-
-## Immutable v3.0.2 receipt
-
-Certified source:
-
-```text
-3a0904324e23bfc65852d730f2647ce47dc65105
-```
-
-Linux Release Check:
-
-```text
-34876949362
-SCOPE=complete PASS=38 FAIL=0 SKIP=0
-```
-
-Certified publication SHA-256 values:
-
-- CTAN: `f309ee3ddc8b748dbb1b1c81b542d3c0f24fc7a26a407887ad674d8f71c3c9dd`;
-- Template: `e88d93d54099482564d2194c2e0d925640312d321897f8b553f623c451615552`;
-- Overleaf: `5fb44b7600e5020784b0de1050ad1d3e5e2b529c43b3bcff6d4aa9082880a763`.
-
-The annotated `v3.0.2` tag, GitHub Release assets and submitted CTAN ZIP must never be rebuilt, amended, replaced or retargeted. The user-bundle institutional-mark defect discovered after publication is corrected only by v3.0.3.
-
-## Distribution contract from v3.0.3 onward
+## Distribution contract
 
 A release build produces:
 
@@ -57,19 +17,20 @@ A release build produces:
 
 The CTAN archive must contain:
 
-- one generated monolithic project-owned `abntexto-ufc.cls`;
-- minimal documentation/example needed by the package;
-- no project-owned modular `.def` files;
+- one canonical project-owned `abntexto-ufc.cls` runtime;
+- minimal documentation/example required by the package;
 - no UFC institutional mark asset;
 - no proprietary Microsoft font files;
 - no repository engineering/control-plane infrastructure;
 - an example configured with `coat-of-arms=false`.
 
+The exact internal source architecture may evolve, but the CTAN surface must remain self-contained for the project-owned runtime and must not expose development-only modules unless a future reviewed packaging contract explicitly requires them.
+
 ### Template surface
 
 The Template bundle must:
 
-- include the editable TCC tutorial and runtime;
+- include the editable TCC tutorial and supported project runtime;
 - include exactly `assets/institutional/ufc-coat-of-arms.png`;
 - preserve `coat-of-arms=true` in the canonical tutorial;
 - include `abntexto-ufc-reference.pdf` generated from that exact bundled source/asset;
@@ -79,21 +40,11 @@ The Template bundle must:
 
 The Overleaf bundle has the same institutional/reference requirements as Template and additionally vendors the pinned upstream `abntexto.cls` needed for reproducible/self-contained Overleaf use.
 
-The distribution tests must rebuild Template/Overleaf source and prove reference-PDF identity. CTAN remains deliberately sanitized for institutional marks; Template/Overleaf are not.
+Distribution tests must rebuild Template/Overleaf source and prove reference-PDF identity.
 
 ## Candidate lifecycle
 
-Normal development remains:
-
-```text
-candidate_state = NOT_FROZEN
-candidate_sha = null
-publication_authorized = false
-```
-
-A workflow-produced archive in this state is engineering evidence only.
-
-Before freeze, one exact source SHA must pass:
+Normal unreleased development begins without publication authority. Before freeze, one exact source SHA must pass:
 
 1. Static Contract;
 2. complete Linux Integration;
@@ -111,36 +62,33 @@ Release invariant:
 certified source SHA == visually approved source SHA == tagged source SHA == source SHA of published release bytes
 ```
 
-## v3.0.3 GitHub finalization
+## Freeze and GitHub publication
 
-The final repository-audit lot removes stale control-plane residue without changing runtime/template semantics and deliberately touches the active marker while preserving `NOT_FROZEN` so that complete release validation runs again.
+After one exact source SHA satisfies all technical and human gates:
 
-After that lot is merged:
+1. record that already-certified source SHA as the frozen candidate;
+2. authorize publication without changing the publication source;
+3. merge any control-plane-only freeze receipt through the protected branch;
+4. create an annotated version tag pointing to the certified source SHA, not a later control commit;
+5. publish a GitHub Release using only the exact retained distribution artifacts from the certified workflow;
+6. verify the published asset digests against the certified `SHA256SUMS`;
+7. record a durable publication receipt;
+8. move completed release-specific narrative/evidence out of active documentation.
 
-1. identify the exact resulting `main` SHA;
-2. require the exact-main release workflows to pass;
-3. retain the exact canonical PDF, seven review pairs, distribution ZIP and validation evidence;
-4. inspect/compare those exact-source PDFs and obtain explicit maintainer visual acceptance;
-5. freeze the already-certified source SHA by updating the marker to `FROZEN`, binding `candidate_sha` to that source and setting `publication_authorized=true`;
-6. create annotated tag `v3.0.3` pointing to the certified source SHA;
-7. create the GitHub Release using only the exact certified distribution artifact and its `SHA256SUMS`.
-
-The freeze-control commit itself is not the publication source; the tag resolves to the earlier exact candidate SHA that generated the certified bytes.
+Never rebuild artifacts merely to upload them to GitHub Releases.
 
 ## Deferred CTAN follow-up
 
-CTAN publication is explicitly allowed to occur later. Do not hold GitHub repository cleanup or the GitHub Release open merely to wait for external CTAN timing.
+When CTAN publication occurs after GitHub publication:
 
-When ready to submit v3.0.3 to CTAN:
-
-1. use only the canonical `abntexto-ufc-3.0.3.zip` from the already-published/certified GitHub release artifact;
-2. verify its SHA-256 against the release `SHA256SUMS`;
+1. obtain the canonical `abntexto-ufc-<version>.zip` from the already-published GitHub Release;
+2. verify its SHA-256 against the published `SHA256SUMS`;
 3. do not rebuild the archive locally;
 4. submit that exact archive through CTAN;
-5. record the CTAN receipt separately.
+5. record the external submission/publication receipt without modifying the frozen GitHub release.
 
-The pending v3.0.2 CTAN closeout remains issue #313. The v3.0.3 GitHub release remains issue #328. CTAN status must never be used as justification to change previously certified source or release bytes.
+## Published releases
 
-## Historical v3.0.1 procedure
+Published tags, GitHub Release assets and checksums are immutable project evidence. Any correction belongs to a later version.
 
-The v3.0.1-specific procedure remains preserved at `docs/history/v3/release/CTAN-RELEASE-v3.0.1.md` as historical evidence only.
+For the current published version and exact hashes, read `docs/RELEASE-STATE.md`.

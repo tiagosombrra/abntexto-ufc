@@ -50,3 +50,23 @@ Thumbs.db
 # Python generated files
 __pycache__/
 *.py[cod]
+
+# Local release / audit material
+.release/
+artifacts/
+.ci-downloads/
+_site/
+
+# Generated release/document artifacts
+*.pdf
+*.zip
+
+# Additional LaTeX generated files
+*.loa
+*.loc
+*.lol
+*.nlo
+*.nls
+*.nav
+*.snm
+*.vrb
