@@ -17,7 +17,7 @@ This document converts the union of the two annotated v1.1.1 review PDFs supplie
 
 The consolidated review state is **34 PASS, 0 PARTIAL, 0 FAIL, 0 NORMATIVE-REVIEW = 34 items**.
 
-All review items have now been reconciled against the applicable current technical/institutional authority and converted into executable or presentation evidence where appropriate. Reference PDF Validation previously closed with a complete **55/55-page visual PASS with 0 unexplained visual failures**; the later Scientific Article and Final Certification phases preserved the shared foundation.
+All review items are reconciled against the applicable current technical/institutional authority and are represented by executable, rendered or manual-review evidence as appropriate. Current acceptance depends on the evidence referenced by this contract and on the repository's active validation gates.
 
 Item 33 was closed on 2026-09-09 after direct review of the primary ABNT NBR 6023:2025 text. The authoritative locators used for closure are sections **6.6**, **8.1.2**, **8.1.2.2–8.1.2.3**, **8.13**, and **9.1**, together with the standard's examples for online references, legal-person authorship/jurisdiction and repeated authorship. The resulting behavior is regression-tested in `tests/integration/references-6023.sh` with controlled fixtures.
 
@@ -77,4 +77,4 @@ The runtime makes repeated-author rendering explicit through the `biblatex-abnt`
 
 No item is closed merely because source text looks plausible or a related test is green. Closure requires the applicable combination of authority/project classification, correct runtime/reference behavior, positive regression evidence, negative evidence where machine-detectable, and canonical presentation evidence when presentation is part of the requirement.
 
-The same discipline applies to every later **material advance**, and every roadmap phase still requires its own **phase-end regression** before closure.
+The same discipline applies to every later material change: affected evidence must be revalidated at the scope required by the change before acceptance.
