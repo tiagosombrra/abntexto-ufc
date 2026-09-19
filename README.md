@@ -209,7 +209,7 @@ As marcas institucionais não são cobertas pela LPPL do projeto. A inclusão do
 
 ## Como uma versão é certificada
 
-As releases da série 3 usam um processo fail-closed. O mesmo candidato precisa passar:
+As releases do projeto usam um processo fail-closed. O mesmo candidato precisa passar:
 
 - contrato estático;
 - regressão Linux completa;
@@ -250,6 +250,9 @@ make distribution-bundles
 - Issues: https://github.com/tiagosombrra/abntexto-ufc/issues
 - Código: https://github.com/tiagosombrra/abntexto-ufc
 - Releases: https://github.com/tiagosombrra/abntexto-ufc/releases
+- Contribuição: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Segurança: [`SECURITY.md`](SECURITY.md)
+- Citação acadêmica: [`CITATION.cff`](CITATION.cff)
 
 Ao relatar um problema, informe o perfil de documento, engine LaTeX, versão da classe e um exemplo mínimo quando possível.
 
