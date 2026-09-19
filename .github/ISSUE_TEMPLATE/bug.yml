@@ -36,7 +36,7 @@ body:
     id: profile
     attributes:
       label: Document profile
-      description: For example, undergraduate-capstone, dissertation, thesis, research-project or scientific-article.
+      description: For example, undergraduate-capstone, specialization-capstone, masters-thesis, doctoral-thesis, research-project, anonymized-research-project or scientific-article.
     validations:
       required: false
   - type: input
