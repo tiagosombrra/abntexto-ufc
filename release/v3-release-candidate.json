@@ -1,21 +1,14 @@
 {
-  "schema_version": 18,
+  "schema_version": 19,
   "project": "abntexto-ufc",
-  "lifecycle": "active-release-marker",
+  "lifecycle": "published-release-marker",
   "development_line": "3.0.3",
   "target_version": "3.0.3",
   "candidate_state": "FROZEN",
   "candidate_sha": "b98270f23b1b384773c409869dfb05d71acd8638",
   "publication_authorized": true,
-  "tracking_issue": 328,
-  "authority": "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
-  "published_baseline": {
-    "version": "3.0.2",
-    "immutable": true,
-    "tag": "v3.0.2",
-    "historical_state": "release/history/v3/v3.0.2-release-candidate.json",
-    "ctan_state": "processing"
-  },
+  "tracking_issue": null,
+  "authority": "docs/RELEASE-STATE.md",
   "policy": {
     "marker_change_forces_complete_linux_integration": true,
     "candidate_must_bind_one_immutable_sha": true,
@@ -23,7 +16,7 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.3 is frozen and publication-authorized on exact source SHA b98270f23b1b384773c409869dfb05d71acd8638. Static Contract #602, Linux Integration #514 and Linux Release Check run 35279315637 passed with SCOPE=complete PASS=38 FAIL=0 SKIP=0. The maintainer explicitly approved the exact canonical PDF generated from this SHA on 2026-09-17. Certified distribution digests are recorded from the exact run #186 SHA256SUMS; tagging and GitHub Release publication must use this source SHA and those exact artifacts. CTAN remains a separate later follow-up.",
+  "note": "v3.0.3 is published and frozen on exact source SHA b98270f23b1b384773c409869dfb05d71acd8638. This root marker is now a steady-state publication receipt, not an open candidate-control issue. CTAN v3.0.3 remains a separate deferred external follow-up; published GitHub bytes must not be rebuilt or replaced.",
   "certification": {
     "static_contract_run": 602,
     "linux_integration_run": 514,
@@ -37,5 +30,15 @@
     "maintainer_visual_acceptance": "PASS",
     "maintainer_visual_acceptance_date": "2026-09-17",
     "sha256sums_sha256": "c526a8f6cc8a51ca3cdd289e3078f23d2c747c3af1b4a55d2b5dd04c67cde95d"
-  }
+  },
+  "publication_state": "PUBLISHED",
+  "published_release": {
+    "version": "3.0.3",
+    "tag": "v3.0.3",
+    "release_id": 391878053,
+    "published_at": "2026-09-19T01:48:03Z",
+    "source_sha": "b98270f23b1b384773c409869dfb05d71acd8638",
+    "immutable_by_project_policy": true
+  },
+  "active_development_candidate": null
 }
