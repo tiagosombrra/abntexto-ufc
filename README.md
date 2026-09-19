@@ -30,7 +30,7 @@ O `abntexto-ufc` organiza em uma única classe LaTeX:
 - validadores Web/Lite e CLI/Deep;
 - distribuição separada para CTAN, uso local e Overleaf.
 
-A série 3 usa uma API pública única em inglês. Ela é incompatível em nível de API com a série 2; projetos antigos devem ser migrados, e não misturados com comandos das duas linhas.
+O projeto usa uma única API pública canônica em inglês. A documentação atual descreve somente essa superfície suportada, enquanto o conteúdo acadêmico produzido continua naturalmente em português quando aplicável.
 
 ## Para quem é
 
