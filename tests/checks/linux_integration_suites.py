@@ -172,6 +172,50 @@ def main() -> None:
             "Linux release check is missing candidate provenance/dynamic-artifact tokens: "
             + ", ".join(missing_release_tokens)
         )
+    release_reference_tokens = (
+        "CANONICAL-REFERENCE-EVIDENCE status=PASS",
+        "template/main.tex",
+        "independent_clean_builds",
+        "identical_sha256",
+    )
+    for token in release_reference_tokens:
+        if token not in release_reference_helper:
+            fail(f"release reference helper is missing contract token: {token}")
+
+    release_asset_tokens = (
+        'PACKAGE_ID = "abntexto-ufc"',
+        'f"{PACKAGE_ID}-{version}.zip"',
+        'f"{PACKAGE_ID}-template-{version}.zip"',
+        'f"{PACKAGE_ID}-overleaf-{version}.zip"',
+        '"SHA256SUMS"',
+    )
+    for token in release_asset_tokens:
+        if token not in release_asset_helper:
+            fail(f"release asset helper is missing contract token: {token}")
+
+    pkgcheck_download_tokens = (
+        "zipfile.ZipFile",
+        "Current CTAN pkgcheck archive is corrupt",
+        "PKGCHECK-DOWNLOAD-EVIDENCE status=PASS",
+    )
+    for token in pkgcheck_download_tokens:
+        if token not in pkgcheck_download_helper:
+            fail(f"pkgcheck download helper is missing contract token: {token}")
+
+    ctan_cert_tokens = (
+        "cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip",
+        'dist/abntexto-ufc-$RELEASE_VERSION.zip',
+        "tests/integration/release-review-pairs.sh",
+        "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS",
+    )
+    for token in ctan_cert_tokens:
+        if token not in ctan_cert_helper:
+            fail(f"CTAN certification helper is missing contract token: {token}")
+
+    for token in ("## Linux release validation", "### CTAN pkgcheck", "### Maintainer visual review"):
+        if token not in release_summary_helper:
+            fail(f"release summary helper is missing contract token: {token}")
+
     if "dist/abntexto-ufc-ctan-" in release_workflow:
         fail("Release workflow must not reintroduce a redundant separate CTAN archive.")
     if "--insecure" in release_workflow or "curl -k " in release_workflow:
@@ -226,8 +270,14 @@ def main() -> None:
         ["tests/run.py", "tests/integration/scientific-article-recommendations.sh"]
     ) != ("article",):
         fail("orchestration plus Step 5 article changes must select article, not complete")
-    if infer_suites(["abntexto-ufc/objects.def"]) != ("objects",):
-        fail("object runtime changes must select the objects suite")
+    if infer_suites(["abntexto-ufc.cls"]) != ("complete",):
+        fail("canonical runtime changes must force complete integration")
+    if infer_suites(["tools/ci/select-integration-scope.py"]) != ("smoke",):
+        fail("integration scope helper changes must select smoke")
+    if infer_suites(["tools/ci/validate-release-reference.py"]) != ("smoke",):
+        fail("release helper changes must select smoke; Linux Release Check owns heavy certification")
+    if infer_suites(["tools/ci/run-web-lite-e2e.sh"]) != ("web-lite",):
+        fail("Web/Lite helper changes must select the web-lite suite")
     if infer_suites(["unknown/technical.file"]) != ("complete",):
         fail("unknown technical paths must fail closed to complete")
     if infer_suites([RELEASE_CANDIDATE_MARKER]) != ("complete",):
