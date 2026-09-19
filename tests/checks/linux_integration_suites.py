@@ -14,6 +14,13 @@ import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
 RELEASE_WORKFLOW = ROOT / ".github" / "workflows" / "linux-release-check.yml"
+INTEGRATION_SCOPE_HELPER = ROOT / "tools" / "ci" / "select-integration-scope.py"
+WEB_LITE_HELPER = ROOT / "tools" / "ci" / "run-web-lite-e2e.sh"
+RELEASE_REFERENCE_HELPER = ROOT / "tools" / "ci" / "validate-release-reference.py"
+RELEASE_ASSET_HELPER = ROOT / "tools" / "ci" / "validate-release-assets.py"
+PKGCHECK_DOWNLOAD_HELPER = ROOT / "tools" / "ci" / "validate-pkgcheck-download.py"
+CTAN_CERT_HELPER = ROOT / "tools" / "ci" / "certify-ctan-package.sh"
+RELEASE_SUMMARY_HELPER = ROOT / "tools" / "ci" / "render-release-summary.sh"
 PROFILE_MATRIX = ROOT / "tests" / "integration" / "profile-matrix.sh"
 ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.sh"
 DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh"
@@ -33,6 +40,13 @@ def fail(message: str) -> None:
 def main() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     release_workflow = RELEASE_WORKFLOW.read_text(encoding="utf-8")
+    integration_scope_helper = INTEGRATION_SCOPE_HELPER.read_text(encoding="utf-8")
+    web_lite_helper = WEB_LITE_HELPER.read_text(encoding="utf-8")
+    release_reference_helper = RELEASE_REFERENCE_HELPER.read_text(encoding="utf-8")
+    release_asset_helper = RELEASE_ASSET_HELPER.read_text(encoding="utf-8")
+    pkgcheck_download_helper = PKGCHECK_DOWNLOAD_HELPER.read_text(encoding="utf-8")
+    ctan_cert_helper = CTAN_CERT_HELPER.read_text(encoding="utf-8")
+    release_summary_helper = RELEASE_SUMMARY_HELPER.read_text(encoding="utf-8")
     profile_matrix = PROFILE_MATRIX.read_text(encoding="utf-8")
     article_profile = ARTICLE_PROFILE.read_text(encoding="utf-8")
     distribution_bundles = DISTRIBUTION_BUNDLES.read_text(encoding="utf-8")
