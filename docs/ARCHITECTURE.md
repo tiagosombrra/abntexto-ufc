@@ -1,8 +1,8 @@
 # abntexto-ufc v3 Architecture
 
-Updated: 2026-09-13
+Updated: 2026-09-18
 
-This document defines the engineering architecture for the `abntexto-ufc` v3 series; the current development/release target is 3.0.2. It governs repository organization and project-owned module/API ownership; it does not create academic formatting requirements.
+This document defines the engineering architecture for the `abntexto-ufc` v3 series. The latest published release is v3.0.3 and no new runtime development candidate is active in post-release steady state. It governs repository organization and project-owned runtime/API ownership; it does not create academic formatting requirements.
 
 > **Lifecycle note:** architecture rules are current unless explicitly described as historical chronology. Old phase/PR status statements retained later in this file are implementation history, not current release-state authority. Current repository/release state is controlled by `AGENTS.md`, `docs/RELEASE-STATE.md`, and `release/v3-release-candidate.json`; closed Issues and historical v3 control files are audit evidence only.
 
