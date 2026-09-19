@@ -14,7 +14,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Published at | `2026-09-19T01:48:03Z` |
 | Maintainer visual acceptance | PASS |
 | CTAN v3.0.3 | deferred external follow-up |
-| Active development candidate | none |
+| Active development candidate | `v3.0.4` — UNRELEASED / NOT_FROZEN |
 
 The current `main` branch may contain repository-maintenance changes made after publication. Those changes do not alter the already-published v3.0.3 source, tag, release assets or checksums.
 
@@ -40,9 +40,9 @@ Published release assets are immutable project evidence and must not be rebuilt 
 
 ## Current repository lifecycle
 
-The repository is in post-v3.0.3 steady state. No unreleased runtime development line is active yet.
+The published baseline remains v3.0.3. An unreleased v3.0.4 development line is active for repository modernization and canonical-class consolidation. It has no frozen candidate SHA and no publication authorization.
 
-Repository-maintenance work may improve documentation, governance, CI, repository layout and contributor experience without changing the published v3.0.3 release. Any future runtime or public-API change must open a new unreleased development line and must never retarget or mutate existing version tags/releases.
+The v3.0.4 line may improve repository structure, governance, CI, contributor experience and runtime-source organization while preserving the v3 public API unless a separately reviewed change explicitly states otherwise. Published v3.0.3 tags/releases/assets remain immutable.
 
 ## Authority order
 
