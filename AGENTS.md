@@ -25,13 +25,13 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Active runtime development candidate | `v3.0.4` / issue #335 / NOT_FROZEN |
 | Active release issue | #335 (development tracking; not publication authorization) |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
-| Branch hygiene | steady state: `main` plus only active short-lived PR branches; merged heads auto-delete |
+| Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
 Published version tags/releases and their assets must never be rewritten, retargeted or rebuilt. Any future runtime/public-API change belongs to a new unreleased development line.
 
 ## Active and historical authority
 
-Current steady-state authority consists of:
+Current authority consists of:
 
 - `docs/RELEASE-STATE.md`;
 - `release/v3-release-candidate.json`;
