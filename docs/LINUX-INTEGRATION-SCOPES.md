@@ -1,63 +1,74 @@
 # Linux Integration Scopes
 
-Updated: 2026-09-09  
-Status: ACCEPTED — RELEASE EXACT-MAIN COMPLETE-LINUX GUARD ACTIVE
+Updated: 2026-09-19
 
 ## Purpose
 
-The permanent `Linux integration` workflow supports bounded suites for intermediate work so small changes receive faster feedback. Scoped suites optimize feedback time; they do not weaken phase acceptance. Every phase transition/closeout requires `complete` Linux on the same immutable phase-end candidate.
+The permanent `Linux integration` workflow supports bounded suites for fast pull-request feedback while preserving fail-closed behavior for changes whose impact is broad or unknown.
+
+Scoped suites are an optimization. They do not replace complete release-grade validation when the change affects the canonical runtime, standards authority, release control or another force-complete surface.
 
 ## Available scopes
 
-| Scope | Intended use | Can close a phase? |
-|---|---|---|
-| `auto` | infer narrowest safe suite from changed paths | No |
-| `complete` | shared/core/standards, unknown technical paths, certification/release markers and phase-end regression | **Yes, with all other phase-end gates** |
-| `article` | Scientific Article implementation/evidence | No |
-| `reference-document` | canonical reference source/corpus | No |
-| `reference-pdf` | presentation-sensitive reference PDF | No |
-| `frontmatter` | cover/title/approval/pre-textual | No |
-| `layout` | page/body/geometry/math/quotation | No |
-| `objects` | figures/tables/code/algorithms/documentary sources | No |
-| `bibliography` | references/citation evidence | No |
-| `backmatter` | appendices/annexes/index/glossary | No |
-| `research-project` | research-project profile | No |
-| `profiles` | non-article profile compatibility | No |
-| `smoke` | orchestration-only changes | No |
-
-## Automatic selection
-
-For pull requests, `auto` evaluates the relevant changed-path window after checkout. Synchronize events prefer previous-head to new-head when both commits are available; otherwise selection fails closed to the full PR range. Documentation-only incremental changes may skip heavy integration.
-
-For canonical `main`, a push that changes `release/v3-release-candidate.json` always runs `scope=complete`. This guarantees that the exact post-squash Release candidate SHA receives complete Linux evidence instead of relying on a PR-head result or an incremental documentation-only scope decision.
-
-| Changed-path/event class | Scope behavior |
+| Scope | Intended use |
 |---|---|
-| orchestration only | `smoke` |
-| orchestration + recognized domain | bounded domain/union |
-| orchestration + unknown technical path | `complete` |
-| force-complete shared/core/standards path | `complete` |
-| `release/final-certification-candidate.json` in PR | `complete` — historical Final Certification candidate transport |
-| `release/v3-release-candidate.json` in PR | **`complete` — Release phase-end candidate transport** |
-| `release/v3-release-candidate.json` pushed to `main` | **`complete` — exact-main Release certification** |
-| unknown technical path | `complete` |
+| `auto` | infer the safest scope from the complete PR diff |
+| `complete` | run all PR integration checks |
+| `article` | scientific-article behavior/evidence |
+| `reference-document` | canonical reference source/corpus |
+| `reference-pdf` | presentation-sensitive reference PDF |
+| `frontmatter` | cover/title/approval/pre-textual behavior |
+| `layout` | page/body/geometry/math/quotation |
+| `objects` | figures/tables/code/algorithms/documentary sources |
+| `bibliography` | references/citation behavior |
+| `backmatter` | appendices/annexes/index/glossary |
+| `research-project` | research-project profile |
+| `profiles` | supported non-article profile compatibility |
+| `distribution` | public/distribution bundle behavior |
+| `web-lite` | browser validator source + E2E preparation |
+| `smoke` | orchestration-only changes |
 
-## Candidate-marker provenance
+## Automatic pull-request selection
 
-Final Certification exposed an orchestration defect when a phase-end candidate workflow concluded `success` while heavy Linux was skipped. Release preserves the fail-closed correction:
+For non-draft pull requests, `auto` classifies the **complete PR diff** rather than only the last synchronize window. This prevents a later documentation-only commit from replacing a required technical run with a superficial skip.
 
-1. `release/final-certification-candidate.json` remains historical Final Certification transport;
-2. `release/v3-release-candidate.json` is the Release-specific transport;
-3. marker-only and marker-plus-orchestration PR cases infer `complete`;
-4. the permanent `Linux release check` includes the Release marker;
-5. the permanent `Linux integration` workflow also runs on `main` pushes that change the Release marker and forces `complete`;
-6. the marker is provenance/orchestration only and does not alter product or normative behavior.
+Current behavior:
 
-`docs/history/v3/release/V3-RELEASE-PHASE-END.md` preserves the historical v3 release semantics. Current execution semantics are owned by the permanent workflows, `tests/integration_suites.py`, and the active release marker contract.
+- documentation-only changes may skip heavy Linux integration;
+- orchestration-only changes select `smoke`;
+- recognized test/domain paths select the relevant bounded suite or union;
+- unknown technical paths fail closed to `complete`;
+- `Makefile`, the canonical `abntexto-ufc.cls`, controlled standards paths and the active release marker force `complete`;
+- if `release/v3-release-candidate.json` changes anywhere in the PR, `complete` dominates all narrower scope decisions.
 
-## Runner importability invariant
+The exact mapping is implemented by `tests/integration_suites.py` and protected by `tests/checks/linux_integration_suites.py`.
 
-The coordinated runner is consumed through direct execution and dynamic loading by normative traceability/false-coverage checks. Runner-owned sibling modules such as `tests/integration_suites.py` must resolve in both contexts.
+## Main-branch release-marker behavior
+
+A push to `main` that changes `release/v3-release-candidate.json` forces complete Linux integration.
+
+This ensures that a control transition such as development-state change or candidate freeze receives validation on the exact post-merge `main` SHA rather than relying only on a PR-head result.
+
+The marker is release/development-state provenance and orchestration. It does not by itself alter document formatting semantics.
+
+## Complete validation
+
+Use complete Linux integration when:
+
+- the canonical runtime changes;
+- standards/current authority changes;
+- the release marker changes;
+- an unknown technical path changes;
+- a bounded scope cannot safely represent the impact;
+- release-grade certification is required.
+
+A successful workflow where heavy integration was skipped is not evidence of a complete validation run.
+
+Linux Release Check is a distinct release-grade workflow and is not interchangeable with Linux Integration.
+
+## Runner importability
+
+The coordinated runner is used both through direct execution and dynamic loading by evidence/traceability checks. Runner-owned sibling modules such as `tests/integration_suites.py` must resolve in both contexts.
 
 ## Manual use
 
@@ -67,8 +78,16 @@ python3 tests/run.py --mode pr --suite profiles,article
 python3 tests/run.py --mode pr --suite complete
 ```
 
-Use `python3 tests/run.py --list-suites` to inspect the current mapping.
+Use:
 
-## Phase-end rule
+```sh
+python3 tests/run.py --list-suites
+```
 
-Every phase closeout requires `complete` Linux integration on the same immutable **phase-end regression** candidate SHA together with Static and phase-specific acceptance evidence. Release additionally requires the permanent `Linux release check`. Workflow `success` with heavy integration skipped never satisfies a `complete`-scope phase predicate.
+to inspect the current suite/check mapping.
+
+## Acceptance rule
+
+A material change is accepted only with the validation scope required by its actual impact.
+
+When complete validation is required, Static Contract, complete Linux Integration and any required release-grade checks must all refer to the intended candidate/source state. A narrow green suite cannot be substituted for a required complete run.
