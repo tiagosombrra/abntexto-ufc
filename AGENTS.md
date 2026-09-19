@@ -25,13 +25,13 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Active runtime development candidate | `v3.0.4` / issue #335 / NOT_FROZEN |
 | Active release issue | #335 (development tracking; not publication authorization) |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
-| Branch hygiene | steady state: `main` plus only active short-lived PR branches; merged heads auto-delete |
+| Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
 Published version tags/releases and their assets must never be rewritten, retargeted or rebuilt. Any future runtime/public-API change belongs to a new unreleased development line.
 
 ## Active and historical authority
 
-Current steady-state authority consists of:
+Current authority consists of:
 
 - `docs/RELEASE-STATE.md`;
 - `release/v3-release-candidate.json`;
@@ -119,13 +119,13 @@ Short-lived PR branches must disappear after merge. TODO/FIXME markers and stale
 
 ## Runtime-source architecture changes
 
-The published v3.0.3 release used modular development sources under `abntexto-ufc/` and a generated monolithic CTAN class. The active v3.0.4 line consolidates that runtime into one canonical `abntexto-ufc.cls`; this refactor must:
+The current project-owned runtime is one canonical `abntexto-ufc.cls`. Runtime-source changes must:
 
-1. open a new unreleased development line;
-2. preserve the public API and rendered behavior unless a versioned change explicitly says otherwise;
-3. prove source/package equivalence through full Static, Linux Integration and Linux Release checks;
-4. simplify, not duplicate, the source of truth;
-5. never modify the already-published v3.0.3 tag or assets.
+1. remain inside the active unreleased development line;
+2. preserve the public API and rendered behavior unless a reviewed versioned change explicitly says otherwise;
+3. prove source/package equivalence through the required Static, Linux Integration and Linux Release checks;
+4. keep one project runtime source of truth;
+5. never modify already-published tags or release assets.
 
 ## Fail-closed rule
 

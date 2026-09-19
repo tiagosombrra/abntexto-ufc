@@ -41,7 +41,7 @@ abntexto-ufc changelog
 ------------------
 
 - Introduces the `abntexto-ufc` class as the canonical class entry point.
-- Migrates the project-owned public API to a single English API.
+- Establishes a single canonical English project-owned public API.
 - Adds academic-work profiles for undergraduate capstones, specialization capstones, master's theses and doctoral theses.
 - Adds research-project and anonymized research-project profiles.
 - Adds the UFC scientific-article profile.
@@ -51,4 +51,4 @@ abntexto-ufc changelog
 - Keeps `abntexto` as an external CTAN dependency; it is not vendored in the CTAN package.
 - Does not redistribute UFC institutional marks or proprietary Microsoft font files.
 
-The v3 API is intentionally incompatible with the historical v2 Portuguese project API. See the repository migration guide for the complete mapping.
+The current API is documented by the repository command reference and is the only supported project-owned public API.

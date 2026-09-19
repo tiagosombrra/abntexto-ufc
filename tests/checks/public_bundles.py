@@ -98,7 +98,7 @@ def assert_public_main(archive_path: Path, entry: str) -> None:
         fail(f"{archive_path.name}: distributed main.tex unexpectedly disables the UFC coat of arms.")
     legacy_tokens = ("  brasao = sim,", "  brasao = nao,")  # v3-api-residual: negative-test-literal
     if any(token in text for token in legacy_tokens):
-        fail(f"{archive_path.name}: distributed main.tex contains a removed v2 coat-of-arms setup key.")
+        fail(f"{archive_path.name}: distributed main.tex contains a removed coat-of-arms setup key.")
 
 
 def assert_institutional_asset(archive_path: Path, entry: str) -> None:
@@ -126,7 +126,6 @@ def validate_template(path: Path, v: str) -> None:
         f"{prefix}COMMAND-REFERENCE.md",
         f"{prefix}NORMATIVE-BASE.md",
         f"{prefix}NORMATIVE-CURRENCY.md",
-        f"{prefix}MIGRATING-TO-V3.md",
         f"{prefix}abntexto-ufc.cls",
         f"{prefix}frontmatter/abstract.tex",
         f"{prefix}chapters/1-introduction.tex",
@@ -160,7 +159,6 @@ def validate_overleaf(path: Path) -> None:
         "COMMAND-REFERENCE.md",
         "NORMATIVE-BASE.md",
         "NORMATIVE-CURRENCY.md",
-        "MIGRATING-TO-V3.md",
         "abntexto.cls",
         "abntexto-ufc.cls",
         "frontmatter/abstract.tex",

@@ -1,16 +1,24 @@
-# abntexto-ufc v3 Architecture
+# abntexto-ufc architecture
 
 Updated: 2026-09-19
 
-This document defines the engineering architecture for the `abntexto-ufc` v3 series. The latest published release is v3.0.3; v3.0.4 is the active unreleased modernization line. It governs repository organization and project-owned runtime/API ownership; it does not create academic formatting requirements.
+This document describes the current engineering architecture of `abntexto-ufc`. It is intentionally limited to the supported repository/runtime model and does not serve as a chronology of earlier implementation phases.
 
-> **Lifecycle note:** architecture rules are current unless explicitly described as historical chronology. Old phase/PR status statements retained later in this file are implementation history, not current release-state authority. Current repository/release state is controlled by `AGENTS.md`, `docs/RELEASE-STATE.md`, and `release/v3-release-candidate.json`; closed Issues and historical v3 control files are audit evidence only.
+The latest published release is v3.0.3. The active unreleased development line is v3.0.4.
 
 ## Design principles
 
-The v3 tree must be explicit, English-first for engineering surfaces, easy to navigate, free of duplicate ownership, testable, distribution-safe, and free of runtime compatibility layers whose only purpose is preserving removed v2 project API.
+The repository follows these constraints:
 
-The repository is an active product tree, not an archive. Primary immutable history belongs to Git commits, tags, releases, issues, pull requests, and certified SHAs. A bounded tracked evidence document may remain when it materially supports the audit trail, but it must live in the controlled `docs/history/v3/` or `release/history/v3/` namespaces, be explicitly historical, and never compete with current control-plane authority.
+- one canonical project-owned runtime source;
+- one canonical public project API;
+- explicit separation between project runtime, upstream dependencies, normative data, tests, tooling and documentation;
+- deterministic, auditable distribution production;
+- no generated release/build products tracked in Git;
+- no proprietary Microsoft font files redistributed;
+- institutional assets handled according to their explicit distribution policy;
+- fail-closed validation for repository, normative, distribution and release contracts;
+- published tags/releases/assets are immutable project evidence.
 
 ## Top-level layout
 
@@ -22,14 +30,10 @@ template/
   chapters/
   backmatter/
   figures/
-.github/
-  workflows/static-contract.yml
-  workflows/linux-integration.yml
-  workflows/linux-release-check.yml
-assets/institutional/
+assets/
+  institutional/
 standards/
 tests/
-  static.py
   checks/
   documents/
   fixtures/
@@ -38,141 +42,218 @@ tests/
 tools/
 validator/
 docs/
+  README.md
   USER-GUIDE.md
   COMMAND-REFERENCE.md
+  ARCHITECTURE.md
   RELEASE-STATE.md
 release/
   ctan/
+  history/
+.github/
+  workflows/
 ```
 
-## Runtime ownership
+Local release/audit material belongs under ignored `.release/` and is never part of the tracked repository.
 
-`abntexto-ufc.cls` is the only canonical project-owned runtime and the only canonical class entry point. v3 does not ship `ufctex.cls` and v3.0.4 no longer tracks a separate `abntexto-ufc/` runtime-module directory.
+## Canonical runtime
 
-The class remains internally organized into responsibility sections for core configuration, fonts, layout, optional modules, front matter, institutional presentation, academic-work profiles, scientific articles, research projects, academic objects, upstream compatibility, bibliography/current-standard adaptation, and back matter. Those sections are organizational boundaries inside one source file, not independently distributed runtime files.
+`abntexto-ufc.cls` is the only canonical project-owned runtime source.
 
-A project-owned internal control sequence has one behavior owner. Public commands remain implemented directly by the responsibility section that owns the behavior; no forwarding-only compatibility layer is part of the v3 runtime. Historical modular ownership and its R2 migration evidence remain under controlled v3 history.
+The class is internally divided into clearly delimited responsibility sections covering:
 
-## Upstream boundaries
+- core configuration and metadata;
+- fonts and typography;
+- page/text layout;
+- optional modules;
+- pre-textual elements;
+- institutional presentation;
+- academic-work profiles;
+- scientific articles;
+- research projects;
+- figures, tables, listings, algorithms and other academic objects;
+- upstream `abntexto` compatibility;
+- citations and references;
+- current-standard adaptations such as NBR 6023:2025 behavior;
+- post-textual elements.
 
-External `abntexto` compatibility remains an explicit responsibility section inside the canonical class. Upstream identifiers may remain non-English when genuinely owned by the dependency and required at that boundary, but they must not be re-exported as canonical project API.
+These are source-organization sections inside one class, not separately distributed runtime modules.
 
-Current-standard runtime adaptations, including the NBR 6023:2025 bibliography compatibility behavior, also live in explicitly delimited sections of the canonical class. Machine normative authority remains in top-level `standards/`; the class contains only the runtime behavior needed to implement the reconciled contract.
+The same tracked class is consumed by repository tests and is distributed through Template, Overleaf and CTAN surfaces. Distribution builders must not transform project source into a different project runtime.
 
-## R2 migration sequencing
-
-The target architecture above was implemented through bounded owner-based lots documented in `docs/history/v3/evidence/R2-API-OWNERSHIP.md`. R2-A and B1 through B5 are complete. B5 merged through PR #249 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e`, removed the forwarding-only file/load, published `docs/MIGRATING-TO-V3.md`, and added `tests/checks/v3_api_residual.py` as a permanent fail-closed residual gate. Template and test consumers moved atomically with each behavior owner.
-
-## Upstream boundaries
-
-`abntexto-ufc/integrations/` contains current adapters to external package/class behavior. These are not legacy compatibility layers. An upstream identifier may remain non-English when it is genuinely owned by the dependency and must be called at an explicit integration boundary, but it must not be re-exported as canonical project API.
-
-`abntexto-ufc/standards/` contains narrow runtime adaptations required for a current technical-standard behavior, such as the current NBR 6023:2025 bibliography adapter.
-
-## Editable template and distribution bundles
-
-The source repository keeps a compact editable TCC tutorial under `template/`. The tutorial has five normal academic chapters and demonstrates the common workflow by use rather than embedding exhaustive maintainer/normative prose. `docs/USER-GUIDE.md` owns the user workflow and normative/institutional explanations, while `docs/COMMAND-REFERENCE.md` owns exhaustive public API lookup. Exhaustive behavioral coverage remains in `tests/` and machine normative traceability remains in `standards/`.
-
-The canonical tutorial source is:
+Required invariant:
 
 ```text
-template/main.tex
-template/chapters/
-  1-introduction.tex
-  2-theoretical-background.tex
-  3-methodology.tex
-  4-results.tex
-  5-conclusion.tex
+tracked canonical class
+    == tested project runtime
+    == Template project runtime
+    == Overleaf project runtime
+    == CTAN project runtime
 ```
 
-The canonical PDF integration gate enforces a 15–35 page tutorial budget so regression/catalog material cannot silently turn the user artifact back into a manual.
+For CTAN, equality is enforced byte-for-byte for the project-owned `abntexto-ufc.cls`.
 
-Template and Overleaf bundles flatten `template/` so the user receives:
+## Public API ownership
 
-```text
-main.tex
-frontmatter/
-chapters/
-backmatter/
-figures/
-```
+The public project API is defined by the canonical class and documented in `docs/COMMAND-REFERENCE.md`.
 
-Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Both user bundles include exactly the project UFC coat-of-arms PNG required by the canonical example, exclude proprietary Microsoft fonts, package the same canonical `abntexto-ufc.cls`, and are checked for safe paths, deterministic rebuild identity and archive reproducibility.
+Project-owned configuration keys, commands and environments have a single implementation owner. Public behavior is implemented directly in the canonical class; forwarding-only compatibility layers are not part of the supported runtime.
 
-`tools/build-distribution-bundles.py`, exposed through `make distribution-bundles`, composes the Template/Overleaf delivery with the canonical CTAN submission candidate and `SHA256SUMS`. No source-to-runtime inlining step exists: the tracked `abntexto-ufc.cls` is copied byte-for-byte as the project-owned runtime on every distribution surface. CTAN keeps `abntexto` external.
+Dependency-owned identifiers remain at the upstream boundary when they are required to interact correctly with the dependency.
 
-The CTAN candidate uses a browsing-friendly top-level `abntexto-ufc/` package directory rather than exposing internal TDS `tex/` and `doc/` staging. `release/ctan/README.md` is the package-facing README. `release/ctan/abntexto-ufc.tex` is the tracked manual source; the distribution producer builds its deterministic PDF and places source and PDF together with the byte-identical canonical class, example and license. `tests/checks/distribution_bundles.py` proves the complete artifact set, checksum integrity, deterministic outputs, canonical-class identity, package metadata, external-upstream semantics, and asset exclusions.
+## Upstream boundary
 
-The accepted `abntexto-uece` package is retained only as a practical CTAN packaging benchmark. Current CTAN guidance and the current `pkgcheck` release govern the technical submission check. See `docs/CTAN-RELEASE.md` for the maintainer procedure. CTAN acceptance is an external release event, not an architectural state inferred from local or CI validation.
+`abntexto-ufc` depends on the external `abntexto` class.
 
-## Standards data
+The repository does not fork or silently redefine the complete upstream project. Project-specific compatibility/adaptation behavior is isolated inside the canonical class and covered by integration tests.
 
-Top-level `standards/` contains the current machine-readable source catalog, precedence, rules, locators, and normative evidence metadata needed by the active product. Process ledgers from completed campaigns are not retained merely as historical records.
+Distribution rules differ by surface:
 
-Scientific-article normative material was reintroduced in V3-A1 from current sources and implemented during the historical V3-A2 sequence. Current runtime ownership is represented directly in the canonical class; historical phase ownership remains audit evidence only.
+- CTAN keeps `abntexto` external;
+- Overleaf vendors the pinned supported `abntexto.cls` required for a self-contained import;
+- Template assumes the supported external dependency is available in the local TeX installation.
 
-## Tests, validation, and workflow orchestration
+## Template and public bundles
 
-- `tests/static.py`: canonical cheap/source-only fail-closed gate. It validates tracked Python/JSON/shell/JavaScript syntax, diff integrity, canonical/repository identity, the aggregate validator/normative source contract, object-scope metadata and reference-guide contract. It snapshots repository status before/after and fails if its own execution changes that state. It must not compile TeX/PDF, access the network, generate distribution bundles or run evidence-producing/platform-certification checks;
-- `tests/checks/`: static and machine-readable contract checks, some of which are source-only and some of which consume generated evidence;
-- `tests/run.py`: coordinated broad integration/release runner. It remains separate from the cheap gate and may compile or inspect generated documents;
-- `tests/documents/`: LaTeX validation documents;
-- `tests/fixtures/`: supporting test data;
-- `tests/integration/`: executable build/inspection runners;
-- `tests/smoke/`: minimal compilation cases;
-- `tools/`: developer/release tooling;
-- `.github/workflows/static-contract.yml`: permanent fast remote orchestration. It exposes the stable workflow/job name `Static contract` and delegates validation to `make static-check`; workflow YAML does not own or duplicate the gate internals;
-- `.github/workflows/linux-integration.yml`: permanent bounded PR integration orchestration. It exposes the stable workflow/job name `Linux integration`, keeps a status on relevant PR lifecycle events, suppresses the expensive TeX step for drafts and a narrow documentation/control-plane-only allowlist, treats unknown paths fail-closed as integration-relevant, cancels superseded PR runs, forces full execution on manual dispatch, and delegates heavy validation to `make check`.;
-- `.github/workflows/linux-release-check.yml`: bounded permanent Linux release orchestration. It exposes the stable workflow/job name `Linux release check`, runs after technical changes land on `main` and on manual dispatch, ignores documentation/control-plane-only main pushes, cancels superseded runs, delegates release validation to `make release-check`, mirrors the repository report into the job summary, and retains `artifacts/validation/**` for 14 days. The Linux observations are engineering evidence; final Windows/literal-font/PDF-A certification remains B8-owned.
+`template/` is the canonical editable TCC tutorial source.
 
-`make static-check` is the permanent local source-only entry point. `make check` and `make release-check` retain their broader integration semantics. Workflow orchestration is a separate layer and must consume these entry points rather than redefine their ownership.
+It is deliberately a realistic, compact user project rather than an exhaustive technical manual. Complete API documentation belongs in `docs/COMMAND-REFERENCE.md`; normative explanations belong in the relevant current documentation and standards data.
 
-R1-BLOCK-7 and R1-BLOCK-8 are DONE. The permanent orchestration surface is exactly `Static contract`, `Linux integration`, and `Linux release check`, each delegating to its repository-owned entry point (`make static-check`, `make check`, and `make release-check`). B7-D confirmed read-only permissions, immutable action pins, bounded concurrency, stable status semantics, and zero temporary workflow residue. The current `Stable branches` ruleset requires `Static contract` and `Linux integration`; `Linux release check` remains a release-certification/post-merge gate rather than a permanent required PR status. B8 certified complete candidate `9b1752565ac217c04ffa22a9ef272cdf078af380` across Times New Roman/Arial × pdfLaTeX/LuaLaTeX with final literal text-family, math-policy, Unicode, embedding and PDF/A-2b inspection. V3-R2 is DONE through B5 at `ecd5926760080003148e8b1621dc8d4e4e8c7e5e`; the forwarding-only API layer is absent and permanent residual enforcement is part of `make static-check`. R3-A is DONE from `345bbe1384c04b3f2002ac1f456ebbbdf7fc13b5`. R3-B1/#252 is DONE through PR #258 at `afb9f16403aafd8752a0aa8b0713f85c41204d1b`. R3-B2/#253 is DONE through PR #260 at `1d9e6373ed674fb7503b968b3e852e4be5fc14ea` after Static `33768911131` and Linux `33768911126` = `PASS=31 FAIL=0 SKIP=0`; complete runs now distinguish declared mechanisms, current rule-specific contribution and conservative proof state, with 113/113 `automatic-partial` rules bounded-positive and zero automation gaps. R3-B3/#254 is DONE through PR #262 at `fbee5bd329f98a389c2880932af40547c8d1674e`: semantic generator variation is fail-closed, the permanent residual gate covers 302 behavior-relevant sources, and the retained test/check surface has zero orphans. R3-B4/#255 is DONE through PR #264 at `59b2bce7fa2eb1ef6cbb418ca12d8c08b9339390`; the permanent engineering-language checker, canonical technical profile IDs and closed-contract consumer audit are part of the source-only contract. Its B4 baseline is 305 residual-scanned sources, 148/148 retained scripts reachable and zero orphans. R3-B5/#256 and V3-R3 are DONE through validated closeout PR #268 at `d90a675a844724c33a5727d8d980027c46291eb0`. V3-R4/#267 certification run `33855800767` passed on exact product `c79f3c73f1d51a30175e8259269504d029442a1c` across the strict four-cell font/engine matrix plus Unicode, embedding and PDF/A-2b; closeout PR #273 merged at `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`, and V3-R5/#272 is DONE through PR #276 at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`. V3-A1/#275 is DONE through source-contract `4d018a92697e8f39e3a53b034c451e55996c84fb` and closeout `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; V3-A2/#280 was the subsequent bounded article runtime/evidence implementation phase; this sentence is retained only as historical implementation chronology.
+The distribution pipeline produces:
 
-Active path names must not encode retired major-version or N-phase identities.
+- the CTAN archive;
+- the editable Template archive;
+- the self-contained Overleaf archive;
+- `SHA256SUMS`.
 
-## R3 hardening architecture
+Template and Overleaf must contain exactly the project institutional PNG required by the canonical tutorial and preserve `coat-of-arms=true`. They embed a reference PDF rebuilt from the exact bundled source.
 
-R3-A established that the remaining foundation risk is primarily evidence truthfulness and policy enforcement rather than missing module ownership. `docs/history/v3/evidence/R3-HARDENING-INVENTORY.md` is the retained historical inventory for that phase. The bounded sequence is: R3-B1/#252 front-matter truthfulness, R3-B2/#253 proof-state/coverage semantics, R3-B3/#254 semantic test integrity/residual scanning, R3-B4/#255 engineering-language enforcement/contract consolidation, and R3-B5/#256 closeout/R4 entry.
+The CTAN archive intentionally excludes institutional mark assets and uses `coat-of-arms=false` in its minimal example.
 
-A validation producer must declare whether its observations contribute proof or are audit/support-only. Proof-contributing normative FAIL cannot coexist with a successful owning gate. R3-B1 made this invariant executable for front matter. R3-B2 generalized it across the full contract: current-run rule-specific PASS evidence is intersected with declared owners; `automatic-partial` rules fail closed on `automation-gap`; `bounded-positive` remains conservative `PARTIAL`; and non-partial automatic rules without rule-specific evidence remain visible as `support-only`. Test generators must fail closed when a requested semantic variation was not actually applied. R3-B3 completed permanent residual expansion across project-owned engineering sources that can affect runtime or test behavior while retaining only narrow explicit migration/negative-test/upstream boundaries. It also makes profile generation fail closed, classifies all retained test/check scripts by reachability/purpose, and couples negative-path rejection to same-`rule_id` positive evidence. R3-B4 made engineering-language enforcement and closed-contract consolidation executable without changing normative semantics, proof-state defaults or the public runtime API. R3-B5 completed final cross-surface validation and recorded immutable R4 predecessor `d90a675a844724c33a5727d8d980027c46291eb0`. R4/#267 has now independently certified the current candidate in run `33855800767` rather than relying on the historical R1 evidence. The product architecture remains unchanged. R4 closeout `0b0f5d989163dc6b1429feeb2d8a7c66988647bb` establishes the exact R5 entry. V3-R5 has now validated foundation freeze without modifying certified product `c79f3c73f1d51a30175e8259269504d029442a1c`: source-only and release gates are green, public/distribution bundles are reproducible with valid checksums and asset exclusions, and temporary validation residue is zero. R5 closed at `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; A1 closed at `7a7562d23e8bf6c92abb635718639d617a2ed6ff`; V3-A2/#280 subsequently executed as part of the historical v3 implementation sequence.
+No distribution surface may contain proprietary Microsoft font files.
 
+## Standards and normative data
 
-## R5 certified-foundation freeze
+`standards/` is the machine-readable normative authority for:
 
-The frozen foundation product is `c79f3c73f1d51a30175e8259269504d029442a1c`, certified by R4 run `33855800767` and entered into R5 through `0b0f5d989163dc6b1429feeb2d8a7c66988647bb`. R5 validation does not create a new runtime candidate: run `33866258865` completed the 33-check release gate with `PASS=33 FAIL=0 SKIP=0`, while run `33869888601` independently proved public and complete distribution reproducibility, checksum integrity, external-`abntexto` packaging semantics, institutional/proprietary asset exclusion and a clean workspace. `docs/NORMATIVE-BASE.md`, `docs/NORMATIVE-CURRENCY.md`, and `docs/MIGRATING-TO-V3.md` remain unchanged because no source/currency/API fact changed. The R5 closeout supplied A1 entry `908ee2eb2ec04c030d74a9a4b146fba38fb745a9`; A1 completed and closeout `7a7562d23e8bf6c92abb635718639d617a2ed6ff` is the exact A2 entry predecessor.
+- source catalog and precedence;
+- atomic/current rules;
+- rule coverage and applicability;
+- source locators;
+- normative proof/evidence classification;
+- controlled validation scenarios.
+
+Human-readable normative context lives in:
+
+- `docs/NORMATIVE-BASE.md`;
+- `docs/NORMATIVE-CURRENCY.md`;
+- `docs/ARTICLE-NORMATIVE-CONTRACT.md`;
+- `docs/UFC-LIBRARIAN-REVIEW.md`.
+
+Runtime code implements the behavior required by that reconciled contract but is not itself the normative-source catalog.
+
+## Test architecture
+
+The permanent test surface is divided into:
+
+- `tests/checks/` — source/repository/normative contracts;
+- `tests/documents/` — controlled LaTeX documents;
+- `tests/fixtures/` — input data and controlled assets;
+- `tests/integration/` — compile/render/distribution gates;
+- `tests/smoke/` — bounded smoke coverage;
+- `tests/run.py` — coordinated integration/release runner;
+- `tests/static.py` — static/source contract entry point.
+
+Tests are part of the architecture. A source-layout refactor is incomplete until all checks that inspect source ownership are reconciled to the new canonical source model.
+
+## Validation and CI
+
+The repository keeps three distinct engineering workflows:
+
+- **Static Contract** — source-only, fast, deterministic checks;
+- **Linux Integration** — compile/render/integration validation, with scoped selection when appropriate;
+- **Linux Release Check** — complete release-grade validation, distribution generation and CTAN package checks.
+
+GitHub Pages is deployed by a separate Pages workflow.
+
+The protected `main` branch requires the permanent PR statuses configured by the repository ruleset. Release-grade evidence remains a separate certification control and may be forced by release-marker changes when a structural runtime change requires complete validation.
+
+A complete release-grade run covers, among other evidence:
+
+- repository and API contracts;
+- canonical tutorial;
+- supported engines/profiles;
+- bibliography/current-reference behavior;
+- PDF/A;
+- Unicode;
+- font embedding/policy;
+- public bundle reconstruction;
+- archive integrity and reproducibility;
+- CTAN `pkgcheck`;
+- reference/review PDFs.
 
 ## Validator
 
-`validator/` is project-owned engineering software. Its implementation, controls, technical labels, and diagnostics are English. Portuguese text extracted from or evaluated inside a Brazilian academic PDF is document data, not validator engineering nomenclature.
+`validator/` is a local-processing Web/Lite validation surface.
 
-## Documentation and release state
+Its source, normative catalog and browser behavior are tested separately from the CLI/deep local validation path. The browser validator does not upload user PDFs to a server.
 
-`docs/` contains current engineering/maintainer documentation, while `docs/history/v3/` contains explicitly labeled historical evidence. Current lifecycle state is summarized in `docs/RELEASE-STATE.md`. `release/` contains current machine-readable publication/release state plus source material required to construct release candidates, such as `release/ctan/`, and explicitly classified historical machine state. A closed migration mapping or evidence ledger may remain only when a permanent gate, current audit trail or active reconstruction control plane still consumes it; otherwise it is removed or consolidated.
+The validator consumes generated normative data from the same controlled standards source rather than maintaining a second independent normative truth.
 
-## Breaking v3 API policy
+## Documentation architecture
 
-v3 provides one canonical project API. Removed Portuguese v2 project API is not retained through runtime aliases. Migration support is documentation-only and is written when the migration surface is final; it is not pre-staged as dormant files during R1/R2.
+Current documentation lives directly under `docs/` and is indexed by `docs/README.md`.
+
+Controlled historical engineering evidence lives under:
+
+- `docs/history/v3/`;
+- `release/history/v3/`.
+
+Historical documents are audit evidence only. They do not define the current runtime, current user workflow or current release state.
+
+Current release/lifecycle authority is:
+
+1. current Git/GitHub facts;
+2. `release/v3-release-candidate.json`;
+3. `docs/RELEASE-STATE.md`;
+4. current durable technical documentation.
+
+## Release-state architecture
+
+`release/v3-release-candidate.json` is the stable machine-readable release/development state path.
+
+During the active v3.0.4 line it must remain explicitly unreleased until a separately certified freeze:
+
+```text
+candidate_state = NOT_FROZEN
+candidate_sha = null
+publication_state = UNPUBLISHED
+publication_authorized = false
+```
+
+The marker also preserves the receipt of the latest published release without allowing that release to be retargeted or rebuilt.
+
+Release invariant:
+
+```text
+certified source SHA
+    == visually approved source SHA
+    == tagged source SHA
+    == source SHA of published release bytes
+```
 
 ## Architecture gates
 
-The final foundation must prove at least:
+The repository architecture is considered coherent when all of the following hold:
 
-- one canonical class entry point;
-- deprecated v2 class wrapper absent;
-- forwarding-only public API module absent;
-- unique runtime ownership;
-- required runtime modules loaded exactly once;
-- explicitly scoped upstream integrations;
-- English project-owned engineering paths;
-- one permanent side-effect-free cheap/source-only validation entry point distinct from integration/release validation;
-- permanent fast remote orchestration that delegates to the repository-owned cheap gate rather than duplicating it;
-- clean-runner-safe repository-owned integration/release entry points before permanent heavy orchestration is activated;
-- valid repository template layout and valid flattened public bundle layout;
-- deterministic class/runtime and CTAN distribution candidates with checksum metadata;
-- no institutional/proprietary assets in public distribution;
-- no generated artifacts, archive directories, or unused migration scaffolding tracked.
-
-## V3-A1 scientific-article boundary
-
-V3-A1 adds only the source/rule contract under `standards/`. `coverage-rules-article.json` is consumed by the existing full-contract loader, while `locator-audit-article.json`, `article.source-review`, proof-state and contribution policy keep every article rule manual/conditional until A2. No article runtime module, profile implementation, template branch, validator shortcut or compatibility alias is introduced in A1. Cross-cutting citation/reference/section/table machinery remains shared rather than forked.
+- exactly one tracked project-owned runtime class exists;
+- no legacy project runtime-module directory is tracked;
+- public API and command documentation agree;
+- all active documentation links resolve;
+- no generated PDF/ZIP/build residue is tracked;
+- public bundles use the same canonical project runtime;
+- CTAN class identity is byte-equal to the tracked canonical class;
+- institutional/proprietary asset policies pass;
+- retained tests/checks are reachable and purposeful;
+- current documentation contains current state rather than closed implementation chronology;
+- Static Contract and applicable integration/release gates pass.

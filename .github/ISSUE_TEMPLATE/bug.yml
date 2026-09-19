@@ -1,0 +1,83 @@
+name: Bug report
+description: Report a reproducible problem in the current abntexto-ufc project.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for reproducible problems in the current supported project.
+        For security or supply-chain concerns, follow SECURITY.md instead.
+  - type: input
+    id: version
+    attributes:
+      label: abntexto-ufc version or commit
+      description: Provide the released version or exact commit SHA.
+      placeholder: "3.0.3 or <40-character SHA>"
+    validations:
+      required: true
+  - type: input
+    id: texlive
+    attributes:
+      label: TeX Live version
+      placeholder: "TeX Live 2026"
+    validations:
+      required: true
+  - type: dropdown
+    id: engine
+    attributes:
+      label: LaTeX engine
+      options:
+        - pdfLaTeX
+        - LuaLaTeX
+        - Other / not applicable
+    validations:
+      required: true
+  - type: input
+    id: profile
+    attributes:
+      label: Document profile
+      description: For example, undergraduate-capstone, specialization-capstone, masters-thesis, doctoral-thesis, research-project, anonymized-research-project or scientific-article.
+    validations:
+      required: false
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Windows 11, Ubuntu 24.04, Overleaf"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproducible example / steps
+      description: Include the smallest source or exact steps that reproduce the problem. Do not include sensitive personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Relevant log excerpt
+      render: text
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checks
+      options:
+        - label: I checked the current documentation and existing open issues.
+          required: true
+        - label: This report does not contain credentials, private documents or other sensitive data.
+          required: true

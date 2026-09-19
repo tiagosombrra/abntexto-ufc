@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use abntexto-ufc in academic work, please cite this software."
+title: "abntexto-ufc"
+type: software
+authors:
+  - family-names: "Sombra"
+    given-names: "Tiago Guimarães"
+repository-code: "https://github.com/tiagosombrra/abntexto-ufc"
+url: "https://github.com/tiagosombrra/abntexto-ufc"
+license: "LPPL-1.3c"
+version: "3.0.3"
+date-released: "2026-09-19"

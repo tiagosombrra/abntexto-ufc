@@ -16,6 +16,18 @@ REQUIRED_PATHS = {
     "docs/RELEASE-STATE.md",
     ".gitattributes",
     ".editorconfig",
+    "docs/README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CITATION.cff",
+    "tests/README.md",
+    "standards/README.md",
+    "assets/institutional/README.md",
+    ".github/pull_request_template.md",
+    ".github/dependabot.yml",
+    ".github/ISSUE_TEMPLATE/bug.yml",
+    ".github/ISSUE_TEMPLATE/documentation.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
     "docs/history/v3/audits/V3.0.2-REPOSITORY-HYGIENE-RECEIPT.md",
     "docs/WINDOWS-FONT-SUPPORT.md",
     "release/v3-release-candidate.json",
@@ -30,6 +42,7 @@ FORBIDDEN_EXACT_PATHS = {
     "docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md",
     "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
     "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
+    "docs/MIGRATING-TO-V3.md",
     "release/final-audit.json",
     "release/n15-b1-source-authority.json",
     "release/n15-b2a-article-contract.json",
@@ -182,7 +195,6 @@ CONTENT_SCAN_EXEMPT = {
 # These active technical/documentation surfaces intentionally name the removed
 # class entrypoint only to assert that it must remain absent.
 NEGATIVE_FRAGMENT_EXEMPT = {
-    "docs/ARCHITECTURE.md": {"ufctex.cls"},
     "tests/checks/canonical_identity.py": {"ufctex.cls"},
     "tests/checks/repository_contract.py": {"ufctex.cls"},
 }

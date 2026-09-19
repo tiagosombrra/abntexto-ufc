@@ -22,7 +22,6 @@ PUBLIC_USER_DOCS = (
     Path("docs/COMMAND-REFERENCE.md"),
     Path("docs/NORMATIVE-BASE.md"),
     Path("docs/NORMATIVE-CURRENCY.md"),
-    Path("docs/MIGRATING-TO-V3.md"),
 )
 UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
 MICROSOFT_FONTS = {
