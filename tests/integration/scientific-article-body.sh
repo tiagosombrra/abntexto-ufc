@@ -3,7 +3,7 @@ set -eu
 
 fixture="tests/documents/scientific-article-body.tex"
 negative_fixture="tests/documents/scientific-article-body-missing-development.tex"
-module="abntexto-ufc/articles.def"
+module="abntexto-ufc.cls"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup_job() {
