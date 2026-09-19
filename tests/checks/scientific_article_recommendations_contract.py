@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RULES = ROOT / "standards" / "coverage-rules-article.json"
-ARTICLE_MODULE = ROOT / "abntexto-ufc" / "articles.def"
+RUNTIME = ROOT / "abntexto-ufc.cls"
 RECOMMENDED_FIXTURE = ROOT / "tests" / "documents" / "scientific-article-recommendations-recommended.tex"
 OUTSIDE_FIXTURE = ROOT / "tests" / "documents" / "scientific-article-recommendations-outside.tex"
 
@@ -97,10 +97,10 @@ def main() -> None:
     if applicability.get("context") != "target-journal-submission":
         fail("journal precedence applicability must remain target-journal-submission")
 
-    module = ARTICLE_MODULE.read_text(encoding="utf-8")
+    runtime = RUNTIME.read_text(encoding="utf-8")
     author_match = re.search(
         r"\\cs_new_protected:Npn \\ufc_article_author:(.*?)\\cs_new_protected:Npn",
-        module,
+        runtime,
         flags=re.DOTALL,
     )
     if not author_match or "\\raggedleft" not in author_match.group(1):
