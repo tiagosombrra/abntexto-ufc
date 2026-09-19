@@ -119,13 +119,13 @@ Short-lived PR branches must disappear after merge. TODO/FIXME markers and stale
 
 ## Runtime-source architecture changes
 
-The published v3.0.3 release used modular development sources under `abntexto-ufc/` and a generated monolithic CTAN class. The active v3.0.4 line consolidates that runtime into one canonical `abntexto-ufc.cls`; this refactor must:
+The current project-owned runtime is one canonical `abntexto-ufc.cls`. Runtime-source changes must:
 
-1. open a new unreleased development line;
-2. preserve the public API and rendered behavior unless a versioned change explicitly says otherwise;
-3. prove source/package equivalence through full Static, Linux Integration and Linux Release checks;
-4. simplify, not duplicate, the source of truth;
-5. never modify the already-published v3.0.3 tag or assets.
+1. remain inside the active unreleased development line;
+2. preserve the public API and rendered behavior unless a reviewed versioned change explicitly says otherwise;
+3. prove source/package equivalence through the required Static, Linux Integration and Linux Release checks;
+4. keep one project runtime source of truth;
+5. never modify already-published tags or release assets.
 
 ## Fail-closed rule
 
