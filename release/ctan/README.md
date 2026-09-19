@@ -27,7 +27,7 @@ When installed through a TeX distribution, use:
 \documentclass{abntexto-ufc}
 ```
 
-The CTAN distribution has a single runtime file: `abntexto-ufc.cls`. All project-owned runtime modules used in the development repository are incorporated into that class during the deterministic CTAN build. No external `abntexto-ufc/*.def` files are required or distributed.
+The repository and the CTAN distribution use the same single project-owned runtime file: `abntexto-ufc.cls`. The tracked class is copied byte-for-byte into the CTAN package; no project-owned external `.def` runtime is required or distributed.
 
 For manual installation, place `abntexto-ufc.cls` in a location visible to TeX and install the external `abntexto` dependency separately.
 
