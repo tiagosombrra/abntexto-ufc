@@ -119,7 +119,7 @@ Short-lived PR branches must disappear after merge. TODO/FIXME markers and stale
 
 ## Runtime-source architecture changes
 
-The published v3.0.3 release uses modular development sources under `abntexto-ufc/` and a monolithic generated CTAN class. The active v3.0.4 line is authorized to consolidate those modules into a single canonical `abntexto-ufc.cls` and must:
+The published v3.0.3 release used modular development sources under `abntexto-ufc/` and a generated monolithic CTAN class. The active v3.0.4 line consolidates that runtime into one canonical `abntexto-ufc.cls`; this refactor must:
 
 1. open a new unreleased development line;
 2. preserve the public API and rendered behavior unless a versioned change explicitly says otherwise;
