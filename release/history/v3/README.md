@@ -1,15 +1,26 @@
 # V3 release-state history
 
-This directory preserves closed v3 release machine-state snapshots.
+This directory preserves closed machine-readable v3 release/development state and migration/evidence contracts that remain useful for auditability or current fail-closed checks.
 
-Files here are historical evidence only. They must not be used as current development or release authority.
+Current release/development authority is:
 
-Current authority:
-
-- `release/v3-release-candidate.json` — root machine publication/release receipt;
-- `docs/RELEASE-STATE.md` — human-readable current release state;
+- `release/v3-release-candidate.json`;
+- `docs/RELEASE-STATE.md`;
 - current Git/GitHub facts.
 
-Historical publication control remains available here, including frozen v3.0.1 and v3.0.2 release-candidate snapshots. The completed v3.0.3 publication receipt remains represented at the stable root marker until a future development line explicitly archives it.
+Files here are historical evidence only.
 
-The root marker is intentionally kept at a stable path because repository governance and CI use that path as a release-state control surface.
+## Retention policy
+
+Keep a historical machine-state file when it:
+
+- is consumed by a current repository/test/governance check;
+- records a frozen/published candidate or immutable release receipt;
+- preserves a machine-readable API/normative/evidence contract still used for negative/residual validation;
+- contains source-SHA or release-control facts not represented by a smaller retained receipt.
+
+Do not promote a historical JSON back into active authority merely because a current check reads it. A current check may use historical state as a negative baseline or audit reference.
+
+Removal requires an explicit consumer audit and must not weaken current fail-closed behavior.
+
+The root `release/v3-release-candidate.json` intentionally stays at a stable path while the active development line evolves.
