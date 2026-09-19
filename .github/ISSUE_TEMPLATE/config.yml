@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security policy
+    url: https://github.com/tiagosombrra/abntexto-ufc/security/policy
+    about: Review the security-reporting scope before publishing sensitive details.
+  - name: Current documentation
+    url: https://github.com/tiagosombrra/abntexto-ufc/blob/main/docs/README.md
+    about: Start with the current documentation index.
