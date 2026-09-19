@@ -29,7 +29,7 @@ Item 33 was closed on 2026-09-09 after direct review of the primary ABNT NBR 602
 | 2 | Pre-textual author field/examples must make clear that the complete author name is required. | PASS — canonical output renders `NOME COMPLETO DO AUTOR`; visually reconfirmed. | `template/main.tex`, reference document gate |
 | 3 | Optional subtitle must be rendered consistently on cover, title page, and approval page. | PASS | `abntexto-ufc.cls` (front-matter/academic-work sections) |
 | 4 | Advisor identification on the title page must end with the requested final punctuation. | PASS | `abntexto-ufc.cls` (front-matter/academic-work sections) |
-| 5 | Co-advisor/co-advisora must be supported and rendered conditionally when present. | PASS | `core.def`, `frontmatter.def` |
+| 5 | Co-advisor/co-advisora must be supported and rendered conditionally when present. | PASS | `abntexto-ufc.cls` (core/front-matter sections) |
 | 6 | Master's and doctoral nature blocks must include area of concentration when applicable, including title and approval pages. | PASS | `core.def`, `frontmatter.def` |
 | 7 | Committee member institution must support the `Instituição (sigla)` presentation where applicable. | PASS — approval-page evidence and canonical visual review preserve `(UFC)` / `(SIGLA)`. | `abntexto-ufc.cls` (front-matter section), approval-page evidence |
 | 8 | Approval-page committee must support additional members and remain variable in size. | PASS | `abntexto-ufc.cls` (front-matter section), `template/main.tex` |
