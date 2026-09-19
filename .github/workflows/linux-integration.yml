@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - release/v3-release-candidate.json
+      - .github/workflows/linux-integration.yml
+      - tools/ci/select-integration-scope.py
+      - tools/ci/run-web-lite-e2e.sh
   pull_request:
     branches:
       - main
@@ -62,59 +65,18 @@ jobs:
         shell: bash
         env:
           PR_DRAFT: ${{ github.event.pull_request.draft || false }}
-          PR_ACTION: ${{ github.event.action || '' }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
           INPUT_SCOPE: ${{ inputs.scope || 'auto' }}
         run: |
-          set -euo pipefail
-
-          run_integration=true
-          selected_scope=complete
-          reason=manual-auto-fail-closed
-          release_candidate_marker=release/v3-release-candidate.json
-
-          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-            if [[ "$PR_DRAFT" == "true" ]]; then
-              run_integration=false
-              selected_scope=none
-              reason=draft-pr
-            elif git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -Fxq "$release_candidate_marker"; then
-              # A release-candidate marker anywhere in the full PR must dominate
-              # incremental synchronize windows so a later docs-only commit cannot
-              # cancel a complete run and replace it with a superficial green skip.
-              selected_scope=complete
-              reason=release-candidate-full-pr
-            else
-              # Always classify the complete PR diff. A later documentation-only
-              # synchronize event must never replace a failing technical run with
-              # a superficial green skip.
-              selected_scope=$(python3 tests/integration_suites.py --base "$BASE_SHA" --head "$HEAD_SHA")
-              if [[ "$selected_scope" == "none" ]]; then
-                run_integration=false
-                reason=documentation-only-full-pr
-              else
-                reason="auto-full-pr:$selected_scope"
-              fi
-            fi
-          elif [[ "$INPUT_SCOPE" != "auto" ]]; then
-            selected_scope="$INPUT_SCOPE"
-            reason="manual:$selected_scope"
-          elif [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
-            selected_scope=complete
-            reason=release-marker-main-push
-          fi
-
-          echo "run_integration=$run_integration" >> "$GITHUB_OUTPUT"
-          echo "scope=$selected_scope" >> "$GITHUB_OUTPUT"
-          echo "reason=$reason" >> "$GITHUB_OUTPUT"
-          {
-            echo "### Linux integration scope"
-            echo
-            echo "- run integration: \`$run_integration\`"
-            echo "- scope: \`$selected_scope\`"
-            echo "- reason: \`$reason\`"
-          } >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/ci/select-integration-scope.py \
+            --event-name "$GITHUB_EVENT_NAME" \
+            --pr-draft "$PR_DRAFT" \
+            --base-sha "$BASE_SHA" \
+            --head-sha "$HEAD_SHA" \
+            --input-scope "$INPUT_SCOPE" \
+            --github-output "$GITHUB_OUTPUT" \
+            --github-summary "$GITHUB_STEP_SUMMARY"
 
       - name: Report scoped skip
         if: steps.scope.outputs.run_integration != 'true'
@@ -146,26 +108,7 @@ jobs:
         shell: bash
         env:
           WEB_LITE_EVIDENCE_DIR: ${{ runner.temp }}/abntexto-ufc-web-lite
-        run: |
-          set -euo pipefail
-          test -s artifacts/validation/web-lite-positive.pdf
-          mkdir -p "$WEB_LITE_EVIDENCE_DIR"
-          command -v chromedriver
-          if command -v google-chrome >/dev/null 2>&1; then
-            google-chrome --version
-          elif command -v chromium >/dev/null 2>&1; then
-            chromium --version
-          elif command -v chromium-browser >/dev/null 2>&1; then
-            chromium-browser --version
-          else
-            echo 'Web/Lite E2E failed: Chrome/Chromium is not installed on the GitHub runner.'
-            exit 1
-          fi
-          chromedriver --version
-          python3 tests/integration/web-lite-e2e.py \
-            --pdf artifacts/validation/web-lite-positive.pdf \
-            --profile portable \
-            --evidence "$WEB_LITE_EVIDENCE_DIR/web-lite-e2e.json"
+        run: sh tools/ci/run-web-lite-e2e.sh
 
       - name: Upload Web/Lite browser evidence
         if: always() && steps.web_lite_e2e.outcome != 'skipped' && steps.web_lite_e2e.outcome != ''
