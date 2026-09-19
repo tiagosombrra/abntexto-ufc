@@ -38,7 +38,7 @@ Project-owned comments, diagnostics, CLI/UI messages, test failure messages, mac
 
 The canonical article profile identifier is `scientific-article`; `article.*` is the project-owned rule namespace. Historical Portuguese profile identifiers are not restored.
 
-Current phase/status authority comes from `AGENTS.md`, `docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md`, and issue #313. Historical v3/v3.0.1 control and lifecycle documents live under `docs/history/v3/`. Historical roadmap/handoff files may preserve old phase names only as evidence and never define current work.
+Current repository/status authority comes from `AGENTS.md`, `docs/RELEASE-STATE.md`, `release/v3-release-candidate.json`, and current Git facts. Historical v3 control and lifecycle documents live under `docs/history/v3/`. Historical roadmap/handoff files may preserve old phase names only as evidence and never define current work.
 
 ## Ongoing guard
 
