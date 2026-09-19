@@ -30,6 +30,7 @@ FORBIDDEN_EXACT_PATHS = {
     "docs/V3.0.2-BRANCH-HYGIENE-MANIFEST.md",
     "docs/V3.0.2-REPOSITORY-HYGIENE-STATUS.md",
     "docs/V3.0.3-DISTRIBUTION-CORRECTION.md",
+    "docs/MIGRATING-TO-V3.md",
     "release/final-audit.json",
     "release/n15-b1-source-authority.json",
     "release/n15-b2a-article-contract.json",
