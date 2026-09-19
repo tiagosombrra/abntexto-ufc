@@ -24,6 +24,9 @@ on:
       - .github/workflows/linux-release-check.yml
       - tools/ci/validate-release-reference.py
       - tools/ci/validate-release-assets.py
+      - tools/ci/validate-pkgcheck-download.py
+      - tools/ci/certify-ctan-package.sh
+      - tools/ci/render-release-summary.sh
   workflow_dispatch:
 
 permissions:
@@ -60,18 +63,7 @@ jobs:
             --proto '=https' --tlsv1.2 \
             https://mirrors.ctan.org/support/pkgcheck.zip \
             --output .ci-downloads/pkgcheck.zip
-          python3 - <<'PY'
-          from pathlib import Path
-          import zipfile
-
-          archive = Path(".ci-downloads/pkgcheck.zip")
-          if not archive.is_file() or archive.stat().st_size == 0:
-              raise SystemExit("Current CTAN pkgcheck download is missing or empty.")
-          with zipfile.ZipFile(archive) as handle:
-              bad = handle.testzip()
-              if bad is not None:
-                  raise SystemExit(f"Current CTAN pkgcheck archive is corrupt at {bad}.")
-          PY
+          python3 tools/ci/validate-pkgcheck-download.py
           sha256sum .ci-downloads/pkgcheck.zip | tee artifacts/validation/pkgcheck-download.sha256
 
       - name: Run repository release contract, build assets and execute CTAN pkgcheck
@@ -108,103 +100,14 @@ jobs:
             )
             python3 tools/ci/validate-release-assets.py
 
-            # The host runner fetched the current CTAN pkgcheck archive over verified
-            # HTTPS before entering this container. Consume those exact bytes here so
-            # container CA-store drift cannot turn a package certification into a TLS failure.
-            mkdir -p artifacts/validation /tmp/ctan-pkgcheck /tmp/ctan-candidate
-            test -s .ci-downloads/pkgcheck.zip
-            cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip
-            unzip -q /tmp/pkgcheck.zip -d /tmp/ctan-pkgcheck
-
-            # CTAN publishes target-named standalone binaries rather than a stable
-            # bin/pkgcheck path. Prefer the documented Linux target name and retain
-            # a conservative fallback for older archive layouts.
-            PKGCHECK="$(find /tmp/ctan-pkgcheck -type f \
-              \( -name 'pkgcheck-x86_64-unknown-linux-musl' -o -name 'pkgcheck' \) \
-              -print -quit)"
-            if [ -z "$PKGCHECK" ]; then
-              for candidate in $(find /tmp/ctan-pkgcheck -type f -name 'pkgcheck-x86_64-unknown-linux-musl*' -print | sort); do
-                case "$(basename "$candidate")" in
-                  *.asc|*.sha*|*.sig|*.txt)
-                    continue
-                    ;;
-                esac
-                PKGCHECK="$candidate"
-                break
-              done
-            fi
-            if [ -z "$PKGCHECK" ]; then
-              echo 'Current CTAN pkgcheck archive did not contain a supported Linux binary.'
-              find /tmp/ctan-pkgcheck -maxdepth 4 -type f -printf '%P\n' | sort
-              exit 1
-            fi
-
-            chmod +x "$PKGCHECK"
-            "$PKGCHECK" --version > artifacts/validation/pkgcheck-version.txt 2>&1
-            cat artifacts/validation/pkgcheck-version.txt
-            sha256sum "dist/abntexto-ufc-$RELEASE_VERSION.zip" > artifacts/validation/pkgcheck-archive.sha256
-            unzip -q "dist/abntexto-ufc-$RELEASE_VERSION.zip" -d /tmp/ctan-candidate
-            if ! "$PKGCHECK" --no-colors -d /tmp/ctan-candidate/abntexto-ufc \
-              > artifacts/validation/pkgcheck.log 2>&1; then
-              cat artifacts/validation/pkgcheck.log
-              echo 'CTAN pkgcheck failed.'
-              exit 1
-            fi
-            cat artifacts/validation/pkgcheck.log
-            printf '%s\n' \
-              "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS source_sha=$SOURCE_COMMIT_SHA archive=abntexto-ufc-$RELEASE_VERSION.zip" \
-              | tee artifacts/validation/pkgcheck-evidence.txt
-
-            # Produce the exact-SHA material for the mandatory human gate only
-            # after the technical release and current CTAN pkgcheck gates pass.
-            sh tests/integration/release-review-pairs.sh
+            # Consume the host-fetched pkgcheck bytes and certify the exact
+            # generated CTAN package plus release-review pairs.
+            sh tools/ci/certify-ctan-package.sh
 
       - name: Publish validation summary
         if: always()
         shell: bash
-        run: |
-          {
-            echo '## Linux release validation'
-            echo
-            echo '> This Linux gate is engineering evidence. The retained Windows/literal-font proof remains separately scope-controlled.'
-            echo
-            if [[ -f artifacts/validation/validation-report.md ]]; then
-              cat artifacts/validation/validation-report.md
-            else
-              echo 'No repository validation report was produced.'
-            fi
-            echo
-            echo '### Canonical reference PDF'
-            if [[ -f artifacts/validation/release-reference-reproducibility.json ]]; then
-              echo 'The full template/main.tex reference was built twice from this exact candidate, validated and retained as a dedicated artifact with source/hash provenance.'
-            else
-              echo 'Canonical reference PDF provenance was not produced.'
-            fi
-            echo
-            echo '### CTAN pkgcheck'
-            if [[ -f artifacts/validation/pkgcheck-version.txt ]]; then
-              echo '```text'
-              cat artifacts/validation/pkgcheck-version.txt
-              echo '```'
-            else
-              echo 'pkgcheck version evidence was not produced.'
-            fi
-            if [[ -f artifacts/validation/pkgcheck.log ]]; then
-              echo '```text'
-              cat artifacts/validation/pkgcheck.log
-              echo '```'
-            else
-              echo 'pkgcheck output was not produced.'
-            fi
-            echo
-            echo '### Maintainer visual review'
-            if [[ -f artifacts/release-review-pairs/manifest.json ]]; then
-              echo 'Seven PDF/TeX profile pairs were generated from this exact candidate and passed automated preflight. Explicit maintainer visual approval remains pending.'
-            else
-              echo 'The seven-profile review-pair artifact was not produced.'
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
-
+        run: sh tools/ci/render-release-summary.sh >> "$GITHUB_STEP_SUMMARY"
       - name: Upload validation evidence
         if: always() && hashFiles('artifacts/validation/**') != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
