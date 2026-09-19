@@ -32,7 +32,7 @@ fi
 if [ -f artifacts/validation/pkgcheck.log ]; then
   printf '%s\n' '```text'
   cat artifacts/validation/pkgcheck.log
-  echo "```"
+  printf '%s\n' '```'
 else
   echo 'pkgcheck output was not produced.'
 fi
