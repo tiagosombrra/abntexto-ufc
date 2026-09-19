@@ -149,7 +149,15 @@ def add_entry(
 
 def current_runtime_entries(prefix: str = "") -> dict[str, tuple[bytes, int]]:
     entries: dict[str, tuple[bytes, int]] = {}
-    runtime_files = tracked_files("abntexto-ufc.cls") + tracked_files("abntexto-ufc")
+    runtime_files = tracked_files("abntexto-ufc.cls")
+    if len(runtime_files) != 1:
+        raise SystemExit("Public bundles require exactly one canonical abntexto-ufc.cls runtime.")
+    legacy_runtime = tracked_files("abntexto-ufc")
+    if legacy_runtime:
+        raise SystemExit(
+            "Legacy modular runtime paths must not be included in public bundles: "
+            + ", ".join(path.relative_to(ROOT).as_posix() for path in legacy_runtime)
+        )
     for path in runtime_files:
         relative = path.relative_to(ROOT).as_posix()
         add_entry(entries, f"{prefix}{relative}", path.read_bytes(), file_mode(path))

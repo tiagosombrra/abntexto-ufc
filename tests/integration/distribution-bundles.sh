@@ -7,7 +7,6 @@ source_sha="${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-local}}"
 version="$(make --no-print-directory version)"
 public_reference="abntexto-ufc-reference.pdf"
 institutional_asset="assets/institutional/ufc-coat-of-arms.png"
-module_count="$(find abntexto-ufc -type f -name '*.def' | wc -l | tr -d ' ')"
 cleanup() {
   rm -rf "$work"
 }
@@ -166,25 +165,15 @@ with zipfile.ZipFile(package_path) as archive:
         if forbidden.casefold() in readme_fold:
             raise SystemExit(f"CTAN README contains stale/deprecated publication text: {forbidden}")
 
-    class_text = archive.read("abntexto-ufc/abntexto-ufc.cls").decode("utf-8")
+    class_bytes = archive.read("abntexto-ufc/abntexto-ufc.cls")
+    class_text = class_bytes.decode("utf-8")
     if re.search(r"\\input\{abntexto-ufc/[^}]+\.def\}", class_text):
         raise SystemExit("CTAN class still loads an external project .def module.")
     if re.search(r"\\ProvidesFile\{abntexto-ufc/", class_text):
         raise SystemExit("CTAN class still contains project module ProvidesFile wrappers.")
-    if "no external .def files are required" not in class_text:
-        raise SystemExit("CTAN class is missing the monolithic-distribution marker.")
-
-    source_modules = sorted(
-        path.relative_to(project_root).as_posix()
-        for path in (project_root / "abntexto-ufc").rglob("*.def")
-        if path.is_file()
-    )
-    for relative in source_modules:
-        label = PurePosixPath(relative).with_suffix("").as_posix()
-        begin = f"% --- BEGIN inlined module: {label} ---"
-        end = f"% --- END inlined module: {label} ---"
-        if class_text.count(begin) != 1 or class_text.count(end) != 1:
-            raise SystemExit(f"CTAN class did not inline source module exactly once: {relative}")
+    source_class = (project_root / "abntexto-ufc.cls").read_bytes()
+    if class_bytes != source_class:
+        raise SystemExit("CTAN runtime differs from tracked canonical abntexto-ufc.cls.")
 
     text_suffixes = {".md", ".tex", ".cls", ".bib", ".txt"}
     for name in files:
@@ -358,7 +347,7 @@ cat > "$evidence_dir/distribution-bundles.json" <<EOF
   "ctan_single_top_level_directory": true,
   "ctan_monolithic_class": true,
   "ctan_def_files": 0,
-  "ctan_inlined_modules": $module_count,
+  "canonical_class_identity": "PASS",
   "ctan_external_abntexto_dependency": true,
   "ctan_full_reference_embedded": false,
   "ctan_institutional_marks_redistributed": false,
@@ -376,5 +365,5 @@ cat > "$evidence_dir/distribution-bundles.json" <<EOF
 }
 EOF
 
-echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=$version artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-$version.zip monolithic_class=PASS def_files=0 inlined_modules=$module_count checksums=PASS archive_integrity=PASS public_reference_pdf=$public_reference public_reference_sha256=$template_reference_hash source_rebuild_identity=PASS cross_bundle_identical=true ctan_institutional_marks_redistributed=false template_overleaf_coat_of_arms=true proprietary_fonts_redistributed=false source_date_epoch=$epoch"
+echo "FINAL-CERTIFICATION-EVIDENCE surface=distribution-bundles status=PASS version=$version artifacts=3 ctan_upload_archives=1 ctan_archive=abntexto-ufc-$version.zip monolithic_class=PASS def_files=0 canonical_class_identity=PASS checksums=PASS archive_integrity=PASS public_reference_pdf=$public_reference public_reference_sha256=$template_reference_hash source_rebuild_identity=PASS cross_bundle_identical=true ctan_institutional_marks_redistributed=false template_overleaf_coat_of_arms=true proprietary_fonts_redistributed=false source_date_epoch=$epoch"
 echo 'Distribution/public bundle integrity gate completed.'

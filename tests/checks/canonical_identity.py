@@ -8,10 +8,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CLASS = ROOT / "abntexto-ufc.cls"
-MODULE_RE = re.compile(r"\\input\{(abntexto-ufc/[^}]+\.def)\}")
-LEGACY_CLASS_MESSAGE_RE = re.compile(
-    r"\\Class(?:Info|Error|Warning|WarningNoLine)\{ufctex\}"
-)
 LEGACY_IDENTITY_RE = re.compile(
     r"(?<![A-Za-z0-9])ufctex(?![A-Za-z0-9])", re.IGNORECASE
 )
@@ -109,30 +105,26 @@ def main() -> None:
     errors: list[str] = []
     class_text = CLASS.read_text(encoding="utf-8")
 
+    if class_text.count(r"\ProvidesClass{abntexto-ufc}") != 1:
+        errors.append("abntexto-ufc.cls: canonical class identity must be declared exactly once")
+    if re.search(r"\\input\{abntexto-ufc/[^}]+\.def\}", class_text):
+        errors.append("abntexto-ufc.cls: canonical class still loads a project-owned .def module")
+    if re.search(r"\\ProvidesFile\{abntexto-ufc/", class_text):
+        errors.append("abntexto-ufc.cls: canonical class still contains project-module wrappers")
     if "\\input{ufctex/" in class_text:
         errors.append("abntexto-ufc.cls: canonical class loads the legacy module namespace")
+    if not class_text.rstrip().endswith(r"\endinput"):
+        errors.append("abntexto-ufc.cls: canonical class must terminate with \\endinput")
 
-    modules = MODULE_RE.findall(class_text)
-    if not modules:
-        errors.append("abntexto-ufc.cls: no canonical modules found")
-
-    if len(modules) != len(set(modules)):
-        errors.append("abntexto-ufc.cls: duplicate canonical module input")
-
-    for module in modules:
-        path = ROOT / module
-        if not path.is_file():
-            errors.append(f"{module}: loaded canonical module does not exist")
-            continue
-
-        text = path.read_text(encoding="utf-8")
-        expected = f"\\ProvidesFile{{{module}}}"
-        if expected not in text:
-            errors.append(f"{module}: expected {expected}")
-        if "\\ProvidesFile{ufctex/" in text:
-            errors.append(f"{module}: legacy ProvidesFile identity")
-        if LEGACY_CLASS_MESSAGE_RE.search(text):
-            errors.append(f"{module}: legacy ufctex class-message identity")
+    runtime_paths = sorted(
+        path.relative_to(ROOT).as_posix()
+        for path in tracked_files()
+        if path.relative_to(ROOT).as_posix().startswith("abntexto-ufc/")
+    )
+    if runtime_paths:
+        errors.append(
+            "legacy modular runtime paths remain tracked: " + ", ".join(runtime_paths)
+        )
 
     audit_global_identity(errors)
 
@@ -151,7 +143,9 @@ def main() -> None:
             print(f"LEGACY_FILES {compact}")
         raise SystemExit(f"Canonical identity check failed with {len(errors)} issue(s).")
 
-    print(f"Canonical identity check passed: {len(modules)} modules aligned.")
+    print("Canonical identity check passed: single tracked abntexto-ufc.cls runtime.")
+
+
 
 
 if __name__ == "__main__":

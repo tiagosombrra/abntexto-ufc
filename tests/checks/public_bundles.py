@@ -128,7 +128,6 @@ def validate_template(path: Path, v: str) -> None:
         f"{prefix}NORMATIVE-CURRENCY.md",
         f"{prefix}MIGRATING-TO-V3.md",
         f"{prefix}abntexto-ufc.cls",
-        f"{prefix}abntexto-ufc/core.def",
         f"{prefix}frontmatter/abstract.tex",
         f"{prefix}chapters/1-introduction.tex",
         f"{prefix}chapters/2-theoretical-background.tex",
@@ -145,6 +144,8 @@ def validate_template(path: Path, v: str) -> None:
         fail(f"{path.name}: standard template bundle must not vendor abntexto.cls.")
     if f"{prefix}{REMOVED_FORWARDING_LAYER}" in entries:
         fail(f"{path.name}: removed forwarding layer must not be distributed.")
+    if any(name.startswith(f"{prefix}abntexto-ufc/") for name in entries):
+        fail(f"{path.name}: legacy modular runtime directory must not be distributed.")
     stripped = {name[len(prefix):]: info for name, info in entries.items()}
     reject_forbidden(stripped, path.name)
     assert_public_main(path, f"{prefix}main.tex")
@@ -162,7 +163,6 @@ def validate_overleaf(path: Path) -> None:
         "MIGRATING-TO-V3.md",
         "abntexto.cls",
         "abntexto-ufc.cls",
-        "abntexto-ufc/core.def",
         "frontmatter/abstract.tex",
         "chapters/1-introduction.tex",
         "chapters/2-theoretical-background.tex",
@@ -177,6 +177,8 @@ def validate_overleaf(path: Path) -> None:
     require(entries, required, path.name)
     if REMOVED_FORWARDING_LAYER in entries:
         fail(f"{path.name}: removed forwarding layer must not be distributed.")
+    if any(name.startswith("abntexto-ufc/") for name in entries):
+        fail(f"{path.name}: legacy modular runtime directory must not be distributed.")
     if any(name.startswith(f"{PACKAGE_ID}-overleaf-") for name in entries):
         fail(f"{path.name}: Overleaf import must place main.tex at archive root.")
     reject_forbidden(entries, path.name)

@@ -1,8 +1,8 @@
 # abntexto-ufc v3 Architecture
 
-Updated: 2026-09-18
+Updated: 2026-09-19
 
-This document defines the engineering architecture for the `abntexto-ufc` v3 series. The latest published release is v3.0.3 and no new runtime development candidate is active in post-release steady state. It governs repository organization and project-owned runtime/API ownership; it does not create academic formatting requirements.
+This document defines the engineering architecture for the `abntexto-ufc` v3 series. The latest published release is v3.0.3; v3.0.4 is the active unreleased modernization line. It governs repository organization and project-owned runtime/API ownership; it does not create academic formatting requirements.
 
 > **Lifecycle note:** architecture rules are current unless explicitly described as historical chronology. Old phase/PR status statements retained later in this file are implementation history, not current release-state authority. Current repository/release state is controlled by `AGENTS.md`, `docs/RELEASE-STATE.md`, and `release/v3-release-candidate.json`; closed Issues and historical v3 control files are audit evidence only.
 
@@ -10,26 +10,12 @@ This document defines the engineering architecture for the `abntexto-ufc` v3 ser
 
 The v3 tree must be explicit, English-first for engineering surfaces, easy to navigate, free of duplicate ownership, testable, distribution-safe, and free of runtime compatibility layers whose only purpose is preserving removed v2 project API.
 
-The repository is an active product tree, not an archive. Primary immutable history belongs to Git commits, tags, releases, issues, pull requests, and certified SHAs. A bounded tracked evidence document may remain when it materially supports the current audit trail, but it must be explicitly labeled historical/superseded and must not compete with current control-plane authority. No `history/` museum directories or dormant future-phase ledgers are part of the active architecture.
+The repository is an active product tree, not an archive. Primary immutable history belongs to Git commits, tags, releases, issues, pull requests, and certified SHAs. A bounded tracked evidence document may remain when it materially supports the audit trail, but it must live in the controlled `docs/history/v3/` or `release/history/v3/` namespaces, be explicitly historical, and never compete with current control-plane authority.
 
 ## Top-level layout
 
 ```text
 abntexto-ufc.cls
-abntexto-ufc/
-  core.def
-  fonts.def
-  layout.def
-  modules.def
-  frontmatter.def
-  institutional.def
-  academic-works.def
-  research-projects.def
-  objects.def
-  bibliography.def
-  backmatter.def
-  integrations/abntexto.def
-  standards/nbr6023-2025.def
 template/
   main.tex
   frontmatter/
@@ -54,31 +40,24 @@ validator/
 docs/
   USER-GUIDE.md
   COMMAND-REFERENCE.md
+  RELEASE-STATE.md
 release/
   ctan/
 ```
 
-`articles.def` is V3-A2-owned and may now be introduced from the canonical A2 entry. It must directly own scientific-article behavior rather than act as a compatibility/forwarding layer.
-
 ## Runtime ownership
 
-`abntexto-ufc.cls` is the only canonical class entry point. v3 does not ship `ufctex.cls`.
+`abntexto-ufc.cls` is the only canonical project-owned runtime and the only canonical class entry point. v3 does not ship `ufctex.cls` and v3.0.4 no longer tracks a separate `abntexto-ufc/` runtime-module directory.
 
-Runtime responsibilities are separated as follows:
+The class remains internally organized into responsibility sections for core configuration, fonts, layout, optional modules, front matter, institutional presentation, academic-work profiles, scientific articles, research projects, academic objects, upstream compatibility, bibliography/current-standard adaptation, and back matter. Those sections are organizational boundaries inside one source file, not independently distributed runtime files.
 
-- `core.def`: setup keys, document/profile state, shared metadata, common conditionals;
-- `fonts.def`: font selection, strict-font policy, engine-specific font resolution;
-- `layout.def`: page geometry, section/page-break policy, structural layout primitives;
-- `modules.def`: optional feature selection and initialization;
-- `frontmatter.def`: front-matter rendering capabilities;
-- `institutional.def`: UFC institutional presentation/assets;
-- `academic-works.def`: capstone/dissertation/thesis behavior;
-- `research-projects.def`: research-project behavior;
-- `objects.def`: figures, charts, tables, listings, algorithms, captions, source/note handling;
-- `bibliography.def`: citation/reference integration and public bibliography surface;
-- `backmatter.def`: appendices, annexes, glossary, index, and back-matter behavior.
+A project-owned internal control sequence has one behavior owner. Public commands remain implemented directly by the responsibility section that owns the behavior; no forwarding-only compatibility layer is part of the v3 runtime. Historical modular ownership and its R2 migration evidence remain under controlled v3 history.
 
-A project-owned internal control sequence has one behavior owner. Public commands are implemented directly by the module that owns the behavior; no forwarding-only compatibility layer is part of the final v3 runtime. R2-B5 completed this invariant: `public-api.def` and its class load are absent.
+## Upstream boundaries
+
+External `abntexto` compatibility remains an explicit responsibility section inside the canonical class. Upstream identifiers may remain non-English when genuinely owned by the dependency and required at that boundary, but they must not be re-exported as canonical project API.
+
+Current-standard runtime adaptations, including the NBR 6023:2025 bibliography compatibility behavior, also live in explicitly delimited sections of the canonical class. Machine normative authority remains in top-level `standards/`; the class contains only the runtime behavior needed to implement the reconciled contract.
 
 ## R2 migration sequencing
 
@@ -118,11 +97,11 @@ backmatter/
 figures/
 ```
 
-Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Public staging excludes the UFC institutional asset and proprietary Microsoft fonts, packages only tracked tutorial assets, and `tests/checks/public_bundles.py` proves archive structure, safe paths and reproducibility. No external reference-photo download is part of normal bundle generation.
+Flattening is a distribution staging responsibility; it must not distort the repository architecture. `tools/build-public-bundles.py`, exposed through `make public-bundles`, produces a version-rooted template archive and a root-flat Overleaf import archive. The latter alone vendors the pinned upstream `abntexto.cls`. Both user bundles include exactly the project UFC coat-of-arms PNG required by the canonical example, exclude proprietary Microsoft fonts, package the same canonical `abntexto-ufc.cls`, and are checked for safe paths, deterministic rebuild identity and archive reproducibility.
 
-`tools/build-distribution-bundles.py`, exposed through `make distribution-bundles`, composes that public delivery with a class/runtime archive, a CTAN submission candidate, and `SHA256SUMS`. The class/runtime archive contains only the current class, runtime modules, project README and license under a versioned root. It keeps `abntexto` external.
+`tools/build-distribution-bundles.py`, exposed through `make distribution-bundles`, composes the Template/Overleaf delivery with the canonical CTAN submission candidate and `SHA256SUMS`. No source-to-runtime inlining step exists: the tracked `abntexto-ufc.cls` is copied byte-for-byte as the project-owned runtime on every distribution surface. CTAN keeps `abntexto` external.
 
-The CTAN candidate uses a browsing-friendly top-level `abntexto-ufc/` directory rather than exposing internal TDS `tex/` and `doc/` staging. `release/ctan/README.md` is the package-facing README. `release/ctan/abntexto-ufc.tex` is the tracked manual source; the distribution producer builds its deterministic PDF and places source and PDF together with the current class/runtime, example and license. `tests/checks/distribution_bundles.py` proves the complete artifact set, checksum integrity, deterministic outputs, expected class/CTAN layouts, package metadata, external-upstream semantics, and asset exclusions.
+The CTAN candidate uses a browsing-friendly top-level `abntexto-ufc/` package directory rather than exposing internal TDS `tex/` and `doc/` staging. `release/ctan/README.md` is the package-facing README. `release/ctan/abntexto-ufc.tex` is the tracked manual source; the distribution producer builds its deterministic PDF and places source and PDF together with the byte-identical canonical class, example and license. `tests/checks/distribution_bundles.py` proves the complete artifact set, checksum integrity, deterministic outputs, canonical-class identity, package metadata, external-upstream semantics, and asset exclusions.
 
 The accepted `abntexto-uece` package is retained only as a practical CTAN packaging benchmark. Current CTAN guidance and the current `pkgcheck` release govern the technical submission check. See `docs/CTAN-RELEASE.md` for the maintainer procedure. CTAN acceptance is an external release event, not an architectural state inferred from local or CI validation.
 
@@ -130,7 +109,7 @@ The accepted `abntexto-uece` package is retained only as a practical CTAN packag
 
 Top-level `standards/` contains the current machine-readable source catalog, precedence, rules, locators, and normative evidence metadata needed by the active product. Process ledgers from completed campaigns are not retained merely as historical records.
 
-Scientific-article normative material was reintroduced in V3-A1 from current sources. V3-A2 is now active and owns only the bounded runtime/profile and article-specific evidence needed to realize that contract.
+Scientific-article normative material was reintroduced in V3-A1 from current sources and implemented during the historical V3-A2 sequence. Current runtime ownership is represented directly in the canonical class; historical phase ownership remains audit evidence only.
 
 ## Tests, validation, and workflow orchestration
 
