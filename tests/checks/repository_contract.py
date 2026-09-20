@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 REQUIRED_PATHS = {
     "abntexto-ufc.cls",
+    "CHANGELOG.md",
     "template/main.tex",
     "tests/run.py",
     "docs/ARCHITECTURE.md",
@@ -37,6 +38,7 @@ REQUIRED_PATHS = {
 
 FORBIDDEN_EXACT_PATHS = {
     "ufctex.cls",
+    "release/ctan/CHANGELOG",
     "docs/B2R-NAMING-INVENTORY.md",
     "docs/HANDOFF-V2.2.0.md",
     "docs/NAMING.md",
