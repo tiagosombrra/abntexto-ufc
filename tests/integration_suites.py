@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+from pathlib import PurePosixPath
 
 SUITES: dict[str, tuple[str, ...]] = {
     "complete": ("*",),
@@ -89,7 +90,15 @@ def is_docs_only(path: str) -> bool:
     return path in DOC_ONLY_EXACT or path.startswith(DOC_ONLY_PREFIXES)
 
 
+def normalized_movable_test_path(path: str) -> str:
+    for prefix in ("tests/checks/", "tests/integration/", "tests/documents/"):
+        if path.startswith(prefix):
+            return prefix + PurePosixPath(path).name
+    return path
+
+
 def matching_suites(path: str) -> set[str]:
+    path = normalized_movable_test_path(path)
     matched: set[str] = set()
     for suite, patterns in PATH_RULES:
         if any(path == pattern or path.startswith(pattern) for pattern in patterns):
@@ -102,6 +111,7 @@ def infer_suites(paths: list[str]) -> tuple[str, ...]:
     if not technical:
         return ()
 
+    technical = [normalized_movable_test_path(path) for path in technical]
     orchestration = [path for path in technical if path in ORCHESTRATION_EXACT]
     domain_technical = [path for path in technical if path not in ORCHESTRATION_EXACT]
     if orchestration and not domain_technical:
@@ -154,6 +164,9 @@ def self_test() -> None:
         ("tools/ci/build-pages-site.sh",): ("web-lite",),
         ("tests/run.py", "validator/app.js"): ("web-lite",),
         ("tests/integration/scientific-article-profile.sh",): ("article",),
+        ("tests/integration/profiles/article/scientific-article-profile.sh",): ("article",),
+        ("tests/checks/validator/validator_source.py",): ("web-lite",),
+        ("tests/documents/profiles/article/scientific-article-body.tex",): ("article",),
         ("tests/integration/scientific-article-recommendations.sh",): ("article",),
         ("tests/run.py", "tests/integration/scientific-article-recommendations.sh"): ("article",),
         ("tests/run.py", "unknown/technical.file"): ("complete",),

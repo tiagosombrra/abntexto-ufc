@@ -9,26 +9,32 @@ import sys
 from pathlib import Path
 from typing import Iterable
 
+from path_resolver import check_file, repository_relative
+
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_CHECKS = (
-    "tests/checks/canonical_identity.py",
-    "tests/checks/repository_contract.py",
-    "tests/checks/phase_governance.py",
-    "tests/checks/metadata_consistency.py",
-    "tests/checks/engineering_language.py",
-    "tests/checks/validator_source.py",
-    "tests/checks/normative_rule_migrations.py",
-    "tests/checks/normative_objects_scope.py",
-    "tests/checks/reference_guide_contract.py",
-    "tests/checks/profile_matrix_contract.py",
-    "tests/checks/scientific_article_profile_contract.py",
-    "tests/checks/scientific_article_recommendations_contract.py",
-    "tests/checks/scientific_article_evidence_map.py",
-    "tests/checks/linux_integration_suites.py",
-    "tests/checks/test_surface_integrity.py",
-    "tests/checks/v3_api_residual.py",
-    "tests/checks/librarian_review_contract.py",
+SOURCE_CHECK_NAMES = (
+    "canonical_identity.py",
+    "repository_contract.py",
+    "phase_governance.py",
+    "metadata_consistency.py",
+    "path_resolution_contract.py",
+    "engineering_language.py",
+    "validator_source.py",
+    "normative_rule_migrations.py",
+    "normative_objects_scope.py",
+    "reference_guide_contract.py",
+    "profile_matrix_contract.py",
+    "scientific_article_profile_contract.py",
+    "scientific_article_recommendations_contract.py",
+    "scientific_article_evidence_map.py",
+    "linux_integration_suites.py",
+    "test_surface_integrity.py",
+    "v3_api_residual.py",
+    "librarian_review_contract.py",
 )
+
+# Resolved repository-relative paths remain exported for integrity/audit tooling.
+SOURCE_CHECKS = tuple(repository_relative(check_file(name)) for name in SOURCE_CHECK_NAMES)
 
 
 def fail(message: str) -> None:
@@ -144,10 +150,12 @@ def execute_checks() -> tuple[int, int, int, int]:
     run(["git", "diff", "--check"], "working-tree diff integrity")
     run(["git", "diff", "--cached", "--check"], "index diff integrity")
 
-    for relative in SOURCE_CHECKS:
-        path = ROOT / relative
-        if not path.is_file():
-            fail(f"required source check is missing: {relative}")
+    for filename in SOURCE_CHECK_NAMES:
+        try:
+            path = check_file(filename)
+        except RuntimeError as exc:
+            fail(str(exc))
+        relative = repository_relative(path)
         run([sys.executable, relative], relative)
 
     return python_count, json_count, shell_count, javascript_count
@@ -171,7 +179,7 @@ def main() -> None:
     print(
         "STATIC-GATE-EVIDENCE status=PASS "
         f"python={python_count} json={json_count} shell={shell_count} javascript={javascript_count} "
-        f"source_checks={len(SOURCE_CHECKS)} side_effects=0 tex_pdf=0 network=0"
+        f"source_checks={len(SOURCE_CHECK_NAMES)} side_effects=0 tex_pdf=0 network=0"
     )
 
 
