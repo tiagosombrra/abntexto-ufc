@@ -1,7 +1,7 @@
 abntexto-ufc changelog
 ======================
 
-3.0.4 — Unreleased
+3.0.4 — 2026-09-19
 ------------------
 
 - Consolidates the project-owned runtime into one canonical tracked `abntexto-ufc.cls`, removing the 14 project-owned `.def` runtime modules while preserving the supported public behavior.
