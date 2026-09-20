@@ -71,22 +71,59 @@ def main() -> int:
         return fail("historical v3.0.2 snapshot must preserve publication authorization")
 
     marker = load_json(ACTIVE_MARKER)
-    if marker.get("lifecycle") != "active-development-marker":
-        return fail("root release marker must represent active v3.0.4 development")
     if marker.get("development_line") != "3.0.4" or marker.get("target_version") != "3.0.4":
-        return fail("active development marker must identify v3.0.4")
-    if marker.get("candidate_state") != "NOT_FROZEN":
-        return fail("active v3.0.4 development must remain NOT_FROZEN before certification")
-    if marker.get("candidate_sha") is not None:
-        return fail("NOT_FROZEN v3.0.4 development must not expose a candidate SHA")
-    if marker.get("publication_authorized") is not False:
-        return fail("v3.0.4 publication must remain unauthorized before freeze")
-    if marker.get("publication_state") != "UNPUBLISHED":
-        return fail("active v3.0.4 development must remain UNPUBLISHED")
+        return fail("active release marker must identify v3.0.4")
+
+    candidate_state = marker.get("candidate_state")
+    if candidate_state not in {"NOT_FROZEN", "FROZEN"}:
+        return fail("v3.0.4 candidate state must be NOT_FROZEN or FROZEN")
+
+    expected_lifecycle = (
+        "active-release-marker" if candidate_state == "FROZEN" else "active-development-marker"
+    )
+    if marker.get("lifecycle") != expected_lifecycle:
+        return fail(f"v3.0.4 lifecycle must be {expected_lifecycle} for {candidate_state}")
+
+    if candidate_state == "NOT_FROZEN":
+        if marker.get("candidate_sha") is not None:
+            return fail("NOT_FROZEN v3.0.4 development must not expose a candidate SHA")
+        if marker.get("publication_authorized") is not False:
+            return fail("v3.0.4 publication must remain unauthorized before freeze")
+        if marker.get("publication_state") != "UNPUBLISHED":
+            return fail("NOT_FROZEN v3.0.4 development must remain UNPUBLISHED")
+    else:
+        if marker.get("candidate_sha") != "7e176fd5472925b519d469a9a756330f4851f0b3":
+            return fail("FROZEN v3.0.4 candidate must bind the certified publication source")
+        if marker.get("publication_authorized") is not True:
+            return fail("FROZEN v3.0.4 candidate must be publication-authorized")
+        if marker.get("publication_state") != "AUTHORIZED":
+            return fail("FROZEN v3.0.4 candidate must expose AUTHORIZED publication state")
+
+        candidate_certification = marker.get("certification")
+        if not isinstance(candidate_certification, dict):
+            return fail("FROZEN v3.0.4 candidate must preserve certification evidence")
+        expected_candidate_evidence = {
+            "static_contract_run": 675,
+            "linux_integration_run": 582,
+            "linux_release_check_run": 35510145977,
+            "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+            "canonical_reference_sha256": "24ec1e9eab489f8d8453c6e1b79978f8d26bf7a3ce37ec96ff676d46482e1089",
+            "ctan_sha256": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
+            "template_sha256": "3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c",
+            "overleaf_sha256": "4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92",
+            "sha256sums_sha256": "a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3",
+            "ctan_pkgcheck": "4.1.0 PASS",
+            "maintainer_visual_acceptance": "PASS",
+            "maintainer_visual_acceptance_date": "2026-09-20",
+        }
+        for key, expected in expected_candidate_evidence.items():
+            if candidate_certification.get(key) != expected:
+                return fail(f"FROZEN v3.0.4 certification mismatch for {key}")
+
     if marker.get("tracking_issue") != 353:
-        return fail("active v3.0.4 release preparation must track issue #353")
+        return fail("active v3.0.4 release must track issue #353")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
-        return fail("active development marker must point to docs/RELEASE-STATE.md")
+        return fail("active release marker must point to docs/RELEASE-STATE.md")
 
     active = marker.get("active_development_candidate")
     if not isinstance(active, dict):
@@ -108,23 +145,24 @@ def main() -> int:
     if published.get("release_id") != 391878053:
         return fail("published v3.0.3 release ID changed unexpectedly")
 
-    certification = published.get("certification")
-    if not isinstance(certification, dict):
+    published_certification = published.get("certification")
+    if not isinstance(published_certification, dict):
         return fail("published v3.0.3 receipt must preserve certification evidence")
-    if certification.get("linux_release_check_run") != 35279315637:
+    if published_certification.get("linux_release_check_run") != 35279315637:
         return fail("published v3.0.3 receipt must bind Linux Release Check run 35279315637")
-    if certification.get("validation") != "SCOPE=complete PASS=38 FAIL=0 SKIP=0":
+    if published_certification.get("validation") != "SCOPE=complete PASS=38 FAIL=0 SKIP=0":
         return fail("published v3.0.3 receipt must preserve complete validation evidence")
-    if certification.get("maintainer_visual_acceptance") != "PASS":
+    if published_certification.get("maintainer_visual_acceptance") != "PASS":
         return fail("published v3.0.3 receipt must preserve maintainer visual acceptance")
 
+    expected_state_token = "FROZEN" if candidate_state == "FROZEN" else "NOT_FROZEN"
     agents = require_tokens(
         AGENTS,
         (
             "docs/RELEASE-STATE.md",
             "v3.0.4",
             "issue #353",
-            "NOT_FROZEN",
+            expected_state_token,
             "must never be rewritten",
             "release/history/v3/",
         ),
@@ -135,10 +173,8 @@ def main() -> int:
             "Latest GitHub release",
             "`v3.0.3`",
             "`PUBLISHED`",
-            "Active development candidate",
             "`v3.0.4`",
-            "UNRELEASED",
-            "NOT_FROZEN",
+            expected_state_token,
         ),
     )
 
@@ -148,7 +184,8 @@ def main() -> int:
     print(
         "DEVELOPMENT-GOVERNANCE-EVIDENCE status=PASS "
         "published_release=3.0.3 active_candidate=3.0.4 "
-        "candidate_state=not_frozen publication_state=unpublished "
+        f"candidate_state={str(candidate_state).lower()} "
+        f"publication_state={str(marker.get('publication_state')).lower()} "
         "tracking_issue=353 entry_sha=51bb54a013dc2fd4917880960928ad9792a2a1be "
         "current_authority=docs/RELEASE-STATE.md"
     )
