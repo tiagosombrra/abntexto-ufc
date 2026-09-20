@@ -40,9 +40,9 @@ Published release assets are immutable project evidence and must not be rebuilt 
 
 ## Current repository lifecycle
 
-The published baseline remains v3.0.3. An unreleased v3.0.4 development line is active for repository modernization. The canonical-class consolidation has been completed on `main`; the current work is repository/documentation/community hygiene. v3.0.4 has no frozen candidate SHA and no publication authorization.
+The published baseline remains v3.0.3. An unreleased v3.0.4 development line is active for repository modernization. The canonical-class consolidation, current-only documentation/community surface, CI simplification, GitHub Actions pin refresh, conservative historical-evidence boundary, machine-readable current public API contract and canonical root changelog have been completed or are in final merge validation. The remaining work is the final repository/regression audit. v3.0.4 has no frozen candidate SHA and no publication authorization.
 
-The v3.0.4 line may improve repository structure, governance, CI, contributor experience and source organization while preserving the current public API unless a separately reviewed change explicitly states otherwise. Published v3.0.3 tags/releases/assets remain immutable.
+The v3.0.4 line preserves the published v3.0.3 public behavior while modernizing repository structure, governance, CI, contributor experience, source ownership and release-control surfaces. `standards/public-api.json` is the current machine-readable project API contract; historical v3 migration evidence remains audit/residual evidence only. Published v3.0.3 tags/releases/assets remain immutable.
 
 ## Authority order
 
