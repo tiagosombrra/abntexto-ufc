@@ -10,6 +10,7 @@ if str(TESTS) not in sys.path:
     sys.path.insert(0, str(TESTS))
 
 from integration_suites import SUITES, infer_suites  # noqa: E402
+from path_resolver import integration_file, repository_relative  # noqa: E402
 import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"
@@ -21,16 +22,16 @@ RELEASE_ASSET_HELPER = ROOT / "tools" / "ci" / "validate-release-assets.py"
 PKGCHECK_DOWNLOAD_HELPER = ROOT / "tools" / "ci" / "validate-pkgcheck-download.py"
 CTAN_CERT_HELPER = ROOT / "tools" / "ci" / "certify-ctan-package.sh"
 RELEASE_SUMMARY_HELPER = ROOT / "tools" / "ci" / "render-release-summary.sh"
-PROFILE_MATRIX = ROOT / "tests" / "integration" / "profile-matrix.sh"
-ARTICLE_PROFILE = ROOT / "tests" / "integration" / "scientific-article-profile.sh"
-DISTRIBUTION_BUNDLES = ROOT / "tests" / "integration" / "distribution-bundles.sh"
-RELEASE_REVIEW_PAIRS = ROOT / "tests" / "integration" / "release-review-pairs.sh"
+PROFILE_MATRIX = integration_file("profile-matrix.sh")
+ARTICLE_PROFILE = integration_file("scientific-article-profile.sh")
+DISTRIBUTION_BUNDLES = integration_file("distribution-bundles.sh")
+RELEASE_REVIEW_PAIRS = integration_file("release-review-pairs.sh")
 RELEASE_CANDIDATE_MARKER = "release/v3-release-candidate.json"
 CORRECTION_STATE = "release/history/v3/v3.0.1-final-corrections.json"
 RELEASE_WORKFLOW_PATH = ".github/workflows/linux-release-check.yml"
 DISTRIBUTION_BUILDER = "tools/build-public-bundles.py"
 DISTRIBUTION_WRAPPER = "tools/build-distribution-bundles.py"
-DISTRIBUTION_GATE = "tests/integration/distribution-bundles.sh"
+DISTRIBUTION_GATE = repository_relative(integration_file("distribution-bundles.sh"))
 
 
 def fail(message: str) -> None:
@@ -270,6 +271,10 @@ def main() -> None:
         ["tests/run.py", "tests/integration/scientific-article-recommendations.sh"]
     ) != ("article",):
         fail("orchestration plus Step 5 article changes must select article, not complete")
+    if infer_suites(
+        ["tests/run.py", "tests/integration/profiles/article/scientific-article-body.sh"]
+    ) != ("article",):
+        fail("nested article paths must retain article scope after taxonomy moves")
     if infer_suites(["abntexto-ufc.cls"]) != ("complete",):
         fail("canonical runtime changes must force complete integration")
     if infer_suites(["tools/ci/select-integration-scope.py"]) != ("smoke",):
