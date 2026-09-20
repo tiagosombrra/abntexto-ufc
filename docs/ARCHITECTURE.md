@@ -1,10 +1,10 @@
 # abntexto-ufc architecture
 
-Updated: 2026-09-19
+Updated: 2026-09-20
 
 This document describes the current engineering architecture of `abntexto-ufc`. It is intentionally limited to the supported repository/runtime model and does not serve as a chronology of earlier implementation phases.
 
-The latest published release is v3.0.3. The active unreleased development line is v3.0.4.
+Current publication and development-line facts are owned by `release/v3-release-candidate.json` and `docs/RELEASE-STATE.md`. This architecture document intentionally does not hard-code volatile release-state values.
 
 ## Design principles
 
@@ -224,16 +224,9 @@ Current release/lifecycle authority is:
 
 `release/v3-release-candidate.json` is the stable machine-readable release/development state path.
 
-During the active v3.0.4 line it must remain explicitly unreleased until a separately certified freeze:
+The marker may represent a published steady state or a separately selected unreleased development line. Current values must be read from the marker itself and from `docs/RELEASE-STATE.md`, rather than duplicated here.
 
-```text
-candidate_state = NOT_FROZEN
-candidate_sha = null
-publication_state = UNPUBLISHED
-publication_authorized = false
-```
-
-The marker also preserves the receipt of the latest published release without allowing that release to be retargeted or rebuilt.
+When an unreleased development line is active, candidate state must remain explicitly distinct from a frozen/published source until the full certification and freeze process is complete. The marker also preserves published-release receipts without allowing an existing release to be retargeted or rebuilt.
 
 Release invariant:
 

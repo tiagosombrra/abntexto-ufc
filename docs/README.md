@@ -15,6 +15,7 @@ The documentation describes the current supported project only. Historical imple
 - [ARCHITECTURE.md](ARCHITECTURE.md) — current repository/runtime architecture and ownership boundaries.
 - [ENGINEERING-LANGUAGE.md](ENGINEERING-LANGUAGE.md) — language policy for project-owned engineering surfaces.
 - [LINUX-INTEGRATION-SCOPES.md](LINUX-INTEGRATION-SCOPES.md) — integration scopes and CI selection rules.
+- [REPOSITORY-MAINTENANCE.md](REPOSITORY-MAINTENANCE.md) — current repository-wide maintenance map, phase boundaries and acceptance criteria.
 
 ## Normative and institutional basis
 

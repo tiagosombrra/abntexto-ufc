@@ -46,7 +46,7 @@ GitHub-reported asset digests were independently verified against those frozen v
 
 ## Current repository lifecycle
 
-GitHub publication of v3.0.4 is complete. Release issue #353 is in closeout; no v3.0.5 or other future development line has been selected.
+GitHub publication of v3.0.4 is complete. Release issue #353 is completed and closed; no v3.0.5 or other future development line has been selected. Repository-wide maintenance and organization improvements are tracked separately in issue #359 and do not by themselves select a future runtime development line.
 
 The root machine receipt `release/v3-release-candidate.json` represents the current published steady state. Completed v3.0.3 and v3.0.4 release receipts are preserved under `release/history/v3/`, and the detailed v3.0.4 publication receipt is preserved under `docs/history/v3/release/`.
 

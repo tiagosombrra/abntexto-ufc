@@ -14,6 +14,7 @@ SOURCE_CHECKS = (
     "tests/checks/canonical_identity.py",
     "tests/checks/repository_contract.py",
     "tests/checks/phase_governance.py",
+    "tests/checks/metadata_consistency.py",
     "tests/checks/engineering_language.py",
     "tests/checks/validator_source.py",
     "tests/checks/normative_rule_migrations.py",
