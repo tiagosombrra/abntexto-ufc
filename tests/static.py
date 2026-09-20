@@ -32,6 +32,9 @@ SOURCE_CHECK_NAMES = (
     "librarian_review_contract.py",
 )
 
+# Resolved repository-relative paths remain exported for integrity/audit tooling.
+SOURCE_CHECKS = tuple(repository_relative(check_file(name)) for name in SOURCE_CHECK_NAMES)
+
 
 def fail(message: str) -> None:
     raise SystemExit(f"Static gate failed: {message}")
