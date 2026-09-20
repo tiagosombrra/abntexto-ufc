@@ -1,5 +1,5 @@
 {
-  "schema_version": 25,
+  "schema_version": 26,
   "project": "abntexto-ufc",
   "lifecycle": "published-release-marker",
   "release_line": "3.0.4",
@@ -50,11 +50,15 @@
   },
   "historical_release_state": "release/history/v3/v3.0.4-release-candidate.json",
   "ctan_follow_up": {
-    "state": "DEFERRED",
+    "state": "SUBMITTED",
     "issue": 356,
+    "previous_ctan_version": "3.0.2",
+    "target_version": "3.0.4",
+    "submitted_date": "2026-09-20",
+    "acceptance_state": "PENDING",
     "asset": "abntexto-ufc-3.0.4.zip",
     "sha256": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
-    "rule": "Use the exact GitHub Release asset; do not rebuild."
+    "rule": "The exact GitHub Release asset was submitted; do not rebuild or replace it while CTAN acceptance/publication is pending."
   },
   "policy": {
     "marker_change_forces_complete_linux_integration": true,
@@ -63,5 +67,5 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.4 is the current published GitHub release. No future development line has been selected. The published tag, source and release assets are immutable project evidence. CTAN remains a separate exact-byte follow-up tracked in issue #356."
+  "note": "v3.0.4 is the current published GitHub release. No future development line has been selected. The published tag, source and release assets are immutable project evidence. The exact canonical CTAN archive was submitted on 2026-09-20 as an update from CTAN version 3.0.2 to 3.0.4; CTAN acceptance/publication remains pending under issue #356."
 }
