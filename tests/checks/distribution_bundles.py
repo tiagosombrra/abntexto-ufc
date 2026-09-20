@@ -145,13 +145,13 @@ def validate_package(path: Path, v: str) -> None:
         bundled_example_pdf = archive.read(f"{prefix}{PACKAGE_ID}-example.pdf")
 
         expected_readme = (CTAN_DIR / "README.md").read_bytes()
-        expected_changelog = (CTAN_DIR / "CHANGELOG").read_bytes()
+        expected_changelog = (ROOT / "CHANGELOG.md").read_bytes()
         expected_manual = (CTAN_DIR / f"{PACKAGE_ID}.tex").read_bytes()
         expected_example = (ROOT / "docs" / "ctan-example.tex").read_bytes()
         if bundled_readme != expected_readme:
             fail(f"{path.name}: README differs from the tracked CTAN package source.")
         if bundled_changelog != expected_changelog:
-            fail(f"{path.name}: CHANGELOG differs from the tracked CTAN package source.")
+            fail(f"{path.name}: CHANGELOG differs from the canonical root CHANGELOG.md.")
         if bundled_manual != expected_manual:
             fail(f"{path.name}: manual source differs from the tracked CTAN package source.")
         if bundled_example != expected_example:
