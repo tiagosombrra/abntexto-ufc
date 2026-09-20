@@ -16,6 +16,11 @@ if str(TESTS_DIR) not in sys.path:
     sys.path.insert(0, str(TESTS_DIR))
 
 from integration_suites import SUITES
+from path_resolver import integration_file, repository_relative
+
+
+def integration_command(filename: str) -> tuple[str, ...]:
+    return ("sh", repository_relative(integration_file(filename)))
 
 
 @dataclass(frozen=True)
@@ -42,7 +47,7 @@ class Result:
 CHECKS = (
     Check("repository", "Repository contract", ("python3", "tests/checks/repository_contract.py")),
     Check("validator-source", "PDF validator sources", ("python3", "tests/checks/validator_source.py")),
-    Check("reference", "Reference document", ("sh", "tests/integration/reference-document.sh")),
+    Check("reference", "Reference document", integration_command("reference-document.sh")),
     Check(
         "web-lite-positive",
         "Web/Lite positive reference snapshot",
@@ -53,7 +58,7 @@ CHECKS = (
     Check(
         "reference-corpus",
         "Reference corpus",
-        ("sh", "tests/integration/reference-corpus.sh"),
+        integration_command("reference-corpus.sh"),
         depends=("reference",),
     ),
     Check(
@@ -69,81 +74,81 @@ CHECKS = (
         modes=("release",),
         depends=("reference",),
     ),
-    Check("layout", "Layout", ("sh", "tests/integration/layout.sh")),
-    Check("font-config", "Font configuration", ("sh", "tests/integration/font-config.sh")),
-    Check("pdf-validation-core", "PDF validation core", ("sh", "tests/integration/pdf-validation-core.sh")),
+    Check("layout", "Layout", integration_command("layout.sh")),
+    Check("font-config", "Font configuration", integration_command("font-config.sh")),
+    Check("pdf-validation-core", "PDF validation core", integration_command("pdf-validation-core.sh")),
     Check(
         "pdf-geometry",
         "PDF geometry",
-        ("sh", "tests/integration/pdf-geometry.sh"),
+        integration_command("pdf-geometry.sh"),
         depends=("pdf-validation-core",),
     ),
-    Check("math", "Mathematics", ("sh", "tests/integration/math.sh")),
-    Check("normative-complement", "Normative complement", ("sh", "tests/integration/normative-complement.sh")),
-    Check("negative-paths", "Negative paths", ("sh", "tests/integration/negative-paths.sh")),
-    Check("frontmatter", "Front matter", ("sh", "tests/integration/frontmatter.sh")),
-    Check("duplex-frontmatter", "Duplex front matter", ("sh", "tests/integration/duplex-frontmatter.sh")),
-    Check("object-geometry", "Object geometry", ("sh", "tests/integration/object-geometry.sh")),
-    Check("code-typography", "Code typography", ("sh", "tests/integration/code-typography.sh")),
-    Check("table-ibge", "IBGE tables", ("sh", "tests/integration/table-ibge.sh")),
-    Check("objects", "Academic objects", ("sh", "tests/integration/object.sh")),
-    Check("minted", "Minted objects", ("sh", "tests/integration/minted.sh")),
-    Check("algorithm-numbering", "Algorithm numbering", ("sh", "tests/integration/algorithm-numbering.sh")),
-    Check("documentary-source", "Documentary sources", ("sh", "tests/integration/documentary-source.sh")),
-    Check("bibliography", "Bibliography", ("sh", "tests/integration/bibliography.sh")),
+    Check("math", "Mathematics", integration_command("math.sh")),
+    Check("normative-complement", "Normative complement", integration_command("normative-complement.sh")),
+    Check("negative-paths", "Negative paths", integration_command("negative-paths.sh")),
+    Check("frontmatter", "Front matter", integration_command("frontmatter.sh")),
+    Check("duplex-frontmatter", "Duplex front matter", integration_command("duplex-frontmatter.sh")),
+    Check("object-geometry", "Object geometry", integration_command("object-geometry.sh")),
+    Check("code-typography", "Code typography", integration_command("code-typography.sh")),
+    Check("table-ibge", "IBGE tables", integration_command("table-ibge.sh")),
+    Check("objects", "Academic objects", integration_command("object.sh")),
+    Check("minted", "Minted objects", integration_command("minted.sh")),
+    Check("algorithm-numbering", "Algorithm numbering", integration_command("algorithm-numbering.sh")),
+    Check("documentary-source", "Documentary sources", integration_command("documentary-source.sh")),
+    Check("bibliography", "Bibliography", integration_command("bibliography.sh")),
     Check(
         "reference-spacing",
         "Reference spacing",
-        ("sh", "tests/integration/reference-spacing.sh"),
+        integration_command("reference-spacing.sh"),
         depends=("bibliography",),
     ),
-    Check("research-project", "Research project", ("sh", "tests/integration/research-project.sh")),
+    Check("research-project", "Research project", integration_command("research-project.sh")),
     Check(
         "scientific-article-profile",
         "Scientific article profile",
-        ("sh", "tests/integration/scientific-article-profile.sh"),
+        integration_command("scientific-article-profile.sh"),
     ),
     Check(
         "scientific-article-front-block",
         "Scientific article front block",
-        ("sh", "tests/integration/scientific-article-front-block.sh"),
+        integration_command("scientific-article-front-block.sh"),
         depends=("scientific-article-profile",),
     ),
     Check(
         "scientific-article-foreign-elements",
         "Scientific article foreign elements",
-        ("sh", "tests/integration/scientific-article-foreign-elements.sh"),
+        integration_command("scientific-article-foreign-elements.sh"),
         depends=("scientific-article-profile",),
     ),
     Check(
         "scientific-article-body",
         "Scientific article textual structure and body",
-        ("sh", "tests/integration/scientific-article-body.sh"),
+        integration_command("scientific-article-body.sh"),
         depends=("scientific-article-profile",),
     ),
     Check(
         "scientific-article-recommendations",
         "Scientific article recommendations and conditional applicability",
-        ("sh", "tests/integration/scientific-article-recommendations.sh"),
+        integration_command("scientific-article-recommendations.sh"),
         depends=("scientific-article-profile",),
     ),
-    Check("profiles", "Document profiles", ("sh", "tests/integration/profile-matrix.sh")),
+    Check("profiles", "Document profiles", integration_command("profile-matrix.sh")),
     Check(
         "profile-pdfa",
         "Profile PDF/A-2b",
-        ("sh", "tests/integration/profile-pdfa.sh"),
+        integration_command("profile-pdfa.sh"),
         modes=("release",),
         depends=("profiles",),
     ),
-    Check("backmatter", "Back matter", ("sh", "tests/integration/backmatter.sh")),
-    Check("duplex-backmatter", "Duplex back matter", ("sh", "tests/integration/duplex-backmatter.sh")),
-    Check("build-path", "Build path", ("sh", "tests/integration/build-path.sh")),
-    Check("multivolume", "Multi-volume documents", ("sh", "tests/integration/multivolume.sh")),
-    Check("catalog-card", "Catalog card", ("sh", "tests/integration/catalog-card.sh")),
+    Check("backmatter", "Back matter", integration_command("backmatter.sh")),
+    Check("duplex-backmatter", "Duplex back matter", integration_command("duplex-backmatter.sh")),
+    Check("build-path", "Build path", integration_command("build-path.sh")),
+    Check("multivolume", "Multi-volume documents", integration_command("multivolume.sh")),
+    Check("catalog-card", "Catalog card", integration_command("catalog-card.sh")),
     Check(
         "distribution-bundles",
         "Public distribution bundles",
-        ("sh", "tests/integration/distribution-bundles.sh"),
+        integration_command("distribution-bundles.sh"),
         modes=("pr",),
     ),
 )
