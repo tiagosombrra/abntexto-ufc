@@ -7,9 +7,11 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from repository_paths import standard_file
+
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_CATALOG = ROOT / "standards" / "catalog.json"
-DEFAULT_PRECEDENCE = ROOT / "standards" / "precedence.json"
+DEFAULT_CATALOG = standard_file("catalog.json")
+DEFAULT_PRECEDENCE = standard_file("precedence.json")
 
 ACTIVE_STATUSES = {
     "current",
