@@ -126,6 +126,8 @@ Generated PDFs/ZIPs, build products, editor state, CI downloads, publication kit
 
 Short-lived PR branches must disappear after merge. TODO/FIXME markers and stale active-path references are blockers unless explicitly documented as intentional test fixtures.
 
+Structural taxonomy changes must preserve semantic identity independently of directory depth. Movable static/integration entrypoints use `tests/path_resolver.py`; machine normative authorities use `tools/repository_paths.py`. Do not create duplicate compatibility copies merely to preserve an old path: ambiguity must fail closed and callers must be migrated to the canonical resolver or updated atomically with the owning move.
+
 ## Runtime-source architecture changes
 
 The current project-owned runtime is one canonical `abntexto-ufc.cls`. Runtime-source changes must:
