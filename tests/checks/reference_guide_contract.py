@@ -11,8 +11,9 @@ STANDARDS_DIR = ROOT / "standards"
 MAP_PATH = STANDARDS_DIR / "reference-guide-map.json"
 CATALOG_PATH = STANDARDS_DIR / "catalog.json"
 ATOMIC_PATH = STANDARDS_DIR / "atomic-rules.json"
-API_CONTRACT_PATH = ROOT / "release" / "history" / "v3" / "v3-api-migration.json"
+API_CONTRACT_PATH = STANDARDS_DIR / "public-api.json"
 COMMAND_REFERENCE_PATH = ROOT / "docs" / "COMMAND-REFERENCE.md"
+CLASS_PATH = ROOT / "abntexto-ufc.cls"
 REFERENCE_ROOT = ROOT / "template"
 BIBLIOGRAPHY_PATH = REFERENCE_ROOT / "backmatter" / "references.bib"
 
@@ -248,10 +249,47 @@ def audit_command_reference() -> list[str]:
     api = load_json(API_CONTRACT_PATH)
     text = COMMAND_REFERENCE_PATH.read_text(encoding="utf-8")
 
+    if api.get("contract") != "current-public-api" or api.get("status") != "active":
+        failures.append("standards/public-api.json: current API contract identity/status is invalid")
+    if api.get("runtime_source") != "abntexto-ufc.cls":
+        failures.append("standards/public-api.json: runtime source must be abntexto-ufc.cls")
+
     setup_keys: set[str] = set()
     for values in api.get("setup_keys", {}).values():
         setup_keys.update(values)
-    setup_keys.update({"submission-date", "article-author-note"})
+
+    class_text = CLASS_PATH.read_text(encoding="utf-8")
+    runtime_keys = set(
+        re.findall(
+            r"(?m)^\s*([a-z][a-z0-9-]*)\s+\.(?:choice:|code:n|tl_gset:N)",
+            class_text,
+        )
+    )
+    missing_runtime_keys = sorted(setup_keys - runtime_keys)
+    undeclared_runtime_keys = sorted(runtime_keys - setup_keys)
+    if missing_runtime_keys:
+        failures.append(
+            "standards/public-api.json: setup keys missing from runtime: "
+            + ", ".join(missing_runtime_keys)
+        )
+    if undeclared_runtime_keys:
+        failures.append(
+            "standards/public-api.json: runtime setup keys missing from current contract: "
+            + ", ".join(undeclared_runtime_keys)
+        )
+
+    runtime_types = set(
+        re.findall(
+            r"(?m)^\s*type\s*/\s*([a-z][a-z0-9-]*)\s+\.code:n",
+            class_text,
+        )
+    )
+    contract_types = set(api.get("setup_values", {}).get("type", []))
+    if runtime_types != contract_types:
+        failures.append(
+            "standards/public-api.json: type values differ from runtime: "
+            f"contract={sorted(contract_types)} runtime={sorted(runtime_types)}"
+        )
 
     missing_keys = sorted(key for key in setup_keys if f"`{key}`" not in text)
     if missing_keys:
@@ -259,7 +297,15 @@ def audit_command_reference() -> list[str]:
             "docs/COMMAND-REFERENCE.md: setup keys missing: " + ", ".join(missing_keys)
         )
 
-    retained_commands = api.get("public_commands", {}).get("retain", [])
+    retained_commands = api.get("public_commands", {}).get("canonical", [])
+    missing_runtime_commands = sorted(
+        command for command in retained_commands if command not in class_text
+    )
+    if missing_runtime_commands:
+        failures.append(
+            "standards/public-api.json: public commands missing from runtime: "
+            + ", ".join(missing_runtime_commands)
+        )
     missing_commands = sorted(command for command in retained_commands if command not in text)
     if missing_commands:
         failures.append(
@@ -268,6 +314,14 @@ def audit_command_reference() -> list[str]:
         )
 
     environments = api.get("public_environments", {}).get("canonical", [])
+    missing_runtime_environments = sorted(
+        environment for environment in environments if environment not in class_text
+    )
+    if missing_runtime_environments:
+        failures.append(
+            "standards/public-api.json: public environments missing from runtime: "
+            + ", ".join(missing_runtime_environments)
+        )
     missing_environments = sorted(
         environment for environment in environments if environment not in text
     )
