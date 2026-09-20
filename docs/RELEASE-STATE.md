@@ -40,7 +40,9 @@ Published release assets are immutable project evidence and must not be rebuilt 
 
 ## Current repository lifecycle
 
-The published baseline remains v3.0.3. An unreleased v3.0.4 development line is active for repository modernization. The canonical-class consolidation, current-only documentation/community surface, CI simplification, GitHub Actions pin refresh, conservative historical-evidence boundary, machine-readable current public API contract and canonical root changelog have been completed or are in final merge validation. The remaining work is the final repository/regression audit. v3.0.4 has no frozen candidate SHA and no publication authorization.
+The published baseline remains v3.0.3. The v3.0.4 repository-modernization line is technically complete; development tracking issue #335 is closed. Exact merged source SHA `b18cd5aca4f55f83fde40dd610375aeb03d5f564` passed Static Contract #670, Linux Integration #578 and Linux Release Check #230, including complete regression `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN `pkgcheck`, release-asset validation and seven-profile review preflights.
+
+v3.0.4 remains UNRELEASED / NOT_FROZEN. The certified review artifacts for that source SHA are awaiting explicit maintainer visual acceptance; no publication authorization has been granted. The next release-stage action is therefore human visual acceptance of the exact certified artifacts, followed only then by an explicit freeze/publication decision.
 
 The v3.0.4 line preserves the published v3.0.3 public behavior while modernizing repository structure, governance, CI, contributor experience, source ownership and release-control surfaces. `standards/public-api.json` is the current machine-readable project API contract; historical v3 migration evidence remains audit/residual evidence only. Published v3.0.3 tags/releases/assets remain immutable.
 
