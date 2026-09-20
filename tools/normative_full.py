@@ -9,9 +9,9 @@ from typing import Any, Iterable
 
 from normative_atomic import load_atomic_contract
 from normative_catalog import ACTIVE_STATUSES, CatalogError, load_catalog, source_map
+from repository_paths import standard_files
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_COVERAGE_DIR = ROOT / "standards"
 DEFAULT_COVERAGE_GLOB = "coverage-rules*.json"
 
 NON_NORMATIVE_AUTHORITIES = {"project-policy", "technical-profile"}
@@ -38,10 +38,10 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
 
 
 def _default_coverage_paths() -> list[Path]:
-    paths = sorted(DEFAULT_COVERAGE_DIR.glob(DEFAULT_COVERAGE_GLOB))
-    if not paths:
-        raise CatalogError("no coverage rule manifests found")
-    return paths
+    try:
+        return standard_files(DEFAULT_COVERAGE_GLOB)
+    except RuntimeError as exc:
+        raise CatalogError(str(exc)) from exc
 
 
 def _resolve_sources(
