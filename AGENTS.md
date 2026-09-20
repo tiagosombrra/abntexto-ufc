@@ -26,6 +26,7 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Active development line | none selected |
 | Completed release issue | issue #353 |
 | CTAN follow-up | issue #356 — submitted exact published bytes; acceptance pending |
+| Repository maintenance roadmap | issue #359 — active; current map in `docs/REPOSITORY-MAINTENANCE.md` |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
@@ -44,7 +45,9 @@ Historical v3 engineering evidence belongs under `docs/history/v3/`. Historical 
 
 ## Progress documentation discipline
 
-A material advance changes runtime, evidence, repository lifecycle, validation state or release readiness. Every material advance must leave an exact commit/PR receipt, executed checks with classification, and unresolved findings carried forward explicitly.
+A material advance changes runtime, evidence, repository lifecycle, validation state, repository taxonomy or release readiness. Every material advance must leave an exact commit/PR receipt, executed checks with classification, and unresolved findings carried forward explicitly.
+
+Repository-wide maintenance is currently mapped by `docs/REPOSITORY-MAINTENANCE.md` and issue #359. Update that map when a phase begins, completes, is superseded or discovers a material dependency. Do not advance to a structural move merely because the previous implementation commit exists; reconcile the durable map and current `main` first.
 
 Failed checks remain part of the audit trail after successful reruns. Do not rewrite history to make a sequence appear uniformly green.
 
