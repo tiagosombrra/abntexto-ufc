@@ -1,0 +1,46 @@
+{
+  "schema_version": 25,
+  "project": "abntexto-ufc",
+  "lifecycle": "historical-release-marker",
+  "development_line": "3.0.4",
+  "target_version": "3.0.4",
+  "candidate_state": "FROZEN",
+  "candidate_sha": "7e176fd5472925b519d469a9a756330f4851f0b3",
+  "publication_authorized": true,
+  "publication_state": "PUBLISHED",
+  "tracking_issue": 353,
+  "publication_receipt": {
+    "tag": "v3.0.4",
+    "annotated_tag_object_sha": "184b00ad2eaed8a98e6b17033e7623efb3e53571",
+    "github_release": "published",
+    "github_release_id": 392476983,
+    "github_release_published_at": "2026-09-20T15:29:02Z",
+    "source_sha": "7e176fd5472925b519d469a9a756330f4851f0b3",
+    "ctan_submission": "deferred",
+    "ctan_follow_up_issue": 356
+  },
+  "certification": {
+    "static_contract_run": 675,
+    "linux_integration_run": 582,
+    "linux_release_check_run": 35510145977,
+    "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "canonical_reference_sha256": "24ec1e9eab489f8d8453c6e1b79978f8d26bf7a3ce37ec96ff676d46482e1089",
+    "ctan_sha256": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
+    "template_sha256": "3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c",
+    "overleaf_sha256": "4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92",
+    "sha256sums_sha256": "a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3",
+    "ctan_pkgcheck": "4.1.0 PASS",
+    "release_review_pairs": 7,
+    "maintainer_visual_acceptance": "PASS",
+    "maintainer_visual_acceptance_date": "2026-09-20",
+    "visual_regression": "93/93 rendered pages unchanged versus previously approved artifacts"
+  },
+  "policy": {
+    "marker_change_forces_complete_linux_integration": true,
+    "candidate_must_bind_one_immutable_sha": true,
+    "technical_certification_and_visual_acceptance_must_match": true,
+    "publication_requires_explicit_maintainer_acceptance": true,
+    "published_tags_must_not_be_retargeted": true
+  },
+  "note": "Historical publication receipt for v3.0.4. The annotated tag points exactly to the certified and visually approved source SHA. All four GitHub Release asset digests were independently verified against the frozen receipt. CTAN is a separate exact-byte follow-up tracked in issue #356."
+}

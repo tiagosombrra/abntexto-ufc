@@ -1,0 +1,40 @@
+{
+  "schema_version": 25,
+  "project": "abntexto-ufc",
+  "lifecycle": "historical-release-marker",
+  "development_line": "3.0.3",
+  "target_version": "3.0.3",
+  "candidate_state": "FROZEN",
+  "candidate_sha": "b98270f23b1b384773c409869dfb05d71acd8638",
+  "publication_authorized": true,
+  "publication_state": "PUBLISHED",
+  "tracking_issue": 328,
+  "publication_receipt": {
+    "tag": "v3.0.3",
+    "github_release": "published",
+    "github_release_id": 391878053,
+    "github_release_published_at": "2026-09-19T01:48:03Z",
+    "source_sha": "b98270f23b1b384773c409869dfb05d71acd8638",
+    "ctan_submission": "deferred"
+  },
+  "certification": {
+    "static_contract_run": 602,
+    "linux_integration_run": 514,
+    "linux_release_check_run": 35279315637,
+    "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "canonical_reference_sha256": "c70370f8f7c2fd21671737dcdbe3d662c6b1b0d68b10e259cfbdf1217bd983b5",
+    "ctan_sha256": "315b39208c52ce2d3f18f9f8c6b3be3b4f7d574d03bf2ebb405fb3a9cb0a091a",
+    "template_sha256": "89e90a49f50f28653bdce1643ffd305b345c9a61ef53804edb5f7a48828ea164",
+    "overleaf_sha256": "32c32bf3e84e8d77db47fa6c433bb5f458ebc789980ae8eb554814af3cbdbb81",
+    "ctan_pkgcheck": "4.1.0 PASS",
+    "maintainer_visual_acceptance": "PASS",
+    "maintainer_visual_acceptance_date": "2026-09-17",
+    "sha256sums_sha256": "c526a8f6cc8a51ca3cdd289e3078f23d2c747c3af1b4a55d2b5dd04c67cde95d"
+  },
+  "policy": {
+    "candidate_must_bind_one_immutable_sha": true,
+    "technical_certification_and_visual_acceptance_must_match": true,
+    "published_tags_must_not_be_retargeted": true
+  },
+  "note": "Historical snapshot of the published v3.0.3 GitHub release preserved when v3.0.4 became the current published release. GitHub v3.0.3 tag, source and release assets remain immutable; CTAN follow-up was still deferred at archive time."
+}
