@@ -19,10 +19,10 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Fact | Current state |
 |---|---|
 | Published release | `v3.0.3` |
-| Frozen publication source | `b98270f23b1b384773c409869dfb05d71acd8638` |
+| Published v3.0.3 source | `b98270f23b1b384773c409869dfb05d71acd8638` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | v3.0.4 unreleased development |
-| Release line | `v3.0.4` / NOT_FROZEN / publication preparation |
+| Repository lifecycle | v3.0.4 frozen candidate / GitHub publication closeout |
+| Release line | `v3.0.4` / FROZEN / publication authorized |
 | Active release issue | issue #353; issue #335 is completed modernization history |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
@@ -79,18 +79,20 @@ Distribution regression must extract Template and Overleaf, rebuild their exact 
 
 There is exactly one root machine receipt path: `release/v3-release-candidate.json`.
 
-During the active v3.0.4 development line it records:
+The v3.0.4 release is currently frozen as:
 
-- `lifecycle = active-development-marker`;
+- `lifecycle = active-release-marker`;
 - `development_line = 3.0.4`;
 - `target_version = 3.0.4`;
-- `candidate_state = NOT_FROZEN`;
-- `candidate_sha = null`;
-- `publication_state = UNPUBLISHED`;
-- `publication_authorized = false`;
+- `candidate_state = FROZEN`;
+- `candidate_sha = 7e176fd5472925b519d469a9a756330f4851f0b3`;
+- `publication_state = AUTHORIZED`;
+- `publication_authorized = true`;
 - `tracking_issue = 353`;
 - published v3.0.3 receipt preserved separately in the marker;
 - authority `docs/RELEASE-STATE.md`.
+
+This candidate passed Static Contract #675, Linux Integration #582 and Linux Release Check run `35510145977` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN `pkgcheck 4.1.0`, and explicit maintainer visual acceptance on 2026-09-20.
 
 Changing the root marker is a deliberate release-control event and forces complete validation. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 

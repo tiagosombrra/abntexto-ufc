@@ -1,13 +1,13 @@
 {
-  "schema_version": 23,
+  "schema_version": 24,
   "project": "abntexto-ufc",
-  "lifecycle": "active-development-marker",
+  "lifecycle": "active-release-marker",
   "development_line": "3.0.4",
   "target_version": "3.0.4",
-  "candidate_state": "NOT_FROZEN",
-  "candidate_sha": null,
-  "publication_authorized": false,
-  "publication_state": "UNPUBLISHED",
+  "candidate_state": "FROZEN",
+  "candidate_sha": "7e176fd5472925b519d469a9a756330f4851f0b3",
+  "publication_authorized": true,
+  "publication_state": "AUTHORIZED",
   "tracking_issue": 353,
   "authority": "docs/RELEASE-STATE.md",
   "published_release": {
@@ -37,9 +37,9 @@
     "entry_sha": "51bb54a013dc2fd4917880960928ad9792a2a1be",
     "tracking_issue": 353,
     "purpose": "repository modernization and canonical class consolidation",
-    "current_change": "release-candidate-preparation",
+    "current_change": "frozen-release-candidate",
     "runtime_source_model": "single-canonical-class",
-    "tracking_pr": 354
+    "tracking_pr": 355
   },
   "policy": {
     "marker_change_forces_complete_linux_integration": true,
@@ -48,5 +48,21 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.4 remains UNRELEASED and NOT_FROZEN while the final publication source is prepared under issue #353. The canonical changelog date is finalized before candidate selection so certified release bytes do not describe themselves as Unreleased. A new exact source SHA must pass full technical certification and explicit maintainer visual acceptance before freeze. Published v3.0.3 remains immutable."
+  "note": "v3.0.4 is frozen and publication-authorized on exact certified source SHA 7e176fd5472925b519d469a9a756330f4851f0b3. Static Contract #675, Linux Integration #582 and Linux Release Check run 35510145977 passed with SCOPE=complete PASS=38 FAIL=0 SKIP=0 and CTAN pkgcheck 4.1.0 PASS. The maintainer explicitly approved the exact final artifacts on 2026-09-20. The later freeze-control commit is not a publication source. Tag v3.0.4 and GitHub Release assets must resolve to/use this source SHA and the exact retained certified bytes. Published v3.0.3 remains immutable.",
+  "certification": {
+    "static_contract_run": 675,
+    "linux_integration_run": 582,
+    "linux_release_check_run": 35510145977,
+    "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+    "canonical_reference_sha256": "24ec1e9eab489f8d8453c6e1b79978f8d26bf7a3ce37ec96ff676d46482e1089",
+    "ctan_sha256": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
+    "template_sha256": "3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c",
+    "overleaf_sha256": "4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92",
+    "sha256sums_sha256": "a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3",
+    "ctan_pkgcheck": "4.1.0 PASS",
+    "release_review_pairs": 7,
+    "maintainer_visual_acceptance": "PASS",
+    "maintainer_visual_acceptance_date": "2026-09-20",
+    "visual_regression": "93/93 rendered pages unchanged versus previously approved artifacts"
+  }
 }

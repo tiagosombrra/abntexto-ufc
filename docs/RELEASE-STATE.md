@@ -14,7 +14,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Published at | `2026-09-19T01:48:03Z` |
 | Maintainer visual acceptance | PASS |
 | CTAN v3.0.3 | deferred external follow-up |
-| Active development candidate | `v3.0.4` — UNRELEASED / NOT_FROZEN |
+| Frozen release candidate | `v3.0.4` — FROZEN / publication authorized |
 
 The current `main` branch may contain repository-maintenance changes made after publication. Those changes do not alter the already-published v3.0.3 source, tag, release assets or checksums.
 
@@ -40,35 +40,40 @@ Published release assets are immutable project evidence and must not be rebuilt 
 
 ## Current repository lifecycle
 
-The published baseline remains v3.0.3. The v3.0.4 repository-modernization line is technically complete; development tracking issue #335 is closed. Exact merged source SHA `b18cd5aca4f55f83fde40dd610375aeb03d5f564` passed Static Contract #670, Linux Integration #578 and Linux Release Check #230, including complete regression `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN `pkgcheck`, release-asset validation and seven-profile review preflights.
+The published baseline remains v3.0.3. Repository modernization issue #335 is completed and release issue #353 now governs v3.0.4 publication.
 
-v3.0.4 remains UNRELEASED / NOT_FROZEN. Maintainer visual acceptance was granted for the modernization-closeout artifacts from `b18cd5aca4f55f83fde40dd610375aeb03d5f564`, but the pre-freeze audit then found that the canonical changelog still identified 3.0.4 as `Unreleased`. Issue #353 therefore prepares a final publication source with the changelog date finalized before freeze. That new exact source must be recertified and visually accepted before publication authorization.
+v3.0.4 is frozen on exact certified source SHA `7e176fd5472925b519d469a9a756330f4851f0b3`. That source passed Static Contract #675, Linux Integration #582 and Linux Release Check #233 / run `35510145977`, including complete regression `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN `pkgcheck 4.1.0`, canonical-reference reproducibility, distribution validation and seven-profile preflight.
 
-The v3.0.4 line preserves the published v3.0.3 public behavior while modernizing repository structure, governance, CI, contributor experience, source ownership and release-control surfaces. `standards/public-api.json` is the current machine-readable project API contract; historical v3 migration evidence remains audit/residual evidence only. Published v3.0.3 tags/releases/assets remain immutable.
+The maintainer explicitly accepted the exact final review artifacts on 2026-09-20. Publication is authorized. The later control-plane commit recording this freeze is not the publication source. Annotated tag `v3.0.4` must point exactly to the frozen SHA above, and GitHub Release publication must use only the retained certified distribution bytes from Linux Release Check #233.
 
-## Certified v3.0.4 pre-freeze evidence
+Published v3.0.3 tags/releases/assets remain immutable.
+
+## Frozen v3.0.4 candidate evidence
 
 | Fact | State |
 |---|---|
-| Certified source SHA | `b18cd5aca4f55f83fde40dd610375aeb03d5f564` |
-| Static Contract | #670 — PASS |
-| Linux Integration | #578 — PASS |
-| Linux Release Check | #230 — PASS |
+| Frozen source SHA | `7e176fd5472925b519d469a9a756330f4851f0b3` |
+| Static Contract | #675 — PASS |
+| Linux Integration | #582 — PASS |
+| Linux Release Check | #233 / run `35510145977` — PASS |
 | Complete regression | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
-| CTAN pkgcheck | PASS |
+| CTAN pkgcheck | `4.1.0 PASS` |
+| Canonical reference SHA-256 | `24ec1e9eab489f8d8453c6e1b79978f8d26bf7a3ce37ec96ff676d46482e1089` |
 | Seven-profile review preflight | PASS |
-| Maintainer visual acceptance | PASS for `b18cd5ac…`; final publication-source acceptance pending after recertification |
-| Candidate state | `NOT_FROZEN` |
-| Publication state | `UNPUBLISHED` |
+| Maintainer visual acceptance | PASS — 2026-09-20 |
+| Candidate state | `FROZEN` |
+| Publication state | `AUTHORIZED` |
 
-Certified distribution hashes from Linux Release Check #230:
+Certified distribution hashes from Linux Release Check #233:
 
-- `abntexto-ufc-3.0.4.zip` — `831d4a2a8a2219e54cb395ba795492ae5b9f5704e92950f04989dcaf94c0b5b7`;
-- `abntexto-ufc-template-3.0.4.zip` — `fa62196950a2e263e4aea500d1720d180ef1bf2c3c58b64be6f366833c90848d`;
-- `abntexto-ufc-overleaf-3.0.4.zip` — `a3adc930da2657ece534c4dad5bbb4a0cae2c921fa3dfd9ced73c60572c2d0aa`;
-- `SHA256SUMS` — `5b666b3354feb225080db068b41d3275afd93c191963f7435c6f78f39ac40f5d`.
+- `abntexto-ufc-3.0.4.zip` — `137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec`;
+- `abntexto-ufc-template-3.0.4.zip` — `3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c`;
+- `abntexto-ufc-overleaf-3.0.4.zip` — `4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92`;
+- `SHA256SUMS` — `a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3`.
 
-These bytes remain valid modernization-closeout evidence, but they are not the final publication bytes because candidate preparation must first finalize the changelog date. Issue #353 governs recertification of the final publication source.
+Visual regression against the previously approved set found zero changed rendered pages across all 71 profile pages and the 22-page canonical reference. The maintainer then explicitly approved the exact final candidate artifacts.
+
+These certified bytes are the only permitted GitHub Release publication assets for v3.0.4. Do not rebuild them.
 
 ## Authority order
 
