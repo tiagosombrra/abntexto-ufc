@@ -6,6 +6,8 @@ GitHub publication and CTAN submission are separate operations. CTAN may be comp
 
 ## Distribution contract
 
+The repository root `CHANGELOG.md` is the canonical version history. The CTAN builder copies those exact bytes into the package as `CHANGELOG`.
+
 A release build produces:
 
 - `abntexto-ufc-<version>.zip` — canonical CTAN archive;
