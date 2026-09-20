@@ -22,8 +22,8 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Frozen publication source | `b98270f23b1b384773c409869dfb05d71acd8638` |
 | Canonical branch | `main`; resolve SHA dynamically |
 | Repository lifecycle | v3.0.4 unreleased development |
-| Certified unreleased source under release review | `v3.0.4` / `b18cd5aca4f55f83fde40dd610375aeb03d5f564` / NOT_FROZEN |
-| Development tracking | issue #335 completed; no publication authorization |
+| Release line | `v3.0.4` / NOT_FROZEN / publication preparation |
+| Active release issue | #353; issue #335 is completed modernization history |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
@@ -88,7 +88,7 @@ During the active v3.0.4 development line it records:
 - `candidate_sha = null`;
 - `publication_state = UNPUBLISHED`;
 - `publication_authorized = false`;
-- `tracking_issue = 335`;
+- `tracking_issue = 353`;
 - published v3.0.3 receipt preserved separately in the marker;
 - authority `docs/RELEASE-STATE.md`.
 
