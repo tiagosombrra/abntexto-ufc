@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "project": "abntexto-ufc",
+  "contract": "current-public-api",
+  "development_line": "3.0.4",
+  "status": "active",
+  "runtime_source": "abntexto-ufc.cls",
+  "human_reference": "docs/COMMAND-REFERENCE.md",
+  "setup_keys": {
+    "core": [
+      "type",
+      "print-mode",
+      "cover",
+      "catalog-card",
+      "coat-of-arms",
+      "institution",
+      "institution-acronym",
+      "center",
+      "department",
+      "undergraduate-program",
+      "undergraduate-degree",
+      "specialization-program",
+      "masters-graduate-program",
+      "masters-program",
+      "masters-degree-field",
+      "masters-concentration",
+      "doctoral-graduate-program",
+      "doctoral-program",
+      "doctoral-degree-field",
+      "doctoral-concentration",
+      "project-program",
+      "project-type",
+      "submission-entity",
+      "project-nature-statement",
+      "project-identifier",
+      "author",
+      "title",
+      "subtitle",
+      "title-variant",
+      "volume",
+      "year",
+      "location",
+      "submission-date",
+      "article-author-note",
+      "approval-date",
+      "advisor",
+      "advisor-institution",
+      "advisor-unit",
+      "advisor-feminine-label",
+      "coadvisor",
+      "coadvisor-institution",
+      "coadvisor-unit",
+      "coadvisor-feminine-label",
+      "epigraph-author",
+      "examiner-2",
+      "examiner-2-unit",
+      "examiner-2-institution",
+      "examiner-3",
+      "examiner-3-unit",
+      "examiner-3-institution",
+      "examiner-4",
+      "examiner-4-unit",
+      "examiner-4-institution",
+      "examiner-5",
+      "examiner-5-unit",
+      "examiner-5-institution",
+      "examiner-6",
+      "examiner-6-unit",
+      "examiner-6-institution"
+    ],
+    "fonts": [
+      "font",
+      "strict-font"
+    ],
+    "modules": [
+      "tables",
+      "code",
+      "algorithms",
+      "glossary",
+      "index"
+    ],
+    "institutional": [
+      "coat-of-arms-file"
+    ],
+    "academic_works": [
+      "initial-page"
+    ]
+  },
+  "setup_values": {
+    "type": [
+      "undergraduate-capstone",
+      "specialization-capstone",
+      "masters-thesis",
+      "doctoral-thesis",
+      "research-project",
+      "anonymized-research-project",
+      "scientific-article"
+    ],
+    "print-mode": [
+      "single-sided",
+      "double-sided"
+    ],
+    "cover": [
+      "auto",
+      "true",
+      "false"
+    ],
+    "catalog-card": [
+      "true",
+      "false"
+    ],
+    "coat-of-arms": [
+      "true",
+      "false"
+    ],
+    "advisor-feminine-label": [
+      "true",
+      "false"
+    ],
+    "coadvisor-feminine-label": [
+      "true",
+      "false"
+    ],
+    "font": [
+      "times",
+      "arial"
+    ],
+    "strict-font": [
+      "true",
+      "false"
+    ],
+    "tables": [
+      "native",
+      "tabularray"
+    ],
+    "code": [
+      "none",
+      "listings",
+      "minted"
+    ],
+    "algorithms": [
+      "none",
+      "algpseudocodex"
+    ],
+    "glossary": [
+      "none",
+      "glossaries"
+    ],
+    "index": [
+      "none",
+      "imakeidx"
+    ]
+  },
+  "public_commands": {
+    "canonical": [
+      "\\ufcsetup",
+      "\\ufcDocumentType",
+      "\\ufcPrintMode",
+      "\\ufcMeta",
+      "\\ufcIfProjectTF",
+      "\\ufcIfAnonymizedProjectTF",
+      "\\ufcMathFontPolicy",
+      "\\ufcPrintCover",
+      "\\ufcPrintTitlePage",
+      "\\ufcPrintApprovalPage",
+      "\\ufcPrintCatalogCard",
+      "\\ufcPrintDedication",
+      "\\ufcPrintAcknowledgments",
+      "\\ufcPrintEpigraph",
+      "\\ufcPrintErrata",
+      "\\ufcSummaryKeywords",
+      "\\ufcPrintSummary",
+      "\\ufcPrintAbstract",
+      "\\ufcPrintListOfIllustrations",
+      "\\ufcPrintListOfFigures",
+      "\\ufcPrintListOfTables",
+      "\\ufcPrintListOfTextTables",
+      "\\ufcPrintListOfCharts",
+      "\\ufcPrintListOfCodeListings",
+      "\\ufcPrintListOfAlgorithms",
+      "\\ufcPrintListOfAbbreviationsAndAcronyms",
+      "\\ufcPrintListOfSymbols",
+      "\\ufcListEntry",
+      "\\ufcPrintTableOfContents",
+      "\\ufcSource",
+      "\\ufcNote",
+      "\\ufcAddBibliographyResource",
+      "\\ufcPrintReferences",
+      "\\ufcPrintGlossary",
+      "\\ufcPrintIndex",
+      "\\ufcInputListing",
+      "\\ufcInputMinted"
+    ]
+  },
+  "public_environments": {
+    "canonical": [
+      "ufclettereditems",
+      "ufcdashedsubitems",
+      "ufcdefinitionlist",
+      "ufcobject",
+      "ufclisting",
+      "ufcalgorithm"
+    ]
+  },
+  "upstream_boundary": {
+    "retained_identifiers": [
+      "\\legend",
+      "\\keywords",
+      "\\appendix",
+      "\\annex",
+      "\\pretextual",
+      "\\textual"
+    ],
+    "policy": "Dependency-owned identifiers remain upstream API and are not redefined as project-owned public API."
+  },
+  "ownership_policy": "Every project-owned public identifier has one canonical implementation in abntexto-ufc.cls. Historical migration mappings are not current API authority."
+}
