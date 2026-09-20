@@ -19,9 +19,9 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Fact | Current state |
 |---|---|
 | Published release | `v3.0.3` |
-| Frozen publication source | `b98270f23b1b384773c409869dfb05d71acd8638` |
+| Published v3.0.3 source | `b98270f23b1b384773c409869dfb05d71acd8638` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | v3.0.4 unreleased development |
+| Repository lifecycle | v3.0.4 frozen candidate / GitHub publication closeout |
 | Release line | `v3.0.4` / FROZEN / publication authorized |
 | Active release issue | issue #353; issue #335 is completed modernization history |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
