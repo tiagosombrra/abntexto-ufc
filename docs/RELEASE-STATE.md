@@ -46,6 +46,30 @@ v3.0.4 remains UNRELEASED / NOT_FROZEN. The certified review artifacts for that 
 
 The v3.0.4 line preserves the published v3.0.3 public behavior while modernizing repository structure, governance, CI, contributor experience, source ownership and release-control surfaces. `standards/public-api.json` is the current machine-readable project API contract; historical v3 migration evidence remains audit/residual evidence only. Published v3.0.3 tags/releases/assets remain immutable.
 
+## Certified v3.0.4 pre-freeze evidence
+
+| Fact | State |
+|---|---|
+| Certified source SHA | `b18cd5aca4f55f83fde40dd610375aeb03d5f564` |
+| Static Contract | #670 — PASS |
+| Linux Integration | #578 — PASS |
+| Linux Release Check | #230 — PASS |
+| Complete regression | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
+| CTAN pkgcheck | PASS |
+| Seven-profile review preflight | PASS |
+| Maintainer visual acceptance | PENDING |
+| Candidate state | `NOT_FROZEN` |
+| Publication state | `UNPUBLISHED` |
+
+Certified distribution hashes from Linux Release Check #230:
+
+- `abntexto-ufc-3.0.4.zip` — `831d4a2a8a2219e54cb395ba795492ae5b9f5704e92950f04989dcaf94c0b5b7`;
+- `abntexto-ufc-template-3.0.4.zip` — `fa62196950a2e263e4aea500d1720d180ef1bf2c3c58b64be6f366833c90848d`;
+- `abntexto-ufc-overleaf-3.0.4.zip` — `a3adc930da2657ece534c4dad5bbb4a0cae2c921fa3dfd9ced73c60572c2d0aa`;
+- `SHA256SUMS` — `5b666b3354feb225080db068b41d3275afd93c191963f7435c6f78f39ac40f5d`.
+
+These bytes are certified evidence for release review. Do not rebuild them for publication; after maintainer acceptance, any release must remain bound to the same source SHA and retained artifact bytes.
+
 ## Authority order
 
 When facts disagree, use this order:
