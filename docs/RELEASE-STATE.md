@@ -14,7 +14,7 @@ This file is the durable human-readable release-state authority for the reposito
 | GitHub Release ID | `392476983` |
 | Published at | `2026-09-20T15:29:02Z` |
 | Maintainer visual acceptance | PASS — 2026-09-20 |
-| CTAN v3.0.4 | deferred exact-byte follow-up — issue #356 |
+| CTAN v3.0.4 | submitted 2026-09-20; acceptance/publication pending — issue #356 |
 | Active development line | none selected |
 
 The current `main` branch may contain control/documentation commits made after publication. Those commits do not alter the published v3.0.4 source, annotated tag, release assets or checksums.
@@ -50,7 +50,7 @@ GitHub publication of v3.0.4 is complete. Release issue #353 is in closeout; no 
 
 The root machine receipt `release/v3-release-candidate.json` represents the current published steady state. Completed v3.0.3 and v3.0.4 release receipts are preserved under `release/history/v3/`, and the detailed v3.0.4 publication receipt is preserved under `docs/history/v3/release/`.
 
-CTAN publication is a separate external operation tracked by issue #356. It must use the exact `abntexto-ufc-3.0.4.zip` asset from GitHub Release v3.0.4 after verifying SHA-256 `137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec`. Do not rebuild the archive.
+CTAN publication is a separate external operation tracked by issue #356. The exact `abntexto-ufc-3.0.4.zip` asset from GitHub Release v3.0.4, SHA-256 `137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec`, was submitted on 2026-09-20 as an update from the CTAN-published version 3.0.2 to 3.0.4. CTAN acceptance/publication remains pending. Do not rebuild or replace the submitted archive.
 
 Previous GitHub release v3.0.3 remains immutable. Its machine receipt is preserved at `release/history/v3/v3.0.3-release-candidate.json`.
 
