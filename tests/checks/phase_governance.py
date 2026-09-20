@@ -83,8 +83,8 @@ def main() -> int:
         return fail("v3.0.4 publication must remain unauthorized before freeze")
     if marker.get("publication_state") != "UNPUBLISHED":
         return fail("active v3.0.4 development must remain UNPUBLISHED")
-    if marker.get("tracking_issue") != 335:
-        return fail("active v3.0.4 development must track issue #335")
+    if marker.get("tracking_issue") != 353:
+        return fail("active v3.0.4 release preparation must track issue #353")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
         return fail("active development marker must point to docs/RELEASE-STATE.md")
 
@@ -95,8 +95,8 @@ def main() -> int:
         return fail("active development metadata must identify v3.0.4")
     if active.get("entry_sha") != "51bb54a013dc2fd4917880960928ad9792a2a1be":
         return fail("v3.0.4 entry must preserve the certified post-v3.0.3 steady-state SHA")
-    if active.get("tracking_issue") != 335:
-        return fail("active development metadata must point to issue #335")
+    if active.get("tracking_issue") != 353:
+        return fail("active release-preparation metadata must point to issue #353")
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
@@ -123,7 +123,7 @@ def main() -> int:
         (
             "docs/RELEASE-STATE.md",
             "v3.0.4",
-            "issue #335",
+            "issue #353",
             "NOT_FROZEN",
             "must never be rewritten",
             "release/history/v3/",
@@ -149,7 +149,7 @@ def main() -> int:
         "DEVELOPMENT-GOVERNANCE-EVIDENCE status=PASS "
         "published_release=3.0.3 active_candidate=3.0.4 "
         "candidate_state=not_frozen publication_state=unpublished "
-        "tracking_issue=335 entry_sha=51bb54a013dc2fd4917880960928ad9792a2a1be "
+        "tracking_issue=353 entry_sha=51bb54a013dc2fd4917880960928ad9792a2a1be "
         "current_authority=docs/RELEASE-STATE.md"
     )
     return 0

@@ -42,7 +42,7 @@ Published release assets are immutable project evidence and must not be rebuilt 
 
 The published baseline remains v3.0.3. The v3.0.4 repository-modernization line is technically complete; development tracking issue #335 is closed. Exact merged source SHA `b18cd5aca4f55f83fde40dd610375aeb03d5f564` passed Static Contract #670, Linux Integration #578 and Linux Release Check #230, including complete regression `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN `pkgcheck`, release-asset validation and seven-profile review preflights.
 
-v3.0.4 remains UNRELEASED / NOT_FROZEN. The certified review artifacts for that source SHA are awaiting explicit maintainer visual acceptance; no publication authorization has been granted. The next release-stage action is therefore human visual acceptance of the exact certified artifacts, followed only then by an explicit freeze/publication decision.
+v3.0.4 remains UNRELEASED / NOT_FROZEN. Maintainer visual acceptance was granted for the modernization-closeout artifacts from `b18cd5aca4f55f83fde40dd610375aeb03d5f564`, but the pre-freeze audit then found that the canonical changelog still identified 3.0.4 as `Unreleased`. Issue #353 therefore prepares a final publication source with the changelog date finalized before freeze. That new exact source must be recertified and visually accepted before publication authorization.
 
 The v3.0.4 line preserves the published v3.0.3 public behavior while modernizing repository structure, governance, CI, contributor experience, source ownership and release-control surfaces. `standards/public-api.json` is the current machine-readable project API contract; historical v3 migration evidence remains audit/residual evidence only. Published v3.0.3 tags/releases/assets remain immutable.
 
@@ -57,7 +57,7 @@ The v3.0.4 line preserves the published v3.0.3 public behavior while modernizing
 | Complete regression | `SCOPE=complete PASS=38 FAIL=0 SKIP=0` |
 | CTAN pkgcheck | PASS |
 | Seven-profile review preflight | PASS |
-| Maintainer visual acceptance | PENDING |
+| Maintainer visual acceptance | PASS for `b18cd5ac…`; final publication-source acceptance pending after recertification |
 | Candidate state | `NOT_FROZEN` |
 | Publication state | `UNPUBLISHED` |
 
@@ -68,7 +68,7 @@ Certified distribution hashes from Linux Release Check #230:
 - `abntexto-ufc-overleaf-3.0.4.zip` — `a3adc930da2657ece534c4dad5bbb4a0cae2c921fa3dfd9ced73c60572c2d0aa`;
 - `SHA256SUMS` — `5b666b3354feb225080db068b41d3275afd93c191963f7435c6f78f39ac40f5d`.
 
-These bytes are certified evidence for release review. Do not rebuild them for publication; after maintainer acceptance, any release must remain bound to the same source SHA and retained artifact bytes.
+These bytes remain valid modernization-closeout evidence, but they are not the final publication bytes because candidate preparation must first finalize the changelog date. Issue #353 governs recertification of the final publication source.
 
 ## Authority order
 
