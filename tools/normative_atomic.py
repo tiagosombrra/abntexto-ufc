@@ -8,11 +8,12 @@ from pathlib import Path
 from typing import Any
 
 from normative_catalog import CatalogError, load_catalog, rule_map
+from repository_paths import standard_file
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_ATOMIC_RULES = ROOT / "standards" / "atomic-rules.json"
-DEFAULT_ATOMICITY_PLAN = ROOT / "standards" / "atomicity-plan.json"
-DEFAULT_VALIDATION_OVERRIDES = ROOT / "standards" / "validation-overrides.json"
+DEFAULT_ATOMIC_RULES = standard_file("atomic-rules.json")
+DEFAULT_ATOMICITY_PLAN = standard_file("atomicity-plan.json")
+DEFAULT_VALIDATION_OVERRIDES = standard_file("validation-overrides.json")
 
 
 def _load_json(path: Path, label: str) -> dict[str, Any]:
