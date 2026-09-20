@@ -4,9 +4,15 @@ abntexto-ufc changelog
 3.0.4 — Unreleased
 ------------------
 
-- Opens the post-v3.0.3 modernization line.
-- Consolidates the project-owned runtime into one canonical `abntexto-ufc.cls` while preserving the public API and rendered behavior.
-- Keeps the published v3.0.3 source, tag, release assets and checksums immutable.
+- Consolidates the project-owned runtime into one canonical tracked `abntexto-ufc.cls`, removing the 14 project-owned `.def` runtime modules while preserving the supported public behavior.
+- Makes the tracked canonical class the same project-owned runtime tested in the repository and distributed through CTAN, Template and Overleaf; CTAN receives the class byte-for-byte.
+- Simplifies distribution builders around the canonical runtime while preserving the packaging contract: CTAN excludes UFC institutional marks, while Template/Overleaf include the authorized project coat-of-arms asset and preserve `coat-of-arms=true`.
+- Reconciles active documentation to the current supported architecture, removes active v2→v3 migration guidance, and adds durable repository/contributor surfaces including `docs/README.md`, `tests/README.md`, `standards/README.md`, `CONTRIBUTING.md`, `SECURITY.md` and `CITATION.cff`.
+- Moves deterministic CI logic into repository-owned scripts, refreshes pinned GitHub Actions under fail-closed validation, and keeps Static Contract, Linux Integration and Linux Release Check as the release-control gates.
+- Defines a conservative boundary for retained v3 historical evidence so historical engineering/release snapshots remain audit evidence rather than current user or maintainer authority.
+- Adds `standards/public-api.json` as the machine-readable current project API contract and validates it against the canonical runtime and `docs/COMMAND-REFERENCE.md`; historical migration mappings remain only for negative/residual validation.
+- Establishes root `CHANGELOG.md` as the single version-history authority and makes the CTAN builder copy those canonical bytes into the package as `CHANGELOG`.
+- Keeps the published v3.0.3 source, tag, immutable GitHub Release assets, checksums and publication evidence unchanged.
 
 3.0.3 — 2026-09-17
 ------------------

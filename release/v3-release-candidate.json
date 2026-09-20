@@ -37,9 +37,9 @@
     "entry_sha": "51bb54a013dc2fd4917880960928ad9792a2a1be",
     "tracking_issue": 335,
     "purpose": "repository modernization and canonical class consolidation",
-    "current_change": "current-documentation-and-community-hygiene",
+    "current_change": "final-repository-regression-audit",
     "runtime_source_model": "single-canonical-class",
-    "tracking_pr": 338
+    "tracking_pr": 351
   },
   "policy": {
     "marker_change_forces_complete_linux_integration": true,
@@ -48,5 +48,5 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.4 remains an unreleased, NOT_FROZEN development line. Canonical-class consolidation is complete on main. PR #338 reconciles active documentation, repository navigation and community-maintenance surfaces around the current single-class architecture. This control update does not freeze a candidate or authorize publication. Published v3.0.3 remains immutable."
+  "note": "v3.0.4 remains an unreleased, NOT_FROZEN development line. Canonical runtime consolidation, current-only documentation, CI simplification, action-pin refresh, historical-evidence retention, the current public API contract and the canonical root changelog are complete or represented by the final closeout stack. PR #351 reconciles durable release-control state and triggers the final repository/regression audit. This marker does not freeze a candidate or authorize publication. Published v3.0.3 remains immutable."
 }
