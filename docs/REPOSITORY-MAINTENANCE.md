@@ -18,7 +18,7 @@ It does not redefine release state. Publication and development-line facts remai
 | Phase | Scope | Current state |
 |---|---|---|
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
-| 1 | metadata consistency and anti-drift | in progress under #359 |
+| 1 | metadata consistency and anti-drift | in review — PR #360, tracked by #359 |
 | 2 | recursive discovery and path-decoupling preparation | pending |
 | 3 | `standards/` taxonomy | pending |
 | 4 | `tests/` taxonomy | pending |
@@ -31,7 +31,7 @@ It does not redefine release state. Publication and development-line facts remai
 
 ## Phase 1 acceptance criteria
 
-Phase 1 is complete only when:
+Phase 1 implementation is carried by PR #360. It is complete only when:
 
 1. `CITATION.cff` identifies published v3.0.4 and its publication date;
 2. `docs/ARCHITECTURE.md` no longer duplicates volatile current release/development-line values;
