@@ -19,8 +19,8 @@ from integration_suites import SUITES
 from path_resolver import integration_file, repository_relative
 
 
-def integration_command(filename: str) -> tuple[str, ...]:
-    return ("sh", repository_relative(integration_file(filename)))
+def integration_command(filename: str, *args: str) -> tuple[str, ...]:
+    return ("sh", repository_relative(integration_file(filename)), *args)
 
 
 @dataclass(frozen=True)
@@ -64,13 +64,13 @@ CHECKS = (
     Check(
         "pdf-validator",
         "UFC PDF validator",
-        ("sh", "tests/integration/pdf-validator.sh", "template/main.pdf"),
+        integration_command("pdf-validator.sh", "template/main.pdf"),
         depends=("reference",),
     ),
     Check(
         "pdfa",
         "Reference PDF/A-2b",
-        ("sh", "tests/integration/pdfa.sh", "template/main.pdf"),
+        integration_command("pdfa.sh", "template/main.pdf"),
         modes=("release",),
         depends=("reference",),
     ),
