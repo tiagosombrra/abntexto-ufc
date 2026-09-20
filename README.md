@@ -14,6 +14,7 @@ Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do 
 - **Tutorial e fluxo de uso:** [docs/USER-GUIDE.md](docs/USER-GUIDE.md)
 - **Referência completa de comandos:** [docs/COMMAND-REFERENCE.md](docs/COMMAND-REFERENCE.md)
 - **Documentação técnica e manutenção:** [docs/README.md](docs/README.md)
+- **Histórico de versões:** [CHANGELOG.md](CHANGELOG.md)
 - **Base normativa:** [docs/NORMATIVE-BASE.md](docs/NORMATIVE-BASE.md)
 
 O site e o validador são publicados a partir do mesmo repositório. Se o site estiver temporariamente indisponível, a aplicação Web/Lite também pode ser servida localmente a partir da pasta `validator/`.

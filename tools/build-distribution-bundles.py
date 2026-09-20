@@ -277,7 +277,7 @@ def ctan_entries(
     prefix = f"{PACKAGE_ID}/"
     return [
         file_entry(CTAN_DIR / "README.md", f"{prefix}README.md"),
-        file_entry(CTAN_DIR / "CHANGELOG", f"{prefix}CHANGELOG"),
+        file_entry(ROOT / "CHANGELOG.md", f"{prefix}CHANGELOG"),
         file_entry(ROOT / "LICENSE", f"{prefix}LICENSE"),
         bytes_entry(ctan_class, f"{prefix}{PACKAGE_ID}.cls"),
         bytes_entry(manual_source, f"{prefix}{PACKAGE_ID}.tex"),
