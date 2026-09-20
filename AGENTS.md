@@ -25,7 +25,7 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Repository lifecycle | v3.0.4 published steady state |
 | Active development line | none selected |
 | Completed release issue | issue #353 |
-| CTAN follow-up | issue #356 — exact published bytes only |
+| CTAN follow-up | issue #356 — submitted exact published bytes; acceptance pending |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
@@ -96,7 +96,7 @@ The repository is currently in a published steady state:
 
 The v3.0.4 publication source passed Static Contract #675, Linux Integration #582 and Linux Release Check run `35510145977` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN `pkgcheck 4.1.0`, and explicit maintainer visual acceptance on 2026-09-20. The annotated tag and all published asset digests were independently verified after publication.
 
-Completed release machine receipts belong under `release/history/v3/`; completed publication narrative belongs under `docs/history/v3/release/`. CTAN v3.0.4 follow-up is tracked separately in issue #356 and must use the exact published GitHub archive.
+Completed release machine receipts belong under `release/history/v3/`; completed publication narrative belongs under `docs/history/v3/release/`. The exact published CTAN archive for v3.0.4 was submitted on 2026-09-20 under issue #356; CTAN acceptance/publication remains pending and the submitted bytes must not be rebuilt or replaced.
 
 Changing the root marker is a deliberate release-control event and forces complete validation. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 
