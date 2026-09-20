@@ -23,7 +23,7 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Canonical branch | `main`; resolve SHA dynamically |
 | Repository lifecycle | v3.0.4 unreleased development |
 | Release line | `v3.0.4` / NOT_FROZEN / publication preparation |
-| Active release issue | #353; issue #335 is completed modernization history |
+| Active release issue | issue #353; issue #335 is completed modernization history |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
