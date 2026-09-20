@@ -17,6 +17,7 @@ SOURCE_CHECK_NAMES = (
     "repository_contract.py",
     "phase_governance.py",
     "metadata_consistency.py",
+    "path_resolution_contract.py",
     "engineering_language.py",
     "validator_source.py",
     "normative_rule_migrations.py",
