@@ -28,9 +28,9 @@ def duplicate_basenames(paths: list[Path]) -> list[str]:
 
 
 def active_text_surfaces() -> list[Path]:
-    excluded_prefixes = (
-        "docs/history/",
-        "release/history/",
+    excluded_roots = (
+        ROOT / "docs" / "history",
+        ROOT / "release" / "history",
     )
     excluded_exact = {
         "CHANGELOG.md",
@@ -56,7 +56,7 @@ def active_text_surfaces() -> list[Path]:
         relative = path.relative_to(ROOT).as_posix()
         if relative.startswith(".git/"):
             continue
-        if relative in excluded_exact or relative.startswith(excluded_prefixes):
+        if relative in excluded_exact or any(root in path.parents for root in excluded_roots):
             continue
         if path.name == "Makefile" or path.suffix.lower() in text_suffixes:
             surfaces.append(path)
