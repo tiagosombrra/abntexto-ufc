@@ -17,9 +17,10 @@ from normative_catalog import load_catalog, rule_map
 from normative_full import load_full_contract
 from normative_proof_state import build_proof_matrix
 from normative_traceability import build_matrix as build_traceability_matrix
+from repository_paths import standard_file
 
-POLICY = ROOT / "standards" / "false-coverage-policy.json"
-VALIDATION_OVERRIDES = ROOT / "standards" / "validation-overrides.json"
+POLICY = standard_file("false-coverage-policy.json")
+VALIDATION_OVERRIDES = standard_file("validation-overrides.json")
 
 
 def fail(message: str) -> None:
