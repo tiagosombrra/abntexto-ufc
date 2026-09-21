@@ -2,10 +2,15 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-RULES_PATH = ROOT / "standards" / "coverage-rules-article.json"
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+
+RULES_PATH = standard_file("coverage-rules-article.json")
 MAP_PATH = ROOT / "standards" / "article-evidence-map.json"
 
 RECOMMENDED_RULES = {
