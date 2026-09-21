@@ -77,7 +77,12 @@ def stale_flat_standard_references(standard_candidates: list[Path]) -> list[str]
         current = authority.relative_to(ROOT).as_posix()
         for surface in surfaces:
             text = surface.read_text(encoding="utf-8", errors="replace")
-            if legacy in text:
+            composed_patterns = (
+                legacy,
+                f'ROOT / "standards" / "{authority.name}"',
+                f"ROOT / 'standards' / '{authority.name}'",
+            )
+            if any(pattern in text for pattern in composed_patterns):
                 source = surface.relative_to(ROOT).as_posix()
                 findings.append(
                     f"{source}: stale flat standards path {legacy}; current authority is {current}"
