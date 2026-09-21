@@ -2,14 +2,19 @@
 from __future__ import annotations
 
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-AUDIT = ROOT / "standards" / "source-audit.json"
-CATALOG = ROOT / "standards" / "catalog.json"
-PRECEDENCE = ROOT / "standards" / "precedence.json"
-STATUS_POLICY = ROOT / "standards" / "source-status-policy.json"
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+
+AUDIT = standard_file("source-audit.json")
+CATALOG = standard_file("catalog.json")
+PRECEDENCE = standard_file("precedence.json")
+STATUS_POLICY = standard_file("source-status-policy.json")
 
 
 def fail(message: str) -> None:

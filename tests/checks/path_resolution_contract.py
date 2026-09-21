@@ -84,6 +84,29 @@ def main() -> int:
     if ".glob(DEFAULT_COVERAGE_GLOB)" in full_text:
         return fail("normative_full.py must discover coverage manifests recursively")
 
+    moved_catalog_authorities = {
+        "catalog.json",
+        "precedence.json",
+        "reference-guide-map.json",
+        "source-audit.json",
+        "source-status-policy.json",
+        "version-policy.json",
+    }
+    for filename in sorted(moved_catalog_authorities):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "catalog":
+            return fail(f"catalog authority {filename} must resolve under standards/catalog")
+        if (ROOT / "standards" / filename).exists():
+            return fail(f"flat compatibility copy is forbidden for moved catalog authority {filename}")
+
+    web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
+        encoding="utf-8"
+    )
+    if 'standard_file("catalog.json")' not in web_lite_text:
+        return fail("Web/Lite E2E must resolve catalog.json through the canonical standards resolver")
+    if 'ROOT / "standards" / "catalog.json"' in web_lite_text:
+        return fail("Web/Lite E2E reintroduced the retired flat catalog path")
+
     print(
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "

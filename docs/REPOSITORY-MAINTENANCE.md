@@ -19,8 +19,8 @@ It does not redefine release state. Publication and development-line facts remai
 |---|---|---|
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
-| 2 | recursive discovery and path-decoupling preparation | in progress — `maintenance/path-discovery-preparation` |
-| 3 | `standards/` taxonomy | pending |
+| 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
+| 3 | `standards/` taxonomy | in progress — issue #362; slice 3A on `maintenance/standards-taxonomy-catalog` |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -31,7 +31,7 @@ It does not redefine release state. Publication and development-line facts remai
 
 ## Phase 1 receipt
 
-Phase 1 is complete. PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` after Static Contract #685 and Linux Integration #592 passed. Linux Release Check was not applicable by scope because the phase did not change runtime, distribution, the release marker or published bytes. The durable receipt is also recorded in issue #359.
+Phase 1 is complete. PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` after Static Contract #685 and Linux Integration #592 passed. Linux Release Check was not selected on the PR by its scoped trigger; after merge, `main` passed Static Contract #686 and Linux Release Check #242. The durable receipt is also recorded in issue #359.
 
 ## Phase 1 acceptance criteria
 
@@ -43,6 +43,10 @@ Phase 1 implementation is carried by PR #360. It is complete only when:
 4. Static Contract executes an explicit metadata-consistency check;
 5. the phase PR passes all required repository checks;
 6. issue #359 receives the merge/check receipt.
+
+## Phase 2 receipt
+
+Phase 2 is complete. PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` after Static Contract #688 and Linux Integration #594 passed. Linux Release Check was not selected on the PR by its scoped trigger; after merge, `main` passed Static Contract #689 and Linux Release Check #243. The durable receipt is also recorded in issue #359.
 
 ## Phase 2 current design
 
@@ -72,3 +76,14 @@ Phase 2 is complete only when:
 ## Next-phase gate
 
 Phase 3 may move `standards/` only after Phase 2 is merged and reconciled on current `main`. Direct-path consumers discovered during the Phase 2 audit must either adopt the canonical standards resolver or be migrated atomically with the file they own; no compatibility duplicate of a normative JSON authority may be introduced.
+
+
+## Phase 3 execution map
+
+Phase 3 is tracked by issue #362 and is intentionally split into bounded slices. Slice 3A moves only source-authority/catalog data into `standards/catalog/`. Later slices will handle API, rules, evidence, audits, scenarios and migrations separately. No slice may introduce duplicate compatibility copies of normative JSON authorities.
+
+### Slice 3A regression receipt
+
+The first Linux Integration run for slice 3A, #602, failed after the complete 38/38 repository regression had passed because the Web/Lite E2E harness still opened `standards/catalog.json` directly. The slice was not merged. The harness now resolves `catalog.json` through the canonical recursive standards resolver, and the path-resolution contract enforces the new location and no-duplicate rule for the catalog authorities moved by this slice. The failed run remains part of the audit trail.
+
+A subsequent Static Contract run, #700, also failed because the first anti-regression scan was intentionally tested fail-closed but proved broader than slice 3A: it rejected existing direct-path consumers for standards resources scheduled for later slices. The contract was narrowed to the six catalog authorities moved by 3A plus the Web/Lite catalog consumer. This preserves the phase rule that each later resource is migrated atomically with its owning slice rather than forcing an unreviewed bulk migration.

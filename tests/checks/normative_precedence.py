@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_catalog import CatalogError, get_rule, load_catalog, validate_catalog
+from repository_paths import standard_file
 
 
 def fail(message: str) -> None:
@@ -42,7 +43,7 @@ def main() -> None:
     if "abnt-nbr-10520-2023" not in epigraph["resolution"].get("constraint_sources", []):
         fail("epigraph citation behavior must remain constrained by current NBR 10520")
 
-    precedence_path = ROOT / "standards" / "precedence.json"
+    precedence_path = standard_file("precedence.json")
     precedence = json.loads(precedence_path.read_text(encoding="utf-8"))
     stale = copy.deepcopy(precedence)
     stale["reviewed_at"] = "2026-08-21"
@@ -50,7 +51,7 @@ def main() -> None:
         temp = Path(temp_dir) / "precedence.json"
         temp.write_text(json.dumps(stale), encoding="utf-8")
         try:
-            load_catalog(ROOT / "standards" / "catalog.json", temp)
+            load_catalog(standard_file("catalog.json"), temp)
         except CatalogError:
             pass
         else:

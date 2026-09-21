@@ -2,12 +2,17 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CATALOG = ROOT / "standards" / "catalog.json"
-PLAN = ROOT / "standards" / "atomicity-plan.json"
-ATOMIC = ROOT / "standards" / "atomic-rules.json"
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+
+CATALOG = standard_file("catalog.json")
+PLAN = standard_file("atomicity-plan.json")
+ATOMIC = standard_file("atomic-rules.json")
 
 
 def fail(message: str) -> None:

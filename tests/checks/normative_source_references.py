@@ -2,12 +2,16 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-NORMATIVE = ROOT / "standards"
-SOURCE_AUDIT = NORMATIVE / "source-audit.json"
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file, standard_files
+
+SOURCE_AUDIT = standard_file("source-audit.json")
 
 REFERENCE_LIST_KEYS = {
     "candidate_sources",
@@ -74,7 +78,7 @@ def main() -> None:
     checked = 0
     unknown: list[str] = []
 
-    for json_path in sorted(NORMATIVE.glob("*.json")):
+    for json_path in standard_files("*.json"):
         data = json.loads(json_path.read_text(encoding="utf-8"))
         for location, source_id in iter_references(data):
             checked += 1

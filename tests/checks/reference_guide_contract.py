@@ -3,15 +3,19 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-STANDARDS_DIR = ROOT / "standards"
-MAP_PATH = STANDARDS_DIR / "reference-guide-map.json"
-CATALOG_PATH = STANDARDS_DIR / "catalog.json"
-ATOMIC_PATH = STANDARDS_DIR / "atomic-rules.json"
-API_CONTRACT_PATH = STANDARDS_DIR / "public-api.json"
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file, standard_files
+
+MAP_PATH = standard_file("reference-guide-map.json")
+CATALOG_PATH = standard_file("catalog.json")
+ATOMIC_PATH = standard_file("atomic-rules.json")
+API_CONTRACT_PATH = standard_file("public-api.json")
 COMMAND_REFERENCE_PATH = ROOT / "docs" / "COMMAND-REFERENCE.md"
 CLASS_PATH = ROOT / "abntexto-ufc.cls"
 REFERENCE_ROOT = ROOT / "template"
@@ -72,7 +76,7 @@ def collect_rule_ids(catalog: dict[str, Any], atomic: dict[str, Any]) -> set[str
             if "id" in rule:
                 rule_ids.add(rule["id"])
 
-    for path in sorted(STANDARDS_DIR.glob("*.json")):
+    for path in standard_files("*.json"):
         if path == MAP_PATH:
             continue
         rule_ids.update(collect_declared_rule_ids(load_json(path)))

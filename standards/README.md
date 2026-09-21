@@ -12,11 +12,16 @@ It is the structured source used by repository validators and evidence checks. I
 
 ### Source authority and precedence
 
-- `catalog.json` — active runtime source catalog.
-- `precedence.json` — conflict/precedence rules.
-- `source-audit.json` — controlled source-status audit.
-- `source-status-policy.json` — status interpretation rules.
-- `version-policy.json` — current-edition policy.
+Current source authority data is grouped under `standards/catalog/`:
+
+- `catalog/catalog.json` — active runtime source catalog.
+- `catalog/precedence.json` — conflict/precedence rules.
+- `catalog/source-audit.json` — controlled source-status audit.
+- `catalog/source-status-policy.json` — status interpretation rules.
+- `catalog/version-policy.json` — current-edition policy.
+- `catalog/reference-guide-map.json` — reviewed mapping to the human-readable reference guide.
+
+Loaders resolve these authorities recursively by unique filename identity. The nested taxonomy is organizational only; it does not create a second source of truth.
 
 ### Rules and coverage
 
