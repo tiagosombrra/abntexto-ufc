@@ -12,10 +12,11 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "section-primary-recto-duplex-scenario.json"
-LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
+LOCATOR_AUDIT = standard_file("locator-audit-sections-footnotes-nature.json")
 RULE_ID = "section.primary.recto-duplex"
 
 
