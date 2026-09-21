@@ -209,3 +209,5 @@ Initial PR #370 Static Contract #762 failed after the eleven locator audit autho
 
 No exception or compatibility copy was introduced. Every affected locator consumer now resolves its authority through `tools/repository_paths.py::standard_file`. The consolidated `normative_locators.py` check resolves `locator-audit.json` canonically and continues to discover its supplements relative to that resolved audit directory. Failed Static #762 remains part of the audit trail; fresh Static and Linux Integration validation is required before merge.
 
+Static Contract #789 then reduced the residual set to one occurrence in `tests/checks/normative_locators.py`: the consolidated `locator-audit.json` path had not matched the bulk replacement pattern used for the domain-suffixed locator filenames. That final consumer now uses `standard_file("locator-audit.json")`; no guard exemption was added. Failed #789 remains part of the audit trail.
+
