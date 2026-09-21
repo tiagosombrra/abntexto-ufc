@@ -12,13 +12,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, Box, bbox_pages, find_marker
 from pdf_vector_measurement import VectorRule, vector_rules
 
 SCENARIO = ROOT / "standards" / "table-ibge-vector-final-pdf-scenario.json"
 LOCATOR = ROOT / "standards" / "locator-audit-final.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
-EXTENSION = ROOT / "standards" / "vector-rule-validation-extension.json"
+VALIDATION_POLICY = standard_file("validation-reference-policy.json")
+EXTENSION = standard_file("vector-rule-validation-extension.json")
 CALIBRATION_RUNTIME = ROOT / "artifacts" / "normative-layout" / "vector-rule-validation-calibration.json"
 
 RULES = [
@@ -164,7 +165,7 @@ def main() -> None:
         or scenario.get("rules") != RULES
     ):
         fail("invalid scenario schema/component/scope")
-    if scenario.get("validation_extension") != "standards/vector-rule-validation-extension.json":
+    if scenario.get("validation_extension") != "standards/evidence/vector-rule-validation-extension.json":
         fail("scenario validation-extension binding drifted")
     if scenario.get("locator_ruleset") != "objects.table-ibge":
         fail("scenario locator binding drifted")
