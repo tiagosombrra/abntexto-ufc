@@ -159,3 +159,14 @@ Direct consumers resolve these resources through `tools/repository_paths.py::sta
 `validation-reference-policy.json` and `vector-rule-validation-extension.json` remain a separate bounded move because they have a broader consumer surface across geometry, typography, objects and final-PDF validation. Their internal path binding must be updated atomically.
 
 Slice 3D changes taxonomy only: no normative values, proof states, runtime behavior or public API are changed.
+
+
+### Slice 3D1 validation incident and correction
+
+Initial PR #367 validation produced Static Contract #729 PASS but Linux Integration #630 FAIL. The Linux failure was caused by a residual composed path in `tests/checks/normative_typography.py`:
+
+`ROOT / "standards" / "evidence-registry.json"`
+
+After `evidence-registry.json` moved to `standards/evidence/`, that consumer failed to load the authority. The negative-path suite then reported a secondary failure because its positive typography baseline depends on the same integration gate.
+
+The correction replaces that direct path with `repository_paths.standard_file("evidence-registry.json")` and strengthens `tests/checks/path_resolution_contract.py` so moved-authority checks reject both literal `standards/<file>` references and composed `ROOT / "standards" / "<file>"` references. The failed #630 run remains part of the audit trail; reruns #731/#632 certify the corrected head when successful.
