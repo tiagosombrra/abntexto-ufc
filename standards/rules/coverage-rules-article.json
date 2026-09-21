@@ -1,0 +1,423 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-04",
+  "purpose": "V3-A1 scientific-article normative contract. Rules are source-backed but intentionally manual/conditional-manual until V3-A2 implements article runtime and article-specific executable evidence.",
+  "rules": [
+    {
+      "id": "article.title.primary.required",
+      "category": "scientific-article",
+      "requirement": "O artigo apresenta título e eventual subtítulo no idioma principal do texto.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8",
+      "normativity": "required",
+      "kind": "article-element-presence",
+      "values": {
+        "element": "primary-title",
+        "required": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.authorship.required",
+      "category": "scientific-article",
+      "requirement": "O artigo identifica a autoria.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8",
+      "normativity": "required",
+      "kind": "article-element-presence",
+      "values": {
+        "element": "authorship",
+        "required": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.summary.primary.required",
+      "category": "scientific-article",
+      "requirement": "O artigo apresenta resumo no idioma principal do texto.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8",
+      "normativity": "required",
+      "kind": "article-element-presence",
+      "values": {
+        "element": "primary-summary",
+        "required": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.dates.submission-approval.required",
+      "category": "scientific-article",
+      "requirement": "O artigo registra as datas de submissão e aprovação aplicáveis ao contexto acadêmico.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 11",
+      "normativity": "required",
+      "kind": "article-dates",
+      "values": {
+        "submission_date": true,
+        "approval_date": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.introduction.required",
+      "category": "scientific-article",
+      "requirement": "A parte textual do artigo contém introdução.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 12",
+      "normativity": "required",
+      "kind": "article-text-structure",
+      "values": {
+        "element": "introduction",
+        "required": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.development.required",
+      "category": "scientific-article",
+      "requirement": "A parte textual do artigo contém desenvolvimento.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 12",
+      "normativity": "required",
+      "kind": "article-text-structure",
+      "values": {
+        "element": "development",
+        "required": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.final-considerations.required",
+      "category": "scientific-article",
+      "requirement": "A parte textual do artigo contém considerações finais.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 12",
+      "normativity": "required",
+      "kind": "article-text-structure",
+      "values": {
+        "element": "final-considerations",
+        "required": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.references.required",
+      "category": "scientific-article",
+      "requirement": "O artigo contém lista de referências.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 12",
+      "normativity": "required",
+      "kind": "article-element-presence",
+      "values": {
+        "element": "references",
+        "required": true,
+        "format_standard": "abnt-nbr-6023-2025"
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.title.foreign.optional",
+      "category": "scientific-article",
+      "requirement": "Título e subtítulo em outro idioma são elementos opcionais.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8-9",
+      "normativity": "optional",
+      "kind": "article-element-optionality",
+      "values": {
+        "element": "foreign-title",
+        "required": false
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.summary.foreign.optional",
+      "category": "scientific-article",
+      "requirement": "Resumo em outro idioma é elemento opcional no perfil geral da UFC.",
+      "locator": "ABNT NBR 6022:2018; Guia UFC de Artigos 2022, p. 8, 11",
+      "normativity": "optional",
+      "kind": "article-element-optionality",
+      "values": {
+        "element": "foreign-summary",
+        "required": false
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6022-2018",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.title.primary.typography",
+      "category": "scientific-article",
+      "requirement": "O título principal segue a apresentação institucional indicada pelo guia UFC para artigos.",
+      "locator": "Guia UFC de Artigos 2022, p. 9",
+      "normativity": "required",
+      "kind": "article-title-typography",
+      "values": {
+        "alignment": "center",
+        "case": "uppercase",
+        "weight": "bold",
+        "font_size_pt": 12,
+        "line_spacing": "single"
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "institutional",
+      "sources": [
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.authorship.metadata.footnote",
+      "category": "scientific-article",
+      "requirement": "A identificação complementar do autor é apresentada em nota de rodapé conforme o guia UFC.",
+      "locator": "Guia UFC de Artigos 2022, p. 9",
+      "normativity": "required",
+      "kind": "article-author-metadata",
+      "values": {
+        "placement": "footnote",
+        "includes_affiliation_or_biographical_note": true,
+        "contact_supported": true
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "institutional",
+      "sources": [
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.authorship.alignment.recommended",
+      "category": "scientific-article",
+      "requirement": "O alinhamento à direita para o nome do autor é uma recomendação institucional, não requisito técnico obrigatório.",
+      "locator": "Guia UFC de Artigos 2022, p. 9",
+      "normativity": "recommended",
+      "kind": "article-author-alignment",
+      "values": {
+        "recommended_alignment": "right"
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "institutional",
+      "sources": [
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.body.typography",
+      "category": "scientific-article",
+      "requirement": "Os elementos textuais seguem a apresentação institucional indicada pelo guia UFC para artigos.",
+      "locator": "Guia UFC de Artigos 2022, p. 12",
+      "normativity": "required",
+      "kind": "article-body-typography",
+      "values": {
+        "font_size_pt": 12,
+        "alignment": "justified",
+        "first_line_indent_cm": 2,
+        "line_spacing": "single"
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "institutional",
+      "sources": [
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.summary.word-count.recommended",
+      "category": "scientific-article",
+      "requirement": "Para artigos, o intervalo de 150 a 250 palavras no resumo é tratado como recomendação, não como requisito absoluto.",
+      "locator": "ABNT NBR 6028:2021; Guia UFC de Artigos 2022, p. 10-11",
+      "normativity": "recommended",
+      "kind": "article-summary-length",
+      "values": {
+        "recommended_min_words": 150,
+        "recommended_max_words": 250
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6028-2021",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.summary.keywords.minimum.recommended",
+      "category": "scientific-article",
+      "requirement": "A indicação de pelo menos três palavras-chave é tratada como recomendação.",
+      "locator": "ABNT NBR 6028:2021; Guia UFC de Artigos 2022, p. 10-11",
+      "normativity": "recommended",
+      "kind": "article-summary-keywords",
+      "values": {
+        "recommended_min_keywords": 3
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6028-2021",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.summary.single-paragraph.recommended",
+      "category": "scientific-article",
+      "requirement": "A redação do resumo em parágrafo único é tratada conservadoramente como recomendação no contrato A1.",
+      "locator": "ABNT NBR 6028:2021; Guia UFC de Artigos 2022, p. 10-11",
+      "normativity": "recommended",
+      "kind": "article-summary-paragraphs",
+      "values": {
+        "recommended_paragraphs": 1
+      },
+      "validation": {
+        "mode": "manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "technical",
+      "sources": [
+        "abnt-nbr-6028-2021",
+        "ufc-guia-artigos-2022"
+      ]
+    },
+    {
+      "id": "article.journal-guidelines.precedence",
+      "category": "scientific-article",
+      "requirement": "Quando o artigo for submetido a periódico com instruções próprias, essas instruções devem ser verificadas como condição de aplicabilidade do perfil genérico UFC.",
+      "locator": "Guia UFC de Artigos 2022, p. 6",
+      "normativity": "required-when-applicable",
+      "kind": "article-journal-boundary",
+      "values": {
+        "journal_specific_instructions_must_be_checked": true,
+        "generic_ufc_profile_is_fallback": true
+      },
+      "validation": {
+        "mode": "conditional-manual",
+        "checks": [
+          "article.source-review"
+        ]
+      },
+      "scope": "institutional",
+      "sources": [
+        "ufc-guia-artigos-2022"
+      ],
+      "applicability": {
+        "context": "target-journal-submission"
+      }
+    }
+  ]
+}
