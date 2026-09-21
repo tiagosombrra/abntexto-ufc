@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3C and path-consistency follow-up complete; 3D1 in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3C, path-consistency follow-up and 3D1 complete; 3D2 in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -170,3 +170,16 @@ Initial PR #367 validation produced Static Contract #729 PASS but Linux Integrat
 After `evidence-registry.json` moved to `standards/evidence/`, that consumer failed to load the authority. The negative-path suite then reported a secondary failure because its positive typography baseline depends on the same integration gate.
 
 The correction replaces that direct path with `repository_paths.standard_file("evidence-registry.json")` and strengthens `tests/checks/path_resolution_contract.py` so moved-authority checks reject both literal `standards/<file>` references and composed `ROOT / "standards" / "<file>"` references. The failed #630 run remains part of the audit trail. The first strengthened-guard rerun, Static Contract #732, then failed on intentional retired-path strings inside `tests/checks/path_resolution_contract.py` itself. That file is now excluded only from the generic textual stale-path scan because it must name retired paths to assert that compatibility copies do not exist; its explicit semantic assertions remain active. Subsequent reruns certify the corrected guard and consumer set.
+
+
+### Slice 3D1 final receipt
+
+Slice 3D1 is complete. PR #367 merged as `2e71bed633e35ad84d653357354dd8b08cc9360e` after Static Contract #734 and Linux Integration #635 passed. Post-merge `main` passed Static Contract #735 and Linux Release Check #248. The seven evidence/proof authorities exist only under `standards/evidence/`, with no flat compatibility copies.
+
+### Slice 3D2 execution map
+
+Slice 3D2 moves exactly two final-PDF measurement authorities into `standards/evidence/`: `validation-reference-policy.json` and `vector-rule-validation-extension.json`.
+
+The move includes all direct Python consumers plus internal path bindings in final-PDF scenarios. Consumers must resolve these authorities through `tools/repository_paths.py::standard_file`. The validation policy's vector-extension binding must point to `standards/evidence/vector-rule-validation-extension.json`. No flat compatibility copies are permitted.
+
+Slice 3D2 changes taxonomy and path bindings only. It does not change normative values, tolerances, proof states, runtime behavior, public API or any published v3.0.4 artifact.
