@@ -198,6 +198,8 @@ def main() -> int:
         "proof-policy.json",
         "test-surface-policy.json",
         "validation-overrides.json",
+        "validation-reference-policy.json",
+        "vector-rule-validation-extension.json",
     }
     for filename in sorted(moved_evidence_authorities):
         resolved = standard_file(filename)
