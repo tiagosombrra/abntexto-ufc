@@ -18,7 +18,7 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "section-unnumbered-centered-scenario.json"
-LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
+LOCATOR_AUDIT = standard_file("locator-audit-sections-footnotes-nature.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 RULE_ID = "heading.unnumbered.centered"
 RULESET_ID = "sections.unnumbered-centered"
