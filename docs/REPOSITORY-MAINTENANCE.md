@@ -31,7 +31,7 @@ It does not redefine release state. Publication and development-line facts remai
 
 ## Phase 1 receipt
 
-Phase 1 is complete. PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` after Static Contract #685 and Linux Integration #592 passed. Linux Release Check was not applicable by scope because the phase did not change runtime, distribution, the release marker or published bytes. The durable receipt is also recorded in issue #359.
+Phase 1 is complete. PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` after Static Contract #685 and Linux Integration #592 passed. Linux Release Check was not selected on the PR by its scoped trigger; after merge, `main` passed Static Contract #686 and Linux Release Check #242. The durable receipt is also recorded in issue #359.
 
 ## Phase 1 acceptance criteria
 
@@ -46,7 +46,7 @@ Phase 1 implementation is carried by PR #360. It is complete only when:
 
 ## Phase 2 receipt
 
-Phase 2 is complete. PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` after Static Contract #688 and Linux Integration #594 passed. Linux Release Check was not applicable by scope because no runtime, distribution, release-marker, tag or published-byte state changed. The durable receipt is also recorded in issue #359.
+Phase 2 is complete. PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` after Static Contract #688 and Linux Integration #594 passed. Linux Release Check was not selected on the PR by its scoped trigger; after merge, `main` passed Static Contract #689 and Linux Release Check #243. The durable receipt is also recorded in issue #359.
 
 ## Phase 2 current design
 
