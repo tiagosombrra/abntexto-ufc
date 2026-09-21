@@ -19,8 +19,8 @@ It does not redefine release state. Publication and development-line facts remai
 |---|---|---|
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
-| 2 | recursive discovery and path-decoupling preparation | in progress — `maintenance/path-discovery-preparation` |
-| 3 | `standards/` taxonomy | pending |
+| 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
+| 3 | `standards/` taxonomy | in progress — issue #362; slice 3A on `maintenance/standards-taxonomy-catalog` |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -43,6 +43,10 @@ Phase 1 implementation is carried by PR #360. It is complete only when:
 4. Static Contract executes an explicit metadata-consistency check;
 5. the phase PR passes all required repository checks;
 6. issue #359 receives the merge/check receipt.
+
+## Phase 2 receipt
+
+Phase 2 is complete. PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` after Static Contract #688 and Linux Integration #594 passed. Linux Release Check was not applicable by scope because no runtime, distribution, release-marker, tag or published-byte state changed. The durable receipt is also recorded in issue #359.
 
 ## Phase 2 current design
 
@@ -72,3 +76,8 @@ Phase 2 is complete only when:
 ## Next-phase gate
 
 Phase 3 may move `standards/` only after Phase 2 is merged and reconciled on current `main`. Direct-path consumers discovered during the Phase 2 audit must either adopt the canonical standards resolver or be migrated atomically with the file they own; no compatibility duplicate of a normative JSON authority may be introduced.
+
+
+## Phase 3 execution map
+
+Phase 3 is tracked by issue #362 and is intentionally split into bounded slices. Slice 3A moves only source-authority/catalog data into `standards/catalog/`. Later slices will handle API, rules, evidence, audits, scenarios and migrations separately. No slice may introduce duplicate compatibility copies of normative JSON authorities.
