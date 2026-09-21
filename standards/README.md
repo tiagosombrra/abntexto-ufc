@@ -25,12 +25,12 @@ Loaders resolve these authorities recursively by unique filename identity. The n
 
 ### Rules and coverage
 
-- `atomic-rules.json` — base atomic rule contract.
-- `atomicity-plan.json` — decomposition/atomicity control.
-- `coverage-rules*.json` — current rule extensions by subject/profile.
-- `evidence-registry.json` — registered evidence producers/ownership.
-- `evidence-contribution-policy.json` — contribution/proof semantics.
-- `proof-policy.json` and `false-coverage-policy.json` — proof-state guardrails.
+Current rule authorities are grouped under `standards/rules/`:
+
+- `rules/atomic-rules.json` — base atomic rule contract.
+- `rules/coverage-rules*.json` — current rule extensions by subject/profile.
+
+`atomicity-plan.json` remains a decomposition/migration control artifact until the dedicated migrations slice moves it. Evidence registries and proof/validation policies remain separate authorities and are intentionally not part of `standards/rules/`.
 
 ### Locators
 
