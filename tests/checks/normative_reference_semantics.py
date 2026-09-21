@@ -14,9 +14,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 
 SCENARIO = ROOT / "standards" / "reference-semantics-scenario.json"
-LOCATOR = ROOT / "standards" / "locator-audit-references.json"
+LOCATOR = standard_file("locator-audit-references.json")
 BIB_FIXTURE = ROOT / "tests" / "fixtures" / "references-6023-2025.bib"
 
 RULE_ORDER = [
