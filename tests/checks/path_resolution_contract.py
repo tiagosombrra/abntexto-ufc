@@ -51,6 +51,7 @@ def main() -> int:
         "integration": repository_relative(integration_file("profile-matrix.sh")),
         "catalog": standard_file("catalog.json").relative_to(ROOT).as_posix(),
         "precedence": standard_file("precedence.json").relative_to(ROOT).as_posix(),
+        "public_api": standard_file("public-api.json").relative_to(ROOT).as_posix(),
     }
     if not expected["check"].startswith("tests/checks/"):
         return fail("check resolver escaped tests/checks")
@@ -60,6 +61,10 @@ def main() -> int:
         return fail("standard resolver escaped standards")
     if not expected["precedence"].startswith("standards/"):
         return fail("precedence resolver escaped standards")
+    if expected["public_api"] != "standards/api/public-api.json":
+        return fail("public API authority must resolve under standards/api")
+    if (ROOT / "standards" / "public-api.json").exists():
+        return fail("flat compatibility copy is forbidden for moved public API authority")
 
     coverage = standard_files("coverage-rules*.json")
     if len(coverage) < 2:

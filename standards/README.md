@@ -8,7 +8,7 @@ It is the structured source used by repository validators and evidence checks. I
 
 ### Current public API
 
-- `public-api.json` — machine-readable contract for the currently supported project-owned setup keys, values, commands and environments. The historical migration mapping in `release/history/v3/v3-api-migration.json` is retained only for negative/residual validation and is not current API authority.
+- `api/public-api.json` — machine-readable contract for the currently supported project-owned setup keys, values, commands and environments. The historical migration mapping in `release/history/v3/v3-api-migration.json` is retained only for negative/residual validation and is not current API authority.
 
 ### Source authority and precedence
 

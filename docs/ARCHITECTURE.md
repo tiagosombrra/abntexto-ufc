@@ -95,7 +95,7 @@ For CTAN, equality is enforced byte-for-byte for the project-owned `abntexto-ufc
 
 ## Public API ownership
 
-The public project API is implemented by the canonical class, represented machine-readably by `standards/public-api.json`, and documented for users in `docs/COMMAND-REFERENCE.md`.
+The public project API is implemented by the canonical class, represented machine-readably by `standards/api/public-api.json`, and documented for users in `docs/COMMAND-REFERENCE.md`.
 
 Historical migration mappings under `release/history/v3/` are retained only for negative/residual validation and auditability; they are not authority for the current public API.
 

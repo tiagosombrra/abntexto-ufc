@@ -23,7 +23,7 @@ REQUIRED_PATHS = {
     "CITATION.cff",
     "tests/README.md",
     "standards/README.md",
-    "standards/public-api.json",
+    "standards/api/public-api.json",
     "assets/institutional/README.md",
     ".github/pull_request_template.md",
     ".github/dependabot.yml",
