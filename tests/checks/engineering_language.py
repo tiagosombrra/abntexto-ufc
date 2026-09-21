@@ -5,9 +5,13 @@ import argparse
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
 EXECUTABLE_ROOTS = (
     "tests/checks/",
     "tests/integration/",
@@ -88,11 +92,11 @@ RETIRED_PROFILE_IDS = re.compile(
     r"projetoanonimizado|projeto)(?![A-Za-z0-9_-])"
 )
 MACHINE_JSON_FILES = (
-    "standards/catalog.json",
-    "standards/coverage-rules-frontmatter.json",
-    "standards/coverage-rules-project.json",
-    "standards/frontmatter-approval-scenario.json",
-    "standards/frontmatter-cover-scenario.json",
+    "catalog.json",
+    "coverage-rules-frontmatter.json",
+    "coverage-rules-project.json",
+    "frontmatter-approval-scenario.json",
+    "frontmatter-cover-scenario.json",
 )
 MACHINE_SOURCE_FILES = (
     "tests/checks/normative_frontmatter_title_page.py",
@@ -201,8 +205,10 @@ def audit() -> list[str]:
                 f"{location}: retired Portuguese technical profile identifier: {value}"
             )
 
-    for rel in MACHINE_JSON_FILES:
-        payload = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+    for filename in MACHINE_JSON_FILES:
+        path = standard_file(filename)
+        rel = path.relative_to(ROOT).as_posix()
+        payload = json.loads(path.read_text(encoding="utf-8"))
         visit_machine_values(payload, rel)
     for rel in MACHINE_SOURCE_FILES:
         text = (ROOT / rel).read_text(encoding="utf-8")
