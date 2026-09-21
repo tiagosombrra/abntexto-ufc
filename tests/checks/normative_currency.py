@@ -9,20 +9,21 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_catalog import ACTIVE_STATUSES, load_catalog, source_map
+from repository_paths import standard_file, standard_files
 
-POLICY = ROOT / "standards" / "version-policy.json"
-SOURCE_AUDIT = ROOT / "standards" / "source-audit.json"
+POLICY = standard_file("version-policy.json")
+SOURCE_AUDIT = standard_file("source-audit.json")
 STATIC_ACTIVE_MACHINE_FILES = (
-    ROOT / "standards" / "catalog.json",
-    ROOT / "standards" / "precedence.json",
-    ROOT / "standards" / "atomic-rules.json",
-    ROOT / "standards" / "atomicity-plan.json",
+    standard_file("catalog.json"),
+    standard_file("precedence.json"),
+    standard_file("atomic-rules.json"),
+    standard_file("atomicity-plan.json"),
 )
 
 
 def active_machine_files() -> list[Path]:
     paths = list(STATIC_ACTIVE_MACHINE_FILES)
-    paths.extend(sorted((ROOT / "standards").glob("coverage-rules*.json")))
+    paths.extend(standard_files("coverage-rules*.json"))
     return list(dict.fromkeys(paths))
 
 
