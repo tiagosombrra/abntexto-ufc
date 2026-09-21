@@ -17,7 +17,7 @@ from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "pagination-geometry-scenario.json"
-LOCATORS = ROOT / "standards" / "locator-audit-layout-pagination.json"
+LOCATORS = standard_file("locator-audit-layout-pagination.json")
 POLICY = standard_file("validation-reference-policy.json")
 PT_PER_MM = 72.0 / 25.4
 HEADER_REGION_PT = 100.0
