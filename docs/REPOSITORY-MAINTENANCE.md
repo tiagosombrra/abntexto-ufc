@@ -81,3 +81,7 @@ Phase 3 may move `standards/` only after Phase 2 is merged and reconciled on cur
 ## Phase 3 execution map
 
 Phase 3 is tracked by issue #362 and is intentionally split into bounded slices. Slice 3A moves only source-authority/catalog data into `standards/catalog/`. Later slices will handle API, rules, evidence, audits, scenarios and migrations separately. No slice may introduce duplicate compatibility copies of normative JSON authorities.
+
+### Slice 3A regression receipt
+
+The first Linux Integration run for slice 3A, #602, failed after the complete 38/38 repository regression had passed because the Web/Lite E2E harness still opened `standards/catalog.json` directly. The slice was not merged. The harness now resolves `catalog.json` through the canonical recursive standards resolver, and the path-resolution contract scans movable test/tool surfaces to prevent reintroduction of direct flat standards file paths. The failed run remains part of the audit trail.
