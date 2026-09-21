@@ -3,11 +3,16 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+
 RUNTIME = ROOT / "abntexto-ufc.cls"
-ARTICLE_RULES = ROOT / "standards" / "coverage-rules-article.json"
+ARTICLE_RULES = standard_file("coverage-rules-article.json")
 
 CANONICAL = "scientific-article"
 ALIASES = (
