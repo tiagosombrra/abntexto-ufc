@@ -3,10 +3,15 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-RULES = ROOT / "standards" / "coverage-rules-article.json"
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+
+RULES = standard_file("coverage-rules-article.json")
 RUNTIME = ROOT / "abntexto-ufc.cls"
 RECOMMENDED_FIXTURE = ROOT / "tests" / "documents" / "scientific-article-recommendations-recommended.tex"
 OUTSIDE_FIXTURE = ROOT / "tests" / "documents" / "scientific-article-recommendations-outside.tex"
