@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3C, path-consistency follow-up and 3D1 complete; 3D2 in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3D and path-consistency follow-up complete; 3E in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -190,3 +190,16 @@ Slice 3D2 changes taxonomy and path bindings only. It does not change normative 
 Initial Static Contract #736 failed after the two final-PDF measurement authorities moved because the generic stale-path guard found 23 remaining active references to the former flat `standards/validation-reference-policy.json` path. The findings included one scenario binding and 22 Python evidence/validation consumers across front matter, sections, quotations, objects and PDF validation.
 
 No exception was added. Every Python consumer now resolves `validation-reference-policy.json` through `tools/repository_paths.py::standard_file`, and the scenario binding points to `standards/evidence/validation-reference-policy.json`. Failed run #736 remains part of the audit trail; fresh Static and Linux validation is required before merge.
+
+### Slice 3D final receipt
+
+Slice 3D is complete. PR #368 merged as `29376fef85f2ef7655132d368f2cd10c9bd3f867` after Static Contract #760 and Linux Integration #660 passed. Post-merge `main` passed Static Contract #761 and Linux Release Check #249. All nine evidence/validation authorities now exist only under `standards/evidence/`, with no flat compatibility copies.
+
+### Slice 3E execution map
+
+Slice 3E moves the eleven unique `locator-audit*.json` authorities into `standards/audits/locator/`. `source-audit.json` is not part of this slice because slice 3A already classified it as source/catalog authority at `standards/catalog/source-audit.json`.
+
+The preliminary plan mentioned possible 3E sub-slices. The post-3D audit supersedes that provisional split: all eleven locator files form one uniform semantic family, the current branch diff moves them as content-identical renames, and recursive resolution already provides a single fail-closed consumer path. Therefore 3E is executed as one bounded PR rather than artificial sub-slices.
+
+The path-resolution contract must require every locator audit to resolve under `standards/audits/locator/` and must reject any flat compatibility copy. `standards/README.md` documents the new ownership. Slice 3E changes taxonomy only: no locator payload, normative rule, runtime behavior, public API or published v3.0.4 artifact may change.
+
