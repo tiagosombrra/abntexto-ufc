@@ -95,7 +95,7 @@ Therefore a page-start observation is not promoted into a new defect or normativ
 
 ## Proof and implementation policy
 
-`standards/proof-policy.json` remains conservative: executable validation does not automatically imply `PROVEN`.
+`standards/evidence/proof-policy.json` remains conservative: executable validation does not automatically imply `PROVEN`.
 
 Shared green mechanisms, profile registration, runtime presence or source-only implementation are insufficient by themselves. Evidence must match the owning rule and the declared proof/contribution policy.
 
