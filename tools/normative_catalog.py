@@ -134,7 +134,7 @@ def validate_precedence_document(
         "principles": precedence.get("principles", []),
         "scope_precedence": scope_precedence,
         "conflict_behavior": precedence["conflict_behavior"],
-        "source_of_truth": "standards/catalog.json + standards/precedence.json",
+        "source_of_truth": "standards/catalog/catalog.json + standards/catalog/precedence.json",
     }
 
 
@@ -332,7 +332,7 @@ def emit_web_module(catalog: dict[str, Any], output: Path) -> None:
     payload = json.dumps(catalog, ensure_ascii=False, separators=(",", ":"))
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
-        "// Generated from standards/catalog.json and standards/precedence.json.\n"
+        "// Generated from standards/catalog/catalog.json and standards/catalog/precedence.json.\n"
         f"export const normativeCatalog={payload};\n"
         "export const normativeRules=Object.fromEntries(normativeCatalog.rules.map(rule=>[rule.id,rule]));\n"
         "export const normativeSources=Object.fromEntries(normativeCatalog.sources.map(source=>[source.id,source]));\n",

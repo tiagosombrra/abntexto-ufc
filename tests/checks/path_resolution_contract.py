@@ -27,6 +27,64 @@ def duplicate_basenames(paths: list[Path]) -> list[str]:
     return sorted(name for name, count in counts.items() if count > 1)
 
 
+def active_text_surfaces() -> list[Path]:
+    excluded_roots = (
+        ROOT / "docs" / "history",
+        ROOT / "release" / "history",
+    )
+    excluded_exact = {
+        "CHANGELOG.md",
+        "docs/REPOSITORY-MAINTENANCE.md",
+    }
+    text_suffixes = {
+        ".cff",
+        ".js",
+        ".json",
+        ".md",
+        ".ps1",
+        ".py",
+        ".sh",
+        ".tex",
+        ".yaml",
+        ".yml",
+    }
+
+    surfaces: list[Path] = []
+    for path in ROOT.rglob("*"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(ROOT).as_posix()
+        if relative.startswith(".git/"):
+            continue
+        if relative in excluded_exact or any(root in path.parents for root in excluded_roots):
+            continue
+        if path.name == "Makefile" or path.suffix.lower() in text_suffixes:
+            surfaces.append(path)
+    return sorted(surfaces)
+
+
+def stale_flat_standard_references(standard_candidates: list[Path]) -> list[str]:
+    moved = [
+        path
+        for path in standard_candidates
+        if path.parent != ROOT / "standards"
+    ]
+    findings: list[str] = []
+    surfaces = active_text_surfaces()
+
+    for authority in moved:
+        legacy = f"standards/{authority.name}"
+        current = authority.relative_to(ROOT).as_posix()
+        for surface in surfaces:
+            text = surface.read_text(encoding="utf-8", errors="replace")
+            if legacy in text:
+                source = surface.relative_to(ROOT).as_posix()
+                findings.append(
+                    f"{source}: stale flat standards path {legacy}; current authority is {current}"
+                )
+    return sorted(set(findings))
+
+
 def main() -> int:
     check_candidates = sorted((ROOT / "tests" / "checks").rglob("*.py"))
     integration_candidates = sorted(
@@ -39,6 +97,9 @@ def main() -> int:
     duplicate_checks = duplicate_basenames(check_candidates)
     duplicate_integrations = duplicate_basenames(integration_candidates)
     duplicate_standards = duplicate_basenames(standard_candidates)
+    stale_standard_paths = stale_flat_standard_references(standard_candidates)
+    if stale_standard_paths:
+        return fail("active stale standards references: " + " | ".join(stale_standard_paths))
     if duplicate_checks:
         return fail("ambiguous check basenames: " + ", ".join(duplicate_checks))
     if duplicate_integrations:

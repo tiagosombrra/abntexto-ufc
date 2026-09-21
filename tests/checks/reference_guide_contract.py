@@ -254,9 +254,9 @@ def audit_command_reference() -> list[str]:
     text = COMMAND_REFERENCE_PATH.read_text(encoding="utf-8")
 
     if api.get("contract") != "current-public-api" or api.get("status") != "active":
-        failures.append("standards/public-api.json: current API contract identity/status is invalid")
+        failures.append("standards/api/public-api.json: current API contract identity/status is invalid")
     if api.get("runtime_source") != "abntexto-ufc.cls":
-        failures.append("standards/public-api.json: runtime source must be abntexto-ufc.cls")
+        failures.append("standards/api/public-api.json: runtime source must be abntexto-ufc.cls")
 
     setup_keys: set[str] = set()
     for values in api.get("setup_keys", {}).values():
@@ -273,12 +273,12 @@ def audit_command_reference() -> list[str]:
     undeclared_runtime_keys = sorted(runtime_keys - setup_keys)
     if missing_runtime_keys:
         failures.append(
-            "standards/public-api.json: setup keys missing from runtime: "
+            "standards/api/public-api.json: setup keys missing from runtime: "
             + ", ".join(missing_runtime_keys)
         )
     if undeclared_runtime_keys:
         failures.append(
-            "standards/public-api.json: runtime setup keys missing from current contract: "
+            "standards/api/public-api.json: runtime setup keys missing from current contract: "
             + ", ".join(undeclared_runtime_keys)
         )
 
@@ -291,7 +291,7 @@ def audit_command_reference() -> list[str]:
     contract_types = set(api.get("setup_values", {}).get("type", []))
     if runtime_types != contract_types:
         failures.append(
-            "standards/public-api.json: type values differ from runtime: "
+            "standards/api/public-api.json: type values differ from runtime: "
             f"contract={sorted(contract_types)} runtime={sorted(runtime_types)}"
         )
 
@@ -307,7 +307,7 @@ def audit_command_reference() -> list[str]:
     )
     if missing_runtime_commands:
         failures.append(
-            "standards/public-api.json: public commands missing from runtime: "
+            "standards/api/public-api.json: public commands missing from runtime: "
             + ", ".join(missing_runtime_commands)
         )
     missing_commands = sorted(command for command in retained_commands if command not in text)
@@ -323,7 +323,7 @@ def audit_command_reference() -> list[str]:
     )
     if missing_runtime_environments:
         failures.append(
-            "standards/public-api.json: public environments missing from runtime: "
+            "standards/api/public-api.json: public environments missing from runtime: "
             + ", ".join(missing_runtime_environments)
         )
     missing_environments = sorted(

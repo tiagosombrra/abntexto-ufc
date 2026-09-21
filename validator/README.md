@@ -14,7 +14,7 @@ Then open `http://localhost:8000/`. The application loads the pinned PDF.js 6.2.
 
 ## Normative catalog
 
-`validator/normative-catalog.js` is generated from the authoritative `standards/catalog.json` plus `standards/precedence.json`:
+`validator/normative-catalog.js` is generated from the authoritative `standards/catalog/catalog.json` plus `standards/catalog/precedence.json`:
 
 ```bash
 python3 tools/normative_catalog.py --emit-web validator/normative-catalog.js
