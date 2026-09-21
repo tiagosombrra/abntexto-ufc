@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from repository_paths import standard_file
 
 RULES_PATH = standard_file("coverage-rules-article.json")
-MAP_PATH = ROOT / "standards" / "article-evidence-map.json"
+MAP_PATH = standard_file("article-evidence-map.json")
 
 RECOMMENDED_RULES = {
     "article.authorship.alignment.recommended",

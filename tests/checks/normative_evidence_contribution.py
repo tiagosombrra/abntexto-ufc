@@ -15,8 +15,9 @@ sys.path.insert(0, str(ROOT / "tests" / "checks"))
 
 from normative_full import load_full_contract
 from normative_traceability import build_matrix as build_traceability_matrix
+from repository_paths import standard_file
 
-POLICY = ROOT / "standards" / "evidence-contribution-policy.json"
+POLICY = standard_file("evidence-contribution-policy.json")
 RULE_PASS = re.compile(r"\brule=([A-Za-z0-9._-]+)\s+status=PASS(?:\s|$)")
 AUTOMATIC_MODES = {
     "automatic",

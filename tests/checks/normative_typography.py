@@ -14,11 +14,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typography_runs
+from repository_paths import standard_file
 
 SCENARIO = ROOT / "standards" / "typography-scenario.json"
 LOCATOR_TYPOGRAPHY = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
 LOCATOR_FINAL = ROOT / "standards" / "locator-audit-final.json"
-EVIDENCE_REGISTRY = ROOT / "standards" / "evidence-registry.json"
+EVIDENCE_REGISTRY = standard_file("evidence-registry.json")
 VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
 
 RULE_ORDER = [

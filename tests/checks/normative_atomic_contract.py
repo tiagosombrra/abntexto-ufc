@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "tests" / "checks"))
 from normative_atomic import atomic_rule_map, load_atomic_contract
 from normative_catalog import load_catalog, rule_map
 from normative_traceability import load_runner_checks
+from repository_paths import standard_file
 
 
 def fail(message: str) -> None:
@@ -100,7 +101,7 @@ def main() -> None:
     web = (ROOT / "validator" / "app.js").read_text(encoding="utf-8")
     validator_checks = {check for check, _ in quoted_pairs(cli, "norm_check")}
     validator_checks |= {check for check, _ in quoted_pairs(web, "nck")}
-    registry_path = ROOT / "standards" / "evidence-registry.json"
+    registry_path = standard_file("evidence-registry.json")
     try:
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:

@@ -4,16 +4,21 @@ from __future__ import annotations
 import ast
 import json
 import runpy
+import sys
 from collections import deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+
 RUNNER = ROOT / "tests/run.py"
 STATIC_RUNNER = ROOT / "tests/static.py"
 MAKEFILE = ROOT / "Makefile"
-EVIDENCE_REGISTRY = ROOT / "standards/evidence-registry.json"
+EVIDENCE_REGISTRY = standard_file("evidence-registry.json")
 NEGATIVE_PATHS = ROOT / "standards/negative-paths.json"
-TEST_SURFACE_POLICY = ROOT / "standards/test-surface-policy.json"
+TEST_SURFACE_POLICY = standard_file("test-surface-policy.json")
 CANDIDATE_ROOTS = (ROOT / "tests/checks", ROOT / "tests/integration")
 CANDIDATE_SUFFIXES = {".py", ".sh"}
 ASSET_ROOTS = (ROOT / "tests/documents", ROOT / "tests/fixtures")
