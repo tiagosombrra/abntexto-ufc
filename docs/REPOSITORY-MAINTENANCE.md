@@ -203,3 +203,9 @@ The preliminary plan mentioned possible 3E sub-slices. The post-3D audit superse
 
 The path-resolution contract must require every locator audit to resolve under `standards/audits/locator/` and must reject any flat compatibility copy. `standards/README.md` documents the new ownership. Slice 3E changes taxonomy only: no locator payload, normative rule, runtime behavior, public API or published v3.0.4 artifact may change.
 
+### Slice 3E validation incident
+
+Initial PR #370 Static Contract #762 failed after the eleven locator audit authorities moved because the generic stale-path guard found 29 active flat references across 25 normative checks. The affected consumers span citations, typography, sections, pagination, references, objects and the consolidated locator audit.
+
+No exception or compatibility copy was introduced. Every affected locator consumer now resolves its authority through `tools/repository_paths.py::standard_file`. The consolidated `normative_locators.py` check resolves `locator-audit.json` canonically and continues to discover its supplements relative to that resolved audit directory. Failed Static #762 remains part of the audit trail; fresh Static and Linux Integration validation is required before merge.
+
