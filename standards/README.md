@@ -32,6 +32,20 @@ Current rule authorities are grouped under `standards/rules/`:
 
 `atomicity-plan.json` remains a decomposition/migration control artifact until the dedicated migrations slice moves it. Evidence registries and proof/validation policies remain separate authorities and are intentionally not part of `standards/rules/`.
 
+### Evidence and validation semantics
+
+Current evidence/proof authorities are grouped under `standards/evidence/`:
+
+- `evidence/article-evidence-map.json` — scientific-article evidence ownership map.
+- `evidence/evidence-contribution-policy.json` — conservative proof-contribution semantics.
+- `evidence/evidence-registry.json` — typed non-runner evidence registry.
+- `evidence/false-coverage-policy.json` — false-coverage prevention policy.
+- `evidence/proof-policy.json` — proof/evidence state policy.
+- `evidence/test-surface-policy.json` — standalone/dynamic/manual test-surface ownership.
+- `evidence/validation-overrides.json` — rule-local validation ownership overrides.
+
+The remaining final-PDF measurement policy pair (`validation-reference-policy.json` and `vector-rule-validation-extension.json`) is reserved for the bounded 3D2 move so its wider consumer surface can be migrated independently.
+
 ### Locators
 
 `locator-audit*.json` maps current rule authority to reviewed source locators and explicit evidence status.
@@ -42,12 +56,7 @@ Files ending in `-scenario.json` define deterministic validation scenarios for s
 
 ### Validation policy
 
-- `validation-reference-policy.json`;
-- `validation-overrides.json`;
-- `test-surface-policy.json`;
-- related validation-extension data.
-
-These files control how evidence is interpreted; they must not silently strengthen a manual/recommended rule into an automatic normative proof.
+Validation semantics are split deliberately between evidence/proof ownership under `standards/evidence/` and the remaining final-PDF measurement reference/extension pair scheduled for the same Phase 3 evidence taxonomy. These controls must not silently strengthen a manual/recommended rule into an automatic normative proof.
 
 ## Maintenance rules
 
