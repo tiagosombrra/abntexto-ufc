@@ -16,7 +16,7 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "equation-display-final-pdf-scenario.json"
-LOCATOR = ROOT / "standards" / "locator-audit-objects-equations.json"
+LOCATOR = standard_file("locator-audit-objects-equations.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 RULE_ID = "equation.display"
 EXPECTED = {"displayed": True}
