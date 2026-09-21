@@ -12,10 +12,11 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "ufc-citation-system-scenario.json"
-LOCATOR_AUDIT = ROOT / "standards" / "locator-audit-citations.json"
+LOCATOR_AUDIT = standard_file("locator-audit-citations.json")
 RULESET_ID = "citations.ufc-system"
 RULE_ID = "citation.system.ufc"
 
