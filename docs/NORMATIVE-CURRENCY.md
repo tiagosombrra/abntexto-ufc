@@ -36,7 +36,7 @@ UFC normalization guides are institutional sources interpreted under the precede
 
 The Scientific Article source-contract reconstruction reconfirmed the corrected UFC scientific-article guide (2022, corrected file dated 2023-04-27) and ABNT NBR 6022:2018 as the current article-presentation basis. The guide's embedded NBR 10520:2002 and NBR 6023:2018 references are superseded for their technical domains by NBR 10520:2023 and NBR 6023:2025.
 
-The scientific-article runtime is active in the canonical `abntexto-ufc.cls` and is governed by the current 18-rule article contract in `standards/coverage-rules-article.json` plus the applicable cross-cutting current technical standards.
+The scientific-article runtime is active in the canonical `abntexto-ufc.cls` and is governed by the current 18-rule article contract in `standards/rules/coverage-rules-article.json` plus the applicable cross-cutting current technical standards.
 
 Runtime activation is distinct from proof-state promotion. The presence of scientific-article behavior in the canonical `abntexto-ufc.cls`, profile routing, or source implementation does not by itself prove article presentation predicates. Article-specific rendered evidence remains required before changing article rule proof state.
 
