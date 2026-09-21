@@ -89,6 +89,23 @@ def main() -> int:
     if ".glob(DEFAULT_COVERAGE_GLOB)" in full_text:
         return fail("normative_full.py must discover coverage manifests recursively")
 
+    moved_rule_authorities = {
+        "atomic-rules.json",
+        "coverage-rules.json",
+        "coverage-rules-article.json",
+        "coverage-rules-citations.json",
+        "coverage-rules-closure.json",
+        "coverage-rules-documentary.json",
+        "coverage-rules-frontmatter.json",
+        "coverage-rules-project.json",
+    }
+    for filename in sorted(moved_rule_authorities):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "rules":
+            return fail(f"rule authority {filename} must resolve under standards/rules")
+        if (ROOT / "standards" / filename).exists():
+            return fail(f"flat compatibility copy is forbidden for moved rule authority {filename}")
+
     moved_catalog_authorities = {
         "catalog.json",
         "precedence.json",
