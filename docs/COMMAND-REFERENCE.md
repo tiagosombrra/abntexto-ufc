@@ -2,7 +2,7 @@
 
 Esta é a referência de consulta da API pública atual. Para aprender pelo fluxo de um TCC completo, comece por `template/main.tex` e pelo [USER-GUIDE.md](USER-GUIDE.md).
 
-A API pública própria do projeto usa os identificadores canônicos documentados nesta referência. O contrato correspondente, legível por máquina, é `standards/public-api.json`. O runtime não mantém aliases paralelos para APIs retiradas; esta referência descreve apenas a superfície atualmente suportada.
+A API pública própria do projeto usa os identificadores canônicos documentados nesta referência. O contrato correspondente, legível por máquina, é `standards/api/public-api.json`. O runtime não mantém aliases paralelos para APIs retiradas; esta referência descreve apenas a superfície atualmente suportada.
 
 ## Configuração: \ufcsetup
 
