@@ -84,6 +84,28 @@ def main() -> int:
     if ".glob(DEFAULT_COVERAGE_GLOB)" in full_text:
         return fail("normative_full.py must discover coverage manifests recursively")
 
+    direct_standard_pattern = 'ROOT / "standards" /'
+    direct_path_exempt = {
+        "tests/checks/path_resolution_contract.py",
+        "tools/repository_paths.py",
+    }
+    direct_path_violations: list[str] = []
+    for subtree in (ROOT / "tests" / "checks", ROOT / "tests" / "integration", ROOT / "tools"):
+        for candidate in sorted(subtree.rglob("*")):
+            if not candidate.is_file() or candidate.suffix not in {".py", ".sh"}:
+                continue
+            relative = candidate.relative_to(ROOT).as_posix()
+            if relative in direct_path_exempt:
+                continue
+            text = candidate.read_text(encoding="utf-8", errors="replace")
+            if direct_standard_pattern in text:
+                direct_path_violations.append(relative)
+    if direct_path_violations:
+        return fail(
+            "direct flat standards file paths remain in movable surfaces: "
+            + ", ".join(direct_path_violations)
+        )
+
     print(
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
