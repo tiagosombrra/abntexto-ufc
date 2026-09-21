@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-26",
+  "component": "vector-rule-geometry",
+  "purpose": "Calibrate an additive final-PDF validation capability for thin horizontal and vertical vector rules for IBGE table geometry.",
+  "tool": "pdftocairo -svg",
+  "implementation": "tools/pdf_vector_measurement.py",
+  "calibration_fixture": "tests/documents/vector-rule-calibration-test.tex",
+  "calibration_checker": "tests/checks/normative_vector_rule_validation.py",
+  "parser": {
+    "axis_classification_tolerance_pt": 0.5,
+    "max_rule_thickness_pt": 2.0,
+    "min_rule_length_pt": 5.0,
+    "accepted_primitives": [
+      "stroked-line",
+      "filled-thin-rectangle"
+    ]
+  },
+  "calibration": {
+    "horizontal_length_mm": 50,
+    "vertical_length_mm": 30,
+    "expected_horizontal_rules": 1,
+    "expected_vertical_rules": 1,
+    "horizontal_length_tolerance_binding": "validation-policy.tolerances.horizontal_position_pt",
+    "vertical_length_tolerance_binding": "validation-policy.tolerances.vertical_position_pt"
+  },
+  "policy": {
+    "additive_capability_only": true,
+    "existing_n5_tolerances_unchanged": true,
+    "rasterization_not_used": true,
+    "proof_state_changed": false
+  }
+}
