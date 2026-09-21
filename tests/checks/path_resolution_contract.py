@@ -35,6 +35,9 @@ def active_text_surfaces() -> list[Path]:
     excluded_exact = {
         "CHANGELOG.md",
         "docs/REPOSITORY-MAINTENANCE.md",
+        # This contract intentionally names retired flat paths in negative
+        # assertions proving that compatibility copies do not exist.
+        "tests/checks/path_resolution_contract.py",
     }
     text_suffixes = {
         ".cff",
