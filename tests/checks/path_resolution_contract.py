@@ -182,6 +182,24 @@ def main() -> int:
         if (ROOT / "standards" / filename).exists():
             return fail(f"flat compatibility copy is forbidden for moved catalog authority {filename}")
 
+    moved_evidence_authorities = {
+        "article-evidence-map.json",
+        "evidence-contribution-policy.json",
+        "evidence-registry.json",
+        "false-coverage-policy.json",
+        "proof-policy.json",
+        "test-surface-policy.json",
+        "validation-overrides.json",
+    }
+    for filename in sorted(moved_evidence_authorities):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "evidence":
+            return fail(f"evidence authority {filename} must resolve under standards/evidence")
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved evidence authority {filename}"
+            )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )
