@@ -10,13 +10,15 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from repository_paths import standard_file
+
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 from pdf_vector_measurement import vector_rules
 
 SCENARIO = ROOT / "standards" / "footnote-separator-scenario.json"
 FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
+VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 RULE_ID = "footnote.separator.length"
 EXPECTED_RULE_IDS = [RULE_ID]
 

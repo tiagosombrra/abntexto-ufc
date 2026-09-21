@@ -20,7 +20,7 @@ SCENARIO = ROOT / "standards" / "typography-scenario.json"
 LOCATOR_TYPOGRAPHY = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
 LOCATOR_FINAL = ROOT / "standards" / "locator-audit-final.json"
 EVIDENCE_REGISTRY = standard_file("evidence-registry.json")
-VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
+VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 
 RULE_ORDER = [
     "format.text.color",

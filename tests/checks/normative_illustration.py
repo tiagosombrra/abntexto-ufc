@@ -11,6 +11,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from repository_paths import standard_file
+
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, Box, bbox_pages, normalize, typography_runs
 
@@ -18,7 +20,7 @@ SCENARIO = ROOT / "standards" / "illustration-final-pdf-scenario.json"
 LOCATOR_TYPOGRAPHY = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
 LOCATOR_OBJECTS = ROOT / "standards" / "locator-audit-objects-equations.json"
 LOCATOR_FINAL = ROOT / "standards" / "locator-audit-final.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
+VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 
 RULES = [
     "illustration.identification.font-size",

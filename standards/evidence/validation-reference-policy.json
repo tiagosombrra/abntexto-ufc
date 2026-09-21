@@ -16,7 +16,7 @@
     "vertical_position_pt": 5.0,
     "font_size_pt": 1.0
   },
-  "vector_geometry_extension": "standards/vector-rule-validation-extension.json",
+  "vector_geometry_extension": "standards/evidence/vector-rule-validation-extension.json",
   "evidence_format": "json",
   "exit_capabilities": [
     "page-geometry",

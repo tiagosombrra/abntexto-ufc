@@ -12,9 +12,10 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from pdf_measurement import PDFMeasurementError
 from pdf_vector_measurement import vector_rules
+from repository_paths import standard_file
 
-EXTENSION = ROOT / "standards" / "vector-rule-validation-extension.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
+EXTENSION = standard_file("vector-rule-validation-extension.json")
+VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 
 
 def fail(message: str) -> None:
@@ -56,7 +57,7 @@ def main() -> None:
         fail("vector tool is not registered in validation-policy.json")
     if "vector-rule-geometry" not in validation.get("exit_capabilities", []):
         fail("vector-rule-geometry capability is not registered")
-    if validation.get("vector_geometry_extension") != "standards/vector-rule-validation-extension.json":
+    if validation.get("vector_geometry_extension") != "standards/evidence/vector-rule-validation-extension.json":
         fail("validation extension binding drifted")
 
     policy = extension.get("policy", {})

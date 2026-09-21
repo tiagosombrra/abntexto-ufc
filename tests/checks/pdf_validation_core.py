@@ -20,8 +20,9 @@ from pdf_measurement import (
     pdf_info,
     typography_runs,
 )
+from repository_paths import standard_file
 
-POLICY = ROOT / "standards" / "validation-reference-policy.json"
+POLICY = standard_file("validation-reference-policy.json")
 PT_PER_MM = 72.0 / 25.4
 
 

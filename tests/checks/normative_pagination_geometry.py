@@ -13,11 +13,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
 SCENARIO = ROOT / "standards" / "pagination-geometry-scenario.json"
 LOCATORS = ROOT / "standards" / "locator-audit-layout-pagination.json"
-POLICY = ROOT / "standards" / "validation-reference-policy.json"
+POLICY = standard_file("validation-reference-policy.json")
 PT_PER_MM = 72.0 / 25.4
 HEADER_REGION_PT = 100.0
 

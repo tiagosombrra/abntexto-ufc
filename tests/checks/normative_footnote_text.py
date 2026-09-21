@@ -11,6 +11,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from repository_paths import standard_file
+
 from normative_full import load_full_contract
 from pdf_measurement import (
     PDFMeasurementError,
@@ -22,7 +24,7 @@ from pdf_measurement import (
 SCENARIO = ROOT / "standards" / "footnote-text-scenario.json"
 TYPOGRAPHY_LOCATORS = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
 FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
+VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 
 FONT_RULE_ID = "font.size.reduced.footnote"
 SPACING_RULE_ID = "footnote.line-spacing"

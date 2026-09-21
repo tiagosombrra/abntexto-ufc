@@ -43,8 +43,8 @@ Current evidence/proof authorities are grouped under `standards/evidence/`:
 - `evidence/proof-policy.json` — proof/evidence state policy.
 - `evidence/test-surface-policy.json` — standalone/dynamic/manual test-surface ownership.
 - `evidence/validation-overrides.json` — rule-local validation ownership overrides.
-
-The remaining final-PDF measurement policy pair (`validation-reference-policy.json` and `vector-rule-validation-extension.json`) is reserved for the bounded 3D2 move so its wider consumer surface can be migrated independently.
+- `evidence/validation-reference-policy.json` — shared final-PDF measurement policy and tolerances.
+- `evidence/vector-rule-validation-extension.json` — calibrated vector-rule measurement extension used by final-PDF evidence checks.
 
 ### Locators
 
@@ -56,7 +56,7 @@ Files ending in `-scenario.json` define deterministic validation scenarios for s
 
 ### Validation policy
 
-Validation semantics are split deliberately between evidence/proof ownership under `standards/evidence/` and the remaining final-PDF measurement reference/extension pair scheduled for the same Phase 3 evidence taxonomy. These controls must not silently strengthen a manual/recommended rule into an automatic normative proof.
+Validation semantics and final-PDF measurement policy are grouped under `standards/evidence/`. This taxonomy is organizational only: these controls must not silently strengthen a manual/recommended rule into an automatic normative proof.
 
 ## Maintenance rules
 
