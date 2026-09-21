@@ -6,6 +6,7 @@ import hashlib
 import json
 import shutil
 import socket
+import sys
 import subprocess
 import tempfile
 import time
@@ -18,9 +19,13 @@ from threading import Thread
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+
 VALIDATOR = ROOT / "validator"
 CONTRACT = VALIDATOR / "validation-contract.json"
-CATALOG = ROOT / "standards" / "catalog.json"
+CATALOG = standard_file("catalog.json")
 ELEMENT_KEY = "element-6066-11e4-a52e-4f735466cecf"
 PASS = "PASS"
 FAIL = "FAIL"
