@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 
 AUDIT = ROOT / "standards" / "locator-audit.json"
 SUPPLEMENT_GLOB = "locator-audit-*.json"
