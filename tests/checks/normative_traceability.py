@@ -12,9 +12,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 
 RUNNER = ROOT / "tests" / "run.py"
-EVIDENCE_REGISTRY = ROOT / "standards" / "evidence-registry.json"
+EVIDENCE_REGISTRY = standard_file("evidence-registry.json")
 
 
 def fail(message: str) -> None:
