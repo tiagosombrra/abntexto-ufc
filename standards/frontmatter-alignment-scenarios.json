@@ -3,7 +3,7 @@
   "reviewed_at": "2026-08-24",
   "purpose": "Naturally wrapped final-PDF scenarios for dedication and epigraph justification evidence.",
   "fixture": "tests/documents/frontmatter-dedication-epigraph-alignment-test.tex",
-  "tolerance_source": "standards/validation-reference-policy.json#tolerances.horizontal_position_pt",
+  "tolerance_source": "standards/evidence/validation-reference-policy.json#tolerances.horizontal_position_pt",
   "scenarios": [
     {
       "id": "dedication.wrapped",
