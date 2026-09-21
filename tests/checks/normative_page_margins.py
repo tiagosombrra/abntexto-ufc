@@ -17,11 +17,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages
 
 SCENARIO = ROOT / "standards" / "page-margins-scenario.json"
 LOCATORS = ROOT / "standards" / "locator-audit-layout-pagination.json"
-VALIDATION_POLICY = ROOT / "standards" / "validation-reference-policy.json"
+VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 PT_PER_MM = 72.0 / 25.4
 PAGE_RULE = "page.a4"
 RECTO_RULES = [
