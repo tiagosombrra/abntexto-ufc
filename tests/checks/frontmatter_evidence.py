@@ -26,7 +26,7 @@ from pdf_measurement import (
     typography_runs,
 )
 
-SCENARIOS = ROOT / "standards" / "frontmatter-scenarios.json"
+SCENARIOS = standard_file("frontmatter-scenarios.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 PT_PER_MM = 72.0 / 25.4
 QUOTE_CHARS = {'"', '“', '”', '„', '«', '»'}
