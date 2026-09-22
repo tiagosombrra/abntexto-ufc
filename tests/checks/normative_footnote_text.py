@@ -21,7 +21,7 @@ from pdf_measurement import (
     typography_runs,
 )
 
-SCENARIO = ROOT / "standards" / "footnote-text-scenario.json"
+SCENARIO = standard_file("footnote-text-scenario.json")
 TYPOGRAPHY_LOCATORS = standard_file("locator-audit-typography-paragraphs.json")
 FOOTNOTE_LOCATORS = standard_file("locator-audit-sections-footnotes-nature.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")

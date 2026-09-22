@@ -16,7 +16,7 @@ from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 from pdf_vector_measurement import vector_rules
 
-SCENARIO = ROOT / "standards" / "footnote-separator-scenario.json"
+SCENARIO = standard_file("footnote-separator-scenario.json")
 FOOTNOTE_LOCATORS = standard_file("locator-audit-sections-footnotes-nature.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 RULE_ID = "footnote.separator.length"
