@@ -53,7 +53,7 @@ ORCHESTRATION_EXACT = {
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
-    "tests/checks/linux_integration_suites.py",
+    "tests/checks/repository/linux_integration_suites.py",
     "tools/ci/select-integration-scope.py",
     "tools/ci/validate-pkgcheck-download.py",
     "tools/ci/validate-release-assets.py",

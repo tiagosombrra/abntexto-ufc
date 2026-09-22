@@ -380,3 +380,13 @@ Issue #382 moves exactly the prepared repository/control family into `tests/chec
 Four files move as blob-identical renames. Four files receive only the path-key updates required to preserve their existing negative/self-exemption semantics. Historical forbidden paths for already removed checks remain historical and are not rewritten.
 
 The path-resolution contract binds all eight basenames to `tests/checks/repository/`, forbids flat compatibility copies and scans active non-historical text surfaces for stale `tests/checks/<basename>.py` references. Basename identity, runner names, suite inference, test counts, reachability, runtime/public API, normative state, release state and published artifacts must remain unchanged.
+
+### Phase 4B1 validation incident
+
+Initial Static Contract #813 failed on PR #383 after the repository/control checks moved because the new stale-check-path guard found three active consumers still naming retired flat paths:
+
+- `docs/ENGINEERING-LANGUAGE.md` referenced `tests/checks/engineering_language.py`;
+- `docs/LINUX-INTEGRATION-SCOPES.md` referenced `tests/checks/linux_integration_suites.py`;
+- `tests/integration_suites.py` retained `tests/checks/linux_integration_suites.py` in the orchestration exact-path set.
+
+The failure is retained as audit evidence. No compatibility copy or guard exemption was added. Those consumers are updated to the repository namespace, preserving engineering-language policy and Linux suite-selection semantics. Fresh Static and Linux Integration gates are required before merge.
