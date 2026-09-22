@@ -152,6 +152,18 @@ def main() -> int:
     moved_api_checks = {
         "v3_api_residual.py",
     }
+    moved_governance_checks = {
+        "normative_configuration.py",
+        "normative_currency.py",
+        "normative_locators.py",
+        "normative_negative_paths.py",
+        "normative_precedence.py",
+        "normative_proof_state.py",
+        "normative_rule_migrations.py",
+        "normative_source_references.py",
+        "normative_sources.py",
+        "reference_guide_contract.py",
+    }
     moved_check_paths = {
         **{
             filename: f"tests/checks/repository/{filename}"
@@ -172,6 +184,10 @@ def main() -> int:
         **{
             filename: f"tests/checks/api/{filename}"
             for filename in moved_api_checks
+        },
+        **{
+            filename: f"tests/checks/governance/{filename}"
+            for filename in moved_governance_checks
         },
     }
 
@@ -562,7 +578,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)}"
     )
     return 0
 

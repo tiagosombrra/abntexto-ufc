@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a/4B2b/4B2c complete; 4B2d API namespace in progress under #388 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a/4B2b/4B2c/4B2d complete; 4C1a governance namespace in progress under #407 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -473,3 +473,28 @@ The check preserves executable mode `100755`, adds `sys` only for the canonical 
 The live migration-contract consumer entry in `tests/checks/repository/engineering_language.py` follows the moved API check while preserving the assertion that both the API-residual check and profile-matrix check consume `release/history/v3/v3-api-migration.json`.
 
 The moved-check path contract gains one API basename mapped to `tests/checks/api/v3_api_residual.py`; stale flat paths and compatibility copies remain fail-closed. No runtime/public API, normative values, release metadata or published artifact changes in this slice. Expected flat-root check count after the move is the certified pre-4C target of 65.
+
+### Phase 4B2d final receipt
+
+Phase 4B2d is complete. PR #401 merged as `6f0aecd9956e8d2cb8707d802098c7ded51adffe` after Static Contract #824 and Linux Integration #709 passed. Post-merge `main` passed Static Contract #825 and Linux Release Check #263 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The API residual check now exists only under `tests/checks/api/`, executable mode is preserved, and the flat `tests/checks/` root contains exactly 65 Python checks. This satisfies the Phase 4C entry invariant.
+
+### Phase 4C1a execution map
+
+Issue #407 moves exactly 10 governance/source-authority checks into `tests/checks/governance/`:
+
+- `normative_configuration.py`;
+- `normative_currency.py`;
+- `normative_locators.py`;
+- `normative_negative_paths.py`;
+- `normative_precedence.py`;
+- `normative_proof_state.py`;
+- `normative_rule_migrations.py`;
+- `normative_source_references.py`;
+- `normative_sources.py`;
+- `reference_guide_contract.py`.
+
+All 10 replace fixed `Path(__file__).resolve().parents[2]` root discovery with the canonical `tests/path_resolver.py` bootstrap. Existing `ROOT/tools` imports remain semantically unchanged. `normative_proof_state.py` additionally resolves the directory of `normative_traceability.py` through `check_file("normative_traceability.py")` instead of relying on the flat `tests/checks/` directory; this is required so 4C1b can later move traceability into `tests/checks/evidence/` without breaking the governance check.
+
+The moved-check path contract gains the 10 governance basenames and canonical paths. Flat compatibility copies and stale flat references remain fail-closed. `normative_locators.py` preserves executable mode `100755`; the other nine governance checks preserve mode `100644`. Expected flat-root check count after this slice is 55. No normative value, source-authority decision, runtime/public API, release metadata or published artifact changes.
