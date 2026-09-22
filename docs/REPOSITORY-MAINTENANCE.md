@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F5 complete; 3G migrations/final flat-root cleanup in progress |
+| 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -320,3 +320,18 @@ Slice 3G closes the standards taxonomy by moving the two remaining decomposition
 All active consumers must resolve these authorities through `tools/repository_paths.py::standard_file`. The path-resolution contract binds both basenames to `standards/migrations/`, forbids flat compatibility copies, and requires the standards root to contain no machine-readable JSON authority after this slice.
 
 This slice changes taxonomy and path bindings only. It must not change migration mappings, atomicity semantics, normative values, proof state, runtime behavior, public API, release metadata, published v3.0.4 bytes or CTAN-submitted bytes. Phase 4 remains blocked until 3G is merged, post-merge certified, issue #362 receives the final Phase 3 closeout receipt, and current `main` is reconciled.
+
+### Phase 3 final receipt
+
+Phase 3 is complete. Its final slice, 3G, merged through PR #377 as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88` after Static Contract #805 and Linux Integration #698 passed. Post-merge `main` passed Static Contract #806 and Linux Release Check #256 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+
+The final standards taxonomy invariants are:
+
+- `standards/` contains only `README.md` as a root file; every machine-readable authority is under a semantic directory;
+- the final 3G moves preserve the original Git blobs for `atomicity-plan.json` and `rule-migrations.json`;
+- movable standards consumers resolve authorities recursively by unique basename and fail closed on ambiguity;
+- flat compatibility copies are forbidden by the path-resolution contract;
+- no normative value, migration mapping, proof state, runtime behavior, public API, release metadata, published v3.0.4 byte or CTAN-submitted byte changed during the taxonomy phase;
+- the complete post-merge certification retained canonical class identity, checksum/archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+Issue #362 is the detailed Phase 3 audit trail. Phase 4 is tracked by #375 and begins with resolver/path hardening before any test file is moved.
