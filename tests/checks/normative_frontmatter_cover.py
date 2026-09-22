@@ -13,10 +13,12 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from repository_paths import standard_file
+
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize
 
-SCENARIO = ROOT / "standards" / "frontmatter-cover-scenario.json"
+SCENARIO = standard_file("frontmatter-cover-scenario.json")
 
 
 def fail(message: str) -> None:
