@@ -238,7 +238,7 @@ def audit() -> list[str]:
                 f"{removed.relative_to(ROOT)}: closed unconsumed migration contract remains active"
             )
     for consumer in (
-        "tests/checks/v3_api_residual.py",
+        "tests/checks/api/v3_api_residual.py",
         "tests/checks/profiles/profile_matrix_contract.py",
     ):
         if "release/history/v3/v3-api-migration.json" not in (ROOT / consumer).read_text(

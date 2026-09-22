@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a/4B2b complete; 4B2c profile/article namespace in progress under #387 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a/4B2b/4B2c complete; 4B2d API namespace in progress under #388 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -457,3 +457,19 @@ The moved-check mapping gains the six profile basenames and canonical `tests/che
 Initial Static Contract #821 failed on PR #390 after the profile/article checks moved because the fail-closed moved-check guard found one active semantic consumer still naming the retired flat path: `tests/checks/repository/engineering_language.py` referenced `tests/checks/profile_matrix_contract.py`.
 
 That reference is not incidental text: the engineering-language contract verifies that the profile-matrix check remains a live consumer of `release/history/v3/v3-api-migration.json`. The consumer path is updated to `tests/checks/profiles/profile_matrix_contract.py` while preserving the same migration-contract assertion. The failed run is retained as audit evidence; no compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4B2c final receipt
+
+Phase 4B2c is complete. PR #390 merged as `43ef38bae5cf0df23327f60976ca9ae8d2779fd0` after Static Contract #822 and Linux Integration #708 passed. Initial Static #821 is retained as evidence of one active semantic stale path in `tests/checks/repository/engineering_language.py`; Linux #707 is retained as superseded-head history. Post-merge `main` passed Static Contract #823 and Linux Release Check #262 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The six profile/article checks now exist only under `tests/checks/profiles/`. The certified 84-check / 86-integration identity baseline remains unchanged, the moved-check path contract reports 6 profile checks, and the flat `tests/checks/` root contains exactly 66 Python checks.
+
+### Phase 4B2d execution map
+
+Issue #388 moves exactly `v3_api_residual.py` into `tests/checks/api/`.
+
+The check preserves executable mode `100755`, adds `sys` only for the canonical `tests/path_resolver.py` bootstrap, and replaces fixed `Path(__file__).resolve().parents[2]` root discovery with imported canonical `ROOT`. Its controlled engineering self-exemption follows the new `tests/checks/api/v3_api_residual.py` path without changing residual/negative-test semantics.
+
+The live migration-contract consumer entry in `tests/checks/repository/engineering_language.py` follows the moved API check while preserving the assertion that both the API-residual check and profile-matrix check consume `release/history/v3/v3-api-migration.json`.
+
+The moved-check path contract gains one API basename mapped to `tests/checks/api/v3_api_residual.py`; stale flat paths and compatibility copies remain fail-closed. No runtime/public API, normative values, release metadata or published artifact changes in this slice. Expected flat-root check count after the move is the certified pre-4C target of 65.
