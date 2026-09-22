@@ -11,8 +11,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from normative_full import load_full_contract
+from repository_paths import standard_file
 
-SCENARIO = ROOT / "standards" / "long-quote-reduced-size-scenario.json"
+SCENARIO = standard_file("long-quote-reduced-size-scenario.json")
 RULE_ID = "font.size.reduced.long-quote"
 SOURCE_RULE_ID = "quotation.long.font.size"
 

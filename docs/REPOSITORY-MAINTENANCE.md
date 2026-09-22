@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3E complete; 3F1 frontmatter scenarios in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F1 complete; 3F2 citations/quotations in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -238,3 +238,16 @@ Slice 3F1 moves eleven front-matter scenario authorities into `standards/scenari
 - `frontmatter-toc-scenario.json`.
 
 All eleven moves reuse the exact existing Git blob identities. The corresponding Python evidence checks resolve scenario files recursively by unique basename. No normative payload, runtime behavior, public API, release metadata or published v3.0.4 byte changes in this slice.
+
+
+### Slice 3F1 final receipt
+
+Slice 3F1 is complete. PR #371 merged as `148851e45c8ab7271b5d73ca4759a9f1e379928f` after Static Contract #793 and Linux Integration #691 passed. Post-merge `main` passed Static Contract #794 and Linux Release Check #251. All eleven front-matter scenarios now exist only under `standards/scenarios/frontmatter/` as content-identical renames.
+
+### Slice 3F2 execution map
+
+Slice 3F2 moves exactly seven citation/quotation scenario authorities into `standards/scenarios/citations/`: `apud-presentation-scenario.json`, `direct-citation-source-scenario.json`, `indirect-citation-source-scenario.json`, `long-quotation-scenario.json`, `long-quote-reduced-size-scenario.json`, `short-direct-citation-scenario.json` and `ufc-citation-system-scenario.json`.
+
+The seven corresponding normative Python checks resolve their scenario through `tools/repository_paths.py::standard_file`. The path-resolution contract requires every basename to resolve under the citations scenario directory and forbids flat compatibility copies. JSON payloads, normative semantics, runtime behavior, public API and published v3.0.4 bytes remain unchanged.
+
+The remaining scenario plan is explicitly mapped as 3F3 layout/typography/sections/footnotes (13 files), 3F4 objects/backmatter/references/research-project (9 files), and 3F5 controlled negative scenarios (`negative-paths.json`). Phase 3G then owns only `atomicity-plan.json` and `rule-migrations.json` as migration/decomposition authorities.
