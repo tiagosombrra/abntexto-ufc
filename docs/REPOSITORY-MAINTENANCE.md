@@ -516,3 +516,11 @@ Static Contract #827 passed the generic moved-check stale-path contract but then
 The correction replaces every validator-source binding to a movable check — frontmatter evidence plus normative coverage, governance, traceability, evidence, atomic/full and validator contracts — with `check_file("<basename>")`. This is a resolver hardening change only: execution labels, check order and validation semantics remain unchanged. It also prevents the same hidden flat-path dependency from recurring in 4C1b and later 4C moves.
 
 The path-resolution contract now rejects reintroduction of `ROOT / "tests" / "checks"` in `validator_source.py`. Failed Static #827 remains part of the audit trail; no compatibility copies are introduced.
+
+### Phase 4C1a third validation incident
+
+Static Contract #828 passed the moved-check path contract and the resolver-hardened validator source, then exposed one remaining Python module dependency: `tests/checks/normative_false_coverage.py` imported `normative_proof_state` through the former flat `tests/checks/` module search path.
+
+A complete audit of all 55 checks still in the flat root found no other direct Python import of the ten governance modules moved in 4C1a. The correction keeps `normative_false_coverage.py` in the flat root for its planned 4C1b move, but resolves the directories for both `normative_proof_state.py` and `normative_traceability.py` through `check_file(...)` before importing them. This preserves proof/evidence semantics and prepares the file for the subsequent evidence move without introducing duplicate modules or compatibility packages.
+
+Failed Static #828 remains part of the audit trail.
