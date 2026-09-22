@@ -71,6 +71,7 @@ Current migrated families:
 - `scenarios/objects/` — equation, illustration and table final-PDF scenarios.
 - `scenarios/references/` — reference layout and reference semantic scenarios.
 - `scenarios/research-project/` — research-project structural final-PDF scenario.
+- `scenarios/negative/` — controlled negative-path mutation scenario inventory and rejection contract.
 
 Scenario files remain unique machine-readable authorities and are resolved recursively by basename. No flat compatibility copies are retained. Unmigrated scenario families remain at the standards root only until their bounded Phase 3F slice moves them.
 
