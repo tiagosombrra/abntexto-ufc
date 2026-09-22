@@ -297,3 +297,9 @@ The nine domain scenarios now exist only under `standards/scenarios/backmatter/`
 Slice 3F5 moves only `negative-paths.json` to `standards/scenarios/negative/`. The manifest payload and rejection semantics remain unchanged. `tests/checks/normative_negative_paths.py` resolves the authority through `standard_file(...)`, and the path-resolution contract forbids a retired flat compatibility copy.
 
 After 3F5, the standards root must contain only `README.md`, `atomicity-plan.json`, and `rule-migrations.json`. Phase 3G then moves those final two migration/decomposition authorities under `standards/migrations/`.
+
+### Slice 3F5 validation incident
+
+Initial Static Contract #801 failed after the controlled negative scenario moved because `tests/checks/test_surface_integrity.py` still bound `NEGATIVE_PATHS` to the retired flat path `standards/negative-paths.json`. The fail-closed stale-path guard correctly rejected that residual consumer.
+
+No compatibility copy or guard exemption was added. The integrity check now resolves `negative-paths.json` through `tools/repository_paths.py::standard_file`, matching the canonical recursive authority used by the negative-path runner. Failed run #801 remains part of the audit trail; fresh Static and Linux Integration validation is required before merge.
