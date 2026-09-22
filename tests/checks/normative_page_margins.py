@@ -21,7 +21,7 @@ from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages
 
 SCENARIO = ROOT / "standards" / "page-margins-scenario.json"
-LOCATORS = ROOT / "standards" / "locator-audit-layout-pagination.json"
+LOCATORS = standard_file("locator-audit-layout-pagination.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 PT_PER_MM = 72.0 / 25.4
 PAGE_RULE = "page.a4"

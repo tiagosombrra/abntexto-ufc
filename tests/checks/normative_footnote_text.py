@@ -22,8 +22,8 @@ from pdf_measurement import (
 )
 
 SCENARIO = ROOT / "standards" / "footnote-text-scenario.json"
-TYPOGRAPHY_LOCATORS = ROOT / "standards" / "locator-audit-typography-paragraphs.json"
-FOOTNOTE_LOCATORS = ROOT / "standards" / "locator-audit-sections-footnotes-nature.json"
+TYPOGRAPHY_LOCATORS = standard_file("locator-audit-typography-paragraphs.json")
+FOOTNOTE_LOCATORS = standard_file("locator-audit-sections-footnotes-nature.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 
 FONT_RULE_ID = "font.size.reduced.footnote"

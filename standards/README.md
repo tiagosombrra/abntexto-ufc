@@ -48,7 +48,12 @@ Current evidence/proof authorities are grouped under `standards/evidence/`:
 
 ### Locators
 
-`locator-audit*.json` maps current rule authority to reviewed source locators and explicit evidence status.
+Current locator-audit authorities are grouped under `standards/audits/locator/`.
+
+- `audits/locator/locator-audit.json` — consolidated locator audit.
+- `audits/locator/locator-audit-*.json` — domain-specific locator audits for article, back matter, citations, deposit, layout/pagination, objects/equations, references, sections/footnotes/nature and typography/paragraphs.
+
+These files map current rule authority to reviewed source locators and explicit evidence status. They remain unique machine-readable authorities; no flat compatibility copies are retained.
 
 ### Controlled scenarios
 

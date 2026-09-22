@@ -210,6 +210,28 @@ def main() -> int:
                 f"flat compatibility copy is forbidden for moved evidence authority {filename}"
             )
 
+    moved_locator_audits = {
+        "locator-audit.json",
+        "locator-audit-article.json",
+        "locator-audit-backmatter.json",
+        "locator-audit-citations.json",
+        "locator-audit-deposit.json",
+        "locator-audit-final.json",
+        "locator-audit-layout-pagination.json",
+        "locator-audit-objects-equations.json",
+        "locator-audit-references.json",
+        "locator-audit-sections-footnotes-nature.json",
+        "locator-audit-typography-paragraphs.json",
+    }
+    for filename in sorted(moved_locator_audits):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "audits" / "locator":
+            return fail(f"locator audit {filename} must resolve under standards/audits/locator")
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved locator audit {filename}"
+            )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )
