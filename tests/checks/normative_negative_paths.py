@@ -6,12 +6,16 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / "standards" / "negative-paths.json"
+sys.path.insert(0, str(ROOT / "tools"))
+
+from repository_paths import standard_file
+MANIFEST = standard_file("negative-paths.json")
 EXPECTED_CASE_IDS = (
     "page-margins-right",
     "body-font-size",
