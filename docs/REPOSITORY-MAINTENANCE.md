@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | pending |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A runner/path hardening in progress |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -335,3 +335,13 @@ The final standards taxonomy invariants are:
 - the complete post-merge certification retained canonical class identity, checksum/archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
 
 Issue #362 is the detailed Phase 3 audit trail. Phase 4 is tracked by #375 and begins with resolver/path hardening before any test file is moved.
+
+### Phase 4A execution map
+
+Phase 4 begins with path hardening before any test file move. The certified entry baseline contains 84 Python checks under `tests/checks/` and 86 executable `.py`/`.sh` integration surfaces under `tests/integration/`.
+
+At entry, `tests/run.py` has exactly three direct movable check paths: `repository_contract.py`, `validator_source.py`, and `normative_evidence_contribution.py`. Slice 4A resolves those identities through `tests/path_resolver.py::check_file` while preserving their current interpreter, arguments, check names and execution ordering.
+
+The path-resolution contract must reject any future hard-coded `tests/checks/...` path in `tests/run.py`. Existing recursive integration resolution and suite-inference behavior remain unchanged, including nested validator/article path invariance. No check, integration script, document or fixture is moved in 4A.
+
+Acceptance requires the 84/86 identity baseline to remain unique and reachable, test-surface integrity to retain zero orphaned scripts/assets/technical controls, Static Contract to pass, and the applicable Linux integration scope to pass before taxonomy slice 4B can begin.

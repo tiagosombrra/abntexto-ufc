@@ -147,6 +147,8 @@ def main() -> int:
 
     if '"tests/checks/' in static_text:
         return fail("tests/static.py reintroduced flat check paths")
+    if "tests/checks/" in run_text:
+        return fail("tests/run.py reintroduced flat check paths")
     if '("sh", "tests/integration/' in run_text:
         return fail("tests/run.py reintroduced flat integration command paths")
     for label, text in (

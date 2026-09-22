@@ -16,7 +16,7 @@ if str(TESTS_DIR) not in sys.path:
     sys.path.insert(0, str(TESTS_DIR))
 
 from integration_suites import SUITES
-from path_resolver import integration_file, repository_relative
+from path_resolver import check_file, integration_file, repository_relative
 
 
 def integration_command(filename: str, *args: str) -> tuple[str, ...]:
@@ -45,8 +45,8 @@ class Result:
 
 
 CHECKS = (
-    Check("repository", "Repository contract", ("python3", "tests/checks/repository_contract.py")),
-    Check("validator-source", "PDF validator sources", ("python3", "tests/checks/validator_source.py")),
+    Check("repository", "Repository contract", ("python3", repository_relative(check_file("repository_contract.py")))),
+    Check("validator-source", "PDF validator sources", ("python3", repository_relative(check_file("validator_source.py")))),
     Check("reference", "Reference document", integration_command("reference-document.sh")),
     Check(
         "web-lite-positive",
@@ -413,7 +413,7 @@ def main() -> int:
             "Normative evidence contribution",
             (
                 sys.executable,
-                "tests/checks/normative_evidence_contribution.py",
+                repository_relative(check_file("normative_evidence_contribution.py")),
                 "--log-dir",
                 str(report_dir / "checks"),
                 "--mode",
