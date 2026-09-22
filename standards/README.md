@@ -30,7 +30,7 @@ Current rule authorities are grouped under `standards/rules/`:
 - `rules/atomic-rules.json` — base atomic rule contract.
 - `rules/coverage-rules*.json` — current rule extensions by subject/profile.
 
-`atomicity-plan.json` remains a decomposition/migration control artifact until the dedicated migrations slice moves it. Evidence registries and proof/validation policies remain separate authorities and are intentionally not part of `standards/rules/`.
+Atomicity decomposition and rule-migration provenance are separate control authorities under `standards/migrations/`. Evidence registries and proof/validation policies remain separate authorities and are intentionally not part of `standards/rules/`.
 
 ### Evidence and validation semantics
 
@@ -73,7 +73,16 @@ Current migrated families:
 - `scenarios/research-project/` — research-project structural final-PDF scenario.
 - `scenarios/negative/` — controlled negative-path mutation scenario inventory and rejection contract.
 
-Scenario files remain unique machine-readable authorities and are resolved recursively by basename. No flat compatibility copies are retained. Unmigrated scenario families remain at the standards root only until their bounded Phase 3F slice moves them.
+Scenario files remain unique machine-readable authorities and are resolved recursively by basename. No flat compatibility copies are retained; all current scenario families are now nested under `standards/scenarios/`.
+
+### Migration and decomposition controls
+
+Current migration/decomposition controls are grouped under `standards/migrations/`:
+
+- `migrations/atomicity-plan.json` — reviewed parent-to-atomic decomposition plan used to validate atomic rule ownership;
+- `migrations/rule-migrations.json` — provenance for retired rule identifiers and their reviewed semantic replacements.
+
+These files are control/provenance authorities rather than active normative-value catalogs. They remain unique machine-readable authorities and are resolved recursively by basename.
 
 ### Validation policy
 

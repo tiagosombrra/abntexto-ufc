@@ -8,8 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 from normative_full import load_full_contract
+from repository_paths import standard_file
 
-MIGRATIONS = ROOT / "standards" / "rule-migrations.json"
+MIGRATIONS = standard_file("rule-migrations.json")
 EXPECTED = {
     "font.size.reduced.illustration-caption": "illustration.identification.font-size",
     "font.size.reduced.table-caption": "table.identification.font-size",
