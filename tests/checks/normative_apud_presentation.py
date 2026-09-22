@@ -15,7 +15,7 @@ from normative_full import load_full_contract
 from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "standards" / "apud-presentation-scenario.json"
+SCENARIO = standard_file("apud-presentation-scenario.json")
 LOCATOR_AUDIT = standard_file("locator-audit-citations.json")
 RULESET_ID = "citations.apud"
 RULE_ID = "citation.apud.presentation"

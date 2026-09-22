@@ -15,7 +15,7 @@ from normative_full import load_full_contract
 from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "standards" / "indirect-citation-source-scenario.json"
+SCENARIO = standard_file("indirect-citation-source-scenario.json")
 LOCATOR_AUDIT = standard_file("locator-audit-citations.json")
 RULESET_ID = "citations.indirect-source"
 RULE_ID = "citation.indirect.source"

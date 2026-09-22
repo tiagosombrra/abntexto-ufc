@@ -256,6 +256,26 @@ def main() -> int:
                 f"flat compatibility copy is forbidden for moved frontmatter scenario {filename}"
             )
 
+    moved_citation_scenarios = {
+        "apud-presentation-scenario.json",
+        "direct-citation-source-scenario.json",
+        "indirect-citation-source-scenario.json",
+        "long-quotation-scenario.json",
+        "long-quote-reduced-size-scenario.json",
+        "short-direct-citation-scenario.json",
+        "ufc-citation-system-scenario.json",
+    }
+    for filename in sorted(moved_citation_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "citations":
+            return fail(
+                f"citation scenario {filename} must resolve under standards/scenarios/citations"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved citation scenario {filename}"
+            )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )

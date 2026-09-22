@@ -59,9 +59,10 @@ These files map current rule authority to reviewed source locators and explicit 
 
 Deterministic validation scenarios are grouped under `standards/scenarios/` by observable domain as each family is migrated.
 
-Current migrated family:
+Current migrated families:
 
 - `scenarios/frontmatter/` — front-matter validation scenarios for acknowledgments, alignment, approval page, cover, errata, optional lists, pagination, dedication/epigraph aggregate behavior, summary, title page and table of contents.
+- `scenarios/citations/` — citation and quotation scenarios covering apud presentation, source attribution, long and short direct quotations, reduced-size mapping and the UFC citation-system surface.
 
 Scenario files remain unique machine-readable authorities and are resolved recursively by basename. No flat compatibility copies are retained. Unmigrated scenario families remain at the standards root only until their bounded Phase 3F slice moves them.
 
