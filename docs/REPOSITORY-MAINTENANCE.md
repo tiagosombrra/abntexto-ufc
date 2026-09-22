@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3D and path-consistency follow-up complete; 3E in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3E complete; 3F1 frontmatter scenarios in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -211,3 +211,30 @@ No exception or compatibility copy was introduced. Every affected locator consum
 
 Static Contract #789 then reduced the residual set to one occurrence in `tests/checks/normative_locators.py`: the consolidated `locator-audit.json` path had not matched the bulk replacement pattern used for the domain-suffixed locator filenames. That final consumer now uses `standard_file("locator-audit.json")`; no guard exemption was added. Failed #789 remains part of the audit trail.
 
+
+
+### Slice 3E final receipt
+
+Slice 3E is complete. PR #370 merged as `f7735262187fd1850cf222aca424e40203192fb2` after Static Contract #791 and Linux Integration #690 passed. Post-merge Static Contract #792 passed; Linux Release Check #250 is recorded separately when complete. All eleven locator-audit authorities now exist only under `standards/audits/locator/`.
+
+### Slice 3F execution strategy
+
+Scenario migration is divided by observable domain instead of moving the remaining scenario corpus in one large PR. Each sub-slice moves content-identical JSON blobs, updates all direct consumers to `tools/repository_paths.py::standard_file`, binds the family to its semantic directory in the path-resolution contract, updates this roadmap and the standards index, and forbids flat compatibility copies.
+
+#### Slice 3F1 — frontmatter scenarios
+
+Slice 3F1 moves eleven front-matter scenario authorities into `standards/scenarios/frontmatter/`:
+
+- `frontmatter-acknowledgments-scenario.json`;
+- `frontmatter-alignment-scenarios.json`;
+- `frontmatter-approval-scenario.json`;
+- `frontmatter-cover-scenario.json`;
+- `frontmatter-errata-scenario.json`;
+- `frontmatter-lists-scenario.json`;
+- `frontmatter-pagination-scenario.json`;
+- `frontmatter-scenarios.json`;
+- `frontmatter-summary-scenario.json`;
+- `frontmatter-title-page-scenario.json`;
+- `frontmatter-toc-scenario.json`.
+
+All eleven moves reuse the exact existing Git blob identities. The corresponding Python evidence checks resolve scenario files recursively by unique basename. No normative payload, runtime behavior, public API, release metadata or published v3.0.4 byte changes in this slice.
