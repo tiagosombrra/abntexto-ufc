@@ -232,6 +232,30 @@ def main() -> int:
                 f"flat compatibility copy is forbidden for moved locator audit {filename}"
             )
 
+    moved_frontmatter_scenarios = {
+        "frontmatter-acknowledgments-scenario.json",
+        "frontmatter-alignment-scenarios.json",
+        "frontmatter-approval-scenario.json",
+        "frontmatter-cover-scenario.json",
+        "frontmatter-errata-scenario.json",
+        "frontmatter-lists-scenario.json",
+        "frontmatter-pagination-scenario.json",
+        "frontmatter-scenarios.json",
+        "frontmatter-summary-scenario.json",
+        "frontmatter-title-page-scenario.json",
+        "frontmatter-toc-scenario.json",
+    }
+    for filename in sorted(moved_frontmatter_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "frontmatter":
+            return fail(
+                f"frontmatter scenario {filename} must resolve under standards/scenarios/frontmatter"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved frontmatter scenario {filename}"
+            )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )
