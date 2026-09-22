@@ -403,6 +403,20 @@ def main() -> int:
                 f"flat compatibility copy is forbidden for moved research-project scenario {filename}"
             )
 
+    moved_negative_scenarios = {
+        "negative-paths.json",
+    }
+    for filename in sorted(moved_negative_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "negative":
+            return fail(
+                f"negative scenario {filename} must resolve under standards/scenarios/negative"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved negative scenario {filename}"
+            )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )
