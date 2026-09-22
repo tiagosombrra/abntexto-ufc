@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a complete; 4B2b validator/PDF namespace in progress under #386 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a/4B2b complete; 4B2c profile/article namespace in progress under #387 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -428,3 +428,32 @@ Initial Static Contract #818 failed on PR #389 after the validator/PDF checks mo
 - `validator/README.md` referenced `tests/checks/validator_source.py`.
 
 The failure is retained as audit evidence. No compatibility copy or stale-path exemption was added. Those consumers are updated to the validator namespace while preserving integration-suite selection and validator documentation semantics. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4B2b final receipt
+
+Phase 4B2b is complete. PR #389 merged as `7ef23716867b3725548c21ee0e64b27316e5acc6` after Static Contract #819 and Linux Integration #706 passed. Initial Static #818 is retained as evidence of three active stale validator/PDF paths; Linux #705 is retained as a superseded concurrency-cancelled run. Post-merge `main` passed Static Contract #820, Pages #6 and Linux Release Check #261 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The validator/PDF checks now exist only under `tests/checks/validator/`. The certified 84-check / 86-integration identity baseline remains unchanged, with 8 repository checks, 2 distribution checks and 2 validator checks represented by the moved-check path contract and zero orphaned scripts, assets or technical controls.
+
+### Phase 4B2c execution map
+
+Issue #387 moves exactly six profile/article checks into `tests/checks/profiles/`:
+
+- `profile_matrix_contract.py`;
+- `scientific_article_body.py`;
+- `scientific_article_evidence_map.py`;
+- `scientific_article_front_block.py`;
+- `scientific_article_profile_contract.py`;
+- `scientific_article_recommendations_contract.py`.
+
+All six replace fixed `Path(__file__).resolve().parents[2]` root discovery with the canonical `tests/path_resolver.py` bootstrap. `profile_matrix_contract.py` needs only canonical `ROOT`; the five scientific-article checks retain their existing `ROOT/tools` helper imports after location-independent bootstrap.
+
+Known active consumers follow the new paths in `scientific-article-front-block.sh`, `scientific-article-body.sh` and `scientific-article-recommendations.sh`. The profile and foreign-elements integration scripts contain no direct check-path invocation and remain unchanged.
+
+The moved-check mapping gains the six profile basenames and canonical `tests/checks/profiles/` paths. Flat compatibility copies and stale flat references remain fail-closed. Linux suite selection requires no proactive `PATH_RULES` edit because movable check paths are normalized by basename before scope matching. File modes are preserved exactly across the move. Expected flat-root check count after this slice is 66.
+
+### Phase 4B2c validation incident
+
+Initial Static Contract #821 failed on PR #390 after the profile/article checks moved because the fail-closed moved-check guard found one active semantic consumer still naming the retired flat path: `tests/checks/repository/engineering_language.py` referenced `tests/checks/profile_matrix_contract.py`.
+
+That reference is not incidental text: the engineering-language contract verifies that the profile-matrix check remains a live consumer of `release/history/v3/v3-api-migration.json`. The consumer path is updated to `tests/checks/profiles/profile_matrix_contract.py` while preserving the same migration-contract assertion. The failed run is retained as audit evidence; no compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
