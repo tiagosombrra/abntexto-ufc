@@ -44,6 +44,12 @@ Shell-based compilation/render/distribution gates. These cover engine behavior, 
 
 Bounded smoke coverage for fast sanity checks where a full integration route is not required.
 
+## Recursive path ownership
+
+Movable test/check identities are resolved by unique basename through `tests/path_resolver.py`. Permanent runners should use `check_file(...)` and `integration_file(...)` plus `repository_relative(...)` instead of hard-coded movable paths.
+
+Resolution is recursive and fail-closed: a missing basename fails, and duplicate basenames are treated as ambiguous rather than choosing one implicitly. This invariant must be established before checks or integration scripts are moved into semantic subdirectories.
+
 ## Evidence model
 
 Tests may produce structured evidence consumed by normative and release validation.
