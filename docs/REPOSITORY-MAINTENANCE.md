@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1 complete; 4B2a distribution namespace in progress under #384 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a complete; 4B2b validator/PDF namespace in progress under #386 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -404,3 +404,17 @@ Issue #384 moves exactly two release-packaging checks into `tests/checks/distrib
 Before moving, each check replaces fixed `Path(__file__).resolve().parents[2]` root discovery with the canonical `tests/path_resolver.py` bootstrap. The two standalone release-candidate entries in `standards/evidence/test-surface-policy.json` and the active `distribution_bundles.py` exemption in `tests/checks/repository/canonical_identity.py` follow the new paths without changing their classification or semantics.
 
 The generic stale-check-path contract is extended from a repository-only filename set to an explicit basename-to-canonical-path mapping, allowing one fail-closed mechanism to protect both `tests/checks/repository/` and `tests/checks/distribution/`. Flat compatibility copies remain forbidden. Bundle-validation behavior, evidence identity, runtime/public API, normative state, release metadata and published artifacts must remain unchanged.
+
+### Phase 4B2a final receipt
+
+Phase 4B2a is complete. PR #385 merged as `bc5c5107ce6751330754df7ac865024ea1718b7f` after Static Contract #816 and Linux Integration #704 passed. Post-merge `main` passed Static Contract #817 and Linux Release Check #260 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The two release-packaging checks now exist only under `tests/checks/distribution/`. Their entries in `standards/evidence/test-surface-policy.json` changed only by path: class, owner stage, purpose and retention reason remained semantically identical. The certified 84-check / 86-integration identity and zero-orphan baselines remain unchanged.
+
+### Phase 4B2b execution map
+
+Issue #386 moves exactly `validator_source.py` and `pdf_validation_core.py` into `tests/checks/validator/`.
+
+Both checks replace fixed `Path(__file__).resolve().parents[2]` root discovery with the canonical `tests/path_resolver.py` bootstrap. `validator_source.py` replaces its direct flat binding to `pdf_validation_core.py` with `check_file("pdf_validation_core.py")`, preserving stable basename identity before and after the move. Its direct paths to normative checks remain unchanged until those normative families move in Phase 4C.
+
+The generic moved-check mapping gains the two validator basenames and canonical `tests/checks/validator/` paths; stale flat paths and compatibility copies remain fail-closed. No validator application, Web/Lite E2E, CLI, integration script, normative semantics, runtime/public API, release metadata or published artifact changes in this slice.

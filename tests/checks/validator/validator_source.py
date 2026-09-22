@@ -9,10 +9,18 @@ import sys
 import tempfile
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT, check_file  # noqa: E402
 CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 PDF_MEASUREMENT = ROOT / "tools" / "pdf_measurement.py"
-PDF_VALIDATION_CORE = ROOT / "tests" / "checks" / "pdf_validation_core.py"
+PDF_VALIDATION_CORE = check_file("pdf_validation_core.py")
 FRONTMATTER_EVIDENCE = ROOT / "tests" / "checks" / "frontmatter_evidence.py"
 VALIDATOR_ROOT = ROOT / "validator"
 APP = VALIDATOR_ROOT / "app.js"
