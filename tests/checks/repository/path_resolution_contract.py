@@ -137,6 +137,10 @@ def main() -> int:
         "distribution_bundles.py",
         "public_bundles.py",
     }
+    moved_validator_checks = {
+        "pdf_validation_core.py",
+        "validator_source.py",
+    }
     moved_check_paths = {
         **{
             filename: f"tests/checks/repository/{filename}"
@@ -145,6 +149,10 @@ def main() -> int:
         **{
             filename: f"tests/checks/distribution/{filename}"
             for filename in moved_distribution_checks
+        },
+        **{
+            filename: f"tests/checks/validator/{filename}"
+            for filename in moved_validator_checks
         },
     }
 
@@ -535,7 +543,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)}"
     )
     return 0
 

@@ -20,7 +20,7 @@ Then open `http://localhost:8000/`. The application loads the pinned PDF.js 6.2.
 python3 tools/normative_catalog.py --emit-web validator/normative-catalog.js
 ```
 
-Do not edit the generated module manually. `tests/checks/validator_source.py` regenerates it independently and requires byte-for-byte identity, validates JavaScript syntax and fails if any relative browser import is missing.
+Do not edit the generated module manually. `tests/checks/validator/validator_source.py` regenerates it independently and requires byte-for-byte identity, validates JavaScript syntax and fails if any relative browser import is missing.
 
 ## Browser regression
 
