@@ -16,7 +16,7 @@ from repository_paths import standard_file
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "standards" / "body-paragraph-scenario.json"
+SCENARIO = standard_file("body-paragraph-scenario.json")
 LOCATOR_AUDIT = standard_file("locator-audit-typography-paragraphs.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 RULESET_ID = "layout.body-paragraph"
