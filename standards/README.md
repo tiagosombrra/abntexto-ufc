@@ -67,6 +67,10 @@ Current migrated families:
 - `scenarios/typography/` — bounded typography and font/spacing observation scenario.
 - `scenarios/footnotes/` — footnote text and separator scenarios.
 - `scenarios/sections/` — section hierarchy, indicators, multiline hanging, primary-section behavior, unnumbered headings and subsection spacing scenarios.
+- `scenarios/backmatter/` — appendix/annex and index/glossary final-PDF scenarios.
+- `scenarios/objects/` — equation, illustration and table final-PDF scenarios.
+- `scenarios/references/` — reference layout and reference semantic scenarios.
+- `scenarios/research-project/` — research-project structural final-PDF scenario.
 
 Scenario files remain unique machine-readable authorities and are resolved recursively by basename. No flat compatibility copies are retained. Unmigrated scenario families remain at the standards root only until their bounded Phase 3F slice moves them.
 
