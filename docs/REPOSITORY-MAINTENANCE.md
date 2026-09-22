@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F2 complete; 3F3 layout/typography/footnotes/sections in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F3 merged; 3F4 objects/backmatter/references/research-project in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -266,3 +266,21 @@ Slice 3F3 moves exactly thirteen remaining layout/typography/footnote/section sc
 - `standards/scenarios/sections/`: `section-hierarchy-scenario.json`, `section-indicator-scenario.json`, `section-multiline-hanging-scenario.json`, `section-primary-after-spacing-scenario.json`, `section-primary-recto-duplex-scenario.json`, `section-unnumbered-centered-scenario.json`, `subsection-spacing-scenario.json`.
 
 Each corresponding Python evidence consumer resolves the scenario through `tools/repository_paths.py::standard_file`. The path-resolution contract binds each basename to its semantic directory and forbids flat compatibility copies. This slice changes taxonomy only: no normative value, validation tolerance, runtime behavior, public API, release metadata, v3.0.4 published byte or CTAN-submitted byte is changed.
+
+
+### Slice 3F3 merge receipt
+
+Slice 3F3 merged through PR #373 as `da21d47dd41c1bf529104231487eaa3765917878` after Static Contract #797 and Linux Integration #693 passed. Post-merge Static Contract #798 passed; Linux Release Check #253 is the remaining post-merge receipt and must be recorded before this slice is classified as fully closed.
+
+### Slice 3F4 execution map
+
+Slice 3F4 moves exactly nine remaining domain scenarios without changing their JSON payloads:
+
+- `standards/scenarios/backmatter/`: `appendix-annex-final-pdf-scenario.json`, `index-glossary-final-pdf-scenario.json`;
+- `standards/scenarios/objects/`: `equation-display-final-pdf-scenario.json`, `illustration-final-pdf-scenario.json`, `table-ibge-vector-final-pdf-scenario.json`, `table-typography-final-pdf-scenario.json`;
+- `standards/scenarios/references/`: `reference-layout-scenario.json`, `reference-semantics-scenario.json`;
+- `standards/scenarios/research-project/`: `research-project-structure-final-pdf-scenario.json`.
+
+Every consumer resolves the scenario through `tools/repository_paths.py::standard_file`. The path-resolution contract binds each basename to its semantic directory and forbids flat compatibility copies. This slice is taxonomy-only: normative values, validation tolerances, runtime behavior, public API, release metadata, published v3.0.4 bytes and CTAN-submitted bytes remain unchanged.
+
+After 3F4, only the controlled negative-path scenario remains for 3F5. Phase 3G then owns only `atomicity-plan.json` and `rule-migrations.json`.
