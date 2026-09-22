@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2 complete; 4B1 repository/control namespace in progress under #382 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1 complete; 4B2a distribution namespace in progress under #384 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -390,3 +390,17 @@ Initial Static Contract #813 failed on PR #383 after the repository/control chec
 - `tests/integration_suites.py` retained `tests/checks/linux_integration_suites.py` in the orchestration exact-path set.
 
 The failure is retained as audit evidence. No compatibility copy or guard exemption was added. Those consumers are updated to the repository namespace, preserving engineering-language policy and Linux suite-selection semantics. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4B1 final receipt
+
+Phase 4B1 is complete. PR #383 merged as `99fabe32b4eea2d93ef3c696e882001b9916d17a` after Static Contract #814 and Linux Integration #703 passed. Initial Static #813 is retained as evidence of three active stale flat-path consumers; Linux #702 is retained as a superseded concurrency-cancelled run. Post-merge `main` passed Static Contract #815 and Linux Release Check #259 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The eight repository/control checks now exist only under `tests/checks/repository/`. The certified 84-check / 86-integration identity baseline and zero-orphan script/asset/technical-control invariants remain unchanged.
+
+### Phase 4B2a execution map
+
+Issue #384 moves exactly two release-packaging checks into `tests/checks/distribution/`: `distribution_bundles.py` and `public_bundles.py`.
+
+Before moving, each check replaces fixed `Path(__file__).resolve().parents[2]` root discovery with the canonical `tests/path_resolver.py` bootstrap. The two standalone release-candidate entries in `standards/evidence/test-surface-policy.json` and the active `distribution_bundles.py` exemption in `tests/checks/repository/canonical_identity.py` follow the new paths without changing their classification or semantics.
+
+The generic stale-check-path contract is extended from a repository-only filename set to an explicit basename-to-canonical-path mapping, allowing one fail-closed mechanism to protect both `tests/checks/repository/` and `tests/checks/distribution/`. Flat compatibility copies remain forbidden. Bundle-validation behavior, evidence identity, runtime/public API, normative state, release metadata and published artifacts must remain unchanged.
