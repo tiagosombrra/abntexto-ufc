@@ -239,7 +239,7 @@ def audit() -> list[str]:
             )
     for consumer in (
         "tests/checks/v3_api_residual.py",
-        "tests/checks/profile_matrix_contract.py",
+        "tests/checks/profiles/profile_matrix_contract.py",
     ):
         if "release/history/v3/v3-api-migration.json" not in (ROOT / consumer).read_text(
             encoding="utf-8"

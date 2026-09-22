@@ -451,3 +451,9 @@ All six replace fixed `Path(__file__).resolve().parents[2]` root discovery with 
 Known active consumers follow the new paths in `scientific-article-front-block.sh`, `scientific-article-body.sh` and `scientific-article-recommendations.sh`. The profile and foreign-elements integration scripts contain no direct check-path invocation and remain unchanged.
 
 The moved-check mapping gains the six profile basenames and canonical `tests/checks/profiles/` paths. Flat compatibility copies and stale flat references remain fail-closed. Linux suite selection requires no proactive `PATH_RULES` edit because movable check paths are normalized by basename before scope matching. File modes are preserved exactly across the move. Expected flat-root check count after this slice is 66.
+
+### Phase 4B2c validation incident
+
+Initial Static Contract #821 failed on PR #390 after the profile/article checks moved because the fail-closed moved-check guard found one active semantic consumer still naming the retired flat path: `tests/checks/repository/engineering_language.py` referenced `tests/checks/profile_matrix_contract.py`.
+
+That reference is not incidental text: the engineering-language contract verifies that the profile-matrix check remains a live consumer of `release/history/v3/v3-api-migration.json`. The consumer path is updated to `tests/checks/profiles/profile_matrix_contract.py` while preserving the same migration-contract assertion. The failed run is retained as audit evidence; no compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
