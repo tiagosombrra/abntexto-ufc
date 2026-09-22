@@ -13,9 +13,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from repository_paths import standard_file
+
 from normative_full import load_full_contract
 
-SCENARIO = ROOT / "standards" / "research-project-structure-final-pdf-scenario.json"
+SCENARIO = standard_file("research-project-structure-final-pdf-scenario.json")
 
 
 def fail(message: str) -> None:
