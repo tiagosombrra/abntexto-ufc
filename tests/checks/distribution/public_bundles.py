@@ -9,7 +9,15 @@ import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT  # noqa: E402
 PACKAGE_ID = "abntexto-ufc"
 UPSTREAM_MARKER = b"[2026-05-08 1.1 Preparation of works in ABNT standards]"
 REMOVED_FORWARDING_LAYER = "abntexto-ufc/public-api.def"

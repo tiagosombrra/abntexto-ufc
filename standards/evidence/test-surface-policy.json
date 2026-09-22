@@ -8,14 +8,14 @@
   ],
   "standalone": [
     {
-      "path": "tests/checks/public_bundles.py",
+      "path": "tests/checks/distribution/public_bundles.py",
       "class": "release-candidate",
       "owner_stage": "release-packaging",
       "purpose": "Validate deterministic public template and Overleaf bundle structure against an explicitly supplied pinned upstream abntexto.cls.",
       "reason_not_permanent_runner": "Requires a separately materialized pinned upstream class and validates distribution staging rather than the ordinary source/runtime contract."
     },
     {
-      "path": "tests/checks/distribution_bundles.py",
+      "path": "tests/checks/distribution/distribution_bundles.py",
       "class": "release-candidate",
       "owner_stage": "release-packaging",
       "purpose": "Validate deterministic class, CTAN, template and Overleaf distribution candidates, checksums and package metadata.",

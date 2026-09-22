@@ -99,12 +99,11 @@ def stale_flat_standard_references(standard_candidates: list[Path]) -> list[str]
     return sorted(set(findings))
 
 
-def stale_flat_check_references(moved_filenames: set[str]) -> list[str]:
+def stale_flat_check_references(moved_paths: dict[str, str]) -> list[str]:
     findings: list[str] = []
     surfaces = active_text_surfaces()
-    for filename in sorted(moved_filenames):
+    for filename, current in sorted(moved_paths.items()):
         legacy = f"tests/checks/{filename}"
-        current = f"tests/checks/repository/{filename}"
         for surface in surfaces:
             text = surface.read_text(encoding="utf-8", errors="replace")
             if legacy in text:
@@ -134,6 +133,20 @@ def main() -> int:
         "phase_governance.py",
         "repository_contract.py",
     }
+    moved_distribution_checks = {
+        "distribution_bundles.py",
+        "public_bundles.py",
+    }
+    moved_check_paths = {
+        **{
+            filename: f"tests/checks/repository/{filename}"
+            for filename in moved_repository_checks
+        },
+        **{
+            filename: f"tests/checks/distribution/{filename}"
+            for filename in moved_distribution_checks
+        },
+    }
 
     duplicate_checks = duplicate_basenames(check_candidates)
     duplicate_integrations = duplicate_basenames(integration_candidates)
@@ -141,7 +154,7 @@ def main() -> int:
     stale_standard_paths = stale_flat_standard_references(standard_candidates)
     if stale_standard_paths:
         return fail("active stale standards references: " + " | ".join(stale_standard_paths))
-    stale_check_paths = stale_flat_check_references(moved_repository_checks)
+    stale_check_paths = stale_flat_check_references(moved_check_paths)
     if stale_check_paths:
         return fail("active stale check references: " + " | ".join(stale_check_paths))
     if duplicate_checks:
@@ -152,15 +165,16 @@ def main() -> int:
         return fail("ambiguous standards basenames: " + ", ".join(duplicate_standards))
 
     fixed_depth_root = "Path(__file__).resolve().parents" + "[2]"
-    for filename in sorted(moved_repository_checks):
+    for filename, current in sorted(moved_check_paths.items()):
         source = check_file(filename)
         text = source.read_text(encoding="utf-8")
         if fixed_depth_root in text:
             return fail(f"prepared check {filename} still derives repository root by fixed depth")
         if "from path_resolver import" not in text or "ROOT" not in text:
             return fail(f"prepared check {filename} must import ROOT from tests/path_resolver.py")
-        if source.parent != ROOT / "tests" / "checks" / "repository":
-            return fail(f"repository/control check {filename} must resolve under tests/checks/repository")
+        expected_source = ROOT / current
+        if source != expected_source:
+            return fail(f"moved check {filename} must resolve at {current}")
         if (ROOT / "tests" / "checks" / filename).exists():
             return fail(f"flat compatibility copy is forbidden for moved check {filename}")
 
@@ -521,7 +535,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)}"
     )
     return 0
 
