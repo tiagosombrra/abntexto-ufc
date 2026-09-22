@@ -16,7 +16,7 @@ from repository_paths import standard_file
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, Box, bbox_pages, normalize, typography_runs
 
-SCENARIO = ROOT / "standards" / "illustration-final-pdf-scenario.json"
+SCENARIO = standard_file("illustration-final-pdf-scenario.json")
 LOCATOR_TYPOGRAPHY = standard_file("locator-audit-typography-paragraphs.json")
 LOCATOR_OBJECTS = standard_file("locator-audit-objects-equations.json")
 LOCATOR_FINAL = standard_file("locator-audit-final.json")
