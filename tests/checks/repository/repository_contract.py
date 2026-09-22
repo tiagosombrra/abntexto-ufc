@@ -201,14 +201,14 @@ CONTENT_SCAN_EXEMPT = {
     "release/history/v3/v3-api-migration.json",
     # This checker defines the forbidden literals above; scanning its own
     # source would report those policy definitions as active stale references.
-    "tests/checks/repository_contract.py",
+    "tests/checks/repository/repository_contract.py",
 }
 
 # These active technical/documentation surfaces intentionally name the removed
 # class entrypoint only to assert that it must remain absent.
 NEGATIVE_FRAGMENT_EXEMPT = {
-    "tests/checks/canonical_identity.py": {"ufctex.cls"},
-    "tests/checks/repository_contract.py": {"ufctex.cls"},
+    "tests/checks/repository/canonical_identity.py": {"ufctex.cls"},
+    "tests/checks/repository/repository_contract.py": {"ufctex.cls"},
 }
 
 

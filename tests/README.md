@@ -24,6 +24,12 @@ Python source contracts for repository structure, API ownership, normative state
 
 These checks are fail-closed: a source-layout or authority change is incomplete until the affected contract is updated deliberately.
 
+Current semantic namespaces:
+
+- `checks/repository/` — repository identity, governance, metadata, path/suite integrity, engineering-language and librarian-review control checks.
+
+Checks not yet assigned to a semantic namespace remain at `checks/` until their family receives the same location-independence and stale-path preparation; no compatibility copies are retained.
+
 ### `documents/`
 
 Controlled LaTeX documents used to exercise public behavior across supported profiles and scenarios.

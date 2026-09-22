@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A complete, 4A2 location-independence hardening in progress under #380 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2 complete; 4B1 repository/control namespace in progress under #382 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -357,3 +357,26 @@ Pre-move audit found that movable checks commonly derive repository root through
 Phase 4A2 moves no files. It prepares the initial repository/control check family — `canonical_identity.py`, `engineering_language.py`, `librarian_review_contract.py`, `linux_integration_suites.py`, `metadata_consistency.py`, `path_resolution_contract.py`, `phase_governance.py`, and `repository_contract.py` — to locate the stable `tests/path_resolver.py` ancestor and import canonical `ROOT` from that module.
 
 The path-resolution contract records the prepared family and rejects fixed-depth repository-root derivation in any nested `tests/checks/**` script. This creates a fail-closed prerequisite for later taxonomy moves without bulk-editing unrelated checks before their own bounded slice. Runtime behavior, public API, normative state, release state and published artifacts remain unchanged.
+
+### Phase 4A2 final receipt
+
+Phase 4A2 is complete. PR #381 merged as `0081adac3a88822f4bb8f3f779f8336c5635f862` after Static Contract #811 and Linux Integration #701 passed. Post-merge `main` passed Static Contract #812 and Linux Release Check #258 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. No test file moved in 4A2.
+
+The certified pre-move baseline remains 84 Python checks, 86 integration identities, 170/170 retained test scripts reachable, 115/115 test assets reachable and 27/27 technical controls reachable. Eight repository/control checks are location-independent; the remaining fixed-depth checks remain deliberately flat until their own bounded family preparation.
+
+### Phase 4B1 execution map
+
+Issue #382 moves exactly the prepared repository/control family into `tests/checks/repository/`:
+
+- `canonical_identity.py`;
+- `engineering_language.py`;
+- `librarian_review_contract.py`;
+- `linux_integration_suites.py`;
+- `metadata_consistency.py`;
+- `path_resolution_contract.py`;
+- `phase_governance.py`;
+- `repository_contract.py`.
+
+Four files move as blob-identical renames. Four files receive only the path-key updates required to preserve their existing negative/self-exemption semantics. Historical forbidden paths for already removed checks remain historical and are not rewritten.
+
+The path-resolution contract binds all eight basenames to `tests/checks/repository/`, forbids flat compatibility copies and scans active non-historical text surfaces for stale `tests/checks/<basename>.py` references. Basename identity, runner names, suite inference, test counts, reachability, runtime/public API, normative state, release state and published artifacts must remain unchanged.
