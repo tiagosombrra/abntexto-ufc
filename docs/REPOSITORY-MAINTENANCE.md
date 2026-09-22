@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F1 complete; 3F2 citations/quotations in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F2 complete; 3F3 layout/typography/footnotes/sections in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -251,3 +251,18 @@ Slice 3F2 moves exactly seven citation/quotation scenario authorities into `stan
 The seven corresponding normative Python checks resolve their scenario through `tools/repository_paths.py::standard_file`. The path-resolution contract requires every basename to resolve under the citations scenario directory and forbids flat compatibility copies. JSON payloads, normative semantics, runtime behavior, public API and published v3.0.4 bytes remain unchanged.
 
 The remaining scenario plan is explicitly mapped as 3F3 layout/typography/sections/footnotes (13 files), 3F4 objects/backmatter/references/research-project (9 files), and 3F5 controlled negative scenarios (`negative-paths.json`). Phase 3G then owns only `atomicity-plan.json` and `rule-migrations.json` as migration/decomposition authorities.
+
+### Slice 3F2 final receipt
+
+Slice 3F2 is complete. PR #372 merged as `af035fd0eae9a3a7c26d47fcd36936d7da0d2296` after Static Contract #795 and Linux Integration #692 passed. Post-merge `main` passed Static Contract #796 and Linux Release Check #252. All seven citation/quotation scenarios now exist only under `standards/scenarios/citations/` as content-identical renames.
+
+### Slice 3F3 execution map
+
+Slice 3F3 moves exactly thirteen remaining layout/typography/footnote/section scenario authorities without changing their JSON payloads:
+
+- `standards/scenarios/layout/`: `body-paragraph-scenario.json`, `page-margins-scenario.json`, `pagination-geometry-scenario.json`;
+- `standards/scenarios/typography/`: `typography-scenario.json`;
+- `standards/scenarios/footnotes/`: `footnote-separator-scenario.json`, `footnote-text-scenario.json`;
+- `standards/scenarios/sections/`: `section-hierarchy-scenario.json`, `section-indicator-scenario.json`, `section-multiline-hanging-scenario.json`, `section-primary-after-spacing-scenario.json`, `section-primary-recto-duplex-scenario.json`, `section-unnumbered-centered-scenario.json`, `subsection-spacing-scenario.json`.
+
+Each corresponding Python evidence consumer resolves the scenario through `tools/repository_paths.py::standard_file`. The path-resolution contract binds each basename to its semantic directory and forbids flat compatibility copies. This slice changes taxonomy only: no normative value, validation tolerance, runtime behavior, public API, release metadata, v3.0.4 published byte or CTAN-submitted byte is changed.

@@ -276,6 +276,72 @@ def main() -> int:
                 f"flat compatibility copy is forbidden for moved citation scenario {filename}"
             )
 
+
+    moved_layout_scenarios = {
+        "body-paragraph-scenario.json",
+        "page-margins-scenario.json",
+        "pagination-geometry-scenario.json",
+    }
+    for filename in sorted(moved_layout_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "layout":
+            return fail(
+                f"layout scenario {filename} must resolve under standards/scenarios/layout"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved layout scenario {filename}"
+            )
+
+    moved_typography_scenarios = {
+        "typography-scenario.json",
+    }
+    for filename in sorted(moved_typography_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "typography":
+            return fail(
+                f"typography scenario {filename} must resolve under standards/scenarios/typography"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved typography scenario {filename}"
+            )
+
+    moved_footnote_scenarios = {
+        "footnote-separator-scenario.json",
+        "footnote-text-scenario.json",
+    }
+    for filename in sorted(moved_footnote_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "footnotes":
+            return fail(
+                f"footnote scenario {filename} must resolve under standards/scenarios/footnotes"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved footnote scenario {filename}"
+            )
+
+    moved_section_scenarios = {
+        "section-hierarchy-scenario.json",
+        "section-indicator-scenario.json",
+        "section-multiline-hanging-scenario.json",
+        "section-primary-after-spacing-scenario.json",
+        "section-primary-recto-duplex-scenario.json",
+        "section-unnumbered-centered-scenario.json",
+        "subsection-spacing-scenario.json",
+    }
+    for filename in sorted(moved_section_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "sections":
+            return fail(
+                f"section scenario {filename} must resolve under standards/scenarios/sections"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved section scenario {filename}"
+            )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )

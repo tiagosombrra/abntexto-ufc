@@ -63,6 +63,10 @@ Current migrated families:
 
 - `scenarios/frontmatter/` — front-matter validation scenarios for acknowledgments, alignment, approval page, cover, errata, optional lists, pagination, dedication/epigraph aggregate behavior, summary, title page and table of contents.
 - `scenarios/citations/` — citation and quotation scenarios covering apud presentation, source attribution, long and short direct quotations, reduced-size mapping and the UFC citation-system surface.
+- `scenarios/layout/` — body-paragraph, page-margin and pagination-geometry scenarios.
+- `scenarios/typography/` — bounded typography and font/spacing observation scenario.
+- `scenarios/footnotes/` — footnote text and separator scenarios.
+- `scenarios/sections/` — section hierarchy, indicators, multiline hanging, primary-section behavior, unnumbered headings and subsection spacing scenarios.
 
 Scenario files remain unique machine-readable authorities and are resolved recursively by basename. No flat compatibility copies are retained. Unmigrated scenario families remain at the standards root only until their bounded Phase 3F slice moves them.
 
