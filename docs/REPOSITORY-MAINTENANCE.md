@@ -418,3 +418,13 @@ Issue #386 moves exactly `validator_source.py` and `pdf_validation_core.py` into
 Both checks replace fixed `Path(__file__).resolve().parents[2]` root discovery with the canonical `tests/path_resolver.py` bootstrap. `validator_source.py` replaces its direct flat binding to `pdf_validation_core.py` with `check_file("pdf_validation_core.py")`, preserving stable basename identity before and after the move. Its direct paths to normative checks remain unchanged until those normative families move in Phase 4C.
 
 The generic moved-check mapping gains the two validator basenames and canonical `tests/checks/validator/` paths; stale flat paths and compatibility copies remain fail-closed. No validator application, Web/Lite E2E, CLI, integration script, normative semantics, runtime/public API, release metadata or published artifact changes in this slice.
+
+### Phase 4B2b validation incident
+
+Initial Static Contract #818 failed on PR #389 after the validator/PDF checks moved because the fail-closed moved-check guard found three active consumers still naming retired flat paths:
+
+- `tests/integration/pdf-validation-core.sh` referenced `tests/checks/pdf_validation_core.py`;
+- `tests/integration_suites.py` referenced `tests/checks/validator_source.py`;
+- `validator/README.md` referenced `tests/checks/validator_source.py`.
+
+The failure is retained as audit evidence. No compatibility copy or stale-path exemption was added. Those consumers are updated to the validator namespace while preserving integration-suite selection and validator documentation semantics. Fresh Static and Linux Integration gates are required before merge.

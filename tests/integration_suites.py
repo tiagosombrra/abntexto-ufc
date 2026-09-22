@@ -82,7 +82,7 @@ PATH_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("profiles", ("tests/integration/profile-matrix", "tests/integration/build-path", "tests/integration/multivolume", "tests/integration/catalog-card", "tests/smoke/base-profile.tex")),
     ("reference-document", ("template/main.tex", "template/chapters/", "tests/integration/reference-document", "tests/integration/reference-corpus", "tests/integration/pdf-validator")),
     ("distribution", ("tools/build-public-bundles.py", "tools/build-distribution-bundles.py", "tests/integration/distribution-bundles.sh")),
-    ("web-lite", ("validator/", "tests/checks/validator_source.py", "tests/integration/web-lite-e2e.py", "tools/ci/run-web-lite-e2e.sh", "tools/ci/build-pages-site.sh")),
+    ("web-lite", ("validator/", "tests/checks/validator/validator_source.py", "tests/integration/web-lite-e2e.py", "tools/ci/run-web-lite-e2e.sh", "tools/ci/build-pages-site.sh")),
 )
 
 
@@ -158,7 +158,7 @@ def self_test() -> None:
         ("tests/run.py", "tools/build-public-bundles.py"): ("distribution",),
         ("validator/app.js",): ("web-lite",),
         ("validator/normative-catalog.js",): ("web-lite",),
-        ("tests/checks/validator_source.py",): ("web-lite",),
+        ("tests/checks/validator/validator_source.py",): ("web-lite",),
         ("tests/integration/web-lite-e2e.py",): ("web-lite",),
         ("tools/ci/run-web-lite-e2e.sh",): ("web-lite",),
         ("tools/ci/build-pages-site.sh",): ("web-lite",),
