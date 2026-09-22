@@ -8,7 +8,7 @@ Portuguese remains appropriate when it is academic or authoritative content rath
 
 ## Permanent enforcement
 
-`tests/checks/engineering_language.py` is the permanent static enforcement surface.
+`tests/checks/repository/engineering_language.py` is the permanent static enforcement surface.
 
 It protects canonical project-owned technical identifiers and rejects retired/noncanonical project engineering terminology in active machine/runtime contracts.
 

@@ -43,7 +43,7 @@ def active_text_surfaces() -> list[Path]:
         "docs/REPOSITORY-MAINTENANCE.md",
         # This contract intentionally names retired flat paths in negative
         # assertions proving that compatibility copies do not exist.
-        "tests/checks/path_resolution_contract.py",
+        "tests/checks/repository/path_resolution_contract.py",
     }
     text_suffixes = {
         ".cff",
@@ -99,6 +99,22 @@ def stale_flat_standard_references(standard_candidates: list[Path]) -> list[str]
     return sorted(set(findings))
 
 
+def stale_flat_check_references(moved_filenames: set[str]) -> list[str]:
+    findings: list[str] = []
+    surfaces = active_text_surfaces()
+    for filename in sorted(moved_filenames):
+        legacy = f"tests/checks/{filename}"
+        current = f"tests/checks/repository/{filename}"
+        for surface in surfaces:
+            text = surface.read_text(encoding="utf-8", errors="replace")
+            if legacy in text:
+                source = surface.relative_to(ROOT).as_posix()
+                findings.append(
+                    f"{source}: stale flat check path {legacy}; current path is {current}"
+                )
+    return sorted(set(findings))
+
+
 def main() -> int:
     check_candidates = sorted((ROOT / "tests" / "checks").rglob("*.py"))
     integration_candidates = sorted(
@@ -108,21 +124,7 @@ def main() -> int:
     )
     standard_candidates = sorted((ROOT / "standards").rglob("*.json"))
 
-    duplicate_checks = duplicate_basenames(check_candidates)
-    duplicate_integrations = duplicate_basenames(integration_candidates)
-    duplicate_standards = duplicate_basenames(standard_candidates)
-    stale_standard_paths = stale_flat_standard_references(standard_candidates)
-    if stale_standard_paths:
-        return fail("active stale standards references: " + " | ".join(stale_standard_paths))
-    if duplicate_checks:
-        return fail("ambiguous check basenames: " + ", ".join(duplicate_checks))
-    if duplicate_integrations:
-        return fail("ambiguous integration basenames: " + ", ".join(duplicate_integrations))
-    if duplicate_standards:
-        return fail("ambiguous standards basenames: " + ", ".join(duplicate_standards))
-
-    fixed_depth_root = "Path(__file__).resolve().parents" + "[2]"
-    prepared_location_independent_checks = {
+    moved_repository_checks = {
         "canonical_identity.py",
         "engineering_language.py",
         "librarian_review_contract.py",
@@ -132,13 +134,35 @@ def main() -> int:
         "phase_governance.py",
         "repository_contract.py",
     }
-    for filename in sorted(prepared_location_independent_checks):
+
+    duplicate_checks = duplicate_basenames(check_candidates)
+    duplicate_integrations = duplicate_basenames(integration_candidates)
+    duplicate_standards = duplicate_basenames(standard_candidates)
+    stale_standard_paths = stale_flat_standard_references(standard_candidates)
+    if stale_standard_paths:
+        return fail("active stale standards references: " + " | ".join(stale_standard_paths))
+    stale_check_paths = stale_flat_check_references(moved_repository_checks)
+    if stale_check_paths:
+        return fail("active stale check references: " + " | ".join(stale_check_paths))
+    if duplicate_checks:
+        return fail("ambiguous check basenames: " + ", ".join(duplicate_checks))
+    if duplicate_integrations:
+        return fail("ambiguous integration basenames: " + ", ".join(duplicate_integrations))
+    if duplicate_standards:
+        return fail("ambiguous standards basenames: " + ", ".join(duplicate_standards))
+
+    fixed_depth_root = "Path(__file__).resolve().parents" + "[2]"
+    for filename in sorted(moved_repository_checks):
         source = check_file(filename)
         text = source.read_text(encoding="utf-8")
         if fixed_depth_root in text:
             return fail(f"prepared check {filename} still derives repository root by fixed depth")
         if "from path_resolver import" not in text or "ROOT" not in text:
             return fail(f"prepared check {filename} must import ROOT from tests/path_resolver.py")
+        if source.parent != ROOT / "tests" / "checks" / "repository":
+            return fail(f"repository/control check {filename} must resolve under tests/checks/repository")
+        if (ROOT / "tests" / "checks" / filename).exists():
+            return fail(f"flat compatibility copy is forbidden for moved check {filename}")
 
     nested_depth_coupled = []
     for source in check_candidates:
@@ -161,8 +185,8 @@ def main() -> int:
         "precedence": standard_file("precedence.json").relative_to(ROOT).as_posix(),
         "public_api": standard_file("public-api.json").relative_to(ROOT).as_posix(),
     }
-    if not expected["check"].startswith("tests/checks/"):
-        return fail("check resolver escaped tests/checks")
+    if expected["check"] != "tests/checks/repository/metadata_consistency.py":
+        return fail("metadata consistency check must resolve under tests/checks/repository")
     if not expected["integration"].startswith("tests/integration/"):
         return fail("integration resolver escaped tests/integration")
     if not expected["catalog"].startswith("standards/"):
@@ -497,7 +521,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        "identity=basename unique=true recursive=true ambiguity=fail-closed"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)}"
     )
     return 0
 

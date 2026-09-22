@@ -191,7 +191,7 @@ def audit() -> list[str]:
         rel = path.relative_to(ROOT).as_posix()
         if path.suffix not in SOURCE_SUFFIXES or not rel.startswith(EXECUTABLE_ROOTS):
             continue
-        if rel == "tests/checks/engineering_language.py":
+        if rel == "tests/checks/repository/engineering_language.py":
             continue
         lines = path.read_text(encoding="utf-8").splitlines()
         for number, scope in diagnostic_scopes(lines):

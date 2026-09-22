@@ -41,8 +41,8 @@ LEGACY_FULL_FILE_EXEMPT = {
     "docs/MIGRATING-TO-V3.md",
 
     # Negative assertions must name the legacy entrypoint to reject it.
-    "tests/checks/canonical_identity.py",
-    "tests/checks/repository_contract.py",
+    "tests/checks/repository/canonical_identity.py",
+    "tests/checks/repository/repository_contract.py",
     "tests/checks/distribution_bundles.py",
     "tests/integration/distribution-bundles.sh",
     "tools/build-distribution-bundles.py",

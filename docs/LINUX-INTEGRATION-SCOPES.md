@@ -41,7 +41,7 @@ Current behavior:
 - `Makefile`, the canonical `abntexto-ufc.cls`, controlled standards paths and the active release marker force `complete`;
 - if `release/v3-release-candidate.json` changes anywhere in the PR, `complete` dominates all narrower scope decisions.
 
-The exact mapping is implemented by `tests/integration_suites.py` and protected by `tests/checks/linux_integration_suites.py`.
+The exact mapping is implemented by `tests/integration_suites.py` and protected by `tests/checks/repository/linux_integration_suites.py`.
 
 ## Main-branch release-marker behavior
 
