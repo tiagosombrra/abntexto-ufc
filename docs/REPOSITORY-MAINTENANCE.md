@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F3 merged; 3F4 objects/backmatter/references/research-project in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F4 merged; 3F5 controlled negative scenario in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -270,7 +270,7 @@ Each corresponding Python evidence consumer resolves the scenario through `tools
 
 ### Slice 3F3 merge receipt
 
-Slice 3F3 merged through PR #373 as `da21d47dd41c1bf529104231487eaa3765917878` after Static Contract #797 and Linux Integration #693 passed. Post-merge Static Contract #798 passed; Linux Release Check #253 is the remaining post-merge receipt and must be recorded before this slice is classified as fully closed.
+Slice 3F3 merged through PR #373 as `da21d47dd41c1bf529104231487eaa3765917878` after Static Contract #797 and Linux Integration #693 passed. Post-merge Static Contract #798 and Linux Release Check #253 both passed. Slice 3F3 is fully closed.
 
 ### Slice 3F4 execution map
 
@@ -284,3 +284,16 @@ Slice 3F4 moves exactly nine remaining domain scenarios without changing their J
 Every consumer resolves the scenario through `tools/repository_paths.py::standard_file`. The path-resolution contract binds each basename to its semantic directory and forbids flat compatibility copies. This slice is taxonomy-only: normative values, validation tolerances, runtime behavior, public API, release metadata, published v3.0.4 bytes and CTAN-submitted bytes remain unchanged.
 
 After 3F4, only the controlled negative-path scenario remains for 3F5. Phase 3G then owns only `atomicity-plan.json` and `rule-migrations.json`.
+
+
+### Slice 3F4 merge receipt
+
+Slice 3F4 merged through PR #374 as `ff86f3e99be7df8e286ad8ae84a6dd75f6807c49` after Static Contract #799 and Linux Integration #694 passed. Post-merge Static Contract #800 and Linux Release Check #254 are the remaining post-merge receipts at the time this execution map was written.
+
+The nine domain scenarios now exist only under `standards/scenarios/backmatter/`, `objects/`, `references/`, and `research-project/`, with content preserved byte-for-byte.
+
+### Slice 3F5 execution map
+
+Slice 3F5 moves only `negative-paths.json` to `standards/scenarios/negative/`. The manifest payload and rejection semantics remain unchanged. `tests/checks/normative_negative_paths.py` resolves the authority through `standard_file(...)`, and the path-resolution contract forbids a retired flat compatibility copy.
+
+After 3F5, the standards root must contain only `README.md`, `atomicity-plan.json`, and `rule-migrations.json`. Phase 3G then moves those final two migration/decomposition authorities under `standards/migrations/`.
