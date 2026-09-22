@@ -47,7 +47,7 @@ for engine in pdflatex lualatex; do
     exit 1
   }
 
-  python3 tests/checks/scientific_article_front_block.py "$job.pdf"
+  python3 tests/checks/profiles/scientific_article_front_block.py "$job.pdf"
 done
 
 cleanup_job scientific-article-front-block-pdflatex

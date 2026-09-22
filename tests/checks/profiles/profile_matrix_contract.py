@@ -3,9 +3,18 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT  # noqa: E402
 CONTRACT = ROOT / "release/history/v3/v3-api-migration.json"
 RUNNER = ROOT / "tests/integration/profile-matrix.sh"
 FIXTURE = ROOT / "tests/smoke/base-profile.tex"

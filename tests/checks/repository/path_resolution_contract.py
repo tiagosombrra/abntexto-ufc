@@ -141,6 +141,14 @@ def main() -> int:
         "pdf_validation_core.py",
         "validator_source.py",
     }
+    moved_profile_checks = {
+        "profile_matrix_contract.py",
+        "scientific_article_body.py",
+        "scientific_article_evidence_map.py",
+        "scientific_article_front_block.py",
+        "scientific_article_profile_contract.py",
+        "scientific_article_recommendations_contract.py",
+    }
     moved_check_paths = {
         **{
             filename: f"tests/checks/repository/{filename}"
@@ -153,6 +161,10 @@ def main() -> int:
         **{
             filename: f"tests/checks/validator/{filename}"
             for filename in moved_validator_checks
+        },
+        **{
+            filename: f"tests/checks/profiles/{filename}"
+            for filename in moved_profile_checks
         },
     }
 
@@ -543,7 +555,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)}"
     )
     return 0
 

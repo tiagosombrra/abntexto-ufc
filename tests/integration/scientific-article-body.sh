@@ -100,7 +100,7 @@ compile_positive() {
     exit 1
   }
 
-  python3 tests/checks/scientific_article_body.py "$job.pdf"
+  python3 tests/checks/profiles/scientific_article_body.py "$job.pdf"
 }
 
 for engine in pdflatex lualatex; do
@@ -124,7 +124,7 @@ for pass in 1 2; do
   }
 done
 
-if python3 tests/checks/scientific_article_body.py "$negative_job.pdf" > "/tmp/$negative_job-check.out" 2>&1; then
+if python3 tests/checks/profiles/scientific_article_body.py "$negative_job.pdf" > "/tmp/$negative_job-check.out" 2>&1; then
   cat "/tmp/$negative_job-check.out"
   echo 'Scientific article body gate failed: missing-development negative fixture was accepted unexpectedly.'
   exit 1

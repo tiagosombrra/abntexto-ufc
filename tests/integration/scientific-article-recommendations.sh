@@ -9,7 +9,7 @@ cleanup_job() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc" "$job.txt"
 }
 
-python3 tests/checks/scientific_article_recommendations_contract.py
+python3 tests/checks/profiles/scientific_article_recommendations_contract.py
 
 for engine in pdflatex lualatex; do
   for scenario in recommended outside; do
