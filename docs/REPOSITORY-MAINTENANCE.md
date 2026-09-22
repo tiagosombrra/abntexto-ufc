@@ -498,3 +498,13 @@ Issue #407 moves exactly 10 governance/source-authority checks into `tests/check
 All 10 replace fixed `Path(__file__).resolve().parents[2]` root discovery with the canonical `tests/path_resolver.py` bootstrap. Existing `ROOT/tools` imports remain semantically unchanged. `normative_proof_state.py` additionally resolves the directory of `normative_traceability.py` through `check_file("normative_traceability.py")` instead of relying on the flat `tests/checks/` directory; this is required so 4C1b can later move traceability into `tests/checks/evidence/` without breaking the governance check.
 
 The moved-check path contract gains the 10 governance basenames and canonical paths. Flat compatibility copies and stale flat references remain fail-closed. `normative_locators.py` preserves executable mode `100755`; the other nine governance checks preserve mode `100644`. Expected flat-root check count after this slice is 55. No normative value, source-authority decision, runtime/public API, release metadata or published artifact changes.
+
+### Phase 4C1a validation incident
+
+Initial Static Contract #826 failed on PR #409 after the governance/source-authority checks moved because the fail-closed moved-check guard found four active retired flat-path references across three consumers:
+
+- `standards/scenarios/negative/negative-paths.json` referenced `tests/checks/normative_configuration.py`;
+- `tests/integration/negative-paths.sh` referenced both `tests/checks/normative_configuration.py` and `tests/checks/normative_negative_paths.py`;
+- `tests/integration/reference-guide-contract.sh` referenced `tests/checks/reference_guide_contract.py`.
+
+Those paths are updated to the canonical `tests/checks/governance/` namespace while preserving negative-path and reference-guide validation semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
