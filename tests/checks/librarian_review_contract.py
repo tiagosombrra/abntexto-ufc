@@ -2,9 +2,18 @@
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT  # noqa: E402
 REVIEW = ROOT / "docs" / "UFC-LIBRARIAN-REVIEW.md"
 AUDIT = ROOT / "docs" / "history" / "v3" / "evidence" / "V3-REGRESSION-AUDIT.md"
 

@@ -4,13 +4,16 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-TESTS = ROOT / "tests"
-if str(TESTS) not in sys.path:
-    sys.path.insert(0, str(TESTS))
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
 
 from integration_suites import SUITES, infer_suites  # noqa: E402
-from path_resolver import integration_file, repository_relative  # noqa: E402
+from path_resolver import ROOT, integration_file, repository_relative  # noqa: E402
 import run as validation_run  # noqa: E402
 
 WORKFLOW = ROOT / ".github" / "workflows" / "linux-integration.yml"

@@ -2,10 +2,19 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT  # noqa: E402
 HISTORICAL_STATE = ROOT / "release" / "history" / "v3" / "v3-roadmap.json"
 HISTORICAL_V302 = ROOT / "release" / "history" / "v3" / "v3.0.2-release-candidate.json"
 HISTORICAL_V303 = ROOT / "release" / "history" / "v3" / "v3.0.3-release-candidate.json"

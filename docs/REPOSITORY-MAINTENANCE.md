@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A runner/path hardening in progress |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A complete, 4A2 location-independence hardening in progress under #380 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -345,3 +345,15 @@ At entry, `tests/run.py` has exactly three direct movable check paths: `reposito
 The path-resolution contract must reject any future hard-coded `tests/checks/...` path in `tests/run.py`. Existing recursive integration resolution and suite-inference behavior remain unchanged, including nested validator/article path invariance. No check, integration script, document or fixture is moved in 4A.
 
 Acceptance requires the 84/86 identity baseline to remain unique and reachable, test-surface integrity to retain zero orphaned scripts/assets/technical controls, Static Contract to pass, and the applicable Linux integration scope to pass before taxonomy slice 4B can begin.
+
+### Phase 4A final receipt
+
+Phase 4A is complete. PR #379 merged as `c366ed6cbe3ba738f2f4743c8274f968a257dac7` after Static Contract #809 and Linux Integration #700 passed. Post-merge `main` passed Static Contract #810 and Linux Release Check #257. No test file moved in this slice. The three direct movable check commands in `tests/run.py` now resolve by unique basename through `check_file(...)`, and the path-resolution contract rejects a reintroduced hard-coded `tests/checks/...` runner path.
+
+### Phase 4A2 execution map
+
+Pre-move audit found that movable checks commonly derive repository root through the fixed-depth expression `Path(__file__).resolve().parents[2]`. This is correct only while a check is an immediate child of `tests/checks/`; a semantic subdirectory would change the resolved parent and silently point at `tests/` instead of the repository root. Issue #380 owns this prerequisite hardening.
+
+Phase 4A2 moves no files. It prepares the initial repository/control check family — `canonical_identity.py`, `engineering_language.py`, `librarian_review_contract.py`, `linux_integration_suites.py`, `metadata_consistency.py`, `path_resolution_contract.py`, `phase_governance.py`, and `repository_contract.py` — to locate the stable `tests/path_resolver.py` ancestor and import canonical `ROOT` from that module.
+
+The path-resolution contract records the prepared family and rejects fixed-depth repository-root derivation in any nested `tests/checks/**` script. This creates a fail-closed prerequisite for later taxonomy moves without bulk-editing unrelated checks before their own bounded slice. Runtime behavior, public API, normative state, release state and published artifacts remain unchanged.
