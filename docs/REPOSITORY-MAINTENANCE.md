@@ -20,7 +20,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
-| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F4 merged; 3F5 controlled negative scenario in progress |
+| 3 | `standards/` taxonomy | in progress — issue #362; slices 3A–3F5 complete; 3G migrations/final flat-root cleanup in progress |
 | 4 | `tests/` taxonomy | pending |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
@@ -288,7 +288,7 @@ After 3F4, only the controlled negative-path scenario remains for 3F5. Phase 3G 
 
 ### Slice 3F4 merge receipt
 
-Slice 3F4 merged through PR #374 as `ff86f3e99be7df8e286ad8ae84a6dd75f6807c49` after Static Contract #799 and Linux Integration #694 passed. Post-merge Static Contract #800 and Linux Release Check #254 are the remaining post-merge receipts at the time this execution map was written.
+Slice 3F4 merged through PR #374 as `ff86f3e99be7df8e286ad8ae84a6dd75f6807c49` after Static Contract #799 and Linux Integration #694 passed. Post-merge Static Contract #800 and Linux Release Check #254 both passed. Slice 3F4 is fully closed.
 
 The nine domain scenarios now exist only under `standards/scenarios/backmatter/`, `objects/`, `references/`, and `research-project/`, with content preserved byte-for-byte.
 
@@ -303,3 +303,20 @@ After 3F5, the standards root must contain only `README.md`, `atomicity-plan.jso
 Initial Static Contract #801 failed after the controlled negative scenario moved because `tests/checks/test_surface_integrity.py` still bound `NEGATIVE_PATHS` to the retired flat path `standards/negative-paths.json`. The fail-closed stale-path guard correctly rejected that residual consumer.
 
 No compatibility copy or guard exemption was added. The integrity check now resolves `negative-paths.json` through `tools/repository_paths.py::standard_file`, matching the canonical recursive authority used by the negative-path runner. Failed run #801 remains part of the audit trail; fresh Static and Linux Integration validation is required before merge.
+
+### Slice 3F5 final receipt
+
+Slice 3F5 is complete. PR #376 merged as `c812411e28b7f6a705b18c9a88b2d0758bc194db` after Static Contract #803 and Linux Integration #697 passed. The initial fail-closed Static #801 finding remains recorded; the isolated path-resolution correction passed Static #802 before the documented final PR head was certified. Post-merge `main` passed Static Contract #804 and Linux Release Check #255.
+
+The controlled negative-path manifest now exists only at `standards/scenarios/negative/negative-paths.json`, and active consumers resolve it through the canonical recursive standards resolver. No normative payload, runtime behavior, public API, release metadata, published v3.0.4 byte or CTAN-submitted byte changed.
+
+### Slice 3G execution map
+
+Slice 3G closes the standards taxonomy by moving the two remaining decomposition/migration control authorities into `standards/migrations/` as content-identical renames:
+
+- `atomicity-plan.json` -> `standards/migrations/atomicity-plan.json`;
+- `rule-migrations.json` -> `standards/migrations/rule-migrations.json`.
+
+All active consumers must resolve these authorities through `tools/repository_paths.py::standard_file`. The path-resolution contract binds both basenames to `standards/migrations/`, forbids flat compatibility copies, and requires the standards root to contain no machine-readable JSON authority after this slice.
+
+This slice changes taxonomy and path bindings only. It must not change migration mappings, atomicity semantics, normative values, proof state, runtime behavior, public API, release metadata, published v3.0.4 bytes or CTAN-submitted bytes. Phase 4 remains blocked until 3G is merged, post-merge certified, issue #362 receives the final Phase 3 closeout receipt, and current `main` is reconciled.

@@ -417,6 +417,33 @@ def main() -> int:
                 f"flat compatibility copy is forbidden for moved negative scenario {filename}"
             )
 
+
+    moved_migration_authorities = {
+        "atomicity-plan.json",
+        "rule-migrations.json",
+    }
+    for filename in sorted(moved_migration_authorities):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "migrations":
+            return fail(
+                f"migration authority {filename} must resolve under standards/migrations"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved migration authority {filename}"
+            )
+
+    unexpected_root_authorities = sorted(
+        path.name
+        for path in (ROOT / "standards").iterdir()
+        if path.is_file() and path.name != "README.md"
+    )
+    if unexpected_root_authorities:
+        return fail(
+            "standards root must contain only README.md plus semantic directories: "
+            + ", ".join(unexpected_root_authorities)
+        )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )
