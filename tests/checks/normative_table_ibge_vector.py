@@ -16,7 +16,7 @@ from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, Box, bbox_pages, find_marker
 from pdf_vector_measurement import VectorRule, vector_rules
 
-SCENARIO = ROOT / "standards" / "table-ibge-vector-final-pdf-scenario.json"
+SCENARIO = standard_file("table-ibge-vector-final-pdf-scenario.json")
 LOCATOR = standard_file("locator-audit-final.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 EXTENSION = standard_file("vector-rule-validation-extension.json")

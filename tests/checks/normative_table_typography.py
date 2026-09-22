@@ -15,7 +15,7 @@ from normative_full import load_full_contract
 from repository_paths import standard_file
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
-SCENARIO = ROOT / "standards" / "table-typography-final-pdf-scenario.json"
+SCENARIO = standard_file("table-typography-final-pdf-scenario.json")
 LOCATOR = standard_file("locator-audit-typography-paragraphs.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 

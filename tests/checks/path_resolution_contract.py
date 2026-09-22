@@ -342,6 +342,67 @@ def main() -> int:
                 f"flat compatibility copy is forbidden for moved section scenario {filename}"
             )
 
+    moved_backmatter_scenarios = {
+        "appendix-annex-final-pdf-scenario.json",
+        "index-glossary-final-pdf-scenario.json",
+    }
+    for filename in sorted(moved_backmatter_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "backmatter":
+            return fail(
+                f"backmatter scenario {filename} must resolve under standards/scenarios/backmatter"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved backmatter scenario {filename}"
+            )
+
+    moved_object_scenarios = {
+        "equation-display-final-pdf-scenario.json",
+        "illustration-final-pdf-scenario.json",
+        "table-ibge-vector-final-pdf-scenario.json",
+        "table-typography-final-pdf-scenario.json",
+    }
+    for filename in sorted(moved_object_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "objects":
+            return fail(
+                f"object scenario {filename} must resolve under standards/scenarios/objects"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved object scenario {filename}"
+            )
+
+    moved_reference_scenarios = {
+        "reference-layout-scenario.json",
+        "reference-semantics-scenario.json",
+    }
+    for filename in sorted(moved_reference_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "references":
+            return fail(
+                f"reference scenario {filename} must resolve under standards/scenarios/references"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved reference scenario {filename}"
+            )
+
+    moved_research_project_scenarios = {
+        "research-project-structure-final-pdf-scenario.json",
+    }
+    for filename in sorted(moved_research_project_scenarios):
+        resolved = standard_file(filename)
+        if resolved.parent != ROOT / "standards" / "scenarios" / "research-project":
+            return fail(
+                f"research-project scenario {filename} must resolve under standards/scenarios/research-project"
+            )
+        if (ROOT / "standards" / filename).exists():
+            return fail(
+                f"flat compatibility copy is forbidden for moved research-project scenario {filename}"
+            )
+
     web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
         encoding="utf-8"
     )

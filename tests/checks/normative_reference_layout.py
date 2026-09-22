@@ -17,7 +17,7 @@ from repository_paths import standard_file
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize, typography_runs
 
-SCENARIO = ROOT / "standards" / "reference-layout-scenario.json"
+SCENARIO = standard_file("reference-layout-scenario.json")
 LOCATOR = standard_file("locator-audit-references.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 

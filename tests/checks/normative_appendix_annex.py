@@ -19,7 +19,7 @@ from repository_paths import standard_file
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, normalize, typography_runs
 
-SCENARIO = ROOT / "standards" / "appendix-annex-final-pdf-scenario.json"
+SCENARIO = standard_file("appendix-annex-final-pdf-scenario.json")
 VALIDATION_POLICY = standard_file("validation-reference-policy.json")
 PT_PER_MM = 72.0 / 25.4
 DASH_CHARS = "-‐‑‒–—―"
