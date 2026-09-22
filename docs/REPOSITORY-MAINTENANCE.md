@@ -508,3 +508,11 @@ Initial Static Contract #826 failed on PR #409 after the governance/source-autho
 - `tests/integration/reference-guide-contract.sh` referenced `tests/checks/reference_guide_contract.py`.
 
 Those paths are updated to the canonical `tests/checks/governance/` namespace while preserving negative-path and reference-guide validation semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4C1a second validation incident
+
+Static Contract #827 passed the generic moved-check stale-path contract but then failed inside `tests/checks/validator/validator_source.py`. That validator contract still constructed movable normative check paths through `ROOT / "tests" / "checks" / <filename>`, so it attempted to open the retired flat `normative_currency.py` path after the governance move.
+
+The correction replaces every validator-source binding to a movable check — frontmatter evidence plus normative coverage, governance, traceability, evidence, atomic/full and validator contracts — with `check_file("<basename>")`. This is a resolver hardening change only: execution labels, check order and validation semantics remain unchanged. It also prevents the same hidden flat-path dependency from recurring in 4C1b and later 4C moves.
+
+The path-resolution contract now rejects reintroduction of `ROOT / "tests" / "checks"` in `validator_source.py`. Failed Static #827 remains part of the audit trail; no compatibility copies are introduced.

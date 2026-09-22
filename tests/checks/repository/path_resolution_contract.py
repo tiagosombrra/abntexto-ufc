@@ -221,6 +221,10 @@ def main() -> int:
         if (ROOT / "tests" / "checks" / filename).exists():
             return fail(f"flat compatibility copy is forbidden for moved check {filename}")
 
+    validator_source_text = check_file("validator_source.py").read_text(encoding="utf-8")
+    if 'ROOT / "tests" / "checks"' in validator_source_text:
+        return fail("validator_source.py must resolve movable checks through check_file(...)")
+
     nested_depth_coupled = []
     for source in check_candidates:
         relative_parent = source.parent.relative_to(ROOT / "tests" / "checks")
