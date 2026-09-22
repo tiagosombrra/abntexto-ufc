@@ -5,15 +5,21 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT, check_file, integration_file, repository_relative  # noqa: E402
+
 TESTS = ROOT / "tests"
 TOOLS = ROOT / "tools"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
 
-for path in (TESTS, TOOLS):
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
-
-from path_resolver import check_file, integration_file, repository_relative  # noqa: E402
 from repository_paths import standard_file, standard_files  # noqa: E402
 
 
@@ -114,6 +120,39 @@ def main() -> int:
         return fail("ambiguous integration basenames: " + ", ".join(duplicate_integrations))
     if duplicate_standards:
         return fail("ambiguous standards basenames: " + ", ".join(duplicate_standards))
+
+    fixed_depth_root = "Path(__file__).resolve().parents" + "[2]"
+    prepared_location_independent_checks = {
+        "canonical_identity.py",
+        "engineering_language.py",
+        "librarian_review_contract.py",
+        "linux_integration_suites.py",
+        "metadata_consistency.py",
+        "path_resolution_contract.py",
+        "phase_governance.py",
+        "repository_contract.py",
+    }
+    for filename in sorted(prepared_location_independent_checks):
+        source = check_file(filename)
+        text = source.read_text(encoding="utf-8")
+        if fixed_depth_root in text:
+            return fail(f"prepared check {filename} still derives repository root by fixed depth")
+        if "from path_resolver import" not in text or "ROOT" not in text:
+            return fail(f"prepared check {filename} must import ROOT from tests/path_resolver.py")
+
+    nested_depth_coupled = []
+    for source in check_candidates:
+        relative_parent = source.parent.relative_to(ROOT / "tests" / "checks")
+        if relative_parent == Path("."):
+            continue
+        text = source.read_text(encoding="utf-8")
+        if fixed_depth_root in text:
+            nested_depth_coupled.append(source.relative_to(ROOT).as_posix())
+    if nested_depth_coupled:
+        return fail(
+            "nested checks cannot derive repository root by fixed parents[2] depth: "
+            + ", ".join(nested_depth_coupled)
+        )
 
     expected = {
         "check": repository_relative(check_file("metadata_consistency.py")),

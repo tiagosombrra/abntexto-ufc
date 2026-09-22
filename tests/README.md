@@ -50,6 +50,8 @@ Movable test/check identities are resolved by unique basename through `tests/pat
 
 Resolution is recursive and fail-closed: a missing basename fails, and duplicate basenames are treated as ambiguous rather than choosing one implicitly. This invariant must be established before checks or integration scripts are moved into semantic subdirectories.
 
+Checks that may move below `tests/checks/` must not derive repository root from a fixed `Path(__file__).resolve().parents[N]` depth. They locate the stable `tests/` ancestor containing `path_resolver.py`, add that directory to `sys.path`, and import canonical `ROOT` from `path_resolver`. The path-resolution contract rejects fixed-depth root derivation in nested checks.
+
 ## Evidence model
 
 Tests may produce structured evidence consumed by normative and release validation.
