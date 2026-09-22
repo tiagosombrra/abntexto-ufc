@@ -57,7 +57,13 @@ These files map current rule authority to reviewed source locators and explicit 
 
 ### Controlled scenarios
 
-Files ending in `-scenario.json` define deterministic validation scenarios for specific observable requirements such as margins, citations, front matter, bibliography behavior, tables and other document properties.
+Deterministic validation scenarios are grouped under `standards/scenarios/` by observable domain as each family is migrated.
+
+Current migrated family:
+
+- `scenarios/frontmatter/` — front-matter validation scenarios for acknowledgments, alignment, approval page, cover, errata, optional lists, pagination, dedication/epigraph aggregate behavior, summary, title page and table of contents.
+
+Scenario files remain unique machine-readable authorities and are resolved recursively by basename. No flat compatibility copies are retained. Unmigrated scenario families remain at the standards root only until their bounded Phase 3F slice moves them.
 
 ### Validation policy
 

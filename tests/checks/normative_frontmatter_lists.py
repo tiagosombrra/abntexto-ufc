@@ -11,10 +11,12 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from repository_paths import standard_file
+
 from normative_full import load_full_contract
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize
 
-SCENARIO = ROOT / "standards" / "frontmatter-lists-scenario.json"
+SCENARIO = standard_file("frontmatter-lists-scenario.json")
 RULE_ORDER = [
     "list.illustrations.optional",
     "list.tables.optional",
