@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A/4A2/4B1/4B2a/4B2b/4B2c/4B2d complete; 4C1a governance namespace in progress under #407 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1 complete; 4C2 frontmatter namespace in progress under #392 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -549,3 +549,19 @@ Issue #408 moves exactly ten evidence/coverage/contract-integrity checks into `t
 All ten replace fixed-depth repository-root discovery with the canonical tests-root bootstrap. Intra-family imports of traceability/cross-surface use the current script directory rather than the retired flat `tests/checks/` directory. `normative_false_coverage.py` keeps its resolver-backed dependency directories for governance proof state and evidence traceability, preserving cross-namespace import semantics.
 
 The moved-check map gains the ten evidence basenames and canonical paths. Flat compatibility copies and stale flat paths remain fail-closed. Executable mode `100755` is preserved for `normative_full_contract.py`, `normative_validator_contract.py` and `test_surface_integrity.py`; the other seven remain `100644`. Expected flat-root check count after this slice is 45. No normative values, proof/evidence ownership, runtime/public API, release metadata or published artifact behavior changes.
+
+### Phase 4C1b final receipt
+
+Phase 4C1b is complete. PR #410 merged as `0077a794ee8262860f211c37a82c715e0a410cef` after Static Contract #831 and Linux Integration #714 passed. Post-merge `main` passed Static Contract #832 and Linux Release Check #265 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The ten evidence/coverage/contract-integrity checks now exist only under `tests/checks/evidence/`. Together with the certified governance slice, Phase 4C1 owns 20 nested checks and the flat `tests/checks/` root contains exactly 45 Python checks. Child issues #407/#408 and umbrella #391 are closed.
+
+### Phase 4C2 execution map
+
+Issue #392 moves exactly 13 frontmatter checks/helpers into `tests/checks/frontmatter/`. `frontmatter_definition_alignment.py` is already repository-depth independent and moves byte-identically. The other twelve replace fixed `Path(__file__).resolve().parents[2]` discovery with the canonical tests-root bootstrap while retaining their existing `ROOT/tools` helper dependency.
+
+Fourteen known active consumers carry fifteen retired flat-path occurrences: thirteen frontmatter integration scripts account for fourteen occurrences and `tests/checks/repository/engineering_language.py` accounts for the title-page contract occurrence. All are updated atomically while preserving their existing semantic assertions and Git modes.
+
+The moved-check contract adds thirteen frontmatter basenames mapped to `tests/checks/frontmatter/`. Because one moved helper intentionally has no repository-root dependency, the contract explicitly records it in a bounded `root_independent_moved_checks` set instead of forcing an artificial `ROOT` import. Flat compatibility copies, fixed-depth nested checks and stale flat paths remain fail-closed.
+
+Suite selection requires no `PATH_RULES` edit because movable check paths normalize by basename before matching. Expected flat-root count after this slice is exactly 32; total check/integration identity remains 84/86. No normative value, PDF tolerance, runtime/public API, release metadata or published artifact behavior changes.

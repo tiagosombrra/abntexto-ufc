@@ -93,7 +93,7 @@ print(
 PY
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_frontmatter_cover.py \
+python3 tests/checks/frontmatter/normative_frontmatter_cover.py \
   "$academic_job.pdf" \
   "$project_job.pdf" \
   "$anonymized_job.pdf" \

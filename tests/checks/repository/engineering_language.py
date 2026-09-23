@@ -107,7 +107,7 @@ MACHINE_JSON_FILES = (
     "frontmatter-cover-scenario.json",
 )
 MACHINE_SOURCE_FILES = (
-    "tests/checks/normative_frontmatter_title_page.py",
+    "tests/checks/frontmatter/normative_frontmatter_title_page.py",
     "tests/integration/frontmatter-approval-evidence.sh",
 )
 RETIRED_PROFILE_VALUES = {

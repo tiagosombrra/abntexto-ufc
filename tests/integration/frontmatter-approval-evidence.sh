@@ -105,7 +105,7 @@ PY
 
 mkdir -p "$(dirname "$evidence")"
 # shellcheck disable=SC2086
-python3 tests/checks/normative_frontmatter_approval.py \
+python3 tests/checks/frontmatter/normative_frontmatter_approval.py \
   $profile_args \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}" \
