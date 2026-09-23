@@ -164,6 +164,18 @@ def main() -> int:
         "normative_sources.py",
         "reference_guide_contract.py",
     }
+    moved_evidence_checks = {
+        "normative_atomic_contract.py",
+        "normative_atomicity.py",
+        "normative_coverage.py",
+        "normative_cross_surface.py",
+        "normative_evidence_contribution.py",
+        "normative_false_coverage.py",
+        "normative_full_contract.py",
+        "normative_traceability.py",
+        "normative_validator_contract.py",
+        "test_surface_integrity.py",
+    }
     moved_check_paths = {
         **{
             filename: f"tests/checks/repository/{filename}"
@@ -188,6 +200,10 @@ def main() -> int:
         **{
             filename: f"tests/checks/governance/{filename}"
             for filename in moved_governance_checks
+        },
+        **{
+            filename: f"tests/checks/evidence/{filename}"
+            for filename in moved_evidence_checks
         },
     }
 
@@ -582,7 +598,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)}"
     )
     return 0
 

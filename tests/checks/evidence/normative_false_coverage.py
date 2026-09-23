@@ -8,17 +8,19 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_ROOT = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TESTS_ROOT))
+
+from path_resolver import ROOT, check_file  # noqa: E402
 
 TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
-
-TESTS_DIR = ROOT / "tests"
-if str(TESTS_DIR) not in sys.path:
-    sys.path.insert(0, str(TESTS_DIR))
-
-from path_resolver import check_file  # noqa: E402
 
 for dependency in ("normative_proof_state.py", "normative_traceability.py"):
     dependency_dir = check_file(dependency).parent

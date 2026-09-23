@@ -6,9 +6,19 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_ROOT = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TESTS_ROOT))
+
+from path_resolver import ROOT  # noqa: E402
 sys.path.insert(0, str(ROOT / "tools"))
-sys.path.insert(0, str(ROOT / "tests" / "checks"))
+CHECK_DIR = Path(__file__).resolve().parent
+if str(CHECK_DIR) not in sys.path:
+    sys.path.insert(0, str(CHECK_DIR))
 
 from normative_atomic import atomic_rule_map, load_atomic_contract
 from normative_catalog import load_catalog, rule_map

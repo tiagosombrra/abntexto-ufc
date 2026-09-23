@@ -8,7 +8,15 @@ import sys
 from collections import deque
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_ROOT = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TESTS_ROOT))
+
+from path_resolver import ROOT  # noqa: E402
 sys.path.insert(0, str(ROOT / "tools"))
 
 from repository_paths import standard_file
