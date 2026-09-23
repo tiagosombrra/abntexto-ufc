@@ -7,13 +7,25 @@ import sys
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_ROOT = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TESTS_ROOT))
+
+from path_resolver import ROOT  # noqa: E402
 CONTRACT = ROOT / "validator" / "validation-contract.json"
 WEB = ROOT / "validator" / "app.js"
 INDEX = ROOT / "validator" / "index.html"
 CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 
 sys.path.insert(0, str(ROOT / "tools"))
+
+CHECK_DIR = Path(__file__).resolve().parent
+if str(CHECK_DIR) not in sys.path:
+    sys.path.insert(0, str(CHECK_DIR))
 from normative_catalog import load_catalog, rule_map  # noqa: E402
 from normative_cross_surface import main as cross_surface_main  # noqa: E402
 

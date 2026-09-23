@@ -10,7 +10,15 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_ROOT = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TESTS_ROOT))
+
+from path_resolver import ROOT  # noqa: E402
 CONTRACT = ROOT / "validator" / "validation-contract.json"
 VECTORS = ROOT / "validator" / "validation-vectors.json"
 WEB = ROOT / "validator" / "app.js"

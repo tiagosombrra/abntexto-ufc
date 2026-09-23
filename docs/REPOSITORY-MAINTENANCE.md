@@ -524,3 +524,28 @@ Static Contract #828 passed the moved-check path contract and the resolver-harde
 A complete audit of all 55 checks still in the flat root found no other direct Python import of the ten governance modules moved in 4C1a. The correction keeps `normative_false_coverage.py` in the flat root for its planned 4C1b move, but resolves the directories for both `normative_proof_state.py` and `normative_traceability.py` through `check_file(...)` before importing them. This preserves proof/evidence semantics and prepares the file for the subsequent evidence move without introducing duplicate modules or compatibility packages.
 
 Failed Static #828 remains part of the audit trail.
+
+### Phase 4C1a final receipt
+
+Phase 4C1a is complete. PR #409 merged as `2ad4273605d8ab4d7764d698f8515625dd49ad67` after Static Contract #829 and Linux Integration #713 passed. Static #826/#827/#828 remain retained as legitimate migration evidence and superseded Linux #710/#711/#712 remain in workflow history. Post-merge `main` passed Static Contract #830 and Linux Release Check #264 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The ten governance/source-authority checks now exist only under `tests/checks/governance/`. The flat `tests/checks/` root contains exactly 55 Python checks, while total check/integration identities and zero-orphan invariants remain unchanged.
+
+### Phase 4C1b execution map
+
+Issue #408 moves exactly ten evidence/coverage/contract-integrity checks into `tests/checks/evidence/`:
+
+- `normative_atomic_contract.py`;
+- `normative_atomicity.py`;
+- `normative_coverage.py`;
+- `normative_cross_surface.py`;
+- `normative_evidence_contribution.py`;
+- `normative_false_coverage.py`;
+- `normative_full_contract.py`;
+- `normative_traceability.py`;
+- `normative_validator_contract.py`;
+- `test_surface_integrity.py`.
+
+All ten replace fixed-depth repository-root discovery with the canonical tests-root bootstrap. Intra-family imports of traceability/cross-surface use the current script directory rather than the retired flat `tests/checks/` directory. `normative_false_coverage.py` keeps its resolver-backed dependency directories for governance proof state and evidence traceability, preserving cross-namespace import semantics.
+
+The moved-check map gains the ten evidence basenames and canonical paths. Flat compatibility copies and stale flat paths remain fail-closed. Executable mode `100755` is preserved for `normative_full_contract.py`, `normative_validator_contract.py` and `test_surface_integrity.py`; the other seven remain `100644`. Expected flat-root check count after this slice is 45. No normative values, proof/evidence ownership, runtime/public API, release metadata or published artifact behavior changes.
