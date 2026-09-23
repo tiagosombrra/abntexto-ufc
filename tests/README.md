@@ -31,6 +31,7 @@ Current semantic namespaces:
 - `checks/validator/` — validator source and isolated PDF measurement-core contracts; validator applications and integration/E2E surfaces remain in their existing namespaces.
 - `checks/profiles/` — document-profile and scientific-article source/rendering contracts; integration scripts and document fixtures remain in their existing namespaces.
 - `checks/api/` — public-API residual/migration contracts that verify retired aliases and migration-state cleanliness without modifying runtime API behavior.
+- `checks/governance/` — normative governance/source-authority contracts covering configuration, source currency, locators, negative paths, precedence, proof state, rule migrations, source references and reference-guide consistency.
 
 Checks not yet assigned to a semantic namespace remain at `checks/` until their family receives the same location-independence and stale-path preparation; no compatibility copies are retained.
 

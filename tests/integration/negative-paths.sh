@@ -2,10 +2,10 @@
 set -eu
 
 python3 -m py_compile \
-  tests/checks/normative_negative_paths.py \
-  tests/checks/normative_configuration.py
+  tests/checks/governance/normative_negative_paths.py \
+  tests/checks/governance/normative_configuration.py
 
-python3 tests/checks/normative_negative_paths.py \
+python3 tests/checks/governance/normative_negative_paths.py \
   --json artifacts/negative-paths/negative-paths.json
 
 test -s artifacts/negative-paths/negative-paths.json || {
@@ -13,7 +13,7 @@ test -s artifacts/negative-paths/negative-paths.json || {
   exit 1
 }
 
-python3 tests/checks/normative_configuration.py \
+python3 tests/checks/governance/normative_configuration.py \
   --json artifacts/negative-paths/configuration-strict-rejection.json
 
 test -s artifacts/negative-paths/configuration-strict-rejection.json || {

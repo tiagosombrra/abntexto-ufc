@@ -21,7 +21,7 @@ from path_resolver import ROOT, check_file  # noqa: E402
 CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 PDF_MEASUREMENT = ROOT / "tools" / "pdf_measurement.py"
 PDF_VALIDATION_CORE = check_file("pdf_validation_core.py")
-FRONTMATTER_EVIDENCE = ROOT / "tests" / "checks" / "frontmatter_evidence.py"
+FRONTMATTER_EVIDENCE = check_file("frontmatter_evidence.py")
 VALIDATOR_ROOT = ROOT / "validator"
 APP = VALIDATOR_ROOT / "app.js"
 INDEX = VALIDATOR_ROOT / "index.html"
@@ -33,20 +33,20 @@ PAGES_BUILDER = ROOT / "tools" / "ci" / "build-pages-site.sh"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
 NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
 NORMATIVE_FULL_TOOL = ROOT / "tools" / "normative_full.py"
-NORMATIVE_COVERAGE = ROOT / "tests" / "checks" / "normative_coverage.py"
-NORMATIVE_CURRENCY = ROOT / "tests" / "checks" / "normative_currency.py"
-NORMATIVE_PRECEDENCE = ROOT / "tests" / "checks" / "normative_precedence.py"
-NORMATIVE_FALSE_COVERAGE = ROOT / "tests" / "checks" / "normative_false_coverage.py"
-NORMATIVE_SOURCES = ROOT / "tests" / "checks" / "normative_sources.py"
-NORMATIVE_SOURCE_REFERENCES = ROOT / "tests" / "checks" / "normative_source_references.py"
-NORMATIVE_LOCATORS = ROOT / "tests" / "checks" / "normative_locators.py"
-NORMATIVE_TRACEABILITY = ROOT / "tests" / "checks" / "normative_traceability.py"
-NORMATIVE_PROOF_STATE = ROOT / "tests" / "checks" / "normative_proof_state.py"
-NORMATIVE_EVIDENCE_CONTRIBUTION = ROOT / "tests" / "checks" / "normative_evidence_contribution.py"
-NORMATIVE_ATOMICITY = ROOT / "tests" / "checks" / "normative_atomicity.py"
-NORMATIVE_ATOMIC_CONTRACT = ROOT / "tests" / "checks" / "normative_atomic_contract.py"
-NORMATIVE_FULL_CONTRACT = ROOT / "tests" / "checks" / "normative_full_contract.py"
-VALIDATOR_CONTRACT = ROOT / "tests" / "checks" / "normative_validator_contract.py"
+NORMATIVE_COVERAGE = check_file("normative_coverage.py")
+NORMATIVE_CURRENCY = check_file("normative_currency.py")
+NORMATIVE_PRECEDENCE = check_file("normative_precedence.py")
+NORMATIVE_FALSE_COVERAGE = check_file("normative_false_coverage.py")
+NORMATIVE_SOURCES = check_file("normative_sources.py")
+NORMATIVE_SOURCE_REFERENCES = check_file("normative_source_references.py")
+NORMATIVE_LOCATORS = check_file("normative_locators.py")
+NORMATIVE_TRACEABILITY = check_file("normative_traceability.py")
+NORMATIVE_PROOF_STATE = check_file("normative_proof_state.py")
+NORMATIVE_EVIDENCE_CONTRIBUTION = check_file("normative_evidence_contribution.py")
+NORMATIVE_ATOMICITY = check_file("normative_atomicity.py")
+NORMATIVE_ATOMIC_CONTRACT = check_file("normative_atomic_contract.py")
+NORMATIVE_FULL_CONTRACT = check_file("normative_full_contract.py")
+VALIDATOR_CONTRACT = check_file("normative_validator_contract.py")
 
 
 def fail(message: str) -> None:

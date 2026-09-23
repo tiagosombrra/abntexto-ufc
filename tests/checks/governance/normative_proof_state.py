@@ -8,9 +8,23 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "tools"))
-sys.path.insert(0, str(ROOT / "tests" / "checks"))
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT, check_file  # noqa: E402
+
+TOOLS = ROOT / "tools"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+TRACEABILITY_DIR = check_file("normative_traceability.py").parent
+if str(TRACEABILITY_DIR) not in sys.path:
+    sys.path.insert(0, str(TRACEABILITY_DIR))
 
 from normative_full import load_full_contract
 from normative_traceability import build_matrix as build_traceability_matrix

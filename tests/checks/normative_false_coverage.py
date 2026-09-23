@@ -9,8 +9,21 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "tools"))
-sys.path.insert(0, str(ROOT / "tests" / "checks"))
+
+TOOLS = ROOT / "tools"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+TESTS_DIR = ROOT / "tests"
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import check_file  # noqa: E402
+
+for dependency in ("normative_proof_state.py", "normative_traceability.py"):
+    dependency_dir = check_file(dependency).parent
+    if str(dependency_dir) not in sys.path:
+        sys.path.insert(0, str(dependency_dir))
 
 from normative_atomic import load_atomic_contract
 from normative_catalog import load_catalog, rule_map
