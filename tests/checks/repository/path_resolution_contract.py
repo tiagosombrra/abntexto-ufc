@@ -176,6 +176,24 @@ def main() -> int:
         "normative_validator_contract.py",
         "test_surface_integrity.py",
     }
+    moved_frontmatter_checks = {
+        "frontmatter_definition_alignment.py",
+        "frontmatter_definition_list_alignment.py",
+        "frontmatter_evidence.py",
+        "normative_frontmatter_acknowledgments.py",
+        "normative_frontmatter_alignment.py",
+        "normative_frontmatter_approval.py",
+        "normative_frontmatter_cover.py",
+        "normative_frontmatter_errata.py",
+        "normative_frontmatter_lists.py",
+        "normative_frontmatter_pagination.py",
+        "normative_frontmatter_summary.py",
+        "normative_frontmatter_title_page.py",
+        "normative_frontmatter_toc.py",
+    }
+    root_independent_moved_checks = {
+        "frontmatter_definition_alignment.py",
+    }
     moved_check_paths = {
         **{
             filename: f"tests/checks/repository/{filename}"
@@ -205,6 +223,10 @@ def main() -> int:
             filename: f"tests/checks/evidence/{filename}"
             for filename in moved_evidence_checks
         },
+        **{
+            filename: f"tests/checks/frontmatter/{filename}"
+            for filename in moved_frontmatter_checks
+        },
     }
 
     duplicate_checks = duplicate_basenames(check_candidates)
@@ -229,13 +251,21 @@ def main() -> int:
         text = source.read_text(encoding="utf-8")
         if fixed_depth_root in text:
             return fail(f"prepared check {filename} still derives repository root by fixed depth")
-        if "from path_resolver import" not in text or "ROOT" not in text:
-            return fail(f"prepared check {filename} must import ROOT from tests/path_resolver.py")
+        if filename not in root_independent_moved_checks:
+            if "from path_resolver import" not in text or "ROOT" not in text:
+                return fail(f"prepared check {filename} must import ROOT from tests/path_resolver.py")
         expected_source = ROOT / current
         if source != expected_source:
             return fail(f"moved check {filename} must resolve at {current}")
         if (ROOT / "tests" / "checks" / filename).exists():
             return fail(f"flat compatibility copy is forbidden for moved check {filename}")
+
+    unknown_root_independent = sorted(root_independent_moved_checks - moved_check_paths.keys())
+    if unknown_root_independent:
+        return fail(
+            "root-independent moved-check exemptions must name canonical moved checks: "
+            + ", ".join(unknown_root_independent)
+        )
 
     validator_source_text = check_file("validator_source.py").read_text(encoding="utf-8")
     if 'ROOT / "tests" / "checks"' in validator_source_text:
@@ -598,7 +628,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} root_independent_moved={len(root_independent_moved_checks)}"
     )
     return 0
 

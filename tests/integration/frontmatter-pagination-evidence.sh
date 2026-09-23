@@ -58,7 +58,7 @@ compile_fixture "$duplex_fixture" "$duplex_job"
 compile_fixture "$catalog_fixture" "$catalog_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_frontmatter_pagination.py \
+python3 tests/checks/frontmatter/normative_frontmatter_pagination.py \
   "$duplex_job.pdf" \
   "$catalog_job.pdf" \
   --json "$evidence" \

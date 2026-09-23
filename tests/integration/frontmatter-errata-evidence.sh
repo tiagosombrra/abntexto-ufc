@@ -44,7 +44,7 @@ compile_fixture "$present_fixture" "$present_job"
 compile_fixture "$absent_fixture" "$absent_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_frontmatter_errata.py \
+python3 tests/checks/frontmatter/normative_frontmatter_errata.py \
   "$present_job.pdf" \
   "$absent_job.pdf" \
   --json "$evidence" \

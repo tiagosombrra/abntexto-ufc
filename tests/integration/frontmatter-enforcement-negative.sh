@@ -23,7 +23,7 @@ for pass in 1 2; do
     }
 done
 
-if python3 tests/checks/frontmatter_evidence.py \
+if python3 tests/checks/frontmatter/frontmatter_evidence.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}" \

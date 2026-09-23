@@ -77,7 +77,7 @@ compile_fixture "$symbols_fixture" "$symbols_job"
 compile_fixture "$absent_fixture" "$absent_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_frontmatter_lists.py \
+python3 tests/checks/frontmatter/normative_frontmatter_lists.py \
   "$illustrations_job.pdf" \
   "$tables_job.pdf" \
   "$abbreviations_job.pdf" \
@@ -87,7 +87,7 @@ python3 tests/checks/normative_frontmatter_lists.py \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}" \
   --enforce
 
-python3 tests/checks/frontmatter_definition_list_alignment.py \
+python3 tests/checks/frontmatter/frontmatter_definition_list_alignment.py \
   "$abbreviations_job.pdf" \
   "$symbols_job.pdf" \
   --json "$alignment_evidence"

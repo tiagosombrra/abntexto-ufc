@@ -28,7 +28,7 @@ for engine in pdflatex lualatex; do
       }
     done
     if [ "$fixture" = "tests/documents/frontmatter-academic-work.tex" ] && command -v pdftotext >/dev/null 2>&1; then
-      python3 tests/checks/frontmatter_definition_alignment.py frontmatter-academic-work.pdf
+      python3 tests/checks/frontmatter/frontmatter_definition_alignment.py frontmatter-academic-work.pdf
     fi
   done
 done
