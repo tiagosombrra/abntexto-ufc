@@ -8,8 +8,19 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "tools"))
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT  # noqa: E402
+
+TOOLS = ROOT / "tools"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
 
 from normative_full import load_full_contract
 from repository_paths import standard_file

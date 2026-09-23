@@ -49,7 +49,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_apud_presentation.py \
+python3 tests/checks/citations/normative_apud_presentation.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

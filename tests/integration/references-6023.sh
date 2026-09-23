@@ -146,7 +146,7 @@ if not re.search(r'\b2\s*v\.', multivolume, re.IGNORECASE):
 PY
 
   evidence_json="${UFC_EVIDENCE_DIR:-artifacts/validation/reference-semantics}/reference-semantics.json"
-  set -- python3 tests/checks/normative_reference_semantics.py \
+  set -- python3 tests/checks/citations/normative_reference_semantics.py \
     /tmp/abntexto-ufc-6023.txt --json "$evidence_json"
   if [ -n "${GITHUB_SHA:-}" ]; then
     set -- "$@" --commit-sha "$GITHUB_SHA"

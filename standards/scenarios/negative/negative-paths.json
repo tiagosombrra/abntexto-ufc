@@ -143,7 +143,7 @@
       },
       "validator": [
         "python3",
-        "tests/checks/normative_short_direct_citation.py",
+        "tests/checks/citations/normative_short_direct_citation.py",
         "{pdf}",
         "--json",
         "{evidence_json}"

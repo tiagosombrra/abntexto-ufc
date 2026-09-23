@@ -191,6 +191,17 @@ def main() -> int:
         "normative_frontmatter_title_page.py",
         "normative_frontmatter_toc.py",
     }
+    moved_citation_checks = {
+        "normative_apud_presentation.py",
+        "normative_direct_citation_source.py",
+        "normative_indirect_citation_source.py",
+        "normative_long_quotation.py",
+        "normative_long_quote_reduced_size.py",
+        "normative_reference_layout.py",
+        "normative_reference_semantics.py",
+        "normative_short_direct_citation.py",
+        "normative_ufc_citation_system.py",
+    }
     root_independent_moved_checks = {
         "frontmatter_definition_alignment.py",
     }
@@ -226,6 +237,10 @@ def main() -> int:
         **{
             filename: f"tests/checks/frontmatter/{filename}"
             for filename in moved_frontmatter_checks
+        },
+        **{
+            filename: f"tests/checks/citations/{filename}"
+            for filename in moved_citation_checks
         },
     }
 
@@ -628,7 +643,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} root_independent_moved={len(root_independent_moved_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} root_independent_moved={len(root_independent_moved_checks)}"
     )
     return 0
 
