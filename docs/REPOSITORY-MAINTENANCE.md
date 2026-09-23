@@ -589,3 +589,9 @@ Issue #393 moves exactly nine citation/reference checks into `tests/checks/citat
 All nine preserve mode `100644`, replace fixed repository-depth discovery with the canonical tests-root bootstrap and retain the existing `ROOT/tools` helper dependency. Eight known integration consumers follow the new paths; `long-quotation-evidence.sh` updates both the main long-quotation and reduced-size check invocations. Consumer executable bits are preserved exactly.
 
 The moved-check contract gains the nine citation basenames mapped to `tests/checks/citations/`. Flat compatibility copies, fixed-depth nested checks and stale flat references remain fail-closed. Suite selection requires no `PATH_RULES` edit because movable check paths normalize by basename before matching. Expected flat-root count after this slice is exactly 23. No citation/reference normative value, evidence semantics, runtime/public API, release metadata or published artifact behavior changes.
+
+### Phase 4C3 validation incident
+
+Initial Static Contract #835 failed on PR #413 after the citation/reference checks moved because the fail-closed moved-check guard found one active negative-scenario consumer still naming the retired flat path: `standards/scenarios/negative/negative-paths.json` referenced `tests/checks/normative_short_direct_citation.py`.
+
+That path is part of a controlled negative assertion rather than incidental documentation. The scenario is updated to `tests/checks/citations/normative_short_direct_citation.py` while preserving the same negative-test semantics. The failed run is retained as audit evidence; no compatibility copy or stale-path exemption is introduced. Fresh Static and Linux Integration gates are required before merge.
