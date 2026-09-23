@@ -33,7 +33,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_long_quotation.py \
+python3 tests/checks/citations/normative_long_quotation.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
@@ -43,7 +43,7 @@ test -s "$evidence" || {
   exit 1
 }
 
-python3 tests/checks/normative_long_quote_reduced_size.py \
+python3 tests/checks/citations/normative_long_quote_reduced_size.py \
   "$evidence" \
   --json "$reduced_evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

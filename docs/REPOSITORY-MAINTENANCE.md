@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1 complete; 4C2 frontmatter namespace in progress under #392 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C2 complete; 4C3 citations/references namespace in progress under #393 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -565,3 +565,27 @@ Fourteen known active consumers carry fifteen retired flat-path occurrences: thi
 The moved-check contract adds thirteen frontmatter basenames mapped to `tests/checks/frontmatter/`. Because one moved helper intentionally has no repository-root dependency, the contract explicitly records it in a bounded `root_independent_moved_checks` set instead of forcing an artificial `ROOT` import. Flat compatibility copies, fixed-depth nested checks and stale flat paths remain fail-closed.
 
 Suite selection requires no `PATH_RULES` edit because movable check paths normalize by basename before matching. Expected flat-root count after this slice is exactly 32; total check/integration identity remains 84/86. No normative value, PDF tolerance, runtime/public API, release metadata or published artifact behavior changes.
+
+### Phase 4C2 final receipt
+
+Phase 4C2 is complete. PR #412 merged as `a82a3fbe3ce388ee4a20e94490e452921e5f95e1` after Static Contract #833 and Linux Integration #715 passed. Post-merge `main` passed Static Contract #834 and Linux Release Check #266 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The thirteen frontmatter checks/helpers now exist only under `tests/checks/frontmatter/`, all preserve mode `100644`, and the flat `tests/checks/` root contains exactly 32 Python checks. The total 84-check / 86-integration identity and zero-orphan invariants remain unchanged.
+
+### Phase 4C3 execution map
+
+Issue #393 moves exactly nine citation/reference checks into `tests/checks/citations/`:
+
+- `normative_apud_presentation.py`;
+- `normative_direct_citation_source.py`;
+- `normative_indirect_citation_source.py`;
+- `normative_long_quotation.py`;
+- `normative_long_quote_reduced_size.py`;
+- `normative_reference_layout.py`;
+- `normative_reference_semantics.py`;
+- `normative_short_direct_citation.py`;
+- `normative_ufc_citation_system.py`.
+
+All nine preserve mode `100644`, replace fixed repository-depth discovery with the canonical tests-root bootstrap and retain the existing `ROOT/tools` helper dependency. Eight known integration consumers follow the new paths; `long-quotation-evidence.sh` updates both the main long-quotation and reduced-size check invocations. Consumer executable bits are preserved exactly.
+
+The moved-check contract gains the nine citation basenames mapped to `tests/checks/citations/`. Flat compatibility copies, fixed-depth nested checks and stale flat references remain fail-closed. Suite selection requires no `PATH_RULES` edit because movable check paths normalize by basename before matching. Expected flat-root count after this slice is exactly 23. No citation/reference normative value, evidence semantics, runtime/public API, release metadata or published artifact behavior changes.

@@ -34,6 +34,7 @@ Current semantic namespaces:
 - `checks/governance/` — normative governance/source-authority contracts covering configuration, source currency, locators, negative paths, precedence, proof state, rule migrations, source references and reference-guide consistency.
 - `checks/evidence/` — normative evidence, coverage, atomic/full contract, cross-surface, traceability, validator-contract and test-surface integrity checks.
 - `checks/frontmatter/` — frontmatter geometry/evidence and normative cover, title-page, approval, acknowledgments, errata, lists, pagination, summary and TOC contracts.
+- `checks/citations/` — citation, quotation and reference-layout/semantics contracts for UFC/ABNT textual and bibliographic behavior.
 
 Checks not yet assigned to a semantic namespace remain at `checks/` until their family receives the same location-independence and stale-path preparation; no compatibility copies are retained.
 
