@@ -619,3 +619,13 @@ Six checks preserve mode `100644`, replace fixed repository-depth discovery with
 Seven known integration consumers follow the new canonical paths one-to-one. `pdfa.sh` preserves mode `100755`; the other six consumer scripts preserve mode `100644`. The moved-check map gains seven layout basenames mapped to `tests/checks/layout/`. Flat compatibility copies, fixed-depth nested checks and stale retired paths remain fail-closed. Suite inference requires no `PATH_RULES` edit because movable check paths normalize by basename before matching.
 
 Expected flat-root count after this slice is exactly 16. No normative value, geometry tolerance, PDF/A behavior, runtime/public API, release metadata or published artifact changes.
+
+### Phase 4C4a validation incident
+
+Initial Static Contract #838 failed on PR #416 after the layout/typography/PDF-A checks moved because the fail-closed moved-check guard found three controlled negative-scenario paths in `standards/scenarios/negative/negative-paths.json` that still named retired flat checks:
+
+- `tests/checks/normative_page_margins.py`;
+- `tests/checks/normative_pdfa.py`;
+- `tests/checks/normative_typography.py`.
+
+These are active negative-path assertions rather than incidental text. Each path is updated to its canonical `tests/checks/layout/` location while preserving the same negative-test semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.

@@ -67,7 +67,7 @@
       "evidence_paths": [
         "tests/integration/pdfa.sh",
         "tests/integration/profile-pdfa.sh",
-        "tests/checks/normative_pdfa.py"
+        "tests/checks/layout/normative_pdfa.py"
       ]
     }
   ],
@@ -91,7 +91,7 @@
       },
       "validator": [
         "python3",
-        "tests/checks/normative_page_margins.py",
+        "tests/checks/layout/normative_page_margins.py",
         "{pdf}",
         "--json",
         "{evidence_json}"
@@ -117,7 +117,7 @@
       },
       "validator": [
         "python3",
-        "tests/checks/normative_typography.py",
+        "tests/checks/layout/normative_typography.py",
         "{pdf}",
         "--json",
         "{evidence_json}"
