@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C2 complete; 4C3 citations/references namespace in progress under #393 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C3 complete; 4C4a layout/typography/PDF-A namespace in progress under #414 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -595,3 +595,37 @@ The moved-check contract gains the nine citation basenames mapped to `tests/chec
 Initial Static Contract #835 failed on PR #413 after the citation/reference checks moved because the fail-closed moved-check guard found one active negative-scenario consumer still naming the retired flat path: `standards/scenarios/negative/negative-paths.json` referenced `tests/checks/normative_short_direct_citation.py`.
 
 That path is part of a controlled negative assertion rather than incidental documentation. The scenario is updated to `tests/checks/citations/normative_short_direct_citation.py` while preserving the same negative-test semantics. The failed run is retained as audit evidence; no compatibility copy or stale-path exemption is introduced. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4C3 final receipt
+
+Phase 4C3 is complete. PR #413 merged as `cecf6b78a4408b5df94cf3b9a9ba390d5f57a19d` after Static Contract #836 and Linux Integration #717 passed. Initial Static #835 is retained as evidence of one controlled negative-scenario stale path; Linux #716 is retained as a superseded concurrency-cancelled run. Post-merge `main` passed Static Contract #837 and Linux Release Check #267 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The nine citation/reference checks now exist only under `tests/checks/citations/`. The flat `tests/checks/` root contains exactly 23 Python checks, while total check/integration identities and zero-orphan invariants remain unchanged.
+
+### Phase 4C4a execution map
+
+Issue #414 moves exactly seven layout/typography/PDF-A checks into `tests/checks/layout/`:
+
+- `normative_body_paragraph.py`;
+- `normative_footnote_separator.py`;
+- `normative_footnote_text.py`;
+- `normative_page_margins.py`;
+- `normative_pagination_geometry.py`;
+- `normative_pdfa.py`;
+- `normative_typography.py`.
+
+Six checks preserve mode `100644`, replace fixed repository-depth discovery with the canonical tests-root bootstrap and retain their existing `ROOT/tools` helper dependency. `normative_pdfa.py` preserves executable mode `100755` and uses only the canonical ROOT bootstrap because it has no tools-module dependency.
+
+Seven known integration consumers follow the new canonical paths one-to-one. `pdfa.sh` preserves mode `100755`; the other six consumer scripts preserve mode `100644`. The moved-check map gains seven layout basenames mapped to `tests/checks/layout/`. Flat compatibility copies, fixed-depth nested checks and stale retired paths remain fail-closed. Suite inference requires no `PATH_RULES` edit because movable check paths normalize by basename before matching.
+
+Expected flat-root count after this slice is exactly 16. No normative value, geometry tolerance, PDF/A behavior, runtime/public API, release metadata or published artifact changes.
+
+### Phase 4C4a validation incident
+
+Initial Static Contract #838 failed on PR #416 after the layout/typography/PDF-A checks moved because the fail-closed moved-check guard found three controlled negative-scenario paths in `standards/scenarios/negative/negative-paths.json` that still named retired flat checks:
+
+- `tests/checks/normative_page_margins.py`;
+- `tests/checks/normative_pdfa.py`;
+- `tests/checks/normative_typography.py`.
+
+These are active negative-path assertions rather than incidental text. Each path is updated to its canonical `tests/checks/layout/` location while preserving the same negative-test semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.

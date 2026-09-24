@@ -32,7 +32,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_pagination_geometry.py \
+python3 tests/checks/layout/normative_pagination_geometry.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

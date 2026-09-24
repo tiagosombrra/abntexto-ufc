@@ -32,7 +32,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_footnote_text.py \
+python3 tests/checks/layout/normative_footnote_text.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
