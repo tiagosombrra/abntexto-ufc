@@ -26,7 +26,7 @@ fi
 if [ -s "$report" ] && grep -Fq 'isCompliant="true"' "$report"; then
   echo 'PDF/A-2b validation completed.'
   if [ "$pdf" = "template/main.pdf" ] && [ "${UFC_PDFA_NEGATIVE_VALIDATION:-1}" = "1" ]; then
-    python3 tests/checks/normative_pdfa.py \
+    python3 tests/checks/layout/normative_pdfa.py \
       "$pdf" \
       --positive-report "$report" \
       --json "$negative_evidence"

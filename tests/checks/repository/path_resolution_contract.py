@@ -202,6 +202,15 @@ def main() -> int:
         "normative_short_direct_citation.py",
         "normative_ufc_citation_system.py",
     }
+    moved_layout_checks = {
+        "normative_body_paragraph.py",
+        "normative_footnote_separator.py",
+        "normative_footnote_text.py",
+        "normative_page_margins.py",
+        "normative_pagination_geometry.py",
+        "normative_pdfa.py",
+        "normative_typography.py",
+    }
     root_independent_moved_checks = {
         "frontmatter_definition_alignment.py",
     }
@@ -241,6 +250,10 @@ def main() -> int:
         **{
             filename: f"tests/checks/citations/{filename}"
             for filename in moved_citation_checks
+        },
+        **{
+            filename: f"tests/checks/layout/{filename}"
+            for filename in moved_layout_checks
         },
     }
 
@@ -643,7 +656,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} root_independent_moved={len(root_independent_moved_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} root_independent_moved={len(root_independent_moved_checks)}"
     )
     return 0
 

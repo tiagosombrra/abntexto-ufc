@@ -6,12 +6,21 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[2]
+TESTS_DIR = next(
+    parent
+    for parent in Path(__file__).resolve().parents
+    if (parent / "path_resolver.py").is_file()
+)
+if str(TESTS_DIR) not in sys.path:
+    sys.path.insert(0, str(TESTS_DIR))
+
+from path_resolver import ROOT  # noqa: E402
 MECHANISM_ID = "pdf-pdfa-validation"
 SOURCE_MARKER = b"<pdfaid:part>2</pdfaid:part>"
 MUTATED_MARKER = b"<pdfaid:part>3</pdfaid:part>"
