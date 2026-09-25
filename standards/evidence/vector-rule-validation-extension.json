@@ -6,7 +6,7 @@
   "tool": "pdftocairo -svg",
   "implementation": "tools/pdf_vector_measurement.py",
   "calibration_fixture": "tests/documents/vector-rule-calibration-test.tex",
-  "calibration_checker": "tests/checks/normative_vector_rule_validation.py",
+  "calibration_checker": "tests/checks/objects/normative_vector_rule_validation.py",
   "parser": {
     "axis_classification_tolerance_pt": 0.5,
     "max_rule_thickness_pt": 2.0,

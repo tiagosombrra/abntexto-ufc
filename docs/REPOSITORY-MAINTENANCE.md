@@ -676,3 +676,9 @@ All six preserve mode `100644`, replace fixed repository-depth discovery with th
 The controlled negative scenario path for `normative_table_ibge_vector.py` follows the new objects namespace without changing negative-test semantics. The moved-check map gains six object basenames mapped to `tests/checks/objects/`. Flat compatibility copies, fixed-depth nested checks and stale retired paths remain fail-closed.
 
 Expected flat-root count after this slice is exactly 3. No equation/illustration/table/vector normative value, measurement tolerance, runtime/public API, release metadata or published artifact behavior changes.
+
+### Phase 4C5 validation incident
+
+Initial Static Contract #843 failed on PR #418 after the academic-object checks moved because the fail-closed moved-check guard found one active validation-extension path still naming the retired flat check: `standards/evidence/vector-rule-validation-extension.json` referenced `tests/checks/normative_vector_rule_validation.py`.
+
+The extension is controlled validation metadata rather than incidental documentation. Its path is updated to `tests/checks/objects/normative_vector_rule_validation.py` while preserving the same additive vector-rule calibration policy and proof-state semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
