@@ -7,7 +7,7 @@ evidence="artifacts/normative-layout/illustration-final-pdf.json"
 log="/tmp/abntexto-ufc-v2-illustration-evidence.log"
 
 python3 -m py_compile \
-  tests/checks/normative_illustration.py
+  tests/checks/objects/normative_illustration.py
 
 cleanup() {
   rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
@@ -35,7 +35,7 @@ if [ -n "$warnings" ]; then
 fi
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_illustration.py \
+python3 tests/checks/objects/normative_illustration.py \
   "$job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

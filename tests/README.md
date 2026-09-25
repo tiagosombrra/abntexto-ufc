@@ -37,6 +37,7 @@ Current semantic namespaces:
 - `checks/citations/` — citation, quotation and reference-layout/semantics contracts for UFC/ABNT textual and bibliographic behavior.
 - `checks/layout/` — body paragraph, footnote, page geometry, PDF/A and typography contracts for rendered-layout behavior.
 - `checks/sections/` — section hierarchy, indicator, spacing, recto/duplex, multiline-hanging and unnumbered-heading contracts.
+- `checks/objects/` — equation, illustration, table, vector-rule and academic-object scope contracts for rendered-object behavior.
 
 Checks not yet assigned to a semantic namespace remain at `checks/` until their family receives the same location-independence and stale-path preparation; no compatibility copies are retained.
 
