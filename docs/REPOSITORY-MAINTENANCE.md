@@ -734,3 +734,9 @@ Operational consumers follow the new locations in `Makefile`, `tools/ci/run-web-
 The path-resolution contract introduces explicit moved-integration canonical paths, flat-copy rejection, fixed-depth rejection for nested Python integrations, and active stale-flat-integration scanning. `tests/integration_suites.py` and `tests/checks/repository/linux_integration_suites.py` are controlled exclusions from that text scan because they intentionally store normalized flat identities; their self-tests and real helper-content assertions remain fail-closed.
 
 Target result: 10 nested integrations + 76 flat integrations = 86 identities, with original Git modes preserved. No runtime/public API/normative/release-asset behavior changes.
+
+### Phase 4D validation incident
+
+Initial Static Contract #850 failed on PR #421 after the non-domain integration move because `tests/checks/repository/canonical_identity.py` still keyed its controlled legacy-identity exemption to the retired path `tests/integration/distribution-bundles.sh`.
+
+The integration intentionally contains a negative assertion for the historical `ufctex` identity; the exemption key follows the moved file to `tests/integration/distribution/distribution-bundles.sh` without changing that assertion. The failed run is retained as audit evidence. No compatibility copy or broad legacy exemption is introduced. Fresh Static and Linux Integration gates are required before merge.

@@ -44,7 +44,7 @@ LEGACY_FULL_FILE_EXEMPT = {
     "tests/checks/repository/canonical_identity.py",
     "tests/checks/repository/repository_contract.py",
     "tests/checks/distribution/distribution_bundles.py",
-    "tests/integration/distribution-bundles.sh",
+    "tests/integration/distribution/distribution-bundles.sh",
     "tools/build-distribution-bundles.py",
 }
 LEGACY_FULL_DIRECTORY_EXEMPT = ("release/history/v3/",)
