@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C3 complete; 4C4a layout/typography/PDF-A namespace in progress under #414 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C4a complete; 4C4b section hierarchy/spacing namespace in progress under #415 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -629,3 +629,27 @@ Initial Static Contract #838 failed on PR #416 after the layout/typography/PDF-A
 - `tests/checks/normative_typography.py`.
 
 These are active negative-path assertions rather than incidental text. Each path is updated to its canonical `tests/checks/layout/` location while preserving the same negative-test semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4C4a final receipt
+
+Phase 4C4a is complete. PR #416 merged as `2f9138bc674d105528caa5d1dcbc7e113260967e` after Static Contract #839 and Linux Integration #719 passed. Initial Static #838 is retained as evidence of three controlled negative-scenario stale paths; Linux #718 is retained as a superseded concurrency-cancelled run. Post-merge `main` passed Static Contract #840 and Linux Release Check #268 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The seven layout/typography/PDF-A checks now exist only under `tests/checks/layout/`. The flat `tests/checks/` root contains exactly 16 Python checks, while total check/integration identities and zero-orphan invariants remain unchanged.
+
+### Phase 4C4b execution map
+
+Issue #415 moves exactly seven section hierarchy/spacing checks into `tests/checks/sections/`:
+
+- `normative_section_hierarchy.py`;
+- `normative_section_indicator.py`;
+- `normative_section_multiline_hanging.py`;
+- `normative_section_primary_after_spacing.py`;
+- `normative_section_primary_recto_duplex.py`;
+- `normative_section_unnumbered_centered.py`;
+- `normative_subsection_spacing.py`.
+
+All seven preserve mode `100644`, replace fixed repository-depth discovery with the canonical tests-root bootstrap and retain their existing `ROOT/tools` helper dependency. Seven one-to-one integration consumers follow the new canonical paths while preserving mode `100644`.
+
+The moved-check map gains the seven section basenames mapped to `tests/checks/sections/`. Flat compatibility copies, fixed-depth nested checks and stale retired paths remain fail-closed. Suite inference requires no `PATH_RULES` edit because movable check paths normalize by basename before matching.
+
+Expected flat-root count after this slice is exactly 9. No section hierarchy, spacing, recto/duplex or indicator normative value, evidence tolerance, runtime/public API, release metadata or published artifact behavior changes.
