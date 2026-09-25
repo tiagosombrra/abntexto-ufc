@@ -31,7 +31,7 @@ The E2E requires Web/Lite to keep Deep-only `font.embedded` and `pdfa.deep` in `
 For local reproduction after a canonical/reference PDF exists, run the same browser harness explicitly:
 
 ```bash
-python3 tests/integration/web-lite-e2e.py \
+python3 tests/integration/validator/web-lite-e2e.py \
   --pdf artifacts/validation/web-lite-positive.pdf \
   --profile portable \
   --evidence /tmp/abntexto-ufc-web-lite/web-lite-e2e.json

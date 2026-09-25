@@ -748,3 +748,9 @@ Corrected-head validation exposed two additional residuals. Static Contract #851
 Linux Integration #726 and Linux Release Check #273 both failed check `[03/38] Reference document` because `tests/integration/reference-document.sh` still invoked the retired flat path `tests/integration/reference-guide-contract.sh` after that integration moved to `tests/integration/core/reference-guide-contract.sh`. The operational call follows the moved integration. The failed runs remain audit evidence and the generic stale-integration scanner remains the exhaustive backstop for any further active consumer.
 
 Fresh Static, Linux Integration and Linux Release gates are required before merge.
+
+### Phase 4D third validation incident
+
+Static Contract #852 advanced past the earlier canonical-identity and reference-document corrections and exposed three remaining active stale integration references. `standards/scenarios/negative/negative-paths.json` still named the retired flat paths for `negative-paths.sh` and `pdf-validator.sh`, and `validator/README.md` still documented the retired flat path for `web-lite-e2e.py`.
+
+These are path-only consumer updates: the controlled negative-scenario inventory continues to reference the same validation mechanisms, and the validator documentation continues to describe the same Web/Lite E2E command. The references follow their canonical `tests/integration/core/` and `tests/integration/validator/` locations. Static #852 is retained as audit evidence; no stale-path exemption or compatibility copy is added. Fresh Static, Linux Integration and Linux Release gates are required before merge.
