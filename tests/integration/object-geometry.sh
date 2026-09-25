@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-python3 tests/checks/normative_objects_scope.py
+python3 tests/checks/objects/normative_objects_scope.py
 
 fixture="tests/documents/object-geometry.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"

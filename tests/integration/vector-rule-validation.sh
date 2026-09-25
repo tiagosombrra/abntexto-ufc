@@ -10,7 +10,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-python3 -m py_compile tools/pdf_vector_measurement.py tests/checks/normative_vector_rule_validation.py
+python3 -m py_compile tools/pdf_vector_measurement.py tests/checks/objects/normative_vector_rule_validation.py
 
 for pass in 1 2; do
   pdflatex -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {
@@ -27,7 +27,7 @@ if [ -n "$warnings" ]; then
   exit 1
 fi
 
-python3 tests/checks/normative_vector_rule_validation.py "$job.pdf" \
+python3 tests/checks/objects/normative_vector_rule_validation.py "$job.pdf" \
   --json artifacts/normative-layout/vector-rule-validation-calibration.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 

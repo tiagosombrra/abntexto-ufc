@@ -21,7 +21,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C4a complete; 4C4b section hierarchy/spacing namespace in progress under #415 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C4 complete; 4C5 academic-object namespace in progress under #395 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -653,3 +653,32 @@ All seven preserve mode `100644`, replace fixed repository-depth discovery with 
 The moved-check map gains the seven section basenames mapped to `tests/checks/sections/`. Flat compatibility copies, fixed-depth nested checks and stale retired paths remain fail-closed. Suite inference requires no `PATH_RULES` edit because movable check paths normalize by basename before matching.
 
 Expected flat-root count after this slice is exactly 9. No section hierarchy, spacing, recto/duplex or indicator normative value, evidence tolerance, runtime/public API, release metadata or published artifact behavior changes.
+
+### Phase 4C4b final receipt
+
+Phase 4C4b is complete. PR #417 merged as `f8adcc06b42453217157e128a8c0db98be588366` after Static Contract #841 and Linux Integration #720 passed. Post-merge `main` passed Static Contract #842 and Linux Release Check #269 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The seven section hierarchy/spacing checks now exist only under `tests/checks/sections/`. Together with 4C4a, the 14 layout/section checks are fully nested and umbrella #394 is closed. The flat `tests/checks/` root contains exactly 9 Python checks; total 84-check / 86-integration identity and zero-orphan invariants remain unchanged.
+
+### Phase 4C5 execution map
+
+Issue #395 moves exactly six academic-object checks into `tests/checks/objects/`:
+
+- `normative_equation_display.py`;
+- `normative_illustration.py`;
+- `normative_objects_scope.py`;
+- `normative_table_ibge_vector.py`;
+- `normative_table_typography.py`;
+- `normative_vector_rule_validation.py`.
+
+All six preserve mode `100644`, replace fixed repository-depth discovery with the canonical tests-root bootstrap and retain their existing `ROOT/tools` helper dependency. Five known integration consumers follow the new canonical paths: `illustration-evidence.sh`, `object-geometry.sh`, `table-ibge-vector-evidence.sh`, `table-typography-equation-evidence.sh` and `vector-rule-validation.sh`. Their existing Git modes are preserved.
+
+The controlled negative scenario path for `normative_table_ibge_vector.py` follows the new objects namespace without changing negative-test semantics. The moved-check map gains six object basenames mapped to `tests/checks/objects/`. Flat compatibility copies, fixed-depth nested checks and stale retired paths remain fail-closed.
+
+Expected flat-root count after this slice is exactly 3. No equation/illustration/table/vector normative value, measurement tolerance, runtime/public API, release metadata or published artifact behavior changes.
+
+### Phase 4C5 validation incident
+
+Initial Static Contract #843 failed on PR #418 after the academic-object checks moved because the fail-closed moved-check guard found one active validation-extension path still naming the retired flat check: `standards/evidence/vector-rule-validation-extension.json` referenced `tests/checks/normative_vector_rule_validation.py`.
+
+The extension is controlled validation metadata rather than incidental documentation. Its path is updated to `tests/checks/objects/normative_vector_rule_validation.py` while preserving the same additive vector-rule calibration policy and proof-state semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.

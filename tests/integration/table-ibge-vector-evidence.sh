@@ -11,8 +11,8 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 python3 -m py_compile tools/pdf_vector_measurement.py \
-  tests/checks/normative_vector_rule_validation.py \
-  tests/checks/normative_table_ibge_vector.py
+  tests/checks/objects/normative_vector_rule_validation.py \
+  tests/checks/objects/normative_table_ibge_vector.py
 
 sh tests/integration/vector-rule-validation.sh
 
@@ -31,7 +31,7 @@ if [ -n "$warnings" ]; then
   exit 1
 fi
 
-python3 tests/checks/normative_table_ibge_vector.py "$job.pdf" \
+python3 tests/checks/objects/normative_table_ibge_vector.py "$job.pdf" \
   --json artifacts/normative-layout/table-ibge-vector-final-pdf.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 

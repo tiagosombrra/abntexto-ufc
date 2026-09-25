@@ -220,6 +220,14 @@ def main() -> int:
         "normative_section_unnumbered_centered.py",
         "normative_subsection_spacing.py",
     }
+    moved_object_checks = {
+        "normative_equation_display.py",
+        "normative_illustration.py",
+        "normative_objects_scope.py",
+        "normative_table_ibge_vector.py",
+        "normative_table_typography.py",
+        "normative_vector_rule_validation.py",
+    }
     root_independent_moved_checks = {
         "frontmatter_definition_alignment.py",
     }
@@ -267,6 +275,10 @@ def main() -> int:
         **{
             filename: f"tests/checks/sections/{filename}"
             for filename in moved_section_checks
+        },
+        **{
+            filename: f"tests/checks/objects/{filename}"
+            for filename in moved_object_checks
         },
     }
 
@@ -669,7 +681,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} root_independent_moved={len(root_independent_moved_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} object_checks={len(moved_object_checks)} root_independent_moved={len(root_independent_moved_checks)}"
     )
     return 0
 

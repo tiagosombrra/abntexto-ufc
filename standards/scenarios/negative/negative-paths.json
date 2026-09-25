@@ -169,7 +169,7 @@
       },
       "validator": [
         "python3",
-        "tests/checks/normative_table_ibge_vector.py",
+        "tests/checks/objects/normative_table_ibge_vector.py",
         "{pdf}",
         "--json",
         "{evidence_json}"
