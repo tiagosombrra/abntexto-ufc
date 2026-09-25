@@ -739,4 +739,12 @@ Target result: 10 nested integrations + 76 flat integrations = 86 identities, wi
 
 Initial Static Contract #850 failed on PR #421 after the non-domain integration move because `tests/checks/repository/canonical_identity.py` still keyed its controlled legacy-identity exemption to the retired path `tests/integration/distribution-bundles.sh`.
 
-The integration intentionally contains a negative assertion for the historical `ufctex` identity; the exemption key follows the moved file to `tests/integration/distribution/distribution-bundles.sh` without changing that assertion. The failed run is retained as audit evidence. No compatibility copy or broad legacy exemption is introduced. Fresh Static and Linux Integration gates are required before merge.
+The integration intentionally contains a negative assertion for the historical pre-v3 class identity; the exemption key follows the moved file to `tests/integration/distribution/distribution-bundles.sh` without changing that assertion. The failed run is retained as audit evidence. No compatibility copy or broad legacy exemption is introduced. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4D second validation incident
+
+Corrected-head validation exposed two additional residuals. Static Contract #851 failed because the Phase 4D incident receipt itself reintroduced the retired pre-v3 class-identity token into an active documentation surface audited by `canonical_identity.py`. The receipt is reworded generically; no new documentation exemption is added.
+
+Linux Integration #726 and Linux Release Check #273 both failed check `[03/38] Reference document` because `tests/integration/reference-document.sh` still invoked the retired flat path `tests/integration/reference-guide-contract.sh` after that integration moved to `tests/integration/core/reference-guide-contract.sh`. The operational call follows the moved integration. The failed runs remain audit evidence and the generic stale-integration scanner remains the exhaustive backstop for any further active consumer.
+
+Fresh Static, Linux Integration and Linux Release gates are required before merge.
