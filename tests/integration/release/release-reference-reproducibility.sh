@@ -1,7 +1,20 @@
 #!/bin/sh
 set -eu
 
-ROOT=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
+find_repo_root() {
+  current=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+  while [ "$current" != "/" ]; do
+    if [ -f "$current/abntexto-ufc.cls" ] && [ -f "$current/tests/path_resolver.py" ]; then
+      printf '%s\n' "$current"
+      return 0
+    fi
+    current=$(dirname "$current")
+  done
+  echo 'Repository root could not be located from integration script.' >&2
+  return 1
+}
+
+ROOT=$(find_repo_root)
 cd "$ROOT"
 
 EVIDENCE="${UFC_REPRO_EVIDENCE:-artifacts/validation/release-reference-reproducibility.json}"
@@ -120,7 +133,7 @@ if [ "$KEEP_PDFS" = "1" ]; then
 fi
 
 sh tests/integration/font-embedding.sh "$OUTPUT_PDF"
-sh tests/integration/pdf-validator.sh "$OUTPUT_PDF"
+sh tests/integration/validator/pdf-validator.sh "$OUTPUT_PDF"
 UFC_PDFA_NEGATIVE_VALIDATION=0 sh tests/integration/pdfa.sh "$OUTPUT_PDF"
 
 TEXT="$WORK/release-reference.txt"

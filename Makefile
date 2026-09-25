@@ -68,12 +68,12 @@ check:
 	@python3 tests/run.py --mode pr
 
 release-reference-reproducibility:
-	@sh tests/integration/release-reference-reproducibility.sh
+	@sh tests/integration/release/release-reference-reproducibility.sh
 
 release-check:
 	@python3 tests/run.py --mode release
 	@sh tests/integration/scientific-article-pdfa.sh
-	@sh tests/integration/distribution-bundles.sh
+	@sh tests/integration/distribution/distribution-bundles.sh
 	@$(MAKE) release-reference-reproducibility
 
 preflight: check

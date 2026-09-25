@@ -56,7 +56,15 @@ Fixtures should remain minimal and deterministic. They are not a second source o
 
 ### `integration/`
 
-Shell-based compilation/render/distribution gates. These cover engine behavior, PDF properties, bibliography, profiles, academic objects, front/back matter, public bundles and other end-to-end contracts.
+Shell/Python compilation, rendering, distribution and validator gates. These cover engine behavior, PDF properties, bibliography, profiles, academic objects, front/back matter, public bundles and other end-to-end contracts.
+
+Current non-domain semantic namespaces:
+- `integration/core/` — orchestration/complement/negative-path integration contracts;
+- `integration/distribution/` — public bundle and platform-staging integrations;
+- `integration/release/` — release reproducibility and review-pair certification integrations;
+- `integration/validator/` — PDF validation and Web/Lite E2E integrations.
+
+Domain integrations remain at the flat `integration/` root until Phase 4E. Recursive basename resolution remains the path authority.
 
 ### `smoke/`
 

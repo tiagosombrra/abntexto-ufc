@@ -114,6 +114,27 @@ def stale_flat_check_references(moved_paths: dict[str, str]) -> list[str]:
     return sorted(set(findings))
 
 
+def stale_flat_integration_references(moved_paths: dict[str, str]) -> list[str]:
+    findings: list[str] = []
+    controlled_normalized_identity_surfaces = {
+        "tests/integration_suites.py",
+        "tests/checks/repository/linux_integration_suites.py",
+    }
+    surfaces = active_text_surfaces()
+    for filename, current in sorted(moved_paths.items()):
+        legacy = f"tests/integration/{filename}"
+        for surface in surfaces:
+            source = surface.relative_to(ROOT).as_posix()
+            if source in controlled_normalized_identity_surfaces:
+                continue
+            text = surface.read_text(encoding="utf-8", errors="replace")
+            if legacy in text:
+                findings.append(
+                    f"{source}: stale flat integration path {legacy}; current path is {current}"
+                )
+    return sorted(set(findings))
+
+
 def main() -> int:
     check_candidates = sorted((ROOT / "tests" / "checks").rglob("*.py"))
     integration_candidates = sorted(
@@ -291,6 +312,43 @@ def main() -> int:
         },
     }
 
+    moved_core_integrations = {
+        "negative-paths.sh",
+        "normative-complement.sh",
+        "reference-guide-contract.sh",
+    }
+    moved_distribution_integrations = {
+        "distribution-bundles.sh",
+        "overleaf-stable.sh",
+    }
+    moved_release_integrations = {
+        "release-reference-reproducibility.sh",
+        "release-review-pairs.sh",
+    }
+    moved_validator_integrations = {
+        "pdf-validation-core.sh",
+        "pdf-validator.sh",
+        "web-lite-e2e.py",
+    }
+    moved_integration_paths = {
+        **{
+            filename: f"tests/integration/core/{filename}"
+            for filename in moved_core_integrations
+        },
+        **{
+            filename: f"tests/integration/distribution/{filename}"
+            for filename in moved_distribution_integrations
+        },
+        **{
+            filename: f"tests/integration/release/{filename}"
+            for filename in moved_release_integrations
+        },
+        **{
+            filename: f"tests/integration/validator/{filename}"
+            for filename in moved_validator_integrations
+        },
+    }
+
     duplicate_checks = duplicate_basenames(check_candidates)
     duplicate_integrations = duplicate_basenames(integration_candidates)
     duplicate_standards = duplicate_basenames(standard_candidates)
@@ -300,6 +358,9 @@ def main() -> int:
     stale_check_paths = stale_flat_check_references(moved_check_paths)
     if stale_check_paths:
         return fail("active stale check references: " + " | ".join(stale_check_paths))
+    stale_integration_paths = stale_flat_integration_references(moved_integration_paths)
+    if stale_integration_paths:
+        return fail("active stale integration references: " + " | ".join(stale_integration_paths))
     if duplicate_checks:
         return fail("ambiguous check basenames: " + ", ".join(duplicate_checks))
     if duplicate_integrations:
@@ -328,6 +389,41 @@ def main() -> int:
             "root-independent moved-check exemptions must name canonical moved checks: "
             + ", ".join(unknown_root_independent)
         )
+
+    for filename, current in sorted(moved_integration_paths.items()):
+        source = integration_file(filename)
+        expected_source = ROOT / current
+        if source != expected_source:
+            return fail(f"moved integration {filename} must resolve at {current}")
+        if (ROOT / "tests" / "integration" / filename).exists():
+            return fail(f"flat compatibility copy is forbidden for moved integration {filename}")
+
+    nested_integration_depth_coupled = []
+    for source in integration_candidates:
+        relative_parent = source.parent.relative_to(ROOT / "tests" / "integration")
+        if relative_parent == Path(".") or source.suffix != ".py":
+            continue
+        text = source.read_text(encoding="utf-8")
+        if fixed_depth_root in text:
+            nested_integration_depth_coupled.append(source.relative_to(ROOT).as_posix())
+    if nested_integration_depth_coupled:
+        return fail(
+            "nested Python integrations cannot derive repository root by fixed parents[2] depth: "
+            + ", ".join(nested_integration_depth_coupled)
+        )
+
+    root_sensitive_shell_integrations = {
+        "overleaf-stable.sh",
+        "release-reference-reproducibility.sh",
+        "release-review-pairs.sh",
+    }
+    for filename in sorted(root_sensitive_shell_integrations):
+        text = integration_file(filename).read_text(encoding="utf-8")
+        if '$(dirname "$0")/../..' in text:
+            return fail(f"moved shell integration {filename} still derives repository root by fixed depth")
+        for marker in ("find_repo_root()", "abntexto-ufc.cls", "tests/path_resolver.py"):
+            if marker not in text:
+                return fail(f"moved shell integration {filename} is missing root locator marker: {marker}")
 
     validator_source_text = check_file("validator_source.py").read_text(encoding="utf-8")
     if 'ROOT / "tests" / "checks"' in validator_source_text:
@@ -678,9 +774,9 @@ def main() -> int:
             + ", ".join(unexpected_root_authorities)
         )
 
-    web_lite_text = (ROOT / "tests" / "integration" / "web-lite-e2e.py").read_text(
-        encoding="utf-8"
-    )
+    web_lite_text = integration_file("web-lite-e2e.py").read_text(encoding="utf-8")
+    if "from path_resolver import ROOT" not in web_lite_text:
+        return fail("Web/Lite E2E must import canonical ROOT through tests/path_resolver.py")
     if 'standard_file("catalog.json")' not in web_lite_text:
         return fail("Web/Lite E2E must resolve catalog.json through the canonical standards resolver")
     if 'ROOT / "standards" / "catalog.json"' in web_lite_text:
@@ -690,7 +786,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} object_checks={len(moved_object_checks)} backmatter_checks={len(moved_backmatter_checks)} root_independent_moved={len(root_independent_moved_checks)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} object_checks={len(moved_object_checks)} backmatter_checks={len(moved_backmatter_checks)} root_independent_moved={len(root_independent_moved_checks)} core_integrations={len(moved_core_integrations)} distribution_integrations={len(moved_distribution_integrations)} release_integrations={len(moved_release_integrations)} validator_integrations={len(moved_validator_integrations)}"
     )
     return 0
 

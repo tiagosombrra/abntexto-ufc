@@ -22,7 +22,7 @@
       "reason_not_permanent_runner": "Candidate packaging is a release-stage responsibility and requires an explicitly supplied pinned upstream class."
     },
     {
-      "path": "tests/integration/overleaf-stable.sh",
+      "path": "tests/integration/distribution/overleaf-stable.sh",
       "class": "platform-staging",
       "owner_stage": "platform-compatibility",
       "purpose": "Compile and inspect a flattened Overleaf-style project with the pinned local upstream class across pdfLaTeX and LuaLaTeX.",

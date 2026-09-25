@@ -35,7 +35,7 @@ Use the lightest process that still protects correctness:
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy complete through 4C6 implementation; integration taxonomy follows under #397/#398 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy complete through 4C6; 4D non-domain integration taxonomy in progress under #397 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -711,3 +711,26 @@ Issue #396 moves the final three flat-root checks to their semantic destinations
 The three checks adopt the canonical tests-root bootstrap while preserving existing `ROOT/tools` behavior and mode `100644`. The three known integration consumers and the controlled research-project negative paths follow the new locations. The moved-check contract adds two backmatter identities and the research-project profile identity.
 
 Target result: zero Python checks directly under `tests/checks/`, while all 84 check identities remain recursively discoverable. This is a taxonomy/path-only change; normal required PR checks are sufficient under the current pragmatic maintenance policy.
+
+### Phase 4C6 final receipt
+
+Phase 4C6 is complete. PR #420 merged as `7a5cd14d8e7a6e0b024a1b5c64321bbf0007e319` after Static Contract #848 and Linux Integration #724 passed. Post-merge `main` passed Static Contract #849 and Linux Release Check #271 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The final three flat checks now exist only under `tests/checks/backmatter/` and `tests/checks/profiles/`. The flat `tests/checks/` root contains zero Python checks, while all 84 check identities remain recursively discoverable with no compatibility copies. Issue #396 is closed and the check-taxonomy portion of Phase 4 is complete.
+
+### Phase 4D execution map
+
+Issue #397 moves exactly ten non-domain integration identities:
+
+- `tests/integration/core/`: `negative-paths.sh`, `normative-complement.sh`, `reference-guide-contract.sh`;
+- `tests/integration/distribution/`: `distribution-bundles.sh`, `overleaf-stable.sh`;
+- `tests/integration/release/`: `release-reference-reproducibility.sh`, `release-review-pairs.sh`;
+- `tests/integration/validator/`: `pdf-validation-core.sh`, `pdf-validator.sh`, `web-lite-e2e.py`.
+
+Six files move byte-identically. `web-lite-e2e.py` adopts the canonical tests-root bootstrap. `overleaf-stable.sh` and both release scripts replace fixed script-depth repository-root derivation with a self-contained POSIX upward sentinel search. `release-reference-reproducibility.sh` follows the moved PDF validator path.
+
+Operational consumers follow the new locations in `Makefile`, `tools/ci/run-web-lite-e2e.sh`, `tools/ci/certify-ctan-package.sh` and the repository path/suite contracts. The Overleaf standalone test-surface policy changes path only; classification semantics remain unchanged.
+
+The path-resolution contract introduces explicit moved-integration canonical paths, flat-copy rejection, fixed-depth rejection for nested Python integrations, and active stale-flat-integration scanning. `tests/integration_suites.py` and `tests/checks/repository/linux_integration_suites.py` are controlled exclusions from that text scan because they intentionally store normalized flat identities; their self-tests and real helper-content assertions remain fail-closed.
+
+Target result: 10 nested integrations + 76 flat integrations = 86 identities, with original Git modes preserved. No runtime/public API/normative/release-asset behavior changes.

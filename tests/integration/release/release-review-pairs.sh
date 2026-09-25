@@ -1,7 +1,20 @@
 #!/bin/sh
 set -eu
 
-ROOT=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
+find_repo_root() {
+  current=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+  while [ "$current" != "/" ]; do
+    if [ -f "$current/abntexto-ufc.cls" ] && [ -f "$current/tests/path_resolver.py" ]; then
+      printf '%s\n' "$current"
+      return 0
+    fi
+    current=$(dirname "$current")
+  done
+  echo 'Repository root could not be located from integration script.' >&2
+  return 1
+}
+
+ROOT=$(find_repo_root)
 cd "$ROOT"
 
 OUTPUT_DIR="${UFC_REVIEW_PAIRS_DIR:-artifacts/release-review-pairs}"
