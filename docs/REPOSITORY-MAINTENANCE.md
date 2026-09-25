@@ -4,14 +4,28 @@ This document is the current durable map for repository-wide maintenance and org
 
 It does not redefine release state. Publication and development-line facts remain owned by `release/v3-release-candidate.json` and `docs/RELEASE-STATE.md`.
 
-## Invariants
+## Working policy — pragmatic mode
+
+This roadmap is a continuity aid, not a ceremony checklist. Historical receipts below are kept for auditability, but their detailed step-by-step wording is not a mandatory template for new work.
+
+Use the lightest process that still protects correctness:
+
+- reconcile current remote `main` at the start of a material work item and again before merge only when the base may have changed; do not repeat the same repository-wide audit before every small edit;
+- keep one material code PR active at a time, but fold related documentation and tracking updates into that PR instead of creating extra documentation-only phases;
+- for taxonomy, path-only and documentation changes, require the repository's normal PR checks (Static Contract plus the selected Linux Integration scope); do not wait for an additional full release-grade run before starting the next low-risk taxonomy slice unless the previous merge produced a failure or changed runtime, normative meaning, release/distribution behavior, or published artifacts;
+- use the full Linux Release Check when the change affects runtime behavior, normative/release/distribution semantics, release preparation, or when CI/contract evidence indicates that broader certification is needed;
+- record decisions, meaningful failures, merge SHAs and unresolved risks; routine green reruns do not need repetitive prose receipts;
+- exact file/count reconciliations are regression aids, not independent approval gates unless the change specifically depends on them;
+- create separate issues only for meaningful workstreams or dependencies; small follow-ups may stay in the parent issue/PR;
+- failed checks remain visible in GitHub history, but documentation only needs to explain failures that changed the implementation or revealed a real defect.
+
+## Core invariants
 
 - Published v3.0.4 source, annotated tag, GitHub Release assets and checksums remain immutable.
-- CTAN follow-up remains tracked by issue #356 until external acceptance/publication is confirmed.
 - `abntexto-ufc.cls` remains the canonical project-owned runtime at repository root.
-- Historical evidence under `docs/history/v3/` and `release/history/v3/` is not reorganized retroactively merely for aesthetics.
-- Every material phase uses a bounded branch/PR, records checks and carries unresolved findings forward.
-- Structural changes must reduce path coupling before moving large groups of files.
+- Historical v3 evidence is not rewritten merely for aesthetics.
+- No force-push, tag retargeting, release-asset replacement or history rewriting.
+- Structural moves must preserve test identity, behavior and source-of-truth ownership; no compatibility copies are introduced to hide stale paths.
 
 ## Phase map
 
@@ -21,7 +35,7 @@ It does not redefine release state. Publication and development-line facts remai
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C4 complete; 4C5 academic-object namespace in progress under #395 |
+| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C5 complete; 4C6 final check remainder next under #396 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
