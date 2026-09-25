@@ -63,7 +63,7 @@ done
 check_log "$absent_job"
 
 mkdir -p "$(dirname "$evidence")"
-python3 tests/checks/normative_index_glossary.py \
+python3 tests/checks/backmatter/normative_index_glossary.py \
   "$present_job.pdf" "$absent_job.pdf" \
   --json "$evidence" \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"

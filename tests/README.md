@@ -38,8 +38,9 @@ Current semantic namespaces:
 - `checks/layout/` — body paragraph, footnote, page geometry, PDF/A and typography contracts for rendered-layout behavior.
 - `checks/sections/` — section hierarchy, indicator, spacing, recto/duplex, multiline-hanging and unnumbered-heading contracts.
 - `checks/objects/` — equation, illustration, table, vector-rule and academic-object scope contracts for rendered-object behavior.
+- `checks/backmatter/` — appendix/annex and index/glossary contracts for post-textual document behavior.
 
-Checks not yet assigned to a semantic namespace remain at `checks/` until their family receives the same location-independence and stale-path preparation; no compatibility copies are retained.
+All current Python checks are assigned to semantic namespaces below `checks/`; the flat `checks/` root contains no check scripts. Recursive basename resolution remains the path authority.
 
 ### `documents/`
 

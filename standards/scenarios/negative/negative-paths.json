@@ -58,7 +58,7 @@
         "project-required-resources"
       ],
       "evidence_paths": [
-        "tests/checks/normative_research_project_structure.py"
+        "tests/checks/profiles/normative_research_project_structure.py"
       ]
     },
     {
@@ -196,7 +196,7 @@
       },
       "validator": [
         "python3",
-        "tests/checks/normative_research_project_structure.py",
+        "tests/checks/profiles/normative_research_project_structure.py",
         "{pdf}",
         "--json",
         "{evidence_json}",

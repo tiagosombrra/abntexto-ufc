@@ -157,8 +157,8 @@ if grep -Eiq 'resumo|abstract|agradecimentos|dedicat[oó]ria|folha de aprova' re
   exit 1
 fi
 
-python3 -m py_compile tests/checks/normative_research_project_structure.py
-python3 tests/checks/normative_research_project_structure.py \
+python3 -m py_compile tests/checks/profiles/normative_research_project_structure.py
+python3 tests/checks/profiles/normative_research_project_structure.py \
   research-project-15287.pdf \
   --json artifacts/normative-project/project-structure-final-pdf.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-unknown}}" \

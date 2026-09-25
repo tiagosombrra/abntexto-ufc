@@ -35,7 +35,7 @@ Use the lightest process that still protects correctness:
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; 4A–4B2d and 4C1–4C5 complete; 4C6 final check remainder next under #396 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy complete through 4C6 implementation; integration taxonomy follows under #397/#398 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -696,3 +696,18 @@ Expected flat-root count after this slice is exactly 3. No equation/illustration
 Initial Static Contract #843 failed on PR #418 after the academic-object checks moved because the fail-closed moved-check guard found one active validation-extension path still naming the retired flat check: `standards/evidence/vector-rule-validation-extension.json` referenced `tests/checks/normative_vector_rule_validation.py`.
 
 The extension is controlled validation metadata rather than incidental documentation. Its path is updated to `tests/checks/objects/normative_vector_rule_validation.py` while preserving the same additive vector-rule calibration policy and proof-state semantics. The failed run is retained as audit evidence. No compatibility copy or stale-path exemption is added. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4C5 final status
+
+PR #418 merged as `404ac70fc81be6dbbefcd5ea4d84f2e43ef81d3f`; Static #845 and Linux Release Check #270 passed. The six academic-object checks live under `tests/checks/objects/`, leaving exactly three flat-root checks.
+
+### Phase 4C6 — final check taxonomy
+
+Issue #396 moves the final three flat-root checks to their semantic destinations:
+
+- `normative_appendix_annex.py` and `normative_index_glossary.py` -> `tests/checks/backmatter/`;
+- `normative_research_project_structure.py` -> `tests/checks/profiles/`.
+
+The three checks adopt the canonical tests-root bootstrap while preserving existing `ROOT/tools` behavior and mode `100644`. The three known integration consumers and the controlled research-project negative paths follow the new locations. The moved-check contract adds two backmatter identities and the research-project profile identity.
+
+Target result: zero Python checks directly under `tests/checks/`, while all 84 check identities remain recursively discoverable. This is a taxonomy/path-only change; normal required PR checks are sufficient under the current pragmatic maintenance policy.
