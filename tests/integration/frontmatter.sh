@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-sh tests/integration/capes-guidance.sh
+sh tests/integration/citations/capes-guidance.sh
 sh tests/integration/frontmatter-evidence.sh
 sh tests/integration/frontmatter-alignment-evidence.sh
 sh tests/integration/frontmatter-enforcement-negative.sh

@@ -130,7 +130,7 @@
       "fixture": "tests/documents/mainmatter-short-direct-citation-test.tex",
       "positive_gate": [
         "sh",
-        "tests/integration/short-direct-citation-evidence.sh"
+        "tests/integration/citations/short-direct-citation-evidence.sh"
       ],
       "mutation": {
         "kind": "insert_before",

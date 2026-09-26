@@ -336,6 +336,22 @@ def main() -> int:
         "duplex-backmatter.sh",
         "index-glossary-final-pdf-evidence.sh",
     }
+    moved_citation_integrations = {
+        "apud-evidence.sh",
+        "bibliography.sh",
+        "capes-guidance.sh",
+        "direct-citation-source-evidence.sh",
+        "indirect-citation-source-evidence.sh",
+        "long-quotation-citation-evidence.sh",
+        "long-quotation-evidence.sh",
+        "reference-corpus.sh",
+        "reference-document.sh",
+        "reference-layout-evidence.sh",
+        "reference-spacing.sh",
+        "references-6023.sh",
+        "short-direct-citation-evidence.sh",
+        "ufc-citation-system-evidence.sh",
+    }
     moved_layout_integrations = {
         "body-paragraph-evidence.sh",
         "font-config.sh",
@@ -383,6 +399,10 @@ def main() -> int:
         **{
             filename: f"tests/integration/layout/{filename}"
             for filename in moved_layout_integrations
+        },
+        **{
+            filename: f"tests/integration/citations/{filename}"
+            for filename in moved_citation_integrations
         },
     }
 
@@ -450,8 +470,10 @@ def main() -> int:
         )
 
     root_sensitive_shell_integrations = {
+        "capes-guidance.sh",
         "font-poc.sh",
         "overleaf-stable.sh",
+        "reference-corpus.sh",
         "release-reference-reproducibility.sh",
         "release-review-pairs.sh",
     }

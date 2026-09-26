@@ -65,6 +65,7 @@ Current non-domain semantic namespaces:
 - `integration/validator/` — PDF validation and Web/Lite E2E integrations.
 - `integration/backmatter/` — post-textual appendix/annex, index/glossary, duplex and aggregate backmatter integration contracts.
 - `integration/layout/` — layout, typography, section geometry, font embedding/POC, PDF/A and pagination integration contracts.
+- `integration/citations/` — citation, quotation, bibliography/reference, CAPES guidance and canonical reference-document integration contracts.
 
 Phase 4E domain integrations are being moved in bounded semantic slices. Families not yet migrated remain at the flat `integration/` root. Recursive basename resolution remains the path authority.
 

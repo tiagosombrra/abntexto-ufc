@@ -801,3 +801,39 @@ Static Contract #857 failed because the fail-closed stale-integration scanner fo
 Linux Integration #731 exposed the operational effect of the same stale paths. Validator traceability could not find the moved `font-config.sh` evidence target, and controlled negative paths for page margins and typography could not execute their positive baselines. The complete run ended with `SCOPE=complete PASS=35 FAIL=2 SKIP=1`.
 
 The failed runs are retained as audit evidence. Each active consumer follows its canonical `tests/integration/layout/` path. No compatibility copy, stale-path exemption or guard weakening is introduced. Fresh Static and Linux Integration gates are required before merge.
+
+### Phase 4E2 final receipt
+
+Phase 4E2 is complete. PR #423 merged as `9bfb446b0ddbdc5059fa25b6e143e3a1c22c3406` after Static Contract #858 and Linux Integration #732 passed on corrected head `edadf1108b45993f0a318de60b3393cdd0264428`. Initial Static #857 and Linux Integration #731 remain preserved as evidence of active stale layout-integration consumers discovered by the fail-closed contracts.
+
+Post-merge `main` passed Static Contract #859 and Linux Release Check #278. The 21 layout/geometry/sections/fonts integrations now live only under `tests/integration/layout/`; topology is 35 nested + 51 flat = 86 integration identities, with original Git modes preserved and no compatibility copies.
+
+### Phase 4E3 execution map
+
+Issue #398 next moves exactly 14 citation/reference/bibliography integrations to `tests/integration/citations/`:
+
+- `apud-evidence.sh`;
+- `bibliography.sh`;
+- `capes-guidance.sh`;
+- `direct-citation-source-evidence.sh`;
+- `indirect-citation-source-evidence.sh`;
+- `long-quotation-citation-evidence.sh`;
+- `long-quotation-evidence.sh`;
+- `reference-corpus.sh`;
+- `reference-document.sh`;
+- `reference-layout-evidence.sh`;
+- `reference-spacing.sh`;
+- `references-6023.sh`;
+- `short-direct-citation-evidence.sh`;
+- `ufc-citation-system-evidence.sh`.
+
+Exact Git modes are preserved: `direct-citation-source-evidence.sh`, `long-quotation-citation-evidence.sh`, `long-quotation-evidence.sh`, `reference-document.sh` and `references-6023.sh` remain executable; the other nine remain mode `100644`.
+
+Only `capes-guidance.sh` and `reference-corpus.sh` derive repository root from fixed script depth. They adopt the already-certified POSIX upward sentinel search for both `abntexto-ufc.cls` and `tests/path_resolver.py`, and the root-sensitive shell contract gains both basenames.
+
+Intra-family callers follow the new namespace atomically: `bibliography.sh` follows six citation integrations, `long-quotation-evidence.sh` follows `long-quotation-citation-evidence.sh`, and `reference-spacing.sh` follows `reference-layout-evidence.sh`. `reference-document.sh` keeps its already-canonical cross-family calls to `core/reference-guide-contract.sh` and `layout/font-embedding.sh`.
+
+Known external consumers also follow the canonical paths: `frontmatter.sh` and `standards/evidence/evidence-registry.json` follow `citations/capes-guidance.sh`; `standards/scenarios/negative/negative-paths.json` follows `citations/short-direct-citation-evidence.sh`. No stale-path exemption or compatibility copy is introduced.
+
+The existing `moved_integration_paths` authority gains exactly these 14 basenames. Suite inference remains basename-normalized, so no `PATH_RULES` rewrite is required. Expected topology after 4E3 is 49 nested + 37 flat = 86 identities. No runtime/public API/normative meaning/release metadata/published artifact behavior changes.
+

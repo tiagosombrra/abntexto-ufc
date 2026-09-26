@@ -30,7 +30,7 @@
       "type": "lower-level-check",
       "description": "Checks that distributed acknowledgement guidance contains the CAPES funding acknowledgement markers required by project policy when applicable.",
       "target": {
-        "script": "tests/integration/capes-guidance.sh",
+        "script": "tests/integration/citations/capes-guidance.sh",
         "runner_gate": "frontmatter"
       }
     },
