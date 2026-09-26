@@ -837,3 +837,12 @@ Known external consumers also follow the canonical paths: `frontmatter.sh` and `
 
 The existing `moved_integration_paths` authority gains exactly these 14 basenames. Suite inference remains basename-normalized, so no `PATH_RULES` rewrite is required. Expected topology after 4E3 is 49 nested + 37 flat = 86 identities. No runtime/public API/normative meaning/release metadata/published artifact behavior changes.
 
+### Phase 4E3 validation incident
+
+Initial Static Contract #860 failed on PR #424 head `c844e93f42034e1596623d1f06236b5c64213887` because the fail-closed stale-integration scanner found two active consumers that still named retired flat citation integrations:
+
+- `docs/UFC-LIBRARIAN-REVIEW.md` still referenced `tests/integration/references-6023.sh` in the item-33 evidence narrative and table;
+- `tests/integration/core/normative-complement.sh` still invoked `tests/integration/long-quotation-evidence.sh`.
+
+Both consumers follow the canonical `tests/integration/citations/` locations without changing librarian evidence meaning or normative-complement behavior. Static #860 is retained as audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
+

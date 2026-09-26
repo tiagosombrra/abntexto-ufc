@@ -98,6 +98,6 @@ PY
 done
 
 # Keep the deeper long-quotation evidence as part of this complementary-structure gate.
-sh tests/integration/long-quotation-evidence.sh
+sh tests/integration/citations/long-quotation-evidence.sh
 
 echo 'NORMATIVE-COMPLEMENT-GATE status=PASS'
