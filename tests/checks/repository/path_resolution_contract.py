@@ -336,6 +336,29 @@ def main() -> int:
         "duplex-backmatter.sh",
         "index-glossary-final-pdf-evidence.sh",
     }
+    moved_layout_integrations = {
+        "body-paragraph-evidence.sh",
+        "font-config.sh",
+        "font-embedding.sh",
+        "font-poc.sh",
+        "footnote-separator-evidence.sh",
+        "footnote-text-evidence.sh",
+        "layout.sh",
+        "math.sh",
+        "page-margins-evidence.sh",
+        "pagination-geometry-evidence.sh",
+        "pdf-geometry.sh",
+        "pdfa.sh",
+        "section-hierarchy-evidence.sh",
+        "section-indicator-evidence.sh",
+        "section-multiline-hanging-evidence.sh",
+        "section-primary-after-spacing-evidence.sh",
+        "section-primary-recto-duplex-evidence.sh",
+        "section-unnumbered-centered-evidence.sh",
+        "subsection-spacing-evidence.sh",
+        "typography-evidence.sh",
+        "windows-font-pdfa.sh",
+    }
     moved_integration_paths = {
         **{
             filename: f"tests/integration/core/{filename}"
@@ -356,6 +379,10 @@ def main() -> int:
         **{
             filename: f"tests/integration/backmatter/{filename}"
             for filename in moved_backmatter_integrations
+        },
+        **{
+            filename: f"tests/integration/layout/{filename}"
+            for filename in moved_layout_integrations
         },
     }
 
@@ -423,6 +450,7 @@ def main() -> int:
         )
 
     root_sensitive_shell_integrations = {
+        "font-poc.sh",
         "overleaf-stable.sh",
         "release-reference-reproducibility.sh",
         "release-review-pairs.sh",
@@ -796,7 +824,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} object_checks={len(moved_object_checks)} backmatter_checks={len(moved_backmatter_checks)} root_independent_moved={len(root_independent_moved_checks)} core_integrations={len(moved_core_integrations)} distribution_integrations={len(moved_distribution_integrations)} release_integrations={len(moved_release_integrations)} validator_integrations={len(moved_validator_integrations)} backmatter_integrations={len(moved_backmatter_integrations)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} object_checks={len(moved_object_checks)} backmatter_checks={len(moved_backmatter_checks)} root_independent_moved={len(root_independent_moved_checks)} core_integrations={len(moved_core_integrations)} distribution_integrations={len(moved_distribution_integrations)} release_integrations={len(moved_release_integrations)} validator_integrations={len(moved_validator_integrations)} backmatter_integrations={len(moved_backmatter_integrations)} layout_integrations={len(moved_layout_integrations)}"
     )
     return 0
 

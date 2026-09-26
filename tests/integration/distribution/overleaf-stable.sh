@@ -86,7 +86,7 @@ for engine in pdflatex lualatex; do
     exit 1
   fi
 
-  sh "$repo_root/tests/integration/font-embedding.sh" "$project/main.pdf"
+  sh "$repo_root/tests/integration/layout/font-embedding.sh" "$project/main.pdf"
 
   pdfinfo -meta "$project/main.pdf" > "/tmp/abntexto-ufc-overleaf-$engine-meta.xml"
   grep -Eq '<pdfaid:part>2</pdfaid:part>' "/tmp/abntexto-ufc-overleaf-$engine-meta.xml" || {

@@ -18,8 +18,8 @@ make DOCUMENT="$job" ENGINE=pdflatex compile
   exit 1
 }
 
-sh tests/integration/font-embedding.sh "$pdf"
-sh tests/integration/pdfa.sh "$pdf"
+sh tests/integration/layout/font-embedding.sh "$pdf"
+sh tests/integration/layout/pdfa.sh "$pdf"
 
 mkdir -p "$evidence_dir"
 cat > "$evidence_dir/scientific-article-pdfa.json" <<EOF

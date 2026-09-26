@@ -132,9 +132,9 @@ if [ "$KEEP_PDFS" = "1" ]; then
   cp "$WORK/build-2.log" "$out_dir/release-reference-build2.log"
 fi
 
-sh tests/integration/font-embedding.sh "$OUTPUT_PDF"
+sh tests/integration/layout/font-embedding.sh "$OUTPUT_PDF"
 sh tests/integration/validator/pdf-validator.sh "$OUTPUT_PDF"
-UFC_PDFA_NEGATIVE_VALIDATION=0 sh tests/integration/pdfa.sh "$OUTPUT_PDF"
+UFC_PDFA_NEGATIVE_VALIDATION=0 sh tests/integration/layout/pdfa.sh "$OUTPUT_PDF"
 
 TEXT="$WORK/release-reference.txt"
 pdftotext "$OUTPUT_PDF" "$TEXT"

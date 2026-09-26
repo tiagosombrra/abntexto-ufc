@@ -80,8 +80,8 @@ for engine in pdflatex lualatex; do
     assert_names "$pdf" "$family"
     assert_no_text_fallback "$pdf"
     assert_text_extraction "$pdf"
-    sh tests/integration/font-embedding.sh "$pdf"
-    sh tests/integration/pdfa.sh "$pdf"
+    sh tests/integration/layout/font-embedding.sh "$pdf"
+    sh tests/integration/layout/pdfa.sh "$pdf"
   done
 done
 

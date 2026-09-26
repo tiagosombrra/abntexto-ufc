@@ -49,8 +49,8 @@
       "description": "Literal font identity evidence, requiring inspection beyond portable fallback configuration.",
       "target": {
         "scripts": [
-          "tests/integration/font-config.sh",
-          "tests/integration/font-poc.sh"
+          "tests/integration/layout/font-config.sh",
+          "tests/integration/layout/font-poc.sh"
         ],
         "ci_evidence": [
           "windows-font-poc",
@@ -64,7 +64,7 @@
       "description": "Rendered PDF A4 page-size assertion.",
       "target": {
         "runner_gate": "pdf-geometry",
-        "script": "tests/integration/pdf-geometry.sh"
+        "script": "tests/integration/layout/pdf-geometry.sh"
       }
     },
     {
@@ -73,7 +73,7 @@
       "description": "Rendered PDF margin geometry assertion.",
       "target": {
         "runner_gate": "pdf-geometry",
-        "script": "tests/integration/pdf-geometry.sh"
+        "script": "tests/integration/layout/pdf-geometry.sh"
       }
     },
     {
@@ -86,7 +86,7 @@
           "profile-pdfa"
         ],
         "scripts": [
-          "tests/integration/pdfa.sh",
+          "tests/integration/layout/pdfa.sh",
           "tests/integration/profile-pdfa.sh"
         ]
       }
@@ -105,7 +105,7 @@
       "type": "ci-job",
       "description": "Windows literal-font certification path including embedding and PDF/A evidence.",
       "target": {
-        "script": "tests/integration/windows-font-pdfa.sh"
+        "script": "tests/integration/layout/windows-font-pdfa.sh"
       }
     },
     {
@@ -113,7 +113,7 @@
       "type": "ci-job",
       "description": "Windows literal-font build proof using Microsoft font files and TeX Live 2026.",
       "target": {
-        "script": "tests/integration/font-poc.sh"
+        "script": "tests/integration/layout/font-poc.sh"
       }
     },
     {

@@ -88,8 +88,8 @@ check_pdf() {
     exit 1
   fi
 
-  sh tests/integration/font-embedding.sh "$pdf"
-  UFC_PDFA_NEGATIVE_VALIDATION=0 sh tests/integration/pdfa.sh "$pdf"
+  sh tests/integration/layout/font-embedding.sh "$pdf"
+  UFC_PDFA_NEGATIVE_VALIDATION=0 sh tests/integration/layout/pdfa.sh "$pdf"
 }
 
 index=1

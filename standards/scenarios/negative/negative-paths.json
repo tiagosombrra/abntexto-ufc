@@ -45,7 +45,7 @@
       "id": "configuration-strict-rejection",
       "state": "represented",
       "evidence_paths": [
-        "tests/integration/font-config.sh",
+        "tests/integration/layout/font-config.sh",
         "tests/integration/validator/pdf-validator.sh",
         "tests/checks/governance/normative_configuration.py",
         "tests/integration/core/negative-paths.sh"
@@ -65,7 +65,7 @@
       "id": "pdf-archival-validation",
       "state": "represented",
       "evidence_paths": [
-        "tests/integration/pdfa.sh",
+        "tests/integration/layout/pdfa.sh",
         "tests/integration/profile-pdfa.sh",
         "tests/checks/layout/normative_pdfa.py"
       ]
@@ -78,7 +78,7 @@
       "fixture": "tests/documents/mainmatter-page-margins-test.tex",
       "positive_gate": [
         "sh",
-        "tests/integration/page-margins-evidence.sh"
+        "tests/integration/layout/page-margins-evidence.sh"
       ],
       "mutation": {
         "kind": "replace_once",
@@ -104,7 +104,7 @@
       "fixture": "tests/documents/mainmatter-typography-test.tex",
       "positive_gate": [
         "sh",
-        "tests/integration/typography-evidence.sh"
+        "tests/integration/layout/typography-evidence.sh"
       ],
       "mutation": {
         "kind": "replace_once",

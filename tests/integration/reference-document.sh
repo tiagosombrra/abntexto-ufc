@@ -17,7 +17,7 @@ if [ -n "$warnings" ]; then
   exit 1
 fi
 
-sh tests/integration/font-embedding.sh "$pdf"
+sh tests/integration/layout/font-embedding.sh "$pdf"
 
 if command -v pdfinfo >/dev/null 2>&1; then
   metadata="/tmp/abntexto-ufc-reference-pdfa-meta.xml"

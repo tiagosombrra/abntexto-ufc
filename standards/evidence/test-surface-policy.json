@@ -32,13 +32,13 @@
   "dynamic_assets": [
     {
       "path": "tests/documents/arial-font-poc.tex",
-      "owner": "tests/integration/font-poc.sh",
+      "owner": "tests/integration/layout/font-poc.sh",
       "purpose": "Exercise the Arial branch of the Windows font proof-of-concept matrix.",
       "reason": "The owner selects this document through the shell family loop and the parameterized path tests/documents/${family}-font-poc.tex rather than a literal full-path reference."
     },
     {
       "path": "tests/documents/times-font-poc.tex",
-      "owner": "tests/integration/font-poc.sh",
+      "owner": "tests/integration/layout/font-poc.sh",
       "purpose": "Exercise the Times New Roman branch of the Windows font proof-of-concept matrix.",
       "reason": "The owner selects this document through the shell family loop and the parameterized path tests/documents/${family}-font-poc.tex rather than a literal full-path reference."
     }

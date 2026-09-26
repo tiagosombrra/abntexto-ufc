@@ -16,8 +16,8 @@ These scripts are **not** part of the normal Linux CI or public distribution bui
 
 The certification consumers remain:
 
-- `tests/integration/font-poc.sh`;
-- `tests/integration/windows-font-pdfa.sh`;
+- `tests/integration/layout/font-poc.sh`;
+- `tests/integration/layout/windows-font-pdfa.sh`;
 - shared embedding/PDF-A checks.
 
 No Microsoft font file is tracked or distributed by this repository.

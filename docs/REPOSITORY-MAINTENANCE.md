@@ -35,7 +35,7 @@ Use the lightest process that still protects correctness:
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy complete through 4C6; 4D non-domain integration taxonomy in progress under #397 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 complete; 4E2 layout integration taxonomy in progress under #398 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -775,3 +775,29 @@ None of the four derives repository root from script depth, so no bootstrap/root
 The existing `moved_integration_paths` authority gains the four backmatter basenames and canonical paths. Flat compatibility copies and active stale flat integration references remain fail-closed through the same Phase 4D scanner. Suite inference needs no `PATH_RULES` edit because movable integration paths are normalized by basename before matching.
 
 Expected topology after this slice: 14 nested integrations + 72 flat integrations = 86 total identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+### Phase 4E1 final receipt
+
+Phase 4E1 is complete. PR #422 merged as `a657197903c9d642b3bf42a82c249e0d2fce9479` after Static Contract #855 and Linux Integration #730 passed. Post-merge `main` passed Static Contract #856 and Linux Release Check #277 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The four backmatter integrations now live only under `tests/integration/backmatter/`. The integration topology is 14 nested + 72 flat = 86 identities, with modes preserved exactly and no compatibility copies.
+
+### Phase 4E2 execution map
+
+Phase 4E2 moves exactly 21 layout/geometry/sections/fonts integrations into `tests/integration/layout/`. Six files preserve executable mode `100755` and fifteen preserve mode `100644`.
+
+Only `font-poc.sh` derives repository root from script depth. It adopts the already-certified POSIX upward sentinel search for both `abntexto-ufc.cls` and `tests/path_resolver.py`; the other twenty move without root-bootstrap changes. The path-resolution contract adds `font-poc.sh` to the existing root-sensitive shell guard.
+
+Known intra-family and cross-family consumers follow the canonical layout paths atomically: aggregate layout and geometry scripts, font/PDF-A helpers, reference-document, duplex frontmatter, object/code typography consumers and profile/article PDF-A consumers. Suite inference requires no PATH_RULE rewrite because integration identities normalize by basename before matching.
+
+The existing `moved_integration_paths` authority gains all 21 layout basenames -> `tests/integration/layout/<basename>`; flat compatibility copies and stale retired paths remain fail-closed through the same scanner. Target topology after this slice is 35 nested + 51 flat = 86 identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+### Phase 4E2 validation incident
+
+Initial validation on PR #423 head `b3eae960e83d92c7c73304d83cfbd59a8a3dee29` failed in both required gates.
+
+Static Contract #857 failed because the fail-closed stale-integration scanner found active flat references to moved layout integrations in `docs/WINDOWS-FONT-SUPPORT.md`, `standards/evidence/evidence-registry.json`, `standards/evidence/test-surface-policy.json`, `standards/scenarios/negative/negative-paths.json`, `tests/integration/distribution/overleaf-stable.sh`, `tests/integration/release/release-reference-reproducibility.sh` and `tests/integration/release/release-review-pairs.sh`.
+
+Linux Integration #731 exposed the operational effect of the same stale paths. Validator traceability could not find the moved `font-config.sh` evidence target, and controlled negative paths for page margins and typography could not execute their positive baselines. The complete run ended with `SCOPE=complete PASS=35 FAIL=2 SKIP=1`.
+
+The failed runs are retained as audit evidence. Each active consumer follows its canonical `tests/integration/layout/` path. No compatibility copy, stale-path exemption or guard weakening is introduced. Fresh Static and Linux Integration gates are required before merge.

@@ -139,7 +139,7 @@ for mode in ('single-sided', 'double-sided'):
 print('PDF geometry measurement completed.')
 PY
 
-sh tests/integration/page-margins-evidence.sh
-sh tests/integration/pagination-geometry-evidence.sh
+sh tests/integration/layout/page-margins-evidence.sh
+sh tests/integration/layout/pagination-geometry-evidence.sh
 
 echo 'PDF geometry gate completed.'
