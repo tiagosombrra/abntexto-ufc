@@ -31,11 +31,11 @@ Use the lightest process that still protects correctness:
 
 | Phase | Scope | Current state |
 |---|---|---|
-| 0 | v3.0.4 CTAN external closeout | external v3.0.4 publication confirmed 2026-09-22; repository-control receipt tracked by #356 |
+| 0 | v3.0.4 CTAN external closeout | complete — PR #425 merged as `88503ea5ce3fae2aa614a17437225ccd86d08b9d`; #356 closed |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 complete; 4E4 frontmatter is the next taxonomy slice under #398 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 complete; 4E4 frontmatter in progress under #398 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -859,3 +859,20 @@ Post-merge `main` passed Static Contract #863 and Linux Release Check #279 with 
 The official CTAN-ann update dated 2026-09-22 confirms publication of `abntexto-ufc` version 3.0.4. Issue #356 owns the bounded repository-control reconciliation from the stale current-state marker `SUBMITTED/PENDING` to the final external receipt `PUBLISHED/ACCEPTED`.
 
 This reconciliation changes only current control metadata and its fail-closed governance assertions. It preserves the published source SHA `7e176fd5472925b519d469a9a756330f4851f0b3`, annotated tag, GitHub Release ID `392476983`, release assets, historical receipts, submitted CTAN archive and SHA-256 `137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec` exactly.
+
+
+### Phase 0 final receipt
+
+The v3.0.4 external CTAN closeout is complete. PR #425 merged as `88503ea5ce3fae2aa614a17437225ccd86d08b9d` after Static Contract #864, Linux Integration #736 and Linux Release Check #280 passed on its final head. Post-merge `main` passed Static Contract #865, Linux Integration #737 and Linux Release Check #281 on the exact merge SHA. Issue #356 is closed.
+
+This reconciliation changed only current repository-control metadata from the prior submitted/pending state to the externally confirmed `PUBLISHED/ACCEPTED` state dated 2026-09-22. Published source, annotated tag, GitHub Release assets, exact CTAN archive bytes/checksum and historical receipts remain immutable.
+
+### Phase 4E4 execution map
+
+Phase 4E4 moves exactly 14 frontmatter integrations into `tests/integration/frontmatter/`: `duplex-frontmatter.sh`, twelve `frontmatter-*-evidence/negative.sh` scripts, and the aggregate `frontmatter.sh`.
+
+Exact Git modes are preserved: `frontmatter-cover-evidence.sh`, `frontmatter-title-page-evidence.sh` and `frontmatter.sh` remain executable mode `100755`; the other eleven remain mode `100644`. None of the fourteen derives repository root from script depth, so no root-bootstrap change is required.
+
+`frontmatter.sh` follows its twelve intra-family calls into the new namespace while retaining the canonical cross-family `tests/integration/citations/capes-guidance.sh` call. `duplex-frontmatter.sh` retains its canonical cross-family `tests/integration/layout/section-primary-recto-duplex-evidence.sh` call. The existing `moved_integration_paths` authority gains all fourteen frontmatter basenames, with no compatibility copies.
+
+Expected topology after this slice is 63 nested + 23 flat = 86 integration identities. Suite inference remains basename-normalized, so no PATH_RULE rewrite is required. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
