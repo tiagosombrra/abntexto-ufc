@@ -47,4 +47,4 @@ if not 0.99 <= stretch <= 1.01:
 print('Reference spacing gate completed.')
 PY
 
-sh tests/integration/reference-layout-evidence.sh
+sh tests/integration/citations/reference-layout-evidence.sh

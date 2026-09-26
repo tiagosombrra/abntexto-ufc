@@ -126,9 +126,9 @@ done
 grep -Fq 'Referências' "$job.toc" || (echo 'References are missing from the table of contents.'; exit 1)
 echo 'Citations and references gate completed.'
 
-sh tests/integration/references-6023.sh
-sh tests/integration/short-direct-citation-evidence.sh
-sh tests/integration/direct-citation-source-evidence.sh
-sh tests/integration/indirect-citation-source-evidence.sh
-sh tests/integration/ufc-citation-system-evidence.sh
-sh tests/integration/apud-evidence.sh
+sh tests/integration/citations/references-6023.sh
+sh tests/integration/citations/short-direct-citation-evidence.sh
+sh tests/integration/citations/direct-citation-source-evidence.sh
+sh tests/integration/citations/indirect-citation-source-evidence.sh
+sh tests/integration/citations/ufc-citation-system-evidence.sh
+sh tests/integration/citations/apud-evidence.sh
