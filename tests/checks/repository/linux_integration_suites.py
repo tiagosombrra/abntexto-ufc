@@ -128,7 +128,7 @@ def main() -> None:
         "artifacts/validation/web-lite-positive.pdf",
         "WEB_LITE_EVIDENCE_DIR",
         'mkdir -p "$WEB_LITE_EVIDENCE_DIR"',
-        "tests/integration/web-lite-e2e.py",
+        "tests/integration/validator/web-lite-e2e.py",
     )
     for token in web_helper_tokens:
         if token not in web_lite_helper:
@@ -209,7 +209,7 @@ def main() -> None:
     ctan_cert_tokens = (
         "cp .ci-downloads/pkgcheck.zip /tmp/pkgcheck.zip",
         'dist/abntexto-ufc-$RELEASE_VERSION.zip',
-        "tests/integration/release-review-pairs.sh",
+        "tests/integration/release/release-review-pairs.sh",
         "FINAL-CERTIFICATION-EVIDENCE surface=ctan-pkgcheck status=PASS",
     )
     for token in ctan_cert_tokens:

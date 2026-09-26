@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-sh tests/integration/reference-guide-contract.sh
+sh tests/integration/core/reference-guide-contract.sh
 
 make clean
 make compile

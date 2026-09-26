@@ -46,9 +46,9 @@
       "state": "represented",
       "evidence_paths": [
         "tests/integration/font-config.sh",
-        "tests/integration/pdf-validator.sh",
+        "tests/integration/validator/pdf-validator.sh",
         "tests/checks/governance/normative_configuration.py",
-        "tests/integration/negative-paths.sh"
+        "tests/integration/core/negative-paths.sh"
       ]
     },
     {

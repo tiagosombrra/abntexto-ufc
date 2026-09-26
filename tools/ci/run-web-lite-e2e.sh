@@ -17,7 +17,7 @@ else
   exit 1
 fi
 chromedriver --version
-python3 tests/integration/web-lite-e2e.py \
+python3 tests/integration/validator/web-lite-e2e.py \
   --pdf artifacts/validation/web-lite-positive.pdf \
   --profile portable \
   --evidence "$WEB_LITE_EVIDENCE_DIR/web-lite-e2e.json"

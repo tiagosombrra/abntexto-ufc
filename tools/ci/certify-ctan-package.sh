@@ -50,4 +50,4 @@ printf '%s\n' \
 
 # Produce exact-source material for the mandatory human review gate only after
 # technical release and CTAN package checks have passed.
-sh tests/integration/release-review-pairs.sh
+sh tests/integration/release/release-review-pairs.sh
