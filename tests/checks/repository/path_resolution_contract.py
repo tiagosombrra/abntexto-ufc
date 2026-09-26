@@ -330,6 +330,12 @@ def main() -> int:
         "pdf-validator.sh",
         "web-lite-e2e.py",
     }
+    moved_backmatter_integrations = {
+        "appendix-annex-final-pdf-evidence.sh",
+        "backmatter.sh",
+        "duplex-backmatter.sh",
+        "index-glossary-final-pdf-evidence.sh",
+    }
     moved_integration_paths = {
         **{
             filename: f"tests/integration/core/{filename}"
@@ -346,6 +352,10 @@ def main() -> int:
         **{
             filename: f"tests/integration/validator/{filename}"
             for filename in moved_validator_integrations
+        },
+        **{
+            filename: f"tests/integration/backmatter/{filename}"
+            for filename in moved_backmatter_integrations
         },
     }
 
@@ -786,7 +796,7 @@ def main() -> int:
         "PATH-RESOLUTION-EVIDENCE status=PASS "
         f"checks={len(check_candidates)} integrations={len(integration_candidates)} "
         f"standards={len(standard_candidates)} coverage_manifests={len(coverage)} "
-        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} object_checks={len(moved_object_checks)} backmatter_checks={len(moved_backmatter_checks)} root_independent_moved={len(root_independent_moved_checks)} core_integrations={len(moved_core_integrations)} distribution_integrations={len(moved_distribution_integrations)} release_integrations={len(moved_release_integrations)} validator_integrations={len(moved_validator_integrations)}"
+        f"identity=basename unique=true recursive=true ambiguity=fail-closed repository_checks={len(moved_repository_checks)} distribution_checks={len(moved_distribution_checks)} validator_checks={len(moved_validator_checks)} profile_checks={len(moved_profile_checks)} api_checks={len(moved_api_checks)} governance_checks={len(moved_governance_checks)} evidence_checks={len(moved_evidence_checks)} frontmatter_checks={len(moved_frontmatter_checks)} citation_checks={len(moved_citation_checks)} layout_checks={len(moved_layout_checks)} section_checks={len(moved_section_checks)} object_checks={len(moved_object_checks)} backmatter_checks={len(moved_backmatter_checks)} root_independent_moved={len(root_independent_moved_checks)} core_integrations={len(moved_core_integrations)} distribution_integrations={len(moved_distribution_integrations)} release_integrations={len(moved_release_integrations)} validator_integrations={len(moved_validator_integrations)} backmatter_integrations={len(moved_backmatter_integrations)}"
     )
     return 0
 

@@ -63,8 +63,9 @@ Current non-domain semantic namespaces:
 - `integration/distribution/` — public bundle and platform-staging integrations;
 - `integration/release/` — release reproducibility and review-pair certification integrations;
 - `integration/validator/` — PDF validation and Web/Lite E2E integrations.
+- `integration/backmatter/` — post-textual appendix/annex, index/glossary, duplex and aggregate backmatter integration contracts.
 
-Domain integrations remain at the flat `integration/` root until Phase 4E. Recursive basename resolution remains the path authority.
+Phase 4E domain integrations are being moved in bounded semantic slices. Families not yet migrated remain at the flat `integration/` root. Recursive basename resolution remains the path authority.
 
 ### `smoke/`
 

@@ -754,3 +754,24 @@ Fresh Static, Linux Integration and Linux Release gates are required before merg
 Static Contract #852 advanced past the earlier canonical-identity and reference-document corrections and exposed three remaining active stale integration references. `standards/scenarios/negative/negative-paths.json` still named the retired flat paths for `negative-paths.sh` and `pdf-validator.sh`, and `validator/README.md` still documented the retired flat path for `web-lite-e2e.py`.
 
 These are path-only consumer updates: the controlled negative-scenario inventory continues to reference the same validation mechanisms, and the validator documentation continues to describe the same Web/Lite E2E command. The references follow their canonical `tests/integration/core/` and `tests/integration/validator/` locations. Static #852 is retained as audit evidence; no stale-path exemption or compatibility copy is added. Fresh Static, Linux Integration and Linux Release gates are required before merge.
+
+### Phase 4D final receipt
+
+Phase 4D is complete. PR #421 merged as `de75e4fd729a5e83776988695b148ea56bbb3ac4` after Static Contract #853, Linux Integration #728 and Linux Release Check #275 passed on the final PR head. Earlier Static #850/#851/#852, Linux Integration #726 and Linux Release #273 remain preserved as evidence of legitimate stale-path, documentation-token and operational-consumer regressions discovered and corrected during the move.
+
+Post-merge `main` passed Static Contract #854, Linux Integration #729, Linux Release Check #276 and Pages #7. Ten non-domain integrations now live under `tests/integration/core/`, `distribution/`, `release/` and `validator/`, while all 86 integration basenames remain recursively unique and no compatibility copies remain.
+
+### Phase 4E1 execution map
+
+Issue #398 begins domain integration taxonomy with the smallest family. Exactly four integrations move to `tests/integration/backmatter/`:
+
+- `appendix-annex-final-pdf-evidence.sh` (mode `100644`);
+- `backmatter.sh` (mode `100755`);
+- `duplex-backmatter.sh` (mode `100755`);
+- `index-glossary-final-pdf-evidence.sh` (mode `100644`).
+
+None of the four derives repository root from script depth, so no bootstrap/root-search change is required. `backmatter.sh` follows the two moved evidence-script paths atomically; document and fixture paths remain unchanged.
+
+The existing `moved_integration_paths` authority gains the four backmatter basenames and canonical paths. Flat compatibility copies and active stale flat integration references remain fail-closed through the same Phase 4D scanner. Suite inference needs no `PATH_RULES` edit because movable integration paths are normalized by basename before matching.
+
+Expected topology after this slice: 14 nested integrations + 72 flat integrations = 86 total identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.

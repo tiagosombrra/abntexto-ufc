@@ -3,8 +3,8 @@ set -eu
 
 modern="tests/documents/backmatter.tex"
 
-sh tests/integration/appendix-annex-final-pdf-evidence.sh
-sh tests/integration/index-glossary-final-pdf-evidence.sh
+sh tests/integration/backmatter/appendix-annex-final-pdf-evidence.sh
+sh tests/integration/backmatter/index-glossary-final-pdf-evidence.sh
 
 cleanup_job() {
   job="$1"
