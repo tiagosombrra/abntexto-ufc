@@ -876,3 +876,10 @@ Exact Git modes are preserved: `frontmatter-cover-evidence.sh`, `frontmatter-tit
 `frontmatter.sh` follows its twelve intra-family calls into the new namespace while retaining the canonical cross-family `tests/integration/citations/capes-guidance.sh` call. `duplex-frontmatter.sh` retains its canonical cross-family `tests/integration/layout/section-primary-recto-duplex-evidence.sh` call. The existing `moved_integration_paths` authority gains all fourteen frontmatter basenames, with no compatibility copies.
 
 Expected topology after this slice is 63 nested + 23 flat = 86 integration identities. Suite inference remains basename-normalized, so no PATH_RULE rewrite is required. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+
+### Phase 4E4 validation incident
+
+Initial Static Contract #866 failed on PR #426 head `aefc16d9068a2b14113132f64bcb66152488a9a5` because the fail-closed stale-integration scanner found one active consumer in `tests/checks/repository/engineering_language.py` still naming the retired flat `frontmatter-approval-evidence.sh` path.
+
+The engineering-language machine-source inventory follows the canonical `tests/integration/frontmatter/frontmatter-approval-evidence.sh` location without changing language-policy semantics or its controlled source set. Static #866 remains audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
