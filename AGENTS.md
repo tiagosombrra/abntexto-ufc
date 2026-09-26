@@ -25,7 +25,7 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Repository lifecycle | v3.0.4 published steady state |
 | Active development line | none selected |
 | Completed release issue | issue #353 |
-| CTAN follow-up | issue #356 — submitted exact published bytes; acceptance pending |
+| CTAN follow-up | issue #356 — exact submitted bytes published as v3.0.4 on 2026-09-22 |
 | Repository maintenance roadmap | issue #359 — active; current map in `docs/REPOSITORY-MAINTENANCE.md` |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
@@ -99,7 +99,7 @@ The repository is currently in a published steady state:
 
 The v3.0.4 publication source passed Static Contract #675, Linux Integration #582 and Linux Release Check run `35510145977` with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN `pkgcheck 4.1.0`, and explicit maintainer visual acceptance on 2026-09-20. The annotated tag and all published asset digests were independently verified after publication.
 
-Completed release machine receipts belong under `release/history/v3/`; completed publication narrative belongs under `docs/history/v3/release/`. The exact published CTAN archive for v3.0.4 was submitted on 2026-09-20 under issue #356; CTAN acceptance/publication remains pending and the submitted bytes must not be rebuilt or replaced.
+Completed release machine receipts belong under `release/history/v3/`; completed publication narrative belongs under `docs/history/v3/release/`. The exact published CTAN archive for v3.0.4 was submitted on 2026-09-20 under issue #356; the official CTAN-ann update confirmed v3.0.4 publication on 2026-09-22. The submitted bytes remain immutable and must not be rebuilt or replaced.
 
 Changing the root marker is a deliberate release-control event and forces complete validation. Historical machine state under `release/history/v3/` must never trigger candidate semantics.
 

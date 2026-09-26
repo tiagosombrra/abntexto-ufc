@@ -31,11 +31,11 @@ Use the lightest process that still protects correctness:
 
 | Phase | Scope | Current state |
 |---|---|---|
-| 0 | v3.0.4 CTAN external closeout | waiting for external CTAN acceptance under #356 |
+| 0 | v3.0.4 CTAN external closeout | external v3.0.4 publication confirmed 2026-09-22; repository-control receipt tracked by #356 |
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 complete; 4E3 citations/references integration taxonomy in progress under #398 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 complete; 4E4 frontmatter is the next taxonomy slice under #398 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -846,3 +846,16 @@ Initial Static Contract #860 failed on PR #424 head `c844e93f42034e1596623d1f062
 
 Both consumers follow the canonical `tests/integration/citations/` locations without changing librarian evidence meaning or normative-complement behavior. Static #860 is retained as audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
 
+
+
+### Phase 4E3 final receipt
+
+Phase 4E3 is complete. PR #424 merged as `4070e1a6b286738c208a107309b67cb3239fc6db` after final PR head `bbf4b915eae6161c9f9ef1713434c09deb4538a5` passed Static Contract #862 and Linux Integration #735. Initial Static #860 is retained as evidence of two active stale citation-integration consumers; correction `2a647e9e85c1280147c7be441893f16fb24af415` updated only those consumers without compatibility copies or scanner exemptions.
+
+Post-merge `main` passed Static Contract #863 and Linux Release Check #279 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Distribution/public bundle integrity, canonical-reference reproducibility, CTAN pkgcheck and seven-profile review-pair certification all passed. The final integration topology is 49 nested + 37 flat = 86 identities, with exact Git modes preserved and no compatibility copies.
+
+### Phase 0 CTAN publication reconciliation
+
+The official CTAN-ann update dated 2026-09-22 confirms publication of `abntexto-ufc` version 3.0.4. Issue #356 owns the bounded repository-control reconciliation from the stale current-state marker `SUBMITTED/PENDING` to the final external receipt `PUBLISHED/ACCEPTED`.
+
+This reconciliation changes only current control metadata and its fail-closed governance assertions. It preserves the published source SHA `7e176fd5472925b519d469a9a756330f4851f0b3`, annotated tag, GitHub Release ID `392476983`, release assets, historical receipts, submitted CTAN archive and SHA-256 `137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec` exactly.

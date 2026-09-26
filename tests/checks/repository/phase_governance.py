@@ -203,16 +203,18 @@ def main() -> int:
     ctan = marker.get("ctan_follow_up")
     if not isinstance(ctan, dict):
         return fail("published marker must preserve CTAN follow-up contract")
-    if ctan.get("state") != "SUBMITTED" or ctan.get("issue") != 356:
-        return fail("CTAN v3.0.4 follow-up must record submitted state under issue #356")
+    if ctan.get("state") != "PUBLISHED" or ctan.get("issue") != 356:
+        return fail("CTAN v3.0.4 follow-up must record published state under issue #356")
     if ctan.get("previous_ctan_version") != "3.0.2":
         return fail("CTAN v3.0.4 submission must preserve previous CTAN version 3.0.2")
     if ctan.get("target_version") != "3.0.4":
         return fail("CTAN submission target must remain v3.0.4")
     if ctan.get("submitted_date") != "2026-09-20":
         return fail("CTAN v3.0.4 submission date changed unexpectedly")
-    if ctan.get("acceptance_state") != "PENDING":
-        return fail("CTAN acceptance must remain pending until external confirmation")
+    if ctan.get("acceptance_state") != "ACCEPTED":
+        return fail("CTAN acceptance must record the confirmed external v3.0.4 publication")
+    if ctan.get("published_date") != "2026-09-22":
+        return fail("CTAN v3.0.4 publication date must match the official CTAN-ann update")
     if ctan.get("sha256") != expected_assets["abntexto-ufc-3.0.4.zip"]:
         return fail("CTAN follow-up must bind the exact published canonical archive")
 
@@ -224,6 +226,7 @@ def main() -> int:
             "PUBLISHED",
             "none selected",
             "issue #356",
+            "2026-09-22",
             "must never be rewritten",
             "release/history/v3/",
         ),
@@ -237,18 +240,24 @@ def main() -> int:
             "392476983",
             "none selected",
             "issue #356",
+            "2026-09-22",
         ),
     )
 
     if "release/history/v3/" not in agents:
         return fail("AGENTS must identify the controlled historical release-state namespace")
+    if "acceptance pending" in agents.casefold() or "acceptance/publication remains pending" in agents.casefold():
+        return fail("AGENTS must not report CTAN acceptance/publication as pending after external confirmation")
+    if "acceptance/publication remains pending" in status.casefold():
+        return fail("RELEASE-STATE.md must not report CTAN publication as pending after external confirmation")
 
     print(
         "RELEASE-GOVERNANCE-EVIDENCE status=PASS "
         "published_release=3.0.4 publication_state=published "
         "source_sha=7e176fd5472925b519d469a9a756330f4851f0b3 "
         "release_id=392476983 active_development_line=none "
-        "ctan_state=submitted ctan_issue=356 "
+        "ctan_state=published ctan_acceptance=accepted "
+        "ctan_published_date=2026-09-22 ctan_issue=356 "
         "current_authority=docs/RELEASE-STATE.md"
     )
     return 0
