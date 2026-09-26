@@ -791,3 +791,13 @@ Only `font-poc.sh` derives repository root from script depth. It adopts the alre
 Known intra-family and cross-family consumers follow the canonical layout paths atomically: aggregate layout and geometry scripts, font/PDF-A helpers, reference-document, duplex frontmatter, object/code typography consumers and profile/article PDF-A consumers. Suite inference requires no PATH_RULE rewrite because integration identities normalize by basename before matching.
 
 The existing `moved_integration_paths` authority gains all 21 layout basenames -> `tests/integration/layout/<basename>`; flat compatibility copies and stale retired paths remain fail-closed through the same scanner. Target topology after this slice is 35 nested + 51 flat = 86 identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+### Phase 4E2 validation incident
+
+Initial validation on PR #423 head `b3eae960e83d92c7c73304d83cfbd59a8a3dee29` failed in both required gates.
+
+Static Contract #857 failed because the fail-closed stale-integration scanner found active flat references to moved layout integrations in `docs/WINDOWS-FONT-SUPPORT.md`, `standards/evidence/evidence-registry.json`, `standards/evidence/test-surface-policy.json`, `standards/scenarios/negative/negative-paths.json`, `tests/integration/distribution/overleaf-stable.sh`, `tests/integration/release/release-reference-reproducibility.sh` and `tests/integration/release/release-review-pairs.sh`.
+
+Linux Integration #731 exposed the operational effect of the same stale paths. Validator traceability could not find the moved `font-config.sh` evidence target, and controlled negative paths for page margins and typography could not execute their positive baselines. The complete run ended with `SCOPE=complete PASS=35 FAIL=2 SKIP=1`.
+
+The failed runs are retained as audit evidence. Each active consumer follows its canonical `tests/integration/layout/` path. No compatibility copy, stale-path exemption or guard weakening is introduced. Fresh Static and Linux Integration gates are required before merge.
