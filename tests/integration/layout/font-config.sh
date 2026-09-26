@@ -67,7 +67,7 @@ for engine in pdflatex lualatex; do
         exit 1
       }
 
-      sh tests/integration/font-embedding.sh "$job.pdf"
+      sh tests/integration/layout/font-embedding.sh "$job.pdf"
       expected=$(expected_family "$engine" "$family" "$job.log")
       pdffonts "$job.pdf" | tail -n +3 | awk 'NF {print $1}' | grep -Fq "$expected" || {
         echo "$job: expected font family not found: $expected"
@@ -86,7 +86,7 @@ for engine in pdflatex lualatex; do
         cat "/tmp/$strict_job.out"
         exit 1
       }
-      sh tests/integration/font-embedding.sh "$strict_job.pdf"
+      sh tests/integration/layout/font-embedding.sh "$strict_job.pdf"
     else
       echo "Validating strict rejection for unavailable literal $family with $engine..."
       if "$engine" -jobname="$strict_job" $flags "$tmp" > "/tmp/$strict_job.out" 2>&1; then

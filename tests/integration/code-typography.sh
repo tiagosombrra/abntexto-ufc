@@ -160,7 +160,7 @@ for marker in ('UFC-CODE-GEOMETRY-MARKER', 'UFC-ALGORITHM-GEOMETRY-MARKER'):
         )
 PY
 
-    sh tests/integration/font-embedding.sh "$job.pdf"
+    sh tests/integration/layout/font-embedding.sh "$job.pdf"
   done
 done
 

@@ -74,15 +74,15 @@ if not match or int(match.group(1)) != 1:
     raise SystemExit('Layout validation: footnote hangafter must be 1.')
 PY
 
-sh tests/integration/section-hierarchy-evidence.sh
-sh tests/integration/section-indicator-evidence.sh
-sh tests/integration/section-primary-after-spacing-evidence.sh
-sh tests/integration/subsection-spacing-evidence.sh
-sh tests/integration/section-multiline-hanging-evidence.sh
-sh tests/integration/section-unnumbered-centered-evidence.sh
-sh tests/integration/body-paragraph-evidence.sh
-sh tests/integration/footnote-text-evidence.sh
-sh tests/integration/footnote-separator-evidence.sh
-sh tests/integration/typography-evidence.sh
+sh tests/integration/layout/section-hierarchy-evidence.sh
+sh tests/integration/layout/section-indicator-evidence.sh
+sh tests/integration/layout/section-primary-after-spacing-evidence.sh
+sh tests/integration/layout/subsection-spacing-evidence.sh
+sh tests/integration/layout/section-multiline-hanging-evidence.sh
+sh tests/integration/layout/section-unnumbered-centered-evidence.sh
+sh tests/integration/layout/body-paragraph-evidence.sh
+sh tests/integration/layout/footnote-text-evidence.sh
+sh tests/integration/layout/footnote-separator-evidence.sh
+sh tests/integration/layout/typography-evidence.sh
 
 echo 'Layout gate completed.'

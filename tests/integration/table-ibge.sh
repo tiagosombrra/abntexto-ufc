@@ -64,7 +64,7 @@ assert_all('UFC-IBGE-SOURCE-FONTSIZE', 10.0 * pt_per_bp)
 assert_all('UFC-IBGE-NOTE-FONTSIZE', 10.0 * pt_per_bp)
 PY
 
-  sh tests/integration/font-embedding.sh "$job.pdf"
+  sh tests/integration/layout/font-embedding.sh "$job.pdf"
 
   pdftotext -layout "$job.pdf" "/tmp/$job.txt"
   python3 - "/tmp/$job.txt" "$job" <<'PY'

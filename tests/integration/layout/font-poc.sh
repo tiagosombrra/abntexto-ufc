@@ -1,7 +1,20 @@
 #!/bin/sh
 set -u
 
-root=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
+find_repo_root() {
+  current=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+  while [ "$current" != "/" ]; do
+    if [ -f "$current/abntexto-ufc.cls" ] && [ -f "$current/tests/path_resolver.py" ]; then
+      printf '%s\n' "$current"
+      return 0
+    fi
+    current=$(dirname "$current")
+  done
+  echo 'Repository root could not be located from integration script.' >&2
+  return 1
+}
+
+root=$(find_repo_root)
 cd "$root" || exit 1
 
 class_fixture="tests/documents/class-font-poc.tex"
@@ -229,7 +242,7 @@ compile_class_case() {
     assert_names "$job.pdf" "$family" || return 1
     assert_no_text_fallback "$job.pdf" || return 1
     assert_text_extraction "$job.pdf" || return 1
-    sh tests/integration/font-embedding.sh "$job.pdf" || return 1
+    sh tests/integration/layout/font-embedding.sh "$job.pdf" || return 1
     echo "Font POC: strict abntexto-ufc confirmed in $job.pdf"
   else
     echo "Font POC: Windows artifact generated at $job.pdf"
