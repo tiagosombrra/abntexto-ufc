@@ -77,7 +77,7 @@ for engine in pdflatex lualatex; do
       exit 1
     }
 
-    sh tests/integration/font-embedding.sh "$job.pdf"
+    sh tests/integration/layout/font-embedding.sh "$job.pdf"
 
     pages=$(pdfinfo "$job.pdf" | awk '/^Pages:/ {print $2}')
     [ "${pages:-0}" -ge 2 ] || {

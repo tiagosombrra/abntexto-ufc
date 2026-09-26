@@ -69,6 +69,6 @@ print(f'{job}: todos os elementos auditados iniciam no anverso.')
 PY
 done
 
-sh tests/integration/section-primary-recto-duplex-evidence.sh
+sh tests/integration/layout/section-primary-recto-duplex-evidence.sh
 
 echo 'Front matter duplex gate completed.'

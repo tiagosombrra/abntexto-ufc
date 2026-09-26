@@ -35,7 +35,7 @@ Use the lightest process that still protects correctness:
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy complete through 4C6; 4D non-domain integration taxonomy in progress under #397 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 complete; 4E2 layout integration taxonomy in progress under #398 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -775,3 +775,19 @@ None of the four derives repository root from script depth, so no bootstrap/root
 The existing `moved_integration_paths` authority gains the four backmatter basenames and canonical paths. Flat compatibility copies and active stale flat integration references remain fail-closed through the same Phase 4D scanner. Suite inference needs no `PATH_RULES` edit because movable integration paths are normalized by basename before matching.
 
 Expected topology after this slice: 14 nested integrations + 72 flat integrations = 86 total identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+### Phase 4E1 final receipt
+
+Phase 4E1 is complete. PR #422 merged as `a657197903c9d642b3bf42a82c249e0d2fce9479` after Static Contract #855 and Linux Integration #730 passed. Post-merge `main` passed Static Contract #856 and Linux Release Check #277 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`. Final certification retained canonical class identity, checksums, archive integrity, source rebuild identity, cross-bundle equality and CTAN pkgcheck success.
+
+The four backmatter integrations now live only under `tests/integration/backmatter/`. The integration topology is 14 nested + 72 flat = 86 identities, with modes preserved exactly and no compatibility copies.
+
+### Phase 4E2 execution map
+
+Phase 4E2 moves exactly 21 layout/geometry/sections/fonts integrations into `tests/integration/layout/`. Six files preserve executable mode `100755` and fifteen preserve mode `100644`.
+
+Only `font-poc.sh` derives repository root from script depth. It adopts the already-certified POSIX upward sentinel search for both `abntexto-ufc.cls` and `tests/path_resolver.py`; the other twenty move without root-bootstrap changes. The path-resolution contract adds `font-poc.sh` to the existing root-sensitive shell guard.
+
+Known intra-family and cross-family consumers follow the canonical layout paths atomically: aggregate layout and geometry scripts, font/PDF-A helpers, reference-document, duplex frontmatter, object/code typography consumers and profile/article PDF-A consumers. Suite inference requires no PATH_RULE rewrite because integration identities normalize by basename before matching.
+
+The existing `moved_integration_paths` authority gains all 21 layout basenames -> `tests/integration/layout/<basename>`; flat compatibility copies and stale retired paths remain fail-closed through the same scanner. Target topology after this slice is 35 nested + 51 flat = 86 identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.

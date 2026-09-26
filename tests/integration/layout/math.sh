@@ -61,7 +61,7 @@ for engine in pdflatex lualatex; do
         ;;
     esac
 
-    sh tests/integration/font-embedding.sh "$job.pdf"
+    sh tests/integration/layout/font-embedding.sh "$job.pdf"
 
     bbox="/tmp/$job.html"
     plain="/tmp/$job.txt"
