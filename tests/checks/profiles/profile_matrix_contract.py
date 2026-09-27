@@ -16,7 +16,7 @@ if str(TESTS_DIR) not in sys.path:
 
 from path_resolver import ROOT  # noqa: E402
 CONTRACT = ROOT / "release/history/v3/v3-api-migration.json"
-RUNNER = ROOT / "tests/integration/profile-matrix.sh"
+RUNNER = ROOT / "tests/integration/profiles/profile-matrix.sh"
 FIXTURE = ROOT / "tests/smoke/base-profile.tex"
 PLACEHOLDER = "@UFC_TYPE@"
 

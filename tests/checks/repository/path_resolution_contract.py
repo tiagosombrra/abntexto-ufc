@@ -368,6 +368,20 @@ def main() -> int:
         "frontmatter-toc-evidence.sh",
         "frontmatter.sh",
     }
+    moved_profile_integrations = {
+        "build-path.sh",
+        "catalog-card.sh",
+        "multivolume.sh",
+        "profile-matrix.sh",
+        "profile-pdfa.sh",
+        "research-project.sh",
+        "scientific-article-body.sh",
+        "scientific-article-foreign-elements.sh",
+        "scientific-article-front-block.sh",
+        "scientific-article-pdfa.sh",
+        "scientific-article-profile.sh",
+        "scientific-article-recommendations.sh",
+    }
     moved_object_integrations = {
         "algorithm-numbering.sh",
         "code-typography.sh",
@@ -428,6 +442,10 @@ def main() -> int:
         **{
             filename: f"tests/integration/frontmatter/{filename}"
             for filename in moved_frontmatter_integrations
+        },
+        **{
+            filename: f"tests/integration/profiles/{filename}"
+            for filename in moved_profile_integrations
         },
         **{
             filename: f"tests/integration/objects/{filename}"

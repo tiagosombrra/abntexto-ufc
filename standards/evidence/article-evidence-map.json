@@ -14,7 +14,7 @@
       "id": "article.title.primary.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-front-block.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-front-block.sh",
       "evidence_kind": "positive-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -23,7 +23,7 @@
       "id": "article.authorship.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-front-block.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-front-block.sh",
       "evidence_kind": "positive-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -32,7 +32,7 @@
       "id": "article.summary.primary.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-front-block.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-front-block.sh",
       "evidence_kind": "positive-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -41,7 +41,7 @@
       "id": "article.dates.submission-approval.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-front-block.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-front-block.sh",
       "evidence_kind": "positive-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -50,7 +50,7 @@
       "id": "article.introduction.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-body.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-body.sh",
       "evidence_kind": "positive-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -59,7 +59,7 @@
       "id": "article.development.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-body.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-body.sh",
       "evidence_kind": "positive-and-negative-final-pdf",
       "negative_evidence": "controlled missing-development fixture is rejected",
       "proof_disposition": "article-specific-executable-support",
@@ -69,7 +69,7 @@
       "id": "article.final-considerations.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-body.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-body.sh",
       "evidence_kind": "positive-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -78,7 +78,7 @@
       "id": "article.references.required",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-body.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-body.sh",
       "evidence_kind": "positive-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -87,7 +87,7 @@
       "id": "article.title.foreign.optional",
       "normativity": "optional",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-foreign-elements.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-foreign-elements.sh",
       "evidence_kind": "present-absent-matrix",
       "proof_disposition": "conditional-optionality-support",
       "validation_promoted": false
@@ -96,7 +96,7 @@
       "id": "article.summary.foreign.optional",
       "normativity": "optional",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-foreign-elements.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-foreign-elements.sh",
       "evidence_kind": "present-absent-matrix",
       "proof_disposition": "conditional-optionality-support",
       "validation_promoted": false
@@ -105,7 +105,7 @@
       "id": "article.title.primary.typography",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-front-block.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-front-block.sh",
       "evidence_kind": "physical-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -114,7 +114,7 @@
       "id": "article.authorship.metadata.footnote",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-front-block.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-front-block.sh",
       "evidence_kind": "physical-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -123,7 +123,7 @@
       "id": "article.authorship.alignment.recommended",
       "normativity": "recommended",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-recommendations.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-recommendations.sh",
       "evidence_kind": "recommended-and-outside-recommendation-scenarios",
       "proof_disposition": "advisory-non-enforcing-support",
       "validation_promoted": false
@@ -132,7 +132,7 @@
       "id": "article.body.typography",
       "normativity": "required",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-body.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-body.sh",
       "evidence_kind": "physical-final-pdf",
       "proof_disposition": "article-specific-executable-support",
       "validation_promoted": false
@@ -141,7 +141,7 @@
       "id": "article.summary.word-count.recommended",
       "normativity": "recommended",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-recommendations.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-recommendations.sh",
       "evidence_kind": "recommended-and-outside-recommendation-scenarios",
       "proof_disposition": "advisory-non-enforcing-support",
       "validation_promoted": false
@@ -150,7 +150,7 @@
       "id": "article.summary.keywords.minimum.recommended",
       "normativity": "recommended",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-recommendations.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-recommendations.sh",
       "evidence_kind": "recommended-and-outside-recommendation-scenarios",
       "proof_disposition": "advisory-non-enforcing-support",
       "validation_promoted": false
@@ -159,7 +159,7 @@
       "id": "article.summary.single-paragraph.recommended",
       "normativity": "recommended",
       "validation_mode": "manual",
-      "article_specific_owner": "tests/integration/scientific-article-recommendations.sh",
+      "article_specific_owner": "tests/integration/profiles/scientific-article-recommendations.sh",
       "evidence_kind": "recommended-and-outside-recommendation-scenarios",
       "proof_disposition": "advisory-non-enforcing-support",
       "validation_promoted": false

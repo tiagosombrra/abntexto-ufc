@@ -40,7 +40,7 @@
       "description": "Policy assertion that the visual catalog card is optional under the current UFC institutional act; behavior is exercised by the catalog-card gate.",
       "target": {
         "runner_gate": "catalog-card",
-        "script": "tests/integration/catalog-card.sh"
+        "script": "tests/integration/profiles/catalog-card.sh"
       }
     },
     {
@@ -87,7 +87,7 @@
         ],
         "scripts": [
           "tests/integration/layout/pdfa.sh",
-          "tests/integration/profile-pdfa.sh"
+          "tests/integration/profiles/profile-pdfa.sh"
         ]
       }
     },
@@ -97,7 +97,7 @@
       "description": "Semantic alias for the document-profile matrix runner gate.",
       "target": {
         "runner_gate": "profiles",
-        "script": "tests/integration/profile-matrix.sh"
+        "script": "tests/integration/profiles/profile-matrix.sh"
       }
     },
     {

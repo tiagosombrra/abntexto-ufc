@@ -112,7 +112,13 @@ def main() -> None:
 
         owner = entry.get("article_specific_owner")
         if owner is not None:
-            if not isinstance(owner, str) or not owner.startswith("tests/integration/scientific-article-"):
+            owner_relative = Path(owner) if isinstance(owner, str) else None
+            if (
+                owner_relative is None
+                or owner_relative.parent != Path("tests/integration/profiles")
+                or not owner_relative.name.startswith("scientific-article-")
+                or owner_relative.suffix != ".sh"
+            ):
                 fail(f"{rule_id}: executable owner must be an article-specific integration gate")
             owner_path = ROOT / owner
             if not owner_path.is_file():
@@ -126,7 +132,7 @@ def main() -> None:
                 fail(f"{rule_id}: recommendation must remain manual")
             if disposition != "advisory-non-enforcing-support":
                 fail(f"{rule_id}: recommendation must remain non-enforcing support")
-            if owner != "tests/integration/scientific-article-recommendations.sh":
+            if owner != "tests/integration/profiles/scientific-article-recommendations.sh":
                 fail(f"{rule_id}: recommendation owner must be the recommendation gate")
 
         if rule_id in OPTIONAL_RULES:
@@ -134,7 +140,7 @@ def main() -> None:
                 fail(f"{rule_id}: optionality changed")
             if disposition != "conditional-optionality-support":
                 fail(f"{rule_id}: optional rule must preserve conditional optionality support")
-            if owner != "tests/integration/scientific-article-foreign-elements.sh":
+            if owner != "tests/integration/profiles/scientific-article-foreign-elements.sh":
                 fail(f"{rule_id}: optional rule must be owned by the present/absent matrix gate")
 
     journal = evidence_by_id[JOURNAL_RULE]

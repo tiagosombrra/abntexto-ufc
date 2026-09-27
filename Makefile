@@ -72,7 +72,7 @@ release-reference-reproducibility:
 
 release-check:
 	@python3 tests/run.py --mode release
-	@sh tests/integration/scientific-article-pdfa.sh
+	@sh tests/integration/profiles/scientific-article-pdfa.sh
 	@sh tests/integration/distribution/distribution-bundles.sh
 	@$(MAKE) release-reference-reproducibility
 
