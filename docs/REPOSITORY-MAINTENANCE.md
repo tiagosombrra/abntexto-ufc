@@ -1012,6 +1012,13 @@ This slice deliberately does not edit the already-published v3.0.4 CTAN README/m
 
 ### Phase 5A validation incident
 
-Initial Static Contract #878 failed on PR #432 head `c04b0efd8276837a91ecf93c065a3aaa949a8655` because the new release ownership prose referenced generic `release/history/` and `docs/history/` roots. The repository contract intentionally permits only the controlled v3 history namespaces and rejects generic history-root references in active documentation.
+Initial Static Contract #878 failed on PR #432 head `c04b0efd8276837a91ecf93c065a3aaa949a8655` because the new release ownership prose referenced unversioned history roots. The repository contract intentionally permits only the controlled v3 history namespaces and rejects generic history-root references in active documentation.
 
 The correction changes documentation wording only, naming `release/history/v3/` and `docs/history/v3/` explicitly. No history policy, exemption or scan rule is weakened. Static #878 remains preserved as audit evidence; fresh required gates must pass before merge.
+
+
+### Phase 5A second validation incident
+
+Static Contract #879 failed on corrected head `60e7e7d39d2fa393b1291a0a117e17c96d477d91` because the first validation-incident receipt itself repeated the forbidden unversioned history-root literals. The repository contract therefore continued to fail exactly as designed.
+
+The receipt now describes those roots without reproducing the forbidden literals and names only the approved `docs/history/v3/` and `release/history/v3/` namespaces. No policy or scanner exception is added. Static #879 remains preserved as audit evidence; fresh required gates are required before merge.
