@@ -69,8 +69,8 @@ PY
 
 done
 
-sh tests/integration/illustration-evidence.sh
-sh tests/integration/table-typography-equation-evidence.sh
-sh tests/integration/table-ibge-vector-evidence.sh
+sh tests/integration/objects/illustration-evidence.sh
+sh tests/integration/objects/table-typography-equation-evidence.sh
+sh tests/integration/objects/table-ibge-vector-evidence.sh
 
 echo 'Object geometry gate completed.'

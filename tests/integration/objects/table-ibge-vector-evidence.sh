@@ -14,7 +14,7 @@ python3 -m py_compile tools/pdf_vector_measurement.py \
   tests/checks/objects/normative_vector_rule_validation.py \
   tests/checks/objects/normative_table_ibge_vector.py
 
-sh tests/integration/vector-rule-validation.sh
+sh tests/integration/objects/vector-rule-validation.sh
 
 for pass in 1 2; do
   pdflatex -jobname="$job" $flags "$fixture" > "/tmp/$job.out" 2>&1 || {

@@ -368,6 +368,19 @@ def main() -> int:
         "frontmatter-toc-evidence.sh",
         "frontmatter.sh",
     }
+    moved_object_integrations = {
+        "algorithm-numbering.sh",
+        "code-typography.sh",
+        "documentary-source.sh",
+        "illustration-evidence.sh",
+        "minted.sh",
+        "object-geometry.sh",
+        "object.sh",
+        "table-ibge-vector-evidence.sh",
+        "table-ibge.sh",
+        "table-typography-equation-evidence.sh",
+        "vector-rule-validation.sh",
+    }
     moved_layout_integrations = {
         "body-paragraph-evidence.sh",
         "font-config.sh",
@@ -415,6 +428,10 @@ def main() -> int:
         **{
             filename: f"tests/integration/frontmatter/{filename}"
             for filename in moved_frontmatter_integrations
+        },
+        **{
+            filename: f"tests/integration/objects/{filename}"
+            for filename in moved_object_integrations
         },
         **{
             filename: f"tests/integration/layout/{filename}"
