@@ -936,3 +936,12 @@ Initial Static Contract #872 failed on PR #428 head `303fd5796b67faa19673ab26799
 The residuals were confined to current control/evidence surfaces: `Makefile`, `standards/evidence/article-evidence-map.json`, `standards/evidence/evidence-registry.json`, `standards/scenarios/negative/negative-paths.json`, `tests/checks/profiles/profile_matrix_contract.py` and `tests/checks/profiles/scientific_article_evidence_map.py`. Each reference follows the canonical `tests/integration/profiles/` location without changing build targets, evidence semantics, negative-scenario meaning or profile/article validation behavior.
 
 Static #872 remains audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
+
+
+### Phase 4E6 second validation incident
+
+After the stale-path correction, Static Contract #873 failed on corrected head `f0b48b40fb3bcb7945d7a620532667437b4b5716` in `tests/checks/profiles/scientific_article_evidence_map.py`. The stale-path scanner itself passed, but the article evidence-map contract still recognized an article-specific executable owner by the retired flat prefix `tests/integration/scientific-article-`.
+
+The contract remains fail-closed and equally strict after the taxonomy move: an article-specific owner must now reside exactly under `tests/integration/profiles/`, have a basename beginning `scientific-article-`, and retain the `.sh` suffix. This is a path-taxonomy adaptation only; evidence ownership, proof disposition, normativity and article validation semantics are unchanged.
+
+Static #873 remains audit evidence. Fresh required gates must pass on the corrected head before merge.

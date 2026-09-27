@@ -112,7 +112,13 @@ def main() -> None:
 
         owner = entry.get("article_specific_owner")
         if owner is not None:
-            if not isinstance(owner, str) or not owner.startswith("tests/integration/scientific-article-"):
+            owner_relative = Path(owner) if isinstance(owner, str) else None
+            if (
+                owner_relative is None
+                or owner_relative.parent != Path("tests/integration/profiles")
+                or not owner_relative.name.startswith("scientific-article-")
+                or owner_relative.suffix != ".sh"
+            ):
                 fail(f"{rule_id}: executable owner must be an article-specific integration gate")
             owner_path = ROOT / owner
             if not owner_path.is_file():
