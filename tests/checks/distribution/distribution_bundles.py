@@ -22,6 +22,8 @@ if str(TESTS_DIR) not in sys.path:
 from path_resolver import ROOT  # noqa: E402
 PACKAGE_ID = "abntexto-ufc"
 CTAN_DIR = ROOT / "release" / "ctan"
+CTAN_EXAMPLE = CTAN_DIR / f"{PACKAGE_ID}-example.tex"
+RETIRED_CTAN_EXAMPLE = ROOT / "docs" / "ctan-example.tex"
 MICROSOFT_FONTS = {
     "times.ttf",
     "timesbd.ttf",
@@ -155,7 +157,7 @@ def validate_package(path: Path, v: str) -> None:
         expected_readme = (CTAN_DIR / "README.md").read_bytes()
         expected_changelog = (ROOT / "CHANGELOG.md").read_bytes()
         expected_manual = (CTAN_DIR / f"{PACKAGE_ID}.tex").read_bytes()
-        expected_example = (ROOT / "docs" / "ctan-example.tex").read_bytes()
+        expected_example = CTAN_EXAMPLE.read_bytes()
         if bundled_readme != expected_readme:
             fail(f"{path.name}: README differs from the tracked CTAN package source.")
         if bundled_changelog != expected_changelog:
@@ -256,6 +258,10 @@ def main() -> None:
     upstream = args.abntexto.resolve()
     if not upstream.is_file():
         fail(f"Pinned upstream class not found: {upstream}")
+    if RETIRED_CTAN_EXAMPLE.exists():
+        fail("Retired CTAN example source path must not exist: docs/ctan-example.tex")
+    if not CTAN_EXAMPLE.is_file():
+        fail(f"Canonical CTAN example source is missing: {CTAN_EXAMPLE.relative_to(ROOT)}")
 
     v = version()
     expected_zips = {
