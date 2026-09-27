@@ -126,7 +126,7 @@ def main() -> None:
                 fail(f"{rule_id}: recommendation must remain manual")
             if disposition != "advisory-non-enforcing-support":
                 fail(f"{rule_id}: recommendation must remain non-enforcing support")
-            if owner != "tests/integration/scientific-article-recommendations.sh":
+            if owner != "tests/integration/profiles/scientific-article-recommendations.sh":
                 fail(f"{rule_id}: recommendation owner must be the recommendation gate")
 
         if rule_id in OPTIONAL_RULES:
@@ -134,7 +134,7 @@ def main() -> None:
                 fail(f"{rule_id}: optionality changed")
             if disposition != "conditional-optionality-support":
                 fail(f"{rule_id}: optional rule must preserve conditional optionality support")
-            if owner != "tests/integration/scientific-article-foreign-elements.sh":
+            if owner != "tests/integration/profiles/scientific-article-foreign-elements.sh":
                 fail(f"{rule_id}: optional rule must be owned by the present/absent matrix gate")
 
     journal = evidence_by_id[JOURNAL_RULE]

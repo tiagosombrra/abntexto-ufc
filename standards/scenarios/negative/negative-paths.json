@@ -66,7 +66,7 @@
       "state": "represented",
       "evidence_paths": [
         "tests/integration/layout/pdfa.sh",
-        "tests/integration/profile-pdfa.sh",
+        "tests/integration/profiles/profile-pdfa.sh",
         "tests/checks/layout/normative_pdfa.py"
       ]
     }
@@ -182,7 +182,7 @@
       "fixture": "tests/documents/research-project-15287.tex",
       "positive_gate": [
         "sh",
-        "tests/integration/research-project.sh"
+        "tests/integration/profiles/research-project.sh"
       ],
       "mutation": {
         "kind": "replace_once",

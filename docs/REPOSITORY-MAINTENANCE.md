@@ -927,3 +927,12 @@ Exact Git modes are preserved: nine scripts remain executable mode `100755`; `bu
 Existing cross-family calls remain unchanged and canonical: `profile-matrix.sh` uses `tests/integration/layout/font-embedding.sh`; `profile-pdfa.sh` uses `tests/integration/layout/pdfa.sh`; `scientific-article-pdfa.sh` uses both canonical layout helpers.
 
 The existing `moved_integration_paths` authority gains all twelve profile/article basenames. Flat compatibility copies and active stale flat references remain fail-closed. Suite inference remains basename-normalized, so no PATH_RULE rewrite is required. Target topology after 4E6 is 86 nested + 0 flat = 86 identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+
+### Phase 4E6 validation incident
+
+Initial Static Contract #872 failed on PR #428 head `303fd5796b67faa19673ab2679989c2770f27618` because the fail-closed stale-integration scanner found active consumers still naming retired flat profiles/article integrations.
+
+The residuals were confined to current control/evidence surfaces: `Makefile`, `standards/evidence/article-evidence-map.json`, `standards/evidence/evidence-registry.json`, `standards/scenarios/negative/negative-paths.json`, `tests/checks/profiles/profile_matrix_contract.py` and `tests/checks/profiles/scientific_article_evidence_map.py`. Each reference follows the canonical `tests/integration/profiles/` location without changing build targets, evidence semantics, negative-scenario meaning or profile/article validation behavior.
+
+Static #872 remains audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
