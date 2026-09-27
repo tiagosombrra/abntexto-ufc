@@ -35,7 +35,7 @@ Use the lightest process that still protects correctness:
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 + 4E4 + 4E5 complete; 4E6 profiles/article in progress under #398 |
+| 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -945,3 +945,49 @@ After the stale-path correction, Static Contract #873 failed on corrected head `
 The contract remains fail-closed and equally strict after the taxonomy move: an article-specific owner must now reside exactly under `tests/integration/profiles/`, have a basename beginning `scientific-article-`, and retain the `.sh` suffix. This is a path-taxonomy adaptation only; evidence ownership, proof disposition, normativity and article validation semantics are unchanged.
 
 Static #873 remains audit evidence. Fresh required gates must pass on the corrected head before merge.
+
+
+### Phase 4E6 final receipt
+
+Phase 4E6 is complete. PR #428 merged as `9bc2ecb87dba10867569da3b636cd49e2aefa711` after final head `0103af617db5fe7dec0c794856b36f41e1a619e8` passed Static Contract #874 and Linux Integration #744.
+
+Two validation incidents remain preserved as audit evidence:
+- Static #872 found active consumers still naming retired flat profiles/article integration paths;
+- Static #873 found the scientific-article evidence-owner contract still recognizing owners through the retired flat path prefix.
+
+Corrections `f0b48b40fb3bcb7945d7a620532667437b4b5716` and `0103af617db5fe7dec0c794856b36f41e1a619e8` updated only canonical taxonomy paths and strict owner recognition. No compatibility copies, scanner exemptions or semantic weakening were introduced.
+
+Post-merge `main` passed Static Contract #875 and Linux Release Check #284 on the exact merge SHA. The final integration topology is 86 nested + 0 flat identities; the Python check topology is 84 nested + 0 flat identities.
+
+### Phase 4F document-layout decision
+
+Issue #399 evaluated whether the 90 controlled LaTeX documents under `tests/documents/` should follow the new nested check/integration taxonomy. The decision is intentionally **no move**.
+
+The current descriptive basename families already provide semantic ownership: frontmatter (26), mainmatter (20), scientific article (10), academic objects (12), layout/font/PDF (10), backmatter (4), research project (2) and six cross-cutting/general documents.
+
+A physical move would require updates to at least 72 direct code/test consumers already measured: 68 integration scripts and four Python checks, before counting metadata/documentation/CI surfaces. Suite inference already normalizes movable document paths by basename, and `test_surface_integrity.py` already treats `tests/documents/` as governed assets and fails closed on unreachable assets. Static #875 reports test assets 115/115 reachable with `asset_orphaned=0`.
+
+Therefore nesting the documents would add migration/stale-path risk without adding correctness, coverage, evidence ownership or runtime/release capability. Descriptive basenames remain the intentional document taxonomy. A future physical move requires a new concrete ownership/navigation problem whose benefit materially exceeds the consumer churn.
+
+### Phase 4 final certification
+
+The finished tests taxonomy was certified on `main` `9bc2ecb87dba10867569da3b636cd49e2aefa711` before this documentation-only closeout sync.
+
+Static Contract #875 proves:
+- 84 check identities and 86 integration identities;
+- recursive unique basename resolution with ambiguity fail-closed;
+- flat Python check root = 0 and flat integration identity root = 0;
+- retained test scripts 170/170 reachable, `orphaned=0`;
+- test assets 115/115 reachable, `asset_orphaned=0`;
+- technical controls 27/27 reachable, `technical_orphaned=0`;
+- Linux suite inference keeps unknown-path fallback at `complete`.
+
+Linux Release Check #284 proves the complete regression on the same SHA:
+- `SCOPE=complete PASS=38 FAIL=0 SKIP=0`;
+- distribution/public bundles PASS;
+- canonical reference reproducibility PASS;
+- CTAN pkgcheck PASS;
+- seven-profile release review-pair generation PASS;
+- no runtime/public API/normative/release behavior or published v3.0.4 byte was changed solely by the taxonomy work.
+
+Phase 4 is structurally complete. This closeout change only synchronizes durable maintenance documentation with the already-certified repository state; the next roadmap phase is Phase 5 supporting repository structure.
