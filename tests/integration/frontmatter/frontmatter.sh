@@ -2,18 +2,18 @@
 set -eu
 
 sh tests/integration/citations/capes-guidance.sh
-sh tests/integration/frontmatter-evidence.sh
-sh tests/integration/frontmatter-alignment-evidence.sh
-sh tests/integration/frontmatter-enforcement-negative.sh
-sh tests/integration/frontmatter-acknowledgments-evidence.sh
-sh tests/integration/frontmatter-summary-evidence.sh
-sh tests/integration/frontmatter-cover-evidence.sh
-sh tests/integration/frontmatter-title-page-evidence.sh
-sh tests/integration/frontmatter-approval-evidence.sh
-sh tests/integration/frontmatter-errata-evidence.sh
-sh tests/integration/frontmatter-lists-evidence.sh
-sh tests/integration/frontmatter-toc-evidence.sh
-sh tests/integration/frontmatter-pagination-evidence.sh
+sh tests/integration/frontmatter/frontmatter-evidence.sh
+sh tests/integration/frontmatter/frontmatter-alignment-evidence.sh
+sh tests/integration/frontmatter/frontmatter-enforcement-negative.sh
+sh tests/integration/frontmatter/frontmatter-acknowledgments-evidence.sh
+sh tests/integration/frontmatter/frontmatter-summary-evidence.sh
+sh tests/integration/frontmatter/frontmatter-cover-evidence.sh
+sh tests/integration/frontmatter/frontmatter-title-page-evidence.sh
+sh tests/integration/frontmatter/frontmatter-approval-evidence.sh
+sh tests/integration/frontmatter/frontmatter-errata-evidence.sh
+sh tests/integration/frontmatter/frontmatter-lists-evidence.sh
+sh tests/integration/frontmatter/frontmatter-toc-evidence.sh
+sh tests/integration/frontmatter/frontmatter-pagination-evidence.sh
 
 fixtures="tests/documents/frontmatter-academic-work.tex tests/documents/frontmatter-anonymized-project.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"

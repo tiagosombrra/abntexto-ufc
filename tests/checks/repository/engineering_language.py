@@ -108,7 +108,7 @@ MACHINE_JSON_FILES = (
 )
 MACHINE_SOURCE_FILES = (
     "tests/checks/frontmatter/normative_frontmatter_title_page.py",
-    "tests/integration/frontmatter-approval-evidence.sh",
+    "tests/integration/frontmatter/frontmatter-approval-evidence.sh",
 )
 RETIRED_PROFILE_VALUES = {
     "tccgraduacao",

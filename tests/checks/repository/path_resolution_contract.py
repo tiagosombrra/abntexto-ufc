@@ -352,6 +352,22 @@ def main() -> int:
         "short-direct-citation-evidence.sh",
         "ufc-citation-system-evidence.sh",
     }
+    moved_frontmatter_integrations = {
+        "duplex-frontmatter.sh",
+        "frontmatter-acknowledgments-evidence.sh",
+        "frontmatter-alignment-evidence.sh",
+        "frontmatter-approval-evidence.sh",
+        "frontmatter-cover-evidence.sh",
+        "frontmatter-enforcement-negative.sh",
+        "frontmatter-errata-evidence.sh",
+        "frontmatter-evidence.sh",
+        "frontmatter-lists-evidence.sh",
+        "frontmatter-pagination-evidence.sh",
+        "frontmatter-summary-evidence.sh",
+        "frontmatter-title-page-evidence.sh",
+        "frontmatter-toc-evidence.sh",
+        "frontmatter.sh",
+    }
     moved_layout_integrations = {
         "body-paragraph-evidence.sh",
         "font-config.sh",
@@ -395,6 +411,10 @@ def main() -> int:
         **{
             filename: f"tests/integration/backmatter/{filename}"
             for filename in moved_backmatter_integrations
+        },
+        **{
+            filename: f"tests/integration/frontmatter/{filename}"
+            for filename in moved_frontmatter_integrations
         },
         **{
             filename: f"tests/integration/layout/{filename}"
