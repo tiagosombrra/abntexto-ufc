@@ -35,7 +35,7 @@ Use the lightest process that still protects correctness:
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 + 4E4 complete; 4E5 academic objects in progress under #398 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 + 4E4 + 4E5 complete; 4E6 profiles/article in progress under #398 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -910,3 +910,20 @@ Initial Static Contract #869 failed on PR #427 head `6f1abee6d925650f3ffeb6b0f94
 - `standards/scenarios/negative/negative-paths.json` referenced the retired flat `table-ibge-vector-evidence.sh` path.
 
 Both consumers follow the canonical `tests/integration/objects/` locations without changing librarian-review evidence meaning or controlled negative-scenario semantics. Static #869 remains audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
+
+
+### Phase 4E5 final receipt
+
+Phase 4E5 is complete. PR #427 merged as `d0bca8f8891ffa95fbe1b8c9764189aeb0bddc18` after final head `b9474490486001acefecf0e2aefcb11397cd9ef9` passed Static Contract #870 and Linux Integration #741. Initial Static #869 remains preserved as evidence of two active stale object-integration consumers; the corrected head updated only those paths without compatibility copies or scanner exemptions.
+
+Post-merge `main` passed Static Contract #871 and Linux Release Check #283. The eleven academic-object integrations now live only under `tests/integration/objects/`; topology is 74 nested + 12 flat = 86 integration identities, with exact Git modes preserved and no compatibility copies.
+
+### Phase 4E6 execution map
+
+Phase 4E6 moves the final twelve flat profiles/article integrations into `tests/integration/profiles/`: `build-path.sh`, `catalog-card.sh`, `multivolume.sh`, `profile-matrix.sh`, `profile-pdfa.sh`, `research-project.sh`, `scientific-article-body.sh`, `scientific-article-foreign-elements.sh`, `scientific-article-front-block.sh`, `scientific-article-pdfa.sh`, `scientific-article-profile.sh` and `scientific-article-recommendations.sh`.
+
+Exact Git modes are preserved: nine scripts remain executable mode `100755`; `build-path.sh`, `profile-pdfa.sh` and `research-project.sh` remain mode `100644`. None derives repository root from script depth and there are no intra-family integration calls, so the move itself is byte-identical.
+
+Existing cross-family calls remain unchanged and canonical: `profile-matrix.sh` uses `tests/integration/layout/font-embedding.sh`; `profile-pdfa.sh` uses `tests/integration/layout/pdfa.sh`; `scientific-article-pdfa.sh` uses both canonical layout helpers.
+
+The existing `moved_integration_paths` authority gains all twelve profile/article basenames. Flat compatibility copies and active stale flat references remain fail-closed. Suite inference remains basename-normalized, so no PATH_RULE rewrite is required. Target topology after 4E6 is 86 nested + 0 flat = 86 identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
