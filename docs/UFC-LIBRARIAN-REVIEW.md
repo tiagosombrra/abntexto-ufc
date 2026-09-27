@@ -41,7 +41,7 @@ Item 33 was closed on 2026-09-09 after direct review of the primary ABNT NBR 602
 | 14 | Do not create synthetic aggregate `APÊNDICES` or `ANEXOS` pages/TOC entries. | PASS | appendix/annex checks |
 | 15 | Appendix and annex entries in the TOC must use the required uppercase/bold presentation. | PASS — canonical TOC visual review reconfirmed presentation. | appendix/annex integration and checks |
 | 16 | First body-text use of UFC should present the full institutional name followed by `(UFC)`. | PASS | reference prose/examples, source/PDF gates |
-| 17 | Academic text/code demonstrations must not accidentally change the adopted text family/nominal size. | PASS | `abntexto-ufc.cls` (font-policy section), `tests/integration/code-typography.sh` |
+| 17 | Academic text/code demonstrations must not accidentally change the adopted text family/nominal size. | PASS | `abntexto-ufc.cls` (font-policy section), `tests/integration/objects/code-typography.sh` |
 | 18 | Author/corporate-author names in citations must follow current NBR 10520 capitalization rather than legacy all-caps output. | PASS | `abntexto-ufc.cls` (bibliography section), citation checks |
 | 19 | Long direct quotations must include the page or other required locator when the source provides one. | PASS | citation fixtures/checks |
 | 20 | Parenthetical citation punctuation after a long direct quotation must not contain an extraneous full stop before the citation. | PASS | citation fixtures/checks |

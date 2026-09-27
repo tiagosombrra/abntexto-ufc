@@ -156,7 +156,7 @@
       "fixture": "tests/documents/table-ibge-vector-final-pdf.tex",
       "positive_gate": [
         "sh",
-        "tests/integration/table-ibge-vector-evidence.sh"
+        "tests/integration/objects/table-ibge-vector-evidence.sh"
       ],
       "mutation": {
         "kind": "replace_once",

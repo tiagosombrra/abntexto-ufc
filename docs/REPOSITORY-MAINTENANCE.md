@@ -35,7 +35,7 @@ Use the lightest process that still protects correctness:
 | 1 | metadata consistency and anti-drift | complete — PR #360 merged as `496f893627b1d2211161b8408e44026a2b66b157` |
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
-| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 complete; 4E4 frontmatter in progress under #398 |
+| 4 | `tests/` taxonomy | in progress — issue #375; check taxonomy + Phase 4D + 4E1 + 4E2 + 4E3 + 4E4 complete; 4E5 academic objects in progress under #398 |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
@@ -883,3 +883,30 @@ Expected topology after this slice is 63 nested + 23 flat = 86 integration ident
 Initial Static Contract #866 failed on PR #426 head `aefc16d9068a2b14113132f64bcb66152488a9a5` because the fail-closed stale-integration scanner found one active consumer in `tests/checks/repository/engineering_language.py` still naming the retired flat `frontmatter-approval-evidence.sh` path.
 
 The engineering-language machine-source inventory follows the canonical `tests/integration/frontmatter/frontmatter-approval-evidence.sh` location without changing language-policy semantics or its controlled source set. Static #866 remains audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
+
+
+### Phase 4E4 final receipt
+
+Phase 4E4 is complete. PR #426 merged as `a93b329258b53c616824cb41f7ffaf35330a37b4` after final head `9efcce31ca67cd0033c387d58117203b055beb3c` passed Static Contract #867 and Linux Integration #739. Initial Static #866 remains preserved as evidence of one active stale `engineering_language.py` consumer; the corrected head updated only that path without compatibility copies or scanner exemptions.
+
+Post-merge `main` passed Static Contract #868 and Linux Release Check #282. The fourteen frontmatter integrations now live only under `tests/integration/frontmatter/`; topology is 63 nested + 23 flat = 86 integration identities, with exact Git modes preserved and no compatibility copies.
+
+### Phase 4E5 execution map
+
+Phase 4E5 moves exactly eleven academic-object integrations into `tests/integration/objects/`: `algorithm-numbering.sh`, `code-typography.sh`, `documentary-source.sh`, `illustration-evidence.sh`, `minted.sh`, `object-geometry.sh`, `object.sh`, `table-ibge-vector-evidence.sh`, `table-ibge.sh`, `table-typography-equation-evidence.sh` and `vector-rule-validation.sh`.
+
+Exact Git modes are preserved: nine scripts remain executable mode `100755`; `illustration-evidence.sh` and `object.sh` remain mode `100644`. None derives repository root from script depth, so no root-bootstrap change is required.
+
+`object-geometry.sh` follows its three object-family evidence calls into the new namespace, and `table-ibge-vector-evidence.sh` follows `vector-rule-validation.sh`. Existing cross-family calls from `code-typography.sh`, `minted.sh` and `table-ibge.sh` retain the canonical `tests/integration/layout/font-embedding.sh` path.
+
+The existing `moved_integration_paths` authority gains all eleven object basenames. Flat compatibility copies and active stale flat references remain fail-closed. Suite inference remains basename-normalized, so no PATH_RULE rewrite is required. Expected topology after 4E5 is 74 nested + 12 flat = 86 identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+
+### Phase 4E5 validation incident
+
+Initial Static Contract #869 failed on PR #427 head `6f1abee6d925650f3ffeb6b0f94222c5ef8c595e` because the fail-closed stale-integration scanner found two active consumers still naming retired flat object integrations:
+
+- `docs/UFC-LIBRARIAN-REVIEW.md` referenced the retired flat `code-typography.sh` path;
+- `standards/scenarios/negative/negative-paths.json` referenced the retired flat `table-ibge-vector-evidence.sh` path.
+
+Both consumers follow the canonical `tests/integration/objects/` locations without changing librarian-review evidence meaning or controlled negative-scenario semantics. Static #869 remains audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
