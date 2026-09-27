@@ -900,3 +900,13 @@ Exact Git modes are preserved: nine scripts remain executable mode `100755`; `il
 `object-geometry.sh` follows its three object-family evidence calls into the new namespace, and `table-ibge-vector-evidence.sh` follows `vector-rule-validation.sh`. Existing cross-family calls from `code-typography.sh`, `minted.sh` and `table-ibge.sh` retain the canonical `tests/integration/layout/font-embedding.sh` path.
 
 The existing `moved_integration_paths` authority gains all eleven object basenames. Flat compatibility copies and active stale flat references remain fail-closed. Suite inference remains basename-normalized, so no PATH_RULE rewrite is required. Expected topology after 4E5 is 74 nested + 12 flat = 86 identities. No validation semantics, runtime/public API, normative meaning, release metadata or published artifact behavior changes.
+
+
+### Phase 4E5 validation incident
+
+Initial Static Contract #869 failed on PR #427 head `6f1abee6d925650f3ffeb6b0f94222c5ef8c595e` because the fail-closed stale-integration scanner found two active consumers still naming retired flat object integrations:
+
+- `docs/UFC-LIBRARIAN-REVIEW.md` referenced the retired flat `code-typography.sh` path;
+- `standards/scenarios/negative/negative-paths.json` referenced the retired flat `table-ibge-vector-evidence.sh` path.
+
+Both consumers follow the canonical `tests/integration/objects/` locations without changing librarian-review evidence meaning or controlled negative-scenario semantics. Static #869 remains audit evidence. No compatibility copy, stale-path exemption or scanner weakening is introduced; fresh required gates must pass before merge.
