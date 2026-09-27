@@ -1005,6 +1005,13 @@ Active consumers are updated atomically:
 
 Both builder and distribution contract reject a compatibility copy at the retired `docs/ctan-example.tex` path. The integration distribution gate continues to validate the same archive member `abntexto-ufc/abntexto-ufc-example.tex`; no generated member name changes.
 
-A new `release/README.md` documents ownership of `release/ctan/`, `release/history/`, current release control and stable build entry points. Historical references under `docs/history/` remain untouched because they describe past repository state.
+A new `release/README.md` documents ownership of `release/ctan/`, `release/history/v3/`, current release control and stable build entry points. Historical references under `docs/history/v3/` remain untouched because they describe past repository state.
 
 This slice deliberately does not edit the already-published v3.0.4 CTAN README/manual content, tags, GitHub Release assets, submitted archive or historical receipts.
+
+
+### Phase 5A validation incident
+
+Initial Static Contract #878 failed on PR #432 head `c04b0efd8276837a91ecf93c065a3aaa949a8655` because the new release ownership prose referenced generic `release/history/` and `docs/history/` roots. The repository contract intentionally permits only the controlled v3 history namespaces and rejects generic history-root references in active documentation.
+
+The correction changes documentation wording only, naming `release/history/v3/` and `docs/history/v3/` explicitly. No history policy, exemption or scan rule is weakened. Static #878 remains preserved as audit evidence; fresh required gates must pass before merge.

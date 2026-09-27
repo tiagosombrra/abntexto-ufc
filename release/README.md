@@ -16,7 +16,7 @@ CTAN-facing sources must not vendor UFC institutional marks or proprietary Micro
 
 ## `history/`
 
-`release/history/` contains durable historical release receipts, migration records and prior release-candidate evidence. These files describe past states and should not be rewritten merely to match current development facts.
+`release/history/v3/` contains durable historical release receipts, migration records and prior release-candidate evidence. These files describe past states and should not be rewritten merely to match current development facts.
 
 ## Current release control
 
