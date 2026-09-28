@@ -36,7 +36,7 @@ Use the lightest process that still protects correctness:
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
 | 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
-| 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | pending |
+| 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | in progress — #430; 5A release namespace ownership active under #431 |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
 | 8 | provenance, LPPL/asset metadata and archival integration | pending |
@@ -991,3 +991,34 @@ Linux Release Check #284 proves the complete regression on the same SHA:
 - no runtime/public API/normative/release behavior or published v3.0.4 byte was changed solely by the taxonomy work.
 
 Phase 4 is structurally complete. This closeout change only synchronizes durable maintenance documentation with the already-certified repository state; the next roadmap phase is Phase 5 supporting repository structure.
+
+
+### Phase 5A execution map
+
+Phase 5A establishes explicit release-source ownership without changing release content or published v3.0.4 artifacts.
+
+The minimal CTAN example source moves byte-identically from `docs/ctan-example.tex` to `release/ctan/abntexto-ufc-example.tex`. This matches the existing `release/ctan/` ownership of the package README and manual and matches the archive member name already emitted by `tools/build-distribution-bundles.py`.
+
+Active consumers are updated atomically:
+- `tools/build-distribution-bundles.py` reads the canonical release source;
+- `tests/checks/distribution/distribution_bundles.py` compares the generated archive example against the canonical release source.
+
+Both builder and distribution contract reject a compatibility copy at the retired `docs/ctan-example.tex` path. The integration distribution gate continues to validate the same archive member `abntexto-ufc/abntexto-ufc-example.tex`; no generated member name changes.
+
+A new `release/README.md` documents ownership of `release/ctan/`, `release/history/v3/`, current release control and stable build entry points. Historical references under `docs/history/v3/` remain untouched because they describe past repository state.
+
+This slice deliberately does not edit the already-published v3.0.4 CTAN README/manual content, tags, GitHub Release assets, submitted archive or historical receipts.
+
+
+### Phase 5A validation incident
+
+Initial Static Contract #878 failed on PR #432 head `c04b0efd8276837a91ecf93c065a3aaa949a8655` because the new release ownership prose referenced unversioned history roots. The repository contract intentionally permits only the controlled v3 history namespaces and rejects generic history-root references in active documentation.
+
+The correction changes documentation wording only, naming `release/history/v3/` and `docs/history/v3/` explicitly. No history policy, exemption or scan rule is weakened. Static #878 remains preserved as audit evidence; fresh required gates must pass before merge.
+
+
+### Phase 5A second validation incident
+
+Static Contract #879 failed on corrected head `60e7e7d39d2fa393b1291a0a117e17c96d477d91` because the first validation-incident receipt itself repeated the forbidden unversioned history-root literals. The repository contract therefore continued to fail exactly as designed.
+
+The receipt now describes those roots without reproducing the forbidden literals and names only the approved `docs/history/v3/` and `release/history/v3/` namespaces. No policy or scanner exception is added. Static #879 remains preserved as audit evidence; fresh required gates are required before merge.

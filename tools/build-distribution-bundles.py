@@ -17,7 +17,8 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ID = "abntexto-ufc"
 CTAN_DIR = ROOT / "release" / "ctan"
-CTAN_EXAMPLE = ROOT / "docs" / "ctan-example.tex"
+CTAN_EXAMPLE = CTAN_DIR / f"{PACKAGE_ID}-example.tex"
+RETIRED_CTAN_EXAMPLE = ROOT / "docs" / "ctan-example.tex"
 CANONICAL_CLASS = ROOT / f"{PACKAGE_ID}.cls"
 MICROSOFT_FONTS = {
     "times.ttf",
@@ -85,6 +86,8 @@ def read_version() -> str:
         fail("CTAN README must explicitly state that no UFC logo is distributed.")
 
     require_publication_ready_text(ROOT / "README.md")
+    if RETIRED_CTAN_EXAMPLE.exists():
+        fail("Retired CTAN example source path must not exist: docs/ctan-example.tex")
     require_publication_ready_text(CTAN_EXAMPLE, ctan_surface=True)
     return version
 
