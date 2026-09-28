@@ -21,6 +21,10 @@ if grep -Eq 'cdn\.jsdelivr\.net|unpkg\.com' _site/validator/app.js; then
   echo "Pages validator must not depend on a runtime JavaScript CDN." >&2
   exit 1
 fi
+grep -Fq 'http-equiv="Content-Security-Policy"' _site/validator/index.html
+grep -Fq "script-src 'self'" _site/validator/index.html
+grep -Fq "worker-src 'self'" _site/validator/index.html
+grep -Fq "connect-src 'self'" _site/validator/index.html
 grep -Fq 'href="./validator/"' _site/index.html
 grep -Fq 'is not sent to a server' _site/validator/index.html
 

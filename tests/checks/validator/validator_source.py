@@ -19,7 +19,7 @@ TESTS_DIR = next(
 if str(TESTS_DIR) not in sys.path:
     sys.path.insert(0, str(TESTS_DIR))
 
-from path_resolver import ROOT, check_file  # noqa: E402
+from path_resolver import ROOT, check_file, integration_file  # noqa: E402
 CLI = ROOT / "tools" / "validate-ufc-pdf.py"
 PDF_MEASUREMENT = ROOT / "tools" / "pdf_measurement.py"
 PDF_VALIDATION_CORE = check_file("pdf_validation_core.py")
@@ -57,6 +57,9 @@ ROOT_README = ROOT / "README.md"
 SITE_INDEX = ROOT / "site" / "index.html"
 PAGES_WORKFLOW = ROOT / ".github" / "workflows" / "pages.yml"
 PAGES_BUILDER = ROOT / "tools" / "ci" / "build-pages-site.sh"
+WEB_LITE_E2E = integration_file("web-lite-e2e.py")
+WEB_LITE_RUNNER = ROOT / "tools" / "ci" / "run-web-lite-e2e.sh"
+CSP_POLICY = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; worker-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'"
 NORMATIVE_TOOL = ROOT / "tools" / "normative_catalog.py"
 NORMATIVE_ATOMIC_TOOL = ROOT / "tools" / "normative_atomic.py"
 NORMATIVE_FULL_TOOL = ROOT / "tools" / "normative_full.py"
@@ -263,6 +266,8 @@ def main() -> None:
     site = SITE_INDEX.read_text(encoding="utf-8")
     pages_workflow = PAGES_WORKFLOW.read_text(encoding="utf-8")
     pages_builder = PAGES_BUILDER.read_text(encoding="utf-8")
+    web_lite_e2e = WEB_LITE_E2E.read_text(encoding="utf-8")
+    web_lite_runner = WEB_LITE_RUNNER.read_text(encoding="utf-8")
 
     pdfjs_vendor_files = validate_pdfjs_vendor()
     if 'from "./vendor/pdfjs/pdf.mjs"' not in app:
@@ -287,6 +292,35 @@ def main() -> None:
 
     if "is not sent to a server" not in html:
         fail("local-processing disclosure is missing")
+
+    csp_marker = f'<meta http-equiv="Content-Security-Policy" content="{CSP_POLICY}">'
+    if csp_marker not in html:
+        fail("Web/Lite bounded Content Security Policy is missing or drifted")
+    if html.count("<style>") != 1 or html.count("</style>") != 1:
+        fail("Web/Lite CSP permits inline style only for the single tracked style block")
+    if re.search(r"\sstyle\s*=", html, re.IGNORECASE):
+        fail("Web/Lite must not add inline style attributes under the bounded CSP")
+    if re.search(r"<script(?![^>]*\bsrc=)[^>]*>", html, re.IGNORECASE):
+        fail("Web/Lite must not contain inline script blocks")
+    if re.search(r"\son[a-z]+\s*=", html, re.IGNORECASE):
+        fail("Web/Lite must not contain inline event-handler script attributes")
+
+    e2e_markers = (
+        '"goog:loggingPrefs"',
+        '"performance": "ALL"',
+        "--proxy-server=http://127.0.0.1:",
+        "--host-resolver-rules=MAP * ~NOTFOUND",
+        "Network.requestWillBeSent",
+        "observed_external_http_requests",
+        "csp_log_violations",
+    )
+    for marker in e2e_markers:
+        if marker not in web_lite_e2e:
+            fail(f"Web/Lite network-denied E2E marker is missing: {marker}")
+
+    for marker in ("sh tools/ci/build-pages-site.sh", "--site-root _site/validator"):
+        if marker not in web_lite_runner:
+            fail(f"Web/Lite CI runner does not exercise the assembled Pages package: {marker}")
     for marker in ('id="normative-base"', 'id="norm-reviewed"', 'id="norm-sources"'):
         if marker not in html:
             fail(f"normative-base UI marker is missing: {marker}")
@@ -339,6 +373,8 @@ def main() -> None:
         'from "./vendor/pdfjs/pdf.mjs"',
         'workerSrc="./vendor/pdfjs/pdf.worker.mjs"',
         "cdn\\.jsdelivr\\.net|unpkg\\.com",
+        'http-equiv=\"Content-Security-Policy\"',
+        "connect-src 'self'",
         "is not sent to a server",
     )
     for marker in pages_builder_markers:
@@ -384,7 +420,8 @@ def main() -> None:
         f"relative_imports={relative_imports} readme_relative_links={readme_relative_links} "
         "generated_catalog_identical=true entry=index.html local_processing=true "
         f"pdfjs_version={PDFJS_VERSION} pdfjs_local=true pdfjs_vendor_files={pdfjs_vendor_files} "
-        "pdfjs_provenance=PASS readme_delivery=true pages_contract=true"
+        "pdfjs_provenance=PASS csp=PASS network_denied_e2e=required "
+        "readme_delivery=true pages_contract=true"
     )
     print("Validator sources and normative contracts validated.")
 
