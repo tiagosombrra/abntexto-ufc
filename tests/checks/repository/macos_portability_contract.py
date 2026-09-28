@@ -31,6 +31,7 @@ def main() -> None:
         "pinned TeX Live setup action": "zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037",
         "pinned TeX Live version": "texlive_version: '2026'",
         "Latin Modern package": "\n            lm\n",
+        "tabularray base package": "\n            tabularray\n",
         "Darwin assertion": "test \"$(uname -s)\" = 'Darwin'",
         "ARM64 assertion": "test \"$(uname -m)\" = 'arm64'",
         "pinned abntexto materialization": "tools/fetch-abntexto.py --output abntexto.cls",

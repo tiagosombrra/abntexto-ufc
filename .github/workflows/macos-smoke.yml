@@ -84,6 +84,7 @@ jobs:
             newtx
             pdfpages
             ragged2e
+            tabularray
             tabularray-abnt
             tex-gyre
             unicode-math

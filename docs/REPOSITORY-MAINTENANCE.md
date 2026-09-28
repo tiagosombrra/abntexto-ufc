@@ -1264,3 +1264,14 @@ The bounded package list requested `lmodern`, but the TeX Live 2026 repository o
 The correction changes only the explicit macOS TeX Live package token from `lmodern` to `lm`. The fail-closed macOS portability contract now requires `lm` and rejects reintroduction of `lmodern`. No runner, architecture, engine, template, artifact-transfer, font-embedding or PDF/A requirement is weakened.
 
 Smoke #1 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required on the corrected head before merge.
+
+
+### Phase 7B validation incident — macOS smoke #2
+
+macOS portability smoke #2 on PR #446 head `f71b5e52aa857c53401cb41b6c2a57ebcbad657b` proved the `lm` correction: TeX Live 2026 installation completed, the runner asserted Darwin/ARM64, pinned `abntexto` was materialized, and compilation entered the canonical public `template/main.tex` path.
+
+The pdfLaTeX build then failed because `tabularray-abnt.sty` requires `tabularray.sty`, but the deliberately bounded TeX Live package set listed `tabularray-abnt` without its base `tabularray` package.
+
+The correction adds only the explicit `tabularray` package and makes the fail-closed macOS portability contract require it. No template, engine, architecture, artifact-transfer, font-embedding or PDF/A requirement is weakened.
+
+Smoke #2 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required on the corrected head before merge.
