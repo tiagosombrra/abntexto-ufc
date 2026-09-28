@@ -97,6 +97,7 @@ jobs:
             ttfutils
             unicode-math
             xcolor
+            xpatch
 
       - name: Verify TeX Live and fetch pinned abntexto
         shell: pwsh

@@ -1187,3 +1187,12 @@ Windows portability smoke #8 on PR #444 head `7c21203dd21c7a57c81d547e722f8480cb
 The failure is an explicit bounded TeX dependency gap. TeX Live provides Brazilian Portuguese Babel support in `babel-portuges`, including `brazilian.ldf`. The corrected workflow adds only `babel-portuges` to the package set, and the portability contract requires that token so the language dependency cannot silently disappear.
 
 Windows smoke #8 remains audit evidence. No document/class semantics, language selection or failure policy is weakened; fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A newtx transitive dependency incident
+
+Windows portability smoke #9 on PR #444 head `4fd5255cfdae31c3c360a107d60dad129da04087` proved the previous bounded corrections: TeX Live 2026 installation, required command verification, pinned `abntexto` materialization, Windows literal-font preparation and Brazilian Portuguese Babel loading all passed. The strict Times New Roman pdfLaTeX proof then stopped while loading `newtxtext.sty` because `xpatch.sty` was absent.
+
+This is a transitive package dependency exposed by the deliberately bounded TeX Live installation, not a class/font-policy failure. The corrected workflow adds only the TeX Live `xpatch` package, and the portability contract requires that package token so the dependency cannot silently disappear.
+
+Windows smoke #9 remains audit evidence. No document semantics, font strictness, engine coverage or failure policy is weakened; fresh Static/Linux/Windows gates are required before merge.

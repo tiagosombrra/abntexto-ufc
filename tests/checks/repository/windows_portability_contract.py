@@ -32,6 +32,7 @@ def main() -> None:
         "pinned TeX Live version": "texlive_version: '2026'",
         "virtual-font utilities package": "\n            fontware\n",
         "Brazilian Portuguese Babel package": "\n            babel-portuges\n",
+        "newtx patch dependency": "\n            xpatch\n",
         "pinned abntexto materialization": "tools/fetch-abntexto.py --output abntexto.cls",
         "Windows font preparation pipeline": "tools/prepare-windows-fonts.ps1",
         "compile-only font proof": "UFC_FONT_POC_COMPILE_ONLY: '1'",
