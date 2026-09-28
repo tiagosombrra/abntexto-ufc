@@ -1105,3 +1105,12 @@ A temporary branch-only GitHub Actions bootstrap was used because PDF.js generic
 No vendor file was committed by the failed run. The bootstrap was corrected to derive the package root from the unique `build/pdf.mjs` match and require the worker and LICENSE under that same package root. Bootstrap run #2 passed and committed the verified upstream files plus machine-readable provenance.
 
 The temporary bootstrap workflow is removed from the final feature tree. Permanent reproducibility is carried by the recorded upstream release/asset identity and fail-closed tracked-file hashes rather than by a standing networked workflow.
+
+
+### Phase 6A validation incident
+
+Initial Static Contract #886 failed on PR #439 head `50b934e739ef0425d8199e773fceb0e7b68429f7` because `tests/checks/evidence/normative_validator_contract.py` still defined the Web/Lite PDF.js boundary through the retired jsDelivr package literal `pdfjs-dist@6.2.108`.
+
+The runtime had already moved to the verified local vendor tree, so the old marker no longer represented the intended contract. The normative validator contract now requires the canonical local main-module and worker paths and explicitly forbids jsDelivr/unpkg runtime dependencies. Exact version, release-asset provenance and file hashes remain independently fail-closed in `tests/checks/validator/validator_source.py`.
+
+Static #886 remains audit evidence. No validation semantics, check IDs, verdict logic or PDF.js version changes; fresh required gates must pass on the corrected head.
