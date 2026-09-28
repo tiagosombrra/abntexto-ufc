@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
+import json
 import py_compile
 import re
 import shutil
@@ -24,6 +26,31 @@ PDF_VALIDATION_CORE = check_file("pdf_validation_core.py")
 FRONTMATTER_EVIDENCE = check_file("frontmatter_evidence.py")
 VALIDATOR_ROOT = ROOT / "validator"
 APP = VALIDATOR_ROOT / "app.js"
+PDFJS_ROOT = VALIDATOR_ROOT / "vendor" / "pdfjs"
+PDFJS_MAIN = PDFJS_ROOT / "pdf.mjs"
+PDFJS_WORKER = PDFJS_ROOT / "pdf.worker.mjs"
+PDFJS_LICENSE = PDFJS_ROOT / "LICENSE"
+PDFJS_PROVENANCE = PDFJS_ROOT / "PROVENANCE.json"
+PDFJS_VERSION = "6.2.108"
+PDFJS_TAG_COMMIT = "0365cbde028bd92e58f2dab1bb70cd30ac7acfd7"
+PDFJS_RELEASE_ID = 361333612
+PDFJS_ASSET_ID = 493114690
+PDFJS_ASSET_SHA256 = "7bf642d59582b475e8c48447da9b02b0108fad9742d7c2a35cb4ed6dd45e95ba"
+PDFJS_ASSET_BYTES = 6296688
+PDFJS_FILES = {
+    "pdf.mjs": {
+        "bytes": 853537,
+        "sha256": "e0ccc62fbfa69942eb7dd46c89d4b3ea8fc08f61b234e65f32e6d5c76efc04c8",
+    },
+    "pdf.worker.mjs": {
+        "bytes": 2222991,
+        "sha256": "1a7607f28cfbc63f0e4e0a41927c89f991e353e4f3fb4565ecfd621ac5975089",
+    },
+    "LICENSE": {
+        "bytes": 10174,
+        "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+    },
+}
 INDEX = VALIDATOR_ROOT / "index.html"
 WEB_CATALOG = VALIDATOR_ROOT / "normative-catalog.js"
 ROOT_README = ROOT / "README.md"
@@ -65,6 +92,72 @@ def run_source_check(path: Path, label: str, *args: str) -> None:
         fail(f"{label}: {completed.stdout}{completed.stderr}")
     if completed.stdout:
         print(completed.stdout.strip())
+
+
+def file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def validate_pdfjs_vendor() -> int:
+    for path in (PDFJS_MAIN, PDFJS_WORKER, PDFJS_LICENSE, PDFJS_PROVENANCE):
+        if not path.is_file() or path.stat().st_size == 0:
+            fail(f"vendored PDF.js file is missing or empty: {path.relative_to(ROOT)}")
+
+    try:
+        provenance = json.loads(PDFJS_PROVENANCE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"PDF.js provenance is invalid: {exc}")
+
+    expected_identity = {
+        "schema_version": 1,
+        "component": "PDF.js",
+        "package": "pdfjs-dist",
+        "version": PDFJS_VERSION,
+        "upstream_repository": "https://github.com/mozilla/pdf.js",
+        "tag": f"v{PDFJS_VERSION}",
+        "tag_commit": PDFJS_TAG_COMMIT,
+        "release_id": PDFJS_RELEASE_ID,
+        "license": "Apache-2.0",
+    }
+    for key, expected in expected_identity.items():
+        if provenance.get(key) != expected:
+            fail(f"PDF.js provenance identity mismatch for {key}: {provenance.get(key)!r}")
+
+    expected_asset = {
+        "id": PDFJS_ASSET_ID,
+        "name": f"pdfjs-{PDFJS_VERSION}-dist.zip",
+        "url": (
+            f"https://github.com/mozilla/pdf.js/releases/download/v{PDFJS_VERSION}/"
+            f"pdfjs-{PDFJS_VERSION}-dist.zip"
+        ),
+        "sha256": PDFJS_ASSET_SHA256,
+        "bytes": PDFJS_ASSET_BYTES,
+    }
+    if provenance.get("asset") != expected_asset:
+        fail("PDF.js provenance release-asset identity/digest is not the pinned official asset")
+
+    recorded_files = provenance.get("files")
+    if not isinstance(recorded_files, dict):
+        fail("PDF.js provenance files map is missing")
+
+    paths = {
+        "pdf.mjs": PDFJS_MAIN,
+        "pdf.worker.mjs": PDFJS_WORKER,
+        "LICENSE": PDFJS_LICENSE,
+    }
+    for name, expected in PDFJS_FILES.items():
+        path = paths[name]
+        actual = {"bytes": path.stat().st_size, "sha256": file_sha256(path)}
+        if actual != expected:
+            fail(f"vendored PDF.js file differs from pinned release bytes: {name}")
+        if recorded_files.get(name) != expected:
+            fail(f"PDF.js provenance file record differs from pinned release bytes: {name}")
+
+    license_text = PDFJS_LICENSE.read_text(encoding="utf-8")
+    if "Apache License" not in license_text or "Version 2.0" not in license_text:
+        fail("vendored PDF.js LICENSE is not the expected Apache License 2.0 text")
+
+    return len(PDFJS_FILES)
 
 
 def validate_readme_relative_links(readme: str) -> int:
@@ -171,8 +264,16 @@ def main() -> None:
     pages_workflow = PAGES_WORKFLOW.read_text(encoding="utf-8")
     pages_builder = PAGES_BUILDER.read_text(encoding="utf-8")
 
-    if "pdfjs-dist@6.2.108" not in app:
-        fail("PDF.js version is not pinned to 6.2.108")
+    pdfjs_vendor_files = validate_pdfjs_vendor()
+    if 'from "./vendor/pdfjs/pdf.mjs"' not in app:
+        fail("Web/Lite does not import the pinned local PDF.js main module")
+    if 'workerSrc="./vendor/pdfjs/pdf.worker.mjs"' not in app:
+        fail("Web/Lite does not use the pinned local PDF.js worker")
+    for forbidden_origin in ("cdn.jsdelivr.net", "unpkg.com"):
+        if forbidden_origin in app:
+            fail(f"Web/Lite runtime still depends on external CDN: {forbidden_origin}")
+    if re.search(r'\bfrom\s+["\']https?://|\bimport\s*\(\s*["\']https?://', app):
+        fail("Web/Lite runtime contains an external JavaScript module import")
     if 'from "./normative-catalog.js"' not in app:
         fail("Web/Lite does not consume the generated normative catalog")
     if "from normative_catalog import" not in cli:
@@ -231,6 +332,13 @@ def main() -> None:
         "test -s _site/validator/index.html",
         "test -s _site/validator/app.js",
         "test -s _site/validator/normative-catalog.js",
+        "test -s _site/validator/vendor/pdfjs/pdf.mjs",
+        "test -s _site/validator/vendor/pdfjs/pdf.worker.mjs",
+        "test -s _site/validator/vendor/pdfjs/LICENSE",
+        "test -s _site/validator/vendor/pdfjs/PROVENANCE.json",
+        'from "./vendor/pdfjs/pdf.mjs"',
+        'workerSrc="./vendor/pdfjs/pdf.worker.mjs"',
+        "cdn\\.jsdelivr\\.net|unpkg\\.com",
         "is not sent to a server",
     )
     for marker in pages_builder_markers:
@@ -275,7 +383,8 @@ def main() -> None:
         "VALIDATION-EVIDENCE web-static-package status=PASS "
         f"relative_imports={relative_imports} readme_relative_links={readme_relative_links} "
         "generated_catalog_identical=true entry=index.html local_processing=true "
-        "readme_delivery=true pages_contract=true"
+        f"pdfjs_version={PDFJS_VERSION} pdfjs_local=true pdfjs_vendor_files={pdfjs_vendor_files} "
+        "pdfjs_provenance=PASS readme_delivery=true pages_contract=true"
     )
     print("Validator sources and normative contracts validated.")
 

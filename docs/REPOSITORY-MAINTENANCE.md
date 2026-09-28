@@ -37,7 +37,7 @@ Use the lightest process that still protects correctness:
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
 | 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
-| 6 | self-contained Web/Lite hardening | pending |
+| 6 | self-contained Web/Lite hardening | in progress — #437; 6A pinned local PDF.js runtime active under #438 |
 | 7 | Windows-first portability smoke coverage | pending |
 | 8 | provenance, LPPL/asset metadata and archival integration | pending |
 | 9 | tagged-PDF/PDF-UA experiment | pending |
@@ -1081,3 +1081,27 @@ Phase 5 leaves the supporting repository structure in the following intentional 
 - no published v3.0.4 source/tag/GitHub Release asset/submitted CTAN archive or historical release receipt was rewritten.
 
 This closeout update is documentation-only. The next roadmap phase is Phase 6 Web/Lite self-contained hardening.
+
+
+### Phase 6A execution map
+
+Phase 6A removes the Web/Lite validator's runtime CDN dependency without changing the PDF.js version or validation semantics.
+
+The existing `pdfjs-dist` 6.2.108 dependency is vendored under `validator/vendor/pdfjs/`. Provenance is bound to the official Mozilla PDF.js `v6.2.108` release, tag commit `0365cbde028bd92e58f2dab1bb70cd30ac7acfd7`, release asset `pdfjs-6.2.108-dist.zip` (GitHub asset ID `493114690`) and published asset SHA-256 `7bf642d59582b475e8c48447da9b02b0108fad9742d7c2a35cb4ed6dd45e95ba`.
+
+The import preserves exact upstream bytes:
+- `pdf.mjs`: 853537 bytes, SHA-256 `e0ccc62fbfa69942eb7dd46c89d4b3ea8fc08f61b234e65f32e6d5c76efc04c8`;
+- `pdf.worker.mjs`: 2222991 bytes, SHA-256 `1a7607f28cfbc63f0e4e0a41927c89f991e353e4f3fb4565ecfd621ac5975089`;
+- `LICENSE`: 10174 bytes, SHA-256 `0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594`.
+
+`validator/app.js` follows the local main module and worker only. `validator_source.py` independently pins the upstream identity, asset digest and each tracked file digest/size, and rejects jsDelivr/unpkg or external JavaScript module imports. The Pages builder requires the complete local runtime/provenance set in the generated static package.
+
+The productive validation schema, check IDs, verdict semantics and local PDF processing behavior are unchanged. Explicit browser network denial and CSP hardening remain the separate 6B slice after this local runtime is certified.
+
+### Phase 6A bootstrap incident
+
+A temporary branch-only GitHub Actions bootstrap was used because PDF.js generic browser modules are generated release assets and are not blobs in the source tag. Bootstrap run #1 downloaded the official asset and verified its published SHA-256 successfully, then failed before commit because the first extraction guard incorrectly required a single shallow `LICENSE` match across the archive.
+
+No vendor file was committed by the failed run. The bootstrap was corrected to derive the package root from the unique `build/pdf.mjs` match and require the worker and LICENSE under that same package root. Bootstrap run #2 passed and committed the verified upstream files plus machine-readable provenance.
+
+The temporary bootstrap workflow is removed from the final feature tree. Permanent reproducibility is carried by the recorded upstream release/asset identity and fail-closed tracked-file hashes rather than by a standing networked workflow.
