@@ -1205,3 +1205,12 @@ Windows portability smoke #10 on PR #444 head `a3cf3c023ba77f107602478c1cb50c1aa
 This is another explicit transitive dependency exposed by the deliberately bounded TeX Live package set, not a font/class-policy failure. The corrected workflow adds only the TeX Live `xstring` package. The fail-closed Windows portability contract requires that package token so it cannot silently disappear.
 
 Windows smoke #10 remains preserved as audit evidence. No proof, font identity, PDF/A requirement, runner generation or artifact-certification step is weakened. Fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A validation incident — Windows smoke #11
+
+Windows portability smoke #11 on PR #444 head `1f5f7ba2655244880bf900a441f804f64f335d7d` proved the `xstring` correction and progressed through TeX Live setup, pinned `abntexto`, Windows font preparation and the earlier `newtxtext` dependencies. The strict Times New Roman pdfLaTeX proof then stopped because `fontaxes.sty` was absent.
+
+The failure is another bounded transitive dependency from the intentionally minimal TeX Live installation. The corrected workflow adds only the TeX Live `fontaxes` package, and the fail-closed Windows portability contract requires that token.
+
+Smoke #11 remains preserved as portability evidence. No runner, font identity, compile proof, artifact transfer, Unicode extraction, embedding or PDF/A-2b requirement is weakened. Fresh Static/Linux/Windows gates are required before merge.

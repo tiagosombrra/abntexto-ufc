@@ -77,6 +77,7 @@ jobs:
             csquotes
             enumitem
             etoolbox
+            fontaxes
             fontspec
             fontware
             geometry

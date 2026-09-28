@@ -30,6 +30,7 @@ def main() -> None:
         "explicit Windows Server 2025 runner": "runs-on: windows-2025",
         "pinned TeX Live setup action": "zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037",
         "pinned TeX Live version": "texlive_version: '2026'",
+        "newtx font axes dependency": "\n            fontaxes\n",
         "virtual-font utilities package": "\n            fontware\n",
         "Brazilian Portuguese Babel package": "\n            babel-portuges\n",
         "newtx patch dependency": "\n            xpatch\n",
