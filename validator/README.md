@@ -12,6 +12,8 @@ python3 -m http.server 8000 --directory validator
 
 Then open `http://localhost:8000/`. The application loads the pinned PDF.js 6.2.108 browser modules from the tracked `validator/vendor/pdfjs/` tree. The validator runtime does not require a CDN; PDF analysis remains local in the browser.
 
+`validator/index.html` enforces a bounded Content Security Policy: scripts, workers and connections are same-origin only; objects, frames, base-URL changes and form submissions are denied. The only `unsafe-inline` allowance is for the single tracked CSS block; Static rejects additional style attributes, inline scripts and inline event handlers.
+
 ## Vendored PDF.js
 
 The browser runtime pins **PDF.js / pdfjs-dist 6.2.108** under [`vendor/pdfjs/`](vendor/pdfjs/).
@@ -35,16 +37,20 @@ Do not edit the generated module manually. `tests/checks/validator/validator_sou
 
 ## Browser regression
 
-The Linux Integration `web-lite` scope compiles a real reference PDF, preserves a stable snapshot, opens the productive `validator/index.html` UI in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.
+The Linux Integration `web-lite` scope compiles a real reference PDF, assembles the same `_site/validator` tree used by GitHub Pages, opens that productive package in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.
+
+The browser is run behind a loopback deny proxy with external DNS/background network disabled. Performance logs must show zero HTTP(S) requests outside the local test origin, and browser logs must show zero CSP violations. This proves that page load and both PDF analyses do not require external network access; there is no CDN fallback.
 
 The E2E requires Web/Lite to keep Deep-only `font.embedded` and `pdfa.deep` in `MANUAL REVIEW`; only CLI/Deep may certify those checks automatically.
 
-For local reproduction after a canonical/reference PDF exists, run the same browser harness explicitly:
+For local reproduction after a canonical/reference PDF exists, assemble the Pages package and run the same browser harness explicitly:
 
 ```bash
+sh tools/ci/build-pages-site.sh
 python3 tests/integration/validator/web-lite-e2e.py \
   --pdf artifacts/validation/web-lite-positive.pdf \
   --profile portable \
+  --site-root _site/validator \
   --evidence /tmp/abntexto-ufc-web-lite/web-lite-e2e.json
 ```
 

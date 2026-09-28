@@ -37,7 +37,7 @@ Use the lightest process that still protects correctness:
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
 | 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
-| 6 | self-contained Web/Lite hardening | in progress — #437; 6A pinned local PDF.js runtime active under #438 |
+| 6 | self-contained Web/Lite hardening | in progress — #437; 6A local PDF.js runtime certified, 6B network-denied/CSP certification active under #440 |
 | 7 | Windows-first portability smoke coverage | pending |
 | 8 | provenance, LPPL/asset metadata and archival integration | pending |
 | 9 | tagged-PDF/PDF-UA experiment | pending |
@@ -1114,3 +1114,22 @@ Initial Static Contract #886 failed on PR #439 head `50b934e739ef0425d8199e773fc
 The runtime had already moved to the verified local vendor tree, so the old marker no longer represented the intended contract. The normative validator contract now requires the canonical local main-module and worker paths and explicitly forbids jsDelivr/unpkg runtime dependencies. Exact version, release-asset provenance and file hashes remain independently fail-closed in `tests/checks/validator/validator_source.py`.
 
 Static #886 remains audit evidence. No validation semantics, check IDs, verdict logic or PDF.js version changes; fresh required gates must pass on the corrected head.
+
+
+### Phase 6A final receipt
+
+Phase 6A is complete. PR #439 merged as `11e3a4f50d3e39d966d736568c4c586c0680a231` after final head `59880edef434c2e8977832b5cfd6ffd6531f689f` passed Static #887 and Linux Integration #752, including productive Web/Lite browser E2E.
+
+Initial Static #886 remains preserved as evidence that the normative validator contract still encoded the retired jsDelivr package literal after the runtime moved local. The correction made the contract require the canonical local PDF.js main/worker paths and reject jsDelivr/unpkg while preserving version 6.2.108 and all validation semantics.
+
+Post-merge `main` passed Static #888, Pages #8 (build + deploy) and Linux Release #287. Static records `pdfjs_local=true`, exact provenance PASS and zero orphaned test/technical surfaces. Release #287 completed `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, distribution bundles, canonical-reference reproducibility, CTAN pkgcheck and seven-profile review-pair generation on the exact merge SHA. Published v3.0.4 release/tag/archive bytes remain unchanged.
+
+### Phase 6B execution map
+
+Phase 6B certifies that the assembled Web/Lite Pages package is genuinely network-independent and applies a bounded browser CSP without changing validator semantics.
+
+The productive Linux browser E2E now assembles `_site/validator` through `tools/ci/build-pages-site.sh` and serves that package rather than the source directory. Chrome runs behind a loopback deny proxy with background/external DNS disabled. Performance logs fail closed on any HTTP(S) request outside the local test origin; browser logs fail on CSP violations. The existing positive canonical/reference PDF and negative non-A4 PDF still pass through the same productive UI/analyze path.
+
+`validator/index.html` gains an enforced meta CSP restricting default/script/worker/connect to same origin and denying objects, frames, base changes and form submission. `style-src 'unsafe-inline'` is deliberately bounded to the one existing tracked style block; Static rejects additional style attributes, inline scripts and inline event handlers.
+
+Static also requires the deny-proxy/performance-log E2E markers and requires the CI runner to exercise the assembled Pages package. The Pages builder requires the CSP markers in the copied artifact. PDF.js vendor bytes/provenance, validation schema/check IDs, mandatory/deep boundaries and verdict semantics remain unchanged.

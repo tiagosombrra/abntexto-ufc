@@ -13,7 +13,8 @@ import time
 import urllib.error
 import urllib.request
 from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlsplit
 from pathlib import Path
 from threading import Thread
 from typing import Any
@@ -41,6 +42,7 @@ ELEMENT_KEY = "element-6066-11e4-a52e-4f735466cecf"
 PASS = "PASS"
 FAIL = "FAIL"
 REVIEW = "MANUAL REVIEW"
+CSP_POLICY = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; worker-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'"
 
 
 def fail(message: str) -> None:
@@ -81,11 +83,40 @@ class QuietHandler(SimpleHTTPRequestHandler):
         pass
 
 
+class DenyProxyHandler(BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+
+    def log_message(self, fmt: str, *args: object) -> None:
+        pass
+
+    def deny(self) -> None:
+        denied = getattr(self.server, "denied_requests", None)
+        if isinstance(denied, list):
+            denied.append(self.requestline)
+        self.send_response(502)
+        self.send_header("Content-Length", "0")
+        self.send_header("Connection", "close")
+        self.end_headers()
+
+    def do_CONNECT(self) -> None:
+        self.deny()
+
+    def do_GET(self) -> None:
+        self.deny()
+
+    def do_HEAD(self) -> None:
+        self.deny()
+
+    def do_POST(self) -> None:
+        self.deny()
+
+
 class Browser:
-    def __init__(self, chrome: str, chromedriver: str, driver_log: Path) -> None:
+    def __init__(self, chrome: str, chromedriver: str, driver_log: Path, proxy_port: int) -> None:
         self.chrome = chrome
         self.chromedriver = chromedriver
         self.driver_log = driver_log
+        self.proxy_port = proxy_port
         self.port = free_port()
         self.base = f"http://127.0.0.1:{self.port}"
         self.process: subprocess.Popen[bytes] | None = None
@@ -141,12 +172,22 @@ class Browser:
                 "capabilities": {
                     "alwaysMatch": {
                         "browserName": "chrome",
+                        "goog:loggingPrefs": {
+                            "performance": "ALL",
+                            "browser": "ALL",
+                        },
                         "goog:chromeOptions": {
                             "binary": self.chrome,
                             "args": [
                                 "--headless=new",
                                 "--no-sandbox",
                                 "--disable-dev-shm-usage",
+                                "--disable-background-networking",
+                                "--disable-component-update",
+                                "--no-default-browser-check",
+                                f"--proxy-server=http://127.0.0.1:{self.proxy_port}",
+                                "--proxy-bypass-list=127.0.0.1;localhost",
+                                "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost",
                                 "--window-size=1440,1000",
                             ],
                         },
@@ -176,6 +217,12 @@ class Browser:
 
     def execute_async(self, script: str, args: list[Any] | None = None) -> Any:
         return self.command("POST", "/execute/async", {"script": script, "args": args or []}, timeout=40)
+
+    def logs(self, log_type: str) -> list[dict[str, Any]]:
+        result = self.command("POST", "/log", {"type": log_type})
+        if not isinstance(result, list):
+            fail(f"WebDriver returned invalid {log_type} logs: {result!r}")
+        return [entry for entry in result if isinstance(entry, dict)]
 
     def element(self, selector: str) -> str:
         result = self.command(
@@ -301,6 +348,49 @@ def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, An
             fail(f"browser check {check.get('id')} is missing fields: {', '.join(absent)}")
 
 
+def performance_request_urls(entries: list[dict[str, Any]]) -> list[str]:
+    urls: list[str] = []
+    for entry in entries:
+        raw = entry.get("message")
+        if not isinstance(raw, str):
+            continue
+        try:
+            envelope = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+        message = envelope.get("message")
+        if not isinstance(message, dict) or message.get("method") != "Network.requestWillBeSent":
+            continue
+        params = message.get("params")
+        request = params.get("request") if isinstance(params, dict) else None
+        url = request.get("url") if isinstance(request, dict) else None
+        if isinstance(url, str):
+            urls.append(url)
+    return urls
+
+
+def external_http_requests(urls: list[str], port: int) -> list[str]:
+    external: list[str] = []
+    for url in urls:
+        parsed = urlsplit(url)
+        if parsed.scheme not in {"http", "https"}:
+            continue
+        if parsed.hostname in {"127.0.0.1", "localhost"} and parsed.port == port:
+            continue
+        external.append(url)
+    return sorted(set(external))
+
+
+def csp_log_violations(entries: list[dict[str, Any]]) -> list[str]:
+    violations: list[str] = []
+    for entry in entries:
+        message = str(entry.get("message", ""))
+        folded = message.casefold()
+        if "content security policy" in folded or "violates the following content security policy" in folded:
+            violations.append(message)
+    return violations
+
+
 def analyze_through_ui(browser: Browser, pdf: Path, profile: str) -> dict[str, Any]:
     browser.execute(
         "window.alert=(message)=>{window.__ufcTestAlert=String(message)};"
@@ -341,12 +431,21 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run real PDFs through the productive Web/Lite browser UI.")
     parser.add_argument("--pdf", type=Path, required=True)
     parser.add_argument("--profile", choices=("strict", "portable", "accessibility"), default="portable")
+    parser.add_argument("--site-root", type=Path, default=VALIDATOR)
     parser.add_argument("--evidence", type=Path)
     args = parser.parse_args()
 
     positive = args.pdf.resolve()
     if not positive.is_file() or positive.stat().st_size == 0:
         fail(f"positive PDF is missing or empty: {positive}")
+
+    site_root = args.site_root.resolve()
+    if not (site_root / "index.html").is_file() or not (site_root / "app.js").is_file():
+        fail(f"Web/Lite site root is incomplete: {site_root}")
+    try:
+        site_root_label = str(site_root.relative_to(ROOT))
+    except ValueError:
+        site_root_label = str(site_root)
 
     chrome = (
         shutil.which("google-chrome")
@@ -362,10 +461,15 @@ def main() -> None:
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
 
-    handler = partial(QuietHandler, directory=str(VALIDATOR))
+    handler = partial(QuietHandler, directory=str(site_root))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
+
+    deny_proxy = ThreadingHTTPServer(("127.0.0.1", 0), DenyProxyHandler)
+    deny_proxy.denied_requests = []
+    proxy_thread = Thread(target=deny_proxy.serve_forever, daemon=True)
+    proxy_thread.start()
 
     evidence_path = args.evidence.resolve() if args.evidence else None
     driver_log = (
@@ -373,7 +477,7 @@ def main() -> None:
         if evidence_path
         else Path(tempfile.gettempdir()) / "abntexto-ufc-web-lite-chromedriver.log"
     )
-    browser = Browser(chrome, driver, driver_log)
+    browser = Browser(chrome, driver, driver_log, deny_proxy.server_port)
     try:
         browser.start()
         browser.navigate(f"http://127.0.0.1:{server.server_port}/index.html")
@@ -382,6 +486,11 @@ def main() -> None:
             "Web/Lite module graph and normative base",
             timeout=70,
         )
+        csp_policy = browser.execute(
+            "return document.querySelector('meta[http-equiv=\"Content-Security-Policy\"]')?.content||'';"
+        )
+        if csp_policy != CSP_POLICY:
+            fail(f"productive Web/Lite CSP mismatch: {csp_policy!r}")
 
         with tempfile.TemporaryDirectory(prefix="abntexto-ufc-web-lite-") as temp:
             negative = Path(temp) / "web-lite-negative-letter.pdf"
@@ -417,6 +526,22 @@ def main() -> None:
                 if not check or check.get("status") != REVIEW or check.get("mandatory") is not False:
                     fail(f"negative Web/Lite deep boundary drift for {check_id}: {check}")
 
+            performance_entries = browser.logs("performance")
+            requested_urls = performance_request_urls(performance_entries)
+            external_urls = external_http_requests(requested_urls, server.server_port)
+            if external_urls:
+                fail("productive Web/Lite attempted external HTTP(S): " + ", ".join(external_urls))
+
+            browser_entries = browser.logs("browser")
+            csp_violations = csp_log_violations(browser_entries)
+            if csp_violations:
+                fail("productive Web/Lite emitted CSP violations: " + " | ".join(csp_violations[:5]))
+
+            observed_http_requests = [
+                url for url in requested_urls if urlsplit(url).scheme in {"http", "https"}
+            ]
+            denied_proxy_requests = list(getattr(deny_proxy, "denied_requests", []))
+
             chrome_version = subprocess.run(
                 [chrome, "--version"], text=True, capture_output=True, check=False
             ).stdout.strip()
@@ -429,8 +554,19 @@ def main() -> None:
                 "ui": "validator/index.html",
                 "analysis_path": "productive UI -> exported analyze/getLastReport",
                 "profile": args.profile,
+                "site_root": site_root_label,
                 "local_processing": True,
                 "normative_catalog": positive_report["normative_catalog"],
+                "network": {
+                    "external_network_denied": True,
+                    "proxy_mode": "deny",
+                    "dns_external_denied": True,
+                    "observed_http_requests": len(observed_http_requests),
+                    "observed_external_http_requests": 0,
+                    "deny_proxy_requests": len(denied_proxy_requests),
+                    "csp": csp_policy,
+                    "csp_violations": 0,
+                },
                 "browser": chrome_version,
                 "driver": driver_version,
                 "driver_log": str(driver_log),
@@ -470,13 +606,17 @@ def main() -> None:
                 "positive_pdf_open=PASS positive_a4=PASS positive_margins=PASS "
                 "negative_pdf_open=PASS negative_a4=FAIL negative_verdict=FAIL "
                 "font_embedded=MANUAL_REVIEW pdfa_deep=MANUAL_REVIEW "
-                "productive_ui=true local_processing=true"
+                "productive_ui=true local_processing=true pages_package=true "
+                "external_network=DENIED external_http_requests=0 csp=PASS"
             )
     finally:
         browser.stop()
         server.shutdown()
         server.server_close()
         thread.join(timeout=5)
+        deny_proxy.shutdown()
+        deny_proxy.server_close()
+        proxy_thread.join(timeout=5)
 
 
 if __name__ == "__main__":
