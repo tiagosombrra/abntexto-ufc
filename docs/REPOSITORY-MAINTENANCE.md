@@ -1178,3 +1178,12 @@ Windows portability smoke #7 on PR #444 head `2dad651d851fe7aa542b028089df1f0d8e
 The failure is a real bounded dependency gap, not a reason to weaken the proof. `prepare-windows-fonts.ps1` requires `vptovf` to convert the generated VPL metrics into VF/TFM files. TeX Live owns this utility under the `fontware` package (with the Windows executable supplied by `fontware.windows`).
 
 The corrected workflow adds only `fontware` to the explicit TeX Live package set. The portability contract now requires that package token and rejects the stale `miktex=` evidence marker. The successful evidence line identifies `texlive=2026` instead. Windows smoke #7 remains preserved as audit evidence; fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A Brazilian Portuguese language dependency incident
+
+Windows portability smoke #8 on PR #444 head `7c21203dd21c7a57c81d547e722f8480cb28bb22` proved the prior `fontware` correction: TeX Live installation, required command verification, pinned `abntexto` materialization and `prepare-windows-fonts.ps1` all passed. The strict pdfLaTeX proof then stopped because Babel could not load the `brazilian` language definition.
+
+The failure is an explicit bounded TeX dependency gap. TeX Live provides Brazilian Portuguese Babel support in `babel-portuges`, including `brazilian.ldf`. The corrected workflow adds only `babel-portuges` to the package set, and the portability contract requires that token so the language dependency cannot silently disappear.
+
+Windows smoke #8 remains audit evidence. No document/class semantics, language selection or failure policy is weakened; fresh Static/Linux/Windows gates are required before merge.
