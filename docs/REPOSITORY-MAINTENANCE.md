@@ -1169,3 +1169,12 @@ The corrected workflow replaces that network-specific MiKTeX bootstrap with TeX 
 Windows portability smoke #5 proved that TeX Live 2026 installation itself succeeds on `windows-2025`, but the initial bounded package set omitted `ttf2tfm`. The workflow stopped in the explicit command-verification step before font preparation or document compilation.
 
 TeX Live packages the `ttf2tfm` binary in `ttfutils`. The corrected package set adds only `ttfutils`; it does not widen the installation to a full TeX Live scheme. Windows smoke #5 remains audit evidence of the missing explicit dependency. Fresh Static/Linux/Windows gates are required on the corrected head.
+
+
+### Phase 7A virtual-font utility dependency incident
+
+Windows portability smoke #7 on PR #444 head `2dad651d851fe7aa542b028089df1f0d8ed83256` successfully installed TeX Live 2026 on `windows-2025`, but stopped in the explicit command-verification step because `vptovf` was absent. Font preparation and PDF compilation therefore did not run.
+
+The failure is a real bounded dependency gap, not a reason to weaken the proof. `prepare-windows-fonts.ps1` requires `vptovf` to convert the generated VPL metrics into VF/TFM files. TeX Live owns this utility under the `fontware` package (with the Windows executable supplied by `fontware.windows`).
+
+The corrected workflow adds only `fontware` to the explicit TeX Live package set. The portability contract now requires that package token and rejects the stale `miktex=` evidence marker. The successful evidence line identifies `texlive=2026` instead. Windows smoke #7 remains preserved as audit evidence; fresh Static/Linux/Windows gates are required before merge.

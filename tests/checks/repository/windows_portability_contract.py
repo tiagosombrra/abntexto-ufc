@@ -30,6 +30,7 @@ def main() -> None:
         "explicit Windows Server 2025 runner": "runs-on: windows-2025",
         "pinned TeX Live setup action": "zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037",
         "pinned TeX Live version": "texlive_version: '2026'",
+        "virtual-font utilities package": "\n            fontware\n",
         "pinned abntexto materialization": "tools/fetch-abntexto.py --output abntexto.cls",
         "Windows font preparation pipeline": "tools/prepare-windows-fonts.ps1",
         "compile-only font proof": "UFC_FONT_POC_COMPILE_ONLY: '1'",
@@ -39,6 +40,7 @@ def main() -> None:
         "artifact download": "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
         "existing Windows PDF certification gate": "tests/integration/layout/windows-font-pdfa.sh",
         "bounded evidence marker": "WINDOWS-PORTABILITY-EVIDENCE status=PASS",
+        "TeX Live evidence identity": "texlive=2026",
     }
     missing = [label for label, token in required.items() if token not in text]
     if missing:
@@ -47,6 +49,7 @@ def main() -> None:
     forbidden = {
         "floating Windows runner": "runs-on: windows-latest",
         "best-effort portability bypass": "continue-on-error: true",
+        "stale MiKTeX evidence marker": "miktex=",
     }
     present = [label for label, token in forbidden.items() if token in text]
     if present:
