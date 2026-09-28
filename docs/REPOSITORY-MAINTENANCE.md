@@ -37,8 +37,8 @@ Use the lightest process that still protects correctness:
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
 | 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
-| 6 | self-contained Web/Lite hardening | in progress — #437; 6A local PDF.js runtime certified, 6B network-denied/CSP certification active under #440 |
-| 7 | Windows-first portability smoke coverage | pending |
+| 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
+| 7 | cross-platform portability smoke coverage | in progress — #442; 7A Windows certified, 7B macOS ARM64 active under #445 |
 | 8 | provenance, LPPL/asset metadata and archival integration | pending |
 | 9 | tagged-PDF/PDF-UA experiment | pending |
 | 10 | next release certification and publication | pending |
@@ -1223,3 +1223,33 @@ Windows portability smoke #12 on PR #444 head `56d97da3ddd3b982f06ef68f07037d763
 The missing style is provided by the TeX Live `biblatex-abnt` package. The corrected workflow adds only that explicit package and the fail-closed Windows portability contract requires its token.
 
 Smoke #12 remains preserved as portability evidence. No bibliography semantics, class behavior, font identity, artifact transfer, Unicode extraction, embedding or PDF/A-2b requirement is weakened. Fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 6 final receipt
+
+Phase 6 is complete. Web/Lite uses the pinned local PDF.js 6.2.108 runtime and the assembled Pages package is certified with external network denied and the bounded CSP enforced.
+
+- 6A / PR #439 merged as `11e3a4f50d3e39d966d736568c4c586c0680a231`; post-merge Static #888, Pages #8 and Linux Release #287 PASS.
+- 6B / PR #441 merged as `e0bfdf1e9a419125b112248dc6365ea8fe33f848`; post-merge Static #890, Pages #9, Linux Integration #754 and Linux Release #288 PASS.
+- Productive browser evidence reports external network denied, zero external HTTP requests, CSP PASS and local PDF processing.
+- Validator schema/check IDs/verdict semantics and published v3.0.4 artifacts remain unchanged.
+
+
+### Phase 7A final receipt
+
+Phase 7A is complete. PR #444 merged as `524b593544854abd2ee10c29d1566da95508c318` after final head `4fc0465684938dd18bbf85a2da5a3c268ebc32fd` passed Static #903, Windows portability smoke #13 and Linux Integration #767.
+
+Post-merge `main` passed Static #904, Windows smoke #14 and Linux Release #289. Windows Server 2025 generated four strict Times New Roman/Arial PDFs across pdfLaTeX and LuaLaTeX; the dependent Ubuntu job certified literal font identity, Unicode extraction, embedding and PDF/A-2b. Release #289 completed `SCOPE=complete PASS=38 FAIL=0 SKIP=0`.
+
+All intermediate Windows bootstrap/dependency failures remain preserved in #443 and the maintenance audit trail. No Microsoft font binary is tracked or redistributed.
+
+
+### Phase 7B execution map
+
+Phase 7B adds only the portability proof that is distinct from Linux x64 and Windows x64: Darwin on Apple Silicon/ARM64.
+
+A bounded `.github/workflows/macos-smoke.yml` job is pinned to `macos-26` and requires `uname -s = Darwin` plus `uname -m = arm64`. It provisions explicit TeX Live 2026 through the same SHA-pinned setup action already certified by 7A, materializes pinned `abntexto`, and compiles the canonical public tutorial `template/main.tex` with pdfLaTeX and LuaLaTeX through the Makefile.
+
+Exactly two PDFs are transferred to a dependent Ubuntu job. That job reuses `tests/integration/layout/font-embedding.sh` and `tests/integration/layout/pdfa.sh` rather than introducing parallel validation semantics. `tests/checks/repository/macos_portability_contract.py` fails closed if the explicit runner/architecture, pinned TeX toolchain, both engines, artifact transfer or Linux certification is removed.
+
+The macOS smoke is not a second release matrix and does not reproduce the Windows literal Microsoft-font path. Linux remains the full release-grade authority.
