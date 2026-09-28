@@ -44,17 +44,25 @@ jobs:
 
           mapfile -t pdf_matches < <(find "$tmp/extract" -type f -path '*/build/pdf.mjs' -print)
           mapfile -t worker_matches < <(find "$tmp/extract" -type f -path '*/build/pdf.worker.mjs' -print)
-          mapfile -t license_matches < <(find "$tmp/extract" -maxdepth 3 -type f -name LICENSE -print)
 
           test "${#pdf_matches[@]}" -eq 1
           test "${#worker_matches[@]}" -eq 1
-          test "${#license_matches[@]}" -eq 1
+
+          package_root="$(dirname "$(dirname "${pdf_matches[0]}")")"
+          license_path="$package_root/LICENSE"
+          test -f "$license_path"
+          test "$(dirname "$(dirname "${worker_matches[0]}")")" = "$package_root"
+
+          echo "PDF.js package root: $package_root"
+          echo "Main module: ${pdf_matches[0]}"
+          echo "Worker module: ${worker_matches[0]}"
+          echo "License: $license_path"
 
           dest="validator/vendor/pdfjs"
           mkdir -p "$dest"
           cp "${pdf_matches[0]}" "$dest/pdf.mjs"
           cp "${worker_matches[0]}" "$dest/pdf.worker.mjs"
-          cp "${license_matches[0]}" "$dest/LICENSE"
+          cp "$license_path" "$dest/LICENSE"
 
           python3 - <<'PY'
           import hashlib
