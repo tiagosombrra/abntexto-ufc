@@ -28,7 +28,9 @@ def main() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
     required = {
         "explicit Windows Server 2025 runner": "runs-on: windows-2025",
-        "pinned MiKTeX package": "miktex.install --version=25.3.0",
+        "pinned TeX Live setup action": "zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037",
+        "pinned TeX Live version": "texlive_version: '2026'",
+        "pinned abntexto materialization": "tools/fetch-abntexto.py --output abntexto.cls",
         "Windows font preparation pipeline": "tools/prepare-windows-fonts.ps1",
         "compile-only font proof": "UFC_FONT_POC_COMPILE_ONLY: '1'",
         "existing font POC": "tests/integration/layout/font-poc.sh",
@@ -57,7 +59,7 @@ def main() -> None:
 
     print(
         "WINDOWS-PORTABILITY-CONTRACT-EVIDENCE status=PASS "
-        "runner=windows-2025 miktex=25.3.0 windows_build=required "
+        "runner=windows-2025 texlive=2026 windows_build=required "
         "artifact_transfer=required linux_certification=required"
     )
 
