@@ -1275,3 +1275,14 @@ The pdfLaTeX build then failed because `tabularray-abnt.sty` requires `tabularra
 The correction adds only the explicit `tabularray` package and makes the fail-closed macOS portability contract require it. No template, engine, architecture, artifact-transfer, font-embedding or PDF/A requirement is weakened.
 
 Smoke #2 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required on the corrected head before merge.
+
+
+### Phase 7B validation incident — macOS smoke #3
+
+macOS portability smoke #3 on PR #446 head `fbbfe30e85c8738a0317d8f84a5989acd3142c96` proved the explicit `tabularray` correction: TeX Live installation passed and the canonical public template reached `tabularray.sty` successfully.
+
+Compilation then failed because the `tabularray`/`tabularray-abnt` path requires `varwidth.sty`, which was absent from the intentionally bounded TeX Live package set.
+
+The correction adds only the explicit TeX Live `varwidth` package and makes the fail-closed macOS portability contract require it. No runner, architecture, engine, template, artifact-transfer, embedding or PDF/A requirement is weakened.
+
+Smoke #3 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required on the corrected head before merge.
