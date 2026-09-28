@@ -36,7 +36,7 @@ Use the lightest process that still protects correctness:
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
 | 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
-| 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | in progress — #430; 5A complete (#431), 5B tools ownership active under #433 |
+| 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
 | 8 | provenance, LPPL/asset metadata and archival integration | pending |
@@ -1047,3 +1047,37 @@ The current `tools/ci/` namespace already cleanly owns workflow-specific helpers
 Moving high-fanout helpers such as `normative_atomic.py`, `normative_catalog.py`, `normative_full.py`, `pdf_measurement.py`, `pdf_vector_measurement.py` or `repository_paths.py` would create broad import/path churn without adding correctness or ownership capability.
 
 Phase 5B therefore keeps all current tool paths and adds `tools/README.md` as the durable ownership contract. It classifies stable build/release entry points, shared normative/path libraries, PDF measurement modules, the PDF validator CLI, Windows support utilities and the existing `tools/ci/` namespace. No compatibility wrappers are needed because no path moves.
+
+
+### Phase 5B final receipt
+
+Phase 5B is complete. PR #434 merged as `565a7e3654074989283487f97101daea17ec83e3` from final head `25c789f71c56aa760782956babf75ba2aad40a58`.
+
+The decision is intentionally **no physical tool move**. `tools/README.md` is now the durable ownership contract for stable Makefile/release entry points, high-fanout shared normative/repository libraries, PDF measurement modules, the PDF validator CLI, Windows support utilities and workflow-owned helpers under the existing `tools/ci/` namespace.
+
+The current paths are retained because a fresh scan found 77/84 Python checks directly dependent on the root tools surface or named tool entry points, in addition to direct Makefile/workflow consumers. Moving those files would create broad import/path churn without adding validation capability or clearer ownership. No compatibility wrappers are needed because no paths moved.
+
+Post-merge `main` passed Static Contract #883 and Linux Release Check #286 on the exact merge SHA, including `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, distribution bundle certification, canonical-reference reproducibility, CTAN pkgcheck and seven-profile release review-pair generation.
+
+### Phase 5C template/examples decision
+
+Issue #435 evaluated whether non-TCC/profile examples should move into a dedicated `examples/` namespace. The decision is intentionally **no move**.
+
+`template/main.tex` is not a loose example: it is the documented canonical executable TCC tutorial and the canonical public-bundle `main.tex` source consumed by `tools/build-public-bundles.py`. `template/scientific-article.tex` is likewise a release-certification source consumed directly by `tests/integration/release/release-review-pairs.sh`.
+
+The rest of `template/` is already organized around the canonical tutorial under `frontmatter/`, `chapters/`, `backmatter/` and `figures/`. Creating `examples/` or moving either root entry point would add documentation/builder/release-path churn without adding validation capability, lifecycle separation or ownership clarity.
+
+No `template/README.md` is added solely for this decision because the public bundle builder would distribute it, changing generated bundle contents without a demonstrated user requirement. Existing root/user documentation already defines the template/tutorial ownership.
+
+### Phase 5 final certification
+
+Phase 5 leaves the supporting repository structure in the following intentional state:
+
+- release ownership is explicit under `release/README.md`;
+- the CTAN example source lives canonically at `release/ctan/abntexto-ufc-example.tex`, with the retired documentation path rejected fail-closed;
+- 5A / PR #432 is certified by Static #881 + Linux Release #285;
+- root `tools/` remains the stable shared-library/entry-point surface, with CI-specific helpers under `tools/ci/`; 5B / PR #434 is certified by Static #883 + Linux Release #286;
+- `template/` remains the canonical executable/template namespace by the 5C no-move decision;
+- no published v3.0.4 source/tag/GitHub Release asset/submitted CTAN archive or historical release receipt was rewritten.
+
+This closeout update is documentation-only. The next roadmap phase is Phase 6 Web/Lite self-contained hardening.
