@@ -1138,7 +1138,7 @@ Static also requires the deny-proxy/performance-log E2E markers and requires the
 
 Phase 7A turns the retained Windows literal-font maintainer path into a bounded CI portability proof without creating a full Windows release matrix.
 
-The Windows job is pinned to `windows-2025`. The workflow provisions pinned Chocolatey package `miktex.install` 25.3.0 explicitly and enables non-interactive MiKTeX package installation.
+The Windows job is pinned to `windows-2025`. The workflow provisions TeX Live 2026 through `zauguin/install-texlive` pinned to commit `6671d0c62046c7e349fe154d5208fe746b07e037` (v4.4.0), then materializes the repository-pinned `abntexto` 1.1 source through `tools/fetch-abntexto.py`.
 
 The job reuses the repository-owned Windows support pipeline:
 - verifies the eight Times New Roman/Arial system font files already present on the Windows runner;
@@ -1149,6 +1149,16 @@ The job reuses the repository-owned Windows support pipeline:
 
 A dependent `ubuntu-24.04` job downloads those exact PDFs and runs `tests/integration/layout/windows-font-pdfa.sh`, reusing existing literal font identity, Unicode extraction, embedding and PDF/A-2b certification semantics.
 
-`tests/checks/repository/windows_portability_contract.py` fails closed if the workflow loses its explicit Windows runner, pinned MiKTeX, preparation pipeline, compile-only proof, artifact handoff or Linux certification gate. A floating `windows-latest` runner and `continue-on-error` bypass are explicitly rejected.
+`tests/checks/repository/windows_portability_contract.py` fails closed if the workflow loses its explicit Windows runner, pinned TeX Live setup/version, pinned `abntexto` materialization, preparation pipeline, compile-only proof, artifact handoff or Linux certification gate. A floating `windows-latest` runner and `continue-on-error` bypass are explicitly rejected.
 
 This is a portability smoke only. Linux remains the authoritative complete release regression, and published v3.0.4 release/tag/archive bytes remain immutable.
+
+
+### Phase 7A initial validation incidents
+
+The first PR #444 head `517d203dc94c1791fd5ea25e81cd6ca3525a9385` exposed two independent bootstrap defects before any merge:
+
+- Static Contract #891 failed because the newly added `windows_portability_contract.py` had not yet been registered in `tests/static.py::SOURCE_CHECK_NAMES`. The existing test-surface integrity check correctly rejected it as an unreachable retained check. Correction `5394f7d62766a0419b7b74cd15097af9c1a49e9e` registers the check instead of exempting it.
+- Windows portability smoke #1 failed during Chocolatey MiKTeX provisioning before any repository font preparation or compilation ran. The Chocolatey installer reached `miktexsetup_standalone` but timed out contacting `https://api2.miktex.org/hello` (curl code 28). The failure is preserved as infrastructure evidence; it is not hidden with retries or `continue-on-error`.
+
+The corrected workflow replaces that network-specific MiKTeX bootstrap with TeX Live 2026 through `zauguin/install-texlive` v4.4.0 pinned by commit SHA. The action's implementation has an explicit Windows platform path using `install-tl-windows.bat`; the repository still verifies required TeX commands and then uses its existing Windows preparation/compile proof. Fresh Static, Linux and Windows gates are required on the corrected head.
