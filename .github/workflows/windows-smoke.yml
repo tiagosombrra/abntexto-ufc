@@ -74,6 +74,7 @@ jobs:
             babel
             babel-portuges
             biblatex
+            biblatex-abnt
             csquotes
             enumitem
             etoolbox

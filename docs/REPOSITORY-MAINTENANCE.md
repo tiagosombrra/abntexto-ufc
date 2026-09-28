@@ -1214,3 +1214,12 @@ Windows portability smoke #11 on PR #444 head `1f5f7ba2655244880bf900a441f804f64
 The failure is another bounded transitive dependency from the intentionally minimal TeX Live installation. The corrected workflow adds only the TeX Live `fontaxes` package, and the fail-closed Windows portability contract requires that token.
 
 Smoke #11 remains preserved as portability evidence. No runner, font identity, compile proof, artifact transfer, Unicode extraction, embedding or PDF/A-2b requirement is weakened. Fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A validation incident — Windows smoke #12
+
+Windows portability smoke #12 on PR #444 head `56d97da3ddd3b982f06ef68f07037d763983c577` proved the `fontaxes` correction and progressed through the strict Times New Roman pdfLaTeX proof into bibliography initialization. Compilation then failed because BibLaTeX could not find style `abnt`.
+
+The missing style is provided by the TeX Live `biblatex-abnt` package. The corrected workflow adds only that explicit package and the fail-closed Windows portability contract requires its token.
+
+Smoke #12 remains preserved as portability evidence. No bibliography semantics, class behavior, font identity, artifact transfer, Unicode extraction, embedding or PDF/A-2b requirement is weakened. Fresh Static/Linux/Windows gates are required before merge.

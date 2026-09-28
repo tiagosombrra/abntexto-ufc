@@ -33,6 +33,7 @@ def main() -> None:
         "newtx font axes dependency": "\n            fontaxes\n",
         "virtual-font utilities package": "\n            fontware\n",
         "Brazilian Portuguese Babel package": "\n            babel-portuges\n",
+        "ABNT bibliography style dependency": "\n            biblatex-abnt\n",
         "newtx patch dependency": "\n            xpatch\n",
         "newtx string dependency": "\n            xstring\n",
         "pinned abntexto materialization": "tools/fetch-abntexto.py --output abntexto.cls",
