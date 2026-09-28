@@ -1133,3 +1133,22 @@ The productive Linux browser E2E now assembles `_site/validator` through `tools/
 `validator/index.html` gains an enforced meta CSP restricting default/script/worker/connect to same origin and denying objects, frames, base changes and form submission. `style-src 'unsafe-inline'` is deliberately bounded to the one existing tracked style block; Static rejects additional style attributes, inline scripts and inline event handlers.
 
 Static also requires the deny-proxy/performance-log E2E markers and requires the CI runner to exercise the assembled Pages package. The Pages builder requires the CSP markers in the copied artifact. PDF.js vendor bytes/provenance, validation schema/check IDs, mandatory/deep boundaries and verdict semantics remain unchanged.
+
+### Phase 7A execution map
+
+Phase 7A turns the retained Windows literal-font maintainer path into a bounded CI portability proof without creating a full Windows release matrix.
+
+The Windows job is pinned to `windows-2025`. The workflow provisions pinned Chocolatey package `miktex.install` 25.3.0 explicitly and enables non-interactive MiKTeX package installation.
+
+The job reuses the repository-owned Windows support pipeline:
+- verifies the eight Times New Roman/Arial system font files already present on the Windows runner;
+- runs `tools/prepare-windows-fonts.ps1` and its two encoding converters;
+- runs `tests/integration/layout/font-poc.sh` with `UFC_FONT_POC_COMPILE_ONLY=1`;
+- requires the four strict class PDFs for Times/Arial under pdfLaTeX/LuaLaTeX;
+- uploads only generated PDFs, never Microsoft font binaries.
+
+A dependent `ubuntu-24.04` job downloads those exact PDFs and runs `tests/integration/layout/windows-font-pdfa.sh`, reusing existing literal font identity, Unicode extraction, embedding and PDF/A-2b certification semantics.
+
+`tests/checks/repository/windows_portability_contract.py` fails closed if the workflow loses its explicit Windows runner, pinned MiKTeX, preparation pipeline, compile-only proof, artifact handoff or Linux certification gate. A floating `windows-latest` runner and `continue-on-error` bypass are explicitly rejected.
+
+This is a portability smoke only. Linux remains the authoritative complete release regression, and published v3.0.4 release/tag/archive bytes remain immutable.
