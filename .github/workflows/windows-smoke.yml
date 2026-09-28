@@ -62,51 +62,56 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Install pinned MiKTeX
+      - name: Install pinned TeX Live 2026
+        uses: zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037 # v4.4.0
+        with:
+          texlive_version: '2026'
+          cache_version: windows-portability-v1
+          accept-stale: false
+          packages: >
+            scheme-basic
+            algpseudocodex
+            babel
+            biblatex
+            csquotes
+            enumitem
+            etoolbox
+            fontspec
+            geometry
+            glossaries
+            graphics
+            iftex
+            imakeidx
+            listings
+            lmodern
+            luaotfload
+            microtype
+            minted
+            newtx
+            pdfpages
+            ragged2e
+            tabularray-abnt
+            tex-gyre
+            unicode-math
+            xcolor
+
+      - name: Verify TeX Live and fetch pinned abntexto
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          choco install miktex.install --version=25.3.0 --no-progress -y
-          $exitCode = $LASTEXITCODE
-          if ($exitCode -notin @(0, 1641, 3010)) {
-            throw "Chocolatey MiKTeX install failed with exit code $exitCode"
-          }
-
-          $candidates = @(
-            "$env:ProgramFiles\MiKTeX\miktex\bin\x64",
-            "$env:ProgramFiles\MiKTeX\miktex\bin",
-            "$env:LOCALAPPDATA\Programs\MiKTeX\miktex\bin\x64",
-            "$env:LOCALAPPDATA\Programs\MiKTeX\miktex\bin"
-          )
-          $miktexBin = $candidates |
-            Where-Object { Test-Path (Join-Path $_ 'kpsewhich.exe') } |
-            Select-Object -First 1
-          if (-not $miktexBin) {
-            throw 'MiKTeX bin directory was not found after installation.'
-          }
-
-          $miktexBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          $env:PATH = "$miktexBin;$env:PATH"
-
-          & initexmf --admin '--set-config-value=[MPM]AutoInstall=1'
-          if ($LASTEXITCODE -ne 0) {
-            throw "MiKTeX AutoInstall configuration failed with exit code $LASTEXITCODE"
-          }
-          & mpm --admin --update-db
-          if ($LASTEXITCODE -ne 0) {
-            throw "MiKTeX package database update failed with exit code $LASTEXITCODE"
-          }
-          & initexmf --admin --update-fndb
-          if ($LASTEXITCODE -ne 0) {
-            throw "MiKTeX FNDB update failed with exit code $LASTEXITCODE"
-          }
-
           foreach ($command in @('kpsewhich', 'pdflatex', 'lualatex', 'ttf2tfm', 'vptovf', 'mktexlsr')) {
             if (-not (Get-Command $command -ErrorAction SilentlyContinue)) {
-              throw "Required MiKTeX command not found: $command"
+              throw "Required TeX Live command not found: $command"
             }
           }
 
+          python tools/fetch-abntexto.py --output abntexto.cls
+          if ($LASTEXITCODE -ne 0) {
+            throw "Pinned abntexto fetch failed with exit code $LASTEXITCODE"
+          }
+          if (-not (Test-Path 'abntexto.cls')) {
+            throw 'Pinned abntexto.cls was not materialized.'
+          }
       - name: Prepare literal Windows fonts
         shell: pwsh
         run: |
