@@ -1,0 +1,32 @@
+{
+  "asset": {
+    "bytes": 6296688,
+    "id": 493114690,
+    "name": "pdfjs-6.2.108-dist.zip",
+    "sha256": "7bf642d59582b475e8c48447da9b02b0108fad9742d7c2a35cb4ed6dd45e95ba",
+    "url": "https://github.com/mozilla/pdf.js/releases/download/v6.2.108/pdfjs-6.2.108-dist.zip"
+  },
+  "component": "PDF.js",
+  "files": {
+    "LICENSE": {
+      "bytes": 10174,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    "pdf.mjs": {
+      "bytes": 853537,
+      "sha256": "e0ccc62fbfa69942eb7dd46c89d4b3ea8fc08f61b234e65f32e6d5c76efc04c8"
+    },
+    "pdf.worker.mjs": {
+      "bytes": 2222991,
+      "sha256": "1a7607f28cfbc63f0e4e0a41927c89f991e353e4f3fb4565ecfd621ac5975089"
+    }
+  },
+  "license": "Apache-2.0",
+  "package": "pdfjs-dist",
+  "release_id": 361333612,
+  "schema_version": 1,
+  "tag": "v6.2.108",
+  "tag_commit": "0365cbde028bd92e58f2dab1bb70cd30ac7acfd7",
+  "upstream_repository": "https://github.com/mozilla/pdf.js",
+  "version": "6.2.108"
+}

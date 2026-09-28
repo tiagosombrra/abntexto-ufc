@@ -280,7 +280,18 @@ def main() -> None:
     html = INDEX.read_text(encoding="utf-8")
     require_marker(web, 'from "./normative-catalog.js"', "Web/Lite normative catalog")
     require_marker(cli, "from normative_catalog import", "CLI/Deep normative catalog")
-    require_marker(web, "pdfjs-dist@6.2.108", "Web/Lite PDF.js pin")
+    require_marker(
+        web,
+        'from "./vendor/pdfjs/pdf.mjs"',
+        "Web/Lite local PDF.js main module",
+    )
+    require_marker(
+        web,
+        'workerSrc="./vendor/pdfjs/pdf.worker.mjs"',
+        "Web/Lite local PDF.js worker",
+    )
+    forbid_marker(web, "cdn.jsdelivr.net", "Web/Lite runtime CDN dependency")
+    forbid_marker(web, "unpkg.com", "Web/Lite runtime CDN dependency")
     require_marker(web, 'mode:"web-lite-local"', "Web/Lite mode")
     require_marker(cli, "'mode':'cli-deep-local'", "CLI/Deep mode")
     require_marker(html, "is not sent to a server", "Web/Lite local-processing disclosure")

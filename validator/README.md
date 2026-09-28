@@ -10,7 +10,18 @@ Serve this directory over HTTP, for example:
 python3 -m http.server 8000 --directory validator
 ```
 
-Then open `http://localhost:8000/`. The application loads the pinned PDF.js 6.2.108 browser modules from jsDelivr, so first load requires network access to that CDN. PDF analysis itself remains local in the browser.
+Then open `http://localhost:8000/`. The application loads the pinned PDF.js 6.2.108 browser modules from the tracked `validator/vendor/pdfjs/` tree. The validator runtime does not require a CDN; PDF analysis remains local in the browser.
+
+## Vendored PDF.js
+
+The browser runtime pins **PDF.js / pdfjs-dist 6.2.108** under [`vendor/pdfjs/`](vendor/pdfjs/).
+
+- `pdf.mjs` and `pdf.worker.mjs` are imported byte-for-byte from the official Mozilla PDF.js `v6.2.108` generic distribution;
+- `PROVENANCE.json` records the upstream tag commit, GitHub release/asset identifiers, release-asset SHA-256 and the exact hashes/sizes of the tracked runtime files;
+- `LICENSE` is the upstream Apache License 2.0 text;
+- vendored runtime files are generated upstream and must not be edited manually.
+
+The main module and worker are kept at the same pinned version. Dependency updates must import a verified official release and update the fail-closed source contract together; there is no CDN fallback.
 
 ## Normative catalog
 
