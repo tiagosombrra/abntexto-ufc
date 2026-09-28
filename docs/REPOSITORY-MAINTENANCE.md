@@ -1133,3 +1133,93 @@ The productive Linux browser E2E now assembles `_site/validator` through `tools/
 `validator/index.html` gains an enforced meta CSP restricting default/script/worker/connect to same origin and denying objects, frames, base changes and form submission. `style-src 'unsafe-inline'` is deliberately bounded to the one existing tracked style block; Static rejects additional style attributes, inline scripts and inline event handlers.
 
 Static also requires the deny-proxy/performance-log E2E markers and requires the CI runner to exercise the assembled Pages package. The Pages builder requires the CSP markers in the copied artifact. PDF.js vendor bytes/provenance, validation schema/check IDs, mandatory/deep boundaries and verdict semantics remain unchanged.
+
+### Phase 7A execution map
+
+Phase 7A turns the retained Windows literal-font maintainer path into a bounded CI portability proof without creating a full Windows release matrix.
+
+The Windows job is pinned to `windows-2025`. The workflow provisions TeX Live 2026 through `zauguin/install-texlive` pinned to commit `6671d0c62046c7e349fe154d5208fe746b07e037` (v4.4.0), then materializes the repository-pinned `abntexto` 1.1 source through `tools/fetch-abntexto.py`.
+
+The job reuses the repository-owned Windows support pipeline:
+- verifies the eight Times New Roman/Arial system font files already present on the Windows runner;
+- runs `tools/prepare-windows-fonts.ps1` and its two encoding converters;
+- runs `tests/integration/layout/font-poc.sh` with `UFC_FONT_POC_COMPILE_ONLY=1`;
+- requires the four strict class PDFs for Times/Arial under pdfLaTeX/LuaLaTeX;
+- uploads only generated PDFs, never Microsoft font binaries.
+
+A dependent `ubuntu-24.04` job downloads those exact PDFs and runs `tests/integration/layout/windows-font-pdfa.sh`, reusing existing literal font identity, Unicode extraction, embedding and PDF/A-2b certification semantics.
+
+`tests/checks/repository/windows_portability_contract.py` fails closed if the workflow loses its explicit Windows runner, pinned TeX Live setup/version, pinned `abntexto` materialization, preparation pipeline, compile-only proof, artifact handoff or Linux certification gate. A floating `windows-latest` runner and `continue-on-error` bypass are explicitly rejected.
+
+This is a portability smoke only. Linux remains the authoritative complete release regression, and published v3.0.4 release/tag/archive bytes remain immutable.
+
+
+### Phase 7A initial validation incidents
+
+The first PR #444 head `517d203dc94c1791fd5ea25e81cd6ca3525a9385` exposed two independent bootstrap defects before any merge:
+
+- Static Contract #891 failed because the newly added `windows_portability_contract.py` had not yet been registered in `tests/static.py::SOURCE_CHECK_NAMES`. The existing test-surface integrity check correctly rejected it as an unreachable retained check. Correction `5394f7d62766a0419b7b74cd15097af9c1a49e9e` registers the check instead of exempting it.
+- Windows portability smoke #1 failed during Chocolatey MiKTeX provisioning before any repository font preparation or compilation ran. The Chocolatey installer reached `miktexsetup_standalone` but timed out contacting `https://api2.miktex.org/hello` (curl code 28). The failure is preserved as infrastructure evidence; it is not hidden with retries or `continue-on-error`.
+
+The corrected workflow replaces that network-specific MiKTeX bootstrap with TeX Live 2026 through `zauguin/install-texlive` v4.4.0 pinned by commit SHA. The action's implementation has an explicit Windows platform path using `install-tl-windows.bat`; the repository still verifies required TeX commands and then uses its existing Windows preparation/compile proof. Fresh Static, Linux and Windows gates are required on the corrected head.
+
+
+### Phase 7A TeX Live dependency incident
+
+Windows portability smoke #5 proved that TeX Live 2026 installation itself succeeds on `windows-2025`, but the initial bounded package set omitted `ttf2tfm`. The workflow stopped in the explicit command-verification step before font preparation or document compilation.
+
+TeX Live packages the `ttf2tfm` binary in `ttfutils`. The corrected package set adds only `ttfutils`; it does not widen the installation to a full TeX Live scheme. Windows smoke #5 remains audit evidence of the missing explicit dependency. Fresh Static/Linux/Windows gates are required on the corrected head.
+
+
+### Phase 7A virtual-font utility dependency incident
+
+Windows portability smoke #7 on PR #444 head `2dad651d851fe7aa542b028089df1f0d8ed83256` successfully installed TeX Live 2026 on `windows-2025`, but stopped in the explicit command-verification step because `vptovf` was absent. Font preparation and PDF compilation therefore did not run.
+
+The failure is a real bounded dependency gap, not a reason to weaken the proof. `prepare-windows-fonts.ps1` requires `vptovf` to convert the generated VPL metrics into VF/TFM files. TeX Live owns this utility under the `fontware` package (with the Windows executable supplied by `fontware.windows`).
+
+The corrected workflow adds only `fontware` to the explicit TeX Live package set. The portability contract now requires that package token and rejects the stale `miktex=` evidence marker. The successful evidence line identifies `texlive=2026` instead. Windows smoke #7 remains preserved as audit evidence; fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A Brazilian Portuguese language dependency incident
+
+Windows portability smoke #8 on PR #444 head `7c21203dd21c7a57c81d547e722f8480cb28bb22` proved the prior `fontware` correction: TeX Live installation, required command verification, pinned `abntexto` materialization and `prepare-windows-fonts.ps1` all passed. The strict pdfLaTeX proof then stopped because Babel could not load the `brazilian` language definition.
+
+The failure is an explicit bounded TeX dependency gap. TeX Live provides Brazilian Portuguese Babel support in `babel-portuges`, including `brazilian.ldf`. The corrected workflow adds only `babel-portuges` to the package set, and the portability contract requires that token so the language dependency cannot silently disappear.
+
+Windows smoke #8 remains audit evidence. No document/class semantics, language selection or failure policy is weakened; fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A newtx transitive dependency incident
+
+Windows portability smoke #9 on PR #444 head `4fd5255cfdae31c3c360a107d60dad129da04087` proved the previous bounded corrections: TeX Live 2026 installation, required command verification, pinned `abntexto` materialization, Windows literal-font preparation and Brazilian Portuguese Babel loading all passed. The strict Times New Roman pdfLaTeX proof then stopped while loading `newtxtext.sty` because `xpatch.sty` was absent.
+
+This is a transitive package dependency exposed by the deliberately bounded TeX Live installation, not a class/font-policy failure. The corrected workflow adds only the TeX Live `xpatch` package, and the portability contract requires that package token so the dependency cannot silently disappear.
+
+Windows smoke #9 remains audit evidence. No document semantics, font strictness, engine coverage or failure policy is weakened; fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A validation incident — Windows smoke #10
+
+Windows portability smoke #10 on PR #444 head `a3cf3c023ba77f107602478c1cb50c1aaade10fa` proved the prior bounded corrections: TeX Live 2026 installation, explicit command verification, pinned `abntexto` materialization, Windows literal-font preparation, Brazilian Portuguese Babel support and `xpatch` loading all passed. The strict Times New Roman pdfLaTeX proof then stopped while loading `newtxtext.sty` because `xstring.sty` was absent.
+
+This is another explicit transitive dependency exposed by the deliberately bounded TeX Live package set, not a font/class-policy failure. The corrected workflow adds only the TeX Live `xstring` package. The fail-closed Windows portability contract requires that package token so it cannot silently disappear.
+
+Windows smoke #10 remains preserved as audit evidence. No proof, font identity, PDF/A requirement, runner generation or artifact-certification step is weakened. Fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A validation incident — Windows smoke #11
+
+Windows portability smoke #11 on PR #444 head `1f5f7ba2655244880bf900a441f804f64f335d7d` proved the `xstring` correction and progressed through TeX Live setup, pinned `abntexto`, Windows font preparation and the earlier `newtxtext` dependencies. The strict Times New Roman pdfLaTeX proof then stopped because `fontaxes.sty` was absent.
+
+The failure is another bounded transitive dependency from the intentionally minimal TeX Live installation. The corrected workflow adds only the TeX Live `fontaxes` package, and the fail-closed Windows portability contract requires that token.
+
+Smoke #11 remains preserved as portability evidence. No runner, font identity, compile proof, artifact transfer, Unicode extraction, embedding or PDF/A-2b requirement is weakened. Fresh Static/Linux/Windows gates are required before merge.
+
+
+### Phase 7A validation incident — Windows smoke #12
+
+Windows portability smoke #12 on PR #444 head `56d97da3ddd3b982f06ef68f07037d763983c577` proved the `fontaxes` correction and progressed through the strict Times New Roman pdfLaTeX proof into bibliography initialization. Compilation then failed because BibLaTeX could not find style `abnt`.
+
+The missing style is provided by the TeX Live `biblatex-abnt` package. The corrected workflow adds only that explicit package and the fail-closed Windows portability contract requires its token.
+
+Smoke #12 remains preserved as portability evidence. No bibliography semantics, class behavior, font identity, artifact transfer, Unicode extraction, embedding or PDF/A-2b requirement is weakened. Fresh Static/Linux/Windows gates are required before merge.

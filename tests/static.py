@@ -28,6 +28,7 @@ SOURCE_CHECK_NAMES = (
     "scientific_article_recommendations_contract.py",
     "scientific_article_evidence_map.py",
     "linux_integration_suites.py",
+    "windows_portability_contract.py",
     "test_surface_integrity.py",
     "v3_api_residual.py",
     "librarian_review_contract.py",
