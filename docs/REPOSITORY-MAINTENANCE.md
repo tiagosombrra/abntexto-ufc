@@ -36,7 +36,7 @@ Use the lightest process that still protects correctness:
 | 2 | recursive discovery and path-decoupling preparation | complete — PR #361 merged as `603c06c5d347d5857d5b5661d489a7c3d6e80211` |
 | 3 | `standards/` taxonomy | complete — PR #377 merged as `f36797cbc34715e9ed9b82af9ddbd8d8d299fd88`; issue #362 closeout |
 | 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
-| 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | in progress — #430; 5A release namespace ownership active under #431 |
+| 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | in progress — #430; 5A complete (#431), 5B tools ownership active under #433 |
 | 6 | self-contained Web/Lite hardening | pending |
 | 7 | Windows-first portability smoke coverage | pending |
 | 8 | provenance, LPPL/asset metadata and archival integration | pending |
@@ -1022,3 +1022,28 @@ The correction changes documentation wording only, naming `release/history/v3/` 
 Static Contract #879 failed on corrected head `60e7e7d39d2fa393b1291a0a117e17c96d477d91` because the first validation-incident receipt itself repeated the forbidden unversioned history-root literals. The repository contract therefore continued to fail exactly as designed.
 
 The receipt now describes those roots without reproducing the forbidden literals and names only the approved `docs/history/v3/` and `release/history/v3/` namespaces. No policy or scanner exception is added. Static #879 remains preserved as audit evidence; fresh required gates are required before merge.
+
+
+### Phase 5A final receipt
+
+Phase 5A is complete. PR #432 merged as `ff7537cbc2d9f9f41a25a6c86e3345401e74397d` from final head `cdf1e0de0e1fb38374153a3d344618f176481dca`.
+
+The CTAN example source moved byte-identically from its retired documentation path to `release/ctan/abntexto-ufc-example.tex`; the destination blob retains SHA `64ea4bc3d1504d4b6496fb6f2f4859b7e4b1e8c0`. The distribution builder and distribution contract now consume the canonical release source and both reject a compatibility copy at the retired path. The generated archive member remains `abntexto-ufc/abntexto-ufc-example.tex`.
+
+Two Static incidents are preserved:
+- #878 rejected active documentation that named generic unversioned history roots;
+- #879 rejected the first incident receipt because it repeated the same forbidden generic literals.
+
+Both corrections were wording-only and retained the approved `docs/history/v3/` and `release/history/v3/` namespaces without weakening repository policy.
+
+Final PR gates Static #880 + Linux Integration #748 passed. Post-merge `main` passed Static #881 and Linux Release #285 with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`; distribution bundles, canonical-reference reproducibility, CTAN pkgcheck and seven-profile review-pair generation all passed. Published v3.0.4 source/tag/GitHub Release assets/submitted CTAN archive and historical receipts were not rewritten.
+
+### Phase 5B tools-ownership decision
+
+Issue #433 evaluates `tools/` organization after 5A certification. The decision is intentionally **no physical move**.
+
+The current `tools/ci/` namespace already cleanly owns workflow-specific helpers. The root `tools/` surface contains stable build/release/CLI entry points plus shared repository Python modules. A fresh scan of all 84 Python checks found **77/84** directly dependent on the root tools surface or named tool entry points. Makefile and GitHub Actions also consume stable paths directly.
+
+Moving high-fanout helpers such as `normative_atomic.py`, `normative_catalog.py`, `normative_full.py`, `pdf_measurement.py`, `pdf_vector_measurement.py` or `repository_paths.py` would create broad import/path churn without adding correctness or ownership capability.
+
+Phase 5B therefore keeps all current tool paths and adds `tools/README.md` as the durable ownership contract. It classifies stable build/release entry points, shared normative/path libraries, PDF measurement modules, the PDF validator CLI, Windows support utilities and the existing `tools/ci/` namespace. No compatibility wrappers are needed because no path moves.
