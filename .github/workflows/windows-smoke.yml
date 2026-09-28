@@ -92,6 +92,7 @@ jobs:
             ragged2e
             tabularray-abnt
             tex-gyre
+            ttfutils
             unicode-math
             xcolor
 
