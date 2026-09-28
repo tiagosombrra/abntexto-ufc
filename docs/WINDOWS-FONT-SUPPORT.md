@@ -30,7 +30,7 @@ Do not delete one of these three scripts independently. If the Windows literal-f
 
 `.github/workflows/windows-smoke.yml` runs only for the Windows/font-portability surfaces it owns, plus manual dispatch.
 
-The Windows job is pinned to Windows Server 2025, provisions pinned MiKTeX 25.3.0, verifies the runner-provided Times New Roman/Arial files, runs `prepare-windows-fonts.ps1`, and executes the existing `font-poc.sh` in compile-only mode. It uploads exactly four strict class PDFs: Times New Roman and Arial under pdfLaTeX and LuaLaTeX.
+The Windows job is pinned to Windows Server 2025 and provisions TeX Live 2026 through `zauguin/install-texlive` pinned to commit `6671d0c62046c7e349fe154d5208fe746b07e037` (v4.4.0). The repository's pinned `abntexto` 1.1 source is materialized through `tools/fetch-abntexto.py`. The job then verifies the runner-provided Times New Roman/Arial files, runs `prepare-windows-fonts.ps1`, and executes the existing `font-poc.sh` in compile-only mode. It uploads exactly four strict class PDFs: Times New Roman and Arial under pdfLaTeX and LuaLaTeX.
 
 A dependent Ubuntu job certifies those exact Windows-produced PDFs through `windows-font-pdfa.sh`, which reuses the existing literal-font identity, Unicode extraction, embedding and PDF/A-2b gates.
 
