@@ -77,7 +77,7 @@ jobs:
             iftex
             imakeidx
             listings
-            lmodern
+            lm
             luaotfload
             microtype
             minted

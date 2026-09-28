@@ -1253,3 +1253,14 @@ A bounded `.github/workflows/macos-smoke.yml` job is pinned to `macos-26` and re
 Exactly two PDFs are transferred to a dependent Ubuntu job. That job reuses `tests/integration/layout/font-embedding.sh` and `tests/integration/layout/pdfa.sh` rather than introducing parallel validation semantics. `tests/checks/repository/macos_portability_contract.py` fails closed if the explicit runner/architecture, pinned TeX toolchain, both engines, artifact transfer or Linux certification is removed.
 
 The macOS smoke is not a second release matrix and does not reproduce the Windows literal Microsoft-font path. Linux remains the full release-grade authority.
+
+
+### Phase 7B validation incident — macOS smoke #1
+
+Initial macOS portability smoke #1 on PR #446 head `220d2a6403f5362f42deeb4b5a9b9799c8020c51` failed during the pinned TeX Live 2026 installation before repository compilation.
+
+The bounded package list requested `lmodern`, but the TeX Live 2026 repository on the `macos-26` universal-darwin platform exposes the Latin Modern package as `lm`. The installer recorded `tlmgr install: package lmodern not present in repository` and exited nonzero after completing the remaining package work. The public template build and dependent Linux certification therefore did not run.
+
+The correction changes only the explicit macOS TeX Live package token from `lmodern` to `lm`. The fail-closed macOS portability contract now requires `lm` and rejects reintroduction of `lmodern`. No runner, architecture, engine, template, artifact-transfer, font-embedding or PDF/A requirement is weakened.
+
+Smoke #1 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required on the corrected head before merge.

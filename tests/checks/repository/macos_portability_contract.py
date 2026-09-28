@@ -30,6 +30,7 @@ def main() -> None:
         "explicit macOS 26 ARM runner": "runs-on: macos-26",
         "pinned TeX Live setup action": "zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037",
         "pinned TeX Live version": "texlive_version: '2026'",
+        "Latin Modern package": "\n            lm\n",
         "Darwin assertion": "test \"$(uname -s)\" = 'Darwin'",
         "ARM64 assertion": "test \"$(uname -m)\" = 'arm64'",
         "pinned abntexto materialization": "tools/fetch-abntexto.py --output abntexto.cls",
@@ -49,6 +50,7 @@ def main() -> None:
     forbidden = {
         "floating macOS runner": "runs-on: macos-latest",
         "Intel-only runner": "macos-26-intel",
+        "retired Latin Modern package token": "\n            lmodern\n",
         "best-effort portability bypass": "continue-on-error: true",
     }
     present = [label for label, token in forbidden.items() if token in text]
