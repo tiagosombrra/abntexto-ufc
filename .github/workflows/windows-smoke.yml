@@ -1,0 +1,212 @@
+name: Windows portability smoke
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/windows-smoke.yml
+      - abntexto-ufc.cls
+      - tools/prepare-windows-fonts.ps1
+      - tools/convert-encoding-to-unicode.ps1
+      - tools/convert-unicode-encoding-to-glyphs.ps1
+      - tests/checks/repository/windows_portability_contract.py
+      - tests/documents/class-font-poc.tex
+      - tests/documents/times-font-poc.tex
+      - tests/documents/arial-font-poc.tex
+      - tests/integration/layout/font-poc.sh
+      - tests/integration/layout/windows-font-pdfa.sh
+      - tests/integration/layout/font-embedding.sh
+      - tests/integration/layout/pdfa.sh
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - .github/workflows/windows-smoke.yml
+      - abntexto-ufc.cls
+      - tools/prepare-windows-fonts.ps1
+      - tools/convert-encoding-to-unicode.ps1
+      - tools/convert-unicode-encoding-to-glyphs.ps1
+      - tests/checks/repository/windows_portability_contract.py
+      - tests/documents/class-font-poc.tex
+      - tests/documents/times-font-poc.tex
+      - tests/documents/arial-font-poc.tex
+      - tests/integration/layout/font-poc.sh
+      - tests/integration/layout/windows-font-pdfa.sh
+      - tests/integration/layout/font-embedding.sh
+      - tests/integration/layout/pdfa.sh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-portability-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-build:
+    name: Windows literal-font build
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - name: Checkout candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install pinned MiKTeX
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          choco install miktex.install --version=25.3.0 --no-progress -y
+          $exitCode = $LASTEXITCODE
+          if ($exitCode -notin @(0, 1641, 3010)) {
+            throw "Chocolatey MiKTeX install failed with exit code $exitCode"
+          }
+
+          $candidates = @(
+            "$env:ProgramFiles\MiKTeX\miktex\bin\x64",
+            "$env:ProgramFiles\MiKTeX\miktex\bin",
+            "$env:LOCALAPPDATA\Programs\MiKTeX\miktex\bin\x64",
+            "$env:LOCALAPPDATA\Programs\MiKTeX\miktex\bin"
+          )
+          $miktexBin = $candidates |
+            Where-Object { Test-Path (Join-Path $_ 'kpsewhich.exe') } |
+            Select-Object -First 1
+          if (-not $miktexBin) {
+            throw 'MiKTeX bin directory was not found after installation.'
+          }
+
+          $miktexBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $env:PATH = "$miktexBin;$env:PATH"
+
+          & initexmf --admin '--set-config-value=[MPM]AutoInstall=1'
+          if ($LASTEXITCODE -ne 0) {
+            throw "MiKTeX AutoInstall configuration failed with exit code $LASTEXITCODE"
+          }
+          & mpm --admin --update-db
+          if ($LASTEXITCODE -ne 0) {
+            throw "MiKTeX package database update failed with exit code $LASTEXITCODE"
+          }
+          & initexmf --admin --update-fndb
+          if ($LASTEXITCODE -ne 0) {
+            throw "MiKTeX FNDB update failed with exit code $LASTEXITCODE"
+          }
+
+          foreach ($command in @('kpsewhich', 'pdflatex', 'lualatex', 'ttf2tfm', 'vptovf', 'mktexlsr')) {
+            if (-not (Get-Command $command -ErrorAction SilentlyContinue)) {
+              throw "Required MiKTeX command not found: $command"
+            }
+          }
+
+      - name: Prepare literal Windows fonts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $requiredFonts = @(
+            'times.ttf', 'timesbd.ttf', 'timesi.ttf', 'timesbi.ttf',
+            'arial.ttf', 'arialbd.ttf', 'ariali.ttf', 'arialbi.ttf'
+          )
+          foreach ($font in $requiredFonts) {
+            $fontPath = Join-Path "$env:WINDIR\Fonts" $font
+            if (-not (Test-Path $fontPath)) {
+              throw "Required Windows font is not present on the runner: $fontPath"
+            }
+          }
+
+          $texmfRoot = Join-Path $env:RUNNER_TEMP 'abntexto-ufc-texmf'
+          "TEXMFHOME=$texmfRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          & ./tools/prepare-windows-fonts.ps1 -TexmfRoot $texmfRoot
+          if ($LASTEXITCODE -ne 0) {
+            throw "Windows font preparation failed with exit code $LASTEXITCODE"
+          }
+
+          $env:TEXMFHOME = $texmfRoot
+          foreach ($file in @('t1times-ttf.fd', 't1arial.fd', 'abntexto-ufc-windows.map')) {
+            $resolved = (& kpsewhich $file).Trim()
+            if (-not $resolved -or -not (Test-Path $resolved)) {
+              throw "Prepared TeX support file is not discoverable: $file"
+            }
+          }
+
+      - name: Compile strict Windows font proofs
+        shell: bash
+        env:
+          UFC_FONT_POC_COMPILE_ONLY: '1'
+          UFC_WINDOWS_FONTS_DIR: 'C:/Windows/Fonts'
+        run: |
+          set -euo pipefail
+          sh tests/integration/layout/font-poc.sh
+          for pdf in \
+            abntexto-ufc-times-pdflatex-strict-poc.pdf \
+            abntexto-ufc-arial-pdflatex-strict-poc.pdf \
+            abntexto-ufc-times-lualatex-strict-poc.pdf \
+            abntexto-ufc-arial-lualatex-strict-poc.pdf; do
+            test -s "$pdf"
+          done
+
+      - name: Upload Windows strict PDFs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: windows-font-pdfs-${{ github.run_id }}
+          path: |
+            abntexto-ufc-times-pdflatex-strict-poc.pdf
+            abntexto-ufc-arial-pdflatex-strict-poc.pdf
+            abntexto-ufc-times-lualatex-strict-poc.pdf
+            abntexto-ufc-arial-lualatex-strict-poc.pdf
+          retention-days: 14
+          if-no-files-found: error
+
+  linux-certify:
+    name: Certify Windows PDFs
+    needs: windows-build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download Windows strict PDFs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: windows-font-pdfs-${{ github.run_id }}
+          path: windows-font-pdfs
+
+      - name: Install PDF inspection tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          docker --version
+          pdffonts -v 2>&1 | head -n 1
+
+      - name: Certify Windows-produced PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          sh tests/integration/layout/windows-font-pdfa.sh windows-font-pdfs
+          mkdir -p artifacts/validation
+          printf '%s\n' \
+            'WINDOWS-PORTABILITY-EVIDENCE status=PASS runner=windows-2025 miktex=25.3.0 strict_pdfs=4 literal_fonts=PASS unicode_extraction=PASS embedding=PASS pdfa_2b=PASS' \
+            | tee artifacts/validation/windows-portability.txt
+
+      - name: Upload Windows portability evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: windows-portability-certification-${{ github.run_id }}
+          path: artifacts/validation/windows-portability.txt
+          retention-days: 14
+          if-no-files-found: error
