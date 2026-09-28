@@ -1162,3 +1162,10 @@ The first PR #444 head `517d203dc94c1791fd5ea25e81cd6ca3525a9385` exposed two in
 - Windows portability smoke #1 failed during Chocolatey MiKTeX provisioning before any repository font preparation or compilation ran. The Chocolatey installer reached `miktexsetup_standalone` but timed out contacting `https://api2.miktex.org/hello` (curl code 28). The failure is preserved as infrastructure evidence; it is not hidden with retries or `continue-on-error`.
 
 The corrected workflow replaces that network-specific MiKTeX bootstrap with TeX Live 2026 through `zauguin/install-texlive` v4.4.0 pinned by commit SHA. The action's implementation has an explicit Windows platform path using `install-tl-windows.bat`; the repository still verifies required TeX commands and then uses its existing Windows preparation/compile proof. Fresh Static, Linux and Windows gates are required on the corrected head.
+
+
+### Phase 7A TeX Live dependency incident
+
+Windows portability smoke #5 proved that TeX Live 2026 installation itself succeeds on `windows-2025`, but the initial bounded package set omitted `ttf2tfm`. The workflow stopped in the explicit command-verification step before font preparation or document compilation.
+
+TeX Live packages the `ttf2tfm` binary in `ttfutils`. The corrected package set adds only `ttfutils`; it does not widen the installation to a full TeX Live scheme. Windows smoke #5 remains audit evidence of the missing explicit dependency. Fresh Static/Linux/Windows gates are required on the corrected head.
