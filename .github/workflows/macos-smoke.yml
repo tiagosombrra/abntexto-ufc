@@ -66,6 +66,7 @@ jobs:
             biber
             biblatex
             biblatex-abnt
+            booktabs
             csquotes
             enumitem
             etoolbox

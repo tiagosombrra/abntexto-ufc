@@ -1286,3 +1286,14 @@ Compilation then failed because the `tabularray`/`tabularray-abnt` path requires
 The correction adds only the explicit TeX Live `varwidth` package and makes the fail-closed macOS portability contract require it. No runner, architecture, engine, template, artifact-transfer, embedding or PDF/A requirement is weakened.
 
 Smoke #3 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required on the corrected head before merge.
+
+
+### Phase 7B validation incident — macOS smoke #4
+
+macOS portability smoke #4 on PR #446 head `2acfd07fc0516e962f5936af83e16d0b91b98e6e` proved the prior `varwidth` correction: TeX Live 2026 installation passed, Darwin/ARM64 assertion passed, pinned `abntexto` materialization passed, and the canonical public template loaded both `tabularray.sty` and `varwidth.sty`.
+
+The pdfLaTeX build then stopped because `booktabs.sty` was absent from the intentionally bounded TeX Live package set. The template/table path requires that package explicitly.
+
+The correction adds only the TeX Live `booktabs` package and makes the fail-closed macOS portability contract require its token. No runner, architecture, engine, public-template, artifact-transfer, font-embedding or PDF/A-2b requirement is weakened.
+
+Smoke #4 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required before merge.
