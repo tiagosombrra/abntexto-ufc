@@ -9,6 +9,7 @@ The documentation describes the current supported project only. Historical imple
 - [USER-GUIDE.md](USER-GUIDE.md) — recommended document-authoring workflow, profiles, academic elements, compilation and validation.
 - [COMMAND-REFERENCE.md](COMMAND-REFERENCE.md) — canonical public configuration keys, commands and environments.
 - [WINDOWS-FONT-SUPPORT.md](WINDOWS-FONT-SUPPORT.md) — scoped support for literal Windows font validation.
+- [PORTABILITY.md](PORTABILITY.md) — bounded Linux/Windows/macOS portability coverage and CI boundaries.
 
 ## Architecture and engineering
 
