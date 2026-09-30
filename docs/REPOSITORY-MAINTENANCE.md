@@ -38,7 +38,7 @@ Use the lightest process that still protects correctness:
 | 4 | `tests/` taxonomy | complete — issues #375/#400; 84 checks nested, 86 integrations nested, `tests/documents/` intentionally flat after #399 evaluation |
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
 | 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
-| 7 | cross-platform portability smoke coverage | in progress — #442; 7A Windows certified, 7B macOS ARM64 active under #445 |
+| 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
 | 8 | provenance, LPPL/asset metadata and archival integration | pending |
 | 9 | tagged-PDF/PDF-UA experiment | pending |
 | 10 | next release certification and publication | pending |
@@ -1297,3 +1297,31 @@ The pdfLaTeX build then stopped because `booktabs.sty` was absent from the inten
 The correction adds only the TeX Live `booktabs` package and makes the fail-closed macOS portability contract require its token. No runner, architecture, engine, public-template, artifact-transfer, font-embedding or PDF/A-2b requirement is weakened.
 
 Smoke #4 remains preserved as portability evidence. Fresh Static, Linux and macOS gates are required before merge.
+
+
+### Phase 7B final receipt
+
+Phase 7B is complete. PR #446 merged as `d2bd510f6bae648492b04dee2f641fb935012ede` after final head `0259f2c807425a273255c3f42ce0f8f3b786d11b` passed Static Contract #909, Linux Integration #772 and macOS portability smoke #5.
+
+Post-merge `main` passed:
+- Static Contract #910;
+- macOS portability smoke #6;
+- Linux Release Check #290.
+
+The macOS proof is intentionally bounded and distinct from Linux/Windows: explicit `macos-26`, required Darwin/`arm64`, pinned TeX Live 2026, canonical public `template/main.tex` compilation through the normal Makefile path with pdfLaTeX and LuaLaTeX, exactly two generated PDFs, and dependent Ubuntu certification of font embedding plus PDF/A-2b.
+
+macOS smoke failures #1–#4 remain preserved as portability evidence. Each correction added only the missing bounded TeX Live dependency (`lm`, `tabularray`, `varwidth`, `booktabs`) and strengthened the fail-closed portability contract accordingly. No runner, architecture, template, engine, artifact-transfer, embedding or PDF/A requirement was weakened.
+
+### Phase 7 final certification
+
+Phase 7 is complete.
+
+- Linux remains the full release-grade authority.
+- Windows 7A certifies the Windows Server 2025 x64 literal Microsoft-font preparation path and four strict Times New Roman/Arial PDFs across pdfLaTeX/LuaLaTeX; post-merge Static #904 + Windows smoke #14 + Linux Release #289 PASS.
+- macOS 7B certifies Darwin/ARM64 public-template compilation and cross-OS PDF certification; post-merge Static #910 + macOS smoke #6 + Linux Release #290 PASS.
+- no Microsoft/system font binary is tracked or redistributed;
+- no second full release matrix was introduced;
+- no validation schema/check-ID/normative behavior changed;
+- published v3.0.4 release/tag/archive bytes remain immutable.
+
+The next roadmap phase is Phase 8 provenance, licensing and preservation.
