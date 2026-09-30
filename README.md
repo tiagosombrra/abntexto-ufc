@@ -261,4 +261,6 @@ Ao relatar um problema, informe o perfil de documento, engine LaTeX, versão da 
 
 O código e a documentação próprios do projeto são distribuídos sob a **LaTeX Project Public License (LPPL), versão 1.3c ou posterior**. Consulte [`LICENSE`](LICENSE).
 
-Ativos de terceiros e marcas institucionais não são cobertos por essa licença. O pacote CTAN não os redistribui; os bundles Template/Overleaf podem incluir o ativo institucional mantido pelo projeto conforme a política de distribuição acima.
+Status de manutenção LPPL: `maintained`. O **Current Maintainer** é **Tiago Guimarães Sombra**. Para a distribuição CTAN, a identidade exata do `Work` é enumerada em [`release/ctan/README.md`](release/ctan/README.md).
+
+Ativos de terceiros e marcas institucionais não são cobertos por essa licença. O pacote CTAN não os redistribui; os bundles Template/Overleaf podem incluir o ativo institucional mantido pelo projeto conforme a política de distribuição acima. O PDF.js vendorizado mantém sua licença Apache-2.0 e metadados próprios de proveniência.

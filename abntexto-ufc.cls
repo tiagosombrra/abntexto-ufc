@@ -5,6 +5,9 @@
 % Historical v2 redesign and maintenance: Tiago Guimarães Sombra.
 % Historical lineage adapted from ueceTeX2 by Thiago Nascimento.
 % Distributed under LPPL 1.3c or later; see LICENSE.
+% LPPL maintenance status: maintained.
+% Current Maintainer: Tiago Guimarães Sombra.
+% CTAN Work identity: release/ctan/README.md.
 % Normative policy and current technical basis: docs/NORMATIVE-BASE.md.
 % Always target the latest applicable ABNT edition.
 
