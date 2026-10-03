@@ -8,6 +8,8 @@ This directory contains institutional visual assets used by supported GitHub use
 
 It is **not covered by the project's LPPL license**. Nothing in this repository grants independent trademark, brand or institutional-mark rights beyond the permissions that may already apply to an authorized user.
 
+Machine-readable identity, repository lineage and distribution policy are recorded in `PROVENANCE.json`. External source provenance is not documented in repository evidence; the metadata records that limitation explicitly instead of inferring an origin or rights grant.
+
 ## Distribution policy
 
 Current project policy is explicit:

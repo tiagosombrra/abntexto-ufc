@@ -114,6 +114,9 @@ def assert_institutional_asset(archive_path: Path, entry: str) -> None:
         data = archive.read(entry)
     if not data.startswith(b"\x89PNG\r\n\x1a\n"):
         fail(f"{archive_path.name}: UFC coat-of-arms asset is missing or is not a PNG.")
+    canonical = (ROOT / INSTITUTIONAL_ASSET).read_bytes()
+    if data != canonical:
+        fail(f"{archive_path.name}: UFC coat-of-arms asset differs from the canonical repository asset.")
 
 
 def assert_upstream(archive_path: Path) -> None:
