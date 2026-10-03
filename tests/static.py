@@ -18,6 +18,7 @@ SOURCE_CHECK_NAMES = (
     "phase_governance.py",
     "metadata_consistency.py",
     "lppl_maintenance_contract.py",
+    "institutional_asset_provenance.py",
     "path_resolution_contract.py",
     "engineering_language.py",
     "validator_source.py",

@@ -1,0 +1,40 @@
+{
+  "asset": {
+    "bytes": 225873,
+    "git_blob_sha1": "0cd0bbc38fba2e01c40051d6c4ae9a5e71025f74",
+    "height_px": 730,
+    "media_type": "image/png",
+    "path": "assets/institutional/ufc-coat-of-arms.png",
+    "sha256": "163614098ff875cc39db3b5398d5a974001d19178bbd433ee235bef4efed4825",
+    "width_px": 488
+  },
+  "classification": {
+    "institution": "Universidade Federal do Ceará (UFC)",
+    "kind": "institutional-mark",
+    "project_license_coverage": false,
+    "project_source": false
+  },
+  "distribution_policy": {
+    "ctan": "exclude",
+    "overleaf": "include",
+    "template": "include"
+  },
+  "external_source_provenance": {
+    "status": "not-documented-in-repository",
+    "url": null
+  },
+  "repository_history": {
+    "canonical_path": "assets/institutional/ufc-coat-of-arms.png",
+    "canonicalized_commit": "c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e",
+    "canonicalized_date": "2026-08-28",
+    "content_changed_on_canonicalization": false,
+    "introduced_commit": "c25cd4dd1c923d9afc910b1011251dcd78ac5ee3",
+    "introduced_date": "2026-08-19",
+    "introduced_path": "assets/institucional/brasao-ufc.PNG"
+  },
+  "rights": {
+    "project_grant": "none",
+    "statement": "Repository inclusion does not grant independent trademark, brand or institutional-mark rights."
+  },
+  "schema_version": 1
+}

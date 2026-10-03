@@ -39,7 +39,7 @@ Use the lightest process that still protects correctness:
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
 | 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
 | 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
-| 8 | provenance, LPPL/asset metadata and archival integration | in progress — #448; 8A LPPL maintenance/Work identity active under #449 |
+| 8 | provenance, LPPL/asset metadata and archival integration | in progress — #448; 8A complete, 8B institutional asset provenance active under #451 |
 | 9 | tagged-PDF/PDF-UA experiment | pending |
 | 10 | next release certification and publication | pending |
 
@@ -1343,3 +1343,39 @@ The CTAN-facing source of truth enumerates exactly eight Work members: `README.m
 - loss of the PDF.js Apache-2.0 provenance identity.
 
 The class changes in this slice are comments only. No runtime/class API, normative rule, validation schema, package member set, published tag/release asset/submitted CTAN archive or historical receipt changes.
+
+
+### Phase 8A final receipt
+
+Phase 8A is complete. PR #450 merged as `bd9b65559863e104d18943a3bb2fc775a55eba69` after final head `d2d31c58a1563b2ae0ec4a101565f180ebd03b05` passed Static Contract #913, Linux Integration #774, Windows portability smoke #15 and macOS portability smoke #7.
+
+Post-merge `main` passed Static #914, Windows #16, macOS #8 and Linux Release Check #291. Static evidence pins the standard LPPL license blob `842cf85e3ce5e5ffaf7ffb24f73f9f15ef9e82c6`, maintenance status `maintained`, Current Maintainer Tiago Guimarães Sombra, exactly eight CTAN Work members, the institutional-asset LPPL exclusion and PDF.js Apache-2.0 identity.
+
+Linux Release #291 passed `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, distribution bundles, canonical-reference reproducibility, CTAN pkgcheck and seven-profile review-pair generation. Published v3.0.4 artifacts, tags and historical receipts remain unchanged.
+
+### Phase 8B execution map
+
+Phase 8B makes the existing UFC institutional-mark policy machine-readable and binds public bundles to the exact canonical asset without changing the PNG bytes or distribution policy.
+
+`assets/institutional/PROVENANCE.json` records:
+- canonical path `assets/institutional/ufc-coat-of-arms.png`;
+- 225873 bytes, PNG 488x730;
+- SHA-256 `163614098ff875cc39db3b5398d5a974001d19178bbd433ee235bef4efed4825`;
+- Git blob `0cd0bbc38fba2e01c40051d6c4ae9a5e71025f74`;
+- classification as an institutional mark outside project source/LPPL coverage;
+- Template/Overleaf inclusion and CTAN exclusion;
+- repository introduction under `assets/institucional/brasao-ufc.PNG` in `c25cd4dd1c923d9afc910b1011251dcd78ac5ee3`, then byte-identical canonicalization in `c31013b4c7cebe3ddaf3dc0011f489b8de3cd20e`;
+- external source provenance explicitly marked not documented in repository evidence, with no invented source URL or rights claim.
+
+A dedicated Static check binds metadata to the actual PNG and human policy. Public-bundle validation additionally requires the packaged PNG bytes to equal the canonical repository asset exactly. Existing CTAN exclusion remains unchanged and fail-closed.
+
+
+### Phase 8B validation incident
+
+Initial Static Contract #915 failed on PR #452 head `029d3aa9dc1b52b5c219f914c0cff77ae9b245b0` in `institutional_asset_provenance.py`.
+
+The institutional README already stated the required provenance limitation explicitly: external source provenance is not documented in repository evidence. The check, however, required that wording with a literal trailing period while the README continued the same sentence with a semicolon. This created a punctuation-only false negative after the substantive policy had already been expressed correctly.
+
+The correction keeps the contract fail-closed on the required semantic phrase but removes the trailing-punctuation dependency. It does not weaken the provenance requirement, alter the asset/metadata identity, change distribution policy, invent an external source, or modify the PNG bytes.
+
+Static #915 remains preserved as audit evidence. Fresh required gates must pass on the corrected head before merge.
