@@ -124,7 +124,7 @@ def main() -> None:
     required_readme = (
         "PROVENANCE.json",
         "not covered by the project's LPPL license",
-        "External source provenance is not documented in repository evidence.",
+        "External source provenance is not documented in repository evidence",
         "Template bundle: include",
         "Overleaf bundle: include",
         "CTAN package: do **not** redistribute",

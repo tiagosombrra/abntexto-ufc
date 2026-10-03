@@ -1368,3 +1368,14 @@ Phase 8B makes the existing UFC institutional-mark policy machine-readable and b
 - external source provenance explicitly marked not documented in repository evidence, with no invented source URL or rights claim.
 
 A dedicated Static check binds metadata to the actual PNG and human policy. Public-bundle validation additionally requires the packaged PNG bytes to equal the canonical repository asset exactly. Existing CTAN exclusion remains unchanged and fail-closed.
+
+
+### Phase 8B validation incident
+
+Initial Static Contract #915 failed on PR #452 head `029d3aa9dc1b52b5c219f914c0cff77ae9b245b0` in `institutional_asset_provenance.py`.
+
+The institutional README already stated the required provenance limitation explicitly: external source provenance is not documented in repository evidence. The check, however, required that wording with a literal trailing period while the README continued the same sentence with a semicolon. This created a punctuation-only false negative after the substantive policy had already been expressed correctly.
+
+The correction keeps the contract fail-closed on the required semantic phrase but removes the trailing-punctuation dependency. It does not weaken the provenance requirement, alter the asset/metadata identity, change distribution policy, invent an external source, or modify the PNG bytes.
+
+Static #915 remains preserved as audit evidence. Fresh required gates must pass on the corrected head before merge.
