@@ -2,7 +2,8 @@
 
 Version: 3.0.4
 Release status: Unreleased
-Maintainer: Tiago Guimarães Sombra
+Current Maintainer: Tiago Guimarães Sombra
+LPPL maintenance status: maintained
 License: LaTeX Project Public License 1.3c or later
 Repository: https://github.com/tiagosombrra/abntexto-ufc
 Bug tracker: https://github.com/tiagosombrra/abntexto-ufc/issues
@@ -48,3 +49,20 @@ This project is not an official or UFC-homologated template unless the Universit
 ## License
 
 This work may be distributed and/or modified under the conditions of the LaTeX Project Public License, version 1.3c or later. See `LICENSE` for the full license text.
+
+## LPPL maintenance and Work identity
+
+The LPPL maintenance status is `maintained`. The Current Maintainer is Tiago Guimarães Sombra.
+
+For this CTAN package, the LPPL `Work` consists exactly of:
+
+- `README.md`
+- `CHANGELOG`
+- `LICENSE`
+- `abntexto-ufc.cls`
+- `abntexto-ufc.tex`
+- `abntexto-ufc.pdf`
+- `abntexto-ufc-example.tex`
+- `abntexto-ufc-example.pdf`
+
+The repository's institutional mark and separately licensed vendored dependencies are not part of this CTAN Work and are not redistributed by the CTAN package.

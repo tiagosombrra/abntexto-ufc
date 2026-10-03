@@ -39,7 +39,7 @@ Use the lightest process that still protects correctness:
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
 | 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
 | 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
-| 8 | provenance, LPPL/asset metadata and archival integration | pending |
+| 8 | provenance, LPPL/asset metadata and archival integration | in progress — #448; 8A LPPL maintenance/Work identity active under #449 |
 | 9 | tagged-PDF/PDF-UA experiment | pending |
 | 10 | next release certification and publication | pending |
 
@@ -1325,3 +1325,21 @@ Phase 7 is complete.
 - published v3.0.4 release/tag/archive bytes remain immutable.
 
 The next roadmap phase is Phase 8 provenance, licensing and preservation.
+
+
+### Phase 8A execution map
+
+Phase 8A makes the repository's LPPL maintenance/Work identity explicit without modifying the standard license text or rewriting published v3.0.4 artifacts.
+
+The standard root `LICENSE` remains byte-identical and is pinned by Git blob `842cf85e3ce5e5ffaf7ffb24f73f9f15ef9e82c6`. The current LPPL maintenance status is declared as `maintained`, with Tiago Guimarães Sombra as Current Maintainer, in the root licensing guidance, the canonical class header, the CTAN package README and the package manual.
+
+The CTAN-facing source of truth enumerates exactly eight Work members: `README.md`, `CHANGELOG`, `LICENSE`, `abntexto-ufc.cls`, `abntexto-ufc.tex`, `abntexto-ufc.pdf`, `abntexto-ufc-example.tex` and `abntexto-ufc-example.pdf`. This matches the existing package member contract and does not add or remove archive members.
+
+`tests/checks/repository/lppl_maintenance_contract.py` fails closed on:
+- changes to the standard LICENSE blob;
+- drift in Current Maintainer or `maintained` status;
+- CTAN Work list drift;
+- loss of the institutional-asset LPPL exclusion;
+- loss of the PDF.js Apache-2.0 provenance identity.
+
+The class changes in this slice are comments only. No runtime/class API, normative rule, validation schema, package member set, published tag/release asset/submitted CTAN archive or historical receipt changes.
