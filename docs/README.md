@@ -29,6 +29,7 @@ The documentation describes the current supported project only. Historical imple
 
 - [RELEASE-STATE.md](RELEASE-STATE.md) — current published baseline and active development state.
 - [CTAN-RELEASE.md](CTAN-RELEASE.md) — reusable GitHub/CTAN release discipline and distribution contract.
+- [ARCHIVAL-PRESERVATION.md](ARCHIVAL-PRESERVATION.md) — citation authority, Zenodo/DOI prerequisites, artifact-attestation decision and preservation boundaries.
 
 ## Repository-wide contributor material
 

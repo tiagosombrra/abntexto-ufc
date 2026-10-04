@@ -39,7 +39,7 @@ Use the lightest process that still protects correctness:
 | 5 | supporting repository structure (`release/`, CTAN example, tools, examples) | complete — #430; 5A release ownership complete, 5B tools and 5C template/examples retained by documented no-move decisions |
 | 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
 | 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
-| 8 | provenance, LPPL/asset metadata and archival integration | in progress — #448; 8A complete, 8B institutional asset provenance active under #451 |
+| 8 | provenance, LPPL/asset metadata and archival integration | complete — #448; 8A/8B certified, 8C least-privilege supply-chain decisions documented, 8D archival/DOI path explicit |
 | 9 | tagged-PDF/PDF-UA experiment | pending |
 | 10 | next release certification and publication | pending |
 
@@ -1379,3 +1379,47 @@ The institutional README already stated the required provenance limitation expli
 The correction keeps the contract fail-closed on the required semantic phrase but removes the trailing-punctuation dependency. It does not weaken the provenance requirement, alter the asset/metadata identity, change distribution policy, invent an external source, or modify the PNG bytes.
 
 Static #915 remains preserved as audit evidence. Fresh required gates must pass on the corrected head before merge.
+
+
+### Phase 8B final receipt
+
+Phase 8B is complete. PR #452 merged as `21940ef1eb58ae9a62ed96de3c75df62c18c0cee` after final head `4f44b970a6846921fd942745579a836fa981f669` passed Static Contract #916 and Linux Integration #776.
+
+Initial Static #915 remains preserved as evidence of a punctuation-only false negative in the institutional human-policy phrase check. The bounded correction kept the provenance limitation semantically mandatory while removing only the terminal-punctuation dependency.
+
+Post-merge `main` passed Static #917 and Linux Release Check #292 on the exact merge SHA. Exact institutional asset identity, repository lineage, explicitly unknown external-source provenance, LPPL exclusion, Template/Overleaf inclusion, CTAN exclusion and public-bundle byte identity remain fail-closed. The PNG bytes and published v3.0.4 artifacts remain unchanged.
+
+### Phase 8C supply-chain decision
+
+Issue #453 evaluated GitHub artifact attestations and a repository-owned OpenSSF Scorecard workflow.
+
+Artifact attestations are intentionally deferred until a future development/release line is explicitly selected. The current release workflow rebuilds v3.0.4 regression candidates from post-publication `main`, while the published v3.0.4 assets are immutable bytes from source `7e176fd5472925b519d469a9a756330f4851f0b3`. Creating new attestations for later rebuilds would blur the provenance boundary between current CI candidates and the actual published artifacts. A future adoption must attest exact release-candidate digests from the future release-producing workflow and bind those subjects to the certified source/release receipt.
+
+No repository-owned Scorecard workflow is added in Phase 8. The repository is public, public Scorecard scanning already exists, all 28 current external Action uses are pinned to full 40-hex commit SHAs, and adding published repository-owned Scorecard results would increase OIDC/security permission and maintenance surface without addressing a concrete current defect.
+
+These are deliberate least-privilege decisions with explicit re-evaluation triggers, not unfinished work.
+
+### Phase 8D archival/DOI decision
+
+Issue #454 defines the archival path. Root `CITATION.cff` remains the repository citation metadata authority. No DOI, Zenodo record, live Zenodo enablement, `.zenodo.json` or `codemeta.json` is evidenced by current repository state.
+
+`docs/ARCHIVAL-PRESERVATION.md` records the future procedure:
+- link/authenticate the maintainer's GitHub account with Zenodo;
+- enable this repository in the Zenodo GitHub integration;
+- select and certify a real future release line;
+- keep `CITATION.cff` current for that release;
+- publish the certified GitHub release;
+- capture the resulting Zenodo record/DOI as external evidence;
+- only then update repository citation/release metadata with real identifiers.
+
+No `.zenodo.json` is added merely for symmetry because Zenodo can consume `CITATION.cff`, and a `.zenodo.json` would override CFF metadata for GitHub release archiving. No CodeMeta file or DOI is fabricated without a concrete consumer/external receipt.
+
+### Phase 8 closeout
+
+Phase 8 satisfies its planned objectives:
+- LPPL maintenance/Work identity is explicit and regression-protected;
+- institutional asset provenance/distribution identity is machine-readable and fail-closed;
+- artifact-attestation and Scorecard adoption decisions are documented under least privilege;
+- citation/Zenodo/DOI prerequisites are explicit without fabricated identifiers or deposition state.
+
+Published v3.0.4 source, tag, GitHub Release assets, submitted CTAN archive, standard LPPL license bytes and historical receipts remain immutable. Completing Phase 8 does not select a future release line. The next roadmap phase is the separate tagged-PDF/PDF-UA experiment.
