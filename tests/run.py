@@ -134,6 +134,12 @@ CHECKS = (
     ),
     Check("profiles", "Document profiles", integration_command("profile-matrix.sh")),
     Check(
+        "tagged-pdf-baseline",
+        "Tagged PDF baseline experiment",
+        integration_command("tagged-pdf-baseline.sh"),
+        modes=("pr",),
+    ),
+    Check(
         "profile-pdfa",
         "Profile PDF/A-2b",
         integration_command("profile-pdfa.sh"),

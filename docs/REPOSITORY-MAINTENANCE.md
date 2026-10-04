@@ -40,7 +40,7 @@ Use the lightest process that still protects correctness:
 | 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
 | 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
 | 8 | provenance, LPPL/asset metadata and archival integration | complete — #448; 8A/8B certified, 8C least-privilege supply-chain decisions documented, 8D archival/DOI path explicit |
-| 9 | tagged-PDF/PDF-UA experiment | pending |
+| 9 | tagged-PDF/PDF-UA experiment | in progress — #456; 9A minimal LuaLaTeX tagged-PDF baseline active under #457 |
 | 10 | next release certification and publication | pending |
 
 ## Phase 1 receipt
@@ -1423,3 +1423,20 @@ Phase 8 satisfies its planned objectives:
 - citation/Zenodo/DOI prerequisites are explicit without fabricated identifiers or deposition state.
 
 Published v3.0.4 source, tag, GitHub Release assets, submitted CTAN archive, standard LPPL license bytes and historical receipts remain immutable. Completing Phase 8 does not select a future release line. The next roadmap phase is the separate tagged-PDF/PDF-UA experiment.
+
+
+### Phase 9A execution map
+
+Phase 9A adds a deliberately isolated tagged-PDF experiment without changing public templates, class defaults or release behavior.
+
+`tests/documents/tagged-pdf-baseline.tex` uses the current LaTeX 2026 metadata interface with LuaLaTeX, `tagging=on`, PDF/UA-2 and PDF/A-4f. Its content is intentionally limited to a section, ordinary paragraphs and a standard itemized list so the first slice measures base class/package compatibility rather than authoring semantics for figures, tables or mathematics.
+
+`tests/integration/profiles/tagged-pdf-baseline.sh` compiles the fixture through the existing repository build environment, requires `tagpdf.sty`, `show-pdf-tags` and Poppler `pdfinfo`, and fails closed unless:
+- Poppler reports the PDF as tagged;
+- XMP declares PDF/UA part 2;
+- XMP declares PDF/A part 4 conformance F;
+- `show-pdf-tags --xml` exposes Document, Sect, P, L and LI structure roles, accepting standard role mapping where LaTeX emits project-namespace elements.
+
+These checks prove only the requested metadata/structure baseline; they do not claim PDF/UA or PDF/A conformance. Standards-conformance claims remain reserved for later externally validated evidence.
+
+The experiment is registered as PR-only in the permanent runner and owned by the existing `profiles` suite. Existing PDF/A-2b public/release gates are unchanged. Figure alternative text, table-header semantics, MathML and richer reading-order coverage remain explicitly deferred to Phase 9B.
