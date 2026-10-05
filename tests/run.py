@@ -140,6 +140,12 @@ CHECKS = (
         modes=("pr",),
     ),
     Check(
+        "tagged-pdf-graphics",
+        "Tagged PDF graphics semantics probe",
+        integration_command("tagged-pdf-graphics.sh"),
+        modes=("pr",),
+    ),
+    Check(
         "profile-pdfa",
         "Profile PDF/A-2b",
         integration_command("profile-pdfa.sh"),

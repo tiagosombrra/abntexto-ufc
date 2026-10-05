@@ -1458,3 +1458,22 @@ Phase 9A completed as a diagnostic compatibility slice, not as PDF/UA or PDF/A c
 - #457 is closed; blocker ownership is #459; #456 and roadmap #359 mark Phase 9B as blocked.
 
 No material Phase 9B work may start until #459 is resolved or #456 records an explicit bounded re-scope. Published v3.0.4 artifacts and release metadata remain unchanged.
+
+### Phase 9B1 graphics probe execution map
+
+A fresh upstream reconciliation on 2026-10-05 confirmed that the LaTeX Tagging Project still classifies both `abntex2` and `memoir` as `currently-incompatible`. Upstream memoir issue #910 also continues to record unresolved chapter/TOC and float/caption incompatibilities. The repository therefore does not release the representative Phase 9B corpus or section/TOC reading-order work from blocker #459.
+
+Phase 9 is explicitly re-scoped in #456/#359 into bounded 9B1 object-level diagnostics plus blocked 9B2 representative work. The first 9B1 work item is #461 and is intentionally limited to graphics semantics that do not exercise memoir float/caption paths.
+
+`tests/documents/tagged-pdf-graphics.tex` uses direct `\includegraphics` calls with the TeX Live `example-image.pdf` fixture:
+- one meaningful graphic has explicit alternative text;
+- one decorative graphic is marked as an artifact;
+- no `figure`, `caption`, section or TOC construct is used.
+
+`tests/integration/profiles/tagged-pdf-graphics.sh` compiles through the normal repository environment with LuaLaTeX and fails closed unless:
+- Poppler reports the PDF as tagged;
+- `show-pdf-tags --xml --map` produces structure output;
+- exactly one structural `Figure` is present;
+- that `Figure` carries the expected alternative text.
+
+Exactly one structural `Figure` is the bounded artifact assertion: the meaningful graphic must remain in the structure tree while the decorative route must not create a second structural figure. The probe is diagnostic only, keeps #459 authoritative for missing section semantics, and does not claim PDF/UA or PDF/A conformance.
