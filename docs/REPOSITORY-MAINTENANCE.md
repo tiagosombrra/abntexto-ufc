@@ -1431,12 +1431,15 @@ Phase 9A adds a deliberately isolated tagged-PDF experiment without changing pub
 
 `tests/documents/tagged-pdf-baseline.tex` uses the current LaTeX 2026 metadata interface with LuaLaTeX, `tagging=on`, PDF/UA-2 and PDF/A-4f. Its content is intentionally limited to a section, ordinary paragraphs and a standard itemized list so the first slice measures base class/package compatibility rather than authoring semantics for figures, tables or mathematics.
 
-`tests/integration/profiles/tagged-pdf-baseline.sh` compiles the fixture through the existing repository build environment, requires `tagpdf.sty`, `show-pdf-tags` and Poppler `pdfinfo`, and fails closed unless:
+`tests/integration/profiles/tagged-pdf-baseline.sh` compiles the fixture through the existing repository build environment, requires `tagpdf.sty`, `show-pdf-tags` and Poppler `pdfinfo`, and follows the PDF role mappings with `show-pdf-tags --xml --map`.
+
+The first CI executions established a bounded upstream compatibility result rather than a conforming section baseline:
 - Poppler reports the PDF as tagged;
 - XMP declares PDF/UA part 2;
 - XMP declares PDF/A part 4 conformance F;
-- `show-pdf-tags --xml --map` follows the PDF role mappings and exposes Document, Sect, P, L and LI structure roles, accepting standard role mapping where LaTeX emits project-namespace elements.
+- mapped paragraph/list structure is present as Document/P/L/LI;
+- the expected `Sect` structure is absent.
 
-These checks prove only the requested metadata/structure baseline; they do not claim PDF/UA or PDF/A conformance. Standards-conformance claims remain reserved for later externally validated evidence.
+This is consistent with the LaTeX Tagging Project's current classification of both `abntex2` and its base `memoir` as currently incompatible with tagging. Phase 9A therefore treats missing `Sect` as an explicit known blocker, not as successful accessibility conformance. The PR-only contract passes only when the partial tagging evidence is present and the known sectioning blocker is reproduced; if a future toolchain/base-class update starts emitting `Sect`, the contract fails closed so the blocker must be re-evaluated before Phase 9B.
 
-The experiment is registered as PR-only in the permanent runner and owned by the existing `profiles` suite. Existing PDF/A-2b public/release gates are unchanged. Figure alternative text, table-header semantics, MathML and richer reading-order coverage remain explicitly deferred to Phase 9B.
+The experiment is registered as PR-only in the permanent runner and owned by the existing `profiles` suite. Existing PDF/A-2b public/release gates are unchanged. No local section-tagging shim is introduced in this slice. Figure alternative text, table-header semantics, MathML and richer reading-order coverage remain blocked from Phase 9B until the sectioning compatibility boundary is explicitly resolved or re-scoped.
