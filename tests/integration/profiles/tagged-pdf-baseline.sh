@@ -101,10 +101,16 @@ require_role() {
   fi
 }
 
-for role in Document Sect P L LI; do
+for role in Document P L LI; do
   require_role "$role"
 done
 
+if grep -Eq '<Sect([[:space:]>])|rolemapped-from="[^"]*Sect"' "$structure"; then
+  cat "$structure"
+  echo "Tagged PDF baseline changed: Sect is now present; re-evaluate the upstream abntex2/memoir blocker before advancing the experiment."
+  exit 1
+fi
+
 tool_version=$(show-pdf-tags --version 2>&1 | tr '\n' ' ' | sed 's/[[:space:]][[:space:]]*/ /g; s/[[:space:]]$//')
-printf 'TAGGED-PDF-BASELINE-EVIDENCE status=PASS engine=lualatex tagged=yes pdfua_declared=2 pdfa_declared=4f structure=Document,Sect,P,L,LI inspector="%s" tagpdf=%s\n' "$tool_version" "$tagpdf_path"
-echo "Tagged PDF baseline experiment completed."
+printf 'TAGGED-PDF-BASELINE-EVIDENCE contract=PASS accessibility_status=BLOCKED engine=lualatex tagged=yes pdfua_declared=2 pdfa_declared=4f structure=Document,P,L,LI missing=Sect blocker=abntex2-memoir-sectioning inspector="%s" tagpdf=%s\n' "$tool_version" "$tagpdf_path"
+echo "Tagged PDF baseline experiment reproduced the known abntex2/memoir section-tagging blocker."
