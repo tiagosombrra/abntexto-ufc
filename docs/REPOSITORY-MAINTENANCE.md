@@ -40,7 +40,7 @@ Use the lightest process that still protects correctness:
 | 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
 | 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
 | 8 | provenance, LPPL/asset metadata and archival integration | complete — #448; 8A/8B certified, 8C least-privilege supply-chain decisions documented, 8D archival/DOI path explicit |
-| 9 | tagged-PDF/PDF-UA experiment | in progress — #456; 9A minimal LuaLaTeX tagged-PDF baseline active under #457 |
+| 9 | tagged-PDF/PDF-UA experiment | in progress — #456; 9A diagnostic complete via #457/#458, 9B blocked by section-tagging dependency #459 |
 | 10 | next release certification and publication | pending |
 
 ## Phase 1 receipt
@@ -1443,3 +1443,18 @@ The first CI executions established a bounded upstream compatibility result rath
 This is consistent with the LaTeX Tagging Project's current classification of both `abntex2` and its base `memoir` as currently incompatible with tagging. Phase 9A therefore treats missing `Sect` as an explicit known blocker, not as successful accessibility conformance. The PR-only contract passes only when the partial tagging evidence is present and the known sectioning blocker is reproduced; if a future toolchain/base-class update starts emitting `Sect`, the contract fails closed so the blocker must be re-evaluated before Phase 9B.
 
 The experiment is registered as PR-only in the permanent runner and owned by the existing `profiles` suite. Existing PDF/A-2b public/release gates are unchanged. No local section-tagging shim is introduced in this slice. Figure alternative text, table-header semantics, MathML and richer reading-order coverage remain blocked from Phase 9B until the sectioning compatibility boundary is explicitly resolved or re-scoped.
+
+
+### Phase 9A closeout receipt
+
+Phase 9A completed as a diagnostic compatibility slice, not as PDF/UA or PDF/A conformance.
+
+- PR #458 merged by squash as `7602dba92eaade8b0652768445bc9febfeea3f32`;
+- final PR head `f33f14a24d08f7fc56bc1b723b57eacbec61e4a3` passed Static #924 and Linux integration #782;
+- Linux #782 completed the full repository scope with `PASS=39`, `FAIL=0`, `SKIP=0`;
+- the experiment proves `Tagged: yes`, UA-2/A-4f declarations and mapped `Document/P/L/LI` structure while preserving missing `Sect` as `blocker=abntex2-memoir-sectioning`;
+- post-merge reconciliation confirmed `main` at `7602dba92eaade8b0652768445bc9febfeea3f32` and exact blob identity for all six paths changed by #458 against the fully gated PR head;
+- the available GitHub connector does not expose push-triggered workflow runs, so no separate post-merge Actions result is claimed; post-merge certification is exact tree/blob identity against the certified PR head;
+- #457 is closed; blocker ownership is #459; #456 and roadmap #359 mark Phase 9B as blocked.
+
+No material Phase 9B work may start until #459 is resolved or #456 records an explicit bounded re-scope. Published v3.0.4 artifacts and release metadata remain unchanged.
