@@ -68,7 +68,7 @@ Current non-domain semantic namespaces:
 - `integration/citations/` — citation, quotation, bibliography/reference, CAPES guidance and canonical reference-document integration contracts.
 - `integration/frontmatter/` — cover/title-page, approval, acknowledgments, summary, lists, TOC, pagination, duplex and aggregate frontmatter integration contracts.
 - `integration/objects/` — algorithms, code typography, illustrations, tables, vector rules and aggregate academic-object integration contracts.
-- `integration/profiles/` — document-profile, research-project, catalog/multivolume, scientific-article and isolated tagged-PDF experiment contracts.
+- `integration/profiles/` — document-profile, research-project, catalog/multivolume, scientific-article and isolated tagged-PDF diagnostic contracts, including the Phase 9A baseline and bounded Phase 9B1 object probes.
 
 Phase 4E domain integrations are fully assigned to semantic namespaces; the flat `integration/` root contains no integration identities. Recursive basename resolution remains the path authority.
 
