@@ -86,7 +86,7 @@ grep -Eiq '<pdfaid:conformance>[[:space:]]*[Ff][[:space:]]*</pdfaid:conformance>
   exit 1
 }
 
-show-pdf-tags --xml "$pdf" > "$structure"
+show-pdf-tags --xml --map "$pdf" > "$structure"
 [ -s "$structure" ] || {
   echo "Tagged PDF baseline failed: show-pdf-tags produced no structure output."
   exit 1
