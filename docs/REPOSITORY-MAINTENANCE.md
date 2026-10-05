@@ -1435,7 +1435,7 @@ Phase 9A adds a deliberately isolated tagged-PDF experiment without changing pub
 - Poppler reports the PDF as tagged;
 - XMP declares PDF/UA part 2;
 - XMP declares PDF/A part 4 conformance F;
-- `show-pdf-tags --xml` exposes Document, Sect, P, L and LI structure roles, accepting standard role mapping where LaTeX emits project-namespace elements.
+- `show-pdf-tags --xml --map` follows the PDF role mappings and exposes Document, Sect, P, L and LI structure roles, accepting standard role mapping where LaTeX emits project-namespace elements.
 
 These checks prove only the requested metadata/structure baseline; they do not claim PDF/UA or PDF/A conformance. Standards-conformance claims remain reserved for later externally validated evidence.
 
