@@ -15,7 +15,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Published at | `2026-09-20T15:29:02Z` |
 | Maintainer visual acceptance | PASS — 2026-09-20 |
 | CTAN v3.0.4 | published/accepted 2026-09-22 from the exact 2026-09-20 submission — issue #356 |
-| Active development line | `v3.0.5` — `UNRELEASED` / `NOT_FROZEN` — issue #469 |
+| Active development line | `v3.0.5` — candidate-source preparation, `UNRELEASED` / `NOT_FROZEN` — issue #471 / PR #472 |
 
 The current `main` branch may contain control/documentation commits made after publication. Those commits do not alter the published v3.0.4 source, annotated tag, release assets or checksums.
 
@@ -46,9 +46,9 @@ GitHub-reported asset digests were independently verified against those frozen v
 
 ## Current repository lifecycle
 
-GitHub publication of v3.0.4 is complete. Release issue #353 is completed and closed. Phase 10A / issue #469 explicitly selects v3.0.5 as the next maintenance development line from certified entry `main` `9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab`.
+GitHub publication of v3.0.4 is complete. Release issue #353 is completed and closed. Phase 10A / issue #469 selected v3.0.5 as the maintenance line and merged as `9aeed2cd57665bf4ec6d13990b88d8b779de22a1`. Phase 10B / issue #471 / PR #472 now prepares the exact publication-source candidate.
 
-v3.0.5 is `UNRELEASED` and `NOT_FROZEN`. It has no candidate SHA and publication is not authorized. The version choice is patch-level because the canonical public templates remain byte-identical to v3.0.4 and the post-release class changes before line selection are LPPL maintenance/Work comments rather than runtime/API behavior. The line carries maintenance, provenance, distribution and repository-hardening work accumulated after v3.0.4.
+v3.0.5 remains `UNRELEASED` and `NOT_FROZEN`. It still has no candidate SHA and publication is not authorized. Phase 10B finalizes release-source content before candidate selection: the canonical changelog is dated, while `CITATION.cff` continues to describe the latest actually published release v3.0.4. The exact merged #472 SHA must be recertified before it can be offered for maintainer visual acceptance.
 
 The root machine receipt `release/v3-release-candidate.json` represents this active development state while embedding the immutable v3.0.4 publication receipt. Completed v3.0.3 and v3.0.4 release receipts remain preserved under `release/history/v3/`, and the detailed v3.0.4 publication receipt remains under `docs/history/v3/release/`.
 
@@ -61,16 +61,16 @@ Previous GitHub release v3.0.3 remains immutable. Its machine receipt is preserv
 | Fact | State |
 |---|---|
 | Development version | `3.0.5` |
-| Entry SHA | `9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab` |
-| Tracking issue | #469 |
+| Candidate-preparation entry SHA | `9aeed2cd57665bf4ec6d13990b88d8b779de22a1` |
+| Tracking issue / PR | #471 / #472 |
 | Candidate state | `NOT_FROZEN` |
 | Candidate SHA | none |
 | Publication state | `UNPUBLISHED` |
 | Publication authorized | no |
-| Canonical changelog | `3.0.5 — Unreleased` |
+| Canonical changelog | `3.0.5 — 2026-10-06` |
 | Published citation metadata | remains v3.0.4 until an actual future publication |
 
-10A only selects and opens the development line. A later candidate-preparation step must produce one exact source SHA, complete technical certification and review artifacts. Freeze, tag and publication remain prohibited until explicit maintainer visual acceptance is recorded for that exact source/artifact set.
+10B prepares, but does not freeze, the publication source. After #472 merges, its exact merge SHA becomes the only source eligible for fresh Static, complete Linux Integration, Linux Release/CTAN/review-artifact and portability certification. Phase 10C then requires explicit maintainer visual acceptance of artifacts from that same SHA. Freeze, tag and publication remain prohibited until that acceptance is recorded.
 
 ## Authority order
 
