@@ -1503,3 +1503,33 @@ The integration contract requires the mapped PDF structure to contain exactly:
 - four `TD` data cells.
 
 This is diagnostic evidence only. #459 remains authoritative for section/TOC/reading-order and representative-corpus limitations, and no class compatibility shim is introduced.
+
+
+### Phase 9B1 table probe final receipt
+
+The second bounded 9B1 object-level diagnostic is complete. PR #464 merged as `f3874acb8d91999fcccdfa1a0baed23f74714eeb` after final head `f2c59d372af7a02a02454453a6fcb589aa23088e` passed Linux integration #785 and the successful rerun of Static #930.
+
+Linux #785 completed with `SCOPE=profiles PASS=7 FAIL=0 SKIP=0` and emitted `TAGGED-PDF-TABLE-EVIDENCE` proving:
+- tagging active;
+- exactly one `Table`;
+- exactly three `TR` rows;
+- exactly two `TH` header cells;
+- exactly four `TD` data cells;
+- #459 remains the sectioning blocker.
+
+The initial Static #930 job was cancelled before any step executed and remains preserved as a CI infrastructure incident; no code correction was derived from it. The unchanged-head rerun passed. Post-merge reconciliation confirmed exact blob identity for all five changed paths, no open PRs and only `main`.
+
+### Phase 9B1 MathML probe execution map
+
+Issue #465 is the final bounded 9B1 object-level work item. Current LaTeX tagging guidance supports LuaLaTeX-generated MathML with `tagging-setup={math/setup=mathml-SE}`; the repository class already loads `unicode-math` on the LuaLaTeX path, so this diagnostic requires no class or public dependency change.
+
+`tests/documents/tagged-pdf-mathml.tex` contains one simple displayed expression, `x^2 + 1 = 0`, and deliberately avoids sections, TOC, floats, captions and frontmatter. The experiment requests MathML structure elements in its private `\DocumentMetadata`.
+
+`tests/integration/profiles/tagged-pdf-mathml.sh` fails closed unless:
+- Poppler reports the generated PDF as tagged;
+- `show-pdf-tags --xml --map` produces structure output;
+- exactly one structural `Formula` is present;
+- a MathML `math` root in the W3C MathML namespace is present;
+- generated `mi`, `mo`, `mn` and `msup` MathML elements are present for the controlled expression.
+
+This remains diagnostic/partial evidence only. It does not claim PDF/UA or PDF/A conformance, does not modify public templates/class defaults, and does not release Phase 9B2 from #459.
