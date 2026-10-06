@@ -76,6 +76,6 @@
     "purpose": "maintenance release for post-v3.0.4 provenance, distribution and repository hardening",
     "current_change": "development-line-open",
     "runtime_source_model": "single-canonical-class",
-    "tracking_pr": null
+    "tracking_pr": 470
   }
 }
