@@ -22,6 +22,9 @@ CLASS = ROOT / "abntexto-ufc.cls"
 MAKEFILE = ROOT / "Makefile"
 ARCHITECTURE = ROOT / "docs" / "ARCHITECTURE.md"
 RELEASE_STATE = ROOT / "docs" / "RELEASE-STATE.md"
+CHANGELOG = ROOT / "CHANGELOG.md"
+CTAN_README = ROOT / "release" / "ctan" / "README.md"
+CTAN_MANUAL = ROOT / "release" / "ctan" / "abntexto-ufc.tex"
 
 
 def fail(message: str) -> int:
@@ -92,6 +95,24 @@ def main() -> int:
             return fail("active-line version metadata must identify either the published or active line")
         if class_version != make_version:
             return fail("abntexto-ufc.cls and Makefile VERSION must agree during active development")
+        if str(active_line) != "3.0.5":
+            return fail("current active development line must be v3.0.5")
+        if class_version != str(active_line):
+            return fail("active development class/Makefile version must match v3.0.5")
+
+        changelog = CHANGELOG.read_text(encoding="utf-8")
+        if "3.0.5 — Unreleased" not in changelog:
+            return fail("CHANGELOG.md must open v3.0.5 as Unreleased")
+
+        ctan_readme = CTAN_README.read_text(encoding="utf-8")
+        if "Version: 3.0.5" not in ctan_readme or "Release status: Unreleased" not in ctan_readme:
+            return fail("CTAN README must identify unreleased v3.0.5 development")
+
+        ctan_manual = CTAN_MANUAL.read_text(encoding="utf-8")
+        if r"\newcommand{\version}{3.0.5}" not in ctan_manual:
+            return fail("CTAN manual must identify v3.0.5 during active development")
+        if r"\texttt{abntexto-ufc-3.0.5.zip}" not in ctan_manual:
+            return fail("CTAN manual distribution name must track v3.0.5")
 
     architecture = ARCHITECTURE.read_text(encoding="utf-8")
     forbidden_architecture_fragments = (
@@ -110,6 +131,10 @@ def main() -> int:
         return fail("RELEASE-STATE.md still reports completed issue #353 as in closeout")
     if "Release issue #353 is completed and closed" not in release_state:
         return fail("RELEASE-STATE.md must record issue #353 as completed and closed")
+    if active_line is not None:
+        for token in ("`v3.0.5`", "`UNRELEASED`", "`NOT_FROZEN`", "issue #469"):
+            if token not in release_state:
+                return fail(f"RELEASE-STATE.md is missing active-line token: {token}")
 
     print(
         "METADATA-CONSISTENCY-EVIDENCE status=PASS "
