@@ -1533,3 +1533,36 @@ Issue #465 is the final bounded 9B1 object-level work item. Current LaTeX taggin
 - generated `mi`, `mo`, `mn` and `msup` MathML elements are present for the controlled expression.
 
 This remains diagnostic/partial evidence only. It does not claim PDF/UA or PDF/A conformance, does not modify public templates/class defaults, and does not release Phase 9B2 from #459.
+
+
+### Phase 9B1 MathML probe final receipt
+
+The final bounded 9B1 object-level diagnostic is complete. PR #466 merged as `8ca076c05232a8fb127564c10f7c4022b1fc2112` after final head `dca614caabd7daf8c3d984cc4d3319f9aa0d0929` passed Static #932 and Linux integration #786.
+
+Linux #786 completed with `SCOPE=profiles PASS=8 FAIL=0 SKIP=0` and emitted `TAGGED-PDF-MATHML-EVIDENCE` proving:
+- tagging active;
+- exactly one structural `Formula`;
+- MathML `math` structure in the W3C MathML namespace;
+- generated `mi`, `mo`, `mn` and `msup` elements under `math/setup=mathml-SE`;
+- #459 remains the sectioning blocker.
+
+Post-merge reconciliation confirmed exact blob identity for all five changed paths, no open PRs and only `main`.
+
+### Phase 9C conformance and adoption decision
+
+Phase 9C is tracked by #467. The repository now has bounded diagnostics for the feasible surface: minimal tagged structure, direct-graphics alt/artifact semantics, plain-table headers and LuaLaTeX MathML. It still does not have representative section/chapter, TOC/reading-order, float/caption or frontmatter coverage because #459 remains unresolved.
+
+Current veraPDF tooling can machine-check PDF/UA-2, WTPDF 1.0 and PDF/A-4f, but the repository intentionally does not add those as required gates for the partial experimental fixtures. External conformance validation becomes decision-relevant only after the blocked representative corpus can be built. Until then, a validator failure would primarily restate the known structural incompatibility, while forcing a green result would risk narrowing the corpus around the blocker.
+
+The Phase 9 adoption decision is therefore:
+- tagged-PDF accessibility remains experimental only;
+- no public opt-in accessibility mode is exposed;
+- tagging is not enabled by default;
+- existing public/release PDF/A-2b behavior is preserved;
+- the PR-only diagnostics remain as fail-closed regression probes;
+- no PDF/UA-2, WTPDF or PDF/A-4f conformance claim is made;
+- #459 remains open as the durable re-entry blocker.
+
+The complete rationale, evidence map and re-entry protocol are recorded in `docs/ACCESSIBILITY-EXPERIMENT.md`.
+
+Phase 9 is considered complete to the currently feasible boundary when this documentation closeout is integrated and #456/#359 record the same decision. Future accessibility work must restart through #459 rather than silently extending or weakening the current probes.
