@@ -1477,3 +1477,29 @@ Phase 9 is explicitly re-scoped in #456/#359 into bounded 9B1 object-level diagn
 - that `Figure` carries the expected alternative text.
 
 Exactly one structural `Figure` is the bounded artifact assertion: the meaningful graphic must remain in the structure tree while the decorative route must not create a second structural figure. The probe is diagnostic only, keeps #459 authoritative for missing section semantics, and does not claim PDF/UA or PDF/A conformance.
+
+
+### Phase 9B1 graphics probe final receipt
+
+The first bounded 9B1 object-level diagnostic is complete. PR #462 merged as `0948feba1cf51581313af96517af387079b5cc0c` after final head `b7ebea8a2c16ee31a6043055d1f611189db8bec7` passed Linux integration #784 and the successful rerun of Static #928.
+
+Linux #784 completed with `SCOPE=complete PASS=40 FAIL=0 SKIP=0` and emitted `TAGGED-PDF-GRAPHICS-EVIDENCE` proving:
+- tagging active;
+- exactly one structural `Figure`;
+- expected meaningful-image alternative text present;
+- decorative image excluded from the structural Figure count;
+- #459 remains the sectioning blocker.
+
+The first Static #928 attempt was cancelled before executing any steps and remains preserved as a CI infrastructure incident; no code correction was derived from it. Post-merge reconciliation confirmed exact blob identity for all six changed paths, no open PRs and only `main`.
+
+### Phase 9B1 table probe execution map
+
+Issue #463 is the second bounded 9B1 work item. It tests only a plain two-column `tabular` with one header row and two data rows. The fixture uses `\tagpdfsetup{table/header-rows=1}` and deliberately avoids floats, captions, sections and TOC behavior.
+
+The integration contract requires the mapped PDF structure to contain exactly:
+- one `Table`;
+- three `TR` rows;
+- two `TH` header cells;
+- four `TD` data cells.
+
+This is diagnostic evidence only. #459 remains authoritative for section/TOC/reading-order and representative-corpus limitations, and no class compatibility shim is introduced.
