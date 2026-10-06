@@ -1582,3 +1582,26 @@ The version decision is intentionally patch-level:
 10A changes release-control and version identity only. The root marker becomes an active `3.0.5` development marker with `NOT_FROZEN`, no candidate SHA, `UNPUBLISHED` and publication unauthorized. The complete published v3.0.4 receipt remains embedded and immutable. `CITATION.cff` continues to describe published v3.0.4 until a future publication actually occurs.
 
 Opening the line is not a freeze or release authorization. Before any tag/publication, a later exact source must pass full Static/Linux/Linux Release certification, generate review artifacts, and receive explicit maintainer visual acceptance for that same source/artifact set.
+
+
+### Phase 10A final receipt
+
+Phase 10A is complete. PR #470 merged as `9aeed2cd57665bf4ec6d13990b88d8b779de22a1` after final head `b1a4c8f3cfd0fce950e4af0c2e03220d83f5a60d` passed Static #937, complete Linux Integration #789, Linux Release #298, Windows portability #18 and macOS portability #10.
+
+Linux #789 completed with `SCOPE=complete PASS=42 FAIL=0 SKIP=0`. Linux Release #298 completed release validation with `SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN package generation, canonical-reference evidence, seven-profile review pairs and certified distribution artifacts. Static #937 proved the immutable published v3.0.4 receipt while opening only `3.0.5 / NOT_FROZEN / candidate_sha=none / UNPUBLISHED / publication_authorized=false`.
+
+Post-merge reconciliation confirmed exact blob identity for all 11 changed paths, no open PRs and only `main`. Issue #469 is closed.
+
+### Phase 10B candidate-source preparation
+
+Phase 10B is tracked by #471 / PR #472 from certified entry `main` `9aeed2cd57665bf4ec6d13990b88d8b779de22a1`.
+
+This slice follows the proven v3.0.4 release ordering:
+- finalize source-visible release content before selecting a publication SHA;
+- date the canonical changelog as `3.0.5 — 2026-10-06`;
+- keep `CITATION.cff` bound to the latest actually published release, v3.0.4;
+- keep the root marker `NOT_FROZEN`, `candidate_sha=null`, `UNPUBLISHED` and publication unauthorized;
+- identify the control state as `release-candidate-preparation`;
+- make no runtime/API/template/normative behavior change.
+
+After #472 merges, that merge SHA is the only source eligible for Phase 10B exact-SHA certification. It must pass fresh Static, complete Linux Integration, Linux Release/CTAN/review-artifact generation and required portability checks. Only those artifacts may be offered for Phase 10C maintainer visual acceptance. Freeze/tag/publication remain prohibited until 10C is complete.
