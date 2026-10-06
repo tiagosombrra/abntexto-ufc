@@ -165,8 +165,8 @@ def main() -> int:
         return fail("v3.0.5 active development change must be development-line-open")
     if active.get("runtime_source_model") != "single-canonical-class":
         return fail("v3.0.5 must preserve the single canonical runtime model")
-    if active.get("tracking_pr") is not None:
-        return fail("development-line marker must not pre-bind a PR before the control PR exists")
+    if active.get("tracking_pr") != 470:
+        return fail("active v3.0.5 development metadata must bind PR #470")
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
