@@ -22,9 +22,9 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Published v3.0.4 source | `7e176fd5472925b519d469a9a756330f4851f0b3` |
 | GitHub Release ID | `392476983` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | v3.0.5 unreleased maintenance development |
+| Repository lifecycle | v3.0.5 release-candidate preparation; still `NOT_FROZEN` / `UNPUBLISHED` |
 | Active development line | `v3.0.5` — `NOT_FROZEN` / `UNPUBLISHED` |
-| Active release-line issue | issue #469 |
+| Active candidate-preparation issue | issue #471 / PR #472; line selection #469 completed |
 | Completed v3.0.4 release issue | issue #353 |
 | CTAN follow-up | issue #356 — exact submitted bytes published as v3.0.4 on 2026-09-22 |
 | Repository maintenance roadmap | issue #359 — active; current map in `docs/REPOSITORY-MAINTENANCE.md` |
@@ -85,7 +85,7 @@ Distribution regression must extract Template and Overleaf, rebuild their exact 
 
 There is exactly one root machine receipt path: `release/v3-release-candidate.json`.
 
-The repository currently has published v3.0.4 evidence plus an explicitly selected unreleased v3.0.5 maintenance line:
+The repository currently has published v3.0.4 evidence plus a v3.0.5 maintenance line in release-candidate preparation:
 
 - `lifecycle = active-development-marker`;
 - `release_line = 3.0.5`;
@@ -95,13 +95,13 @@ The repository currently has published v3.0.4 evidence plus an explicitly select
 - `publication_state = UNPUBLISHED`;
 - `publication_authorized = false`;
 - `active_development_line = 3.0.5`;
-- active tracking issue #469;
+- active tracking issue #471 / PR #472;
 - latest published GitHub Release remains v3.0.4 / ID `392476983`;
 - authority `docs/RELEASE-STATE.md`.
 
 The embedded published-release receipt for v3.0.4 remains immutable and continues to bind source `7e176fd5472925b519d469a9a756330f4851f0b3`, Static #675, Linux #582, Linux Release run `35510145977`, CTAN `pkgcheck 4.1.0`, explicit maintainer visual acceptance, annotated tag identity and published asset digests.
 
-Opening v3.0.5 does not create a release candidate. Freeze/publication requires a later exact-SHA full certification and explicit maintainer visual acceptance of the exact generated review artifacts.
+Phase 10B finalizes release-source content before candidate selection. It still does not freeze a source: the exact merged #472 source must receive fresh full certification and explicit maintainer visual acceptance before a later control-plane freeze/tag/publication step.
 
 Completed release machine receipts belong under `release/history/v3/`; completed publication narrative belongs under `docs/history/v3/release/`. The exact published CTAN archive for v3.0.4 was submitted on 2026-09-20 under issue #356; the official CTAN-ann update confirmed v3.0.4 publication on 2026-09-22. The submitted bytes remain immutable and must not be rebuilt or replaced.
 

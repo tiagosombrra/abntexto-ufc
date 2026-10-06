@@ -100,9 +100,20 @@ def main() -> int:
         if class_version != str(active_line):
             return fail("active development class/Makefile version must match v3.0.5")
 
+        active = marker.get("active_development_candidate")
+        if not isinstance(active, dict):
+            return fail("active v3.0.5 marker must contain development metadata")
+        current_change = active.get("current_change")
+
         changelog = CHANGELOG.read_text(encoding="utf-8")
-        if "3.0.5 — Unreleased" not in changelog:
-            return fail("CHANGELOG.md must open v3.0.5 as Unreleased")
+        if current_change == "development-line-open":
+            expected_changelog = "3.0.5 — Unreleased"
+        elif current_change == "release-candidate-preparation":
+            expected_changelog = "3.0.5 — 2026-10-06"
+        else:
+            return fail(f"unsupported v3.0.5 development change: {current_change}")
+        if expected_changelog not in changelog:
+            return fail(f"CHANGELOG.md must contain candidate heading: {expected_changelog}")
 
         ctan_readme = CTAN_README.read_text(encoding="utf-8")
         if "Version: 3.0.5" not in ctan_readme or "Release status: Unreleased" not in ctan_readme:
@@ -132,7 +143,7 @@ def main() -> int:
     if "Release issue #353 is completed and closed" not in release_state:
         return fail("RELEASE-STATE.md must record issue #353 as completed and closed")
     if active_line is not None:
-        for token in ("`v3.0.5`", "`UNRELEASED`", "`NOT_FROZEN`", "issue #469"):
+        for token in ("`v3.0.5`", "`UNRELEASED`", "`NOT_FROZEN`", "issue #471"):
             if token not in release_state:
                 return fail(f"RELEASE-STATE.md is missing active-line token: {token}")
 
@@ -140,7 +151,8 @@ def main() -> int:
         "METADATA-CONSISTENCY-EVIDENCE status=PASS "
         f"published_version={published_version} citation_date={published_date} "
         f"class_version={class_version} make_version={make_version} "
-        f"active_development_line={active_line if active_line is not None else 'none'}"
+        f"active_development_line={active_line if active_line is not None else 'none'} "
+        f"candidate_change={marker.get('active_development_candidate', {}).get('current_change', 'none')}"
     )
     return 0
 

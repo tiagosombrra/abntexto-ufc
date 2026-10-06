@@ -1,7 +1,7 @@
 abntexto-ufc changelog
 ======================
 
-3.0.5 — Unreleased
+3.0.5 — 2026-10-06
 ------------------
 
 - Opens a maintenance release line without changing the supported class API or the canonical public templates.
