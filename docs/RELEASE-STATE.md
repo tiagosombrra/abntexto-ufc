@@ -15,7 +15,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Published at | `2026-09-20T15:29:02Z` |
 | Maintainer visual acceptance | PASS — 2026-09-20 |
 | CTAN v3.0.4 | published/accepted 2026-09-22 from the exact 2026-09-20 submission — issue #356 |
-| Active development line | none selected |
+| Active development line | `v3.0.5` — `UNRELEASED` / `NOT_FROZEN` — issue #469 |
 
 The current `main` branch may contain control/documentation commits made after publication. Those commits do not alter the published v3.0.4 source, annotated tag, release assets or checksums.
 
@@ -46,13 +46,31 @@ GitHub-reported asset digests were independently verified against those frozen v
 
 ## Current repository lifecycle
 
-GitHub publication of v3.0.4 is complete. Release issue #353 is completed and closed; no v3.0.5 or other future development line has been selected. Repository-wide maintenance and organization improvements are tracked separately in issue #359 and do not by themselves select a future runtime development line.
+GitHub publication of v3.0.4 is complete. Release issue #353 is completed and closed. Phase 10A / issue #469 explicitly selects v3.0.5 as the next maintenance development line from certified entry `main` `9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab`.
 
-The root machine receipt `release/v3-release-candidate.json` represents the current published steady state. Completed v3.0.3 and v3.0.4 release receipts are preserved under `release/history/v3/`, and the detailed v3.0.4 publication receipt is preserved under `docs/history/v3/release/`.
+v3.0.5 is `UNRELEASED` and `NOT_FROZEN`. It has no candidate SHA and publication is not authorized. The version choice is patch-level because the canonical public templates remain byte-identical to v3.0.4 and the post-release class changes before line selection are LPPL maintenance/Work comments rather than runtime/API behavior. The line carries maintenance, provenance, distribution and repository-hardening work accumulated after v3.0.4.
+
+The root machine receipt `release/v3-release-candidate.json` represents this active development state while embedding the immutable v3.0.4 publication receipt. Completed v3.0.3 and v3.0.4 release receipts remain preserved under `release/history/v3/`, and the detailed v3.0.4 publication receipt remains under `docs/history/v3/release/`.
 
 CTAN publication is a separate external operation tracked by issue #356. The exact `abntexto-ufc-3.0.4.zip` asset from GitHub Release v3.0.4, SHA-256 `137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec`, was submitted on 2026-09-20 as an update from CTAN version 3.0.2 to 3.0.4. The official CTAN-ann update on 2026-09-22 confirms version 3.0.4 publication/acceptance. Repository control therefore records CTAN state `PUBLISHED` and acceptance state `ACCEPTED`; the submitted archive remains immutable and must not be rebuilt or replaced.
 
 Previous GitHub release v3.0.3 remains immutable. Its machine receipt is preserved at `release/history/v3/v3.0.3-release-candidate.json`.
+
+## Active v3.0.5 maintenance line
+
+| Fact | State |
+|---|---|
+| Development version | `3.0.5` |
+| Entry SHA | `9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab` |
+| Tracking issue | #469 |
+| Candidate state | `NOT_FROZEN` |
+| Candidate SHA | none |
+| Publication state | `UNPUBLISHED` |
+| Publication authorized | no |
+| Canonical changelog | `3.0.5 — Unreleased` |
+| Published citation metadata | remains v3.0.4 until an actual future publication |
+
+10A only selects and opens the development line. A later candidate-preparation step must produce one exact source SHA, complete technical certification and review artifacts. Freeze, tag and publication remain prohibited until explicit maintainer visual acceptance is recorded for that exact source/artifact set.
 
 ## Authority order
 
