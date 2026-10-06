@@ -131,24 +131,42 @@ def main() -> int:
         return fail("historical v3.0.4 snapshot must preserve CTAN follow-up issue #356")
 
     marker = load_json(ACTIVE_MARKER)
-    if marker.get("lifecycle") != "published-release-marker":
-        return fail("root release marker must represent published steady state")
-    if marker.get("release_line") != "3.0.4" or marker.get("target_version") != "3.0.4":
-        return fail("published release marker must identify v3.0.4")
-    if marker.get("candidate_state") != "FROZEN":
-        return fail("published v3.0.4 source must remain frozen")
-    if marker.get("candidate_sha") != "7e176fd5472925b519d469a9a756330f4851f0b3":
-        return fail("published v3.0.4 marker must bind the certified source SHA")
-    if marker.get("publication_authorized") is not True:
-        return fail("published v3.0.4 marker must preserve publication authorization")
-    if marker.get("publication_state") != "PUBLISHED":
-        return fail("root release marker must record PUBLISHED state")
-    if marker.get("active_development_line") is not None:
-        return fail("no future development line may be implied before it is explicitly selected")
-    if marker.get("tracking_issue") != 353:
-        return fail("published v3.0.4 marker must preserve release issue #353")
+    if marker.get("schema_version") != 28:
+        return fail("active v3.0.5 marker must use schema version 28")
+    if marker.get("lifecycle") != "active-development-marker":
+        return fail("root release marker must represent active v3.0.5 development")
+    if marker.get("release_line") != "3.0.5" or marker.get("target_version") != "3.0.5":
+        return fail("active release marker must identify v3.0.5")
+    if marker.get("candidate_state") != "NOT_FROZEN":
+        return fail("active v3.0.5 development must remain NOT_FROZEN")
+    if marker.get("candidate_sha") is not None:
+        return fail("NOT_FROZEN v3.0.5 development must not expose a candidate SHA")
+    if marker.get("publication_authorized") is not False:
+        return fail("v3.0.5 publication must remain unauthorized before freeze")
+    if marker.get("publication_state") != "UNPUBLISHED":
+        return fail("active v3.0.5 development must remain UNPUBLISHED")
+    if marker.get("active_development_line") != "3.0.5":
+        return fail("active development line must be v3.0.5")
+    if marker.get("tracking_issue") != 469:
+        return fail("active v3.0.5 development must track issue #469")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
-        return fail("published release marker must point to docs/RELEASE-STATE.md")
+        return fail("active development marker must point to docs/RELEASE-STATE.md")
+
+    active = marker.get("active_development_candidate")
+    if not isinstance(active, dict):
+        return fail("active v3.0.5 marker must contain development metadata")
+    if active.get("version") != "3.0.5":
+        return fail("active development metadata must identify v3.0.5")
+    if active.get("entry_sha") != "9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab":
+        return fail("v3.0.5 entry must bind the certified Phase 9 closeout main")
+    if active.get("tracking_issue") != 469:
+        return fail("active development metadata must point to issue #469")
+    if active.get("current_change") != "development-line-open":
+        return fail("v3.0.5 active development change must be development-line-open")
+    if active.get("runtime_source_model") != "single-canonical-class":
+        return fail("v3.0.5 must preserve the single canonical runtime model")
+    if active.get("tracking_pr") is not None:
+        return fail("development-line marker must not pre-bind a PR before the control PR exists")
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
@@ -224,7 +242,9 @@ def main() -> int:
             "docs/RELEASE-STATE.md",
             "v3.0.4",
             "PUBLISHED",
-            "none selected",
+            "v3.0.5",
+            "NOT_FROZEN",
+            "issue #469",
             "issue #356",
             "2026-09-22",
             "must never be rewritten",
@@ -238,7 +258,9 @@ def main() -> int:
             "`v3.0.4`",
             "`PUBLISHED`",
             "392476983",
-            "none selected",
+            "`v3.0.5`",
+            "NOT_FROZEN",
+            "issue #469",
             "issue #356",
             "2026-09-22",
         ),
@@ -255,7 +277,8 @@ def main() -> int:
         "RELEASE-GOVERNANCE-EVIDENCE status=PASS "
         "published_release=3.0.4 publication_state=published "
         "source_sha=7e176fd5472925b519d469a9a756330f4851f0b3 "
-        "release_id=392476983 active_development_line=none "
+        "release_id=392476983 active_development_line=3.0.5 "
+        "candidate_state=not_frozen candidate_sha=none publication_authorized=false "
         "ctan_state=published ctan_acceptance=accepted "
         "ctan_published_date=2026-09-22 ctan_issue=356 "
         "current_authority=docs/RELEASE-STATE.md"
