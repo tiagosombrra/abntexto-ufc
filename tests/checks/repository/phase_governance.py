@@ -147,8 +147,8 @@ def main() -> int:
         return fail("active v3.0.5 development must remain UNPUBLISHED")
     if marker.get("active_development_line") != "3.0.5":
         return fail("active development line must be v3.0.5")
-    if marker.get("tracking_issue") != 469:
-        return fail("active v3.0.5 development must track issue #469")
+    if marker.get("tracking_issue") != 471:
+        return fail("v3.0.5 candidate preparation must track issue #471")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
         return fail("active development marker must point to docs/RELEASE-STATE.md")
 
@@ -157,16 +157,16 @@ def main() -> int:
         return fail("active v3.0.5 marker must contain development metadata")
     if active.get("version") != "3.0.5":
         return fail("active development metadata must identify v3.0.5")
-    if active.get("entry_sha") != "9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab":
-        return fail("v3.0.5 entry must bind the certified Phase 9 closeout main")
-    if active.get("tracking_issue") != 469:
-        return fail("active development metadata must point to issue #469")
-    if active.get("current_change") != "development-line-open":
-        return fail("v3.0.5 active development change must be development-line-open")
+    if active.get("entry_sha") != "9aeed2cd57665bf4ec6d13990b88d8b779de22a1":
+        return fail("v3.0.5 candidate preparation must bind the certified 10A main")
+    if active.get("tracking_issue") != 471:
+        return fail("active development metadata must point to issue #471")
+    if active.get("current_change") != "release-candidate-preparation":
+        return fail("v3.0.5 active development change must be release-candidate-preparation")
     if active.get("runtime_source_model") != "single-canonical-class":
         return fail("v3.0.5 must preserve the single canonical runtime model")
-    if active.get("tracking_pr") != 470:
-        return fail("active v3.0.5 development metadata must bind PR #470")
+    if active.get("tracking_pr") != 472:
+        return fail("v3.0.5 candidate preparation metadata must bind PR #472")
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
@@ -244,7 +244,7 @@ def main() -> int:
             "PUBLISHED",
             "v3.0.5",
             "NOT_FROZEN",
-            "issue #469",
+            "issue #471",
             "issue #356",
             "2026-09-22",
             "must never be rewritten",
@@ -260,7 +260,7 @@ def main() -> int:
             "392476983",
             "`v3.0.5`",
             "NOT_FROZEN",
-            "issue #469",
+            "issue #471",
             "issue #356",
             "2026-09-22",
         ),
@@ -279,6 +279,7 @@ def main() -> int:
         "source_sha=7e176fd5472925b519d469a9a756330f4851f0b3 "
         "release_id=392476983 active_development_line=3.0.5 "
         "candidate_state=not_frozen candidate_sha=none publication_authorized=false "
+        "candidate_change=release-candidate-preparation "
         "ctan_state=published ctan_acceptance=accepted "
         "ctan_published_date=2026-09-22 ctan_issue=356 "
         "current_authority=docs/RELEASE-STATE.md"
