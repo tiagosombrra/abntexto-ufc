@@ -1566,3 +1566,19 @@ The Phase 9 adoption decision is therefore:
 The complete rationale, evidence map and re-entry protocol are recorded in `docs/ACCESSIBILITY-EXPERIMENT.md`.
 
 Phase 9 is considered complete to the currently feasible boundary when this documentation closeout is integrated and #456/#359 record the same decision. Future accessibility work must restart through #459 rather than silently extending or weakening the current probes.
+
+
+### Phase 10A development-line selection
+
+Phase 10A is tracked by #469 and selects `3.0.5` as the next patch/maintenance development line from certified entry `main` `9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab`.
+
+The version decision is intentionally patch-level:
+- the canonical public `template/main.tex` and `template/scientific-article.tex` are byte-identical to published v3.0.4;
+- the post-v3.0.4 class delta before line selection is limited to LPPL maintainer/Work comments and does not change runtime behavior or the public API;
+- standards work is predominantly taxonomy/ownership reorganization with normative authority preserved;
+- Web/Lite runtime hardening was already deployed/certified independently through the Pages surface;
+- post-release work primarily concerns test/repository organization, portability, provenance/licensing, preservation and experimental accessibility diagnostics.
+
+10A changes release-control and version identity only. The root marker becomes an active `3.0.5` development marker with `NOT_FROZEN`, no candidate SHA, `UNPUBLISHED` and publication unauthorized. The complete published v3.0.4 receipt remains embedded and immutable. `CITATION.cff` continues to describe published v3.0.4 until a future publication actually occurs.
+
+Opening the line is not a freeze or release authorization. Before any tag/publication, a later exact source must pass full Static/Linux/Linux Release certification, generate review artifacts, and receive explicit maintainer visual acceptance for that same source/artifact set.
