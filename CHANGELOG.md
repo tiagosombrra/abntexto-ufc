@@ -1,6 +1,16 @@
 abntexto-ufc changelog
 ======================
 
+3.0.5 — Unreleased
+------------------
+
+- Opens a maintenance release line without changing the supported class API or the canonical public templates.
+- Carries explicit LPPL maintenance/Work identity and institutional-asset provenance into the next package candidate.
+- Carries repository/distribution hardening completed after v3.0.4, including recursive test ownership, cross-platform portability certification and preservation guidance.
+- Keeps the Web/Lite validator's self-contained/offline hardening on its independently deployed Pages surface; no validator semantics are promoted into the LaTeX package API.
+- Retains tagged-PDF/PDF-UA work as experimental diagnostics only; no public accessibility opt-in/default or conformance claim is introduced.
+- Preserves published v3.0.4 source, tag, GitHub Release assets and CTAN archive as immutable evidence.
+
 3.0.4 — 2026-09-19
 ------------------
 
