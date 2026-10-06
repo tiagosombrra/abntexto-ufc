@@ -152,6 +152,12 @@ CHECKS = (
         modes=("pr",),
     ),
     Check(
+        "tagged-pdf-mathml",
+        "Tagged PDF MathML semantics probe",
+        integration_command("tagged-pdf-mathml.sh"),
+        modes=("pr",),
+    ),
+    Check(
         "profile-pdfa",
         "Profile PDF/A-2b",
         integration_command("profile-pdfa.sh"),
