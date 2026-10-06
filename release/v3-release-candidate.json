@@ -8,7 +8,7 @@
   "candidate_sha": null,
   "publication_authorized": false,
   "publication_state": "UNPUBLISHED",
-  "tracking_issue": 469,
+  "tracking_issue": 471,
   "authority": "docs/RELEASE-STATE.md",
   "active_development_line": "3.0.5",
   "published_release": {
@@ -68,14 +68,14 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.4 remains the immutable published GitHub/CTAN release. v3.0.5 is the active unreleased maintenance development line under issue #469; it is NOT_FROZEN, has no candidate SHA, and publication is not authorized. Full exact-SHA technical certification plus explicit maintainer visual acceptance are required before any future freeze/tag/publication.",
+  "note": "v3.0.4 remains the immutable published GitHub/CTAN release. v3.0.5 is in release-candidate preparation under issue #471 / PR #472; it remains NOT_FROZEN, has no candidate SHA, and publication is not authorized. The exact merged preparation source must pass fresh full technical certification and explicit maintainer visual acceptance before any freeze/tag/publication.",
   "active_development_candidate": {
     "version": "3.0.5",
-    "entry_sha": "9f2d15e58cf2e42364defc7caa30c9c0ad04f2ab",
-    "tracking_issue": 469,
+    "entry_sha": "9aeed2cd57665bf4ec6d13990b88d8b779de22a1",
+    "tracking_issue": 471,
     "purpose": "maintenance release for post-v3.0.4 provenance, distribution and repository hardening",
-    "current_change": "development-line-open",
+    "current_change": "release-candidate-preparation",
     "runtime_source_model": "single-canonical-class",
-    "tracking_pr": 470
+    "tracking_pr": 472
   }
 }
