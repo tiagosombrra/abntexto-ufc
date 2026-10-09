@@ -22,7 +22,7 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Published v3.0.4 source | `7e176fd5472925b519d469a9a756330f4851f0b3` |
 | GitHub Release ID | `392476983` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | v3.0.5 release-candidate preparation; still `NOT_FROZEN` / `UNPUBLISHED` |
+| Repository lifecycle | v3.0.5 candidate visually ACCEPTED (#474); still `NOT_FROZEN` / `UNPUBLISHED` until #475 freeze |
 | Active development line | `v3.0.5` — `NOT_FROZEN` / `UNPUBLISHED` |
 | Active candidate-preparation issue | issue #471 / PR #472; line selection #469 completed |
 | Completed v3.0.4 release issue | issue #353 |
@@ -145,3 +145,9 @@ The current project-owned runtime is one canonical `abntexto-ufc.cls`. Runtime-s
 ## Fail-closed rule
 
 If a required fact cannot be established from current Git state, active machine state, current evidence or reviewed source material, record the ambiguity and stop that advancement. Automated success never substitutes for explicit maintainer visual approval when a release gate requires it.
+
+## v3.0.5 explicit maintainer ACCEPT receipt
+
+The maintainer explicitly recorded `ACCEPT` on 2026-10-09 for certified source `407f279a78df3824b27585d0e86d688c19cd90ee` and retained seven-profile review-pair artifact `11415094731` (digest `sha256:23193aaaacdb2af7b465e4ddae17428344d1ac1d65d5dcc1b7089cf7bb342fa4`). Issue #474 is closed; #475 owns freeze/tag/publication.
+
+This receipt does **not** modify the current machine marker: the candidate remains `NOT_FROZEN`, `candidate_sha=null`, `UNPUBLISHED` and publication unauthorized until an independent freeze-control PR passes the full required gates. The approved publication source remains the exact earlier SHA even after future documentation/control commits. No v3.0.5 tag or GitHub Release exists yet.
