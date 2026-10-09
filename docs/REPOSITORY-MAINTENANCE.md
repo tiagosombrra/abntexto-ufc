@@ -1605,3 +1605,10 @@ This slice follows the proven v3.0.4 release ordering:
 - make no runtime/API/template/normative behavior change.
 
 After #472 merges, that merge SHA is the only source eligible for Phase 10B exact-SHA certification. It must pass fresh Static, complete Linux Integration, Linux Release/CTAN/review-artifact generation and required portability checks. Only those artifacts may be offered for Phase 10C maintainer visual acceptance. Freeze/tag/publication remain prohibited until 10C is complete.
+
+
+### Phase 10C explicit ACCEPT / Phase 10D entry
+
+On 2026-10-09 the maintainer expressly recorded `ACCEPT` for v3.0.5 source `407f279a78df3824b27585d0e86d688c19cd90ee` and review-pairs artifact `11415094731` (GitHub digest `sha256:23193aaaacdb2af7b465e4ddae17428344d1ac1d65d5dcc1b7089cf7bb342fa4`), closing #474. Technical receipts: Static #945, complete Linux Integration #798, Linux Release #306, Windows #20 and macOS #12 all PASS for that exact source. Prior 71-page identical-image automated review is supporting evidence, not the human acceptance.
+
+Issue #475 tracks subsequent freeze/tag/publication. This documentation-only receipt deliberately **does not freeze** the machine marker or authorize publication: `release/v3-release-candidate.json` still reports `NOT_FROZEN`, null candidate SHA, publication unauthorized and `UNPUBLISHED`. A separate control-plane freeze must update strict governance and metadata checks together and pass all required gates. Tag target and retained certified distribution bytes must match the original accepted source, not any later control/documentation commit. The connected GitHub tool does not currently provide annotated-tag/Release-asset publication mutations; those remain an explicit capability dependency. Published v3.0.4 artifacts remain immutable.
