@@ -48,18 +48,9 @@ jobs:
       - name: Checkout candidate source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: 407f279a78df3824b27585d0e86d688c19cd90ee
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Verify exact candidate source
-        shell: bash
-        run: |
-          set -euo pipefail
-          expected='407f279a78df3824b27585d0e86d688c19cd90ee'
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$expected"
-          echo "PORTABILITY-CANDIDATE-EVIDENCE status=PASS platform=macos-build source_sha=$actual"
 
       - name: Install pinned TeX Live 2026
         uses: zauguin/install-texlive@6671d0c62046c7e349fe154d5208fe746b07e037 # v4.4.0
@@ -155,18 +146,9 @@ jobs:
       - name: Checkout candidate source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: 407f279a78df3824b27585d0e86d688c19cd90ee
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Verify exact candidate source
-        shell: bash
-        run: |
-          set -euo pipefail
-          expected='407f279a78df3824b27585d0e86d688c19cd90ee'
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$expected"
-          echo "PORTABILITY-CANDIDATE-EVIDENCE status=PASS platform=macos-certify source_sha=$actual"
 
       - name: Download macOS template PDFs
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -195,7 +177,7 @@ jobs:
             UFC_PDFA_NEGATIVE_VALIDATION=0 sh tests/integration/layout/pdfa.sh "$pdf"
           done
           printf '%s\n' \
-            'MACOS-PORTABILITY-EVIDENCE status=PASS source_sha=407f279a78df3824b27585d0e86d688c19cd90ee runner=macos-26 arch=arm64 texlive=2026 template=main engines=2 font_embedding=PASS pdfa_2b=PASS' \
+            'MACOS-PORTABILITY-EVIDENCE status=PASS runner=macos-26 arch=arm64 texlive=2026 template=main engines=2 font_embedding=PASS pdfa_2b=PASS' \
             | tee artifacts/validation/macos-portability.txt
 
       - name: Upload macOS portability evidence
