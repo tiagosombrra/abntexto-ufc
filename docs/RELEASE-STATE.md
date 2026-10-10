@@ -62,7 +62,7 @@ Previous GitHub release v3.0.3 remains immutable. Its machine receipt is preserv
 |---|---|
 | Development version | `3.0.5` |
 | Candidate-preparation entry SHA | `9aeed2cd57665bf4ec6d13990b88d8b779de22a1` |
-| Tracking issue / PR | #471 / #472 |
+| Tracking issue / PR | #475 / CTAN correction #369; original #471 / #472 historical |
 | Candidate state | `NOT_FROZEN` |
 | Candidate SHA | none |
 | Publication state | `UNPUBLISHED` |
@@ -98,3 +98,16 @@ A fresh remote reconciliation at `main=47f101129316a72815c5e2f0bb1f9223dba5a3eb`
 **Decision: BLOCKED, fail closed.** No control-plane-only freeze may silently certify these inconsistent publication-source bytes. Editing that README changes the previously accepted source and therefore requires selecting an updated exact source SHA, rerunning complete Static/Linux Integration/Linux Release (including CTAN, reproducibility and distribution) plus Windows/macOS portability certification, regenerating/reviewing the seven profile pairs and obtaining explicit renewed maintainer ACCEPT for the updated source/artifact pair. Existing 10B/10C receipts remain valid historical evidence for the original SHA but are not transferable to changed bytes. No tag/Release/CTAN submission is authorized. The v3.0.4 publication is untouched.
 
 The repository metadata-consistency contract now fails closed if a frozen or publication-authorized 3.0.5 marker retains either stale CTAN README declaration; unfrozen development continues to be explicitly labelled Unreleased. The freeze-control transition and downstream #475 publication work remain pending, and the separate authenticated annotated-tag/Release-asset capability remains a later dependency. Track #475 and #369; do not bypass this by weakening tests or publishing the accepted archive with stale metadata.
+
+
+## Phase 10D source-metadata correction — 2026-10-10
+
+Current owner: issue #475 (release control) and issue #369 (CTAN metadata); PR #478 implements this bounded correction.
+
+PR #477 was merged as `57b433bb2525e9776a5e86c7b26b8412b33268eb`. All mandatory exact-merge-SHA post-merge gates passed: Static run `38048287023`, complete Linux Integration `38048286958`, Linux Release `38048287005`. This is a certified prerequisite, not a freeze. At entry, no PR was open.
+
+Issue #369 requires correction of the verbatim CTAN `release/ctan/README.md`. Its version metadata now reads **Prepared for publication**: the source is staged for distribution without falsely claiming GitHub Release or CTAN publication. The earlier 'unreleased maintenance development line' assertion is removed. Metadata and governance tests bind that corrected status to the explicit source-correction stage, preserving a fail-closed release control and immutable v3.0.4 receipt.
+
+**This change creates a new source, not an approved publication candidate.** Historic #474 ACCEPT binds only exact source `407f279a78df3824b27585d0e86d688c19cd90ee` and review artifact `11415094731`; the acceptance cannot carry over to changed package bytes. The release marker stays `NOT_FROZEN`, `candidate_sha=null`, `UNPUBLISHED`, `publication_authorized=false`.
+
+Next gate: Static, complete Linux Integration and Linux Release of the source-correction PR; only after all PASS, merge and recertify the exact new `main` SHA, plus fresh Windows/macOS portability and seven-profile review. Require renewed explicit maintainer ACCEPT on the **new** source and artifacts before a separately certified freeze-control transition. Annotated tag, GitHub Release and CTAN submission remain forbidden until their independent gates and publication capabilities exist. Published v3.0.4 tags and bytes remain immutable.
