@@ -102,6 +102,8 @@ The repository metadata-consistency contract now fails closed if a frozen or pub
 
 ## Phase 10D source-metadata correction — 2026-10-10
 
+Current owner: issue #475 (release control) and issue #369 (CTAN metadata); PR #478 implements this bounded correction.
+
 PR #477 was merged as `57b433bb2525e9776a5e86c7b26b8412b33268eb`. All mandatory exact-merge-SHA post-merge gates passed: Static run `38048287023`, complete Linux Integration `38048286958`, Linux Release `38048287005`. This is a certified prerequisite, not a freeze. At entry, no PR was open.
 
 Issue #369 requires correction of the verbatim CTAN `release/ctan/README.md`. Its version metadata now reads **Prepared for publication**: the source is staged for distribution without falsely claiming GitHub Release or CTAN publication. The earlier 'unreleased maintenance development line' assertion is removed. Metadata and governance tests bind that corrected status to the explicit source-correction stage, preserving a fail-closed release control and immutable v3.0.4 receipt.
