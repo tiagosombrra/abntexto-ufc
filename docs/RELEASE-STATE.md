@@ -15,7 +15,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Published at | `2026-09-20T15:29:02Z` |
 | Maintainer visual acceptance | PASS — 2026-09-20 |
 | CTAN v3.0.4 | published/accepted 2026-09-22 from the exact 2026-09-20 submission — issue #356 |
-| Active development line | `v3.0.5` — corrected-source certification complete, new human ACCEPT pending (#475); still `UNRELEASED` / `NOT_FROZEN` / `UNPUBLISHED`; historical issue #471 / PR #472 |
+| Active development line | `v3.0.5` — NEW seven-profile ACCEPT recorded under issue #475 on 2026-10-10; `UNRELEASED` / `FROZEN` / `UNPUBLISHED` |
 
 The current `main` branch may contain control/documentation commits made after publication. Those commits do not alter the published v3.0.4 source, annotated tag, release assets or checksums.
 
@@ -60,17 +60,18 @@ Previous GitHub release v3.0.3 remains immutable. Its machine receipt is preserv
 
 | Fact | State |
 |---|---|
-| Development version | `3.0.5` |
-| Candidate-preparation entry SHA | `9aeed2cd57665bf4ec6d13990b88d8b779de22a1` |
-| Tracking issue / PR | #475 / CTAN correction #369; original #471 / #472 historical |
-| Candidate state | `NOT_FROZEN` |
-| Candidate SHA | none |
-| Publication state | `UNPUBLISHED` |
-| Publication authorized | no |
-| Canonical changelog | `3.0.5 — 2026-10-06` |
-| Published citation metadata | remains v3.0.4 until an actual future publication |
+| Candidate version | `v3.0.5` |
+| Candidate state | `FROZEN` (subject to freeze-control PR gates) |
+| Candidate exact certified SHA | `30ff9b7bc777db28584fce7e96930e748ee1a661` |
+| Current release issue | issue #475; CTAN metadata issue #369 |
+| Publication authorized | true following explicit new maintainer ACCEPT |
+| Publication state | `UNPUBLISHED` — no v3.0.5 tag or GitHub Release |
+| Review evidence | artifact `11670542808`, sha256 `8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886` |
+| Distribution evidence | artifact `11670527758`, sha256 `ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c` |
+| Source checks | Static `38052629167`, Linux Integration `38052629234`, Linux Release `38052629238`, Windows `38055168762`, macOS `38055168813` PASS |
+| Changelog | `3.0.5 — 2026-10-06`; CITATION.cff remains v3.0.4 until publication |
 
-10B prepares, but does not freeze, the publication source. After #472 merges, its exact merge SHA becomes the only source eligible for fresh Static, complete Linux Integration, Linux Release/CTAN/review-artifact and portability certification. Phase 10C then requires explicit maintainer visual acceptance of artifacts from that same SHA. Freeze, tag and publication remain prohibited until that acceptance is recorded.
+A freeze-control merge is not the release source and must not become the `v3.0.5` tag target. The release process must annotate/tag exactly `30ff9b7bc777db28584fce7e96930e748ee1a661`, verify and reuse the retained certified distribution bytes, and only then publish using an authenticated authorized mechanism. CTAN submission is later and independent. Existing v3.0.4 publication must not be altered.
 
 ## Authority order
 
@@ -126,3 +127,14 @@ Next gate: Static, complete Linux Integration and Linux Release of the source-co
 **State/gate:** The earlier explicit ACCEPT in issue #474 binds **only** SHA `407f279a78df3824b27585d0e86d688c19cd90ee` / historical artifact `11415094731` and does NOT transfer to the corrected source. For the seven newly certified v3.0.5 PDFs, an **explicit fresh maintainer visual ACCEPT** of exactly source `30ff9b7bc777db28584fce7e96930e748ee1a661` and artifact `11670542808` is still required. Thus the machine marker must stay `NOT_FROZEN`, `candidate_sha=null`, `UNPUBLISHED`, `publication_authorized=false`; the last published release is immutable v3.0.4. These docs are a subsequent control-plane receipt, **not** a new release source and not a request to transfer acceptance to their merge SHA.
 
 **Next exact step:** Present the seven PDFs for human review and obtain the new unambiguous maintainer ACCEPT, or correct visual defects through a new isolated release-source PR and rerun all exact-SHA certifications. Only after human ACCEPT may a separate freeze-control PR reconcile marker/governance, pass its full gates, then use an authorized authenticated mechanism for annotated `v3.0.5` tag targeting **exactly the accepted source**, verify retained distribution bytes/digests, publish GitHub Release and separately follow up on CTAN. No tag, release upload, CTAN submission or retroactive change to v3.0.4 has occurred.
+
+
+## Phase 10D — explicit corrected-source ACCEPT and controlled freeze (2026-10-10)
+
+The maintainer has now explicitly **ACCEPTED** the seven reviewed PDFs by responding "Pode seguir, aceitos" on 2026-10-10. Issue #475 records the new and only applicable publication-source identity: exact certified commit `30ff9b7bc777db28584fce7e96930e748ee1a661` (tree `4b2a64e5c318ef761d84364877000086d51f1664`), seven-profile review artifact `11670542808` (sha256 `8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886`), retained distribution artifact `11670527758` (sha256 `ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c`). The previous #474 ACCEPT binds a **different source** and is preserved as historical evidence, not reused.
+
+Source was certified on exact SHA by Static `38052629167`, complete Linux Integration `38052629234`, Linux Release `38052629238` (38/38 and CTAN pkgcheck 4.1.2 PASS), native Windows `38055168762` and macOS ARM64 `38055168813`. All retained distribution inner ZIP checksums and seven PDF/.tex pairs were verified. The published v3.0.4 receipt is immutable.
+
+**This PR changes only control plane:** `release/v3-release-candidate.json`, the two strict governance/metadata tests, AGENTS, RELEASE-STATE and REPOSITORY-MAINTENANCE. Candidate `FROZEN` / `candidate_sha=30ff9b7bc777db28584fce7e96930e748ee1a661` / `publication_authorized=true` / `publication_state=UNPUBLISHED`. It neither modifies publication source nor creates v3.0.5 GitHub Release/tag/CTAN entry. All Static, **complete** Linux Integration and Linux Release gates must be green on freeze-control head; verify base/head and certify post-merge main. The control-plane SHA must **never** be substituted for `30ff9b7bc777db28584fce7e96930e748ee1a661`.
+
+**Next gate after fully green freeze:** tag `v3.0.5` as an annotated Git tag peeled **exactly** to `30ff9b7bc777db28584fce7e96930e748ee1a661` using an authenticated authorized mechanism, verify original certified assets vs recorded hashes, publish GitHub Release with only those bytes, verify server receipts, synchronize release state, then create separate CTAN follow-up. Connected GitHub connector lacks tag and Release asset mutations; do not attempt lightweight tags, substitute binaries, unverified publication or silent bypass. If those capabilities remain unavailable, stop publication and record the external CLI instructions and limitation in issue #475.
