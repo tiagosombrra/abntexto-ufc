@@ -108,7 +108,7 @@ def main() -> int:
         changelog = CHANGELOG.read_text(encoding="utf-8")
         if current_change == "development-line-open":
             expected_changelog = "3.0.5 — Unreleased"
-        elif current_change in ("release-candidate-preparation", "release-source-metadata-correction"):
+        elif current_change in ("release-candidate-preparation", "release-source-metadata-correction", "release-control-freeze"):
             expected_changelog = "3.0.5 — 2026-10-06"
         else:
             return fail(f"unsupported v3.0.5 development change: {current_change}")
@@ -120,13 +120,22 @@ def main() -> int:
             return fail("CTAN README must identify exact v3.0.5 version")
         # Source readiness describes package bytes, not external publication.
         statuses = re.findall(r"(?m)^Release status:\s*(.+?)\s*$", ctan_readme)
-        source_corrected = current_change == "release-source-metadata-correction"
+        source_corrected = current_change in ("release-source-metadata-correction", "release-control-freeze")
         frozen_or_authorized = (
             marker.get("candidate_state") == "FROZEN"
             or marker.get("publication_authorized") is True
         )
-        if frozen_or_authorized and not source_corrected:
-            return fail("freeze/publication requires explicitly corrected source metadata")
+        if frozen_or_authorized:
+            if current_change != "release-control-freeze":
+                return fail("freeze requires approved control-plane state")
+            if (
+                marker.get("candidate_state") != "FROZEN"
+                or marker.get("candidate_sha") != "30ff9b7bc777db28584fce7e96930e748ee1a661"
+                or marker.get("publication_authorized") is not True
+                or marker.get("publication_state") != "UNPUBLISHED"
+                or marker.get("freeze_receipt", {}).get("maintainer_acceptance") != "ACCEPT"
+            ):
+                return fail("freeze metadata must bind explicit human approval for exact source")
         expected_status = "Prepared for publication" if source_corrected else "Unreleased"
         if statuses != [expected_status]:
             return fail(f"CTAN README status must be exactly {expected_status!r}")
@@ -160,7 +169,7 @@ def main() -> int:
     if "Release issue #353 is completed and closed" not in release_state:
         return fail("RELEASE-STATE.md must record issue #353 as completed and closed")
     if active_line is not None:
-        for token in ("`v3.0.5`", "`UNRELEASED`", "`NOT_FROZEN`", "issue #471"):
+        for token in ("`v3.0.5`", "`UNRELEASED`", "`FROZEN`", "issue #475", "30ff9b7bc777db28584fce7e96930e748ee1a661", "11670542808"):
             if token not in release_state:
                 return fail(f"RELEASE-STATE.md is missing active-line token: {token}")
 

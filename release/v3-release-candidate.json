@@ -4,9 +4,9 @@
   "lifecycle": "active-development-marker",
   "release_line": "3.0.5",
   "target_version": "3.0.5",
-  "candidate_state": "NOT_FROZEN",
-  "candidate_sha": null,
-  "publication_authorized": false,
+  "candidate_state": "FROZEN",
+  "candidate_sha": "30ff9b7bc777db28584fce7e96930e748ee1a661",
+  "publication_authorized": true,
   "publication_state": "UNPUBLISHED",
   "tracking_issue": 475,
   "authority": "docs/RELEASE-STATE.md",
@@ -68,20 +68,51 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "Phase 10D source-metadata correction under #369/#475. PR #477 merged 57b433bb2525e9776a5e86c7b26b8412b33268eb; its post-merge Static 38048287023, Linux Integration 38048286958 and Linux Release 38048287005 passed. Corrected source status is Prepared for publication, which does not claim an already published GitHub/CTAN release. New merged exact-source SHA requires fresh Static, complete Linux Integration, Linux Release/pkgcheck/distribution, Windows/macOS, new seven-profile artifact and renewed explicit human ACCEPT. Prior #474 ACCEPT of 407f279a78df3824b27585d0e86d688c19cd90ee remains historical, not transferable to changed bytes. Publication remains unauthorized, candidate is not frozen; no tag or Release. Immutable v3.0.4 receipt is unchanged. PR #478 source-correction traceability is explicit. Initial Static Contract run 38050098273 failed because docs/RELEASE-STATE.md lacked the literal issue #475 ownership token; the gate was not bypassed, the text was fixed in commit 3848be3634d768ec92feeb5aeb158315e6cb807a, and all current-head checks must rerun before merge.",
+  "note": "Phase 10D: fresh explicit ACCEPT on 2026-10-10 by maintainer for corrected exact source 30ff9b7bc777db28584fce7e96930e748ee1a661 and seven-profile artifact 11670542808, issue #475. Source passed Static 38052629167, complete Linux Integration 38052629234, Linux Release 38052629238, Windows 38055168762, macOS 38055168813. Distribution artifact 11670527758 checksum verified. This machine marker freezes exactly that source, not subsequent control-plane main commits. Publication is still UNPUBLISHED; v3.0.5 annotated tag, GitHub Release and CTAN not created/submitted. Control PR must pass Static, complete Linux Integration and Linux Release on its own head and again post-merge before publication work. Published v3.0.4 remains immutable.",
   "active_development_candidate": {
     "version": "3.0.5",
     "entry_sha": "57b433bb2525e9776a5e86c7b26b8412b33268eb",
     "tracking_issue": 475,
     "source_correction_issue": 369,
     "purpose": "CTAN README release source metadata correction; no class/API/template change",
-    "current_change": "release-source-metadata-correction",
+    "current_change": "release-control-freeze",
     "runtime_source_model": "single-canonical-class",
     "tracking_pr": 478,
     "prior_accepted_source_sha": "407f279a78df3824b27585d0e86d688c19cd90ee",
     "prior_review_artifact_id": 11415094731,
     "prior_acceptance_not_transferable": true,
-    "requires_new_exact_sha_certification": true,
-    "requires_new_maintainer_accept": true
+    "requires_new_exact_sha_certification": false,
+    "requires_new_maintainer_accept": false
+  },
+  "freeze_receipt": {
+    "source_sha": "30ff9b7bc777db28584fce7e96930e748ee1a661",
+    "source_tree_sha": "4b2a64e5c318ef761d84364877000086d51f1664",
+    "review_artifact_id": 11670542808,
+    "review_artifact_sha256": "8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886",
+    "distribution_artifact_id": 11670527758,
+    "distribution_artifact_sha256": "ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c",
+    "maintainer_acceptance": "ACCEPT",
+    "maintainer_acceptance_date": "2026-10-10",
+    "maintainer_acceptance_origin": "explicit maintainer response 'Pode seguir, aceitos' to seven corrected-source review PDFs; issue #475",
+    "maintainer_acceptance_issue": 475,
+    "source_certification": {
+      "static_run": 38052629167,
+      "linux_integration_run": 38052629234,
+      "linux_release_run": 38052629238,
+      "windows_portability_run": 38055168762,
+      "macos_portability_run": 38055168813,
+      "linux_complete": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+      "ctan_pkgcheck": "4.1.2 PASS"
+    },
+    "certified_assets": {
+      "abntexto-ufc-3.0.5.zip": "b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8",
+      "abntexto-ufc-template-3.0.5.zip": "a6433d7e698a8e89a39761a7ea5951b267cce2169844827410fdc958da39196a",
+      "abntexto-ufc-overleaf-3.0.5.zip": "082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d"
+    },
+    "annotated_tag": "v3.0.5",
+    "annotated_tag_state": "NOT_CREATED",
+    "github_release_state": "NOT_PUBLISHED",
+    "ctan_submission_state": "NOT_SUBMITTED",
+    "control_plane_base_sha": "830322177ed08b64af7e6d64e7f663f55ca9b711"
   }
 }

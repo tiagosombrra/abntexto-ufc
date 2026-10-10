@@ -137,14 +137,14 @@ def main() -> int:
         return fail("root release marker must represent active v3.0.5 development")
     if marker.get("release_line") != "3.0.5" or marker.get("target_version") != "3.0.5":
         return fail("active release marker must identify v3.0.5")
-    if marker.get("candidate_state") != "NOT_FROZEN":
-        return fail("active v3.0.5 development must remain NOT_FROZEN")
-    if marker.get("candidate_sha") is not None:
-        return fail("NOT_FROZEN v3.0.5 development must not expose a candidate SHA")
-    if marker.get("publication_authorized") is not False:
-        return fail("v3.0.5 publication must remain unauthorized before freeze")
+    if marker.get("candidate_state") != "FROZEN":
+        return fail("v3.0.5 must be frozen only after new explicit ACCEPT")
+    if marker.get("candidate_sha") != "30ff9b7bc777db28584fce7e96930e748ee1a661":
+        return fail("frozen candidate SHA must match exact approved publication source")
+    if marker.get("publication_authorized") is not True:
+        return fail("accepted frozen source must explicitly authorize subsequent publication")
     if marker.get("publication_state") != "UNPUBLISHED":
-        return fail("active v3.0.5 development must remain UNPUBLISHED")
+        return fail("freeze cannot imply that GitHub Release already exists")
     if marker.get("active_development_line") != "3.0.5":
         return fail("active development line must be v3.0.5")
     if marker.get("tracking_issue") != 475:
@@ -161,8 +161,8 @@ def main() -> int:
         return fail("source correction must start at post-merge certified #477 main")
     if active.get("tracking_issue") != 475 or active.get("source_correction_issue") != 369:
         return fail("source correction must link #475 and #369")
-    if active.get("current_change") != "release-source-metadata-correction":
-        return fail("current release control must identify source metadata correction")
+    if active.get("current_change") != "release-control-freeze":
+        return fail("frozen release control requires release-control-freeze")
     if active.get("runtime_source_model") != "single-canonical-class":
         return fail("v3.0.5 must preserve its single canonical runtime")
     if active.get("tracking_pr") != 478:
@@ -171,9 +171,56 @@ def main() -> int:
         return fail("original maintainer-approved source receipt changed")
     if active.get("prior_review_artifact_id") != 11415094731:
         return fail("original maintainer-approved artifact receipt changed")
-    for key in ("prior_acceptance_not_transferable", "requires_new_exact_sha_certification", "requires_new_maintainer_accept"):
-        if active.get(key) is not True:
-            return fail(f"source correction must preserve explicit gate {key}")
+    if active.get("prior_acceptance_not_transferable") is not True:
+        return fail("old-source human acceptance must remain nontransferable")
+    for key in ("requires_new_exact_sha_certification", "requires_new_maintainer_accept"):
+        if active.get(key) is not False:
+            return fail(f"fresh candidate acceptance gate remains incomplete: {key}")
+
+    freeze = marker.get("freeze_receipt")
+    if not isinstance(freeze, dict):
+        return fail("missing immutable new-source freeze receipt")
+    expected = {
+        "source_sha": "30ff9b7bc777db28584fce7e96930e748ee1a661",
+        "source_tree_sha": "4b2a64e5c318ef761d84364877000086d51f1664",
+        "review_artifact_id": 11670542808,
+        "review_artifact_sha256": "8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886",
+        "distribution_artifact_id": 11670527758,
+        "distribution_artifact_sha256": "ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c",
+        "maintainer_acceptance": "ACCEPT",
+        "maintainer_acceptance_date": "2026-10-10",
+        "maintainer_acceptance_issue": 475,
+        "annotated_tag": "v3.0.5",
+        "annotated_tag_state": "NOT_CREATED",
+        "github_release_state": "NOT_PUBLISHED",
+        "ctan_submission_state": "NOT_SUBMITTED",
+        "control_plane_base_sha": "830322177ed08b64af7e6d64e7f663f55ca9b711",
+    }
+    for key, value in expected.items():
+        if freeze.get(key) != value:
+            return fail(f"freeze source/approval/publication mismatch for {key}")
+    expected_checks = {
+        "static_run": 38052629167,
+        "linux_integration_run": 38052629234,
+        "linux_release_run": 38052629238,
+        "windows_portability_run": 38055168762,
+        "macos_portability_run": 38055168813,
+        "linux_complete": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+        "ctan_pkgcheck": "4.1.2 PASS",
+    }
+    if freeze.get("source_certification") != expected_checks:
+        return fail("frozen source test receipts do not match full certification")
+    expected_assets = {
+        "abntexto-ufc-3.0.5.zip": "b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8",
+        "abntexto-ufc-template-3.0.5.zip": "a6433d7e698a8e89a39761a7ea5951b267cce2169844827410fdc958da39196a",
+        "abntexto-ufc-overleaf-3.0.5.zip": "082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d",
+    }
+    if freeze.get("certified_assets") != expected_assets:
+        return fail("certified release bundle hashes changed")
+    if "issue #475" not in str(freeze.get("maintainer_acceptance_origin", "")):
+        return fail("maintainer ACCEPT must carry its issue provenance")
+    if marker["candidate_sha"] != freeze["source_sha"]:
+        return fail("marker must bind accepted artifact's exact source")
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
@@ -250,7 +297,7 @@ def main() -> int:
             "v3.0.4",
             "PUBLISHED",
             "v3.0.5",
-            "NOT_FROZEN",
+            "FROZEN",
             "issue #475",
             "issue #356",
             "2026-09-22",
@@ -266,7 +313,7 @@ def main() -> int:
             "`PUBLISHED`",
             "392476983",
             "`v3.0.5`",
-            "NOT_FROZEN",
+            "FROZEN",
             "issue #475",
             "issue #356",
             "2026-09-22",
@@ -285,8 +332,8 @@ def main() -> int:
         "published_release=3.0.4 publication_state=published "
         "source_sha=7e176fd5472925b519d469a9a756330f4851f0b3 "
         "release_id=392476983 active_development_line=3.0.5 "
-        "candidate_state=not_frozen candidate_sha=none publication_authorized=false "
-        "candidate_change=release-source-metadata-correction "
+        "candidate_state=frozen candidate_sha=30ff9b7bc777db28584fce7e96930e748ee1a661 publication_authorized=true publication_state=unpublished "
+        "candidate_change=release-control-freeze "
         "ctan_state=published ctan_acceptance=accepted "
         "ctan_published_date=2026-09-22 ctan_issue=356 "
         "current_authority=docs/RELEASE-STATE.md"
