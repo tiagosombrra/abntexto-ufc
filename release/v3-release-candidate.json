@@ -8,7 +8,7 @@
   "candidate_sha": null,
   "publication_authorized": false,
   "publication_state": "UNPUBLISHED",
-  "tracking_issue": 471,
+  "tracking_issue": 475,
   "authority": "docs/RELEASE-STATE.md",
   "active_development_line": "3.0.5",
   "published_release": {
@@ -68,14 +68,20 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.4 remains immutable. v3.0.5 exact source 407f279a78df3824b27585d0e86d688c19cd90ee received maintainer ACCEPT on 2026-10-09 (#474), but Phase 10D freeze is BLOCKED by #369: the exact accepted source's CTAN README still says Unreleased, and the distribution builder copies it verbatim. A publication-source metadata correction changes candidate bytes and requires fresh exact-SHA release/portability certification and renewed maintainer visual ACCEPT before freeze. #475 owns re-entry. No v3.0.5 tag, release or publication authorization.",
+  "note": "Phase 10D source-metadata correction under #369/#475. PR #477 merged 57b433bb2525e9776a5e86c7b26b8412b33268eb; its post-merge Static 38048287023, Linux Integration 38048286958 and Linux Release 38048287005 passed. Corrected source status is Prepared for publication, which does not claim an already published GitHub/CTAN release. New merged exact-source SHA requires fresh Static, complete Linux Integration, Linux Release/pkgcheck/distribution, Windows/macOS, new seven-profile artifact and renewed explicit human ACCEPT. Prior #474 ACCEPT of 407f279a78df3824b27585d0e86d688c19cd90ee remains historical, not transferable to changed bytes. Publication remains unauthorized, candidate is not frozen; no tag or Release. Immutable v3.0.4 receipt is unchanged.",
   "active_development_candidate": {
     "version": "3.0.5",
-    "entry_sha": "9aeed2cd57665bf4ec6d13990b88d8b779de22a1",
-    "tracking_issue": 471,
-    "purpose": "maintenance release for post-v3.0.4 provenance, distribution and repository hardening",
-    "current_change": "release-candidate-preparation",
+    "entry_sha": "57b433bb2525e9776a5e86c7b26b8412b33268eb",
+    "tracking_issue": 475,
+    "source_correction_issue": 369,
+    "purpose": "CTAN README release source metadata correction; no class/API/template change",
+    "current_change": "release-source-metadata-correction",
     "runtime_source_model": "single-canonical-class",
-    "tracking_pr": 472
+    "tracking_pr": null,
+    "prior_accepted_source_sha": "407f279a78df3824b27585d0e86d688c19cd90ee",
+    "prior_review_artifact_id": 11415094731,
+    "prior_acceptance_not_transferable": true,
+    "requires_new_exact_sha_certification": true,
+    "requires_new_maintainer_accept": true
   }
 }

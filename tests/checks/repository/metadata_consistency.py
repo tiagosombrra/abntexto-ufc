@@ -108,7 +108,7 @@ def main() -> int:
         changelog = CHANGELOG.read_text(encoding="utf-8")
         if current_change == "development-line-open":
             expected_changelog = "3.0.5 — Unreleased"
-        elif current_change == "release-candidate-preparation":
+        elif current_change in ("release-candidate-preparation", "release-source-metadata-correction"):
             expected_changelog = "3.0.5 — 2026-10-06"
         else:
             return fail(f"unsupported v3.0.5 development change: {current_change}")
@@ -116,33 +116,25 @@ def main() -> int:
             return fail(f"CHANGELOG.md must contain candidate heading: {expected_changelog}")
 
         ctan_readme = CTAN_README.read_text(encoding="utf-8")
-        if f"Version: {active_line}" not in ctan_readme:
-            return fail("CTAN README must identify the exact v3.0.5 release line")
+        if not re.search(rf"(?m)^Version:\s*{re.escape(str(active_line))}\s*$", ctan_readme):
+            return fail("CTAN README must identify exact v3.0.5 version")
+        # Source readiness describes package bytes, not external publication.
+        statuses = re.findall(r"(?m)^Release status:\s*(.+?)\s*$", ctan_readme)
+        source_corrected = current_change == "release-source-metadata-correction"
         frozen_or_authorized = (
             marker.get("candidate_state") == "FROZEN"
             or marker.get("publication_authorized") is True
         )
-        unreleased_status = re.search(
-            r"(?im)^Release status:\s*Unreleased\s*$", ctan_readme
-        )
-        unreleased_line = re.search(
-            rf"(?i)Version\s+{re.escape(str(active_line))}\s+is an unreleased",
-            ctan_readme,
-        )
-        if frozen_or_authorized:
-            if unreleased_status or unreleased_line:
-                return fail(
-                    "freeze/publication blocked: CTAN README still declares the "
-                    "accepted source unreleased; #369 requires a newly certified "
-                    "source and explicit renewed maintainer acceptance"
-                )
-            if not re.search(
-                r"(?im)^Release status:\s*(Released|Published)\s*$",
-                ctan_readme,
-            ):
-                return fail("frozen CTAN README must explicitly declare Released or Published")
-        elif not unreleased_status:
-            return fail("unfrozen v3.0.5 development must declare Unreleased in CTAN README")
+        if frozen_or_authorized and not source_corrected:
+            return fail("freeze/publication requires explicitly corrected source metadata")
+        expected_status = "Prepared for publication" if source_corrected else "Unreleased"
+        if statuses != [expected_status]:
+            return fail(f"CTAN README status must be exactly {expected_status!r}")
+        if source_corrected or frozen_or_authorized:
+            if re.search(r"(?i)\bunreleased\b|\bdevelopment line\b", ctan_readme):
+                return fail("publication-ready CTAN README contains stale development wording")
+            if "Actual publication and acceptance are recorded separately" not in ctan_readme:
+                return fail("CTAN README must distinguish source readiness from publication")
 
         ctan_manual = CTAN_MANUAL.read_text(encoding="utf-8")
         if r"\newcommand{\version}{3.0.5}" not in ctan_manual:

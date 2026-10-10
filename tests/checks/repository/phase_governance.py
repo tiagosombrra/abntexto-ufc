@@ -147,8 +147,8 @@ def main() -> int:
         return fail("active v3.0.5 development must remain UNPUBLISHED")
     if marker.get("active_development_line") != "3.0.5":
         return fail("active development line must be v3.0.5")
-    if marker.get("tracking_issue") != 471:
-        return fail("v3.0.5 candidate preparation must track issue #471")
+    if marker.get("tracking_issue") != 475:
+        return fail("v3.0.5 source correction must track active issue #475")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
         return fail("active development marker must point to docs/RELEASE-STATE.md")
 
@@ -157,16 +157,23 @@ def main() -> int:
         return fail("active v3.0.5 marker must contain development metadata")
     if active.get("version") != "3.0.5":
         return fail("active development metadata must identify v3.0.5")
-    if active.get("entry_sha") != "9aeed2cd57665bf4ec6d13990b88d8b779de22a1":
-        return fail("v3.0.5 candidate preparation must bind the certified 10A main")
-    if active.get("tracking_issue") != 471:
-        return fail("active development metadata must point to issue #471")
-    if active.get("current_change") != "release-candidate-preparation":
-        return fail("v3.0.5 active development change must be release-candidate-preparation")
+    if active.get("entry_sha") != "57b433bb2525e9776a5e86c7b26b8412b33268eb":
+        return fail("source correction must start at post-merge certified #477 main")
+    if active.get("tracking_issue") != 475 or active.get("source_correction_issue") != 369:
+        return fail("source correction must link #475 and #369")
+    if active.get("current_change") != "release-source-metadata-correction":
+        return fail("current release control must identify source metadata correction")
     if active.get("runtime_source_model") != "single-canonical-class":
-        return fail("v3.0.5 must preserve the single canonical runtime model")
-    if active.get("tracking_pr") != 472:
-        return fail("v3.0.5 candidate preparation metadata must bind PR #472")
+        return fail("v3.0.5 must preserve its single canonical runtime")
+    if active.get("tracking_pr") is not None:
+        return fail("new PR id must not be predeclared before GitHub assigns it")
+    if active.get("prior_accepted_source_sha") != "407f279a78df3824b27585d0e86d688c19cd90ee":
+        return fail("original maintainer-approved source receipt changed")
+    if active.get("prior_review_artifact_id") != 11415094731:
+        return fail("original maintainer-approved artifact receipt changed")
+    for key in ("prior_acceptance_not_transferable", "requires_new_exact_sha_certification", "requires_new_maintainer_accept"):
+        if active.get(key) is not True:
+            return fail(f"source correction must preserve explicit gate {key}")
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
@@ -244,7 +251,7 @@ def main() -> int:
             "PUBLISHED",
             "v3.0.5",
             "NOT_FROZEN",
-            "issue #471",
+            "issue #475",
             "issue #356",
             "2026-09-22",
             "must never be rewritten",
@@ -260,7 +267,7 @@ def main() -> int:
             "392476983",
             "`v3.0.5`",
             "NOT_FROZEN",
-            "issue #471",
+            "issue #475",
             "issue #356",
             "2026-09-22",
         ),
@@ -279,7 +286,7 @@ def main() -> int:
         "source_sha=7e176fd5472925b519d469a9a756330f4851f0b3 "
         "release_id=392476983 active_development_line=3.0.5 "
         "candidate_state=not_frozen candidate_sha=none publication_authorized=false "
-        "candidate_change=release-candidate-preparation "
+        "candidate_change=release-source-metadata-correction "
         "ctan_state=published ctan_acceptance=accepted "
         "ctan_published_date=2026-09-22 ctan_issue=356 "
         "current_authority=docs/RELEASE-STATE.md"
