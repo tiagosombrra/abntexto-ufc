@@ -40,8 +40,8 @@ Use the lightest process that still protects correctness:
 | 6 | self-contained Web/Lite hardening | complete — #437; local PDF.js + network-denied/CSP certification complete via #439/#441 |
 | 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
 | 8 | provenance, LPPL/asset metadata and archival integration | complete — #448; 8A/8B certified, 8C least-privilege supply-chain decisions documented, 8D archival/DOI path explicit |
-| 9 | tagged-PDF/PDF-UA experiment | in progress — #456; 9A diagnostic complete via #457/#458, 9B blocked by section-tagging dependency #459 |
-| 10 | next release certification and publication | pending |
+| 9 | tagged-PDF/PDF-UA experiment | experimental closeout complete via #467/#468; further representative work blocked by #459 |
+| 10 | v3.0.5 release certification and publication | 10A–10C complete; 10D freeze BLOCKED by source/CTAN README inconsistency #369/#475 |
 
 ## Phase 1 receipt
 
@@ -1612,3 +1612,12 @@ After #472 merges, that merge SHA is the only source eligible for Phase 10B exac
 On 2026-10-09 the maintainer expressly recorded `ACCEPT` for v3.0.5 source `407f279a78df3824b27585d0e86d688c19cd90ee` and review-pairs artifact `11415094731` (GitHub digest `sha256:23193aaaacdb2af7b465e4ddae17428344d1ac1d65d5dcc1b7089cf7bb342fa4`), closing #474. Technical receipts: Static #945, complete Linux Integration #798, Linux Release #306, Windows #20 and macOS #12 all PASS for that exact source. Prior 71-page identical-image automated review is supporting evidence, not the human acceptance.
 
 Issue #475 tracks subsequent freeze/tag/publication. This documentation-only receipt deliberately **does not freeze** the machine marker or authorize publication: `release/v3-release-candidate.json` still reports `NOT_FROZEN`, null candidate SHA, publication unauthorized and `UNPUBLISHED`. A separate control-plane freeze must update strict governance and metadata checks together and pass all required gates. Tag target and retained certified distribution bytes must match the original accepted source, not any later control/documentation commit. The connected GitHub tool does not currently provide annotated-tag/Release-asset publication mutations; those remain an explicit capability dependency. Published v3.0.4 artifacts remain immutable.
+
+
+## Phase 10D freeze preflight — 2026-10-10
+
+A fresh remote reconciliation at `main=47f101129316a72815c5e2f0bb1f9223dba5a3eb` confirmed #474 ACCEPT for exact source `407f279a78df3824b27585d0e86d688c19cd90ee`, but identified a publication-metadata blocker before #475 freeze. The accepted source's `release/ctan/README.md` still declares `Release status: Unreleased` and describes 3.0.5 as an unreleased development line. `tools/build-distribution-bundles.py` copies this file verbatim into the CTAN archive. Issue #369 explicitly forbids this status in a frozen/publication-authorized candidate.
+
+**Decision: BLOCKED, fail closed.** No control-plane-only freeze may silently certify these inconsistent publication-source bytes. Editing that README changes the previously accepted source and therefore requires selecting an updated exact source SHA, rerunning complete Static/Linux Integration/Linux Release (including CTAN, reproducibility and distribution) plus Windows/macOS portability certification, regenerating/reviewing the seven profile pairs and obtaining explicit renewed maintainer ACCEPT for the updated source/artifact pair. Existing 10B/10C receipts remain valid historical evidence for the original SHA but are not transferable to changed bytes. No tag/Release/CTAN submission is authorized. The v3.0.4 publication is untouched.
+
+The repository metadata-consistency contract now fails closed if a frozen or publication-authorized 3.0.5 marker retains either stale CTAN README declaration; unfrozen development continues to be explicitly labelled Unreleased. The freeze-control transition and downstream #475 publication work remain pending, and the separate authenticated annotated-tag/Release-asset capability remains a later dependency. Track #475 and #369; do not bypass this by weakening tests or publishing the accepted archive with stale metadata.

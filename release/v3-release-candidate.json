@@ -68,7 +68,7 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "v3.0.4 remains the immutable published GitHub/CTAN release. v3.0.5 is in release-candidate preparation under issue #471 / PR #472; it remains NOT_FROZEN, has no candidate SHA, and publication is not authorized. The exact merged preparation source must pass fresh full technical certification and explicit maintainer visual acceptance before any freeze/tag/publication.",
+  "note": "v3.0.4 remains immutable. v3.0.5 exact source 407f279a78df3824b27585d0e86d688c19cd90ee received maintainer ACCEPT on 2026-10-09 (#474), but Phase 10D freeze is BLOCKED by #369: the exact accepted source's CTAN README still says Unreleased, and the distribution builder copies it verbatim. A publication-source metadata correction changes candidate bytes and requires fresh exact-SHA release/portability certification and renewed maintainer visual ACCEPT before freeze. #475 owns re-entry. No v3.0.5 tag, release or publication authorization.",
   "active_development_candidate": {
     "version": "3.0.5",
     "entry_sha": "9aeed2cd57665bf4ec6d13990b88d8b779de22a1",

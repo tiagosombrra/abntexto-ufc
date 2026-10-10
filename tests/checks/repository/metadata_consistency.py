@@ -116,8 +116,33 @@ def main() -> int:
             return fail(f"CHANGELOG.md must contain candidate heading: {expected_changelog}")
 
         ctan_readme = CTAN_README.read_text(encoding="utf-8")
-        if "Version: 3.0.5" not in ctan_readme or "Release status: Unreleased" not in ctan_readme:
-            return fail("CTAN README must identify unreleased v3.0.5 development")
+        if f"Version: {active_line}" not in ctan_readme:
+            return fail("CTAN README must identify the exact v3.0.5 release line")
+        frozen_or_authorized = (
+            marker.get("candidate_state") == "FROZEN"
+            or marker.get("publication_authorized") is True
+        )
+        unreleased_status = re.search(
+            r"(?im)^Release status:\s*Unreleased\s*$", ctan_readme
+        )
+        unreleased_line = re.search(
+            rf"(?i)Version\s+{re.escape(str(active_line))}\s+is an unreleased",
+            ctan_readme,
+        )
+        if frozen_or_authorized:
+            if unreleased_status or unreleased_line:
+                return fail(
+                    "freeze/publication blocked: CTAN README still declares the "
+                    "accepted source unreleased; #369 requires a newly certified "
+                    "source and explicit renewed maintainer acceptance"
+                )
+            if not re.search(
+                r"(?im)^Release status:\s*(Released|Published)\s*$",
+                ctan_readme,
+            ):
+                return fail("frozen CTAN README must explicitly declare Released or Published")
+        elif not unreleased_status:
+            return fail("unfrozen v3.0.5 development must declare Unreleased in CTAN README")
 
         ctan_manual = CTAN_MANUAL.read_text(encoding="utf-8")
         if r"\newcommand{\version}{3.0.5}" not in ctan_manual:
