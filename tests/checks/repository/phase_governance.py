@@ -165,8 +165,8 @@ def main() -> int:
         return fail("current release control must identify source metadata correction")
     if active.get("runtime_source_model") != "single-canonical-class":
         return fail("v3.0.5 must preserve its single canonical runtime")
-    if active.get("tracking_pr") is not None:
-        return fail("new PR id must not be predeclared before GitHub assigns it")
+    if active.get("tracking_pr") != 478:
+        return fail("corrected publication source must track PR #478 exactly")
     if active.get("prior_accepted_source_sha") != "407f279a78df3824b27585d0e86d688c19cd90ee":
         return fail("original maintainer-approved source receipt changed")
     if active.get("prior_review_artifact_id") != 11415094731:

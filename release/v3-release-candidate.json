@@ -68,7 +68,7 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "Phase 10D source-metadata correction under #369/#475. PR #477 merged 57b433bb2525e9776a5e86c7b26b8412b33268eb; its post-merge Static 38048287023, Linux Integration 38048286958 and Linux Release 38048287005 passed. Corrected source status is Prepared for publication, which does not claim an already published GitHub/CTAN release. New merged exact-source SHA requires fresh Static, complete Linux Integration, Linux Release/pkgcheck/distribution, Windows/macOS, new seven-profile artifact and renewed explicit human ACCEPT. Prior #474 ACCEPT of 407f279a78df3824b27585d0e86d688c19cd90ee remains historical, not transferable to changed bytes. Publication remains unauthorized, candidate is not frozen; no tag or Release. Immutable v3.0.4 receipt is unchanged.",
+  "note": "Phase 10D source-metadata correction under #369/#475. PR #477 merged 57b433bb2525e9776a5e86c7b26b8412b33268eb; its post-merge Static 38048287023, Linux Integration 38048286958 and Linux Release 38048287005 passed. Corrected source status is Prepared for publication, which does not claim an already published GitHub/CTAN release. New merged exact-source SHA requires fresh Static, complete Linux Integration, Linux Release/pkgcheck/distribution, Windows/macOS, new seven-profile artifact and renewed explicit human ACCEPT. Prior #474 ACCEPT of 407f279a78df3824b27585d0e86d688c19cd90ee remains historical, not transferable to changed bytes. Publication remains unauthorized, candidate is not frozen; no tag or Release. Immutable v3.0.4 receipt is unchanged. PR #478 source-correction traceability is explicit. Initial Static Contract run 38050098273 failed because docs/RELEASE-STATE.md lacked the literal issue #475 ownership token; the gate was not bypassed, the text was fixed in commit 3848be3634d768ec92feeb5aeb158315e6cb807a, and all current-head checks must rerun before merge.",
   "active_development_candidate": {
     "version": "3.0.5",
     "entry_sha": "57b433bb2525e9776a5e86c7b26b8412b33268eb",
@@ -77,7 +77,7 @@
     "purpose": "CTAN README release source metadata correction; no class/API/template change",
     "current_change": "release-source-metadata-correction",
     "runtime_source_model": "single-canonical-class",
-    "tracking_pr": null,
+    "tracking_pr": 478,
     "prior_accepted_source_sha": "407f279a78df3824b27585d0e86d688c19cd90ee",
     "prior_review_artifact_id": 11415094731,
     "prior_acceptance_not_transferable": true,

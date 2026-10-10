@@ -171,3 +171,10 @@ Issue #369 requires correction of the verbatim CTAN `release/ctan/README.md`. It
 **This change creates a new source, not an approved publication candidate.** Historic #474 ACCEPT binds only exact source `407f279a78df3824b27585d0e86d688c19cd90ee` and review artifact `11415094731`; the acceptance cannot carry over to changed package bytes. The release marker stays `NOT_FROZEN`, `candidate_sha=null`, `UNPUBLISHED`, `publication_authorized=false`.
 
 Next gate: Static, complete Linux Integration and Linux Release of the source-correction PR; only after all PASS, merge and recertify the exact new `main` SHA, plus fresh Windows/macOS portability and seven-profile review. Require renewed explicit maintainer ACCEPT on the **new** source and artifacts before a separately certified freeze-control transition. Annotated tag, GitHub Release and CTAN submission remain forbidden until their independent gates and publication capabilities exist. Published v3.0.4 tags and bytes remain immutable.
+
+
+### Phase 10D source PR #478 — validation iteration
+
+PR #478 head initially `17d13433f450b120016c397897eafbd30a0238b1` failed Static Contract run `38050098273` because `docs/RELEASE-STATE.md` lacked the explicit token `issue #475` required by `phase_governance.py`. The error is retained, not bypassed. Commit `3848be3634d768ec92feeb5aeb158315e6cb807a` repaired the active ownership wording. This follow-up binds the now-assigned PR #478 into machine release metadata and the regression contract, so future CI runs use one consolidated corrected PR head. The required gates are **not yet certified** and this PR must not merge until current head Static, complete Linux Integration and Linux Release are all PASS.
+
+No version tag, GitHub release, CTAN update, runtime/API/template change or acceptance transfer is authorized.
