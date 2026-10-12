@@ -85,10 +85,18 @@ def main() -> int:
 
     active_line = marker.get("active_development_line")
     if active_line is None:
+        if published_version != "3.0.5" or marker.get("publication_state") != "PUBLISHED":
+            return fail("steady state requires published 3.0.5 source and release receipt")
         if class_version != published_version:
             return fail("steady-state class version must match the latest published release")
         if make_version != published_version:
             return fail("steady-state Makefile VERSION must match the latest published release")
+        if marker.get("candidate_sha") != "30ff9b7bc777db28584fce7e96930e748ee1a661":
+            return fail("steady-state must preserve the certified v3.0.5 source")
+        if marker.get("freeze_receipt", {}).get("maintainer_acceptance") != "ACCEPT":
+            return fail("steady-state must preserve explicit maintainer acceptance")
+        if marker.get("published_release", {}).get("annotated_tag_object_sha") != "a3648d5b1ff572f502bb25ef11dc534df7a664d4":
+            return fail("published steady-state requires exact annotated tag identity")
     else:
         allowed_versions = {published_version, str(active_line)}
         if class_version not in allowed_versions or make_version not in allowed_versions:
@@ -132,7 +140,7 @@ def main() -> int:
                 marker.get("candidate_state") != "FROZEN"
                 or marker.get("candidate_sha") != "30ff9b7bc777db28584fce7e96930e748ee1a661"
                 or marker.get("publication_authorized") is not True
-                or marker.get("publication_state") != "UNPUBLISHED"
+                or marker.get("publication_state") != "PUBLISHED"
                 or marker.get("freeze_receipt", {}).get("maintainer_acceptance") != "ACCEPT"
             ):
                 return fail("freeze metadata must bind explicit human approval for exact source")
@@ -168,7 +176,11 @@ def main() -> int:
         return fail("RELEASE-STATE.md still reports completed issue #353 as in closeout")
     if "Release issue #353 is completed and closed" not in release_state:
         return fail("RELEASE-STATE.md must record issue #353 as completed and closed")
-    if active_line is not None:
+    if active_line is None:
+        for token in ("`v3.0.5`", "`PUBLISHED`", "410584912", "2026-10-12T12:42:11Z", "30ff9b7bc777db28584fce7e96930e748ee1a661", "issue #475", "CTAN"):
+            if token not in release_state:
+                return fail(f"RELEASE-STATE.md is missing publication receipt token: {token}")
+    else:
         for token in ("`v3.0.5`", "`UNRELEASED`", "`FROZEN`", "issue #475", "30ff9b7bc777db28584fce7e96930e748ee1a661", "11670542808"):
             if token not in release_state:
                 return fail(f"RELEASE-STATE.md is missing active-line token: {token}")

@@ -41,7 +41,7 @@ Use the lightest process that still protects correctness:
 | 7 | cross-platform portability smoke coverage | complete — #442; Linux release-grade + Windows x64 literal-font + macOS Darwin/ARM64 bounded portability certification |
 | 8 | provenance, LPPL/asset metadata and archival integration | complete — #448; 8A/8B certified, 8C least-privilege supply-chain decisions documented, 8D archival/DOI path explicit |
 | 9 | tagged-PDF/PDF-UA experiment | experimental closeout complete via #467/#468; further representative work blocked by #459 |
-| 10 | v3.0.5 release certification and publication | 10D freeze-control PR #481 merged `9e0de03d805798650bb6972f282741ff9164b301` + three post-merge gates PASS; annotated tag/GitHub Release blocked by connected publication capability; CTAN follows publication (#475) |
+| 10 | v3.0.5 release certification and publication | 10D GitHub v3.0.5 Release ID `410584912` **PUBLISHED** 2026-10-12T12:42:11Z; annotated tag/source/four asset digests verified; publication-state metadata PR in validation; CTAN v3.0.5 NOT_SUBMITTED (#475/#369) |
 
 ## Phase 1 receipt
 
@@ -1674,3 +1674,12 @@ Fresh remote `main=9e0de03d805798650bb6972f282741ff9164b301`, tree `313ff9026d84
 The root marker truthfully records `FROZEN`, exact source SHA, `publication_authorized=true`, **`publication_state=UNPUBLISHED`**. Fresh GitHub tag/release reconciliation found no `v3.0.5`; last published remains immutable `v3.0.4`. Original distribution artifact `11670527758` (run `38052629238`), outer SHA256 `ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c`, reverified, with inner CTAN `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`, Template `a6433d7e698a8e89a39761a7ea5951b267cce2169844827410fdc958da39196a`, Overleaf `082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d` and `SHA256SUMS` `6fcb6ce5c8c56cee4c08c5f719280bf36e8422d81950c052db63b4f142e9df95`.
 
 **Remaining blocker:** connected GitHub tools do not create annotated tag objects or GitHub Releases/upload assets; this environment lacks authenticated GitHub CLI. Publication cannot be performed here. The reproducible operator handoff is now `docs/RELEASE-PUBLICATION-OPERATOR.md`. Only publish the retained archive bytes by authenticated local `git` / `gh`; create annotated `v3.0.5` tag peeling to source SHA, upload via draft Release, compare GitHub server SHA256 on all four assets, then publish draft and retain Release ID and timestamp. On successful remote publication, update marker/docs in a **separate** audited PR with all gates, then follow up with CTAN; never prematurely mark v3.0.5 `PUBLISHED`.
+
+
+## Phase 10D — confirmed GitHub v3.0.5 publication; CTAN separately pending (2026-10-12)
+
+Exact publication authority now **GitHub Release ID `410584912`**, published `2026-10-12T12:42:11Z`, tag `v3.0.5` is annotated Git object `a3648d5b1ff572f502bb25ef11dc534df7a664d4` peeled to certified and visually ACCEPTED source `30ff9b7bc777db28584fce7e96930e748ee1a661`. Four certified GitHub assets `abntexto-ufc-3.0.5.zip`, Template ZIP, Overleaf ZIP and `SHA256SUMS` were independently verified by GitHub server SHA256 + size (see `docs/RELEASE-STATE.md`). Source approval artifact `11670542808` (seven profiles); distribution artifact `11670527758`. Prior PR #481 freeze-control complete with three green postmerge gates, PR #482 documentation handoff passed its postmerge Static.
+
+This separate **publication-receipt PR** synchronizes `release/v3-release-candidate.json` to `PUBLISHED` and released version 3.0.5, advances `CITATION.cff` to v3.0.5/date-released 2026-10-12, enforces exact source/tag/release/asset identities in strict regression checks, and updates AGENTS/release-state/roadmap. Historical v3.0.4 and v3.0.3 receipts remain immutable. Must PASS Static, **complete** Linux Integration and Linux Release on PR head and exact merged main before advancing to CTAN.
+
+**Next CTAN phase:** NOT_SUBMITTED, no acceptance claim. Submit only original published canonical GitHub asset ID `633747960`, sha256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; official CTAN submission and acceptance require separate authenticated external action and evidence. Repo source and published assets must not be modified; new v3.0.6 or future maintenance line requires independent explicit selection.

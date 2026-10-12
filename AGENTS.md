@@ -18,12 +18,12 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 
 | Fact | Current state |
 |---|---|
-| Published release | `v3.0.4` |
-| Published v3.0.4 source | `7e176fd5472925b519d469a9a756330f4851f0b3` |
-| GitHub Release ID | `392476983` |
+| Published release | `v3.0.5` — 2026-10-12T12:42:11Z |
+| Published v3.0.5 source | `30ff9b7bc777db28584fce7e96930e748ee1a661` — annotated tag object `a3648d5b1ff572f502bb25ef11dc534df7a664d4` |
+| GitHub Release ID | `410584912` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | v3.0.5 accepted source `30ff9b7bc777db28584fce7e96930e748ee1a661`; PR #481 freeze control merged `9e0de03d805798650bb6972f282741ff9164b301` with all post-merge gates PASS; `FROZEN` / `UNPUBLISHED`, annotated tag and Release missing |
-| Active development line | `v3.0.5` — `FROZEN` / `UNPUBLISHED` (annotated tag and Release not created) |
+| Repository lifecycle | v3.0.5 `FROZEN` / `PUBLISHED` on GitHub; 4 certified assets immutable; CTAN v3.0.5 `NOT_SUBMITTED` under issue #475 |
+| Active development line | None selected since v3.0.5 publication; future changes require a new explicit line |
 | Active release-control issue | issue #475; metadata correction #369; earlier #471 / PR #472 is historical |
 | Completed v3.0.4 release issue | issue #353 |
 | CTAN follow-up | issue #356 — exact submitted bytes published as v3.0.4 on 2026-09-22 |
@@ -85,21 +85,23 @@ Distribution regression must extract Template and Overleaf, rebuild their exact 
 
 There is exactly one root machine receipt path: `release/v3-release-candidate.json`.
 
-The repository has immutable published v3.0.4 and a **separately frozen v3.0.5 source**:
+The current GitHub release is **published v3.0.5**, distinct from the source-authoritative freeze-control and documentation commits:
 
-- `lifecycle = active-development-marker`, release/target version `3.0.5`;
-- `candidate_state = FROZEN` and `candidate_sha = 30ff9b7bc777db28584fce7e96930e748ee1a661`;
-- `publication_authorized = true` after new human ACCEPT on 2026-10-10;
-- `publication_state = UNPUBLISHED`; there is no v3.0.5 tag/Release yet;
-- `active_development_line = 3.0.5`, issue #475;
-- seven-profile artifact `11670542808`, sha256 `8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886`;
-- distribution artifact `11670527758`, sha256 `ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c`;
-- v3.0.4 remains latest **published** release until an actual authenticated release action.
+- `lifecycle = published-release-marker`, `schema_version = 29`;
+- `release_line = 3.0.5`, `candidate_state = FROZEN`, `candidate_sha = 30ff9b7bc777db28584fce7e96930e748ee1a661`;
+- `publication_authorized = true`, `publication_state = PUBLISHED`, `active_development_line = null`;
+- GitHub Release ID `410584912`, published `2026-10-12T12:42:11Z`, `draft=false`;
+- annotated tag `v3.0.5`, Git object `a3648d5b1ff572f502bb25ef11dc534df7a664d4`, peeled commit `30ff9b7bc777db28584fce7e96930e748ee1a661`;
+- exact seven-profile review `11670542808` approved 2026-10-10; certified distribution artifact `11670527758`;
+- all four immutable GitHub assets server-side SHA256 verified (see `docs/RELEASE-STATE.md`);
+- GitHub publication COMPLETE. CTAN v3.0.5 `NOT_SUBMITTED`, previous confirmed CTAN v3.0.4 still published/accepted under issue #356;
+- issue #475 owns release-control closeout; #369 handles CTAN metadata requirements; no next development line selected.
 
-Control-plane Git commits must never replace the accepted v3.0.5 publication source SHA.
+Do not rewrite either published v3.0.4 or v3.0.5 assets/tags. The `main` publication-state control commit is **not** the `v3.0.5` source SHA.
+
 The embedded published-release receipt for v3.0.4 remains immutable and continues to bind source `7e176fd5472925b519d469a9a756330f4851f0b3`, Static #675, Linux #582, Linux Release run `35510145977`, CTAN `pkgcheck 4.1.0`, explicit maintainer visual acceptance, annotated tag identity and published asset digests.
 
-Phase 10B finalizes release-source content before candidate selection. It still does not freeze a source: the exact merged #472 source must receive fresh full certification and explicit maintainer visual acceptance before a later control-plane freeze/tag/publication step.
+Historically, Phase 10B finalized the release source; subsequent exact-source validation, human ACCEPT, freeze PR #481 and published GitHub Release #410584912 completed those dependencies.
 
 Completed release machine receipts belong under `release/history/v3/`; completed publication narrative belongs under `docs/history/v3/release/`. The exact published CTAN archive for v3.0.4 was submitted on 2026-09-20 under issue #356; the official CTAN-ann update confirmed v3.0.4 publication on 2026-09-22. The submitted bytes remain immutable and must not be rebuilt or replaced.
 
