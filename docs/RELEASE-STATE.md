@@ -59,7 +59,7 @@ GitHub-reported asset digests were independently verified against those frozen v
 
 ## Current repository lifecycle
 
-GitHub v3.0.5 publication is complete and externally verified. Issue #475 controls the remaining repository metadata integration and closeout. The candidate remains `FROZEN` as a historical publication source; current machine release marker is `PUBLISHED`, latest GitHub release v3.0.5, no next development line selected. `CITATION.cff` records the latest published `3.0.5` and actual publication date `2026-10-12`.
+GitHub v3.0.5 publication is complete and externally verified. Release issue #353 is completed and closed (historical v3.0.4). Issue #475 controls the remaining repository metadata integration and closeout. The candidate remains `FROZEN` as a historical publication source; current machine release marker is `PUBLISHED`, latest GitHub release v3.0.5, no next development line selected. `CITATION.cff` records the latest published `3.0.5` and actual publication date `2026-10-12`.
 
 ### Validation and historic continuity
 
