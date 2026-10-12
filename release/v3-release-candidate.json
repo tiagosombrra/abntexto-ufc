@@ -1,52 +1,79 @@
 {
-  "schema_version": 28,
+  "schema_version": 29,
   "project": "abntexto-ufc",
-  "lifecycle": "active-development-marker",
+  "lifecycle": "published-release-marker",
   "release_line": "3.0.5",
   "target_version": "3.0.5",
   "candidate_state": "FROZEN",
   "candidate_sha": "30ff9b7bc777db28584fce7e96930e748ee1a661",
   "publication_authorized": true,
-  "publication_state": "UNPUBLISHED",
+  "publication_state": "PUBLISHED",
   "tracking_issue": 475,
   "authority": "docs/RELEASE-STATE.md",
-  "active_development_line": "3.0.5",
+  "active_development_line": null,
   "published_release": {
+    "version": "3.0.5",
+    "tag": "v3.0.5",
+    "annotated_tag_object_sha": "a3648d5b1ff572f502bb25ef11dc534df7a664d4",
+    "release_id": 410584912,
+    "published_at": "2026-10-12T12:42:11Z",
+    "source_sha": "30ff9b7bc777db28584fce7e96930e748ee1a661",
+    "source_tree_sha": "4b2a64e5c318ef761d84364877000086d51f1664",
+    "immutable_by_project_policy": true,
+    "certification": {
+      "static_contract_run": 38052629167,
+      "linux_integration_run": 38052629234,
+      "linux_release_check_run": 38052629238,
+      "windows_portability_run": 38055168762,
+      "macos_portability_run": 38055168813,
+      "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
+      "ctan_pkgcheck": "4.1.2 PASS",
+      "release_review_pairs": 7,
+      "maintainer_visual_acceptance": "ACCEPT",
+      "maintainer_visual_acceptance_date": "2026-10-10",
+      "review_artifact_id": 11670542808,
+      "review_artifact_sha256": "8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886",
+      "distribution_artifact_id": 11670527758,
+      "distribution_artifact_sha256": "ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c",
+      "control_pr": 481,
+      "control_merge_sha": "9e0de03d805798650bb6972f282741ff9164b301",
+      "control_postmerge_static_run": 38065763832,
+      "control_postmerge_linux_integration_run": 38065763807,
+      "control_postmerge_linux_release_run": 38065763818
+    },
+    "assets": {
+      "abntexto-ufc-3.0.5.zip": "b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8",
+      "abntexto-ufc-template-3.0.5.zip": "a6433d7e698a8e89a39761a7ea5951b267cce2169844827410fdc958da39196a",
+      "abntexto-ufc-overleaf-3.0.5.zip": "082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d",
+      "SHA256SUMS": "6fcb6ce5c8c56cee4c08c5f719280bf36e8422d81950c052db63b4f142e9df95"
+    },
+    "asset_ids": {
+      "abntexto-ufc-3.0.5.zip": 633747960,
+      "abntexto-ufc-template-3.0.5.zip": 633747953,
+      "abntexto-ufc-overleaf-3.0.5.zip": 633747961,
+      "SHA256SUMS": 633747954
+    },
+    "asset_sizes": {
+      "abntexto-ufc-3.0.5.zip": 247575,
+      "abntexto-ufc-template-3.0.5.zip": 628536,
+      "abntexto-ufc-overleaf-3.0.5.zip": 655462,
+      "SHA256SUMS": 285
+    }
+  },
+  "previous_published_release": {
     "version": "3.0.4",
     "tag": "v3.0.4",
-    "annotated_tag_object_sha": "184b00ad2eaed8a98e6b17033e7623efb3e53571",
     "release_id": 392476983,
     "published_at": "2026-09-20T15:29:02Z",
     "source_sha": "7e176fd5472925b519d469a9a756330f4851f0b3",
-    "immutable_by_project_policy": true,
-    "certification": {
-      "static_contract_run": 675,
-      "linux_integration_run": 582,
-      "linux_release_check_run": 35510145977,
-      "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
-      "canonical_reference_sha256": "24ec1e9eab489f8d8453c6e1b79978f8d26bf7a3ce37ec96ff676d46482e1089",
-      "ctan_sha256": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
-      "template_sha256": "3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c",
-      "overleaf_sha256": "4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92",
-      "sha256sums_sha256": "a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3",
-      "ctan_pkgcheck": "4.1.0 PASS",
-      "release_review_pairs": 7,
-      "maintainer_visual_acceptance": "PASS",
-      "maintainer_visual_acceptance_date": "2026-09-20",
-      "visual_regression": "93/93 rendered pages unchanged versus previously approved artifacts"
-    },
+    "annotated_tag_object_sha": "184b00ad2eaed8a98e6b17033e7623efb3e53571",
+    "historical_state": "release/history/v3/v3.0.4-release-candidate.json",
     "assets": {
       "abntexto-ufc-3.0.4.zip": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
       "abntexto-ufc-template-3.0.4.zip": "3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c",
       "abntexto-ufc-overleaf-3.0.4.zip": "4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92",
       "SHA256SUMS": "a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3"
     }
-  },
-  "previous_published_release": {
-    "version": "3.0.3",
-    "tag": "v3.0.3",
-    "release_id": 391878053,
-    "historical_state": "release/history/v3/v3.0.3-release-candidate.json"
   },
   "historical_release_state": "release/history/v3/v3.0.4-release-candidate.json",
   "ctan_follow_up": {
@@ -68,7 +95,7 @@
     "publication_requires_explicit_maintainer_acceptance": true,
     "published_tags_must_not_be_retargeted": true
   },
-  "note": "Phase 10D: fresh explicit ACCEPT on 2026-10-10 by maintainer for corrected exact source 30ff9b7bc777db28584fce7e96930e748ee1a661 and seven-profile artifact 11670542808, issue #475. Source passed Static 38052629167, complete Linux Integration 38052629234, Linux Release 38052629238, Windows 38055168762, macOS 38055168813. Distribution artifact 11670527758 checksum verified. This machine marker freezes exactly that source, not subsequent control-plane main commits. Publication is still UNPUBLISHED; v3.0.5 annotated tag, GitHub Release and CTAN not created/submitted. Control PR must pass Static, complete Linux Integration and Linux Release on its own head and again post-merge before publication work. Published v3.0.4 remains immutable.",
+  "note": "Phase 10D GitHub Release v3.0.5 PUBLISHED 2026-10-12T12:42:11Z, ID 410584912, tagged from exact source 30ff9b7bc777db28584fce7e96930e748ee1a661 by annotated tag object a3648d5b1ff572f502bb25ef11dc534df7a664d4. All four uploaded asset GitHub server SHA256/size match certified artifact 11670527758. Source Static 38052629167, full Linux 38052629234, Release 38052629238, Windows 38055168762, macOS 38055168813 PASS. Seven PDFs accepted 2026-10-10, artifact 11670542808. Freeze control PR #481 postmerge all three gates PASS, including 38065763832, 38065763807, 38065763818; documentation PR #482 postmerge Static 38238806274 PASS. Source tag is NOT subsequent control/docs main SHA. Latest confirmed CTAN remains v3.0.4, v3.0.5 NOT_SUBMITTED. Published v3.0.4 and earlier receipts immutable. Next: certify this publication-state-only PR with Static, complete Linux Integration, Linux Release; postmerge certify main; only then start CTAN follow-up using exact asset SHA256 b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8.",
   "active_development_candidate": {
     "version": "3.0.5",
     "entry_sha": "57b433bb2525e9776a5e86c7b26b8412b33268eb",
@@ -107,12 +134,39 @@
     "certified_assets": {
       "abntexto-ufc-3.0.5.zip": "b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8",
       "abntexto-ufc-template-3.0.5.zip": "a6433d7e698a8e89a39761a7ea5951b267cce2169844827410fdc958da39196a",
-      "abntexto-ufc-overleaf-3.0.5.zip": "082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d"
+      "abntexto-ufc-overleaf-3.0.5.zip": "082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d",
+      "SHA256SUMS": "6fcb6ce5c8c56cee4c08c5f719280bf36e8422d81950c052db63b4f142e9df95"
     },
     "annotated_tag": "v3.0.5",
-    "annotated_tag_state": "NOT_CREATED",
-    "github_release_state": "NOT_PUBLISHED",
+    "annotated_tag_state": "CREATED",
+    "github_release_state": "PUBLISHED",
     "ctan_submission_state": "NOT_SUBMITTED",
-    "control_plane_base_sha": "830322177ed08b64af7e6d64e7f663f55ca9b711"
+    "control_plane_base_sha": "830322177ed08b64af7e6d64e7f663f55ca9b711",
+    "annotated_tag_object_sha": "a3648d5b1ff572f502bb25ef11dc534df7a664d4",
+    "github_release_id": 410584912,
+    "github_published_at": "2026-10-12T12:42:11Z",
+    "asset_ids": {
+      "abntexto-ufc-3.0.5.zip": 633747960,
+      "abntexto-ufc-template-3.0.5.zip": 633747953,
+      "abntexto-ufc-overleaf-3.0.5.zip": 633747961,
+      "SHA256SUMS": 633747954
+    }
+  },
+  "earlier_published_release": {
+    "version": "3.0.3",
+    "tag": "v3.0.3",
+    "release_id": 391878053,
+    "historical_state": "release/history/v3/v3.0.3-release-candidate.json"
+  },
+  "ctan_next_release": {
+    "target_version": "3.0.5",
+    "state": "NOT_SUBMITTED",
+    "acceptance_state": "PENDING",
+    "previous_ctan_version": "3.0.4",
+    "canonical_github_release_id": 410584912,
+    "canonical_github_asset_id": 633747960,
+    "asset": "abntexto-ufc-3.0.5.zip",
+    "sha256": "b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8",
+    "rule": "CTAN is a distinct external submission. Use exactly the existing verified published GitHub canonical asset; never rebuild, replace or falsely declare CTAN submission/acceptance."
   }
 }

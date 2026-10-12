@@ -2,22 +2,35 @@
 
 This file is the durable human-readable release-state authority for the repository.
 
-## Published release
+## Published release — current GitHub authority
 
 | Fact | State |
 |---|---|
-| Latest GitHub release | `v3.0.4` |
+| Latest GitHub release | `v3.0.5` |
 | Publication state | `PUBLISHED` |
-| Published source SHA | `7e176fd5472925b519d469a9a756330f4851f0b3` |
-| Annotated tag | `v3.0.4` |
-| Annotated tag object SHA | `184b00ad2eaed8a98e6b17033e7623efb3e53571` |
-| GitHub Release ID | `392476983` |
-| Published at | `2026-09-20T15:29:02Z` |
-| Maintainer visual acceptance | PASS — 2026-09-20 |
-| CTAN v3.0.4 | published/accepted 2026-09-22 from the exact 2026-09-20 submission — issue #356 |
-| Active development line | `v3.0.5` — NEW seven-profile ACCEPT recorded under issue #475 on 2026-10-10; `UNRELEASED` / `FROZEN` / `UNPUBLISHED` |
+| Published source SHA | `30ff9b7bc777db28584fce7e96930e748ee1a661` |
+| Annotated tag | `v3.0.5` |
+| Annotated tag object SHA | `a3648d5b1ff572f502bb25ef11dc534df7a664d4` |
+| GitHub Release ID | `410584912` |
+| Published at | `2026-10-12T12:42:11Z` |
+| Maintainer visual acceptance | `ACCEPT` — 2026-10-10, seven-profile artifact `11670542808` |
+| Four GitHub assets | Uploaded, server SHA256 and sizes verified; immutable |
+| CTAN v3.0.5 | `NOT_SUBMITTED` (separate external process) |
+| Last confirmed CTAN release | `v3.0.4`, accepted/published 2026-09-22, issue #356 |
+| Active development line | None selected after v3.0.5 publication |
 
-The current `main` branch may contain control/documentation commits made after publication. Those commits do not alter the published v3.0.4 source, annotated tag, release assets or checksums.
+The annotated Git tag resolves to exactly the certified release-source commit `30ff9b7bc777db28584fce7e96930e748ee1a661` (tree `4b2a64e5c318ef761d84364877000086d51f1664`), **not** to any later `main` control or documentation commit. Published v3.0.4 source, tag, assets and CTAN archive remain unchanged.
+
+### Immutable v3.0.5 GitHub asset receipt
+
+| Name | GitHub asset ID | Size (bytes) | SHA256 |
+|---|---:|---:|---|
+| `abntexto-ufc-3.0.5.zip` | `633747960` | 247575 | `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8` |
+| `abntexto-ufc-template-3.0.5.zip` | `633747953` | 628536 | `a6433d7e698a8e89a39761a7ea5951b267cce2169844827410fdc958da39196a` |
+| `abntexto-ufc-overleaf-3.0.5.zip` | `633747961` | 655462 | `082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d` |
+| `SHA256SUMS` | `633747954` | 285 | `6fcb6ce5c8c56cee4c08c5f719280bf36e8422d81950c052db63b4f142e9df95` |
+
+Retained original distribution artifact `11670527758`; archive ZIP SHA256 `ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c`. All four asset digests above match their original independent certification. GitHub URL: https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.5.
 
 ## Certified v3.0.4 publication evidence
 
@@ -46,32 +59,20 @@ GitHub-reported asset digests were independently verified against those frozen v
 
 ## Current repository lifecycle
 
-GitHub publication of v3.0.4 is complete. Release issue #353 is completed and closed. Phase 10A / issue #469 selected v3.0.5 as the maintenance line and merged as `9aeed2cd57665bf4ec6d13990b88d8b779de22a1`. Phase 10B / issue #471 / PR #472 now prepares the exact publication-source candidate.
+GitHub v3.0.5 publication is complete and externally verified. Release issue #353 is completed and closed (historical v3.0.4). Issue #475 controls the remaining repository metadata integration and closeout. The candidate remains `FROZEN` as a historical publication source; current machine release marker is `PUBLISHED`, latest GitHub release v3.0.5, no next development line selected. `CITATION.cff` records the latest published `3.0.5` and actual publication date `2026-10-12`.
 
-v3.0.5 remains `UNRELEASED`, `NOT_FROZEN` and `UNPUBLISHED` with no frozen candidate SHA and no publication authorization in the machine marker. Phase 10C has now received explicit maintainer ACCEPT for one exact certified source; Phase 10D must still perform a separately validated control-plane freeze before tag/publication. Phase 10B finalizes release-source content before candidate selection: the canonical changelog is dated, while `CITATION.cff` continues to describe the latest actually published release v3.0.4. The exact merged #472 SHA must be recertified before it can be offered for maintainer visual acceptance.
+### Validation and historic continuity
 
-The root machine receipt `release/v3-release-candidate.json` represents this active development state while embedding the immutable v3.0.4 publication receipt. Completed v3.0.3 and v3.0.4 release receipts remain preserved under `release/history/v3/`, and the detailed v3.0.4 publication receipt remains under `docs/history/v3/release/`.
+- Certified exact source: Static `38052629167`, full Linux Integration `38052629234`, Linux Release `38052629238` (38/38, CTAN pkgcheck 4.1.2), Windows `38055168762`, macOS `38055168813` all PASS.
+- Fresh corrected-source seven-profile maintainer ACCEPT on 2026-10-10; artifact `11670542808`. Older #474 ACCEPT of other source `407f279...` remains historical only.
+- Freeze-control PR #481 merged `9e0de03d805798650bb6972f282741ff9164b301`; postmerge Static `38065763832`, full Integration `38065763807`, Linux Release `38065763818` all PASS.
+- Operator-handoff documentation PR #482 merged `1e4da7b9411f11da1239ec300a8ec9105186a290`, postmerge Static `38238806274` PASS.
+- Historical 3.0.4 release is retained under `release/history/v3/v3.0.4-release-candidate.json` and as `previous_published_release`; historical 3.0.3 remains separately preserved. The previous CTAN 3.0.4 submission was accepted/published 2026-09-22 under issue #356.
+- Operator kit v2 initially failed PowerShell strict-mode empty list; v3 earlier failed Git refspec interpolation; both findings documented on #475. The subsequent authenticated process successfully created exact annotated tag/draft, uploaded 4 unmodified certified files, then maintainer published the existing draft. No tags or assets were rewritten.
 
-CTAN publication is a separate external operation tracked by issue #356. The exact `abntexto-ufc-3.0.4.zip` asset from GitHub Release v3.0.4, SHA-256 `137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec`, was submitted on 2026-09-20 as an update from CTAN version 3.0.2 to 3.0.4. The official CTAN-ann update on 2026-09-22 confirms version 3.0.4 publication/acceptance. Repository control therefore records CTAN state `PUBLISHED` and acceptance state `ACCEPTED`; the submitted archive remains immutable and must not be rebuilt or replaced.
+### CTAN v3.0.5 — independent next dependency
 
-Previous GitHub release v3.0.3 remains immutable. Its machine receipt is preserved at `release/history/v3/v3.0.3-release-candidate.json`.
-
-## Active v3.0.5 maintenance line
-
-| Fact | State |
-|---|---|
-| Candidate version | `v3.0.5` |
-| Candidate state | `FROZEN` — PR #481 and all three exact-SHA post-merge gates PASS |
-| Candidate exact certified SHA | `30ff9b7bc777db28584fce7e96930e748ee1a661` |
-| Current release issue | issue #475; CTAN metadata issue #369 |
-| Publication authorized | true following explicit new maintainer ACCEPT |
-| Publication state | `UNPUBLISHED` — no v3.0.5 tag or GitHub Release |
-| Review evidence | artifact `11670542808`, sha256 `8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886` |
-| Distribution evidence | artifact `11670527758`, sha256 `ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c` |
-| Source checks | Static `38052629167`, Linux Integration `38052629234`, Linux Release `38052629238`, Windows `38055168762`, macOS `38055168813` PASS |
-| Changelog | `3.0.5 — 2026-10-06`; CITATION.cff remains v3.0.4 until publication |
-
-A freeze-control merge is not the release source and must not become the `v3.0.5` tag target. The release process must annotate/tag exactly `30ff9b7bc777db28584fce7e96930e748ee1a661`, verify and reuse the retained certified distribution bytes, and only then publish using an authenticated authorized mechanism. CTAN submission is later and independent. Existing v3.0.4 publication must not be altered.
+**CTAN 3.0.5 has NOT been submitted or accepted.** The next external operation must submit only the already published canonical `abntexto-ufc-3.0.5.zip` from GitHub asset ID `633747960`, exact SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`, preserving upstream LPPL/Work, CTAN README and third-party asset exclusions. Never rebuild or replace this ZIP. CTAN acceptance must have a separate external receipt before it is marked submitted/accepted. Do not start actual CTAN submission until this release-state PR's full gates and postmerge certification are green.
 
 ## Authority order
 

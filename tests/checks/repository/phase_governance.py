@@ -131,10 +131,10 @@ def main() -> int:
         return fail("historical v3.0.4 snapshot must preserve CTAN follow-up issue #356")
 
     marker = load_json(ACTIVE_MARKER)
-    if marker.get("schema_version") != 28:
-        return fail("active v3.0.5 marker must use schema version 28")
-    if marker.get("lifecycle") != "active-development-marker":
-        return fail("root release marker must represent active v3.0.5 development")
+    if marker.get("schema_version") != 29:
+        return fail("published v3.0.5 marker must use schema version 29")
+    if marker.get("lifecycle") != "published-release-marker":
+        return fail("root release marker must represent published v3.0.5")
     if marker.get("release_line") != "3.0.5" or marker.get("target_version") != "3.0.5":
         return fail("active release marker must identify v3.0.5")
     if marker.get("candidate_state") != "FROZEN":
@@ -143,10 +143,10 @@ def main() -> int:
         return fail("frozen candidate SHA must match exact approved publication source")
     if marker.get("publication_authorized") is not True:
         return fail("accepted frozen source must explicitly authorize subsequent publication")
-    if marker.get("publication_state") != "UNPUBLISHED":
-        return fail("freeze cannot imply that GitHub Release already exists")
-    if marker.get("active_development_line") != "3.0.5":
-        return fail("active development line must be v3.0.5")
+    if marker.get("publication_state") != "PUBLISHED":
+        return fail("published v3.0.5 must explicitly record actual GitHub publication")
+    if marker.get("active_development_line") is not None:
+        return fail("after v3.0.5 publication there is no automatically selected next development line")
     if marker.get("tracking_issue") != 475:
         return fail("v3.0.5 source correction must track active issue #475")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
@@ -191,8 +191,8 @@ def main() -> int:
         "maintainer_acceptance_date": "2026-10-10",
         "maintainer_acceptance_issue": 475,
         "annotated_tag": "v3.0.5",
-        "annotated_tag_state": "NOT_CREATED",
-        "github_release_state": "NOT_PUBLISHED",
+        "annotated_tag_state": "CREATED",
+        "github_release_state": "PUBLISHED",
         "ctan_submission_state": "NOT_SUBMITTED",
         "control_plane_base_sha": "830322177ed08b64af7e6d64e7f663f55ca9b711",
     }
@@ -215,8 +215,26 @@ def main() -> int:
         "abntexto-ufc-template-3.0.5.zip": "a6433d7e698a8e89a39761a7ea5951b267cce2169844827410fdc958da39196a",
         "abntexto-ufc-overleaf-3.0.5.zip": "082255fddec80f6e6aeee17f6781d579d3c488c8571a456018aa3524eade7e3d",
     }
-    if freeze.get("certified_assets") != expected_assets:
-        return fail("certified release bundle hashes changed")
+    expected_published_assets = {
+        **expected_assets,
+        "SHA256SUMS": "6fcb6ce5c8c56cee4c08c5f719280bf36e8422d81950c052db63b4f142e9df95",
+    }
+    if freeze.get("certified_assets") != expected_published_assets:
+        return fail("published release asset SHA256 receipt changed")
+    if freeze.get("annotated_tag_object_sha") != "a3648d5b1ff572f502bb25ef11dc534df7a664d4":
+        return fail("annotated tag object receipt does not match GitHub")
+    if freeze.get("github_release_id") != 410584912:
+        return fail("freeze receipt GitHub Release ID incorrect")
+    if freeze.get("github_published_at") != "2026-10-12T12:42:11Z":
+        return fail("freeze receipt GitHub published time incorrect")
+    expected_ids = {
+        "abntexto-ufc-3.0.5.zip": 633747960,
+        "abntexto-ufc-template-3.0.5.zip": 633747953,
+        "abntexto-ufc-overleaf-3.0.5.zip": 633747961,
+        "SHA256SUMS": 633747954,
+    }
+    if freeze.get("asset_ids") != expected_ids:
+        return fail("freeze receipt published asset IDs do not match GitHub")
     if "issue #475" not in str(freeze.get("maintainer_acceptance_origin", "")):
         return fail("maintainer ACCEPT must carry its issue provenance")
     if marker["candidate_sha"] != freeze["source_sha"]:
@@ -224,53 +242,93 @@ def main() -> int:
 
     published = marker.get("published_release")
     if not isinstance(published, dict):
-        return fail("published v3.0.4 marker must preserve publication receipt")
-    if published.get("version") != "3.0.4" or published.get("tag") != "v3.0.4":
-        return fail("current published release must be v3.0.4")
-    if published.get("release_id") != 392476983:
-        return fail("published v3.0.4 Release ID changed unexpectedly")
-    if published.get("published_at") != "2026-09-20T15:29:02Z":
-        return fail("published v3.0.4 timestamp changed unexpectedly")
-    if published.get("source_sha") != "7e176fd5472925b519d469a9a756330f4851f0b3":
-        return fail("published v3.0.4 source SHA changed unexpectedly")
-    if published.get("annotated_tag_object_sha") != "184b00ad2eaed8a98e6b17033e7623efb3e53571":
-        return fail("published v3.0.4 annotated tag object SHA changed unexpectedly")
-
+        return fail("missing v3.0.5 published GitHub receipt")
+    expected_published = {
+        "version": "3.0.5",
+        "tag": "v3.0.5",
+        "release_id": 410584912,
+        "published_at": "2026-10-12T12:42:11Z",
+        "source_sha": "30ff9b7bc777db28584fce7e96930e748ee1a661",
+        "source_tree_sha": "4b2a64e5c318ef761d84364877000086d51f1664",
+        "annotated_tag_object_sha": "a3648d5b1ff572f502bb25ef11dc534df7a664d4",
+        "immutable_by_project_policy": True,
+    }
+    for key, value in expected_published.items():
+        if published.get(key) != value:
+            return fail(f"v3.0.5 published GitHub identity mismatch for {key}")
+    if published.get("assets") != expected_published_assets:
+        return fail("v3.0.5 published asset hashes differ from certified immutable bytes")
+    if published.get("asset_ids") != expected_ids:
+        return fail("v3.0.5 GitHub asset IDs differ from server receipt")
+    expected_sizes = {
+        "abntexto-ufc-3.0.5.zip": 247575,
+        "abntexto-ufc-template-3.0.5.zip": 628536,
+        "abntexto-ufc-overleaf-3.0.5.zip": 655462,
+        "SHA256SUMS": 285,
+    }
+    if published.get("asset_sizes") != expected_sizes:
+        return fail("v3.0.5 published asset sizes changed")
     certification = published.get("certification")
     if not isinstance(certification, dict):
-        return fail("published v3.0.4 receipt must preserve certification evidence")
-    expected_certification = {
-        "static_contract_run": 675,
-        "linux_integration_run": 582,
-        "linux_release_check_run": 35510145977,
+        return fail("v3.0.5 published release certification missing")
+    expected_cert = {
+        "static_contract_run": 38052629167,
+        "linux_integration_run": 38052629234,
+        "linux_release_check_run": 38052629238,
+        "windows_portability_run": 38055168762,
+        "macos_portability_run": 38055168813,
         "validation": "SCOPE=complete PASS=38 FAIL=0 SKIP=0",
-        "canonical_reference_sha256": "24ec1e9eab489f8d8453c6e1b79978f8d26bf7a3ce37ec96ff676d46482e1089",
-        "ctan_sha256": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
-        "template_sha256": "3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c",
-        "overleaf_sha256": "4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92",
-        "sha256sums_sha256": "a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3",
-        "ctan_pkgcheck": "4.1.0 PASS",
-        "maintainer_visual_acceptance": "PASS",
-        "maintainer_visual_acceptance_date": "2026-09-20",
+        "ctan_pkgcheck": "4.1.2 PASS",
+        "release_review_pairs": 7,
+        "maintainer_visual_acceptance": "ACCEPT",
+        "maintainer_visual_acceptance_date": "2026-10-10",
+        "review_artifact_id": 11670542808,
+        "review_artifact_sha256": "8aaff1d8b317034470470d4acd10af20518e1ac791b3d7e8b7ba5231817f1886",
+        "distribution_artifact_id": 11670527758,
+        "distribution_artifact_sha256": "ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c",
+        "control_pr": 481,
+        "control_merge_sha": "9e0de03d805798650bb6972f282741ff9164b301",
+        "control_postmerge_static_run": 38065763832,
+        "control_postmerge_linux_integration_run": 38065763807,
+        "control_postmerge_linux_release_run": 38065763818,
     }
-    for key, expected in expected_certification.items():
-        if certification.get(key) != expected:
-            return fail(f"published v3.0.4 certification mismatch for {key}")
+    if certification != expected_cert:
+        return fail("v3.0.5 published technical and maintainer acceptance receipt mismatch")
+    if published["source_sha"] != marker["candidate_sha"] or published["source_sha"] != freeze["source_sha"]:
+        return fail("published and frozen source identity must be the same approved commit")
+    if published["annotated_tag_object_sha"] != freeze["annotated_tag_object_sha"]:
+        return fail("GitHub tag object receipt diverges from certified frozen release")
+    if published["assets"] != freeze["certified_assets"]:
+        return fail("GitHub publication asset bytes diverge from frozen certification")
 
-    expected_assets = {
+    previous = marker.get("previous_published_release")
+    if not isinstance(previous, dict):
+        return fail("previous v3.0.4 publication receipt not preserved")
+    historical_v304 = {
+        "version": "3.0.4",
+        "tag": "v3.0.4",
+        "release_id": 392476983,
+        "published_at": "2026-09-20T15:29:02Z",
+        "source_sha": "7e176fd5472925b519d469a9a756330f4851f0b3",
+        "annotated_tag_object_sha": "184b00ad2eaed8a98e6b17033e7623efb3e53571",
+        "historical_state": "release/history/v3/v3.0.4-release-candidate.json",
+    }
+    for key, value in historical_v304.items():
+        if previous.get(key) != value:
+            return fail(f"published v3.0.4 historical reference drift for {key}")
+    expected_v304_assets = {
         "abntexto-ufc-3.0.4.zip": "137ba95ff0d8dab5fe8af6eab05d22b3cb9fd453d16d84b6beb26d090dc48cec",
         "abntexto-ufc-template-3.0.4.zip": "3412c0c63a85d340ec7789da509e1f6a2994efa1974207f3d79ac402a3aa159c",
         "abntexto-ufc-overleaf-3.0.4.zip": "4967ce1407e8b42b0a77ab688edbe9e759a64827e566f52d7864cb1f6118cf92",
         "SHA256SUMS": "a1aeb3f0c75449811677aaa6b11ee954cef3a253bd492433f066ba3ffea4f4d3",
     }
-    if published.get("assets") != expected_assets:
-        return fail("published v3.0.4 asset receipt changed unexpectedly")
-
-    previous = marker.get("previous_published_release")
-    if not isinstance(previous, dict):
-        return fail("current marker must preserve previous v3.0.3 publication reference")
-    if previous.get("version") != "3.0.3" or previous.get("release_id") != 391878053:
-        return fail("previous published release reference must remain v3.0.3")
+    if previous.get("assets") != expected_v304_assets:
+        return fail("previous v3.0.4 immutable asset hashes drifted")
+    earlier = marker.get("earlier_published_release")
+    if not isinstance(earlier, dict) or earlier.get("version") != "3.0.3" or earlier.get("release_id") != 391878053:
+        return fail("published v3.0.3 historical reference must be preserved")
+    if marker.get("historical_release_state") != "release/history/v3/v3.0.4-release-candidate.json":
+        return fail("v3.0.4 historical marker path changed")
 
     ctan = marker.get("ctan_follow_up")
     if not isinstance(ctan, dict):
@@ -287,8 +345,25 @@ def main() -> int:
         return fail("CTAN acceptance must record the confirmed external v3.0.4 publication")
     if ctan.get("published_date") != "2026-09-22":
         return fail("CTAN v3.0.4 publication date must match the official CTAN-ann update")
-    if ctan.get("sha256") != expected_assets["abntexto-ufc-3.0.4.zip"]:
-        return fail("CTAN follow-up must bind the exact published canonical archive")
+    if ctan.get("sha256") != expected_v304_assets["abntexto-ufc-3.0.4.zip"]:
+        return fail("CTAN v3.0.4 follow-up must bind the exact historical canonical archive")
+
+    ctan_next = marker.get("ctan_next_release")
+    if not isinstance(ctan_next, dict):
+        return fail("v3.0.5 CTAN must have an independent pending submission record")
+    expected_ctan_next = {
+        "target_version": "3.0.5",
+        "state": "NOT_SUBMITTED",
+        "acceptance_state": "PENDING",
+        "previous_ctan_version": "3.0.4",
+        "canonical_github_release_id": 410584912,
+        "canonical_github_asset_id": 633747960,
+        "asset": "abntexto-ufc-3.0.5.zip",
+        "sha256": expected_published_assets["abntexto-ufc-3.0.5.zip"],
+    }
+    for key, value in expected_ctan_next.items():
+        if ctan_next.get(key) != value:
+            return fail(f"v3.0.5 CTAN pending receipt mismatch: {key}")
 
     agents = require_tokens(
         AGENTS,
@@ -309,9 +384,9 @@ def main() -> int:
         STATUS,
         (
             "Latest GitHub release",
-            "`v3.0.4`",
+            "`v3.0.5`",
             "`PUBLISHED`",
-            "392476983",
+            "410584912",
             "`v3.0.5`",
             "FROZEN",
             "issue #475",
@@ -329,10 +404,10 @@ def main() -> int:
 
     print(
         "RELEASE-GOVERNANCE-EVIDENCE status=PASS "
-        "published_release=3.0.4 publication_state=published "
-        "source_sha=7e176fd5472925b519d469a9a756330f4851f0b3 "
-        "release_id=392476983 active_development_line=3.0.5 "
-        "candidate_state=frozen candidate_sha=30ff9b7bc777db28584fce7e96930e748ee1a661 publication_authorized=true publication_state=unpublished "
+        "published_release=3.0.5 publication_state=published "
+        "source_sha=30ff9b7bc777db28584fce7e96930e748ee1a661 "
+        "release_id=410584912 active_development_line=none "
+        "candidate_state=frozen candidate_sha=30ff9b7bc777db28584fce7e96930e748ee1a661 publication_authorized=true publication_state=published "
         "candidate_change=release-control-freeze "
         "ctan_state=published ctan_acceptance=accepted "
         "ctan_published_date=2026-09-22 ctan_issue=356 "
