@@ -145,8 +145,28 @@ def main() -> int:
         return fail("accepted frozen source must explicitly authorize subsequent publication")
     if marker.get("publication_state") != "PUBLISHED":
         return fail("published v3.0.5 must explicitly record actual GitHub publication")
-    if marker.get("active_development_line") is not None:
-        return fail("after v3.0.5 publication there is no automatically selected next development line")
+    active_line = marker.get("active_development_line")
+    if active_line not in (None, "3.1.0"):
+        return fail("only separately authorized v3.1.0 is permitted after v3.0.5 publication")
+    if active_line == "3.1.0":
+        next_candidate = marker.get("next_development_candidate")
+        expected_next = {
+            "version": "3.1.0",
+            "tracking_issue": 489,
+            "parent_roadmap_issue": 488,
+            "entry_main_sha": "020ed29054445003273130fc96a9ab3261ff0803",
+            "current_change": "development-line-open",
+            "candidate_state": "UNRELEASED",
+            "publication_authorized": False,
+            "maintainer_visual_acceptance": False,
+        }
+        if not isinstance(next_candidate, dict):
+            return fail("v3.1.0 requires an independent unreleased development receipt")
+        for key, value in expected_next.items():
+            if next_candidate.get(key) != value:
+                return fail(f"v3.1.0 candidate identity/authorization mismatch: {key}")
+    elif marker.get("next_development_candidate") is not None:
+        return fail("next development candidate requires active v3.1.0 line")
     if marker.get("tracking_issue") != 475:
         return fail("v3.0.5 source correction must track active issue #475")
     if marker.get("authority") != "docs/RELEASE-STATE.md":
@@ -432,7 +452,7 @@ def main() -> int:
         "RELEASE-GOVERNANCE-EVIDENCE status=PASS "
         "published_release=3.0.5 publication_state=published "
         "source_sha=30ff9b7bc777db28584fce7e96930e748ee1a661 "
-        "release_id=410584912 active_development_line=none "
+        f"release_id=410584912 active_development_line={marker.get('active_development_line') or 'none'} "
         "candidate_state=frozen candidate_sha=30ff9b7bc777db28584fce7e96930e748ee1a661 publication_authorized=true publication_state=published "
         "candidate_change=release-control-freeze "
         "ctan_state=published ctan_acceptance=accepted "
