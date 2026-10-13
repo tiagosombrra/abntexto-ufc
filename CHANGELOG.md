@@ -1,6 +1,15 @@
 abntexto-ufc changelog
 ======================
 
+3.1.0 — Unreleased
+------------------
+
+- Opens a backward-compatible minor development line distinct from the immutable CTAN-published 3.0.5.
+- Fixes spaces lost in default institution, submission entity, and research-project type values under expl3.
+- Labels the development manual as a v3.1.0 preview instead of inheriting the published v3.0.5 manual's stale status.
+- Adds generated cover and actual CTAN ZIP PDF text-boundary regression tests.
+- Continues the ABNT/IBGE/UFC, seven-profile validator and multilingual roadmap under issues #488 and #489.
+
 3.0.5 — 2026-10-06
 ------------------
 
