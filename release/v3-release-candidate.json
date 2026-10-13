@@ -160,14 +160,14 @@
   },
   "ctan_next_release": {
     "target_version": "3.0.5",
-    "state": "SUBMITTED",
-    "acceptance_state": "PENDING",
+    "state": "PUBLISHED",
+    "acceptance_state": "ACCEPTED",
     "previous_ctan_version": "3.0.4",
     "canonical_github_release_id": 410584912,
     "canonical_github_asset_id": 633747960,
     "asset": "abntexto-ufc-3.0.5.zip",
     "sha256": "b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8",
-    "rule": "CTAN own upload confirmation proves SUBMITTED, not accepted or published. Only actual CTAN acceptance/catalog evidence may advance to PUBLISHED/ACCEPTED. Original certified and GitHub-published canonical archive ID 633747960 remains immutable and cannot be rebuilt or replaced.",
+    "rule": "PUBLISHED/ACCEPTED is supported by official CTAN maintainer installation email and public package listing. Mirror propagation (within 24 hours per CTAN) and separate announcement are not yet verified. Never rebuild, replace or retarget the certified v3.0.5 archive, GitHub tag, or Release.",
     "submitted_date": "2026-10-13",
     "submission_timestamp": "2026-10-13 11:14 CEST",
     "submission_timestamp_utc": "2026-10-13T09:14Z",
@@ -178,6 +178,12 @@
     "tracking_issue": 484,
     "path": "/macros/latex/contrib/abntexto-ufc",
     "license": "lppl1.3c",
-    "submitted_filename": "abntexto-ufc-3.0.5.zip"
+    "submitted_filename": "abntexto-ufc-3.0.5.zip",
+    "published_date": "2026-10-13",
+    "server_installation_confirmed_date": "2026-10-13",
+    "official_catalog_url": "https://ctan.org/pkg/abntexto-ufc",
+    "official_catalog_version": "3.0.5",
+    "acceptance_evidence": "CTAN staff Petra Rübe-Pugliese email to recognized maintainer (2026-10-13 14:30 CEST) confirms update installed on CTAN main server, issue #484 comment 6149595933.",
+    "catalog_evidence": "Official CTAN package listing shows Version 3.0.5 as of page timestamp 2026-10-13 17:47 CEST, issue #484 comment 6149595933."
   }
 }
