@@ -227,8 +227,8 @@ def main() -> None:
     reference_resolution = precedence.get("rules", {}).get("references.layout", {})
     if reference_resolution.get("governing_sources") != ["abnt-nbr-6023-2025"]:
         fail("NBR 6023:2025 must remain the governing references standard")
-    if "ufc-guia-referencias-2023" not in reference_resolution.get("supporting_sources", []):
-        fail("UFC historical guide must be supporting only")
+    if "ufc-guia-referencias-2023" in reference_resolution.get("supporting_sources", []):
+        fail("UFC historical guide cannot be mapped to unreviewed atomic reference checks")
 
     catalog_ids = {source["id"] for source in catalog["sources"]}
     missing = sorted(catalog_ids - set(by_id))
