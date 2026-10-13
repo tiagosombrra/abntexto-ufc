@@ -1,6 +1,6 @@
 # Normative Base
 
-Updated: 2026-09-19
+Updated: 2026-10-13 (targeted UFC guide-source reconciliation; technical standard recertification pending)
 
 This document is the human-readable normative baseline for the current `abntexto-ufc` scope. Machine-readable evidence lives under `standards/`. This document does not create requirements by itself.
 
