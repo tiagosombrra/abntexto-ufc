@@ -309,6 +309,46 @@ compile_public_project() {
   printf '%s\n' "$embedded_hash"
 }
 
+# Gate the PDFs extracted from the exact newly generated CTAN archive (not source text).
+# Historical tagged/public v3.0.5 artifacts are never modified by this validation.
+python3 - "$work/dist/abntexto-ufc-$version.zip" "$version" <<'PY'
+from __future__ import annotations
+import re
+import subprocess
+import sys
+import tempfile
+import unicodedata
+import zipfile
+from pathlib import Path
+
+zip_path, version = Path(sys.argv[1]), sys.argv[2]
+with zipfile.ZipFile(zip_path) as zf:
+    manual_tex = zf.read("abntexto-ufc/abntexto-ufc.tex").decode("utf-8")
+    with tempfile.TemporaryDirectory(prefix="abntexto-ctan-pdf-check-") as temp:
+        def extract_pdf(filename: str) -> str:
+            path = Path(temp) / filename
+            path.write_bytes(zf.read("abntexto-ufc/" + filename))
+            result = subprocess.run(
+                ["pdftotext", "-layout", str(path), "-"],
+                check=True, capture_output=True, text=True, encoding="utf-8"
+            )
+            return re.sub(r"\s+", " ", unicodedata.normalize("NFC", result.stdout))
+        manual = extract_pdf("abntexto-ufc.pdf")
+        example = extract_pdf("abntexto-ufc-example.pdf").upper()
+        if version == "3.1.0":
+            if r"\date{Version \version\ --- development preview}" not in manual_tex:
+                raise SystemExit("CTAN PDF regression: development manual source status missing.")
+            if "Version 3.1.0" not in manual or "development preview" not in manual:
+                raise SystemExit("CTAN PDF regression: compiled manual has incorrect version/status.")
+            if re.search(r"Version 3\.1\.0\s*[—-]\s*unreleased", manual, flags=re.I):
+                raise SystemExit("CTAN PDF regression: stale manual date from published v3.0.5.")
+            if not re.search(r"UNIVERSIDADE\s+FEDERAL\s+DO\s+CEARÁ", example):
+                raise SystemExit("CTAN PDF regression: example's institutional word boundaries are absent.")
+            if "UNIVERSIDADEFEDERALDOCEARÁ" in example:
+                raise SystemExit("CTAN PDF regression: example glues institution words.")
+print(f"CTAN-PDF-TEXT-EVIDENCE status=PASS version={version} actual_zip=true manual_pdf=true example_pdf=true")
+PY
+
 template_extract="$work/template-extract"
 overleaf_extract="$work/overleaf-extract"
 mkdir -p "$template_extract" "$overleaf_extract"

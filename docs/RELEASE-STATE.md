@@ -17,7 +17,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Four GitHub assets | Uploaded, server SHA256 and sizes verified; immutable |
 | CTAN v3.0.5 | `PUBLISHED/ACCEPTED` — installed on CTAN main server 2026-10-13 and official catalogue lists 3.0.5, evidence issue #484 comment `6149595933` |
 | Last confirmed CTAN release | `v3.0.4`, accepted/published 2026-09-22, issue #356 |
-| Active development line | None selected after v3.0.5 publication |
+| Active development line | `v3.1.0` — UNRELEASED; selected under issue #489, without transferring v3.0.5 release acceptance |
 
 The annotated Git tag resolves to exactly the certified release-source commit `30ff9b7bc777db28584fce7e96930e748ee1a661` (tree `4b2a64e5c318ef761d84364877000086d51f1664`), **not** to any later `main` control or documentation commit. Published v3.0.4 source, tag, assets and CTAN archive remain unchanged.
 
@@ -31,6 +31,12 @@ The annotated Git tag resolves to exactly the certified release-source commit `3
 | `SHA256SUMS` | `633747954` | 285 | `6fcb6ce5c8c56cee4c08c5f719280bf36e8422d81950c052db63b4f142e9df95` |
 
 Retained original distribution artifact `11670527758`; archive ZIP SHA256 `ed4eb70d1b06e09c38e70b35d505e552c90f72c9d3cc982874b79f0f2020df1c`. All four asset digests above match their original independent certification. GitHub URL: https://github.com/tiagosombrra/abntexto-ufc/releases/tag/v3.0.5.
+
+## v3.1.0 development — not published
+
+The maintainer selected v3.1.0 as the next backward-compatible minor development line (issues #489 and #488). The root release marker retains the complete published v3.0.5 tag/source/asset/CTAN receipts and records separate `next_development_candidate` fields: `UNRELEASED`, `publication_authorized=false`, and `maintainer_visual_acceptance=false`. Current class/Makefile/preview CTAN source identify 3.1.0; `CITATION.cff` still identifies the **latest published** 3.0.5.
+
+First scoped source correction #487 restores word boundaries in default metadata created under `\\ExplSyntaxOn`, and validates PDF output for the new candidate. Draft documentation says `development preview`, never implying CTAN submission/approval. No historical published artifact may be rebuilt or retargeted.
 
 ## Certified v3.0.4 publication evidence
 
@@ -59,7 +65,7 @@ GitHub-reported asset digests were independently verified against those frozen v
 
 ## Current repository lifecycle
 
-GitHub v3.0.5 publication and all control-plane gates are complete and externally verified. Release issue #353 is completed and closed (historical v3.0.4). Release-control issue #475 is complete after PR #483, with independent CTAN 3.0.5 submission now tracked by issue #484. The candidate remains `FROZEN` as a historical publication source; current machine release marker is `PUBLISHED`, latest GitHub release v3.0.5, no next development line selected. `CITATION.cff` records the latest published `3.0.5` and actual publication date `2026-10-12`.
+GitHub v3.0.5 publication and all control-plane gates are complete and externally verified. Release issue #353 is completed and closed (historical v3.0.4). Release-control issue #475 is complete after PR #483, with independent CTAN 3.0.5 submission now tracked by issue #484. The candidate remains `FROZEN` as a historical publication source; current machine release marker is `PUBLISHED`, latest GitHub release v3.0.5, independent v3.1.0 development line under issue #489. `CITATION.cff` records the latest published `3.0.5` and actual publication date `2026-10-12`.
 
 ### Validation and historic continuity
 

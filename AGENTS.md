@@ -28,12 +28,13 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Completed v3.0.4 release issue | issue #353 |
 | CTAN follow-up | issue #484 — v3.0.5 `PUBLISHED/ACCEPTED` (official CTAN team installation confirmation dated 2026-10-13 and catalogue listing Version 3.0.5; mirror propagation and announcement not independently confirmed), exact canonical GitHub asset ID `633747960` SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; issue #356 is completed historical v3.0.4 |
 | Repository maintenance roadmap | issue #359 — active; current map in `docs/REPOSITORY-MAINTENANCE.md` |
+| Selected next development line | v3.1.0 UNRELEASED (#489), v3.0.5 GitHub/CTAN receipts immutable, no inherited release approval |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
 Publication-state PR #483 was squash merged as `70398eb3a462e137433e217f0864da7d96ac4b44` (tree `54e221ec34a61c9c5b7b691b9e41b19f634a55a9`). Its exact merged commit passed Static `38260799693`, **full** Linux Integration `38260799760` (`SCOPE=complete PASS=42 FAIL=0 SKIP=0`, including Web/Lite E2E), Linux Release Check `38260799764` (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.2). These are mandatory release-closeout receipts, not a CTAN submission confirmation. CTAN `v3.0.5` was submitted through the recognized-maintainer CTAN upload form at 2026-10-13 11:14 CEST (issue #484 comment `6142389236`). It is now **PUBLISHED/ACCEPTED**: Petra Rübe-Pugliese of the CTAN team confirmed installation on the main server in her 2026-10-13 14:30 CEST email, and the official public package page displays Version 3.0.5 (issue #484 comment `6149595933`). CTAN indicated up to 24 hours for mirror propagation and a later announcement; neither is claimed verified yet. Historical GitHub tag/assets and accepted source remain immutable.
 
-Published version tags/releases and their assets must never be rewritten, retargeted or rebuilt. Any future runtime/public-API change belongs to a newly selected unreleased development line.
+Published version tags/releases and their assets must never be rewritten, retargeted or rebuilt. The independent v3.1.0 branch identifies unreleased code in Makefile/class/CTAN draft source while CITATION.cff correctly stays at latest published v3.0.5. Do not inherit human acceptance from older sources. Any future runtime/public-API change belongs to a newly selected unreleased development line.
 
 ## Active and historical authority
 

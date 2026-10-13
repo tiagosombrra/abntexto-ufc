@@ -10,7 +10,7 @@
   "publication_state": "PUBLISHED",
   "tracking_issue": 475,
   "authority": "docs/RELEASE-STATE.md",
-  "active_development_line": null,
+  "active_development_line": "3.1.0",
   "published_release": {
     "version": "3.0.5",
     "tag": "v3.0.5",
@@ -185,5 +185,16 @@
     "official_catalog_version": "3.0.5",
     "acceptance_evidence": "CTAN staff Petra Rübe-Pugliese email to recognized maintainer (2026-10-13 14:30 CEST) confirms update installed on CTAN main server, issue #484 comment 6149595933.",
     "catalog_evidence": "Official CTAN package listing shows Version 3.0.5 as of page timestamp 2026-10-13 17:47 CEST, issue #484 comment 6149595933."
+  },
+  "next_development_candidate": {
+    "version": "3.1.0",
+    "tracking_issue": 489,
+    "parent_roadmap_issue": 488,
+    "entry_main_sha": "020ed29054445003273130fc96a9ab3261ff0803",
+    "current_change": "development-line-open",
+    "candidate_state": "UNRELEASED",
+    "publication_authorized": false,
+    "maintainer_visual_acceptance": false,
+    "notes": "Separate v3.1.0 development line; frozen GitHub+CTAN v3.0.5 source/tag/assets and acceptance receipts remain authoritative. This candidate is not approved for public release."
   }
 }
