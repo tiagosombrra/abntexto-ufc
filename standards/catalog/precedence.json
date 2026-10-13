@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-09-04",
+  "reviewed_at": "2026-10-13",
   "description": "Política de resolução de vigência e precedência da base normativa abntexto-ufc.",
   "catalog_policy_mode": "replace-embedded-policy",
   "principles": [
@@ -25,6 +25,8 @@
     "ufc-guia-trabalhos-2022": "institutional-guide",
     "ufc-guia-artigos-2022": "institutional-guide",
     "ufc-guia-citacoes-2025": "institutional-guide",
+    "ufc-guia-referencias-2023": "institutional-guide",
+    "ufc-guia-projetos-2019": "institutional-guide",
     "ufc-in-2-2026": "institutional-act",
     "ufc-deposito-tcc-2026": "institutional-requirement",
     "ufc-deposito-pos-2026": "institutional-requirement",
@@ -248,7 +250,8 @@
         "abnt-nbr-6023-2025"
       ],
       "supporting_sources": [
-        "ufc-guia-trabalhos-2022"
+        "ufc-guia-trabalhos-2022",
+        "ufc-guia-referencias-2023"
       ]
     },
     "illustration.bounds": {
