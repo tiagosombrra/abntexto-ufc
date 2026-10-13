@@ -353,8 +353,8 @@ def main() -> int:
         return fail("v3.0.5 CTAN must have an independent pending submission record")
     expected_ctan_next = {
         "target_version": "3.0.5",
-        "state": "SUBMITTED",
-        "acceptance_state": "PENDING",
+        "state": "PUBLISHED",
+        "acceptance_state": "ACCEPTED",
         "previous_ctan_version": "3.0.4",
         "canonical_github_release_id": 410584912,
         "canonical_github_asset_id": 633747960,
@@ -370,14 +370,24 @@ def main() -> int:
         "path": "/macros/latex/contrib/abntexto-ufc",
         "license": "lppl1.3c",
         "submitted_filename": "abntexto-ufc-3.0.5.zip",
+        "published_date": "2026-10-13",
+        "server_installation_confirmed_date": "2026-10-13",
+        "official_catalog_url": "https://ctan.org/pkg/abntexto-ufc",
+        "official_catalog_version": "3.0.5",
     }
     for key, value in expected_ctan_next.items():
         if ctan_next.get(key) != value:
-            return fail(f"v3.0.5 CTAN submitted receipt mismatch: {key}")
+            return fail(f"v3.0.5 CTAN publication receipt mismatch: {key}")
     if "GitHub issue #484 comment 6142389236" not in str(ctan_next.get("submission_evidence", "")):
         return fail("CTAN v3.0.5 submission must cite external upload confirmation evidence")
-    if ctan_next.get("acceptance_state") != "PENDING":
-        return fail("CTAN v3.0.5 cannot report acceptance before external confirmation")
+    if ctan_next.get("acceptance_state") != "ACCEPTED":
+        return fail("CTAN v3.0.5 acceptance must match confirmed main-server installation")
+    if "issue #484 comment 6149595933" not in str(ctan_next.get("acceptance_evidence", "")):
+        return fail("CTAN v3.0.5 accepted publication requires independent CTAN team email evidence")
+    if "Version 3.0.5" not in str(ctan_next.get("catalog_evidence", "")):
+        return fail("CTAN v3.0.5 published catalog version must be independently verified")
+    if "issue #484 comment 6149595933" not in str(ctan_next.get("catalog_evidence", "")):
+        return fail("CTAN catalogue proof must cite independent CTAN observation")
     if ctan_next.get("canonical_github_asset_id") != 633747960 or ctan_next.get("sha256") != expected_published_assets["abntexto-ufc-3.0.5.zip"]:
         return fail("CTAN submitted bytes must match immutable GitHub-published canonical asset")
 
@@ -427,6 +437,8 @@ def main() -> int:
         "candidate_change=release-control-freeze "
         "ctan_state=published ctan_acceptance=accepted "
         "ctan_published_date=2026-09-22 ctan_issue=356 "
+        "ctan_v305_state=published ctan_v305_acceptance=accepted "
+        "ctan_v305_published_date=2026-10-13 "
         "current_authority=docs/RELEASE-STATE.md"
     )
     return 0
