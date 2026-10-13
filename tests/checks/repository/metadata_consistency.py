@@ -97,6 +97,28 @@ def main() -> int:
             return fail("steady-state must preserve explicit maintainer acceptance")
         if marker.get("published_release", {}).get("annotated_tag_object_sha") != "a3648d5b1ff572f502bb25ef11dc534df7a664d4":
             return fail("published steady-state requires exact annotated tag identity")
+    elif active_line == "3.1.0":
+        nxt = marker.get("next_development_candidate")
+        if not isinstance(nxt, dict) or nxt.get("version") != "3.1.0" or nxt.get("candidate_state") != "UNRELEASED":
+            return fail("active v3.1.0 must carry an independent UNRELEASED candidate")
+        if nxt.get("publication_authorized") is not False or nxt.get("maintainer_visual_acceptance") is not False:
+            return fail("v3.1.0 may not inherit past release acceptance")
+        if class_version != "3.1.0" or make_version != "3.1.0":
+            return fail("v3.1.0 class and Makefile identities must agree")
+        if "3.1.0 — Unreleased" not in CHANGELOG.read_text(encoding="utf-8"):
+            return fail("v3.1.0 must have an Unreleased changelog section")
+        readme = CTAN_README.read_text(encoding="utf-8")
+        if not re.search(r"(?m)^Version:\s*3\.1\.0\s*$", readme):
+            return fail("v3.1.0 CTAN README must match development version")
+        if re.findall(r"(?m)^Release status:\s*(.+?)\s*$", readme) != ["Unreleased"]:
+            return fail("v3.1.0 CTAN README must declare Unreleased")
+        manual = CTAN_MANUAL.read_text(encoding="utf-8")
+        if r"\newcommand{\version}{3.1.0}" not in manual:
+            return fail("CTAN manual must identify v3.1.0")
+        if r"\texttt{abntexto-ufc-3.1.0.zip}" not in manual:
+            return fail("CTAN manual must name the future archive, not the v3.0.5 release")
+        if r"\date{Version \version\ --- development preview}" not in manual:
+            return fail("CTAN manual must label the unreleased 3.1.0 document as development preview")
     else:
         allowed_versions = {published_version, str(active_line)}
         if class_version not in allowed_versions or make_version not in allowed_versions:
