@@ -676,8 +676,7 @@
       "requirement": "Referências usam espaço simples internamente, alinhamento à esquerda e uma linha em branco de espaço simples entre entradas.",
       "sources": [
         "abnt-nbr-6023-2025",
-        "ufc-guia-trabalhos-2022",
-        "ufc-guia-referencias-2023"
+        "ufc-guia-trabalhos-2022"
       ],
       "locator": "NBR 6023:2025 6.3; UFC 3.2.3.1",
       "normativity": "required",
