@@ -15,7 +15,7 @@ This file is the durable human-readable release-state authority for the reposito
 | Published at | `2026-10-12T12:42:11Z` |
 | Maintainer visual acceptance | `ACCEPT` — 2026-10-10, seven-profile artifact `11670542808` |
 | Four GitHub assets | Uploaded, server SHA256 and sizes verified; immutable |
-| CTAN v3.0.5 | `NOT_SUBMITTED` — external authenticated update tracked in issue #484 |
+| CTAN v3.0.5 | `SUBMITTED/PENDING` — CTAN upload page confirms 2026-10-13 11:14 CEST; review/acceptance pending, issue #484 |
 | Last confirmed CTAN release | `v3.0.4`, accepted/published 2026-09-22, issue #356 |
 | Active development line | None selected after v3.0.5 publication |
 
@@ -72,7 +72,9 @@ GitHub v3.0.5 publication and all control-plane gates are complete and externall
 
 ### CTAN v3.0.5 — independent next dependency
 
-**CTAN 3.0.5 has NOT been submitted or accepted.** The next external operation must submit only the already published canonical `abntexto-ufc-3.0.5.zip` from GitHub asset ID `633747960`, exact SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`, preserving upstream LPPL/Work, CTAN README and third-party asset exclusions. Never rebuild or replace this ZIP. CTAN acceptance must have a separate external receipt before it is marked submitted/accepted. Release-state PR #483 is now merged and its exact-main postmerge gates are green: Static `38260799693` PASS, complete Linux Integration `38260799760` PASS (`SCOPE=complete PASS=42 FAIL=0 SKIP=0`, including Web/Lite E2E), Linux Release `38260799764` PASS (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.2). The CTAN submission prerequisite is therefore SATISFIED, but **no submission has been made**. Follow issue #484 and the updated `docs/RELEASE-PUBLICATION-OPERATOR.md` for the recognized maintainer's external upload and receipt.
+**CTAN 3.0.5 was SUBMITTED on 2026-10-13; acceptance/publication is PENDING.** The recognized maintainer provided the actual CTAN post-upload confirmation page headed **"Your contribution abntexto-ufc has been uploaded"**, timestamp **2026-10-13 11:14 CEST** (**2026-10-13 09:14 UTC**), file `abntexto-ufc-3.0.5.zip`, version `3.0.5`, destination `/macros/latex/contrib/abntexto-ufc`, license `lppl1.3c`, sender Tiago Guimarães Sombra at his recognized maintainer email. Its response states: **"Your submission will be processed soon. In case of questions we will come back to you via email."** Exact source of proof is the maintainer-provided CTAN confirmation page, recorded in GitHub issue #484 comment `6142389236`.
+
+The previously published canonical GitHub asset ID `633747960` has SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; the maintainer had independently confirmed the downloaded upload ZIP's checksum before submission. The **CTAN receipt establishes the upload, not the contents' server-side digest**. Never rebuild or replace this ZIP. **Only subsequent CTAN confirmation or an official catalogue update to v3.0.5 may mark it `PUBLISHED/ACCEPTED`**. Issue #484 remains open. Release-state PR #483 is now merged and its exact-main postmerge gates are green: Static `38260799693` PASS, complete Linux Integration `38260799760` PASS (`SCOPE=complete PASS=42 FAIL=0 SKIP=0`, including Web/Lite E2E), Linux Release `38260799764` PASS (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.2). The CTAN technical submission prerequisite is SATISFIED and the actual CTAN upload confirmation has been received; a subsequent formal CTAN approval and catalogue publication have not yet been confirmed. Follow issue #484 and the current `docs/RELEASE-PUBLICATION-OPERATOR.md` for the external receipt and review status.
 
 ## Authority order
 

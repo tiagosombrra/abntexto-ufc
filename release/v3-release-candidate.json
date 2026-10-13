@@ -160,13 +160,24 @@
   },
   "ctan_next_release": {
     "target_version": "3.0.5",
-    "state": "NOT_SUBMITTED",
+    "state": "SUBMITTED",
     "acceptance_state": "PENDING",
     "previous_ctan_version": "3.0.4",
     "canonical_github_release_id": 410584912,
     "canonical_github_asset_id": 633747960,
     "asset": "abntexto-ufc-3.0.5.zip",
     "sha256": "b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8",
-    "rule": "CTAN is a distinct external submission. Use exactly the existing verified published GitHub canonical asset; never rebuild, replace or falsely declare CTAN submission/acceptance."
+    "rule": "CTAN own upload confirmation proves SUBMITTED, not accepted or published. Only actual CTAN acceptance/catalog evidence may advance to PUBLISHED/ACCEPTED. Original certified and GitHub-published canonical archive ID 633747960 remains immutable and cannot be rebuilt or replaced.",
+    "submitted_date": "2026-10-13",
+    "submission_timestamp": "2026-10-13 11:14 CEST",
+    "submission_timestamp_utc": "2026-10-13T09:14Z",
+    "submitter": "Tiago Guimarães Sombra",
+    "submission_receipt_title": "Your contribution abntexto-ufc has been uploaded",
+    "submission_receipt_message": "Your submission will be processed soon. In case of questions we will come back to you via email.",
+    "submission_evidence": "CTAN post-upload confirmation page supplied by the recognized maintainer in conversation on 2026-10-13; complete fields recorded in GitHub issue #484 comment 6142389236",
+    "tracking_issue": 484,
+    "path": "/macros/latex/contrib/abntexto-ufc",
+    "license": "lppl1.3c",
+    "submitted_filename": "abntexto-ufc-3.0.5.zip"
   }
 }
