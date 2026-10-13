@@ -26,7 +26,7 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Active development line | None selected since v3.0.5 publication; future changes require a new explicit line |
 | Completed GitHub release-control | issue #475 / PR #483; metadata correction issue #369 completed; source issue #471 / PR #472 historical |
 | Completed v3.0.4 release issue | issue #353 |
-| CTAN follow-up | issue #484 — v3.0.5 `SUBMITTED/PENDING` (CTAN upload receipt, 2026-10-13 11:14 CEST; acceptance pending), exact canonical GitHub asset ID `633747960` SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; issue #356 is completed historical v3.0.4 |
+| CTAN follow-up | issue #484 — v3.0.5 `SUBMITTED/PENDING` (CTAN upload receipt, 2026-10-13 11:14 CEST; formal CTAN decision awaited), exact canonical GitHub asset ID `633747960` SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; issue #356 is completed historical v3.0.4 |
 | Repository maintenance roadmap | issue #359 — active; current map in `docs/REPOSITORY-MAINTENANCE.md` |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
