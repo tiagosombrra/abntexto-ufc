@@ -189,6 +189,7 @@ def validate_article_source_reconciliation(audit: dict, by_id: dict[str, dict]) 
 def main() -> None:
     audit = json.loads(AUDIT.read_text(encoding="utf-8"))
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+    precedence = json.loads(PRECEDENCE.read_text(encoding="utf-8"))
 
     if audit.get("schema_version") != 1:
         fail("unsupported schema_version")
@@ -213,6 +214,21 @@ def main() -> None:
             fail(f"source {source_id}: checked after audit review date")
         if source["status"] in {"superseded", "historical", "revoked"}:
             fail(f"legacy source must not remain in current inventory: {source_id}")
+
+    # UFC-normalization portal's reference/research guides were already audited
+    # but must also appear in the live subset with technical authority restricted.
+    live_sources = {source["id"]: source for source in catalog["sources"]}
+    for source_id in ("ufc-guia-referencias-2023", "ufc-guia-projetos-2019"):
+        guide = live_sources.get(source_id)
+        if not guide or guide["status"] != "current-with-superseded-norm-references":
+            fail(f"missing/reclassified UFC guide in runtime catalog: {source_id}")
+        if precedence.get("source_roles", {}).get(source_id) != "institutional-guide":
+            fail(f"UFC guide cannot govern technical editions: {source_id}")
+    reference_resolution = precedence.get("rules", {}).get("references.layout", {})
+    if reference_resolution.get("governing_sources") != ["abnt-nbr-6023-2025"]:
+        fail("NBR 6023:2025 must remain the governing references standard")
+    if "ufc-guia-referencias-2023" in reference_resolution.get("supporting_sources", []):
+        fail("UFC historical guide cannot be mapped to unreviewed atomic reference checks")
 
     catalog_ids = {source["id"] for source in catalog["sources"]}
     missing = sorted(catalog_ids - set(by_id))

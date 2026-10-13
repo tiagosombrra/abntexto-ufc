@@ -1,6 +1,6 @@
 # Normative Base
 
-Updated: 2026-09-19
+Updated: 2026-10-13 (targeted UFC guide-source reconciliation; technical standard recertification pending)
 
 This document is the human-readable normative baseline for the current `abntexto-ufc` scope. Machine-readable evidence lives under `standards/`. This document does not create requirements by itself.
 
@@ -15,6 +15,12 @@ For institutional requirements:
 **current UFC act → current UFC institutional requirement → current UFC guide → applicable technical standard → implementation**.
 
 A superseded technical edition is not reactivated merely because an older UFC guide still cites it. A genuine conflict between current sources requires explicit review.
+
+## 2026-10-13 — UFC guide reconciliation (v3.1.0 development target)
+
+UFC's [current normalization page](https://biblioteca.ufc.br/pt/servicos-e-produtos/normalizacao-de-trabalhos-academicos/) lists five normalization guides. The Guide to References (2023) and Guide to Research Projects (2019) were **already present** in `standards/catalog/source-audit.json`, but absent from the compact runtime/source catalog. This correction adds both to `standards/catalog/catalog.json`, `standards/catalog/precedence.json`, and the deterministic Web/Lite catalog, without introducing new normative rules (19→21 sources, 29 rules retained).
+
+The references guide cites superseded **NBR 6023:2018** and is inventoried as **potential institutional context** only; it is deliberately not yet attached to an atomic rule or its source-check proof, pending clause-by-clause review. The governing reference standard remains **NBR 6023:2025**. The research guide cites superseded **NBR 15287:2011**, **NBR 10520:2002**, and **NBR 6023:2018**; no older edition becomes governing. Research-specific criteria require future explicit clause-level applicability mapping. This is a source inventory and strict regression improvement, **not proof** of a complete ABNT corrigenda audit or of full institutional compliance. The catalog and precedence *global* review dates remain at their previously certified values (2026-08-22 and 2026-09-04); the two sources retain the previously documented 2026-08-22 audit check dates, with their 2026-10-13 portal reconfirmation recorded separately in their notes. A full global review-date advance requires corresponding atomic-contract revalidation. No already-published v3.0.5 source/tag/archive is altered.
 
 ## Active technical basis
 
