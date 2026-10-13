@@ -1,7 +1,7 @@
 # abntexto-ufc
 
-Version: 3.0.5
-Release status: Prepared for publication
+Version: 3.1.0
+Release status: Unreleased
 Current Maintainer: Tiago Guimarães Sombra
 LPPL maintenance status: maintained
 License: LaTeX Project Public License 1.3c or later
@@ -18,7 +18,7 @@ Upstream dependency: https://ctan.org/pkg/abntexto (version 1.1 or newer)
 - `biblatex` and `biber` for bibliography workflows;
 - additional LaTeX packages required by optional features selected by the document.
 
-Version 3.0.5 is a maintenance patch release prepared for distribution and validated primarily against TeX Live 2026. Actual publication and acceptance are recorded separately in GitHub release records and CTAN notices.
+Version 3.1.0 is an unreleased development preview undergoing validation against TeX Live 2026. It has not been approved for CTAN submission or GitHub release. The certified 3.0.5 publication and CTAN acceptance are preserved separately in the project's release records.
 
 ## Installation
 
