@@ -2,17 +2,21 @@
 set -eu
 
 academic_fixture="tests/documents/frontmatter-cover-academic-test.tex"
+default_institution_fixture="tests/documents/frontmatter-default-institution-v310.tex"
+default_project_fixture="tests/documents/frontmatter-default-project-v310.tex"
 project_fixture="tests/documents/frontmatter-cover-project-optional-test.tex"
 anonymized_fixture="tests/documents/frontmatter-cover-project-anonymized-optional-test.tex"
 filled_department_fixture="/tmp/abntexto-ufc-frontmatter-cover-department-filled.tex"
 academic_job="frontmatter-validation-cover-academic"
+default_institution_job="frontmatter-validation-cover-default-institution"
+default_project_job="frontmatter-validation-cover-default-project"
 filled_department_job="frontmatter-validation-cover-department-filled"
 project_job="frontmatter-validation-cover-project-optional"
 anonymized_job="frontmatter-validation-cover-project-anonymized-optional"
 evidence="artifacts/frontmatter/cover.json"
 
 cleanup() {
-  for job in "$academic_job" "$filled_department_job" "$project_job" "$anonymized_job"; do
+  for job in "$academic_job" "$default_institution_job" "$default_project_job" "$filled_department_job" "$project_job" "$anonymized_job"; do
     rm -f "$job.aux" "$job.log" "$job.out" "$job.pdf" "$job.toc"
     rm -f "$job"-*.png "$job"-*.jpg "$job"-*.ppm "$job".xml
   done
@@ -47,6 +51,8 @@ compile_fixture() {
 }
 
 compile_fixture "$academic_fixture" "$academic_job"
+compile_fixture "$default_institution_fixture" "$default_institution_job"
+compile_fixture "$default_project_fixture" "$default_project_job"
 
 python3 - "$academic_fixture" "$filled_department_fixture" <<'PY'
 import sys
@@ -65,6 +71,30 @@ PY
 compile_fixture "$filled_department_fixture" "$filled_department_job"
 compile_fixture "$project_fixture" "$project_job"
 compile_fixture "$anonymized_fixture" "$anonymized_job"
+
+pdftotext -layout "$default_institution_job.pdf" /tmp/abntexto-ufc-default-institution.txt
+pdftotext -layout "$default_project_job.pdf" /tmp/abntexto-ufc-default-project.txt
+python3 - <<'PY'
+import re
+import unicodedata
+from pathlib import Path
+
+def normalized(path):
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFC", Path(path).read_text(encoding="utf-8"))).upper()
+
+institution = normalized("/tmp/abntexto-ufc-default-institution.txt")
+project = normalized("/tmp/abntexto-ufc-default-project.txt")
+for label, text in (("doctoral", institution), ("research project", project)):
+    if not re.search(r"UNIVERSIDADE\s+FEDERAL\s+DO\s+CEARÁ", text):
+        raise SystemExit(f"Word boundary regression: missing spaced institution in {label} PDF.")
+    if "UNIVERSIDADEFEDERALDOCEARÁ" in text:
+        raise SystemExit(f"Word boundary regression: glued institution in {label} PDF.")
+if not re.search(r"PROJETO\s+DE\s+PESQUISA", project):
+    raise SystemExit("Word boundary regression: default research project type lost its spaces.")
+if "PROJETODEPESQUISA" in project:
+    raise SystemExit("Word boundary regression: glued research project type in PDF.")
+print("INSTITUTION-WORD-BOUNDARY-EVIDENCE status=PASS profile=doctoral,research-project words=preserved")
+PY
 
 pdftotext -layout "$academic_job.pdf" /tmp/abntexto-ufc-cover-department-blank.txt
 pdftotext -layout "$filled_department_job.pdf" /tmp/abntexto-ufc-cover-department-filled.txt
