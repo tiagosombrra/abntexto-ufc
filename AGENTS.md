@@ -22,16 +22,16 @@ Priority on disagreement: **current Git/GitHub facts > machine release receipt >
 | Published v3.0.5 source | `30ff9b7bc777db28584fce7e96930e748ee1a661` — annotated tag object `a3648d5b1ff572f502bb25ef11dc534df7a664d4` |
 | GitHub Release ID | `410584912` |
 | Canonical branch | `main`; resolve SHA dynamically |
-| Repository lifecycle | GitHub v3.0.5 `PUBLISHED` and fully certified on main `70398eb3a462e137433e217f0864da7d96ac4b44`; CTAN v3.0.5 `NOT_SUBMITTED`, tracked exclusively by issue #484 |
+| Repository lifecycle | GitHub v3.0.5 `PUBLISHED` and fully certified on main `70398eb3a462e137433e217f0864da7d96ac4b44`; CTAN v3.0.5 `SUBMITTED/PENDING` as confirmed by CTAN upload page on 2026-10-13 at 11:14 CEST, tracked in issue #484 |
 | Active development line | None selected since v3.0.5 publication; future changes require a new explicit line |
 | Completed GitHub release-control | issue #475 / PR #483; metadata correction issue #369 completed; source issue #471 / PR #472 historical |
 | Completed v3.0.4 release issue | issue #353 |
-| CTAN follow-up | issue #484 — v3.0.5 `NOT_SUBMITTED`, exact canonical GitHub asset ID `633747960` SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; issue #356 is completed historical v3.0.4 |
+| CTAN follow-up | issue #484 — v3.0.5 `SUBMITTED/PENDING` (CTAN upload receipt, 2026-10-13 11:14 CEST; acceptance pending), exact canonical GitHub asset ID `633747960` SHA256 `b57e2f4f17d5a707e93a30f5fe701f0f14606fc39c01d6f09b6e8a3781e652e8`; issue #356 is completed historical v3.0.4 |
 | Repository maintenance roadmap | issue #359 — active; current map in `docs/REPOSITORY-MAINTENANCE.md` |
 | Workflow lifecycle | Static Contract, Linux Integration, Linux Release Check and Pages are permanent distinct workflows |
 | Branch hygiene | `main` plus only active short-lived PR branches; merged heads auto-delete |
 
-Publication-state PR #483 was squash merged as `70398eb3a462e137433e217f0864da7d96ac4b44` (tree `54e221ec34a61c9c5b7b691b9e41b19f634a55a9`). Its exact merged commit passed Static `38260799693`, **full** Linux Integration `38260799760` (`SCOPE=complete PASS=42 FAIL=0 SKIP=0`, including Web/Lite E2E), Linux Release Check `38260799764` (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.2). These are mandatory release-closeout receipts, not a CTAN submission confirmation. CTAN `v3.0.5` remains `NOT_SUBMITTED` until a recognized maintainer obtains an actual receipt; issue #484 owns that action.
+Publication-state PR #483 was squash merged as `70398eb3a462e137433e217f0864da7d96ac4b44` (tree `54e221ec34a61c9c5b7b691b9e41b19f634a55a9`). Its exact merged commit passed Static `38260799693`, **full** Linux Integration `38260799760` (`SCOPE=complete PASS=42 FAIL=0 SKIP=0`, including Web/Lite E2E), Linux Release Check `38260799764` (`SCOPE=complete PASS=38 FAIL=0 SKIP=0`, CTAN pkgcheck 4.1.2). These are mandatory release-closeout receipts, not a CTAN submission confirmation. CTAN `v3.0.5` has a recognized-maintainer CTAN confirmation page: `SUBMITTED/PENDING`, 2026-10-13 11:14 CEST, issuer CTAN, evidence issue #484 comment `6142389236`. This is upload confirmation only, **not CTAN acceptance or publication**. Do not claim `ACCEPTED/PUBLISHED` without a separate official response/catalog receipt; issue #484 owns that remaining gate.
 
 Published version tags/releases and their assets must never be rewritten, retargeted or rebuilt. Any future runtime/public-API change belongs to a newly selected unreleased development line.
 

@@ -353,17 +353,33 @@ def main() -> int:
         return fail("v3.0.5 CTAN must have an independent pending submission record")
     expected_ctan_next = {
         "target_version": "3.0.5",
-        "state": "NOT_SUBMITTED",
+        "state": "SUBMITTED",
         "acceptance_state": "PENDING",
         "previous_ctan_version": "3.0.4",
         "canonical_github_release_id": 410584912,
         "canonical_github_asset_id": 633747960,
         "asset": "abntexto-ufc-3.0.5.zip",
         "sha256": expected_published_assets["abntexto-ufc-3.0.5.zip"],
+        "submitted_date": "2026-10-13",
+        "submission_timestamp": "2026-10-13 11:14 CEST",
+        "submission_timestamp_utc": "2026-10-13T09:14Z",
+        "submitter": "Tiago Guimarães Sombra",
+        "submission_receipt_title": "Your contribution abntexto-ufc has been uploaded",
+        "submission_receipt_message": "Your submission will be processed soon. In case of questions we will come back to you via email.",
+        "tracking_issue": 484,
+        "path": "/macros/latex/contrib/abntexto-ufc",
+        "license": "lppl1.3c",
+        "submitted_filename": "abntexto-ufc-3.0.5.zip",
     }
     for key, value in expected_ctan_next.items():
         if ctan_next.get(key) != value:
-            return fail(f"v3.0.5 CTAN pending receipt mismatch: {key}")
+            return fail(f"v3.0.5 CTAN submitted receipt mismatch: {key}")
+    if "GitHub issue #484 comment 6142389236" not in str(ctan_next.get("submission_evidence", "")):
+        return fail("CTAN v3.0.5 submission must cite external upload confirmation evidence")
+    if ctan_next.get("acceptance_state") != "PENDING":
+        return fail("CTAN v3.0.5 cannot report acceptance before external confirmation")
+    if ctan_next.get("canonical_github_asset_id") != 633747960 or ctan_next.get("sha256") != expected_published_assets["abntexto-ufc-3.0.5.zip"]:
+        return fail("CTAN submitted bytes must match immutable GitHub-published canonical asset")
 
     agents = require_tokens(
         AGENTS,
