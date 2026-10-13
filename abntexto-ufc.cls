@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{abntexto-ufc}[2026/10/06 v3.0.5 UFC academic document class]
+\ProvidesClass{abntexto-ufc}[2026/10/13 v3.1.0 UFC academic document class]
 
 % Historical UFC template: Ednardo Moreira Rodrigues and Alan Batista de Oliveira.
 % Historical v2 redesign and maintenance: Tiago Guimarães Sombra.
@@ -46,7 +46,7 @@
 
 \prop_gset_from_keyval:Nn \g_ufc_metadata_prop
   {
-    institution = {Universidade Federal do Ceará},
+    institution = {Universidade~Federal~do~Ceará},
     institution-acronym = {UFC},
     center = {},
     department = {},
@@ -62,8 +62,8 @@
     doctoral-degree-field = {},
     doctoral-concentration = {},
     project-program = {},
-    project-type = {Projeto de pesquisa},
-    submission-entity = {Universidade Federal do Ceará},
+    project-type = {Projeto~de~pesquisa},
+    submission-entity = {Universidade~Federal~do~Ceará},
     project-nature-statement = {},
     project-identifier = {},
     author = {},
