@@ -189,6 +189,7 @@ def validate_article_source_reconciliation(audit: dict, by_id: dict[str, dict]) 
 def main() -> None:
     audit = json.loads(AUDIT.read_text(encoding="utf-8"))
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+    precedence = json.loads(PRECEDENCE.read_text(encoding="utf-8"))
 
     if audit.get("schema_version") != 1:
         fail("unsupported schema_version")
