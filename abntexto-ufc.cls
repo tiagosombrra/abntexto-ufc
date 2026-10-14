@@ -766,6 +766,15 @@
             % lower continuation/source/note text remains reduced.
             \SetTblrStyle{caption,lasthead,capcont}{font=\normalsize}
             \SetTblrStyle{firsthead-text,lasthead-text,conthead-text,lastfoot}{font=\abntsmall}
+            % IBGE 1993 §§4.10-4.12: source, general remarks, then specific notes.
+            % The upstream tabularray default places specific notes first.
+            % Override only the affected ABNT table theme's final foot order.
+            \DefTblrTemplate { lastfoot } { ufc-ibge-note-order }
+              {
+                \UseTblrTemplate { remark } { default }
+                \UseTblrTemplate { note } { default }
+              }
+            \SetTblrTemplate { lastfoot } { ufc-ibge-note-order }
           }
       }
       {
