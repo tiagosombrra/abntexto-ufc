@@ -1,0 +1,32 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{tables = tabularray}
+\pagestyle{empty}
+
+\begin{document}
+
+% This controlled fixture declares the measurable mass unit in its header.
+% Applicability is determined by the scenario, never inferred from PDF text.
+\begin{table}[htbp]
+\centering
+\begin{tallabnttblr}
+[
+  caption={UFCIBGEUNITCAP Massa observada},
+  label={tab:ibge-unit-controlled},
+  remark{Fonte}={UFCIBGEUNITSRC Dados sintéticos.},
+]
+{
+  width=0.8\linewidth,
+  colspec={X[l] X[r]},
+}
+\toprule
+Categoria & UFCIBGEUNITHEAD \quad (kg) \\
+\midrule
+UFCIBGEUNITR1 & 10 \\
+UFCIBGEUNITR2 & 20 \\
+UFCIBGEUNITR3 & 30 \\
+\bottomrule
+\end{tallabnttblr}
+\end{table}
+
+\end{document}

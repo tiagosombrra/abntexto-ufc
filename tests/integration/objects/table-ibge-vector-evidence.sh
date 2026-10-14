@@ -76,6 +76,10 @@ python3 tests/checks/objects/normative_table_ibge_text.py "$negative_job.pdf" \
   --json artifacts/normative-layout/table-ibge-title-source-negative.json \
   --commit-sha "${SOURCE_COMMIT_SHA:-${GITHUB_SHA:-}}"
 
+# Keep the new conditional unit proof in the established IBGE object gate.
+# Applicability is fixture-declared, never guessed for arbitrary PDFs.
+sh tests/integration/objects/table-ibge-unit-evidence.sh
+
 echo 'IBGE rendered title/source positive and negative PDF checks completed.'
 
 echo 'IBGE table vector-geometry evidence gate completed.'
