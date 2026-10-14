@@ -16,6 +16,14 @@ For institutional requirements:
 
 A superseded technical edition is not reactivated merely because an older UFC guide still cites it. A genuine conflict between current sources requires explicit review.
 
+## 2026-10-13 — Conditional IBGE units: bounded PDF regression (v3.1.0 development)
+
+IBGE *Normas de apresentação tabular*, 3rd ed. (1993), **§4.6** places a unit in the column header or indicator columns **when needed** to clarify the numeric quantity. **§4.6.1** uses a symbol or word **in parentheses**; **§4.6.2** concerns values divided by a constant (not covered by this slice). Source: [IBGE catalog PDF](https://biblioteca.ibge.gov.br/visualizacao/livros/liv23907.pdf), independently inspected in the [institutional copy, printed page 16](https://www3.eco.unicamp.br/biblioteca/images/arquivos/pdf/Norma_de_apresentacao_tabular_IBGE_1993.pdf).
+
+The controlled fixture `tests/documents/table-ibge-unit-final-pdf.tex` and `tests/checks/objects/normative_table_ibge_unit.py` are run by `tests/integration/objects/table-ibge-unit-evidence.sh` via the **existing** IBGE vector integration gate. Three **separately compiled** PDF cases are measured using `pdftotext -bbox-layout`: (1) a declared necessary mass unit `(kg)` in the table header → **PASS**, (2) the same required unit absent from the header, but mentioned unrelatedly in the source → **FAIL** as a negative control, and (3) a scenario where a metrological unit is not applicable, intentionally absent → **NOT_APPLICABLE**. JSON stores per-PDF SHA-256, coordinates, the applicability assumption, localized header evidence and the observed verdict; CI must verify the three PDFs have distinct bytes.
+
+**Proof boundary:** applicability is supplied by each fixture, not inferred automatically from arbitrary documents; actual data semantics, other legal units, alternative locations in indicator columns, constants under §4.6.2, and all other table criteria remain outside this regression. A missing unit **must not cause an unconditional FAIL** in the general validator. This adds no top-level catalog rule; `table.ibge` remains `automatic-partial`, the 29 parent rules and seven profiles remain unchanged, and v3.0.5 publication artifacts are immutable. Successful CI execution is required before any integration or claim of test certification.
+
 ## 2026-10-13 — IBGE table title/source PDF evidence (development v3.1.0)
 
 The *third edition (1993)* of IBGE's [Normas de apresentação tabular](https://biblioteca.ibge.gov.br/visualizacao/livros/liv23907.pdf) establishes separate criteria for table identification (§4.1), title (§4.2), units of measure **when applicable** (§4.6), source (§4.10), explanatory notes **when necessary** (§§4.11–4.12), and continuation of tables beyond a page (§8.3). The applicable edition is the same 1993 source already present in `standards/catalog/catalog.json`; this evidence slice does **not** claim a new edition or an exhaustive ABNT audit.
