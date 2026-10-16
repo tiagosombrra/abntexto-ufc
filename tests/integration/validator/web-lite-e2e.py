@@ -328,15 +328,15 @@ def by_id(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return result
 
 
-def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, Any], catalog: dict[str, Any]) -> None:
+def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, Any], catalog: dict[str, Any], document_type: str = 'undergraduate-capstone') -> None:
     schema = contract["target_report_schema"]
     missing = [key for key in schema["required_top_level"] if key not in report]
     if missing:
         fail("browser report is missing top-level fields: " + ", ".join(missing))
     if report.get("profile") != profile:
         fail(f"browser profile mismatch: {report.get('profile')!r}")
-    if report.get("document_type") != "undergraduate-capstone":
-        fail(f"browser document type mismatch: {report.get('document_type')!r}")
+    if report.get("document_type") != document_type:
+        fail(f"browser document type mismatch: {report.get('document_type')!r} != {document_type!r}")
     if report.get("mode") != "web-lite-local":
         fail(f"browser mode mismatch: {report.get('mode')!r}")
     base = report.get("normative_catalog")
@@ -393,13 +393,14 @@ def csp_log_violations(entries: list[dict[str, Any]]) -> list[str]:
     return violations
 
 
-def analyze_through_ui(browser: Browser, pdf: Path, profile: str) -> dict[str, Any]:
+def analyze_through_ui(browser: Browser, pdf: Path, profile: str, document_type: str = 'undergraduate-capstone') -> dict[str, Any]:
     browser.execute(
         "window.alert=(message)=>{window.__ufcTestAlert=String(message)};"
         "const p=document.querySelector('#profile');p.value=arguments[0];"
-        "const d=document.querySelector('#document-type');d.value='undergraduate-capstone';"
+        "const d=document.querySelector('#document-type');d.value=arguments[1];"
+        "document.querySelector('#summary').classList.add('hidden');"
         "document.querySelector('#pdf-file').value='';return p.value;",
-        [profile],
+        [profile, document_type],
     )
     browser.send_file("#pdf-file", pdf)
     browser.click("#analyze")
@@ -435,6 +436,7 @@ def main() -> None:
     parser.add_argument("--pdf", type=Path, required=True)
     parser.add_argument("--profile", choices=("strict", "portable", "accessibility"), default="portable")
     parser.add_argument("--site-root", type=Path, default=VALIDATOR)
+    parser.add_argument("--document-pdf-dir", type=Path, help="Five real class-rendered profile PDFs and matching CLI evidence")
     parser.add_argument("--evidence", type=Path)
     args = parser.parse_args()
 
@@ -529,6 +531,59 @@ def main() -> None:
                 if not check or check.get("status") != REVIEW or check.get("mandatory") is not False:
                     fail(f"negative Web/Lite deep boundary drift for {check_id}: {check}")
 
+            profile_reports: dict[str, Any] = {}
+            if args.document_pdf_dir:
+                directory = args.document_pdf_dir.resolve()
+                cli_evidence_file = directory / "cli-evidence.json"
+                if not cli_evidence_file.is_file():
+                    fail("real-PDF CLI evidence missing: " + str(cli_evidence_file))
+                cli_evidence = json.loads(cli_evidence_file.read_text(encoding="utf-8"))
+                if cli_evidence.get("status") != PASS or len(cli_evidence.get("pdfs", {})) != 5:
+                    fail("real-PDF CLI evidence is incomplete")
+                for scenario, expected in cli_evidence["pdfs"].items():
+                    pdf = directory / (scenario + ".pdf")
+                    if not pdf.is_file() or file_sha256(pdf) != expected["pdf_sha256"]:
+                        fail("real-PDF identity mismatch: " + scenario)
+                    result = analyze_through_ui(
+                        browser, pdf, args.profile, expected["document_type"]
+                    )
+                    validate_schema(
+                        result, args.profile, contract, catalog, expected["document_type"]
+                    )
+                    if result.get("file") != pdf.name:
+                        fail("wrong real-PDF browser report: " + scenario)
+                    checks = by_id(result)
+                    if checks.get("pdf.open", {}).get("status") != PASS:
+                        fail("browser did not open real PDF: " + scenario)
+                    for check_id, expected_status in expected["expected_checks"].items():
+                        status = checks.get(check_id, {}).get("status")
+                        if status != expected_status:
+                            fail(
+                                "real-PDF cross-surface drift: "
+                                f"{scenario}/{check_id}: browser {status!r}, "
+                                f"CLI {expected_status!r}"
+                            )
+                    if expected["negative_control"]:
+                        if result.get("verdict") != FAIL:
+                            fail("real negative PDF did not fail: " + scenario)
+                    elif result.get("verdict") == FAIL:
+                        fail("real positive PDF failed: " + scenario)
+                    profile_reports[scenario] = {
+                        "document_type": expected["document_type"],
+                        "sha256": expected["pdf_sha256"],
+                        "verdict": result["verdict"],
+                        "checks": {
+                            key: checks[key]["status"]
+                            for key in expected["expected_checks"]
+                        },
+                        "negative_control": expected["negative_control"],
+                    }
+                print(
+                    "DOCUMENT-TYPE-PDF-EVIDENCE surface=web-lite status=PASS "
+                    "real_pdfs=5 positive=3 negative=2 "
+                    "cross_surface_checks=ALIGNED proof_state=automatic-partial"
+                )
+
             performance_entries = browser.logs("performance")
             requested_urls = performance_request_urls(performance_entries)
             external_urls = external_http_requests(requested_urls, server.server_port)
@@ -585,6 +640,7 @@ def main() -> None:
                     "font_embedded": positive_checks["font.embedded"]["status"],
                     "pdfa_deep": positive_checks["pdfa.deep"]["status"],
                 },
+                "document_type_pdfs": profile_reports,
                 "negative": {
                     "file": negative_report["file"],
                     "sha256": negative_sha256,
