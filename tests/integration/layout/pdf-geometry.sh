@@ -139,6 +139,16 @@ for mode in ('single-sided', 'double-sided'):
 print('PDF geometry measurement completed.')
 PY
 
+# Preserve both class-compiled PDFs and check the productive CLI/Deep path
+# before the existing geometry fixture cleanup. Artifacts feed productive Web/Lite.
+duplex_dir="artifacts/validation/duplex-margins"
+mkdir -p "$duplex_dir"
+cp geometry-single-sided.pdf "$duplex_dir/geometry-single-sided.pdf"
+cp geometry-double-sided.pdf "$duplex_dir/geometry-double-sided.pdf"
+python3 tests/checks/validator/duplex_margin_pdf_evidence.py \
+  --pdf-dir "$duplex_dir" \
+  --evidence "$duplex_dir/cli-evidence.json"
+
 sh tests/integration/layout/page-margins-evidence.sh
 sh tests/integration/layout/pagination-geometry-evidence.sh
 
