@@ -14,9 +14,24 @@
     "measurement_backend_equivalence_required": false,
     "browser_network_upload_allowed": false
   },
-  "profiles": ["strict", "portable", "accessibility"],
-  "statuses": ["PASS", "FAIL", "WARNING", "MANUAL REVIEW", "NOT APPLICABLE"],
-  "verdicts": ["FAIL", "REVIEW REQUIRED", "AUTOMATED CHECKS PASSED WITH WARNINGS", "AUTOMATED CHECKS PASSED"],
+  "profiles": [
+    "strict",
+    "portable",
+    "accessibility"
+  ],
+  "statuses": [
+    "PASS",
+    "FAIL",
+    "WARNING",
+    "MANUAL REVIEW",
+    "NOT APPLICABLE"
+  ],
+  "verdicts": [
+    "FAIL",
+    "REVIEW REQUIRED",
+    "AUTOMATED CHECKS PASSED WITH WARNINGS",
+    "AUTOMATED CHECKS PASSED"
+  ],
   "surfaces": {
     "web-lite": {
       "implementation": "validator/app.js",
@@ -43,8 +58,14 @@
     "web_only_count": 1,
     "cli_only_count": 3,
     "aliases": {
-      "font.literal": {"web_id": "font.family", "cli_id": "font.literal"},
-      "font.embedded": {"web_id": "font.embedding", "cli_id": "font.embedded"}
+      "font.literal": {
+        "web_id": "font.family",
+        "cli_id": "font.literal"
+      },
+      "font.embedded": {
+        "web_id": "font.embedding",
+        "cli_id": "font.embedded"
+      }
     },
     "observed_schema_drift": {
       "web_normative_catalog_field": "normativeCatalog",
@@ -57,8 +78,28 @@
   },
   "target_report_schema": {
     "case": "snake_case",
-    "required_top_level": ["file", "profile", "verdict", "normative_catalog", "checks", "mode"],
-    "required_check_fields": ["id", "category", "rule", "source", "status", "evidence", "correction", "mandatory", "level", "normative_rule", "locator", "normativity"],
+    "required_top_level": [
+      "file",
+      "profile",
+      "verdict",
+      "normative_catalog",
+      "checks",
+      "mode"
+    ],
+    "required_check_fields": [
+      "id",
+      "category",
+      "rule",
+      "source",
+      "status",
+      "evidence",
+      "correction",
+      "mandatory",
+      "level",
+      "normative_rule",
+      "locator",
+      "normativity"
+    ],
     "adoption_state": "ADOPTED"
   },
   "adoption": {
@@ -72,34 +113,240 @@
     "proof_state_changed": false
   },
   "check_inventory": [
-    {"canonical_id":"pdf.open","web_id":"pdf.open","cli_id":"pdf.open","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"layout.a4","web_id":"layout.a4","cli_id":"layout.a4","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"page.a4","state":"ALIGNED"},
-    {"canonical_id":"layout.margins","web_id":"layout.margins","cli_id":"layout.margins","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"margin.recto","state":"ALIGNED"},
-    {"canonical_id":"font.literal","web_id":"font.literal","cli_id":"font.literal","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"font.family.body","state":"ALIGNED"},
-    {"canonical_id":"font.embedded","web_id":"font.embedded","cli_id":"font.embedded","web_mode":"review-only","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"structure.cover","web_id":"structure.cover","cli_id":"structure.cover","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"structure.approval","web_id":"structure.approval","cli_id":"structure.approval","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"structure.resumo","web_id":"structure.resumo","cli_id":"structure.resumo","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"structure.abstract","web_id":"structure.abstract","cli_id":"structure.abstract","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"structure.toc","web_id":"structure.toc","cli_id":"structure.toc","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"structure.refs","web_id":"structure.refs","cli_id":"structure.refs","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"structure.keywords","web_id":"structure.keywords","cli_id":"structure.keywords","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"summary.paragraph","state":"ALIGNED"},
-    {"canonical_id":"structure.keywords-en","web_id":"structure.keywords-en","cli_id":"structure.keywords-en","web_mode":"automatic-lite","cli_mode":"automatic-deep","normative_rule":"summary.paragraph","state":"ALIGNED"},
-    {"canonical_id":"meta.lang","web_id":"meta.lang","cli_id":"meta.lang","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"meta.title","web_id":"meta.title","cli_id":"meta.title","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"meta.author","web_id":"meta.author","cli_id":"meta.author","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"access.tagged","web_id":"access.tagged","cli_id":"access.tagged","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"access.bookmarks","web_id":"access.bookmarks","cli_id":"access.bookmarks","web_mode":"automatic-lite","cli_mode":"automatic-deep","state":"ALIGNED"},
-    {"canonical_id":"security.javascript","web_id":"security.javascript","cli_id":null,"web_mode":"automatic-lite","cli_mode":"not-implemented","state":"WEB_ONLY"},
-    {"canonical_id":"security.encrypted","web_id":null,"cli_id":"security.encrypted","web_mode":"not-implemented","cli_mode":"automatic-deep","state":"CLI_ONLY"},
-    {"canonical_id":"pdfa.claim","web_id":null,"cli_id":"pdfa.claim","web_mode":"not-implemented","cli_mode":"automatic-deep","normative_rule":"deposit.pdfa","state":"CLI_ONLY"},
-    {"canonical_id":"pdfa.deep","web_id":"pdfa.deep","cli_id":"pdfa.deep","web_mode":"review-only","cli_mode":"automatic-deep","normative_rule":"deposit.pdfa","state":"ALIGNED"},
-    {"canonical_id":"catalog.optional","web_id":"catalog.optional","cli_id":"catalog.optional","web_mode":"not-applicable","cli_mode":"not-applicable","normative_rule":"deposit.catalog-card","state":"ALIGNED"},
-    {"canonical_id":"approval.signatures","web_id":"approval.signatures","cli_id":"approval.signatures","web_mode":"manual","cli_mode":"manual","normative_rule":"deposit.approval-signatures","state":"ALIGNED"},
-    {"canonical_id":"capes","web_id":"capes","cli_id":"capes","web_mode":"conditional-manual","cli_mode":"conditional-manual","normative_rule":"deposit.capes","state":"ALIGNED"},
-    {"canonical_id":"access.pdfua","web_id":null,"cli_id":"access.pdfua","web_mode":"not-implemented","cli_mode":"automatic-deep","state":"CLI_ONLY"},
-    {"canonical_id":"access.alt","web_id":"access.alt","cli_id":"access.alt","web_mode":"manual","cli_mode":"manual","state":"ALIGNED"},
-    {"canonical_id":"access.order","web_id":"access.order","cli_id":"access.order","web_mode":"manual","cli_mode":"manual","state":"ALIGNED"}
+    {
+      "canonical_id": "pdf.open",
+      "web_id": "pdf.open",
+      "cli_id": "pdf.open",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "layout.a4",
+      "web_id": "layout.a4",
+      "cli_id": "layout.a4",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "normative_rule": "page.a4",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "layout.margins",
+      "web_id": "layout.margins",
+      "cli_id": "layout.margins",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "normative_rule": "margin.recto",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "font.literal",
+      "web_id": "font.literal",
+      "cli_id": "font.literal",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "normative_rule": "font.family.body",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "font.embedded",
+      "web_id": "font.embedded",
+      "cli_id": "font.embedded",
+      "web_mode": "review-only",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.cover",
+      "web_id": "structure.cover",
+      "cli_id": "structure.cover",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.approval",
+      "web_id": "structure.approval",
+      "cli_id": "structure.approval",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.resumo",
+      "web_id": "structure.resumo",
+      "cli_id": "structure.resumo",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.abstract",
+      "web_id": "structure.abstract",
+      "cli_id": "structure.abstract",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.toc",
+      "web_id": "structure.toc",
+      "cli_id": "structure.toc",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.refs",
+      "web_id": "structure.refs",
+      "cli_id": "structure.refs",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.keywords",
+      "web_id": "structure.keywords",
+      "cli_id": "structure.keywords",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "normative_rule": "summary.paragraph",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "structure.keywords-en",
+      "web_id": "structure.keywords-en",
+      "cli_id": "structure.keywords-en",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "normative_rule": "summary.paragraph",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "meta.lang",
+      "web_id": "meta.lang",
+      "cli_id": "meta.lang",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "meta.title",
+      "web_id": "meta.title",
+      "cli_id": "meta.title",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "meta.author",
+      "web_id": "meta.author",
+      "cli_id": "meta.author",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "access.tagged",
+      "web_id": "access.tagged",
+      "cli_id": "access.tagged",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "access.bookmarks",
+      "web_id": "access.bookmarks",
+      "cli_id": "access.bookmarks",
+      "web_mode": "automatic-lite",
+      "cli_mode": "automatic-deep",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "security.javascript",
+      "web_id": "security.javascript",
+      "cli_id": null,
+      "web_mode": "automatic-lite",
+      "cli_mode": "not-implemented",
+      "state": "WEB_ONLY"
+    },
+    {
+      "canonical_id": "security.encrypted",
+      "web_id": null,
+      "cli_id": "security.encrypted",
+      "web_mode": "not-implemented",
+      "cli_mode": "automatic-deep",
+      "state": "CLI_ONLY"
+    },
+    {
+      "canonical_id": "pdfa.claim",
+      "web_id": null,
+      "cli_id": "pdfa.claim",
+      "web_mode": "not-implemented",
+      "cli_mode": "automatic-deep",
+      "normative_rule": "deposit.pdfa",
+      "state": "CLI_ONLY"
+    },
+    {
+      "canonical_id": "pdfa.deep",
+      "web_id": "pdfa.deep",
+      "cli_id": "pdfa.deep",
+      "web_mode": "review-only",
+      "cli_mode": "automatic-deep",
+      "normative_rule": "deposit.pdfa",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "catalog.optional",
+      "web_id": "catalog.optional",
+      "cli_id": "catalog.optional",
+      "web_mode": "not-applicable",
+      "cli_mode": "not-applicable",
+      "normative_rule": "deposit.catalog-card",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "approval.signatures",
+      "web_id": "approval.signatures",
+      "cli_id": "approval.signatures",
+      "web_mode": "manual",
+      "cli_mode": "manual",
+      "normative_rule": "deposit.approval-signatures",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "capes",
+      "web_id": "capes",
+      "cli_id": "capes",
+      "web_mode": "conditional-manual",
+      "cli_mode": "conditional-manual",
+      "normative_rule": "deposit.capes",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "access.pdfua",
+      "web_id": null,
+      "cli_id": "access.pdfua",
+      "web_mode": "not-implemented",
+      "cli_mode": "automatic-deep",
+      "state": "CLI_ONLY"
+    },
+    {
+      "canonical_id": "access.alt",
+      "web_id": "access.alt",
+      "cli_id": "access.alt",
+      "web_mode": "manual",
+      "cli_mode": "manual",
+      "state": "ALIGNED"
+    },
+    {
+      "canonical_id": "access.order",
+      "web_id": "access.order",
+      "cli_id": "access.order",
+      "web_mode": "manual",
+      "cli_mode": "manual",
+      "state": "ALIGNED"
+    }
   ],
   "closure": {
     "state": "DONE",
@@ -125,5 +372,22 @@
     "Deep-only capabilities remain explicit and Web/Lite never auto-approves a check it cannot execute.",
     "Cross-surface contract tests pass without requiring PDF.js and Poppler measurements to be numerically identical.",
     "Normative predicates, locators, reference tolerances and proof state remain unchanged."
-  ]
+  ],
+  "document_types": [
+    "undergraduate-capstone",
+    "specialization-capstone",
+    "masters-thesis",
+    "doctoral-thesis",
+    "research-project",
+    "anonymized-research-project",
+    "scientific-article"
+  ],
+  "document_applicability": {
+    "canonical_file": "validator/document-applicability.json",
+    "generated_web_module": "validator/document-applicability.js",
+    "scope": "Eight text-token structure checks per document type; bounded automatic-partial evidence only",
+    "document_type_independent_from": "strict|portable|accessibility",
+    "normative_rule_count_changed": false,
+    "legacy_default": "undergraduate-capstone"
+  }
 }
