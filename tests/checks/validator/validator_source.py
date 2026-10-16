@@ -77,6 +77,7 @@ NORMATIVE_ATOMICITY = check_file("normative_atomicity.py")
 NORMATIVE_ATOMIC_CONTRACT = check_file("normative_atomic_contract.py")
 NORMATIVE_FULL_CONTRACT = check_file("normative_full_contract.py")
 VALIDATOR_CONTRACT = check_file("normative_validator_contract.py")
+DOCUMENT_APPLICABILITY_CHECK = check_file("document_applicability.py")
 
 
 def fail(message: str) -> None:
@@ -229,6 +230,7 @@ def main() -> None:
         NORMATIVE_ATOMIC_CONTRACT,
         NORMATIVE_FULL_CONTRACT,
         VALIDATOR_CONTRACT,
+        DOCUMENT_APPLICABILITY_CHECK,
     ):
         py_compile.compile(str(path), doraise=True)
 
@@ -248,6 +250,7 @@ def main() -> None:
     run_source_check(NORMATIVE_PROOF_STATE, "normative proof state")
     run_source_check(NORMATIVE_EVIDENCE_CONTRIBUTION, "normative evidence contribution", "--static")
     run_source_check(VALIDATOR_CONTRACT, "validator contract")
+    run_source_check(DOCUMENT_APPLICABILITY_CHECK, "document profile applicability")
 
     completed = subprocess.run(
         [sys.executable, str(CLI), "--help"],
