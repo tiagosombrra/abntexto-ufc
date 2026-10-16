@@ -22,7 +22,7 @@ The prior profile-applicability checks used controlled in-memory text, which alo
 
 Each PDF is evaluated through productive **CLI/Deep** (`tools/validate-ufc-pdf.py --profile portable --document-type ...`) and, during the PR Linux full integration browser step, the **Web/Lite UI** with the same document type. The Web/Lite E2E rejects mismatched statuses compared with CLI evidence and checks productive reports, actual PDF SHA-256, negative final verdicts, network denial, local processing and CSP. Source-level expected results cover required markers (`PASS`/controlled `FAIL`) and not-applicable markers (`NOT APPLICABLE`); no test is counted as passed merely because it is skipped. Output remains `automatic-partial` and holds no claim of general PDF semantic/placement correctness, type-detection, text extraction equivalence outside tested cases, or full ABNT/IBGE/UFC conformance.
 
-Generated PDF artifacts remain local CI evidence and are **not** a GitHub or CTAN release. The separate original seven-profile visual review and multilingual/PDF-UA approvals remain pending, and published v3.0.5 binaries are immutable.
+The five generated PDFs and their CLI/Deep JSON are retained as short-lived, SHA-linked GitHub Actions **test artifacts** alongside the browser E2E JSON; they are **not** a GitHub Release or CTAN distribution. The separate original seven-profile visual review and multilingual/PDF-UA approvals remain pending, and published v3.0.5 binaries are immutable.
 
 ## 2026-10-16 — Document-type-aware structural validation (v3.1.0 development)
 
