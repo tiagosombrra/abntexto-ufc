@@ -16,6 +16,12 @@ For institutional requirements:
 
 A superseded technical edition is not reactivated merely because an older UFC guide still cites it. A genuine conflict between current sources requires explicit review.
 
+## 2026-10-16 — Explicit recto-verso margin validator contract (v3.1.0 development)
+
+Confirmed previously: CLI/Deep `check_layout` and productive Web/Lite `layout.margins` applied the `margin.recto` horizontal bounds on **all** PDF pages, even for `print-mode=double-sided`. The catalog already separately defines `margin.recto` (30/20 mm) and `margin.verso` (20/30 mm). This bounded fix adds an **explicit** validator `print_mode`, independent of document type and of strict/portable/accessibility rigour: default `single-sided` preserves historical semantics; `double-sided` applies the verso margins only to even PDF pages. A PDF alone does **not** disclose or prove the LaTeX print mode. Reports retain the stable `layout.margins` identifier, add the selected print mode and show both sources where applicable. No parent normative rules or typographic thresholds are changed.
+
+The existing PDF-geometry integration now saves two class-compiled 4-page PDF fixtures (single-sided/double-sided). CLI/Deep tests both correct selections (expected `PASS`) and two intentionally mismatched selections (expected `FAIL`); productive browser Web/Lite repeats the four scenarios on PDFs identified by SHA-256. The specific evidence is bounded **horizontal text bounding boxes** only; true page layout and top/bottom bounds, OCR, semantic compliance, and correct print-mode declaration remain separate.
+
 ## 2026-10-16 — Class-rendered document-type validator evidence (v3.1.0 development)
 
 The prior profile-applicability checks used controlled in-memory text, which alone cannot establish correct behavior with actual PDF.js/Poppler extraction. The profile integration gate now produces five **distinct actual-class-compiled PDFs**: canonical scientific article, research project, anonymized research project, deliberately incomplete scientific article (missing primary summary/keywords/references), and a project with references deliberately omitted in its TeX source. The last two are **negative controls**, not valid example documents. The fixture contract is intentionally bounded to the existing structural check IDs and document-type selection; it does not add normative rules.

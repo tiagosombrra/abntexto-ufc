@@ -79,6 +79,14 @@ ou:
 print-mode = double-sided
 ```
 
+Os validadores distinguem agora o modo de impressão de seu rigor e do tipo documental. No Web/Lite, selecione **Single-sided** ou **Double-sided**; no CLI/Deep, use `--print-mode single-sided` (padrão de compatibilidade) ou `--print-mode double-sided`. Esta escolha precisa refletir o modo efetivamente utilizado na compilação e **não é inferida automaticamente do PDF**. Em `double-sided`, páginas ímpares usam `margin.recto` (esquerda 3 cm, direita 2 cm) e páginas pares usam `margin.verso` (esquerda 2 cm, direita 3 cm). Exemplo:
+
+```bash
+python3 tools/validate-ufc-pdf.py tese.pdf --profile portable --document-type doctoral-thesis --print-mode double-sided --format json
+```
+
+A verificação automática aqui mede somente limites **horizontais** do texto extraído. Não prova margens superior/inferior, organização semântica ou que o arquivo realmente foi composto para frente e verso.
+
 Não simule margens com espaços, `\hspace`, minipages globais ou alterações locais de geometria.
 
 ### Fonte, tamanho e espaçamento

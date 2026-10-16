@@ -11,6 +11,10 @@ for profile_pdf in scientific-article research-project anonymized-research-proje
   }
 done
 test -s artifacts/validation/document-profiles/cli-evidence.json
+for pdf in geometry-single-sided geometry-double-sided; do
+  test -s "artifacts/validation/duplex-margins/$pdf.pdf"
+done
+test -s artifacts/validation/duplex-margins/cli-evidence.json
 mkdir -p "$WEB_LITE_EVIDENCE_DIR"
 command -v chromedriver
 if command -v google-chrome >/dev/null 2>&1; then
@@ -29,5 +33,6 @@ python3 tests/integration/validator/web-lite-e2e.py \
   --pdf artifacts/validation/web-lite-positive.pdf \
   --profile portable \
   --document-pdf-dir artifacts/validation/document-profiles \
+  --duplex-pdf-dir artifacts/validation/duplex-margins \
   --site-root _site/validator \
   --evidence "$WEB_LITE_EVIDENCE_DIR/web-lite-e2e.json"

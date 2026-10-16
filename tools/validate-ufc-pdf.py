@@ -11,9 +11,9 @@ MM=72/25.4
 CATALOG=load_catalog(); RULES=rule_map(CATALOG)
 DOCUMENT_APPLICABILITY = json.loads((Path(__file__).resolve().parents[1] / 'validator' / 'document-applicability.json').read_text(encoding='utf-8'))
 DOCUMENT_TYPES = tuple(DOCUMENT_APPLICABILITY['document_types'])
-PAGE=RULES['page.a4']['values']; RECTO=RULES['margin.recto']['values']
+PAGE=RULES['page.a4']['values']; RECTO=RULES['margin.recto']['values']; VERSO=RULES['margin.verso']['values']
 A4=(PAGE['width_mm']*MM,PAGE['height_mm']*MM); A4_TOLERANCE=PAGE.get('tolerance_pt',1.8)
-LEFT=RECTO['left_mm']*MM; RIGHT=RECTO['right_mm']*MM
+PRINT_MODES=('single-sided','double-sided')
 
 @dataclass
 class Check:
@@ -81,17 +81,36 @@ def verdict(cs):
     if any(c.status in (WARN,REVIEW) for c in cs): return 'AUTOMATED CHECKS PASSED WITH WARNINGS'
     return 'AUTOMATED CHECKS PASSED'
 
-def check_layout(pages):
+def check_layout(pages, print_mode='single-sided'):
+    """Inspect horizontal text bounds for the explicitly selected print mode."""
+    if print_mode not in PRINT_MODES:
+        raise ValueError(f'Unsupported print mode: {print_mode}')
     bad=[i for i,(w,h,_) in enumerate(pages,1) if abs(w-A4[0])>A4_TOLERANCE or abs(h-A4[1])>A4_TOLERANCE]
     cs=[norm_check('layout.a4','page.a4','Layout','Papel A4',PASS if not bad else FAIL,'All pages are A4.' if not bad else f'Pages outside A4: {bad}','Configure A4 paper size for all pages.' if bad else '')]
     out=[]
     for i,(w,h,ws) in enumerate(pages,1):
-        for s,x0,y0,x1,y1 in ws:
-            s=s.strip()
-            if not s: continue
-            if re.fullmatch(r'\d+',s) and y0<70: continue
-            if x0<LEFT-A4_TOLERANCE or x1>w-RIGHT+3: out.append((i,s[:24],round(x0,1),round(x1,1)))
-    cs.append(norm_check('layout.margins','margin.recto','Layout','Margens horizontais do anverso: 3 cm / 2 cm',PASS if not out else FAIL,'No text exceeds the margins.' if not out else f'Examples: {out[:8]}','Move the element inside the text block.' if out else '',level='geometric'))
+        side='verso' if print_mode=='double-sided' and i%2==0 else 'recto'
+        margin=VERSO if side=='verso' else RECTO
+        left=margin['left_mm']*MM
+        right=margin['right_mm']*MM
+        for word,x0,y0,x1,y1 in ws:
+            word=word.strip()
+            if not word: continue
+            if re.fullmatch(r'\d+',word) and y0<70: continue
+            if x0<left-A4_TOLERANCE or x1>w-right+3:
+                out.append((i,side,word[:24],round(x0,1),round(x1,1)))
+    label=('Margens horizontais: anverso 3 cm / 2 cm'
+           if print_mode=='single-sided'
+           else 'Margens horizontais: anverso 3 cm / 2 cm; verso 2 cm / 3 cm')
+    evidence=(f'Mode {print_mode}; all text inside page-specific horizontal margins.'
+              if not out else f'Mode {print_mode}; page/side/word/bounds: {out[:8]}')
+    cs.append(norm_check('layout.margins','margin.recto','Layout',label,PASS if not out else FAIL,
+                         evidence,'Move the element inside the page-specific text block.' if out else '',
+                         level='geometric'))
+    # Same existing report ID and normative metadata; even pages under duplex
+    # additionally evaluate the catalog's margin.verso geometry.
+    if print_mode=='double-sided':
+        cs[-1].source += ' / ' + norm_source('margin.verso')
     return cs
 
 def is_text_fallback(name):
@@ -185,14 +204,14 @@ def check_verapdf(pdf,profile):
 
 def render_table(cs): return '\n'.join(f'{c.status:18} | {c.category:16} | {c.rule[:48]:48} | {c.evidence[:70]}' for c in cs)
 def main():
-    ap=argparse.ArgumentParser(description='Validate an academic UFC/ABNT PDF.'); ap.add_argument('pdf',type=Path); ap.add_argument('--profile',choices=('strict','portable','accessibility'),default='strict'); ap.add_argument('--document-type',choices=DOCUMENT_TYPES,default='undergraduate-capstone'); ap.add_argument('--format',choices=('table','json','markdown'),default='table'); ap.add_argument('--output',type=Path); a=ap.parse_args(); pdf=a.pdf.resolve()
+    ap=argparse.ArgumentParser(description='Validate an academic UFC/ABNT PDF.'); ap.add_argument('pdf',type=Path); ap.add_argument('--profile',choices=('strict','portable','accessibility'),default='strict'); ap.add_argument('--document-type',choices=DOCUMENT_TYPES,default='undergraduate-capstone'); ap.add_argument('--print-mode',choices=PRINT_MODES,default='single-sided'); ap.add_argument('--format',choices=('table','json','markdown'),default='table'); ap.add_argument('--output',type=Path); a=ap.parse_args(); pdf=a.pdf.resolve()
     if not pdf.is_file(): raise SystemExit(f'File not found: {pdf}')
-    inf=info(pdf); fs=fonts(pdf); t=text(pdf); pages=bbox(pdf); cs=[Check('pdf.open','Integrity','Readable PDF','Technical prerequisite',PASS,f"{inf.get('Pages','?')} pages; PDF {inf.get('PDF version','?')}.")]; cs+=check_layout(pages)+check_fonts(fs,a.profile)+check_structure(t,a.document_type)+check_meta(pdf,inf,a.profile)+check_verapdf(pdf,a.profile)
+    inf=info(pdf); fs=fonts(pdf); t=text(pdf); pages=bbox(pdf); cs=[Check('pdf.open','Integrity','Readable PDF','Technical prerequisite',PASS,f"{inf.get('Pages','?')} pages; PDF {inf.get('PDF version','?')}.")]; cs+=check_layout(pages,a.print_mode)+check_fonts(fs,a.profile)+check_structure(t,a.document_type)+check_meta(pdf,inf,a.profile)+check_verapdf(pdf,a.profile)
     if a.profile=='accessibility': cs += [Check('access.alt','Accessibility','Adequate alternative text','PDF/UA / WCAG',REVIEW,'Quality requires human review.','Review /Alt and decorative artifacts.',mandatory=True,level='manual'),Check('access.order','Accessibility','Logical reading order','PDF/UA / WCAG',REVIEW,'Requires testing with assistive technology.','Review the reading order.',mandatory=True,level='manual')]
     v=verdict(cs); base={'schema_version':CATALOG['schema_version'],'reviewed_at':CATALOG['reviewed_at']}
-    if a.format=='json': out=json.dumps({'file':pdf.name,'profile':a.profile,'document_type':a.document_type,'verdict':v,'normative_catalog':base,'checks':[asdict(c) for c in cs],'mode':'cli-deep-local'},ensure_ascii=False,indent=2)+'\n'
+    if a.format=='json': out=json.dumps({'file':pdf.name,'profile':a.profile,'document_type':a.document_type,'print_mode':a.print_mode,'verdict':v,'normative_catalog':base,'checks':[asdict(c) for c in cs],'mode':'cli-deep-local'},ensure_ascii=False,indent=2)+'\n'
     elif a.format=='markdown':
-        esc=lambda x:str(x).replace('|','\\|').replace('\n',' '); lines=['# UFC validation report','',f'File: `{pdf.name}`',f'Profile: `{a.profile}`',f'Document type: `{a.document_type}`',f'Verdict: **{v}**',f'Normative base reviewed on: `{CATALOG["reviewed_at"]}`','','| Status | Category | Rule | Source | Evidence | Correction |','|---|---|---|---|---|---|']; lines += [f'| {esc(c.status)} | {esc(c.category)} | {esc(c.rule)} | {esc(c.source)} | {esc(c.evidence)} | {esc(c.correction)} |' for c in cs]; out='\n'.join(lines)+'\n'
-    else: out=f'File: {pdf.name}\nProfile: {a.profile}\nDocument type: {a.document_type}\nVerdict: {v}\nNormative base: {CATALOG["reviewed_at"]}\n\n{render_table(cs)}\n'
+        esc=lambda x:str(x).replace('|','\\|').replace('\n',' '); lines=['# UFC validation report','',f'File: `{pdf.name}`',f'Profile: `{a.profile}`',f'Document type: `{a.document_type}`',f'Print mode: `{a.print_mode}`',f'Verdict: **{v}**',f'Normative base reviewed on: `{CATALOG["reviewed_at"]}`','','| Status | Category | Rule | Source | Evidence | Correction |','|---|---|---|---|---|---|']; lines += [f'| {esc(c.status)} | {esc(c.category)} | {esc(c.rule)} | {esc(c.source)} | {esc(c.evidence)} | {esc(c.correction)} |' for c in cs]; out='\n'.join(lines)+'\n'
+    else: out=f'File: {pdf.name}\nProfile: {a.profile}\nDocument type: {a.document_type}\nPrint mode: {a.print_mode}\nVerdict: {v}\nNormative base: {CATALOG["reviewed_at"]}\n\n{render_table(cs)}\n'
     (a.output.write_text(out,encoding='utf-8') if a.output else print(out,end='')); raise SystemExit(1 if v==FAIL else 0)
 if __name__=='__main__': main()

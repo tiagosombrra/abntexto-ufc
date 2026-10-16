@@ -15,6 +15,16 @@
     "browser_network_upload_allowed": false
   },
   "profiles": ["strict", "portable", "accessibility"],
+  "print_modes": ["single-sided", "double-sided"],
+  "print_mode_policy": {
+    "selected_explicitly": true,
+    "default": "single-sided",
+    "double_sided_even_pages_use": "margin.verso",
+    "other_pages_use": "margin.recto",
+    "semantic_detection_from_pdf": false,
+    "scope": "horizontal PDF text bounds only; preserved layout.margins ID",
+    "normative_rule_count_changed": false
+  },
   "statuses": ["PASS", "FAIL", "WARNING", "MANUAL REVIEW", "NOT APPLICABLE"],
   "verdicts": ["FAIL", "REVIEW REQUIRED", "AUTOMATED CHECKS PASSED WITH WARNINGS", "AUTOMATED CHECKS PASSED"],
   "surfaces": {
