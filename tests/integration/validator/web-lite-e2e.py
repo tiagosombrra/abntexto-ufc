@@ -335,6 +335,8 @@ def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, An
         fail("browser report is missing top-level fields: " + ", ".join(missing))
     if report.get("profile") != profile:
         fail(f"browser profile mismatch: {report.get('profile')!r}")
+    if report.get("document_type") != "undergraduate-capstone":
+        fail(f"browser document type mismatch: {report.get('document_type')!r}")
     if report.get("mode") != "web-lite-local":
         fail(f"browser mode mismatch: {report.get('mode')!r}")
     base = report.get("normative_catalog")
@@ -395,6 +397,7 @@ def analyze_through_ui(browser: Browser, pdf: Path, profile: str) -> dict[str, A
     browser.execute(
         "window.alert=(message)=>{window.__ufcTestAlert=String(message)};"
         "const p=document.querySelector('#profile');p.value=arguments[0];"
+        "const d=document.querySelector('#document-type');d.value='undergraduate-capstone';"
         "document.querySelector('#pdf-file').value='';return p.value;",
         [profile],
     )
