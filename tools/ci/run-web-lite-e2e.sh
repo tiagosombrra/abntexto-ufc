@@ -4,6 +4,13 @@ set -eu
 : "${WEB_LITE_EVIDENCE_DIR:?WEB_LITE_EVIDENCE_DIR is required}"
 
 test -s artifacts/validation/web-lite-positive.pdf
+for profile_pdf in scientific-article research-project anonymized-research-project scientific-article-missing research-project-missing-refs; do
+  test -s "artifacts/validation/document-profiles/$profile_pdf.pdf" || {
+    echo "Web/Lite E2E: required actual-class PDF missing: $profile_pdf" >&2
+    exit 1
+  }
+done
+test -s artifacts/validation/document-profiles/cli-evidence.json
 mkdir -p "$WEB_LITE_EVIDENCE_DIR"
 command -v chromedriver
 if command -v google-chrome >/dev/null 2>&1; then
@@ -21,5 +28,6 @@ sh tools/ci/build-pages-site.sh
 python3 tests/integration/validator/web-lite-e2e.py \
   --pdf artifacts/validation/web-lite-positive.pdf \
   --profile portable \
+  --document-pdf-dir artifacts/validation/document-profiles \
   --site-root _site/validator \
   --evidence "$WEB_LITE_EVIDENCE_DIR/web-lite-e2e.json"

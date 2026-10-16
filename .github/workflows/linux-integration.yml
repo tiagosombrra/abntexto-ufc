@@ -120,3 +120,14 @@ jobs:
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log
           retention-days: 14
           if-no-files-found: warn
+
+      - name: Upload rendered document-type PDF evidence
+        if: always() && steps.web_lite_e2e.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: document-type-pdfs-${{ github.run_id }}
+          path: |
+            artifacts/validation/document-profiles/cli-evidence.json
+            artifacts/validation/document-profiles/*.pdf
+          retention-days: 14
+          if-no-files-found: error
