@@ -59,7 +59,9 @@ python3 tools/validate-ufc-pdf.py artigo.pdf --profile strict --document-type sc
 
 A matriz única de aplicabilidade está em `validator/document-applicability.json`, com representação estática correspondente no Web/Lite. Ela distingue elementos **obrigatórios** (ausência do marcador textual resulta em `FAIL`), **opcionais** (ausência resulta em `NOT APPLICABLE`, presença requer revisão) e **não exigíveis naquele perfil** (não geram falha mesmo ausentes). Projetos de pesquisa não exigem a estrutura pré-textual de um trabalho concluído; artigos não exigem capa, folha de aprovação ou sumário do TCC.
 
-Os testes da v3.1.0 também exercitam PDFs realmente compilados de artigo, projetos de pesquisa e um projeto anonimizado, incluindo documentos de controle deliberadamente incompletos. Eles comparam os resultados Web/Lite e CLI/Deep para os marcadores cobertos sem declarar equivalência completa entre os motores de leitura de PDF.\n\nA verificação textual é **parcial**: encontrar uma palavra no PDF não prova que o elemento está corretamente localizado, completo ou semanticamente válido. Requisitos do periódico, condições institucionais, anonimização e elementos não cobertos pela matriz continuam sujeitos a avaliação própria. Esse mecanismo não certifica conformidade ABNT/UFC integral.
+Os testes da v3.1.0 também exercitam PDFs realmente compilados de artigo, projetos de pesquisa e um projeto anonimizado, incluindo documentos de controle deliberadamente incompletos. Eles comparam os resultados Web/Lite e CLI/Deep para os marcadores cobertos sem declarar equivalência completa entre os motores de leitura de PDF.
+
+A verificação textual é **parcial**: encontrar uma palavra no PDF não prova que o elemento está corretamente localizado, completo ou semanticamente válido. Requisitos do periódico, condições institucionais, anonimização e elementos não cobertos pela matriz continuam sujeitos a avaliação própria. Esse mecanismo não certifica conformidade ABNT/UFC integral.
 
 ### Papel, margens e paginação
 
