@@ -39,7 +39,7 @@ if font_status(fallback, 'portable') != module['WARN']:
 PY
 
 set +e
-python3 tools/validate-ufc-pdf.py "$pdf" --profile portable --format json --output "$report"
+python3 tools/validate-ufc-pdf.py "$pdf" --profile portable --document-type undergraduate-capstone --format json --output "$report"
 validator_status=$?
 set -e
 
@@ -50,6 +50,8 @@ import sys
 with open(sys.argv[1], encoding='utf-8') as handle:
     report = json.load(handle)
 checks = {item['id']: item for item in report['checks']}
+if report.get('document_type') != 'undergraduate-capstone':
+    raise SystemExit('CLI report document-type contract drift')
 required = {
     'pdf.open',
     'layout.a4',

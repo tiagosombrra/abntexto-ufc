@@ -125,5 +125,14 @@
     "Deep-only capabilities remain explicit and Web/Lite never auto-approves a check it cannot execute.",
     "Cross-surface contract tests pass without requiring PDF.js and Poppler measurements to be numerically identical.",
     "Normative predicates, locators, reference tolerances and proof state remain unchanged."
-  ]
+  ],
+  "document_types": ["undergraduate-capstone","specialization-capstone","masters-thesis","doctoral-thesis","research-project","anonymized-research-project","scientific-article"],
+  "document_applicability": {
+    "canonical_file": "validator/document-applicability.json",
+    "generated_web_module": "validator/document-applicability.js",
+    "scope": "Eight text-token structure checks per document type; bounded automatic-partial evidence only",
+    "document_type_independent_from": "strict|portable|accessibility",
+    "normative_rule_count_changed": false,
+    "legacy_default": "undergraduate-capstone"
+  }
 }
