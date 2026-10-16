@@ -216,5 +216,9 @@ PY
   done
 done
 
+# Feed compiled project PDFs and fresh actual-class article/negative PDFs to the
+# existing profile gate. No extra optional test category or scoped skip is created.
+sh tests/integration/validator/document-type-pdf-evidence.sh
+
 echo "PROFILE-MATRIX-EVIDENCE status=PASS profiles=$profile_count engines=2 article_excluded=true"
 echo 'Complete non-article profile matrix gate completed.'
