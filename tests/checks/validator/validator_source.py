@@ -79,6 +79,7 @@ NORMATIVE_FULL_CONTRACT = check_file("normative_full_contract.py")
 VALIDATOR_CONTRACT = check_file("normative_validator_contract.py")
 DOCUMENT_APPLICABILITY_CHECK = check_file("document_applicability.py")
 DOCUMENT_TYPE_PDF_EVIDENCE = check_file("document_type_pdf_evidence.py")
+DUPLEX_MARGIN_PDF_EVIDENCE = check_file("duplex_margin_pdf_evidence.py")
 
 
 def fail(message: str) -> None:
@@ -233,6 +234,7 @@ def main() -> None:
         VALIDATOR_CONTRACT,
         DOCUMENT_APPLICABILITY_CHECK,
         DOCUMENT_TYPE_PDF_EVIDENCE,
+        DUPLEX_MARGIN_PDF_EVIDENCE,
     ):
         py_compile.compile(str(path), doraise=True)
 
