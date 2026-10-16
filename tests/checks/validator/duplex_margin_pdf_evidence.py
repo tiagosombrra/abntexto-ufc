@@ -39,7 +39,6 @@ def source_contract() -> None:
     for mode in require_mode:
         for page_index in range(1, 5):
             side = verso if mode == "double-sided" and page_index % 2 == 0 else recto
-            opposite = recto if side is verso else verso
             left, right = side["left_mm"] * pt, side["right_mm"] * pt
             # Tight but inside the allowed catalog margins; measured text is synthetic
             # only in this unit-level calibration. Real PDFs are checked below.
@@ -47,7 +46,8 @@ def source_contract() -> None:
                 ("LEFT", left + 2, 110, left + 15, 120),
                 ("RIGHT", w - right - 15, 110, w - right - 2, 120),
             ])
-            result = check([ok_page] * page_index, mode)[-1]
+            other_pages = [(w, module["A4"][1], []) for _ in range(page_index - 1)]
+            result = check(other_pages + [ok_page], mode)[-1]
             if result.status != "PASS":
                 fail(f"unit positive mode={mode} page={page_index}: {result.evidence}")
             # Deliberately move one word beyond the chosen side's bounding box.
@@ -115,7 +115,6 @@ def main() -> None:
                 "print_mode": selected_mode,
                 "pdf_sha256": digest,
                 "margins": expected,
-                "page_count": report.get("file"),
                 "negative_control": pdf_mode != selected_mode,
             }
             print(
