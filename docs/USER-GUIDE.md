@@ -47,6 +47,20 @@ Perfis controlam metadados, natureza do trabalho e elementos aplicáveis. Não a
 
 Nos perfis de projeto de pesquisa, a capa é opcional no contrato da NBR 15287:2025 adotado pelo projeto e a folha de rosto é obrigatória. Quando uma capa institucional UFC é produzida, o projeto usa o brasão por padrão como política de apresentação institucional. `coat-of-arms=false` permanece disponível para submissões sem marca ou processos cegos.
 
+### Validação por tipo de documento (v3.1.0 em desenvolvimento)
+
+Os validadores agora distinguem o **tipo de documento** (os sete valores da chave `type`) do **modo de validação** (`strict`, `portable` ou `accessibility`). Selecione sempre o tipo correspondente ao PDF; não confunda `--profile` (rigor/capacidade do validador) com `--document-type` (contrato de estrutura). Por compatibilidade, a seleção inicial é `undergraduate-capstone`.
+
+Exemplo de validação CLI/Deep para artigo:
+
+```bash
+python3 tools/validate-ufc-pdf.py artigo.pdf --profile strict --document-type scientific-article --format json
+```
+
+A matriz única de aplicabilidade está em `validator/document-applicability.json`, com representação estática correspondente no Web/Lite. Ela distingue elementos **obrigatórios** (ausência do marcador textual resulta em `FAIL`), **opcionais** (ausência resulta em `NOT APPLICABLE`, presença requer revisão) e **não exigíveis naquele perfil** (não geram falha mesmo ausentes). Projetos de pesquisa não exigem a estrutura pré-textual de um trabalho concluído; artigos não exigem capa, folha de aprovação ou sumário do TCC.
+
+A verificação textual é **parcial**: encontrar uma palavra no PDF não prova que o elemento está corretamente localizado, completo ou semanticamente válido. Requisitos do periódico, condições institucionais, anonimização e elementos não cobertos pela matriz continuam sujeitos a avaliação própria. Esse mecanismo não certifica conformidade ABNT/UFC integral.
+
 ### Papel, margens e paginação
 
 O projeto trabalha em papel A4 e aplica automaticamente as margens do perfil acadêmico. Em impressão simples, o anverso usa margens esquerda/superior de 3 cm e direita/inferior de 2 cm. Em frente e verso, a geometria é espelhada quando aplicável.
