@@ -1,0 +1,34 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{tables = tabularray}
+\pagestyle{empty}
+
+\begin{document}
+
+% Synthetic table with a declared necessary general explanation
+% and one item-specific note marked by an explicit tabularray callout.
+\begin{table}[htbp]
+\centering
+\begin{tallabnttblr}
+[
+  caption={UFCIBGENOTECAP Notas em tabela controlada},
+  label={tab:ibge-note-order},
+  remark{Fonte}={UFCIBGENOTESRC Dados sintéticos.},
+  remark{Nota}={UFCIBGENOTEGEN Valores meramente ilustrativos.},
+  note{1}={UFCIBGENOTESPEC Valor estimado para a categoria.},
+]
+{
+  width=0.8\linewidth,
+  colspec={X[l] X[r]},
+}
+\toprule
+Categoria & Quantidade \\
+\midrule
+UFCIBGENOTER1\TblrNote{1} & 10 \\
+UFCIBGENOTER2 & 20 \\
+UFCIBGENOTER3 & 30 \\
+\bottomrule
+\end{tallabnttblr}
+\end{table}
+
+\end{document}

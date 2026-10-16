@@ -80,6 +80,9 @@ python3 tests/checks/objects/normative_table_ibge_text.py "$negative_job.pdf" \
 # Applicability is fixture-declared, never guessed for arbitrary PDFs.
 sh tests/integration/objects/table-ibge-unit-evidence.sh
 
+# Include conditional source/general/specific-note ordering in the same PDF gate.
+sh tests/integration/objects/table-ibge-notes-evidence.sh
+
 echo 'IBGE rendered title/source positive and negative PDF checks completed.'
 
 echo 'IBGE table vector-geometry evidence gate completed.'
