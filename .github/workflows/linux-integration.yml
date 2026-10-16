@@ -118,5 +118,7 @@ jobs:
           path: |
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log
+            artifacts/validation/document-profiles/cli-evidence.json
+            artifacts/validation/document-profiles/*.pdf
           retention-days: 14
           if-no-files-found: warn
