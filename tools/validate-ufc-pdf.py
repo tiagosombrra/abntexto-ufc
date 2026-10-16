@@ -9,6 +9,8 @@ from normative_catalog import get_rule, load_catalog, rule_map, source_label
 PASS='PASS'; FAIL='FAIL'; WARN='WARNING'; REVIEW='MANUAL REVIEW'; NA='NOT APPLICABLE'
 MM=72/25.4
 CATALOG=load_catalog(); RULES=rule_map(CATALOG)
+DOCUMENT_APPLICABILITY = json.loads((Path(__file__).resolve().parents[1] / 'validator' / 'document-applicability.json').read_text(encoding='utf-8'))
+DOCUMENT_TYPES = tuple(DOCUMENT_APPLICABILITY['document_types'])
 PAGE=RULES['page.a4']['values']; RECTO=RULES['margin.recto']['values']
 A4=(PAGE['width_mm']*MM,PAGE['height_mm']*MM); A4_TOLERANCE=PAGE.get('tolerance_pt',1.8)
 LEFT=RECTO['left_mm']*MM; RIGHT=RECTO['right_mm']*MM
@@ -109,17 +111,51 @@ def check_fonts(fs,profile):
     cs.append(norm_check('font.literal','font.family.body','Typography',f'{allowed_label} literal',st,f'Literal fonts: {literal or "none"}; text fallback: {fallback or "none"}',f'Use strict-font = true with literal {allowed_label}.' if not ok else '',mandatory=profile!='portable',level='typographic'))
     return cs
 
-def check_structure(t):
-    u=norm(t); cs=[]
-    req=[('cover','Capa','UNIVERSIDADE FEDERAL DO CEARA'),('approval','Folha de aprovação','BANCA EXAMINADORA'),('resumo','Resumo','RESUMO'),('abstract','Abstract','ABSTRACT'),('toc','Sumário','SUMARIO'),('refs','Referências','REFERENCIAS')]
-    for k,label,token in req:
-        ok=token in u; cs.append(Check('structure.'+k,'Structure',label,'ABNT/UFC',PASS if ok else FAIL,'Element found.' if ok else 'Element not found.',f'Include {label.lower()}.' if not ok else ''))
-    summary_source=norm_source('summary.paragraph')
-    for k,token in [('keywords','PALAVRAS-CHAVE'),('keywords-en','KEYWORDS')]:
-        ok=token in u; cs.append(Check('structure.'+k,'Resumo',token.title(),summary_source,PASS if ok else FAIL,'Field found.' if ok else 'Field missing.',f'Include {token.lower()}.' if not ok else '',normative_rule='summary.paragraph',locator=RULES['summary.paragraph']['locator'],normativity=RULES['summary.paragraph']['normativity']))
-    cs.append(norm_check('catalog.optional','deposit.catalog-card','UFC Deposit','Ficha catalográfica visual',NA,'The visual representation is optional.',mandatory=False))
-    cs.append(norm_check('approval.signatures','deposit.approval-signatures','UFC Deposit','Folha de aprovação sem assinaturas digitalizadas',REVIEW,'Requires visual inspection.','For repository submission, use the Folha de aprovação without signatures.',mandatory=False,level='manual'))
-    cs.append(norm_check('capes','deposit.capes','UFC Deposit','Agradecimento CAPES quando aplicável',REVIEW,'Depends on funding.','Include the required wording when CAPES funding applies.',mandatory=False,level='conditional'))
+def check_structure(t, document_type='undergraduate-capstone'):
+    """Evaluate text-token presence using the declared document-type contract."""
+    u = norm(t)
+    cs = []
+    document = DOCUMENT_APPLICABILITY['document_types'][document_type]
+    modes = document['checks']
+    requirements = (
+        ('cover', 'Capa', 'UNIVERSIDADE FEDERAL DO CEARA'),
+        ('approval', 'Folha de aprovação', 'BANCA EXAMINADORA'),
+        ('resumo', 'Resumo', 'RESUMO'),
+        ('abstract', 'Abstract', 'ABSTRACT'),
+        ('toc', 'Sumário', 'SUMARIO'),
+        ('refs', 'Referências', 'REFERENCIAS'),
+        ('keywords', 'Palavras-chave', 'PALAVRAS-CHAVE'),
+        ('keywords-en', 'Keywords', 'KEYWORDS'),
+    )
+    for key, label, token in requirements:
+        mode = modes[key]
+        found = token in u
+        if mode == 'required':
+            status = PASS if found else FAIL
+            evidence = 'Token found in PDF text; location and semantics unverified.' if found else 'Required token not found in PDF text.'
+            level = 'automatic-partial'
+        elif mode == 'optional':
+            status = REVIEW if found else NA
+            evidence = 'Optional token detected; review its applicability and placement.' if found else 'Optional element absent; no failure.'
+            level = 'conditional'
+        elif mode == 'not-applicable':
+            status = NA
+            evidence = 'Not required for this document type; presence is not prohibited.'
+            level = 'conditional'
+        else:
+            raise ValueError(f'Unsupported document applicability: {document_type}/{key}={mode}')
+        is_summary = key in ('keywords', 'keywords-en')
+        source = norm_source('summary.paragraph') if is_summary else document['authority']
+        rule = RULES['summary.paragraph'] if is_summary else None
+        cs.append(Check(
+            'structure.' + key, 'Resumo' if is_summary else 'Structure', label,
+            source, status, evidence,
+            f'Include {label.lower()}.' if status == FAIL else '',
+            mandatory=mode == 'required', level=level,
+            normative_rule='summary.paragraph' if is_summary else '',
+            locator=rule['locator'] if rule else '',
+            normativity=rule['normativity'] if rule else '',
+        ))
     return cs
 
 def check_meta(pdf,inf,profile):
@@ -149,14 +185,14 @@ def check_verapdf(pdf,profile):
 
 def render_table(cs): return '\n'.join(f'{c.status:18} | {c.category:16} | {c.rule[:48]:48} | {c.evidence[:70]}' for c in cs)
 def main():
-    ap=argparse.ArgumentParser(description='Validate an academic UFC/ABNT PDF.'); ap.add_argument('pdf',type=Path); ap.add_argument('--profile',choices=('strict','portable','accessibility'),default='strict'); ap.add_argument('--format',choices=('table','json','markdown'),default='table'); ap.add_argument('--output',type=Path); a=ap.parse_args(); pdf=a.pdf.resolve()
+    ap=argparse.ArgumentParser(description='Validate an academic UFC/ABNT PDF.'); ap.add_argument('pdf',type=Path); ap.add_argument('--profile',choices=('strict','portable','accessibility'),default='strict'); ap.add_argument('--document-type',choices=DOCUMENT_TYPES,default='undergraduate-capstone'); ap.add_argument('--format',choices=('table','json','markdown'),default='table'); ap.add_argument('--output',type=Path); a=ap.parse_args(); pdf=a.pdf.resolve()
     if not pdf.is_file(): raise SystemExit(f'File not found: {pdf}')
-    inf=info(pdf); fs=fonts(pdf); t=text(pdf); pages=bbox(pdf); cs=[Check('pdf.open','Integrity','Readable PDF','Technical prerequisite',PASS,f"{inf.get('Pages','?')} pages; PDF {inf.get('PDF version','?')}.")]; cs+=check_layout(pages)+check_fonts(fs,a.profile)+check_structure(t)+check_meta(pdf,inf,a.profile)+check_verapdf(pdf,a.profile)
+    inf=info(pdf); fs=fonts(pdf); t=text(pdf); pages=bbox(pdf); cs=[Check('pdf.open','Integrity','Readable PDF','Technical prerequisite',PASS,f"{inf.get('Pages','?')} pages; PDF {inf.get('PDF version','?')}.")]; cs+=check_layout(pages)+check_fonts(fs,a.profile)+check_structure(t,a.document_type)+check_meta(pdf,inf,a.profile)+check_verapdf(pdf,a.profile)
     if a.profile=='accessibility': cs += [Check('access.alt','Accessibility','Adequate alternative text','PDF/UA / WCAG',REVIEW,'Quality requires human review.','Review /Alt and decorative artifacts.',mandatory=True,level='manual'),Check('access.order','Accessibility','Logical reading order','PDF/UA / WCAG',REVIEW,'Requires testing with assistive technology.','Review the reading order.',mandatory=True,level='manual')]
     v=verdict(cs); base={'schema_version':CATALOG['schema_version'],'reviewed_at':CATALOG['reviewed_at']}
-    if a.format=='json': out=json.dumps({'file':pdf.name,'profile':a.profile,'verdict':v,'normative_catalog':base,'checks':[asdict(c) for c in cs],'mode':'cli-deep-local'},ensure_ascii=False,indent=2)+'\n'
+    if a.format=='json': out=json.dumps({'file':pdf.name,'profile':a.profile,'document_type':a.document_type,'verdict':v,'normative_catalog':base,'checks':[asdict(c) for c in cs],'mode':'cli-deep-local'},ensure_ascii=False,indent=2)+'\n'
     elif a.format=='markdown':
-        esc=lambda x:str(x).replace('|','\\|').replace('\n',' '); lines=['# UFC validation report','',f'File: `{pdf.name}`',f'Profile: `{a.profile}`',f'Verdict: **{v}**',f'Normative base reviewed on: `{CATALOG["reviewed_at"]}`','','| Status | Category | Rule | Source | Evidence | Correction |','|---|---|---|---|---|---|']; lines += [f'| {esc(c.status)} | {esc(c.category)} | {esc(c.rule)} | {esc(c.source)} | {esc(c.evidence)} | {esc(c.correction)} |' for c in cs]; out='\n'.join(lines)+'\n'
-    else: out=f'File: {pdf.name}\nProfile: {a.profile}\nVerdict: {v}\nNormative base: {CATALOG["reviewed_at"]}\n\n{render_table(cs)}\n'
+        esc=lambda x:str(x).replace('|','\\|').replace('\n',' '); lines=['# UFC validation report','',f'File: `{pdf.name}`',f'Profile: `{a.profile}`',f'Document type: `{a.document_type}`',f'Verdict: **{v}**',f'Normative base reviewed on: `{CATALOG["reviewed_at"]}`','','| Status | Category | Rule | Source | Evidence | Correction |','|---|---|---|---|---|---|']; lines += [f'| {esc(c.status)} | {esc(c.category)} | {esc(c.rule)} | {esc(c.source)} | {esc(c.evidence)} | {esc(c.correction)} |' for c in cs]; out='\n'.join(lines)+'\n'
+    else: out=f'File: {pdf.name}\nProfile: {a.profile}\nDocument type: {a.document_type}\nVerdict: {v}\nNormative base: {CATALOG["reviewed_at"]}\n\n{render_table(cs)}\n'
     (a.output.write_text(out,encoding='utf-8') if a.output else print(out,end='')); raise SystemExit(1 if v==FAIL else 0)
 if __name__=='__main__': main()
