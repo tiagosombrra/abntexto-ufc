@@ -1,19 +1,12 @@
 import * as pdfjsLib from "./vendor/pdfjs/pdf.mjs";
 import {normativeCatalog,normativeRules,normativeSources} from "./normative-catalog.js";
+import {documentApplicability} from "./document-applicability.js";
 pdfjsLib.GlobalWorkerOptions.workerSrc="./vendor/pdfjs/pdf.worker.mjs";
 
 const PASS="PASS",FAIL="FAIL",WARN="WARNING",REVIEW="MANUAL REVIEW",NA="NOT APPLICABLE";
 const MM=72/25.4,pageRule=normativeRules["page.a4"],rectoRule=normativeRules["margin.recto"];
 const A4=[pageRule.values.width_mm*MM,pageRule.values.height_mm*MM],TOL=pageRule.values.tolerance_pt??1.8,LEFT=rectoRule.values.left_mm*MM,RIGHT=rectoRule.values.right_mm*MM;
 const $=s=>document.querySelector(s); let report=null;
-let applicabilityPromise;
-function loadApplicability(){
- if(!applicabilityPromise){
-  applicabilityPromise=fetch(new URL("./document-applicability.json",import.meta.url))
-   .then(response=>{if(!response.ok)throw new Error("Cannot load document applicability contract.");return response.json()});
- }
- return applicabilityPromise;
-}
 function structureObservation(modality,found){
  if(modality==="required")return {status:found?PASS:FAIL,mandatory:true,level:"automatic-partial",evidence:found?"Token detected in PDF text; placement and semantics unverified.":"Required token not detected in PDF text."};
  if(modality==="optional")return {status:found?REVIEW:NA,mandatory:false,level:"conditional",evidence:found?"Optional token detected; review applicability and placement.":"Optional element absent; no failure."};
@@ -46,8 +39,7 @@ function render(r){
 }
 
 export async function analyze(file,profile,documentType="undergraduate-capstone"){
- const contract=await loadApplicability();
- const documentContract=contract.document_types[documentType];
+ const documentContract=documentApplicability.document_types[documentType];
  if(!documentContract)throw new Error("Unsupported document type: "+documentType);
  const data=new Uint8Array(await file.arrayBuffer()),pdf=await pdfjsLib.getDocument({data}).promise,meta=await pdf.getMetadata(),outline=await pdf.getOutline(),js=await pdf.getJSActions().catch(()=>null);
  const pages=[],families=new Set();let tagged=false;
