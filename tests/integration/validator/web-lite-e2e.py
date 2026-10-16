@@ -328,7 +328,7 @@ def by_id(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return result
 
 
-def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, Any], catalog: dict[str, Any], document_type: str = 'undergraduate-capstone') -> None:
+def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, Any], catalog: dict[str, Any], document_type: str = 'undergraduate-capstone', print_mode: str = 'single-sided') -> None:
     schema = contract["target_report_schema"]
     missing = [key for key in schema["required_top_level"] if key not in report]
     if missing:
@@ -337,6 +337,8 @@ def validate_schema(report: dict[str, Any], profile: str, contract: dict[str, An
         fail(f"browser profile mismatch: {report.get('profile')!r}")
     if report.get("document_type") != document_type:
         fail(f"browser document type mismatch: {report.get('document_type')!r} != {document_type!r}")
+    if report.get("print_mode") != print_mode:
+        fail(f"browser print mode mismatch: {report.get('print_mode')!r} != {print_mode!r}")
     if report.get("mode") != "web-lite-local":
         fail(f"browser mode mismatch: {report.get('mode')!r}")
     base = report.get("normative_catalog")
@@ -393,14 +395,15 @@ def csp_log_violations(entries: list[dict[str, Any]]) -> list[str]:
     return violations
 
 
-def analyze_through_ui(browser: Browser, pdf: Path, profile: str, document_type: str = 'undergraduate-capstone') -> dict[str, Any]:
+def analyze_through_ui(browser: Browser, pdf: Path, profile: str, document_type: str = 'undergraduate-capstone', print_mode: str = 'single-sided') -> dict[str, Any]:
     browser.execute(
         "window.alert=(message)=>{window.__ufcTestAlert=String(message)};"
         "const p=document.querySelector('#profile');p.value=arguments[0];"
         "const d=document.querySelector('#document-type');d.value=arguments[1];"
+        "const m=document.querySelector('#print-mode');m.value=arguments[2];"
         "document.querySelector('#summary').classList.add('hidden');"
         "document.querySelector('#pdf-file').value='';return p.value;",
-        [profile, document_type],
+        [profile, document_type, print_mode],
     )
     browser.send_file("#pdf-file", pdf)
     browser.click("#analyze")
@@ -437,6 +440,7 @@ def main() -> None:
     parser.add_argument("--profile", choices=("strict", "portable", "accessibility"), default="portable")
     parser.add_argument("--site-root", type=Path, default=VALIDATOR)
     parser.add_argument("--document-pdf-dir", type=Path, help="Five real class-rendered profile PDFs and matching CLI evidence")
+    parser.add_argument("--duplex-pdf-dir", type=Path, help="Two real recto/verso PDFs and matching CLI evidence")
     parser.add_argument("--evidence", type=Path)
     args = parser.parse_args()
 
@@ -584,6 +588,48 @@ def main() -> None:
                     "cross_surface_checks=ALIGNED proof_state=automatic-partial"
                 )
 
+            duplex_reports: dict[str, Any] = {}
+            if args.duplex_pdf_dir:
+                directory = args.duplex_pdf_dir.resolve()
+                evidence_file = directory / "cli-evidence.json"
+                if not evidence_file.is_file():
+                    fail("duplex CLI evidence is missing")
+                control = json.loads(evidence_file.read_text(encoding="utf-8"))
+                if control.get("status") != PASS or len(control.get("scenarios", {})) != 4:
+                    fail("duplex CLI evidence scenarios are incomplete")
+                for scenario, spec in control["scenarios"].items():
+                    pdf = directory / spec["pdf_file"]
+                    if not pdf.is_file() or file_sha256(pdf) != spec["pdf_sha256"]:
+                        fail("duplex real PDF identity mismatch: " + scenario)
+                    report = analyze_through_ui(
+                        browser, pdf, args.profile, "doctoral-thesis", spec["print_mode"]
+                    )
+                    validate_schema(
+                        report, args.profile, contract, catalog, "doctoral-thesis", spec["print_mode"]
+                    )
+                    checks = by_id(report)
+                    if checks.get("pdf.open", {}).get("status") != PASS:
+                        fail("duplex PDF is not readable: " + scenario)
+                    actual = checks.get("layout.margins", {}).get("status")
+                    if actual != spec["margins"]:
+                        fail(
+                            "duplex cross-surface mismatch: "
+                            f"{scenario}: Web/Lite={actual!r}, CLI/Deep={spec['margins']!r}"
+                        )
+                    if checks.get("layout.a4", {}).get("status") != PASS:
+                        fail("duplex PDF is not A4: " + scenario)
+                    duplex_reports[scenario] = {
+                        "print_mode": spec["print_mode"],
+                        "pdf_sha256": spec["pdf_sha256"],
+                        "layout_margins": actual,
+                        "negative_control": spec["negative_control"],
+                    }
+                print(
+                    "DUPLEX-MARGIN-PDF-EVIDENCE surface=web-lite status=PASS "
+                    "actual_pdfs=2 scenarios=4 positive=2 negative=2 "
+                    "cross_surface_margins=ALIGNED"
+                )
+
             performance_entries = browser.logs("performance")
             requested_urls = performance_request_urls(performance_entries)
             external_urls = external_http_requests(requested_urls, server.server_port)
@@ -641,6 +687,7 @@ def main() -> None:
                     "pdfa_deep": positive_checks["pdfa.deep"]["status"],
                 },
                 "document_type_pdfs": profile_reports,
+                "duplex_margin_pdfs": duplex_reports,
                 "negative": {
                     "file": negative_report["file"],
                     "sha256": negative_sha256,
