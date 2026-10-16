@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import runpy
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -58,6 +59,7 @@ def main() -> None:
     require("'--document-type'" in cli, "CLI does not expose explicit type selection")
     require("document_type" in cli and "document_type:documentType" in app, "report type metadata missing")
 
+    sys.path.insert(0, str(ROOT / "tools"))
     module = runpy.run_path(str(CLI), run_name="document_applicability_test")
     check_structure = module["check_structure"]
     PASS, FAIL = module["PASS"], module["FAIL"]
