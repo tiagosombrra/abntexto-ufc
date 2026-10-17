@@ -89,6 +89,10 @@ A verificação automática aqui mede somente limites **horizontais** do texto e
 
 Não simule margens com espaços, `\hspace`, minipages globais ou alterações locais de geometria.
 
+### Tabelas que ocupam várias páginas
+
+Para tabelas numéricas extensas com `tables = tabularray`, use o ambiente **`longabnttblr`**, sem envolvê-lo em um `table` flutuante. O ambiente `tallabnttblr` é destinado a tabelas que não atravessam páginas. O tema ABNT do pacote tabularray fornece os indicadores de continuação em português. Cada página da tabela deve manter sua identificação e cabeçalho; a fonte e as notas cabem ao rodapé da página de conclusão, conforme a aplicação de §8.3 das normas tabulares do IBGE. A evidência automática do projeto cobre, por enquanto, uma tabela sintética controlada com casos negativos de cabeçalho e fonte; outras tabelas ainda exigem inspeção visual.
+
 ### Fonte, tamanho e espaçamento
 
 A política institucional coberta pelo projeto admite Times New Roman ou Arial para o corpo textual. Configure:
