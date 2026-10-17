@@ -93,6 +93,8 @@ Não simule margens com espaços, `\hspace`, minipages globais ou alterações l
 
 Para tabelas numéricas extensas com `tables = tabularray`, use o ambiente **`longabnttblr`**, sem envolvê-lo em um `table` flutuante. O ambiente `tallabnttblr` é destinado a tabelas que não atravessam páginas. O tema ABNT do pacote tabularray fornece os indicadores de continuação em português. Cada página da tabela deve manter sua identificação e cabeçalho; a fonte e as notas cabem ao rodapé da página de conclusão, conforme a aplicação de §8.3 das normas tabulares do IBGE. A evidência automática do projeto cobre, por enquanto, uma tabela sintética controlada com casos negativos de cabeçalho e fonte; outras tabelas ainda exigem inspeção visual.
 
+**Limitação conhecida na quebra entre páginas:** quando se utiliza `\\bottomrule` no corpo de `longabnttblr`, o mecanismo de rodapé de linhas do `tabularray` pode repetir esse traço nas páginas intermediárias. Embora a fonte e as notas sejam corretamente reservadas para a conclusão, esse traço pode contrariar o item 8.3(d) do IBGE. A verificação vetorial da PR #500 reproduz o problema em PDF real. Até que exista uma correção testada para o ambiente padrão, **não presuma conformidade do fechamento da tabela**: examine todas as páginas do PDF. A prova experimental também demonstra a possibilidade de deslocar a linha para o modelo `lastfoot` e omitir `\\bottomrule` no corpo da tabela, mas isso ainda não constitui solução automática da classe para documentos de usuários.
+
 ### Fonte, tamanho e espaçamento
 
 A política institucional coberta pelo projeto admite Times New Roman ou Arial para o corpo textual. Configure:
