@@ -8,7 +8,7 @@ tmp="$(mktemp -d)"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {
-  for scenario in positive header-missing source-missing; do
+  for scenario in positive header-missing source-missing nonterminal-rule; do
     job="ibge-multipage-$scenario"
     for ext in aux log out pdf lot toc; do
       rm -f "$job.$ext"
@@ -18,9 +18,10 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-python3 -m py_compile tests/checks/objects/normative_table_ibge_multipage.py
+python3 -m py_compile tests/checks/objects/normative_table_ibge_multipage.py \
+  tests/checks/objects/normative_table_ibge_multipage_vector.py
 
-for scenario in positive header-missing source-missing; do
+for scenario in positive header-missing source-missing nonterminal-rule; do
   job="ibge-multipage-$scenario"
   generated="$tmp/$job.tex"
 
@@ -52,6 +53,23 @@ elif scenario == "source-missing":
     if source.count(anchor) != 1:
         raise SystemExit("IBGE §8.3: source-removal fixture drifted")
     source = source.replace(anchor, "")
+elif scenario == "nonterminal-rule":
+    # Deliberate negative: inject a forbidden full-width horizontal line into
+    # the nonterminal first/middle foot templates of the real ABNT theme.
+    # This mutates TeX before compiling; neither runtime nor PDF is patched.
+    anchor = r"\begin{document}"
+    if source.count(anchor) != 1:
+        raise SystemExit("IBGE §8.3(d): document insertion anchor drifted")
+    mutation = r"""
+\ExplSyntaxOn
+\tl_gput_right:cn { g__tblr_theme_abnt_code_tl }
+  {
+    \DefTblrTemplate { firstfoot,middlefoot } { default }
+      { \par \noindent \rule{\linewidth}{0.7pt} }
+  }
+\ExplSyntaxOff
+"""
+    source = source.replace(anchor, mutation + "\n" + anchor)
 elif scenario != "positive":
     raise SystemExit("IBGE §8.3: unsupported fixture scenario")
 out.write_text(source, encoding="utf-8")
@@ -79,6 +97,12 @@ PY
     --scenario "$scenario" \
     --json "$evidence_dir/$job.json" \
     --commit-sha "$(git rev-parse HEAD)"
+  if [ "$scenario" = "positive" ] || [ "$scenario" = "nonterminal-rule" ]; then
+    python3 tests/checks/objects/normative_table_ibge_multipage_vector.py "$job.pdf" \
+      --scenario "$scenario" \
+      --json "$evidence_dir/$job-vector.json" \
+      --commit-sha "$(git rev-parse HEAD)"
+  fi
 done
 
 python3 - "$evidence_dir" <<'PY'
@@ -88,7 +112,7 @@ import sys
 from pathlib import Path
 
 directory = Path(sys.argv[1])
-names = ("positive", "header-missing", "source-missing")
+names = ("positive", "header-missing", "source-missing", "nonterminal-rule")
 records = [
     json.loads((directory / f"ibge-multipage-{name}.json").read_text(encoding="utf-8"))
     for name in names
@@ -101,8 +125,9 @@ if any(not entry["matches_declared_scenario"] for entry in records):
     raise SystemExit("IBGE §8.3 evidence: declared control case failed")
 print(
     "IBGE-MULTIPAGE-PDF-EVIDENCE status=PASS "
-    "real_pdfs=3 positive=1 negative=2 "
+    "real_pdfs=4 positive=1 negative=3 "
     "header_repeat=CONTROLLED continuation_labels=CONTROLLED "
-    "source_notes_terminal=CONTROLLED proof_state=automatic-partial"
+    "source_notes_terminal=CONTROLLED footer_vector=CONTROLLED "
+    "proof_state=automatic-partial"
 )
 PY
