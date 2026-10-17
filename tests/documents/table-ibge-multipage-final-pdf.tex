@@ -1,0 +1,30 @@
+\documentclass{abntexto-ufc}
+
+\ufcsetup{tables = tabularray}
+\pagestyle{empty}
+
+\begin{document}
+
+% Deliberately use the true multi-page tabularray-abnt wrapper. Tall tables
+% cannot split across pages. Rows are generated deterministically by CI.
+% This evidence concerns a controlled numeric table, not arbitrary documents.
+\begin{longabnttblr}
+[
+  caption={UFCIBGEMPCAP Indicadores numericos sinteticos por sequencia},
+  label={tab:ibge-multipage},
+  remark{Fonte}={UFCIBGEMPSRC Elaboracao sintetica.},
+  remark{Nota}={UFCIBGEMPGEN Valores sem significado estatistico.},
+]
+{
+  colspec={X[l] X[r]},
+  width=0.80\linewidth,
+  rowhead=1,
+}
+\toprule
+UFCIBGEMPHEAD & UFCIBGEMPVALUE \\
+\midrule
+@UFC_ROWS@
+\bottomrule
+\end{longabnttblr}
+
+\end{document}

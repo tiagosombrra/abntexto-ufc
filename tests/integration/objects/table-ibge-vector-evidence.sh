@@ -83,6 +83,10 @@ sh tests/integration/objects/table-ibge-unit-evidence.sh
 # Include conditional source/general/specific-note ordering in the same PDF gate.
 sh tests/integration/objects/table-ibge-notes-evidence.sh
 
+# IBGE 1993 §8.3: genuine multi-page header/continuation/foot PDF controls.
+# Keep within the existing complete object gate, without a scoped optional test.
+sh tests/integration/objects/table-ibge-multipage-evidence.sh
+
 echo 'IBGE rendered title/source positive and negative PDF checks completed.'
 
 echo 'IBGE table vector-geometry evidence gate completed.'
