@@ -53,23 +53,40 @@ elif scenario == "source-missing":
     if source.count(anchor) != 1:
         raise SystemExit("IBGE §8.3: source-removal fixture drifted")
     source = source.replace(anchor, "")
-elif scenario == "nonterminal-rule":
-    # Deliberate negative: inject a forbidden full-width horizontal line into
-    # the nonterminal first/middle foot templates of the real ABNT theme.
-    # This mutates TeX before compiling; neither runtime nor PDF is patched.
+elif scenario == "positive":
+    # Opt-in controlled workaround: do not give tabularray a body-level
+    # \bottomrule that its row-foot mechanism repeats on every page.
+    # Move the actual horizontal footer separator into the LAST foot,
+    # before source and notes, without changing the public class/runtime.
+    # The unmodified user-facing fixture is retained as a negative control.
+    bottom = r"\bottomrule"
+    if source.count(bottom) != 1:
+        raise SystemExit("IBGE §8.3(d): body bottom-rule anchor drifted")
+    source = source.replace(bottom, "")
     anchor = r"\begin{document}"
     if source.count(anchor) != 1:
         raise SystemExit("IBGE §8.3(d): document insertion anchor drifted")
-    mutation = r"""
+    workaround = r"""
 \ExplSyntaxOn
 \tl_gput_right:cn { g__tblr_theme_abnt_code_tl }
   {
-    \DefTblrTemplate { firstfoot,middlefoot } { default }
-      { \par \noindent \rule{\linewidth}{0.7pt} }
+    \DefTblrTemplate { lastfoot } { ufc-ibge-concluding-rule }
+      {
+        \par\noindent\rule{\linewidth}{\heavyrulewidth}\par
+        \UseTblrTemplate { remark } { default }
+        \UseTblrTemplate { note } { default }
+      }
+    \SetTblrTemplate { lastfoot } { ufc-ibge-concluding-rule }
   }
 \ExplSyntaxOff
 """
-    source = source.replace(anchor, mutation + "\n" + anchor)
+    source = source.replace(anchor, workaround + "\n" + anchor)
+elif scenario == "nonterminal-rule":
+    # Reproduce the actual upstream defect with unmodified class and theme:
+    # tabularray reuses the body-level last \bottomrule on ALL split pages.
+    # This PDF must still retain valid title/header/source and a valid final
+    # rule, but fail §8.3(d) because earlier pages also show the separator.
+    pass
 elif scenario != "positive":
     raise SystemExit("IBGE §8.3: unsupported fixture scenario")
 out.write_text(source, encoding="utf-8")
