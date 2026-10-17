@@ -36,6 +36,7 @@ SCENARIOS = {
     "positive": ("PASS", "PASS", "PASS"),
     "header-missing": ("FAIL", "PASS", "PASS"),
     "source-missing": ("PASS", "PASS", "FAIL"),
+    "nonterminal-rule": ("PASS", "PASS", "PASS"),
 }
 
 
