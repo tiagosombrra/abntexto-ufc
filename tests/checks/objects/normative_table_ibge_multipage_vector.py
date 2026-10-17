@@ -139,7 +139,12 @@ def evaluate(pdf: Path, negative: bool) -> dict:
     # A real defect can produce several overdrawn contours of one printed
     # rule. The deduplication above is exact enough for these controlled PDFs;
     # require a single terminal rule and strictly no early footer rule.
-    actual = "PASS" if terminal_count == 1 and all(n == 0 for n in nonterminal_counts) else "FAIL"
+    # Fail closed for an ambiguous negative: the positive terminal footer
+    # must still exist. Otherwise absence of the *correct* final boundary
+    # could masquerade as proof of detecting the injected premature rule.
+    if terminal_count != 1:
+        fail(f"terminal footer-rule calibration expected exactly one, got {terminal_count}")
+    actual = "PASS" if all(n == 0 for n in nonterminal_counts) else "FAIL"
     expected = "FAIL" if negative else "PASS"
     return {
         "schema_version": 1,
