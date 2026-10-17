@@ -27,6 +27,7 @@ if str(TOOLS) not in sys.path:
 
 from pdf_measurement import PDFMeasurementError, bbox_pages, normalize  # noqa: E402
 from pdf_vector_measurement import vector_rules  # noqa: E402
+from normative_table_ibge_vector import cluster_axis_rules  # noqa: E402
 
 ROW_PREFIX = "UFCIBGEMPROW"
 HEADER_LEFT = "UFCIBGEMPHEAD"
@@ -50,17 +51,6 @@ def row_markers(page):
         if number:
             found.append((int(number.group(1)), word))
     return found
-
-
-def group_center_y(rules, tolerance=1.8):
-    """Deduplicate SVG subpaths belonging to one physical printed rule."""
-    groups = []
-    for rule in sorted(rules, key=lambda rule: rule.box.center_y):
-        if groups and abs(rule.box.center_y - groups[-1][-1].box.center_y) <= tolerance:
-            groups[-1].append(rule)
-        else:
-            groups.append([rule])
-    return [max(group, key=lambda line: line.length) for group in groups]
 
 
 def evaluate(pdf: Path, negative: bool) -> dict:
@@ -108,22 +98,28 @@ def evaluate(pdf: Path, negative: bool) -> dict:
             )
         except PDFMeasurementError as exc:
             fail(f"page {page.index}: {exc}")
-        horizontal = [
-            item for item in rules
-            if item.orientation == "horizontal"
-            and item.length >= 0.78 * (right - left)
+        # A printed full-width line may become two contiguous SVG
+        # subpaths (one per tabularray column). Reuse the existing calibrated
+        # logical-rule merger before checking the table's horizontal extent.
+        # Testing each raw segment separately causes false negatives.
+        horizontal = cluster_axis_rules(
+            rules, orientation="horizontal", cluster_tolerance_pt=1.8
+        )
+        covering = [
+            item for item in horizontal
+            if item.length >= 0.78 * (right - left)
             and item.box.x_min <= left + 6
             and item.box.x_max >= right - 6
         ]
         footer = [
-            line for line in group_center_y(horizontal)
+            line for line in covering
             if y_min <= line.box.center_y <= y_max
         ]
         per_page.append({
             "page": page.index,
             "last_data_row": rows[-1][0],
             "row_bbox": last_row.box.to_dict(),
-            "horizontal_rule_total": len(group_center_y(horizontal)),
+            "horizontal_rule_total": len(covering),
             "possible_footer_rule_count": len(footer),
             "possible_footer_rules": [line.to_dict() for line in footer],
             "is_concluding_page": last,
