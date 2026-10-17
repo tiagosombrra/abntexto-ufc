@@ -84,7 +84,7 @@ def main() -> None:
         reason = f"manual:{selected_scope}"
     elif args.event_name == "push":
         selected_scope = "complete"
-        reason = "release-marker-main-push"
+        reason = "main-push-full-regression"
 
     output = (
         f"run_integration={'true' if run_integration else 'false'}\n"
