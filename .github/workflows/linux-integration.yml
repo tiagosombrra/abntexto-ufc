@@ -1,14 +1,11 @@
 name: Linux integration
 
 on:
+  # Every merge to main must run the complete integration contract.
+  # A paths filter silently omits test-only and class/validator changes.
   push:
     branches:
       - main
-    paths:
-      - release/v3-release-candidate.json
-      - .github/workflows/linux-integration.yml
-      - tools/ci/select-integration-scope.py
-      - tools/ci/run-web-lite-e2e.sh
   pull_request:
     branches:
       - main
