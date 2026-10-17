@@ -48,7 +48,6 @@ DOC_ONLY_EXACT = {
 DOC_ONLY_PREFIXES = ("docs/", "release/history/v3/")
 
 ORCHESTRATION_EXACT = {
-    ".github/workflows/linux-integration.yml",
     ".github/workflows/linux-release-check.yml",
     "tests/run.py",
     "tests/static.py",
@@ -63,6 +62,7 @@ ORCHESTRATION_EXACT = {
 }
 
 FORCE_COMPLETE_EXACT = {
+    ".github/workflows/linux-integration.yml",
     "Makefile",
     "abntexto-ufc.cls",
     "release/v3-release-candidate.json",
@@ -149,6 +149,7 @@ def self_test() -> None:
         ("release/history/v3/v3.0.1-final-corrections.json",): (),
         ("abntexto-ufc.cls",): ("complete",),
         ("tests/run.py",): ("smoke",),
+        (".github/workflows/linux-integration.yml",): ("complete",),
         (".github/workflows/linux-release-check.yml",): ("smoke",),
         ("tools/ci/select-integration-scope.py",): ("smoke",),
         ("tools/ci/validate-release-reference.py",): ("smoke",),
