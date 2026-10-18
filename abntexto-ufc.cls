@@ -817,7 +817,7 @@
               }
             \SetTblrTemplate { lastfoot } { ufc-ibge-long-conclusion }
           }
-        \NewDocumentEnvironment { ufcibgelongtblr } { +o +m +b }
+        \NewDocumentEnvironment { ufcibgelongtblr } { O{} +m +b }
           {
             % Fail loudly instead of reintroducing a repeated intermediate
             % row-foot separator that negates the opt-in contract.
