@@ -144,6 +144,89 @@ rm -f ibge-multipage-optin-invalid.aux ibge-multipage-optin-invalid.log \
   ibge-multipage-optin-invalid.pdf ibge-multipage-optin-invalid.out
 echo "IBGE-MULTIPAGE-OPTIN-CONTRACT status=PASS body_bottomrule=REJECTED class_error=true"
 
+
+# Additional one-page regression for the public opt-in interface. Ensure
+# source, note and a physical SVG footer separator survive without spilling.
+short_job=ibge-optin-short-final-pdf
+short_fixture=tests/documents/table-ibge-optin-short-final-pdf.tex
+for pass in 1 2 3; do
+  pdflatex -jobname="$short_job" $flags "$short_fixture" \
+    > "$tmp/$short_job.log" 2>&1 || {
+      cat "$tmp/$short_job.log"
+      exit 1
+    }
+done
+short_warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$short_job.log" |
+  grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+if [ -n "$short_warnings" ]; then
+  printf '%s\n' "$short_warnings"
+  echo "IBGE single-page opt-in: unexpected LaTeX warning or box overflow." >&2
+  exit 1
+fi
+cp "$short_job.pdf" "$evidence_dir/$short_job.pdf"
+PYTHONPATH=tools:tests/checks/objects python3 - "$short_job.pdf" "$evidence_dir/$short_job.json" <<'PY'
+import hashlib
+import json
+from pathlib import Path
+import sys
+from pdf_measurement import bbox_pages, normalize
+from pdf_vector_measurement import vector_rules
+from normative_table_ibge_vector import cluster_axis_rules
+
+pdf = Path(sys.argv[1])
+pages = bbox_pages(pdf)
+if len(pages) != 1:
+    raise SystemExit(f"IBGE opt-in short table spilled: pages={len(pages)}")
+page = pages[0]
+def one(marker):
+    found = [w for w in page.words if normalize(w.text) == marker]
+    if len(found) != 1:
+        raise SystemExit(f"IBGE opt-in short table marker {marker}: matches={len(found)}")
+    return found[0]
+
+header = one("UFCIBGESHORTHEAD")
+right = one("UFCIBGESHORTVAL")
+last_row = one("UFCIBGESHORTROW")
+source = one("UFCIBGESHORTSOURCE")
+note = one("UFCIBGESHORTNOTE")
+one("UFCIBGESHORTCAP")
+if not (header.box.y_max < last_row.box.y_min
+        and last_row.box.y_max < source.box.y_min
+        and source.box.y_max < note.box.y_min):
+    raise SystemExit("IBGE opt-in short table has wrong heading/row/source/note order")
+left_x, right_x = header.box.x_min, right.box.x_max
+rules = cluster_axis_rules(
+    vector_rules(pdf, page=page.index),
+    orientation="horizontal", cluster_tolerance_pt=1.8
+)
+footer = [
+    item for item in rules
+    if item.length >= .78 * (right_x-left_x)
+    and item.box.x_min <= left_x + 6
+    and item.box.x_max >= right_x - 6
+    and last_row.box.y_max + 1 <= item.box.center_y <= source.box.y_min - 1
+]
+if len(footer) != 1:
+    raise SystemExit(f"IBGE opt-in short table expected one final rule: {len(footer)}")
+report = {
+    "component": "table-ibge-optin-single-page",
+    "pdf_pages": 1,
+    "final_rule_count": 1,
+    "source_and_note_only_at_final": True,
+    "pdf_sha256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
+    "source_commit_sha": __import__("subprocess").check_output(
+        ["git", "rev-parse", "HEAD"], text=True
+    ).strip(),
+    "proof_state": "automatic-partial",
+    "unrelated_normative_proof_promoted": False
+}
+Path(sys.argv[2]).write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8")
+print("IBGE-OPTIN-SINGLE-PAGE-EVIDENCE status=PASS pages=1 "
+      "lastfoot_rule=1 source_note_order=PASS proof_state=automatic-partial")
+PY
+rm -f "$short_job".aux "$short_job".log "$short_job".out \
+  "$short_job".lot "$short_job".toc "$short_job".pdf
+
 python3 - "$evidence_dir" <<'PY'
 import hashlib
 import json
@@ -167,7 +250,7 @@ print(
     "real_pdfs=4 positive=1 negative=3 "
     "header_repeat=CONTROLLED continuation_labels=CONTROLLED "
     "source_notes_terminal=CONTROLLED footer_vector=CONTROLLED "
-    "optin_footer=CONTROLLED "
+    "optin_footer=CONTROLLED single_page=CONTROLLED "
     "proof_state=automatic-partial"
 )
 PY
