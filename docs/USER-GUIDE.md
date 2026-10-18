@@ -95,6 +95,34 @@ Para tabelas numéricas extensas com `tables = tabularray`, use o ambiente **`lo
 
 **Limitação conhecida na quebra entre páginas:** quando se utiliza `\\bottomrule` no corpo de `longabnttblr`, o mecanismo de rodapé de linhas do `tabularray` pode repetir esse traço nas páginas intermediárias. Embora a fonte e as notas sejam corretamente reservadas para a conclusão, esse traço pode contrariar o item 8.3(d) do IBGE. A verificação vetorial da PR #500 reproduz o problema em PDF real. Até que exista uma correção testada para o ambiente padrão, **não presuma conformidade do fechamento da tabela**: examine todas as páginas do PDF. A prova experimental também demonstra a possibilidade de deslocar a linha para o modelo `lastfoot` e omitir `\\bottomrule` no corpo da tabela, mas isso ainda não constitui solução automática da classe para documentos de usuários.
 
+### Fechamento correto em tabela longa: modo explícito v3.1
+
+O projeto oferece, quando \`tables = tabularray\`, o ambiente **\`ufcibgelongtblr\`** para tabelas numéricas que se estendem por várias páginas. Ele reutiliza o tema ABNT (identificação, continuação, fonte e notas), porém desenha um único traço separador no \`lastfoot\`, imediatamente antes de Fonte/Nota. **Não inclua \`\\bottomrule\` no corpo do ambiente**: a classe rejeita esse comando com um erro explícito, porque ele faria o \`tabularray\` repetir a linha em páginas intermediárias.
+
+\`\`\`tex
+\ufcsetup{tables = tabularray}
+
+\begin{ufcibgelongtblr}[
+  caption = {Resultados numéricos da pesquisa},
+  remark{Fonte} = {Elaboração própria.},
+  remark{Nota} = {Dados ilustrativos.}
+]{
+  colspec = {X[l] X[r]},
+  width = 0.80\linewidth,
+  rowhead = 1,
+}
+\toprule
+Indicador & Valor \\
+\midrule
+Amostra A & 10 \\
+Amostra B & 20 \\
+% Acrescente as demais linhas com \\\\
+% Não use \bottomrule aqui.
+\end{ufcibgelongtblr}
+\`\`\`
+
+O ambiente **\`longabnttblr\` antigo não foi alterado**; documentos existentes não recebem uma alteração silenciosa na apresentação. Nele, um \`\\bottomrule\` no corpo ainda pode repetir-se nos fechamentos intermediários. A nova opção foi examinada no cenário experimental de sete páginas, não constitui conformidade IBGE integral e requer conferência visual do documento de depósito. O comprimento exato da linha final em diferentes configurações de largura também permanece sujeito à revisão.
+
 ### Fonte, tamanho e espaçamento
 
 A política institucional coberta pelo projeto admite Times New Roman ou Arial para o corpo textual. Configure:
