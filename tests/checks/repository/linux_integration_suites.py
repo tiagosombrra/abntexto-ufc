@@ -41,10 +41,67 @@ def fail(message: str) -> None:
     raise SystemExit(f"Linux integration suite contract failed: {message}")
 
 
+
+def main_push_unfiltered(workflow: str) -> bool:
+    """Guard the main push trigger against silent path/branch exclusions.
+
+    This intentionally validates the simple workflow form used by this
+    repository rather than adding a runtime YAML parser dependency.
+    Unknown trigger syntax must fail closed and be reviewed.
+    """
+    if workflow.count("\non:\n") != 1:
+        return False
+    block = workflow.split("\non:\n", 1)[1].split("\npermissions:", 1)[0]
+    if block.count("\n  push:\n") != 1 or block.count("\n  pull_request:\n") != 1:
+        return False
+    push = block.split("\n  push:\n", 1)[1].split("\n  pull_request:\n", 1)[0]
+    lines = [
+        line.strip()
+        for line in push.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+    return lines == ["branches:", "- main"]
+
+
+def audit_main_push_regression(workflow: str, helper: str) -> None:
+    if not main_push_unfiltered(workflow):
+        fail("main push must run unfiltered Linux Integration, including test-only changes")
+    # Deliberate static negative controls detect reintroduction of the former
+    # release-marker-only path filter or an accidentally changed branch.
+    if main_push_unfiltered(
+        workflow.replace(
+            "\n  pull_request:\n",
+            "\n    paths:\n      - release/v3-release-candidate.json\n  pull_request:\n",
+            1,
+        )
+    ):
+        fail("main push static guard accepted a filtered path negative")
+    if main_push_unfiltered(
+        workflow.replace("\n      - main\n", "\n      - development\n", 1)
+    ):
+        fail("main push static guard accepted a wrong-branch negative")
+    if main_push_unfiltered(
+        workflow.replace(
+            "\n  pull_request:\n",
+            "\n    paths-ignore:\n      - tests/**\n  pull_request:\n",
+            1,
+        )
+    ):
+        fail("main push static guard accepted an ignored test-path negative")
+    trigger = 'elif args.event_name == "push":'
+    if helper.count(trigger) != 1:
+        fail("main push scope selector lost its explicit event branch")
+    push_selector = helper.split(trigger, 1)[1].split("\n    output =", 1)[0]
+    for token in ('selected_scope = "complete"', 'reason = "main-push-full-regression"'):
+        if token not in push_selector:
+            fail(f"main push scope must remain complete: missing {token}")
+
+
 def main() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
     release_workflow = RELEASE_WORKFLOW.read_text(encoding="utf-8")
     integration_scope_helper = INTEGRATION_SCOPE_HELPER.read_text(encoding="utf-8")
+    audit_main_push_regression(workflow, integration_scope_helper)
     web_lite_helper = WEB_LITE_HELPER.read_text(encoding="utf-8")
     release_reference_helper = RELEASE_REFERENCE_HELPER.read_text(encoding="utf-8")
     release_asset_helper = RELEASE_ASSET_HELPER.read_text(encoding="utf-8")
@@ -242,6 +299,8 @@ def main() -> None:
         fail("documentation-only changes must not trigger heavy Linux integration")
     if infer_suites([CORRECTION_STATE]) != ():
         fail("historical release-state maintenance must not trigger heavy Linux integration by itself")
+    if infer_suites([".github/workflows/linux-integration.yml"]) != ("complete",):
+        fail("changes to main integration workflow must require complete PR regression")
     if infer_suites(["tests/run.py"]) != ("smoke",):
         fail("orchestration-only changes must select smoke")
     if infer_suites([RELEASE_WORKFLOW_PATH]) != ("smoke",):
