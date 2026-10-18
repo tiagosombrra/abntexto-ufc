@@ -794,6 +794,51 @@
       }
   }
 
+
+% Opt-in IBGE 1993 8.3(d) footer separator: tabularray repeats a body-level
+% \bottomrule on every longtblr sub-page. Never patch the upstream row-foot
+% internals or silently change existing longabnttblr, tallabnttblr or quadro.
+% Use a distinct theme and public long-table wrapper with NO body bottomrule.
+\bool_new:N \g_ufc_ibge_long_initialized_bool
+\cs_new_protected:Npn \ufc_table_register_ibge_long:
+  {
+    \bool_if:NF \g_ufc_ibge_long_initialized_bool
+      {
+        \NewTblrTheme { ufc-ibge-long }
+          {
+            % The existing abnt theme is already patched to preserve UFC
+            % caption size and IBGE source/general/specific note order.
+            \tl_use:c { g__tblr_theme_abnt_code_tl }
+            \DefTblrTemplate { lastfoot } { ufc-ibge-long-conclusion }
+              {
+                \par\noindent\rule{\linewidth}{\heavyrulewidth}\par
+                \UseTblrTemplate { remark } { default }
+                \UseTblrTemplate { note } { default }
+              }
+            \SetTblrTemplate { lastfoot } { ufc-ibge-long-conclusion }
+          }
+        \NewDocumentEnvironment { ufcibgelongtblr } { +o +m +b }
+          {
+            % Fail loudly instead of reintroducing a repeated intermediate
+            % row-foot separator that negates the opt-in contract.
+            \tl_if_in:nnT {##3} {\bottomrule}
+              {
+                \ClassError {abntexto-ufc}
+                  {Do~not~use~\string\bottomrule~inside~ufcibgelongtblr}
+                  {The~final~rule~is~supplied~by~the~table's~lastfoot~
+                   template.~Remove~the~body-level~\string\bottomrule.}
+              }
+            \ifdefined\AbntTblrFont \AbntTblrFont \fi
+            \begin{longtblr}[theme=ufc-ibge-long,##1]{##2}
+              ##3
+            \end{longtblr}
+          }
+          { }
+        \bool_gset_true:N \g_ufc_ibge_long_initialized_bool
+      }
+  }
+
+
 \keys_define:nn { ufc }
   {
     tables .choice:,
@@ -808,6 +853,7 @@
         \UseTblrLibrary{booktabs}
         \SetAbntTblrFont{\normalsize}
         \ufc_table_apply_typography:
+        \ufc_table_register_ibge_long:
       },
 
     code .choice:,

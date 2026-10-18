@@ -1,0 +1,20 @@
+\documentclass{abntexto-ufc}
+\ufcsetup{tables=tabularray}
+\pagestyle{empty}
+\begin{document}
+% Single-page public-API smoke evidence, separate from the seven-page table.
+\begin{ufcibgelongtblr}[
+  caption={UFCIBGESHORTCAP Indicadores ilustrativos},
+  remark{Fonte}={UFCIBGESHORTSOURCE Elaboracao propria.},
+  remark{Nota}={UFCIBGESHORTNOTE Valores sinteticos.},
+]{
+  colspec={X[l] X[r]},
+  width=0.80\linewidth,
+  rowhead=1,
+}
+\toprule
+UFCIBGESHORTHEAD & UFCIBGESHORTVAL \\
+\midrule
+UFCIBGESHORTROW & 1 \\
+\end{ufcibgelongtblr}
+\end{document}
