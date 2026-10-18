@@ -54,33 +54,22 @@ elif scenario == "source-missing":
         raise SystemExit("IBGE §8.3: source-removal fixture drifted")
     source = source.replace(anchor, "")
 elif scenario == "positive":
-    # Opt-in controlled workaround: do not give tabularray a body-level
-    # \bottomrule that its row-foot mechanism repeats on every page.
-    # Move the actual horizontal footer separator into the LAST foot,
-    # before source and notes, without changing the public class/runtime.
-    # The unmodified user-facing fixture is retained as a negative control.
+    # The new public opt-in wrapper owns the concluding horizontal separator.
+    # This is not a fixture-level internal theme mutation. Existing old
+    # longabnttblr plus bottomrule remains the independent negative PDF.
+    start = r"\begin{longabnttblr}"
+    close = r"\end{longabnttblr}"
+    for anchor, new in (
+        (start, r"\begin{ufcibgelongtblr}"),
+        (close, r"\end{ufcibgelongtblr}"),
+    ):
+        if source.count(anchor) != 1:
+            raise SystemExit("IBGE §8.3(d): expected one wrapper environment anchor")
+        source = source.replace(anchor, new)
     bottom = r"\bottomrule"
     if source.count(bottom) != 1:
-        raise SystemExit("IBGE §8.3(d): body bottom-rule anchor drifted")
+        raise SystemExit("IBGE §8.3(d): original bottomrule fixture drifted")
     source = source.replace(bottom, "")
-    anchor = r"\begin{document}"
-    if source.count(anchor) != 1:
-        raise SystemExit("IBGE §8.3(d): document insertion anchor drifted")
-    workaround = r"""
-\ExplSyntaxOn
-\tl_gput_right:cn { g__tblr_theme_abnt_code_tl }
-  {
-    \DefTblrTemplate { lastfoot } { ufc-ibge-concluding-rule }
-      {
-        \par\noindent\rule{\linewidth}{\heavyrulewidth}\par
-        \UseTblrTemplate { remark } { default }
-        \UseTblrTemplate { note } { default }
-      }
-    \SetTblrTemplate { lastfoot } { ufc-ibge-concluding-rule }
-  }
-\ExplSyntaxOff
-"""
-    source = source.replace(anchor, workaround + "\n" + anchor)
 elif scenario == "nonterminal-rule":
     # Reproduce the actual upstream defect with unmodified class and theme:
     # tabularray reuses the body-level last \bottomrule on ALL split pages.
@@ -122,6 +111,39 @@ PY
   fi
 done
 
+
+# Opt-in misuse must fail at TeX compilation with an explicit class error,
+# not silently emit a nonconforming repeated footer.
+invalid="$tmp/ibge-multipage-optin-invalid.tex"
+python3 - "$fixture" "$invalid" <<'PY'
+from pathlib import Path
+import sys
+
+source = Path(sys.argv[1]).read_text(encoding="utf-8")
+source = source.replace(
+    r"\begin{longabnttblr}", r"\begin{ufcibgelongtblr}"
+).replace(
+    r"\end{longabnttblr}", r"\end{ufcibgelongtblr}"
+)
+if source.count("@UFC_ROWS@") != 1:
+    raise SystemExit("IBGE invalid fixture marker drifted")
+source = source.replace("@UFC_ROWS@", "\n".join(
+    f"UFCIBGEMPROW{i:03d} & {i} " + chr(92) * 2 for i in range(1, 169)
+))
+out = Path(sys.argv[2])
+out.write_text(source, encoding="utf-8")
+PY
+if pdflatex -jobname=ibge-multipage-optin-invalid $flags "$invalid" \
+    > "$tmp/ibge-optin-invalid.log" 2>&1; then
+  echo "IBGE §8.3(d): opt-in environment unexpectedly accepted body bottomrule." >&2
+  exit 1
+fi
+grep -F 'ufcibgelongtblr' "$tmp/ibge-optin-invalid.log" >/dev/null
+grep -F 'bottomrule' "$tmp/ibge-optin-invalid.log" >/dev/null
+rm -f ibge-multipage-optin-invalid.aux ibge-multipage-optin-invalid.log \
+  ibge-multipage-optin-invalid.pdf ibge-multipage-optin-invalid.out
+echo "IBGE-MULTIPAGE-OPTIN-CONTRACT status=PASS body_bottomrule=REJECTED class_error=true"
+
 python3 - "$evidence_dir" <<'PY'
 import hashlib
 import json
@@ -145,6 +167,7 @@ print(
     "real_pdfs=4 positive=1 negative=3 "
     "header_repeat=CONTROLLED continuation_labels=CONTROLLED "
     "source_notes_terminal=CONTROLLED footer_vector=CONTROLLED "
+    "optin_footer=CONTROLLED "
     "proof_state=automatic-partial"
 )
 PY
