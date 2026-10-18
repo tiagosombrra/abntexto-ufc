@@ -97,9 +97,11 @@ Para tabelas numéricas extensas com `tables = tabularray`, use o ambiente **`lo
 
 ### Fechamento correto em tabela longa: modo explícito v3.1
 
-O projeto oferece, quando \`tables = tabularray\`, o ambiente **\`ufcibgelongtblr\`** para tabelas numéricas que se estendem por várias páginas. Ele reutiliza o tema ABNT (identificação, continuação, fonte e notas), porém desenha um único traço separador no \`lastfoot\`, imediatamente antes de Fonte/Nota. **Não inclua \`\\bottomrule\` no corpo do ambiente**: a classe rejeita esse comando com um erro explícito, porque ele faria o \`tabularray\` repetir a linha em páginas intermediárias.
+Quando `tables = tabularray`, utilize o ambiente **`ufcibgelongtblr`** para uma tabela numérica que possa atravessar páginas. Ele reutiliza a identificação e os cabeçalhos do tema ABNT, colocando o traço separador exclusivamente no `lastfoot` antes de Fonte/Nota. Não inclua `\\bottomrule` no corpo: a classe sinaliza um erro explícito porque esse comando repetiria a linha nas páginas intermediárias.
 
-\`\`\`tex
+O bloco opcional `[...]` contém os metadados da tabela (título, fonte e notas). O ambiente funciona também **sem o bloco opcional**, embora nesse caso o autor continue responsável por fornecer identificação e fonte quando as normas aplicáveis as exigirem.
+
+```tex
 \ufcsetup{tables = tabularray}
 
 \begin{ufcibgelongtblr}[
@@ -116,12 +118,13 @@ Indicador & Valor \\
 \midrule
 Amostra A & 10 \\
 Amostra B & 20 \\
-% Acrescente as demais linhas com \\\\
-% Não use \bottomrule aqui.
+% Acrescente as demais linhas; não inclua \bottomrule.
 \end{ufcibgelongtblr}
-\`\`\`
+```
 
-O ambiente **\`longabnttblr\` antigo não foi alterado**; documentos existentes não recebem uma alteração silenciosa na apresentação. Nele, um \`\\bottomrule\` no corpo ainda pode repetir-se nos fechamentos intermediários. A nova opção foi examinada no cenário experimental de sete páginas, não constitui conformidade IBGE integral e requer conferência visual do documento de depósito. O comprimento exato da linha final em diferentes configurações de largura também permanece sujeito à revisão.
+A forma sem metadados opcionais é `\begin{ufcibgelongtblr}{colspec={l r}}`, seguida das linhas e de `\end{ufcibgelongtblr}`. Essa possibilidade é um contrato de sintaxe, **não uma dispensa das exigências normativas de título ou fonte**.
+
+O ambiente existente `longabnttblr` **não foi alterado**. Nele, um `\\bottomrule` no corpo ainda pode se repetir nas páginas intermediárias. A evidência automática do opt-in é parcial, com amostras de uma e sete páginas; revise visualmente o PDF de depósito. Larguras variáveis, tabelas complexas e exceções normativas requerem validações adicionais.
 
 ### Fonte, tamanho e espaçamento
 
