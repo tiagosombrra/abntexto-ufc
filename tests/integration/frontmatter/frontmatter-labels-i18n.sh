@@ -11,7 +11,28 @@ for lang in default pt en es fr; do
     default) options='' ;;
     *) options="labels-language = $lang," ;;
   esac
-  sed "s/@UFC_LABELS_LANGUAGE@/$options/" "$fixture" > "$work/labels-$lang.tex"
+  # A blank line inside \ufcsetup{...} expands to \par and becomes
+  # part of the following l3keys key name ("ufc/\par coat-of-arms").
+  # Delete the entire optional-only line for the implicit PT-default path.
+  # Never replace the placeholder with empty text on its own line.
+  if [ "$lang" = default ]; then
+    sed '/^[[:space:]]*@UFC_LABELS_LANGUAGE@[[:space:]]*$/d' \
+      "$fixture" > "$work/labels-$lang.tex"
+    if grep -Fq 'labels-language' "$work/labels-$lang.tex"; then
+      echo "I18N-LABELS-EVIDENCE status=FAIL default_locale_not_implicit=true" >&2
+      exit 1
+    fi
+  else
+    sed "s/@UFC_LABELS_LANGUAGE@/$options/" "$fixture" > "$work/labels-$lang.tex"
+    if [ "$(grep -c 'labels-language' "$work/labels-$lang.tex")" -ne 1 ]; then
+      echo "I18N-LABELS-EVIDENCE status=FAIL language=$lang locale_key_not_unique=true" >&2
+      exit 1
+    fi
+  fi
+  if grep -Fq '@UFC_LABELS_LANGUAGE@' "$work/labels-$lang.tex"; then
+    echo "I18N-LABELS-EVIDENCE status=FAIL language=$lang placeholder_not_replaced=true" >&2
+    exit 1
+  fi
   job="ufc-labels-$lang"
   for pass in 1 2; do
     pdflatex -jobname="$job" -output-directory="$work" $flags \
