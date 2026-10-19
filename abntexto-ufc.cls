@@ -1974,8 +1974,10 @@
 
 \cs_new_protected:Npn \ufc_objects_print_illustration_list:
   {
-    \ufc_pretextual_list:nn
-      {Lista~de~Ilustrações}
+    % Preserve the late illustration-list renderer while using the same
+    % translated title as the initial frontmatter public definition.
+    \exp_args:Ne \ufc_pretextual_list:nn
+      { \ufc_label:n {illustrations} }
       {\ufc_objects_start_illustration_toc:}
   }
 
