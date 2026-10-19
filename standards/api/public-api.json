@@ -9,6 +9,7 @@
   "setup_keys": {
     "core": [
       "type",
+      "labels-language",
       "print-mode",
       "cover",
       "catalog-card",
@@ -149,6 +150,12 @@
     "index": [
       "none",
       "imakeidx"
+    ],
+    "labels-language": [
+      "pt",
+      "en",
+      "es",
+      "fr"
     ]
   },
   "public_commands": {
