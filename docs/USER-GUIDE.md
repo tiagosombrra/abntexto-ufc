@@ -31,6 +31,21 @@ Toda configuração pública da classe parte de:
 
 O tutorial mantém apenas os campos mais comuns visíveis no `main.tex`. Chaves especializadas continuam documentadas na referência de comandos.
 
+### Idioma de títulos pré-textuais (experimental, v3.1.0)
+
+O idioma padrão dos **rótulos exibidos** continua sendo português. Para alterar somente os títulos de agradecimentos, errata, listas e sumário:
+
+```tex
+\ufcsetup{
+  labels-language = en, % pt (padrão), en, es, fr
+  institution = {Universidade Federal do Ceará}
+}
+```
+
+A opção `labels-language` traduz apenas nove títulos da apresentação pré-textual. **Não traduz** o conteúdo do autor, nome oficial da instituição, natureza do trabalho, titulação, folha de aprovação, referências, hifenização ou os metadados do PDF. O nome da universidade pode ser informado explicitamente pelo autor no campo `institution` quando houver uma denominação oficial adequada. Não há tradução institucional automática.
+
+Por razões normativas, `\ufcPrintSummary` continua identificado como **Resumo** (português), e `\ufcPrintAbstract` continua identificado como **Abstract** (inglês), em todos os quatro modos. Nenhuma escolha de rótulos dispensa os elementos exigidos para depósito na UFC. Espanhol e francês devem passar por revisão linguística e pela autoridade institucional antes de uma afirmação de conformidade integral. Essa primeira entrega é **experimental e limitada aos rótulos**.
+
 ### Perfis de documento
 
 A chave `type` seleciona o perfil:
