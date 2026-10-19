@@ -434,6 +434,54 @@ def analyze_through_ui(browser: Browser, pdf: Path, profile: str, document_type:
     return report
 
 
+def verify_report_filters(browser: Browser, report: dict[str, Any]) -> dict[str, int]:
+    """Exercise all filters on the productive UI; canonical report stays whole."""
+    original = report["checks"]
+    modes = {
+        "all": lambda c: True,
+        "attention": lambda c: c["status"] in {"FAIL", "WARNING", "MANUAL REVIEW"},
+        "failures": lambda c: c["status"] == "FAIL",
+        "manual": lambda c: c["status"] == "MANUAL REVIEW",
+    }
+    evidence: dict[str, int] = {}
+    for mode, predicate in modes.items():
+        observed = browser.execute(
+            "const select=document.querySelector('#report-filter');"
+            "if(!select||select.disabled)return {error:'filter unavailable'};"
+            "select.value=arguments[0];"
+            "select.dispatchEvent(new Event('change',{bubbles:true}));"
+            "const rows=[...document.querySelectorAll('#report-body tr')];"
+            "return {mode:select.value,total:rows.length,"
+            "visible:rows.filter(row=>!row.hidden).length,"
+            "statuses:rows.filter(row=>!row.hidden)"
+            ".map(row=>row.querySelector('td')?.textContent||''),"
+            "label:document.querySelector('#filter-count')?.textContent||''};",
+            [mode],
+        )
+        if not isinstance(observed, dict) or observed.get("error"):
+            fail(f"report filter not available: {observed!r}")
+        expected_statuses = [c["status"] for c in original if predicate(c)]
+        expected_count = len(expected_statuses)
+        if (
+            observed.get("mode") != mode
+            or observed.get("total") != len(original)
+            or observed.get("visible") != expected_count
+            or observed.get("statuses") != expected_statuses
+            or observed.get("label") != f"Showing {expected_count} of {len(original)} checks"
+        ):
+            fail(f"productive UI {mode} filter diverged from canonical report: {observed!r}")
+        evidence[mode] = expected_count
+
+    canonical = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(mod=>done(mod.getLastReport()))"
+        ".catch(e=>done({__import_error__:String(e)}));"
+    )
+    if not isinstance(canonical, dict) or canonical.get("checks") != original:
+        fail("filtering modified the canonical full report or exported evidence")
+    return evidence
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run real PDFs through the productive Web/Lite browser UI.")
     parser.add_argument("--pdf", type=Path, required=True)
@@ -511,6 +559,7 @@ def main() -> None:
             positive_report = analyze_through_ui(browser, positive, args.profile)
             validate_schema(positive_report, args.profile, contract, catalog)
             positive_checks = by_id(positive_report)
+            positive_filter_counts = verify_report_filters(browser, positive_report)
             for check_id in ("pdf.open", "layout.a4", "layout.margins"):
                 if positive_checks.get(check_id, {}).get("status") != PASS:
                     fail(f"positive PDF {check_id} is not PASS: {positive_checks.get(check_id)}")
@@ -523,6 +572,9 @@ def main() -> None:
 
             negative_report = analyze_through_ui(browser, negative, args.profile)
             validate_schema(negative_report, args.profile, contract, catalog)
+            if browser.execute("return document.querySelector('#report-filter').value;") != "all":
+                fail("new PDF analysis did not reset filter to all (may hide real failures)")
+            negative_filter_counts = verify_report_filters(browser, negative_report)
             negative_checks = by_id(negative_report)
             if negative_checks.get("pdf.open", {}).get("status") != PASS:
                 fail("negative fixture is not a readable PDF")
@@ -686,6 +738,7 @@ def main() -> None:
                     "font_embedded": positive_checks["font.embedded"]["status"],
                     "pdfa_deep": positive_checks["pdfa.deep"]["status"],
                 },
+                "report_filter": {"positive": positive_filter_counts, "negative": negative_filter_counts, "source_report_preserved": True},
                 "document_type_pdfs": profile_reports,
                 "duplex_margin_pdfs": duplex_reports,
                 "negative": {
@@ -713,7 +766,8 @@ def main() -> None:
                 "negative_pdf_open=PASS negative_a4=FAIL negative_verdict=FAIL "
                 "font_embedded=MANUAL_REVIEW pdfa_deep=MANUAL_REVIEW "
                 "productive_ui=true local_processing=true pages_package=true "
-                "external_network=DENIED external_http_requests=0 csp=PASS"
+                "external_network=DENIED external_http_requests=0 csp=PASS "
+                "report_filter=PASS full_report_unchanged=true"
             )
     finally:
         browser.stop()

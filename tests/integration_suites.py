@@ -29,7 +29,7 @@ SUITES: dict[str, tuple[str, ...]] = {
     "research-project": ("research-project",),
     "profiles": ("profiles", "tagged-pdf-baseline", "tagged-pdf-graphics", "tagged-pdf-table", "tagged-pdf-mathml", "build-path", "multivolume", "catalog-card"),
     "distribution": ("distribution-bundles",),
-    "web-lite": ("validator-source", "web-lite-positive"),
+    "web-lite": ("validator-source", "web-lite-positive", "profiles", "pdf-geometry"),
     "article": (
         "validator-source", "scientific-article-profile", "scientific-article-front-block",
         "scientific-article-foreign-elements", "scientific-article-body",
