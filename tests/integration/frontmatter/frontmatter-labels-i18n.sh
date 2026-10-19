@@ -176,7 +176,7 @@ from pathlib import Path
 import sys
 
 raw = Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
-flat = raw.replace("\\r", "").replace("\\n", "")
+flat = raw.replace("\r", "").replace("\n", "")
 required = (
     "LaTeX Error: Key 'ufc/labels-language' "
     "accepts only a fixed set of choices."
