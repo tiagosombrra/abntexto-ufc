@@ -166,9 +166,25 @@ if pdflatex -jobname=ufc-labels-invalid -output-directory="$work" $flags \
   echo "I18N-LABELS-EVIDENCE status=FAIL unsupported_language_accepted=true" >&2
   exit 1
 fi
-grep -F 'labels-language' "$work/invalid.stdout" >/dev/null || {
-  cat "$work/invalid.stdout"
-  echo "I18N-LABELS-EVIDENCE status=FAIL wrong_invalid_error=true" >&2
-  exit 1
-}
+# TeX wraps the long key name at the 79-column log margin:
+#   Key 'ufc/labels-languag
+#   e' accepts only a fixed set of choices.
+# Preserve the strict wrong-error negative control, normalising *only*
+# TeX's line wrapping before matching the complete expected l3keys error.
+python3 - "$work/invalid.stdout" <<'PY'
+from pathlib import Path
+import sys
+
+raw = Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
+flat = raw.replace("\\r", "").replace("\\n", "")
+required = (
+    "LaTeX Error: Key 'ufc/labels-language' "
+    "accepts only a fixed set of choices."
+)
+if required not in flat or "Fatal error occurred, no output" not in flat:
+    print(raw)
+    raise SystemExit(
+        "I18N-LABELS-EVIDENCE status=FAIL wrong_invalid_error=true"
+    )
+PY
 echo 'I18N-LABELS-EVIDENCE status=PASS languages=pt,en,es,fr default=pt invalid=REJECTED scope=display-only'
