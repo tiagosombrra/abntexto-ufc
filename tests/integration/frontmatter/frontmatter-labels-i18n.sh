@@ -34,7 +34,11 @@ for lang in default pt en es fr; do
     exit 1
   fi
   job="ufc-labels-$lang"
-  for pass in 1 2; do
+  # The abntexto upstream \\eqbox{toc} width is first measured only after the
+  # initial .toc is populated and read on pass 2. Pass 3 consumes that
+  # auxiliary measurement. Keep zero-warning enforcement on the FINAL pass;
+  # never mask or whitelist the recompile warning.
+  for pass in 1 2 3; do
     pdflatex -jobname="$job" -output-directory="$work" $flags \
       "$work/labels-$lang.tex" > "$work/$job.stdout" 2>&1 || {
         cat "$work/$job.stdout"
