@@ -20,11 +20,18 @@ Forma geral:
 | Chave | Valores / uso |
 | --- | --- |
 | `type` | `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project`, `anonymized-research-project`, `scientific-article` |
+| `labels-language` | `pt` (padrão), `en`, `es`, `fr`; títulos pré-textuais, não idioma completo do manuscrito |
 | `print-mode` | `single-sided` ou `double-sided` |
 | `cover` | `auto`, `true` ou `false` |
 | `catalog-card` | `true` ou `false` |
 | `coat-of-arms` | `true` ou `false` |
 | `initial-page` | política de página inicial dos trabalhos acadêmicos quando aplicável |
+
+### `labels-language = pt|en|es|fr` (v3.1.0 experimental)
+
+Seleciona exclusivamente a tradução dos títulos gerados por `\ufcPrintAcknowledgments`, `\ufcPrintErrata`, `\ufcPrintListOfIllustrations`, `\ufcPrintListOfFigures`, `\ufcPrintListOfTables`, `\ufcPrintListOfTextTables`, `\ufcPrintListOfAbbreviationsAndAcronyms`, `\ufcPrintListOfSymbols` e `\ufcPrintTableOfContents`.
+
+**Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\ufcPrintSummary` preserva o rótulo Resumo e `\ufcPrintAbstract` preserva Abstract; a seleção não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
 
 ### Instituição e unidade acadêmica
 

@@ -1,0 +1,29 @@
+\documentclass{abntexto-ufc}
+\ufcsetup{
+  type = doctoral-thesis,
+  @UFC_LABELS_LANGUAGE@
+  coat-of-arms = false,
+  title = {UFC I18N label smoke},
+  author = {Autor Teste},
+  location = {Fortaleza},
+  year = {2026}
+}
+\begin{document}
+\pretextual
+\ufcPrintAcknowledgments{tests/fixtures/frontmatter/acknowledgments.tex}
+\ufcPrintErrata{tests/fixtures/frontmatter/errata.tex}
+\ufcPrintListOfIllustrations
+\ufcPrintListOfFigures
+\ufcPrintListOfTables
+\ufcPrintListOfTextTables
+\ufcPrintListOfAbbreviationsAndAcronyms{tests/fixtures/frontmatter/abbreviations.tex}
+\ufcPrintListOfSymbols{tests/fixtures/frontmatter/symbols.tex}
+% The two academic-summary channels are deliberately independent of label
+% localization, preserving normative bilingual Resumo / Abstract output.
+\ufcPrintSummary{tests/fixtures/frontmatter/summary.tex}
+\ufcPrintAbstract{tests/fixtures/frontmatter/abstract.tex}
+\ufcPrintTableOfContents
+\textual
+\section{UFC I18N SECTION}
+Conteúdo de controle.
+\end{document}

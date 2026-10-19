@@ -39,10 +39,60 @@
 
 \tl_new:N \g_ufc_document_type_tl
 \tl_new:N \g_ufc_print_mode_tl
+\tl_new:N \g_ufc_labels_language_tl
 \tl_new:N \g_ufc_cover_mode_tl
 \bool_new:N \g_ufc_catalog_card_bool
 \bool_new:N \g_ufc_coat_of_arms_bool
 \prop_new:N \g_ufc_metadata_prop
+
+% Additive display labels: neither document language nor ABNT rules change.
+\prop_new:N \g_ufc_heading_labels_prop
+\prop_gset_from_keyval:Nn \g_ufc_heading_labels_prop
+  {
+    pt/acknowledgments = {Agradecimentos},
+    pt/errata = {Errata},
+    pt/illustrations = {Lista~de~Ilustrações},
+    pt/figures = {Lista~de~Figuras},
+    pt/tables = {Lista~de~Tabelas},
+    pt/text-tables = {Lista~de~Quadros},
+    pt/abbreviations = {Lista~de~Abreviaturas~e~Siglas},
+    pt/symbols = {Lista~de~Símbolos},
+    pt/contents = {Sumário},
+    en/acknowledgments = {Acknowledgments},
+    en/errata = {Errata},
+    en/illustrations = {List~of~Illustrations},
+    en/figures = {List~of~Figures},
+    en/tables = {List~of~Tables},
+    en/text-tables = {List~of~Text~Tables},
+    en/abbreviations = {List~of~Abbreviations~and~Acronyms},
+    en/symbols = {List~of~Symbols},
+    en/contents = {Contents},
+    es/acknowledgments = {Agradecimientos},
+    es/errata = {Fe~de~erratas},
+    es/illustrations = {Lista~de~Ilustraciones},
+    es/figures = {Lista~de~Figuras},
+    es/tables = {Lista~de~Tablas},
+    es/text-tables = {Lista~de~Cuadros},
+    es/abbreviations = {Lista~de~Abreviaturas~y~Siglas},
+    es/symbols = {Lista~de~Símbolos},
+    es/contents = {Índice~general},
+    fr/acknowledgments = {Remerciements},
+    fr/errata = {Errata},
+    fr/illustrations = {Liste~des~illustrations},
+    fr/figures = {Liste~des~figures},
+    fr/tables = {Liste~des~tableaux},
+    fr/text-tables = {Liste~des~encadrés},
+    fr/abbreviations = {Liste~des~abréviations~et~sigles},
+    fr/symbols = {Liste~des~symboles},
+    fr/contents = {Table~des~matières}
+  }
+\cs_generate_variant:Nn \prop_item:Nn { Ne }
+\cs_new:Npn \ufc_label:n #1
+  {
+    \prop_item:Ne \g_ufc_heading_labels_prop
+      { \tl_use:N \g_ufc_labels_language_tl / #1 }
+  }
+
 
 \prop_gset_from_keyval:Nn \g_ufc_metadata_prop
   {
@@ -117,6 +167,16 @@
 
 \keys_define:nn { ufc }
   {
+    labels-language .choice:,
+    labels-language / pt .code:n =
+      { \tl_gset:Nn \g_ufc_labels_language_tl {pt} },
+    labels-language / en .code:n =
+      { \tl_gset:Nn \g_ufc_labels_language_tl {en} },
+    labels-language / es .code:n =
+      { \tl_gset:Nn \g_ufc_labels_language_tl {es} },
+    labels-language / fr .code:n =
+      { \tl_gset:Nn \g_ufc_labels_language_tl {fr} },
+
     type .choice:,
     type / undergraduate-capstone .code:n =
       {
@@ -246,6 +306,7 @@
 
 \keys_set:nn { ufc }
   {
+    labels-language = pt,
     type = undergraduate-capstone,
     print-mode = single-sided,
     cover = auto,
@@ -1211,7 +1272,7 @@
   {
     \clearpage
     \thispagestyle{empty}
-    \ufc_pretextual_heading:n {Agradecimentos}
+    \exp_args:Ne \ufc_pretextual_heading:n { \ufc_label:n {acknowledgments} }
     \justifying\ufc_input_file:n {#1}
     \clearpage
   }
@@ -1268,7 +1329,7 @@
   {
     \clearpage
     \thispagestyle{empty}
-    \ufc_pretextual_heading:n {Errata}
+    \exp_args:Ne \ufc_pretextual_heading:n { \ufc_label:n {errata} }
     \justifying
     \ufc_input_file:n {#1}
     \clearpage
@@ -1321,28 +1382,28 @@
   }
 
 \NewDocumentCommand \ufcPrintListOfIllustrations { }
-  { \ufc_pretextual_list:nn {Lista~de~Ilustrações} {\ufcstarttoc{loi}} }
+  { \exp_args:Ne \ufc_pretextual_list:nn { \ufc_label:n {illustrations} } {\ufcstarttoc{loi}} }
 
 \NewDocumentCommand \ufcPrintListOfFigures { }
-  { \ufc_pretextual_list:nn {Lista~de~Figuras} {\ufcstarttoc{lof}} }
+  { \exp_args:Ne \ufc_pretextual_list:nn { \ufc_label:n {figures} } {\ufcstarttoc{lof}} }
 
 \NewDocumentCommand \ufcPrintListOfTables { }
-  { \ufc_pretextual_list:nn {Lista~de~Tabelas} {\ufcstarttoc{lot}} }
+  { \exp_args:Ne \ufc_pretextual_list:nn { \ufc_label:n {tables} } {\ufcstarttoc{lot}} }
 
 \NewDocumentCommand \ufcPrintListOfTextTables { }
-  { \ufc_pretextual_list:nn {Lista~de~Quadros} {\ufcstarttoc{loq}} }
+  { \exp_args:Ne \ufc_pretextual_list:nn { \ufc_label:n {text-tables} } {\ufcstarttoc{loq}} }
 
 \NewDocumentCommand \ufcPrintListOfAbbreviationsAndAcronyms { m }
   {
-    \ufc_pretextual_list:nn
-      {Lista~de~Abreviaturas~e~Siglas}
+    \exp_args:Ne \ufc_pretextual_list:nn
+      { \ufc_label:n {abbreviations} }
       {\ufc_input_file:n {#1}}
   }
 
 \NewDocumentCommand \ufcPrintListOfSymbols { m }
   {
-    \ufc_pretextual_list:nn
-      {Lista~de~Símbolos}
+    \exp_args:Ne \ufc_pretextual_list:nn
+      { \ufc_label:n {symbols} }
       {\ufc_input_file:n {#1}}
   }
 
@@ -1369,7 +1430,7 @@
   {
     \clearpage
     \thispagestyle{empty}
-    \ufc_pretextual_heading:n {Sumário}
+    \exp_args:Ne \ufc_pretextual_heading:n { \ufc_label:n {contents} }
     \ufcstarttoc{toc}
     \clearpage
   }
@@ -1913,8 +1974,10 @@
 
 \cs_new_protected:Npn \ufc_objects_print_illustration_list:
   {
-    \ufc_pretextual_list:nn
-      {Lista~de~Ilustrações}
+    % Preserve the late illustration-list renderer while using the same
+    % translated title as the initial frontmatter public definition.
+    \exp_args:Ne \ufc_pretextual_list:nn
+      { \ufc_label:n {illustrations} }
       {\ufc_objects_start_illustration_toc:}
   }
 
