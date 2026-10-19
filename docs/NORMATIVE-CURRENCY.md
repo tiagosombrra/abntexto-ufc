@@ -6,7 +6,7 @@ Updated: 2026-09-19
 
 ## 2026-10-19 cross-domain source-currency audit — evidence-limited
 
-The [dated 21-source ABNT/UFC/IBGE/CAPES cross-domain inventory](history/NORMATIVE-CURRENCY-2026-10-19.md) now records, for **every active catalog source ID**, the repository's prior check date, a separately graded external corroboration tier, the still-unverified edition/corrigenda scope, and concrete next review actions.
+The [dated 21-source ABNT/UFC/IBGE/CAPES cross-domain inventory](NORMATIVE-CURRENCY-AUDIT-2026-10-19.md) now records, for **every active catalog source ID**, the repository's prior check date, a separately graded external corroboration tier, the still-unverified edition/corrigenda scope, and concrete next review actions.
 
 **This is a triage record, not a technical-standard recertification.** In particular, official per-item ABNT publisher status and licensed corrigenda/primary clause texts were **not** verified. Do not replace the existing `checked_at` timestamps or promote `table.ibge`, document-profile proofs, or any other active normative rule merely because a university bibliography or distributor listed an edition. Already-recorded UFC Instruction 2/2026 must not be duplicated.
 
