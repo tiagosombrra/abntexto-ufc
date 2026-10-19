@@ -227,6 +227,98 @@ PY
 rm -f "$short_job".aux "$short_job".log "$short_job".out \
   "$short_job".lot "$short_job".toc "$short_job".pdf
 
+
+# Separate one-page actual-PDF scenario WITHOUT optional metadata. This
+# catches accidental forwarding of xparse's NoValue sentinel into longtblr.
+noopts_job=ibge-optin-no-options-final-pdf
+noopts_fixture=tests/documents/table-ibge-optin-no-options-final-pdf.tex
+for pass in 1 2 3; do
+  pdflatex -jobname="$noopts_job" $flags "$noopts_fixture" \
+    > "$tmp/$noopts_job.log" 2>&1 || {
+      cat "$tmp/$noopts_job.log"
+      exit 1
+    }
+done
+noopts_warnings=$(grep -E 'LaTeX Warning:|Package [^ ]+ Warning:|Class [^ ]+ Warning:|Overfull \\hbox|Overfull \\vbox' "$noopts_job.log" |
+  grep -vF -e 'Class abntexto-ufc Warning: Times New Roman not found; using TeX Gyre Termes' || true)
+if [ -n "$noopts_warnings" ]; then
+  printf '%s\n' "$noopts_warnings"
+  echo "IBGE opt-in without metadata: unexpected LaTeX warning or box overflow." >&2
+  exit 1
+fi
+test -s "$noopts_job.pdf"
+cp "$noopts_job.pdf" "$evidence_dir/$noopts_job.pdf"
+PYTHONPATH=tools:tests/checks/objects python3 - "$noopts_job.pdf" "$evidence_dir/$noopts_job.json" <<'PY'
+import hashlib
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+from pdf_measurement import bbox_pages, normalize
+from pdf_vector_measurement import vector_rules
+from normative_table_ibge_vector import cluster_axis_rules
+
+pdf = Path(sys.argv[1])
+pages = bbox_pages(pdf)
+if len(pages) != 1:
+    raise SystemExit(f"IBGE optional-free PDF spilled to {len(pages)} pages")
+page = pages[0]
+
+def marker(name):
+    words = [word for word in page.words if normalize(word.text) == name]
+    if len(words) != 1:
+        raise SystemExit(f"IBGE optional-free PDF marker {name}: {len(words)} occurrences")
+    return words[0]
+
+left = marker("UFCIBGENOOPTHEAD")
+right = marker("UFCIBGENOOPTVAL")
+row = marker("UFCIBGENOOPTROW")
+if not (left.box.y_max < row.box.y_min and right.box.y_max < row.box.y_min):
+    raise SystemExit("IBGE optional-free PDF header and data row order invalid")
+width = right.box.x_max - left.box.x_min
+if width < 90:
+    raise SystemExit("IBGE optional-free PDF table width calibration too small")
+rules = cluster_axis_rules(
+    vector_rules(pdf, page=page.index),
+    orientation="horizontal", cluster_tolerance_pt=1.8
+)
+final = [
+    line for line in rules
+    if line.length >= width * 0.78
+    and line.box.x_min <= left.box.x_min + 6
+    and line.box.x_max >= right.box.x_max - 6
+    and line.box.center_y > row.box.y_max + 1
+    and line.box.center_y < page.height - 15
+]
+if len(final) != 1:
+    raise SystemExit(
+        f"IBGE optional-free PDF expected exactly one closing vector line, got {len(final)}"
+    )
+report = {
+    "component": "table-ibge-optin-no-optional-metadata",
+    "pdf_pages": 1,
+    "observed_final_rule_count": len(final),
+    "pdf_sha256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
+    "source_commit_sha": subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], text=True
+    ).strip(),
+    "proof_state": "automatic-partial",
+    "unrelated_normative_proof_promoted": False,
+    "limits": [
+        "Only the absent-optional-argument parser and a one-page vector footer are measured.",
+        "No source or remarks were specified; semantic attribution is not evaluated."
+    ],
+}
+Path(sys.argv[2]).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+print(
+    "IBGE-OPTIN-NO-OPTIONS-EVIDENCE status=PASS pages=1 "
+    "final_rule=1 no_optional_metadata=SUPPORTED proof_state=automatic-partial"
+)
+PY
+rm -f "$noopts_job".aux "$noopts_job".log "$noopts_job".out \
+  "$noopts_job".lot "$noopts_job".toc "$noopts_job".pdf
+
 python3 - "$evidence_dir" <<'PY'
 import hashlib
 import json
@@ -250,7 +342,7 @@ print(
     "real_pdfs=4 positive=1 negative=3 "
     "header_repeat=CONTROLLED continuation_labels=CONTROLLED "
     "source_notes_terminal=CONTROLLED footer_vector=CONTROLLED "
-    "optin_footer=CONTROLLED single_page=CONTROLLED "
+    "optin_footer=CONTROLLED single_page=CONTROLLED no_options=CONTROLLED "
     "proof_state=automatic-partial"
 )
 PY

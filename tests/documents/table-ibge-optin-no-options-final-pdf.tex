@@ -1,0 +1,17 @@
+\documentclass{abntexto-ufc}
+\ufcsetup{tables=tabularray}
+\pagestyle{empty}
+\begin{document}
+% No optional [caption/remark/note] block: the opt-in environment must not
+% forward an xparse NoValue token to the upstream tabularray key parser.
+\begin{ufcibgelongtblr}{
+  colspec={X[l] X[r]},
+  width=\linewidth,
+  rowhead=1,
+}
+\toprule
+UFCIBGENOOPTHEAD & UFCIBGENOOPTVAL \\
+\midrule
+UFCIBGENOOPTROW & 42 \\
+\end{ufcibgelongtblr}
+\end{document}
