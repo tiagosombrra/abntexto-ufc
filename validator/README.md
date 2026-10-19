@@ -47,6 +47,8 @@ The productive browser E2E exercises each filter against both an actual valid cl
 
 The Linux Integration `web-lite` scope compiles a real reference PDF, assembles the same `_site/validator` tree used by GitHub Pages, opens that productive package in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.
 
+On a Web/Lite-only PR, the scoped TeX integration suite must explicitly prepare the canonical reference PDF, the six non-article profile PDFs (feeding five genuine positive/negative document-type artifacts) and two class-rendered duplex-margin PDFs **before** the browser stage. This is selected as `validator-source`, `web-lite-positive`, `profiles`, and `pdf-geometry` with their real dependencies; it is not a synthetic test fixture or an exemption. The static CI contract fails if those prerequisites are removed. On a `main` push the full 42-check suite is still mandatory.
+
 The browser is run behind a loopback deny proxy with external DNS/background network disabled. Performance logs must show zero HTTP(S) requests outside the local test origin, and browser logs must show zero CSP violations. This proves that page load and both PDF analyses do not require external network access; there is no CDN fallback.
 
 The E2E requires Web/Lite to keep Deep-only `font.embedded` and `pdfa.deep` in `MANUAL REVIEW`; only CLI/Deep may certify those checks automatically.
