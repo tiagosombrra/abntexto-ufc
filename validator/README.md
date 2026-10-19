@@ -35,6 +35,14 @@ python3 tools/normative_catalog.py --emit-web validator/normative-catalog.js
 
 Do not edit the generated module manually. `tests/checks/validator/validator_source.py` regenerates it independently and requires byte-for-byte identity, validates JavaScript syntax and fails if any relative browser import is missing.
 
+## Result review and filters (v3.1.0 development)
+
+After running Web/Lite on a PDF, use **Show checks** to review either the full result, **Requires attention** (FAIL, WARNING, MANUAL REVIEW), **Failures only**, or **Manual review only**. The accessible counter shows the visible subset and total. Running a new PDF analysis automatically restores **All checks**, so a prior selection cannot conceal failures in the next report.
+
+Filters **only hide or reveal rows in the browser table**. They do not change the checks array, verdict, mandatory/optional distinction, normative sources or `normative_rule` provenance, source `proof_state`, or data downloaded through **Export JSON** / **Export CSV**. Exports still contain **all** checks even when a filtered view is selected. In particular, Deep-only PDF/A and font embedding evaluations remain MANUAL REVIEW, not PASS.
+
+The productive browser E2E exercises each filter against both an actual valid class PDF and the controlled invalid non-A4 PDF, checks visible row statuses and counter against the canonical report, verifies report completeness and the new-analysis reset. This is an interface/accessibility enhancement, **not** a stronger ABNT/UFC/IBGE compliance claim or a change to PDF/UA support.
+
 ## Browser regression
 
 The Linux Integration `web-lite` scope compiles a real reference PDF, assembles the same `_site/validator` tree used by GitHub Pages, opens that productive package in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.
