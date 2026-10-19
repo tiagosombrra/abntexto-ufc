@@ -118,8 +118,8 @@ def main() -> None:
         fail("complete suite must remain the wildcard full PR integration contract")
     if SUITES.get("distribution") != ("distribution-bundles",):
         fail("distribution suite must remain a first-class PR-only public bundle gate")
-    if SUITES.get("web-lite") != ("validator-source", "web-lite-positive"):
-        fail("web-lite suite must prepare validator sources and a stable positive reference snapshot")
+    if SUITES.get("web-lite") != ("validator-source", "web-lite-positive", "profiles", "pdf-geometry"):
+        fail("web-lite suite must prepare positive PDF, five actual document-profile PDFs and two duplex PDF fixtures for browser E2E")
 
     for suite, checks in SUITES.items():
         if checks == ("*",):
