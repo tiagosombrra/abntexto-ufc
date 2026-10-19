@@ -28,9 +28,9 @@ Forma geral:
 
 ### `labels-language = pt|en|es|fr` (v3.1.0 experimental)
 
-Seleciona exclusivamente a tradução dos títulos gerados por `\\ufcPrintAcknowledgments`, `\\ufcPrintErrata`, `\\ufcPrintListOfIllustrations`, `\\ufcPrintListOfFigures`, `\\ufcPrintListOfTables`, `\\ufcPrintListOfTextTables`, `\\ufcPrintListOfAbbreviationsAndAcronyms`, `\\ufcPrintListOfSymbols` e `\\ufcPrintTableOfContents`.
+Seleciona exclusivamente a tradução dos títulos gerados por `\ufcPrintAcknowledgments`, `\ufcPrintErrata`, `\ufcPrintListOfIllustrations`, `\ufcPrintListOfFigures`, `\ufcPrintListOfTables`, `\ufcPrintListOfTextTables`, `\ufcPrintListOfAbbreviationsAndAcronyms`, `\ufcPrintListOfSymbols` e `\ufcPrintTableOfContents`.
 
-**Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\\ufcPrintSummary` preserva o rótulo Resumo e `\\ufcPrintAbstract` preserva Abstract; a seleção não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
+**Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\ufcPrintSummary` preserva o rótulo Resumo e `\ufcPrintAbstract` preserva Abstract; a seleção não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
 
 ### Instituição e unidade acadêmica
 
