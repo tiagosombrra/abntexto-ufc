@@ -32,10 +32,28 @@ function renderNormativeBase(){
  const list=$("#norm-sources");list.replaceChildren();
  for(const source of normativeCatalog.sources){const li=document.createElement("li"),a=document.createElement(source.url?"a":"span");a.textContent=`${source.title} — ${source.status}`;if(source.url){a.href=source.url;a.target="_blank";a.rel="noopener"}li.append(a);list.append(li)}
 }
+// Presentation-only filtering. Canonical verdicts, full exports and the
+// complete immutable report.checks array always retain all evaluated rules.
+function checkVisible(c,mode){
+ if(mode==="all")return true;
+ if(mode==="attention")return [FAIL,WARN,REVIEW].includes(c.status);
+ if(mode==="failures")return c.status===FAIL;
+ if(mode==="manual")return c.status===REVIEW;
+ throw new Error("Unknown Web/Lite report filter: "+mode);
+}
+function filterReport(){
+ if(!report)return;
+ const mode=$("#report-filter").value,rows=[...$("#report-body").children];
+ if(rows.length!==report.checks.length)throw new Error("Visible rows differ from canonical report");
+ let shown=0;
+ rows.forEach((row,i)=>{const visible=checkVisible(report.checks[i],mode);row.hidden=!visible;if(visible)shown++});
+ $("#filter-count").textContent=`Showing ${shown} of ${report.checks.length} checks`;
+}
 function render(r){
  $("#summary").classList.remove("hidden");$("#report-section").classList.remove("hidden");$("#verdict").textContent=r.verdict;$("#file-name").textContent=r.file;$("#page-count").textContent=r.pages;
  const body=$("#report-body");body.replaceChildren();for(const c of r.checks){const tr=document.createElement("tr");for(const [i,v] of [c.status,c.category,c.rule,c.source,c.evidence,c.correction].entries()){const td=document.createElement("td");td.textContent=v;if(i===0)td.className=c.status===PASS?"status-pass":c.status===FAIL?"status-fail":c.status===WARN?"status-warn":"status-review";tr.append(td)}body.append(tr)}
- $("#counts").textContent=[PASS,FAIL,WARN,REVIEW,NA].map(s=>`${s}: ${r.checks.filter(c=>c.status===s).length}`).join(" · ");["#export-json","#export-csv","#print-report"].forEach(s=>$(s).disabled=false)
+ $("#counts").textContent=[PASS,FAIL,WARN,REVIEW,NA].map(s=>`${s}: ${r.checks.filter(c=>c.status===s).length}`).join(" · ");["#export-json","#export-csv","#print-report"].forEach(s=>$(s).disabled=false);
+  $("#report-filter").disabled=false;$("#report-filter").value="all";filterReport();
 }
 
 export async function analyze(file,profile,documentType="undergraduate-capstone",printMode="single-sided"){
@@ -77,6 +95,7 @@ export async function analyze(file,profile,documentType="undergraduate-capstone"
 export function getLastReport(){return report}
 
 renderNormativeBase();
+$("#report-filter").addEventListener("change",filterReport);
 $("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert("Select a PDF.");const b=$("#analyze");b.disabled=true;b.textContent="Validating...";try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value);render(report)}catch(e){console.error(e);alert(`Validation failed: ${e.message||e}`)}finally{b.disabled=false;b.textContent="Validate PDF"}});
 $("#export-json").addEventListener("click",()=>report&&save("ufc-validation-report.json",JSON.stringify(report,null,2),"application/json;charset=utf-8"));
 $("#export-csv").addEventListener("click",()=>{if(!report)return;const h=["Status","Category","Rule","Source","Evidence","Correction","Level","Mandatory","Normative rule","Locator","Normativity"],rows=report.checks.map(c=>[c.status,c.category,c.rule,c.source,c.evidence,c.correction,c.level,c.mandatory?"yes":"no",c.normative_rule,c.locator,c.normativity]),data=[h,...rows].map(r=>r.map(csv).join(",")).join("\r\n");save("ufc-validation-report.csv",`\ufeff${data}`,"text/csv;charset=utf-8")});
