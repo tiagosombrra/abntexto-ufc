@@ -35,6 +35,16 @@ python3 tools/normative_catalog.py --emit-web validator/normative-catalog.js
 
 Do not edit the generated module manually. `tests/checks/validator/validator_source.py` regenerates it independently and requires byte-for-byte identity, validates JavaScript syntax and fails if any relative browser import is missing.
 
+## Idioma da interface (pt-BR) — v3.1.0 em desenvolvimento
+
+O site principal e o Web/Lite usam **português brasileiro** por padrão (`<html lang="pt-BR">`). Títulos, identificação dos sete perfis, três modos de validação, ações, filtros, contadores, resultado visual e legendas de situação aparecem em português. Os rótulos visuais são `Aprovado`, `Falha`, `Aviso`, `Revisão manual` e `Não aplicável`; o resultado geral diferencia aprovação com ressalvas de uma certificação normativa integral.
+
+**Somente apresentação:** os valores dos sete tipos de documentos, dos três modos de validação, dos quatro filtros e os estados de máquina (`PASS`, `FAIL`, `WARNING`, `MANUAL REVIEW`, `NOT APPLICABLE`) **não mudaram**. O relatório JavaScript e os arquivos JSON/CSV exportados continuam contendo todos os resultados e o esquema original; os textos explicativos originados das verificações técnicas e os títulos de fontes podem permanecer no idioma de origem para garantir rastreabilidade. A interface não traduz automaticamente o idioma do PDF, as cláusulas ABNT/UFC nem a API de `labels-language` do LaTeX.
+
+O aviso de privacidade continua explícito: o PDF é analisado **localmente e não é enviado a um servidor**. A regra do Pages builder e os testes estáticos verificam a divulgação em português, os imports locais de PDF.js e a CSP intacta. O E2E produtivo em Chromium verifica `html.lang=pt-BR`, textos e rótulos acessíveis dos controles, enumerações de valores estáveis, mapeamento visual dos estados, contagem de filtros, relatórios completos e resultado negativo para PDF fora de A4. Ele também exige zero HTTP externo e nenhuma violação da CSP.
+
+O Web/Lite é uma avaliação automatizada parcial, **não uma homologação oficial da UFC**. PDF/A profunda, incorporação de fontes e conclusões que exigem julgamento humano permanecem sinalizadas para revisão manual.
+
 ## Result review and filters (v3.1.0 development)
 
 After running Web/Lite on a PDF, use **Show checks** to review either the full result, **Requires attention** (FAIL, WARNING, MANUAL REVIEW), **Failures only**, or **Manual review only**. The accessible counter shows the visible subset and total. Running a new PDF analysis automatically restores **All checks**, so a prior selection cannot conceal failures in the next report.
