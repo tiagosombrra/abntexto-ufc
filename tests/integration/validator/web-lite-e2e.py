@@ -429,9 +429,83 @@ def analyze_through_ui(browser: Browser, pdf: Path, profile: str, document_type:
         fail(f"productive report is not an object for {pdf.name}: {report!r}")
     if report.get("__import_error__"):
         fail(f"cannot read productive app module report: {report['__import_error__']}")
+    actual_verdict = browser.execute("return document.querySelector('#verdict')?.textContent||'';")
+    if actual_verdict != PT_VERDICT.get(report["verdict"], report["verdict"]):
+        fail(f"visible pt-BR verdict mismatches canonical report: {actual_verdict!r}")
     if report.get("file") != pdf.name:
         fail(f"productive report file mismatch: {report.get('file')!r} != {pdf.name!r}")
     return report
+
+
+PT_STATUS = {
+    "PASS": "Aprovado",
+    "FAIL": "Falha",
+    "WARNING": "Aviso",
+    "MANUAL REVIEW": "Revisão manual",
+    "NOT APPLICABLE": "Não aplicável",
+}
+PT_VERDICT = {
+    "FAIL": "Falha",
+    "REVIEW REQUIRED": "Revisão obrigatória",
+    "AUTOMATED CHECKS PASSED WITH WARNINGS": "Verificações automáticas aprovadas com ressalvas",
+    "AUTOMATED CHECKS PASSED": "Verificações automáticas aprovadas",
+}
+
+
+def verify_portuguese_ui(browser: Browser) -> None:
+    """Assert real browser copy, semantics and unchanged public select values."""
+    observed = browser.execute(
+        "const pick=id=>document.querySelector('#'+id);"
+        "const options=id=>[...pick(id).options].map(o=>({value:o.value,label:o.textContent}));"
+        "const label=id=>pick(id).closest('label')?.textContent||'';"
+        "return {lang:document.documentElement.lang,"
+        "heading:document.querySelector('header h1')?.textContent||'',"
+        "lead:document.querySelector('header .lead')?.textContent||'',"
+        "button:pick('analyze').textContent,"
+        "profile:options('profile'),types:options('document-type'),"
+        "print:options('print-mode'),filter:options('report-filter'),"
+        "fileLabel:label('pdf-file'),profileLabel:label('profile'),"
+        "docLabel:label('document-type'),printLabel:label('print-mode'),"
+        "filterLabel:document.querySelector('label[for=report-filter]')?.textContent||'',"
+        "exportJSON:pick('export-json').textContent,printReport:pick('print-report').textContent};"
+    )
+    if observed.get("lang") != "pt-BR":
+        fail(f"Web/Lite html language must be pt-BR: {observed!r}")
+    for field, marker in {
+        "heading": "Validador de PDF UFC/ABNT",
+        "lead": "o arquivo não é enviado a um servidor",
+        "button": "Validar PDF",
+        "fileLabel": "PDF",
+        "profileLabel": "Modo de validação",
+        "docLabel": "Tipo de documento",
+        "printLabel": "Modo de impressão",
+        "filterLabel": "Exibir verificações",
+        "exportJSON": "Exportar JSON",
+        "printReport": "Imprimir relatório",
+    }.items():
+        if marker not in observed.get(field, ""):
+            fail(f"Web/Lite pt-BR missing {field}={marker!r}: {observed!r}")
+    types = observed.get("types", [])
+    expected_types = [
+        "undergraduate-capstone",
+        "specialization-capstone",
+        "masters-thesis",
+        "doctoral-thesis",
+        "research-project",
+        "anonymized-research-project",
+        "scientific-article",
+    ]
+    if [x["value"] for x in types] != expected_types or any(not x["label"] for x in types):
+        fail(f"Web/Lite changed public document types: {types!r}")
+    if [x["value"] for x in observed["profile"]] != ["strict", "portable", "accessibility"]:
+        fail("Web/Lite changed public validation-mode values")
+    if [x["value"] for x in observed["print"]] != ["single-sided", "double-sided"]:
+        fail("Web/Lite changed public print-mode values")
+    filters = observed.get("filter", [])
+    if [x["value"] for x in filters] != ["all", "attention", "failures", "manual"]:
+        fail(f"Web/Lite changed canonical result filter values: {filters!r}")
+    if any(not x["label"] for x in filters) or "revisão" not in filters[-1]["label"].lower():
+        fail("Web/Lite report filter has inaccessible or untranslated labels")
 
 
 def verify_report_filters(browser: Browser, report: dict[str, Any]) -> dict[str, int]:
@@ -460,14 +534,14 @@ def verify_report_filters(browser: Browser, report: dict[str, Any]) -> dict[str,
         )
         if not isinstance(observed, dict) or observed.get("error"):
             fail(f"report filter not available: {observed!r}")
-        expected_statuses = [c["status"] for c in original if predicate(c)]
+        expected_statuses = [PT_STATUS[c["status"]] for c in original if predicate(c)]
         expected_count = len(expected_statuses)
         if (
             observed.get("mode") != mode
             or observed.get("total") != len(original)
             or observed.get("visible") != expected_count
             or observed.get("statuses") != expected_statuses
-            or observed.get("label") != f"Showing {expected_count} of {len(original)} checks"
+            or observed.get("label") != f"Exibindo {expected_count} de {len(original)} verificações"
         ):
             fail(f"productive UI {mode} filter diverged from canonical report: {observed!r}")
         evidence[mode] = expected_count
@@ -548,6 +622,8 @@ def main() -> None:
         )
         if csp_policy != CSP_POLICY:
             fail(f"productive Web/Lite CSP mismatch: {csp_policy!r}")
+
+        verify_portuguese_ui(browser)
 
         with tempfile.TemporaryDirectory(prefix="abntexto-ufc-web-lite-") as temp:
             negative = Path(temp) / "web-lite-negative-letter.pdf"
@@ -712,6 +788,8 @@ def main() -> None:
                 "profile": args.profile,
                 "site_root": site_root_label,
                 "local_processing": True,
+                "ui_locale": "pt-BR",
+                "canonical_machine_values_preserved": True,
                 "normative_catalog": positive_report["normative_catalog"],
                 "network": {
                     "external_network_denied": True,
@@ -767,7 +845,7 @@ def main() -> None:
                 "font_embedded=MANUAL_REVIEW pdfa_deep=MANUAL_REVIEW "
                 "productive_ui=true local_processing=true pages_package=true "
                 "external_network=DENIED external_http_requests=0 csp=PASS "
-                "report_filter=PASS full_report_unchanged=true"
+                "report_filter=PASS full_report_unchanged=true ui_locale=pt-BR"
             )
     finally:
         browser.stop()

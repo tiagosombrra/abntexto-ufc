@@ -26,6 +26,7 @@ grep -Fq "script-src 'self'" _site/validator/index.html
 grep -Fq "worker-src 'self'" _site/validator/index.html
 grep -Fq "connect-src 'self'" _site/validator/index.html
 grep -Fq 'href="./validator/"' _site/index.html
-grep -Fq 'is not sent to a server' _site/validator/index.html
+grep -Fq '<html lang="pt-BR">' _site/validator/index.html
+grep -Fq 'o arquivo não é enviado a um servidor' _site/validator/index.html
 
 echo "PAGES-BUILD-EVIDENCE status=PASS root=_site validator=_site/validator"
