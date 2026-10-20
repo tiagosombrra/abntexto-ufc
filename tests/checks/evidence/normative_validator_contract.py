@@ -294,7 +294,8 @@ def main() -> None:
     forbid_marker(web, "unpkg.com", "Web/Lite runtime CDN dependency")
     require_marker(web, 'mode:"web-lite-local"', "Web/Lite mode")
     require_marker(cli, "'mode':'cli-deep-local'", "CLI/Deep mode")
-    require_marker(html, "is not sent to a server", "Web/Lite local-processing disclosure")
+    require_marker(html, '<html lang="pt-BR">', "Web/Lite Brazilian Portuguese accessibility language")
+    require_marker(html, "o arquivo não é enviado a um servidor", "Web/Lite local-processing disclosure")
 
     forbidden = r"FormData\(|XMLHttpRequest|sendBeacon\(|WebSocket\(|\bfetch\s*\("
     if re.search(forbidden, web):
