@@ -297,7 +297,7 @@ def main() -> None:
     if re.search(forbidden, app):
         fail("browser code contains a network upload API")
 
-    if "is not sent to a server" not in html:
+    if '<html lang="pt-BR">' not in html or "o arquivo não é enviado a um servidor" not in html:
         fail("local-processing disclosure is missing")
 
     csp_marker = f'<meta http-equiv="Content-Security-Policy" content="{CSP_POLICY}">'
@@ -382,7 +382,7 @@ def main() -> None:
         "cdn\\.jsdelivr\\.net|unpkg\\.com",
         'http-equiv=\"Content-Security-Policy\"',
         "connect-src 'self'",
-        "is not sent to a server",
+        "o arquivo não é enviado a um servidor",
     )
     for marker in pages_builder_markers:
         if marker not in pages_builder:
