@@ -593,12 +593,15 @@ def verify_csv_export(browser: Browser, report: dict[str, Any]) -> dict[str, Any
         "}catch(e){URL.createObjectURL=previous;done({error:String(e)});return;}"
         "URL.createObjectURL=previous;"
         "if(!captured){done({error:'productive CSV download missing'});return;}"
-        "captured.text().then(text=>done({text,type:captured.type})).catch(e=>done({error:String(e)}));"
+        "Promise.all([captured.text(),captured.arrayBuffer()])"
+        ".then(([text,bytes])=>done({text,type:captured.type,"
+        "bom:[...new Uint8Array(bytes).slice(0,3)]}))"
+        ".catch(e=>done({error:String(e)}));"
     )
     if not isinstance(actual_csv, dict) or actual_csv.get("error"):
         fail(f"CSV download was not created: {actual_csv!r}")
     payload = actual_csv.get("text")
-    if not isinstance(payload, str) or not payload.startswith("\ufeff") or "text/csv" not in actual_csv.get("type", ""):
+    if not isinstance(payload, str) or actual_csv.get("bom") != [239, 187, 191] or "text/csv" not in actual_csv.get("type", ""):
         fail("CSV download missing expected UTF-8 BOM or MIME type")
     rows = list(csv.reader(io.StringIO(payload.lstrip("\ufeff"))))
     names = ["Status", "Category", "Rule", "Source", "Evidence", "Correction",
