@@ -205,7 +205,7 @@ PY
 # Independently check all 14 source/PDF hashes and fail closed on identity-bearing
 # review *source* being represented as safe for blind external distribution.
 python3 tools/ci/validate-review-pairs.py \
-  --directory "$OUTPUT_DIR" --source-sha "$SOURCE_SHA"
+  --directory "$OUTPUT_DIR" --source-sha "$SOURCE_SHA" --expected-version "$VERSION"
 
 printf '%s\n' \
   "RELEASE-REVIEW-PAIRS-EVIDENCE status=PASS version=$VERSION source_sha=$SOURCE_SHA pairs=7 engine=pdflatex pinned_abntexto=$PINNED_UPSTREAM_COMMIT a4=PASS pdfa_2b=PASS font_embedding=PASS warnings_overflow=PASS maintainer_approval=PENDING"
