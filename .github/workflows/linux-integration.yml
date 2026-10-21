@@ -140,6 +140,17 @@ jobs:
           retention-days: 14
           if-no-files-found: error
 
+      - name: Upload four-locale profile PDF smoke evidence
+        if: steps.scope.outputs.run_integration == 'true' && success() && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'frontmatter'))
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: profile-locale-smoke-pdfs-${{ github.run_id }}
+          path: |
+            artifacts/frontmatter/profile-locale-pdfs/*.pdf
+            artifacts/frontmatter/profile-locale-pdfs/manifest.json
+          retention-days: 14
+          if-no-files-found: error
+
       - name: Upload IBGE multipage PDF evidence
         if: steps.scope.outputs.run_integration == 'true' && success() && (steps.scope.outputs.scope == 'complete' || contains(steps.scope.outputs.scope, 'objects') || contains(steps.scope.outputs.scope, 'reference-pdf'))
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
