@@ -561,13 +561,13 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
     """Verify four locales with real PDFs and strict canonical-result invariance."""
     outcomes: dict[str, Any] = {}
     expected = {
-        "pt-BR": ("Validador de PDF UFC/ABNT", "Validar PDF", "Exibindo", "o arquivo não é enviado a um servidor", "Idioma da interface"),
-        "en": ("UFC/ABNT PDF Validator", "Validate PDF", "Showing", "not uploaded to a server", "Interface language"),
-        "es": ("Validador de PDF UFC/ABNT", "Validar PDF", "Mostrando", "no se envía a ningún servidor", "Idioma de la interfaz"),
-        "fr": ("Validateur de PDF UFC/ABNT", "Valider le PDF", "Affichage", "n’est pas envoyé à un serveur", "Langue de l’interface"),
+        "pt-BR": ("Validador de PDF UFC/ABNT", "Validar PDF", "Exibindo", "o arquivo não é enviado a um servidor", "PDF é processado apenas neste dispositivo", "Idioma da interface", "Falha"),
+        "en": ("UFC/ABNT PDF Validator", "Validate PDF", "Showing", "not uploaded to a server", "PDF is processed only on this device", "Interface language", "Failed"),
+        "es": ("Validador de PDF UFC/ABNT", "Validar PDF", "Mostrando", "no se envía a ningún servidor", "PDF se procesa únicamente en este dispositivo", "Idioma de la interfaz", "Fallo"),
+        "fr": ("Validateur de PDF UFC/ABNT", "Valider le PDF", "Affichage", "n’est pas envoyé à un serveur", "PDF est traité uniquement sur cet appareil", "Langue de l’interface", "Échec"),
     }
     canonical_keys = lambda report: {key: value for key, value in report.items() if key != "generated_at"}
-    for locale, (heading, button, counter, privacy, accessible_name) in expected.items():
+    for locale, (heading, button, counter, lead_privacy, device_privacy, accessible_name, fail_label) in expected.items():
         observed = browser.execute(
             "const control=document.querySelector('#ui-locale');"
             "control.value=arguments[0];control.dispatchEvent(new Event('change',{bubbles:true}));"
@@ -575,6 +575,7 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
             "heading:document.querySelector('header h1').textContent,"
             "button:document.querySelector('#analyze').textContent,"
             "privacy:document.querySelector('section.controls p.note').textContent,"
+            "lead:document.querySelector('header .lead').textContent,"
             "label:control.labels?.[0]?.querySelector('span')?.textContent||'',"
             "associatedLabels:control.labels?.length??0,hasAriaOverride:control.hasAttribute('aria-label'),"
             "types:[...document.querySelector('#document-type').options].map(o=>o.value),"
@@ -583,8 +584,10 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
         )
         if observed["locale"] != locale or observed["selected"] != locale:
             fail(f"locale DOM selection mismatch: {observed!r}")
-        if observed["heading"] != heading or observed["button"] != button or privacy not in observed["privacy"]:
-            fail(f"locale {locale} UI copy incomplete: {observed!r}")
+        if observed["heading"] != heading or observed["button"] != button:
+            fail(f"locale {locale} headline or button copy incomplete: {observed!r}")
+        if lead_privacy not in observed["lead"] or device_privacy not in observed["privacy"]:
+            fail(f"locale {locale} local-only privacy disclosures are incomplete: {observed!r}")
         if observed["label"] != accessible_name or observed["associatedLabels"] != 1 or observed["hasAriaOverride"]:
             fail(f"locale {locale} accessible selector name did not follow the selected language: {observed!r}")
         if len(observed["types"]) != 7 or observed["filters"] != ["all", "attention", "failures", "manual"]:
@@ -600,6 +603,14 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
             fail(f"locale {locale} changed canonical negative PDF report")
         if negative_report["verdict"] != FAIL:
             fail(f"locale {locale} lost negative PDF failure")
+        visual_failure = browser.execute(
+            "const first=[...document.querySelectorAll('#report-body tr')]"
+            ".find(row=>row.querySelector('td')?.classList.contains('status-fail'));"
+            "return {verdict:document.querySelector('#verdict')?.textContent||'',"
+            "row:first?.querySelector('td')?.textContent||''};"
+        )
+        if visual_failure != {"verdict": fail_label, "row": fail_label}:
+            fail(f"locale {locale} failure presentation differs from machine status: {visual_failure!r}")
         outcomes[locale] = {"positive": positive_report["verdict"], "negative": negative_report["verdict"], "canonical_equal": True}
     invalid = browser.execute_async(
         "const done=arguments[arguments.length-1];"
