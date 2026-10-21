@@ -1,0 +1,40 @@
+\DocumentMetadata{
+  lang = pt-BR,
+  pdfstandard = A-2b,
+  pdfversion = 1.7
+}
+\documentclass{abntexto-ufc}
+% Only front-matter display headings are localized; document language,
+% semantics and institution naming stay Portuguese. PDF catalog language is not
+% independently verified by this smoke test.
+\ufcsetup{
+  type = @UFC_TYPE@,
+  labels-language = @UFC_LOCALE@,
+  coat-of-arms = false,
+  cover = false,
+  catalog-card = false,
+  title = {Matrix PDF Profile Locale Smoke},
+  author = {Autor do Teste de Idioma},
+  location = {Fortaleza},
+  year = {2026},
+  institution = {Universidade Federal do Ceará},
+  undergraduate-program = {Ciência da Computação},
+  undergraduate-degree = {bacharel},
+  specialization-program = {Computação Aplicada},
+  masters-graduate-program = {Programa de Pós-Graduação de Teste},
+  masters-degree-field = {Ciência da Computação},
+  doctoral-graduate-program = {Programa de Pós-Graduação de Teste},
+  doctoral-degree-field = {Ciência da Computação},
+  project-program = {Processo Seletivo de Teste},
+  project-type = {Projeto de pesquisa},
+  project-identifier = {MATRIX-ANON-001},
+  submission-entity = {Universidade Federal do Ceará},
+  submission-date = {20 de outubro de 2026},
+  approval-date = {21 de outubro de 2026},
+  advisor = {Prof. Orientador Teste},
+  examiner-2 = {Prof. Membro Teste},
+  article-author-note = {Universidade Federal do Ceará. autor@example.org}
+}
+\begin{document}
+@UFC_BODY@
+\end{document}
