@@ -126,6 +126,14 @@ for profile in profiles:
         page_size = re.search(r"^Page size:\s+([\d.]+)\s+x\s+([\d.]+)\s+pts\b", info, re.MULTILINE)
         if not pages or int(pages.group(1)) < 1 or not page_size:
             raise SystemExit(f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL pdfinfo={key}")
+        # DocumentMetadata fixes the *actual PDF document language* to PT-BR.
+        # The UI display headings may change; this catalog property must not.
+        pdf_language = re.search(r"^Language:\s*(\S+)\s*$", info, re.MULTILINE)
+        if not pdf_language or pdf_language.group(1) != "pt-BR":
+            raise SystemExit(
+                f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL pdf_language={key} "
+                f"actual={pdf_language.group(1) if pdf_language else 'MISSING'} expected=pt-BR"
+            )
         width, height = map(float, page_size.groups())
         if not (594.5 <= width <= 596.0 and 841.0 <= height <= 842.8):
             raise SystemExit(f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL not_a4={key}")
@@ -152,7 +160,7 @@ for profile in profiles:
             "page_size": "A4",
             "heading_proof": heading_proof,
             "source_content_language": "pt-BR",
-            "pdf_metadata_language": "pt-BR",
+            "pdf_metadata_language": pdf_language.group(1),
         }
         receipts.append(receipt)
         print(
