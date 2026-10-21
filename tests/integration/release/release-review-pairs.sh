@@ -189,10 +189,23 @@ payload = {
     "pinned_abntexto_commit": upstream_commit,
     "pair_count": len(pairs),
     "maintainer_visual_approval": "PENDING",
+    "blind_review_boundary": {
+        "profile": "anonymized-research-project",
+        "pdf_identity_token_check": "PASS",
+        "latex_source_distribution": "INTERNAL_AUDIT_ONLY",
+        "human_approval": "PENDING",
+        "scope": "synthetic_fixture_tokens_pdf_text_pdf_info_xmp_and_attachments_only",
+        "note": "A TeX review pair includes synthetic identifying fields: never send its source as a blind submission.",
+    },
     "pairs": pairs,
 }
 (root / "manifest.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 PY
+
+# Independently check all 14 source/PDF hashes and fail closed on identity-bearing
+# review *source* being represented as safe for blind external distribution.
+python3 tools/ci/validate-review-pairs.py \
+  --directory "$OUTPUT_DIR" --source-sha "$SOURCE_SHA"
 
 printf '%s\n' \
   "RELEASE-REVIEW-PAIRS-EVIDENCE status=PASS version=$VERSION source_sha=$SOURCE_SHA pairs=7 engine=pdflatex pinned_abntexto=$PINNED_UPSTREAM_COMMIT a4=PASS pdfa_2b=PASS font_embedding=PASS warnings_overflow=PASS maintainer_approval=PENDING"
