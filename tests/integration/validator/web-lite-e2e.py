@@ -575,7 +575,8 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
             "heading:document.querySelector('header h1').textContent,"
             "button:document.querySelector('#analyze').textContent,"
             "privacy:document.querySelector('section.controls p.note').textContent,"
-            "label:control.labels?.[0]?.querySelector('span')?.textContent||'',"\n            "associatedLabels:control.labels?.length??0,hasAriaOverride:control.hasAttribute('aria-label'),"
+            "label:control.labels?.[0]?.querySelector('span')?.textContent||'',"
+            "associatedLabels:control.labels?.length??0,hasAriaOverride:control.hasAttribute('aria-label'),"
             "types:[...document.querySelector('#document-type').options].map(o=>o.value),"
             "filters:[...document.querySelector('#report-filter').options].map(o=>o.value)};",
             [locale],
