@@ -2,7 +2,7 @@
 set -eu
 
 # Opt-in multilingual abstracts: real PDF positive/negative controls.
-# The nine pre-textual display headings and canonical normative rules are separate.
+# The nine front-matter display headings and canonical normative rules are separate.
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT INT TERM
 flags='-interaction=nonstopmode -halt-on-error -file-line-error'
