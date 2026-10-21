@@ -61,14 +61,16 @@ def assert_no_tokens(text: str, surface: str) -> None:
                 f"Anonymized review PDF leaks a fixture identity on {surface}: {token}")
 
 
-def assert_manifest(root: Path, source_sha: str) -> dict:
+def assert_manifest(root: Path, source_sha: str, expected_version: str) -> dict:
     require(re.fullmatch(r"[0-9a-f]{40}", source_sha) is not None,
             "Source SHA must be one exact Git commit")
     manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
     require(manifest.get("source_sha") == source_sha,
             "Review manifest does not bind to the exact candidate source SHA")
-    require(manifest.get("version") == "3.1.0",
-            "Review manifest unexpectedly changed target version")
+    require(re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", expected_version) is not None,
+            "Expected release version must use a semantic three-component form")
+    require(manifest.get("version") == expected_version,
+            "Review manifest version does not match the actual package version")
     require(manifest.get("status") == "READY_FOR_MAINTAINER_REVIEW",
             "Review manifest has an unsupported state")
     require(manifest.get("maintainer_visual_approval") == "PENDING",
@@ -153,9 +155,10 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--directory", required=True, type=Path)
     parser.add_argument("--source-sha", required=True)
+    parser.add_argument("--expected-version", required=True)
     args = parser.parse_args()
     self_test()
-    manifest = assert_manifest(args.directory, args.source_sha)
+    manifest = assert_manifest(args.directory, args.source_sha, args.expected_version)
     print(
         "RELEASE-REVIEW-BOUNDARY-EVIDENCE status=PASS "
         f"source_sha={manifest['source_sha']} pairs=7 "
