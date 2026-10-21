@@ -561,13 +561,13 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
     """Verify four locales with real PDFs and strict canonical-result invariance."""
     outcomes: dict[str, Any] = {}
     expected = {
-        "pt-BR": ("Validador de PDF UFC/ABNT", "Validar PDF", "Exibindo", "o arquivo não é enviado a um servidor"),
-        "en": ("UFC/ABNT PDF Validator", "Validate PDF", "Showing", "not uploaded to a server"),
-        "es": ("Validador de PDF UFC/ABNT", "Validar PDF", "Mostrando", "no se envía a ningún servidor"),
-        "fr": ("Validateur de PDF UFC/ABNT", "Valider le PDF", "Affichage", "n’est pas envoyé à un serveur"),
+        "pt-BR": ("Validador de PDF UFC/ABNT", "Validar PDF", "Exibindo", "o arquivo não é enviado a um servidor", "Idioma da interface"),
+        "en": ("UFC/ABNT PDF Validator", "Validate PDF", "Showing", "not uploaded to a server", "Interface language"),
+        "es": ("Validador de PDF UFC/ABNT", "Validar PDF", "Mostrando", "no se envía a ningún servidor", "Idioma de la interfaz"),
+        "fr": ("Validateur de PDF UFC/ABNT", "Valider le PDF", "Affichage", "n’est pas envoyé à un serveur", "Langue de l’interface"),
     }
     canonical_keys = lambda report: {key: value for key, value in report.items() if key != "generated_at"}
-    for locale, (heading, button, counter, privacy) in expected.items():
+    for locale, (heading, button, counter, privacy, accessible_name) in expected.items():
         observed = browser.execute(
             "const control=document.querySelector('#ui-locale');"
             "control.value=arguments[0];control.dispatchEvent(new Event('change',{bubbles:true}));"
@@ -575,7 +575,7 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
             "heading:document.querySelector('header h1').textContent,"
             "button:document.querySelector('#analyze').textContent,"
             "privacy:document.querySelector('section.controls p.note').textContent,"
-            "label:control.closest('label')?.textContent||'',"
+            "label:control.labels?.[0]?.querySelector('span')?.textContent||'',"\n            "associatedLabels:control.labels?.length??0,hasAriaOverride:control.hasAttribute('aria-label'),"
             "types:[...document.querySelector('#document-type').options].map(o=>o.value),"
             "filters:[...document.querySelector('#report-filter').options].map(o=>o.value)};",
             [locale],
@@ -584,8 +584,10 @@ def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile:
             fail(f"locale DOM selection mismatch: {observed!r}")
         if observed["heading"] != heading or observed["button"] != button or privacy not in observed["privacy"]:
             fail(f"locale {locale} UI copy incomplete: {observed!r}")
-        if not observed["label"].strip() or len(observed["types"]) != 7 or observed["filters"] != ["all", "attention", "failures", "manual"]:
-            fail(f"locale {locale} changed accessible labels or canonical options")
+        if observed["label"] != accessible_name or observed["associatedLabels"] != 1 or observed["hasAriaOverride"]:
+            fail(f"locale {locale} accessible selector name did not follow the selected language: {observed!r}")
+        if len(observed["types"]) != 7 or observed["filters"] != ["all", "attention", "failures", "manual"]:
+            fail(f"locale {locale} changed canonical form options")
         positive_report = analyze_through_ui_locale(browser, positive, profile)
         if canonical_keys(positive_report) != canonical_keys(canonical_positive):
             fail(f"locale {locale} changed canonical positive PDF report")
