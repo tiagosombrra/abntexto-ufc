@@ -53,6 +53,12 @@ Filters **only hide or reveal rows in the browser table**. They do not change th
 
 The productive browser E2E exercises each filter against both an actual valid class PDF and the controlled invalid non-A4 PDF, checks visible row statuses and counter against the canonical report, verifies report completeness and the new-analysis reset. This is an interface/accessibility enhancement, **not** a stronger ABNT/UFC/IBGE compliance claim or a change to PDF/UA support.
 
+## Spreadsheet-safe CSV export (v3.1.0 development)
+
+A PDF may contain adversarial metadata or text that begins with spreadsheet formula operators. Quoting a CSV field (RFC-style double quotes) does **not** by itself prevent spreadsheet software from interpreting that field as a formula. The Web/Lite `Export CSV` action now uses the local `csv-export.js` encoder to prefix an apostrophe to values whose first non-whitespace/control character is `=`, `+`, `-`, or `@`. It still doubles embedded quotes, retains UTF-8 BOM and includes **all canonical checks**, regardless of the selected report filter or interface language. This is a defensive spreadsheet-import mitigation, not a guarantee about every spreadsheet product, its import settings, or active-content execution policy.
+
+The JSON export and the in-memory canonical report preserve the original evidence string **byte-for-byte**; only the CSV representation may add the leading apostrophe. The productive Chromium test opens a real negative-control PDF with `/Title (=1+2)` metadata, exercises the actual CSV download button, parses every exported row back to fields, and checks that the formula is neutralized in CSV but remains unchanged in the canonical report. Additional hostile input cases cover leading controls/whitespace, operator variants, embedded quotes and commas. This test also runs behind the existing network-deny proxy and CSP controls.
+
 ## Interface locale selector (v3.1.0 development, #515)
 
 Web/Lite defaults to Brazilian Portuguese, with a keyboard-accessible selector for `pt-BR`, `en`, `es`, and `fr`. The self-contained `ui-locales.js` dictionary is used exclusively for user-facing browser copy, including labels, modes, document display names, result filters, counts, status/verdict presentation and privacy limitations. Unsupported locale values and missing dictionary entries raise explicit errors. No network translation service or stored preference is used; reloading restores pt-BR.
