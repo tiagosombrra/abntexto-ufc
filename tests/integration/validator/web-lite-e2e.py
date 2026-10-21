@@ -556,6 +556,107 @@ def verify_report_filters(browser: Browser, report: dict[str, Any]) -> dict[str,
     return evidence
 
 
+
+def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile: str, canonical_positive: dict[str, Any], canonical_negative: dict[str, Any]) -> dict[str, Any]:
+    """Verify four locales with real PDFs and strict canonical-result invariance."""
+    outcomes: dict[str, Any] = {}
+    expected = {
+        "pt-BR": ("Validador de PDF UFC/ABNT", "Validar PDF", "Exibindo", "o arquivo não é enviado a um servidor", "PDF é processado apenas neste dispositivo", "Idioma da interface", "Falha"),
+        "en": ("UFC/ABNT PDF Validator", "Validate PDF", "Showing", "not uploaded to a server", "PDF is processed only on this device", "Interface language", "Failed"),
+        "es": ("Validador de PDF UFC/ABNT", "Validar PDF", "Mostrando", "no se envía a ningún servidor", "PDF se procesa únicamente en este dispositivo", "Idioma de la interfaz", "Fallo"),
+        "fr": ("Validateur de PDF UFC/ABNT", "Valider le PDF", "Affichage", "n’est pas envoyé à un serveur", "PDF est traité uniquement sur cet appareil", "Langue de l’interface", "Échec"),
+    }
+    canonical_keys = lambda report: {key: value for key, value in report.items() if key != "generated_at"}
+    for locale, (heading, button, counter, lead_privacy, device_privacy, accessible_name, fail_label) in expected.items():
+        observed = browser.execute(
+            "const control=document.querySelector('#ui-locale');"
+            "control.value=arguments[0];control.dispatchEvent(new Event('change',{bubbles:true}));"
+            "return {locale:document.documentElement.lang,selected:control.value,"
+            "heading:document.querySelector('header h1').textContent,"
+            "button:document.querySelector('#analyze').textContent,"
+            "privacy:document.querySelector('section.controls p.note').textContent,"
+            "lead:document.querySelector('header .lead').textContent,"
+            "label:control.labels?.[0]?.querySelector('span')?.textContent||'',"
+            "associatedLabels:control.labels?.length??0,hasAriaOverride:control.hasAttribute('aria-label'),"
+            "types:[...document.querySelector('#document-type').options].map(o=>o.value),"
+            "filters:[...document.querySelector('#report-filter').options].map(o=>o.value)};",
+            [locale],
+        )
+        if observed["locale"] != locale or observed["selected"] != locale:
+            fail(f"locale DOM selection mismatch: {observed!r}")
+        if observed["heading"] != heading or observed["button"] != button:
+            fail(f"locale {locale} headline or button copy incomplete: {observed!r}")
+        if lead_privacy not in observed["lead"] or device_privacy not in observed["privacy"]:
+            fail(f"locale {locale} local-only privacy disclosures are incomplete: {observed!r}")
+        if observed["label"] != accessible_name or observed["associatedLabels"] != 1 or observed["hasAriaOverride"]:
+            fail(f"locale {locale} accessible selector name did not follow the selected language: {observed!r}")
+        if len(observed["types"]) != 7 or observed["filters"] != ["all", "attention", "failures", "manual"]:
+            fail(f"locale {locale} changed canonical form options")
+        positive_report = analyze_through_ui_locale(browser, positive, profile)
+        if canonical_keys(positive_report) != canonical_keys(canonical_positive):
+            fail(f"locale {locale} changed canonical positive PDF report")
+        count = browser.execute("return document.querySelector('#filter-count').textContent;")
+        if not count.startswith(counter):
+            fail(f"locale {locale} did not translate dynamic counter: {count!r}")
+        negative_report = analyze_through_ui_locale(browser, negative, profile)
+        if canonical_keys(negative_report) != canonical_keys(canonical_negative):
+            fail(f"locale {locale} changed canonical negative PDF report")
+        if negative_report["verdict"] != FAIL:
+            fail(f"locale {locale} lost negative PDF failure")
+        visual_failure = browser.execute(
+            "const first=[...document.querySelectorAll('#report-body tr')]"
+            ".find(row=>row.querySelector('td')?.classList.contains('status-fail'));"
+            "return {verdict:document.querySelector('#verdict')?.textContent||'',"
+            "row:first?.querySelector('td')?.textContent||''};"
+        )
+        if visual_failure != {"verdict": fail_label, "row": fail_label}:
+            fail(f"locale {locale} failure presentation differs from machine status: {visual_failure!r}")
+        outcomes[locale] = {"positive": positive_report["verdict"], "negative": negative_report["verdict"], "canonical_equal": True}
+    invalid = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(m=>{try{m.setLocale('xx-INVALID');done('ACCEPTED')}catch(e){done(e.name)}}).catch(e=>done(String(e)));"
+    )
+    if invalid != "RangeError":
+        fail(f"unsupported Web/Lite locale was not rejected: {invalid!r}")
+    coverage = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(m=>done(m.assertLocaleCoverage())).catch(e=>done(String(e)));"
+    )
+    if coverage is not True:
+        fail(f"Web/Lite locale dictionary incomplete: {coverage!r}")
+    browser.execute("const x=document.querySelector('#ui-locale');x.value='pt-BR';x.dispatchEvent(new Event('change',{bubbles:true}));")
+    return outcomes
+
+
+def analyze_through_ui_locale(browser: Browser, pdf: Path, profile: str) -> dict[str, Any]:
+    """Read the productive analysis path without imposing the Portuguese display assertion."""
+    browser.execute(
+        "const p=document.querySelector('#profile');p.value=arguments[0];"
+        "document.querySelector('#document-type').value='undergraduate-capstone';"
+        "document.querySelector('#print-mode').value='single-sided';"
+        "document.querySelector('#summary').classList.add('hidden');"
+        "document.querySelector('#pdf-file').value='';",
+        [profile],
+    )
+    browser.send_file("#pdf-file", pdf)
+    browser.click("#analyze")
+    wait_for(
+        lambda: bool(browser.execute(
+            "const s=document.querySelector('#summary'),b=document.querySelector('#analyze'),f=document.querySelector('#file-name');"
+            "return Boolean(s&&!s.classList.contains('hidden')&&b&&!b.disabled&&f&&f.textContent===arguments[0]);",
+            [pdf.name],
+        )),
+        f"localized UI report for {pdf.name}",
+    )
+    report = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(m=>done(m.getLastReport())).catch(e=>done({error:String(e)}));"
+    )
+    if not isinstance(report, dict) or report.get("error"):
+        fail(f"localized report unavailable: {report!r}")
+    return report
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run real PDFs through the productive Web/Lite browser UI.")
     parser.add_argument("--pdf", type=Path, required=True)
@@ -758,6 +859,8 @@ def main() -> None:
                     "cross_surface_margins=ALIGNED"
                 )
 
+            locale_evidence = verify_ui_locales(browser, positive, negative, args.profile, positive_report, negative_report)
+
             performance_entries = browser.logs("performance")
             requested_urls = performance_request_urls(performance_entries)
             external_urls = external_http_requests(requested_urls, server.server_port)
@@ -789,6 +892,7 @@ def main() -> None:
                 "site_root": site_root_label,
                 "local_processing": True,
                 "ui_locale": "pt-BR",
+                "ui_locales": locale_evidence,
                 "canonical_machine_values_preserved": True,
                 "normative_catalog": positive_report["normative_catalog"],
                 "network": {
@@ -845,7 +949,7 @@ def main() -> None:
                 "font_embedded=MANUAL_REVIEW pdfa_deep=MANUAL_REVIEW "
                 "productive_ui=true local_processing=true pages_package=true "
                 "external_network=DENIED external_http_requests=0 csp=PASS "
-                "report_filter=PASS full_report_unchanged=true ui_locale=pt-BR"
+                "report_filter=PASS full_report_unchanged=true ui_locale=pt-BR locales=4"
             )
     finally:
         browser.stop()

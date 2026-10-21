@@ -1,17 +1,16 @@
 import * as pdfjsLib from "./vendor/pdfjs/pdf.mjs";
 import {normativeCatalog,normativeRules,normativeSources} from "./normative-catalog.js";
 import {documentApplicability} from "./document-applicability.js";
+import {assertLocaleCoverage, setLocale, getLocale, uiText} from "./ui-locales.js";
 pdfjsLib.GlobalWorkerOptions.workerSrc="./vendor/pdfjs/pdf.worker.mjs";
 
 const PASS="PASS",FAIL="FAIL",WARN="WARNING",REVIEW="MANUAL REVIEW",NA="NOT APPLICABLE";
 const MM=72/25.4,pageRule=normativeRules["page.a4"],rectoRule=normativeRules["margin.recto"],versoRule=normativeRules["margin.verso"];
 const A4=[pageRule.values.width_mm*MM,pageRule.values.height_mm*MM],TOL=pageRule.values.tolerance_pt??1.8;
 const $=s=>document.querySelector(s); let report=null;
-// UI-only Brazilian Portuguese labels; canonical machine data stays unchanged.
-const UI_STATUS={PASS:"Aprovado",FAIL:"Falha",WARNING:"Aviso","MANUAL REVIEW":"Revisão manual","NOT APPLICABLE":"Não aplicável"};
-const UI_VERDICT={FAIL:"Falha","REVIEW REQUIRED":"Revisão obrigatória","AUTOMATED CHECKS PASSED WITH WARNINGS":"Verificações automáticas aprovadas com ressalvas","AUTOMATED CHECKS PASSED":"Verificações automáticas aprovadas"};
-const displayStatus=s=>UI_STATUS[s]??s;
-const displayVerdict=s=>UI_VERDICT[s]??s;
+// Presentation-only translations never modify canonical report data.
+const displayStatus=s=>uiText("status"+s);
+const displayVerdict=s=>uiText("verdict"+s);
 
 function structureObservation(modality,found){
  if(modality==="required")return {status:found?PASS:FAIL,mandatory:true,level:"automatic-partial",evidence:found?"Token detected in PDF text; placement and semantics unverified.":"Required token not detected in PDF text."};
@@ -34,7 +33,7 @@ function save(name,data,type){const b=new Blob([data],{type}),u=URL.createObject
 function csv(v){return `"${String(v??"").replaceAll('"','""')}"`}
 function renderNormativeBase(){
  $("#norm-reviewed").textContent=normativeCatalog.reviewed_at;
- $("#norm-stats").textContent=`${normativeCatalog.rules.length} regras · ${normativeCatalog.sources.length} fontes versionadas`;
+ $("#norm-stats").textContent=uiText("rulesStats",normativeCatalog.rules.length,normativeCatalog.sources.length);
  const list=$("#norm-sources");list.replaceChildren();
  for(const source of normativeCatalog.sources){const li=document.createElement("li"),a=document.createElement(source.url?"a":"span");a.textContent=`${source.title} — ${source.status}`;if(source.url){a.href=source.url;a.target="_blank";a.rel="noopener"}li.append(a);list.append(li)}
 }
@@ -53,7 +52,7 @@ function filterReport(){
  if(rows.length!==report.checks.length)throw new Error("Visible rows differ from canonical report");
  let shown=0;
  rows.forEach((row,i)=>{const visible=checkVisible(report.checks[i],mode);row.hidden=!visible;if(visible)shown++});
- $("#filter-count").textContent=`Exibindo ${shown} de ${report.checks.length} verificações`;
+ $("#filter-count").textContent=uiText("showing",shown,report.checks.length);
 }
 function render(r){
  $("#summary").classList.remove("hidden");$("#report-section").classList.remove("hidden");$("#verdict").textContent=displayVerdict(r.verdict);$("#file-name").textContent=r.file;$("#page-count").textContent=r.pages;
@@ -99,10 +98,14 @@ export async function analyze(file,profile,documentType="undergraduate-capstone"
 }
 
 export function getLastReport(){return report}
+export {setLocale, getLocale, assertLocaleCoverage};
 
+assertLocaleCoverage();
+setLocale("pt-BR");
+$("#ui-locale").addEventListener("change",event=>{setLocale(event.target.value);renderNormativeBase();if(report)render(report)});
 renderNormativeBase();
 $("#report-filter").addEventListener("change",filterReport);
-$("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert("Selecione um arquivo PDF.");const b=$("#analyze");b.disabled=true;b.textContent="Validando...";try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value);render(report)}catch(e){console.error(e);alert(`Falha na validação: ${e.message||e}`)}finally{b.disabled=false;b.textContent="Validar PDF"}});
+$("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert(uiText("selectFile"));const b=$("#analyze");b.disabled=true;b.textContent=uiText("validating");try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value);render(report)}catch(e){console.error(e);alert(uiText("validationFailed",e.message||e))}finally{b.disabled=false;b.textContent=uiText("analyze")}});
 $("#export-json").addEventListener("click",()=>report&&save("ufc-validation-report.json",JSON.stringify(report,null,2),"application/json;charset=utf-8"));
 $("#export-csv").addEventListener("click",()=>{if(!report)return;const h=["Status","Category","Rule","Source","Evidence","Correction","Level","Mandatory","Normative rule","Locator","Normativity"],rows=report.checks.map(c=>[c.status,c.category,c.rule,c.source,c.evidence,c.correction,c.level,c.mandatory?"yes":"no",c.normative_rule,c.locator,c.normativity]),data=[h,...rows].map(r=>r.map(csv).join(",")).join("\r\n");save("ufc-validation-report.csv",`\ufeff${data}`,"text/csv;charset=utf-8")});
 $("#print-report").addEventListener("click",()=>window.print());
