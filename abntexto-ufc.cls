@@ -1391,7 +1391,6 @@
 
 \NewDocumentCommand \ufcSummaryKeywordsInLanguage { m m }
   {
-    \ufc_summary_select_language:n {#1}
     \par\vspace{\baselineskip}
     \noindent
     \textbf{\prop_item:Nn \g_ufc_summary_keywords_prop {#1}:}\space #2
@@ -1399,7 +1398,6 @@
 
 \NewDocumentCommand \ufcPrintSummaryInLanguage { m m }
   {
-    \ufc_summary_select_language:n {#1}
     \ufc_summary_mark_language:n {#1}
     \clearpage
     \thispagestyle{empty}
@@ -1859,7 +1857,6 @@
 \NewDocumentCommand \ufcPrintArticleTranslatedSummary { m +m }
   {
     \ufc_article_require_profile:
-    \ufc_summary_select_language:n {#1}
     \str_if_eq:eeTF {#1} {\tl_use:N \g_ufc_document_language_tl}
       {
         \ClassError{abntexto-ufc}
