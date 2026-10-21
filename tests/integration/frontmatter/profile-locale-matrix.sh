@@ -132,8 +132,12 @@ for profile in profiles:
         if profile == "scientific-article":
             if "matrix article section" not in content or "matrix pdf profile locale smoke" not in content:
                 raise SystemExit(f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL article_body={key}")
-            if "sumário" in content or "table des matières" in content:
-                raise SystemExit(f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL article_toc_leak={key}")
+            leaked_headings = [heading for heading in headings.values() if normalize(heading) in content]
+            if leaked_headings:
+                raise SystemExit(
+                    f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL article_toc_leak={key} "
+                    f"headings={leaked_headings}"
+                )
             heading_proof = "not-applicable-article-no-toc"
         else:
             if "matrix body section" not in content or normalize(headings[locale]) not in content:
