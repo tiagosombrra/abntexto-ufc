@@ -53,6 +53,14 @@ Filters **only hide or reveal rows in the browser table**. They do not change th
 
 The productive browser E2E exercises each filter against both an actual valid class PDF and the controlled invalid non-A4 PDF, checks visible row statuses and counter against the canonical report, verifies report completeness and the new-analysis reset. This is an interface/accessibility enhancement, **not** a stronger ABNT/UFC/IBGE compliance claim or a change to PDF/UA support.
 
+## Interface locale selector (v3.1.0 development, #515)
+
+Web/Lite defaults to Brazilian Portuguese, with a keyboard-accessible selector for `pt-BR`, `en`, `es`, and `fr`. The self-contained `ui-locales.js` dictionary is used exclusively for user-facing browser copy, including labels, modes, document display names, result filters, counts, status/verdict presentation and privacy limitations. Unsupported locale values and missing dictionary entries raise explicit errors. No network translation service or stored preference is used; reloading restores pt-BR.
+
+Machine-facing check IDs, status/verdict tokens, document profiles, normative catalog source descriptions and JSON/CSV report fields are unchanged. Technical check evidence intentionally stays in its original language. Browser locale selection does not change PDF language, LaTeX `labels-language`, institutional legal conditions, or PDF/UA claims.
+
+The productive Chromium E2E now exercises all four locales over the *same* real positive and non-A4 negative PDFs, comparing canonical checks and verdicts with the Portuguese baseline (apart from generation timestamps), checking localized labels and counters and rejecting invalid locale choices. Only a non-draft PR triggers the full scoped Linux Integration; a green draft-only skip is **not** certification. The full `main` push still requires 42/42 complete checks.
+
 ## Browser regression
 
 The Linux Integration `web-lite` scope compiles a real reference PDF, assembles the same `_site/validator` tree used by GitHub Pages, opens that productive package in headless Chrome, selects/uploads the PDF and runs the same `analyze` path used by the button. It then repeats the UI flow with a valid non-A4 negative PDF.
