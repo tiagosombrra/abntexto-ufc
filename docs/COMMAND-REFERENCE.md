@@ -21,11 +21,25 @@ Forma geral:
 | --- | --- |
 | `type` | `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project`, `anonymized-research-project`, `scientific-article` |
 | `labels-language` | `pt` (padrão), `en`, `es`, `fr`; títulos pré-textuais, não idioma completo do manuscrito |
+| `document-language` | `pt` (padrão), `en`, `es`, `fr`; idioma do corpo do texto e seleção da versão principal do resumo (não altera automaticamente metadados PDF) |
 | `print-mode` | `single-sided` ou `double-sided` |
 | `cover` | `auto`, `true` ou `false` |
 | `catalog-card` | `true` ou `false` |
 | `coat-of-arms` | `true` ou `false` |
 | `initial-page` | política de página inicial dos trabalhos acadêmicos quando aplicável |
+
+### Idioma principal e versões do resumo (opt-in, v3.1.0)
+
+A chave **document-language = pt|en|es|fr** define o idioma principal do texto e dos novos comandos de resumo, de forma independente de **labels-language**. Padrão PT. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
+
+| Idioma principal | Par gerado pelo comando novo | Versão inglesa adicional |
+| --- | --- | --- |
+| pt | RESUMO → ABSTRACT | não se aplica |
+| en | ABSTRACT → RESUMO | não se aplica |
+| es | RESUMEN → RESUMO | opcional |
+| fr | RÉSUMÉ → RESUMO | opcional |
+
+A ordem é a política adotada para o projeto e exige confirmação específica do programa ou instituição no caso de uma submissão em língua estrangeira. Espanhol/francês dependem dos recursos Babel correspondentes no ambiente LaTeX; o idioma padrão não passa a depender desses pacotes. Veja [Política de idiomas dos resumos](SUMMARY-LANGUAGE-POLICY.md).
 
 ### `labels-language = pt|en|es|fr` (v3.1.0 experimental)
 
@@ -189,6 +203,30 @@ Gera os agradecimentos.
 ### \ufcPrintEpigraph[short|long]{arquivo}
 
 Gera a epígrafe. O argumento opcional seleciona a composição curta ou longa.
+
+### \ufcDocumentLanguage
+
+Consulta o idioma principal configurado em document-language.
+
+### \ufcPrintRequiredSummaries{arquivo-principal}{arquivo-complementar}
+
+Gera duas páginas com idiomas e títulos determinados pelo idioma principal: PT→PT+EN; EN→EN+PT; ES→ES+PT; FR→FR+PT.
+
+### \ufcPrintSummaryInLanguage{idioma}{arquivo}
+
+Gera uma página em pt, en, es ou fr. Idiomas duplicados usando a nova API provocam erro; não combine versões duplicadas com comandos antigos.
+
+### \ufcSummaryKeywordsInLanguage{idioma}{termos}
+
+Imprime Palavras-chave / Keywords / Palabras clave / Mots-clés de acordo com o idioma do texto de resumo.
+
+### \ufcPrintOptionalEnglishSummary{arquivo}
+
+Somente para documento principal em espanhol ou francês. Complementa o par com um ABSTRACT em inglês; pt/en são rejeitados para evitar duplicação.
+
+### \ufcPrintArticleTranslatedSummary{idioma}{texto}
+
+No perfil scientific-article, insere uma versão traduzida identificada e rejeita o mesmo idioma do resumo principal. \ufcPrintArticleFrontMatter usa o rótulo principal escolhido por document-language; a API legada de elementos estrangeiros permanece.
 
 ### \ufcPrintSummary{arquivo}
 
