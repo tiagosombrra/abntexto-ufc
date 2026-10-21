@@ -46,6 +46,21 @@ A opção `labels-language` traduz apenas nove títulos da apresentação pré-t
 
 Por razões normativas, `\ufcPrintSummary` continua identificado como **Resumo** (português), e `\ufcPrintAbstract` continua identificado como **Abstract** (inglês), em todos os quatro modos. Nenhuma escolha de rótulos dispensa os elementos exigidos para depósito na UFC. Espanhol e francês devem passar por revisão linguística e pela autoridade institucional antes de uma afirmação de conformidade integral. Essa primeira entrega é **experimental e limitada aos rótulos**.
 
+### Política opcional de RESUMO, ABSTRACT, RESUMEN e RÉSUMÉ (v3.1.0)
+
+A configuração **document-language=pt|en|es|fr** é independente de **labels-language**. O primeiro define o idioma principal do texto e dos resumos; o segundo seleciona somente os nove títulos gerais pré-textuais. O par de resumos é explicitamente gerado com **\ufcPrintRequiredSummaries{arquivo-principal}{arquivo-complementar}**:
+
+- Português: RESUMO seguido de ABSTRACT em inglês.
+- Inglês: ABSTRACT seguido de RESUMO em português.
+- Espanhol: RESUMEN seguido de RESUMO em português; ABSTRACT adicional é opcional.
+- Francês: RÉSUMÉ seguido de RESUMO em português; ABSTRACT adicional é opcional.
+
+Em espanhol ou francês, use **\ufcPrintOptionalEnglishSummary{arquivo-ingles}** apenas quando a versão inglesa complementar for necessária. Cada arquivo deve ter o conteúdo realmente traduzido e as palavras-chave no respectivo idioma, por meio de **\ufcSummaryKeywordsInLanguage{idioma}{termos}**. O documento deve declarar o idioma apropriado em **\DocumentMetadata** separadamente. A ordem é a política opt-in deste projeto, não uma declaração de que a ABNT estabelece automaticamente essa sequência para qualquer instituição.
+
+Para artigos científicos, o título do resumo principal acompanha o idioma escolhido por **document-language** e uma tradução identificada pode ser acrescentada por **\ufcPrintArticleTranslatedSummary{idioma}{texto}**, sujeita às condições da revista. Os comandos antigos permanecem válidos e não mudam seus nomes ou semântica.
+
+Consulte [Política de idiomas dos resumos](SUMMARY-LANGUAGE-POLICY.md) para exemplos completos, ressalvas quanto à UFC, limitações de conformidade e testes em PDFs reais. Nenhuma tradução automática do conteúdo ou dos dados institucionais é realizada.
+
 ### Perfis de documento
 
 A chave `type` seleciona o perfil:
