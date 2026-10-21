@@ -87,6 +87,7 @@ python3 - "$work" "$source_sha" <<'PY'
 import hashlib
 import json
 import re
+import shutil
 import subprocess
 import sys
 import unicodedata
@@ -129,6 +130,20 @@ for profile in profiles:
         width, height = map(float, page_size.groups())
         if not (594.5 <= width <= 596.0 and 841.0 <= height <= 842.8):
             raise SystemExit(f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL not_a4={key}")
+        # Fail closed on controlled anonymization fixtures before uploading
+        # the rendered PDFs. Never distribute the identifying TeX sources.
+        if profile == "anonymized-research-project":
+            protected_values = (
+                "Autor do Teste de Idioma",
+                "Prof. Orientador Teste",
+                "Prof. Membro Teste",
+            )
+            for protected in protected_values:
+                if normalize(protected) in content or normalize(protected) in normalize(info):
+                    raise SystemExit(
+                        f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL "
+                        f"anonymized_fixture_identity_leak={key}"
+                    )
         if profile == "scientific-article":
             if "matrix article section" not in content or "matrix pdf profile locale smoke" not in content:
                 raise SystemExit(f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL article_body={key}")
@@ -175,8 +190,43 @@ manifest = {
     "normative_rule_promotion": False,
     "receipts": receipts,
 }
+# Retain **only** verified final PDFs. The 28 TeX fixtures contain
+# author/advisor test metadata and must never enter the downloadable artifact.
+archive_dir = Path("artifacts/frontmatter/profile-locale-pdfs")
+if archive_dir.exists():
+    if not archive_dir.is_dir() or archive_dir.is_symlink():
+        raise SystemExit("PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL unsafe_archive_path")
+    shutil.rmtree(archive_dir)
+archive_dir.mkdir(parents=True)
+verified_files = set()
+for receipt in receipts:
+    name = f"matrix-{receipt['profile']}-{receipt['display_locale']}.pdf"
+    source_pdf = work / name
+    target = archive_dir / name
+    shutil.copyfile(source_pdf, target)
+    if hashlib.sha256(target.read_bytes()).hexdigest() != receipt["pdf_sha256"]:
+        raise SystemExit(f"PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL copied_pdf_hash={name}")
+    verified_files.add(name)
+actual_files = {item.name for item in archive_dir.iterdir() if item.is_file()}
+if actual_files != verified_files or len(actual_files) != 28:
+    raise SystemExit("PROFILE-LOCALE-MATRIX-EVIDENCE status=FAIL archive_pdf_set")
+manifest["retained_audit_pdfs"] = {
+    "directory": str(archive_dir),
+    "pdf_count": 28,
+    "sha256_matches_receipts": True,
+    "tex_sources_in_archive": False,
+    "proof_scope": "two-page-display-heading-smoke-only",
+    "release_review_status": "NOT_APPLICABLE",
+    "human_visual_approval": "PENDING",
+}
 out = Path("artifacts/frontmatter/profile-locale-matrix.json")
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+shutil.copyfile(out, archive_dir / "manifest.json")
+print(
+    "PROFILE-LOCALE-ARCHIVE-EVIDENCE status=PASS real_pdfs=28 "
+    "all_pdf_sha256=PASS tex_sources=EXCLUDED privacy_fixture=CHECKED "
+    f"source_sha={source_sha} visual_approval=PENDING"
+)
 print("PROFILE-LOCALE-MATRIX-EVIDENCE status=PASS real_pdfs=28 profiles=7 locales=4 compilation=PASS pdf_a4=PASS display_scope=partial human_visual_approval=PENDING")
 PY
