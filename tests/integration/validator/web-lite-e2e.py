@@ -569,10 +569,10 @@ def verify_csv_export(browser: Browser, report: dict[str, Any]) -> dict[str, Any
         ["+SUM(1,2)", "\"'+SUM(1,2)\""],
         ["-1+2", "\"'-1+2\""],
         ["@SUM(1,2)", "\"'@SUM(1,2)\""],
-        [" \\t=1+2", "\"' \\t=1+2\""],
-        ["\\r\\n=1+2", "\"'\\r\\n=1+2\""],
+        [" \t=1+2", "\"' \t=1+2\""],
+        ["\r\n=1+2", "\"'\r\n=1+2\""],
         ["simple,comma", "\"simple,comma\""],
-        ["with \\"quotes\\"", "\"with \\"\\"quotes\\"\\"\""],
+        ['with "quotes"', '"with ""quotes"""'],
         ["normal evidence", "\"normal evidence\""],
         [None, "\"\""],
     ]
@@ -598,16 +598,16 @@ def verify_csv_export(browser: Browser, report: dict[str, Any]) -> dict[str, Any
     if not isinstance(actual_csv, dict) or actual_csv.get("error"):
         fail(f"CSV download was not created: {actual_csv!r}")
     payload = actual_csv.get("text")
-    if not isinstance(payload, str) or not payload.startswith("\\ufeff") or "text/csv" not in actual_csv.get("type", ""):
+    if not isinstance(payload, str) or not payload.startswith("\ufeff") or "text/csv" not in actual_csv.get("type", ""):
         fail("CSV download missing expected UTF-8 BOM or MIME type")
-    rows = list(csv.reader(io.StringIO(payload.lstrip("\\ufeff"))))
+    rows = list(csv.reader(io.StringIO(payload.lstrip("\ufeff"))))
     names = ["Status", "Category", "Rule", "Source", "Evidence", "Correction",
              "Level", "Mandatory", "Normative rule", "Locator", "Normativity"]
     if not rows or rows[0] != names or len(rows) != len(report["checks"]) + 1:
         fail("CSV export does not include the canonical header and all checks")
     fields = ["status", "category", "rule", "source", "evidence", "correction",
               "level", "mandatory", "normative_rule", "locator", "normativity"]
-    formula = re.compile(r"^[\\s\\x00-\\x1f\\x7f]*[=+@-]")
+    formula = re.compile(r"^[\s\x00-\x1f\x7f]*[=+@-]")
     formula_cells = 0
     for row, check_entry in zip(rows[1:], report["checks"], strict=True):
         canonical = [check_entry[field] for field in fields]
