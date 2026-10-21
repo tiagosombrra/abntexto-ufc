@@ -32,7 +32,11 @@
 % Normative mapping: docs/NORMATIVE-BASE.md.
 
 \RequirePackage{iftex}
-\RequirePackage[english,spanish,french,brazilian]{babel}
+\RequirePackage[english,brazilian]{babel}
+% Optional Babel locales: do not break legacy PT/EN builds on minimal
+% TeX installations. Foreign-language PDF builds need the matching .ldf.
+\IfFileExists{spanish.ldf}{\babelprovide[import]{spanish}}{}
+\IfFileExists{french.ldf}{\babelprovide[import]{french}}{}
 \RequirePackage{microtype}
 
 \ExplSyntaxOn
@@ -1366,8 +1370,20 @@
       {
         {pt}{\selectlanguage{brazilian}}
         {en}{\selectlanguage{english}}
-        {es}{\selectlanguage{spanish}}
-        {fr}{\selectlanguage{french}}
+        {es}{
+          \IfFileExists{spanish.ldf}
+            {\selectlanguage{spanish}}
+            {\ClassError{abntexto-ufc}
+               {Spanish~Babel~support~is~not~installed}
+               {Install~the~babel-spanish~language~package.}}
+        }
+        {fr}{
+          \IfFileExists{french.ldf}
+            {\selectlanguage{french}}
+            {\ClassError{abntexto-ufc}
+               {French~Babel~support~is~not~installed}
+               {Install~the~babel-french~language~package.}}
+        }
       }
       {
         \ClassError{abntexto-ufc}
