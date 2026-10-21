@@ -2,6 +2,7 @@ import * as pdfjsLib from "./vendor/pdfjs/pdf.mjs";
 import {normativeCatalog,normativeRules,normativeSources} from "./normative-catalog.js";
 import {documentApplicability} from "./document-applicability.js";
 import {assertLocaleCoverage, setLocale, getLocale, uiText} from "./ui-locales.js";
+import {csvRows} from "./csv-export.js";
 pdfjsLib.GlobalWorkerOptions.workerSrc="./vendor/pdfjs/pdf.worker.mjs";
 
 const PASS="PASS",FAIL="FAIL",WARN="WARNING",REVIEW="MANUAL REVIEW",NA="NOT APPLICABLE";
@@ -30,7 +31,6 @@ const CHECK_ID_ALIASES={"font.family":"font.literal","font.embedding":"font.embe
 const reportCheck=c=>({id:CHECK_ID_ALIASES[c.id]??c.id,category:c.category,rule:c.rule,source:c.source,status:c.status,evidence:c.evidence,correction:c.correction,mandatory:c.mandatory,level:c.level,normative_rule:c.normativeRule,locator:c.locator,normativity:c.normativity});
 
 function save(name,data,type){const b=new Blob([data],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
-function csv(v){return `"${String(v??"").replaceAll('"','""')}"`}
 function renderNormativeBase(){
  $("#norm-reviewed").textContent=normativeCatalog.reviewed_at;
  $("#norm-stats").textContent=uiText("rulesStats",normativeCatalog.rules.length,normativeCatalog.sources.length);
@@ -107,5 +107,5 @@ renderNormativeBase();
 $("#report-filter").addEventListener("change",filterReport);
 $("#analyze").addEventListener("click",async()=>{const f=$("#pdf-file").files?.[0];if(!f)return alert(uiText("selectFile"));const b=$("#analyze");b.disabled=true;b.textContent=uiText("validating");try{report=await analyze(f,$("#profile").value,$("#document-type").value,$("#print-mode").value);render(report)}catch(e){console.error(e);alert(uiText("validationFailed",e.message||e))}finally{b.disabled=false;b.textContent=uiText("analyze")}});
 $("#export-json").addEventListener("click",()=>report&&save("ufc-validation-report.json",JSON.stringify(report,null,2),"application/json;charset=utf-8"));
-$("#export-csv").addEventListener("click",()=>{if(!report)return;const h=["Status","Category","Rule","Source","Evidence","Correction","Level","Mandatory","Normative rule","Locator","Normativity"],rows=report.checks.map(c=>[c.status,c.category,c.rule,c.source,c.evidence,c.correction,c.level,c.mandatory?"yes":"no",c.normative_rule,c.locator,c.normativity]),data=[h,...rows].map(r=>r.map(csv).join(",")).join("\r\n");save("ufc-validation-report.csv",`\ufeff${data}`,"text/csv;charset=utf-8")});
+$("#export-csv").addEventListener("click",()=>{if(!report)return;const h=["Status","Category","Rule","Source","Evidence","Correction","Level","Mandatory","Normative rule","Locator","Normativity"],rows=report.checks.map(c=>[c.status,c.category,c.rule,c.source,c.evidence,c.correction,c.level,c.mandatory?"yes":"no",c.normative_rule,c.locator,c.normativity]),data=csvRows([h,...rows]);save("ufc-validation-report.csv",`\ufeff${data}`,"text/csv;charset=utf-8")});
 $("#print-report").addEventListener("click",()=>window.print());
