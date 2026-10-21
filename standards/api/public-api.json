@@ -9,6 +9,7 @@
   "setup_keys": {
     "core": [
       "type",
+      "document-language",
       "labels-language",
       "print-mode",
       "cover",
@@ -156,6 +157,12 @@
       "en",
       "es",
       "fr"
+    ],
+    "document-language": [
+      "pt",
+      "en",
+      "es",
+      "fr"
     ]
   },
   "public_commands": {
@@ -175,6 +182,12 @@
       "\\ufcPrintAcknowledgments",
       "\\ufcPrintEpigraph",
       "\\ufcPrintErrata",
+      "\\ufcDocumentLanguage",
+      "\\ufcSummaryKeywordsInLanguage",
+      "\\ufcPrintSummaryInLanguage",
+      "\\ufcPrintRequiredSummaries",
+      "\\ufcPrintOptionalEnglishSummary",
+      "\\ufcPrintArticleTranslatedSummary",
       "\\ufcSummaryKeywords",
       "\\ufcPrintSummary",
       "\\ufcPrintAbstract",
