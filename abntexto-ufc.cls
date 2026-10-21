@@ -32,7 +32,7 @@
 % Normative mapping: docs/NORMATIVE-BASE.md.
 
 \RequirePackage{iftex}
-\RequirePackage[english,brazilian]{babel}
+\RequirePackage[english,spanish,french,brazilian]{babel}
 \RequirePackage{microtype}
 
 \ExplSyntaxOn
@@ -40,6 +40,14 @@
 \tl_new:N \g_ufc_document_type_tl
 \tl_new:N \g_ufc_print_mode_tl
 \tl_new:N \g_ufc_labels_language_tl
+\tl_new:N \g_ufc_document_language_tl
+\prop_new:N \g_ufc_summary_seen_prop
+\prop_new:N \g_ufc_summary_headings_prop
+\prop_new:N \g_ufc_summary_keywords_prop
+\prop_gset_from_keyval:Nn \g_ufc_summary_headings_prop
+  {pt={Resumo},en={Abstract},es={Resumen},fr={Résumé}}
+\prop_gset_from_keyval:Nn \g_ufc_summary_keywords_prop
+  {pt={Palavras-chave},en={Keywords},es={Palabras~clave},fr={Mots-clés}}
 \tl_new:N \g_ufc_cover_mode_tl
 \bool_new:N \g_ufc_catalog_card_bool
 \bool_new:N \g_ufc_coat_of_arms_bool
@@ -167,6 +175,16 @@
 
 \keys_define:nn { ufc }
   {
+    document-language .choice:,
+    document-language / pt .code:n =
+      { \tl_gset:Nn \g_ufc_document_language_tl {pt} },
+    document-language / en .code:n =
+      { \tl_gset:Nn \g_ufc_document_language_tl {en} },
+    document-language / es .code:n =
+      { \tl_gset:Nn \g_ufc_document_language_tl {es} },
+    document-language / fr .code:n =
+      { \tl_gset:Nn \g_ufc_document_language_tl {fr} },
+
     labels-language .choice:,
     labels-language / pt .code:n =
       { \tl_gset:Nn \g_ufc_labels_language_tl {pt} },
@@ -307,6 +325,7 @@
 \keys_set:nn { ufc }
   {
     labels-language = pt,
+    document-language = pt,
     type = undergraduate-capstone,
     print-mode = single-sided,
     cover = auto,
@@ -316,6 +335,9 @@
 
 \NewDocumentCommand \ufcsetup { +m }
   { \keys_set:nn { ufc } { #1 } }
+
+\NewExpandableDocumentCommand \ufcDocumentLanguage { }
+  { \tl_use:N \g_ufc_document_language_tl }
 
 \NewExpandableDocumentCommand \ufcDocumentType { }
   { \tl_use:N \g_ufc_document_type_tl }
@@ -756,6 +778,7 @@
   \AddToHook{cmd/ufcPrintErrata/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintSummary/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintAbstract/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintSummaryInLanguage/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfIllustrations/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfFigures/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfTables/before}{\ufcPretextualBreak}%
@@ -1335,6 +1358,92 @@
     \clearpage
   }
 
+% Main text language is independent from presentation headings and PDF metadata.
+% Existing Portuguese/English summary commands below remain unchanged.
+\cs_new_protected:Npn \ufc_summary_select_language:n #1
+  {
+    \str_case:nnF {#1}
+      {
+        {pt}{\selectlanguage{brazilian}}
+        {en}{\selectlanguage{english}}
+        {es}{\selectlanguage{spanish}}
+        {fr}{\selectlanguage{french}}
+      }
+      {
+        \ClassError{abntexto-ufc}
+          {Unsupported~summary~language~'#1'}
+          {Use~pt,~en,~es~or~fr.}
+      }
+  }
+\cs_new_protected:Npn \ufc_summary_mark_language:n #1
+  {
+    \prop_if_in:NnTF \g_ufc_summary_seen_prop {#1}
+      {
+        \ClassError{abntexto-ufc}
+          {Duplicate~summary~language~'#1'}
+          {Each~language~may~appear~only~once~with~the~new~summary~API.}
+      }
+      { \prop_gput:Nnn \g_ufc_summary_seen_prop {#1} {present} }
+  }
+
+\AtBeginDocument
+  { \exp_args:NV \ufc_summary_select_language:n \g_ufc_document_language_tl }
+
+\NewDocumentCommand \ufcSummaryKeywordsInLanguage { m m }
+  {
+    \ufc_summary_select_language:n {#1}
+    \par\vspace{\baselineskip}
+    \noindent
+    \textbf{\prop_item:Nn \g_ufc_summary_keywords_prop {#1}:}\space #2
+  }
+
+\NewDocumentCommand \ufcPrintSummaryInLanguage { m m }
+  {
+    \ufc_summary_select_language:n {#1}
+    \ufc_summary_mark_language:n {#1}
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \ufc_summary_select_language:n {#1}
+      \exp_args:Ne \ufc_pretextual_heading:n
+        { \prop_item:Nn \g_ufc_summary_headings_prop {#1} }
+      \setlength{\parindent}{0pt}
+      \justifying\ufc_input_file:n {#2}
+    \endgroup
+    \clearpage
+  }
+
+% Required two-version policy: PT -> PT+EN; EN/ES/FR -> main+PT.
+% The language identifiers, rather than interface label preferences, determine
+% the headings, keyword labels and local Babel language.
+\NewDocumentCommand \ufcPrintRequiredSummaries { m m }
+  {
+    \exp_args:NV \ufc_summary_required_pair:nnn
+      \g_ufc_document_language_tl {#1}{#2}
+  }
+\cs_new_protected:Npn \ufc_summary_required_pair:nnn #1#2#3
+  {
+    \ufcPrintSummaryInLanguage{#1}{#2}
+    \str_if_eq:nnTF {#1}{pt}
+      {\ufcPrintSummaryInLanguage{en}{#3}}
+      {\ufcPrintSummaryInLanguage{pt}{#3}}
+  }
+
+% An optional third (English) version only makes sense for ES/FR manuscripts.
+\NewDocumentCommand \ufcPrintOptionalEnglishSummary { m }
+  {
+    \str_case:VnF \g_ufc_document_language_tl
+      {
+        {es}{\ufcPrintSummaryInLanguage{en}{#1}}
+        {fr}{\ufcPrintSummaryInLanguage{en}{#1}}
+      }
+      {
+        \ClassError{abntexto-ufc}
+          {Optional~English~summary~duplicates~the~required~pair}
+          {Only~ES/FR~manuscripts~can~add~an~optional~English~summary.}
+      }
+  }
+
 \ProvideDocumentCommand \ufcSummaryKeywords { m }
   {
     \par\vspace{\baselineskip}
@@ -1712,7 +1821,9 @@
       \singlesp
       \setlength{\parindent}{0pt}
       \justifying
-      \noindent\textbf{Resumo:}\space #1\par
+      \noindent\textbf{
+        \exp_args:Ne \prop_item:Nn \g_ufc_summary_headings_prop
+          {\tl_use:N \g_ufc_document_language_tl}:}\space #1\par
     \endgroup
   }
 
@@ -1739,6 +1850,31 @@
           \setlength{\parindent}{0pt}
           \justifying
           \noindent #1\par
+        \endgroup
+      }
+  }
+
+% Explicit translated article summary. Existing two-argument
+% \ufcPrintArticleForeignElements remains unchanged for backwards compatibility.
+\NewDocumentCommand \ufcPrintArticleTranslatedSummary { m +m }
+  {
+    \ufc_article_require_profile:
+    \ufc_summary_select_language:n {#1}
+    \str_if_eq:eeTF {#1} {\tl_use:N \g_ufc_document_language_tl}
+      {
+        \ClassError{abntexto-ufc}
+          {Translated~article~summary~duplicates~the~main~language}
+          {Select~a~different~language~for~this~summary.}
+      }
+      {
+        \ufc_summary_mark_language:n {#1}
+        \par\vspace{\baselineskip}
+        \begingroup
+          \ufc_summary_select_language:n {#1}
+          \setlength{\parindent}{0pt}
+          \justifying\noindent
+          \textbf{\prop_item:Nn \g_ufc_summary_headings_prop {#1}:}\space
+          #2\par
         \endgroup
       }
   }
