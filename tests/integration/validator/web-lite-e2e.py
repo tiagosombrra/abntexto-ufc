@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import io
+import re
 import hashlib
 import json
 import shutil
@@ -288,6 +291,7 @@ def write_negative_pdf(path: Path) -> None:
         b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
         b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
         b"<< /Length " + str(len(content)).encode("ascii") + b" >>\nstream\n" + content + b"\nendstream",
+        b"<< /Title (=1+2) >>",  # Real PDF Info dictionary: negative spreadsheet-formula control.
     ]
     data = bytearray(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n")
     offsets = [0]
@@ -303,7 +307,7 @@ def write_negative_pdf(path: Path) -> None:
         data.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
     data.extend(
         (
-            f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\n"
+            f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R /Info 6 0 R >>\n"
             f"startxref\n{xref}\n%%EOF\n"
         ).encode("ascii")
     )
@@ -557,6 +561,89 @@ def verify_report_filters(browser: Browser, report: dict[str, Any]) -> dict[str,
 
 
 
+
+def verify_csv_export(browser: Browser, report: dict[str, Any]) -> dict[str, Any]:
+    """Exercise the production download button with a real PDF metadata formula."""
+    vectors = [
+        ["=1+2", "\"'=1+2\""],
+        ["+SUM(1,2)", "\"'+SUM(1,2)\""],
+        ["-1+2", "\"'-1+2\""],
+        ["@SUM(1,2)", "\"'@SUM(1,2)\""],
+        [" \t=1+2", "\"' \t=1+2\""],
+        ["\r\n=1+2", "\"'\r\n=1+2\""],
+        ["simple,comma", "\"simple,comma\""],
+        ['with "quotes"', '"with ""quotes"""'],
+        ["normal evidence", "\"normal evidence\""],
+        [None, "\"\""],
+    ]
+    check = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./csv-export.js').then(m=>done("
+        "arguments[0].map(pair=>({actual:m.csvCell(pair[0]),expected:pair[1]}))"
+        ")).catch(e=>done({error:String(e)}));",
+        [vectors],
+    )
+    if not isinstance(check, list) or any(row["actual"] != row["expected"] for row in check):
+        fail(f"spreadsheet formula/escaping vectors diverged: {check!r}")
+    actual_csv = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "const previous=URL.createObjectURL;let captured=null;"
+        "try{URL.createObjectURL=blob=>{captured=blob;return previous(blob)};"
+        "document.querySelector('#export-csv').click();"
+        "}catch(e){URL.createObjectURL=previous;done({error:String(e)});return;}"
+        "URL.createObjectURL=previous;"
+        "if(!captured){done({error:'productive CSV download missing'});return;}"
+        "Promise.all([captured.text(),captured.arrayBuffer()])"
+        ".then(([text,bytes])=>done({text,type:captured.type,"
+        "bom:[...new Uint8Array(bytes).slice(0,3)]}))"
+        ".catch(e=>done({error:String(e)}));"
+    )
+    if not isinstance(actual_csv, dict) or actual_csv.get("error"):
+        fail(f"CSV download was not created: {actual_csv!r}")
+    payload = actual_csv.get("text")
+    if not isinstance(payload, str) or actual_csv.get("bom") != [239, 187, 191] or "text/csv" not in actual_csv.get("type", ""):
+        fail("CSV download missing expected UTF-8 BOM or MIME type")
+    rows = list(csv.reader(io.StringIO(payload.lstrip("\ufeff"))))
+    names = ["Status", "Category", "Rule", "Source", "Evidence", "Correction",
+             "Level", "Mandatory", "Normative rule", "Locator", "Normativity"]
+    if not rows or rows[0] != names or len(rows) != len(report["checks"]) + 1:
+        fail("CSV export does not include the canonical header and all checks")
+    fields = ["status", "category", "rule", "source", "evidence", "correction",
+              "level", "mandatory", "normative_rule", "locator", "normativity"]
+    formula = re.compile(r"^[\s\x00-\x1f\x7f]*[=+@-]")
+    formula_cells = 0
+    for row, check_entry in zip(rows[1:], report["checks"], strict=True):
+        canonical = [check_entry[field] for field in fields]
+        canonical[7] = "yes" if canonical[7] else "no"
+        expected = []
+        for raw in canonical:
+            text = str(raw if raw is not None else "")
+            if formula.match(text):
+                formula_cells += 1
+                text = "'" + text
+            expected.append(text)
+        if row != expected:
+            fail(f"CSV export changes report row or misses a formula guard: {row!r} != {expected!r}")
+    metadata = by_id(report).get("meta.title")
+    if metadata is None or metadata.get("evidence") != "=1+2" or formula_cells < 1:
+        fail(f"real negative PDF formula metadata not exercised: {metadata!r}")
+    canonical_after = browser.execute_async(
+        "const done=arguments[arguments.length-1];"
+        "import('./app.js').then(m=>done(m.getLastReport())).catch(e=>done({error:String(e)}));"
+    )
+    if not isinstance(canonical_after, dict) or canonical_after.get("checks") != report["checks"]:
+        fail("CSV export mutated the canonical machine report")
+    print(
+        "CSV-EXPORT-EVIDENCE surface=web-lite status=PASS "
+        f"real_pdf_formula=NEUTRALIZED attack_vectors={len(vectors)} "
+        f"exported_checks={len(report['checks'])} formula_cells={formula_cells} "
+        "canonical_report=UNCHANGED no_network_dependency=true"
+    )
+    return {"status": "PASS", "attack_vectors": len(vectors),
+            "exported_checks": len(report["checks"]), "formula_cells": formula_cells,
+            "canonical_report_unchanged": True}
+
+
 def verify_ui_locales(browser: Browser, positive: Path, negative: Path, profile: str, canonical_positive: dict[str, Any], canonical_negative: dict[str, Any]) -> dict[str, Any]:
     """Verify four locales with real PDFs and strict canonical-result invariance."""
     outcomes: dict[str, Any] = {}
@@ -753,6 +840,7 @@ def main() -> None:
                 fail("new PDF analysis did not reset filter to all (may hide real failures)")
             negative_filter_counts = verify_report_filters(browser, negative_report)
             negative_checks = by_id(negative_report)
+            csv_evidence = verify_csv_export(browser, negative_report)
             if negative_checks.get("pdf.open", {}).get("status") != PASS:
                 fail("negative fixture is not a readable PDF")
             if negative_checks.get("layout.a4", {}).get("status") != FAIL:
@@ -921,6 +1009,7 @@ def main() -> None:
                     "pdfa_deep": positive_checks["pdfa.deep"]["status"],
                 },
                 "report_filter": {"positive": positive_filter_counts, "negative": negative_filter_counts, "source_report_preserved": True},
+                "csv_export": csv_evidence,
                 "document_type_pdfs": profile_reports,
                 "duplex_margin_pdfs": duplex_reports,
                 "negative": {
@@ -949,7 +1038,7 @@ def main() -> None:
                 "font_embedded=MANUAL_REVIEW pdfa_deep=MANUAL_REVIEW "
                 "productive_ui=true local_processing=true pages_package=true "
                 "external_network=DENIED external_http_requests=0 csp=PASS "
-                "report_filter=PASS full_report_unchanged=true ui_locale=pt-BR locales=4"
+                "report_filter=PASS csv_export=PASS full_report_unchanged=true ui_locale=pt-BR locales=4"
             )
     finally:
         browser.stop()
