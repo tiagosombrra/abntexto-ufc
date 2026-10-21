@@ -33,7 +33,7 @@ academic_body = r"""
 \ufcPrintTableOfContents
 \textual
 \section{MATRIX BODY SECTION}
-Conteúdo de teste em português; somente o rótulo do sumário é traduzido.
+Conteúdo de teste em português com elementos estruturais traduzíveis.
 """
 article_body = r"""
 \ufcPrintArticleFrontMatter{Texto de controle de artigo científico.
