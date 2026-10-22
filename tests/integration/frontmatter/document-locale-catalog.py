@@ -68,7 +68,7 @@ expected = {
     "submitted-on", "article-approved-on", "references", "glossary",
     "list-charts", "list-code", "list-algorithms",
     "caption-chart", "caption-code", "caption-algorithm", "caption-text-table",
-    "appendix", "annex", "index",
+    "appendix", "annex", "index", "default-project-type",
     "nature-undergraduate", "nature-specialization", "nature-masters",
     "nature-doctoral", "nature-project",
 }
@@ -100,6 +100,7 @@ for table_name, key in (("summary", "summary_headings"), ("keywords", "summary_k
 # the PT defaults for immutable institutional proper names, or legacy commands.
 required_routes = (
     r"\ufc_doc_text:n {nature-doctoral}",
+    r"\ufc_doc_text:n {default-project-type}",
     r"\ufc_doc_text:n {examining-committee}",
     r"\ufc_doc_text:n {approved-on}",
     r"\ufc_doc_text:n {references}",
