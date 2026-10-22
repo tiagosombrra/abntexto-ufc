@@ -79,6 +79,12 @@ for main, pdf_lang in langs.items():
     ),
     encoding="utf-8",
 )
+(work / "academic-keyword-invalid.tex").write_text(
+    (work / "academic-pt.tex").read_text(encoding="utf-8").replace(
+        r"\textual", r"\ufcSummaryKeywordsInLanguage{de}{invalid.}" + "\n" + r"\textual"
+    ),
+    encoding="utf-8",
+)
 (work / "article-duplicate.tex").write_text(
     (work / "article-en.tex").read_text(encoding="utf-8").replace(
         rf"\ufcPrintArticleTranslatedSummary{{pt}}",
@@ -101,7 +107,7 @@ for case in academic-pt academic-en academic-es academic-fr article-pt article-e
   echo "SUMMARY-LOCALE-EVIDENCE status=PASS case=$case real_pdf=true"
 done
 
-for case in academic-duplicate academic-invalid article-duplicate; do
+for case in academic-duplicate academic-invalid academic-keyword-invalid article-duplicate; do
   if pdflatex $flags -jobname="$case" -output-directory="$work" "$work/$case.tex" > "$work/$case.stdout" 2>&1; then
     echo "SUMMARY-LOCALE-EVIDENCE status=FAIL unexpected_negative_success=$case" >&2
     exit 1
@@ -119,6 +125,13 @@ for case in academic-duplicate academic-invalid article-duplicate; do
       grep -Fq "document-language" "$work/$case.stdout" || {
         cat "$work/$case.stdout"
         echo "SUMMARY-LOCALE-EVIDENCE status=FAIL missing_invalid_locale_error=true" >&2
+        exit 1
+      }
+      ;;
+    academic-keyword-invalid)
+      grep -Fq "Unsupported" "$work/$case.stdout" || {
+        cat "$work/$case.stdout"
+        echo "SUMMARY-LOCALE-EVIDENCE status=FAIL missing_invalid_keyword_locale_error=true" >&2
         exit 1
       }
       ;;
@@ -182,5 +195,5 @@ for kind in ("academic", "article"):
         if norm(("body-" if kind == "academic" else "articlebody-") + main) not in text:
             raise SystemExit(f"SUMMARY-LOCALE-EVIDENCE status=FAIL body_missing={kind}-{main}")
         print(f"SUMMARY-LOCALE-EVIDENCE status=PASS kind={kind} main={main} versions={','.join(expect)} headings=PASS keywords=PASS no_duplicates=PASS")
-print("SUMMARY-LOCALE-EVIDENCE status=PASS real_pdfs=8 positive=8 negative=3 main_languages=pt,en,es,fr compatibility=OPT_IN")
+print("SUMMARY-LOCALE-EVIDENCE status=PASS real_pdfs=8 positive=8 negative=4 main_languages=pt,en,es,fr compatibility=OPT_IN")
 PY
