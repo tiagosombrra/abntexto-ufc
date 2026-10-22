@@ -44,6 +44,8 @@
 \tl_new:N \g_ufc_document_type_tl
 \tl_new:N \g_ufc_print_mode_tl
 \tl_new:N \g_ufc_labels_language_tl
+\tl_gset:Nn \g_ufc_labels_language_tl {pt}
+\bool_new:N \g_ufc_labels_language_explicit_bool
 \tl_new:N \g_ufc_document_language_tl
 \tl_gset:Nn \g_ufc_document_language_tl {pt}
 \bool_new:N \g_ufc_document_language_explicit_bool
@@ -307,32 +309,52 @@
       {
         \tl_gset:Nn \g_ufc_document_language_tl {pt}
         \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {pt} }
       },
     document-language / en .code:n =
       {
         \tl_gset:Nn \g_ufc_document_language_tl {en}
         \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {en} }
       },
     document-language / es .code:n =
       {
         \tl_gset:Nn \g_ufc_document_language_tl {es}
         \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {es} }
       },
     document-language / fr .code:n =
       {
         \tl_gset:Nn \g_ufc_document_language_tl {fr}
         \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {fr} }
       },
 
     labels-language .choice:,
     labels-language / pt .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {pt} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {pt}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
     labels-language / en .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {en} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {en}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
     labels-language / es .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {es} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {es}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
     labels-language / fr .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {fr} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {fr}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
 
     type .choice:,
     type / undergraduate-capstone .code:n =
@@ -463,7 +485,6 @@
 
 \keys_set:nn { ufc }
   {
-    labels-language = pt,
     type = undergraduate-capstone,
     print-mode = single-sided,
     cover = auto,
