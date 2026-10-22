@@ -48,7 +48,7 @@ Por razões normativas, `\ufcPrintSummary` continua identificado como **Resumo**
 
 ### Política opcional de RESUMO, ABSTRACT, RESUMEN e RÉSUMÉ (v3.1.0)
 
-A configuração **document-language=pt|en|es|fr** é independente de **labels-language**. O primeiro define o idioma principal do texto e dos resumos; o segundo seleciona somente os nove títulos gerais pré-textuais. O par de resumos é explicitamente gerado com **\ufcPrintRequiredSummaries{arquivo-principal}{arquivo-complementar}**:
+A configuração **document-language=pt|en|es|fr** é independente de **labels-language**. Quando informada explicitamente, a primeira seleciona o idioma principal do texto no Babel e a política de resumos; sem essa opção, a escolha existente de idioma no preâmbulo é preservada, mantendo PT como padrão apenas dos novos comandos de resumo. A segunda seleciona somente os nove títulos gerais pré-textuais. O par de resumos é explicitamente gerado com **\ufcPrintRequiredSummaries{arquivo-principal}{arquivo-complementar}**:
 
 - Português: RESUMO seguido de ABSTRACT em inglês.
 - Inglês: ABSTRACT seguido de RESUMO em português.
