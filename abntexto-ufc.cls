@@ -45,6 +45,8 @@
 \tl_new:N \g_ufc_print_mode_tl
 \tl_new:N \g_ufc_labels_language_tl
 \tl_new:N \g_ufc_document_language_tl
+\tl_gset:Nn \g_ufc_document_language_tl {pt}
+\bool_new:N \g_ufc_document_language_explicit_bool
 \prop_new:N \g_ufc_summary_seen_prop
 \prop_new:N \g_ufc_summary_headings_prop
 \prop_new:N \g_ufc_summary_keywords_prop
@@ -181,13 +183,25 @@
   {
     document-language .choice:,
     document-language / pt .code:n =
-      { \tl_gset:Nn \g_ufc_document_language_tl {pt} },
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {pt}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+      },
     document-language / en .code:n =
-      { \tl_gset:Nn \g_ufc_document_language_tl {en} },
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {en}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+      },
     document-language / es .code:n =
-      { \tl_gset:Nn \g_ufc_document_language_tl {es} },
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {es}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+      },
     document-language / fr .code:n =
-      { \tl_gset:Nn \g_ufc_document_language_tl {fr} },
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {fr}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+      },
 
     labels-language .choice:,
     labels-language / pt .code:n =
@@ -329,7 +343,6 @@
 \keys_set:nn { ufc }
   {
     labels-language = pt,
-    document-language = pt,
     type = undergraduate-capstone,
     print-mode = single-sided,
     cover = auto,
@@ -1403,7 +1416,10 @@
   }
 
 \AtBeginDocument
-  { \exp_args:NV \ufc_summary_select_language:n \g_ufc_document_language_tl }
+  {
+    \bool_if:NT \g_ufc_document_language_explicit_bool
+      { \exp_args:NV \ufc_summary_select_language:n \g_ufc_document_language_tl }
+  }
 
 \NewDocumentCommand \ufcSummaryKeywordsInLanguage { m m }
   {
