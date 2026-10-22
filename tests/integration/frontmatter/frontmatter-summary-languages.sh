@@ -66,6 +66,25 @@ for main, pdf_lang in langs.items():
     article += r"\end{document}" + "\n"
     (work / f"article-{main}.tex").write_text(article, encoding="utf-8")
 
+# Regression: a legacy preamble \selectlanguage must survive unchanged.
+# Only the explicit new document-language choice is allowed to override it.
+for choice in ("legacy", "explicit"):
+    config = "document-language=pt," if choice == "explicit" else ""
+    (work / f"preamble-{choice}.tex").write_text(
+        r"\DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}" + "\n"
+        r"\documentclass{abntexto-ufc}" + "\n"
+        r"\ufcsetup{type=doctoral-thesis,cover=false,catalog-card=false,"
+        r"coat-of-arms=false," + config + "}\n"
+        r"\selectlanguage{english}" + "\n"
+        r"\begin{document}" + "\n"
+        r"\typeout{SUMMARY-BABEL-BASELINE=\languagename}" + "\n"
+        r"\textual" + "\n"
+        r"\section{Existing manuscript language}" + "\n"
+        r"LANGUAGE CONTROL BODY." + "\n"
+        r"\end{document}" + "\n",
+        encoding="utf-8",
+    )
+
 (work / "academic-duplicate.tex").write_text(
     (work / "academic-pt.tex").read_text(encoding="utf-8").replace(
         r"\textual",
@@ -105,6 +124,24 @@ for case in academic-pt academic-en academic-es academic-fr article-pt article-e
   test -s "$work/$case.pdf"
   pdftotext -layout "$work/$case.pdf" "$work/$case.txt"
   echo "SUMMARY-LOCALE-EVIDENCE status=PASS case=$case real_pdf=true"
+done
+
+for choice in legacy explicit; do
+  case="preamble-$choice"
+  if ! pdflatex $flags -jobname="$case" -output-directory="$work" "$work/$case.tex" > "$work/$case.stdout" 2>&1; then
+    cat "$work/$case.stdout"
+    echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=FAIL case=$case compilation=FAIL" >&2
+    exit 1
+  fi
+  expected=english
+  if [ "$choice" = explicit ]; then expected=brazilian; fi
+  grep -Fq "SUMMARY-BABEL-BASELINE=$expected" "$work/$case.stdout" || {
+    cat "$work/$case.stdout"
+    echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=FAIL case=$case expected=$expected" >&2
+    exit 1
+  }
+  test -s "$work/$case.pdf"
+  echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=PASS case=$case language=$expected real_pdf=true"
 done
 
 for case in academic-duplicate academic-invalid academic-keyword-invalid article-duplicate; do
