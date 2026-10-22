@@ -27,13 +27,24 @@ for main, pdf_lang in langs.items():
 \ufcsetup{{
   type=doctoral-thesis,
   document-language={main},
-  labels-language=pt,
+  labels-language={main},
+  author={{Academic Test Author}},
+  title={{Sample Research Thesis}},
+  institution={{Universidade Federal do Ceará}},
+  doctoral-graduate-program={{Graduate Program in Computing}},
+  doctoral-degree-field={{Computer Science}},
+  advisor={{Academic Test Advisor}},
+  examiner-2={{Academic Test Examiner}},
+  approval-date={{21 October 2026}},
+  year={{2026}},
   coat-of-arms=false,
   cover=false,
   catalog-card=false
 }}
 \begin{{document}}
 \pretextual
+\ufcPrintTitlePage
+\ufcPrintApprovalPage
 \ufcPrintRequiredSummaries{{{work / (main + '-' + main + '.tex')}}}{{{work / (main + '-' + complement + '.tex')}}}
 """
     if main in {"es", "fr"}:
@@ -200,6 +211,32 @@ for kind in ("academic", "article"):
         expect = [main, secondary] + (["en"] if main in ("es", "fr") else [])
         raw = (work / f"{kind}-{main}.txt").read_text(encoding="utf-8")
         text = norm(raw)
+        if kind == "academic":
+            institutional = {
+                "pt": ["tese apresentada ao", "banca examinadora", "aprovada em:", "orientador:"],
+                "en": ["doctoral thesis submitted to", "examining committee", "approved on:", "advisor:"],
+                "es": ["tesis presentada al", "tribunal examinador", "aprobada el:", "director:"],
+                "fr": ["thèse présentée au", "jury d'examen", "approuvée le:", "directeur de recherche:"],
+            }
+            for token in institutional[main]:
+                if norm(token) not in text:
+                    raise SystemExit(
+                        f"SUMMARY-LOCALE-EVIDENCE status=FAIL untranslated_institutional_text={kind}-{main}-{token}"
+                    )
+            if main != "pt" and ("banca examinadora" in text or "tese apresentada ao" in text):
+                raise SystemExit(f"SUMMARY-LOCALE-EVIDENCE status=FAIL portuguese_leak={kind}-{main}")
+        else:
+            date_labels = {
+                "pt": ["submetido em:", "aprovado em:"],
+                "en": ["submitted on:", "approved on:"],
+                "es": ["enviado el:", "aprobado el:"],
+                "fr": ["soumis le:", "approuvé le:"],
+            }
+            for token in date_labels[main]:
+                if norm(token) not in text:
+                    raise SystemExit(
+                        f"SUMMARY-LOCALE-EVIDENCE status=FAIL untranslated_article_date={main}-{token}"
+                    )
         # Each version must be on a separate heading/inline heading route.
         found_with_offsets = []
         for language, heading in titles.items():
