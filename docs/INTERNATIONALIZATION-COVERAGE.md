@@ -20,7 +20,7 @@ This is the implementation inventory for the requested PT / EN / ES / FR *comple
 | Committee, approval/submission dates, volume and program type captions | PT/EN/ES/FR | `document-language` |
 | Bibliography/reference and glossary headings | PT/EN/ES/FR | `document-language` |
 | Additional code/algorithm/chart list headings and legend labels | PT/EN/ES/FR | `document-language` |
-| Inherited appendix, annex, index and text-table captions | Best-effort opt-in bindings to available inherited macros | `document-language`, only when relevant macros are provided by installed dependencies |
+| Inherited appendix, annex, index, figure/table captions, source labels and text-table captions | Best-effort opt-in bindings to available inherited macros | `document-language`, only when relevant macros are provided by installed dependencies |
 | Institution names, degree titles, program names, PDF language metadata | Supplied by author or by institution | No automatic translation of proper names or legal descriptors |
 | Externally generated citation language, figure/table legends, bibliography localization | Controlled by Babel, biblatex-abnt, abntexto, tabularray-abnt and their installed versions | PDF tests and independent compatibility review required; class does not promise arbitrary third-party terminology is fully translated |
 | Body text, quotations, bibliography entry contents, alt text, research data | Supplied by author | Not automatically translated |
