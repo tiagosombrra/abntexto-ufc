@@ -77,6 +77,22 @@ for main, pdf_lang in langs.items():
     article += r"\end{document}" + "\n"
     (work / f"article-{main}.tex").write_text(article, encoding="utf-8")
 
+# Verify document-language selects the matching general headings unless the
+# author explicitly configures the independent labels-language override.
+for variant in ("implicit", "override"):
+    labels = "labels-language=pt," if variant == "override" else ""
+    (work / f"labels-{variant}.tex").write_text(
+        r"\DocumentMetadata{lang=en-US,pdfstandard=A-2b,pdfversion=1.7}" + "\n"
+        r"\documentclass{abntexto-ufc}" + "\n"
+        r"\ufcsetup{type=doctoral-thesis,cover=false,catalog-card=false,"
+        r"coat-of-arms=false,document-language=en," + labels + "}\n"
+        r"\begin{document}" + "\n"
+        r"\pretextual\ufcPrintTableOfContents" + "\n"
+        r"\textual\section{TEST HEADING}" + "\n"
+        r"\end{document}" + "\n",
+        encoding="utf-8",
+    )
+
 # Regression: a pre-document Babel choice in the LaTeX begin-document/before
 # hook must survive without document-language, and be overridden only with
 # an explicit option. Direct preamble selectlanguage may be reset by Babel.
@@ -136,6 +152,26 @@ for case in academic-pt academic-en academic-es academic-fr article-pt article-e
   test -s "$work/$case.pdf"
   pdftotext -layout "$work/$case.pdf" "$work/$case.txt"
   echo "SUMMARY-LOCALE-EVIDENCE status=PASS case=$case real_pdf=true"
+done
+
+for variant in implicit override; do
+  case="labels-$variant"
+  for pass in 1 2 3; do
+    pdflatex $flags -jobname="$case" -output-directory="$work" "$work/$case.tex" > "$work/$case.stdout" 2>&1 || {
+      cat "$work/$case.stdout"
+      echo "SUMMARY-LABEL-DEFAULT-EVIDENCE status=FAIL case=$case compilation=FAIL" >&2
+      exit 1
+    }
+  done
+  pdftotext -layout "$work/$case.pdf" "$work/$case.txt"
+  expected=CONTENTS
+  if [ "$variant" = override ]; then expected=SUMÁRIO; fi
+  grep -Fiq "$expected" "$work/$case.txt" || {
+    cat "$work/$case.txt"
+    echo "SUMMARY-LABEL-DEFAULT-EVIDENCE status=FAIL case=$case expected=$expected" >&2
+    exit 1
+  }
+  echo "SUMMARY-LABEL-DEFAULT-EVIDENCE status=PASS case=$case auto_locale_or_override=true"
 done
 
 for choice in legacy explicit; do
