@@ -49,6 +49,7 @@
 \tl_new:N \g_ufc_document_language_tl
 \tl_gset:Nn \g_ufc_document_language_tl {pt}
 \bool_new:N \g_ufc_document_language_explicit_bool
+\bool_new:N \g_ufc_project_type_explicit_bool
 \prop_new:N \g_ufc_summary_seen_prop
 \prop_new:N \g_ufc_summary_headings_prop
 \prop_new:N \g_ufc_summary_keywords_prop
@@ -221,14 +222,18 @@
 \prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
-\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_meta_use:n {project-type}~apresentado~à~\ufc_meta_use:n {submission-entity}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_meta_use:n {project-type}~submitted~to~\ufc_meta_use:n {submission-entity}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_meta_use:n {project-type}~presentado~a~\ufc_meta_use:n {submission-entity}.}
-\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_meta_use:n {project-type}~soumis~à~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_project_type_text:~apresentado~à~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_project_type_text:~submitted~to~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:~presentado~a~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:~soumis~à~\ufc_meta_use:n {submission-entity}.}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-text-table} {Quadro}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/caption-text-table} {Text~Table}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/caption-text-table} {Cuadro}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-text-table} {Encadré}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/default-project-type} {Projeto~de~pesquisa}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/default-project-type} {Research~project}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/default-project-type} {Proyecto~de~investigación}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/default-project-type} {Projet~de~recherche}
 \cs_new:Npn \ufc_doc_text:n #1
   {
     \prop_item:Ne \g_ufc_document_text_prop
@@ -439,7 +444,11 @@
     doctoral-degree-field .code:n = { \ufc_meta_set:nn {doctoral-degree-field} {#1} },
     doctoral-concentration .code:n = { \ufc_meta_set:nn {doctoral-concentration} {#1} },
     project-program .code:n = { \ufc_meta_set:nn {project-program} {#1} },
-    project-type .code:n = { \ufc_meta_set:nn {project-type} {#1} },
+    project-type .code:n =
+      {
+        \ufc_meta_set:nn {project-type} {#1}
+        \bool_gset_true:N \g_ufc_project_type_explicit_bool
+      },
     submission-entity .code:n = { \ufc_meta_set:nn {submission-entity} {#1} },
     project-nature-statement .code:n = { \ufc_meta_set:nn {project-nature-statement} {#1} },
     project-identifier .code:n = { \ufc_meta_set:nn {project-identifier} {#1} },
@@ -1261,6 +1270,13 @@
     \str_if_eq:eeTF {\ufc_meta_use:n {coadvisor-feminine-label}} {true}
       {\ufc_doc_text:n {coadvisor-female}}
       {\ufc_doc_text:n {coadvisor-male}}
+  }
+
+\cs_new:Npn \ufc_project_type_text:
+  {
+    \bool_if:NTF \g_ufc_project_type_explicit_bool
+      {\ufc_meta_use:n {project-type}}
+      {\ufc_doc_text:n {default-project-type}}
   }
 
 \cs_new:Npn \ufc_nature_text:
