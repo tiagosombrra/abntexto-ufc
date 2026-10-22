@@ -1836,7 +1836,7 @@
       \setlength{\parindent}{0pt}
       \justifying
       \noindent\textbf{
-        \exp_args:Ne \prop_item:Nn \g_ufc_summary_headings_prop
+        \prop_item:Ne \g_ufc_summary_headings_prop
           {\tl_use:N \g_ufc_document_language_tl}:}\space #1\par
     \endgroup
   }
