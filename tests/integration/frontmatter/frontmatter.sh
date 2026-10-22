@@ -7,6 +7,7 @@ sh tests/integration/frontmatter/frontmatter-alignment-evidence.sh
 sh tests/integration/frontmatter/frontmatter-enforcement-negative.sh
 sh tests/integration/frontmatter/frontmatter-acknowledgments-evidence.sh
 sh tests/integration/frontmatter/frontmatter-summary-evidence.sh
+python3 tests/integration/frontmatter/document-locale-catalog.py
 sh tests/integration/frontmatter/frontmatter-summary-languages.sh
 sh tests/integration/frontmatter/frontmatter-cover-evidence.sh
 sh tests/integration/frontmatter/frontmatter-title-page-evidence.sh
