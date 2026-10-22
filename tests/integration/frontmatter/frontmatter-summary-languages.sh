@@ -114,12 +114,15 @@ for case in academic-duplicate academic-invalid academic-keyword-invalid article
   fi
   case "$case" in
     academic-duplicate|article-duplicate)
-      grep -Fq 'Duplicate' "$work/$case.stdout" ||
-      grep -Fq 'duplicates' "$work/$case.stdout" || {
+      # TeX wraps ClassError diagnostics at its output line width, including
+      # across words ("Duplic" + newline + "ate"). Join only for matching the
+      # complete *expected* diagnostic. Compilation must already have failed.
+      if ! tr -d '\r\n' < "$work/$case.stdout" |
+        grep -Eq 'Class abntexto-ufc Error: (Duplicate summary language|Translated article summary duplicates the main language)'; then
         cat "$work/$case.stdout"
         echo "SUMMARY-LOCALE-EVIDENCE status=FAIL missing_duplicate_error=$case" >&2
         exit 1
-      }
+      fi
       ;;
     academic-invalid)
       grep -Fq "document-language" "$work/$case.stdout" || {
