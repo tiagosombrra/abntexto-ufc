@@ -50,6 +50,6 @@ For scientific-article, \ufcPrintArticleFrontMatter now labels its primary summa
 
 ## Evidence and boundaries
 
-The frontmatter language test builds eight genuine real-PDF scenarios (four languages × thesis/article) and fail-closed invalid/duplicate-language cases, checking headings, keyword labels, body and optional English versions. It supplements the existing NBR 6028 final-PDF check rather than replacing it.
+The frontmatter language test builds eight genuine real-PDF scenarios (four languages × thesis/article) and four fail-closed invalid/duplicate-language cases (including unsupported keyword locales), checking headings, keyword labels, body and optional English versions. It supplements the existing NBR 6028 final-PDF check rather than replacing it.
 
 **Not certified:** the accuracy of author translations, institutional authorization of summary order, arbitrary-text word counts, PDF catalog /Lang, foreign degree/title page wording, PDF/UA, journal policy, or human visual release acceptance. Seven complete profile PDFs remain gated by #507; PDF/UA research by #459; v3.1.0 is UNRELEASED. The 29 normative parent rules and public v3.0.5 assets remain unchanged.
