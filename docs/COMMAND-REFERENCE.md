@@ -30,7 +30,7 @@ Forma geral:
 
 ### Idioma principal e versões do resumo (opt-in, v3.1.0)
 
-A chave **document-language = pt|en|es|fr** define o idioma principal do texto e dos novos comandos de resumo, de forma independente de **labels-language**. Padrão PT. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
+A chave **document-language = pt|en|es|fr** define o idioma dos novos comandos de resumo, de forma independente de **labels-language**. O idioma padrão para a política de resumos é PT. A seleção de idioma do Babel ao iniciar o documento ocorre **somente se esta chave for informada explicitamente**; documentos antigos que já selecionam um idioma no preâmbulo preservam seu comportamento. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
 
 | Idioma principal | Par gerado pelo comando novo | Versão inglesa adicional |
 | --- | --- | --- |
