@@ -229,11 +229,15 @@ for case in academic-duplicate academic-invalid academic-keyword-invalid article
       fi
       ;;
     academic-invalid)
-      grep -Fq "document-language" "$work/$case.stdout" || {
+      # TeX may split the key itself across output lines. Require the exact
+      # invalid-choice diagnostic after joining physical log lines; a compiler
+      # failure from some other reason must not satisfy this negative case.
+      if ! tr -d '\r\n' < "$work/$case.stdout" |
+        grep -Fq "Key 'ufc/document-language' accepts only a fixed set of"; then
         cat "$work/$case.stdout"
         echo "SUMMARY-LOCALE-EVIDENCE status=FAIL missing_invalid_locale_error=true" >&2
         exit 1
-      }
+      fi
       ;;
     academic-keyword-invalid)
       grep -Fq "Unsupported" "$work/$case.stdout" || {
