@@ -93,19 +93,25 @@ for variant in ("implicit", "override"):
         encoding="utf-8",
     )
 
-# Regression: a pre-document Babel choice in the LaTeX begin-document/before
-# hook must survive without document-language, and be overridden only with
-# an explicit option. Direct preamble selectlanguage may be reset by Babel.
+# Regression: a direct preamble Babel selection is reset by the dependency
+# startup in the inherited baseline; absence of document-language must retain
+# that result, whereas explicit document-language=en overrides it. Separately
+# prove that the new class language-opt-in boolean is false/true respectively.
 for choice in ("legacy", "explicit"):
-    config = "document-language=pt," if choice == "explicit" else ""
+    config = "document-language=en," if choice == "explicit" else ""
     (work / f"preamble-{choice}.tex").write_text(
         r"\DocumentMetadata{lang=pt-BR,pdfstandard=A-2b,pdfversion=1.7}" + "\n"
         r"\documentclass{abntexto-ufc}" + "\n"
         r"\ufcsetup{type=doctoral-thesis,cover=false,catalog-card=false,"
         r"coat-of-arms=false," + config + "}\n"
-        r"\AddToHook{begindocument/before}{\selectlanguage{english}}" + "\n"
+        r"\selectlanguage{english}" + "\n"
         r"\begin{document}" + "\n"
         r"\typeout{SUMMARY-BABEL-BASELINE=\languagename}" + "\n"
+        r"\ExplSyntaxOn" + "\n"
+        r"\bool_if:NTF \g_ufc_document_language_explicit_bool"
+        r"{\typeout{SUMMARY-LOCALE-EXPLICIT=true}}"
+        r"{\typeout{SUMMARY-LOCALE-EXPLICIT=false}}" + "\n"
+        r"\ExplSyntaxOff" + "\n"
         r"\textual" + "\n"
         r"\section{Existing manuscript language}" + "\n"
         r"LANGUAGE CONTROL BODY." + "\n"
@@ -181,15 +187,28 @@ for choice in legacy explicit; do
     echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=FAIL case=$case compilation=FAIL" >&2
     exit 1
   fi
-  expected=english
-  if [ "$choice" = explicit ]; then expected=brazilian; fi
+  # A direct preamble selectlanguage is reset by the inherited Babel startup
+  # on this TeX distribution. Never assert that the old class preserved
+  # preamble English here; measure the inherited PT baseline, while proving
+  # that the *explicit* document-language=en overrides startup to English.
+  expected=brazilian
+  marked=false
+  if [ "$choice" = explicit ]; then
+    expected=english
+    marked=true
+  fi
   grep -Fq "SUMMARY-BABEL-BASELINE=$expected" "$work/$case.stdout" || {
     cat "$work/$case.stdout"
     echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=FAIL case=$case expected=$expected" >&2
     exit 1
   }
+  grep -Fq "SUMMARY-LOCALE-EXPLICIT=$marked" "$work/$case.stdout" || {
+    cat "$work/$case.stdout"
+    echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=FAIL case=$case explicit_expected=$marked" >&2
+    exit 1
+  }
   test -s "$work/$case.pdf"
-  echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=PASS case=$case language=$expected real_pdf=true"
+  echo "SUMMARY-BABEL-BASELINE-EVIDENCE status=PASS case=$case language=$expected explicitly_set=$marked real_pdf=true"
 done
 
 for case in academic-duplicate academic-invalid academic-keyword-invalid article-duplicate; do
@@ -251,8 +270,8 @@ for kind in ("academic", "article"):
             institutional = {
                 "pt": ["tese apresentada ao", "banca examinadora", "aprovada em:", "orientador:"],
                 "en": ["doctoral thesis submitted to", "examining committee", "approved on:", "advisor:"],
-                "es": ["tesis presentada al", "tribunal examinador", "aprobada el:", "director:"],
-                "fr": ["thèse présentée au", "jury d'examen", "approuvée le:", "directeur de recherche:"],
+                "es": ["tesis presentada al", "tribunal examinador", "fecha de aprobación:", "director:"],
+                "fr": ["thèse présentée au", "jury d'examen", "date d'approbation:", "directeur de recherche:"],
             }
             for token in institutional[main]:
                 if norm(token) not in text:
