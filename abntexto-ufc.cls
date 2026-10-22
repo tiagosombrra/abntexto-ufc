@@ -108,6 +108,107 @@
   }
 
 
+% Canonical translatable institutional phrases; names of universities,
+% degrees, people and programs remain user-supplied official metadata.
+% Translations are descriptive; institutional approval is a separate gate.
+\prop_new:N \g_ufc_document_text_prop
+\prop_gset_from_keyval:Nn \g_ufc_document_text_prop
+  {
+    pt/advisor-male = {Orientador},
+    en/advisor-male = {Advisor},
+    es/advisor-male = {Director},
+    fr/advisor-male = {Directeur~de~recherche},
+    pt/advisor-female = {Orientadora},
+    en/advisor-female = {Advisor},
+    es/advisor-female = {Directora},
+    fr/advisor-female = {Directrice~de~recherche},
+    pt/coadvisor-male = {Coorientador},
+    en/coadvisor-male = {Co-advisor},
+    es/coadvisor-male = {Codirector},
+    fr/coadvisor-male = {Codirecteur~de~recherche},
+    pt/coadvisor-female = {Coorientadora},
+    en/coadvisor-female = {Co-advisor},
+    es/coadvisor-female = {Codirectora},
+    fr/coadvisor-female = {Codirectrice~de~recherche},
+    pt/approved-on = {Aprovada~em},
+    en/approved-on = {Approved~on},
+    es/approved-on = {Aprobada~el},
+    fr/approved-on = {Approuvée~le},
+    pt/examining-committee = {BANCA~EXAMINADORA},
+    en/examining-committee = {EXAMINING~COMMITTEE},
+    es/examining-committee = {TRIBUNAL~EXAMINADOR},
+    fr/examining-committee = {JURY~D'EXAMEN},
+    pt/volume = {VOLUME},
+    en/volume = {VOLUME},
+    es/volume = {VOLUMEN},
+    fr/volume = {VOLUME},
+    pt/undergraduate-program-line = {Curso~de~Graduação~em},
+    en/undergraduate-program-line = {Undergraduate~Program~in},
+    es/undergraduate-program-line = {Programa~de~Grado~en},
+    fr/undergraduate-program-line = {Programme~de~licence~en},
+    pt/specialization-program-line = {Curso~de~Especialização~em},
+    en/specialization-program-line = {Specialization~Program~in},
+    es/specialization-program-line = {Programa~de~Especialización~en},
+    fr/specialization-program-line = {Programme~de~spécialisation~en},
+    pt/submitted-on = {Submetido~em},
+    en/submitted-on = {Submitted~on},
+    es/submitted-on = {Enviado~el},
+    fr/submitted-on = {Soumis~le},
+    pt/article-approved-on = {Aprovado~em},
+    en/article-approved-on = {Approved~on},
+    es/article-approved-on = {Aprobado~el},
+    fr/article-approved-on = {Approuvé~le},
+    pt/references = {Referências},
+    en/references = {References},
+    es/references = {Referencias},
+    fr/references = {Références},
+    pt/glossary = {Glossário},
+    en/glossary = {Glossary},
+    es/glossary = {Glosario},
+    fr/glossary = {Glossaire},
+    pt/list-charts = {Lista~de~Gráficos},
+    en/list-charts = {List~of~Charts},
+    es/list-charts = {Lista~de~Gráficos},
+    fr/list-charts = {Liste~des~graphiques},
+    pt/list-code = {Lista~de~Códigos},
+    en/list-code = {List~of~Code~Listings},
+    es/list-code = {Lista~de~Códigos},
+    fr/list-code = {Liste~des~codes},
+    pt/list-algorithms = {Lista~de~Algoritmos},
+    en/list-algorithms = {List~of~Algorithms},
+    es/list-algorithms = {Lista~de~Algoritmos},
+    fr/list-algorithms = {Liste~des~algorithmes},
+    pt/caption-chart = {Gráfico},
+    en/caption-chart = {Chart},
+    es/caption-chart = {Gráfico},
+    fr/caption-chart = {Graphique},
+    pt/caption-code = {Código},
+    en/caption-code = {Code},
+    es/caption-code = {Código},
+    fr/caption-code = {Code},
+    pt/caption-algorithm = {Algoritmo},
+    en/caption-algorithm = {Algorithm},
+    es/caption-algorithm = {Algoritmo},
+    fr/caption-algorithm = {Algorithme},
+    pt/appendix = {Apêndice},
+    en/appendix = {Appendix},
+    es/appendix = {Apéndice},
+    fr/appendix = {Annexe},
+    pt/annex = {Anexo},
+    en/annex = {Annex},
+    es/annex = {Anexo},
+    fr/annex = {Annexe},
+    pt/index = {Índice~remissivo},
+    en/index = {Index},
+    es/index = {Índice~alfabético},
+    fr/index = {Index}
+  }
+\cs_new:Npn \ufc_doc_text:n #1
+  {
+    \prop_item:Ne \g_ufc_document_text_prop
+      { \tl_use:N \g_ufc_document_language_tl / #1 }
+  }
+
 \prop_gset_from_keyval:Nn \g_ufc_metadata_prop
   {
     institution = {Universidade~Federal~do~Ceará},
@@ -1106,15 +1207,15 @@
 \cs_new:Npn \ufc_orientation_label:
   {
     \str_if_eq:eeTF {\ufc_meta_use:n {advisor-feminine-label}} {true}
-      {Orientadora}
-      {Orientador}
+      {\ufc_doc_text:n {advisor-female}}
+      {\ufc_doc_text:n {advisor-male}}
   }
 
 \cs_new:Npn \ufc_coorientation_label:
   {
     \str_if_eq:eeTF {\ufc_meta_use:n {coadvisor-feminine-label}} {true}
-      {Coorientadora}
-      {Coorientador}
+      {\ufc_doc_text:n {coadvisor-female}}
+      {\ufc_doc_text:n {coadvisor-male}}
   }
 
 \cs_new:Npn \ufc_nature_text:
@@ -1273,9 +1374,9 @@
           \end{minipage}\par
           \vspace{\baselineskip}
           \raggedright
-          Aprovada~em:~\ufc_meta_use:n {approval-date}\par
+          \ufc_doc_text:n {approved-on}:~\ufc_meta_use:n {approval-date}\par
           \vspace{\baselineskip}
-          \centering\bfseries BANCA~EXAMINADORA\normalfont\par
+          \centering\bfseries \ufc_doc_text:n {examining-committee}\normalfont\par
           \ufc_setup_signature_spacing:
           \ufc_advisor_signature:
           \ufc_coadvisor_signature:
@@ -1652,7 +1753,7 @@
 \cs_new_protected:Npn \ufc_work_volume_line:
   {
     \ufc_meta_if_blank:nF {volume}
-      { VOLUME~\ufc_meta_use:n {volume}\par }
+      { \ufc_doc_text:n {volume}~\ufc_meta_use:n {volume}\par }
   }
 
 \cs_new_protected:Npn \ufc_cover_program_lines:
@@ -1664,7 +1765,7 @@
             \ufc_meta_if_blank:nF {undergraduate-program}
               {
                 \MakeUppercase
-                  {Curso~de~Graduação~em~\ufc_meta_use:n {undergraduate-program}}\par
+                  {\ufc_doc_text:n {undergraduate-program-line}~\ufc_meta_use:n {undergraduate-program}}\par
               }
           }
         {specialization-capstone}
@@ -1672,7 +1773,7 @@
             \ufc_meta_if_blank:nF {specialization-program}
               {
                 \MakeUppercase
-                  {Curso~de~Especialização~em~\ufc_meta_use:n {specialization-program}}\par
+                  {\ufc_doc_text:n {specialization-program-line}~\ufc_meta_use:n {specialization-program}}\par
               }
           }
         {masters-thesis}
@@ -1847,8 +1948,8 @@
 \cs_new_protected:Npn \ufc_article_dates:
   {
     \par\noindent
-    Submetido~em:~\ufc_meta_use:n {submission-date}.\space
-    Aprovado~em:~\ufc_meta_use:n {approval-date}.\par
+    \ufc_doc_text:n {submitted-on}:~\ufc_meta_use:n {submission-date}.\space
+    \ufc_doc_text:n {article-approved-on}:~\ufc_meta_use:n {approval-date}.\par
   }
 
 \cs_new_protected:Npn \ufc_article_primary_summary:n #1
@@ -1980,7 +2081,7 @@
     \ufc_meta_if_blank:nF {title-variant}
       { \MakeUppercase{\ufc_meta_use:n {title-variant}}\par }
     \ufc_meta_if_blank:nF {volume}
-      { VOLUME~\ufc_meta_use:n {volume}\par }
+      { \ufc_doc_text:n {volume}~\ufc_meta_use:n {volume}\par }
   }
 
 \cs_new_protected:Npn \ufc_project_cover:
@@ -2081,11 +2182,11 @@
 
 % Native abntexto legend areas used by the UFC profile.
 \cs_if_exist:cF { IDgrafico }
-  { \definelegendplace{grafico}{Gráfico}{logr} }
+  { \definelegendplace{grafico}{\ufc_doc_text:n {caption-chart}}{logr} }
 \cs_if_exist:cF { IDcode }
-  { \definelegendplace{code}{Código}{loc} }
+  { \definelegendplace{code}{\ufc_doc_text:n {caption-code}}{loc} }
 \cs_if_exist:cF { IDalgorithm }
-  { \definelegendplace{algorithm}{Algoritmo}{loa} }
+  { \definelegendplace{algorithm}{\ufc_doc_text:n {caption-algorithm}}{loa} }
 
 % tabularray-abnt defines quadro itself when loaded with abntexto.
 \cs_new_protected:Npn \ufc_objects_setup_quadro:
@@ -2167,13 +2268,13 @@
   { \end{place} }
 
 \NewDocumentCommand \ufcPrintListOfCharts { }
-  { \ufc_pretextual_list:nn {Lista~de~Gráficos} {\ufcstarttoc{logr}} }
+  { \ufc_pretextual_list:nn {\ufc_doc_text:n {list-charts}} {\ufcstarttoc{logr}} }
 
 \NewDocumentCommand \ufcPrintListOfCodeListings { }
-  { \ufc_pretextual_list:nn {Lista~de~Códigos} {\ufcstarttoc{loc}} }
+  { \ufc_pretextual_list:nn {\ufc_doc_text:n {list-code}} {\ufcstarttoc{loc}} }
 
 \NewDocumentCommand \ufcPrintListOfAlgorithms { }
-  { \ufc_pretextual_list:nn {Lista~de~Algoritmos} {\ufcstarttoc{loa}} }
+  { \ufc_pretextual_list:nn {\ufc_doc_text:n {list-algorithms}} {\ufcstarttoc{loa}} }
 
 \cs_new_protected:Npn \ufc_listing_apply_number_margins:
   {
@@ -2638,11 +2739,11 @@
   {
     \ufc_primary_section_break:
     \cs_if_exist:NT \phantomsection { \phantomsection }
-    \addcontentsline{toc}{section}{\ufcTocPosttextualTitle{Referências}}
+    \addcontentsline{toc}{section}{\ufcTocPosttextualTitle{\ufc_doc_text:n {references}}}
     \begingroup
       \parindent=0pt
       \begin{center}
-        \bfseries REFERÊNCIAS\par
+        \bfseries\MakeUppercase{\ufc_doc_text:n {references}}\par
       \end{center}
       \vspace{\baselineskip}
       \singlesp
@@ -2896,7 +2997,7 @@
   {
     \cs_if_exist:NTF \printglossary
       {
-        \ufc_aligned_posttextual_heading:n {Glossário}
+        \ufc_aligned_posttextual_heading:n {\ufc_doc_text:n {glossary}}
         \begingroup
           \setglossarysection{none}
           \glstocfalse
