@@ -69,6 +69,7 @@ expected = {
     "list-charts", "list-code", "list-algorithms",
     "caption-chart", "caption-code", "caption-algorithm", "caption-text-table",
     "appendix", "annex", "index", "default-project-type",
+    "caption-figure", "caption-table", "source-label",
     "nature-undergraduate", "nature-specialization", "nature-masters",
     "nature-doctoral", "nature-project",
 }
