@@ -2242,7 +2242,7 @@
 \cs_new_protected:Npn \ufc_objects_setup_quadro:
   {
     \cs_if_exist:cF { IDquadro }
-      { \definelegendplace{quadro}{Quadro}{loq} }
+      { \definelegendplace{quadro}{\ufc_doc_text:n {caption-text-table}}{loq} }
   }
 \AtEndPreamble{\ufc_objects_setup_quadro:}
 
