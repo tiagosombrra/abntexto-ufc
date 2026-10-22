@@ -15,7 +15,7 @@ The helper uses main-language-first order by project decision. **Do not claim NB
 
 ## Supported TeX API
 
-The optional **document-language = pt | en | es | fr** setting selects the primary language and Babel language of the manuscript, independently from the established nine-heading **labels-language** setting. The author must set a matching BCP 47 language separately in the pre-class **DocumentMetadata** declaration; no automatic PDF metadata, official institution/degree text, bibliography, hyphenation policy outside Babel, or content translation is claimed.
+The optional **document-language = pt | en | es | fr** setting selects the primary summary language and, **only when explicitly set**, selects the Babel main language at document start; otherwise an existing preamble `\\selectlanguage{english}` (or another legacy Babel selection) is preserved. The initial policy value for summary helpers is PT, independently from the established nine-heading **labels-language** setting. The author must set a matching BCP 47 language separately in the pre-class **DocumentMetadata** declaration; no automatic PDF metadata, official institution/degree text, bibliography, hyphenation policy outside Babel, or content translation is claimed.
 
 Example English thesis:
 
