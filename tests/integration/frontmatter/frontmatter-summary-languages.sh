@@ -147,24 +147,25 @@ for kind in ("academic", "article"):
         raw = (work / f"{kind}-{main}.txt").read_text(encoding="utf-8")
         text = norm(raw)
         # Each version must be on a separate heading/inline heading route.
-        found = []
+        found_with_offsets = []
         for language, heading in titles.items():
             if kind == "academic":
-                occurrence = len(re.findall(
+                matches = list(re.finditer(
                     r"^\s*" + re.escape(norm(heading)) + r"\s*$",
                     text, flags=re.MULTILINE,
                 ))
             else:
-                occurrence = len(re.findall(
+                matches = list(re.finditer(
                     r"\b" + re.escape(norm(heading)) + r"\s*:",
                     text,
                 ))
-            if occurrence:
-                if occurrence != 1:
+            if matches:
+                if len(matches) != 1:
                     raise SystemExit(f"SUMMARY-LOCALE-EVIDENCE status=FAIL duplicate={kind}-{main}-{language}")
-                found.append(language)
-        if set(found) != set(expect):
-            raise SystemExit(f"SUMMARY-LOCALE-EVIDENCE status=FAIL headings={kind}-{main}-{found} expected={expect}")
+                found_with_offsets.append((matches[0].start(), language))
+        found = [language for _, language in sorted(found_with_offsets)]
+        if found != expect:
+            raise SystemExit(f"SUMMARY-LOCALE-EVIDENCE status=FAIL headings_or_order={kind}-{main}-{found} expected={expect}")
         expected_markers = (
             [f"language-content-{main}-{l}" for l in expect]
             if kind == "academic"
