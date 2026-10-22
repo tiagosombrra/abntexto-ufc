@@ -225,6 +225,10 @@
 \prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_meta_use:n {project-type}~submitted~to~\ufc_meta_use:n {submission-entity}.}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_meta_use:n {project-type}~presentado~a~\ufc_meta_use:n {submission-entity}.}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_meta_use:n {project-type}~soumis~à~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-text-table} {Quadro}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/caption-text-table} {Text~Table}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/caption-text-table} {Cuadro}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-text-table} {Encadré}
 \cs_new:Npn \ufc_doc_text:n #1
   {
     \prop_item:Ne \g_ufc_document_text_prop
@@ -1530,6 +1534,27 @@
     \bool_if:NT \g_ufc_document_language_explicit_bool
       { \exp_args:NV \ufc_summary_select_language:n \g_ufc_document_language_tl }
   }
+
+% Bind inherited LaTeX/abntexto and tabularray-abnt caption names only for
+% explicitly internationalized documents; preserve all legacy defaults.
+\cs_new_protected:Npn \ufc_localize_inherited_names:
+  {
+    \bool_if:NT \g_ufc_document_language_explicit_bool
+      {
+        \cs_if_exist:NT \appendixname
+          { \cs_gset:Npn \appendixname { \ufc_doc_text:n {appendix} } }
+        \cs_if_exist:NT \annexname
+          { \cs_gset:Npn \annexname { \ufc_doc_text:n {annex} } }
+        \cs_if_exist:NT \indexname
+          { \cs_gset:Npn \indexname { \ufc_doc_text:n {index} } }
+        \cs_if_exist:NT \quadroname
+          { \cs_gset:Npn \quadroname { \ufc_doc_text:n {caption-text-table} } }
+        \cs_if_exist:NT \listquadroname
+          { \cs_gset:Npn \listquadroname { \ufc_label:n {text-tables} } }
+      }
+  }
+\AddToHook{begindocument/end}{\ufc_localize_inherited_names:}
+
 
 \NewDocumentCommand \ufcSummaryKeywordsInLanguage { m m }
   {
