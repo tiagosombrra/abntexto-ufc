@@ -135,8 +135,8 @@
     fr/coadvisor-female = {Codirectrice~de~recherche},
     pt/approved-on = {Aprovada~em},
     en/approved-on = {Approved~on},
-    es/approved-on = {Aprobada~el},
-    fr/approved-on = {Approuvée~le},
+    es/approved-on = {Fecha~de~aprobación},
+    fr/approved-on = {Date~d'approbation},
     pt/examining-committee = {BANCA~EXAMINADORA},
     en/examining-committee = {EXAMINING~COMMITTEE},
     es/examining-committee = {TRIBUNAL~EXAMINADOR},
@@ -1291,6 +1291,19 @@
       {\ufc_doc_text:n {default-project-type}}
   }
 
+% Preserve the original canonical Portuguese formula byte-for-byte in the
+% default/explicit PT path. Non-PT project nature statements are localized,
+% while an author-provided complete nature-statement still takes precedence.
+\cs_new:Npn \ufc_project_nature_text:
+  {
+    \str_if_eq:VnTF \g_ufc_document_language_tl {pt}
+      {
+        \ufc_meta_use:n {project-type}~apresentado~à~
+        \ufc_meta_use:n {submission-entity}.
+      }
+      {\ufc_doc_text:n {nature-project}}
+  }
+
 \cs_new:Npn \ufc_nature_text:
   {
     \str_case:VnF \g_ufc_document_type_tl
@@ -1302,13 +1315,13 @@
         {research-project}
           {
             \ufc_meta_if_blank:nTF {project-nature-statement}
-              {\ufc_doc_text:n {nature-project}}
+              {\ufc_project_nature_text:}
               {\ufc_meta_use:n {project-nature-statement}}
           }
         {anonymized-research-project}
           {
             \ufc_meta_if_blank:nTF {project-nature-statement}
-              {\ufc_doc_text:n {nature-project}}
+              {\ufc_project_nature_text:}
               {\ufc_meta_use:n {project-nature-statement}}
           }
       }
