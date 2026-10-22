@@ -203,6 +203,26 @@
     es/index = {Índice~alfabético},
     fr/index = {Index}
   }
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-undergraduate} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Graduação~em~\ufc_meta_use:n {undergraduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~grau~de~\ufc_meta_use:n {undergraduate-degree}~em~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-undergraduate} {Undergraduate~capstone~submitted~to~the~\ufc_meta_use:n {undergraduate-program}~program~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~degree~of~\ufc_meta_use:n {undergraduate-degree}~in~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-undergraduate} {Trabajo~de~fin~de~grado~presentado~al~programa~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~el~título~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-undergraduate} {Mémoire~de~fin~de~licence~présenté~au~programme~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~diplôme~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-specialization} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Especialização~em~\ufc_meta_use:n {specialization-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~especialista~em~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-specialization} {Specialization~capstone~submitted~to~the~\ufc_meta_use:n {specialization-program}~program~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~specialist~qualification~in~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-specialization} {Trabajo~final~de~especialización~presentado~al~programa~de~\ufc_meta_use:n {specialization-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~la~especialización~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-specialization} {Mémoire~de~spécialisation~présenté~au~programme~de~\ufc_meta_use:n {specialization-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~titre~de~spécialiste~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-masters} {Dissertação~apresentada~ao~\ufc_meta_use:n {masters-graduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~mestre~em~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentração:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-masters} {Master's~dissertation~submitted~to~the~\ufc_meta_use:n {masters-graduate-program}~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~degree~of~Master~in~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Area~of~concentration:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-masters} {Disertación~presentada~al~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~el~grado~de~Máster~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentración:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-masters} {Mémoire~présenté~au~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~grade~de~master~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-doctoral} {Tese~apresentada~ao~\ufc_meta_use:n {doctoral-graduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~doutor~em~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentração:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_meta_use:n {project-type}~apresentado~à~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_meta_use:n {project-type}~submitted~to~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_meta_use:n {project-type}~presentado~a~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_meta_use:n {project-type}~soumis~à~\ufc_meta_use:n {submission-entity}.}
 \cs_new:Npn \ufc_doc_text:n #1
   {
     \prop_item:Ne \g_ufc_document_text_prop
@@ -1222,53 +1242,21 @@
   {
     \str_case:VnF \g_ufc_document_type_tl
       {
-        {undergraduate-capstone}
-          {
-            Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Graduação~em~
-            \ufc_meta_use:n {undergraduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~
-            parcial~à~obtenção~do~grau~de~\ufc_meta_use:n {undergraduate-degree}~em~
-            \ufc_meta_use:n {undergraduate-program}.
-          }
-        {specialization-capstone}
-          {
-            Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Especialização~em~
-            \ufc_meta_use:n {specialization-program}~da~\ufc_meta_use:n {institution},~como~
-            requisito~parcial~à~obtenção~do~título~de~especialista~em~
-            \ufc_meta_use:n {specialization-program}.
-          }
-        {masters-thesis}
-          {
-            Dissertação~apresentada~ao~\ufc_meta_use:n {masters-graduate-program}~da~
-            \ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~
-            mestre~em~\ufc_meta_use:n {masters-degree-field}.
-            \ufc_meta_if_blank:nF {masters-concentration}
-              {~Área~de~concentração:~\ufc_meta_use:n {masters-concentration}.}
-          }
-        {doctoral-thesis}
-          {
-            Tese~apresentada~ao~\ufc_meta_use:n {doctoral-graduate-program}~da~
-            \ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~
-            doutor~em~\ufc_meta_use:n {doctoral-degree-field}.
-            \ufc_meta_if_blank:nF {doctoral-concentration}
-              {~Área~de~concentração:~\ufc_meta_use:n {doctoral-concentration}.}
-          }
+        {undergraduate-capstone}{\ufc_doc_text:n {nature-undergraduate}}
+        {specialization-capstone}{\ufc_doc_text:n {nature-specialization}}
+        {masters-thesis}{\ufc_doc_text:n {nature-masters}}
+        {doctoral-thesis}{\ufc_doc_text:n {nature-doctoral}}
         {research-project}
           {
             \ufc_meta_if_blank:nTF {project-nature-statement}
-              {
-                \ufc_meta_use:n {project-type}~apresentado~à~
-                \ufc_meta_use:n {submission-entity}.
-              }
-              { \ufc_meta_use:n {project-nature-statement} }
+              {\ufc_doc_text:n {nature-project}}
+              {\ufc_meta_use:n {project-nature-statement}}
           }
         {anonymized-research-project}
           {
             \ufc_meta_if_blank:nTF {project-nature-statement}
-              {
-                \ufc_meta_use:n {project-type}~apresentado~à~
-                \ufc_meta_use:n {submission-entity}.
-              }
-              { \ufc_meta_use:n {project-nature-statement} }
+              {\ufc_doc_text:n {nature-project}}
+              {\ufc_meta_use:n {project-nature-statement}}
           }
       }
       {}
