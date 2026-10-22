@@ -66,8 +66,9 @@ for main, pdf_lang in langs.items():
     article += r"\end{document}" + "\n"
     (work / f"article-{main}.tex").write_text(article, encoding="utf-8")
 
-# Regression: a legacy preamble \selectlanguage must survive unchanged.
-# Only the explicit new document-language choice is allowed to override it.
+# Regression: a pre-document Babel choice in the LaTeX begin-document/before
+# hook must survive without document-language, and be overridden only with
+# an explicit option. Direct preamble selectlanguage may be reset by Babel.
 for choice in ("legacy", "explicit"):
     config = "document-language=pt," if choice == "explicit" else ""
     (work / f"preamble-{choice}.tex").write_text(
@@ -75,7 +76,7 @@ for choice in ("legacy", "explicit"):
         r"\documentclass{abntexto-ufc}" + "\n"
         r"\ufcsetup{type=doctoral-thesis,cover=false,catalog-card=false,"
         r"coat-of-arms=false," + config + "}\n"
-        r"\selectlanguage{english}" + "\n"
+        r"\AddToHook{begindocument/before}{\selectlanguage{english}}" + "\n"
         r"\begin{document}" + "\n"
         r"\typeout{SUMMARY-BABEL-BASELINE=\languagename}" + "\n"
         r"\textual" + "\n"
