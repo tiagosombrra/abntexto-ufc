@@ -230,6 +230,18 @@
 \prop_gput:Nnn \g_ufc_document_text_prop {en/caption-text-table} {Text~Table}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/caption-text-table} {Cuadro}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-text-table} {Encadré}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-figure} {Figura}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/caption-figure} {Figure}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/caption-figure} {Figura}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-figure} {Figure}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-table} {Tabela}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/caption-table} {Table}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/caption-table} {Tabla}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-table} {Tableau}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/source-label} {Fonte}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/source-label} {Source}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/source-label} {Fuente}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/source-label} {Source}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/default-project-type} {Projeto~de~pesquisa}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/default-project-type} {Research~project}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/default-project-type} {Proyecto~de~investigación}
@@ -1563,6 +1575,12 @@
           { \cs_gset:Npn \annexname { \ufc_doc_text:n {annex} } }
         \cs_if_exist:NT \indexname
           { \cs_gset:Npn \indexname { \ufc_doc_text:n {index} } }
+        \cs_if_exist:NT \figurename
+          { \cs_gset:Npn \figurename { \ufc_doc_text:n {caption-figure} } }
+        \cs_if_exist:NT \tablename
+          { \cs_gset:Npn \tablename { \ufc_doc_text:n {caption-table} } }
+        \cs_if_exist:NT \srclabel
+          { \cs_gset:Npn \srclabel { \ufc_doc_text:n {source-label}:~ } }
         \cs_if_exist:NT \quadroname
           { \cs_gset:Npn \quadroname { \ufc_doc_text:n {caption-text-table} } }
         \cs_if_exist:NT \listquadroname
