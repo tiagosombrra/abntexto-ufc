@@ -1407,6 +1407,13 @@
 
 \NewDocumentCommand \ufcSummaryKeywordsInLanguage { m m }
   {
+    \str_case:nnF {#1}
+      { {pt}{} {en}{} {es}{} {fr}{} }
+      {
+        \ClassError{abntexto-ufc}
+          {Unsupported~summary~keyword~language~'#1'}
+          {Use~pt,~en,~es~or~fr.}
+      }
     \par\vspace{\baselineskip}
     \noindent
     \textbf{\prop_item:Nn \g_ufc_summary_keywords_prop {#1}:}\space #2
