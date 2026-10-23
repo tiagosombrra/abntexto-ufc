@@ -115,6 +115,8 @@ jobs:
           path: |
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-e2e.json
             ${{ runner.temp }}/abntexto-ufc-web-lite/web-lite-chromedriver.log
+            ${{ runner.temp }}/abntexto-ufc-web-lite/homepage-locale-e2e.json
+            ${{ runner.temp }}/abntexto-ufc-web-lite/homepage-chromedriver.log
           retention-days: 14
           if-no-files-found: warn
 

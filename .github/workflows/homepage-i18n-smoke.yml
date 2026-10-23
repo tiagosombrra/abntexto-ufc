@@ -1,0 +1,56 @@
+name: Homepage localization smoke
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - site/**
+      - tools/ci/build-pages-site.sh
+      - tests/checks/repository/homepage_locales_contract.py
+      - tests/integration/validator/homepage-locale-e2e.py
+      - .github/workflows/homepage-i18n-smoke.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homepage-i18n-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  homepage-i18n:
+    name: Homepage four-locale browser smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify catalog and build Pages
+        shell: bash
+        run: |
+          python3 tests/checks/repository/homepage_locales_contract.py
+          sh tools/ci/build-pages-site.sh
+
+      - name: Run productive offline browser
+        shell: bash
+        run: |
+          command -v chromedriver
+          python3 tests/integration/validator/homepage-locale-e2e.py \
+            --site-root _site \
+            --evidence "$RUNNER_TEMP/homepage-locale-e2e.json"
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: homepage-i18n-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/homepage-locale-e2e.json
+            ${{ runner.temp }}/homepage-chromedriver.log
+          if-no-files-found: warn
+          retention-days: 14

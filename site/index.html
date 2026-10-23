@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="abntexto-ufc — classe LaTeX comunitária para trabalhos acadêmicos da UFC.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'none'">
+  <script src="./homepage-locales.js" defer></script>
   <title>abntexto-ufc</title>
   <style>
     :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f6f8fb}
@@ -13,6 +15,10 @@
     p{line-height:1.65}.lead{font-size:1.15rem;color:#44506a;max-width:760px}
     .notice{margin:20px 0;padding:14px 16px;background:#fff7df;border-left:4px solid #9a6a00;border-radius:8px}
     .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .locale-control{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:20px}
+    .locale-control label{font-size:.95rem;font-weight:650}
+    .locale-control select{font:inherit;padding:8px 11px;border:1px solid #9ca9bc;border-radius:8px;background:#fff;color:#172033}
+    .locale-control select:focus-visible,.button:focus-visible,a:focus-visible{outline:3px solid #e0a21a;outline-offset:3px}
     .button{display:inline-block;padding:11px 16px;border-radius:10px;background:#173f8a;color:#fff;text-decoration:none;font-weight:650}
     .button.secondary{background:#eef3fb;color:#173f8a}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
@@ -25,47 +31,56 @@
 <body>
 <main class="wrap">
   <header>
+    <div class="locale-control">
+      <label for="home-locale" data-i18n="localeLabel">Idioma do site</label>
+      <select id="home-locale" autocomplete="off">
+        <option value="pt-BR" lang="pt-BR">Português (Brasil)</option>
+        <option value="en" lang="en">English</option>
+        <option value="es" lang="es">Español</option>
+        <option value="fr" lang="fr">Français</option>
+      </select>
+    </div>
     <h1>abntexto-ufc</h1>
-    <p class="lead">Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do Ceará, construída sobre <code>abntexto</code>, com templates, referência completa e validação Web/Lite e CLI/Deep.</p>
-    <div class="notice"><strong>Projeto comunitário:</strong> não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.</div>
+    <p class="lead"><span data-i18n="leadBefore">Classe LaTeX comunitária para trabalhos acadêmicos da Universidade Federal do Ceará, construída sobre</span> <code>abntexto</code><span data-i18n="leadAfter">, com templates, referência completa e validação Web/Lite e CLI/Deep.</span></p>
+    <div class="notice"><strong data-i18n="communityLabel">Projeto comunitário:</strong> <span data-i18n="communityText">não é um template oficial ou homologado pela UFC, salvo manifestação institucional explícita em sentido contrário.</span></div>
     <div class="actions">
-      <a class="button" href="./validator/">Abrir validador Web/Lite</a>
-      <a class="button secondary" href="https://github.com/tiagosombrra/abntexto-ufc/releases">Baixar uma Release</a>
-      <a class="button secondary" href="https://github.com/tiagosombrra/abntexto-ufc">Ver repositório</a>
+      <a class="button" href="./validator/" data-i18n="openValidator">Abrir validador Web/Lite</a>
+      <a class="button secondary" href="https://github.com/tiagosombrra/abntexto-ufc/releases" data-i18n="downloadRelease">Baixar uma Release</a>
+      <a class="button secondary" href="https://github.com/tiagosombrra/abntexto-ufc" data-i18n="viewRepository">Ver repositório</a>
     </div>
   </header>
 
-  <h2>Por onde começar</h2>
+  <h2 data-i18n="startHeading">Por onde começar</h2>
   <section class="grid">
     <article class="card">
       <h3>Overleaf</h3>
-      <p>Baixe <code>abntexto-ufc-overleaf-&lt;versão&gt;.zip</code> na Release e envie em <strong>New Project → Upload Project</strong>.</p>
+      <p><span data-i18n="overleafStart">Baixe</span> <code>abntexto-ufc-overleaf-&lt;versão&gt;.zip</code> <span data-i18n="overleafEnd">na Release e envie em</span> <strong>New Project → Upload Project</strong>.</p>
     </article>
     <article class="card">
-      <h3>LaTeX local</h3>
-      <p>Use <code>abntexto-ufc-template-&lt;versão&gt;.zip</code>. Ele contém a fonte completa e o PDF pedagógico de referência.</p>
+      <h3 data-i18n="localHeading">LaTeX local</h3>
+      <p><span data-i18n="localStart">Use</span> <code>abntexto-ufc-template-&lt;versão&gt;.zip</code><span data-i18n="localEnd">. Ele contém a fonte completa e o PDF pedagógico de referência.</span></p>
     </article>
     <article class="card">
-      <h3>Validação</h3>
-      <p>O <a href="./validator/">Web/Lite</a> roda no navegador. Para PDF/A e incorporação de fontes, use também o CLI/Deep do repositório.</p>
+      <h3 data-i18n="validationHeading">Validação</h3>
+      <p><span data-i18n="validationBefore">O</span> <a href="./validator/">Web/Lite</a> <span data-i18n="validationAfter">roda no navegador. Para PDF/A e incorporação de fontes, use também o CLI/Deep do repositório.</span></p>
     </article>
   </section>
 
-  <h2>O que a distribuição oferece</h2>
+  <h2 data-i18n="offersHeading">O que a distribuição oferece</h2>
   <section class="grid">
-    <article class="card"><h3>TCC, dissertação e tese</h3><p>Perfis de trabalhos acadêmicos com frontmatter, capítulos, referências e elementos pós-textuais.</p></article>
-    <article class="card"><h3>Projeto e artigo</h3><p>Perfis específicos para projeto de pesquisa, projeto anonimizado e artigo científico.</p></article>
-    <article class="card"><h3>Referência comentada</h3><p>O bundle de uso inclui <code>abntexto-ufc-reference.pdf</code>, gerado da mesma fonte pública do template.</p></article>
+    <article class="card"><h3 data-i18n="thesisHeading">TCC, dissertação e tese</h3><p data-i18n="thesisText">Perfis de trabalhos acadêmicos com frontmatter, capítulos, referências e elementos pós-textuais.</p></article>
+    <article class="card"><h3 data-i18n="projectHeading">Projeto e artigo</h3><p data-i18n="projectText">Perfis específicos para projeto de pesquisa, projeto anonimizado e artigo científico.</p></article>
+    <article class="card"><h3 data-i18n="referenceHeading">Referência comentada</h3><p><span data-i18n="referenceBefore">O pacote de uso inclui</span> <code>abntexto-ufc-reference.pdf</code><span data-i18n="referenceAfter">, gerado da mesma fonte pública do template.</span></p></article>
   </section>
 
-  <h2>Links</h2>
+  <h2 data-i18n="linksHeading">Links</h2>
   <section class="grid">
-    <article class="card"><h3>Downloads</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/releases">GitHub Releases</a></p></article>
-    <article class="card"><h3>Documentação</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc#readme">README completo</a></p></article>
-    <article class="card"><h3>Suporte</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/issues">Issues</a></p></article>
+    <article class="card"><h3 data-i18n="downloadsHeading">Downloads</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/releases">GitHub Releases</a></p></article>
+    <article class="card"><h3 data-i18n="documentationHeading">Documentação</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc#readme" data-i18n="readmeLink">README completo</a></p></article>
+    <article class="card"><h3 data-i18n="supportHeading">Suporte</h3><p><a href="https://github.com/tiagosombrra/abntexto-ufc/issues">Issues</a></p></article>
   </section>
 
-  <footer>abntexto-ufc · LPPL 1.3c ou posterior · site publicado a partir do repositório canônico.</footer>
+  <footer>abntexto-ufc · <span data-i18n="footerText">LPPL 1.3c ou posterior · site publicado a partir do repositório canônico.</span></footer>
 </main>
 </body>
 </html>

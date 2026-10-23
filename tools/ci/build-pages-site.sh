@@ -4,10 +4,15 @@ set -eu
 rm -rf _site
 mkdir -p _site/validator
 cp site/index.html _site/index.html
+cp site/homepage-locales.js _site/homepage-locales.js
 cp -a validator/. _site/validator/
 touch _site/.nojekyll
 
 test -s _site/index.html
+test -s _site/homepage-locales.js
+node --check _site/homepage-locales.js
+grep -Fq 'src="./homepage-locales.js"' _site/index.html
+grep -Fq 'id="home-locale"' _site/index.html
 test -s _site/validator/index.html
 test -s _site/validator/app.js
 test -s _site/validator/normative-catalog.js
