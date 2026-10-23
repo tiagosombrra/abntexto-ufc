@@ -262,7 +262,11 @@ keywords = {"pt": "Palavras-chave:", "en": "Keywords:",
             "es": "Palabras clave:", "fr": "Mots-clés:"}
 
 def norm(value):
-    return unicodedata.normalize("NFC", value).casefold()
+    # PDF font encodings may extract an apostrophe as U+2019/U+02BC rather
+    # than ASCII U+0027. These are equivalent glyph representations here;
+    # preserve all actual letters and the complete required title.
+    value = unicodedata.normalize("NFC", value).casefold()
+    return value.replace("\u2019", "'").replace("\u2018", "'").replace("\u02bc", "'")
 
 for kind in ("academic", "article"):
     for main in titles:
