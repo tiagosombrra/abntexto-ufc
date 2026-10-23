@@ -23,20 +23,23 @@ for locale, meta in langs.items():
 \section{{BODY-OBJECT-{locale.upper()}}}
 \appendix{{APPENDIX-OBJECT-{locale.upper()}}}
 \annex{{ANNEX-OBJECT-{locale.upper()}}}
-\legend{{figure}}{{OBJECT-CAPTION-{locale.upper()}}}
-\ufcSource{{OBJECT-SOURCE-{locale.upper()}}}
-\ufcNote{{OBJECT-NOTE-{locale.upper()}}}
+\legend{{figure}}{{PLAINCAPTION{locale.upper()}}}
+\ufcSource{{OBJSOURCE{locale.upper()}}}
+\ufcNote{{OBJNOTE{locale.upper()}}}
 \begin{{ufcobject}}[here]
 \rule{{5cm}}{{1cm}}
 \end{{ufcobject}}
-% Exercise upstream normal and bracketed alternative sublegend paths.
-\legend{{figure}}{{MULTI-OBJECT-CAPTION-{locale.upper()}}}
+% Separate objects avoid column interleaving in extracted PDF text.
+\legend{{figure}}{{MULTINORMAL{locale.upper()}}}
 \begin{{multiplace}}[here]
-\sublegend{{SUB-NORMAL-{locale.upper()}}}
+\sublegend{{NORMALSUB{locale.upper()}}}
 \begin{{subplace}}[3cm]
 \rule{{2cm}}{{1cm}}
 \end{{subplace}}
-\sublegend[figure]{{SUB-ALTERNATIVE-{locale.upper()}}}
+\end{{multiplace}}
+\legend{{figure}}{{MULTIALT{locale.upper()}}}
+\begin{{multiplace}}[here]
+\sublegend[figure]{{ALTSUB{locale.upper()}}}
 \begin{{subplace}}[3cm]
 \rule{{2cm}}{{1cm}}
 \end{{subplace}}
@@ -80,20 +83,21 @@ for lang,(app,ann,source,note) in expect.items():
         raise SystemExit(f"INHERITED-LOCALE-EVIDENCE status=FAIL locale={lang} label={label}")
     for prefix,marker in ((app,"APPENDIX"),(ann,"ANNEX")):
         pattern=re.escape(prefix)+r"\s+a\b"
-        if not re.search(pattern,data) or f"{marker}-object-{lang}" not in data:
+        if not re.search(pattern,data) or f"{marker.lower()}-object-{lang}" not in data:
             fail(marker,pattern)
-    for prefix,marker in ((source,"SOURCE"),(note,"NOTE")):
-        pattern=re.escape(prefix)+r"\s*object-"+marker.lower()+"-"+lang
+    for prefix,marker in ((source,"OBJSOURCE"),(note,"OBJNOTE")):
+        pattern=re.escape(prefix)+r"\s*"+marker.lower()+lang
         if not re.search(pattern,data):
             fail(marker,pattern)
-    for marker in ("object-caption","multi-object-caption","sub-normal","sub-alternative"):
-        if f"{marker}-{lang}" not in data:
-            fail(marker,f"{marker}-{lang}")
-    # Both sublegend branches must print an actual numbered heading, not
-    # merely a marker from the underlying object box or auxiliary file.
-    for marker in ("sub-normal","sub-alternative"):
-        if not re.search(r"(?:\d+|\([a-z]\))\s*(?:—|---|–)?\s*"+re.escape(marker+"-"+lang),data):
-            fail(marker+"-numbered","numbered legend immediately before text")
+    for marker in ("plaincaption","multinormal","multialt","normalsub","altsub"):
+        if marker+lang not in data:
+            fail(marker,marker+lang)
+    # A normal sublegend must carry the inherited '(a)' identifier; the
+    # alternate path uses the inherited object number before its title.
+    if not re.search(r"\(a\)\s*normalsub"+lang,data):
+        fail("normal_sub_number","(a) before caption")
+    if not re.search(r"\b\d+\s*(?:—|---|–)\s*altsub"+lang,data):
+        fail("alternative_sub_number","object number and separator before caption")
     if lang=="fr" and len(re.findall(r"annexe\s+a\b",data))<2:
         fail("fr_dual_annexe","two annex labels")
     if lang in ("en","es","fr") and "fonte:" in data:
