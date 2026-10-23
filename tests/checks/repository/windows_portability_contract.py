@@ -46,6 +46,7 @@ def main() -> None:
         "existing Windows PDF certification gate": "tests/integration/layout/windows-font-pdfa.sh",
         "bounded evidence marker": "WINDOWS-PORTABILITY-EVIDENCE status=PASS",
         "TeX Live evidence identity": "texlive=2026",
+        "draft iteration skips heavy builds": "if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.draft }}",
     }
     missing = [label for label, token in required.items() if token not in text]
     if missing:
