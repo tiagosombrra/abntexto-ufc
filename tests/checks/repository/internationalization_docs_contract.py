@@ -24,6 +24,18 @@ for command in (r"\\legendlabel", r"\\nobreakspace"):
     if command in audit:
         raise SystemExit(f"I18N-DOCS-EVIDENCE status=FAIL doubled_tex_command={command}")
 
+# Markdown code spans preserve slashes verbatim; catching a copied doubled
+# TeX command across the four public documents needs no LaTeX run.
+for filename in (
+    "docs/COMMAND-REFERENCE.md",
+    "docs/USER-GUIDE.md",
+    "docs/SUMMARY-LANGUAGE-POLICY.md",
+    "docs/INTERNATIONALIZATION-COVERAGE.md",
+):
+    source = (root / filename).read_text(encoding="utf-8")
+    if r"\\\\selectlanguage{english}" in source:
+        raise SystemExit(f"I18N-DOCS-EVIDENCE status=FAIL doubled_babel_command={filename}")
+
 # Fail early when the old labels-only summary is accidentally restored.
 guide = (root / "docs/USER-GUIDE.md").read_text(encoding="utf-8").casefold()
 for stale in ("essa primeira entrega é **experimental e limitada aos rótulos**",
