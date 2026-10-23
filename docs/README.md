@@ -8,6 +8,10 @@ The documentation describes the current supported project only. Historical imple
 
 - [USER-GUIDE.md](USER-GUIDE.md) — recommended document-authoring workflow, profiles, academic elements, compilation and validation.
 - [COMMAND-REFERENCE.md](COMMAND-REFERENCE.md) — canonical public configuration keys, commands and environments.
+- [INTERNATIONALIZATION-COVERAGE.md](INTERNATIONALIZATION-COVERAGE.md) — four-locale class-owned text coverage and limits.
+- [I18N-AUDIT-2026-10-23.md](I18N-AUDIT-2026-10-23.md) — updated audit and pending evidence.
+- [SUMMARY-LANGUAGE-POLICY.md](SUMMARY-LANGUAGE-POLICY.md) — multilingual summary commands.
+- [PROFILE-LOCALE-COVERAGE.md](PROFILE-LOCALE-COVERAGE.md) — display-only 7×4 regression matrix.
 - [WINDOWS-FONT-SUPPORT.md](WINDOWS-FONT-SUPPORT.md) — scoped support for literal Windows font validation.
 - [PORTABILITY.md](PORTABILITY.md) — bounded Linux/Windows/macOS portability coverage and CI boundaries.
 
