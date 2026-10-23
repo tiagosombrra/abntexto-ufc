@@ -31,6 +31,7 @@ const HOME_COPY = {
     "linksHeading": "Links",
     "downloadsHeading": "Downloads",
     "documentationHeading": "Documentação",
+    "readmeLink": "README completo",
     "supportHeading": "Suporte",
     "footerText": "LPPL 1.3c ou posterior · site publicado a partir do repositório canônico."
   },
@@ -64,6 +65,7 @@ const HOME_COPY = {
     "linksHeading": "Links",
     "downloadsHeading": "Downloads",
     "documentationHeading": "Documentation",
+    "readmeLink": "Full README",
     "supportHeading": "Support",
     "footerText": "LPPL 1.3c or later · website published from the canonical repository."
   },
@@ -97,6 +99,7 @@ const HOME_COPY = {
     "linksHeading": "Enlaces",
     "downloadsHeading": "Descargas",
     "documentationHeading": "Documentación",
+    "readmeLink": "README completo",
     "supportHeading": "Soporte",
     "footerText": "LPPL 1.3c o posterior · sitio publicado desde el repositorio canónico."
   },
@@ -130,6 +133,7 @@ const HOME_COPY = {
     "linksHeading": "Liens",
     "downloadsHeading": "Téléchargements",
     "documentationHeading": "Documentation",
+    "readmeLink": "README complet",
     "supportHeading": "Assistance",
     "footerText": "LPPL 1.3c ou ultérieure · site publié à partir du dépôt canonique."
   }

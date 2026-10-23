@@ -29,7 +29,7 @@ The `tests/integration/frontmatter/document-locale-catalog.py` gate rejects miss
 
 ## Project homepage (issue #521)
 
-The **homepage** now has a separate, opt-in PT-BR/EN/ES/FR browser UI catalog (31 keys), controlled by an accessible language selector and optional `?lang=en|es|fr` deep link. Translation updates visible homepage copy, the document `html.lang` attribute and the meta description; it never rewrites canonical download/repository URLs, artifact names, validator results or normative rule descriptions. Portuguese remains the default without JavaScript. A Static contract verifies catalog parity and baseline content, and the productive offline Chromium E2E exercises all four languages and selector changes.
+The **homepage** now has a separate, opt-in PT-BR/EN/ES/FR browser UI catalog (32 keys), controlled by an accessible language selector and optional `?lang=en|es|fr` deep link. Translation updates visible homepage copy, the document `html.lang` attribute and the meta description; it never rewrites canonical download/repository URLs, artifact names, validator results or normative rule descriptions. Portuguese remains the default without JavaScript. A Static contract verifies catalog parity and baseline content, and the productive offline Chromium E2E exercises all four languages and selector changes.
 
 The **validator** continues to own its independent four-language `validator/ui-locales.js` interface catalog. The author-maintained Markdown manuals, normative wording from third-party libraries and official UFC program/degree names are **not** translated by the homepage feature. The published v3.0.5 stays immutable and v3.1.0 remains unreleased.
 

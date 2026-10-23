@@ -19,6 +19,7 @@ performance_request_urls = browser_utils["performance_request_urls"]
 external_http_requests = browser_utils["external_http_requests"]
 csp_log_violations = browser_utils["csp_log_violations"]
 
+READMES = {"pt-BR": "README completo", "en": "Full README", "es": "README completo", "fr": "README complet"}
 EXPECTED = {
     "pt-BR": ("Por onde começar", "Abrir validador Web/Lite", "Idioma do site"),
     "en": ("Getting started", "Open Web/Lite validator", "Website language"),
@@ -37,6 +38,7 @@ def snapshot(browser):
         description: document.querySelector('meta[name="description"]').content,
         disclaimer: document.querySelector('[data-i18n="communityText"]').textContent,
         footer: document.querySelector('[data-i18n="footerText"]').textContent,
+        readmeLabel: document.querySelector('a[href="https://github.com/tiagosombrra/abntexto-ufc#readme"]').textContent,
         originalLinks: Array.from(document.querySelectorAll("a")).map(x=>x.getAttribute("href")),
         fileNames: Array.from(document.querySelectorAll("code")).map(x=>x.textContent),
         contentReady: document.querySelectorAll("[data-i18n]").length
@@ -70,7 +72,9 @@ def main():
             item=snapshot(browser)
             if (item["lang"],item["selected"],item["heading"],item["cta"],item["selectorLabel"]) != (locale,locale,heading,cta,label):
                 fail(f"locale={locale} observed={item!r}")
-            if len(item["description"])<30 or not item["disclaimer"] or not item["footer"] or item["contentReady"]<29:
+            if item["readmeLabel"] != READMES[locale]:
+                fail("untranslated_readme_link:"+locale)
+            if len(item["description"])<30 or not item["disclaimer"] or not item["footer"] or item["contentReady"]<30:
                 fail("incomplete_visible_translation:"+locale)
             if set(item["originalLinks"]) != {
                 "./validator/",
