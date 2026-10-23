@@ -1612,6 +1612,12 @@
                 \thelegend\nobreakspace{}---\nobreakspace{}
               }
           }
+        % The upstream multi-object path aliases legendlabel to this macro.
+        \cs_if_exist:NT \sublegendlabel
+          {
+            \cs_gset:Npn \sublegendlabel
+              { (\alph{subplace})\nobreakspace{} }
+          }
         \cs_if_exist:NT \srclabel
           { \cs_gset:Npn \srclabel { \ufc_doc_text:n {source-label}:~ } }
         % The public object-note command uses this separate inherited prefix.
