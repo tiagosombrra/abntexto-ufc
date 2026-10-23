@@ -71,7 +71,7 @@ expected_hrefs = (
     "https://github.com/tiagosombrra/abntexto-ufc#readme",
     "https://github.com/tiagosombrra/abntexto-ufc/issues",
 )
-if set(parser.hrefs) != set(expected_hrefs) or len(parser.hrefs) != 6:
+if set(parser.hrefs) != set(expected_hrefs) or len(parser.hrefs) != 7:
     raise SystemExit(f"HOMEPAGE-I18N-EVIDENCE status=FAIL canonical_hrefs={parser.hrefs}")
 if any(mark in JS for mark in ("fetch(", "XMLHttpRequest", "sendBeacon", "localStorage", "sessionStorage", "innerHTML")):
     raise SystemExit("HOMEPAGE-I18N-EVIDENCE status=FAIL unexpected_network_storage_or_markup")
