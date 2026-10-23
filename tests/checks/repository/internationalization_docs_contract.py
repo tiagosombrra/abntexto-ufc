@@ -16,6 +16,14 @@ for filename, markers in expected.items():
         if marker.casefold() not in source.casefold():
             raise SystemExit(f"I18N-DOCS-EVIDENCE status=FAIL file={filename} missing={marker}")
 
+# Avoid literal escaped newlines and double-escaped TeX commands in the audit.
+audit = (root / "docs/I18N-AUDIT-2026-10-23.md").read_text(encoding="utf-8")
+if r"\\n\\n" in audit:
+    raise SystemExit("I18N-DOCS-EVIDENCE status=FAIL escaped_audit_paragraphs")
+for command in (r"\\legendlabel", r"\\nobreakspace"):
+    if command in audit:
+        raise SystemExit(f"I18N-DOCS-EVIDENCE status=FAIL doubled_tex_command={command}")
+
 # Fail early when the old labels-only summary is accidentally restored.
 guide = (root / "docs/USER-GUIDE.md").read_text(encoding="utf-8").casefold()
 for stale in ("essa primeira entrega é **experimental e limitada aos rótulos**",

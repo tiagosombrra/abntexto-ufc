@@ -1,0 +1,39 @@
+name: Inherited locale PDF smoke
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/inherited-object-labels.sh
+      - .github/workflows/i18n-inherited-smoke.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: inherited-locale-pdfs-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  inherited-locale-pdfs:
+    name: Five-locale inherited PDF smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Render inherited labels and sublegends
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils
+            sh tests/integration/frontmatter/inherited-object-labels.sh

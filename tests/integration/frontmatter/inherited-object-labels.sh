@@ -29,6 +29,18 @@ for locale, meta in langs.items():
 \begin{{ufcobject}}[here]
 \rule{{5cm}}{{1cm}}
 \end{{ufcobject}}
+% Exercise upstream normal and bracketed alternative sublegend paths.
+\legend{{figure}}{{MULTI-OBJECT-CAPTION-{locale.upper()}}}
+\begin{{multiplace}}[here]
+\sublegend{{SUB-NORMAL-{locale.upper()}}}
+\begin{{subplace}}[3cm]
+\rule{{2cm}}{{1cm}}
+\end{{subplace}}
+\sublegend[figure]{{SUB-ALTERNATIVE-{locale.upper()}}}
+\begin{{subplace}}[3cm]
+\rule{{2cm}}{{1cm}}
+\end{{subplace}}
+\end{{multiplace}}
 \end{{document}}
 """
     (work/f"inherited-{locale}.tex").write_text(tex, encoding="utf-8")
@@ -61,15 +73,30 @@ expect={
 for lang,(app,ann,source,note) in expect.items():
     data=(work/f"inherited-{lang}.txt").read_text(encoding="utf-8")
     data=re.sub(r"\s+"," ",unicodedata.normalize("NFC",data).casefold())
+    def fail(label, pattern):
+        # Keep extracted observations visible even when PDFs are absent from
+        # uploaded workflow artifacts. Do not silently relax the assertions.
+        print(f"INHERITED-LOCALE-DEBUG locale={lang} label={label} pattern={pattern!r} extracted={data[:1400]!r}",flush=True)
+        raise SystemExit(f"INHERITED-LOCALE-EVIDENCE status=FAIL locale={lang} label={label}")
     for prefix,marker in ((app,"APPENDIX"),(ann,"ANNEX")):
-        if not re.search(re.escape(prefix)+r"\s+a\b",data) or f"{marker}-object-{lang}" not in data:
-            raise SystemExit(f"INHERITED-LOCALE-EVIDENCE status=FAIL locale={lang} label={marker}")
+        pattern=re.escape(prefix)+r"\s+a\b"
+        if not re.search(pattern,data) or f"{marker}-object-{lang}" not in data:
+            fail(marker,pattern)
     for prefix,marker in ((source,"SOURCE"),(note,"NOTE")):
-        if not re.search(re.escape(prefix)+r"\s*object-"+marker.lower()+"-"+lang,data):
-            raise SystemExit(f"INHERITED-LOCALE-EVIDENCE status=FAIL locale={lang} label={marker}")
+        pattern=re.escape(prefix)+r"\s*object-"+marker.lower()+"-"+lang
+        if not re.search(pattern,data):
+            fail(marker,pattern)
+    for marker in ("object-caption","multi-object-caption","sub-normal","sub-alternative"):
+        if f"{marker}-{lang}" not in data:
+            fail(marker,f"{marker}-{lang}")
+    # Both sublegend branches must print an actual numbered heading, not
+    # merely a marker from the underlying object box or auxiliary file.
+    for marker in ("sub-normal","sub-alternative"):
+        if not re.search(r"(?:\d+|\([a-z]\))\s*(?:—|---|–)?\s*"+re.escape(marker+"-"+lang),data):
+            fail(marker+"-numbered","numbered legend immediately before text")
     if lang=="fr" and len(re.findall(r"annexe\s+a\b",data))<2:
-        raise SystemExit("INHERITED-LOCALE-EVIDENCE status=FAIL fr_dual_annexe")
+        fail("fr_dual_annexe","two annex labels")
     if lang in ("en","es","fr") and "fonte:" in data:
-        raise SystemExit(f"INHERITED-LOCALE-EVIDENCE status=FAIL pt_source_leak={lang}")
-    print(f"INHERITED-LOCALE-EVIDENCE status=PASS locale={lang} real_pdf=true")
+        fail("pt_source_leak","fonte:")
+    print(f"INHERITED-LOCALE-EVIDENCE status=PASS locale={lang} paths=plain,normal-sub,alternative-sub real_pdf=true")
 PY
