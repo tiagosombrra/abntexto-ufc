@@ -42,6 +42,8 @@ concurrency:
 jobs:
   macos-build:
     name: macOS ARM64 public-template build
+    # Keep draft iteration fast; ready_for_review and main still run full certification.
+    if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.draft }}
     runs-on: macos-26
     timeout-minutes: 30
     steps:
