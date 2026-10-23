@@ -33,11 +33,11 @@ O tutorial mantém apenas os campos mais comuns visíveis no `main.tex`. Chaves 
 
 ### Idiomas e textos gerados pela classe (v3.1.0 em desenvolvimento)
 
-Existem duas opções independentes: \`labels-language=pt|en|es|fr\` traduz somente os **nove títulos pré-textuais**; \`document-language=pt|en|es|fr\`, quando explicitamente configurada, seleciona o idioma principal Babel, as versões de resumo e **33 chaves de texto institucional/legendas geradas pela classe** (natureza, banca, orientador, datas, fontes/notas, referências, glossário, apêndices e anexos). Sem escolha explícita de \`labels-language\`, os nove títulos acompanham \`document-language\`. Sem \`document-language\`, o legado continua em português.
+Existem duas opções independentes: `labels-language=pt|en|es|fr` traduz somente os **nove títulos pré-textuais**; `document-language=pt|en|es|fr`, quando explicitamente configurada, seleciona o idioma principal Babel, as versões de resumo e **33 chaves de texto institucional/legendas geradas pela classe** (natureza, banca, orientador, datas, fontes/notas, referências, glossário, apêndices e anexos). Sem escolha explícita de `labels-language`, os nove títulos acompanham `document-language`. Sem `document-language`, o legado continua em português.
 
 Exemplo de configuração:
 
-\`\`\`tex
+```tex
 \DocumentMetadata{lang=en-US,pdfstandard=A-2b,pdfversion=1.7}
 \documentclass{abntexto-ufc}
 \ufcsetup{
@@ -46,9 +46,9 @@ Exemplo de configuração:
   labels-language=en,
   institution={Universidade Federal do Ceará}
 }
-\`\`\`
+```
 
-Os comandos legados \`\ufcPrintSummary\` e \`\ufcPrintAbstract\` continuam produzindo títulos fixos em português e inglês; os novos comandos multilíngues devem ser usados para outros idiomas. A tradução das frases **automáticas** não traduz os nomes oficiais de instituições, programas ou titulações, nem conteúdo do autor, referências de dependências ou metadados PDF. Os textos institucionais estrangeiros são descritivos e exigem revisão pela autoridade competente. Veja [a cobertura](INTERNATIONALIZATION-COVERAGE.md) e [a auditoria](I18N-AUDIT-2026-10-23.md).
+Os comandos legados `\ufcPrintSummary` e `\ufcPrintAbstract` continuam produzindo títulos fixos em português e inglês; os novos comandos multilíngues devem ser usados para outros idiomas. A tradução das frases **automáticas** não traduz os nomes oficiais de instituições, programas ou titulações, nem conteúdo do autor, referências de dependências ou metadados PDF. Os textos institucionais estrangeiros são descritivos e exigem revisão pela autoridade competente. Veja [a cobertura](INTERNATIONALIZATION-COVERAGE.md) e [a auditoria](I18N-AUDIT-2026-10-23.md).
 
 ### Política opcional de RESUMO, ABSTRACT, RESUMEN e RÉSUMÉ (v3.1.0)
 
