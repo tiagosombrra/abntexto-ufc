@@ -31,20 +31,24 @@ Toda configuração pública da classe parte de:
 
 O tutorial mantém apenas os campos mais comuns visíveis no `main.tex`. Chaves especializadas continuam documentadas na referência de comandos.
 
-### Idioma de títulos pré-textuais (experimental, v3.1.0)
+### Idiomas e textos gerados pela classe (v3.1.0 em desenvolvimento)
 
-O idioma padrão dos **rótulos exibidos** continua sendo português. Para alterar somente os títulos de agradecimentos, errata, listas e sumário:
+Existem duas opções independentes: \`labels-language=pt|en|es|fr\` traduz somente os **nove títulos pré-textuais**; \`document-language=pt|en|es|fr\`, quando explicitamente configurada, seleciona o idioma principal Babel, as versões de resumo e **33 chaves de texto institucional/legendas geradas pela classe** (natureza, banca, orientador, datas, fontes/notas, referências, glossário, apêndices e anexos). Sem escolha explícita de \`labels-language\`, os nove títulos acompanham \`document-language\`. Sem \`document-language\`, o legado continua em português.
 
-```tex
+Exemplo de configuração:
+
+\`\`\`tex
+\DocumentMetadata{lang=en-US,pdfstandard=A-2b,pdfversion=1.7}
+\documentclass{abntexto-ufc}
 \ufcsetup{
-  labels-language = en, % pt (padrão), en, es, fr
-  institution = {Universidade Federal do Ceará}
+  type=doctoral-thesis,
+  document-language=en,
+  labels-language=en,
+  institution={Universidade Federal do Ceará}
 }
-```
+\`\`\`
 
-A opção `labels-language` traduz apenas nove títulos da apresentação pré-textual. **Não traduz** o conteúdo do autor, nome oficial da instituição, natureza do trabalho, titulação, folha de aprovação, referências, hifenização ou os metadados do PDF. O nome da universidade pode ser informado explicitamente pelo autor no campo `institution` quando houver uma denominação oficial adequada. Não há tradução institucional automática.
-
-Por razões normativas, `\ufcPrintSummary` continua identificado como **Resumo** (português), e `\ufcPrintAbstract` continua identificado como **Abstract** (inglês), em todos os quatro modos. Nenhuma escolha de rótulos dispensa os elementos exigidos para depósito na UFC. Espanhol e francês devem passar por revisão linguística e pela autoridade institucional antes de uma afirmação de conformidade integral. Essa primeira entrega é **experimental e limitada aos rótulos**.
+Os comandos legados \`\ufcPrintSummary\` e \`\ufcPrintAbstract\` continuam produzindo títulos fixos em português e inglês; os novos comandos multilíngues devem ser usados para outros idiomas. A tradução das frases **automáticas** não traduz os nomes oficiais de instituições, programas ou titulações, nem conteúdo do autor, referências de dependências ou metadados PDF. Os textos institucionais estrangeiros são descritivos e exigem revisão pela autoridade competente. Veja [a cobertura](INTERNATIONALIZATION-COVERAGE.md) e [a auditoria](I18N-AUDIT-2026-10-23.md).
 
 ### Política opcional de RESUMO, ABSTRACT, RESUMEN e RÉSUMÉ (v3.1.0)
 
