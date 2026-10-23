@@ -33,6 +33,10 @@
 
 \RequirePackage{iftex}
 \RequirePackage[english,brazilian]{babel}
+% Optional Babel locales: do not break legacy PT/EN builds on minimal
+% TeX installations. Foreign-language PDF builds need the matching .ldf.
+\IfFileExists{spanish.ldf}{\babelprovide[import]{spanish}}{}
+\IfFileExists{french.ldf}{\babelprovide[import]{french}}{}
 \RequirePackage{microtype}
 
 \ExplSyntaxOn
@@ -40,6 +44,19 @@
 \tl_new:N \g_ufc_document_type_tl
 \tl_new:N \g_ufc_print_mode_tl
 \tl_new:N \g_ufc_labels_language_tl
+\tl_gset:Nn \g_ufc_labels_language_tl {pt}
+\bool_new:N \g_ufc_labels_language_explicit_bool
+\tl_new:N \g_ufc_document_language_tl
+\tl_gset:Nn \g_ufc_document_language_tl {pt}
+\bool_new:N \g_ufc_document_language_explicit_bool
+\bool_new:N \g_ufc_project_type_explicit_bool
+\prop_new:N \g_ufc_summary_seen_prop
+\prop_new:N \g_ufc_summary_headings_prop
+\prop_new:N \g_ufc_summary_keywords_prop
+\prop_gset_from_keyval:Nn \g_ufc_summary_headings_prop
+  {pt={Resumo},en={Abstract},es={Resumen},fr={Résumé}}
+\prop_gset_from_keyval:Nn \g_ufc_summary_keywords_prop
+  {pt={Palavras-chave},en={Keywords},es={Palabras~clave},fr={Mots-clés}}
 \tl_new:N \g_ufc_cover_mode_tl
 \bool_new:N \g_ufc_catalog_card_bool
 \bool_new:N \g_ufc_coat_of_arms_bool
@@ -93,6 +110,151 @@
       { \tl_use:N \g_ufc_labels_language_tl / #1 }
   }
 
+
+% Canonical translatable institutional phrases; names of universities,
+% degrees, people and programs remain user-supplied official metadata.
+% Translations are descriptive; institutional approval is a separate gate.
+\prop_new:N \g_ufc_document_text_prop
+\prop_gset_from_keyval:Nn \g_ufc_document_text_prop
+  {
+    pt/advisor-male = {Orientador},
+    en/advisor-male = {Advisor},
+    es/advisor-male = {Director},
+    fr/advisor-male = {Directeur~de~recherche},
+    pt/advisor-female = {Orientadora},
+    en/advisor-female = {Advisor},
+    es/advisor-female = {Directora},
+    fr/advisor-female = {Directrice~de~recherche},
+    pt/coadvisor-male = {Coorientador},
+    en/coadvisor-male = {Co-advisor},
+    es/coadvisor-male = {Codirector},
+    fr/coadvisor-male = {Codirecteur~de~recherche},
+    pt/coadvisor-female = {Coorientadora},
+    en/coadvisor-female = {Co-advisor},
+    es/coadvisor-female = {Codirectora},
+    fr/coadvisor-female = {Codirectrice~de~recherche},
+    pt/approved-on = {Aprovada~em},
+    en/approved-on = {Approved~on},
+    es/approved-on = {Fecha~de~aprobación},
+    fr/approved-on = {Date~d'approbation},
+    pt/examining-committee = {BANCA~EXAMINADORA},
+    en/examining-committee = {EXAMINING~COMMITTEE},
+    es/examining-committee = {TRIBUNAL~EXAMINADOR},
+    fr/examining-committee = {JURY~D'EXAMEN},
+    pt/volume = {VOLUME},
+    en/volume = {VOLUME},
+    es/volume = {VOLUMEN},
+    fr/volume = {VOLUME},
+    pt/undergraduate-program-line = {Curso~de~Graduação~em},
+    en/undergraduate-program-line = {Undergraduate~Program~in},
+    es/undergraduate-program-line = {Programa~de~Grado~en},
+    fr/undergraduate-program-line = {Programme~de~licence~en},
+    pt/specialization-program-line = {Curso~de~Especialização~em},
+    en/specialization-program-line = {Specialization~Program~in},
+    es/specialization-program-line = {Programa~de~Especialización~en},
+    fr/specialization-program-line = {Programme~de~spécialisation~en},
+    pt/submitted-on = {Submetido~em},
+    en/submitted-on = {Submitted~on},
+    es/submitted-on = {Enviado~el},
+    fr/submitted-on = {Soumis~le},
+    pt/article-approved-on = {Aprovado~em},
+    en/article-approved-on = {Approved~on},
+    es/article-approved-on = {Aprobado~el},
+    fr/article-approved-on = {Approuvé~le},
+    pt/references = {Referências},
+    en/references = {References},
+    es/references = {Referencias},
+    fr/references = {Références},
+    pt/glossary = {Glossário},
+    en/glossary = {Glossary},
+    es/glossary = {Glosario},
+    fr/glossary = {Glossaire},
+    pt/list-charts = {Lista~de~Gráficos},
+    en/list-charts = {List~of~Charts},
+    es/list-charts = {Lista~de~Gráficos},
+    fr/list-charts = {Liste~des~graphiques},
+    pt/list-code = {Lista~de~Códigos},
+    en/list-code = {List~of~Code~Listings},
+    es/list-code = {Lista~de~Códigos},
+    fr/list-code = {Liste~des~codes},
+    pt/list-algorithms = {Lista~de~Algoritmos},
+    en/list-algorithms = {List~of~Algorithms},
+    es/list-algorithms = {Lista~de~Algoritmos},
+    fr/list-algorithms = {Liste~des~algorithmes},
+    pt/caption-chart = {Gráfico},
+    en/caption-chart = {Chart},
+    es/caption-chart = {Gráfico},
+    fr/caption-chart = {Graphique},
+    pt/caption-code = {Código},
+    en/caption-code = {Code},
+    es/caption-code = {Código},
+    fr/caption-code = {Code},
+    pt/caption-algorithm = {Algoritmo},
+    en/caption-algorithm = {Algorithm},
+    es/caption-algorithm = {Algoritmo},
+    fr/caption-algorithm = {Algorithme},
+    pt/appendix = {Apêndice},
+    en/appendix = {Appendix},
+    es/appendix = {Apéndice},
+    fr/appendix = {Annexe},
+    pt/annex = {Anexo},
+    en/annex = {Annex},
+    es/annex = {Anexo},
+    fr/annex = {Annexe},
+    pt/index = {Índice~remissivo},
+    en/index = {Index},
+    es/index = {Índice~alfabético},
+    fr/index = {Index}
+  }
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-undergraduate} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Graduação~em~\ufc_meta_use:n {undergraduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~grau~de~\ufc_meta_use:n {undergraduate-degree}~em~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-undergraduate} {Undergraduate~capstone~submitted~to~the~\ufc_meta_use:n {undergraduate-program}~program~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~degree~of~\ufc_meta_use:n {undergraduate-degree}~in~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-undergraduate} {Trabajo~de~fin~de~grado~presentado~al~programa~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~el~título~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-undergraduate} {Mémoire~de~fin~de~licence~présenté~au~programme~de~\ufc_meta_use:n {undergraduate-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~diplôme~de~\ufc_meta_use:n {undergraduate-degree}~en~\ufc_meta_use:n {undergraduate-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-specialization} {Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Especialização~em~\ufc_meta_use:n {specialization-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~especialista~em~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-specialization} {Specialization~capstone~submitted~to~the~\ufc_meta_use:n {specialization-program}~program~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~specialist~qualification~in~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-specialization} {Trabajo~final~de~especialización~presentado~al~programa~de~\ufc_meta_use:n {specialization-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~la~especialización~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-specialization} {Mémoire~de~spécialisation~présenté~au~programme~de~\ufc_meta_use:n {specialization-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~titre~de~spécialiste~en~\ufc_meta_use:n {specialization-program}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-masters} {Dissertação~apresentada~ao~\ufc_meta_use:n {masters-graduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~mestre~em~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentração:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-masters} {Master's~dissertation~submitted~to~the~\ufc_meta_use:n {masters-graduate-program}~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~degree~of~Master~in~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Area~of~concentration:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-masters} {Disertación~presentada~al~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~el~grado~de~Máster~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Área~de~concentración:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-masters} {Mémoire~présenté~au~\ufc_meta_use:n {masters-graduate-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~grade~de~master~en~\ufc_meta_use:n {masters-degree-field}.\ufc_meta_if_blank:nF {masters-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {masters-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-doctoral} {Tese~apresentada~ao~\ufc_meta_use:n {doctoral-graduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~doutor~em~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentração:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-doctoral} {Doctoral~thesis~submitted~to~the~\ufc_meta_use:n {doctoral-graduate-program}~at~\ufc_meta_use:n {institution}~in~partial~fulfillment~of~the~requirements~for~the~degree~of~Doctor~in~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Area~of~concentration:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-doctoral} {Tesis~presentada~al~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_meta_use:n {institution}~como~requisito~parcial~para~obtener~el~grado~de~doctor~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Área~de~concentración:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-doctoral} {Thèse~présentée~au~\ufc_meta_use:n {doctoral-graduate-program}~de~\ufc_meta_use:n {institution}~en~vue~de~l'obtention~du~grade~de~docteur~en~\ufc_meta_use:n {doctoral-degree-field}.\ufc_meta_if_blank:nF {doctoral-concentration}{~Domaine~de~spécialisation:~\ufc_meta_use:n {doctoral-concentration}.}}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/nature-project} {\ufc_project_type_text:~apresentado~à~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/nature-project} {\ufc_project_type_text:~submitted~to~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/nature-project} {\ufc_project_type_text:~presentado~a~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/nature-project} {\ufc_project_type_text:~soumis~à~\ufc_meta_use:n {submission-entity}.}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-text-table} {Quadro}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/caption-text-table} {Text~Table}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/caption-text-table} {Cuadro}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-text-table} {Encadré}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-figure} {Figura}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/caption-figure} {Figure}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/caption-figure} {Figura}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-figure} {Figure}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/caption-table} {Tabela}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/caption-table} {Table}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/caption-table} {Tabla}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/caption-table} {Tableau}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/source-label} {Fonte}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/source-label} {Source}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/source-label} {Fuente}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/source-label} {Source}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/note-label} {Nota}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/note-label} {Note}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/note-label} {Nota}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/note-label} {Note}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/default-project-type} {Projeto~de~pesquisa}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/default-project-type} {Research~project}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/default-project-type} {Proyecto~de~investigación}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/default-project-type} {Projet~de~recherche}
+\cs_new:Npn \ufc_doc_text:n #1
+  {
+    \prop_item:Ne \g_ufc_document_text_prop
+      { \tl_use:N \g_ufc_document_language_tl / #1 }
+  }
 
 \prop_gset_from_keyval:Nn \g_ufc_metadata_prop
   {
@@ -167,15 +329,57 @@
 
 \keys_define:nn { ufc }
   {
+    document-language .choice:,
+    document-language / pt .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {pt}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {pt} }
+      },
+    document-language / en .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {en}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {en} }
+      },
+    document-language / es .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {es}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {es} }
+      },
+    document-language / fr .code:n =
+      {
+        \tl_gset:Nn \g_ufc_document_language_tl {fr}
+        \bool_gset_true:N \g_ufc_document_language_explicit_bool
+        \bool_if:NF \g_ufc_labels_language_explicit_bool
+          { \tl_gset:Nn \g_ufc_labels_language_tl {fr} }
+      },
+
     labels-language .choice:,
     labels-language / pt .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {pt} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {pt}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
     labels-language / en .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {en} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {en}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
     labels-language / es .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {es} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {es}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
     labels-language / fr .code:n =
-      { \tl_gset:Nn \g_ufc_labels_language_tl {fr} },
+      {
+        \tl_gset:Nn \g_ufc_labels_language_tl {fr}
+        \bool_gset_true:N \g_ufc_labels_language_explicit_bool
+      },
 
     type .choice:,
     type / undergraduate-capstone .code:n =
@@ -256,7 +460,11 @@
     doctoral-degree-field .code:n = { \ufc_meta_set:nn {doctoral-degree-field} {#1} },
     doctoral-concentration .code:n = { \ufc_meta_set:nn {doctoral-concentration} {#1} },
     project-program .code:n = { \ufc_meta_set:nn {project-program} {#1} },
-    project-type .code:n = { \ufc_meta_set:nn {project-type} {#1} },
+    project-type .code:n =
+      {
+        \ufc_meta_set:nn {project-type} {#1}
+        \bool_gset_true:N \g_ufc_project_type_explicit_bool
+      },
     submission-entity .code:n = { \ufc_meta_set:nn {submission-entity} {#1} },
     project-nature-statement .code:n = { \ufc_meta_set:nn {project-nature-statement} {#1} },
     project-identifier .code:n = { \ufc_meta_set:nn {project-identifier} {#1} },
@@ -306,7 +514,6 @@
 
 \keys_set:nn { ufc }
   {
-    labels-language = pt,
     type = undergraduate-capstone,
     print-mode = single-sided,
     cover = auto,
@@ -316,6 +523,9 @@
 
 \NewDocumentCommand \ufcsetup { +m }
   { \keys_set:nn { ufc } { #1 } }
+
+\NewExpandableDocumentCommand \ufcDocumentLanguage { }
+  { \tl_use:N \g_ufc_document_language_tl }
 
 \NewExpandableDocumentCommand \ufcDocumentType { }
   { \tl_use:N \g_ufc_document_type_tl }
@@ -756,6 +966,7 @@
   \AddToHook{cmd/ufcPrintErrata/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintSummary/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintAbstract/before}{\ufcPretextualBreak}%
+  \AddToHook{cmd/ufcPrintSummaryInLanguage/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfIllustrations/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfFigures/before}{\ufcPretextualBreak}%
   \AddToHook{cmd/ufcPrintListOfTables/before}{\ufcPretextualBreak}%
@@ -1066,68 +1277,56 @@
 \cs_new:Npn \ufc_orientation_label:
   {
     \str_if_eq:eeTF {\ufc_meta_use:n {advisor-feminine-label}} {true}
-      {Orientadora}
-      {Orientador}
+      {\ufc_doc_text:n {advisor-female}}
+      {\ufc_doc_text:n {advisor-male}}
   }
 
 \cs_new:Npn \ufc_coorientation_label:
   {
     \str_if_eq:eeTF {\ufc_meta_use:n {coadvisor-feminine-label}} {true}
-      {Coorientadora}
-      {Coorientador}
+      {\ufc_doc_text:n {coadvisor-female}}
+      {\ufc_doc_text:n {coadvisor-male}}
+  }
+
+\cs_new:Npn \ufc_project_type_text:
+  {
+    \bool_if:NTF \g_ufc_project_type_explicit_bool
+      {\ufc_meta_use:n {project-type}}
+      {\ufc_doc_text:n {default-project-type}}
+  }
+
+% Preserve the original canonical Portuguese formula byte-for-byte in the
+% default/explicit PT path. Non-PT project nature statements are localized,
+% while an author-provided complete nature-statement still takes precedence.
+\cs_new:Npn \ufc_project_nature_text:
+  {
+    \str_if_eq:VnTF \g_ufc_document_language_tl {pt}
+      {
+        \ufc_meta_use:n {project-type}~apresentado~à~
+        \ufc_meta_use:n {submission-entity}.
+      }
+      {\ufc_doc_text:n {nature-project}}
   }
 
 \cs_new:Npn \ufc_nature_text:
   {
     \str_case:VnF \g_ufc_document_type_tl
       {
-        {undergraduate-capstone}
-          {
-            Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Graduação~em~
-            \ufc_meta_use:n {undergraduate-program}~da~\ufc_meta_use:n {institution},~como~requisito~
-            parcial~à~obtenção~do~grau~de~\ufc_meta_use:n {undergraduate-degree}~em~
-            \ufc_meta_use:n {undergraduate-program}.
-          }
-        {specialization-capstone}
-          {
-            Trabalho~de~Conclusão~de~Curso~apresentado~ao~Curso~de~Especialização~em~
-            \ufc_meta_use:n {specialization-program}~da~\ufc_meta_use:n {institution},~como~
-            requisito~parcial~à~obtenção~do~título~de~especialista~em~
-            \ufc_meta_use:n {specialization-program}.
-          }
-        {masters-thesis}
-          {
-            Dissertação~apresentada~ao~\ufc_meta_use:n {masters-graduate-program}~da~
-            \ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~
-            mestre~em~\ufc_meta_use:n {masters-degree-field}.
-            \ufc_meta_if_blank:nF {masters-concentration}
-              {~Área~de~concentração:~\ufc_meta_use:n {masters-concentration}.}
-          }
-        {doctoral-thesis}
-          {
-            Tese~apresentada~ao~\ufc_meta_use:n {doctoral-graduate-program}~da~
-            \ufc_meta_use:n {institution},~como~requisito~parcial~à~obtenção~do~título~de~
-            doutor~em~\ufc_meta_use:n {doctoral-degree-field}.
-            \ufc_meta_if_blank:nF {doctoral-concentration}
-              {~Área~de~concentração:~\ufc_meta_use:n {doctoral-concentration}.}
-          }
+        {undergraduate-capstone}{\ufc_doc_text:n {nature-undergraduate}}
+        {specialization-capstone}{\ufc_doc_text:n {nature-specialization}}
+        {masters-thesis}{\ufc_doc_text:n {nature-masters}}
+        {doctoral-thesis}{\ufc_doc_text:n {nature-doctoral}}
         {research-project}
           {
             \ufc_meta_if_blank:nTF {project-nature-statement}
-              {
-                \ufc_meta_use:n {project-type}~apresentado~à~
-                \ufc_meta_use:n {submission-entity}.
-              }
-              { \ufc_meta_use:n {project-nature-statement} }
+              {\ufc_project_nature_text:}
+              {\ufc_meta_use:n {project-nature-statement}}
           }
         {anonymized-research-project}
           {
             \ufc_meta_if_blank:nTF {project-nature-statement}
-              {
-                \ufc_meta_use:n {project-type}~apresentado~à~
-                \ufc_meta_use:n {submission-entity}.
-              }
-              { \ufc_meta_use:n {project-nature-statement} }
+              {\ufc_project_nature_text:}
+              {\ufc_meta_use:n {project-nature-statement}}
           }
       }
       {}
@@ -1233,9 +1432,9 @@
           \end{minipage}\par
           \vspace{\baselineskip}
           \raggedright
-          Aprovada~em:~\ufc_meta_use:n {approval-date}\par
+          \ufc_doc_text:n {approved-on}:~\ufc_meta_use:n {approval-date}\par
           \vspace{\baselineskip}
-          \centering\bfseries BANCA~EXAMINADORA\normalfont\par
+          \centering\bfseries \ufc_doc_text:n {examining-committee}\normalfont\par
           \ufc_setup_signature_spacing:
           \ufc_advisor_signature:
           \ufc_coadvisor_signature:
@@ -1333,6 +1532,181 @@
     \justifying
     \ufc_input_file:n {#1}
     \clearpage
+  }
+
+% Main text language is independent from presentation headings and PDF metadata.
+% Existing Portuguese/English summary commands below remain unchanged.
+\cs_new_protected:Npn \ufc_summary_select_language:n #1
+  {
+    \str_case:nnF {#1}
+      {
+        {pt}{\selectlanguage{brazilian}}
+        {en}{\selectlanguage{english}}
+        {es}{
+          \IfFileExists{spanish.ldf}
+            {\selectlanguage{spanish}}
+            {\ClassError{abntexto-ufc}
+               {Spanish~Babel~support~is~not~installed}
+               {Install~the~babel-spanish~language~package.}}
+        }
+        {fr}{
+          \IfFileExists{french.ldf}
+            {\selectlanguage{french}}
+            {\ClassError{abntexto-ufc}
+               {French~Babel~support~is~not~installed}
+               {Install~the~babel-french~language~package.}}
+        }
+      }
+      {
+        \ClassError{abntexto-ufc}
+          {Unsupported~summary~language~'#1'}
+          {Use~pt,~en,~es~or~fr.}
+      }
+  }
+\cs_new_protected:Npn \ufc_summary_mark_language:n #1
+  {
+    \prop_if_in:NnTF \g_ufc_summary_seen_prop {#1}
+      {
+        \ClassError{abntexto-ufc}
+          {Duplicate~summary~language~'#1'}
+          {Each~language~may~appear~only~once~with~the~new~summary~API.}
+      }
+      { \prop_gput:Nnn \g_ufc_summary_seen_prop {#1} {present} }
+  }
+
+\AtBeginDocument
+  {
+    \bool_if:NT \g_ufc_document_language_explicit_bool
+      { \exp_args:NV \ufc_summary_select_language:n \g_ufc_document_language_tl }
+  }
+
+% Bind inherited LaTeX/abntexto and tabularray-abnt caption names only for
+% explicitly internationalized documents; preserve all legacy defaults.
+\cs_new_protected:Npn \ufc_localize_inherited_names:
+  {
+    \bool_if:NT \g_ufc_document_language_explicit_bool
+      {
+        \cs_if_exist:NT \appendixname
+          { \cs_gset:Npn \appendixname { \ufc_doc_text:n {appendix} } }
+        \cs_if_exist:NT \annexname
+          { \cs_gset:Npn \annexname { \ufc_doc_text:n {annex} } }
+        % Bind the real abntexto appendix/annex heading and TOC labels.
+        \cs_if_exist:NT \appendixlabel
+          { \cs_gset:Npn \appendixlabel { \ufc_doc_text:n {appendix}~\theappendix~---~ } }
+        \cs_if_exist:NT \annexlabel
+          { \cs_gset:Npn \annexlabel { \ufc_doc_text:n {annex}~\theannex~---~ } }
+        \cs_if_exist:NT \indexname
+          { \cs_gset:Npn \indexname { \ufc_doc_text:n {index} } }
+        \cs_if_exist:NT \figurename
+          { \cs_gset:Npn \figurename { \ufc_doc_text:n {caption-figure} } }
+        \cs_if_exist:NT \tablename
+          { \cs_gset:Npn \tablename { \ufc_doc_text:n {caption-table} } }
+        % The upstream legend label has active ~ tokens. Spanish Babel
+        % treats them as shorthands and the trailing one fails inside a box.
+        % Rebind only in explicit locales and retain nonbreaking spaces.
+        \cs_if_exist:NT \legendlabel
+          {
+            \cs_gset:Npn \legendlabel
+              {
+                \currentlegendID\nobreakspace{}
+                \thelegend\nobreakspace{}---\nobreakspace{}
+              }
+          }
+        % The upstream multi-object path aliases legendlabel to this macro.
+        \cs_if_exist:NT \sublegendlabel
+          {
+            \cs_gset:Npn \sublegendlabel
+              { (\alph{subplace})\nobreakspace{} }
+          }
+        % The pinned upstream alternative macro has delimited arguments
+        % [#1]#2, which etoolbox cannot reliably append to. Preserve its
+        % original body and restore the stable separator immediately after.
+        \cs_if_exist:NT \alternativesublegend
+          {
+            \cs_new_eq:NN \ufc_original_alternativesublegend \alternativesublegend
+            \cs_set_protected:Npn \alternativesublegend [##1]##2
+              {
+                \ufc_original_alternativesublegend [##1] {##2}
+                \cs_set:Npn \legendlabel
+                  {
+                    \currentlegendID\nobreakspace{}
+                    \thelegend\nobreakspace{}---\nobreakspace{}
+                  }
+                \ignorespaces
+              }
+          }
+        \cs_if_exist:NT \srclabel
+          { \cs_gset:Npn \srclabel { \ufc_doc_text:n {source-label}:~ } }
+        % The public object-note command uses this separate inherited prefix.
+        \cs_if_exist:NT \abntextonotelabel
+          { \cs_gset:Npn \abntextonotelabel { \ufc_doc_text:n {note-label}:~ } }
+        \cs_if_exist:NT \quadroname
+          { \cs_gset:Npn \quadroname { \ufc_doc_text:n {caption-text-table} } }
+        \cs_if_exist:NT \listquadroname
+          { \cs_gset:Npn \listquadroname { \ufc_label:n {text-tables} } }
+      }
+  }
+\AddToHook{begindocument/end}{\ufc_localize_inherited_names:}
+
+
+\NewDocumentCommand \ufcSummaryKeywordsInLanguage { m m }
+  {
+    \str_case:nnF {#1}
+      { {pt}{} {en}{} {es}{} {fr}{} }
+      {
+        \ClassError{abntexto-ufc}
+          {Unsupported~summary~keyword~language~'#1'}
+          {Use~pt,~en,~es~or~fr.}
+      }
+    \par\vspace{\baselineskip}
+    \noindent
+    \textbf{\prop_item:Nn \g_ufc_summary_keywords_prop {#1}:}\space #2
+  }
+
+\NewDocumentCommand \ufcPrintSummaryInLanguage { m m }
+  {
+    \ufc_summary_mark_language:n {#1}
+    \clearpage
+    \thispagestyle{empty}
+    \begingroup
+      \ufc_summary_select_language:n {#1}
+      \exp_args:Ne \ufc_pretextual_heading:n
+        { \prop_item:Nn \g_ufc_summary_headings_prop {#1} }
+      \setlength{\parindent}{0pt}
+      \justifying\ufc_input_file:n {#2}
+    \endgroup
+    \clearpage
+  }
+
+% Required two-version policy: PT -> PT+EN; EN/ES/FR -> main+PT.
+% The language identifiers, rather than interface label preferences, determine
+% the headings, keyword labels and local Babel language.
+\NewDocumentCommand \ufcPrintRequiredSummaries { m m }
+  {
+    \exp_args:NV \ufc_summary_required_pair:nnn
+      \g_ufc_document_language_tl {#1}{#2}
+  }
+\cs_new_protected:Npn \ufc_summary_required_pair:nnn #1#2#3
+  {
+    \ufcPrintSummaryInLanguage{#1}{#2}
+    \str_if_eq:nnTF {#1}{pt}
+      {\ufcPrintSummaryInLanguage{en}{#3}}
+      {\ufcPrintSummaryInLanguage{pt}{#3}}
+  }
+
+% An optional third (English) version only makes sense for ES/FR manuscripts.
+\NewDocumentCommand \ufcPrintOptionalEnglishSummary { m }
+  {
+    \str_case:VnF \g_ufc_document_language_tl
+      {
+        {es}{\ufcPrintSummaryInLanguage{en}{#1}}
+        {fr}{\ufcPrintSummaryInLanguage{en}{#1}}
+      }
+      {
+        \ClassError{abntexto-ufc}
+          {Optional~English~summary~duplicates~the~required~pair}
+          {Only~ES/FR~manuscripts~can~add~an~optional~English~summary.}
+      }
   }
 
 \ProvideDocumentCommand \ufcSummaryKeywords { m }
@@ -1506,7 +1880,7 @@
 \cs_new_protected:Npn \ufc_work_volume_line:
   {
     \ufc_meta_if_blank:nF {volume}
-      { VOLUME~\ufc_meta_use:n {volume}\par }
+      { \ufc_doc_text:n {volume}~\ufc_meta_use:n {volume}\par }
   }
 
 \cs_new_protected:Npn \ufc_cover_program_lines:
@@ -1518,7 +1892,7 @@
             \ufc_meta_if_blank:nF {undergraduate-program}
               {
                 \MakeUppercase
-                  {Curso~de~Graduação~em~\ufc_meta_use:n {undergraduate-program}}\par
+                  {\ufc_doc_text:n {undergraduate-program-line}~\ufc_meta_use:n {undergraduate-program}}\par
               }
           }
         {specialization-capstone}
@@ -1526,7 +1900,7 @@
             \ufc_meta_if_blank:nF {specialization-program}
               {
                 \MakeUppercase
-                  {Curso~de~Especialização~em~\ufc_meta_use:n {specialization-program}}\par
+                  {\ufc_doc_text:n {specialization-program-line}~\ufc_meta_use:n {specialization-program}}\par
               }
           }
         {masters-thesis}
@@ -1701,8 +2075,8 @@
 \cs_new_protected:Npn \ufc_article_dates:
   {
     \par\noindent
-    Submetido~em:~\ufc_meta_use:n {submission-date}.\space
-    Aprovado~em:~\ufc_meta_use:n {approval-date}.\par
+    \ufc_doc_text:n {submitted-on}:~\ufc_meta_use:n {submission-date}.\space
+    \ufc_doc_text:n {article-approved-on}:~\ufc_meta_use:n {approval-date}.\par
   }
 
 \cs_new_protected:Npn \ufc_article_primary_summary:n #1
@@ -1712,7 +2086,9 @@
       \singlesp
       \setlength{\parindent}{0pt}
       \justifying
-      \noindent\textbf{Resumo:}\space #1\par
+      \noindent\textbf{
+        \prop_item:Ne \g_ufc_summary_headings_prop
+          {\tl_use:N \g_ufc_document_language_tl}:}\space #1\par
     \endgroup
   }
 
@@ -1739,6 +2115,30 @@
           \setlength{\parindent}{0pt}
           \justifying
           \noindent #1\par
+        \endgroup
+      }
+  }
+
+% Explicit translated article summary. Existing two-argument
+% \ufcPrintArticleForeignElements remains unchanged for backwards compatibility.
+\NewDocumentCommand \ufcPrintArticleTranslatedSummary { m +m }
+  {
+    \ufc_article_require_profile:
+    \str_if_eq:eeTF {#1} {\tl_use:N \g_ufc_document_language_tl}
+      {
+        \ClassError{abntexto-ufc}
+          {Translated~article~summary~duplicates~the~main~language}
+          {Select~a~different~language~for~this~summary.}
+      }
+      {
+        \ufc_summary_mark_language:n {#1}
+        \par\vspace{\baselineskip}
+        \begingroup
+          \ufc_summary_select_language:n {#1}
+          \setlength{\parindent}{0pt}
+          \justifying\noindent
+          \textbf{\prop_item:Nn \g_ufc_summary_headings_prop {#1}:}\space
+          #2\par
         \endgroup
       }
   }
@@ -1808,7 +2208,7 @@
     \ufc_meta_if_blank:nF {title-variant}
       { \MakeUppercase{\ufc_meta_use:n {title-variant}}\par }
     \ufc_meta_if_blank:nF {volume}
-      { VOLUME~\ufc_meta_use:n {volume}\par }
+      { \ufc_doc_text:n {volume}~\ufc_meta_use:n {volume}\par }
   }
 
 \cs_new_protected:Npn \ufc_project_cover:
@@ -1909,17 +2309,17 @@
 
 % Native abntexto legend areas used by the UFC profile.
 \cs_if_exist:cF { IDgrafico }
-  { \definelegendplace{grafico}{Gráfico}{logr} }
+  { \definelegendplace{grafico}{\ufc_doc_text:n {caption-chart}}{logr} }
 \cs_if_exist:cF { IDcode }
-  { \definelegendplace{code}{Código}{loc} }
+  { \definelegendplace{code}{\ufc_doc_text:n {caption-code}}{loc} }
 \cs_if_exist:cF { IDalgorithm }
-  { \definelegendplace{algorithm}{Algoritmo}{loa} }
+  { \definelegendplace{algorithm}{\ufc_doc_text:n {caption-algorithm}}{loa} }
 
 % tabularray-abnt defines quadro itself when loaded with abntexto.
 \cs_new_protected:Npn \ufc_objects_setup_quadro:
   {
     \cs_if_exist:cF { IDquadro }
-      { \definelegendplace{quadro}{Quadro}{loq} }
+      { \definelegendplace{quadro}{\ufc_doc_text:n {caption-text-table}}{loq} }
   }
 \AtEndPreamble{\ufc_objects_setup_quadro:}
 
@@ -1995,13 +2395,13 @@
   { \end{place} }
 
 \NewDocumentCommand \ufcPrintListOfCharts { }
-  { \ufc_pretextual_list:nn {Lista~de~Gráficos} {\ufcstarttoc{logr}} }
+  { \ufc_pretextual_list:nn {\ufc_doc_text:n {list-charts}} {\ufcstarttoc{logr}} }
 
 \NewDocumentCommand \ufcPrintListOfCodeListings { }
-  { \ufc_pretextual_list:nn {Lista~de~Códigos} {\ufcstarttoc{loc}} }
+  { \ufc_pretextual_list:nn {\ufc_doc_text:n {list-code}} {\ufcstarttoc{loc}} }
 
 \NewDocumentCommand \ufcPrintListOfAlgorithms { }
-  { \ufc_pretextual_list:nn {Lista~de~Algoritmos} {\ufcstarttoc{loa}} }
+  { \ufc_pretextual_list:nn {\ufc_doc_text:n {list-algorithms}} {\ufcstarttoc{loa}} }
 
 \cs_new_protected:Npn \ufc_listing_apply_number_margins:
   {
@@ -2466,11 +2866,11 @@
   {
     \ufc_primary_section_break:
     \cs_if_exist:NT \phantomsection { \phantomsection }
-    \addcontentsline{toc}{section}{\ufcTocPosttextualTitle{Referências}}
+    \addcontentsline{toc}{section}{\ufcTocPosttextualTitle{\ufc_doc_text:n {references}}}
     \begingroup
       \parindent=0pt
       \begin{center}
-        \bfseries REFERÊNCIAS\par
+        \bfseries\MakeUppercase{\ufc_doc_text:n {references}}\par
       \end{center}
       \vspace{\baselineskip}
       \singlesp
@@ -2724,7 +3124,7 @@
   {
     \cs_if_exist:NTF \printglossary
       {
-        \ufc_aligned_posttextual_heading:n {Glossário}
+        \ufc_aligned_posttextual_heading:n {\ufc_doc_text:n {glossary}}
         \begingroup
           \setglossarysection{none}
           \glstocfalse

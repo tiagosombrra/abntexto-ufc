@@ -21,17 +21,35 @@ Forma geral:
 | --- | --- |
 | `type` | `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project`, `anonymized-research-project`, `scientific-article` |
 | `labels-language` | `pt` (padrão), `en`, `es`, `fr`; títulos pré-textuais, não idioma completo do manuscrito |
+| `document-language` | `pt`, `en`, `es`, `fr`; quando explícita seleciona idioma Babel, resumos e **33 textos gerados pela classe**; ausente preserva padrão PT; metadados PDF independentes |
 | `print-mode` | `single-sided` ou `double-sided` |
 | `cover` | `auto`, `true` ou `false` |
 | `catalog-card` | `true` ou `false` |
 | `coat-of-arms` | `true` ou `false` |
 | `initial-page` | política de página inicial dos trabalhos acadêmicos quando aplicável |
 
+### Idioma principal e versões do resumo (opt-in, v3.1.0)
+
+A chave **document-language = pt|en|es|fr** define o idioma dos novos comandos de resumo **e das 33 chaves de textos/legendas gerados pela classe**, de forma independente de **labels-language**. O idioma padrão para a política de resumos é PT. Quando `document-language` é informado explicitamente, os títulos gerais seguem esse idioma automaticamente, salvo configuração explícita e independente de `labels-language`. A seleção de idioma do Babel ao iniciar o documento ocorre **somente se esta chave for informada explicitamente**; na ausência da chave, a classe não sobrescreve o idioma selecionado pelo Babel, mas a inicialização das dependências pode redefinir uma seleção `\selectlanguage{english}` feita diretamente no preâmbulo para português brasileiro. Para garantir inglês, configure `document-language=en`. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
+
+| Idioma principal | Par gerado pelo comando novo | Versão inglesa adicional |
+| --- | --- | --- |
+| pt | RESUMO → ABSTRACT | não se aplica |
+| en | ABSTRACT → RESUMO | não se aplica |
+| es | RESUMEN → RESUMO | opcional |
+| fr | RÉSUMÉ → RESUMO | opcional |
+
+A ordem é a política adotada para o projeto e exige confirmação específica do programa ou instituição no caso de uma submissão em língua estrangeira. Espanhol/francês dependem dos recursos Babel correspondentes no ambiente LaTeX; o idioma padrão não passa a depender desses pacotes. Veja [Política de idiomas dos resumos](SUMMARY-LANGUAGE-POLICY.md).
+
 ### `labels-language = pt|en|es|fr` (v3.1.0 experimental)
 
 Seleciona exclusivamente a tradução dos títulos gerados por `\ufcPrintAcknowledgments`, `\ufcPrintErrata`, `\ufcPrintListOfIllustrations`, `\ufcPrintListOfFigures`, `\ufcPrintListOfTables`, `\ufcPrintListOfTextTables`, `\ufcPrintListOfAbbreviationsAndAcronyms`, `\ufcPrintListOfSymbols` e `\ufcPrintTableOfContents`.
 
-**Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\ufcPrintSummary` preserva o rótulo Resumo e `\ufcPrintAbstract` preserva Abstract; a seleção não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
+**Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\ufcPrintSummary` preserva o rótulo Resumo e `\ufcPrintAbstract` preserva Abstract; a seleção isolada de `labels-language` não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC; `document-language` explícito também traduz as expressões institucionais e cargos suportados, exceto nomes oficiais. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
+
+### Tradução das frases automáticas (v3.1.0)
+
+Ao configurar `document-language` explicitamente, a classe traduz as naturezas aplicáveis aos cinco perfis, banca, cargos de orientação, datas, legendas de objetos, referências, glossário, apêndices, anexos e Fonte/Nota. No abntexto herdado os títulos de apêndices/anexos e notas de objeto passam por `\appendixlabel`, `\annexlabel` e `\abntextonotelabel`, corrigidos no ramo de desenvolvimento. `labels-language` sozinho continua limitado aos nove títulos pré-textuais. Nomes oficiais, bibliografia gerada por dependências, conteúdo autoral e PDF `/Lang` são assuntos distintos, não traduzidos automaticamente. As traduções institucionais descritivas não constituem homologação da UFC. Consulte [a auditoria](I18N-AUDIT-2026-10-23.md).
 
 ### Instituição e unidade acadêmica
 
@@ -189,6 +207,30 @@ Gera os agradecimentos.
 ### \ufcPrintEpigraph[short|long]{arquivo}
 
 Gera a epígrafe. O argumento opcional seleciona a composição curta ou longa.
+
+### \ufcDocumentLanguage
+
+Consulta o idioma principal configurado em document-language.
+
+### \ufcPrintRequiredSummaries{arquivo-principal}{arquivo-complementar}
+
+Gera duas páginas com idiomas e títulos determinados pelo idioma principal: PT→PT+EN; EN→EN+PT; ES→ES+PT; FR→FR+PT.
+
+### \ufcPrintSummaryInLanguage{idioma}{arquivo}
+
+Gera uma página em pt, en, es ou fr. Idiomas duplicados usando a nova API provocam erro; não combine versões duplicadas com comandos antigos.
+
+### \ufcSummaryKeywordsInLanguage{idioma}{termos}
+
+Imprime Palavras-chave / Keywords / Palabras clave / Mots-clés de acordo com o idioma do texto de resumo.
+
+### \ufcPrintOptionalEnglishSummary{arquivo}
+
+Somente para documento principal em espanhol ou francês. Complementa o par com um ABSTRACT em inglês; pt/en são rejeitados para evitar duplicação.
+
+### \ufcPrintArticleTranslatedSummary{idioma}{texto}
+
+No perfil scientific-article, insere uma versão traduzida identificada e rejeita o mesmo idioma do resumo principal. \ufcPrintArticleFrontMatter usa o rótulo principal escolhido por document-language; a API legada de elementos estrangeiros permanece.
 
 ### \ufcPrintSummary{arquivo}
 
