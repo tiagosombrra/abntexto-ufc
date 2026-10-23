@@ -1601,6 +1601,17 @@
           { \cs_gset:Npn \figurename { \ufc_doc_text:n {caption-figure} } }
         \cs_if_exist:NT \tablename
           { \cs_gset:Npn \tablename { \ufc_doc_text:n {caption-table} } }
+        % The upstream legend label has active ~ tokens. Spanish Babel
+        % treats them as shorthands and the trailing one fails inside a box.
+        % Rebind only in explicit locales and retain nonbreaking spaces.
+        \cs_if_exist:NT \legendlabel
+          {
+            \cs_gset:Npn \legendlabel
+              {
+                \currentlegendID\nobreakspace{}
+                \thelegend\nobreakspace{}---\nobreakspace{}
+              }
+          }
         \cs_if_exist:NT \srclabel
           { \cs_gset:Npn \srclabel { \ufc_doc_text:n {source-label}:~ } }
         % The public object-note command uses this separate inherited prefix.
