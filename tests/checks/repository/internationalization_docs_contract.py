@@ -33,7 +33,7 @@ for filename in (
     "docs/INTERNATIONALIZATION-COVERAGE.md",
 ):
     source = (root / filename).read_text(encoding="utf-8")
-    if r"\\\\selectlanguage{english}" in source:
+    if r"\\selectlanguage{english}" in source:
         raise SystemExit(f"I18N-DOCS-EVIDENCE status=FAIL doubled_babel_command={filename}")
 
 # Fail early when the old labels-only summary is accidentally restored.
