@@ -112,7 +112,7 @@ required_routes = (
     r"\cs_gset:Npn \abntextonotelabel",
     r"\cs_gset:Npn \legendlabel",
     r"\cs_gset:Npn \sublegendlabel",
-    r"\apptocmd{\alternativesublegend}",
+    r"\cs_new_eq:NN \ufc_original_alternativesublegend \alternativesublegend",
     r"\currentlegendID\nobreakspace{}",
     r"\ufc_doc_text:n {note-label}",
 )
