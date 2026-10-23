@@ -110,6 +110,8 @@ required_routes = (
     r"\cs_gset:Npn \appendixlabel",
     r"\cs_gset:Npn \annexlabel",
     r"\cs_gset:Npn \abntextonotelabel",
+    r"\cs_gset:Npn \legendlabel",
+    r"\currentlegendID\nobreakspace{}",
     r"\ufc_doc_text:n {note-label}",
 )
 for route in required_routes:
