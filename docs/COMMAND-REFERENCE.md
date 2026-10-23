@@ -21,7 +21,7 @@ Forma geral:
 | --- | --- |
 | `type` | `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project`, `anonymized-research-project`, `scientific-article` |
 | `labels-language` | `pt` (padrão), `en`, `es`, `fr`; títulos pré-textuais, não idioma completo do manuscrito |
-| `document-language` | `pt` (padrão), `en`, `es`, `fr`; idioma do corpo do texto e seleção da versão principal do resumo (não altera automaticamente metadados PDF) |
+| `document-language` | `pt`, `en`, `es`, `fr`; quando explícita seleciona idioma Babel, resumos e **33 textos gerados pela classe**; ausente preserva padrão PT; metadados PDF independentes |
 | `print-mode` | `single-sided` ou `double-sided` |
 | `cover` | `auto`, `true` ou `false` |
 | `catalog-card` | `true` ou `false` |
@@ -45,11 +45,11 @@ A ordem é a política adotada para o projeto e exige confirmação específica 
 
 Seleciona exclusivamente a tradução dos títulos gerados por `\ufcPrintAcknowledgments`, `\ufcPrintErrata`, `\ufcPrintListOfIllustrations`, `\ufcPrintListOfFigures`, `\ufcPrintListOfTables`, `\ufcPrintListOfTextTables`, `\ufcPrintListOfAbbreviationsAndAcronyms`, `\ufcPrintListOfSymbols` e `\ufcPrintTableOfContents`.
 
-**Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\ufcPrintSummary` preserva o rótulo Resumo e `\ufcPrintAbstract` preserva Abstract; a seleção não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
+**Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\ufcPrintSummary` preserva o rótulo Resumo e `\ufcPrintAbstract` preserva Abstract; a seleção isolada de `labels-language` não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC; `document-language` explícito também traduz as expressões institucionais e cargos suportados, exceto nomes oficiais. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
 
 ### Tradução das frases automáticas (v3.1.0)
 
-Ao configurar \`document-language\` explicitamente, a classe traduz as naturezas aplicáveis aos cinco perfis, banca, cargos de orientação, datas, legendas de objetos, referências, glossário, apêndices, anexos e Fonte/Nota. No abntexto herdado os títulos de apêndices/anexos e notas de objeto passam por \`\appendixlabel\`, \`\annexlabel\` e \`\abntextonotelabel\`, corrigidos no ramo de desenvolvimento. \`labels-language\` sozinho continua limitado aos nove títulos pré-textuais. Nomes oficiais, bibliografia gerada por dependências, conteúdo autoral e PDF \`/Lang\` são assuntos distintos, não traduzidos automaticamente. As traduções institucionais descritivas não constituem homologação da UFC. Consulte [a auditoria](I18N-AUDIT-2026-10-23.md).
+Ao configurar `document-language` explicitamente, a classe traduz as naturezas aplicáveis aos cinco perfis, banca, cargos de orientação, datas, legendas de objetos, referências, glossário, apêndices, anexos e Fonte/Nota. No abntexto herdado os títulos de apêndices/anexos e notas de objeto passam por `\appendixlabel`, `\annexlabel` e `\abntextonotelabel`, corrigidos no ramo de desenvolvimento. `labels-language` sozinho continua limitado aos nove títulos pré-textuais. Nomes oficiais, bibliografia gerada por dependências, conteúdo autoral e PDF `/Lang` são assuntos distintos, não traduzidos automaticamente. As traduções institucionais descritivas não constituem homologação da UFC. Consulte [a auditoria](I18N-AUDIT-2026-10-23.md).
 
 ### Instituição e unidade acadêmica
 
