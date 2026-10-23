@@ -242,6 +242,10 @@
 \prop_gput:Nnn \g_ufc_document_text_prop {en/source-label} {Source}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/source-label} {Fuente}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/source-label} {Source}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/note-label} {Nota}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/note-label} {Note}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/note-label} {Nota}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/note-label} {Note}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/default-project-type} {Projeto~de~pesquisa}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/default-project-type} {Research~project}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/default-project-type} {Proyecto~de~investigación}
@@ -1586,6 +1590,11 @@
           { \cs_gset:Npn \appendixname { \ufc_doc_text:n {appendix} } }
         \cs_if_exist:NT \annexname
           { \cs_gset:Npn \annexname { \ufc_doc_text:n {annex} } }
+        % Bind the real abntexto appendix/annex heading and TOC labels.
+        \cs_if_exist:NT \appendixlabel
+          { \cs_gset:Npn \appendixlabel { \ufc_doc_text:n {appendix}~\theappendix~---~ } }
+        \cs_if_exist:NT \annexlabel
+          { \cs_gset:Npn \annexlabel { \ufc_doc_text:n {annex}~\theannex~---~ } }
         \cs_if_exist:NT \indexname
           { \cs_gset:Npn \indexname { \ufc_doc_text:n {index} } }
         \cs_if_exist:NT \figurename
@@ -1594,6 +1603,9 @@
           { \cs_gset:Npn \tablename { \ufc_doc_text:n {caption-table} } }
         \cs_if_exist:NT \srclabel
           { \cs_gset:Npn \srclabel { \ufc_doc_text:n {source-label}:~ } }
+        % The public object-note command uses this separate inherited prefix.
+        \cs_if_exist:NT \abntextonotelabel
+          { \cs_gset:Npn \abntextonotelabel { \ufc_doc_text:n {note-label}:~ } }
         \cs_if_exist:NT \quadroname
           { \cs_gset:Npn \quadroname { \ufc_doc_text:n {caption-text-table} } }
         \cs_if_exist:NT \listquadroname

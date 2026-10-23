@@ -69,7 +69,7 @@ expected = {
     "list-charts", "list-code", "list-algorithms",
     "caption-chart", "caption-code", "caption-algorithm", "caption-text-table",
     "appendix", "annex", "index", "default-project-type",
-    "caption-figure", "caption-table", "source-label",
+    "caption-figure", "caption-table", "source-label", "note-label",
     "nature-undergraduate", "nature-specialization", "nature-masters",
     "nature-doctoral", "nature-project",
 }
@@ -107,6 +107,10 @@ required_routes = (
     r"\ufc_doc_text:n {references}",
     r"\ufc_doc_text:n {glossary}",
     r"\ufc_doc_text:n {caption-text-table}",
+    r"\cs_gset:Npn \appendixlabel",
+    r"\cs_gset:Npn \annexlabel",
+    r"\cs_gset:Npn \abntextonotelabel",
+    r"\ufc_doc_text:n {note-label}",
 )
 for route in required_routes:
     if route not in source:
