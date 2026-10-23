@@ -35,6 +35,7 @@ SOURCE_CHECK_NAMES = (
     "test_surface_integrity.py",
     "v3_api_residual.py",
     "librarian_review_contract.py",
+    "internationalization_docs_contract.py",
 )
 
 # Resolved repository-relative paths remain exported for integrity/audit tooling.
@@ -153,6 +154,10 @@ def execute_checks() -> tuple[int, int, int, int]:
 
     run(["git", "diff", "--check"], "working-tree diff integrity")
     run(["git", "diff", "--cached", "--check"], "index diff integrity")
+
+    # Check locale parity before the expensive TeX Live/PDF workflows.
+    run([sys.executable, "tests/integration/frontmatter/document-locale-catalog.py"],
+        "four-locale class-generated text catalog")
 
     for filename in SOURCE_CHECK_NAMES:
         try:
