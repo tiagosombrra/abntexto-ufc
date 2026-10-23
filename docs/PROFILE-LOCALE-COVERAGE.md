@@ -1,6 +1,6 @@
 # v3.1.0 profile × display-locale PDF regression
 
-The v3.1.0 class provides an opt-in `labels-language=pt|en|es|fr` setting for **nine front-matter display headings only**, with Portuguese as the default. It does **not** translate academic content, institutional names, title/degree/submission statements, references, `babel` hyphenation or PDF language metadata. The separately maintained Web/Lite language selector changes **browser presentation only**.
+This **historical test matrix** covers `labels-language=pt|en|es|fr` for **nine front-matter display headings only**, with Portuguese author content in every fixture. It is distinct from the newer `document-language=pt|en|es|fr` support in PR #520, which separately localizes **33 class-owned text keys**, including nature/submission statements, summary labels, captions and inherited appendix/annex/object-note routes. Neither setting automatically translates user-authored content, official proper names, external bibliography text or PDF language metadata. The separate Web/Lite language selector changes **browser presentation only**.
 
 ## Automated evidence and limits
 
@@ -10,4 +10,4 @@ The matrix obtains the six non-article profile identifiers from the existing v3 
 
 This is a display-heading and profile-compatibility **smoke matrix**. All fixture content and `\DocumentMetadata{lang=pt-BR}` stay Portuguese irrespective of selected labels. The smoke test does not independently inspect the PDF catalog `/Lang` entry; each receipt explicitly records `pdf_catalog_language_proof_state=NOT_CHECKED`. It does not certify full translation of 28 academic manuscripts, ABNT/UFC compliance, PDF/UA, accessibility reading order or a reviewer-approved seven-profile publication archive. The latest generated seven-profile release PDFs need separate source-bound human visual approval under [issue #507](https://github.com/tiagosombrra/abntexto-ufc/issues/507). The upstream section-tagging blocker remains [#459](https://github.com/tiagosombrra/abntexto-ufc/issues/459).
 
-For developers: `sh tests/integration/frontmatter/profile-locale-matrix.sh` runs the bounded 28-case PDF test; `sh tests/integration/frontmatter/frontmatter.sh` includes both localization checks in the normal CI suite. This does not modify runtime normative rules or any previously released v3.0.5 asset.
+For developers: `sh tests/integration/frontmatter/profile-locale-matrix.sh` builds 28 **display-only** PDF cases; the full Front matter suite additionally tests four-language summaries and inherited labels. A complete **7 × 4 manuscript-language** test matrix is still PENDING; never infer full translation coverage from this display smoke matrix. This does not modify runtime normative rules or any previously released v3.0.5 asset.
