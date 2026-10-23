@@ -36,3 +36,6 @@ python3 tests/integration/validator/web-lite-e2e.py \
   --duplex-pdf-dir artifacts/validation/duplex-margins \
   --site-root _site/validator \
   --evidence "$WEB_LITE_EVIDENCE_DIR/web-lite-e2e.json"
+python3 tests/integration/validator/homepage-locale-e2e.py \
+  --site-root _site \
+  --evidence "$WEB_LITE_EVIDENCE_DIR/homepage-locale-e2e.json"

@@ -36,6 +36,7 @@ SOURCE_CHECK_NAMES = (
     "v3_api_residual.py",
     "librarian_review_contract.py",
     "internationalization_docs_contract.py",
+    "homepage_locales_contract.py",
 )
 
 # Resolved repository-relative paths remain exported for integrity/audit tooling.
