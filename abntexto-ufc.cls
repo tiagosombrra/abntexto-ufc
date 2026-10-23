@@ -1618,6 +1618,25 @@
             \cs_gset:Npn \sublegendlabel
               { (\alph{subplace})\nobreakspace{} }
           }
+        % Alternative sublegends redefine legendlabel inside an object.
+        % Restore the same stable separator after that inherited command.
+        \cs_if_exist:NT \alternativesublegend
+          {
+            \apptocmd{\alternativesublegend}
+              {
+                \cs_set:Npn \legendlabel
+                  {
+                    \currentlegendID\nobreakspace{}
+                    \thelegend\nobreakspace{}---\nobreakspace{}
+                  }
+              }
+              {}
+              {
+                \ClassError{abntexto-ufc}
+                  {Cannot~patch~inherited~sublegend~spacing}
+                  {Check~the~installed~abntexto~version.}
+              }
+          }
         \cs_if_exist:NT \srclabel
           { \cs_gset:Npn \srclabel { \ufc_doc_text:n {source-label}:~ } }
         % The public object-note command uses this separate inherited prefix.
