@@ -45,6 +45,7 @@ def main() -> None:
         "existing font embedding gate": "tests/integration/layout/font-embedding.sh",
         "existing PDF/A gate": "tests/integration/layout/pdfa.sh",
         "bounded evidence marker": "MACOS-PORTABILITY-EVIDENCE status=PASS",
+        "draft iteration skips heavy builds": "if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.draft }}",
     }
     missing = [label for label, token in required.items() if token not in text]
     if missing:
