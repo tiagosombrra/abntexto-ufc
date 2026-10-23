@@ -30,7 +30,7 @@ Forma geral:
 
 ### Idioma principal e versões do resumo (opt-in, v3.1.0)
 
-A chave **document-language = pt|en|es|fr** define o idioma dos novos comandos de resumo, de forma independente de **labels-language**. O idioma padrão para a política de resumos é PT. Quando `document-language` é informado explicitamente, os títulos gerais seguem esse idioma automaticamente, salvo configuração explícita e independente de `labels-language`. A seleção de idioma do Babel ao iniciar o documento ocorre **somente se esta chave for informada explicitamente**; na ausência da chave, a classe não sobrescreve o idioma selecionado pelo Babel, mas a inicialização das dependências pode redefinir uma seleção `\\selectlanguage{english}` feita diretamente no preâmbulo para português brasileiro. Para garantir inglês, configure `document-language=en`. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
+A chave **document-language = pt|en|es|fr** define o idioma dos novos comandos de resumo **e das 33 chaves de textos/legendas gerados pela classe**, de forma independente de **labels-language**. O idioma padrão para a política de resumos é PT. Quando `document-language` é informado explicitamente, os títulos gerais seguem esse idioma automaticamente, salvo configuração explícita e independente de `labels-language`. A seleção de idioma do Babel ao iniciar o documento ocorre **somente se esta chave for informada explicitamente**; na ausência da chave, a classe não sobrescreve o idioma selecionado pelo Babel, mas a inicialização das dependências pode redefinir uma seleção `\\selectlanguage{english}` feita diretamente no preâmbulo para português brasileiro. Para garantir inglês, configure `document-language=en`. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
 
 | Idioma principal | Par gerado pelo comando novo | Versão inglesa adicional |
 | --- | --- | --- |
@@ -46,6 +46,10 @@ A ordem é a política adotada para o projeto e exige confirmação específica 
 Seleciona exclusivamente a tradução dos títulos gerados por `\ufcPrintAcknowledgments`, `\ufcPrintErrata`, `\ufcPrintListOfIllustrations`, `\ufcPrintListOfFigures`, `\ufcPrintListOfTables`, `\ufcPrintListOfTextTables`, `\ufcPrintListOfAbbreviationsAndAcronyms`, `\ufcPrintListOfSymbols` e `\ufcPrintTableOfContents`.
 
 **Padrão: `pt`**, preservando a saída existente; `en`, `es` e `fr` são opt-in. Idiomas inválidos causam erro de configuração. `\ufcPrintSummary` preserva o rótulo Resumo e `\ufcPrintAbstract` preserva Abstract; a seleção não modifica Babel, idioma do documento, títulos/cargos institucionais, PDF/A, referências nem conformidade ABNT/UFC. A tradução de nomes próprios (instituição, programa) exige informação explícita nos metadados e revisão institucional.
+
+### Tradução das frases automáticas (v3.1.0)
+
+Ao configurar \`document-language\` explicitamente, a classe traduz as naturezas aplicáveis aos cinco perfis, banca, cargos de orientação, datas, legendas de objetos, referências, glossário, apêndices, anexos e Fonte/Nota. No abntexto herdado os títulos de apêndices/anexos e notas de objeto passam por \`\appendixlabel\`, \`\annexlabel\` e \`\abntextonotelabel\`, corrigidos no ramo de desenvolvimento. \`labels-language\` sozinho continua limitado aos nove títulos pré-textuais. Nomes oficiais, bibliografia gerada por dependências, conteúdo autoral e PDF \`/Lang\` são assuntos distintos, não traduzidos automaticamente. As traduções institucionais descritivas não constituem homologação da UFC. Consulte [a auditoria](I18N-AUDIT-2026-10-23.md).
 
 ### Instituição e unidade acadêmica
 
