@@ -1,6 +1,6 @@
 # Linux Integration Scopes
 
-Updated: 2026-09-19
+Updated: 2026-10-23
 
 ## Purpose
 
@@ -85,6 +85,14 @@ python3 tests/run.py --list-suites
 ```
 
 to inspect the current suite/check mapping.
+
+## Fast iteration without reducing final assurance
+
+For a single active material PR, keep unfinished edits in **draft**. Each push retains fast Static Contract checks, including locale catalog parity and documentation consistency. The existing selector skips the heavy Linux integration suite while draft. Static-only green is **not** release-grade evidence.
+
+On the final, fixed HEAD, mark the PR ready for review and require complete non-skipped Linux integration, relevant Windows/macOS checks and fresh review. Any subsequent source update invalidates previous same-HEAD certification. The merge commit on `main` still requires complete Linux integration and separate Linux release/CTAN proof.
+
+The expensive stages include TeX Live setup, repeated LaTeX passes for cross-profile PDFs, and browser E2E. Profile-locale display smoke alone compiles 28 scenarios × 3 passes. Optimize startup/caching and use scoped local diagnostics while developing; do not remove mandatory release checks or silently reduce LaTeX passes without equivalent evidence.
 
 ## Acceptance rule
 
