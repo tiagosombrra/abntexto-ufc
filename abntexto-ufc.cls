@@ -1618,23 +1618,21 @@
             \cs_gset:Npn \sublegendlabel
               { (\alph{subplace})\nobreakspace{} }
           }
-        % Alternative sublegends redefine legendlabel inside an object.
-        % Restore the same stable separator after that inherited command.
+        % The pinned upstream alternative macro has delimited arguments
+        % [#1]#2, which etoolbox cannot reliably append to. Preserve its
+        % original body and restore the stable separator immediately after.
         \cs_if_exist:NT \alternativesublegend
           {
-            \apptocmd{\alternativesublegend}
+            \cs_new_eq:NN \ufc_original_alternativesublegend \alternativesublegend
+            \cs_set_protected:Npn \alternativesublegend [##1]##2
               {
+                \ufc_original_alternativesublegend [##1] {##2}
                 \cs_set:Npn \legendlabel
                   {
                     \currentlegendID\nobreakspace{}
                     \thelegend\nobreakspace{}---\nobreakspace{}
                   }
-              }
-              {}
-              {
-                \ClassError{abntexto-ufc}
-                  {Cannot~patch~inherited~sublegend~spacing}
-                  {Check~the~installed~abntexto~version.}
+                \ignorespaces
               }
           }
         \cs_if_exist:NT \srclabel
