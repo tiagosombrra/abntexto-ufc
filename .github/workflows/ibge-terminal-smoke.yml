@@ -36,6 +36,8 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             apt-get install -y --no-install-recommends poppler-utils
+            # texlive-action runs as root over a runner-owned mounted checkout.
+            git config --global --add safe.directory "$PWD"
             sh tests/integration/objects/table-ibge-multipage-evidence.sh
       - name: Upload source-bound PDF/vector diagnostics
         if: always()
