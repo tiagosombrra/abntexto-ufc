@@ -61,10 +61,10 @@ elif scenario == "positive":
         raise SystemExit("IBGE §8.3(d): expected one original closing rule")
 elif scenario == "theme-override":
     # Preserve the original body-level closing rule under an explicit theme.
-    options = "[\\n  caption="
+    options = "[\n  caption="
     if source.count(options) != 1:
         raise SystemExit("IBGE theme override anchor drift")
-    source = source.replace(options, "[\\n  theme=abnt,\\n  caption=")
+    source = source.replace(options, "[\n  theme=abnt,\n  caption=")
 elif scenario == "nonterminal-rule":
     # Negative control bypasses ONLY the class-owned compatibility adapter,
     # invoking the upstream public longtblr+abnt theme with a literal
