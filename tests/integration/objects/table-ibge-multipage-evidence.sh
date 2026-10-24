@@ -1,5 +1,5 @@
 #!/bin/sh
-# Actual-class longabnttblr evidence for IBGE 1993 §8.3, bounded to 3 scenarios.
+# Actual-class longabnttblr evidence for IBGE 1993 §8.3, bounded to 4 scenarios.
 set -eu
 
 fixture="tests/documents/table-ibge-multipage-final-pdf.tex"
@@ -54,28 +54,24 @@ elif scenario == "source-missing":
         raise SystemExit("IBGE §8.3: source-removal fixture drifted")
     source = source.replace(anchor, "")
 elif scenario == "positive":
-    # The new public opt-in wrapper owns the concluding horizontal separator.
-    # This is not a fixture-level internal theme mutation. Existing old
-    # longabnttblr plus bottomrule remains the independent negative PDF.
-    start = r"\begin{longabnttblr}"
-    close = r"\end{longabnttblr}"
-    for anchor, new in (
-        (start, r"\begin{ufcibgelongtblr}"),
-        (close, r"\end{ufcibgelongtblr}"),
-    ):
-        if source.count(anchor) != 1:
-            raise SystemExit("IBGE §8.3(d): expected one wrapper environment anchor")
-        source = source.replace(anchor, new)
-    bottom = r"\bottomrule"
-    if source.count(bottom) != 1:
-        raise SystemExit("IBGE §8.3(d): original bottomrule fixture drifted")
-    source = source.replace(bottom, "")
+    # The positive now uses the *default* public longabnttblr, unchanged in
+    # source syntax, including the familiar literal body-level \bottomrule.
+    # The class routes that closing line to the lastfoot template.
+    if source.count(r"\bottomrule") != 1:
+        raise SystemExit("IBGE §8.3(d): expected one original closing rule")
 elif scenario == "nonterminal-rule":
-    # Reproduce the actual upstream defect with unmodified class and theme:
-    # tabularray reuses the body-level last \bottomrule on ALL split pages.
-    # This PDF must still retain valid title/header/source and a valid final
-    # rule, but fail §8.3(d) because earlier pages also show the separator.
-    pass
+    # Negative control bypasses ONLY the class-owned compatibility adapter,
+    # invoking the upstream public longtblr+abnt theme with a literal
+    # \bottomrule. It must show intermediate repeated footer rules.
+    start, end = r"\begin{longabnttblr}", r"\end{longabnttblr}"
+    if source.count(start) != 1 or source.count(end) != 1:
+        raise SystemExit("IBGE §8.3(d): original wrapper drift")
+    source = source.replace(start, r"\begin{longtblr}")
+    source = source.replace(end, r"\end{longtblr}")
+    options = "[\n  caption="
+    if source.count(options) != 1:
+        raise SystemExit("IBGE §8.3(d): theme injection anchor drift")
+    source = source.replace(options, "[\n  theme=abnt,\n  caption=")
 elif scenario != "positive":
     raise SystemExit("IBGE §8.3: unsupported fixture scenario")
 out.write_text(source, encoding="utf-8")

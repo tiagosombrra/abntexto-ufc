@@ -127,7 +127,7 @@ Não simule margens com espaços, `\hspace`, minipages globais ou alterações l
 
 Para tabelas numéricas extensas com `tables = tabularray`, use o ambiente **`longabnttblr`**, sem envolvê-lo em um `table` flutuante. O ambiente `tallabnttblr` é destinado a tabelas que não atravessam páginas. O tema ABNT do pacote tabularray fornece os indicadores de continuação em português. Cada página da tabela deve manter sua identificação e cabeçalho; a fonte e as notas cabem ao rodapé da página de conclusão, conforme a aplicação de §8.3 das normas tabulares do IBGE. A evidência automática do projeto cobre, por enquanto, uma tabela sintética controlada com casos negativos de cabeçalho e fonte; outras tabelas ainda exigem inspeção visual.
 
-**Limitação conhecida na quebra entre páginas:** quando se utiliza `\\bottomrule` no corpo de `longabnttblr`, o mecanismo de rodapé de linhas do `tabularray` pode repetir esse traço nas páginas intermediárias. Embora a fonte e as notas sejam corretamente reservadas para a conclusão, esse traço pode contrariar o item 8.3(d) do IBGE. A verificação vetorial da PR #500 reproduz o problema em PDF real. Até que exista uma correção testada para o ambiente padrão, **não presuma conformidade do fechamento da tabela**: examine todas as páginas do PDF. A prova experimental também demonstra a possibilidade de deslocar a linha para o modelo `lastfoot` e omitir `\\bottomrule` no corpo da tabela, mas isso ainda não constitui solução automática da classe para documentos de usuários.
+**Correção do rodapé em tabelas longas (3.1.0):** o ambiente público `longabnttblr` usado com `tables=tabularray` mantém os argumentos e a sintaxe familiar de linhas com `\bottomrule`. A classe converte esse traço literal em uma linha do `lastfoot`, impressa somente na página de conclusão, antes de Fonte/Nota. Isso evita a repetição que o `tabularray` produziria em páginas intermediárias. `tallabnttblr` e `quadro` não mudam. A variante `\bottomrule[espessura]` não é suportada por esse adaptador. A evidência vetorial testa a tabela controlada de 168 linhas; tabelas mais complexas continuam exigindo inspeção visual.
 
 ### Fechamento correto em tabela longa: modo explícito v3.1
 
@@ -158,7 +158,7 @@ Amostra B & 20 \\
 
 A forma sem metadados opcionais é `\begin{ufcibgelongtblr}{colspec={l r}}`, seguida das linhas e de `\end{ufcibgelongtblr}`. Essa possibilidade é um contrato de sintaxe, **não uma dispensa das exigências normativas de título ou fonte**.
 
-O ambiente existente `longabnttblr` **não foi alterado**. Nele, um `\\bottomrule` no corpo ainda pode se repetir nas páginas intermediárias. A evidência automática do opt-in é parcial, com amostras de uma e sete páginas; revise visualmente o PDF de depósito. Larguras variáveis, tabelas complexas e exceções normativas requerem validações adicionais.
+O ambiente `longabnttblr` padrão já aplica o mesmo rodapé final quando o autor usa o comando literal `\bottomrule`; `ufcibgelongtblr` continua sendo a variante explícita e estrita que rejeita esse comando no corpo. A evidência automática é parcial, com uma tabela longa controlada e casos curtos do modo estrito; revise visualmente o PDF de depósito. Larguras variáveis, tabelas complexas, temas personalizados e exceções normativas requerem validações adicionais.
 
 ### Fonte, tamanho e espaçamento
 
