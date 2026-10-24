@@ -1,5 +1,5 @@
 #!/bin/sh
-# Actual-class longabnttblr evidence for IBGE 1993 §8.3, bounded to 3 scenarios.
+# Actual-class longabnttblr evidence for IBGE 1993 §8.3, bounded to 4 scenarios.
 set -eu
 
 fixture="tests/documents/table-ibge-multipage-final-pdf.tex"
@@ -8,7 +8,7 @@ tmp="$(mktemp -d)"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {
-  for scenario in positive header-missing source-missing nonterminal-rule; do
+  for scenario in positive header-missing source-missing nonterminal-rule theme-override; do
     job="ibge-multipage-$scenario"
     for ext in aux log out pdf lot toc; do
       rm -f "$job.$ext"
@@ -21,7 +21,7 @@ trap cleanup EXIT INT TERM
 python3 -m py_compile tests/checks/objects/normative_table_ibge_multipage.py \
   tests/checks/objects/normative_table_ibge_multipage_vector.py
 
-for scenario in positive header-missing source-missing nonterminal-rule; do
+for scenario in positive header-missing source-missing nonterminal-rule theme-override; do
   job="ibge-multipage-$scenario"
   generated="$tmp/$job.tex"
 
@@ -54,28 +54,30 @@ elif scenario == "source-missing":
         raise SystemExit("IBGE §8.3: source-removal fixture drifted")
     source = source.replace(anchor, "")
 elif scenario == "positive":
-    # The new public opt-in wrapper owns the concluding horizontal separator.
-    # This is not a fixture-level internal theme mutation. Existing old
-    # longabnttblr plus bottomrule remains the independent negative PDF.
-    start = r"\begin{longabnttblr}"
-    close = r"\end{longabnttblr}"
-    for anchor, new in (
-        (start, r"\begin{ufcibgelongtblr}"),
-        (close, r"\end{ufcibgelongtblr}"),
-    ):
-        if source.count(anchor) != 1:
-            raise SystemExit("IBGE §8.3(d): expected one wrapper environment anchor")
-        source = source.replace(anchor, new)
-    bottom = r"\bottomrule"
-    if source.count(bottom) != 1:
-        raise SystemExit("IBGE §8.3(d): original bottomrule fixture drifted")
-    source = source.replace(bottom, "")
+    # The positive now uses the *default* public longabnttblr, unchanged in
+    # source syntax, including the familiar literal body-level \bottomrule.
+    # The class routes that closing line to the lastfoot template.
+    if source.count(r"\bottomrule") != 1:
+        raise SystemExit("IBGE §8.3(d): expected one original closing rule")
+elif scenario == "theme-override":
+    # Preserve the original body-level closing rule under an explicit theme.
+    options = "[\n  caption="
+    if source.count(options) != 1:
+        raise SystemExit("IBGE theme override anchor drift")
+    source = source.replace(options, "[\n  theme=abnt,\n  caption=")
 elif scenario == "nonterminal-rule":
-    # Reproduce the actual upstream defect with unmodified class and theme:
-    # tabularray reuses the body-level last \bottomrule on ALL split pages.
-    # This PDF must still retain valid title/header/source and a valid final
-    # rule, but fail §8.3(d) because earlier pages also show the separator.
-    pass
+    # Negative control bypasses ONLY the class-owned compatibility adapter,
+    # invoking the upstream public longtblr+abnt theme with a literal
+    # \bottomrule. It must show intermediate repeated footer rules.
+    start, end = r"\begin{longabnttblr}", r"\end{longabnttblr}"
+    if source.count(start) != 1 or source.count(end) != 1:
+        raise SystemExit("IBGE §8.3(d): original wrapper drift")
+    source = source.replace(start, r"\begin{longtblr}")
+    source = source.replace(end, r"\end{longtblr}")
+    options = "[\n  caption="
+    if source.count(options) != 1:
+        raise SystemExit("IBGE §8.3(d): theme injection anchor drift")
+    source = source.replace(options, "[\n  theme=abnt,\n  caption=")
 elif scenario != "positive":
     raise SystemExit("IBGE §8.3: unsupported fixture scenario")
 out.write_text(source, encoding="utf-8")
@@ -99,13 +101,17 @@ PY
   test -s "$job.pdf"
   mkdir -p "$evidence_dir"
   cp "$job.pdf" "$evidence_dir/$job.pdf"
+  validation_scenario="$scenario"
+  if [ "$scenario" = "theme-override" ]; then
+    validation_scenario="nonterminal-rule"
+  fi
   python3 tests/checks/objects/normative_table_ibge_multipage.py "$job.pdf" \
-    --scenario "$scenario" \
+    --scenario "$validation_scenario" \
     --json "$evidence_dir/$job.json" \
     --commit-sha "$(git rev-parse HEAD)"
-  if [ "$scenario" = "positive" ] || [ "$scenario" = "nonterminal-rule" ]; then
+  if [ "$scenario" = "positive" ] || [ "$scenario" = "nonterminal-rule" ] || [ "$scenario" = "theme-override" ]; then
     python3 tests/checks/objects/normative_table_ibge_multipage_vector.py "$job.pdf" \
-      --scenario "$scenario" \
+      --scenario "$validation_scenario" \
       --json "$evidence_dir/$job-vector.json" \
       --commit-sha "$(git rev-parse HEAD)"
   fi
