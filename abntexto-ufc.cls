@@ -1067,10 +1067,24 @@
   }
 
 
-% Opt-in IBGE 1993 8.3(d) footer separator: tabularray repeats a body-level
-% \bottomrule on every longtblr sub-page. Never patch the upstream row-foot
-% internals or silently change existing longabnttblr, tallabnttblr or quadro.
-% Use a distinct theme and public long-table wrapper with NO body bottomrule.
+
+% Keep tabularray-abnt's public environment signature while migrating the
+% closing rule to a last-page-only theme. The table parser needs literal body
+% tokens: expanding the token list *inside* longtblr would misplace \toprule.
+\tl_new:N \l_ufc_longabnttblr_body_tl
+\cs_new_protected:Npn \ufc_table_render_longabnt:nnn #1#2#3
+  {
+    \ifdefined\AbntTblrFont \AbntTblrFont \fi
+    \begin{longtblr}[theme=ufc-ibge-long,#1]{#2}
+      #3
+    \end{longtblr}
+  }
+
+% IBGE 1993 8.3(d): tabularray repeats a body-level
+% \bottomrule on every longtblr sub-page. The class-owned longabnttblr
+% adapter now migrates a literal body-level \bottomrule to lastfoot while
+% preserving the public +o +m +b arguments. Do not patch internal row-foot
+% code or change tallabnttblr/quadro. The strict opt-in environment remains.
 \bool_new:N \g_ufc_ibge_long_initialized_bool
 \cs_new_protected:Npn \ufc_table_register_ibge_long:
   {
@@ -1104,6 +1118,33 @@
             \begin{longtblr}[theme=ufc-ibge-long,##1]{##2}
               ##3
             \end{longtblr}
+          }
+          { }
+        % Public tabularray-abnt-compatible default: retain optional
+        % caption/remark metadata, colspec, and body-level booktabs syntax.
+        % The ABNT lastfoot draws exactly one closing rule, so remove literal
+        % \bottomrule tokens before passing the body into the table parser.
+        \RenewDocumentEnvironment { longabnttblr } { +o +m +b }
+          {
+            \tl_set:Nn \l_ufc_longabnttblr_body_tl {##3}
+            \tl_if_in:NnT \l_ufc_longabnttblr_body_tl {\bottomrule[}
+              {
+                \ClassError {abntexto-ufc}
+                  {Optional~thickness~on~\string\bottomrule~is~not~supported~
+                   inside~longabnttblr}
+                  {Use~a~plain~\string\bottomrule~or~the~explicit~
+                   ufcibgelongtblr~environment.}
+              }
+            \tl_remove_all:Nn \l_ufc_longabnttblr_body_tl {\bottomrule}
+            \IfNoValueTF{##1}
+              {
+                \exp_args:NnnV \ufc_table_render_longabnt:nnn
+                  {} {##2} \l_ufc_longabnttblr_body_tl
+              }
+              {
+                \exp_args:NnnV \ufc_table_render_longabnt:nnn
+                  {##1} {##2} \l_ufc_longabnttblr_body_tl
+              }
           }
           { }
         \bool_gset_true:N \g_ufc_ibge_long_initialized_bool
