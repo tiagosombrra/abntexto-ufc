@@ -1072,6 +1072,19 @@
 % closing rule to a last-page-only theme. The table parser needs literal body
 % tokens: expanding the token list *inside* longtblr would misplace \toprule.
 \tl_new:N \l_ufc_longabnttblr_body_tl
+% Only the class-owned theme guarantees a replacement lastfoot separator.
+\cs_new_protected:Npn \ufc_table_migrate_default_bottomrule:
+  {
+    \tl_if_in:NnT \l_ufc_longabnttblr_body_tl {\bottomrule[}
+      {
+        \ClassError {abntexto-ufc}
+          {Optional~thickness~on~\string\bottomrule~is~not~supported~
+           inside~longabnttblr}
+          {Use~a~plain~\string\bottomrule~or~the~explicit~
+           ufcibgelongtblr~environment.}
+      }
+    \tl_remove_all:Nn \l_ufc_longabnttblr_body_tl {\bottomrule}
+  }
 \cs_new_protected:Npn \ufc_table_render_longabnt:nnn #1#2#3
   {
     \ifdefined\AbntTblrFont \AbntTblrFont \fi
@@ -1127,21 +1140,17 @@
         \RenewDocumentEnvironment { longabnttblr } { +o +m +b }
           {
             \tl_set:Nn \l_ufc_longabnttblr_body_tl {##3}
-            \tl_if_in:NnT \l_ufc_longabnttblr_body_tl {\bottomrule[}
-              {
-                \ClassError {abntexto-ufc}
-                  {Optional~thickness~on~\string\bottomrule~is~not~supported~
-                   inside~longabnttblr}
-                  {Use~a~plain~\string\bottomrule~or~the~explicit~
-                   ufcibgelongtblr~environment.}
-              }
-            \tl_remove_all:Nn \l_ufc_longabnttblr_body_tl {\bottomrule}
             \IfNoValueTF{##1}
               {
+                \ufc_table_migrate_default_bottomrule:
                 \exp_args:NnnV \ufc_table_render_longabnt:nnn
                   {} {##2} \l_ufc_longabnttblr_body_tl
               }
               {
+                % A caller-supplied theme may replace lastfoot. Do not remove
+                % the original rule when its replacement is not guaranteed.
+                \regex_match:nnF { (^|,) \s* theme \s* = } {##1}
+                  { \ufc_table_migrate_default_bottomrule: }
                 \exp_args:NnnV \ufc_table_render_longabnt:nnn
                   {##1} {##2} \l_ufc_longabnttblr_body_tl
               }

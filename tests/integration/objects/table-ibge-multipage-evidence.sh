@@ -8,7 +8,7 @@ tmp="$(mktemp -d)"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 
 cleanup() {
-  for scenario in positive header-missing source-missing nonterminal-rule; do
+  for scenario in positive header-missing source-missing nonterminal-rule theme-override; do
     job="ibge-multipage-$scenario"
     for ext in aux log out pdf lot toc; do
       rm -f "$job.$ext"
@@ -21,7 +21,7 @@ trap cleanup EXIT INT TERM
 python3 -m py_compile tests/checks/objects/normative_table_ibge_multipage.py \
   tests/checks/objects/normative_table_ibge_multipage_vector.py
 
-for scenario in positive header-missing source-missing nonterminal-rule; do
+for scenario in positive header-missing source-missing nonterminal-rule theme-override; do
   job="ibge-multipage-$scenario"
   generated="$tmp/$job.tex"
 
@@ -59,6 +59,12 @@ elif scenario == "positive":
     # The class routes that closing line to the lastfoot template.
     if source.count(r"\bottomrule") != 1:
         raise SystemExit("IBGE §8.3(d): expected one original closing rule")
+elif scenario == "theme-override":
+    # Preserve the original body-level closing rule under an explicit theme.
+    options = "[\\n  caption="
+    if source.count(options) != 1:
+        raise SystemExit("IBGE theme override anchor drift")
+    source = source.replace(options, "[\\n  theme=abnt,\\n  caption=")
 elif scenario == "nonterminal-rule":
     # Negative control bypasses ONLY the class-owned compatibility adapter,
     # invoking the upstream public longtblr+abnt theme with a literal
@@ -95,13 +101,17 @@ PY
   test -s "$job.pdf"
   mkdir -p "$evidence_dir"
   cp "$job.pdf" "$evidence_dir/$job.pdf"
+  validation_scenario="$scenario"
+  if [ "$scenario" = "theme-override" ]; then
+    validation_scenario="nonterminal-rule"
+  fi
   python3 tests/checks/objects/normative_table_ibge_multipage.py "$job.pdf" \
-    --scenario "$scenario" \
+    --scenario "$validation_scenario" \
     --json "$evidence_dir/$job.json" \
     --commit-sha "$(git rev-parse HEAD)"
-  if [ "$scenario" = "positive" ] || [ "$scenario" = "nonterminal-rule" ]; then
+  if [ "$scenario" = "positive" ] || [ "$scenario" = "nonterminal-rule" ] || [ "$scenario" = "theme-override" ]; then
     python3 tests/checks/objects/normative_table_ibge_multipage_vector.py "$job.pdf" \
-      --scenario "$scenario" \
+      --scenario "$validation_scenario" \
       --json "$evidence_dir/$job-vector.json" \
       --commit-sha "$(git rev-parse HEAD)"
   fi

@@ -158,7 +158,7 @@ Amostra B & 20 \\
 
 A forma sem metadados opcionais é `\begin{ufcibgelongtblr}{colspec={l r}}`, seguida das linhas e de `\end{ufcibgelongtblr}`. Essa possibilidade é um contrato de sintaxe, **não uma dispensa das exigências normativas de título ou fonte**.
 
-O ambiente `longabnttblr` padrão já aplica o mesmo rodapé final quando o autor usa o comando literal `\bottomrule`; `ufcibgelongtblr` continua sendo a variante explícita e estrita que rejeita esse comando no corpo. A evidência automática é parcial, com uma tabela longa controlada e casos curtos do modo estrito; revise visualmente o PDF de depósito. Larguras variáveis, tabelas complexas, temas personalizados e exceções normativas requerem validações adicionais.
+O ambiente `longabnttblr` padrão já aplica o mesmo rodapé final quando o autor usa o comando literal `\bottomrule`; `ufcibgelongtblr` continua sendo a variante explícita e estrita que rejeita esse comando no corpo. A evidência automática é parcial, com uma tabela longa controlada e casos curtos do modo estrito; revise visualmente o PDF de depósito. Ao definir explicitamente `theme=...` nos metadados, o adaptador preserva o `\\bottomrule` original, pois o tema pode substituir o rodapé final; nesse caso, verifique a paginação e a conformidade manualmente. Larguras variáveis, tabelas complexas, temas personalizados e exceções normativas requerem validações adicionais.
 
 ### Fonte, tamanho e espaçamento
 
