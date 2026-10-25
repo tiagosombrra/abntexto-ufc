@@ -49,13 +49,16 @@ def make_source(locale: str, profile: str) -> str:
     ]
     if profile == "optional-objects":
         base += [r"\ufcPrintListOfAlgorithms"]
-    base += [r"\textual", rf"\section{{OPTIONAL-MODULE-BODY-{locale.upper()}}}",
-             rf"\typeout{{OPTIONAL-I18N-BABEL=\languagename}}"]
+    base += [r"\ifmmode\typeout{OPTIONAL-PROBE-A=MATH}\else\typeout{OPTIONAL-PROBE-A=TEXT}\fi",
+             r"\textual", rf"\section{{OPTIONAL-MODULE-BODY-{locale.upper()}}}",
+             rf"\typeout{{OPTIONAL-I18N-BABEL=\languagename}}",
+             r"\ifmmode\typeout{OPTIONAL-PROBE-B=MATH}\else\typeout{OPTIONAL-PROBE-B=TEXT}\fi"]
     if profile == "optional-objects":
         base += [
             rf"\legend{{algorithm}}{{OPTIONAL-ALGORITHM-{locale.upper()}}}",
             r"\ufcSource{SYNTHETIC-ALGORITHM-SOURCE}",
             r"\begin{ufcalgorithm}[here][1]",
+            r"\ifmmode\typeout{OPTIONAL-PROBE-C=MATH}\else\typeout{OPTIONAL-PROBE-C=TEXT}\fi",
             r"\State $i \gets 1$ \Comment{OPTIONAL-ALG-STEP-1}",
             r"\While{$i < 3$}",
             r"  \State $i \gets i + 1$ \Comment{OPTIONAL-ALG-STEP-2}",
