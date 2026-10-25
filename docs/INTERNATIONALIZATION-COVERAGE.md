@@ -44,3 +44,7 @@ The **validator** continues to own its independent four-language `validator/ui-l
 ## Institutional review before release
 
 English wording such as *Doctoral thesis submitted to...*, *Examining Committee* and translated program descriptions is a **proposed descriptive rendering**, not an official UFC translation. The Brazilian standards and individual postgraduate program can require a Portuguese or bilingual nature statement even for an English manuscript. Normative approval, PDF/UA, physical bibliography compliance, PDF language, glossary/index interactions, typography and full seven-profile acceptance must stay separately gated. The historical Portuguese rendering and the immutable public 3.0.5 tag/assets are preserved; 3.1.0 remains unreleased.
+
+## Optional document modules — dedicated four-locale certification (in progress)
+
+A proposed independent evidence workflow tests listings, code-list titles, pseudocode labels, multi-page `longabnttblr` with per-locale author-supplied source and note keys, and `minted` with real PDF artifacts in PT/EN/ES/FR. Its assertions read PDF text, Babel log and actual `/Root/Lang`, and preserve legacy Portuguese conventions. The module matrix does **not** automatically translate authors' captions, `remark{Fonte}` arguments, source prose, or code listings. Its status remains **PENDING** until all eight PDFs pass on the exact commit and the main integration gates are green.

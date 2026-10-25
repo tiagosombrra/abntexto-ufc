@@ -43,3 +43,9 @@ Cada recibo exige nome da fonte/PDF, SHA-256 dos dois arquivos, SHA do commit, p
 4. **Aceite final:** revisão visual e linguística com os PDFs exatos, e parecer separado sobre nomenclatura oficial UFC. Não declarar PDF/UA ou conformidade normativa integral só por traduzir rótulos.
 
 A versão **v3.0.5 é imutável**. A **v3.1.0 permanece UNRELEASED**, sem autorização para tag, release ou submissão CTAN. A gestão ocorre somente no GitHub.
+
+## Etapa P0.3 — ambientes opcionais em PT/EN/ES/FR
+
+A execução opt-in de `tests/integration/objects/optional-locale-evidence.py`, por meio do workflow `.github/workflows/i18n-optional-modules-matrix.yml`, exercita **dois PDFs reais por idioma**, combinando `listings`, `ufclisting`, `algpseudocodex`, `ufcalgorithm`, lista de códigos/algoritmos, `tabularray-abnt`, `longabnttblr` multipágina com título, fonte e nota, e, separadamente, `minted` / `ufcInputMinted`. Quatro jobs paralelos devem produzir oito PDFs e seus manifests com SHA-256 e `/Root/Lang`, verificando rótulos da classe e Babel.
+
+**Status: PENDING — implementação e testes preparados, sem certificação no SHA final.** Chaves `remark{...}` das tabelas são texto fornecido pelo autor, portanto exigem versão apropriada ao idioma (a classe não traduz essas strings). O teste deve reprovar ausência de `latexminted`, e não registrar SKIP como sucesso. Também devem ser mantidas as regressões específicas já existentes de tabela IBGE, numeração de algoritmos e fontes, que não são substituídas por essa matriz. As traduções institucionais e a revisão visual continuam dependentes de aceite humano.
