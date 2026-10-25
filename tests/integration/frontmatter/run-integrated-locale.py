@@ -81,6 +81,8 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
         f"integrated-section-{locale}",
         f"integrated-object-{locale}",
         f"integrated-table-{locale}",
+        f"integrated-letter-{locale}", f"integrated-dash-{locale}",
+        f"integrated-term-{locale}", f"integrated-definition-{locale}",
         references, "silva", "oliveira", legal_date,
     ]
     if profile == "scientific-article":
@@ -191,6 +193,12 @@ def main() -> None:
             expected_babel = LANGUAGES[locale][1]
             if f"INTEGRATED-I18N-BABEL={expected_babel}" not in log:
                 raise ValueError(f"Babel did not activate {expected_babel} in {job}")
+            for marker in (
+                f"INTEGRATED-I18N-API-LANGUAGE={locale}",
+                f"INTEGRATED-I18N-API-TYPE={profile}",
+            ):
+                if marker not in log:
+                    raise ValueError(f"public API expansion missing or wrong for {job}: {marker}")
             lang = real_pdf_lang(pdf)
             if lang != LANGUAGES[locale][0]:
                 raise ValueError(f"/Root/Lang {lang} != {LANGUAGES[locale][0]} for {job}")
