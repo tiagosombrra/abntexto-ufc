@@ -49,6 +49,12 @@
       "owner_doc": "docs/WINDOWS-FONT-SUPPORT.md",
       "purpose": "Provide the documented Windows preparation entrypoint for local Times New Roman and Arial TeX metrics, maps and font definition files.",
       "reason": "This pipeline is intentionally manual because it depends on locally installed proprietary Microsoft fonts; the entrypoint owns the two encoding-conversion PowerShell helpers transitively."
+    },
+    {
+      "path": ".github/workflows/integrated-manuscript-locale-matrix.yml",
+      "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
+      "purpose": "Own the exact-source four-locale matrix of 28 joined academic manuscripts and its fast negative/source preflight.",
+      "reason": "The 28 real Biber/PDF profiles run as a dedicated parallel per-locale workflow, not as an implicit additional heavy check in every ordinary Linux integration iteration."
     }
   ]
 }
