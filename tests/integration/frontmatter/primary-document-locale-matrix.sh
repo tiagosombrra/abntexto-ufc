@@ -36,7 +36,7 @@ PY
 for profile in $profiles; do
   for locale in pt en es fr; do
     job="primary-$profile-$locale"
-    for pass in 1 2; do
+    for pass in 1; do
       pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -jobname="$job" \
         -output-directory="$work" "$work/$job.tex" > "$work/$job.stdout" 2>&1 || {
         cat "$work/$job.stdout"

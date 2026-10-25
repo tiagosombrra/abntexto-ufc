@@ -18,6 +18,7 @@ sh tests/integration/frontmatter/frontmatter-lists-evidence.sh
 sh tests/integration/frontmatter/frontmatter-toc-evidence.sh
 sh tests/integration/frontmatter/frontmatter-labels-i18n.sh
 sh tests/integration/frontmatter/profile-locale-matrix.sh
+sh tests/integration/frontmatter/primary-document-locale-matrix.sh
 sh tests/integration/frontmatter/frontmatter-pagination-evidence.sh
 
 fixtures="tests/documents/frontmatter-academic-work.tex tests/documents/frontmatter-anonymized-project.tex"
