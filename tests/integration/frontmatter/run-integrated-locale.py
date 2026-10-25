@@ -93,10 +93,30 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
     missing = [token for token in expected if fold(token) not in visible]
     if missing:
         raise ValueError(f"missing PDF text for {profile}/{locale}: {missing}, sample={visible[:750]}")
-    # Author-authored bibliography data and mandatory Portuguese companion
-    # summary are excluded from blanket no-Portuguese heuristics.
-    return {"positive_tokens": len(expected), "missing": [], "negative_policy":
-            "no blanket locale ban (authored bibliography/proper nouns/PT companion)"}
+    # Target *class-owned* label leaks; never ban all Portuguese because
+    # names, source titles and the required PT companion are legitimate.
+    # Keep these probes narrow: Spanish Referencias folds identically to
+    # Portuguese Referências and therefore cannot be an ES forbidden token.
+    forbidden = {
+        "pt": ("judged on", "juzgado el", "juge le"),
+        "en": ("julgado em", "juzgado el", "juge le",
+               "referências", "glossário", "índice remissivo",
+               "banca examinadora", "tese apresentada ao"),
+        "es": ("julgado em", "judged on", "juge le",
+               "glossário", "índice remissivo", "banca examinadora"),
+        "fr": ("julgado em", "judged on", "juzgado el",
+               "referências", "glossário", "índice remissivo",
+               "banca examinadora", "tese apresentada ao"),
+    }
+    leaking = [
+        token for token in forbidden[locale]
+        if re.search(r"(?<!\\w)" + re.escape(fold(token)) + r"(?!\\w)", visible)
+    ]
+    if leaking:
+        raise ValueError(f"wrong-locale class-owned labels in {profile}/{locale}: {leaking}")
+    return {"positive_tokens": len(expected), "missing": [],
+            "negative_locale_labels": len(forbidden[locale]),
+            "negative_policy": "targeted class-owned labels only; PT companion and authored data allowed"}
 
 
 def main() -> None:
