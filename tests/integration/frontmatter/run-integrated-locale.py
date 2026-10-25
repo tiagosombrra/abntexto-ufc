@@ -95,8 +95,8 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
         raise ValueError(f"missing PDF text for {profile}/{locale}: {missing}, sample={visible[:750]}")
     # Target *class-owned* label leaks; never ban all Portuguese because
     # names, source titles and the required PT companion are legitimate.
-    # Keep these probes narrow: Spanish Referencias folds identically to
-    # Portuguese Referências and therefore cannot be an ES forbidden token.
+    # Be precise: Spanish and PT bibliography headings normalize to the
+    # same ASCII token, so omit this ambiguous probe from ES assertions.
     forbidden = {
         "pt": ("judged on", "juzgado el", "juge le"),
         "en": ("julgado em", "juzgado el", "juge le",
