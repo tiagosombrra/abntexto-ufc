@@ -4,11 +4,11 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[3]
 expected = {
-    "docs/USER-GUIDE.md": ("document-language=pt|en|es|fr", "33 chaves", "I18N-AUDIT-2026-10-23.md"),
-    "docs/COMMAND-REFERENCE.md": ("document-language", "33 chaves", r"\appendixlabel", r"\abntextonotelabel"),
-    "docs/PROFILE-LOCALE-COVERAGE.md": ("display-only", "33 class-owned text keys", "PENDING"),
-    "docs/INTERNATIONALIZATION-COVERAGE.md": ("33 document keys", "document-language", "PDF"),
-    "docs/I18N-AUDIT-2026-10-23.md": ("PT/EN/ES/FR", "33", "28 PDFs", "PENDING"),
+    "docs/USER-GUIDE.md": ("document-language=pt|en|es|fr", "34 chaves", "I18N-AUDIT-2026-10-23.md"),
+    "docs/COMMAND-REFERENCE.md": ("document-language", "34 chaves", r"\appendixlabel", r"\abntextonotelabel"),
+    "docs/PROFILE-LOCALE-COVERAGE.md": ("display-only", "34 class-owned text keys", "PENDING"),
+    "docs/INTERNATIONALIZATION-COVERAGE.md": ("34 document keys", "document-language", "PDF"),
+    "docs/I18N-AUDIT-2026-10-23.md": ("PT/EN/ES/FR", "34", "28 PDFs", "PENDING"),
 }
 for filename, markers in expected.items():
     source = (root / filename).read_text(encoding="utf-8")
@@ -43,5 +43,5 @@ for stale in ("essa primeira entrega é **experimental e limitada aos rótulos**
     if stale in guide:
         raise SystemExit(f"I18N-DOCS-EVIDENCE status=FAIL outdated_claim={stale}")
 
-print("I18N-DOCS-EVIDENCE status=PASS keys=33 locales=4 "
+print("I18N-DOCS-EVIDENCE status=PASS keys=34 locales=4 "
       "legacy_preserved=true full_document_matrix=PENDING tex_pdf=0")

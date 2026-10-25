@@ -1,6 +1,6 @@
 # v3.1.0 profile × display-locale PDF regression
 
-This **historical test matrix** covers `labels-language=pt|en|es|fr` for **nine front-matter display headings only**, with Portuguese author content in every fixture. It is distinct from the newer `document-language=pt|en|es|fr` support in PR #520, which separately localizes **33 class-owned text keys**, including nature/submission statements, summary labels, captions and inherited appendix/annex/object-note routes. Neither setting automatically translates user-authored content, official proper names, external bibliography text or PDF language metadata. The separate Web/Lite language selector changes **browser presentation only**.
+This **historical test matrix** covers `labels-language=pt|en|es|fr` for **nine front-matter display headings only**, with Portuguese author content in every fixture. It is distinct from the newer `document-language=pt|en|es|fr` support in PR #520, which separately localizes **34 class-owned text keys**, including nature/submission statements, summary labels, captions and inherited appendix/annex/object-note routes. Neither setting automatically translates user-authored content, official proper names, external bibliography text or PDF language metadata. The separate Web/Lite language selector changes **browser presentation only**.
 
 ## Automated evidence and limits
 
