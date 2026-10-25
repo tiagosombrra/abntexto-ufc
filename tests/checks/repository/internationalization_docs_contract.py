@@ -8,6 +8,7 @@ expected = {
     "docs/COMMAND-REFERENCE.md": ("document-language", "34 chaves", r"\appendixlabel", r"\abntextonotelabel"),
     "docs/PROFILE-LOCALE-COVERAGE.md": ("display-only", "34 class-owned text keys", "PENDING"),
     "docs/INTERNATIONALIZATION-COVERAGE.md": ("34 document keys", "document-language", "PDF"),
+    "docs/I18N-COMPLETION-MATRIX.md": ("P0", "7 × 4", "PENDING", "legacy", "PDF"),
     "docs/I18N-AUDIT-2026-10-23.md": ("PT/EN/ES/FR", "34", "28 PDFs", "PENDING"),
 }
 for filename, markers in expected.items():

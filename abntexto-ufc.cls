@@ -1729,6 +1729,14 @@
     \thispagestyle{empty}
     \begingroup
       \ufc_summary_select_language:n {#1}
+      % In an opt-in summary the legacy keyword helpers follow this
+      % summary's language, rather than a fixed PT/EN label. Definitions
+      % remain local to this group; old summary/abstract commands retain
+      % their historical behavior outside it.
+      \RenewDocumentCommand \ufcSummaryKeywords { m }
+        { \ufcSummaryKeywordsInLanguage {#1} {##1} }
+      \RenewDocumentCommand \keywords { m }
+        { \ufcSummaryKeywordsInLanguage {#1} {##1} }
       \exp_args:Ne \ufc_pretextual_heading:n
         { \prop_item:Nn \g_ufc_summary_headings_prop {#1} }
       \setlength{\parindent}{0pt}
