@@ -59,6 +59,7 @@ def make_source(locale: str, profile: str) -> str:
             r"\ufcSource{SYNTHETIC-ALGORITHM-SOURCE}",
             r"\begin{ufcalgorithm}[here][1]",
             r"\ifmmode\typeout{OPTIONAL-PROBE-C=MATH}\else\typeout{OPTIONAL-PROBE-C=TEXT}\fi",
+            r"\State $i \gets 1$",
             r"\State OPTIONAL-ALG-STEP-1",
             r"\While{OPTIONAL-ALG-LOOP}",
             r"  \State OPTIONAL-ALG-STEP-2",
