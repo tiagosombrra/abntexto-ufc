@@ -36,7 +36,9 @@ def summary_text(locale: str, label: str) -> str:
 
 def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
     bcp = LOCALES[locale]
-    code = profile.replace("-", "_")
+    # LaTeX text mode rejects raw underscore characters: keep fixture markers
+    # printable, without requiring \texttt or math mode.
+    code = profile.replace("-", "")
     name = f"integrated-{profile}-{locale}"
     companion = "en" if locale == "pt" else "pt"
     support = target / "texts"
