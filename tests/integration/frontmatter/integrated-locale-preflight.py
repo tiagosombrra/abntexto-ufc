@@ -32,6 +32,9 @@ def validate_case(case: dict, locale: str, source: str) -> None:
         r"\textcite{oliveira2011}", r"\ufcSource{Synthetic original}",
         r"\ufcNote{Synthetic object note}", r"\begin{tabular}",
         r"\begin{ufcobject}",
+        r"\begin{ufclettereditems}", r"\begin{ufcdashedsubitems}",
+        r"\begin{ufcdefinitionlist}", r"\ufcListEntry{",
+        r"\ufcDocumentLanguage", r"\ufcDocumentType",
     )
     if any(x not in source for x in required):
         raise ValueError(f"missing joined core component: {profile}/{locale}")
@@ -79,6 +82,12 @@ def check(out: Path) -> None:
         "wrong_pdf_lang": sample.replace(
             r"\DocumentMetadata{lang=en-US,", r"\DocumentMetadata{lang=pt-BR,", 1),
         "missing_references": sample.replace(r"\ufcPrintReferences", "", 1),
+        "missing_lettered_items": sample.replace(r"\begin{ufclettereditems}", "", 1),
+        "missing_dashed_items": sample.replace(r"\begin{ufcdashedsubitems}", "", 1),
+        "missing_definition_list": sample.replace(r"\begin{ufcdefinitionlist}", "", 1),
+        "missing_list_entry": sample.replace(r"\ufcListEntry{", "", 1),
+        "missing_api_language": sample.replace(r"\ufcDocumentLanguage", "", 1),
+        "missing_api_type": sample.replace(r"\ufcDocumentType", "", 1),
     }
     for label, mutant in damaged.items():
         if mutant == sample:
