@@ -1,0 +1,43 @@
+name: Primary document locale PDF smoke
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - tests/integration/frontmatter/primary-document-locale-matrix.sh
+      - tests/documents/profile-locale-matrix.tex
+      - .github/workflows/primary-document-locale-smoke.yml
+permissions:
+  contents: read
+concurrency:
+  group: primary-doc-locales-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  primary-document-locales:
+    name: Seven profiles by four primary document locales
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Compile actual profile PDFs and verify class natures
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils
+            git config --global --add safe.directory "$PWD"
+            sh tests/integration/frontmatter/primary-document-locale-matrix.sh
+      - name: Upload bounded machine evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: primary-doc-locales-${{ github.run_id }}
+          path: artifacts/frontmatter/primary-document-locale-matrix.json
+          retention-days: 14
+          if-no-files-found: warn
