@@ -110,7 +110,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
     }
     leaking = [
         token for token in forbidden[locale]
-        if re.search(r"(?<!\\w)" + re.escape(fold(token)) + r"(?!\\w)", visible)
+        if re.search(r"(?<!\w)" + re.escape(fold(token)) + r"(?!\w)", visible)
     ]
     if leaking:
         raise ValueError(f"wrong-locale class-owned labels in {profile}/{locale}: {leaking}")
