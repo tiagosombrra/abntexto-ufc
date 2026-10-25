@@ -35,7 +35,12 @@ def sha(path: Path) -> str:
 
 def fold(text: str) -> str:
     text = unicodedata.normalize("NFKD", text.casefold())
-    return re.sub(r"\s+", " ", "".join(c for c in text if not unicodedata.combining(c)))
+    normalized = re.sub(r"\s+", " ", "".join(
+        c for c in text if not unicodedata.combining(c)))
+    # pdfToText may wrap a hyphen-separated synthetic marker after the
+    # hyphen: "INTEGRATED- OBJECT- EN". Rejoin only whitespace following
+    # a hyphen, preserving the actual alphanumeric marker and its hyphens.
+    return re.sub(r"-(?=\s+\w)\s+", "-", normalized)
 
 
 def command(args: list[str], logfile: Path, *, cwd: Path = ROOT) -> None:
