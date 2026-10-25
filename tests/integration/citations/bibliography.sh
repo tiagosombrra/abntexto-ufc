@@ -132,3 +132,4 @@ sh tests/integration/citations/direct-citation-source-evidence.sh
 sh tests/integration/citations/indirect-citation-source-evidence.sh
 sh tests/integration/citations/ufc-citation-system-evidence.sh
 sh tests/integration/citations/apud-evidence.sh
+sh tests/integration/citations/jurisdiction-language-evidence.sh
