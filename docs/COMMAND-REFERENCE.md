@@ -21,7 +21,7 @@ Forma geral:
 | --- | --- |
 | `type` | `undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project`, `anonymized-research-project`, `scientific-article` |
 | `labels-language` | `pt` (padrão), `en`, `es`, `fr`; títulos pré-textuais, não idioma completo do manuscrito |
-| `document-language` | `pt`, `en`, `es`, `fr`; quando explícita seleciona idioma Babel, resumos e **33 textos gerados pela classe**; ausente preserva padrão PT; metadados PDF independentes |
+| `document-language` | `pt`, `en`, `es`, `fr`; quando explícita seleciona idioma Babel, resumos e **34 textos gerados pela classe**; ausente preserva padrão PT; metadados PDF independentes |
 | `print-mode` | `single-sided` ou `double-sided` |
 | `cover` | `auto`, `true` ou `false` |
 | `catalog-card` | `true` ou `false` |
@@ -30,7 +30,7 @@ Forma geral:
 
 ### Idioma principal e versões do resumo (opt-in, v3.1.0)
 
-A chave **document-language = pt|en|es|fr** define o idioma dos novos comandos de resumo **e das 33 chaves de textos/legendas gerados pela classe**, de forma independente de **labels-language**. O idioma padrão para a política de resumos é PT. Quando `document-language` é informado explicitamente, os títulos gerais seguem esse idioma automaticamente, salvo configuração explícita e independente de `labels-language`. A seleção de idioma do Babel ao iniciar o documento ocorre **somente se esta chave for informada explicitamente**; na ausência da chave, a classe não sobrescreve o idioma selecionado pelo Babel, mas a inicialização das dependências pode redefinir uma seleção `\selectlanguage{english}` feita diretamente no preâmbulo para português brasileiro. Para garantir inglês, configure `document-language=en`. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
+A chave **document-language = pt|en|es|fr** define o idioma dos novos comandos de resumo **e das 34 chaves de textos/legendas gerados pela classe**, de forma independente de **labels-language**. O idioma padrão para a política de resumos é PT. Quando `document-language` é informado explicitamente, os títulos gerais seguem esse idioma automaticamente, salvo configuração explícita e independente de `labels-language`. A seleção de idioma do Babel ao iniciar o documento ocorre **somente se esta chave for informada explicitamente**; na ausência da chave, a classe não sobrescreve o idioma selecionado pelo Babel, mas a inicialização das dependências pode redefinir uma seleção `\selectlanguage{english}` feita diretamente no preâmbulo para português brasileiro. Para garantir inglês, configure `document-language=en`. O autor deve configurar também o idioma do PDF em **\DocumentMetadata** antes de **\documentclass**; a classe não modifica automaticamente os metadados.
 
 | Idioma principal | Par gerado pelo comando novo | Versão inglesa adicional |
 | --- | --- | --- |

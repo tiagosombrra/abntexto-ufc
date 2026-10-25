@@ -71,7 +71,7 @@ expected = {
     "appendix", "annex", "index", "default-project-type",
     "caption-figure", "caption-table", "source-label", "note-label",
     "nature-undergraduate", "nature-specialization", "nature-masters",
-    "nature-doctoral", "nature-project",
+    "nature-doctoral", "nature-project", "judgment-date-label",
 }
 if text_keys != expected:
     raise SystemExit(

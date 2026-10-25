@@ -246,6 +246,12 @@
 \prop_gput:Nnn \g_ufc_document_text_prop {en/note-label} {Note}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/note-label} {Nota}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/note-label} {Note}
+% Bibliography citation-driver glue must follow the document's explicit locale.
+% This label is not the authored jurisdiction title or a translated norm.
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/judgment-date-label} {julgado~em}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/judgment-date-label} {judged~on}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/judgment-date-label} {juzgado~el}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/judgment-date-label} {jugé~le}
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/default-project-type} {Projeto~de~pesquisa}
 \prop_gput:Nnn \g_ufc_document_text_prop {en/default-project-type} {Research~project}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/default-project-type} {Proyecto~de~investigación}
@@ -255,6 +261,9 @@
     \prop_item:Ne \g_ufc_document_text_prop
       { \tl_use:N \g_ufc_document_language_tl / #1 }
   }
+% Accessible from the bibliography driver after ExplSyntaxOff.
+\cs_new:Npn \ufc_judgment_date_label:
+  { \ufc_doc_text:n {judgment-date-label} }
 
 \prop_gset_from_keyval:Nn \g_ufc_metadata_prop
   {
@@ -3051,7 +3060,7 @@
 \newbibmacro*{ufc:judgmentdate}{%
   \iffieldundef{eventyear}
     {}
-    {\printtext{julgado em\addspace}%
+    {\printtext{\csname ufc_judgment_date_label:\endcsname\addspace}%
      \printeventdate}%
 }
 

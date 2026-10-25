@@ -9,7 +9,7 @@ This is the implementation inventory for the requested PT / EN / ES / FR *comple
 - `\DocumentMetadata{lang=...}` is declared by the author before `\documentclass`, and is *not* inferred or silently mutated from `document-language`. English, Spanish and French names of UFC units, degrees, real programs, academic bodies and individual names must be checked against institutional official nomenclature, not guessed by the class.
 - The default project type ("Projeto de pesquisa") is translated only when no `project-type` is explicitly supplied. The entire Portuguese research-project nature sentence follows its original composition to preserve the tested baseline. Spanish `Fecha de aprobación` and French `Date d'approbation` are gender-neutral, so they remain grammatically valid for both masculine and feminine academic work types. User-authored and program-mandated titles or nature statements override the descriptive translations.
 
-## Inventory of class-owned text (33 document keys and 9 title keys)
+## Inventory of class-owned text (34 document keys and 9 title keys)
 
 | Surface | Coverage | Binding |
 |---|---|---|
@@ -28,6 +28,8 @@ This is the implementation inventory for the requested PT / EN / ES / FR *comple
 The `tests/integration/frontmatter/document-locale-catalog.py` gate rejects missing PT/EN/ES/FR keys and class-owned untranslated rendering routes in the declared catalog. The real `frontmatter-summary-languages.sh` suite renders four-language academic and article PDFs and checks translated thesis nature, committee, advisor, approval and submission dates; earlier seven-profile × four-heading smoke tests remain independent. Five real-PDF regression fixtures exercise inherited appendix/annex headings, source/note prefixes, and plain/normal-sub/alternative-sub object legends (legacy PT plus opt-in PT/EN/ES/FR). The opt-in object legend additionally rebinds the original upstream `\legendlabel` using `\nobreakspace` rather than Babel-active `~`; Spanish Babel otherwise raises `Argument of \language@active@arg~ has an extra }` when ending an object with a legend. Additional dedicated full-length foreign-language documents and an institutional terminology review are required before labeling this as 100% **validated end-to-end**.
 
 ## Project homepage (issue #521)
+
+The class bibliography jurisdiction driver now routes its optional judgment-date prefix through the document-language catalog (PT *julgado em*, EN *judged on*, ES *juzgado el*, FR *jugé le*); the author-supplied court, title and jurisdiction facts are unchanged. A new qpdf JSON v2 inspection independently verifies /Root/Lang against declared metadata in the 28 real primary-language PDFs and rejects missing or mismatched languages. These proofs do not translate legal norms or verify manuscript prose.
 
 The **homepage** now has a separate, opt-in PT-BR/EN/ES/FR browser UI catalog (32 keys), controlled by an accessible language selector and optional `?lang=en|es|fr` deep link. Translation updates visible homepage copy, the document `html.lang` attribute and the meta description; it never rewrites canonical download/repository URLs, artifact names, validator results or normative rule descriptions. Portuguese remains the default without JavaScript. A Static contract verifies catalog parity and baseline content, and the productive offline Chromium E2E exercises all four languages and selector changes.
 

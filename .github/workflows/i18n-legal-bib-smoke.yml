@@ -1,0 +1,44 @@
+name: Legal bibliography locale PDF smoke
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/citations/jurisdiction-language-evidence.sh
+      - tests/fixtures/i18n-jurisdiction.bib
+      - .github/workflows/i18n-legal-bib-smoke.yml
+permissions:
+  contents: read
+concurrency:
+  group: legal-bib-i18n-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  bibliography-locales:
+    name: Jurisdiction bibliography four-locale real PDF
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Compile real Biber and PDF fixtures
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils
+            git config --global --add safe.directory "$PWD"
+            sh tests/integration/citations/jurisdiction-language-evidence.sh
+      - name: Upload source-bound lexical evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: legal-bib-i18n-${{ github.run_id }}
+          path: artifacts/bibliography/jurisdiction-language-evidence.json
+          retention-days: 14
+          if-no-files-found: warn

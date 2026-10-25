@@ -33,7 +33,7 @@ O tutorial mantém apenas os campos mais comuns visíveis no `main.tex`. Chaves 
 
 ### Idiomas e textos gerados pela classe (v3.1.0 em desenvolvimento)
 
-Existem duas opções independentes: `labels-language=pt|en|es|fr` traduz somente os **nove títulos pré-textuais**; `document-language=pt|en|es|fr`, quando explicitamente configurada, seleciona o idioma principal Babel, as versões de resumo e **33 chaves de texto institucional/legendas geradas pela classe** (natureza, banca, orientador, datas, fontes/notas, referências, glossário, apêndices e anexos). Sem escolha explícita de `labels-language`, os nove títulos acompanham `document-language`. Sem `document-language`, o legado continua em português.
+Existem duas opções independentes: `labels-language=pt|en|es|fr` traduz somente os **nove títulos pré-textuais**; `document-language=pt|en|es|fr`, quando explicitamente configurada, seleciona o idioma principal Babel, as versões de resumo e **34 chaves de texto institucional/legendas geradas pela classe** (natureza, banca, orientador, datas, fontes/notas, referências, glossário, apêndices e anexos). Sem escolha explícita de `labels-language`, os nove títulos acompanham `document-language`. Sem `document-language`, o legado continua em português.
 
 Exemplo de configuração:
 

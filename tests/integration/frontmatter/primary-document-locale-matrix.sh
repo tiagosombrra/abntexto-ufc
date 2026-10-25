@@ -88,5 +88,6 @@ manifest={"status":"AUTOMATED_PARTIAL","case_count":28,"source_sha":os.environ.g
  "official_institutional_translation_verified":False,"author_prose_translated":False,
  "human_visual_approval":"PENDING","receipts":receipts}
 Path("artifacts/frontmatter/primary-document-locale-matrix.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-print("PRIMARY-LOCALE-MATRIX status=PASS profiles=7 document_locales=4 real_pdfs=28 pdf_catalog=NOT_CHECKED proof=automatic-partial")
+print("PRIMARY-LOCALE-MATRIX status=PASS profiles=7 document_locales=4 real_pdfs=28 pdf_catalog=VERIFY_NEXT proof=automatic-partial")
 PY
+python3 tests/integration/frontmatter/pdf-catalog-language.py "$work"
