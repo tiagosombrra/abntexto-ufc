@@ -48,6 +48,7 @@ DOC_ONLY_EXACT = {
 DOC_ONLY_PREFIXES = ("docs/", "release/history/v3/")
 
 ORCHESTRATION_EXACT = {
+    ".github/workflows/linux-release-check.yml",
     "tests/run.py",
     "tests/static.py",
     "tests/integration_suites.py",
@@ -61,7 +62,6 @@ ORCHESTRATION_EXACT = {
 }
 
 FORCE_COMPLETE_EXACT = {
-    ".github/workflows/linux-release-check.yml",
     ".github/workflows/linux-integration.yml",
     "Makefile",
     "abntexto-ufc.cls",
@@ -150,14 +150,13 @@ def self_test() -> None:
         ("abntexto-ufc.cls",): ("complete",),
         ("tests/run.py",): ("smoke",),
         (".github/workflows/linux-integration.yml",): ("complete",),
-        (".github/workflows/linux-release-check.yml",): ("complete",),
+        (".github/workflows/linux-release-check.yml",): ("smoke",),
         ("tools/ci/select-integration-scope.py",): ("smoke",),
         ("tools/ci/validate-release-reference.py",): ("smoke",),
         ("tools/build-public-bundles.py",): ("distribution",),
         ("tools/build-distribution-bundles.py",): ("distribution",),
         ("tests/integration/distribution-bundles.sh",): ("distribution",),
         ("tests/run.py", "tools/build-public-bundles.py"): ("distribution",),
-        (".github/workflows/linux-release-check.yml", "tests/run.py"): ("complete",),
         ("validator/app.js",): ("web-lite",),
         ("validator/normative-catalog.js",): ("web-lite",),
         ("tests/checks/validator/validator_source.py",): ("web-lite",),
