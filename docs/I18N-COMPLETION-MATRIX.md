@@ -1,6 +1,8 @@
 # Internacionalização integral v3.1.0 — matriz de aceitação P0
 
-**Decisão:** foco exclusivo em textos controlados pela classe, na integração dos pacotes suportados e em documentos completos nos idiomas `pt`, `en`, `es`, `fr`. **Status: PENDING — não afirmar 100% antes de cumprir todas as linhas e testar a fonte final.** A API LaTeX possui nomes canônicos em inglês e **não muda seus identificadores** conforme o idioma. Nunca traduzir prosa do autor, títulos/nomes próprios, nomes oficiais institucionais ou registros bibliográficos fornecidos pelo usuário.
+**Decisão:** foco exclusivo em textos controlados pela classe, na integração dos pacotes suportados e em documentos completos nos idiomas `pt`, `en`, `es`, `fr`. **Status: PENDING — não afirmar 100% antes de cumprir todas as linhas e testar a fonte final.**
+
+**Compatibilidade legacy:** os comandos históricos de resumo e palavras-chave permanecem compatíveis com documentos anteriores; nos resumos opt-in, seus rótulos acompanham o idioma efetivo do resumo. Uma tradução de rótulo não autoriza reescrever conteúdo fornecido pelo autor. A API LaTeX possui nomes canônicos em inglês e **não muda seus identificadores** conforme o idioma. Nunca traduzir prosa do autor, títulos/nomes próprios, nomes oficiais institucionais ou registros bibliográficos fornecidos pelo usuário.
 
 ## Matriz de aceitação, não checklist de mera existência
 
