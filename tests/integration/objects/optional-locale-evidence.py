@@ -282,6 +282,19 @@ def diagnose_algorithm_comment(locale: str, folder: Path) -> None:
         "class-text-only-metadata": source.replace(
             r"$i \gets 1$", "initialize-i"
         ).replace(r"$i \leq n$", "condition").replace(r"$i$", "i"),
+        "article-metadata-no-right-alignment": article_probe.replace(
+            r"[noEnd=false]", r"[noEnd=false,rightComments=false]"
+        ),
+        "article-metadata-text-marker": article_probe.replace(
+            r"[noEnd=false]", r"[noEnd=false,beginComment={//~}]"
+        ),
+        "article-metadata-text-marker-no-align": article_probe.replace(
+            r"[noEnd=false]", r"[noEnd=false,beginComment={//~},rightComments=false]"
+        ),
+        "article-metadata-algorithmicx": article_probe.replace(
+            r"\usepackage[noEnd=false]{algpseudocodex}",
+            r"\usepackage{algpseudocode}"
+        ),
     }
     for label, candidate in additional.items():
         probe = folder / f"optional-alg-diagnostic-{label}.tex"
