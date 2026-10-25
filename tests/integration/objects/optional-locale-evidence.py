@@ -259,6 +259,49 @@ def diagnose_algorithm_comment(locale: str, folder: Path) -> None:
               f"error={errors[0] if errors else 'none'}", flush=True)
 
 
+    # Compare the upstream package under article against the class wrapper.
+    article_probe = "\n".join([
+        rf"\DocumentMetadata{{lang={LOCALES[locale][0]},pdfstandard=A-2b,pdfversion=1.7}}",
+        r"\documentclass{article}",
+        r"\usepackage[noEnd=false]{algpseudocodex}",
+        r"\begin{document}",
+        r"\begin{algorithmic}[1]",
+        r"\State $i \gets 1$ \Comment{PROBE}",
+        r"\end{algorithmic}",
+        r"\end{document}",
+    ]) + "\n"
+    additional = {
+        "article-metadata": article_probe,
+        "article-legacy": "\n".join(article_probe.splitlines()[1:]) + "\n",
+        "class-direct-algorithmic-metadata": source.replace(
+            r"\begin{ufcalgorithm}[here][1]", r"\begin{algorithmic}[1]"
+        ).replace(r"\end{ufcalgorithm}", r"\end{algorithmic}"),
+        "class-unnumbered-metadata": source.replace(
+            r"\begin{ufcalgorithm}[here][1]", r"\begin{ufcalgorithm}[here][0]"
+        ),
+        "class-text-only-metadata": source.replace(
+            r"$i \gets 1$", "initialize-i"
+        ).replace(r"$i \leq n$", "condition").replace(r"$i$", "i"),
+    }
+    for label, candidate in additional.items():
+        probe = folder / f"optional-alg-diagnostic-{label}.tex"
+        probe.write_text(candidate, encoding="utf-8")
+        job = probe.stem
+        command = ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
+                   "-file-line-error", f"-jobname={job}",
+                   f"-output-directory={folder}", str(probe)]
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        stdout = result.stdout + result.stderr
+        (folder / f"{job}.stdout").write_text(stdout, encoding="utf-8")
+        errors = [line.strip() for line in stdout.splitlines()
+                  if "You can't use" in line or "Undefined control sequence" in line
+                  or "Fatal error" in line]
+        print(f"OPTIONAL-ALG-DIAGNOSTIC locale={locale} case={label} "
+              f"result={'PASS' if result.returncode == 0 else 'FAIL'} "
+              f"error={errors[0] if errors else 'none'}", flush=True)
+
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", required=True, choices=tuple(LOCALES))
