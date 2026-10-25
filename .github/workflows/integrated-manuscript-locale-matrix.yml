@@ -5,6 +5,7 @@ on:
     paths:
       - abntexto-ufc.cls
       - tests/integration/frontmatter/generate-integrated-locale.py
+      - tests/integration/frontmatter/integrated-locale-preflight.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - tests/fixtures/references.bib
       - tests/fixtures/i18n-jurisdiction.bib
@@ -15,6 +16,7 @@ on:
     paths:
       - abntexto-ufc.cls
       - tests/integration/frontmatter/generate-integrated-locale.py
+      - tests/integration/frontmatter/integrated-locale-preflight.py
       - tests/integration/frontmatter/run-integrated-locale.py
       - tests/fixtures/references.bib
       - tests/fixtures/i18n-jurisdiction.bib
@@ -25,9 +27,22 @@ concurrency:
   group: integrated-i18n-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  preflight:
+    name: Fast complete-profile source/locale contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Generate and statically inspect 28 real TeX inputs
+        run: python3 tests/integration/frontmatter/integrated-locale-preflight.py
   manuscripts:
     name: Integrated documents / ${{ matrix.locale }} (7 real PDFs)
     runs-on: ubuntu-24.04
+    needs: preflight
     timeout-minutes: 42
     strategy:
       fail-fast: false
