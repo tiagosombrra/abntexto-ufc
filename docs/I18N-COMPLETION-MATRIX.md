@@ -19,6 +19,12 @@
 | Site / validador | Interface PT/EN/ES/FR, seletor, feedback, exportação, navegação acessível | Chromium E2E offline, catálogos separados | Auditar todos os 65 textos de validador e 32 do site, negativos de falha segura, não reescrever IDs normativos |
 | Continuidade / publicação | Legado PT não pode sofrer regressão | Baselines antigas, gates 42/42 e 38/38/pkgcheck | Revisão Codex exata, pós-merge, sete perfis × idiomas, revisão visual source-bound |
 
+## Primeira bateria de documentos integrados — implementação em PR de testes
+
+O gerador `tests/integration/frontmatter/generate-integrated-locale.py` e o executor `tests/integration/frontmatter/run-integrated-locale.py` criam, compilam e verificam **7 PDFs por idioma, 28 no conjunto**. A matriz roda em quatro jobs paralelos no workflow `.github/workflows/integrated-manuscript-locale-matrix.yml`, usando TeX Live 2026, Biber, qpdf e pdftotext. Cada documento integra mais de um domínio: frente aplicável, idioma Babel, rótulos, elementos gráficos e tabulares, duas formas de citação, referências Biber de cinco tipos, texto pós-textual quando aplicável e metadados reais `/Root/Lang`; doutorado exercita adicionalmente glossário e índice.
+
+**Status inicial da bateria: NOT YET CERTIFIED**. A existência dos scripts não implica compilação bem-sucedida: exigir quatro jobs PASS no SHA exato, 28 PDFs reais, 28 recibos fonte+PDF com hashes, catálogo PDF verificado, sete perfis e zero casos ignorados. Os documentos gerados usam conteúdo sintético e dados institucionais apenas como nomes próprios. A bateria inicial não prova ainda todas as opções avançadas (minted, longabnttblr, semântica de traduções institucionais) nem a tradução de prosa autoral. Esses casos permanecem em P0 e exigem fixtures adicionais, nunca uma declaração implícita de 100%.
+
 ## Prova integrada de 7 × 4 = 28 manuscritos
 
 Gerar **28 PDFs integrados**, um para cada tipo (`undergraduate-capstone`, `specialization-capstone`, `masters-thesis`, `doctoral-thesis`, `research-project`, `anonymized-research-project`, `scientific-article`) e idioma. Cada um deve combinar, **somente se aplicável**: capa, folha, aprovação, resumos, listas, sumário, seções e corpo, citações Biber e referências, objeto simples e composto, títulos de apêndice/anexo, glossário/índice. Ensaiar também variantes de texto jurídico, tabelas com nota/fonte, `\keywords` e `\ufcSummaryKeywords` dentro e fora de resumos opt-in, e idioma do PDF. O artigo e os projetos não devem ganhar elementos obrigatórios de tese artificialmente.
