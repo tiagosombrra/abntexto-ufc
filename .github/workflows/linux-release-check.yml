@@ -77,7 +77,7 @@ jobs:
             set -eu
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
-            apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli curl ca-certificates unzip
+            apt-get install -y --no-install-recommends make poppler-utils nodejs docker-cli curl ca-certificates unzip qpdf
             node --version
             docker --version
             # The TeX Live action executes inside a container over the runner checkout.
