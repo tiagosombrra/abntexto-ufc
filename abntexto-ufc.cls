@@ -261,6 +261,9 @@
     \prop_item:Ne \g_ufc_document_text_prop
       { \tl_use:N \g_ufc_document_language_tl / #1 }
   }
+% Accessible from the bibliography driver after ExplSyntaxOff.
+\cs_new:Npn \ufc_judgment_date_label:
+  { \ufc_doc_text:n {judgment-date-label} }
 
 \prop_gset_from_keyval:Nn \g_ufc_metadata_prop
   {
@@ -3057,7 +3060,7 @@
 \newbibmacro*{ufc:judgmentdate}{%
   \iffieldundef{eventyear}
     {}
-    {\printtext{\csname ufc_doc_text:n\endcsname{judgment-date-label}\addspace}%
+    {\printtext{\csname ufc_judgment_date_label:\endcsname\addspace}%
      \printeventdate}%
 }
 
