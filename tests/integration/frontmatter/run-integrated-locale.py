@@ -116,8 +116,9 @@ def main() -> None:
         raise ValueError("integrated matrix must contain exactly the seven profiles")
     source_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT,
                                          text=True).strip()
-    if os.getenv("GITHUB_SHA") and os.getenv("GITHUB_SHA") != source_sha:
-        raise ValueError("CI checkout SHA differs from the test-source SHA")
+    expected_source = os.getenv("SOURCE_COMMIT_SHA")
+    if expected_source and expected_source != source_sha:
+        raise ValueError("CI checkout SHA differs from expected PR/push source SHA")
     entries = []
     with tempfile.TemporaryDirectory(prefix="abntexto-integrated-i18n-") as tmp:
         work = Path(tmp)
