@@ -38,9 +38,9 @@ def fold(text: str) -> str:
     return re.sub(r"\s+", " ", "".join(c for c in text if not unicodedata.combining(c)))
 
 
-def command(args: list[str], logfile: Path) -> None:
+def command(args: list[str], logfile: Path, *, cwd: Path = ROOT) -> None:
     with logfile.open("w", encoding="utf-8") as out:
-        process = subprocess.run(args, cwd=ROOT, stdout=out, stderr=subprocess.STDOUT,
+        process = subprocess.run(args, cwd=cwd, stdout=out, stderr=subprocess.STDOUT,
                                  text=True, check=False)
     if process.returncode:
         lines = logfile.read_text(encoding="utf-8", errors="replace").splitlines()
@@ -161,9 +161,10 @@ def main() -> None:
             if profile == "doctoral-thesis":
                 command(["makeglossaries", "-d", str(work), job],
                         path / f"{job}-glossaries.log")
-                command(["makeindex", str(work / f"{job}.idx"),
-                         "-o", str(work / f"{job}.ind")],
-                        path / f"{job}-index.log")
+                # TeX's openout_any=p forbids absolute output targets. Run
+                # makeindex *inside* the temporary compilation directory.
+                command(["makeindex", f"{job}.idx", "-o", f"{job}.ind"],
+                        path / f"{job}-index.log", cwd=work)
             for part in (2, 3):
                 command(["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
                          "-file-line-error", f"-jobname={job}",
