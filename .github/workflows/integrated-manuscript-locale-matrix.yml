@@ -1,0 +1,62 @@
+name: Integrated manuscript four-language matrix
+on:
+  push:
+    branches: [main]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/generate-integrated-locale.py
+      - tests/integration/frontmatter/run-integrated-locale.py
+      - tests/fixtures/references.bib
+      - tests/fixtures/i18n-jurisdiction.bib
+      - .github/workflows/integrated-manuscript-locale-matrix.yml
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/frontmatter/generate-integrated-locale.py
+      - tests/integration/frontmatter/run-integrated-locale.py
+      - tests/fixtures/references.bib
+      - tests/fixtures/i18n-jurisdiction.bib
+      - .github/workflows/integrated-manuscript-locale-matrix.yml
+permissions:
+  contents: read
+concurrency:
+  group: integrated-i18n-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  manuscripts:
+    name: Integrated documents / ${{ matrix.locale }} (7 real PDFs)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout source SHA
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile and verify seven joined manuscripts
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends make poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/run-integrated-locale.py --locale ${{ matrix.locale }}
+      - name: Upload source-bound PDF and manifest evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: integrated-manuscript-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/integrated-i18n/${{ matrix.locale }}/**
+          retention-days: 21
+          if-no-files-found: warn
