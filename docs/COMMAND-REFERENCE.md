@@ -218,7 +218,7 @@ Gera duas páginas com idiomas e títulos determinados pelo idioma principal: PT
 
 ### \ufcPrintSummaryInLanguage{idioma}{arquivo}
 
-Gera uma página em pt, en, es ou fr. Idiomas duplicados usando a nova API provocam erro; não combine versões duplicadas com comandos antigos.
+Gera uma página em pt, en, es ou fr. Durante **esta página**, os auxiliares históricos `\\ufcSummaryKeywords{...}` e `\\keywords{...}` recebem automaticamente o rótulo do idioma da página; fora dessa página, preservam a semântica legada PT/EN. O comando explícito `\\ufcSummaryKeywordsInLanguage{idioma}{...}` continua disponível. Idiomas duplicados usando a nova API provocam erro; não combine versões duplicadas com comandos antigos.
 
 ### \ufcSummaryKeywordsInLanguage{idioma}{termos}
 
@@ -238,13 +238,15 @@ Gera o resumo em português.
 
 ### \ufcSummaryKeywords{texto}
 
-Usado dentro do arquivo de resumo para as palavras-chave.
+Historicamente gera **Palavras-chave** no `\\ufcPrintSummary` português. Dentro de `\\ufcPrintSummaryInLanguage{idioma}{arquivo}`, o mesmo comando agora acompanha o idioma do resumo (PT/EN/ES/FR) sem alterar o comando legado fora desse contexto.
 
 ### \ufcPrintAbstract{arquivo}
 
 Gera o abstract em inglês.
 
 ### \keywords{texto}
+
+Historicamente usa **Keywords** no `\\ufcPrintAbstract`. Dentro de `\\ufcPrintSummaryInLanguage{idioma}{arquivo}`, acompanha o idioma desse resumo (PT/EN/ES/FR), inclusive para resumos complementares. A escrita dos termos continua responsabilidade do autor.
 
 Comando fornecido pela infraestrutura usada pelo projeto para as keywords do abstract.
 

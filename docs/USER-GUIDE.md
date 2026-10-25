@@ -48,7 +48,7 @@ Exemplo de configuração:
 }
 ```
 
-Os comandos legados `\ufcPrintSummary` e `\ufcPrintAbstract` continuam produzindo títulos fixos em português e inglês; os novos comandos multilíngues devem ser usados para outros idiomas. A tradução das frases **automáticas** não traduz os nomes oficiais de instituições, programas ou titulações, nem conteúdo do autor, referências de dependências ou metadados PDF. Os textos institucionais estrangeiros são descritivos e exigem revisão pela autoridade competente. Veja [a cobertura](INTERNATIONALIZATION-COVERAGE.md) e [a auditoria](I18N-AUDIT-2026-10-23.md).
+Os comandos legados `\ufcPrintSummary` e `\ufcPrintAbstract` continuam produzindo títulos fixos em português e inglês; os novos comandos multilíngues devem ser usados para outros idiomas. Dentro de `\ufcPrintSummaryInLanguage{idioma}{arquivo}` (incluindo o par `\ufcPrintRequiredSummaries`), os auxiliares legados `\ufcSummaryKeywords` e `\keywords` agora geram o rótulo de palavras-chave do **idioma desse resumo**, mesmo quando diferente do idioma principal. Fora do fluxo multilíngue, os auxiliares legados permanecem PT/EN. A tradução das frases **automáticas** não traduz os nomes oficiais de instituições, programas ou titulações, nem conteúdo do autor, referências de dependências ou metadados PDF. Os textos institucionais estrangeiros são descritivos e exigem revisão pela autoridade competente. Veja [a cobertura](INTERNATIONALIZATION-COVERAGE.md) e [a auditoria](I18N-AUDIT-2026-10-23.md).
 
 ### Política opcional de RESUMO, ABSTRACT, RESUMEN e RÉSUMÉ (v3.1.0)
 
