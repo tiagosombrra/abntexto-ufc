@@ -1,0 +1,520 @@
+{
+  "schema_version": 1,
+  "scope": "current public API identifiers (not translated)",
+  "target_locales": [
+    "pt",
+    "en",
+    "es",
+    "fr"
+  ],
+  "completion": "PENDING_INTEGRATED_PDF_AND_HUMAN_REVIEW",
+  "setup_keys": {
+    "type": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "document-language": {
+      "origin": "option_identifier",
+      "requirement": "selects class text + Babel main language"
+    },
+    "labels-language": {
+      "origin": "option_identifier",
+      "requirement": "selects nine display headings"
+    },
+    "print-mode": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "cover": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "catalog-card": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "coat-of-arms": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "institution": {
+      "origin": "default_or_user_value",
+      "requirement": "proper name or user override: never silently translate"
+    },
+    "institution-acronym": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "center": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "department": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "undergraduate-program": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "undergraduate-degree": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "specialization-program": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "masters-graduate-program": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "masters-program": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "masters-degree-field": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "masters-concentration": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "doctoral-graduate-program": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "doctoral-program": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "doctoral-degree-field": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "doctoral-concentration": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "project-program": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "project-type": {
+      "origin": "default_or_user_value",
+      "requirement": "class default localized when no author override"
+    },
+    "submission-entity": {
+      "origin": "default_or_user_value",
+      "requirement": "proper name or user override: never silently translate"
+    },
+    "project-nature-statement": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "project-identifier": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "author": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "title": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "subtitle": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "title-variant": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "volume": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "year": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "location": {
+      "origin": "default_or_user_value",
+      "requirement": "proper name or user override: never silently translate"
+    },
+    "submission-date": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "article-author-note": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "approval-date": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "advisor": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "advisor-institution": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "advisor-unit": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "advisor-feminine-label": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "coadvisor": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "coadvisor-institution": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "coadvisor-unit": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "coadvisor-feminine-label": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "epigraph-author": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-2": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-2-unit": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-2-institution": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-3": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-3-unit": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-3-institution": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-4": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-4-unit": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-4-institution": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-5": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-5-unit": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-5-institution": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-6": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-6-unit": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "examiner-6-institution": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "font": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "strict-font": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "tables": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "code": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "algorithms": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "glossary": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "index": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    },
+    "coat-of-arms-file": {
+      "origin": "user_supplied_value",
+      "requirement": "literal authored metadata: no automatic translation"
+    },
+    "initial-page": {
+      "origin": "option_identifier",
+      "requirement": "identifier stable across locale"
+    }
+  },
+  "public_commands": {
+    "\\ufcsetup": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcDocumentType": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintMode": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcMeta": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcIfProjectTF": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcIfAnonymizedProjectTF": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcMathFontPolicy": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintCover": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintTitlePage": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintApprovalPage": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintCatalogCard": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintDedication": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintAcknowledgments": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintEpigraph": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintErrata": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcDocumentLanguage": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcSummaryKeywordsInLanguage": {
+      "origin": "explicit_locale",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintSummaryInLanguage": {
+      "origin": "explicit_locale",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintRequiredSummaries": {
+      "origin": "explicit_locale",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintOptionalEnglishSummary": {
+      "origin": "explicit_locale",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintArticleTranslatedSummary": {
+      "origin": "explicit_locale",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcSummaryKeywords": {
+      "origin": "legacy_fixed_outside_opt_in",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintSummary": {
+      "origin": "legacy_fixed_outside_opt_in",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintAbstract": {
+      "origin": "legacy_fixed_outside_opt_in",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfIllustrations": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfFigures": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfTables": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfTextTables": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfCharts": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfCodeListings": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfAlgorithms": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfAbbreviationsAndAcronyms": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintListOfSymbols": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcListEntry": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintTableOfContents": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcSource": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcNote": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcAddBibliographyResource": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintReferences": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintGlossary": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcPrintIndex": {
+      "origin": "class_generated_label",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcInputListing": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\ufcInputMinted": {
+      "origin": "neutral_or_user_content",
+      "certification": "PENDING_END_TO_END"
+    }
+  },
+  "public_environments": {
+    "ufclettereditems": {
+      "origin": "neutral_structure",
+      "certification": "PENDING_END_TO_END"
+    },
+    "ufcdashedsubitems": {
+      "origin": "neutral_structure",
+      "certification": "PENDING_END_TO_END"
+    },
+    "ufcdefinitionlist": {
+      "origin": "neutral_structure",
+      "certification": "PENDING_END_TO_END"
+    },
+    "ufcobject": {
+      "origin": "inherited_object_labels",
+      "certification": "PENDING_END_TO_END"
+    },
+    "ufclisting": {
+      "origin": "listing_labels_from_legend",
+      "certification": "PENDING_END_TO_END"
+    },
+    "ufcalgorithm": {
+      "origin": "algorithm_labels_from_legend",
+      "certification": "PENDING_END_TO_END"
+    }
+  },
+  "retained_upstream_identifiers": {
+    "\\legend": {
+      "origin": "inherited_localized_binding",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\keywords": {
+      "origin": "legacy_contextual",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\appendix": {
+      "origin": "inherited_localized_binding",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\annex": {
+      "origin": "inherited_localized_binding",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\pretextual": {
+      "origin": "upstream_structure",
+      "certification": "PENDING_END_TO_END"
+    },
+    "\\textual": {
+      "origin": "upstream_structure",
+      "certification": "PENDING_END_TO_END"
+    }
+  },
+  "note": "Class-owned text is translated; user content, institutional names, and API identifiers are not auto-translated. Every added public identifier must be accounted for before release."
+}
