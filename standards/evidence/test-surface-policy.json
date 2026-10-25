@@ -55,6 +55,12 @@
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
       "purpose": "Own the exact-source four-locale matrix of 28 joined academic manuscripts and its fast negative/source preflight.",
       "reason": "The 28 real Biber/PDF profiles run as a dedicated parallel per-locale workflow, not as an implicit additional heavy check in every ordinary Linux integration iteration."
+    },
+    {
+      "path": ".github/workflows/i18n-optional-modules-matrix.yml",
+      "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
+      "purpose": "Prove optional class-owned labels and inherited module behavior in twelve PT/EN/ES/FR real PDFs including long tables, listings, algorithms and minted.",
+      "reason": "Runs a dedicated four-locale parallel workflow with TeX Live and minted dependencies so regular Linux integration need not duplicate expensive optional PDF builds."
     }
   ]
 }

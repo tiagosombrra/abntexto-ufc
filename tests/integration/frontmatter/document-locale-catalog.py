@@ -70,6 +70,7 @@ expected = {
     "caption-chart", "caption-code", "caption-algorithm", "caption-text-table",
     "appendix", "annex", "index", "default-project-type",
     "caption-figure", "caption-table", "source-label", "note-label",
+    "table-firsthead", "table-conthead", "table-lasthead",
     "nature-undergraduate", "nature-specialization", "nature-masters",
     "nature-doctoral", "nature-project", "judgment-date-label",
 }

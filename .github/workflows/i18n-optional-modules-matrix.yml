@@ -1,0 +1,71 @@
+name: Optional modules four-language PDF certification
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/objects/optional-locale-evidence.py
+      - standards/evidence/test-surface-policy.json
+      - .github/workflows/i18n-optional-modules-matrix.yml
+  push:
+    branches: [main]
+    paths:
+      - abntexto-ufc.cls
+      - tests/integration/objects/optional-locale-evidence.py
+      - .github/workflows/i18n-optional-modules-matrix.yml
+permissions:
+  contents: read
+concurrency:
+  group: i18n-optional-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Check three module fixtures across four locales and negative mutations
+        run: |
+          for locale in pt en es fr; do
+            python3 tests/integration/objects/optional-locale-evidence.py --locale "$locale" --preflight
+          done
+  optional-locales:
+    name: Code + minted + algorithm comments + long tables / ${{ matrix.locale }}
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 36
+    strategy:
+      fail-fast: false
+      matrix:
+        locale: [pt, en, es, fr]
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile three real PDFs, fail if latexminted absent
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils qpdf
+            command -v latexminted >/dev/null || { echo 'minted processor missing'; exit 1; }
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/objects/optional-locale-evidence.py --locale ${{ matrix.locale }}
+      - name: Upload source-bound PDFs and hashes
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: optional-i18n-${{ matrix.locale }}-${{ github.run_id }}
+          path: artifacts/optional-i18n/${{ matrix.locale }}/**
+          retention-days: 21
+          if-no-files-found: warn

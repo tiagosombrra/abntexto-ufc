@@ -246,6 +246,21 @@
 \prop_gput:Nnn \g_ufc_document_text_prop {en/note-label} {Note}
 \prop_gput:Nnn \g_ufc_document_text_prop {es/note-label} {Nota}
 \prop_gput:Nnn \g_ufc_document_text_prop {fr/note-label} {Note}
+
+% Long-table continuation markers are supplied by tabularray-abnt in Portuguese.
+% Override only package-owned labels, preserving all author-supplied remarks.
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/table-firsthead} {continua}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/table-firsthead} {continued}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/table-firsthead} {continúa}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/table-firsthead} {à~suivre}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/table-conthead} {continuação}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/table-conthead} {continuation}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/table-conthead} {continuación}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/table-conthead} {suite}
+\prop_gput:Nnn \g_ufc_document_text_prop {pt/table-lasthead} {conclusão}
+\prop_gput:Nnn \g_ufc_document_text_prop {en/table-lasthead} {concluded}
+\prop_gput:Nnn \g_ufc_document_text_prop {es/table-lasthead} {conclusión}
+\prop_gput:Nnn \g_ufc_document_text_prop {fr/table-lasthead} {fin}
 % Bibliography citation-driver glue must follow the document's explicit locale.
 % This label is not the authored jurisdiction title or a translated norm.
 \prop_gput:Nnn \g_ufc_document_text_prop {pt/judgment-date-label} {julgado~em}
@@ -1047,6 +1062,15 @@
             % lower continuation/source/note text remains reduced.
             \SetTblrStyle{caption,lasthead,capcont}{font=\normalsize}
             \SetTblrStyle{firsthead-text,lasthead-text,conthead-text,lastfoot}{font=\abntsmall}
+
+            % Upstream caption/lasthead/continuation templates explicitly use
+            % the 'abnt' variants, so changing only the active template fails.
+            \DefTblrTemplate{firsthead-text}{abnt}
+              {\par~\hfill(\ufc_doc_text:n {table-firsthead})}
+            \DefTblrTemplate{conthead-text}{abnt}
+              {\par~\hfill(\ufc_doc_text:n {table-conthead})}
+            \DefTblrTemplate{lasthead-text}{abnt}
+              {\par~\hfill(\ufc_doc_text:n {table-lasthead})}
             % IBGE 1993 §§4.10-4.12: source, general remarks, then specific notes.
             % The upstream tabularray default places specific notes first.
             % Override only the affected ABNT table theme's final foot order.
@@ -1214,6 +1238,17 @@
         % Keep EndIf/EndWhile visible: hidden block endings still consume line
         % numbers in algpseudocodex and produce visually empty numbered lines.
         \PassOptionsToPackage{noEnd=false}{algpseudocodex}
+        % Under PDF management, the upstream rightComments implementation
+        % invokes tabto's alignment while math tagging is active and raises
+        % "You can't use \halign in math mode." Preserve \Comment (including
+        % its marker and contents) with the upstream non-aligned mode.
+        % Legacy documents without \DocumentMetadata keep right alignment.
+        \cs_if_exist:NT \IfPDFManagementActiveTF
+          {
+            \IfPDFManagementActiveTF
+              { \PassOptionsToPackage{rightComments=false}{algpseudocodex} }
+              { }
+          }
         \RequirePackage{algpseudocodex}
       },
 
