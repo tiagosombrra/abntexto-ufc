@@ -23,7 +23,7 @@ LOCALES = {
     "es": ("es-ES", "spanish", "Fuente", "Nota", "Lista de Códigos", "Lista de Algoritmos", "Algoritmo"),
     "fr": ("fr-FR", "french", "Source", "Note", "Liste des codes", "Liste des algorithmes", "Algorithme"),
 }
-PROFILES = ("optional-objects", "optional-minted")
+PROFILES = ("optional-objects", "optional-minted", "optional-algorithm-comment")
 RUNNER = runpy.run_path(str(ROOT / "tests/integration/frontmatter/run-integrated-locale.py"))
 real_pdf_lang = RUNNER["real_pdf_lang"]
 fold = RUNNER["fold"]
@@ -35,6 +35,26 @@ def sha(path: Path) -> str:
 
 def make_source(locale: str, profile: str) -> str:
     bcp, _, source, note, _, _, _ = LOCALES[locale]
+    if profile == "optional-algorithm-comment":
+        # Isolate math plus algorithmic comment from listings and tabularray.
+        # This source follows the existing proven line-numbering fixture.
+        standalone = [
+            rf"\DocumentMetadata{{lang={bcp},pdfstandard=A-2b,pdfversion=1.7}}",
+            r"\documentclass{abntexto-ufc}",
+            rf"\ufcsetup{{document-language={locale},algorithms=algpseudocodex}}",
+            r"\begin{document}",
+            rf"\typeout{{OPTIONAL-I18N-BABEL=\languagename}}",
+            rf"\legend{{algorithm}}{{OPTIONAL-ALGORITHM-ONLY-{locale.upper()}}}",
+            r"\ufcSource{SYNTHETIC-ALGO-ONLY}",
+            r"\begin{ufcalgorithm}[here][1]",
+            r"\State $i \gets 1$ \Comment{NUMERADO-1}",
+            r"\While{$i \leq n$} \Comment{NUMERADO-2}",
+            r"\State \Return $i$ \Comment{NUMERADO-3}",
+            r"\EndWhile",
+            r"\end{ufcalgorithm}",
+            r"\end{document}",
+        ]
+        return "\n".join(standalone) + "\n"
     base = [
         rf"\DocumentMetadata{{lang={bcp},pdfstandard=A-2b,pdfversion=1.7}}",
         r"\documentclass{abntexto-ufc}",
@@ -104,14 +124,19 @@ def validate_source(source: str, locale: str, profile: str) -> None:
     required = [
         rf"\DocumentMetadata{{lang={bcp},",
         f"document-language={locale}",
-        rf"\section{{OPTIONAL-MODULE-BODY-{locale.upper()}}}",
-        r"\ufcPrintListOfCodeListings",
     ]
+    if profile == "optional-algorithm-comment":
+        required += [r"algorithms=algpseudocodex",
+                     r"\begin{ufcalgorithm}",
+                     r"\Comment{NUMERADO-1}", r"\State $i \gets 1$"]
+    else:
+        required += [rf"\section{{OPTIONAL-MODULE-BODY-{locale.upper()}}}",
+                     r"\ufcPrintListOfCodeListings"]
     if profile == "optional-objects":
         required += [r"tables=tabularray,code=listings,algorithms=algpseudocodex",
                      r"\begin{longabnttblr}", r"\begin{ufcalgorithm}",
                      r"\begin{ufclisting}", "OPTIONALROW110"]
-    else:
+    elif profile == "optional-minted":
         required += [r"code=minted", r"\ufcInputMinted[here]"]
     missing = [token for token in required if token not in source]
     if missing:
@@ -148,12 +173,17 @@ def compile_pdf(source: Path, pdf: Path, locale: str, profile: str) -> dict:
                                         cwd=ROOT, text=True)
     text = fold(extracted)
     _, babel, source_label, note_label, code_list, alg_list, alg = LOCALES[locale]
-    expected = [
-        f"optional-module-body-{locale}", code_list,
-        f"optional-{'listing' if profile == 'optional-objects' else 'minted'}-{locale}",
-        "synthetic-code-source" if profile == "optional-objects" else "synthetic-minted-source",
-        source_label + ":",
-    ]
+    if profile == "optional-algorithm-comment":
+        expected = [f"optional-algorithm-only-{locale}",
+                    "synthetic-algo-only", "numerado-1", "numerado-2",
+                    source_label + ":"]
+    else:
+        expected = [
+            f"optional-module-body-{locale}", code_list,
+            f"optional-{'listing' if profile == 'optional-objects' else 'minted'}-{locale}",
+            "synthetic-code-source" if profile == "optional-objects" else "synthetic-minted-source",
+            source_label + ":",
+        ]
     if profile == "optional-objects":
         expected += [alg_list, alg, f"optional-algorithm-{locale}",
                      "optional-alg-step-1", "optional-alg-step-2",
@@ -208,6 +238,9 @@ def main() -> None:
             if profile == "optional-objects":
                 mutants += [original.replace(r"\begin{ufcalgorithm}", "", 1),
                             original.replace(r"\begin{longabnttblr}", "", 1)]
+            elif profile == "optional-algorithm-comment":
+                mutants += [original.replace(r"\begin{ufcalgorithm}", "", 1),
+                            original.replace(r"\Comment{NUMERADO-1}", "", 1)]
             for wrong in mutants:
                 if wrong == original:
                     raise ValueError("negative mutation ineffective")
@@ -218,7 +251,7 @@ def main() -> None:
                 else:
                     raise ValueError("negative fixture accepted")
         if args.preflight:
-            print(f"OPTIONAL-I18N-PREFLIGHT status=PASS locale={args.locale} tex=2 negative=PASS")
+            print(f"OPTIONAL-I18N-PREFLIGHT status=PASS locale={args.locale} tex=3 negative=PASS")
             return
         receipts = []
         for src in sources:
@@ -233,7 +266,7 @@ def main() -> None:
                     "automatically_translated_author_data": False,
                     "visual_language_review": "PENDING"}
         (folder / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
-        print(f"OPTIONAL-I18N status=PASS locale={args.locale} real_pdfs=2 lang=PASS "
+        print(f"OPTIONAL-I18N status=PASS locale={args.locale} real_pdfs=3 lang=PASS "
               "babel=PASS text=PASS negatives=PASS", flush=True)
 
 
