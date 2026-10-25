@@ -220,6 +220,45 @@ def compile_pdf(source: Path, pdf: Path, locale: str, profile: str) -> dict:
             "pdf_catalog_lang": actual_lang, "checks": len(expected) + len(forbidden[locale])}
 
 
+def diagnose_algorithm_comment(locale: str, folder: Path) -> None:
+    """Compare controlled PDF-metadata and language settings after a real TeX failure."""
+    # These are diagnostic builds, not accepted PDF certification evidence.
+    if locale != "pt":
+        return
+    source = make_source(locale, "optional-algorithm-comment")
+    variants = {
+        "legacy-no-metadata-no-locale": (False, False),
+        "metadata-only": (True, False),
+        "locale-only": (False, True),
+        "metadata-and-locale-no-comment": (True, True),
+    }
+    for label, (with_metadata, with_locale) in variants.items():
+        candidate = source
+        if not with_metadata:
+            candidate = "\n".join(candidate.splitlines()[1:]) + "\n"
+        if not with_locale:
+            candidate = candidate.replace("document-language=pt,", "", 1)
+        if label.endswith("no-comment"):
+            candidate = candidate.replace(r" \Comment{NUMERADO-1}", "", 1)
+            candidate = candidate.replace(r" \Comment{NUMERADO-2}", "", 1)
+            candidate = candidate.replace(r" \Comment{NUMERADO-3}", "", 1)
+        probe = folder / f"optional-alg-diagnostic-{label}.tex"
+        probe.write_text(candidate, encoding="utf-8")
+        job = probe.stem
+        command = ["pdflatex", "-interaction=nonstopmode", "-halt-on-error",
+                   "-file-line-error", f"-jobname={job}",
+                   f"-output-directory={folder}", str(probe)]
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        stdout = result.stdout + result.stderr
+        (folder / f"{job}.stdout").write_text(stdout, encoding="utf-8")
+        errors = [line.strip() for line in stdout.splitlines()
+                  if "You can't use" in line or "Undefined control sequence" in line
+                  or "Fatal error" in line]
+        print(f"OPTIONAL-ALG-DIAGNOSTIC locale={locale} case={label} "
+              f"result={'PASS' if result.returncode == 0 else 'FAIL'} "
+              f"error={errors[0] if errors else 'none'}", flush=True)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", required=True, choices=tuple(LOCALES))
@@ -256,7 +295,12 @@ def main() -> None:
         receipts = []
         for src in sources:
             profile = src.stem.removesuffix("-" + args.locale)
-            entry = compile_pdf(src, src.with_suffix(".pdf"), args.locale, profile)
+            try:
+                entry = compile_pdf(src, src.with_suffix(".pdf"), args.locale, profile)
+            except RuntimeError:
+                if profile == "optional-algorithm-comment":
+                    diagnose_algorithm_comment(args.locale, folder)
+                raise
             receipts.append(entry)
             print(f"OPTIONAL-I18N status=PASS locale={args.locale} profile={profile} "
                   f"pdf_pages={entry['pages']} qpdf=PASS sha256=PASS", flush=True)
