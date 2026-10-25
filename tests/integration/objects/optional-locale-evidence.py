@@ -23,6 +23,12 @@ LOCALES = {
     "es": ("es-ES", "spanish", "Fuente", "Nota", "Lista de Códigos", "Lista de Algoritmos", "Algoritmo"),
     "fr": ("fr-FR", "french", "Source", "Note", "Liste des codes", "Liste des algorithmes", "Algorithme"),
 }
+TABLE_MARKERS = {
+    "pt": ("(continua)", "(continuação)", "(conclusão)"),
+    "en": ("(continued)", "(continuation)", "(concluded)"),
+    "es": ("(continúa)", "(continuación)", "(conclusión)"),
+    "fr": ("(à suivre)", "(suite)", "(fin)"),
+}
 PROFILES = ("optional-objects", "optional-minted", "optional-algorithm-comment")
 RUNNER = runpy.run_path(str(ROOT / "tests/integration/frontmatter/run-integrated-locale.py"))
 real_pdf_lang = RUNNER["real_pdf_lang"]
@@ -128,7 +134,8 @@ def validate_source(source: str, locale: str, profile: str) -> None:
     if profile == "optional-algorithm-comment":
         required += [r"algorithms=algpseudocodex",
                      r"\begin{ufcalgorithm}",
-                     r"\Comment{NUMERADO-1}", r"\State $i \gets 1$"]
+                     r"\Comment{NUMERADO-1}", r"\Comment{NUMERADO-2}",
+                     r"\Comment{NUMERADO-3}", r"\State $i \gets 1$"]
     else:
         required += [rf"\section{{OPTIONAL-MODULE-BODY-{locale.upper()}}}",
                      r"\ufcPrintListOfCodeListings"]
@@ -176,7 +183,7 @@ def compile_pdf(source: Path, pdf: Path, locale: str, profile: str) -> dict:
     if profile == "optional-algorithm-comment":
         expected = [f"optional-algorithm-only-{locale}",
                     "synthetic-algo-only", "numerado-1", "numerado-2",
-                    source_label + ":"]
+                    source_label + ":", alg, "numerado-3"]
     else:
         expected = [
             f"optional-module-body-{locale}", code_list,
@@ -189,6 +196,7 @@ def compile_pdf(source: Path, pdf: Path, locale: str, profile: str) -> dict:
                      "optional-alg-step-1", "optional-alg-step-2",
                      f"optional-table-{locale}", f"optional-table-source-{locale}",
                      f"optional-table-note-{locale}", "optionalrow110", note_label + ":"]
+        expected.extend(TABLE_MARKERS[locale])
     missing = [p for p in expected if fold(p) not in text]
     if missing:
         raise ValueError(f"PDF content mismatch for {job}: {missing}. Sample={text[:800]}")
@@ -198,7 +206,16 @@ def compile_pdf(source: Path, pdf: Path, locale: str, profile: str) -> dict:
         "es": ("list of algorithms", "liste des algorithmes", "list of code listings", "fonte:"),
         "fr": ("list of algorithms", "lista de algoritmos", "lista de códigos", "fonte:"),
     }
-    leaks = [x for x in forbidden[locale] if fold(x) in text]
+    # Upstream table-head text must follow the effective locale on all pages.
+    # Skip strings normalized identically across languages (e.g. PT/ES accents).
+    foreign_table_markers = [
+        marker
+        for other_locale, terms in TABLE_MARKERS.items()
+        if other_locale != locale
+        for marker in terms
+        if fold(marker) not in {fold(own) for own in TABLE_MARKERS[locale]}
+    ] if profile == "optional-objects" else []
+    leaks = [x for x in (*forbidden[locale], *foreign_table_markers) if fold(x) in text]
     if leaks:
         raise ValueError(f"foreign-locale class labels in PDF {job}: {leaks}")
     actual_lang = real_pdf_lang(pdf)
