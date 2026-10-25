@@ -20,6 +20,32 @@ PROFILES = {
 TOTAL = 0
 
 
+def validate_case(case: dict, locale: str, source: str) -> None:
+    """Validate the same source invariants for real cases and mutations."""
+    profile = case["profile"]
+    if (case["locale"] != locale or
+            rf"\DocumentMetadata{{lang={LOCALES[locale]}," not in source or
+            f"document-language={locale}" not in source):
+        raise ValueError(f"mismatched document-language and PDF metadata: {profile}/{locale}")
+    required = (
+        r"\ufcPrintReferences", r"\parencite{silva2020}",
+        r"\textcite{oliveira2011}", r"\ufcSource{Synthetic original}",
+        r"\ufcNote{Synthetic object note}", r"\begin{tabular}",
+        r"\begin{ufcobject}",
+    )
+    if any(x not in source for x in required):
+        raise ValueError(f"missing joined core component: {profile}/{locale}")
+    if profile == "scientific-article":
+        if r"\ufcPrintArticleFrontMatter" not in source:
+            raise ValueError(f"article frontmatter absent: {profile}/{locale}")
+    else:
+        if r"\ufcPrintTitlePage" not in source or r"\appendix{" not in source:
+            raise ValueError(f"academic/project front/back missing: {profile}/{locale}")
+    if profile == "doctoral-thesis" and (
+            r"\ufcPrintGlossary" not in source or r"\ufcPrintIndex" not in source):
+        raise ValueError(f"doctoral optional modules missing: {profile}/{locale}")
+
+
 def check(out: Path) -> None:
     global TOTAL
     seen = set()
@@ -37,41 +63,32 @@ def check(out: Path) -> None:
                 raise ValueError(f"duplicate or wrong locale case: {key}")
             seen.add(key)
             tex = Path(c["source"]).read_text(encoding="utf-8")
-            if any(k not in tex for k in (
-                rf"\DocumentMetadata{{lang={bcp},",
-                f"document-language={locale}", r"\ufcPrintReferences",
-                r"\parencite{silva2020}", r"\textcite{oliveira2011}",
-                r"\ufcSource{Synthetic original}", r"\ufcNote{Synthetic object note}",
-                r"\begin{tabular}", r"\begin{ufcobject}",
-            )):
-                raise ValueError(f"core joined components missing: {key}")
-            if c["profile"] == "scientific-article":
-                if r"\ufcPrintArticleFrontMatter" not in tex:
-                    raise ValueError(f"article frontmatter absent: {key}")
-            else:
-                if r"\ufcPrintTitlePage" not in tex or r"\appendix{" not in tex:
-                    raise ValueError(f"academic/project full front/back missing: {key}")
-            if c["profile"] == "doctoral-thesis" and (
-                r"\ufcPrintGlossary" not in tex or r"\ufcPrintIndex" not in tex
-            ):
-                raise ValueError(f"doctoral optional modules missing: {key}")
+            validate_case(c, locale, tex)
             for source in c["support_sources"]:
                 if not Path(source).is_file():
                     raise ValueError(f"unavailable summary input: {source}")
             TOTAL += 1
     if TOTAL != 28 or len(seen) != 28:
         raise ValueError(f"expected 28 distinct generated sources, got {TOTAL}")
-    # Negative guards: modifying a locale or removing a component must be
-    # detected by the same checks rather than accepted as an incomplete smoke.
+    # Exercise the SAME production-source guard with deliberately corrupted
+    # cases. Mutation detection alone is not a meaningful negative test.
     sample = (out / "en" / "integrated-doctoral-thesis-en.tex").read_text()
-    mutated = sample.replace(r"\ufcPrintGlossary", "", 1)
-    if r"\ufcPrintGlossary" in mutated:
-        raise ValueError("negative mutation of glossary was ineffective")
-    if r"\ufcPrintGlossary" not in sample or r"\ufcPrintGlossary" in mutated:
-        raise ValueError("missing-glossary negative not observable")
-    wrong_lang = sample.replace(r"\DocumentMetadata{lang=en-US,", r"\DocumentMetadata{lang=pt-BR,", 1)
-    if wrong_lang == sample or r"\DocumentMetadata{lang=en-US," in wrong_lang:
-        raise ValueError("wrong-PDF-language negative not observable")
+    fixture = {"profile": "doctoral-thesis", "locale": "en"}
+    damaged = {
+        "glossary": sample.replace(r"\ufcPrintGlossary", "", 1),
+        "wrong_pdf_lang": sample.replace(
+            r"\DocumentMetadata{lang=en-US,", r"\DocumentMetadata{lang=pt-BR,", 1),
+        "missing_references": sample.replace(r"\ufcPrintReferences", "", 1),
+    }
+    for label, mutant in damaged.items():
+        if mutant == sample:
+            raise ValueError(f"mutation ineffective: {label}")
+        try:
+            validate_case(fixture, "en", mutant)
+        except ValueError:
+            pass
+        else:
+            raise ValueError(f"negative mutation was accepted: {label}")
 
 
 def main() -> None:
