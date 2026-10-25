@@ -19,6 +19,10 @@
 | Site / validador | Interface PT/EN/ES/FR, seletor, feedback, exportação, navegação acessível | Chromium E2E offline, catálogos separados | Auditar todos os 65 textos de validador e 32 do site, negativos de falha segura, não reescrever IDs normativos |
 | Continuidade / publicação | Legado PT não pode sofrer regressão | Baselines antigas, gates 42/42 e 38/38/pkgcheck | Revisão Codex exata, pós-merge, sete perfis × idiomas, revisão visual source-bound |
 
+## Auditoria completa das tags e comandos públicos
+
+O mapa `standards/api/i18n-coverage-inventory.json` classifica nominalmente **70 chaves de configuração**, **43 comandos canônicos**, **seis ambientes** e **seis identificadores herdados**, com fronteiras entre texto produzido pela classe, pacotes externos, parâmetros do autor e os comandos PT/EN legados. A verificação `tests/integration/frontmatter/i18n-api-inventory.py` compara integralmente esse mapa com `standards/api/public-api.json` e reprova macros/chaves sem classificação, inclusive em testes negativos. **Classificado não significa testado em PDF:** a certificação dinâmica continuará PENDING até todos os casos pertinentes terem prova produtiva.
+
 ## Primeira bateria de documentos integrados — implementação em PR de testes
 
 O gerador `tests/integration/frontmatter/generate-integrated-locale.py` e o executor `tests/integration/frontmatter/run-integrated-locale.py` criam, compilam e verificam **7 PDFs por idioma, 28 no conjunto**. A matriz roda em quatro jobs paralelos no workflow `.github/workflows/integrated-manuscript-locale-matrix.yml`, usando TeX Live 2026, Biber, qpdf e pdftotext. Cada documento integra mais de um domínio: frente aplicável, idioma Babel, rótulos, elementos gráficos e tabulares, duas formas de citação, referências Biber de cinco tipos, texto pós-textual quando aplicável e metadados reais `/Root/Lang`; doutorado exercita adicionalmente glossário e índice.
