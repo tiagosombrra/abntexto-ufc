@@ -156,7 +156,7 @@ def self_test() -> None:
         ("tools/build-public-bundles.py",): ("distribution",),
         ("tools/build-distribution-bundles.py",): ("distribution",),
         ("tests/integration/distribution-bundles.sh",): ("distribution",),
-        ("tests/run.py", "tools/build-public-bundles.py"): ("distribution",
+        ("tests/run.py", "tools/build-public-bundles.py"): ("distribution",),
         (".github/workflows/linux-release-check.yml", "tests/run.py"): ("complete",),
         ("validator/app.js",): ("web-lite",),
         ("validator/normative-catalog.js",): ("web-lite",),
