@@ -63,7 +63,7 @@ nature={
 "anonymized-research-project":("apresentado a","submitted to","presentado a","soumis a"),
 "scientific-article":("submetido em","submitted on","enviado el","soumis le")
 }
-def fold(x):return re.sub(r"\s+"," ",unicodedata.normalize("NFKD",x).encode("ascii","ignore").decode().lower()).strip()
+def fold(x):return re.sub(r"\s+"," ",unicodedata.normalize("NFKD",x).encode("ascii","ignore").decode().lower().replace("\u0027","").replace("\u2019","")).strip()
 receipts=[]
 for profile in profiles:
   for i,(locale,(code,babel)) in enumerate(langs.items()):
