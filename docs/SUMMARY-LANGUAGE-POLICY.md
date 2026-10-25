@@ -15,7 +15,7 @@ The helper uses main-language-first order by project decision. **Do not claim NB
 
 ## Legacy helper compatibility in opt-in summaries
 
-For `\\ufcPrintSummaryInLanguage{en}{file}` (and the `\\ufcPrintRequiredSummaries` wrapper), both historic keyword macros `\\ufcSummaryKeywords{...}` and `\\keywords{...}` are locally rebound to the **summary's** language, never the primary manuscript language. Thus English yields **Keywords**, Spanish **Palabras clave**, French **Mots-clés**, and Portuguese **Palavras-chave**. The binding ends when that summary ends. Outside this new API, `\\ufcPrintSummary`/`\\ufcSummaryKeywords` remain specifically Portuguese, and `\\ufcPrintAbstract`/`\\keywords` remain specifically English. Do not mix a legacy fixed-language title with foreign-language content; use the language-explicit API for the full manuscript. Real-PDF regression covers the eight (4 locale × 2 helper) cases plus historical PT/EN baseline.
+For `\ufcPrintSummaryInLanguage{en}{file}` (and the `\ufcPrintRequiredSummaries` wrapper), both historic keyword macros `\ufcSummaryKeywords{...}` and `\keywords{...}` are locally rebound to the **summary's** language, never the primary manuscript language. Thus English yields **Keywords**, Spanish **Palabras clave**, French **Mots-clés**, and Portuguese **Palavras-chave**. The binding ends when that summary ends. Outside this new API, `\ufcPrintSummary`/`\ufcSummaryKeywords` remain specifically Portuguese, and `\ufcPrintAbstract`/`\keywords` remain specifically English. Do not mix a legacy fixed-language title with foreign-language content; use the language-explicit API for the full manuscript. Real-PDF regression covers the eight (4 locale × 2 helper) cases plus historical PT/EN baseline.
 
 ## Supported TeX API
 
