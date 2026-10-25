@@ -29,13 +29,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-      - name: Check both module fixtures across four locales and negative mutations
+      - name: Check three module fixtures across four locales and negative mutations
         run: |
           for locale in pt en es fr; do
             python3 tests/integration/objects/optional-locale-evidence.py --locale "$locale" --preflight
           done
   optional-locales:
-    name: Code + minted + algorithms + long tables / ${{ matrix.locale }}
+    name: Code + minted + algorithm comments + long tables / ${{ matrix.locale }}
     needs: preflight
     runs-on: ubuntu-24.04
     timeout-minutes: 36
@@ -49,7 +49,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-      - name: Compile the two real PDFs, fail if latexminted absent
+      - name: Compile three real PDFs, fail if latexminted absent
         uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
         with:
           texlive_version: 2026
