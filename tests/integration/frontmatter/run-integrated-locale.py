@@ -72,7 +72,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
     visible = fold(txt)
     _, _, references, legal_date = LANGUAGES[locale]
     expected = [
-        f"integrated-manuscript-{locale}-{profile.replace('-', '_')}",
+        f"integrated-manuscript-{locale}-{profile.replace('-', '')}",
         f"integrated-section-{locale}",
         f"integrated-object-{locale}",
         f"integrated-table-{locale}",
