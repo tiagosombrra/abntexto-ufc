@@ -59,7 +59,7 @@
     {
       "path": ".github/workflows/i18n-optional-modules-matrix.yml",
       "owner_doc": "docs/I18N-COMPLETION-MATRIX.md",
-      "purpose": "Prove optional class-owned labels and inherited module behavior in eight PT/EN/ES/FR real PDFs including long tables, listings, algorithms and minted.",
+      "purpose": "Prove optional class-owned labels and inherited module behavior in twelve PT/EN/ES/FR real PDFs including long tables, listings, algorithms and minted.",
       "reason": "Runs a dedicated four-locale parallel workflow with TeX Live and minted dependencies so regular Linux integration need not duplicate expensive optional PDF builds."
     }
   ]
