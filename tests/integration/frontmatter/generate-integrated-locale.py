@@ -23,6 +23,10 @@ USER_DATES = {
     "fr": "21 octobre 2026",
 }
 PROJECTS = {"research-project", "anonymized-research-project"}
+ACADEMIC_PROFILES = {
+    "undergraduate-capstone", "specialization-capstone",
+    "masters-thesis", "doctoral-thesis",
+}
 
 
 def summary_text(locale: str, label: str) -> str:
@@ -43,6 +47,7 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
     companion = "en" if locale == "pt" else "pt"
     support = target / "texts"
     support.mkdir(parents=True, exist_ok=True)
+    extra_sources: list[str] = []
     (support / (name + "-primary.tex")).write_text(
         summary_text(locale, "main"), encoding="utf-8",
     )
@@ -109,6 +114,33 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         ]
     else:
         lines += [r"\pretextual", r"\ufcPrintCover", r"\ufcPrintTitlePage"]
+        if profile in ACADEMIC_PROFILES:
+            # Author-supplied text is synthetic and must never be translated
+            # by the class. Only the public command headings are localized.
+            extras = {
+                "ack": f"INTEGRATED-ACKNOWLEDGMENTS-{locale.upper()}.",
+                "errata": f"INTEGRATED-ERRATA-{locale.upper()}.",
+                "abbreviations": (
+                    "\\begin{ufcdefinitionlist}\n"
+                    f"\\ufcListEntry{{IAA-{locale.upper()}}}"
+                    f"{{INTEGRATED-ABBREVIATION-{locale.upper()}.}}\n"
+                    "\\end{ufcdefinitionlist}"
+                ),
+                "symbols": (
+                    "\\begin{ufcdefinitionlist}\n"
+                    f"\\ufcListEntry{{IAS-{locale.upper()}}}"
+                    f"{{INTEGRATED-SYMBOL-{locale.upper()}.}}\n"
+                    "\\end{ufcdefinitionlist}"
+                ),
+            }
+            for suffix, text in extras.items():
+                source = support / f"{name}-{suffix}.tex"
+                source.write_text(text + "\n", encoding="utf-8")
+                extra_sources.append(str(source))
+            lines += [
+                rf"\ufcPrintAcknowledgments{{{support / (name + '-ack.tex')}}}",
+                rf"\ufcPrintErrata{{{support / (name + '-errata.tex')}}}",
+            ]
         if profile not in PROJECTS:
             lines += [
                 r"\ufcPrintApprovalPage",
@@ -116,11 +148,16 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
                 rf"{{{support / (name + '-primary.tex')}}}"
                 rf"{{{support / (name + '-secondary.tex')}}}",
             ]
-        lines += [
-            r"\ufcPrintListOfFigures",
-            r"\ufcPrintListOfTables",
-            r"\ufcPrintTableOfContents",
-        ]
+        lines += [r"\ufcPrintListOfFigures", r"\ufcPrintListOfTables"]
+        if profile in ACADEMIC_PROFILES:
+            lines += [
+                r"\ufcPrintListOfIllustrations",
+                r"\ufcPrintListOfTextTables",
+                r"\ufcPrintListOfCharts",
+                rf"\ufcPrintListOfAbbreviationsAndAcronyms{{{support / (name + '-abbreviations.tex')}}}",
+                rf"\ufcPrintListOfSymbols{{{support / (name + '-symbols.tex')}}}",
+            ]
+        lines.append(r"\ufcPrintTableOfContents")
     lines += [
         rf"\typeout{{INTEGRATED-I18N-BABEL=\languagename}}",
         r"\typeout{INTEGRATED-I18N-API-LANGUAGE=\ufcDocumentLanguage}",
@@ -152,6 +189,20 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         r"\begin{tabular}{cc} 1 & 2 \\ 3 & 4 \end{tabular}",
         r"\end{table}",
     ]
+    if profile in ACADEMIC_PROFILES:
+        # Populate the chart and text-table list files with real objects.
+        lines += [
+            rf"\legend{{grafico}}{{INTEGRATED-CHART-{locale.upper()}}}",
+            r"\ufcSource{Synthetic original}",
+            r"\begin{ufcobject}[here]",
+            r"\centering\rule{3cm}{1cm}",
+            r"\end{ufcobject}",
+            rf"\legend{{quadro}}{{INTEGRATED-TEXTTABLE-{locale.upper()}}}",
+            r"\ufcSource{Synthetic original}",
+            r"\begin{ufcobject}[here]",
+            r"\centering\rule{3cm}{1cm}",
+            r"\end{ufcobject}",
+        ]
     if profile == "doctoral-thesis":
         lines += [
             r"\gls{integratedterm}\index{integrated term}",
@@ -175,7 +226,7 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
     path = target / f"{name}.tex"
     path.write_text(result, encoding="utf-8")
     return name, [str(path), str(support / (name + "-primary.tex")),
-                  str(support / (name + "-secondary.tex"))]
+                  str(support / (name + "-secondary.tex")), *extra_sources]
 
 
 def main() -> None:
