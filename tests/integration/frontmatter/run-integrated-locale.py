@@ -27,6 +27,24 @@ LANGUAGES = {
     "es": ("es-ES", "spanish", "Referencias", "juzgado el"),
     "fr": ("fr-FR", "french", "Références", "jugé le"),
 }
+ACADEMIC = {
+    "undergraduate-capstone", "specialization-capstone",
+    "masters-thesis", "doctoral-thesis",
+}
+PRETEXTUAL_HEADINGS = {
+    "pt": ("Agradecimentos", "Errata", "Lista de Ilustrações",
+           "Lista de Quadros", "Lista de Gráficos",
+           "Lista de Abreviaturas e Siglas", "Lista de Símbolos"),
+    "en": ("Acknowledgments", "Errata", "List of Illustrations",
+           "List of Text Tables", "List of Charts",
+           "List of Abbreviations and Acronyms", "List of Symbols"),
+    "es": ("Agradecimientos", "Fe de erratas", "Lista de Ilustraciones",
+           "Lista de Cuadros", "Lista de Gráficos",
+           "Lista de Abreviaturas y Siglas", "Lista de Símbolos"),
+    "fr": ("Remerciements", "Errata", "Liste des illustrations",
+           "Liste des encadrés", "Liste des graphiques",
+           "Liste des abréviations et sigles", "Liste des symboles"),
+}
 
 
 def sha(path: Path) -> str:
@@ -95,11 +113,48 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             companion = "en" if locale == "pt" else "pt"
             expected += [f"integrated-summary-{locale}-main",
                          f"integrated-summary-{companion}-companion"]
+    if profile in ACADEMIC:
+        expected += list(PRETEXTUAL_HEADINGS[locale])
+        expected += [
+            f"integrated-authored-gratitude-{locale}",
+            f"integrated-authored-corrections-{locale}",
+            f"integrated-abbreviation-{locale}",
+            f"integrated-symbol-{locale}",
+            f"integrated-chart-{locale}",
+            f"integrated-texttable-{locale}",
+        ]
     if profile == "doctoral-thesis":
         expected += ["integrated term"]
     missing = [token for token in expected if fold(token) not in visible]
     if missing:
         raise ValueError(f"missing PDF text for {profile}/{locale}: {missing}, sample={visible[:750]}")
+    if profile in ACADEMIC:
+        # The chart and text-table entry must occur in the list AND in its
+        # actual body caption. The heading alone is insufficient evidence.
+        for prefix in ("integrated-chart", "integrated-texttable"):
+            marker = fold(f"{prefix}-{locale}")
+            if visible.count(marker) < 2:
+                raise ValueError(f"unpopulated translated list: {profile}/{locale}/{prefix}")
+        # Exclude translated headings of unrelated languages while allowing
+        # genuine shared words such as "Errata" or PT/ES "Lista de Gráficos".
+        own = {fold(x) for x in PRETEXTUAL_HEADINGS[locale]}
+        other = {
+            fold(h) for lang, labels in PRETEXTUAL_HEADINGS.items()
+            if lang != locale for h in labels
+        } - own
+        wrong = [
+            heading for heading in sorted(other)
+            if re.search(r"(?<!\w)" + re.escape(heading) + r"(?!\w)", visible)
+        ]
+        if wrong:
+            raise ValueError(f"foreign pretextual headings: {profile}/{locale}: {wrong}")
+    else:
+        if any(fold(marker) in visible for marker in (
+            "integrated-authored-gratitude", "integrated-authored-corrections",
+            "integrated-abbreviation", "integrated-symbol",
+            "integrated-chart", "integrated-texttable",
+        )):
+            raise ValueError(f"inapplicable pretextual content: {profile}/{locale}")
     # Target *class-owned* label leaks; never ban all Portuguese because
     # names, source titles and the required PT companion are legitimate.
     # Be precise: Spanish and PT bibliography headings normalize to the
@@ -122,6 +177,8 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
     if leaking:
         raise ValueError(f"wrong-locale class-owned labels in {profile}/{locale}: {leaking}")
     return {"positive_tokens": len(expected), "missing": [],
+            "pretextual_headings_checked": 7 if profile in ACADEMIC else 0,
+            "populated_lists_checked": 2 if profile in ACADEMIC else 0,
             "negative_locale_labels": len(forbidden[locale]),
             "negative_policy": "targeted class-owned labels only; PT companion and authored data allowed"}
 
