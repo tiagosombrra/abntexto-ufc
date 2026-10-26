@@ -118,8 +118,8 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
             # Author-supplied text is synthetic and must never be translated
             # by the class. Only the public command headings are localized.
             extras = {
-                "ack": f"INTEGRATED-ACKNOWLEDGMENTS-{locale.upper()}.",
-                "errata": f"INTEGRATED-ERRATA-{locale.upper()}.",
+                "ack": f"INTEGRATED-AUTHORED-GRATITUDE-{locale.upper()}.",
+                "errata": f"INTEGRATED-AUTHORED-CORRECTIONS-{locale.upper()}.",
                 "abbreviations": (
                     "\\begin{ufcdefinitionlist}\n"
                     f"\\ufcListEntry{{IAA-{locale.upper()}}}"
