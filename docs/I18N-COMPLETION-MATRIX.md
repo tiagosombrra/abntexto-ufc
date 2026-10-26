@@ -57,7 +57,7 @@ A PR #530 (DRAFT, **NÃO CERTIFICADA**) estende os **mesmos 28 manuscritos integ
 
 ## Etapa P0.5 — pré-textuais opcionais com conteúdo real (PR de testes)
 
-A nova matriz integrada mantém os sete perfis e os quatro idiomas, mas adiciona os elementos opcionais **somente** a TCC de graduação, especialização, dissertação e tese (16 dos 28 PDFs). Exercita, na mesma compilação com Babel, Biber e metadados PDF, os comandos `\\ufcPrintAcknowledgments`, `\\ufcPrintErrata`, `\\ufcPrintListOfIllustrations`, `\\ufcPrintListOfTextTables`, `\\ufcPrintListOfCharts`, `\\ufcPrintListOfAbbreviationsAndAcronyms` e `\\ufcPrintListOfSymbols`.
+A nova matriz integrada mantém os sete perfis e os quatro idiomas, mas adiciona os elementos opcionais **somente** a TCC de graduação, especialização, dissertação e tese (16 dos 28 PDFs). Exercita, na mesma compilação com Babel, Biber e metadados PDF, os comandos `\ufcPrintAcknowledgments`, `\ufcPrintErrata`, `\ufcPrintListOfIllustrations`, `\ufcPrintListOfTextTables`, `\ufcPrintListOfCharts`, `\ufcPrintListOfAbbreviationsAndAcronyms` e `\ufcPrintListOfSymbols`.
 
 Os arquivos de conteúdo gerados pelo autor são sintéticos, têm hashes no manifesto e não são traduzidos pela classe. O executor deve comprovar os **sete títulos próprios de cada idioma** a partir do texto do PDF, rejeitar vazamentos de títulos inequívocos de outros idiomas, confirmar conteúdo de agradecimento, errata, abreviatura e símbolo, e exigir ocorrência das legendas de gráfico/quadro **duas vezes** (lista e objeto real). O preflight reprova ausência de cada macro e de qualquer um dos 64 arquivos autorais. Projetos de pesquisa, projetos anonimizados e artigos não ganham obrigatoriedades artificiais.
 
