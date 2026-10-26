@@ -91,8 +91,8 @@ def check(out: Path) -> None:
                     raise ValueError(f"unavailable synthetic input: {source}")
             if c["profile"] in ACADEMIC:
                 markers = {
-                    "ack": f"INTEGRATED-ACKNOWLEDGMENTS-{locale.upper()}",
-                    "errata": f"INTEGRATED-ERRATA-{locale.upper()}",
+                    "ack": f"INTEGRATED-AUTHORED-GRATITUDE-{locale.upper()}",
+                    "errata": f"INTEGRATED-AUTHORED-CORRECTIONS-{locale.upper()}",
                     "abbreviations": f"INTEGRATED-ABBREVIATION-{locale.upper()}",
                     "symbols": f"INTEGRATED-SYMBOL-{locale.upper()}",
                 }
