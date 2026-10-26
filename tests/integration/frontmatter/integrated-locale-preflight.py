@@ -17,6 +17,16 @@ PROFILES = {
     "doctoral-thesis", "research-project", "anonymized-research-project",
     "scientific-article",
 }
+ACADEMIC = {
+    "undergraduate-capstone", "specialization-capstone",
+    "masters-thesis", "doctoral-thesis",
+}
+PRETEXTUAL_COMMANDS = (
+    r"\ufcPrintAcknowledgments{", r"\ufcPrintErrata{",
+    r"\ufcPrintListOfIllustrations", r"\ufcPrintListOfTextTables",
+    r"\ufcPrintListOfCharts", r"\ufcPrintListOfAbbreviationsAndAcronyms{",
+    r"\ufcPrintListOfSymbols{",
+)
 TOTAL = 0
 
 
@@ -38,6 +48,12 @@ def validate_case(case: dict, locale: str, source: str) -> None:
     )
     if any(x not in source for x in required):
         raise ValueError(f"missing joined core component: {profile}/{locale}")
+    if profile in ACADEMIC and any(command not in source
+                               for command in PRETEXTUAL_COMMANDS):
+        raise ValueError(f"missing academic pretextual module: {profile}/{locale}")
+    if profile not in ACADEMIC and any(command in source
+                                   for command in PRETEXTUAL_COMMANDS):
+        raise ValueError(f"inapplicable academic frontmatter: {profile}/{locale}")
     if profile == "scientific-article":
         if r"\ufcPrintArticleFrontMatter" not in source:
             raise ValueError(f"article frontmatter absent: {profile}/{locale}")
@@ -67,9 +83,26 @@ def check(out: Path) -> None:
             seen.add(key)
             tex = Path(c["source"]).read_text(encoding="utf-8")
             validate_case(c, locale, tex)
-            for source in c["support_sources"]:
-                if not Path(source).is_file():
-                    raise ValueError(f"unavailable summary input: {source}")
+            support = [Path(source) for source in c["support_sources"]]
+            if len(support) != (6 if c["profile"] in ACADEMIC else 2):
+                raise ValueError(f"unexpected pretextual support inputs: {key}")
+            for source in support:
+                if not source.is_file():
+                    raise ValueError(f"unavailable synthetic input: {source}")
+            if c["profile"] in ACADEMIC:
+                markers = {
+                    "ack": f"INTEGRATED-ACKNOWLEDGMENTS-{locale.upper()}",
+                    "errata": f"INTEGRATED-ERRATA-{locale.upper()}",
+                    "abbreviations": f"INTEGRATED-ABBREVIATION-{locale.upper()}",
+                    "symbols": f"INTEGRATED-SYMBOL-{locale.upper()}",
+                }
+                for suffix, marker in markers.items():
+                    source = next((
+                        p for p in support
+                        if p.name.endswith(f"-{suffix}.tex")
+                    ), None)
+                    if source is None or marker not in source.read_text(encoding="utf-8"):
+                        raise ValueError(f"missing populated author content: {key}/{suffix}")
             TOTAL += 1
     if TOTAL != 28 or len(seen) != 28:
         raise ValueError(f"expected 28 distinct generated sources, got {TOTAL}")
@@ -88,6 +121,11 @@ def check(out: Path) -> None:
         "missing_list_entry": sample.replace(r"\ufcListEntry{", "", 1),
         "missing_api_language": sample.replace(r"\ufcDocumentLanguage", "", 1),
         "missing_api_type": sample.replace(r"\ufcDocumentType", "", 1),
+        **{
+            "missing_pretextual_" + str(index):
+                sample.replace(command, "", 1)
+            for index, command in enumerate(PRETEXTUAL_COMMANDS)
+        },
     }
     for label, mutant in damaged.items():
         if mutant == sample:
@@ -107,8 +145,8 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="abntexto-i18n-28-preflight-") as tmp:
         check(Path(tmp))
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 bibliography=5kinds "
-          "components=present negatives=PASS")
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 "
+          "bibliography=5kinds components=present negatives=PASS")
 
 
 if __name__ == "__main__":
