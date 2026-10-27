@@ -61,6 +61,55 @@ def fold(text: str) -> str:
     return re.sub(r"-(?=\s+\w)\s+", "-", normalized)
 
 
+def check_dedicated_list_pages(txt: str, locale: str) -> dict:
+    """Require the entry on its own dedicated-list page and later in the body.
+
+    Aggregate illustrations also contain chart/quadro entries, so counting
+    occurrences across the entire PDF gives false positives when the
+    dedicated list is accidentally empty.
+    """
+    pages = [page for page in txt.split("\f") if page.strip()]
+    if len(pages) < 3:
+        raise ValueError(f"PDF page boundaries missing for {locale}")
+    expected = (
+        ("charts", PRETEXTUAL_HEADINGS[locale][4], f"integrated-chart-{locale}"),
+        ("text-tables", PRETEXTUAL_HEADINGS[locale][3],
+         f"integrated-texttable-{locale}"),
+    )
+    evidence = {}
+    for key, heading, token in expected:
+        title = fold(heading)
+        heading_pages = [
+            index for index, page in enumerate(pages)
+            if any(fold(line) == title for line in page.splitlines())
+        ]
+        if len(heading_pages) != 1:
+            raise ValueError(
+                f"expected one dedicated list heading for {locale}/{key}: "
+                f"pages={[index + 1 for index in heading_pages]}"
+            )
+        page_index = heading_pages[0]
+        marker = fold(token)
+        if marker not in fold(pages[page_index]):
+            raise ValueError(
+                f"entry missing from dedicated list page: {locale}/{key}/"
+                f"{page_index + 1}"
+            )
+        body_pages = [
+            index + 1 for index in range(page_index + 1, len(pages))
+            if marker in fold(pages[index])
+        ]
+        if not body_pages:
+            raise ValueError(
+                f"caption missing after dedicated list: {locale}/{key}"
+            )
+        evidence[key] = {
+            "dedicated_list_page": page_index + 1,
+            "body_caption_page": body_pages[0],
+        }
+    return evidence
+
+
 def command(args: list[str], logfile: Path, *, cwd: Path = ROOT) -> None:
     with logfile.open("w", encoding="utf-8") as out:
         process = subprocess.run(args, cwd=cwd, stdout=out, stderr=subprocess.STDOUT,
@@ -129,12 +178,9 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
     if missing:
         raise ValueError(f"missing PDF text for {profile}/{locale}: {missing}, sample={visible[:750]}")
     if profile in ACADEMIC:
-        # The chart and text-table entry must occur in the list AND in its
-        # actual body caption. The heading alone is insufficient evidence.
-        for prefix in ("integrated-chart", "integrated-texttable"):
-            marker = fold(f"{prefix}-{locale}")
-            if visible.count(marker) < 2:
-                raise ValueError(f"unpopulated translated list: {profile}/{locale}/{prefix}")
+        # Check the actual dedicated list pages, not the aggregate
+        # illustrations list (which also repeats chart/text-table markers).
+        list_pages = check_dedicated_list_pages(txt, locale)
         # Exclude translated headings of unrelated languages while allowing
         # genuine shared words such as "Errata" or PT/ES "Lista de Gráficos".
         own = {fold(x) for x in PRETEXTUAL_HEADINGS[locale]}
@@ -179,6 +225,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
     return {"positive_tokens": len(expected), "missing": [],
             "pretextual_headings_checked": 7 if profile in ACADEMIC else 0,
             "populated_lists_checked": 2 if profile in ACADEMIC else 0,
+            "dedicated_list_pages": list_pages if profile in ACADEMIC else {},
             "negative_locale_labels": len(forbidden[locale]),
             "negative_policy": "targeted class-owned labels only; PT companion and authored data allowed"}
 
