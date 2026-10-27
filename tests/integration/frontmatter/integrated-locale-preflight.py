@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import runpy
 from pathlib import Path
 import subprocess
 import sys
@@ -138,14 +139,63 @@ def check(out: Path) -> None:
             raise ValueError(f"negative mutation was accepted: {label}")
 
 
+def check_list_page_mutations() -> None:
+    """Test the real PDF-list predicate against aggregate-list false positives."""
+    namespace = runpy.run_path(str(RUNNER), run_name="i18n_preflight_runner")
+    predicate = namespace["check_dedicated_list_pages"]
+    pages = [
+        # Inherited illustration list duplicates entries from both objects.
+        "LIST OF ILLUSTRATIONS\nINTEGRATED-CHART-EN\nINTEGRATED-TEXTTABLE-EN",
+        "LIST OF TEXT TABLES\nINTEGRATED-TEXTTABLE-EN",
+        "LIST OF CHARTS\nINTEGRATED-CHART-EN",
+        "INTEGRATED-SECTION-EN\nINTEGRATED-CHART-EN\nINTEGRATED-TEXTTABLE-EN",
+    ]
+    good = "\f".join(pages) + "\f"
+    result = predicate(good, "en")
+    if set(result) != {"charts", "text-tables"}:
+        raise ValueError("positive dedicated list-page predicate failed")
+    variants = {
+        "aggregate_only_chart": (
+            "LIST OF CHARTS\nINTEGRATED-CHART-EN", "LIST OF CHARTS"
+        ),
+        "aggregate_only_text_table": (
+            "LIST OF TEXT TABLES\nINTEGRATED-TEXTTABLE-EN",
+            "LIST OF TEXT TABLES",
+        ),
+        "chart_body_missing": (
+            "INTEGRATED-SECTION-EN\nINTEGRATED-CHART-EN\n"
+            "INTEGRATED-TEXTTABLE-EN",
+            "INTEGRATED-SECTION-EN\nINTEGRATED-TEXTTABLE-EN",
+        ),
+        "text_table_body_missing": (
+            "INTEGRATED-SECTION-EN\nINTEGRATED-CHART-EN\n"
+            "INTEGRATED-TEXTTABLE-EN",
+            "INTEGRATED-SECTION-EN\nINTEGRATED-CHART-EN",
+        ),
+    }
+    for label, (before, after) in variants.items():
+        mutant = good.replace(before, after, 1)
+        if mutant == good:
+            raise ValueError(f"ineffective dedicated-list mutation: {label}")
+        try:
+            predicate(mutant, "en")
+        except ValueError:
+            pass
+        else:
+            raise ValueError(
+                f"dedicated list accepted false-positive aggregate: {label}"
+            )
+
+
 def main() -> None:
     for path in (GENERATOR, RUNNER, Path(__file__)):
         subprocess.run([sys.executable, "-m", "py_compile", str(path)],
                        cwd=ROOT, check=True, capture_output=True, text=True)
     with tempfile.TemporaryDirectory(prefix="abntexto-i18n-28-preflight-") as tmp:
         check(Path(tmp))
+    check_list_page_mutations()
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 "
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 dedicated_list_mutations=PASS "
           "bibliography=5kinds components=present negatives=PASS")
 
 
