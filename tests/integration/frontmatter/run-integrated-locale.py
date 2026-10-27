@@ -81,7 +81,7 @@ def check_dedicated_list_pages(txt: str, locale: str) -> dict:
         title = fold(heading)
         heading_pages = [
             index for index, page in enumerate(pages)
-            if any(fold(line) == title for line in page.splitlines())
+            if any(fold(line).strip() == title for line in page.splitlines())
         ]
         if len(heading_pages) != 1:
             raise ValueError(
