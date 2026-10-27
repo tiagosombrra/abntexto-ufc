@@ -146,8 +146,8 @@ def check_list_page_mutations() -> None:
     pages = [
         # Inherited illustration list duplicates entries from both objects.
         "LIST OF ILLUSTRATIONS\nINTEGRATED-CHART-EN\nINTEGRATED-TEXTTABLE-EN",
-        "LIST OF TEXT TABLES\nINTEGRATED-TEXTTABLE-EN",
-        "LIST OF CHARTS\nINTEGRATED-CHART-EN",
+        "             LIST OF TEXT TABLES\nINTEGRATED-TEXTTABLE-EN",
+        "                 LIST OF CHARTS\nINTEGRATED-CHART-EN",
         "INTEGRATED-SECTION-EN\nINTEGRATED-CHART-EN\nINTEGRATED-TEXTTABLE-EN",
     ]
     good = "\f".join(pages) + "\f"
@@ -156,10 +156,10 @@ def check_list_page_mutations() -> None:
         raise ValueError("positive dedicated list-page predicate failed")
     variants = {
         "aggregate_only_chart": (
-            "LIST OF CHARTS\nINTEGRATED-CHART-EN", "LIST OF CHARTS"
+            "                 LIST OF CHARTS\nINTEGRATED-CHART-EN", "LIST OF CHARTS"
         ),
         "aggregate_only_text_table": (
-            "LIST OF TEXT TABLES\nINTEGRATED-TEXTTABLE-EN",
+            "             LIST OF TEXT TABLES\nINTEGRATED-TEXTTABLE-EN",
             "LIST OF TEXT TABLES",
         ),
         "chart_body_missing": (
