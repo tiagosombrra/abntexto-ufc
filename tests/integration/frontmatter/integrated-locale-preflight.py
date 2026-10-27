@@ -22,6 +22,10 @@ ACADEMIC = {
     "undergraduate-capstone", "specialization-capstone",
     "masters-thesis", "doctoral-thesis",
 }
+PROJECTS = {"research-project", "anonymized-research-project"}
+DUPLEX_PROFILES = {
+    "masters-thesis", "doctoral-thesis", "anonymized-research-project",
+}
 PRETEXTUAL_COMMANDS = (
     r"\ufcPrintAcknowledgments{", r"\ufcPrintErrata{",
     r"\ufcPrintListOfIllustrations", r"\ufcPrintListOfTextTables",
@@ -49,6 +53,36 @@ def validate_case(case: dict, locale: str, source: str) -> None:
     )
     if any(x not in source for x in required):
         raise ValueError(f"missing joined core component: {profile}/{locale}")
+    print_mode = "double-sided" if profile in DUPLEX_PROFILES else "single-sided"
+    routing_commands = (
+        ("ufcIfProjectTF", "PROJECT"),
+        ("ufcIfAnonymizedProjectTF", "ANON"),
+    )
+    required_routing = (
+        f"print-mode={print_mode}",
+        "title={Integrated Multilingual Document}",
+        r"\typeout{INTEGRATED-I18N-API-PRINT-MODE=\ufcPrintMode}",
+        r"\typeout{INTEGRATED-I18N-API-META-TITLE=\ufcMeta{title}}",
+        *(
+            "\\" + command + "{INTEGRATED-" + label
+            + "-TRUE-" + locale.upper() + ". "
+            for command, label in routing_commands
+        ),
+        *(
+            "}{INTEGRATED-" + label + "-FALSE-" + locale.upper() + ". "
+            for _, label in routing_commands
+        ),
+        *(
+            r"\typeout{INTEGRATED-I18N-" + label + "=TRUE}"
+            for _, label in routing_commands
+        ),
+        *(
+            r"\typeout{INTEGRATED-I18N-" + label + "=FALSE}"
+            for _, label in routing_commands
+        ),
+    )
+    if any(value not in source for value in required_routing):
+        raise ValueError(f"missing or incorrect public routing source: {profile}/{locale}")
     if profile in ACADEMIC and any(command not in source
                                for command in PRETEXTUAL_COMMANDS):
         raise ValueError(f"missing academic pretextual module: {profile}/{locale}")
@@ -122,11 +156,38 @@ def check(out: Path) -> None:
         "missing_list_entry": sample.replace(r"\ufcListEntry{", "", 1),
         "missing_api_language": sample.replace(r"\ufcDocumentLanguage", "", 1),
         "missing_api_type": sample.replace(r"\ufcDocumentType", "", 1),
+        "missing_api_print_mode": sample.replace(r"\ufcPrintMode", "", 1),
+        "missing_api_meta_title": sample.replace(r"\ufcMeta{title}", "", 1),
+        "alter_author_title": sample.replace(
+            "title={Integrated Multilingual Document}",
+            "title={Changed Title}", 1),
+        "wrong_print_mode": sample.replace(
+            "print-mode=double-sided", "print-mode=single-sided", 1),
+        "missing_project_route": sample.replace(
+            r"\ufcIfProjectTF{INTEGRATED-PROJECT-TRUE-EN.", "", 1),
+        "missing_anon_route": sample.replace(
+            r"\ufcIfAnonymizedProjectTF{INTEGRATED-ANON-TRUE-EN.", "", 1),
+        "inverted_project_true_arm": sample.replace(
+            "INTEGRATED-PROJECT-TRUE-EN.",
+            "INTEGRATED-PROJECT-FALSE-EN.", 1),
+        "inverted_anon_true_arm": sample.replace(
+            "INTEGRATED-ANON-TRUE-EN.",
+            "INTEGRATED-ANON-FALSE-EN.", 1),
         **{
             "missing_pretextual_" + str(index):
                 sample.replace(command, "", 1)
             for index, command in enumerate(PRETEXTUAL_COMMANDS)
         },
+    }
+    # Cover the distinguishing anonymized profile as well as ordinary
+    # academic cases so a normal project cannot masquerade as anonymous.
+    anonymous = (out / "en" / "integrated-anonymized-research-project-en.tex").read_text()
+    anon_fixture = {"profile": "anonymized-research-project", "locale": "en"}
+    anon_damaged = {
+        "anonymized_wrong_print_mode": anonymous.replace(
+            "print-mode=double-sided", "print-mode=single-sided", 1),
+        "anonymized_removed_conditional": anonymous.replace(
+            r"\ufcIfAnonymizedProjectTF{INTEGRATED-ANON-TRUE-EN.", "", 1),
     }
     for label, mutant in damaged.items():
         if mutant == sample:
@@ -137,6 +198,15 @@ def check(out: Path) -> None:
             pass
         else:
             raise ValueError(f"negative mutation was accepted: {label}")
+    for label, mutant in anon_damaged.items():
+        if mutant == anonymous:
+            raise ValueError(f"ineffective anonymized mutation: {label}")
+        try:
+            validate_case(anon_fixture, "en", mutant)
+        except ValueError:
+            pass
+        else:
+            raise ValueError(f"anonymized mutation accepted: {label}")
 
 
 def check_list_page_mutations() -> None:
@@ -195,7 +265,7 @@ def main() -> None:
         check(Path(tmp))
     check_list_page_mutations()
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 dedicated_list_mutations=PASS "
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS dedicated_list_mutations=PASS "
           "bibliography=5kinds components=present negatives=PASS")
 
 
