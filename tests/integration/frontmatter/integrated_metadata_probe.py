@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real-TeX, four-locale round-trip for authored/default public metadata.
+r"""Real-TeX, four-locale round-trip for authored/default public metadata.
 
 The 53 authored/default key identifiers are stable API names, not strings
 the class is supposed to translate. At the very end of each integrated
@@ -43,7 +43,7 @@ def marker(key: str) -> str:
 
 
 def source_lines() -> list[str]:
-    """A post-document-content probe: actual \ufcsetup and \ufcMeta commands."""
+    r"""A post-document-content probe: actual \ufcsetup and \ufcMeta commands."""
     lines = [r"\ufcsetup{"]
     for i, key in enumerate(METADATA_KEYS):
         comma = "," if i + 1 < len(METADATA_KEYS) else ""
