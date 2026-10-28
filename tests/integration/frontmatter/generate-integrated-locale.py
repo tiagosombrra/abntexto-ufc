@@ -27,6 +27,14 @@ ACADEMIC_PROFILES = {
     "undergraduate-capstone", "specialization-capstone",
     "masters-thesis", "doctoral-thesis",
 }
+# Progressively exercise examiner slots 3..6 and compact-signature spacing
+# at four, five, six and seven real committee signatures, respectively.
+APPROVAL_LAST_EXAMINER = {
+    "undergraduate-capstone": 3,
+    "specialization-capstone": 4,
+    "masters-thesis": 5,
+    "doctoral-thesis": 6,
+}
 # Every academic profile is one of four flag combinations in each locale.
 # The two projects also exercise metadata; the anonymized one must hide it.
 ROLE_GENDERS = {
@@ -104,8 +112,7 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         "coadvisor-feminine-label": (
             "true" if ROLE_GENDERS[profile][1] else "false"
         ),
-        "examiner-2": "{Integrated Examiner}",
-        "undergraduate-program": "{Computing}",
+         "undergraduate-program": "{Computing}",
         "undergraduate-degree": "{Bachelor}",
         "specialization-program": "{Specialization in Computing}",
         "masters-graduate-program": "{Graduate Program in Computing}",
@@ -118,6 +125,13 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         "project-identifier": "{SYNTHETIC-ANON-001}",
         "submission-entity": "{Universidade Federal do Ceará}",
     }
+    if profile in ACADEMIC_PROFILES:
+        for slot in range(2, APPROVAL_LAST_EXAMINER[profile] + 1):
+            options[f"examiner-{slot}"] = f"{{Integrated Examiner {slot}}}"
+            options[f"examiner-{slot}-institution"] = f"{{Integrated Institution {slot}}}"
+            # Metadata-only unit fields are intentionally not displayed on the
+            # approval page; PDF assertions must prove that they stay hidden.
+            options[f"examiner-{slot}-unit"] = f"{{Integrated Hidden Unit {slot}}}"
     # Only the doctoral profile exercises the optional glossary/index paths
     # (4 real language tests); remaining profiles do not invent requirements.
     if profile == "doctoral-thesis":

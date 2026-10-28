@@ -26,6 +26,12 @@ PROJECTS = {"research-project", "anonymized-research-project"}
 DUPLEX_PROFILES = {
     "masters-thesis", "doctoral-thesis", "anonymized-research-project",
 }
+APPROVAL_LAST_EXAMINER = {
+    "undergraduate-capstone": 3,
+    "specialization-capstone": 4,
+    "masters-thesis": 5,
+    "doctoral-thesis": 6,
+}
 ROLE_GENDERS = {
     "undergraduate-capstone": (False, False),
     "specialization-capstone": (True, False),
@@ -103,6 +109,23 @@ def validate_case(case: dict, locale: str, source: str) -> None:
     setup_lines = {line.strip().rstrip(",") for line in source.splitlines()}
     if any(option not in setup_lines for option in role_options):
         raise ValueError(f"missing or wrong gender/role fixture: {profile}/{locale}")
+    if profile in ACADEMIC:
+        last = APPROVAL_LAST_EXAMINER[profile]
+        for slot in range(2, last + 1):
+            signatures = (
+                f"examiner-{slot}={{Integrated Examiner {slot}}}",
+                f"examiner-{slot}-institution={{Integrated Institution {slot}}}",
+                f"examiner-{slot}-unit={{Integrated Hidden Unit {slot}}}",
+            )
+            if any(value not in setup_lines for value in signatures):
+                raise ValueError(f"missing or incorrect committee metadata: {profile}/{locale}/{slot}")
+        for slot in range(last + 1, 7):
+            if any(line.startswith(f"examiner-{slot}=")
+                   or line.startswith(f"examiner-{slot}-")
+                   for line in setup_lines):
+                raise ValueError(f"unexpected extra examiner: {profile}/{locale}/{slot}")
+    elif any(line.startswith("examiner-") for line in setup_lines):
+        raise ValueError(f"inapplicable committee metadata: {profile}/{locale}")
     if profile in ACADEMIC and any(command not in source
                                for command in PRETEXTUAL_COMMANDS):
         raise ValueError(f"missing academic pretextual module: {profile}/{locale}")
@@ -184,6 +207,14 @@ def check(out: Path) -> None:
             "advisor-feminine-label=true", "advisor-feminine-label=false", 1),
         "wrong_coadvisor_gender": sample.replace(
             "coadvisor-feminine-label=true", "coadvisor-feminine-label=false", 1),
+        "missing_examiner_6": sample.replace(
+            "examiner-6={Integrated Examiner 6}", "examiner-6={}", 1),
+        "missing_examiner_6_institution": sample.replace(
+            "examiner-6-institution={Integrated Institution 6}",
+            "examiner-6-institution={}", 1),
+        "missing_examiner_6_unit": sample.replace(
+            "examiner-6-unit={Integrated Hidden Unit 6}",
+            "examiner-6-unit={}", 1),
         "alter_author_title": sample.replace(
             "title={Integrated Multilingual Document}",
             "title={Changed Title}", 1),
@@ -364,6 +395,65 @@ def check_role_page_mutations() -> None:
                 raise ValueError(f"anonymous leak mutation passed: {kind}/{locale}")
 
 
+def check_committee_page_mutations() -> None:
+    """Verify the real PDF approval predicate rejects missing/overflow labels."""
+    run = runpy.run_path(str(RUNNER), run_name="i18n_committee_preflight_runner")
+    predicate = run["check_committee_approval_page"]
+    headings = run["COMMITTEE_HEADINGS"]
+    maxima = run["APPROVAL_LAST_EXAMINER"]
+    for locale in LOCALES:
+        for profile in ACADEMIC:
+            last = maxima[profile]
+            # Match the real Babel PDF typography: French ASCII apostrophe
+            # in the source heading is extracted as U+2019 RIGHT SINGLE QUOTE.
+            rendered_heading = headings[locale].replace("'", "’")
+            lines = [rendered_heading]
+            for slot in range(2, last + 1):
+                lines.extend((f"Integrated Examiner {slot}", f"Integrated Institution {slot}"))
+            approval = "\n".join(lines)
+            good = "COVER\fTITLE\f" + approval + "\fMANUSCRIPT BODY\f"
+            positive = predicate(good, profile, locale)
+            if positive.get("last_examiner") != last or not positive.get("single_page"):
+                raise ValueError(f"committee positive control failed: {profile}/{locale}")
+            mutants = {
+                "wrong_heading": good.replace(rendered_heading, "WRONG COMMITTEE", 1),
+                "missing_member": good.replace(f"Integrated Examiner {last}", "", 1),
+                "missing_institution": good.replace(f"Integrated Institution {last}", "", 1),
+                "split_signature_across_pages": good.replace(
+                    f"Integrated Institution {last}", "\fIntegrated Institution " + str(last), 1),
+                "metadata_unit_leak": good + f"Integrated Hidden Unit {last}",
+                "extraneous_member": good + "\fIntegrated Examiner 7\n",
+                "signature_elsewhere": good.replace(
+                    f"Integrated Examiner {last}", "", 1)
+                    + f"Integrated Examiner {last}",
+            }
+            for label, damaged in mutants.items():
+                if label == "extraneous_member":
+                    # Require an otherwise valid but unconfigured slot 6 to be absent
+                    # for all profiles with fewer than the maximum six examiners.
+                    if last == 6:
+                        continue
+                    damaged = good + f"Integrated Examiner {last + 1}"
+                if damaged == good:
+                    raise ValueError(f"ineffective committee mutation: {label}/{profile}/{locale}")
+                try:
+                    predicate(damaged, profile, locale)
+                except ValueError:
+                    pass
+                else:
+                    raise ValueError(f"committee PDF mutation passed: {label}/{profile}/{locale}")
+        if predicate("COVER\fTITLE\fMANUSCRIPT BODY\f", "scientific-article", locale)[
+            "applicability"] != "not-applicable":
+            raise ValueError(f"article committee applicability failed: {locale}")
+        try:
+            predicate("COVER\fTITLE\fIntegrated Examiner 2\f",
+                      "research-project", locale)
+        except ValueError:
+            pass
+        else:
+            raise ValueError(f"inapplicable project committee passed: {locale}")
+
+
 def main() -> None:
     for path in (GENERATOR, RUNNER, Path(__file__)):
         subprocess.run([sys.executable, "-m", "py_compile", str(path)],
@@ -372,8 +462,9 @@ def main() -> None:
         check(Path(tmp))
     check_list_page_mutations()
     check_role_page_mutations()
+    check_committee_page_mutations()
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS dedicated_list_mutations=PASS "
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS dedicated_list_mutations=PASS "
           "bibliography=5kinds components=present negatives=PASS")
 
 
