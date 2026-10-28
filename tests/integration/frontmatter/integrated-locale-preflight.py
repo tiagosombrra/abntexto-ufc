@@ -113,7 +113,12 @@ def validate_case(case: dict, locale: str, source: str) -> None:
     )
     # Match complete setup lines: "advisor-feminine-label=true" is a suffix
     # of "coadvisor-feminine-label=true" and substring matching admits mutants.
-    setup_lines = {line.strip().rstrip(",") for line in source.splitlines()}
+    # The final metadata round-trip block deliberately sets ALL authored
+    # keys, including examiner 2..6, after every typeset page. The academic
+    # approval-page rules apply only to the original preamble configuration.
+    # check_metadata_source() already validates the complete appended block.
+    original_setup = source.rsplit("\n\\ufcsetup{\n", 1)[0]
+    setup_lines = {line.strip().rstrip(",") for line in original_setup.splitlines()}
     if any(option not in setup_lines for option in role_options):
         raise ValueError(f"missing or wrong gender/role fixture: {profile}/{locale}")
     if profile in ACADEMIC:
