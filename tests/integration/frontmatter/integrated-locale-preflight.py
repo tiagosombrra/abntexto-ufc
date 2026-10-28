@@ -10,11 +10,8 @@ import sys
 import tempfile
 
 from integrated_metadata_probe import (
-    METADATA_KEYS, check_log as check_metadata_log,
     check_source as check_metadata_source,
     negative_controls as metadata_negative_controls,
-    expected_receipt as metadata_receipt,
-    marker as metadata_marker,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
