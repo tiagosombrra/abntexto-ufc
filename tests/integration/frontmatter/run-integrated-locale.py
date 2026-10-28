@@ -32,6 +32,18 @@ ACADEMIC = {
     "masters-thesis", "doctoral-thesis",
 }
 PROJECTS = {"research-project", "anonymized-research-project"}
+APPROVAL_LAST_EXAMINER = {
+    "undergraduate-capstone": 3,
+    "specialization-capstone": 4,
+    "masters-thesis": 5,
+    "doctoral-thesis": 6,
+}
+COMMITTEE_HEADINGS = {
+    "pt": "BANCA EXAMINADORA",
+    "en": "EXAMINING COMMITTEE",
+    "es": "TRIBUNAL EXAMINADOR",
+    "fr": "JURY D'EXAMEN",
+}
 DUPLEX_PROFILES = {
     "masters-thesis", "doctoral-thesis", "anonymized-research-project",
 }
@@ -137,6 +149,53 @@ def check_role_title_page(txt: str, profile: str, locale: str) -> dict:
                          "label": chosen, "person": names[idx]}
     return {"applicability": "title-page", "title_page": 2,
             "labels": selected, "author_values_preserved": True}
+
+
+def check_committee_approval_page(txt: str, profile: str, locale: str) -> dict:
+    """Require every configured signature on ONE actual approval page.
+
+    Merely finding an examiner's name anywhere in a PDF would allow false
+    positives on a cover, in the manuscript body or on an overflow page.
+    The source supplies distinct persons/institutions and intentionally
+    nonrendered academic-unit metadata.
+    """
+    pages = txt.split("\f")
+    if profile not in ACADEMIC:
+        if any(fold("Integrated Examiner " + str(slot)) in fold(txt)
+               for slot in range(2, 7)):
+            raise ValueError(f"nonacademic profile prints examiner: {profile}/{locale}")
+        return {"applicability": "not-applicable", "reason": "no approval page"}
+    heading = fold(COMMITTEE_HEADINGS[locale])
+    matches = [
+        i for i, page in enumerate(pages)
+        if any(fold(line).strip() == heading for line in page.splitlines())
+    ]
+    if len(matches) != 1 or matches[0] <= 1:
+        raise ValueError(f"wrong or duplicated approval heading: {profile}/{locale}: {matches}")
+    page_index = matches[0]
+    approval = fold(pages[page_index])
+    expected_last = APPROVAL_LAST_EXAMINER[profile]
+    people = {}
+    for slot in range(2, expected_last + 1):
+        person = f"Integrated Examiner {slot}"
+        institution = f"Integrated Institution {slot}"
+        for token in (person, institution):
+            if fold(token) not in approval:
+                raise ValueError(f"signature incomplete on approval page: {profile}/{locale}/{token}")
+            if any(fold(token) in fold(page) for idx, page in enumerate(pages)
+                   if idx != page_index):
+                raise ValueError(f"signature appears outside approval page: {profile}/{locale}/{token}")
+        people[str(slot)] = {"person": person, "institution": institution}
+    for slot in range(expected_last + 1, 7):
+        if any(fold(f"Integrated {kind} {slot}") in fold(txt)
+               for kind in ("Examiner", "Institution")):
+            raise ValueError(f"unexpected additional committee slot: {profile}/{locale}/{slot}")
+    for slot in range(2, 7):
+        if fold(f"Integrated Hidden Unit {slot}") in fold(txt):
+            raise ValueError(f"metadata-only unit leaked into PDF: {profile}/{locale}/{slot}")
+    return {"applicability": "approval-page", "page": page_index + 1,
+            "last_examiner": expected_last, "verified_slots": people,
+            "single_page": True, "academic_units_hidden": True}
 
 
 def check_dedicated_list_pages(txt: str, locale: str) -> dict:
@@ -251,6 +310,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             f"integrated-texttable-{locale}",
         ]
     role_evidence = check_role_title_page(txt, profile, locale)
+    committee_evidence = check_committee_approval_page(txt, profile, locale)
     routes = expected_public_routes(profile)
     for label, outcome in (
         ("project", routes["project"]), ("anon", routes["anon"]),
@@ -317,6 +377,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             "dedicated_list_pages": list_pages if profile in ACADEMIC else {},
             "public_branch_evidence": routes,
             "role_title_page": role_evidence,
+            "examining_committee": committee_evidence,
             "negative_locale_labels": len(forbidden[locale]),
             "negative_policy": "targeted class-owned labels only; PT companion and authored data allowed"}
 
