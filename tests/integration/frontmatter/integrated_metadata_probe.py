@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 r"""Real-TeX, four-locale round-trip for authored/default public metadata.
 
-The 53 authored/default key identifiers are stable API names, not strings
+The 52 metadata-backed authored/default key identifiers are stable API names, not strings
 the class is supposed to translate. At the very end of each integrated
 manuscript, reconfigure them with distinct synthetic author values, expand
 the actual public \ufcMeta{key} command into the TeX log, and verify that the
@@ -24,10 +24,14 @@ def metadata_keys() -> tuple[str, ...]:
         key for key, entry in ledger["setup_keys"].items()
         if entry["origin"] in ORIGINS
     ))
-    if len(result) != 53 or sum(
+    if len(result) != 52 or sum(
             entry["origin"] == "user_supplied_value"
-            for entry in ledger["setup_keys"].values()) != 49:
+            for entry in ledger["setup_keys"].values()) != 48:
         raise ValueError("public metadata inventory changed; re-audit its boundary")
+    assets = [key for key, entry in ledger["setup_keys"].items()
+              if entry["origin"] == "external_asset_path"]
+    if assets != ["coat-of-arms-file"]:
+        raise ValueError("non-metadata asset path mapping requires a separate functional proof")
     if len(set(result)) != len(result):
         raise ValueError("duplicate metadata key")
     return result
@@ -83,9 +87,9 @@ def negative_controls() -> int:
     """Exercise the same production predicates with effective mutations."""
     block = "\n".join(source_lines()) + "\n"
     receipt_log = "\n".join(expected_receipt(k) for k in METADATA_KEYS)
-    if check_source(block + r"\end{document}" + "\n") != 53:
+    if check_source(block + r"\end{document}" + "\n") != 52:
         raise ValueError("metadata source positive control")
-    if check_log(receipt_log) != 53:
+    if check_log(receipt_log) != 52:
         raise ValueError("metadata log positive control")
     controls = 0
     for key in (METADATA_KEYS[0], METADATA_KEYS[len(METADATA_KEYS) // 2],
