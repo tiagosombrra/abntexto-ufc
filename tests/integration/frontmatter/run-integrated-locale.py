@@ -93,7 +93,10 @@ def sha(path: Path) -> str:
 
 
 def fold(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text.casefold())
+    # TeX/Babel PDF extraction can use typographic apostrophes for a source
+    # ASCII quote (e.g. French JURY D'EXAMEN renders JURY D’EXAMEN).
+    # Normalize punctuation before exact heading comparisons.
+    text = unicodedata.normalize("NFKD", text.casefold().replace("’", "'").replace("ʼ", "'"))
     normalized = re.sub(r"\s+", " ", "".join(
         c for c in text if not unicodedata.combining(c)))
     # pdfToText may wrap a hyphen-separated synthetic marker after the
