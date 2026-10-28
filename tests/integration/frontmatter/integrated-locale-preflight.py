@@ -9,6 +9,14 @@ import subprocess
 import sys
 import tempfile
 
+from integrated_metadata_probe import (
+    METADATA_KEYS, check_log as check_metadata_log,
+    check_source as check_metadata_source,
+    negative_controls as metadata_negative_controls,
+    expected_receipt as metadata_receipt,
+    marker as metadata_marker,
+)
+
 ROOT = Path(__file__).resolve().parents[3]
 GENERATOR = ROOT / "tests/integration/frontmatter/generate-integrated-locale.py"
 RUNNER = ROOT / "tests/integration/frontmatter/run-integrated-locale.py"
@@ -53,6 +61,8 @@ TOTAL = 0
 def validate_case(case: dict, locale: str, source: str) -> None:
     """Validate the same source invariants for real cases and mutations."""
     profile = case["profile"]
+    if check_metadata_source(source) != 53:
+        raise ValueError(f"authored metadata probe missing: {profile}/{locale}")
     if (case["locale"] != locale or
             rf"\DocumentMetadata{{lang={LOCALES[locale]}," not in source or
             f"document-language={locale}" not in source):
@@ -455,7 +465,8 @@ def check_committee_page_mutations() -> None:
 
 
 def main() -> None:
-    for path in (GENERATOR, RUNNER, Path(__file__)):
+    for path in (GENERATOR, RUNNER, Path(__file__),
+                 ROOT / "tests/integration/frontmatter/integrated_metadata_probe.py"):
         subprocess.run([sys.executable, "-m", "py_compile", str(path)],
                        cwd=ROOT, check=True, capture_output=True, text=True)
     with tempfile.TemporaryDirectory(prefix="abntexto-i18n-28-preflight-") as tmp:
@@ -463,8 +474,11 @@ def main() -> None:
     check_list_page_mutations()
     check_role_page_mutations()
     check_committee_page_mutations()
+    metadata_mutations = metadata_negative_controls()
+    if metadata_mutations != 8:
+        raise ValueError(f"incorrect metadata negative coverage: {metadata_mutations}")
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS dedicated_list_mutations=PASS "
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS metadata_keys=53 metadata_mutations=PASS dedicated_list_mutations=PASS "
           "bibliography=5kinds components=present negatives=PASS")
 
 
