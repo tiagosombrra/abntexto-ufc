@@ -35,6 +35,23 @@ PROJECTS = {"research-project", "anonymized-research-project"}
 DUPLEX_PROFILES = {
     "masters-thesis", "doctoral-thesis", "anonymized-research-project",
 }
+ROLE_GENDERS = {
+    "undergraduate-capstone": (False, False),
+    "specialization-capstone": (True, False),
+    "masters-thesis": (False, True),
+    "doctoral-thesis": (True, True),
+    "research-project": (True, True),
+    "anonymized-research-project": (True, True),
+    "scientific-article": (False, False),
+}
+# The English role wording is intentionally gender-neutral, not a missing translation.
+ROLE_LABELS = {
+    "pt": (("Orientador", "Orientadora"), ("Coorientador", "Coorientadora")),
+    "en": (("Advisor", "Advisor"), ("Co-advisor", "Co-advisor")),
+    "es": (("Director", "Directora"), ("Codirector", "Codirectora")),
+    "fr": (("Directeur de recherche", "Directrice de recherche"),
+           ("Codirecteur de recherche", "Codirectrice de recherche")),
+}
 
 
 def expected_public_routes(profile: str) -> dict[str, str]:
@@ -71,6 +88,55 @@ def fold(text: str) -> str:
     # hyphen: "INTEGRATED- OBJECT- EN". Rejoin only whitespace following
     # a hyphen, preserving the actual alphanumeric marker and its hyphens.
     return re.sub(r"-(?=\s+\w)\s+", "-", normalized)
+
+
+def check_role_title_page(txt: str, profile: str, locale: str) -> dict:
+    """Check class-owned labels adjacent to synthetic metadata on a real title page.
+
+    The examining committee can repeat an advisor name, so inspecting the
+    entire PDF would not prove a role label or anonymization on the title page.
+    """
+    if profile == "scientific-article":
+        return {"applicability": "not-applicable", "reason": "no title page"}
+    pages = txt.split("\f")
+    if len(pages) < 2 or fold("Integrated Multilingual Document") not in fold(pages[1]):
+        raise ValueError(f"missing expected second title page: {profile}/{locale}")
+    title = fold(pages[1])
+    anonymized = profile == "anonymized-research-project"
+    genders = ROLE_GENDERS[profile]
+    names = ("Integrated Advisor", "Integrated Coadvisor")
+    labels = ROLE_LABELS[locale]
+    if anonymized:
+        # Anonymous PDFs cannot disclose either name, anywhere, even though
+        # both were supplied in the fixture metadata.
+        body = fold(txt)
+        for name in names:
+            if fold(name) in body:
+                raise ValueError(f"anonymized PDF leaks {name}: {profile}/{locale}")
+        for choices in labels:
+            for label in set(choices):
+                if re.search(r"(?<![\w-])" + re.escape(fold(label)) + r"\s*:", title):
+                    raise ValueError(f"anonymized title page leaks role label: {label}/{locale}")
+        return {"applicability": "anonymous", "names_redacted": True,
+                "role_labels_redacted": True, "title_page": 2}
+    # A hyphen is not a regex word character: (?<!\\w) accepts "Advisor"
+    # as the suffix of "Co-advisor" in English. Reject that role confusion.
+    selected = {}
+    for idx, key in enumerate(("advisor", "coadvisor")):
+        chosen = labels[idx][int(genders[idx])]
+        other = labels[idx][1 - int(genders[idx])]
+        value = fold(names[idx])
+        expression = r"(?<![\w-])" + re.escape(fold(chosen)) + r"\s*:\s*" + re.escape(value) + r"(?=[\s\.])"
+        if not re.search(expression, title):
+            raise ValueError(f"missing correct {key} role on title page: {profile}/{locale}/{chosen}")
+        if fold(other) != fold(chosen):
+            wrong = r"(?<![\w-])" + re.escape(fold(other)) + r"\s*:\s*" + re.escape(value) + r"(?=[\s\.])"
+            if re.search(wrong, title):
+                raise ValueError(f"wrong-gender {key} label: {profile}/{locale}/{other}")
+        selected[key] = {"gender": "feminine" if genders[idx] else "masculine",
+                         "label": chosen, "person": names[idx]}
+    return {"applicability": "title-page", "title_page": 2,
+            "labels": selected, "author_values_preserved": True}
 
 
 def check_dedicated_list_pages(txt: str, locale: str) -> dict:
@@ -184,6 +250,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             f"integrated-chart-{locale}",
             f"integrated-texttable-{locale}",
         ]
+    role_evidence = check_role_title_page(txt, profile, locale)
     routes = expected_public_routes(profile)
     for label, outcome in (
         ("project", routes["project"]), ("anon", routes["anon"]),
@@ -249,6 +316,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             "populated_lists_checked": 2 if profile in ACADEMIC else 0,
             "dedicated_list_pages": list_pages if profile in ACADEMIC else {},
             "public_branch_evidence": routes,
+            "role_title_page": role_evidence,
             "negative_locale_labels": len(forbidden[locale]),
             "negative_policy": "targeted class-owned labels only; PT companion and authored data allowed"}
 

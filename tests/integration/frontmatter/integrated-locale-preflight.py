@@ -26,6 +26,15 @@ PROJECTS = {"research-project", "anonymized-research-project"}
 DUPLEX_PROFILES = {
     "masters-thesis", "doctoral-thesis", "anonymized-research-project",
 }
+ROLE_GENDERS = {
+    "undergraduate-capstone": (False, False),
+    "specialization-capstone": (True, False),
+    "masters-thesis": (False, True),
+    "doctoral-thesis": (True, True),
+    "research-project": (True, True),
+    "anonymized-research-project": (True, True),
+    "scientific-article": (False, False),
+}
 PRETEXTUAL_COMMANDS = (
     r"\ufcPrintAcknowledgments{", r"\ufcPrintErrata{",
     r"\ufcPrintListOfIllustrations", r"\ufcPrintListOfTextTables",
@@ -83,6 +92,17 @@ def validate_case(case: dict, locale: str, source: str) -> None:
     )
     if any(value not in source for value in required_routing):
         raise ValueError(f"missing or incorrect public routing source: {profile}/{locale}")
+    role_options = (
+        "advisor={Integrated Advisor}",
+        "coadvisor={Integrated Coadvisor}",
+        "advisor-feminine-label=" + ("true" if ROLE_GENDERS[profile][0] else "false"),
+        "coadvisor-feminine-label=" + ("true" if ROLE_GENDERS[profile][1] else "false"),
+    )
+    # Match complete setup lines: "advisor-feminine-label=true" is a suffix
+    # of "coadvisor-feminine-label=true" and substring matching admits mutants.
+    setup_lines = {line.strip().rstrip(",") for line in source.splitlines()}
+    if any(option not in setup_lines for option in role_options):
+        raise ValueError(f"missing or wrong gender/role fixture: {profile}/{locale}")
     if profile in ACADEMIC and any(command not in source
                                for command in PRETEXTUAL_COMMANDS):
         raise ValueError(f"missing academic pretextual module: {profile}/{locale}")
@@ -158,6 +178,12 @@ def check(out: Path) -> None:
         "missing_api_type": sample.replace(r"\ufcDocumentType", "", 1),
         "missing_api_print_mode": sample.replace(r"\ufcPrintMode", "", 1),
         "missing_api_meta_title": sample.replace(r"\ufcMeta{title}", "", 1),
+        "missing_coadvisor": sample.replace(
+            "coadvisor={Integrated Coadvisor}", "", 1),
+        "wrong_advisor_gender": sample.replace(
+            "advisor-feminine-label=true", "advisor-feminine-label=false", 1),
+        "wrong_coadvisor_gender": sample.replace(
+            "coadvisor-feminine-label=true", "coadvisor-feminine-label=false", 1),
         "alter_author_title": sample.replace(
             "title={Integrated Multilingual Document}",
             "title={Changed Title}", 1),
@@ -188,6 +214,14 @@ def check(out: Path) -> None:
             "print-mode=double-sided", "print-mode=single-sided", 1),
         "anonymized_removed_conditional": anonymous.replace(
             r"\ufcIfAnonymizedProjectTF{INTEGRATED-ANON-TRUE-EN.", "", 1),
+        "anonymized_missing_advisor": anonymous.replace(
+            "advisor={Integrated Advisor}", "advisor={}", 1),
+        "anonymized_missing_coadvisor": anonymous.replace(
+            "coadvisor={Integrated Coadvisor}", "coadvisor={}", 1),
+        "anonymized_wrong_advisor_gender": anonymous.replace(
+            "advisor-feminine-label=true", "advisor-feminine-label=false", 1),
+        "anonymized_wrong_coadvisor_gender": anonymous.replace(
+            "coadvisor-feminine-label=true", "coadvisor-feminine-label=false", 1),
     }
     for label, mutant in damaged.items():
         if mutant == sample:
@@ -257,6 +291,79 @@ def check_list_page_mutations() -> None:
             )
 
 
+def check_role_page_mutations() -> None:
+    """Check production PDF predicate with genuine expected/foreign role pairs."""
+    run = runpy.run_path(str(RUNNER), run_name="i18n_role_preflight_runner")
+    predicate = run["check_role_title_page"]
+    labels = run["ROLE_LABELS"]
+    cases = run["ROLE_GENDERS"]
+    for locale in LOCALES:
+        for profile in ACADEMIC:
+            genders = cases[profile]
+            first = labels[locale][0][int(genders[0])]
+            second = labels[locale][1][int(genders[1])]
+            title = (
+                "Integrated Multilingual Document\n"
+                + first + ": Integrated Advisor.\n"
+                + second + ": Integrated Coadvisor.\n"
+            )
+            good = "COVER PAGE\f" + title + "\fEXAMINING COMMITTEE\nIntegrated Advisor\f"
+            result = predicate(good, profile, locale)
+            if result.get("applicability") != "title-page":
+                raise ValueError(f"missing role positive control: {profile}/{locale}")
+            mutants = {
+                "missing_advisor": good.replace(first + ": Integrated Advisor.", "", 1),
+                "missing_coadvisor": good.replace(second + ": Integrated Coadvisor.", "", 1),
+                "advisor_wrong_name": good.replace(
+                    first + ": Integrated Advisor.", first + ": Other Advisor.", 1),
+                "coadvisor_wrong_name": good.replace(
+                    second + ": Integrated Coadvisor.", second + ": Other Coadvisor.", 1),
+                # Exact-label negative controls: in English the word "Advisor"
+                # is a suffix of "Co-advisor", but this is NOT the advisor role.
+                "advisor_wrong_role": good.replace(
+                    first + ": Integrated Advisor.",
+                    labels[locale][1][int(genders[1])] + ": Integrated Advisor.", 1),
+                "coadvisor_wrong_role": good.replace(
+                    second + ": Integrated Coadvisor.",
+                    labels[locale][0][int(genders[0])] + ": Integrated Coadvisor.", 1),
+            }
+            if labels[locale][0][0] != labels[locale][0][1]:
+                wrong = labels[locale][0][1-int(genders[0])]
+                mutants["wrong_advisor_gender"] = good.replace(
+                    first + ": Integrated Advisor.", wrong + ": Integrated Advisor.", 1)
+            if labels[locale][1][0] != labels[locale][1][1]:
+                wrong = labels[locale][1][1-int(genders[1])]
+                mutants["wrong_coadvisor_gender"] = good.replace(
+                    second + ": Integrated Coadvisor.", wrong + ": Integrated Coadvisor.", 1)
+            for label, bad in mutants.items():
+                if bad == good:
+                    raise ValueError(f"ineffective role PDF mutation: {label}/{locale}")
+                try:
+                    predicate(bad, profile, locale)
+                except ValueError:
+                    pass
+                else:
+                    raise ValueError(f"role PDF mutation passed: {label}/{profile}/{locale}")
+        # Anonymous source still supplies both names; they must be absent from
+        # ALL rendered PDF pages, not merely the second title page.
+        good = "COVER\fIntegrated Multilingual Document\nREDACTED\fPROJECT BODY\f"
+        result = predicate(good, "anonymized-research-project", locale)
+        if not result.get("names_redacted"):
+            raise ValueError(f"anonymous positive control failed: {locale}")
+        for kind, corrupt in (
+            ("advisor", good + "\fIntegrated Advisor"),
+            ("coadvisor", good + "\fIntegrated Coadvisor"),
+            ("role_label", good.replace(
+                "REDACTED", labels[locale][0][0] + ": REDACTED", 1)),
+        ):
+            try:
+                predicate(corrupt, "anonymized-research-project", locale)
+            except ValueError:
+                pass
+            else:
+                raise ValueError(f"anonymous leak mutation passed: {kind}/{locale}")
+
+
 def main() -> None:
     for path in (GENERATOR, RUNNER, Path(__file__)):
         subprocess.run([sys.executable, "-m", "py_compile", str(path)],
@@ -264,8 +371,9 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="abntexto-i18n-28-preflight-") as tmp:
         check(Path(tmp))
     check_list_page_mutations()
+    check_role_page_mutations()
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS dedicated_list_mutations=PASS "
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS dedicated_list_mutations=PASS "
           "bibliography=5kinds components=present negatives=PASS")
 
 
