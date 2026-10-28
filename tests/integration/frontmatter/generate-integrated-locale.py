@@ -275,7 +275,7 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         ]
     if profile == "doctoral-thesis":
         lines += [r"\ufcPrintIndex"]
-    # Probe all 53 authored/default values after every typeset page, without
+    # Probe all 52 metadata-backed authored/default values after every typeset page, without
     # changing existing labels, anonymization, bibliography or title pages.
     lines += metadata_probe_lines()
     lines += [r"\end{document}"]
