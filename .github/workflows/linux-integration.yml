@@ -49,7 +49,9 @@ jobs:
   linux-integration:
     name: Linux integration
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    # Full 42-check TeX Live integration uses ~35 min on a cold hosted runner;
+    # leave headroom for mandatory Web/Lite E2E and artifact uploads without skips.
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
