@@ -27,6 +27,17 @@ ACADEMIC_PROFILES = {
     "undergraduate-capstone", "specialization-capstone",
     "masters-thesis", "doctoral-thesis",
 }
+# Every academic profile is one of four flag combinations in each locale.
+# The two projects also exercise metadata; the anonymized one must hide it.
+ROLE_GENDERS = {
+    "undergraduate-capstone": (False, False),
+    "specialization-capstone": (True, False),
+    "masters-thesis": (False, True),
+    "doctoral-thesis": (True, True),
+    "research-project": (True, True),
+    "anonymized-research-project": (True, True),
+    "scientific-article": (False, False),
+}
 DUPLEX_PROFILES = {
     "masters-thesis", "doctoral-thesis", "anonymized-research-project",
 }
@@ -86,6 +97,13 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         "submission-date": "{" + date + "}",
         "article-author-note": "{Synthetic Test Author Note}",
         "advisor": "{Integrated Advisor}",
+        "coadvisor": "{Integrated Coadvisor}",
+        "advisor-feminine-label": (
+            "true" if ROLE_GENDERS[profile][0] else "false"
+        ),
+        "coadvisor-feminine-label": (
+            "true" if ROLE_GENDERS[profile][1] else "false"
+        ),
         "examiner-2": "{Integrated Examiner}",
         "undergraduate-program": "{Computing}",
         "undergraduate-degree": "{Bachelor}",
