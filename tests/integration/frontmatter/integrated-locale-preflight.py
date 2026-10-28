@@ -318,6 +318,14 @@ def check_role_page_mutations() -> None:
                     first + ": Integrated Advisor.", first + ": Other Advisor.", 1),
                 "coadvisor_wrong_name": good.replace(
                     second + ": Integrated Coadvisor.", second + ": Other Coadvisor.", 1),
+                # Exact-label negative controls: in English the word "Advisor"
+                # is a suffix of "Co-advisor", but this is NOT the advisor role.
+                "advisor_wrong_role": good.replace(
+                    first + ": Integrated Advisor.",
+                    labels[locale][1][int(genders[1])] + ": Integrated Advisor.", 1),
+                "coadvisor_wrong_role": good.replace(
+                    second + ": Integrated Coadvisor.",
+                    labels[locale][0][int(genders[0])] + ": Integrated Coadvisor.", 1),
             }
             if labels[locale][0][0] != labels[locale][0][1]:
                 wrong = labels[locale][0][1-int(genders[0])]
