@@ -27,6 +27,21 @@ ACADEMIC_PROFILES = {
     "undergraduate-capstone", "specialization-capstone",
     "masters-thesis", "doctoral-thesis",
 }
+DUPLEX_PROFILES = {
+    "masters-thesis", "doctoral-thesis", "anonymized-research-project",
+}
+
+
+def routing_probe(command: str, category: str, locale: str) -> str:
+    """Exercise both public branch operands in an actual TeX manuscript."""
+    tag = locale.upper()
+    return (
+        "\\" + command
+        + "{INTEGRATED-" + category + "-TRUE-" + tag
+        + r". \typeout{INTEGRATED-I18N-" + category + "=TRUE}}"
+        + "{INTEGRATED-" + category + "-FALSE-" + tag
+        + r". \typeout{INTEGRATED-I18N-" + category + "=FALSE}}\par"
+    )
 
 
 def summary_text(locale: str, label: str) -> str:
@@ -58,6 +73,7 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
     options = {
         "type": profile,
         "document-language": locale,
+        "print-mode": "double-sided" if profile in DUPLEX_PROFILES else "single-sided",
         "cover": "false" if profile == "scientific-article" else "true",
         "coat-of-arms": "false",
         "catalog-card": "false",
@@ -162,9 +178,13 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         rf"\typeout{{INTEGRATED-I18N-BABEL=\languagename}}",
         r"\typeout{INTEGRATED-I18N-API-LANGUAGE=\ufcDocumentLanguage}",
         r"\typeout{INTEGRATED-I18N-API-TYPE=\ufcDocumentType}",
+        r"\typeout{INTEGRATED-I18N-API-PRINT-MODE=\ufcPrintMode}",
+        r"\typeout{INTEGRATED-I18N-API-META-TITLE=\ufcMeta{title}}",
         r"\textual",
         rf"\section{{INTEGRATED-SECTION-{locale.upper()}}}",
         rf"INTEGRATED-MANUSCRIPT-{locale.upper()}-{code.upper()}.",
+        routing_probe("ufcIfProjectTF", "PROJECT", locale),
+        routing_probe("ufcIfAnonymizedProjectTF", "ANON", locale),
         r"\begin{ufclettereditems}",
         rf"\item INTEGRATED-LETTER-{locale.upper()}.",
         r"\item INTEGRATED-NESTED-LIST:",

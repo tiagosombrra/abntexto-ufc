@@ -31,6 +31,18 @@ ACADEMIC = {
     "undergraduate-capstone", "specialization-capstone",
     "masters-thesis", "doctoral-thesis",
 }
+PROJECTS = {"research-project", "anonymized-research-project"}
+DUPLEX_PROFILES = {
+    "masters-thesis", "doctoral-thesis", "anonymized-research-project",
+}
+
+
+def expected_public_routes(profile: str) -> dict[str, str]:
+    return {
+        "print_mode": "double-sided" if profile in DUPLEX_PROFILES else "single-sided",
+        "project": "TRUE" if profile in PROJECTS else "FALSE",
+        "anon": "TRUE" if profile == "anonymized-research-project" else "FALSE",
+    }
 PRETEXTUAL_HEADINGS = {
     "pt": ("Agradecimentos", "Errata", "Lista de Ilustrações",
            "Lista de Quadros", "Lista de Gráficos",
@@ -172,6 +184,16 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             f"integrated-chart-{locale}",
             f"integrated-texttable-{locale}",
         ]
+    routes = expected_public_routes(profile)
+    for label, outcome in (
+        ("project", routes["project"]), ("anon", routes["anon"]),
+    ):
+        expected.append(f"integrated-{label}-{outcome.lower()}-{locale}")
+        wrong = "FALSE" if outcome == "TRUE" else "TRUE"
+        if fold(f"integrated-{label}-{wrong}-{locale}") in visible:
+            raise ValueError(
+                f"wrong conditional branch in PDF: {profile}/{locale}/{label}"
+            )
     if profile == "doctoral-thesis":
         expected += ["integrated term"]
     missing = [token for token in expected if fold(token) not in visible]
@@ -226,6 +248,7 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
             "pretextual_headings_checked": 7 if profile in ACADEMIC else 0,
             "populated_lists_checked": 2 if profile in ACADEMIC else 0,
             "dedicated_list_pages": list_pages if profile in ACADEMIC else {},
+            "public_branch_evidence": routes,
             "negative_locale_labels": len(forbidden[locale]),
             "negative_policy": "targeted class-owned labels only; PT companion and authored data allowed"}
 
@@ -297,12 +320,21 @@ def main() -> None:
             expected_babel = LANGUAGES[locale][1]
             if f"INTEGRATED-I18N-BABEL={expected_babel}" not in log:
                 raise ValueError(f"Babel did not activate {expected_babel} in {job}")
+            routes = expected_public_routes(profile)
             for marker in (
                 f"INTEGRATED-I18N-API-LANGUAGE={locale}",
                 f"INTEGRATED-I18N-API-TYPE={profile}",
+                f"INTEGRATED-I18N-API-PRINT-MODE={routes['print_mode']}",
+                "INTEGRATED-I18N-API-META-TITLE=Integrated Multilingual Document",
+                f"INTEGRATED-I18N-PROJECT={routes['project']}",
+                f"INTEGRATED-I18N-ANON={routes['anon']}",
             ):
                 if marker not in log:
                     raise ValueError(f"public API expansion missing or wrong for {job}: {marker}")
+            for label, answer in (("PROJECT", routes["project"]), ("ANON", routes["anon"])):
+                wrong = "FALSE" if answer == "TRUE" else "TRUE"
+                if f"INTEGRATED-I18N-{label}={wrong}" in log:
+                    raise ValueError(f"unexpected public API branch executed: {job}/{label}/{wrong}")
             lang = real_pdf_lang(pdf)
             if lang != LANGUAGES[locale][0]:
                 raise ValueError(f"/Root/Lang {lang} != {LANGUAGES[locale][0]} for {job}")
@@ -318,7 +350,8 @@ def main() -> None:
                      ], "pdf": pdf.relative_to(ROOT).as_posix(),
                      "pdf_sha256": sha(pdf), "pdf_pages": int(match.group(1)),
                      "babel": expected_babel, "pdf_catalog_lang": lang,
-                     "biber": "PASS", "checks": checks}
+                     "biber": "PASS", "public_api_routes": routes,
+                     "author_title_preserved": True, "checks": checks}
             entries.append(entry)
             print(f"INTEGRATED-I18N status=PASS profile={profile} locale={locale} "
                   f"real_pdf=true biber=PASS catalog={lang} pages={entry['pdf_pages']}", flush=True)
