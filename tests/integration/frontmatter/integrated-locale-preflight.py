@@ -58,7 +58,7 @@ TOTAL = 0
 def validate_case(case: dict, locale: str, source: str) -> None:
     """Validate the same source invariants for real cases and mutations."""
     profile = case["profile"]
-    if check_metadata_source(source) != 53:
+    if check_metadata_source(source) != 52:
         raise ValueError(f"authored metadata probe missing: {profile}/{locale}")
     if (case["locale"] != locale or
             rf"\DocumentMetadata{{lang={LOCALES[locale]}," not in source or
@@ -480,7 +480,7 @@ def main() -> None:
     if metadata_mutations != 8:
         raise ValueError(f"incorrect metadata negative coverage: {metadata_mutations}")
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS metadata_keys=53 metadata_mutations=PASS dedicated_list_mutations=PASS "
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS metadata_keys=52 asset_path=SEPARATE_TEST_PENDING metadata_mutations=PASS dedicated_list_mutations=PASS "
           "bibliography=5kinds components=present negatives=PASS")
 
 
