@@ -404,7 +404,10 @@ def check_committee_page_mutations() -> None:
     for locale in LOCALES:
         for profile in ACADEMIC:
             last = maxima[profile]
-            lines = [headings[locale]]
+            # Match the real Babel PDF typography: French ASCII apostrophe
+            # in the source heading is extracted as U+2019 RIGHT SINGLE QUOTE.
+            rendered_heading = headings[locale].replace("'", "’")
+            lines = [rendered_heading]
             for slot in range(2, last + 1):
                 lines.extend((f"Integrated Examiner {slot}", f"Integrated Institution {slot}"))
             approval = "\n".join(lines)
@@ -413,7 +416,7 @@ def check_committee_page_mutations() -> None:
             if positive.get("last_examiner") != last or not positive.get("single_page"):
                 raise ValueError(f"committee positive control failed: {profile}/{locale}")
             mutants = {
-                "wrong_heading": good.replace(headings[locale], "WRONG COMMITTEE", 1),
+                "wrong_heading": good.replace(rendered_heading, "WRONG COMMITTEE", 1),
                 "missing_member": good.replace(f"Integrated Examiner {last}", "", 1),
                 "missing_institution": good.replace(f"Integrated Institution {last}", "", 1),
                 "split_signature_across_pages": good.replace(
