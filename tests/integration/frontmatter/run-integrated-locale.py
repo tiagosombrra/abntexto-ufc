@@ -115,20 +115,22 @@ def check_role_title_page(txt: str, profile: str, locale: str) -> dict:
                 raise ValueError(f"anonymized PDF leaks {name}: {profile}/{locale}")
         for choices in labels:
             for label in set(choices):
-                if re.search(r"(?<!\w)" + re.escape(fold(label)) + r"\s*:", title):
+                if re.search(r"(?<![\w-])" + re.escape(fold(label)) + r"\s*:", title):
                     raise ValueError(f"anonymized title page leaks role label: {label}/{locale}")
         return {"applicability": "anonymous", "names_redacted": True,
                 "role_labels_redacted": True, "title_page": 2}
+    # A hyphen is not a regex word character: (?<!\\w) accepts "Advisor"
+    # as the suffix of "Co-advisor" in English. Reject that role confusion.
     selected = {}
     for idx, key in enumerate(("advisor", "coadvisor")):
         chosen = labels[idx][int(genders[idx])]
         other = labels[idx][1 - int(genders[idx])]
         value = fold(names[idx])
-        expression = r"(?<!\w)" + re.escape(fold(chosen)) + r"\s*:\s*" + re.escape(value) + r"(?=[\s\.])"
+        expression = r"(?<![\w-])" + re.escape(fold(chosen)) + r"\s*:\s*" + re.escape(value) + r"(?=[\s\.])"
         if not re.search(expression, title):
             raise ValueError(f"missing correct {key} role on title page: {profile}/{locale}/{chosen}")
         if fold(other) != fold(chosen):
-            wrong = r"(?<!\w)" + re.escape(fold(other)) + r"\s*:\s*" + re.escape(value) + r"(?=[\s\.])"
+            wrong = r"(?<![\w-])" + re.escape(fold(other)) + r"\s*:\s*" + re.escape(value) + r"(?=[\s\.])"
             if re.search(wrong, title):
                 raise ValueError(f"wrong-gender {key} label: {profile}/{locale}/{other}")
         selected[key] = {"gender": "feminine" if genders[idx] else "masculine",
