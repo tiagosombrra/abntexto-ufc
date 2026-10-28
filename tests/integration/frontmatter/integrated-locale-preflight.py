@@ -98,7 +98,10 @@ def validate_case(case: dict, locale: str, source: str) -> None:
         "advisor-feminine-label=" + ("true" if ROLE_GENDERS[profile][0] else "false"),
         "coadvisor-feminine-label=" + ("true" if ROLE_GENDERS[profile][1] else "false"),
     )
-    if any(option not in source for option in role_options):
+    # Match complete setup lines: "advisor-feminine-label=true" is a suffix
+    # of "coadvisor-feminine-label=true" and substring matching admits mutants.
+    setup_lines = {line.strip().rstrip(",") for line in source.splitlines()}
+    if any(option not in setup_lines for option in role_options):
         raise ValueError(f"missing or wrong gender/role fixture: {profile}/{locale}")
     if profile in ACADEMIC and any(command not in source
                                for command in PRETEXTUAL_COMMANDS):
