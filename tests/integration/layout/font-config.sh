@@ -2,6 +2,8 @@
 set -eu
 
 fixture="tests/documents/font-configuration.tex"
+# Exercises the public strict-font option through the real TeX fixture.
+# Its existing embedded-PDF fallback/strict-rejection gates are reused in P0.8D.
 tmp=".abntexto-ufc-font-config.tex"
 flags="-interaction=nonstopmode -halt-on-error -file-line-error"
 

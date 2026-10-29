@@ -8,6 +8,8 @@ on:
       - tests/integration/frontmatter/integrated-locale-preflight.py
       - tests/integration/frontmatter/integrated_metadata_probe.py
       - tests/integration/frontmatter/coat-of-arms-evidence.py
+      - tests/integration/frontmatter/dual-language-evidence.py
+      - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
       - standards/api/i18n-functional-evidence-crosswalk.json
@@ -26,6 +28,8 @@ on:
       - tests/integration/frontmatter/integrated-locale-preflight.py
       - tests/integration/frontmatter/integrated_metadata_probe.py
       - tests/integration/frontmatter/coat-of-arms-evidence.py
+      - tests/integration/frontmatter/dual-language-evidence.py
+      - tests/integration/layout/font-config.sh
       - tests/integration/frontmatter/i18n-api-inventory.py
       - tests/integration/frontmatter/i18n-evidence-crosswalk.py
       - standards/api/i18n-functional-evidence-crosswalk.json
@@ -69,6 +73,8 @@ jobs:
         run: python3 tests/integration/frontmatter/integrated-locale-preflight.py
       - name: Verify image-path fixtures and eleven negative controls
         run: python3 tests/integration/frontmatter/coat-of-arms-evidence.py --preflight
+      - name: Verify mixed primary and display language cases and 13 negative controls
+        run: python3 tests/integration/frontmatter/dual-language-evidence.py --preflight
   manuscripts:
     name: Integrated documents / ${{ matrix.locale }} (7 real PDFs)
     runs-on: ubuntu-24.04
@@ -135,5 +141,37 @@ jobs:
         with:
           name: coat-path-${{ github.run_id }}
           path: artifacts/integrated-i18n/coat-path/**
+          retention-days: 21
+          if-no-files-found: warn
+  mixed-languages:
+    name: Mixed document/display languages / 32 real PDFs
+    runs-on: ubuntu-24.04
+    needs: preflight
+    timeout-minutes: 36
+    steps:
+      - name: Checkout exact source SHA
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compile 4x4x2 actual PDFs and inspect locale semantics and PDF catalog
+        uses: xu-cheng/texlive-action@22c04326a5d855880f9d39bb955138bf11c6df80 # v3
+        env:
+          SOURCE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        with:
+          texlive_version: 2026
+          os: debian
+          run: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            apt-get install -y --no-install-recommends poppler-utils qpdf
+            git config --global --add safe.directory "$PWD"
+            python3 tests/integration/frontmatter/dual-language-evidence.py
+      - name: Upload source-bound 32 mixed-language PDF evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mixed-language-${{ github.run_id }}
+          path: artifacts/integrated-i18n/dual-language/**
           retention-days: 21
           if-no-files-found: warn

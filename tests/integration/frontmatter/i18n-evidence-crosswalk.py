@@ -25,7 +25,7 @@ OUTPUT = ROOT / "artifacts/validation/i18n-public-evidence-crosswalk.json"
 SOURCE_STATES = {"SOURCE_REFERENCE_ONLY", "UNMAPPED"}
 SOURCES = {"integrated-28", "optional-12", "coat-32", "inherited-pdf",
            "legacy-summary-pdf", "profile-28", "display-labels-pdf",
-           "summary-language-pdf", "multivolume-pdf", "fixture"}
+           "summary-language-pdf", "multivolume-pdf", "layout-font-integration", "fixture"}
 
 
 def expected_groups(api: dict, inventory: dict) -> dict[str, set[str]]:
