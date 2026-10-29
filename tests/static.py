@@ -159,6 +159,10 @@ def execute_checks() -> tuple[int, int, int, int]:
     # Check locale parity before the expensive TeX Live/PDF workflows.
     run([sys.executable, "tests/integration/frontmatter/document-locale-catalog.py"],
         "four-locale class-generated text catalog")
+    # Every PR and main push must revalidate the mapped test/fixture sources.
+    # The integrated PDF workflow is path-scoped, so it is not sufficient here.
+    run([sys.executable, "tests/integration/frontmatter/i18n-evidence-crosswalk.py"],
+        "72 public API evidence-source links (source-only; no PDF claim)")
 
     for filename in SOURCE_CHECK_NAMES:
         try:
