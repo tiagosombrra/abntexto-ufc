@@ -89,21 +89,21 @@ def validate(data: dict, api: dict, inventory: dict) -> list[dict]:
             raise ValueError(f"canonical API drift in group {kind}")
         for identifier in sorted(identifiers):
             item = actual[identifier]
-            if set(item) != {"source", "source_kind", "proof_state"}:
+            if set(item) != {"candidate_test_file", "candidate_suite", "proof_state"}:
                 raise ValueError(f"invalid evidence fields: {kind}/{identifier}")
             state = item["proof_state"]
             if state not in SOURCE_STATES:
                 raise ValueError(f"invalid proof state/overclaimed success: {kind}/{identifier}")
-            source = item["source"]
+            source = item["candidate_test_file"]
             if state == "UNMAPPED":
-                if source is not None or item["source_kind"] != "none":
+                if source is not None or item["candidate_suite"] != "none":
                     raise ValueError(f"unmapped name has invented source: {identifier}")
                 digest = None
             else:
                 if not isinstance(source, str) or source not in registered:
                     raise ValueError(f"unregistered source for {identifier}")
                 data_source = registered[source]
-                if item["source_kind"] != data_source["suite"]:
+                if item["candidate_suite"] != data_source["suite"]:
                     raise ValueError(f"wrong suite for {identifier}")
                 # Match the complete public-name token; never accept a prefix
                 # such as ufcPrintSummary inside ufcPrintSummaryInLanguage.
@@ -115,7 +115,7 @@ def validate(data: dict, api: dict, inventory: dict) -> list[dict]:
                 digest = data_source["sha256"]
             records.append({
                 "group": kind, "identifier": identifier, "proof_state": state,
-                "candidate_source": source, "source_suite": item["source_kind"],
+                "candidate_source": source, "source_suite": item["candidate_suite"],
                 "candidate_source_sha256": digest,
                 "independent_pdf_assertion": "NOT_CERTIFIED_PER_IDENTIFIER",
                 "human_linguistic_review": "PENDING",
@@ -135,16 +135,16 @@ def mutation_controls(data: dict, api: dict, inventory: dict) -> int:
     mutations.append(a)
     a = mutant()
     a["entries"]["public_commands"]["\\ufcImaginary"] = {
-        "source": None, "source_kind": "none", "proof_state": "UNMAPPED"}
+        "candidate_test_file": None, "candidate_suite": "none", "proof_state": "UNMAPPED"}
     mutations.append(a)
     a = mutant()
     a["entries"]["setup_option_identifiers"]["type"]["proof_state"] = "CERTIFIED"
     mutations.append(a)
     a = mutant()
-    a["entries"]["setup_option_identifiers"]["type"]["source"] = "tests/does-not-exist.tex"
+    a["entries"]["setup_option_identifiers"]["type"]["candidate_test_file"] = "tests/does-not-exist.tex"
     mutations.append(a)
     a = mutant()
-    a["entries"]["public_environments"]["ufcobject"]["source_kind"] = "fixture"
+    a["entries"]["public_environments"]["ufcobject"]["candidate_suite"] = "fixture"
     mutations.append(a)
     a = mutant()
     a["schema_version"] = 2
