@@ -477,7 +477,7 @@ def main() -> None:
     check_role_page_mutations()
     check_committee_page_mutations()
     metadata_mutations = metadata_negative_controls()
-    if metadata_mutations != 8:
+    if metadata_mutations != 9:
         raise ValueError(f"incorrect metadata negative coverage: {metadata_mutations}")
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
           "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS metadata_keys=52 asset_path=SEPARATE_TEST_PENDING metadata_mutations=PASS dedicated_list_mutations=PASS "

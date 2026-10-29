@@ -64,8 +64,8 @@ def check_source(source: str) -> int:
     block = "\n".join(source_lines()) + "\n"
     if source.count(block) != 1:
         raise ValueError("missing/duplicated/altered complete metadata probe")
-    if not source.index(block) < source.index(r"\end{document}"):
-        raise ValueError("metadata probe executes after document end")
+    if not source.endswith(block + r"\end{document}" + "\n"):
+        raise ValueError("metadata probe must follow all typeset document content")
     return len(METADATA_KEYS)
 
 
@@ -130,4 +130,11 @@ def negative_controls() -> int:
         controls += 1
     else:
         raise ValueError("duplicated receipt mutation accepted")
+    relocated = block + r"\ufcPrintCover" + "\n" + r"\end{document}" + "\n"
+    try:
+        check_source(relocated)
+    except ValueError:
+        controls += 1
+    else:
+        raise ValueError("pre-render metadata probe relocation accepted")
     return controls
