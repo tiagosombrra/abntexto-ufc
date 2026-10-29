@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "contract": "v3.1.0 public API i18n evidence-source crosswalk",
+  "locales": [
+    "pt",
+    "en",
+    "es",
+    "fr"
+  ],
+  "acceptance": "PENDING_ITEM_PDF_ASSERTIONS_AND_HUMAN_REVIEW",
+  "interpretation": "A lexical source link is a research lead, NOT a functional/PDF certification or a linguistic approval. Source SHA comes from the executing CI checkout, not this ledger.",
+  "sources": [
+    {
+      "path": "tests/integration/frontmatter/generate-integrated-locale.py",
+      "suite": "integrated-28",
+      "scope": "four-locale generator; real-PDF assertion NOT item-certified"
+    },
+    {
+      "path": "tests/integration/objects/optional-locale-evidence.py",
+      "suite": "optional-12",
+      "scope": "four-locale optional module runner; check individual output"
+    },
+    {
+      "path": "tests/integration/frontmatter/coat-of-arms-evidence.py",
+      "suite": "coat-32",
+      "scope": "four-locale actual asset image assertions"
+    },
+    {
+      "path": "tests/integration/frontmatter/inherited-object-labels.sh",
+      "suite": "inherited-pdf",
+      "scope": "inherited macros four-locale PDF runner"
+    },
+    {
+      "path": "tests/integration/frontmatter/summary-legacy-context.sh",
+      "suite": "legacy-summary-pdf",
+      "scope": "legacy language context PDF runner"
+    },
+    {
+      "path": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
+      "suite": "profile-28",
+      "scope": "profile-language PDF runner"
+    },
+    {
+      "path": "tests/integration/frontmatter/frontmatter-labels-i18n.sh",
+      "suite": "display-labels-pdf",
+      "scope": "labels PDF runner"
+    },
+    {
+      "path": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+      "suite": "summary-language-pdf",
+      "scope": "summary PDF runner"
+    },
+    {
+      "path": "tests/integration/profiles/multivolume.sh",
+      "suite": "multivolume-pdf",
+      "scope": "multivolume PDF runner"
+    },
+    {
+      "path": "tests/documents/mathematics.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/documents/catalog-card.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/documents/advanced-objects.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/documents/frontmatter-academic-work.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/documents/frontmatter-summary-abstract-test.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/documents/frontmatter-pagination-catalog-test.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/documents/frontmatter-dedication-epigraph-test.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/smoke/base-profile.tex",
+      "suite": "fixture",
+      "scope": "source fixture; no standalone run proven"
+    }
+  ],
+  "entries": {
+    "setup_option_identifiers": {
+      "type": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "document-language": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "labels-language": {
+        "source": "tests/integration/frontmatter/primary-document-locale-matrix.sh",
+        "source_kind": "profile-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "print-mode": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "cover": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "catalog-card": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "coat-of-arms": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "advisor-feminine-label": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "coadvisor-feminine-label": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "font": {
+        "source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "source_kind": "summary-language-pdf",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "strict-font": {
+        "source": null,
+        "source_kind": "none",
+        "proof_state": "UNMAPPED"
+      },
+      "tables": {
+        "source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_kind": "optional-12",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "code": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "algorithms": {
+        "source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_kind": "optional-12",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "glossary": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "index": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "initial-page": {
+        "source": "tests/integration/profiles/multivolume.sh",
+        "source_kind": "multivolume-pdf",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      }
+    },
+    "public_commands": {
+      "\\ufcsetup": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcDocumentType": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintMode": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcMeta": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcIfProjectTF": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcIfAnonymizedProjectTF": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcMathFontPolicy": {
+        "source": "tests/documents/mathematics.tex",
+        "source_kind": "fixture",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintCover": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintTitlePage": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintApprovalPage": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintCatalogCard": {
+        "source": "tests/documents/catalog-card.tex",
+        "source_kind": "fixture",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintDedication": {
+        "source": "tests/documents/frontmatter-academic-work.tex",
+        "source_kind": "fixture",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintAcknowledgments": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintEpigraph": {
+        "source": "tests/documents/frontmatter-academic-work.tex",
+        "source_kind": "fixture",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintErrata": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcDocumentLanguage": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcSummaryKeywordsInLanguage": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintSummaryInLanguage": {
+        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_kind": "legacy-summary-pdf",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintRequiredSummaries": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintOptionalEnglishSummary": {
+        "source": "tests/integration/frontmatter/frontmatter-summary-languages.sh",
+        "source_kind": "summary-language-pdf",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintArticleTranslatedSummary": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcSummaryKeywords": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintSummary": {
+        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_kind": "legacy-summary-pdf",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintAbstract": {
+        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_kind": "legacy-summary-pdf",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfIllustrations": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfFigures": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfTables": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfTextTables": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfCharts": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfCodeListings": {
+        "source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_kind": "optional-12",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfAlgorithms": {
+        "source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_kind": "optional-12",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfAbbreviationsAndAcronyms": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintListOfSymbols": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcListEntry": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintTableOfContents": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcSource": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcNote": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcAddBibliographyResource": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintReferences": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintGlossary": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcPrintIndex": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcInputListing": {
+        "source": "tests/documents/advanced-objects.tex",
+        "source_kind": "fixture",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\ufcInputMinted": {
+        "source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_kind": "optional-12",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      }
+    },
+    "public_environments": {
+      "ufclettereditems": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "ufcdashedsubitems": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "ufcdefinitionlist": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "ufcobject": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "ufclisting": {
+        "source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_kind": "optional-12",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "ufcalgorithm": {
+        "source": "tests/integration/objects/optional-locale-evidence.py",
+        "source_kind": "optional-12",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      }
+    },
+    "retained_upstream_identifiers": {
+      "\\legend": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\keywords": {
+        "source": "tests/integration/frontmatter/summary-legacy-context.sh",
+        "source_kind": "legacy-summary-pdf",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\appendix": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\annex": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\pretextual": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      },
+      "\\textual": {
+        "source": "tests/integration/frontmatter/generate-integrated-locale.py",
+        "source_kind": "integrated-28",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
+      }
+    }
+  }
+}
