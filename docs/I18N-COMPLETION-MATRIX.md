@@ -105,7 +105,7 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 
 **Exceção identificada por PDF real:** a tentativa inicial de ler `coat-of-arms-file` por `\\ufcMeta` retornou vazio, pois `abntexto-ufc.cls` registra essa chave em uma *token list* de caminho de imagem, e não no mapa recuperado por `\\ufcMeta`. A distinção é de contrato, não prova de falha na tradução. O inventário passa a classificar a chave como `external_asset_path`; seu comportamento de seleção de arquivo e renderização precisa de um teste específico em PDF antes da certificação final (P0.8C), sem contabilizar falsamente esse campo entre os 52 metadados cobertos.
 
-**Status: PENDING_REAL_TEX_PDF_CI, CODEX_EXACT_HEAD_AND_POSTMERGE.** Um único trabalho ativo, zero skips tolerados na certificação integral, sem tag/release/CTAN da v3.1.0.
+**Resultado pós-merge P0.8B (29/10/2026):** PR #536 integrada; 28 PDFs + 12 PDFs opcionais, Linux `42/42`, Release `38/38`, Web/Lite e `pkgcheck` aprovados no `main=b8b98faee0a5178e1d40205d9723301b861a0619`. O marco permanece restrito aos 52 campos de metadados, sem inferir visibilidade de cada campo. Um único trabalho ativo, zero skips tolerados na certificação integral, sem tag/release/CTAN da v3.1.0.
 
 
 ## P0.8C — Public `coat-of-arms-file` image path (bounded real-PDF gate)
@@ -116,4 +116,17 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 
 **Safety and applicability:** fixtures are synthetic and are not UFC or other institutional marks. This is a strict opt-in path/cover proof, not visual or linguistic acceptance of all seven profiles, nor proof that images are required for scientific articles. All original integrated 28 PDFs, optional 12 PDFs, Linux and release gates remain mandatory; the new image proof is additive. The final README/documentation/site work remains P0.9–P0.12, not deferred past v3.1.0 publication.
 
-**Status: PENDING_REAL_PDF_CI, EXACT_HEAD_CODEX_AND_POSTMERGE.** Do not report P0.8C as certified before source-bound logs show all 32 PDFs and complete PR/merge gates. v3.1.0 stays UNRELEASED; v3.0.5 remains the last published release.
+**Resultado pós-merge P0.8C (29/10/2026):** PR #537 integrada e certificada no `main=7eec8cb9c797f2192cf01351e64849deef5ecaf6`; 28 PDFs integrados, 32 PDFs de brasão, 11 controles negativos, Linux `42/42`, Web/Lite, Release `38/38` e `pkgcheck` aprovados (runs `40871900222`, `40871900289`, `40871900235`, Static `40871900245`). Não substitui o aceite linguístico ou visual humano. Do not report P0.8C as certified before source-bound logs show all 32 PDFs and complete PR/merge gates. v3.1.0 stays UNRELEASED; v3.0.5 remains the last published release.
+
+
+## P0.8D — Rastreabilidade por identificador público (entrega inicial)
+
+**Motivação:** existir no inventário da API não comprova que uma chave, comando ou ambiente tenha produzido o resultado esperado em um documento real. A nova matriz `standards/api/i18n-functional-evidence-crosswalk.json` registra **72 identificadores** ainda sujeitos a reconciliação individual: 17 identificadores estáveis de opções, 43 comandos públicos, seis ambientes e seis nomes mantidos do upstream. Os 52 campos de metadados já têm prova específica (P0.8B); `coat-of-arms-file` é um caminho externo com prova específica (P0.8C).
+
+**Critério conservador:** cada registro contém um caminho de teste ou fixture existente com presença lexical exata do nome público, o tipo de suíte e o estado `SOURCE_REFERENCE_ONLY`. Quando não há referência entre os arquivos auditados, o estado é `UNMAPPED`. **Nenhum desses estados significa PASS funcional**, muito menos que todos os sete perfis e quatro idiomas tenham sido aprovados para aquela API. Uma referência em arquivo `.tex` tampouco significa que a fixture foi compilada nesta execução. Os PDFs já gerados permanecem evidências reais, mas sua relação com cada identificador precisa ser verificada por predicados independentes.
+
+**Validador fail-closed:** `tests/integration/frontmatter/i18n-evidence-crosswalk.py` reconcilia a matriz com `standards/api/public-api.json` e `standards/api/i18n-coverage-inventory.json`, verifica a existência do arquivo, sua localização em `tests/`, a correspondência exata do nome (sem aceitar prefixos de comandos), a coerência da suíte, os 72 itens e nove mutações negativas (identificadores omitidos/inventados, fontes inválidas, mudança artificial de estado etc.). O preflight do CI emite um manifesto por SHA, com hash SHA-256 das fontes e estado por identificador, sem promover automaticamente o marco global.
+
+**Primeira triagem:** 71/72 referências de fonte localizadas na seleção de 17 drivers/fixtures. A opção `strict-font` permanece `UNMAPPED` nesse recorte e requer um caso funcional direcionado. O inventário continuará marcando `PENDING_ITEM_PDF_ASSERTIONS_AND_HUMAN_REVIEW` até que a correspondência com predicados de PDF/TeX, aplicabilidade por perfil e idioma e revisão linguística seja concluída. Outras lacunas podem ser encontradas durante a inspeção dos 71 registros referenciados; referências lexicais não excluem falhas funcionais.
+
+**Próxima subetapa P0.8D:** converter vínculos de fonte em evidências específicas de saída (incluindo opções `strict-font`, `labels-language` e casos condicionais), cobrir quatro idiomas e perfis aplicáveis, registrar casos não aplicáveis e manter os gates completos por PR. P0.9 (README), P0.10 (documentação), P0.11 (site/validador) e P0.12 (auditoria final humana) continuam obrigatórios antes de qualquer publicação da v3.1.0.
