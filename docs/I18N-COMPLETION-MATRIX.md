@@ -106,3 +106,14 @@ A auditoria das 70 chaves públicas revelou que `examiner-3` até `examiner-6`, 
 **Exceção identificada por PDF real:** a tentativa inicial de ler `coat-of-arms-file` por `\\ufcMeta` retornou vazio, pois `abntexto-ufc.cls` registra essa chave em uma *token list* de caminho de imagem, e não no mapa recuperado por `\\ufcMeta`. A distinção é de contrato, não prova de falha na tradução. O inventário passa a classificar a chave como `external_asset_path`; seu comportamento de seleção de arquivo e renderização precisa de um teste específico em PDF antes da certificação final (P0.8C), sem contabilizar falsamente esse campo entre os 52 metadados cobertos.
 
 **Status: PENDING_REAL_TEX_PDF_CI, CODEX_EXACT_HEAD_AND_POSTMERGE.** Um único trabalho ativo, zero skips tolerados na certificação integral, sem tag/release/CTAN da v3.1.0.
+
+
+## P0.8C — Public `coat-of-arms-file` image path (bounded real-PDF gate)
+
+**Scope:** independent of `\ufcMeta`, the option `coat-of-arms-file` is stored in a dedicated image-path token list. It must be exercised through public `\ufcsetup` and actual `\ufcPrintCover`, not counted among the 52 metadata getter fields certified by #536. The 70-key inventory remains 17 identifiers + 52 metadata/default fields + this one image path. The final P0.8 certification is not claimed here.
+
+**Functional test being added:** `tests/integration/frontmatter/coat-of-arms-evidence.py` uses two programmatically generated RGB PNG fixtures (19×13 and 23×17 pixels), the 4 locales PT/EN/ES/FR and both undergraduate and research-project covers. Four scenarios per profile/locale (32 real PDFs): enabled first path, enabled second path, enabled nonexistent file and disabled existent file. Exact TeX source, Babel and public language markers, `qpdf --check`, real page image XObjects via `pdfimages -list`, image dimensions and cardinality, warning/no-warning behavior, source/PDF hashes and switching-assets difference are checked; eleven source/log/PDF negative controls use the same production predicates.
+
+**Safety and applicability:** fixtures are synthetic and are not UFC or other institutional marks. This is a strict opt-in path/cover proof, not visual or linguistic acceptance of all seven profiles, nor proof that images are required for scientific articles. All original integrated 28 PDFs, optional 12 PDFs, Linux and release gates remain mandatory; the new image proof is additive. The final README/documentation/site work remains P0.9–P0.12, not deferred past v3.1.0 publication.
+
+**Status: PENDING_REAL_PDF_CI, EXACT_HEAD_CODEX_AND_POSTMERGE.** Do not report P0.8C as certified before source-bound logs show all 32 PDFs and complete PR/merge gates. v3.1.0 stays UNRELEASED; v3.0.5 remains the last published release.
