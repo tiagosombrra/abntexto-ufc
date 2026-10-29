@@ -94,6 +94,11 @@
       "path": "tests/smoke/base-profile.tex",
       "suite": "fixture",
       "scope": "source fixture; no standalone run proven"
+    },
+    {
+      "path": "tests/integration/layout/font-config.sh",
+      "suite": "layout-font-integration",
+      "scope": "real PDFs for pdfLaTeX/LuaLaTeX times/arial, strict reject or literal-font success; Linux 42-case integration gate"
     }
   ],
   "entries": {
@@ -149,9 +154,9 @@
         "candidate_suite": "summary-language-pdf"
       },
       "strict-font": {
-        "proof_state": "UNMAPPED",
-        "candidate_test_file": null,
-        "candidate_suite": "none"
+        "candidate_test_file": "tests/integration/layout/font-config.sh",
+        "candidate_suite": "layout-font-integration",
+        "proof_state": "SOURCE_REFERENCE_ONLY"
       },
       "tables": {
         "proof_state": "SOURCE_REFERENCE_ONLY",
