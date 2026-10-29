@@ -19,8 +19,6 @@ import sys
 import tempfile
 import unicodedata
 
-from integrated_metadata_probe import check_log as verify_authored_metadata_log
-
 ROOT = Path(__file__).resolve().parents[3]
 ARTIFACTS = ROOT / "artifacts" / "integrated-i18n"
 LANGUAGES = {
@@ -388,6 +386,9 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
 
 
 def main() -> None:
+    # Preserve runpy callers that import public PDF helpers without executing main.
+    from integrated_metadata_probe import check_log as verify_authored_metadata_log
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", required=True, choices=tuple(LANGUAGES))
     args = parser.parse_args()
