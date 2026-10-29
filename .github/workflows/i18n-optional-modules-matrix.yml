@@ -6,6 +6,7 @@ on:
     paths:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
+      - tests/integration/frontmatter/run-integrated-locale.py
       - standards/evidence/test-surface-policy.json
       - .github/workflows/i18n-optional-modules-matrix.yml
   push:
@@ -13,6 +14,7 @@ on:
     paths:
       - abntexto-ufc.cls
       - tests/integration/objects/optional-locale-evidence.py
+      - tests/integration/frontmatter/run-integrated-locale.py
       - .github/workflows/i18n-optional-modules-matrix.yml
 permissions:
   contents: read

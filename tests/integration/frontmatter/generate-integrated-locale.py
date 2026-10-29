@@ -10,6 +10,8 @@ import argparse
 import json
 from pathlib import Path
 
+from integrated_metadata_probe import source_lines as metadata_probe_lines
+
 PROFILES = (
     "undergraduate-capstone", "specialization-capstone", "masters-thesis",
     "doctoral-thesis", "research-project", "anonymized-research-project",
@@ -273,6 +275,9 @@ def make_doc(profile: str, locale: str, target: Path) -> tuple[str, list[str]]:
         ]
     if profile == "doctoral-thesis":
         lines += [r"\ufcPrintIndex"]
+    # Probe all 52 metadata-backed authored/default values after every typeset page, without
+    # changing existing labels, anonymization, bibliography or title pages.
+    lines += metadata_probe_lines()
     lines += [r"\end{document}"]
     result = "\n".join(lines) + "\n"
     path = target / f"{name}.tex"

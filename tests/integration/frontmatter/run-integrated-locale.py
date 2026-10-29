@@ -386,6 +386,9 @@ def check_text(txt: str, profile: str, locale: str) -> dict:
 
 
 def main() -> None:
+    # Preserve runpy callers that import public PDF helpers without executing main.
+    from integrated_metadata_probe import check_log as verify_authored_metadata_log
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--locale", required=True, choices=tuple(LANGUAGES))
     args = parser.parse_args()
@@ -449,6 +452,12 @@ def main() -> None:
                     raise ValueError(f"pdftotext failed for {job}: {process.stderr}")
             checks = check_text(txt.read_text(encoding="utf-8"), profile, locale)
             log = (work / (job + ".log")).read_text(encoding="utf-8", errors="replace")
+            authored_keys_checked = verify_authored_metadata_log(log)
+            checks["authored_metadata_roundtrip"] = {
+                "keys": authored_keys_checked,
+                "source": "ufcsetup/ufcMeta TeX log",
+                "preserved": True,
+            }
             expected_babel = LANGUAGES[locale][1]
             if f"INTEGRATED-I18N-BABEL={expected_babel}" not in log:
                 raise ValueError(f"Babel did not activate {expected_babel} in {job}")

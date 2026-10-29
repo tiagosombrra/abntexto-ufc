@@ -282,8 +282,8 @@
       "requirement": "identifier stable across locale"
     },
     "coat-of-arms-file": {
-      "origin": "user_supplied_value",
-      "requirement": "literal authored metadata: no automatic translation"
+      "origin": "external_asset_path",
+      "requirement": "user-provided image path is not translated; configured in a separate asset tl, not retrievable via \\ufcMeta (requires dedicated PDF/image test)"
     },
     "initial-page": {
       "origin": "option_identifier",
