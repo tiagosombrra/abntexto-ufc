@@ -480,7 +480,7 @@ def main() -> None:
     if metadata_mutations != 9:
         raise ValueError(f"incorrect metadata negative coverage: {metadata_mutations}")
     print("INTEGRATED-I18N-PREFLIGHT status=PASS profiles=7 locales=4 "
-          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS metadata_keys=52 asset_path=SEPARATE_TEST_PENDING metadata_mutations=PASS dedicated_list_mutations=PASS "
+          "generated_tex=28 summary_inputs=56 academic_pretextual_sources=64 public_routes=PASS role_gender_mutations=PASS committee_mutations=PASS metadata_keys=52 asset_path=SEPARATE_32PDF_MATRIX_JOB metadata_mutations=PASS dedicated_list_mutations=PASS "
           "bibliography=5kinds components=present negatives=PASS")
 
 
